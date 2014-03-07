@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,7 +22,7 @@ require_once dirname(__FILE__).'/../../bootstrap.php';
 require_once 'common/include/Config.class.php';
 require_once dirname(__FILE__).'/../../../../ldap/include/LDAP_User.class.php';
 
-abstract class Git_Driver_Gerrit_baseTest extends TuleapTestCase {
+abstract class Git_Driver_GerritLegacy_baseTest extends TuleapTestCase {
 
     /**
      * @var GitRepository
@@ -60,12 +59,12 @@ abstract class Git_Driver_Gerrit_baseTest extends TuleapTestCase {
 
         $this->ssh    = mock('Git_Driver_Gerrit_RemoteSSHCommand');
         $this->logger = mock('BackendLogger');
-        $this->driver = new Git_Driver_Gerrit($this->ssh, $this->logger);
+        $this->driver = new Git_Driver_GerritLegacy($this->ssh, $this->logger);
     }
 
 }
 
-class Git_Driver_Gerrit_createProjectTest extends Git_Driver_Gerrit_baseTest {
+class Git_Driver_GerritLegacy_createProjectTest extends Git_Driver_GerritLegacy_baseTest {
 
     /**
      * @var GitRepository
@@ -111,7 +110,7 @@ class Git_Driver_Gerrit_createProjectTest extends Git_Driver_Gerrit_baseTest {
     public function itRaisesAGerritDriverExceptionOnProjectCreation() {
         $std_err = 'fatal: project "someproject" exists';
         $command = "gerrit create-project --parent firefox firefox/jean-claude/dusse";
-        stub($this->ssh)->execute()->throws(new Git_Driver_Gerrit_RemoteSSHCommandFailure(Git_Driver_Gerrit::EXIT_CODE, '', $std_err));
+        stub($this->ssh)->execute()->throws(new Git_Driver_Gerrit_RemoteSSHCommandFailure(Git_Driver_GerritLegacy::EXIT_CODE, '', $std_err));
         try {
             $this->driver->createProject($this->gerrit_server, $this->repository, $this->project_name);
             $this->fail('An exception was expected');
@@ -135,11 +134,15 @@ class Git_Driver_Gerrit_createProjectTest extends Git_Driver_Gerrit_baseTest {
     }
 }
 
-class Git_Driver_Gerrit_createGroupTest extends Git_Driver_Gerrit_baseTest {
+class Git_Driver_GerritLegacy_createGroupTest extends Git_Driver_GerritLegacy_baseTest {
 
     public function setUp() {
         parent::setUp();
-        $this->gerrit_driver = partial_mock('Git_Driver_Gerrit', array('DoesTheGroupExist'), array($this->ssh, $this->logger));
+        $this->gerrit_driver = partial_mock(
+            'Git_Driver_GerritLegacy',
+            array('doesTheGroupExist'),
+            array($this->ssh, $this->logger)
+        );
     }
 
     public function itCreatesGroupsIfItNotExistsOnGerrit() {
@@ -172,7 +175,7 @@ class Git_Driver_Gerrit_createGroupTest extends Git_Driver_Gerrit_baseTest {
         $std_err = 'fatal: group "somegroup" already exists';
         $command = "gerrit create-group firefox/project_members --owner firefox/project_admins";
 
-        stub($this->ssh)->execute()->throws(new Git_Driver_Gerrit_RemoteSSHCommandFailure(Git_Driver_Gerrit::EXIT_CODE, '', $std_err));
+        stub($this->ssh)->execute()->throws(new Git_Driver_Gerrit_RemoteSSHCommandFailure(Git_Driver_GerritLegacy::EXIT_CODE, '', $std_err));
 
         try {
             $this->gerrit_driver->createGroup($this->gerrit_server,  'firefox/project_members', 'firefox/project_admins');
@@ -191,7 +194,7 @@ class Git_Driver_Gerrit_createGroupTest extends Git_Driver_Gerrit_baseTest {
     }
 }
 
-class Git_Driver_Gerrit_getGroupUUIDTest extends Git_Driver_Gerrit_baseTest {
+class Git_Driver_GerritLegacy_getGroupUUIDTest extends Git_Driver_GerritLegacy_baseTest {
 
     private $groupname = 'project/repo-contributors';
     private $expected_query = 'gerrit gsql --format json -c "SELECT\ *\ FROM\ account_groups\ WHERE\ name=\\\'project/repo-contributors\\\'"';
@@ -214,7 +217,7 @@ class Git_Driver_Gerrit_getGroupUUIDTest extends Git_Driver_Gerrit_baseTest {
     }
 }
 
-class Git_Driver_Gerrit_getGroupIdTest extends Git_Driver_Gerrit_baseTest {
+class Git_Driver_GerritLegacy_getGroupIdTest extends Git_Driver_GerritLegacy_baseTest {
 
     private $groupname = 'project/repo-contributors';
     private $expected_query = 'gerrit gsql --format json -c "SELECT\ *\ FROM\ account_groups\ WHERE\ name=\\\'project/repo-contributors\\\'"';
@@ -237,7 +240,7 @@ class Git_Driver_Gerrit_getGroupIdTest extends Git_Driver_Gerrit_baseTest {
     }
 }
 
-class Git_Driver_Gerrit_addUserToGroupTest extends Git_Driver_Gerrit_baseTest {
+class Git_Driver_GerritLegacy_addUserToGroupTest extends Git_Driver_GerritLegacy_baseTest {
 
     private $groupname;
     private $ldap_uid;
@@ -271,7 +274,7 @@ class Git_Driver_Gerrit_addUserToGroupTest extends Git_Driver_Gerrit_baseTest {
     }
 }
 
-class Git_Driver_Gerrit_removeUserFromGroupTest extends Git_Driver_Gerrit_baseTest {
+class Git_Driver_GerritLegacy_removeUserFromGroupTest extends Git_Driver_GerritLegacy_baseTest {
 
     private $groupname;
     private $ldap_uid;
@@ -306,7 +309,7 @@ class Git_Driver_Gerrit_removeUserFromGroupTest extends Git_Driver_Gerrit_baseTe
     }
 }
 
-class Git_Driver_Gerrit_GroupExistsTest extends TuleapTestCase {
+class Git_Driver_GerritLegacy_GroupExistsTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
@@ -321,7 +324,7 @@ class Git_Driver_Gerrit_GroupExistsTest extends TuleapTestCase {
             'project/group_from_ldap',
         );
 
-        $this->gerrit_driver = partial_mock('Git_Driver_Gerrit', array('listGroups'));
+        $this->gerrit_driver = partial_mock('Git_Driver_GerritLegacy', array('listGroups'));
         stub($this->gerrit_driver)->listGroups()->returns($this->ls_group_return);
 
         $this->gerrit_server = mock('Git_RemoteServer_GerritServer');
@@ -341,7 +344,7 @@ class Git_Driver_Gerrit_GroupExistsTest extends TuleapTestCase {
     }
 }
 
-class Git_Driver_Gerrit_LsGroupsTest extends TuleapTestCase {
+class Git_Driver_GerritLegacy_LsGroupsTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
@@ -349,7 +352,7 @@ class Git_Driver_Gerrit_LsGroupsTest extends TuleapTestCase {
 
         $this->ssh    = mock('Git_Driver_Gerrit_RemoteSSHCommand');
         $this->logger = mock('BackendLogger');
-        $this->driver = new Git_Driver_Gerrit($this->ssh, $this->logger);
+        $this->driver = new Git_Driver_GerritLegacy($this->ssh, $this->logger);
     }
 
     public function itUsesGerritSSHCommandToListGroups() {
@@ -387,7 +390,7 @@ project/group_from_ldap';
     }
 }
 
-class Git_Driver_Gerrit_ProjectExistsTest extends TuleapTestCase {
+class Git_Driver_GerritLegacy_ProjectExistsTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
@@ -396,7 +399,7 @@ class Git_Driver_Gerrit_ProjectExistsTest extends TuleapTestCase {
             'project',
         );
 
-        $this->gerrit_driver = partial_mock('Git_Driver_Gerrit', array('listParentProjects'));
+        $this->gerrit_driver = partial_mock('Git_Driver_GerritLegacy', array('listParentProjects'));
         stub($this->gerrit_driver)->listParentProjects()->returns($this->ls_project_return);
 
         $this->gerrit_server = mock('Git_RemoteServer_GerritServer');
@@ -411,7 +414,7 @@ class Git_Driver_Gerrit_ProjectExistsTest extends TuleapTestCase {
     }
 }
 
-class Git_Driver_Gerrit_LsParentProjectsTest extends TuleapTestCase {
+class Git_Driver_GerritLegacy_LsParentProjectsTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
@@ -419,7 +422,7 @@ class Git_Driver_Gerrit_LsParentProjectsTest extends TuleapTestCase {
 
         $this->ssh    = mock('Git_Driver_Gerrit_RemoteSSHCommand');
         $this->logger = mock('BackendLogger');
-        $this->driver = new Git_Driver_Gerrit($this->ssh, $this->logger);
+        $this->driver = new Git_Driver_GerritLegacy($this->ssh, $this->logger);
     }
 
     public function itUsesGerritSSHCommandToListParentProjects() {
@@ -449,14 +452,14 @@ project/group_from_ldap';
     }
 }
 
-class Git_Driver_Gerrit_AddIncludedGroupTest extends TuleapTestCase {
+class Git_Driver_GerritLegacy_AddIncludedGroupTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->gerrit_server = mock('Git_RemoteServer_GerritServer');
 
         $this->ssh    = mock('Git_Driver_Gerrit_RemoteSSHCommand');
         $this->logger = mock('BackendLogger');
-        $this->driver = new Git_Driver_Gerrit($this->ssh, $this->logger);
+        $this->driver = new Git_Driver_GerritLegacy($this->ssh, $this->logger);
     }
 
     public function itAddAnIncludedGroup() {
@@ -472,14 +475,18 @@ class Git_Driver_Gerrit_AddIncludedGroupTest extends TuleapTestCase {
     }
 }
 
-class Git_Driver_Gerrit_RemoveIncludedGroupTest extends TuleapTestCase {
+class Git_Driver_GerritLegacy_RemoveIncludedGroupTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->gerrit_server = mock('Git_RemoteServer_GerritServer');
 
         $this->ssh    = mock('Git_Driver_Gerrit_RemoteSSHCommand');
         $this->logger = mock('BackendLogger');
-        $this->driver = partial_mock('Git_Driver_Gerrit', array('getGroupId'), array($this->ssh, $this->logger));
+        $this->driver = partial_mock(
+            'Git_Driver_GerritLegacy',
+            array('getGroupId'),
+            array($this->ssh, $this->logger)
+        );
     }
 
     public function itAddAnIncludedGroup() {
@@ -498,7 +505,7 @@ class Git_Driver_Gerrit_RemoveIncludedGroupTest extends TuleapTestCase {
     }
 }
 
-class Git_Driver_Gerrit_isDeletePluginEnabledTest extends TuleapTestCase {
+class Git_Driver_GerritLegacy_isDeletePluginEnabledTest extends TuleapTestCase {
     /**
      * @var Git_Driver_Gerrit
      */
@@ -520,7 +527,7 @@ class Git_Driver_Gerrit_isDeletePluginEnabledTest extends TuleapTestCase {
 
         $this->ssh    = mock('Git_Driver_Gerrit_RemoteSSHCommand');
         $this->logger = mock('BackendLogger');
-        $this->driver = partial_mock('Git_Driver_Gerrit', array(), array($this->ssh, $this->logger));
+        $this->driver = new Git_Driver_GerritLegacy($this->ssh, $this->logger);
     }
 
     public function itReturnsFalseIfPluginIsNotInstalled() {
@@ -550,4 +557,3 @@ class Git_Driver_Gerrit_isDeletePluginEnabledTest extends TuleapTestCase {
         $this->assertTrue($enabled);
     }
 }
-?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,34 +21,24 @@
 require_once 'common/backend/BackendLogger.class.php';
 
 /**
- * I know how to speak to a Gerrit remote server
+ * I know how to speak to a Gerrit 2.5 remote server
  */
-class Git_Driver_Gerrit {
+class Git_Driver_GerritLegacy implements Git_Driver_Gerrit {
     const INDEX_GROUPS_VERBOSE_NAME = 0;
     const INDEX_GROUPS_VERBOSE_UUID = 1;
-
-    const CACHE_ACCOUNTS        = 'accounts';
-    const CACHE_GROUPS_INCLUDES = 'groups_byinclude';
 
     const COMMAND      = 'gerrit';
     const GSQL_COMMAND = 'gerrit gsql --format json -c';
     const EXIT_CODE    = 1;
 
-    const DEFAULT_PARENT_PROJECT = 'All-Projects';
-
-    const DELETEPROJECT_PLUGIN_NAME = 'deleteproject';
-    const GERRIT_PLUGIN_ENABLED_VALUE = 'ENABLED';
-
-    /**
-     * @var Git_Driver_Gerrit_RemoteSSHCommand
-     */
+    /** @var Git_Driver_Gerrit_RemoteSSHCommand */
     private $ssh;
 
     /** @var Logger */
     private $logger;
 
     public function __construct(Git_Driver_Gerrit_RemoteSSHCommand $ssh, Logger $logger) {
-        $this->ssh = $ssh;
+        $this->ssh    = $ssh;
         $this->logger = $logger;
     }
 
@@ -236,19 +226,6 @@ class Git_Driver_Gerrit {
         return "$project/$repo";
     }
 
-    private function compileMemberCommands($user_name_list) {
-        $member_args = array();
-        foreach ($user_name_list as $user_name) {
-            $user_name = $this->escapeUserIdentifierAsWeNeedToGiveTheParameterToGsqlBehindSSH($user_name);
-            $member_args[] = "--member $user_name";
-        }
-        return $member_args;
-    }
-
-    private function escapeUserIdentifierAsWeNeedToGiveTheParameterToGsqlBehindSSH($user_identifier) {
-        return escapeshellarg(escapeshellarg($user_identifier));
-    }
-
     protected function setAccount(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user) {
         $this->logger->debug("Set account ".$user->getSSHUserName());
         $query = self::COMMAND .' set-account '. $user->getSSHUserName();
@@ -370,12 +347,12 @@ class Git_Driver_Gerrit {
 
 
     /**
-     * 
+     *
      * @param Git_RemoteServer_GerritServer $server
      * @param Git_Driver_Gerrit_User $user
      * @param string $ssh_key
      * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
-     * 
+     *
      */
     public function addSSHKeyToAccount(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user, $ssh_key) {
         $escaped_ssh_key = escapeshellarg($ssh_key);
@@ -384,7 +361,7 @@ class Git_Driver_Gerrit {
     }
 
     /**
-     * 
+     *
      * @param Git_RemoteServer_GerritServer $server
      * @param Git_Driver_Gerrit_User $user
      * @param string $ssh_key
@@ -448,7 +425,7 @@ class Git_Driver_Gerrit {
     /**
      * @param Git_RemoteServer_GerritServer $server
      * @param string $gerrit_project_full_name E.g. bugs or bugs/repository1
-     * 
+     *
      * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
      */
     public function deleteProject(Git_RemoteServer_GerritServer $server, $gerrit_project_full_name) {
@@ -467,4 +444,3 @@ class Git_Driver_Gerrit {
         $this->ssh->execute($server, $query);
     }
 }
-?>

@@ -53,6 +53,7 @@ class Git_Driver_Gerrit_ProjectCreator_CreateParentUmbrellaProjectsTest extends 
     public function setUp() {
         parent::setUp();
 
+        $this->server  = mock('Git_RemoteServer_GerritServer');
         $this->project = aMockProject()->withId($this->project_id)->withUnixName($this->project_unix_name)->isPublic()->build();
 
         $this->project_admins_gerrit_parent_name = 'grozilla/project_admins';

@@ -1036,10 +1036,8 @@ class GitPlugin extends Plugin {
     }
 
     private function getGerritDriver() {
-        return new Git_Driver_Gerrit(
-            new Git_Driver_Gerrit_RemoteSSHCommand($this->getLogger()),
-            $this->getLogger()
-        );
+        $gerrit_driver_factory = new Git_Driver_Gerrit_GerritDriverFactory($this->getLogger());
+        return $gerrit_driver_factory->getDriver();
     }
 
     private function getPermissionsManager() {
