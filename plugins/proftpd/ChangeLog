@@ -1,3 +1,6 @@
+Version 0.8 - Tuleap 6.12
+    * request #6403: Proftpd logs can be either absolute or relative
+
 Version 0.7 - Tuleap 6.11
     * story #6128: download through HTTP the files uploaded into SFTP area
 
