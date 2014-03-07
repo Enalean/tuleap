@@ -27,7 +27,9 @@ require_once dirname(__FILE__).'/../../lib/autoload.php';
  */
 class Regressions_MilestonesContentTest extends RestBase {
 
-    private $project_trackers;
+    /** @var Test_Rest_TrackerFactory */
+    private $tracker_test_helper;
+
     private $one_epic;
     private $another_epic;
     private $product;
@@ -59,7 +61,12 @@ class Regressions_MilestonesContentTest extends RestBase {
 
     public function setUp() {
         parent::setUp();
-        $this->cacheProjectTrackers(TestDataBuilder::PROJECT_PBI_ID);
+        $this->tracker_test_helper = new Test\Rest\Tracker\TrackerFactory(
+            $this->client,
+            $this->rest_request,
+            TestDataBuilder::PROJECT_PBI_ID,
+            TestDataBuilder::TEST_USER_1_NAME
+        );
         $this->createBacklog();
         $this->createProductAndRelease();
         $this->assignEpicsToProductAndRelease();
@@ -82,83 +89,31 @@ class Regressions_MilestonesContentTest extends RestBase {
     }
 
     private function createEpic($summary) {
-        return $this->createArtifact(
-            $this->project_trackers['epic'],
+        $tracker = $this->tracker_test_helper->getTrackerRest('epic');
+        return $tracker->createArtifact(
             array(
-               $this->getSubmitTextValue($this->project_trackers['epic'], 'Title', $summary),
-               $this->getSubmitListValue($this->project_trackers['epic'], 'Status', 'Not Started')
+                $tracker->getSubmitTextValue('Title', $summary),
+                $tracker->getSubmitListValue('Status', 'Not Started'),
             )
         );
     }
 
     private function createProduct($name) {
-        return $this->createArtifact(
-            $this->project_trackers['product'],
+        $tracker = $this->tracker_test_helper->getTrackerRest('product');
+        return $tracker->createArtifact(
             array(
-               $this->getSubmitTextValue($this->project_trackers['product'], 'Name', $name),
+                $tracker->getSubmitTextValue('Name', $name)
             )
         );
     }
 
     private function createRelease($release) {
-        return $this->createArtifact(
-            $this->project_trackers['releases'],
+        $tracker = $this->tracker_test_helper->getTrackerRest('releases');
+        return $tracker->createArtifact(
             array(
-               $this->getSubmitTextValue($this->project_trackers['releases'], 'Version Number', $release),
+                $tracker->getSubmitTextValue('Version Number', $release)
             )
         );
-    }
-
-    private function createArtifact(array $tracker, array $values) {
-        $post = json_encode(array(
-            'tracker' => array(
-                'id'  => $tracker['id'],
-                'uri' => 'whatever'
-            ),
-            'values' => $values,
-        ));
-        return $this->getResponse($this->client->post('artifacts', null, $post))->json();
-    }
-
-    private function getSubmitTextValue(array $tracker, $field_label, $field_value) {
-        $field_def = $this->getFieldByLabel($tracker, $field_label);
-        return array(
-            'field_id' => $field_def['field_id'],
-            'value'    => $field_value,
-        );
-    }
-
-    private function getSubmitListValue(array $tracker, $field_label, $field_value_label) {
-        $field_def = $this->getFieldByLabel($tracker, $field_label);
-        return array(
-            'field_id'       => $field_def['field_id'],
-            'bind_value_ids' => array(
-                $this->getListValueIdByLabel($field_def, $field_value_label)
-            ),
-        );
-    }
-
-    private function getListValueIdByLabel(array $field, $field_value_label) {
-        foreach ($field['values'] as $value) {
-            if ($value['label'] == $field_value_label) {
-                return $value['id'];
-            }
-        }
-    }
-
-    private function getFieldByLabel(array $tracker, $field_label) {
-        foreach ($tracker['fields'] as $field) {
-            if ($field['label'] == $field_label) {
-                return $field;
-            }
-        }
-    }
-
-    private function cacheProjectTrackers($project_id) {
-        $project_trackers = $this->getResponse($this->client->get("projects/$project_id/trackers"))->json();
-        foreach ($project_trackers as $tracker) {
-            $this->project_trackers[strtolower($tracker['item_name'])] = $tracker;
-        }
     }
 
     protected function getResponse($request) {
