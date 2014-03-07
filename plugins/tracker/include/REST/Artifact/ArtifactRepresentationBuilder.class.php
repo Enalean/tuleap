@@ -87,6 +87,13 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder {
         );
     }
 
+    private function mapFilterSlice(array $collection, $offset, $limit, Closure $function) {
+        return $this->mapAndFilter(
+            array_slice($collection, $offset, $limit),
+            $function
+        );
+    }
+
     private function getFieldsValuesFilter(PFUser $user, Tracker_Artifact_Changeset $changeset) {
         return function (Tracker_FormElement_Field $field) use ($user, $changeset) {
             if ($field->userCanRead($user)) {
@@ -101,15 +108,23 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder {
      *
      * @param PFUser $user
      * @param Tracker_Artifact $artifact
+     * @param int $offset
+     * @param int $limit
      *
-     * @return Tuleap\Tracker\REST\ChangesetRepresentation[]
+     * @return Tuleap\Tracker\REST\ChangesetRepresentationCollection
      */
-    public function getArtifactChangesetsRepresentation(PFUser $user, Tracker_Artifact $artifact) {
-        return $this->mapAndFilter(
-            $artifact->getChangesets(),
-            function (Tracker_Artifact_Changeset $changeset) use ($user) {
-                return $changeset->getRESTValue($user);
-            }
+    public function getArtifactChangesetsRepresentation(PFUser $user, Tracker_Artifact $artifact, $offset, $limit) {
+        $all_changesets = $artifact->getChangesets();
+        return new Tuleap\Tracker\REST\ChangesetRepresentationCollection(
+            $this->mapFilterSlice(
+                $all_changesets,
+                $offset,
+                $limit,
+                function (Tracker_Artifact_Changeset $changeset) use ($user) {
+                    return $changeset->getRESTValue($user);
+                }
+            ),
+            count($all_changesets)
         );
     }
 }

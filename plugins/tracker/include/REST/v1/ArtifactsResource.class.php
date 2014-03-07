@@ -42,6 +42,10 @@ use \Tracker_REST_Artifact_ArtifactCreator;
 use \Tuleap\Tracker\REST\Artifact\ArtifactReference;
 
 class ArtifactsResource {
+    const MAX_LIMIT      = 50;
+    const DEFAULT_LIMIT  = 10;
+    const DEFAULT_OFFSET = 0;
+
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
 
@@ -84,6 +88,19 @@ class ArtifactsResource {
     }
 
     /**
+     * @url OPTIONS {id}/changesets
+     *
+     * @param int $id Id of the artifact
+     */
+    protected function optionsArtifactChangesets($id) {
+        $user     = UserManager::instance()->getCurrentUser();
+        $artifact = $this->getArtifactById($user, $id);
+
+        $this->sendAllowHeadersForChangesets($artifact);
+        Header::sendOptionsPaginationHeaders(self::DEFAULT_LIMIT, self::DEFAULT_OFFSET, self::MAX_LIMIT);
+    }
+
+    /**
      * Get changesets
      *
      * Get the changesets of a given artifact
@@ -91,15 +108,19 @@ class ArtifactsResource {
      * @url GET {id}/changesets
      *
      * @param int $id Id of the artifact
+     * @param int $limit  Number of elements displayed per page {@from path}{@min 1}
+     * @param int $offset Position of the first element to display {@from path}{@min 0}
      *
-     * @return array ArtifactChangesetsRepresentation
+     * @return array {@type Tuleap\Tracker\REST\ChangesetRepresentation}
      */
-    protected function getArtifactChangesets($id) {
-        $user     = UserManager::instance()->getCurrentUser();
-        $artifact = $this->getArtifactById($user, $id);
-        $this->sendAllowHeadersForArtifact($artifact);
+    protected function getArtifactChangesets($id, $limit = 10, $offset = self::DEFAULT_OFFSET) {
+        $user       = UserManager::instance()->getCurrentUser();
+        $artifact   = $this->getArtifactById($user, $id);
+        $changesets = $this->builder->getArtifactChangesetsRepresentation($user, $artifact, $offset, $limit);
 
-        return $this->builder->getArtifactChangesetsRepresentation($user, $artifact);
+        $this->sendAllowHeadersForChangesets($artifact);
+        Header::sendPaginationHeaders($limit, $offset, $changesets->totalCount(), self::MAX_LIMIT);
+        return $changesets->toArray();
     }
 
     /**
@@ -208,6 +229,12 @@ class ArtifactsResource {
             return $artifact;
         }
         throw new RestException(404);
+    }
+
+    private function sendAllowHeadersForChangesets(Tracker_Artifact $artifact) {
+        $date = $artifact->getLastUpdateDate();
+        Header::allowOptionsGet();
+        Header::lastModified($date);
     }
 
     private function sendAllowHeadersForArtifact(Tracker_Artifact $artifact) {

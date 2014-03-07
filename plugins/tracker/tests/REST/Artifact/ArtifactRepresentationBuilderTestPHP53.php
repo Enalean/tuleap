@@ -149,7 +149,7 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_ChangesetsTest extends
         $this->artifact->setChangesets(array());
 
         $this->assertIdentical(
-            $this->builder->getArtifactChangesetsRepresentation($this->user, $this->artifact),
+            $this->builder->getArtifactChangesetsRepresentation($this->user, $this->artifact, 0, 10)->toArray(),
             array()
         );
     }
@@ -160,7 +160,7 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_ChangesetsTest extends
 
         $this->artifact->setChangesets(array($changeset1));
 
-        $this->builder->getArtifactChangesetsRepresentation($this->user, $this->artifact);
+        $this->builder->getArtifactChangesetsRepresentation($this->user, $this->artifact, 0, 10)->toArray();
     }
 
     public function itDoesntExportEmptyChanges() {
@@ -173,8 +173,38 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_ChangesetsTest extends
         $this->artifact->setChangesets(array($changeset1, $changeset2));
 
         $this->assertIdentical(
-            $this->builder->getArtifactChangesetsRepresentation($this->user, $this->artifact),
+            $this->builder->getArtifactChangesetsRepresentation($this->user, $this->artifact, 0, 10)->toArray(),
             array('whatever')
+        );
+    }
+
+    public function itPaginatesResults() {
+        $changeset1 = mock('Tracker_Artifact_Changeset');
+        $changeset2 = mock('Tracker_Artifact_Changeset');
+
+        stub($changeset1)->getRESTValue()->returns('result 1');
+        stub($changeset2)->getRESTValue()->returns('result 2');
+
+        $this->artifact->setChangesets(array($changeset1, $changeset2));
+
+        $this->assertIdentical(
+            $this->builder->getArtifactChangesetsRepresentation($this->user, $this->artifact, 1, 10)->toArray(),
+            array('result 2')
+        );
+    }
+
+    public function itReturnsTheTotalCountOfResults() {
+        $changeset1 = mock('Tracker_Artifact_Changeset');
+        $changeset2 = mock('Tracker_Artifact_Changeset');
+
+        stub($changeset1)->getRESTValue()->returns('result 1');
+        stub($changeset2)->getRESTValue()->returns('result 2');
+
+        $this->artifact->setChangesets(array($changeset1, $changeset2));
+
+        $this->assertIdentical(
+            $this->builder->getArtifactChangesetsRepresentation($this->user, $this->artifact, 1, 10)->totalCount(),
+            2
         );
     }
 }
