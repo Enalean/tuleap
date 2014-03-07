@@ -34,7 +34,7 @@ class Tracker_REST_TrackerRestBuilder {
     }
 
     public function getTrackerRepresentation(PFUser $user, Tracker $tracker) {
-        $semantic_manager = new Tracker_SemanticManager($tracker);
+        $semantic_manager = $this->getSemanticManager($tracker);
 
         $tracker_representation = new TrackerRepresentation();
         $tracker_representation->build(
@@ -45,6 +45,19 @@ class Tracker_REST_TrackerRestBuilder {
         );
 
         return $tracker_representation;
+    }
+
+    /**
+     * This is for tests
+     * I know it's crappy but there is no clean alternative as semantic manager
+     * requires a tracker as a parameter (I cannot pass it as constructor argument
+     * because the tracker is an argument of the method, not the class).
+     *
+     * @param Tracker $tracker
+     * @return Tracker_SemanticManager
+     */
+    protected function getSemanticManager(Tracker $tracker) {
+        return new Tracker_SemanticManager($tracker);
     }
 
     /**
@@ -138,12 +151,14 @@ class Tracker_REST_TrackerRestBuilder {
 
     private function getRESTFieldsUserCanRead(PFUser $user, Tracker $tracker) {
         return
-            array_filter(
-                array_map(
-                    $this->getRESTFieldUserCanReadFilter($user),
-                    $this->formelement_factory->getUsedFields($tracker)
+            array_values(
+                array_filter(
+                    array_map(
+                        $this->getRESTFieldUserCanReadFilter($user),
+                        $this->formelement_factory->getUsedFields($tracker)
+                    )
                 )
-            );
+        );
     }
 
     private function getRESTFieldUserCanReadFilter(PFUser $user) {
