@@ -22,81 +22,42 @@ require_once dirname(__FILE__).'/../autoload.php';
 require_once 'common/autoload.php';
 require_once dirname(__FILE__).'/../../../vendor/autoload.php';
 
-use Guzzle\Http\Client;
-use Guzzle\Http\Exception\BadResponseException;
+use \Guzzle\Http\Client;
+use \Test\Rest\RequestWrapper;
 
 class RestBase extends PHPUnit_Framework_TestCase {
     protected $base_url  = 'http://localhost:8089/api/v1';
-
-    private $user_manager;
 
     /**
      * @var Client
      */
     protected $client;
 
+    /**
+     * @var RequestWrapper
+     */
+    protected $rest_request;
+
     public function __construct() {
         parent::__construct();
-
-        $this->setDbConnection();
-        $this->user_manager = UserManager::instance();
+        $this->rest_request = new RequestWrapper();
     }
 
     public function setUp() {
         parent::setUp();
-
         $this->client = new Client($this->base_url);
     }
 
     protected function getResponseByName($name, $request) {
-        return $this->getResponseByToken(
-            $this->generateToken(
-                $this->getUserByName($name)
-            ),
-            $request
-        );
+        return $this->rest_request->getResponseByName($name, $request);
     }
 
     protected function getResponseByToken(Rest_Token $token, $request) {
-        $request->setHeader('X-Auth-Token', $token->getTokenValue())
-                ->setHeader('Content-Type', 'application/json')
-                ->setHeader('X-Auth-UserId', $token->getUserId());
-        return $request->send();
+        return $this->rest_request->getResponseByToken($token, $request);
     }
 
     protected function getTokenForUserName($user_name) {
-        return $this->generateToken(
-            $this->getUserByName($user_name)
-        );
-    }
-
-    /**
-     * @param PFUser $user
-     * @return Rest_Token
-     */
-    protected function generateToken(PFUser $user) {
-        $dao             = new Rest_TokenDao();
-        $generated_hash = 'gbgfb5gfb6bfdb6db5dbdbd6b5rd'.  rand(0, 152125415);
-
-        $dao->addTokenForUserId($user->getId(), $generated_hash, mktime());
-
-        return new Rest_Token(
-            $user->getId(),
-            $generated_hash
-        );
-    }
-
-    /**
-     * @param string $user_name
-     * @return PFUser
-     */
-    protected function getUserByName($user_name) {
-        return $this->user_manager->getUserByUserName($user_name);
-    }
-
-    private function setDbConnection() {
-        $this->db = new DBTestAccess();
-        db_connect();
+        return $this->rest_request->getTokenForUserName($user_name);
     }
 }
 ?>
