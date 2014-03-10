@@ -128,7 +128,7 @@ class Git_Driver_GerritLegacy implements Git_Driver_Gerrit {
     }
 
     /**
-     *
+     * Should be protected (only used publicly in tests)?
      * @param Git_RemoteServer_GerritServer $server
      * @return array : the list of the parent project created in the gerrit server
      */
@@ -197,6 +197,7 @@ class Git_Driver_GerritLegacy implements Git_Driver_Gerrit {
         return in_array($group_name, $this->listGroups($server));
     }
 
+    /** should be protected (used publicly only in tests), like listProjects */
     public function listGroups(Git_RemoteServer_GerritServer $server) {
         $command = self::COMMAND . ' ls-groups';
         return explode(PHP_EOL, $this->ssh->execute($server, $command));
