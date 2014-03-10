@@ -1,3 +1,6 @@
+Version 0.9 - Tuleap 6.12
+    * (dev environment) Fix Phpunit tests on proftpd
+
 Version 0.8 - Tuleap 6.12
     * request #6403: Proftpd logs can be either absolute or relative
 
