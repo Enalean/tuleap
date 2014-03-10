@@ -841,7 +841,7 @@ class TrackerFactory {
      */
     public function saveTrackerDefaultPermission($tracker_id) {
         $pm = PermissionsManager::instance();
-        if(!$pm->addPermission(Tracker::PERMISSION_FULL, $tracker_id, UGroup::ANONYMOUS)) {
+        if(!$pm->addPermission(Tracker::PERMISSION_FULL, $tracker_id, ProjectUGroup::ANONYMOUS)) {
             return false;
         }
         return true;

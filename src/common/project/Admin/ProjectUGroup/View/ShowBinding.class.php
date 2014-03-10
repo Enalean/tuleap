@@ -27,7 +27,7 @@ class Project_Admin_UGroup_View_ShowBinding extends Project_Admin_UGroup_View_Bi
     private $plugin_binding;
     private $ldap_plugin;
 
-    public function __construct(UGroup $ugroup, UGroupBinding $ugroup_binding, $plugin_binding, $ldap_plugin) {
+    public function __construct(ProjectUGroup $ugroup, UGroupBinding $ugroup_binding, $plugin_binding, $ldap_plugin) {
         parent::__construct($ugroup, $ugroup_binding);
         $this->plugin_binding = $plugin_binding;
         $this->ldap_plugin    = $ldap_plugin;

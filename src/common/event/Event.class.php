@@ -398,8 +398,8 @@ class Event {
      * Raised when an ugroup is bound to another one
      *
      * Parameters
-     *     'ugroup' => UGroup The modified ugroup
-     *     'source' => UGroup The new ugroup we bind with
+     *     'ugroup' => ProjectUGroup The modified ugroup
+     *     'source' => ProjectUGroup The new ugroup we bind with
      *
      * Expected results:
      *     void
@@ -410,7 +410,7 @@ class Event {
      * Raised when an ugroup binding is removed
      *
      * Parameters
-     *     'ugroup' => UGroup The modified ugroup (no longer bound)
+     *     'ugroup' => ProjectUGroup The modified ugroup (no longer bound)
      *
      * Expected results:
      *     void

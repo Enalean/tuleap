@@ -52,9 +52,9 @@ abstract class Git_Driver_Gerrit_MembershipManagerCommonTest extends TuleapTestC
         $this->gerrit_user                           = mock('Git_Driver_Gerrit_User');
         $this->gerrit_user_manager                   = mock('Git_Driver_Gerrit_UserAccountManager');
         $this->project                               = mock('Project');
-        $this->u_group                               = mock('UGroup');
-        $this->u_group2                              = mock('UGroup');
-        $this->u_group3                              = mock('UGroup');
+        $this->u_group                               = mock('ProjectUGroup');
+        $this->u_group2                              = mock('ProjectUGroup');
+        $this->u_group3                              = mock('ProjectUGroup');
         $this->git_repository                        = mock('GitRepository');
         $this->project_manager                       = mock('ProjectManager');
 
@@ -214,11 +214,11 @@ class Git_Driver_Gerrit_MembershipManager_ProjectAdminTest extends Git_Driver_Ge
     public function setUp() {
         parent::setUp();
 
-        $this->admin_ugroup = mock('UGroup');
-        stub($this->admin_ugroup)->getId()->returns(UGroup::PROJECT_ADMIN);
+        $this->admin_ugroup = mock('ProjectUGroup');
+        stub($this->admin_ugroup)->getId()->returns(ProjectUGroup::PROJECT_ADMIN);
         stub($this->admin_ugroup)->getProject()->returns($this->project);
 
-        stub($this->user)->getUgroups()->returns(array($this->u_group_id, UGroup::PROJECT_ADMIN));
+        stub($this->user)->getUgroups()->returns(array($this->u_group_id, ProjectUGroup::PROJECT_ADMIN));
         stub($this->remote_server_factory)->getServersForUGroup()->returns(array($this->remote_server));
     }
 
@@ -243,9 +243,9 @@ class Git_Driver_Gerrit_MembershipManager_ProjectAdminTest extends Git_Driver_Ge
 //                $this->git_repository,
 //                array(
 //                    Git::PERM_READ          => array(),
-//                    Git::PERM_WRITE         => array(UGroup::PROJECT_ADMIN),
+//                    Git::PERM_WRITE         => array(ProjectUGroup::PROJECT_ADMIN),
 //                    Git::PERM_WPLUS         => array(),
-//                    Git::SPECIAL_PERM_ADMIN => array(UGroup::PROJECT_ADMIN),
+//                    Git::SPECIAL_PERM_ADMIN => array(ProjectUGroup::PROJECT_ADMIN),
 //                )
 //            )
 //        ));
@@ -294,10 +294,10 @@ class Git_Driver_Gerrit_MembershipManager_BindedUGroupsTest extends TuleapTestCa
 
 
         $project = stub('Project')->getUnixName()->returns('mozilla');
-        $this->ugroup = new UGroup(array('ugroup_id' => 112, 'name' => 'developers'));
+        $this->ugroup = new ProjectUGroup(array('ugroup_id' => 112, 'name' => 'developers'));
         $this->ugroup->setProject($project);
         $this->ugroup->setSourceGroup(null);
-        $this->source = new UGroup(array('ugroup_id' => 124, 'name' => 'coders'));
+        $this->source = new ProjectUGroup(array('ugroup_id' => 124, 'name' => 'coders'));
         $this->source->setProject($project);
     }
 
@@ -335,7 +335,7 @@ class Git_Driver_Gerrit_MembershipManager_BindedUGroupsTest extends TuleapTestCa
 
     public function itRemovesBindingWithAGroup() {
         $project = stub('Project')->getUnixName()->returns('mozilla');
-        $ugroup = new UGroup(array('ugroup_id' => 112, 'name' => 'developers'));
+        $ugroup = new ProjectUGroup(array('ugroup_id' => 112, 'name' => 'developers'));
         $ugroup->setProject($project);
         $ugroup->setSourceGroup(null);
 
@@ -350,11 +350,11 @@ class Git_Driver_Gerrit_MembershipManager_BindedUGroupsTest extends TuleapTestCa
         $gerrit_user = mock('Git_Driver_Gerrit_User');
         stub($this->gerrit_user_manager)->getGerritUser($user)->returns($gerrit_user);
 
-        $source_ugroup = mock('UGroup');
+        $source_ugroup = mock('ProjectUGroup');
         stub($source_ugroup)->getMembers()->returns(array($user));
 
         $project = stub('Project')->getUnixName()->returns('mozilla');
-        $ugroup = new UGroup(array('ugroup_id' => 112, 'name' => 'developers'));
+        $ugroup = new ProjectUGroup(array('ugroup_id' => 112, 'name' => 'developers'));
         $ugroup->setProject($project);
         $ugroup->setSourceGroup($source_ugroup);
 
@@ -374,10 +374,10 @@ abstract class Git_Driver_Gerrit_MembershipManagerGroupCreationCommonTest extend
     /** @var Git_Driver_Gerrit_UserAccountManager */
     protected $gerrit_user_manager;
 
-    /** @var UGroup */
+    /** @var ProjectUGroup */
     protected $admin_ugroup;
 
-    /** @var UGroup */
+    /** @var ProjectUGroup */
     protected $ugroup;
 
     /** @var UGroupManager */
@@ -419,14 +419,14 @@ abstract class Git_Driver_Gerrit_MembershipManagerGroupCreationCommonTest extend
         stub($this->project)->getID()->returns($project_id);
         stub($this->project)->getUnixName()->returns('w3c');
 
-        $this->ugroup = mock('UGroup');
+        $this->ugroup = mock('ProjectUGroup');
         stub($this->ugroup)->getId()->returns(25698);
         stub($this->ugroup)->getNormalizedName()->returns('coders');
         stub($this->ugroup)->getProject()->returns($this->project);
         stub($this->ugroup)->getProjectId()->returns($project_id);
 
-        $this->admin_ugroup = mock('UGroup');
-        stub($this->admin_ugroup)->getId()->returns(UGroup::PROJECT_ADMIN);
+        $this->admin_ugroup = mock('ProjectUGroup');
+        stub($this->admin_ugroup)->getId()->returns(ProjectUGroup::PROJECT_ADMIN);
         stub($this->admin_ugroup)->getNormalizedName()->returns('project_admins');
         stub($this->admin_ugroup)->getProject()->returns($this->project);
         stub($this->admin_ugroup)->getProjectId()->returns($project_id);
@@ -692,7 +692,7 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends Git_Driver_Ger
     public function itDoesntCreateGroupForSpecialNoneUGroup() {
         expect($this->driver)->createGroup()->never();
 
-        $ugroup = new UGroup(array('ugroup_id' => UGroup::NONE));
+        $ugroup = new ProjectUGroup(array('ugroup_id' => ProjectUGroup::NONE));
         $gerrit_group_name = $this->membership_manager->createGroupForServer($this->remote_server, $ugroup);
         $this->assertEqual($gerrit_group_name, '');
     }
@@ -700,7 +700,7 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends Git_Driver_Ger
     public function itDoesntCreateGroupForSpecialWikiAdminGroup() {
         expect($this->driver)->createGroup()->never();
 
-        $ugroup = new UGroup(array('ugroup_id' => UGroup::WIKI_ADMIN));
+        $ugroup = new ProjectUGroup(array('ugroup_id' => ProjectUGroup::WIKI_ADMIN));
         $gerrit_group_name = $this->membership_manager->createGroupForServer($this->remote_server, $ugroup);
         $this->assertEqual($gerrit_group_name, '');
     }
@@ -708,8 +708,8 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends Git_Driver_Ger
     public function itCreatesGroupForSpecialProjectMembersGroup() {
         expect($this->driver)->createGroup()->once();
 
-        $ugroup = mock('UGroup');
-        stub($ugroup)->getId()->returns(UGroup::PROJECT_MEMBERS);
+        $ugroup = mock('ProjectUGroup');
+        stub($ugroup)->getId()->returns(ProjectUGroup::PROJECT_MEMBERS);
         stub($ugroup)->getNormalizedName()->returns('project_members');
         stub($ugroup)->getProject()->returns($this->project);
         stub($ugroup)->getProjectId()->returns(999);
@@ -721,8 +721,8 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends Git_Driver_Ger
     public function itCreatesGroupForSpecialProjectAdminsGroup() {
         expect($this->driver)->createGroup()->once();
 
-        $ugroup = mock('UGroup');
-        stub($ugroup)->getId()->returns(UGroup::PROJECT_ADMIN);
+        $ugroup = mock('ProjectUGroup');
+        stub($ugroup)->getId()->returns(ProjectUGroup::PROJECT_ADMIN);
         stub($ugroup)->getNormalizedName()->returns('project_admin');
         stub($ugroup)->getProject()->returns($this->project);
         stub($ugroup)->getProjectId()->returns(999);
@@ -732,9 +732,9 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends Git_Driver_Ger
     }
 
     public function itCreatesAnIncludedGroupWhenUGroupIsBinded() {
-        $source_group = mock('UGroup');
+        $source_group = mock('ProjectUGroup');
 
-        $ugroup = mock('UGroup');
+        $ugroup = mock('ProjectUGroup');
         stub($ugroup)->getId()->returns(25698);
         stub($ugroup)->getNormalizedName()->returns('coders');
         stub($ugroup)->getProject()->returns($this->project);

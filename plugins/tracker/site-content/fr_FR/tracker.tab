@@ -1501,7 +1501,7 @@ project_admin_utils	tracker_date_reminder_invalid_Tracker	'$1' n'est pas un Id d
 project_admin_utils	tracker_date_reminder_invalid_notification_type	'$1' n'est pas un type de notification valide
 project_admin_utils	tracker_date_reminder_invalid_status	'$1' n'est pas un status valide
 project_admin_utils	tracker_date_reminder_invalid_reminder	'$1' n'est pas un rappel sur un champ de type date valide
-project_admin_utils	tracker_date_reminder_invalid_ugroup	'$1' n'est pas un ugroup valide
+project_admin_utils	tracker_date_reminder_invalid_ugroup	'$1' n'est pas un groupe d'utilisateurs projet valide
 project_admin_utils	tracker_date_reminder_invalid_role_param	Vous devez sélectionner un rôle de Tracker valide
 project_admin_utils	tracker_date_reminder_empty_people_param	Vous devez sélectionner au moins un ugroup valid ou un rôle de Tracker valide
 project_admin_utils	tracker_date_reminder_before_submittedOn	Impossible d'ajouter un rappel sur date de tracker avant le champ 'SubmittedOn'

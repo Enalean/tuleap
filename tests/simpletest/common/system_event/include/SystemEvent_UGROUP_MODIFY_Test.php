@@ -41,7 +41,7 @@ Mock::generate('UGroupBinding');
 class SystemEvent_UGROUP_MODIFY_Test extends UnitTestCase {
 
     /**
-     * Ugroup modify Users fail
+     * ProjectUGroup modify Users fail
      *
      * @return Void
      */
@@ -70,7 +70,7 @@ class SystemEvent_UGROUP_MODIFY_Test extends UnitTestCase {
     }
 
     /**
-     * Ugroup modify SVN fail
+     * ProjectUGroup modify SVN fail
      *
      * @return Void
      */
@@ -100,7 +100,7 @@ class SystemEvent_UGROUP_MODIFY_Test extends UnitTestCase {
     }
 
     /**
-     * Ugroup modify Success
+     * ProjectUGroup modify Success
      *
      * @return Void
      */

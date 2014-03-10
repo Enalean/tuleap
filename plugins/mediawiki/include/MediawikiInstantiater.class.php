@@ -134,7 +134,7 @@ class MediaWikiInstantiater {
         $new_mapping      = array();
         foreach ($template_mapping as $mw_group => $tuleap_groups) {
             foreach ($tuleap_groups as $grp) {
-                if ($grp < UGroup::DYNAMIC_UPPER_BOUNDARY) {
+                if ($grp < ProjectUGroup::DYNAMIC_UPPER_BOUNDARY) {
                     $new_mapping[$mw_group][] = $grp;
                 } elseif (isset($ugroup_mapping[$grp])) {
                     $new_mapping[$mw_group][] = $ugroup_mapping[$grp];

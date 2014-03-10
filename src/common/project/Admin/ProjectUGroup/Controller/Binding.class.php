@@ -24,7 +24,7 @@ class Project_Admin_UGroup_UGroupController_Binding extends Project_Admin_UGroup
     private $bindOption;
     private $synchro;
 
-    public function __construct(Codendi_Request $request, UGroup $ugroup, Project_Admin_UGroup_PaneInfo $pane) {
+    public function __construct(Codendi_Request $request, ProjectUGroup $ugroup, Project_Admin_UGroup_PaneInfo $pane) {
         parent::__construct($request, $ugroup);
         $this->synchro    = null;
         $this->bindOption = null;
@@ -189,7 +189,7 @@ class Project_Admin_UGroup_UGroupController_Binding extends Project_Admin_UGroup
 
             if($this->request->existAndNonEmpty('confirm')) {
                 //
-                // Perform Ugroup <-> LDAP Group synchro
+                // Perform ProjectUGroup <-> LDAP Group synchro
                 //
                 $ldapUserGroupManager->bindWithLdap($this->bindOption, $this->synchro);
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_ugroup_binding', 'link_ldap_group', array($this->request->get('bind_with_group'))));

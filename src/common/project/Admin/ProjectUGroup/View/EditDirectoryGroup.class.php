@@ -27,7 +27,7 @@ class Project_Admin_UGroup_View_EditDirectoryGroup extends Project_Admin_UGroup_
     private $bindOption;
     private $synchro;
 
-    public function __construct(UGroup $ugroup, UGroupBinding $ugroup_binding, $row, $ldapUserGroupManager, $pluginPath, $bindOption, $synchro) {
+    public function __construct(ProjectUGroup $ugroup, UGroupBinding $ugroup_binding, $row, $ldapUserGroupManager, $pluginPath, $bindOption, $synchro) {
         parent::__construct($ugroup, $ugroup_binding);
         $this->row = $row;
         $this->ldap_user_group_manager = $ldapUserGroupManager;

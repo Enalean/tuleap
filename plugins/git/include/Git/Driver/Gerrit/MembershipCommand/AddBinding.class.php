@@ -27,7 +27,7 @@ require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipCommand.class.php';
 class Git_Driver_Gerrit_MembershipCommand_AddBinding extends Git_Driver_Gerrit_MembershipCommand {
     private $source_ugroup;
 
-    public function __construct(Git_Driver_Gerrit_MembershipManager $membership_manager, Git_Driver_Gerrit $driver, UGroup $ugroup, UGroup $source_ugroup) {
+    public function __construct(Git_Driver_Gerrit_MembershipManager $membership_manager, Git_Driver_Gerrit $driver, ProjectUGroup $ugroup, ProjectUGroup $source_ugroup) {
         parent::__construct($membership_manager, $driver, $ugroup);
         $this->source_ugroup = $source_ugroup;
     }

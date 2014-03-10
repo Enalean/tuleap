@@ -45,7 +45,7 @@ class GitPresenters_AdminPresenter {
      */
     private $parent_templates_list;
 
-    /** @var Ugroup[] */
+    /** @var ProjectUGroup[] */
     private $static_ugroups;
 
     /** @var array */
@@ -212,9 +212,9 @@ class GitPresenters_AdminPresenter {
 
     private function getProjectMembersOption() {
         return array(
-            'value'    => UGroup::PROJECT_MEMBERS,
+            'value'    => ProjectUGroup::PROJECT_MEMBERS,
             'label'    => $GLOBALS['Language']->getText('project_admin_editugroup', 'proj_members'),
-            'selected' => isset($this->selected_ugroups) ? in_array(UGroup::PROJECT_MEMBERS, $this->selected_ugroups) : false
+            'selected' => isset($this->selected_ugroups) ? in_array(ProjectUGroup::PROJECT_MEMBERS, $this->selected_ugroups) : false
         );
     }
 }

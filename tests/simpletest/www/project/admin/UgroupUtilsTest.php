@@ -21,7 +21,7 @@ require_once('www/project/admin/ugroup_utils.php');
 
 Mock::generate('UserManager');
 Mock::generate('PFUser');
-Mock::generate('UGroup');
+Mock::generate('ProjectUGroup');
 
 class UgroupUtilsTest extends UnitTestCase {
 
@@ -113,7 +113,7 @@ class UgroupUtilsTest extends UnitTestCase {
     function testUgroupCountNonAdminForStaticUgroupsNotProjectGroups() {
         $this->skipUnless(MOCKFUNCTION_AVAILABLE, "Function mocking not available");
         if (MOCKFUNCTION_AVAILABLE) {
-            $uGroup = new MockUGroup();
+            $uGroup = new MockProjectUGroup();
             $uGroup->setReturnValue('exists', true, array(1, 1));
             $uGroup->setReturnValue('exists', true, array(1, 2));
             $uGroup->setReturnValue('exists', false, array(1, 3));
@@ -133,7 +133,7 @@ class UgroupUtilsTest extends UnitTestCase {
     function testUgroupCountNonAdminForStaticUgroupsContainAdmins() {
         $this->skipUnless(MOCKFUNCTION_AVAILABLE, "Function mocking not available");
         if (MOCKFUNCTION_AVAILABLE) {
-            $uGroup = new MockUGroup();
+            $uGroup = new MockProjectUGroup();
             $uGroup->setReturnValue('exists', true, array(1, 1));
             $uGroup->setReturnValue('exists', true, array(1, 2));
             $uGroup->setReturnValue('exists', true, array(1, 3));
@@ -153,7 +153,7 @@ class UgroupUtilsTest extends UnitTestCase {
     function testUgroupCountNonAdminForStaticUgroupsContainNoAdmins() {
         $this->skipUnless(MOCKFUNCTION_AVAILABLE, "Function mocking not available");
         if (MOCKFUNCTION_AVAILABLE) {
-            $uGroup = new MockUGroup();
+            $uGroup = new MockProjectUGroup();
             $uGroup->setReturnValue('exists', true, array(1, 1));
             $uGroup->setReturnValue('exists', true, array(1, 2));
             $uGroup->setReturnValue('exists', true, array(1, 3));
@@ -173,7 +173,7 @@ class UgroupUtilsTest extends UnitTestCase {
     function testUgroupCountNonAdminForStaticUgroupsMixed() {
         $this->skipUnless(MOCKFUNCTION_AVAILABLE, "Function mocking not available");
         if (MOCKFUNCTION_AVAILABLE) {
-            $uGroup = new MockUGroup();
+            $uGroup = new MockProjectUGroup();
             $uGroup->setReturnValue('exists', true, array(1, 1));
             $uGroup->setReturnValue('exists', true, array(1, 2));
             $uGroup->setReturnValue('exists', true, array(1, 3));

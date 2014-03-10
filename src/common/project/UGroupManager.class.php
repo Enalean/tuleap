@@ -19,7 +19,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'UGroup.class.php';
 require_once 'Project.class.php';
 require_once 'common/dao/UGroupDao.class.php';
 require_once 'common/dao/UGroupUserDao.class.php';
@@ -47,7 +46,7 @@ class UGroupManager {
      * @param Project $project
      * @param type $ugroup_id
      *
-     * @return UGroup
+     * @return ProjectUGroup
      */
     public function getUGroupWithMembers(Project $project, $ugroup_id) {
         $ugroup = $this->getUGroup($project, $ugroup_id);
@@ -57,7 +56,7 @@ class UGroupManager {
     }
 
     /**
-     * @return UGroup of the given project or null if not found
+     * @return ProjectUGroup of the given project or null if not found
      */
     public function getUGroup(Project $project, $ugroup_id) {
         $project_id = $project->getID();
@@ -74,14 +73,14 @@ class UGroupManager {
     private function instanciateGroupForProject(Project $project, array $row) {
         // force group_id as it is set to 100 for dynamic groups
         $row['group_id'] = $project->getID();
-        return new UGroup($row);
+        return new ProjectUGroup($row);
     }
 
     /**
      *
      * @param Project $project
      * @param array $excluded_ugroups_id
-     * @return UGroup[]
+     * @return ProjectUGroup[]
      */
     public function getUGroups(Project $project, array $excluded_ugroups_id = array()) {
         $ugroups = array();
@@ -95,7 +94,7 @@ class UGroupManager {
     }
 
     /**
-     * @return UGroup[]
+     * @return ProjectUGroup[]
      */
     public function getStaticUGroups(Project $project) {
         $ugroups = array();
@@ -111,7 +110,7 @@ class UGroupManager {
             $row = $this->getDao()->searchByGroupIdAndName(100, $name)->getRow();
         }
         if ($row) {
-            return new UGroup($row);
+            return new ProjectUGroup($row);
         }
         return null;
     }
@@ -130,7 +129,7 @@ class UGroupManager {
      *
      * @param PFUser $user The user
      *
-     * @return UGroup[]
+     * @return ProjectUGroup[]
      */
     public function getByUserId($user) {
         $ugroups = array();
@@ -138,7 +137,7 @@ class UGroupManager {
 
         if ($dar && ! $dar->isError()) {
             foreach ($dar as $row) {
-                $ugroups [] = new UGroup($row);
+                $ugroups [] = new ProjectUGroup($row);
             }
         }
 
@@ -146,18 +145,18 @@ class UGroupManager {
     }
 
     /**
-     * Returns a UGroup from its Id
+     * Returns a ProjectUGroup from its Id
      *
      * @param Integer $ugroupId The UserGroupId
      * 
-     * @return UGroup
+     * @return ProjectUGroup
      */
     public function getById($ugroupId) {
         $dar = $this->getDao()->searchByUGroupId($ugroupId);
         if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
-            return new UGroup($dar->getRow());
+            return new ProjectUGroup($dar->getRow());
         } else {
-            return new UGroup();
+            return new ProjectUGroup();
         }
     }
 
@@ -247,7 +246,7 @@ class UGroupManager {
     }
 
     /**
-     * Wrapper for dao method that retrieves all Ugroups bound to a given Ugroup
+     * Wrapper for dao method that retrieves all Ugroups bound to a given ProjectUGroup
      *
      * @param Integer $ugroupId Id of the user goup
      *
@@ -258,7 +257,7 @@ class UGroupManager {
     }
 
     /**
-     * Wrapper for dao method that updates binding option for a given UGroup
+     * Wrapper for dao method that updates binding option for a given ProjectUGroup
      *
      * @param Integer $ugroup_id Id of the user group
      * @param Integer $source_ugroup_id Id of the user group we should bind to
@@ -297,7 +296,7 @@ class UGroupManager {
     public function getUgroupBindingSource($ugroupId) {
         $dar = $this->getDao()->getUgroupBindingSource($ugroupId);
         if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
-            return new UGroup($dar->getRow());
+            return new ProjectUGroup($dar->getRow());
         } else {
             return null;
         }

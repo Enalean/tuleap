@@ -42,7 +42,7 @@ class Tracker_UgroupPermissionsGoldenRetriever {
     }
 
     /**
-     * @return UGroup[]
+     * @return ProjectUGroup[]
      */
     public function getListOfInvolvedStaticUgroups(Tracker $template_tracker) {
         $project = $template_tracker->getProject();

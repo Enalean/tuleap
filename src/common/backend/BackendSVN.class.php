@@ -42,10 +42,10 @@ class BackendSVN extends Backend {
      *
      * @param array $row a row from the db for a ugroup
      * 
-     * @return UGroup
+     * @return ProjectUGroup
      */
     protected function getUGroupFromRow($row) {
-        return new UGroup($row);
+        return new ProjectUGroup($row);
     }
     /**
      * For mocking (unit tests)

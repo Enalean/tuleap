@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'common/project/UGroup.class.php';
+require_once 'common/project/ProjectUGroup.class.php';
 
 class UGroup_AddUserTest extends TuleapTestCase {
     
@@ -31,7 +31,7 @@ class UGroup_AddUserTest extends TuleapTestCase {
         $ugroup_id = 200;
         $group_id  = 300;
         
-        $ugroup = TestHelper::getPartialMock('UGroup', array('addUserToStaticGroup', 'exists'));
+        $ugroup = TestHelper::getPartialMock('ProjectUGroup', array('addUserToStaticGroup', 'exists'));
         stub($ugroup)->exists()->returns(true);
         $ugroup->__construct(array('ugroup_id' => $ugroup_id, 'group_id' => $group_id));
         
@@ -44,7 +44,7 @@ class UGroup_AddUserTest extends TuleapTestCase {
         $ugroup_id = 200;
         $group_id  = 300;
         
-        $ugroup = TestHelper::getPartialMock('UGroup', array('exists'));
+        $ugroup = TestHelper::getPartialMock('ProjectUGroup', array('exists'));
         stub($ugroup)->exists()->returns(false);
         $ugroup->__construct(array('ugroup_id' => $ugroup_id, 'group_id' => $group_id));
         
@@ -57,7 +57,7 @@ class UGroup_AddUserTest extends TuleapTestCase {
         $ugroup_id = $GLOBALS['UGROUP_WIKI_ADMIN'];
         $group_id  = 300;
         
-        $ugroup = TestHelper::getPartialMock('UGroup', array('_getUserGroupDao'));
+        $ugroup = TestHelper::getPartialMock('ProjectUGroup', array('_getUserGroupDao'));
         
         $dao = mock('UserGroupDao');
         stub($ugroup)->_getUserGroupDao()->returns($dao);
@@ -73,7 +73,7 @@ class UGroup_AddUserTest extends TuleapTestCase {
     function itThrowAnExceptionIfThereIsNoGroupId() {
         $ugroup_id = 200;
         
-        $ugroup = new UGroup(array('ugroup_id' => $ugroup_id));
+        $ugroup = new ProjectUGroup(array('ugroup_id' => $ugroup_id));
         
         $this->expectException();
         
@@ -83,7 +83,7 @@ class UGroup_AddUserTest extends TuleapTestCase {
     function itThrowAnExceptionIfThereIsNoUGroupId() {
         $group_id  = 300;
         
-        $ugroup = new UGroup(array('group_id' => $group_id));
+        $ugroup = new ProjectUGroup(array('group_id' => $group_id));
         
         $this->expectException();
         
@@ -94,7 +94,7 @@ class UGroup_AddUserTest extends TuleapTestCase {
         $group_id  = 300;
         $ugroup_id = 200;
         
-        $ugroup = new UGroup(array('group_id' => $group_id, 'ugroup_id' => $ugroup_id));
+        $ugroup = new ProjectUGroup(array('group_id' => $group_id, 'ugroup_id' => $ugroup_id));
         
         $this->expectException();
         
@@ -116,7 +116,7 @@ class UGroup_RemoveUserTest extends TuleapTestCase {
         $ugroup_id = 200;
         $group_id  = 300;
         
-        $ugroup = TestHelper::getPartialMock('UGroup', array('removeUserFromStaticGroup', 'exists'));
+        $ugroup = TestHelper::getPartialMock('ProjectUGroup', array('removeUserFromStaticGroup', 'exists'));
         stub($ugroup)->exists()->returns(true);
         $ugroup->__construct(array('ugroup_id' => $ugroup_id, 'group_id' => $group_id));
         
@@ -129,7 +129,7 @@ class UGroup_RemoveUserTest extends TuleapTestCase {
         $ugroup_id = 200;
         $group_id  = 300;
         
-        $ugroup = TestHelper::getPartialMock('UGroup', array('exists'));
+        $ugroup = TestHelper::getPartialMock('ProjectUGroup', array('exists'));
         stub($ugroup)->exists()->returns(false);
         $ugroup->__construct(array('ugroup_id' => $ugroup_id, 'group_id' => $group_id));
         
@@ -142,7 +142,7 @@ class UGroup_RemoveUserTest extends TuleapTestCase {
         $ugroup_id = $GLOBALS['UGROUP_WIKI_ADMIN'];
         $group_id  = 300;
         
-        $ugroup = TestHelper::getPartialMock('UGroup', array('_getUserGroupDao'));
+        $ugroup = TestHelper::getPartialMock('ProjectUGroup', array('_getUserGroupDao'));
         
         $dao = mock('UserGroupDao');
         stub($ugroup)->_getUserGroupDao()->returns($dao);
@@ -158,7 +158,7 @@ class UGroup_RemoveUserTest extends TuleapTestCase {
         $ugroup_id = $GLOBALS['UGROUP_PROJECT_ADMIN'];
         $group_id  = 300;
         
-        $ugroup = TestHelper::getPartialMock('UGroup', array('_getUserGroupDao'));
+        $ugroup = TestHelper::getPartialMock('ProjectUGroup', array('_getUserGroupDao'));
         
         $project_admin_dar = TestHelper::arrayToDar(array('LastAdmin'));
         $dao = stub('UserGroupDao')->returnProjectAdminsByGroupId($group_id)->returns($project_admin_dar);
@@ -175,7 +175,7 @@ class UGroup_RemoveUserTest extends TuleapTestCase {
     function itThrowAnExceptionIfThereIsNoGroupId() {
         $ugroup_id = 200;
         
-        $ugroup = new UGroup(array('ugroup_id' => $ugroup_id));
+        $ugroup = new ProjectUGroup(array('ugroup_id' => $ugroup_id));
         
         $this->expectException();
         
@@ -185,7 +185,7 @@ class UGroup_RemoveUserTest extends TuleapTestCase {
     function itThrowAnExceptionIfThereIsNoUGroupId() {
         $group_id  = 300;
         
-        $ugroup = new UGroup(array('group_id' => $group_id));
+        $ugroup = new ProjectUGroup(array('group_id' => $group_id));
         
         $this->expectException();
         
@@ -196,7 +196,7 @@ class UGroup_RemoveUserTest extends TuleapTestCase {
         $group_id  = 300;
         $ugroup_id = 200;
         
-        $ugroup = new UGroup(array('group_id' => $group_id, 'ugroup_id' => $ugroup_id));
+        $ugroup = new ProjectUGroup(array('group_id' => $group_id, 'ugroup_id' => $ugroup_id));
         
         $this->expectException();
         
@@ -235,7 +235,7 @@ class UGroup_getUsersTest extends UGroup_getUsersBaseTest {
     public function itIsEmptyWhenTheGroupIsEmpty() {
         $id       = 333;
         $row      = array('ugroup_id' => $id, 'group_id' => 105);
-        $ugroup   = new UGroup($row);
+        $ugroup   = new ProjectUGroup($row);
         $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsEmptyDar());
         $this->assertEqual($ugroup->getUsers()->reify(), array());
     }
@@ -243,7 +243,7 @@ class UGroup_getUsersTest extends UGroup_getUsersBaseTest {
     public function itReturnsTheMembersOfStaticGroups() {
         $id       = 333;
         $row      = array('ugroup_id' => $id, 'group_id' => 105);
-        $ugroup   = new UGroup($row);
+        $ugroup   = new ProjectUGroup($row);
         $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsDar($this->garfield_incomplete_row, $this->goofy_incomplete_row));
         
         $users = array($this->garfield, $this->goofy);
@@ -254,7 +254,7 @@ class UGroup_getUsersTest extends UGroup_getUsersBaseTest {
         $id       = 1;
         $group_id = 555;
         $row      = array('ugroup_id' => $id , 'group_id' => $group_id);
-        $ugroup   = new UGroup($row);
+        $ugroup   = new ProjectUGroup($row);
         $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByDynamicUGroupId($id, $group_id)->returnsDar($this->garfield_incomplete_row, $this->goofy_incomplete_row));
 
         $users = array($this->garfield, $this->goofy);
@@ -267,7 +267,7 @@ class UGroup_getMembersTest extends UGroup_getUsersBaseTest {
     public function itIsEmptyWhenTheGroupIsEmpty() {
         $id       = 333;
         $row      = array('ugroup_id' =>$id);
-        $ugroup   = new UGroup($row);
+        $ugroup   = new ProjectUGroup($row);
         $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsEmptyDar());
         $this->assertTrue(count($ugroup->getMembers()) == 0);
         $this->assertTrue(count($ugroup->getMembersUserName()) == 0);
@@ -276,7 +276,7 @@ class UGroup_getMembersTest extends UGroup_getUsersBaseTest {
     public function itReturnsTheMembersOfStaticGroups() {
         $id       = 333;
         $row      = array('ugroup_id' =>$id);
-        $ugroup   = new UGroup($row);
+        $ugroup   = new ProjectUGroup($row);
         $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsDar($this->garfield_incomplete_row, $this->goofy_incomplete_row));
         $this->assertArrayNotEmpty($ugroup->getMembers());
         $this->assertEqual(count($ugroup->getMembers()), 2);
@@ -289,7 +289,7 @@ class UGroup_getMembersTest extends UGroup_getUsersBaseTest {
         $id       = 1;
         $group_id = 555;
         $row      = array('ugroup_id' =>$id , 'group_id' => $group_id);
-        $ugroup   = new UGroup($row);
+        $ugroup   = new ProjectUGroup($row);
         $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByDynamicUGroupId($id, $group_id)->returnsDar($this->garfield_incomplete_row, $this->goofy_incomplete_row));
         $this->assertArrayNotEmpty($ugroup->getMembers());
         $this->assertEqual(count($ugroup->getMembers()), 2);
@@ -302,27 +302,27 @@ class UGroup_getMembersTest extends UGroup_getUsersBaseTest {
 class UGroup_DynamicGroupTest extends TuleapTestCase {
     
     function itConvertDynamicGroupIdToCorrespondingDatabaseFieldUpdateForAdd() {
-        $this->assertEqual(UGroup::getAddFlagForUGroupId($GLOBALS['UGROUP_PROJECT_ADMIN']),      "admin_flags = 'A'");
-        $this->assertEqual(UGroup::getAddFlagForUGroupId($GLOBALS['UGROUP_FILE_MANAGER_ADMIN']), 'file_flags = 2');
-        $this->assertEqual(UGroup::getAddFlagForUGroupId($GLOBALS['UGROUP_WIKI_ADMIN']),         'wiki_flags = 2');
-        //$this->assertEqual(UGroup::getFieldForUGroupId($GLOBALS['UGROUP_DOCUMENT_TECH'], 'doc_flags = '));
-        //$this->assertEqual(UGroup::getFieldForUGroupId($GLOBALS['UGROUP_DOCUMENT_ADMIN'], ''));
-        $this->assertEqual(UGroup::getAddFlagForUGroupId(UGroup::FORUM_ADMIN),                   "forum_flags = 2");
-        $this->assertEqual(UGroup::getAddFlagForUGroupId(UGroup::SVN_ADMIN),                     "svn_flags = 2");
-        $this->assertEqual(UGroup::getAddFlagForUGroupId(UGroup::NEWS_ADMIN),                    "news_flags = 2");
-        $this->assertEqual(UGroup::getAddFlagForUGroupId(UGroup::NEWS_EDITOR),                   "news_flags = 1");
+        $this->assertEqual(ProjectUGroup::getAddFlagForUGroupId($GLOBALS['UGROUP_PROJECT_ADMIN']),      "admin_flags = 'A'");
+        $this->assertEqual(ProjectUGroup::getAddFlagForUGroupId($GLOBALS['UGROUP_FILE_MANAGER_ADMIN']), 'file_flags = 2');
+        $this->assertEqual(ProjectUGroup::getAddFlagForUGroupId($GLOBALS['UGROUP_WIKI_ADMIN']),         'wiki_flags = 2');
+        //$this->assertEqual(ProjectUGroup::getFieldForUGroupId($GLOBALS['UGROUP_DOCUMENT_TECH'], 'doc_flags = '));
+        //$this->assertEqual(ProjectUGroup::getFieldForUGroupId($GLOBALS['UGROUP_DOCUMENT_ADMIN'], ''));
+        $this->assertEqual(ProjectUGroup::getAddFlagForUGroupId(ProjectUGroup::FORUM_ADMIN),                   "forum_flags = 2");
+        $this->assertEqual(ProjectUGroup::getAddFlagForUGroupId(ProjectUGroup::SVN_ADMIN),                     "svn_flags = 2");
+        $this->assertEqual(ProjectUGroup::getAddFlagForUGroupId(ProjectUGroup::NEWS_ADMIN),                    "news_flags = 2");
+        $this->assertEqual(ProjectUGroup::getAddFlagForUGroupId(ProjectUGroup::NEWS_EDITOR),                   "news_flags = 1");
     }
     
     function itConvertDynamicGroupIdToCorrespondingDatabaseFieldUpdateForRemove() {
-        $this->assertEqual(UGroup::getRemoveFlagForUGroupId($GLOBALS['UGROUP_PROJECT_ADMIN']),      "admin_flags = ''");
-        $this->assertEqual(UGroup::getRemoveFlagForUGroupId($GLOBALS['UGROUP_FILE_MANAGER_ADMIN']), 'file_flags = 0');
-        $this->assertEqual(UGroup::getRemoveFlagForUGroupId($GLOBALS['UGROUP_WIKI_ADMIN']),         'wiki_flags = 0');
-        //$this->assertEqual(UGroup::getFieldForUGroupId($GLOBALS['UGROUP_DOCUMENT_TECH'], 'doc_flags = '));
-        //$this->assertEqual(UGroup::getFieldForUGroupId($GLOBALS['UGROUP_DOCUMENT_ADMIN'], ''));
-        $this->assertEqual(UGroup::getRemoveFlagForUGroupId(UGroup::FORUM_ADMIN),                   "forum_flags = 0");
-        $this->assertEqual(UGroup::getRemoveFlagForUGroupId(UGroup::SVN_ADMIN),                     "svn_flags = 0");
-        $this->assertEqual(UGroup::getRemoveFlagForUGroupId(UGroup::NEWS_ADMIN),                    "news_flags = 0");
-        $this->assertEqual(UGroup::getRemoveFlagForUGroupId(UGroup::NEWS_EDITOR),                   "news_flags = 0");
+        $this->assertEqual(ProjectUGroup::getRemoveFlagForUGroupId($GLOBALS['UGROUP_PROJECT_ADMIN']),      "admin_flags = ''");
+        $this->assertEqual(ProjectUGroup::getRemoveFlagForUGroupId($GLOBALS['UGROUP_FILE_MANAGER_ADMIN']), 'file_flags = 0');
+        $this->assertEqual(ProjectUGroup::getRemoveFlagForUGroupId($GLOBALS['UGROUP_WIKI_ADMIN']),         'wiki_flags = 0');
+        //$this->assertEqual(ProjectUGroup::getFieldForUGroupId($GLOBALS['UGROUP_DOCUMENT_TECH'], 'doc_flags = '));
+        //$this->assertEqual(ProjectUGroup::getFieldForUGroupId($GLOBALS['UGROUP_DOCUMENT_ADMIN'], ''));
+        $this->assertEqual(ProjectUGroup::getRemoveFlagForUGroupId(ProjectUGroup::FORUM_ADMIN),                   "forum_flags = 0");
+        $this->assertEqual(ProjectUGroup::getRemoveFlagForUGroupId(ProjectUGroup::SVN_ADMIN),                     "svn_flags = 0");
+        $this->assertEqual(ProjectUGroup::getRemoveFlagForUGroupId(ProjectUGroup::NEWS_ADMIN),                    "news_flags = 0");
+        $this->assertEqual(ProjectUGroup::getRemoveFlagForUGroupId(ProjectUGroup::NEWS_EDITOR),                   "news_flags = 0");
     }
 }
 
@@ -335,21 +335,21 @@ class UGroup_GetsNameTest extends TuleapTestCase {
     }
 
     public function itReturnsProjectMembers() {
-        $ugroup = new UGroup(array('ugroup_id' => UGroup::PROJECT_MEMBERS, 'name' => 'ugroup_project_members_name_key'));
+        $ugroup = new ProjectUGroup(array('ugroup_id' => ProjectUGroup::PROJECT_MEMBERS, 'name' => 'ugroup_project_members_name_key'));
         $this->assertEqual('ugroup_project_members_name_key', $ugroup->getName());
         $this->assertEqual('membre_de_projet', $ugroup->getTranslatedName());
         $this->assertEqual('project_members', $ugroup->getNormalizedName());
     }
 
     public function itReturnsProjectAdmins() {
-        $ugroup = new UGroup(array('ugroup_id' => UGroup::PROJECT_ADMIN, 'name' => 'ugroup_project_admins_name_key'));
+        $ugroup = new ProjectUGroup(array('ugroup_id' => ProjectUGroup::PROJECT_ADMIN, 'name' => 'ugroup_project_admins_name_key'));
         $this->assertEqual('ugroup_project_admins_name_key', $ugroup->getName());
         $this->assertEqual('administrateur_de_le_projet', $ugroup->getTranslatedName());
         $this->assertEqual('project_admins', $ugroup->getNormalizedName());
     }
 
     public function itReturnsAStaticGroup() {
-        $ugroup = new UGroup(array('ugroup_id' => 120, 'name' => 'Zoum_zoum_zen'));
+        $ugroup = new ProjectUGroup(array('ugroup_id' => 120, 'name' => 'Zoum_zoum_zen'));
         $this->assertEqual('Zoum_zoum_zen', $ugroup->getName());
         $this->assertEqual('Zoum_zoum_zen', $ugroup->getTranslatedName());
         $this->assertEqual('Zoum_zoum_zen', $ugroup->getNormalizedName());
@@ -360,7 +360,7 @@ class UGroup_SourceInitializationTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->ugroup = partial_mock('UGroup', array('getUgroupBindingSource'), array('ugroup_id' => 123));
+        $this->ugroup = partial_mock('ProjectUGroup', array('getUgroupBindingSource'), array('ugroup_id' => 123));
     }
 
     public function itQueriesTheDatabaseWhenDefaultValueIsFalse() {
@@ -376,7 +376,7 @@ class UGroup_SourceInitializationTest extends TuleapTestCase {
     }
 
     public function itReturnsTrueWhenTheGroupIsBound() {
-        stub($this->ugroup)->getUgroupBindingSource()->returns(stub('UGroup')->getId()->returns(666));
+        stub($this->ugroup)->getUgroupBindingSource()->returns(stub('ProjectUGroup')->getId()->returns(666));
         $this->assertTrue($this->ugroup->isBound());
     }
 

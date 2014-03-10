@@ -1503,7 +1503,7 @@ project_admin_utils	tracker_date_reminder_invalid_Tracker	'$1' is not a valid Tr
 project_admin_utils	tracker_date_reminder_invalid_notification_type	'$1' is not a valid Notification type
 project_admin_utils	tracker_date_reminder_invalid_status	'$1' is not a valid Reminder Status
 project_admin_utils	tracker_date_reminder_invalid_reminder	'$1' is not a valid Date Reminder
-project_admin_utils	tracker_date_reminder_invalid_ugroup	'$1' is not a valid Ugroup
+project_admin_utils	tracker_date_reminder_invalid_ugroup	'$1' is not a valid project user group
 project_admin_utils	tracker_date_reminder_invalid_role_param	You should select a valid Tracker role
 project_admin_utils	tracker_date_reminder_empty_people_param	You should select at least one ugroup or one tracker role
 project_admin_utils	tracker_date_reminder_before_submittedOn	Unable to add Date Reminder before 'SubmittedOn' Field

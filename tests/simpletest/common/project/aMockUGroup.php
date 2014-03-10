@@ -43,7 +43,7 @@ class MockUGroupBuilder {
     }
 
     public function build() {
-        $ugroup = mock('UGroup');
+        $ugroup = mock('ProjectUGroup');
         stub($ugroup)->getId()->returns($this->id);
         stub($ugroup)->getNormalizedName()->returns($this->normalized_name);
         return $ugroup;

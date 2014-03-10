@@ -275,7 +275,7 @@ class Project_SOAPServer {
         $this->getProjectIfUserIsAdmin($groupId, $sessionKey);
         if ($user = $this->userManager->getUserById($userId)) {
             try {
-                $ugroup = new UGroup(array('ugroup_id' => $ugroupId, 'group_id' => $groupId));
+                $ugroup = new ProjectUGroup(array('ugroup_id' => $ugroupId, 'group_id' => $groupId));
                 $ugroup->addUser($user);
             }  catch (Exception $e) {
                 throw new SoapFault((string) $e->getCode(), $e->getMessage());
@@ -307,7 +307,7 @@ class Project_SOAPServer {
         $this->getProjectIfUserIsAdmin($groupId, $sessionKey);
         if ($user = $this->userManager->getUserById($userId)) {
             try {
-                $ugroup = new UGroup(array('ugroup_id' => $ugroupId, 'group_id' => $groupId));
+                $ugroup = new ProjectUGroup(array('ugroup_id' => $ugroupId, 'group_id' => $groupId));
                 $ugroup->removeUser($user);
             }  catch (Exception $e) {
                 throw new SoapFault((string) $e->getCode(), $e->getMessage());

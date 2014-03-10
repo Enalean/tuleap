@@ -99,13 +99,13 @@ class UGroupLiteralizerTest extends TuleapTestCase {
     }
 
     public function itCanTransformAnArrayWithUGroupMembersConstantIntoString() {
-        $ugroup_ids = array(Ugroup::PROJECT_MEMBERS);
+        $ugroup_ids = array(ProjectUGroup::PROJECT_MEMBERS);
         $expected   = array('@gpig_project_members');
         $this->assertUgroupIdsToString($ugroup_ids, $expected);
     }
 
     public function itDoesntIncludeTwiceProjectMemberIfSiteActive() {
-        $ugroup_ids = array(Ugroup::REGISTERED, Ugroup::PROJECT_MEMBERS);
+        $ugroup_ids = array(ProjectUGroup::REGISTERED, ProjectUGroup::PROJECT_MEMBERS);
         $expected   = array('@site_active', '@gpig_project_members');
         $this->assertUgroupIdsToString($ugroup_ids, $expected);
     }
@@ -120,7 +120,7 @@ class UGroupLiteralizerTest extends TuleapTestCase {
 
     public function itCanReturnUgroupIdsFromAnItemAndItsPermissionTypes() {
         $object_id = 100;
-        $expected  = array(Ugroup::PROJECT_MEMBERS);
+        $expected  = array(ProjectUGroup::PROJECT_MEMBERS);
         $permissions_manager = mock('PermissionsManager');
         stub($permissions_manager)->getAuthorizedUgroupIds($object_id, self::PERMISSIONS_TYPE)->returns($expected);
         PermissionsManager::setInstance($permissions_manager);

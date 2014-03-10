@@ -241,12 +241,12 @@ abstract class Error_PermissionDenied {
     }
 
     /**
-     * Get an instance of UGroup. 
+     * Get an instance of ProjectUGroup. 
      * 
-     * @return UGroup
+     * @return ProjectUGroup
      */
     protected function getUGroup() {
-        return new UGroup();
+        return new ProjectUGroup();
     }
 
     /**

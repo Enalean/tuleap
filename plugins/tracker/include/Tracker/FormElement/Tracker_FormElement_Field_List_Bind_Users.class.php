@@ -197,7 +197,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                     default:
                         if (preg_match('/ugroup_([0-9]+)/', $ugroup, $matches)) {
                             $ugroup_data = db_fetch_array(ugroup_db_get_ugroup($matches[1]));
-                            $user_group = new UGroup($ugroup_data);
+                            $user_group = new ProjectUGroup($ugroup_data);
 
                             $ugroups[] = array(
                                 self::SOAP_BINDING_LIST_ID    => $matches[1],

@@ -282,7 +282,7 @@ class Tracker_ReportDao extends DataAccessObject {
         // }}}
 
         // {{{ tracker_admins
-        if ($this->hasPermissionForDynamicUgroup(UGroup::TRACKER_ADMIN, $dynamic_ugroups, $allowed_ugroups)) {
+        if ($this->hasPermissionForDynamicUgroup(ProjectUGroup::TRACKER_ADMIN, $dynamic_ugroups, $allowed_ugroups)) {
             $join_user_constraint = " INNER JOIN tracker_perm AS p ON (
                                           artifact.submitted_by = p.user_id
                                           AND p.tracker_id = $tracker_id
@@ -292,7 +292,7 @@ class Tracker_ReportDao extends DataAccessObject {
         //}}}
         
         // {{{ project_members
-        if ($this->hasPermissionForDynamicUgroup(UGroup::PROJECT_MEMBERS, $dynamic_ugroups, $allowed_ugroups)) {
+        if ($this->hasPermissionForDynamicUgroup(ProjectUGroup::PROJECT_MEMBERS, $dynamic_ugroups, $allowed_ugroups)) {
             $join_user_constraint = " INNER JOIN user_group AS ug ON ( 
                                           artifact.submitted_by = ug.user_id 
                                           AND ug.group_id = $group_id) ";
@@ -301,7 +301,7 @@ class Tracker_ReportDao extends DataAccessObject {
         //}}}
         
         // {{{ project_admins
-        if ($this->hasPermissionForDynamicUgroup(UGroup::PROJECT_ADMIN, $dynamic_ugroups, $allowed_ugroups)) {
+        if ($this->hasPermissionForDynamicUgroup(ProjectUGroup::PROJECT_ADMIN, $dynamic_ugroups, $allowed_ugroups)) {
             $join_user_constraint = " INNER JOIN user_group ug ON (
                                           artifact.submitted_by = ug.user_id 
                                           AND ug.group_id = $group_id
@@ -348,7 +348,7 @@ class Tracker_ReportDao extends DataAccessObject {
         // }}}
 
         // {{{ tracker_admins
-        if ($this->hasPermissionForDynamicUgroup(UGroup::TRACKER_ADMIN, $dynamic_ugroups, $allowed_ugroups)) {
+        if ($this->hasPermissionForDynamicUgroup(ProjectUGroup::TRACKER_ADMIN, $dynamic_ugroups, $allowed_ugroups)) {
             $join_user_constraint = "
                 INNER JOIN tracker_perm AS p ON (
                     p.user_id = tcvl.bindvalue_id
@@ -361,7 +361,7 @@ class Tracker_ReportDao extends DataAccessObject {
         //}}}
         
         // {{{ project_members
-        if ($this->hasPermissionForDynamicUgroup(UGroup::PROJECT_MEMBERS, $dynamic_ugroups, $allowed_ugroups)) {
+        if ($this->hasPermissionForDynamicUgroup(ProjectUGroup::PROJECT_MEMBERS, $dynamic_ugroups, $allowed_ugroups)) {
             $join_user_constraint = "
                 INNER JOIN user_group AS ug ON (
                     ug.user_id = tcvl.bindvalue_id
@@ -373,7 +373,7 @@ class Tracker_ReportDao extends DataAccessObject {
         //}}}
         
         // {{{ project_admins
-        if ($this->hasPermissionForDynamicUgroup(UGroup::PROJECT_ADMIN, $dynamic_ugroups, $allowed_ugroups)) {
+        if ($this->hasPermissionForDynamicUgroup(ProjectUGroup::PROJECT_ADMIN, $dynamic_ugroups, $allowed_ugroups)) {
             $join_user_constraint = "
                 INNER JOIN user_group AS ug ON (
                     ug.user_id = tcvl.bindvalue_id

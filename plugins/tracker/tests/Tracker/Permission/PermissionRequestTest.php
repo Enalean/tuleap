@@ -24,46 +24,46 @@ class Tracker_Permission_PermissionRequestTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->minimal_ugroup_list = array(
-            UGroup::ANONYMOUS,
-            UGroup::REGISTERED,
-            UGroup::PROJECT_MEMBERS,
-            UGroup::PROJECT_ADMIN
+            ProjectUGroup::ANONYMOUS,
+            ProjectUGroup::REGISTERED,
+            ProjectUGroup::PROJECT_MEMBERS,
+            ProjectUGroup::PROJECT_ADMIN
         );
     }
 
     public function itHasPermissionsBasedOnGroupIds() {
         $request = aRequest()
             ->with(
-                Tracker_Permission_Command::PERMISSION_PREFIX.UGroup::ANONYMOUS,
+                Tracker_Permission_Command::PERMISSION_PREFIX.ProjectUGroup::ANONYMOUS,
                 Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY
             )
             ->with(
-                Tracker_Permission_Command::PERMISSION_PREFIX.UGroup::REGISTERED,
+                Tracker_Permission_Command::PERMISSION_PREFIX.ProjectUGroup::REGISTERED,
                 Tracker_Permission_Command::PERMISSION_FULL
             )
             ->build();
         $set_permission_request = new Tracker_Permission_PermissionRequest(array());
         $set_permission_request->setFromRequest($request, $this->minimal_ugroup_list);
 
-        $this->assertEqual($set_permission_request->getPermissionType(UGroup::ANONYMOUS), Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY);
-        $this->assertEqual($set_permission_request->getPermissionType(UGroup::REGISTERED), Tracker_Permission_Command::PERMISSION_FULL);
+        $this->assertEqual($set_permission_request->getPermissionType(ProjectUGroup::ANONYMOUS), Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY);
+        $this->assertEqual($set_permission_request->getPermissionType(ProjectUGroup::REGISTERED), Tracker_Permission_Command::PERMISSION_FULL);
     }
 
     public function itRevokesPermissions() {
         $request = aRequest()
             ->with(
-                Tracker_Permission_Command::PERMISSION_PREFIX.UGroup::ANONYMOUS,
+                Tracker_Permission_Command::PERMISSION_PREFIX.ProjectUGroup::ANONYMOUS,
                 Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY
             )
             ->with(
-                Tracker_Permission_Command::PERMISSION_PREFIX.UGroup::REGISTERED,
+                Tracker_Permission_Command::PERMISSION_PREFIX.ProjectUGroup::REGISTERED,
                 Tracker_Permission_Command::PERMISSION_FULL
             )
             ->build();
         $set_permission_request = new Tracker_Permission_PermissionRequest(array());
         $set_permission_request->setFromRequest($request, $this->minimal_ugroup_list);
 
-        $set_permission_request->revoke(UGroup::REGISTERED);
-        $this->assertNull($set_permission_request->getPermissionType(UGroup::REGISTERED));
+        $set_permission_request->revoke(ProjectUGroup::REGISTERED);
+        $this->assertNull($set_permission_request->getPermissionType(ProjectUGroup::REGISTERED));
     }
 }

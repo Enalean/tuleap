@@ -55,8 +55,8 @@ class Git_Driver_Gerrit_UserFinder_areRegisteredUsersAllowedToTest extends Git_D
 
     public function itReturnsFalseIfRegisteredUsersGroupIsNotContainedInTheAllowedOnes() {
         stub($this->permissions_manager)->getAuthorizedUgroups()->returns(array(
-            array('ugroup_id' => UGroup::PROJECT_MEMBERS),
-            array('ugroup_id' => UGroup::PROJECT_ADMIN),
+            array('ugroup_id' => ProjectUGroup::PROJECT_MEMBERS),
+            array('ugroup_id' => ProjectUGroup::PROJECT_ADMIN),
         ));
         $allowed = $this->user_finder->areRegisteredUsersAllowedTo(Git::PERM_READ, $this->repository);
         $this->assertFalse($allowed);
@@ -64,8 +64,8 @@ class Git_Driver_Gerrit_UserFinder_areRegisteredUsersAllowedToTest extends Git_D
 
     public function itReturnsTrueIfRegisteredUsersGroupIsContainedInTheAllowedOnes() {
         stub($this->permissions_manager)->getAuthorizedUgroups()->returns(array(
-            array('ugroup_id' => UGroup::PROJECT_MEMBERS),
-            array('ugroup_id' => UGroup::REGISTERED),
+            array('ugroup_id' => ProjectUGroup::PROJECT_MEMBERS),
+            array('ugroup_id' => ProjectUGroup::REGISTERED),
         ));
         $allowed = $this->user_finder->areRegisteredUsersAllowedTo(Git::PERM_READ, $this->repository);
         $this->assertTrue($allowed);
@@ -73,7 +73,7 @@ class Git_Driver_Gerrit_UserFinder_areRegisteredUsersAllowedToTest extends Git_D
 
     public function itReturnsTrueIfAllUsersAreContainedInTheAllowedOnes() {
         stub($this->permissions_manager)->getAuthorizedUgroups()->returns(array(
-            array('ugroup_id' => UGroup::ANONYMOUS),
+            array('ugroup_id' => ProjectUGroup::ANONYMOUS),
         ));
         $allowed = $this->user_finder->areRegisteredUsersAllowedTo(Git::PERM_READ, $this->repository);
         $this->assertTrue($allowed);
@@ -120,7 +120,7 @@ class Git_Driver_Gerrit_UserFinder_getUGroupsTest extends TuleapTestCase {
     }
 
     public function itAlwaysReturnsTheProjectAdminGroupWhenGitAdministratorsAreRequested() {
-        $project_admin_group_id = UGroup::PROJECT_ADMIN;
+        $project_admin_group_id = ProjectUGroup::PROJECT_ADMIN;
 
         $expected_ugroups = array($project_admin_group_id);
         $ugroups          = $this->user_finder->getUgroups('whatever', Git::SPECIAL_PERM_ADMIN);

@@ -37,7 +37,7 @@ class Docman_PermissionsItemManager {
         $contains_anonymous = $this->oneContainsAnonymous($child_ugroups_ids, $parent_ugroups_ids);
 
         foreach($remaining_ids as $item_ugroup_id) {
-            if ($item_ugroup_id < Ugroup::NONE || $contains_anonymous) {
+            if ($item_ugroup_id < ProjectUGroup::NONE || $contains_anonymous) {
                 $item_ugroups_ids[] = $item_ugroup_id;
             }
         }
@@ -68,8 +68,8 @@ class Docman_PermissionsItemManager {
     }
 
     private function oneContainsAnonymous($child_ugroups_ids, $parent_ugroups_ids) {
-        return in_array(Ugroup::ANONYMOUS, $child_ugroups_ids, true)
-            || in_array(Ugroup::ANONYMOUS, $parent_ugroups_ids, true);
+        return in_array(ProjectUGroup::ANONYMOUS, $child_ugroups_ids, true)
+            || in_array(ProjectUGroup::ANONYMOUS, $parent_ugroups_ids, true);
     }
 
     private function lowest($array) {

@@ -24,7 +24,7 @@
 
 class Project_Admin_UGroup_View_EditBinding extends Project_Admin_UGroup_View_Binding {
 
-    public function __construct(UGroup $ugroup, UGroupBinding $ugroup_binding, $source_project_id) {
+    public function __construct(ProjectUGroup $ugroup, UGroupBinding $ugroup_binding, $source_project_id) {
         parent::__construct($ugroup, $ugroup_binding);
         $this->source_project_id = $source_project_id;
     }
@@ -67,11 +67,11 @@ class Project_Admin_UGroup_View_EditBinding extends Project_Admin_UGroup_View_Bi
      * Get the HTML output for current binding
      *
      * @param Project $currentProject Project of the currently bound ugroup
-     * @param UGroup  $currentSource  Currently bound ugroup
+     * @param ProjectUGroup  $currentSource  Currently bound ugroup
      *
      * @return String
      */
-    private function getCurrentBindingHTML(Project $currentProject = null, UGroup $currentSource = null) {
+    private function getCurrentBindingHTML(Project $currentProject = null, ProjectUGroup $currentSource = null) {
         if ($currentSource) {
             $currentBindHTML = '';
             if ($currentSource && $currentProject->userIsAdmin()) {
@@ -127,16 +127,16 @@ class Project_Admin_UGroup_View_EditBinding extends Project_Admin_UGroup_View_Bi
      * Get the list of source ugroups by project
      *
      * @param Integer $sourceProject Id of the current soucrce project
-     * @param UGroup  $currentSource Currently bound ugroup
+     * @param ProjectUGroup  $currentSource Currently bound ugroup
      *
      * @return Array
      */
-    private function getUgroupList($sourceProject, UGroup $currentSource = null) {
+    private function getUgroupList($sourceProject, ProjectUGroup $currentSource = null) {
         $ugroupList = array();
         $selected   = false;
         $ugroups    = ugroup_db_get_existing_ugroups($sourceProject);
         while ($ugroup = db_fetch_array($ugroups)) {
-            $userGroup  = new UGroup(array('ugroup_id' => $ugroup['ugroup_id']));
+            $userGroup  = new ProjectUGroup(array('ugroup_id' => $ugroup['ugroup_id']));
             if (!$userGroup->isBound()) {
                 if ($currentSource && $currentSource->getId() == $ugroup['ugroup_id']) {
                     $selected = true;
@@ -151,11 +151,11 @@ class Project_Admin_UGroup_View_EditBinding extends Project_Admin_UGroup_View_Bi
      * Get the HTML select listing the source ugroups by project
      *
      * @param Integer $sourceProject Id of the current soucrce project
-     * @param UGroup  $currentSource Currently bound ugroup
+     * @param ProjectUGroup  $currentSource Currently bound ugroup
      *
      * @return String
      */
-    private function getUgroupSelect($sourceProject, UGroup $currentSource = null) {
+    private function getUgroupSelect($sourceProject, ProjectUGroup $currentSource = null) {
         $ugroupList = $this->getUgroupList($sourceProject, $currentSource);
         $ugroupSelect  = '<select name="source_ugroup" >';
         $ugroupSelect .= '<option value="" >'.$GLOBALS['Language']->getText('global', 'none').'</option>';

@@ -21,7 +21,7 @@
 
 class Project_Admin_UGroup_UGroupController_Members extends Project_Admin_UGroup_UGroupController {
 
-    public function __construct(Codendi_Request $request, UGroup $ugroup, Project_Admin_UGroup_PaneInfo $pane) {
+    public function __construct(Codendi_Request $request, ProjectUGroup $ugroup, Project_Admin_UGroup_PaneInfo $pane) {
         parent::__construct($request, $ugroup);
         $this->pane = $pane;
     }

@@ -72,7 +72,7 @@ class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupTest ext
         $this->user         = stub('PFUser')->getUgroups($this->project_id, null)->returns($this->user_ugroups);
 
         $this->project = stub('Project')->getID()->returns($this->project_id);
-        $this->ugroup  = stub('UGroup')->getId()->returns($this->ugroup_id);
+        $this->ugroup  = stub('ProjectUGroup')->getId()->returns($this->ugroup_id);
     }
 
     public function itCallsDaoWithArguments() {
@@ -237,7 +237,7 @@ class GitRepositoryFactory_getAllGerritRepositoriesFromProjectTest extends Tulea
         $this->user         = stub('PFUser')->getUgroups($this->project_id, null)->returns($this->user_ugroups);
 
         $this->project = stub('Project')->getID()->returns($this->project_id);
-        $this->ugroup  = stub('UGroup')->getId()->returns($this->ugroup_id);
+        $this->ugroup  = stub('ProjectUGroup')->getId()->returns($this->ugroup_id);
     }
 
     public function itFetchAllGerritRepositoriesFromDao() {
@@ -273,7 +273,7 @@ class GitRepositoryFactory_getAllGerritRepositoriesFromProjectTest extends Tulea
                     $this->repository,
                     array(
                         Git::PERM_READ          => array(),
-                        Git::PERM_WRITE         => array(UGroup::PROJECT_ADMIN, 404),
+                        Git::PERM_WRITE         => array(ProjectUGroup::PROJECT_ADMIN, 404),
                         Git::PERM_WPLUS         => array(),
                         Git::SPECIAL_PERM_ADMIN => array()
                     )
@@ -290,9 +290,9 @@ class GitRepositoryFactory_getAllGerritRepositoriesFromProjectTest extends Tulea
                     $this->repository,
                     array(
                         Git::PERM_READ          => array(),
-                        Git::PERM_WRITE         => array(UGroup::PROJECT_ADMIN, 404),
+                        Git::PERM_WRITE         => array(ProjectUGroup::PROJECT_ADMIN, 404),
                         Git::PERM_WPLUS         => array(),
-                        Git::SPECIAL_PERM_ADMIN => array(UGroup::PROJECT_ADMIN)
+                        Git::SPECIAL_PERM_ADMIN => array(ProjectUGroup::PROJECT_ADMIN)
                     )
                 )
             )

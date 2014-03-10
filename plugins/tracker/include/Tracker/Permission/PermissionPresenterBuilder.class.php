@@ -34,7 +34,7 @@ class Tracker_Permission_PermissionPresenterBuilder {
             $ugroup      = $ugroup_permissions['ugroup'];
             $permissions = $ugroup_permissions['permissions'];
 
-            if ($ugroup['id'] != UGroup::PROJECT_ADMIN) {
+            if ($ugroup['id'] != ProjectUGroup::PROJECT_ADMIN) {
                 $ugroup_list[] = new Tracker_Permission_PermissionUgroupPresenter(
                     $ugroup['id'],
                     $ugroup['name'],
@@ -62,14 +62,14 @@ class Tracker_Permission_PermissionPresenterBuilder {
             isset($permissions[Tracker::PERMISSION_FULL])
         );
 
-        if ($ugroup_id != UGroup::ANONYMOUS) {
+        if ($ugroup_id != ProjectUGroup::ANONYMOUS) {
             $permission_type_list[] = new Tracker_Permission_PermissionTypePresenter(
                 Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY,
                 $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', Tracker::PERMISSION_SUBMITTER_ONLY),
                 isset($permissions[Tracker::PERMISSION_SUBMITTER_ONLY])
             );
 
-            if ($ugroup_id != UGroup::REGISTERED) {
+            if ($ugroup_id != ProjectUGroup::REGISTERED) {
                 $permission_type_list[] = new Tracker_Permission_PermissionTypePresenter(
                     Tracker_Permission_Command::PERMISSION_ASSIGNEE,
                     $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', Tracker::PERMISSION_ASSIGNEE),

@@ -100,7 +100,7 @@ class Tracker_DateReminderFactory {
         if ($reminder) {
             $roles = implode("," , $roles);
             $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
-            $historyDao->groupAddHistory("tracker_date_reminder_add", $this->getTracker()->getName().":".$fieldId, $this->getTracker()->getGroupId(), array($distance.' Day(s), Type: '.$notificationType.' Ugroup(s): '.$ugroups. 'Tracker Role(s): '.$roles));
+            $historyDao->groupAddHistory("tracker_date_reminder_add", $this->getTracker()->getName().":".$fieldId, $this->getTracker()->getGroupId(), array($distance.' Day(s), Type: '.$notificationType.' ProjectUGroup(s): '.$ugroups. 'Tracker Role(s): '.$roles));
             return $reminder;
         } else {
             $errorMessage = $GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_add_failure', array($trackerId, $fieldId));
@@ -181,7 +181,7 @@ class Tracker_DateReminderFactory {
         if ($updateReminder) {
             $roles = implode("," , $roles);
             $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
-            $historyDao->groupAddHistory("tracker_date_reminder_edit", $this->getTracker()->getName().":".$reminderId, $this->getTracker()->getGroupId(), array("Id: ".$reminderId.", Type: ".$notificationType.", Ugroup(s): ".$ugroups.", Tracker Role(s): ".$roles.", Day(s): ".$distance.", Status: ".$status));
+            $historyDao->groupAddHistory("tracker_date_reminder_edit", $this->getTracker()->getName().":".$reminderId, $this->getTracker()->getGroupId(), array("Id: ".$reminderId.", Type: ".$notificationType.", ProjectUGroup(s): ".$ugroups.", Tracker Role(s): ".$roles.", Day(s): ".$distance.", Status: ".$status));
             return $updateReminder;
         } else {
             $errorMessage = $GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_update_failure', array($reminderId));

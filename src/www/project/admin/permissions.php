@@ -636,7 +636,7 @@ function permission_fetch_selection_field(
             WHERE permission_type='$permission_type'";
 
     if (! $show_admins) {
-        $sql .= 'AND ugroup_id <> '. UGroup::PROJECT_ADMIN;
+        $sql .= 'AND ugroup_id <> '. ProjectUGroup::PROJECT_ADMIN;
     }
 
     $res                = db_query($sql);

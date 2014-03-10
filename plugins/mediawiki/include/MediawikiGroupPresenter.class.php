@@ -20,7 +20,7 @@
 
 class MediawikiGroupPresenter {
 
-    /** @var UGroup[] */
+    /** @var ProjectUGroup[] */
     private $available_ugroups;
 
     /** @var string */
@@ -29,7 +29,7 @@ class MediawikiGroupPresenter {
     /** @var string */
     private $mediawiki_group_id;
 
-    /** @var UGroup[] */
+    /** @var ProjectUGroup[] */
     private $current_mapping;
 
     public function __construct($mediawiki_group_id, $mediawiki_group_label, $available_ugroups, $mapping) {

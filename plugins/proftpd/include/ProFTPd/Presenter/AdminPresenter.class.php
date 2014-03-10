@@ -22,13 +22,13 @@
 namespace Tuleap\ProFTPd\Presenter;
 
 use Tuleap\ProFTPd\Admin\PermissionsManager;
-use UGroup;
+use ProjectUGroup;
 
 class AdminPresenter {
     /** @var int */
     private $project_id;
 
-    /** @var UGroup[] */
+    /** @var ProjectUGroup[] */
     private $static_ugroups;
 
     /** @var int */
@@ -88,9 +88,9 @@ class AdminPresenter {
 
     private function getNoneOption($selected) {
         return array(
-            'value'    => UGroup::NONE,
+            'value'    => ProjectUGroup::NONE,
             'label'    => $GLOBALS['Language']->getText('global', 'none'),
-            'selected' => $selected == UGroup::NONE,
+            'selected' => $selected == ProjectUGroup::NONE,
         );
     }
 

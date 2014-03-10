@@ -137,7 +137,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         if ($ugroup) {
             return new Tracker_FormElement_Field_List_Bind_UgroupsValue($row['id'], $ugroup, $row['is_hidden']);
         }
-        return new Tracker_FormElement_Field_List_Bind_UgroupsValue(-1, new UGroup(array('ugroup_id' => 0, 'name' => "")), true);
+        return new Tracker_FormElement_Field_List_Bind_UgroupsValue(-1, new ProjectUGroup(array('ugroup_id' => 0, 'name' => "")), true);
     }
 
     /**
@@ -428,7 +428,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
 
         $ugroups = $ugroup_manager->getUGroups(
             $field->getTracker()->getProject(),
-            array(UGROUP::NONE, UGROUP::ANONYMOUS, UGroup::REGISTERED, UGroup::DOCUMENT_ADMIN, UGroup::DOCUMENT_TECH)
+            array(ProjectUGroup::NONE, ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED, ProjectUGroup::DOCUMENT_ADMIN, ProjectUGroup::DOCUMENT_TECH)
         );
 
         $html  = '';
