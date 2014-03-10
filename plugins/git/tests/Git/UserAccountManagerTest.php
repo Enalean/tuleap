@@ -22,10 +22,8 @@ require_once dirname(__FILE__).'/../bootstrap.php';
 
 class Git_UserAccountManager_SynchroniseSSHKeysTest extends TuleapTestCase {
     private $user;
-    private $gerrit_driver;
+    private $gerrit_driver_factory;
     private $remote_gerrit_factory;
-    private $original_keys;
-    private $new_keys;
 
     /**
      * @var Git_UserAccountManager
@@ -38,12 +36,15 @@ class Git_UserAccountManager_SynchroniseSSHKeysTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->user                  = aUser()->withLdapId("testUser")->build();
-        $this->gerrit_driver         = mock('Git_Driver_Gerrit');
-        $this->remote_gerrit_factory = mock('Git_RemoteServer_GerritServerFactory');
+        $this->user                         = aUser()->withLdapId("testUser")->build();
+        $this->gerrit_driver_factory        = mock('Git_Driver_Gerrit_GerritDriverFactory');
+        $this->remote_gerrit_factory        = mock('Git_RemoteServer_GerritServerFactory');
         $this->gerrit_user_account_manager  = mock('Git_Driver_Gerrit_UserAccountManager');
 
-        $this->user_account_manager = new Git_UserAccountManager($this->gerrit_driver, $this->remote_gerrit_factory);
+        $this->user_account_manager = new Git_UserAccountManager(
+            $this->gerrit_driver_factory,
+            $this->remote_gerrit_factory
+        );
         $this->user_account_manager->setGerritUserAccountManager($this->gerrit_user_account_manager);
 
         $this->original_keys = array(
@@ -80,7 +81,7 @@ class Git_UserAccountManager_SynchroniseSSHKeysTest extends TuleapTestCase {
 class Git_UserAccountManager_PushSSHKeysTest extends TuleapTestCase {
     /** @var PFUser */
     private $user;
-    private $gerrit_driver;
+    private $gerrit_driver_factory;
     private $remote_gerrit_factory;
     /**
      * @var Git_UserAccountManager
@@ -96,9 +97,9 @@ class Git_UserAccountManager_PushSSHKeysTest extends TuleapTestCase {
 
         $this->user = aUser()->withLdapId("testUser")->build();
 
-        $this->gerrit_driver                = mock('Git_Driver_Gerrit');
+        $this->gerrit_driver_factory        = mock('Git_Driver_Gerrit_GerritDriverFactory');
         $this->remote_gerrit_factory        = mock('Git_RemoteServer_GerritServerFactory');
-        $this->user_account_manager         = new Git_UserAccountManager($this->gerrit_driver, $this->remote_gerrit_factory);
+        $this->user_account_manager         = new Git_UserAccountManager($this->gerrit_driver_factory, $this->remote_gerrit_factory);
         $this->gerrit_user_account_manager  = mock('Git_Driver_Gerrit_UserAccountManager');
 
         $this->user_account_manager->setGerritUserAccountManager($this->gerrit_user_account_manager);
@@ -116,4 +117,3 @@ class Git_UserAccountManager_PushSSHKeysTest extends TuleapTestCase {
         );
     }
 }
-?>

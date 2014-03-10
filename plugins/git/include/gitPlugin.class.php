@@ -1,22 +1,23 @@
 <?php
-
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2011, 2012, 2013, 2014. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 require_once 'constants.php';
@@ -212,7 +213,7 @@ class GitPlugin extends Plugin {
                 $params['dependencies'] = array(
                     $this->getRepositoryFactory(),
                     $this->getGerritServerFactory(),
-                    $this->getGerritDriver()
+                    $this->getGerritDriverFactory()
                 );
                 break;
             case SystemEvent_GIT_GERRIT_PROJECT_READONLY::NAME:
@@ -220,7 +221,7 @@ class GitPlugin extends Plugin {
                 $params['dependencies'] = array(
                     $this->getRepositoryFactory(),
                     $this->getGerritServerFactory(),
-                    $this->getGerritDriver()
+                    $this->getGerritDriverFactory()
                 );
                 break;
             case SystemEvent_GIT_USER_RENAME::NAME:
@@ -460,11 +461,14 @@ class GitPlugin extends Plugin {
     /**
      *
      * @param PFUser $user
-     * @return \Git_UserAccountManager
+     * @return Git_UserAccountManager
      */
     private function getUserAccountManager() {
         if (! $this->user_account_manager) {
-            $this->user_account_manager = new Git_UserAccountManager($this->getGerritDriver(), $this->getGerritServerFactory());
+            $this->user_account_manager = new Git_UserAccountManager(
+                $this->getGerritDriverFactory(),
+                $this->getGerritServerFactory()
+            );
         }
 
         return $this->user_account_manager;
@@ -964,7 +968,7 @@ class GitPlugin extends Plugin {
         $tmp_dir = Config::get('tmp_dir') .'/gerrit_'. uniqid();
         return new Git_Driver_Gerrit_ProjectCreator(
             $tmp_dir,
-            $this->getGerritDriver(),
+            $this->getGerritDriverFactory(),
             $this->getGerritUserFinder(),
             $this->getUGroupManager(),
             $this->getGerritMembershipManager(),
@@ -983,7 +987,7 @@ class GitPlugin extends Plugin {
             $this->getUGroupManager(),
             $this->getProjectManager(),
             $this->getGerritMembershipManager(),
-            $this->getGerritDriver()
+            $this->getGerritDriverFactory()
         );
     }
 
@@ -999,10 +1003,10 @@ class GitPlugin extends Plugin {
         return new Git(
             $this,
             $this->getGerritServerFactory(),
-            $this->getGerritDriver(),
+            $this->getGerritDriverFactory(),
             $this->getRepositoryManager(),
             $this->getGitSystemEventManager(),
-            new Git_Driver_Gerrit_UserAccountManager($this->getGerritDriver(), $this->getGerritServerFactory()),
+            new Git_Driver_Gerrit_UserAccountManager($this->getGerritDriverFactory(), $this->getGerritServerFactory()),
             $this->getRepositoryFactory(),
             UserManager::instance(),
             ProjectManager::instance(),
@@ -1035,9 +1039,11 @@ class GitPlugin extends Plugin {
         return new GitDao();
     }
 
-    private function getGerritDriver() {
-        $gerrit_driver_factory = new Git_Driver_Gerrit_GerritDriverFactory($this->getLogger());
-        return $gerrit_driver_factory->getDriver();
+    /**
+     * @return Git_Driver_Gerrit_GerritDriverFactory
+     */
+    private function getGerritDriverFactory() {
+        return new Git_Driver_Gerrit_GerritDriverFactory($this->getLogger());
     }
 
     private function getPermissionsManager() {
@@ -1070,8 +1076,8 @@ class GitPlugin extends Plugin {
     private function getGerritMembershipManager() {
         return new Git_Driver_Gerrit_MembershipManager(
             new Git_Driver_Gerrit_MembershipDao(),
-            $this->getGerritDriver(),
-            new Git_Driver_Gerrit_UserAccountManager($this->getGerritDriver(), $this->getGerritServerFactory()),
+            $this->getGerritDriverFactory(),
+            new Git_Driver_Gerrit_UserAccountManager($this->getGerritDriverFactory(), $this->getGerritServerFactory()),
             $this->getGerritServerFactory(),
             $this->getLogger(),
             $this->getUGroupManager(),

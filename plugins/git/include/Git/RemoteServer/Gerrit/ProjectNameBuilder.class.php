@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,18 +15,19 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Git_Driver_Gerrit_MembershipCommand_AddUser extends Git_Driver_Gerrit_MembershipCommand_User {
+/**
+ * I return the name of a project on a gerrit server
+ */
+class Git_RemoteServer_Gerrit_ProjectNameBuilder {
 
-    protected function executeForGerritUser(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $gerrit_user) {
-        $driver = $this->getDriver($server);
-        $driver->addUserToGroup(
-            $server,
-            $gerrit_user,
-            $this->membership_manager->getFullyQualifiedUGroupName($this->ugroup)
-        );
+    public function getGerritProjectName(GitRepository $repository) {
+        $project = $repository->getProject()->getUnixName();
+        $repo    = $repository->getFullName();
+
+        return "$project/$repo";
     }
 }
-?>

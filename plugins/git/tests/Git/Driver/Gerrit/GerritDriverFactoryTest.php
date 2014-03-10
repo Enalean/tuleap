@@ -18,12 +18,65 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
+require_once dirname(__FILE__).'/../../../bootstrap.php';
+
 class GerritDriverFactoryTest extends TuleapTestCase {
 
-    public function itReturnsAGerritDriverLegacyObject() {
-        $logger                = new BackendLogger();
-        $gerrit_driver_factory = new Git_Driver_Gerrit_GerritDriverFactory($logger);
+    public function setUp() {
+        parent::setUp();
 
-        $this->assertIsA($gerrit_driver_factory->getDriver(), 'Git_Driver_GerritLegacy');
+        $logger                      = new BackendLogger();
+        $this->gerrit_driver_factory = new Git_Driver_Gerrit_GerritDriverFactory($logger);
+    }
+
+    public function itReturnsAGerritDriverLegacyObjectIfServerIsIn25Version() {
+        $server = new Git_RemoteServer_GerritServer(
+            0,
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            false,
+            Git_RemoteServer_GerritServer::DEFAULT_GERRIT_VERSION,
+            ''
+        );
+
+        $this->assertIsA($this->gerrit_driver_factory->getDriver($server), 'Git_Driver_GerritLegacy');
+    }
+
+    public function itReturnsAGerritDriverLegacyObjectIfServerAsNoVersionSet() {
+         $server = new Git_RemoteServer_GerritServer(
+            0,
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            false,
+            '',
+            ''
+        );
+
+        $this->assertIsA($this->gerrit_driver_factory->getDriver($server), 'Git_Driver_GerritLegacy');
+    }
+
+    public function itReturnsAGerritDriverRESTObjectIfServerIsIn25Version() {
+        $server = new Git_RemoteServer_GerritServer(
+            0,
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            false,
+            Git_RemoteServer_GerritServer::GERRIT_VERSION_2_8_PLUS,
+            ''
+        );
+        $this->assertIsA($this->gerrit_driver_factory->getDriver($server), 'Git_Driver_GerritREST');
     }
 }

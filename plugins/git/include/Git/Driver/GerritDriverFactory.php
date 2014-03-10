@@ -32,11 +32,17 @@ class Git_Driver_Gerrit_GerritDriverFactory {
     }
 
     /**
-     * Builds the Gerrit Driver
+     * Builds the Gerrit Driver regarding the gerrit server version
+     *
+     * @param Git_RemoteServer_GerritServer $server The gerrit server
      *
      * @return Git_Driver_Gerrit
      */
-    public function getDriver() {
+    public function getDriver(Git_RemoteServer_GerritServer $server) {
+        if ($server->getGerritVersion() === Git_RemoteServer_GerritServer::GERRIT_VERSION_2_8_PLUS) {
+            return new Git_Driver_GerritREST();
+        }
+
         return new Git_Driver_GerritLegacy(new Git_Driver_Gerrit_RemoteSSHCommand($this->logger), $this->logger);
     }
 }

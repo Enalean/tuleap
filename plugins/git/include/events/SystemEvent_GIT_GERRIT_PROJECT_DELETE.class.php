@@ -37,18 +37,18 @@ class SystemEvent_GIT_GERRIT_PROJECT_DELETE extends SystemEvent {
     private $server_factory;
 
     /**
-     * @var Git_Driver_Gerrit
+     * @var Git_Driver_Gerrit_GerritDriverFactory
      */
-    private $driver;
+    private $driver_factory;
 
     public function injectDependencies(
         GitRepositoryFactory $repository_factory,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
-        Git_Driver_Gerrit $driver)
+        Git_Driver_Gerrit_GerritDriverFactory $factory)
     {
         $this->repository_factory = $repository_factory;
         $this->server_factory     = $gerrit_server_factory;
-        $this->driver             = $driver;
+        $this->driver_factory     = $factory;
     }
 
     public function process() {
@@ -95,9 +95,17 @@ class SystemEvent_GIT_GERRIT_PROJECT_DELETE extends SystemEvent {
         return $this->deleteGerritProject($repository, $server, $project, $backend);
     }
 
-    private function deleteGerritProject(GitRepository $repository, $server, $project, $backend) {
+    private function deleteGerritProject(
+            GitRepository $repository,
+            Git_RemoteServer_GerritServer $server,
+            Project $project,
+            $backend
+    ) {
         try {
-            $this->driver->deleteProject($server, $project->getUnixName().'/'.$repository->getName());
+            $this->driver_factory->getDriver($server)->deleteProject(
+                    $server,
+                    $project->getUnixName().'/'.$repository->getName()
+            );
             $backend->setGerritProjectAsDeleted($repository);
 
         } catch (Exception $e) {
@@ -113,5 +121,3 @@ class SystemEvent_GIT_GERRIT_PROJECT_DELETE extends SystemEvent {
         return $this->parameters;
     }
 }
-
-?>

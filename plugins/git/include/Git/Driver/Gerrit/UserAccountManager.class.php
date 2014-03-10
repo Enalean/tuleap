@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,17 +24,20 @@
 class Git_Driver_Gerrit_UserAccountManager {
 
     /**
-     * @var Git_Driver_Gerrit
+     * @var Git_Driver_Gerrit_GerritDriverFactory
      */
-    private $gerrit_driver;
+    private $gerrit_driver_factory;
 
     /**
      * @var Git_RemoteServer_GerritServerFactory
      */
     private $remote_gerrit_factory;
 
-    public function __construct(Git_Driver_Gerrit $gerrit_driver, Git_RemoteServer_GerritServerFactory $remote_gerrit_factory) {
-        $this->gerrit_driver = $gerrit_driver;
+    public function __construct(
+        Git_Driver_Gerrit_GerritDriverFactory $gerrit_driver_factory,
+        Git_RemoteServer_GerritServerFactory $remote_gerrit_factory
+    ) {
+        $this->gerrit_driver_factory = $gerrit_driver_factory;
         $this->remote_gerrit_factory = $remote_gerrit_factory;
     }
 
@@ -158,7 +161,7 @@ class Git_Driver_Gerrit_UserAccountManager {
      */
     private function addKeys(Git_RemoteServer_GerritServer $remote_server, Array $keys, Git_Driver_Gerrit_User $gerrit_user) {
         foreach($keys as $key) {
-            $this->gerrit_driver->addSSHKeyToAccount($remote_server, $gerrit_user, $key);
+            $this->gerrit_driver_factory->getDriver($remote_server)->addSSHKeyToAccount($remote_server, $gerrit_user, $key);
         }
     }
 
@@ -171,7 +174,7 @@ class Git_Driver_Gerrit_UserAccountManager {
      */
     private function removeKeys(Git_RemoteServer_GerritServer $remote_server, Array $keys, Git_Driver_Gerrit_User $gerrit_user) {
         foreach($keys as $key) {
-            $this->gerrit_driver->removeSSHKeyFromAccount($remote_server, $gerrit_user, $key);
+            $this->gerrit_driver_factory->getDriver($remote_server)->removeSSHKeyFromAccount($remote_server, $gerrit_user, $key);
         }
     }
 

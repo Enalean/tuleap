@@ -81,6 +81,7 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
     protected $template_id = 'default';
 
     protected $template;
+    protected $gerrit_driver_factory;
 
     /** @var Git_Driver_Gerrit_Template_TemplateProcessor */
     protected $template_processor;
@@ -145,6 +146,8 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
         stub($this->driver)->doesTheProjectExist()->returns(false);
         stub($this->driver)->getGerritProjectName()->returns($this->gerrit_project);
 
+        $this->gerrit_driver_factory = stub('Git_Driver_Gerrit_GerritDriverFactory')->getDriver()->returns($this->driver);
+
         $this->membership_manager = mock('Git_Driver_Gerrit_MembershipManager');
         stub($this->membership_manager)->getGroupUUIDByNameOnServer($this->server, $this->contributors)->returns($this->contributors_uuid);
         stub($this->membership_manager)->getGroupUUIDByNameOnServer($this->server, $this->integrators)->returns($this->integrators_uuid);
@@ -168,7 +171,7 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
 
         $this->project_creator = new Git_Driver_Gerrit_ProjectCreator(
                     $this->gerrit_tmpdir,
-                    $this->driver,
+                    $this->gerrit_driver_factory,
                     $this->userfinder,
                     $this->ugroup_manager,
                     $this->membership_manager,
@@ -251,10 +254,11 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
 
         $driver = mock('Git_Driver_Gerrit');
         stub($driver)->doesTheProjectExist()->returns(true);
+        $gerrit_driver_factory = stub('Git_Driver_Gerrit_GerritDriverFactory')->getDriver()->returns($driver);
 
         $project_creator = new Git_Driver_Gerrit_ProjectCreator(
                     $this->gerrit_tmpdir,
-                    $driver,
+                    $gerrit_driver_factory,
                     $this->userfinder,
                     $this->ugroup_manager,
                     $this->membership_manager,

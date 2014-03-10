@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013. All rights reserved.
+ * Copyright Enalean (c) 2013 - 2014. All rights reserved.
  * 
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -66,6 +66,8 @@ class Git_Driver_Gerrit_ProjectCreator_CreateParentUmbrellaProjectsTest extends 
         $this->driver = mock('Git_Driver_Gerrit');
         stub($this->driver)->doesTheParentProjectExist()->returns(false);
 
+        $driver_factory = stub('Git_Driver_Gerrit_GerritDriverFactory')->getDriver()->returns($this->driver);
+
         $this->ugroup_manager = mock('UGroupManager');
         stub($this->ugroup_manager)->getUGroups($this->project)->returns(array($this->project_admins));
         stub($this->ugroup_manager)->getUGroups($this->parent_project)->returns(array($this->parent_project_admins));
@@ -79,7 +81,7 @@ class Git_Driver_Gerrit_ProjectCreator_CreateParentUmbrellaProjectsTest extends 
             $this->ugroup_manager,
             $this->project_manager,
             $this->membership_manager,
-            $this->driver
+            $driver_factory
         );
     }
 

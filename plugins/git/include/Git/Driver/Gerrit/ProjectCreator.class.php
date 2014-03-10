@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -64,8 +63,8 @@ class Git_Driver_Gerrit_ProjectCreator {
         )
     );
 
-    /** @var Git_Driver_Gerrit */
-    private $driver;
+    /** @var Git_Driver_Gerrit_GerritDriverFactory */
+    private $driver_factory;
 
     /** @var string */
     private $dir;
@@ -87,7 +86,7 @@ class Git_Driver_Gerrit_ProjectCreator {
 
     public function __construct(
         $dir,
-        Git_Driver_Gerrit $driver,
+        Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
         Git_Driver_Gerrit_UserFinder $user_finder,
         UGroupManager $ugroup_manager,
         Git_Driver_Gerrit_MembershipManager $membership_manager,
@@ -96,7 +95,7 @@ class Git_Driver_Gerrit_ProjectCreator {
         Git_Driver_Gerrit_Template_TemplateProcessor $template_processor
     ) {
         $this->dir                = $dir;
-        $this->driver             = $driver;
+        $this->driver_factory     = $driver_factory;
         $this->user_finder        = $user_finder;
         $this->ugroup_manager     = $ugroup_manager;
         $this->membership_manager = $membership_manager;
@@ -119,9 +118,10 @@ class Git_Driver_Gerrit_ProjectCreator {
         $project          = $repository->getProject();
         $project_name     = $project->getUnixName();
         $ugroups          = $this->ugroup_manager->getUGroups($project);
+        $driver           = $this->driver_factory->getDriver($gerrit_server);
 
-        $name = $this->driver->getGerritProjectName($repository);
-        if ($this->driver->doesTheProjectExist($gerrit_server, $name)) {
+        $name = $driver->getGerritProjectName($repository);
+        if ($driver->doesTheProjectExist($gerrit_server, $name)) {
              throw new Git_Driver_Gerrit_ProjectCreator_ProjectAlreadyexistsException($name, $gerrit_server->getHost());
         }
 
@@ -129,7 +129,7 @@ class Git_Driver_Gerrit_ProjectCreator {
 
         $this->umbrella_manager->recursivelyCreateUmbrellaProjects(array($gerrit_server), $project);
 
-        $gerrit_project_name = $this->driver->createProject($gerrit_server, $repository, $project_name);
+        $gerrit_project_name = $driver->createProject($gerrit_server, $repository, $project_name);
 
         $this->initiateGerritPermissions(
                 $repository,
@@ -197,7 +197,7 @@ class Git_Driver_Gerrit_ProjectCreator {
     }
 
     private function getGerritProjectUrl(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository) {
-        return $gerrit_server->getCloneSSHUrl($this->driver->getGerritProjectName($repository));
+        return $gerrit_server->getCloneSSHUrl($this->driver_factory->getDriver($gerrit_server)->getGerritProjectName($repository));
     }
 
     private function exportGitBranches(Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project, GitRepository $repository) {
@@ -246,7 +246,7 @@ class Git_Driver_Gerrit_ProjectCreator {
      * @throw Git_Driver_Gerrit_RemoteSSHCommandFailure
      */
     public function getGerritConfig(Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url) {
-        $this->driver->ping($gerrit_server);
+        $this->driver_factory->getDriver($gerrit_server)->ping($gerrit_server);
         $this->cloneGerritProjectConfig($gerrit_server, $gerrit_project_url);
 
         return file_get_contents($this->dir . '/project.config');
@@ -391,5 +391,3 @@ class Git_Driver_Gerrit_ProjectCreator {
         }
     }
 }
-
-?>

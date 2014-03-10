@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -149,7 +149,7 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
             array(
                 mock('GitPlugin'),
                 $gerrit_server_factory,
-                mock('Git_Driver_Gerrit'),
+                stub('Git_Driver_Gerrit_GerritDriverFactory')->getDriver()->returns(mock('Git_Driver_Gerrit')),
                 mock('GitRepositoryManager'),
                 mock('Git_SystemEventManager'),
                 mock('Git_Driver_Gerrit_UserAccountManager'),

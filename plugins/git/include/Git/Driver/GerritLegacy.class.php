@@ -222,9 +222,9 @@ class Git_Driver_GerritLegacy implements Git_Driver_Gerrit {
     }
 
     public function getGerritProjectName(GitRepository $repository) {
-        $project = $repository->getProject()->getUnixName();
-        $repo    = $repository->getFullName();
-        return "$project/$repo";
+        $name_builder = new Git_RemoteServer_Gerrit_ProjectNameBuilder();
+
+        return $name_builder->getGerritProjectName($repository);
     }
 
     protected function setAccount(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user) {

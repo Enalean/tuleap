@@ -60,7 +60,7 @@ class GitActionsTest extends TuleapTestCase {
                 mock('GitRepositoryFactory'),
                 mock('GitRepositoryManager'),
                 mock('Git_RemoteServer_GerritServerFactory'),
-                mock('Git_Driver_Gerrit'),
+                stub('Git_Driver_Gerrit_GerritDriverFactory')->getDriver()->returns(mock('Git_Driver_Gerrit')),
                 mock('Git_Driver_Gerrit_UserAccountManager'),
                 mock('Git_Driver_Gerrit_ProjectCreator'),
                 mock('Git_Driver_Gerrit_Template_TemplateFactory'),
@@ -465,7 +465,7 @@ class GitActions_Delete_Tests extends TuleapTestCase {
             $git_repository_factory,
             mock('GitRepositoryManager'),
             mock('Git_RemoteServer_GerritServerFactory'),
-            mock('Git_Driver_Gerrit'),
+            stub('Git_Driver_Gerrit_GerritDriverFactory')->getDriver()->returns(mock('Git_Driver_Gerrit')),
             mock('Git_Driver_Gerrit_UserAccountManager'),
             mock('Git_Driver_Gerrit_ProjectCreator'),
             mock('Git_Driver_Gerrit_Template_TemplateFactory'),
@@ -518,7 +518,7 @@ class GitActions_ForkTests extends TuleapTestCase {
             mock('GitRepositoryFactory'),
             $this->manager,
             mock('Git_RemoteServer_GerritServerFactory'),
-            mock('Git_Driver_Gerrit'),
+            stub('Git_Driver_Gerrit_GerritDriverFactory')->getDriver()->returns(mock('Git_Driver_Gerrit')),
             mock('Git_Driver_Gerrit_UserAccountManager'),
             mock('Git_Driver_Gerrit_ProjectCreator'),
             mock('Git_Driver_Gerrit_Template_TemplateFactory'),
@@ -646,7 +646,7 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
             mock('GitRepositoryFactory'),
             $this->manager,
             $this->gerrit_factory,
-            mock('Git_Driver_Gerrit'),
+            stub('Git_Driver_Gerrit_GerritDriverFactory')->getDriver()->returns(mock('Git_Driver_Gerrit')),
             mock('Git_Driver_Gerrit_UserAccountManager'),
             mock('Git_Driver_Gerrit_ProjectCreator'),
             mock('Git_Driver_Gerrit_Template_TemplateFactory'),
@@ -685,8 +685,6 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
 
 class GitActions_disconnectFromGerritTest extends TuleapTestCase {
 
-
-
     public function setUp() {
         parent::setUp();
 
@@ -710,7 +708,7 @@ class GitActions_disconnectFromGerritTest extends TuleapTestCase {
             mock('GitRepositoryFactory'),
             mock('GitRepositoryManager'),
             $this->gerrit_server_factory,
-            $this->driver,
+            stub('Git_Driver_Gerrit_GerritDriverFactory')->getDriver()->returns($this->driver),
             mock('Git_Driver_Gerrit_UserAccountManager'),
             mock('Git_Driver_Gerrit_ProjectCreator'),
             mock('Git_Driver_Gerrit_Template_TemplateFactory'),
@@ -791,7 +789,7 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
             $this->factory,
             mock('GitRepositoryManager'),
             $this->gerrit_server_factory,
-            $this->driver,
+            stub('Git_Driver_Gerrit_GerritDriverFactory')->getDriver()->returns($this->driver),
             mock('Git_Driver_Gerrit_UserAccountManager'),
             $this->project_creator,
             mock('Git_Driver_Gerrit_Template_TemplateFactory'),

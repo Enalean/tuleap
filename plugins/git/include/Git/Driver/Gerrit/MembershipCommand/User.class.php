@@ -29,12 +29,12 @@ abstract class Git_Driver_Gerrit_MembershipCommand_User extends Git_Driver_Gerri
 
     public function __construct(
         Git_Driver_Gerrit_MembershipManager $membership_manager,
-        Git_Driver_Gerrit $driver,
+        Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
         Git_Driver_Gerrit_UserAccountManager $gerrit_user_manager,
         UGroup $ugroup,
         PFUser $user
     ) {
-        parent::__construct($membership_manager, $driver, $ugroup);
+        parent::__construct($membership_manager, $driver_factory, $ugroup);
         $this->gerrit_user_manager = $gerrit_user_manager;
         $this->user                = $user;
     }
@@ -44,11 +44,12 @@ abstract class Git_Driver_Gerrit_MembershipCommand_User extends Git_Driver_Gerri
     }
 
     public function execute(Git_RemoteServer_GerritServer $server) {
+        $driver      = $this->getDriver($server);
         $gerrit_user = $this->gerrit_user_manager->getGerritUser($this->user);
         if ($gerrit_user) {
             $this->executeForGerritUser($server, $gerrit_user);
             if ($this->autoflush) {
-                $this->driver->flushGerritCacheAccounts($server);
+                $driver->flushGerritCacheAccounts($server);
             }
         }
     }

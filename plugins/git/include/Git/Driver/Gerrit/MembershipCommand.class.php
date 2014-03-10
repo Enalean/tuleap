@@ -24,15 +24,19 @@
 abstract class Git_Driver_Gerrit_MembershipCommand {
     /** @var Git_Driver_Gerrit_MembershipManager */
     protected $membership_manager;
-    /** @var Git_Driver_Gerrit */
-    protected $driver;
+    /** @var Git_Driver_Gerrit_GerritDriverFactory */
+    protected $driver_factory;
     /** @var UGroup */
     protected $ugroup;
 
-    public function __construct(Git_Driver_Gerrit_MembershipManager $membership_manager, Git_Driver_Gerrit $driver, UGroup $ugroup) {
+    public function __construct(
+        Git_Driver_Gerrit_MembershipManager $membership_manager,
+        Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
+        UGroup $ugroup
+    ) {
         $this->membership_manager = $membership_manager;
-        $this->driver = $driver;
-        $this->ugroup = $ugroup;
+        $this->driver_factory     = $driver_factory;
+        $this->ugroup             = $ugroup;
     }
 
     public function getUGroup() {
@@ -40,6 +44,8 @@ abstract class Git_Driver_Gerrit_MembershipCommand {
     }
 
     abstract public function execute(Git_RemoteServer_GerritServer $server);
-}
 
-?>
+    protected function getDriver(Git_RemoteServer_GerritServer $server) {
+        return $this->driver_factory->getDriver($server);
+    }
+}

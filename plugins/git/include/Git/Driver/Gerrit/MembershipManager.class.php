@@ -31,7 +31,7 @@ require_once 'MembershipCommand/RemoveBinding.class.php';
  */
 class Git_Driver_Gerrit_MembershipManager {
     private $dao;
-    private $driver;
+    private $driver_factory;
     private $gerrit_server_factory;
     private $logger;
     private $gerrit_user_manager;
@@ -43,16 +43,16 @@ class Git_Driver_Gerrit_MembershipManager {
     private $cache_groups = array();
 
     public function __construct(
-        Git_Driver_Gerrit_MembershipDao      $dao,
-        Git_Driver_Gerrit                    $driver,
-        Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
-        Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
-        Logger                               $logger,
-        UGroupManager                        $ugroup_manager,
-        ProjectManager                       $project_manager
+        Git_Driver_Gerrit_MembershipDao       $dao,
+        Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
+        Git_Driver_Gerrit_UserAccountManager  $gerrit_usermanager,
+        Git_RemoteServer_GerritServerFactory  $gerrit_server_factory,
+        Logger                                $logger,
+        UGroupManager                         $ugroup_manager,
+        ProjectManager                        $project_manager
     ) {
         $this->dao                    = $dao;
-        $this->driver                 = $driver;
+        $this->driver_factory         = $driver_factory;
         $this->gerrit_user_manager    = $gerrit_usermanager;
         $this->gerrit_server_factory  = $gerrit_server_factory;
         $this->logger                 = $logger;
@@ -68,7 +68,7 @@ class Git_Driver_Gerrit_MembershipManager {
      */
     public function addUserToGroup(PFUser $user, UGroup $ugroup) {
         $this->updateUserMembership(
-            new Git_Driver_Gerrit_MembershipCommand_AddUser($this, $this->driver, $this->gerrit_user_manager, $ugroup, $user)
+            new Git_Driver_Gerrit_MembershipCommand_AddUser($this, $this->driver_factory, $this->gerrit_user_manager, $ugroup, $user)
         );
     }
 
@@ -82,7 +82,7 @@ class Git_Driver_Gerrit_MembershipManager {
         $user_groups =  array_merge($static_user_groups, $dynamic_user_groups);
         foreach ($user_groups as $ugroup) {
             $this->updateUserMembership(
-                new Git_Driver_Gerrit_MembershipCommand_AddUser($this, $this->driver, $this->gerrit_user_manager, $ugroup, $user)
+                new Git_Driver_Gerrit_MembershipCommand_AddUser($this, $this->driver_factory, $this->gerrit_user_manager, $ugroup, $user)
             );
         }
     }
@@ -114,7 +114,7 @@ class Git_Driver_Gerrit_MembershipManager {
      */
     public function removeUserFromGroup(PFUser $user, UGroup $ugroup) {
         $this->updateUserMembership(
-            new Git_Driver_Gerrit_MembershipCommand_RemoveUser($this, $this->driver, $this->gerrit_user_manager, $ugroup, $user)
+            new Git_Driver_Gerrit_MembershipCommand_RemoveUser($this, $this->driver_factory, $this->gerrit_user_manager, $ugroup, $user)
         );
     }
 
@@ -133,7 +133,7 @@ class Git_Driver_Gerrit_MembershipManager {
      */
     public function addUGroupBinding(UGroup $ugroup, UGroup $source_ugroup) {
         $this->updateUGroupBinding(
-            new Git_Driver_Gerrit_MembershipCommand_AddBinding($this, $this->driver, $ugroup, $source_ugroup)
+            new Git_Driver_Gerrit_MembershipCommand_AddBinding($this, $this->driver_factory, $ugroup, $source_ugroup)
         );
     }
 
@@ -144,7 +144,7 @@ class Git_Driver_Gerrit_MembershipManager {
      */
     public function removeUGroupBinding(UGroup $ugroup) {
         $this->updateUGroupBinding(
-            new Git_Driver_Gerrit_MembershipCommand_RemoveBinding($this, $this->driver, $ugroup)
+            new Git_Driver_Gerrit_MembershipCommand_RemoveBinding($this, $this->driver_factory, $ugroup)
         );
     }
 
@@ -208,7 +208,7 @@ class Git_Driver_Gerrit_MembershipManager {
 
     private function invalidGerritGroupsCaches(Git_RemoteServer_GerritServer $server) {
         unset($this->cache_groups[$server->getId()]);
-        $this->driver->flushGerritCacheAccounts($server);
+        $this->driver_factory->getDriver($server)->flushGerritCacheAccounts($server);
     }
 
     /**
@@ -251,12 +251,17 @@ class Git_Driver_Gerrit_MembershipManager {
         return $this->ugroup_manager->getUGroup($ugroup->getProject(), UGroup::PROJECT_ADMIN);
     }
 
-    private function createGroupOnServerWithoutCheckingUGroupValidity(Git_RemoteServer_GerritServer $server, UGroup $ugroup, UGroup $admin_ugroup) {
+    private function createGroupOnServerWithoutCheckingUGroupValidity(
+        Git_RemoteServer_GerritServer $server,
+        UGroup $ugroup,
+        UGroup $admin_ugroup
+    ) {
         $admin_group_name  = $this->getFullyQualifiedUGroupName($admin_ugroup);
         $gerrit_group_name = $this->getFullyQualifiedUGroupName($ugroup);
+        $driver            = $this->driver_factory->getDriver($server);
 
-        if (! $this->driver->doesTheGroupExist($server, $gerrit_group_name)) {
-            $this->driver->createGroup($server, $gerrit_group_name, $admin_group_name);
+        if (! $driver->doesTheGroupExist($server, $gerrit_group_name)) {
+            $driver->createGroup($server, $gerrit_group_name, $admin_group_name);
             $this->dao->addReference($ugroup->getProjectId(), $ugroup->getId(), $server->getId());
         }
         $this->fillGroupWithMembers($ugroup);
@@ -276,7 +281,7 @@ class Git_Driver_Gerrit_MembershipManager {
     }
 
     protected function addUserToGroupWithoutFlush(PFUser $user, UGroup $ugroup) {
-        $command = new Git_Driver_Gerrit_MembershipCommand_AddUser($this, $this->driver, $this->gerrit_user_manager, $ugroup, $user);
+        $command = new Git_Driver_Gerrit_MembershipCommand_AddUser($this, $this->driver_factory, $this->gerrit_user_manager, $ugroup, $user);
         $command->disableAutoFlush();
         $this->updateUserMembership($command);
     }
@@ -323,7 +328,7 @@ class Git_Driver_Gerrit_MembershipManager {
     private function cacheGroupDefinitionForServer(Git_RemoteServer_GerritServer $server) {
         if ( ! isset($this->cache_groups[$server->getId()])) {
             $this->cache_groups[$server->getId()] = array();
-            foreach ($this->driver->listGroupsVerbose($server) as $group_line) {
+            foreach ($this->driver_factory->getDriver($server)->listGroupsVerbose($server) as $group_line) {
                 $group_entry = explode("\t", $group_line);
                 $this->cache_groups[$server->getId()][$group_entry[Git_Driver_GerritLegacy::INDEX_GROUPS_VERBOSE_NAME]] = $group_entry;
             }
@@ -352,4 +357,3 @@ class Git_Driver_Gerrit_MembershipManager {
     }
 
 }
-?>
