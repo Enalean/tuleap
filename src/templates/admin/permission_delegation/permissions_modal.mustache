@@ -1,0 +1,26 @@
+<div id="add-permissions-modal" class="modal hide fade">
+    <form action="permission_delegation.php?action=add-permissions" method="post">
+        <div class="modal-header">
+            <a type="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></a>
+            <h3>{{ permissions_modal_title }}</h3>
+        </div>
+
+        <div class="modal-body">
+            <p>{{{ permissions_modal_description }}} :</p>
+
+            {{# permissions }}
+            <label>
+                <input type="checkbox" class="available-permission" />
+                {{ . }}
+            </label>
+            {{/ permissions }}
+
+            <input type="hidden" name="group-id" value="{{ group_id }}" />
+        </div>
+
+        <div class="modal-footer">
+            <a class="btn" data-dismiss="modal">{{ permissions_modal_cancel }}</a>
+            <input id="submit-permissions" type="submit" class="btn btn-primary" value="{{ permissions_modal_submit }}" disabled="disabled" />
+        </div>
+    </form>
+</div>

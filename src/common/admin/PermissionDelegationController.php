@@ -94,6 +94,18 @@ class Admin_PermissionDelegationController {
                 $this->deleteGroup();
                 break;
 
+            case 'show-add-permissions':
+                $this->showAddPermissions($this->request->get('group-id'));
+                break;
+
+            case 'add-permissions':
+                $this->addPermissions();
+                break;
+
+            case 'delete-permissions':
+                $this->deletePermissions();
+                break;
+
             case 'index':
             default     :
                 $this->index();
@@ -169,6 +181,38 @@ class Admin_PermissionDelegationController {
         $this->header();
         $this->renderer->renderToPage('index', $presenter);
         $this->footer();
+    }
+
+    private function showAddPermissions($group_id) {
+        $group                 = $this->user_group_factory->getForgeUserGroupById($group_id);
+        $available_permissions = $this->user_group_permissions_factory->getPermissionsForForgeUserGroup($group);
+
+        $presenter = new Admin_PermissionDelegationPermissionsModalPresenter($group, $available_permissions);
+        $this->renderer->renderToPage('permissions_modal', $presenter);
+    }
+
+    private function addPermissions() {
+        $id = $this->request->get('group-id');
+
+        if ($id) {
+
+        } else {
+
+        }
+
+        $this->index();
+    }
+
+    private function deletePermissions() {
+        $id = $this->request->get('group-id');
+
+        if ($id) {
+
+        } else {
+
+        }
+
+        $this->index();
     }
 
     private function header() {

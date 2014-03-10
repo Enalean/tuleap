@@ -492,3 +492,7 @@ admin_permission_delegation	group_submit_delete	Oui, supprimer
 admin_permission_delegation	group_cancel_delete	Annuler
 admin_permission_delegation	user_group_already_exists	Le nom du groupe d'utilisateurs est invalide (vide ou déjà existant)
 admin_permission_delegation	ugroup_not_found	Ce groupe d'utilisateurs n'existe pas
+admin_permission_delegation	permissions_modal_title	Ajouter des permissions au groupe "$1"
+admin_permission_delegation	permissions_modal_description	Selectionnez les permissions que vous voulez ajouter au groupe "<b>$1</b>"
+admin_permission_delegation	permissions_modal_submit	Ajouter les permissions
+admin_permission_delegation	permissions_modal_cancel	Annuler

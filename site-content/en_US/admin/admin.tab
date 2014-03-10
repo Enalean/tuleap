@@ -502,3 +502,7 @@ admin_permission_delegation	group_submit_delete	Yes, delete it
 admin_permission_delegation	group_cancel_delete	Cancel
 admin_permission_delegation	user_group_already_exists	The user group name is invalid (empty or already exists)
 admin_permission_delegation	ugroup_not_found	User group does not exist
+admin_permission_delegation	permissions_modal_title	Add permissions to "$1"
+admin_permission_delegation	permissions_modal_description	Select the permissions you want to add to the group "<b>$1</b>"
+admin_permission_delegation	permissions_modal_submit	Add permissions
+admin_permission_delegation	permissions_modal_cancel	Cancel
