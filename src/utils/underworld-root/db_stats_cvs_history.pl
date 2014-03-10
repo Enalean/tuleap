@@ -62,7 +62,10 @@ $day_date = "$year$mon$day";
 
 $logfile = "$codendi_log/cvslogs/$year/$mon/cvs_traffic_$year$mon$day.log";
 print "Pulling down preprocessed logfile from $logfile...\n" if $verbose;
-
+if ( ! -f $logfile ) {
+    print "No log file, exiting...\n";
+    exit;
+}
 
    ## Now, we will pull all of the project ID's and names into a *massive*
    ## hash, because it will save us some real time in the log processing.
