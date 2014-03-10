@@ -18,30 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class User_ForgeUGroup implements User_UGroup {
+class User_ForgeUserGroupPermission_ProjectApproval implements User_ForgeUserGroupPermission {
 
-    private $id;
-
-    private $name;
-
-    private $description;
-
-    public function __construct($id, $name, $description) {
-        $this->id          = $id;
-        $this->name        = $name;
-        $this->description = $description;
-    }
-
-    public function getDescription() {
-        return $this->description;
-    }
+    const ID = 1;
 
     public function getId() {
-        return $this->id;
+        if (self::ID) {
+            return self::ID;
+        }
     }
 
     public function getName() {
-        return $this->name;
+        return $GLOBALS['Language']->getText('usergroup_forge_permission', 'project_approval_name');
+    }
+
+    public function getDescription() {
+        return $GLOBALS['Language']->getText('usergroup_forge_permission', 'project_approval_description');
     }
 }
-?>

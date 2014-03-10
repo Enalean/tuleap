@@ -18,30 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class User_ForgeUGroup implements User_UGroup {
+interface User_ForgeUserGroupPermission {
 
-    private $id;
+    /**
+     * @return int
+     */
+    public function getId();
 
-    private $name;
+    /**
+     * @return string the full name of the permission
+     */
+    public function getName();
 
-    private $description;
-
-    public function __construct($id, $name, $description) {
-        $this->id          = $id;
-        $this->name        = $name;
-        $this->description = $description;
-    }
-
-    public function getDescription() {
-        return $this->description;
-    }
-
-    public function getId() {
-        return $this->id;
-    }
-
-    public function getName() {
-        return $this->name;
-    }
+    /**
+     * @return string the description of the permission
+     */
+    public function getDescription();
 }
-?>

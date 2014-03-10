@@ -18,30 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class User_ForgeUGroup implements User_UGroup {
+class User_ForgeUserGroupUsersManager {
 
-    private $id;
+    public function addUserToForgeUserGroup(PFUser $user, User_ForgeUGroup $user_group) {
 
-    private $name;
-
-    private $description;
-
-    public function __construct($id, $name, $description) {
-        $this->id          = $id;
-        $this->name        = $name;
-        $this->description = $description;
     }
 
-    public function getDescription() {
-        return $this->description;
-    }
+    public function removeUserFromForgeUserGroup(PFUser $user, User_ForgeUGroup $user_group) {
 
-    public function getId() {
-        return $this->id;
-    }
-
-    public function getName() {
-        return $this->name;
     }
 }
-?>

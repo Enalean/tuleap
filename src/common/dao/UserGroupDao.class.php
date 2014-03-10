@@ -22,43 +22,43 @@ require_once('include/DataAccessObject.class.php');
 
 class UserGroupDao extends DataAccessObject {
     /**
-    * Searches User-Group by UserId 
+    * Searches User-Group by UserId
     * @return DataAccessResult
     */
     function searchByUserId($user_id) {
         $user_id = $this->da->escapeInt($user_id);
-        $sql = "SELECT * 
-                FROM user_group 
+        $sql = "SELECT *
+                FROM user_group
                 WHERE user_id = $user_id";
         return $this->retrieve($sql);
     }
 
     /**
-    * Searches User-Group by UserId 
+    * Searches User-Group by UserId
     * @return DataAccessResult
     */
     function searchActiveGroupsByUserId($user_id) {
         $user_id = $this->da->escapeInt($user_id);
-        $sql = "SELECT * 
+        $sql = "SELECT *
                 FROM user_group INNER JOIN groups USING(group_id)
                 WHERE user_id = $user_id
                   AND groups.status = 'A'";
         return $this->retrieve($sql);
     }
-    
-    
+
+
     /**
      * return users count, members of given project
      *
      * @param Integer $groupId
      *
      * @return Integer
-     *        
+     *
      */
     function returnUsersNumberByGroupId($groupId) {
         $groupId = $this->da->escapeInt($groupId);
-        $sql = 'SELECT count(*) as numrows 
-                FROM user_group 
+        $sql = 'SELECT count(*) as numrows
+                FROM user_group
                 WHERE group_id ='.$groupId;
         $row = $this->retrieve($sql)->getRow();
         return $row['numrows'];
@@ -73,10 +73,10 @@ class UserGroupDao extends DataAccessObject {
      */
     function returnProjectAdminsByGroupId($groupId) {
         $sql = 'SELECT u.email as email  FROM user u
-                    JOIN user_group ug 
-                    USING(user_id) 
-                    WHERE ug.admin_flags="A" 
-                    AND u.status IN ("A", "R") 
+                    JOIN user_group ug
+                    USING(user_id)
+                    WHERE ug.admin_flags="A"
+                    AND u.status IN ("A", "R")
                     AND ug.group_id ='.$this->da->escapeInt($groupId);
         return $this->retrieve($sql);
     }
@@ -94,14 +94,14 @@ class UserGroupDao extends DataAccessObject {
                    " WHERE group_id = ".$groupId;
         return $this->update($sql);
     }
-    
+
     public function updateUserGroupFlags($user_id, $group_id, $flag) {
         if ($flag == '') {
             return false;
         }
 
         // FIXME: find a way to escape the flag to prevent mysql injection
-        //        for now it is not possible but we don't 
+        //        for now it is not possible but we don't
         //        necessarily know who will use this dao.
         $user_id  = $this->da->escapeInt($user_id);
         $group_id = $this->da->escapeInt($group_id);
@@ -134,6 +134,91 @@ class UserGroupDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function getAllForgeUGroups() {
+        $sql = "SELECT ugroup.*
+                WHERE ugroup.group_id IS NULL";
+
+        return $this->retrieve($sql);
+    }
+
+    public function getForgeUGroup($user_group_id) {
+        $user_group_id = $this->da->escapeInt($user_group_id);
+
+        $sql = "SELECT ugroup.*
+                WHERE ugroup.ugroup_id = $user_group_id
+                AND ugroup.group_id IS NULL";
+
+        return $this->retrieveFirstRow($sql);
+    }
+
+    /**
+    * @return bool
+    * @throws User_UserGroupNameAlreadyExistsException
+    */
+    public function updateForgeUGroup($user_group_id, $name, $description) {
+        $user_group_id = $this->da->escapeInt($user_group_id);
+        $name = $this->da->quoteSmart($name);
+        $description = $this->da->quoteSmart($description);
+
+        if (! $this->isUserGroupNameValid($name, $user_group_id)) {
+            throw new User_UserGroupNameAlreadyExistsException($name);
+        }
+
+        $sql = "UPDATE ugroup
+            SET name = $name,
+            description = $description,
+            WHERE ugroup_id = $user_group_id
+            AND ugroup.group_id IS NULL";
+
+        return $this->update($sql);
+    }
+
+    /**
+     * @return int
+     * @throws User_UserGroupNameAlreadyExistsException
+     */
+    public function createForgeUGroup($name, $description) {
+        $name        = $this->da->quoteSmart($name);
+        $description = $this->da->quoteSmart($description);
+
+        if (! $this->isUserGroupNameValid($name, null)) {
+            throw new User_UserGroupNameAlreadyExistsException($name);
+        }
+
+        $sql = "INSERT INTO ugroup
+                    (name, description, group_id)
+                VALUES
+                 ($name, $description, NULL)";
+
+        return $this->updateAndGetLastId($sql);
+    }
+
+    private function isUserGroupNameValid($name, $user_group_id) {
+        $name = $this->da->quoteSmart($name);
+        $sql = "SELECT ugroup.ugroup_id FROM ugroup WHERE name='$name'";
+
+        $row = $this->retrieveFirstRow($sql);
+
+        if (! $row) {
+            return true;
+        }
+
+        if ($user_group_id && $row['ugroup_id'] == $user_group_id) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function deleteForgeUGroup($user_group_id) {
+        $user_group_id = $this->da->escapeInt($user_group_id);
+
+        $sql = "DELETE FROM ugroup
+                WHERE ugroup_id = $user_group_id
+                AND ugroup.group_id IS NULL";
+
+        return $this->update($sql);
+    }
 }
 
 ?>
