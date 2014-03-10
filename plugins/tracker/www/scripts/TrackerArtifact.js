@@ -76,7 +76,7 @@ document.observe('dom:loaded', function () {
 
         new Ajax.Request(codendi.tracker.base_url + "comments_order.php", {
             parameters: {
-                tracker_id: $('tracker_id').value
+                tracker: $('tracker_id').value
             },
             onSuccess: function (transport) {
                 if (!transport.responseText) {
@@ -95,7 +95,7 @@ document.observe('dom:loaded', function () {
                     invertFollowups(followup_section);
                     new Ajax.Request(codendi.tracker.base_url + "invert_comments_order.php", {
                         parameters: {
-                            tracker_id: $('tracker_id').value
+                            tracker: $('tracker_id').value
                         }
                     });
                     Event.stop(evt);
