@@ -264,8 +264,16 @@ class ErrorManager
         }
         else if (($error->errno & error_reporting()) != 0) {
             if  (($error->errno & $this->_postpone_mask) != 0) {
+                //echo "postponed errors: ";
+                if (defined('DEBUG') and (DEBUG & _DEBUG_TRACE)) {
+                    echo "error_reporting=",error_reporting(),"\n";
+                    if (function_exists("debug_backtrace")) // >= 4.3.0
+                        $error->printSimpleTrace(debug_backtrace());
+                    $error->printXML();
+                }
+            } else {
                 if ((function_exists('isa') and isa($error, 'PhpErrorOnce'))
-                    or (!function_exists('isa') and 
+                    or (!function_exists('isa') and
                     (
                      // stdlib independent isa()
                      (strtolower(get_class($error)) == 'phperroronce')
@@ -276,15 +284,6 @@ class ErrorManager
                 } else {
                     $this->_postponed_errors[] = $error;
                 }
-            }
-            else {
-                //echo "postponed errors: ";
-                if (defined('DEBUG') and (DEBUG & _DEBUG_TRACE)) {
-                    echo "error_reporting=",error_reporting(),"\n";
-                    if (function_exists("debug_backtrace")) // >= 4.3.0
-                        $error->printSimpleTrace(debug_backtrace());
-                }
-                $error->printXML();
             }
         }
         $in_handler = false;
