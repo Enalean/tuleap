@@ -12,8 +12,8 @@
         <tbody>
             {{# users }}
             <tr>
-                <td></td>
-                <td></td>
+                <td><input type="checkbox" name="users" class="user" /></td>
+                <td><img src="{{ getAvatarUrl }}" /> {{ getRealName }} ({{ getUsername }})</td>
             </tr>
             {{/ users }}
         </tbody>
@@ -26,13 +26,13 @@
     <div class="table-actions">
         <div class="left-actions">
             <div class="input-append">
-                <input type="text">
-                <button class="btn"><i class="icon-plus"></i> {{ users_action_add }}</button>
+                <input type="text" name="user" id="add-user">
+                <button class="btn btn-primary"><i class="icon-plus"></i> {{ users_action_add }}</button>
             </div>
         </div>
         <div class="right-actions">
             {{# has_users }}
-                <button class="btn btn-danger"><i class="icon-trash"></i> {{ users_action_delete }}</button>
+                <button id="delete-users" class="btn btn-danger" disabled="disabled"><i class="icon-trash"></i> {{ users_action_delete }}</button>
             {{/ has_users }}
         </div>
         <div style="clear: both"></div>

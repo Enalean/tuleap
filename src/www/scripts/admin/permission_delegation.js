@@ -73,5 +73,9 @@ tuleap.admin = tuleap.admin || { };
             });
         });
         tuleap.admin.permissionDelegation.handlePermissionsState('.permission', '#delete-permissions');
+
+        tuleap.admin.permissionDelegation.handlePermissionsState('.user', '#delete-users');
     });
+
+    var autocomplete_user = new UserAutoCompleter('add-user', codendi.imgroot, false);
 })(jQuery);
