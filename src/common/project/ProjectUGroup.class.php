@@ -31,7 +31,7 @@ require_once 'utils.php';
 /**
  * ProjectUGroup object
  */
-class ProjectUGroup {
+class ProjectUGroup implements User_UGroup {
 
     const NONE               = 100;
     const ANONYMOUS          = 1;
