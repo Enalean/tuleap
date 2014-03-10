@@ -1,8 +1,11 @@
 Version 6.12 (Not Released Yet)
 
-    == Plugins ==
+	== Plugins ==
 	* proftpd: 0.8
 	* tracker: 5.263
+
+	== Bug fix ==
+	* request #6404: Do not display postponed error for phpwiki (contrib STMicroelectronics)
 
 Version 6.11 (Thursday, March 6th 2014)
 	== Plugins ==
