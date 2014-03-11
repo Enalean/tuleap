@@ -44,7 +44,7 @@ plugin_hudson	form_job_with_token	with (optional) token:
 plugin_hudson	wrong_job_url	Wrong Job URL: $1
 plugin_hudson	job_url_file_not_found	File not found at URL: $1
 plugin_hudson	job_url_file_error	Unable to read file at URL: $1
-plugin_hudson	form_joburl_example	eg: http://myCIserver/hudson/job/myJob
+plugin_hudson	form_joburl_example	eg: http://myCIserver/hudson/job/myJob or http://myCIserver/hudson/job/myJob/buildWithParameters?param1=value1 for parameterized jobs
 plugin_hudson	form_jobname_help	Name (with no space) used to make a reference to this job. Eg: job #$1
 plugin_hudson	form_addjob_button	Add job
 plugin_hudson	editjob_title	Edit job

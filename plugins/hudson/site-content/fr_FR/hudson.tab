@@ -44,7 +44,7 @@ plugin_hudson	form_job_with_token	avec le token (optionnel) :
 plugin_hudson	wrong_job_url	URL du job incorrecte : $1
 plugin_hudson	job_url_file_not_found	Fichier non trouvé à l'Url : $1
 plugin_hudson	job_url_file_error	Impossible de lire le fichier à l'Url : $1
-plugin_hudson	form_joburl_example	ex : http://monICserveur/hudson/job/monJob
+plugin_hudson	form_joburl_example	ex : http://monICserveur/hudson/job/monJob ou http://monICserveur/hudson/job/myJob/buildWithParameters?param1=value1 pour les jobs avec parametres
 plugin_hudson	form_jobname_help	Nom (sans espace) utilisé pour référencer ce job. Ex : job #$1
 plugin_hudson	form_addjob_button	Ajouter
 plugin_hudson	editjob_title	Modifier le job
