@@ -749,3 +749,49 @@ class Tracker_Artifact_XMLImport_CCListTest extends Tracker_Artifact_XMLImportBa
         $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
     }
 }
+
+class Tracker_Artifact_XMLImport_PermsOnArtifactTest extends Tracker_Artifact_XMLImportBaseTest {
+
+    private $xml_element;
+
+    private $perms_field_id = 369;
+    private $perms_field;
+
+    public function setUp() {
+        parent::setUp();
+
+        stub($this->artifact_creator)->create()->returns(mock('Tracker_Artifact'));
+
+        $this->perms_field = stub('Tracker_FormElement_Field_PermissionsOnArtifact')->getId()->returns($this->perms_field_id);
+
+        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'permissions_on_artifact')->returns(
+            $this->perms_field
+        );
+
+        $this->xml_element = new SimpleXMLElement('<?xml version="1.0"?>
+            <artifacts>
+              <artifact id="4918">
+                <changeset>
+                  <submitted_by format="username">john_doe</submitted_by>
+                  <submitted_on format="ISO8601">2014-01-15T10:38:06+01:00</submitted_on>
+                  <field_change type="permissions_on_artifact" field_name="permissions_on_artifact" use_perm="1">
+                    <ugroup ugroup_id="15" />
+                    <ugroup ugroup_id="101" />
+                  </field_change>
+                </changeset>
+              </artifact>
+            </artifacts>');
+    }
+
+    public function itCreatesArtifactWithPermsFieldData() {
+        $data = array(
+            $this->perms_field_id => array(
+                'use_artifact_permissions' => 1,
+                'u_groups' => array(15, 101)
+            )
+        );
+        expect($this->artifact_creator)->create('*', $data, '*', '*', '*', '*')->once();
+
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+    }
+}

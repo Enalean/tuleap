@@ -122,4 +122,16 @@ class ArtifactXMLExporterDao extends DataAccessObject {
                   AND date < $date";
         return $this->retrieve($sql);
     }
+
+    public function searchPermsForArtifact($artifact_id) {
+        $sql = "SELECT ugroup_id
+                FROM permissions
+                    INNER JOIN artifact ON (CAST(artifact_id AS CHAR) = object_id)
+                WHERE permission_type = 'TRACKER_ARTIFACT_ACCESS'
+                  AND object_id = '$artifact_id'
+                  AND use_artifact_permissions = 1
+                ORDER BY ugroup_id";
+
+        return $this->retrieve($sql);
+    }
 }

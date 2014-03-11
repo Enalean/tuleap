@@ -86,6 +86,8 @@ class ArtifactXMLExporterArtifact {
         $this->updateInitialChangeset('summary', $artifact_summary);
 
         $this->addLastChangesetIfNoHistoryRecorded($artifact_node, $artifact_id, $artifact_summary);
+
+        $this->addPermissionOnArtifactAtTheVeryEnd($artifact_node, $artifact_id);
     }
 
     private function updateInitialChangeset($field_name, $old_value) {
@@ -297,6 +299,30 @@ class ArtifactXMLExporterArtifact {
 
     private function getFilePathInArchive($xml_file_id) {
         return ArtifactXMLExporter::ARCHIVE_DATA_DIR.DIRECTORY_SEPARATOR.'Artifact'.$xml_file_id;
+    }
+
+    private function addPermissionOnArtifactAtTheVeryEnd(DOMElement $artifact_node, $artifact_id) {
+        $list_of_changesets = $artifact_node->getElementsByTagName('changeset');
+        if ($list_of_changesets->length == 0) {
+            return;
+        }
+
+        $permissions = $this->dao->searchPermsForArtifact($artifact_id);
+        if (! count($permissions)) {
+            return;
+        }
+
+        $last_changeset_node = $list_of_changesets->item($list_of_changesets->length - 1);
+        $field_node = $this->document->createElement('field_change');
+        $field_node->setAttribute('field_name', 'permissions_on_artifact');
+        $field_node->setAttribute('type', 'permissions_on_artifact');
+        $field_node->setAttribute('use_perm', '1');
+        foreach ($permissions as $row) {
+            $ugroup_node = $this->document->createElement('ugroup');
+            $ugroup_node->setAttribute('ugroup_id', $row['ugroup_id']);
+            $field_node->appendChild($ugroup_node);
+        }
+        $last_changeset_node->appendChild($field_node);
     }
 }
 

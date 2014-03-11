@@ -87,6 +87,7 @@
       <ref name="field_string"/>
       <ref name="field_file"/>
       <ref name="field_open_list_user"/>
+      <ref name="field_perms_on_artifact"/>
     </choice>
   </define>
   <define name="field_string">
@@ -119,6 +120,21 @@
     <oneOrMore>
       <element name="value">
         <ref name="user_content"/>
+      </element>
+    </oneOrMore>
+  </define>
+  <define name="field_perms_on_artifact">
+    <attribute name="type">
+      <value>permissions_on_artifact</value>
+    </attribute>
+    <attribute name="use_perm">
+      <data type="boolean"/>
+    </attribute>
+    <oneOrMore>
+      <element name="ugroup">
+        <attribute name="ugroup_id">
+          <data type="int"/>
+        </attribute>
       </element>
     </oneOrMore>
   </define>
