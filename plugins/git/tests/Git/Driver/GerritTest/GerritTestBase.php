@@ -66,4 +66,36 @@ abstract class Git_Driver_GerritLegacy_baseTest extends TuleapTestCase {
     }
 
 }
-abstract class Git_Driver_GerritREST_baseTest extends TuleapTestCase {}
+abstract class Git_Driver_GerritREST_baseTest extends TuleapTestCase {
+
+    /** @var Http_Client */
+    protected $http_client;
+    protected $gerrit_server_host = 'http://gerrit.example.com';
+    protected $gerrit_server_port = 8080;
+    protected $gerrit_server_pass = 'correct horse battery staple';
+    protected $gerrit_server_user = 'admin-tuleap.example.com';
+
+    /** @var Git_RemoteServer_GerritServer */
+    protected $gerrit_server;
+
+    /** @var Git_Driver_GerritREST */
+    protected $driver;
+
+    public function setUp() {
+        parent::setUp();
+        $this->http_client   = mock('Http_Client');
+        $this->gerrit_server = mock('Git_RemoteServer_GerritServer');
+        $this->logger        = mock('BackendLogger');
+        stub($this->gerrit_server)->getHost()->returns($this->gerrit_server_host);
+        stub($this->gerrit_server)->getHTTPPassword()->returns($this->gerrit_server_pass);
+        stub($this->gerrit_server)->getLogin()->returns($this->gerrit_server_user);
+        stub($this->gerrit_server)->getHTTPPort()->returns($this->gerrit_server_port);
+        stub($this->gerrit_server)->getBaseUrl()->returns($this->gerrit_server_host .':'. $this->gerrit_server_port);
+
+        $this->driver = new Git_Driver_GerritREST($this->http_client, $this->logger);
+
+        $this->project_name    = 'firefox';
+        $this->namespace       = 'jean-claude';
+        $this->repository_name = 'dusse';
+    }
+}

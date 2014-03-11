@@ -24,6 +24,17 @@
  */
 class Git_Driver_GerritREST implements Git_Driver_Gerrit {
 
+    /** @var Http_Client */
+    private $http_client;
+
+    /** @var Logger */
+    private $logger;
+
+    public function __construct(Http_Client $http_client, Logger $logger) {
+        $this->http_client = $http_client;
+        $this->logger      = $logger;
+    }
+
     public function createProject(
         Git_RemoteServer_GerritServer $server,
         GitRepository $repository,
@@ -84,8 +95,25 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         return;
     }
 
-    public function addUserToGroup(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user, $group_name ){
-        return;
+    public function addUserToGroup(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user, $group_name){
+        if (! $this->userIsAlreadyMigratedOnGerrit($server, $user)) {
+            return $this->createUserOnGerritAndAddItDirectlyIntoGroup($server, $user, $group_name);
+        }
+
+        $url            = '/groups/'.$group_name.'/members/'.$user->getSSHUserName();
+        $custom_options = array(
+            CURLOPT_PUT => true,
+        );
+
+        $options = $this->getOptionsForRequest($server, $url, $custom_options);
+
+        try {
+            $this->http_client->addOptions($options);
+            $this->http_client->doRequest();
+            return true;
+        } catch (Http_ClientException $exception) {
+            return false;
+        }
     }
 
     public function removeUserFromGroup(
@@ -93,7 +121,66 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         Git_Driver_Gerrit_User $user,
         $group_name
      ){
-        return;
+        $url            = '/groups/'.$group_name.'/members.delete/'.$user->getSSHUserName();
+        $custom_options = array(
+            CURLOPT_CUSTOMREQUEST => 'DELETE',
+        );
+
+        $options = $this->getOptionsForRequest($server, $url, $custom_options);
+
+        try {
+            $this->http_client->addOptions($options);
+            $this->http_client->doRequest();
+            return true;
+        } catch (Http_ClientException $exception) {
+            return false;
+        }
+    }
+
+    private function createUserOnGerritAndAddItDirectlyIntoGroup(
+        Git_RemoteServer_GerritServer $server,
+        Git_Driver_Gerrit_User $user,
+        $group_name
+    ){
+        $url_create_account = '/accounts/'.$user->getSSHUserName();
+        $custom_options = array(
+            CURLOPT_PUT        => true,
+            CURLOPT_HTTPHEADER => 'Content-Type: application/json;charset=UTF-8',
+            CURLOPT_POSTFIELDS => json_encode(
+                array(
+                    'name'   => $user->getRealName(),
+                    'email'  => $user->getEmail(),
+                    'groups' => array($group_name)
+                )
+            )
+        );
+
+        $options = $this->getOptionsForRequest($server, $url_create_account, $custom_options);
+
+        try {
+            $this->http_client->addOptions($options);
+            $this->http_client->doRequest();
+            return true;
+        } catch (Http_ClientException $exception) {
+            return false;
+        }
+    }
+
+    private function userIsAlreadyMigratedOnGerrit(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user){
+        $url            = '/accounts/'.$user->getSSHUserName();
+        $custom_options = array(
+            CURLOPT_CUSTOMREQUEST   => 'GET'
+        );
+
+        $options = $this->getOptionsForRequest($server, $url, $custom_options);
+
+        try {
+            $this->http_client->addOptions($options);
+            $this->http_client->doRequest();
+            return $this->http_client->getLastHTTPCode() === '200';
+        } catch (Http_ClientException $exception) {
+            return false;
+        }
     }
 
     public function removeAllGroupMembers(Git_RemoteServer_GerritServer $server, $group_name ){
@@ -142,5 +229,18 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
 
     public function makeGerritProjectReadOnly(Git_RemoteServer_GerritServer $server, $gerrit_project_full_name ){
         return;
+    }
+
+    private function getOptionsForRequest(Git_RemoteServer_GerritServer $server, $url, array $custom_options) {
+        $gerrit_url = $server->getBaseUrl().'/a'. $url;
+
+        $standard_options = array(
+            CURLOPT_URL             => $gerrit_url,
+            CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_HTTPAUTH        => CURLAUTH_DIGEST,
+            CURLOPT_USERPWD         => $server->getLogin() .':'. $server->getHTTPPassword(),
+        );
+
+        return ($standard_options + $custom_options);
     }
 }

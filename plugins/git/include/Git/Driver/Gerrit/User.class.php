@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
+ * Copyright Enalean (c) 2011, 2012, 2013, 2014. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -52,6 +52,12 @@ class Git_Driver_Gerrit_User {
     public function getWebUserName() {
         return $this->ldap_user->getUid();
     }
-}
 
-?>
+    public function getRealName() {
+        return $this->ldap_user->getRealName();
+    }
+
+    public function getEmail() {
+        return $this->ldap_user->getEmail();
+    }
+}

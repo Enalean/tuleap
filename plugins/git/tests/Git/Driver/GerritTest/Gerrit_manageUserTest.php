@@ -77,8 +77,104 @@ class Git_Driver_GerritLegacy_manageUserTest extends Git_Driver_GerritLegacy_bas
 }
 
 class Git_DriverREST_Gerrit_manageUserTest extends Git_Driver_GerritREST_baseTest implements Git_Driver_Gerrit_manageUserTest {
-    public function itInitializeUserAccountInGerritWhenUserNeverLoggedToGerritUI(){}
-    public function itExecutesTheInsertCommand(){}
-    public function itExecutesTheDeletionCommand(){}
+    private $username = 'someuser';
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->user      = mock('Git_Driver_Gerrit_User');
+        $this->group     = 'contributors';
+        $this->groupname = $this->project_name.'/'.$this->namespace.'/'.$this->repository_name.'-'.$this->group;
+
+        stub($this->user)->getRealName()->returns('John Doe');
+        stub($this->user)->getEmail()->returns('jdoe@example.com');
+        stub($this->user)->getSSHUserName()->returns($this->username);
+
+        $url_get_user = $this->gerrit_server_host
+            .':'. $this->gerrit_server_port
+            .'/a/accounts/'. $this->username;
+
+        $this->expected_options_get_user = array(
+            CURLOPT_URL             => $url_get_user,
+            CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_HTTPAUTH        => CURLAUTH_DIGEST,
+            CURLOPT_USERPWD         => $this->gerrit_server_user .':'. $this->gerrit_server_pass,
+            CURLOPT_CUSTOMREQUEST   => 'GET',
+        );
+    }
+
+    public function itInitializeUserAccountInGerritWhenUserNeverLoggedToGerritUI(){
+        stub($this->http_client)->getLastHTTPCode()->returns('404');
+
+        $url_create_account = $this->gerrit_server_host
+            .':'. $this->gerrit_server_port
+            .'/a/accounts/'. $this->username;
+
+        $expected_options_create_account = array(
+            CURLOPT_URL             => $url_create_account,
+            CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_HTTPAUTH        => CURLAUTH_DIGEST,
+            CURLOPT_USERPWD         => $this->gerrit_server_user .':'. $this->gerrit_server_pass,
+            CURLOPT_PUT             => true,
+            CURLOPT_HTTPHEADER      => 'Content-Type: application/json;charset=UTF-8',
+            CURLOPT_POSTFIELDS      => json_encode(
+                array(
+                    'name'   => "John Doe",
+                    'email'  => "jdoe@example.com",
+                    'groups' => array($this->groupname)
+                )
+            )
+        );
+
+        expect($this->http_client)->doRequest()->count(2);
+        expect($this->http_client)->addOptions($this->expected_options_get_user)->at(0);
+        expect($this->http_client)->addOptions($expected_options_create_account)->at(1);
+
+        $this->driver->addUserToGroup($this->gerrit_server, $this->user, $this->groupname);
+    }
+
+    public function itExecutesTheInsertCommand(){
+        stub($this->http_client)->getLastHTTPCode()->returns('200');
+
+        $url = $this->gerrit_server_host
+            .':'. $this->gerrit_server_port
+            .'/a/groups/'. $this->groupname
+            .'/members/'. $this->username;
+
+        $expected_options = array(
+            CURLOPT_URL             => $url,
+            CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_HTTPAUTH        => CURLAUTH_DIGEST,
+            CURLOPT_USERPWD         => $this->gerrit_server_user .':'. $this->gerrit_server_pass,
+            CURLOPT_PUT             => true,
+        );
+
+        expect($this->http_client)->doRequest()->count(2);
+        expect($this->http_client)->addOptions($this->expected_options_get_user)->at(0);
+        expect($this->http_client)->addOptions($expected_options)->at(1);
+
+        $this->driver->addUserToGroup($this->gerrit_server, $this->user, $this->groupname);
+    }
+
+    public function itExecutesTheDeletionCommand(){
+        $url = $this->gerrit_server_host
+            .':'. $this->gerrit_server_port
+            .'/a/groups/'. $this->groupname
+            .'/members.delete/'. $this->username;
+
+        $expected_options = array(
+            CURLOPT_URL             => $url,
+            CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_HTTPAUTH        => CURLAUTH_DIGEST,
+            CURLOPT_USERPWD         => $this->gerrit_server_user .':'. $this->gerrit_server_pass,
+            CURLOPT_CUSTOMREQUEST   => 'DELETE',
+        );
+
+        expect($this->http_client)->doRequest()->once();
+        expect($this->http_client)->addOptions($expected_options)->once();
+
+        $this->driver->removeUserFromGroup($this->gerrit_server, $this->user, $this->groupname);
+    }
+
     public function itRemovesAllMembers(){}
 }

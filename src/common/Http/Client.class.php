@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2012. All rights reserved
+ * Copyright (c) Enalean, 2012 - 2014. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -56,6 +55,13 @@ class Http_Client
      */
     public function getLastRequest() {
         return curl_getinfo($this->curl_handle);
+    }
+
+    /**
+     * @return null | string
+     */
+    public function getLastHTTPCode() {
+        return curl_getinfo($this->curl_handle, CURLINFO_HTTP_CODE);
     }
 
     /**
@@ -171,4 +177,3 @@ class Http_Client
         return curl_exec($this->curl_handle);
     }
 }
-?>
