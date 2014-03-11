@@ -1,3 +1,6 @@
+Version 5.264 - Tuleap 6.12
+    * Fix request #6290: invert order in follow ups comments is not saved as preferences
+
 Version 5.263 - Tuleap 6.12
     * Fix request #6401: PUT /artifacts/:id issue with artifact links
     * Fix request #6400 - REST route /tracker_reports/:id/artifacts has problems with pagination
