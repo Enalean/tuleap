@@ -393,6 +393,7 @@ class MilestoneResource {
 
         try {
             $this->milestone_validator->validateArtifactsFromBodyContent($ids, $milestone, $current_user);
+            $this->milestone_content_updater->updateMilestoneContent($ids, $current_user, $milestone);
         } catch (ArtifactDoesNotExistException $exception) {
             throw new RestException(404, $exception->getMessage());
         } catch (ArtifactIsNotInBacklogTrackerException $exception) {
@@ -401,12 +402,14 @@ class MilestoneResource {
             throw new RestException(400, $exception->getMessage());
         } catch (IdsFromBodyAreNotUniqueException $exception) {
             throw new RestException(400, $exception->getMessage());
+        } catch (Tracker_NoChangeException $exception) {
+            //Do nothing
         }
 
         try {
-            $this->milestone_content_updater->updateMilestoneContent($ids, $current_user, $milestone);
-        } catch (Tracker_NoChangeException $exception) {
-            //Do nothing
+            $this->artifactlink_updater->setOrder($ids);
+        } catch (ItemListedTwiceException $exception) {
+            throw new RestException(400, $exception->getMessage());
         }
 
         $this->sendAllowHeaderForContent();
