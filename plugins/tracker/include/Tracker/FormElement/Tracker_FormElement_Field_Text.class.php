@@ -536,5 +536,11 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
     public function getFieldDataFromCSVValue($csv_value) {
         return $this->getFieldData($csv_value);
     }
+
+    public function isEmpty(array $value) {
+        if (trim($value['content']) == '') {
+            return true;
+        }
+        return false;
+    }
 }
-?>
