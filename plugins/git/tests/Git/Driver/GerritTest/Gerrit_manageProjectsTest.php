@@ -98,12 +98,184 @@ class Git_Driver_GerritLegacy_manageProjectsTest extends Git_Driver_GerritLegacy
 }
 
 class Git_DriverREST_Gerrit_manageProjectsTest extends Git_Driver_GerritREST_baseTest implements Git_Driver_Gerrit_manageProjectsTest {
-    public function itExecutesTheCreateCommandForProjectOnTheGerritServer(){}
-    public function itExecutesTheCreateCommandForParentProjectOnTheGerritServer(){}
-    public function itReturnsTheNameOfTheCreatedProject(){}
-    public function itRaisesAGerritDriverExceptionOnProjectCreation(){}
+
+    public function itExecutesTheCreateCommandForProjectOnTheGerritServer(){
+        stub($this->http_client)->isLastResponseSuccess()->returns(true);
+
+        $url_create_project = $this->gerrit_server_host
+            .':'. $this->gerrit_server_port
+            .'/a/projects/'. urlencode($this->gerrit_project_name);
+
+        $expected_json_data = json_encode(
+            array(
+                'description' => "Migration of $this->gerrit_project_name from Tuleap",
+                'parent'      => $this->project_name
+            )
+        );
+
+        $expected_options_create_project = array(
+            CURLOPT_URL             => $url_create_project,
+            CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_HTTPAUTH        => CURLAUTH_DIGEST,
+            CURLOPT_USERPWD         => $this->gerrit_server_user .':'. $this->gerrit_server_pass,
+            CURLOPT_PUT             => true,
+            CURLOPT_HTTPHEADER      => array(Git_Driver_GerritREST::CONTENT_TYPE_JSON),
+            CURLOPT_INFILE          => $this->temporary_file_for_body,
+            CURLOPT_INFILESIZE      => strlen($expected_json_data)
+        );
+
+        expect($this->body_builder)->getTemporaryFile($expected_json_data)->once();
+        expect($this->http_client)->doRequest()->once();
+        expect($this->http_client)->addOptions($expected_options_create_project)->once();
+
+        $this->driver->createProject($this->gerrit_server, $this->repository, $this->project_name);
+    }
+
+    public function itExecutesTheCreateCommandForParentProjectOnTheGerritServer(){
+       $url_create_project = $this->gerrit_server_host
+            .':'. $this->gerrit_server_port
+            .'/a/projects/'. urlencode($this->project_name);
+
+        $expected_json_data = json_encode(
+            array(
+                'description'      => "Migration of $this->project_name from Tuleap",
+                'permissions_only' => true,
+                'owners'           => array(
+                    'firefox/project_admins'
+                )
+            )
+        );
+
+        $expected_options_create_project = array(
+            CURLOPT_URL             => $url_create_project,
+            CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_HTTPAUTH        => CURLAUTH_DIGEST,
+            CURLOPT_USERPWD         => $this->gerrit_server_user .':'. $this->gerrit_server_pass,
+            CURLOPT_PUT             => true,
+            CURLOPT_HTTPHEADER      => array(Git_Driver_GerritREST::CONTENT_TYPE_JSON),
+            CURLOPT_INFILE          => $this->temporary_file_for_body,
+            CURLOPT_INFILESIZE      => strlen($expected_json_data)
+        );
+
+        expect($this->body_builder)->getTemporaryFile($expected_json_data)->once();
+        expect($this->http_client)->doRequest()->once();
+        expect($this->http_client)->addOptions($expected_options_create_project)->once();
+
+        $this->driver->createProjectWithPermissionsOnly($this->gerrit_server, $this->project, 'firefox/project_admins');
+    }
+
+    public function itReturnsTheNameOfTheCreatedProject(){
+        stub($this->http_client)->isLastResponseSuccess()->returns(true);
+
+        $project_name = $this->driver->createProject($this->gerrit_server, $this->repository, $this->project_name);
+        $this->assertEqual($project_name, $this->gerrit_project_name);
+    }
+
+    public function itRaisesAGerritDriverExceptionOnProjectCreation(){
+         $url_create_project = $this->gerrit_server_host
+            .':'. $this->gerrit_server_port
+            .'/a/projects/'. urlencode($this->gerrit_project_name);
+
+        stub($this->http_client)->isLastResponseSuccess()->returns(false);
+        stub($this->http_client)->getLastHTTPCode()->returns(404);
+
+        try {
+            $this->driver->createProject($this->gerrit_server, $this->repository, $this->project_name);
+        } catch(Git_Driver_Gerrit_Exception $exception) {
+            $this->assertEqual(
+                $exception->getMessage(),
+                'url: '. $url_create_project.', http code: '. $this->http_client->getLastHTTPCode()
+            );
+        }
+    }
+
     public function itDoesntTransformExceptionsThatArentRelatedToGerrit(){}
     public function itInformsAboutProjectInitialization(){}
-    public function itReturnsTrueIfParentProjectExists(){}
-    public function itReturnsFalseIfParentProjectDoNotExists(){}
+
+    public function itPutsThneProjectInReadOnly() {
+        $url = $this->gerrit_server_host
+            .':'. $this->gerrit_server_port
+            .'/a/projects/'. urlencode($this->project_name) .'/config';
+
+        $expected_json_data = json_encode(
+            array(
+                'state' => 'READ_ONLY'
+            )
+        );
+
+        $expected_options = array(
+            CURLOPT_URL             => $url,
+            CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_HTTPAUTH        => CURLAUTH_DIGEST,
+            CURLOPT_USERPWD         => $this->gerrit_server_user .':'. $this->gerrit_server_pass,
+            CURLOPT_PUT             => true,
+            CURLOPT_HTTPHEADER      => array(Git_Driver_GerritREST::CONTENT_TYPE_JSON),
+            CURLOPT_INFILE          => $this->temporary_file_for_body,
+            CURLOPT_INFILESIZE      => strlen($expected_json_data)
+        );
+
+        expect($this->body_builder)->getTemporaryFile($expected_json_data)->once();
+        expect($this->http_client)->doRequest()->once();
+        expect($this->http_client)->addOptions($expected_options)->once();
+
+        $this->driver->makeGerritProjectReadOnly($this->gerrit_server, $this->project_name);
+    }
+
+    public function itAddsTheProjectInheritance() {
+        $url = $this->gerrit_server_host
+            .':'. $this->gerrit_server_port
+            .'/a/projects/'. urlencode($this->project_name) .'/parent';
+
+        $expected_json_data = json_encode(
+            array(
+                'parent' => 'prj'
+            )
+        );
+
+        $expected_options = array(
+            CURLOPT_URL             => $url,
+            CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_HTTPAUTH        => CURLAUTH_DIGEST,
+            CURLOPT_USERPWD         => $this->gerrit_server_user .':'. $this->gerrit_server_pass,
+            CURLOPT_PUT             => true,
+            CURLOPT_HTTPHEADER      => array(Git_Driver_GerritREST::CONTENT_TYPE_JSON),
+            CURLOPT_INFILE          => $this->temporary_file_for_body,
+            CURLOPT_INFILESIZE      => strlen($expected_json_data)
+        );
+
+        expect($this->body_builder)->getTemporaryFile($expected_json_data)->once();
+        expect($this->http_client)->doRequest()->once();
+        expect($this->http_client)->addOptions($expected_options)->once();
+
+        $this->driver->setProjectInheritance($this->gerrit_server, $this->project_name, 'prj');
+    }
+
+     public function itResetsTheProjectInheritance() {
+        $url = $this->gerrit_server_host
+            .':'. $this->gerrit_server_port
+            .'/a/projects/'. urlencode($this->project_name) .'/parent';
+
+        $expected_json_data = json_encode(
+            array(
+                'parent' => Git_Driver_Gerrit::DEFAULT_PARENT_PROJECT
+            )
+        );
+
+        $expected_options = array(
+            CURLOPT_URL             => $url,
+            CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_HTTPAUTH        => CURLAUTH_DIGEST,
+            CURLOPT_USERPWD         => $this->gerrit_server_user .':'. $this->gerrit_server_pass,
+            CURLOPT_PUT             => true,
+            CURLOPT_HTTPHEADER      => array(Git_Driver_GerritREST::CONTENT_TYPE_JSON),
+            CURLOPT_INFILE          => $this->temporary_file_for_body,
+            CURLOPT_INFILESIZE      => strlen($expected_json_data)
+        );
+
+        expect($this->body_builder)->getTemporaryFile($expected_json_data)->once();
+        expect($this->http_client)->doRequest()->once();
+        expect($this->http_client)->addOptions($expected_options)->once();
+
+        $this->driver->resetProjectInheritance($this->gerrit_server, $this->project_name);
+    }
 }

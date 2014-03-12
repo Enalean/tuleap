@@ -86,13 +86,48 @@ project/group_from_ldap';
     }
 }
 
-class Git_Driver_GerritREST_projectExistsTest extends TuleapTestCase implements Git_Driver_Gerrit_projectExistsTest {
-    public function itReturnsFalseIfParentProjectDoNotExists() {
+class Git_Driver_GerritREST_projectExistsTest extends Git_Driver_GerritREST_baseTest implements Git_Driver_Gerrit_projectExistsTest {
 
+    public function setUp() {
+        parent::setUp();
+
+        $url = $this->gerrit_server_host
+            .':'. $this->gerrit_server_port
+            .'/a/projects/'. urlencode($this->project_name);
+
+        $this->expected_options = array(
+            CURLOPT_URL             => $url,
+            CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_HTTPAUTH        => CURLAUTH_DIGEST,
+            CURLOPT_USERPWD         => $this->gerrit_server_user .':'. $this->gerrit_server_pass,
+            CURLOPT_CUSTOMREQUEST   => 'GET'
+        );
+    }
+
+    public function itReturnsFalseIfParentProjectDoNotExists() {
+        stub($this->http_client)->doRequest()->throws(new Http_ClientException());
+
+        $this->assertFalse($this->driver->doesTheParentProjectExist($this->gerrit_server, $this->project_name));
     }
 
     public function itReturnsTrueIfParentProjectExists() {
-
+        $this->assertTrue($this->driver->doesTheParentProjectExist($this->gerrit_server, $this->project_name));
     }
 
+    public function itReturnsTrueIfTheProjectExists() {
+        $this->assertTrue($this->driver->doesTheProjectExist($this->gerrit_server, $this->project_name));
+    }
+
+    public function itReturnsFalseIfTheProjectDoesNotExist() {
+        stub($this->http_client)->doRequest()->throws(new Http_ClientException());
+
+        $this->assertfalse($this->driver->doesTheProjectExist($this->gerrit_server, $this->project_name));
+    }
+
+    public function itCallsTheRightOptions() {
+        expect($this->http_client)->doRequest()->once();
+        expect($this->http_client)->addOptions($this->expected_options)->once();
+
+        $this->driver->doesTheParentProjectExist($this->gerrit_server, $this->project_name);
+    }
 }

@@ -30,8 +30,6 @@ interface Git_Driver_Gerrit_manageGroupsTest {
     public function itReturnsNullUUIDIfNotFound();
     public function itAsksGerritForTheGroupId();
     public function itReturnsNullIdIfNotFound();
-    public function itAddAnIncludedGroup();
-    public function itRemovesAnIncludedGroup();
 }
 
 class Git_Driver_GerritLegacy_manageGroupsTest extends Git_Driver_GerritLegacy_baseTest implements Git_Driver_Gerrit_manageGroupsTest {
@@ -130,22 +128,171 @@ class Git_Driver_GerritLegacy_manageGroupsTest extends Git_Driver_GerritLegacy_b
 
         $this->assertNull($this->driver->getGroupID($this->gerrit_server, $this->groupname));
     }
-
-    public function itAddAnIncludedGroup(){}
-    public function itRemovesAnIncludedGroup(){}
 }
 
 class Git_DriverREST_Gerrit_manageGroupsTest extends Git_Driver_GerritREST_baseTest implements Git_Driver_Gerrit_manageGroupsTest {
-    public function itCreatesGroupsIfItNotExistsOnGerrit(){}
-    public function itDoesNotCreateGroupIfItAlreadyExistsOnGerrit(){}
+
+    public function setUp() {
+        parent::setUp();
+        $this->gerrit_driver = partial_mock(
+            'Git_Driver_GerritREST',
+            array('doesTheGroupExist'),
+            array($this->http_client, $this->logger, $this->body_builder)
+        );
+    }
+
+    public function itCreatesGroupsIfItNotExistsOnGerrit(){
+        stub($this->gerrit_driver)->doesTheGroupExist()->returns(false);
+
+        $url_create_group = $this->gerrit_server_host
+            .':'. $this->gerrit_server_port
+            .'/a/groups/'. urlencode('firefox/project_members');
+
+        $expected_json_data = json_encode(
+            array(
+                'owner' => 'firefox/project_admins'
+            )
+        );
+
+        $expected_options_create_group = array(
+            CURLOPT_URL             => $url_create_group,
+            CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_HTTPAUTH        => CURLAUTH_DIGEST,
+            CURLOPT_USERPWD         => $this->gerrit_server_user .':'. $this->gerrit_server_pass,
+            CURLOPT_PUT             => true,
+            CURLOPT_HTTPHEADER      => array(Git_Driver_GerritREST::CONTENT_TYPE_JSON),
+            CURLOPT_INFILE          => $this->temporary_file_for_body,
+            CURLOPT_INFILESIZE      => strlen($expected_json_data)
+        );
+
+        expect($this->body_builder)->getTemporaryFile($expected_json_data)->once();
+        expect($this->http_client)->doRequest()->once();
+        expect($this->http_client)->addOptions($expected_options_create_group)->once();
+
+        $this->gerrit_driver->createGroup($this->gerrit_server, 'firefox/project_members', 'firefox/project_admins');
+    }
+
+    public function itDoesNotCreateGroupIfItAlreadyExistsOnGerrit(){
+        stub($this->gerrit_driver)->doesTheGroupExist()->returns(true);
+
+        expect($this->http_client)->doRequest()->never();
+        expect($this->http_client)->addOptions()->never();
+
+        $this->gerrit_driver->createGroup($this->gerrit_server, 'firefox/project_members', 'firefox/project_admins');
+    }
     public function itInformsAboutGroupCreation(){}
     public function itRaisesAGerritDriverExceptionOnGroupsCreation(){}
-    public function itCreatesGroupWithoutOwnerWhenSelfOwnedToAvoidChickenEggIssue(){}
-    public function itAsksGerritForTheGroupUUID(){}
-    public function itAsksGerritForTheGroupId(){}
-    public function itCallsLsGroups(){}
-    public function itAddAnIncludedGroup(){}
-    public function itRemovesAnIncludedGroup(){}
-    public function itReturnsNullIdIfNotFound() {}
-    public function itReturnsNullUUIDIfNotFound() {}
+
+    public function itCreatesGroupWithoutOwnerWhenSelfOwnedToAvoidChickenEggIssue(){
+        stub($this->gerrit_driver)->doesTheGroupExist()->returns(false);
+
+        $url_create_group = $this->gerrit_server_host
+            .':'. $this->gerrit_server_port
+            .'/a/groups/'. urlencode('firefox/project_admins');
+
+        $expected_options_create_group = array(
+            CURLOPT_URL             => $url_create_group,
+            CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_HTTPAUTH        => CURLAUTH_DIGEST,
+            CURLOPT_USERPWD         => $this->gerrit_server_user .':'. $this->gerrit_server_pass,
+            CURLOPT_PUT             => true,
+        );
+
+        expect($this->http_client)->doRequest()->once();
+        expect($this->http_client)->addOptions($expected_options_create_group)->once();
+
+        $this->gerrit_driver->createGroup($this->gerrit_server, 'firefox/project_admins', 'firefox/project_admins');
+    }
+
+    public function itAsksGerritForTheGroupUUID(){
+        $get_group_response = <<<EOS
+)]}'
+{
+  "kind": "gerritcodereview#group",
+  "url": "#/admin/groups/uuid-a1e6742f55dc890205b9db147826964d12c9a775",
+  "options": {},
+  "group_id": 8,
+  "owner": "enalean",
+  "owner_id": "a1e6742f55dc890205b9db147826964d12c9a775",
+  "id": "a1e6742f55dc890205b9db147826964d12c9a775",
+  "name": "enalean"
+}
+EOS;
+
+        stub($this->http_client)->getLastResponse()->returns($get_group_response);
+
+        $url = $this->gerrit_server_host
+            .':'. $this->gerrit_server_port
+            .'/a/groups/enalean';
+
+        $expected_options = array(
+            CURLOPT_URL             => $url,
+            CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_HTTPAUTH        => CURLAUTH_DIGEST,
+            CURLOPT_USERPWD         => $this->gerrit_server_user .':'. $this->gerrit_server_pass,
+            CURLOPT_CUSTOMREQUEST   => 'GET'
+        );
+
+        expect($this->http_client)->doRequest()->once();
+        expect($this->http_client)->addOptions($expected_options)->once();
+
+        $this->assertEqual(
+            $this->driver->getGroupUUID($this->gerrit_server, 'enalean'),
+            'a1e6742f55dc890205b9db147826964d12c9a775'
+        );
+    }
+
+    public function itAsksGerritForTheGroupId(){
+        $get_group_response = <<<EOS
+)]}'
+{
+  "kind": "gerritcodereview#group",
+  "url": "#/admin/groups/uuid-a1e6742f55dc890205b9db147826964d12c9a775",
+  "options": {},
+  "group_id": 8,
+  "owner": "enalean",
+  "owner_id": "a1e6742f55dc890205b9db147826964d12c9a775",
+  "id": "a1e6742f55dc890205b9db147826964d12c9a775",
+  "name": "enalean"
+}
+EOS;
+
+        stub($this->http_client)->getLastResponse()->returns($get_group_response);
+
+        $url = $this->gerrit_server_host
+            .':'. $this->gerrit_server_port
+            .'/a/groups/enalean';
+
+        $expected_options = array(
+            CURLOPT_URL             => $url,
+            CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_HTTPAUTH        => CURLAUTH_DIGEST,
+            CURLOPT_USERPWD         => $this->gerrit_server_user .':'. $this->gerrit_server_pass,
+            CURLOPT_CUSTOMREQUEST   => 'GET'
+        );
+
+        expect($this->http_client)->doRequest()->once();
+        expect($this->http_client)->addOptions($expected_options)->once();
+
+        $this->assertEqual(
+            $this->driver->getGroupId($this->gerrit_server, 'enalean'),
+            8
+        );
+    }
+
+    public function itReturnsNullIdIfNotFound() {
+        $get_group_response = null;
+
+        stub($this->http_client)->getLastResponse()->returns($get_group_response);
+
+        $this->assertNull($this->driver->getGroupId($this->gerrit_server, 'enalean'));
+    }
+
+    public function itReturnsNullUUIDIfNotFound() {
+        $get_group_response = null;
+
+        stub($this->http_client)->getLastResponse()->returns($get_group_response);
+
+        $this->assertNull($this->driver->getGroupUUID($this->gerrit_server, 'enalean'));
+    }
 }

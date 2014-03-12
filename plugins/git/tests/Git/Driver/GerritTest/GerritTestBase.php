@@ -68,6 +68,14 @@ abstract class Git_Driver_GerritLegacy_baseTest extends TuleapTestCase {
 }
 abstract class Git_Driver_GerritREST_baseTest extends TuleapTestCase {
 
+    protected $temporary_file_for_body = "a php resource to a file";
+
+    protected $project_name    = 'fire/fox';
+    protected $namespace       = 'jean-claude';
+    protected $repository_name = 'dusse';
+
+    protected $gerrit_project_name = 'fire/fox/jean-claude/dusse';
+
     /** @var Http_Client */
     protected $http_client;
     protected $gerrit_server_host = 'http://gerrit.example.com';
@@ -81,21 +89,37 @@ abstract class Git_Driver_GerritREST_baseTest extends TuleapTestCase {
     /** @var Git_Driver_GerritREST */
     protected $driver;
 
+    /** @var GitRepository */
+    protected $repository;
+
+    /** @var Project */
+    protected $project;
+
+    /** @var Git_Driver_GerritRESTBodyBuilder */
+    protected $body_builder;
+
     public function setUp() {
         parent::setUp();
         $this->http_client   = mock('Http_Client');
         $this->gerrit_server = mock('Git_RemoteServer_GerritServer');
         $this->logger        = mock('BackendLogger');
+        $this->body_builder  = mock('Git_Driver_GerritRESTBodyBuilder');
+
+        stub($this->body_builder)->getTemporaryFile()->returns($this->temporary_file_for_body);
+
         stub($this->gerrit_server)->getHost()->returns($this->gerrit_server_host);
         stub($this->gerrit_server)->getHTTPPassword()->returns($this->gerrit_server_pass);
         stub($this->gerrit_server)->getLogin()->returns($this->gerrit_server_user);
         stub($this->gerrit_server)->getHTTPPort()->returns($this->gerrit_server_port);
         stub($this->gerrit_server)->getBaseUrl()->returns($this->gerrit_server_host .':'. $this->gerrit_server_port);
 
-        $this->driver = new Git_Driver_GerritREST($this->http_client, $this->logger);
+        $this->project = stub('Project')->getUnixName()->returns($this->project_name);
+        $this->repository = aGitRepository()
+            ->withProject($this->project)
+            ->withNamespace($this->namespace)
+            ->withName($this->repository_name)
+            ->build();
 
-        $this->project_name    = 'firefox';
-        $this->namespace       = 'jean-claude';
-        $this->repository_name = 'dusse';
+        $this->driver = new Git_Driver_GerritREST($this->http_client, $this->logger, $this->body_builder);
     }
 }

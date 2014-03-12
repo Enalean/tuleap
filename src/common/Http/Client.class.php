@@ -18,8 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 require_once 'common/Http/ClientException.class.php';
-class Http_Client
-{
+
+class Http_Client {
+
+    const SUCCESS     = 200;
+    const REDIRECTION = 300;
+
     /**
      * @var resource
      */
@@ -41,6 +45,13 @@ class Http_Client
      * Initiates a curl handle.
      */
     public function __construct() {
+        $this->init();
+    }
+
+    public function init() {
+        if ($this->curl_handle) {
+            $this->close();
+        }
         $this->curl_handle = curl_init();
         $this->setOption(CURLINFO_HEADER_OUT, true);
         $this->setOption(CURLOPT_RETURNTRANSFER, true);
@@ -58,10 +69,17 @@ class Http_Client
     }
 
     /**
-     * @return null | string
+     * @return int
      */
     public function getLastHTTPCode() {
-        return curl_getinfo($this->curl_handle, CURLINFO_HTTP_CODE);
+        return (int) curl_getinfo($this->curl_handle, CURLINFO_HTTP_CODE);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLastResponseSuccess() {
+        return $this->getLastHTTPCode() >= self::SUCCESS && $this->getLastHTTPCode() < self::REDIRECTION;
     }
 
     /**
@@ -149,13 +167,14 @@ class Http_Client
      */
     public function close() {
         curl_close($this->curl_handle);
+        $this->curl_options = array();
     }
 
     /**
      * Method to execute requests..
      *
      * @param array $options curl options
-     * @throws Tracker_Exception
+     * @throws Http_ClientException
      */
     public function doRequest() {
         $this->curl_response = $this->execute();
