@@ -80,7 +80,20 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
     }
 
     public function doesTheGroupExist(Git_RemoteServer_GerritServer $server, $group_name ){
-        return;
+        $url            = '/groups/'.$group_name;
+        $custom_options = array(
+            CURLOPT_CUSTOMREQUEST   => 'GET'
+        );
+
+        $options = $this->getOptionsForRequest($server, $url, $custom_options);
+
+        try {
+            $this->http_client->addOptions($options);
+            $this->http_client->doRequest();
+            return $this->http_client->getLastHTTPCode() === '200';
+        } catch (Http_ClientException $exception) {
+            return false;
+        }
     }
 
     public function listGroups(Git_RemoteServer_GerritServer $server ){

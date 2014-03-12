@@ -21,7 +21,6 @@
 require_once dirname(__FILE__).'/GerritTestBase.php';
 
 interface Git_Driver_Gerrit_groupExistsTest {
-    public function itCallsLsGroups();
     public function itReturnsTrueIfGroupExists();
     public function itReturnsFalseIfGroupDoNotExists();
 }
@@ -62,53 +61,51 @@ class Git_Driver_Gerrit_Legacy_GroupExistsTest extends TuleapTestCase implements
 }
 
 class Git_DriverREST_Gerrit_groupExistsTest extends Git_Driver_GerritREST_baseTest implements Git_Driver_Gerrit_groupExistsTest {
-    public function itReturnsTrueIfGroupExists(){}
-    public function itReturnsFalseIfGroupDoNotExists(){}
-    public function itCallsLsGroups() {}
-}
 
-class Git_Driver_GerritLegacy_LsGroupsTest extends TuleapTestCase {
+    /** @var Git_Driver_GerritREST */
+    private $gerrit_driver;
+
+    /** @var Git_RemoteServer_GerritServer */
+    private $server;
 
     public function setUp() {
         parent::setUp();
-        $this->gerrit_server = mock('Git_RemoteServer_GerritServer');
 
-        $this->ssh    = mock('Git_Driver_Gerrit_RemoteSSHCommand');
-        $this->logger = mock('BackendLogger');
-        $this->driver = new Git_Driver_GerritLegacy($this->ssh, $this->logger);
+        $http_client         = mock('Http_client');
+        $logger              = mock('Logger');
+        $this->gerrit_driver = new Git_Driver_GerritREST($http_client, $logger);
+        $this->server        = mock('Git_RemoteServer_GerritServer');
+        $this->group         = 'contributors';
+        $this->groupname     = $this->project_name.'/'.$this->namespace.'/'.$this->repository_name.'-'.$this->group;
+
+        $url = $this->gerrit_server_host
+            .':'. $this->gerrit_server_port
+            .'/a/groups/'. $this->groupname;
+
+        $this->expected_options = array(
+            CURLOPT_URL             => $url,
+            CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_HTTPAUTH        => CURLAUTH_DIGEST,
+            CURLOPT_USERPWD         => $this->gerrit_server_user .':'. $this->gerrit_server_pass,
+            CURLOPT_CUSTOMREQUEST   => 'GET'
+        );
     }
 
-    public function itUsesGerritSSHCommandToListGroups() {
-        expect($this->ssh)->execute($this->gerrit_server, 'gerrit ls-groups')->once();
-        $this->driver->listGroups($this->gerrit_server);
+    public function itReturnsTrueIfGroupExists(){
+        stub($this->http_client)->getLastHTTPCode()->returns('200');
+
+        expect($this->http_client)->doRequest()->once();
+        expect($this->http_client)->addOptions($this->expected_options)->at(0);
+
+        $this->assertTrue($this->driver->doesTheGroupExist($this->gerrit_server, $this->groupname));
     }
 
-    public function itReturnsAllPlatformGroups() {
-        $ls_groups_expected_return = array(
-            'Administrators',
-            'Anonymous Users',
-            'Non-Interactive Users',
-            'Project Owners',
-            'Registered Users',
-            'project/project_members',
-            'project/project_admins',
-            'project/group_from_ldap',
-        );
+    public function itReturnsFalseIfGroupDoNotExists(){
+       stub($this->http_client)->getLastHTTPCode()->returns('404');
 
-        $ssh_ls_groups = 'Administrators
-Anonymous Users
-Non-Interactive Users
-Project Owners
-Registered Users
-project/project_members
-project/project_admins
-project/group_from_ldap';
+        expect($this->http_client)->doRequest()->once();
+        expect($this->http_client)->addOptions($this->expected_options)->at(0);
 
-        stub($this->ssh)->execute()->returns($ssh_ls_groups);
-
-        $this->assertEqual(
-            $ls_groups_expected_return,
-            $this->driver->listGroups($this->gerrit_server)
-        );
+        $this->assertFalse($this->driver->doesTheGroupExist($this->gerrit_server, $this->groupname));
     }
 }
