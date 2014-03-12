@@ -190,6 +190,43 @@ class Tracker_FormElement_Field_TextTest extends TuleapTestCase {
         $this->assertEqual($f->buildMatchExpression('field', '/regexp/'), "field RLIKE 'regexp'");
         $this->assertEqual($f->buildMatchExpression('field', '!/regexp/'), "field NOT RLIKE 'regexp'");
     }
-}
 
-?>
+    /**
+     * @see https://tuleap.net/plugins/tracker?aid=6435
+     */
+    function itIsEmptyWhenThereIsNoContent() {
+        $field = aTextField()->build();
+        $this->assertTrue($field->isEmpty(
+            array(
+                'format' => 'text',
+                'content' => ''
+            )
+        ));
+    }
+
+    /**
+     * @see https://tuleap.net/plugins/tracker?aid=6435
+     */
+    function itIsEmptyWhenThereIsOnlyWhitespaces() {
+        $field = aTextField()->build();
+        $this->assertTrue($field->isEmpty(
+            array(
+                'format' => 'text',
+                'content' => '   '
+            )
+        ));
+    }
+
+    /**
+     * @see https://tuleap.net/plugins/tracker?aid=6435
+     */
+    function itIsNotEmptyWhenThereIsContent() {
+        $field = aTextField()->build();
+        $this->assertFalse($field->isEmpty(
+            array(
+                'format' => 'text',
+                'content' => 'bla'
+            )
+        ));
+    }
+}
