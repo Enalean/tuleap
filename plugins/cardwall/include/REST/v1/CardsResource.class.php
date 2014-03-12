@@ -110,19 +110,19 @@ class CardsResource {
      * </ol>
      *
      * @url PUT {id}
-     * @param string $id        Id of the card (format: planningId_artifactId, @see milstones/:id/cardwall)
+     * @param string $id        Id of the card (format: planningId_artifactId, @see milestones/:id/cardwall)
      * @param string $label     Label of the card {@from body}
-     * @param int    $column_id Where the card should stands {@from body}
      * @param array  $values    Card's fields values {@from body}
+     * @param int    $column_id Where the card should stands {@from body}
      *
      */
-    protected function putId($id, $label, $column_id, array $values) {
+    protected function putId($id, $label, array $values, $column_id = null) {
         try {
             $current_user = $this->user_manager->getCurrentUser();
             $single_card  = $this->getSingleCard($current_user, $id);
 
             $card_updater = new CardUpdater();
-            $card_updater->updateCard($current_user, $single_card, $label, $column_id, $values);
+            $card_updater->updateCard($current_user, $single_card, $label, $values, $column_id);
         } catch (Tracker_FormElement_InvalidFieldException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_FormElement_NotImplementedForRESTException $exception) {
