@@ -25,72 +25,32 @@ class User_ForgeUserGroupPermissionsManager {
      */
     private $permissions_dao;
 
-    private $available_permissions = array();
-
-    /**
-     *
-     * @param int $id
-     * @param strin $name
-     * @param array $permissions
-     * @param string $description
-     */
     public function __construct(User_ForgeUserGroupPermissionsDao $dao) {
         $this->permissions_dao = $dao;
     }
 
+    /**
+     * @return boolean
+     */
     public function addPermission(User_ForgeUGroup $user_group, User_ForgeUserGroupPermission $permission) {
-        if (! $this->isPermissionValid($permission->getId())) {
-            throw new User_InvalidForgePermissionException('Invalid permission: ' . $permission->getId());
+        $user_group_id = $user_group->getId();
+        $permission_id = $permission->getId();
+
+        if (! $this->permissions_dao->permissionExistsForUGroup($user_group_id, $permission_id)) {
+            return $this->permissions_dao->addPermission($user_group_id, $permission_id);
         }
 
-        $permission_name = $this->available_permissions[$permission->getId()];
-
-        $user_group->addPermission($permission->getId(), $permission_name);
+        return true;
     }
 
+    /**
+     * @return bool
+     */
     public function deletePermission(User_ForgeUGroup $user_group, User_ForgeUserGroupPermission $permission) {
+        $user_group_id = $user_group->getId();
+        $permission_id = $permission->getId();
 
-    }
-
-    public function getPermissionsForForgeUserGroup(User_ForgeUGroup $user_group) {
-
-    }
-
-    /**
-     * @param string $permission_id within self::$available_permissions
-     * @throws User_InvalidForgePermissionException
-     */
-
-    private function isPermissionValid($permission_id) {
-        $this->getAvailablePermissions();
-
-        return in_array($permission_id, $this->getAvailablePermissionIds());
-    }
-
-    /**
-     * Returns an associative $permission_id => $shortname array of permissions
-     *
-     * @return associative array
-     */
-    public function getAvailablePermissions() {
-        if ($this->available_permissions) {
-            return $this->available_permissions;
-        }
-
-        $allowed = $this->permissions_dao->getAllowedPermissions();
-        if ($allowed) {
-            foreach ($allowed as $row) {
-                $this->available_permissions[$row['id']] = $row['shortname'];
-            }
-        }
-
-        return $this->available_permissions;
-    }
-
-    public function getAvailablePermissionIds() {
-        $this->getAvailablePermissions();
-
-        return array_keys($this->available_permissions);
+        return $this->permissions_dao->deletePersmissionForUGroup($user_group_id, $permission_id);
     }
 }
 ?>

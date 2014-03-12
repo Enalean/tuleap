@@ -21,11 +21,59 @@
 
 class User_ForgeUserGroupPermissionsFactory {
 
+    /**
+     * @var User_ForgeUserGroupPermissionsDao
+     */
+    private $permissions_dao;
+
+    public function __construct(User_ForgeUserGroupPermissionsDao $dao) {
+        $this->permissions_dao = $dao;
+    }
+
+    /**
+     * @return User_ForgeUserGroupPermission
+     * @throws User_ForgeUserGroupPermission_NotFoundException
+     */
     public function getForgePermissionById($permission_id) {
-
+        switch ($permission_id) {
+            case User_ForgeUserGroupPermission_ProjectApproval::ID :
+                return new User_ForgeUserGroupPermission_ProjectApproval();
+            default :
+                throw new User_ForgeUserGroupPermission_NotFoundException();
+        }
     }
 
+    /**
+     * @return User_ForgeUserGroupPermission[]
+     */
     public function getAllAvailableForgePermissions() {
-
+        return array(
+            new User_ForgeUserGroupPermission_ProjectApproval()
+        );
     }
+
+    /**
+     * @return User_ForgeUserGroupPermission[]
+     */
+    public function getPermissionsForForgeUserGroup(User_ForgeUGroup $user_group) {
+        $permissions   = array();
+        $user_group_id = $user_group->getId();
+
+        $rows = $this->permissions_dao->getPermissionsForForgeUGroup($user_group_id);
+
+        if (! $rows) {
+            return $permissions;
+        }
+
+        foreach ($rows as $row) {
+            $permissions[$row['permission_id']] = $this->instantiateFromRow($row);
+        }
+
+        return array_values($permissions);
+    }
+
+    private function instantiateFromRow($row) {
+        return $this->getForgePermissionById($row['permission_id']);
+    }
+
 }

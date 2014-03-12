@@ -21,7 +21,7 @@
 class User_ForgeUserGroupFactory_BaseTest extends TuleapTestCase {
 
     /**
-     * @var User_ForgeUserGroupPermissionsDao
+     * @var UserGroupDao
      */
     protected $dao;
 
