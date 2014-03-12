@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class User_ForgeUserGroupUsersManager {
+class User_ForgeUserGroupUsersFactory {
 
     /** @var User_ForgeUserGroupUsersDao */
     private $users_dao;
@@ -27,19 +27,18 @@ class User_ForgeUserGroupUsersManager {
         $this->users_dao = $users_dao;
     }
 
-    public function addUserToForgeUserGroup(PFUser $user, User_ForgeUGroup $user_group) {
-        if ($this->userIsAlreadyInTheGroup($user, $user_group)) {
-            return true;
+    public function getAllUsersFromForgeUserGroup(User_ForgeUGroup $user_group) {
+        $rows = $this->users_dao->getUsersByForgeUserGroupId($user_group->getId());
+
+        if (! $rows) {
+            return array();
         }
-        return $this->users_dao->addUserToForgeUserGroup($user->getId(), $user_group->getId());
+
+        return $rows->instanciateWith(array($this, 'instantiateFromRow'));
+
     }
 
-    public function removeUserFromForgeUserGroup(PFUser $user, User_ForgeUGroup $user_group) {
-        return $this->users_dao->removeUserFromForgeUserGroup($user->getId(), $user_group->getId());
+    public function instantiateFromRow(array $row) {
+        return new PFUser($row);
     }
-
-    public function userIsAlreadyInTheGroup(PFUser $user, User_ForgeUGroup $user_group) {
-        return $this->users_dao->isUserInGroup($user->getId(), $user_group->getId());
-    }
-
 }
