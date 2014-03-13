@@ -203,9 +203,24 @@ class Git_Driver_GerritLegacy implements Git_Driver_Gerrit {
         return explode(PHP_EOL, $this->ssh->execute($server, $command));
     }
 
-    public function listGroupsVerbose(Git_RemoteServer_GerritServer $server) {
+    /**
+     * @param Git_RemoteServer_GerritServer $server
+     *
+     * @return array of (groupname => uuid)
+     */
+    public function getAllGroups(Git_RemoteServer_GerritServer $server) {
         $command = self::COMMAND . ' ls-groups --verbose';
-        return explode(PHP_EOL, $this->ssh->execute($server, $command));
+        $results = explode(PHP_EOL, $this->ssh->execute($server, $command));
+
+        $group_info = array();
+        foreach ($results as $group_line) {
+            $group_entry = explode("\t", $group_line);
+            $name        = $group_entry[self::INDEX_GROUPS_VERBOSE_NAME];
+
+            $group_info[$name] = $group_entry[self::INDEX_GROUPS_VERBOSE_UUID];
+        }
+
+        return $group_info;
     }
 
     private function computeException(Git_Driver_Gerrit_RemoteSSHCommandFailure $e, $command) {

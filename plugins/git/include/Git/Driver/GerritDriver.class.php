@@ -114,7 +114,12 @@ interface Git_Driver_Gerrit {
 
     public function listGroups(Git_RemoteServer_GerritServer $server);
 
-    public function listGroupsVerbose(Git_RemoteServer_GerritServer $server);
+    /**
+     * @param Git_RemoteServer_GerritServer $server
+     *
+     * @return array of (groupname => uuid)
+     */
+    public function getAllGroups(Git_RemoteServer_GerritServer $server);
 
     public function getGerritProjectName(GitRepository $repository);
 

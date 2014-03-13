@@ -30,6 +30,7 @@ interface Git_Driver_Gerrit_manageGroupsTest {
     public function itReturnsNullUUIDIfNotFound();
     public function itAsksGerritForTheGroupId();
     public function itReturnsNullIdIfNotFound();
+    public function itReturnsAllGroups();
 }
 
 class Git_Driver_GerritLegacy_manageGroupsTest extends Git_Driver_GerritLegacy_baseTest implements Git_Driver_Gerrit_manageGroupsTest {
@@ -127,6 +128,23 @@ class Git_Driver_GerritLegacy_manageGroupsTest extends Git_Driver_GerritLegacy_b
         stub($this->ssh)->execute($this->gerrit_server, $this->expected_query)->once()->returns($query_result);
 
         $this->assertNull($this->driver->getGroupID($this->gerrit_server, $this->groupname));
+    }
+
+    public function itReturnsAllGroups() {
+        $ls_groups_expected_return = <<<EOS
+Administrators	31c2cb467c263d73eb24552a7cc98b7131ac2115	Gerrit Site Administrators	INTERNAL	Administrators	31c2cb467c263d73eb24552a7cc98b7131ac2115	false
+Anonymous Users	global:Anonymous-Users	Any user, signed-in or not	SYSTEM	Administrators	31c2cb467c263d73eb24552a7cc98b7131ac2115	false
+someProject/group_from_ldap	ec68131cc1adc6b42753c10adb3e3265493f64f9		INTERNAL	chicken-egg/LDAP_Others	ec68131cc1adc6b42753c10adb3e3265493f64f9	false
+EOS;
+        $expected_query = 'gerrit ls-groups --verbose';
+        stub($this->ssh)->execute($this->gerrit_server, $expected_query)->once()->returns($ls_groups_expected_return);
+
+        $expected_result = array(
+            'Administrators'              => '31c2cb467c263d73eb24552a7cc98b7131ac2115',
+            'Anonymous Users'             => 'global:Anonymous-Users',
+            'someProject/group_from_ldap' => 'ec68131cc1adc6b42753c10adb3e3265493f64f9',
+        );
+        $this->assertEqual($this->driver->getAllGroups($this->gerrit_server), $expected_result);
     }
 }
 
@@ -294,5 +312,39 @@ EOS;
         stub($this->http_client)->getLastResponse()->returns($get_group_response);
 
         $this->assertNull($this->driver->getGroupUUID($this->gerrit_server, 'enalean'));
+    }
+
+    public function itReturnsAllGroups() {
+        $raiponce = <<<EOS
+)]}'
+{
+  "enalean": {
+    "kind": "gerritcodereview#group",
+    "url": "#/admin/groups/uuid-6ef56904c11e6d53c8f2f3657353faaac74bfc6d",
+    "options": {},
+    "group_id": 7,
+    "owner": "enalean",
+    "owner_id": "6ef56904c11e6d53c8f2f3657353faaac74bfc6d",
+    "id": "6ef56904c11e6d53c8f2f3657353faaac74bfc6d"
+  },
+  "grp": {
+    "kind": "gerritcodereview#group",
+    "url": "#/admin/groups/uuid-b99e4455ca98f2ec23d9250f69617e34ceae6bd6",
+    "options": {},
+    "group_id": 6,
+    "owner": "grp",
+    "owner_id": "b99e4455ca98f2ec23d9250f69617e34ceae6bd6",
+    "id": "b99e4455ca98f2ec23d9250f69617e34ceae6bd6"
+  }
+}
+EOS;
+        stub($this->http_client)->getLastResponse()->returns($raiponce);
+
+        $expected_result = array(
+            "enalean" => "6ef56904c11e6d53c8f2f3657353faaac74bfc6d",
+            "grp"     => "b99e4455ca98f2ec23d9250f69617e34ceae6bd6",
+        );
+
+        $this->assertEqual($this->driver->getAllGroups($this->gerrit_server), $expected_result);
     }
 }

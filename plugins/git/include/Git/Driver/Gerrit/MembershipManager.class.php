@@ -320,18 +320,14 @@ class Git_Driver_Gerrit_MembershipManager {
     public function getGroupUUIDByNameOnServer(Git_RemoteServer_GerritServer $server, $gerrit_group_name) {
         $this->cacheGroupDefinitionForServer($server);
         if (isset($this->cache_groups[$server->getId()][$gerrit_group_name])) {
-            return $this->cache_groups[$server->getId()][$gerrit_group_name][Git_Driver_GerritLegacy::INDEX_GROUPS_VERBOSE_UUID];
+            return $this->cache_groups[$server->getId()][$gerrit_group_name];
         }
         throw new Exception("Group $gerrit_group_name doesn't not exist on server ".$server->getId()." ".$server->getHost());
     }
 
     private function cacheGroupDefinitionForServer(Git_RemoteServer_GerritServer $server) {
         if ( ! isset($this->cache_groups[$server->getId()])) {
-            $this->cache_groups[$server->getId()] = array();
-            foreach ($this->driver_factory->getDriver($server)->listGroupsVerbose($server) as $group_line) {
-                $group_entry = explode("\t", $group_line);
-                $this->cache_groups[$server->getId()][$group_entry[Git_Driver_GerritLegacy::INDEX_GROUPS_VERBOSE_NAME]] = $group_entry;
-            }
+            $this->cache_groups[$server->getId()] = $this->driver_factory->getDriver($server)->getAllGroups($server);
         }
     }
 

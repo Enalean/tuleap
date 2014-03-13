@@ -197,7 +197,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
 
         $url            = '/groups/'.urlencode($group_name);
         $custom_options = array(
-            CURLOPT_PUT        => true,
+            CURLOPT_PUT => true,
         );
 
         if ($group_name !== $owner) {
@@ -256,8 +256,27 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         return;
     }
 
-    public function listGroupsVerbose(Git_RemoteServer_GerritServer $server ){
-        return;
+    public function getAllGroups(Git_RemoteServer_GerritServer $server ){
+        $this->http_client->init();
+        $this->logger->debug("Gerrit REST driver: Get all groups");
+
+        $url = '/groups/';
+
+        $options = $this->getOptionsForRequest($server, $url, array());
+
+        try {
+            $this->http_client->addOptions($options);
+            $this->http_client->doRequest();
+
+            $groups = array();
+            foreach ($this->decodeGerritResponse($this->http_client->getLastResponse()) as $name => $group) {
+                $groups[$name] = $group['id'];
+            }
+
+            return $groups;
+        } catch (Http_ClientException $exception) {
+            return array();
+        }
     }
 
     public function getGerritProjectName(GitRepository $repository) {
