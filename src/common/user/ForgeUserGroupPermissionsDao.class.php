@@ -64,5 +64,16 @@ class User_ForgeUserGroupPermissionsDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function doesUserHavePermission($user_id, $permission_id) {
+        $user_id       = $this->da->escapeInt($user_id);
+        $permission_id = $this->da->escapeInt($permission_id);
+
+        $sql = "SELECT permission_id FROM ugroup_forge_permission
+                    JOIN ugroup_user ON ugroup_forge_permission.ugroup_id = ugroup_user.ugroup_id
+                WHERE user_id = $user_id
+                    AND permission_id = $permission_id";
+
+         return (bool) $this->retrieveFirstRow($sql);
+    }
 }
 ?>

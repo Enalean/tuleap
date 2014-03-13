@@ -52,5 +52,12 @@ class User_ForgeUserGroupPermissionsManager {
 
         return $this->permissions_dao->deletePersmissionForUGroup($user_group_id, $permission_id);
     }
+
+    /**
+     * @return bool
+     */
+    public function doesUserHavePermission(PFUser $user, User_ForgeUserGroupPermission $permission) {
+        return $this->permissions_dao->doesUserHavePermission($user->getId(), $permission->getId());
+    }
 }
 ?>

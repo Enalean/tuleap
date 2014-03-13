@@ -22,27 +22,47 @@ require_once('Widget.class.php');
 
 /**
 * Widget_MyAdmin
-* 
+*
 * Personal Admin
 */
 class Widget_MyAdmin extends Widget {
-    function Widget_MyAdmin() {
+    private $user_is_super_admin;
+
+    public function __construct($user_is_super_admin) {
         $this->Widget('myadmin');
+        $this->user_is_super_admin = $user_is_super_admin;
     }
-    function getTitle() {
-        return $GLOBALS['Language']->getText('my_index', 'my_admin');
+
+    public function getTitle() {
+        if ($this->user_is_super_admin) {
+            return $GLOBALS['Language']->getText('my_index', 'my_admin');
+        } else {
+            return $GLOBALS['Language']->getText('my_index', 'my_admin_non_super');
+        }
     }
-    function getContent() {
-        
+
+    public function getContent() {
+        $html_my_admin = '<table width="100%">';
+
+        if ($this->user_is_super_admin) {
+            $html_my_admin .= $this->getHTMLForSuperAdmin();
+        } else {
+            $row_colour_id = 0;
+            $html_my_admin .= $this->getHTMLForNonSuperAdmin($row_colour_id);
+        }
+
+        $html_my_admin .= '</table>';
+
+        return $html_my_admin;
+    }
+
+    private function getHTMLForSuperAdmin() {
         require_once('www/forum/forum_utils.php');
         require_once('www/project/admin/ugroup_utils.php');
-        
+
         $html_my_admin = '';
         // Get the number of pending users and projects
-        db_query("SELECT count(*) AS count FROM groups WHERE status='P'");
-        $row = db_fetch_array();
-        $pending_projects = $row['count'];
-        
+
         if ($GLOBALS['sys_user_approval'] == 1) {
             db_query("SELECT count(*) AS count FROM user WHERE status='P'");
             $row = db_fetch_array();
@@ -55,8 +75,8 @@ class Widget_MyAdmin extends Widget {
         db_query("SELECT count(*) AS count FROM user WHERE status='V' OR status='W'");
         $row = db_fetch_array();
         $validated_users = $row['count'];
-        
-        
+
+
         $sql="SELECT * FROM news_bytes WHERE is_approved=0 OR is_approved=3";
         $result=db_query($sql);
         $pending_news = 0;
@@ -72,60 +92,66 @@ class Widget_MyAdmin extends Widget {
             }
         }
 
-        
         $i = 0;
-        $html_my_admin .= '<table width="100%">';
         $html_my_admin .= $this->_get_admin_row(
-            $i++, 
+            $i++,
             $GLOBALS['Language']->getText('admin_main', 'pending_user',array("/admin/approve_pending_users.php?page=pending")),
             $pending_users,
             $this->_get_color($pending_users)
         );
-        
+
         if ($GLOBALS['sys_user_approval'] == 1) {
             $html_my_admin .= $this->_get_admin_row(
-                $i++, 
+                $i++,
                 $GLOBALS['Language']->getText('admin_main', 'validated_user',array("/admin/approve_pending_users.php?page=validated")),
                 $validated_users,
                 $this->_get_color($validated_users)
             );
         }
-        
+
+        $html_my_admin .= $this->getHTMLForNonSuperAdmin($i);
+
         $html_my_admin .= $this->_get_admin_row(
-            $i++, 
-            $GLOBALS['Language']->getText('admin_main', 'pending_group',array("/admin/approve-pending.php")),
-            $pending_projects,
-            $this->_get_color($pending_projects)
-        );
-        
-        $html_my_admin .= $this->_get_admin_row(
-            $i++, 
+            $i++,
             '<a href="/news/admin">'. $GLOBALS['Language']->getText('admin_main', 'site_news_approval') .'</a>',
             $pending_news,
             $this->_get_color($pending_news)
         );
-        
-        $result = array();
+
+        $pendings = array();
         $em =& EventManager::instance();
-        $em->processEvent('widget_myadmin', array('result' => &$result));
-        foreach($result as $entry) {
+        $em->processEvent('widget_myadmin', array('result' => &$pendings));
+        foreach($pendings as $entry) {
             $html_my_admin .= $this->_get_admin_row(
-                $i++, 
+                $i++,
                 $entry['text'],
                 $entry['value'],
                 $entry['bgcolor'],
                 isset($entry['textcolor']) ? $entry['textcolor'] : 'white'
             );
         }
-        
-        $html_my_admin .= '</table>';
-        
+
         return $html_my_admin;
     }
-    function _get_color($nb) {
+
+    private function getHTMLForNonSuperAdmin($i) {
+        db_query("SELECT count(*) AS count FROM groups WHERE status='P'");
+        $row = db_fetch_array();
+        $pending_projects = $row['count'];
+
+        return $this->_get_admin_row(
+            $i++,
+            $GLOBALS['Language']->getText('admin_main', 'pending_group',array("/admin/approve-pending.php")),
+            $pending_projects,
+            $this->_get_color($pending_projects)
+        );
+    }
+
+    public function _get_color($nb) {
         return $nb == 0 ? 'green' : 'orange';
     }
-    function _get_admin_row($i, $text, $value, $bgcolor, $textcolor = 'white') {
+
+    public function _get_admin_row($i, $text, $value, $bgcolor, $textcolor = 'white') {
         return '<tr class="'. util_get_alt_row_color($i++) .'"><td>'. $text .'</td><td nowrap="nowrap" style="width:20%; background:'. $bgcolor .'; color:'. $textcolor .'; padding: 2px 8px; font-weight:bold; text-align:center;">'. $value .'</td></tr>';
     }
 }

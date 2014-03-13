@@ -209,17 +209,20 @@ class Admin_PermissionDelegationController {
     }
 
     private function getCurrentGroupPresenter(array $formatted_groups) {
-
         foreach ($formatted_groups as $formatted_group) {
-            if ($formatted_group['is_current']) {
-                $user_group  = $this->user_group_factory->getForgeUserGroupById($formatted_group['id']);
-                $permissions = $this->user_group_permissions_factory->getPermissionsForForgeUserGroup($user_group);
-                $users       = $this->user_group_users_factory->getAllUsersFromForgeUserGroup($user_group);
-                return new Admin_PermissionDelegationGroupPresenter($user_group, $permissions, $users);
+            try {
+                if ($formatted_group['is_current']) {
+                    $user_group  = $this->user_group_factory->getForgeUserGroupById($formatted_group['id']);
+                    $permissions = $this->user_group_permissions_factory->getPermissionsForForgeUserGroup($user_group);
+                    $users       = $this->user_group_users_factory->getAllUsersFromForgeUserGroup($user_group);
+                    return new Admin_PermissionDelegationGroupPresenter($user_group, $permissions, $users);
+                }
+            } catch (User_ForgeUserGroupPermission_NotFoundException $e) {
+                return null;
             }
         }
 
-        return;
+        return null;
     }
 
     private function getFormattedGroups(array $groups, $current_id) {
