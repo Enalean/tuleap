@@ -21,6 +21,8 @@
 
 class Admin_PermissionDelegationController {
 
+    const REDIRECT_URL = '/admin/permission_delegation.php';
+
     /**
      * @var Codendi_Request
      */
@@ -42,7 +44,6 @@ class Admin_PermissionDelegationController {
     private $user_group_permissions_manager;
 
     /**
-     *
      * @var User_ForgeUserGroupFactory
      */
     private $user_group_factory;
@@ -53,10 +54,10 @@ class Admin_PermissionDelegationController {
     private $user_group_users_factory;
 
     /**
-     *
      * @var User_ForgeUserGroupManager
      */
     private $user_group_manager;
+
 
     public function __construct(Codendi_Request $request) {
         $this->request  = $request;
@@ -79,6 +80,11 @@ class Admin_PermissionDelegationController {
         );
     }
 
+    private function redirect($id = null) {
+        $redirect = http_build_query(array('id' => $id));
+        $GLOBALS['Response']->redirect(self::REDIRECT_URL.'/?'.$redirect);
+    }
+
     public function process() {
         switch ($this->request->get('action')) {
             case 'show-add-group':
@@ -86,7 +92,7 @@ class Admin_PermissionDelegationController {
                 break;
 
             case 'show-edit-group':
-                $this->showEditGroup($this->request->get('group-id'));
+                $this->showEditGroup($this->request->get('id'));
                 break;
 
             case 'update-group':
@@ -94,7 +100,7 @@ class Admin_PermissionDelegationController {
                 break;
 
             case 'show-delete-group':
-                $this->showDeleteGroup($this->request->get('group-id'));
+                $this->showDeleteGroup($this->request->get('id'));
                 break;
 
             case 'delete-group':
@@ -102,7 +108,7 @@ class Admin_PermissionDelegationController {
                 break;
 
             case 'show-add-permissions':
-                $this->showAddPermissions($this->request->get('group-id'));
+                $this->showAddPermissions($this->request->get('id'));
                 break;
 
             case 'add-permissions':
@@ -133,9 +139,9 @@ class Admin_PermissionDelegationController {
     }
 
     private function updateGroup() {
-        $id          = $this->request->get('group-id');
-        $name        = $this->request->get('group-name');
-        $description = $this->request->get('group-description');
+        $id          = $this->request->get('id');
+        $name        = $this->request->get('name');
+        $description = $this->request->get('description');
 
         try {
             if ($id) {
@@ -143,10 +149,12 @@ class Admin_PermissionDelegationController {
                 $this->user_group_manager->updateUserGroup($user_group);
             } else {
                 $user_group = $this->user_group_factory->createForgeUGroup($name, $description);
-                $id = $user_group->getId();
+                $this->request->set('id', $user_group->getId());
             }
+
         } catch (User_UserGroupNameInvalidException $e) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_permission_delegation', 'user_group_already_exists'));
+
         } catch(User_UserGroupNotFoundException $e) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_permission_delegation', 'ugroup_not_found'));
         }
@@ -162,13 +170,14 @@ class Admin_PermissionDelegationController {
     }
 
     private function deleteGroup() {
-        $id = $this->request->get('group-id');
+        $id = $this->request->get('id');
 
         if ($id) {
             try {
                 $user_group = $this->user_group_factory->getForgeUserGroupById($id);
                 $this->user_group_manager->deleteForgeUserGroup($user_group);
-                $this->request->set('group-id', null);
+                $this->request->set('id', null);
+
             } catch(User_UserGroupNotFoundException $e) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_permission_delegation', 'ugroup_not_found'));
             }
@@ -179,7 +188,7 @@ class Admin_PermissionDelegationController {
 
     private function index() {
         $groups     = $this->user_group_factory->getAllForgeUserGroups();
-        $current_id = $this->request->get('group-id');
+        $current_id = $this->request->get('id');
 
         $formatted_groups        = $this->getFormattedGroups($groups,$current_id);
         $current_group_presenter = $this->getCurrentGroupPresenter($formatted_groups);
@@ -224,35 +233,59 @@ class Admin_PermissionDelegationController {
     }
 
     private function showAddPermissions($group_id) {
-        $group                 = $this->user_group_factory->getForgeUserGroupById($group_id);
-        $available_permissions = $this->user_group_permissions_factory->getAllAvailableForgePermissions();
+        $group              = $this->user_group_factory->getForgeUserGroupById($group_id);
+        $unused_permissions = $this->user_group_permissions_factory->getAllUnusedForgePermissionsForForgeUserGroup($group);
 
-        $presenter = new Admin_PermissionDelegationPermissionsModalPresenter($group, $available_permissions);
+        $presenter = new Admin_PermissionDelegationPermissionsModalPresenter($group, $unused_permissions);
         $this->renderer->renderToPage('permissions_modal', $presenter);
     }
 
     private function addPermissions() {
-        $id = $this->request->get('group-id');
+        $id             = $this->request->get('id');
+        $permission_ids = $this->request->get('permissions');
 
         if ($id) {
+            try {
+                $user_group  = $this->user_group_factory->getForgeUserGroupById($id);
 
-        } else {
+                foreach ($permission_ids as $permission_id) {
+                    $permission = $this->user_group_permissions_factory->getForgePermissionById($permission_id);
+                    $this->user_group_permissions_manager->addPermission($user_group, $permission);
+                }
 
+            } catch(User_UserGroupNotFoundException $e) {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_permission_delegation', 'ugroup_not_found'));
+
+            } catch(User_ForgeUserGroupPermission_NotFoundException $e) {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_permission_delegation', 'permission_not_found'));
+            }
         }
 
-        $this->index();
+        $this->redirect($id);
     }
 
     private function deletePermissions() {
-        $id = $this->request->get('group-id');
+        $id             = $this->request->get('id');
+        $permission_ids = $this->request->get('permissions');
 
         if ($id) {
+            try {
+                $user_group  = $this->user_group_factory->getForgeUserGroupById($id);
 
-        } else {
+                foreach ($permission_ids as $permission_id) {
+                    $permission = $this->user_group_permissions_factory->getForgePermissionById($permission_id);
+                    $this->user_group_permissions_manager->deletePermission($user_group, $permission);
+                }
 
+            } catch(User_UserGroupNotFoundException $e) {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_permission_delegation', 'ugroup_not_found'));
+
+            } catch(User_ForgeUserGroupPermission_NotFoundException $e) {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_permission_delegation', 'permission_not_found'));
+            }
         }
 
-        $this->index();
+        $this->redirect($id);
     }
 
     private function header() {

@@ -65,6 +65,34 @@ class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends Use
         $this->assertIsA($permission, 'User_ForgeUserGroupPermission_ProjectApproval');
         $this->assertEqual($expected_id, $permission->getId());
     }
+
+    public function itReturnsEmptyArrayIfAllForgeUserGroupHasAllPermissions() {
+        $user_group     = new User_ForgeUGroup(101, '', '');
+        $expected_id    = User_ForgeUserGroupPermission_ProjectApproval::ID;
+
+        $permission_ids = array (
+            array('permission_id' => $expected_id)
+        );
+
+        stub($this->dao)->getPermissionsForForgeUGroup(101)->returns($permission_ids);
+        $all = $this->factory->getAllUnusedForgePermissionsForForgeUserGroup($user_group);
+
+        $this->assertEqual(0, count($all));
+    }
+
+    public function itReturnsArrayIfAllForgeUserGroupHasNoPermission() {
+        $user_group     = new User_ForgeUGroup(101, '', '');
+        $expected_id    = User_ForgeUserGroupPermission_ProjectApproval::ID;
+
+        $permission_ids = array (
+            array('permission_id' => $expected_id)
+        );
+
+        stub($this->dao)->getPermissionsForForgeUGroup(101)->returns(false);
+        $all = $this->factory->getAllUnusedForgePermissionsForForgeUserGroup($user_group);
+
+        $this->assertEqual(1, count($all));
+    }
 }
 
 ?>

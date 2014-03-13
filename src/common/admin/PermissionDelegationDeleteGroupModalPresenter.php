@@ -23,29 +23,29 @@ class Admin_PermissionDelegationDeleteGroupModalPresenter {
     /**
      * @var int
      */
-    private $group_id;
+    private $id;
 
     /**
      * @var string
      */
-    private $group_name;
+    private $name;
 
 
     public function __construct(User_ForgeUGroup $group) {
-        $this->group_id          = $group->getId();
-        $this->group_name        = $group->getName();
+        $this->id   = $group->getId();
+        $this->name = $group->getName();
     }
 
     public function group_title_delete() {
-        return $GLOBALS['Language']->getText('admin_permission_delegation', 'group_title_delete', array($this->group_name));
+        return $GLOBALS['Language']->getText('admin_permission_delegation', 'group_title_delete', array($this->name));
     }
 
     public function group_delete_confirmation() {
-        return $GLOBALS['Language']->getText('admin_permission_delegation', 'group_delete_confirmation', array($this->group_name));
+        return $GLOBALS['Language']->getText('admin_permission_delegation', 'group_delete_confirmation', array($this->name));
     }
 
-    public function group_id() {
-        return $this->group_id;
+    public function id() {
+        return $this->id;
     }
 
     public function group_submit_delete() {

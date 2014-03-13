@@ -506,3 +506,5 @@ admin_permission_delegation	permissions_modal_title	Add permissions to "$1"
 admin_permission_delegation	permissions_modal_description	Select the permissions you want to add to the group "<b>$1</b>"
 admin_permission_delegation	permissions_modal_submit	Add permissions
 admin_permission_delegation	permissions_modal_cancel	Cancel
+admin_permission_delegation	no_permission_to_add	This group already has all available permissions.
+admin_permission_delegation	permission_not_found	Permission does not exist

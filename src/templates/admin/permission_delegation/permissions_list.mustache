@@ -16,7 +16,7 @@
             <tbody>
                 {{# permissions }}
                 <tr>
-                    <td><input type="checkbox" name="permissions" value="{{ getId }}" class="permission" /></td>
+                    <td><input type="checkbox" name="permissions[]" value="{{ getId }}" class="permissions" /></td>
                     <td>{{ getName }}</td>
                 </tr>
                 {{/ permissions }}
@@ -33,7 +33,7 @@
             </div>
             <div class="right-actions">
                 {{# has_permissions }}
-                    <input type="hidden" name="group-id" value="{{ id }}" />
+                    <input type="hidden" name="id" value="{{ id }}" />
                     <button id="delete-permissions" class="btn btn-danger" disabled="disabled"><i class="icon-trash"></i> {{ permissions_action_delete }}</button>
                 {{/ has_permissions }}
             </div>

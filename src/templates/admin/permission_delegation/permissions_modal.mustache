@@ -6,21 +6,28 @@
         </div>
 
         <div class="modal-body">
-            <p>{{{ permissions_modal_description }}} :</p>
+            {{# has_permissions }}
+                <p>{{{ permissions_modal_description }}} :</p>
 
-            {{# permissions }}
-            <label>
-                <input type="checkbox" class="available-permission" value="{{ getId }}" />
-                {{ getName }}
-            </label>
-            {{/ permissions }}
+                {{# permissions }}
+                <label>
+                    <input type="checkbox" class="available-permissions" name="permissions[]" value="{{ getId }}" />
+                    {{ getName }}
+                </label>
+                {{/ permissions }}
 
-            <input type="hidden" name="group-id" value="{{ group_id }}" />
+                <input type="hidden" name="id" value="{{ id }}" />
+            {{/ has_permissions }}
+            {{^ has_permissions }}
+                <p>{{ no_permission_to_add }}</p>
+            {{/ has_permissions }}
         </div>
 
         <div class="modal-footer">
             <a class="btn" data-dismiss="modal">{{ permissions_modal_cancel }}</a>
-            <input id="submit-permissions" type="submit" class="btn btn-primary" value="{{ permissions_modal_submit }}" disabled="disabled" />
+            {{# has_permissions }}
+                <input id="submit-permissions" type="submit" class="btn btn-primary" value="{{ permissions_modal_submit }}" disabled="disabled" />
+            {{/ has_permissions }}
         </div>
     </form>
 </div>

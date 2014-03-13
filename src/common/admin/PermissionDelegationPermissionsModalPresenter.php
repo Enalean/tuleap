@@ -23,12 +23,12 @@ class Admin_PermissionDelegationPermissionsModalPresenter {
     /**
      * @var int
      */
-    private $group_id;
+    private $id;
 
     /**
      * @var string
      */
-    private $group_name;
+    private $name;
 
     /**
      * @var array
@@ -37,21 +37,29 @@ class Admin_PermissionDelegationPermissionsModalPresenter {
 
 
     public function __construct($group, array $permissions) {
-        $this->group_id    = $group->getId();
-        $this->group_name  = $group->getName();
+        $this->id          = $group->getId();
+        $this->name        = $group->getName();
         $this->permissions = $permissions;
     }
 
-    public function group_id() {
-        return $this->group_id;
+    public function id() {
+        return $this->id;
     }
 
     public function permissions_modal_title() {
-        return $GLOBALS['Language']->getText('admin_permission_delegation', 'permissions_modal_title', array($this->group_name));
+        return $GLOBALS['Language']->getText('admin_permission_delegation', 'permissions_modal_title', array($this->name));
     }
 
     public function permissions_modal_description() {
-        return $GLOBALS['Language']->getText('admin_permission_delegation', 'permissions_modal_description', array($this->group_name));
+        return $GLOBALS['Language']->getText('admin_permission_delegation', 'permissions_modal_description', array($this->name));
+    }
+
+    public function has_permissions() {
+        return count($this->permissions) > 0;
+    }
+
+    public function no_permission_to_add() {
+        return $GLOBALS['Language']->getText('admin_permission_delegation', 'no_permission_to_add');
     }
 
     public function permissions() {

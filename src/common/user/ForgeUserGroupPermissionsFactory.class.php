@@ -46,6 +46,42 @@ class User_ForgeUserGroupPermissionsFactory {
     /**
      * @return User_ForgeUserGroupPermission[]
      */
+    public function getAllUnusedForgePermissionsForForgeUserGroup(User_ForgeUGroup $user_group) {
+        $unused_permissions    = array();
+        $group_permissions_ids = $this->extractPermissionIds($this->permissions_dao->getPermissionsForForgeUGroup($user_group->getId()));
+        $all_permissions_ids   = $this->getAllAvailableForgePermissionIds();
+
+        $remaining_permission_ids = array_diff($all_permissions_ids, $group_permissions_ids);
+
+        foreach ($remaining_permission_ids as $remaining_permission_id) {
+            $unused_permissions[] = $this->getForgePermissionById($remaining_permission_id);
+        }
+
+        return $unused_permissions;
+    }
+
+    private function extractPermissionIds($permissions) {
+        $permission_ids = array();
+
+        if ($permissions) {
+            foreach ($permissions as $permission) {
+                $permission_ids[] = $permission['permission_id'];
+            }
+        }
+
+        return $permission_ids;
+    }
+
+    private function getAllAvailableForgePermissionIds() {
+        $available_permission_ids = array();
+
+        foreach ($this->getAllAvailableForgePermissions() as $forge_permission) {
+            $available_permission_ids[] = $forge_permission->getId();
+        }
+
+        return $available_permission_ids;
+    }
+
     public function getAllAvailableForgePermissions() {
         return array(
             new User_ForgeUserGroupPermission_ProjectApproval()

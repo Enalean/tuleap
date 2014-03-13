@@ -23,17 +23,17 @@ class Admin_PermissionDelegationGroupModalPresenter {
     /**
      * @var int
      */
-    private $group_id;
+    private $id;
 
     /**
      * @var string
      */
-    private $group_name;
+    private $name;
 
     /**
      * @var string
      */
-    private $group_description;
+    private $description;
 
     /**
      * @var boolean
@@ -45,9 +45,9 @@ class Admin_PermissionDelegationGroupModalPresenter {
         $this->is_new = true;
 
         if ($group) {
-            $this->group_id          = $group->getId();
-            $this->group_name        = $group->getName();
-            $this->group_description = $group->getDescription();
+            $this->id          = $group->getId();
+            $this->name        = $group->getName();
+            $this->description = $group->getDescription();
             $this->is_new            = false;
         }
     }
@@ -57,27 +57,27 @@ class Admin_PermissionDelegationGroupModalPresenter {
             return $GLOBALS['Language']->getText('admin_permission_delegation', 'group_title_create');
         }
 
-        return $GLOBALS['Language']->getText('admin_permission_delegation', 'group_title_edit', array($this->group_name));
+        return $GLOBALS['Language']->getText('admin_permission_delegation', 'group_title_edit', array($this->name));
     }
 
-    public function group_name_label() {
+    public function name_label() {
         return $GLOBALS['Language']->getText('admin_permission_delegation', 'group_name');
     }
 
-    public function group_description_label() {
+    public function description_label() {
         return $GLOBALS['Language']->getText('admin_permission_delegation', 'group_description');
     }
 
-    public function group_id() {
-        return $this->group_id;
+    public function id() {
+        return $this->id;
     }
 
-    public function group_name() {
-        return $this->group_name;
+    public function name() {
+        return $this->name;
     }
 
-    public function group_description() {
-        return $this->group_description;
+    public function description() {
+        return $this->description;
     }
 
     public function is_new() {

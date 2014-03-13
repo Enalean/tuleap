@@ -26,9 +26,10 @@ class User_ForgeUserGroupPermissionsDao extends DataAccessObject {
 
         $sql = "SELECT permission_id FROM ugroup_forge_permission
                 WHERE permission_id = $permission_id
-                AND ugroup_id = $user_group_id";
+                AND ugroup_id = $user_group_id
+                LIMIT 1";
 
-        return (bool) $this->retrieve($sql);
+        return $this->retrieve($sql)->count() > 0;
     }
 
     public function addPermission($user_group_id, $permission_id) {

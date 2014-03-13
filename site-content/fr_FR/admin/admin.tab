@@ -496,3 +496,5 @@ admin_permission_delegation	permissions_modal_title	Ajouter des permissions au g
 admin_permission_delegation	permissions_modal_description	Selectionnez les permissions que vous voulez ajouter au groupe "<b>$1</b>"
 admin_permission_delegation	permissions_modal_submit	Ajouter les permissions
 admin_permission_delegation	permissions_modal_cancel	Annuler
+admin_permission_delegation	no_permission_to_add	Ce groupe possède déjà toutes les permissions disponibles.
+admin_permission_delegation	permission_not_found	Cette permission n'existe pas

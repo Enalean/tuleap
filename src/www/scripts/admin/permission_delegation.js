@@ -21,6 +21,8 @@ tuleap.admin = tuleap.admin || { };
 (function ($) {
     tuleap.admin.permissionDelegation = {
         showModal: function(ajax_url, modal_id, callback) {
+            var self = this;
+
             $.ajax({
                 url: ajax_url,
                 beforeSend: tuleap.modal.showLoad
@@ -30,15 +32,27 @@ tuleap.admin = tuleap.admin || { };
 
                 $('body').append(data);
                 $(modal_id).modal();
-                $(modal_id + ' input:first-child').focus();
                 $(modal_id).on('hidden', function () {
                     $(this).remove();
                 });
-                callback();
+
+                self.focusOnField(modal_id);
+
+                if (callback) {
+                    callback();
+                }
 
             }).fail(function() {
                 codendi.feedback.log('error', 'An error has occured');
             });
+        },
+
+        focusOnField: function(modal_id) {
+            if ($(modal_id + ' input:first-child').length > 0) {
+                $(modal_id + ' input:first-child').focus();
+            } else if ($(modal_id + ' input[type="submit"]').length > 0) {
+                $(modal_id + ' input[type="submit"]').focus();
+            }
         },
 
         handlePermissionsState: function(source_elements, target_element) {
@@ -59,20 +73,20 @@ tuleap.admin = tuleap.admin || { };
         });
         $('#edit-group').click(function(e) {
             e.preventDefault();
-            tuleap.admin.permissionDelegation.showModal('permission_delegation.php?action=show-edit-group&group-id=' + $(this).attr('data-group-id'), '#add-group-modal');
+            tuleap.admin.permissionDelegation.showModal('permission_delegation.php?action=show-edit-group&id=' + $(this).attr('data-group-id'), '#add-group-modal');
         });
         $('#delete-group').click(function(e) {
             e.preventDefault();
-            tuleap.admin.permissionDelegation.showModal('permission_delegation.php?action=show-delete-group&group-id=' + $(this).attr('data-group-id'), '#delete-group-modal');
+            tuleap.admin.permissionDelegation.showModal('permission_delegation.php?action=show-delete-group&id=' + $(this).attr('data-group-id'), '#delete-group-modal');
         });
 
         $('#add-permissions').click(function(e) {
             e.preventDefault();
-            tuleap.admin.permissionDelegation.showModal('permission_delegation.php?action=show-add-permissions&group-id=' + $(this).attr('data-group-id'), '#add-permissions-modal', function() {
-                tuleap.admin.permissionDelegation.handlePermissionsState('.available-permission', '#submit-permissions');
+            tuleap.admin.permissionDelegation.showModal('permission_delegation.php?action=show-add-permissions&id=' + $(this).attr('data-group-id'), '#add-permissions-modal', function() {
+                tuleap.admin.permissionDelegation.handlePermissionsState('.available-permissions', '#submit-permissions');
             });
         });
-        tuleap.admin.permissionDelegation.handlePermissionsState('.permission', '#delete-permissions');
+        tuleap.admin.permissionDelegation.handlePermissionsState('.permissions', '#delete-permissions');
 
         tuleap.admin.permissionDelegation.handlePermissionsState('.user', '#delete-users');
     });
