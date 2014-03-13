@@ -65,7 +65,7 @@ class User_ForgeUserGroupUsersDao extends DataAccessObject {
                     AND ugroup_id = $ugroup_id
                 LIMIT 1";
 
-        return $this->retrieve($sql);
+        return count($this->retrieve($sql)) > 0;
     }
 
 }

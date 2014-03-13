@@ -212,14 +212,41 @@ class UserGroupDao extends DataAccessObject {
         return false;
     }
 
+    /**
+     * @return boolean
+     */
     public function deleteForgeUGroup($user_group_id) {
         $user_group_id = $this->da->escapeInt($user_group_id);
+
+        $this->startTransaction();
+
+        $sql = "DELETE FROM ugroup_user
+                WHERE ugroup_id = $user_group_id";
+
+        if(! $this->update($sql)) {
+           $this->rollback();
+           return false;
+        }
+
+        $sql = "DELETE FROM ugroup_forge_permission
+                WHERE ugroup_id = $user_group_id";
+
+        if(! $this->update($sql)) {
+            $this->rollback();
+            return false;
+        }
 
         $sql = "DELETE FROM ugroup
                 WHERE ugroup_id = $user_group_id
                 AND ugroup.group_id IS NULL";
 
-        return $this->update($sql);
+        if(! $this->update($sql)) {
+            $this->rollback();
+            return false;
+        }
+
+        $this->commit();
+        return true;
     }
 }
 

@@ -32,7 +32,7 @@ class User_ForgeUserGroupManager {
     /**
      * @return bool
      */
-    public function deleteForgeUserGroup( User_ForgeUGroup $user_group) {
+    public function deleteForgeUserGroup(User_ForgeUGroup $user_group) {
         return $this->dao->deleteForgeUGroup($user_group->getId());
     }
 

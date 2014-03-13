@@ -54,6 +54,12 @@ class Admin_PermissionDelegationController {
     private $user_group_users_factory;
 
     /**
+     * @var User_ForgeUserGroupUsersManager
+     */
+    private $user_group_users_manager;
+
+    /**
+     *
      * @var User_ForgeUserGroupManager
      */
     private $user_group_manager;
@@ -63,26 +69,26 @@ class Admin_PermissionDelegationController {
         $this->request  = $request;
         $this->renderer = TemplateRendererFactory::build()->getRenderer($this->getTemplatesDir());
 
-        $this->user_group_permissions_factory = new User_ForgeUserGroupPermissionsFactory(
-            new User_ForgeUserGroupPermissionsDao()
-        );
-        $this->user_group_permissions_manager = new User_ForgeUserGroupPermissionsManager(
-            new User_ForgeUserGroupPermissionsDao()
-        );
-        $this->user_group_factory = new User_ForgeUserGroupFactory(
-            new UserGroupDao()
-        );
-        $this->user_group_users_factory = new User_ForgeUserGroupUsersFactory(
-                new User_ForgeUserGroupUsersDao()
-        );
-        $this->user_group_manager = new User_ForgeUserGroupManager(
-            new UserGroupDao()
-        );
+        $permissions_dao                      = new User_ForgeUserGroupPermissionsDao();
+        $this->user_group_permissions_factory = new User_ForgeUserGroupPermissionsFactory($permissions_dao);
+        $this->user_group_permissions_manager = new User_ForgeUserGroupPermissionsManager($permissions_dao);
+
+        $user_group_dao                       = new UserGroupDao();
+        $this->user_group_factory             = new User_ForgeUserGroupFactory($user_group_dao);
+        $this->user_group_manager             = new User_ForgeUserGroupManager($user_group_dao);
+
+        $user_group_users_dao                 = new User_ForgeUserGroupUsersDao();
+        $this->user_group_users_factory       = new User_ForgeUserGroupUsersFactory($user_group_users_dao);
+        $this->user_group_users_manager       = new User_ForgeUserGroupUsersManager($user_group_users_dao);
     }
 
     private function redirect($id = null) {
-        $redirect = http_build_query(array('id' => $id));
-        $GLOBALS['Response']->redirect(self::REDIRECT_URL.'/?'.$redirect);
+        if ($id) {
+            $redirect = http_build_query(array('id' => $id));
+            $GLOBALS['Response']->redirect(self::REDIRECT_URL.'/?'.$redirect);
+        }
+
+        $GLOBALS['Response']->redirect(self::REDIRECT_URL.'/');
     }
 
     public function process() {
@@ -117,6 +123,9 @@ class Admin_PermissionDelegationController {
 
             case 'delete-permissions':
                 $this->deletePermissions();
+                break;
+            case 'manage-users':
+                $this->manageUsers();
                 break;
 
             case 'index':
@@ -176,14 +185,13 @@ class Admin_PermissionDelegationController {
             try {
                 $user_group = $this->user_group_factory->getForgeUserGroupById($id);
                 $this->user_group_manager->deleteForgeUserGroup($user_group);
-                $this->request->set('id', null);
 
             } catch(User_UserGroupNotFoundException $e) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_permission_delegation', 'ugroup_not_found'));
             }
         }
 
-        $this->index();
+        $this->redirect();
     }
 
     private function index() {
@@ -279,7 +287,6 @@ class Admin_PermissionDelegationController {
 
             } catch(User_UserGroupNotFoundException $e) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_permission_delegation', 'ugroup_not_found'));
-
             } catch(User_ForgeUserGroupPermission_NotFoundException $e) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_permission_delegation', 'permission_not_found'));
             }
@@ -299,6 +306,67 @@ class Admin_PermissionDelegationController {
 
     private function getTemplatesDir() {
         return Config::get('codendi_dir') .'/src/templates/admin/permission_delegation/';
+    }
+
+    private function getUserManager() {
+        return UserManager::instance();
+    }
+
+    private function manageUsers() {
+        if ($this->request->get('remove-users')) {
+            $this->removeUsersFromGroup();
+        } elseif ($this->request->get('add-user')) {
+            $this->addUserToGroup();
+        }
+
+        $this->redirect();
+    }
+
+    private function addUserToGroup() {
+        $group_id = $this->request->get('id');
+        $user     = $this->request->get('user');
+
+        if ($user) {
+            $user = $this->getUserManager()->findUser($user);
+        }
+
+        if ($group_id && $user) {
+            try {
+                $user_group = $this->user_group_factory->getForgeUserGroupById($group_id);
+                $this->user_group_users_manager->addUserToForgeUserGroup($user, $user_group);
+            } catch (User_UserGroupNotFoundException $e) {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_permission_delegation', 'ugroup_not_found'));
+            }
+        }
+
+        $this->redirect($group_id);
+    }
+
+    private function removeUsersFromGroup() {
+        $group_id = $this->request->get('id');
+        $user_ids = $this->request->get('user-ids');
+
+        if ($group_id) {
+            try {
+                $user_group = $this->user_group_factory->getForgeUserGroupById($group_id);
+                $this->removeUsers($user_group, $user_ids);
+
+            } catch (User_UserGroupNotFoundException $e) {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_permission_delegation', 'ugroup_not_found'));
+            }
+        }
+
+        $this->redirect($group_id);
+    }
+
+    private function removeUsers($user_group, $user_ids) {
+        foreach ($user_ids as $user_id) {
+            $user = $this->getUserManager()->getUserById($user_id);
+
+            if ($user) {
+                $this->user_group_users_manager->removeUserFromForgeUserGroup($user, $user_group);
+            }
+        }
     }
 }
 ?>
