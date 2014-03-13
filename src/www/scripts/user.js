@@ -1,4 +1,4 @@
-new Insertion.After('form_pw','<input type="button" name="generate" class="btn" value="generate" onclick="setPwd()">');
+new Insertion.After('form_pw','<input type="button" name="generate" class="btn" value="Generate" onclick="setPwd()">');
         function generate(){
             var lowercase = "abcdefghijklmnopqrstuvwxyz";
             var uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";

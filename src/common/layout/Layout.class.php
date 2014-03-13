@@ -1697,10 +1697,14 @@ class Layout extends Response {
     /**
      * @return string
      */
-    protected function getClassnamesForBodyTag() {
+    protected function getClassnamesForBodyTag($params = array()) {
+        $body_class = isset($params['body_class']) ? $params['body_class'] : array();
+
         if ($this->getUser()->useLabFeatures()) {
-            return 'lab-mode';
+            $body_class[] = 'lab-mode';
         }
+
+        return implode(' ', $body_class);
     }
 
     /**
@@ -1725,12 +1729,12 @@ class Layout extends Response {
     function header($params) {
         global $Language;
         
-        $this->generic_header($params); 
+        $this->generic_header($params);
 
         //themable someday?
         $site_fonts='verdana,arial,helvetica,sans-serif';
 
-        echo '<body leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0" marginwidth="0" marginheight="0" class="'. $this->getClassnamesForBodyTag() .'">';
+        echo '<body leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0" marginwidth="0" marginheight="0" class="'. $this->getClassnamesForBodyTag($params) .'">';
 
         echo $this->getOsdnNavBar();
 

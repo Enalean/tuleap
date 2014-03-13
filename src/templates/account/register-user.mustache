@@ -1,0 +1,27 @@
+{{> register-form-start }}
+
+    <div class="fields">
+        <input type="password" value="" placeholder="{{ new_password }} *" id="form_pw" name="form_pw" required />
+        <input type="password" value="" placeholder="{{ new_password2 }} *" name="form_pw2" required />
+        {{> register-choose-password }}
+    </div>
+
+    {{# prefill_values }}
+    <div class="fields">
+        <input type="text" name="form_realname" placeholder="{{ realname }} *" value="{{ form_realname }}" required="required" />
+        {{{ timezone_selector }}}
+    </div>
+
+    <div class="fields">
+        <label class="checkbox">
+            <input type="checkbox" name="form_mail_site" value="1" {{# form_mail_site }}checked="checked"{{/ form_mail_site }} />
+            {{{ siteupdate }}}
+        </label>
+    </div>
+
+    {{> register-purpose-directions }}
+    {{/ prefill_values }}
+
+    <p class="mandatory">{{ mandatory }}</p>
+
+{{> register-form-end }}

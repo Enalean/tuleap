@@ -22,21 +22,21 @@ function password_validator_check(element) {
             var res = eval('('+transport.responseText+')');
             password_validators.each(function (i) {
                 if (res.include(i)) {
-                    $('password_validator_msg_'+i).addClassName('password_validator_ko');
-                    $('password_validator_msg_'+i).removeClassName('password_validator_ok');
+                    $$('.password_validator_msg_'+i).each(function(element) { $(element).addClassName('password_validator_ko') });
+                    $$('.password_validator_msg_'+i).each(function(element) { $(element).removeClassName('password_validator_ok') });
                 } else {
-                    $('password_validator_msg_'+i).addClassName('password_validator_ok');
-                    $('password_validator_msg_'+i).removeClassName('password_validator_ko');
+                    $$('.password_validator_msg_'+i).each(function(element) { $(element).addClassName('password_validator_ok') });
+                    $$('.password_validator_msg_'+i).each(function(element) { $(element).removeClassName('password_validator_ko') });
                 }
             });
             if (res.length) {
-                $('password_strategy_good_or_bad').update(password_strategy_messages.bad);
-                $('password_strategy_good_or_bad').removeClassName('password_strategy_good');
-                $('password_strategy_good_or_bad').addClassName('password_strategy_bad');
+                $$('.password_strategy_good_or_bad').each(function(element) { $(element).update(password_strategy_messages.bad) });
+                $$('.password_strategy_good_or_bad').each(function(element) { $(element).removeClassName('password_strategy_good') });
+                $$('.password_strategy_good_or_bad').each(function(element) { $(element).addClassName('password_strategy_bad') });
             } else {
-                $('password_strategy_good_or_bad').update(password_strategy_messages.good);
-                $('password_strategy_good_or_bad').addClassName('password_strategy_good');
-                $('password_strategy_good_or_bad').removeClassName('password_strategy_bad');
+                $$('.password_strategy_good_or_bad').each(function(element) { $(element).update(password_strategy_messages.good) });
+                $$('.password_strategy_good_or_bad').each(function(element) { $(element).addClassName('password_strategy_good') });
+                $$('.password_strategy_good_or_bad').each(function(element) { $(element).removeClassName('password_strategy_bad') });
             }
         }
     });
