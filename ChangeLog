@@ -4,6 +4,7 @@ Version 6.12 (Not Released Yet)
 	* proftpd: 0.9
 	* tracker: 5.264
 	* graphontrackersv5: 5.5
+	* agiledashboard: 1.54
 
 	== Bug fix ==
 	* request #6404: Do not display postponed error for phpwiki (contrib STMicroelectronics)
