@@ -126,7 +126,7 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
     FROM  tracker_field_list_bind_static_value val
     LEFT JOIN tracker_field_list_bind_decorator deco ON (val.id = deco.value_id)
     WHERE val.field_id = $this->observed_field_id
-    ORDER BY val.id";
+    ORDER BY val.rank";
             $res = db_query($sql);
             $this->labels[100] = $GLOBALS['Language']->getText('global','none');
             $engine->colors[$this->labels[100]] = array(null, null, null);
@@ -136,9 +136,12 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
                $this->labels[$data['id']] = $data['label'];
                for ($i = 0 ; $i <= $this->nbSteps; $i++ ) {
                    $timestamp = $this->startDate + ($i * $this->timeFiller[$this->scale]) ;
-                   $resultArray[$timestamp][$data['id']] =  0;
                    $resultArray[$timestamp][100] =  0;
+                   $resultArray[$timestamp][$data['id']] =  0;
                }
+            }
+            foreach ($resultArray as $timestamp => $values) {
+                $resultArray[$timestamp] = array_reverse($resultArray[$timestamp], true);
             }
         return $resultArray;
     }
