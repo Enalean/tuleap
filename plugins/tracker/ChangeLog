@@ -1,3 +1,6 @@
+Version 5.265 - Tuleap 6.12
+    * Fix request #6435: Mandatory field in workflow doesn't enforce Text fields
+
 Version 5.264 - Tuleap 6.12
     * Fix request #6290: invert order in follow ups comments is not saved as preferences
 
