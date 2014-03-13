@@ -69,6 +69,10 @@ if ($request->exist('wsdl')) {
     $service_usage_factory = new Project_Service_ServiceUsageFactory($service_usage_dao);
     $service_usage_manager = new Project_Service_ServiceUsageManager($service_usage_dao);
 
+    $forge_ugroup_permissions_manager = new User_ForgeUserGroupPermissionsManager(
+        new User_ForgeUserGroupPermissionsDao()
+    );
+
     $server = new SoapServer($uri.'/?wsdl',
                              array('cache_wsdl' => WSDL_CACHE_NONE));
     $server->setClass(
@@ -82,7 +86,8 @@ if ($request->exist('wsdl')) {
         $custom_project_description_manager,
         $custom_project_description_value_factory,
         $service_usage_factory,
-        $service_usage_manager
+        $service_usage_manager,
+        $forge_ugroup_permissions_manager
     );
     $server->handle();
 }
