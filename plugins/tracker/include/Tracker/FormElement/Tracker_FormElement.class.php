@@ -959,7 +959,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         if (! $user) {
             $user = $this->getCurrentUser();
         }
-        return $user->isSuperUser() || PermissionsManager::instance()->userHasPermission(
+        return $user->isSuperUser() || $this->getTracker()->userIsAdmin() || PermissionsManager::instance()->userHasPermission(
             $this->id,
             $permission_type,
             $user->getUgroups(

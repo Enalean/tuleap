@@ -798,6 +798,21 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         }
         return $user->isMember($group_id, 'A');
     }
+
+    public function userCanAdminAllProjectTrackers($user = null) {
+        if (! $user instanceof PFUser) {
+            $um = UserManager::instance();
+            $user = $um->getCurrentUser();
+        }
+
+        $permission = new User_ForgeUserGroupPermission_TrackerAdminAllProjects();
+        $user       = UserManager::instance()->getCurrentUser();
+        $forge_ugroup_permissions_manager = new User_ForgeUserGroupPermissionsManager(
+            new User_ForgeUserGroupPermissionsDao()
+        );
+
+        return $forge_ugroup_permissions_manager->doesUserHavePermission($user, $permission);
+    }
     
     public function search($request, $current_user) {
         if ($request->exist('tracker')) {
