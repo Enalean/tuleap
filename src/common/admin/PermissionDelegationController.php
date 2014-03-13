@@ -48,6 +48,11 @@ class Admin_PermissionDelegationController {
     private $user_group_factory;
 
     /**
+     * @var User_ForgeUserGroupUsersFactory
+     */
+    private $user_group_users_factory;
+
+    /**
      *
      * @var User_ForgeUserGroupManager
      */
@@ -63,9 +68,11 @@ class Admin_PermissionDelegationController {
         $this->user_group_permissions_manager = new User_ForgeUserGroupPermissionsManager(
             new User_ForgeUserGroupPermissionsDao()
         );
-
         $this->user_group_factory = new User_ForgeUserGroupFactory(
             new UserGroupDao()
+        );
+        $this->user_group_users_factory = new User_ForgeUserGroupUsersFactory(
+                new User_ForgeUserGroupUsersDao()
         );
         $this->user_group_manager = new User_ForgeUserGroupManager(
             new UserGroupDao()
@@ -144,7 +151,7 @@ class Admin_PermissionDelegationController {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_permission_delegation', 'ugroup_not_found'));
         }
 
-        $this->index($id);
+        $this->index();
     }
 
     private function showDeleteGroup($group_id) {
@@ -161,6 +168,7 @@ class Admin_PermissionDelegationController {
             try {
                 $user_group = $this->user_group_factory->getForgeUserGroupById($id);
                 $this->user_group_manager->deleteForgeUserGroup($user_group);
+                $this->request->set('group-id', null);
             } catch(User_UserGroupNotFoundException $e) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_permission_delegation', 'ugroup_not_found'));
             }
@@ -169,23 +177,55 @@ class Admin_PermissionDelegationController {
         $this->index();
     }
 
-    private function index($id = null) {
-        $groups = $this->user_group_factory->getAllForgeUserGroups();
+    private function index() {
+        $groups     = $this->user_group_factory->getAllForgeUserGroups();
+        $current_id = $this->request->get('group-id');
 
-        if (! $id) {
-            $id = $this->request->get('group-id');
-        }
+        $formatted_groups        = $this->getFormattedGroups($groups,$current_id);
+        $current_group_presenter = $this->getCurrentGroupPresenter($formatted_groups);
 
-        $presenter = new Admin_PermissionDelegationIndexPresenter($groups, $id);
+        $presenter = new Admin_PermissionDelegationIndexPresenter($formatted_groups, $current_group_presenter);
 
         $this->header();
         $this->renderer->renderToPage('index', $presenter);
         $this->footer();
     }
 
+    private function getCurrentGroupPresenter(array $formatted_groups) {
+
+        foreach ($formatted_groups as $formatted_group) {
+            if ($formatted_group['is_current']) {
+                $user_group  = $this->user_group_factory->getForgeUserGroupById($formatted_group['id']);
+                $permissions = $this->user_group_permissions_factory->getPermissionsForForgeUserGroup($user_group);
+                $users       = $this->user_group_users_factory->getAllUsersFromForgeUserGroup($user_group);
+                return new Admin_PermissionDelegationGroupPresenter($user_group, $permissions, $users);
+            }
+        }
+
+        return;
+    }
+
+    private function getFormattedGroups(array $groups, $current_id) {
+        $formatted_groups = array();
+
+        foreach ($groups as $group) {
+            $formatted_groups[] = array(
+                'id'         => $group->getId(),
+                'name'       => $group->getName(),
+                'is_current' => $group->getId() == $current_id,
+            );
+        }
+
+        if (! $current_id && $formatted_groups) {
+            $formatted_groups[0]['is_current'] = true;
+        }
+
+        return $formatted_groups;
+    }
+
     private function showAddPermissions($group_id) {
         $group                 = $this->user_group_factory->getForgeUserGroupById($group_id);
-        $available_permissions = $this->user_group_permissions_factory->getPermissionsForForgeUserGroup($group);
+        $available_permissions = $this->user_group_permissions_factory->getAllAvailableForgePermissions();
 
         $presenter = new Admin_PermissionDelegationPermissionsModalPresenter($group, $available_permissions);
         $this->renderer->renderToPage('permissions_modal', $presenter);

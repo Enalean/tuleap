@@ -16,8 +16,8 @@
             <tbody>
                 {{# permissions }}
                 <tr>
-                    <td><input type="checkbox" name="permissions" class="permission" /></td>
-                    <td>{{ . }}</td>
+                    <td><input type="checkbox" name="permissions" value="{{ getId }}" class="permission" /></td>
+                    <td>{{ getName }}</td>
                 </tr>
                 {{/ permissions }}
             </tbody>

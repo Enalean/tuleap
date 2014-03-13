@@ -35,7 +35,6 @@ class User_ForgeUserGroupUsersFactory {
         }
 
         return $rows->instanciateWith(array($this, 'instantiateFromRow'));
-
     }
 
     public function instantiateFromRow(array $row) {

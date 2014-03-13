@@ -12,7 +12,7 @@
         <tbody>
             {{# users }}
             <tr>
-                <td><input type="checkbox" name="users" class="user" /></td>
+                <td><input type="checkbox" name="users" class="user" value="{{ getId }}" /></td>
                 <td><img src="{{ getAvatarUrl }}" /> {{ getRealName }} ({{ getUsername }})</td>
             </tr>
             {{/ users }}

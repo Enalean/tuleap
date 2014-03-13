@@ -31,22 +31,9 @@ class Admin_PermissionDelegationIndexPresenter {
     private $current_group;
 
 
-    public function __construct(array $groups, $current_id = null) {
-
-        foreach ($groups as $group) {
-
-            $group_presenter = new Admin_PermissionDelegationGroupPresenter($group);
-            $this->groups[]  = $group_presenter;
-
-            if (! $this->current_group || $group->getId() == $current_id) {
-                if ($this->current_group) {
-                    $this->current_group->setIsCurrent(false);
-                }
-
-                $this->current_group = $group_presenter;
-                $this->current_group->setIsCurrent(true);
-            }
-        }
+    public function __construct(array $groups, Admin_PermissionDelegationGroupPresenter $current_group_presenter = null) {
+        $this->groups        = $groups;
+        $this->current_group = $current_group_presenter;
     }
 
     public function page_title() {

@@ -156,13 +156,13 @@ class UserGroupDao extends DataAccessObject {
     * @throws User_UserGroupNameInvalidException
     */
     public function updateForgeUGroup($user_group_id, $name, $description) {
-        $user_group_id = $this->da->escapeInt($user_group_id);
-        $name = $this->da->quoteSmart($name);
-        $description = $this->da->quoteSmart($description);
-
         if (! $this->isUserGroupNameValid($name, $user_group_id)) {
             throw new User_UserGroupNameInvalidException($name);
         }
+
+        $user_group_id = $this->da->escapeInt($user_group_id);
+        $description   = $this->da->quoteSmart($description);
+        $name          = $this->da->quoteSmart($name);
 
         $sql = "UPDATE ugroup
             SET name = $name,
@@ -198,7 +198,7 @@ class UserGroupDao extends DataAccessObject {
             return false;
         }
 
-        $sql = "SELECT ugroup.ugroup_id FROM ugroup WHERE name LIKE $name";
+        $sql = "SELECT ugroup.ugroup_id FROM ugroup WHERE name LIKE '$name'";
         $row = $this->retrieveFirstRow($sql);
 
         if (! $row) {

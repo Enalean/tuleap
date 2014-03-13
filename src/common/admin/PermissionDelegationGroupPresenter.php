@@ -51,17 +51,13 @@ class Admin_PermissionDelegationGroupPresenter {
     private $users;
 
 
-    public function __construct(User_ForgeUGroup $group) {
+    public function __construct(User_ForgeUGroup $group, array $permissions, $users) {
         $this->id          = $group->getId();
         $this->title       = $group->getName();
         $this->description = $group->getDescription();
         $this->is_current  = false;
-        $this->permissions = array();
-        $this->users       = array();
-    }
-
-    public function setIsCurrent($is_current) {
-        $this->is_current = $is_current;
+        $this->permissions = $permissions;
+        $this->users       = $users;
     }
 
     public function id() {
@@ -78,10 +74,6 @@ class Admin_PermissionDelegationGroupPresenter {
 
     public function has_description() {
         return $this->description !== '';
-    }
-
-    public function is_current() {
-        return $this->is_current;
     }
 
     public function group_action_edit() {
