@@ -1204,25 +1204,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     /**
-     * Get artifacts linked to the current artifact at a given timestamp
-     *
-     * @param PFUser $user The user who should see the artifacts
-     * @param int $timestamp
-     *
-     * @return Array of Tracker_Artifact
-     */
-    public function getLinkedArtifactsAtTimestamp(PFUser $user, $timestamp) {
-        $artifact_links      = array();
-        $artifact_link_field = $this->getAnArtifactLinkField($user);
-
-        $changeset = $this->getChangesetFactory()->getChangesetForArtifactAtTimestamp($this, $timestamp);
-        if ($artifact_link_field && $changeset) {
-            $artifact_links = $artifact_link_field->getLinkedArtifacts($changeset, $user);
-        }
-        return $artifact_links;
-    }
-
-    /**
      * Get artifacts linked to the current artifact and sub artifacts
      *
      * @param PFUser $user The user who should see the artifacts
