@@ -36,13 +36,13 @@
 # run the daily statistics script just a little bit after
 # midnight so that it computes stats for the day before
 # Run at 0:30 am
-30 0 * * * root /usr/share/codendi/src/utils/compute_all_daily_stats.sh 2>&1 >/dev/null
+30 0 * * * root /usr/share/codendi/src/utils/compute_all_daily_stats.sh >/dev/null 2>&1
 
 #
 # run the weekly stats for projects. Run it on Monday morning so that
 # it computes the stats for the week before
 # Run on Monday at 1am
-0 1 * * Mon root (cd /usr/share/codendi/src/utils/underworld-root; ./db_project_weekly_metric.pl 2>&1 >/dev/null)
+0 1 * * Mon root (cd /usr/share/codendi/src/utils/underworld-root; ./db_project_weekly_metric.pl >/dev/null 2>&1)
 
 # Delete all files in FTP incoming that are older than 2 weeks (336 hours)
 #
