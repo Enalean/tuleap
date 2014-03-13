@@ -23,12 +23,19 @@ class Tracker_FormElement_Field_ComputedTest extends TuleapTestCase {
     private $user;
     private $field;
     private $formelement_factory;
+    private $dao;
+    private $artifact_factory;
 
     public function setUp() {
         parent::setUp();
         $this->user  = mock('PFUser');
-        $this->field = TestHelper::getPartialMock('Tracker_FormElement_Field_Computed', array('getProperty'));
+        $this->dao   = mock('Tracker_FormElement_Field_ComputedDao');
+        $this->field = TestHelper::getPartialMock('Tracker_FormElement_Field_Computed', array('getProperty', 'getDao'));
         stub($this->field)->getProperty()->returns('effort');
+        stub($this->field)->getDao()->returns($this->dao);
+
+        $this->artifact_factory = mock('Tracker_ArtifactFactory');
+        Tracker_ArtifactFactory::setInstance($this->artifact_factory);
 
         $this->formelement_factory = mock('Tracker_FormElementFactory');
         Tracker_FormElementFactory::setInstance($this->formelement_factory);
@@ -40,77 +47,26 @@ class Tracker_FormElement_Field_ComputedTest extends TuleapTestCase {
     }
 
     public function itComputesDirectValues() {
-        $sub_artifact1 = anArtifact()->withId(1)->withTracker(aTracker()->build())->build();
-        $sub_artifact2 = anArtifact()->withId(2)->withTracker(aTracker()->build())->build();
-        $artifact      = stub('Tracker_Artifact')->getLinkedArtifacts()->returns(array($sub_artifact1, $sub_artifact2));
+        stub($this->dao)->getFieldValues(233, 'effort')->returnsDar(
+            array('type' => 'int', 'int_value' => 5),
+            array('type' => 'int', 'int_value' => 15)
+        );
 
-        $field = mock('Tracker_FormElement_Field_Float');
-        stub($field)->getComputedValue($this->user, $sub_artifact1, null, '*')->returns(5);
-        stub($field)->getComputedValue($this->user, $sub_artifact2, null, '*')->returns(15);
+        $child_art = stub('Tracker_Artifact')->userCanView()->returns(true);
+        stub($this->artifact_factory)->getInstanceFromRow()->returns($child_art);
 
-        stub($this->formelement_factory)->getComputableFieldByNameForUser()->returns($field);
-
+        $artifact = stub('Tracker_Artifact')->getId()->returns(233);
         $this->assertEqual(20, $this->field->getComputedValue($this->user, $artifact));
     }
 
-    public function itReturnsNullWhenThereAreNoData() {
-        $sub_artifact1 = anArtifact()->withId(1)->withTracker(aTracker()->build())->build();
-        $sub_artifact2 = anArtifact()->withId(2)->withTracker(aTracker()->build())->build();
-        $artifact      = stub('Tracker_Artifact')->getLinkedArtifacts()->returns(array($sub_artifact1, $sub_artifact2));
+    public function itReturnsNullWhenThereAreNoDataBecauseNoDataMeansNoPlotOnChart() {
+        stub($this->dao)->getFieldValues(233, 'effort')->returnsEmptyDar();
 
-        $field = mock('Tracker_FormElement_Field_Float');
-        stub($field)->getComputedValue()->returns(null);
+        $child_art = stub('Tracker_Artifact')->userCanView()->returns(true);
+        stub($this->artifact_factory)->getInstanceFromRow()->returns($child_art);
 
-        stub($this->formelement_factory)->getComputableFieldByNameForUser()->returns($field);
-
+        $artifact = stub('Tracker_Artifact')->getId()->returns(233);
         $this->assertIdentical(null, $this->field->getComputedValue($this->user, $artifact));
-    }
-
-    public function itIgnoreCyclesInChildrens() {
-        $sub_artifact1 = anArtifact()->withId(1)->withTracker(aTracker()->withId(150)->build())->build();
-        $artifact      = mock('Tracker_Artifact');
-        stub($artifact)->getTracker()->returns(aTracker()->withId(300)->build());
-        stub($artifact)->getLinkedArtifacts()->returns(array($artifact, $sub_artifact1));
-
-        $field = mock('Tracker_FormElement_Field_Float');
-        stub($field)->getComputedValue($this->user, $sub_artifact1, null, '*')->returns(5);
-
-        stub($this->formelement_factory)->getComputableFieldByNameForUser(150, 'effort', $this->user)->returns($field);
-        stub($this->formelement_factory)->getComputableFieldByNameForUser(300, 'effort', $this->user)->returns($this->field);
-
-        $this->assertEqual(5, $this->field->getComputedValue($this->user, $artifact));
-    }
-
-    public function itComputesRemainingEffortAtAGivenTime() {
-        $timestamp = mktime(23, 59, 59, 7, 3, 2012);
-
-        $sub_artifact1 = anArtifact()->withId(1)->withTracker(aTracker()->build())->build();
-        $sub_artifact2 = anArtifact()->withId(2)->withTracker(aTracker()->build())->build();
-        $artifact      = stub('Tracker_Artifact')->getLinkedArtifactsAtTimestamp()->returns(array($sub_artifact1, $sub_artifact2));
-
-        $field = mock('Tracker_FormElement_Field_Float');
-        stub($field)->getComputedValue($this->user, $sub_artifact1, $timestamp, '*')->returns(5);
-        stub($field)->getComputedValue($this->user, $sub_artifact2, $timestamp, '*')->returns(15);
-
-        stub($this->formelement_factory)->getComputableFieldByNameForUser()->returns($field);
-
-        $this->assertEqual(20, $this->field->getComputedValue($this->user, $artifact, $timestamp));
-    }
-
-    public function itComputesRemainingEffortAtAZeroTime() {
-        $timestamp = 0;
-
-        $sub_artifact1 = anArtifact()->withId(1)->withTracker(aTracker()->build())->build();
-        $sub_artifact2 = anArtifact()->withId(2)->withTracker(aTracker()->build())->build();
-        $artifact      = stub('Tracker_Artifact')->getLinkedArtifacts()->returns(array($sub_artifact1, $sub_artifact2));
-
-        $field = mock('Tracker_FormElement_Field_Float');
-        stub($field)->getComputedValue($this->user, $sub_artifact1, $timestamp, '*')->returns(5);
-        stub($field)->getComputedValue($this->user, $sub_artifact2, $timestamp, '*')->returns(15);
-
-        stub($this->formelement_factory)->getComputableFieldByNameForUser()->returns($field);
-
-        $this->assertEqual(20, $this->field->getComputedValue($this->user, $artifact, $timestamp));
     }
 }
 
