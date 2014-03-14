@@ -278,4 +278,24 @@ class Git_DriverREST_Gerrit_manageProjectsTest extends Git_Driver_GerritREST_bas
 
         $this->driver->resetProjectInheritance($this->gerrit_server, $this->project_name);
     }
+
+    public function itDeletesProject() {
+        $url = $this->gerrit_server_host
+            .':'. $this->gerrit_server_port
+            .'/a/projects/'. urlencode($this->project_name);
+
+        $expected_options = array(
+            CURLOPT_URL             => $url,
+            CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_HTTPAUTH        => CURLAUTH_DIGEST,
+            CURLOPT_USERPWD         => $this->gerrit_server_user .':'. $this->gerrit_server_pass,
+            CURLOPT_CUSTOMREQUEST   => 'DELETE'
+        );
+
+        expect($this->http_client)->doRequest()->once();
+        expect($this->http_client)->addOptions($expected_options)->once();
+        expect($this->logger)->info()->count(2);
+
+        $this->driver->deleteProject($this->gerrit_server, $this->project_name);
+    }
 }

@@ -600,7 +600,26 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
     }
 
     public function deleteProject(Git_RemoteServer_GerritServer $server, $gerrit_project_full_name ){
-        return;
+        $this->http_client->init();
+        $this->logger->info("Gerrit REST driver: Delete project $gerrit_project_full_name");
+
+        $url            = '/projects/'. urlencode($gerrit_project_full_name);
+        $custom_options = array(
+            CURLOPT_CUSTOMREQUEST => 'DELETE'
+        );
+
+        $options = $this->getOptionsForRequest($server, $url, $custom_options);
+
+        try {
+            $this->http_client->addOptions($options);
+            $this->http_client->doRequest();
+
+            $this->logger->info("Gerrit REST driver: Project successfully deleted");
+            return true;
+        } catch (Http_ClientException $exception) {
+            $this->logger->error("Gerrit REST driver: Cannot delete project $gerrit_project_full_name");
+            return false;
+        }
     }
 
     public function makeGerritProjectReadOnly(Git_RemoteServer_GerritServer $server, $gerrit_project_full_name ){
