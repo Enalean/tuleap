@@ -287,10 +287,6 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
     }
 
     public function addUserToGroup(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user, $group_name){
-        if (! $this->userIsAlreadyMigratedOnGerrit($server, $user)) {
-            return $this->createUserOnGerritAndAddItDirectlyIntoGroup($server, $user, $group_name);
-        }
-
         $this->http_client->init();
         $this->logger->info("Gerrit REST driver: Add user " . $user->getSSHUserName() . " in group $group_name");
 
@@ -336,42 +332,6 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
             return true;
         } catch (Http_ClientException $exception) {
             $this->logger->error("Gerrit REST driver: Cannot remove user: " . $exception->getMessage());
-            return false;
-        }
-    }
-
-    private function createUserOnGerritAndAddItDirectlyIntoGroup(
-        Git_RemoteServer_GerritServer $server,
-        Git_Driver_Gerrit_User $user,
-        $group_name
-    ) {
-        $this->http_client->init();
-        $this->logger->info("Gerrit REST driver: Create user ". $user->getSSHUserName() ." in Gerrit and add it directly in $group_name group");
-
-        $url_create_account = '/accounts/'. urlencode($user->getSSHUserName());
-
-        $json_data = json_encode(
-            array(
-                'name'   => $user->getRealName(),
-                'email'  => $user->getEmail(),
-                'groups' => array($group_name)
-            )
-        );
-
-        $custom_options = array(
-            CURLOPT_PUT        => true,
-            CURLOPT_HTTPHEADER => array(self::CONTENT_TYPE_JSON),
-            CURLOPT_INFILE     => $this->body_builder->getTemporaryFile($json_data),
-            CURLOPT_INFILESIZE => strlen($json_data),
-        );
-
-        $options = $this->getOptionsForRequest($server, $url_create_account, $custom_options);
-
-        try {
-            $this->http_client->addOptions($options);
-            $this->http_client->doRequest();
-            return true;
-        } catch (Http_ClientException $exception) {
             return false;
         }
     }

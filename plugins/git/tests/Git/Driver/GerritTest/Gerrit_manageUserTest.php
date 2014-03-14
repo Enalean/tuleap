@@ -21,7 +21,6 @@
 require_once dirname(__FILE__).'/GerritTestBase.php';
 
 interface Git_Driver_Gerrit_manageUserTest {
-    public function itInitializeUserAccountInGerritWhenUserNeverLoggedToGerritUI();
     public function itExecutesTheInsertCommand();
     public function itExecutesTheDeletionCommand();
     public function itRemovesAllMembers();
@@ -92,53 +91,6 @@ class Git_DriverREST_Gerrit_manageUserTest extends Git_Driver_GerritREST_baseTes
         stub($this->user)->getRealName()->returns('John Doe');
         stub($this->user)->getEmail()->returns('jdoe@example.com');
         stub($this->user)->getSSHUserName()->returns($this->username);
-
-        $url_get_user = $this->gerrit_server_host
-            .':'. $this->gerrit_server_port
-            .'/a/accounts/'. $this->username;
-
-        $this->expected_options_get_user = array(
-            CURLOPT_URL             => $url_get_user,
-            CURLOPT_SSL_VERIFYPEER  => false,
-            CURLOPT_HTTPAUTH        => CURLAUTH_DIGEST,
-            CURLOPT_USERPWD         => $this->gerrit_server_user .':'. $this->gerrit_server_pass,
-            CURLOPT_CUSTOMREQUEST   => 'GET',
-        );
-    }
-
-    public function itInitializeUserAccountInGerritWhenUserNeverLoggedToGerritUI(){
-        stub($this->http_client)->isLastResponseSuccess()->returns(false);
-
-        $url_create_account = $this->gerrit_server_host
-            .':'. $this->gerrit_server_port
-            .'/a/accounts/'. $this->username;
-
-        $expected_json_data = json_encode(
-            array(
-                'name'   => "John Doe",
-                'email'  => "jdoe@example.com",
-                'groups' => array($this->groupname)
-            )
-        );
-
-        $expected_options_create_account = array(
-            CURLOPT_URL             => $url_create_account,
-            CURLOPT_SSL_VERIFYPEER  => false,
-            CURLOPT_HTTPAUTH        => CURLAUTH_DIGEST,
-            CURLOPT_USERPWD         => $this->gerrit_server_user .':'. $this->gerrit_server_pass,
-            CURLOPT_PUT             => true,
-            CURLOPT_HTTPHEADER      => array(Git_Driver_GerritREST::CONTENT_TYPE_JSON),
-            CURLOPT_INFILE          => $this->temporary_file_for_body,
-            CURLOPT_INFILESIZE      => strlen($expected_json_data)
-        );
-
-        expect($this->body_builder)->getTemporaryFile($expected_json_data)->once();
-        expect($this->http_client)->doRequest()->count(2);
-        expect($this->http_client)->addOptions()->count(2);
-        expect($this->http_client)->addOptions($this->expected_options_get_user)->at(0);
-        expect($this->http_client)->addOptions($expected_options_create_account)->at(1);
-
-        $this->driver->addUserToGroup($this->gerrit_server, $this->user, $this->groupname);
     }
 
     public function itExecutesTheInsertCommand(){
@@ -157,9 +109,8 @@ class Git_DriverREST_Gerrit_manageUserTest extends Git_Driver_GerritREST_baseTes
             CURLOPT_PUT             => true,
         );
 
-        expect($this->http_client)->doRequest()->count(2);
-        expect($this->http_client)->addOptions($this->expected_options_get_user)->at(0);
-        expect($this->http_client)->addOptions($expected_options)->at(1);
+        expect($this->http_client)->doRequest()->once();
+        expect($this->http_client)->addOptions($expected_options)->once();
 
         $this->driver->addUserToGroup($this->gerrit_server, $this->user, $this->groupname);
     }
