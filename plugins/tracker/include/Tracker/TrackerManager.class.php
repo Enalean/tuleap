@@ -924,8 +924,10 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     public function exportToXml($group_id, SimpleXMLElement $xml_content) {
         $xml_field_id = 0;
         foreach ($this->getTrackerFactory()->getTrackersByGroupId($group_id) as $tracker) {
-            $child = $xml_content->addChild('tracker');
-            $tracker->exportToXML($child, $xml_field_id);
+            if ($tracker->isActive()) {
+                $child = $xml_content->addChild('tracker');
+                $tracker->exportToXML($child, $xml_field_id);
+            }
         }
         return $xml_content;
     }
