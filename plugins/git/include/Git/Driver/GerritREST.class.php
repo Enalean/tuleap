@@ -101,7 +101,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         $this->http_client->init();
         $this->logger->info("Gerrit REST driver: Create parent project $parent_project_name");
 
-        $url       = '/projects/'.urlencode($parent_project_name);
+        $url       = '/projects/'. urlencode($parent_project_name);
         $json_data = json_encode(
             array(
                 'description'      => "Migration of $parent_project_name from Tuleap",
@@ -141,7 +141,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         $this->http_client->init();
         $this->logger->debug("Gerrit REST driver: Check if project $project_name already exists");
 
-        $url            = '/projects/'.urlencode($project_name);
+        $url            = '/projects/'. urlencode($project_name);
         $custom_options = array(
             CURLOPT_CUSTOMREQUEST => 'GET'
         );
@@ -163,7 +163,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
     }
 
     public function ping(Git_RemoteServer_GerritServer $server ){
-        //$this->http_client->init();
+        $this->http_client->init();
         $this->logger->debug("Gerrit REST driver: Check if server is up");
 
         $url            = '/config/server/version';
@@ -195,7 +195,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         $this->http_client->init();
         $this->logger->info("Gerrit REST driver: Create group $group_name");
 
-        $url            = '/groups/'.urlencode($group_name);
+        $url            = '/groups/'. urlencode($group_name);
         $custom_options = array(
             CURLOPT_PUT => true,
         );
@@ -220,7 +220,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
 
             $this->logger->info("Gerrit REST driver: Group $group_name successfully created");
         } catch (Http_ClientException $exception) {
-            $this->logger->error("Gerrit REST driver: Unable to create group $group_name");
+            $this->logger->error("Gerrit REST driver: Unable to create group $group_name: ". $exception->getMessage());
             return false;
         }
     }
@@ -291,18 +291,25 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         }
 
         $this->http_client->init();
-        $url            = '/groups/'.$group_name.'/members/'.$user->getSSHUserName();
+        $this->logger->info("Gerrit REST driver: Add user " . $user->getSSHUserName() . " in group $group_name");
+
+        $url            = '/groups/'. urlencode($group_name) .'/members/'. urlencode($user->getSSHUserName());
         $custom_options = array(
             CURLOPT_PUT => true,
         );
 
         $options = $this->getOptionsForRequest($server, $url, $custom_options);
 
+        $this->logger->debug("debug url " . $options[CURLOPT_URL]);
+
         try {
             $this->http_client->addOptions($options);
             $this->http_client->doRequest();
+
+            $this->logger->info("Gerrit REST driver: User successfully added");
             return true;
         } catch (Http_ClientException $exception) {
+            $this->logger->error("Gerrit REST driver: Cannot add user: " . $exception->getMessage());
             return false;
         }
     }
@@ -312,9 +319,10 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         Git_Driver_Gerrit_User $user,
         $group_name
      ) {
-        //$this->http_client->init();
+        $this->http_client->init();
+        $this->logger->info("Gerrit REST driver: Remove user " . $user->getSSHUserName() . " from group $group_name");
 
-        $url            = '/groups/'.$group_name.'/members.delete/'.$user->getSSHUserName();
+        $url            = '/groups/'. urlencode($group_name) .'/members/'. urlencode($user->getSSHUserName());
         $custom_options = array(
             CURLOPT_CUSTOMREQUEST => 'DELETE',
         );
@@ -324,8 +332,11 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         try {
             $this->http_client->addOptions($options);
             $this->http_client->doRequest();
+
+            $this->logger->info("Gerrit REST driver: User successfully removed");
             return true;
         } catch (Http_ClientException $exception) {
+            $this->logger->error("Gerrit REST driver: Cannot remove user: " . $exception->getMessage());
             return false;
         }
     }
@@ -338,7 +349,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         $this->http_client->init();
         $this->logger->debug("Gerrit REST driver: Create user ". $user->getSSHUserName() ." in Gerrit and add it directly in $group_name group");
 
-        $url_create_account = '/accounts/'.$user->getSSHUserName();
+        $url_create_account = '/accounts/'. urlencode($user->getSSHUserName());
 
         $json_data = json_encode(
             array(
@@ -368,8 +379,9 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
 
     private function userIsAlreadyMigratedOnGerrit(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user){
         $this->http_client->init();
+        $this->logger->info("Gerrit REST driver: Check if user ". $user->getSSHUserName() ." is already migrated in Gerrit");
 
-        $url            = '/accounts/'.$user->getSSHUserName();
+        $url            = '/accounts/'. urlencode($user->getSSHUserName());
         $custom_options = array(
             CURLOPT_CUSTOMREQUEST   => 'GET'
         );
@@ -380,8 +392,10 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
             $this->http_client->addOptions($options);
             $this->http_client->doRequest();
 
+            $this->logger->debug("debug: " . $this->http_client->isLastResponseSuccess());
             return $this->http_client->isLastResponseSuccess();
         } catch (Http_ClientException $exception) {
+            $this->logger->info("User does not exist in Gerrit: ". $exception->getMessage());
             return false;
         }
     }
@@ -392,10 +406,10 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
             return true;
         }
 
-        //$this->http_client->init();
+        $this->http_client->init();
         $this->logger->info("Gerrit REST driver: Remove all group members from $group_name");
 
-        $url = '/groups/'.$group_name.'/members.delete';
+        $url = '/groups/'. urlencode($group_name) .'/members.delete';
 
         $custom_options = array(
             CURLOPT_POST       => true,
@@ -420,7 +434,8 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
     }
 
     public function addIncludedGroup(Git_RemoteServer_GerritServer $server, $group_name, $included_group_name ){
-        //$this->http_client->init();
+        $this->http_client->init();
+        $this->logger->info("Gerrit REST driver: Add included group $included_group_name in group $group_name");
 
         $url = '/groups/'. urlencode($group_name) .'/groups/'. urlencode($included_group_name);
 
@@ -434,8 +449,10 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
             $this->http_client->addOptions($options);
             $this->http_client->doRequest();
 
-            return $this->http_client->isLastResponseSuccess();
+            $this->logger->info("Gerrit REST driver: Group successfully included");
+            return true;
         } catch (Http_ClientException $exception) {
+            $this->logger->error("Gerrit REST driver: Cannot include group: ". $exception->getMessage());
             return false;
         }
     }
@@ -446,10 +463,10 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
             return true;
         }
 
-        //$this->http_client->init();
+        $this->http_client->init();
         $this->logger->info("Gerrit REST driver: Remove all included groups from group $group_name");
 
-        $url = '/groups/'.urlencode($group_name).'/groups.delete';
+        $url = '/groups/'. urlencode($group_name) .'/groups.delete';
 
         $custom_options = array(
             CURLOPT_POST       => true,
@@ -466,9 +483,11 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         try {
             $this->http_client->addOptions($options);
             $this->http_client->doRequest();
+            $this->logger->info("Gerrit REST driver: included groups successfully removed");
 
-            return $this->http_client->isLastResponseSuccess();
+            return true;
         } catch (Http_ClientException $exception) {
+            $this->logger->error("Gerrit REST driver: Cannot remove included group: ". $exception->getMessage());
             return false;
         }
     }
@@ -490,7 +509,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
     }
 
     public function setProjectInheritance(Git_RemoteServer_GerritServer $server, $project_name, $parent_project_name ){
-        //$this->http_client->init();
+        $this->http_client->init();
         $this->logger->info("Gerrit REST driver: Set project $parent_project_name as parent of $project_name");
 
         $url       = '/projects/'. urlencode($project_name) .'/parent';
@@ -512,9 +531,11 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         try {
             $this->http_client->addOptions($options);
             $this->http_client->doRequest();
+            $this->logger->error("Gerrit REST driver: parent project successfully added");
 
             return true;
         } catch (Http_ClientException $exception) {
+            $this->logger->error("Gerrit REST driver: Cannot set parent project: ". $exception->getMessage());
             return false;
         }
     }
@@ -524,7 +545,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
     }
 
     public function isDeletePluginEnabled(Git_RemoteServer_GerritServer $server ){
-        //$this->http_client->init();
+        $this->http_client->init();
         $this->logger->debug("Gerrit REST driver: Check if delete plugin is activated");
 
         $url            = '/plugins/';
@@ -545,6 +566,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
 
             return $activated;
         } catch (Http_ClientException $exception) {
+            $this->logger->error("Gerrit REST driver: Cannot detect if delete plugin is activated: ". $exception->getMessage());
             return false;
         }
     }
@@ -603,9 +625,9 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         Git_RemoteServer_GerritServer $server,
         $group_name
     ) {
-        //$this->http_client->init();
+        $this->http_client->init();
 
-        $url     = '/groups/'.$group_name.'/members';
+        $url     = '/groups/'. urlencode($group_name) .'/members';
         $options = $this->getOptionsForRequest($server, $url, array(
            CURLOPT_CUSTOMREQUEST   => 'GET',
         ));
@@ -626,9 +648,9 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         Git_RemoteServer_GerritServer $server,
         $group_name
     ) {
-        //$this->http_client->init();
+        $this->http_client->init();
 
-        $url     = '/groups/'.urlencode($group_name).'/groups';
+        $url     = '/groups/'. urlencode($group_name) .'/groups';
         $options = $this->getOptionsForRequest($server, $url, array(
            CURLOPT_CUSTOMREQUEST   => 'GET',
         ));
@@ -661,7 +683,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
     }
 
     private function getGroupInfoFromGerrit($server, $group_name) {
-        //$this->http_client->init();
+        $this->http_client->init();
 
         $url            = '/groups/'. urlencode($group_name);
         $custom_options = array(

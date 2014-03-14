@@ -198,7 +198,15 @@ class Git_DriverREST_Gerrit_manageGroupsTest extends Git_Driver_GerritREST_baseT
 
         $this->gerrit_driver->createGroup($this->gerrit_server, 'firefox/project_members', 'firefox/project_admins');
     }
-    public function itInformsAboutGroupCreation(){}
+    public function itInformsAboutGroupCreation(){
+        stub($this->gerrit_driver)->doesTheGroupExist()->returns(false);
+
+        expect($this->logger)->info()->count(2);
+        expect($this->logger)->info("Gerrit REST driver: Create group firefox/project_members")->at(0);
+        expect($this->logger)->info("Gerrit REST driver: Group firefox/project_members successfully created")->at(1);
+
+        $this->gerrit_driver->createGroup($this->gerrit_server, 'firefox/project_members', 'firefox/project_admins');
+    }
     public function itRaisesAGerritDriverExceptionOnGroupsCreation(){}
 
     public function itCreatesGroupWithoutOwnerWhenSelfOwnedToAvoidChickenEggIssue(){

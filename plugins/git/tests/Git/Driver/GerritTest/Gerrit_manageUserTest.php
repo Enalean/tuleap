@@ -143,8 +143,8 @@ class Git_DriverREST_Gerrit_manageUserTest extends Git_Driver_GerritREST_baseTes
 
         $url = $this->gerrit_server_host
             .':'. $this->gerrit_server_port
-            .'/a/groups/'. $this->groupname
-            .'/members/'. $this->username;
+            .'/a/groups/'. urlencode($this->groupname)
+            .'/members/'. urlencode($this->username);
 
         $expected_options = array(
             CURLOPT_URL             => $url,
@@ -164,8 +164,8 @@ class Git_DriverREST_Gerrit_manageUserTest extends Git_Driver_GerritREST_baseTes
     public function itExecutesTheDeletionCommand(){
         $url = $this->gerrit_server_host
             .':'. $this->gerrit_server_port
-            .'/a/groups/'. $this->groupname
-            .'/members.delete/'. $this->username;
+            .'/a/groups/'. urlencode($this->groupname)
+            .'/members/'. urlencode($this->username);
 
         $expected_options = array(
             CURLOPT_URL             => $url,
@@ -205,7 +205,7 @@ EOS;
 
         $url = $this->gerrit_server_host
             .':'. $this->gerrit_server_port
-            .'/a/groups/'. $this->groupname
+            .'/a/groups/'. urlencode($this->groupname)
             .'/members.delete';
 
         $expected_options = array(
@@ -224,7 +224,7 @@ EOS;
 
         $url_get_members = $this->gerrit_server_host
             .':'. $this->gerrit_server_port
-            .'/a/groups/'. $this->groupname
+            .'/a/groups/'. urlencode($this->groupname)
             .'/members';
 
         $expected_options_get_members = array(
