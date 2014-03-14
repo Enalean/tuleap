@@ -48,6 +48,13 @@ class Http_Client {
         $this->init();
     }
 
+    /**
+     * Initialize a curl client
+     *
+     * This function *MUST* be called before each self::doRequest() call
+     * in order to be able to use multiple time the same client, otherwise we
+     * have to recreate a new one.
+     */
     public function init() {
         if ($this->curl_handle) {
             $this->close();

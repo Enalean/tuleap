@@ -25,6 +25,7 @@
 class Git_Driver_GerritREST implements Git_Driver_Gerrit {
 
     const CONTENT_TYPE_JSON = 'Content-Type: application/json;charset=UTF-8';
+    const CONTENT_TYPE_TEXT = 'Content-Type: plain/text';
 
     /** @var Http_Client */
     private $http_client;
@@ -139,7 +140,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
 
     public function doesTheProjectExist(Git_RemoteServer_GerritServer $server, $project_name ){
         $this->http_client->init();
-        $this->logger->debug("Gerrit REST driver: Check if project $project_name already exists");
+        $this->logger->info("Gerrit REST driver: Check if project $project_name already exists");
 
         $url            = '/projects/'. urlencode($project_name);
         $custom_options = array(
@@ -152,11 +153,11 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
             $this->http_client->addOptions($options);
             $this->http_client->doRequest();
 
-            $this->logger->debug("Gerrit REST driver: project $project_name exists");
+            $this->logger->info("Gerrit REST driver: project $project_name exists");
 
             return true;
         } catch (Http_ClientException $exception) {
-            $this->logger->debug("Gerrit REST driver: project $project_name does not exist");
+            $this->logger->info("Gerrit REST driver: project $project_name does not exist");
 
             return false;
         }
@@ -164,7 +165,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
 
     public function ping(Git_RemoteServer_GerritServer $server ){
         $this->http_client->init();
-        $this->logger->debug("Gerrit REST driver: Check if server is up");
+        $this->logger->info("Gerrit REST driver: Check if server is up");
 
         $url            = '/config/server/version';
         $custom_options = array(
@@ -245,7 +246,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
 
     public function doesTheGroupExist(Git_RemoteServer_GerritServer $server, $group_name ){
         $this->http_client->init();
-        $this->logger->debug("Gerrit REST driver: Check if the group $group_name exists");
+        $this->logger->info("Gerrit REST driver: Check if the group $group_name exists");
 
         $this->getGroupInfoFromGerrit($server, $group_name);
 
@@ -258,7 +259,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
 
     public function getAllGroups(Git_RemoteServer_GerritServer $server ){
         $this->http_client->init();
-        $this->logger->debug("Gerrit REST driver: Get all groups");
+        $this->logger->info("Gerrit REST driver: Get all groups");
 
         $url = '/groups/';
 
@@ -299,8 +300,6 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         );
 
         $options = $this->getOptionsForRequest($server, $url, $custom_options);
-
-        $this->logger->debug("debug url " . $options[CURLOPT_URL]);
 
         try {
             $this->http_client->addOptions($options);
@@ -347,7 +346,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         $group_name
     ) {
         $this->http_client->init();
-        $this->logger->debug("Gerrit REST driver: Create user ". $user->getSSHUserName() ." in Gerrit and add it directly in $group_name group");
+        $this->logger->info("Gerrit REST driver: Create user ". $user->getSSHUserName() ." in Gerrit and add it directly in $group_name group");
 
         $url_create_account = '/accounts/'. urlencode($user->getSSHUserName());
 
@@ -392,7 +391,6 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
             $this->http_client->addOptions($options);
             $this->http_client->doRequest();
 
-            $this->logger->debug("debug: " . $this->http_client->isLastResponseSuccess());
             return $this->http_client->isLastResponseSuccess();
         } catch (Http_ClientException $exception) {
             $this->logger->info("User does not exist in Gerrit: ". $exception->getMessage());
@@ -496,8 +494,34 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         return;
     }
 
-    public function addSSHKeyToAccount(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user, $ssh_key ){
-        return;
+    public function addSSHKeyToAccount(
+        Git_RemoteServer_GerritServer $server,
+        Git_Driver_Gerrit_User $user,
+        $ssh_key
+    ){
+        $this->http_client->init();
+        $this->logger->info("Gerrit REST driver: Add ssh key for user ". $user->getSSHUserName());
+
+        $url = '/accounts/'. urlencode($user->getSSHUserName()) .'/sshkeys';
+
+        $custom_options = array(
+            CURLOPT_POST       => true,
+            CURLOPT_HTTPHEADER => array(self::CONTENT_TYPE_TEXT),
+            CURLOPT_POSTFIELDS => $this->escapeSSHKey($ssh_key)
+        );
+
+        $options = $this->getOptionsForRequest($server, $url, $custom_options);
+
+        try {
+            $this->http_client->addOptions($options);
+            $this->http_client->doRequest();
+            $this->logger->info("Gerrit REST driver: ssh key successfully added");
+
+            return true;
+        } catch (Http_ClientException $exception) {
+            $this->logger->error("Gerrit REST driver: Cannot add ssh key: ". $exception->getMessage());
+            return false;
+        }
     }
 
     public function removeSSHKeyFromAccount(
@@ -505,7 +529,51 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         Git_Driver_Gerrit_User $user,
         $ssh_key
      ) {
-        return;
+        $this->logger->info("Gerrit REST driver: Remove ssh key for user ". $user->getSSHUserName());
+
+        $ssh_keys           = $this->getAllSSHKeysForUser($server, $user);
+        $gerrit_ssh_key_ids = $this->getUserSSHKeyId($ssh_keys, $ssh_key);
+
+        $this->logger->info("Gerrit REST driver: Found this ssh key ". count($gerrit_ssh_key_ids). " time(s)");
+
+        foreach ($gerrit_ssh_key_ids as $gerrit_key_id) {
+            $this->actionRemoveSSHKey($server, $user, $gerrit_key_id);
+        }
+
+    }
+
+    /**
+     *
+     * @param Git_RemoteServer_GerritServer $server
+     * @param Git_Driver_Gerrit_User $user
+     *
+     * @return array
+     */
+    private function getAllSSHKeysForUser(
+        Git_RemoteServer_GerritServer $server,
+        Git_Driver_Gerrit_User $user
+    ){
+        $this->http_client->init();
+        $this->logger->info("Gerrit REST driver: Get all ssh keys for user ". $user->getSSHUserName());
+
+        $url = '/accounts/'. urlencode($user->getSSHUserName()) .'/sshkeys';
+
+        $custom_options = array(
+            CURLOPT_CUSTOMREQUEST => 'GET'
+        );
+
+        $options = $this->getOptionsForRequest($server, $url, $custom_options);
+
+        try {
+            $this->http_client->addOptions($options);
+            $this->http_client->doRequest();
+            $this->logger->info("Gerrit REST driver: Successfully get all ssh keys for user");
+
+            return $this->decodeGerritResponse($this->http_client->getLastResponse());
+        } catch (Http_ClientException $exception) {
+            $this->logger->error("Gerrit REST driver: Cannot get ssh keys for user: ". $exception->getMessage());
+            return array();
+        }
     }
 
     public function setProjectInheritance(Git_RemoteServer_GerritServer $server, $project_name, $parent_project_name ){
@@ -546,7 +614,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
 
     public function isDeletePluginEnabled(Git_RemoteServer_GerritServer $server ){
         $this->http_client->init();
-        $this->logger->debug("Gerrit REST driver: Check if delete plugin is activated");
+        $this->logger->info("Gerrit REST driver: Check if delete plugin is activated");
 
         $url            = '/plugins/';
         $custom_options = array(
@@ -562,7 +630,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
 
             $activated = isset($plugins['deleteproject']);
 
-            $this->logger->debug("Gerrit REST driver: delete plugin is activated : $activated");
+            $this->logger->info("Gerrit REST driver: delete plugin is activated : $activated");
 
             return $activated;
         } catch (Http_ClientException $exception) {
@@ -700,5 +768,56 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         } catch (Http_ClientException $exception) {
             return false;
         }
+    }
+
+    private function getUserSSHKeyId(array $ssh_keys, $expected_ssh_key) {
+        $matching_keys = array();
+
+        foreach ($ssh_keys as $ssh_key_info) {
+            if ($ssh_key_info['encoded_key'] === $this->getKeyPartFromSSHKey($expected_ssh_key)) {
+                $gerrit_ssh_key_id = $ssh_key_info['seq'];
+                $this->logger->info("Gerrit REST driver: Key found ($gerrit_ssh_key_id)");
+                $matching_keys[] = $gerrit_ssh_key_id ;
+            }
+        }
+
+        return $matching_keys;
+    }
+
+    private function escapeSSHKey($ssh_key) {
+        return str_replace('=', '\u003d', $ssh_key);
+    }
+
+    private function actionRemoveSSHKey(
+            Git_RemoteServer_GerritServer $server,
+            Git_Driver_Gerrit_User $user,
+            $gerrit_key_id
+    ) {
+        $this->http_client->init();
+
+        $url = '/accounts/'. urlencode($user->getSSHUserName()) .'/sshkeys/'. urlencode($gerrit_key_id);
+
+        $custom_options = array(
+            CURLOPT_CUSTOMREQUEST => 'DELETE'
+        );
+
+        $options = $this->getOptionsForRequest($server, $url, $custom_options);
+
+        try {
+            $this->http_client->addOptions($options);
+            $this->http_client->doRequest();
+            $this->logger->info("Gerrit REST driver: Successfully deleted ssh key ($gerrit_key_id)");
+
+            return true;
+        } catch (Http_ClientException $exception) {
+            $this->logger->error("Gerrit REST driver: Cannot remove ssh key ($gerrit_key_id): ". $exception->getMessage());
+            return false;
+        }
+    }
+
+    private function getKeyPartFromSSHKey($expected_ssh_key) {
+        $key_parts = explode(' ', $expected_ssh_key);
+
+        return $key_parts[1];
     }
 }

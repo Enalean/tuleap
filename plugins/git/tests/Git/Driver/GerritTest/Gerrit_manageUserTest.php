@@ -79,6 +79,9 @@ class Git_Driver_GerritLegacy_manageUserTest extends Git_Driver_GerritLegacy_bas
 class Git_DriverREST_Gerrit_manageUserTest extends Git_Driver_GerritREST_baseTest implements Git_Driver_Gerrit_manageUserTest {
     private $username = 'someuser';
 
+    /** @var Git_Driver_Gerrit_User */
+    private $user;
+
     public function setUp() {
         parent::setUp();
 
@@ -241,5 +244,171 @@ EOS;
         expect($this->http_client)->addOptions($expected_options)->at(1);
 
         $this->driver->removeAllGroupMembers($this->gerrit_server, $this->groupname);
+    }
+
+    public function itAddsAnSSHKeyforUser() {
+        $url = $this->gerrit_server_host
+            .':'. $this->gerrit_server_port
+            .'/a/accounts/'. urlencode($this->user->getSSHUserName()) .'/sshkeys';
+
+        $ssh_key = "AAAAB3NzaC1yc2EAAAABIwAAAQEA0T...YImydZAw==";
+
+        $encoded_ssh_key = "AAAAB3NzaC1yc2EAAAABIwAAAQEA0T...YImydZAw\u003d\u003d";
+
+        $expected_options = array(
+            CURLOPT_URL             => $url,
+            CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_HTTPAUTH        => CURLAUTH_DIGEST,
+            CURLOPT_USERPWD         => $this->gerrit_server_user .':'. $this->gerrit_server_pass,
+            CURLOPT_POST            => true,
+            CURLOPT_HTTPHEADER      => array(Git_Driver_GerritREST::CONTENT_TYPE_TEXT),
+            CURLOPT_POSTFIELDS      => $encoded_ssh_key
+        );
+
+        expect($this->http_client)->init()->once();
+        expect($this->http_client)->doRequest()->once();
+        expect($this->http_client)->addOptions($expected_options)->once();
+        expect($this->logger)->info()->count(2);
+
+        $this->driver->addSSHKeyToAccount($this->gerrit_server, $this->user, $ssh_key);
+    }
+
+    public function itRemovesAnSSHKeyforUser() {
+        $url_list_keys = $this->gerrit_server_host
+            .':'. $this->gerrit_server_port
+            .'/a/accounts/'. urlencode($this->user->getSSHUserName()) .'/sshkeys';
+
+        $expected_list_keys_options = array(
+            CURLOPT_URL             => $url_list_keys,
+            CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_HTTPAUTH        => CURLAUTH_DIGEST,
+            CURLOPT_USERPWD         => $this->gerrit_server_user .':'. $this->gerrit_server_pass,
+            CURLOPT_CUSTOMREQUEST   => 'GET',
+        );
+
+        $existing_keys = <<<EOS
+)]}'
+[
+  {
+    "seq": 1,
+    "ssh_public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA0T...azertyAw\u003d\u003d john.doe@example.com",
+    "encoded_key": "AAAAB3NzaC1yc2EAAAABIwAAAQEA0T...azertyAw\u003d\u003d",
+    "algorithm": "ssh-rsa",
+    "comment": "john.doe@example.com",
+    "valid": true
+  },
+  {
+    "seq": 2,
+    "ssh_public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA0T...YImydZAw\u003d\u003d john.doe@example.com",
+    "encoded_key": "AAAAB3NzaC1yc2EAAAABIwAAAQEA0T...YImydZAw\u003d\u003d",
+    "algorithm": "ssh-rsa",
+    "comment": "john.doe@example.com",
+    "valid": true
+  }
+]
+EOS;
+        $url = $this->gerrit_server_host
+            .':'. $this->gerrit_server_port
+            .'/a/accounts/'. urlencode($this->user->getSSHUserName()) .'/sshkeys/2';
+
+        $ssh_key = "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA0T...YImydZAw== john.doe@example.com";
+
+        $expected_options = array(
+            CURLOPT_URL             => $url,
+            CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_HTTPAUTH        => CURLAUTH_DIGEST,
+            CURLOPT_USERPWD         => $this->gerrit_server_user .':'. $this->gerrit_server_pass,
+            CURLOPT_CUSTOMREQUEST   => 'DELETE',
+        );
+
+        expect($this->http_client)->init()->count(2);
+        expect($this->http_client)->doRequest()->count(2);
+        expect($this->http_client)->getLastResponse()->at(0)->returns($existing_keys);
+        expect($this->http_client)->addOptions()->count(2);
+        expect($this->http_client)->addOptions($expected_list_keys_options)->at(0);
+        expect($this->http_client)->addOptions($expected_options)->at(1);
+        expect($this->logger)->info()->count(6);
+
+        $this->driver->removeSSHKeyFromAccount($this->gerrit_server, $this->user, $ssh_key);
+    }
+
+    public function itRemovesMultipleTimeTheSSHKeyforUserIfFoundMultipleTimes() {
+        $url_list_keys = $this->gerrit_server_host
+            .':'. $this->gerrit_server_port
+            .'/a/accounts/'. urlencode($this->user->getSSHUserName()) .'/sshkeys';
+
+        $expected_list_keys_options = array(
+            CURLOPT_URL             => $url_list_keys,
+            CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_HTTPAUTH        => CURLAUTH_DIGEST,
+            CURLOPT_USERPWD         => $this->gerrit_server_user .':'. $this->gerrit_server_pass,
+            CURLOPT_CUSTOMREQUEST   => 'GET',
+        );
+
+        $existing_keys = <<<EOS
+)]}'
+[
+  {
+    "seq": 1,
+    "ssh_public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA0T...azertyAw\u003d\u003d john.doe@example.com",
+    "encoded_key": "AAAAB3NzaC1yc2EAAAABIwAAAQEA0T...azertyAw\u003d\u003d",
+    "algorithm": "ssh-rsa",
+    "comment": "john.doe@example.com",
+    "valid": true
+  },
+  {
+    "seq": 2,
+    "ssh_public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA0T...YImydZAw\u003d\u003d john.doe@example.com",
+    "encoded_key": "AAAAB3NzaC1yc2EAAAABIwAAAQEA0T...YImydZAw\u003d\u003d",
+    "algorithm": "ssh-rsa",
+    "comment": "john.doe@example.com",
+    "valid": true
+  },
+  {
+    "seq": 3,
+    "ssh_public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA0T...YImydZAw\u003d\u003d another comment that do not match the requested comment",
+    "encoded_key": "AAAAB3NzaC1yc2EAAAABIwAAAQEA0T...YImydZAw\u003d\u003d",
+    "algorithm": "ssh-rsa",
+    "comment": "another comment that do not match the requested comment",
+    "valid": true
+  }
+]
+EOS;
+        $url_first_key = $this->gerrit_server_host
+            .':'. $this->gerrit_server_port
+            .'/a/accounts/'. urlencode($this->user->getSSHUserName()) .'/sshkeys/2';
+
+        $ssh_key = "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA0T...YImydZAw== john.doe@example.com";
+
+        $expected_options_first_key = array(
+            CURLOPT_URL             => $url_first_key,
+            CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_HTTPAUTH        => CURLAUTH_DIGEST,
+            CURLOPT_USERPWD         => $this->gerrit_server_user .':'. $this->gerrit_server_pass,
+            CURLOPT_CUSTOMREQUEST   => 'DELETE',
+        );
+
+        $url_second_key = $this->gerrit_server_host
+            .':'. $this->gerrit_server_port
+            .'/a/accounts/'. urlencode($this->user->getSSHUserName()) .'/sshkeys/3';
+
+        $expected_options_second_key = array(
+            CURLOPT_URL             => $url_second_key,
+            CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_HTTPAUTH        => CURLAUTH_DIGEST,
+            CURLOPT_USERPWD         => $this->gerrit_server_user .':'. $this->gerrit_server_pass,
+            CURLOPT_CUSTOMREQUEST   => 'DELETE',
+        );
+
+        expect($this->http_client)->init()->count(3);
+        expect($this->http_client)->doRequest()->count(3);
+        expect($this->http_client)->getLastResponse()->at(0)->returns($existing_keys);
+        expect($this->http_client)->addOptions()->count(3);
+        expect($this->http_client)->addOptions($expected_list_keys_options)->at(0);
+        expect($this->http_client)->addOptions($expected_options_first_key)->at(1);
+        expect($this->http_client)->addOptions($expected_options_second_key)->at(2);
+        expect($this->logger)->info()->count(8);
+
+        $this->driver->removeSSHKeyFromAccount($this->gerrit_server, $this->user, $ssh_key);
     }
 }
