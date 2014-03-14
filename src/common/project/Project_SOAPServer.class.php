@@ -69,6 +69,9 @@ class Project_SOAPServer {
     /** @var Project_Service_ServiceUsageManager */
     private $service_usage_manager;
 
+    /** @var User_ForgeUserGroupPermissionsManager */
+    private $forge_ugroup_permissions_manager;
+
     public function __construct(
         ProjectManager $projectManager,
         ProjectCreator $projectCreator,
@@ -79,18 +82,20 @@ class Project_SOAPServer {
         Project_CustomDescription_CustomDescriptionValueManager $description_manager,
         Project_CustomDescription_CustomDescriptionValueFactory $description_value_factory,
         Project_Service_ServiceUsageFactory $service_usage_factory,
-        Project_Service_ServiceUsageManager $service_usage_manager
+        Project_Service_ServiceUsageManager $service_usage_manager,
+        User_ForgeUserGroupPermissionsManager $forge_ugroup_permissions_manager
     ) {
-        $this->projectManager             = $projectManager;
-        $this->projectCreator             = $projectCreator;
-        $this->userManager                = $userManager;
-        $this->generic_user_factory       = $generic_user_factory;
-        $this->limitator                  = $limitator;
-        $this->description_factory        = $description_factory;
-        $this->description_manager        = $description_manager;
-        $this->description_value_factory  = $description_value_factory;
-        $this->service_usage_factory      = $service_usage_factory;
-        $this->service_usage_manager      = $service_usage_manager;
+        $this->projectManager                   = $projectManager;
+        $this->projectCreator                   = $projectCreator;
+        $this->userManager                      = $userManager;
+        $this->generic_user_factory             = $generic_user_factory;
+        $this->limitator                        = $limitator;
+        $this->description_factory              = $description_factory;
+        $this->description_manager              = $description_manager;
+        $this->description_value_factory        = $description_value_factory;
+        $this->service_usage_factory            = $service_usage_factory;
+        $this->service_usage_manager            = $service_usage_manager;
+        $this->forge_ugroup_permissions_manager = $forge_ugroup_permissions_manager;
     }
 
     /**
@@ -132,9 +137,17 @@ class Project_SOAPServer {
      * @return Integer The ID of newly created project
      */
     public function addProject($sessionKey, $adminSessionKey, $shortName, $publicName, $privacy, $templateId) {
-        $this->continueAdminSession($adminSessionKey);
-        $requester = $this->continueSession($sessionKey);
-        $template  = $this->getTemplateById($templateId, $requester);
+        $requester          = $this->continueSession($sessionKey);
+        $has_special_access = $this->doesUserHavePermission(
+            $requester,
+            new User_ForgeUserGroupPermission_ProjectApproval()
+        );
+
+        if (! $has_special_access) {
+            $this->continueAdminSession($adminSessionKey);
+        }
+
+        $template = $this->getTemplateById($templateId, $requester);
         try {
             $this->limitator->logCallTo('addProject');
             return $this->formatDataAndCreateProject($shortName, $publicName, $privacy, $template);
@@ -142,7 +155,16 @@ class Project_SOAPServer {
             throw new SoapFault((string) $e->getCode(), $e->getMessage());
         }
     }
-    
+
+    /**
+     * @return bool
+     */
+    private function doesUserHavePermission(PFUser $user, User_ForgeUserGroupPermission $permission) {
+        return $this->forge_ugroup_permissions_manager->doesUserHavePermission(
+            $user, $permission
+        );
+    }
+
     /**
      * Return a project the user is authorized to use as template
      * 
@@ -275,7 +297,7 @@ class Project_SOAPServer {
         $this->getProjectIfUserIsAdmin($groupId, $sessionKey);
         if ($user = $this->userManager->getUserById($userId)) {
             try {
-                $ugroup = new UGroup(array('ugroup_id' => $ugroupId, 'group_id' => $groupId));
+                $ugroup = new ProjectUGroup(array('ugroup_id' => $ugroupId, 'group_id' => $groupId));
                 $ugroup->addUser($user);
             }  catch (Exception $e) {
                 throw new SoapFault((string) $e->getCode(), $e->getMessage());
@@ -307,7 +329,7 @@ class Project_SOAPServer {
         $this->getProjectIfUserIsAdmin($groupId, $sessionKey);
         if ($user = $this->userManager->getUserById($userId)) {
             try {
-                $ugroup = new UGroup(array('ugroup_id' => $ugroupId, 'group_id' => $groupId));
+                $ugroup = new ProjectUGroup(array('ugroup_id' => $ugroupId, 'group_id' => $groupId));
                 $ugroup->removeUser($user);
             }  catch (Exception $e) {
                 throw new SoapFault((string) $e->getCode(), $e->getMessage());

@@ -22,7 +22,7 @@ require_once('common/dao/UGroupDao.class.php');
 require_once('common/project/UGroupManager.class.php');
 
 /**
- * UGroup binding
+ * ProjectUGroup binding
  */
 class UGroupBinding {
 
@@ -65,7 +65,7 @@ class UGroupBinding {
     }
 
     /**
-     * Retrieve All Ugroups bound to a given Ugroup
+     * Retrieve All Ugroups bound to a given ProjectUGroup
      *
      * @param Integer $ugroupId Id of the source user goup
      *
@@ -85,7 +85,7 @@ class UGroupBinding {
     }
 
     /**
-     * Remove all Ugroups binding to a given Ugroup
+     * Remove all Ugroups binding to a given ProjectUGroup
      *
      * @param Integer $ugroupId Id of the source user group
      *
@@ -151,7 +151,7 @@ class UGroupBinding {
      * @return String
      */
     public function getLinkTitle($ugroupId) {
-        $ugroup = new UGroup(array('ugroup_id' => $ugroupId));
+        $ugroup = new ProjectUGroup(array('ugroup_id' => $ugroupId));
         if ($ugroup->isBound()) {
             $action = 'update_binding';
         } else {

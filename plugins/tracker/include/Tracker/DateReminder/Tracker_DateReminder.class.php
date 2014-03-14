@@ -200,7 +200,7 @@ class Tracker_DateReminder {
     }
 
     /**
-     * Set the Ugroup of this reminder
+     * Set the ProjectUGroup of this reminder
      *
      * @param String $ugroups The user groups to be notified
      *

@@ -39,11 +39,11 @@ class Project_Admin_UGroup_PaneManagement {
     private $view;
 
     /**
-     * @var UGroup
+     * @var ProjectUGroup
      */
     private $ugroup;
 
-    public function __construct(UGroup $ugroup, Project_Admin_UGroup_View $view = null) {
+    public function __construct(ProjectUGroup $ugroup, Project_Admin_UGroup_View $view = null) {
         $this->ugroup       = $ugroup;
         $this->view         = $view;
         $this->panes = array(

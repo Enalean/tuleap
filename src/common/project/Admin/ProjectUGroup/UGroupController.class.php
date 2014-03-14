@@ -38,7 +38,7 @@ class Project_Admin_UGroup_UGroupController {
 
     /**
      *
-     * @var UGroup
+     * @var ProjectUGroup
      */
     protected $ugroup;
 
@@ -60,7 +60,7 @@ class Project_Admin_UGroup_UGroupController {
      */
     private $pane_management;
 
-    public function __construct(Codendi_Request $request, UGroup $ugroup) {
+    public function __construct(Codendi_Request $request, ProjectUGroup $ugroup) {
         $this->request = $request;
         $this->ugroup = $ugroup;
         $this->ugroup_manager = new UGroupManager();

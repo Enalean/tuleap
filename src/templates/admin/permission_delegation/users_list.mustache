@@ -1,0 +1,43 @@
+<div class="span6">
+    <form action="permission_delegation.php?action=manage-users" method="post">
+        <h3>{{ users_title }}</h3>
+
+        {{# has_users }}
+        <table class="table table-hover table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>{{ users_list_title }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{# users }}
+                <tr>
+                    <td><input type="checkbox" name="user-ids[]" class="user" value="{{ getId }}" /></td>
+                    <td><img src="{{ getAvatarUrl }}" /> {{ getRealName }} ({{ getUsername }})</td>
+                </tr>
+                {{/ users }}
+            </tbody>
+        </table>
+        {{/ has_users }}
+        {{^ has_users }}
+            <p class="no-user">{{ no_user }}</p>
+        {{/ has_users }}
+
+        <div class="table-actions">
+            <div class="left-actions">
+                <div class="input-append">
+                    <input type="text" name="user" id="add-user">
+                    <input type="submit" class="btn btn-primary" name="add-user" value="{{ users_action_add }}" />
+                </div>
+            </div>
+            <div class="right-actions">
+                {{# has_users }}
+                    <input type="submit" id="delete-users" class="btn btn-danger" disabled="disabled" name="remove-users" value="{{ users_action_delete }}"/>
+                {{/ has_users }}
+            </div>
+            <div style="clear: both"></div>
+        </div>
+        <input type="hidden" name="id" value="{{ id }}" />
+    </form>
+</div>

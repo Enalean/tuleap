@@ -31,7 +31,7 @@ class Project_Admin_UGroup_View_Permissions extends Project_Admin_UGroup_View {
      */
     private $permissions_manager;
 
-    public function __construct(UGroup $ugroup) {
+    public function __construct(ProjectUGroup $ugroup) {
         parent::__construct($ugroup);
         $this->permissions_manager = PermissionsManager::instance();
         $this->event_manager = EventManager::instance();

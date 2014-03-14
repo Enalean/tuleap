@@ -846,15 +846,15 @@ class GitActions extends PluginActions {
     }
 
     private function removeNobodyFromSelectGroups(array $select_group_ids) {
-        return array_diff($select_group_ids, array(UGroup::NONE));
+        return array_diff($select_group_ids, array(ProjectUGroup::NONE));
     }
 
     private function removeAnonymousFromSelectGroups(array $select_group_ids) {
-        return array_diff($select_group_ids, array(Ugroup::ANONYMOUS));
+        return array_diff($select_group_ids, array(ProjectUGroup::ANONYMOUS));
     }
 
     private function removeRegisteredUsersFromSelectGroups(array $select_group_ids) {
-        return array_diff($select_group_ids, array(Ugroup::REGISTERED));
+        return array_diff($select_group_ids, array(ProjectUGroup::REGISTERED));
     }
 
     private function checkIfProjectIsValid(Project $project) {

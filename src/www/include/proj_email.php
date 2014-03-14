@@ -9,7 +9,7 @@
 
 function send_new_project_email(Project $project) {
     $ugroup_manager = new UGroupManager();
-    $admin_ugroup   = $ugroup_manager->getUGroup($project, UGroup::PROJECT_ADMIN);
+    $admin_ugroup   = $ugroup_manager->getUGroup($project, ProjectUGroup::PROJECT_ADMIN);
 
     $mail_manager   = new MailManager();
 

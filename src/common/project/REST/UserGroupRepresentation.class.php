@@ -18,7 +18,7 @@
  */
 
 namespace Tuleap\Project\REST;
-use \UGroup;
+use \ProjectUGroup;
 
 class UserGroupRepresentation {
 
@@ -44,7 +44,7 @@ class UserGroupRepresentation {
     public $users_uri;
 
 
-    public function build($project_id, UGroup $ugroup) {
+    public function build($project_id, ProjectUGroup $ugroup) {
         $this->id        = $project_id . '_' . $ugroup->getId();
         $this->uri       = UserGroupRepresentation::ROUTE . '/' . $this->id ;
         $this->label     = $ugroup->getNormalizedName();

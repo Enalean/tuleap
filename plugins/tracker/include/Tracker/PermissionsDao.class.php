@@ -29,7 +29,7 @@ class Tracker_PermissionsDao extends DataAccessObject {
      */
     public function getAuthorizedStaticUgroupIds($tracker_id) {
         $tracker_id             = $this->da->escapeInt($tracker_id);
-        $dynamic_upper_boundary = $this->da->escapeInt(UGROUP::DYNAMIC_UPPER_BOUNDARY);
+        $dynamic_upper_boundary = $this->da->escapeInt(ProjectUGroup::DYNAMIC_UPPER_BOUNDARY);
 
         $sql = "SELECT DISTINCT ugroup_id
                 FROM tracker_field AS F

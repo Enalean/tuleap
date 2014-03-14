@@ -106,6 +106,37 @@ class Project_SOAPServerTest extends TuleapTestCase {
         $projectId = $server->addProject($sessionKey, $adminSessionKey, $shortName, $publicName, $privacy, $templateId);
         $this->assertEqual($projectId, 3459);
     }
+
+    function testAddProjectShouldNotFailWhenRequesterIsNotProjectAdminAndHasPermission() {
+        $server = $this->GivenASOAPServerReadyToCreate();
+
+        stub($this->forge_ugroup_perm_manager)->doesUserHavePermission()->returns(true);
+
+        $sessionKey      = '123';
+        $adminSessionKey = null;
+        $shortName       = 'toto';
+        $publicName      = 'Mon Toto';
+        $privacy         = 'public';
+        $templateId      = 100;
+
+        $server->addProject($sessionKey, $adminSessionKey, $shortName, $publicName, $privacy, $templateId);
+    }
+
+    function testAddProjectShouldFailWhenRequesterIsNotProjectAdminAndDoesNotHavePermission() {
+        $server = $this->GivenASOAPServerReadyToCreate();
+
+        stub($this->forge_ugroup_perm_manager)->doesUserHavePermission()->returns(false);
+
+        $sessionKey      = '123';
+        $adminSessionKey = '';
+        $shortName       = 'toto';
+        $publicName      = 'Mon Toto';
+        $privacy         = 'public';
+        $templateId      = 100;
+
+        $this->expectException('SoapFault');
+        $server->addProject($sessionKey, $adminSessionKey, $shortName, $publicName, $privacy, $templateId);
+    }
     
     /**
      *
@@ -153,6 +184,7 @@ class Project_SOAPServerTest extends TuleapTestCase {
         $this->description_value_factory = mock('Project_CustomDescription_CustomDescriptionValueFactory');
         $this->service_usage_factory     = mock('Project_Service_ServiceUsageFactory');
         $this->service_usage_manager     = mock('Project_Service_ServiceUsageManager');
+        $this->forge_ugroup_perm_manager = mock('User_ForgeUserGroupPermissionsManager');
 
         $server = new Project_SOAPServer(
                 $this->pm,
@@ -164,7 +196,8 @@ class Project_SOAPServerTest extends TuleapTestCase {
                 $this->description_manager,
                 $this->description_value_factory,
                 $this->service_usage_factory,
-                $this->service_usage_manager
+                $this->service_usage_manager,
+                $this->forge_ugroup_perm_manager
         );
 
         return $server;
@@ -209,6 +242,7 @@ class Project_SOAPServerGenericUserTest extends TuleapTestCase {
         $description_value_factory  = mock('Project_CustomDescription_CustomDescriptionValueFactory');
         $service_usage_factory      = mock('Project_Service_ServiceUsageFactory');
         $service_usage_manager      = mock('Project_Service_ServiceUsageManager');
+        $forge_ugroup_perm_manager  = mock('User_ForgeUserGroupPermissionsManager');
 
         $this->server = partial_mock(
                 'Project_SOAPServerObjectTest',
@@ -223,7 +257,8 @@ class Project_SOAPServerGenericUserTest extends TuleapTestCase {
                     $description_manager,
                     $description_value_factory,
                     $service_usage_factory,
-                    $service_usage_manager
+                    $service_usage_manager,
+                    $forge_ugroup_perm_manager
                 )
         );
 
@@ -285,6 +320,7 @@ class Project_SOAPServerProjectDescriptionFieldsTest extends TuleapTestCase {
         $this->description_value_factory  = mock('Project_CustomDescription_CustomDescriptionValueFactory');
         $this->service_usage_factory      = mock('Project_Service_ServiceUsageFactory');
         $this->service_usage_manager      = mock('Project_Service_ServiceUsageManager');
+        $this->forge_ugroup_perm_manager = mock('User_ForgeUserGroupPermissionsManager');
 
         $this->server = new Project_SOAPServer(
             $this->project_manager,
@@ -296,7 +332,8 @@ class Project_SOAPServerProjectDescriptionFieldsTest extends TuleapTestCase {
             $this->description_manager,
             $this->description_value_factory,
             $this->service_usage_factory,
-            $this->service_usage_manager
+            $this->service_usage_manager,
+            $this->forge_ugroup_perm_manager
         );
 
         $this->user       = stub('PFUser')->isLoggedIn()->returns(true);
@@ -413,6 +450,7 @@ class Project_SOAPServerProjectServicesUsageTest extends TuleapTestCase {
         $this->description_value_factory  = mock('Project_CustomDescription_CustomDescriptionValueFactory');
         $this->service_usage_factory      = mock('Project_Service_ServiceUsageFactory');
         $this->service_usage_manager      = mock('Project_Service_ServiceUsageManager');
+        $this->forge_ugroup_perm_manager  = mock('User_ForgeUserGroupPermissionsManager');
 
         $this->server = new Project_SOAPServer(
             $this->project_manager,
@@ -424,7 +462,8 @@ class Project_SOAPServerProjectServicesUsageTest extends TuleapTestCase {
             $this->description_manager,
             $this->description_value_factory,
             $this->service_usage_factory,
-            $this->service_usage_manager
+            $this->service_usage_manager,
+            $this->forge_ugroup_perm_manager
         );
 
         $this->user       = stub('PFUser')->isLoggedIn()->returns(true);
@@ -453,7 +492,8 @@ class Project_SOAPServerProjectServicesUsageTest extends TuleapTestCase {
             $this->description_manager,
             $this->description_value_factory,
             $this->service_usage_factory,
-            $this->service_usage_manager
+            $this->service_usage_manager,
+            $this->forge_ugroup_perm_manager
         );
 
         stub($this->user_manager)->getCurrentUser($this->session_key)->returns($this->user_admin);

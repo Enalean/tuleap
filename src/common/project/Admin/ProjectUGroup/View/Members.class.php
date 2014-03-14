@@ -42,7 +42,7 @@ class Project_Admin_UGroup_View_Members extends Project_Admin_UGroup_View {
      */
     private $validated_request;
 
-    public function __construct(UGroup $ugroup, Codendi_Request $request, UGroupManager $ugroup_manager, array $validated_request) {
+    public function __construct(ProjectUGroup $ugroup, Codendi_Request $request, UGroupManager $ugroup_manager, array $validated_request) {
         parent::__construct($ugroup);
         $this->request = $request;
         $this->ugroup_manager = $ugroup_manager;

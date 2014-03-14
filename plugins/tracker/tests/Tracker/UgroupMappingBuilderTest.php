@@ -38,12 +38,12 @@ class Tracker_UgroupMappingBuilderTest extends TuleapTestCase {
     protected $tracker_id                 = 101;
 
     public function itBuildsAMappingBasedOnTheNames() {
-        $this->template_ugroup_dev     = stub('UGroup')->getName()->returns('dev');
-        $this->template_ugroup_support = stub('UGroup')->getName()->returns('support');
-        $this->template_ugroup_staff   = stub('UGroup')->getName()->returns('staff');
-        $this->target_ugroup_dev       = stub('UGroup')->getName()->returns('DEV');
-        $this->target_ugroup_support   = stub('UGroup')->getName()->returns('support');
-        $this->target_ugroup_client    = stub('UGroup')->getName()->returns('client');
+        $this->template_ugroup_dev     = stub('ProjectUGroup')->getName()->returns('dev');
+        $this->template_ugroup_support = stub('ProjectUGroup')->getName()->returns('support');
+        $this->template_ugroup_staff   = stub('ProjectUGroup')->getName()->returns('staff');
+        $this->target_ugroup_dev       = stub('ProjectUGroup')->getName()->returns('DEV');
+        $this->target_ugroup_support   = stub('ProjectUGroup')->getName()->returns('support');
+        $this->target_ugroup_client    = stub('ProjectUGroup')->getName()->returns('client');
 
         stub($this->template_ugroup_support)->getId()->returns(1001);
         stub($this->target_ugroup_support)->getId()->returns(1002);

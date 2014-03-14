@@ -14,7 +14,17 @@ require_once('www/admin/admin_utils.php');
 require_once('www/project/admin/project_admin_utils.php');
 require_once('common/event/EventManager.class.php');
 
-session_require(array('group'=>'1','admin_flags'=>'A'));
+$user = UserManager::instance()->getCurrentUser();
+$forge_ugroup_permissions_manager = new User_ForgeUserGroupPermissionsManager(
+    new User_ForgeUserGroupPermissionsDao()
+);
+$special_access = $forge_ugroup_permissions_manager->doesUserHavePermission(
+    $user, new User_ForgeUserGroupPermission_ProjectApproval()
+);
+
+if (! $special_access) {
+    session_require(array('group'=>'1','admin_flags'=>'A'));
+}
 
 $action = $request->getValidated('action', 'string', '');
 
@@ -31,7 +41,11 @@ if ($action=='activate') {
         $project = $pm->getProject($group_id);
         $pm->activate($project);
     }
-    $GLOBALS['Response']->redirect('/admin/');
+    if ($special_access) {
+        $GLOBALS['Response']->redirect('/my/');
+    } else {
+        $GLOBALS['Response']->redirect('/admin/');
+    }
 
 } else if ($action=='delete') {
 	group_add_history ('deleted','x',$group_id);
@@ -39,7 +53,11 @@ if ($action=='activate') {
 		. " WHERE group_id='$group_id'");
 
     $em->processEvent('project_is_deleted', array('group_id' => $group_id));
-    $GLOBALS['Response']->redirect('/admin/');
+    if ($special_access) {
+        $GLOBALS['Response']->redirect('/my/');
+    } else {
+        $GLOBALS['Response']->redirect('/admin/');
+    }
 }
 
 

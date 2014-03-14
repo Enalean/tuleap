@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'UGroup.class.php';
 require_once 'common/permission/PermissionsManager.class.php';
 
 /**
@@ -32,10 +31,10 @@ class UGroupLiteralizer {
     );
 
     private static $ugroups_templates = array(
-        UGroup::ANONYMOUS       => '@site_active @%s_project_members',
-        UGroup::REGISTERED      => '@site_active @%s_project_members',
-        UGroup::PROJECT_MEMBERS => '@%s_project_members',
-        UGroup::PROJECT_ADMIN   => '@%s_project_admin'
+        ProjectUGroup::ANONYMOUS       => '@site_active @%s_project_members',
+        ProjectUGroup::REGISTERED      => '@site_active @%s_project_members',
+        ProjectUGroup::PROJECT_MEMBERS => '@%s_project_members',
+        ProjectUGroup::PROJECT_ADMIN   => '@%s_project_admin'
     );
 
     /**
@@ -97,9 +96,9 @@ class UGroupLiteralizer {
         foreach ($user_projects as $user_project) {
             $project_name = strtolower($user_project['unix_group_name']);
             $group_id     = $user_project['group_id'];
-            $user_ugroups[] = $this->ugroupIdToStringWithoutArobase(UGroup::PROJECT_MEMBERS, $project_name);
+            $user_ugroups[] = $this->ugroupIdToStringWithoutArobase(ProjectUGroup::PROJECT_MEMBERS, $project_name);
             if ($user->isMember($group_id, 'A')) {
-                $user_ugroups[] = $this->ugroupIdToStringWithoutArobase(UGroup::PROJECT_ADMIN, $project_name);
+                $user_ugroups[] = $this->ugroupIdToStringWithoutArobase(ProjectUGroup::PROJECT_ADMIN, $project_name);
             }
         }
         return $user_ugroups;

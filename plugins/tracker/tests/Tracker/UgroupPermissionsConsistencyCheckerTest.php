@@ -41,10 +41,10 @@ class Tracker_UgroupPermissionsConsistencyCheckerTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->template_ugroup_dev     = stub('UGroup')->getName()->returns('dev');
-        $this->template_ugroup_support = stub('UGroup')->getName()->returns('support');
-        $this->target_ugroup_dev       = stub('UGroup')->getName()->returns('dev');
-        $this->target_ugroup_support   = stub('UGroup')->getName()->returns('support');
+        $this->template_ugroup_dev     = stub('ProjectUGroup')->getName()->returns('dev');
+        $this->template_ugroup_support = stub('ProjectUGroup')->getName()->returns('support');
+        $this->target_ugroup_dev       = stub('ProjectUGroup')->getName()->returns('dev');
+        $this->target_ugroup_support   = stub('ProjectUGroup')->getName()->returns('support');
 
         $template_project            = stub('Project')->getId()->returns(103);
         $this->template_tracker      = aTracker()->withProject($template_project)->build();

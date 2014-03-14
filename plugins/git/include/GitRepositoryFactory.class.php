@@ -124,11 +124,11 @@ class GitRepositoryFactory {
      * @todo should be private
      *
      * @param Project $project
-     * @param UGroup $ugroup
+     * @param ProjectUGroup $ugroup
      * @param PFUser $user
      * @return \GitRepositoryWithPermissions
      */
-    public function getGerritRepositoriesWithPermissionsForUGroupAndProject(Project $project, UGroup $ugroup, PFUser $user) {
+    public function getGerritRepositoriesWithPermissionsForUGroupAndProject(Project $project, ProjectUGroup $ugroup, PFUser $user) {
         $repositories = array();
         $ugroups      = $user->getUgroups($project->getID(), null);
         $ugroups[]    = $ugroup->getId();
@@ -157,7 +157,7 @@ class GitRepositoryFactory {
         foreach ($all_repositories_dar as $row) {
             $all_repositories[$row['repository_id']] = new GitRepositoryWithPermissions($this->instanciateFromRow($row));
         }
-        $admin_ugroup = new UGroup(array('ugroup_id' => UGroup::PROJECT_ADMIN));
+        $admin_ugroup = new ProjectUGroup(array('ugroup_id' => ProjectUGroup::PROJECT_ADMIN));
         $repositories_with_admin_permissions = $this->getGerritRepositoriesWithPermissionsForUGroupAndProject($project, $admin_ugroup, $user);
 
         foreach ($repositories_with_admin_permissions as $repository_id => $repository) {
@@ -165,7 +165,7 @@ class GitRepositoryFactory {
         }
 
         foreach ($all_repositories as $repository) {
-            $repository->addUGroupForPermissionType(Git::SPECIAL_PERM_ADMIN, UGroup::PROJECT_ADMIN);
+            $repository->addUGroupForPermissionType(Git::SPECIAL_PERM_ADMIN, ProjectUGroup::PROJECT_ADMIN);
         }
 
         return $all_repositories;

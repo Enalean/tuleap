@@ -70,7 +70,7 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
 
         $evt->setReturnValue('deleteMembershipRequestNotificationEntries', true);
 
-        //Cleanup Ugroup binding
+        //Cleanup ProjectUGroup binding
         $evt->setReturnValue('cleanupProjectUgroupsBinding', true);
 
         //Cleanup FRS
@@ -150,7 +150,7 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
 
         $evt->setReturnValue('deleteMembershipRequestNotificationEntries', false);
 
-        //Cleanup Ugroup binding
+        //Cleanup ProjectUGroup binding
         $evt->setReturnValue('cleanupProjectUgroupsBinding', true);
 
         //Cleanup FRS
@@ -230,7 +230,7 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
 
         $evt->setReturnValue('deleteMembershipRequestNotificationEntries', true);
 
-        //Cleanup Ugroup binding
+        //Cleanup ProjectUGroup binding
         $evt->setReturnValue('cleanupProjectUgroupsBinding', true);
 
         //Cleanup FRS
@@ -310,7 +310,7 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
 
         $evt->setReturnValue('deleteMembershipRequestNotificationEntries', true);
 
-        //Cleanup Ugroup binding
+        //Cleanup ProjectUGroup binding
         $evt->setReturnValue('cleanupProjectUgroupsBinding', true);
 
         //Cleanup FRS
@@ -390,7 +390,7 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
 
         $evt->setReturnValue('deleteMembershipRequestNotificationEntries', true);
 
-        //Cleanup Ugroup binding
+        //Cleanup ProjectUGroup binding
         $evt->setReturnValue('cleanupProjectUgroupsBinding', true);
 
         //Cleanup FRS
@@ -470,7 +470,7 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
 
         $evt->setReturnValue('deleteMembershipRequestNotificationEntries', true);
 
-        //Cleanup Ugroup binding
+        //Cleanup ProjectUGroup binding
         $evt->setReturnValue('cleanupProjectUgroupsBinding', true);
 
         //Cleanup FRS
@@ -550,7 +550,7 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
 
         $evt->setReturnValue('deleteMembershipRequestNotificationEntries', true);
 
-        //Cleanup Ugroup binding
+        //Cleanup ProjectUGroup binding
         $evt->setReturnValue('cleanupProjectUgroupsBinding', true);
 
         //Cleanup FRS
@@ -630,7 +630,7 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
 
         $evt->setReturnValue('deleteMembershipRequestNotificationEntries', true);
 
-        //Cleanup Ugroup binding
+        //Cleanup ProjectUGroup binding
         $evt->setReturnValue('cleanupProjectUgroupsBinding', true);
 
         //Cleanup FRS
@@ -710,7 +710,7 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
 
         $evt->setReturnValue('deleteMembershipRequestNotificationEntries', true);
 
-        //Cleanup Ugroup binding
+        //Cleanup ProjectUGroup binding
         $evt->setReturnValue('cleanupProjectUgroupsBinding', true);
 
         //Cleanup FRS
@@ -790,7 +790,7 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
 
         $evt->setReturnValue('deleteMembershipRequestNotificationEntries', true);
 
-        //Cleanup Ugroup binding
+        //Cleanup ProjectUGroup binding
         $evt->setReturnValue('cleanupProjectUgroupsBinding', true);
 
         //Cleanup FRS
@@ -851,7 +851,7 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
     }
 
     /**
-     * Project delete Ugroup binding fail
+     * Project delete ProjectUGroup binding fail
      *
      * @return Void
      */
@@ -870,7 +870,7 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
 
         $evt->setReturnValue('deleteMembershipRequestNotificationEntries', true);
 
-        //Cleanup Ugroup binding
+        //Cleanup ProjectUGroup binding
         $evt->setReturnValue('cleanupProjectUgroupsBinding', false);
 
         //Cleanup FRS
@@ -950,7 +950,7 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
 
         $evt->setReturnValue('deleteMembershipRequestNotificationEntries', true);
 
-        //Cleanup Ugroup binding
+        //Cleanup ProjectUGroup binding
         $evt->setReturnValue('cleanupProjectUgroupsBinding', true);
 
         //Cleanup FRS

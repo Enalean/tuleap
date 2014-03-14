@@ -23,7 +23,7 @@ require_once dirname(__FILE__).'/../include/Docman_Item.class.php';
 require_once dirname(__FILE__).'/../include/Docman_PermissionsItemManager.class.php';
 require_once 'common/permission/PermissionsManager.class.php';
 require_once 'common/project/ProjectManager.class.php';
-require_once 'common/project/UGroup.class.php';
+require_once 'common/project/ProjectUGroup.class.php';
 
 class Docman_PermissionsItemManager_Test extends TuleapTestCase {
     protected $permissions_manager;
@@ -80,7 +80,7 @@ class Docman_PermissionsItemManager_Test extends TuleapTestCase {
     }
 
     public function itReturnsValueOfExternalPermissions_GetProjectObjectGroupsIfItHasNoParents() {
-        $permissions = array(UGroup::REGISTERED, UGroup::PROJECT_MEMBERS, UGroup::PROJECT_ADMIN, 103);
+        $permissions = array(ProjectUGroup::REGISTERED, ProjectUGroup::PROJECT_MEMBERS, ProjectUGroup::PROJECT_ADMIN, 103);
         stub($this->permissions_manager)->getAuthorizedUgroupIds()->returns($permissions);
 
         $expected    = $this->literalizer->ugroupIdsToString($permissions, $this->project);
@@ -93,8 +93,8 @@ class Docman_PermissionsItemManager_Test extends TuleapTestCase {
         $parent_id = $parent->getId();
         $this->docman_item->setParentId($parent_id);
 
-        $parent_permissions = array(UGroup::PROJECT_MEMBERS);
-        $child_permissions  = array(UGroup::REGISTERED);
+        $parent_permissions = array(ProjectUGroup::PROJECT_MEMBERS);
+        $child_permissions  = array(ProjectUGroup::REGISTERED);
 
         stub(Docman_ItemFactory::instance($this->project->getID()))->getItemFromDb($parent_id)->returns($parent);
         stub($this->permissions_manager)->getAuthorizedUgroupIds($parent_id,     self::PERMISSIONS_TYPE)->returns($parent_permissions);
@@ -115,9 +115,9 @@ class Docman_PermissionsItemManager_Test extends TuleapTestCase {
         $parent->setParentId($parent_parent_id);
 
 
-        $parent_parent_permissions = array(UGroup::PROJECT_MEMBERS);
-        $parent_permissions        = array(UGroup::REGISTERED);
-        $child_permissions         = array(UGroup::REGISTERED);
+        $parent_parent_permissions = array(ProjectUGroup::PROJECT_MEMBERS);
+        $parent_permissions        = array(ProjectUGroup::REGISTERED);
+        $child_permissions         = array(ProjectUGroup::REGISTERED);
 
         stub(Docman_ItemFactory::instance($project_id))->getItemFromDb($parent_id)->returns($parent);
         stub(Docman_ItemFactory::instance($project_id))->getItemFromDb($parent_parent_id)->returns($parent_parent);
@@ -136,8 +136,8 @@ class Docman_PermissionsItemManager_Test extends TuleapTestCase {
         $parent_id = $parent->getId();
         $this->docman_item->setParentId($parent_id);
 
-        $parent_permissions = array(UGroup::REGISTERED);
-        $child_permissions  = array(UGroup::PROJECT_MEMBERS);
+        $parent_permissions = array(ProjectUGroup::REGISTERED);
+        $child_permissions  = array(ProjectUGroup::PROJECT_MEMBERS);
 
         stub(Docman_ItemFactory::instance($this->project->getID()))->getItemFromDb($parent_id)->returns($parent);
         stub($this->permissions_manager)->getAuthorizedUgroupIds($parent_id,     self::PERMISSIONS_TYPE)->returns($parent_permissions);
@@ -154,8 +154,8 @@ class Docman_PermissionsItemManager_Test extends TuleapTestCase {
         $parent_id = $parent->getId();
         $this->docman_item->setParentId($parent_id);
 
-        $parent_permissions = array(UGroup::REGISTERED, UGroup::PROJECT_MEMBERS);
-        $child_permissions  = array(UGroup::REGISTERED, UGroup::PROJECT_MEMBERS, UGroup::PROJECT_ADMIN);
+        $parent_permissions = array(ProjectUGroup::REGISTERED, ProjectUGroup::PROJECT_MEMBERS);
+        $child_permissions  = array(ProjectUGroup::REGISTERED, ProjectUGroup::PROJECT_MEMBERS, ProjectUGroup::PROJECT_ADMIN);
 
         stub(Docman_ItemFactory::instance($this->project->getID()))->getItemFromDb($parent_id)->returns($parent);
         stub($this->permissions_manager)->getAuthorizedUgroupIds($parent_id,     self::PERMISSIONS_TYPE)->returns($parent_permissions);
@@ -172,8 +172,8 @@ class Docman_PermissionsItemManager_Test extends TuleapTestCase {
         $parent_id = $parent->getId();
         $this->docman_item->setParentId($parent_id);
 
-        $parent_permissions  = array(UGroup::REGISTERED, UGroup::PROJECT_MEMBERS, UGroup::PROJECT_ADMIN);
-        $child_permissions = array(UGroup::REGISTERED, UGroup::PROJECT_MEMBERS);
+        $parent_permissions  = array(ProjectUGroup::REGISTERED, ProjectUGroup::PROJECT_MEMBERS, ProjectUGroup::PROJECT_ADMIN);
+        $child_permissions = array(ProjectUGroup::REGISTERED, ProjectUGroup::PROJECT_MEMBERS);
 
         stub(Docman_ItemFactory::instance($this->project->getID()))->getItemFromDb($parent_id)->returns($parent);
         stub($this->permissions_manager)->getAuthorizedUgroupIds($parent_id,     self::PERMISSIONS_TYPE)->returns($parent_permissions);
@@ -209,7 +209,7 @@ class Docman_PermissionsItemManager_Test extends TuleapTestCase {
         $this->docman_item->setParentId($parent_id);
 
         $parent_permissions = array(1);
-        $child_permissions  = array(102, 103, UGroup::REGISTERED);
+        $child_permissions  = array(102, 103, ProjectUGroup::REGISTERED);
 
         stub(Docman_ItemFactory::instance($this->project->getID()))->getItemFromDb($parent_id)->returns($parent);
         stub($this->permissions_manager)->getAuthorizedUgroupIds($parent_id,     self::PERMISSIONS_TYPE)->returns($parent_permissions);
@@ -226,7 +226,7 @@ class Docman_PermissionsItemManager_Test extends TuleapTestCase {
         $parent_id = $parent->getId();
         $this->docman_item->setParentId($parent_id);
 
-        $parent_permissions = array(101, 102, UGroup::REGISTERED);
+        $parent_permissions = array(101, 102, ProjectUGroup::REGISTERED);
         $child_permissions  = array(1);
 
         stub(Docman_ItemFactory::instance($this->project->getID()))->getItemFromDb($parent_id)->returns($parent);

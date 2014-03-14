@@ -25,7 +25,7 @@ use \PFUser;
 use \Project;
 use \EventManager;
 use \Event;
-use \UGroup;
+use \ProjectUGroup;
 use \UGroupManager;
 use \Tuleap\Project\REST\ProjectRepresentation;
 use \Tuleap\Project\REST\UserGroupRepresentation;
@@ -447,7 +447,7 @@ class ProjectResource {
         $project = $this->getProject($id);
         $this->userCanSeeUserGroups($id);
 
-        $excluded_ugroups_ids = array(UGroup::NONE, UGroup::ANONYMOUS, Ugroup::REGISTERED);
+        $excluded_ugroups_ids = array(ProjectUGroup::NONE, ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED);
         $ugroups              = $this->ugroup_manager->getUGroups($project, $excluded_ugroups_ids);
         $user_groups          = $this->getUserGroupsRepresentations($ugroups, $id);
 

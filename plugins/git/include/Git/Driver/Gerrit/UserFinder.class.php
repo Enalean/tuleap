@@ -42,7 +42,7 @@ class Git_Driver_Gerrit_UserFinder {
             return false;
         }
         foreach ($this->permissions_manager->getAuthorizedUgroups($repository->getId(), $permission_type) as $row) {
-            if ($row['ugroup_id'] == Ugroup::REGISTERED || $row['ugroup_id'] == Ugroup::ANONYMOUS) {
+            if ($row['ugroup_id'] == ProjectUGroup::REGISTERED || $row['ugroup_id'] == ProjectUGroup::ANONYMOUS) {
                 return true;
             }
         }
@@ -58,7 +58,7 @@ class Git_Driver_Gerrit_UserFinder {
      */
     public function getUgroups($repository_id, $permission_type) {
         if ($permission_type == Git::SPECIAL_PERM_ADMIN) {
-            return array(UGroup::PROJECT_ADMIN);
+            return array(ProjectUGroup::PROJECT_ADMIN);
         }
 
         $ugroup_ids = $this->permissions_manager->getAuthorizedUgroups($repository_id, $permission_type, false);

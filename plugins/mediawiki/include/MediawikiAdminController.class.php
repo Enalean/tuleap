@@ -62,9 +62,9 @@ class MediawikiAdminController {
     private function getIndexedUgroups(Project $project) {
         $ugroups        = array();
         $ugroup_manager = new UGroupManager();
-        $excluded_groups = array_merge(UGroup::$legacy_ugroups, array(UGroup::NONE, UGroup::ANONYMOUS));
+        $excluded_groups = array_merge(ProjectUGroup::$legacy_ugroups, array(ProjectUGroup::NONE, ProjectUGroup::ANONYMOUS));
         if (! $project->isPublic()) {
-            $excluded_groups = array_merge($excluded_groups, array(UGroup::REGISTERED));
+            $excluded_groups = array_merge($excluded_groups, array(ProjectUGroup::REGISTERED));
         }
         $all_ugroups    = $ugroup_manager->getUGroups($project, $excluded_groups);
         foreach ($all_ugroups as $ugroup) {

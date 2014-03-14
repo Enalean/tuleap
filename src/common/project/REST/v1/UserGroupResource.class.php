@@ -21,7 +21,7 @@ namespace Tuleap\Project\REST\v1;
 
 use \ProjectManager;
 use \UserManager;
-use \UGroup;
+use \ProjectUGroup;
 use \PFUser;
 use \UGroupManager;
 use \Tuleap\Project\REST\UserGroupRepresentation;
@@ -170,7 +170,7 @@ class UserGroupResource {
      *
      * @return PFUser[]
      */
-    private function getUserGroupMembers(UGroup $user_group, $project_id, $limit, $offset) {
+    private function getUserGroupMembers(ProjectUGroup $user_group, $project_id, $limit, $offset) {
         return $user_group->getStaticOrDynamicMembersPaginated($project_id, $limit, $offset);
     }
 
@@ -179,7 +179,7 @@ class UserGroupResource {
      *
      * @return int
      */
-    private function countUserGroupMembers(UGroup $user_group, $project_id) {
+    private function countUserGroupMembers(ProjectUGroup $user_group, $project_id) {
         return $user_group->countStaticOrDynamicMembers($project_id);
     }
 
@@ -259,7 +259,7 @@ class UserGroupResource {
      * @return boolean
      */
     private function isGroupViewable($ugroup_id) {
-        $excluded_ugroups_ids = array(UGroup::NONE, UGroup::ANONYMOUS, Ugroup::REGISTERED);
+        $excluded_ugroups_ids = array(ProjectUGroup::NONE, ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED);
 
         if (in_array($ugroup_id, $excluded_ugroups_ids)) {
             throw new RestException(404, 'Unable to list the users of this group');

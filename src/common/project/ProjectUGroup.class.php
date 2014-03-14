@@ -29,9 +29,9 @@ require_once 'UGroup_Invalid_Exception.class.php';
 require_once 'utils.php';
 
 /**
- * UGroup object
+ * ProjectUGroup object
  */
-class UGroup {
+class ProjectUGroup implements User_UGroup {
 
     const NONE               = 100;
     const ANONYMOUS          = 1;
@@ -90,7 +90,7 @@ class UGroup {
     protected $members_name = null;
     /** @var Project */
     protected $project      = null;
-    /** @var UGroup */
+    /** @var ProjectUGroup */
     protected $source_ugroup  = false;
 
     protected $_ugroupdao;
@@ -545,7 +545,7 @@ class UGroup {
         return $ugroup_manager->getUgroupBindingSource($id);
     }
 
-    public function setSourceGroup(UGroup $ugroup = null) {
+    public function setSourceGroup(ProjectUGroup $ugroup = null) {
         $this->source_ugroup = $ugroup;
         $this->source_id = ($ugroup === null) ? null : $ugroup->getId();
     }

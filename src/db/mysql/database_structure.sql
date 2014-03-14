@@ -2930,7 +2930,7 @@ CREATE TABLE ugroup (
   name text NOT NULL,
   description text NOT NULL,
   source_id INT(11) DEFAULT NULL,
-  group_id int(11) NOT NULL,
+  group_id int(11) NULL,
   PRIMARY KEY  (ugroup_id)
 );
 
@@ -3467,6 +3467,15 @@ CREATE TABLE IF NOT EXISTS rest_authentication_token (
     INDEX idx_rest_authentication_token_userid (user_id)
 );
 
+#
+# Table structure for UGroup permissions that are valid for all the forge
+#
+
+CREATE TABLE IF NOT EXISTS ugroup_forge_permission (
+    ugroup_id INT(11) NOT NULL,
+    permission_id INT(11) NOT NULL,
+    INDEX idx_user_group_id (ugroup_id)
+);
 #
 # EOF
 #

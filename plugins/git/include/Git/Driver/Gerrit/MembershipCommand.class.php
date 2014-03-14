@@ -26,10 +26,10 @@ abstract class Git_Driver_Gerrit_MembershipCommand {
     protected $membership_manager;
     /** @var Git_Driver_Gerrit */
     protected $driver;
-    /** @var UGroup */
+    /** @var ProjectUGroup */
     protected $ugroup;
 
-    public function __construct(Git_Driver_Gerrit_MembershipManager $membership_manager, Git_Driver_Gerrit $driver, UGroup $ugroup) {
+    public function __construct(Git_Driver_Gerrit_MembershipManager $membership_manager, Git_Driver_Gerrit $driver, ProjectUGroup $ugroup) {
         $this->membership_manager = $membership_manager;
         $this->driver = $driver;
         $this->ugroup = $ugroup;

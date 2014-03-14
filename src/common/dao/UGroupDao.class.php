@@ -21,12 +21,12 @@
 require_once('include/DataAccessObject.class.php');
 
 /**
- *  Data Access Object for UGroup 
+ *  Data Access Object for ProjectUGroup 
  */
 class UGroupDao extends DataAccessObject {
 
     /**
-     * Searches static UGroup by GroupId
+     * Searches static ProjectUGroup by GroupId
      * return all static ugroups
      *
      * @param Integer $group_id Id of the project
@@ -138,7 +138,7 @@ class UGroupDao extends DataAccessObject {
     }
 
     /**
-     * Checks UGroup  validity by GroupId
+     * Checks ProjectUGroup  validity by GroupId
      *
      * @param Integer $groupId  The group id
      * @param Integer $ugroupId The ugroup id
@@ -161,7 +161,7 @@ class UGroupDao extends DataAccessObject {
     }
 
     /**
-     * Update binding option for a given UGroup
+     * Update binding option for a given ProjectUGroup
      *
      * @param Integer $ugroupId The bound ugroup id
      * @param Integer $sourceId The ugroup id we want to clone
@@ -181,7 +181,7 @@ class UGroupDao extends DataAccessObject {
     }
 
     /**
-     * Retrieve all bound UGroups of a given UGroup
+     * Retrieve all bound UGroups of a given ProjectUGroup
      *
      * @param Integer $sourceId The source ugroup id
      *

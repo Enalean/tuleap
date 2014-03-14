@@ -429,14 +429,14 @@ class Project extends Group implements PFO_Project {
      * @return array of User admin of the project
      */
     public function getAdmins() {
-        return $this->getUGroupManager()->getDynamicUGroupsMembers(Ugroup::PROJECT_ADMIN, $this->getID());
+        return $this->getUGroupManager()->getDynamicUGroupsMembers(ProjectUGroup::PROJECT_ADMIN, $this->getID());
     }
 
     /**
      * @return array of User members of the project
      */
     public function getMembers() {
-        return $this->getUGroupManager()->getDynamicUGroupsMembers(Ugroup::PROJECT_MEMBERS, $this->getID());
+        return $this->getUGroupManager()->getDynamicUGroupsMembers(ProjectUGroup::PROJECT_MEMBERS, $this->getID());
     }
 
     /**

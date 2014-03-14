@@ -25,11 +25,11 @@
 abstract class Project_Admin_UGroup_View {
 
     /**
-     * @var UGroup
+     * @var ProjectUGroup
      */
     protected $ugroup;
 
-    public function __construct(UGroup $ugroup) {
+    public function __construct(ProjectUGroup $ugroup) {
         $this->ugroup = $ugroup;
     }
 

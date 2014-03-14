@@ -26,22 +26,22 @@
 class Tracker_Permission_ChainOfResponsibility_PermissionsOfRegistered extends Tracker_Permission_Command {
 
     public function apply(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permission_setter) {
-        switch($request->getPermissionType(UGroup::REGISTERED)) {
+        switch($request->getPermissionType(ProjectUGroup::REGISTERED)) {
         case Tracker_Permission_Command::PERMISSION_FULL:
-            $permission_setter->grantAccess(Tracker::PERMISSION_FULL, UGroup::REGISTERED);
+            $permission_setter->grantAccess(Tracker::PERMISSION_FULL, ProjectUGroup::REGISTERED);
             foreach ($permission_setter->getAllGroupIds() as $stored_ugroup_id) {
-                if ($stored_ugroup_id !== UGroup::ANONYMOUS && $stored_ugroup_id !== UGroup::REGISTERED) {
+                if ($stored_ugroup_id !== ProjectUGroup::ANONYMOUS && $stored_ugroup_id !== ProjectUGroup::REGISTERED) {
                     $this->revokeAllButAdmin($request, $permission_setter, $stored_ugroup_id);
                 }
             }
             break;
 
         case Tracker_Permission_Command::PERMISSION_NONE:
-            $permission_setter->revokeAll(UGroup::REGISTERED);
+            $permission_setter->revokeAll(ProjectUGroup::REGISTERED);
             break;
 
         case Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY:
-            $permission_setter->grant(Tracker::PERMISSION_SUBMITTER_ONLY, UGroup::REGISTERED);
+            $permission_setter->grant(Tracker::PERMISSION_SUBMITTER_ONLY, ProjectUGroup::REGISTERED);
             break;
         }
 
@@ -56,7 +56,7 @@ class Tracker_Permission_ChainOfResponsibility_PermissionsOfRegistered extends T
                 'tracker_ignore_g_regis_full',
                 array(
                     $permission_setter->getUGroupName($ugroup_id),
-                    $permission_setter->getUGroupName(UGroup::REGISTERED),
+                    $permission_setter->getUGroupName(ProjectUGroup::REGISTERED),
                 )
             )
         );

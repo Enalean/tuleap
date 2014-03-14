@@ -188,8 +188,8 @@ class Tracker_FormElement_Field_List_BindFactoryImportUGroupsTest extends Tuleap
             </bind>'
         );
 
-        stub($this->ugroup_manager)->getUGroupByName($this->project, 'Integrators')->returns(new UGroup(array('name' => 'Integrators')));
-        stub($this->ugroup_manager)->getUGroupByName($this->project, 'Customers')->returns(new UGroup(array('name' => 'Customers')));
+        stub($this->ugroup_manager)->getUGroupByName($this->project, 'Integrators')->returns(new ProjectUGroup(array('name' => 'Integrators')));
+        stub($this->ugroup_manager)->getUGroupByName($this->project, 'Customers')->returns(new ProjectUGroup(array('name' => 'Customers')));
 
         $bind = $this->bind_factory->getInstanceFromXML($xml, $this->field, $this->mapping);
 
@@ -223,7 +223,7 @@ class Tracker_FormElement_Field_List_BindFactoryImportUGroupsTest extends Tuleap
             </bind>'
         );
 
-        stub($this->ugroup_manager)->getUGroupByName($this->project, 'ugroup_registered_users_name_key')->returns(new UGroup(array('name' => 'ugroup_registered_users_name_key')));
+        stub($this->ugroup_manager)->getUGroupByName($this->project, 'ugroup_registered_users_name_key')->returns(new ProjectUGroup(array('name' => 'ugroup_registered_users_name_key')));
 
         $bind = $this->bind_factory->getInstanceFromXML($xml, $this->field, $this->mapping);
 
@@ -240,7 +240,7 @@ class Tracker_FormElement_Field_List_BindFactoryImportUGroupsTest extends Tuleap
             </bind>'
         );
 
-        stub($this->ugroup_manager)->getUGroupByName($this->project, 'ugroup_registered_users_name_key')->returns(new UGroup(array('name' => 'ugroup_registered_users_name_key')));
+        stub($this->ugroup_manager)->getUGroupByName($this->project, 'ugroup_registered_users_name_key')->returns(new ProjectUGroup(array('name' => 'ugroup_registered_users_name_key')));
 
         $bind = $this->bind_factory->getInstanceFromXML($xml, $this->field, $this->mapping);
 

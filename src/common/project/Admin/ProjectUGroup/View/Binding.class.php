@@ -22,28 +22,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/pane/PaneInfo.class.php';
+abstract class Project_Admin_UGroup_View_Binding extends Project_Admin_UGroup_View {
 
-class Project_Admin_UGroup_PaneInfo extends PaneInfo {
+    const IDENTIFIER = 'binding';
 
-    private $ugroup;
+    /**
+     * @var UGroupBinding
+     */
+    protected $ugroup_binding;
 
-    public function __construct(UGroup $ugroup, $identifier, $title) {
-        parent::__construct($identifier, $title, '');
-        $this->ugroup = $ugroup;
+    /**
+     * @var ProjectManager
+     */
+    protected $project_manager;
+
+    public function __construct(ProjectUGroup $ugroup, UGroupBinding $ugroup_binding) {
+        parent::__construct($ugroup);
+        $this->ugroup_binding = $ugroup_binding;
+        $this->project_manager = ProjectManager::instance();
     }
 
-    public function getUrl() {
-        return '/project/admin/editugroup.php?'.
-        http_build_query(array(
-            'group_id'  => $this->ugroup->getProjectId(),
-            'ugroup_id' => $this->ugroup->getId(),
-            'func'      => 'edit',
-            'pane' => $this->getIdentifier(),
-        ));
+    public function getIdentifier() {
+        return self::IDENTIFIER;
     }
 }
-
-
 
 ?>

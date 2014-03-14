@@ -22,7 +22,7 @@ require_once 'common/project/UGroupBinding.class.php';
 
 Mock::generate('UGroupBinding');
 Mock::generatePartial('UGroupBinding', 'UGroupBindingTestVersion', array('getUGroupsByBindingSource', 'getUGroupManager', 'getUGroupUserDao'));
-Mock::generate('UGroup');
+Mock::generate('ProjectUGroup');
 Mock::generate('UGroupUserDao');
 Mock::generate('UGroupManager');
 require_once('common/language/BaseLanguage.class.php');

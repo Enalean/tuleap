@@ -106,7 +106,7 @@ if($request->isPost() && $request->valid($vSubmit)) {
         if($request->valid($vBindWithGroup)) {
             if($request->existAndNonEmpty('confirm')) {
                 //
-                // Perform Ugroup <-> LDAP Group synchro
+                // Perform ProjectUGroup <-> LDAP Group synchro
                 //
                 $ldapUserGroupManager->bindWithLdap($bindOption, $synchro);
 
@@ -116,7 +116,7 @@ if($request->isPost() && $request->valid($vSubmit)) {
 
             } else {
                 //
-                // Display to user what will be done with Ugroup members.
+                // Display to user what will be done with ProjectUGroup members.
                 //
 
                 $toRemove    = $ldapUserGroupManager->getUsersToBeRemoved($bindOption);
