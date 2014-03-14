@@ -33,6 +33,7 @@ use \Tuleap\REST\Header;
 use \Luracast\Restler\RestException;
 use \Tuleap\REST\ProjectAuthorization;
 use \Tuleap\REST\ResourcesInjector;
+use \URLVerification;
 
 /**
  * Wrapper for project related REST methods
@@ -147,7 +148,7 @@ class ProjectResource {
      */
     public function getId($id) {
         $this->sendAllowHeadersForProject();
-        return $this->getProjectRepresentation($this->getProject($id));
+        return $this->getProjectRepresentation($this->getProjectForUser($id));
     }
 
     /**
@@ -161,7 +162,7 @@ class ProjectResource {
      * @throws 404
      */
     public function optionsId($id) {
-        $this->getProject($id);
+        $this->getProjectForUser($id);
         $this->sendAllowHeadersForProject();
     }
 
@@ -171,12 +172,22 @@ class ProjectResource {
      *
      * @return Project
      */
-    private function getProject($id) {
+    private function getProjectForUser($id) {
         $project = $this->project_manager->getProject($id);
         $user    = $this->user_manager->getCurrentUser();
 
-        ProjectAuthorization::userCanAccessProject($user, $project);
+        ProjectAuthorization::userCanAccessProject($user, $project, new URLVerification());
         return $project;
+    }
+
+    /**
+     * Used when the resource manages its own special access permissions
+     * e.g. trackers
+     *
+     * @return Project
+     */
+    private function getProjectWithoutAuthorisation($id) {
+        return $this->project_manager->getProject($id);
     }
 
     /**
@@ -236,7 +247,7 @@ class ProjectResource {
     }
 
     private function plannings($id, $limit, $offset, $event) {
-        $project = $this->getProject($id);
+        $project = $this->getProjectForUser($id);
         $result  = array();
 
         EventManager::instance()->processEvent(
@@ -284,7 +295,7 @@ class ProjectResource {
     }
 
     private function milestones($id, $limit, $offset, $event) {
-        $project = $this->getProject($id);
+        $project = $this->getProjectForUser($id);
         $result  = array();
 
         EventManager::instance()->processEvent(
@@ -315,7 +326,7 @@ class ProjectResource {
      * @return array {@type Tuleap\Tracker\REST\TrackerRepresentation}
      */
     protected function getTrackers($id, $limit = 10, $offset = 0) {
-        $trackers = $this->trackers($id, $limit, $offset, Event::REST_GET_PROJECT_TRACKERS);
+        $trackers = $this->getRepresentationsForTrackers($id, $limit, $offset, Event::REST_GET_PROJECT_TRACKERS);
         $this->sendAllowHeadersForProject();
 
         return $trackers;
@@ -327,12 +338,12 @@ class ProjectResource {
      * @param int $id Id of the project
      */
     protected function optionsTrackers($id) {
-        $this->trackers($id, 10, 0, Event::REST_OPTIONS_PROJECT_TRACKERS);
+        $this->getRepresentationsForTrackers($id, 10, 0, Event::REST_OPTIONS_PROJECT_TRACKERS);
         $this->sendAllowHeadersForProject();
     }
 
-    private function trackers($id, $limit, $offset, $event) {
-        $project = $this->getProject($id);
+    private function getRepresentationsForTrackers($id, $limit, $offset, $event) {
+        $project = $this->getProjectWithoutAuthorisation($id);
         $result  = array();
 
         EventManager::instance()->processEvent(
@@ -394,7 +405,7 @@ class ProjectResource {
      * @throws 500
      */
     protected function putBacklog($id, array $ids) {
-        $project = $this->getProject($id);
+        $project = $this->getProjectForUser($id);
         $result  = array();
 
         EventManager::instance()->processEvent(
@@ -411,7 +422,7 @@ class ProjectResource {
     }
 
     private function backlogItems($id, $limit, $offset, $event) {
-        $project = $this->getProject($id);
+        $project = $this->getProjectForUser($id);
         $result  = array();
 
         EventManager::instance()->processEvent(
@@ -444,7 +455,7 @@ class ProjectResource {
      * @return array {@type Tuleap\Project\REST\v1\UserGroupRepresentation}
      */
     protected function getUserGroups($id) {
-        $project = $this->getProject($id);
+        $project = $this->getProjectForUser($id);
         $this->userCanSeeUserGroups($id);
 
         $excluded_ugroups_ids = array(ProjectUGroup::NONE, ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED);

@@ -122,6 +122,9 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
 
         $this->fileinfo_factory = mock('Tracker_FileInfoFactory');
 
+        $this->tracker_manager = mock('TrackerManager');
+        stub($this->tracker_manager)->userCanAdminAllProjectTrackers()->returns(false);
+
         $this->server = new Tracker_SOAPServer(
             $this->soap_request_validator,
             $this->tracker_factory,
@@ -130,7 +133,8 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
             $this->formelement_factory,
             $this->artifact_factory,
             $this->report_factory,
-            $this->fileinfo_factory
+            $this->fileinfo_factory,
+            $this->tracker_manager
         );
     }
 
@@ -372,7 +376,8 @@ class Tracker_SOAPServer_getTrackerStructure_Test extends Tracker_SOAPServer_Bas
             $this->formelement_factory,
             $this->artifact_factory,
             $this->report_factory,
-            $this->fileinfo_factory
+            $this->fileinfo_factory,
+            $this->tracker_manager
          ));
     }
 
