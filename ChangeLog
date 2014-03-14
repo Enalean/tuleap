@@ -6,13 +6,18 @@ Version 6.12 (Not Released Yet)
 	* graphontrackersv5: 5.5
 	* agiledashboard: 1.54
 	* cardwall: 1.22
+	* docman: 2.26.29
 
 	== Bug fix ==
 	* request #6404: Do not display postponed error for phpwiki (contrib STMicroelectronics)
 	* request #6146 - Backend raise errors about cvs logs while cvs is not even installed
 
-    == Themes ==
+	== Development ==
+	* story #6139: give access admin rights to some users to all trackers
+
+	== Themes ==
 	* Experimental: 0.9.11
+	* CodexSTN: 1.13
 
 Version 6.11 (Thursday, March 6th 2014)
 	== Plugins ==
