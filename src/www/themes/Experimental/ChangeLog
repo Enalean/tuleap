@@ -1,3 +1,6 @@
+Version 0.9.11 - Tuleap 6.12
+    * Fix Experimental footer position
+
 Version 0.9.10 - Tuleap 6.11
     * request #6372: fix modal when there is no title
 

@@ -10,6 +10,9 @@ Version 6.12 (Not Released Yet)
 	* request #6404: Do not display postponed error for phpwiki (contrib STMicroelectronics)
 	* request #6146 - Backend raise errors about cvs logs while cvs is not even installed
 
+    == Themes ==
+	* Experimental: 0.9.11
+
 Version 6.11 (Thursday, March 6th 2014)
 	== Plugins ==
 	* git: 3.71
