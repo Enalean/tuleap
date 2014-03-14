@@ -29,10 +29,12 @@ use \PFUser;
 
 class CardValidator {
 
-    public function getFieldsDataFromREST(PFUser $user, Cardwall_SingleCard $single_card, $label, $column_id, $values) {
+    public function getFieldsDataFromREST(PFUser $user, Cardwall_SingleCard $single_card, $label, array $values, $column_id = null) {
         $fields_data  = $this->getLabelFieldData($single_card, $label);
-        $fields_data += $this->getColumnIdFieldData($single_card, $column_id);
         $fields_data += $this->getValuesFieldData($user, $values, $single_card);
+        if ($column_id !== null) {
+            $fields_data += $this->getColumnIdFieldData($single_card, $column_id);
+        }
         return $fields_data;
     }
 
