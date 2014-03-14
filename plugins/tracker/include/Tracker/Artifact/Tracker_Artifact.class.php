@@ -451,11 +451,16 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return $this->status;
     }
 
+
     /**
      * @param String $status
      */
     public function setStatus($status) {
         $this->status = $status;
+    }
+
+    public function isOpen() {
+        return Tracker_Semantic_Status::load($this->getTracker())->isOpen($this);
     }
 
     /**
