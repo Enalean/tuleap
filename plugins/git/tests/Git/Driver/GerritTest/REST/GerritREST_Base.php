@@ -18,55 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../../bootstrap.php';
-require_once 'common/include/Config.class.php';
-require_once dirname(__FILE__).'/../../../../../ldap/include/LDAP_User.class.php';
+require_once '/usr/share/php-guzzle/guzzle.phar';
 
-abstract class Git_Driver_GerritLegacy_baseTest extends TuleapTestCase {
+require_once dirname(__FILE__).'/../GerritTestInterfaces.php';
 
-    /**
-     * @var GitRepository
-     */
-    protected $repository;
-
-    /** @var Git_RemoteServer_GerritServer */
-    protected $gerrit_server;
-
-    /** @var Project */
-    protected $project;
-
-    /**
-     * @var RemoteSshCommand
-     */
-    protected $ssh;
-
-    /** @var Git_Driver_GerritLegacy */
-    protected $driver;
-
-    public function setUp() {
-        parent::setUp();
-
-        $this->project_name    = 'firefox';
-        $this->namespace       = 'jean-claude';
-        $this->repository_name = 'dusse';
-
-        $this->project = stub('Project')->getUnixName()->returns($this->project_name);
-
-        $this->repository = aGitRepository()
-            ->withProject($this->project)
-            ->withNamespace($this->namespace)
-            ->withName($this->repository_name)
-            ->build();
-
-        $this->gerrit_server = mock('Git_RemoteServer_GerritServer');
-
-        $this->ssh    = mock('Git_Driver_Gerrit_RemoteSSHCommand');
-        $this->logger = mock('BackendLogger');
-        $this->driver = new Git_Driver_GerritLegacy($this->ssh, $this->logger);
-    }
-
-}
-abstract class Git_Driver_GerritREST_baseTest extends TuleapTestCase {
+abstract class Git_Driver_GerritREST_base extends TuleapTestCase {
 
     protected $temporary_file_for_body = "a php resource to a file";
 
@@ -76,8 +32,6 @@ abstract class Git_Driver_GerritREST_baseTest extends TuleapTestCase {
 
     protected $gerrit_project_name = 'fire/fox/jean-claude/dusse';
 
-    /** @var Http_Client */
-    protected $http_client;
     protected $gerrit_server_host = 'http://gerrit.example.com';
     protected $gerrit_server_port = 8080;
     protected $gerrit_server_pass = 'correct horse battery staple';
@@ -95,17 +49,16 @@ abstract class Git_Driver_GerritREST_baseTest extends TuleapTestCase {
     /** @var Project */
     protected $project;
 
-    /** @var Git_Driver_GerritRESTBodyBuilder */
-    protected $body_builder;
+    protected $guzzle_client;
+
+    protected $guzzle_request;
+
+    protected $logger;
 
     public function setUp() {
         parent::setUp();
-        $this->http_client   = mock('Http_Client');
         $this->gerrit_server = mock('Git_RemoteServer_GerritServer');
         $this->logger        = mock('BackendLogger');
-        $this->body_builder  = mock('Git_Driver_GerritRESTBodyBuilder');
-
-        stub($this->body_builder)->getTemporaryFile()->returns($this->temporary_file_for_body);
 
         stub($this->gerrit_server)->getHost()->returns($this->gerrit_server_host);
         stub($this->gerrit_server)->getHTTPPassword()->returns($this->gerrit_server_pass);
@@ -120,6 +73,14 @@ abstract class Git_Driver_GerritREST_baseTest extends TuleapTestCase {
             ->withName($this->repository_name)
             ->build();
 
-        $this->driver = new Git_Driver_GerritREST($this->http_client, $this->logger, $this->body_builder);
+        $this->guzzle_client  = mock('Guzzle\Http\Client');
+        $this->guzzle_request = mock('Guzzle\Http\Message\EntityEnclosingRequest');
+
+        $this->driver = new Git_Driver_GerritREST($this->guzzle_client, $this->logger);
+    }
+
+    protected function getGuzzleRequestWithTextResponse($text) {
+        $response     = stub('Guzzle\Http\Message\Response')->getBody(true)->returns($text);
+        return stub('Guzzle\Http\Message\EntityEnclosingRequest')->send()->returns($response);
     }
 }

@@ -20,12 +20,6 @@
 
 require_once dirname(__FILE__).'/GerritTestBase.php';
 
-interface Git_Driver_Gerrit_isDeletePluginEnabledTest {
-    public function itReturnsFalseIfPluginIsNotInstalled();
-    public function itReturnsFalseIfPluginIsInstalledAndNotEnabled();
-    public function itReturnsTrueIfPluginIsInstalledAndEnabled();
-}
-
 class Git_Driver_GerritLegacy_isDeletePluginEnabledTest extends TuleapTestCase implements Git_Driver_Gerrit_isDeletePluginEnabledTest {
     /**
      * @var Git_Driver_Gerrit
@@ -76,82 +70,5 @@ class Git_Driver_GerritLegacy_isDeletePluginEnabledTest extends TuleapTestCase i
         $enabled = $this->driver->isDeletePluginEnabled($this->gerrit_server);
 
         $this->assertTrue($enabled);
-    }
-}
-
-class Git_DriverREST_Gerrit_isDeletePluginEnabledTest extends Git_Driver_GerritREST_baseTest implements Git_Driver_Gerrit_isDeletePluginEnabledTest {
-
-    private $response_with_plugin;
-    private $response_without_plugin;
-
-    public function setUp() {
-        parent::setUp();
-        $this->response_with_plugin = <<<EOS
-)]}'
-{
-  "deleteproject": {
-    "kind": "gerritcodereview#plugin",
-    "id": "deleteproject",
-    "version": "v2.8.2"
-  },
-  "replication": {
-    "kind": "gerritcodereview#plugin",
-    "id": "replication",
-    "version": "v2.8.1"
-  }
-}
-EOS;
-        $this->response_without_plugin = <<<EOS
-)]}'
-{
-  "replication": {
-    "kind": "gerritcodereview#plugin",
-    "id": "replication",
-    "version": "v2.8.1"
-  }
-}
-EOS;
-    }
-    public function itReturnsFalseIfPluginIsNotInstalled(){
-        stub($this->http_client)->getLastResponse()->returns($this->response_without_plugin);
-
-        $enabled = $this->driver->isDeletePluginEnabled($this->gerrit_server);
-
-        $this->assertFalse($enabled);
-    }
-
-    public function itReturnsFalseIfPluginIsInstalledAndNotEnabled(){
-        stub($this->http_client)->getLastResponse()->returns($this->response_without_plugin);
-
-        $enabled = $this->driver->isDeletePluginEnabled($this->gerrit_server);
-
-        $this->assertFalse($enabled);
-    }
-
-    public function itReturnsTrueIfPluginIsInstalledAndEnabled(){
-        stub($this->http_client)->getLastResponse()->returns($this->response_with_plugin);
-
-        $enabled = $this->driver->isDeletePluginEnabled($this->gerrit_server);
-
-        $this->assertTrue($enabled);
-    }
-
-    public function itCallsGerritServerWithOptions() {
-        $url = $this->gerrit_server_host
-            .':'. $this->gerrit_server_port
-            .'/a/plugins/';
-
-        $options = array(
-            CURLOPT_URL             => $url,
-            CURLOPT_SSL_VERIFYPEER  => false,
-            CURLOPT_HTTPAUTH        => CURLAUTH_DIGEST,
-            CURLOPT_USERPWD         => $this->gerrit_server_user .':'. $this->gerrit_server_pass,
-            CURLOPT_CUSTOMREQUEST   => 'GET'
-        );
-
-        expect($this->http_client)->doRequest()->once();
-        expect($this->http_client)->addOptions($options)->once();
-
-        $this->driver->isDeletePluginEnabled($this->gerrit_server);
     }
 }

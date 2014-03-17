@@ -20,11 +20,6 @@
 
 require_once dirname(__FILE__).'/GerritTestBase.php';
 
-interface Git_Driver_Gerrit_groupExistsTest {
-    public function itReturnsTrueIfGroupExists();
-    public function itReturnsFalseIfGroupDoNotExists();
-}
-
 class Git_Driver_Gerrit_Legacy_GroupExistsTest extends TuleapTestCase implements Git_Driver_Gerrit_groupExistsTest{
 
     public function setUp() {
@@ -57,46 +52,5 @@ class Git_Driver_Gerrit_Legacy_GroupExistsTest extends TuleapTestCase implements
 
     public function itReturnsFalseIfGroupDoNotExists() {
         $this->assertFalse($this->gerrit_driver->doesTheGroupExist($this->gerrit_server, 'project/wiki_admins'));
-    }
-}
-
-class Git_DriverREST_Gerrit_groupExistsTest extends Git_Driver_GerritREST_baseTest implements Git_Driver_Gerrit_groupExistsTest {
-
-    public function setUp() {
-        parent::setUp();
-
-        $this->group         = 'contributors';
-        $this->groupname     = $this->project_name.'/'.$this->namespace.'/'.$this->repository_name.'-'.$this->group;
-
-        $url = $this->gerrit_server_host
-            .':'. $this->gerrit_server_port
-            .'/a/groups/'. urlencode($this->groupname);
-
-        $this->expected_options = array(
-            CURLOPT_URL             => $url,
-            CURLOPT_SSL_VERIFYPEER  => false,
-            CURLOPT_HTTPAUTH        => CURLAUTH_DIGEST,
-            CURLOPT_USERPWD         => $this->gerrit_server_user .':'. $this->gerrit_server_pass,
-            CURLOPT_CUSTOMREQUEST   => 'GET'
-        );
-    }
-
-    public function itReturnsTrueIfGroupExists(){
-        stub($this->http_client)->isLastResponseSuccess()->returns(true);
-
-        $this->assertTrue($this->driver->doesTheGroupExist($this->gerrit_server, $this->groupname));
-    }
-
-    public function itReturnsFalseIfGroupDoNotExists(){
-        stub($this->http_client)->isLastResponseSuccess()->returns(false);
-
-        $this->assertFalse($this->driver->doesTheGroupExist($this->gerrit_server, $this->groupname));
-    }
-
-    public function itCallsTheRightOptions() {
-        expect($this->http_client)->doRequest()->once();
-        expect($this->http_client)->addOptions($this->expected_options)->once();
-
-        $this->driver->doesTheGroupExist($this->gerrit_server, $this->groupname);
     }
 }

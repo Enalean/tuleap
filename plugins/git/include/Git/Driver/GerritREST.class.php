@@ -24,26 +24,22 @@
  */
 class Git_Driver_GerritREST implements Git_Driver_Gerrit {
 
-    const CONTENT_TYPE_JSON = 'Content-Type: application/json;charset=UTF-8';
-    const CONTENT_TYPE_TEXT = 'Content-Type: plain/text';
-
-    /** @var Http_Client */
-    private $http_client;
+    const HEADER_CONTENT_TYPE = 'Content-type';
+    const MIME_JSON           = 'application/json;charset=UTF-8';
+    const MIME_TEXT           = 'plain/text';
 
     /** @var Logger */
     private $logger;
 
-    /** @var Git_Driver_GerritRESTBodyBuilder */
-    private $body_builder;
+    /** @var Guzzle\Http\Client */
+    private $guzzle_client;
 
     public function __construct(
-        Http_Client $http_client,
-        Logger $logger,
-        Git_Driver_GerritRESTBodyBuilder $body_builder
+        $guzzle_client,
+        Logger $logger
     ) {
-        $this->http_client  = $http_client;
-        $this->logger       = $logger;
-        $this->body_builder = $body_builder;
+        $this->guzzle_client = $guzzle_client;
+        $this->logger        = $logger;
     }
 
     public function createProject(
@@ -52,44 +48,29 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         $parent_project_name
     ) {
         $gerrit_project_name = $this->getGerritProjectName($repository);
-
-        $this->http_client->init();
-        $this->logger->info("Gerrit REST driver: Create project $gerrit_project_name");
-
-        $url       = '/projects/'. urlencode($gerrit_project_name);
-        $json_data = json_encode(
-            array(
-                'description' => "Migration of $gerrit_project_name from Tuleap",
-                'parent'      => $parent_project_name
-            )
-        );
-
-        $custom_options = array(
-            CURLOPT_PUT        => true,
-            CURLOPT_HTTPHEADER => array(self::CONTENT_TYPE_JSON),
-            CURLOPT_INFILE     => $this->body_builder->getTemporaryFile($json_data),
-            CURLOPT_INFILESIZE => strlen($json_data),
-        );
-
-        $options = $this->getOptionsForRequest($server, $url, $custom_options);
-
         try {
-            $this->http_client->addOptions($options);
-            $this->http_client->doRequest();
+            $this->logger->info("Gerrit REST driver: Create project $gerrit_project_name");
 
-            if (! $this->http_client->isLastResponseSuccess()) {
-                throw new Git_Driver_Gerrit_Exception(
-                    'url: '. $this->getGerritURL($server, $url).
-                    ', http code: '. $this->http_client->getLastHTTPCode()
-                );
-            }
+            $this->sendRequest(
+                $server,
+                $this->guzzle_client->put(
+                    $this->getGerritURL($server, '/projects/'. urlencode($gerrit_project_name)),
+                    $this->getRequestOptions(array(self::HEADER_CONTENT_TYPE => self::MIME_JSON)),
+                    json_encode(
+                        array(
+                            'description' => "Migration of $gerrit_project_name from Tuleap",
+                            'parent'      => $parent_project_name
+                        )
+                    )
+                )
+            );
 
             $this->logger->info("Gerrit: Project $gerrit_project_name successfully initialized");
             return $gerrit_project_name;
-        } catch (Http_ClientException $exception) {
+        } catch (Exception $exception) {
             $this->logger->error("Gerrit: Project $gerrit_project_name not created: " . $exception->getMessage());
-            return false;
         }
+        return false;
     }
 
     public function createProjectWithPermissionsOnly(
@@ -97,136 +78,115 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         Project $project,
         $admin_group_name
      ){
-        $parent_project_name = $project->getUnixName();
-
-        $this->http_client->init();
-        $this->logger->info("Gerrit REST driver: Create parent project $parent_project_name");
-
-        $url       = '/projects/'. urlencode($parent_project_name);
-        $json_data = json_encode(
-            array(
-                'description'      => "Migration of $parent_project_name from Tuleap",
-                'permissions_only' => true,
-                'owners'           => array(
-                    $admin_group_name
-                )
-            )
-        );
-
-        $custom_options = array(
-            CURLOPT_PUT        => true,
-            CURLOPT_HTTPHEADER => array(self::CONTENT_TYPE_JSON),
-            CURLOPT_INFILE     => $this->body_builder->getTemporaryFile($json_data),
-            CURLOPT_INFILESIZE => strlen($json_data),
-        );
-
-        $options = $this->getOptionsForRequest($server, $url, $custom_options);
-
         try {
-            $this->http_client->addOptions($options);
-            $this->http_client->doRequest();
+            $parent_project_name = $project->getUnixName();
+
+            $this->logger->info("Gerrit REST driver: Create parent project $parent_project_name");
+
+            $this->sendRequest(
+                $server,
+                $this->guzzle_client->put(
+                    $this->getGerritURL($server, '/projects/'. urlencode($parent_project_name)),
+                    $this->getRequestOptions(array(self::HEADER_CONTENT_TYPE => self::MIME_JSON)),
+                    json_encode(
+                        array(
+                            'description'      => "Migration of $parent_project_name from Tuleap",
+                            'permissions_only' => true,
+                            'owners'           => array(
+                                $admin_group_name
+                            )
+                        )
+                    )
+                )
+            );
 
             $this->logger->info("Gerrit: Permissions-only project $parent_project_name successfully initialized");
-        } catch (Http_ClientException $exception) {
-            $this->logger->error(var_export($this->http_client->getLastRequest(), true));
+        } catch (Exception $exception) {
             $this->logger->error("Gerrit: Permissions-only project $parent_project_name not created: " . $exception->getMessage());
             return false;
         }
     }
 
-    public function doesTheParentProjectExist(Git_RemoteServer_GerritServer $server, $project_name ){
+    public function doesTheParentProjectExist(Git_RemoteServer_GerritServer $server, $project_name) {
        return $this->doesTheProjectExist($server, $project_name);
     }
 
-    public function doesTheProjectExist(Git_RemoteServer_GerritServer $server, $project_name ){
-        $this->http_client->init();
-        $this->logger->info("Gerrit REST driver: Check if project $project_name already exists");
-
-        $url            = '/projects/'. urlencode($project_name);
-        $custom_options = array(
-            CURLOPT_CUSTOMREQUEST => 'GET'
-        );
-
-        $options = $this->getOptionsForRequest($server, $url, $custom_options);
-
+    public function doesTheProjectExist(Git_RemoteServer_GerritServer $server, $project_name) {
         try {
-            $this->http_client->addOptions($options);
-            $this->http_client->doRequest();
+            $this->logger->info("Gerrit REST driver: Check if project $project_name already exists");
+            $this->sendRequest(
+                $server,
+                $this->guzzle_client->get(
+                    $this->getGerritURL($server, '/projects/'. urlencode($project_name)),
+                    $this->getRequestOptions()
+                )
+            );
 
             $this->logger->info("Gerrit REST driver: project $project_name exists");
 
             return true;
-        } catch (Http_ClientException $exception) {
+        } catch (Exception $exception) {
             $this->logger->info("Gerrit REST driver: project $project_name does not exist");
 
             return false;
         }
     }
 
-    public function ping(Git_RemoteServer_GerritServer $server ){
-        $this->http_client->init();
-        $this->logger->info("Gerrit REST driver: Check if server is up");
-
-        $url            = '/config/server/version';
-        $custom_options = array(
-            CURLOPT_CUSTOMREQUEST => 'GET'
-        );
-
-        $options = $this->getOptionsForRequest($server, $url, $custom_options);
-
+    public function ping(Git_RemoteServer_GerritServer $server) {
         try {
-            $this->http_client->addOptions($options);
-            $this->http_client->doRequest();
-
-            return $this->http_client->isLastResponseSuccess();
-        } catch (Http_ClientException $exception) {
+            $this->logger->info("Gerrit REST driver: Check if server is up");
+            $this->sendRequest(
+                $server,
+                $this->guzzle_client->get(
+                    $this->getGerritURL($server, '/config/server/version'),
+                    $this->getRequestOptions()
+                )
+            );
+            $this->logger->info("Gerrit REST driver: server is up!");
+            return true;
+        } catch (Exception $exception) {
             return false;
         }
     }
 
-    public function listParentProjects(Git_RemoteServer_GerritServer $server ){
+    public function listParentProjects(Git_RemoteServer_GerritServer $server) {
         return;
     }
 
-    public function createGroup(Git_RemoteServer_GerritServer $server, $group_name, $owner ){
+    public function createGroup(Git_RemoteServer_GerritServer $server, $group_name, $owner) {
         if ($this->doesTheGroupExist($server, $group_name)) {
             return;
         }
 
-        $this->http_client->init();
-        $this->logger->info("Gerrit REST driver: Create group $group_name");
-
-        $url            = '/groups/'. urlencode($group_name);
-        $custom_options = array(
-            CURLOPT_PUT => true,
-        );
-
-        if ($group_name !== $owner) {
-
-            $json_data = json_encode(
-                array(
-                    'owner' => $owner
+        try {
+            $this->logger->info("Gerrit REST driver: Create group $group_name");
+            $json_data = null;
+            $options   = $this->getRequestOptions();
+            if ($group_name !== $owner) {
+                $json_data = json_encode(
+                    array(
+                        'owner' => $owner
+                    )
+                );
+                $options += array(self::HEADER_CONTENT_TYPE => self::MIME_JSON);
+            }
+            $this->sendRequest(
+                $server,
+                $this->guzzle_client->put(
+                    $this->getGerritURL($server, '/groups/'. urlencode($group_name)),
+                    $options,
+                    $json_data
                 )
             );
-            $custom_options[CURLOPT_HTTPHEADER] = array(self::CONTENT_TYPE_JSON);
-            $custom_options[CURLOPT_INFILE]     = $this->body_builder->getTemporaryFile($json_data);
-            $custom_options[CURLOPT_INFILESIZE] = strlen($json_data);
-        }
-
-        $options = $this->getOptionsForRequest($server, $url, $custom_options);
-
-        try {
-            $this->http_client->addOptions($options);
-            $this->http_client->doRequest();
 
             $this->logger->info("Gerrit REST driver: Group $group_name successfully created");
-        } catch (Http_ClientException $exception) {
+        } catch (Exception $exception) {
             $this->logger->error("Gerrit REST driver: Unable to create group $group_name: ". $exception->getMessage());
             return false;
         }
     }
 
-    public function getGroupUUID(Git_RemoteServer_GerritServer $server, $group_full_name ){
+    public function getGroupUUID(Git_RemoteServer_GerritServer $server, $group_full_name) {
         $group_info = $this->getGroupInfoFromGerrit($server, $group_full_name);
         if (! $group_info) {
             return;
@@ -235,7 +195,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         return $group_info['id'];
     }
 
-    public function getGroupId(Git_RemoteServer_GerritServer $server, $group_full_name ){
+    public function getGroupId(Git_RemoteServer_GerritServer $server, $group_full_name) {
         $group_info = $this->getGroupInfoFromGerrit($server, $group_full_name);
         if (! $group_info) {
             return;
@@ -244,38 +204,34 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         return $group_info['group_id'];
     }
 
-    public function doesTheGroupExist(Git_RemoteServer_GerritServer $server, $group_name ){
-        $this->http_client->init();
+    public function doesTheGroupExist(Git_RemoteServer_GerritServer $server, $group_name) {
         $this->logger->info("Gerrit REST driver: Check if the group $group_name exists");
 
-        $this->getGroupInfoFromGerrit($server, $group_name);
-
-        return $this->http_client->isLastResponseSuccess();
+        return $this->getGroupInfoFromGerrit($server, $group_name) !== false;
     }
 
-    public function listGroups(Git_RemoteServer_GerritServer $server ){
+    public function listGroups(Git_RemoteServer_GerritServer $server) {
         return;
     }
 
-    public function getAllGroups(Git_RemoteServer_GerritServer $server ){
-        $this->http_client->init();
-        $this->logger->info("Gerrit REST driver: Get all groups");
-
-        $url = '/groups/';
-
-        $options = $this->getOptionsForRequest($server, $url, array());
-
+    public function getAllGroups(Git_RemoteServer_GerritServer $server) {
         try {
-            $this->http_client->addOptions($options);
-            $this->http_client->doRequest();
+            $this->logger->info("Gerrit REST driver: Get all groups");
+            $response = $this->sendRequest(
+                $server,
+                $this->guzzle_client->get(
+                    $this->getGerritURL($server, '/groups/'),
+                    $this->getRequestOptions()
+                )
+            );
 
             $groups = array();
-            foreach ($this->decodeGerritResponse($this->http_client->getLastResponse()) as $name => $group) {
+            foreach ($this->decodeGerritResponse($response->getBody(true)) as $name => $group) {
                 $groups[$name] = $group['id'];
             }
 
             return $groups;
-        } catch (Http_ClientException $exception) {
+        } catch (Exception $exception) {
             return array();
         }
     }
@@ -287,23 +243,20 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
     }
 
     public function addUserToGroup(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user, $group_name){
-        $this->http_client->init();
-        $this->logger->info("Gerrit REST driver: Add user " . $user->getSSHUserName() . " in group $group_name");
-
-        $url            = '/groups/'. urlencode($group_name) .'/members/'. urlencode($user->getSSHUserName());
-        $custom_options = array(
-            CURLOPT_PUT => true,
-        );
-
-        $options = $this->getOptionsForRequest($server, $url, $custom_options);
-
         try {
-            $this->http_client->addOptions($options);
-            $this->http_client->doRequest();
+            $this->logger->info("Gerrit REST driver: Add user " . $user->getSSHUserName() . " in group $group_name");
+
+            $this->sendRequest(
+                $server,
+                $this->guzzle_client->put(
+                    $this->getGerritURL($server, '/groups/'. urlencode($group_name) .'/members/'. urlencode($user->getSSHUserName())),
+                    $this->getRequestOptions()
+                )
+            );
 
             $this->logger->info("Gerrit REST driver: User successfully added");
             return true;
-        } catch (Http_ClientException $exception) {
+        } catch (Exception $exception) {
             $this->logger->error("Gerrit REST driver: Cannot add user: " . $exception->getMessage());
             return false;
         }
@@ -314,143 +267,97 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         Git_Driver_Gerrit_User $user,
         $group_name
      ) {
-        $this->http_client->init();
-        $this->logger->info("Gerrit REST driver: Remove user " . $user->getSSHUserName() . " from group $group_name");
-
-        $url            = '/groups/'. urlencode($group_name) .'/members/'. urlencode($user->getSSHUserName());
-        $custom_options = array(
-            CURLOPT_CUSTOMREQUEST => 'DELETE',
-        );
-
-        $options = $this->getOptionsForRequest($server, $url, $custom_options);
-
         try {
-            $this->http_client->addOptions($options);
-            $this->http_client->doRequest();
-
+            $this->logger->info("Gerrit REST driver: Remove user " . $user->getSSHUserName() . " from group $group_name");
+            $this->sendRequest(
+                $server,
+                $this->guzzle_client->delete(
+                    $this->getGerritURL($server, '/groups/'. urlencode($group_name) .'/members/'. urlencode($user->getSSHUserName())),
+                    $this->getRequestOptions()
+                )
+            );
             $this->logger->info("Gerrit REST driver: User successfully removed");
             return true;
-        } catch (Http_ClientException $exception) {
+        } catch (Exception $exception) {
             $this->logger->error("Gerrit REST driver: Cannot remove user: " . $exception->getMessage());
             return false;
         }
     }
 
-    private function userIsAlreadyMigratedOnGerrit(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user){
-        $this->http_client->init();
-        $this->logger->info("Gerrit REST driver: Check if user ". $user->getSSHUserName() ." is already migrated in Gerrit");
-
-        $url            = '/accounts/'. urlencode($user->getSSHUserName());
-        $custom_options = array(
-            CURLOPT_CUSTOMREQUEST   => 'GET'
-        );
-
-        $options = $this->getOptionsForRequest($server, $url, $custom_options);
-
-        try {
-            $this->http_client->addOptions($options);
-            $this->http_client->doRequest();
-
-            return $this->http_client->isLastResponseSuccess();
-        } catch (Http_ClientException $exception) {
-            $this->logger->info("User does not exist in Gerrit: ". $exception->getMessage());
-            return false;
-        }
-    }
-
-    public function removeAllGroupMembers(Git_RemoteServer_GerritServer $server, $group_name ){
+    public function removeAllGroupMembers(Git_RemoteServer_GerritServer $server, $group_name) {
         $exiting_members = $this->getAllMembers($server, $group_name);
         if (! $exiting_members) {
             return true;
         }
 
-        $this->http_client->init();
-        $this->logger->info("Gerrit REST driver: Remove all group members from $group_name");
-
-        $url = '/groups/'. urlencode($group_name) .'/members.delete';
-
-        $custom_options = array(
-            CURLOPT_POST       => true,
-            CURLOPT_HTTPHEADER => array(self::CONTENT_TYPE_JSON),
-            CURLOPT_POSTFIELDS => json_encode(
-                array(
-                    'members' => $exiting_members
-                )
-            )
-        );
-
-        $options = $this->getOptionsForRequest($server, $url, $custom_options);
-
         try {
-            $this->http_client->addOptions($options);
-            $this->http_client->doRequest();
-
-            return $this->http_client->isLastResponseSuccess();
-        } catch (Http_ClientException $exception) {
+            $this->logger->info("Gerrit REST driver: Remove all group members from $group_name");
+            $this->sendRequest(
+                $server,
+                $this->guzzle_client->post(
+                    $this->getGerritURL($server, '/groups/'. urlencode($group_name) .'/members.delete'),
+                    $this->getRequestOptions(array(self::HEADER_CONTENT_TYPE => self::MIME_JSON)),
+                    json_encode(
+                        array(
+                            'members' => $exiting_members
+                        )
+                    )
+                )
+            );
+            return true;
+        } catch (Exception $exception) {
             return false;
         }
     }
 
-    public function addIncludedGroup(Git_RemoteServer_GerritServer $server, $group_name, $included_group_name ){
-        $this->http_client->init();
-        $this->logger->info("Gerrit REST driver: Add included group $included_group_name in group $group_name");
-
-        $url = '/groups/'. urlencode($group_name) .'/groups/'. urlencode($included_group_name);
-
-        $custom_options = array(
-            CURLOPT_PUT => true,
-        );
-
-        $options = $this->getOptionsForRequest($server, $url, $custom_options);
-
+    public function addIncludedGroup(Git_RemoteServer_GerritServer $server, $group_name, $included_group_name) {
         try {
-            $this->http_client->addOptions($options);
-            $this->http_client->doRequest();
-
+            $this->logger->info("Gerrit REST driver: Add included group $included_group_name in group $group_name");
+            $this->sendRequest(
+                $server,
+                $this->guzzle_client->put(
+                    $this->getGerritURL($server, '/groups/'. urlencode($group_name) .'/groups/'. urlencode($included_group_name)),
+                    $this->getRequestOptions()
+                )
+            );
             $this->logger->info("Gerrit REST driver: Group successfully included");
             return true;
-        } catch (Http_ClientException $exception) {
+        } catch (Exception $exception) {
             $this->logger->error("Gerrit REST driver: Cannot include group: ". $exception->getMessage());
             return false;
         }
     }
 
-    public function removeAllIncludedGroups(Git_RemoteServer_GerritServer $server, $group_name ){
+    public function removeAllIncludedGroups(Git_RemoteServer_GerritServer $server, $group_name) {
         $exiting_groups = $this->getAllIncludedGroups($server, $group_name);
         if (! $exiting_groups) {
             return true;
         }
 
-        $this->http_client->init();
-        $this->logger->info("Gerrit REST driver: Remove all included groups from group $group_name");
-
-        $url = '/groups/'. urlencode($group_name) .'/groups.delete';
-
-        $custom_options = array(
-            CURLOPT_POST       => true,
-            CURLOPT_HTTPHEADER => array(self::CONTENT_TYPE_JSON),
-            CURLOPT_POSTFIELDS => json_encode(
-                array(
-                    'groups' => $exiting_groups
-                )
-            )
-        );
-
-        $options = $this->getOptionsForRequest($server, $url, $custom_options);
-
         try {
-            $this->http_client->addOptions($options);
-            $this->http_client->doRequest();
+            $this->logger->info("Gerrit REST driver: Remove all included groups from group $group_name");
+            $this->sendRequest(
+                $server,
+                $this->guzzle_client->post(
+                    $this->getGerritURL($server, '/groups/'. urlencode($group_name) .'/groups.delete'),
+                    $this->getRequestOptions(array(self::HEADER_CONTENT_TYPE => self::MIME_JSON)),
+                    json_encode(
+                        array(
+                            'groups' => $exiting_groups
+                        )
+                    )
+                )
+            );
             $this->logger->info("Gerrit REST driver: included groups successfully removed");
 
             return true;
-        } catch (Http_ClientException $exception) {
+        } catch (Exception $exception) {
             $this->logger->error("Gerrit REST driver: Cannot remove included group: ". $exception->getMessage());
             return false;
         }
     }
 
-    public function flushGerritCacheAccounts($server ){
+    public function flushGerritCacheAccounts($server) {
         return;
     }
 
@@ -459,26 +366,20 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         Git_Driver_Gerrit_User $user,
         $ssh_key
     ){
-        $this->http_client->init();
-        $this->logger->info("Gerrit REST driver: Add ssh key for user ". $user->getSSHUserName());
-
-        $url = '/accounts/'. urlencode($user->getSSHUserName()) .'/sshkeys';
-
-        $custom_options = array(
-            CURLOPT_POST       => true,
-            CURLOPT_HTTPHEADER => array(self::CONTENT_TYPE_TEXT),
-            CURLOPT_POSTFIELDS => $this->escapeSSHKey($ssh_key)
-        );
-
-        $options = $this->getOptionsForRequest($server, $url, $custom_options);
-
         try {
-            $this->http_client->addOptions($options);
-            $this->http_client->doRequest();
+            $this->logger->info("Gerrit REST driver: Add ssh key for user ". $user->getSSHUserName());
+            $this->sendRequest(
+                $server,
+                $this->guzzle_client->post(
+                    $this->getGerritURL($server, '/accounts/'. urlencode($user->getSSHUserName()) .'/sshkeys'),
+                    $this->getRequestOptions(array(self::HEADER_CONTENT_TYPE => self::MIME_TEXT)),
+                    $this->escapeSSHKey($ssh_key)
+                )
+            );
             $this->logger->info("Gerrit REST driver: ssh key successfully added");
 
             return true;
-        } catch (Http_ClientException $exception) {
+        } catch (Exception $exception) {
             $this->logger->error("Gerrit REST driver: Cannot add ssh key: ". $exception->getMessage());
             return false;
         }
@@ -513,140 +414,113 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         Git_RemoteServer_GerritServer $server,
         Git_Driver_Gerrit_User $user
     ){
-        $this->http_client->init();
-        $this->logger->info("Gerrit REST driver: Get all ssh keys for user ". $user->getSSHUserName());
-
-        $url = '/accounts/'. urlencode($user->getSSHUserName()) .'/sshkeys';
-
-        $custom_options = array(
-            CURLOPT_CUSTOMREQUEST => 'GET'
-        );
-
-        $options = $this->getOptionsForRequest($server, $url, $custom_options);
-
         try {
-            $this->http_client->addOptions($options);
-            $this->http_client->doRequest();
-            $this->logger->info("Gerrit REST driver: Successfully get all ssh keys for user");
+            $this->logger->info("Gerrit REST driver: Get all ssh keys for user ". $user->getSSHUserName());
+            $response = $this->sendRequest(
+                $server,
+                $this->guzzle_client->get(
+                    $this->getGerritURL($server, '/accounts/'. urlencode($user->getSSHUserName()) .'/sshkeys'),
+                    $this->getRequestOptions()
+                )
+            );
+            $this->logger->info("Gerrit REST driver: Successfully got all ssh keys for user");
 
-            return $this->decodeGerritResponse($this->http_client->getLastResponse());
-        } catch (Http_ClientException $exception) {
+            return $this->decodeGerritResponse($response->getBody(true));
+        } catch (Exception $exception) {
             $this->logger->error("Gerrit REST driver: Cannot get ssh keys for user: ". $exception->getMessage());
             return array();
         }
     }
 
-    public function setProjectInheritance(Git_RemoteServer_GerritServer $server, $project_name, $parent_project_name ){
-        $this->http_client->init();
-        $this->logger->info("Gerrit REST driver: Set project $parent_project_name as parent of $project_name");
-
-        $url       = '/projects/'. urlencode($project_name) .'/parent';
-        $json_data = json_encode(
-            array(
-                'parent' => $parent_project_name
-            )
-        );
-
-        $custom_options = array(
-            CURLOPT_PUT        => true,
-            CURLOPT_HTTPHEADER => array(self::CONTENT_TYPE_JSON),
-            CURLOPT_INFILE     => $this->body_builder->getTemporaryFile($json_data),
-            CURLOPT_INFILESIZE => strlen($json_data),
-        );
-
-        $options = $this->getOptionsForRequest($server, $url, $custom_options);
-
+    public function setProjectInheritance(Git_RemoteServer_GerritServer $server, $project_name, $parent_project_name) {
         try {
-            $this->http_client->addOptions($options);
-            $this->http_client->doRequest();
-            $this->logger->error("Gerrit REST driver: parent project successfully added");
+            $this->logger->info("Gerrit REST driver: Set project $parent_project_name as parent of $project_name");
+            $this->sendRequest(
+                $server,
+                $this->guzzle_client->put(
+                    $this->getGerritURL($server, '/projects/'. urlencode($project_name) .'/parent'),
+                    $this->getRequestOptions(array(self::HEADER_CONTENT_TYPE => self::MIME_JSON)),
+                    json_encode(
+                        array(
+                            'parent' => $parent_project_name
+                        )
+                    )
+                )
+            );
+            $this->logger->info("Gerrit REST driver: parent project successfully added");
 
             return true;
-        } catch (Http_ClientException $exception) {
+        } catch (Exception $exception) {
             $this->logger->error("Gerrit REST driver: Cannot set parent project: ". $exception->getMessage());
             return false;
         }
     }
 
-    public function resetProjectInheritance(Git_RemoteServer_GerritServer $server, $project_name ){
+    public function resetProjectInheritance(Git_RemoteServer_GerritServer $server, $project_name) {
         return $this->setProjectInheritance($server, $project_name, self::DEFAULT_PARENT_PROJECT);
     }
 
-    public function isDeletePluginEnabled(Git_RemoteServer_GerritServer $server ){
-        $this->http_client->init();
-        $this->logger->info("Gerrit REST driver: Check if delete plugin is activated");
-
-        $url            = '/plugins/';
-        $custom_options = array(
-            CURLOPT_CUSTOMREQUEST => 'GET'
-        );
-
-        $options = $this->getOptionsForRequest($server, $url, $custom_options);
-
+    public function isDeletePluginEnabled(Git_RemoteServer_GerritServer $server) {
         try {
-            $this->http_client->addOptions($options);
-            $this->http_client->doRequest();
-            $plugins = $this->decodeGerritResponse($this->http_client->getLastResponse());
+            $this->logger->info("Gerrit REST driver: Check if delete plugin is activated");
+            $response = $this->sendRequest(
+                $server,
+                $this->guzzle_client->get(
+                    $this->getGerritURL($server, '/plugins/'),
+                    $this->getRequestOptions()
+                )
+            );
+            $plugins = $this->decodeGerritResponse($response->getBody(true));
 
             $activated = isset($plugins['deleteproject']);
 
             $this->logger->info("Gerrit REST driver: delete plugin is activated : $activated");
 
             return $activated;
-        } catch (Http_ClientException $exception) {
+        } catch (Exception $exception) {
             $this->logger->error("Gerrit REST driver: Cannot detect if delete plugin is activated: ". $exception->getMessage());
             return false;
         }
     }
 
-    public function deleteProject(Git_RemoteServer_GerritServer $server, $gerrit_project_full_name ){
-        $this->http_client->init();
-        $this->logger->info("Gerrit REST driver: Delete project $gerrit_project_full_name");
-
-        $url            = '/projects/'. urlencode($gerrit_project_full_name);
-        $custom_options = array(
-            CURLOPT_CUSTOMREQUEST => 'DELETE'
-        );
-
-        $options = $this->getOptionsForRequest($server, $url, $custom_options);
-
+    public function deleteProject(Git_RemoteServer_GerritServer $server, $gerrit_project_full_name) {
         try {
-            $this->http_client->addOptions($options);
-            $this->http_client->doRequest();
+            $this->logger->info("Gerrit REST driver: Delete project $gerrit_project_full_name");
+            $this->sendRequest(
+                $server,
+                $this->guzzle_client->delete(
+                    $this->getGerritURL($server, '/projects/'. urlencode($gerrit_project_full_name)),
+                    $this->getRequestOptions()
+                )
+            );
 
             $this->logger->info("Gerrit REST driver: Project successfully deleted");
             return true;
-        } catch (Http_ClientException $exception) {
-            $this->logger->error("Gerrit REST driver: Cannot delete project $gerrit_project_full_name");
+        } catch (Exception $exception) {
+            $this->logger->error("Gerrit REST driver: Cannot delete project $gerrit_project_full_name. (".$exception->getMessage().")");
             return false;
         }
     }
 
-    public function makeGerritProjectReadOnly(Git_RemoteServer_GerritServer $server, $gerrit_project_full_name ){
-        $this->http_client->init();
-
-        $url       = '/projects/'. urlencode($gerrit_project_full_name) .'/config';
-        $json_data = json_encode(
-            array(
-                'state' => 'READ_ONLY'
-            )
-        );
-
-        $custom_options = array(
-            CURLOPT_PUT        => true,
-            CURLOPT_HTTPHEADER => array(self::CONTENT_TYPE_JSON),
-            CURLOPT_INFILE     => $this->body_builder->getTemporaryFile($json_data),
-            CURLOPT_INFILESIZE => strlen($json_data),
-        );
-
-        $options = $this->getOptionsForRequest($server, $url, $custom_options);
-
+    public function makeGerritProjectReadOnly(Git_RemoteServer_GerritServer $server, $gerrit_project_full_name) {
         try {
-            $this->http_client->addOptions($options);
-            $this->http_client->doRequest();
-
+            $this->logger->info("Gerrit REST driver: Set $gerrit_project_full_name Read-Only");
+            $this->sendRequest(
+                $server,
+                $this->guzzle_client->put(
+                    $this->getGerritURL($server, '/projects/'. urlencode($gerrit_project_full_name) .'/config'),
+                    $this->getRequestOptions(array(self::HEADER_CONTENT_TYPE => self::MIME_JSON)),
+                    json_encode(
+                        array(
+                            'state' => 'READ_ONLY'
+                        )
+                    )
+                )
+            );
+            $this->logger->info("Gerrit REST driver: Project successfully set Read-Only");
             return true;
-        } catch (Http_ClientException $exception) {
+        } catch (Exception $exception) {
+            $this->logger->errorr("Gerrit REST driver: An error occured while setting project read-only: ".$exception->getMessage());
             return false;
         }
     }
@@ -668,25 +542,39 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         return ($standard_options + $custom_options);
     }
 
+    /**
+     * @param Git_RemoteServer_GerritServer        $server
+     * @param Guzzle\Http\Message\RequestInterface $request
+     *
+     * @return Guzzle\Http\Message\Response
+     */
+    private function sendRequest(Git_RemoteServer_GerritServer $server, Guzzle\Http\Message\RequestInterface $request) {
+        $request->setAuth($server->getLogin(), $server->getHTTPPassword(), 'Digest');
+        return $request->send();
+    }
+
+    private function getRequestOptions(array $custom_options = array()) {
+        return $custom_options + array(
+            'verify' => false,
+        );
+    }
+
     private function getAllMembers(
         Git_RemoteServer_GerritServer $server,
         $group_name
     ) {
-        $this->http_client->init();
-
-        $url     = '/groups/'. urlencode($group_name) .'/members';
-        $options = $this->getOptionsForRequest($server, $url, array(
-           CURLOPT_CUSTOMREQUEST   => 'GET',
-        ));
-
         try {
-            $this->http_client->addOptions($options);
-            $this->http_client->doRequest();
-            $gerrit_response = $this->http_client->getLastResponse();
-            $members = $this->decodeGerritResponse($gerrit_response);
+            $response = $this->sendRequest(
+                $server,
+                $this->guzzle_client->get(
+                    $this->getGerritURL($server, '/groups/'. urlencode($group_name) .'/members'),
+                    $this->getRequestOptions()
+                )
+            );
+            $members = $this->decodeGerritResponse($response->getBody(true));
 
             return array_map(array($this, 'pluckUsername'), $members);
-        } catch(Http_ClientException $exception) {
+        } catch(Exception $exception) {
             return array();
         }
     }
@@ -695,21 +583,18 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         Git_RemoteServer_GerritServer $server,
         $group_name
     ) {
-        $this->http_client->init();
-
-        $url     = '/groups/'. urlencode($group_name) .'/groups';
-        $options = $this->getOptionsForRequest($server, $url, array(
-           CURLOPT_CUSTOMREQUEST   => 'GET',
-        ));
-
         try {
-            $this->http_client->addOptions($options);
-            $this->http_client->doRequest();
-            $gerrit_response = $this->http_client->getLastResponse();
-            $members = $this->decodeGerritResponse($gerrit_response);
+            $response = $this->sendRequest(
+                $server,
+                $this->guzzle_client->get(
+                    $this->getGerritURL($server, '/groups/'. urlencode($group_name) .'/groups'),
+                    $this->getRequestOptions()
+                )
+            );
+            $members = $this->decodeGerritResponse($response->getBody(true));
 
             return array_map(array($this, 'pluckGroupname'), $members);
-        } catch(Http_ClientException $exception) {
+        } catch(Exception $exception) {
             return array();
         }
     }
@@ -722,29 +607,30 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         return $member['name'];
     }
 
+    /**
+     * Strip magic prefix
+     *
+     * @see https://gerrit-documentation.storage.googleapis.com/Documentation/2.8.3/rest-api.html#output
+     *
+     * @param string $gerrit_response
+     * @return string
+     */
     private function decodeGerritResponse($gerrit_response) {
-        $magic_prefix = ")]}'";
-        $regexp = '/^'.preg_quote($magic_prefix).'\s+/';
-
-        return json_decode(preg_replace($regexp, '', $gerrit_response), true);
+        return json_decode(substr($gerrit_response, 5), true);
     }
 
     private function getGroupInfoFromGerrit($server, $group_name) {
-        $this->http_client->init();
-
-        $url            = '/groups/'. urlencode($group_name);
-        $custom_options = array(
-            CURLOPT_CUSTOMREQUEST => 'GET'
-        );
-
-        $options = $this->getOptionsForRequest($server, $url, $custom_options);
-
         try {
-            $this->http_client->addOptions($options);
-            $this->http_client->doRequest();
+            $response = $this->sendRequest(
+                $server,
+                $this->guzzle_client->get(
+                    $this->getGerritURL($server, '/groups/'. urlencode($group_name)),
+                    $this->getRequestOptions()
+                )
+            );
 
-            return $this->decodeGerritResponse($this->http_client->getLastResponse());
-        } catch (Http_ClientException $exception) {
+            return $this->decodeGerritResponse($response->getBody(true));
+        } catch (Exception $exception) {
             return false;
         }
     }
@@ -772,23 +658,18 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
             Git_Driver_Gerrit_User $user,
             $gerrit_key_id
     ) {
-        $this->http_client->init();
-
-        $url = '/accounts/'. urlencode($user->getSSHUserName()) .'/sshkeys/'. urlencode($gerrit_key_id);
-
-        $custom_options = array(
-            CURLOPT_CUSTOMREQUEST => 'DELETE'
-        );
-
-        $options = $this->getOptionsForRequest($server, $url, $custom_options);
-
         try {
-            $this->http_client->addOptions($options);
-            $this->http_client->doRequest();
+            $this->sendRequest(
+                $server,
+                $this->guzzle_client->delete(
+                    $this->getGerritURL($server, '/accounts/'. urlencode($user->getSSHUserName()) .'/sshkeys/'. urlencode($gerrit_key_id)),
+                    $this->getRequestOptions()
+                )
+            );
             $this->logger->info("Gerrit REST driver: Successfully deleted ssh key ($gerrit_key_id)");
 
             return true;
-        } catch (Http_ClientException $exception) {
+        } catch (Exception $exception) {
             $this->logger->error("Gerrit REST driver: Cannot remove ssh key ($gerrit_key_id): ". $exception->getMessage());
             return false;
         }

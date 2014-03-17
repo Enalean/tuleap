@@ -20,10 +20,6 @@
 
 require_once dirname(__FILE__).'/GerritTestBase.php';
 
-interface Git_Driver_Gerrit_addIncludedGroupTest {
-    public function itAddAnIncludedGroup();
-}
-
 class Git_Driver_GerritLegacy_addIncludedGroupTest extends TuleapTestCase implements Git_Driver_Gerrit_addIncludedGroupTest {
     public function setUp() {
         parent::setUp();
@@ -42,31 +38,6 @@ class Git_Driver_GerritLegacy_addIncludedGroupTest extends TuleapTestCase implem
         expect($this->ssh)->execute()->count(2);
         expect($this->ssh)->execute($this->gerrit_server, $insert_included_query)->at(0);
         expect($this->ssh)->execute($this->gerrit_server, 'gerrit flush-caches --cache groups_byinclude')->at(1);
-
-        $this->driver->addIncludedGroup($this->gerrit_server, $group_name, $included_group_name);
-    }
-}
-
-class Git_Driver_GerritREST_addIncludedGroupTest extends Git_Driver_GerritREST_baseTest implements Git_Driver_Gerrit_addIncludedGroupTest {
-
-    public function itAddAnIncludedGroup() {
-        $group_name          = 'grp';
-        $included_group_name = 'proj grp';
-
-        $url = $this->gerrit_server_host
-            .':'. $this->gerrit_server_port
-            .'/a/groups/'.urlencode($group_name).'/groups/'.urlencode($included_group_name);
-
-        $expected_options = array(
-            CURLOPT_URL             => $url,
-            CURLOPT_SSL_VERIFYPEER  => false,
-            CURLOPT_HTTPAUTH        => CURLAUTH_DIGEST,
-            CURLOPT_USERPWD         => $this->gerrit_server_user .':'. $this->gerrit_server_pass,
-            CURLOPT_PUT             => true
-        );
-
-        expect($this->http_client)->doRequest()->once();
-        expect($this->http_client)->addOptions($expected_options)->once();
 
         $this->driver->addIncludedGroup($this->gerrit_server, $group_name, $included_group_name);
     }
