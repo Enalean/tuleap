@@ -18,16 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/dao/UGroupDao.class.php';
-require_once 'common/dao/UGroupUserDao.class.php';
-require_once 'common/dao/UserGroupDao.class.php';
-require_once 'common/user/User.class.php';
-require_once 'common/user/Users.class.php';
-require_once 'common/project/ProjectManager.class.php';
-require_once 'www/project/admin/ugroup_utils.php';
-require_once 'UGroup_Invalid_Exception.class.php';
-require_once 'utils.php';
-
 /**
  * ProjectUGroup object
  */
@@ -392,6 +382,7 @@ class ProjectUGroup implements User_UGroup {
      * @return Void
      */
     protected function addUserToStaticGroup($group_id, $ugroup_id, $user_id) {
+        include_once 'www/project/admin/ugroup_utils.php';
         ugroup_add_user_to_ugroup($group_id, $ugroup_id, $user_id);
     }
 
@@ -471,6 +462,7 @@ class ProjectUGroup implements User_UGroup {
      * @return Void
      */
     protected function removeUserFromStaticGroup($group_id, $ugroup_id, $user_id) {
+        include_once 'www/project/admin/ugroup_utils.php';
         ugroup_remove_user_from_ugroup($group_id, $ugroup_id, $user_id);
     }
 

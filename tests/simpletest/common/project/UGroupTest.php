@@ -17,7 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'common/project/ProjectUGroup.class.php';
+require_once 'www/project/admin/ugroup_utils.php';
+require_once 'utils.php';
 
 class UGroup_AddUserTest extends TuleapTestCase {
     
