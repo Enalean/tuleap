@@ -6,7 +6,7 @@ Version 6.12 (Not Released Yet)
 	* graphontrackersv5: 5.5
 	* agiledashboard: 1.54
 	* cardwall: 1.22
-	* docman: 2.26.29
+	* docman: 2.26.30
 
 	== Bug fix ==
 	* request #6404: Do not display postponed error for phpwiki (contrib STMicroelectronics)
