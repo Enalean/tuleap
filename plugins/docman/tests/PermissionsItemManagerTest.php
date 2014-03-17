@@ -23,7 +23,6 @@ require_once dirname(__FILE__).'/../include/Docman_Item.class.php';
 require_once dirname(__FILE__).'/../include/Docman_PermissionsItemManager.class.php';
 require_once 'common/permission/PermissionsManager.class.php';
 require_once 'common/project/ProjectManager.class.php';
-require_once 'common/project/ProjectUGroup.class.php';
 
 class Docman_PermissionsItemManager_Test extends TuleapTestCase {
     protected $permissions_manager;
