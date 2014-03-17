@@ -1,3 +1,6 @@
+Version 0.9.12 - Tuleap 6.12
+    * request #6445 - Experimental theme should allow site JS inclusion
+
 Version 0.9.11 - Tuleap 6.12
     * Fix Experimental footer position
 
