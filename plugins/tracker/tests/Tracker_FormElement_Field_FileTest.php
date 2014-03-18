@@ -49,6 +49,7 @@ abstract class Tracker_FormElement_Field_File_BaseTest extends TuleapTestCase {
     protected $thumbnails_dir;
     protected $tmp_name;
     protected $another_tmp_name;
+    protected $tempfile_dao;
 
     public function setUp() {
         parent::setUp();
@@ -70,6 +71,8 @@ abstract class Tracker_FormElement_Field_File_BaseTest extends TuleapTestCase {
  
         $this->tmp_name         = $this->fixture_dir.'/uploaded_file.txt';
         $this->another_tmp_name = $this->fixture_dir.'/another_uploaded_file.txt';
+
+        $this->tempfile_dao = mock('Tracker_Artifact_Attachment_TemporaryFileManagerDao');
     }
 
     public function tearDown() {
@@ -694,7 +697,12 @@ class Tracker_FormElement_Field_File_PersistDataTest extends Tracker_FormElement
 
         Config::set('sys_data_dir', $this->storage_dir);
         $this->field_id = 987;
-        $this->field    = new Tracker_FormElement_Field_File_FileSystemPersistanceTest($this->field_id);
+        $this->field    = partial_mock('Tracker_FormElement_Field_File_FileSystemPersistanceTest',
+            array('getTemporaryFileManagerDao'),
+            array($this->field_id)
+        );
+
+        stub($this->field)->getTemporaryFileManagerDao()->returns(mock('Tracker_Artifact_Attachment_TemporaryFileManagerDao'));
 
         $this->attachment_id = 654;
         $this->attachment = partial_mock('Tracker_FileInfo', array('save', 'delete', 'postUploadActions'), array(
@@ -711,8 +719,8 @@ class Tracker_FormElement_Field_File_PersistDataTest extends Tracker_FormElement
 
     public function itCreatesAFileWhenItComesFromAsSoapRequest() {
         $file_id        = 'coucou123';
-        $temp_file      = new Tracker_SOAP_TemporaryFile($this->current_user, $file_id);
-        $temp_file_path = $temp_file->getPath();
+        $temp_file      = new Tracker_Artifact_Attachment_TemporaryFileManager($this->current_user, $this->tempfile_dao);
+        $temp_file_path = $temp_file->getPath($file_id);
 
         $file_info = array(
             'tmp_name' => $temp_file_path,
@@ -752,7 +760,11 @@ class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends Tracker_Fo
 
     public function setUp() {
         parent::setUp();
-        $this->field = aFileField()->build();
+        $this->field = partial_mock('Tracker_FormElement_Field_File_FileSystemPersistanceTest',
+            array('getTemporaryFileManagerDao')
+        );
+
+        stub($this->field)->getTemporaryFileManagerDao()->returns(mock('Tracker_Artifact_Attachment_TemporaryFileManagerDao'));
     }
 
     private function createFakeSoapFileRequest($id, $description, $filename, $filesize, $filetype, $action = null) {
@@ -862,11 +874,14 @@ class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends Tracker_Fo
             $this->createFakeSoapFileRequest($file_id, $description, $filename, $filesize, $filetype)
         );
 
-        $temp_file = new Tracker_SOAP_TemporaryFile($this->current_user, $file_id);
-        $temp_file_path = $temp_file->getPath();
+        $temp_file = new Tracker_Artifact_Attachment_TemporaryFileManager($this->current_user, $this->tempfile_dao);
+        $temp_file_path = $temp_file->getPath($file_id);
         touch($temp_file_path);
 
-        $field = aFileField()->build();
+        $field = partial_mock('Tracker_FormElement_Field_File',
+            array('getTemporaryFileManagerDao')
+        );
+        stub($field)->getTemporaryFileManagerDao()->returns(mock('Tracker_Artifact_Attachment_TemporaryFileManagerDao'));
         $this->assertEqual(
             $field->getFieldData($field_value),
             array(
@@ -889,8 +904,8 @@ class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends Tracker_Fo
         $filesize1    = 1234;
         $filetype1    = 'application/vnd.oasis.opendocument.spreadsheet';
         $file_id1     = 'sdfsdfaz';
-        $temp_file1      = new Tracker_SOAP_TemporaryFile($this->current_user, $file_id1);
-        $temp_file_path1 = $temp_file1->getPath();
+        $temp_file1      = new Tracker_Artifact_Attachment_TemporaryFileManager($this->current_user, $this->tempfile_dao);
+        $temp_file_path1 = $temp_file1->getPath($file_id1);
         touch($temp_file_path1);
 
         $description2 = "Capture d'écran";
@@ -898,8 +913,8 @@ class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends Tracker_Fo
         $filesize2    = 5698;
         $filetype2    = 'image/png';
         $file_id2     = 'sdfsdfaz';
-        $temp_file2      = new Tracker_SOAP_TemporaryFile($this->current_user, $file_id2);
-        $temp_file_path2 = $temp_file2->getPath();
+        $temp_file2      = new Tracker_Artifact_Attachment_TemporaryFileManager($this->current_user, $this->tempfile_dao);
+        $temp_file_path2 = $temp_file2->getPath($file_id2);
         touch($temp_file_path2);
 
         $field_value = $this->createFakeSoapFieldValue(
@@ -968,8 +983,8 @@ class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends Tracker_Fo
         $filesize1    = 1234;
         $filetype1    = 'application/vnd.oasis.opendocument.spreadsheet';
         $file_id1     = 'sdfsdfaz';
-        $temp_file1      = new Tracker_SOAP_TemporaryFile($this->current_user, $file_id1);
-        $temp_file_path1 = $temp_file1->getPath();
+        $temp_file1      = new Tracker_Artifact_Attachment_TemporaryFileManager($this->current_user, $this->tempfile_dao);
+        $temp_file_path1 = $temp_file1->getPath($file_id1);
         touch($temp_file_path1);
 
         $file_id2 = 12;

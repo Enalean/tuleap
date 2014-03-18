@@ -774,15 +774,16 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
             $tmp_name = $file_info['tmp_name'];
 
             if(isset($file_info['id'])) {
-                $temporary = new Tracker_SOAP_TemporaryFile($this->getCurrentUser(), $file_info['id']);
+                $filename  = $file_info['id'];
+                $temporary = new Tracker_Artifact_Attachment_TemporaryFileManager($this->getCurrentUser(), $this->getTemporaryFileManagerDao());
 
-                if (!$temporary->exists()) {
+                if (!$temporary->exists($filename)) {
                     $attachment->delete();
                     return false;
                 }
 
                 $method   = 'rename';
-                $tmp_name = $temporary->getPath();
+                $tmp_name = $temporary->getPath($filename);
             } else if (isset($file_info['is_migrated']) && $file_info['is_migrated']) {
                 $method   = 'rename';
             }
@@ -922,8 +923,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
             if (isset($fileinfo->action) && $fileinfo->action == 'delete') {
                 $field_data['delete'][] = $fileinfo->id;
             } else {
-                $temporary_file = new Tracker_SOAP_TemporaryFile($this->getCurrentUser(), $fileinfo->id);
-                if (!$temporary_file->exists()) {
+                $temporary_file = new Tracker_Artifact_Attachment_TemporaryFileManager($this->getCurrentUser(), $this->getTemporaryFileManagerDao());
+                if (! $temporary_file->exists($fileinfo->id)) {
                     throw new SoapFault(self::SOAP_FAULT_INVALID_REQUEST_FORMAT, "Invalid FieldValueFileInfo->id, file doesn't exist");
                 }
                 $field_data[] = array(
@@ -933,11 +934,15 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                     'type'        => $fileinfo->filetype,
                     'size'        => $fileinfo->filesize,
                     'error'       => UPLOAD_ERR_OK,
-                    'tmp_name'    => $temporary_file->getPath(),
+                    'tmp_name'    => $temporary_file->getPath($fileinfo->id),
                 );
             }
         }
         return $field_data;
+    }
+
+    protected function getTemporaryFileManagerDao() {
+        return new Tracker_Artifact_Attachment_TemporaryFileManagerDao();
     }
 
     public function deleteChangesetValue($changeset_value_id) {
