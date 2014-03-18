@@ -1,3 +1,6 @@
+Version 3.72 - Tuleap 6.12
+    * Fix request #6406: Upgrade to 6.11 on Centos 6 block git web access
+
 Version 3.71 - Tuleap 6.11
     * Fix request #6354: Can't create a new project
 
