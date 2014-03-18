@@ -112,7 +112,7 @@ class Git_Driver_Gerrit_ProjectCreator {
      * @return string Gerrit project name
      *
      * @throws Git_Driver_Gerrit_ProjectCreator_ProjectAlreadyexistsException
-     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     * @throws Git_Driver_Gerrit_Exception
      */
     public function createGerritProject(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository, $template_id) {
         $project          = $repository->getProject();

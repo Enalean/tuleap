@@ -70,14 +70,14 @@ interface Git_Driver_Gerrit {
      * @param string $project_name
      * @return true if the gerrit project exists, else return false
      *
-     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     * @throws Git_Driver_Gerrit_Exception
      */
     public function doesTheProjectExist(Git_RemoteServer_GerritServer $server, $project_name);
 
     /**
      * @param Git_RemoteServer_GerritServer $server
      *
-     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     * @throws Git_Driver_Gerrit_Exception
      */
     public function ping(Git_RemoteServer_GerritServer $server);
 
@@ -187,7 +187,7 @@ interface Git_Driver_Gerrit {
      * @param Git_RemoteServer_GerritServer $server
      * @param Git_Driver_Gerrit_User $user
      * @param string $ssh_key
-     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     * @throws Git_Driver_Gerrit_Exception
      *
      */
     public function addSSHKeyToAccount(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user, $ssh_key);
@@ -197,7 +197,7 @@ interface Git_Driver_Gerrit {
      * @param Git_RemoteServer_GerritServer $server
      * @param Git_Driver_Gerrit_User $user
      * @param string $ssh_key
-     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     * @throws Git_Driver_Gerrit_Exception
      */
     public function removeSSHKeyFromAccount(
         Git_RemoteServer_GerritServer $server,
@@ -230,7 +230,7 @@ interface Git_Driver_Gerrit {
      * @param Git_RemoteServer_GerritServer $server
      * @param string $gerrit_project_full_name E.g. bugs or bugs/repository1
      *
-     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     * @throws Git_Driver_Gerrit_Exception
      */
     public function deleteProject(Git_RemoteServer_GerritServer $server, $gerrit_project_full_name);
 
@@ -238,7 +238,7 @@ interface Git_Driver_Gerrit {
      * @param Git_RemoteServer_GerritServer $server
      * @param string $gerrit_project_full_name
      *
-     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     * @throws Git_Driver_Gerrit_Exception
      */
     public function makeGerritProjectReadOnly(Git_RemoteServer_GerritServer $server, $gerrit_project_full_name);
 }

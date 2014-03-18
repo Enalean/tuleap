@@ -96,7 +96,7 @@ class Git_Driver_Gerrit_UserAccountManager {
             try {
                 $this->removeKeys($remote_server, $keys_to_add, $gerrit_user);
                 $this->removeKeys($remote_server, $keys_to_remove, $gerrit_user);
-            } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
+            } catch (Git_Driver_Gerrit_Exception $e) {
                 $errors[] = $e->getTraceAsString();
             }
         }
@@ -104,7 +104,7 @@ class Git_Driver_Gerrit_UserAccountManager {
         foreach($remote_servers as $remote_server) {
             try {
                 $this->addKeys($remote_server, $keys_to_add, $gerrit_user);
-            } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
+            } catch (Git_Driver_Gerrit_Exception $e) {
                 $errors[] = $e->getTraceAsString();
             }
         }
@@ -141,7 +141,7 @@ class Git_Driver_Gerrit_UserAccountManager {
            try { 
                 $this->removeKeys($remote_server, $user_keys, $gerrit_user);
                 $this->addKeys($remote_server, $user_keys, $gerrit_user);
-            } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
+            } catch (Git_Driver_Gerrit_Exception $e) {
                 $errors[] = $e->getTraceAsString();
             }
         }
@@ -157,7 +157,7 @@ class Git_Driver_Gerrit_UserAccountManager {
      * @param Git_RemoteServer_GerritServer $remote_server
      * @param array $keys
      * @param Git_Driver_Gerrit_User $gerrit_user
-     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     * @throws Git_Driver_Gerrit_Exception
      */
     private function addKeys(Git_RemoteServer_GerritServer $remote_server, Array $keys, Git_Driver_Gerrit_User $gerrit_user) {
         foreach($keys as $key) {
@@ -170,7 +170,7 @@ class Git_Driver_Gerrit_UserAccountManager {
      * @param Git_RemoteServer_GerritServer $remote_server
      * @param array $keys
      * @param Git_Driver_Gerrit_User $gerrit_user
-     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     * @throws Git_Driver_Gerrit_Exception
      */
     private function removeKeys(Git_RemoteServer_GerritServer $remote_server, Array $keys, Git_Driver_Gerrit_User $gerrit_user) {
         foreach($keys as $key) {

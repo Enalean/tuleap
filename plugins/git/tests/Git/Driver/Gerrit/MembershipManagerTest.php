@@ -197,7 +197,7 @@ class Git_Driver_Gerrit_MembershipManagerTest extends Git_Driver_Gerrit_Membersh
         stub($this->remote_server_factory)->getServersForUGroup()->returns(array($this->remote_server, $this->remote_server2));
         stub($this->user)->getUgroups()->returns(array($this->u_group_id));
         stub($this->u_group)->getNormalizedName()->returns('project_members');
-        stub($this->driver)->addUserToGroup()->throwsAt(0, new Git_Driver_Gerrit_RemoteSSHCommandFailure(1, 'error', 'error'));
+        stub($this->driver)->addUserToGroup()->throwsAt(0, new Git_Driver_Gerrit_Exception('error'));
 
         $this->driver->expectCallCount('addUserToGroup', 2);
         expect($this->driver)->addUserToGroup($this->remote_server, '*', '*')->at(0);
@@ -628,9 +628,9 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends Git_Driver_Ger
     public function itLogsRemoteSSHErrors() {
         stub($this->remote_server_factory)->getServersForProject()->returns(array($this->remote_server));
 
-        stub($this->driver)->createGroup()->throws(new Git_Driver_Gerrit_RemoteSSHCommandFailure('whatever', 'whatever', 'whatever'));
+        stub($this->driver)->createGroup()->throws(new Git_Driver_Gerrit_Exception('whatever'));
 
-        expect($this->logger)->error(new PatternExpectation('/^exit_code:/'))->once();
+        expect($this->logger)->error(new PatternExpectation('/whatever/'))->once();
 
         $this->membership_manager->createGroupOnProjectsServers($this->ugroup);
     }

@@ -620,7 +620,7 @@ class Git extends PluginController {
                         } else {
                             $this->addAction('migrateToGerrit', array($repo, $remote_server_id, $gerrit_template_id));
                         }
-                    } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
+                    } catch (Git_Driver_Gerrit_Exception $e) {
                         $this->addError($this->getText('gerrit_server_down'));
                     }
                     $this->addAction('redirectToRepoManagementWithMigrationAccessRightInformation', array($this->groupId, $repoId, $pane));
@@ -643,7 +643,7 @@ class Git extends PluginController {
 
                 try {
                     $this->driver_factory->deleteProject($server, $project_gerrit_name);
-                } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
+                } catch (Git_Driver_Gerrit_Exception $e) {
                     $this->addError($this->getText('gerrit_server_down'));
                 }
                 $migrate_access_right = $this->request->existAndNonEmpty('migrate_access_right');

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_Driver_Gerrit_RemoteSSHCommandFailure extends Exception {
+class Git_Driver_Gerrit_RemoteSSHCommandFailure extends Git_Driver_Gerrit_Exception {
 
     private $exit_code;
     private $std_out;
