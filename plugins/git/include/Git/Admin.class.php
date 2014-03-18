@@ -49,126 +49,18 @@ class Git_Admin {
     }
 
     public function display() {
-        $this->fetchGerritServers();
+        $title    = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
+        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
 
-        $title = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
-        $GLOBALS['HTML']->header(array('title' => $title, 'selected_top_tab' => 'admin'));
-        $html  = '';
-        $html .= '<h1>'. $title .'</h1>';
-        $html .= '<div class="alert-message block-message warning">';
-        $html .= 'This feature is not finished yet. Use it only if you know what you are doing!';
-        $html .= '</div>';
-        $html .= '<form method="POST" action="">';
-        $html .= $this->csrf->fetchHTMLInput();
-        $html .= '<h2>'. 'Admin gerrit servers' .'</h2>';
-        $html .= '<dl>';
-        foreach ($this->servers as $server) {
-            $html .= $this->getInputForm($server->getHost(), $server);
-        }
-        $html .= '</dl>';
-        $html .= '<p><input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /></p>';
-        $html .= '</form>';
-        echo $html;
-
-        $GLOBALS['HTML']->footer(array());
-    }
-
-    /**
-     * @return string
-     */
-    private function getInputForm($title, Git_RemoteServer_GerritServer $server) {
-        $hp    = Codendi_HTMLPurifier::instance();
-        $id    = (int)$server->getId();
-        $title = 'Add new gerrit server';
-        if ($id) {
-            $title = $server->getHost();
-        }
-
-        $html  = '';
-        $html .= '<dt><h3>'. $title .'</h3></dt>';
-        $html .= '<dd>';
-        $html .= '<table><tbody>';
-        $fields = array(
-            array('Host:',              'host',             $server->getHost()),
-            array('HTTP Port:',         'http_port',        $server->getHTTPPort()),
-            array('SSH Port:',          'ssh_port',         $server->getSSHPort()),
-            array('Login:',             'login',            $server->getLogin()),
-            array('Identity File:',     'identity_file',    $server->getIdentityFile())
+        $admin_presenter = new Git_AdminPresenter(
+            $title,
+            $this->csrf,
+            $this->getListOfServersPresenters()
         );
 
-        foreach ($fields as $field) {
-            $html .= '<tr valign="top">
-                        <td>'. $field[0].'</td>
-                        <td>
-                            <input type="text"
-                                   name="gerrit_servers['. $id .']['.$field[1].']"
-                                   value="'. $hp->purify($field[2]) .'"
-                            />
-                        </td>
-                      </tr>';
-        }
-        $html .= '<tr valign="top">
-                    <td>Replication SSH Key (SSH key of the user who runs gerrit server)</td>
-                    <td>
-                        <textarea
-                            type="checkbox"
-                            name="gerrit_servers['. $id .'][replication_key]"
-                            cols="30"
-                            rows="5">'.$server->getReplicationKey().'</textarea>
-                    </td>
-                  </tr>';
-
-        $checked = '';
-        if ($server->usesSSL()) {
-            $checked = 'checked = "checked"';
-        }
-
-        $html .= '<tr>
-                    <td> <label> Use SSL </label> </td>
-                    <td> <input type="checkbox" name="gerrit_servers['. $id .'][use_ssl]" '.$checked.'/> </td>
-                  </tr>';
-
-        $html .= '<tr>
-                    <td> <label> '. $GLOBALS['Language']->getText('plugin_git', 'admin_gerrit_version_label') .' </label> </td>
-                    <td>
-                        <label class="radio">
-                            <input type="radio"
-                                   name="gerrit_servers['. $id .'][gerrit_version]"
-                                   id="gerritVersion25"
-                                   value="2.5"
-                                   '. ($server->getGerritVersion() === Git_RemoteServer_GerritServer::DEFAULT_GERRIT_VERSION ? 'checked' : '') .'
-                            />
-                            '. $GLOBALS['Language']->getText('plugin_git', 'admin_gerrit_v2_5') .'
-                        </label>
-                        <label class="radio">
-                            <input type="radio" 
-                                   name="gerrit_servers['. $id .'][gerrit_version]"
-                                   id="gerritVersion28"
-                                   value="2.8+"
-                                   '. ($server->getGerritVersion() !== Git_RemoteServer_GerritServer::DEFAULT_GERRIT_VERSION ? 'checked' : '') .'
-                            />
-                            '. $GLOBALS['Language']->getText('plugin_git', 'admin_gerrit_v2_8plus') .'
-                        </label>
-                    </td>
-                  </tr>';
-        $html .= '<tr>
-                    <td> <label> '. $GLOBALS['Language']->getText('plugin_git', 'admin_gerrit_http_password_label') .' </label> </td>
-                    <td>
-                        <input type="text" 
-                               name="gerrit_servers['. $id .'][http_password]"
-                               value="'.$hp->purify($server->getHTTPPassword()).'"
-                        />
-                    </td>
-                  </tr>';
-
-        if ($id && ! $this->gerrit_server_factory->isServerUsed($server)) {
-            $html .= '<td><label>'. 'Delete?' .'<br /><input type="checkbox" name="gerrit_servers['. $id .'][delete]" value="1" /></label></td>';
-        } else {
-            $html .= '<td>This server is already used by some repositories, cannot delete it.</td>';
-        }
-        $html .= '</tbody></table>';
-        $html .= '</dd>';
-        return $html;
+        $GLOBALS['HTML']->header(array('title' => $title, 'selected_top_tab' => 'admin'));
+        $renderer->renderToPage('admin-plugin', $admin_presenter);
+        $GLOBALS['HTML']->footer(array());
     }
 
     private function fetchGerritServers() {
@@ -177,6 +69,18 @@ class Git_Admin {
         }
  
         $this->servers["0"] = new Git_RemoteServer_GerritServer(0, '', '', '', '', '', '', false, Git_RemoteServer_GerritServer::DEFAULT_GERRIT_VERSION, '');
+    }
+
+    private function getListOfServersPresenters() {
+        $this->fetchGerritServers();
+
+        $list_of_presenters = array();
+        foreach ($this->servers as $server) {
+            $is_used = $this->gerrit_server_factory->isServerUsed($server);
+            $list_of_presenters[] = new Git_RemoteServer_GerritServerPresenter($server, $is_used);
+        }
+
+        return $list_of_presenters;
     }
 
     private function updateServers(array $request_gerrit_servers) {

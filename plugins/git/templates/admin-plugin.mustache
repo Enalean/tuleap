@@ -1,0 +1,12 @@
+<h1>{{ title }}</h1>
+
+<form method="POST" action="">
+    {{{ csrf_input }}}
+    <h2>Admin gerrit servers</h2>
+    <dl>
+        {{# list_of_servers }}
+            {{> admin-plugin-gerrit-server }}
+        {{/ list_of_servers }}
+    </dl>
+    <p><input type="submit" value="{{ btn_submit }}" /></p>
+</form>

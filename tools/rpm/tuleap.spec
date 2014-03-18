@@ -211,7 +211,7 @@ Requires: %{name} >= %{version}, git > 1.6, %{php_base}-Smarty, gitolite
 %if %{php_base} == php
 Requires: geshi
 %else
-Requires: %{php_base}-geshi
+Requires: %{php_base}-geshi, %{php_base}-guzzle
 %endif
 %if %{PKG_NAME} == codendi_st
 Provides: codendi-plugin-git = %{version}
