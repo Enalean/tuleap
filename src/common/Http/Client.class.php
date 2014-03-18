@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (c) Enalean, 2012 - 2014. All rights reserved
+ * Copyright (c) Enalean, 2012. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,12 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 require_once 'common/Http/ClientException.class.php';
-
-class Http_Client {
-
-    const SUCCESS     = 200;
-    const REDIRECTION = 300;
-
+class Http_Client
+{
     /**
      * @var resource
      */
@@ -45,20 +42,6 @@ class Http_Client {
      * Initiates a curl handle.
      */
     public function __construct() {
-        $this->init();
-    }
-
-    /**
-     * Initialize a curl client
-     *
-     * This function *MUST* be called before each self::doRequest() call
-     * in order to be able to use multiple time the same client, otherwise we
-     * have to recreate a new one.
-     */
-    public function init() {
-        if ($this->curl_handle) {
-            $this->close();
-        }
         $this->curl_handle = curl_init();
         $this->setOption(CURLINFO_HEADER_OUT, true);
         $this->setOption(CURLOPT_RETURNTRANSFER, true);
@@ -73,20 +56,6 @@ class Http_Client {
      */
     public function getLastRequest() {
         return curl_getinfo($this->curl_handle);
-    }
-
-    /**
-     * @return int
-     */
-    public function getLastHTTPCode() {
-        return (int) curl_getinfo($this->curl_handle, CURLINFO_HTTP_CODE);
-    }
-
-    /**
-     * @return bool
-     */
-    public function isLastResponseSuccess() {
-        return $this->getLastHTTPCode() >= self::SUCCESS && $this->getLastHTTPCode() < self::REDIRECTION;
     }
 
     /**
@@ -174,14 +143,13 @@ class Http_Client {
      */
     public function close() {
         curl_close($this->curl_handle);
-        $this->curl_options = array();
     }
 
     /**
      * Method to execute requests..
      *
      * @param array $options curl options
-     * @throws Http_ClientException
+     * @throws Tracker_Exception
      */
     public function doRequest() {
         $this->curl_response = $this->execute();
@@ -203,3 +171,4 @@ class Http_Client {
         return curl_exec($this->curl_handle);
     }
 }
+?>
