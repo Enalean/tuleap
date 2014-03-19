@@ -51,7 +51,7 @@ class Tracker_REST_Artifact_ArtifactValidator {
             throw new Tracker_FormElement_InvalidFieldException('No \'field_id\' or invalid id in submitted value');
         }
         if (! isset($indexed_fields[$value['field_id']])) {
-            throw new Tracker_FormElement_InvalidFieldException('Unknow field '.$value['field_id']);
+            throw new Tracker_FormElement_InvalidFieldException('Unknown field '.$value['field_id']);
         }
         return $indexed_fields[$value['field_id']];
     }

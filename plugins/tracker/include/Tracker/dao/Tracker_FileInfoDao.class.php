@@ -21,23 +21,24 @@
 /**
  *  Data Access Object for Tracker_FileInfo
  */
- 
+
 require_once('common/dao/include/DataAccessObject.class.php');
 
 class Tracker_FileInfoDao extends DataAccessObject {
+
     function __construct() {
         parent::__construct();
         $this->table_name = 'tracker_fileinfo';
     }
-    
+
     /**
-    * Searches Tracker_FileInfo by Id 
+    * Searches Tracker_FileInfo by Id
     * @return DataAccessResult
     */
     function searchById($id) {
         $id = $this->da->escapeInt($id);
-        $sql = "SELECT * 
-                FROM $this->table_name 
+        $sql = "SELECT *
+                FROM $this->table_name
                 WHERE id = $id";
         return $this->retrieve($sql);
     }
@@ -71,6 +72,16 @@ class Tracker_FileInfoDao extends DataAccessObject {
         $id  = $this->da->quoteSmart($id);
         $sql = "DELETE FROM $this->table_name WHERE id = $id";
         return $this->update($sql);
+    }
+
+    public function searchArtifactIdByFileInfoId($id) {
+        $id = $this->da->escapeInt($id);
+        $sql = "SELECT DISTINCT c.artifact_id as artifact_id, cv.field_id as field_id
+                FROM tracker_changeset_value AS cv
+                    INNER JOIN tracker_changeset_value_file AS cv_file ON (cv_file.changeset_value_id = cv.id)
+                    INNER JOIN tracker_changeset AS c ON (cv.changeset_id = c.id)
+                WHERE cv_file.fileinfo_id = $id";
+        return $this->retrieve($sql);
     }
 }
 ?>

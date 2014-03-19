@@ -64,6 +64,8 @@ if ($request->exist('wsdl')) {
     }
 
     $formelement_factory = Tracker_FormElementFactory::instance();
+    $artifact_factory    = Tracker_ArtifactFactory::instance();
+
     $server = new SoapServer($uri.'/?wsdl', $soap_options);
 
     $server->setClass(
@@ -75,7 +77,7 @@ if ($request->exist('wsdl')) {
         $formelement_factory,
         Tracker_ArtifactFactory::instance(),
         Tracker_ReportFactory::instance(),
-        new Tracker_FileInfoFactory(new Tracker_FileInfoDao, $formelement_factory),
+        new Tracker_FileInfoFactory(new Tracker_FileInfoDao, $formelement_factory, $artifact_factory),
         new Tracker_Artifact_Attachment_TemporaryFileManagerDao()
     );
     $server->handle();

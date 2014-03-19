@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\REST\v1;
 
+use \Tuleap\REST\ProjectAuthorization;
 use \Luracast\Restler\RestException;
 use \Tracker_Artifact_Attachment_TemporaryFile           as TemporaryFile;
 use \Tracker_Artifact_Attachment_TemporaryFileManager    as FileManager;
@@ -31,12 +32,38 @@ use \Tracker_Artifact_Attachment_InvalidPathException    as InvalidPathException
 use \Tracker_Artifact_Attachment_MaxFilesException       as MaxFilesException;
 use \Tracker_Artifact_Attachment_FileNotFoundException   as FileNotFoundException;
 use \Tracker_Artifact_Attachment_InvalidOffsetException  as InvalidOffsetException;
+use \Tracker_FileInfo_InvalidFileInfoException           as InvalidFileInfoException;
+use \Tracker_FileInfo_UnauthorisedException              as UnauthorisedException;
+use \Tuleap\Tracker\REST\Artifact\ArtifactFilesReference as ArtifactFilesReference;
 use \Tuleap\REST\Header;
 use \UserManager;
 use \PFUser;
-
+use \Tracker_ArtifactFactory;
+use \Tracker_FormElementFactory;
+use \Tracker_FileInfoFactory;
+use \Tracker_FileInfoDao;
+use \Tracker_REST_Artifact_ArtifactUpdater;
+use \Tracker_REST_Artifact_ArtifactValidator;
+use \Tracker_URLVerification;
 
 class ArtifactFilesResource {
+    /** @var Tracker_ArtifactFactory */
+    private $artifact_factory;
+
+    /** @var Tracker_FormElementFactory */
+    private $formelement_factory;
+
+    /** @var Tracker_FileInfoFactory */
+    private $fileinfo_factory;
+
+    public function __construct() {
+        $this->artifact_factory    = Tracker_ArtifactFactory::instance();
+        $this->formelement_factory = Tracker_FormElementFactory::instance();
+        $this->fileinfo_factory    = new Tracker_FileInfoFactory(   new Tracker_FileInfoDao(),
+                                                                    $this->formelement_factory,
+                                                                    $this->artifact_factory
+                                                                 );
+    }
 
     /**
      * Create a temporary file
@@ -53,6 +80,7 @@ class ArtifactFilesResource {
      * @throws 500 406 403
      */
     protected function post($name, $description, $mimetype, $content) {
+
         $user         = UserManager::instance()->getCurrentUser();
         $file_manager = $this->getFileManager($user);
 
@@ -176,6 +204,37 @@ class ArtifactFilesResource {
     }
 
     /**
+     * Delete a temporary file or a file attached to an artifact
+     *
+     * @url DELETE {id}
+     *
+     * @throws 500, 400
+     *
+     * @param string $id Id of the file
+     */
+    public function delete($id) {
+        Header::allowOptionsDelete();
+        try {
+            if (! $this->isFileTemporary($id)) {
+                $this->removeAttachedFile($id);
+            } else {
+                $this->removeTemporaryFile($id);
+            }
+        } catch (Tracker_FormElement_InvalidFieldException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (Tracker_FileInfo_InvalidFileInfoException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (Tracker_NoChangeException $exception) {
+        // Do nothing
+        } catch (Tracker_Exception $exception) {
+            if ($GLOBALS['Response']->feedbackHasErrors()) {
+                throw new RestException(500, $GLOBALS['Response']->getRawFeedback());
+            }
+            throw new RestException(500, $exception->getMessage());
+        }
+    }
+
+    /**
      * @param PFUser $user
      * @return FileManager
      */
@@ -191,8 +250,56 @@ class ArtifactFilesResource {
         Header::sendMaxFileChunkSizeHeaders(FileManager::getMaximumFileChunkSize());
     }
 
+
     private function sendAllowHeadersForArtifactFileId() {
         Header::allowOptionsPatch();
         Header::sendMaxFileChunkSizeHeaders(FileManager::getMaximumFileChunkSize());
     }
+
+    /**
+     * @param int $id
+     *
+     * @return Tracker_Artifact
+     */
+    private function getArtifactByFileInfoId(PFUser $user, $fileinfo_id) {
+        try {
+            $artifact = $this->fileinfo_factory->getArtifactByFileInfoId($user, $fileinfo_id);
+        } catch (Tracker_FileInfo_InvalidFileInfoException $e) {
+            throw new RestException(404, $e->getMessage());
+        } catch (UnauthorisedException $e) {
+            throw new RestException(403, $e->getMessage());
+        }
+
+        if ($artifact) {
+            ProjectAuthorization::userCanAccessProject($user, $artifact->getTracker()->getProject(), new Tracker_URLVerification());
+            return $artifact;
+        }
+    }
+
+    private function isFileTemporary($id) {
+        $user         = UserManager::instance()->getCurrentUser();
+        $file_manager = $this->getFileManager($user);
+        return $file_manager->isFileIdTemporary($id);
+    }
+
+    private function removeAttachedFile($id) {
+        $user     = UserManager::instance()->getCurrentUser();
+        $artifact = $this->getArtifactByFileInfoId($user, $id);
+        $values   = $this->fileinfo_factory->getValuesForDeletionByFileInfoId($id);
+
+        $updater = new Tracker_REST_Artifact_ArtifactUpdater(
+            new Tracker_REST_Artifact_ArtifactValidator(
+                $this->formelement_factory
+            )
+        );
+        $updater->update($user, $artifact, $values);
+    }
+
+    private function removeTemporaryFile($id) {
+        $user         = UserManager::instance()->getCurrentUser();
+        $file         = $this->getFile($id, $user);
+        $file_manager = $this->getFileManager($user);
+        $file_manager->removeTemporaryFile($file);
+    }
+
 }

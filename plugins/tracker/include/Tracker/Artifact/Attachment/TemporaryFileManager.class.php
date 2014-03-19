@@ -218,6 +218,24 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
     public function isFileIdTemporary($id) {
         return $this->dao->doesFileExist($id);
     }
+
+    public function removeTemporaryFile(Tracker_Artifact_Attachment_TemporaryFile $file) {
+        $this->removeTemporaryFileInDB($file->getId());
+        $this->removeTemporaryFileFomFileSystem($file);
+    }
+
+    private function removeTemporaryFileInDB($id) {
+        $this->dao->delete($id);
+    }
+
+    private function removeTemporaryFileFomFileSystem(Tracker_Artifact_Attachment_TemporaryFile $temporary_file) {
+        $temporary_file_name = $temporary_file->getName();
+        $temporary_file_path = $this->getPath($temporary_file_name);
+
+        if ($this->exists($temporary_file_path )) {
+            unlink($this->getPath($temporary_file_name));
+        }
+    }
 }
 
 ?>

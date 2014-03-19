@@ -89,5 +89,14 @@ class Tracker_Artifact_Attachment_TemporaryFileManagerDao extends DataAccessObje
                 WHERE fileinfo_id = $file_id";
         return $this->retrieve($sql)->count() > 0;
     }
+
+    public function delete($file_id) {
+        $file_id = $this->da->escapeInt($file_id);
+
+        $sql = "DELETE tracker_fileinfo_temporary, tracker_fileinfo FROM tracker_fileinfo_temporary
+                    JOIN tracker_fileinfo ON tracker_fileinfo_temporary.fileinfo_id = tracker_fileinfo.id
+                WHERE fileinfo_id = $file_id";
+        return $this->update($sql);
+    }
 }
 ?>
