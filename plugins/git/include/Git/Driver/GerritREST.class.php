@@ -24,6 +24,12 @@
  */
 class Git_Driver_GerritREST implements Git_Driver_Gerrit {
 
+    /**
+     * When one create a group when no owners, set Administrators as default
+     * @see: https://groups.google.com/d/msg/repo-discuss/kVDkj7Ds970/xzLP1WQI2BAJ
+     */
+    const DEFAULT_GROUP_OWNER = 'Administrators';
+
     const HEADER_CONTENT_TYPE = 'Content-type';
     const MIME_JSON           = 'application/json;charset=UTF-8';
     const MIME_TEXT           = 'plain/text';
@@ -161,22 +167,21 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
 
         try {
             $this->logger->info("Gerrit REST driver: Create group $group_name");
-            $json_data = null;
-            $options   = $this->getRequestOptions();
-            if ($group_name !== $owner) {
-                $json_data = json_encode(
-                    array(
-                        'owner' => $owner
-                    )
-                );
-                $options += array(self::HEADER_CONTENT_TYPE => self::MIME_JSON);
+
+            if ($owner == $group_name) {
+                $owner = self::DEFAULT_GROUP_OWNER;
             }
+
             $this->sendRequest(
                 $server,
                 $this->guzzle_client->put(
                     $this->getGerritURL($server, '/groups/'. urlencode($group_name)),
-                    $options,
-                    $json_data
+                    $this->getRequestOptions(array(self::HEADER_CONTENT_TYPE => self::MIME_JSON)),
+                    json_encode(
+                        array(
+                            'owner_id' => $this->getGroupUUID($server, $owner)
+                        )
+                    )
                 )
             );
 
