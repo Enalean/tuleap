@@ -75,5 +75,36 @@ class Jenkins_ClientTest extends TuleapTestCase {
         $this->jenkins_client->setToken('thou shall not pass');
         $this->jenkins_client->launchJobBuild($job_url);
     }
+
+    public function testLaunchJobWithParametersGivenByUser() {
+        $job_url = 'http://degaine:8080/job/dylanJob/buildWithParameters?stuff=bla';
+
+        $expected_options = array(
+            CURLOPT_URL             => $job_url,
+            CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_POST            => true,
+        );
+
+        stub($this->http_client)->doRequest()->once();
+        stub($this->http_client)->addOptions($expected_options)->once();
+
+        $this->jenkins_client->launchJobBuild($job_url);
+    }
+
+    public function testLaunchJobWithParametersGivenByUserAndToken() {
+        $job_url = 'http://degaine:8080/job/dylanJob/buildWithParameters?stuff=bla';
+
+        $expected_options = array(
+            CURLOPT_URL             => $job_url.'&token=thou+shall+not+pass',
+            CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_POST            => true,
+        );
+
+        stub($this->http_client)->doRequest()->once();
+        stub($this->http_client)->addOptions($expected_options)->once();
+
+        $this->jenkins_client->setToken('thou shall not pass');
+        $this->jenkins_client->launchJobBuild($job_url);
+    }
 }
 ?>
