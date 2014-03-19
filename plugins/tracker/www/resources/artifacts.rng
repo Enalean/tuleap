@@ -85,6 +85,8 @@
     </attribute>
     <choice>
       <ref name="field_string"/>
+      <ref name="field_int"/>
+      <ref name="field_float"/>
       <ref name="field_file"/>
       <ref name="field_open_list_user"/>
       <ref name="field_perms_on_artifact"/>
@@ -92,10 +94,29 @@
   </define>
   <define name="field_string">
     <attribute name="type">
-      <value>string</value>
+      <choice>
+        <value>string</value>
+        <value>text</value>
+      </choice>
     </attribute>
     <element name="value">
       <data type="string"/>
+    </element>
+  </define>
+  <define name="field_int">
+    <attribute name="type">
+      <value>int</value>
+    </attribute>
+    <element name="value">
+      <data type="int"/>
+    </element>
+  </define>
+  <define name="field_float">
+    <attribute name="type">
+      <value>float</value>
+    </attribute>
+    <element name="value">
+      <data type="float"/>
     </element>
   </define>
   <define name="field_file">

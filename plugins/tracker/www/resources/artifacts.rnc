@@ -38,12 +38,25 @@ grammar {
 
     field_content =
         attribute field_name { xsd:string },
-        (field_string | field_file | field_open_list_user | field_perms_on_artifact)
-        
+        ( field_string
+            | field_int
+            | field_float
+            | field_file
+            | field_open_list_user
+            | field_perms_on_artifact
+        )
 
-    field_string = 
-        attribute type { "string" },
+    field_string =
+        attribute type { "string" | "text"},
         element value { xsd:string }
+
+    field_int =
+        attribute type { "int" },
+        element value { xsd:int }
+
+    field_float =
+        attribute type { "float" },
+        element value { xsd:float }
 
     field_file =
         attribute type { "file" },
