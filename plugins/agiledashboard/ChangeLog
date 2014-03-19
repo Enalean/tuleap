@@ -1,3 +1,6 @@
+Version 1.55 - Tuleap 6.12
+    * request #6441 - Agile dashboard should take artifact status into account
+
 Version 1.54 - Tuleap 6.12
     * Fix request #6429 - PUT /milestones/123/content doesn't change the order of element
 
