@@ -1,3 +1,6 @@
+Version 5.268 - Tuleap 6.12
+    * Fix request #6446 - Do not export deleted trackers
+
 Version 5.267 - Tuleap 6.12
     * request #6441 - Agile dashboard should take artifact status into account
 
