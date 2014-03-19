@@ -107,6 +107,14 @@ abstract class ArtifactXMLExporter_BaseTest extends TuleapTestCase {
         } else {
             stub($this->dao)->searchCCAt($artifact_id)->returnsEmptyDar();
         }
+
+        if (isset($json['permissions'])) {
+            foreach ($json['permissions'] as $artifact_id => $perms) {
+                stub($this->dao)->searchPermsForArtifact($artifact_id)->returnsDarFromArray($perms);
+            }
+        } else {
+            stub($this->dao)->searchPermsForArtifact()->returnsEmptyDar();
+        }
     }
 
 
@@ -404,5 +412,52 @@ class ArtifactXMLExporter_AttachmentAndSummaryTest extends ArtifactXMLExporter_B
         $this->assertEqual((string)$this->xml->artifact->changeset[3]->field_change->value, 'Le artifact with half history');
 
         $this->assertCount($this->xml->artifact->file, 1);
+    }
+}
+
+class ArtifactXMLExporter_PermissionsOnArtifactTest extends ArtifactXMLExporter_BaseTest {
+
+    public function itDoesNotExportPermsIfThereIsNoPerms() {
+        $this->exportTrackerDataFromFixture('artifact_with_full_history');
+        foreach ($this->xml->artifact->xpath('changeset') as $changeset) {
+            $this->assertThereIsNoPermissionsFieldChange($changeset);
+        }
+    }
+
+    public function itCreatesPermsOnArtifactAtTheVeryEnd() {
+        $permissions_are_exported = false;
+        $this->exportTrackerDataFromFixture('artifact_with_full_history_with_perms_on_artifact');
+
+        $nb_of_changesets = count($this->xml->artifact->changeset);
+        $last_changeset   = $this->xml->artifact->changeset[$nb_of_changesets - 1];
+
+        foreach ($last_changeset->field_change as $field_change) {
+            if ((string)$field_change['field_name'] !== 'permissions_on_artifact') {
+                continue;
+            }
+            $this->assertEqual((string)$field_change['type'], 'permissions_on_artifact');
+            $this->assertEqual((string)$field_change['use_perm'], '1');
+            $this->assertCount($field_change->ugroup, 2);
+            $this->assertEqual((string)$field_change->ugroup[0]['ugroup_id'], '15');
+            $this->assertEqual((string)$field_change->ugroup[1]['ugroup_id'], '101');
+            $permissions_are_exported = true;
+        }
+
+        $this->assertTrue($permissions_are_exported);
+    }
+
+    public function itDoesNotExportPermissionsInFirstChangesets() {
+        $this->exportTrackerDataFromFixture('artifact_with_full_history');
+
+        $first_changesets = array_slice($this->xml->artifact->xpath('changeset'), 0, -1);
+        foreach ($first_changesets as $changeset) {
+            $this->assertThereIsNoPermissionsFieldChange($changeset);
+        }
+    }
+
+    private function assertThereIsNoPermissionsFieldChange(SimpleXMLElement $changeset) {
+        foreach ($changeset->field_change as $field_change) {
+            $this->assertNotEqual((string)$field_change['field_name'], 'permissions_on_artifact');
+        }
     }
 }

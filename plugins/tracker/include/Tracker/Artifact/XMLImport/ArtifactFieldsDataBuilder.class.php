@@ -23,9 +23,10 @@
  */
 class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
 
-    const FIELDNAME_CHANGE_SUMMARY     = 'summary';
-    const FIELDNAME_CHANGE_ATTACHEMENT = 'attachment';
-    const FIELDNAME_CHANGE_CC          = 'cc';
+    const FIELDNAME_CHANGE_SUMMARY           = 'summary';
+    const FIELDNAME_CHANGE_PERMS_ON_ARTIFACT = 'permissions_on_artifact';
+    const FIELDNAME_CHANGE_ATTACHEMENT       = 'attachment';
+    const FIELDNAME_CHANGE_CC                = 'cc';
 
     /** @var Tracker_FormElementFactory */
     private $formelement_factory;
@@ -80,6 +81,9 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
         switch ((string)$field_change['field_name']) {
             case self::FIELDNAME_CHANGE_SUMMARY :
                 $strategy = new Tracker_Artifact_XMLImport_XMLImportFieldStrategySummary();
+                break;
+            case self::FIELDNAME_CHANGE_PERMS_ON_ARTIFACT:
+                $strategy = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyPermissionsOnArtifact();
                 break;
             case self::FIELDNAME_CHANGE_ATTACHEMENT :
                 $strategy = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment(

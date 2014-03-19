@@ -38,7 +38,7 @@ grammar {
 
     field_content =
         attribute field_name { xsd:string },
-        (field_string | field_file | field_open_list_user)
+        (field_string | field_file | field_open_list_user | field_perms_on_artifact)
         
 
     field_string = 
@@ -55,4 +55,11 @@ grammar {
         attribute type { "open_list" },
         attribute bind { "user" },
         element value { user_content }+
+
+    field_perms_on_artifact =
+        attribute type { "permissions_on_artifact" },
+        attribute use_perm { xsd:boolean },
+        element ugroup {
+            attribute ugroup_id { xsd:int }
+        }+
 }
