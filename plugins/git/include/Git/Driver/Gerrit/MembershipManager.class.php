@@ -229,9 +229,6 @@ class Git_Driver_Gerrit_MembershipManager {
                 return false;
             }
         }
-        catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
-            $this->logger->error($e->getMessage());
-        }
         catch (Git_Driver_Gerrit_Exception $e) {
             $this->logger->error($e->getMessage());
         }
@@ -346,7 +343,7 @@ class Git_Driver_Gerrit_MembershipManager {
         foreach ($remote_servers as $remote_server) {
             try {
                 $command->execute($remote_server);
-            } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
+            } catch (Git_Driver_Gerrit_Exception $e) {
                 $this->logger->error($e->getMessage());
             }
         }

@@ -24,6 +24,12 @@
  */
 class Git_Driver_GerritREST implements Git_Driver_Gerrit {
 
+    /**
+     * When one create a group when no owners, set Administrators as default
+     * @see: https://groups.google.com/d/msg/repo-discuss/kVDkj7Ds970/xzLP1WQI2BAJ
+     */
+    const DEFAULT_GROUP_OWNER = 'Administrators';
+
     const HEADER_CONTENT_TYPE = 'Content-type';
     const MIME_JSON           = 'application/json;charset=UTF-8';
     const MIME_TEXT           = 'plain/text';
@@ -68,9 +74,8 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
             $this->logger->info("Gerrit: Project $gerrit_project_name successfully initialized");
             return $gerrit_project_name;
         } catch (Exception $exception) {
-            $this->logger->error("Gerrit: Project $gerrit_project_name not created: " . $exception->getMessage());
+            $this->throwGerritException("Gerrit: Project $gerrit_project_name not created: " . $exception->getMessage());
         }
-        return false;
     }
 
     public function createProjectWithPermissionsOnly(
@@ -102,8 +107,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
 
             $this->logger->info("Gerrit: Permissions-only project $parent_project_name successfully initialized");
         } catch (Exception $exception) {
-            $this->logger->error("Gerrit: Permissions-only project $parent_project_name not created: " . $exception->getMessage());
-            return false;
+            $this->throwGerritException("Gerrit: Permissions-only project $parent_project_name not created: " . $exception->getMessage());
         }
     }
 
@@ -125,10 +129,12 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
             $this->logger->info("Gerrit REST driver: project $project_name exists");
 
             return true;
-        } catch (Exception $exception) {
+        } catch (Guzzle\Http\Exception\ClientErrorResponseException $exception) {
             $this->logger->info("Gerrit REST driver: project $project_name does not exist");
-
             return false;
+        }
+        catch (Exception $exception) {
+            $this->throwGerritException("Gerrit REST driver: an error occured while checking existance of project (".$exception->getMessage().")");
         }
     }
 
@@ -145,6 +151,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
             $this->logger->info("Gerrit REST driver: server is up!");
             return true;
         } catch (Exception $exception) {
+            $this->logger->info("Gerrit REST driver: server is down");
             return false;
         }
     }
@@ -160,29 +167,27 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
 
         try {
             $this->logger->info("Gerrit REST driver: Create group $group_name");
-            $json_data = null;
-            $options   = $this->getRequestOptions();
-            if ($group_name !== $owner) {
-                $json_data = json_encode(
-                    array(
-                        'owner' => $owner
-                    )
-                );
-                $options += array(self::HEADER_CONTENT_TYPE => self::MIME_JSON);
+
+            if ($owner == $group_name) {
+                $owner = self::DEFAULT_GROUP_OWNER;
             }
+
             $this->sendRequest(
                 $server,
                 $this->guzzle_client->put(
                     $this->getGerritURL($server, '/groups/'. urlencode($group_name)),
-                    $options,
-                    $json_data
+                    $this->getRequestOptions(array(self::HEADER_CONTENT_TYPE => self::MIME_JSON)),
+                    json_encode(
+                        array(
+                            'owner_id' => $this->getGroupUUID($server, $owner)
+                        )
+                    )
                 )
             );
 
             $this->logger->info("Gerrit REST driver: Group $group_name successfully created");
         } catch (Exception $exception) {
-            $this->logger->error("Gerrit REST driver: Unable to create group $group_name: ". $exception->getMessage());
-            return false;
+            $this->throwGerritException("Gerrit REST driver: Unable to create group $group_name: ". $exception->getMessage());
         }
     }
 
@@ -231,8 +236,10 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
             }
 
             return $groups;
-        } catch (Exception $exception) {
+        } catch (Guzzle\Http\Exception\ClientErrorResponseException $exception) {
             return array();
+        } catch (Exception $exception) {
+            $this->throwGerritException("Gerrit REST driver: an error occured while fetching all groups (".$exception->getMessage().")");
         }
     }
 
@@ -257,8 +264,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
             $this->logger->info("Gerrit REST driver: User successfully added");
             return true;
         } catch (Exception $exception) {
-            $this->logger->error("Gerrit REST driver: Cannot add user: " . $exception->getMessage());
-            return false;
+            $this->throwGerritException("Gerrit REST driver: Cannot add user: " . $exception->getMessage());
         }
     }
 
@@ -279,8 +285,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
             $this->logger->info("Gerrit REST driver: User successfully removed");
             return true;
         } catch (Exception $exception) {
-            $this->logger->error("Gerrit REST driver: Cannot remove user: " . $exception->getMessage());
-            return false;
+            $this->throwGerritException("Gerrit REST driver: Cannot remove user: " . $exception->getMessage());
         }
     }
 
@@ -306,7 +311,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
             );
             return true;
         } catch (Exception $exception) {
-            return false;
+            $this->throwGerritException("Gerrit REST driver: An error occured while removing all groups members: " . $exception->getMessage());
         }
     }
 
@@ -323,8 +328,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
             $this->logger->info("Gerrit REST driver: Group successfully included");
             return true;
         } catch (Exception $exception) {
-            $this->logger->error("Gerrit REST driver: Cannot include group: ". $exception->getMessage());
-            return false;
+            $this->throwGerritException("Gerrit REST driver: Cannot include group: ". $exception->getMessage());
         }
     }
 
@@ -352,8 +356,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
 
             return true;
         } catch (Exception $exception) {
-            $this->logger->error("Gerrit REST driver: Cannot remove included group: ". $exception->getMessage());
-            return false;
+            $this->throwGerritException("Gerrit REST driver: Cannot remove included group: ". $exception->getMessage());
         }
     }
 
@@ -380,8 +383,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
 
             return true;
         } catch (Exception $exception) {
-            $this->logger->error("Gerrit REST driver: Cannot add ssh key: ". $exception->getMessage());
-            return false;
+            $this->throwGerritException("Gerrit REST driver: Cannot add ssh key: ". $exception->getMessage());
         }
     }
 
@@ -426,9 +428,10 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
             $this->logger->info("Gerrit REST driver: Successfully got all ssh keys for user");
 
             return $this->decodeGerritResponse($response->getBody(true));
-        } catch (Exception $exception) {
-            $this->logger->error("Gerrit REST driver: Cannot get ssh keys for user: ". $exception->getMessage());
+        } catch (Guzzle\Http\Exception\ClientErrorResponseException $exception) {
             return array();
+        } catch (Exception $exception) {
+            $this->throwGerritException("Gerrit REST driver: Cannot get ssh keys for user: ". $exception->getMessage());
         }
     }
 
@@ -451,8 +454,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
 
             return true;
         } catch (Exception $exception) {
-            $this->logger->error("Gerrit REST driver: Cannot set parent project: ". $exception->getMessage());
-            return false;
+            $this->throwGerritException("Gerrit REST driver: Cannot set parent project: ". $exception->getMessage());
         }
     }
 
@@ -477,9 +479,10 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
             $this->logger->info("Gerrit REST driver: delete plugin is activated : $activated");
 
             return $activated;
-        } catch (Exception $exception) {
-            $this->logger->error("Gerrit REST driver: Cannot detect if delete plugin is activated: ". $exception->getMessage());
+        } catch (Guzzle\Http\Exception\ClientErrorResponseException $exception) {
             return false;
+        } catch (Exception $exception) {
+            $this->throwGerritException("Gerrit REST driver: An error occured while checking if deleted plugins is available: ". $exception->getMessage());
         }
     }
 
@@ -497,8 +500,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
             $this->logger->info("Gerrit REST driver: Project successfully deleted");
             return true;
         } catch (Exception $exception) {
-            $this->logger->error("Gerrit REST driver: Cannot delete project $gerrit_project_full_name. (".$exception->getMessage().")");
-            return false;
+            $this->throwGerritException("Gerrit REST driver: Cannot delete project $gerrit_project_full_name. (".$exception->getMessage().")");
         }
     }
 
@@ -520,43 +522,8 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
             $this->logger->info("Gerrit REST driver: Project successfully set Read-Only");
             return true;
         } catch (Exception $exception) {
-            $this->logger->errorr("Gerrit REST driver: An error occured while setting project read-only: ".$exception->getMessage());
-            return false;
+            $this->throwGerritException("Gerrit REST driver: An error occured while setting project read-only: ".$exception->getMessage());
         }
-    }
-
-    private function getGerritURL(Git_RemoteServer_GerritServer $server, $url) {
-        $full_url = $server->getBaseUrl().'/a'. $url;
-
-        return $full_url;
-    }
-
-    private function getOptionsForRequest(Git_RemoteServer_GerritServer $server, $url, array $custom_options) {
-        $standard_options = array(
-            CURLOPT_URL             => $this->getGerritURL($server, $url),
-            CURLOPT_SSL_VERIFYPEER  => false,
-            CURLOPT_HTTPAUTH        => CURLAUTH_DIGEST,
-            CURLOPT_USERPWD         => $server->getLogin() .':'. $server->getHTTPPassword(),
-        );
-
-        return ($standard_options + $custom_options);
-    }
-
-    /**
-     * @param Git_RemoteServer_GerritServer        $server
-     * @param Guzzle\Http\Message\RequestInterface $request
-     *
-     * @return Guzzle\Http\Message\Response
-     */
-    private function sendRequest(Git_RemoteServer_GerritServer $server, Guzzle\Http\Message\RequestInterface $request) {
-        $request->setAuth($server->getLogin(), $server->getHTTPPassword(), 'Digest');
-        return $request->send();
-    }
-
-    private function getRequestOptions(array $custom_options = array()) {
-        return $custom_options + array(
-            'verify' => false,
-        );
     }
 
     private function getAllMembers(
@@ -599,26 +566,6 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         }
     }
 
-    private function pluckUsername($member) {
-        return $member['username'];
-    }
-
-    private function pluckGroupname($member) {
-        return $member['name'];
-    }
-
-    /**
-     * Strip magic prefix
-     *
-     * @see https://gerrit-documentation.storage.googleapis.com/Documentation/2.8.3/rest-api.html#output
-     *
-     * @param string $gerrit_response
-     * @return string
-     */
-    private function decodeGerritResponse($gerrit_response) {
-        return json_decode(substr($gerrit_response, 5), true);
-    }
-
     private function getGroupInfoFromGerrit($server, $group_name) {
         try {
             $response = $this->sendRequest(
@@ -649,10 +596,6 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         return $matching_keys;
     }
 
-    private function escapeSSHKey($ssh_key) {
-        return str_replace('=', '\u003d', $ssh_key);
-    }
-
     private function actionRemoveSSHKey(
             Git_RemoteServer_GerritServer $server,
             Git_Driver_Gerrit_User $user,
@@ -670,14 +613,66 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
 
             return true;
         } catch (Exception $exception) {
-            $this->logger->error("Gerrit REST driver: Cannot remove ssh key ($gerrit_key_id): ". $exception->getMessage());
-            return false;
+            $this->throwGerritException("Gerrit REST driver: Cannot remove ssh key ($gerrit_key_id): ". $exception->getMessage());
         }
+    }
+
+    private function escapeSSHKey($ssh_key) {
+        return str_replace('=', '\u003d', $ssh_key);
     }
 
     private function getKeyPartFromSSHKey($expected_ssh_key) {
         $key_parts = explode(' ', $expected_ssh_key);
 
         return $key_parts[1];
+    }
+
+    private function throwGerritException($message) {
+        $this->logger->error($message);
+        throw new Git_Driver_Gerrit_Exception($message);
+    }
+
+
+    private function pluckUsername($member) {
+        return $member['username'];
+    }
+
+    private function pluckGroupname($member) {
+        return $member['name'];
+    }
+
+    /**
+     * Strip magic prefix
+     *
+     * @see https://gerrit-documentation.storage.googleapis.com/Documentation/2.8.3/rest-api.html#output
+     *
+     * @param string $gerrit_response
+     * @return string
+     */
+    private function decodeGerritResponse($gerrit_response) {
+        return json_decode(substr($gerrit_response, 5), true);
+    }
+
+    private function getGerritURL(Git_RemoteServer_GerritServer $server, $url) {
+        $full_url = $server->getBaseUrl().'/a'. $url;
+
+        return $full_url;
+    }
+
+    /**
+     * @param Git_RemoteServer_GerritServer        $server
+     * @param Guzzle\Http\Message\RequestInterface $request
+     *
+     * @return Guzzle\Http\Message\Response
+     */
+    private function sendRequest(Git_RemoteServer_GerritServer $server, Guzzle\Http\Message\RequestInterface $request) {
+        $request->setAuth($server->getLogin(), $server->getHTTPPassword(), 'Digest');
+        return $request->send();
+    }
+
+    private function getRequestOptions(array $custom_options = array()) {
+        return $custom_options + array(
+            'verify' => false,
+        );
     }
 }

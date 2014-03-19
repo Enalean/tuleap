@@ -907,7 +907,7 @@ class GitPlugin extends Plugin {
             $gerrit_servers = $this->getGerritServerFactory()->getServersForProject($project);
 
             $this->getGerritUmbrellaProjectManager()->recursivelyCreateUmbrellaProjects($gerrit_servers, $project);
-        } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $exception) {
+        } catch (Git_Driver_Gerrit_Exception $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_git', 'gerrit_remote_exception', $exception->getMessage()));
         } catch (Exception $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());

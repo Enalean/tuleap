@@ -180,7 +180,7 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
             if (! $driver->doesTheProjectExist($server, $project_name)) {
                 return false;
             }
-        } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
+        } catch (Git_Driver_Gerrit_Exception $e) {
             return false;
         }
 

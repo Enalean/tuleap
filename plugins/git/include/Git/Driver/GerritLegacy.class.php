@@ -75,7 +75,7 @@ class Git_Driver_GerritLegacy implements Git_Driver_Gerrit {
      * @param string $project_name
      * @return string Gerrit project name
      * @throws Git_Driver_Gerrit_Exception
-     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     * @throws Git_Driver_Gerrit_Exception
      */
     private function actionCreateProject(Git_RemoteServer_GerritServer $server, $command, $project_name) {
         try {
@@ -102,7 +102,7 @@ class Git_Driver_GerritLegacy implements Git_Driver_Gerrit {
      * @param string $project_name
      * @return true if the gerrit project exists, else return false
      *
-     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     * @throws Git_Driver_Gerrit_Exception
      */
     public function doesTheProjectExist(Git_RemoteServer_GerritServer $server, $project_name) {
         return in_array($project_name, $this->listProjects($server));
@@ -111,7 +111,7 @@ class Git_Driver_GerritLegacy implements Git_Driver_Gerrit {
     /**
      * @param Git_RemoteServer_GerritServer $server
      *
-     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     * @throws Git_Driver_Gerrit_Exception
      */
     public function ping(Git_RemoteServer_GerritServer $server) {
         $command = self::COMMAND . ' version';
@@ -367,7 +367,7 @@ class Git_Driver_GerritLegacy implements Git_Driver_Gerrit {
      * @param Git_RemoteServer_GerritServer $server
      * @param Git_Driver_Gerrit_User $user
      * @param string $ssh_key
-     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     * @throws Git_Driver_Gerrit_Exception
      *
      */
     public function addSSHKeyToAccount(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user, $ssh_key) {
@@ -381,7 +381,7 @@ class Git_Driver_GerritLegacy implements Git_Driver_Gerrit {
      * @param Git_RemoteServer_GerritServer $server
      * @param Git_Driver_Gerrit_User $user
      * @param string $ssh_key
-     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     * @throws Git_Driver_Gerrit_Exception
      */
     public function removeSSHKeyFromAccount(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user, $ssh_key) {
         $escaped_ssh_key = escapeshellarg($ssh_key);
@@ -442,7 +442,7 @@ class Git_Driver_GerritLegacy implements Git_Driver_Gerrit {
      * @param Git_RemoteServer_GerritServer $server
      * @param string $gerrit_project_full_name E.g. bugs or bugs/repository1
      *
-     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     * @throws Git_Driver_Gerrit_Exception
      */
     public function deleteProject(Git_RemoteServer_GerritServer $server, $gerrit_project_full_name) {
         $query = ' deleteproject delete ' . $gerrit_project_full_name . ' --yes-really-delete';
@@ -453,7 +453,7 @@ class Git_Driver_GerritLegacy implements Git_Driver_Gerrit {
      * @param Git_RemoteServer_GerritServer $server
      * @param string $gerrit_project_full_name
      *
-     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     * @throws Git_Driver_Gerrit_Exception
      */
     public function makeGerritProjectReadOnly(Git_RemoteServer_GerritServer $server, $gerrit_project_full_name) {
         $query = self::COMMAND . ' set-project --ps READ_ONLY ' . $gerrit_project_full_name;

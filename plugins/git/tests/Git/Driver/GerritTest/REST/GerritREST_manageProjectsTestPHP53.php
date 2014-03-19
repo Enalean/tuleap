@@ -85,6 +85,8 @@ class Git_DriverREST_Gerrit_manageProjectsTest extends Git_Driver_GerritREST_bas
     public function itRaisesAGerritDriverExceptionOnProjectCreation(){
         stub($this->guzzle_client)->put()->throws(new Guzzle\Http\Exception\ClientErrorResponseException());
 
+        $this->expectException('Git_Driver_Gerrit_Exception');
+
         expect($this->logger)->error()->once();
 
         $this->driver->createProject($this->gerrit_server, $this->repository, $this->project_name);

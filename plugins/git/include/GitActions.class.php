@@ -244,7 +244,7 @@ class GitActions extends PluginActions {
 
         try {
             echo $this->project_creator->getGerritConfig($gerrit_server, $url);
-        } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
+        } catch (Git_Driver_Gerrit_Exception $e) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, 'Cannot access Gerrit ' . $e->getTraceAsString());
             $GLOBALS['Response']->sendStatusCode(500);
             return;

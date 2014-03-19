@@ -838,7 +838,7 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
     public function itReturnsAnErrorIfRepoIsGerritServerIsDown() {
         stub($this->git_permissions_manager)->userIsGitAdmin()->returns(true);
         stub($this->repo)->isMigratedToGerrit()->returns(true);
-        stub($this->project_creator)->getGerritConfig()->throws(new Git_Driver_Gerrit_RemoteSSHCommandFailure('', '', ''));
+        stub($this->project_creator)->getGerritConfig()->throws(new Git_Driver_Gerrit_Exception());
         $GLOBALS['Response']->expectOnce('sendStatusCode', array(500));
 
         $this->actions->fetchGitConfig($this->repo_id, $this->user, $this->project);
