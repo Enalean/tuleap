@@ -26,13 +26,21 @@ class Tracker_Artifact_Attachment_TemporaryFile {
     private $tempname;
     private $description;
     private $last_modified;
+    private $current_offset;
+    private $creator_id;
+    private $size;
+    private $mimetype;
 
-    public function __construct($id, $name, $tempname, $description, $last_modified) {
-        $this->id = $id;
-        $this->name = $name;
-        $this->tempname = $tempname;
-        $this->description = $description;
-        $this->last_modified = $last_modified;
+    public function __construct($id, $name, $tempname, $description, $last_modified, $current_offset, $creator_id, $size, $mimetype) {
+        $this->id             = $id;
+        $this->name           = $name;
+        $this->tempname       = $tempname;
+        $this->description    = $description;
+        $this->last_modified  = $last_modified;
+        $this->current_offset = $current_offset;
+        $this->creator_id     = $creator_id;
+        $this->size           = $size;
+        $this->mimetype       = $mimetype;
     }
 
     public function getTemporaryName() {
@@ -42,5 +50,34 @@ class Tracker_Artifact_Attachment_TemporaryFile {
     public function getId() {
         return $this->id;
     }
+
+    public function getCurrentChunkOffset() {
+        return $this->current_offset;
+    }
+
+    public function getCreatorId() {
+        return $this->creator_id;
+    }
+
+    public function getSize() {
+        return $this->size;
+    }
+
+    public function getName() {
+        return $this->name;
+    }
+
+    public function getType() {
+        return $this->mimetype;
+    }
+
+    public function setSize($size) {
+        $this->size = $size;
+    }
+
+    public function getDescription() {
+        return $this->description;
+    }
+
 }
 ?>

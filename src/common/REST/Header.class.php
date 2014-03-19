@@ -25,6 +25,7 @@ class Header {
     const PUT     = 'PUT';
     const POST    = 'POST';
     const DELETE  = 'DELETE';
+    const PATCH   = 'PATCH';
 
     const CORS_ALLOW_METHODS = 'Access-Control-Allow-Methods';
     const ALLOW              = 'Allow';
@@ -67,6 +68,10 @@ class Header {
 
     public static function allowOptionsPost() {
         self::sendAllowHeaders(array(self::OPTIONS, self::POST));
+    }
+
+    public static function allowOptionsPatch() {
+        self::sendAllowHeaders(array(self::OPTIONS, self::PATCH));
     }
 
     private static function sendAllowHeaders($methods) {

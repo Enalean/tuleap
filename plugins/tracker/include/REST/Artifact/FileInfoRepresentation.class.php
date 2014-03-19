@@ -61,5 +61,7 @@ class FileInfoRepresentation {
         $this->size         = JsonCast::toInt($filesize);
         $this->type         = $filetype;
         $this->uri          = 'artifact_files/'.$this->id;
+
+        return $this;
     }
 }

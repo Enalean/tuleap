@@ -73,8 +73,9 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
     }
 
     /**
-     * @return Tracker_Artifact_Attachment_TemporaryFile
+     * @return \Tracker_Artifact_Attachment_TemporaryFile
      * @throws Tracker_Artifact_Attachment_CannotCreateException
+     * @throws Tracker_Artifact_Attachment_MaxFilesException
      */
     public function save($name, $description, $mimetype) {
         $user_id   = $this->user->getId();
@@ -87,7 +88,10 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
             throw new Tracker_Artifact_Attachment_CannotCreateException();
         }
 
-        return new Tracker_Artifact_Attachment_TemporaryFile($id, $name, $tempname, $description, $timestamp);
+        $number_of_chunks = 0;
+        $filesize         = 0;
+
+        return new Tracker_Artifact_Attachment_TemporaryFile($id, $name, $tempname, $description, $timestamp, $number_of_chunks, $this->user->getId(), $filesize, $mimetype);
     }
 
     /**
@@ -108,14 +112,26 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
      *
      * @param String $content
      * @param Tracker_Artifact_Attachment_TemporaryFile $file
+     * @param int $offset
+     *
      * @return boolean
      * @throws Tracker_Artifact_Attachment_FileTooBigException
      * @throws Tracker_Artifact_Attachment_InvalidPathException
+     * @throws Tracker_Artifact_Attachment_InvalidOffsetException
      */
-    public function appendChunkForREST($content, Tracker_Artifact_Attachment_TemporaryFile $file) {
-        $bytes_written = $this->appendChunk($content, $file->getTemporaryName());
+    public function appendChunkForREST($content, Tracker_Artifact_Attachment_TemporaryFile $file, $offset) {
+        $current_offset = $file->getCurrentChunkOffset();
 
-        return $bytes_written && $this->dao->updateLastModifiedDate($file->getId(), $_SERVER['REQUEST_TIME']);
+        if ($current_offset + 1 !== (int) $offset) {
+            throw new Tracker_Artifact_Attachment_InvalidOffsetException();
+        }
+
+        $bytes_written = $this->appendChunk($content, $file->getTemporaryName());
+        $size          = exec('stat -c %s ' . $this->getPath($file->getTemporaryName()));
+
+        $file->setSize($size);
+
+        return $bytes_written && $this->dao->updateFileInfo($file->getId(), $offset, $_SERVER['REQUEST_TIME'], $size);
     }
 
     private function appendChunk($content, $attachment_name) {
@@ -173,6 +189,34 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
 
     public static function getMaximumFileChunkSize() {
         return Config::get('sys_max_size_upload');
+    }
+
+    /**
+     * @return \Tracker_Artifact_Attachment_TemporaryFile
+     * @throws Tracker_Artifact_Attachment_FileNotFoundException
+     */
+    public function getFile($id) {
+        $row = $this->dao->getTemporaryFile($id);
+
+        if (! $row) {
+            throw new Tracker_Artifact_Attachment_FileNotFoundException();
+        }
+
+        return new Tracker_Artifact_Attachment_TemporaryFile(
+            $row['id'],
+            $row['filename'],
+            $row['tempname'],
+            $row['description'],
+            $row['last_modified'],
+            $row['offset'],
+            $row['submitted_by'],
+            $row['filesize'],
+            $row['filetype']
+        );
+    }
+
+    public function isFileIdTemporary($id) {
+        return $this->dao->doesFileExist($id);
     }
 }
 

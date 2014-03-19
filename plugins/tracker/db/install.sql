@@ -692,6 +692,7 @@ CREATE TABLE IF NOT EXISTS tracker_fileinfo_temporary (
     last_modified int(11) NOT NULL,
     created int(11) NOT NULL,
     tempname varchar(255) default NULL,
+    offset int(11) UNSIGNED NOT NULL DEFAULT 0,
     INDEX idx_fileinfo_id ( fileinfo_id ),
     INDEX idx_last_modified( last_modified )
 ) ENGINE=InnoDB;

@@ -55,16 +55,39 @@ class Tracker_Artifact_Attachment_TemporaryFileManagerDao extends DataAccessObje
         return $file_id;
     }
 
-    public function updateLastModifiedDate($file_id, $last_modified) {
+    public function updateFileInfo($file_id, $offset, $last_modified, $size) {
         $file_id       = $this->da->escapeInt($file_id);
+        $offset        = $this->da->escapeInt($offset);
         $last_modified = $this->da->escapeInt($last_modified);
+        $size          = $this->da->escapeInt($size);
 
         $sql = "UPDATE tracker_fileinfo_temporary
-                    SET last_modified = $last_modified
+                    JOIN tracker_fileinfo
+                        ON tracker_fileinfo_temporary.fileinfo_id = tracker_fileinfo.id
+                    SET last_modified = '$last_modified',
+                        offset        = '$offset',
+                        filesize      = '$size'
                 WHERE fileinfo_id = '$file_id'";
 
         return $this->update($sql);
     }
 
+    public function getTemporaryFile($file_id) {
+        $file_id  = $this->da->escapeInt($file_id);
+
+        $sql = "SELECT * FROM tracker_fileinfo_temporary
+                    JOIN tracker_fileinfo ON tracker_fileinfo_temporary.fileinfo_id = tracker_fileinfo.id
+                WHERE fileinfo_id = '$file_id'";
+
+        return $this->retrieveFirstRow($sql);
+    }
+
+    public function doesFileExist($file_id) {
+        $file_id = $this->da->escapeInt($file_id);
+
+        $sql = "SELECT * FROM tracker_fileinfo_temporary
+                WHERE fileinfo_id = $file_id";
+        return $this->retrieve($sql)->count() > 0;
+    }
 }
 ?>
