@@ -1,3 +1,6 @@
+Version 5.269 - Tuleap 6.12
+    * story #5993: import permissions on artifacts from tv3 to tv5
+
 Version 5.268 - Tuleap 6.12
     * Fix request #6446 - Do not export deleted trackers
 
