@@ -1,3 +1,6 @@
+Version 5.6 - Tuleap 6.12
+    * request #6413 - Cumulative chart legend too extensive (Contrib JTEKT)
+
 Version 5.5 - Tuleap 6.12
     * story #6377: chart legend is ranked the same way as field values (Contrib JTEKT)
 
