@@ -1,3 +1,6 @@
+Version 5.270 - Tuleap 6.12
+    * request #6444: Agile dashboard performance with a lot of burndown
+
 Version 5.269 - Tuleap 6.12
     * story #5993: import permissions on artifacts from tv3 to tv5
 
