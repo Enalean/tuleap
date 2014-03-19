@@ -15,8 +15,8 @@ Version 6.12 (Not Released Yet)
 	* request #6423: [trackerV3] Bind a field to mutiple lists doesn't work
 	* Fix request #6146 - Backend raise errors about cvs logs
 
-	== Development ==
-	* story #6139: give access admin rights to some users to all trackers
+	== Enhancement ==
+	* story #5998 - Delegate the validation of projects to users
 
 	== Themes ==
 	* Experimental: 0.9.12

@@ -1,5 +1,6 @@
 Version 5.266 - Tuleap 6.12
     * request #6449 - Cannot update artifact
+    * story #5998 - Delegate the validation of projects to users
 
 Version 5.265 - Tuleap 6.12
     * Fix request #6435: Mandatory field in workflow doesn't enforce Text fields

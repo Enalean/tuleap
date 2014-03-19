@@ -1,3 +1,6 @@
+Version 3.40 - Tuleap 6.12
+    * story #5998 - Delegate the validation of projects to users
+
 Version 3.39 - Tuleap 6.7
     * Dev: remove a bunch of explicit require_once
 
