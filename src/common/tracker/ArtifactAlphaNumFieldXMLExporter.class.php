@@ -18,18 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ArtifactStringFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporter {
-    const TV3_DISPLAY_TYPE = 'TF';
-    const TV3_DATA_TYPE    = '1';
-    const TV3_TYPE         = 'TF_1';
-    const TV5_TYPE         = 'string';
-    const TV3_VALUE_INDEX  = 'valueText';
+abstract class ArtifactAlphaNumFieldXMLExporter extends ArtifactFieldXMLExporter {
 
-    public function appendNode(DOMElement $changeset_node, $artifact_id, array $row) {
-        $this->appendStringNode($changeset_node, self::TV5_TYPE, $row);
+    protected function appendStringNode(DOMElement $changeset_node, $type, array $row) {
+        $field_node = $this->node_helper->createElement('field_change');
+        $field_node->setAttribute('field_name', $row['field_name']);
+        $field_node->setAttribute('type', $type);
+        $field_node->appendChild($this->getNodeValue($row['new_value']));
+        $changeset_node->appendChild($field_node);
     }
 
-    public function getFieldValueIndex() {
-        return self::TV3_VALUE_INDEX;
+    protected function getNodeValue($value) {
+        return $this->node_helper->getNodeWithValue('value', $value);
     }
 }

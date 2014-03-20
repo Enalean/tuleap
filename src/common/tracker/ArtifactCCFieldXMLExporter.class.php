@@ -19,13 +19,14 @@
  */
 
 class ArtifactCCFieldXMLExporter extends ArtifactFieldXMLExporter {
-    const TYPE = 'cc';
+    const TV3_TYPE = 'cc';
+    const TV5_TYPE = 'open_list';
 
     public function appendNode(DOMElement $changeset_node, $artifact_id, array $row) {
         $values = array_filter(explode(',', $row['new_value']));
         $field_node = $this->node_helper->createElement('field_change');
         $field_node->setAttribute('field_name', 'cc');
-        $field_node->setAttribute('type', 'open_list');
+        $field_node->setAttribute('type', self::TV5_TYPE);
         $field_node->setAttribute('bind', 'user');
         foreach ($values as $value) {
             $cc_value_node = $this->node_helper->getNodeWithValue('value', $value);
@@ -37,5 +38,9 @@ class ArtifactCCFieldXMLExporter extends ArtifactFieldXMLExporter {
 
     private function isValueAnEmailAddress($value) {
         return strpos($value, '@') !== false;
+    }
+
+    public function getFieldValueIndex() {
+        throw new Exception_TV3XMLException('Try to get artifact_value on a non value field: cc');
     }
 }

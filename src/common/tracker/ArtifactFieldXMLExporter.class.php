@@ -20,7 +20,7 @@
 
 abstract class ArtifactFieldXMLExporter {
 
-    /** @var ArtifactFieldXMLExporter */
+    /** @var ArtifactXMLNodeHelper */
     protected $node_helper;
 
     public function __construct(ArtifactXMLNodeHelper $node_helper) {
@@ -28,4 +28,6 @@ abstract class ArtifactFieldXMLExporter {
     }
 
     abstract public function appendNode(DOMElement $changeset_node, $artifact_id, array $row);
+
+    abstract public function getFieldValueIndex();
 }

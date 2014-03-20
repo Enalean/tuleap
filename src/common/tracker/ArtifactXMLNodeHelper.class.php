@@ -44,9 +44,15 @@ class ArtifactXMLNodeHelper {
     }
 
     public function appendSubmittedOn(DOMElement $xml, $timestamp) {
-        $submitted_on_node = $this->document->createElement('submitted_on', date('c', $timestamp));
-        $submitted_on_node->setAttribute('format', 'ISO8601');
-        $xml->appendChild($submitted_on_node);
+        $xml->appendChild($this->getDateNodeFromTimestamp('submitted_on', $timestamp));
+    }
+
+    public function getDateNodeFromTimestamp($name, $timestamp) {
+        $timestamp = intval($timestamp);
+        $iso       = $timestamp > 0 ? date('c', $timestamp) : '';
+        $node      = $this->document->createElement($name, $iso);
+        $node->setAttribute('format', 'ISO8601');
+        return $node;
     }
 
     public function getNodeWithValue($node_name, $value) {

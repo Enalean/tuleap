@@ -19,7 +19,8 @@
  */
 
 class ArtifactAttachmentFieldXMLExporter extends ArtifactFieldXMLExporter {
-    const TYPE            = 'attachment';
+    const TV3_TYPE            = 'attachment';
+    const TV5_TYPE            = 'file';
     const XML_FILE_PREFIX = 'File';
 
     /** @var ArtifactXMLExporterDao */
@@ -38,7 +39,7 @@ class ArtifactAttachmentFieldXMLExporter extends ArtifactFieldXMLExporter {
                 $row_file = $dar->current();
                 $field_node = $this->node_helper->createElement('field_change');
                 $field_node->setAttribute('field_name', 'attachment');
-                $field_node->setAttribute('type', 'file');
+                $field_node->setAttribute('type', self::TV5_TYPE);
                 $field_node->appendChild($this->getNodeValueForFile($row_file['id']));
                 $this->appendPreviousAttachements($field_node, $artifact_id, $row['date'], $row['old_value']);
                 $changeset_node->appendChild($field_node);
@@ -95,5 +96,9 @@ class ArtifactAttachmentFieldXMLExporter extends ArtifactFieldXMLExporter {
             return $new_values_array[$i];
         }
         return '';
+    }
+
+    public function getFieldValueIndex() {
+        throw new Exception_TV3XMLException('Try to get artifact_value on a non value field: attachment');
     }
 }

@@ -44,20 +44,15 @@ class ArtifactXMLExporterArtifact {
     /** @var ArtifactXMLNodeHelper */
     private $node_helper;
 
-    /** @var Array */
-    private $fields = array();
-
+    /** @var ArtifactFieldFactoryXMLExporter */
+    private $field_factory;
 
     public function __construct(ArtifactXMLExporterDao $dao, ZipArchive $archive, DOMDocument $document, Logger $logger) {
         $this->dao                 = $dao;
         $this->logger              = $logger;
         $this->node_helper         = new ArtifactXMLNodeHelper($document);
         $this->attachment_exporter = new ArtifactAttachmentXMLExporter($this->node_helper, $this->dao, $archive);
-        $this->fields              = array(
-            ArtifactStringFieldXMLExporter::TYPE     => new ArtifactStringFieldXMLExporter($this->node_helper),
-            ArtifactAttachmentFieldXMLExporter::TYPE => new ArtifactAttachmentFieldXMLExporter($this->node_helper, $this->dao),
-            ArtifactCCFieldXMLExporter::TYPE         => new ArtifactCCFieldXMLExporter($this->node_helper),
-        );
+        $this->field_factory       = new ArtifactFieldFactoryXMLExporter($this->dao, $this->node_helper);
     }
 
     public function exportArtifact($tracker_id, array $artifact_row) {
@@ -107,7 +102,7 @@ class ArtifactXMLExporterArtifact {
             array(
                 'field_name'   => 'summary',
                 'display_type' => ArtifactStringFieldXMLExporter::TV3_DISPLAY_TYPE,
-                'data_type'    => '1',
+                'data_type'    => ArtifactStringFieldXMLExporter::TV3_DATA_TYPE,
                 'valueText'    => $summary,
             )
         );
@@ -120,16 +115,22 @@ class ArtifactXMLExporterArtifact {
     private function updateInitialChangesetVersusCurrentStatus($artifact_id, array $current_fields_values) {
         foreach ($current_fields_values as $field_value) {
             try {
-                $this->updateInitialChangeset($artifact_id, $field_value['field_name'], $field_value['display_type'], $field_value['data_type'], $field_value['valueText']);
+                $this->updateInitialChangeset(
+                    $artifact_id,
+                    $field_value['field_name'],
+                    $field_value['display_type'],
+                    $field_value['data_type'],
+                    $this->field_factory->getFieldValue($field_value)
+                );
             } catch (Exception_TV3XMLException $exception) {
-                $this->logger->warn("Artifact $artifact_id: skip update initial changeset (".$field_value['field_name'].", ".$field_value['valueText']."): ".$exception->getMessage());
+                $this->logger->warn("Artifact $artifact_id: skip update initial changeset (".$field_value['field_name']."): ".$exception->getMessage());
             }
         }
     }
 
     private function updateInitialChangeset($artifact_id, $field_name, $display_type, $data_type, $value) {
         if (! isset($this->field_initial_changeset[$field_name])) {
-            $this->appendValueByType(
+            $this->field_factory->appendValueByType(
                 $this->initial_changeset,
                 $artifact_id,
                 array(
@@ -148,7 +149,7 @@ class ArtifactXMLExporterArtifact {
             try {
                 $this->appendMissingValues($artifact_id, $field_value);
             } catch (Exception_TV3XMLException $exception) {
-                $this->logger->warn("Artifact $artifact_id: skip fake last changeset (".$field_value['field_name'].", ".$field_value['valueText']."): ".$exception->getMessage());
+                $this->logger->warn("Artifact $artifact_id: skip fake last changeset (".$field_value['field_name']."): ".$exception->getMessage());
             }
         }
         if ($this->last_changeset_for_truncated_history) {
@@ -158,14 +159,14 @@ class ArtifactXMLExporterArtifact {
 
     private function appendMissingValues($artifact_id, $field_value) {
         if (! $this->isLastRecoredValueEqualsToCurrentValue($field_value)) {
-            $this->appendValueByType(
+            $this->field_factory->appendValueByType(
                 $this->getLastChangesetForTruncatedHistory(),
                 $artifact_id,
                 array(
                     'display_type' => $field_value['display_type'],
                     'data_type'    => $field_value['data_type'],
                     'field_name'   => $field_value['field_name'],
-                    'new_value'    => $field_value['valueText'],
+                    'new_value'    => $this->field_factory->getFieldValue($field_value),
                 )
             );
             return true;
@@ -182,7 +183,7 @@ class ArtifactXMLExporterArtifact {
 
     private function isLastRecoredValueEqualsToCurrentValue(array $field_value) {
         if (isset($this->last_history_recorded[$field_value['field_name']])) {
-            if ($this->last_history_recorded[$field_value['field_name']] === $field_value['valueText']) {
+            if ($this->last_history_recorded[$field_value['field_name']] == $this->field_factory->getFieldValue($field_value)) {
                 return true;
             }
             return false;
@@ -215,28 +216,9 @@ class ArtifactXMLExporterArtifact {
         $changeset_node = $this->createOrReuseChangeset($previous_changeset, $row['submitted_by'], $row['is_anonymous'], $row['date']);
 
         $this->last_history_recorded[$row['field_name']] = $row['new_value'];
-        $this->appendValueByType($changeset_node, $artifact_id, $row);
+        $this->field_factory->appendValueByType($changeset_node, $artifact_id, $row);
 
         return $changeset_node;
-    }
-
-    private function appendValueByType(DOMElement $changeset_node, $artifact_id, $row) {
-        $this->fields[$this->getFieldType($row)]->appendNode($changeset_node, $artifact_id, $row);
-    }
-
-    private function getFieldType(array $row) {
-        switch ($row['display_type']) {
-            case ArtifactStringFieldXMLExporter::TV3_DISPLAY_TYPE:
-                return ArtifactStringFieldXMLExporter::TYPE;
-
-            case null:
-                if (isset($this->fields[$row['field_name']])) {
-                    return $row['field_name'];
-                }
-
-            default:
-                throw new Exception_TV3XMLUnknownFieldTypeException($row['field_name']);
-        }
     }
 
     private function addPermissionOnArtifactAtTheVeryEnd(DOMElement $artifact_node, $artifact_id) {
