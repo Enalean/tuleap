@@ -19,6 +19,7 @@
  */
 
 class ArtifactStringFieldXMLExporter extends ArtifactFieldXMLExporter {
+    const TV3_DISPLAY_TYPE = 'TF';
     const TYPE = 'string';
 
     public function appendNode(DOMElement $changeset_node, $artifact_id, array $row) {

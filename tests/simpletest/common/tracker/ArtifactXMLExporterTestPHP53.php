@@ -115,6 +115,14 @@ abstract class ArtifactXMLExporter_BaseTest extends TuleapTestCase {
         } else {
             stub($this->dao)->searchPermsForArtifact()->returnsEmptyDar();
         }
+
+        if (isset($json['artifact_field_value'])) {
+            foreach ($json['artifact_field_value'] as $artifact_id => $history_rows) {
+                stub($this->dao)->searchFieldValues($artifact_id)->returnsDarFromArray($history_rows);
+            }
+        } else {
+            stub($this->dao)->searchFieldValues()->returnsEmptyDar();
+        }
     }
 
 
@@ -459,5 +467,65 @@ class ArtifactXMLExporter_PermissionsOnArtifactTest extends ArtifactXMLExporter_
         foreach ($changeset->field_change as $field_change) {
             $this->assertNotEqual((string)$field_change['field_name'], 'permissions_on_artifact');
         }
+    }
+}
+
+class ArtifactXMLExporter_StringFieldTest extends ArtifactXMLExporter_BaseTest {
+
+    public function itCreatesAChangesetForEachHistoryEntry() {
+        $this->exportTrackerDataFromFixture('artifact_with_string_history');
+
+        $this->assertCount($this->xml->artifact->changeset, 3);
+
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value, 'The error code is 23232');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['field_name'], 'field_14');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['type'], 'string');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->submitted_on, $this->toExpectedDate(3234567890));
+
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value, 'The error code is not returned');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['field_name'], 'field_14');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['type'], 'string');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->submitted_on, $this->toExpectedDate(3234570000));
+    }
+
+    public function itCreatesAnInitialChangesetATheTimeOfOpenDateWhenThereIsNoHistory() {
+        $this->exportTrackerDataFromFixture('artifact_with_string_no_history');
+
+        $this->assertCount($this->xml->artifact->changeset, 1);
+
+        $this->assertCount($this->xml->artifact->changeset[0]->field_change, 2);
+        $this->assertChangesItCreatesASingleChangesetWithSummaryAndString($this->xml->artifact->changeset[0]->field_change[0]);
+        $this->assertChangesItCreatesASingleChangesetWithSummaryAndString($this->xml->artifact->changeset[0]->field_change[1]);
+    }
+
+    private function assertChangesItCreatesASingleChangesetWithSummaryAndString(SimpleXMLElement $field_change) {
+        switch($field_change['field_name']) {
+            case 'field_14':
+                $this->assertEqual($field_change->value, 'The error code is not returned');
+                break;
+            case 'summary':
+                $this->assertEqual($field_change->value, 'Le artifact with full history');
+                break;
+            default:
+                throw new Exception('Unexpected field type: '.$field_change['field_name']);
+                break;
+        }
+    }
+
+    public function itCreatesALastChangesetAtImportTimeWhenHistoryDiffersFromCurrentState() {
+        $this->exportTrackerDataFromFixture('artifact_with_string_half_history');
+
+        $this->assertCount($this->xml->artifact->changeset, 3);
+
+        $this->assertCount($this->xml->artifact->changeset[1]->field_change, 1);
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value, 'The error code is 23232');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['field_name'], 'field_14');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->submitted_on, $this->toExpectedDate(3234567890));
+
+        $this->assertCount($this->xml->artifact->changeset[2]->field_change, 1);
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value, 'The error code is not returned');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['field_name'], 'field_14');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->submitted_on, $this->toExpectedDate($_SERVER['REQUEST_TIME']));
+
     }
 }

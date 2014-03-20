@@ -139,4 +139,13 @@ class ArtifactXMLExporterDao extends DataAccessObject {
 
         return $this->retrieve($sql);
     }
+
+    public function searchFieldValues($artifact_id) {
+        $sql = "SELECT f.display_type, f.data_type, f.field_name, fv.*
+                FROM artifact_field_value fv
+                    JOIN artifact         a  ON (a.artifact_id = fv.artifact_id)
+                    JOIN artifact_field   f  ON (f.field_id = fv.field_id AND f.group_artifact_id = a.group_artifact_id)
+                WHERE fv.artifact_id = $artifact_id";
+        return $this->retrieve($sql);
+    }
 }
