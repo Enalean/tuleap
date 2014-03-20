@@ -4,7 +4,7 @@ Version 6.12 (Not Released Yet)
 	* proftpd: 0.9
 	* tracker: 5.270
 	* graphontrackersv5: 5.6
-	* agiledashboard: 1.55
+	* agiledashboard: 1.56
 	* cardwall: 1.22
 	* docman: 2.26.30
 	* git: 3.72
@@ -18,6 +18,7 @@ Version 6.12 (Not Released Yet)
 
 	== Enhancement ==
 	* story #5998 - Delegate the validation of projects to users
+	* story #6454 - Giving access admin rights to some users to all trackers
 
 	== Themes ==
 	* Experimental: 0.9.12

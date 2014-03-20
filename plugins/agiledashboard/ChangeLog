@@ -1,3 +1,6 @@
+Version 1.56 - Tuleap 6.12
+    * story #6454 giving access admin rights to some users to all trackers
+
 Version 1.55 - Tuleap 6.12
     * request #6441 - Agile dashboard should take artifact status into account
 
