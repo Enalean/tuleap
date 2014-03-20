@@ -363,7 +363,8 @@ class FRSFileFactory extends Error {
             $cmdFilePath = preg_replace('` `', '\\ ', $filePath);
             $ret_val   = null;
             $exec_res  = null;
-            $cmd = $this->fileforge." $fileName " . $unixName . "/" . $upload_sub_dir.'/'.$cmdFilePath;
+            $src_dir   = $GLOBALS['ftp_incoming_dir'];
+            $cmd = $this->fileforge." $fileName " . $unixName . "/" . $upload_sub_dir.'/'.$cmdFilePath . " $src_dir 2>&1";
             exec($cmd, $exec_res, $ret_val);
             // Warning. Posix common value for success is 0 (zero), but in php 0 == false.
             // So "convert" the unix "success" value to the php one (basically 0 => true).
