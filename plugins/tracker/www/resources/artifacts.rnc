@@ -41,6 +41,7 @@ grammar {
         ( field_string
             | field_int
             | field_float
+            | field_date
             | field_file
             | field_open_list_user
             | field_perms_on_artifact
@@ -57,6 +58,10 @@ grammar {
     field_float =
         attribute type { "float" },
         element value { xsd:float }
+
+    field_date =
+        attribute type { "date" },
+        element value { date_content }
 
     field_file =
         attribute type { "file" },

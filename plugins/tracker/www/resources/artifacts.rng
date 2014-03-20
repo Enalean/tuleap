@@ -87,6 +87,7 @@
       <ref name="field_string"/>
       <ref name="field_int"/>
       <ref name="field_float"/>
+      <ref name="field_date"/>
       <ref name="field_file"/>
       <ref name="field_open_list_user"/>
       <ref name="field_perms_on_artifact"/>
@@ -117,6 +118,14 @@
     </attribute>
     <element name="value">
       <data type="float"/>
+    </element>
+  </define>
+  <define name="field_date">
+    <attribute name="type">
+      <value>date</value>
+    </attribute>
+    <element name="value">
+      <ref name="date_content"/>
     </element>
   </define>
   <define name="field_file">
