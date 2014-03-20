@@ -38,6 +38,8 @@ class User_ForgeUserGroupPermissionsFactory {
         switch ($permission_id) {
             case User_ForgeUserGroupPermission_ProjectApproval::ID :
                 return new User_ForgeUserGroupPermission_ProjectApproval();
+            case User_ForgeUserGroupPermission_TrackerAdminAllProjects::ID :
+                return new User_ForgeUserGroupPermission_TrackerAdminAllProjects();
             default :
                 throw new User_ForgeUserGroupPermission_NotFoundException();
         }
@@ -84,7 +86,8 @@ class User_ForgeUserGroupPermissionsFactory {
 
     public function getAllAvailableForgePermissions() {
         return array(
-            new User_ForgeUserGroupPermission_ProjectApproval()
+            new User_ForgeUserGroupPermission_ProjectApproval(),
+            new User_ForgeUserGroupPermission_TrackerAdminAllProjects()
         );
     }
 

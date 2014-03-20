@@ -96,6 +96,11 @@ class Tracker_SOAPServer {
      */
     private $fileinfo_factory;
 
+    /**
+     * @var TrackerManager
+     */
+    private $tracker_manager;
+
     public function __construct(
             SOAP_RequestValidator $soap_request_validator,
             TrackerFactory $tracker_factory,
@@ -104,7 +109,9 @@ class Tracker_SOAPServer {
             Tracker_FormElementFactory $formelement_factory,
             Tracker_ArtifactFactory $artifact_factory,
             Tracker_ReportFactory $report_factory,
-            Tracker_FileInfoFactory $fileinfo_factory
+            Tracker_FileInfoFactory $fileinfo_factory,
+            TrackerManager $tracker_manager
+
     ) {
         $this->soap_request_validator   = $soap_request_validator;
         $this->tracker_factory          = $tracker_factory;
@@ -114,6 +121,7 @@ class Tracker_SOAPServer {
         $this->artifact_factory         = $artifact_factory;
         $this->report_factory           = $report_factory;
         $this->fileinfo_factory         = $fileinfo_factory;
+        $this->tracker_manager          = $tracker_manager;
     }
 
     public function getVersion() {
@@ -369,7 +377,9 @@ class Tracker_SOAPServer {
      * @throws SoapFault if user can't access the project
      */
     private function checkUserCanAccessProject(PFUser $user, Project $project) {
-        $this->soap_request_validator->assertUserCanAccessProject($user, $project);
+        if (! $this->tracker_manager->userCanAdminAllProjectTrackers($user)) {
+            $this->soap_request_validator->assertUserCanAccessProject($user, $project);
+        }
     }
 
     /**

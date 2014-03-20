@@ -39,6 +39,7 @@ use \PFUser;
 use \AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use \Tracker_NoChangeException;
 use \EventManager;
+use \URLVerification;
 
 /**
  * Wrapper for milestone related REST methods
@@ -548,7 +549,7 @@ class MilestoneResource {
             throw new RestException(404);
         }
 
-        ProjectAuthorization::userCanAccessProject($user, $milestone->getProject());
+        ProjectAuthorization::userCanAccessProject($user, $milestone->getProject(), new URLVerification());
 
         if (! $milestone->getArtifact()->userCanView()) {
             throw new RestException(403);

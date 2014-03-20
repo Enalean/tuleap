@@ -26,12 +26,12 @@ use \Luracast\Restler\RestException;
 use \Project_AccessProjectNotFoundException;
 use \Project_AccessException;
 use \Project_AccessNotAdminException;
+use \Tracker_URLVerification;
 
 class ProjectAuthorization {
 
-    public static function userCanAccessProject(PFUser $user, Project $project) {
+    public static function userCanAccessProject(PFUser $user, Project $project, URLVerification $url_verification) {
         try {
-            $url_verification = new URLVerification();
             $url_verification->userCanAccessProject($user, $project);
             return true;
         } catch (Project_AccessProjectNotFoundException $exception) {

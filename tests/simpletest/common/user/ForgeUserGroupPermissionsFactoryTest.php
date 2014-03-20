@@ -68,10 +68,12 @@ class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends Use
 
     public function itReturnsEmptyArrayIfAllForgeUserGroupHasAllPermissions() {
         $user_group     = new User_ForgeUGroup(101, '', '');
-        $expected_id    = User_ForgeUserGroupPermission_ProjectApproval::ID;
+        $expected_id1    = User_ForgeUserGroupPermission_ProjectApproval::ID;
+        $expected_id2    = User_ForgeUserGroupPermission_TrackerAdminAllProjects::ID;
 
         $permission_ids = array (
-            array('permission_id' => $expected_id)
+            array('permission_id' => $expected_id1),
+            array('permission_id' => $expected_id2),
         );
 
         stub($this->dao)->getPermissionsForForgeUGroup(101)->returns($permission_ids);
@@ -84,14 +86,11 @@ class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends Use
         $user_group     = new User_ForgeUGroup(101, '', '');
         $expected_id    = User_ForgeUserGroupPermission_ProjectApproval::ID;
 
-        $permission_ids = array (
-            array('permission_id' => $expected_id)
-        );
-
         stub($this->dao)->getPermissionsForForgeUGroup(101)->returns(false);
         $all = $this->factory->getAllUnusedForgePermissionsForForgeUserGroup($user_group);
 
-        $this->assertEqual(1, count($all));
+        $available_permissions = $this->factory->getAllAvailableForgePermissions();
+        $this->assertEqual(count($available_permissions), count($all));
     }
 }
 

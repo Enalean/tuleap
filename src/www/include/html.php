@@ -510,7 +510,7 @@ function site_project_header($params) {
 	}
 
 	//group is private
-	if (!$project->isPublic()) {
+	if (! $project->isPublic() && isset($params['user_has_special_access']) && ! $params['user_has_special_access']) {
 		//if its a private group, you must be a member of that group
 		session_require(array('group'=>$group_id));
 	}

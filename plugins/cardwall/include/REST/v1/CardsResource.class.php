@@ -37,6 +37,7 @@ use \PFUser;
 use \CardControllerBuilderRequestIdException;
 use \CardControllerBuilderRequestDataException;
 use \CardControllerBuilderRequestPlanningIdException;
+use \URLVerification;
 
 class CardsResource {
 
@@ -143,7 +144,11 @@ class CardsResource {
             list($planning_id, $artifact_id) = explode('_', $id);
             $single_card = $this->single_card_builder->getSingleCard($user, $artifact_id, $planning_id);
             if ($single_card->getArtifact()->userCanView($user)) {
-                ProjectAuthorization::userCanAccessProject($user, $single_card->getArtifact()->getTracker()->getProject());
+                ProjectAuthorization::userCanAccessProject(
+                    $user,
+                    $single_card->getArtifact()->getTracker()->getProject(),
+                     new URLVerification()
+                );
                 return $single_card;
             }
             throw new RestException(403);

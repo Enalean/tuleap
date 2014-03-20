@@ -2076,6 +2076,10 @@ EOS;
             return true;
         }
 
+        if ($this->getTrackerManager()->userCanAdminAllProjectTrackers($user)) {
+            return true;
+        }
+
         $permissions = $this->getPermissionsByUgroupId();
 
         foreach ($permissions as $ugroup_id => $permission_types) {
@@ -2092,6 +2096,14 @@ EOS;
         }
         return false;
     }
+
+    /**
+     * @return TrackerManager
+     */
+    protected function getTrackerManager() {
+        return new TrackerManager();
+    }
+
 
     /**
      * Check if user has permission to submit artifact or not
