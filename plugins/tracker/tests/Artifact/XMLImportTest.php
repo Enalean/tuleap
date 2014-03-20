@@ -122,7 +122,7 @@ class Tracker_Artifact_XMLImport_HappyPathTest extends Tracker_Artifact_XMLImpor
                 <changeset>
                   <submitted_by format="username">john_doe</submitted_by>
                   <submitted_on format="ISO8601">2014-01-15T10:38:06+01:00</submitted_on>
-                  <field_change field_name="summary">
+                  <field_change field_name="summary" type="string">
                     <value>Ça marche</value>
                   </field_change>
                 </changeset>
@@ -184,7 +184,7 @@ class Tracker_Artifact_XMLImport_NoFieldTest extends Tracker_Artifact_XMLImportB
                 <changeset>
                   <submitted_by format="username">john_doe</submitted_by>
                   <submitted_on format="ISO8601">2014-01-15T10:38:06+01:00</submitted_on>
-                  <field_change field_name="summaro">
+                  <field_change field_name="summaro" type="string">
                     <value>Ça marche</value>
                   </field_change>
                 </changeset>
@@ -228,7 +228,7 @@ class Tracker_Artifact_XMLImport_UserTest extends Tracker_Artifact_XMLImportBase
                 <changeset>
                   <submitted_by format="username">jmalko</submitted_by>
                   <submitted_on format="ISO8601">2014-01-15T10:38:06+01:00</submitted_on>
-                  <field_change field_name="summary">
+                  <field_change field_name="summary" type="string">
                     <value>Ça marche</value>
                   </field_change>
                 </changeset>
@@ -247,7 +247,7 @@ class Tracker_Artifact_XMLImport_UserTest extends Tracker_Artifact_XMLImportBase
                 <changeset>
                   <submitted_by format="id">700</submitted_by>
                   <submitted_on format="ISO8601">2014-01-15T10:38:06+01:00</submitted_on>
-                  <field_change field_name="summary">
+                  <field_change field_name="summary" type="string">
                     <value>Ça marche</value>
                   </field_change>
                 </changeset>
@@ -269,7 +269,7 @@ class Tracker_Artifact_XMLImport_UserTest extends Tracker_Artifact_XMLImportBase
                 <changeset>
                   <submitted_by format="ldap">uid=jo,ou=people,dc=example,dc=com</submitted_by>
                   <submitted_on format="ISO8601">2014-01-15T10:38:06+01:00</submitted_on>
-                  <field_change field_name="summary">
+                  <field_change field_name="summary" type="string">
                     <value>Ça marche</value>
                   </field_change>
                 </changeset>
@@ -291,7 +291,7 @@ class Tracker_Artifact_XMLImport_UserTest extends Tracker_Artifact_XMLImportBase
                 <changeset>
                   <submitted_by format="email" is_anonymous="1">jo@example.com</submitted_by>
                   <submitted_on format="ISO8601">2014-01-15T10:38:06+01:00</submitted_on>
-                  <field_change field_name="summary">
+                  <field_change field_name="summary" type="string">
                     <value>Ça marche</value>
                   </field_change>
                 </changeset>
@@ -320,14 +320,14 @@ class Tracker_Artifact_XMLImport_MultipleChangesetsTest extends Tracker_Artifact
                 <changeset>
                   <submitted_by format="username">john_doe</submitted_by>
                   <submitted_on format="ISO8601">2014-01-15T10:38:06+01:00</submitted_on>
-                  <field_change field_name="summary">
+                  <field_change field_name="summary" type="string">
                     <value>Ça marche</value>
                   </field_change>
                 </changeset>
                 <changeset>
                   <submitted_by format="username">john_doe</submitted_by>
                   <submitted_on format="ISO8601">2014-01-15T11:03:50+01:00</submitted_on>
-                  <field_change field_name="summary">
+                  <field_change field_name="summary" type="string">
                     <value>^Wit updates</value>
                   </field_change>
                 </changeset>
@@ -382,14 +382,14 @@ class Tracker_Artifact_XMLImport_MultipleChangesetsTest extends Tracker_Artifact
                 <changeset>
                   <submitted_by format="username">john_doe</submitted_by>
                   <submitted_on format="ISO8601">2014-01-15T11:03:50+01:00</submitted_on>
-                  <field_change field_name="summary">
+                  <field_change field_name="summary" type="string">
                     <value>^Wit updates</value>
                   </field_change>
                 </changeset>
                 <changeset>
                   <submitted_by format="username">john_doe</submitted_by>
                   <submitted_on format="ISO8601">2014-01-15T10:38:06+01:00</submitted_on>
-                  <field_change field_name="summary">
+                  <field_change field_name="summary" type="string">
                     <value>Ça marche</value>
                   </field_change>
                 </changeset>
@@ -420,7 +420,7 @@ class Tracker_Artifact_XMLImport_SeveralArtifactsTest extends Tracker_Artifact_X
                 <changeset>
                   <submitted_by format="username">john_doe</submitted_by>
                   <submitted_on format="ISO8601">2014-01-15T10:38:06+01:00</submitted_on>
-                  <field_change field_name="summary">
+                  <field_change field_name="summary" type="string">
                     <value>Ça marche</value>
                   </field_change>
                 </changeset>
@@ -429,7 +429,7 @@ class Tracker_Artifact_XMLImport_SeveralArtifactsTest extends Tracker_Artifact_X
                 <changeset>
                   <submitted_by format="username">john_doe</submitted_by>
                   <submitted_on format="ISO8601">2014-01-16T11:38:06+01:00</submitted_on>
-                  <field_change field_name="summary">
+                  <field_change field_name="summary" type="string">
                     <value>Ça marche</value>
                   </field_change>
                 </changeset>
@@ -476,10 +476,10 @@ class Tracker_Artifact_XMLImport_OneArtifactWithAttachementTest extends Tracker_
                     <changeset>
                         <submitted_by format="username">manuel</submitted_by>
                         <submitted_on format="ISO8601">2014-01-29T10:39:44+01:00</submitted_on>
-                        <field_change field_name="attachment">
+                        <field_change field_name="attachment" type="file">
                           <value ref="File33"/>
                         </field_change>
-                        <field_change field_name="summary">
+                        <field_change field_name="summary" type="string">
                           <value>Newly submitted</value>
                         </field_change>
                     </changeset>
@@ -545,11 +545,11 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsTest extends
                     <changeset>
                         <submitted_by format="username">manuel</submitted_by>
                         <submitted_on format="ISO8601">2014-01-29T10:39:44+01:00</submitted_on>
-                        <field_change field_name="attachment">
+                        <field_change field_name="attachment" type="file">
                           <value ref="File33"/>
                           <value ref="File34"/>
                         </field_change>
-                        <field_change field_name="summary">
+                        <field_change field_name="summary" type="string">
                           <value>Newly submitted</value>
                         </field_change>
                     </changeset>
@@ -621,17 +621,17 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsAndChangeset
                     <changeset>
                         <submitted_by format="username">manuel</submitted_by>
                         <submitted_on format="ISO8601">2014-01-29T10:39:44+01:00</submitted_on>
-                        <field_change field_name="attachment">
+                        <field_change field_name="attachment" type="file">
                           <value ref="File33"/>
                         </field_change>
-                        <field_change field_name="summary">
+                        <field_change field_name="summary" type="string">
                           <value>Newly submitted</value>
                         </field_change>
                     </changeset>
                     <changeset>
                         <submitted_by format="username">manuel</submitted_by>
                         <submitted_on format="ISO8601">2014-01-30T10:39:44+01:00</submitted_on>
-                        <field_change field_name="attachment">
+                        <field_change field_name="attachment" type="file">
                           <value ref="File33"/>
                           <value ref="File34"/>
                         </field_change>
@@ -789,6 +789,88 @@ class Tracker_Artifact_XMLImport_PermsOnArtifactTest extends Tracker_Artifact_XM
                 'use_artifact_permissions' => 1,
                 'u_groups' => array(15, 101)
             )
+        );
+        expect($this->artifact_creator)->create('*', $data, '*', '*', '*', '*')->once();
+
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+    }
+}
+
+class Tracker_Artifact_XMLImport_AlphanumericTest extends Tracker_Artifact_XMLImportBaseTest {
+
+    private $xml_element;
+
+    private $string_field_id = 369;
+    private $string_field;
+    private $text_field_id = 567;
+    private $text_field;
+    private $int_field_id = 234;
+    private $int_field;
+    private $float_field_id = 347;
+    private $float_field;
+    private $date_field_id = 978;
+    private $date_field;
+
+    public function setUp() {
+        parent::setUp();
+
+        stub($this->artifact_creator)->create()->returns(mock('Tracker_Artifact'));
+
+        $this->string_field = stub('Tracker_FormElement_Field_String')->getId()->returns($this->string_field_id);
+        $this->text_field = stub('Tracker_FormElement_Field_Text')->getId()->returns($this->text_field_id);
+        $this->int_field = stub('Tracker_FormElement_Field_Integer')->getId()->returns($this->int_field_id);
+        $this->float_field = stub('Tracker_FormElement_Field_Float')->getId()->returns($this->float_field_id);
+        $this->date_field = stub('Tracker_FormElement_Field_Date')->getId()->returns($this->date_field_id);
+
+        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'i_want_to')->returns(
+            $this->string_field
+        );
+        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'so_that')->returns(
+            $this->text_field
+        );
+        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'initial_effort')->returns(
+            $this->int_field
+        );
+        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'remaining_effort')->returns(
+            $this->float_field
+        );
+        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'start_date')->returns(
+            $this->date_field
+        );
+
+        $this->xml_element = new SimpleXMLElement('<?xml version="1.0"?>
+            <artifacts>
+              <artifact id="4918">
+                <changeset>
+                  <submitted_by format="username">john_doe</submitted_by>
+                  <submitted_on format="ISO8601">2014-01-15T10:38:06+01:00</submitted_on>
+                  <field_change type="string" field_name="i_want_to">
+                    <value>Import artifact in tracker v5</value>
+                  </field_change>
+                  <field_change type="text" field_name="so_that">
+                    <value>My base of support tickets is migrated from Bugzilla to Tuleap</value>
+                  </field_change>
+                  <field_change type="integer" field_name="initial_effort">
+                    <value>5</value>
+                  </field_change>
+                  <field_change type="float" field_name="remaining_effort">
+                    <value>4.5</value>
+                  </field_change>
+                  <field_change type="date" field_name="start_date">
+                    <value format="ISO8601">2014-03-20T10:13:07+01:00</value>
+                  </field_change>
+                </changeset>
+              </artifact>
+            </artifacts>');
+    }
+
+    public function itCreatesArtifactWithAlphanumFieldData() {
+        $data = array(
+            $this->string_field_id => 'Import artifact in tracker v5',
+            $this->text_field_id   => 'My base of support tickets is migrated from Bugzilla to Tuleap',
+            $this->int_field_id    => '5',
+            $this->float_field_id  => '4.5',
+            $this->date_field_id   => '2014-03-20T10:13:07+01:00',
         );
         expect($this->artifact_creator)->create('*', $data, '*', '*', '*', '*')->once();
 
