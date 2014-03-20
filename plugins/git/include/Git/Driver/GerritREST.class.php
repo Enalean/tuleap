@@ -566,7 +566,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         }
     }
 
-    private function getGroupInfoFromGerrit($server, $group_name) {
+    private function getGroupInfoFromGerrit(Git_RemoteServer_GerritServer $server, $group_name) {
         try {
             $response = $this->sendRequest(
                 $server,

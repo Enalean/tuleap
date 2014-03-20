@@ -32,5 +32,6 @@ class Git_RemoteServer_GerritServerPresenter {
         $this->use_gerrit_2_5   = $server->getGerritVersion() === Git_RemoteServer_GerritServer::DEFAULT_GERRIT_VERSION;
         $this->use_gerrit_2_8   = $server->getGerritVersion() !== Git_RemoteServer_GerritServer::DEFAULT_GERRIT_VERSION;
         $this->is_used          = $is_used;
+        $this->http_password    = $server->getHTTPPassword();
     }
 }

@@ -138,7 +138,7 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
                         data-repo-delete="'.(int) $should_delete.'"
                         value="'.(int) $server->getId().'"
                         data-repo-delete-plugin-enabled="'.(int) $plugin_enabled.'">'
-                    .$this->hp->purify($server->getHost()) .
+                    .$this->hp->purify($server->getBaseUrl()) .
                     '</option>';
         }
 
