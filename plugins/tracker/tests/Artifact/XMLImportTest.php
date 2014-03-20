@@ -850,7 +850,7 @@ class Tracker_Artifact_XMLImport_AlphanumericTest extends Tracker_Artifact_XMLIm
                   <field_change type="text" field_name="so_that">
                     <value>My base of support tickets is migrated from Bugzilla to Tuleap</value>
                   </field_change>
-                  <field_change type="integer" field_name="initial_effort">
+                  <field_change type="int" field_name="initial_effort">
                     <value>5</value>
                   </field_change>
                   <field_change type="float" field_name="remaining_effort">

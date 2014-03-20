@@ -25,7 +25,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
 
     const FIELDTYPE_STRING            = 'string';
     const FIELDTYPE_TEXT              = 'text';
-    const FIELDTYPE_INT               = 'integer';
+    const FIELDTYPE_INT               = 'int';
     const FIELDTYPE_FLOAT             = 'float';
     const FIELDTYPE_DATE              = 'date';
     const FIELDTYPE_PERMS_ON_ARTIFACT = 'permissions_on_artifact';
