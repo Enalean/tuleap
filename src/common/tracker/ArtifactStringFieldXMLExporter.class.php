@@ -19,6 +19,7 @@
  */
 
 class ArtifactStringFieldXMLExporter extends ArtifactFieldXMLExporter {
+    const TYPE = 'string';
 
     public function appendNode(DOMElement $changeset_node, $artifact_id, array $row) {
         $field_node = $this->node_helper->createElement('field_change');

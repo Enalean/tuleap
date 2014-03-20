@@ -38,11 +38,19 @@ class ArtifactXMLExporterArtifact {
     /** @var ArtifactXMLNodeHelper */
     private $node_helper;
 
+    /** @var Array */
+    private $fields = array();
+
     public function __construct(ArtifactXMLExporterDao $dao, ZipArchive $archive, DOMDocument $document, Logger $logger) {
         $this->dao                 = $dao;
         $this->logger              = $logger;
         $this->node_helper         = new ArtifactXMLNodeHelper($document);
         $this->attachment_exporter = new ArtifactAttachmentXMLExporter($this->node_helper, $this->dao, $archive);
+        $this->fields              = array(
+            ArtifactStringFieldXMLExporter::TYPE     => new ArtifactStringFieldXMLExporter($this->node_helper),
+            ArtifactAttachmentFieldXMLExporter::TYPE => new ArtifactAttachmentFieldXMLExporter($this->node_helper, $this->dao),
+            ArtifactCCFieldXMLExporter::TYPE         => new ArtifactCCFieldXMLExporter($this->node_helper),
+        );
     }
 
     public function exportArtifact($tracker_id, array $artifact_row) {
@@ -104,6 +112,8 @@ class ArtifactXMLExporterArtifact {
                         $artifact_node,
                         $artifact_id,
                         array(
+                            'data_type'    => '1',
+                            'display_type' => 'TF',
                             'field_name'   => 'summary',
                             'mod_by'       => 0,
                             'submitted_by' => 'migration-tv3-to-tv5',
@@ -142,28 +152,25 @@ class ArtifactXMLExporterArtifact {
 
         $changeset_node = $this->createOrReuseChangeset($previous_changeset, $row['submitted_by'], $row['is_anonymous'], $row['date']);
 
-        switch ($row['field_name']) {
-            case 'summary':
-                $this->last_history_recorded['summary'] = $row['new_value'];
-                $field = new ArtifactStringFieldXMLExporter($this->node_helper);
-                $field->appendNode($changeset_node, $artifact_id, $row);
-                break;
+        $this->last_history_recorded[$row['field_name']] = $row['new_value'];
+        $this->fields[$this->getFieldType($row)]->appendNode($changeset_node, $artifact_id, $row);
 
-            case 'attachment':
-                $field = new ArtifactAttachmentFieldXMLExporter($this->node_helper, $this->dao);
-                $field->appendNode($changeset_node, $artifact_id, $row);
-                break;
+        return $changeset_node;
+    }
 
-            case 'cc':
-                $field = new ArtifactCCFieldXMLExporter($this->node_helper);
-                $field->appendNode($changeset_node, $artifact_id, $row);
-                break;
+    private function getFieldType(array $row) {
+        switch ($row['display_type']) {
+            case 'TF':
+                return ArtifactStringFieldXMLExporter::TYPE;
+
+            case null:
+                if (isset($this->fields[$row['field_name']])) {
+                    return $row['field_name'];
+                }
 
             default:
                 throw new Exception_TV3XMLUnknownFieldTypeException($row['field_name']);
         }
-
-        return $changeset_node;
     }
 
     private function addPermissionOnArtifactAtTheVeryEnd(DOMElement $artifact_node, $artifact_id) {

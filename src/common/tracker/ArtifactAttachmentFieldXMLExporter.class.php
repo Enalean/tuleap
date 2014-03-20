@@ -19,6 +19,7 @@
  */
 
 class ArtifactAttachmentFieldXMLExporter extends ArtifactFieldXMLExporter {
+    const TYPE            = 'attachment';
     const XML_FILE_PREFIX = 'File';
 
     /** @var ArtifactXMLExporterDao */

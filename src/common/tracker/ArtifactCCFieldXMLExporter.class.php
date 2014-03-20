@@ -19,6 +19,7 @@
  */
 
 class ArtifactCCFieldXMLExporter extends ArtifactFieldXMLExporter {
+    const TYPE = 'cc';
 
     public function appendNode(DOMElement $changeset_node, $artifact_id, array $row) {
         $values = array_filter(explode(',', $row['new_value']));

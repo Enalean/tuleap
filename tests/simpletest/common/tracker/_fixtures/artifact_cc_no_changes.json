@@ -12,6 +12,8 @@
     "artifact_history": {
         "123": [
             {
+                "data_type":    null,
+                "display_type": null,
                 "field_name":   "cc",
                 "old_value":    "",
                 "new_value":    "john@doe.org,jeanjean",
