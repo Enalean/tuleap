@@ -47,6 +47,9 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
     /** @var string */
     private $extraction_path;
 
+    /** @var Tracker_Artifact_XMLImport_XMLImportFieldStrategy */
+    private $strategies;
+
     public function __construct(
         Tracker_FormElementFactory $formelement_factory,
         UserManager $user_manager,
@@ -60,6 +63,21 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
         $this->tracker              = $tracker;
         $this->files_importer       = $files_importer;
         $this->extraction_path      = $extraction_path;
+
+        $alphanum_strategy = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyAlphanumeric();
+        $this->strategies  = array(
+            self::FIELDTYPE_PERMS_ON_ARTIFACT => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyPermissionsOnArtifact(),
+            self::FIELDTYPE_ATTACHEMENT => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment(
+                $this->extraction_path,
+                $this->files_importer
+            ),
+            self::FIELDTYPE_OPENLIST => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList(),
+            self::FIELDTYPE_STRING   => $alphanum_strategy,
+            self::FIELDTYPE_TEXT     => $alphanum_strategy,
+            self::FIELDTYPE_INT      => $alphanum_strategy,
+            self::FIELDTYPE_FLOAT    => $alphanum_strategy,
+            self::FIELDTYPE_DATE     => $alphanum_strategy,
+        );
     }
 
     /**
@@ -82,30 +100,8 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
     }
 
     private function getFieldData(Tracker_FormElement_Field $field, SimpleXMLElement $field_change) {
-        switch ((string)$field_change['type']) {
-            case self::FIELDTYPE_STRING:
-            case self::FIELDTYPE_TEXT:
-            case self::FIELDTYPE_INT:
-            case self::FIELDTYPE_FLOAT:
-            case self::FIELDTYPE_DATE:
-                $strategy = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyAlphanumeric();
-                break;
-            case self::FIELDTYPE_PERMS_ON_ARTIFACT:
-                $strategy = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyPermissionsOnArtifact();
-                break;
-            case self::FIELDTYPE_ATTACHEMENT:
-                $strategy = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment(
-                    $this->extraction_path,
-                    $this->files_importer
-                );
-                break;
-            case self::FIELDTYPE_OPENLIST:
-                $strategy = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList(
-                    $field
-                );
-                break;
-        }
+        $type = (string)$field_change['type'];
 
-        return $strategy->getFieldData($field_change);
+        return $this->strategies[$type]->getFieldData($field, $field_change);
     }
 }
