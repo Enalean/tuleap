@@ -20,26 +20,19 @@
 
 class Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList implements Tracker_Artifact_XMLImport_XMLImportFieldStrategy {
 
-    /** @var Tracker_FormElement_Field_OpenList */
-    private $field;
-
-    public function __construct(Tracker_FormElement_Field_OpenList $field) {
-        $this->field = $field;
-    }
-
     /**
      * Extract Field data from XML input
      *
+     * @param Tracker_FormElement_Field $field
      * @param SimpleXMLElement $field_change
-     * @param SimpleXMLElement $xml_artifact
      *
      * @return mixed
      */
-    public function getFieldData(SimpleXMLElement $field_change) {
+    public function getFieldData(Tracker_FormElement_Field $field, SimpleXMLElement $field_change) {
         $values = array();
         foreach ($field_change->value as $value) {
             $values[] = (string) $value;
         }
-        return $this->field->getFieldData(implode(',', $values));
+        return $field->getFieldData(implode(',', $values));
     }
 }

@@ -34,12 +34,12 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
     /**
      * Extract Field data from XML input
      *
+     * @param Tracker_FormElement_Field $field
      * @param SimpleXMLElement $field_change
-     * @param SimpleXMLElement $xml_artifact
      *
      * @return mixed
      */
-    public function getFieldData(SimpleXMLElement $field_change) {
+    public function getFieldData(Tracker_FormElement_Field $field, SimpleXMLElement $field_change) {
         $values      = $field_change->value;
         $files_infos = array();
 
