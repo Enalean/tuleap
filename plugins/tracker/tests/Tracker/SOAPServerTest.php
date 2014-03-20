@@ -658,7 +658,7 @@ abstract class Tracker_SOAPServer_AttachmentChunkTest extends Tracker_SOAPServer
         $this->field         = mock('Tracker_FormElement_Field_File');
         $this->file_info     = partial_mock(
             'Tracker_FileInfo',
-            array('getSoapContent', 'fileExists', 'appendSoapContent', 'postUploadActions'),
+            array('getContent', 'fileExists', 'appendSoapContent', 'postUploadActions'),
             array($this->attachment_id, $this->field, null, null, null, null, null)
         );
 
@@ -721,7 +721,7 @@ class Tracker_SOAPServer_GetArtifactAttachmentChunk_Test extends Tracker_SOAPSer
         stub($this->file_info)->fileExists()->returns(true);
         stub($this->field)->userCanRead()->returns(true);
 
-        expect($this->file_info)->getSoapContent($this->offset, $this->size)->once();
+        expect($this->file_info)->getContent($this->offset, $this->size)->once();
 
         $this->server->getArtifactAttachmentChunk($this->session_key, $this->artifact_id, $this->attachment_id, $this->offset, $this->size);
     }

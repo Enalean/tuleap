@@ -775,7 +775,11 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
 
             if(isset($file_info['id'])) {
                 $filename  = $file_info['id'];
-                $temporary = new Tracker_Artifact_Attachment_TemporaryFileManager($this->getCurrentUser(), $this->getTemporaryFileManagerDao());
+                $temporary = new Tracker_Artifact_Attachment_TemporaryFileManager(
+                    $this->getCurrentUser(),
+                    $this->getTemporaryFileManagerDao(),
+                    $this->getFileInfoFactory()
+                );
 
                 if (!$temporary->exists($filename)) {
                     $attachment->delete();
@@ -865,7 +869,20 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
     protected function getFileInfoDao() {
         return new Tracker_FileInfoDao();
     }
-    
+
+    /**
+     * Get file info factory
+     *
+     * @return Tracker_FileInfoFactory
+     */
+    protected function getFileInfoFactory() {
+        return new Tracker_FileInfoFactory(
+            $this->getFileInfoDao(),
+            Tracker_FormElementFactory::instance(),
+            Tracker_ArtifactFactory::instance()
+        );
+    }
+
     /**
      * Get available values of this field for SOAP usage
      * Fields like int, float, date, string don't have available values
@@ -925,7 +942,11 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
             if (isset($fileinfo->action) && $fileinfo->action == 'delete') {
                 $field_data['delete'][] = $fileinfo->id;
             } else {
-                $temporary_file = new Tracker_Artifact_Attachment_TemporaryFileManager($this->getCurrentUser(), $this->getTemporaryFileManagerDao());
+                $temporary_file = new Tracker_Artifact_Attachment_TemporaryFileManager(
+                    $this->getCurrentUser(),
+                    $this->getTemporaryFileManagerDao(),
+                    $this->getFileInfoFactory()
+                );
                 if (! $temporary_file->exists($fileinfo->id)) {
                     throw new SoapFault(self::SOAP_FAULT_INVALID_REQUEST_FORMAT, "Invalid FieldValueFileInfo->id, file doesn't exist");
                 }

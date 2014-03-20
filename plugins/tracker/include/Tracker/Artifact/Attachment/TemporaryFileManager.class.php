@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) Enalean, 2014. All Rights Reserved.
  *
@@ -21,6 +22,7 @@
  * Manage temporary uploaded files
  */
 class Tracker_Artifact_Attachment_TemporaryFileManager {
+
     const TEMP_FILE_PREFIX = 'soap_attachement_temp_';
     const TEMP_FILE_NB_MAX = 5;
 
@@ -34,9 +36,19 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
      */
     private $dao;
 
-    public function __construct(PFUser $user, Tracker_Artifact_Attachment_TemporaryFileManagerDao $dao) {
-        $this->user = $user;
-        $this->dao  = $dao;
+    /**
+     * @var Tracker_FileInfoFactory
+     */
+    private $file_info_factory;
+
+    public function __construct(
+        PFUser $user,
+        Tracker_Artifact_Attachment_TemporaryFileManagerDao $dao,
+        Tracker_FileInfoFactory $file_info_factory
+    ) {
+        $this->user              = $user;
+        $this->dao               = $dao;
+        $this->file_info_factory = $file_info_factory;
     }
 
     /**
@@ -54,7 +66,7 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
      * @return String
      */
     public function getPath($attachment_name) {
-        return Config::get('codendi_cache_dir').DIRECTORY_SEPARATOR.$this->getUserTemporaryFilePrefix().$attachment_name;
+        return Config::get('codendi_cache_dir') . DIRECTORY_SEPARATOR . $this->getUserTemporaryFilePrefix() . $attachment_name;
     }
 
     /**
@@ -65,9 +77,9 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
      */
     public function getUniqueFileName() {
         if ($this->isOverUserTemporaryFileLimit()) {
-            throw new Tracker_Artifact_Attachment_MaxFilesException('Temporary attachment limits: '.self::TEMP_FILE_NB_MAX.' files max.');
+            throw new Tracker_Artifact_Attachment_MaxFilesException('Temporary attachment limits: ' . self::TEMP_FILE_NB_MAX . ' files max.');
         }
-        $prefix    = $this->getUserTemporaryFilePrefix();
+        $prefix = $this->getUserTemporaryFilePrefix();
         $file_path = tempnam(Config::get('codendi_cache_dir'), $prefix);
         return substr(basename($file_path), strlen($prefix));
     }
@@ -78,20 +90,71 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
      * @throws Tracker_Artifact_Attachment_MaxFilesException
      */
     public function save($name, $description, $mimetype) {
-        $user_id   = $this->user->getId();
-        $tempname  = $this->getUniqueFileName();
+        $user_id = $this->user->getId();
+        $tempname = $this->getUniqueFileName();
         $timestamp = $_SERVER['REQUEST_TIME'];
 
         $id = $this->dao->create($user_id, $name, $description, $mimetype, $timestamp, $tempname);
 
-        if (! $id) {
+        if (!$id) {
             throw new Tracker_Artifact_Attachment_CannotCreateException();
         }
 
         $number_of_chunks = 0;
-        $filesize         = 0;
+        $filesize = 0;
 
         return new Tracker_Artifact_Attachment_TemporaryFile($id, $name, $tempname, $description, $timestamp, $number_of_chunks, $this->user->getId(), $filesize, $mimetype);
+    }
+
+    /**
+     * Get chunk of a file
+     *
+     * @param int    $attachment_id
+     * @param PFUser $current_user
+     * @param int    $offset
+     * @param int    $size
+     *
+     * @return \Tracker_Artifact_Attachment_PermissionDeniedOnFieldException
+     *
+     * @throws Tracker_Artifact_Attachment_PermissionDeniedOnFieldException
+     * @throws Tracker_Artifact_Attachment_FileNotFoundException
+     */
+    public function getAttachedFileChunk($attachment_id, PFUser $current_user, $offset, $size) {
+        $file_info = $this->file_info_factory->getById($attachment_id);
+
+        if ($file_info && $file_info->fileExists()) {
+            $field = $file_info->getField();
+
+            if ($field->userCanRead($current_user)) {
+                return $file_info->getContent($offset, $size);
+
+            } else {
+                throw new Tracker_Artifact_Attachment_PermissionDeniedOnFieldException('Permission denied: you cannot access this field');
+            }
+        }
+
+        throw new Tracker_Artifact_Attachment_FileNotFoundException();
+    }
+
+    /**
+     * Returns encoded content chunk of file
+     *
+     * @param Tracker_Artifact_Attachment_TemporaryFile $file
+     * @param int $offset Where to start reading
+     * @param int $size   How much to read
+     *
+     * @return string Base64 encoded content
+     *
+     * @throws Tracker_Artifact_Attachment_FileNotFoundException
+     */
+    public function getTemporaryFileChunk($file, $offset, $size) {
+        $temporary_name = $file->getTemporaryName();
+
+        if ($this->exists($temporary_name)) {
+            return base64_encode(file_get_contents($this->getPath($temporary_name), false, NULL, $offset, $size));
+        }
+
+        throw new Tracker_Artifact_Attachment_FileNotFoundException();
     }
 
     /**
@@ -127,7 +190,7 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
         }
 
         $bytes_written = $this->appendChunk($content, $file->getTemporaryName());
-        $size          = exec('stat -c %s ' . $this->getPath($file->getTemporaryName()));
+        $size = exec('stat -c %s ' . $this->getPath($file->getTemporaryName()));
 
         $file->setSize($size);
 
@@ -140,7 +203,7 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
             if ($this->validTemporaryFilesSize($decoded_content)) {
                 return file_put_contents($this->getPath($attachment_name), $decoded_content, FILE_APPEND);
             } else {
-                throw new Tracker_Artifact_Attachment_FileTooBigException('Uploaded file exceed max file size for attachments ('.Config::get('sys_max_size_upload').')');
+                throw new Tracker_Artifact_Attachment_FileTooBigException('Uploaded file exceed max file size for attachments (' . Config::get('sys_max_size_upload') . ')');
             }
         } else {
             throw new Tracker_Artifact_Attachment_InvalidPathException('Invalid temporary file path');
@@ -160,7 +223,7 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
     }
 
     private function getUserTemporaryFiles() {
-        return glob(Config::get('codendi_cache_dir').DIRECTORY_SEPARATOR.$this->getUserTemporaryFilePrefix().'*');
+        return glob(Config::get('codendi_cache_dir') . DIRECTORY_SEPARATOR . $this->getUserTemporaryFilePrefix() . '*');
     }
 
     private function isOverUserTemporaryFileLimit() {
@@ -168,16 +231,26 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
     }
 
     private function getUserTemporaryFilePrefix() {
-        return self::TEMP_FILE_PREFIX.$this->user->getId().'_';
+        return self::TEMP_FILE_PREFIX . $this->user->getId() . '_';
     }
 
     private function getTemporaryFilesSize() {
-        $size  = 0;
+        $size = 0;
         $files = $this->getUserTemporaryFiles();
         foreach ($files as $file) {
             $size = $size + filesize($file);
         }
         return $size;
+    }
+
+    public function getAttachedFileSize($id) {
+        $file_info = $this->file_info_factory->getById($id);
+
+        if ($file_info && $file_info->fileExists()) {
+            return $file_info->getFilesize();
+        }
+
+        throw new Tracker_Artifact_Attachment_FileNotFoundException();
     }
 
     private function validTemporaryFilesSize($content) {
@@ -198,7 +271,7 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
     public function getFile($id) {
         $row = $this->dao->getTemporaryFile($id);
 
-        if (! $row) {
+        if (!$row) {
             throw new Tracker_Artifact_Attachment_FileNotFoundException();
         }
 
@@ -232,7 +305,7 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
         $temporary_file_name = $temporary_file->getName();
         $temporary_file_path = $this->getPath($temporary_file_name);
 
-        if ($this->exists($temporary_file_path )) {
+        if ($this->exists($temporary_file_path)) {
             unlink($this->getPath($temporary_file_name));
         }
     }

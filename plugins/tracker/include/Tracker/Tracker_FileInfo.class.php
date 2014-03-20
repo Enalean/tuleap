@@ -87,14 +87,14 @@ class Tracker_FileInfo {
     }
 
     /**
-     * Returns SOAP encoded content chunk of file
+     * Returns encoded content chunk of file
      *
      * @param Integer $offset Where to start reading
      * @param Integer $size   How much to read
      *
      * @return String Base64 encoded content
      */
-    public function getSoapContent($offset, $size) {
+    public function getContent($offset, $size) {
         if (file_exists($this->getPath())) {
             return base64_encode(file_get_contents($this->getPath(), false, NULL, $offset, $size));
         }

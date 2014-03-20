@@ -34,7 +34,9 @@ use \Tracker_Artifact_Attachment_FileNotFoundException   as FileNotFoundExceptio
 use \Tracker_Artifact_Attachment_InvalidOffsetException  as InvalidOffsetException;
 use \Tracker_FileInfo_InvalidFileInfoException           as InvalidFileInfoException;
 use \Tracker_FileInfo_UnauthorisedException              as UnauthorisedException;
-use \Tuleap\Tracker\REST\Artifact\ArtifactFilesReference as ArtifactFilesReference;
+use \Tuleap\REST\Exceptions\LimitOutOfBoundsException;
+use \Tuleap\Tracker\REST\Artifact\FileDataRepresentation          as FileDataRepresentation;
+use \Tracker_Artifact_Attachment_PermissionDeniedOnFieldException as PermissionDeniedOnFieldException;
 use \Tuleap\REST\Header;
 use \UserManager;
 use \PFUser;
@@ -47,6 +49,16 @@ use \Tracker_REST_Artifact_ArtifactValidator;
 use \Tracker_URLVerification;
 
 class ArtifactFilesResource {
+
+    const DEFAULT_LIMIT  = 10485760;
+    const DEFAULT_OFFSET = 0;
+
+    /** @var PFUser */
+    private $user;
+
+    /** @var Tracker_Artifact_Attachment_TemporaryFileManager */
+    private $file_manager;
+
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
 
@@ -56,13 +68,107 @@ class ArtifactFilesResource {
     /** @var Tracker_FileInfoFactory */
     private $fileinfo_factory;
 
+
     public function __construct() {
+        $this->user                = UserManager::instance()->getCurrentUser();
         $this->artifact_factory    = Tracker_ArtifactFactory::instance();
         $this->formelement_factory = Tracker_FormElementFactory::instance();
-        $this->fileinfo_factory    = new Tracker_FileInfoFactory(   new Tracker_FileInfoDao(),
-                                                                    $this->formelement_factory,
-                                                                    $this->artifact_factory
-                                                                 );
+        $this->fileinfo_factory    = new Tracker_FileInfoFactory(
+            new Tracker_FileInfoDao(),
+            $this->formelement_factory,
+            $this->artifact_factory
+        );
+        $this->file_manager = new FileManager(
+            $this->user,
+            new FileManagerDao(),
+            $this->fileinfo_factory
+        );
+    }
+
+    /**
+     * Get a chunk of given file
+     *
+     * A user can only access its own temporary files or attached files if he has the rights to see them.
+     *
+     * @url GET {id}
+     * @param int $id     Id of the file
+     * @param int $offset Where to start to read the file
+     * @param int $limit  How much to read the file
+     *
+     * @return \Tuleap\Tracker\REST\Artifact\FileDataRepresentation
+     *
+     * @throws 401
+     * @throws 403
+     * @throws 404
+     * @throws 406
+     */
+    protected function getId($id, $offset = self::DEFAULT_OFFSET, $limit = self::DEFAULT_LIMIT) {
+        $this->checkLimitValue($limit);
+
+        $chunk = '';
+        $size  = 0;
+
+        if ($this->file_manager->isFileIdTemporary($id)) {
+            $file  = $this->getFile($id, $this->user);
+
+            $chunk = $this->getTemporaryFileContent($file, $offset, $limit);
+            $size  = $file->getSize();
+        } else {
+            $chunk = $this->getAttachedFileContent($id, $offset, $limit);
+            $size  = $this->getAttachedFileSize($id);
+        }
+
+        $this->sendAllowHeadersForArtifactFileId();
+        $this->sendPaginationHeaders($limit, $offset, $size);
+
+        $file_data_representation = new FileDataRepresentation();
+        return $file_data_representation->build($chunk);
+    }
+
+    /**
+     * @throws 404
+     */
+    private function getTemporaryFileContent($file, $offset, $limit) {
+        try {
+            return $this->file_manager->getTemporaryFileChunk($file, $offset, $limit);
+
+        } catch (Tracker_Artifact_Attachment_FileNotFoundException $e) {
+            throw new RestException(404);
+        }
+    }
+
+    /**
+     * @throws 403
+     * @throws 404
+     */
+    private function getAttachedFileContent($id, $offset, $limit) {
+        try {
+            return $this->file_manager->getAttachedFileChunk($id, $this->user, $offset, $limit);
+
+        } catch (PermissionDeniedOnFieldException $e) {
+            throw new RestException(403);
+
+        } catch (FileNotFoundException $e) {
+            throw new RestException(404);
+        }
+    }
+
+    /**
+     * @throws 404
+     */
+    private function getAttachedFileSize($id) {
+        try {
+            return $this->file_manager->getAttachedFileSize($id);
+
+        } catch (FileNotFoundException $e) {
+            throw new RestException(404);
+        }
+    }
+
+    private function checkLimitValue($limit) {
+        if ($limit > FileManager::getMaximumFileChunkSize()) {
+            throw new LimitOutOfBoundsException(FileManager::getMaximumFileChunkSize());
+        }
     }
 
     /**
@@ -80,16 +186,12 @@ class ArtifactFilesResource {
      * @throws 500 406 403
      */
     protected function post($name, $description, $mimetype, $content) {
-
-        $user         = UserManager::instance()->getCurrentUser();
-        $file_manager = $this->getFileManager($user);
-
         $this->sendAllowHeadersForArtifactFile();
 
         try {
-            $file         = $file_manager->save($name, $description, $mimetype);
+            $file         = $this->file_manager->save($name, $description, $mimetype);
             $chunk_offset = 1;
-            $append       = $file_manager->appendChunkForREST($content, $file, $chunk_offset);
+            $append       = $this->file_manager->appendChunkForREST($content, $file, $chunk_offset);
         } catch (CannotCreateException $e) {
             throw new RestException(500);
         } catch (FileTooBigException $e) {
@@ -140,17 +242,14 @@ class ArtifactFilesResource {
     protected function patchId($id, $content, $offset) {
         $this->sendAllowHeadersForArtifactFileId();
 
-        $user         = UserManager::instance()->getCurrentUser();
-        $file_manager = $this->getFileManager($user);
-
-        if (! $file_manager->isFileIdTemporary($id)) {
+        if (! $this->file_manager->isFileIdTemporary($id)) {
             throw new RestException(404, 'File is not modifiable');
         }
 
-        $file = $this->getFile($id, $user);
+        $file = $this->getFile($id);
 
         try {
-            $file_manager->appendChunkForREST($content, $file, $offset);
+            $this->file_manager->appendChunkForREST($content, $file, $offset);
         } catch (InvalidOffsetException $e) {
             throw new RestException(406, 'Invalid offset received. Expected: '. ($file->getCurrentChunkOffset() +1));
         }
@@ -168,11 +267,10 @@ class ArtifactFilesResource {
     /**
      * @url OPTIONS {id}
      */
-    public function optionsId($id) {
+    protected function optionsId($id) {
         $this->sendAllowHeadersForArtifactFileId();
 
-        $user = UserManager::instance()->getCurrentUser();
-        $this->getFile($id, $user);
+        $this->getFile($id);
     }
 
     /**
@@ -182,23 +280,23 @@ class ArtifactFilesResource {
      * @return TemporaryFile
      * @throws RestException
      */
-    private function getFile($id, PFUser $user) {
-        $file_manager = $this->getFileManager($user);
-
+    private function getFile($id) {
         try {
-            $file = $file_manager->getFile($id);
+            $file = $this->file_manager->getFile($id);
+
         } catch (FileNotFoundException $e) {
             throw new RestException(404);
         }
 
-        $this->checkFileBelongsToUser($file, $user);
+        $this->checkTemporaryFileBelongsToCurrentUser($file);
 
         return $file;
     }
 
-    private function checkFileBelongsToUser(TemporaryFile $file, PFUser $user) {
+    private function checkTemporaryFileBelongsToCurrentUser(TemporaryFile $file) {
         $creator_id = $file->getCreatorId();
-        if ($creator_id != $user->getId()) {
+
+        if ($creator_id != $this->user->getId()) {
             throw new RestException(401, 'This file does not belong to you');
         }
     }
@@ -212,7 +310,7 @@ class ArtifactFilesResource {
      *
      * @param string $id Id of the file
      */
-    public function delete($id) {
+    protected function delete($id) {
         Header::allowOptionsDelete();
         try {
             if (! $this->isFileTemporary($id)) {
@@ -222,27 +320,16 @@ class ArtifactFilesResource {
             }
         } catch (Tracker_FormElement_InvalidFieldException $exception) {
             throw new RestException(400, $exception->getMessage());
-        } catch (Tracker_FileInfo_InvalidFileInfoException $exception) {
+        } catch (InvalidFileInfoException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_NoChangeException $exception) {
-        // Do nothing
+            // Do nothing
         } catch (Tracker_Exception $exception) {
             if ($GLOBALS['Response']->feedbackHasErrors()) {
                 throw new RestException(500, $GLOBALS['Response']->getRawFeedback());
             }
             throw new RestException(500, $exception->getMessage());
         }
-    }
-
-    /**
-     * @param PFUser $user
-     * @return FileManager
-     */
-    private function getFileManager(PFUser $user) {
-        return new FileManager(
-            $user,
-            new FileManagerDao()
-        );
     }
 
     private function sendAllowHeadersForArtifactFile() {
@@ -252,8 +339,12 @@ class ArtifactFilesResource {
 
 
     private function sendAllowHeadersForArtifactFileId() {
-        Header::allowOptionsPatch();
+        Header::allowOptionsGetPatch();
         Header::sendMaxFileChunkSizeHeaders(FileManager::getMaximumFileChunkSize());
+    }
+
+    private function sendPaginationHeaders($limit, $offset, $size) {
+        Header::sendPaginationHeaders($limit, $offset, $size, FileManager::getMaximumFileChunkSize());
     }
 
     /**
@@ -261,30 +352,27 @@ class ArtifactFilesResource {
      *
      * @return Tracker_Artifact
      */
-    private function getArtifactByFileInfoId(PFUser $user, $fileinfo_id) {
+    private function getArtifactByFileInfoId($fileinfo_id) {
         try {
             $artifact = $this->fileinfo_factory->getArtifactByFileInfoId($user, $fileinfo_id);
-        } catch (Tracker_FileInfo_InvalidFileInfoException $e) {
+        } catch (InvalidFileInfoException $e) {
             throw new RestException(404, $e->getMessage());
         } catch (UnauthorisedException $e) {
             throw new RestException(403, $e->getMessage());
         }
 
         if ($artifact) {
-            ProjectAuthorization::userCanAccessProject($user, $artifact->getTracker()->getProject(), new Tracker_URLVerification());
+            ProjectAuthorization::userCanAccessProject($this->user, $artifact->getTracker()->getProject(), new Tracker_URLVerification());
             return $artifact;
         }
     }
 
     private function isFileTemporary($id) {
-        $user         = UserManager::instance()->getCurrentUser();
-        $file_manager = $this->getFileManager($user);
-        return $file_manager->isFileIdTemporary($id);
+        return $this->file_manager->isFileIdTemporary($id);
     }
 
     private function removeAttachedFile($id) {
-        $user     = UserManager::instance()->getCurrentUser();
-        $artifact = $this->getArtifactByFileInfoId($user, $id);
+        $artifact = $this->getArtifactByFileInfoId($id);
         $values   = $this->fileinfo_factory->getValuesForDeletionByFileInfoId($id);
 
         $updater = new Tracker_REST_Artifact_ArtifactUpdater(
@@ -292,14 +380,11 @@ class ArtifactFilesResource {
                 $this->formelement_factory
             )
         );
-        $updater->update($user, $artifact, $values);
+        $updater->update($this->user, $artifact, $values);
     }
 
     private function removeTemporaryFile($id) {
-        $user         = UserManager::instance()->getCurrentUser();
-        $file         = $this->getFile($id, $user);
-        $file_manager = $this->getFileManager($user);
-        $file_manager->removeTemporaryFile($file);
+        $file = $this->getFile($id, $this->user);
+        $this->file_manager->removeTemporaryFile($file);
     }
-
 }
