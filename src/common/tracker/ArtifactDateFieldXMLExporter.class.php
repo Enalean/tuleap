@@ -19,6 +19,8 @@
  */
 
 class ArtifactDateFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporter {
+    const TV3_DISPLAY_TYPE = 'DF';
+    const TV3_DATA_TYPE    = '4';
     const TV3_VALUE_INDEX  = 'valueDate';
     const TV3_TYPE         = 'DF_4';
     const TV5_TYPE         = 'date';

@@ -63,9 +63,7 @@ class ArtifactXMLExporterArtifact {
         $this->addAllChangesets(
             $artifact_node,
             $artifact_id,
-            $artifact_row['summary'],
-            $artifact_row['open_date'],
-            $artifact_row['submitted_by']
+            $artifact_row
         );
 
         $this->attachment_exporter->addFilesToArtifact($artifact_node, $tracker_id, $artifact_id);
@@ -73,8 +71,8 @@ class ArtifactXMLExporterArtifact {
         return $artifact_node;
     }
 
-    private function addAllChangesets(DOMElement $artifact_node, $artifact_id, $artifact_summary, $artifact_open_date, $artifact_submitted_by) {
-        $this->initial_changeset = $this->getBareChangeset( $artifact_submitted_by, 0, $artifact_open_date);
+    private function addAllChangesets(DOMElement $artifact_node, $artifact_id, array $artifact) {
+        $this->initial_changeset = $this->getBareChangeset($artifact['submitted_by'], 0, $artifact['open_date']);
         $artifact_node->appendChild($this->initial_changeset);
 
         $previous_changeset = $this->initial_changeset;
@@ -89,7 +87,7 @@ class ArtifactXMLExporterArtifact {
             }
         }
 
-        $current_fields_values = $this->getCurrentFieldsValues($artifact_id, $artifact_summary);
+        $current_fields_values = $this->getCurrentFieldsValues($artifact_id, $artifact);
         $this->updateInitialChangesetVersusCurrentStatus($artifact_id, $current_fields_values);
 
         $this->addLastChangesetIfNoHistoryRecorded($artifact_node, $artifact_id, $current_fields_values);
@@ -97,17 +95,27 @@ class ArtifactXMLExporterArtifact {
         $this->addPermissionOnArtifactAtTheVeryEnd($artifact_node, $artifact_id);
     }
 
-    private function getCurrentFieldsValues($artifact_id, $summary) {
+    private function getCurrentFieldsValues($artifact_id, array $artifact_row) {
         $fields_values = array(
             array(
                 'field_name'   => 'summary',
                 'display_type' => ArtifactStringFieldXMLExporter::TV3_DISPLAY_TYPE,
                 'data_type'    => ArtifactStringFieldXMLExporter::TV3_DATA_TYPE,
-                'valueText'    => $summary,
-            )
+                'valueText'    => $artifact_row['summary'],
+            ),
         );
+        if (isset($artifact_row['close_date']) && $artifact_row['close_date']) {
+            $fields_values[] = array(
+                'field_name'   => 'close_date',
+                'display_type' => ArtifactDateFieldXMLExporter::TV3_DISPLAY_TYPE,
+                'data_type'    => ArtifactDateFieldXMLExporter::TV3_DATA_TYPE,
+                'valueDate'    => $artifact_row['close_date'],
+            );
+        }
         foreach ($this->dao->searchFieldValues($artifact_id) as $row) {
-            $fields_values[] = $row;
+            if ($row['field_name'] != 'close_date') {
+                $fields_values[] = $row;
+            }
         }
         return $fields_values;
     }
@@ -215,10 +223,26 @@ class ArtifactXMLExporterArtifact {
 
         $changeset_node = $this->createOrReuseChangeset($previous_changeset, $row['submitted_by'], $row['is_anonymous'], $row['date']);
 
+        $this->fixDataWithArtifactSpecialValues($row);
+
         $this->last_history_recorded[$row['field_name']] = $row['new_value'];
         $this->field_factory->appendValueByType($changeset_node, $artifact_id, $row);
 
         return $changeset_node;
+    }
+
+    private function fixDataWithArtifactSpecialValues(array &$row) {
+        if ($this->isCloseDate($row)) {
+            $row['new_value'] = $row['date'];
+        }
+    }
+
+    private function isCloseDate(array $row) {
+        return $row['field_name'] == 'close_date' && $this->isACloseDateHistoryEntry($row);
+    }
+
+    private function isACloseDateHistoryEntry(array $row) {
+        return $row['old_value'] === '0' && $row['new_value'] === '';
     }
 
     private function addPermissionOnArtifactAtTheVeryEnd(DOMElement $artifact_node, $artifact_id) {

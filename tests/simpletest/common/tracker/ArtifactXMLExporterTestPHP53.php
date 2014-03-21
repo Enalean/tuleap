@@ -629,3 +629,50 @@ class ArtifactXMLExporter_ScalarFieldTest extends ArtifactXMLExporter_BaseTest {
         throw new Exception("$name not found");
     }
 }
+
+class ArtifactXMLExporter_CloseDateFieldTest extends ArtifactXMLExporter_BaseTest {
+
+    public function itCreatesTheChangesetWithValueStoredOnArtifactTable() {
+        $this->exportTrackerDataFromFixture('artifact_with_close_date_no_history');
+
+        $this->assertCount($this->xml->artifact->changeset, 2);
+
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value, $this->toExpectedDate(1234800000));
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['field_name'], 'close_date');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['type'], 'date');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->submitted_on, $this->toExpectedDate(1234800000));
+    }
+
+    public function itCreatesTheChangesetWhenArtifactIsKeptReopen() {
+        $this->exportTrackerDataFromFixture('artifact_with_close_date_kept_reopen');
+        $this->assertCount($this->xml->artifact->changeset, 3);
+
+        // 1. Create artifact
+        // 2. Close artifact
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value, $this->toExpectedDate(1234800000));
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->submitted_on, $this->toExpectedDate(1234800000));
+        // 3. Reopen artifact
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value, '');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->submitted_on, $this->toExpectedDate(1234900000));
+    }
+
+    public function itCreatesTheChangesetWhenOneOpenAndCloseArtifact() {
+        $this->exportTrackerDataFromFixture('artifact_with_close_date_history');
+
+        $this->assertCount($this->xml->artifact->changeset, 5);
+
+        // 1. Create artifact
+        // 2. Close artifact
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value, $this->toExpectedDate(1234800000));
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->submitted_on, $this->toExpectedDate(1234800000));
+        // 3. Reopen artifact
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value, '');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->submitted_on, $this->toExpectedDate(1234810000));
+        // 4. Close again artifact
+        $this->assertEqual((string)$this->xml->artifact->changeset[3]->field_change->value, $this->toExpectedDate(1234820000));
+        $this->assertEqual((string)$this->xml->artifact->changeset[3]->submitted_on, $this->toExpectedDate(1234820000));
+        // 5. Change close date
+        $this->assertEqual((string)$this->xml->artifact->changeset[4]->field_change->value, $this->toExpectedDate(1234830000));
+        $this->assertEqual((string)$this->xml->artifact->changeset[4]->submitted_on, $this->toExpectedDate(1234840000));
+    }
+}
