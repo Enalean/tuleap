@@ -1,3 +1,6 @@
+Version 5.272 - Tuleap 6.12
+    * story #5990: import scalar fields from tv3 to tv5
+
 Version 5.271 - Tuleap 6.12
     * story #6454 giving access admin rights to some users to all trackers
 
