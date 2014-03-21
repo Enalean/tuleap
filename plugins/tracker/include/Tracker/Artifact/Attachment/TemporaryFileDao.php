@@ -98,5 +98,16 @@ class Tracker_Artifact_Attachment_TemporaryFileManagerDao extends DataAccessObje
                 WHERE fileinfo_id = $file_id";
         return $this->update($sql);
     }
+
+    public function getUserTemporaryFiles($user_id) {
+        $user_id = $this->da->escapeInt($user_id);
+
+        $sql = "SELECT * FROM tracker_fileinfo_temporary
+                  JOIN tracker_fileinfo ON tracker_fileinfo_temporary.fileinfo_id = tracker_fileinfo.id
+                WHERE tracker_fileinfo.submitted_by = $user_id";
+
+        return $this->retrieve($sql);
+    }
+
 }
 ?>
