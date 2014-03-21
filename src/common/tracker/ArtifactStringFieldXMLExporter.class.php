@@ -18,17 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_XMLImport_XMLImportFieldStrategySummary implements Tracker_Artifact_XMLImport_XMLImportFieldStrategy {
+class ArtifactStringFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporter {
+    const TV3_DISPLAY_TYPE = 'TF';
+    const TV3_DATA_TYPE    = '1';
+    const TV3_TYPE         = 'TF_1';
+    const TV5_TYPE         = 'string';
+    const TV3_VALUE_INDEX  = 'valueText';
 
-    /**
-     * Extract Field data from XML input
-     *
-     * @param SimpleXMLElement $field_change
-     * @param SimpleXMLElement $xml_artifact
-     *
-     * @return mixed
-     */
-    public function getFieldData(SimpleXMLElement $field_change) {
-        return (string) $field_change->value;
+    public function appendNode(DOMElement $changeset_node, $artifact_id, array $row) {
+        $this->appendStringNode($changeset_node, self::TV5_TYPE, $row);
+    }
+
+    public function getFieldValueIndex() {
+        return self::TV3_VALUE_INDEX;
     }
 }

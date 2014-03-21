@@ -14,10 +14,10 @@
             {
                 "data_type":    "1",
                 "display_type": "TF",
-                "field_name":   "summary",
-                "old_value":    "Le artifact",
-                "new_value":    "Le artifact with history",
-                "date":         "2234567890",
+                "field_name":   "field_14",
+                "old_value":    "",
+                "new_value":    "The error code is 23232",
+                "date":         "3234567890",
                 "mod_by":       "115",
                 "submitted_by": "goofy",
                 "is_anonymous": "0"
@@ -25,27 +25,26 @@
             {
                 "data_type":    "1",
                 "display_type": "TF",
-                "field_name":   "summary",
-                "old_value":    "Le artifact with history",
-                "new_value":    "Le artifact with full history",
-                "date":         "3234567890",
+                "field_name":   "field_14",
+                "old_value":    "The error code is 23232",
+                "new_value":    "The error code is not returned",
+                "date":         "3234570000",
                 "mod_by":       "115",
                 "submitted_by": "goofy",
                 "is_anonymous": "0"
             }
         ]
     },
-    "permissions": {
+    "artifact_field_value" : {
         "123": [
             {
-                "ugroup_id": "15",
-                "object_id": "123",
-                "permission_type": "TRACKER_ARTIFACT_ACCESS"
-            },
-            {
-                "ugroup_id": "101",
-                "object_id": "123",
-                "permission_type": "TRACKER_ARTIFACT_ACCESS"
+                "data_type":    "1",
+                "display_type": "TF",
+                "field_name":   "field_14",
+                "valueInt":     null,
+                "valueText":    "The error code is not returned",
+                "valueFloat":   null,
+                "valueDate":    null
             }
         ]
     }

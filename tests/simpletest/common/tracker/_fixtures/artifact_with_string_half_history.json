@@ -14,24 +14,26 @@
             {
                 "data_type":    "1",
                 "display_type": "TF",
-                "field_name":   "summary",
-                "old_value":    "Le artifact",
-                "new_value":    "Le artifact with history",
-                "date":         "2234567890",
-                "mod_by":       "115",
-                "submitted_by": "goofy",
-                "is_anonymous": "0"
-            },
-            {
-                "data_type":    "1",
-                "display_type": "TF",
-                "field_name":   "summary",
-                "old_value":    "Le artifact with history",
-                "new_value":    "Le artifact with full history",
+                "field_name":   "field_14",
+                "old_value":    "",
+                "new_value":    "The error code is 23232",
                 "date":         "3234567890",
                 "mod_by":       "115",
                 "submitted_by": "goofy",
                 "is_anonymous": "0"
+            }
+        ]
+    },
+    "artifact_field_value" : {
+        "123": [
+            {
+                "data_type":    "1",
+                "display_type": "TF",
+                "field_name":   "field_14",
+                "valueInt":     null,
+                "valueText":    "The error code is not returned",
+                "valueFloat":   null,
+                "valueDate":    null
             }
         ]
     }

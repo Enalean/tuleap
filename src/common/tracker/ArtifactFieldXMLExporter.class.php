@@ -18,21 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList implements Tracker_Artifact_XMLImport_XMLImportFieldStrategy {
+abstract class ArtifactFieldXMLExporter {
 
-    /**
-     * Extract Field data from XML input
-     *
-     * @param Tracker_FormElement_Field $field
-     * @param SimpleXMLElement $field_change
-     *
-     * @return mixed
-     */
-    public function getFieldData(Tracker_FormElement_Field $field, SimpleXMLElement $field_change) {
-        $values = array();
-        foreach ($field_change->value as $value) {
-            $values[] = (string) $value;
-        }
-        return $field->getFieldData(implode(',', $values));
+    /** @var ArtifactXMLNodeHelper */
+    protected $node_helper;
+
+    public function __construct(ArtifactXMLNodeHelper $node_helper) {
+        $this->node_helper = $node_helper;
     }
+
+    abstract public function appendNode(DOMElement $changeset_node, $artifact_id, array $row);
+
+    abstract public function getFieldValueIndex();
 }

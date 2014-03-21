@@ -115,6 +115,14 @@ abstract class ArtifactXMLExporter_BaseTest extends TuleapTestCase {
         } else {
             stub($this->dao)->searchPermsForArtifact()->returnsEmptyDar();
         }
+
+        if (isset($json['artifact_field_value'])) {
+            foreach ($json['artifact_field_value'] as $artifact_id => $history_rows) {
+                stub($this->dao)->searchFieldValues($artifact_id)->returnsDarFromArray($history_rows);
+            }
+        } else {
+            stub($this->dao)->searchFieldValues()->returnsEmptyDar();
+        }
     }
 
 
@@ -459,5 +467,212 @@ class ArtifactXMLExporter_PermissionsOnArtifactTest extends ArtifactXMLExporter_
         foreach ($changeset->field_change as $field_change) {
             $this->assertNotEqual((string)$field_change['field_name'], 'permissions_on_artifact');
         }
+    }
+}
+
+class ArtifactXMLExporter_StringFieldTest extends ArtifactXMLExporter_BaseTest {
+
+    public function itCreatesAChangesetForEachHistoryEntry() {
+        $this->exportTrackerDataFromFixture('artifact_with_string_history');
+
+        $this->assertCount($this->xml->artifact->changeset, 3);
+
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value, 'The error code is 23232');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['field_name'], 'field_14');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['type'], 'string');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->submitted_on, $this->toExpectedDate(3234567890));
+
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value, 'The error code is not returned');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['field_name'], 'field_14');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['type'], 'string');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->submitted_on, $this->toExpectedDate(3234570000));
+    }
+
+    public function itCreatesAnInitialChangesetATheTimeOfOpenDateWhenThereIsNoHistory() {
+        $this->exportTrackerDataFromFixture('artifact_with_string_no_history');
+
+        $this->assertCount($this->xml->artifact->changeset, 1);
+
+        $this->assertCount($this->xml->artifact->changeset[0]->field_change, 2);
+        $this->assertChangesItCreatesASingleChangesetWithSummaryAndString($this->xml->artifact->changeset[0]->field_change[0]);
+        $this->assertChangesItCreatesASingleChangesetWithSummaryAndString($this->xml->artifact->changeset[0]->field_change[1]);
+    }
+
+    private function assertChangesItCreatesASingleChangesetWithSummaryAndString(SimpleXMLElement $field_change) {
+        switch($field_change['field_name']) {
+            case 'field_14':
+                $this->assertEqual($field_change->value, 'The error code is not returned');
+                break;
+            case 'summary':
+                $this->assertEqual($field_change->value, 'Le artifact with full history');
+                break;
+            default:
+                throw new Exception('Unexpected field type: '.$field_change['field_name']);
+                break;
+        }
+    }
+
+    public function itCreatesALastChangesetAtImportTimeWhenHistoryDiffersFromCurrentState() {
+        $this->exportTrackerDataFromFixture('artifact_with_string_half_history');
+
+        $this->assertCount($this->xml->artifact->changeset, 3);
+
+        $this->assertCount($this->xml->artifact->changeset[1]->field_change, 1);
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value, 'The error code is 23232');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['field_name'], 'field_14');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->submitted_on, $this->toExpectedDate(3234567890));
+
+        $this->assertCount($this->xml->artifact->changeset[2]->field_change, 1);
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value, 'The error code is not returned');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['field_name'], 'field_14');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->submitted_on, $this->toExpectedDate($_SERVER['REQUEST_TIME']));
+    }
+}
+
+class ArtifactXMLExporter_FloatFieldTest extends ArtifactXMLExporter_BaseTest {
+
+    public function itDoesntCreateAnExtraChangesetWhenThereIsAFloatToStringConversionWithTrailingZero() {
+        $this->exportTrackerDataFromFixture('artifact_with_float_history');
+
+        $this->assertCount($this->xml->artifact->changeset, 3);
+
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value, '66.98');
+
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value, '2048');
+    }
+}
+
+class ArtifactXMLExporter_ScalarFieldTest extends ArtifactXMLExporter_BaseTest {
+
+    public function itCreatesAChangesetForEachHistoryEntry() {
+        $this->exportTrackerDataFromFixture('artifact_with_scalar_history');
+
+        $this->assertCount($this->xml->artifact->changeset, 6);
+
+        $this->assertCount($this->xml->artifact->changeset[0]->field_change, 6);
+        $this->assertEqual((string)$this->findValue($this->xml->artifact->changeset[0]->field_change, 'field_18')->value, '');
+
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value, 'The error code is 23232');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['field_name'], 'field_14');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['type'], 'string');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->submitted_on, $this->toExpectedDate(3234567100));
+
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value, "some text");
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['field_name'], 'field_15');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['type'], 'text');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->submitted_on, $this->toExpectedDate(3234567200));
+
+        $this->assertEqual((string)$this->xml->artifact->changeset[3]->field_change->value, "9001");
+        $this->assertEqual((string)$this->xml->artifact->changeset[3]->field_change['field_name'], 'field_16');
+        $this->assertEqual((string)$this->xml->artifact->changeset[3]->field_change['type'], 'int');
+        $this->assertEqual((string)$this->xml->artifact->changeset[3]->submitted_on, $this->toExpectedDate(3234567300));
+
+        $this->assertEqual((string)$this->xml->artifact->changeset[4]->field_change->value, "66.98");
+        $this->assertEqual((string)$this->xml->artifact->changeset[4]->field_change['field_name'], 'field_17');
+        $this->assertEqual((string)$this->xml->artifact->changeset[4]->field_change['type'], 'float');
+        $this->assertEqual((string)$this->xml->artifact->changeset[4]->submitted_on, $this->toExpectedDate(3234567400));
+
+        $this->assertEqual((string)$this->xml->artifact->changeset[5]->field_change->value, $this->toExpectedDate(1234543210));
+        $this->assertEqual((string)$this->xml->artifact->changeset[5]->field_change->value['format'], 'ISO8601');
+        $this->assertEqual((string)$this->xml->artifact->changeset[5]->field_change['field_name'], 'field_18');
+        $this->assertEqual((string)$this->xml->artifact->changeset[5]->field_change['type'], 'date');
+        $this->assertEqual((string)$this->xml->artifact->changeset[5]->submitted_on, $this->toExpectedDate(3234567500));
+    }
+
+    public function itCreatesAnInitialChangesetATheTimeOfOpenDateWhenThereIsNoHistory() {
+        $this->exportTrackerDataFromFixture('artifact_with_scalar_no_history');
+
+        $this->assertCount($this->xml->artifact->changeset, 1);
+
+        $change = $this->xml->artifact->changeset[0]->field_change;
+        $this->assertCount($change, 6);
+
+
+        $string = $this->findValue($change, 'field_14');
+        $this->assertEqual((string)$string->value, 'The error code is 23232');
+        $text   = $this->findValue($change, 'field_15');
+        $this->assertEqual((string)$text->value, 'some text');
+        $int    = $this->findValue($change, 'field_16');
+        $this->assertEqual((string)$int->value, '9001');
+        $float  = $this->findValue($change, 'field_17');
+        $this->assertEqual((string)$float->value, '66.98');
+        $date   = $this->findValue($change, 'field_18');
+        $this->assertEqual((string)$date->value, $this->toExpectedDate(1234543210));
+    }
+
+    public function itCreatesALastChangesetAtImportTimeWhenHistoryDiffersFromCurrentState() {
+        $this->exportTrackerDataFromFixture('artifact_with_scalar_half_history');
+
+        $this->assertCount($this->xml->artifact->changeset, 7);
+
+        $change = $this->xml->artifact->changeset[6]->field_change;
+        $this->assertCount($change, 5);
+
+        $string = $this->findValue($change, 'field_14');
+        $this->assertEqual((string)$string->value, 'The error code is wrong');
+        $text   = $this->findValue($change, 'field_15');
+        $this->assertEqual((string)$text->value, 'some rant');
+        $int    = $this->findValue($change, 'field_16');
+        $this->assertEqual((string)$int->value, '987');
+        $float  = $this->findValue($change, 'field_17');
+        $this->assertEqual((string)$float->value, '3.14');
+        $date   = $this->findValue($change, 'field_18');
+        $this->assertEqual((string)$date->value, $this->toExpectedDate(1234555555));
+    }
+
+    private function findValue(SimpleXMLElement $field_change, $name) {
+        foreach($field_change as $change) {
+            if ($change['field_name'] == $name) {
+                return $change;
+            }
+        }
+        throw new Exception("$name not found");
+    }
+}
+
+class ArtifactXMLExporter_CloseDateFieldTest extends ArtifactXMLExporter_BaseTest {
+
+    public function itCreatesTheChangesetWithValueStoredOnArtifactTable() {
+        $this->exportTrackerDataFromFixture('artifact_with_close_date_no_history');
+
+        $this->assertCount($this->xml->artifact->changeset, 2);
+
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value, $this->toExpectedDate(1234800000));
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['field_name'], 'close_date');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['type'], 'date');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->submitted_on, $this->toExpectedDate(1234800000));
+    }
+
+    public function itCreatesTheChangesetWhenArtifactIsKeptReopen() {
+        $this->exportTrackerDataFromFixture('artifact_with_close_date_kept_reopen');
+        $this->assertCount($this->xml->artifact->changeset, 3);
+
+        // 1. Create artifact
+        // 2. Close artifact
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value, $this->toExpectedDate(1234800000));
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->submitted_on, $this->toExpectedDate(1234800000));
+        // 3. Reopen artifact
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value, '');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->submitted_on, $this->toExpectedDate(1234900000));
+    }
+
+    public function itCreatesTheChangesetWhenOneOpenAndCloseArtifact() {
+        $this->exportTrackerDataFromFixture('artifact_with_close_date_history');
+
+        $this->assertCount($this->xml->artifact->changeset, 5);
+
+        // 1. Create artifact
+        // 2. Close artifact
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value, $this->toExpectedDate(1234800000));
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->submitted_on, $this->toExpectedDate(1234800000));
+        // 3. Reopen artifact
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value, '');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->submitted_on, $this->toExpectedDate(1234810000));
+        // 4. Close again artifact
+        $this->assertEqual((string)$this->xml->artifact->changeset[3]->field_change->value, $this->toExpectedDate(1234820000));
+        $this->assertEqual((string)$this->xml->artifact->changeset[3]->submitted_on, $this->toExpectedDate(1234820000));
+        // 5. Change close date
+        $this->assertEqual((string)$this->xml->artifact->changeset[4]->field_change->value, $this->toExpectedDate(1234830000));
+        $this->assertEqual((string)$this->xml->artifact->changeset[4]->submitted_on, $this->toExpectedDate(1234840000));
     }
 }

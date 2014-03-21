@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList implements Tracker_Artifact_XMLImport_XMLImportFieldStrategy {
+class Tracker_Artifact_XMLImport_XMLImportFieldStrategyDate extends Tracker_Artifact_XMLImport_XMLImportFieldStrategyAlphanumeric {
 
     /**
      * Extract Field data from XML input
@@ -29,10 +29,10 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList implements Track
      * @return mixed
      */
     public function getFieldData(Tracker_FormElement_Field $field, SimpleXMLElement $field_change) {
-        $values = array();
-        foreach ($field_change->value as $value) {
-            $values[] = (string) $value;
+        $timestamp = strtotime((string) $field_change->value);
+        if ($timestamp > 0) {
+            return date('Y-m-d', strtotime((string) $field_change->value));
         }
-        return $field->getFieldData(implode(',', $values));
+        return '';
     }
 }

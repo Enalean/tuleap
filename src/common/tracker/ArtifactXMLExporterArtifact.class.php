@@ -20,16 +20,8 @@
 
 class ArtifactXMLExporterArtifact {
 
-    const XML_FILE_PREFIX = 'File';
-
     /** @var ArtifactXMLExporterDao */
     private $dao;
-
-    /** @var ZipArchive */
-    private $archive;
-
-    /** @var DomDocument */
-    private $document;
 
     /** @var Logger */
     private $logger;
@@ -37,45 +29,57 @@ class ArtifactXMLExporterArtifact {
     /** @var DomElement */
     private $initial_changeset;
 
+    /** @var DomElement */
+    private $last_changeset_for_truncated_history = null;
+
     /** @var Array */
-    private $field_initial_changeset = array();
+    private $field_initial_changeset = array(
+        'attachment' => true,
+        'cc'         => true,
+    );
 
     /** @var Array */
     private $last_history_recorded = array();
 
+    /** @var ArtifactXMLNodeHelper */
+    private $node_helper;
+
+    /** @var ArtifactFieldFactoryXMLExporter */
+    private $field_factory;
+
     public function __construct(ArtifactXMLExporterDao $dao, ZipArchive $archive, DOMDocument $document, Logger $logger) {
-        $this->dao      = $dao;
-        $this->document = $document;
-        $this->logger   = $logger;
-        $this->archive  = $archive;
+        $this->dao                 = $dao;
+        $this->logger              = $logger;
+        $this->node_helper         = new ArtifactXMLNodeHelper($document);
+        $this->attachment_exporter = new ArtifactAttachmentXMLExporter($this->node_helper, $this->dao, $archive);
+        $this->field_factory       = new ArtifactFieldFactoryXMLExporter($this->dao, $this->node_helper);
     }
 
     public function exportArtifact($tracker_id, array $artifact_row) {
         $artifact_id   = (int)$artifact_row['artifact_id'];
-        $artifact_node = $this->document->createElement('artifact');
+        $artifact_node = $this->node_helper->createElement('artifact');
         $artifact_node->setAttribute('id', $artifact_row['artifact_id']);
 
         $this->addAllChangesets(
             $artifact_node,
             $artifact_id,
-            $artifact_row['summary'],
-            $artifact_row['open_date'],
-            $artifact_row['submitted_by']
+            $artifact_row
         );
 
-        $this->addFilesToArtifact($artifact_node, $tracker_id, $artifact_id);
+        $this->attachment_exporter->addFilesToArtifact($artifact_node, $tracker_id, $artifact_id);
+
         return $artifact_node;
     }
 
-    private function addAllChangesets(DOMElement $artifact_node, $artifact_id, $artifact_summary, $artifact_open_date, $artifact_submitted_by) {
-        $this->initial_changeset = $this->getBareChangeset( $artifact_submitted_by, 0, $artifact_open_date);
+    private function addAllChangesets(DOMElement $artifact_node, $artifact_id, array $artifact) {
+        $this->initial_changeset = $this->getBareChangeset($artifact['submitted_by'], 0, $artifact['open_date']);
         $artifact_node->appendChild($this->initial_changeset);
 
         $previous_changeset = $this->initial_changeset;
         $history = $this->dao->searchHistory($artifact_id);
         foreach($history as $row) {
             try {
-                $node = $this->getChangeset($previous_changeset, $artifact_id, $row['field_name'], $row['mod_by'], $row['submitted_by'], $row['is_anonymous'], $row['date'], $row['old_value'], $row['new_value']);
+                $node = $this->getChangeset($previous_changeset, $artifact_id, $row);
                 $artifact_node->appendChild($node);
                 $previous_changeset = $node;
             } catch (Exception_TV3XMLException $exception) {
@@ -83,34 +87,122 @@ class ArtifactXMLExporterArtifact {
             }
         }
 
-        $this->updateInitialChangeset('summary', $artifact_summary);
+        $current_fields_values = $this->getCurrentFieldsValues($artifact_id, $artifact);
+        $this->updateInitialChangesetVersusCurrentStatus($artifact_id, $current_fields_values);
 
-        $this->addLastChangesetIfNoHistoryRecorded($artifact_node, $artifact_id, $artifact_summary);
+        $this->addLastChangesetIfNoHistoryRecorded($artifact_node, $artifact_id, $current_fields_values);
 
         $this->addPermissionOnArtifactAtTheVeryEnd($artifact_node, $artifact_id);
     }
 
-    private function updateInitialChangeset($field_name, $old_value) {
-        if (! isset($this->field_initial_changeset[$field_name])) {
-            if ($field_name == 'summary') {
-                $this->setSummaryFieldChange($this->initial_changeset, $old_value);
+    private function getCurrentFieldsValues($artifact_id, array $artifact_row) {
+        $fields_values = array(
+            array(
+                'field_name'   => 'summary',
+                'display_type' => ArtifactStringFieldXMLExporter::TV3_DISPLAY_TYPE,
+                'data_type'    => ArtifactStringFieldXMLExporter::TV3_DATA_TYPE,
+                'valueText'    => $artifact_row['summary'],
+            ),
+        );
+        if (isset($artifact_row['close_date']) && $artifact_row['close_date']) {
+            $fields_values[] = array(
+                'field_name'   => 'close_date',
+                'display_type' => ArtifactDateFieldXMLExporter::TV3_DISPLAY_TYPE,
+                'data_type'    => ArtifactDateFieldXMLExporter::TV3_DATA_TYPE,
+                'valueDate'    => $artifact_row['close_date'],
+            );
+        }
+        foreach ($this->dao->searchFieldValues($artifact_id) as $row) {
+            if ($row['field_name'] != 'close_date') {
+                $fields_values[] = $row;
             }
-            $this->field_initial_changeset[$field_name] = 1;
+        }
+        return $fields_values;
+    }
+
+    private function updateInitialChangesetVersusCurrentStatus($artifact_id, array $current_fields_values) {
+        foreach ($current_fields_values as $field_value) {
+            try {
+                $this->updateInitialChangeset(
+                    $artifact_id,
+                    $field_value['field_name'],
+                    $field_value['display_type'],
+                    $field_value['data_type'],
+                    $this->field_factory->getFieldValue($field_value)
+                );
+            } catch (Exception_TV3XMLException $exception) {
+                $this->logger->warn("Artifact $artifact_id: skip update initial changeset (".$field_value['field_name']."): ".$exception->getMessage());
+            }
         }
     }
 
-    private function addLastChangesetIfNoHistoryRecorded(DOMElement $artifact_node, $artifact_id, $artifact_summary) {
-        if (isset($this->last_history_recorded['summary'])) {
-            if ($this->last_history_recorded['summary'] != $artifact_summary) {
-                $artifact_node->appendChild($this->getChangeset($artifact_node, $artifact_id, 'summary', 0, 'migration-tv3-to-tv5', 1, $_SERVER['REQUEST_TIME'], '', $artifact_summary));
+    private function updateInitialChangeset($artifact_id, $field_name, $display_type, $data_type, $value) {
+        if (! isset($this->field_initial_changeset[$field_name])) {
+            $this->field_factory->appendValueByType(
+                $this->initial_changeset,
+                $artifact_id,
+                array(
+                    'display_type' => $display_type,
+                    'data_type'    => $data_type,
+                    'field_name'   => $field_name,
+                    'new_value'    => $value,
+                )
+            );
+            $this->field_initial_changeset[$field_name] = true;
+        }
+    }
+
+    private function addLastChangesetIfNoHistoryRecorded(DOMElement $artifact_node, $artifact_id, array $current_fields_values) {
+        foreach ($current_fields_values as $field_value) {
+            try {
+                $this->appendMissingValues($artifact_id, $field_value);
+            } catch (Exception_TV3XMLException $exception) {
+                $this->logger->warn("Artifact $artifact_id: skip fake last changeset (".$field_value['field_name']."): ".$exception->getMessage());
             }
         }
+        if ($this->last_changeset_for_truncated_history) {
+            $artifact_node->appendChild($this->last_changeset_for_truncated_history);
+        }
+    }
+
+    private function appendMissingValues($artifact_id, $field_value) {
+        if (! $this->isLastRecoredValueEqualsToCurrentValue($field_value)) {
+            $this->field_factory->appendValueByType(
+                $this->getLastChangesetForTruncatedHistory(),
+                $artifact_id,
+                array(
+                    'display_type' => $field_value['display_type'],
+                    'data_type'    => $field_value['data_type'],
+                    'field_name'   => $field_value['field_name'],
+                    'new_value'    => $this->field_factory->getFieldValue($field_value),
+                )
+            );
+            return true;
+        }
+        return false;
+    }
+
+    private function getLastChangesetForTruncatedHistory() {
+        if (! $this->last_changeset_for_truncated_history) {
+            $this->last_changeset_for_truncated_history = $this->getBareChangeset('migration-tv3-to-tv5', 1, $_SERVER['REQUEST_TIME']);
+        }
+        return $this->last_changeset_for_truncated_history;
+    }
+
+    private function isLastRecoredValueEqualsToCurrentValue(array $field_value) {
+        if (isset($this->last_history_recorded[$field_value['field_name']])) {
+            if ($this->last_history_recorded[$field_value['field_name']] == $this->field_factory->getFieldValue($field_value)) {
+                return true;
+            }
+            return false;
+        }
+        return true;
     }
 
     private function getBareChangeset($submitted_by, $is_anonymous, $submitted_on) {
-        $changeset_node = $this->document->createElement('changeset');
-        $this->setSubmittedBy($changeset_node, $submitted_by, $is_anonymous);
-        $this->setSubmittedOn($changeset_node, $submitted_on);
+        $changeset_node = $this->node_helper->createElement('changeset');
+        $this->node_helper->appendSubmittedBy($changeset_node, $submitted_by, $is_anonymous);
+        $this->node_helper->appendSubmittedOn($changeset_node, $submitted_on);
         return $changeset_node;
     }
 
@@ -126,203 +218,35 @@ class ArtifactXMLExporterArtifact {
         return (string)$previous_changeset->submitted_on == date('c', $submitted_on);
     }
 
-    private function getChangeset(DOMElement $previous_changeset, $artifact_id, $field_name, $mod_by, $submitted_by, $is_anonymous, $submitted_on, $old_value, $new_value) {
-        $this->updateInitialChangeset($field_name, $old_value);
+    private function getChangeset(DOMElement $previous_changeset, $artifact_id, array $row) {
+        $this->updateInitialChangeset($artifact_id, $row['field_name'], $row['display_type'], $row['data_type'], $row['old_value']);
 
-        $changeset_node = $this->createOrReuseChangeset($previous_changeset, $submitted_by, $is_anonymous, $submitted_on);
+        $changeset_node = $this->createOrReuseChangeset($previous_changeset, $row['submitted_by'], $row['is_anonymous'], $row['date']);
 
-        switch ($field_name) {
-            case 'summary':
-                $this->last_history_recorded['summary'] = $new_value;
-                $this->setSummaryFieldChange($changeset_node, $new_value);
-                break;
+        $this->fixDataWithArtifactSpecialValues($row);
 
-            case 'attachment':
-                $this->setAttachmentFieldChange($changeset_node, $artifact_id, $mod_by, $submitted_on, $old_value, $new_value);
-                break;
-
-            case 'cc':
-                $this->setCCFieldChange($changeset_node, $artifact_id, $mod_by, $submitted_on, $old_value, $new_value);
-                break;
-
-            default:
-                throw new Exception_TV3XMLUnknownFieldTypeException($field_name);
-        }
+        $this->last_history_recorded[$row['field_name']] = $row['new_value'];
+        $this->field_factory->appendValueByType($changeset_node, $artifact_id, $row);
 
         return $changeset_node;
     }
 
-    private function setSummaryFieldChange(DOMElement $changeset_node, $value) {
-        $field_node = $this->document->createElement('field_change');
-        $field_node->setAttribute('field_name', 'summary');
-        $field_node->setAttribute('type', 'string');
-        $field_node->appendChild($this->getNodeWithValue('value', $value));
-        $changeset_node->appendChild($field_node);
-    }
-
-    private function setAttachmentFieldChange(DOMElement $changeset_node, $artifact_id, $submitted_by, $submitted_on, $old_value, $new_value) {
-        $new_attachment = $this->extractFirstDifference($old_value, $new_value);
-        if ($new_attachment) {
-            $dar = $this->dao->searchFile($artifact_id, $new_attachment, $submitted_by, $submitted_on);
-            if ($dar && $dar->rowCount() == 1) {
-                $row_file = $dar->current();
-                $field_node = $this->document->createElement('field_change');
-                $field_node->setAttribute('field_name', 'attachment');
-                $field_node->setAttribute('type', 'file');
-                $field_node->appendChild($this->getNodeValueForFile($row_file['id']));
-                $this->appendPreviousAttachements($field_node, $artifact_id, $submitted_on, $old_value);
-                $changeset_node->appendChild($field_node);
-            } else {
-                throw new Exception_TV3XMLAttachmentNotFoundException('new: '.$new_attachment);
-            }
-        } else {
-            $deleted_attachment = $this->extractFirstDifference($new_value, $old_value);
-            throw new Exception_TV3XMLAttachmentNotFoundException('del: '.$deleted_attachment.' n:'.$new_value.' o:'.$old_value);
+    private function fixDataWithArtifactSpecialValues(array &$row) {
+        if ($this->isCloseDate($row)) {
+            $row['new_value'] = $row['date'];
         }
     }
 
-    private function appendPreviousAttachements(DOMElement $field_node, $artifact_id, $submitted_on, $old_value) {
-        $previous_attachements = array_filter(explode(',', $old_value));
-        foreach ($previous_attachements as $attachement) {
-            $dar = $this->dao->searchFileBefore($artifact_id, $attachement, $submitted_on);
-            if ($dar && $dar->rowCount() == 1) {
-                $row_file = $dar->current();
-                $field_node->appendChild($this->getNodeValueForFile($row_file['id']));
-            }
-        }
+    private function isCloseDate(array $row) {
+        return $row['field_name'] == 'close_date' && $this->isACloseDateHistoryEntry($row);
     }
 
-    private function getNodeValueForFile($file_id) {
-        $node = $this->document->createElement('value');
-        $node->setAttribute('ref', self::XML_FILE_PREFIX.$file_id);
-
-        return $node;
-    }
-
-    /**
-     * Given $reference_value = 'A.png' and $value_to_compare = 'A.png,zzz.pdf' returns 'zzz.pdf'
-     *
-     * Protip, before trying to refactor this with array_diff, think to the following
-     * test case:
-     * Given $reference_value = 'A.png' and $value_to_compare = 'A.png,A.png' returns 'A.png'
-     * because 2 attachements can have same name!
-     *
-     * @param string $reference_value
-     * @param string $value_to_compare
-     */
-    private function extractFirstDifference($reference_value, $value_to_compare) {
-        $old_values_array = array_filter(explode(',', $reference_value));
-        $new_values_array = array_filter(explode(',', $value_to_compare));
-
-        for ($i = 0; $i < count($old_values_array); $i++) {
-            if (isset($new_values_array[$i]) && $new_values_array[$i] == $old_values_array[$i]) {
-                continue;
-            } else {
-                return '';
-            }
-        }
-        if ($new_values_array[$i]) {
-            return $new_values_array[$i];
-        }
-        return '';
-    }
-
-    private function setCCFieldChange(DOMElement $changeset_node, $artifact_id, $mod_by, $submitted_on, $old_value, $new_value) {
-        $values = array_filter(explode(',', $new_value));
-        $field_node = $this->document->createElement('field_change');
-        $field_node->setAttribute('field_name', 'cc');
-        $field_node->setAttribute('type', 'open_list');
-        $field_node->setAttribute('bind', 'user');
-        foreach ($values as $value) {
-            $cc_value_node = $this->getNodeWithValue('value', $value);
-            $this->addUserFormatAttribute($cc_value_node, $this->isValueAnEmailAddress($value));
-            $field_node->appendChild($cc_value_node);
-        }
-        $changeset_node->appendChild($field_node);
-    }
-
-    private function isValueAnEmailAddress($value) {
-        return strpos($value, '@') !== false;
-    }
-
-    private function getNodeWithValue($node_name, $value) {
-        $node = $this->document->createElement($node_name);
-        $no = $node->ownerDocument;
-        $node->appendChild($no->createCDATASection($value));
-        return $node;
-    }
-
-    private function setSubmittedBy(DOMElement $xml, $submitted_by, $is_anonymous) {
-        $submitted_by_node = $this->document->createElement('submitted_by', $submitted_by);
-        $this->addUserFormatAttribute($submitted_by_node, $is_anonymous);
-        $xml->appendChild($submitted_by_node);
-    }
-
-    private function addUserFormatAttribute(DOMElement $node, $is_anonymous) {
-        $node->setAttribute('format', $is_anonymous ? 'email' : 'username');
-        if ($is_anonymous) {
-            $node->setAttribute('is_anonymous', "1");
-        }
-    }
-
-    private function setSubmittedOn(DOMElement $xml, $timestamp) {
-        $submitted_on_node = $this->document->createElement('submitted_on', date('c', $timestamp));
-        $submitted_on_node->setAttribute('format', 'ISO8601');
-        $xml->appendChild($submitted_on_node);
-    }
-
-    private function addFilesToArtifact(DOMElement $artifact_node, $artifact_type_id, $artifact_id) {
-        $dar = $this->dao->searchFilesForArtifact($artifact_id);
-        if (count($dar)) {
-            $this->archive->addEmptyDir(ArtifactXMLExporter::ARCHIVE_DATA_DIR);
-        }
-        foreach($dar as $row) {
-            $xml_file_id = self::XML_FILE_PREFIX.$row['id'];
-            $this->archive->addFile(
-                $this->getFilePathOnServer($artifact_type_id, $row['id']),
-                $this->getFilePathInArchive($xml_file_id)
-            );
-            $file = $this->document->createElement('file');
-            $file->setAttribute('id', $xml_file_id);
-            $file->appendChild($this->getNodeWithValue('filename', $row['filename']));
-            $file->appendChild($this->getNodeWithValue('path', $this->getFilePathInArchive($xml_file_id)));
-            $file->appendChild($this->getNodeWithValue('filesize', $row['filesize']));
-            $file->appendChild($this->getNodeWithValue('filetype', $row['filetype']));
-            $file->appendChild($this->getNodeWithValue('description', $row['description']));
-            $artifact_node->appendChild($file);
-        }
-    }
-
-    private function getFilePathOnServer($artifact_type_id, $attachment_id) {
-        return ArtifactFile::getPathOnFilesystemByArtifactTypeId($artifact_type_id, $attachment_id);
-    }
-
-    private function getFilePathInArchive($xml_file_id) {
-        return ArtifactXMLExporter::ARCHIVE_DATA_DIR.DIRECTORY_SEPARATOR.'Artifact'.$xml_file_id;
+    private function isACloseDateHistoryEntry(array $row) {
+        return $row['old_value'] === '0' && $row['new_value'] === '';
     }
 
     private function addPermissionOnArtifactAtTheVeryEnd(DOMElement $artifact_node, $artifact_id) {
-        $list_of_changesets = $artifact_node->getElementsByTagName('changeset');
-        if ($list_of_changesets->length == 0) {
-            return;
-        }
-
-        $permissions = $this->dao->searchPermsForArtifact($artifact_id);
-        if (! count($permissions)) {
-            return;
-        }
-
-        $last_changeset_node = $list_of_changesets->item($list_of_changesets->length - 1);
-        $field_node = $this->document->createElement('field_change');
-        $field_node->setAttribute('field_name', 'permissions_on_artifact');
-        $field_node->setAttribute('type', 'permissions_on_artifact');
-        $field_node->setAttribute('use_perm', '1');
-        foreach ($permissions as $row) {
-            $ugroup_node = $this->document->createElement('ugroup');
-            $ugroup_node->setAttribute('ugroup_id', $row['ugroup_id']);
-            $field_node->appendChild($ugroup_node);
-        }
-        $last_changeset_node->appendChild($field_node);
+        $field = new ArtifactPermissionsXMLExporter($this->node_helper, $this->dao);
+        $field->appendNode($artifact_node, $artifact_id);
     }
 }
-
