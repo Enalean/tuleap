@@ -198,7 +198,7 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
     /**
      * @return Tracker_Artifact_Attachment_TemporaryFile[]
      */
-    private function getUserTemporaryFiles() {
+    public function getUserTemporaryFiles() {
         return $this->dao->getUserTemporaryFiles($this->user->getId())->instanciateWith(array($this, 'getInstanceFromRow'));
     }
 
