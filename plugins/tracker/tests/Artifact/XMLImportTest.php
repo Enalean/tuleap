@@ -870,7 +870,29 @@ class Tracker_Artifact_XMLImport_AlphanumericTest extends Tracker_Artifact_XMLIm
             $this->text_field_id   => 'My base of support tickets is migrated from Bugzilla to Tuleap',
             $this->int_field_id    => '5',
             $this->float_field_id  => '4.5',
-            $this->date_field_id   => '2014-03-20T10:13:07+01:00',
+            $this->date_field_id   => '2014-03-20',
+        );
+        expect($this->artifact_creator)->create('*', $data, '*', '*', '*', '*')->once();
+
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+    }
+
+    public function itDoesntConvertEmptyDateInto70sdate() {
+        $this->xml_element = new SimpleXMLElement('<?xml version="1.0"?>
+            <artifacts>
+              <artifact id="4918">
+                <changeset>
+                  <submitted_by format="username">john_doe</submitted_by>
+                  <submitted_on format="ISO8601">2014-01-15T10:38:06+01:00</submitted_on>
+                  <field_change type="date" field_name="start_date">
+                    <value format="ISO8601"></value>
+                  </field_change>
+                </changeset>
+              </artifact>
+            </artifacts>');
+
+        $data = array(
+            $this->date_field_id   => '',
         );
         expect($this->artifact_creator)->create('*', $data, '*', '*', '*', '*')->once();
 
