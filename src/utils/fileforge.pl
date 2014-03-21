@@ -59,9 +59,6 @@ if (! -d $dst_dir) {
     }
 }
 
-# add 'group' read and remove 'other' perms
-chmod(0640, $src_file);
-
 
 $dst_file  = $dst_dir.$dst_file;
 # print "Rename $src_file $dst_file\n";
@@ -69,6 +66,11 @@ $dst_file  = $dst_dir.$dst_file;
 if (!rename($src_file, $dst_file)) {
     die("FAILURE: cannot move file ($!)\n");
 }
+
+# add 'group' read and remove 'other' perms
+system("setfacl -b $dst_file");
+chmod(0640, $dst_file);
+system("chgrp ftpadmin $dst_file");
 
 print "OK\n";
 

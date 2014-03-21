@@ -1,8 +1,9 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2012, 2013, 2014. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
  * Codendi is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -740,4 +741,16 @@ class Event {
      *  'project_id' => int
      */
     const GET_PROJECTID_FROM_URL = 'get_projectid_from_url';
+
+    /**
+     * Gives the path to the ftp incoming folder
+     *
+     * Parameters:
+     *  'project' => Project
+     *  'src_dir' => string
+     *
+     * Expected result:
+     *  'src_dir' => string
+     */
+    const GET_FTP_INCOMING_DIR = 'get_ftp_incoming_dir';
 }
