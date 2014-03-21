@@ -36,7 +36,7 @@ class Header {
     const X_PAGINATION_SIZE      = 'X-PAGINATION-SIZE';
     const X_PAGINATION_LIMIT_MAX = 'X-PAGINATION-LIMIT-MAX';
 
-    const UPLOAD_MAX_FILE_CHUNKSIZE = 'Upload-Max-File-Chunksize';
+    const X_UPLOAD_MAX_FILE_CHUNKSIZE = 'X-UPLOAD-MAX-FILE-CHUNKSIZE';
 
     public static function lastModified($timestamp) {
         self::sendHeader(self::LAST_MODIFIED, date('c', $timestamp));
@@ -98,7 +98,7 @@ class Header {
     }
 
     public static function sendMaxFileChunkSizeHeaders($size) {
-        self::sendHeader(self::UPLOAD_MAX_FILE_CHUNKSIZE, $size);
+        self::sendHeader(self::X_UPLOAD_MAX_FILE_CHUNKSIZE, $size);
     }
 
     private static function sendHeader($name, $value) {

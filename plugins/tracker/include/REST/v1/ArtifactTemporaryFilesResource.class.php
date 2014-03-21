@@ -26,6 +26,7 @@ use \Tracker_Artifact_Attachment_TemporaryFile                    as TemporaryFi
 use \Tracker_Artifact_Attachment_TemporaryFileManager             as FileManager;
 use \Tracker_Artifact_Attachment_TemporaryFileManagerDao          as FileManagerDao;
 use \Tuleap\Tracker\REST\Artifact\FileInfoRepresentation          as FileInfoRepresentation;
+use \Tuleap\Tracker\REST\Artifact\FileDataRepresentation          as FileDataRepresentation;
 use \Tracker_Artifact_Attachment_CannotCreateException            as CannotCreateException;
 use \Tracker_Artifact_Attachment_TemporaryFileTooBigException     as TemporaryFileTooBigException;
 use \Tracker_Artifact_Attachment_ChunkTooBigException             as ChunkTooBigException;
@@ -35,6 +36,7 @@ use \Tracker_Artifact_Attachment_FileNotFoundException            as FileNotFoun
 use \Tracker_Artifact_Attachment_InvalidOffsetException           as InvalidOffsetException;
 use \Tracker_FileInfo_InvalidFileInfoException                    as InvalidFileInfoException;
 use \Tracker_FileInfo_UnauthorisedException                       as UnauthorisedException;
+use \Tuleap\REST\Exceptions\LimitOutOfBoundsException;
 use \Tuleap\REST\Header;
 use \UserManager;
 use \PFUser;
@@ -42,8 +44,6 @@ use \Tracker_ArtifactFactory;
 use \Tracker_FormElementFactory;
 use \Tracker_FileInfoFactory;
 use \Tracker_FileInfoDao;
-use \Tracker_REST_Artifact_ArtifactUpdater;
-use \Tracker_REST_Artifact_ArtifactValidator;
 use \Tracker_URLVerification;
 
 class ArtifactTemporaryFilesResource {
@@ -102,6 +102,57 @@ class ArtifactTemporaryFilesResource {
         }
 
         return $files_representations;
+    }
+
+    /**
+     * Get a chunk of given file
+     *
+     * A user can only access their own temporary files
+     *
+     * @url GET {id}
+     * @param int $id     Id of the file
+     * @param int $offset Where to start to read the file
+     * @param int $limit  How much to read the file
+     *
+     * @return \Tuleap\Tracker\REST\Artifact\FileDataRepresentation
+     *
+     * @throws 404
+     * @throws 406
+     */
+    protected function getId($id, $offset = 0, $limit = self::DEFAULT_LIMIT) {
+        $this->checkLimitValue($limit);
+
+        $chunk = $this->getTemporaryFileContent($id, $offset, $limit);
+        $size  = $this->getTemporaryFileSize($id);
+
+        $this->sendAllowHeadersForArtifactFilesId();
+        $this->sendPaginationHeaders($limit, $offset, $size);
+
+        $file_data_representation = new FileDataRepresentation();
+
+        return $file_data_representation->build($chunk);
+    }
+
+    /**
+     * @throws 401
+     * @throws 404
+     */
+    private function getTemporaryFileContent($id, $offset, $limit) {
+        $file = $this->getFile($id);
+
+        try {
+            return $this->file_manager->getTemporaryFileChunk($file, $offset, $limit);
+
+        } catch (FileNotFoundException $e) {
+            throw new RestException(404);
+        }
+    }
+
+    /**
+     * @throws 404
+     */
+    private function getTemporaryFileSize($id) {
+        return $this->getFile($id)->getSize();
     }
 
     /**
@@ -284,6 +335,10 @@ class ArtifactTemporaryFilesResource {
         Header::sendMaxFileChunkSizeHeaders(FileManager::getMaximumChunkSize());
     }
 
+    private function sendPaginationHeaders($limit, $offset, $size) {
+        Header::sendPaginationHeaders($limit, $offset, $size, FileManager::getMaximumChunkSize());
+    }
+
     /**
      * @param int $fileinfo_id
      *
@@ -312,6 +367,15 @@ class ArtifactTemporaryFilesResource {
     private function checkFileIsTemporary($id) {
         if (! $this->file_manager->isFileIdTemporary($id)) {
             throw new RestException(404);
+        }
+    }
+
+    /**
+     * @throws 406
+     */
+    private function checkLimitValue($limit) {
+        if ($limit > self::DEFAULT_LIMIT) {
+            throw new LimitOutOfBoundsException(self::DEFAULT_LIMIT);
         }
     }
 }

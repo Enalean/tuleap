@@ -82,6 +82,17 @@ class Tracker_Artifact_Attachment_TemporaryFileManagerDao extends DataAccessObje
         return $this->retrieveFirstRow($sql);
     }
 
+    public function getTemporaryFileByTemporaryName($temporary_name) {
+        $temporary_name  = $this->da->quoteSmart($temporary_name);
+
+        $sql = "SELECT * FROM tracker_fileinfo_temporary
+                    JOIN tracker_fileinfo ON tracker_fileinfo_temporary.fileinfo_id = tracker_fileinfo.id
+                WHERE tempname = $temporary_name";
+
+        return $this->retrieveFirstRow($sql);
+    }
+
+
     public function doesFileExist($file_id) {
         $file_id = $this->da->escapeInt($file_id);
 
@@ -89,13 +100,20 @@ class Tracker_Artifact_Attachment_TemporaryFileManagerDao extends DataAccessObje
                 WHERE fileinfo_id = $file_id";
         return $this->retrieve($sql)->count() > 0;
     }
-
     public function delete($file_id) {
         $file_id = $this->da->escapeInt($file_id);
 
         $sql = "DELETE tracker_fileinfo_temporary, tracker_fileinfo FROM tracker_fileinfo_temporary
                     JOIN tracker_fileinfo ON tracker_fileinfo_temporary.fileinfo_id = tracker_fileinfo.id
                 WHERE fileinfo_id = $file_id";
+        return $this->update($sql);
+    }
+
+    public function deleteByTemporaryName($temporary_name) {
+        $temporary_name = $this->da->quoteSmart($temporary_name);
+
+        $sql = "DELETE FROM tracker_fileinfo_temporary
+                WHERE tempname = $temporary_name";
         return $this->update($sql);
     }
 

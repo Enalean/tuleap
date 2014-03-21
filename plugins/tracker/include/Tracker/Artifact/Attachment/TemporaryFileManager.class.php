@@ -265,6 +265,16 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
         return $this->getInstanceFromRow($row);
     }
 
+    public function getFileByTemporaryName($temporary_name) {
+        $row = $this->dao->getTemporaryFileByTemporaryName($temporary_name);
+
+        if (! $row) {
+            return;
+        }
+
+        return $this->getInstanceFromRow($row);
+    }
+
     public function isFileIdTemporary($id) {
         return $this->dao->doesFileExist($id);
     }
@@ -276,6 +286,10 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
 
     private function removeTemporaryFileInDB($id) {
         $this->dao->delete($id);
+    }
+
+    public function removeTemporaryFileInDBByTemporaryName($temporary_name) {
+        $this->dao->deleteByTemporaryName($temporary_name);
     }
 
     private function removeTemporaryFileFomFileSystem(Tracker_Artifact_Attachment_TemporaryFile $temporary_file) {
@@ -299,6 +313,74 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
             $row['filesize'],
             $row['filetype']
         );
+    }
+
+    public function getAlreadyAttachedFileIds(Tracker_Artifact $artifact) {
+        $formelement_factory     = Tracker_FormElementFactory::instance();
+        $formelement_files       = $formelement_factory->getUsedFormElementsByType($artifact->getTracker(), 'file');
+
+        $last_changeset_file_ids = array();
+
+        foreach($formelement_files as $formelement_files) {
+            $field               = $formelement_factory->getFormElementById($formelement_files->getId());
+            $value               = $field->getLastChangesetValue($artifact);
+
+            foreach($value->getFiles() as $file) {
+                $last_changeset_file_ids[] = (int) $file->getId();
+            }
+        }
+
+        return $last_changeset_file_ids;
+    }
+
+    /**
+     * Get the field data for artifact submission
+     * @throws Tracker_Artifact_Attachment_FileNotFoundException
+     * @throws Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException
+     */
+    public function buildFieldDataForREST($rest_value, Tracker_Artifact $artifact = null) {
+        $field_data                = array();
+        $already_attached_file_ids = array();
+
+        if ($artifact) {
+            $already_attached_file_ids = $this->getAlreadyAttachedFileIds($artifact);
+        }
+
+        $given_rest_file_ids = $rest_value->value;
+        // Ids given in REST
+        foreach ($given_rest_file_ids as $file_id) {
+            $linked_artifact = $this->file_info_factory->getArtifactByFileInfoId($file_id);
+
+            // Temporary => link
+            if (! $linked_artifact && $this->isFileIdTemporary($file_id)) {
+                $temporary_file = $this->getFile($file_id);
+
+                if (! $this->exists($temporary_file->getTemporaryName())) {
+                    throw new Tracker_Artifact_Attachment_FileNotFoundException('Temporary file #' . $file_id . ' not found');
+                }
+
+                $field_data[] = $this->file_info_factory->buildFileInfoData($temporary_file, $this->getPath($temporary_file->getTemporaryName()));
+
+            } elseif (! $linked_artifact && ! $this->isFileIdTemporary($file_id)) {
+                throw new Tracker_Artifact_Attachment_FileNotFoundException('Temporary file #' . $file_id . ' not found');
+
+            // Already attached to another artifact => error
+            } elseif ($artifact && $artifact->getId() != $linked_artifact->getId()
+                    || ! $artifact && $linked_artifact) {
+
+                throw new Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException('File #' . $file_id . ' is already linked to artifact #' . $linked_artifact->getId());
+            }
+        }
+
+        // Already attached file ids
+        foreach ($already_attached_file_ids as $file_id) {
+            // Not in given ids => unlink
+            if (! in_array($file_id, $given_rest_file_ids)) {
+                $field_data['delete'][] = $file_id;
+            }
+        }
+
+        return $field_data;
     }
 }
 

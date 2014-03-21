@@ -80,6 +80,7 @@ class Tracker_FileInfoDao extends DataAccessObject {
                 FROM tracker_changeset_value AS cv
                     INNER JOIN tracker_changeset_value_file AS cv_file ON (cv_file.changeset_value_id = cv.id)
                     INNER JOIN tracker_changeset AS c ON (cv.changeset_id = c.id)
+                    INNER JOIN tracker_artifact AS a ON (a.id = c.artifact_id AND a.last_changeset_id = c.id)
                 WHERE cv_file.fileinfo_id = $id";
         return $this->retrieve($sql);
     }

@@ -86,7 +86,7 @@ class Tracker_FileInfoFactory {
      * @throws Tracker_FileInfo_InvalidFileInfoException
      * @throws Tracker_FileInfo_UnauthorisedException
      */
-    public function getArtifactByFileInfoId(PFUser $user, $id) {
+    public function getArtifactByFileInfoIdAndUser(PFUser $user, $id) {
         $row = $this->dao->searchArtifactIdByFileInfoId($id)->getRow();
         if (! $row) {
             throw new Tracker_FileInfo_InvalidFileInfoException('File does not exist');
@@ -97,6 +97,37 @@ class Tracker_FileInfoFactory {
             throw new Tracker_FileInfo_UnauthorisedException('User can\'t access the artifact the file is attached to');
         }
         return $artifact;
+    }
+
+    /**
+     *
+     * @param type $id
+     *
+     * @return Tracker_Artifact
+     * @throws Tracker_FileInfo_InvalidFileInfoException
+     * @throws Tracker_FileInfo_UnauthorisedException
+     */
+    public function getArtifactByFileInfoId($id) {
+        $row = $this->dao->searchArtifactIdByFileInfoId($id)->getRow();
+        if (! $row) {
+            return;
+        }
+
+        return $this->artifact_factory->getArtifactById($row['artifact_id']);
+    }
+
+    public function buildFileInfoData(Tracker_Artifact_Attachment_TemporaryFile $file, $path) {
+        return array(
+            'id'           => $file->getTemporaryName(),
+            'submitted_by' => $file->getCreatorId(),
+            'description'  => $file->getDescription(),
+            'name'         => $file->getName(),
+            'tmp_name'     => $path,
+            'size'         => $file->getSize(),
+            'type'         => $file->getType(),
+            'error'        => UPLOAD_ERR_OK,
+            'action'       => ''
+        );
     }
 }
 

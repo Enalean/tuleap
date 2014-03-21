@@ -49,7 +49,6 @@ abstract class Tracker_FormElement_Field_File_BaseTest extends TuleapTestCase {
     protected $thumbnails_dir;
     protected $tmp_name;
     protected $another_tmp_name;
-    protected $tempfile_dao;
     protected $file_info_factory;
 
     public function setUp() {
@@ -74,7 +73,6 @@ abstract class Tracker_FormElement_Field_File_BaseTest extends TuleapTestCase {
         $this->another_tmp_name = $this->fixture_dir.'/another_uploaded_file.txt';
 
         $this->file_info_factory = mock('Tracker_FileInfoFactory');
-        $this->tempfile_dao      = mock('Tracker_Artifact_Attachment_TemporaryFileManagerDao');
     }
 
     public function tearDown() {
@@ -722,8 +720,8 @@ class Tracker_FormElement_Field_File_PersistDataTest extends Tracker_FormElement
 
     public function itCreatesAFileWhenItComesFromAsSoapRequest() {
         $file_id        = 'coucou123';
-        $temp_file      = new Tracker_Artifact_Attachment_TemporaryFileManager($this->current_user, $this->tempfile_dao, $this->file_info_factory);
-        $temp_file_path = $temp_file->getPath($file_id);
+        $temp_file = new Tracker_SOAP_TemporaryFile($this->current_user, $file_id);
+        $temp_file_path = $temp_file->getPath();
 
         $file_info = array(
             'tmp_name' => $temp_file_path,
@@ -878,12 +876,14 @@ class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends Tracker_Fo
             $this->createFakeSoapFileRequest($file_id, $description, $filename, $filesize, $filetype)
         );
 
-        $temp_file = new Tracker_Artifact_Attachment_TemporaryFileManager($this->current_user, $this->tempfile_dao, $this->file_info_factory);
-        $temp_file_path = $temp_file->getPath($file_id);
+        $temp_file = new Tracker_SOAP_TemporaryFile($this->current_user, $file_id);
+        $temp_file_path = $temp_file->getPath();
         touch($temp_file_path);
 
+        $field = aFileField()->build();
+
         $this->assertEqual(
-            $this->field->getFieldData($field_value),
+            $field->getFieldData($field_value),
             array(
                 array(
                     'id'          =>  $file_id,
@@ -904,8 +904,8 @@ class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends Tracker_Fo
         $filesize1    = 1234;
         $filetype1    = 'application/vnd.oasis.opendocument.spreadsheet';
         $file_id1     = 'sdfsdfaz';
-        $temp_file1      = new Tracker_Artifact_Attachment_TemporaryFileManager($this->current_user, $this->tempfile_dao, $this->file_info_factory);
-        $temp_file_path1 = $temp_file1->getPath($file_id1);
+        $temp_file1      = new Tracker_SOAP_TemporaryFile($this->current_user, $file_id1);
+        $temp_file_path1 = $temp_file1->getPath();
         touch($temp_file_path1);
 
         $description2 = "Capture d'écran";
@@ -913,8 +913,8 @@ class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends Tracker_Fo
         $filesize2    = 5698;
         $filetype2    = 'image/png';
         $file_id2     = 'sdfsdfaz';
-        $temp_file2      = new Tracker_Artifact_Attachment_TemporaryFileManager($this->current_user, $this->tempfile_dao, $this->file_info_factory);
-        $temp_file_path2 = $temp_file2->getPath($file_id2);
+        $temp_file2      = new Tracker_SOAP_TemporaryFile($this->current_user, $file_id2);
+        $temp_file_path2 = $temp_file2->getPath();
         touch($temp_file_path2);
 
         $field_value = $this->createFakeSoapFieldValue(
@@ -983,8 +983,8 @@ class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends Tracker_Fo
         $filesize1    = 1234;
         $filetype1    = 'application/vnd.oasis.opendocument.spreadsheet';
         $file_id1     = 'sdfsdfaz';
-        $temp_file1      = new Tracker_Artifact_Attachment_TemporaryFileManager($this->current_user, $this->tempfile_dao, $this->file_info_factory);
-        $temp_file_path1 = $temp_file1->getPath($file_id1);
+        $temp_file1      =  new Tracker_SOAP_TemporaryFile($this->current_user, $file_id1);
+        $temp_file_path1 = $temp_file1->getPath();
         touch($temp_file_path1);
 
         $file_id2 = 12;

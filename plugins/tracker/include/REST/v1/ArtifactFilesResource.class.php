@@ -73,7 +73,7 @@ class ArtifactFilesResource {
     /**
      * Get a chunk of given file
      *
-     * A user can only access its own temporary files or attached files if he has the rights to see them.
+     * Get a chunk of given attached file
      *
      * @url GET {id}
      * @param int $id     Id of the file
@@ -108,6 +108,7 @@ class ArtifactFilesResource {
     private function getAttachedFileContent($id, $offset, $limit) {
         try {
             return $this->file_manager->getAttachedFileChunk($id, $this->user, $offset, $limit);
+
         } catch (PermissionDeniedOnFieldException $e) {
             throw new RestException(403);
         } catch (FileNotFoundException $e) {
@@ -115,6 +116,9 @@ class ArtifactFilesResource {
         }
     }
 
+    /**
+     * @throws 406
+     */
     private function checkLimitValue($limit) {
         if ($limit > self::DEFAULT_LIMIT) {
             throw new LimitOutOfBoundsException(self::DEFAULT_LIMIT);
@@ -124,6 +128,10 @@ class ArtifactFilesResource {
     private function sendAllowHeadersForArtifactFilesId() {
         Header::allowOptionsGetPutDelete();
         Header::sendMaxFileChunkSizeHeaders(self::DEFAULT_LIMIT);
+    }
+
+    private function sendPaginationHeaders($limit, $offset, $size) {
+        Header::sendPaginationHeaders($limit, $offset, $size, FileManager::getMaximumChunkSize());
     }
 
     /**

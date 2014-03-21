@@ -175,6 +175,10 @@ class ArtifactsResource {
                 throw new RestException(500, $GLOBALS['Response']->getRawFeedback());
             }
             throw new RestException(500, $exception->getMessage());
+        } catch (Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException $exception) {
+            throw new RestException(500, $exception->getMessage());
+        } catch (Tracker_Artifact_Attachment_FileNotFoundException $exception) {
+            throw new RestException(404, $exception->getMessage());
         }
         $this->sendAllowHeadersForArtifact($artifact);
     }
@@ -214,6 +218,10 @@ class ArtifactsResource {
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_FormElement_NotImplementedForRESTException $exception) {
             throw new RestException(501, $exception->getMessage());
+        } catch (Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException $exception) {
+            throw new RestException(500, $exception->getMessage());
+        } catch (Tracker_Artifact_Attachment_FileNotFoundException $exception) {
+            throw new RestException(404, $exception->getMessage());
         }
         $this->options();
     }
