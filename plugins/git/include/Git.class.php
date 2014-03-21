@@ -78,8 +78,8 @@ class Git extends PluginController {
      */
     private $gerrit_server_factory;
 
-    /** @var Git_Driver_Gerrit */
-    private $driver;
+    /** @var Git_Driver_Gerrit_GerritDriverFactory */
+    private $driver_factory;
 
     /** @var GitRepositoryManager */
     private $repository_manager;
@@ -105,7 +105,7 @@ class Git extends PluginController {
     public function __construct(
         GitPlugin $plugin,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
-        Git_Driver_Gerrit $driver,
+        Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
         GitRepositoryManager $repository_manager,
         Git_SystemEventManager $system_event_manager,
         Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
@@ -125,7 +125,7 @@ class Git extends PluginController {
         $this->projectManager           = $project_manager;
         $this->factory                  = $git_repository_factory;
         $this->gerrit_server_factory    = $gerrit_server_factory;
-        $this->driver                   = $driver;
+        $this->driver_factory           = $driver_factory;
         $this->repository_manager       = $repository_manager;
         $this->git_system_event_manager = $system_event_manager;
         $this->gerrit_usermanager       = $gerrit_usermanager;
@@ -620,7 +620,7 @@ class Git extends PluginController {
                         } else {
                             $this->addAction('migrateToGerrit', array($repo, $remote_server_id, $gerrit_template_id));
                         }
-                    } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
+                    } catch (Git_Driver_Gerrit_Exception $e) {
                         $this->addError($this->getText('gerrit_server_down'));
                     }
                     $this->addAction('redirectToRepoManagementWithMigrationAccessRightInformation', array($this->groupId, $repoId, $pane));
@@ -638,12 +638,12 @@ class Git extends PluginController {
                 break;
             case 'delete_gerrit_project':
                 $repo                = $this->factory->getRepositoryById($repoId);
-                $project_gerrit_name = $this->driver->getGerritProjectName($repo);
                 $server              = $this->gerrit_server_factory->getServerById($repo->getRemoteServerId());
+                $project_gerrit_name = $this->driver_factory->getDriver($server)->getGerritProjectName($repo);
 
                 try {
-                    $this->driver->deleteProject($server, $project_gerrit_name);
-                } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
+                    $this->driver_factory->deleteProject($server, $project_gerrit_name);
+                } catch (Git_Driver_Gerrit_Exception $e) {
                     $this->addError($this->getText('gerrit_server_down'));
                 }
                 $migrate_access_right = $this->request->existAndNonEmpty('migrate_access_right');
@@ -693,10 +693,11 @@ class Git extends PluginController {
     }
 
     private function gerritProjectAlreadyExists($remote_server_id, GitRepository $repo) {
-        $gerrit_server         = $this->gerrit_server_factory->getServerById($remote_server_id);
-        $gerrit_project_name   = $this->driver->getGerritProjectName($repo);
+        $gerrit_server       = $this->gerrit_server_factory->getServerById($remote_server_id);
+        $driver              = $this->driver_factory->getDriver($gerrit_server);
+        $gerrit_project_name = $driver->getGerritProjectName($repo);
 
-        return $this->driver->doesTheProjectExist($gerrit_server, $gerrit_project_name);
+        return $driver->doesTheProjectExist($gerrit_server, $gerrit_project_name);
     }
 
     private function processRepoManagementNotifications($pane, $repoId, $repositoryName, $user) {
@@ -789,7 +790,7 @@ class Git extends PluginController {
             $this->factory,
             $this->repository_manager,
             $this->gerrit_server_factory,
-            $this->driver,
+            $this->driver_factory,
             $this->gerrit_usermanager,
             $this->project_creator,
             $this->template_factory,
@@ -895,5 +896,3 @@ class Git extends PluginController {
     }
 
 }
-
-?>

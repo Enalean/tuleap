@@ -281,3 +281,8 @@ plugin_git	third_party_synch_warning	Cela nécessite parfois une connexion à Ge
 plugin_git	no_longer_access_to_admin	Vous n'avez plus accès à l'administration du service Git suite à la mise à jour des permissions.
 plugin_git	no_data_retrieved	La requête ne contient aucune donnée.
 plugin_git	not_valid_request	La requête n'est pas valide.
+
+plugin_git	admin_gerrit_version_label	Version du serveur gerrit :
+plugin_git	admin_gerrit_v2_8plus	2.8+
+plugin_git	admin_gerrit_v2_5	2.5
+plugin_git	admin_gerrit_http_password_label	HTTP password :

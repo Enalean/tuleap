@@ -2,8 +2,9 @@
 
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2011 - 2014. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
  * Codendi is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -138,7 +139,7 @@ class GitViews extends PluginViews {
             $this->controller,
             $this->url_manager,
             $this->controller->getRequest(),
-            $params['driver'],
+            $params['driver_factory'],
             $params['gerrit_usermanager'],
             $params['gerrit_servers']
         );
@@ -153,7 +154,13 @@ class GitViews extends PluginViews {
         $repository   = $params['repository'];
         $this->_getBreadCrumb();
         echo '<h2>'. $repository->getHTMLLink($this->url_manager) .' - '. $GLOBALS['Language']->getText('global', 'Settings') .'</h2>';
-        $repo_management_view = new GitViews_RepoManagement($repository, $this->controller->getRequest(), $params['driver'], $params['gerrit_servers'], $params['gerrit_templates']);
+        $repo_management_view = new GitViews_RepoManagement(
+            $repository,
+            $this->controller->getRequest(),
+            $params['driver_factory'],
+            $params['gerrit_servers'],
+            $params['gerrit_templates']
+        );
         $repo_management_view->display();
     }
     

@@ -159,7 +159,7 @@ Group: Development/Tools
 Version: @@PLUGIN_GIT_VERSION@@
 Release: @@RELEASE@@%{?dist}
 Requires: %{name} >= %{version}, git > 1.7.4, %{php_base}-Smarty, gitolite = 2.3.1
-Requires: geshi
+Requires: geshi, php-guzzle
 Provides: tuleap-plugin-git = %{version}
 %description plugin-git
 Integration of git distributed software configuration management tool together

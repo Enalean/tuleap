@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -49,83 +49,18 @@ class Git_Admin {
     }
 
     public function display() {
-        $this->fetchGerritServers();
+        $title    = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
+        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
 
-        $title = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
-        $GLOBALS['HTML']->header(array('title' => $title, 'selected_top_tab' => 'admin'));
-        $html  = '';
-        $html .= '<h1>'. $title .'</h1>';
-        $html .= '<div class="alert-message block-message warning">';
-        $html .= 'This feature is not finished yet. Use it only if you know what you are doing!';
-        $html .= '</div>';
-        $html .= '<form method="POST" action="">';
-        $html .= $this->csrf->fetchHTMLInput();
-        $html .= '<h2>'. 'Admin gerrit servers' .'</h2>';
-        $html .= '<dl>';
-        foreach ($this->servers as $server) {
-            $html .= $this->getInputForm($server->getHost(), $server);
-        }
-        $html .= '</dl>';
-        $html .= '<p><input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /></p>';
-        $html .= '</form>';
-        echo $html;
-
-        $GLOBALS['HTML']->footer(array());
-    }
-
-    /**
-     * @return string
-     */
-    private function getInputForm($title, Git_RemoteServer_GerritServer $server) {
-        $hp    = Codendi_HTMLPurifier::instance();
-        $id    = (int)$server->getId();
-        $title = 'Add new gerrit server';
-        if ($id) {
-            $title = $server->getHost();;
-        }
-
-        $html  = '';
-        $html .= '<dt><h3>'. $title .'</h3></dt>';
-        $html .= '<dd>';
-        $html .= '<table><tbody>';
-        $fields = array(
-            array('Host:',              'host',             $server->getHost()),
-            array('HTTP Port:',         'http_port',        $server->getHTTPPort()),
-            array('SSH Port:',          'ssh_port',         $server->getSSHPort()),
-            array('Login:',             'login',            $server->getLogin()),
-            array('Identity File:',     'identity_file',    $server->getIdentityFile())
+        $admin_presenter = new Git_AdminPresenter(
+            $title,
+            $this->csrf,
+            $this->getListOfServersPresenters()
         );
 
-        foreach ($fields as $field) {
-            $html .= '<tr valign="top"><td>'. $field[0].'</td><td><input type="text" name="gerrit_servers['. $id .']['.$field[1].']" value="'. $hp->purify($field[2]) .'" /></td></tr>';
-        }
-        $html .= '<tr valign="top">
-            <td>Replication SSH Key (SSH key of the user who runs gerrit server)</td>
-            <td><textarea
-                type="checkbox"
-                name="gerrit_servers['. $id .'][replication_key]"
-                cols="30"
-                rows="5">'.$server->getReplicationKey().'</textarea>
-            </td></tr>';
-
-        $checked = '';
-        if ($server->usesSSL()) {
-            $checked = 'checked = "checked"';
-        }
-
-        $html .= '<tr>
-                    <td> <label> Use SSL </label> </td>
-                    <td> <input type="checkbox" name="gerrit_servers['. $id .'][use_ssl]" '.$checked.'/> </td>
-                  </tr>';
-
-        if ($id && ! $this->gerrit_server_factory->isServerUsed($server)) {
-            $html .= '<td><label>'. 'Delete?' .'<br /><input type="checkbox" name="gerrit_servers['. $id .'][delete]" value="1" /></label></td>';
-        } else {
-            $html .= '<td>This server is already used by some repositories, cannot delete it.</td>';
-        }
-        $html .= '</tbody></table>';
-        $html .= '</dd>';
-        return $html;
+        $GLOBALS['HTML']->header(array('title' => $title, 'selected_top_tab' => 'admin'));
+        $renderer->renderToPage('admin-plugin', $admin_presenter);
+        $GLOBALS['HTML']->footer(array());
     }
 
     private function fetchGerritServers() {
@@ -133,7 +68,19 @@ class Git_Admin {
             $this->servers = $this->gerrit_server_factory->getServers();
         }
  
-        $this->servers["0"] = new Git_RemoteServer_GerritServer(0, '', '', '', '', '', '', false);
+        $this->servers["0"] = new Git_RemoteServer_GerritServer(0, '', '', '', '', '', '', false, Git_RemoteServer_GerritServer::DEFAULT_GERRIT_VERSION, '');
+    }
+
+    private function getListOfServersPresenters() {
+        $this->fetchGerritServers();
+
+        $list_of_presenters = array();
+        foreach ($this->servers as $server) {
+            $is_used = $this->gerrit_server_factory->isServerUsed($server);
+            $list_of_presenters[] = new Git_RemoteServer_GerritServerPresenter($server, $is_used);
+        }
+
+        return $list_of_presenters;
     }
 
     private function updateServers(array $request_gerrit_servers) {
@@ -156,15 +103,19 @@ class Git_Admin {
             $identity_file          = isset($settings['identity_file'])     ? $settings['identity_file']    : '';
             $replication_ssh_key    = isset($settings['replication_key'])   ? $settings['replication_key']  : '';
             $use_ssl                = isset($settings['use_ssl'])                                               ;
+            $gerrit_version         = isset($settings['gerrit_version'])    ? $settings['gerrit_version']   : '';
+            $http_password          = isset($settings['http_password'] )    ? $settings['http_password']    : '';
 
-            if ($host &&
-                $host != $server->getHost() ||
+            if ($host !== '' &&
+                ($host != $server->getHost() ||
                 $ssh_port != $server->getSSHPort() ||
                 $http_port != $server->getHTTPPort() ||
                 $login != $server->getLogin() ||
                 $identity_file != $server->getIdentityFile() ||
                 $replication_ssh_key != $server->getReplicationKey() ||
-                $use_ssl != $server->usesSSL()
+                $use_ssl != $server->usesSSL() ||
+                $gerrit_version != $server->getGerritVersion() ||
+                $http_password != $server->getHTTPPassword())
             ) {
                 $server
                     ->setHost($host)
@@ -173,11 +124,12 @@ class Git_Admin {
                     ->setLogin($login)
                     ->setIdentityFile($identity_file)
                     ->setReplicationKey($replication_ssh_key)
-                    ->setUseSSL($use_ssl);
+                    ->setUseSSL($use_ssl)
+                    ->setGerritVersion($gerrit_version)
+                    ->setHTTPPassword($http_password);
                 $this->gerrit_server_factory->save($server);
                 $this->servers[$server->getId()] = $server;
             }
         }
     }
 }
-?>

@@ -1,9 +1,9 @@
 <?php
-
 /**
   * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+  * Copyright (c) Enalean, 2011 - 2014. All Rights Reserved.
   *
-  * This file is a part of Codendi.
+  * This file is a part of Tuleap.
   *
   * Codendi is free software; you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
@@ -48,8 +48,8 @@ class GitActions extends PluginActions {
      */
     private $gerrit_server_factory;
 
-    /** @var Git_Driver_Gerrit */
-    private $driver;
+    /** @var Git_Driver_Gerrit_GerritDriverFactory */
+    private $driver_factory;
 
     /** @var Git_Driver_Gerrit_UserAccountManager */
     private $gerrit_usermanager;
@@ -76,7 +76,7 @@ class GitActions extends PluginActions {
      * @param GitRepositoryFactory                       $factory
      * @param GitRepositoryManager                       $manager
      * @param Git_RemoteServer_GerritServerFactory       $gerrit_server_factory
-     * @param Git_Driver_Gerrit                          $driver
+     * @param Git_Driver_Gerrit_GerritDriverFactory      $driver_factory
      * @param Git_Driver_Gerrit_UserAccountManager       $gerrit_usermanager
      * @param Git_Driver_Gerrit_ProjectCreator           $project_creator
      * @param Git_Driver_Gerrit_Template_TemplateFactory $template_factory
@@ -89,7 +89,7 @@ class GitActions extends PluginActions {
         GitRepositoryFactory $factory,
         GitRepositoryManager $manager,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
-        Git_Driver_Gerrit $driver,
+        Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
         Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
         Git_Driver_Gerrit_ProjectCreator $project_creator,
         Git_Driver_Gerrit_Template_TemplateFactory $template_factory,
@@ -102,7 +102,7 @@ class GitActions extends PluginActions {
         $this->factory                  = $factory;
         $this->manager                  = $manager;
         $this->gerrit_server_factory    = $gerrit_server_factory;
-        $this->driver                   = $driver;
+        $this->driver_factory           = $driver_factory;
         $this->gerrit_usermanager       = $gerrit_usermanager;
         $this->project_creator          = $project_creator;
         $this->template_factory         = $template_factory;
@@ -239,12 +239,12 @@ class GitActions extends PluginActions {
         }
 
         $gerrit_server           = $this->gerrit_server_factory->getServerById($git_repo->getRemoteServerId());
-        $git_repo_name_on_gerrit = $this->driver->getGerritProjectName($git_repo);
+        $git_repo_name_on_gerrit = $this->driver_factory->getDriver($gerrit_server)->getGerritProjectName($git_repo);
         $url                     = $gerrit_server->getCloneSSHUrl($git_repo_name_on_gerrit);
 
         try {
             echo $this->project_creator->getGerritConfig($gerrit_server, $url);
-        } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
+        } catch (Git_Driver_Gerrit_Exception $e) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, 'Cannot access Gerrit ' . $e->getTraceAsString());
             $GLOBALS['Response']->sendStatusCode(500);
             return;
@@ -435,9 +435,9 @@ class GitActions extends PluginActions {
             return;
         }
         $this->addData(array(
-            'repository'     => $repository,
-            'gerrit_servers' => $this->gerrit_server_factory->getServers(),
-            'driver'         => $this->driver,
+            'repository'         => $repository,
+            'gerrit_servers'     => $this->gerrit_server_factory->getServers(),
+            'driver_factory'     => $this->driver_factory,
             'gerrit_usermanager' => $this->gerrit_usermanager
         ));
         return true;
@@ -448,7 +448,7 @@ class GitActions extends PluginActions {
         $this->displayFeedbacksOnRepoManagement($repository);
         $this->addData(array(
             'gerrit_servers'   => $this->gerrit_server_factory->getServers(),
-            'driver'           => $this->driver,
+            'driver_factory'   => $this->driver_factory,
             'gerrit_templates' => $this->template_factory->getTemplatesAvailableForRepository($repository)
         ));
         return true;
@@ -795,14 +795,17 @@ class GitActions extends PluginActions {
         $repository->getBackend()->disconnectFromGerrit($repository);
         $this->git_system_event_manager->queueRepositoryUpdate($repository);
 
+        $server = $this->gerrit_server_factory->getServerById($repository->getRemoteServerId());
+        $driver = $this->driver_factory->getDriver($server);
+
         $disconnect_option = $this->request->get(GitViews_RepoManagement_Pane_Gerrit::OPTION_DISCONNECT_GERRIT_PROJECT);
 
         if ($disconnect_option == GitViews_RepoManagement_Pane_Gerrit::OPTION_DELETE_GERRIT_PROJECT) {
-            $this->git_system_event_manager->queueRemoteProjectDeletion($repository, $this->driver);
+            $this->git_system_event_manager->queueRemoteProjectDeletion($repository, $driver);
         }
 
         if ($disconnect_option == GitViews_RepoManagement_Pane_Gerrit::OPTION_READONLY_GERRIT_PROJECT) {
-            $this->git_system_event_manager->queueRemoteProjectReadOnly($repository, $this->driver);
+            $this->git_system_event_manager->queueRemoteProjectReadOnly($repository, $driver);
         }
     }
 
@@ -876,4 +879,3 @@ class GitActions extends PluginActions {
         return true;
     }
 }
-?>

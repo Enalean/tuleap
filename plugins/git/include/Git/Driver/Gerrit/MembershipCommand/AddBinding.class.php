@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
+ * Copyright Enalean (c) 2011, 2012, 2013, 2014. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -27,20 +27,24 @@ require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipCommand.class.php';
 class Git_Driver_Gerrit_MembershipCommand_AddBinding extends Git_Driver_Gerrit_MembershipCommand {
     private $source_ugroup;
 
-    public function __construct(Git_Driver_Gerrit_MembershipManager $membership_manager, Git_Driver_Gerrit $driver, ProjectUGroup $ugroup, ProjectUGroup $source_ugroup) {
-        parent::__construct($membership_manager, $driver, $ugroup);
+    public function __construct(
+        Git_Driver_Gerrit_MembershipManager $membership_manager,
+        Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
+        ProjectUGroup $ugroup,
+        ProjectUGroup $source_ugroup
+    ) {
+        parent::__construct($membership_manager, $driver_factory, $ugroup);
         $this->source_ugroup = $source_ugroup;
     }
 
     public function execute(Git_RemoteServer_GerritServer $server) {
+        $driver = $this->getDriver($server);
         $group_name = $this->membership_manager->getFullyQualifiedUGroupName($this->ugroup);
         $included_group_name = $this->membership_manager->createGroupForServer($server, $this->source_ugroup);
-        $this->driver->removeAllGroupMembers($server, $group_name);
+        $driver->removeAllGroupMembers($server, $group_name);
         if ($this->ugroup->getSourceGroup()) {
-            $this->driver->removeAllIncludedGroups($server, $group_name);
+            $driver->removeAllIncludedGroups($server, $group_name);
         }
-        $this->driver->addIncludedGroup($server, $group_name, $included_group_name);
+        $driver->addIncludedGroup($server, $group_name, $included_group_name);
     }
 }
-
-?>

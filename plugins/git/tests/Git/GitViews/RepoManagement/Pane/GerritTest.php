@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2012. All rights reserved
+ * Copyright (c) Enalean, 2012 - 2014. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -23,20 +22,31 @@ require_once dirname(__FILE__).'/../../../../bootstrap.php';
 
 class GitViews_RepoManagement_Pane_GerritTest extends TuleapTestCase {
 
+    private $driver_factory;
+
     public function setUp() {
         parent::setUp();
 
-        $this->repository             = new GitRepository();
-        $this->request                = mock('Codendi_Request');
-        $this->driver = mock('Git_Driver_Gerrit');
+        $this->repository     = new GitRepository();
+        $this->request        = mock('Codendi_Request');
+        $this->driver         = mock('Git_Driver_Gerrit');
+        $this->driver_factory = mock('Git_Driver_Gerrit_GerritDriverFactory');
+
+        stub($this->driver_factory)->getDriver()->returns($this->driver);
     }
 
     public function testCanBeDisplayedReturnsFalseIfAuthTypeNotLdapAndGerritServersSet() {
         //set of type not ldap
         Config::set('sys_auth_type', 'not_ldap');
 
-        $gerrit_servers         = array('IAmAServer');
-        $pane = new GitViews_RepoManagement_Pane_Gerrit($this->repository, $this->request, $this->driver, $gerrit_servers, array());
+        $gerrit_servers = array('IAmAServer');
+        $pane = new GitViews_RepoManagement_Pane_Gerrit(
+            $this->repository,
+            $this->request,
+            $this->driver_factory,
+            $gerrit_servers,
+            array()
+        );
 
         $this->assertFalse($pane->canBeDisplayed());
     }
@@ -46,7 +56,13 @@ class GitViews_RepoManagement_Pane_GerritTest extends TuleapTestCase {
         Config::set('sys_auth_type', Config::AUTH_TYPE_LDAP);
 
         $gerrit_servers = array();
-        $pane = new GitViews_RepoManagement_Pane_Gerrit($this->repository, $this->request, $this->driver, $gerrit_servers, array());
+        $pane = new GitViews_RepoManagement_Pane_Gerrit(
+            $this->repository,
+            $this->request,
+            $this->driver_factory,
+            $gerrit_servers,
+            array()
+        );
 
         $this->assertFalse($pane->canBeDisplayed());
     }
@@ -56,9 +72,14 @@ class GitViews_RepoManagement_Pane_GerritTest extends TuleapTestCase {
         Config::set('sys_auth_type', Config::AUTH_TYPE_LDAP);
 
         $gerrit_servers = array('IAmAServer');
-        $pane = new GitViews_RepoManagement_Pane_Gerrit($this->repository, $this->request, $this->driver, $gerrit_servers, array());
+        $pane = new GitViews_RepoManagement_Pane_Gerrit(
+            $this->repository,
+            $this->request,
+            $this->driver_factory,
+            $gerrit_servers,
+            array()
+        );
 
         $this->assertTrue($pane->canBeDisplayed());
     }
 }
-?>

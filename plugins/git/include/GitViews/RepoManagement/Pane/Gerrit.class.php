@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,19 +30,25 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
     private $gerrit_servers;
 
     /**
-     *  @var Git_Driver_Gerrit
+     *  @var Git_Driver_Gerrit_GerritDriverFactory
      */
-    private $driver;
+    private $driver_factory;
 
     /**
      * @var Git_Drive_Gerrit_Template_Template[]
      */
     private $templates;
 
-    public function __construct(GitRepository $repository, Codendi_Request $request, Git_Driver_Gerrit $driver, array $gerrit_servers, array $gerrit_config_templates) {
+    public function __construct(
+        GitRepository $repository,
+        Codendi_Request $request,
+        Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
+        array $gerrit_servers,
+        array $gerrit_config_templates
+    ) {
         parent::__construct($repository, $request);
         $this->gerrit_servers = $gerrit_servers;
-        $this->driver         = $driver;
+        $this->driver_factory = $driver_factory;
         $this->templates      = $gerrit_config_templates;
     }
 
@@ -76,6 +82,8 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
             return $this->getContentAlreadyMigrated();
         }
 
+        $name_builder = new Git_RemoteServer_Gerrit_ProjectNameBuilder();
+
         $html  = '';
         $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_title') .'</h3>';
         $html .= '<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id='. $this->repository->getProjectId() .'">';
@@ -87,7 +95,7 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
         $html .= $GLOBALS['Language']->getText('plugin_git', 'gerrit_migration_description', $this->repository->getName());
         $html .= '</p>';
         $html .= '<div class="git_repomanagement_gerrit_more_description">';
-        $html .= $GLOBALS['Language']->getText('plugin_git', 'gerrit_migration_more_description', $this->driver->getGerritProjectName($this->repository));
+        $html .= $GLOBALS['Language']->getText('plugin_git', 'gerrit_migration_more_description', $name_builder->getGerritProjectName($this->repository));
         $html .= '</div>';
         $html .= '<p>';
         $html .= '<label for="gerrit_url">'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_url') .'</label>';
@@ -122,14 +130,15 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
     private function getServers() {
         $html = '';
         foreach ($this->gerrit_servers as $server) {
-            $plugin_enabled = (int) $this->driver->isDeletePluginEnabled($server);
+            $driver         = $this->driver_factory->getDriver($server);
+            $plugin_enabled = (int) $driver->isDeletePluginEnabled($server);
             $should_delete  = (int) $this->doesRemoteGerritProjectNeedDeleting($server);
 
             $html .= '<option
                         data-repo-delete="'.(int) $should_delete.'"
                         value="'.(int) $server->getId().'"
                         data-repo-delete-plugin-enabled="'.(int) $plugin_enabled.'">'
-                    .$this->hp->purify($server->getHost()) .
+                    .$this->hp->purify($server->getBaseUrl()) .
                     '</option>';
         }
 
@@ -165,12 +174,13 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
             return false;
         }
 
-        $project_name = $this->driver->getGerritProjectName($this->repository);
+        $driver       = $this->getGerritDriverForRepository($this->repository);
+        $project_name = $driver->getGerritProjectName($this->repository);
         try {
-            if (! $this->driver->doesTheProjectExist($server, $project_name)) {
+            if (! $driver->doesTheProjectExist($server, $project_name)) {
                 return false;
             }
-        } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
+        } catch (Git_Driver_Gerrit_Exception $e) {
             return false;
         }
 
@@ -183,8 +193,9 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
             return $this->getDisconnectFromGerritConfirmationScreen();
         }
 
-        $gerrit_project = $this->driver->getGerritProjectName($this->repository);
-        $gerrit_server  = $this->gerrit_servers[$this->repository->getRemoteServerId()];
+        $driver         = $this->getGerritDriverForRepository($this->repository);
+        $gerrit_project = $driver->getGerritProjectName($this->repository);
+        $gerrit_server  = $this->getGerritServerForRepository($this->repository);
         $link           = $gerrit_server->getProjectAdminUrl($gerrit_project);
 
         $html  = '';
@@ -233,10 +244,11 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
     }
 
     private function getDisconnectFromGerritOptions() {
-        $gerrit_server  = $this->gerrit_servers[$this->repository->getRemoteServerId()];
+        $gerrit_server = $this->getGerritServerForRepository($this->repository);
         $html = '';
 
-        if ($this->driver->isDeletePluginEnabled($gerrit_server)) {
+        $driver = $this->driver_factory->getDriver($gerrit_server);
+        if ($driver->isDeletePluginEnabled($gerrit_server)) {
             $html .= '<input type="radio" name="' . self::OPTION_DISCONNECT_GERRIT_PROJECT . '" value="'.self::OPTION_DELETE_GERRIT_PROJECT.'"/>'
                 . $GLOBALS['Language']->getText('plugin_git', 'gerrit_project_delete')
                 . '<br />';
@@ -251,6 +263,16 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
             . '<br />';
 
         return $html;
+    }
+
+    private function getGerritDriverForRepository(GitRepository $repository) {
+        $server = $this->getGerritServerForRepository($repository);
+
+        return $this->driver_factory->getDriver($server);
+    }
+
+    private function getGerritServerForRepository(GitRepository $repository) {
+        return $this->gerrit_servers[$repository->getRemoteServerId()];
     }
 }
 ?>

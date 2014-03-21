@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
+ * Copyright Enalean (c) 2011, 2012, 2013, 2014. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -24,6 +24,7 @@
 require_once('common/system_event/SystemEvent.class.php');
 
 class SystemEvent_GIT_GERRIT_PROJECT_READONLY extends SystemEvent {
+
     const NAME = 'GIT_GERRIT_PROJECT_READONLY';
 
     /**
@@ -37,18 +38,18 @@ class SystemEvent_GIT_GERRIT_PROJECT_READONLY extends SystemEvent {
     private $server_factory;
 
     /**
-     * @var Git_Driver_Gerrit
+     * @var Git_Driver_Gerrit_GerritDriverFactory
      */
-    private $driver;
+    private $driver_factory;
 
     public function injectDependencies(
         GitRepositoryFactory $repository_factory,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
-        Git_Driver_Gerrit $driver)
+        Git_Driver_Gerrit_GerritDriverFactory $driver_factory)
     {
         $this->repository_factory = $repository_factory;
         $this->server_factory     = $gerrit_server_factory;
-        $this->driver             = $driver;
+        $this->driver_factory     = $driver_factory;
     }
 
     public function process() {
@@ -89,9 +90,13 @@ class SystemEvent_GIT_GERRIT_PROJECT_READONLY extends SystemEvent {
         return $this->makeGerritProjectReadOnly($repository, $server, $project);
     }
 
-    private function makeGerritProjectReadOnly(GitRepository $repository, $server, $project) {
+    private function makeGerritProjectReadOnly(
+            GitRepository $repository,
+            Git_RemoteServer_GerritServer $server,
+            Project $project
+    ) {
         try {
-            $this->driver->makeGerritProjectReadOnly($server, $project->getUnixName().'/'.$repository->getName());
+            $this->driver_factory->getDriver($server)->makeGerritProjectReadOnly($server, $project->getUnixName().'/'.$repository->getName());
         } catch (Exception $e) {
             $this->error($e->getMessage().$e->getTraceAsString());
             return false;
@@ -105,5 +110,3 @@ class SystemEvent_GIT_GERRIT_PROJECT_READONLY extends SystemEvent {
         return $this->parameters;
     }
 }
-
-?>

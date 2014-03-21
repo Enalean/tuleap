@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
+ * Copyright Enalean (c) 2011, 2012, 2013, 2014. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -56,6 +56,8 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TuleapTestCase {
 
         $replication_key = 'ssh-rsa blablabla';
         $use_ssl         = false;
+        $gerrit_version  = '2.5';
+        $http_password   = 'ikshjdshg';
 
         $gerrit_server = new Git_RemoteServer_GerritServer(
             $gerrit_server_id,
@@ -65,7 +67,9 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TuleapTestCase {
             '$login',
             '$identity_file',
             $replication_key,
-            $use_ssl
+            $use_ssl,
+            $gerrit_version,
+            $http_password
         );
         stub($this->gerrit_server_factory)->getServerById()->returns($gerrit_server);
 
@@ -111,5 +115,3 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TuleapTestCase {
         $this->event->process();
     }
 }
-
-?>

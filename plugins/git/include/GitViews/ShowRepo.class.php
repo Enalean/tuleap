@@ -39,7 +39,7 @@ class GitViews_ShowRepo {
     /**
      * @var Git_Driver_Gerrit
      */
-    private $driver;
+    private $driver_factory;
 
     /**
      * @var Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager
@@ -59,14 +59,14 @@ class GitViews_ShowRepo {
             Git $controller,
             Git_GitRepositoryUrlManager $url_manager,
             Codendi_Request $request,
-            Git_Driver_Gerrit $driver,
+            Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
             Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
             array $gerrit_servers
     ) {
         $this->repository         = $repository;
         $this->controller         = $controller;
         $this->request            = $request;
-        $this->driver             = $driver;
+        $this->driver_factory     = $driver_factory;
         $this->gerrit_usermanager = $gerrit_usermanager;
         $this->gerrit_servers     = $gerrit_servers;
         $this->url_manager        = $url_manager;
@@ -87,7 +87,7 @@ class GitViews_ShowRepo {
                 $this->request->getCurrentUser(),
                 $this->controller,
                 $this->url_manager,
-                $this->driver,
+                $this->driver_factory,
                 $this->gerrit_usermanager,
                 $this->gerrit_servers,
                 $this->controller->getPlugin()->getThemePath()
