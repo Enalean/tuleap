@@ -31,7 +31,7 @@ class ArtifactAttachmentFieldXMLExporter extends ArtifactFieldXMLExporter {
         $this->dao = $dao;
     }
 
-    public function appendNode(DOMElement $changeset_node, $artifact_id, array $row) {
+    public function appendNode(DOMElement $changeset_node, $tracker_id, $artifact_id, array $row) {
         $new_attachment = $this->extractFirstDifference($row['old_value'], $row['new_value']);
         if ($new_attachment) {
             $dar = $this->dao->searchFile($artifact_id, $new_attachment, $row['mod_by'], $row['date']);

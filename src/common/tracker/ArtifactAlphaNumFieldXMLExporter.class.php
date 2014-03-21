@@ -21,11 +21,16 @@
 abstract class ArtifactAlphaNumFieldXMLExporter extends ArtifactFieldXMLExporter {
 
     protected function appendStringNode(DOMElement $changeset_node, $type, array $row) {
+        $field_node = $this->getNode($type, $row);
+        $field_node->appendChild($this->getNodeValue($row['new_value']));
+        $changeset_node->appendChild($field_node);
+    }
+
+    protected function getNode($type, array $row) {
         $field_node = $this->node_helper->createElement('field_change');
         $field_node->setAttribute('field_name', $row['field_name']);
         $field_node->setAttribute('type', $type);
-        $field_node->appendChild($this->getNodeValue($row['new_value']));
-        $changeset_node->appendChild($field_node);
+        return $field_node;
     }
 
     protected function getNodeValue($value) {

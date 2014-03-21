@@ -62,6 +62,7 @@ class ArtifactXMLExporterArtifact {
 
         $this->addAllChangesets(
             $artifact_node,
+            $tracker_id,
             $artifact_id,
             $artifact_row
         );
@@ -71,7 +72,7 @@ class ArtifactXMLExporterArtifact {
         return $artifact_node;
     }
 
-    private function addAllChangesets(DOMElement $artifact_node, $artifact_id, array $artifact) {
+    private function addAllChangesets(DOMElement $artifact_node, $tracker_id, $artifact_id, array $artifact) {
         $this->initial_changeset = $this->getBareChangeset($artifact['submitted_by'], 0, $artifact['open_date']);
         $artifact_node->appendChild($this->initial_changeset);
 
@@ -79,7 +80,7 @@ class ArtifactXMLExporterArtifact {
         $history = $this->dao->searchHistory($artifact_id);
         foreach($history as $row) {
             try {
-                $node = $this->getChangeset($previous_changeset, $artifact_id, $row);
+                $node = $this->getChangeset($previous_changeset, $tracker_id, $artifact_id, $row);
                 $artifact_node->appendChild($node);
                 $previous_changeset = $node;
             } catch (Exception_TV3XMLException $exception) {
@@ -88,9 +89,9 @@ class ArtifactXMLExporterArtifact {
         }
 
         $current_fields_values = $this->getCurrentFieldsValues($artifact_id, $artifact);
-        $this->updateInitialChangesetVersusCurrentStatus($artifact_id, $current_fields_values);
+        $this->updateInitialChangesetVersusCurrentStatus($tracker_id, $artifact_id, $current_fields_values);
 
-        $this->addLastChangesetIfNoHistoryRecorded($artifact_node, $artifact_id, $current_fields_values);
+        $this->addLastChangesetIfNoHistoryRecorded($artifact_node, $tracker_id, $artifact_id, $current_fields_values);
 
         $this->addPermissionOnArtifactAtTheVeryEnd($artifact_node, $artifact_id);
     }
@@ -120,10 +121,11 @@ class ArtifactXMLExporterArtifact {
         return $fields_values;
     }
 
-    private function updateInitialChangesetVersusCurrentStatus($artifact_id, array $current_fields_values) {
+    private function updateInitialChangesetVersusCurrentStatus($tracker_id, $artifact_id, array $current_fields_values) {
         foreach ($current_fields_values as $field_value) {
             try {
                 $this->updateInitialChangeset(
+                    $tracker_id,
                     $artifact_id,
                     $field_value['field_name'],
                     $field_value['display_type'],
@@ -136,10 +138,11 @@ class ArtifactXMLExporterArtifact {
         }
     }
 
-    private function updateInitialChangeset($artifact_id, $field_name, $display_type, $data_type, $value) {
+    private function updateInitialChangeset($tracker_id, $artifact_id, $field_name, $display_type, $data_type, $value) {
         if (! isset($this->field_initial_changeset[$field_name])) {
             $this->field_factory->appendValueByType(
                 $this->initial_changeset,
+                $tracker_id,
                 $artifact_id,
                 array(
                     'display_type' => $display_type,
@@ -152,10 +155,10 @@ class ArtifactXMLExporterArtifact {
         }
     }
 
-    private function addLastChangesetIfNoHistoryRecorded(DOMElement $artifact_node, $artifact_id, array $current_fields_values) {
+    private function addLastChangesetIfNoHistoryRecorded(DOMElement $artifact_node, $tracker_id, $artifact_id, array $current_fields_values) {
         foreach ($current_fields_values as $field_value) {
             try {
-                $this->appendMissingValues($artifact_id, $field_value);
+                $this->appendMissingValues($tracker_id, $artifact_id, $field_value);
             } catch (Exception_TV3XMLException $exception) {
                 $this->logger->warn("Artifact $artifact_id: skip fake last changeset (".$field_value['field_name']."): ".$exception->getMessage());
             }
@@ -165,10 +168,11 @@ class ArtifactXMLExporterArtifact {
         }
     }
 
-    private function appendMissingValues($artifact_id, $field_value) {
+    private function appendMissingValues($tracker_id, $artifact_id, $field_value) {
         if (! $this->isLastRecoredValueEqualsToCurrentValue($field_value)) {
             $this->field_factory->appendValueByType(
                 $this->getLastChangesetForTruncatedHistory(),
+                $tracker_id,
                 $artifact_id,
                 array(
                     'display_type' => $field_value['display_type'],
@@ -218,15 +222,15 @@ class ArtifactXMLExporterArtifact {
         return (string)$previous_changeset->submitted_on == date('c', $submitted_on);
     }
 
-    private function getChangeset(DOMElement $previous_changeset, $artifact_id, array $row) {
-        $this->updateInitialChangeset($artifact_id, $row['field_name'], $row['display_type'], $row['data_type'], $row['old_value']);
+    private function getChangeset(DOMElement $previous_changeset, $tracker_id, $artifact_id, array $row) {
+        $this->updateInitialChangeset($tracker_id, $artifact_id, $row['field_name'], $row['display_type'], $row['data_type'], $row['old_value']);
 
         $changeset_node = $this->createOrReuseChangeset($previous_changeset, $row['submitted_by'], $row['is_anonymous'], $row['date']);
 
         $this->fixDataWithArtifactSpecialValues($row);
 
         $this->last_history_recorded[$row['field_name']] = $row['new_value'];
-        $this->field_factory->appendValueByType($changeset_node, $artifact_id, $row);
+        $this->field_factory->appendValueByType($changeset_node, $tracker_id, $artifact_id, $row);
 
         return $changeset_node;
     }

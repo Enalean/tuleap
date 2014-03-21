@@ -148,4 +148,20 @@ class ArtifactXMLExporterDao extends DataAccessObject {
                 WHERE fv.artifact_id = $artifact_id";
         return $this->retrieve($sql);
     }
+
+    public function searchFieldValuesList($group_artifact_id, $field_name) {
+        $sql = "SELECT fvl.value_id, fvl.value
+                FROM artifact_field_value_list fvl
+                    JOIN artifact_field   f  ON (f.field_id = fvl.field_id AND f.group_artifact_id = fvl.group_artifact_id)
+                WHERE  f.group_artifact_id = $group_artifact_id
+                   AND f.field_name = '$field_name'";
+        return $this->retrieve($sql);
+    }
+
+    public function searchUser($user_id) {
+        $sql = "SELECT user_name, ldap_id, email
+                FROM user
+                WHERE user_id = $user_id";
+        return $this->retrieve($sql);
+    }
 }

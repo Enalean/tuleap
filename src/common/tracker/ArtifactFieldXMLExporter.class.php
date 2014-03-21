@@ -27,7 +27,7 @@ abstract class ArtifactFieldXMLExporter {
         $this->node_helper = $node_helper;
     }
 
-    abstract public function appendNode(DOMElement $changeset_node, $artifact_id, array $row);
+    abstract public function appendNode(DOMElement $changeset_node, $tracker_id, $artifact_id, array $row);
 
     abstract public function getFieldValueIndex();
 }

@@ -123,6 +123,23 @@ abstract class ArtifactXMLExporter_BaseTest extends TuleapTestCase {
         } else {
             stub($this->dao)->searchFieldValues()->returnsEmptyDar();
         }
+
+        if (isset($json['artifact_field_value_list'])) {
+            foreach ($json['artifact_field_value_list'] as $artifact_field_value_list) {
+                $params = $artifact_field_value_list['parameters'];
+                stub($this->dao)->searchFieldValuesList($params['group_artifact_id'], $params['field_name'])->returnsDarFromArray($artifact_field_value_list['rows']);
+            }
+        } else {
+            stub($this->dao)->searchFieldValuesList($artifact_id)->returnsEmptyDar();
+        }
+
+        if (isset($json['user'])) {
+            foreach ($json['user'] as $user_id => $user_rows) {
+                stub($this->dao)->searchUser("$user_id")->returnsDarFromArray($user_rows);
+            }
+        } else {
+            stub($this->dao)->searchUser()->returnsEmptyDar();
+        }
     }
 
 
@@ -173,6 +190,15 @@ abstract class ArtifactXMLExporter_BaseTest extends TuleapTestCase {
         $proc = new XSLTProcessor();
         $proc->importStyleSheet($xsl);
         echo '<pre>'.htmlentities($proc->transformToXML($this->dom)).'</pre>';
+    }
+
+    protected function findValue(SimpleXMLElement $field_change, $name) {
+        foreach($field_change as $change) {
+            if ($change['field_name'] == $name) {
+                return $change;
+            }
+        }
+        throw new Exception("$name not found");
     }
 }
 
@@ -619,15 +645,6 @@ class ArtifactXMLExporter_ScalarFieldTest extends ArtifactXMLExporter_BaseTest {
         $date   = $this->findValue($change, 'field_18');
         $this->assertEqual((string)$date->value, $this->toExpectedDate(1234555555));
     }
-
-    private function findValue(SimpleXMLElement $field_change, $name) {
-        foreach($field_change as $change) {
-            if ($change['field_name'] == $name) {
-                return $change;
-            }
-        }
-        throw new Exception("$name not found");
-    }
 }
 
 class ArtifactXMLExporter_CloseDateFieldTest extends ArtifactXMLExporter_BaseTest {
@@ -674,5 +691,66 @@ class ArtifactXMLExporter_CloseDateFieldTest extends ArtifactXMLExporter_BaseTes
         // 5. Change close date
         $this->assertEqual((string)$this->xml->artifact->changeset[4]->field_change->value, $this->toExpectedDate(1234830000));
         $this->assertEqual((string)$this->xml->artifact->changeset[4]->submitted_on, $this->toExpectedDate(1234840000));
+    }
+}
+
+class ArtifactXMLExporter_StaticListFieldTest extends ArtifactXMLExporter_BaseTest {
+
+    public function itCreatesAChangesetForEachHistoryEntry() {
+        $this->exportTrackerDataFromFixture('artifact_with_static_list_history');
+
+        $this->assertCount($this->xml->artifact->changeset, 3);
+
+        $initial_change = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'category_id');
+        $this->assertEqual((string)$initial_change->value, 'UI');
+        $this->assertEqual((string)$initial_change['field_name'], 'category_id');
+        $this->assertEqual((string)$initial_change['type'], 'list');
+        $this->assertEqual((string)$initial_change['bind'], 'static');
+
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value, 'Database');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['field_name'], 'category_id');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['type'], 'list');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['bind'], 'static');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->submitted_on, $this->toExpectedDate(3234567890));
+
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value, '');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['field_name'], 'category_id');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['type'], 'list');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['bind'], 'static');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->submitted_on, $this->toExpectedDate(3234570000));
+    }
+
+    public function itCreatesALastChangesetWhenHistoryWasNotRecorded() {
+        $this->exportTrackerDataFromFixture('artifact_with_static_list_half_history');
+
+        $this->assertCount($this->xml->artifact->changeset, 3);
+
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value, 'UI');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['field_name'], 'category_id');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['type'], 'list');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['bind'], 'static');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->submitted_on, $this->toExpectedDate($_SERVER['REQUEST_TIME']));
+    }
+}
+
+class ArtifactXMLExporter_UserListFieldTest extends ArtifactXMLExporter_BaseTest {
+
+    public function itCreatesAChangesetForEachHistoryEntry() {
+        $this->exportTrackerDataFromFixture('artifact_with_user_list_history');
+
+        $this->assertCount($this->xml->artifact->changeset, 2);
+
+        $initial_change = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'assigned_to');
+        $this->assertEqual((string)$initial_change->value, '');
+        $this->assertEqual((string)$initial_change['field_name'], 'assigned_to');
+        $this->assertEqual((string)$initial_change['type'], 'list');
+        $this->assertEqual((string)$initial_change['bind'], 'user');
+
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value, 'jeanjean');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value['format'], 'username');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['field_name'], 'assigned_to');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['type'], 'list');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['bind'], 'user');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->submitted_on, $this->toExpectedDate(3234567890));
     }
 }

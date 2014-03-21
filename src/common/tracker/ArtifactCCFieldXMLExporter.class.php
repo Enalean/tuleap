@@ -22,7 +22,7 @@ class ArtifactCCFieldXMLExporter extends ArtifactFieldXMLExporter {
     const TV3_TYPE = 'cc';
     const TV5_TYPE = 'open_list';
 
-    public function appendNode(DOMElement $changeset_node, $artifact_id, array $row) {
+    public function appendNode(DOMElement $changeset_node, $tracker_id, $artifact_id, array $row) {
         $values = array_filter(explode(',', $row['new_value']));
         $field_node = $this->node_helper->createElement('field_change');
         $field_node->setAttribute('field_name', 'cc');

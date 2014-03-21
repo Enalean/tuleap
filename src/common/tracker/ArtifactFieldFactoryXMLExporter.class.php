@@ -31,11 +31,13 @@ class ArtifactFieldFactoryXMLExporter {
             ArtifactIntegerFieldXMLExporter::TV3_TYPE    => new ArtifactIntegerFieldXMLExporter($node_helper),
             ArtifactFloatFieldXMLExporter::TV3_TYPE      => new ArtifactFloatFieldXMLExporter($node_helper),
             ArtifactDateFieldXMLExporter::TV3_TYPE       => new ArtifactDateFieldXMLExporter($node_helper),
+            ArtifactStaticListFieldXMLExporter::TV3_TYPE => new ArtifactStaticListFieldXMLExporter($node_helper, $dao),
+            ArtifactUserListFieldXMLExporter::TV3_TYPE   => new ArtifactUserListFieldXMLExporter($node_helper, $dao),
         );
     }
 
-    public function appendValueByType(DOMElement $changeset_node, $artifact_id, array $history_row) {
-        $this->getFieldByHistoryRow($history_row)->appendNode($changeset_node, $artifact_id, $history_row);
+    public function appendValueByType(DOMElement $changeset_node, $tracker_id, $artifact_id, array $history_row) {
+        $this->getFieldByHistoryRow($history_row)->appendNode($changeset_node, $tracker_id, $artifact_id, $history_row);
     }
 
     private function getFieldByHistoryRow(array $history_row) {
