@@ -96,11 +96,6 @@ class Tracker_SOAPServer {
      */
     private $fileinfo_factory;
 
-    /**
-     * @var Tracker_Artifact_Attachment_TemporaryFileManagerDao
-     */
-    private $tempfile_dao;
-
     public function __construct(
             SOAP_RequestValidator $soap_request_validator,
             TrackerFactory $tracker_factory,
@@ -109,8 +104,7 @@ class Tracker_SOAPServer {
             Tracker_FormElementFactory $formelement_factory,
             Tracker_ArtifactFactory $artifact_factory,
             Tracker_ReportFactory $report_factory,
-            Tracker_FileInfoFactory $fileinfo_factory,
-            Tracker_Artifact_Attachment_TemporaryFileManagerDao $tempfile_dao
+            Tracker_FileInfoFactory $fileinfo_factory
     ) {
         $this->soap_request_validator   = $soap_request_validator;
         $this->tracker_factory          = $tracker_factory;
@@ -120,7 +114,6 @@ class Tracker_SOAPServer {
         $this->artifact_factory         = $artifact_factory;
         $this->report_factory           = $report_factory;
         $this->fileinfo_factory         = $fileinfo_factory;
-        $this->tempfile_dao             = $tempfile_dao;
     }
 
     public function getVersion() {
@@ -446,7 +439,7 @@ class Tracker_SOAPServer {
                 }
             }
         }
-        
+
         return $fields_data;
     }
 
@@ -476,7 +469,7 @@ class Tracker_SOAPServer {
 
             $fields_data = $this->getArtifactDataFromSoapRequest($artifact->getTracker(), $value, $artifact);
             try {
-                $artifact->createNewChangeset($fields_data, $comment, $user, true, $comment_format);
+                $artifact->createNewChangeset($fields_data, $comment, $user, null, true, $comment_format);
                 return $artifact_id;
             } catch (Tracker_NoChangeException $e) {
                 return $artifact_id;
@@ -563,16 +556,18 @@ class Tracker_SOAPServer {
         try {
             $current_user = $this->soap_request_validator->continueSession($session_key);
             $artifact     = $this->getArtifactById($artifact_id, $current_user, 'getArtifactAttachmentChunk');
-            $temporary    = new Tracker_Artifact_Attachment_TemporaryFileManager($current_user, $this->tempfile_dao, $this->fileinfo_factory);
 
-            return $temporary->getAttachedFileChunk($attachment_id, $current_user, $offset, $size);
-
-        } catch (Tracker_Artifact_Attachment_PermissionDeniedOnFieldException $e) {
-            return new SoapFault(invalid_field_fault, 'Permission denied: you cannot access this field');
-
-        } catch (Tracker_Artifact_Attachment_FileNotFoundException $e) {
-            return new SoapFault(invalid_field_fault, 'Permission denied: you cannot access this field');
-
+            $file_info = $this->fileinfo_factory->getById($attachment_id);
+            if ($file_info && $file_info->fileExists()) {
+                $field = $file_info->getField();
+                if ($field->userCanRead($current_user)) {
+                    return $file_info->getSoapContent($offset, $size);
+                } else {
+                    return new SoapFault(invalid_field_fault, 'Permission denied: you cannot access this field');
+                }
+            } else {
+                return new SoapFault(invalid_field_fault, 'Permission denied: you cannot access this field');
+            }
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
@@ -588,10 +583,8 @@ class Tracker_SOAPServer {
     public function createTemporaryAttachment($session_key) {
         try {
             $current_user = $this->soap_request_validator->continueSession($session_key);
-            $temporary    = new Tracker_Artifact_Attachment_TemporaryFileManager($current_user, $this->tempfile_dao, $this->fileinfo_factory);
+            $temporary    = new Tracker_SOAP_TemporaryFile($current_user);
             return $temporary->getUniqueFileName();
-        } catch (Tracker_Artifact_Attachment_MaxFilesException $e) {
-            return new SoapFault((string) nb_max_temp_files, $e->getMessage());
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
@@ -609,12 +602,8 @@ class Tracker_SOAPServer {
     public function appendTemporaryAttachmentChunk($session_key, $attachment_name, $content) {
         try {
             $current_user = $this->soap_request_validator->continueSession($session_key);
-            $temporary    = new Tracker_Artifact_Attachment_TemporaryFileManager($current_user, $this->tempfile_dao, $this->fileinfo_factory);
-            return $temporary->appendChunkForSOAP($content, $attachment_name);
-        } catch (Tracker_Artifact_Attachment_FileTooBigException $e) {
-            return new SoapFault((string) uploaded_file_too_big, $e->getMessage());
-        } catch (Tracker_Artifact_Attachment_InvalidPathException $e) {
-            return new SoapFault((string) temp_file_invalid, $e->getMessage());
+            $temporary    = new Tracker_SOAP_TemporaryFile($current_user, $attachment_name);
+            return $temporary->appendChunk($content);
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
@@ -630,7 +619,7 @@ class Tracker_SOAPServer {
     public function purgeAllTemporaryAttachments($session_key) {
         try {
             $current_user = $this->soap_request_validator->continueSession($session_key);
-            $temporary    = new Tracker_Artifact_Attachment_TemporaryFileManager($current_user, $this->tempfile_dao, $this->fileinfo_factory);
+            $temporary    = new Tracker_SOAP_TemporaryFile($current_user);
             return $temporary->purgeAllTemporaryFiles();
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());

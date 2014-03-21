@@ -122,8 +122,6 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
 
         $this->fileinfo_factory = mock('Tracker_FileInfoFactory');
 
-        $this->tempfile_dao = mock('Tracker_Artifact_Attachment_TemporaryFileManagerDao');
-
         $this->server = new Tracker_SOAPServer(
             $this->soap_request_validator,
             $this->tracker_factory,
@@ -132,8 +130,7 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
             $this->formelement_factory,
             $this->artifact_factory,
             $this->report_factory,
-            $this->fileinfo_factory,
-            $this->tempfile_dao
+            $this->fileinfo_factory
         );
     }
 
@@ -375,8 +372,7 @@ class Tracker_SOAPServer_getTrackerStructure_Test extends Tracker_SOAPServer_Bas
             $this->formelement_factory,
             $this->artifact_factory,
             $this->report_factory,
-            $this->fileinfo_factory,
-            $this->tempfile_dao
+            $this->fileinfo_factory
          ));
     }
 
@@ -658,7 +654,7 @@ abstract class Tracker_SOAPServer_AttachmentChunkTest extends Tracker_SOAPServer
         $this->field         = mock('Tracker_FormElement_Field_File');
         $this->file_info     = partial_mock(
             'Tracker_FileInfo',
-            array('getContent', 'fileExists', 'appendSoapContent', 'postUploadActions'),
+            array('getSoapContent', 'fileExists', 'appendSoapContent', 'postUploadActions'),
             array($this->attachment_id, $this->field, null, null, null, null, null)
         );
 
@@ -721,7 +717,7 @@ class Tracker_SOAPServer_GetArtifactAttachmentChunk_Test extends Tracker_SOAPSer
         stub($this->file_info)->fileExists()->returns(true);
         stub($this->field)->userCanRead()->returns(true);
 
-        expect($this->file_info)->getContent($this->offset, $this->size)->once();
+        expect($this->file_info)->getSoapContent($this->offset, $this->size)->once();
 
         $this->server->getArtifactAttachmentChunk($this->session_key, $this->artifact_id, $this->attachment_id, $this->offset, $this->size);
     }
@@ -757,7 +753,7 @@ abstract class Tracker_SOAPServer_TemproraryAttachments_BaseTest extends Tracker
     }
 
     protected function getTemporaryFilePath($user_id, $temporary_name) {
-        return $this->fixture_dir.'/'.Tracker_Artifact_Attachment_TemporaryFileManager::TEMP_FILE_PREFIX.$user_id.'_'.$temporary_name;
+        return $this->fixture_dir.'/'.Tracker_SOAP_TemporaryFile::TEMP_FILE_PREFIX.$user_id.'_'.$temporary_name;
     }
 }
 
@@ -808,7 +804,7 @@ class Tracker_SOAPServer_PurgeTemporaryAttachments_Test extends Tracker_SOAPServ
         $this->server->createTemporaryAttachment($this->session_key);
         $this->server->createTemporaryAttachment($this->session_key);
         $this->assertTrue($this->server->purgeAllTemporaryAttachments($this->session_key));
-        $this->assertCount(glob($this->fixture_dir.'/'.Tracker_Artifact_Attachment_TemporaryFileManager::TEMP_FILE_PREFIX.'*'), 0);
+        $this->assertCount(glob($this->fixture_dir.'/'.Tracker_SOAP_TemporaryFile::TEMP_FILE_PREFIX.'*'), 0);
     }
 
     public function itRemovesOnlyFilesForCurrentUser() {
@@ -819,9 +815,9 @@ class Tracker_SOAPServer_PurgeTemporaryAttachments_Test extends Tracker_SOAPServ
         $this->server->createTemporaryAttachment($this->another_session_key);
 
         $this->assertTrue($this->server->purgeAllTemporaryAttachments($this->session_key));
-        $temporary_files = glob($this->fixture_dir.'/'.Tracker_Artifact_Attachment_TemporaryFileManager::TEMP_FILE_PREFIX.'*');
+        $temporary_files = glob($this->fixture_dir.'/'.Tracker_SOAP_TemporaryFile::TEMP_FILE_PREFIX.'*');
         $this->assertCount($temporary_files, 2);
-        $another_user_prefix = $this->fixture_dir.'/'.Tracker_Artifact_Attachment_TemporaryFileManager::TEMP_FILE_PREFIX.$this->another_user_id;
+        $another_user_prefix = $this->fixture_dir.'/'.Tracker_SOAP_TemporaryFile::TEMP_FILE_PREFIX.$this->another_user_id;
         foreach ($temporary_files as $file) {
             $this->assertPattern("%^$another_user_prefix%", $file);
         }
