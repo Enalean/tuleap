@@ -97,6 +97,19 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
      * - Docman_ItemDao::_getItemSearchFromStmt
      * - http://stackoverflow.com/questions/2111384/sql-join-selecting-the-last-records-in-a-one-to-many-relationship
      *
+     * This trick needs to be used twice in this query:
+     * - First time to select the changeset of the parent artifact (cs_parent_art1)
+     * - Second time to select the changesets for each linked artifact (cs_linked_art1)
+     *
+     * Please note that we are not ranking with the date as this is not discriment enough.
+     * If 2 changeset have the same timestamp (for instance with workflow trigger) we end
+     * up with 2 matching changeset instead of one.
+     * To avoid this situation, we order with changeset.id (unique).
+     *
+     * Please note however that, ranking by changeset id, can be misleading if we
+     * start to introduce changes in the past (the new changeset will have a newer id
+     * but it's date might be before). 99% of the time it should be transparent.
+     *
      * @param Integer $source_id
      * @param String  $target_name
      * @param Integer $timestamp
@@ -111,13 +124,13 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
         $sql = "SELECT linked_art.*, f_compute.formElement_type as type, cv_compute_i.value as int_value, cv_compute_f.`value` as float_value
                 FROM tracker_artifact parent_art
                     INNER JOIN tracker_changeset                    cs_parent_art1 ON (cs_parent_art1.artifact_id = parent_art.id AND cs_parent_art1.submitted_on <= $timestamp)
-                    LEFT JOIN  tracker_changeset                    cs_parent_art2 ON (cs_parent_art2.artifact_id = parent_art.id AND cs_parent_art1.submitted_on < cs_parent_art2.submitted_on AND cs_parent_art2.submitted_on <= $timestamp)
+                    LEFT JOIN  tracker_changeset                    cs_parent_art2 ON (cs_parent_art2.artifact_id = parent_art.id AND cs_parent_art1.id < cs_parent_art2.id AND cs_parent_art2.submitted_on <= $timestamp)
                     INNER JOIN tracker_field                        f              ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND f.use_it = 1)
                     INNER JOIN tracker_changeset_value              cv             ON (cv.changeset_id = cs_parent_art1.id AND cv.field_id = f.id)
                     INNER JOIN tracker_changeset_value_artifactlink artlink        ON (artlink.changeset_value_id = cv.id)
                     INNER JOIN tracker_artifact                     linked_art     ON (linked_art.id = artlink.artifact_id)
                     INNER JOIN tracker_changeset                    cs_linked_art1 ON (cs_linked_art1.artifact_id = linked_art.id AND cs_linked_art1.submitted_on <= $timestamp)
-                    LEFT JOIN  tracker_changeset                    cs_linked_art2 ON (cs_linked_art2.artifact_id = linked_art.id AND cs_linked_art1.submitted_on < cs_linked_art2.submitted_on AND cs_linked_art2.submitted_on <= $timestamp)
+                    LEFT JOIN  tracker_changeset                    cs_linked_art2 ON (cs_linked_art2.artifact_id = linked_art.id AND cs_linked_art1.id < cs_linked_art2.id AND cs_linked_art2.submitted_on <= $timestamp)
                     INNER JOIN tracker_field                        f_compute      ON (f_compute.tracker_id = linked_art.tracker_id AND f_compute.name = $target_name AND f_compute.use_it = 1)
                     LEFT JOIN (
                         tracker_changeset_value cs_compute_i
