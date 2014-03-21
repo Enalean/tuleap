@@ -28,6 +28,7 @@ use \UserManager;
 use \AgileDashboard_Milestone_MilestoneStatusCounter;
 use \AgileDashboard_BacklogItemDao;
 use \Tracker_ArtifactDao;
+use \URLVerification;
 
 class PlanningResource {
 
@@ -101,7 +102,11 @@ class PlanningResource {
         if (! $planning) {
             throw new RestException(404, 'Planning not found');
         }
-        ProjectAuthorization::userCanAccessProject($this->getCurrentUser(), $planning->getPlanningTracker()->getProject());
+        ProjectAuthorization::userCanAccessProject(
+            $this->getCurrentUser(),
+            $planning->getPlanningTracker()->getProject(),
+            new URLVerification()
+        );
 
         return $planning;
     }

@@ -59,9 +59,9 @@ class Git_Driver_Gerrit_ProjectCreator_CreateParentUmbrellaProjectsTest extends 
         $this->project_admins_gerrit_parent_name = 'grozilla/project_admins';
         $this->parent_project = aMockProject()->withId(104)->withUnixName('grozilla')->build();
 
-        $this->parent_project_admins = aMockUGroup()->withId(UGroup::PROJECT_ADMIN)->withNormalizedName('project_admins')->build();
+        $this->parent_project_admins = aMockUGroup()->withId(ProjectUGroup::PROJECT_ADMIN)->withNormalizedName('project_admins')->build();
 
-        $this->project_admins = aMockUGroup()->withId(UGroup::PROJECT_ADMIN)->withNormalizedName('project_admins')->build();
+        $this->project_admins = aMockUGroup()->withId(ProjectUGroup::PROJECT_ADMIN)->withNormalizedName('project_admins')->build();
 
         $this->driver = mock('Git_Driver_Gerrit');
         stub($this->driver)->doesTheParentProjectExist()->returns(false);

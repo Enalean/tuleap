@@ -100,11 +100,11 @@ class Tracker_Permission_PermissionSetter {
     }
 
     public function anonymousHaveFullAccess() {
-        return $this->groupHasPermission(Tracker::PERMISSION_FULL, UGroup::ANONYMOUS);
+        return $this->groupHasPermission(Tracker::PERMISSION_FULL, ProjectUGroup::ANONYMOUS);
     }
 
     public function registeredHaveFullAccess() {
-        return $this->groupHasPermission(Tracker::PERMISSION_FULL, UGroup::REGISTERED);
+        return $this->groupHasPermission(Tracker::PERMISSION_FULL, ProjectUGroup::REGISTERED);
     }
 
     public function revokeAll($ugroup_id) {

@@ -163,8 +163,20 @@
                 $o = new Widget_MyImageViewer();
                 break;
             case 'myadmin':
-                if (user_is_super_user()) { //This widget is only for super admin
-                    $o = new Widget_MyAdmin();
+                $user_is_super_user = user_is_super_user();
+
+                if (! $user_is_super_user) {
+                    $user = UserManager::instance()->getCurrentUser();
+                    $forge_ugroup_permissions_manager = new User_ForgeUserGroupPermissionsManager(
+                        new User_ForgeUserGroupPermissionsDao()
+                    );
+                    $can_access = $forge_ugroup_permissions_manager->doesUserHavePermission(
+                        $user, new User_ForgeUserGroupPermission_ProjectApproval()
+                    );
+                }
+
+                if ($user_is_super_user || $can_access) { //This widget is mainly for super admin
+                    $o = new Widget_MyAdmin($user_is_super_user);
                 }
                 break;
             case 'mysystemevent':

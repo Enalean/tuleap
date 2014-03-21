@@ -31,21 +31,21 @@ class Tracker_FormElement_Field_List_Bind_BaseTest extends TuleapTestCase {
 
         $this->integrators_ugroup_id    = 103;
         $this->integrators_ugroup_name  = 'Integrators';
-        $this->integrators_ugroup       = new UGroup(array('ugroup_id' => $this->integrators_ugroup_id, 'name' => $this->integrators_ugroup_name));
+        $this->integrators_ugroup       = new ProjectUGroup(array('ugroup_id' => $this->integrators_ugroup_id, 'name' => $this->integrators_ugroup_name));
         $this->integrators_ugroup_value = new Tracker_FormElement_Field_List_Bind_UgroupsValue(345, $this->integrators_ugroup, false);
 
         $this->customers_ugroup_id    = 104;
         $this->customers_ugroup_name  = 'Customers';
-        $this->customers_ugroup       = new UGroup(array('ugroup_id' => $this->customers_ugroup_id, 'name' => $this->customers_ugroup_name));
+        $this->customers_ugroup       = new ProjectUGroup(array('ugroup_id' => $this->customers_ugroup_id, 'name' => $this->customers_ugroup_name));
         $this->customers_ugroup_value = new Tracker_FormElement_Field_List_Bind_UgroupsValue(687, $this->customers_ugroup, false);
 
         $this->project_members_ugroup_name  = 'ugroup_project_members_name_key';
-        $this->project_members_ugroup       = new UGroup(array('ugroup_id' => UGroup::PROJECT_MEMBERS, 'name' => $this->project_members_ugroup_name));
+        $this->project_members_ugroup       = new ProjectUGroup(array('ugroup_id' => ProjectUGroup::PROJECT_MEMBERS, 'name' => $this->project_members_ugroup_name));
         $this->project_members_ugroup_value = new Tracker_FormElement_Field_List_Bind_UgroupsValue(4545, $this->project_members_ugroup, false);
 
         $this->hidden_ugroup_id    = 105;
-        $this->hidden_ugroup_name  = 'Unused UGroup';
-        $this->hidden_ugroup       = new UGroup(array('ugroup_id' => $this->hidden_ugroup_id, 'name' => $this->hidden_ugroup_name));
+        $this->hidden_ugroup_name  = 'Unused ProjectUGroup';
+        $this->hidden_ugroup       = new ProjectUGroup(array('ugroup_id' => $this->hidden_ugroup_id, 'name' => $this->hidden_ugroup_name));
         $this->hidden_ugroup_value = new Tracker_FormElement_Field_List_Bind_UgroupsValue(666, $this->hidden_ugroup, true);
     }
 
@@ -151,7 +151,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups_SaveObjectTest extends Tracker
             $this->customers_ugroup_value,
         );
         $bind = $this->buildBindUgroups($values);
-        stub($this->value_dao)->create($this->field_id, UGROUP::PROJECT_MEMBERS, false)->at(0);
+        stub($this->value_dao)->create($this->field_id, ProjectUGroup::PROJECT_MEMBERS, false)->at(0);
         stub($this->value_dao)->create($this->field_id, $this->customers_ugroup_id, false)->at(1);
         $bind->saveObject();
     }
@@ -214,7 +214,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups_CreateUpdateValuesTest extends
         $this->bind   = $this->buildBindUgroups($values);
         $this->params = array(
             'values' => array(
-                UGroup::PROJECT_MEMBERS,
+                ProjectUGroup::PROJECT_MEMBERS,
                 $this->integrators_ugroup_id,
                 $this->hidden_ugroup_id,
             )

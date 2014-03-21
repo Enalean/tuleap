@@ -129,7 +129,7 @@ class MigrateTracker_DefectTrackerConfigTest extends MigrateDefaultTrackersTest 
 
     public function itGivesFullAccessToAllUsers() {
         $this->assertEqual($this->defect_tracker->getPermissionsByUgroupId(), array(
-            UGroup::ANONYMOUS => array(
+            ProjectUGroup::ANONYMOUS => array(
                 Tracker::PERMISSION_FULL
             )
         ));
@@ -143,13 +143,13 @@ class MigrateTracker_DefectTrackerConfigTest extends MigrateDefaultTrackersTest 
         $this->assertTrue($field->isRequired());
         $this->assertTrue($field->isUsed());
         $this->assertEqual($field->getPermissionsByUgroupId(), array(
-            UGroup::ANONYMOUS => array(
+            ProjectUGroup::ANONYMOUS => array(
                 Tracker_FormElement::PERMISSION_READ
             ),
-            UGroup::REGISTERED => array(
+            ProjectUGroup::REGISTERED => array(
                 Tracker_FormElement::PERMISSION_SUBMIT
             ),
-            UGroup::PROJECT_MEMBERS => array(
+            ProjectUGroup::PROJECT_MEMBERS => array(
                 Tracker_FormElement::PERMISSION_UPDATE
             ),
         ));
@@ -163,10 +163,10 @@ class MigrateTracker_DefectTrackerConfigTest extends MigrateDefaultTrackersTest 
         $this->assertTrue($field->isRequired());
         $this->assertTrue($field->isUsed());
         $this->assertEqual($field->getPermissionsByUgroupId(), array(
-            UGroup::ANONYMOUS => array(
+            ProjectUGroup::ANONYMOUS => array(
                 Tracker_FormElement::PERMISSION_READ
             ),
-            UGroup::PROJECT_MEMBERS => array(
+            ProjectUGroup::PROJECT_MEMBERS => array(
                 Tracker_FormElement::PERMISSION_UPDATE
             ),
         ));
@@ -189,13 +189,13 @@ class MigrateTracker_DefectTrackerConfigTest extends MigrateDefaultTrackersTest 
         $this->assertTrue($field->isUsed());
         $this->assertFalse($field->isMultiple());
         $this->assertEqual($field->getPermissionsByUgroupId(), array(
-            UGroup::ANONYMOUS => array(
+            ProjectUGroup::ANONYMOUS => array(
                 Tracker_FormElement::PERMISSION_READ
             ),
-            UGroup::REGISTERED => array(
+            ProjectUGroup::REGISTERED => array(
                 Tracker_FormElement::PERMISSION_SUBMIT
             ),
-            UGroup::PROJECT_MEMBERS => array(
+            ProjectUGroup::PROJECT_MEMBERS => array(
                 Tracker_FormElement::PERMISSION_UPDATE
             ),
         ));
@@ -211,7 +211,7 @@ class MigrateTracker_DefectTrackerFieldsTest extends MigrateDefaultTrackersTest 
         $this->assertFalse($field->isRequired());
         $this->assertTrue($field->isUsed());
         $this->assertEqual($field->getPermissionsByUgroupId(), array(
-            UGroup::ANONYMOUS => array(
+            ProjectUGroup::ANONYMOUS => array(
                 Tracker_FormElement::PERMISSION_READ
             ),
         ));
@@ -225,13 +225,13 @@ class MigrateTracker_DefectTrackerFieldsTest extends MigrateDefaultTrackersTest 
         $this->assertFalse($field->isRequired());
         $this->assertTrue($field->isUsed());
         $this->assertEqual($field->getPermissionsByUgroupId(), array(
-            UGroup::ANONYMOUS => array(
+            ProjectUGroup::ANONYMOUS => array(
                 Tracker_FormElement::PERMISSION_READ
             ),
-            UGroup::REGISTERED => array(
+            ProjectUGroup::REGISTERED => array(
                 Tracker_FormElement::PERMISSION_SUBMIT
             ),
-            UGroup::PROJECT_MEMBERS => array(
+            ProjectUGroup::PROJECT_MEMBERS => array(
                 Tracker_FormElement::PERMISSION_UPDATE
             ),
         ));
@@ -245,10 +245,10 @@ class MigrateTracker_DefectTrackerFieldsTest extends MigrateDefaultTrackersTest 
         $this->assertFalse($field->isRequired());
         $this->assertFalse($field->isUsed());
         $this->assertEqual($field->getPermissionsByUgroupId(), array(
-            UGroup::ANONYMOUS => array(
+            ProjectUGroup::ANONYMOUS => array(
                 Tracker_FormElement::PERMISSION_READ
             ),
-            UGroup::PROJECT_MEMBERS => array(
+            ProjectUGroup::PROJECT_MEMBERS => array(
                 Tracker_FormElement::PERMISSION_UPDATE
             ),
         ));
@@ -378,7 +378,7 @@ class MigrateTracker_TaskTrackerConfigTest extends MigrateDefaultTrackersTest {
 
     public function itGivesFullAccessToAllUsers() {
         $this->assertEqual($this->task_tracker->getPermissionsByUgroupId(), array(
-            UGroup::ANONYMOUS => array(
+            ProjectUGroup::ANONYMOUS => array(
                 Tracker::PERMISSION_FULL
             )
         ));
@@ -392,10 +392,10 @@ class MigrateTracker_TaskTrackerConfigTest extends MigrateDefaultTrackersTest {
         $this->assertTrue($field->isRequired());
         $this->assertTrue($field->isUsed());
         $this->assertEqual($field->getPermissionsByUgroupId(), array(
-            UGroup::ANONYMOUS => array(
+            ProjectUGroup::ANONYMOUS => array(
                 Tracker_FormElement::PERMISSION_READ
             ),
-            UGroup::PROJECT_MEMBERS => array(
+            ProjectUGroup::PROJECT_MEMBERS => array(
                 Tracker_FormElement::PERMISSION_SUBMIT,
                 Tracker_FormElement::PERMISSION_UPDATE
             ),
@@ -410,10 +410,10 @@ class MigrateTracker_TaskTrackerConfigTest extends MigrateDefaultTrackersTest {
         $this->assertTrue($field->isRequired());
         $this->assertTrue($field->isUsed());
         $this->assertEqual($field->getPermissionsByUgroupId(), array(
-            UGroup::ANONYMOUS => array(
+            ProjectUGroup::ANONYMOUS => array(
                 Tracker_FormElement::PERMISSION_READ
             ),
-            UGroup::PROJECT_MEMBERS => array(
+            ProjectUGroup::PROJECT_MEMBERS => array(
                 Tracker_FormElement::PERMISSION_UPDATE
             ),
         ));
@@ -436,10 +436,10 @@ class MigrateTracker_TaskTrackerConfigTest extends MigrateDefaultTrackersTest {
         $this->assertTrue($field->isUsed());
         $this->assertTrue($field->isMultiple());
         $this->assertEqual($field->getPermissionsByUgroupId(), array(
-            UGroup::ANONYMOUS => array(
+            ProjectUGroup::ANONYMOUS => array(
                 Tracker_FormElement::PERMISSION_READ
             ),
-            UGroup::PROJECT_MEMBERS => array(
+            ProjectUGroup::PROJECT_MEMBERS => array(
                 Tracker_FormElement::PERMISSION_SUBMIT,
                 Tracker_FormElement::PERMISSION_UPDATE
             ),
@@ -457,7 +457,7 @@ class MigrateTracker_TaskTrackerFieldsTest extends MigrateDefaultTrackersTest {
         $this->assertFalse($field->isRequired());
         $this->assertTrue($field->isUsed());
         $this->assertEqual($field->getPermissionsByUgroupId(), array(
-            UGroup::ANONYMOUS => array(
+            ProjectUGroup::ANONYMOUS => array(
                 Tracker_FormElement::PERMISSION_READ
             ),
         ));
@@ -471,10 +471,10 @@ class MigrateTracker_TaskTrackerFieldsTest extends MigrateDefaultTrackersTest {
         $this->assertFalse($field->isRequired());
         $this->assertTrue($field->isUsed());
         $this->assertEqual($field->getPermissionsByUgroupId(), array(
-            UGroup::ANONYMOUS => array(
+            ProjectUGroup::ANONYMOUS => array(
                 Tracker_FormElement::PERMISSION_READ
             ),
-            UGroup::PROJECT_MEMBERS => array(
+            ProjectUGroup::PROJECT_MEMBERS => array(
                 Tracker_FormElement::PERMISSION_SUBMIT,
                 Tracker_FormElement::PERMISSION_UPDATE
             ),
@@ -489,10 +489,10 @@ class MigrateTracker_TaskTrackerFieldsTest extends MigrateDefaultTrackersTest {
         $this->assertFalse($field->isRequired());
         $this->assertTrue($field->isUsed());
         $this->assertEqual($field->getPermissionsByUgroupId(), array(
-            UGroup::ANONYMOUS => array(
+            ProjectUGroup::ANONYMOUS => array(
                 Tracker_FormElement::PERMISSION_READ
             ),
-            UGroup::PROJECT_MEMBERS => array(
+            ProjectUGroup::PROJECT_MEMBERS => array(
                 Tracker_FormElement::PERMISSION_SUBMIT,
                 Tracker_FormElement::PERMISSION_UPDATE
             ),
@@ -610,7 +610,7 @@ class MigrateTracker_TaskTrackerReportsTest extends MigrateDefaultTrackersTest {
 
 class MigrateTracker_TaskTrackerDateReminder_startDateTest extends MigrateDefaultTrackersTest {
 
-    private $notified_ugroups = array(UGroup::PROJECT_ADMIN, UGroup::TRACKER_ADMIN);
+    private $notified_ugroups = array(ProjectUGroup::PROJECT_ADMIN, ProjectUGroup::TRACKER_ADMIN);
 
     public function setUp() {
         parent::setUp();
@@ -650,7 +650,7 @@ class MigrateTracker_TaskTrackerDateReminder_startDateTest extends MigrateDefaul
 
 class MigrateTracker_TaskTrackerDateReminder_endDateTest extends MigrateDefaultTrackersTest {
 
-    private $notified_ugroups = array(UGroup::PROJECT_MEMBERS);
+    private $notified_ugroups = array(ProjectUGroup::PROJECT_MEMBERS);
     private $notified_roles   = array();
 
 

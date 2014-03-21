@@ -24,15 +24,16 @@
 abstract class Git_Driver_Gerrit_MembershipCommand {
     /** @var Git_Driver_Gerrit_MembershipManager */
     protected $membership_manager;
+
     /** @var Git_Driver_Gerrit_GerritDriverFactory */
     protected $driver_factory;
-    /** @var UGroup */
+    /** @var ProjectUGroup */
     protected $ugroup;
 
     public function __construct(
         Git_Driver_Gerrit_MembershipManager $membership_manager,
         Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
-        UGroup $ugroup
+        ProjectUGroup $ugroup
     ) {
         $this->membership_manager = $membership_manager;
         $this->driver_factory     = $driver_factory;

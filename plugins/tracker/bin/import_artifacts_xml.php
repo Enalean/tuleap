@@ -34,6 +34,7 @@ try {
 
         $artifact_creator = new Tracker_ArtifactCreator(
             $artifact_factory,
+            new Tracker_Artifact_Changeset_InitialChangesetFieldsValidator($formelement_factory),
             new Tracker_Artifact_Changeset_InitialChangesetAtGivenDateCreator(
                 $fields_validator,
                 $formelement_factory,

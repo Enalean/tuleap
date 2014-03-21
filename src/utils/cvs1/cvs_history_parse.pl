@@ -79,7 +79,8 @@ if ( -d $base_log_dir ) {
 	}
 	$daily_log_file .= "/cvs_traffic_" . sprintf("%04d%02d%02d",$year,$month,$day) . ".log";
 } else {
-	die("Base log directory \'$base_log_dir\' does not exist!");
+	print "Base log directory \'$base_log_dir\' does not exist!";
+	exit;
 }
 
 open(DAYS_LOG, "> $daily_log_file") || die "Unable to open the log file \'$daily_log_file\'";

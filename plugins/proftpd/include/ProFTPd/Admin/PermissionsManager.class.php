@@ -22,7 +22,7 @@ namespace Tuleap\ProFTPd\Admin;
 
 use Project;
 use UGroupManager;
-use UGroup;
+use ProjectUGroup;
 use PFUser;
 
 class PermissionsManager {
@@ -45,12 +45,12 @@ class PermissionsManager {
         if (count($ugroups) == 1) {
             return array_shift($ugroups);
         }
-        return UGroup::NONE;
+        return ProjectUGroup::NONE;
     }
 
     public function getUGroupSystemNameFor(Project $project, $permissions) {
         $ugroup_id = $this->getSelectUGroupFor($project, $permissions);
-        if ($ugroup_id != UGroup::NONE) {
+        if ($ugroup_id != ProjectUGroup::NONE) {
             $ugroup = $this->ugroup_manager->getById($ugroup_id);
             return $project->getUnixName() . '-' . $ugroup->getName();
         }

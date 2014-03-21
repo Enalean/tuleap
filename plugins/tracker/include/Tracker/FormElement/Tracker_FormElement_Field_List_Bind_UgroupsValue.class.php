@@ -21,11 +21,11 @@
 class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormElement_Field_List_BindValue {
 
     /**
-     * @var UGroup
+     * @var ProjectUGroup
      */
     protected $ugroup;
 
-    public function __construct($id, UGroup $ugroup, $is_hidden) {
+    public function __construct($id, ProjectUGroup $ugroup, $is_hidden) {
         parent::__construct($id, $is_hidden);
         $this->ugroup    = $ugroup;
     }

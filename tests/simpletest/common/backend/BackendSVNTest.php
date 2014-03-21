@@ -33,8 +33,7 @@ require_once('common/project/Project.class.php');
 Mock::generate('Project');
 require_once('common/dao/UGroupDao.class.php');
 Mock::generate('UGroupDao');
-require_once('common/project/UGroup.class.php');
-Mock::generate('UGroup');
+Mock::generate('ProjectUGroup');
 require_once('common/dao/ServiceDao.class.php');
 Mock::generate('ServiceDao');
 require_once('common/svn/SVNAccessFile.class.php');
@@ -153,7 +152,7 @@ class BackendSVNTest extends TuleapTestCase {
         $ugdao = new MockUGroupDao();
         $ugdao->setReturnValue('searchByGroupId',$ugroups);
 
-        $ugroup = new MockUGroup($this);
+        $ugroup = new MockProjectUGroup($this);
         $ugroup->setReturnValueAt(0,'getMembersUserName',array('user1', 'user2', 'user3'));
         $ugroup->setReturnValueAt(1,'getMembersUserName',array('user1', 'user4'));
         $ugroup->setReturnValueAt(0,'getName',"QA");
@@ -211,7 +210,7 @@ class BackendSVNTest extends TuleapTestCase {
         $ugdao = new MockUGroupDao();
         $ugdao->setReturnValue('searchByGroupId',$ugroups);
 
-        $ugroup = new MockUGroup($this);
+        $ugroup = new MockProjectUGroup($this);
         $ugroup->setReturnValueAt(0,'getMembersUserName',array('user1', 'user2', 'user3'));
         $ugroup->setReturnValueAt(1,'getMembersUserName',array('user1', 'user4'));
         $ugroup->setReturnValueAt(2,'getMembersUserName',array('user1', 'user2', 'user3'));

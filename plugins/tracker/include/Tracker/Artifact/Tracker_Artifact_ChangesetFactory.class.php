@@ -60,21 +60,6 @@ class Tracker_Artifact_ChangesetFactory {
     }
 
     /**
-     * Return the last changeset at a given timestamp
-     *
-     * @param Tracker_Artifact $artifact
-     * @param int $timestamp
-     * @return Tracker_Artifact_Changeset | null
-     */
-    public function getChangesetForArtifactAtTimestamp(Tracker_Artifact $artifact, $timestamp) {
-        $row = $this->dao->searchLastChangesetAtDate($artifact->getId(), $timestamp)->getRow();
-        if ($row) {
-            return $this->getChangesetFromRow($artifact, $row);
-        }
-        return null;
-    }
-
-    /**
      * Get all changesets in a format ready for json conversion
      *
      * @param Tracker_Artifact $artifact

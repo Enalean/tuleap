@@ -47,16 +47,16 @@ class MediawikiUserGroupsMapper {
     );
 
     public static $DEFAULT_MAPPING_PUBLIC_PROJECT = array (
-        self::MEDIAWIKI_GROUPS_ANONYMOUS  => array(UGroup::ANONYMOUS),
-        self::MEDIAWIKI_GROUPS_USER       => array(UGroup::REGISTERED),
-        self::MEDIAWIKI_GROUPS_SYSOP      => array(UGroup::PROJECT_ADMIN),
-        self::MEDIAWIKI_GROUPS_BUREAUCRAT => array(UGroup::PROJECT_ADMIN)
+        self::MEDIAWIKI_GROUPS_ANONYMOUS  => array(ProjectUGroup::ANONYMOUS),
+        self::MEDIAWIKI_GROUPS_USER       => array(ProjectUGroup::REGISTERED),
+        self::MEDIAWIKI_GROUPS_SYSOP      => array(ProjectUGroup::PROJECT_ADMIN),
+        self::MEDIAWIKI_GROUPS_BUREAUCRAT => array(ProjectUGroup::PROJECT_ADMIN)
     );
 
     public static $DEFAULT_MAPPING_PRIVATE_PROJECT = array (
-        self::MEDIAWIKI_GROUPS_USER       => array(UGroup::REGISTERED),
-        self::MEDIAWIKI_GROUPS_SYSOP      => array(UGroup::PROJECT_ADMIN),
-        self::MEDIAWIKI_GROUPS_BUREAUCRAT => array(UGroup::PROJECT_ADMIN)
+        self::MEDIAWIKI_GROUPS_USER       => array(ProjectUGroup::REGISTERED),
+        self::MEDIAWIKI_GROUPS_SYSOP      => array(ProjectUGroup::PROJECT_ADMIN),
+        self::MEDIAWIKI_GROUPS_BUREAUCRAT => array(ProjectUGroup::PROJECT_ADMIN)
     );
 
     /** @var MediawikiDao */

@@ -18,10 +18,10 @@
 
 require_once('pre.php');
 
-$valid = new Valid_UInt('tracker_id');
+$valid = new Valid_UInt('tracker');
 $valid->required();
 if($request->valid($valid)) {
-    echo user_get_preference('tracker_comment_invertorder_'.$request->get('tracker_id'));
+    echo user_get_preference('tracker_comment_invertorder_'.$request->get('tracker'));
 }
 
 ?>

@@ -126,12 +126,12 @@ class Git_Driver_Gerrit_UmbrellaProjectManager {
 
     /**
      *
-     * @param UGroup[] $ugroups
-     * @return null | UGroup
+     * @param ProjectUGroup[] $ugroups
+     * @return null | ProjectUGroup
      */
     private function getAdminUGroup(array $ugroups) {
         foreach ($ugroups as $ugroup) {
-            if ($ugroup->getId() == UGroup::PROJECT_ADMIN) {
+            if ($ugroup->getId() == ProjectUGroup::PROJECT_ADMIN) {
                 return $ugroup;
             }
         }

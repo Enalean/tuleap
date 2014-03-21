@@ -33,7 +33,7 @@ class Tracker_Permission_ChainOfResponsibility_PermissionsOfAllGroups extends Tr
     }
 
     private function ugroupHasOwnCommand($ugroup_id) {
-        return ($ugroup_id == Ugroup::ANONYMOUS || $ugroup_id == UGroup::REGISTERED);
+        return ($ugroup_id == ProjectUGroup::ANONYMOUS || $ugroup_id == ProjectUGroup::REGISTERED);
     }
 
     private function adjustPermissionsForGroup(Tracker_Permission_PermissionSetter $permission_setter, $ugroup_id, $permission_type) {

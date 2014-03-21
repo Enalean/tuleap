@@ -417,10 +417,10 @@ function news_fetch_ugroups($project) {
     $ugroup_manager   = new UGroupManager();
     $hp               = Codendi_HTMLPurifier::instance();
     $excluded_ugroups = array(
-        UGroup::NONE,
-        UGroup::ANONYMOUS,
-        UGroup::REGISTERED,
-        UGroup::TRACKER_ADMIN
+        ProjectUGroup::NONE,
+        ProjectUGroup::ANONYMOUS,
+        ProjectUGroup::REGISTERED,
+        ProjectUGroup::TRACKER_ADMIN
     );
 
     $ugroups = $ugroup_manager->getUGroups($project, $excluded_ugroups);

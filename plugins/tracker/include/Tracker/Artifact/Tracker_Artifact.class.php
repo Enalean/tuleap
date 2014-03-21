@@ -157,9 +157,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         if (! $user) {
             $user = $um->getCurrentUser();
         }
+
         if (! isset($this->can_view_cache[$user->getId()])) {
-            $permission_checker = new Tracker_Permission_PermissionChecker($um);
-            $this->setUserCanView($user, $permission_checker->userCanView($user, $this));
+            if ($this->getTracker()->userIsAdmin() || $user->isSuperUser()) {
+                $this->setUserCanView($user, true);
+            } else {
+                $permission_checker = new Tracker_Permission_PermissionChecker($um);
+                $this->setUserCanView($user, $permission_checker->userCanView($user, $this));
+            }
         }
         return $this->can_view_cache[$user->getId()];
     }
@@ -451,11 +456,16 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return $this->status;
     }
 
+
     /**
      * @param String $status
      */
     public function setStatus($status) {
         $this->status = $status;
+    }
+
+    public function isOpen() {
+        return Tracker_Semantic_Status::load($this->getTracker())->isOpen($this);
     }
 
     /**
@@ -1194,25 +1204,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $artifact_link_field = $this->getAnArtifactLinkField($user);
         if ($artifact_link_field) {
             $artifact_links = $artifact_link_field->getLinkedArtifacts($this->getLastChangeset(), $user);
-        }
-        return $artifact_links;
-    }
-
-    /**
-     * Get artifacts linked to the current artifact at a given timestamp
-     *
-     * @param PFUser $user The user who should see the artifacts
-     * @param int $timestamp
-     *
-     * @return Array of Tracker_Artifact
-     */
-    public function getLinkedArtifactsAtTimestamp(PFUser $user, $timestamp) {
-        $artifact_links      = array();
-        $artifact_link_field = $this->getAnArtifactLinkField($user);
-
-        $changeset = $this->getChangesetFactory()->getChangesetForArtifactAtTimestamp($this, $timestamp);
-        if ($artifact_link_field && $changeset) {
-            $artifact_links = $artifact_link_field->getLinkedArtifacts($changeset, $user);
         }
         return $artifact_links;
     }

@@ -96,7 +96,7 @@ class Git_RemoteServer_GerritServerFactory {
         return $servers;
     }
 
-    public function getServersForUGroup(UGroup $ugroup) {
+    public function getServersForUGroup(ProjectUGroup $ugroup) {
         $servers = array();
         foreach ($this->dao->searchAllByUGroupId($ugroup->getProjectId(), $ugroup->getId()) as $row) {
             $servers[$row['id']] = $this->instantiateFromRow($row);

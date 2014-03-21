@@ -22,12 +22,12 @@ require_once('include/DataAccessObject.class.php');
 require_once('www/project/admin/ugroup_utils.php');
 
 /**
- *  Data Access Object for UGroup 
+ *  Data Access Object for ProjectUGroup 
  */
 class UGroupUserDao extends DataAccessObject {
 
     /**
-    * Searches UGroup members by UGroupId 
+    * Searches ProjectUGroup members by UGroupId 
     * 
     * Return all Active or Restricted ugroup members
     * Only return active & restricted to keep it coherent with Group::getMembersUserNames
@@ -47,7 +47,7 @@ class UGroupUserDao extends DataAccessObject {
     }
 
     /**
-     * Searches UGroup members by UGroupId paginated
+     * Searches ProjectUGroup members by UGroupId paginated
      *
      * Return all Active or Restricted ugroup members
      * Only return active & restricted to keep it coherent with Group::getMembersUserNames
@@ -74,7 +74,7 @@ class UGroupUserDao extends DataAccessObject {
     }
 
     /**
-     * Count UGroup members by UGroupId
+     * Count ProjectUGroup members by UGroupId
      *
      * @param Integer $ugroup_id Id of the ugroup
      *

@@ -1,0 +1,46 @@
+<div class="span6">
+    {{# has_permissions }}
+    <form action="permission_delegation.php?action=delete-permissions" method="post">
+    {{/ has_permissions }}
+
+        <h3>{{ permissions_title }}</h3>
+
+        {{# has_permissions }}
+        <table class="table table-hover table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>{{ permissions_list_title }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{# permissions }}
+                <tr>
+                    <td><input type="checkbox" name="permissions[]" value="{{ getId }}" class="permissions" /></td>
+                    <td>{{ getName }}</td>
+                </tr>
+                {{/ permissions }}
+            </tbody>
+        </table>
+        {{/ has_permissions }}
+        {{^ has_permissions }}
+            <p class="no-permission">{{ no_permission }}</p>
+        {{/ has_permissions }}
+
+        <div class="table-actions">
+            <div class="left-actions">
+                <button id="add-permissions" class="btn btn-primary" data-group-id="{{ id }}"><i class="icon-plus"></i> {{ permissions_action_add }}</button>
+            </div>
+            <div class="right-actions">
+                {{# has_permissions }}
+                    <input type="hidden" name="id" value="{{ id }}" />
+                    <button id="delete-permissions" class="btn btn-danger" disabled="disabled"><i class="icon-trash"></i> {{ permissions_action_delete }}</button>
+                {{/ has_permissions }}
+            </div>
+            <div style="clear: both"></div>
+        </div>
+
+    {{# has_permissions }}
+    </form>
+    {{/ has_permissions }}
+</div>

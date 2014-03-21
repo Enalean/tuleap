@@ -1,3 +1,9 @@
+Version 1.23 - Tuleap 6.12
+    * story #6454 giving access admin rights to some users to all trackers
+
+Version 1.22 - Tuleap 6.12
+    * request #6430 - PUT /cards/:id cannot update solo card
+
 Version 1.21 - Tuleap 6.11
     * story #6191 - artifacts POST PUT OPTIONS
 

@@ -363,7 +363,7 @@ class Git_Driver_Gerrit_ProjectCreator {
     }
 
     private function shouldAddRegisteredUsersToGroup(GitRepository $repository, $permission, $group) {
-        return array_intersect(array(UGroup::ANONYMOUS, UGroup::REGISTERED), $group) &&
+        return array_intersect(array(ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED), $group) &&
             $repository->getProject()->isPublic() &&
             $this->user_finder->areRegisteredUsersAllowedTo($permission, $repository);
     }

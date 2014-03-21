@@ -39,6 +39,7 @@ use \PFUser;
 use \AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use \Tracker_NoChangeException;
 use \EventManager;
+use \URLVerification;
 
 /**
  * Wrapper for milestone related REST methods
@@ -393,6 +394,7 @@ class MilestoneResource {
 
         try {
             $this->milestone_validator->validateArtifactsFromBodyContent($ids, $milestone, $current_user);
+            $this->milestone_content_updater->updateMilestoneContent($ids, $current_user, $milestone);
         } catch (ArtifactDoesNotExistException $exception) {
             throw new RestException(404, $exception->getMessage());
         } catch (ArtifactIsNotInBacklogTrackerException $exception) {
@@ -401,12 +403,14 @@ class MilestoneResource {
             throw new RestException(400, $exception->getMessage());
         } catch (IdsFromBodyAreNotUniqueException $exception) {
             throw new RestException(400, $exception->getMessage());
+        } catch (Tracker_NoChangeException $exception) {
+            //Do nothing
         }
 
         try {
-            $this->milestone_content_updater->updateMilestoneContent($ids, $current_user, $milestone);
-        } catch (Tracker_NoChangeException $exception) {
-            //Do nothing
+            $this->artifactlink_updater->setOrder($ids);
+        } catch (ItemListedTwiceException $exception) {
+            throw new RestException(400, $exception->getMessage());
         }
 
         $this->sendAllowHeaderForContent();
@@ -545,7 +549,7 @@ class MilestoneResource {
             throw new RestException(404);
         }
 
-        ProjectAuthorization::userCanAccessProject($user, $milestone->getProject());
+        ProjectAuthorization::userCanAccessProject($user, $milestone->getProject(), new URLVerification());
 
         if (! $milestone->getArtifact()->userCanView()) {
             throw new RestException(403);

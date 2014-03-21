@@ -60,6 +60,7 @@ admin_main	trove_cat_list	List all
 admin_main	trove_cat_add	Add one
 admin_main	skills	People skills
 admin_main	new_user	New user
+admin_main	permission_delegation	Permission delegation
 admin_main	active_users	Per activities
 admin_main	lastday_users	Last 24 hours
 admin_main	lastweek_users	Last week
@@ -471,3 +472,39 @@ admin_generic_user	back	« Back
 admin_generic_user	set_by_project	Configured at project level (each project administrator can configure it in project administration page)
 admin_generic_user	email	Email
 admin_generic_user	password	Password
+
+admin_permission_delegation	page_title	Permission delegation
+admin_permission_delegation	page_description	Here you can assign plateform roles to user groups.
+admin_permission_delegation	group_action_add	Add group
+admin_permission_delegation	group_action_edit	Edit
+admin_permission_delegation	group_action_delete	Delete
+admin_permission_delegation	no_group	There is no group yet. You can start by adding one:
+admin_permission_delegation	permissions_title	Permissions
+admin_permission_delegation	no_permission	There is no permission associated to this group
+admin_permission_delegation	users_title	Users
+admin_permission_delegation	no_user	There is no user associated to this group
+admin_permission_delegation	permissions_list_title	Permission
+admin_permission_delegation	users_list_title	User
+admin_permission_delegation	permissions_action_add	Add permissions
+admin_permission_delegation	permissions_action_delete	Delete selected permissions
+admin_permission_delegation	users_action_add	Add user
+admin_permission_delegation	users_action_delete	Delete selected users
+admin_permission_delegation	group_title_create	Create a new group
+admin_permission_delegation	group_title_edit	Edit the group "$1"
+admin_permission_delegation	group_name	Name
+admin_permission_delegation	group_description	Description
+admin_permission_delegation	group_submit_create	Create
+admin_permission_delegation	group_submit_edit	Save changes
+admin_permission_delegation	group_cancel	Cancel
+admin_permission_delegation	group_title_delete	Delete the group "$1"
+admin_permission_delegation	group_delete_confirmation	You are about to delete the group "<b>$1</b>". This action is action is irreversible. Do you confirm this deletion?
+admin_permission_delegation	group_submit_delete	Yes, delete it
+admin_permission_delegation	group_cancel_delete	Cancel
+admin_permission_delegation	user_group_already_exists	The user group name is invalid (empty or already exists)
+admin_permission_delegation	ugroup_not_found	User group does not exist
+admin_permission_delegation	permissions_modal_title	Add permissions to "$1"
+admin_permission_delegation	permissions_modal_description	Select the permissions you want to add to the group "<b>$1</b>"
+admin_permission_delegation	permissions_modal_submit	Add permissions
+admin_permission_delegation	permissions_modal_cancel	Cancel
+admin_permission_delegation	no_permission_to_add	This group already has all available permissions.
+admin_permission_delegation	permission_not_found	Permission does not exist

@@ -40,6 +40,7 @@ use \Tracker_NoChangeException;
 use \TrackerFactory;
 use \Tracker_REST_Artifact_ArtifactCreator;
 use \Tuleap\Tracker\REST\Artifact\ArtifactReference;
+use \Tracker_URLVerification;
 
 class ArtifactsResource {
     const MAX_LIMIT      = 50;
@@ -225,7 +226,7 @@ class ArtifactsResource {
     private function getArtifactById(PFUser $user, $id) {
         $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $id);
         if ($artifact) {
-            ProjectAuthorization::userCanAccessProject($user, $artifact->getTracker()->getProject());
+            ProjectAuthorization::userCanAccessProject($user, $artifact->getTracker()->getProject(), new Tracker_URLVerification());
             return $artifact;
         }
         throw new RestException(404);

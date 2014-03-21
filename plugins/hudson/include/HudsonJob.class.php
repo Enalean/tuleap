@@ -23,6 +23,7 @@ require_once('HudsonJobURLFileException.class.php');
 require_once('HudsonJobURLFileNotFoundException.class.php');
  
 class HudsonJob {
+    const API_XML = '/api/xml';
 
     protected $hudson_job_url;
     protected $hudson_dobuild_url;
@@ -40,14 +41,33 @@ class HudsonJob {
         if ( ! $parsed_url || ! array_key_exists('scheme', $parsed_url) ) {
             throw new HudsonJobURLMalformedException($GLOBALS['Language']->getText('plugin_hudson','wrong_job_url', array($hudson_job_url)));
         }
-                
-        $this->hudson_job_url     = $hudson_job_url . "/api/xml";
-        $this->hudson_dobuild_url = $hudson_job_url . "/build";
-        $this->name               = $name;
-        
-        $controler = $this->getHudsonControler(); 
+
+        $this->setJobUrl($hudson_job_url);
+
+        $this->name       = $name;
+        $controler        = $this->getHudsonControler();
         $this->icons_path = $controler->getIconsPath();
     }
+
+    private function setJobUrl($url) {
+        $matches = array();
+        if (preg_match(Jenkins_Client::BUILD_WITH_PARAMETERS_REGEXP, $url, $matches)) {
+            $this->hudson_job_url     = $matches['job_url'] . self::API_XML;
+            $this->hudson_dobuild_url = $url;
+        } else {
+            $this->hudson_job_url     = $url . self::API_XML;
+            $this->hudson_dobuild_url = $url . "/build";
+        }
+    }
+
+    public function getJobUrl() {
+        return $this->hudson_job_url;
+    }
+
+    public function getDoBuildUrl() {
+        return $this->hudson_dobuild_url;
+    }
+
     function getHudsonControler() {
         return new hudson();
     }

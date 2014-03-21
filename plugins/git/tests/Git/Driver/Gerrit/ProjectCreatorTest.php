@@ -205,17 +205,17 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
 
     public function setUp() {
         parent::setUp();
-        $this->project_members = mock('UGroup');
+        $this->project_members = mock('ProjectUGroup');
         stub($this->project_members)->getNormalizedName()->returns('project_members');
-        stub($this->project_members)->getId()->returns(UGroup::PROJECT_MEMBERS);
+        stub($this->project_members)->getId()->returns(ProjectUGroup::PROJECT_MEMBERS);
 
-        $this->another_ugroup = mock('UGroup');
+        $this->another_ugroup = mock('ProjectUGroup');
         stub($this->another_ugroup)->getNormalizedName()->returns('another_ugroup');
         stub($this->another_ugroup)->getId()->returns(120);
 
-        $this->project_admins = mock('UGroup');
+        $this->project_admins = mock('ProjectUGroup');
         stub($this->project_admins)->getNormalizedName()->returns('project_admins');
-        stub($this->project_admins)->getId()->returns(UGroup::PROJECT_ADMIN);
+        stub($this->project_admins)->getId()->returns(ProjectUGroup::PROJECT_ADMIN);
 
         stub($this->ugroup_manager)->getUGroups()->returns(array($this->project_members, $this->another_ugroup, $this->project_admins));
 
@@ -231,9 +231,9 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
     }
 
     public function itPushesTheUpdatedConfigToTheServer() {
-        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_READ)->returns(array(UGroup::REGISTERED));
-        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WRITE)->returns(array(UGroup::PROJECT_MEMBERS, 120));
-        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WPLUS)->returns(array(UGroup::PROJECT_ADMIN));
+        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_READ)->returns(array(ProjectUGroup::REGISTERED));
+        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WRITE)->returns(array(ProjectUGroup::PROJECT_MEMBERS, 120));
+        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WPLUS)->returns(array(ProjectUGroup::PROJECT_ADMIN));
 
         $this->project_creator->createGerritProject($this->server, $this->repository, $this->template_id);
         $this->project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
@@ -248,9 +248,9 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
     }
 
     public function itThrowsAnExceptionIfProjectAlreadyExists() {
-        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_READ)->returns(array(UGroup::REGISTERED));
-        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WRITE)->returns(array(UGroup::PROJECT_MEMBERS, 120));
-        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WPLUS)->returns(array(UGroup::PROJECT_ADMIN));
+        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_READ)->returns(array(ProjectUGroup::REGISTERED));
+        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WRITE)->returns(array(ProjectUGroup::PROJECT_MEMBERS, 120));
+        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WPLUS)->returns(array(ProjectUGroup::PROJECT_ADMIN));
 
         $driver = mock('Git_Driver_Gerrit');
         stub($driver)->doesTheProjectExist()->returns(true);
@@ -281,7 +281,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
     }
 
     public function itDoesNotSetPermsOnRegisteredUsersIfProjectIsPrivate() {
-        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_READ)->returns(array(UGroup::REGISTERED));
+        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_READ)->returns(array(ProjectUGroup::REGISTERED));
         stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WRITE)->returns(array());
         stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WPLUS)->returns(array());
 
@@ -293,8 +293,8 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
 
     public function itDoesNotSetPermsOnRegisteredUsersIfRepoHasNoPermsForRegisteredOrAnonymous() {
         $groups = array(
-            UGroup::REGISTERED,
-            UGroup::ANONYMOUS,
+            ProjectUGroup::REGISTERED,
+            ProjectUGroup::ANONYMOUS,
         );
         stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_READ)->returns($groups);
         stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WRITE)->returns($groups);
@@ -307,7 +307,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
     }
 
     public function itSetsPermsOnRegisteredUsersIfRepoHasReadForRegistered() {
-        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_READ)->returns(array(UGroup::REGISTERED));
+        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_READ)->returns(array(ProjectUGroup::REGISTERED));
         stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WRITE)->returns(array());
         stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WPLUS)->returns(array());
 
@@ -319,7 +319,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
 
     public function itSetsPermsOnRegisteredUsersIfRepoHasWriteForRegistered() {
         stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_READ)->returns(array());
-        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WRITE)->returns(array(UGroup::REGISTERED));
+        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WRITE)->returns(array(ProjectUGroup::REGISTERED));
         stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WPLUS)->returns(array());
 
         $this->project_creator->createGerritProject($this->server, $this->repository_with_registered, $this->migrate_access_rights);
@@ -331,7 +331,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
     public function itSetsPermsOnRegisteredUsersIfRepoHasExecuteForRegistered() {
         stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_READ)->returns(array());
         stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WRITE)->returns(array());
-        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WPLUS)->returns(array(UGroup::REGISTERED));
+        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WPLUS)->returns(array(ProjectUGroup::REGISTERED));
 
         $this->project_creator->createGerritProject($this->server, $this->repository_with_registered, $this->migrate_access_rights);
         $this->project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
@@ -340,7 +340,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
     }
 
     public function itSetsPermsOnRegisteredUsersIfRepoHasReadForAnonymous() {
-        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_READ)->returns(array(UGroup::ANONYMOUS));
+        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_READ)->returns(array(ProjectUGroup::ANONYMOUS));
         stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WRITE)->returns(array());
         stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WPLUS)->returns(array());
 
@@ -352,7 +352,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
 
     public function itSetsPermsOnRegisteredUsersIfRepoHasWriteForAnonymous() {
         stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_READ)->returns(array());
-        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WRITE)->returns(array(UGroup::ANONYMOUS));
+        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WRITE)->returns(array(ProjectUGroup::ANONYMOUS));
         stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WPLUS)->returns(array());
 
         $this->project_creator->createGerritProject($this->server, $this->repository_with_registered, $this->migrate_access_rights);
@@ -364,7 +364,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
     public function itSetsPermsOnRegisteredUsersIfRepoHasExecuteForAnonymous() {
         stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_READ)->returns(array());
         stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WRITE)->returns(array());
-        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WPLUS)->returns(array(UGroup::ANONYMOUS));
+        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WPLUS)->returns(array(ProjectUGroup::ANONYMOUS));
 
         $this->project_creator->createGerritProject($this->server, $this->repository_with_registered, $this->migrate_access_rights);
         $this->project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
@@ -459,9 +459,9 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
     public function itCreatesAProjectAndExportGitBranchesAndTagsWithoutCreateParentProject() {
         //ssh gerrit gerrit create tuleap.net-Firefox/all/mobile
 
-        $this->project_admins = mock('UGroup');
+        $this->project_admins = mock('ProjectUGroup');
         stub($this->project_admins)->getNormalizedName()->returns('project_admins');
-        stub($this->project_admins)->getId()->returns(UGroup::PROJECT_ADMIN);
+        stub($this->project_admins)->getId()->returns(ProjectUGroup::PROJECT_ADMIN);
 
         stub($this->ugroup_manager)->getUGroups()->returns(array($this->project_admins));
         stub($this->driver)->DoesTheParentProjectExist()->returns(true);
@@ -480,13 +480,13 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
     }
 
     public function itCreatesProjectMembersGroup() {
-        $ugroup = mock('UGroup');
+        $ugroup = mock('ProjectUGroup');
         stub($ugroup)->getNormalizedName()->returns('project_members');
-        stub($ugroup)->getId()->returns(Ugroup::PROJECT_MEMBERS);
+        stub($ugroup)->getId()->returns(ProjectUGroup::PROJECT_MEMBERS);
 
-        $ugroup_project_admins = mock('UGroup');
+        $ugroup_project_admins = mock('ProjectUGroup');
         stub($ugroup_project_admins)->getNormalizedName()->returns('project_admins');
-        stub($ugroup_project_admins)->getId()->returns(UGroup::PROJECT_ADMIN);
+        stub($ugroup_project_admins)->getId()->returns(ProjectUGroup::PROJECT_ADMIN);
 
         expect($this->ugroup_manager)->getUGroups($this->project)->once();
         stub($this->ugroup_manager)->getUGroups()->returns(array($ugroup, $ugroup_project_admins));
@@ -499,15 +499,15 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
     }
 
     public function itCreatesAllGroups() {
-        $ugroup_project_members = mock('UGroup');
+        $ugroup_project_members = mock('ProjectUGroup');
         stub($ugroup_project_members)->getNormalizedName()->returns('project_members');
-        stub($ugroup_project_members)->getId()->returns(UGroup::PROJECT_MEMBERS);
+        stub($ugroup_project_members)->getId()->returns(ProjectUGroup::PROJECT_MEMBERS);
 
-        $ugroup_project_admins = mock('UGroup');
+        $ugroup_project_admins = mock('ProjectUGroup');
         stub($ugroup_project_admins)->getNormalizedName()->returns('project_admins');
-        stub($ugroup_project_admins)->getId()->returns(UGroup::PROJECT_ADMIN);
+        stub($ugroup_project_admins)->getId()->returns(ProjectUGroup::PROJECT_ADMIN);
 
-        $ugroup_another_group = mock('UGroup');
+        $ugroup_another_group = mock('ProjectUGroup');
         stub($ugroup_another_group)->getNormalizedName()->returns('another_group');
         stub($ugroup_another_group)->getId()->returns(120);
 

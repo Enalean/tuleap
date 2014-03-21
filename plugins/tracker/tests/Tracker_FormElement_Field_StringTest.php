@@ -29,7 +29,7 @@ Mock::generate('Rule_NoCr');
 require_once('common/include/Response.class.php');
 Mock::generate('Response');
 
-class Tracker_FormElement_Field_StringTest extends UnitTestCase {
+class Tracker_FormElement_Field_StringTest extends TuleapTestCase {
     
     function setUp() {
         $GLOBALS['Response'] = new MockResponse();
@@ -93,6 +93,29 @@ class Tracker_FormElement_Field_StringTest extends UnitTestCase {
         $f = new Tracker_FormElement_Field_StringTestVersion();
         $this->assertEqual('this is a string value', $f->getFieldData('this is a string value'));
     }
-    
+
+    /**
+     * @see https://tuleap.net/plugins/tracker?aid=6449
+     */
+    function itIsEmptyWhenThereIsNoContent() {
+        $field = aStringField()->build();
+        $this->assertTrue($field->isEmpty(''));
+    }
+
+    /**
+     * @see https://tuleap.net/plugins/tracker?aid=6449
+     */
+    function itIsEmptyWhenThereIsOnlyWhitespaces() {
+        $field = aStringField()->build();
+        $this->assertTrue($field->isEmpty('  '));
+    }
+
+    /**
+     * @see https://tuleap.net/plugins/tracker?aid=6449
+     */
+    function itIsNotEmptyWhenThereIsContent() {
+        $field = aStringField()->build();
+        $this->assertFalse($field->isEmpty('sdf'));
+    }
 }
 ?>

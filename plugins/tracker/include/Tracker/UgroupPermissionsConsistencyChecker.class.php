@@ -80,7 +80,7 @@ class Tracker_UgroupPermissionsConsistencyChecker {
         }
     }
 
-    private function extractUGroupName(UGroup $ugroup) {
+    private function extractUGroupName(ProjectUGroup $ugroup) {
         return $ugroup->getName();
     }
 }

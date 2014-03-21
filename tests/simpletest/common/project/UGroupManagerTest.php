@@ -67,7 +67,7 @@ class UGroupManager_getUGroup_Test extends UGroupManager_BaseTest {
     }
 
     public function itReturnsDynamicUgroupForAGivenProject() {
-        $ugroup = $this->ugroup_manager->getUGroup($this->project, UGroup::PROJECT_MEMBERS);
+        $ugroup = $this->ugroup_manager->getUGroup($this->project, ProjectUGroup::PROJECT_MEMBERS);
         $this->assertEqual('ugroup_project_members_name_key', $ugroup->getName());
     }
 }
@@ -80,7 +80,7 @@ class UGroupManager_getUGroups_Test extends UGroupManager_BaseTest {
     }
 
     public function itExcludesGivenUgroups() {
-        $ugroups = $this->ugroup_manager->getUGroups($this->project, array(UGROUP::NONE, UGROUP::ANONYMOUS));
+        $ugroups = $this->ugroup_manager->getUGroups($this->project, array(ProjectUGroup::NONE, ProjectUGroup::ANONYMOUS));
         $this->assertCount($ugroups, 10);
     }
 }
@@ -122,7 +122,7 @@ class UGroupManager_getUGroupWithMembers_Test extends TuleapTestCase {
     }
 
     public function itReturnsAUGroupWithMembers() {
-        $ugroup = mock('UGroup');
+        $ugroup = mock('ProjectUGroup');
         stub($this->ugroup_manager)->getUGroup($this->project, $this->ugroup_id)->returns($ugroup);
 
         expect($ugroup)->getMembers()->once();
@@ -160,8 +160,8 @@ class UGroupManager_UpdateUgroupBindingEventTest extends TuleapTestCase {
         $this->ugroup_manager = partial_mock('UGroupManager', array('getById'), array($this->dao, $this->event_manager));
 
 
-        $this->ugroup_12 = new UGroup(array('ugroup_id' => 12));
-        $this->ugroup_24 = new UGroup(array('ugroup_id' => 24));
+        $this->ugroup_12 = new ProjectUGroup(array('ugroup_id' => 12));
+        $this->ugroup_24 = new ProjectUGroup(array('ugroup_id' => 24));
         stub($this->ugroup_manager)->getById(12)->returns($this->ugroup_12);
         stub($this->ugroup_manager)->getById(24)->returns($this->ugroup_24);
     }

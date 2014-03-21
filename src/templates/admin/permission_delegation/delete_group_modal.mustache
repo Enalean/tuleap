@@ -1,0 +1,18 @@
+<div id="delete-group-modal" class="modal hide fade">
+    <form action="permission_delegation.php?action=delete-group" method="post">
+        <div class="modal-header">
+            <a type="button" class="close" data-dismiss="modal"><i class="icon-remove"></i></a>
+            <h3>{{ group_title_delete }}</h3>
+        </div>
+
+        <div class="modal-body">
+            <p>{{{ group_delete_confirmation }}}</p>
+            <input type="hidden" name="id" value="{{ id }}" />
+        </div>
+
+        <div class="modal-footer">
+            <a class="btn" data-dismiss="modal">{{ group_cancel_delete }}</a>
+            <input type="submit" class="btn btn-danger" value="{{ group_submit_delete }}" />
+        </div>
+    </form>
+</div>

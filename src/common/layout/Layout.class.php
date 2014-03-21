@@ -1233,8 +1233,15 @@ class Layout extends Response {
         $em = EventManager::instance();
         echo '<script type="text/javascript">'."\n";
         $em->processEvent(Event::JAVASCRIPT_FOOTER, null);
+        echo $this->getFooterSiteJs();
         echo '
         </script>';
+    }
+
+    protected function getFooterSiteJs() {
+        ob_start();
+        include($GLOBALS['Language']->getContent('layout/footer', null, null, '.js'));
+        return ob_get_clean();
     }
 
     /**

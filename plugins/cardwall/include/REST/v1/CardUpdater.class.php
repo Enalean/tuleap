@@ -26,12 +26,12 @@ use \PFUser;
 
 class CardUpdater {
 
-    public function updateCard(PFUser $user, Cardwall_SingleCard $card, $label, $column_id, $values) {
+    public function updateCard(PFUser $user, Cardwall_SingleCard $card, $label, array $values, $column_id = null) {
         $artifact     = $card->getArtifact();
 
         $this->checkArtifact($user, $artifact);
         $cards_resource_validator = new CardValidator();
-        $fields_data = $cards_resource_validator->getFieldsDataFromREST($user, $card, $label, $column_id, $values);
+        $fields_data = $cards_resource_validator->getFieldsDataFromREST($user, $card, $label, $values, $column_id);
         $artifact->createNewChangeset($fields_data, '', $user);
     }
 

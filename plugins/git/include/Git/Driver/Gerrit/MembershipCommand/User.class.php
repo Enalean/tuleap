@@ -31,7 +31,7 @@ abstract class Git_Driver_Gerrit_MembershipCommand_User extends Git_Driver_Gerri
         Git_Driver_Gerrit_MembershipManager $membership_manager,
         Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
         Git_Driver_Gerrit_UserAccountManager $gerrit_user_manager,
-        UGroup $ugroup,
+        ProjectUGroup $ugroup,
         PFUser $user
     ) {
         parent::__construct($membership_manager, $driver_factory, $ugroup);

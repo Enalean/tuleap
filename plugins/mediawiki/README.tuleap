@@ -72,7 +72,7 @@ It's mainly a wrapper around mediawiki:
 layout::BodyHeader() ??
 *Project::getRolesId()
 *Project::getRoles()
-Ugroup/UserManager  ->  new PFUser($row) (renommage User -> PFUser) => won't be modified on Tuleap side
+ProjectUGroup/UserManager  ->  new PFUser($row) (renommage User -> PFUser) => won't be modified on Tuleap side
 SystemEventManager::fetchEvents() => not used
 *database_pforole.sql
 *codendi_aliases.conf.dist -> Include /usr/share/codendi/plugins/mediawiki/etc/plugin-mediawiki.inc

@@ -848,10 +848,10 @@ class GitPlugin extends Plugin {
 
     public function project_admin_change_user_permissions($params) {
         if ($params['user_permissions']['admin_flags'] == 'A') {
-            $params['ugroup_id'] = UGroup::PROJECT_ADMIN;
+            $params['ugroup_id'] = ProjectUGroup::PROJECT_ADMIN;
             $this->project_admin_ugroup_add_user($params);
         } else {
-            $params['ugroup_id'] = UGroup::PROJECT_ADMIN;
+            $params['ugroup_id'] = ProjectUGroup::PROJECT_ADMIN;
             $this->project_admin_ugroup_remove_user($params);
         }
     }
@@ -871,12 +871,12 @@ class GitPlugin extends Plugin {
     }
 
     public function project_admin_add_user($params) {
-        $params['ugroup_id'] = UGroup::PROJECT_MEMBERS;
+        $params['ugroup_id'] = ProjectUGroup::PROJECT_MEMBERS;
         $this->project_admin_ugroup_add_user($params);
     }
 
     public function project_admin_remove_user($params) {
-        $params['ugroup_id'] = UGroup::PROJECT_MEMBERS;
+        $params['ugroup_id'] = ProjectUGroup::PROJECT_MEMBERS;
         $this->project_admin_ugroup_remove_user($params);
         $this->projectRemoveUserFromNotification($params);
     }

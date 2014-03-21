@@ -259,5 +259,9 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
     public function getFieldDataFromCSVValue($csv_value) {
         return $this->getFieldData($csv_value);
     }
+
+    public function isEmpty($value) {
+        return trim($value) == '';
+    }
 }
-?>
+

@@ -52,6 +52,7 @@ admin_main	trove_cat_list	Liste des catégories
 admin_main	trove_cat_add	Ajout des catégories
 admin_main	skills	Compétences utilisateurs
 admin_main	new_user	Nouvel utilisateur
+admin_main	permission_delegation	Délégation de permission
 admin_main	active_users	Utilisateurs actifs
 admin_main	lastday_users	Les dernières 24 heures
 admin_main	lastweek_users	La semaine dernière
@@ -461,3 +462,39 @@ admin_generic_user	back	« Retour
 admin_generic_user	set_by_project	Configurable au niveau de chaque projet (chaque administrateur peut définir sa propre valeur dans les pages d'administration du projet)
 admin_generic_user	email	Email
 admin_generic_user	password	Mot de passe
+
+admin_permission_delegation	page_title	Délegation de permission
+admin_permission_delegation	page_description	Ici vous pouvez assigner des permissions à des groupes portants sur l'ensemble de la plateforme.
+admin_permission_delegation	group_action_add	Ajouter un groupe
+admin_permission_delegation	group_action_edit	Editer
+admin_permission_delegation	group_action_delete	Supprimer
+admin_permission_delegation	no_group	Il n'y a pas encore de groupe. Vous pouvez commencer par en ajouter un :
+admin_permission_delegation	permissions_title	Permissions
+admin_permission_delegation	no_permission	Il n'y a aucune permission associée à ce groupe
+admin_permission_delegation	users_title	Utilisateurs
+admin_permission_delegation	no_user	Il n'y a aucun utilisateur associé à ce groupe
+admin_permission_delegation	permissions_list_title	Permission
+admin_permission_delegation	users_list_title	Utilisateur
+admin_permission_delegation	permissions_action_add	Ajouter des permissions
+admin_permission_delegation	permissions_action_delete	Supprimer les permissions sélectionnées
+admin_permission_delegation	users_action_add	Ajouter un utilisateur
+admin_permission_delegation	users_action_delete	Supprimer les utilisateurs sélectionnés
+admin_permission_delegation	group_title_create	Ajouter un nouveau groupe
+admin_permission_delegation	group_title_edit	Editer le groupe "$1"
+admin_permission_delegation	group_name	Nom
+admin_permission_delegation	group_description	Description
+admin_permission_delegation	group_submit_create	Créer
+admin_permission_delegation	group_submit_edit	Sauvegarder
+admin_permission_delegation	group_cancel	Annuler
+admin_permission_delegation	group_title_delete	Supprimer le groupe "$1"
+admin_permission_delegation	group_delete_confirmation	Vous êtes sur le point de supprimer le groupe "<b>$1</b>". Cette action est irréversible. Confirmez-vous la suppression ?
+admin_permission_delegation	group_submit_delete	Oui, supprimer
+admin_permission_delegation	group_cancel_delete	Annuler
+admin_permission_delegation	user_group_already_exists	Le nom du groupe d'utilisateurs est invalide (vide ou déjà existant)
+admin_permission_delegation	ugroup_not_found	Ce groupe d'utilisateurs n'existe pas
+admin_permission_delegation	permissions_modal_title	Ajouter des permissions au groupe "$1"
+admin_permission_delegation	permissions_modal_description	Selectionnez les permissions que vous voulez ajouter au groupe "<b>$1</b>"
+admin_permission_delegation	permissions_modal_submit	Ajouter les permissions
+admin_permission_delegation	permissions_modal_cancel	Annuler
+admin_permission_delegation	no_permission_to_add	Ce groupe possède déjà toutes les permissions disponibles.
+admin_permission_delegation	permission_not_found	Cette permission n'existe pas

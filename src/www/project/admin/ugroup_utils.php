@@ -12,20 +12,19 @@
 //
 // Define various functions for user group management
 //
-
+require_once 'utils.php';
 // Predefined ugroups. Should be consistent with DB (table 'ugroup')
 /** @deprecated **/
-$GLOBALS['UGROUP_NONE']               = UGroup::NONE;
-$GLOBALS['UGROUP_ANONYMOUS']          = UGroup::ANONYMOUS;
-$GLOBALS['UGROUP_REGISTERED']         = UGroup::REGISTERED;
-$GLOBALS['UGROUP_PROJECT_MEMBERS']    = UGroup::PROJECT_MEMBERS;
-$GLOBALS['UGROUP_PROJECT_ADMIN']      = UGroup::PROJECT_ADMIN;
-$GLOBALS['UGROUP_FILE_MANAGER_ADMIN'] = UGroup::FILE_MANAGER_ADMIN;
-$GLOBALS['UGROUP_DOCUMENT_TECH']      = UGroup::DOCUMENT_TECH;
-$GLOBALS['UGROUP_DOCUMENT_ADMIN']     = UGroup::DOCUMENT_ADMIN;
-$GLOBALS['UGROUP_WIKI_ADMIN']         = UGroup::WIKI_ADMIN;
-$GLOBALS['UGROUP_TRACKER_ADMIN']      = UGroup::TRACKER_ADMIN;
-
+$GLOBALS['UGROUP_NONE']               = ProjectUGroup::NONE;
+$GLOBALS['UGROUP_ANONYMOUS']          = ProjectUGroup::ANONYMOUS;
+$GLOBALS['UGROUP_REGISTERED']         = ProjectUGroup::REGISTERED;
+$GLOBALS['UGROUP_PROJECT_MEMBERS']    = ProjectUGroup::PROJECT_MEMBERS;
+$GLOBALS['UGROUP_PROJECT_ADMIN']      = ProjectUGroup::PROJECT_ADMIN;
+$GLOBALS['UGROUP_FILE_MANAGER_ADMIN'] = ProjectUGroup::FILE_MANAGER_ADMIN;
+$GLOBALS['UGROUP_DOCUMENT_TECH']      = ProjectUGroup::DOCUMENT_TECH;
+$GLOBALS['UGROUP_DOCUMENT_ADMIN']     = ProjectUGroup::DOCUMENT_ADMIN;
+$GLOBALS['UGROUP_WIKI_ADMIN']         = ProjectUGroup::WIKI_ADMIN;
+$GLOBALS['UGROUP_TRACKER_ADMIN']      = ProjectUGroup::TRACKER_ADMIN;
 $GLOBALS['UGROUPS'] = array(
     'UGROUP_NONE'               => $GLOBALS['UGROUP_NONE'],
     'UGROUP_ANONYMOUS'          => $GLOBALS['UGROUP_ANONYMOUS'],
@@ -701,10 +700,10 @@ function ugroup_get_user_manager() {
 /**
  * Wrapper for tests
  *
- * @return UGroup
+ * @return ProjectUGroup
  */
 function ugroup_get_ugroup() {
-    return new UGroup();
+    return new ProjectUGroup();
 }
 
 /**

@@ -31,6 +31,7 @@ use \Tracker_ReportFactory;
 use \UserManager;
 use \Tuleap\REST\Header;
 use \Tracker_Report;
+use \Tracker_URLVerification;
 
 /**
  * Wrapper for Tracker related REST methods
@@ -133,7 +134,7 @@ class TrackersResource {
         $tracker = TrackerFactory::instance()->getTrackerById($id);
         if ($tracker) {
             if ($tracker->userCanView($user)) {
-                ProjectAuthorization::userCanAccessProject($user, $tracker->getProject());
+                ProjectAuthorization::userCanAccessProject($user, $tracker->getProject(), new Tracker_URLVerification());
                 return $tracker;
             }
             throw new RestException(403);
