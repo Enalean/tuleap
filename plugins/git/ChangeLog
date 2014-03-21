@@ -1,3 +1,6 @@
+Version 3.74 - Tuleap 6.12
+    * Request #6533 - wrong permissions on gitolite repository after gitolite3 installation
+
 Version 3.73 - Tuleap 6.12
     * * story #5679 - upgrade to gerrit REST API
 * story #6447 - Finish Gerrit 2.8 / Rest API
