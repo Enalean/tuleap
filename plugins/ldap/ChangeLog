@@ -1,3 +1,6 @@
+Version 3.41 - Tuleap 6.12
+    * story #5679 - upgrade to gerrit REST API
+
 Version 3.40 - Tuleap 6.12
     * story #5998 - Delegate the validation of projects to users
 

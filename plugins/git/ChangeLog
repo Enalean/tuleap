@@ -1,3 +1,7 @@
+Version 3.73 - Tuleap 6.12
+    * * story #5679 - upgrade to gerrit REST API
+* story #6447 - Finish Gerrit 2.8 / Rest API
+
 Version 3.72 - Tuleap 6.12
     * Fix request #6406: Upgrade to 6.11 on Centos 6 block git web access
     * story #5998 - Delegate the validation of projects to users
