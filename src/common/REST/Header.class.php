@@ -62,6 +62,10 @@ class Header {
         self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::PUT));
     }
 
+    public static function allowOptionsGetPutDelete() {
+        self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::PUT, self::DELETE));
+    }
+
     public static function allowOptionsPut() {
         self::sendAllowHeaders(array(self::OPTIONS, self::PUT));
     }
@@ -70,8 +74,8 @@ class Header {
         self::sendAllowHeaders(array(self::OPTIONS, self::POST));
     }
 
-    public static function allowOptionsGetPatch() {
-        self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::PATCH));
+    public static function allowOptionsGetPost() {
+        self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::POST));
     }
 
     private static function sendAllowHeaders($methods) {

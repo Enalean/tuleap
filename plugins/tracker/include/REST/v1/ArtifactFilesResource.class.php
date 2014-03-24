@@ -124,7 +124,7 @@ class ArtifactFilesResource {
             $size  = $this->getAttachedFileSize($id);
         }
 
-        $this->sendAllowHeadersForArtifactFileId();
+        $this->sendAllowHeadersForArtifactFilesId();
         $this->sendPaginationHeaders($limit, $offset, $size);
 
         $file_data_representation = new FileDataRepresentation();
@@ -218,7 +218,7 @@ class ArtifactFilesResource {
     /**
      * Create a temporary file
      *
-     * Call this method to create a new file. To add new chunks, use PATCH on artifact_files/:ID
+     * Call this method to create a new file. To add new chunks, use PUT on artifact_files/:id
      *
      * @url POST
      * @param string $name          Name of the file {@from body}
@@ -230,7 +230,7 @@ class ArtifactFilesResource {
      * @throws 500 406 403
      */
     protected function post($name, $description, $mimetype, $content) {
-        $this->sendAllowHeadersForArtifactFile();
+        $this->sendAllowHeadersForArtifactFiles();
 
         try {
             $this->file_manager->validateChunkSize($content);
@@ -272,7 +272,7 @@ class ArtifactFilesResource {
      *  </li>
      * </ol>
      *
-     * @url PATCH {id}
+     * @url PUT {id}
      *
      * @param int    $id      The ID of the temporary artifact_file
      * @param string $content Chunk of the file (base64-encoded) {@from body}
@@ -281,8 +281,8 @@ class ArtifactFilesResource {
      * @return \Tuleap\Tracker\REST\Artifact\FileInfoRepresentation
      * @throws 406
      */
-    protected function patchId($id, $content, $offset) {
-        $this->sendAllowHeadersForArtifactFileId();
+    protected function putId($id, $content, $offset) {
+        $this->sendAllowHeadersForArtifactFilesId();
 
         if (! $this->file_manager->isFileIdTemporary($id)) {
             throw new RestException(404, 'File is not modifiable');
@@ -311,14 +311,14 @@ class ArtifactFilesResource {
      * @url OPTIONS
      */
     public function options() {
-        $this->sendAllowHeadersForArtifactFile();
+        $this->sendAllowHeadersForArtifactFiles();
     }
 
     /**
      * @url OPTIONS {id}
      */
     protected function optionsId($id) {
-        $this->sendAllowHeadersForArtifactFileId();
+        $this->sendAllowHeadersForArtifactFilesId();
 
         $this->getFile($id);
     }
@@ -375,8 +375,9 @@ class ArtifactFilesResource {
      *
      * @param string $id Id of the file
      */
-    protected function delete($id) {
-        Header::allowOptionsDelete();
+    protected function deleteId($id) {
+        $this->sendAllowHeadersForArtifactFilesId();
+
         try {
             if (! $this->isFileTemporary($id)) {
                 $this->removeAttachedFile($id);
@@ -397,14 +398,14 @@ class ArtifactFilesResource {
         }
     }
 
-    private function sendAllowHeadersForArtifactFile() {
-        Header::allowOptionsPost();
+    private function sendAllowHeadersForArtifactFiles() {
+        Header::allowOptionsGetPost();
         Header::sendMaxFileChunkSizeHeaders(FileManager::getMaximumChunkSize());
     }
 
 
-    private function sendAllowHeadersForArtifactFileId() {
-        Header::allowOptionsGetPatch();
+    private function sendAllowHeadersForArtifactFilesId() {
+        Header::allowOptionsGetPutDelete();
         Header::sendMaxFileChunkSizeHeaders(FileManager::getMaximumChunkSize());
     }
 
