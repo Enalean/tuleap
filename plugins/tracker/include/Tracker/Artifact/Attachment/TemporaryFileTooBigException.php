@@ -18,5 +18,5 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-class Tracker_Artifact_Attachment_FileTooBigException extends Exception {}
+class Tracker_Artifact_Attachment_TemporaryFileTooBigException extends Exception {}
 ?>

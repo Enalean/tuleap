@@ -165,7 +165,6 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
      * @param int $offset
      *
      * @return boolean
-     * @throws Tracker_Artifact_Attachment_FileTooBigException
      * @throws Tracker_Artifact_Attachment_InvalidPathException
      * @throws Tracker_Artifact_Attachment_InvalidOffsetException
      */
@@ -176,15 +175,9 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
             throw new Tracker_Artifact_Attachment_InvalidOffsetException();
         }
 
-        $bytes_written   = '';
-        $decoded_content = base64_decode($content);
-
         if ($this->exists($file->getTemporaryName())) {
-            if ($this->validTemporaryFilesSize($decoded_content)) {
-                $bytes_written = file_put_contents($this->getPath($file->getTemporaryName()), $decoded_content, FILE_APPEND);
-            } else {
-                throw new Tracker_Artifact_Attachment_FileTooBigException('Uploaded file exceed max file size for attachments (' . Config::get('sys_max_size_upload') . ')');
-            }
+            $bytes_written = file_put_contents($this->getPath($file->getTemporaryName()), base64_decode($content), FILE_APPEND);
+
         } else {
             throw new Tracker_Artifact_Attachment_InvalidPathException('Invalid temporary file path');
         }
@@ -210,17 +203,6 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
         return self::TEMP_FILE_PREFIX . $this->user->getId() . '_';
     }
 
-    private function getTemporaryFilesSize() {
-        $size  = 0;
-        $files = $this->getUserTemporaryFiles();
-
-        foreach ($files as $file) {
-            $size = (int) $size + (int) exec('stat -c %s ' . $this->getPath($file->getTemporaryName()));
-        }
-
-        return $size;
-    }
-
     public function getAttachedFileSize($id) {
         $file_info = $this->file_info_factory->getById($id);
 
@@ -231,14 +213,41 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
         throw new Tracker_Artifact_Attachment_FileNotFoundException();
     }
 
-    private function validTemporaryFilesSize($content) {
-        $chunk_size = strlen($content);
-        $total_size = $chunk_size + $this->getTemporaryFilesSize();
+    /**
+     * @throws Tracker_Artifact_Attachment_ChunkTooBigException
+     */
+    public function validateChunkSize($content) {
+        $chunk_size = strlen(base64_decode($content));
 
-        return $total_size <= self::getMaximumFileChunkSize();
+        if ($chunk_size > self::getMaximumChunkSize()) {
+            throw new Tracker_Artifact_Attachment_ChunkTooBigException();
+        }
     }
 
-    public static function getMaximumFileChunkSize() {
+    /**
+     * @throws Tracker_Artifact_Attachment_TemporaryFileTooBigException
+     */
+    public function validateTemporaryFileSize($file, $content) {
+        $chunk_size = strlen(base64_decode($content));
+        $file_size  = (int) exec('stat -c %s ' . $this->getPath($file->getTemporaryName()));
+        $total_size = $chunk_size + $file_size;
+
+        if ($total_size > self::getMaximumTemporaryFileSize()) {
+            throw new Tracker_Artifact_Attachment_TemporaryFileTooBigException();
+        }
+    }
+
+    /**
+     * Max chunk size : 1 Mo = 1048576 bytes
+     */
+    public static function getMaximumChunkSize() {
+        return 1048576;
+    }
+
+    /**
+     * Max chunk size : 64 Mo = 67108864 bytes
+     */
+    public static function getMaximumTemporaryFileSize() {
         return Config::get('sys_max_size_upload');
     }
 

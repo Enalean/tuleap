@@ -27,7 +27,8 @@ use \Tracker_Artifact_Attachment_TemporaryFileManager             as FileManager
 use \Tracker_Artifact_Attachment_TemporaryFileManagerDao          as FileManagerDao;
 use \Tuleap\Tracker\REST\Artifact\FileInfoRepresentation          as FileInfoRepresentation;
 use \Tracker_Artifact_Attachment_CannotCreateException            as CannotCreateException;
-use \Tracker_Artifact_Attachment_FileTooBigException              as FileTooBigException;
+use \Tracker_Artifact_Attachment_TemporaryFileTooBigException     as TemporaryFileTooBigException;
+use \Tracker_Artifact_Attachment_ChunkTooBigException             as ChunkTooBigException;
 use \Tracker_Artifact_Attachment_InvalidPathException             as InvalidPathException;
 use \Tracker_Artifact_Attachment_MaxFilesException                as MaxFilesException;
 use \Tracker_Artifact_Attachment_FileNotFoundException            as FileNotFoundException;
@@ -50,10 +51,9 @@ use \Tracker_URLVerification;
 
 class ArtifactFilesResource {
 
-    const DEFAULT_LIMIT  = 10485760;
-    const DEFAULT_OFFSET = 0;
-
     const STATUS_TEMPORARY = 'temporary';
+
+    const DEFAULT_LIMIT = 1048576; // 1Mo
 
     public static $valid_status = array(
         self::STATUS_TEMPORARY
@@ -108,7 +108,7 @@ class ArtifactFilesResource {
      * @throws 404
      * @throws 406
      */
-    protected function getId($id, $offset = self::DEFAULT_OFFSET, $limit = self::DEFAULT_LIMIT) {
+    protected function getId($id, $offset = 0, $limit = self::DEFAULT_LIMIT) {
         $this->checkLimitValue($limit);
 
         $chunk = '';
@@ -210,8 +210,8 @@ class ArtifactFilesResource {
     }
 
     private function checkLimitValue($limit) {
-        if ($limit > FileManager::getMaximumFileChunkSize()) {
-            throw new LimitOutOfBoundsException(FileManager::getMaximumFileChunkSize());
+        if ($limit > FileManager::getMaximumChunkSize()) {
+            throw new LimitOutOfBoundsException(FileManager::getMaximumChunkSize());
         }
     }
 
@@ -233,17 +233,22 @@ class ArtifactFilesResource {
         $this->sendAllowHeadersForArtifactFile();
 
         try {
+            $this->file_manager->validateChunkSize($content);
+
             $file         = $this->file_manager->save($name, $description, $mimetype);
             $chunk_offset = 1;
             $append       = $this->file_manager->appendChunk($content, $file, $chunk_offset);
+
         } catch (CannotCreateException $e) {
             throw new RestException(500);
-        } catch (FileTooBigException $e) {
-            throw new RestException(406, 'Uploaded content exceeds maximum size of ' . FileManager::getMaximumFileChunkSize());
+        } catch (ChunkTooBigException $e) {
+            throw new RestException(406, 'Uploaded content exceeds maximum size of ' . FileManager::getMaximumChunkSize());
+        } catch (TemporaryFileTooBigException $e) {
+            throw new RestException(406, "Temporary file's content exceeds maximum size of " . FileManager::getMaximumTemporaryFileSize());
         } catch (InvalidPathException $e) {
             throw new RestException(500, $e->getMessage());
         } catch (MaxFilesException $e) {
-            throw new RestException(403, 'Maximum number of temporary files reached: '. FileManager::TEMP_FILE_NB_MAX);
+            throw new RestException(403, 'Maximum number of temporary files reached: ' . FileManager::TEMP_FILE_NB_MAX);
         }
 
         if (! $append) {
@@ -251,16 +256,6 @@ class ArtifactFilesResource {
         }
 
         return $this->buildFileRepresentation($file);
-    }
-
-    /**
-     *
-     * @param TemporaryFile $file
-     * @return FileInfoRepresentation
-     */
-    private function buildFileRepresentation(TemporaryFile $file) {
-        $reference = new FileInfoRepresentation();
-        return $reference->build($file->getId(), $file->getCreatorId(), $file->getDescription(), $file->getName(), $file->getSize(), $file->getType());
     }
 
     /**
@@ -282,6 +277,9 @@ class ArtifactFilesResource {
      * @param int    $id      The ID of the temporary artifact_file
      * @param string $content Chunk of the file (base64-encoded) {@from body}
      * @param int    $offset  Used to check that the chunk uploaded is the next one (minimum value is 2) {@from body}
+     *
+     * @return \Tuleap\Tracker\REST\Artifact\FileInfoRepresentation
+     * @throws 406
      */
     protected function patchId($id, $content, $offset) {
         $this->sendAllowHeadersForArtifactFileId();
@@ -293,7 +291,15 @@ class ArtifactFilesResource {
         $file = $this->getFile($id);
 
         try {
+            $this->file_manager->validateChunkSize($content);
+            $this->file_manager->validateTemporaryFileSize($file, $content);
+
             $this->file_manager->appendChunk($content, $file, $offset);
+
+        } catch (ChunkTooBigException $e) {
+            throw new RestException(406, 'Uploaded content exceeds maximum size of ' . FileManager::getMaximumChunkSize());
+        } catch (TemporaryFileTooBigException $e) {
+            throw new RestException(406, "Temporary file's content exceeds maximum size of " . FileManager::getMaximumTemporaryFileSize());
         } catch (InvalidOffsetException $e) {
             throw new RestException(406, 'Invalid offset received. Expected: '. ($file->getCurrentChunkOffset() +1));
         }
@@ -315,6 +321,23 @@ class ArtifactFilesResource {
         $this->sendAllowHeadersForArtifactFileId();
 
         $this->getFile($id);
+    }
+
+    /**
+     *
+     * @param TemporaryFile $file
+     * @return FileInfoRepresentation
+     */
+    private function buildFileRepresentation(TemporaryFile $file) {
+        $reference = new FileInfoRepresentation();
+        return $reference->build(
+            $file->getId(),
+            $file->getCreatorId(),
+            $file->getDescription(),
+            $file->getName(),
+            $file->getSize(),
+            $file->getType()
+        );
     }
 
     /**
@@ -376,17 +399,17 @@ class ArtifactFilesResource {
 
     private function sendAllowHeadersForArtifactFile() {
         Header::allowOptionsPost();
-        Header::sendMaxFileChunkSizeHeaders(FileManager::getMaximumFileChunkSize());
+        Header::sendMaxFileChunkSizeHeaders(FileManager::getMaximumChunkSize());
     }
 
 
     private function sendAllowHeadersForArtifactFileId() {
         Header::allowOptionsGetPatch();
-        Header::sendMaxFileChunkSizeHeaders(FileManager::getMaximumFileChunkSize());
+        Header::sendMaxFileChunkSizeHeaders(FileManager::getMaximumChunkSize());
     }
 
     private function sendPaginationHeaders($limit, $offset, $size) {
-        Header::sendPaginationHeaders($limit, $offset, $size, FileManager::getMaximumFileChunkSize());
+        Header::sendPaginationHeaders($limit, $offset, $size, FileManager::getMaximumChunkSize());
     }
 
     /**
