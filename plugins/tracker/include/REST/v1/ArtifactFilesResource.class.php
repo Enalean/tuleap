@@ -53,6 +53,12 @@ class ArtifactFilesResource {
     const DEFAULT_LIMIT  = 10485760;
     const DEFAULT_OFFSET = 0;
 
+    const STATUS_TEMPORARY = 'temporary';
+
+    public static $valid_status = array(
+        self::STATUS_TEMPORARY
+    );
+
     /** @var PFUser */
     private $user;
 
@@ -126,13 +132,51 @@ class ArtifactFilesResource {
     }
 
     /**
+     * Get files representation
+     *
+     * For now, only user's temporary files can be retrieved
+     *
+     * @url GET
+     *
+     * @param string $status Accepted values: [temporary]
+     *
+     * @return Array {@type \Tuleap\Tracker\REST\Artifact\FileInfoRepresentation}
+     *
+     * @throws 400
+     */
+    protected function get($status) {
+        $this->validateStatus($status);
+
+        if ($status == self::STATUS_TEMPORARY) {
+            $files                 = $this->file_manager->getUserTemporaryFiles();
+            $files_representations = array();
+
+            foreach ($files as $file) {
+                $files_representations[] = $this->buildFileRepresentation($file);
+            }
+
+            return $files_representations;
+        }
+    }
+
+    /**
+     * @param type $status
+     * @throws 400
+     */
+    private function validateStatus($status) {
+        if (! in_array($status, self::$valid_status)) {
+            throw new RestException(400, "Invalid value for parameter 'status'");
+        }
+    }
+
+    /**
      * @throws 404
      */
     private function getTemporaryFileContent($file, $offset, $limit) {
         try {
             return $this->file_manager->getTemporaryFileChunk($file, $offset, $limit);
 
-        } catch (Tracker_Artifact_Attachment_FileNotFoundException $e) {
+        } catch (FileNotFoundException $e) {
             throw new RestException(404);
         }
     }
@@ -352,7 +396,7 @@ class ArtifactFilesResource {
      */
     private function getArtifactByFileInfoId($fileinfo_id) {
         try {
-            $artifact = $this->fileinfo_factory->getArtifactByFileInfoId($user, $fileinfo_id);
+            $artifact = $this->fileinfo_factory->getArtifactByFileInfoId($this->user, $fileinfo_id);
         } catch (InvalidFileInfoException $e) {
             throw new RestException(404, $e->getMessage());
         } catch (UnauthorisedException $e) {
