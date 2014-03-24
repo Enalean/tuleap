@@ -31,12 +31,12 @@ class b201403191118_add_offset_column_to_fileinfo_temporary_table extends ForgeU
     public function up() {
         $sql = "ALTER TABLE tracker_fileinfo_temporary
                     ADD COLUMN offset int(11) UNSIGNED NOT NULL DEFAULT 0";
-        $this->db->createTable('tracker_fileinfo_temporary', $sql);
-    }
 
-    public function postUp() {
-        if (! $this->db->tableNameExists('tracker_fileinfo_temporary')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('tracker_fileinfo_temporary table is missing');
+        $result = $this->db->dbh->exec($sql);
+
+        if ($result === false) {
+            $error_message = implode(', ', $this->db->dbh->errorInfo());
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($error_message);
         }
     }
 }
