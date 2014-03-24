@@ -22,21 +22,21 @@ namespace Tuleap\Tracker\REST\v1;
 
 use \Tuleap\REST\ProjectAuthorization;
 use \Luracast\Restler\RestException;
-use \Tracker_Artifact_Attachment_TemporaryFile           as TemporaryFile;
-use \Tracker_Artifact_Attachment_TemporaryFileManager    as FileManager;
-use \Tracker_Artifact_Attachment_TemporaryFileManagerDao as FileManagerDao;
-use \Tuleap\Tracker\REST\Artifact\FileInfoRepresentation as FileInfoRepresentation;
-use \Tracker_Artifact_Attachment_CannotCreateException   as CannotCreateException;
-use \Tracker_Artifact_Attachment_FileTooBigException     as FileTooBigException;
-use \Tracker_Artifact_Attachment_InvalidPathException    as InvalidPathException;
-use \Tracker_Artifact_Attachment_MaxFilesException       as MaxFilesException;
-use \Tracker_Artifact_Attachment_FileNotFoundException   as FileNotFoundException;
-use \Tracker_Artifact_Attachment_InvalidOffsetException  as InvalidOffsetException;
-use \Tracker_FileInfo_InvalidFileInfoException           as InvalidFileInfoException;
-use \Tracker_FileInfo_UnauthorisedException              as UnauthorisedException;
-use \Tuleap\REST\Exceptions\LimitOutOfBoundsException;
+use \Tracker_Artifact_Attachment_TemporaryFile                    as TemporaryFile;
+use \Tracker_Artifact_Attachment_TemporaryFileManager             as FileManager;
+use \Tracker_Artifact_Attachment_TemporaryFileManagerDao          as FileManagerDao;
+use \Tuleap\Tracker\REST\Artifact\FileInfoRepresentation          as FileInfoRepresentation;
+use \Tracker_Artifact_Attachment_CannotCreateException            as CannotCreateException;
+use \Tracker_Artifact_Attachment_FileTooBigException              as FileTooBigException;
+use \Tracker_Artifact_Attachment_InvalidPathException             as InvalidPathException;
+use \Tracker_Artifact_Attachment_MaxFilesException                as MaxFilesException;
+use \Tracker_Artifact_Attachment_FileNotFoundException            as FileNotFoundException;
+use \Tracker_Artifact_Attachment_InvalidOffsetException           as InvalidOffsetException;
+use \Tracker_FileInfo_InvalidFileInfoException                    as InvalidFileInfoException;
+use \Tracker_FileInfo_UnauthorisedException                       as UnauthorisedException;
 use \Tuleap\Tracker\REST\Artifact\FileDataRepresentation          as FileDataRepresentation;
 use \Tracker_Artifact_Attachment_PermissionDeniedOnFieldException as PermissionDeniedOnFieldException;
+use \Tuleap\REST\Exceptions\LimitOutOfBoundsException;
 use \Tuleap\REST\Header;
 use \UserManager;
 use \PFUser;
@@ -191,7 +191,7 @@ class ArtifactFilesResource {
         try {
             $file         = $this->file_manager->save($name, $description, $mimetype);
             $chunk_offset = 1;
-            $append       = $this->file_manager->appendChunkForREST($content, $file, $chunk_offset);
+            $append       = $this->file_manager->appendChunk($content, $file, $chunk_offset);
         } catch (CannotCreateException $e) {
             throw new RestException(500);
         } catch (FileTooBigException $e) {
@@ -249,7 +249,7 @@ class ArtifactFilesResource {
         $file = $this->getFile($id);
 
         try {
-            $this->file_manager->appendChunkForREST($content, $file, $offset);
+            $this->file_manager->appendChunk($content, $file, $offset);
         } catch (InvalidOffsetException $e) {
             throw new RestException(406, 'Invalid offset received. Expected: '. ($file->getCurrentChunkOffset() +1));
         }
@@ -274,9 +274,7 @@ class ArtifactFilesResource {
     }
 
     /**
-     *
      * @param int $id
-     * @param FileManager $file_manager
      * @return TemporaryFile
      * @throws RestException
      */

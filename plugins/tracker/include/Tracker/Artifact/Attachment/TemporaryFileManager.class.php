@@ -23,7 +23,7 @@
  */
 class Tracker_Artifact_Attachment_TemporaryFileManager {
 
-    const TEMP_FILE_PREFIX = 'soap_attachement_temp_';
+    const TEMP_FILE_PREFIX = 'rest_attachement_temp_';
     const TEMP_FILE_NB_MAX = 5;
 
     /**
@@ -90,8 +90,8 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
      * @throws Tracker_Artifact_Attachment_MaxFilesException
      */
     public function save($name, $description, $mimetype) {
-        $user_id = $this->user->getId();
-        $tempname = $this->getUniqueFileName();
+        $user_id   = $this->user->getId();
+        $tempname  = $this->getUniqueFileName();
         $timestamp = $_SERVER['REQUEST_TIME'];
 
         $id = $this->dao->create($user_id, $name, $description, $mimetype, $timestamp, $tempname);
@@ -161,19 +161,6 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
      * Append some content (base64 encoded) to the file
      *
      * @param String $content
-     * @param String $attachment_name
-     * @return Number of written bytes on filesystem
-     * @throws Tracker_Artifact_Attachment_FileTooBigException
-     * @throws Tracker_Artifact_Attachment_InvalidPathException
-     */
-    public function appendChunkForSOAP($content, $attachment_name) {
-        return $this->appendChunk($content, $attachment_name);
-    }
-
-    /**
-     * Append some content (base64 encoded) to the file
-     *
-     * @param String $content
      * @param Tracker_Artifact_Attachment_TemporaryFile $file
      * @param int $offset
      *
@@ -182,48 +169,37 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
      * @throws Tracker_Artifact_Attachment_InvalidPathException
      * @throws Tracker_Artifact_Attachment_InvalidOffsetException
      */
-    public function appendChunkForREST($content, Tracker_Artifact_Attachment_TemporaryFile $file, $offset) {
+    public function appendChunk($content, Tracker_Artifact_Attachment_TemporaryFile $file, $offset) {
         $current_offset = $file->getCurrentChunkOffset();
 
         if ($current_offset + 1 !== (int) $offset) {
             throw new Tracker_Artifact_Attachment_InvalidOffsetException();
         }
 
-        $bytes_written = $this->appendChunk($content, $file->getTemporaryName());
-        $size = exec('stat -c %s ' . $this->getPath($file->getTemporaryName()));
-
-        $file->setSize($size);
-
-        return $bytes_written && $this->dao->updateFileInfo($file->getId(), $offset, $_SERVER['REQUEST_TIME'], $size);
-    }
-
-    private function appendChunk($content, $attachment_name) {
+        $bytes_written   = '';
         $decoded_content = base64_decode($content);
-        if ($this->exists($attachment_name)) {
+
+        if ($this->exists($file->getTemporaryName())) {
             if ($this->validTemporaryFilesSize($decoded_content)) {
-                return file_put_contents($this->getPath($attachment_name), $decoded_content, FILE_APPEND);
+                $bytes_written = file_put_contents($this->getPath($file->getTemporaryName()), $decoded_content, FILE_APPEND);
             } else {
                 throw new Tracker_Artifact_Attachment_FileTooBigException('Uploaded file exceed max file size for attachments (' . Config::get('sys_max_size_upload') . ')');
             }
         } else {
             throw new Tracker_Artifact_Attachment_InvalidPathException('Invalid temporary file path');
         }
+
+        $size = exec('stat -c %s ' . $this->getPath($file->getTemporaryName()));
+        $file->setSize($size);
+
+        return $bytes_written && $this->dao->updateFileInfo($file->getId(), $offset, $_SERVER['REQUEST_TIME'], $size);
     }
 
     /**
-     * Remove all temporary files of user
-     *
-     * @return Boolean
+     * @return Tracker_Artifact_Attachment_TemporaryFile[]
      */
-    public function purgeAllTemporaryFiles() {
-        foreach ($this->getUserTemporaryFiles() as $file) {
-            unlink($file);
-        }
-        return true;
-    }
-
     private function getUserTemporaryFiles() {
-        return glob(Config::get('codendi_cache_dir') . DIRECTORY_SEPARATOR . $this->getUserTemporaryFilePrefix() . '*');
+        return $this->dao->getUserTemporaryFiles($this->user->getId())->instanciateWith(array($this, 'getInstanceFromRow'));
     }
 
     private function isOverUserTemporaryFileLimit() {
@@ -235,11 +211,13 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
     }
 
     private function getTemporaryFilesSize() {
-        $size = 0;
+        $size  = 0;
         $files = $this->getUserTemporaryFiles();
+
         foreach ($files as $file) {
-            $size = $size + filesize($file);
+            $size = (int) $size + (int) exec('stat -c %s ' . $this->getPath($file->getTemporaryName()));
         }
+
         return $size;
     }
 
@@ -271,21 +249,11 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
     public function getFile($id) {
         $row = $this->dao->getTemporaryFile($id);
 
-        if (!$row) {
+        if (! $row) {
             throw new Tracker_Artifact_Attachment_FileNotFoundException();
         }
 
-        return new Tracker_Artifact_Attachment_TemporaryFile(
-            $row['id'],
-            $row['filename'],
-            $row['tempname'],
-            $row['description'],
-            $row['last_modified'],
-            $row['offset'],
-            $row['submitted_by'],
-            $row['filesize'],
-            $row['filetype']
-        );
+        return $this->getInstanceFromRow($row);
     }
 
     public function isFileIdTemporary($id) {
@@ -302,12 +270,26 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
     }
 
     private function removeTemporaryFileFomFileSystem(Tracker_Artifact_Attachment_TemporaryFile $temporary_file) {
-        $temporary_file_name = $temporary_file->getName();
+        $temporary_file_name = $temporary_file->getTemporaryName();
         $temporary_file_path = $this->getPath($temporary_file_name);
 
-        if ($this->exists($temporary_file_path)) {
-            unlink($this->getPath($temporary_file_name));
+        if ($this->exists($temporary_file_name)) {
+            unlink($temporary_file_path);
         }
+    }
+
+    public function getInstanceFromRow($row) {
+        return new Tracker_Artifact_Attachment_TemporaryFile(
+            $row['id'],
+            $row['filename'],
+            $row['tempname'],
+            $row['description'],
+            $row['last_modified'],
+            $row['offset'],
+            $row['submitted_by'],
+            $row['filesize'],
+            $row['filetype']
+        );
     }
 }
 
