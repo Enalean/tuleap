@@ -112,6 +112,16 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $this->setCriteriaValue(!empty($soap_criteria_value->value) ? $soap_criteria_value->value: '');
     }
 
+    public function setCriteriaValueFromREST(Tracker_Report_Criteria $criteria, array $rest_criteria_value) {
+        $value = $rest_criteria_value[Tracker_Report_REST::VALUE_PROPERTY_NAME];
+
+        if (! is_string($value) && ! is_numeric($value)) {
+            throw new Tracker_Report_InvalidRESTCriterionException('Invalid value for field "'. $this->name .'"');
+        }
+
+        $this->setCriteriaValue($value);
+    }
+
     /**
      * Format the criteria value submitted by the user for storage purpose (dao or session)
      *

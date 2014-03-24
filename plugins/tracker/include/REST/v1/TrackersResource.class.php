@@ -36,17 +36,23 @@ use \Tracker_Report;
 use \Tracker_URLVerification;
 use \Tracker_REST_Artifact_ArtifactRepresentationBuilder;
 use \PFUser;
+use \Tracker_Report_REST;
+use \PermissionsManager;
+use \Tracker_ReportDao;
+use \Tracker_FormElementFactory                   as FormElementFactory;
+use \Tracker_Report_InvalidRESTCriterionException as InvalidCriteriaException;
 
 /**
  * Wrapper for Tracker related REST methods
  */
 class TrackersResource {
 
-    const MAX_LIMIT      = 50;
-    const DEFAULT_LIMIT  = 10;
-    const DEFAULT_OFFSET = 0;
-    const DEFAULT_VALUES = '';
-    const ALL_VALUES     = 'all';
+    const MAX_LIMIT        = 50;
+    const DEFAULT_LIMIT    = 10;
+    const DEFAULT_OFFSET   = 0;
+    const DEFAULT_VALUES   = '';
+    const ALL_VALUES       = 'all';
+    const DEFAULT_CRITERIA = '';
 
     /**
      * @url OPTIONS
@@ -140,32 +146,48 @@ class TrackersResource {
      * Get all artifacts of a given tracker
      *
      * Get all artifacts of a given tracker the user can view
+     *
+     * Notes on the query parameter
+     * <ol>
+     *  <li>It is a JSON object</li>
+     *  <li>The basic form of a property is "field_id" : "field_value". For this format, the implied operator is "contained"</li>
+     *  <li>The complex form of a property is "field_id" : {"operator" : "operator_name", "value" : "field_value"}</li>
+     *  <li>The allowed operator list is currently: "contains"</li>
+     *  <li>Example: {"title" : "rest", "description" : {"operator" : "contains", "value", "parameter"}}</li>
+     * </ol>
      * 
      * @url GET {id}/artifacts
      *
-     * @param int    $id Id of the tracker
-     * @param string $values  Which fields to include in the response. Default is no field values {@from path}{@choice ,all}
+     * @param int    $id     Id of the tracker
+     * @param string $values Which fields to include in the response. Default is no field values {@from path}{@choice ,all}
      * @param int    $limit  Number of elements displayed per page {@from path}{@min 1}
      * @param int    $offset Position of the first element to display {@from path}{@min 0}
+     * @param string $query  JSON object of search criteria properties {@from path}
      *
      * @return array {@type Tuleap\Tracker\REST\Artifact\ArtifactRepresentation}
+     * @throws RestException 400
      */
-    protected function getArtifacts($id,
+    protected function getArtifacts(
+        $id,
         $values = self::DEFAULT_VALUES,
         $limit  = self::DEFAULT_LIMIT,
-        $offset = self::DEFAULT_OFFSET
+        $offset = self::DEFAULT_OFFSET,
+        $query  = self::DEFAULT_CRITERIA
     ) {
         $this->checkLimitValue($limit);
 
-        $user              = UserManager::instance()->getCurrentUser();
-        $check_user_access = $this->getTrackerById($user, $id);
+        $user          = UserManager::instance()->getCurrentUser();
+        $valid_tracker = $this->getTrackerById($user, $id);
 
-        $artifact_factory = Tracker_ArtifactFactory::instance();
-        $artifacts        = $artifact_factory->getArtifactsByTrackerId($id);
+        if ($query) {
+            $artifacts = $this->getArtifactsMatchingQuery($user, $valid_tracker, $query, $offset, $limit);
+        } else {
+            $all_artifacts = $this->getTrackerArtifactFactory()->getArtifactsByTrackerId($id);
+            $artifacts     = array_slice($all_artifacts, $offset, $limit);
+        }
 
-        $nb_matching      = count($artifacts);
-        $artifacts        = array_slice($artifacts, $offset, $limit);
-        $with_all_field_values = $values == self::ALL_VALUES;
+        $with_all_field_values = ($values == self::ALL_VALUES);
+        $nb_matching           = count($artifacts);
 
         Header::allowOptionsGet();
         Header::sendPaginationHeaders($limit, $offset, $nb_matching, self::MAX_LIMIT);
@@ -175,6 +197,36 @@ class TrackersResource {
             $artifacts,
             $with_all_field_values
         );
+    }
+
+    /**
+     * @throws RestException 400
+     */
+    private function getArtifactsMatchingQuery(PFUser $user, Tracker $tracker, $query, $offset, $limit) {
+        $report = new Tracker_Report_REST(
+            $user,
+            $tracker,
+            PermissionsManager::instance(),
+            new Tracker_ReportDao(),
+            FormElementFactory::instance()
+        );
+
+        try {
+            $report->setRESTCriteria($query);
+        } catch (InvalidCriteriaException $e) {
+            throw new RestException(400, $e->getMessage());
+        }
+
+        $matching_ids = $report->getMatchingIds();
+        if (! $matching_ids['id']) {
+            return array();
+        }
+
+        $matching_artifact_ids = explode(',', $matching_ids['id']);
+        $slice_matching_ids    = array_slice($matching_artifact_ids, $offset, $limit);
+
+        $artifacts = $this->getTrackerArtifactFactory()->getArtifactsByArtifactIdList($slice_matching_ids);
+        return array_values($artifacts);
     }
 
     /**
@@ -220,6 +272,13 @@ class TrackersResource {
             throw new RestException(403);
         }
         throw new RestException(404);
+    }
+
+    /**
+     * @return Tracker_ArtifactFactory
+     */
+    private function getTrackerArtifactFactory() {
+        return Tracker_ArtifactFactory::instance();
     }
 
     private function sendAllowHeaderForTracker() {
