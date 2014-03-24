@@ -30,4 +30,8 @@ abstract class ArtifactFieldXMLExporter {
     abstract public function appendNode(DOMElement $changeset_node, $tracker_id, $artifact_id, array $row);
 
     abstract public function getFieldValueIndex();
+
+    public function getCurrentFieldValue(array $field_value_row, $tracker_id) {
+        return $field_value_row;
+    }
 }

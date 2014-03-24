@@ -92,7 +92,7 @@ class ArtifactXMLExporterArtifact {
             }
         }
 
-        $current_fields_values = $this->getCurrentFieldsValues($artifact_id, $artifact);
+        $current_fields_values = $this->getCurrentFieldsValues($tracker_id, $artifact_id, $artifact);
         $this->updateInitialChangesetVersusCurrentStatus($tracker_id, $artifact_id, $current_fields_values);
 
         $this->addLastChangesetIfNoHistoryRecorded($artifact_node, $tracker_id, $artifact_id, $current_fields_values);
@@ -100,7 +100,7 @@ class ArtifactXMLExporterArtifact {
         $this->addPermissionOnArtifactAtTheVeryEnd($artifact_node, $artifact_id);
     }
 
-    private function getCurrentFieldsValues($artifact_id, array $artifact_row) {
+    private function getCurrentFieldsValues($tracker_id, $artifact_id, array $artifact_row) {
         $fields_values = array(
             array(
                 'field_name'   => 'summary',
@@ -126,11 +126,10 @@ class ArtifactXMLExporterArtifact {
             );
         }
         foreach ($this->dao->searchFieldValues($artifact_id) as $row) {
-            if ($row['field_name'] != 'close_date') {
-                $fields_values[] = $row;
-            }
+            $fields_values[$row['field_name']] = $this->field_factory->getCurrentFieldValue($row, $tracker_id);
         }
-        return $fields_values;
+
+        return array_filter($fields_values);
     }
 
     private function updateInitialChangesetVersusCurrentStatus($tracker_id, $artifact_id, array $current_fields_values) {

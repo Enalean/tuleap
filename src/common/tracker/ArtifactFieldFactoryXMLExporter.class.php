@@ -24,15 +24,16 @@ class ArtifactFieldFactoryXMLExporter {
 
     public function __construct(ArtifactXMLExporterDao $dao, ArtifactXMLNodeHelper $node_helper) {
         $this->fields = array(
-            ArtifactAttachmentFieldXMLExporter::TV3_TYPE => new ArtifactAttachmentFieldXMLExporter($node_helper, $dao),
-            ArtifactCCFieldXMLExporter::TV3_TYPE         => new ArtifactCCFieldXMLExporter($node_helper),
-            ArtifactStringFieldXMLExporter::TV3_TYPE     => new ArtifactStringFieldXMLExporter($node_helper),
-            ArtifactTextFieldXMLExporter::TV3_TYPE       => new ArtifactTextFieldXMLExporter($node_helper),
-            ArtifactIntegerFieldXMLExporter::TV3_TYPE    => new ArtifactIntegerFieldXMLExporter($node_helper),
-            ArtifactFloatFieldXMLExporter::TV3_TYPE      => new ArtifactFloatFieldXMLExporter($node_helper),
-            ArtifactDateFieldXMLExporter::TV3_TYPE       => new ArtifactDateFieldXMLExporter($node_helper),
-            ArtifactStaticListFieldXMLExporter::TV3_TYPE => new ArtifactStaticListFieldXMLExporter($node_helper, $dao),
-            ArtifactUserListFieldXMLExporter::TV3_TYPE   => new ArtifactUserListFieldXMLExporter($node_helper, $dao),
+            ArtifactAttachmentFieldXMLExporter::TV3_TYPE      => new ArtifactAttachmentFieldXMLExporter($node_helper, $dao),
+            ArtifactCCFieldXMLExporter::TV3_TYPE              => new ArtifactCCFieldXMLExporter($node_helper),
+            ArtifactStringFieldXMLExporter::TV3_TYPE          => new ArtifactStringFieldXMLExporter($node_helper),
+            ArtifactTextFieldXMLExporter::TV3_TYPE            => new ArtifactTextFieldXMLExporter($node_helper),
+            ArtifactIntegerFieldXMLExporter::TV3_TYPE         => new ArtifactIntegerFieldXMLExporter($node_helper),
+            ArtifactFloatFieldXMLExporter::TV3_TYPE           => new ArtifactFloatFieldXMLExporter($node_helper),
+            ArtifactDateFieldXMLExporter::TV3_TYPE            => new ArtifactDateFieldXMLExporter($node_helper),
+            ArtifactStaticListFieldXMLExporter::TV3_TYPE      => new ArtifactStaticListFieldXMLExporter($node_helper, $dao),
+            ArtifactUserListFieldXMLExporter::TV3_TYPE        => new ArtifactUserListFieldXMLExporter($node_helper, $dao),
+            ArtifactStaticMultiListFieldXMLExporter::TV3_TYPE => new ArtifactStaticMultiListFieldXMLExporter($node_helper, $dao),
         );
     }
 
@@ -44,6 +45,16 @@ class ArtifactFieldFactoryXMLExporter {
         return $this->getField($history_row['field_name'], $history_row['display_type'], $history_row['data_type']);
     }
 
+    /**
+     *
+     * @param string $field_name
+     * @param string $display_type
+     * @param string $data_type
+     *
+     * @return ArtifactFieldXMLExporter
+     *
+     * @throws Exception_TV3XMLUnknownFieldTypeException
+     */
     private function getField($field_name, $display_type, $data_type) {
         $index = $this->getFieldType($field_name, $display_type, $data_type);
         if (isset($this->fields[$index])) {
@@ -63,5 +74,15 @@ class ArtifactFieldFactoryXMLExporter {
 
     public function getFieldValue(array $field_value_row) {
         return $field_value_row[$this->getFieldByHistoryRow($field_value_row)->getFieldValueIndex()];
+    }
+
+    public function getCurrentFieldValue(array $field_value_row, $tracker_id) {
+        $field = $this->getField(
+            $field_value_row['field_name'],
+            $field_value_row['display_type'],
+            $field_value_row['data_type']
+        );
+
+        return $field->getCurrentFieldValue($field_value_row, $tracker_id);
     }
 }
