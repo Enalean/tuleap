@@ -1,3 +1,6 @@
+Version 5.274 - Tuleap 6.12
+    * request #6524: admin tracker permission delegation not compatible php 5.1
+
 Version 5.273 - Tuleap 6.12
     * request #6521 - Burndown computation seems broken
 
