@@ -32,22 +32,27 @@ class Tracker_Artifact_XMLImport {
     /** @var Tracker_FormElementFactory */
     private $formelement_factory;
 
-    /** @var UserManager */
-    private $user_manager;
+    /** @var Tracker_Artifact_XMLImport_XMLImportHelper */
+    private $xml_import_helper;
+
+    /** @var Tracker_FormElement_Field_List_Bind_Static_ValueDao */
+    private $static_value_dao;
 
     public function __construct(
         XML_RNGValidator $rng_validator,
         Tracker_ArtifactCreator $artifact_creator,
         Tracker_Artifact_Changeset_NewChangesetCreatorBase $new_changeset_creator,
         Tracker_FormElementFactory $formelement_factory,
-        UserManager $user_manager
+        Tracker_Artifact_XMLImport_XMLImportHelper $xml_import_helper,
+        Tracker_FormElement_Field_List_Bind_Static_ValueDao $static_value_dao
     ) {
 
         $this->rng_validator         = $rng_validator;
         $this->artifact_creator      = $artifact_creator;
         $this->new_changeset_creator = $new_changeset_creator;
         $this->formelement_factory   = $formelement_factory;
-        $this->user_manager          = $user_manager;
+        $this->xml_import_helper     = $xml_import_helper;
+        $this->static_value_dao      = $static_value_dao;
     }
 
     public function importFromArchive(Tracker $tracker, Tracker_Artifact_XMLImport_XMLImportZipArchive $archive) {
@@ -64,10 +69,11 @@ class Tracker_Artifact_XMLImport {
             $files_importer = new Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact($artifact);
             $fields_data_builder = new Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder(
                 $this->formelement_factory,
-                $this->user_manager,
+                $this->xml_import_helper,
                 $tracker,
                 $files_importer,
-                $extraction_path
+                $extraction_path,
+                $this->static_value_dao
             );
             $this->importOneArtifact($tracker, $artifact, $fields_data_builder);
         }
@@ -147,28 +153,7 @@ class Tracker_Artifact_XMLImport {
     }
 
     private function getSubmittedBy(SimpleXMLElement $xml_changeset) {
-        $submitter    = $this->user_manager->getUserByIdentifier($this->getUserFormat($xml_changeset->submitted_by));
-        if (! $submitter) {
-            $submitter = $this->user_manager->getUserAnonymous();
-            $submitter->setEmail((string) $xml_changeset->submitted_by);
-        }
-        return $submitter;
-    }
-
-    private function getUserFormat(SimpleXMLElement $xml_submitted_by) {
-        $format       = (string) $xml_submitted_by['format'];
-        $submitted_by = (string) $xml_submitted_by;
-        switch($format) {
-            case 'id':
-            case 'email':
-                return "$format:$submitted_by";
-
-            case 'ldap':
-                return "ldapId:$submitted_by";
-
-            default :
-                return (string) $xml_submitted_by;
-        }
+        return $this->xml_import_helper->getUser($xml_changeset->submitted_by);
     }
 
     private function getSubmittedOn(SimpleXMLElement $xml_changeset) {

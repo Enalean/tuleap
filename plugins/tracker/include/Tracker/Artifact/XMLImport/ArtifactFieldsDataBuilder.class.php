@@ -31,12 +31,10 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
     const FIELDTYPE_PERMS_ON_ARTIFACT = 'permissions_on_artifact';
     const FIELDTYPE_ATTACHEMENT       = 'file';
     const FIELDTYPE_OPENLIST          = 'open_list';
+    const FIELDTYPE_LIST              = 'list';
 
     /** @var Tracker_FormElementFactory */
     private $formelement_factory;
-
-    /** @var UserManager */
-    private $user_manager;
 
     /** @var Tracker */
     private $tracker;
@@ -47,19 +45,18 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
     /** @var string */
     private $extraction_path;
 
-    /** @var Tracker_Artifact_XMLImport_XMLImportFieldStrategy */
+    /** @var Tracker_Artifact_XMLImport_XMLImportFieldStrategy[] */
     private $strategies;
 
     public function __construct(
         Tracker_FormElementFactory $formelement_factory,
-        UserManager $user_manager,
+        Tracker_Artifact_XMLImport_XMLImportHelper $xml_import_helper,
         Tracker $tracker,
         Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact $files_importer,
-        $extraction_path
-
+        $extraction_path,
+        Tracker_FormElement_Field_List_Bind_Static_ValueDao $static_value_dao
     ) {
         $this->formelement_factory  = $formelement_factory;
-        $this->user_manager         = $user_manager;
         $this->tracker              = $tracker;
         $this->files_importer       = $files_importer;
         $this->extraction_path      = $extraction_path;
@@ -77,6 +74,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
             self::FIELDTYPE_INT      => $alphanum_strategy,
             self::FIELDTYPE_FLOAT    => $alphanum_strategy,
             self::FIELDTYPE_DATE     => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyDate(),
+            self::FIELDTYPE_LIST     => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyList($static_value_dao, $xml_import_helper)
         );
     }
 

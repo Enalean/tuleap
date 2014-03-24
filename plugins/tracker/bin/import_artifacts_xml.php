@@ -58,7 +58,8 @@ try {
             $artifact_creator,
             $new_changeset_creator,
             Tracker_FormElementFactory::instance(),
-            $user_manager
+            new Tracker_Artifact_XMLImport_XMLImportHelper($user_manager),
+            new Tracker_FormElement_Field_List_Bind_Static_ValueDao()
         );
 
         $zip = new ZipArchive();

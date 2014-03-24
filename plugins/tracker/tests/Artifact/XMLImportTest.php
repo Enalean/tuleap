@@ -38,9 +38,10 @@ abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase {
     protected $john_doe;
     protected $formelement_factory;
     protected $user_manager;
+    protected $xml_import_helper;
     protected $artifact;
     protected $extraction_path;
-
+    protected $static_value_dao;
 
     public function setUp() {
         parent::setUp();
@@ -59,16 +60,21 @@ abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase {
         stub($this->user_manager)->getUserByIdentifier('john_doe')->returns($this->john_doe);
         stub($this->user_manager)->getUserAnonymous()->returns(new PFUser(array('user_id' => 0)));
 
+        $this->xml_import_helper = new Tracker_Artifact_XMLImport_XMLImportHelper($this->user_manager);
+
         $this->artifact = mock('Tracker_Artifact');
 
         $this->extraction_path = '/some/random/path';
+
+        $this->static_value_dao = mock('Tracker_FormElement_Field_List_Bind_Static_ValueDao');
 
         $this->importer = new Tracker_Artifact_XMLImport(
             mock('XML_RNGValidator'),
             $this->artifact_creator,
             $this->new_changeset_creator,
             $this->formelement_factory,
-            $this->user_manager
+            $this->xml_import_helper,
+            $this->static_value_dao
         );
     }
 }
@@ -212,12 +218,15 @@ class Tracker_Artifact_XMLImport_UserTest extends Tracker_Artifact_XMLImportBase
         $this->user_manager = mock('UserManager');
         stub($this->user_manager)->getUserAnonymous()->returns(new PFUser(array('user_id' => 0)));
 
+        $this->xml_import_helper = new Tracker_Artifact_XMLImport_XMLImportHelper($this->user_manager);
+
         $this->importer = new Tracker_Artifact_XMLImport(
             mock('XML_RNGValidator'),
             $this->artifact_creator,
             $this->new_changeset_creator,
             $this->formelement_factory,
-            $this->user_manager
+            $this->xml_import_helper,
+            $this->static_value_dao
         );
     }
 
@@ -893,6 +902,63 @@ class Tracker_Artifact_XMLImport_AlphanumericTest extends Tracker_Artifact_XMLIm
 
         $data = array(
             $this->date_field_id   => '',
+        );
+        expect($this->artifact_creator)->create('*', $data, '*', '*', '*', '*')->once();
+
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+    }
+}
+
+class Tracker_Artifact_XMLImport_SelectboxTest extends Tracker_Artifact_XMLImportBaseTest {
+
+    private $status_field;
+    private $status_field_id = 234;
+    private $assto_field;
+    private $assto_field_id = 456;
+    private $open_value_id = 104;
+
+    public function setUp() {
+        parent::setUp();
+
+        stub($this->artifact_creator)->create()->returns(mock('Tracker_Artifact'));
+
+        $this->status_field = stub('Tracker_FormElement_Field_String')->getId()->returns($this->status_field_id);
+        $this->assto_field = stub('Tracker_FormElement_Field_String')->getId()->returns($this->assto_field_id);
+
+        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'status_id')->returns(
+            $this->status_field
+        );
+        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'assigned_to')->returns(
+            $this->assto_field
+        );
+
+        stub($this->static_value_dao)->searchValueByLabel($this->status_field_id, 'Open')->returnsDar(array(
+            'id'    => $this->open_value_id,
+            'label' => 'Open',
+            // ...
+        ));
+
+        $this->xml_element = new SimpleXMLElement('<?xml version="1.0"?>
+            <artifacts>
+              <artifact id="4918">
+                <changeset>
+                  <submitted_by format="username">john_doe</submitted_by>
+                  <submitted_on format="ISO8601">2014-01-15T10:38:06+01:00</submitted_on>
+                  <field_change type="list" field_name="status_id" bind="static">
+                    <value>Open</value>
+                  </field_change>
+                  <field_change type="list" field_name="assigned_to" bind="user">
+                    <value format="username">john_doe</value>
+                  </field_change>
+                </changeset>
+              </artifact>
+            </artifacts>');
+    }
+
+    public function itCreatesArtifactWithSelectboxValue() {
+        $data = array(
+            $this->status_field_id => $this->open_value_id,
+            $this->assto_field_id  => $this->john_doe->getId(),
         );
         expect($this->artifact_creator)->create('*', $data, '*', '*', '*', '*')->once();
 
