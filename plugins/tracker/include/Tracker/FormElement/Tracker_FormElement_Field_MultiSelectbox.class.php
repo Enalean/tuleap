@@ -19,7 +19,7 @@
  */
 
 class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field_Selectbox {
-    
+
     public $default_properties = array(
         'size' => array(
             'value' => 7,
@@ -27,21 +27,21 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
             'size'  => 3,
         ),
     );
-    
+
     /**
      * @return boolean
      */
     public function isMultiple() {
         return true;
     }
-    
+
     protected function getDao() {
         return new Tracker_FormElement_Field_MultiSelectboxDao();
     }
-    
+
     /**
      * The field is permanently deleted from the db
-     * This hooks is here to delete specific properties, 
+     * This hooks is here to delete specific properties,
      * or specific values of the field.
      * (The field itself will be deleted later)
      * @return boolean true if success
@@ -49,32 +49,32 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
     public function delete() {
         return $this->getDao()->delete($this->id);
     }
-    
+
     protected function getMaxSize() {
         return $this->getproperty('size') ? $this->getproperty('size') : parent::getMaxSize();
     }
-    
+
     /**
      * @return the label of the field (mainly used in admin part)
      */
     public static function getFactoryLabel() {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','multiselectbox');
     }
-    
+
     /**
      * @return the description of the field (mainly used in admin part)
      */
     public static function getFactoryDescription() {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','multiselectbox_description');
     }
-    
+
     /**
      * @return the path to the icon
      */
     public static function getFactoryIconUseIt() {
         return $GLOBALS['HTML']->getImagePath('ic/ui-list-box.png');
     }
-    
+
     /**
      * @return the path to the icon
      */
@@ -89,18 +89,17 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
      * @return boolean true if the change is allowed and successful
      */
     public function changeType($type) {
-        // only "sb" available at the moment.
-        if ($type === 'sb' || $type === 'cb') {
+        if (in_array($type, array('sb', 'rb', 'cb'))) {
             // We should remove the entry in msb table
             // However we keep it for the case where admin changes its mind.
             return true;
         }
         return false;
     }
-    
+
     /**
      * Augment data from request
-     * With multi select boxes, when nothing is selected, 
+     * With multi select boxes, when nothing is selected,
      * $fields_data does not contains any entry for the field.
      * => augment $fields_data with None value (100)
      *
@@ -116,8 +115,8 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
              *
              * This method is in iteself somewhat of a hack. Its aim is to set default values for multiselect fields
              * that do not have a value in the $fields_data array. However, this method assumes that EVERY field
-             * and its value(s) will be submitted. This is a BAD assumption since it is possible to submit only those 
-             * fields that have changed. In that case, we do not want to set a default value but, rather, use the 
+             * and its value(s) will be submitted. This is a BAD assumption since it is possible to submit only those
+             * fields that have changed. In that case, we do not want to set a default value but, rather, use the
              * existing one.
              */
         }

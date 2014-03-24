@@ -366,6 +366,7 @@
             <value>msb</value>
             <value>tbl</value>
             <value>cb</value>
+            <value>rb</value>
           </choice>
         </attribute>
         <ref name="bindContent"/>

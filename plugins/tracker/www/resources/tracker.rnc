@@ -43,13 +43,13 @@ grammar {
         }?,
 
         element rules {
-            element date_rules { 
+            element date_rules {
                 element rule {dateRuleContent }*
             }?,
-            element list_rules { 
+            element list_rules {
                 element rule {listRuleContent }*
             }?
-            
+
         }?,
 
         element reports {
@@ -125,7 +125,7 @@ grammar {
             )
         |
             (
-                attribute type { "sb" | "msb" | "tbl" | "cb" },
+                attribute type { "sb" | "msb" | "tbl" | "cb" | "rb"},
                 bindContent
             )
         )

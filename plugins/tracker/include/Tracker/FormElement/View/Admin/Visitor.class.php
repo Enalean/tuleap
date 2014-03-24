@@ -54,7 +54,9 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
     public function visit(/*Tracker_FormElement*/ $element) {
         $this->element = $element;
         
-        if ($element instanceof Tracker_FormElement_Field_Checkbox) {
+        if ($element instanceof Tracker_FormElement_Field_Radiobutton) {
+            $this->visitRadiobutton($element);
+        } elseif ($element instanceof Tracker_FormElement_Field_Checkbox) {
             $this->visitCheckbox($element);
         } elseif ($element instanceof Tracker_FormElement_Field_MultiSelectbox) {
             $this->visitMultiSelectbox($element);
@@ -153,6 +155,11 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_Checkbox($element, $this->allUsedElements);
     }
     
+    private function visitRadiobutton(Tracker_FormElement_Field_Radiobutton $element) {
+        include_once 'Field/Radiobutton.class.php';
+        $this->adminElement = new Tracker_FormElement_View_Admin_Field_Radiobutton($element, $this->allUsedElements);
+	}
+
     private function visitContainer(Tracker_FormElement_Container $element) {
         include_once 'Container.class.php';
         $this->adminElement = new Tracker_FormElement_View_Admin_Container($element, $this->allUsedElements);

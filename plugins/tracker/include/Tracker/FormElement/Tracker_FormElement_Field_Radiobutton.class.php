@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Jtekt, Jason Team, 2012. All rights reserved
+ * Copyright (c) Jtekt, Jason Team, 2014. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -19,29 +19,41 @@
  */
 
 
-class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_MultiSelectbox {
+class Tracker_FormElement_Field_Radiobutton extends Tracker_FormElement_Field_Selectbox {
+
+
 
     protected function fetchFieldContainerStart($id, $name) {
-        return '';
+        $html  = '<div ' . $id . '">';
+        $html .= '<input type="hidden" '.$name.' value="0"  />';
+        return $html;
     }
 
     protected function fetchFieldValue(Tracker_FormElement_Field_List_Value $value, $name, $is_selected) {
         if ($value->getId() == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
-            return '';
+            $is_selected = true; //Hackalert: "None" selected by default. Overrided when other value is selected
         }
+        $label = $this->getBind()->formatChangesetValueWithoutLink($value);
+
+        if(!$name) {
+            $name= 'name="admin"';
+        }
+
         $id      = $value->getId();
         $html    = '';
         $checked = $is_selected ? 'checked="checked"' : '';
 
-        $html .= '<label class="checkbox" for="cb_'. $id .'" ><input type="hidden" '.$name.' value="0"  />';
-        $html .= '<input type="checkbox" '. $name .' value="'. $id .'" id=cb_'. $id .' '. $checked .' valign="middle" />';
-        $html .= $this->getBind()->formatChangesetValue($value) .'</label>';
+        $html .= '<div class="val_'. $id.'">';
+        $html .= '    <label class="radio" for="rb_'. $id .'" >';
+        $html .= '        <input type="radio" '. $name .' value="'. $id .'" id=rb_'. $id .' '. $checked .' valign="middle" />';
+        $html .= '    '. $label . '</label>';
+        $html .= '</div>';
 
         return $html;
     }
 
     protected function fetchFieldContainerEnd() {
-        return '';
+        return '</div>';
     }
 
 
@@ -61,40 +73,42 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Multi
      * @return the label of the field (mainly used in admin part)
      */
     public static function getFactoryLabel() {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'checkbox');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'radiobtn');
     }
 
     /**
      * @return the description of the field (mainly used in admin part)
      */
     public static function getFactoryDescription() {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','checkbox_desc');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','radiobtn_desc');
     }
 
     /**
      * @return the path to the icon
      */
     public static function getFactoryIconUseIt() {
-        return $GLOBALS['HTML']->getImagePath('ic/ui-check-box.png');
+        return $GLOBALS['HTML']->getImagePath('ic/ui-radio-buttons.png');
     }
 
     /**
      * @return the path to the icon
      */
     public static function getFactoryIconCreate() {
-        return $GLOBALS['HTML']->getImagePath('ic/ui-check--plus.png');
+        return $GLOBALS['HTML']->getImagePath('ic/ui-radio-buttons-plus.png');
     }
 
     /**
-     * Change the type of the checkbox
+     * Change the type of the button
      * @param string $type the new type
      *
      * @return boolean true if the change is allowed and successful
      */
     public function changeType($type) {
-        if (in_array($type, array('sb', 'msb', 'rb'))) {
-            // We should remove the entry in msb table
-            // However we keep it for the case where admin changes its mind.
+        if (in_array($type, array('msb', 'cb'))) {
+            //do not change from SB to MSB if the field is used to define the workflow
+            $wf = WorkflowFactory::instance();
+            return !$wf->isWorkflowField($this);
+        } elseif ($type === 'sb') {
             return true;
         }
         return false;

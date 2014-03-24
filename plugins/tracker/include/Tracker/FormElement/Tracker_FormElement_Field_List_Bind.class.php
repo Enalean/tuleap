@@ -36,13 +36,13 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
     protected $default_values;
     protected $decorators;
     protected $field;
-    
+
     public function __construct($field, $default_values, $decorators) {
         $this->field          = $field;
         $this->default_values = $default_values;
         $this->decorators     = $decorators;
     }
-    
+
     /**
      * Get the default values definition of the bind
      *
@@ -51,7 +51,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
     public function getDefaultValues() {
         return $this->default_values;
     }
-    
+
     public function getDecorators() {
         return $this->decorators;
     }
@@ -104,7 +104,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
      * @return array
      */
     protected abstract function getSoapBindingList();
-    
+
     /**
      * Get the field data for artifact submission
      *
@@ -122,21 +122,21 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
      * @return array
      */
     public abstract function getChangesetValues($changeset_id);
-    
+
     /**
      * Fetch the value
      * @param mixed $value the value of the field
      * @return string
      */
     public abstract function fetchRawValue($value);
-    
+
     /**
      * Fetch the value in a specific changeset
      * @param Tracker_Artifact_Changeset $changeset
      * @return string
      */
     public abstract function fetchRawValueFromChangeset($changeset);
-    
+
     /**
      * @return string
      */
@@ -158,12 +158,22 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
     public function formatCardValue($value, Tracker_CardDisplayPreferences $display_preferences) {
         return $this->formatChangesetValue($value);
     }
-    
+
+
     /**
      * @return string
      */
     public abstract function formatChangesetValueForCSV($value);
-    
+
+    /**
+     * Formatted changeset are considered without link by default.
+     * Classes that format with a link (i.e. userBind) must override this.
+     * @return string
+     */
+    public function formatChangesetValueWithoutLink($value) {
+        return $this->formatChangesetValue($value);
+    }
+
     /**
      * @return string
      */
@@ -181,16 +191,16 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
     public function formatMailArtifactvalue ($value_id) {
         return $this->formatMailCriteriaValue($value_id);
     }
-    
+
     /**
      * Get the "from" statement to allow search with this field
-     * You can join on 'c' which is a pseudo table used to retrieve 
+     * You can join on 'c' which is a pseudo table used to retrieve
      * the last changeset of all artifacts.
      * @param array $criteria_value array of criteria_value (which are array)
      * @return string
      */
     public abstract function getCriteriaFrom($criteria_value);
-    
+
     /**
      * Get the "where" statement to allow search with this field
      * @param array $criteria_value array of id => criteria_value (which are array)
@@ -205,7 +215,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
      * @see getQueryFrom
      */
     public abstract function getQuerySelect();
-    
+
     /**
      * Get the "select" statement to retrieve field values with their decorator if they exist
      * @return string
@@ -214,11 +224,11 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
     public function getQuerySelectWithDecorator() {
         return $this->getQuerySelect();
     }
-    
-    
+
+
     /**
      * Get the "from" statement to retrieve field values
-     * You can join on artifact AS a, tracker_changeset AS c 
+     * You can join on artifact AS a, tracker_changeset AS c
      * which tables used to retrieve the last changeset of matching artifacts.
      *
      * @param string $changesetvalue_table The changeset value table to use
@@ -226,7 +236,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
      * @return string
      */
     public abstract function getQueryFrom($changesetvalue_table = 'tracker_changeset_value_list');
-    
+
 	/**
      * Get the "from" statement to retrieve field values with their decorator if they exist
      * @return string
@@ -235,7 +245,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
     public function getQueryFromWithDecorator($changesetvalue_table = 'tracker_changeset_value_list') {
         return $this->getQueryFrom($changesetvalue_table);
     }
-    
+
     /**
      * Get the field
      *
@@ -244,7 +254,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
     public function getField() {
         return $this->field;
     }
-    
+
     /**
      * Get a bindvalue by its row
      *
@@ -253,7 +263,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
      * @return Tracker_FormElement_Field_List_BindValue
      */
     public abstract function getValueFromRow($row);
-    
+
     /**
      * Get the sql fragment used to retrieve value for a changeset to display the bindvalue in table rows for example.
      * Used by OpenList.
@@ -266,17 +276,17 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
      *              }
      */
     public abstract function getBindtableSqlFragment();
-    
+
     /**
      * Get the "order by" statement to retrieve field values
      */
     public abstract function getQueryOrderby();
-    
+
     /**
      * Get the "group by" statement to retrieve field values
      */
     public abstract function getQueryGroupby();
-    
+
     public function fetchDecoratorsAsJavascript() {
         $html = '';
         if (is_array($this->decorators) && count($this->decorators)) {
@@ -289,7 +299,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
         }
         return $html;
     }
-    
+
     public function getSelectOptionInlineStyle($value_id) {
         if (count($this->decorators)) {
             if (isset($this->decorators[$value_id])) {
@@ -301,17 +311,17 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
             return '';
         }
     }
-    
+
     public abstract function getDao();
     public abstract function getValueDao();
-    
+
     /**
      * Fetch the form to edit the formElement
      *
      * @return string html
      */
     public abstract function fetchAdminEditForm();
-    
+
     /**
      * Process the request
      *
@@ -331,14 +341,14 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
             }
             $redirect = true;
         }
-        
+
         $default = array();
         if (isset($params['default'])) {
             $default = $params['default'];
         }
         $this->getDefaultValueDao()->save($this->field->getId(), $default);
         $redirect = true;
-        
+
         if (!$no_redirect && $redirect) {
             $GLOBALS['Response']->redirect('?'. http_build_query(array(
                     'tracker'            => $this->field->getTracker()->id,
@@ -370,18 +380,18 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
      * @return string html
      */
     public static abstract function fetchAdminCreateForm($field);
-    
+
     /**
      * Transforms Bind into a SimpleXMLElement
-     * 
+     *
      * @param SimpleXMLElement $root        the node to which the Bind is attached (passed by reference)
      * @param array            &$xmlMapping the correspondance between real ids and XML IDs
      * @param string           $fieldID     XML ID of the binded field
      */
     public abstract function exportToXml(SimpleXMLElement $root, &$xmlMapping, $fieldID);
-    
+
     /**
-     * Give an extract of the bindvalues defined. The extract is based on $bindvalue_ids. 
+     * Give an extract of the bindvalues defined. The extract is based on $bindvalue_ids.
      * If the $bindvalue_ids is null then return all values.
      *
      * @param array $bindvalue_ids The ids of BindValue to retrieve
@@ -389,7 +399,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
      * @Return array the BindValue(s)
      */
     public abstract function getBindValues($bindvalue_ids = null);
-    
+
     /**
      * Get the html to select a default value
      *
@@ -398,7 +408,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
     protected function getSelectDefaultValues() {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
-        
+
         //Select default values
         $html .= '<p>';
         $html .= '<strong>'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','select_default_value'). '</strong><br />';
@@ -409,7 +419,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
         }
         $html .= '</select>';
         $html .= '</p>';
-        
+
         return $html;
     }
 
@@ -441,7 +451,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
      *               - multiselectbox: all (else it breaks other computations)
      */
     public abstract function getQuerySelectAggregate($functions);
-    
+
     /**
      * Saves a bind in the database
      *
@@ -454,12 +464,12 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
                 $t[$value->getId()] = $value;
             }
             $this->default_values = $t;
-            
+
             if (count($this->default_values)) {
                 $this->getDefaultValueDao()->save($this->field->getId(), array_keys($this->default_values));
             }
         }
-        
+
         if (is_array($this->decorators) && !empty($this->decorators)) {
             $values = $this->getBindValues();
             foreach ( $this->decorators as $decorator) {
@@ -468,7 +478,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
             }
         }
     }
-    
+
     /**
      * Get a recipients list for notifications. This is filled by users fields for example.
      *
@@ -479,7 +489,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
     public function getRecipients(Tracker_Artifact_ChangesetValue_List $changeset_value) {
         return array();
     }
-    
+
     /**
      * Say if this fields suport notifications
      *
@@ -488,7 +498,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
     public function isNotificationsSupported() {
         return false;
     }
-    
+
     /**
      * Retrieve all values which match the keyword
      *
