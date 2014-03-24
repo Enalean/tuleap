@@ -26,12 +26,16 @@ use \Luracast\Restler\RestException;
 use \Tracker_REST_TrackerRestBuilder;
 use \Tuleap\Tracker\REST\ReportRepresentation;
 use \Tracker_FormElementFactory;
+use \Tracker;
 use \TrackerFactory;
+use \Tracker_ArtifactFactory;
 use \Tracker_ReportFactory;
 use \UserManager;
 use \Tuleap\REST\Header;
 use \Tracker_Report;
 use \Tracker_URLVerification;
+use \Tracker_REST_Artifact_ArtifactRepresentationBuilder;
+use \PFUser;
 
 /**
  * Wrapper for Tracker related REST methods
@@ -41,6 +45,8 @@ class TrackersResource {
     const MAX_LIMIT      = 50;
     const DEFAULT_LIMIT  = 10;
     const DEFAULT_OFFSET = 0;
+    const DEFAULT_VALUES = '';
+    const ALL_VALUES     = 'all';
 
     /**
      * @url OPTIONS
@@ -130,6 +136,80 @@ class TrackersResource {
         );
     }
 
+    /**
+     * Get all artifacts of a given tracker
+     *
+     * Get all artifacts of a given tracker the user can view
+     * 
+     * @url GET {id}/artifacts
+     *
+     * @param int    $id Id of the tracker
+     * @param string $values  Which fields to include in the response. Default is no field values {@from path}{@choice ,all}
+     * @param int    $limit  Number of elements displayed per page {@from path}{@min 1}
+     * @param int    $offset Position of the first element to display {@from path}{@min 0}
+     *
+     * @return array {@type Tuleap\Tracker\REST\Artifact\ArtifactRepresentation}
+     */
+    protected function getArtifacts($id,
+        $values = self::DEFAULT_VALUES,
+        $limit  = self::DEFAULT_LIMIT,
+        $offset = self::DEFAULT_OFFSET
+    ) {
+        $this->checkLimitValue($limit);
+
+        $user              = UserManager::instance()->getCurrentUser();
+        $check_user_access = $this->getTrackerById($user, $id);
+
+        $artifact_factory = Tracker_ArtifactFactory::instance();
+        $artifacts        = $artifact_factory->getArtifactsByTrackerId($id);
+
+        $nb_matching      = count($artifacts);
+        $artifacts        = array_slice($artifacts, $offset, $limit);
+        $with_all_field_values = $values == self::ALL_VALUES;
+
+        Header::allowOptionsGet();
+        Header::sendPaginationHeaders($limit, $offset, $nb_matching, self::MAX_LIMIT);
+
+        return $this->getListOfArtifactRepresentation(
+            $user,
+            $artifacts,
+            $with_all_field_values
+        );
+    }
+
+    /**
+     * @return Tuleap\Tracker\REST\Artifact\ArtifactRepresentation[]
+     */
+    private function getListOfArtifactRepresentation(PFUser $user, $artifacts, $with_all_field_values) {
+        $builder = new Tracker_REST_Artifact_ArtifactRepresentationBuilder(
+            Tracker_FormElementFactory::instance()
+        );
+
+        $build_artifact_representation = function ($artifact) use (
+            $builder,
+            $user,
+            $with_all_field_values
+        ) {
+            if (! $artifact || ! $artifact->userCanView($user)) {
+                return;
+            }
+
+            if ($with_all_field_values) {
+                return $builder->getArtifactRepresentationWithFieldValues($user, $artifact);
+            } else {
+                return $builder->getArtifactRepresentation($artifact);
+            }
+        };
+
+        $list_of_artifact_representation = array_map($build_artifact_representation, $artifacts);
+
+        return array_filter($list_of_artifact_representation);
+    }
+
+    /**
+     * @return Tracker
+     * @throws RestException
+     */
     private function getTrackerById(\PFUser $user, $id) {
         $tracker = TrackerFactory::instance()->getTrackerById($id);
         if ($tracker) {
