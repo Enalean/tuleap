@@ -254,6 +254,39 @@ class ArtifactXMLExporter_SummaryTest extends ArtifactXMLExporter_BaseTest {
     }
 }
 
+class ArtifactXMLExporter_CommentTest extends ArtifactXMLExporter_BaseTest {
+
+    public function itHasChangesetPerComment() {
+        $this->exportTrackerDataFromFixture('artifact_with_comment');
+
+        $this->assertCount($this->xml->artifact->changeset, 3);
+
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->submitted_on, $this->toExpectedDate(1234568000));
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->comment, 'This is my comment');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->comment['format'], 'text');
+
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->submitted_on, $this->toExpectedDate(1234569000));
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->comment, '<p>With<strong> CHTEUMEULEU</strong></p>');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->comment['format'], 'html');
+    }
+
+    public function itHasChangesetWithFieldChangeAndCommentIsAtTheThirdPositionInChangeset() {
+        $this->exportTrackerDataFromFixture('artifact_with_comment_and_change');
+
+        $this->assertCount($this->xml->artifact->changeset, 2);
+
+        $i = 0;
+        $found = false;
+        foreach ($this->xml->artifact->changeset[1] as $name => $attribute) {
+            if ($name == 'comment') {
+                $found = $i;
+            }
+            $i++;
+        }
+        $this->assertIdentical(2, $found, "Comment must be at third position according to RNC. Found at $found");
+    }
+}
+
 class ArtifactXMLExporter_AttachmentTest extends ArtifactXMLExporter_BaseTest {
 
     public function itCreatesAChangesetWithOneAttachment() {

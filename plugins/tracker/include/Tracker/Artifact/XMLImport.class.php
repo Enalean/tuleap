@@ -144,16 +144,15 @@ class Tracker_Artifact_XMLImport {
         $count = 1;
         foreach($xml_changesets as $xml_changeset) {
             try {
-                $comment           = '';
                 $send_notification = false;
                 $result = $this->new_changeset_creator->create(
                     $artifact,
                     $fields_data_builder->getFieldsData($xml_changeset->field_change),
-                    $comment,
+                    (string)$xml_changeset->comment,
                     $this->getSubmittedBy($xml_changeset),
                     $this->getSubmittedOn($xml_changeset),
                     $send_notification,
-                    Tracker_Artifact_Changeset_Comment::TEXT_COMMENT
+                    (string)$xml_changeset->comment['format']
                 );
                 if (! $result) {
                     throw new Tracker_Artifact_Exception_CannotCreateNewChangeset();

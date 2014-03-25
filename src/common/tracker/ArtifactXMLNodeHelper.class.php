@@ -59,10 +59,14 @@ class ArtifactXMLNodeHelper {
         return $node;
     }
 
+    public function getCDATASection(DOMNode $node, $value) {
+        $no = $node->ownerDocument;
+        return $no->createCDATASection($value);
+    }
+
     public function getNodeWithValue($node_name, $value) {
         $node = $this->document->createElement($node_name);
-        $no = $node->ownerDocument;
-        $node->appendChild($no->createCDATASection($value));
+        $node->appendChild($this->getCDATASection($node, $value));
         return $node;
     }
 }

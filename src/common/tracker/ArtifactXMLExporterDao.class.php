@@ -22,8 +22,8 @@ class ArtifactXMLExporterDao extends DataAccessObject {
 
     public function searchArtifacts($tracker_id) {
         $tracker_id = $this->da->escapeInt($tracker_id);
-        $summary = $this->unconvertHtmlspecialchars('artifact.summary', 'summary');
-        $details = $this->unconvertHtmlspecialchars('details', 'details');
+        $summary = $this->unconvertHtmlspecialcharsAlias('artifact.summary', 'summary');
+        $details = $this->unconvertHtmlspecialcharsAlias('details', 'details');
 
         $sql = "SELECT artifact_id, $summary, $details, open_date, user_name AS submitted_by
                 FROM artifact
@@ -35,7 +35,9 @@ class ArtifactXMLExporterDao extends DataAccessObject {
 
     public function searchHistory($artifact_id) {
         $artifact_id = $this->da->escapeInt($artifact_id);
-        $old_value = $this->unconvertHtmlspecialchars('h.old_value', 'old_value');
+        $old_value = $this->unconvertHtmlspecialcharsAlias('h.old_value', 'old_value');
+
+        $comment = $this->unconvertHtmlspecialchars('h.new_value');
 
         $sql = "SELECT 
                     f.data_type, 
@@ -46,7 +48,9 @@ class ArtifactXMLExporterDao extends DataAccessObject {
                     h.date,
                     h.mod_by,
                     IFNULL(user.user_name, h.email) AS submitted_by,
-                    IF(h.email, 1, 0) AS is_anonymous
+                    IF(h.email, 1, 0) AS is_anonymous,
+                    IF(h.field_name = 'comment', $comment, '') AS comment,
+                    h.format
                 FROM artifact_history h
                     INNER JOIN artifact a ON (a.artifact_id = h.artifact_id)
                     LEFT JOIN artifact_field f ON (f.field_name = h.field_name AND f.group_artifact_id = a.group_artifact_id)
@@ -65,7 +69,11 @@ class ArtifactXMLExporterDao extends DataAccessObject {
      *
      * @see util_unconvert_htmlspecialchars
      */
-    private function unconvertHtmlspecialchars($column_name, $alias) {
+    private function unconvertHtmlspecialcharsAlias($column_name, $alias) {
+        return $this->unconvertHtmlspecialchars($column_name)." AS $alias";
+    }
+
+    private function unconvertHtmlspecialchars($column_name) {
         return "REPLACE(
                     REPLACE(
                         REPLACE(
@@ -76,7 +84,7 @@ class ArtifactXMLExporterDao extends DataAccessObject {
                             ), '&gt;', '>'
                         ), '&lt;', '<'
                     ), '&amp;', '&'
-                ) AS $alias";
+                )";
     }
 
     public function searchFilesForArtifact($artifact_id) {

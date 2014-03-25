@@ -17,14 +17,14 @@
               </element>
               <optional>
                 <element name="comment">
-                  <data type="string"/>
+                  <ref name="text_content"/>
                 </element>
               </optional>
-              <oneOrMore>
+              <zeroOrMore>
                 <element name="field_change">
                   <ref name="field_content"/>
                 </element>
-              </oneOrMore>
+              </zeroOrMore>
             </element>
           </zeroOrMore>
           <zeroOrMore>
@@ -53,6 +53,15 @@
       </zeroOrMore>
     </element>
   </start>
+  <define name="text_content">
+    <attribute name="format">
+      <choice>
+        <value>text</value>
+        <value>html</value>
+      </choice>
+    </attribute>
+    <data type="string"/>
+  </define>
   <define name="date_content">
     <attribute name="format">
       <value>ISO8601</value>
