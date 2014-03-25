@@ -149,11 +149,11 @@
     <attribute name="bind">
       <value>static</value>
     </attribute>
-    <oneOrMore>
+    <zeroOrMore>
       <element name="value">
         <data type="string"/>
       </element>
-    </oneOrMore>
+    </zeroOrMore>
   </define>
   <define name="field_user_list">
     <attribute name="type">
@@ -162,11 +162,11 @@
     <attribute name="bind">
       <value>user</value>
     </attribute>
-    <oneOrMore>
+    <zeroOrMore>
       <element name="value">
         <ref name="user_content"/>
       </element>
-    </oneOrMore>
+    </zeroOrMore>
   </define>
   <define name="field_open_list_user">
     <attribute name="type">
@@ -175,11 +175,11 @@
     <attribute name="bind">
       <value>user</value>
     </attribute>
-    <oneOrMore>
+    <zeroOrMore>
       <element name="value">
         <ref name="user_content"/>
       </element>
-    </oneOrMore>
+    </zeroOrMore>
   </define>
   <define name="field_perms_on_artifact">
     <attribute name="type">

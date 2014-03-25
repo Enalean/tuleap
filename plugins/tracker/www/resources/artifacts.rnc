@@ -74,17 +74,17 @@ grammar {
     field_static_list =
         attribute type { "list" },
         attribute bind { "static" },
-        element value  { xsd:string }+
+        element value  { xsd:string }*
 
     field_user_list =
         attribute type { "list" },
         attribute bind { "user" },
-        element value  { user_content }+
+        element value  { user_content }*
 
     field_open_list_user =
         attribute type { "open_list" },
         attribute bind { "user" },
-        element value { user_content }+
+        element value { user_content }*
 
     field_perms_on_artifact =
         attribute type { "permissions_on_artifact" },
