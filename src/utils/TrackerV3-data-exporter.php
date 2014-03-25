@@ -80,8 +80,6 @@ try {
     $archive->addFromString('artifacts.xml', $proc->transformToXML($xml));
 
     $archive->close();
-
-    $logger->dump();
 } catch (XML_ParseException $exception) {
     foreach ($exception->getErrors() as $error) {
         echo $error.PHP_EOL;

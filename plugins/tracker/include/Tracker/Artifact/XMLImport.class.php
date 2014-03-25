@@ -38,13 +38,17 @@ class Tracker_Artifact_XMLImport {
     /** @var Tracker_FormElement_Field_List_Bind_Static_ValueDao */
     private $static_value_dao;
 
+    /** @var Logger */
+    private $logger;
+
     public function __construct(
         XML_RNGValidator $rng_validator,
         Tracker_ArtifactCreator $artifact_creator,
         Tracker_Artifact_Changeset_NewChangesetCreatorBase $new_changeset_creator,
         Tracker_FormElementFactory $formelement_factory,
         Tracker_Artifact_XMLImport_XMLImportHelper $xml_import_helper,
-        Tracker_FormElement_Field_List_Bind_Static_ValueDao $static_value_dao
+        Tracker_FormElement_Field_List_Bind_Static_ValueDao $static_value_dao,
+        Logger $logger
     ) {
 
         $this->rng_validator         = $rng_validator;
@@ -53,6 +57,7 @@ class Tracker_Artifact_XMLImport {
         $this->formelement_factory   = $formelement_factory;
         $this->xml_import_helper     = $xml_import_helper;
         $this->static_value_dao      = $static_value_dao;
+        $this->logger                = $logger;
     }
 
     public function importFromArchive(Tracker $tracker, Tracker_Artifact_XMLImport_XMLImportZipArchive $archive) {
@@ -66,6 +71,7 @@ class Tracker_Artifact_XMLImport {
     public function importFromXML(Tracker $tracker, SimpleXMLElement $xml_element, $extraction_path) {
         $this->rng_validator->validate($xml_element);
         foreach ($xml_element->artifact as $artifact) {
+            $this->logger->info("Import {$artifact['id']}");
             $files_importer = new Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact($artifact);
             $fields_data_builder = new Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder(
                 $this->formelement_factory,
@@ -88,6 +94,7 @@ class Tracker_Artifact_XMLImport {
             $changesets      = $this->getSortedBySubmittedOn($xml_artifact->changeset);
             $first_changeset = array_shift($changesets);
             $artifact        = $this->importInitialChangeset($tracker, $first_changeset, $fields_data_builder);
+            $this->logger->info("--> new artifact {$artifact->getId()}");
             if (count($changesets)) {
                 $this->importRemainingChangesets($artifact, $changesets, $fields_data_builder);
             }
@@ -134,20 +141,26 @@ class Tracker_Artifact_XMLImport {
         array $xml_changesets,
         Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder $fields_data_builder
     ) {
+        $count = 1;
         foreach($xml_changesets as $xml_changeset) {
-            $comment           = '';
-            $send_notification = false;
-            $result = $this->new_changeset_creator->create(
-                $artifact,
-                $fields_data_builder->getFieldsData($xml_changeset->field_change),
-                $comment,
-                $this->getSubmittedBy($xml_changeset),
-                $this->getSubmittedOn($xml_changeset),
-                $send_notification,
-                Tracker_Artifact_Changeset_Comment::TEXT_COMMENT
-            );
-            if (! $result) {
-                throw new Tracker_Artifact_Exception_CannotCreateNewChangeset();
+            try {
+                $comment           = '';
+                $send_notification = false;
+                $result = $this->new_changeset_creator->create(
+                    $artifact,
+                    $fields_data_builder->getFieldsData($xml_changeset->field_change),
+                    $comment,
+                    $this->getSubmittedBy($xml_changeset),
+                    $this->getSubmittedOn($xml_changeset),
+                    $send_notification,
+                    Tracker_Artifact_Changeset_Comment::TEXT_COMMENT
+                );
+                if (! $result) {
+                    throw new Tracker_Artifact_Exception_CannotCreateNewChangeset();
+                }
+                $count++;
+            } catch (Tracker_NoChangeException $exception) {
+                $this->logger->warn("No Change for changeset $count");
             }
         }
     }
