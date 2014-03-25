@@ -4,6 +4,7 @@
             {
                 "artifact_id":  "123",
                 "summary":      "Le artifact without history",
+                "details":      "Le original submission",
                 "open_date":    "1234567890",
                 "submitted_by": "goofy"
             }

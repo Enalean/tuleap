@@ -209,15 +209,21 @@ class ArtifactXMLExporter_SummaryTest extends ArtifactXMLExporter_BaseTest {
     public function itCreatesAnInitialChangesetATheTimeOfOpenDateWhenThereIsNoHistory() {
         $this->exportTrackerDataFromFixture('artifact_without_any_history');
 
-        $this->assertEqual((string)$this->xml->artifact->changeset[0]->field_change->value, 'Le artifact without history');
-        $this->assertEqual((string)$this->xml->artifact->changeset[0]->field_change['type'], 'string');
+        $this->assertEqual((string)$this->xml->artifact->changeset[0]->field_change[0]->value, 'Le artifact without history');
+        $this->assertEqual((string)$this->xml->artifact->changeset[0]->field_change[0]['type'], 'string');
+        $this->assertEqual((string)$this->xml->artifact->changeset[0]->field_change[0]['field_name'], 'summary');
+        $this->assertEqual((string)$this->xml->artifact->changeset[0]->field_change[1]->value, 'Le original submission');
+        $this->assertEqual((string)$this->xml->artifact->changeset[0]->field_change[1]['type'], 'text');
+        $this->assertEqual((string)$this->xml->artifact->changeset[0]->field_change[1]['field_name'], 'details');
         $this->assertEqual((string)$this->xml->artifact->changeset[0]->submitted_on, $this->expected_open_date);
     }
 
     public function itCreatesAnInitialChangesetBasedOnTheOldestValueKnownWhenThereIsHistory() {
         $this->exportTrackerDataFromFixture('artifact_with_full_history');
 
-        $this->assertEqual((string)$this->xml->artifact->changeset[0]->field_change->value, 'Le artifact');
+        $this->assertEqual((string)$this->xml->artifact->changeset[0]->field_change[0]->value, 'Le artifact');
+        $this->assertEqual((string)$this->xml->artifact->changeset[0]->field_change[1]->value, 'Le original submission that will be updated');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change[1]->value, 'Le original submission');
         $this->assertEqual((string)$this->xml->artifact->changeset[0]->submitted_on, $this->expected_open_date);
     }
 

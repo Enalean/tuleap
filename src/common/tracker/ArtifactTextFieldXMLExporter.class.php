@@ -19,6 +19,8 @@
  */
 
 class ArtifactTextFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporter {
+    const TV3_DISPLAY_TYPE = 'TA';
+    const TV3_DATA_TYPE    = '1';
     const TV3_TYPE         = 'TA_1';
     const TV5_TYPE         = 'text';
     const TV3_VALUE_INDEX  = 'valueText';

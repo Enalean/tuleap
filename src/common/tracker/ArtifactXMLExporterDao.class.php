@@ -23,8 +23,9 @@ class ArtifactXMLExporterDao extends DataAccessObject {
     public function searchArtifacts($tracker_id) {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $summary = $this->unconvertHtmlspecialchars('artifact.summary', 'summary');
+        $details = $this->unconvertHtmlspecialchars('details', 'details');
 
-        $sql = "SELECT artifact_id, $summary, open_date, user_name AS submitted_by
+        $sql = "SELECT artifact_id, $summary, $details, open_date, user_name AS submitted_by
                 FROM artifact
                     LEFT JOIN user ON (submitted_by = user_id)
                 WHERE group_artifact_id = $tracker_id";

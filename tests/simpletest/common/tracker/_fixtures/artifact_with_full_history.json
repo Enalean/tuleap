@@ -4,6 +4,7 @@
             {
                 "artifact_id":  "123",
                 "summary":      "Le artifact with full history",
+                "details":      "Le original submission",
                 "open_date":    "1234567890",
                 "submitted_by": "goofy"
             }
@@ -28,6 +29,17 @@
                 "field_name":   "summary",
                 "old_value":    "Le artifact with history",
                 "new_value":    "Le artifact with full history",
+                "date":         "3234567890",
+                "mod_by":       "115",
+                "submitted_by": "goofy",
+                "is_anonymous": "0"
+            },
+            {
+                "data_type":    "1",
+                "display_type": "TA",
+                "field_name":   "details",
+                "old_value":    "Le original submission that will be updated",
+                "new_value":    "Le original submission",
                 "date":         "3234567890",
                 "mod_by":       "115",
                 "submitted_by": "goofy",

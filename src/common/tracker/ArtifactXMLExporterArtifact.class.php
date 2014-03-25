@@ -103,8 +103,16 @@ class ArtifactXMLExporterArtifact {
                 'display_type' => ArtifactStringFieldXMLExporter::TV3_DISPLAY_TYPE,
                 'data_type'    => ArtifactStringFieldXMLExporter::TV3_DATA_TYPE,
                 'valueText'    => $artifact_row['summary'],
-            ),
+            )
         );
+        if (isset($artifact_row['details'])) {
+            $fields_values[] = array(
+                'field_name'   => 'details',
+                'display_type' => ArtifactTextFieldXMLExporter::TV3_DISPLAY_TYPE,
+                'data_type'    => ArtifactTextFieldXMLExporter::TV3_DATA_TYPE,
+                'valueText'    => $artifact_row['details'],
+            );
+        }
         if (isset($artifact_row['close_date']) && $artifact_row['close_date']) {
             $fields_values[] = array(
                 'field_name'   => 'close_date',
