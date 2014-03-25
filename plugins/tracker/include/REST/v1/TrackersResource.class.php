@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -213,11 +213,11 @@ class TrackersResource {
 
         try {
             $report->setRESTCriteria($query);
+            $matching_ids = $report->getMatchingIds();
         } catch (InvalidCriteriaException $e) {
             throw new RestException(400, $e->getMessage());
         }
 
-        $matching_ids = $report->getMatchingIds();
         if (! $matching_ids['id']) {
             return array();
         }

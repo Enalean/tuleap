@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Codendi.
@@ -489,4 +490,70 @@ class Tracker_FormElement_Field_ListJsonFormattedTest extends TuleapTestCase {
     }
 }
 
+class Tracker_FormElement_Field_ListsetCriteriaValueFromRESTTest extends TuleapTestCase {
+
+    private $bind;
+    private $list;
+
+    public function setUp() {
+        parent::setUp();
+        $this->bind     = mock('Tracker_FormElement_Field_List_Bind_Static');
+        $this->list     = new Tracker_FormElement_Field_ListTestVersion();
+        $this->list->id = 234;
+        stub($this->list)->getBind()->returns($this->bind);
+        stub($this->bind)->getAllValues()->returns(array(101 => 101, 102=> 102, 103 => 103));
+    }
+
+    public function itThrowsAnExceptionIfValueIsNotUsable() {
+        $this->expectException('Tracker_Report_InvalidRESTCriterionException');
+
+        $criteria            = mock('Tracker_Report_Criteria');
+        $rest_criteria_value = array(Tracker_Report_REST::VALUE_PROPERTY_NAME => array(array(1234)));
+
+        $this->list->setCriteriaValueFromREST($criteria, $rest_criteria_value);
+    }
+
+    public function itThrowsAnExceptionIfValueIsNotANumber() {
+        $this->expectException('Tracker_Report_InvalidRESTCriterionException');
+
+        $criteria            = mock('Tracker_Report_Criteria');
+        $rest_criteria_value = array(Tracker_Report_REST::VALUE_PROPERTY_NAME => 'I am a string');
+
+        $this->list->setCriteriaValueFromREST($criteria, $rest_criteria_value);
+    }
+
+    public function itIgnoresInvalidFieldValues() {
+        $criteria            = mock('Tracker_Report_Criteria');
+        $rest_criteria_value = array(Tracker_Report_REST::VALUE_PROPERTY_NAME => '106');
+
+        $res = $this->list->setCriteriaValueFromREST($criteria, $rest_criteria_value);
+
+        $this->assertCount($res, 0);
+    }
+
+    public function itAddsACriterion() {
+        $criteria            = mock('Tracker_Report_Criteria');
+        $rest_criteria_value = array(Tracker_Report_REST::VALUE_PROPERTY_NAME => '101');
+
+        $this->list->setCriteriaValueFromREST($criteria, $rest_criteria_value);
+
+        $res = $this->list->getCriteriaValue($criteria);
+
+        $this->assertCount($res, 1);
+        $this->assertTrue(in_array(101, $res));
+    }
+
+    public function itAddsACriteria() {
+        $criteria            = mock('Tracker_Report_Criteria');
+        $rest_criteria_value = array(Tracker_Report_REST::VALUE_PROPERTY_NAME => array('101', 103));
+
+        $this->list->setCriteriaValueFromREST($criteria, $rest_criteria_value);
+
+        $res = $this->list->getCriteriaValue($criteria);
+
+        $this->assertCount($res, 2);
+        $this->assertTrue(in_array(101, $res));
+        $this->assertTrue(in_array(103, $res));
+    }
+}
 ?>
