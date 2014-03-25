@@ -40,7 +40,9 @@ abstract class ArtifactXMLExporter_BaseTest extends TuleapTestCase {
         $this->dao                = mock('ArtifactXMLExporterDao');
         $this->dom                = new DOMDocument("1.0", "UTF8");
         $this->archive            = mock('ZipArchive');
-        $this->exporter           = new ArtifactXMLExporter($this->dao, $this->archive, $this->dom, mock('Logger'));
+        $node_helper              = new ArtifactXMLNodeHelper($this->dom);
+        $attachment_exporter      = new ArtifactAttachmentXMLExporter($node_helper, $this->dao, $this->archive, false);
+        $this->exporter           = new ArtifactXMLExporter($this->dao, $attachment_exporter, $node_helper, mock('Logger'));
         $this->fixtures_dir       = dirname(__FILE__) .'/_fixtures/';
         $this->expected_open_date = $this->toExpectedDate($this->open_date);
         Config::store();

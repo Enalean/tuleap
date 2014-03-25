@@ -30,6 +30,10 @@ class ArtifactXMLNodeHelper {
         return $this->document->createElement($name);
     }
 
+    public function appendChild(DOMElement $node) {
+        $this->document->appendChild($node);
+    }
+
     public function addUserFormatAttribute(DOMElement $node, $is_anonymous) {
         $node->setAttribute('format', $is_anonymous ? 'email' : 'username');
         if ($is_anonymous) {

@@ -47,11 +47,11 @@ class ArtifactXMLExporterArtifact {
     /** @var ArtifactFieldFactoryXMLExporter */
     private $field_factory;
 
-    public function __construct(ArtifactXMLExporterDao $dao, ZipArchive $archive, DOMDocument $document, Logger $logger) {
+    public function __construct(ArtifactXMLExporterDao $dao, ArtifactAttachmentXMLExporter $attachment_exporter, ArtifactXMLNodeHelper $node_helper, Logger $logger) {
         $this->dao                 = $dao;
         $this->logger              = $logger;
-        $this->node_helper         = new ArtifactXMLNodeHelper($document);
-        $this->attachment_exporter = new ArtifactAttachmentXMLExporter($this->node_helper, $this->dao, $archive);
+        $this->node_helper         = $node_helper;
+        $this->attachment_exporter = $attachment_exporter;
         $this->field_factory       = new ArtifactFieldFactoryXMLExporter($this->dao, $this->node_helper);
     }
 
