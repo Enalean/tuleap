@@ -141,9 +141,10 @@ class Tracker_Artifact_XMLImport {
         array $xml_changesets,
         Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder $fields_data_builder
     ) {
-        $count = 1;
+        $count = 0;
         foreach($xml_changesets as $xml_changeset) {
             try {
+                $count++;
                 $send_notification = false;
                 $initial_comment_body   = '';
                 $initial_comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
@@ -164,7 +165,6 @@ class Tracker_Artifact_XMLImport {
                     throw new Tracker_Artifact_Exception_CannotCreateNewChangeset();
                 }
                 $this->updateComments($changeset, $xml_changeset);
-                $count++;
             } catch (Tracker_NoChangeException $exception) {
                 $this->logger->warn("No Change for changeset $count");
             }

@@ -12,7 +12,19 @@
         ]
     },
     "artifact_history": {
-        "123": []
+        "123": [
+              {
+                "data_type":    "2",
+                "display_type": "SB",
+                "field_name":   "severity",
+                "old_value":    "0",
+                "new_value":    "1",
+                "date":         "3234567100",
+                "mod_by":       "115",
+                "submitted_by": "goofy",
+                "is_anonymous": "0"
+            }
+        ]
     },
     "artifact_field_value_list" : [
         {
@@ -35,5 +47,18 @@
                 }
             ]
         }
-    ]
+    ],
+    "artifact_field_value" : {
+        "123": [
+            {
+                "data_type":    "2",
+                "display_type": "SB",
+                "field_name":   "severity",
+                "valueInt":     "5",
+                "valueText":    null,
+                "valueFloat":   null,
+                "valueDate":    null
+            }
+        ]
+    }
 }

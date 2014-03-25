@@ -119,6 +119,14 @@ class ArtifactXMLExporterArtifact {
                 'valueText'    => $artifact_row['details'],
             );
         }
+        if (isset($artifact_row['severity']) && $artifact_row['severity']) {
+            $fields_values[] = array(
+                'field_name'   => 'severity',
+                'display_type' => ArtifactStaticListFieldXMLExporter::TV3_DISPLAY_TYPE,
+                'data_type'    => ArtifactStaticListFieldXMLExporter::TV3_DATA_TYPE,
+                'valueInt'     => $artifact_row['severity'],
+            );
+        }
         if (isset($artifact_row['close_date']) && $artifact_row['close_date']) {
             $fields_values[] = array(
                 'field_name'   => 'close_date',

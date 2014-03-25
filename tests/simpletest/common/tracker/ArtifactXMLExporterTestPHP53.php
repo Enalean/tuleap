@@ -218,6 +218,10 @@ class ArtifactXMLExporter_SummaryTest extends ArtifactXMLExporter_BaseTest {
         $this->assertEqual((string)$this->xml->artifact->changeset[0]->field_change[1]->value, 'Le original submission');
         $this->assertEqual((string)$this->xml->artifact->changeset[0]->field_change[1]['type'], 'text');
         $this->assertEqual((string)$this->xml->artifact->changeset[0]->field_change[1]['field_name'], 'details');
+        $this->assertEqual((string)$this->xml->artifact->changeset[0]->field_change[2]->value, '1 - Ordinary');
+        $this->assertEqual((string)$this->xml->artifact->changeset[0]->field_change[2]['type'], 'list');
+        $this->assertEqual((string)$this->xml->artifact->changeset[0]->field_change[2]['bind'], 'static');
+        $this->assertEqual((string)$this->xml->artifact->changeset[0]->field_change[2]['field_name'], 'severity');
         $this->assertEqual((string)$this->xml->artifact->changeset[0]->submitted_on, $this->expected_open_date);
     }
 
@@ -419,6 +423,18 @@ class ArtifactXMLExporter_CCTest extends ArtifactXMLExporter_BaseTest {
 
         $this->assertCount($this->xml->artifact->changeset[1]->field_change->value, 1);
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value, 'john@doe.org');
+    }
+}
+
+class ArtifactXMLExporter_SeverityTest extends ArtifactXMLExporter_BaseTest {
+
+    public function itSetNoneAsOriginalSeverityValue() {
+        $this->exportTrackerDataFromFixture('artifact_with_severity_history');
+
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value, '1 - Ordinary');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['type'], 'list');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['bind'], 'static');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['field_name'], 'severity');
     }
 }
 
