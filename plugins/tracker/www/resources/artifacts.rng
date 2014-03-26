@@ -15,11 +15,9 @@
               <element name="submitted_on">
                 <ref name="date_content"/>
               </element>
-              <optional>
-                <element name="comment">
-                  <ref name="text_content"/>
-                </element>
-              </optional>
+              <element name="comments">
+                <ref name="comments"/>
+              </element>
               <zeroOrMore>
                 <element name="field_change">
                   <ref name="field_content"/>
@@ -53,6 +51,24 @@
       </zeroOrMore>
     </element>
   </start>
+  <define name="comments">
+    <zeroOrMore>
+      <element name="comment">
+        <ref name="comment_content"/>
+      </element>
+    </zeroOrMore>
+  </define>
+  <define name="comment_content">
+    <element name="submitted_by">
+      <ref name="user_content"/>
+    </element>
+    <element name="submitted_on">
+      <ref name="date_content"/>
+    </element>
+    <element name="body">
+      <ref name="text_content"/>
+    </element>
+  </define>
   <define name="text_content">
     <attribute name="format">
       <choice>

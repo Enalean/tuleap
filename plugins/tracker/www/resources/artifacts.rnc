@@ -7,7 +7,7 @@ grammar {
             element changeset {
                 element submitted_by { user_content },
                 element submitted_on { date_content },
-                element comment { text_content }?,
+                element comments     { comments },
                 element field_change { field_content }*
             }*,
             element file {
@@ -20,6 +20,14 @@ grammar {
             }*
         }*
     }
+
+    comments =
+        element comment { comment_content }*
+
+    comment_content =
+        element submitted_by { user_content },
+        element submitted_on { date_content },
+        element body { text_content }
 
     text_content =
         attribute format { "text" | "html" },

@@ -145,21 +145,42 @@ class Tracker_Artifact_XMLImport {
         foreach($xml_changesets as $xml_changeset) {
             try {
                 $send_notification = false;
-                $result = $this->new_changeset_creator->create(
+                $initial_comment_body   = '';
+                $initial_comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
+                if (isset($xml_changeset->comments) && count($xml_changeset->comments->comment) > 0) {
+                    $initial_comment_body   = (string)$xml_changeset->comments->comment[0]->body;
+                    $initial_comment_format = (string)$xml_changeset->comments->comment[0]->body['format'];
+                }
+                $changeset = $this->new_changeset_creator->create(
                     $artifact,
                     $fields_data_builder->getFieldsData($xml_changeset->field_change),
-                    (string)$xml_changeset->comment,
+                    $initial_comment_body,
                     $this->getSubmittedBy($xml_changeset),
                     $this->getSubmittedOn($xml_changeset),
                     $send_notification,
-                    (string)$xml_changeset->comment['format']
+                    $initial_comment_format
                 );
-                if (! $result) {
+                if (! $changeset) {
                     throw new Tracker_Artifact_Exception_CannotCreateNewChangeset();
                 }
+                $this->updateComments($changeset, $xml_changeset);
                 $count++;
             } catch (Tracker_NoChangeException $exception) {
                 $this->logger->warn("No Change for changeset $count");
+            }
+        }
+    }
+
+    private function updateComments(Tracker_Artifact_Changeset $changeset, SimpleXMLElement $xml_changeset) {
+        if (isset($xml_changeset->comments) && count($xml_changeset->comments->comment) > 1) {
+            $all_comments = $xml_changeset->comments->comment;
+            for ($i = 1; $i < count($all_comments); ++$i) {
+                $changeset->updateComment(
+                    (string)$all_comments[$i]->body,
+                    $this->getSubmittedBy($all_comments[$i]),
+                    (string)$all_comments[$i]->body['format'],
+                    $this->getSubmittedOn($all_comments[$i])
+                );
             }
         }
     }

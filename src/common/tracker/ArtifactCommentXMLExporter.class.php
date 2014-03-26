@@ -25,23 +25,46 @@ class ArtifactCommentXMLExporter {
     /** @var ArtifactXMLNodeHelper */
     private $node_helper;
 
+    private $all_comments = array();
+
     public function __construct(ArtifactXMLNodeHelper $node_helper) {
         $this->node_helper = $node_helper;
     }
 
-    public function createNode(DOMElement $changeset) {
-        $comment_node = $this->node_helper->getNodeWithValue('comment', '');
-        $comment_node->setAttribute('format', self::TEXT);
-        $changeset->appendChild($comment_node);
+    public function createRootNode(DOMElement $changeset) {
+        $changeset->appendChild($this->node_helper->createElement('comments'));
     }
 
     public function appendComment(DOMElement $changeset, array $row) {
-        $dom_node_list = $changeset->getElementsByTagName('comment');
-        $comment_node = $dom_node_list->item(0);
-        $comment_node->setAttribute('format', $this->getFormat($row['format']));
+        $dom_node_list = $changeset->getElementsByTagName('comments');
+        $comments_node = $dom_node_list->item(0);
 
-        $comment_value_node = $this->node_helper->getCDATASection($comment_node, $row['comment']);
-        $comment_node->replaceChild($comment_value_node, $comment_node->firstChild);
+        $this->all_comments[$row['id']] = $comments_node;
+
+        $comments_node->appendChild($this->createCommentNode($row));
+    }
+
+    private function createCommentNode(array $row) {
+        $comment_node = $this->node_helper->createElement('comment');
+        $this->node_helper->appendSubmittedBy($comment_node, $row['submitted_by'], $row['is_anonymous']);
+        $this->node_helper->appendSubmittedOn($comment_node, $row['date']);
+        $body = $this->node_helper->getNodeWithValue('body', $row['comment']);
+        $body->setAttribute('format', $this->getFormat($row['format']));
+        $comment_node->appendChild($body);
+        return $comment_node;
+    }
+
+    public function updateComment(array $row) {
+        $matches = array();
+        if (preg_match('/^lbl_(?P<history_id>\d+)_comment$/', $row['field_name'], $matches)) {
+            $this->updateCommentNode($matches['history_id'], $row);
+            return true;
+        }
+        return false;
+    }
+
+    private function updateCommentNode($reference_id, array $row) {
+        $this->all_comments[$reference_id]->appendChild($this->createCommentNode($row));
     }
 
     private function getFormat($format) {

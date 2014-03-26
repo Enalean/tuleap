@@ -35,6 +35,7 @@ abstract class ArtifactXMLExporter_BaseTest extends TuleapTestCase {
     protected $open_date = 1234567890; // the same as in fixtures
     protected $expected_open_date;
     protected $archive;
+    protected $logger;
 
     public function setUp() {
         parent::setUp();
@@ -258,34 +259,45 @@ class ArtifactXMLExporter_SummaryTest extends ArtifactXMLExporter_BaseTest {
 
 class ArtifactXMLExporter_CommentTest extends ArtifactXMLExporter_BaseTest {
 
-    public function itHasChangesetPerComment() {
+    public function _itHasChangesetPerComment() {
         $this->exportTrackerDataFromFixture('artifact_with_comment');
 
         $this->assertCount($this->xml->artifact->changeset, 3);
 
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->submitted_on, $this->toExpectedDate(1234568000));
-        $this->assertEqual((string)$this->xml->artifact->changeset[1]->comment, 'This is my comment');
-        $this->assertEqual((string)$this->xml->artifact->changeset[1]->comment['format'], 'text');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->comments->comment->body, 'This is my comment');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->comments->comment->body['format'], 'text');
 
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->submitted_on, $this->toExpectedDate(1234569000));
-        $this->assertEqual((string)$this->xml->artifact->changeset[2]->comment, '<p>With<strong> CHTEUMEULEU</strong></p>');
-        $this->assertEqual((string)$this->xml->artifact->changeset[2]->comment['format'], 'html');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->comments->comment->body, '<p>With<strong> CHTEUMEULEU</strong></p>');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->comments->comment->body['format'], 'html');
     }
 
-    public function itHasChangesetWithFieldChangeAndCommentIsAtTheThirdPositionInChangeset() {
-        $this->exportTrackerDataFromFixture('artifact_with_comment_and_change');
-
+    public function itHasACommentVersions() {
+        expect($this->logger)->warn()->never();
+        $this->exportTrackerDataFromFixture('artifact_with_comment_updates');
         $this->assertCount($this->xml->artifact->changeset, 2);
+        $this->assertCount($this->xml->artifact->changeset[1]->comments->comment, 3);
 
-        $i = 0;
-        $found = false;
-        foreach ($this->xml->artifact->changeset[1] as $name => $attribute) {
-            if ($name == 'comment') {
-                $found = $i;
-            }
-            $i++;
-        }
-        $this->assertIdentical(2, $found, "Comment must be at third position according to RNC. Found at $found");
+
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->submitted_on, $this->toExpectedDate(1234568000));
+
+        $comments = $this->xml->artifact->changeset[1]->comments;
+
+        $this->assertEqual((string)$comments->comment[0]->submitted_on, $this->toExpectedDate(1234568000));
+
+        $this->assertEqual((string)$comments->comment[0]->body, 'This is my comment');
+        $this->assertEqual((string)$comments->comment[0]->body['format'], 'text');
+
+        $this->assertEqual((string)$comments->comment[1]->submitted_on, $this->toExpectedDate(1234569000));
+        $this->assertEqual((string)$comments->comment[1]->submitted_by, 'goofy');
+        $this->assertEqual((string)$comments->comment[1]->body, '<p>With<strong> CHTEUMEULEU</strong></p>');
+        $this->assertEqual((string)$comments->comment[1]->body['format'], 'html');
+
+        $this->assertEqual((string)$comments->comment[2]->submitted_on, $this->toExpectedDate(1234569500));
+        $this->assertEqual((string)$comments->comment[2]->submitted_by, 'goofy');
+        $this->assertEqual((string)$comments->comment[2]->body, '<p>With<strong> HTML</strong></p>');
+        $this->assertEqual((string)$comments->comment[2]->body['format'], 'html');
     }
 }
 

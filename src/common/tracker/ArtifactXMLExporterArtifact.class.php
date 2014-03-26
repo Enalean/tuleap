@@ -84,9 +84,11 @@ class ArtifactXMLExporterArtifact {
         $history = $this->dao->searchHistory($artifact_id);
         foreach($history as $row) {
             try {
-                $node = $this->getChangeset($previous_changeset, $tracker_id, $artifact_id, $row);
-                $artifact_node->appendChild($node);
-                $previous_changeset = $node;
+                if (! $this->comment_exporter->updateComment($row)) {
+                    $node = $this->getChangeset($previous_changeset, $tracker_id, $artifact_id, $row);
+                    $artifact_node->appendChild($node);
+                    $previous_changeset = $node;
+                }
             } catch (Exception_TV3XMLException $exception) {
                 $this->logger->warn("Artifact $artifact_id: skip changeset (".$row['field_name'].", ".$row['submitted_by'].", ".date('c', $row['date'])."): ".$exception->getMessage());
             }
@@ -218,7 +220,7 @@ class ArtifactXMLExporterArtifact {
         $changeset_node = $this->node_helper->createElement('changeset');
         $this->node_helper->appendSubmittedBy($changeset_node, $submitted_by, $is_anonymous);
         $this->node_helper->appendSubmittedOn($changeset_node, $submitted_on);
-        $this->comment_exporter->createNode($changeset_node);
+        $this->comment_exporter->createRootNode($changeset_node);
         return $changeset_node;
     }
 
@@ -236,6 +238,7 @@ class ArtifactXMLExporterArtifact {
 
     private function getChangeset(DOMElement $previous_changeset, $tracker_id, $artifact_id, array $row) {
         $changeset_node = $this->createOrReuseChangeset($previous_changeset, $row['submitted_by'], $row['is_anonymous'], $row['date']);
+
         if ($row['field_name'] == 'comment') {
             $this->comment_exporter->appendComment($changeset_node, $row);
         } else {
@@ -245,7 +248,6 @@ class ArtifactXMLExporterArtifact {
             $this->last_history_recorded[$row['field_name']] = $row['new_value'];
             $this->field_factory->appendValueByType($changeset_node, $tracker_id, $artifact_id, $row);
         }
-
         return $changeset_node;
     }
 

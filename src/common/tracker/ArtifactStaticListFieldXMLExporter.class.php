@@ -48,7 +48,7 @@ class ArtifactStaticListFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporte
                 return $row['value'];
             }
         }
-        throw new Exception('Unknown label');
+        throw new Exception_TV3XMLException('Unknown label');
     }
 
     public function getFieldValueIndex() {

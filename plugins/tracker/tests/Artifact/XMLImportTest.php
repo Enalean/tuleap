@@ -191,6 +191,7 @@ class Tracker_Artifact_XMLImport_CommentsTest extends Tracker_Artifact_XMLImport
                 <changeset>
                   <submitted_by format="username">john_doe</submitted_by>
                   <submitted_on format="ISO8601">2014-01-15T10:38:06+01:00</submitted_on>
+                  <comments/>
                   <field_change field_name="summary" type="string">
                     <value>Ça marche</value>
                   </field_change>
@@ -198,24 +199,94 @@ class Tracker_Artifact_XMLImport_CommentsTest extends Tracker_Artifact_XMLImport
                 <changeset>
                   <submitted_by format="username">john_doe</submitted_by>
                   <submitted_on format="ISO8601">2014-01-15T11:03:50+01:00</submitted_on>
-                  <comment format="text">Some text</comment>
+                  <comments>
+                    <comment>
+                      <submitted_by format="username">john_doe</submitted_by>
+                      <submitted_on format="ISO8601">2014-01-15T11:03:50+01:00</submitted_on>
+                      <body format="text">Some text</body>
+                    </comment>
+                  </comments>
                 </changeset>
                 <changeset>
                   <submitted_by format="username">john_doe</submitted_by>
                   <submitted_on format="ISO8601">2014-01-15T11:23:50+01:00</submitted_on>
-                  <comment format="html">&lt;p&gt;Some text&lt;/p&gt;</comment>
+                  <comments>
+                    <comment>
+                      <submitted_by format="username">john_doe</submitted_by>
+                      <submitted_on format="ISO8601">2014-01-15T11:23:50+01:00</submitted_on>
+                      <body format="html">&lt;p&gt;Some text&lt;/p&gt;</body>
+                    </comment>
+                  </comments>
                 </changeset>
               </artifact>
             </artifacts>');
 
         stub($this->artifact_creator)->create()->returns($this->artifact);
-        stub($this->new_changeset_creator)->create()->returns(true);
+        stub($this->new_changeset_creator)->create()->returns(mock('Tracker_Artifact_Changeset'));
     }
 
     public function itCreatesTheComments() {
         expect($this->new_changeset_creator)->create()->count(2);
         expect($this->new_changeset_creator)->create('*', '*', 'Some text', '*', '*', '*', Tracker_Artifact_Changeset_Comment::TEXT_COMMENT)->at(0);
         expect($this->new_changeset_creator)->create('*', '*', '<p>Some text</p>', '*', '*', '*', Tracker_Artifact_Changeset_Comment::HTML_COMMENT)->at(1);
+
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+    }
+}
+
+class Tracker_Artifact_XMLImport_CommentUpdatesTest extends Tracker_Artifact_XMLImportBaseTest {
+
+    private $xml_element;
+    private $changeset;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->xml_element = new SimpleXMLElement('<?xml version="1.0"?>
+            <artifacts>
+              <artifact id="4918">
+                <changeset>
+                  <submitted_by format="username">john_doe</submitted_by>
+                  <submitted_on format="ISO8601">2014-01-15T10:38:06+01:00</submitted_on>
+                  <comments/>
+                  <field_change field_name="summary" type="string">
+                    <value>Ça marche</value>
+                  </field_change>
+                </changeset>
+                <changeset>
+                  <submitted_by format="username">john_doe</submitted_by>
+                  <submitted_on format="ISO8601">2014-01-15T11:03:50+01:00</submitted_on>
+                  <comments>
+                    <comment>
+                      <submitted_by format="username">john_doe</submitted_by>
+                      <submitted_on format="ISO8601">2014-01-15T11:03:50+01:00</submitted_on>
+                      <body format="text">Some text</body>
+                    </comment>
+                    <comment>
+                      <submitted_by format="username">john_doe</submitted_by>
+                      <submitted_on format="ISO8601">2014-01-15T11:23:50+01:00</submitted_on>
+                      <body format="html">&lt;p&gt;Some text&lt;/p&gt;</body>
+                    </comment>
+                  </comments>
+                </changeset>
+              </artifact>
+            </artifacts>');
+
+        $this->changeset = mock('Tracker_Artifact_Changeset');
+
+        stub($this->artifact_creator)->create()->returns($this->artifact);
+        stub($this->new_changeset_creator)->create()->returns($this->changeset);
+    }
+
+    public function itCreatesTheCommentsWithUpdates() {
+        expect($this->new_changeset_creator)->create('*', '*', 'Some text', '*', '*', '*', Tracker_Artifact_Changeset_Comment::TEXT_COMMENT)->once();
+
+        expect($this->changeset)->updateComment(
+            '<p>Some text</p>',
+            $this->john_doe,
+            Tracker_Artifact_Changeset_Comment::HTML_COMMENT,
+            strtotime('2014-01-15T11:23:50+01:00')
+        )->once();
 
         $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
     }
@@ -389,7 +460,7 @@ class Tracker_Artifact_XMLImport_MultipleChangesetsTest extends Tracker_Artifact
             </artifacts>');
 
         stub($this->artifact_creator)->create()->returns($this->artifact);
-        stub($this->new_changeset_creator)->create()->returns(true);
+        stub($this->new_changeset_creator)->create()->returns(mock('Tracker_Artifact_Changeset'));
     }
 
     public function itCreatesTwoChangesets() {
@@ -713,7 +784,7 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsAndChangeset
     public function itCreatesChangesetsThatOnlyReferenceConcernedFiles() {
         $artifact = mock('Tracker_Artifact');
         stub($this->artifact_creator)->create()->returns($artifact);
-        stub($this->new_changeset_creator)->create()->returns(true);
+        stub($this->new_changeset_creator)->create()->returns(mock('Tracker_Artifact_Changeset'));
         stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'attachment')->returns(
             aFileField()->withId($this->file_field_id)->build()
         );

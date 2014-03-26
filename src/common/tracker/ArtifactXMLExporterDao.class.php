@@ -39,7 +39,8 @@ class ArtifactXMLExporterDao extends DataAccessObject {
 
         $comment = $this->unconvertHtmlspecialchars('h.new_value');
 
-        $sql = "SELECT 
+        $sql = "SELECT
+                    h.artifact_history_id AS id,
                     f.data_type, 
                     f.display_type,
                     h.field_name,
@@ -49,13 +50,14 @@ class ArtifactXMLExporterDao extends DataAccessObject {
                     h.mod_by,
                     IFNULL(user.user_name, h.email) AS submitted_by,
                     IF(h.email, 1, 0) AS is_anonymous,
-                    IF(h.field_name = 'comment', $comment, '') AS comment,
+                    IF(h.field_name REGEXP '^(comment|lbl_[0-9]+_comment)$', $comment, '') AS comment,
                     h.format
                 FROM artifact_history h
                     INNER JOIN artifact a ON (a.artifact_id = h.artifact_id)
                     LEFT JOIN artifact_field f ON (f.field_name = h.field_name AND f.group_artifact_id = a.group_artifact_id)
                     LEFT JOIN user ON (h.mod_by = user.user_id)
-                WHERE h.artifact_id = $artifact_id";
+                WHERE h.artifact_id = $artifact_id
+                ORDER BY id";
 
         return $this->retrieve($sql);
     }

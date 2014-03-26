@@ -29,7 +29,7 @@
                 "id":           104,
                 "data_type":    null,
                 "display_type": null,
-                "field_name":   "comment",
+                "field_name":   "lbl_103_comment",
                 "old_value":    "",
                 "new_value":    "&lt;p&gt;With&lt;strong&gt; CHTEUMEULEU&lt;/strong&gt;&lt;/p&gt;",
                 "date":         "1234569000",
@@ -37,6 +37,20 @@
                 "submitted_by": "goofy",
                 "is_anonymous": "0",
                 "comment":      "<p>With<strong> CHTEUMEULEU</strong></p>",
+                "format":       "1"
+            },
+            {
+                "id":           105,
+                "data_type":    null,
+                "display_type": null,
+                "field_name":   "lbl_103_comment",
+                "old_value":    "",
+                "new_value":    "&lt;p&gt;With&lt;strong&gt; CHTEUMEULEU&lt;/strong&gt;&lt;/p&gt;",
+                "date":         "1234569500",
+                "mod_by":       "115",
+                "submitted_by": "goofy",
+                "is_anonymous": "0",
+                "comment":      "<p>With<strong> HTML</strong></p>",
                 "format":       "1"
             }
         ]
