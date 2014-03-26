@@ -144,7 +144,7 @@ class TrackersTest extends RestBase {
         $response  = $this->getResponse($request);
         $artifacts = $response->json();
 
-        $first_artifact_info = array_shift($artifacts);
+        $first_artifact_info = $artifacts[0];
         $this->assertEquals(1, $first_artifact_info['id']);
         $this->assertEquals('artifacts/1', $first_artifact_info['uri']);
 
@@ -177,7 +177,7 @@ class TrackersTest extends RestBase {
         $response  = $this->getResponse($request);
         $artifacts = $response->json();
 
-        $first_artifact_info = array_shift($artifacts);
+        $first_artifact_info = $artifacts[0];
         $this->assertEquals(1, $first_artifact_info['id']);
         $this->assertEquals('artifacts/1', $first_artifact_info['uri']);
 

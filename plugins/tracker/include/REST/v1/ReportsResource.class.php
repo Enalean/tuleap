@@ -151,6 +151,9 @@ class ReportsResource {
         $matching_artifact_ids = explode(',', $matching_ids['id']);
         $nb_matching           = count($matching_artifact_ids);
         $slice_matching_ids    = array_slice($matching_artifact_ids, $offset, $limit);
+        $artifact_factory      = Tracker_ArtifactFactory::instance();
+
+        $artifacts = $artifact_factory->getArtifactsByArtifactIdList($slice_matching_ids);
         $with_all_field_values = $values == self::ALL_VALUES;
 
         Header::allowOptionsGet();
@@ -158,7 +161,7 @@ class ReportsResource {
 
         return $this->getListOfArtifactRepresentation(
             $user,
-            $slice_matching_ids,
+            $artifacts,
             $with_all_field_values
         );
     }
@@ -166,25 +169,17 @@ class ReportsResource {
     /**
      * @return Tuleap\Tracker\REST\Artifact\ArtifactRepresentation[]
      */
-    private function getListOfArtifactRepresentation(
-        PFUser $user,
-        $matching_ids,
-        $with_all_field_values
-
-    ) {
-        $artifact_factory = Tracker_ArtifactFactory::instance();
-        $builder          = new Tracker_REST_Artifact_ArtifactRepresentationBuilder(
+    private function getListOfArtifactRepresentation(PFUser $user, $artifacts, $with_all_field_values) {
+        $builder = new Tracker_REST_Artifact_ArtifactRepresentationBuilder(
             Tracker_FormElementFactory::instance()
         );
 
-        $build_artifact_representation = function ($artifact_id) use (
+        $build_artifact_representation = function ($artifact) use (
             $builder,
-            $artifact_factory,
             $user,
             $with_all_field_values
         ) {
-            $artifact = $artifact_factory->getArtifactById($artifact_id);
-            if (! $artifact) {
+            if (! $artifact || ! $artifact->userCanView($user)) {
                 return;
             }
 
@@ -195,9 +190,9 @@ class ReportsResource {
             }
         };
 
-        $list_of_artifact_representation = array_map($build_artifact_representation, $matching_ids);
+        $list_of_artifact_representation = array_map($build_artifact_representation, $artifacts);
 
-        return array_filter($list_of_artifact_representation);
+        return array_values(array_filter($list_of_artifact_representation));
     }
 
     /** @return Tracker_Report */

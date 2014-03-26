@@ -113,6 +113,24 @@ class Tracker_ArtifactFactory {
         }
         return $artifacts;
     }
+
+    /**
+     * @param int $tracker_id The id of the tracker
+     * @param int $limit      The maximum number of artifacts returned
+     * @param int $offset
+     *
+     * @return Tracker_Artifact_PaginatedArtifacts
+     */
+    public function getPaginatedArtifactsByTrackerId($tracker_id, $limit, $offset) {
+        $artifacts = array();
+        foreach ($this->getDao()->searchPaginatedByTrackerId($tracker_id, $limit, $offset) as $row) {
+            $artifacts[$row['id']] = $this->getInstanceFromRow($row);
+        }
+
+        $size = (int) $this->getDao()->foundRows();
+
+        return new Tracker_Artifact_PaginatedArtifacts($artifacts, $size);
+    }
     
     /**
      * Given a list of artifact ids, return corresponding artifact objects if any

@@ -188,16 +188,15 @@ class TrackersResource {
         if ($query) {
             $artifacts = $this->getArtifactsMatchingQuery($user, $valid_tracker, $query, $offset, $limit);
         } else {
-            $all_artifacts = $this->getTrackerArtifactFactory()->getArtifactsByTrackerId($id);
-            $artifacts     = array_slice($all_artifacts, $offset, $limit);
+            $pagination = $this->getTrackerArtifactFactory()->getPaginatedArtifactsByTrackerId($id, $limit, $offset);
+            $nb_matching = $pagination->getSize();
+            $artifacts   = $pagination->getArtifacts();
+            Header::sendPaginationHeaders($limit, $offset, $nb_matching, self::MAX_LIMIT);
         }
 
-        $with_all_field_values = ($values == self::ALL_VALUES);
-        $nb_matching           = count($artifacts);
-
         Header::allowOptionsGet();
-        Header::sendPaginationHeaders($limit, $offset, $nb_matching, self::MAX_LIMIT);
 
+        $with_all_field_values = ($values == self::ALL_VALUES);
         return $this->getListOfArtifactRepresentation(
             $user,
             $artifacts,
@@ -231,8 +230,10 @@ class TrackersResource {
         $matching_artifact_ids = explode(',', $matching_ids['id']);
         $slice_matching_ids    = array_slice($matching_artifact_ids, $offset, $limit);
 
+        Header::sendPaginationHeaders($limit, $offset, count($matching_artifact_ids), self::MAX_LIMIT);
+
         $artifacts = $this->getTrackerArtifactFactory()->getArtifactsByArtifactIdList($slice_matching_ids);
-        return array_values($artifacts);
+        return array_filter($artifacts);
     }
 
     /**
@@ -261,7 +262,7 @@ class TrackersResource {
 
         $list_of_artifact_representation = array_map($build_artifact_representation, $artifacts);
 
-        return array_filter($list_of_artifact_representation);
+        return array_values(array_filter($list_of_artifact_representation));
     }
 
     /**
