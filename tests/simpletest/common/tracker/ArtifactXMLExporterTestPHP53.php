@@ -43,7 +43,8 @@ abstract class ArtifactXMLExporter_BaseTest extends TuleapTestCase {
         $this->archive            = mock('ZipArchive');
         $node_helper              = new ArtifactXMLNodeHelper($this->dom);
         $attachment_exporter      = new ArtifactAttachmentXMLExporter($node_helper, $this->dao, $this->archive, false);
-        $this->exporter           = new ArtifactXMLExporter($this->dao, $attachment_exporter, $node_helper, mock('Logger'));
+        $this->logger             = mock('Logger');
+        $this->exporter           = new ArtifactXMLExporter($this->dao, $attachment_exporter, $node_helper, $this->logger);
         $this->fixtures_dir       = dirname(__FILE__) .'/_fixtures/';
         $this->expected_open_date = $this->toExpectedDate($this->open_date);
         Config::store();
@@ -804,7 +805,7 @@ class ArtifactXMLExporter_StaticMultiListFieldTest extends ArtifactXMLExporter_B
 
         $initial_change = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'multiselect');
 
-        $this->assertEqual((string)$initial_change->value[0], 'None');
+        $this->assertEqual((string)$initial_change->value[0], '');
         $this->assertEqual((string)$initial_change['field_name'], 'multiselect');
         $this->assertEqual((string)$initial_change['type'], 'list');
         $this->assertEqual((string)$initial_change['bind'], 'static');
@@ -830,12 +831,12 @@ class ArtifactXMLExporter_StaticMultiListFieldTest extends ArtifactXMLExporter_B
         $initial_change_msb   = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'multiselect');
         $initial_change_msb_2 = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'multiselect_2');
 
-        $this->assertEqual((string)$initial_change_msb->value[0], 'None');
+        $this->assertEqual((string)$initial_change_msb->value[0], '');
         $this->assertEqual((string)$initial_change_msb['field_name'], 'multiselect');
         $this->assertEqual((string)$initial_change_msb['type'], 'list');
         $this->assertEqual((string)$initial_change_msb['bind'], 'static');
 
-        $this->assertEqual((string)$initial_change_msb_2->value[0], 'None');
+        $this->assertEqual((string)$initial_change_msb_2->value[0], '');
         $this->assertEqual((string)$initial_change_msb_2['field_name'], 'multiselect_2');
         $this->assertEqual((string)$initial_change_msb_2['type'], 'list');
         $this->assertEqual((string)$initial_change_msb_2['bind'], 'static');
@@ -865,6 +866,92 @@ class ArtifactXMLExporter_StaticMultiListFieldTest extends ArtifactXMLExporter_B
         $this->assertEqual((string)$this->xml->artifact->changeset[4]->field_change['type'], 'list');
         $this->assertEqual((string)$this->xml->artifact->changeset[4]->field_change['bind'], 'static');
         $this->assertEqual((string)$this->xml->artifact->changeset[4]->submitted_on, $this->toExpectedDate(3234590000));
+
+    }
+
+    public function itDoesNotCreateAChangesetForAnHistoryEnrtyIfItHasAZeroValue() {
+        expect($this->logger)->warn()->once();
+
+        $this->exportTrackerDataFromFixture('artifact_with_static_multi_list_history_with_0');
+        $this->assertCount($this->xml->artifact->changeset, 3);
+
+        $initial_change = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'multiselect');
+
+        $this->assertEqual((string)$initial_change->value[0], '');
+        $this->assertEqual((string)$initial_change['field_name'], 'multiselect');
+        $this->assertEqual((string)$initial_change['type'], 'list');
+        $this->assertEqual((string)$initial_change['bind'], 'static');
+
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value[0], 'UI');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['field_name'], 'multiselect');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['type'], 'list');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['bind'], 'static');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->submitted_on, $this->toExpectedDate(3234567890));
+
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value[0], 'Database');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value[1], 'Stuff');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['field_name'], 'multiselect');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['type'], 'list');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['bind'], 'static');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->submitted_on, $this->toExpectedDate(3234580000));
+    }
+
+    public function itCreatesAChangesetForAnHistoryEnrtyIfItHasAZeroValueInASetOfValues() {
+        $this->exportTrackerDataFromFixture('artifact_with_static_multi_list_history_with_0_in_set_of_values');
+        $this->assertCount($this->xml->artifact->changeset, 4);
+
+        $initial_change = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'multiselect');
+
+        $this->assertEqual((string)$initial_change->value[0], '');
+        $this->assertEqual((string)$initial_change['field_name'], 'multiselect');
+        $this->assertEqual((string)$initial_change['type'], 'list');
+        $this->assertEqual((string)$initial_change['bind'], 'static');
+
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value[0], 'UI');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['field_name'], 'multiselect');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['type'], 'list');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['bind'], 'static');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->submitted_on, $this->toExpectedDate(3234567890));
+
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value[0], 'Database');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value[1], '0');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['field_name'], 'multiselect');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['type'], 'list');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['bind'], 'static');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->submitted_on, $this->toExpectedDate(3234570000));
+
+        $this->assertEqual((string)$this->xml->artifact->changeset[3]->field_change->value[0], 'Database');
+        $this->assertEqual((string)$this->xml->artifact->changeset[3]->field_change->value[1], 'Stuff');
+        $this->assertEqual((string)$this->xml->artifact->changeset[3]->field_change['field_name'], 'multiselect');
+        $this->assertEqual((string)$this->xml->artifact->changeset[3]->field_change['type'], 'list');
+        $this->assertEqual((string)$this->xml->artifact->changeset[3]->field_change['bind'], 'static');
+        $this->assertEqual((string)$this->xml->artifact->changeset[3]->submitted_on, $this->toExpectedDate(3234580000));
+    }
+
+    public function itDoesNotCreateAChangesetForAnHistoryEnrtyIfItHasALabelWithAComma() {
+        expect($this->logger)->warn()->once();
+
+        $this->exportTrackerDataFromFixture('artifact_with_static_multi_list_history_with_a_comma_in_a_label');
+        $this->assertCount($this->xml->artifact->changeset, 3);
+
+        $initial_change = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'multiselect');
+
+        $this->assertEqual((string)$initial_change->value[0], '');
+        $this->assertEqual((string)$initial_change['field_name'], 'multiselect');
+        $this->assertEqual((string)$initial_change['type'], 'list');
+        $this->assertEqual((string)$initial_change['bind'], 'static');
+
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value[0], 'UI');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['field_name'], 'multiselect');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['type'], 'list');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['bind'], 'static');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->submitted_on, $this->toExpectedDate(3234567890));
+
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value[0], 'PHP');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['field_name'], 'multiselect');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['type'], 'list');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['bind'], 'static');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->submitted_on, $this->toExpectedDate(3234580000));
 
     }
 }

@@ -44,7 +44,18 @@ class ArtifactStaticMultiListFieldXMLExporter extends ArtifactFieldXMLExporter {
         $this->dao = $dao;
     }
 
+    /**
+     *
+     * @param DOMElement $changeset_node
+     * @param int $tracker_id
+     * @param int $artifact_id
+     * @param array $row
+     *
+     * @throws Exception_TV3XMLException
+     */
     public function appendNode(DOMElement $changeset_node, $tracker_id, $artifact_id, array $row) {
+        $this->getListValueLabels($tracker_id, $row);
+
         $values     = explode(',', $row['new_value']);
         $field_name = $this->getFieldNameFromRow($row);
 
@@ -52,7 +63,12 @@ class ArtifactStaticMultiListFieldXMLExporter extends ArtifactFieldXMLExporter {
         $field_node->setAttribute('field_name', $field_name);
         $field_node->setAttribute('type', self::TV5_TYPE);
         $field_node->setAttribute('bind', self::TV5_BIND);
+
         foreach ($values as $value) {
+            if ($this->valueCannotBeParsed($value, count($values), $field_name)) {
+                throw new Exception_TV3XMLException();
+            }
+
             $static_value_node = $this->node_helper->getNodeWithValue('value', $this->getValueLabel($value));
             $field_node->appendChild($static_value_node);
         }
@@ -61,6 +77,10 @@ class ArtifactStaticMultiListFieldXMLExporter extends ArtifactFieldXMLExporter {
     }
 
     private function getValueLabel($value) {
+        if ($this->valueIsSystemValueNone($value)) {
+            return '';
+        }
+
         return $value;
     }
 
@@ -136,6 +156,58 @@ class ArtifactStaticMultiListFieldXMLExporter extends ArtifactFieldXMLExporter {
         $field_name = $this->getFieldNameFromRow($field_value_row);
 
         return $this->labels[$field_name][$field_value_row[self::TV3_VALUE_INDEX]];
+    }
+
+    /**
+     * This method searches if the current value can be interpreted correctly
+     *
+     * We can have some strange cases in database side. It stores:
+     *   A string comma separated if we select multiple values
+     *   The label if its a unique value
+     *   0 when the field is cleared without selecting any value
+     *   'Any' or 'Tous' regarding the langage when the value is saved if the old value
+     *     is a cleared field
+     *
+     * We can manage the first case because we are sur that there is only label
+     * The two following cases are ambiguous : how to be sure that 0 is the label of the value
+     * or the representation of a cleared field ?
+     *
+     * Then, if the unique value is an int, how to be sure that this numeric is a
+     * label instead of an ID sometimes stored in the database ?
+     *
+     * If a label has a comma in its content, we are not able to manage it.
+     *
+     * Finally, when the label can be a system word, we don't know if it's the label
+     * or a magic system word saved in the database.
+     *
+     * @param string $value
+     * @param int    $number_of_values
+     * @param string $field_name
+     *
+     * @return boolean
+     */
+    private function valueCannotBeParsed($value, $number_of_values, $field_name) {
+        return $this->valueIsNotAnExistingLabel($value, $field_name) ||
+               $this->valueIsSystemValueAny($value)                  ||
+               is_numeric($value) && $number_of_values === 1;
+    }
+
+    private function valueIsSystemValueAny($value) {
+        return $value === self::SYS_VALUE_ANY_EN  ||
+               $value === self::SYS_VALUE_ANY_FR;
+    }
+
+    private function valueIsSystemValueNone($value) {
+        return $value === self::SYS_VALUE_NONE_EN  ||
+               $value === self::SYS_VALUE_NONE_FR;
+    }
+
+    private function valueIsNotAnExistingLabel($value, $field_name) {
+        if ($this->valueIsSystemValueNone($value)) {
+            return false;
+        }
+
+        return ((boolean) array_search($value, $this->labels[$field_name])) === false;
     }
 
 }
