@@ -1,3 +1,6 @@
+Version 5.276 - Tuleap 6.12
+    * request #6513 - Broken link in tracker admin
+
 Version 5.275 - Tuleap 6.12
     * request #6486: Fix invalid param issue on advanced query for date field
 
