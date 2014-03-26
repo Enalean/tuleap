@@ -30,18 +30,20 @@ class ArtifactStaticMultiListFieldXMLExporter extends ArtifactFieldXMLExporter {
     const SYS_VALUE_ANY_EN  = 'Any';
     const SYS_VALUE_ANY_FR  = 'Tous';
 
-    /** @var array() */
-    private $labels = array();
-
     /** @var ArtifactXMLExporterDao */
     private $dao;
 
-    /** @var array */
-    private $current_field_values = array();
+    /** @var ArtifactMultiListCurrentValueExporter */
+    private $current_value_exporter;
 
-    public function __construct(ArtifactXMLNodeHelper $node_helper, ArtifactXMLExporterDao $dao) {
+    public function __construct(
+        ArtifactXMLNodeHelper $node_helper,
+        ArtifactXMLExporterDao $dao,
+        ArtifactMultiListCurrentValueExporter $current_value_exporter
+    ) {
         parent::__construct($node_helper);
-        $this->dao = $dao;
+        $this->dao                    = $dao;
+        $this->current_value_exporter = $current_value_exporter;
     }
 
     /**
@@ -54,10 +56,9 @@ class ArtifactStaticMultiListFieldXMLExporter extends ArtifactFieldXMLExporter {
      * @throws Exception_TV3XMLException
      */
     public function appendNode(DOMElement $changeset_node, $tracker_id, $artifact_id, array $row) {
-        $this->getListValueLabels($tracker_id, $row);
-
+        $all_labels = $this->getListValueLabels($row, $tracker_id);
         $values     = explode(',', $row['new_value']);
-        $field_name = $this->getFieldNameFromRow($row);
+        $field_name = $row['field_name'];
 
         $field_node = $this->node_helper->createElement('field_change');
         $field_node->setAttribute('field_name', $field_name);
@@ -65,8 +66,8 @@ class ArtifactStaticMultiListFieldXMLExporter extends ArtifactFieldXMLExporter {
         $field_node->setAttribute('bind', self::TV5_BIND);
 
         foreach ($values as $value) {
-            if ($this->valueCannotBeParsed($value, count($values), $field_name)) {
-                throw new Exception_TV3XMLException();
+            if ($this->valueCannotBeParsed($value, count($values), $field_name, $all_labels)) {
+                throw new Exception_TV3XMLException("Unable to parse the value $value for the field $field_name");
             }
 
             $static_value_node = $this->node_helper->getNodeWithValue('value', $this->getValueLabel($value));
@@ -89,73 +90,7 @@ class ArtifactStaticMultiListFieldXMLExporter extends ArtifactFieldXMLExporter {
     }
 
     public function getCurrentFieldValue(array $field_value_row, $tracker_id) {
-        $this->getListValueLabels($tracker_id, $field_value_row);
-
-        $field_name = $this->getFieldNameFromRow($field_value_row);
-
-        if (! isset($this->current_field_values[$field_name])) {
-            $this->initCurrentFieldValues($field_value_row);
-        }
-
-        $this->addCurrentValueLabel($field_value_row);
-
-        return $this->current_field_values[$field_name];
-    }
-
-    private function addCurrentValueLabel(array $field_value_row) {
-        $field_name     = $this->getFieldNameFromRow($field_value_row);
-        $existing_value = $this->getExistingValueForCurrentField($field_value_row);
-
-        if (! $existing_value) {
-            $current_value = $this->getCurrentValueLabel($field_value_row);
-            $this->current_field_values[$field_name][self::LABEL_VALUES_INDEX] = $current_value;
-            return;
-        }
-
-        $this->updateFieldsValues($field_value_row);
-    }
-
-    private function updateFieldsValues(array $field_value_row) {
-        $field_name     = $this->getFieldNameFromRow($field_value_row);
-        $current_value  = $this->getCurrentValueLabel($field_value_row);
-
-        $this->current_field_values[$field_name][self::LABEL_VALUES_INDEX] .= ",$current_value";
-    }
-
-    private function getListValueLabels($tracker_id, array $field_value_row) {
-        $field_name = $this->getFieldNameFromRow($field_value_row);
-
-        if (empty($this->labels[$field_name])) {
-            $values_label_rows = $this->dao->searchFieldValuesList($tracker_id, $field_name);
-            foreach ($values_label_rows as $values_label_row) {
-                $this->labels[$field_name][$values_label_row['value_id']] = $values_label_row['value'];
-            }
-        }
-
-        return $this->labels;
-    }
-
-    private function initCurrentFieldValues(array $field_value_row) {
-        $field_name = $this->getFieldNameFromRow($field_value_row);
-
-        $this->current_field_values[$field_name] = $field_value_row;
-        $this->current_field_values[$field_name][self::LABEL_VALUES_INDEX] = null;
-    }
-
-    private function getFieldNameFromRow(array $field_value_row) {
-        return $field_value_row['field_name'];
-    }
-
-    private function getExistingValueForCurrentField(array $field_value_row) {
-        $field_name = $this->getFieldNameFromRow($field_value_row);
-
-        return $this->current_field_values[$field_name][self::LABEL_VALUES_INDEX];
-    }
-
-    private function getCurrentValueLabel(array $field_value_row) {
-        $field_name = $this->getFieldNameFromRow($field_value_row);
-
-        return $this->labels[$field_name][$field_value_row[self::TV3_VALUE_INDEX]];
+        return $this->current_value_exporter->getCurrentFieldValue($field_value_row, $tracker_id);
     }
 
     /**
@@ -183,12 +118,13 @@ class ArtifactStaticMultiListFieldXMLExporter extends ArtifactFieldXMLExporter {
      * @param string $value
      * @param int    $number_of_values
      * @param string $field_name
+     * @param array  $all_labels
      *
      * @return boolean
      */
-    private function valueCannotBeParsed($value, $number_of_values, $field_name) {
-        return $this->valueIsNotAnExistingLabel($value, $field_name) ||
-               $this->valueIsSystemValueAny($value)                  ||
+    private function valueCannotBeParsed($value, $number_of_values, $field_name, array $all_labels) {
+        return $this->valueIsNotAnExistingLabel($value, $field_name, $all_labels) ||
+               $this->valueIsSystemValueAny($value)                               ||
                is_numeric($value) && $number_of_values === 1;
     }
 
@@ -202,12 +138,23 @@ class ArtifactStaticMultiListFieldXMLExporter extends ArtifactFieldXMLExporter {
                $value === self::SYS_VALUE_NONE_FR;
     }
 
-    private function valueIsNotAnExistingLabel($value, $field_name) {
+    private function valueIsNotAnExistingLabel($value, $field_name, array $all_labels) {
         if ($this->valueIsSystemValueNone($value)) {
             return false;
         }
 
-        return ((boolean) array_search($value, $this->labels[$field_name])) === false;
+        return ((boolean) array_search($value, $all_labels)) === false;
+    }
+
+    private function getListValueLabels(array $field_value_row, $tracker_id) {
+        $field_name        = $field_value_row['field_name'];
+        $labels            = array();
+        $values_label_rows = $this->dao->searchFieldValuesList($tracker_id, $field_name);
+        foreach ($values_label_rows as $values_label_row) {
+            $labels[$values_label_row['value_id']] = $values_label_row['value'];
+        }
+
+        return $labels;
     }
 
 }

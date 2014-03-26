@@ -34,4 +34,8 @@ abstract class ArtifactFieldXMLExporter {
     public function getCurrentFieldValue(array $field_value_row, $tracker_id) {
         return $field_value_row;
     }
+
+    public function isValueEqual($value1, $value2) {
+        return $value1 == $value2;
+    }
 }

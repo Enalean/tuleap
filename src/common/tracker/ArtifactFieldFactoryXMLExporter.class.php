@@ -23,6 +23,8 @@ class ArtifactFieldFactoryXMLExporter {
     private $fields = array();
 
     public function __construct(ArtifactXMLExporterDao $dao, ArtifactXMLNodeHelper $node_helper) {
+        $current_value_exporter = new ArtifactMultiListCurrentValueExporter($dao);
+
         $this->fields = array(
             ArtifactAttachmentFieldXMLExporter::TV3_TYPE      => new ArtifactAttachmentFieldXMLExporter($node_helper, $dao),
             ArtifactCCFieldXMLExporter::TV3_TYPE              => new ArtifactCCFieldXMLExporter($node_helper),
@@ -33,7 +35,8 @@ class ArtifactFieldFactoryXMLExporter {
             ArtifactDateFieldXMLExporter::TV3_TYPE            => new ArtifactDateFieldXMLExporter($node_helper),
             ArtifactStaticListFieldXMLExporter::TV3_TYPE      => new ArtifactStaticListFieldXMLExporter($node_helper, $dao),
             ArtifactUserListFieldXMLExporter::TV3_TYPE        => new ArtifactUserListFieldXMLExporter($node_helper, $dao),
-            ArtifactStaticMultiListFieldXMLExporter::TV3_TYPE => new ArtifactStaticMultiListFieldXMLExporter($node_helper, $dao),
+            ArtifactStaticMultiListFieldXMLExporter::TV3_TYPE => new ArtifactStaticMultiListFieldXMLExporter($node_helper, $dao, $current_value_exporter),
+            ArtifactUserMultiListFieldXMLExporter::TV3_TYPE   => new ArtifactUserMultiListFieldXMLExporter($node_helper, $current_value_exporter),
         );
     }
 
@@ -55,7 +58,7 @@ class ArtifactFieldFactoryXMLExporter {
      *
      * @throws Exception_TV3XMLUnknownFieldTypeException
      */
-    private function getField($field_name, $display_type, $data_type) {
+    public function getField($field_name, $display_type, $data_type) {
         $index = $this->getFieldType($field_name, $display_type, $data_type);
         if (isset($this->fields[$index])) {
             return $this->fields[$index];

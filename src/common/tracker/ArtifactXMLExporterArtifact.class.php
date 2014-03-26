@@ -224,10 +224,16 @@ class ArtifactXMLExporterArtifact {
 
     private function isLastRecoredValueEqualsToCurrentValue(array $field_value) {
         if (isset($this->last_history_recorded[$field_value['field_name']])) {
-            if ($this->last_history_recorded[$field_value['field_name']] == $this->field_factory->getFieldValue($field_value)) {
-                return true;
-            }
-            return false;
+            $field = $this->field_factory->getField(
+                $field_value['field_name'],
+                $field_value['display_type'],
+                $field_value['data_type']
+            );
+
+            return $field->isValueEqual(
+                $this->last_history_recorded[$field_value['field_name']],
+                $this->field_factory->getFieldValue($field_value)
+            );
         }
         return true;
     }
