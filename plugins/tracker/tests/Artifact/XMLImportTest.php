@@ -1002,8 +1002,64 @@ class Tracker_Artifact_XMLImport_SelectboxTest extends Tracker_Artifact_XMLImpor
 
     public function itCreatesArtifactWithSelectboxValue() {
         $data = array(
-            $this->status_field_id => $this->open_value_id,
-            $this->assto_field_id  => $this->john_doe->getId(),
+            $this->status_field_id => array($this->open_value_id),
+            $this->assto_field_id  => array($this->john_doe->getId()),
+        );
+        expect($this->artifact_creator)->create('*', $data, '*', '*', '*', '*')->once();
+
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+    }
+}
+
+class Tracker_Artifact_XMLImport_MultiSelectboxTest extends Tracker_Artifact_XMLImportBaseTest {
+
+    private $static_multi_selectbox_field;
+    private $static_multi_selectbox_field_id = 456;
+
+    private $ui_value_id          = 101;
+    private $ui_value_label       = "UI";
+    private $database_value_id    = 102;
+    private $database_value_label = "Database";
+
+    public function setUp() {
+        parent::setUp();
+
+        stub($this->artifact_creator)->create()->returns(mock('Tracker_Artifact'));
+
+        $this->static_multi_selectbox_field = stub('Tracker_FormElement_Field_String')->getId()->returns($this->static_multi_selectbox_field_id);
+
+        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'multi_select_box')->returns(
+            $this->static_multi_selectbox_field
+        );
+
+        stub($this->static_value_dao)->searchValueByLabel($this->static_multi_selectbox_field_id, $this->ui_value_label)->returnsDar(array(
+            'id'    => $this->ui_value_id,
+            'label' => $this->ui_value_label,
+        ));
+
+        stub($this->static_value_dao)->searchValueByLabel($this->static_multi_selectbox_field_id, $this->database_value_label)->returnsDar(array(
+            'id'    => $this->database_value_id,
+            'label' => $this->database_value_label,
+        ));
+
+        $this->xml_element = new SimpleXMLElement('<?xml version="1.0"?>
+            <artifacts>
+              <artifact id="4918">
+                <changeset>
+                  <submitted_by format="username">john_doe</submitted_by>
+                  <submitted_on format="ISO8601">2014-01-15T10:38:06+01:00</submitted_on>
+                  <field_change type="list" field_name="multi_select_box" bind="static">
+                    <value>UI</value>
+                    <value>Database</value>
+                  </field_change>
+                </changeset>
+              </artifact>
+            </artifacts>');
+    }
+
+    public function itCreatesArtifactWithAllMultiSelectboxValue() {
+        $data = array(
+            $this->static_multi_selectbox_field_id => array($this->ui_value_id, $this->database_value_id),
         );
         expect($this->artifact_creator)->create('*', $data, '*', '*', '*', '*')->once();
 

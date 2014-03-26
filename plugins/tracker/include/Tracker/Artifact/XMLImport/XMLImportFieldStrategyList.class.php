@@ -42,17 +42,21 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Arti
      * @param Tracker_FormElement_Field $field
      * @param SimpleXMLElement $field_change
      *
-     * @return mixed
+     * @return array
      */
     public function getFieldData(Tracker_FormElement_Field $field, SimpleXMLElement $field_change) {
         $bind = (string) $field_change['bind'];
+        $data = array();
+
         if ($bind === self::BIND_STATIC) {
-            $result = $this->static_value_dao->searchValueByLabel($field->getId(), (string) $field_change->value);
-            $row    = $result->getRow();
-            $data   = (int) $row['id'];
+            foreach ($field_change as $value) {
+                $result = $this->static_value_dao->searchValueByLabel($field->getId(), (string) $value);
+                $row    = $result->getRow();
+                $data[] = (int) $row['id'];
+            }
         } else {
-            $user = $this->xml_import_helper->getUser($field_change->value);
-            $data = $user->getId();
+            $user   = $this->xml_import_helper->getUser($field_change->value);
+            $data[] = $user->getId();
         }
 
         return $data;
