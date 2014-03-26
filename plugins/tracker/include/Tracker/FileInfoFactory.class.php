@@ -49,22 +49,33 @@ class Tracker_FileInfoFactory {
      */
     public function getById($id) {
         $row = $this->dao->searchById($id)->getRow();
-        if ($row) {
-            $field_id = $this->dao->searchFieldIdByFileInfoId($id);
-            $field    = $this->formelement_factory->getFormElementById($field_id);
-            if ($field && $field->isUsed()) {
-                return new Tracker_FileInfo(
-                    $row['id'],
-                    $field,
-                    $row['submitted_by'],
-                    $row['description'],
-                    $row['filename'],
-                    $row['filesize'],
-                    $row['filetype']
-                );
-            }
+        if (! $row) {
+            return;
         }
-        return null;
+
+        $field_id = $this->dao->searchFieldIdByFileInfoId($id);
+        if (! $field_id) {
+            return;
+        }
+
+        $field = $this->formelement_factory->getFormElementById($field_id);
+        if (! $field) {
+            return;
+        }
+
+        if (! $field->isUsed()) {
+            return;
+        }
+
+        return new Tracker_FileInfo(
+            $row['id'],
+            $field,
+            $row['submitted_by'],
+            $row['description'],
+            $row['filename'],
+            $row['filesize'],
+            $row['filetype']
+        );
     }
 
     /**
@@ -86,28 +97,6 @@ class Tracker_FileInfoFactory {
             throw new Tracker_FileInfo_UnauthorisedException('User can\'t access the artifact the file is attached to');
         }
         return $artifact;
-    }
-
-    public function getValuesForDeletionByFileInfoId($id) {
-        $field_id = $this->dao->searchFieldIdByFileInfoId($id);
-        $values = array('values' => array(
-            'field_id' => (int)$field_id,
-            'field_value' => array(
-                'file_info' => array(
-                    array(
-                         'id'           => $id,
-                         'submitted_by' => 0,
-                         'description'  => '',
-                         'filename'     => '',
-                         'filesize'     => '',
-                         'filetype'     => '',
-                         'action'       => 'delete',
-                    )
-             )
-            )
-        ));
-
-        return $values;
     }
 }
 

@@ -31,6 +31,7 @@ class Tracker_REST_ResourcesInjector {
         $restler->addAPIClass('\\Tuleap\\Tracker\\REST\\v1\\TrackersResource', 'trackers');
         $restler->addAPIClass('\\Tuleap\\Tracker\\REST\\v1\\ArtifactsResource', 'artifacts');
         $restler->addAPIClass('\\Tuleap\\Tracker\\REST\\v1\\ArtifactFilesResource', 'artifact_files');
+        $restler->addAPIClass('\\Tuleap\\Tracker\\REST\\v1\\ArtifactTemporaryFilesResource', 'artifact_temporary_files');
         $restler->addAPIClass('\\Tuleap\\Tracker\\REST\\v1\\ReportsResource', ReportRepresentation::ROUTE);
     }
 
