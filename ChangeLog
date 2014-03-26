@@ -1,3 +1,25 @@
+Version 6.11-3 (Wednesday, March 26th 2014)
+
+	== Bug fix ==
+	* request #6371 - OPTIONS returns 404 for /artifacts/:id/changesets
+	* Request #6533 - wrong permissions on gitolite repository after gitolite3 installation
+	* request #6449 - Cannot update artifact
+	* request #6445 - Experimental theme should allow site JS inclusion
+	* request #6444 - Agile dashboard performance with a lot of burndown
+	* Fix request #6435 - Mandatory field in workflow doesn't enforce Text fields
+	* request #6430 - PUT /cards/:id cannot update solo card
+	* Fix request #6429 - PUT /milestones/123/content doesn't change the order of elements
+	* request #6423 - [trackerV3] Bind a field to mutiple lists doesn't work.
+	* request #6413 - Cumulative chart legend too extensive
+	* request #6404: Do not display postponed error for phpwiki
+	* request #6403 - Proftpd logs can be either absolute or relative
+	* request #6401: PUT /artifacts/:id issue with artifact links
+	* Fix request request #6400 - REST route /tracker_reports/:id/artifacts has problems with pagination
+	* request #6343 - "fields" should be a JSON Array in GET /trackers/:id and GET /projects/:id/trackers
+	* Fix request #6290: invert order in follow ups comments is not saved as preferences
+	* Fix request #6146 - Backend raise errors about cvs logs
+	* Fix request #6146 - Backend raise errors about cvs logs while cvs is not even installed
+
 Version 6.11 (Thursday, March 6th 2014)
 	== Plugins ==
 	* git: 3.71
