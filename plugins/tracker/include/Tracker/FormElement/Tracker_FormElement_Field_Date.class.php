@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Codendi.
@@ -60,6 +61,92 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
             'to_date'   => $criteria_date->to_date,
         );
         $this->setCriteriaValue($criteria_value);
+    }
+
+    /**
+     * @throws Tracker_Report_InvalidRESTCriterionException
+     */
+    public function setCriteriaValueFromREST(Tracker_Report_Criteria $criteria, array $rest_criteria_value) {
+        $searched_date = $rest_criteria_value[Tracker_Report_REST::VALUE_PROPERTY_NAME];
+        $operator      = $rest_criteria_value[Tracker_Report_REST::OPERATOR_PROPERTY_NAME];
+
+        switch ($operator) {
+            case Tracker_Report_REST::DEFAULT_OPERATOR :
+            case Tracker_Report_REST::OPERATOR_CONTAINS :
+            case Tracker_Report_REST::OPERATOR_EQUALS :
+                $searched_date = $this->extractStringifiedDate($searched_date);
+                if (! $searched_date) {
+                    return false;
+                }
+                $op        = '=';
+                $from_date = null;
+                $to_date   = $searched_date;
+                break;
+            case Tracker_Report_REST::OPERATOR_GREATER_THAN :
+                $searched_date = $this->extractStringifiedDate($searched_date);
+                if (! $searched_date) {
+                    return false;
+                }
+                $op        = '>';
+                $from_date = null;
+                $to_date   = $searched_date;
+                break;
+            case Tracker_Report_REST::OPERATOR_LESS_THAN :
+                $searched_date = $this->extractStringifiedDate($searched_date);
+                if (! $searched_date) {
+                    return false;
+                }
+                $op        = '<';
+                $from_date = null;
+                $to_date   = $searched_date;
+                break;
+            case Tracker_Report_REST::OPERATOR_BETWEEN :
+                if (! $this->areBetweenDatesValid($searched_date)) {
+                    return false;
+                }
+                $criteria->setIsAdvanced(true);
+                $op        = null;
+                $from_date = $searched_date[0];
+                $to_date   = $searched_date[1];
+                break;
+            default:
+                throw new Tracker_Report_InvalidRESTCriterionException("Invalid operator for criterion field '$this->name' ($this->id). "
+                    . "Allowed operators: [" . implode(' | ', array(
+                        Tracker_Report_REST::OPERATOR_EQUALS,
+                        Tracker_Report_REST::OPERATOR_GREATER_THAN,
+                        Tracker_Report_REST::OPERATOR_LESS_THAN,
+                        Tracker_Report_REST::OPERATOR_BETWEEN,
+                    )) . "]");
+        }
+
+        $criteria_value = array(
+            'op'        => $op,
+            'from_date' => $from_date,
+            'to_date'   => $to_date,
+        );
+        $formatted_criteria_value = $this->getFormattedCriteriaValue($criteria_value);
+
+        $this->setCriteriaValue($formatted_criteria_value);
+        return true;
+    }
+
+    private function extractStringifiedDate($date) {
+        if (is_array($date) && count($date) == 1 && isset($date[0])) {
+            $date = $date[0];
+        }
+
+        if (! strtotime($date)) {
+            return null;
+        }
+
+        return $date;
+    }
+
+    private function areBetweenDatesValid($criteria_dates) {
+        return is_array($criteria_dates)
+            && count($criteria_dates) == 2
+            && isset($criteria_dates[0]) && strtotime($criteria_dates[0])
+            && isset($criteria_dates[1]) && strtotime($criteria_dates[1]);
     }
 
     /**

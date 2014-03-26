@@ -22,6 +22,11 @@ class Tracker_Report_REST extends Tracker_Report {
     const OPERATOR_PROPERTY_NAME = 'operator';
     const VALUE_PROPERTY_NAME    = 'value';
     const DEFAULT_OPERATOR       = 'contains';
+    const OPERATOR_CONTAINS      = 'contains';
+    const OPERATOR_EQUALS        = '=';
+    const OPERATOR_BETWEEN       = 'between';
+    const OPERATOR_GREATER_THAN  = '>';
+    const OPERATOR_LESS_THAN     = '<';
 
     /**
      * @var Tracker_FormElementFactory
@@ -29,7 +34,11 @@ class Tracker_Report_REST extends Tracker_Report {
     private $formelement_factory;
 
     private $allowed_operators = array(
-        self::DEFAULT_OPERATOR
+        self::DEFAULT_OPERATOR,
+        self::OPERATOR_EQUALS,
+        self::OPERATOR_BETWEEN,
+        self::OPERATOR_GREATER_THAN,
+        self::OPERATOR_LESS_THAN,
     );
 
     protected $rest_criteria = array();
@@ -170,8 +179,10 @@ class Tracker_Report_REST extends Tracker_Report {
             $is_advanced
         );
 
-        $formelement->setCriteriaValueFromREST($criteria, $criterion);
-        $this->criteria[$formelement->getId()] = $criteria;
+        $set = $formelement->setCriteriaValueFromREST($criteria, $criterion);
+        if ($set) {
+            $this->criteria[$formelement->getId()] = $criteria;
+        }
     }
 }
 

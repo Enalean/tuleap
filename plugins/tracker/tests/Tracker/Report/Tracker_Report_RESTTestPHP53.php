@@ -163,6 +163,8 @@ class Tracker_Report_RESTTest_getCriteria extends TuleapTestCase {
         stub($field_2)->getId()->returns(222);
         stub($field_3)->getId()->returns(333);
 
+        stub($field_3)->setCriteriaValueFromREST()->returns(true);
+
         $criteria = $this->report->getCriteria();
 
         $this->assertCount($criteria, 1);
@@ -184,12 +186,12 @@ class Tracker_Report_RESTTest_getCriteria extends TuleapTestCase {
         stub($this->formelement_factory)->getFormElementByName($this->tracker_id, "my_field")->returns($label);
         stub($this->formelement_factory)->getFormElementByName("my_other_field")->returns(null);
 
+        stub($integer)->setCriteriaValueFromREST()->once()->returns(true);
+        stub($label)->setCriteriaValueFromREST()->once()->returns(false);
+
         $criteria = $this->report->getCriteria();
 
-        stub($integer)->setCriteriaValueFromREST()->once();
-        stub($label)->setCriteriaValueFromREST()->once();
-
-        $this->assertCount($criteria, 2);
+        $this->assertCount($criteria, 1);
     }
 }
 ?>

@@ -295,8 +295,16 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $this->setCriteriaValue($criterias);
     }
 
+    /**
+     * @throws Tracker_Report_InvalidRESTCriterionException
+     */
     public function setCriteriaValueFromREST(Tracker_Report_Criteria $criteria, array $rest_criteria_value) {
         $searched_field_values = $rest_criteria_value[Tracker_Report_REST::VALUE_PROPERTY_NAME];
+        $operator              = $rest_criteria_value[Tracker_Report_REST::OPERATOR_PROPERTY_NAME];
+
+        if ($operator !== Tracker_Report_REST::OPERATOR_CONTAINS) {
+            throw new Tracker_Report_InvalidRESTCriterionException("Unallowed operator for criterion field '$this->name' ($this->id). Allowed operators: [" . Tracker_Report_REST::OPERATOR_CONTAINS . "]");
+        }
 
         if (is_numeric($searched_field_values)) {
             $values_to_match = array((int) $searched_field_values);
@@ -326,6 +334,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         }
 
         $this->setCriteriaValue($criteria);
+
+        return count($criteria) > 0;
     }
 
     /**

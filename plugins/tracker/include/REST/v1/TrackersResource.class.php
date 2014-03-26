@@ -146,14 +146,20 @@ class TrackersResource {
      * Get all artifacts of a given tracker
      *
      * Get all artifacts of a given tracker the user can view
-     *
+     *<br><br>
      * Notes on the query parameter
      * <ol>
-     *  <li>It is a JSON object</li>
-     *  <li>The basic form of a property is "field_id" : "field_value". For this format, the implied operator is "contained"</li>
-     *  <li>The complex form of a property is "field_id" : {"operator" : "operator_name", "value" : "field_value"}</li>
-     *  <li>The allowed operator list is currently: "contains"</li>
-     *  <li>Example: {"title" : "rest", "description" : {"operator" : "contains", "value", "parameter"}}</li>
+     *  <li>It must be a URL-encoded JSON object</li>
+     *  <li>The basic form of a property is [field_id|field_shortname] : [number|string|array(number)]
+     *      <br>Example: {"1258" : "bug"} OR {"title" : "bug"}
+     *  </li>
+     *  <li>The complex form of a property is "field_id" : {"operator" : "operator_name", "value" : [number|string|array(number)]}
+     *      <br>Example: {"title" : {"operator" : "contains", "value" : "bug"}}
+     *  </li>
+     *  <li>For text or number-like fields, the allowed operators are ["contains"]. The value must be a string or number</li>
+     *  <li>For select-box-like fields, the allowed operators are ["contains"]. The value(s) are bind_value_id</li>
+     *  <li>For date-like fields, the allowed operators are ["="|"<"|">"|"between"]. Dates must be in ISO date format</li>
+     *  <li>Full example: {"title" : "bug", "2458" : {"operator" : "between", "value", ["2014-02-25", "2014-03-25T00:00:00-05:00"]}}</li>
      * </ol>
      * 
      * @url GET {id}/artifacts

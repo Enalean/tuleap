@@ -112,14 +112,23 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $this->setCriteriaValue(!empty($soap_criteria_value->value) ? $soap_criteria_value->value: '');
     }
 
+    /**
+     * @throws Tracker_Report_InvalidRESTCriterionException
+     */
     public function setCriteriaValueFromREST(Tracker_Report_Criteria $criteria, array $rest_criteria_value) {
-        $value = $rest_criteria_value[Tracker_Report_REST::VALUE_PROPERTY_NAME];
+        $value    = $rest_criteria_value[Tracker_Report_REST::VALUE_PROPERTY_NAME];
+        $operator = $rest_criteria_value[Tracker_Report_REST::OPERATOR_PROPERTY_NAME];
+
+        if ($operator !== Tracker_Report_REST::OPERATOR_CONTAINS) {
+            throw new Tracker_Report_InvalidRESTCriterionException("Unallowed operator for criterion field '$this->name' ($this->id). Allowed operators: [" . Tracker_Report_REST::OPERATOR_CONTAINS . "]");
+        }
 
         if (! is_string($value) && ! is_numeric($value)) {
             throw new Tracker_Report_InvalidRESTCriterionException('Invalid value for field "'. $this->name .'"');
         }
 
         $this->setCriteriaValue($value);
+        return true;
     }
 
     /**
