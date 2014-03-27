@@ -25,6 +25,9 @@ require_once('common/language/BaseLanguageFactory.class.php');
 require_once('utils.php');
 
 class Tracker_Artifact_Changeset {
+    const FIELDS_ALL      = 'all';
+    const FIELDS_COMMENTS = 'comments';
+
     public $id;
     public $artifact;
     public $submitted_by;
@@ -936,17 +939,20 @@ class Tracker_Artifact_Changeset {
         return $soap;
     }
 
-    public function getRESTValue(PFUser $user) {
+    public function getRESTValue(PFUser $user, $fields) {
         $comment = $this->getComment();
         if (! $comment) {
             $comment = new Tracker_Artifact_Changeset_CommentNull($this);
+        }
+        if ($fields == self::FIELDS_COMMENTS && $comment->hasEmptyBody()) {
+            return null;
         }
         $classname_with_namespace = 'Tuleap\Tracker\REST\ChangesetRepresentation';
         $changeset_representation = new $classname_with_namespace;
         $changeset_representation->build(
             $this,
             $comment,
-            $this->getRESTFieldValues($user)
+            $fields  == self::FIELDS_COMMENTS  ? array() : $this->getRESTFieldValues($user)
         );
         return $changeset_representation;
     }
