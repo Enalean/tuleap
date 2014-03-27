@@ -108,20 +108,21 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder {
      *
      * @param PFUser $user
      * @param Tracker_Artifact $artifact
+     * @param string $fields
      * @param int $offset
      * @param int $limit
      *
      * @return Tuleap\Tracker\REST\ChangesetRepresentationCollection
      */
-    public function getArtifactChangesetsRepresentation(PFUser $user, Tracker_Artifact $artifact, $offset, $limit) {
+    public function getArtifactChangesetsRepresentation(PFUser $user, Tracker_Artifact $artifact, $fields, $offset, $limit) {
         $all_changesets = $artifact->getChangesets();
         return new Tuleap\Tracker\REST\ChangesetRepresentationCollection(
             $this->mapFilterSlice(
                 $all_changesets,
                 $offset,
                 $limit,
-                function (Tracker_Artifact_Changeset $changeset) use ($user) {
-                    return $changeset->getRESTValue($user);
+                function (Tracker_Artifact_Changeset $changeset) use ($user, $fields) {
+                    return $changeset->getRESTValue($user, $fields);
                 }
             ),
             count($all_changesets)
