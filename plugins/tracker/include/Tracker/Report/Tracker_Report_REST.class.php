@@ -101,10 +101,10 @@ class Tracker_Report_REST extends Tracker_Report {
      * @throws Tracker_Report_InvalidRESTCriterionException
      */
     private function harmoniseCriteria(&$criteria) {
-        if ($criteria == '') {
+        if (! is_array($criteria)) {
             $criteria = array();
         }
-
+ 
         foreach ($criteria as $field => $criterion) {
             if ($this->isCriterionBasic($criterion)) {
                 $criterion = $criteria[$field] = array(
