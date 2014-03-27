@@ -1085,7 +1085,7 @@ class Tracker_Artifact_XMLImport_SelectboxTest extends Tracker_Artifact_XMLImpor
     }
 }
 
-class Tracker_Artifact_XMLImport_MultiSelectboxTest extends Tracker_Artifact_XMLImportBaseTest {
+class Tracker_Artifact_XMLImport_StaticMultiSelectboxTest extends Tracker_Artifact_XMLImportBaseTest {
 
     private $static_multi_selectbox_field;
     private $static_multi_selectbox_field_id = 456;
@@ -1134,6 +1134,59 @@ class Tracker_Artifact_XMLImport_MultiSelectboxTest extends Tracker_Artifact_XML
     public function itCreatesArtifactWithAllMultiSelectboxValue() {
         $data = array(
             $this->static_multi_selectbox_field_id => array($this->ui_value_id, $this->database_value_id),
+        );
+        expect($this->artifact_creator)->create('*', $data, '*', '*', '*', '*')->once();
+
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+    }
+}
+
+class Tracker_Artifact_XMLImport_UserMultiSelectboxTest extends Tracker_Artifact_XMLImportBaseTest {
+
+    private $user_multi_selectbox_field;
+    private $user_multi_selectbox_field_id = 456;
+
+    private $user_01_id   = 101;
+    private $user_02_id   = 102;
+
+    public function setUp() {
+        parent::setUp();
+
+        stub($this->artifact_creator)->create()->returns(mock('Tracker_Artifact'));
+
+        $this->user_multi_selectbox_field = stub('Tracker_FormElement_Field_String')->getId()->returns($this->user_multi_selectbox_field_id);
+
+        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'multi_select_box_user')->returns(
+            $this->user_multi_selectbox_field
+        );
+
+        $this->xml_element = new SimpleXMLElement('<?xml version="1.0"?>
+            <artifacts>
+              <artifact id="4918">
+                <changeset>
+                  <submitted_by format="username">john_doe</submitted_by>
+                  <submitted_on format="ISO8601">2014-01-15T10:38:06+01:00</submitted_on>
+                  <field_change type="list" field_name="multi_select_box_user" bind="user">
+                    <value format="username">jeanne</value>
+                    <value format="username">serge</value>
+                  </field_change>
+                </changeset>
+              </artifact>
+            </artifacts>');
+
+        $this->jeanne = aUser()->withId(101)->withUserName('jeanne')->build();
+        $this->serge  = aUser()->withId(102)->withUserName('serge')->build();
+
+        stub($this->user_manager)->getUserByIdentifier('jeanne')->returns($this->jeanne);
+        stub($this->user_manager)->getUserByIdentifier('serge')->returns($this->serge);
+    }
+
+    public function itCreatesArtifactWithAllMultiSelectboxValue() {
+        $data = array(
+            $this->user_multi_selectbox_field_id => array(
+                $this->user_01_id,
+                $this->user_02_id
+            ),
         );
         expect($this->artifact_creator)->create('*', $data, '*', '*', '*', '*')->once();
 

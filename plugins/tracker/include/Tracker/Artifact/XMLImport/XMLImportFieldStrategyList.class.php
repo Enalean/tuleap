@@ -55,8 +55,10 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Arti
                 $data[] = (int) $row['id'];
             }
         } else {
-            $user   = $this->xml_import_helper->getUser($field_change->value);
-            $data[] = $user->getId();
+            foreach ($field_change as $value) {
+                $user   = $this->xml_import_helper->getUser($value);
+                $data[] = $user->getId();
+            }
         }
 
         return $data;
