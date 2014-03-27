@@ -14,24 +14,15 @@ use File::Copy;
 my $localinc = $ENV{'CODENDI_LOCAL_INC'} || "/etc/codendi/conf/local.inc"; # Local Include file for database username and password
 my %conf = load_local_config($localinc);
 
-my $src_dir = $conf{'ftp_incoming_dir'}   || '/var/lib/codendi/ftp/incoming/';
-my $dst_dir = $conf{'ftp_frs_dir_prefix'} || '/var/lib/codendi/ftp/codendi/';
-my $file    = '';
-my $group   = '';
+my $dst_dir  = $conf{'ftp_frs_dir_prefix'} || '/var/lib/codendi/ftp/codendi/';
+my $file     = '';
+my $group    = '';
 my $dst_file = '';
-
-# Ensure there is a trailing slash
-if ($src_dir !~ '/\/$/') {
-    $src_dir = "$src_dir/";
-}
-if ($dst_dir !~ '/\/$/') {
-    $dst_dir = "$dst_dir/";
-}
-
+my $src_dir  = '';
 
 # Treat arguments
-if ($#ARGV ne 1) {
-    die("Usage: $0 file group\n");
+if ($#ARGV ne 2) {
+    die("Usage: $0 file group src_dir\n");
 }
 if ($ARGV[0] =~ /^(.*)$/) {
     $file = $1;
@@ -44,6 +35,20 @@ if ($ARGV[1] =~ /^(.*)(\/(.*))$/) {
 } else {
     die("Second argument invalid\n");
 }
+if ($ARGV[2] =~ /^(.*)$/) {
+    $src_dir = $1;
+} else {
+    die("Third argument invalid\n");
+}
+
+# Ensure there is a trailing slash
+if ($src_dir !~ '/\/$/') {
+    $src_dir = "$src_dir/";
+}
+
+if ($dst_dir !~ '/\/$/') {
+    $dst_dir = "$dst_dir/";
+}
 
 my $src_file = $src_dir.$file;
 
@@ -54,9 +59,6 @@ if (! -d $dst_dir) {
     }
 }
 
-# add 'group' read and remove 'other' perms
-chmod(0640, $src_file);
-
 
 $dst_file  = $dst_dir.$dst_file;
 # print "Rename $src_file $dst_file\n";
@@ -64,6 +66,11 @@ $dst_file  = $dst_dir.$dst_file;
 if (!rename($src_file, $dst_file)) {
     die("FAILURE: cannot move file ($!)\n");
 }
+
+# add 'group' read and remove 'other' perms
+system("setfacl -b $dst_file");
+chmod(0640, $dst_file);
+system("chgrp ftpadmin $dst_file");
 
 print "OK\n";
 

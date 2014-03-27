@@ -1322,7 +1322,7 @@ function getUploadedFiles($sessionKey, $group_id) {
 
         try {
             $pm = ProjectManager::instance();
-            $pm->getGroupByIdForSoap($group_id, 'getUploadedFiles');
+            $project = $pm->getGroupByIdForSoap($group_id, 'getUploadedFiles');
         } catch (SoapFault $e) {
             return $e;
         }
@@ -1330,7 +1330,7 @@ function getUploadedFiles($sessionKey, $group_id) {
         $file_fact = new FRSFileFactory();
         if ($file_fact->userCanAdd($group_id)) {
             $soap_files = array();
-            $file_names = $file_fact->getUploadedFileNames();
+            $file_names = $file_fact->getUploadedFileNames($project);
             return $file_names;
         } else {
             return new SoapFault(invalid_file_fault, 'User not allowed to see the uploaded files', 'getUploadedFiles');

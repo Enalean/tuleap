@@ -27,7 +27,7 @@ Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestMoveToStaging', array
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeDeletedFiles', array('purgeFiles', 'moveDeletedFilesToStagingArea', 'cleanStaging', 'restoreDeletedFiles'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestore', array('_getFRSReleaseFactory', '_getFRSFileDao', '_getUserManager', '_getEventManager'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestoreFiles', array('_getFRSFileDao', 'restoreFile'));
-Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestCreateFiles', array('create', 'moveFileForge','isFileBaseNameExists', 'isSameFileMarkedToBeRestored', 'compareMd5Checksums'));
+Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestCreateFiles', array('create', 'moveFileForge','isFileBaseNameExists', 'isSameFileMarkedToBeRestored', 'compareMd5Checksums', 'getSrcDir'));
 
 class FRSFileFactoryTest extends UnitTestCase {
 
@@ -911,6 +911,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $f->setRelease($r);
 
         $ff = new FRSFileFactoryTestCreateFiles();
+        $ff->setReturnValue('getSrcDir', $GLOBALS['ftp_incoming_dir']);
         $ff->setReturnValue('isFileBaseNameExists', True);
         try {
             $ff->createFile($f);
@@ -953,6 +954,7 @@ class FRSFileFactoryTest extends UnitTestCase {
 
 
         $ff = new FRSFileFactoryTestCreateFiles();
+        $ff->setReturnValue('getSrcDir', $GLOBALS['ftp_incoming_dir']);
         $ff->setReturnValue('isFileBaseNameExists', False);
         $ff->setReturnValue('isSameFileMarkedToBeRestored', False);
 
@@ -997,6 +999,7 @@ class FRSFileFactoryTest extends UnitTestCase {
 
 
         $ff = new FRSFileFactoryTestCreateFiles();
+        $ff->setReturnValue('getSrcDir', $GLOBALS['ftp_incoming_dir']);
         $ff->setReturnValue('isFileBaseNameExists', False);
         $ff->setReturnValue('isSameFileMarkedToBeRestored', True);
 
@@ -1024,6 +1027,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $f->setFileName('toto.txt');
         $f->setRelease($r);
         $ff = new FRSFileFactoryTestCreateFiles();
+        $ff->setReturnValue('getSrcDir', $GLOBALS['ftp_incoming_dir']);
         $this->assertFalse(is_file($GLOBALS['ftp_incoming_dir'].'/toto.txt'));
         try {
             $ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5);
@@ -1048,6 +1052,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $f->setRelease($r);
         $f->setFileLocation($GLOBALS['ftp_incoming_dir']);
         $ff = new FRSFileFactoryTestCreateFiles();
+        $ff->setReturnValue('getSrcDir', $GLOBALS['ftp_incoming_dir']);
 
         $path = $GLOBALS['ftp_incoming_dir'].'/'.$f->getFileName();
         touch($GLOBALS['ftp_incoming_dir'].'/toto.txt');
@@ -1061,12 +1066,16 @@ class FRSFileFactoryTest extends UnitTestCase {
     }
 
     function testCreateFileCompareMD5Checksums(){
-        $r = new FRSRelease();
+        $project = stub('Project')->getId()->returns(111);
+
+        $r = partial_mock('FRSRelease', array('getProject'));
         $r->setReleaseID(456);
         $r->setPackageID(123);
         $r->setGroupID(111);
+        stub($r)->getProject()->returns($project);
 
         $ff = new FRSFileFactoryTestCreateFiles();
+        $ff->setReturnValue('getSrcDir', $GLOBALS['ftp_incoming_dir']);
 
         $f = new FRSFile();
         $f->setRelease($r);
@@ -1090,12 +1099,17 @@ class FRSFileFactoryTest extends UnitTestCase {
     }
 
     function testCreateFileMoveFileForgeKo(){
-        $r = new FRSRelease();
+        $project = stub('Project')->getId()->returns(111);
+
+        $r = partial_mock('FRSRelease', array('getProject'));
         $r->setReleaseID(456);
         $r->setPackageID(123);
         $r->setGroupID(111);
+        stub($r)->getProject()->returns($project);
 
         $ff = new FRSFileFactoryTestCreateFiles();
+        $ff->setReturnValue('getSrcDir', $GLOBALS['ftp_incoming_dir']);
+
         $f = new FRSFile();
         $f->setRelease($r);
 
@@ -1128,7 +1142,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $f->setFileLocation($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
 
         $ff = new FRSFileFactoryTestCreateFiles();
-
+        $ff->setReturnValue('getSrcDir', $GLOBALS['ftp_incoming_dir']);
         $ff->setReturnValue('moveFileForge', True);
         $ff->setReturnValue('create', False);
 

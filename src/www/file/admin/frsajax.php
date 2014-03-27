@@ -114,8 +114,9 @@ if ($action == 'permissions_frs_package') {
                 }
             } else {
                 if ($action == 'refresh_file_list') {
+                    $project = $request->getProject();
                     $frsff = new FRSFileFactory();
-                    $file_list = $frsff->getUploadedFileNames();
+                    $file_list = $frsff->getUploadedFileNames($project);
                     $available_ftp_files = implode(",", $file_list);
                     echo '{"valid":true, "msg":"'.$available_ftp_files.'"}';
                 }
