@@ -38,6 +38,7 @@ Upgrade
 # install -g gitolite -o gitolite -m 00755 /usr/share/codendi/plugins/git/hooks/post-receive-gitolite /usr/com/gitolite/.gitolite/hooks/common/post-receive
 # edit ~/.gitolite.rc and uncomment GROUPLIST_PGM line
 # find /usr/com/gitolite/.gitolite -type d -exec chmod g+rx {} \;
+# find /var/lib/codendi/gitolite/repositories/ -type l \( -name "post-receive.mirrorpush" -o -name "gitolite-hooked" \)  -exec rm {} \;
 # as root, service codendi start
 
 HTTP Users
