@@ -1,3 +1,6 @@
+Version 5.277 - Tuleap 6.12
+    * request #6366 - GET /artifacts/:id/changesets should have option to retrieve only comments
+
 Version 5.276 - Tuleap 6.12
     * request #6513 - Broken link in tracker admin
 
