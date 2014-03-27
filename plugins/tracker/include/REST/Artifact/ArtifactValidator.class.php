@@ -28,6 +28,7 @@ class Tracker_REST_Artifact_ArtifactValidator {
     }
 
     public function getFieldsDataOnCreate(array $values, Tracker $tracker) {
+        $new_values     = array();
         $indexed_fields = $this->getIndexedFields($tracker);
         foreach ($values as $value) {
             $field = $this->getField($indexed_fields, $value);
@@ -48,7 +49,7 @@ class Tracker_REST_Artifact_ArtifactValidator {
 
     private function getField(array $indexed_fields, array $value) {
         if (! isset($value['field_id']) || (isset($value['field_id']) && ! is_int($value['field_id']))) {
-            throw new Tracker_FormElement_InvalidFieldException('No \'field_id\' or invalid id in submitted value');
+            throw new Tracker_FormElement_InvalidFieldException('No \'field_id\' or invalid id in submitted value. Field IDs must be integers');
         }
         if (! isset($indexed_fields[$value['field_id']])) {
             throw new Tracker_FormElement_InvalidFieldException('Unknown field '.$value['field_id']);
