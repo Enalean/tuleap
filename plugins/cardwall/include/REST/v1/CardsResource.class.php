@@ -30,7 +30,6 @@ use \Tracker_FormElementFactory;
 use \Tracker_ArtifactFactory;
 use \Tracker_Exception;
 use \Tracker_FormElement_InvalidFieldException;
-use \Tracker_FormElement_NotImplementedForRESTException;
 use \PlanningFactory;
 use \UserManager;
 use \PFUser;
@@ -101,7 +100,6 @@ class CardsResource {
      * Things to take into account:
      * <ol>
      *  <li>You will get an error (400) if there are no changes in submitted document</li>
-     *  <li>Please note that "file" fields cannot be modified yet</li>
      *  <li>You can re-use the same document provided by /milestones/:id/cardwall cards
      *      section. Even if it contains more data. The extra data/info will be ignored</li>
      *  <li>You don't need to set all 'values' of the card, you can restrict to the modified ones</li>
@@ -126,8 +124,6 @@ class CardsResource {
             $card_updater->updateCard($current_user, $single_card, $label, $values, $column_id);
         } catch (Tracker_FormElement_InvalidFieldException $exception) {
             throw new RestException(400, $exception->getMessage());
-        } catch (Tracker_FormElement_NotImplementedForRESTException $exception) {
-            throw new RestException(501, $exception->getMessage());
         } catch (Tracker_Exception $exception) {
             if ($GLOBALS['Response']->feedbackHasErrors()) {
                 throw new RestException(400, $GLOBALS['Response']->getRawFeedback());

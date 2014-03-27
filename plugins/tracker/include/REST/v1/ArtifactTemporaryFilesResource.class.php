@@ -85,7 +85,7 @@ class ArtifactTemporaryFilesResource {
     /**
      * Get files representation
      *
-     * For now, only user's temporary files can be retrieved
+     * For now, only temporary files created by the user can be retrieved
      *
      * @url GET
      *
@@ -105,7 +105,7 @@ class ArtifactTemporaryFilesResource {
     }
 
     /**
-     * Get a chunk of given file
+     * Get a chunk of a file
      *
      * A user can only access their own temporary files
      *
@@ -201,7 +201,7 @@ class ArtifactTemporaryFilesResource {
     /**
      * Append a chunk to a temporary file (not attached to any artifact)
      *
-     * Use this method to append a chunk of file to any existing file created via POST on /artifact_temporary_files
+     * Use this method to append a file chunk to any existing file created via POST on /artifact_temporary_files
      * <ol>
      *  <li>This method cannot be called on a file that is already referenced by an artifact
      *  </li>
@@ -310,7 +310,9 @@ class ArtifactTemporaryFilesResource {
     }
 
     /**
-     * Delete a temporary file or a file attached to an artifact
+     * Delete a temporary file
+     *
+     * Use this method to delete a temporary file the user owns.
      *
      * @url DELETE {id}
      *
