@@ -252,6 +252,18 @@ class ArtifactTemporaryFilesResource {
     }
 
     /**
+     * @url OPTIONS {id}
+     *
+     * @throws 401
+     * @throws 404
+     */
+    protected function optionsId($id) {
+        $this->sendAllowHeadersForArtifactFilesId();
+
+        $this->getFile($id);
+    }
+
+    /**
      *
      * @param TemporaryFile $file
      * @return FileInfoRepresentation
@@ -286,6 +298,9 @@ class ArtifactTemporaryFilesResource {
         return $file;
     }
 
+    /**
+     * @throws 401
+     */
     private function checkTemporaryFileBelongsToCurrentUser(TemporaryFile $file) {
         $creator_id = $file->getCreatorId();
 

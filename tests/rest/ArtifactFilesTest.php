@@ -174,62 +174,60 @@ class ArtifactFilesTest extends RestBase {
 
         $this->assertTrue($error);
     }
-//
-// UNCOMMENT AS SOON AS ATTACHING FILES TO ARTIFACT IS WORKING
-//
-//    /**
-//     * @depends testPutArtifactFileId
-//     */
-//    public function testAttachFileToArtifact($file_id) {
-//        $artifact_id = TestDataBuilder::STORY_1_ARTIFACT_ID;
-//
-//        $request = $this->client->get('trackers/'. TestDataBuilder::USER_STORIES_TRACKER_ID);
-//        $structure = json_decode($this->getResponse($request)->getBody(true), true);
-//        foreach ($structure['fields'] as $field) {
-//            if ($field['type'] == 'file') {
-//                $field_id = $field['field_id'];
-//                break;
-//            }
-//        }
-//        $this->assertNotNull($field_id);
-//
-//        $this->client->put('artifact/'. $artifact_id, null, json_encode(array(
-//            'values' => array(
-//                array(
-//                    'field_id' => $field_id,
-//                    'value'    => $file_id,
-//                ),
-//            ),
-//        )));
-//
-//        return $file_id;
-//    }
-//
-//    /**
-//     * @depends testAttachFileToArtifact
-//     */
-//    public function testOptionsArtifactFilesId($file_id) {
-//        $response = $this->getResponse($this->client->options('artifact_files/'.$file_id));
-//
-//        $this->assertEquals($response->getStatusCode(), 200);
-//        $this->assertEquals(array('OPTIONS', 'GET', 'PUT', 'DELETE'), $response->getHeader('Allow')->normalize()->toArray());
-//    }
-//
-//    /**
-//     * @depends testAttachFileToArtifact
-//     */
-//    public function testOptionsArtifactId_isForbiddenForADifferentUser($file_id) {
-//        $request = $this->client->options('artifact_files/'.$file_id);
-//
-//        $unauthorised = false;
-//        try {
-//            $response = $this->getResponseForDifferentUser($request);
-//            var_dump($response->getBody(true));
-//        } catch (Exception $e) {
-//            $unauthorised = true;
-//            $this->assertEquals($e->getResponse()->getStatusCode(), 401);
-//        }
-//
-//        $this->assertTrue($unauthorised);
-//    }
+
+    /**
+     * @depends testPutArtifactFileId
+     */
+    public function testAttachFileToArtifact($file_id) {
+        $artifact_id = TestDataBuilder::STORY_1_ARTIFACT_ID;
+
+        $request = $this->client->get('trackers/'. TestDataBuilder::USER_STORIES_TRACKER_ID);
+        $structure = json_decode($this->getResponse($request)->getBody(true), true);
+        foreach ($structure['fields'] as $field) {
+            if ($field['type'] == 'file') {
+                $field_id = $field['field_id'];
+                break;
+            }
+        }
+        $this->assertNotNull($field_id);
+
+        $this->client->put('artifact/'. $artifact_id, null, json_encode(array(
+            'values' => array(
+                array(
+                    'field_id' => $field_id,
+                    'value'    => $file_id,
+                ),
+            ),
+        )));
+
+        return $file_id;
+    }
+
+    /**
+     * @depends testAttachFileToArtifact
+     */
+    public function testOptionsArtifactTemporaryFilesId($file_id) {
+        $response = $this->getResponse($this->client->options('artifact_temporary_files/'.$file_id));
+
+        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals(array('OPTIONS', 'GET', 'PUT', 'DELETE'), $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    /**
+     * @depends testAttachFileToArtifact
+     */
+    public function testOptionsArtifactId_isForbiddenForADifferentUser($file_id) {
+        $request = $this->client->options('artifact_temporary_files/'.$file_id);
+
+        $unauthorised = false;
+        try {
+            $response = $this->getResponseForDifferentUser($request);
+            var_dump($response->getBody(true));
+        } catch (Exception $e) {
+            $unauthorised = true;
+            $this->assertEquals($e->getResponse()->getStatusCode(), 401);
+        }
+
+        $this->assertTrue($unauthorised);
+    }
 }

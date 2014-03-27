@@ -126,7 +126,7 @@ class ArtifactFilesResource {
     }
 
     private function sendAllowHeadersForArtifactFilesId() {
-        Header::allowOptionsGetPutDelete();
+        Header::allowOptionsGet();
         Header::sendMaxFileChunkSizeHeaders(self::DEFAULT_LIMIT);
     }
 
