@@ -1,3 +1,6 @@
+Version 3.75 - Tuleap 6.12
+    * request #6569 - Broken hooks symlinks after upgrade to gitolite3
+
 Version 3.74 - Tuleap 6.12
     * Request #6533 - wrong permissions on gitolite repository after gitolite3 installation
 

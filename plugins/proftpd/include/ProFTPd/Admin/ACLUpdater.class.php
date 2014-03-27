@@ -25,9 +25,10 @@ use \RecursiveIteratorIterator;
 use \RecursiveDirectoryIterator;
 
 class ACLUpdater {
-    const PARENT_DIR = '..';
-    const FILE       = 'file';
-    const DIRECTORY  = 'dir';
+    const PARENT_DIR  = '..';
+    const CURRENT_DIR = '.';
+    const FILE        = 'file';
+    const DIRECTORY   = 'dir';
 
     /** @var Backend */
     private $backend;
@@ -55,7 +56,7 @@ class ACLUpdater {
         );
 
         foreach ($iterator as $file) {
-            if ($file->getFilename() !== self::PARENT_DIR) {
+            if ($this->fileCanBeUpdated($file->getFilename())) {
                 $this->updateACL($this->getBuilderFromType($file), $file->getPathname(), $http_user, $writers, $readers);
             }
         }
@@ -71,5 +72,9 @@ class ACLUpdater {
             $builder->getACL($http_user, $writers, $readers),
             $path
         );
+    }
+
+    private function fileCanBeUpdated($filename) {
+        return $filename !== self::PARENT_DIR && $filename !== self::CURRENT_DIR;
     }
 }
