@@ -1,3 +1,7 @@
+Version 5.278 - Tuleap 6.12
+    * * story #5995 - import comments from tv3 to tv5
+* story #5991 - import SB and MSB from tv3 to tv5
+
 Version 5.277 - Tuleap 6.12
     * request #6366 - GET /artifacts/:id/changesets should have option to retrieve only comments
 
