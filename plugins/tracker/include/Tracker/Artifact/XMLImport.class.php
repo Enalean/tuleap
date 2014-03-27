@@ -32,22 +32,32 @@ class Tracker_Artifact_XMLImport {
     /** @var Tracker_FormElementFactory */
     private $formelement_factory;
 
-    /** @var UserManager */
-    private $user_manager;
+    /** @var Tracker_Artifact_XMLImport_XMLImportHelper */
+    private $xml_import_helper;
+
+    /** @var Tracker_FormElement_Field_List_Bind_Static_ValueDao */
+    private $static_value_dao;
+
+    /** @var Logger */
+    private $logger;
 
     public function __construct(
         XML_RNGValidator $rng_validator,
         Tracker_ArtifactCreator $artifact_creator,
         Tracker_Artifact_Changeset_NewChangesetCreatorBase $new_changeset_creator,
         Tracker_FormElementFactory $formelement_factory,
-        UserManager $user_manager
+        Tracker_Artifact_XMLImport_XMLImportHelper $xml_import_helper,
+        Tracker_FormElement_Field_List_Bind_Static_ValueDao $static_value_dao,
+        Logger $logger
     ) {
 
         $this->rng_validator         = $rng_validator;
         $this->artifact_creator      = $artifact_creator;
         $this->new_changeset_creator = $new_changeset_creator;
         $this->formelement_factory   = $formelement_factory;
-        $this->user_manager          = $user_manager;
+        $this->xml_import_helper     = $xml_import_helper;
+        $this->static_value_dao      = $static_value_dao;
+        $this->logger                = $logger;
     }
 
     public function importFromArchive(Tracker $tracker, Tracker_Artifact_XMLImport_XMLImportZipArchive $archive) {
@@ -61,15 +71,25 @@ class Tracker_Artifact_XMLImport {
     public function importFromXML(Tracker $tracker, SimpleXMLElement $xml_element, $extraction_path) {
         $this->rng_validator->validate($xml_element);
         foreach ($xml_element->artifact as $artifact) {
-            $files_importer = new Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact($artifact);
-            $fields_data_builder = new Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder(
-                $this->formelement_factory,
-                $this->user_manager,
-                $tracker,
-                $files_importer,
-                $extraction_path
-            );
-            $this->importOneArtifact($tracker, $artifact, $fields_data_builder);
+            try {
+                $this->logger->info("Import {$artifact['id']}");
+                $files_importer = new Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact($artifact);
+                $fields_data_builder = new Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder(
+                    $this->formelement_factory,
+                    $this->xml_import_helper,
+                    $tracker,
+                    $files_importer,
+                    $extraction_path,
+                    $this->static_value_dao
+                );
+                $this->importOneArtifact($tracker, $artifact, $fields_data_builder);
+            } catch (Tracker_Artifact_Exception_CannotCreateInitialChangeset $exception) {
+                $this->logger->error("Impossible to create artifact: ".$exception->getMessage());
+            } catch (Tracker_Artifact_Exception_EmptyChangesetException $exception) {
+                $this->logger->error("Impossible to create artifact, there is no valid data to import for initial changeset: ".$exception->getMessage());
+            } catch (Exception $exception) {
+                $this->logger->error("Unexpected exception: ".$exception->getMessage());
+            }
         }
     }
 
@@ -82,6 +102,7 @@ class Tracker_Artifact_XMLImport {
             $changesets      = $this->getSortedBySubmittedOn($xml_artifact->changeset);
             $first_changeset = array_shift($changesets);
             $artifact        = $this->importInitialChangeset($tracker, $first_changeset, $fields_data_builder);
+            $this->logger->info("--> new artifact {$artifact->getId()}");
             if (count($changesets)) {
                 $this->importRemainingChangesets($artifact, $changesets, $fields_data_builder);
             }
@@ -128,47 +149,52 @@ class Tracker_Artifact_XMLImport {
         array $xml_changesets,
         Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder $fields_data_builder
     ) {
+        $count = 0;
         foreach($xml_changesets as $xml_changeset) {
-            $comment           = '';
-            $send_notification = false;
-            $result = $this->new_changeset_creator->create(
-                $artifact,
-                $fields_data_builder->getFieldsData($xml_changeset->field_change),
-                $comment,
-                $this->getSubmittedBy($xml_changeset),
-                $this->getSubmittedOn($xml_changeset),
-                $send_notification,
-                Tracker_Artifact_Changeset_Comment::TEXT_COMMENT
-            );
-            if (! $result) {
-                throw new Tracker_Artifact_Exception_CannotCreateNewChangeset();
+            try {
+                $count++;
+                $send_notification = false;
+                $initial_comment_body   = '';
+                $initial_comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
+                if (isset($xml_changeset->comments) && count($xml_changeset->comments->comment) > 0) {
+                    $initial_comment_body   = (string)$xml_changeset->comments->comment[0]->body;
+                    $initial_comment_format = (string)$xml_changeset->comments->comment[0]->body['format'];
+                }
+                $changeset = $this->new_changeset_creator->create(
+                    $artifact,
+                    $fields_data_builder->getFieldsData($xml_changeset->field_change),
+                    $initial_comment_body,
+                    $this->getSubmittedBy($xml_changeset),
+                    $this->getSubmittedOn($xml_changeset),
+                    $send_notification,
+                    $initial_comment_format
+                );
+                if (! $changeset) {
+                    throw new Tracker_Artifact_Exception_CannotCreateNewChangeset();
+                }
+                $this->updateComments($changeset, $xml_changeset);
+            } catch (Tracker_NoChangeException $exception) {
+                $this->logger->warn("No Change for changeset $count");
+            }
+        }
+    }
+
+    private function updateComments(Tracker_Artifact_Changeset $changeset, SimpleXMLElement $xml_changeset) {
+        if (isset($xml_changeset->comments) && count($xml_changeset->comments->comment) > 1) {
+            $all_comments = $xml_changeset->comments->comment;
+            for ($i = 1; $i < count($all_comments); ++$i) {
+                $changeset->updateComment(
+                    (string)$all_comments[$i]->body,
+                    $this->getSubmittedBy($all_comments[$i]),
+                    (string)$all_comments[$i]->body['format'],
+                    $this->getSubmittedOn($all_comments[$i])
+                );
             }
         }
     }
 
     private function getSubmittedBy(SimpleXMLElement $xml_changeset) {
-        $submitter    = $this->user_manager->getUserByIdentifier($this->getUserFormat($xml_changeset->submitted_by));
-        if (! $submitter) {
-            $submitter = $this->user_manager->getUserAnonymous();
-            $submitter->setEmail((string) $xml_changeset->submitted_by);
-        }
-        return $submitter;
-    }
-
-    private function getUserFormat(SimpleXMLElement $xml_submitted_by) {
-        $format       = (string) $xml_submitted_by['format'];
-        $submitted_by = (string) $xml_submitted_by;
-        switch($format) {
-            case 'id':
-            case 'email':
-                return "$format:$submitted_by";
-
-            case 'ldap':
-                return "ldapId:$submitted_by";
-
-            default :
-                return (string) $xml_submitted_by;
-        }
+        return $this->xml_import_helper->getUser($xml_changeset->submitted_by);
     }
 
     private function getSubmittedOn(SimpleXMLElement $xml_changeset) {

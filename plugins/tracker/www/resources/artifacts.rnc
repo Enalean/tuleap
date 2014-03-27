@@ -7,8 +7,8 @@ grammar {
             element changeset {
                 element submitted_by { user_content },
                 element submitted_on { date_content },
-                element comment { xsd:string }?,
-                element field_change { field_content }+
+                element comments     { comments },
+                element field_change { field_content }*
             }*,
             element file {
                 attribute id { xsd:ID },
@@ -20,6 +20,18 @@ grammar {
             }*
         }*
     }
+
+    comments =
+        element comment { comment_content }*
+
+    comment_content =
+        element submitted_by { user_content },
+        element submitted_on { date_content },
+        element body { text_content }
+
+    text_content =
+        attribute format { "text" | "html" },
+        xsd:string
 
     date_content =
         attribute format { "ISO8601" },
@@ -43,6 +55,8 @@ grammar {
             | field_float
             | field_date
             | field_file
+            | field_static_list
+            | field_user_list
             | field_open_list_user
             | field_perms_on_artifact
         )
@@ -69,10 +83,20 @@ grammar {
             attribute ref { xsd:IDREF }
         }+
 
+    field_static_list =
+        attribute type { "list" },
+        attribute bind { "static" },
+        element value  { xsd:string }*
+
+    field_user_list =
+        attribute type { "list" },
+        attribute bind { "user" },
+        element value  { user_content }*
+
     field_open_list_user =
         attribute type { "open_list" },
         attribute bind { "user" },
-        element value { user_content }+
+        element value { user_content }*
 
     field_perms_on_artifact =
         attribute type { "permissions_on_artifact" },

@@ -59,7 +59,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
      *
      * @throws Tracker_Exception In the validation
      * @throws Tracker_NoChangeException In the validation
-     * @return boolean True if update is done without error, false otherwise
+     * @return Tracker_Artifact_Changeset|Boolean The new changeset if update is done without error, false otherwise
      */
     public function create(
         Tracker_Artifact $artifact,
@@ -119,7 +119,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
             $artifact->getChangeset($changeset_id)->notify();
         }
 
-        return true;
+        return $new_changeset;
     }
 
     /**

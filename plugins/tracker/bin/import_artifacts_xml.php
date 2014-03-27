@@ -31,6 +31,7 @@ try {
         $fields_validator      = new Tracker_Artifact_Changeset_AtGivenDateFieldsValidator($formelement_factory);
         $changeset_dao         = new Tracker_Artifact_ChangesetDao();
         $changeset_comment_dao = new Tracker_Artifact_Changeset_CommentDao();
+        $logger                = new Log_ConsoleLogger();
 
         $artifact_creator = new Tracker_ArtifactCreator(
             $artifact_factory,
@@ -58,7 +59,9 @@ try {
             $artifact_creator,
             $new_changeset_creator,
             Tracker_FormElementFactory::instance(),
-            $user_manager
+            new Tracker_Artifact_XMLImport_XMLImportHelper($user_manager),
+            new Tracker_FormElement_Field_List_Bind_Static_ValueDao(),
+            $logger
         );
 
         $zip = new ZipArchive();

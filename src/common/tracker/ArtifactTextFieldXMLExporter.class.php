@@ -19,11 +19,13 @@
  */
 
 class ArtifactTextFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporter {
+    const TV3_DISPLAY_TYPE = 'TA';
+    const TV3_DATA_TYPE    = '1';
     const TV3_TYPE         = 'TA_1';
     const TV5_TYPE         = 'text';
     const TV3_VALUE_INDEX  = 'valueText';
 
-    public function appendNode(DOMElement $changeset_node, $artifact_id, array $row) {
+    public function appendNode(DOMElement $changeset_node, $tracker_id, $artifact_id, array $row) {
         $this->appendStringNode($changeset_node, self::TV5_TYPE, $row);
     }
 

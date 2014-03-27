@@ -19,6 +19,13 @@
  */
 
 class Log_ConsoleLogger implements Logger {
+    const BLACK   = "\033[30m";
+    const RED     = "\033[31m";
+    const GREEN   = "\033[32m";
+    const BLUE    = "\033[34m";
+    const YELLOW  = "\033[35m";
+    const BG_RED  = "\033[41m";
+    const NOCOLOR = "\033[0m";
 
     private $log = array();
 
@@ -35,7 +42,7 @@ class Log_ConsoleLogger implements Logger {
     }
 
     public function log($message, $level = null) {
-        $this->log[] = array($level => $message);
+        fwrite(STDERR, $this->colorize($level, $level.' '.$message.PHP_EOL));
     }
 
     public function warn($message, Exception $e = null) {
@@ -53,10 +60,30 @@ class Log_ConsoleLogger implements Logger {
 
     }
 
-    public function dump() {
-        foreach ($this->log as $log_line) {
-            list($level, $message) = each($log_line);
-            fwrite(STDERR, $level.' '.$message.PHP_EOL);
+    /**
+     * Format message aaccording to given level
+     *
+     * @param String $level
+     * @param String $message
+     *
+     * @return string
+     */
+    private function colorize($level, $message) {
+        $color = null;
+        switch ($level) {
+            case Logger::INFO:
+                $color = self::GREEN;
+                break;
+            case Logger::WARN:
+                $color = self::YELLOW;
+                break;
+            case Logger::ERROR:
+                $color = self::RED;
+                break;
         }
+        if ($color) {
+            $message = $color.$message.self::NOCOLOR;
+        }
+        return $message;
     }
 }

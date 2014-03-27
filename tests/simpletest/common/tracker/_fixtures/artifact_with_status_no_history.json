@@ -5,7 +5,7 @@
                 "artifact_id":  "123",
                 "summary":      "Le artifact without history",
                 "details":      "Le original submission",
-                "severity":     "1",
+                "status_id":    "3",
                 "open_date":    "1234567890",
                 "submitted_by": "goofy"
             }
@@ -18,20 +18,16 @@
         {
             "parameters": {
                 "group_artifact_id": 1,
-                "field_name": "severity"
+                "field_name": "status_id"
             },
             "rows": [
                 {
                     "value_id": "1",
-                    "value": "1 - Ordinary"
+                    "value": "Open"
                 },
                 {
-                    "value_id": "5",
-                    "value": "5 - Major"
-                },
-                {
-                    "value_id": "9",
-                    "value": "9 - Critical"
+                    "value_id": "3",
+                    "value": "Closed"
                 }
             ]
         }

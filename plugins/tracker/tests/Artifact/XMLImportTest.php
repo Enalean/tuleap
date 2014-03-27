@@ -38,9 +38,11 @@ abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase {
     protected $john_doe;
     protected $formelement_factory;
     protected $user_manager;
+    protected $xml_import_helper;
     protected $artifact;
     protected $extraction_path;
-
+    protected $static_value_dao;
+    protected $logger;
 
     public function setUp() {
         parent::setUp();
@@ -59,16 +61,24 @@ abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase {
         stub($this->user_manager)->getUserByIdentifier('john_doe')->returns($this->john_doe);
         stub($this->user_manager)->getUserAnonymous()->returns(new PFUser(array('user_id' => 0)));
 
+        $this->xml_import_helper = new Tracker_Artifact_XMLImport_XMLImportHelper($this->user_manager);
+
         $this->artifact = mock('Tracker_Artifact');
 
         $this->extraction_path = '/some/random/path';
+
+        $this->static_value_dao = mock('Tracker_FormElement_Field_List_Bind_Static_ValueDao');
+
+        $this->logger = mock('Logger');
 
         $this->importer = new Tracker_Artifact_XMLImport(
             mock('XML_RNGValidator'),
             $this->artifact_creator,
             $this->new_changeset_creator,
             $this->formelement_factory,
-            $this->user_manager
+            $this->xml_import_helper,
+            $this->static_value_dao,
+            $this->logger
         );
     }
 }
@@ -171,6 +181,120 @@ class Tracker_Artifact_XMLImport_HappyPathTest extends Tracker_Artifact_XMLImpor
     }
 }
 
+class Tracker_Artifact_XMLImport_CommentsTest extends Tracker_Artifact_XMLImportBaseTest {
+
+    private $xml_element;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->xml_element = new SimpleXMLElement('<?xml version="1.0"?>
+            <artifacts>
+              <artifact id="4918">
+                <changeset>
+                  <submitted_by format="username">john_doe</submitted_by>
+                  <submitted_on format="ISO8601">2014-01-15T10:38:06+01:00</submitted_on>
+                  <comments/>
+                  <field_change field_name="summary" type="string">
+                    <value>Ça marche</value>
+                  </field_change>
+                </changeset>
+                <changeset>
+                  <submitted_by format="username">john_doe</submitted_by>
+                  <submitted_on format="ISO8601">2014-01-15T11:03:50+01:00</submitted_on>
+                  <comments>
+                    <comment>
+                      <submitted_by format="username">john_doe</submitted_by>
+                      <submitted_on format="ISO8601">2014-01-15T11:03:50+01:00</submitted_on>
+                      <body format="text">Some text</body>
+                    </comment>
+                  </comments>
+                </changeset>
+                <changeset>
+                  <submitted_by format="username">john_doe</submitted_by>
+                  <submitted_on format="ISO8601">2014-01-15T11:23:50+01:00</submitted_on>
+                  <comments>
+                    <comment>
+                      <submitted_by format="username">john_doe</submitted_by>
+                      <submitted_on format="ISO8601">2014-01-15T11:23:50+01:00</submitted_on>
+                      <body format="html">&lt;p&gt;Some text&lt;/p&gt;</body>
+                    </comment>
+                  </comments>
+                </changeset>
+              </artifact>
+            </artifacts>');
+
+        stub($this->artifact_creator)->create()->returns($this->artifact);
+        stub($this->new_changeset_creator)->create()->returns(mock('Tracker_Artifact_Changeset'));
+    }
+
+    public function itCreatesTheComments() {
+        expect($this->new_changeset_creator)->create()->count(2);
+        expect($this->new_changeset_creator)->create('*', '*', 'Some text', '*', '*', '*', Tracker_Artifact_Changeset_Comment::TEXT_COMMENT)->at(0);
+        expect($this->new_changeset_creator)->create('*', '*', '<p>Some text</p>', '*', '*', '*', Tracker_Artifact_Changeset_Comment::HTML_COMMENT)->at(1);
+
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+    }
+}
+
+class Tracker_Artifact_XMLImport_CommentUpdatesTest extends Tracker_Artifact_XMLImportBaseTest {
+
+    private $xml_element;
+    private $changeset;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->xml_element = new SimpleXMLElement('<?xml version="1.0"?>
+            <artifacts>
+              <artifact id="4918">
+                <changeset>
+                  <submitted_by format="username">john_doe</submitted_by>
+                  <submitted_on format="ISO8601">2014-01-15T10:38:06+01:00</submitted_on>
+                  <comments/>
+                  <field_change field_name="summary" type="string">
+                    <value>Ça marche</value>
+                  </field_change>
+                </changeset>
+                <changeset>
+                  <submitted_by format="username">john_doe</submitted_by>
+                  <submitted_on format="ISO8601">2014-01-15T11:03:50+01:00</submitted_on>
+                  <comments>
+                    <comment>
+                      <submitted_by format="username">john_doe</submitted_by>
+                      <submitted_on format="ISO8601">2014-01-15T11:03:50+01:00</submitted_on>
+                      <body format="text">Some text</body>
+                    </comment>
+                    <comment>
+                      <submitted_by format="username">john_doe</submitted_by>
+                      <submitted_on format="ISO8601">2014-01-15T11:23:50+01:00</submitted_on>
+                      <body format="html">&lt;p&gt;Some text&lt;/p&gt;</body>
+                    </comment>
+                  </comments>
+                </changeset>
+              </artifact>
+            </artifacts>');
+
+        $this->changeset = mock('Tracker_Artifact_Changeset');
+
+        stub($this->artifact_creator)->create()->returns($this->artifact);
+        stub($this->new_changeset_creator)->create()->returns($this->changeset);
+    }
+
+    public function itCreatesTheCommentsWithUpdates() {
+        expect($this->new_changeset_creator)->create('*', '*', 'Some text', '*', '*', '*', Tracker_Artifact_Changeset_Comment::TEXT_COMMENT)->once();
+
+        expect($this->changeset)->updateComment(
+            '<p>Some text</p>',
+            $this->john_doe,
+            Tracker_Artifact_Changeset_Comment::HTML_COMMENT,
+            strtotime('2014-01-15T11:23:50+01:00')
+        )->once();
+
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+    }
+}
+
 class Tracker_Artifact_XMLImport_NoFieldTest extends Tracker_Artifact_XMLImportBaseTest {
 
     private $xml_element;
@@ -195,7 +319,7 @@ class Tracker_Artifact_XMLImport_NoFieldTest extends Tracker_Artifact_XMLImportB
     public function itThrowAnExceptionWhenFieldDoesntExist() {
         expect($this->artifact_creator)->create()->never();
 
-        $this->expectException('Tracker_Artifact_Exception_EmptyChangesetException');
+        expect($this->logger)->error()->once();
 
         $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
     }
@@ -212,12 +336,16 @@ class Tracker_Artifact_XMLImport_UserTest extends Tracker_Artifact_XMLImportBase
         $this->user_manager = mock('UserManager');
         stub($this->user_manager)->getUserAnonymous()->returns(new PFUser(array('user_id' => 0)));
 
+        $this->xml_import_helper = new Tracker_Artifact_XMLImport_XMLImportHelper($this->user_manager);
+
         $this->importer = new Tracker_Artifact_XMLImport(
             mock('XML_RNGValidator'),
             $this->artifact_creator,
             $this->new_changeset_creator,
             $this->formelement_factory,
-            $this->user_manager
+            $this->xml_import_helper,
+            $this->static_value_dao,
+            mock('Logger')
         );
     }
 
@@ -335,7 +463,7 @@ class Tracker_Artifact_XMLImport_MultipleChangesetsTest extends Tracker_Artifact
             </artifacts>');
 
         stub($this->artifact_creator)->create()->returns($this->artifact);
-        stub($this->new_changeset_creator)->create()->returns(true);
+        stub($this->new_changeset_creator)->create()->returns(mock('Tracker_Artifact_Changeset'));
     }
 
     public function itCreatesTwoChangesets() {
@@ -659,7 +787,7 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsAndChangeset
     public function itCreatesChangesetsThatOnlyReferenceConcernedFiles() {
         $artifact = mock('Tracker_Artifact');
         stub($this->artifact_creator)->create()->returns($artifact);
-        stub($this->new_changeset_creator)->create()->returns(true);
+        stub($this->new_changeset_creator)->create()->returns(mock('Tracker_Artifact_Changeset'));
         stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'attachment')->returns(
             aFileField()->withId($this->file_field_id)->build()
         );
@@ -893,6 +1021,172 @@ class Tracker_Artifact_XMLImport_AlphanumericTest extends Tracker_Artifact_XMLIm
 
         $data = array(
             $this->date_field_id   => '',
+        );
+        expect($this->artifact_creator)->create('*', $data, '*', '*', '*', '*')->once();
+
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+    }
+}
+
+class Tracker_Artifact_XMLImport_SelectboxTest extends Tracker_Artifact_XMLImportBaseTest {
+
+    private $status_field;
+    private $status_field_id = 234;
+    private $assto_field;
+    private $assto_field_id = 456;
+    private $open_value_id = 104;
+
+    public function setUp() {
+        parent::setUp();
+
+        stub($this->artifact_creator)->create()->returns(mock('Tracker_Artifact'));
+
+        $this->status_field = stub('Tracker_FormElement_Field_String')->getId()->returns($this->status_field_id);
+        $this->assto_field = stub('Tracker_FormElement_Field_String')->getId()->returns($this->assto_field_id);
+
+        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'status_id')->returns(
+            $this->status_field
+        );
+        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'assigned_to')->returns(
+            $this->assto_field
+        );
+
+        stub($this->static_value_dao)->searchValueByLabel($this->status_field_id, 'Open')->returnsDar(array(
+            'id'    => $this->open_value_id,
+            'label' => 'Open',
+            // ...
+        ));
+
+        $this->xml_element = new SimpleXMLElement('<?xml version="1.0"?>
+            <artifacts>
+              <artifact id="4918">
+                <changeset>
+                  <submitted_by format="username">john_doe</submitted_by>
+                  <submitted_on format="ISO8601">2014-01-15T10:38:06+01:00</submitted_on>
+                  <field_change type="list" field_name="status_id" bind="static">
+                    <value>Open</value>
+                  </field_change>
+                  <field_change type="list" field_name="assigned_to" bind="user">
+                    <value format="username">john_doe</value>
+                  </field_change>
+                </changeset>
+              </artifact>
+            </artifacts>');
+    }
+
+    public function itCreatesArtifactWithSelectboxValue() {
+        $data = array(
+            $this->status_field_id => array($this->open_value_id),
+            $this->assto_field_id  => array($this->john_doe->getId()),
+        );
+        expect($this->artifact_creator)->create('*', $data, '*', '*', '*', '*')->once();
+
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+    }
+}
+
+class Tracker_Artifact_XMLImport_StaticMultiSelectboxTest extends Tracker_Artifact_XMLImportBaseTest {
+
+    private $static_multi_selectbox_field;
+    private $static_multi_selectbox_field_id = 456;
+
+    private $ui_value_id          = 101;
+    private $ui_value_label       = "UI";
+    private $database_value_id    = 102;
+    private $database_value_label = "Database";
+
+    public function setUp() {
+        parent::setUp();
+
+        stub($this->artifact_creator)->create()->returns(mock('Tracker_Artifact'));
+
+        $this->static_multi_selectbox_field = stub('Tracker_FormElement_Field_String')->getId()->returns($this->static_multi_selectbox_field_id);
+
+        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'multi_select_box')->returns(
+            $this->static_multi_selectbox_field
+        );
+
+        stub($this->static_value_dao)->searchValueByLabel($this->static_multi_selectbox_field_id, $this->ui_value_label)->returnsDar(array(
+            'id'    => $this->ui_value_id,
+            'label' => $this->ui_value_label,
+        ));
+
+        stub($this->static_value_dao)->searchValueByLabel($this->static_multi_selectbox_field_id, $this->database_value_label)->returnsDar(array(
+            'id'    => $this->database_value_id,
+            'label' => $this->database_value_label,
+        ));
+
+        $this->xml_element = new SimpleXMLElement('<?xml version="1.0"?>
+            <artifacts>
+              <artifact id="4918">
+                <changeset>
+                  <submitted_by format="username">john_doe</submitted_by>
+                  <submitted_on format="ISO8601">2014-01-15T10:38:06+01:00</submitted_on>
+                  <field_change type="list" field_name="multi_select_box" bind="static">
+                    <value>UI</value>
+                    <value>Database</value>
+                  </field_change>
+                </changeset>
+              </artifact>
+            </artifacts>');
+    }
+
+    public function itCreatesArtifactWithAllMultiSelectboxValue() {
+        $data = array(
+            $this->static_multi_selectbox_field_id => array($this->ui_value_id, $this->database_value_id),
+        );
+        expect($this->artifact_creator)->create('*', $data, '*', '*', '*', '*')->once();
+
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+    }
+}
+
+class Tracker_Artifact_XMLImport_UserMultiSelectboxTest extends Tracker_Artifact_XMLImportBaseTest {
+
+    private $user_multi_selectbox_field;
+    private $user_multi_selectbox_field_id = 456;
+
+    private $user_01_id   = 101;
+    private $user_02_id   = 102;
+
+    public function setUp() {
+        parent::setUp();
+
+        stub($this->artifact_creator)->create()->returns(mock('Tracker_Artifact'));
+
+        $this->user_multi_selectbox_field = stub('Tracker_FormElement_Field_String')->getId()->returns($this->user_multi_selectbox_field_id);
+
+        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'multi_select_box_user')->returns(
+            $this->user_multi_selectbox_field
+        );
+
+        $this->xml_element = new SimpleXMLElement('<?xml version="1.0"?>
+            <artifacts>
+              <artifact id="4918">
+                <changeset>
+                  <submitted_by format="username">john_doe</submitted_by>
+                  <submitted_on format="ISO8601">2014-01-15T10:38:06+01:00</submitted_on>
+                  <field_change type="list" field_name="multi_select_box_user" bind="user">
+                    <value format="username">jeanne</value>
+                    <value format="username">serge</value>
+                  </field_change>
+                </changeset>
+              </artifact>
+            </artifacts>');
+
+        $this->jeanne = aUser()->withId(101)->withUserName('jeanne')->build();
+        $this->serge  = aUser()->withId(102)->withUserName('serge')->build();
+
+        stub($this->user_manager)->getUserByIdentifier('jeanne')->returns($this->jeanne);
+        stub($this->user_manager)->getUserByIdentifier('serge')->returns($this->serge);
+    }
+
+    public function itCreatesArtifactWithAllMultiSelectboxValue() {
+        $data = array(
+            $this->user_multi_selectbox_field_id => array(
+                $this->user_01_id,
+                $this->user_02_id
+            ),
         );
         expect($this->artifact_creator)->create('*', $data, '*', '*', '*', '*')->once();
 

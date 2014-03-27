@@ -359,9 +359,10 @@ class Tracker_Artifact_Changeset {
      *
      * @return void
      */
-    public function updateComment($body, $user, $comment_format) {
+    public function updateComment($body, $user, $comment_format, $timestamp) {
         if ($this->userCanEdit($user)) {
-            $commentUpdated = $this->getCommentDao()->createNewVersion($this->id, $body, $user->getId(), $_SERVER['REQUEST_TIME'], $this->getComment()->id, $comment_format);
+            $commentUpdated = $this->getCommentDao()->createNewVersion($this->id, $body, $user->getId(), $timestamp, $this->getComment()->id, $comment_format);
+            unset($this->latest_comment);
             if ($commentUpdated) {
                 $params = array('group_id'     => $this->getArtifact()->getTracker()->getGroupId(),
                                 'artifact_id'  => $this->getArtifact()->getId(),

@@ -30,6 +30,10 @@ class ArtifactXMLNodeHelper {
         return $this->document->createElement($name);
     }
 
+    public function appendChild(DOMElement $node) {
+        $this->document->appendChild($node);
+    }
+
     public function addUserFormatAttribute(DOMElement $node, $is_anonymous) {
         $node->setAttribute('format', $is_anonymous ? 'email' : 'username');
         if ($is_anonymous) {
@@ -55,10 +59,14 @@ class ArtifactXMLNodeHelper {
         return $node;
     }
 
+    public function getCDATASection(DOMNode $node, $value) {
+        $no = $node->ownerDocument;
+        return $no->createCDATASection($value);
+    }
+
     public function getNodeWithValue($node_name, $value) {
         $node = $this->document->createElement($node_name);
-        $no = $node->ownerDocument;
-        $node->appendChild($no->createCDATASection($value));
+        $node->appendChild($this->getCDATASection($node, $value));
         return $node;
     }
 }

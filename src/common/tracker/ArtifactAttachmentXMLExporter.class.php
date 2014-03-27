@@ -26,10 +26,14 @@ class ArtifactAttachmentXMLExporter {
     /** @var ZipArchive */
     private $archive;
 
-    public function __construct(ArtifactXMLNodeHelper $node_helper, ArtifactXMLExporterDao $dao, ZipArchive $archive) {
+    /** @var Boolean */
+    private $skip_files = false;
+
+    public function __construct(ArtifactXMLNodeHelper $node_helper, ArtifactXMLExporterDao $dao, ZipArchive $archive, $skip_files) {
         $this->node_helper = $node_helper;
         $this->dao         = $dao;
         $this->archive     = $archive;
+        $this->skip_files  = $skip_files;
     }
 
     public function addFilesToArtifact(DOMElement $artifact_node, $artifact_type_id, $artifact_id) {
@@ -38,11 +42,16 @@ class ArtifactAttachmentXMLExporter {
             $this->archive->addEmptyDir(ArtifactXMLExporter::ARCHIVE_DATA_DIR);
         }
         foreach($dar as $row) {
-            $xml_file_id = ArtifactAttachmentFieldXMLExporter::XML_FILE_PREFIX.$row['id'];
-            $this->archive->addFile(
-                $this->getFilePathOnServer($artifact_type_id, $row['id']),
-                $this->getFilePathInArchive($xml_file_id)
-            );
+            $xml_file_id     = ArtifactAttachmentFieldXMLExporter::XML_FILE_PREFIX.$row['id'];
+            $path_in_archive = $this->getFilePathInArchive($xml_file_id);
+            if ($this->skip_files) {
+                $this->archive->addFromString($path_in_archive, '');
+            } else {
+                $this->archive->addFile(
+                    $this->getFilePathOnServer($artifact_type_id, $row['id']),
+                    $path_in_archive
+                );
+            }
             $file = $this->node_helper->createElement('file');
             $file->setAttribute('id', $xml_file_id);
             $file->appendChild($this->node_helper->getNodeWithValue('filename', $row['filename']));

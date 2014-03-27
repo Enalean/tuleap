@@ -234,5 +234,16 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
 
         return $this->update($sql);
     }
+
+    public function searchValueByLabel($field_id, $label) {
+        $field_id = $this->da->escapeInt($field_id);
+        $label    = $this->da->quoteSmart($label);
+
+        $sql = "SELECT *
+                FROM tracker_field_list_bind_static_value
+                WHERE field_id = $field_id AND label = $label";
+
+        return $this->retrieve($sql);
+    }
 }
 ?>
