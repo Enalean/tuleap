@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -31,9 +30,12 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
     private $identity_file      = '/home/chuck/.ssh/id_rsa';
     private $replication_key    = 'ssh-rsa blablabla john@cake.do';
     private $use_ssl            = false;
+    private $gerrit_version     = '2.5';
+    private $http_password      = 'azerty';
 
-    private $alternate_server_id = 2;
-    private $alternate_host      = 'h.tuleap.net';
+    private $alternate_server_id      = 2;
+    private $alternate_host           = 'h.tuleap.net';
+    private $alternate_gerrit_version = '2.8+';
     /** @var Git_SystemEventManager */
     private $system_event_manager;
     /** @var Git_RemoteServer_GerritServer  */
@@ -58,6 +60,8 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
             'identity_file'     => $this->identity_file,
             'ssh_key'           => $this->replication_key,
             'use_ssl'           => $this->use_ssl,
+            'gerrit_version'    => $this->gerrit_version,
+            'http_password'     => $this->http_password,
         );
         $this->dar_2 = array(
             'id'                => $this->alternate_server_id,
@@ -68,6 +72,8 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
             'identity_file'     => $this->identity_file,
             'ssh_key'           => $this->replication_key,
             'use_ssl'           => $this->use_ssl,
+            'gerrit_version'    => $this->alternate_gerrit_version,
+            'http_password'     => $this->http_password,
         );
 
         $git_dao   = mock('GitDao');
@@ -90,7 +96,9 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
             $this->login,
             $this->identity_file,
             $this->replication_key,
-            $this->use_ssl
+            $this->use_ssl,
+            $this->gerrit_version,
+            $this->http_password
         );
         $this->alternate_gerrit_server  = new Git_RemoteServer_GerritServer(
             $this->alternate_server_id,
@@ -100,7 +108,9 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
             $this->login,
             $this->identity_file,
             $this->replication_key,
-            $this->use_ssl
+            $this->use_ssl,
+            $this->alternate_gerrit_version,
+            $this->http_password
         );
         stub($git_dao)->isRemoteServerUsed($this->server_id)->returns(true);
         stub($git_dao)->isRemoteServerUsed($this->alternate_server_id)->returns(false);
@@ -198,7 +208,18 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
 
     public function itSavesAnExistingServer() {
         $this->main_gerrit_server->setLogin('new_login');
-        expect($this->dao)->save($this->server_id, $this->host, $this->ssh_port, $this->http_port, 'new_login', $this->identity_file, $this->replication_key, $this->use_ssl)->once();
+        expect($this->dao)->save(
+            $this->server_id,
+            $this->host,
+            $this->ssh_port,
+            $this->http_port,
+            'new_login',
+            $this->identity_file,
+            $this->replication_key,
+            $this->use_ssl,
+            $this->gerrit_version,
+            $this->http_password
+        )->once();
         $this->factory->save($this->main_gerrit_server);
     }
 
@@ -217,7 +238,9 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
             $this->login,
             $this->identity_file,
             $this->replication_key,
-            $this->use_ssl
+            $this->use_ssl,
+            $this->gerrit_version,
+            $this->http_password
         );
         stub($this->dao)->save()->returns(113);
         $this->factory->save($new_server);

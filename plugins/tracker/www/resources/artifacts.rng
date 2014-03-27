@@ -85,16 +85,47 @@
     </attribute>
     <choice>
       <ref name="field_string"/>
+      <ref name="field_int"/>
+      <ref name="field_float"/>
+      <ref name="field_date"/>
       <ref name="field_file"/>
       <ref name="field_open_list_user"/>
+      <ref name="field_perms_on_artifact"/>
     </choice>
   </define>
   <define name="field_string">
     <attribute name="type">
-      <value>string</value>
+      <choice>
+        <value>string</value>
+        <value>text</value>
+      </choice>
     </attribute>
     <element name="value">
       <data type="string"/>
+    </element>
+  </define>
+  <define name="field_int">
+    <attribute name="type">
+      <value>int</value>
+    </attribute>
+    <element name="value">
+      <data type="int"/>
+    </element>
+  </define>
+  <define name="field_float">
+    <attribute name="type">
+      <value>float</value>
+    </attribute>
+    <element name="value">
+      <data type="float"/>
+    </element>
+  </define>
+  <define name="field_date">
+    <attribute name="type">
+      <value>date</value>
+    </attribute>
+    <element name="value">
+      <ref name="date_content"/>
     </element>
   </define>
   <define name="field_file">
@@ -119,6 +150,21 @@
     <oneOrMore>
       <element name="value">
         <ref name="user_content"/>
+      </element>
+    </oneOrMore>
+  </define>
+  <define name="field_perms_on_artifact">
+    <attribute name="type">
+      <value>permissions_on_artifact</value>
+    </attribute>
+    <attribute name="use_perm">
+      <data type="boolean"/>
+    </attribute>
+    <oneOrMore>
+      <element name="ugroup">
+        <attribute name="ugroup_id">
+          <data type="int"/>
+        </attribute>
       </element>
     </oneOrMore>
   </define>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,34 +21,24 @@
 require_once 'common/backend/BackendLogger.class.php';
 
 /**
- * I know how to speak to a Gerrit remote server
+ * I know how to speak to a Gerrit 2.5 remote server
  */
-class Git_Driver_Gerrit {
+class Git_Driver_GerritLegacy implements Git_Driver_Gerrit {
     const INDEX_GROUPS_VERBOSE_NAME = 0;
     const INDEX_GROUPS_VERBOSE_UUID = 1;
-
-    const CACHE_ACCOUNTS        = 'accounts';
-    const CACHE_GROUPS_INCLUDES = 'groups_byinclude';
 
     const COMMAND      = 'gerrit';
     const GSQL_COMMAND = 'gerrit gsql --format json -c';
     const EXIT_CODE    = 1;
 
-    const DEFAULT_PARENT_PROJECT = 'All-Projects';
-
-    const DELETEPROJECT_PLUGIN_NAME = 'deleteproject';
-    const GERRIT_PLUGIN_ENABLED_VALUE = 'ENABLED';
-
-    /**
-     * @var Git_Driver_Gerrit_RemoteSSHCommand
-     */
+    /** @var Git_Driver_Gerrit_RemoteSSHCommand */
     private $ssh;
 
     /** @var Logger */
     private $logger;
 
     public function __construct(Git_Driver_Gerrit_RemoteSSHCommand $ssh, Logger $logger) {
-        $this->ssh = $ssh;
+        $this->ssh    = $ssh;
         $this->logger = $logger;
     }
 
@@ -85,7 +75,7 @@ class Git_Driver_Gerrit {
      * @param string $project_name
      * @return string Gerrit project name
      * @throws Git_Driver_Gerrit_Exception
-     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     * @throws Git_Driver_Gerrit_Exception
      */
     private function actionCreateProject(Git_RemoteServer_GerritServer $server, $command, $project_name) {
         try {
@@ -112,7 +102,7 @@ class Git_Driver_Gerrit {
      * @param string $project_name
      * @return true if the gerrit project exists, else return false
      *
-     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     * @throws Git_Driver_Gerrit_Exception
      */
     public function doesTheProjectExist(Git_RemoteServer_GerritServer $server, $project_name) {
         return in_array($project_name, $this->listProjects($server));
@@ -121,7 +111,7 @@ class Git_Driver_Gerrit {
     /**
      * @param Git_RemoteServer_GerritServer $server
      *
-     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     * @throws Git_Driver_Gerrit_Exception
      */
     public function ping(Git_RemoteServer_GerritServer $server) {
         $command = self::COMMAND . ' version';
@@ -138,7 +128,7 @@ class Git_Driver_Gerrit {
     }
 
     /**
-     *
+     * Should be protected (only used publicly in tests)?
      * @param Git_RemoteServer_GerritServer $server
      * @return array : the list of the parent project created in the gerrit server
      */
@@ -207,14 +197,30 @@ class Git_Driver_Gerrit {
         return in_array($group_name, $this->listGroups($server));
     }
 
+    /** should be protected (used publicly only in tests), like listProjects */
     public function listGroups(Git_RemoteServer_GerritServer $server) {
         $command = self::COMMAND . ' ls-groups';
         return explode(PHP_EOL, $this->ssh->execute($server, $command));
     }
 
-    public function listGroupsVerbose(Git_RemoteServer_GerritServer $server) {
+    /**
+     * @param Git_RemoteServer_GerritServer $server
+     *
+     * @return array of (groupname => uuid)
+     */
+    public function getAllGroups(Git_RemoteServer_GerritServer $server) {
         $command = self::COMMAND . ' ls-groups --verbose';
-        return explode(PHP_EOL, $this->ssh->execute($server, $command));
+        $results = explode(PHP_EOL, $this->ssh->execute($server, $command));
+
+        $group_info = array();
+        foreach ($results as $group_line) {
+            $group_entry = explode("\t", $group_line);
+            $name        = $group_entry[self::INDEX_GROUPS_VERBOSE_NAME];
+
+            $group_info[$name] = $group_entry[self::INDEX_GROUPS_VERBOSE_UUID];
+        }
+
+        return $group_info;
     }
 
     private function computeException(Git_Driver_Gerrit_RemoteSSHCommandFailure $e, $command) {
@@ -231,22 +237,9 @@ class Git_Driver_Gerrit {
     }
 
     public function getGerritProjectName(GitRepository $repository) {
-        $project = $repository->getProject()->getUnixName();
-        $repo    = $repository->getFullName();
-        return "$project/$repo";
-    }
+        $name_builder = new Git_RemoteServer_Gerrit_ProjectNameBuilder();
 
-    private function compileMemberCommands($user_name_list) {
-        $member_args = array();
-        foreach ($user_name_list as $user_name) {
-            $user_name = $this->escapeUserIdentifierAsWeNeedToGiveTheParameterToGsqlBehindSSH($user_name);
-            $member_args[] = "--member $user_name";
-        }
-        return $member_args;
-    }
-
-    private function escapeUserIdentifierAsWeNeedToGiveTheParameterToGsqlBehindSSH($user_identifier) {
-        return escapeshellarg(escapeshellarg($user_identifier));
+        return $name_builder->getGerritProjectName($repository);
     }
 
     protected function setAccount(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user) {
@@ -370,12 +363,12 @@ class Git_Driver_Gerrit {
 
 
     /**
-     * 
+     *
      * @param Git_RemoteServer_GerritServer $server
      * @param Git_Driver_Gerrit_User $user
      * @param string $ssh_key
-     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
-     * 
+     * @throws Git_Driver_Gerrit_Exception
+     *
      */
     public function addSSHKeyToAccount(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user, $ssh_key) {
         $escaped_ssh_key = escapeshellarg($ssh_key);
@@ -384,11 +377,11 @@ class Git_Driver_Gerrit {
     }
 
     /**
-     * 
+     *
      * @param Git_RemoteServer_GerritServer $server
      * @param Git_Driver_Gerrit_User $user
      * @param string $ssh_key
-     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     * @throws Git_Driver_Gerrit_Exception
      */
     public function removeSSHKeyFromAccount(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user, $ssh_key) {
         $escaped_ssh_key = escapeshellarg($ssh_key);
@@ -448,8 +441,8 @@ class Git_Driver_Gerrit {
     /**
      * @param Git_RemoteServer_GerritServer $server
      * @param string $gerrit_project_full_name E.g. bugs or bugs/repository1
-     * 
-     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     *
+     * @throws Git_Driver_Gerrit_Exception
      */
     public function deleteProject(Git_RemoteServer_GerritServer $server, $gerrit_project_full_name) {
         $query = ' deleteproject delete ' . $gerrit_project_full_name . ' --yes-really-delete';
@@ -460,11 +453,10 @@ class Git_Driver_Gerrit {
      * @param Git_RemoteServer_GerritServer $server
      * @param string $gerrit_project_full_name
      *
-     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     * @throws Git_Driver_Gerrit_Exception
      */
     public function makeGerritProjectReadOnly(Git_RemoteServer_GerritServer $server, $gerrit_project_full_name) {
         $query = self::COMMAND . ' set-project --ps READ_ONLY ' . $gerrit_project_full_name;
         $this->ssh->execute($server, $query);
     }
 }
-?>

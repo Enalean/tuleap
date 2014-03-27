@@ -22,8 +22,6 @@ class ArtifactXMLExporter {
 
     const ARCHIVE_DATA_DIR = 'data';
 
-    const XML_FILE_PREFIX = 'File';
-
     /** @var ArtifactXMLExporterDao */
     private $dao;
 

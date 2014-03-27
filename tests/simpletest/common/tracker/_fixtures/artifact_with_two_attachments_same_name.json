@@ -12,6 +12,8 @@
     "artifact_history": {
         "123": [
             {
+                "data_type":    null,
+                "display_type": null,
                 "field_name":   "attachment",
                 "old_value":    "",
                 "new_value":    "A.png",
@@ -21,6 +23,8 @@
                 "is_anonymous": "0"
             },
             {
+                "data_type":    null,
+                "display_type": null,
                 "field_name":   "attachment",
                 "old_value":    "A.png",
                 "new_value":    "A.png,A.png",

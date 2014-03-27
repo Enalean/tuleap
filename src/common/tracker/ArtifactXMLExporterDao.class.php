@@ -34,18 +34,23 @@ class ArtifactXMLExporterDao extends DataAccessObject {
 
     public function searchHistory($artifact_id) {
         $artifact_id = $this->da->escapeInt($artifact_id);
-        $old_value = $this->unconvertHtmlspecialchars('artifact_history.old_value', 'old_value');
+        $old_value = $this->unconvertHtmlspecialchars('h.old_value', 'old_value');
 
-        $sql = "SELECT field_name,
+        $sql = "SELECT
+                    f.data_type,
+                    f.display_type,
+                    h.field_name,
                     $old_value,
-                    new_value,
-                    date,
-                    mod_by,
-                    IFNULL(user.user_name, artifact_history.email) AS submitted_by,
-                    IF(artifact_history.email, 1, 0) AS is_anonymous
-                FROM artifact_history
-                     LEFT JOIN user ON (mod_by = user_id)
-                WHERE artifact_id = $artifact_id";
+                    h.new_value,
+                    h.date,
+                    h.mod_by,
+                    IFNULL(user.user_name, h.email) AS submitted_by,
+                    IF(h.email, 1, 0) AS is_anonymous
+                FROM artifact_history h
+                    INNER JOIN artifact a ON (a.artifact_id = h.artifact_id)
+                    LEFT JOIN artifact_field f ON (f.field_name = h.field_name AND f.group_artifact_id = a.group_artifact_id)
+                    LEFT JOIN user ON (h.mod_by = user.user_id)
+                WHERE h.artifact_id = $artifact_id";
 
         return $this->retrieve($sql);
     }
@@ -120,6 +125,27 @@ class ArtifactXMLExporterDao extends DataAccessObject {
                 WHERE artifact_id = $artifact_id
                   AND added_by = $user_id
                   AND date < $date";
+        return $this->retrieve($sql);
+    }
+
+    public function searchPermsForArtifact($artifact_id) {
+        $sql = "SELECT ugroup_id
+                FROM permissions
+                    INNER JOIN artifact ON (CAST(artifact_id AS CHAR) = object_id)
+                WHERE permission_type = 'TRACKER_ARTIFACT_ACCESS'
+                  AND object_id = '$artifact_id'
+                  AND use_artifact_permissions = 1
+                ORDER BY ugroup_id";
+
+        return $this->retrieve($sql);
+    }
+
+    public function searchFieldValues($artifact_id) {
+        $sql = "SELECT f.display_type, f.data_type, f.field_name, fv.*
+                FROM artifact_field_value fv
+                    JOIN artifact         a  ON (a.artifact_id = fv.artifact_id)
+                    JOIN artifact_field   f  ON (f.field_id = fv.field_id AND f.group_artifact_id = a.group_artifact_id)
+                WHERE fv.artifact_id = $artifact_id";
         return $this->retrieve($sql);
     }
 }

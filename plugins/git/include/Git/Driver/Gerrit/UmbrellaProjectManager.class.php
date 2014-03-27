@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -34,8 +34,8 @@ class Git_Driver_Gerrit_UmbrellaProjectManager {
     /** @var ProjectManager */
     private $project_manager;
 
-    /** @var Git_Driver_Gerrit */
-    private $driver;
+    /** @var Git_Driver_Gerrit_GerritDriverFactory */
+    private $driver_factory;
 
     /** @var Git_Driver_Gerrit_MembershipManager */
     private $membership_manager;
@@ -44,12 +44,12 @@ class Git_Driver_Gerrit_UmbrellaProjectManager {
         UGroupManager $ugroup_manager,
         ProjectManager $project_manager,
         Git_Driver_Gerrit_MembershipManager $membership_manager,
-        Git_Driver_Gerrit $driver
+     Git_Driver_Gerrit_GerritDriverFactory $driver_factory
     ) {
         $this->ugroup_manager     = $ugroup_manager;
         $this->project_manager    = $project_manager;
         $this->membership_manager = $membership_manager;
-        $this->driver             = $driver;
+        $this->driver_factory     = $driver_factory;
     }
 
     /**
@@ -79,7 +79,13 @@ class Git_Driver_Gerrit_UmbrellaProjectManager {
      */
     private function setProjectInheritanceOnServers(array $gerrit_servers, Project $project, Project $parent_project) {
         foreach ($gerrit_servers as $gerrit_server) {
-            $this->driver->setProjectInheritance($gerrit_server, $project->getUnixName(), $parent_project->getUnixName());
+            $this->driver_factory
+                ->getDriver($gerrit_server)
+                ->setProjectInheritance(
+                    $gerrit_server,
+                    $project->getUnixName(),
+                    $parent_project->getUnixName()
+                );
         }
     }
 
@@ -89,7 +95,12 @@ class Git_Driver_Gerrit_UmbrellaProjectManager {
      */
     private function resetProjectInheritanceOnServers(array $gerrit_servers, Project $project) {
         foreach ($gerrit_servers as $gerrit_server) {
-            $this->driver->resetProjectInheritance($gerrit_server, $project->getUnixName());
+            $this->driver_factory
+                ->getDriver($gerrit_server)
+                ->resetProjectInheritance(
+                    $gerrit_server,
+                    $project->getUnixName()
+                );
         }
     }
 
@@ -104,10 +115,11 @@ class Git_Driver_Gerrit_UmbrellaProjectManager {
 
         foreach ($gerrit_servers as $gerrit_server) {
             $this->membership_manager->createArrayOfGroupsForServer($gerrit_server, $ugroups);
+            $driver = $this->driver_factory->getDriver($gerrit_server);
 
-            if (! $this->driver->doesTheParentProjectExist($gerrit_server, $project_name)) {
+            if (! $driver->doesTheParentProjectExist($gerrit_server, $project_name)) {
                 $admin_group_name = $project_name.'/'.$admin_ugroup->getNormalizedName();
-                $project_name = $this->driver->createProjectWithPermissionsOnly($gerrit_server, $project, $admin_group_name);
+                $project_name = $driver->createProjectWithPermissionsOnly($gerrit_server, $project, $admin_group_name);
             }
         }
     }
@@ -128,4 +140,3 @@ class Git_Driver_Gerrit_UmbrellaProjectManager {
     }
 
 }
-?>

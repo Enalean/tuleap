@@ -30,11 +30,12 @@ class SystemEvent_GIT_GERRIT_PROJECT_DELETE_BaseTest extends TuleapTestCase {
         $this->repository_factory = mock('GitRepositoryFactory');
         $this->server_factory     = mock('Git_RemoteServer_GerritServerFactory');
         $this->driver             = mock('Git_Driver_Gerrit');
+        $this->driver_factory     = stub('Git_Driver_Gerrit_GerritDriverFactory')->getDriver()->returns($this->driver);
         $this->backend            = mock('Git_Backend_Gitolite');
         $this->repository         = mock('GitRepository');
 
         $this->event = partial_mock('SystemEvent_GIT_GERRIT_PROJECT_DELETE', array(('getParametersAsArray')));
-        $this->event->injectDependencies($this->repository_factory, $this->server_factory, $this->driver);
+        $this->event->injectDependencies($this->repository_factory, $this->server_factory, $this->driver_factory);
 
         $this->forge_project_name = 'Hello_kitty';
         $forge_project = stub('Project')->getUnixName()->returns($this->forge_project_name);
@@ -69,5 +70,3 @@ class SystemEvent_GIT_GERRIT_PROJECT_DELETE_BaseTest extends TuleapTestCase {
         $this->event->process();
     }
 }
-
-?>

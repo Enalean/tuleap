@@ -55,7 +55,7 @@ class Experimental_Theme extends DivBasedTabbedLayout {
     }
 
     public function isLabFeature() {
-        return true;
+        return false;
     }
 
     public function header($params) {

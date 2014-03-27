@@ -322,17 +322,19 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 $additional_where[] = $w;
             }
         }
-        $matching_ids = $dao->searchMatchingIds($group_id, $tracker->getId(), $additional_from, $additional_where, $user, $permissions, $contributor_field_id)->getRow();
-        if ($matching_ids) {
-            if (substr($matching_ids['id'], -1) === ',') {
-                $matching_ids['id'] = substr($matching_ids['id'], 0, -1);
+        $matching_ids['id']                = '';
+        $matching_ids['last_changeset_id'] = '';
+        $matching_ids_result = $dao->searchMatchingIds($group_id, $tracker->getId(), $additional_from, $additional_where, $user, $permissions, $contributor_field_id);
+        if ($matching_ids_result) {
+            $matching_ids = $matching_ids_result->getRow();
+            if ($matching_ids) {
+                if (substr($matching_ids['id'], -1) === ',') {
+                    $matching_ids['id'] = substr($matching_ids['id'], 0, -1);
+                }
+                if (substr($matching_ids['last_changeset_id'], -1) === ',') {
+                    $matching_ids['last_changeset_id'] = substr($matching_ids['last_changeset_id'], 0, -1);
+                }
             }
-            if (substr($matching_ids['last_changeset_id'], -1) === ',') {
-                $matching_ids['last_changeset_id'] = substr($matching_ids['last_changeset_id'], 0, -1);
-            }
-        } else {
-            $matching_ids['id']                = '';
-            $matching_ids['last_changeset_id'] = '';
         }
         
         $nb_matching = $matching_ids['id'] ? substr_count($matching_ids['id'], ',') + 1 : 0;
@@ -1309,7 +1311,9 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                     $this->updateCriteriaValues($criteria_values);
 
                     $additional_criteria_values = $request->get('additional_criteria');
-                    $this->updateAdditionalCriteriaValues($additional_criteria_values);
+                    if (!empty($additional_criteria_values)) {
+                        $this->updateAdditionalCriteriaValues($additional_criteria_values);
+                    }
                 }
                 $this->display($layout, $request, $current_user);
                 break;

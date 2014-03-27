@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -38,7 +38,10 @@ class Git_Admin_process_Test extends TuleapTestCase {
             'identity_file'     => '/path/to/file',
             'replication_key'   => '',
             'use_ssl'           => 0,
+            'gerrit_version'    => '2.5',
+            'http_password'     => 'azerty'
         );
+
         $this->request_update_existing_server = array(
             'host'              => 'g.example.com',
             'port'              => '1234',
@@ -46,9 +49,45 @@ class Git_Admin_process_Test extends TuleapTestCase {
             'identity_file'     => '/path/to/file',
             'replication_key'   => '',
             'use_ssl'           => 0,
+            'gerrit_version'    => '2.5',
+            'http_password'     => 'azerty'
         );
-        $this->a_brand_new_server = new Git_RemoteServer_GerritServer(0, 'host', '1234', '80', 'login', '/path/to/file', '', 0);
-        $this->an_existing_server = new Git_RemoteServer_GerritServer(1, 'g.example.com', '1234', '80', 'login', '/path/to/file', '', 0);
+
+        $this->request_new_server_with_no_data = array(
+            'host'              => '',
+            'port'              => '',
+            'login'             => '',
+            'identity_file'     => '',
+            'replication_key'   => '',
+            'use_ssl'           => '',
+            'gerrit_version'    => '2.5',
+            'http_password'     => ''
+        );
+
+        $this->request_update_existing_server_with_host_and_empty_data = array(
+            'host'              => 'awesome_host',
+            'port'              => '',
+            'login'             => '',
+            'identity_file'     => '',
+            'replication_key'   => '',
+            'use_ssl'           => '',
+            'gerrit_version'    => '',
+            'http_password'     => ''
+        );
+
+        $this->request_update_existing_server_with_empty_host = array(
+            'host'              => '',
+            'port'              => '1234',
+            'login'             => 'new_login',
+            'identity_file'     => '/path/to/file',
+            'replication_key'   => '',
+            'use_ssl'           => 0,
+            'gerrit_version'    => '2.5',
+            'http_password'     => 'azerty'
+        );
+
+        $this->a_brand_new_server = new Git_RemoteServer_GerritServer(0, 'host', '1234', '80', 'login', '/path/to/file', '', 0, '2.5', 'azerty');
+        $this->an_existing_server = new Git_RemoteServer_GerritServer(1, 'g.example.com', '1234', '80', 'login', '/path/to/file', '', 0, '2.5', 'azerty');
 
         stub($this->factory)->getServers()->returns(array(
             1 => $this->an_existing_server
@@ -60,6 +99,24 @@ class Git_Admin_process_Test extends TuleapTestCase {
     public function itDoesNotSaveAnythingIfTheRequestIsNotValid() {
         $this->request->set('gerrit_servers', false);
         expect($this->factory)->save()->never();
+        $this->admin->process($this->request);
+    }
+
+    public function itDoesNotSaveAServerIfNoDataIsGiven() {
+        $this->request->set('gerrit_servers', array(1 => $this->request_new_server_with_no_data));
+        expect($this->factory)->save()->never();
+        $this->admin->process($this->request);
+    }
+
+    public function itDoesNotSaveAServerIfItsHostIsEmpty() {
+        $this->request->set('gerrit_servers', array(1 => $this->request_update_existing_server_with_empty_host));
+        expect($this->factory)->save()->never();
+        $this->admin->process($this->request);
+    }
+
+    public function itSavesAServerIfItsHostIsNotEmptyAndAllOtherDataAreEmpty() {
+        $this->request->set('gerrit_servers', array(1 => $this->request_update_existing_server_with_host_and_empty_data));
+        expect($this->factory)->save()->once();
         $this->admin->process($this->request);
     }
 

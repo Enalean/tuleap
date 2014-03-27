@@ -36,7 +36,7 @@ Mock::generate('hudson');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
-class HudsonJobTest extends UnitTestCase {
+class HudsonJobTest extends TuleapTestCase {
 
     function setUp() {
         $GLOBALS['Language'] = new MockBaseLanguage($this);
@@ -61,7 +61,15 @@ class HudsonJobTest extends UnitTestCase {
         }
         $j = new HudsonJob("http://");
     }
-    
+
+    function testURLWithBuildWithParams() {
+        $job = partial_mock('HudsonJob', array('getHudsonControler'));
+        stub($job)->getHudsonControler()->returns(mock('hudson'));
+        $job->__construct('http://shunt.cro.enalean.com:8080/job/build_params/buildWithParameters?Stuff=truc');
+        $this->assertEqual($job->getJobUrl(), 'http://shunt.cro.enalean.com:8080/job/build_params/api/xml');
+        $this->assertEqual($job->getDoBuildUrl(), 'http://shunt.cro.enalean.com:8080/job/build_params/buildWithParameters?Stuff=truc');
+    }
+
     function testSimpleJob() {
         $xmlstr = <<<XML
 <?xml version='1.0' standalone='yes'?>

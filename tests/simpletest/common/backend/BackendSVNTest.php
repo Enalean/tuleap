@@ -33,7 +33,6 @@ require_once('common/project/Project.class.php');
 Mock::generate('Project');
 require_once('common/dao/UGroupDao.class.php');
 Mock::generate('UGroupDao');
-require_once('common/project/ProjectUGroup.class.php');
 Mock::generate('ProjectUGroup');
 require_once('common/dao/ServiceDao.class.php');
 Mock::generate('ServiceDao');

@@ -19,6 +19,8 @@
         "123": [],
         "124": [
             {
+                "data_type":    "1",
+                "display_type": "TF",
                 "field_name":   "summary",
                 "old_value":    "Le artifact",
                 "new_value":    "The second one",

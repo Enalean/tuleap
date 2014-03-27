@@ -23,16 +23,20 @@
  */
 class Git_UserAccountManager {
 
-    /** @var Git_Driver_Gerrit */
-    private $gerrit_driver;
+    /** @var Git_Driver_Gerrit_GerritDriverFactory */
+    private $gerrit_driver_factory;
 
     /** @var Git_Driver_Gerrit_UserAccountManager */
     private $gerrit_user_account_manager;
-    
+
+    /** @var Git_RemoteServer_GerritServerFactory */
     private $gerrit_server_factory;
 
-    public function __construct(Git_Driver_Gerrit $driver, Git_RemoteServer_GerritServerFactory $factory) {
-        $this->gerrit_driver = $driver;
+    public function __construct(
+        Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
+        Git_RemoteServer_GerritServerFactory $factory
+    ) {
+        $this->gerrit_driver_factory = $driver_factory;
         $this->gerrit_server_factory = $factory;
     }
 
@@ -76,7 +80,7 @@ class Git_UserAccountManager {
     public function getGerritUserAccountManager() {
         if (! $this->gerrit_user_account_manager) {
             $this->gerrit_user_account_manager = new Git_Driver_Gerrit_UserAccountManager(
-                $this->gerrit_driver,
+                $this->gerrit_driver_factory,
                 $this->gerrit_server_factory
             );
         }
@@ -87,11 +91,10 @@ class Git_UserAccountManager {
     /**
      *
      * @param Git_Driver_Gerrit_UserAccountManager $manager
-     * @return \Git_UserAccountManager
+     * @return Git_UserAccountManager
      */
     public function setGerritUserAccountManager(Git_Driver_Gerrit_UserAccountManager $manager) {
         $this->gerrit_user_account_manager = $manager;
         return $this;
     }
 }
-?>

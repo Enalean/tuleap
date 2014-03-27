@@ -26,6 +26,8 @@ require_once 'ClientUnableToLaunchBuildException.class.php';
  */
 class Jenkins_Client {
 
+    const BUILD_WITH_PARAMETERS_REGEXP = '%(?P<job_url>.*)/buildWithParameters(/|\?).*%';
+
     /**
      * @var Http_Client
      */
@@ -83,10 +85,16 @@ class Jenkins_Client {
 
     private function getBuildUrl($job_url) {
         $params = http_build_query($this->getTokenUrlParameter());
-        if ($params) {
-            $params = '?'.$params;
+        if (preg_match(self::BUILD_WITH_PARAMETERS_REGEXP, $job_url)) {
+            $separator = '&';
+        } else {
+            $job_url   = $job_url . '/build';
+            $separator = '?';
         }
-        return $job_url . '/build'.$params;
+        if ($params) {
+            $params = $separator.$params;
+        }
+        return $job_url . $params;
     }
 
     private function getTokenUrlParameter() {

@@ -1,22 +1,27 @@
 Version 6.12 (Not Released Yet)
 
 	== Plugins ==
-	* proftpd: 0.9
-	* tracker: 5.266
-	* graphontrackersv5: 5.5
-	* agiledashboard: 1.54
+	* proftpd: 0.11
+	* tracker: 5.276
+	* graphontrackersv5: 5.6
+	* agiledashboard: 1.56
 	* cardwall: 1.22
-	* docman: 2.26.29
+	* docman: 2.26.30
+	* git: 3.75
+	* hudson: 1.14
 
 	== Bug fix ==
 	* request #6404: Do not display postponed error for phpwiki (contrib STMicroelectronics)
 	* request #6146 - Backend raise errors about cvs logs while cvs is not even installed
+	* request #6423: [trackerV3] Bind a field to mutiple lists doesn't work
+	* Fix request #6146 - Backend raise errors about cvs logs
 
-	== Development ==
-	* story #6139: give access admin rights to some users to all trackers
+	== Enhancement ==
+	* story #5998 - Delegate the validation of projects to users
+	* story #6454 - Giving access admin rights to some users to all trackers
 
 	== Themes ==
-	* Experimental: 0.9.11
+	* Experimental: 0.9.12
 	* CodexSTN: 1.13
 
 Version 6.11 (Thursday, March 6th 2014)

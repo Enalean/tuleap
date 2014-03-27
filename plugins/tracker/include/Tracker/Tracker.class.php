@@ -1560,7 +1560,7 @@ EOS;
             //end of table
             $html .= "</table>";
             if ($a_star_is_displayed) {
-                $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', 'ug_may_have_no_access', TRACKER_BASE_URL."/admin/?group_id=".(int)$this->getGroupID()."&atid=".(int)$this->getID()."&func=permissions&perm_type=tracker");
+                $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', 'ug_may_have_no_access', TRACKER_BASE_URL."/?tracker=".(int)$this->getID()."&func=admin-perms-tracker");
             }
             $html .= "<input type='submit' name='update' value=\"".$GLOBALS['Language']->getText('project_admin_permissions','submit_perm')."\" />";
             //{{{20050602 NTY: removed. what is default permissions ???
@@ -2076,6 +2076,10 @@ EOS;
             return true;
         }
 
+        if ($this->getTrackerManager()->userCanAdminAllProjectTrackers($user)) {
+            return true;
+        }
+
         $permissions = $this->getPermissionsByUgroupId();
 
         foreach ($permissions as $ugroup_id => $permission_types) {
@@ -2092,6 +2096,14 @@ EOS;
         }
         return false;
     }
+
+    /**
+     * @return TrackerManager
+     */
+    protected function getTrackerManager() {
+        return new TrackerManager();
+    }
+
 
     /**
      * Check if user has permission to submit artifact or not

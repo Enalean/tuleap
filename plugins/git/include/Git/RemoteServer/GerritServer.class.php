@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,6 +25,8 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
 
     const DEFAULT_HTTP_PORT       = 80;
     const DEFAULT_GERRIT_USERNAME = 'gerrit_username';
+    const DEFAULT_GERRIT_VERSION  = '2.5';
+    const GERRIT_VERSION_2_8_PLUS = '2.8+';
 
     private $id;
     private $host;
@@ -35,8 +37,23 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
     private $replication_key;
     /** @var Boolean */
     private $use_ssl;
+    /** @var String */
+    private $http_password;
+    /** @var String */
+    private $gerrit_version;
 
-    public function __construct($id, $host, $ssh_port, $http_port, $login, $identity_file, $replication_key, $use_ssl) {
+    public function __construct(
+        $id,
+        $host,
+        $ssh_port,
+        $http_port,
+        $login,
+        $identity_file,
+        $replication_key,
+        $use_ssl,
+        $gerrit_version,
+        $http_password
+    ) {
         $this->id               = $id;
         $this->host             = $host;
         $this->ssh_port         = $ssh_port;
@@ -45,6 +62,8 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
         $this->identity_file    = $identity_file;
         $this->replication_key  = $replication_key;
         $this->use_ssl          = $use_ssl;
+        $this->http_password    = $http_password;
+        $this->gerrit_version   = $gerrit_version;
     }
 
     public function __toString() {
@@ -144,7 +163,7 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
     /**
      *
      * @param String $key
-     * @return \Git_RemoteServer_GerritServer
+     * @return Git_RemoteServer_GerritServer
      */
     public function setReplicationKey($key) {
         $this->replication_key = $key;
@@ -169,5 +188,34 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
 
         return 'http://';
     }
+
+    /**
+     * @return String
+     */
+    public function getGerritVersion() {
+        return $this->gerrit_version;
+    }
+
+    /**
+     * @param String $gerrit_version
+     */
+    public function setGerritVersion($gerrit_version) {
+        $this->gerrit_version = $gerrit_version;
+        return $this;
+    }
+
+    /**
+     * @return String
+     */
+    public function getHTTPPassword() {
+        return (string)$this->http_password;
+    }
+
+    /**
+     * @param String $http_password
+     */
+    public function setHTTPPassword($http_password) {
+        $this->http_password = $http_password;
+        return $this;
+    }
 }
-?>

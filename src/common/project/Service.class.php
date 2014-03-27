@@ -99,7 +99,7 @@ class Service {
         return false;
     }
     
-    public function displayHeader($title, $breadcrumbs, $toolbar) {
+    public function displayHeader($title, $breadcrumbs, $toolbar, $params = array()) {
         $GLOBALS['HTML']->setRenderedThroughService(true);
         $GLOBALS['HTML']->addBreadcrumbs($breadcrumbs);
 
@@ -108,11 +108,10 @@ class Service {
             $item_title = isset($t['short_title']) ? $t['short_title'] :$t['title'];
             $GLOBALS['HTML']->addToolbarItem('<a href="'. $t['url'] .'" '. $class .'>'. $item_title .'</a>');
         }
-        $params = array(
-            'title' => $title, 
-            'group' => $this->project->group_id, 
-            'toptab' => $this->getId()
-        );
+        $params['title']  = $title;
+        $params['group']  = $this->project->group_id;
+        $params['toptab'] = $this->getId();
+
         if ($pv = (int)HTTPRequest::instance()->get('pv')) {
             $params['pv'] = (int)$pv;
         }

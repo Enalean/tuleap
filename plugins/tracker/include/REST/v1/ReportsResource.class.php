@@ -31,6 +31,7 @@ use \UserManager;
 use \PFUser;
 use \Tuleap\REST\Header;
 use \Tracker_REST_Artifact_ArtifactRepresentationBuilder;
+use \Tracker_URLVerification;
 
 /**
  * Wrapper for Tracker Report related REST methods
@@ -217,7 +218,7 @@ class ReportsResource {
             throw new RestException(403);
         }
 
-        ProjectAuthorization::userCanAccessProject($user, $tracker->getProject());
+        ProjectAuthorization::userCanAccessProject($user, $tracker->getProject(), new Tracker_URLVerification());
 
         return $report;
     }

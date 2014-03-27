@@ -649,10 +649,13 @@ class trackerPlugin extends Plugin {
     public function rest_get_project_trackers($params) {
         $user              = UserManager::instance()->getCurrentUser();
         $planning_resource = $this->buildRightVersionOfProjectTrackersResource($params['version']);
+        $project           = $params['project'];
+
+        $this->checkProjectRESTAccess($project, $user);
 
         $params['result'] = $planning_resource->get(
             $user,
-            $params['project'],
+            $project,
             $params['limit'],
             $params['offset']
         );
@@ -663,14 +666,22 @@ class trackerPlugin extends Plugin {
      */
     public function rest_options_project_trackers($params) {
         $user             = UserManager::instance()->getCurrentUser();
+        $project          = $params['project'];
         $tracker_resource = $this->buildRightVersionOfProjectTrackersResource($params['version']);
+
+        $this->checkProjectRESTAccess($project, $user);
 
         $params['result'] = $tracker_resource->options(
             $user,
-            $params['project'],
+            $project,
             $params['limit'],
             $params['offset']
         );
+    }
+
+    private function checkProjectRESTAccess(Project $project, PFUser $user) {
+        $project_authorization = '\\Tuleap\\REST\\ProjectAuthorization';
+        $project_authorization::userCanAccessProject($user, $project, new Tracker_URLVerification());
     }
 
     private function buildRightVersionOfProjectTrackersResource($version) {

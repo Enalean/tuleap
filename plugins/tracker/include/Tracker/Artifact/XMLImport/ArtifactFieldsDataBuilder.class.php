@@ -23,9 +23,14 @@
  */
 class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
 
-    const FIELDNAME_CHANGE_SUMMARY     = 'summary';
-    const FIELDNAME_CHANGE_ATTACHEMENT = 'attachment';
-    const FIELDNAME_CHANGE_CC          = 'cc';
+    const FIELDTYPE_STRING            = 'string';
+    const FIELDTYPE_TEXT              = 'text';
+    const FIELDTYPE_INT               = 'int';
+    const FIELDTYPE_FLOAT             = 'float';
+    const FIELDTYPE_DATE              = 'date';
+    const FIELDTYPE_PERMS_ON_ARTIFACT = 'permissions_on_artifact';
+    const FIELDTYPE_ATTACHEMENT       = 'file';
+    const FIELDTYPE_OPENLIST          = 'open_list';
 
     /** @var Tracker_FormElementFactory */
     private $formelement_factory;
@@ -42,6 +47,9 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
     /** @var string */
     private $extraction_path;
 
+    /** @var Tracker_Artifact_XMLImport_XMLImportFieldStrategy */
+    private $strategies;
+
     public function __construct(
         Tracker_FormElementFactory $formelement_factory,
         UserManager $user_manager,
@@ -55,6 +63,21 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
         $this->tracker              = $tracker;
         $this->files_importer       = $files_importer;
         $this->extraction_path      = $extraction_path;
+
+        $alphanum_strategy = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyAlphanumeric();
+        $this->strategies  = array(
+            self::FIELDTYPE_PERMS_ON_ARTIFACT => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyPermissionsOnArtifact(),
+            self::FIELDTYPE_ATTACHEMENT => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment(
+                $this->extraction_path,
+                $this->files_importer
+            ),
+            self::FIELDTYPE_OPENLIST => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList(),
+            self::FIELDTYPE_STRING   => $alphanum_strategy,
+            self::FIELDTYPE_TEXT     => $alphanum_strategy,
+            self::FIELDTYPE_INT      => $alphanum_strategy,
+            self::FIELDTYPE_FLOAT    => $alphanum_strategy,
+            self::FIELDTYPE_DATE     => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyDate(),
+        );
     }
 
     /**
@@ -77,23 +100,8 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
     }
 
     private function getFieldData(Tracker_FormElement_Field $field, SimpleXMLElement $field_change) {
-        switch ((string)$field_change['field_name']) {
-            case self::FIELDNAME_CHANGE_SUMMARY :
-                $strategy = new Tracker_Artifact_XMLImport_XMLImportFieldStrategySummary();
-                break;
-            case self::FIELDNAME_CHANGE_ATTACHEMENT :
-                $strategy = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment(
-                    $this->extraction_path,
-                    $this->files_importer
-                );
-                break;
-            case self::FIELDNAME_CHANGE_CC:
-                $strategy = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList(
-                    $field
-                );
-                break;
-        }
+        $type = (string)$field_change['type'];
 
-        return $strategy->getFieldData($field_change);
+        return $this->strategies[$type]->getFieldData($field, $field_change);
     }
 }

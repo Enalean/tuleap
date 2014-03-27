@@ -679,18 +679,17 @@ class Planning_MilestoneFactory {
     }
 
     private function isMilestoneCurrent(Tracker_Artifact $milestone_artifact, PFUser $user) {
-        return $this->getMilestoneTimePeriod($milestone_artifact, $user)
-            ->isTodayWithinTimePeriod();
+        return $milestone_artifact->isOpen() && ! $this->getMilestoneTimePeriod($milestone_artifact, $user)
+            ->isTodayBeforeTimePeriod();
     }
 
     private function isMilestoneFuture(Tracker_Artifact $milestone_artifact, PFUser $user) {
-        return $this->getMilestoneTimePeriod($milestone_artifact, $user)
+        return $milestone_artifact->isOpen() && $this->getMilestoneTimePeriod($milestone_artifact, $user)
             ->isTodayBeforeTimePeriod();
     }
 
     private function isMilestonePast(Tracker_Artifact $milestone_artifact, PFUser $user) {
-        return $this->getMilestoneTimePeriod($milestone_artifact, $user)
-            ->isTodayAfterTimePeriod();
+        return ! $milestone_artifact->isOpen();
     }
 
     private function getMilestoneTimePeriod(Tracker_Artifact $milestone_artifact, PFUser $user) {

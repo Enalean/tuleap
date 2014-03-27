@@ -40,5 +40,25 @@ class Tracker_URLVerification extends URLVerification {
         $userRequestsDefaultTemplates |= $server['REQUEST_URI'] == TRACKER_BASE_URL .'/invert_display_changes.php';
         return $userRequestsDefaultTemplates || parent::isException($server);
     }
+    /**
+     * Ensure given user can access given project
+     *
+     * @param PFUser  $user
+     * @param Project $project
+     * @return boolean
+     * @throws Project_AccessProjectNotFoundException
+     * @throws Project_AccessDeletedException
+     * @throws Project_AccessRestrictedException
+     * @throws Project_AccessPrivateException
+     */
+    public function userCanAccessProject(PFUser $user, Project $project) {
+        $tracker_manager = new TrackerManager();
+        if ($tracker_manager->userCanAdminAllProjectTrackers($user)) {
+            return true;
+        }
+
+        return parent::userCanAccessProject($user, $project);
+    }
+
 }
 ?>

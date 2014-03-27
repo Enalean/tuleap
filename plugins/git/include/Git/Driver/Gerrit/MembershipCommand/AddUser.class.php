@@ -21,7 +21,8 @@
 class Git_Driver_Gerrit_MembershipCommand_AddUser extends Git_Driver_Gerrit_MembershipCommand_User {
 
     protected function executeForGerritUser(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $gerrit_user) {
-        $this->driver->addUserToGroup(
+        $driver = $this->getDriver($server);
+        $driver->addUserToGroup(
             $server,
             $gerrit_user,
             $this->membership_manager->getFullyQualifiedUGroupName($this->ugroup)

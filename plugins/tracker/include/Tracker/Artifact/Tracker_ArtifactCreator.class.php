@@ -29,7 +29,7 @@ class Tracker_ArtifactCreator {
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
 
-    /** @var Tracker_Artifact_Changeset_InitialChangesetFieldsValidator */
+    /** @var Tracker_Artifact_Changeset_FieldsValidator */
     private $fields_validator;
 
     /** @var Tracker_Artifact_Changeset_InitialChangesetCreatorBase */
@@ -37,7 +37,7 @@ class Tracker_ArtifactCreator {
 
     public function __construct(
         Tracker_ArtifactFactory $artifact_factory,
-        Tracker_Artifact_Changeset_InitialChangesetFieldsValidator $fields_validator,
+        Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
         Tracker_Artifact_Changeset_InitialChangesetCreatorBase $changeset_creator
     ) {
         $this->artifact_dao      = $artifact_factory->getDao();

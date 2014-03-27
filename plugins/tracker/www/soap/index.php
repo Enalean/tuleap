@@ -78,7 +78,7 @@ if ($request->exist('wsdl')) {
         Tracker_ArtifactFactory::instance(),
         Tracker_ReportFactory::instance(),
         new Tracker_FileInfoFactory(new Tracker_FileInfoDao, $formelement_factory, $artifact_factory),
-        new Tracker_Artifact_Attachment_TemporaryFileManagerDao()
+        new TrackerManager()
     );
     $server->handle();
 }

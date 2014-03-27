@@ -36,27 +36,42 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
      * @param Tracker_Artifact $artifact              The artifact on which the value is computed
      * @param Array            $computed_artifact_ids Hash map to store artifacts already computed (avoid cycles)
      *
-     * @return float
+     * @return float|null if there are no data (/!\ it's on purpose, otherwise we can mean to distinguish if there is data but 0 vs no data at all, for the graph plot)
      */
-    public function getComputedValue(PFUser $user, Tracker_Artifact $artifact, $timestamp = null, &$computed_artifact_ids = array()) {
+    public function getComputedValue(PFUser $user, Tracker_Artifact $artifact, $timestamp = null, array &$computed_artifact_ids = array()) {
+        if ($timestamp === null) {
+            $dar = $this->getDao()->getFieldValues($artifact->getId(), $this->getProperty('target_field_name'));
+        } else {
+            $dar = Tracker_FormElement_Field_ComputedDaoCache::instance()->getFieldValuesAtTimestamp($artifact->getId(), $this->getProperty('target_field_name'), $timestamp);
+        }
+        return $this->computeValuesVersion($dar, $user, $timestamp, $computed_artifact_ids);
+    }
+
+    private function computeValuesVersion(DataAccessResult $dar, PFUser $user, $timestamp, array &$computed_artifact_ids) {
         $sum = null;
 
-        $linked_artifacts = ($timestamp) ?
-            $artifact->getLinkedArtifactsAtTimestamp($user, $timestamp) :
-            $artifact->getLinkedArtifacts($user);
-
-        foreach ($linked_artifacts as $linked_artifact) {
-            $value = $this->getUniqueFieldValue($user, $linked_artifact, $timestamp, $computed_artifact_ids);
-            $sum   = $this->sumIfNotNull($sum, $value);
+        foreach ($dar as $row) {
+            $linked_artifact = Tracker_ArtifactFactory::instance()->getInstanceFromRow($row);
+            if ($linked_artifact->userCanView($user)) {
+                $this->addIfNotNull($sum, $this->getValueOrContinueComputing($user, $linked_artifact, $row, $timestamp, $computed_artifact_ids));
+            }
         }
+
         return $sum;
     }
 
-    private function sumIfNotNull($sum, $value) {
+    private function addIfNotNull(&$sum, $value) {
         if ($value !== null) {
             $sum += $value;
         }
-        return $sum;
+    }
+
+    private function getValueOrContinueComputing(PFUser $user, Tracker_Artifact $linked_artifact, array $row, $timestamp, array &$computed_artifact_ids) {
+        if ($row['type'] == 'computed') {
+            return $this->getUniqueFieldValue($user, $linked_artifact, $timestamp, $computed_artifact_ids);
+        } else {
+            return $row[$row['type'].'_value'];
+        }
     }
 
     private function getUniqueFieldValue(PFUser $user, Tracker_Artifact $artifact, $timestamp, &$computed_artifact_ids) {

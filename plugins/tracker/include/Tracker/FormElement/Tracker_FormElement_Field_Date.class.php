@@ -239,10 +239,14 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
     protected function getSQLCompareDate($is_advanced, $op, $from, $to, $column) {
         if ($is_advanced) {
             if ( ! $to ) {
-                $to = PHP_INT_MAX; //infinity
+                $to = $_SERVER['REQUEST_TIME'];
             }
-            $and_compare_date = "$column BETWEEN ". $from ."
-                                                   AND ". $to ." + 24 * 60 * 60 - 1";
+            if ( empty($from) ) {
+                $and_compare_date = "$column <= ". $to ." + 24 * 60 * 60 - 1 ";
+            } else {
+                $and_compare_date = "$column BETWEEN ". $from ."
+                                                           AND ". $to ." + 24 * 60 * 60 - 1";
+            }
         } else {
             switch ($op) {
                 case '<':
@@ -259,7 +263,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         }
         return $and_compare_date;
     }
-    
+
     public function getCriteriaWhere($criteria) {
         return '';
     }

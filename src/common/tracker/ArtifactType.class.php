@@ -1031,7 +1031,7 @@ class ArtifactType extends Error {
             $sqlname=$uh->getDisplayNameSQLQuery();
         }
 		$group_artifact_id = $this->getID();
-		$sql="(SELECT DISTINCT user.user_id, ".$sqlname." ".
+		$sql="(SELECT DISTINCT user.user_id, ".$sqlname." , user.user_name ".
 			"FROM user,artifact ".
 			"WHERE (user.user_id=artifact.submitted_by ".
 			"AND artifact.group_artifact_id='". db_ei($group_artifact_id) ."') ".

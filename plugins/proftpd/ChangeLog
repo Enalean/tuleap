@@ -1,3 +1,9 @@
+Version 0.11 - Tuleap 6.12
+    * Backport change from gerrit #2147 to fix tests
+
+Version 0.10 - Tuleap 6.12
+    * story #5998 - Delegate the validation of projects to users
+
 Version 0.9 - Tuleap 6.12
     * (dev environment) Fix Phpunit tests on proftpd
 

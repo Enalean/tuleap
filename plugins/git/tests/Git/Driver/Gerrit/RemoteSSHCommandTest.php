@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -38,6 +37,10 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
 
     protected $use_ssl = false;
 
+    protected $gerrit_version = '2.5';
+
+    protected $http_password = 'qwerty';
+
     /** @var Git_Driver_Gerrit_RemoteSSHConfig */
     private $config;
 
@@ -56,7 +59,18 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
         $this->logger = mock('Logger');
 
         $this->ssh->__construct($this->logger);
-        $this->config = new Git_RemoteServer_GerritServer(1, $this->host, $this->ssh_port, $this->http_port, $this->login, $this->identity_file, $this->replication_key, $this->use_ssl);
+        $this->config = new Git_RemoteServer_GerritServer(
+            1,
+            $this->host,
+            $this->ssh_port,
+            $this->http_port,
+            $this->login,
+            $this->identity_file,
+            $this->replication_key,
+            $this->use_ssl,
+            $this->gerrit_version,
+            $this->http_password
+        );
     }
 
     public function itExecutesTheCreateCommandOnTheRemoteServer() {

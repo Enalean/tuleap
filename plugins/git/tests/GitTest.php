@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -139,29 +139,31 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
     protected function getGit($request, $factory, $template_factory = null) {
         $template_factory = $template_factory?$template_factory:$this->template_factory;
 
-        $git_plugin  = stub('GitPlugin')->areFriendlyUrlsActivated()->returns(false);
-        $url_manager = new Git_GitRepositoryUrlManager($git_plugin);
-
-        $git = partial_mock('Git',
-                array('_informAboutPendingEvents', 'addAction', 'addView', 'addError', 'checkSynchronizerToken', 'redirect'),
-                array(
-                    mock('GitPlugin'),
-                    mock('Git_RemoteServer_GerritServerFactory'),
-                    mock('Git_Driver_Gerrit'),
-                    mock('GitRepositoryManager'),
-                    mock('Git_SystemEventManager'),
-                    mock('Git_Driver_Gerrit_UserAccountManager'),
-                    mock('GitRepositoryFactory'),
-                    $this->user_manager,
-                    $this->project_manager,
-                    $this->plugin_manager,
-                    aRequest()->with('group_id', $this->group_id)->build(),
-                    $this->project_creator,
-                    $template_factory,
-                    $this->git_permissions_manager,
-                    $url_manager
-                )
-            );
+        $git_plugin            = stub('GitPlugin')->areFriendlyUrlsActivated()->returns(false);
+        $url_manager           = new Git_GitRepositoryUrlManager($git_plugin);
+        $server                = mock('Git_RemoteServer_GerritServer');
+        $gerrit_server_factory = stub('Git_RemoteServer_GerritServerFactory')->getServerById()->returns($server);
+        $git                   = partial_mock(
+            'Git',
+            array('_informAboutPendingEvents', 'addAction', 'addView', 'addError', 'checkSynchronizerToken', 'redirect'),
+            array(
+                mock('GitPlugin'),
+                $gerrit_server_factory,
+                stub('Git_Driver_Gerrit_GerritDriverFactory')->getDriver()->returns(mock('Git_Driver_Gerrit')),
+                mock('GitRepositoryManager'),
+                mock('Git_SystemEventManager'),
+                mock('Git_Driver_Gerrit_UserAccountManager'),
+                mock('GitRepositoryFactory'),
+                $this->user_manager,
+                $this->project_manager,
+                $this->plugin_manager,
+                aRequest()->with('group_id', $this->group_id)->build(),
+                $this->project_creator,
+                $template_factory,
+                $this->git_permissions_manager,
+                $url_manager
+            )
+        );
         $git->setRequest($request);
         $git->setUserManager($this->user_manager);
         $git->setGroupId($this->group_id);
@@ -244,15 +246,18 @@ class Gittest_MigrateToGerritRouteTest extends Git_RouteBaseTestCase {
         $repo_id            = 999;
         $server_id          = 111;
         $gerrit_template_id = 'default';
+
         $request->set('repo_id', $repo_id);
         $request->set('remote_server_id', $server_id);
         $request->set('gerrit_template_id', $gerrit_template_id);
-        $repo        = mock('GitRepository');
+
+        $repo    = mock('GitRepository');
         $factory = stub('GitRepositoryFactory')->getRepositoryById()->once()->returns($repo);
-        $git = $this->getGit($request, $factory);
+        $git     = $this->getGit($request, $factory);
 
         expect($git)->addAction('migrateToGerrit', array($repo, $server_id, $gerrit_template_id))->at(0);
         expect($git)->addAction('redirectToRepoManagementWithMigrationAccessRightInformation', '*')->at(1);
+
         $git->request();
     }
 

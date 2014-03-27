@@ -65,8 +65,11 @@ function expect($classname_or_simpletest_mock) {
  * @return a simpletest mock
  */
 function mock($classname) {
-    Mock::generate($classname);
     $mockclassname = "Mock$classname";
+    if (strpos($classname, '\\') !== false) {
+        $mockclassname = "Mock". str_replace('\\', '_', $classname);
+    }
+    Mock::generate($classname, $mockclassname);
     return new $mockclassname();
 }
 

@@ -7,6 +7,8 @@ CREATE TABLE IF NOT EXISTS plugin_git_remote_servers (
     identity_file VARCHAR(255) NOT NULL,
     ssh_key TEXT NULL,
     use_ssl boolean DEFAULT 0,
+    gerrit_version VARCHAR(255) NOT NULL DEFAULT '2.5',
+    http_password VARCHAR(255),
     PRIMARY KEY (id)
 );
 

@@ -98,24 +98,36 @@ class Tracker_ArtifactFactory_GetChildrenTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->dao = mock('Tracker_ArtifactDao');
-        $this->artifact_factory = partial_mock('Tracker_ArtifactFactory', array('getDao'));
+        $this->artifact_factory = partial_mock('Tracker_ArtifactFactory', array('getDao', 'getInstanceFromRow'));
         stub($this->artifact_factory)->getDao()->returns($this->dao);
 
         $this->user = mock('PFUser');
+        stub($this->user)->getId()->returns(48);
         // Needed to by pass Tracker_Artifact::userCanView
         stub($this->user)->isSuperUser()->returns(true);
     }
 
     public function itFetchAllChildren() {
+        $tracker = mock('Tracker');
+        stub($tracker)->userIsAdmin($this->user)->returns(true);
+
         $artifacts = array(
-            anArtifact()->withId(11)->build(),
-            anArtifact()->withId(12)->build(),
+            anArtifact()->withId(11)->userCanView($this->user)->withTracker($tracker)->build(),
+            anArtifact()->withId(12)->userCanView($this->user)->withTracker($tracker)->build(),
         );
 
+        $artiafct_as_dar1 = anArtifactDar()->withId(55)->build();
+        $artiafct_as_dar2 = anArtifactDar()->withId(56)->build();
         stub($this->dao)->getChildrenForArtifacts(array(11, 12))->returnsDar(
-            anArtifactDar()->withId(55)->build(),
-            anArtifactDar()->withId(56)->build()
+            $artiafct_as_dar1,
+            $artiafct_as_dar2
         );
+
+        $child_artifact1 = anArtifact()->withId(22)->userCanView($this->user)->withTracker($tracker)->build();
+        $child_artifact2 = anArtifact()->withId(88)->userCanView($this->user)->withTracker($tracker)->build();
+
+        stub($this->artifact_factory)->getInstanceFromRow($artiafct_as_dar1)->returns($child_artifact1);
+        stub($this->artifact_factory)->getInstanceFromRow($artiafct_as_dar2)->returns($child_artifact2);
 
         $this->artifact_factory->getChildrenForArtifacts($this->user, $artifacts);
     }

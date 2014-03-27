@@ -106,6 +106,13 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
         return $this->open_values;
     }
 
+    public function isOpen(Tracker_Artifact $artifact) {
+        if ($this->getNormalizedStatusLabel($artifact) == self::CLOSED) {
+            return false;
+        }
+        return true;
+    }
+
     /**
      * Get status label independent of language (hence english)
      *
