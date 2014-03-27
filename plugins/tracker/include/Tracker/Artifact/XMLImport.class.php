@@ -71,17 +71,25 @@ class Tracker_Artifact_XMLImport {
     public function importFromXML(Tracker $tracker, SimpleXMLElement $xml_element, $extraction_path) {
         $this->rng_validator->validate($xml_element);
         foreach ($xml_element->artifact as $artifact) {
-            $this->logger->info("Import {$artifact['id']}");
-            $files_importer = new Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact($artifact);
-            $fields_data_builder = new Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder(
-                $this->formelement_factory,
-                $this->xml_import_helper,
-                $tracker,
-                $files_importer,
-                $extraction_path,
-                $this->static_value_dao
-            );
-            $this->importOneArtifact($tracker, $artifact, $fields_data_builder);
+            try {
+                $this->logger->info("Import {$artifact['id']}");
+                $files_importer = new Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact($artifact);
+                $fields_data_builder = new Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder(
+                    $this->formelement_factory,
+                    $this->xml_import_helper,
+                    $tracker,
+                    $files_importer,
+                    $extraction_path,
+                    $this->static_value_dao
+                );
+                $this->importOneArtifact($tracker, $artifact, $fields_data_builder);
+            } catch (Tracker_Artifact_Exception_CannotCreateInitialChangeset $exception) {
+                $this->logger->error("Impossible to create artifact: ".$exception->getMessage());
+            } catch (Tracker_Artifact_Exception_EmptyChangesetException $exception) {
+                $this->logger->error("Impossible to create artifact, there is no valid data to import for initial changeset: ".$exception->getMessage());
+            } catch (Exception $exception) {
+                $this->logger->error("Unexpected exception: ".$exception->getMessage());
+            }
         }
     }
 

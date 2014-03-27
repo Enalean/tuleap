@@ -42,6 +42,7 @@ abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase {
     protected $artifact;
     protected $extraction_path;
     protected $static_value_dao;
+    protected $logger;
 
     public function setUp() {
         parent::setUp();
@@ -68,6 +69,8 @@ abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase {
 
         $this->static_value_dao = mock('Tracker_FormElement_Field_List_Bind_Static_ValueDao');
 
+        $this->logger = mock('Logger');
+
         $this->importer = new Tracker_Artifact_XMLImport(
             mock('XML_RNGValidator'),
             $this->artifact_creator,
@@ -75,7 +78,7 @@ abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase {
             $this->formelement_factory,
             $this->xml_import_helper,
             $this->static_value_dao,
-            mock('Logger')
+            $this->logger
         );
     }
 }
@@ -316,7 +319,7 @@ class Tracker_Artifact_XMLImport_NoFieldTest extends Tracker_Artifact_XMLImportB
     public function itThrowAnExceptionWhenFieldDoesntExist() {
         expect($this->artifact_creator)->create()->never();
 
-        $this->expectException('Tracker_Artifact_Exception_EmptyChangesetException');
+        expect($this->logger)->error()->once();
 
         $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
     }
