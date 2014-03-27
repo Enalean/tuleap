@@ -765,6 +765,35 @@ class ArtifactXMLExporter_CloseDateFieldTest extends ArtifactXMLExporter_BaseTes
     }
 }
 
+class ArtifactXMLExporter_StatusFieldTest extends ArtifactXMLExporter_BaseTest {
+
+    public function itCreatesTheInitialChangesetWithRecoredValue() {
+        $this->exportTrackerDataFromFixture('artifact_with_status_no_history');
+
+        $this->assertCount($this->xml->artifact->changeset, 1);
+
+        $field_change = $this->findValue($this->xml->artifact->changeset[0]->field_change, 'status_id');
+
+        $this->assertEqual($field_change['field_name'], 'status_id');
+        $this->assertEqual($field_change['type'], 'list');
+        $this->assertEqual($field_change['bind'], 'static');
+        $this->assertEqual($field_change->value, 'Closed');
+    }
+
+    public function itAlwaysTrustValueInArtifactTableEvenIfThereIsAValueInValueList() {
+        $this->exportTrackerDataFromFixture('artifact_with_status_history');
+
+        $this->assertCount($this->xml->artifact->changeset, 2);
+
+        $field_change = $this->findValue($this->xml->artifact->changeset[1]->field_change, 'status_id');
+
+        $this->assertEqual($field_change['field_name'], 'status_id');
+        $this->assertEqual($field_change['type'], 'list');
+        $this->assertEqual($field_change['bind'], 'static');
+        $this->assertEqual($field_change->value, 'Closed');
+    }
+}
+
 class ArtifactXMLExporter_StaticListFieldTest extends ArtifactXMLExporter_BaseTest {
 
     public function itCreatesAChangesetForEachHistoryEntry() {

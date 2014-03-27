@@ -135,6 +135,14 @@ class ArtifactXMLExporterArtifact {
                 'valueDate'    => $artifact_row['close_date'],
             );
         }
+        if (isset($artifact_row['status_id']) && $artifact_row['status_id']) {
+            $fields_values[] = array(
+                'field_name'   => 'status_id',
+                'display_type' => ArtifactStaticListFieldXMLExporter::TV3_DISPLAY_TYPE,
+                'data_type'    => ArtifactStaticListFieldXMLExporter::TV3_DATA_TYPE,
+                'valueInt'     => $artifact_row['status_id'],
+            );
+        }
         foreach ($this->dao->searchFieldValues($artifact_id) as $row) {
             $fields_values[$row['field_name']] = $this->field_factory->getCurrentFieldValue($row, $tracker_id);
         }

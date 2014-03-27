@@ -27,13 +27,19 @@ class ArtifactStaticListFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporte
     const TV5_BIND         = 'static';
 
     const SPECIAL_SEVERITY = 'severity';
+    const SPECIAL_STATUS   = 'status_id';
 
     /** @var ArtifactXMLExporterDao */
     protected $dao;
+    private $artifact_field_value_not_accurate;
 
     public function __construct(ArtifactXMLNodeHelper $node_helper, ArtifactXMLExporterDao $dao) {
         parent::__construct($node_helper);
         $this->dao = $dao;
+        $this->artifact_field_value_not_accurate = array(
+            self::SPECIAL_SEVERITY => true,
+            self::SPECIAL_STATUS   => true,
+        );
     }
 
     public function appendNode(DOMElement $changeset_node, $tracker_id, $artifact_id, array $row) {
@@ -60,7 +66,7 @@ class ArtifactStaticListFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporte
     }
 
     public function getCurrentFieldValue(array $field_value_row, $tracker_id) {
-        if ($field_value_row['field_name'] != self::SPECIAL_SEVERITY) {
+        if (! isset($this->artifact_field_value_not_accurate[$field_value_row['field_name']])) {
             return parent::getCurrentFieldValue($field_value_row, $tracker_id);
         }
     }
