@@ -60,7 +60,7 @@ class Widget_ProjectMembers extends Widget {
                 echo '<a href="/users/'.$row_admin['user_name'].'/">'. $display_name .'</a><br />';
             }
         }
-        echo '<span class="develtitle">' . $GLOBALS['Language']->getText('include_project_home','devels') . ':</span><br />';
+        echo '<span class="develtitle">' . $GLOBALS['Language']->getText('include_project_home','proj_members') . ':</span><br />';
         // count of developers on this project
         $res_count = db_query("SELECT user_id FROM user_group WHERE group_id=".db_ei($group_id));
         echo db_numrows($res_count);
