@@ -25,6 +25,9 @@ Version 6.12 (Not Released Yet)
 	* Experimental: 0.9.12
 	* CodexSTN: 1.13
 
+	== Development ==
+	* Add script to ease the execution of webdav tests
+
 Version 6.11 (Thursday, March 6th 2014)
 	== Plugins ==
 	* git: 3.71
