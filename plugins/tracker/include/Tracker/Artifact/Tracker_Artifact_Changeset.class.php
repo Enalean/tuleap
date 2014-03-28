@@ -25,6 +25,9 @@ require_once('common/language/BaseLanguageFactory.class.php');
 require_once('utils.php');
 
 class Tracker_Artifact_Changeset {
+    const FIELDS_ALL      = 'all';
+    const FIELDS_COMMENTS = 'comments';
+
     public $id;
     public $artifact;
     public $submitted_by;
@@ -356,9 +359,10 @@ class Tracker_Artifact_Changeset {
      *
      * @return void
      */
-    public function updateComment($body, $user, $comment_format) {
+    public function updateComment($body, $user, $comment_format, $timestamp) {
         if ($this->userCanEdit($user)) {
-            $commentUpdated = $this->getCommentDao()->createNewVersion($this->id, $body, $user->getId(), $_SERVER['REQUEST_TIME'], $this->getComment()->id, $comment_format);
+            $commentUpdated = $this->getCommentDao()->createNewVersion($this->id, $body, $user->getId(), $timestamp, $this->getComment()->id, $comment_format);
+            unset($this->latest_comment);
             if ($commentUpdated) {
                 $params = array('group_id'     => $this->getArtifact()->getTracker()->getGroupId(),
                                 'artifact_id'  => $this->getArtifact()->getId(),
@@ -936,17 +940,20 @@ class Tracker_Artifact_Changeset {
         return $soap;
     }
 
-    public function getRESTValue(PFUser $user) {
+    public function getRESTValue(PFUser $user, $fields) {
         $comment = $this->getComment();
         if (! $comment) {
             $comment = new Tracker_Artifact_Changeset_CommentNull($this);
+        }
+        if ($fields == self::FIELDS_COMMENTS && $comment->hasEmptyBody()) {
+            return null;
         }
         $classname_with_namespace = 'Tuleap\Tracker\REST\ChangesetRepresentation';
         $changeset_representation = new $classname_with_namespace;
         $changeset_representation->build(
             $this,
             $comment,
-            $this->getRESTFieldValues($user)
+            $fields  == self::FIELDS_COMMENTS  ? array() : $this->getRESTFieldValues($user)
         );
         return $changeset_representation;
     }

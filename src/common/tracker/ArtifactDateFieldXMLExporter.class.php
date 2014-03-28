@@ -25,7 +25,9 @@ class ArtifactDateFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporter {
     const TV3_TYPE         = 'DF_4';
     const TV5_TYPE         = 'date';
 
-    public function appendNode(DOMElement $changeset_node, $artifact_id, array $row) {
+    const SPECIAL_DATE_FIELD = 'close_date';
+
+    public function appendNode(DOMElement $changeset_node, $tracker_id, $artifact_id, array $row) {
         $this->appendStringNode($changeset_node, self::TV5_TYPE, $row);
     }
 
@@ -37,4 +39,11 @@ class ArtifactDateFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporter {
         return self::TV3_VALUE_INDEX;
     }
 
+    public function getCurrentFieldValue(array $field_value_row, $tracker_id) {
+        if ($field_value_row['field_name'] === self::SPECIAL_DATE_FIELD) {
+            return;
+        }
+
+        return parent::getCurrentFieldValue($field_value_row, $tracker_id);
+    }
 }

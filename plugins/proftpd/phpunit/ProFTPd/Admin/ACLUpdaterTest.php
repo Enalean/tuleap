@@ -58,12 +58,12 @@ class ACLUpdaterTest extends PHPUnit_Framework_TestCase {
             switch ($path) {
                 case $root_path:
                 case $root_path.'/SomeDirectory':
-                    if ($acl == 'd:u:httpuser:rx,d:g:gpig-ftp_writers:rwx,d:g:gpig-ftp_readers:rx,u:httpuser:rx,g:gpig-ftp_writers:rwx,g:gpig-ftp_readers:rx') {
+                    if ($acl == 'd:u:httpuser:rwx,d:g:gpig-ftp_writers:rwx,d:g:gpig-ftp_readers:rx,u:httpuser:rwx,g:gpig-ftp_writers:rwx,g:gpig-ftp_readers:rx') {
                         break;
                     }
                 case $root_path.'/SomeFile':
                 case $root_path.'/SomeDirectory/AnotherFile':
-                    if ($acl == 'u:httpuser:r,g:gpig-ftp_writers:rw,g:gpig-ftp_readers:r') {
+                    if ($acl == 'u:httpuser:rw,g:gpig-ftp_writers:rw,g:gpig-ftp_readers:r') {
                         break;
                     }
                 default:
@@ -81,19 +81,19 @@ class ACLUpdaterTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testItSetsACLOnDirectoryWhenNoReaders() {
-        $this->backend->expects($this->at(1))->method('modifyacl')->with('d:u:httpuser:rx,d:g:gpig-ftp_writers:rwx,u:httpuser:rx,g:gpig-ftp_writers:rwx', $this->path);
+        $this->backend->expects($this->at(1))->method('modifyacl')->with('d:u:httpuser:rwx,d:g:gpig-ftp_writers:rwx,u:httpuser:rwx,g:gpig-ftp_writers:rwx', $this->path);
 
         $this->acl_updater->recursivelyApplyACL($this->path, $this->http_user, $this->writers, '');
     }
 
     public function testItSetsACLOnDirectoryWhenNoWriters() {
-        $this->backend->expects($this->at(1))->method('modifyacl')->with('d:u:httpuser:rx,d:g:gpig-ftp_readers:rx,u:httpuser:rx,g:gpig-ftp_readers:rx', $this->path);
+        $this->backend->expects($this->at(1))->method('modifyacl')->with('d:u:httpuser:rwx,d:g:gpig-ftp_readers:rx,u:httpuser:rwx,g:gpig-ftp_readers:rx', $this->path);
 
         $this->acl_updater->recursivelyApplyACL($this->path, $this->http_user, '', $this->readers);
     }
 
     public function testItSetsACLOnDirectoryWhenNoReadersNorWriters() {
-        $this->backend->expects($this->at(1))->method('modifyacl')->with('d:u:httpuser:rx,u:httpuser:rx', $this->path);
+        $this->backend->expects($this->at(1))->method('modifyacl')->with('d:u:httpuser:rwx,u:httpuser:rwx', $this->path);
 
         $this->acl_updater->recursivelyApplyACL($this->path, $this->http_user, '', '');
     }

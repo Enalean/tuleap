@@ -41,6 +41,7 @@ use \TrackerFactory;
 use \Tracker_REST_Artifact_ArtifactCreator;
 use \Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use \Tracker_URLVerification;
+use \Tracker_Artifact_Changeset as Changeset;
 
 class ArtifactsResource {
     const MAX_LIMIT      = 50;
@@ -108,16 +109,17 @@ class ArtifactsResource {
      *
      * @url GET {id}/changesets
      *
-     * @param int $id Id of the artifact
-     * @param int $limit  Number of elements displayed per page {@from path}{@min 1}
-     * @param int $offset Position of the first element to display {@from path}{@min 0}
+     * @param int    $id     Id of the artifact
+     * @param string $fields Whether you want to fetch all fields or just comments {@from path}{@choice all,comments}
+     * @param int    $limit  Number of elements displayed per page {@from path}{@min 1}
+     * @param int    $offset Position of the first element to display {@from path}{@min 0}
      *
      * @return array {@type Tuleap\Tracker\REST\ChangesetRepresentation}
      */
-    protected function getArtifactChangesets($id, $limit = 10, $offset = self::DEFAULT_OFFSET) {
+    protected function getArtifactChangesets($id, $fields = Changeset::FIELDS_ALL, $limit = 10, $offset = self::DEFAULT_OFFSET) {
         $user       = UserManager::instance()->getCurrentUser();
         $artifact   = $this->getArtifactById($user, $id);
-        $changesets = $this->builder->getArtifactChangesetsRepresentation($user, $artifact, $offset, $limit);
+        $changesets = $this->builder->getArtifactChangesetsRepresentation($user, $artifact, $fields, $offset, $limit);
 
         $this->sendAllowHeadersForChangesets($artifact);
         Header::sendPaginationHeaders($limit, $offset, $changesets->totalCount(), self::MAX_LIMIT);

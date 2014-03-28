@@ -1,8 +1,8 @@
 Version 6.12 (Not Released Yet)
 
 	== Plugins ==
-	* proftpd: 0.11
-	* tracker: 5.276
+	* proftpd: 0.12
+	* tracker: 5.278
 	* graphontrackersv5: 5.6
 	* agiledashboard: 1.56
 	* cardwall: 1.22
@@ -15,6 +15,7 @@ Version 6.12 (Not Released Yet)
 	* request #6146 - Backend raise errors about cvs logs while cvs is not even installed
 	* request #6423: [trackerV3] Bind a field to mutiple lists doesn't work
 	* Fix request #6146 - Backend raise errors about cvs logs
+	* Fix request #6539 - Missleading terminology for Project Members and Developers
 
 	== Enhancement ==
 	* story #5998 - Delegate the validation of projects to users
@@ -23,6 +24,9 @@ Version 6.12 (Not Released Yet)
 	== Themes ==
 	* Experimental: 0.9.12
 	* CodexSTN: 1.13
+
+	== Development ==
+	* Add script to ease the execution of webdav tests
 
 Version 6.11 (Thursday, March 6th 2014)
 	== Plugins ==

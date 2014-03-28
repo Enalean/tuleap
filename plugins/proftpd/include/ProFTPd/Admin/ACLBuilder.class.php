@@ -35,15 +35,15 @@ abstract class ACLBuilder {
     protected function getACLList($http_user, $writers, $readers) {
         return array_filter(
             array(
-                $this->getACLUserReader($http_user),
+                $this->getACLUserWriter($http_user),
                 $this->getACLGroupWriters($writers),
                 $this->getACLGroupReaders($readers)
             )
         );
     }
 
-    protected function getACLUserReader($user) {
-        return "u:".$this->getACLReaders($user);
+    protected function getACLUserWriter($user) {
+        return "u:".$this->getACLWriters($user);
     }
 
     protected function getACLGroupWriters($group) {

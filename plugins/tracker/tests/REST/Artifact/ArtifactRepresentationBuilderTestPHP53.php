@@ -149,18 +149,18 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_ChangesetsTest extends
         $this->artifact->setChangesets(array());
 
         $this->assertIdentical(
-            $this->builder->getArtifactChangesetsRepresentation($this->user, $this->artifact, 0, 10)->toArray(),
+            $this->builder->getArtifactChangesetsRepresentation($this->user, $this->artifact, Tracker_Artifact_Changeset::FIELDS_ALL, 0, 10)->toArray(),
             array()
         );
     }
 
     public function itBuildsHistoryOutOfChangeset() {
         $changeset1 = mock('Tracker_Artifact_Changeset');
-        expect($changeset1)->getRESTValue($this->user)->once();
+        expect($changeset1)->getRESTValue($this->user, Tracker_Artifact_Changeset::FIELDS_ALL)->once();
 
         $this->artifact->setChangesets(array($changeset1));
 
-        $this->builder->getArtifactChangesetsRepresentation($this->user, $this->artifact, 0, 10)->toArray();
+        $this->builder->getArtifactChangesetsRepresentation($this->user, $this->artifact, Tracker_Artifact_Changeset::FIELDS_ALL, 0, 10)->toArray();
     }
 
     public function itDoesntExportEmptyChanges() {
@@ -173,7 +173,7 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_ChangesetsTest extends
         $this->artifact->setChangesets(array($changeset1, $changeset2));
 
         $this->assertIdentical(
-            $this->builder->getArtifactChangesetsRepresentation($this->user, $this->artifact, 0, 10)->toArray(),
+            $this->builder->getArtifactChangesetsRepresentation($this->user, $this->artifact, Tracker_Artifact_Changeset::FIELDS_ALL, 0, 10)->toArray(),
             array('whatever')
         );
     }
@@ -188,7 +188,7 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_ChangesetsTest extends
         $this->artifact->setChangesets(array($changeset1, $changeset2));
 
         $this->assertIdentical(
-            $this->builder->getArtifactChangesetsRepresentation($this->user, $this->artifact, 1, 10)->toArray(),
+            $this->builder->getArtifactChangesetsRepresentation($this->user, $this->artifact, Tracker_Artifact_Changeset::FIELDS_ALL, 1, 10)->toArray(),
             array('result 2')
         );
     }
@@ -203,7 +203,7 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_ChangesetsTest extends
         $this->artifact->setChangesets(array($changeset1, $changeset2));
 
         $this->assertIdentical(
-            $this->builder->getArtifactChangesetsRepresentation($this->user, $this->artifact, 1, 10)->totalCount(),
+            $this->builder->getArtifactChangesetsRepresentation($this->user, $this->artifact, Tracker_Artifact_Changeset::FIELDS_ALL, 1, 10)->totalCount(),
             2
         );
     }

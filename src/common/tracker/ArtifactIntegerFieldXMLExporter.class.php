@@ -23,7 +23,7 @@ class ArtifactIntegerFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporter {
     const TV3_TYPE         = 'TF_2';
     const TV5_TYPE         = 'int';
 
-    public function appendNode(DOMElement $changeset_node, $artifact_id, array $row) {
+    public function appendNode(DOMElement $changeset_node, $tracker_id, $artifact_id, array $row) {
         $this->appendStringNode($changeset_node, self::TV5_TYPE, $row);
     }
 

@@ -29,6 +29,7 @@ class proftpdPlugin extends Plugin {
         $this->addHook('service_is_used');
         $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES);
+        $this->addHook(Event::GET_FTP_INCOMING_DIR);
     }
 
     public function getPluginInfo() {
@@ -132,5 +133,17 @@ class proftpdPlugin extends Plugin {
             ProjectManager::instance(),
             $this->getPluginInfo()->getPropVal('proftpd_base_directory')
         );
+    }
+
+    /**
+     * @see Event::GET_FTP_INCOMING_DIR
+     */
+    public function get_ftp_incoming_dir($params) {
+        $project = $params['project'];
+
+        if ($project->usesService(self::SERVICE_SHORTNAME)) {
+            $base_sftp_dir     = $this->getPluginInfo()->getPropVal('proftpd_base_directory');
+            $params['src_dir'] = $base_sftp_dir . '/' . $project->getUnixName();
+        }
     }
 }

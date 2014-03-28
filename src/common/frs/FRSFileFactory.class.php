@@ -1,8 +1,9 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
  * Codendi is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -274,7 +275,7 @@ class FRSFileFactory extends Error {
         }
 
         clearstatcache();
-        $filePath = $GLOBALS['ftp_incoming_dir'] . '/' . $file->getFileName();
+        $filePath = $this->getSrcDir($rel->getProject()) . '/' . $file->getFileName();
         if (!file_exists($filePath)) {
             throw new FRSFileInvalidNameException($file);
         }
@@ -307,7 +308,7 @@ class FRSFileFactory extends Error {
      *
      * @return array of string : the names of the files present in the incoming directory
      */
-    function getUploadedFileNames() {
+    function getUploadedFileNames(Project $project) {
         $uploaded_file_names = array();
         //iterate and show the files in the upload directory
 
@@ -316,7 +317,8 @@ class FRSFileFactory extends Error {
         //while ($file = @ readdir($dirhandle)) {
 
         // Workaround for files bigger than 2Gb:
-        $filelist = shell_exec("/usr/bin/find ".$GLOBALS['ftp_incoming_dir']." -maxdepth 1 -type f -printf \"%f\\n\"");
+        $src_dir  = $this->getSrcDir($project);
+        $filelist = shell_exec("/usr/bin/find ". $src_dir ." -maxdepth 1 -type f -printf \"%f\\n\"");
         $files = explode("\n",$filelist);
         // Remove last (empty) element
         array_pop($files);
@@ -353,8 +355,10 @@ class FRSFileFactory extends Error {
      * @return Boolean True if file is moved to it's final location (false otherwise)
      */
     public function moveFileForge(FRSFile $file) {
-        $release = $file->getRelease();
-        $unixName = $release->getProject()->getUnixName(false);
+        $release  = $file->getRelease();
+        $project  = $release->getProject();
+        $unixName = $project->getUnixName(false);
+
         $upload_sub_dir = $this->getUploadSubDirectory($release);
         $fileName = $file->getFileName();
         $filePath = $this->getResolvedFileName($file->getFileName());
@@ -363,7 +367,8 @@ class FRSFileFactory extends Error {
             $cmdFilePath = preg_replace('` `', '\\ ', $filePath);
             $ret_val   = null;
             $exec_res  = null;
-            $cmd = $this->fileforge." $fileName " . $unixName . "/" . $upload_sub_dir.'/'.$cmdFilePath;
+            $src_dir   = $this->getSrcDir($project);
+            $cmd = $this->fileforge." $fileName " . $unixName . "/" . $upload_sub_dir.'/'.$cmdFilePath . " $src_dir 2>&1";
             exec($cmd, $exec_res, $ret_val);
             // Warning. Posix common value for success is 0 (zero), but in php 0 == false.
             // So "convert" the unix "success" value to the php one (basically 0 => true).
@@ -376,6 +381,17 @@ class FRSFileFactory extends Error {
         return false;
     }
 
+    public function getSrcDir(Project $project) {
+        $src_dir = $GLOBALS['ftp_incoming_dir'];
+        $params  = array(
+            'project' => $project,
+            'src_dir' => &$src_dir
+        );
+
+        EventManager::instance()->processEvent(Event::GET_FTP_INCOMING_DIR, $params);
+
+        return $src_dir;
+    }
 
     /**
      * Get the sub directory where to upload the files

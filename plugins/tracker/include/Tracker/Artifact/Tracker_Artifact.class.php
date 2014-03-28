@@ -533,7 +533,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 if ((int)$request->get('changeset_id') && $request->exist('content')) {
                     if ($changeset = $this->getChangeset($request->get('changeset_id'))) {
                         $comment_format = $this->validateCommentFormat($request, 'comment_format');
-                        $changeset->updateComment($request->get('content'), $current_user, $comment_format);
+                        $changeset->updateComment($request->get('content'), $current_user, $comment_format, $_SERVER['REQUEST_TIME']);
                         if ($request->isAjax()) {
                             //We assume that we can only change a comment from a followUp
                             echo $changeset->getComment()->fetchFollowUp();
@@ -824,7 +824,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @throws Tracker_Exception In the validation
      * @throws Tracker_NoChangeException In the validation
-     * @return boolean True if update is done without error, false otherwise
+     * @return Tracker_Artifact_Changeset|Boolean The new changeset if update is done without error, false otherwise
      */
     public function createNewChangeset($fields_data, $comment, PFUser $submitter, $send_notification = true, $comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT) {
         $submitted_on = $_SERVER['REQUEST_TIME'];

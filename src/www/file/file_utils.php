@@ -432,7 +432,6 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
         echo "var default_permissions_text = '" . $GLOBALS['Language']->getText('file_admin_editreleases', 'default_permissions') . "';";
     }
     echo '</script>';
-    $dirhandle = @ opendir($GLOBALS['ftp_incoming_dir']);
     //set variables for news template 
     $relname = $GLOBALS['Language']->getText('file_admin_editreleases', 'relname');
     if (!$is_update) {
@@ -558,7 +557,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     <?php
     
     //iterate and show the files in the upload directory
-    $file_list = $frsff->getUploadedFileNames();
+    $file_list = $frsff->getUploadedFileNames($release->getProject());
     foreach ($file_list as $file) {
         echo '<option value="' . $file . '">' . $hp->purify($file, CODENDI_PURIFIER_CONVERT_HTML) . '</option>';
     }
@@ -1222,7 +1221,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                             }
                         }
                         if (is_uploaded_file($file['tmp_name'])) {
-                            $uploaddir = $GLOBALS['ftp_incoming_dir'];
+                            $uploaddir = $frsff->getSrcDir($request->getProject());
                             $uploadfile = $uploaddir . "/" . basename($filename);
                             if (!file_exists($uploaddir) || !is_writable($uploaddir) || !move_uploaded_file($file['tmp_name'], $uploadfile)) {
                                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases', 'not_add_file') . ": " . basename($filename));

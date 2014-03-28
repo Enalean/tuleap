@@ -15,16 +15,14 @@
               <element name="submitted_on">
                 <ref name="date_content"/>
               </element>
-              <optional>
-                <element name="comment">
-                  <data type="string"/>
-                </element>
-              </optional>
-              <oneOrMore>
+              <element name="comments">
+                <ref name="comments"/>
+              </element>
+              <zeroOrMore>
                 <element name="field_change">
                   <ref name="field_content"/>
                 </element>
-              </oneOrMore>
+              </zeroOrMore>
             </element>
           </zeroOrMore>
           <zeroOrMore>
@@ -53,6 +51,33 @@
       </zeroOrMore>
     </element>
   </start>
+  <define name="comments">
+    <zeroOrMore>
+      <element name="comment">
+        <ref name="comment_content"/>
+      </element>
+    </zeroOrMore>
+  </define>
+  <define name="comment_content">
+    <element name="submitted_by">
+      <ref name="user_content"/>
+    </element>
+    <element name="submitted_on">
+      <ref name="date_content"/>
+    </element>
+    <element name="body">
+      <ref name="text_content"/>
+    </element>
+  </define>
+  <define name="text_content">
+    <attribute name="format">
+      <choice>
+        <value>text</value>
+        <value>html</value>
+      </choice>
+    </attribute>
+    <data type="string"/>
+  </define>
   <define name="date_content">
     <attribute name="format">
       <value>ISO8601</value>
@@ -89,6 +114,8 @@
       <ref name="field_float"/>
       <ref name="field_date"/>
       <ref name="field_file"/>
+      <ref name="field_static_list"/>
+      <ref name="field_user_list"/>
       <ref name="field_open_list_user"/>
       <ref name="field_perms_on_artifact"/>
     </choice>
@@ -140,6 +167,32 @@
       </element>
     </oneOrMore>
   </define>
+  <define name="field_static_list">
+    <attribute name="type">
+      <value>list</value>
+    </attribute>
+    <attribute name="bind">
+      <value>static</value>
+    </attribute>
+    <zeroOrMore>
+      <element name="value">
+        <data type="string"/>
+      </element>
+    </zeroOrMore>
+  </define>
+  <define name="field_user_list">
+    <attribute name="type">
+      <value>list</value>
+    </attribute>
+    <attribute name="bind">
+      <value>user</value>
+    </attribute>
+    <zeroOrMore>
+      <element name="value">
+        <ref name="user_content"/>
+      </element>
+    </zeroOrMore>
+  </define>
   <define name="field_open_list_user">
     <attribute name="type">
       <value>open_list</value>
@@ -147,11 +200,11 @@
     <attribute name="bind">
       <value>user</value>
     </attribute>
-    <oneOrMore>
+    <zeroOrMore>
       <element name="value">
         <ref name="user_content"/>
       </element>
-    </oneOrMore>
+    </zeroOrMore>
   </define>
   <define name="field_perms_on_artifact">
     <attribute name="type">
