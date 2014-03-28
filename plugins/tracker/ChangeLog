@@ -1,3 +1,6 @@
+Version 5.280 - Tuleap 6.12
+    * story #6422 - uploaded files via REST
+
 Version 5.279 - Tuleap 6.12
     * story #6277:adding query_parameter for tracker/id/artifacts
 
