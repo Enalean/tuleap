@@ -17,5 +17,8 @@ $sys_enablessl="0";
 $sys_server="mysql";
 $sys_server_join="30";
 
+$sys_org_name = "Integration Tests Plateform";
+$sys_news_group = "Integration News";
+
 // End of customizations -- place nothing after the closing PHP tag!
 ?>
