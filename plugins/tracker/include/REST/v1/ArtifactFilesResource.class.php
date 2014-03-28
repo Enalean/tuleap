@@ -71,9 +71,9 @@ class ArtifactFilesResource {
     }
 
     /**
-     * Get a chunk of given file
+     * Get a chunk of a file
      *
-     * Get a chunk of given attached file
+     * A user can only access the attached files they can view.
      *
      * @url GET {id}
      * @param int $id     Id of the file
