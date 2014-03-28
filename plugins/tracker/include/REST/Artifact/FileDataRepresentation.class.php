@@ -18,9 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_FormElement_NotImplementedForRESTException extends Tracker_Exception {
-    public function __construct(Tracker_FormElement_Field $field) {
-        $type = Tracker_FormElementFactory::instance()->getType($field);
-        parent::__construct("cannot modify $type fields yet (id: {$field->getId()})");
+namespace Tuleap\Tracker\REST\Artifact;
+
+class FileDataRepresentation {
+
+    /**
+     * @var string Chunk
+     */
+    public $data;
+
+    public function build($data) {
+        $this->data = $data;
+
+        return $this;
     }
 }

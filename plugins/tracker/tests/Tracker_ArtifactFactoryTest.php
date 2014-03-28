@@ -122,7 +122,7 @@ class Tracker_ArtifactFactory_GetChildrenTest extends TuleapTestCase {
             $artiafct_as_dar1,
             $artiafct_as_dar2
         );
-        
+
         $child_artifact1 = anArtifact()->withId(22)->userCanView($this->user)->withTracker($tracker)->build();
         $child_artifact2 = anArtifact()->withId(88)->userCanView($this->user)->withTracker($tracker)->build();
 

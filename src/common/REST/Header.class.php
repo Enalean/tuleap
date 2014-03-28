@@ -25,6 +25,7 @@ class Header {
     const PUT     = 'PUT';
     const POST    = 'POST';
     const DELETE  = 'DELETE';
+    const PATCH   = 'PATCH';
 
     const CORS_ALLOW_METHODS = 'Access-Control-Allow-Methods';
     const ALLOW              = 'Allow';
@@ -34,6 +35,8 @@ class Header {
     const X_PAGINATION_OFFSET    = 'X-PAGINATION-OFFSET';
     const X_PAGINATION_SIZE      = 'X-PAGINATION-SIZE';
     const X_PAGINATION_LIMIT_MAX = 'X-PAGINATION-LIMIT-MAX';
+
+    const X_UPLOAD_MAX_FILE_CHUNKSIZE = 'X-UPLOAD-MAX-FILE-CHUNKSIZE';
 
     public static function lastModified($timestamp) {
         self::sendHeader(self::LAST_MODIFIED, date('c', $timestamp));
@@ -59,12 +62,20 @@ class Header {
         self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::PUT));
     }
 
+    public static function allowOptionsGetPutDelete() {
+        self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::PUT, self::DELETE));
+    }
+
     public static function allowOptionsPut() {
         self::sendAllowHeaders(array(self::OPTIONS, self::PUT));
     }
 
     public static function allowOptionsPost() {
         self::sendAllowHeaders(array(self::OPTIONS, self::POST));
+    }
+
+    public static function allowOptionsGetPost() {
+        self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::POST));
     }
 
     private static function sendAllowHeaders($methods) {
@@ -84,6 +95,10 @@ class Header {
         self::sendHeader(self::X_PAGINATION_LIMIT, $limit);
         self::sendHeader(self::X_PAGINATION_OFFSET, $offset);
         self::sendHeader(self::X_PAGINATION_LIMIT_MAX, $max_limit);
+    }
+
+    public static function sendMaxFileChunkSizeHeaders($size) {
+        self::sendHeader(self::X_UPLOAD_MAX_FILE_CHUNKSIZE, $size);
     }
 
     private static function sendHeader($name, $value) {
