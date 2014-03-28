@@ -44,7 +44,7 @@ class Account_RegisterPresenter {
         $this->purpose_directions     = $GLOBALS['Language']->getText('account_register', 'purpose_directions');
         $this->password_robustness    = $GLOBALS['Language']->getText('account_check_pw', 'password_robustness');
         $this->new_password           = $GLOBALS['Language']->getText('account_change_pw', 'new_password');
-        $this->timezone_selector      = html_get_timezone_popup('timezone', $this->prefill_values->form_timezone);
+        $this->timezone_selector      = new Account_TimezoneSelectorPresenter($this->prefill_values->form_timezone);
         $this->should_display_purpose = $GLOBALS['sys_user_approval'] == 1;
 
         $password_strategy = new PasswordStrategy();

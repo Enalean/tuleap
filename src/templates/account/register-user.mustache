@@ -9,7 +9,10 @@
     {{# prefill_values }}
     <div class="fields">
         <input type="text" name="form_realname" placeholder="{{ realname }} *" value="{{ form_realname }}" required="required" />
-        {{{ timezone_selector }}}
+
+        {{# timezone_selector }}
+            {{> timezone }}
+        {{/ timezone_selector }}
     </div>
 
     <div class="fields">

@@ -135,7 +135,7 @@ account_change_timezone	title	Change Timezone
 account_change_timezone	title2	Timezone Change
 account_change_timezone	message	Now, no matter where you live, you can see all dates and times throughout $1 as if it were in your neighborhood.
 account_change_timezone	no_update	Nothing Updated
-account_change_timezone	choose_tz	Please choose a timezone other than none
+account_change_timezone	choose_tz	Please choose a timezone
 #
 #-----------------------------------------------
 # Script: SF/www/scripts/check_pw.js.php

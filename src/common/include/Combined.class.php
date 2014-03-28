@@ -50,6 +50,7 @@ class Combined {
             '/scripts/bootstrap/bootstrap-datetimepicker/js/bootstrap-datetimepicker-fix-prototypejs-conflict.js',
             '/scripts/jscrollpane/jquery.mousewheel.js',
             '/scripts/jscrollpane/jquery.jscrollpane.min.js',
+            '/scripts/select2/select2.min.js',
             '/scripts/AZHU/storage.js',
             '/scripts/codendi/common.js',
             '/scripts/tuleap/systray.js',

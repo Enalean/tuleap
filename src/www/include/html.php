@@ -61,9 +61,9 @@ function html_image($src,$args,$display=1) {
 	}
 }
 
-function html_get_timezone_popup ($title='timezone',$selected='xzxzxzx') {
-    global $TZs;
-    return html_build_select_box_from_arrays ($TZs,$TZs,$title,$selected,false);
+function html_get_timezone_popup($selected = 0) {
+    $renderer = TemplateRendererFactory::build()->getRenderer(Config::get('codendi_dir') .'/src/templates/account/');
+    return $renderer->renderToString('timezone', new Account_TimezoneSelectorPresenter($selected));
 }
 
 /**

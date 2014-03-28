@@ -127,7 +127,7 @@ account_change_timezone	title	Changement de fuseau horaire
 account_change_timezone	title2	Changement de fuseau horaire
 account_change_timezone	message	Désormais, où que vous habitiez, vous pourrez voir toutes les dates et heures affichées par $1 comme si tout se passait dans votre voisinage.
 account_change_timezone	no_update	Aucune mise à jour effectuée
-account_change_timezone	choose_tz	Prière de choisir un autre fuseau horaire que 'Aucun'
+account_change_timezone	choose_tz	Prière de choisir un fuseau horaire
 #
 #-----------------------------------------------
 # Script: SF/www/scripts/check_pw.js.php

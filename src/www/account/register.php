@@ -48,8 +48,7 @@ function register_valid($confirm_hash)	{
 	return 0;
     }
     $tz = $request->get('timezone');
-    if (!is_valid_timezone($tz) ||
-        $tz == 'None') {
+    if (!is_valid_timezone($tz)) {
 	$GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_notz'));
 	return 0;
     }
@@ -137,7 +136,7 @@ function display_account_form($register_error)	{
     if($request->exist('timezone') && is_valid_timezone($request->get('timezone'))) {
         $timezone = $request->get('timezone');
     } else {
-        $timezone = 'None';
+        $timezone = false;
     }
 
     $form_register_purpose = $request->exist('form_register_purpose')?$purifier->purify($request->get('form_register_purpose')):'';
