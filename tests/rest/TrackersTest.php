@@ -123,6 +123,67 @@ class TrackersTest extends RestBase {
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
+    public function testGetTrackerArtifacts() {
+        $request   = $this->client->get($this->getReleaseTrackerUri() . '/artifacts');
+        $response  = $this->getResponse($request);
+        $artifacts = $response->json();
+
+        $first_artifact_info = $artifacts[0];
+        $this->assertEquals(1, $first_artifact_info['id']);
+        $this->assertEquals('artifacts/1', $first_artifact_info['uri']);
+
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    public function testGetTrackerArtifactsBasicQuery() {
+        $query = json_encode(array(
+            "Name" => "lease"
+            )
+        );
+        $request   = $this->client->get($this->getReleaseTrackerUri() . '/artifacts?query='.urlencode($query));
+        $response  = $this->getResponse($request);
+        $artifacts = $response->json();
+
+        $first_artifact_info = $artifacts[0];
+        $this->assertEquals(1, $first_artifact_info['id']);
+        $this->assertEquals('artifacts/1', $first_artifact_info['uri']);
+
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    public function testGetTrackerArtifactsBasicCounterQuery() {
+        $query = json_encode(array(
+            "Name" => "wwwxxxyyyzzz"
+            )
+        );
+
+        $request   = $this->client->get($this->getReleaseTrackerUri() . '/artifacts?values=all&limit=10&query='.urlencode($query));
+        $response  = $this->getResponse($request);
+        $artifacts = $response->json();
+
+        $this->assertCount(0, $artifacts);
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    public function testGetTrackerArtifactsAdvancedQuery() {
+        $query = json_encode(array(
+            "Name" => array(
+                "operator"=>"contains",
+                "value"=>"lease"
+                )
+            )
+        );
+        $request   = $this->client->get($this->getReleaseTrackerUri() . '/artifacts?values=all&query='.urlencode($query));
+        $response  = $this->getResponse($request);
+        $artifacts = $response->json();
+
+        $first_artifact_info = $artifacts[0];
+        $this->assertEquals(1, $first_artifact_info['id']);
+        $this->assertEquals('artifacts/1', $first_artifact_info['uri']);
+
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
     private function getReleaseTrackerUri() {
         $response_plannings = $this->getResponse($this->client->get('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/plannings'))->json();
         return $response_plannings[0]['milestone_tracker']['uri'];

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,21 +26,33 @@ use \Luracast\Restler\RestException;
 use \Tracker_REST_TrackerRestBuilder;
 use \Tuleap\Tracker\REST\ReportRepresentation;
 use \Tracker_FormElementFactory;
+use \Tracker;
 use \TrackerFactory;
+use \Tracker_ArtifactFactory;
 use \Tracker_ReportFactory;
 use \UserManager;
 use \Tuleap\REST\Header;
 use \Tracker_Report;
 use \Tracker_URLVerification;
+use \Tracker_REST_Artifact_ArtifactRepresentationBuilder;
+use \PFUser;
+use \Tracker_Report_REST;
+use \PermissionsManager;
+use \Tracker_ReportDao;
+use \Tracker_FormElementFactory                   as FormElementFactory;
+use \Tracker_Report_InvalidRESTCriterionException as InvalidCriteriaException;
 
 /**
  * Wrapper for Tracker related REST methods
  */
 class TrackersResource {
 
-    const MAX_LIMIT      = 50;
-    const DEFAULT_LIMIT  = 10;
-    const DEFAULT_OFFSET = 0;
+    const MAX_LIMIT        = 50;
+    const DEFAULT_LIMIT    = 10;
+    const DEFAULT_OFFSET   = 0;
+    const DEFAULT_VALUES   = '';
+    const ALL_VALUES       = 'all';
+    const DEFAULT_CRITERIA = '';
 
     /**
      * @url OPTIONS
@@ -130,6 +142,133 @@ class TrackersResource {
         );
     }
 
+    /**
+     * Get all artifacts of a given tracker
+     *
+     * Get all artifacts of a given tracker the user can view
+     *<br><br>
+     * Notes on the query parameter
+     * <ol>
+     *  <li>It must be a URL-encoded JSON object</li>
+     *  <li>The basic form of a property is [field_id|field_shortname] : [number|string|array(number)]
+     *      <br>Example: {"1258" : "bug"} OR {"title" : "bug"}
+     *  </li>
+     *  <li>The complex form of a property is "field_id" : {"operator" : "operator_name", "value" : [number|string|array(number)]}
+     *      <br>Example: {"title" : {"operator" : "contains", "value" : "bug"}}
+     *  </li>
+     *  <li>For text or number-like fields, the allowed operators are ["contains"]. The value must be a string or number</li>
+     *  <li>For select-box-like fields, the allowed operators are ["contains"]. The value(s) are bind_value_id</li>
+     *  <li>For date-like fields, the allowed operators are ["="|"<"|">"|"between"]. Dates must be in ISO date format</li>
+     *  <li>Full example: {"title" : "bug", "2458" : {"operator" : "between", "value", ["2014-02-25", "2014-03-25T00:00:00-05:00"]}}</li>
+     * </ol>
+     * 
+     * @url GET {id}/artifacts
+     *
+     * @param int    $id     Id of the tracker
+     * @param string $values Which fields to include in the response. Default is no field values {@from path}{@choice ,all}
+     * @param int    $limit  Number of elements displayed per page {@from path}{@min 1}
+     * @param int    $offset Position of the first element to display {@from path}{@min 0}
+     * @param string $query  JSON object of search criteria properties {@from path}
+     *
+     * @return array {@type Tuleap\Tracker\REST\Artifact\ArtifactRepresentation}
+     * @throws RestException 400
+     */
+    protected function getArtifacts(
+        $id,
+        $values = self::DEFAULT_VALUES,
+        $limit  = self::DEFAULT_LIMIT,
+        $offset = self::DEFAULT_OFFSET,
+        $query  = self::DEFAULT_CRITERIA
+    ) {
+        $this->checkLimitValue($limit);
+
+        $user          = UserManager::instance()->getCurrentUser();
+        $valid_tracker = $this->getTrackerById($user, $id);
+
+        if ($query) {
+            $artifacts = $this->getArtifactsMatchingQuery($user, $valid_tracker, $query, $offset, $limit);
+        } else {
+            $pagination = $this->getTrackerArtifactFactory()->getPaginatedArtifactsByTrackerId($id, $limit, $offset);
+            $nb_matching = $pagination->getSize();
+            $artifacts   = $pagination->getArtifacts();
+            Header::sendPaginationHeaders($limit, $offset, $nb_matching, self::MAX_LIMIT);
+        }
+
+        Header::allowOptionsGet();
+
+        $with_all_field_values = ($values == self::ALL_VALUES);
+        return $this->getListOfArtifactRepresentation(
+            $user,
+            $artifacts,
+            $with_all_field_values
+        );
+    }
+
+    /**
+     * @throws RestException 400
+     */
+    private function getArtifactsMatchingQuery(PFUser $user, Tracker $tracker, $query, $offset, $limit) {
+        $report = new Tracker_Report_REST(
+            $user,
+            $tracker,
+            PermissionsManager::instance(),
+            new Tracker_ReportDao(),
+            FormElementFactory::instance()
+        );
+
+        try {
+            $report->setRESTCriteria($query);
+            $matching_ids = $report->getMatchingIds();
+        } catch (InvalidCriteriaException $e) {
+            throw new RestException(400, $e->getMessage());
+        }
+
+        if (! $matching_ids['id']) {
+            return array();
+        }
+
+        $matching_artifact_ids = explode(',', $matching_ids['id']);
+        $slice_matching_ids    = array_slice($matching_artifact_ids, $offset, $limit);
+
+        Header::sendPaginationHeaders($limit, $offset, count($matching_artifact_ids), self::MAX_LIMIT);
+
+        $artifacts = $this->getTrackerArtifactFactory()->getArtifactsByArtifactIdList($slice_matching_ids);
+        return array_filter($artifacts);
+    }
+
+    /**
+     * @return Tuleap\Tracker\REST\Artifact\ArtifactRepresentation[]
+     */
+    private function getListOfArtifactRepresentation(PFUser $user, $artifacts, $with_all_field_values) {
+        $builder = new Tracker_REST_Artifact_ArtifactRepresentationBuilder(
+            Tracker_FormElementFactory::instance()
+        );
+
+        $build_artifact_representation = function ($artifact) use (
+            $builder,
+            $user,
+            $with_all_field_values
+        ) {
+            if (! $artifact || ! $artifact->userCanView($user)) {
+                return;
+            }
+
+            if ($with_all_field_values) {
+                return $builder->getArtifactRepresentationWithFieldValues($user, $artifact);
+            } else {
+                return $builder->getArtifactRepresentation($artifact);
+            }
+        };
+
+        $list_of_artifact_representation = array_map($build_artifact_representation, $artifacts);
+
+        return array_values(array_filter($list_of_artifact_representation));
+    }
+
+    /**
+     * @return Tracker
+     * @throws RestException
+     */
     private function getTrackerById(\PFUser $user, $id) {
         $tracker = TrackerFactory::instance()->getTrackerById($id);
         if ($tracker) {
@@ -140,6 +279,13 @@ class TrackersResource {
             throw new RestException(403);
         }
         throw new RestException(404);
+    }
+
+    /**
+     * @return Tracker_ArtifactFactory
+     */
+    private function getTrackerArtifactFactory() {
+        return Tracker_ArtifactFactory::instance();
     }
 
     private function sendAllowHeaderForTracker() {

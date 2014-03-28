@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Codendi.
@@ -427,4 +428,94 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
         $this->assertEqual('-', $date->fetchMailArtifactValue($artifact, $user, $value, 'text'));
         $this->assertEqual('-', $date->fetchMailArtifactValue($artifact, $user, $value, 'html'));
     }
+}
+
+class Tracker_FormElement_Field_DateTest_setCriteriaValueFromREST extends TuleapTestCase {
+
+    public function setUp() {
+        $this->date = new Tracker_FormElement_Field_DateTestVersion();
+    }
+
+    public function itAddsAnEqualsCrterion() {
+        $date     = '2014-04-05';
+        $criteria = mock('Tracker_Report_Criteria');
+        $values   = array(
+            Tracker_Report_REST::VALUE_PROPERTY_NAME    => $date,
+            Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_EQUALS
+        );
+
+        $this->date->setCriteriaValueFromREST($criteria, $values);
+        $res = $this->date->getCriteriaValue($criteria);
+
+        $this->assertCount($res, 3);
+        $this->assertEqual($res['op'], '=');
+        $this->assertEqual($res['from_date'], 0);
+        $this->assertEqual($res['to_date'], strtotime($date));
+    }
+
+    public function itAddsAGreaterThanCrterion() {
+        $date     = '2014-04-05T00:00:00-05:00';
+        $criteria = mock('Tracker_Report_Criteria');
+        $values   = array(
+            Tracker_Report_REST::VALUE_PROPERTY_NAME    => $date,
+            Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_GREATER_THAN
+        );
+
+        $this->date->setCriteriaValueFromREST($criteria, $values);
+        $res = $this->date->getCriteriaValue($criteria);
+
+        $this->assertCount($res, 3);
+        $this->assertEqual($res['op'], '>');
+        $this->assertEqual($res['from_date'], 0);
+        $this->assertEqual($res['to_date'], strtotime($date));
+    }
+
+    public function itAddsALessThanCrterion() {
+        $date     = '2014-04-05';
+        $criteria = mock('Tracker_Report_Criteria');
+        $values   = array(
+            Tracker_Report_REST::VALUE_PROPERTY_NAME    => array($date),
+            Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_LESS_THAN
+        );
+
+        $this->date->setCriteriaValueFromREST($criteria, $values);
+        $res = $this->date->getCriteriaValue($criteria);
+
+        $this->assertCount($res, 3);
+        $this->assertEqual($res['op'], '<');
+        $this->assertEqual($res['from_date'], 0);
+        $this->assertEqual($res['to_date'], strtotime($date));
+    }
+
+    public function itAddsABetweenCrterion() {
+        $from_date     = '2014-04-05';
+        $to_date       = '2014-05-12';
+        $criteria = mock('Tracker_Report_Criteria');
+        $values   = array(
+            Tracker_Report_REST::VALUE_PROPERTY_NAME    => array($from_date, $to_date),
+            Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_BETWEEN
+        );
+
+        $this->date->setCriteriaValueFromREST($criteria, $values);
+        $res = $this->date->getCriteriaValue($criteria);
+
+        $this->assertCount($res, 3);
+        $this->assertEqual($res['op'], '=');
+        $this->assertEqual($res['from_date'], strtotime($from_date));
+        $this->assertEqual($res['to_date'], strtotime($to_date));
+    }
+
+    public function itIgnoresInvalidDates() {
+        $date     = 'christmas eve';
+
+        $criteria = mock('Tracker_Report_Criteria');
+        $values   = array(
+            Tracker_Report_REST::VALUE_PROPERTY_NAME    => $date,
+            Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_BETWEEN
+        );
+
+        $res = $this->date->setCriteriaValueFromREST($criteria, $values);
+        $this->assertFalse($res);
+    }
+
 }

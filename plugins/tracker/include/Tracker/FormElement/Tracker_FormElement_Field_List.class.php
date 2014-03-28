@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Codendi.
@@ -20,6 +21,8 @@
 
 
 abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field implements Tracker_FormElement_Field_Shareable {
+
+    const NONE_VALUE = 100;
 
     protected $bind;
 
@@ -290,6 +293,49 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
             }
         }
         $this->setCriteriaValue($criterias);
+    }
+
+    /**
+     * @throws Tracker_Report_InvalidRESTCriterionException
+     */
+    public function setCriteriaValueFromREST(Tracker_Report_Criteria $criteria, array $rest_criteria_value) {
+        $searched_field_values = $rest_criteria_value[Tracker_Report_REST::VALUE_PROPERTY_NAME];
+        $operator              = $rest_criteria_value[Tracker_Report_REST::OPERATOR_PROPERTY_NAME];
+
+        if ($operator !== Tracker_Report_REST::OPERATOR_CONTAINS) {
+            throw new Tracker_Report_InvalidRESTCriterionException("Unallowed operator for criterion field '$this->name' ($this->id). Allowed operators: [" . Tracker_Report_REST::OPERATOR_CONTAINS . "]");
+        }
+
+        if (is_numeric($searched_field_values)) {
+            $values_to_match = array((int) $searched_field_values);
+        } elseif(is_array($searched_field_values)) {
+            $values_to_match = $searched_field_values;
+        } else {
+            throw new Tracker_Report_InvalidRESTCriterionException("Invalid format for criterion field '$this->name' ($this->id)");
+        }
+
+        $available_field_values = $this->getAllValues();
+        $criteria               = array();
+
+        foreach ($values_to_match as $value_to_match) {
+            if (! is_numeric($value_to_match)) {
+                throw new Tracker_Report_InvalidRESTCriterionException("Invalid format for criterion field '$this->name' ($this->id)");
+            }
+
+            if ($value_to_match == self::NONE_VALUE) {
+                continue;
+            }
+
+            if (! isset($available_field_values[$value_to_match])) {
+                continue;
+            }
+
+            $criteria[] = $value_to_match;
+        }
+
+        $this->setCriteriaValue($criteria);
+
+        return count($criteria) > 0;
     }
 
     /**
