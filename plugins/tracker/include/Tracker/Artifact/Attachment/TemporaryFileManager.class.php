@@ -322,11 +322,13 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
         $last_changeset_file_ids = array();
 
         foreach($formelement_files as $formelement_files) {
-            $field               = $formelement_factory->getFormElementById($formelement_files->getId());
-            $value               = $field->getLastChangesetValue($artifact);
+            $field = $formelement_factory->getFormElementById($formelement_files->getId());
+            $value = $field->getLastChangesetValue($artifact);
 
-            foreach($value->getFiles() as $file) {
-                $last_changeset_file_ids[] = (int) $file->getId();
+            if ($value) {
+                foreach($value->getFiles() as $file) {
+                    $last_changeset_file_ids[] = (int) $file->getId();
+                }
             }
         }
 

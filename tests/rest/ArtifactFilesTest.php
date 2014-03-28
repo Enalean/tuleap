@@ -27,6 +27,9 @@ require_once dirname(__FILE__).'/../lib/autoload.php';
 class ArtifactFilesTest extends RestBase {
 
     private $first_file;
+    private $second_file;
+    private $second_chunk = 'with more data';
+    private $third_file;
 
     protected function getResponse($request) {
         return $this->getResponseByToken(
@@ -50,6 +53,20 @@ class ArtifactFilesTest extends RestBase {
             'description' => 'a very LARGE file',
             'mimetype'    => 'text/plain',
             'content'     => base64_encode('a very LARGE file'),
+        );
+
+        $this->second_file = array(
+            'name'        => 'my file 2',
+            'description' => 'a very small file',
+            'mimetype'    => 'text/plain',
+            'content'     => base64_encode('a very small file'),
+        );
+
+        $this->third_file = array(
+            'name'        => 'my file 3',
+            'description' => 'a very small file',
+            'mimetype'    => 'text/plain',
+            'content'     => base64_encode('a very small file'),
         );
     }
 
@@ -76,6 +93,21 @@ class ArtifactFilesTest extends RestBase {
         $this->assertEquals($file_representation['submitted_by'], TestDataBuilder::TEST_USER_1_ID);
 
         return $file_representation['id'];
+    }
+
+    /**
+     * @depends testPostArtifactFile
+     */
+    public function testArtifactTemporaryFilesGetId($file_id) {
+        $request  = $this->client->get('artifact_temporary_files/'.$file_id);
+        $response = $this->getResponse($request);
+
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $json = $response->json();
+        $data = $json['data'];
+
+        $this->assertEquals($this->first_file['content'], $data);
     }
 
     /**
@@ -176,35 +208,24 @@ class ArtifactFilesTest extends RestBase {
     }
 
     /**
-     * @depends testPutArtifactFileId
+     * @depends testPostArtifactFile
      */
-    public function testAttachFileToArtifact($file_id) {
-        $artifact_id = TestDataBuilder::STORY_1_ARTIFACT_ID;
+    public function testArtifactTemporaryFilesGet($file_id) {
+        $request  = $this->client->get('artifact_temporary_files');
+        $response = $this->getResponse($request);
 
-        $request = $this->client->get('trackers/'. TestDataBuilder::USER_STORIES_TRACKER_ID);
-        $structure = json_decode($this->getResponse($request)->getBody(true), true);
-        foreach ($structure['fields'] as $field) {
-            if ($field['type'] == 'file') {
-                $field_id = $field['field_id'];
-                break;
-            }
-        }
-        $this->assertNotNull($field_id);
+        $this->assertEquals($response->getStatusCode(), 200);
 
-        $this->client->put('artifact/'. $artifact_id, null, json_encode(array(
-            'values' => array(
-                array(
-                    'field_id' => $field_id,
-                    'value'    => $file_id,
-                ),
-            ),
-        )));
+        $json = $response->json();
 
-        return $file_id;
+        $this->assertCount(1, $json);
+        $this->assertEquals($file_id, $json[0]['id']);
+        $this->assertEquals($this->first_file['name'], $json[0]['name']);
+        $this->assertEquals($this->first_file['description'], $json[0]['description']);
     }
 
     /**
-     * @depends testAttachFileToArtifact
+     * @depends testPostArtifactFile
      */
     public function testOptionsArtifactTemporaryFilesId($file_id) {
         $response = $this->getResponse($this->client->options('artifact_temporary_files/'.$file_id));
@@ -214,7 +235,7 @@ class ArtifactFilesTest extends RestBase {
     }
 
     /**
-     * @depends testAttachFileToArtifact
+     * @depends testPostArtifactFile
      */
     public function testOptionsArtifactId_isForbiddenForADifferentUser($file_id) {
         $request = $this->client->options('artifact_temporary_files/'.$file_id);
@@ -229,5 +250,130 @@ class ArtifactFilesTest extends RestBase {
         }
 
         $this->assertTrue($unauthorised);
+    }
+
+    public function testAttachFileToPostArtifact() {
+        $post_resource = json_encode($this->third_file);
+        $request  = $this->client->post('artifact_temporary_files', null, $post_resource);
+        $response = $this->getResponse($request);
+        $file_representation = $response->json();
+
+        $request = $this->client->get('trackers/'. TestDataBuilder::USER_STORIES_TRACKER_ID);
+        $structure = json_decode($this->getResponse($request)->getBody(true), true);
+        foreach ($structure['fields'] as $field) {
+            if ($field['type'] == 'file') {
+                $field_id_file = $field['field_id'];
+            }
+            if ($field['label'] == 'I want to') {
+                $field_id_summary = $field['field_id'];
+            }
+            if ($field['label'] == 'Status') {
+                $field_id_status = $field['field_id'];
+            }
+        }
+        $this->assertNotNull($field_id_file);
+        $this->assertNotNull($field_id_summary);
+        $this->assertNotNull($field_id_status);
+
+        $params = json_encode(array(
+            'tracker' => array(
+                'id'  => TestDataBuilder::USER_STORIES_TRACKER_ID,
+                'uri' => 'trackers/' . TestDataBuilder::USER_STORIES_TRACKER_ID
+            ),
+            'values' => array(
+                array(
+                    'field_id' => $field_id_summary,
+                    'value'    => 'I want 2',
+                ),
+                array(
+                    'field_id'       => $field_id_status,
+                    'bind_value_ids' => array(205),
+                ),
+                array(
+                    'field_id' => $field_id_file,
+                    'value'    => array($file_representation['id']),
+                ),
+            ),
+        ));
+
+        $response = $this->getResponse($this->client->post('artifacts' , null, $params));
+        $this->assertEquals($response->getStatusCode(), 200);
+        $posted_artifact = $response->json();
+
+        $response = $this->getResponse($this->client->get('artifacts/' . $posted_artifact['id']));
+        $posted_artifact = $response->json();
+        $this->assertCount(3, $posted_artifact['values']);
+    }
+
+    /**
+     * @depends testPutArtifactFileId
+     */
+    public function testAttachFileToPutArtifact($file_id) {
+        $artifact_id = TestDataBuilder::STORY_1_ARTIFACT_ID;
+
+        $request = $this->client->get('trackers/'. TestDataBuilder::USER_STORIES_TRACKER_ID);
+        $structure = json_decode($this->getResponse($request)->getBody(true), true);
+        foreach ($structure['fields'] as $field) {
+            if ($field['type'] == 'file') {
+                $field_id = $field['field_id'];
+                break;
+            }
+        }
+        $this->assertNotNull($field_id);
+
+        $params = json_encode(array(
+            'values' => array(
+                array(
+                    'field_id' => $field_id,
+                    'value'    => array($file_id),
+                ),
+            ),
+        ));
+
+        $response = $this->getResponse($this->client->put('artifacts/'. $artifact_id, null, $params));
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $response = $this->getResponse($this->client->get('artifacts/' . $artifact_id));
+        $posted_artifact = $response->json();
+        $this->assertCount(4, $posted_artifact['values']);
+
+        return $file_id;
+    }
+
+    /**
+     * @depends testAttachFileToPutArtifact
+     */
+    public function testArtifactAttachedFilesGetId($file_id) {
+        $request  = $this->client->get('artifact_files/' . $file_id);
+        $response = $this->getResponse($request);
+
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $json = $response->json();
+        $data = $json['data'];
+
+        $expected = base64_encode(base64_decode($this->first_file['content']).$this->second_chunk);
+
+        $this->assertEquals($expected, $data);
+    }
+
+    /**
+     * @depends testAttachFileToPutArtifact
+     */
+    public function testOptionsArtifactAttachedFilesId($file_id) {
+        $response = $this->getResponse($this->client->options('artifact_files/'.$file_id));
+
+        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    public function testArtifactTemporaryFilesDeleteId() {
+        $post_resource = json_encode($this->second_file);
+        $request  = $this->client->post('artifact_temporary_files', null, $post_resource);
+        $response = $this->getResponse($request);
+        $file_representation = $response->json();
+
+        $response = $this->getResponse($this->client->delete('artifact_temporary_files/'.$file_representation['id']));
+        $this->assertEquals($response->getStatusCode(), 200);
     }
 }
