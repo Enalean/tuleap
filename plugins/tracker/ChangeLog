@@ -1,3 +1,6 @@
+Version 5.281 - Tuleap 6.12
+    * request #6581 - Display artifact reverse link performance penalty
+
 Version 5.280 - Tuleap 6.12
     * story #6422 - uploaded files via REST
 
