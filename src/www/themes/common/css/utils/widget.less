@@ -1,12 +1,13 @@
 /* {{{ Widgets */
+.layout_manager_customize {
+    margin-bottom: 20px;
+}
 
 .emptyPlaceMarker
 {
-    border-right: #bcbcad 1px dashed;
-    border-top: #bcbcad 1px dashed;
-    border-left: #bcbcad 1px dashed;
-    border-bottom: #bcbcad 1px dashed;
-    background-color: Transparent;
+    background: transparent;
+    border: 2px dashed #CCC;
+    border-radius: 4px;
 }
 
 .widget {
@@ -15,6 +16,7 @@
 }
 .widget_content {
     clear:both;
+    background: #FFF;
     padding: 0.5em;
 }
 .widget_preferences {
@@ -46,17 +48,16 @@
 .widget_titlebar_minimize,
 .widget_titlebar_maximize {
     float:right;
-}
-.widget_titlebar_rss,
-.widget_titlebar_prefs {
-    padding:1px;
-}
-.widget_titlebar_rss a, .widget_titlebar_rss a:link, .widget_titlebar_rss a:visited, .widget_titlebar_rss a:hover,
-.widget_titlebar_prefs a, .widget_titlebar_prefs a:link, .widget_titlebar_prefs a:visited, .widget_titlebar_prefs a:hover {
-    color:#555;
-    font-weight:normal;
-    font-size:0.8em;
-    text-decoration:none;
+    margin-left: 10px;
+
+    a {
+        color: lighten(#CCC, 5%);
+
+        &:hover {
+            color: #AAA;
+            text-decoration: none;
+        };
+    }
 }
 .widget_toolbar {
     list-style-type:none;

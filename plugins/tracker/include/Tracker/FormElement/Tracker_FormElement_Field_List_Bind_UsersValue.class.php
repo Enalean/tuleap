@@ -86,7 +86,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
 
         $user = $this->getUser();
         if ($display_preferences->shouldDisplayAvatars()) {
-            return $user->fetchHtmlAvatar(16);
+            return $user->fetchHtmlAvatar();
         }
         return $this->fetchUserDisplayName($user);
     }

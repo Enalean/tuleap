@@ -36,6 +36,9 @@ class Experimental_ContainerPresenter {
     private $project_is_public;
 
     /** @var string */
+    private $project_privacy;
+
+    /** @var string */
     private $project_tabs;
 
     /** @var Feedback */
@@ -52,6 +55,7 @@ class Experimental_ContainerPresenter {
         $project_name,
         $project_link,
         $project_is_public,
+        $project_privacy,
         $project_tabs,
         $feedback,
         $feedback_content,
@@ -62,6 +66,7 @@ class Experimental_ContainerPresenter {
         $this->project_name      = $project_name;
         $this->project_link      = $project_link;
         $this->project_is_public = $project_is_public;
+        $this->project_privacy   = $project_privacy;
         $this->project_tabs      = $project_tabs;
         $this->feedback          = $feedback;
         $this->feedback_content  = $feedback_content;
@@ -111,6 +116,10 @@ class Experimental_ContainerPresenter {
 
     public function projectIsPublic() {
         return $this->project_is_public;
+    }
+
+    public function project_privacy() {
+        return $GLOBALS['Language']->getText('project_privacy', 'tooltip_' . $this->project_privacy);
     }
 
     public function feedback() {

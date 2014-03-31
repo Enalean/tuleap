@@ -23,6 +23,16 @@
     var api;
     var throttleTimeout;
 
+    function handleProjectTooltip() {
+        $('.project-title-container').popover({
+            html: true,
+            placement: 'right',
+            container: 'body',
+            trigger: 'hover',
+            delay: {show: 1000, hide: 500}
+        });
+    }
+
     function getSidebarUserPreference() {
         return localStorage.getItem('sidebar-size');
     }
@@ -112,8 +122,9 @@
         var current_size = getSidebarUserPreference();
 
         if (current_size == width_expanded) {
-            api.reinitialise();
+            api.destroy();
             throttleTimeout = null;
+            initCustomScrollbar();
         }
     }
 
@@ -133,9 +144,11 @@
     $(document).ready(function() {
         var current_size = getSidebarUserPreference();
 
-        initCustomScrollbar();
-
         if ($('.sidebar-nav').length > 0) {
+            initCustomScrollbar();
+
+            handleProjectTooltip();
+
             $('.sidebar-nav li a').tooltip({
                 placement: 'right',
                 container: 'body'

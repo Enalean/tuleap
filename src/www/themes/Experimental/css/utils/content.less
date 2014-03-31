@@ -1,16 +1,19 @@
 /* {{{ CONTENT */
-.main {
+body .main {
+    margin: 0;
+}
+body.has_sidebar .main {
     margin: 0 0 0 @sidebar-width;
-    padding: (@navbar-height + 1) 0 0 0;
-    &.big-nav {
-        padding: 90px 0 0 @sidebar-width;
-    }
-    &.huge-nav {
-        padding: 135px 0 0 @sidebar-width;
+}
+
+.main {
+    padding: 0;
+    @media screen and (max-width: 870px) {
+        padding: @navbar-height 0 0 0;
     }
 
-    &.full {
-        margin: 0;
+    @media screen and (max-width: 475px) {
+        padding: @navbar-height * 2 0 0 0;
     }
 
     #feedback ul {

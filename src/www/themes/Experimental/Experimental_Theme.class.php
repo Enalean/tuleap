@@ -42,7 +42,6 @@ class Experimental_Theme extends DivBasedTabbedLayout {
         $this->renderer = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
         $this->includeJavascriptFile('/themes/Experimental/js/navbar.js');
         $this->includeJavascriptFile('/themes/Experimental/js/sidebar.js');
-        $this->includeJavascriptFile('/themes/Experimental/js/resize-window.js');
         $this->includeJavascriptFile('/themes/Experimental/js/motd.js');
     }
 
@@ -99,13 +98,17 @@ class Experimental_Theme extends DivBasedTabbedLayout {
 
     private function body($params) {
         $selected_top_tab = isset($params['selected_top_tab']) ? $params['selected_top_tab'] : false;
+        $body_class       = isset($params['body_class']) ? $params['body_class'] : array();
+        $has_sidebar      = isset($params['group']) ? 'has_sidebar' : '';
+        $body_class[]     = $has_sidebar;
 
         $this->render('body', new Experimental_BodyPresenter(
             $_SERVER['REQUEST_URI'],
             $params['title'],
             $this->imgroot,
             $selected_top_tab,
-            $this->getNotificationPlaceholder()
+            $this->getNotificationPlaceholder(),
+            $body_class
         ));
 
         $current_user = UserManager::instance()->getCurrentUser();
@@ -157,6 +160,7 @@ class Experimental_Theme extends DivBasedTabbedLayout {
         $project_name      = null;
         $project_link      = null;
         $project_is_public = null;
+        $project_privacy   = null;
 
         if (! empty($params['group'])) {
             $this->show_sidebar = true;
@@ -167,6 +171,7 @@ class Experimental_Theme extends DivBasedTabbedLayout {
             $project_name      = $project->getPublicName();
             $project_link      = $this->getProjectLink($project);
             $project_is_public = $project->isPublic();
+            $project_privacy   = $this->getProjectPrivacy($project);
         }
 
         $this->render('container', new Experimental_ContainerPresenter(
@@ -175,11 +180,29 @@ class Experimental_Theme extends DivBasedTabbedLayout {
             $project_name,
             $project_link,
             $project_is_public,
+            $project_privacy,
             $project_tabs,
             $this->_feedback,
             $this->_getFeedback(),
             $this->getForgeVersion()
         ));
+    }
+
+    private function getProjectPrivacy(Project $project) {
+        if ($project->isPublic()) {
+            $privacy = 'public';
+
+            if ($GLOBALS['sys_allow_anon']) {
+                $privacy .= '_w_anon';
+            } else {
+                $privacy .= '_wo_anon';
+            }
+
+        } else {
+            $privacy = 'private';
+        }
+
+        return $privacy;
     }
 
     private function getForgeVersion() {

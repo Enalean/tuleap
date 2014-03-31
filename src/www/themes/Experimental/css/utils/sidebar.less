@@ -7,13 +7,13 @@
     width: @sidebar-width;
     max-width: @sidebar-width;
     overflow: hidden;
-    padding: (@navbar-height + 1) 0 80px 0;
-
-    &.big-nav {
-        padding: 90px 0 80px 0;
+    padding: 0 0 150px 0;
+    @media screen and (max-width: 870px) {
+        padding: @navbar-height 0 150px 0;
     }
-    &.huge-nav {
-        padding: 135px 0 80px 0;
+
+    @media screen and (max-width: 475px) {
+        padding: @navbar-height * 2 0 150px 0;
     }
 
     a.project-title {

@@ -13,14 +13,14 @@
     background: @orange url('../images/organization_logo_small.png') no-repeat center center;
 }
 
-@media screen and (max-width: 1320px) {
+@media screen and (max-width: 1366px) {
     .logo {
         max-width: 155px;
-        width:  155px;
+        width: 155px;
         float: left;
     }
 }
-@media screen and (max-width: 1210px) {
+@media screen and (max-width: 1300px) {
     .logo {
         max-width: 42px;
         width: 42px;
@@ -53,9 +53,15 @@
     }
 }
 
-@media screen and (max-width: 870px) {
+@media screen and (max-width: 825px) {
     .navbar {
         height: @navbar-height * 2;
+    }
+}
+
+@media screen and (max-width: 595px) {
+    .navbar {
+        height: @navbar-height * 3;
     }
 }
 
@@ -74,8 +80,8 @@
     height: @navbar-height;
     .box-shadow(none);
 
-    @media screen and (max-width: 1070px) {
-        font-size: 1.1em;
+    @media screen and (max-width: 1250px) {
+        font-size: 1em;
     }
     @media screen and (max-width: 980px) {
         font-size: 0.9em;
@@ -130,9 +136,14 @@
             overflow: hidden;
             max-width: 250px;
         }
-        @media screen and (max-width: 1070px) {
-            li > a.username {
-                max-width: 150px;
+        @media screen and (max-width: 1250px) {
+            li.user-menu {
+                width: 50px;
+
+                & > a.username {
+                    width: 50px;
+                    padding-left: 8px;
+                }
             }
         }
 
@@ -209,12 +220,11 @@
     .user-avatar {
         float: left;
         position: relative;
-        top: -7px;
+        top: -8px;
         margin: 0 10px 0 0;
         width: 36px;
         height: 36px;
         border-radius: 50%;
-        box-shadow: 0 0 0 2px @white;
     }
 
     .navbar-search {
