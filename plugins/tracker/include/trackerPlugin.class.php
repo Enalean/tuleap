@@ -680,8 +680,10 @@ class trackerPlugin extends Plugin {
     }
 
     private function checkProjectRESTAccess(Project $project, PFUser $user) {
-        $project_authorization = '\\Tuleap\\REST\\ProjectAuthorization';
-        $project_authorization::userCanAccessProject($user, $project, new Tracker_URLVerification());
+        $project_authorization_class = '\\Tuleap\\REST\\ProjectAuthorization';
+        $project_authorization       = new $project_authorization_class();
+
+        $project_authorization->userCanAccessProject($user, $project, new Tracker_URLVerification());
     }
 
     private function buildRightVersionOfProjectTrackersResource($version) {
