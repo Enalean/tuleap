@@ -68,13 +68,16 @@ class GitViews_RepoManagement {
      * @return array
      */
     private function buildPanes(GitRepository $repository) {
-        $panes = array(
-            new GitViews_RepoManagement_Pane_GeneralSettings($repository, $this->request),
-            new GitViews_RepoManagement_Pane_Gerrit($repository, $this->request, $this->driver_factory, $this->gerrit_servers, $this->gerrit_config_templates),
-            new GitViews_RepoManagement_Pane_AccessControl($repository, $this->request),
-            new GitViews_RepoManagement_Pane_Notification($repository, $this->request),
-            new GitViews_RepoManagement_Pane_Delete($repository, $this->request),
-        );
+        $panes = array(new GitViews_RepoManagement_Pane_GeneralSettings($repository, $this->request));
+
+        if ($repository->getBackendType() == GitDao::BACKEND_GITOLITE) {
+            $panes[] = new GitViews_RepoManagement_Pane_Gerrit($repository, $this->request, $this->driver_factory, $this->gerrit_servers, $this->gerrit_config_templates);
+        }
+
+        $panes[] = new GitViews_RepoManagement_Pane_AccessControl($repository, $this->request);
+        $panes[] = new GitViews_RepoManagement_Pane_Notification($repository, $this->request);
+        $panes[] = new GitViews_RepoManagement_Pane_Delete($repository, $this->request);
+
         $indexed_panes = array();
         foreach ($panes as $pane) {
             if ($pane->canBeDisplayed()) {
