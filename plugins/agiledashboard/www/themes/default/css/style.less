@@ -492,10 +492,10 @@
     border-spacing: 0;
 }
 
-#topblcontent table th, #topblcontent table td,
-#topplanning table th, #topplanning table td,
-#planning table th, #planning table td,
-#blcontent table th, #blcontent table td {
+#topblcontent table th,
+#topplanning table th,
+#planning table th,
+#blcontent table th, {
     white-space: nowrap;
 }
 
@@ -509,15 +509,15 @@
 
 #topblcontent table td.milestone-element-parent, #topblcontent table td.submilestone-element-parent,
 #blcontent table td.milestone-element-parent, #blcontent table td.submilestone-element-parent {
-    min-width: 300px;
-    max-width: 300px;
+    min-width: 200px;
+    max-width: 200px;
     white-space: normal;
 }
 
 #topplanning table td.milestone-element-parent, #topplanning table td.submilestone-element-parent,
 #planning table td.milestone-element-parent, #planning table td.submilestone-element-parent {
-    min-width: 150px;
-    max-width: 150px;
+    min-width: 200px;
+    max-width: 200px;
     white-space: normal;
 }
 
@@ -525,6 +525,7 @@
 #topplanning table td:first-child,
 #planning table td:first-child,
 #blcontent table td:first-child {
+    white-space: nowrap;
     min-width: 35px;
     max-width: 60px;
 }

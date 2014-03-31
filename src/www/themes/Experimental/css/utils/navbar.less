@@ -22,8 +22,8 @@
 }
 @media screen and (max-width: 1300px) {
     .logo {
-        max-width: 42px;
-        width: 42px;
+        max-width: 45px;
+        width: 45px;
         float: left;
         .logo-background-small;
     }
@@ -145,6 +145,17 @@
                     padding-left: 8px;
                 }
             }
+        }
+
+        li.current-project > a {
+            background-color: darken(@dark-orange, 5%);
+
+            i {
+                margin-right: 5px;
+            }
+        }
+        li.current-project:hover > a:hover, li.current-project:focus > a:focus {
+            background-color: darken(@dark-orange, 7%);
         }
 
         ul.dropdown-menu {

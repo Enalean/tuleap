@@ -29,7 +29,7 @@
             placement: 'right',
             container: 'body',
             trigger: 'hover',
-            delay: {show: 1000, hide: 500}
+            delay: {show: 1000, hide: 300}
         });
     }
 
@@ -44,43 +44,35 @@
     function updateSidebarWidth(new_width, duration) {
         $('.sidebar-nav').animate({
             width: new_width
-        }, duration);
+        }, duration, updateNavbar(new_width));
         $('.sidebar-nav li a').css({
-            width: parseInt(new_width) - (parseInt($('.sidebar-nav li a').css('paddingLeft')) * 2) + 'px'
+            width: parseInt(new_width) + 'px'
         });
         $('.main').animate({
             marginLeft: new_width
         }, duration);
     }
 
+    function updateNavbar(new_width) {
+        if (new_width == width_expanded) {
+            $('.navbar .nav:first-child li.current-project').remove();
+        } else {
+            $('.navbar .nav:first-child').prepend('<li class="current-project">' + $('.project-title-container').html() + '</li>');
+        }
+    }
+
     function updateSidebarIcon(direction, show_only_icon) {
         $('.sidebar-collapse').removeClass('icon-chevron-left icon-chevron-right').addClass('icon-chevron-' + direction);
-
-        if (show_only_icon) {
-            $('.sidebar-collapse').css({
-                width: width_collapsed
-            })
-        } else {
-            $('.sidebar-collapse').css({
-                width: width_expanded
-            })
-        }
     }
 
     function updateSidebarTitle(show_only_icon) {
         if (show_only_icon) {
-            $('.project-title').css({
-                display: 'none'
-            });
-            $('.nav-list').css({
-                marginTop: '74px'
+            $('.project-title-container').css({
+                visibility: 'hidden'
             });
         } else {
-            $('.project-title').css({
-                display: 'block'
-            });
-            $('.nav-list').css({
-                marginTop: 'auto'
+            $('.project-title-container').css({
+                visibility: 'visible'
             });
         }
     }
@@ -145,9 +137,8 @@
         var current_size = getSidebarUserPreference();
 
         if ($('.sidebar-nav').length > 0) {
-            initCustomScrollbar();
-
             handleProjectTooltip();
+            initCustomScrollbar();
 
             $('.sidebar-nav li a').tooltip({
                 placement: 'right',
