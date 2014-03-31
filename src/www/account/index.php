@@ -1,203 +1,96 @@
 <?php
-//
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
-//
-// 
+/**
+ * Copyright (c) Enalean, 2014. All rights reserved
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/
+ */
 
-require_once('pre.php');    
-require_once('common/event/EventManager.class.php');
-require_once('www/my/my_utils.php');
+require_once 'pre.php';
 
 session_require(array('isloggedin'=>'1'));
-
 
 $em = EventManager::instance();
 $um = UserManager::instance();
 
-my_header(array('title'=>$Language->getText('account_options', 'title')));
-
-$purifier =& Codendi_HTMLPurifier::instance();
-
-// get global user vars
 $user = $um->getCurrentUser();
 
-?>
-<p><?php echo $Language->getText('account_options', 'welcome'); ?>,
-    <b><?php echo  $purifier->purify(user_getrealname(user_getid()), CODENDI_PURIFIER_CONVERT_HTML) ; ?></b>
+$third_paty_html     = '';
+$can_change_password = true;
+$can_change_realname = true;
+$can_change_email    = true;
+$extra_user_info     = array();
+$ssh_keys_extra_html = '';
 
-<p><?php echo $Language->getText('account_options', 'welcome_intro'); ?>
-<?php
-echo '<fieldset><legend>'. $Language->getText('account_options', 'title') .'</legend>';
-?>
+$em->processEvent(
+    Event::MANAGE_THIRD_PARTY_APPS,
+    array(
+        'user' => $user,
+        'html' => &$third_paty_html
+    )
+);
 
-<UL>
-<LI><A href="/users/<?php echo $purifier->purify($user->getUserName()); ?>/">
-<B><?php echo $Language->getText('account_options', 'view_developer_profile'); ?></B></A>
-<LI><A HREF="/people/editprofile.php"><B><?php echo $Language->getText('account_options', 'edit_skills_profile'); ?></B></A>
-</UL>
+$em->processEvent(
+    'display_change_password',
+    array(
+        'allow' => &$can_change_password
+    )
+);
 
-&nbsp;<BR>
+$em->processEvent(
+    'display_change_realname',
+    array(
+        'allow' => &$can_change_realname
+    )
+);
 
-<?php if (Config::get('sys_enable_avatars')) {
-    echo $user->fetchHtmlAvatar();
-    echo '<a href="/account/change_avatar.php">[ '. $GLOBALS['Language']->getText('account_change_avatar', 'link') .' ]</a>';
-}
-?>
+$em->processEvent(
+    'display_change_email',
+    array(
+        'allow' => &$can_change_email
+    )
+);
 
-<TABLE width=100% border=0>
+$em->processEvent(
+    'account_pi_entry',
+    array(
+        'user'      => $user,
+        'user_info' => &$extra_user_info,
+    )
+);
 
-<TR valign=top>
-<TD><?php echo $Language->getText('account_options', 'member_since'); ?>: </TD>
-<TD colspan="2"><B><?php print format_date($GLOBALS['Language']->getText('system', 'datefmt'),$user->getAddDate()); ?></B></TD>
-</TR>
-<TR valign=top>
-<TD><?php echo $Language->getText('account_options', 'user_id'); ?>: </TD>
-<TD colspan="2"><B><?php print $user->getId(); ?></B></TD>
-</TR>
+$em->processEvent(
+    Event::LIST_SSH_KEYS,
+    array(
+        'user' => $user,
+        'html' => &$ssh_keys_extra_html
+    )
+);
 
-<TR valign=top>
-<TD><?php echo $Language->getText('account_options', 'login_name', $GLOBALS['sys_name']); ?>: </TD>
-<TD><B><?php echo $purifier->purify($user->getUserName()); ?></B></td>
-<td>
-<?php
-$display_change_password = true;
-$params = array('allow' => &$display_change_password);
-$em->processEvent('display_change_password', $params);
-if ($display_change_password) {
-    echo '<A href="change_pw.php">['.$Language->getText('account_options', 'change_password').']</A>';
- }
-?>
-</TD>
-</TR>
+$presenter = new User_PreferencesPresenter(
+    $user,
+    $can_change_realname,
+    $can_change_email,
+    $can_change_password,
+    $extra_user_info,
+    $um->getUserAccessInfo($user),
+    $ssh_keys_extra_html,
+    $third_paty_html
+);
 
-<TR valign=top>
-<TD><?php echo $Language->getText('account_options', 'timezone'); ?>: </TD>
-<TD><B><?php print $user->getTimezone(); ?></B></td>
-<td><A href="change_timezone.php">[<?php echo $Language->getText('account_options', 'change_timezone'); ?>]</A></TD>
-</TR>
-
-<TR valign=top>
-<TD><?php echo $Language->getText('account_options', 'real_name'); ?>: </TD>
-<TD><B><?php echo $purifier->purify($user->getRealName(), CODENDI_PURIFIER_CONVERT_HTML); ?></B></td>
-<td>
-<?php
-$display_change_realname = true;
-$params = array('allow' => &$display_change_realname);
-$em->processEvent('display_change_realname', $params);
-if ($display_change_realname) {
-    echo '<A href="change_realname.php">['.$Language->getText('account_options', 'change_real_name').']</A>';
- }
-?>
-</TD>
-</TR>
-
-<TR valign=top>
-<TD><?php echo $Language->getText('account_options', 'email_address'); ?>: </TD>
-<TD><B><?php print $user->getEmail(); ?></B></td>
-<td>
-<?php
-$display_change_email = true;
-$params = array('allow' => &$display_change_email);
-$em->processEvent('display_change_email', $params);
-if ($display_change_email) {
-    echo '<A href="change_email.php">['.$Language->getText('account_options', 'change_email_address').']</A>';
- }
-?>
-</TD>
-</TR>
-
-<?php
-$entry_label  = array();
-$entry_value  = array();
-$entry_change = array();
-
-$eParams = array('user_id'      => $user->getId(),
-                 'entry_label'  => &$entry_label,
-                 'entry_value'  => &$entry_value,
-                 'entry_change' => &$entry_change);
-$em->processEvent('account_pi_entry', $eParams);
-foreach($entry_label as $key => $label) {
-    $value  = $entry_value[$key];
-    $change = $entry_change[$key];
-    print '
-<TR valign=top>
-<TD>'.$label.'</TD>
-<TD><B>'.$value.'</B></td>
-<TD>'.$change.'</TD>
-</TR>
-';
-}
-?>
-
-<TR>
-<TD COLSPAN=3>&nbsp;<BR></td>
-</tr>
-
-<TR>
-</TABLE>
-</fieldset>
-
-<?php
-// Shell Account
-$keys = $user->getAuthorizedKeys(true);
-
-echo '<fieldset><legend>'. $Language->getText('account_options', 'shell_account_title').' '.help_button('other-services.html#shell-account') .'</legend>';
-echo $Language->getText('account_options', 'shell_shared_keys').': <strong>'.count($keys).'</strong><ol>';
-foreach ($keys as $key) {
-    echo '<li>'.substr($key, 0, 20).'...'.substr($key, -20).'</li>';
-}
-echo '</ol><a href="editsshkeys.php">['.$Language->getText('account_options', 'shell_edit_keys').']</a>';
-
-$key_list_html = '';
-$em->processEvent(Event::LIST_SSH_KEYS, array('user'=>$user, 'html' => &$key_list_html));
-if ($key_list_html !== '') {
-    echo $key_list_html;
-}
-
-echo '</fieldset>';
-
-// Authentication attempts
-
-$accessInfo = $um->getUserAccessInfo($user);
-
-echo '<fieldset><legend>'. $Language->getText('account_options', 'auth_attempt_title').'</legend>';
-echo '<table>';
-echo '<tr>';
-echo '<td>'.$Language->getText('account_options', 'auth_attempt_last_success').'</td>';
-echo '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $accessInfo['last_auth_success']).'</td>';
-echo '</tr>';
-
-echo '<tr>';
-echo '<td>'.$Language->getText('account_options', 'auth_attempt_last_failure').'</td>';
-echo '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $accessInfo['last_auth_failure']).'</td>';
-echo '</tr>';
-
-echo '<tr>';
-echo '<td>'.$Language->getText('account_options', 'auth_attempt_nb_failure').'</td>';
-echo '<td>'.$accessInfo['nb_auth_failure'].'</td>';
-echo '</tr>';
-
-echo '<tr>';
-echo '<td>'.$Language->getText('account_options', 'auth_attempt_prev_success').'</td>';
-echo '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $accessInfo['prev_auth_success']).'</td>';
-echo '</tr>';
-
-echo '</table>';
-echo '</fieldset>';
-
-echo '<br>';
-
-$third_paty_html = '';
-$em->processEvent(Event::MANAGE_THIRD_PARTY_APPS, array('user' => $user, 'html' => &$third_paty_html));
-echo '<fieldset><legend>'. 'Third party applications' .'</legend>';
-echo '<ul>';
-echo $third_paty_html;
-echo '</ul>';
-echo '</fieldset>';
-
-include $Language->getContent('account/user_legal');
-
+$HTML->header(array('title' => $Language->getText('account_options', 'title')));
+$renderer = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../../templates/user');
+$renderer->renderToPage('account-maintenance', $presenter);
 $HTML->footer(array());
-?>

@@ -1,0 +1,86 @@
+<div id="account_maintenance">
+
+    <div id="account_user_info">
+
+        {{ welcome_user }}
+
+        <div>
+        {{# has_avatar }}
+            <a href="/account/change_avatar.php">{{{ avatar }}}</a>
+        {{/ has_avatar }}
+        {{ real_name }}
+        {{# can_change_real_name }}<a href="change_realname.php" class="btn">{{ change_real_name }}</a>{{/ can_change_real_name }}
+        {{# can_change_password }}<a href="change_pw.php" class="btn">{{ change_password }}</a>{{/ can_change_password }}
+        </div>
+
+        <ul>
+            <li>{{ user_id_label }} {{ user_id_value }}</li>
+            <li>{{ user_email_label }} {{ user_email_value }} {{# can_change_email }}<a href="change_email.php" class="btn">{{ change_email }}</a>{{/ can_change_email }}</li>
+            <li>{{ member_since_label }} {{member_since_value }}</li>
+            <li>{{ timezone_label }} {{ timezone_value }} <a href="change_timezone.php" class="btn">{{ change_timezone }}</a></li>
+            {{# extra_user_info }}
+            <li>{{ label }} {{{ value }}} {{# can_change }}{{{ change }}}{{/ can_change }}</li>
+            {{/ extra_user_info }}
+        </ul>
+    </div>
+
+    <div id="account_shell">
+        <h2 class="account_title"><i class="icon-terminal"></i> {{ shell_account_title }} </h2>
+
+        {{ ssh_keys_count_label }} {{ ssh_keys_count }}
+
+        {{# has_ssh_key }}
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>{{ ssh_keys_label }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{# ssh_keys_list }}
+                <tr>
+                    <td>
+                        <input type="checkbox" />
+                    </td>
+                    <td>
+                        {{ ssh_key_value }}
+                    </td>
+                </tr>
+                {{/ ssh_keys_list }}
+            </tbody>
+        </table>
+        {{/ has_ssh_key }}
+
+        {{{ ssh_keys_extra_html }}}
+
+        <a class="btn btn-primary" href="editsshkeys.php">
+            <i class="icon-plus"> </i> {{ add_ssh_key_button }}
+        </a>
+    </div>
+
+    <div id="account_details">
+        <h2 class="account_title"><i class="icon-key"></i> {{ authentication_attempts_title }} </h2>
+
+        <ul>
+            <li>{{ last_successful_login_label }} {{ last_successful_login_value }}</li>
+            <li>{{ last_login_failure_label }} {{ last_login_failure_value }}</li>
+            <li>{{ number_login_failure_label }} {{ number_login_failure_value }}</li>
+            <li>{{ previous_successful_login_label }} {{ previous_successful_login_value }}</li>
+        </ul>
+    </div>
+
+    <div id="account_third_party_applications">
+        <h2 class="account_title"><i class="icon-circle-blank"></i> {{ third_party_applications_title }} </h2>
+
+        <ul>
+            {{{ third_party_applications_content }}}
+        </ul>
+    </div>
+
+    {{{ user_legal }}}
+
+</div>
+<div id="account_preferences">
+
+</div>

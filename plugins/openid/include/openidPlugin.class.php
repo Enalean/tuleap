@@ -40,15 +40,23 @@ class OpenidPlugin extends Plugin {
 
     public function account_pi_entry(array $params) {
         $dao = new Openid_Dao();
-        $dar = $dao->searchOpenidUrlsForUserId($params['user_id']);
+        $dar = $dao->searchOpenidUrlsForUserId($params['user']->getId());
         $params['entry_label'][$this->getId()] = 'OpenId';
         if ($dar->count()) {
             $row = $dar->getRow();
+            $params['user_info'][] = new User_MutableInfoPresenter(
+                'OpenId',
+                $row['connexion_string'],
+                '<a href="'.OPENID_BASE_URL.'/?func='.OpenId_OpenIdRouter::REMOVE_PAIR.'" class="btn">'.$GLOBALS['Language']->getText('plugin_openid', 'remove_openid').'</a>'
+            );
             $params['entry_value'][$this->getId()] = $row['connexion_string'];
             $params['entry_change'][$this->getId()] = '<a href="'.OPENID_BASE_URL.'/?func='.OpenId_OpenIdRouter::REMOVE_PAIR.'">['.$GLOBALS['Language']->getText('plugin_openid', 'remove_openid').']</a>';
         } else {
-            $params['entry_value'][$this->getId()]  = '';
-            $params['entry_change'][$this->getId()] = '<a href="'.OPENID_BASE_URL.'/?func='.OpenId_OpenIdRouter::SHOW_PAIR_ACCOUNTS.'">['.$GLOBALS['Language']->getText('plugin_openid', 'add_openid').']</a>';
+            $params['user_info'][] = new User_MutableInfoPresenter(
+                'OpenId',
+                '',
+                '<a href="'.OPENID_BASE_URL.'/?func='.OpenId_OpenIdRouter::SHOW_PAIR_ACCOUNTS.'" class="btn">'.$GLOBALS['Language']->getText('plugin_openid', 'add_openid').'</a>'
+            );
         }
     }
 
