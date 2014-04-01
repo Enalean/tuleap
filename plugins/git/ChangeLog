@@ -1,3 +1,6 @@
+Version 3.77 - Tuleap 6.12
+    * request #6592: Fix fatal error when deleting a Gerrit migration
+
 Version 3.76 - Tuleap 6.12
     * request #6583 - Gerrit pane should not appear with gitshell repositories
 
