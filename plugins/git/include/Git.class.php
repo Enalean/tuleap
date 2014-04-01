@@ -642,7 +642,7 @@ class Git extends PluginController {
                 $project_gerrit_name = $this->driver_factory->getDriver($server)->getGerritProjectName($repo);
 
                 try {
-                    $this->driver_factory->deleteProject($server, $project_gerrit_name);
+                    $this->driver_factory->getDriver($server)->deleteProject($server, $project_gerrit_name);
                 } catch (Git_Driver_Gerrit_Exception $e) {
                     $this->addError($this->getText('gerrit_server_down'));
                 }
