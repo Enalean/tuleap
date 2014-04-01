@@ -34,8 +34,6 @@ if ( !$request->exist('pv') ) {
 	if ( $pv ) $ro = true;
 }
 
-$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tiny_mce/tiny_mce.js');
-
 $GLOBALS['HTML']->addFeed(
     $group->getPublicName().' '.$ath->getName() .' #'. $ah->getId() .' - '. html_entity_decode($ah->getValue('summary'), ENT_QUOTES) .' - '. $Language->getText('tracker_include_artifact','follow_ups'), 
     '/tracker/?func=rss&aid='. $ah->getId() .'&atid='. $ath->getID() .'&group_id='. $group->getGroupId()
@@ -53,6 +51,8 @@ $ath->header($params);
 // artifact object (and field values) initialized in script above (index.php)
 $ah->display($ro,$pv,user_getid());
 
+$GLOBALS['Response']->includeFooterJavascriptFile('/scripts/trackerv3_artifact.js');
+
 echo '<script type="text/javascript">'. "\n";
 $armh = new ArtifactRulesManagerHtml($ath);
 $armh->displayRulesAsJavascript();
@@ -65,8 +65,6 @@ echo "Event.observe(window, 'load', function() {
                 group_id:". (int)$ath->getGroupId(). "
             });
         }
-        
-        new Codendi_RTE_Light_Tracker_FollowUp('tracker_artifact_comment');
 });";
 
 echo "new UserAutoCompleter('tracker_cc',

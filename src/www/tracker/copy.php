@@ -46,7 +46,7 @@ echo '<div id="tracker_toolbar_clear"></div>';
 // artifact object (and field values) initialized in script above (index.php)
 $ah->displayCopy($ro,$pv);
 
-$GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tiny_mce/tiny_mce.js');
+$GLOBALS['Response']->includeFooterJavascriptFile('/scripts/trackerv3_artifact.js');
 
 echo "<script type=\"text/javascript\">\n";
 $armh = new ArtifactRulesManagerHtml($ath);
@@ -54,9 +54,6 @@ $armh->displayRulesAsJavascript();
 echo "new UserAutoCompleter('tracker_cc',
                           '".util_get_dir_image_theme()."',
                           true);\n";
-echo "document.observe(\"dom:loaded\", function() {
-    new Codendi_RTE_Light_Tracker_FollowUp(\"follow_up_comment\");
-});";
 echo "</script>";
 
 // Display footer page
