@@ -215,6 +215,7 @@ class DocmanPlugin extends Plugin {
             echo '<script type="text/javascript" src="/scripts/behaviour/behaviour.js"></script>'."\n";
             echo '<script type="text/javascript" src="/scripts/scriptaculous/scriptaculous.js"></script>'."\n";
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/docman.js"></script>'."\n";
+            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/embedded_file.js"></script>'."\n";
         }
     }
 
