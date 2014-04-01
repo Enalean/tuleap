@@ -27,7 +27,7 @@ require_once 'common/user/UserManager.class.php';
 
 // Needed because of bad type checking in SimpleTest
 Mock::generatePartial('LDAP', 'MockInhLDAP', array('search', 'getErrno', 'getLDAPParam'));
-Mock::generatePartial('LDAP_DirectorySynchronization', 'LDAP_DirectorySynchronizationTestVersion', array('getUserManager', 'getLdapUserManager', 'getLdapUserSync'));
+Mock::generatePartial('LDAP_DirectorySynchronization', 'LDAP_DirectorySynchronizationTestVersion', array('getUserManager', 'getLdapUserManager', 'getLdapUserSync', 'getLdapSyncNotificationManager'));
 Mock::generate('LDAPResultIterator');
 Mock::generate('LDAPResult');
 Mock::generate('BaseLanguage');
@@ -137,6 +137,9 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
         $lum->expectNever('updateLdapUid');
         $sync->setReturnValue('getLdapUserManager', $lum);
 
+        $syncNotifManager = mock('LDAP_SyncNotificationManager');
+        $sync->setReturnValue('getLdapSyncNotificationManager', $syncNotifManager);
+
         $lus = new MockLDAP_UserSync($this);
         $lus->expectNever('sync');
         $sync->setReturnValue('getLdapUserSync', $lus);
@@ -175,6 +178,9 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
         $lum->expectOnce('updateLdapUid', array(new PFUser($row), 'mis_1234'));
         $sync->setReturnValue('getLdapUserManager', $lum);
 
+        $syncNotifManager = mock('LDAP_SyncNotificationManager');
+        $sync->setReturnValue('getLdapSyncNotificationManager', $syncNotifManager);
+
         $lus = new MockLDAP_UserSync($this);
         $lus->setReturnValue('sync', false);
         $lus->expectOnce('sync');
@@ -209,6 +215,9 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
         $lum = new MockLDAP_UserManager($this);
         $lum->expectNever('updateLdapUid');
         $sync->setReturnValue('getLdapUserManager', $lum);
+
+        $syncNotifManager = mock('LDAP_SyncNotificationManager');
+        $sync->setReturnValue('getLdapSyncNotificationManager', $syncNotifManager);
 
         $lus = new MockLDAP_UserSync($this);
         $lus->setReturnValue('sync', true);

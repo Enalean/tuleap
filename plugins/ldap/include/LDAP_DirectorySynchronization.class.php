@@ -23,6 +23,7 @@
 
 require_once 'LDAP.class.php';
 require_once 'LDAP_UserManager.class.php';
+require_once 'LDAP_SyncNotificationManager.class.php';
 
 class LDAP_DirectorySynchronization {
     /**
@@ -96,6 +97,10 @@ class LDAP_DirectorySynchronization {
 
             if ($modified) {
                 $this->getUserManager()->updateDb($user);
+                if ($retentionPeriod = $this->ldap->getLDAPParam('daily_sync_retention_period')) {
+                    $projectManager = $this->getProjectManager();
+                    $this->getLdapSyncNotificationManager($projectManager, $retentionPeriod)->processNotification($user);
+                }
             }
         }
     }
@@ -117,6 +122,14 @@ class LDAP_DirectorySynchronization {
 
     protected function getLdapUserSync() {
         return LDAP_UserSync::instance();
+    }
+
+    protected function getLdapSyncNotificationManager(ProjectManager $projectManager, $retentionPeriod){
+        return new LDAP_SyncNotificationManager($projectManager, $retentionPeriod);
+    }
+
+    protected function getProjectManager() {
+        return ProjectManager::instance();
     }
 }
 ?>
