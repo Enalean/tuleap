@@ -1,3 +1,6 @@
+Version 2.26.31 - Tuleap 6.12
+    * Replace TinyMCE by CKEditor in docman (IE9 compat)
+
 Version 2.26.30 - Tuleap 6.12
     * request #6453 Unable to clone a git repository
 
