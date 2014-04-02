@@ -11,7 +11,7 @@ $sys_ldap_server = '%sys_ldap_server%';
 // (distinguised name) to use in LDAP queries.
 // The ldap filter is the filter to use to query the LDAP directory
 // (%name% are substituted with the value from the user table)
-$sys_ldap_dn     = 'dc=tuleap,dc=net';
+$sys_ldap_dn     = 'dc=tuleap,dc=local';
 
 // For LDAP systems that do not accept anonymous binding, define here
 // a valid DN and password:
@@ -35,7 +35,7 @@ $sys_ldap_uid   = 'uid';
 // user (even after deletion). It correspond to ldap_id field in user table
 // in database.
 // (authentication 2st step)
-$sys_ldap_eduid = 'eduid';
+$sys_ldap_eduid = 'employeeNumber';
 
 // User common name   
 $sys_ldap_cn    = 'cn';
@@ -45,7 +45,7 @@ $sys_ldap_mail  = 'mail';
 // Specific DN to look for people
 // You may use more than one DN separated by ; if you want to use several branches.
 // Example : 'ou=People, dc=st, dc=com ; ou=Extranet, dc=st, dc=com'
-$sys_ldap_people_dn     = 'ou=people,dc=tuleap,dc=net';
+$sys_ldap_people_dn     = 'ou=people,dc=tuleap,dc=local';
 
 // Filter used to look for user. It should cover a wide selection of
 // fields because it's aim to find a user whatever it's given (email, name,
@@ -83,7 +83,7 @@ $sys_ldap_user_management = 1;
 $sys_ldap_grp_enabled   = 1;
 
 // Specific DN where the user groups are
-$sys_ldap_grp_dn        = 'ou=groups,dc=tuleap,dc=net';
+$sys_ldap_grp_dn        = 'ou=groups,dc=tuleap,dc=local';
 // Field that reprsent group name
 $sys_ldap_grp_cn        = 'cn';
 // Field that indicate the membership of a user in a group
@@ -95,4 +95,21 @@ $sys_ldap_threshold_users_suspension = '';
 // 'onelevel': search for users only into the level immediately below $sys_ldap_people_dn
 // 'subtree' : search for users into all $sys_ldap_people_dn subtrees (default)
 $search_depth = 'subtree';
-?>
+
+
+//
+// Write user accounts into a LDAP server
+// /!\ DO NOT USE IT - EXPERIMENTAL /!\
+
+// A server on which you can write so users are exported into it
+/*
+$sys_ldap_write_server    = '';
+
+$sys_ldap_write_dn        = 'cn=Manager,dc=tuleap,dc=local';
+
+$sys_ldap_write_password  = 'welcome0';
+
+$sys_ldap_write_people_dn = 'ou=people,dc=tuleap,dc=local';
+
+$sys_ldap_write_group_dn  = 'ou=groups,dc=tuleap,dc=local';
+*/

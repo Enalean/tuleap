@@ -82,6 +82,7 @@ class User_LoginManager {
         } else {
             $user = $this->user_manager->getUserByUserName($name);
             if ($user && $user->getUserPw() == md5($password)) {
+                $user->setPassword($password);
                 $auth_success = true;
                 $this->event_manager->processEvent(
                     Event::SESSION_AFTER_LOGIN,

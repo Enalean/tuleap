@@ -30,6 +30,11 @@ class LdapPlugin extends Plugin {
     private $ldapInstance;
 
     /**
+     * @var LDAP
+     */
+    private $ldap_write_instance;
+
+    /**
      * @type LDAP_UserManager
      */
     private $_ldapUmInstance;
@@ -39,6 +44,7 @@ class LdapPlugin extends Plugin {
 
         // Layout
         $this->_addHook('display_newaccount', 'forbidIfLdapAuth', false);
+        $this->_addHook('before_register', 'before_register', false);
         
         // Search
         $this->addHook(Event::LAYOUT_SEARCH_ENTRY);
@@ -89,7 +95,6 @@ class LdapPlugin extends Plugin {
         $this->_addHook('svn_intro', 'svn_intro', false);
         $this->_addHook('svn_check_access_username', 'svn_check_access_username', false);
 
-        $this->_addHook('before_register', 'redirectToLogin', false);
 
         // Search as you type user
         $this->_addHook('ajax_search_user', 'ajax_search_user', false);
@@ -110,6 +115,10 @@ class LdapPlugin extends Plugin {
 
         // Ask for LDAP Username of a User
         $this->_addHook(Event::GET_LDAP_LOGIN_NAME_FOR_USER);
+
+        // User profile creation/update
+        $this->addHook(Event::USER_MANAGER_UPDATE_DB);
+        $this->addHook('project_admin_activate_user');
     }
     
     /**
@@ -125,21 +134,19 @@ class LdapPlugin extends Plugin {
     /**
      * @return LDAP
      */
-    function getLdap() {
+    public function getLdap() {
         if (!isset($this->ldapInstance)) {
-            $ldapParams = array();
-            $keys = $this->getPluginInfo()->propertyDescriptors->getKeys()->iterator();
-            foreach ($keys as $k) {
-                $nk = str_replace('sys_ldap_', '', $k);
-                $ldapParams[$nk] = $this->getPluginInfo()->getPropertyValueForName($k);
-            }
-            $this->ldapInstance = new LDAP(
-                $ldapParams,
-                $this->getLogger(),
-                $this->getQueryEscaper()
-            );
+            $this->ldapInstance = $this->instanciateLDAP();
         }
         return $this->ldapInstance;
+    }
+
+    private function instanciateLDAP() {
+        return new LDAP(
+            $this->getLDAPParams(),
+            $this->getLogger(),
+            $this->getQueryEscaper()
+        );
     }
 
     /**
@@ -147,6 +154,41 @@ class LdapPlugin extends Plugin {
      */
     public function getLogger() {
         return new TruncateLevelLogger(new BackendLogger(), ForgeConfig::get('sys_logger_level'));
+    }
+
+    /**
+     * @return LDAP
+     */
+    public function getLDAPWrite() {
+        if (! isset($this->ldap_write_instance)) {
+            $ldap_params = $this->getLDAPParams();
+            if (isset($ldap_params['write_server']) && trim($ldap_params['write_server']) != '') {
+                $this->ldap_write_instance = $this->instanciateLDAP();
+            } else {
+                throw new LDAP_Exception_NoWriteException();
+            }
+        }
+        return $this->ldap_write_instance;
+    }
+
+    private function hasLDAPWrite() {
+        try {
+            $this->getLDAPWrite();
+            return true;
+        } catch (LDAP_Exception_NoWriteException $ex) {
+
+        }
+        return false;
+    }
+
+    private function getLDAPParams() {
+        $ldap_params = array();
+        $keys = $this->getPluginInfo()->propertyDescriptors->getKeys()->iterator();
+        foreach ($keys as $k) {
+            $nk = str_replace('sys_ldap_', '', $k);
+            $ldap_params[$nk] = $this->getPluginInfo()->getPropertyValueForName($k);
+        }
+        return $ldap_params;
     }
 
     /**
@@ -313,6 +355,13 @@ class LdapPlugin extends Plugin {
             }
             else {
                 $params['allow_codendi_login'] = true;
+                if ($this->hasLDAPWrite()) {
+                    try {
+                        $this->getLDAPUserWrite()->updateWithUser($params['user']);
+                    } catch (Exception $exception) {
+                        $this->getLogger()->error('An error occured while registering user (session_after_login): '.$exception->getMessage());
+                    }
+                }
             }
         }
     }
@@ -509,13 +558,15 @@ class LdapPlugin extends Plugin {
         $um = UserManager::instance();
         $user = $um->getCurrentUser();
         if($GLOBALS['sys_auth_type'] == 'ldap' && $user->getLdapId() != '') {
-            exit_permission_denied();
+            if (! $this->hasLDAPWrite()) {
+                exit_permission_denied();
+            }
         }
     }
     
 
-    function redirectToLogin($params) {
-        if($GLOBALS['sys_auth_type'] == 'ldap') {
+    function before_register($params) {
+        if ($GLOBALS['sys_auth_type'] == 'ldap' && ! $this->hasLDAPWrite()) {
             if (isset($GLOBALS['sys_https_host']) && ($GLOBALS['sys_https_host'] != "")) {
                 $host = 'https://'.$GLOBALS['sys_https_host'];
             } else {
@@ -578,7 +629,9 @@ class LdapPlugin extends Plugin {
      */
     function forbidIfLdapAuth($params) {
         if ($GLOBALS['sys_auth_type'] == 'ldap') {
-            $params['allow']=false;
+            if (! $this->hasLDAPWrite()) {
+                $params['allow'] = false;
+            }
         }
     }
 
@@ -595,7 +648,9 @@ class LdapPlugin extends Plugin {
         $um = UserManager::instance();
         $user = $um->getCurrentUser();
         if ($GLOBALS['sys_auth_type'] == 'ldap' && $user->getLdapId() != '') {
-            $params['allow']=false;
+            if (! $this->hasLDAPWrite()) {
+                $params['allow'] = false;
+            }
         }
     }
 
@@ -869,6 +924,40 @@ class LdapPlugin extends Plugin {
             $params['presenter']     = new LDAP_LoginPresenter($params['presenter']);
         }
     }
-}
 
-?>
+    /**
+     * @see Event::USER_MANAGER_UPDATE_DB
+     */
+    public function user_manager_update_db(array $params) {
+        try {
+            $this->getLDAPUserWrite()->updateWithPreviousUser($params['old_user'], $params['new_user']);
+        } catch (LDAP_Exception_NoWriteException $exception) {
+            $this->getLogger()->debug('User info not updated in LDAP, no write LDAP configured');
+        } catch (Exception $exception) {
+            $this->getLogger()->error('An error occured while updating user settings (user_manager_update_db): '.$exception->getMessage());
+        }
+    }
+
+    /**
+     *
+     * @see project_admin_activate_user
+     */
+    public function project_admin_activate_user(array $params) {
+        try {
+            $this->getLDAPUserWrite()->updateWithUserId($params['user_id']);
+        } catch (LDAP_Exception_NoWriteException $exception) {
+            $this->getLogger()->debug('User info not updated in LDAP, no write LDAP configured');
+        } catch (Exception $exception) {
+            $this->getLogger()->error('An error occured while activating user as site admin (project_admin_activate_user): '.$exception->getMessage());
+        }
+    }
+
+    private function getLDAPUserWrite() {
+        return new LDAP_UserWrite(
+            $this->getLDAPWrite(),
+            UserManager::instance(),
+            new UserDao(),
+            $this->getLogger()
+        );
+    }
+}
