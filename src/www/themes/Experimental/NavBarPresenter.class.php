@@ -125,6 +125,14 @@ class Experimental_NavBarPresenter {
         return $GLOBALS['Language']->getText('menu', 'home');
     }
 
+    public function menu_projects_text() {
+        return $GLOBALS['Language']->getText('include_menu','projects');
+    }
+
+    public function browse_projects_text() {
+        return $GLOBALS['Language']->getText('include_menu','browse_projects');
+    }
+
     public function menu_my_personnal_page_text() {
          return $GLOBALS['Language']->getText('menu', 'my_personal_page');
     }
@@ -163,6 +171,10 @@ class Experimental_NavBarPresenter {
 
     public function soap_api() {
         return $GLOBALS['Language']->getText('include_menu','soap_api');
+    }
+
+    public function search_placeholder() {
+        return $GLOBALS['Language']->getText('include_menu','search');
     }
 
     public function nav_home_class() {
