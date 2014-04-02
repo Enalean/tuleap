@@ -481,7 +481,10 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
             return $activated;
         } catch (Guzzle\Http\Exception\ClientErrorResponseException $exception) {
             return false;
-        } catch (Exception $exception) {
+        } catch (Guzzle\Http\Exception\CurlException $exception) {
+            return false;
+        }
+        catch (Exception $exception) {
             $this->throwGerritException("Gerrit REST driver: An error occured while checking if deleted plugins is available: ". $exception->getMessage());
         }
     }
@@ -499,6 +502,11 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
 
             $this->logger->info("Gerrit REST driver: Project successfully deleted");
             return true;
+        } catch (Guzzle\Http\Exception\ClientErrorResponseException $exception) {
+            $this->logger->error('Gerrit REST driver: Cannot delete project ' . $gerrit_project_full_name . ': There are open changes');
+            throw new ProjectDeletionException(
+                $GLOBALS['Language']->getText('plugin_git', 'project_deletion_open_elements')
+            );
         } catch (Exception $exception) {
             $this->throwGerritException("Gerrit REST driver: Cannot delete project $gerrit_project_full_name. (".$exception->getMessage().")");
         }

@@ -20,7 +20,7 @@
 
 require_once dirname(__FILE__).'/GerritTestBase.php';
 
-class Git_Driver_GerritLegacy_isDeletePluginEnabledTest extends TuleapTestCase implements Git_Driver_Gerrit_isDeletePluginEnabledTest {
+class Git_Driver_GerritLegacy_DeletePluginTest extends TuleapTestCase implements Git_Driver_Gerrit_DeletePluginTest {
     /**
      * @var Git_Driver_Gerrit
      */
@@ -70,5 +70,14 @@ class Git_Driver_GerritLegacy_isDeletePluginEnabledTest extends TuleapTestCase i
         $enabled = $this->driver->isDeletePluginEnabled($this->gerrit_server);
 
         $this->assertTrue($enabled);
+    }
+
+    public function itThrowsAProjectDeletionExceptionIfThereAreOpenChanges() {
+        $exception = new Git_Driver_Gerrit_RemoteSSHCommandFailure(1, '', 'error');
+        stub($this->ssh)->execute()->throws($exception);
+
+        $this->expectException('ProjectDeletionException');
+
+        $this->driver->deleteProject($this->gerrit_server, 'project');
     }
 }
