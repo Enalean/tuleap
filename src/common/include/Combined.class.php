@@ -45,6 +45,7 @@ class Combined {
             '/scripts/bootstrap/bootstrap-tooltip-fix-prototypejs-conflict.js',
             '/scripts/bootstrap/bootstrap-popover.js',
             '/scripts/bootstrap/bootstrap-select/bootstrap-select.js',
+            '/scripts/bootstrap/bootstrap-tour/bootstrap-tour.min.js',
             '/scripts/bootstrap/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js',
             '/scripts/bootstrap/bootstrap-datetimepicker/js/bootstrap-datetimepicker.fr.js',
             '/scripts/bootstrap/bootstrap-datetimepicker/js/bootstrap-datetimepicker-fix-prototypejs-conflict.js',
@@ -75,6 +76,7 @@ class Combined {
             '/scripts/codendi/Tracker.js',
             '/scripts/codendi/TreeNode.js',
             '/scripts/tuleap/tuleap-modal.js',
+            '/scripts/tuleap/tuleap-tours.js',
         );
         EventManager::instance()->processEvent(Event::COMBINED_SCRIPTS, array('scripts' => &$arr));
 
