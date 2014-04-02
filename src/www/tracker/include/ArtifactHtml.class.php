@@ -198,13 +198,13 @@ class ArtifactHtml extends Artifact {
                 }
                 $html .= '<b>'.$Language->getText('tracker_include_artifact','add_comment').'</b>';
                 $html .= '<DIV ID="tracker_artifact_comment_label"></DIV>';
-                $html .= '<TEXTAREA NAME="comment" id="tracker_artifact_comment" ROWS="10" style="width:99%" WRAP="SOFT"></TEXTAREA>';
+                $html .= '<TEXTAREA NAME="comment" id="tracker_artifact_comment" ROWS="10" style="width:700px;" WRAP="SOFT"></TEXTAREA>';
             } else {
                 if ($pv == 0) {
                     $html .= '<b>'.$Language->getText('tracker_include_artifact','add_comment').'</b>';
                     // Non authenticated user can submit only in text format
                     //$html .= '<DIV ID="tracker_artifact_comment_label"></DIV>';
-                    $html .= '<TEXTAREA NAME="comment" id="tracker_artifact_comment" ROWS="10" style="width:99%" WRAP="SOFT"></TEXTAREA>';
+                    $html .= '<TEXTAREA NAME="comment" id="tracker_artifact_comment" ROWS="10" style="width:700px" WRAP="SOFT"></TEXTAREA>';
                 }
             }
             if (!user_isloggedin() && ($pv == 0)) {
@@ -630,14 +630,14 @@ class ArtifactHtml extends Artifact {
             }
             // This div id used just to show the toggle of html format
             $html .= '<DIV ID="follow_up_comment_label"></DIV>';
-            $html .= '<TEXTAREA NAME="follow_up_comment" ID="follow_up_comment" ROWS="10"  style="width:100%" WRAP="SOFT">';
+            $html .= '<TEXTAREA NAME="follow_up_comment" id="tracker_artifact_comment" ROWS="10" style="width:700px;" WRAP="SOFT">';
             $html .=  $hp->purify($Language->getText('tracker_include_artifact','is_copy',array($this->ArtifactType->getItemName(),$this->ArtifactType->getItemName().' #'.$this->getID())), CODENDI_PURIFIER_CONVERT_HTML) ;
             $html .= '</TEXTAREA>';
         } else {
             if ($pv == 0) {
                 $html .= '<b>'.$Language->getText('tracker_include_artifact','add_comment').'</b>';
                 $html .= '<DIV ID="follow_up_comment_label"></DIV>';
-                $html .= '<TEXTAREA NAME="follow_up_comment" ID="follow_up_comment" ROWS="10"  style="width:100%" WRAP="SOFT">'. $hp->purify($Language->getText('tracker_include_artifact','is_copy',array($this->ArtifactType->getItemName(),$this->ArtifactType->getItemName().' #'.$this->getID())), CODENDI_PURIFIER_CONVERT_HTML) .'</TEXTAREA>';
+                $html .= '<TEXTAREA NAME="follow_up_comment" id="tracker_artifact_comment" ROWS="10" style="width:700px;" WRAP="SOFT">'. $hp->purify($Language->getText('tracker_include_artifact','is_copy',array($this->ArtifactType->getItemName(),$this->ArtifactType->getItemName().' #'.$this->getID())), CODENDI_PURIFIER_CONVERT_HTML) .'</TEXTAREA>';
             }
         }
         if (!user_isloggedin() && ($pv == 0)) {
@@ -1120,22 +1120,11 @@ class ArtifactHtml extends Artifact {
         echo '<FORM ACTION="/tracker/?group_id='.(int)$group_id.'&atid='.(int)$group_artifact_id.'&func=updatecomment" METHOD="post">
         <INPUT TYPE="hidden" NAME="artifact_history_id" VALUE="'.(int)$comment_id.'">
         <INPUT TYPE="hidden" NAME="artifact_id" VALUE="'.(int)$this->getID().'">
-        <P><DIV ID="followup_update_label"></DIV><TEXTAREA NAME="followup_update" ID="followup_update" ROWS="10"  style="width:100%" WRAP="SOFT">'. $hp->purify(util_unconvert_htmlspecialchars($followUp['new_value']), CODENDI_PURIFIER_CONVERT_HTML) .'</TEXTAREA>
+        <P><DIV ID="followup_update_label"></DIV><TEXTAREA NAME="followup_update" id="tracker_artifact_comment" ROWS="10" style="width:700px;" WRAP="SOFT">'. $hp->purify(util_unconvert_htmlspecialchars($followUp['new_value']), CODENDI_PURIFIER_CONVERT_HTML) .'</TEXTAREA>
         <P><INPUT CLASS="btn btn-primary" TYPE="submit" VALUE="'. $GLOBALS['Language']->getText('global', 'btn_submit').'">
         </FORM>';
         
-        if ($followUp['format'] == self::FORMAT_HTML) {
-            $format = 'html';
-        } else {
-            $format = 'text';
-        }
-        
-        $js = '
-        document.observe("dom:loaded", function() {
-            new Codendi_RTE_Light_Tracker_FollowUp("followup_update", "'.$format.'");
-        });';
-        $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tiny_mce/tiny_mce.js');
-        $GLOBALS['HTML']->includeFooterJavascriptSnippet($js);
+        $GLOBALS['Response']->includeFooterJavascriptFile('/scripts/trackerv3_artifact.js');
     }
 
     /**

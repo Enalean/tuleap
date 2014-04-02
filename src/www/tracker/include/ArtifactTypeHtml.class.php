@@ -2426,7 +2426,7 @@ EOS;
                 }
                 // This div id used just to show the toggle of html format
                 echo '<DIV ID="tracker_artifact_comment_label"></DIV>';
-                echo '<TEXTAREA NAME="comment" ID="tracker_artifact_comment" ROWS="10"  style="width:100%" WRAP="SOFT"></TEXTAREA><p>';
+                echo '<TEXTAREA NAME="comment" id="tracker_artifact_comment" ROWS="10" style="width:700px;" WRAP="SOFT"></TEXTAREA><p>';
                                 
         
                 echo '</td></tr>';
