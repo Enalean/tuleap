@@ -4,11 +4,6 @@
     <div class="navbar-inner">
         <div class="container-fluid">
             <ul class="nav">
-                <li class={{ nav_home_class }}>
-                    <a href="/">
-                        {{ menu_home_text }}
-                    </a>
-                </li>
                 {{# user_is_logged_in }}
                 <li class={{ nav_my_class }}>
                     <a href="/my/">
@@ -19,19 +14,11 @@
 
                 {{> navbar-project }}
 
-                {{# there_is_one_extra_tab }}
-                    {{# extra_tabs }}
-                    <li class="{{extra_tabs_active}}">
-                        <a href="{{ link }}">
-                            {{{ title }}}
-                        </a>
-                    </li>
-                    {{/ extra_tabs }}
-                {{/ there_is_one_extra_tab }}
-
-                {{# there_are_multiple_extra_tabs }}
+                {{# there_are_extra_tabs }}
                     {{> navbar-extra-tabs }}
-                {{/ there_are_multiple_extra_tabs }}
+                {{/ there_are_extra_tabs }}
+
+                {{> navbar-help }}
 
                 {{# user_is_admin }}
                     <li class={{ nav_admin_class }}>
@@ -40,8 +27,6 @@
                         </a>
                     </li>
                 {{/ user_is_admin }}
-
-                {{> navbar-help }}
             </ul>
             {{> navbar-user-navigation }}
         </div>

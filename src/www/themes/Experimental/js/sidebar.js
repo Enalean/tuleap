@@ -34,11 +34,23 @@
     }
 
     function getSidebarUserPreference() {
-        return localStorage.getItem('sidebar-size');
+        if ($('body').hasClass('sidebar-collapsed')) {
+            return width_collapsed;
+        }
+
+        return width_expanded;
     }
 
     function setSidebarUserPreference(new_width) {
-        localStorage.setItem('sidebar-size', new_width);
+        var state = (new_width == width_expanded) ? 'sidebar-expanded' : 'sidebar-collapsed';
+
+        $.ajax({
+            type: 'POST',
+            url: '/account/update-sidebar-preference.php',
+            data: { sidebar_state: state }
+        });
+
+        $('body').removeClass('sidebar-expanded sidebar-collapsed').addClass(state);
     }
 
     function updateSidebarWidth(new_width, duration) {
@@ -46,7 +58,7 @@
             width: new_width
         }, duration, updateNavbar(new_width));
         $('.sidebar-nav li a').css({
-            width: parseInt(new_width) + 'px'
+            width: new_width
         });
         $('.main').animate({
             marginLeft: new_width
@@ -91,14 +103,16 @@
 
     function sidebarCollapseEvent(duration) {
         var current_size   = getSidebarUserPreference();
-        var new_size       = width_expanded;
         var new_direction  = 'left';
         var show_only_icon = false;
+        var new_size;
 
         if (current_size == width_expanded) {
-            new_size       = width_collapsed
+            new_size       = width_collapsed;
             new_direction  = 'right';
             show_only_icon = true;
+        } else {
+            new_size = width_expanded;
         }
 
         setSidebarUserPreference(new_size);
@@ -111,18 +125,16 @@
     }
 
     function updateCustomScrollbar() {
-        var current_size = getSidebarUserPreference();
-
-        if (current_size == width_expanded) {
-            api.destroy();
-            throttleTimeout = null;
-            initCustomScrollbar();
-        }
+        api.destroy();
+        throttleTimeout = null;
+        initCustomScrollbar();
     }
 
     function initCustomScrollbar() {
         $('.sidebar-nav').jScrollPane({
-            verticalGutter: 0
+            verticalGutter: 0,
+            hideFocus: true,
+            contentWidth: getSidebarUserPreference()
         });
         api = $('.sidebar-nav').data('jsp');
 
@@ -146,15 +158,12 @@
             });
 
             if (current_size == null || current_size == width_expanded) {
-                updateSidebarTitle(false);
-                updateSidebarWidth(width_expanded, 0);
                 updateSidebarIcon('left', false);
                 updateSidebarServices(false, 100);
             } else {
-                updateSidebarTitle(true);
-                updateSidebarWidth(width_collapsed, 0);
                 updateSidebarIcon('right', true);
                 updateSidebarServices(true, 100);
+                updateNavbar(width_collapsed);
             }
 
             $('.sidebar-collapse').click(function() {

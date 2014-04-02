@@ -5,14 +5,21 @@ body .main {
 body.has_sidebar .main {
     margin: 0 0 0 @sidebar-width;
 }
+body.has_sidebar.sidebar-collapsed .main {
+    margin: 0 0 0 45px;
+}
+
+.main {
+    margin: 0 0 0 @sidebar-width;
+}
 
 .main {
     padding: 0;
-    @media screen and (max-width: 825px) {
+    @media screen and (max-width: 880px) {
         padding: @navbar-height 0 0 0;
     }
 
-    @media screen and (max-width: 595px) {
+    @media screen and (max-width: 650px) {
         padding: @navbar-height * 2 0 0 0;
     }
 
@@ -22,7 +29,7 @@ body.has_sidebar .main {
 
     /* {{{ BREADCRUMB */
     .breadcrumb {
-        background-color: @dark-grey;
+        background-color: lighten(@dark-grey, 4%);
         font-family: 'SourceSansPro', Arial;
         font-size: 1em;
         color: @grey;

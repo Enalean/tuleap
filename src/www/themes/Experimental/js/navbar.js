@@ -24,6 +24,7 @@
     function initCustomScrollbar() {
         $('.projects-nav .dropdown-menu').jScrollPane({
             autoReinitialise: true,
+            hideFocus: true,
             verticalGutter: 0
         });
     }

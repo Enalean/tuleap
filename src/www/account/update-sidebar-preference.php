@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2014. All Rights Reserved.
  *
@@ -17,22 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.jspVerticalBar {
-    width: 8px;
-    background: transparent;
-}
+require_once('pre.php');
 
-.jspHorizontalBar {
-    height: 8px;
-    background: transparent;
-}
-
-.jspTrack {
-    background: transparent;
-}
-
-.jspDrag {
-    background: #555;
-    opacity: 0.9;
-    border-radius: 5px;
-}
+$current_user->setPreference('sidebar_state', $request->get('sidebar_state'));

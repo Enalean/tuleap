@@ -244,12 +244,8 @@ class Experimental_NavBarPresenter {
         return $this->extra_tabs;
     }
 
-    public function there_is_one_extra_tab() {
-        return count($this->extra_tabs) === 1;
-    }
-
-    public function there_are_multiple_extra_tabs() {
-        return count($this->extra_tabs) > 1;
+    public function there_are_extra_tabs() {
+        return count($this->extra_tabs) > 0;
     }
 
     public function extra_tabs_active() {

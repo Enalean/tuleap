@@ -195,7 +195,7 @@ include_menu	auth_last_failure	Dernière tentative de connexion:
 include_menu	auth_nb_failure	Nombre de tentatives:
 include_menu	help	Aide
 include_menu	soap_api	API SOAP
-include_menu	extras	Extras
+include_menu	extras	Plus
 include_menu	get_help	Rubriques d'aide
 #
 #-----------------------------------------------

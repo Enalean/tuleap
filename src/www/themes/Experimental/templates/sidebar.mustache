@@ -18,7 +18,9 @@
             </li>
         {{/sidebar}}
     </ul>
-    <i class="icon-chevron-left sidebar-collapse"></i>
+    {{# is_sidebar_collapsable }}
+        <i class="icon-chevron-left sidebar-collapse"></i>
+    {{/ is_sidebar_collapsable }}
     <div class="sidebar-about">
         <p>{{{ powered_by }}}</p>
         <p>{{{ copyright }}}</p>

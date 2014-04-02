@@ -49,6 +49,9 @@ class Experimental_ContainerPresenter {
 
     private $forge_version;
 
+    /** @var boolean */
+    private $sidebar_collapsable;
+
     function __construct(
         $breadcrumbs,
         $toolbar,
@@ -59,18 +62,20 @@ class Experimental_ContainerPresenter {
         $project_tabs,
         $feedback,
         $feedback_content,
-        $forge_version
+        $forge_version,
+        $sidebar_collapsable
     ) {
-        $this->breadcrumbs       = $breadcrumbs;
-        $this->toolbar           = $toolbar;
-        $this->project_name      = $project_name;
-        $this->project_link      = $project_link;
-        $this->project_is_public = $project_is_public;
-        $this->project_privacy   = $project_privacy;
-        $this->project_tabs      = $project_tabs;
-        $this->feedback          = $feedback;
-        $this->feedback_content  = $feedback_content;
-        $this->forge_version     = $forge_version;
+        $this->breadcrumbs         = $breadcrumbs;
+        $this->toolbar             = $toolbar;
+        $this->project_name        = $project_name;
+        $this->project_link        = $project_link;
+        $this->project_is_public   = $project_is_public;
+        $this->project_privacy     = $project_privacy;
+        $this->project_tabs        = $project_tabs;
+        $this->feedback            = $feedback;
+        $this->feedback_content    = $feedback_content;
+        $this->forge_version       = $forge_version;
+        $this->sidebar_collapsable = $sidebar_collapsable;
     }
 
     public function hasBreadcrumbs() {
@@ -91,6 +96,10 @@ class Experimental_ContainerPresenter {
 
     public function hasSidebar() {
         return isset($this->project_tabs);
+    }
+
+    public function is_sidebar_collapsable() {
+        return $this->sidebar_collapsable;
     }
 
     public function sidebar() {

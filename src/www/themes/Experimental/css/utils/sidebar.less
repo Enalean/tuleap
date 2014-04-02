@@ -1,12 +1,12 @@
 /* {{{ SIDEBAR */
 .sidebar-nav {
-    background: @dark-grey;
-    background: -moz-linear-gradient(top, lighten(@dark-grey, 8%) 0%, @dark-grey 200px);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, lighten(@dark-grey, 8%)), color-stop(200px, @dark-grey));
-    background: -webkit-linear-gradient(top, lighten(@dark-grey, 8%) 0%, @dark-grey 200px);
-    background: -o-linear-gradient(top, lighten(@dark-grey, 8%) 0%, @dark-grey 200px);
-    background: -ms-linear-gradient(top, lighten(@dark-grey, 8%) 0%, @dark-grey 200px);
-    background: linear-gradient(to bottom, lighten(@dark-grey, 8%) 0%, @dark-grey 200px);
+    background: darken(@dark-grey, 3%);
+    background: -moz-linear-gradient(top, lighten(@dark-grey, 6%) 0%, @dark-grey 150px);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, lighten(@dark-grey, 6%)), color-stop(150px, @dark-grey));
+    background: -webkit-linear-gradient(top, lighten(@dark-grey, 6%) 0%, @dark-grey 150px);
+    background: -o-linear-gradient(top, lighten(@dark-grey, 6%) 0%, @dark-grey 150px);
+    background: -ms-linear-gradient(top, lighten(@dark-grey, 6%) 0%, @dark-grey 150px);
+    background: linear-gradient(to bottom, lighten(@dark-grey, 6%) 0%, @dark-grey 150px);
     font-family: 'SourceSansPro', Arial;
     position: fixed;
     height: 100%;
@@ -14,11 +14,11 @@
     max-width: @sidebar-width;
     overflow: hidden;
     padding: 0 0 150px 0;
-    @media screen and (max-width: 870px) {
+    @media screen and (max-width: 880px) {
         padding: @navbar-height 0 150px 0;
     }
 
-    @media screen and (max-width: 475px) {
+    @media screen and (max-width: 650px) {
         padding: @navbar-height * 2 0 150px 0;
     }
 
@@ -121,6 +121,33 @@
                 text-decoration: none;
             }
         }
+    }
+}
+
+body.sidebar-collapsed {
+    .sidebar-nav {
+        width: 45px;
+
+        .project-title-container {
+            width: @sidebar-width;
+            visibility: hidden;
+        }
+
+        li a {
+            width: 45px;
+
+            & > span {
+                display: none;
+            }
+        }
+
+        .sidebar-about {
+            display: none;
+        }
+    }
+
+    .main {
+        margin-left: 45px;
     }
 }
 /* }}} */
