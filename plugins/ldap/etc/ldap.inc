@@ -95,4 +95,19 @@ $sys_ldap_threshold_users_suspension = '';
 // 'onelevel': search for users only into the level immediately below $sys_ldap_people_dn
 // 'subtree' : search for users into all $sys_ldap_people_dn subtrees (default)
 $search_depth = 'subtree';
-?>
+
+
+//
+// Write user accounts into a LDAP server
+//
+
+// A server on which you can write so users are exported into it
+$sys_ldap_write_server    = '';
+
+$sys_ldap_write_dn        = 'cn=Manager,dc=tuleap,dc=local';
+
+$sys_ldap_write_password  = 'welcome0';
+
+$sys_ldap_write_people_dn = 'ou=people,dc=tuleap,dc=local';
+
+$sys_ldap_write_group_dn  = 'ou=groups,dc=tuleap,dc=local';

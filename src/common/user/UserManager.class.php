@@ -712,8 +712,11 @@ class UserManager {
                 }
             }
             $result = $this->getDao()->updateByRow($userRow);
-            if ($result && ($user->isSuspended() || $user->isDeleted())) {
-                $this->getDao()->deleteAllUserSessions($user->getId());
+            if ($result) {
+                if ($user->isSuspended() || $user->isDeleted()) {
+                    $this->getDao()->deleteAllUserSessions($user->getId());
+                }
+                $this->_getEventManager()->processEvent(Event::USER_MANAGER_UPDATE_DB, array('user' => &$user));
             }
             return $result;
         }
@@ -848,7 +851,7 @@ class UserManager {
                 case PFUser::STATUS_ACTIVE:
                 case PFUser::STATUS_RESTRICTED:
                     $em =$this->_getEventManager();
-                    $em->processEvent('project_admin_activate_user', array('user_id' => $user_id));
+                    $em->processEvent('project_admin_activate_user', array('user_id' => $user_id, 'user' => $user));
                     break;
             }
 

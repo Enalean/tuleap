@@ -64,7 +64,17 @@ class Event {
      * No expected results
      */
     const USER_EMAIL_CHANGED = 'user_email_changed';
-    
+
+    /**
+     * The user is updated
+     *
+     * Parameters:
+     *   'users' => PFUser
+     *
+     * No expected results
+     */
+    const USER_MANAGER_UPDATE_DB = 'user_manager_update_db';
+
     /**
      * We are retrieving an instance of Backend. 
      * Shortcut for BACKEND_FACTORY_GET_PREFIX . 'Backend'

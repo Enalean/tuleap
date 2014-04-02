@@ -7,46 +7,30 @@
 // 
 
 require_once('pre.php');    
-require_once('account.php');
-require_once('common/include/CSRFSynchronizerToken.class.php');
-require_once('common/event/EventManager.class.php');
 
-$em =& EventManager::instance();
+$em      = EventManager::instance();
+$um      = UserManager::instance();
+$request = HTTPRequest::instance();
+
 $em->processEvent('before_change_realname', array());
+
 $csrf = new CSRFSynchronizerToken('/account/change_realname.php');
 
-// ###### function register_valid()
-// ###### checks for valid register from form post
+$user = $um->getCurrentUser();
 
-function register_valid(CSRFSynchronizerToken $csrf)	{
-    global $Language;
+if ($request->isPost() && $request->existAndNonEmpty('form_realname')) {
+    $csrf->check();
 
-    $request =& HTTPRequest::instance();
-	if (!$request->isPost() || !$request->exist('Update')) {
-		return 0;
-	}
-	
-	if (!$request->existAndNonEmpty('form_realname')) {
-		$GLOBALS['Response']->addFeedback('error', $Language->getText('account_change_realname', 'error'));
-		return 0;
-	}
-	$csrf->check();
-	// if we got this far, it must be good
-    $sql = "UPDATE user SET realname='".db_es($request->get('form_realname'))."' WHERE user_id=" . user_getid();
-    db_query($sql);
-	return 1;
+    $user->setRealName($request->get('form_realname'));
+    $um->updateDb($user);
+
+    $GLOBALS['Response']->redirect("/account/");
+    exit;
 }
 
-// ###### first check for valid login, if so, congratulate
+$HTML->header(array('title'=>$Language->getText('account_change_realname', 'title')));
 
-if (register_valid($csrf)) {
-	session_redirect("/account/");
-} else { // not valid registration, or first time to page
-	$HTML->header(array('title'=>$Language->getText('account_change_realname', 'title')));
-
-    $um = UserManager::instance();
-    $user = $um->getCurrentUser();
-    $hp = Codendi_HTMLPurifier::instance();
+$hp = Codendi_HTMLPurifier::instance();
 ?>
 <h2><?php echo $Language->getText('account_change_realname', 'title'); ?></h2>
 <form action="change_realname.php" method="post">
@@ -59,7 +43,5 @@ echo $Language->getText('account_change_realname', 'new_name'); ?>:
 </form>
 
 <?php
-}
-$HTML->footer(array());
 
-?>
+$HTML->footer(array());
