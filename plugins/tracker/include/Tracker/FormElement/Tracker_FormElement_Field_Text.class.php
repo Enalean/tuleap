@@ -35,7 +35,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
         ),
         'default_value' => array(
             'value' => '',
-            'type'  => 'string',
+            'type'  => 'text',
             'size'  => 40,
         ),
     );
