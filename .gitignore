@@ -24,6 +24,7 @@ plugins/maillog
 !src/www/scripts/ckeditor-for-ie7/skins/moono/*css
 !src/www/scripts/tiny_mce/*.css
 !src/www/scripts/bootstrap/bootstrap-select/*.css
+!src/www/scripts/bootstrap/bootstrap-tour/*.css
 !src/www/scripts/bootstrap/bootstrap-datetimepicker/css/*.css
 !src/www/scripts/jscrollpane/*.css
 !src/www/svn/repos-web/*.css
