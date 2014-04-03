@@ -52,7 +52,7 @@ class TemplateRendererFactory {
         $renderer_class = $this->getRendererClassName();
         return new $renderer_class($plugin_templates_dir);
     }
-    
+
     /**
      * @return string
      */
