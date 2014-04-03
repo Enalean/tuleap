@@ -3,30 +3,65 @@ button[name=tracker_query_submit] {
     margin-top:16px;
 }
 
-#tracker_report_selection {
-    margin-top: 1em;
-    margin-bottom: 1em;
+#tracker_report_config_options {
+    display: block;
+    width: 100%;
+    box-sizing:border-box;
+    -moz-box-sizing:border-box; /* Firefox */
+    padding-bottom: 14px;
+    padding-left: 14px;
+    padding-right: 14px;
     z-index:150;
+
+    h2 {
+        display: inline-block;
+    }
+}
+#tracker_report_options {
+    position: relative;
+    font-weight: normal;
 }
 
-#tracker_report_selection.tracker_report_haschanged,
-#tracker_report_selection.tracker_report_haschanged_and_isobsolete,
-#tracker_report_selection.tracker_report_isobsolete {
-    background-color:#FFFFCC;
-    border:2px solid #FFF380;
-    padding:0.25em 0.5em;
+#report_copy_name_input {
+    position: relative;
+    top: 4.5px;
 }
 
-#tracker_report_selection #tracker_report_haschanged_explenations,
-#tracker_report_selection #tracker_report_isobsolete_explenations,
-#tracker_report_selection #tracker_report_haschanged_and_isobsolete_explenations {
+#tracker_report_form {
+    display: inline;
+}
+
+#tracker_report_form select {
+    width: auto;
+}
+
+#tracker_report_save_or_revert {
+    display: none;
+    text-align: right;
+    padding-top: 20px;
+}
+
+#tracker_report_save_or_revert li {
+    text-align: left;
+}
+
+#tracker_report_save_or_revert #tracker_report_haschanged_explenations,
+#tracker_report_save_or_revert #tracker_report_isobsolete_explenations,
+#tracker_report_save_or_revert #tracker_report_haschanged_and_isobsolete_explenations {
     display: none;
 }
 
-#tracker_report_selection.tracker_report_haschanged #tracker_report_haschanged_explenations,
-#tracker_report_selection.tracker_report_isobsolete #tracker_report_isobsolete_explenations,
-#tracker_report_selection.tracker_report_haschanged_and_isobsolete #tracker_report_haschanged_and_isobsolete_explenations {
-    display: block;
+#tracker_report_save_or_revert.tracker_report_haschanged,
+#tracker_report_save_or_revert.tracker_report_isobsolete,
+#tracker_report_save_or_revert.tracker_report_haschanged_and_isobsolete,
+#tracker_report_save_or_revert.tracker_report_haschanged #tracker_report_haschanged_explenations,
+#tracker_report_save_or_revert.tracker_report_isobsolete #tracker_report_isobsolete_explenations,
+#tracker_report_save_or_revert.tracker_report_haschanged_and_isobsolete #tracker_report_haschanged_and_isobsolete_explenations {
+    display: inline;
+}
+
+#tracker_report_save_or_revert_buttons {
+    display: inline-block;
 }
 
 .tracker-form-element-artifactlink-list {
@@ -189,10 +224,6 @@ ul.tracker_function_aggregate_results {
 }
 #tracker_query tr {
     vertical-align:top
-}
-
-#tracker_report_form select {
-    width: auto;
 }
 
 #tracker_report_query_form h4 {

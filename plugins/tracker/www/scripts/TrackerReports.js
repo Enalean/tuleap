@@ -27,26 +27,29 @@ codendi.tracker = codendi.tracker || { };
 codendi.tracker.report = codendi.tracker.report || { };
 
 codendi.tracker.report.setHasChanged = function () {
-    if (!$('tracker_report_selection').hasClassName('tracker_report_haschanged') && !$('tracker_report_selection').hasClassName('tracker_report_haschanged_and_isobsolete')) {
-        if ($('tracker_report_selection').hasClassName('tracker_report_isobsolete')) {
-            $('tracker_report_selection').removeClassName('tracker_report_isobsolete')
-            $('tracker_report_selection').addClassName('tracker_report_haschanged_and_isobsolete');
+    var save_or_revert = $('tracker_report_save_or_revert');
+    save_or_revert.setStyle('display: inline;');
+    if (!save_or_revert.hasClassName('tracker_report_haschanged') && !save_or_revert.hasClassName('tracker_report_haschanged_and_isobsolete')) {
+        if (save_or_revert.hasClassName('tracker_report_isobsolete')) {
+            save_or_revert.removeClassName('tracker_report_isobsolete')
+            save_or_revert.addClassName('tracker_report_haschanged_and_isobsolete');
         } else {
-            $('tracker_report_selection').addClassName('tracker_report_haschanged');
+            save_or_revert.addClassName('tracker_report_haschanged');
         }
     }
 };
 Ajax.Responders.register({
     onComplete: function (response) {
         if (response.getHeader('X-Codendi-Tracker-Report-IsObsolete')) {
-            if ($('tracker_report_selection')) {
+            var save_or_revert = $('tracker_report_save_or_revert');
+            if (save_or_revert) {
                 $$('.tracker_report_updated_by').invoke('update', response.getHeader('X-Codendi-Tracker-Report-IsObsolete'));
-                if (!$('tracker_report_selection').hasClassName('tracker_report_isobsolete') && !$('tracker_report_selection').hasClassName('tracker_report_haschanged_and_isobsolete')) {
-                    if ($('tracker_report_selection').hasClassName('tracker_report_haschanged')) {
-                        $('tracker_report_selection').removeClassName('tracker_report_haschanged')
-                        $('tracker_report_selection').addClassName('tracker_report_haschanged_and_isobsolete');
+                if (!save_or_revert.hasClassName('tracker_report_isobsolete') && !save_or_revert.hasClassName('tracker_report_haschanged_and_isobsolete')) {
+                    if (save_or_revert.hasClassName('tracker_report_haschanged')) {
+                        save_or_revert.removeClassName('tracker_report_haschanged')
+                        save_or_revert.addClassName('tracker_report_haschanged_and_isobsolete');
                     } else {
-                        $('tracker_report_selection').addClassName('tracker_report_isobsolete');
+                        save_or_revert.addClassName('tracker_report_isobsolete');
                     }
                 }
             }
@@ -581,7 +584,7 @@ codendi.tracker.report.loadAggregates = function (selectbox, report_id, renderer
 };
 
 document.observe('dom:loaded', function () {
-    
+
     function inject_data_in_form(form) {
         //table
         var columns = $$('.tracker_report_table_column');
@@ -755,20 +758,6 @@ document.observe('dom:loaded', function () {
             });
         }*/
         
-        if ($('tracker_report_updater_save')) {
-            //TODO: 'save as'
-            $('tracker_report_updater_save').form.observe('submit', function (evt) {
-                var save_btn = $('tracker_report_updater_save');
-                if (save_btn.checked) {
-                    //criteria
-                    $('tracker_report_query_form').select('[name^=criteria]').each(function (criteria) {
-                        save_btn.form.appendChild(criteria.cloneNode(true).hide());
-                    });
-                    inject_data_in_form(save_btn.form);
-                }
-            });
-        }
-        
         //Pager
         /*if ($('tracker_report_table_pager')) {
             $$('.tracker_report_table_pager a').each(function (a) {
@@ -899,5 +888,12 @@ document.observe('dom:loaded', function () {
     }
     */
 
+    if($('tracker_report_updater_delete')) {
+        $('tracker_report_updater_delete').observe('click', function (event) {
+            if (! confirm(codendi.locales.tracker_report.delete_report)) {
+                event.stop();
+            }
+        });
+    }
 });
 
