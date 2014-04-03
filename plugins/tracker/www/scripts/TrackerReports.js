@@ -193,7 +193,7 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
                         var new_column = div.down('thead').down('th');
                         $('tracker_report_table').down('thead').down('tr').insert({bottom: new_column});
                         var new_trs = div.down('tbody').childElements().reverse();
-                        $('tracker_report_table').down('tbody').childElements().each(function (tr) {
+                        $$('#tracker_report_table > tbody > tr').each(function (tr) {
                             if (!tr.hasClassName('tracker_report_table_no_result')) {
                                 tr.insert(new_trs.pop().down('td'));
                             }

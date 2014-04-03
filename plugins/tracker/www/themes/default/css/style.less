@@ -401,28 +401,50 @@ ul.tracker_function_aggregate_results {
 }
 .tracker_report_renderer h3 {
 }
-#tracker_report_table {
-    border-collapse: separate;
-    border-spacing: 2px;
-}
-#tracker_report_table .boxtable {
-    border: 0;
-}
-#tracker_report_table th.boxtitle {
-    background: #f2f2f2;
-    background: -moz-linear-gradient(top,  #f2f2f2 0%, #d1d1d1 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f2f2f2), color-stop(100%,#d1d1d1));
-    background: -webkit-linear-gradient(top,  #f2f2f2 0%,#d1d1d1 100%);
-    background: -o-linear-gradient(top,  #f2f2f2 0%,#d1d1d1 100%);
-    background: -ms-linear-gradient(top,  #f2f2f2 0%,#d1d1d1 100%);
-    background: linear-gradient(to bottom,  #f2f2f2 0%,#d1d1d1 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f2f2', endColorstr='#d1d1d1',GradientType=0 );
-    text-align: left;
 
-    a {
-        color: #0676B9;
+#tracker_report_table {
+    & > thead > tr {
+        background: #E4E4E4;
+
+        & > th {
+            vertical-align: top;
+            border-left-color: #D2D2D2;
+
+            & > table > tbody > tr > td {
+                background-color: #E4E4E4;
+                vertical-align: top;
+                padding: 0;
+                border: none;
+
+                & > a {
+                    text-decoration: none;
+                    color: #333;
+                    display: block;
+                }
+
+                &.tracker_report_table_column_grip {
+                    width: 14px;
+                    background-image: url(../images/drag.png);
+                    background-repeat: no-repeat;
+                    background-position: 0 5px;
+                    cursor: move;
+                }
+
+                &.tracker_report_table_column_caret {
+                    text-align: right;
+                    padding-left: 4px;
+                    padding-right: 4px;
+                }
+            }
+        }
+    }
+
+    & > tbody > tr:first-child > td {
+        border-top: none;
     }
 }
+
+
 #tracker_report_table_addcolumn_panel {
     text-align:right;
 }
@@ -845,16 +867,6 @@ li.tracker_aggregate_function_add_unused:hover {
 #tracker_renderer_options_menu_handle {
     font-size:0.8em;
 }
-a.tracker_report_table_column_title {
-    padding-left:20px;
-}
-a.tracker_report_table_column_title:hover {
-    cursor: move;
-}
-a.tracker_report_table_column_title:hover span {
-    cursor: pointer;
-}
-
 #renderer_table_chunksz_input {
     width: 35px;
     text-align: center;

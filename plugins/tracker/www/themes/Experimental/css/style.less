@@ -1,0 +1,19 @@
+@import "plugins/tracker/www/themes/default/css/style.less";
+
+body {
+    @import "src/www/themes/Experimental/css/utils/variables-orange.less";
+    .definitions;
+
+    /* Keep it for when we will have more than one color in Experimental theme
+    &.blue {
+        @import "src/www/themes/Experimental/css/utils/variables-blue.less";
+        .definitions;
+    }
+    */
+}
+
+.definitions() {
+    #tracker_report_table > thead > tr > th {
+        border-bottom: 2px solid @orange;
+    }
+}
