@@ -1,0 +1,48 @@
+{{> register-form-start }}
+
+    <div class="fields">
+        <input type="text" value="" placeholder="{{ new_password }} *" id="form_pw" name="form_pw" required />
+        <script type="text/javascript" src="/scripts/user.js"></script>
+        {{> register-choose-password }}
+    </div>
+
+    {{# prefill_values }}
+    <div class="fields">
+        <input type="text" name="form_realname" placeholder="{{ realname }} *" value="{{ form_realname }}" required="required" />
+
+        <div class="datetimepicker input-prepend">
+            <span class="add-on">
+                <i data-date-icon="icon-calendar"></i>
+            </span>
+            <input data-format="yyyy-MM-dd" type="text" id="form_expiry" placeholder="{{ expiry_date }}" />
+        </div>
+        <div id="form_expiry-tooltip" style="display: none">
+            {{{ expiry_date_directions }}}
+        </div>
+
+        {{# timezone_selector }}
+            {{> timezone }}
+        {{/ timezone_selector }}
+    </div>
+
+    <div class="fields">
+        <label class="checkbox">
+            <input type="checkbox" name="form_mail_site" value="1" {{# form_mail_site }}checked="checked"{{/ form_mail_site }} />
+            {{{ siteupdate }}}
+        </label>
+
+        <label class="checkbox">
+            <input type="checkbox" name="form_restricted" value="1" {{# form_restricted }}checked{{/ form_restricted }} />
+            {{ restricted_user }}
+        </label>
+
+        <label class="checkbox">
+            <input type="checkbox" name="form_send_email" value="1" {{# form_send_email }}checked{{/ form_send_email }}>
+            {{ send_email }}
+        </label>
+    </div>
+
+    {{> register-purpose-directions }}
+    {{/ prefill_values }}
+
+{{> register-form-end }}

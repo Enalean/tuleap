@@ -48,8 +48,7 @@ function register_valid($confirm_hash)	{
 	return 0;
     }
     $tz = $request->get('timezone');
-    if (!is_valid_timezone($tz) ||
-        $tz == 'None') {
+    if (!is_valid_timezone($tz)) {
 	$GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_notz'));
 	return 0;
     }
@@ -127,125 +126,48 @@ function display_account_form($register_error)	{
         print "<p><blink><b><span class=\"feedback\">$register_error</span></b></blink>";
     }
     $star = '<span class="highlight"><big>*</big></span>';
-    $form_loginname = $request->exist('form_loginname')?$purifier->purify($request->get('form_loginname')):'';
-    $form_realname  = $request->exist('form_realname')?$purifier->purify($request->get('form_realname')):'';
-    $form_email     = $request->exist('form_email')?$purifier->purify($request->get('form_email')):'';
+    $form_loginname  = $request->exist('form_loginname')?$purifier->purify($request->get('form_loginname')):'';
+    $form_realname   = $request->exist('form_realname')?$purifier->purify($request->get('form_realname')):'';
+    $form_email      = $request->exist('form_email')?$purifier->purify($request->get('form_email')):'';
     $form_expiry     = $request->exist('form_expiry')?$purifier->purify($request->get('form_expiry')):'';
+    $form_mail_site  = ! $request->exist('form_mail_site') || $request->get('form_mail_site') == 1;
+    $form_restricted = $GLOBALS['sys_allow_restricted_users'] == 1 && (! $request->exist('form_restricted') || $request->get('form_restricted') == 1);
+    $form_send_email = $request->get('form_send_email') == 1;
     if($request->exist('timezone') && is_valid_timezone($request->get('timezone'))) {
         $timezone = $request->get('timezone');
     } else {
-        $timezone = 'None';
+        $timezone = false;
     }
 
     $form_register_purpose = $request->exist('form_register_purpose')?$purifier->purify($request->get('form_register_purpose')):'';
 
-    ?>
-<?php if($page == "admin_creation"){ ?>
-    <form action="/admin/register_admin.php?page=admin_creation" name="new_user" method="post">
-<?php } else { ?>
-    <form action="/account/register.php" method="post">
-<?php }?>
-<p><?php print $Language->getText('account_register', 'login').'&nbsp;'.$star; ?>:<br>
-<input type="text" name="form_loginname" value="<?php echo $form_loginname; ?>" required="required">
-<?php print $Language->getText('account_register', 'login_directions'); ?>
-<?php user_display_choose_password($page); ?>
-<P><?php print $Language->getText('account_register', 'realname').'&nbsp;'.$star; ?>:<br>
-<INPUT size=40 type="text" name="form_realname" value="<?php echo $form_realname; ?>" required="required">
-<?php print $Language->getText('account_register', 'realname_directions'); ?>
-<P><?php print $Language->getText('account_register', 'email').'&nbsp;'.$star; ?>:<BR>
-<INPUT size=40 type="text" name="form_email" value="<?php echo $form_email; ?>" required="required"><BR>
-<?php print $Language->getText('account_register', 'email_directions'); ?>
-<?php if($page == "admin_creation"){ ?>
-    <P><?php print $Language->getText('account_register', 'expiry_date')?>:<BR>
-    <?php echo $GLOBALS['HTML']->getDatePicker("form_expiry", "form_expiry", $form_expiry); ?>
-    <BR>
-    <?php print $Language->getText('account_register', 'expiry_date_directions'); ?>
-<?php } ?>
-<P><?php print $Language->getText('account_register', 'tz').'&nbsp;'.$star; ?>:<BR>
-<?php
-    echo html_get_timezone_popup ('timezone',$timezone); ?>
-<p>
-<label class="checkbox">
-<?php
-if($request->isPost() && $request->exist('Register') && !($request->get('form_mail_site')==1)){
-
-	echo '<INPUT type="checkbox" name="form_mail_site" value="1" > ';
-
-}else{
-
-	echo '<INPUT type="checkbox" name="form_mail_site" value="1" checked> ';
-
-}
-print $Language->getText('account_register', 'siteupdate') .'</label>';
-
-echo '<label class="checkbox">';
-if($request->isPost() && $request->exist('Register') && ($request->get('form_mail_va')==1)){
-
-	echo '<INPUT type="checkbox" name="form_mail_va" value="1" checked> ';
-
-}else{
-
-	echo '<INPUT type="checkbox" name="form_mail_va" value="1" > ';
-
-}
-print $Language->getText('account_register', 'communitymail') . '</label>';
-
-?>
-
-<P>
-<?
-if ($GLOBALS['sys_user_approval'] == 1 || $page == "admin_creation") {
-    print $Language->getText('account_register', 'purpose');
-    if($page != "admin_creation") {
-        print '&nbsp;'.$star;
-        print ":<br>";
-        print $Language->getText('account_register', 'purpose_directions');
-    } else{
-        print ":<br>";
-        print $Language->getText('account_register', 'purpose_directions_admin');
-    }
-    echo '<textarea wrap="virtual" rows="5" cols="70" style="width:auto;" name="form_register_purpose">'.$form_register_purpose.'</textarea></p>';
-}
-?>
-
-<p>
-<?php print $Language->getText('account_register', 'mandatory', $star); ?>
-</p>
-<?php
-
-if ($page == "admin_creation" && $GLOBALS['sys_allow_restricted_users'] == 1) {
-
-    echo '<label class="checkbox">';
-    if($request->isPost() && $request->exist('Register') && !($request->get('form_restricted')==1)){
-        echo '<INPUT type="checkbox" name="form_restricted" value="1" > ';
+    if ($page == "admin_creation") {
+        $prefill = new Account_RegisterAdminPrefillValuesPresenter(
+            $form_loginname,
+            $form_email,
+            $form_realname,
+            $form_register_purpose,
+            $form_mail_site,
+            $timezone,
+            $form_restricted,
+            $form_send_email
+        );
+        $presenter = new Account_RegisterByAdminPresenter($prefill);
+        $template = 'register-admin';
     } else {
-        echo '<INPUT type="checkbox" name="form_restricted" value="1" checked> ';
+        $prefill = new Account_RegisterPrefillValuesPresenter(
+            $form_loginname,
+            $form_email,
+            $form_realname,
+            $form_register_purpose,
+            $form_mail_site,
+            $timezone
+        );
+        $presenter = new Account_RegisterByUserPresenter($prefill);
+        $template = 'register-user';
     }
-    print $Language->getText('account_register', 'restricted_user') . '</label>';
-}
-
-if ($page == "admin_creation") {
-    echo '<label class="checkbox">';
-    if ($request->isPost() && $request->exist('Register') && ($request->get('form_send_email')==1)){
-        echo '<INPUT type="checkbox" name="form_send_email" value="1" checked> ';
-    } else {
-        echo '<INPUT type="checkbox" name="form_send_email" value="1" > ';
-    }
-    print $Language->getText('account_register', 'send_email') . '</label>';
-}
-?>
-
-<P>
-<p><input type="submit" name="Register" class="btn btn-primary" value="<?php if($page != "admin_creation") print $Language->getText('account_register', 'btn_register');
-else print $Language->getText('account_register', 'btn_activate');?>">
-<?php
-if($page !== "admin_creation") {
-    include $Language->getContent('account/user_legal');
-}
-
-?>
-</form>
-<?
+    $renderer = TemplateRendererFactory::build()->getRenderer(Config::get('codendi_dir') .'/src/templates/account/');
+    $renderer->renderToPage($template, $presenter);
 }
 
 // ###### first check for valid login, if so, congratulate
@@ -342,25 +264,27 @@ if($page != 'admin_creation'){
     $em->processEvent('before_register', array());
 }
 
+$body_class = array('register-page');
+if($page == 'admin_creation'){
+    $body_class[] = 'admin_register';
+}
 
 //
 // not valid registration, or first time to page
 //
 $HTML->includeJavascriptFile('/scripts/check_pw.js.php');
-$HTML->header(array('title'=>$Language->getText('account_register', 'title') ));
+$HTML->header(array('title'=>$Language->getText('account_register', 'title'), 'body_class' => $body_class));
 ?>
 
+<div id="register-background">
 
-<h2><?php print $Language->getText('account_register', 'title').' ';
-if($page != 'admin_creation'){
-    print help_button('citizen.html#user-registration');
-}
-?></h2>
 <?php
-
 $reg_err = isset($GLOBALS['register_error'])?$GLOBALS['register_error']:'';
 display_account_form($reg_err);
+?>
 
+</div>
+
+<?php
 $HTML->footer(array());
-
 ?>

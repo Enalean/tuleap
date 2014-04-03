@@ -174,7 +174,6 @@ class cardwallPlugin extends Plugin {
             strpos($_SERVER['REQUEST_URI'], '/projects/') === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0 ) {
             echo '<link rel="stylesheet" type="text/css" href="'. $this->getThemePath() .'/css/style.css" />';
-            echo '<link rel="stylesheet" type="text/css" href="'. $this->getPluginPath() .'/themes/default/select2/select2.css" />';
         }
     }
 
@@ -187,7 +186,6 @@ class cardwallPlugin extends Plugin {
                 'cardwall.js',
                 'script.js',
                 'admin.js',
-                'select2.min.js',
                 'CardsEditInPlace.js',
                 'fullscreen.js',
             ));

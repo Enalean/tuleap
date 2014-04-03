@@ -38,22 +38,31 @@ class Experimental_BodyPresenter {
     /** @var string */
     private $notifications_placeholder;
 
+    /** @var array */
+    private $body_class;
+
     function __construct(
         $request,
         $title,
         $img_root,
         $selected_top_tab,
-        $notifications_placeholder
+        $notifications_placeholder,
+        $body_class
     ) {
         $this->request                   = $request;
         $this->title                     = $title;
         $this->img_root                  = $img_root;
         $this->selected_top_tab          = $selected_top_tab;
         $this->notifications_placeholder = $notifications_placeholder;
+        $this->body_class                = $body_class;
     }
 
     public function notificationsPlaceholder() {
         return $this->notifications_placeholder;
+    }
+
+    public function body_class() {
+        return $this->body_class;
     }
 
 }

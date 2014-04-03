@@ -86,6 +86,7 @@ class Experimental_Theme extends DivBasedTabbedLayout {
 
         echo '<link rel="stylesheet" type="text/css" href="/scripts/bootstrap/bootstrap-select/bootstrap-select.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/scripts/bootstrap/bootstrap-tour/bootstrap-tour.min.css" />';
+        echo '<link rel="stylesheet" type="text/css" href="/scripts/select2/select2.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/scripts/bootstrap/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/scripts/jscrollpane/jquery.jscrollpane.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/scripts/jscrollpane/jquery.jscrollpane-tuleap.css" />';
@@ -100,13 +101,15 @@ class Experimental_Theme extends DivBasedTabbedLayout {
 
     private function body($params) {
         $selected_top_tab = isset($params['selected_top_tab']) ? $params['selected_top_tab'] : false;
+        $body_class       = isset($params['body_class']) ? $params['body_class'] : array();
 
         $this->render('body', new Experimental_BodyPresenter(
             $_SERVER['REQUEST_URI'],
             $params['title'],
             $this->imgroot,
             $selected_top_tab,
-            $this->getNotificationPlaceholder()
+            $this->getNotificationPlaceholder(),
+            $body_class
         ));
 
         $current_user = UserManager::instance()->getCurrentUser();
