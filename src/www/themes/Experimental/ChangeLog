@@ -1,3 +1,6 @@
+Version 0.9.15 - Tuleap 6.13
+    * request #6609: Activate 'require all words' search option by default
+
 Version 0.9.14 - Tuleap 6.13
     * Developers: Foundation for Tuleap tours
 
