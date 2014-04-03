@@ -96,6 +96,8 @@ plugin_git	actions_delete_ok	Le dépôt a été supprimé
 plugin_git	actions_no_repository_forked	Aucun dépôt n'a été forké.
 plugin_git	gerrit_project_exists	Un projet Gerrit du même nom existe déjà sur ce serveur
 plugin_git	gerrit_server_down	Impossible de se connecter au serveur Gerrit
+plugin_git	project_deletion_not_possible	Impossible de supprimer le project $1 sur Gerrit. $2.
+plugin_git	project_deletion_open_elements	Il y'a des revues ouvertes concernant ce projet.
 
 plugin_git	view_repo_description	Description
 plugin_git	view_repo_creator	Crée par

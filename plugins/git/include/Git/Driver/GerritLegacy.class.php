@@ -446,7 +446,21 @@ class Git_Driver_GerritLegacy implements Git_Driver_Gerrit {
      */
     public function deleteProject(Git_RemoteServer_GerritServer $server, $gerrit_project_full_name) {
         $query = ' deleteproject delete ' . $gerrit_project_full_name . ' --yes-really-delete';
-        $this->ssh->execute($server, $query);
+        try {
+            $this->ssh->execute($server, $query);
+        } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $exception) {
+            $this->throwMeaningfullException($exception);
+        }
+    }
+
+    private function throwMeaningfullException(Git_Driver_Gerrit_RemoteSSHCommandFailure $exception) {
+        if ($this->isGerritFailure($exception)) {
+            throw new ProjectDeletionException(
+                $GLOBALS['Language']->getText('plugin_git', 'project_deletion_open_elements')
+            );
+        }
+
+        throw $exception;
     }
 
     /**
