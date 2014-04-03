@@ -195,6 +195,8 @@ include_menu	auth_last_failure	Dernière tentative de connexion:
 include_menu	auth_nb_failure	Nombre de tentatives:
 include_menu	help	Aide
 include_menu	soap_api	API SOAP
+include_menu	projects	Projets
+include_menu	browse_projects	Afficher l'ensemble des projets
 #
 #-----------------------------------------------
 # Script: SF/www/include/pre.php
