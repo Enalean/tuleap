@@ -270,5 +270,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         }
     }
 
+    public function getIcon() {
+        return 'icon-table';
+    }
 }
-?>

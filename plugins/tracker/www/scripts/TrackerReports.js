@@ -802,7 +802,7 @@ document.observe('dom:loaded', function () {
             });
         }*/
         
-        if ($('tracker_renderer_updater_move')) {
+        if ($('tracker_report_renderers')) {
             var renderers_sorting = false;
             Sortable.create('tracker_report_renderers', {
                 constraint: 'horizontal',
@@ -819,10 +819,6 @@ document.observe('dom:loaded', function () {
                     });
                 }
             });
-            $('tracker_renderer_updater_move').up('ul').appendChild(
-                new Element('li').update('<em>' + codendi.locales.tracker_renderer.order_dragdrop + '</em>')
-            );
-            $('tracker_renderer_updater_move').up('li').remove();
             $$('#tracker_report_renderers li a').each(function (a) {
                 a.observe('click', function (evt) {
                     if (renderers_sorting) {
@@ -831,44 +827,6 @@ document.observe('dom:loaded', function () {
                     }
                 });
             });
-                   
-            /*var tabs = $$('.tracker_report_renderer_tab');
-            if (tabs.length) {
-                var tabs_info = tabs.collect(
-                    function (el) {
-                        return el.id.gsub('tracker_report_renderer_', '');
-                    }
-                ).join(',');
-            }*/
-      
-       
-            /*
-            $('tracker_renderer_updater_move').form.observe('submit', function (evt) {
-                    var form = $('tracker_report_query_form');
-                    var move_radio =  $('tracker_renderer_updater_move');
-                    if (move_radio.checked) {
-                        evt.stop();
-                        var renderer_id = $$('.tracker_report_renderer')[0].id.gsub('tracker_report_renderer_', '');
-                        var current = $$('li.tracker_report_renderers-current')[0];
-                        var current_rank = current.down('[name=tracker_report_renderer_rank]').value;
-                        var current_select_value = $('tracker_renderer_updater_move').form.down('[name=move-renderer-direction]').value;
-                        var ul = current.up('ul');
-                        
-                        //move right
-                        var sibling = current.next();
-                        var pos  = 'after';
-                        if (current_rank > current_select_value) {
-                            //move left
-                            sibling = current.previous();
-                            pos  = 'before';
-                        }
-                        current.remove();
-                        var params = {};
-                        params[pos] = current;
-                        sibling.insert(params);
-                    }
-            });
-            */
         }
         
         $$('select[name^=tracker_aggregate_function_add]').each(function (selectbox) {
