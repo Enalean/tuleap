@@ -11,8 +11,9 @@ Version 6.12 (Not Released Yet)
 	* hudson: 1.14
 
 	== Bug fix ==
+	* request #6586: Do not display unknown user in TV3 assigned_to field
 	* request #6404: Do not display postponed error for phpwiki (contrib STMicroelectronics)
-	* request #6146 - Backend raise errors about cvs logs while cvs is not even installed
+	* request #6146: Backend raise errors about cvs logs while cvs is not even installed
 	* request #6423: [trackerV3] Bind a field to mutiple lists doesn't work
 	* Fix request #6146 - Backend raise errors about cvs logs
 	* Fix request #6539 - Missleading terminology for Project Members and Developers
