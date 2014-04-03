@@ -19,6 +19,20 @@
 
                 {{> navbar-project }}
 
+                {{# there_is_one_extra_tab }}
+                    {{# extra_tabs }}
+                    <li class="{{extra_tabs_active}}">
+                        <a href="{{ link }}">
+                            {{{ title }}}
+                        </a>
+                    </li>
+                    {{/ extra_tabs }}
+                {{/ there_is_one_extra_tab }}
+
+                {{# there_are_multiple_extra_tabs }}
+                    {{> navbar-extra-tabs }}
+                {{/ there_are_multiple_extra_tabs }}
+
                 {{# user_is_admin }}
                     <li class={{ nav_admin_class }}>
                         <a href="/admin/">

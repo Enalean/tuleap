@@ -47,7 +47,22 @@ class Experimental_NavBarPresenter {
     /** @var bool */
     public $has_motd;
 
-    public function __construct($imgroot, PFUser $user, $request_uri, $selected_top_tab, HTTPRequest $request, $title, $search_form_presenter, $project_list, $display_new_account, $motd) {
+    /** @var array */
+    private $extra_tabs;
+
+    public function __construct(
+        $imgroot,
+        PFUser $user,
+        $request_uri,
+        $selected_top_tab,
+        HTTPRequest $request,
+        $title,
+        $search_form_presenter,
+        $project_list,
+        $display_new_account,
+        $motd,
+        $extra_tabs
+    ) {
         $this->imgroot               = $imgroot;
         $this->user                  = $user;
         $this->request_uri           = $request_uri;
@@ -59,6 +74,7 @@ class Experimental_NavBarPresenter {
         $this->display_new_account   = $display_new_account;
         $this->motd                  = $motd;
         $this->has_motd              = ! empty($motd);
+        $this->extra_tabs            = $extra_tabs;
     }
 
     public function imgroot() {
@@ -149,8 +165,8 @@ class Experimental_NavBarPresenter {
         return $GLOBALS['Language']->getText('include_menu','filter_project');
     }
 
-    public function documentation() {
-        return $GLOBALS['Language']->getText('include_project_home','doc');
+    public function get_help() {
+        return $GLOBALS['Language']->getText('include_menu','get_help');
     }
 
     public function help() {
@@ -222,5 +238,33 @@ class Experimental_NavBarPresenter {
             }
         }
         return $class;
+    }
+
+    public function extra_tabs() {
+        return $this->extra_tabs;
+    }
+
+    public function there_is_one_extra_tab() {
+        return count($this->extra_tabs) === 1;
+    }
+
+    public function there_are_multiple_extra_tabs() {
+        return count($this->extra_tabs) > 1;
+    }
+
+    public function extra_tabs_active() {
+        $current_page = getStringFromServer('REQUEST_URI');
+
+        foreach ($this->extra_tabs as $tab) {
+            if (strstr($current_page, $tab['link'])) {
+                return 'active';
+            }
+        }
+
+        return '';
+    }
+
+    public function extras_text() {
+        return $GLOBALS['Language']->getText('include_menu','extras');
     }
 }

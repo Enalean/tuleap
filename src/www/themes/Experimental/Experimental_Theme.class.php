@@ -132,11 +132,29 @@ class Experimental_Theme extends DivBasedTabbedLayout {
                 $search_form_presenter,
                 $project_manager->getActiveProjectsForUser($current_user),
                 $this->displayNewAccount(),
-                $this->getMOTD()
+                $this->getMOTD(),
+                $this->getExtraTabs()
             )
         );
 
         $this->container($params, $project_manager, $current_user);
+    }
+
+    private function getExtraTabs() {
+        include $GLOBALS['Language']->getContent('layout/extra_tabs', null, null, '.php');
+
+        if ($GLOBALS['sys_use_snippet'] != 0) {
+            $selected = (boolean) strstr(getStringFromServer('REQUEST_URI'),'/snippet/');
+
+            array_unshift($additional_tabs, array(
+                'link'      => '/snippet/',
+                'title'     => $GLOBALS['Language']->getText('menu','code_snippet'),
+                'selected'  => $selected,
+                )
+            );
+	}
+
+        return $additional_tabs;
     }
 
     protected function getMOTD() {
