@@ -1,3 +1,6 @@
+Version 3.78 - Tuleap 6.12
+    * request #6599: Have more meaningfull gerrit error messages
+
 Version 3.77 - Tuleap 6.12
     * request #6592: Fix fatal error when deleting a Gerrit migration
 
