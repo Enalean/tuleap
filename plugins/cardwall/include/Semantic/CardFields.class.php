@@ -229,7 +229,9 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic {
 
         foreach ($rows as $row) {
             $field = $form_element_factory->getFieldById($row['field_id']);
-            $this->card_fields[$field->getId()] = $field;
+            if ($field) {
+                $this->card_fields[$field->getId()] = $field;
+            }
         }
     }
 
