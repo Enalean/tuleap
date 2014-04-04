@@ -283,6 +283,11 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
         $value = $value ? $value->getValue() : '';
+
+        if (! $value) {
+            return $this->getNoValueLabel();
+        }
+
         return $value;
     }
     

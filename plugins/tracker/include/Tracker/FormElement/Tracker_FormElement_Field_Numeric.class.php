@@ -280,8 +280,8 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
      * @return string
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
-        if ( empty($value) ) {
-            return '';
+        if ( empty($value) || ! $value->getValue()) {
+            return $this->getNoValueLabel();
         }
         $hp = Codendi_HTMLPurifier::instance();
         return $hp->purify( "{$value->getValue()}", CODENDI_PURIFIER_CONVERT_HTML);

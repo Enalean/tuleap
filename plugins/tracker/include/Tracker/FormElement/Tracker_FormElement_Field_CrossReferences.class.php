@@ -266,7 +266,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         if ($crossref_fact->getNbReferences()) {
             $html .= $crossref_fact->getHTMLDisplayCrossRefs();
         } else {
-            $html .= '<div>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'ref_list_empty') .'</div>';
+            $html .= '<div>'."<span class='empty_value'>".$GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'ref_list_empty')."</span>".'</div>';
         }
         return $html;
     }

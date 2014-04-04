@@ -614,8 +614,8 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
         $html  = '';
-        if ( empty($value) ) {
-            return '';
+        if ( empty($value) || ! $value->getTimestamp() ) {
+            return $this->getNoValueLabel();
         }
         $value = $value->getTimestamp();
         $value = $value ? $this->formatDate($value) : '';

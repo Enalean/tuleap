@@ -1139,6 +1139,7 @@ plugin_tracker_formelement_property	include_weekends	Inclure les week-ends
 plugin_tracker_formelement_exception	wrong_field_id	Aucun champ avec l'ID:$1
 plugin_tracker_formelement_exception	permission_denied	Permissions insuffisantes
 plugin_tracker_formelement_exception	field_must_be_static	Il n'est pas possible de partager d'autres champs que des boites de sélection statiques
+plugin_tracker_formelement_exception	no_value_for_field	Aucun(e)
 
 plugin_tracker_widget_my	no_artifacts	Aucun artefact trouvé.
 

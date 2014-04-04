@@ -1141,6 +1141,7 @@ plugin_tracker_formelement_property	include_weekends	Include week-ends
 plugin_tracker_formelement_exception	wrong_field_id	There is no field with ID:$1
 plugin_tracker_formelement_exception	permission_denied	Permission Denied
 plugin_tracker_formelement_exception	field_must_be_static	Can only share static selectbox fields
+plugin_tracker_formelement_exception	no_value_for_field	Empty
 
 plugin_tracker_widget_my	no_artifacts	No artifact found.
 
