@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,22 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-!function($) {
-    function headerResized() {
-        $('.main').removeClass('big-nav huge-nav');
-        $('.sidebar-nav').removeClass('big-nav huge-nav');
+require_once('pre.php');
 
-        if ($('.navbar').height() > 105) {
-            $('.main').addClass('huge-nav');
-            $('.sidebar-nav').addClass('huge-nav');
-        } else if ($('.navbar').height() > 53) {
-            $('.main').addClass('big-nav');
-            $('.sidebar-nav').addClass('big-nav');
-        }
-    }
-
-    $(window).resize(headerResized);
-
-    $(document).ready(headerResized);
-
-}(window.jQuery);
+$current_user->setPreference('sidebar_state', $request->get('sidebar_state'));

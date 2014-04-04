@@ -43,7 +43,11 @@ html, body {
 }
 
 body {
-    padding: 0;
+    padding: @navbar-height 0 0 0;
+
+    &.widgetable {
+        background: #FCFCFC;
+    }
 
     > .wrapper {
         min-height: 100%;
@@ -56,6 +60,9 @@ body {
 @import 'utils/content.less';
 @import 'utils/footer.less';
 @import 'utils/register.less';
+
+@import 'utils/widget.less';
+@import 'utils/avatar.less';
 
 /* {{{ BOOTSTRAP OVERRIDES */
 h2 {
@@ -113,6 +120,13 @@ legend {
 }
 .dropdown-menu {
     z-index: 3000;
+}
+.popover {
+    z-index: 4000;
+
+    .project-privacy {
+        font-size: 0.9em;
+    }
 }
 .modal {
     form {

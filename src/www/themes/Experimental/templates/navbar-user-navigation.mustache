@@ -2,7 +2,7 @@
     {{> navbar-search-form }}
 
     {{# user_is_logged_in }}
-        <li class="dropdown {{ nav_user_class }}">
+        <li class="dropdown user-menu {{ nav_user_class }}">
             <a href="#" class="dropdown-toggle username" data-toggle="dropdown">
                 {{# has_user_avatar }}
                     <img class="user-avatar" src="{{user_avatar}}" />

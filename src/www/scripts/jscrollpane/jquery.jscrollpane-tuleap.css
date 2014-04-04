@@ -33,5 +33,6 @@
 
 .jspDrag {
     background: #555;
+    opacity: 0.9;
     border-radius: 5px;
 }

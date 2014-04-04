@@ -3,6 +3,10 @@
 # Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 # This file is licensed under the GNU General Public License version 2. See the file COPYING.
 #
+widget	close_title	Supprimer
+widget	maximize_title	Maximiser
+widget	minimize_title	Minimiser
+widget	rss_title	RSS
 widget	preferences_title	Préférences
 
 widget_add	title	Ajouter des widgets
@@ -10,7 +14,7 @@ widget_add	codendi_widgets	Widgets $1
 widget_add	external_widgets	Widgets Externes
 widget_add	add	Ajouter
 widget_add	already_used	Déjà utilisé
-widget_add	link_add	Personnaliser
+widget_add	link_add	Personnaliser les widgets
 
 widget_rss	default_url	http://search.twitter.com/search.atom?q=TuleapEnalean&show_user=1
 widget_imageviewer	default_url	http://upload.wikimedia.org/wikipedia/commons/2/29/Tulipa_celsiana.jpg
@@ -28,14 +32,14 @@ widget_layout	title	Personnaliser la mise en page
 
 widget_dashboard	updated	Votre <a href="$1">tableau de bord</a> a été modifié.
 
-widget_description_my_bookmarks	description	Affiche la liste de vos favoris (sur Tuleap ou externes).<br>A noter que ces pointeurs vers vos favoris peuvent être très sophistiqués. Ils permettent par exemple de mémoriser une requête multi-critères effectuée sur un outil de suivi.<br>Les marques-pages peuvent étre édités, ce qui signifie que vous pouvez modifier à la fois le titre et l'url. 
+widget_description_my_bookmarks	description	Affiche la liste de vos favoris (sur Tuleap ou externes).<br>A noter que ces pointeurs vers vos favoris peuvent être très sophistiqués. Ils permettent par exemple de mémoriser une requête multi-critères effectuée sur un outil de suivi.<br>Les marques-pages peuvent étre édités, ce qui signifie que vous pouvez modifier à la fois le titre et l'url.
 widget_description_my_artifacts	description	Affiche la liste des artefacts par projet que vous avez soumis ou qui vous ont été assignés.
 widget_description_my_latest_svn_commits	description	Affiche la liste de vos derniers commits SVN par projet.
 widget_description_my_monitored_forums	description	Affiche la liste les forums que vous surveillez, par projet. Pour interrompre la surveillance, il vous suffit de cliquer sur la corbeille à côté de l'item concerné.
 widget_description_my_monitored_fp	description	Affiche la liste les fichiers que vous surveillez, par projet. Pour interrompre la surveillance, il vous suffit de cliquer sur la corbeille à côté de l'item concerné.
-widget_description_my_projects	description	Affiche la liste les projets auxquels vous appartenez. La sélection d'un de ces projets vous amène sur sa page sommaire. 
+widget_description_my_projects	description	Affiche la liste les projets auxquels vous appartenez. La sélection d'un de ces projets vous amène sur sa page sommaire.
 widget_description_rss	description	Permet d'inclure dans votre page personnelle des fils rss (ou atom) publiques.
-widget_description_my_surveys	description	Affiche la liste des sondages auxquels vous n'avez pas encore participé. 
+widget_description_my_surveys	description	Affiche la liste des sondages auxquels vous n'avez pas encore participé.
 widget_description_my_system_event	description	Affiche les événements système.
 widget_description_my_tasks	description	Affiche la liste des tâches qui vous ont été assignées.
 widget_description_twitter_follow	description	Permet d'inclure dans votre page personnelle les messages d'un utilisateur de Twitter.

@@ -42,7 +42,6 @@ class Experimental_Theme extends DivBasedTabbedLayout {
         $this->renderer = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
         $this->includeJavascriptFile('/themes/Experimental/js/navbar.js');
         $this->includeJavascriptFile('/themes/Experimental/js/sidebar.js');
-        $this->includeJavascriptFile('/themes/Experimental/js/resize-window.js');
         $this->includeJavascriptFile('/themes/Experimental/js/motd.js');
     }
 
@@ -100,8 +99,19 @@ class Experimental_Theme extends DivBasedTabbedLayout {
     }
 
     private function body($params) {
+        $current_user = UserManager::instance()->getCurrentUser();
+
         $selected_top_tab = isset($params['selected_top_tab']) ? $params['selected_top_tab'] : false;
         $body_class       = isset($params['body_class']) ? $params['body_class'] : array();
+        $has_sidebar      = isset($params['group']) ? 'has_sidebar' : '';
+        $sidebar_state    = 'sidebar-expanded';
+
+        if ($current_user->getPreference('sidebar_state')) {
+            $sidebar_state = $current_user->getPreference('sidebar_state');
+        }
+
+        $body_class[] = $has_sidebar;
+        $body_class[] = $sidebar_state;
 
         $this->render('body', new Experimental_BodyPresenter(
             $_SERVER['REQUEST_URI'],
@@ -111,8 +121,6 @@ class Experimental_Theme extends DivBasedTabbedLayout {
             $this->getNotificationPlaceholder(),
             $body_class
         ));
-
-        $current_user = UserManager::instance()->getCurrentUser();
 
         $this->navbar($params, $current_user, $selected_top_tab);
 
@@ -133,11 +141,29 @@ class Experimental_Theme extends DivBasedTabbedLayout {
                 $search_form_presenter,
                 $project_manager->getActiveProjectsForUser($current_user),
                 $this->displayNewAccount(),
-                $this->getMOTD()
+                $this->getMOTD(),
+                $this->getExtraTabs()
             )
         );
 
         $this->container($params, $project_manager, $current_user);
+    }
+
+    private function getExtraTabs() {
+        include $GLOBALS['Language']->getContent('layout/extra_tabs', null, null, '.php');
+
+        if ($GLOBALS['sys_use_snippet'] != 0) {
+            $selected = (boolean) strstr(getStringFromServer('REQUEST_URI'),'/snippet/');
+
+            array_unshift($additional_tabs, array(
+                'link'      => '/snippet/',
+                'title'     => $GLOBALS['Language']->getText('menu','code_snippet'),
+                'selected'  => $selected,
+                )
+            );
+	}
+
+        return $additional_tabs;
     }
 
     protected function getMOTD() {
@@ -157,20 +183,24 @@ class Experimental_Theme extends DivBasedTabbedLayout {
     }
 
     private function container(array $params, ProjectManager $project_manager, PFUser $current_user) {
-        $project_tabs      = null;
-        $project_name      = null;
-        $project_link      = null;
-        $project_is_public = null;
+        $project_tabs        = null;
+        $project_name        = null;
+        $project_link        = null;
+        $project_is_public   = null;
+        $project_privacy     = null;
+        $sidebar_collapsable = false;
 
         if (! empty($params['group'])) {
             $this->show_sidebar = true;
 
             $project = ProjectManager::instance()->getProject($params['group']);
 
-            $project_tabs      = $this->getProjectTabs($params, $project);
-            $project_name      = $project->getPublicName();
-            $project_link      = $this->getProjectLink($project);
-            $project_is_public = $project->isPublic();
+            $project_tabs        = $this->getProjectTabs($params, $project);
+            $project_name        = $project->getPublicName();
+            $project_link        = $this->getProjectLink($project);
+            $project_is_public   = $project->isPublic();
+            $project_privacy     = $this->getProjectPrivacy($project);
+            $sidebar_collapsable = (! $current_user->isAnonymous() && $current_user->isLoggedIn()) ? true : false;
         }
 
         $this->render('container', new Experimental_ContainerPresenter(
@@ -179,11 +209,30 @@ class Experimental_Theme extends DivBasedTabbedLayout {
             $project_name,
             $project_link,
             $project_is_public,
+            $project_privacy,
             $project_tabs,
             $this->_feedback,
             $this->_getFeedback(),
-            $this->getForgeVersion()
+            $this->getForgeVersion(),
+            $sidebar_collapsable
         ));
+    }
+
+    private function getProjectPrivacy(Project $project) {
+        if ($project->isPublic()) {
+            $privacy = 'public';
+
+            if ($GLOBALS['sys_allow_anon']) {
+                $privacy .= '_w_anon';
+            } else {
+                $privacy .= '_wo_anon';
+            }
+
+        } else {
+            $privacy = 'private';
+        }
+
+        return $privacy;
     }
 
     private function getForgeVersion() {

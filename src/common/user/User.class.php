@@ -1315,24 +1315,22 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
       *
       * @return string html
       */
-     public function fetchHtmlAvatar($width = 50) {
+     public function fetchHtmlAvatar() {
          $purifier    = Codendi_HTMLPurifier::instance();
          $user_helper = new UserHelper();
 
          $title    = $purifier->purify($user_helper->getDisplayNameFromUser($this));
-         $style    = 'width: '. ($width+2) .'px; height: '. ($width+2) .'px;';
          $user_id  = $this->getId();
 
          $html = '<div class="avatar"
                         title="'. $title . '"
-                        style="' . $style .'"
                         data-user-id = "' . $user_id . '"
                     >';
 
-         $url = $this->getAvatarUrl($width);
+         $url = $this->getAvatarUrl();
 
          if ($url) {
-             $html .= '<img src="'. $url .'" width="'. $width .'" />';
+             $html .= '<img src="'. $url .'" />';
          }
 
          $html .= '</div>';
@@ -1343,8 +1341,9 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
       * Return the user avatar url
       * @return string url
       */
-     public function getAvatarUrl($width = 50) {
+     public function getAvatarUrl() {
          $purifier = Codendi_HTMLPurifier::instance();
+         $width    = 50;
 
          if ($this->isAnonymous()) {
              return 'http://www.gravatar.com/avatar/'. md5($this->getEmail()) .'.jpg?s='. $width .'&amp;d=wavatar';

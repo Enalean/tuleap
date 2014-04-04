@@ -3,7 +3,7 @@
  * SourceForge: Breaking Down the Barriers to Open Source Development
  * Copyright 1999-2000 (c) The SourceForge Crew
  * http://sourceforge.net
- * 
+ *
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Codendi.
@@ -22,7 +22,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** 
+/**
  *
  * Extends the basic Response class to add HTML functions for displaying all site dependent HTML, while allowing extendibility/overriding by themes via the Theme class.
  *
@@ -31,7 +31,7 @@
  */
 class Layout extends Response {
 
-    
+
     /**
      * The root location for the current theme : '/themes/Tuleap/'
      */
@@ -70,16 +70,16 @@ class Layout extends Response {
      * Background for priorities
      */
     private $bgpri = array();
-    
+
     var $feeds;
     protected $javascriptFooter;
-    
+
     protected $breadcrumbs;
     protected $toolbar;
 
     /**
      * Set to true if HTML object is displayed through a Service
-     * 
+     *
      * @var Boolean
      */
     protected $renderedThroughService = false;
@@ -90,7 +90,7 @@ class Layout extends Response {
      * @var Array of path to CSS files
      */
     protected $stylesheets = array();
-    
+
     /**
      * Constuctor
      * @param string $root the root of the theme : '/themes/Tuleap/'
@@ -98,7 +98,7 @@ class Layout extends Response {
     public function __construct($root) {
         // Constructor for parent class...
         parent::Response();
-        
+
         $this->feeds       = array();
         $this->javascript  = array();
         $this->breadcrumbs = array();
@@ -117,12 +117,12 @@ class Layout extends Response {
         $this->bgpri[7] = 'priorg';
         $this->bgpri[8] = 'priorh';
         $this->bgpri[9] = 'priori';
-        
+
         $this->root     = $root;
         $this->imgroot  = $root . '/images/';
         $this->purifier = Codendi_HTMLPurifier::instance();
     }
-    
+
     function getChartColors() {
         return array(
             'lightsalmon',
@@ -173,43 +173,43 @@ class Layout extends Response {
             'purple4'
         );
     }
-    
+
     function getChartBackgroundColor() {
         return "white";
     }
-    
+
     function getChartMainColor() {
         return "#444444";
     }
-    
+
     public function getGanttLateBarColor() {
         return 'salmon';
     }
-    
+
     public function getGanttErrorBarColor() {
         return 'yellow';
     }
-    
+
     public function getGanttGreenBarColor() {
         return 'darkgreen';
     }
-    
+
     public function getGanttTodayLineColor() {
         return 'red';
     }
-    
+
     public function getGanttHeaderColor() {
         return 'gray9';
     }
-    
+
     public function getGanttBarColor() {
         return 'steelblue1';
     }
-    
+
     public function getGanttMilestoneColor() {
         return 'orange';
     }
-    
+
     public function getTextColors() {
         return array(
             'lightsalmon',
@@ -230,7 +230,7 @@ class Layout extends Response {
             'mistyrose3'
         );
     }
-    
+
     public function getColorCodeFromColorName($color_name, $type='chart') {
         if ($type == 'text') {
             $available_colors = $this->getTextColors();
@@ -239,8 +239,8 @@ class Layout extends Response {
         }
         if (in_array($color_name, $available_colors)) {
             $rgb_table = array(
-                "aqua"=> array(0,255,255),        
-                "lime"=> array(0,255,0),        
+                "aqua"=> array(0,255,255),
+                "lime"=> array(0,255,0),
                 "teal"=> array(0,128,128),
                 "whitesmoke"=>array(245,245,245),
                 "gainsboro"=>array(220,220,220),
@@ -629,7 +629,7 @@ class Layout extends Response {
                 "magenta2"=>array(238,0,238),
                 "magenta3"=>array(205,0,205),
                 "magenta4"=>array(139,0,139),
-                "mediumred"=>array(140,34,34),         
+                "mediumred"=>array(140,34,34),
                 "orchid1"=>array(255,131,250),
                 "orchid2"=>array(238,122,233),
                 "orchid3"=>array(205,105,201),
@@ -675,7 +675,7 @@ class Layout extends Response {
                 "silver"=>array(192, 192, 192),
                 "eggplant"=>array(144,176,168),
                 "lightgreen"=>array(144,238,144));
-            
+
             $rgb_arr = $rgb_table[$color_name];
             $r = dechex($rgb_arr[0]);
             if (strlen($r) < 2) {
@@ -728,7 +728,7 @@ class Layout extends Response {
         }
         exit();
     }
-    
+
     function iframe($url, $html_options = array()) {
         $html = '';
         $html .= '<div class="iframe_showonly"><a id="link_show_only" href="'. $url .'" title="'.$GLOBALS['Language']->getText('global', 'show_frame') .'">'.$GLOBALS['Language']->getText('global', 'show_frame').' '. $this->getImage('ic/plain-arrow-down.png') .'</a></div>';
@@ -739,7 +739,7 @@ class Layout extends Response {
         $html .= '<iframe '. $args .'></iframe>';
         echo $html;
     }
-    
+
     function selectRank($id, $rank, $items, $html_options) {
         $html = '';
         $html .= '<select ';
@@ -754,18 +754,18 @@ class Layout extends Response {
         $html .= '</select>';
         return $html;
     }
-    
+
     protected function selectRank_optgroup($id, $items, $prefix = '', $value_prefix = '') {
         $html = '';
         $optgroups = '';
         foreach($items as $i => $item) {
             // don't include the item itself
             if ($item['id'] != $id) {
-                
+
                 // need an optgroup ?
                 if (isset($item['subitems'])) {
                     $optgroups .= '<optgroup label="'. $prefix . $item['name'] .'">';
-                    
+
                     $selected = '';
                     if ( count($item['subitems']) ) {
                         // look if our item is the first subitem
@@ -782,11 +782,11 @@ class Layout extends Response {
                     $optgroups .= '</optgroup>';
                     $optgroups .= $g;
                 }
-                
+
                 // The rank is the next one.
                 // TODO: use the next rank instead?
                 $value = $item['rank']+1;
-                
+
                 // select the element if the item is just after id
                 $selected = '';
                 if (isset($items[$i + 1]) && $items[$i + 1]['id'] == $id) {
@@ -799,70 +799,70 @@ class Layout extends Response {
         }
         return array($html, $optgroups);
     }
-    
+
     /**
-     * Add a Javascript file path that will be included in the header of the HTML page. 
+     * Add a Javascript file path that will be included in the header of the HTML page.
      *
      * The file will be included in the generated page in <head> section
-     * Note: the order of call of include*Javascript method is very important. 
+     * Note: the order of call of include*Javascript method is very important.
      * The code will be included and executed in the same order the
      * includes are done. This allows (for instance) to define a var before
      * including a script (eg. Layout::includeCalendarScripts).
-     * 
+     *
      * @see   Layout::includeCalendarScripts
      * @param String $file Path (relative to URL root) the the javascript file
-     * 
+     *
      * @return void
      */
     function includeJavascriptFile($file) {
         $this->javascript[] = array('file' => $file);
         return $this;
     }
-    
+
     /**
-     * Add a Javascript piece of code to execute in the header of the page. 
+     * Add a Javascript piece of code to execute in the header of the page.
      *
      * Codendi will append and execute the code in <head> section.
      * Note: the order of call of include*Javascript method is very important.
      * see includeJavascriptFile for more details
-     * 
-     * @see Layout::includeJavascriptFile 
+     *
+     * @see Layout::includeJavascriptFile
      * @param String $snippet Javascript code.
-     * 
+     *
      * @return void
      */
     function includeJavascriptSnippet($snippet) {
         $this->javascript[] = array('snippet' => $snippet);
         return $this;
     }
-    
+
     /**
-     * Add a Javascript file path that will be included at the end of the HTML page. 
+     * Add a Javascript file path that will be included at the end of the HTML page.
      *
      * The file will be included in the generated page just before the </body>
-     * markup. 
+     * markup.
      * Note: the order of call of include*Javascript method is very important.
      * see includeJavascriptFile for more details
-     * 
+     *
      * @see Layout::includeJavascriptFile
      * @param String $file Path (relative to URL root) the the javascript file
-     * 
+     *
      * @return void
      */
     function includeFooterJavascriptFile($file) {
         $this->javascriptFooter[] = array('file' => $file);
     }
-    
+
     /**
      * Add a Javascript piece of code to execute in the footer of the page.
      *
      * Codendi will append and execute the code just before </body> markup.
      * Note: the order of call of include*Javascript method is very important.
      * see includeJavascriptFile for more details
-     * 
+     *
      * @see Layout::includeJavascriptFile
      * @param String $snippet Javascript code.
-     * 
+     *
      * @return void
      */
     function includeFooterJavascriptSnippet($snippet) {
@@ -927,7 +927,7 @@ class Layout extends Response {
     function addFeed($title, $href) {
         $this->feeds[] = array('title' => $title, 'href' => $href);
     }
-    
+
     function _getFeedback() {
         $feedback = '';
         if (trim($GLOBALS['feedback']) !== '') {
@@ -935,25 +935,32 @@ class Layout extends Response {
         }
         return $feedback;
     }
-    
+
     function widget(&$widget, $layout_id, $readonly, $column_id, $is_minimized, $display_preferences, $owner_id, $owner_type) {
         $element_id = 'widget_'. $widget->id .'-'. $widget->getInstanceId();
-        echo '<div class="widget" id="'. $element_id .'">';
+
+        if ($is_minimized) {
+            echo '<div class="widget minimized" id="'. $element_id .'">';
+        } else {
+            echo '<div class="widget" id="'. $element_id .'">';
+        }
+
         echo '<div class="widget_titlebar '. ($readonly?'':'widget_titlebar_handle') .'">';
         echo '<div class="widget_titlebar_title">'. $widget->getTitle() .'</div>';
+
         if (!$readonly) {
-            echo '<div class="widget_titlebar_close"><a href="/widgets/updatelayout.php?owner='. $owner_type.$owner_id .'&amp;action=widget&amp;name['. $widget->id .'][remove]='. $widget->getInstanceId() .'&amp;column_id='. $column_id .'&amp;layout_id='. $layout_id .'">'. $this->getImage('ic/close.png', array('alt' => 'Close','title' =>'Close')) .'</a></div>';
+            echo '<div class="widget_titlebar_close"><a href="/widgets/updatelayout.php?owner='. $owner_type.$owner_id .'&amp;action=widget&amp;name['. $widget->id .'][remove]='. $widget->getInstanceId() .'&amp;column_id='. $column_id .'&amp;layout_id='. $layout_id .'" class="icon-remove" title="'. $GLOBALS['Language']->getText('widget', 'close_title') .'"></a></div>';
             if ($is_minimized) {
-                echo '<div class="widget_titlebar_maximize"><a href="/widgets/updatelayout.php?owner='. $owner_type.$owner_id .'&amp;action=maximize&amp;name['. $widget->id .']='. $widget->getInstanceId() .'&amp;column_id='. $column_id .'&amp;layout_id='. $layout_id .'">'. $this->getImage($this->_getTogglePlusForWidgets(), array('alt' => 'Maximize', 'title' =>'Maximize')) .'</a></div>';
+                echo '<div class="widget_titlebar_maximize"><a href="/widgets/updatelayout.php?owner='. $owner_type.$owner_id .'&amp;action=maximize&amp;name['. $widget->id .']='. $widget->getInstanceId() .'&amp;column_id='. $column_id .'&amp;layout_id='. $layout_id .'" class="icon-caret-up" title="'. $GLOBALS['Language']->getText('widget', 'maximize_title') .'"></a></div>';
             } else {
-                echo '<div class="widget_titlebar_minimize"><a href="/widgets/updatelayout.php?owner='. $owner_type.$owner_id .'&amp;action=minimize&amp;name['. $widget->id .']='. $widget->getInstanceId() .'&amp;column_id='. $column_id .'&amp;layout_id='. $layout_id .'">'. $this->getImage($this->_getToggleMinusForWidgets(), array('alt' => 'Minimize', 'title' =>'Minimize')) .'</a></div>';
+                echo '<div class="widget_titlebar_minimize"><a href="/widgets/updatelayout.php?owner='. $owner_type.$owner_id .'&amp;action=minimize&amp;name['. $widget->id .']='. $widget->getInstanceId() .'&amp;column_id='. $column_id .'&amp;layout_id='. $layout_id .'" class="icon-caret-down" title="'. $GLOBALS['Language']->getText('widget', 'minimize_title') .'"></a></div>';
             }
             if (strlen($widget->getPreferences($owner_id))) {
-                echo '<div class="widget_titlebar_prefs"><a href="/widgets/updatelayout.php?owner='. $owner_type.$owner_id .'&amp;action=preferences&amp;name['. $widget->id .']='. $widget->getInstanceId() .'&amp;layout_id='. $layout_id .'">'. $GLOBALS['Language']->getText('widget', 'preferences_title') .'</a></div>';
+                echo '<div class="widget_titlebar_prefs"><a href="/widgets/updatelayout.php?owner='. $owner_type.$owner_id .'&amp;action=preferences&amp;name['. $widget->id .']='. $widget->getInstanceId() .'&amp;layout_id='. $layout_id .'" title="'. $GLOBALS['Language']->getText('widget', 'preferences_title') .'" class="icon-cog"></a></div>';
             }
         }
         if ($widget->hasRss()) {
-            echo '<div class="widget_titlebar_rss"><a href="'.$widget->getRssUrl($owner_id, $owner_type).'">'.$this->getImage('ic/feed.png').'</a></div>';
+            echo '<div class="widget_titlebar_rss" title="'. $GLOBALS['Language']->getText('widget', 'rss_title') .'"><a href="'.$widget->getRssUrl($owner_id, $owner_type).'" class="icon-rss"></a></div>';
         }
         echo '</div>';
         $style = '';
@@ -976,7 +983,7 @@ class Layout extends Response {
             echo '<script type="text/javascript">'."
             document.observe('dom:loaded', function () {
                 $('$element_id-ajax').update('<div style=\"text-align:center\">". $this->getImage('ic/spinner.gif') ."</div>');
-                new Ajax.Updater('$element_id-ajax', 
+                new Ajax.Updater('$element_id-ajax',
                                  '". $widget->getAjaxUrl($owner_id, $owner_type) ."',
                                  {
                                      onComplete: function() {
@@ -1007,7 +1014,7 @@ class Layout extends Response {
 
     /**
      * Box Top, equivalent to html_box1_top()
-     * 
+     *
      * @see Widget_Static
      * @deprecated You should consider using Widget_Static instead
      */
@@ -1027,7 +1034,7 @@ class Layout extends Response {
 
     /**
      * Box Middle, equivalent to html_box1_middle()
-     * 
+     *
      * @see Widget_Static
      * @deprecated You should consider using Widget_Static instead
      */
@@ -1035,7 +1042,7 @@ class Layout extends Response {
             return '
                                 </TD>
                         </TR>
-    
+
                         <TR class="boxtitle">
                                 <TD colspan="'.$cols.'"><SPAN class=titlebar>'.$title.'</SPAN></TD>
                         </TR>
@@ -1045,7 +1052,7 @@ class Layout extends Response {
 
     /**
      * Box Bottom, equivalent to html_box1_bottom()
-     * 
+     *
      * @see Widget_Static
      * @deprecated You should consider using Widget_Static instead
      */
@@ -1089,7 +1096,7 @@ class Layout extends Response {
                         ["#FF1A00", "#CC0000", "#FF7400", "#008C00", "#006E2E", "#4096EE", "#FF0084"],
                         ["#B02B2C", "#D15600", "#73880A", "#6BBA70", "#3F4C6B", "#356AA0", "#D01F3C"],
                         ["#FEF5A8", "#C5F19A", "#FFD8A0", "#F5DDB7", "#B9D0E8", "#D6BFD4", "#F79494"]]',
-                        
+
         'vivid'    => '[["#ffffff", "#0000ff", "#004dff", "#0077ff", "#00a0ff", "#00c4ff", "#00e3ff", "#4dfeff", "#00ffdf", "#00ffb2", "#00ff8c", "#00ff79", "#00ff31", "#00ff00", "#17ff00", "#70ff00", "#a0ff00", "#c8ff00", "#ebff00", "#ffff00", "#ffdc00", "#ffb000", "#ff8400", "#ff5d00", "#ff3600", "#ff0000", "#ff0034", "#ff006b", "#ff0091", "#ff00aa", "#ff00d0", "#ff00ff", "#cc19ff", "#9500f9", "#7a00ff", "#6100ff", "#4700ff", "#0000ff"],
                         ["#e2e2e2", "#0000ec", "#0049f3", "#0070f3", "#0091e9", "#00b8f3", "#00d0ef", "#00f2f6", "#00efd4", "#00eda8", "#00e680", "#00ee73", "#00ee2d", "#00ff00", "#16ee00", "#68eb00", "#94e900", "#b8eb00", "#dced00", "#ffeb01", "#f6c800", "#f09e00", "#ec7700", "#ed5300", "#ed2e00", "#df1b00", "#ef072b", "#e90068", "#e60084", "#df1d96", "#ec00d9", "#e020e4", "#bb16ec", "#8a00e6", "#7000ea", "#6100ff", "#4700ff", "#0000ff"],
                         ["#c6c6c6", "#0000d7", "#0041dd", "#0062d8", "#0081d3", "#009fdb", "#00b4da", "#00cbdc", "#00cdbe", "#00d69a", "#00cc74", "#00d86a", "#00da29", "#00d300", "#15da00", "#5ed200", "#89d500", "#aedc00", "#cee000", "#ffd202", "#edb100", "#e08900", "#d36700", "#d74601", "#d32201", "#d50000", "#d81633", "#c70063", "#cf0077", "#d4008d", "#ce00ae", "#d100d1", "#a913d6", "#7e00d1", "#6300cd", "#5414d9", "#4700ff", "#0000d7"],
@@ -1100,7 +1107,7 @@ class Layout extends Response {
                         ["#383838", "#00007d", "#001263", "#0f225c", "#00266f", "#002c6b", "#003474", "#003879", "#004b6b", "#005750", "#006642", "#00613e", "#005d0e", "#006800", "#116000", "#306000", "#456a00", "#495900", "#4d4a00", "#663800", "#6e3100", "#652300", "#652100", "#6f1900", "#6e0901", "#700101", "#63141b", "#611032", "#730041", "#670043", "#5d005e", "#600060", "#42045b", "#350054", "#350071", "#280663", "#240563", "#00007d"],
                         ["#1c1c1c", "#0a045b", "#00094c", "#0a194c", "#0a1950", "#0a1950", "#001c61", "#102863", "#002d51", "#003c40", "#004836", "#004c36", "#004d0a", "#004a00", "#0f4c00", "#294c00", "#354d00", "#374200", "#393200", "#482100", "#491300", "#4d1300", "#480f00", "#4d0e00", "#4d0500", "#4e0101", "#4a0a0f", "#4a0222", "#53002e", "#570038", "#4d0045", "#480048", "#34024a", "#31004c", "#2d0556", "#240347", "#1f0346", "#150351"],
                         ["#000000", "#000042", "#000540", "#00103a", "#060d41", "#000544", "#00054f", "#001355", "#00224a", "#00313a", "#00372e", "#003a30", "#003806", "#003200", "#0f3700", "#213700", "#233100", "#2b2d04", "#302302", "#350f00", "#350300", "#350300", "#350300", "#350300", "#350300", "#350300", "#360308", "#370118", "#37001e", "#370024", "#370032", "#370037", "#320040", "#260039", "#200035", "#210233", "#170039", "#000042"]]',
-                        
+
         //See http://www.visibone.com. Copyright (c) 2011 VisiBone
         'visibone-light' => '[["#FFFFFF", "#CCCCCC", "#999999", "#666666", "#333333", "#000000", "#FFCC00", "#FF9900", "#FF6600", "#FF3300", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF"],
                         ["#99CC00", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#CC9900", "#FFCC33", "#FFCC66", "#FF9966", "#FF6633", "#CC3300", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#CC0033"],
@@ -1118,7 +1125,7 @@ class Layout extends Response {
                         ["#00FFCC", "#33FFCC", "#00FFFF", "#00CCCC", "#009999", "#006666", "#003333", "#3399CC", "#3366CC", "#0000FF", "#0000CC", "#000099", "#000066", "#000033", "#6633FF", "#3300FF"],
                         ["#00CC99", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#0099CC", "#33CCFF", "#66CCFF", "#6699FF", "#3366FF", "#0033CC", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#3300CC"],
                         ["#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#00CCFF", "#0099FF", "#0066FF", "#0033FF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF"]]',
-                        
+
         'visibone-dark' => '[["#FFFFFF", "#CCCCCC", "#999999", "#666666", "#333333", "#000000", "#FFCC00", "#FF9900", "#FF6600", "#FF3300", "#000000", "#000000", "#000000", "#000000", "#000000", "#000000"],
                         ["#99CC00", "#000000", "#000000", "#000000", "#000000", "#CC9900", "#FFCC33", "#FFCC66", "#FF9966", "#FF6633", "#CC3300", "#000000", "#000000", "#000000", "#000000", "#CC0033"],
                         ["#CCFF00", "#CCFF33", "#333300", "#666600", "#999900", "#CCCC00", "#FFFF00", "#CC9933", "#CC6633", "#330000", "#660000", "#990000", "#CC0000", "#FF0000", "#FF3366", "#FF0033"],
@@ -1137,7 +1144,7 @@ class Layout extends Response {
                         ["#000000", "#000000", "#000000", "#000000", "#000000", "#000000", "#00CCFF", "#0099FF", "#0066FF", "#0033FF", "#000000", "#000000", "#000000", "#000000", "#000000", "#000000"]]',
 
     );
-    
+
     /**
      * Customize the palette used for the colorpicker.
      *
@@ -1148,13 +1155,13 @@ class Layout extends Response {
     protected function changeColorpickerPalette() {
         return 'codendi.colorpicker_theme = '. $this->colorpicker_palettes['visibone-dark'] .';';
     }
-    
+
     /**
      * Display the Javascript code to be included in <head>
      *
      * Snippet and files are included one after another in the order of call
      * of includeJavascriptFile & includeJavascriptSnippet methods.
-     * 
+     *
      * @see includeJavascriptFile
      * @see includeJavascriptSnippet
      */
@@ -1209,12 +1216,12 @@ class Layout extends Response {
         echo '
         </script>';
     }
-    
+
     /**
      * Display the Javascript code to be included at the end of the page.
      * Snippet and files are included one after another in the order of call
      * of includeFooterJavascriptFile & includeFooterJavascriptSnippet methods.
-     * 
+     *
      * @see includeFooterJavascriptFile
      * @see includeFooterJavascriptSnippet
      */
@@ -1261,7 +1268,7 @@ class Layout extends Response {
     public function getAllStyleSheets() {
         return $this->stylesheets;
     }
-    
+
     function getStylesheetTheme($css) {
         if ($GLOBALS['sys_is_theme_custom']) {
             $path = '/custom/'.$GLOBALS['sys_user_theme'].'/css/'.$css;
@@ -1270,13 +1277,13 @@ class Layout extends Response {
         }
         return $path;
     }
-    
+
     /**
      * Display all the stylesheets for the current page
      */
     public function displayStylesheetElements($params) {
         $this->displayCommonStylesheetElements($params);
-        
+
         // Stylesheet external files
         if(isset($params['stylesheet']) && is_array($params['stylesheet'])) {
             foreach($params['stylesheet'] as $css) {
@@ -1292,7 +1299,7 @@ class Layout extends Response {
         // Plugins css
         $em = $this->getEventManager();
         $em->processEvent("cssfile", null);
-        
+
         // Inline stylesheets
         echo '
         <style type="text/css">
@@ -1301,7 +1308,7 @@ class Layout extends Response {
         echo '
         </style>';
     }
-    
+
     protected function displayCommonStylesheetElements($params) {
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/bootstrap-2.3.2.min.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/bootstrap-responsive-2.3.2.min.css" />';
@@ -1333,7 +1340,7 @@ class Layout extends Response {
      */
     public function displaySyndicationElements() {
         $hp =& Codendi_HTMLPurifier::instance();
-        
+
         //Basic feeds
         echo $this->getRssFeed(
             $hp->purify($GLOBALS['sys_name']. ' - ' .$GLOBALS['Language']->getText('include_layout','latest_news_rss'), CODENDI_PURIFIER_CONVERT_HTML),
@@ -1347,7 +1354,7 @@ class Layout extends Response {
             $hp->purify($GLOBALS['sys_name']. ' - ' .$GLOBALS['Language']->getText('include_layout','newest_projects_rss'), CODENDI_PURIFIER_CONVERT_HTML),
             '/export/rss_sfprojects.php?type=rss&option=newest'
         );
-        
+
         // If in a project page, add a project news feed
         if (isset($GLOBALS['group_id']) && $GLOBALS['group_id']) {
             $pm = ProjectManager::instance();
@@ -1357,7 +1364,7 @@ class Layout extends Response {
                 '/export/rss_sfnews.php?group_id='.$GLOBALS['group_id']
             );
         }
-        
+
         //Add additionnal feeds
         foreach($this->feeds as $feed) {
             echo $this->getRssFeed(
@@ -1366,7 +1373,7 @@ class Layout extends Response {
             );
         }
     }
-    
+
     /**
      * @param string $title the title of the feed
      * @param string $href the href of the feed
@@ -1375,9 +1382,9 @@ class Layout extends Response {
     function getRssFeed($title, $href) {
         return '<link rel="alternate" title="'. $title .'" href="'. $href .'" type="application/rss+xml" />';
     }
-    
+
     /**
-     * Helper for the calendar picker. It returns the html snippet which will 
+     * Helper for the calendar picker. It returns the html snippet which will
      * enable user to specify a date with the help of little dhtml
      *
      * @param string $id the id of the input element
@@ -1388,15 +1395,15 @@ class Layout extends Response {
      */
     function getDatePicker($id, $name, $value, $size = 10, $maxlength = 10) {
         $hp = Codendi_HTMLPurifier::instance();
-        return '<span style="white-space:nowrap;"><input type="text" 
-                       class="highlight-days-67 format-y-m-d divider-dash no-transparency" 
-                       id="'.  $hp->purify($id, CODENDI_PURIFIER_CONVERT_HTML)  .'" 
-                       name="'. $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) .'" 
-                       size="'. $hp->purify($size, CODENDI_PURIFIER_CONVERT_HTML) .'" 
-                       maxlength="'. $hp->purify($maxlength, CODENDI_PURIFIER_CONVERT_HTML) .'" 
+        return '<span style="white-space:nowrap;"><input type="text"
+                       class="highlight-days-67 format-y-m-d divider-dash no-transparency"
+                       id="'.  $hp->purify($id, CODENDI_PURIFIER_CONVERT_HTML)  .'"
+                       name="'. $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) .'"
+                       size="'. $hp->purify($size, CODENDI_PURIFIER_CONVERT_HTML) .'"
+                       maxlength="'. $hp->purify($maxlength, CODENDI_PURIFIER_CONVERT_HTML) .'"
                        value="'. $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) .'"></span>';
     }
-    
+
     function warning_for_services_which_configuration_is_not_inherited($group_id, $service_top_tab) {
         $pm = ProjectManager::instance();
         $project=$pm->getProject($group_id);
@@ -1425,11 +1432,11 @@ class Layout extends Response {
 
         // Codendi version number
         $version = trim(file_get_contents($GLOBALS['codendi_dir'].'/VERSION'));
-        
+
         echo '<footer class="footer">';
         include($Language->getContent('layout/footer'));
         echo '</footer>';
-        
+
         if ( Config::get('DEBUG_MODE') && (Config::get('DEBUG_DISPLAY_FOR_ALL') || user_ismember(1, 'A')) ) {
             $this->showDebugInfo();
         }
@@ -1438,10 +1445,10 @@ class Layout extends Response {
         echo '</body>';
         echo '</html>';
     }
-    
+
     /**
      * Display debug info gathered along the execution
-     * 
+     *
      * @return void
      */
     public static function showDebugInfo() {
@@ -1617,7 +1624,7 @@ class Layout extends Response {
             echo '</div>';
         echo '</div>';
     }
-    
+
     private static function sort_queries_by_time_taken($a, $b) {
         return strnatcasecmp($b['total time'], $a['total time']);
     }
@@ -1678,7 +1685,7 @@ class Layout extends Response {
     }
 
     function pv_header($params) {
-        $this->generic_header($params); 
+        $this->generic_header($params);
         echo '
 <body class="bg_help">
 ';
@@ -1689,7 +1696,7 @@ class Layout extends Response {
             }
         }
     }
-    
+
     function pv_footer($params) {
         echo $this->displayFooterJavascriptElements();
         echo "\n</body></html>";
@@ -1729,7 +1736,6 @@ class Layout extends Response {
 
     function header($params) {
         global $Language;
-        
         $this->generic_header($params);
 
         //themable someday?
@@ -1799,21 +1805,21 @@ class Layout extends Response {
         </TD>
 
         <td width="15" background="<? echo util_get_image_theme("fade.png"); ?>" nowrap>&nbsp;</td>
-    
+
         <td class="contenttable <?=$main_body_class?>">
         <BR>
 <?php
         if (isset($params['group']) && $params['group']) {
             echo $this->project_tabs($params['toptab'],$params['group']);
-        } else if (strstr(getStringFromServer('REQUEST_URI'),'/my/') ||  
+        } else if (strstr(getStringFromServer('REQUEST_URI'),'/my/') ||
                    strstr(getStringFromServer('REQUEST_URI'),'/account/')) {
             $tabs = array(
                 array(
-                    'link'  => '/my/', 
+                    'link'  => '/my/',
                     'label' => $Language->getText('my_index','my_dashboard')
                 ),
                 array(
-                    'link'  => '/account/', 
+                    'link'  => '/account/',
                     'label' => $Language->getText('my_index','account_maintenance'),
                 ),
                 array(
@@ -1874,7 +1880,7 @@ class Layout extends Response {
 </table>
 </div>
 <!-- themed page footer -->
-<?php 
+<?php
     $this->generic_footer($params);
     }
 
@@ -1945,9 +1951,9 @@ class Layout extends Response {
             @result text - echos HTML to the screen directly
     */
     function project_tabs($toptab,$group_id) {
-        
+
       global $sys_default_domain,$Language;
-            
+
             // get group info using the common result set
             $pm = ProjectManager::instance();
             $project=$pm->getProject($group_id);
@@ -1957,7 +1963,7 @@ class Layout extends Response {
             }
 
             print '<H2>'. $project->getPublicName() .' - ';
-            
+
             if (isset($project->service_data_array[$toptab])) {
                 echo $project->service_data_array[$toptab]['label'];
             }
@@ -1996,7 +2002,7 @@ class Layout extends Response {
                     }
                 }
             }
-            
+
             if (!$service_data['is_used']) continue;
             if (!$service_data['is_active']) continue;
             // Get URL, and eval variables
@@ -2015,7 +2021,7 @@ class Layout extends Response {
                 }
                 $link=str_replace('$sys_default_domain',$GLOBALS['sys_default_domain'],$link);
                 if ($GLOBALS['sys_force_ssl']) {
-                    $sys_default_protocol='https'; 
+                    $sys_default_protocol='https';
                 } else { $sys_default_protocol='http'; }
                 $link=str_replace('$sys_default_protocol',$sys_default_protocol,$link);
                 $link=str_replace('$group_id',$group_id,$link);
@@ -2212,12 +2218,12 @@ class Layout extends Response {
     function searchBox() {
         echo "\t<CENTER>\n".$this->getSearchBox()."\t</CENTER>\n";
     }
-    
+
     //diplaying search box in body
     function bodySearchBox() {
         $this->searchBox();
     }
-    
+
 
     /**
      * @return string the message of the day
@@ -2261,7 +2267,7 @@ class Layout extends Response {
         ';
         return $output;
     }
-    
+
     function _getOsdnRandpick($sitear, $num_sites = 1) {
         $output = '';
         shuffle($sitear);
@@ -2275,7 +2281,7 @@ class Layout extends Response {
         $output .= '&nbsp;&middot;&nbsp;';
         return $output;
     }
-    
+
     function getOsdnNavDropdown() {
         $output = '
         <!-- OSDN navdropdown -->
@@ -2304,14 +2310,14 @@ class Layout extends Response {
             $output .= '</div></form>';
         }
         $output .= '<!-- end OSDN navdropdown -->';
-        
+
         return $output;
     }
-    
+
     public function getImagePath($src) {
         return $this->imgroot . $src;
     }
-    
+
     /**
      * Build an img tag
      *
@@ -2322,7 +2328,7 @@ class Layout extends Response {
     function getImage($src, $args = array()) {
         return $this->getAbsoluteImage($this->getImagePath($src), $args);
     }
-    
+
     /**
      * Same as getImage but with absolute path to the image.
      * Usefull for plugin related image for example
@@ -2334,17 +2340,17 @@ class Layout extends Response {
         foreach($args as $k => $v) {
             $return .= ' '.$k.'="'.$v.'"';
         }
-        
+
         // insert a border tag if there isn't one
         if (!isset($args['border']) || !$args['border']) $return .= ' border="0"';
-        
+
         // insert alt tag if there isn't one
         if (!isset($args['alt']) || !$args['alt']) $return .= ' alt="'. $src .'"';
-        
+
         $return .= ' />';
         return $return;
     }
-    
+
     /**
      * Return the background color (classname) for priority
      *
@@ -2361,7 +2367,7 @@ class Layout extends Response {
 
     /**
      * Set to true if HTML object is displayed through a Service
-     * 
+     *
      * @see Service
      *
      * @param Boolean $value

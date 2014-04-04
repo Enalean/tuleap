@@ -23,54 +23,68 @@
     var api;
     var throttleTimeout;
 
+    function handleProjectTooltip() {
+        $('.project-title-container').popover({
+            html: true,
+            placement: 'right',
+            container: 'body',
+            trigger: 'hover',
+            delay: {show: 1000, hide: 300}
+        });
+    }
+
     function getSidebarUserPreference() {
-        return localStorage.getItem('sidebar-size');
+        if ($('body').hasClass('sidebar-collapsed')) {
+            return width_collapsed;
+        }
+
+        return width_expanded;
     }
 
     function setSidebarUserPreference(new_width) {
-        localStorage.setItem('sidebar-size', new_width);
+        var state = (new_width == width_expanded) ? 'sidebar-expanded' : 'sidebar-collapsed';
+
+        $.ajax({
+            type: 'POST',
+            url: '/account/update-sidebar-preference.php',
+            data: { sidebar_state: state }
+        });
+
+        $('body').removeClass('sidebar-expanded sidebar-collapsed').addClass(state);
     }
 
     function updateSidebarWidth(new_width, duration) {
         $('.sidebar-nav').animate({
             width: new_width
-        }, duration);
+        }, duration, updateNavbar(new_width));
         $('.sidebar-nav li a').css({
-            width: parseInt(new_width) - (parseInt($('.sidebar-nav li a').css('paddingLeft')) * 2) + 'px'
+            width: new_width
         });
         $('.main').animate({
             marginLeft: new_width
         }, duration);
     }
 
+    function updateNavbar(new_width) {
+        if (new_width == width_expanded) {
+            $('.navbar .nav:first-child li.current-project').remove();
+        } else {
+            $('.navbar .nav:first-child').prepend('<li class="current-project">' + $('.project-title-container').html() + '</li>');
+        }
+    }
+
     function updateSidebarIcon(direction, show_only_icon) {
         $('.sidebar-collapse').removeClass('icon-chevron-left icon-chevron-right').addClass('icon-chevron-' + direction);
-
-        if (show_only_icon) {
-            $('.sidebar-collapse').css({
-                width: width_collapsed
-            })
-        } else {
-            $('.sidebar-collapse').css({
-                width: width_expanded
-            })
-        }
     }
 
     function updateSidebarTitle(show_only_icon) {
         if (show_only_icon) {
-            $('.project-title').css({
-                display: 'none'
-            });
-            $('.nav-list').css({
-                marginTop: '74px'
+            $('.project-title-container').css({
+                visibility: 'hidden'
             });
         } else {
-            $('.project-title').css({
-                display: 'block'
-            });
-            $('.nav-list').css({
-                marginTop: 'auto'
+            $('.project-title-container').css({
+                visibility: 'visible'
             });
         }
     }
@@ -89,14 +103,16 @@
 
     function sidebarCollapseEvent(duration) {
         var current_size   = getSidebarUserPreference();
-        var new_size       = width_expanded;
         var new_direction  = 'left';
         var show_only_icon = false;
+        var new_size;
 
         if (current_size == width_expanded) {
-            new_size       = width_collapsed
+            new_size       = width_collapsed;
             new_direction  = 'right';
             show_only_icon = true;
+        } else {
+            new_size = width_expanded;
         }
 
         setSidebarUserPreference(new_size);
@@ -109,17 +125,16 @@
     }
 
     function updateCustomScrollbar() {
-        var current_size = getSidebarUserPreference();
-
-        if (current_size == width_expanded) {
-            api.reinitialise();
-            throttleTimeout = null;
-        }
+        api.destroy();
+        throttleTimeout = null;
+        initCustomScrollbar();
     }
 
     function initCustomScrollbar() {
         $('.sidebar-nav').jScrollPane({
-            verticalGutter: 0
+            verticalGutter: 0,
+            hideFocus: true,
+            contentWidth: getSidebarUserPreference()
         });
         api = $('.sidebar-nav').data('jsp');
 
@@ -133,24 +148,22 @@
     $(document).ready(function() {
         var current_size = getSidebarUserPreference();
 
-        initCustomScrollbar();
-
         if ($('.sidebar-nav').length > 0) {
+            handleProjectTooltip();
+            initCustomScrollbar();
+
             $('.sidebar-nav li a').tooltip({
                 placement: 'right',
                 container: 'body'
             });
 
             if (current_size == null || current_size == width_expanded) {
-                updateSidebarTitle(false);
-                updateSidebarWidth(width_expanded, 0);
                 updateSidebarIcon('left', false);
                 updateSidebarServices(false, 100);
             } else {
-                updateSidebarTitle(true);
-                updateSidebarWidth(width_collapsed, 0);
                 updateSidebarIcon('right', true);
                 updateSidebarServices(true, 100);
+                updateNavbar(width_collapsed);
             }
 
             $('.sidebar-collapse').click(function() {
