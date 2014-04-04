@@ -752,9 +752,26 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 }
                 
                 if ($with_sort_links) {
-                    $html .= '<a href="'. $url . $column['field']->id .'" class="tracker_report_table_column_title"><span>';
+                    $field_factory     = $this->getFieldFactory();
+                    $field_is_comptued = $field_factory->getComputedValueFieldByNameForUser(
+                            $column['field']->tracker_id,
+                            $column['field']->name,
+                            $current_user
+                    );
+
+                    if (! $field_is_comptued) {
+                        $sort_url = $url . $column['field']->id;
+                        $html    .= '<a href="'. $sort_url .'">';
+                    }
+
+                    $html .= '<span class="tracker_report_table_column_title">';
                     $html .= $label;
-                    $html .= '</span></a>';
+                    $html .= '</span>';
+
+                    if (! $field_is_comptued) {
+                        $html .= '</a>';
+                    }
+
                 } else {
                     $html .= $label;
                 }
