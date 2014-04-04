@@ -2,6 +2,7 @@ Version 6.13 (Not Released Yet)
 
 	== Developers ==
 	* Foundation for Tuleap tours
+	* Allow to search for templates in several directories (works with partial too)
 
 	== Themes ==
 	* Experimental: 0.9.16
