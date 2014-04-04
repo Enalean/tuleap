@@ -1,3 +1,6 @@
+Version 0.9.18 - Tuleap 6.13
+    * request #6594: no more able to sort on a computed field
+
 Version 0.9.17 - Tuleap 7.0
     * story #6455 - beautiful register and change password page
 
