@@ -32,6 +32,12 @@ class Response {
      * @var Feedback
      */
     var $_feedback;
+
+    /**
+     *
+     * @var Tour[]
+     */
+    var $tours = array();
     
     /**
     * Constructor
@@ -50,6 +56,11 @@ class Response {
             $this->clearFeedback();
         }
     }
+
+    function addTour(Tuleap_Tour $tour) {
+        $this->tours[] = $tour;
+    }
+
     function addFeedback($level, $message,  $purify=CODENDI_PURIFIER_CONVERT_HTML) {
         $this->_feedback->log($level, $message, $purify);
     }

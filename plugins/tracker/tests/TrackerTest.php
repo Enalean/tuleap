@@ -408,7 +408,7 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker_admin->setReturnValue('isMemberOfUGroup', true, array(1001, '*'));
         $this->tracker_admin->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
         $this->tracker_admin->setReturnValue('isMember', false, array(102));
-        
+
         $this->all_trackers_forge_admin_user = mock('PFUser');
         $this->all_trackers_forge_admin_user->setReturnValue('getId', 888);
         $this->all_trackers_forge_admin_user->setReturnValue('isMember', false);

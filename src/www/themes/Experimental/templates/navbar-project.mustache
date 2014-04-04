@@ -2,12 +2,12 @@
     {{# user_is_logged_in }}
         {{^ nav_project_anonymous }}
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            Projects
+            {{ menu_projects_text }}
             <b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
             <li>
-                <a href="/softwaremap/">Browse all projects
+                <a href="/softwaremap/">{{ browse_projects_text }}
                 </a>
             </li>
             {{# project_registration }}

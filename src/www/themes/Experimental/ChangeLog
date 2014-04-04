@@ -1,3 +1,21 @@
+Version 0.9.18 - Tuleap 6.13
+    * request #6594: no more able to sort on a computed field
+
+Version 0.9.17 - Tuleap 7.0
+    * story #6455 - beautiful register and change password page
+
+Version 0.9.16 - Tuleap 6.13
+    * request #6618: Fix UI regression
+
+Version 0.9.15 - Tuleap 6.13
+    * request #6609: Activate 'require all words' search option by default
+
+Version 0.9.14 - Tuleap 6.13
+    * Developers: Foundation for Tuleap tours
+
+Version 0.9.13 - Tuleap 6.12
+    * request #6601: Translate several labels in Experimental theme
+
 Version 0.9.12 - Tuleap 6.12
     * request #6445 - Experimental theme should allow site JS inclusion
 

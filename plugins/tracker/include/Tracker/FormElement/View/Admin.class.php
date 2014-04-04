@@ -228,6 +228,13 @@ class Tracker_FormElement_View_Admin {
             $value = $property['value'] ? $this->formElement->formatDate($property['value']) : '';
             $html .= $GLOBALS['HTML']->getDatePicker("formElement_properties_".$key, "formElement_data[specific_properties][$key]", $value);
             break;
+        case 'text':
+            $html .= '<textarea
+                           cols="50" rows="10"
+                           name="formElement_data[specific_properties]['. $key .']"
+                           id="formElement_properties_'. $key .'">' .
+                       $property['value'] . '</textarea>';
+            break;
         case 'rich_text':
             $html .= '<textarea
                            class="tracker-field-richtext"

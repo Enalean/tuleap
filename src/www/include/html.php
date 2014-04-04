@@ -61,9 +61,9 @@ function html_image($src,$args,$display=1) {
 	}
 }
 
-function html_get_timezone_popup ($title='timezone',$selected='xzxzxzx') {
-    global $TZs;
-    return html_build_select_box_from_arrays ($TZs,$TZs,$title,$selected,false);
+function html_get_timezone_popup($selected = 0) {
+    $renderer = TemplateRendererFactory::build()->getRenderer(Config::get('codendi_dir') .'/src/templates/account/');
+    return $renderer->renderToString('timezone', new Account_TimezoneSelectorPresenter($selected));
 }
 
 /**
@@ -168,8 +168,21 @@ function html_build_select_box_from_array ($vals,$select_name,$checked_val='xzxz
 	return $return;
 }
 
-function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_val='xzxz',$show_100=true,$text_100='',$show_any=false,$text_any='',$show_unchanged=false,$text_unchanged='', $purify_level=CODENDI_PURIFIER_CONVERT_HTML) {
-        global $Language;
+function html_build_select_box_from_arrays (
+    $vals,
+    $texts,
+    $select_name,
+    $checked_val='xzxz',
+    $show_100=true,
+    $text_100='',
+    $show_any=false,
+    $text_any='',
+    $show_unchanged=false,
+    $text_unchanged='',
+    $purify_level=CODENDI_PURIFIER_CONVERT_HTML,
+    $show_unknown_value = true
+) {
+    global $Language;
         $return = '';
         $isAValueSelected = false;
         $hp =& Codendi_HTMLPurifier::instance();
@@ -245,19 +258,19 @@ function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_v
 
 	//we don't always want the default 100 row shown
 	if ($show_100) {
-		if ( is_array($checked_val) ) {
-			if ( in_array(100,$checked_val) ) {
-				$selected = "SELECTED";
-                $isAValueSelected = true;
-			} else {
-				$selected = "";
-			}
-		} else {
-		    $selected = ( $checked_val == 100 ? 'SELECTED':'');
-            if ($checked_val == 100) {
-                $isAValueSelected = true;
+            if ( is_array($checked_val) ) {
+                if ( in_array(100,$checked_val) ) {
+                    $selected = "SELECTED";
+                    $isAValueSelected = true;
+                } else {
+                    $selected = "";
+                }
+            } else {
+                $selected = ( $checked_val == 100 ? 'SELECTED':'');
+                if ($checked_val == 100) {
+                    $isAValueSelected = true;
+                }
             }
-		}
 	    $return .= "\n<OPTION VALUE=\"100\" $selected>".$hp->purify($text_100,$purify_level)."</OPTION>";
 	}
 
@@ -288,7 +301,7 @@ function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_v
 			$return .= '>'.$hp->purify($texts[$i],$purify_level).'</OPTION>';
 		}
 	}
-    if ($checked_val && $checked_val != 'xzxz' && ! $isAValueSelected) {
+    if ($show_unknown_value && ($checked_val && $checked_val != 'xzxz' && ! $isAValueSelected)) {
         $return .= '<OPTION VALUE="'.$checked_val.'" SELECTED>'.$hp->purify($Language->getText('include_html','unknown_value'),$purify_level).'</OPTION>';
     }
     $return .= '
@@ -296,7 +309,19 @@ function html_build_select_box_from_arrays ($vals,$texts,$select_name,$checked_v
 	return $return;
 }
 
-function html_build_select_box ($result, $name, $checked_val="xzxz",$show_100=true,$text_100='',$show_any=false,$text_any='',$show_unchanged=false,$text_unchanged='', $purify_level=CODENDI_PURIFIER_CONVERT_HTML) {
+function html_build_select_box (
+    $result,
+    $name,
+    $checked_val="xzxz",
+    $show_100=true,
+    $text_100='',
+    $show_any=false,
+    $text_any='',
+    $show_unchanged=false,
+    $text_unchanged='',
+    $purify_level=CODENDI_PURIFIER_CONVERT_HTML,
+    $show_unknown_value = true
+) {
         global $Language;
 	/*
 		Takes a result set, with the first column being the "id" or value
@@ -316,7 +341,20 @@ function html_build_select_box ($result, $name, $checked_val="xzxz",$show_100=tr
         if ($text_any == '') { $text_any = $Language->getText('global','any'); }
         if ($text_unchanged == '') { $text_unchanged = $Language->getText('global','unchanged'); }
 
-	return html_build_select_box_from_arrays (util_result_column_to_array($result,0),util_result_column_to_array($result,1),$name,$checked_val,$show_100,$text_100,$show_any,$text_any,$show_unchanged,$text_unchanged, $purify_level);
+	return html_build_select_box_from_arrays(
+            util_result_column_to_array($result,0),
+            util_result_column_to_array($result,1),
+            $name,
+            $checked_val,
+            $show_100,
+            $text_100,
+            $show_any,
+            $text_any,
+            $show_unchanged,
+            $text_unchanged,
+            $purify_level,
+            $show_unknown_value
+        );
 }
 
 function html_build_multiple_select_box($result,$name,$checked_array,$size='8',$show_100=true,$text_100='', $show_any=false,$text_any='',$show_unchanged=false,$text_unchanged='',$show_value=true, $purify_level=CODENDI_PURIFIER_CONVERT_HTML, $disabled = false) {

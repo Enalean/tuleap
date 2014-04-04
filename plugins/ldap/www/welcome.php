@@ -106,7 +106,7 @@ else {
     if($request->valid($vPv)) {
         $pv = $request->get('pv');
     }
-    $timezone = $request->existAndNonEmpty('timezone') ? $request->get('timezone') : 'None';
+    $timezone = $request->get('timezone');
 
     $ldapUm = new LDAP_UserManager($ldapPlugin->getLdap());
     $lr = $ldapUm->getLdapFromUserId($user_id);
@@ -150,7 +150,7 @@ else {
 
 <p>'.$star.' '.$Language->getText('plugin_ldap', 'welcome_tz').':';
 
-    echo html_get_timezone_popup ('timezone',$timezone);
+    echo html_get_timezone_popup($timezone);
 
     print '</p>
 <p><input type="checkbox" name="form_mail_site" value="1" checked />'.$Language->getText('plugin_ldap', 'welcome_siteupdate');

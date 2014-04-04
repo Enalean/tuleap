@@ -37,22 +37,7 @@
  * - The expected Presenter object may differ with some future engines.
  */
 abstract class TemplateRenderer {
-    
-    /**
-     * @var String
-     */
-    protected $plugin_templates_dir;
-    
-    /**
-     * @param string $plugin_templates_dir The plugin directory containing the
-     *                                     templates (usually 'plugins/myplugin/templates/')
-     * 
-     * Override to provide setup specific to your engine.
-     */
-    public function __construct($plugin_templates_dir) {
-        $this->plugin_templates_dir = $plugin_templates_dir;
-    }
-    
+
     /**
      * Renders a template, given its name and a presenter (providing the
      * template logic), and returns the result as a string.

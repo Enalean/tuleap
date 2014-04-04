@@ -70,4 +70,3 @@ class ArtifactXMLNodeHelper {
         return $node;
     }
 }
-

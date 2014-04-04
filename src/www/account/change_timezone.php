@@ -26,8 +26,7 @@ if ($request->isPost()) {
     $csrf->check();
 	if (!$request->existAndNonEmpty('timezone')) {
 		$GLOBALS['Response']->addFeedback('error', $Language->getText('account_change_timezone', 'no_update'));
-	} else if (!is_valid_timezone($request->get('timezone')) ||
-               $request->get('timezone') == 'None') {
+	} else if (!is_valid_timezone($request->get('timezone'))) {
 		$GLOBALS['Response']->addFeedback('error', $Language->getText('account_change_timezone', 'choose_tz'));
 	} else {
 		// if we got this far, it must be good
@@ -46,7 +45,7 @@ $HTML->header(array('title'=>$Language->getText('account_change_timezone', 'titl
 <form action="change_timezone.php" method="post">
 <?php
 echo $csrf->fetchHTMLInput();
-echo html_get_timezone_popup ('timezone',user_get_timezone());
+echo html_get_timezone_popup(user_get_timezone());
 
 ?>
 <br>

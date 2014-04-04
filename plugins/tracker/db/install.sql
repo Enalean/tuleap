@@ -327,7 +327,8 @@ CREATE TABLE tracker_changeset_value_artifactlink(
     artifact_id INT(11) NOT NULL,
     keyword VARCHAR(32) NOT NULL,
     group_id INT(11) NOT NULL,
-    PRIMARY KEY(changeset_value_id, artifact_id)
+    PRIMARY KEY(changeset_value_id, artifact_id),
+    INDEX idx_reverse (artifact_id, changeset_value_id)
 ) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS tracker_changeset_value_permissionsonartifact;
@@ -684,6 +685,17 @@ CREATE TABLE tracker_workflow_trigger_rule_trg_field_static_value (
     rule_id INT(11) UNSIGNED NOT NULL,
     value_id INT(11) NOT NULL,
     INDEX idx_rule_value (rule_id, value_id)
+) ENGINE=InnoDB;
+
+DROP TABLE IF EXISTS tracker_fileinfo_temporary;
+CREATE TABLE IF NOT EXISTS tracker_fileinfo_temporary (
+    fileinfo_id int(11) UNSIGNED NOT NULL,
+    last_modified int(11) NOT NULL,
+    created int(11) NOT NULL,
+    tempname varchar(255) default NULL,
+    offset int(11) UNSIGNED NOT NULL DEFAULT 0,
+    INDEX idx_fileinfo_id ( fileinfo_id ),
+    INDEX idx_last_modified( last_modified )
 ) ENGINE=InnoDB;
 
 -- Enable service for project 100

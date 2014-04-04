@@ -84,6 +84,8 @@ class Experimental_Theme extends DivBasedTabbedLayout {
         }
 
         echo '<link rel="stylesheet" type="text/css" href="/scripts/bootstrap/bootstrap-select/bootstrap-select.css" />';
+        echo '<link rel="stylesheet" type="text/css" href="/scripts/bootstrap/bootstrap-tour/bootstrap-tour.min.css" />';
+        echo '<link rel="stylesheet" type="text/css" href="/scripts/select2/select2.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/scripts/bootstrap/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/scripts/jscrollpane/jquery.jscrollpane.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/scripts/jscrollpane/jquery.jscrollpane-tuleap.css" />';
@@ -281,7 +283,9 @@ class Experimental_Theme extends DivBasedTabbedLayout {
     }
 
     private function endOfPage() {
+        $this->appendJsonEncodedVariable('tuleap.tours', $this->tours);
         $this->displayFooterJavascriptElements();
+
         if ($this->isInDebugMode()) {
             $this->showDebugInfo();
         }

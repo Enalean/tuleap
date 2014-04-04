@@ -189,69 +189,6 @@ var Codendi_RTE_Light = Class.create({
     }
 });
 
-var Codendi_RTE_Light_Tracker_FollowUp = Class.create(Codendi_RTE_Light, {
-    initialize: function ($super, element, format) {
-        $super(element);
-
-        var label = $(element+'_label');
-
-        // This div contains comment format selection buttons
-        var div = Builder.node('div', {'class' : 'rte_format'});
-        var bold = document.createElement("b");
-        bold.appendChild(document.createTextNode("Comment format : "));
-        div.appendChild(bold);
-
-        var selectbox = Builder.node('select', {'name' : 'comment_format', 'class' : 'input-small'});
-        div.appendChild(selectbox);
-
-        // Add an option that tells that the content format is text
-        // The value is defined in Artifact class.
-
-        var text_option = Builder.node(
-            'option',
-            {'value' : '0', 'id' : 'comment_format_text', 'selected' : 'selected'},
-            "Text"
-        );
-        selectbox.appendChild(text_option);
-
-        // Add an option that tells that the content format is HTML
-        // The value is defined in Artifact class.
-        var html_option = Builder.node(
-            'option',
-            {'value': '1', 'id' : 'comment_format_html'},
-            "HTML"
-        );
-        selectbox.appendChild(html_option);
-
-        label.appendChild(div);
-
-        // This div is used to clear the CSS of the pervious div
-        var div_clear = Builder.node('div', {'class' : 'rte_clear'});
-        label.appendChild(div_clear);
-
-        if (format == 'html') {
-            this.switchButtonToHtml();
-        } else {
-            $('comment_format_text').selected = true;
-        }
-        
-    },
-
-    toggle: function ($super, event) {
-        this.switchButtonToHtml();
-        $super(event);
-    },
-
-    /**
-     * Disable the option that tells that the content is text
-     * Select the option that tells that the content is HTML
-     */
-    switchButtonToHtml: function () {
-        $('comment_format_text').disabled = true;
-        $('comment_format_html').selected  = true;
-    }
-});
-
 var Codendi_RTE_Send_HTML_MAIL = Class.create(Codendi_RTE_Light, {
     initialize: function ($super,element, format) {
         $super(element);

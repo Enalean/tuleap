@@ -48,17 +48,18 @@ body {
     &.widgetable {
         background: #FCFCFC;
     }
-}
 
-body > .wrapper {
-    min-height: 100%;
-    position: relative;
+    > .wrapper {
+        min-height: 100%;
+        position: relative;
+    }
 }
 
 @import 'utils/navbar.less';
 @import 'utils/sidebar.less';
 @import 'utils/content.less';
 @import 'utils/footer.less';
+@import 'utils/register.less';
 
 @import 'utils/widget.less';
 @import 'utils/avatar.less';
@@ -84,6 +85,34 @@ input[type="file"] {
 }
 .tooltip-inner {
     background-color: @dark-grey;
+}
+.tour-backdrop {
+    opacity: 0.3;
+}
+.popover[class*="tour"] {
+    background: #0e73c2;
+    color: @white;
+    padding: 0;
+    border: none;
+    font-size: 0.85em;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+
+    &.top .arrow:after    { border-top-color: #0e73c2; }
+    &.right .arrow:after  { border-right-color: #0e73c2; }
+    &.bottom .arrow:after { border-bottom-color: darken(#0e73c2, 5%); }
+    &.left .arrow:after   { border-left-color: #0e73c2; }
+
+    .popover-title {
+        background: darken(#0e73c2, 5%);
+        color: @white;
+        border: none;
+        font-size: 1.1em;
+    }
+
+    .popover-navigation [data-role=prev], .popover-navigation [data-role=next] {
+        float: left;
+        margin-right: 5px;
+    }
 }
 legend {
     -moz-box-sizing: border-box;

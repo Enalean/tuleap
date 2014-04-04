@@ -643,37 +643,38 @@ class ArtifactField extends Error {
 	 * @return array
 	 */
 	function getFieldPredefinedValues ($group_artifact_id, $checked=false,$by_field_id=false,$active_only=true,$use_cache=false,$with_display_preferences=false) {
-	
-		// ArtifactTypeHtml object created in index.php
-		global $ath, $RES_CACHE;
+
+            // ArtifactTypeHtml object created in index.php
+            global $ath, $RES_CACHE;
 	    // The "Assigned_to" box requires some special processing
 	    // because possible values  are project members) and they are
 	    // not stored in the artifact_field_value table but in the user_group table	    
 	    $value_func = $this->getGlobalValueFunction();
 	    if (count($value_func) > 0) {
+            $show_suspended = true;
 	        for ($i=0;$i<count($value_func);$i++) {
 			if ($value_func[$i] == 'group_members')
-			    $qry_value[$i] = ugroup_db_get_dynamic_members($GLOBALS['UGROUP_PROJECT_MEMBERS'], $group_artifact_id, $ath->getGroupID(), $with_display_preferences);			    			
+			    $qry_value[$i] = ugroup_db_get_dynamic_members($GLOBALS['UGROUP_PROJECT_MEMBERS'], $group_artifact_id, $ath->getGroupID(), $with_display_preferences, null, $show_suspended);
 			else if ($value_func[$i] == 'group_admins')
-			    $qry_value[$i] = ugroup_db_get_dynamic_members($GLOBALS['UGROUP_PROJECT_ADMIN'], $group_artifact_id, $ath->getGroupID(), $with_display_preferences);	
+			    $qry_value[$i] = ugroup_db_get_dynamic_members($GLOBALS['UGROUP_PROJECT_ADMIN'], $group_artifact_id, $ath->getGroupID(), $with_display_preferences, null, $show_suspended);
 			else if ($value_func[$i] == 'tracker_admins')
-			    $qry_value[$i] = ugroup_db_get_dynamic_members($GLOBALS['UGROUP_TRACKER_ADMIN'], $group_artifact_id, $ath->getGroupID(), $with_display_preferences);			    			
+			    $qry_value[$i] = ugroup_db_get_dynamic_members($GLOBALS['UGROUP_TRACKER_ADMIN'], $group_artifact_id, $ath->getGroupID(), $with_display_preferences, null, $show_suspended);
 			else if ($value_func[$i] == 'artifact_submitters')
-			    $qry_value[$i] = $ath->getSubmitters($with_display_preferences);			    			
+			    $qry_value[$i] = $ath->getSubmitters($with_display_preferences);
 			else if (preg_match('/ugroup_([0-9]+)/', $value_func[$i], $matches))
 			  if (strlen($matches[1]) > 2)
-			    $qry_value[$i] = ugroup_db_get_members($matches[1], $with_display_preferences);			    
+			    $qry_value[$i] = ugroup_db_get_members($matches[1], $with_display_preferences);
 			else
-			    $qry_value[$i] = ugroup_db_get_dynamic_members($matches[1], $group_artifact_id, $ath->getGroupID(), $with_display_preferences);			    			
+			    $qry_value[$i] = ugroup_db_get_dynamic_members($matches[1], $group_artifact_id, $ath->getGroupID(), $with_display_preferences, null, $show_suspended);
 		}
 		$qry = $qry_value[0];
 		if (count($qry_value) > 1) {
-		    for ($i=1;$i<count($qry_value);$i++) {		        
+		    for ($i=1;$i<count($qry_value);$i++) {
 		        $qry = $qry." UNION ".$qry_value[$i];
 		    }
-		}		
+		}
 		$res_value = db_query($qry);
-		
+
 	    } else {
 			// If only active field
             $status_cond = "";
@@ -1166,7 +1167,7 @@ class ArtifactField extends Error {
 		if ( $this->isUserName() ) {
 			$all_values = $this->getUsersList($values);
 		} else {
-			$all_values = $this->getFieldPredefinedValues($group_artifact_id,false,false,false,true);		
+			$all_values = $this->getFieldPredefinedValues($group_artifact_id,false,false,false,true);
 		}
 
         // Create an hash table with the id as key
@@ -1185,7 +1186,7 @@ class ArtifactField extends Error {
             }
         }
 
-		return $label_values;
+            return $label_values;
 	}
 
 	/**

@@ -1322,6 +1322,7 @@ class Layout extends Response {
         echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('style.css') .'" />';
         echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('print.css') .'" media="print" />';
         echo '<link rel="stylesheet" type="text/css" href="/scripts/bootstrap/bootstrap-select/bootstrap-select.css" />';
+        echo '<link rel="stylesheet" type="text/css" href="/scripts/select2/select2.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/scripts/bootstrap/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" />';
     }
 
@@ -1705,10 +1706,7 @@ class Layout extends Response {
      * @return string
      */
     protected function getClassnamesForBodyTag($params = array()) {
-        if ($this->getUser()->useLabFeatures()) {
-            $body_class = isset($params['body_class']) ? $params['body_class'] : array();
-            return 'lab-mode';
-        }
+        $body_class = isset($params['body_class']) ? $params['body_class'] : array();
 
         if ($this->getUser()->useLabFeatures()) {
             $body_class[] = 'lab-mode';
@@ -1738,7 +1736,6 @@ class Layout extends Response {
 
     function header($params) {
         global $Language;
-
         $this->generic_header($params);
 
         //themable someday?

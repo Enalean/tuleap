@@ -1,0 +1,11 @@
+<select id="timezone" name="timezone" data-placeholder="{{ placeholder }}">
+    {{^ has_one_selected }}
+        <option></option>
+    {{/ has_one_selected }}
+    {{# list_of_timezones }}
+        <option value="{{ value }}" {{# is_selected }}selected="selected"{{/ is_selected }}>
+            {{ label }}
+        </option>
+    {{/ list_of_timezones }}
+</select>
+<script>jQuery(document).ready(function() { jQuery("#timezone").select2(); });</script>

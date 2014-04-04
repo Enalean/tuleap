@@ -49,10 +49,11 @@ interface Git_Driver_Gerrit_groupExistsTest {
     public function itReturnsFalseIfGroupDoNotExists();
 }
 
-interface Git_Driver_Gerrit_isDeletePluginEnabledTest {
+interface Git_Driver_Gerrit_DeletePluginTest {
     public function itReturnsFalseIfPluginIsNotInstalled();
     public function itReturnsFalseIfPluginIsInstalledAndNotEnabled();
     public function itReturnsTrueIfPluginIsInstalledAndEnabled();
+    public function itThrowsAProjectDeletionExceptionIfThereAreOpenChanges();
 }
 
 interface Git_Driver_Gerrit_manageGroupsTest {

@@ -1,0 +1,10 @@
+<div id="register-form">
+    <h2>{{ title }}</h2>
+
+    <form action="{{ form_url }}" name="new_user" method="post">
+        <div class="fields">
+            {{# prefill_values }}
+            <input type="text" id="form_loginname" name="form_loginname" placeholder="{{ login }} *" value="{{ form_loginname }}" required="required" />
+            <input type="email" name="form_email" placeholder="{{ email }} *" value="{{ form_email }}" required="required" />
+            {{/ prefill_values }}
+        </div>

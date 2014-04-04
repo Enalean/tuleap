@@ -32,7 +32,6 @@ use \Tracker_FormElementFactory;
 use \Tracker_REST_Artifact_ArtifactUpdater;
 use \Tracker_REST_Artifact_ArtifactValidator;
 use \Tracker_FormElement_InvalidFieldException;
-use \Tracker_FormElement_NotImplementedForRESTException;
 use \Tracker_Exception;
 use \Tuleap\Tracker\REST\ChangesetCommentRepresentation;
 use \Tuleap\Tracker\REST\TrackerReference;
@@ -143,10 +142,16 @@ class ArtifactsResource {
      * Things to take into account:
      * <ol>
      *  <li>You will get an error (400) if there are no changes in submitted document</li>
-     *  <li>Please note that "file" fields cannot be modified yet</li>
      *  <li>You can re-use the same document provided by /artifacts/:id route
      *      section. Even if it contains more data. The extra data/info will be ignored</li>
      *  <li>You don't need to set all 'values' of the artifact, you can restrict to the modified ones</li>
+     *  <li>Examples:</li>
+     *    <ol>
+     *      <li>To update a file field, the value must be an array of the ids of the attachment you want to keep attached together with the new ones you want to attach.
+     *          Each new file must correspond to valid /artifact_temporary_files/:id resource.
+     *          A user can only add their own temporary files</li>
+     *      <li>To empty a file field of its content, the value should be empty (value: []).</li>
+     *    </ol>
      * </ol>
      *
      * @url PUT {id}
@@ -168,8 +173,6 @@ class ArtifactsResource {
             $updater->update($user, $artifact, $values, $comment);
         } catch (Tracker_FormElement_InvalidFieldException $exception) {
             throw new RestException(400, $exception->getMessage());
-        } catch (Tracker_FormElement_NotImplementedForRESTException $exception) {
-            throw new RestException(501, $exception->getMessage());
         } catch (Tracker_NoChangeException $exception) {
             // Do nothing
         } catch (Tracker_Exception $exception) {
@@ -177,6 +180,10 @@ class ArtifactsResource {
                 throw new RestException(500, $GLOBALS['Response']->getRawFeedback());
             }
             throw new RestException(500, $exception->getMessage());
+        } catch (Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException $exception) {
+            throw new RestException(500, $exception->getMessage());
+        } catch (Tracker_Artifact_Attachment_FileNotFoundException $exception) {
+            throw new RestException(404, $exception->getMessage());
         }
         $this->sendAllowHeadersForArtifact($artifact);
     }
@@ -193,7 +200,16 @@ class ArtifactsResource {
      *
      * Things to take into account:
      * <ol>
-     *  <li>Please note that "file" fields cannot be modified yet</li>
+     *  <li>You don't need to set all 'values' of the artifact, you can pass only the ones you want to add,
+     *      together with those that are required (depends on a given tracker's configuration).</li>
+     *  <li>Example:
+     *          To attach a file on a file field, the value must contain the ids of the attachements you want to add (eg. : {
+     *                                             "field_id": 101,
+     *                                             "value": [41, 42]
+     *                                           })
+     *          Note that 41 and 42 ids are provided by /artifact_temporary_files routes.
+     *          A user can only add their own temporary files.
+     *          To create a temporary file, use POST on /artifact_temporary_files.
      * </ol>
      *
      * @url POST
@@ -214,8 +230,10 @@ class ArtifactsResource {
             return $updater->create($user, $tracker, $values);
         } catch (Tracker_FormElement_InvalidFieldException $exception) {
             throw new RestException(400, $exception->getMessage());
-        } catch (Tracker_FormElement_NotImplementedForRESTException $exception) {
-            throw new RestException(501, $exception->getMessage());
+        } catch (Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException $exception) {
+            throw new RestException(500, $exception->getMessage());
+        } catch (Tracker_Artifact_Attachment_FileNotFoundException $exception) {
+            throw new RestException(404, $exception->getMessage());
         }
         $this->options();
     }

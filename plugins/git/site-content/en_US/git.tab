@@ -109,6 +109,8 @@ plugin_git	actions_delete_ok	Repository has been deleted
 plugin_git	actions_no_repository_forked	No repository has been forked.
 plugin_git	gerrit_project_exists	A Gerrit project with that name already exists on that server
 plugin_git	gerrit_server_down	Cannot connect to remote Gerrit server
+plugin_git	project_deletion_not_possible	Cannot delete project $1 on Gerrit: $2.
+plugin_git	project_deletion_open_elements	There are open changes for this project.
 
 plugin_git	actions_repo_not_found	The repository does not exist
 plugin_git	actions_repo_access	Repository access permissions are going to be modified in a few seconds

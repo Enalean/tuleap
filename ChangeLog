@@ -1,28 +1,45 @@
-Version 6.12 (Not Released Yet)
+Version 6.13 (Not Released Yet)
+
+	== Developers ==
+	* Foundation for Tuleap tours
+	* Allow to search for templates in several directories (works with partial too)
+
+	== Themes ==
+	* Experimental: 0.9.18
+	* CodexSTN: 1.14
+
+    == Plugins ==
+	* tracker: 5.285
+	* cardwall: 1.25
+
+Version 6.12 (Thursday, April 3rd 2014)
 
 	== Plugins ==
 	* proftpd: 0.12
-	* tracker: 5.279
+	* tracker: 5.282
 	* graphontrackersv5: 5.6
 	* agiledashboard: 1.56
-	* cardwall: 1.22
-	* docman: 2.26.30
-	* git: 3.75
+	* cardwall: 1.24
+	* docman: 2.26.31
+	* git: 3.78
 	* hudson: 1.14
 
 	== Bug fix ==
+	* request #6586: Do not display unknown user in TV3 assigned_to field
 	* request #6404: Do not display postponed error for phpwiki (contrib STMicroelectronics)
-	* request #6146 - Backend raise errors about cvs logs while cvs is not even installed
+	* request #6146: Backend raise errors about cvs logs while cvs is not even installed
 	* request #6423: [trackerV3] Bind a field to mutiple lists doesn't work
 	* Fix request #6146 - Backend raise errors about cvs logs
 	* Fix request #6539 - Missleading terminology for Project Members and Developers
+	* Fix request #6598 - FRS file url broken after package update
+	* request #6589 - TinyMCE is not compatible with IE9
 
 	== Enhancement ==
 	* story #5998 - Delegate the validation of projects to users
 	* story #6454 - Giving access admin rights to some users to all trackers
 
 	== Themes ==
-	* Experimental: 0.9.12
+	* Experimental: 0.9.13
 	* CodexSTN: 1.13
 
 	== Development ==

@@ -74,7 +74,7 @@ class Git_Admin_process_Test extends TuleapTestCase {
             'gerrit_version'    => '',
             'http_password'     => ''
         );
-        
+
         $this->request_update_existing_server_with_empty_host = array(
             'host'              => '',
             'port'              => '1234',
