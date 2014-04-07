@@ -1819,6 +1819,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         );
 
         return $field === null;
+    }
 
     public function getIcon() {
         return 'icon-list-ul';
