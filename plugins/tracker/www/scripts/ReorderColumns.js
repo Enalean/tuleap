@@ -46,7 +46,8 @@ codendi.ReorderColumns = Class.create({
                 Event.stop(evt);
             }
         }).bind(this));
-        var d = new Draggable(cell.down('.tracker_report_table_column_title'), {
+        var d = new Draggable(cell.down('table'), {
+            handle: cell.down('.tracker_report_table_column_grip'),
             revert: true,
             onStart: function () {
                 Element.addClassName(cell, "reordercolumns_ondrag");

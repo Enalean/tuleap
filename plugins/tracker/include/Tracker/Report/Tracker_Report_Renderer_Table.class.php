@@ -493,7 +493,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                                                   )
                             ) . '">' . 
                             $row['field']->getLabel() .
-                            $GLOBALS['HTML']->getImage(($row['is_desc'] ? 'dn' : 'up') .'_arrow.png') .
+                            $this->getSortIcon($row['is_desc']) .
                             '</a>';
                 }
             }
@@ -667,17 +667,21 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     const EXTRACOLUMN_UNLINK     = 3;
     
     protected function _fetchHead($extracolumn = 1, $only_one_column = null, $with_sort_links = true, $use_data_from_db = false, $id_suffix = '', $store_in_session = true) {
-        $html = '';
+        $html  = '';
         $html .= '<table';
         if (!$only_one_column) {
-            $html .= ' id="tracker_report_table'. $id_suffix .'"  width="100%" cellpadding="2" cellspacing="1" border="0"';
+            $html .= ' id="tracker_report_table'. $id_suffix .'"  width="100%"';
         }
+
+        $classnames = '';
         if ($with_sort_links && $this->report->userCanUpdate(UserManager::instance()->getCurrentUser())) {
-            $html .= ' class="reorderable resizable"';
+            $classnames .= ' reorderable resizable';
         }
+        $html .= ' class="table table-striped table-bordered '. $classnames .'"';
+
         $html .= '>';
         $html .= '<thead>';
-        $html .= '<tr class="boxtable">';
+        $html .= '<tr>';
         
         $current_user = UserManager::instance()->getCurrentUser();
         
@@ -695,13 +699,13 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             }
             
             if ($display_extracolumn) {
-                $html .= '<th class="boxtitle '. $classname .'">&nbsp;</th>';
+                $html .= '<th class="'. $classname .'">&nbsp;</th>';
             }
         }
         
         //the link to the artifact
         if (!$only_one_column) {
-            $html .= '<th class="boxtitle" width="16px">&nbsp;</th>';
+            $html .= '<th width="16px">&nbsp;</th>';
         }
         
         $ff = $this->getFieldFactory();
@@ -739,7 +743,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 $width = '';
             }
             if ( !empty($column['field']) && $column['field']->isUsed()) {
-                $html .= '<th class="boxtitle tracker_report_table_column" 
+                $html .= '<th class="tracker_report_table_column"
                               id="tracker_report_table_column_'. $column['field']->id .'" 
                               '. $width .'>';
                 $html .= '<input type="hidden" 
@@ -747,30 +751,29 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                                  value="'. $column['field']->parent_id .'" />';
                                  
                 $label = $column['field']->getLabel();
-                if (isset($sort_columns[$column['field']->getId()])) {
-                    $label .= ' '.$GLOBALS['HTML']->getImage(($sort_columns[$column['field']->getId()]['is_desc'] ? 'dn' : 'up') .'_arrow.png');
-                }
                 
                 if ($with_sort_links) {
-                    $field_factory     = $this->getFieldFactory();
-                    $field_is_comptued = $field_factory->getComputedValueFieldByNameForUser(
-                            $column['field']->tracker_id,
-                            $column['field']->name,
-                            $current_user
-                    );
+                    $sort_url = $url . $column['field']->id;
 
-                    if (! $field_is_comptued) {
-                        $sort_url = $url . $column['field']->id;
-                        $html    .= '<a href="'. $sort_url .'">';
+                    $html .= '<table width="100%" border="0" cellpadding="0" cellspacing="0"><tbody><tr>';
+                    $html .= '<td class="tracker_report_table_column_grip">&nbsp;&nbsp;</td>';
+                    $html .= '<td class="tracker_report_table_column_title">';
+                    if ($this->canFieldBeUsedToSort($column['field'], $current_user)) {
+                        $html .= '<a href="'. $sort_url .'">';
+                        $html .= $label;
+                        $html .= '</a>';
+                    } else {
+                        $html .= $label;
                     }
-
-                    $html .= '<span class="tracker_report_table_column_title">';
-                    $html .= $label;
-                    $html .= '</span>';
-
-                    if (! $field_is_comptued) {
+                    $html .= '</td>';
+                    $html .= '<td class="tracker_report_table_column_caret">';
+                    if (isset($sort_columns[$column['field']->getId()])) {
+                        $html .= '<a href="'. $sort_url .'">';
+                        $html .= $this->getSortIcon($sort_columns[$column['field']->getId()]['is_desc']);
                         $html .= '</a>';
                     }
+                    $html .= '</td>';
+                    $html .= '</tr></tbody></table>';
 
                 } else {
                     $html .= $label;
@@ -852,7 +855,6 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             }
             // test if first result is valid (if yes, we consider that others are valid too)
             if (!empty($results[0])) {
-                $i = 0;
                 //extract the first results
                 $first_result = array_shift($results);
                 //loop through it
@@ -863,7 +865,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                         $row = array_merge($row, $result->getRow());
                         //row == id, f1, f2, f3, f4...
                     }
-                    $html .= '<tr class="'. html_get_alt_row_color($i++) .' '. $additional_classname .'">';
+                    $html .= '<tr class="'. $additional_classname .'">';
                     $current_user = UserManager::instance()->getCurrentUser();
                     if ($extracolumn) {
                         $display_extracolumn = true;
@@ -1804,6 +1806,18 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             return true;
         }
     }
-}
 
-?>
+    private function getSortIcon($is_desc) {
+        return '<i class="icon-caret-'. ( $is_desc ? 'down' : 'up' ) .'"></i>';
+    }
+
+    private function canFieldBeUsedToSort(Tracker_FormElement_Field $field, PFUser $current_user) {
+        $field = $this->getFieldFactory()->getComputedValueFieldByNameForUser(
+            $field->tracker_id,
+            $field->name,
+            $current_user
+        );
+
+        return $field === null;
+    }
+}
