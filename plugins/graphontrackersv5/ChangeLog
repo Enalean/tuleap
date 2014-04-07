@@ -1,3 +1,6 @@
+Version 5.7 - Tuleap 6.12
+    * tasks #6603: bootstrap style for renderer tabs
+
 Version 5.6 - Tuleap 6.12
     * request #6413 - Cumulative chart legend too extensive (Contrib JTEKT)
 
