@@ -89,7 +89,7 @@ class Tracker_Action_UpdateArtifact {
     }
 
     protected function getRedirectUrlAfterArtifactUpdate(Codendi_Request $request) {
-        $stay     = $request->get('submit_and_stay') ;
+        $stay     = $request->get('submit_and_stay');
         $from_aid = $request->get('from_aid');
 
         $redirect = new Tracker_Artifact_Redirect();

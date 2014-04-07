@@ -108,11 +108,18 @@ abstract class Tracker_Artifact_ArtifactRenderer {
      * @return string The HTML code for submit buttons
      */
     public function fetchSubmitButton() {
-        return '<p class="artifact-submit-button">
-                  <input class="btn btn-primary" type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />
-                  <input class="btn btn-primary" type="submit" name="submit_and_stay" value="'. $GLOBALS['Language']->getText('global', 'btn_submit_and_stay') .'" />
-                  '. $this->getConcurrentEditMessage() .'
-                </p>';
+        return '<div class="artifact-submit-button">
+                    <input type="hidden" id="submit-type" />
+                    <div class="btn-group dropup">
+                        <button class="btn btn-primary" type="submit">'. $GLOBALS['Language']->getText('global', 'btn_submit') .'</button>
+                        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><input type="submit" name="submit_and_stay" class="btn btn-link" value="'.$GLOBALS['Language']->getText('global', 'btn_submit_and_stay').'" /></li>
+                        </ul>
+                    </div>'.$this->getConcurrentEditMessage().'
+                </div>';
     }
 
     protected function getConcurrentEditMessage() {

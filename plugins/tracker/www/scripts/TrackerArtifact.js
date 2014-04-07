@@ -325,7 +325,7 @@ document.observe('dom:loaded', function () {
         elem.observe('click', function (evt) { toggle_tracker_artifact_attachment_delete(elem); });
     });
 
-    $$("p.artifact-submit-button > input").each(function (elem) {
+    $$("div.artifact-submit-button input").each(function (elem) {
         elem.observe('click', disableWarnOnPageLeave);
     });
 

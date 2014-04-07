@@ -64,11 +64,17 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
 
         $html .= $this->fetchFormElements($request, $current_user);
 
-        $html .= '<input class="btn btn-primary" type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
-        $html .= ' ';
-        $html .= '<input class="btn" type="submit" name="submit_and_continue" value="'. $GLOBALS['Language']->getText('global', 'btn_submit_and_continue') .'" />';
-        $html .= ' ';
-        $html .= '<input class="btn" type="submit" name="submit_and_stay" value="'. $GLOBALS['Language']->getText('global', 'btn_submit_and_stay') .'" />';
+        $html .= '<div class="artifact-submit-button">';
+        $html .= '<input type="hidden" id="submit-type" />';
+        $html .= '<div class="btn-group dropup">';
+        $html .= '<button class="btn btn-primary" type="submit">'. $GLOBALS['Language']->getText('global', 'btn_submit') .'</button>';
+        $html .= '<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>';
+        $html .= '<ul class="dropdown-menu">';
+        $html .= '<li><input type="submit" name="submit_and_continue" class="btn btn-link" value="'.$GLOBALS['Language']->getText('global', 'btn_submit_and_continue').'" /></li>';
+        $html .= '<li><input type="submit" name="submit_and_stay" class="btn btn-link" value="'.$GLOBALS['Language']->getText('global', 'btn_submit_and_stay').'" /></li>';
+        $html .= '</ul>';
+        $html .= '</div>';
+        $html .= '</div>';
 
         return $html;
     }
