@@ -207,7 +207,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         );
     }
     
-    public function displayHeader($project, $title, $breadcrumbs, $toolbar) {
+    public function displayHeader($project, $title, $breadcrumbs, $toolbar, array $params) {
         if (count($breadcrumbs)) {
             $breadcrumbs = array_merge(
                 array(
@@ -223,7 +223,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
             $breadcrumbs = array();
         }
         if ($service = $project->getService('plugin_tracker')) {
-            $service->displayHeader($title, $breadcrumbs, $toolbar);
+            $service->displayHeader($title, $breadcrumbs, $toolbar, $params);
         }
     }
     
@@ -289,7 +289,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
             )
         );
         $toolbar = array();
-        $this->displayHeader($project, 'Trackers', $breadcrumbs, $toolbar);
+        $params  = array();
+        $this->displayHeader($project, 'Trackers', $breadcrumbs, $toolbar, $params);
         
         $hp = Codendi_HTMLPurifier::instance();
 
@@ -522,8 +523,9 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
             }
             echo $html;
         } else {
-            
-            $this->displayHeader($project, $GLOBALS['Language']->getText('plugin_tracker', 'trackers'), $breadcrumbs, $toolbar);
+            $params = array();
+
+            $this->displayHeader($project, $GLOBALS['Language']->getText('plugin_tracker', 'trackers'), $breadcrumbs, $toolbar, $params);
             $this->displayTrackerHomeNav($project);
             
             $html .= '<p>';
@@ -590,8 +592,9 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     protected function displayCSVImportOverview($project, $group_id, $user) {
         $hp = Codendi_HTMLPurifier::instance();
         $breadcrumbs = array();
-        $toolbar = array();
-        $this->displayHeader($project, $GLOBALS['Language']->getText('plugin_tracker', 'trackers'), $breadcrumbs, $toolbar);
+        $toolbar     = array();
+        $params      = array();
+        $this->displayHeader($project, $GLOBALS['Language']->getText('plugin_tracker', 'trackers'), $breadcrumbs, $toolbar, $params);
                 
         $html = '';
         

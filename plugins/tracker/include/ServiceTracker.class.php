@@ -28,13 +28,13 @@ class ServiceTracker extends Service {
      *
      * @return void
      */
-    public function displayHeader($title, $breadcrumbs, $toolbar) {
+    public function displayHeader($title, $breadcrumbs, $toolbar, $params = array()) {
         $GLOBALS['HTML']->includeCalendarScripts();
 
         $tracker_manager         = new TrackerManager();
         $user_has_special_access = $tracker_manager->userCanAdminAllProjectTrackers();
 
-        $params = array('user_has_special_access' => $user_has_special_access);
+        $params = $params + array('user_has_special_access' => $user_has_special_access);
 
         parent::displayHeader($title, $breadcrumbs, $toolbar, $params);
     }

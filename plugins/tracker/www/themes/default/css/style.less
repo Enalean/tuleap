@@ -1,7 +1,6 @@
 /* {{{ New trackers */
-input[name=tracker_query_submit] {
-    margin-top:1em;
-    margin-bottom:2em;
+button[name=tracker_query_submit] {
+    margin-top:16px;
 }
 
 #tracker_report_selection {
@@ -128,15 +127,16 @@ h5.artifack_link_subtitle {
     padding-top:1em;
     margin-top:0;
 }
+
 .tracker_report_query {
-    border-left:1px solid #CCC;
-    border-top:1px solid #CCC;
-    border-right:1px solid #CCC;
-    padding:0 1em;
-    background:#f5f7f7 url(../images/tracker_report_query_bg.png) top left repeat-x;
-    z-index:100;
+    border:1px solid #cecece;
+    border-left: none;
+    border-right: none;
+    padding: 10px 16px 16px;
+    background:#fafafa;
     position:relative;
 }
+
 .tracker_report_query_followup_search {
     border-left:1px solid #CCC;
     border-top:1px solid #CCC;
@@ -1876,6 +1876,7 @@ tr.artifact-children-table-head {
 
 #tracker_report_renderers {
     margin-top: 24px;
+    margin: 24px 12px 0 12px;
 
     & > li:first-child {
         margin-left: 4px;
@@ -1895,4 +1896,9 @@ tr.artifact-children-table-head {
             }
         }
     }
+}
+
+body.in_tracker_report .main .content {
+    padding-left: 0;
+    padding-right: 0;
 }

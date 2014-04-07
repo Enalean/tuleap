@@ -1023,7 +1023,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $this->displayFooter($layout);
     }
 
-    public function displayHeader(Tracker_IDisplayTrackerLayout $layout, $title, $breadcrumbs, $toolbar = null) {
+    public function displayHeader(Tracker_IDisplayTrackerLayout $layout, $title, $breadcrumbs, $toolbar = null, array $params = array()) {
         if ($project = ProjectManager::instance()->getProject($this->group_id)) {
             $hp = Codendi_HTMLPurifier::instance();
             $breadcrumbs = array_merge(array(array('title' => $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML),
@@ -1055,7 +1055,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 );
             }
             $title = ($title ? $title .' - ' : ''). $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML);
-            $layout->displayHeader($project, $title, $breadcrumbs, $toolbar);
+            $layout->displayHeader($project, $title, $breadcrumbs, $toolbar, $params);
         }
     }
     public function displayFooter(Tracker_IDisplayTrackerLayout $layout) {

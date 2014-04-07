@@ -365,8 +365,10 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         $link_artifact_id = (int)$request->get('link-artifact-id');
         $title            = '';
         $breadcrumbs      = array();
+        $params           = array('body_class' => array('in_tracker_report'));
+        $toolbar          = null;
         if ($report_can_be_modified) {
-            $this->getTracker()->displayHeader($layout, $title, $breadcrumbs);
+            $this->getTracker()->displayHeader($layout, $title, $breadcrumbs, $toolbar, $params);
         }
         
         if ($request->get('pv')) {
@@ -567,7 +569,11 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         $html .= '<ul id="tracker_query">' . implode('', $criteria_fetched).'</ul>';
  
         $html .= '<div align="center">';
-        $html .= '<input type="submit" name="tracker_query_submit" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" /></div>';
+        $html .= '<button type="submit" name="tracker_query_submit" class="btn btn-primary">';
+        $html .= '<i class="icon-search"></i> ';
+        $html .= $GLOBALS['Language']->getText('global', 'btn_search');
+        $html .= '</button>';
+        $html .= '</div>';
         $html .= '</form>';
         $html .= '</div>';
         return $html;

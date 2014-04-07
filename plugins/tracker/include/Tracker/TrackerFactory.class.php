@@ -756,8 +756,9 @@ class TrackerFactory {
                             )
                     );
                     $toolbar = array();
+                    $params  = array();
 
-                    $trackermanager->displayHeader($project, 'Trackers', $breadcrumbs, $toolbar);
+                    $trackermanager->displayHeader($project, 'Trackers', $breadcrumbs, $toolbar, $params);
                     //var_dump($cmd_indent, $cmd_valid);
                     echo '<h2>XML file doesnt have correct format</h2>';
 
