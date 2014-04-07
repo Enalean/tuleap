@@ -568,7 +568,8 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      * @return string
      */
     protected function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
-        if (is_array($submitted_values[0])) {
+        $html = '';
+        if (! empty($submitted_values) && is_array($submitted_values[0])) {
             $value=$submitted_values[0][$this->getId()];
         } else {
             if ($value != null) {
@@ -620,10 +621,14 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         if ( empty($value) || ! $value->getTimestamp() ) {
             return $this->getNoValueLabel();
         }
-        $value = $value->getTimestamp();
-        $value = $value ? $this->formatDate($value) : '';
-        $html .= $value;
+        $value_timestamp = $value->getTimestamp();
+        $value_timestamp = $value_timestamp ? $this->formatDate($value_timestamp) : '';
+        $html .= $value_timestamp;
         return $html;
+    }
+
+    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+        return $this->fetchArtifactValueReadOnly($artifact, $value) . $this->getHiddenArtifactValueForEdition($artifact, $value);
     }
     
     /**

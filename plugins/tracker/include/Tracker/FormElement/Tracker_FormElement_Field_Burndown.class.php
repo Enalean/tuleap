@@ -90,7 +90,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     }
 
     public function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
-        return $this->fetchArtifactValueReadOnly($artifact, $value);
+        return $this->fetchArtifactValueWithEditionFormIfEditable($artifact, $value);
     }
 
     /**

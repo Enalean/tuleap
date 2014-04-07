@@ -212,6 +212,9 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         return $html;
     }
 
+    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+        return $this->fetchArtifactValueReadOnly($artifact, $value) . $this->getHiddenArtifactValueForEdition($artifact, $value);
+    }
     /**
      * Fetch the html code to display the field value in new artifact submission form
      *
@@ -334,9 +337,12 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                 $added[] = $add;
             }
             $html .= implode('', $added);
-        } else {
+        }
+
+        if ($read_only && ! count($values)) {
             $html .= $this->getNoValueLabel();
         }
+
         return $html;
     }
 

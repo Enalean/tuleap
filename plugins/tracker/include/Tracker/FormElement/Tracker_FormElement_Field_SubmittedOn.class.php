@@ -193,7 +193,7 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
      * @return string
      */
     protected function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
-        return $this->fetchArtifactValueReadOnly($artifact, $value);
+        return $this->fetchArtifactValueWithEditionFormIfEditable($artifact, $value);
     }
     
     /**
@@ -213,6 +213,10 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
         $value = $value ? $this->formatDateTime($value) : '';
         $html .= $value;
         return $html;
+    }
+
+    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+        return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
     
     /**

@@ -108,7 +108,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
      */
     protected function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         $html = '';        
-        if (is_array($submitted_values[0])) {
+        if (! empty($submitted_values) && is_array($submitted_values[0])) {
             $value=$submitted_values[0][$this->getId()];
         } else {
             if($value != null) {
