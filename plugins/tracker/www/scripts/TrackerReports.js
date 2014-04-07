@@ -745,26 +745,6 @@ document.observe('dom:loaded', function () {
     }
     if ($('tracker_report_query_form')) {
         
-        if ($('renderer_table_chunksz_input')) {
-            var form = $('tracker_report_query_form');
-            var element = $('renderer_table_chunksz_input');
-            var chunksz_old_value = element.value;
-           
-            var btn = $('renderer_table_chunksz_btn');
-            if (btn) {
-                btn.hide();
-                element.observe('focus', function () {
-                    btn.show();
-                });
-                element.observe('blur', function () {
-                    if (element.value === chunksz_old_value) {
-                        btn.hide();
-                    }
-                });
-            }
-            
-        }
-        
         var report_id   = $F($('tracker_report_query_form')['report']);
         var renderer_id = $$('.tracker_report_renderer')[0].id.gsub('tracker_report_renderer_', '');
         
