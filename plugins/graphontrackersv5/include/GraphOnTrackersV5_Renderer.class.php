@@ -389,5 +389,8 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
         }
         return $success;
     }
+
+    public function getIcon() {
+        return 'icon-bar-chart';
+    }
 }
-?>

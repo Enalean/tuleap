@@ -650,15 +650,10 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             
             //Display Renderers
             $html .= '<div>';
-            $html .= '<ul id="tracker_report_renderers">';
+            $html .= '<ul id="tracker_report_renderers" class="nav nav-tabs">';
             
-            //Display renderers
-            $previous_rank = null;
-            $next_rank     = null;
-            $previous_done = false;
-            $next_ok       = false;
             foreach($renderers as $r) {
-                $active = $r->id == $current_renderer->id ? 'tracker_report_renderers-current' : '';
+                $active = $r->id == $current_renderer->id ? 'tracker_report_renderers-current active dropdown' : '';
                 if ($active || !$link_artifact_id || is_a($r, 'Tracker_Report_Renderer_ArtifactLinkable')) {
                     $parameters = array(
                         'report'   => $this->id,
@@ -671,143 +666,46 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                         $parameters['link-artifact-id'] = (int)$link_artifact_id;
                         $parameters['only-renderer']    = 1;
                     }
-                    
-                    $html .= '<li id="tracker_report_renderer_'. $r->id .'" 
+
+                    $url = $active ? '#' : '?'. http_build_query($parameters);
+                    $html .= '<li id="tracker_report_renderer_'. $r->id .'"
                                   class="'. $active .'
                                             tracker_report_renderer_tab
-                                            tracker_report_renderer_tab_'. $r->getType() .'"><a href="?'. http_build_query($parameters). '" title="'.  $hp->purify($r->description, CODENDI_PURIFIER_CONVERT_HTML)  .'">';
+                                            tracker_report_renderer_tab_'. $r->getType() .'">
+                              <a href="'. $url .'" title="'.  $hp->purify($r->description, CODENDI_PURIFIER_CONVERT_HTML)  .'" '. ($active ? 'class="dropdown-toggle" data-toggle="dropdown"' : '') .'>';
                     $html .= '<input type="hidden" name="tracker_report_renderer_rank" value="'.(int)$r->rank.'" />';
+                    $html .= '<i class="'. $r->getIcon() .'"></i>';
                     $html .= ' '. $hp->purify($r->name, CODENDI_PURIFIER_CONVERT_HTML) ;
                     if ($active) {
-                        $previous_done = true;
                         //Check that user can update the renderer
                         if ($report_can_be_modified && $this->userCanUpdate($current_user)) {
-                            $html .= ' '. $GLOBALS['HTML']->getImage('ic/dropdown_panel_handler.png', array('id' => 'tracker_renderer_updater_handle'));
-                        }
-                    } else {
-                        if (!$previous_done) {
-                            $previous_rank = $r->rank;
-                        } else {
-                            if ($next_ok && $next_rank === null) {
-                                $next_rank = $r->rank;
-                            }
-                            $next_ok = true;
+                            $html .= ' <b class="caret" id="tracker_renderer_updater_handle"></b>';
                         }
                     }
                     $html .= '</a>';
+                    if ($report_can_be_modified && $this->userCanUpdate($current_user)) {
+                        $html .= '<div class="dropdown-menu">'. $this->fetchUpdateRendererForm($r) .'</div>';
+                    }
                     $html .= '</li>';
                 }
             }
-            if ($next_ok && $next_rank === null) {
-                $next_rank = 'end';
-            }
             
             if ($report_can_be_modified && $this->userCanUpdate($current_user)) {
-            
-                $html .= '<li class="tracker_report_renderers-add"><a id="tracker_renderer_add_handle"
-                                                                  href="?'. http_build_query(array(
-                                                                  'report'   => $this->id,
-                                                                  'action'   => 'add_renderer',
-                )). '">';
-                $html .=  '+' ;
-                $html .= '</a></li>';
+                $html .= '<li class="tracker_report_renderers-add dropdown">
+                    <a id="tracker_renderer_add_handle"
+                       href="#"
+                       class="dropdown-toggle"
+                       data-toggle="dropdown">';
+                $html .=  '<i class="icon-plus"></i>' ;
+                $html .= '</a>';
+                $html .= '<div class="dropdown-menu">'. $this->fetchAddRendererForm($current_renderer) .'</div>';
+                $html .= '</li>';
             }
             
             $html .= '</ul>';
             
     
             if ($current_renderer) {
-                //Check that the user can update the renderer
-                if ($report_can_be_modified && $this->userCanUpdate($current_user)) {
-                    $update_renderer = '';
-                    $update_renderer .= '<form action="" method="POST">';
-                    $update_renderer .= '<input type="hidden" name="report" value="'. $this->id .'" />';
-                    $update_renderer .= '<input type="hidden" name="renderer" value="'. (int)$current_renderer->id .'" />';
-                    $update_renderer .= '<ul>';
-                    $update_renderer .= '<li><input type="radio" name="func" value="rename-renderer" id="tracker_renderer_updater_rename" /> <label for="tracker_renderer_updater_rename">'. $GLOBALS['Language']->getText('plugin_tracker_report','update') .'</label><br /><br />
-                                         <blockquote>
-                                            <label for="tracker_renderer_updater_rename_name">'. $GLOBALS['Language']->getText('plugin_tracker_report','name') .'</label><br />
-                                            <input type="text" 
-                                                   name="new_name"  
-                                                   id="tracker_renderer_updater_rename_name" 
-                                                   value="'.  $hp->purify($current_renderer->name, CODENDI_PURIFIER_CONVERT_HTML)  .'" /><br />
-                                            <label for="tracker_renderer_updater_rename_description">'. $GLOBALS['Language']->getText('plugin_tracker_report','description') .'</label><br />
-                                            <textarea 
-                                                   name="new_description" 
-                                                   rows="5"
-                                                   cols="30"
-                                                   id="tracker_renderer_updater_rename_description" 
-                                                   >'.  $hp->purify($current_renderer->description, CODENDI_PURIFIER_CONVERT_HTML)  .'</textarea>
-                                         </blockquote>
-                                     </li>';
-                    if ($previous_rank === null && $next_rank === null) {
-                        //Do nothing because the renderer cannot be move (there is only one renderer)
-                    } else {
-                        $update_renderer .= '<li>
-                                    <input type="radio" name="func" value="move-renderer" id="tracker_renderer_updater_move" /> 
-                                    <label for="tracker_renderer_updater_move">'. 'Move';
-                        if ($previous_rank !== null && $next_rank !== null) {
-                            //both move are possible
-                            $update_renderer .= ' </label>
-                                <select name="move-renderer-direction" onchange="$(\'tracker_renderer_updater_moveleft\').checked = true;">
-                                    <option value="'. $previous_rank .'">'. 'Left' .'</option>
-                                    <option value="'. $next_rank .'">'. 'Right' .'</option>
-                                </select>';
-                        } else {
-                            if ($previous_rank !== null) {
-                                //Can only move to the left
-                                $rank_value = $previous_rank;
-                                $update_renderer .= ' Left';
-                            } else {
-                                //Can only move to the right
-                                $rank_value = $next_rank;
-                                $update_renderer .= ' Right';
-                            }
-                            $update_renderer .= '<input type="hidden" name="move-renderer-direction" value="'. $rank_value .'" />';
-                        }
-                        $update_renderer .= '</li>';
-                    }
-                    $update_renderer .= '<li><input type="radio" name="func" value="delete-renderer" id="tracker_renderer_updater_delete" /> <label for="tracker_renderer_updater_delete">'. $GLOBALS['Language']->getText('plugin_tracker_report', 'delete') .'</label></li>';
-                    $update_renderer .= '</ul><br/>';
-                    $update_renderer .= '<input type="submit" value="'.  $hp->purify($GLOBALS['Language']->getText('global', 'btn_submit'), CODENDI_PURIFIER_CONVERT_HTML)  .'" onclick="if ($(\'tracker_renderer_updater_delete\').checked) return confirm(\''. $GLOBALS['Language']->getText('plugin_tracker_report', 'confirm_delete_renderer') .'\');"/> ';
-                    $update_renderer .= '<input type="reset" value="'.  $hp->purify($GLOBALS['Language']->getText('global', 'btn_cancel'), CODENDI_PURIFIER_CONVERT_HTML)  .'" />';
-                    $update_renderer .= '</form>';
-                    $html .= $GLOBALS['HTML']->getDropdownPanel('tracker_renderer_updater', $update_renderer);
-                }
-                
-                //check that the user can update the report
-                if ($report_can_be_modified && $this->userCanUpdate($current_user)) {
-                
-                    $add_renderer = '';
-                    $add_renderer .= '<form action="" method="POST">';
-                    $add_renderer .= '<input type="hidden" name="report" value="'. $this->id .'" />';
-                    $add_renderer .= '<input type="hidden" name="renderer" value="'. (int)$current_renderer->id .'" />';
-                    $add_renderer .= '<input type="hidden" name="func" value="add-renderer" />';
-                    $rrf = Tracker_Report_RendererFactory::instance();
-                    $types = $rrf->getTypes();
-                    if (count($types) > 1) { //No need to ask for type if there is only one
-                        $type = '<select name="new_type" id="tracker_renderer_add_type">';
-                        foreach($types as $key => $label) {
-                            $type .= '<option value="'. $key .'">'.  $hp->purify($label, CODENDI_PURIFIER_CONVERT_HTML)  .'</option>';
-                        }
-                        $type .= '</select>';
-                    } else {
-                        list(,$type) = each($types);
-                    }
-                    $add_renderer .= '<p><strong>' . $GLOBALS['Language']->getText('plugin_tracker_report','add_new') . ' ' . $type .'</strong></p>';
-                    $add_renderer .= '<p>';
-                    $add_renderer .= '<label for="tracker_renderer_add_name">'. $GLOBALS['Language']->getText('plugin_tracker_report','name') .'</label><br/>
-                                     <input type="text" name="new_name" value="" id="tracker_renderer_add_name" /><br />';
-                                     
-                    $add_renderer .= '<label for="tracker_renderer_add_description">'. $GLOBALS['Language']->getText('plugin_tracker_report','description') .'</label><br/>
-                                     <input type="text" name="new_description" value="" id="tracker_renderer_add_description" /><br />';
-                                     
-                    $add_renderer .= '</p>';
-                    $add_renderer .= '<input type="submit" value="'.  $hp->purify($GLOBALS['Language']->getText('global', 'btn_submit'), CODENDI_PURIFIER_CONVERT_HTML)  .'" onclick="if (!$(\'tracker_renderer_add_name\').getValue()) { alert(\''. $GLOBALS['Language']->getText('plugin_tracker_report','name_mandatory') .'\'); return false;}"/> ';
-                    $add_renderer .= '<input type="reset" value="'.  $hp->purify($GLOBALS['Language']->getText('global', 'btn_cancel'), CODENDI_PURIFIER_CONVERT_HTML)  .'" />';
-                    $add_renderer .= '</form>';
-                    $html .= $GLOBALS['HTML']->getDropdownPanel('tracker_renderer_add', $add_renderer);
-                }
                 $html .= '<div class="tracker_report_renderer" id="tracker_report_renderer_'. $current_renderer->getId() .'">';
                 
                 //  Options menu
@@ -1542,6 +1440,77 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
 
         return $additional_criteria;
     }
-}
 
-?>
+    private function fetchUpdateRendererForm(Tracker_Report_Renderer $renderer) {
+        $hp = Codendi_HTMLPurifier::instance();
+
+        $update_renderer  = '';
+        $update_renderer .= '<form action="" method="POST">';
+        $update_renderer .= '<input type="hidden" name="report" value="'. $this->id .'" />';
+        $update_renderer .= '<input type="hidden" name="renderer" value="'. (int)$renderer->id .'" />';
+        $update_renderer .= '
+            <label class="radio">
+                <input type="radio" name="func" value="rename-renderer" id="tracker_renderer_updater_rename" />
+                '. $GLOBALS['Language']->getText('plugin_tracker_report','update') .'
+            </label>
+            <div class="tracker-renderer-details">
+               <label for="tracker_renderer_updater_rename_name">'. $GLOBALS['Language']->getText('plugin_tracker_report','name') .'</label>
+               <input type="text"
+                      name="new_name"
+                      id="tracker_renderer_updater_rename_name"
+                      value="'.  $hp->purify($renderer->name, CODENDI_PURIFIER_CONVERT_HTML)  .'" /><br />
+               <label for="tracker_renderer_updater_rename_description">'. $GLOBALS['Language']->getText('plugin_tracker_report','description') .'</label>
+               <textarea
+                      name="new_description"
+                      rows="5"
+                      cols="30"
+                      id="tracker_renderer_updater_rename_description"
+                      >'.  $hp->purify($renderer->description, CODENDI_PURIFIER_CONVERT_HTML)  .'</textarea>
+            </div>
+        ';
+        $update_renderer .= '<label class="radio"><input type="radio" name="func" value="delete-renderer" id="tracker_renderer_updater_delete" />'. $GLOBALS['Language']->getText('plugin_tracker_report', 'delete') .'</label>';
+        $update_renderer .= '<br/>';
+        $update_renderer .= '<input type="submit" class="btn btn-primary" value="'.  $hp->purify($GLOBALS['Language']->getText('global', 'btn_submit'), CODENDI_PURIFIER_CONVERT_HTML)  .'" onclick="if ($(\'tracker_renderer_updater_delete\').checked) return confirm(\''. $GLOBALS['Language']->getText('plugin_tracker_report', 'confirm_delete_renderer') .'\');"/> ';
+        $update_renderer .= '</form>';
+
+        return $update_renderer;
+    }
+
+    private function fetchAddRendererForm($current_renderer) {
+        $hp = Codendi_HTMLPurifier::instance();
+
+        $add_renderer  = '';
+        $add_renderer .= '<form action="" method="POST">';
+        $add_renderer .= '<input type="hidden" name="report" value="'. $this->id .'" />';
+        $add_renderer .= '<input type="hidden" name="renderer" value="'. (int)$current_renderer->id .'" />';
+        $add_renderer .= '<input type="hidden" name="func" value="add-renderer" />';
+        $rrf = Tracker_Report_RendererFactory::instance();
+        $types = $rrf->getTypes();
+        if (count($types) > 1) { //No need to ask for type if there is only one
+            $type = '<select name="new_type" id="tracker_renderer_add_type">';
+            foreach($types as $key => $label) {
+                $type .= '<option value="'. $key .'">'.  $hp->purify($label, CODENDI_PURIFIER_CONVERT_HTML)  .'</option>';
+            }
+            $type .= '</select>';
+        } else {
+            list(,$type) = each($types);
+        }
+        $add_renderer .= '<p><strong>' . $GLOBALS['Language']->getText('plugin_tracker_report','add_new') . ' ' . $type .'</strong></p>';
+        $add_renderer .= '<p>';
+        $add_renderer .= '<label for="tracker_renderer_add_name">'. $GLOBALS['Language']->getText('plugin_tracker_report','name') .'</label>
+                         <input type="text" name="new_name" value="" id="tracker_renderer_add_name" />';
+
+        $add_renderer .= '<label for="tracker_renderer_add_description">'. $GLOBALS['Language']->getText('plugin_tracker_report','description') .'</label>
+                         <textarea
+                            name="new_description"
+                            id="tracker_renderer_add_description"
+                            rows="5"
+                            cols="30"></textarea>';
+
+        $add_renderer .= '</p>';
+        $add_renderer .= '<input type="submit" class="btn btn-primary" value="'.  $hp->purify($GLOBALS['Language']->getText('global', 'btn_submit'), CODENDI_PURIFIER_CONVERT_HTML)  .'" onclick="if (!$(\'tracker_renderer_add_name\').getValue()) { alert(\''. $GLOBALS['Language']->getText('plugin_tracker_report','name_mandatory') .'\'); return false;}"/> ';
+        $add_renderer .= '</form>';
+
+        return $add_renderer;
+    }
+}

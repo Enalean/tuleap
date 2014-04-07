@@ -43,7 +43,6 @@ h5.artifack_link_subtitle {
     padding-top: 1em;
 }
 
-#tracker_report_renderers,
 #tracker-home-nav,
 .tracker-form-element-artifactlink-list-nav,
 .tracker-artifact-nav {
@@ -73,7 +72,6 @@ h5.artifack_link_subtitle {
     margin-bottom: 1em;
 }
 
-#tracker_report_renderers li,
 #tracker-home-nav li,
 .tracker-form-element-artifactlink-list-nav li,
 .tracker-artifact-nav li {
@@ -82,7 +80,6 @@ h5.artifack_link_subtitle {
     display: inline;
 }
 
-#tracker_report_renderers li a,
 #tracker-home-nav li a,
 .tracker-form-element-artifactlink-list-nav li a,
 .tracker-artifact-nav li a {
@@ -103,13 +100,6 @@ h5.artifack_link_subtitle {
         padding-left: 0.5em;
 }
 
-#tracker_report_renderers li a img {
-    vertical-align:middle;
-}
-#tracker_report_renderers li a:link,
-#tracker_report_renderers li a:visited,
-#tracker-home-nav li a:link,
-#tracker-home-nav li a:visited,
 .tracker-form-element-artifactlink-list-nav li a:link,
 .tracker-form-element-artifactlink-list-nav li a:visited,
 .tracker-artifact-nav li a:link,
@@ -117,33 +107,19 @@ h5.artifack_link_subtitle {
     color: black;
 }
 
-#tracker_report_renderers li a:hover,
-#tracker-home-nav li a:hover,
 .tracker-form-element-artifactlink-list-nav li a:hover,
 .tracker-artifact-nav li a:hover {
     color: black;
     background-color: #CCC;
 }
-#tracker_report_renderers li.tracker_report_renderers-current a,
-#tracker-home-nav li.current a,
+
 .tracker-form-element-artifactlink-list-nav li.tracker-form-element-artifactlink-list-nav-current a,
 .tracker-artifact-nav li.tracker-artifact-nav-current a {
     font-weight:bold;
     background-color: white;
     border-bottom: 1px solid white;
 }
-#tracker_report_renderers li.tracker_report_renderers-add {
-    font-size:0.8em;
-    padding-left:0.5em;
-}
-#tracker_report_renderers li.tracker_report_renderers-add a {
-    padding-left:0.6em;
-}
 .tracker_report_renderer {
-    border-top:1px solid transparent;
-    border-left:1px solid #999;
-    border-bottom:1px solid #999;
-    border-right:1px solid #999;
     background-color:white;
     padding:0 1em 1em;
     margin-bottom:1em;
@@ -804,12 +780,6 @@ div.tracker-admin-field-controls {
     -webkit-box-shadow: 2px 2px 10px #ccc;
     -moz-box-shadow: 2px 2px 10px #ccc;
     box-shadow: 2px 2px 10px #ccc;
-}
-#tracker_report_renderers li.tracker_report_renderer_tab_table a {
-    background-image: url(../images/ic/tracker_renderer_table-faded.png);
-}
-#tracker_report_renderers li.tracker_report_renderer_tab_table.tracker_report_renderers-current a {
-    background-image: url(../images/ic/tracker_renderer_table.png);
 }
 li.tracker_report_table_add_column_used,
 li.tracker_report_table_add_column_unused,
@@ -1901,5 +1871,28 @@ tr.artifact-children-table-head {
         text-align: center;
         font-size: 0.8em;
         color: #999;
+    }
+}
+
+#tracker_report_renderers {
+    margin-top: 24px;
+
+    & > li:first-child {
+        margin-left: 4px;
+    }
+
+    & > li {
+
+        & > a > b.caret {
+            margin-left: 16px;
+        }
+
+        & > .dropdown-menu {
+            padding: 20px 20px 0 20px;
+
+            & > form > .tracker-renderer-details {
+                margin-left: 20px;
+            }
+        }
     }
 }
