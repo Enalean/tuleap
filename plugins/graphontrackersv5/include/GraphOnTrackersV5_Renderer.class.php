@@ -127,27 +127,37 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
         $html = '';
         $hp = Codendi_HTMLPurifier::instance();
         if (!$readonly) {
-            $html .= '<form name="show_rep_graphic" action="" method="POST">
-                        <input type="hidden" name="func" VALUE="renderer" />
-                        <input type="hidden" name="renderer" VALUE="'. $this->id .'" />';
-                    
-            $html .= '<p><strong>'.$GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report','add_chart').'</strong> ';
+            $html .= '<div id="tracker_report_renderer_view_controls">';
+            $html .= '<div class="btn-group">';
+            $html .= '<a href="#" class="btn btn-mini dropdown-toggle" data-toggle="dropdown">';
+            $html .= '<i class="icon-plus"></i> ';
+            $html .= $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report','add_chart');
+            $html .= ' <span class="caret"></span>';
+            $html .= '</a>';
+            $html .= '<ul class="dropdown-menu pull-right"> ';
             $url = '?'. http_build_query(array(
                                                'report'   => $this->report->id,
                                                'renderer' => $this->id,
                                                'func'     => 'renderer',
                                               ));
             $url_add = $url .'&amp;renderer_plugin_graphontrackersv5[add_chart]=';
-            foreach($this->getChartFactory()
-                         ->getChartFactories() as $factory) {
-                $html .= '<a href="'. $url_add . $factory['chart_type'] .'"  
-                             style="border:1px solid #ccc; margin:10px; padding:5px 10px; vertical-align:middle">';
-                $html .= '<img style="vertical-align:middle; " src="'. $factory['icon'] .'" /> ';
-                $html .= '<span style="margin-left:4px;">'. $factory['title'] .'</span>';
+            foreach($this->getChartFactory()->getChartFactories() as $factory) {
+                $html .= '<li>';
+                $html .= '<a href="'. $url_add . $factory['chart_type'] .'">';
+                $html .= $factory['title'];
                 $html .= '</a>';
+                $html .= '</li>';
             }
-            $html .= '</p><hr size="1" color="#f0f0f0">';
+            $html .= '</ul>';
+            $html .= '</div>';
+            $html .= '</div>';
+            $html .= '<form action="" method="POST">
+                <input type="hidden" name="func" VALUE="renderer" />
+                <input type="hidden" name="renderer" VALUE="'. $this->id .'" />';
+
         }
+
+        $html .= '<div class="tracker_report_renderer_graphontrackers_charts">';
         foreach($this->getChartFactory()
                      ->getCharts($this) as $chart) {
             $html .= '<div style="float:left; padding:10px; text-align:right;">';
@@ -206,6 +216,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
             $html .= '</div>';
         }
         $html .= '<div style="clear:both;"></div>';
+        $html .= '</div>';
         if (!$readonly) {
             $html .='</form>';
         }

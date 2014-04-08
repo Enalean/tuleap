@@ -120,12 +120,35 @@ h5.artifack_link_subtitle {
 }
 .tracker_report_renderer {
     background-color:white;
-    padding:0 1em 1em;
+    padding: 1em;
     margin-bottom:1em;
-}
-.tracker_report_renderer h3 {
-    padding-top:1em;
-    margin-top:0;
+
+    & > .tracker_report_renderer_table_information {
+        clear: both;
+        font-size: 0.8em;
+        margin-top: 40px;
+        color: #646464;
+
+        & > p {
+            margin-bottom: 5px;
+        }
+
+        & > .tracker_report_table_sortby_panel {
+            float: right;
+
+            & > .icon-angle-right {
+                margin: auto 8px;
+            }
+        }
+
+        & > p > strong,
+        & > .tracker_report_table_sortby_panel > a {
+            color: #333;
+            font-size: 1.2em;
+            font-weight: normal;
+        }
+
+    }
 }
 
 .tracker_report_query {
@@ -442,17 +465,6 @@ ul.tracker_function_aggregate_results {
     margin:0;
     position:relative;
     z-index: 50;
-}
-#tracker_report_table_sortby_panel {
-}
-.tracker_report_table_sort_controls {
-    padding-top:0.5em;
-    font-size:0.7em;
-    color:lightgray;
-}
-.tracker_report_table_sort_controls a:link,
-.tracker_report_table_sort_controls a:visited {
-    color:gray;
 }
 
 /* Disable bootrap width for elements controled by tracker config  */
@@ -844,12 +856,8 @@ li.tracker_aggregate_function_add_unused:hover {
     float:right;
 }
 #tracker_renderer_options {
-    font-weight:normal;
-    float:right;
-    z-index: 150;
-}
-#tracker_renderer_options_menu_handle {
-    font-size:0.8em;
+    margin-bottom: 10px;
+    float: left;
 }
 #renderer_table_chunksz_input {
     width: 35px;
@@ -1910,4 +1918,8 @@ tr.artifact-children-table-head {
 body.in_tracker_report .main .content {
     padding-left: 0;
     padding-right: 0;
+}
+
+#tracker_report_renderer_view_controls {
+    float: right;
 }

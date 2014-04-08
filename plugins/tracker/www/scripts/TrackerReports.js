@@ -689,24 +689,26 @@ document.observe('dom:loaded', function () {
                 mc_panel.up('.tracker_report_renderer').toggleClassName('tracker_report_table_show_masschange');
                 $$('.tracker_report_table_masschange').invoke('show');
             } else {
-                $('tracker_renderer_options_menu').down('ul').insert(
-                    {
-                        bottom: new Element('li').insert(
-                            new Element('a', {
-                                href: '#masschange'
-                            }).observe('click', function (evt) {
-                                codendi.dropdown_panels.invoke('reset');
-                                $$('.tracker_report_table_masschange').invoke('show');
-                                mc_panel.up('.tracker_report_renderer').toggleClassName('tracker_report_table_hide_masschange');
-                                mc_panel.up('.tracker_report_renderer').toggleClassName('tracker_report_table_show_masschange');
-                                if (mc_panel.up('.tracker_report_renderer').hasClassName('tracker_report_table_show_masschange')) {
-                                    Element.scrollTo(mc_panel);
-                                }
-                                Event.stop(evt);
-                            }).update('<img src="'+ codendi.imgroot +'ic/clipboard-lightning.png" style="vertical-align:top" /> ' + codendi.locales.tracker_artifact.masschange)
-                        )
-                    }
+                var masschange_button = new Element('div', { className: 'btn-group' })
+                    .update(
+                        new Element('a', {
+                            href: '#masschange'
+                        }).addClassName('btn btn-mini')
+                        .observe('click', function (evt) {
+                            codendi.dropdown_panels.invoke('reset');
+                            $$('.tracker_report_table_masschange').invoke('show');
+                            mc_panel.up('.tracker_report_renderer').toggleClassName('tracker_report_table_hide_masschange');
+                            mc_panel.up('.tracker_report_renderer').toggleClassName('tracker_report_table_show_masschange');
+                            if (mc_panel.up('.tracker_report_renderer').hasClassName('tracker_report_table_show_masschange')) {
+                                Element.scrollTo(mc_panel);
+                            }
+                            Event.stop(evt);
+                        })
+                        .update('<i class="icon-pencil"></i> ' + codendi.locales.tracker_artifact.masschange)
                 );
+
+                $('tracker_renderer_options').insert({ top: ' ' });
+                $('tracker_renderer_options').insert({ top: masschange_button });
             }
         }
         

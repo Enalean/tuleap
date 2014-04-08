@@ -394,7 +394,7 @@ plugin_tracker_include_report	or_use	ou utiliser la
 plugin_tracker_include_report	simple_search	Recherche simple
 plugin_tracker_include_report	adv_search	Recherche avancée	
 plugin_tracker_include_report	sorted_by	trié(s) par
-plugin_tracker_include_report	matching	artefact(s)
+plugin_tracker_include_report	matching	Artefact(s) : <strong>$1</strong>
 plugin_tracker_include_report	sort_results	Cliquer sur une entête de colonne pour trier les résultats (ordre ascendant ou descendant), 
 plugin_tracker_include_report	sort_sev	trier par $1
 plugin_tracker_include_report	reset_sort	réinitialiser le tri
@@ -1270,11 +1270,12 @@ plugin_tracker_report	confirm_delete	Etes-vous sûr de vouloir supprimer ce rapp
 plugin_tracker_report	current_report	Rapport courant :
 plugin_tracker_report	toggle_criteria	Modifier les critères
 plugin_tracker_report	toggle_columns	Modifier les colonnes
-plugin_tracker_report	click_to_sort	Cliquer sur une entête de colonne pour trier les résultats.
 plugin_tracker_report	sort_by	Triés par : 
 plugin_tracker_report	reset_sort	Réinitialiser le tri
 plugin_tracker_report	disable_multisort	Desactiver le tri multi-colonnes
 plugin_tracker_report	enable_multisort	Activer le tri multi-colonnes
+plugin_tracker_report	export	Exporter
+plugin_tracker_report	dashboard	Ajouter au tableau de bord
 plugin_tracker_report	my_dashboard	Ajouter à mon tableau de bord
 plugin_tracker_report	project_dashboard	Ajouter au tableau de bord du projet
 plugin_tracker_report	update	Mettre à jour

@@ -713,30 +713,18 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
     
             if ($current_renderer) {
                 $html .= '<div class="tracker_report_renderer" id="tracker_report_renderer_'. $current_renderer->getId() .'">';
-                
-                //  Options menu
-                if ($report_can_be_modified && ($options = $current_renderer->getOptionsMenuItems())) {
-                    $html .= '<div id="tracker_renderer_options">';
-                    $html .= '<a href="#" id="tracker_renderer_options_menu_handle">options '. $GLOBALS['HTML']->getimage('ic/dropdown_panel_handler_button.png', array('style' => 'vertical-align:top')) .'</a>';
-                    
-                    $menu_dropdown = '<ul>';
-                    foreach ($options as $item) {
-                        if ($item === 'separator') {
-                            $menu_dropdown .= '<li><hr size="1" width="95%" style="color:#ccc"/></li>';
-                        } else {
-                          $menu_dropdown .= '<li><a href="'.$item['url'] .'">'. $item['icon'] .' '. $item['label'] .'</a></li>';
-    
-                        }
-                    }
-                    $menu_dropdown .= '</ul>';
-                    
-                    $html .= $GLOBALS['HTML']->getDropdownPanel('tracker_renderer_options_menu', $menu_dropdown);
-                    $html .= '</div>';
-                }
-                
+
                 if ($current_renderer->description) {
                     $html .= '<p class="tracker_report_renderer_description">'. $hp->purify($current_renderer->description, CODENDI_PURIFIER_BASIC) .'</p>';
                 }
+
+                //  Options menu
+                if ($report_can_be_modified && ($options = $current_renderer->getOptionsMenuItems())) {
+                    $html .= '<div id="tracker_renderer_options">';
+                    $html .= implode(' ', $options);
+                    $html .= '</div>';
+                }
+
                 //Warning about Full text in Tracker Report...
                 $fts_warning = '';
                 $params = array('html' => &$fts_warning, 'request' => $request, 'group_id' => $this->getProjectId());

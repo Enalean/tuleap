@@ -21,7 +21,10 @@
 require_once('common/include/Codendi_HTTPPurifier.class.php');
 
 class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements Tracker_Report_Renderer_ArtifactLinkable {
-    
+
+    const EXPORT_LIGHT = 1;
+    const EXPORT_FULL  = 0;
+
     public $chunksz;
     public $multisort;
     
@@ -305,20 +308,42 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             $extracolumn = self::EXTRACOLUMN_LINK;
         }
             
-        
-        //Display # matching
-        $html .= $this->_fetchMatchingNumber($total_rows);
-        
+        $html .= $this->fetchHeader($report_can_be_modified, $user, $total_rows);
+        $html .= $this->fetchTable($report_can_be_modified, $matching_ids, $total_rows, $offset, $extracolumn);
+
+        //Display next/previous
+        $html .= $this->fetchNextPrevious($total_rows, $offset, $report_can_be_modified, (int)$request->get('link-artifact-id'));
+
+        //Display masschange controls
+        if ((int)$request->get('link-artifact-id')) {
+            //TODO
+        } else {
+            $html .= $this->fetchMassChange($matching_ids, $total_rows, $offset);
+        }
+
+        return $html;
+    }
+
+    private function fetchHeader($report_can_be_modified, PFUser $user, $total_rows) {
+        $html = '';
+
+        $html .= $this->fetchViewButtons($report_can_be_modified, $user);
+
         //Display sort info
+        $html .= '<div class="tracker_report_renderer_table_information">';
         if ($report_can_be_modified) {
-            $html .= $this->_fetchSort();
+            $html .= $this->fetchSort();
         }
-        
-        if ($report_can_be_modified && $this->report->userCanUpdate($user)) {
-            //Display the column switcher
-            $html .= $this->_fetchAddColumn();
-        }
-        
+
+        $html .= $this->fetchMatchingNumber($total_rows);
+        $html .= '</div>';
+
+        return $html;
+    }
+
+    private function fetchTable($report_can_be_modified, $matching_ids, $total_rows, $offset, $extracolumn) {
+        $html = '';
+
         //Display the head of the table
         if ($report_can_be_modified) {
             $only_one_column = null;
@@ -327,21 +352,11 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             $only_one_column = null;
             $with_sort_links = false;
         }
-        $html .= $this->_fetchHead($extracolumn, $only_one_column, $with_sort_links);
-        
+        $html .= $this->fetchTHead($extracolumn, $only_one_column, $with_sort_links);
+
         //Display the body of the table
-        $html .= $this->_fetchBody($matching_ids, $total_rows, $offset, $extracolumn);
-        
-        //Display next/previous
-        $html .= $this->_fetchNextPrevious($total_rows, $offset, $report_can_be_modified, (int)$request->get('link-artifact-id'));
-        
-        //Display masschange controls
-        if ((int)$request->get('link-artifact-id')) {
-            //TODO
-        } else {
-            $html .= $this->_fetchMassChange($matching_ids, $total_rows, $offset);
-        }
-        
+        $html .= $this->fetchTBody($matching_ids, $total_rows, $offset, $extracolumn);
+
         return $html;
     }
     
@@ -364,12 +379,12 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
         //Display the head of the table
         $suffix = '_'. $field_id .'_'. $this->report->id .'_'. $this->id;
-        $head .= $this->_fetchHead($extracolumn, $only_one_column, $with_sort_links, $use_data_from_db, $suffix);
+        $head .= $this->fetchTHead($extracolumn, $only_one_column, $with_sort_links, $use_data_from_db, $suffix);
         if (!$only_rows) {
             $html .= $head;
         }
         //Display the body of the table
-        $html .= $this->_fetchBody($matching_ids, $total_rows, $offset, $extracolumn, $only_one_column, $use_data_from_db, $pagination, $field_id, $prefill_removed_values, $only_rows, $read_only, $store_in_session, $from_aid);
+        $html .= $this->fetchTBody($matching_ids, $total_rows, $offset, $extracolumn, $only_one_column, $use_data_from_db, $pagination, $field_id, $prefill_removed_values, $only_rows, $read_only, $store_in_session, $from_aid);
         
         if (!$only_rows) {
             $html .= $this->fetchArtifactLinkGoToTracker();
@@ -389,41 +404,45 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      * @return array of 'item_key' => {url: '', icon: '', label: ''}
      */
     public function getOptionsMenuItems() {
-        $items = parent::getOptionsMenuItems();
-        $items['export_light'] = array(
-            'url'   => TRACKER_BASE_URL.'/?'.http_build_query(
-                array(
-                    'report'         => $this->report->id,
-                    'renderer'       => $this->id,
-                    'func'           => 'renderer',
-                    'renderer_table' => array(
-                        'export'                       => 1,
-                        'export_only_displayed_fields' => 1,
-                    ),
-                )
-            ),
-            'icon'  => $GLOBALS['HTML']->getImage('ic/clipboard-paste.png', array('border' => 0, 'alt' => '', 'style' => 'vertical-align:middle;')),
-            'label' => $GLOBALS['Language']->getText('plugin_tracker_include_report' ,'export_only_report_columns'),
-        );
-        $items['export_full'] = array(
-            'url'   => TRACKER_BASE_URL.'/?'.http_build_query(
-                array(
-                    'report'         => $this->report->id,
-                    'renderer'       => $this->id,
-                    'func'           => 'renderer',
-                    'renderer_table' => array(
-                        'export'                       => 1,
-                        'export_only_displayed_fields' => 0,
-                    ),
-                )
-            ),
-            'icon'  => $GLOBALS['HTML']->getImage('ic/clipboard-paste.png', array('border' => 0, 'alt' => '', 'style' => 'vertical-align:middle;')),
-            'label' => $GLOBALS['Language']->getText('plugin_tracker_include_report' ,'export_all_columns'),
-        );
-        return $items;
+        $my_items = array('export' => '');
+        $my_items['export'] .= '<div class="btn-group">';
+        $my_items['export'] .= '<a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#">';
+        $my_items['export'] .= '<i class="icon-download-alt"></i> ';
+        $my_items['export'] .= $GLOBALS['Language']->getText('plugin_tracker_report', 'export');
+        $my_items['export'] .= ' <span class="caret"></span>';
+        $my_items['export'] .= '</a>';
+        $my_items['export'] .= '<ul class="dropdown-menu">';
+        $my_items['export'] .= '<li>';
+        $my_items['export'] .= '<a href="'. $this->getExportResultURL(self::EXPORT_LIGHT) .'">';
+        $my_items['export'] .= $GLOBALS['Language']->getText('plugin_tracker_include_report', 'export_only_report_columns');
+        $my_items['export'] .= '</a>';
+        $my_items['export'] .= '</li>';
+        $my_items['export'] .= '<li>';
+        $my_items['export'] .= '<a href="'. $this->getExportResultURL(self::EXPORT_FULL) .'">';
+        $my_items['export'] .= $GLOBALS['Language']->getText('plugin_tracker_include_report', 'export_all_columns');
+        $my_items['export'] .= '</a>';
+        $my_items['export'] .= '</li>';
+        $my_items['export'] .= '</ul>';
+        $my_items['export'] .= '</div>';
+
+        return $my_items + parent::getOptionsMenuItems();
     }
-    
-    protected function _form($id = '', $func = 'renderer') {
+
+    private function getExportResultURL($export_only_displayed_fields) {
+        return TRACKER_BASE_URL.'/?'.http_build_query(
+            array(
+                'report'         => $this->report->id,
+                'renderer'       => $this->id,
+                'func'           => 'renderer',
+                'renderer_table' => array(
+                    'export'                       => 1,
+                    'export_only_displayed_fields' => $export_only_displayed_fields,
+                ),
+            )
+        );
+    }
+
+    private function fetchFormStart($id = '', $func = 'renderer') {
         $html  = '';
         $html .= '<form method="POST" action="" id="'. $id .'" class="form-inline">';
         $html .= '<input type="hidden" name="report" value="'. $this->report->id .'" />';
@@ -452,30 +471,31 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $read_only              = true;
         $id_suffix              = '';
         //Display the head of the table
-        $html .= $this->_fetchHead($extracolumn, $only_one_column, $with_sort_links, $use_data_from_db, $id_suffix, $store_in_session);
+        $html .= $this->fetchTHead($extracolumn, $only_one_column, $with_sort_links, $use_data_from_db, $id_suffix, $store_in_session);
         //Display the body of the table
-        $html .= $this->_fetchBody($matching_ids, $total_rows, $offset, $extracolumn, $only_one_column, $use_data_from_db, $pagination, $artifactlink_field_id, $prefill_removed_values, $only_rows, $read_only, $store_in_session);
+        $html .= $this->fetchTBody($matching_ids, $total_rows, $offset, $extracolumn, $only_one_column, $use_data_from_db, $pagination, $artifactlink_field_id, $prefill_removed_values, $only_rows, $read_only, $store_in_session);
         
         //Dispaly range
         $offset_last = min($offset + $this->chunksz - 1, $total_rows - 1);
         $html .= '<div class="tracker_report_table_pager">';
-        $html .= $this->_fetchRange($offset + 1, $offset_last + 1, $total_rows, $this->fetchWidgetGoToReport());
+        $html .= $this->fetchRange($offset + 1, $offset_last + 1, $total_rows, $this->fetchWidgetGoToReport());
         $html .= '</div>';
         
         return $html;
     }
     
-    protected function _fetchMatchingNumber($total_rows) {
-        $html = '<h3>'. $total_rows .' '. $GLOBALS['Language']->getText('plugin_tracker_include_report','matching') .'</h3>';
+    private function fetchMatchingNumber($total_rows) {
+        $html = '<p>'. $GLOBALS['Language']->getText('plugin_tracker_include_report', 'matching', $total_rows) .'</p>';
         return $html;
     }
     
-    protected function _fetchSort() {
+    private function fetchSort() {
         $html = '';
-        $html .= '<div id="tracker_report_table_sortby_panel">';
+        $html .= '<div class="tracker_report_table_sortby_panel">';
         $sort_columns = $this->getSort();
         if ($this->sortHasUsedField()) {
             $html .= $GLOBALS['Language']->getText('plugin_tracker_report','sort_by');
+            $html .= ' ';
             $ff = $this->getFieldFactory();
             $sort = array();
             foreach($sort_columns as $row) {
@@ -494,37 +514,13 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                             '</a>';
                 }
             }
-            $html .= implode(' &gt; ', $sort);
-            
-            $html .= '<div class="tracker_report_table_sort_controls">';
-            //reset sort
-            $html .= '<a href="?' . http_build_query(array(
-                               'report'                    => $this->report->id,
-                               'renderer'                  => $this->id,
-                               'func'                      => 'renderer',
-                               'renderer_table[resetsort]' => 1
-                               )) .'">'. 
-                     $GLOBALS['Language']->getText('plugin_tracker_report','reset_sort') .
-                     '</a>';
-            $html .= ' | ';
-            //toggle multisort
-            $multisort_label = $this->multisort ? $GLOBALS['Language']->getText('plugin_tracker_report','disable_multisort') : $GLOBALS['Language']->getText('plugin_tracker_report','enable_multisort');
-            $html .= '<a href="?' . http_build_query(array(
-                               'report'                    => $this->report->id,
-                               'renderer'                  => $this->id,
-                               'func'                      => 'renderer',
-                               'renderer_table[multisort]' => 1
-                               )) .'"';;            
-            $html .= '>'. $multisort_label .'</a>';
-            $html .= '</div>';
-        } else {
-            $html .= '<span style="color:#666">'. $GLOBALS['Language']->getText('plugin_tracker_report', 'click_to_sort') .'</span>';
+            $html .= implode(' <i class="icon-angle-right"></i> ', $sort);
         }
         $html .= '</div>';
         return $html;
     }
     
-    protected function _fetchAddColumn() {
+    private function fetchAddColumn() {
         $html = '';
         $used = $this->getColumns();
         $options = '';
@@ -534,7 +530,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             }
         }
         if ($options) {
-            $html .= $this->_form('tracker_report_table_addcolumn_form');
+            $html .= $this->fetchFormStart('tracker_report_table_addcolumn_form');
             $html .= '<div id="tracker_report_table_addcolumn_panel">';
             $html .= '<select name="renderer_table[add_column]" id="tracker_report_table_add_column" autocomplete="off">';
             $html .= '<option selected="selected" value="">'. '-- '.$GLOBALS['Language']->getText('plugin_tracker_report', 'toggle_columns').'</option>';
@@ -547,7 +543,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return $html;
     }
     
-    protected function _fetchRange($from, $to, $total_rows, $additionnal_html) {
+    private function fetchRange($from, $to, $total_rows, $additionnal_html) {
         $html = '';
         $html .= '<span class="tracker_report_table_pager_range">';
         $html .= $GLOBALS['Language']->getText('plugin_tracker_include_report','items');
@@ -555,10 +551,11 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $html .= ' ' . $GLOBALS['Language']->getText('plugin_tracker_renderer_table','items_range_of') . ' <strong>'. $total_rows .'</strong>';
         $html .= $additionnal_html;
         $html .= '</span>';
+
         return $html;
     }
     
-    protected function _fetchNextPrevious($total_rows, $offset, $report_can_be_modified, $link_artifact_id = null) {
+    private function fetchNextPrevious($total_rows, $offset, $report_can_be_modified, $link_artifact_id = null) {
         $html = '';
         if ($total_rows) {
             $parameters = array(
@@ -586,10 +583,10 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             }
             $chunk .= '</span>';
             
-            $html .= $this->_form('tracker_report_table_next_previous_form');
+            $html .= $this->fetchFormStart('tracker_report_table_next_previous_form');
             $html .= '<div class="tracker_report_table_pager">';
             if ($total_rows < $this->chunksz) {
-                $html .= $this->_fetchRange(1, $total_rows, $total_rows, $chunk);
+                $html .= $this->fetchRange(1, $total_rows, $total_rows, $chunk);
             } else {
                 if ($offset > 0) {
                     $html .= $this->getPagerButton($url . 0, 'begin');
@@ -600,8 +597,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 }
                 
                 $offset_last = min($offset + $this->chunksz - 1, $total_rows - 1);
-                $html .= $this->_fetchRange($offset + 1, $offset_last + 1, $total_rows, $chunk);
-                
+                $html .= $this->fetchRange($offset + 1, $offset_last + 1, $total_rows, $chunk);
+
                 if (($offset + $this->chunksz) < $total_rows) {
                     if ($this->chunksz > 0) {
                         $offset_end = ($total_rows - ($total_rows % $this->chunksz));
@@ -618,8 +615,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                     $html .= $this->getDisabledPagerButton('end');
                 }
             }
-            $html .= '</form>';
             $html .= '</div>';
+            $html .= '</form>';
         }
         return $html;
     }
@@ -681,7 +678,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     const EXTRACOLUMN_LINK       = 2;
     const EXTRACOLUMN_UNLINK     = 3;
     
-    protected function _fetchHead($extracolumn = 1, $only_one_column = null, $with_sort_links = true, $use_data_from_db = false, $id_suffix = '', $store_in_session = true) {
+    private function fetchTHead($extracolumn = 1, $only_one_column = null, $with_sort_links = true, $use_data_from_db = false, $id_suffix = '', $store_in_session = true) {
         $html  = '';
         $html .= '<table';
         if (!$only_one_column) {
@@ -840,7 +837,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      *
      * @return string html
      */
-    protected function _fetchBody($matching_ids, $total_rows, $offset, $extracolumn = 1, $only_one_column = null, $use_data_from_db = false, $pagination = true, $artifactlink_field_id = null, $prefill_removed_values = null, $only_rows = false, $read_only = false, $store_in_session = true, $from_aid = null) {
+    private function fetchTBody($matching_ids, $total_rows, $offset, $extracolumn = 1, $only_one_column = null, $use_data_from_db = false, $pagination = true, $artifactlink_field_id = null, $prefill_removed_values = null, $only_rows = false, $read_only = false, $store_in_session = true, $from_aid = null) {
         $html = '';
         if (!$only_rows) {
             $html .= "\n<!-- table renderer body -->\n";
@@ -1232,7 +1229,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return $queries;
     }
     
-    protected function _fetchMassChange($matching_ids, $total_rows, $offset) {
+    private function fetchMassChange($matching_ids, $total_rows, $offset) {
         $html    = '';
         $tracker = $this->report->getTracker();
         if ($tracker->userIsAdmin()) {
@@ -1438,8 +1435,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                         $extracolumn     = self::NO_EXTRACOLUMN;
                         $total_rows      = $matching_ids['id'] ? substr_count($matching_ids['id'], ',') + 1 : 0;
                         
-                        echo $this->_fetchHead($extracolumn, $field_id);
-                        echo $this->_fetchBody($matching_ids, $total_rows, $offset, $extracolumn, $field_id);
+                        echo $this->fetchTHead($extracolumn, $field_id);
+                        echo $this->fetchTBody($matching_ids, $total_rows, $offset, $extracolumn, $field_id);
                     }
                 }
             }
@@ -1823,7 +1820,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     }
 
     private function getSortIcon($is_desc) {
-        return '<i class="icon-caret-'. ( $is_desc ? 'down' : 'up' ) .'"></i>';
+        return ' <i class="icon-caret-'. ( $is_desc ? 'down' : 'up' ) .'"></i>';
     }
 
     private function canFieldBeUsedToSort(Tracker_FormElement_Field $field, PFUser $current_user) {
@@ -1838,5 +1835,47 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
     public function getIcon() {
         return 'icon-list-ul';
+    }
+
+    private function fetchViewButtons($report_can_be_modified, $user) {
+        $html  = '';
+        $html .= '<div id="tracker_report_renderer_view_controls">';
+        if ($this->sortHasUsedField()) {
+            //reset sort
+            $reset_sort_params = array(
+                'report'                    => $this->report->id,
+                'renderer'                  => $this->id,
+                'func'                      => 'renderer',
+                'renderer_table[resetsort]' => 1
+            );
+            $html .= '<div class="btn-group"><a class="btn btn-mini" href="?' . http_build_query($reset_sort_params) .'">'
+                . '<i class="icon-reply"></i> '
+                . $GLOBALS['Language']->getText('plugin_tracker_report','reset_sort')
+                . '</a></div> ';
+
+            //toggle multisort
+            $multisort_params = array(
+                'report'                    => $this->report->id,
+                'renderer'                  => $this->id,
+                'func'                      => 'renderer',
+                'renderer_table[multisort]' => 1
+            );
+            $multisort_label = $GLOBALS['Language']->getText('plugin_tracker_report','enable_multisort');
+            if ($this->multisort) {
+                $multisort_label = $GLOBALS['Language']->getText('plugin_tracker_report','disable_multisort');
+            }
+            $html .= '<div class="btn-group"><a class="btn btn-mini" href="?' . http_build_query($multisort_params) .'">'
+                . '<i class="icon-sort"></i> '
+                . $multisort_label
+                . '</a></div> ';
+
+        }
+
+        if ($report_can_be_modified && $this->report->userCanUpdate($user)) {
+            $html .= $this->fetchAddColumn();
+        }
+        $html .= '</div>';
+
+        return $html;
     }
 }
