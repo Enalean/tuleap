@@ -209,13 +209,16 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase {
                       array('create',
                             'getTrackersByGroupId',
                             'getHierarchyFactory',
-                            'getFormElementFactory'
+                            'getFormElementFactory',
+                            'getTriggerRulesManager'
                       ));
-        $this->hierarchy_factory = new MockTracker_HierarchyFactory();
-        $this->formelement_factory = mock('Tracker_FormElementFactory');
+        $this->hierarchy_factory     = new MockTracker_HierarchyFactory();
+        $this->trigger_rules_manager = mock('Tracker_Workflow_Trigger_RulesManager');
+        $this->formelement_factory   = mock('Tracker_FormElementFactory');
 
         $this->tracker_factory->setReturnValue('getHierarchyFactory', $this->hierarchy_factory);
         $this->tracker_factory->setReturnValue('getFormElementFactory', $this->formelement_factory);
+        $this->tracker_factory->setReturnValue('getTriggerRulesManager', $this->trigger_rules_manager);
         
     }
     
@@ -289,7 +292,27 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase {
         return $t1;
     }
 
-    
+    public function testDuplicate_duplicatesAllTriggerRules() {
+
+        $t1 = $this->GivenADuplicatableTracker(1234);
+        stub($t1)->getName()->returns('Bugs');
+        stub($t1)->getDescription()->returns('Bug Tracker');
+        stub($t1)->getItemname()->returns('bug');
+
+        $trackers = array($t1);
+        $this->tracker_factory->setReturnReference('getTrackersByGroupId', $trackers, array(100));
+
+        $t_new = stub('Tracker')->getId()->returns(555);
+
+        $this->tracker_factory->setReturnValue('create', array('tracker' => $t_new, 'field_mapping' => array())) ;
+
+        $this->tracker_factory->expectOnce('create', array(999, 100, 1234, 'Bugs', 'Bug Tracker', 'bug', null));
+
+        $this->trigger_rules_manager->expectOnce('duplicate');
+
+        $this->tracker_factory->duplicate(100, 999, null);
+    }
+
 }
 
 

@@ -40,6 +40,115 @@ abstract class Tracker_Workflow_Trigger_RulesManagerTest extends TuleapTestCase 
     }
 }
 
+class Tracker_Workflow_Trigger_RulesManager_duplicateTest extends Tracker_Workflow_Trigger_RulesManagerTest {
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->manager = partial_mock(
+            'Tracker_Workflow_Trigger_RulesManager',
+            array('add', 'getForTargetTracker', 'getTriggers'),
+            array(
+                $this->dao,
+                $this->formelement_factory,
+                $this->rules_processor,
+                mock('WorkflowBackendLogger')
+            )
+        );
+    }
+
+    public function itDuplicatesTriggerRulesFromOldTracker() {
+        $template_tracker  = stub('Tracker')->getId()->returns(101);
+        $new_field_01      = aMockField()->withTracker($template_tracker)->withId(502)->build();
+        $new_field_02      = aMockField()->withTracker($template_tracker)->withId(503)->build();
+        $new_field_03      = aMockField()->withTracker($template_tracker)->withId(501)->build();
+
+        stub($this->formelement_factory)->getFieldById(502)->returns($new_field_01);
+        stub($this->formelement_factory)->getFieldById(503)->returns($new_field_02);
+        stub($this->formelement_factory)->getFieldById(501)->returns($new_field_03);
+
+        $trigger_01 = new Tracker_Workflow_Trigger_FieldValue(
+            aSelectBoxField()->withId(102)->build(),
+            aBindStaticValue()->withId(101)->build()
+        );
+
+        $trigger_02 = new Tracker_Workflow_Trigger_FieldValue(
+            aSelectBoxField()->withId(103)->build(),
+            aBindStaticValue()->withId(104)->build()
+        );
+
+        $rule_01 = new Tracker_Workflow_Trigger_TriggerRule(
+            0,
+            new Tracker_Workflow_Trigger_FieldValue(
+                aSelectBoxField()->withId(101)->build(),
+                aBindStaticValue()->withId(101)->build()
+            ),
+            Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_AT_LEAST_ONE,
+            array(
+                $trigger_01
+            )
+        );
+
+        $rule_02 = new Tracker_Workflow_Trigger_TriggerRule(
+            1,
+            new Tracker_Workflow_Trigger_FieldValue(
+                aSelectBoxField()->withId(101)->build(),
+                aBindStaticValue()->withId(102)->build()
+            ),
+            Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF,
+            array(
+                $trigger_02
+            )
+        );
+
+
+        stub($this->manager)->getForTargetTracker()->returns(
+            array($rule_01, $rule_02)
+        );
+
+        stub($this->manager)->getTriggers(0)->returns($trigger_01);
+        stub($this->manager)->getTriggers(1)->returns($trigger_02);
+
+        $template_trackers = array(
+           $template_tracker,
+        );
+
+        $field_mapping = array(
+            0 => array(
+                'from'   => 102,
+                'to'     => 502,
+                'values' => array(
+                    101 => 601,
+                    102 => 602
+                )
+            ),
+            1 => array(
+                'from'   => 103,
+                'to'     => 503,
+                'values' => array(
+                    101 => 701,
+                    102 => 702,
+                    103 => 703,
+                    104 => 704,
+                )
+            ),
+            2 => array(
+                'from'   => 101,
+                'to'     => 501,
+                'values' => array(
+                    101 => 801,
+                    102 => 802,
+                )
+            )
+        );
+
+        expect($this->manager)->add()->count(2);
+
+        $this->manager->duplicate($template_trackers, $field_mapping);
+    }
+
+}
+
 class Tracker_Workflow_Trigger_RulesManager_addTest extends Tracker_Workflow_Trigger_RulesManagerTest {
 
     public function setUp() {
