@@ -705,7 +705,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         
         //the link to the artifact
         if (!$only_one_column) {
-            $html .= '<th width="16px">&nbsp;</th>';
+            $html .= '<th></th>';
         }
         
         $ff = $this->getFieldFactory();
@@ -894,21 +894,21 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                         }
                     }
                     if (!$only_one_column) {
+                        $params = array(
+                            'aid' => $row['id']
+                        );
                         if ($from_aid != null) {
-                            $html .= '<td style="white-space:nowrap"><a class="direct-link-to-artifact icon-eye-open" href="'.TRACKER_BASE_URL.'/?aid='. $row['id'] .'&from_aid='.$from_aid.'" title="'.
-                                $GLOBALS['Language']->getText('plugin_tracker_include_report','show')
-                                .' artifact #'. $row['id'] .'"></a>';
-                            $html .= '&nbsp;&nbsp;&nbsp;<a class="direct-link-to-artifact icon-edit" href="'.TRACKER_BASE_URL.'/?aid='. $row['id'] .'&from_aid='.$from_aid.'&func=edit" title="'.
-                                $GLOBALS['Language']->getText('plugin_tracker_include_report','edit')
-                                .' artifact #'. $row['id'] .'"></a></td>';
-                        } else {
-                            $html .= '<td style="white-space:nowrap"><a class="direct-link-to-artifact icon-eye-open" href="'.TRACKER_BASE_URL.'/?aid='. $row['id'] .'" title="'.
-                                $GLOBALS['Language']->getText('plugin_tracker_include_report','show')
-                                .' artifact #'. $row['id'] .'"></a>';
-                            $html .= '&nbsp;&nbsp;&nbsp;<a class="direct-link-to-artifact icon-edit" href="'.TRACKER_BASE_URL.'/?aid='. $row['id'] .'&func=edit" title="'.
-                                $GLOBALS['Language']->getText('plugin_tracker_include_report','edit')
-                                .' artifact #'. $row['id'] .'"></a></td>';
+                            $params['from_aid'] = $from_aid;
                         }
+                        $url = TRACKER_BASE_URL .'/?'. http_build_query($params);
+
+                        $html .= '<td>';
+                        $html .= '<a
+                            class="direct-link-to-artifact"
+                            href="'. $url .'"
+                            title="'. $GLOBALS['Language']->getText('plugin_tracker_include_report','show') .' artifact #'. $row['id'] .'">';
+                        $html .= '<i class="icon-edit"></i>';
+                        $html .= '</td>';
                     }
                     foreach($columns as $column) {
                         if($column['field']->isUsed()) {
@@ -999,7 +999,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             }
         }
         if (!$only_one_column) {
-            $html .= '<td width="16"></td>';
+            $html .= '<td></td>';
         }
         $hp = Codendi_HTMLPurifier::instance();
         foreach ($columns as $column) {
