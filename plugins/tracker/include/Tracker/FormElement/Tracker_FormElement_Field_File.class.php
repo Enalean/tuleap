@@ -334,6 +334,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                 $added[] = $add;
             }
             $html .= implode('', $added);
+        } else {
+            $html .= $this->getNoValueLabel();
         }
         return $html;
     }

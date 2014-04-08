@@ -512,6 +512,10 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      */
     public abstract function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null);
 
+    protected function getNoValueLabel() {
+        return "<span class='empty_value'>".$GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'no_value_for_field')."</span>";
+    }
+
     /**
      * Fetch the html code to display the field value in new artifact submission form
      *

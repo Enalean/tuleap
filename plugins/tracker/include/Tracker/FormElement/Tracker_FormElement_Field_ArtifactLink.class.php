@@ -547,6 +547,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                     $html .= '</div>';
                 }
             }
+        } else {
+            $html .= $this->getNoValueLabel();
         }
         $html .= '</div>';
 

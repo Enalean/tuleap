@@ -555,6 +555,11 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $html = '';
         $selected_values = $value ? $value->getListValues() : array();        
         $tablo = array();
+
+        if (empty($selected_values)) {
+            return $this->getNoValueLabel();
+        }
+
         foreach ($selected_values as $id => $value) {
             $tablo[] = $this->getBind()->formatArtifactValue($id);
         }

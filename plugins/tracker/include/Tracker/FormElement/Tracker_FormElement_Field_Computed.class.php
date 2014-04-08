@@ -128,6 +128,9 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
         $current_user = UserManager::instance()->getCurrentUser();
+        if (! $this->getComputedValue($current_user, $artifact)) {
+            return $this->getNoValueLabel();
+        }
         return $this->getComputedValue($current_user, $artifact);
     }
 

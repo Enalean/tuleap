@@ -160,6 +160,11 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
         $labels = array();
         $selected_values = $value ? $value->getListValues() : array();
+
+        if (empty($selected_values)) {
+            return $this->getNoValueLabel();
+        }
+
         foreach($selected_values as $id => $v) {
             if ($id != 100) {
                 $labels[] = $v->getLabel();
