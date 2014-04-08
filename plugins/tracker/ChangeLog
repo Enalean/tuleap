@@ -1,3 +1,6 @@
+Version 5.291 - Tuleap 6.13
+    * Follow-up to tasks #6613: do not display an orange line in widget
+
 Version 5.290 - Tuleap 6.13
     * tasks #6617: Only one icon to go to an artifact
 
