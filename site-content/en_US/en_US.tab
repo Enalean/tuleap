@@ -28,6 +28,7 @@ global	btn_delete	Delete
 global	btn_cancel	Cancel
 global	btn_update	Update
 global	btn_submit	Submit
+global	btn_search	Search
 global	btn_submit_and_continue	Submit and continue
 global	btn_submit_and_stay	Submit and stay
 global	btn_browse	Browse

@@ -22,6 +22,7 @@ global	btn_delete	Détruire
 global	btn_cancel	Annuler
 global	btn_update	Mettre à jour
 global	btn_submit	Valider
+global	btn_search	Rechercher
 global	btn_submit_and_continue	Valider et continuer
 global	btn_submit_and_stay	Valider et visualiser
 global	btn_browse	Afficher

@@ -112,6 +112,11 @@ class Service {
         $params['group']  = $this->project->group_id;
         $params['toptab'] = $this->getId();
 
+        if (! isset($params['body_class'])) {
+            $params['body_class'] = array();
+        }
+        $params['body_class'][] = 'service-'. $this->getShortName();
+
         if ($pv = (int)HTTPRequest::instance()->get('pv')) {
             $params['pv'] = (int)$pv;
         }

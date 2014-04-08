@@ -33,7 +33,7 @@ interface Tracker_IDisplayTrackerLayout {
      *
      * @return void
      */
-    public function displayHeader($project, $title, $breadcrumbs, $toolbar);
+    public function displayHeader($project, $title, $breadcrumbs, $toolbar, array $params);
     
     /**
      * Display footer for the current service.
