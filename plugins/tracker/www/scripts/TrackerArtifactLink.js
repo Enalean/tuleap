@@ -189,7 +189,7 @@ codendi.tracker.artifact.artifactLink = {
         );
     },
     load_nb_artifacts: function (tracker_panel) {
-        var nb_artifacts = tracker_panel.down('tbody').select('tr.boxitem', 'tr.boxitemalt').size();
+        var nb_artifacts = tracker_panel.down('tbody').select('tr:not(.tracker_report_table_aggregates)').size();
         var h3 = tracker_panel.down('h3');
         var txt = nb_artifacts + ' ' + codendi.locales.tracker_artifact_link.nb_artifacts;
         if (h3) {
