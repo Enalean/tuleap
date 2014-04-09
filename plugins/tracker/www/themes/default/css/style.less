@@ -366,16 +366,29 @@ ul.tracker_function_aggregate_results {
     filter : alpha(opacity=35); /* IE < 8 */
 }
 .tracker_report_table_pager {
-    border-top:1px solid #CCC;
+    text-align: center;
+
+    & > .btn {
+        width: 45px;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
 }
-.tracker_report_table_pager input {
-    vertical-align:middle;
-}
+
 .tracker_report_table_pager_range {
-    padding-left:3em;
-    padding-right:3em;
+    padding-left: 28px;
+    padding-right: 28px;
+    color: #646464;
+    font-size: 0.8em;
+
+    & > strong {
+        font-size: 1.25em;
+        color: #333;
+    }
 }
-.tracker_report_renderer h3 {
+
+.tracker_report_table_pager_chunk {
+    padding-left: 16px;
 }
 
 #tracker_report_table {
@@ -841,10 +854,6 @@ li.tracker_aggregate_function_add_unused:hover {
 #renderer_table_chunksz_input {
     width: 35px;
     text-align: center;
-    margin-top: 5px;
-}
-#renderer_table_chunksz_btn {
-    margin-top: 5px;
 }
 
 div.tracker_report_table_hide_masschange #tracker_report_table_masschange_form,

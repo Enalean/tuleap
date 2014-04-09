@@ -393,7 +393,6 @@ plugin_tracker_include_report	btn_go	Valider
 plugin_tracker_include_report	or_use	ou utiliser la
 plugin_tracker_include_report	simple_search	Recherche simple
 plugin_tracker_include_report	adv_search	Recherche avancée	
-plugin_tracker_include_report	at_once	à la fois.
 plugin_tracker_include_report	sorted_by	trié(s) par
 plugin_tracker_include_report	matching	artefact(s)
 plugin_tracker_include_report	sort_results	Cliquer sur une entête de colonne pour trier les résultats (ordre ascendant ou descendant), 
@@ -1515,6 +1514,7 @@ plugin_tracker	missing_ugroups	Le patron sélectionné a des permissions sur des
 
 plugin_tracker	artifact_update_popup_title	$1 vient de mettre à jour l'artefact
 plugin_tracker	artifact_update_popup_got_it	OK, vu.
+plugin_tracker	items_per_page	Items par page :
 
 plugin_tracker_modal_artifact	artifact_links_title	Liens entre artefacts
 plugin_tracker_modal_artifact	no_artifact_links	Aucun lien entre artefacts

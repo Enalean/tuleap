@@ -402,7 +402,6 @@ plugin_tracker_include_report	btn_go	Go
 plugin_tracker_include_report	or_use	or use
 plugin_tracker_include_report	simple_search	Simple Search
 plugin_tracker_include_report	adv_search	Advanced Search	
-plugin_tracker_include_report	at_once	at once.
 plugin_tracker_include_report	sorted_by	sorted by
 plugin_tracker_include_report	matching	matching
 plugin_tracker_include_report	sort_results	Click a column heading to sort results (up or down), 
@@ -1517,6 +1516,7 @@ plugin_tracker	missing_ugroups	The selected template set permissions on user gro
 
 plugin_tracker	artifact_update_popup_title	$1 has just updated the artifact
 plugin_tracker	artifact_update_popup_got_it	OK, got it!
+plugin_tracker	items_per_page	Items per page :
 
 plugin_tracker_modal_artifact	artifact_links_title	Artifact links
 plugin_tracker_modal_artifact	no_artifact_links	No artifact links

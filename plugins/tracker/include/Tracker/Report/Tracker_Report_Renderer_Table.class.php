@@ -425,7 +425,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     
     protected function _form($id = '', $func = 'renderer') {
         $html  = '';
-        $html .= '<form method="POST" action="" id="'. $id .'">';
+        $html .= '<form method="POST" action="" id="'. $id .'" class="form-inline">';
         $html .= '<input type="hidden" name="report" value="'. $this->report->id .'" />';
         $html .= '<input type="hidden" name="renderer" value="'. $this->id .'" />';
         $html .= '<input type="hidden" name="func" value="'.$func.'" />';
@@ -458,11 +458,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         
         //Dispaly range
         $offset_last = min($offset + $this->chunksz - 1, $total_rows - 1);
-        $html .= '<div id="tracker_report_table_pager" class="tracker_report_table_pager">';
-        $html .= $this->_fetchRange($offset + 1, $offset_last + 1, $total_rows);
-        
-        $html .= $this->fetchWidgetGoToReport();
-        
+        $html .= '<div class="tracker_report_table_pager">';
+        $html .= $this->_fetchRange($offset + 1, $offset_last + 1, $total_rows, $this->fetchWidgetGoToReport());
         $html .= '</div>';
         
         return $html;
@@ -550,12 +547,14 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return $html;
     }
     
-    protected function _fetchRange($from, $to, $total_rows) {
+    protected function _fetchRange($from, $to, $total_rows, $additionnal_html) {
         $html = '';
+        $html .= '<span class="tracker_report_table_pager_range">';
         $html .= $GLOBALS['Language']->getText('plugin_tracker_include_report','items');
-        $html .= ' <b>'. $from .' - '. $to .'</b>';
-        $html .= ' ' . $GLOBALS['Language']->getText('plugin_tracker_renderer_table','items_range_of') . ' <b>'. $total_rows .'</b>';
-        $html .= '. ';
+        $html .= ' <strong>'. $from .'</strong> – <strong>'. $to .'</strong>';
+        $html .= ' ' . $GLOBALS['Language']->getText('plugin_tracker_renderer_table','items_range_of') . ' <strong>'. $total_rows .'</strong>';
+        $html .= $additionnal_html;
+        $html .= '</span>';
         return $html;
     }
     
@@ -573,48 +572,35 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             //offset should be the last parameter to ease the concat later
             $parameters['offset'] = '';
             $url = '?'. http_build_query($parameters);
-            
-            $chunk = $GLOBALS['Language']->getText('global','btn_browse');
+
+            $chunk  = '<span class="tracker_report_table_pager_chunk">';
+            $chunk .= $GLOBALS['Language']->getText('plugin_tracker', 'items_per_page');
+            $chunk .= ' ';
             if ($report_can_be_modified) {
-                $chunk .= ' <span class="input-append">';
-                $chunk .= ' <input id="renderer_table_chunksz_input" type="text" name="renderer_table[chunksz]" size="1" maxlength="5" value="'. (int)$this->chunksz.'" />';
-                $chunk .= ' <button type="submit" class="btn" id="renderer_table_chunksz_btn">Ok</button> ';
-                $chunk .= ' </span> ';
+                $chunk .= '<div class="input-append">';
+                $chunk .= '<input id="renderer_table_chunksz_input" type="text" name="renderer_table[chunksz]" size="1" maxlength="5" value="'. (int)$this->chunksz.'" />';
+                $chunk .= '<button type="submit" class="btn">Ok</button> ';
+                $chunk .= '</div> ';
             } else {
-                $chunk .= ' '. (int)$this->chunksz .' ';
+                $chunk .= (int)$this->chunksz;
             }
-            $chunk .= $GLOBALS['Language']->getText('plugin_tracker_include_report','at_once');
-            
+            $chunk .= '</span>';
             
             $html .= $this->_form('tracker_report_table_next_previous_form');
+            $html .= '<div class="tracker_report_table_pager">';
             if ($total_rows < $this->chunksz) {
-                $html .= '<div id="tracker_report_table_pager" class="tracker_report_table_pager" style="text-align:center" class="small">';
-                $html .= $this->_fetchRange(1, $total_rows, $total_rows);
-                $html .= $chunk;
-                $html .= '</div>';
+                $html .= $this->_fetchRange(1, $total_rows, $total_rows, $chunk);
             } else {
-                $html .= '<table id="tracker_report_table_pager" class="tracker_report_table_pager" width="100%"><tr>';
-                $html .= '<td align="center" class="small">';
                 if ($offset > 0) {
-                    $html .= '<a href="'.$url . 0 .'" class="small"><b>&lt;&lt;&nbsp;';
-                    $html .= $GLOBALS['Language']->getText('global','begin');
-                    $html .= '</b></a>';
-                    $html .= '&nbsp &nbsp;';
-                    $html .= '<a href="'.$url . ($offset - $this->chunksz) .'" class="small"><b>&lt;&nbsp;';
-                    $html .= $GLOBALS['Language']->getText('global','prev') .'</b></a>';
+                    $html .= $this->getPagerButton($url . 0, 'begin');
+                    $html .= $this->getPagerButton($url . ($offset - $this->chunksz), 'prev');
                 } else {
-                    $html .= '<span class="disable">&lt;&lt;&nbsp;';
-                    $html .= $GLOBALS['Language']->getText('global','begin');
-                    $html .= '&nbsp; &lt;&nbsp;';
-                    $html .= $GLOBALS['Language']->getText('global','prev');
-                    $html .= '</span>';
+                    $html .= $this->getDisabledPagerButton('begin');
+                    $html .= $this->getDisabledPagerButton('prev');
                 }
                 
                 $offset_last = min($offset + $this->chunksz - 1, $total_rows - 1);
-                $html .= '<span class="tracker_report_table_pager_range">';
-                $html .= $this->_fetchRange($offset + 1, $offset_last + 1, $total_rows);
-                $html .= $chunk;
-                $html .= '</span>';
+                $html .= $this->_fetchRange($offset + 1, $offset_last + 1, $total_rows, $chunk);
                 
                 if (($offset + $this->chunksz) < $total_rows) {
                     if ($this->chunksz > 0) {
@@ -625,28 +611,57 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                     if ($offset_end >= $total_rows) { 
                         $offset_end -= $this->chunksz; 
                     }
-                    $html .= '<a href="'.$url . ($offset + $this->chunksz) .'" class="small"><b>';
-                    $html .= $GLOBALS['Language']->getText('global','next');
-                    $html .= '&nbsp;&gt;</b></a>';
-                    $html .= '&nbsp;&nbsp;&nbsp;';
-                    $html .= '<a href="'.$url . $offset_end .'" class="small"><b>';
-                    $html .= $GLOBALS['Language']->getText('global','end');
-                    $html .= '&nbsp;&gt;&gt;</b></a>';
+                    $html .= $this->getPagerButton($url . ($offset + $this->chunksz), 'next');
+                    $html .= $this->getPagerButton($url . $offset_end, 'end');
                 } else {
-                    $html .= '<span class="disable">';
-                    $html .= $GLOBALS['Language']->getText('global','next');
-                    $html .= '&nbsp;&gt;&nbsp;&nbsp; ';
-                    $html .= $GLOBALS['Language']->getText('global','end');
-                    $html .= '&nbsp;&gt;&gt;</span>';
+                    $html .= $this->getDisabledPagerButton('next');
+                    $html .= $this->getDisabledPagerButton('end');
                 }
-                $html .= '</td>';
-                $html .= '</tr></table>';
             }
             $html .= '</form>';
+            $html .= '</div>';
         }
         return $html;
     }
     
+    private function getDisabledPagerButton($direction) {
+        $icons = array(
+            'begin' => 'icon-double-angle-left',
+            'end'   => 'icon-double-angle-right',
+            'prev'  => 'icon-angle-left',
+            'next'  => 'icon-angle-right',
+        );
+        $html  = '';
+        $html .= '<button
+            class="btn disabled"
+            type="button"
+            title="'. $GLOBALS['Language']->getText('global', $direction) .'"
+            >';
+        $html .= '<i class="'. $icons[$direction] .'"></i>';
+        $html .= '</button> ';
+
+        return $html;
+    }
+
+    private function getPagerButton($url, $direction) {
+        $icons = array(
+            'begin' => 'icon-double-angle-left',
+            'end'   => 'icon-double-angle-right',
+            'prev'  => 'icon-angle-left',
+            'next'  => 'icon-angle-right',
+        );
+        $html  = '';
+        $html .= '<a
+            href="'. $url .'"
+            class="btn"
+            title="'. $GLOBALS['Language']->getText('global', $direction) .'"
+            >';
+        $html .= '<i class="'. $icons[$direction] .'"></i>';
+        $html .= '</a> ';
+
+        return $html;
+    }
+
     protected function reorderColumnsByRank($columns) {
         
         $array_rank = array();
