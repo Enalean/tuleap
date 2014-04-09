@@ -124,6 +124,11 @@ codendi.tracker.artifact.artifactLink = {
                             $H(json.rows).each(function (pair) {
                                 var renderer_table = $('tracker_report_table_' + pair.key);
                                 if (!renderer_table) {
+                                    // remove the empty element
+                                    var empty_value = codendi.tracker.artifact.artifactLinker_currentField.down('.empty_value');
+                                    if (empty_value) {
+                                        empty_value.remove();
+                                    }
                                     var list = codendi.tracker.artifact.artifactLinker_currentField.down('.tracker-form-element-artifactlink-list');
                                     list.insert(json.head[pair.key] + '<tbody>');
                                     var first_list = $$('.tracker-form-element-artifactlink-list ul').first();
