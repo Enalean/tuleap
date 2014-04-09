@@ -1317,21 +1317,14 @@ plugin_tracker_stat	last_update	Last update
 plugin_tracker_stat	last_artifact_created	Last artifact created
 
 
-plugin_tracker_aggregate	AVG_sel	AVG - Average
-plugin_tracker_aggregate	AVG_title	Average:
-plugin_tracker_aggregate	COUNT_sel	COUNT - Count
-plugin_tracker_aggregate	COUNT_title	Count:
-plugin_tracker_aggregate	COUNT_GRBY_sel	COUNT GROUP BY - Count (group by)
-plugin_tracker_aggregate	COUNT_GRBY_title	Count (group by):
-plugin_tracker_aggregate	MAX_sel	MAX - Maximum
-plugin_tracker_aggregate	MAX_title	Maximum:
-plugin_tracker_aggregate	MIN_sel	MIN - Minimum
-plugin_tracker_aggregate	MIN_title	Minimum:
-plugin_tracker_aggregate	STD_sel	STD - Std deviation
-plugin_tracker_aggregate	STD_title	Std deviation:
-plugin_tracker_aggregate	SUM_sel	SUM - Sum
-plugin_tracker_aggregate	SUM_title	Sum:
-plugin_tracker_aggregate	toggle	-- Toggle an aggregate function
+plugin_tracker_aggregate	AVG	Average
+plugin_tracker_aggregate	COUNT	Count
+plugin_tracker_aggregate	COUNT_GRBY	Count (group by)
+plugin_tracker_aggregate	MAX	Maximum
+plugin_tracker_aggregate	MIN	Minimum
+plugin_tracker_aggregate	STD	Std deviation
+plugin_tracker_aggregate	SUM	Sum
+plugin_tracker_aggregate	toggle	Toggle an aggregate function
 
 
 plugin_tracker_search_index	artifact_title	Artifact Title
