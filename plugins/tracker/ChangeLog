@@ -1,3 +1,6 @@
+Version 5.296 - Tuleap 6.13
+    * tasks #6619 - Use bootstrap calendar in criteria
+
 Version 5.295 - Tuleap 6.13
     * tasks #6648: Artifact counter is broken in artifact link
 
