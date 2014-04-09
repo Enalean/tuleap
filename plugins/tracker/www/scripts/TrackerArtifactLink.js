@@ -550,7 +550,10 @@ document.observe('dom:loaded', function () {
         if (location.href.toQueryParams().modal == 1) {
             input.up().insert('<br /><em style="color:#666; font-size: 0.9em;">'+ codendi.locales.tracker_artifact_link.advanced + '<br />'+ input.title +'</em>');
         }
-        
+
+        if (! link) {
+            return;
+        }
         codendi.tracker.artifact.artifactLinker_currentField = link.up('.tracker_artifact_field');
         codendi.tracker.artifact.artifactLinker_currentField_id = input.name.gsub(/artifact\[(\d+)\]\[new_values\]/, '#{1}');
         
