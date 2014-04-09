@@ -25,12 +25,20 @@ class Templating_Presenter_ButtonDropdownsOption {
     private $selected;
     private $label;
     private $id;
+    private $li_parameters = array();
 
     public function __construct($id, $label, $selected, $url) {
         $this->id       = $id;
         $this->label    = $label;
         $this->selected = $selected;
         $this->url      = $url;
+    }
+
+    public function addLiParameter($parameter, $value) {
+        $this->li_parameters[] = array(
+            'parameter' => $parameter,
+            'value'     => $value,
+        );
     }
 
     public function divider() {
@@ -57,4 +65,7 @@ class Templating_Presenter_ButtonDropdownsOption {
 
     }
 
+    public function li_parameters() {
+        return $this->li_parameters;
+    }
 }

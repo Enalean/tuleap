@@ -1,26 +1,23 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2011, 2012, 2013, 2014. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-
-require_once('common/include/Toggler.class.php');
-require_once('common/html/HTML_Element_Input_Checkbox.class.php');
 
 /**
  * Tracker_ report.
@@ -365,7 +362,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         $header_builder = new Tracker_Report_HeaderRenderer(
             Tracker_ReportFactory::instance(),
             Codendi_HTMLPurifier::instance(),
-            TemplateRendererFactory::build()
+            $this->getTemplateRenderer()
         );
         $header_builder->displayHeader($layout, $request, $current_user, $this, $report_can_be_modified);
     }
@@ -393,7 +390,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         $html .= '<h4 class="backlog-planning-search-title ' . Toggler::getClassname($id, $this->is_query_displayed ? true : false) . '" id="' . $id . '">';
 
         //  Query title
-        $html .= $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML) . '</h4>';
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_report', 'search').'</h4>';
         $used = array();
         $criteria_fetched = array();
         foreach ($criteria as $criterion) {
@@ -410,7 +407,9 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             }
         }
         if ($report_can_be_modified && $user_can_update) {
-            $html .= '<div id="tracker_report_addcriteria_panel">' . $this->_fetchAddCriteria($used) . '</div>';
+            $html .= '<div class="pull-right">';
+            $html .= $this->getAddCriteriaDropdown($used);
+            $html .= '</div>';
         }
 
         $array_of_html_criteria = array();
@@ -427,7 +426,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             $criteria_fetched[] = '<li>'. $additional_criteria .'</li>';
         }
         $html .= '<ul id="tracker_query">' . implode('', $criteria_fetched).'</ul>';
- 
+
         $html .= '<div align="center">';
         $html .= '<button type="submit" name="tracker_query_submit" class="btn btn-primary">';
         $html .= '<i class="icon-search"></i> ';
@@ -437,6 +436,47 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         $html .= '</form>';
         $html .= '</div>';
         return $html;
+    }
+
+    private function getAddCriteriaDropdown($used) {
+        $fields_for_criteria = array();
+        $fields_for_sort = array();
+        foreach($this->getFormElementFactory()->getFields($this->getTracker()) as $field) {
+            if ($field->userCanRead() && $field->isUsed()) {
+                $fields_for_criteria[$field->getId()] = $field;
+                $fields_for_sort[$field->getId()] = strtolower($field->getLabel());
+            }
+        }
+        asort($fields_for_sort);
+        $criteria_options = array();
+        foreach ($fields_for_sort as $id => $nop) {
+            $option = new Templating_Presenter_ButtonDropdownsOption(
+                $id,
+                $fields_for_criteria[$id]->getLabel(),
+                isset($used[$id]),
+                '#'
+            );
+            $option->addLiParameter('data-field-id', $id);
+            $option->addLiParameter('data-field-is-used', intval(isset($used[$id])));
+            $criteria_options[] = $option;
+        }
+
+        $add_criteria_presenter = new Templating_Presenter_ButtonDropdowns(
+            'tracker_report_add_criteria_dropdown',
+            $GLOBALS['Language']->getText('plugin_tracker_report', 'toggle_criteria'),
+            $criteria_options
+        );
+        $add_criteria_presenter->setIcon('icon-eye-close');
+        return $this->getTemplateRenderer()->renderToString('button_dropdowns',  $add_criteria_presenter);
+    }
+
+    private function getTemplateRenderer() {
+        return TemplateRendererFactory::build()->getRenderer(
+            array(
+                TRACKER_TEMPLATE_DIR.'/report',
+                Config::get('codendi_dir').'/src/templates/common'
+            )
+        );
     }
 
     public function display(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {

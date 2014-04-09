@@ -286,8 +286,8 @@ plugin_tracker_include_canned	no_canned_response	No canned responses set up yet 
 # Script: SF/www/tracker/include/ArtifactFieldHtml.class.php
 #
 plugin_tracker_include_field	error_no_atid	ERROR - no group_artifact_id
-plugin_tracker_include_field	start	Start:
-plugin_tracker_include_field	end	End:
+plugin_tracker_include_field	start	Start
+plugin_tracker_include_field	end	End
 plugin_tracker_include_field	any_time	Any time
 plugin_tracker_include_field	pick_date	Click Here to Pick up a date
 plugin_tracker_include_field	unknown_display_type	$1: UNKNOWN ARTIFACT FIELD DISPLAY TYPE
@@ -1281,7 +1281,7 @@ plugin_tracker_report	revert	Revert
 plugin_tracker_report	replace_existing_report	Replace an existing report
 plugin_tracker_report	change_visibility	Change the visibility
 plugin_tracker_report	current_report	Report:
-plugin_tracker_report	toggle_criteria	Toggle criteria
+plugin_tracker_report	toggle_criteria	Criteria
 plugin_tracker_report	toggle_columns	Toggle columns
 plugin_tracker_report	sort_by	Sort by:
 plugin_tracker_report	reset_sort	Reset sort
@@ -1306,6 +1306,7 @@ plugin_tracker_report	isobsolete_explanations	Report has been modified by <span 
 plugin_tracker_report	haschanged_isobsolete_explanations	Report has been modified by <span class="tracker_report_updated_by">$1</span>. You can either:
 plugin_tracker_report	renderer_name_mandatory	Renderer name is mandatory.
 plugin_tracker_report	set_default_report	Set default report
+plugin_tracker_report	search	Search
 
 plugin_tracker_report_widget	go_to_report	Go to report
 
