@@ -24,10 +24,11 @@
 require_once dirname(__FILE__).'/../include/LDAP_DirectorySynchronization.class.php';
 require_once 'common/language/BaseLanguage.class.php';
 require_once 'common/user/UserManager.class.php';
+require_once dirname(__FILE__).'/../include/LDAP_CleanUpManager.class.php';
 
 // Needed because of bad type checking in SimpleTest
 Mock::generatePartial('LDAP', 'MockInhLDAP', array('search', 'getErrno', 'getLDAPParam'));
-Mock::generatePartial('LDAP_DirectorySynchronization', 'LDAP_DirectorySynchronizationTestVersion', array('getUserManager', 'getLdapUserManager', 'getLdapUserSync', 'getLdapSyncNotificationManager'));
+Mock::generatePartial('LDAP_DirectorySynchronization', 'LDAP_DirectorySynchronizationTestVersion', array('getUserManager', 'getLdapUserManager', 'getLdapUserSync', 'getLdapSyncNotificationManager','getCleanUpManager'));
 Mock::generate('LDAPResultIterator');
 Mock::generate('LDAPResult');
 Mock::generate('BaseLanguage');
@@ -35,6 +36,7 @@ Mock::generate('UserManager');
 Mock::generate('PFUser');
 Mock::generate('LDAP_UserManager');
 Mock::generate('LDAP_UserSync');
+Mock::generate('LDAP_CleanUpManager');
 
 // Ensure user is suspended
 class MyUmMock4Suspended extends MockUserManager {
@@ -140,6 +142,10 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
         $syncNotifManager = mock('LDAP_SyncNotificationManager');
         $sync->setReturnValue('getLdapSyncNotificationManager', $syncNotifManager);
 
+        $clm = new MockLDAP_CleanUpManager($this);
+        $clm->expectOnce('addUserDeletionForecastDate');
+        $sync->setReturnValue('getCleanUpManager', $clm);
+
         $lus = new MockLDAP_UserSync($this);
         $lus->expectNever('sync');
         $sync->setReturnValue('getLdapUserSync', $lus);
@@ -211,6 +217,10 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
         $um = new MockUserManager($this);
         $um->expectOnce('updateDb');
         $sync->setReturnValue('getUserManager', $um);
+
+        $clm = new MockLDAP_CleanUpManager($this);
+        $clm->expectOnce('addUserDeletionForecastDate');
+        $sync->setReturnValue('getCleanUpManager', $clm);
 
         $lum = new MockLDAP_UserManager($this);
         $lum->expectNever('updateLdapUid');

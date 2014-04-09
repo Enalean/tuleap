@@ -71,7 +71,7 @@ $sys_ldap_daily_sync = 1;
 
 // This Period of retention (in days) added to the date on which the LDAP daily synchronization
 // was ran in order to compute the forecast date of the cleanup of suspended users.
-$sys_ldap_daily_sync_retention_period = 15;
+$sys_ldap_daily_sync_retention_period = '';
 
 // Enable usage of LDAP for people management. For instance autocompletion on
 // user list, automatic creation of users not already referenced in the forge.

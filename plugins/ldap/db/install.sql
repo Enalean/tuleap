@@ -30,3 +30,8 @@ CREATE TABLE plugin_ldap_project_group (
     ldap_group_dn VARCHAR(255) NOT NULL default 0,
     PRIMARY KEY  (group_id, ldap_group_dn)
 );
+DROP TABLE IF EXISTS plugin_ldap_suspended_user;
+CREATE TABLE plugin_ldap_suspended_user (
+    user_id int(11) NOT NULL,
+    deletion_date int(11) NOT NULL
+);

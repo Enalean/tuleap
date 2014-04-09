@@ -26,7 +26,6 @@ ini_set('max_execution_time', 0);
 ini_set('memory_limit', -1);
 
 require_once 'pre.php';
-require_once dirname(__FILE__).'/../include/LDAP_DirectorySynchronization.class.php';
 
 $time_start = microtime(true);
 
@@ -37,6 +36,12 @@ if ($pluginManager->isPluginAvailable($ldapPlugin)) {
 
     $ldapQuery = new LDAP_DirectorySynchronization($ldapPlugin->getLdap());
     $ldapQuery->syncAll();
+
+    $retentionPeriod = $ldapPlugin->getLdap()->getLDAPParam('daily_sync_retention_period');
+    if($retentionPeriod != NULL && $retentionPeriod!= "") {
+        $ldapCleanUpManager = new LDAP_CleanUpManager($retentionPeriod);
+        $ldapCleanUpManager->cleanAll();
+    }
 
     $time_end = microtime(true);
     $time = $time_end - $time_start;
