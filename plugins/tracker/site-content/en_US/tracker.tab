@@ -403,7 +403,7 @@ plugin_tracker_include_report	or_use	or use
 plugin_tracker_include_report	simple_search	Simple Search
 plugin_tracker_include_report	adv_search	Advanced Search	
 plugin_tracker_include_report	sorted_by	sorted by
-plugin_tracker_include_report	matching	matching
+plugin_tracker_include_report	matching	Matching artifacts: <strong>$1</strong>
 plugin_tracker_include_report	sort_results	Click a column heading to sort results (up or down), 
 plugin_tracker_include_report	sort_sev	sort by $1
 plugin_tracker_include_report	reset_sort	reset sort
@@ -1272,11 +1272,12 @@ plugin_tracker_report	confirm_delete	Are you sure that you want to delete this r
 plugin_tracker_report	current_report	Current report:
 plugin_tracker_report	toggle_criteria	Toggle criteria
 plugin_tracker_report	toggle_columns	Toggle columns
-plugin_tracker_report	click_to_sort	Unordered. Click column to sort.
 plugin_tracker_report	sort_by	Sort by:
 plugin_tracker_report	reset_sort	Reset sort
 plugin_tracker_report	disable_multisort	Disable multisort
 plugin_tracker_report	enable_multisort	Enable multisort
+plugin_tracker_report	export	Export
+plugin_tracker_report	dashboard	Add to dashboard
 plugin_tracker_report	my_dashboard	Add to my dashboard
 plugin_tracker_report	project_dashboard	Add to project dashboard
 plugin_tracker_report	update	Update

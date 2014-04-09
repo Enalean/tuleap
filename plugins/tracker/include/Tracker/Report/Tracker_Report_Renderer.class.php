@@ -143,70 +143,109 @@ abstract class Tracker_Report_Renderer {
      */
     public function getOptionsMenuItems() {
         $items = array(
-            'printer_version' => array(
-                'url'   => TRACKER_BASE_URL.'/?'.http_build_query(
-                    array(
-                        'report'   => $this->report->id,
-                        'renderer' => $this->id,
-                        'pv'       => 1,
-                    )
-                ),
-                'icon'  => $GLOBALS['HTML']->getImage('ic/printer.png', array('border' => 0, 'alt' => '', 'style' => 'vertical-align:middle;')),
-                'label' => $GLOBALS['Language']->getText('global', 'printer_version'),
-            )
+            'printer_version' => '<div class="btn-group"><a class="btn btn-mini" href="'. TRACKER_BASE_URL.'/?'.http_build_query(
+                array(
+                    'report'   => $this->report->id,
+                    'renderer' => $this->id,
+                    'pv'       => 1,
+                )
+            ) .'"><i class="icon-print"></i> '. $GLOBALS['Language']->getText('global', 'printer_version') .'</a></div>'
         );
+        $this->addDashboardButtons($items);
 
-        if ($this->id > 0 && (!isset($this->report_session) || !$this->report_session->hasChanged())) {
-            $user = UserManager::instance()->getCurrentUser();
-            if ($user->isLoggedIn()) {
-                $items['addto_my_dashboard'] = array(
-                     'url'    => '/widgets/updatelayout.php?'.http_build_query(
-                         array(
-                             'owner'    => 'u'. $user->getId(),
-                             'action'   => 'widget',
-                             'renderer' => array(
-                                 'title'       => $this->name .' for '. $this->report->name,
-                                 'renderer_id' => $this->id
-                             ),
-                             'name'     => array(
-                                 Tracker_Widget_MyRenderer::ID => array (
-                                     'add' => 1
-                                 )
-                             )
-                         )
-                     ),
-                    'icon'  => $GLOBALS['HTML']->getImage('ic/layout_user.png'),
-                    'label' => $GLOBALS['Language']->getText('plugin_tracker_report','my_dashboard'),
-                );
-               
-                
-                $project = $this->report->getTracker()->getProject();
-                if ($project->userIsAdmin($user)) {
-                    $items['addto_project_dashboard'] = array(
-                        'url'    => '/widgets/updatelayout.php?'.http_build_query(
-                            array(
-                                'owner'    => 'g'. $project->getGroupId(),
-                                'action'   => 'widget',
-                                'renderer' => array(
-                                    'title'       => $this->name .' for '. $this->report->name,
-                                    'renderer_id' => $this->id
-                                ),
-                                'name'     => array(
-                                    Tracker_Widget_ProjectRenderer::ID => array (
-                                        'add' => 1
-                                    )
-                                )
-                            )
-                        ),
-                        'icon'  => $GLOBALS['HTML']->getImage('ic/layout_project.png'),
-                        'label' => $GLOBALS['Language']->getText('plugin_tracker_report','project_dashboard'),
-                    );
-                }
-            }
-        }
         return $items;
     }
-    
+
+    private function addDashboardButtons(array &$items) {
+        $user = UserManager::instance()->getCurrentUser();
+        if (! $this->canAddToDashboard($user)) {
+            return;
+        }
+
+        $project = $this->report->getTracker()->getProject();
+        if ($project->userIsAdmin($user)) {
+            $dashboard_items = $this->getDropdownMenuForDashboardActions($user, $project);
+        } else {
+            $dashboard_items = $this->getSinglePurposeButtonForMyDashboardActions($user);
+        }
+
+        $items = array('add_to_dashboard' => $dashboard_items) + $items;
+    }
+
+    private function getDropdownMenuForDashboardActions(PFUser $user, Project $project) {
+        $html  = '';
+        $html .= '<div class="btn-group">';
+        $html .= '<a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#">';
+        $html .= '<i class="icon-dashboard"></i> ';
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_report', 'dashboard');
+        $html .= ' <span class="caret"></span>';
+        $html .= '</a>';
+        $html .= '<ul class="dropdown-menu">';
+
+        $addto_my_dashboard_url = $this->getAddToDashboardURL(
+            'u'. $user->getId(),
+            Tracker_Widget_MyRenderer::ID
+        );
+        $html .= '<li>';
+        $html .= '<a href="'. $addto_my_dashboard_url .'">';
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_report', 'my_dashboard');
+        $html .= '</a>';
+        $html .= '</li>';
+
+        $addto_project_dashboard_url = $this->getAddToDashboardURL(
+            'g'. $project->getGroupId(),
+            Tracker_Widget_ProjectRenderer::ID
+        );
+        $html .= '<li>';
+        $html .= '<a href="'. $addto_project_dashboard_url .'">';
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_report', 'project_dashboard');
+        $html .= '</a>';
+        $html .= '</li>';
+
+        $html .= '</ul>';
+        $html .= '</div>';
+
+        return $html;
+    }
+
+    private function getSinglePurposeButtonForMyDashboardActions(PFUser $user) {
+        $html  = '';
+        $addto_my_dashboard_url = $this->getAddToDashboardURL(
+            'u'. $user->getId(),
+            Tracker_Widget_MyRenderer::ID
+        );
+        $html .= '<li>';
+        $html .= '<a href="'. $addto_my_dashboard_url .'" class="btn btn-mini">';
+        $html .= '<i class="icon-dashboard"></i> ';
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_report', 'my_dashboard');
+        $html .= '</a>';
+        $html .= '</li>';
+
+        return $html;
+    }
+    private function canAddToDashboard($user) {
+        return $this->id > 0
+            && (!isset($this->report_session) || !$this->report_session->hasChanged())
+            && $user->isLoggedIn();
+    }
+
+    private function getAddToDashboardURL($owner_id, $widget_id) {
+        '/widgets/updatelayout.php?'.http_build_query(
+            array(
+                'owner'    => $owner_id,
+                'action'   => 'widget',
+                'renderer' => array(
+                    'title'       => $this->name .' for '. $this->report->name,
+                    'renderer_id' => $this->id
+                ),
+                'name'     => array(
+                    $widget_id => array (
+                        'add' => 1
+                    )
+                )
+            )
+        );
+    }
     /**
      * Create a renderer - add in db
      *     
