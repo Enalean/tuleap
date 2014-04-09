@@ -1,3 +1,6 @@
+Version 5.292 - Tuleap 6.13
+    * Fix request #6646 - Cannot query a report
+
 Version 5.291 - Tuleap 6.13
     * Follow-up to tasks #6613: do not display an orange line in widget
 
