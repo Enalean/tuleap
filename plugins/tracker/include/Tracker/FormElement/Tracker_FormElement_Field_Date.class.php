@@ -19,8 +19,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/date/DateHelper.class.php');
-
 class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
     
     const DEFAULT_VALUE_TYPE_TODAY    = 0;
@@ -434,7 +432,15 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
             '<option value="<"'. $lt_selected .'>&lt;</option>'.
             '</select>';
             $value = $criteria_value ? $this->formatDate($criteria_value['to_date']) : '';
-            $html .= $GLOBALS['HTML']->getDatePicker("tracker_report_criteria_".$this->id, "criteria[". $this->id ."][to_date]", $value);
+
+            $html .= $GLOBALS['HTML']->getBootstrapDatePicker(
+                "tracker_report_criteria_".$this->id,
+                "criteria[". $this->id ."][to_date]",
+                $value,
+                array(
+                    "tracker_artifact_field_date"
+                )
+            );
             $html .= '</div>';
         }
         return $html;
@@ -562,7 +568,6 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      * @return string
      */
     protected function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
-        $html = '';
         if (is_array($submitted_values[0])) {
             $value=$submitted_values[0][$this->getId()];
         } else {
@@ -571,20 +576,18 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
                 $value = $value ? $this->formatDate($value) : '';
             }
         }
-        $hp = Codendi_HTMLPurifier::instance();
-        $html .= '<div class="input-append date tracker_artifact_field_date '. ($this->has_errors ? 'has_errors' : '') .'">
-                  <input name="'. $hp->purify('artifact['.$this->id.']', CODENDI_PURIFIER_CONVERT_HTML) .'"
-                         id="'. $hp->purify("tracker_admin_field_".$this->id, CODENDI_PURIFIER_CONVERT_HTML) .'"
-                         data-format="yyyy-MM-dd"
-                         type="text"
-                         value="' . $value . '">
-                  </input>
-                  <span class="add-on">
-                    <i class="icon-calendar" data-time-icon="icon-time" data-date-icon="icon-calendar">
-                    </i>
-                  </span>
-                </div>';
-        return $html;
+
+        $date_picker_classes = array("tracker_artifact_field_date");
+        if ($this->has_errors) {
+            $date_picker_classes[] = 'has_error';
+        }
+
+        return $GLOBALS['HTML']->getBootstrapDatePicker(
+            "tracker_admin_field_".$this->id,
+            'artifact['.$this->id.']',
+            $value,
+            $date_picker_classes
+        );
     }
 
     /**
@@ -646,13 +649,12 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      * @return string html
      */
     protected function fetchAdminFormElement() {
-        $html = '';
-        $value = '';
-        if ($this->hasDefaultValue()) {
-            $value = $this->getDefaultValue();
-        }
-        $html .= $GLOBALS['HTML']->getDatePicker("tracker_admin_field_".$this->id, "", $value);
-        return $html;
+        return $GLOBALS['HTML']->getBootstrapDatePicker(
+            "tracker_admin_field_".$this->id,
+            '',
+            $this->hasDefaultValue() ? $this->getDefaultValue() : '',
+            array("tracker_artifact_field_date")
+        );
     }
 
     /**
@@ -928,5 +930,3 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         return $artifacts;
     }
 }
-
-?>
