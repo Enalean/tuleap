@@ -96,7 +96,7 @@ class AgileDashboard_MilestonePresenter {
     }
 
     public function editArtifactUrl() {
-        return '/plugins/tracker/?aid='.$this->milestone->getArtifactId().'&func=edit';
+        return '/plugins/tracker/?aid='.$this->milestone->getArtifactId();
     }
 
     private function getParentArtifactId() {
