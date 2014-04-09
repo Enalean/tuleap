@@ -1210,7 +1210,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                     break;
                 }
             default:
-                if ($request->get('tracker_query_submit') && is_array($request->get('criteria'))) {
+                if ($request->exist('tracker_query_submit') && is_array($request->get('criteria'))) {
                     $criteria_values = $request->get('criteria');
                     $this->updateCriteriaValues($criteria_values);
 
