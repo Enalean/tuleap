@@ -387,11 +387,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function fetchTitle($prefix = '') {
         $html = '';
-        $hp = Codendi_HTMLPurifier::instance();
         $html .= $this->fetchHiddenTrackerId();
         $html .= '<div class="tracker_artifact_title">';
         $html .= $prefix;
-        $html .= $hp->purify($this->getXRefAndTitle(), CODENDI_PURIFIER_CONVERT_HTML);
+        $html .= $this->getXRefAndTitle();
         $html .= '</div>';
         return $html;
     }
@@ -401,7 +400,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     public function getXRefAndTitle() {
-        return $this->getXRef() .' - '. $this->getTitle();
+        $hp = Codendi_HTMLPurifier::instance();
+        return '<span class="xref-in-title">' . $this->getXRef() .'</span>'. $hp->purify($this->getTitle());
     }
     /**
      * Get the artifact title, or null if no title defined in semantics
@@ -680,8 +680,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return string html
      */
     public function fetchDirectLinkToArtifactWithTitle() {
-        $hp = Codendi_HTMLPurifier::instance();
-        return '<a class="direct-link-to-artifact" href="'. $this->getUri() . '">' . $hp->purify($this->getXRefAndTitle()) . '</a>';
+        return '<a class="direct-link-to-artifact" href="'. $this->getUri() . '">' . $this->getXRefAndTitle() . '</a>';
     }
 
     /**

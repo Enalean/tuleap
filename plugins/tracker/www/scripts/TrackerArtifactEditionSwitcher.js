@@ -42,12 +42,12 @@ tuleap.tracker.artifact.editionSwitcher = function() {
             return;
         }
 
-        setClickableCursor(element);
+        setFieldEditable(element);
         bindEditionSwitch(element);
     };
 
     var bindEditionSwitch = function (element) {
-        $(element).on('click', function() {
+        $(element).find('label').on('click', function() {
             toggleField(element);
         });
     };
@@ -55,8 +55,10 @@ tuleap.tracker.artifact.editionSwitcher = function() {
     var toggleField = function (element) {
         removeReadOnlyElements(element);
         removeUnwrappedText(element);
+        $(element).addClass('in-edition');
         $(element).find('.tracker_hidden_edition_field').show();
         $(element).off('click');
+        $(element).find('input[type=text], textarea, .cke').filter(':visible:first').focus();
         toggleDependencyIfAny(element);
         toggleSubmissionBar();
     };
@@ -87,15 +89,16 @@ tuleap.tracker.artifact.editionSwitcher = function() {
     };
 
     var removeReadOnlyElements = function (element) {
-        $(element).children(":not(.tracker_formelement_label, .tracker_hidden_edition_field, #display-tracker-form-element-artifactlink-reverse, #tracker-form-element-artifactlink-reverse)").remove();
+        console.log($(element).children());
+        $(element).children(":not(.tracker_formelement_label, .tracker_hidden_edition_field, .artifact-link-value-reverse)").remove();
     };
 
     var removeUnwrappedText = function (element) {
         $(element).contents().filter(function(){ return this.nodeType == 3; }).remove();
     };
 
-    var setClickableCursor = function (element) {
-        $(element).css('cursor', 'pointer');
+    var setFieldEditable = function (element) {
+        $(element).addClass('editable');
     };
 
     var fieldIsEditable = function(element) {
@@ -116,7 +119,7 @@ tuleap.tracker.artifact.editionSwitcher = function() {
 
     var displaySubmissionBarIfNeeded = function () {
         if (somethingIsEdited()) {
-            $('.hidden-artifact-submit-button').slideDown();
+            $('.hidden-artifact-submit-button').slideDown(50);
         }
     };
 
@@ -124,7 +127,7 @@ tuleap.tracker.artifact.editionSwitcher = function() {
         if (somethingIsEdited()) {
             return;
         }
-        $('.hidden-artifact-submit-button').slideUp();
+        $('.hidden-artifact-submit-button').slideUp(50);
     };
 
     var somethingIsEdited = function () {
@@ -136,7 +139,7 @@ tuleap.tracker.artifact.editionSwitcher = function() {
     };
 
     var noFieldIsSwitchedToEdit = function () {
-        if ($('.tracker_hidden_edition_field:visible').size() > 0) {
+        if ($('.tracker_artifact_field.in-edition').size() > 0) {
             return false;
         }
 

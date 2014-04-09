@@ -272,7 +272,7 @@ lightwindow.prototype = {
 		this._getScroll();
 		this._browserDimensions();
 		this._setupDimensions();
-		this._toggleTroubleElements('hidden', false);
+		//this._toggleTroubleElements('hidden', false);
 		this._displayLightWindow('block', 'hidden');
 		this._setStatus(true);
 		this._monitorKeyboard(true);
@@ -310,7 +310,7 @@ lightwindow.prototype = {
 		// Undo the setup
 		this._prepareIE(false);
 		this._setupDimensions();
-		this._toggleTroubleElements('visible', false);	
+		//this._toggleTroubleElements('visible', false);
 		this._monitorKeyboard(false);	
 	},
 	//
@@ -354,7 +354,7 @@ lightwindow.prototype = {
 		this._getScroll();
 		this._browserDimensions();
 		this._setupDimensions();
-		this._toggleTroubleElements('hidden', false);
+		//this._toggleTroubleElements('hidden', false);
 		this._displayLightWindow('block', 'hidden');
 		this._setStatus(true);
 		this._monitorKeyboard(true);
@@ -717,7 +717,7 @@ lightwindow.prototype = {
 	//     We could use iframe shims instead here but why add all the extra markup for one browser when this is much easier and cleaner
 	//
 	_toggleTroubleElements : function(visibility, content){
-		
+
 		if (content) {
 			var selects = $('lightwindow_contents').getElementsByTagName('select');
 		} else {
@@ -1365,7 +1365,7 @@ lightwindow.prototype = {
 			this.resizeTo.height = $('lightwindow_contents').scrollHeight+(this.options.contentOffset.height);
 			this.resizeTo.width = $('lightwindow_contents').scrollWidth+(this.options.contentOffset.width);
 			
-			this._toggleTroubleElements('hidden', true); 			
+			//this._toggleTroubleElements('hidden', true);
 			this._processWindow();
 			
 			break;

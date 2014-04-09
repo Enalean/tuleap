@@ -214,7 +214,7 @@ codendi.tracker.artifact.artifactLink = {
             //build a nifty navigation list
             if (location.href.toQueryParams().func != 'new-artifact' && location.href.toQueryParams().func != 'submit-artifact') {
                 if (!location.href.toQueryParams().modal) {
-                    this.ul = new Element('ul').addClassName('tracker-form-element-artifactlink-list-nav');
+                    this.ul = new Element('ul').addClassName('nav nav-tabs tracker-form-element-artifactlink-list-nav');
                 }
             }
 
@@ -228,7 +228,8 @@ codendi.tracker.artifact.artifactLink = {
         showTrackerPanel: function(event, tracker_panel, element, h2) {
             var ul = element.up('ul');
             ul.childElements().invoke('removeClassName', 'tracker-form-element-artifactlink-list-nav-current');
-            element.up('li').addClassName('tracker-form-element-artifactlink-list-nav-current');
+            ul.childElements().invoke('removeClassName', 'active');
+            element.up('li').addClassName('tracker-form-element-artifactlink-list-nav-current active');
 
             // hide all panels
             tracker_panel.adjacent('div').invoke('hide');
@@ -276,7 +277,7 @@ codendi.tracker.artifact.artifactLink = {
             }
 
             if (li == tab_list.firstDescendant()) {
-                li.addClassName('tracker-form-element-artifactlink-list-nav-current');
+                li.addClassName('tracker-form-element-artifactlink-list-nav-current active');
                 this.showTrackerPanel(null, tracker_panel, a, h2);
             }
 

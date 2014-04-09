@@ -59,11 +59,11 @@ class Tracker_Artifact_View_ViewCollection {
      */
     private function fetchTabs(Tracker_Artifact_View_View $current_view) {
         $html  = '';
-        $html .= '<ul class="tracker-artifact-nav">';
+        $html .= '<ul class="nav nav-tabs tracker-artifact-nav">';
         foreach ($this->views as $view) {
             $class = '';
             if ($view == $current_view) {
-                $class = 'tracker-artifact-nav-current';
+                $class = 'active';
             }
             $html .= '<li class="'. $class .'"><a href="'. $view->getURL() .'">'. $view->getTitle() .'</a></li>';
         }

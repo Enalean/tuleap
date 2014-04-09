@@ -55,7 +55,7 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
             ),
         );
 
-        $this->tracker->displayHeader($this->layout, $this->tracker->name, $breadcrumbs);
+        $this->tracker->displayHeader($this->layout, $this->tracker->name, $breadcrumbs, null, array('body_class' => array('widgetable')));
         echo $this->fetchSubmitInstructions();
     }
 
@@ -67,8 +67,8 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
         $html .= '<div class="artifact-submit-button">';
         $html .= '<input type="hidden" id="submit-type" />';
         $html .= '<div class="btn-group dropup">';
-        $html .= '<button class="btn btn-primary" type="submit">'. $GLOBALS['Language']->getText('global', 'btn_submit') .'</button>';
-        $html .= '<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>';
+        $html .= '<button class="btn btn-large btn-primary" type="submit">'. $GLOBALS['Language']->getText('global', 'btn_submit') .'</button>';
+        $html .= '<button class="btn btn-large btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>';
         $html .= '<ul class="dropdown-menu">';
         $html .= '<li><input type="submit" name="submit_and_continue" class="btn btn-link" value="'.$GLOBALS['Language']->getText('global', 'btn_submit_and_continue').'" /></li>';
         $html .= '<li><input type="submit" name="submit_and_stay" class="btn btn-link" value="'.$GLOBALS['Language']->getText('global', 'btn_submit_and_stay').'" /></li>';

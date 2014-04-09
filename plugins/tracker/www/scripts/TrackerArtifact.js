@@ -311,11 +311,9 @@ document.observe('dom:loaded', function () {
 
     function toggle_tracker_artifact_attachment_delete(elem) {
         if (elem.checked) {
-            elem.up('td').nextSiblings().invoke('addClassName', 'tracker_artifact_attachment_deleted');
-            elem.up('tr').select('.tracker_artifact_preview_attachment').invoke('setOpacity', 0.4);
+            elem.up().siblings().invoke('addClassName', 'tracker_artifact_attachment_deleted');
         } else {
-            elem.up('td').nextSiblings().invoke('removeClassName', 'tracker_artifact_attachment_deleted');
-            elem.up('tr').select('.tracker_artifact_preview_attachment').invoke('setOpacity', 1);
+            elem.up().siblings().invoke('removeClassName', 'tracker_artifact_attachment_deleted');
         }
     }
 

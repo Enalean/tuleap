@@ -33,11 +33,12 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
                           id="fieldset_'. $this->getId() .'">';
         $html .= $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '</legend>';
+        $html .= '<div class="tracker_artifact_fieldset_content">';
         return $html;
     }
     
     protected function fetchArtifactSuffix() {
-        $html = '';
+        $html = '</div>';
         $html .= '</fieldset>';
         return $html;
     }
