@@ -1387,6 +1387,7 @@ class Layout extends Response {
      * Helper for the calendar picker. It returns the html snippet which will
      * enable user to specify a date with the help of little dhtml
      *
+     * @deprecated since version 7.0 in favor of getBootstrapDatePicker
      * @param string $id the id of the input element
      * @param string $name the name of the input element
      * @param string $size the optional size of the input element, default is 10
@@ -1402,6 +1403,31 @@ class Layout extends Response {
                        size="'. $hp->purify($size, CODENDI_PURIFIER_CONVERT_HTML) .'"
                        maxlength="'. $hp->purify($maxlength, CODENDI_PURIFIER_CONVERT_HTML) .'"
                        value="'. $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) .'"></span>';
+    }
+
+    /**
+     * Helper for the calendar picker. It returns the html snippet which will
+     * enable user to specify a date with the help of little dhtml
+     *
+     * @param string $id the id of the input element
+     * @param string $name the name of the input element
+     * @params array $classes extra css classes if needed
+     *
+     * @return string The calendar picker
+     */
+    public function getBootstrapDatePicker($id, $name, $value, $classes=array()) {
+        $hp = Codendi_HTMLPurifier::instance();
+        return '<div class="input-append date ' . implode(' ', $classes) . '">
+            <input name="'. $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) .'"
+                   id="'. $hp->purify($id, CODENDI_PURIFIER_CONVERT_HTML) .'"
+                   data-format="yyyy-MM-dd"
+                   type="text"
+                   value="' . $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) . '">
+            </input>
+            <span class="add-on add-on-calendar">
+              <i class="icon-calendar" data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+            </span>
+        </div>';
     }
 
     function warning_for_services_which_configuration_is_not_inherited($group_id, $service_top_tab) {
