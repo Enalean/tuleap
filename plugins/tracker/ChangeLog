@@ -1,3 +1,6 @@
+Version 5.299 - Tuleap 6.13
+    * tasks #6605: Replace report options by buttons
+
 Version 5.298 - Tuleap 6.13
     * request #6641: Fix X-PAGINATION-SIZE for /trackers/:id/artifacts
 
