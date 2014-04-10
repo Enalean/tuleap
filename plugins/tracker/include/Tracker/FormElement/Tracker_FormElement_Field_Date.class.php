@@ -426,17 +426,33 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
                 $eq_selected = 'selected="selected"';
             }
             $html .= '<div style="white-space:nowrap;">';
-            $html .= '<select name="criteria['. $this->id .'][op]">'.
-            '<option value=">"'. $lt_selected .'>&gt;</option>'.
-            '<option value="="'. $eq_selected .'>=</option>'.
-            '<option value="<"'. $lt_selected .'>&lt;</option>'.
-            '</select>';
+
+            $criteria_selector = array(
+                "name"      => 'criteria['. $this->id .'][op]',
+                "criterias" => array(
+                    ">" => array(
+                        "html_value" => $GLOBALS['Language']->getText('plugin_tracker_include_field','after'),
+                        "selected"   => $gt_selected
+
+                    ),
+                    "=" => array(
+                        "html_value" => $GLOBALS['Language']->getText('plugin_tracker_include_field','asof'),
+                        "selected"   => $eq_selected
+                    ),
+                    "<" => array(
+                        "html_value" => $GLOBALS['Language']->getText('plugin_tracker_include_field','before'),
+                        "selected"   => $lt_selected
+                    ),
+                )
+            );
+
             $value = $criteria_value ? $this->formatDate($criteria_value['to_date']) : '';
 
             $html .= $GLOBALS['HTML']->getBootstrapDatePicker(
                 "tracker_report_criteria_".$this->id,
                 "criteria[". $this->id ."][to_date]",
                 $value,
+                $criteria_selector,
                 array(
                     "tracker_artifact_field_date"
                 )
@@ -586,6 +602,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
             "tracker_admin_field_".$this->id,
             'artifact['.$this->id.']',
             $value,
+            array(),
             $date_picker_classes
         );
     }
@@ -653,6 +670,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
             "tracker_admin_field_".$this->id,
             '',
             $this->hasDefaultValue() ? $this->getDefaultValue() : '',
+            array(),
             array("tracker_artifact_field_date")
         );
     }

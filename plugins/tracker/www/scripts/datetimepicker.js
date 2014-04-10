@@ -23,16 +23,21 @@ tuleap.tracker = tuleap.tracker || { };
 (function ($) {
     tuleap.tracker.dateTimePicker = {
 
-        init: function() {
-           $('.tracker_artifact_field_date').datetimepicker({
+        init: function(selector) {
+
+         $(selector).datetimepicker({
              language: codendi.locale,
              pickTime: false
-           });
+             });
         }
     };
 
     $(document).ready(function () {
-        tuleap.tracker.dateTimePicker.init();
+        if ($('#tracker_report_form').size() > 0) {
+            tuleap.tracker.dateTimePicker.init('.tracker_artifact_field_date > span');
+            return;
+        }
+        tuleap.tracker.dateTimePicker.init('.tracker_artifact_field_date');
     });
 
 })(window.jQuery);
