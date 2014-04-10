@@ -1280,7 +1280,7 @@ plugin_tracker_report	replace_existing_report	Remplacer un rapport existant
 plugin_tracker_report	change_visibility	Modifier la visibilité
 plugin_tracker_report	current_report	Rapport :
 plugin_tracker_report	toggle_criteria	Critères
-plugin_tracker_report	toggle_columns	Modifier les colonnes
+plugin_tracker_report	toggle_columns	Colonnes
 plugin_tracker_report	sort_by	Triés par : 
 plugin_tracker_report	reset_sort	Réinitialiser le tri
 plugin_tracker_report	disable_multisort	Desactiver le tri multi-colonnes

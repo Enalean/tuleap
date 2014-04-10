@@ -39,6 +39,14 @@ class Templating_Presenter_ButtonDropdownsOption {
             'parameter' => $parameter,
             'value'     => $value,
         );
+        return $this;
+    }
+
+    public function setLiParameters(array $parameters) {
+        foreach ($parameters as $key => $value) {
+            $this->addLiParameter($key, $value);
+        }
+        return $this;
     }
 
     public function divider() {

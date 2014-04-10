@@ -28,11 +28,12 @@ class Templating_Presenter_ButtonDropdowns {
      */
     private $options;
     private $icon = 'icon-cog';
+    private $class_names = array();
 
     public function __construct($id, $label, array $options) {
         $this->label   = $label;
         $this->options = $options;
-        $this->id = $id;
+        $this->id      = $id;
     }
 
     public function setIcon($icon) {
@@ -54,5 +55,13 @@ class Templating_Presenter_ButtonDropdowns {
 
     public function icon() {
         return $this->icon;
+    }
+
+    public function class_names() {
+        return $this->class_names;
+    }
+
+    protected function addClassName($classname) {
+        $this->class_names[] = $classname;
     }
 }
