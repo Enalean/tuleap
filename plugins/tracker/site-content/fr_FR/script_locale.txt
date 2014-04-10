@@ -56,3 +56,6 @@ codendi.locales['tracker_trigger'] = {
 codendi.locales['tracker_modal_errors'] = {
     bad_request: 'Vous ne pouvez executer cette action'
 };
+codendi.locales['tracker_report'] = {
+    delete_report: 'Etes-vous sûr de vouloir supprimer ce rapport ?'
+};

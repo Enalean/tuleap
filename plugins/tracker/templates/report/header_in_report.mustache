@@ -1,0 +1,59 @@
+{{# has_browse_instructions }}
+    <p class="browse_instructions">{{{ browse_instructions }}}</p>
+{{/ has_browse_instructions }}
+
+<div id="tracker_report_config_options" class="row-fluid">
+    <div id="tracker_report_selection" class="pull-left">
+        <h2>
+        <form id="tracker_report_form" action="{{ select_report_url }}" method="POST" class="form-horizontal form-inline">
+            {{ title }} {{{ reports_selector }}}
+        </form>
+
+    {{# can_save }}
+        {{# options_dropdown }}
+            {{> button_dropdowns }}
+        {{/ options_dropdown }}
+    {{/ can_save }}
+    </h2>
+    </div>
+
+    {{# can_save }}
+        <div class="modal hide fade" id="tracker_report_updater_saveas-modal" role="dialog" aria-labelledby="tracker_report_updater_saveas-modal-label" aria-hidden="true" tabindex="-1">
+            <form id="tracker_report_form" action="{{ saveas_url }}" method="POST">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3 id="tracker_report_updater_saveas-modal-label">{{ save_report_as }}</h3>
+                </div>
+                <div class="modal-body">
+                    <label for="report_copy_name_input">{{ report_name }} <input id="report_copy_name_input" type="text" name="report_copy_name" placeholder="{{ copy_of }}" /></label>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal">{{ cancel }}</button>
+                    <button class="btn btn-primary" type="submit" name="save_new_report">{{ save_new_report }}</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="tracker_report_save_or_revert" class="{{ has_changed_classname }} pull-right">
+                <span id="tracker_report_haschanged_explenations">
+                    <i class="icon-info-sign"></i>&nbsp{{{ haschanged_explainations }}}
+                </span>
+
+                <span id="tracker_report_isobsolete_explenations">
+                    <i class="icon-info-sign"></i>&nbsp{{{ isobsolete_explainations }}}
+                </span>
+
+                <span id="tracker_report_haschanged_and_isobsolete_explenations">
+                    <i class="icon-info-sign"></i>&nbsp{{{ report_haschanged_and_isobsolete_explainations }}}
+                </span>
+
+                <div id="tracker_report_save_or_revert_buttons">
+                    {{# save_dropdown }}
+                        {{> split_button_dropdowns }}
+                    {{/ save_dropdown }}
+                    {{ or_lbl }}
+                    <a href="{{ revert_url }}" class="btn btn-danger">{{ revert }}</a>
+                </div>
+        </div>
+    {{/ can_save }}
+</div>

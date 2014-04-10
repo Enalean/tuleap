@@ -1263,11 +1263,19 @@ plugin_tracker_report	edit_report	Editer le rapport
 plugin_tracker_report	report_is_public	Ce rapport est public
 plugin_tracker_report	save	Enregistrer
 plugin_tracker_report	rename_as	Renommer sous
-plugin_tracker_report	save_as	Enregistrer sous
+plugin_tracker_report	save_as	Enregistrer sous...
+plugin_tracker_report	public	Public
+plugin_tracker_report	default	Defaut
+plugin_tracker_report	options	Options
+plugin_tracker_report	duplicate	Dupliquer...
+plugin_tracker_report	save_report_as	Enregistrer sous
+plugin_tracker_report	report_name	Nom du rapport :
+plugin_tracker_report	copy_of	Copie de
+plugin_tracker_report	save_new_report	Enregistrer
+plugin_tracker_report	revert	Annuler
 plugin_tracker_report	replace_existing_report	Remplacer un rapport existant
 plugin_tracker_report	change_visibility	Modifier la visibilité
-plugin_tracker_report	confirm_delete	Etes-vous sûr de vouloir supprimer ce rapport?
-plugin_tracker_report	current_report	Rapport courant :
+plugin_tracker_report	current_report	Rapport :
 plugin_tracker_report	toggle_criteria	Modifier les critères
 plugin_tracker_report	toggle_columns	Modifier les colonnes
 plugin_tracker_report	sort_by	Triés par : 
@@ -1288,9 +1296,9 @@ plugin_tracker_report	add_new	Ajouter
 plugin_tracker_report	table	Table
 plugin_tracker_report	charts	Graphique(s)
 plugin_tracker_report	has_been_saved	a été sauvegardé.
-plugin_tracker_report	haschanged_explanations	Si vous êtes satisfait des modifications que vous avez faites au rapport, n'oubliez pas de le sauvegarder ou <a id="tracker_report_clean_session" href="?tracker=$1&amp;func=clean-session">d'annuler vos modifications et de recharger le rapport</a>.
-plugin_tracker_report	isobsolete_explanations	$1 Le rapport a été modifié par <span class="tracker_report_updated_by">$2</span>. Vous pouvez <a id="tracker_report_clean_session" href="?tracker=$3&amp;func=clean-session">charger le nouveau rapport</a>.
-plugin_tracker_report	haschanged_isobsolete_explanations	$1 Le rapport a été modifié par <span class="tracker_report_updated_by">$2</span>. Si vous êtes satisfait des modifications que vous avez faites au rapport, n'oubliez pas de le sauvegarder ou <a id="tracker_report_clean_session" href="?tracker=$3&amp;func=clean-session">d'annuler vos modifications et de charger le nouveau rapport</a>.
+plugin_tracker_report	haschanged_explanations	Le rapport a été modifié. Vous pouvez :
+plugin_tracker_report	isobsolete_explanations	Le rapport a été modifié par <span class="tracker_report_updated_by">$1</span>. Vous pouvez :
+plugin_tracker_report	haschanged_isobsolete_explanations	Le rapport a été modifié par <span class="tracker_report_updated_by">$1</span>. Vous pouvez :
 plugin_tracker_report	renderer_name_mandatory	Le nom est obligatoire.
 plugin_tracker_report	set_default_report	Mettre ce rapport par défaut
 

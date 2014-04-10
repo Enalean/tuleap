@@ -34,6 +34,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
     const ACTION_DELETE  = 'report-delete';
     const ACTION_SCOPE   = 'report-scope';
     const ACTION_DEFAULT = 'report-default';
+    const ACTION_CLEANSESSION = 'clean-session';
     
     public $id;
     public $name;
@@ -346,168 +347,27 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
     /**
      * @return boolean true if the report has been modified since the last checkout
      */
-    protected function isObsolete() {
+    public function isObsolete() {
         return isset($this->report_session) && $this->updated_at && ($this->report_session->get('checkout_date') < $this->updated_at);
     }
     
     /**
      * @return string html the user who has modified the report. Or false if the report has not been modified
      */
-    protected function getLastUpdaterUserName() {
+    public function getLastUpdaterUserName() {
         if ($this->isObsolete()) {
             return UserHelper::instance()->getLinkOnUserFromUserId($this->updated_by);
         }
         return '';
     }
-    
+
     protected function displayHeader(Tracker_IFetchTrackerSwitcher $layout, $request, $current_user, $report_can_be_modified) {
-        $hp = Codendi_HTMLPurifier::instance();
-        $link_artifact_id = (int)$request->get('link-artifact-id');
-        $title            = '';
-        $breadcrumbs      = array();
-        $params           = array('body_class' => array('in_tracker_report'));
-        $toolbar          = null;
-        if ($report_can_be_modified) {
-            $this->getTracker()->displayHeader($layout, $title, $breadcrumbs, $toolbar, $params);
-        }
-        
-        if ($request->get('pv')) {
-            return;
-        }
-        
-        if (!$link_artifact_id && $this->getTracker()->getBrowseInstructions()) {
-            echo '<p class="browse_instructions">' . $hp->purify($this->getTracker()->getBrowseInstructions(), CODENDI_PURIFIER_FULL) . '</p>';
-        }
-        
-        $reports = Tracker_ReportFactory::instance()
-                   ->getReportsByTrackerId($this->tracker_id, $current_user->getId());
-        if (count($reports) > 1) {
-            $options = '<select id="tracker_select_report" name="select_report">';
-            $optgroup = array('personal' => '', 'public' => '');
-            foreach($reports as $r) {
-                $prefix = '<option value="'. $r->id .'"';
-                $suffix = '>'. $hp->purify($r->name, CODENDI_PURIFIER_CONVERT_HTML)  .'</option>';
-                $selected = $r->id == $this->id ? 'selected="selected"' : '';
-                $optgroup[($r->isPublic() ? 'public' : 'personal')] .= $prefix .' '. $selected . $suffix;
-            }
-            if ($optgroup['personal']) {
-                $options .= '<optgroup label="Personal reports">';
-                $options .= $optgroup['personal'];
-                $options .= '</optgroup>';
-            }
-            if ($optgroup['public']) {
-                $options .= '<optgroup label="Public reports">';
-                $options .= $optgroup['public'];
-                $options .= '</optgroup>';
-            }
-            $options .= '</select>';
-            $options .= '<noscript><input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /></noscript>';
-        } else {
-            $options = "'". $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML) ."'";
-        }        
-        $params = array('tracker' => $this->tracker_id);
-        
-        if($request->exist('criteria')) {
-            $params['criteria'] = $request->get('criteria');
-        }
-        
-        echo '<form id="tracker_report_form" action="?'. http_build_query($params).'" method="POST">';  
-        echo '<div>';
-        
-        if ($report_can_be_modified) {
-            $updated_by_username = '';
-            $img                 = $GLOBALS['HTML']->getimage('ic/warning.png', array('style' => 'vertical-align:top;'));
-            $is_obsolete         = $this->isObsolete();
-            if ($is_obsolete) {
-                $updated_by_username = $this->getLastUpdaterUserName();
-            }
-            
-            $classname_has_changed = '';
-            if ($this->report_session->hasChanged() && !$is_obsolete) {
-                $classname_has_changed .= 'tracker_report_haschanged';
-            }
-            if ($this->report_session->hasChanged() && $is_obsolete) {
-                $classname_has_changed .= 'tracker_report_haschanged_and_isobsolete';
-            }
-            if (!$this->report_session->hasChanged() && $is_obsolete) {
-                $classname_has_changed .= 'tracker_report_isobsolete';
-            }
-            echo '<div id="tracker_report_selection" class="'. $classname_has_changed .'">';
-        }
-        
-        if ($link_artifact_id) {
-            
-            echo '<p class="tracker-link-artifact-slow-way-content-selectreport">';
-            
-            $project = null;
-            $artifact = Tracker_ArtifactFactory::instance()->getArtifactByid($link_artifact_id);
-            if ($artifact) {
-                $project = $artifact->getTracker()->getProject();
-            }
-            echo $layout->fetchTrackerSwitcher($current_user, '<br />', $project, $this->getTracker());
-            
-            
-            //Reports
-            echo ' >&nbsp;';
-            echo $options;
-            echo '</p>';
-        } else {
-            echo $GLOBALS['Language']->getText('plugin_tracker_report', 'current_report'). $options;
-        }
-        
-        if ($report_can_be_modified) {
-            echo '<a href="#report-options" id="tracker_report_updater_handle" title="'. $GLOBALS['Language']->getText('plugin_tracker_report', 'edit_report') .'">';
-            echo '<span>options</span>';
-            echo $GLOBALS['HTML']->getimage('ic/dropdown_panel_handler_button.png');
-            echo '</a>';
-            
-            echo '<div id="tracker_report_haschanged_explenations">';
-            echo $GLOBALS['Language']->getText('plugin_tracker_report', 'haschanged_explanations', $this->tracker_id); 
-            echo '</div>';
-            
-            echo '<div id="tracker_report_isobsolete_explenations">';
-            echo $GLOBALS['Language']->getText('plugin_tracker_report', 'isobsolete_explanations', array($img, $updated_by_username, $this->tracker_id)); 
-            echo '</div>';
-            
-            echo '<div id="tracker_report_haschanged_and_isobsolete_explenations">';
-            echo $GLOBALS['Language']->getText('plugin_tracker_report', 'haschanged_isobsolete_explanations', array($img, $updated_by_username, $this->tracker_id)); 
-            echo '</div>';
-            
-            $update_report  = '';
-            if ($this->user_id == null && !$this->getTracker()->userIsAdmin($current_user)) {
-                $update_report  = $GLOBALS['Language']->getText('plugin_tracker_report', 'report_is_public');
-            }
-            $update_report .= '<ul>';
-            if ($this->userCanUpdate($current_user)) {
-                    $update_report .= '<li><label class="radio"><input type="radio" autocomplete="off" name="func" value="'. self::ACTION_SAVE  .'" id="tracker_report_updater_save"  />'. $GLOBALS['Language']->getText('plugin_tracker_report', 'save') .'</label></li>';
-            }
-            if (!$current_user->isAnonymous()) {
-                $update_report .= '<li><label class="radio"><input type="radio" autocomplete="off" name="func" value="'. self::ACTION_SAVEAS  .'" id="tracker_report_updater_saveas"  />'. $GLOBALS['Language']->getText('plugin_tracker_report', 'save_as') .'</label> <input type="text" name="report_copy_name" value="Copy of '.  $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML)  .'" /></li>';
-            }
-            if ($this->getTracker()->userIsAdmin($current_user)) {
-                $h = new HTML_Element_Input_Checkbox('Public', 'report_scope_public', ($this->user_id ? 0 : 1));
-                $update_report .= '<li><label class="radio"><input type="radio" autocomplete="off" name="func" value="'. self::ACTION_SCOPE  .'" id="tracker_report_updater_scope"  />'. $GLOBALS['Language']->getText('plugin_tracker_report', 'change_visibility') .'</label> '. $h->render() .'</li>';
-            }
-            
-            if(count($reports) > 1 && $this->getTracker()->userIsAdmin($current_user)) { 
-                $h = new HTML_Element_Input_Checkbox('Default', 'report_default', ($this->is_default ? 1 : 0));
-                $update_report .= '<li><label class="radio"><input type="radio" autocomplete="off" name="func" value="'. self::ACTION_DEFAULT  .'" id="tracker_report_updater_default"  />'. $GLOBALS['Language']->getText('plugin_tracker_report', 'set_default_report') .'</label> '. $h->render() .'</li>';
-            }
-            
-            if (count($reports) > 1) { 
-                if ($this->user_id || ($this->user_id == null && $this->getTracker()->userIsAdmin($current_user) && $this->nbPublicReport($reports) >1)) {
-                        $update_report .= '<li><label class="radio"><input type="radio" autocomplete="off" name="func" value="'. self::ACTION_DELETE  .'" id="tracker_report_updater_delete"  />'. $GLOBALS['Language']->getText('global', 'delete') .'</label></li>';
-                }
-            }
-            $update_report .= '</ul>';
-            if (!$current_user->isAnonymous()) {
-                $update_report .= '<input type="submit" value="'.  $hp->purify($GLOBALS['Language']->getText('global', 'btn_submit'), CODENDI_PURIFIER_CONVERT_HTML)  .'" onclick="if ($(\'tracker_report_updater_delete\') && $(\'tracker_report_updater_delete\').checked) { return confirm(\''.$GLOBALS['Language']->getText('plugin_tracker_report', 'confirm_delete').'\'); } else { return true; }"/> ';
-                $update_report .= '<input type="reset" value="'.  $hp->purify($GLOBALS['Language']->getText('global', 'btn_cancel'), CODENDI_PURIFIER_CONVERT_HTML)  .'" />';
-            }
-            echo $GLOBALS['HTML']->getDropdownPanel('tracker_report_updater', $update_report);
-        }
-        echo '</div>';
-        echo '</form>';
+        $header_builder = new Tracker_Report_HeaderRenderer(
+            Tracker_ReportFactory::instance(),
+            Codendi_HTMLPurifier::instance(),
+            TemplateRendererFactory::build()
+        );
+        $header_builder->displayHeader($layout, $request, $current_user, $this, $report_can_be_modified);
     }
     
     public function nbPublicReport($reports) {
@@ -1059,7 +919,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                     }
                 }
                 break;
-            case 'clean-session':
+            case self::ACTION_CLEANSESSION:
                 $this->report_session->clean();
                 $GLOBALS['Response']->redirect('?'. http_build_query(array(
                         'tracker'   => $this->tracker_id
@@ -1155,8 +1015,11 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                     $new_report->saveAdditionalCriteria();
                     $new_report->saveRenderers();
                     $new_report->report_session->cleanNamespace();
+                } else {
+                    $GLOBALS['Response']->addFeedback('error', 'Invalid copy name', CODENDI_PURIFIER_DISABLED);
                 }
-                
+
+
                 $GLOBALS['Response']->redirect('?'. http_build_query(array(
                     'report'   => $redirect_to_report_id
                 )));
