@@ -394,12 +394,16 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         $criteria_value = $this->getCriteriaValue($criteria);
         $html .= '<div style="text-align:right">';
         $value = isset($criteria_value['from_date']) ? $this->formatDate($criteria_value['from_date']) : '';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_include_field','start');
-        $html .= $GLOBALS['HTML']->getDatePicker("criteria_".$this->id ."_from", "criteria[". $this->id ."][from_date]", $value);
+        $html .= '<label>';
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_include_field','start').' ';
+        $html .= $GLOBALS['HTML']->getBootstrapDatePicker("criteria_".$this->id ."_from", "criteria[". $this->id ."][from_date]", $value);
+        $html .= '</label>';
         $html .= "<br />";
         $value = isset($criteria_value['to_date']) ? $this->formatDate($criteria_value['to_date']) : '';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_include_field','end');
-        $html .= $GLOBALS['HTML']->getDatePicker("criteria_".$this->id ."_to", "criteria[". $this->id ."][to_date]", $value);
+        $html .= '<label>';
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_include_field','end').' ';
+        $html .= $GLOBALS['HTML']->getBootstrapDatePicker("criteria_".$this->id ."_to", "criteria[". $this->id ."][to_date]", $value);
+        $html .= '</label>';
         $html .= '</div>';
         return $html;
     }
@@ -452,10 +456,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
                 "tracker_report_criteria_".$this->id,
                 "criteria[". $this->id ."][to_date]",
                 $value,
-                $criteria_selector,
-                array(
-                    "tracker_artifact_field_date"
-                )
+                $criteria_selector
             );
             $html .= '</div>';
         }
@@ -593,17 +594,12 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
             }
         }
 
-        $date_picker_classes = array("tracker_artifact_field_date");
-        if ($this->has_errors) {
-            $date_picker_classes[] = 'has_error';
-        }
-
         return $GLOBALS['HTML']->getBootstrapDatePicker(
             "tracker_admin_field_".$this->id,
             'artifact['.$this->id.']',
             $value,
             array(),
-            $date_picker_classes
+            $this->has_errors ? array('has_error') : array()
         );
     }
 
@@ -670,8 +666,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
             "tracker_admin_field_".$this->id,
             '',
             $this->hasDefaultValue() ? $this->getDefaultValue() : '',
-            array(),
-            array("tracker_artifact_field_date")
+            array()
         );
     }
 

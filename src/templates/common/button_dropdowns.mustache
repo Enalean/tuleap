@@ -1,16 +1,18 @@
-<div class="btn-group" id="{{id}}">
+<div class="btn-group button_dropdowns" id="{{ id }}">
     <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-        <i class="icon-cog"></i> {{label}}
+        <i class="{{ icon }}"></i> {{ label }}
         <span class="caret"></span>
     </a>
     <ul class="dropdown-menu pull-right">
-        {{#options}}
-            {{#divider}}
+        {{# options }}
+            {{# divider }}
             <li class="divider"></li>
-            {{/divider}}
-            {{^divider}}
-            <li><a href="{{url}}" id="{{id}}" data-toggle="{{data_toggle}}">{{#selected}}<i class="icon-ok"></i> {{/selected}}{{label}}</a></li>
-            {{/divider}}
-        {{/options}}
+            {{/ divider }}
+            {{^ divider }}
+            <li {{# li_parameters }} {{ parameter }}="{{ value }}"{{/ li_parameters }}>
+                <a href="{{ url }}" id="{{ id }}" data-toggle="{{ data_toggle }}">{{# selected }}<i class="icon-ok"></i>{{/ selected }} {{ label }}</a>
+            </li>
+            {{/ divider }}
+        {{/ options }}
     </ul>
 </div>

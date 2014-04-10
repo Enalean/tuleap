@@ -18,26 +18,19 @@
  */
 
 var tuleap = tuleap || { };
-tuleap.tracker = tuleap.tracker || { };
 
 (function ($) {
-    tuleap.tracker.dateTimePicker = {
-
-        init: function(selector) {
-
-         $(selector).datetimepicker({
-             language: codendi.locale,
-             pickTime: false
-             });
+    tuleap.dateTimePicker = {
+        init: function() {
+            $('.tuleap_field_date').datetimepicker({
+                 language: codendi.locale,
+                 pickTime: false
+            });
         }
     };
 
     $(document).ready(function () {
-        if ($('#tracker_report_form').size() > 0) {
-            tuleap.tracker.dateTimePicker.init('.tracker_artifact_field_date > span');
-            return;
-        }
-        tuleap.tracker.dateTimePicker.init('.tracker_artifact_field_date');
+        tuleap.dateTimePicker.init();
     });
 
 })(window.jQuery);

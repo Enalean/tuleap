@@ -22,9 +22,9 @@
 class Tracker_Report_HeaderRenderer {
 
     /**
-     * @var TemplateRendererFactory
+     * @var TemplateRenderer
      */
-    private $renderer_factory;
+    private $renderer;
 
     /**
      * @var Codendi_HTMLPurifier
@@ -36,10 +36,10 @@ class Tracker_Report_HeaderRenderer {
      */
     private $report_factory;
 
-    public function __construct(Tracker_ReportFactory $report_factory, Codendi_HTMLPurifier $purifier, TemplateRendererFactory $renderer_factory) {
-        $this->report_factory   = $report_factory;
-        $this->purifier         = $purifier;
-        $this->renderer_factory = $renderer_factory;
+    public function __construct(Tracker_ReportFactory $report_factory, Codendi_HTMLPurifier $purifier, TemplateRenderer $renderer) {
+        $this->report_factory = $report_factory;
+        $this->purifier       = $purifier;
+        $this->renderer       = $renderer;
     }
 
     public function displayHeader(Tracker_IFetchTrackerSwitcher $layout, Codendi_Request $request, PFUser $current_user, Tracker_Report $report, $report_can_be_modified) {
@@ -71,7 +71,7 @@ class Tracker_Report_HeaderRenderer {
             'select_report' => $report->id,
         );
 
-        $this->renderTemplateToPage(
+        $this->renderer->renderToPage(
             'header_in_report',
             new Tracker_Report_HeaderInReportPresenter(
                 $this->purifier->purify($report->getTracker()->getBrowseInstructions(), CODENDI_PURIFIER_FULL),
@@ -209,7 +209,7 @@ class Tracker_Report_HeaderRenderer {
             $project = $artifact->getTracker()->getProject();
         }
 
-        $this->renderTemplateToPage(
+        $this->renderer->renderToPage(
             'header_in_artifact_link_modal',
             new Tracker_Report_HeaderInArtifactLinkModalPresenter(
                 $GLOBALS['Language']->getText('plugin_tracker_report', 'current_report'),
@@ -257,14 +257,5 @@ class Tracker_Report_HeaderRenderer {
             $options = $this->purifier->purify($report->name, CODENDI_PURIFIER_CONVERT_HTML);
         }
         return $options;
-    }
-
-    private function renderTemplateToPage($template_name, $presenter) {
-        $this->renderer_factory->getRenderer(
-            array(
-                TRACKER_TEMPLATE_DIR.'/report',
-                Config::get('codendi_dir').'/src/templates/common'
-            )
-        )->renderToPage($template_name, $presenter);
     }
 }
