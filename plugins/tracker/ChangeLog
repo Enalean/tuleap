@@ -1,3 +1,6 @@
+Version 5.300 - Tuleap 6.13
+    * request #6654 - Artifact Links no longer dynamically loaded
+
 Version 5.299 - Tuleap 6.13
     * tasks #6605: Replace report options by buttons
 
