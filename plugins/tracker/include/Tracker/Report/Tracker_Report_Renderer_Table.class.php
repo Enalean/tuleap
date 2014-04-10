@@ -689,7 +689,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         if ($with_sort_links && $this->report->userCanUpdate(UserManager::instance()->getCurrentUser())) {
             $classnames .= ' reorderable resizable';
         }
-        $html .= ' class="table table-striped table-bordered '. $classnames .'"';
+        $html .= ' class="tracker_report_table table table-striped table-bordered '. $classnames .'"';
 
         $html .= '>';
         $html .= '<thead>';
