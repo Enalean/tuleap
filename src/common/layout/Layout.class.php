@@ -1411,13 +1411,27 @@ class Layout extends Response {
      *
      * @param string $id the id of the input element
      * @param string $name the name of the input element
+     * @param array $critria_selector list of extra criterias to be listed in a prepended select
      * @params array $classes extra css classes if needed
      *
      * @return string The calendar picker
      */
-    public function getBootstrapDatePicker($id, $name, $value, $classes=array()) {
+    public function getBootstrapDatePicker($id, $name, $value, array $criteria_selector, $classes=array()) {
         $hp = Codendi_HTMLPurifier::instance();
-        return '<div class="input-append date ' . implode(' ', $classes) . '">
+        $html  = '';
+        $html .= '<div class="input-prepend dropdown input-append date ' . implode(' ', $classes) . '">';
+
+        if(count($criteria_selector) > 0) {
+            $html .= '<select id="add-on-select" name="' . $criteria_selector['name'] . '" class="add-on add-on-select selectpicker">';
+            foreach($criteria_selector['criterias'] as $criteria_value => $criteria) {
+                $html .= '<option value="' . $criteria_value . '" ' . $criteria['selected'] . '>' . $criteria['html_value'] . '</option>';
+            }
+
+            $html .= '</select>';
+        }
+
+        $html .= '
+            <span>
             <input name="'. $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) .'"
                    id="'. $hp->purify($id, CODENDI_PURIFIER_CONVERT_HTML) .'"
                    data-format="yyyy-MM-dd"
@@ -1427,7 +1441,10 @@ class Layout extends Response {
             <span class="add-on add-on-calendar">
               <i class="icon-calendar" data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
             </span>
+            </span>
         </div>';
+
+        return $html;
     }
 
     function warning_for_services_which_configuration_is_not_inherited($group_id, $service_top_tab) {

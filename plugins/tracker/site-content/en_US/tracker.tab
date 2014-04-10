@@ -292,6 +292,9 @@ plugin_tracker_include_field	any_time	Any time
 plugin_tracker_include_field	pick_date	Click Here to Pick up a date
 plugin_tracker_include_field	unknown_display_type	$1: UNKNOWN ARTIFACT FIELD DISPLAY TYPE
 plugin_tracker_include_field	unknown_value	*** unknown value ***
+plugin_tracker_include_field	before	Before
+plugin_tracker_include_field	asof	As of
+plugin_tracker_include_field	after	After
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactFileHtml.class.php
