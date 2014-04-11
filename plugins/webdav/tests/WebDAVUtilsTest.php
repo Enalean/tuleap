@@ -32,7 +32,7 @@ array()
 /**
  * This is the unit test of WebDAVUtils
  */
-class WebDAVUtilsTest extends UnitTestCase {
+class WebDAVUtilsTest extends TuleapTestCase {
 
     /**
      * Testing when The user is not member and is not super user

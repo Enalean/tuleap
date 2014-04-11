@@ -32,7 +32,7 @@ Mock::generatePartial(
  *
  * Test the class IMPlugin
  */
-class IMPluginTest extends UnitTestCase {
+class IMPluginTest extends TuleapTestCase {
     
     var $implugin;
     var $project;

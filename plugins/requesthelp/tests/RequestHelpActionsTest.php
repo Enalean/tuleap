@@ -39,7 +39,7 @@ Mock::generatePartial('RequestHelpActions', 'RequestHelpActionsTestVersion', arr
 Mock::generatePartial('RequestHelpActions', 'RequestHelpActionsTestVersion2', array('_getUserManager', 'insertTicketInCodexDB', 'sendMail', 'insertTicketInRIFDB', 'getController', 'validateRequest'));
 Mock::generatePartial('RequestHelpActions', 'RequestHelpActionsTestVersion3', array('_getUserManager', '_getCodendiMail', '_getPluginManager', 'validateRequest'));
 
-class RequestHelpActionsTest extends UnitTestCase {
+class RequestHelpActionsTest extends TuleapTestCase {
 
     function setUp() {
         $GLOBALS['Language'] = new MockBaseLanguage($this);
