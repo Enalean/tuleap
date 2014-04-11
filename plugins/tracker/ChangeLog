@@ -1,3 +1,6 @@
+Version 5.314 - Tuleap 6.13
+    * Follow up to tasks #6607: issue with 'Add to my dashboard'
+
 Version 5.313 - Tuleap 6.13
     * Fields dependencies recursively loaded on switch
 
