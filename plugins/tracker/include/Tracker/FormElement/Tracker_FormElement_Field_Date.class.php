@@ -396,13 +396,24 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         $value = isset($criteria_value['from_date']) ? $this->formatDate($criteria_value['from_date']) : '';
         $html .= '<label>';
         $html .= $GLOBALS['Language']->getText('plugin_tracker_include_field','start').' ';
-        $html .= $GLOBALS['HTML']->getBootstrapDatePicker("criteria_".$this->id ."_from", "criteria[". $this->id ."][from_date]", $value);
+        $html .= $GLOBALS['HTML']->getBootstrapDatePicker(
+            "criteria_".$this->id ."_from",
+            "criteria[". $this->id ."][from_date]",
+            $value,
+            array(),
+            array()
+        );
         $html .= '</label>';
-        $html .= "<br />";
         $value = isset($criteria_value['to_date']) ? $this->formatDate($criteria_value['to_date']) : '';
         $html .= '<label>';
         $html .= $GLOBALS['Language']->getText('plugin_tracker_include_field','end').' ';
-        $html .= $GLOBALS['HTML']->getBootstrapDatePicker("criteria_".$this->id ."_to", "criteria[". $this->id ."][to_date]", $value);
+        $html .= $GLOBALS['HTML']->getBootstrapDatePicker(
+            "criteria_".$this->id ."_to",
+            "criteria[". $this->id ."][to_date]",
+            $value,
+            array(),
+            array()
+        );
         $html .= '</label>';
         $html .= '</div>';
         return $html;
@@ -456,7 +467,8 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
                 "tracker_report_criteria_".$this->id,
                 "criteria[". $this->id ."][to_date]",
                 $value,
-                $criteria_selector
+                $criteria_selector,
+                array()
             );
             $html .= '</div>';
         }
@@ -671,6 +683,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
             "tracker_admin_field_".$this->id,
             '',
             $this->hasDefaultValue() ? $this->getDefaultValue() : '',
+            array(),
             array()
         );
     }

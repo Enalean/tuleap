@@ -1416,7 +1416,7 @@ class Layout extends Response {
      *
      * @return string The calendar picker
      */
-    public function getBootstrapDatePicker($id, $name, $value, array $criteria_selector, $classes=array()) {
+    public function getBootstrapDatePicker($id, $name, $value, array $criteria_selector, array $classes) {
         $hp = Codendi_HTMLPurifier::instance();
         $html  = '';
         $html .= '<div class="input-prepend dropdown input-append date ' . implode(' ', $classes) . '">';
