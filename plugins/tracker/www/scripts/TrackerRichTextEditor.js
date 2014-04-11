@@ -26,7 +26,6 @@ tuleap.trackers.textarea.RTE = Class.create(codendi.RTE, {
         $super(element, options);
         // This div contains comment format selection buttons
         var div = Builder.node('div');
-        div.style.width = this.element.getWidth()+'px';
         var select_container = Builder.node('div', {'class' : 'rte_format'});
         select_container.appendChild(document.createTextNode("Format : "));
         div.appendChild(select_container);
