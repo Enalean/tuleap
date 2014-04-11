@@ -1,3 +1,6 @@
+Version 0.9.25 - Tuleap 6.13
+    * Submit bar instead of submit buttons in artifacts
+
 Version 0.9.24 - Tuleap 6.13
     * Load edit form with the artifact view (form hidden)
 

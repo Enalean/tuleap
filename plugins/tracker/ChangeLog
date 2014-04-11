@@ -1,3 +1,6 @@
+Version 5.305 - Tuleap 6.13
+    * Submit bar instead of submit buttons in artifacts
+
 Version 5.304 - Tuleap 6.13
     * Fix tasks #6637: fix z-index issue on IE9/Chrome for dropdown menu
 
