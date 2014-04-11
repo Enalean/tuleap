@@ -69,6 +69,18 @@ class SkinTuleap extends SkinTemplate {
             $out->addStyle( 'tuleap/IE60Fixes.css', 'screen', 'IE 6' );
             $out->addStyle( 'tuleap/IE70Fixes.css', 'screen', 'IE 7' );
     }
+
+    function addToBodyAttributes( $out, &$bodyAttrs ) {
+        parent::addToBodyAttributes( $out, $bodyAttrs );
+        $current_user  = UserManager::instance()->getCurrentUser();
+        $sidebar_state = $current_user->getPreference('sidebar_state');
+
+        if (! $sidebar_state) {
+            $sidebar_state = 'sidebar-expanded';
+        }
+
+        $bodyAttrs['class'] .= ' has_sidebar ' . $sidebar_state;
+    }
 }
 
 /**
