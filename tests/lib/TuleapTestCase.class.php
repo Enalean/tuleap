@@ -177,7 +177,7 @@ abstract class TuleapTestCase extends UnitTestCase {
     }
 
     protected function assertArrayEmpty($a) {
-        return $this->assertTrue(is_array($a), "expected an array, but '$a' is not an array") &&
+        return $this->assertTrue(is_array($a), "expected an array") &&
                $this->assertTrue(empty($a), "expected array to be empty, but it contains ". count($a). " elements");
     }
 

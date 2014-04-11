@@ -121,7 +121,7 @@ class RequestHelpDBDriver {
             $stid = @oci_parse($this->dbh, $sql);
             if ($stid) {
                 $rifId = 0;
-                @oci_bind_by_name($stid, ":OUT", &$rifId, 30);
+                @oci_bind_by_name($stid, ":OUT", $rifId, 30);
                 if (@oci_execute($stid)) {
                     $sql= 'SELECT TICKET_ID, REQUEST_STATUS FROM RIF_REQUEST WHERE RIF_ID = '.$rifId;
                     $stid = @oci_parse($this->dbh, $sql);
