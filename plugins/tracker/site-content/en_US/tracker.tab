@@ -1282,7 +1282,7 @@ plugin_tracker_report	replace_existing_report	Replace an existing report
 plugin_tracker_report	change_visibility	Change the visibility
 plugin_tracker_report	current_report	Report:
 plugin_tracker_report	toggle_criteria	Criteria
-plugin_tracker_report	toggle_columns	Toggle columns
+plugin_tracker_report	toggle_columns	Columns
 plugin_tracker_report	sort_by	Sort by:
 plugin_tracker_report	reset_sort	Reset sort
 plugin_tracker_report	disable_multisort	Disable multisort

@@ -383,7 +383,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
 
         $html = '';
         
-        $html .= '<div class="tracker_report_query">';
+        $html .= '<div id="tracker_report_query" data-report-id="'.$this->id.'">';
         $html .= '<form action="" method="POST" id="tracker_report_query_form">';
         $html .= '<input type="hidden" name="report" value="' . $this->id . '" />';
         $id = 'tracker_report_query_' . $this->id;
@@ -439,6 +439,17 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
     }
 
     private function getAddCriteriaDropdown($used) {
+        $add_criteria_presenter = new Templating_Presenter_ButtonDropdownsMini(
+            'tracker_report_add_criteria_dropdown',
+            $GLOBALS['Language']->getText('plugin_tracker_report', 'toggle_criteria'),
+            $this->getFieldsAsDropdownOptions('tracker_report_add_criterion', $used)
+        );
+        $add_criteria_presenter->setIcon('icon-eye-close');
+
+        return $this->getTemplateRenderer()->renderToString('button_dropdowns',  $add_criteria_presenter);
+    }
+
+    public function getFieldsAsDropdownOptions($id_prefix, array $used) {
         $fields_for_criteria = array();
         $fields_for_sort = array();
         foreach($this->getFormElementFactory()->getFields($this->getTracker()) as $field) {
@@ -451,26 +462,23 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         $criteria_options = array();
         foreach ($fields_for_sort as $id => $nop) {
             $option = new Templating_Presenter_ButtonDropdownsOption(
-                $id,
+                $id_prefix.'_'.$id,
                 $fields_for_criteria[$id]->getLabel(),
                 isset($used[$id]),
                 '#'
             );
-            $option->addLiParameter('data-field-id', $id);
-            $option->addLiParameter('data-field-is-used', intval(isset($used[$id])));
+            $option->setLiParameters(
+                array(
+                    'data-field-id'      => $id,
+                    'data-field-is-used' => intval(isset($used[$id])),
+                )
+            );
             $criteria_options[] = $option;
         }
-
-        $add_criteria_presenter = new Templating_Presenter_ButtonDropdowns(
-            'tracker_report_add_criteria_dropdown',
-            $GLOBALS['Language']->getText('plugin_tracker_report', 'toggle_criteria'),
-            $criteria_options
-        );
-        $add_criteria_presenter->setIcon('icon-eye-close');
-        return $this->getTemplateRenderer()->renderToString('button_dropdowns',  $add_criteria_presenter);
+        return $criteria_options;
     }
 
-    private function getTemplateRenderer() {
+    public function getTemplateRenderer() {
         return TemplateRendererFactory::build()->getRenderer(
             array(
                 TRACKER_TEMPLATE_DIR.'/report',
@@ -612,7 +620,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             
     
             if ($current_renderer) {
-                $html .= '<div class="tracker_report_renderer" id="tracker_report_renderer_'. $current_renderer->getId() .'">';
+                $html .= '<div class="tracker_report_renderer" id="tracker_report_renderer_current" data-renderer-id="'. $current_renderer->getId() .'">';
 
                 if ($current_renderer->description) {
                     $html .= '<p class="tracker_report_renderer_description">'. $hp->purify($current_renderer->description, CODENDI_PURIFIER_BASIC) .'</p>';

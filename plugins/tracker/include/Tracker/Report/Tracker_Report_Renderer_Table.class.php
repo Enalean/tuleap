@@ -521,28 +521,16 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     }
     
     private function fetchAddColumn() {
-        $html = '';
-        $used = $this->getColumns();
-        $options = '';
-        foreach($this->report->getTracker()->getFormElements() as $formElement) {
-            if ($formElement->userCanRead()) {
-                $options .= $formElement->fetchAddColumn($used);
-            }
-        }
-        if ($options) {
-            $html .= $this->fetchFormStart('tracker_report_table_addcolumn_form');
-            $html .= '<div id="tracker_report_table_addcolumn_panel">';
-            $html .= '<select name="renderer_table[add_column]" id="tracker_report_table_add_column" autocomplete="off">';
-            $html .= '<option selected="selected" value="">'. '-- '.$GLOBALS['Language']->getText('plugin_tracker_report', 'toggle_columns').'</option>';
-            $html .= $options;
-            $html .= '</select>';
-            $html .= '<noscript><input type="submit" value="Add !" /></noscript>';
-            $html .= '</div>';
-            $html .= '</form>';
-        }
-        return $html;
+        $add_columns_presenter = new Templating_Presenter_ButtonDropdownsMini(
+            'tracker_report_add_columns_dropdown',
+            $GLOBALS['Language']->getText('plugin_tracker_report', 'toggle_columns'),
+            $this->report->getFieldsAsDropdownOptions('tracker_report_add_column', $this->getColumns())
+        );
+        $add_columns_presenter->setIcon('icon-eye-close');
+
+        return $this->report->getTemplateRenderer()->renderToString('button_dropdowns',  $add_columns_presenter);
     }
-    
+
     private function fetchRange($from, $to, $total_rows, $additionnal_html) {
         $html = '';
         $html .= '<span class="tracker_report_table_pager_range">';
