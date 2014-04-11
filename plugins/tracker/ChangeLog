@@ -1,3 +1,6 @@
+Version 5.308 - Tuleap 6.13
+    * request #6632: trigger rules are duplicated
+
 Version 5.307 - Tuleap 6.13
     * tasks #6660: renderer table headers in artifact link
 
