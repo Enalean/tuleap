@@ -120,8 +120,6 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
         $html .= '</ul>';
         $html .= '</fieldset>';
 
-        $html .= $this->fetchSubmitButton();
-
         $html .= '</td></tr></table>'; //see fetchFields
 
         return $html;

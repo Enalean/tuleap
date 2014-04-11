@@ -30,7 +30,7 @@ var tuleap = tuleap || {};
 tuleap.trackers = tuleap.trackers || {};
 
 (function ($) {
-    var submit_buttons = "form p input[type='submit'], .tuleap-modal input[type='submit']",
+    var submit_buttons = "form div input[type='submit'], .tuleap-modal input[type='submit']",
         infos_element  = 'input#artifact_informations',
         last_viewed_changeset;
 
@@ -41,8 +41,8 @@ tuleap.trackers = tuleap.trackers || {};
             var self = this;
 
             if (isOnArtifactEditionView()) {
-                $("form p input[type='submit']").each(function() {
-                    $(this).click(self.checkArtifactIsSubmittable);
+                $("form").submit(function(event) {
+                    return self.isArtifactSubmittable(event);
                 });
             }
         },

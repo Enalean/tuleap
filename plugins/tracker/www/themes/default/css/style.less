@@ -1648,6 +1648,34 @@ tr.artifact-children-table-head {
 
 .artifact-submit-button {
     text-align: center;
+    background: rgba(255,255,255,0.9);
+    border-top: 2px solid orange;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 30px 0;
+    box-sizing: border-box;
+    z-index: 999;
+
+    .dropdown-menu li {
+        .btn-link {
+            width: 100%;
+            text-decoration: none;
+            text-align: left;
+            color: #222;
+        }
+
+        &:hover {
+            background-color: #0081c2;
+
+            .btn-link {
+                text-decoration: none;
+                text-shadow: none;
+                color: #FFF;
+            }
+        }
+    }
 }
 
 #artifacts_query td {
