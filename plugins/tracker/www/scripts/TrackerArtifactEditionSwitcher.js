@@ -17,18 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-var tuleap     = tuleap || { };
-tuleap.tracker = tuleap.tracker || { };
+var tuleap              = tuleap || { };
+tuleap.tracker          = tuleap.tracker || { };
+tuleap.tracker.artifact = tuleap.tracker.artifact || { };
 
 (function($) {
 
-tuleap.tracker.editionSwitcher = function() {
+tuleap.tracker.artifact.editionSwitcher = function() {
 
     var init = function() {
         if ($("#artifact_informations").size() > 0) {
             bindClickOnEditableFields();
             bindSubmissionBarToFollowups();
-            hideSubmissionBar();
         }
     };
 
@@ -116,7 +116,7 @@ tuleap.tracker.editionSwitcher = function() {
 
     var displaySubmissionBarIfNeeded = function () {
         if (somethingIsEdited()) {
-            $('.artifact-submit-button').slideDown();
+            $('.hidden-artifact-submit-button').slideDown();
         }
     };
 
@@ -124,7 +124,7 @@ tuleap.tracker.editionSwitcher = function() {
         if (somethingIsEdited()) {
             return;
         }
-        $('.artifact-submit-button').slideUp();
+        $('.hidden-artifact-submit-button').slideUp();
     };
 
     var somethingIsEdited = function () {
@@ -148,11 +148,7 @@ tuleap.tracker.editionSwitcher = function() {
     };
 
     var submissionBarIsAlreadyActive = function () {
-        return $('.artifact-submit-button:visible').size() > 0;
-    };
-
-    var hideSubmissionBar = function () {
-        $('.artifact-submit-button').hide();
+        return $('.hidden-artifact-submit-button:visible').size() > 0;
     };
 
     return {
@@ -161,7 +157,7 @@ tuleap.tracker.editionSwitcher = function() {
 };
 
 $(document).ready(function() {
-    var edition_switcher = new tuleap.tracker.editionSwitcher();
+    var edition_switcher = new tuleap.tracker.artifact.editionSwitcher();
     edition_switcher.init();
 });
 
