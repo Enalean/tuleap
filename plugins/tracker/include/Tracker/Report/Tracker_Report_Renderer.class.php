@@ -182,20 +182,14 @@ abstract class Tracker_Report_Renderer {
         $html .= '</a>';
         $html .= '<ul class="dropdown-menu">';
 
-        $addto_my_dashboard_url = $this->getAddToDashboardURL(
-            'u'. $user->getId(),
-            Tracker_Widget_MyRenderer::ID
-        );
+        $addto_my_dashboard_url = $this->getAddToMyDashboardURL($user);
         $html .= '<li>';
         $html .= '<a href="'. $addto_my_dashboard_url .'">';
         $html .= $GLOBALS['Language']->getText('plugin_tracker_report', 'my_dashboard');
         $html .= '</a>';
         $html .= '</li>';
 
-        $addto_project_dashboard_url = $this->getAddToDashboardURL(
-            'g'. $project->getGroupId(),
-            Tracker_Widget_ProjectRenderer::ID
-        );
+        $addto_project_dashboard_url = $this->getAddToProjectDashboardURL($project);
         $html .= '<li>';
         $html .= '<a href="'. $addto_project_dashboard_url .'">';
         $html .= $GLOBALS['Language']->getText('plugin_tracker_report', 'project_dashboard');
@@ -210,16 +204,11 @@ abstract class Tracker_Report_Renderer {
 
     private function getSinglePurposeButtonForMyDashboardActions(PFUser $user) {
         $html  = '';
-        $addto_my_dashboard_url = $this->getAddToDashboardURL(
-            'u'. $user->getId(),
-            Tracker_Widget_MyRenderer::ID
-        );
-        $html .= '<li>';
+        $addto_my_dashboard_url = $this->getAddToMyDashboardURL($user);
         $html .= '<a href="'. $addto_my_dashboard_url .'" class="btn btn-mini">';
         $html .= '<i class="icon-dashboard"></i> ';
         $html .= $GLOBALS['Language']->getText('plugin_tracker_report', 'my_dashboard');
         $html .= '</a>';
-        $html .= '</li>';
 
         return $html;
     }
@@ -229,8 +218,22 @@ abstract class Tracker_Report_Renderer {
             && $user->isLoggedIn();
     }
 
+    private function getAddToMyDashboardURL(PFUser $user) {
+        return $this->getAddToDashboardURL(
+            'u'. $user->getId(),
+            Tracker_Widget_MyRenderer::ID
+        );
+    }
+
+    private function getAddToProjectDashboardURL(Project $project) {
+        return $this->getAddToDashboardURL(
+            'g'. $project->getGroupId(),
+            Tracker_Widget_ProjectRenderer::ID
+        );
+    }
+
     private function getAddToDashboardURL($owner_id, $widget_id) {
-        '/widgets/updatelayout.php?'.http_build_query(
+        return '/widgets/updatelayout.php?'. http_build_query(
             array(
                 'owner'    => $owner_id,
                 'action'   => 'widget',
@@ -238,7 +241,7 @@ abstract class Tracker_Report_Renderer {
                     'title'       => $this->name .' for '. $this->report->name,
                     'renderer_id' => $this->id
                 ),
-                'name'     => array(
+                'name' => array(
                     $widget_id => array (
                         'add' => 1
                     )
