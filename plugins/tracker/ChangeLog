@@ -1,3 +1,6 @@
+Version 5.304 - Tuleap 6.13
+    * Fix tasks #6637: fix z-index issue on IE9/Chrome for dropdown menu
+
 Version 5.303 - Tuleap 6.13
     * Load edit form with the artifact view (form hidden)
 
