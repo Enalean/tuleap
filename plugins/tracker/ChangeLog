@@ -1,3 +1,6 @@
+Version 5.313 - Tuleap 6.13
+    * Fields dependencies recursively loaded on switch
+
 Version 5.312 - Tuleap 6.13
     * Change style of add/remove columns
 
