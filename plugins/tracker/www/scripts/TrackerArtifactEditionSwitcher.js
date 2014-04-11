@@ -48,12 +48,42 @@ tuleap.tracker.editionSwitcher = function() {
 
     var bindEditionSwitch = function (element) {
         $(element).on('click', function() {
-            removeReadOnlyElements(element);
-            removeUnwrappedText(element);
-            $(element).find('.tracker_hidden_edition_field').show();
-            $(element).off('click');
-            toggleSubmissionBar();
+            toggleField(element);
         });
+    };
+
+    var toggleField = function (element) {
+        removeReadOnlyElements(element);
+        removeUnwrappedText(element);
+        $(element).find('.tracker_hidden_edition_field').show();
+        $(element).off('click');
+        toggleDependencyIfAny(element);
+        toggleSubmissionBar();
+    };
+
+    var toggleDependencyIfAny = function (element) {
+        if (! codendi.tracker.rules_definitions) {
+            return;
+        }
+
+        var field_id = $(element).find('.tracker_hidden_edition_field').attr('data-field-id');
+
+        $(codendi.tracker.rules_definitions).each( function() {
+            if (this.source_field == field_id) {
+                var target_field = getTargetField(this.target_field);
+                if (target_field) {
+                    toggleField(target_field);
+                }
+            }
+        });
+    };
+
+    var getTargetField = function(target_field_id) {
+        var field = $(".tracker_artifact_field .tracker_hidden_edition_field[data-field-id="+target_field_id+"]");
+
+        if (field) {
+            return $(field).parent(".tracker_artifact_field");
+        }
     };
 
     var removeReadOnlyElements = function (element) {
