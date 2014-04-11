@@ -1,3 +1,6 @@
+Version 0.27 - Tuleap 6.13
+    * request #6662: Fix Mediawiki UI in experimental theme
+
 Version 0.26 - Tuleap 6.12
     * story #5998 - Delegate the validation of projects to users
 
