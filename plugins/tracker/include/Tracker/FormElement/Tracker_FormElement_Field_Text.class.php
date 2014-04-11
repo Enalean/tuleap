@@ -222,7 +222,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
             $format = $default_value['format'];
         }
 
-        if (is_array($submitted_values[0])) {
+        if (! empty($submitted_values) && is_array($submitted_values[0])) {
             $content = $submitted_values[0][$this->getId()]['content'];
             $format  = $submitted_values[0][$this->getId()]['format'] == Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT ? Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT : Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT;
         } elseif ($value != null) {
@@ -282,15 +282,19 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      * @return string
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
-        $value = $value ? $value->getValue() : '';
+        $text = $value ? $value->getValue() : '';
 
-        if (! $value) {
+        if (! $text) {
             return $this->getNoValueLabel();
         }
 
-        return $value;
+        return $text;
     }
-    
+
+    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+        return $this->fetchArtifactValueReadOnly($artifact, $value) . $this->getHiddenArtifactValueForEdition($artifact, $value);
+    }
+
     /**
      * Fetch the changes that has been made to this field in a followup
      * @param Tracker_ $artifact

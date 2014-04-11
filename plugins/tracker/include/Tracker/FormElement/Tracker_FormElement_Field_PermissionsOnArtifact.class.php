@@ -244,6 +244,10 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         $is_read_only = true;
         return $this->fetchArtifactValueCommon($is_read_only, $artifact, $value);
     }
+
+    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+        return $this->fetchArtifactValueReadOnly($artifact, $value) . $this->getHiddenArtifactValueForEdition($artifact, $value);
+    }
     
     private function isValidSubmittedValues($submitted_values) {
         return (

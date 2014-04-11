@@ -227,7 +227,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
      */
     protected function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         $html = '';
-        if (is_array($submitted_values[0])) {
+        if (! empty($submitted_values) && is_array($submitted_values[0])) {
             $value=$submitted_values[0][$this->getId()];
         } else {
             if ($value !=null) {
@@ -285,6 +285,10 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
         }
         $hp = Codendi_HTMLPurifier::instance();
         return $hp->purify( "{$value->getValue()}", CODENDI_PURIFIER_CONVERT_HTML);
+    }
+
+    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+        return $this->fetchArtifactValueReadOnly($artifact, $value) . $this->getHiddenArtifactValueForEdition($artifact, $value);
     }
     
     /**

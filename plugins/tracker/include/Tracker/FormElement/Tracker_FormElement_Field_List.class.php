@@ -505,11 +505,14 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @return string
      */
     protected function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
-        $submitted_values = isset($submitted_values[0][$this->id]) ? $submitted_values[0][$this->id] : array();
+        $values = array();
+        if (! empty($submitted_values) && isset($submitted_values[0][$this->id])) {
+            $values = $submitted_values[0][$this->id];
+        }
         $selected_values  = $value ? $value->getListValues() : array();
         return $this->_fetchField('tracker_field_'. $this->id, 
                 'artifact['. $this->id .']', 
-                $selected_values, $submitted_values);
+                $selected_values, $values);
     }
 
      /**
@@ -560,11 +563,15 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
             return $this->getNoValueLabel();
         }
 
-        foreach ($selected_values as $id => $value) {
+        foreach ($selected_values as $id => $selected) {
             $tablo[] = $this->getBind()->formatArtifactValue($id);
         }
         $html .= implode(', ', $tablo);
         return $html;
+    }
+
+    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+        return $this->fetchArtifactValueReadOnly($artifact, $value) . $this->getHiddenArtifactValueForEdition($artifact, $value);
     }
 
     /**

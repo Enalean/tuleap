@@ -754,7 +754,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             $artifact_links = $value->getValue();
         }
 
-        if (isset($submitted_values[0]) && is_array($submitted_values[0])) {
+        if (! empty($submitted_values) && isset($submitted_values[0]) && is_array($submitted_values[0])) {
             $submitted_value = $submitted_values[0][$this->getId()];
         }
 
@@ -814,6 +814,14 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $reverse_links_tab   = $this->fetchReverseLinks($artifact);
 
         return $links_tab_read_only . $reverse_links_tab;
+    }
+
+    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+        return $this->getHiddenArtifactValueForEdition($artifact, $value) . $this->fetchArtifactValueReadOnly($artifact, $value) ;
+    }
+
+    public function getHiddenArtifactValueForEdition(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+        return "<div class='tracker_hidden_edition_field' data-field-id=" . $this->getId() . ">" . $this->fetchLinks($artifact, $value) . "</div>";
     }
 
     private function fetchLinksReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {

@@ -248,7 +248,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
      * @return string
      */
     public function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
-        return $this->fetchArtifactValueReadOnly($artifact, $value);
+        return $this->fetchArtifactValueWithEditionFormIfEditable($artifact, $value);
     }
     
     /**
