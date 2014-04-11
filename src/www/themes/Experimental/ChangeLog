@@ -1,3 +1,6 @@
+Version 0.9.24 - Tuleap 6.13
+    * Load edit form with the artifact view (form hidden)
+
 Version 0.9.23 - Tuleap 6.13
     * tasks #6652 - Change style of add/remove criteria
 
