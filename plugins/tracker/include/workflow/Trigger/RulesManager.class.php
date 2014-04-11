@@ -179,6 +179,68 @@ class Tracker_Workflow_Trigger_RulesManager {
 
         $this->logger->end(__METHOD__, $changeset->getId());
     }
-}
 
-?>
+    /**
+     * Duplicates all the triggers from template on project creation
+     *
+     * @param array $template_trackers
+     * @param array $field_mapping
+     */
+    public function duplicate(array $template_trackers, array $field_mapping) {
+        foreach ($template_trackers as $template_tracker) {
+            $this->duplicateFromTemplateTracker($template_tracker, $field_mapping);
+        }
+    }
+
+    private function duplicateFromTemplateTracker(Tracker $template_tracker, array $field_mapping) {
+        $trigger_rule_collection = $this->getForTargetTracker($template_tracker);
+
+        foreach ($trigger_rule_collection as $template_trigger_rule) {
+            $old_triggers = $template_trigger_rule->getTriggers();
+
+            $new_target   = $this->buildRuleTargetFromTemplateTriggerRule($template_trigger_rule->getTarget(), $field_mapping);
+            $new_triggers = $this->buildRuleTriggersFromTemplateTriggerRule($old_triggers, $field_mapping);
+
+            $new_trigger_rule = new Tracker_Workflow_Trigger_TriggerRule(
+                    0,
+                    $new_target,
+                    $template_trigger_rule->getCondition(),
+                    $new_triggers
+            );
+
+            $this->add($new_trigger_rule);
+        }
+    }
+
+    private function buildRuleTargetFromTemplateTriggerRule(
+        Tracker_Workflow_Trigger_FieldValue $template_trigger_rule_target,
+        array $field_mapping
+    ) {
+        foreach ($field_mapping as $mapping) {
+            if ($mapping['from'] === $template_trigger_rule_target->getField()->getId()) {
+                $new_field_id = $mapping['to'];
+                $target_field = $this->formelement_factory->getFieldById($new_field_id);
+                $target_value = $template_trigger_rule_target->getValue();
+                $target_value->setId($mapping['values'][$template_trigger_rule_target->getValue()->getId()]);
+
+                break;
+            }
+        }
+
+        return new Tracker_Workflow_Trigger_FieldValue(
+                $target_field,
+                $target_value
+        );
+    }
+
+    private function buildRuleTriggersFromTemplateTriggerRule(array $template_triggers, array $field_mapping) {
+        $new_triggers = array();
+
+        foreach ($template_triggers as $template_trigger) {
+           $new_triggers[] = $this->buildRuleTargetFromTemplateTriggerRule($template_trigger, $field_mapping);
+        }
+
+        return $new_triggers;
+    }
+
+}

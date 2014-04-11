@@ -604,11 +604,13 @@ class TrackerFactory {
      *
      */
     public function duplicate($from_project_id, $to_project_id, $ugroup_mapping) {
-        $tracker_mapping = array();
-        $field_mapping   = array();
+        $tracker_mapping        = array();
+        $field_mapping          = array();
+        $trackers_from_template = array();
 
         foreach($this->getTrackersByGroupId($from_project_id) as $tracker) {
             if ($tracker->mustBeInstantiatedForNewProjects()) {
+                $trackers_from_template[] = $tracker;
                 list($tracker_mapping, $field_mapping) = $this->duplicateTracker(
                         $tracker_mapping, 
                         $field_mapping, 
@@ -633,8 +635,11 @@ class TrackerFactory {
         if ($tracker_mapping) {
             $hierarchy_factory = $this->getHierarchyFactory();
             $hierarchy_factory->duplicate($tracker_mapping);
-        }
 
+            $trigger_rules_manager = $this->getTriggerRulesManager();
+            $trigger_rules_manager->duplicate($trackers_from_template, $field_mapping);
+
+        }
         $shared_factory = $this->getFormElementFactory();
         $shared_factory->fixOriginalFieldIdsAfterDuplication($to_project_id, $from_project_id, $field_mapping);
 
@@ -643,6 +648,25 @@ class TrackerFactory {
             'field_mapping'   => $field_mapping,
             'group_id'        => $to_project_id
         ));
+    }
+
+    /**
+     * @return Tracker_Workflow_Trigger_RulesManager
+     */
+    protected function getTriggerRulesManager() {
+        $trigger_rule_dao        = new Tracker_Workflow_Trigger_RulesDao();
+        $workflow_backend_logger = new WorkflowBackendLogger(new BackendLogger());
+        $rules_processor         = new Tracker_Workflow_Trigger_RulesProcessor(
+            new Tracker_Workflow_WorkflowUser(),
+            $workflow_backend_logger
+        );
+
+        return new Tracker_Workflow_Trigger_RulesManager(
+            $trigger_rule_dao,
+            $this->getFormElementFactory(),
+            $rules_processor,
+            $workflow_backend_logger
+        );
     }
 
     /**
