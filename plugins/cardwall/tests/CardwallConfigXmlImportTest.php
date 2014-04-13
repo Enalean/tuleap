@@ -126,6 +126,7 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
 
     public function itThrowsAnExceptionIfXmlDoesNotMatchRNG() {
          $xml_validator              = stub('XmlValidator')->nodeIsValid()->returns(false);
+         stub($xml_validator)->getValidationErrors()->returns(array());
          $cardwall_config_xml_import = new CardwallConfigXmlImport($this->group_id, $this->mapping, $this->cardwall_ontop_dao, $this->column_dao, $this->event_manager, $xml_validator);
 
          $this->expectException('CardwallFromXmlInputNotWellFormedException');
