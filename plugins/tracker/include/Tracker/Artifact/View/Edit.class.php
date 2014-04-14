@@ -53,8 +53,11 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
 
     /** @see Tracker_Artifact_View_View::fetch() */
     public function fetch() {
-        $html = $this->renderer->fetchFields($this->artifact, $this->request->get('artifact'));
+        $html  = '';
+        $html .= '<div class="tracker_artifact">';
+        $html .= $this->renderer->fetchFields($this->artifact, $this->request->get('artifact'));
         $html .= $this->fetchFollowUps($this->request->get('artifact_followup_comment'));
+        $html .= '</div>';
 
         return $html;
     }

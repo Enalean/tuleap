@@ -32,18 +32,6 @@ class Tracker_Artifact_ReadOnlyRenderer extends Tracker_Artifact_EditRenderer {
      * @return string The HTML code for artifact fields
      */
     public function fetchFields(Tracker_Artifact $artifact, $submitted_values = array()) {
-        return '<div class="tabForStory1693" id="fieldsFetchedChangeMe">
-            <input type="hidden" id="artifact-read-only-page" value="" />
-
-            <table cellspacing="0" cellpadding="0" border="0">
-                <tr valign="top">
-                    <td style="padding-right:1em;">'.
-                        $artifact->getTracker()->fetchFormElementsReadOnly($artifact, array($submitted_values)).
-                    '</td>
-                </tr>
-            </table>
-        </div>';
+        return $artifact->getTracker()->fetchFormElementsReadOnly($artifact, array($submitted_values));
     }
 }
-
-?>

@@ -643,6 +643,7 @@ a:hover .xref-in-title {
     border-top: 1px solid #E9E9E9;
     border-right: 1px solid #E9E9E9;
     border-left: 1px solid #E9E9E9;
+    white-space: nowrap;
 
     &.toggler-noajax {
         background-image: url('/themes/common/images/toggle-fontawesome-minus.png');
@@ -2431,4 +2432,12 @@ body.in_tracker_report .main .content {
     &.xref-in-title {
         background-color: @flamingo_pink_secondary;
     }
+}
+
+.tracker_artifact_add_attachment > p > input[type=file] {
+    width: 206px;
+}
+
+.tracker_artifact {
+    max-width: 960px;
 }

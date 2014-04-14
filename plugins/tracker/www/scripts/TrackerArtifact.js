@@ -255,11 +255,11 @@ document.observe('dom:loaded', function () {
                 new_attachment.select('input').each(function (input) {
                     input.value = '';
                 });
-                
+
                 //Add the remove button
-                new_attachment.down('tr', 1)
+                new_attachment.down('p')
                 .insert(
-                    new Element('td')
+                    new Element('div')
                     .insert(
                         new Element('a', { href: '#remove-attachment' })
                         .addClassName('tracker_artifact_remove_attachment')
