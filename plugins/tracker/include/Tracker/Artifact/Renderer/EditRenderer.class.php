@@ -84,7 +84,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
             array('title' => $title,
                   'url'   => TRACKER_BASE_URL.'/?aid='. $this->artifact->getId())
         );
-        $this->tracker->displayHeader($this->layout, $title, $breadcrumbs);
+        $this->tracker->displayHeader($this->layout, $title, $breadcrumbs, null, array('body_class' => array('widgetable')));
     }
 
     private function fetchView(Codendi_Request $request, PFUser $user) {
@@ -98,19 +98,18 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
     }
 
     private function fetchTitleInHierarchy(array $hierarchy) {
-        $hp    = Codendi_HTMLPurifier::instance();
         $html  = '';
         $html .= $this->artifact->fetchHiddenTrackerId();
         if ($hierarchy) {
             array_unshift($hierarchy, $this->artifact);
-            $html .= $this->fetchParentsTitle($hp, $hierarchy);
+            $html .= $this->fetchParentsTitle($hierarchy);
         } else {
             $html .= $this->artifact->fetchTitle();
         }
         return $html;
     }
 
-    private function fetchParentsTitle(Codendi_HTMLPurifier $hp, array $parents, $padding_prefix = '') {
+    private function fetchParentsTitle(array $parents, $padding_prefix = '') {
         $html   = '';
         $parent = array_pop($parents);
         if ($parent) {
@@ -121,7 +120,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
             if ($parents) {
                 $html .= $parent->fetchDirectLinkToArtifactWithTitle();
             } else {
-                $html .= $hp->purify($parent->getXRefAndTitle());
+                $html .= $parent->getXRefAndTitle();
             }
             if ($parents) {
                 $html .= '</a>';
@@ -132,7 +131,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
                     $div_suffix = '</div>';
                 }
                 $html .= $div_prefix;
-                $html .= $this->fetchParentsTitle($hp, $parents, $padding_prefix . '<div class="tree-blank">&nbsp;</div>');
+                $html .= $this->fetchParentsTitle($parents, $padding_prefix . '<div class="tree-blank">&nbsp;</div>');
                 $html .= $div_suffix;
             }
             $html .= '</li>';

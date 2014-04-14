@@ -199,7 +199,7 @@ LyteBox.prototype.updateLyteboxItems = function() {
 	}
 };
 LyteBox.prototype.start = function(imageLink, doSlide, doFrame) {
-	if (this.ie && !this.ie7) {	this.toggleSelects('hide');	}
+	//if (this.ie && !this.ie7) {	this.toggleSelects('hide');	}
 	if (this.hideFlash) { this.toggleFlash('hide'); }
 	this.isLyteframe = (doFrame ? true : false);
 	var pageSize	= this.getPageSize();
@@ -637,7 +637,7 @@ LyteBox.prototype.end = function(caller) {
 	this.disableKeyboardNav();
 	this.doc.getElementById('lbMain').style.display = 'none';
 	this.fade('lbOverlay', (this.doAnimations ? this.maxOpacity : 0));
-	this.toggleSelects('visible');
+	//this.toggleSelects('visible');
 	if (this.hideFlash) { this.toggleFlash('visible'); }
 	if (this.isSlideshow) {
 		for (var i = 0; i < this.slideshowIDCount; i++) { window.clearTimeout(this.slideshowIDArray[i]); }

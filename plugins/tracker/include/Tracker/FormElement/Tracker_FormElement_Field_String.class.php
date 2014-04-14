@@ -96,6 +96,24 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
         return $html;
     }
 
+    /**
+     * Fetch the html code to display the field value in artifact in read only mode
+     *
+     * @param Tracker_Artifact                $artifact The artifact
+     * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
+     *
+     * @return string
+     */
+    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+        $value = $value ? $value->getValue() : '';
+
+        if (! $value) {
+            return $this->getNoValueLabel();
+        }
+
+        return $value;
+    }
+
 
     /**
      * Fetch the html code to display the field value in artifact

@@ -1682,7 +1682,7 @@ EOS;
         echo '<div class="tracker_confirm_delete">';
         echo '<form name="delete_artifact" method="post" action="'.TRACKER_BASE_URL.'/?tracker='. (int)$this->id.'&amp;func=admin-delete-artifact">';
         echo $token->fetchHTMLInput();
-        echo $GLOBALS['Language']->getText('plugin_tracker_admin', 'clean_confirm_text', array($artifact->getXRefAndTitle()), CODENDI_PURIFIER_DISABLED);
+        echo $GLOBALS['Language']->getText('plugin_tracker_admin', 'clean_confirm_text', array($artifact->getXRefAndTitle()));
         echo '<div class="tracker_confirm_delete_preview">';
         echo $this->fetchFormElementsReadOnly($artifact);
         echo '</div>';
