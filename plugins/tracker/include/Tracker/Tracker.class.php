@@ -752,7 +752,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $report = null;
 
         //Does the user wants to change its report?
-        if ($request->get('select_report') && $request->isPost()) {
+        if ($request->get('select_report')) {
             //Is the report id valid
             if ($report = $this->getReportFactory()->getReportById($request->get('select_report'), $current_user->getid())) {
                 $current_user->setPreference('tracker_'. $this->id .'_last_report', $report->id);
