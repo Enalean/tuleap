@@ -108,7 +108,7 @@ abstract class Tracker_Artifact_ArtifactRenderer {
      * @return string The HTML code for submit buttons
      */
     public function fetchSubmitButton() {
-        return '<div class="artifact-submit-button">
+        return '<div class="hidden-artifact-submit-button">
                     <input type="hidden" id="submit-type" />
                     <div class="btn-group dropup">
                         <button class="btn btn-primary" type="submit">'. $GLOBALS['Language']->getText('global', 'btn_submit') .'</button>
