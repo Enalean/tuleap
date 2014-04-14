@@ -131,7 +131,8 @@ class trackerPlugin extends Plugin {
                 '/plugins/tracker/scripts/artifactChildren.js',
                 '/plugins/tracker/scripts/load-artifactChildren.js',
                 '/plugins/tracker/scripts/modal-in-place.js',
-                '/plugins/tracker/scripts/TrackerArtifactEditionSwitcher.js'
+                '/plugins/tracker/scripts/TrackerArtifactEditionSwitcher.js',
+                '/plugins/tracker/scripts/FixAggregatesHeaderHeight.js'
             )
         );
     }

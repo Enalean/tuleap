@@ -979,8 +979,174 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             }
         }
 
+        $is_first = true;
         $html .= '<tr valign="top" class="tracker_report_table_aggregates">';
-        if ($extracolumn) {
+        $html .= $this->fetchAggregatesExtraColumns($extracolumn, $only_one_column, $current_user);
+        foreach ($columns as $column) {
+            $field = $column['field'];
+            if (! $field->isUsed()) {
+                continue;
+            }
+
+            $html .= '<td class="tracker_report_table_column_'. $field->getId() .'">';
+            $html .= '<table><thead><tr>';
+            $html .= $this->fetchAddAggregatesUsedFunctionsHeader($field, $aggregates, $results);
+            $html .= '<th>';
+            $html .= $this->fetchAddAggregatesButton($read_only, $field, $current_user, $aggregates, $is_first);
+            $html .= '</th>';
+            $html .= '</tr></thead><tbody><tr>';
+            $result = $this->fetchAddAggregatesUsedFunctionsValue($field, $aggregates, $results);
+            if (! $result) {
+                $html .= '<td></td>';
+            }
+            $html .= $result;
+            $html .= '</tr></tbody></table>';
+            $html .= '</td>';
+
+            $is_first = false;
+        }
+        $html .= '</tr>';
+
+        return $html;
+    }
+
+    private function fetchAddAggregatesUsedFunctionsHeader(
+        Tracker_FormElement_Field $field,
+        array $used_aggregates,
+        array $results
+    ) {
+        if (! isset($used_aggregates[$field->getId()])) {
+            return '';
+        }
+
+        $html = '';
+        foreach ($used_aggregates[$field->getId()] as $function) {
+            if (! isset($results[$field->getName() . '_' . $function])) {
+                continue;
+            }
+
+            $html .= '<th>';
+            $html .= $GLOBALS['Language']->getText('plugin_tracker_aggregate', $function);
+            $html .= '</th>';
+        }
+
+        return $html;
+    }
+
+    private function fetchAddAggregatesUsedFunctionsValue(
+        Tracker_FormElement_Field $field,
+        array $used_aggregates,
+        array $results
+    ) {
+        if (! isset($used_aggregates[$field->getId()])) {
+            return '';
+        }
+
+        $hp   = Codendi_HTMLPurifier::instance();
+        $html = '';
+        foreach ($used_aggregates[$field->getId()] as $function) {
+            $result_key = $field->getName() . '_' . $function;
+            if (! isset($results[$result_key])) {
+                continue;
+            }
+
+            $result = $results[$result_key];
+            $html .= '<td>';
+            if (is_a($result, 'DataAccessResult')) {
+                if ($row = $result->getRow()) {
+                    if (isset($row[$result_key])) {
+                        //this case is for multiple selectbox/count
+                        $html .= '<label>';
+                        $html .= $this->formatAggregateResult($row[$result_key]);
+                        $html .= '<label>';
+                    } else {
+                        foreach ($result as $row) {
+                            $html .= '<label>';
+                            if ($row['label'] === null) {
+                                $html .= '<em>'. $GLOBALS['Language']->getText('global', 'null') .'</em>';
+                            } else {
+                                $html .= $hp->purify($row['label']);
+                            }
+                            $html .= ':&nbsp;';
+                            $html .= $this->formatAggregateResult($row['value']);
+                            $html .= '</label>';
+                        }
+                    }
+                }
+            } else {
+                $html .= '<label>';
+                $html .= $this->formatAggregateResult($result);
+                $html .= '<label>';
+            }
+            $html .= '</td>';
+        }
+
+        return $html;
+    }
+
+    private function fetchAddAggregatesButton(
+        $read_only,
+        Tracker_FormElement_Field $field,
+        PFUser $current_user,
+        array $used_aggregates,
+        $is_first
+    ) {
+        $aggregate_functions = $field->getAggregateFunctions();
+        if (! $read_only && $this->report->userCanUpdate($current_user)) {
+            return;
+        }
+
+        if (! $aggregate_functions) {
+            return;
+        }
+
+        $html  = '';
+        $html .= '<div class="btn-group">';
+        $html .= '<a href="#"
+            class="btn btn-mini dropdown-toggle"
+            title="'. $GLOBALS['Language']->getText('plugin_tracker_aggregate', 'toggle') .'"
+            data-toggle="dropdown">';
+        $html .= '<i class="icon-plus"></i> ';
+        $html .= '<span class="caret"></span>';
+        $html .= '</a>';
+        $html .= '<ul class="dropdown-menu '. ($is_first ? '' : 'pull-right') .'">';
+        foreach ($aggregate_functions as $function) {
+            $is_used = isset($used_aggregates[$field->getId()]) && in_array($function, $used_aggregates[$field->getId()]);
+            $url = $this->getAggregateURL($field, $function);
+            $html .= '<li>';
+            $html .= '<a href="'. $url .'">';
+            if ($is_used) {
+                $html .= '<i class="icon-ok"></i> ';
+            }
+            $html .= $GLOBALS['Language']->getText('plugin_tracker_aggregate', $function);
+            $html .= '</a>';
+            $html .= '</li>';
+        }
+        $html .= '</ul>';
+        $html .= '</div>';
+
+        return $html;
+    }
+
+    private function getAggregateURL($field, $function) {
+        $field_id = $field->getId();
+        $params = array(
+            'func'       => 'renderer',
+            'report'     => $this->report->getId(),
+            'renderer'   => $this->getId(),
+            'renderer_table' => array(
+                'add_aggregate' => array(
+                    $field_id => $function
+                )
+            )
+        );
+        return TRACKER_BASE_URL .'/?'. http_build_query($params);
+    }
+
+    private function fetchAggregatesExtraColumns($extracolumn, $only_one_column, PFUser $current_user) {
+        $html        = '';
+        $inner_table = '<table><thead><tr><th></th></tr></thead></table>';
+       if ($extracolumn) {
             $display_extracolumn = true;
             $classname = 'tracker_report_table_';
             if ($extracolumn === self::EXTRACOLUMN_MASSCHANGE && $this->report->getTracker()->userIsAdmin($current_user)) {
@@ -995,75 +1161,14 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
             if ($display_extracolumn) {
                 $html .= '<td class="' . $classname . '" width="1">';
+                $html .= $inner_table;
                 $html .= '</td>';
             }
         }
-        if (!$only_one_column) {
-            $html .= '<td></td>';
+        if (! $only_one_column) {
+            $html .= '<td>'. $inner_table .'</td>';
         }
-        $hp = Codendi_HTMLPurifier::instance();
-        foreach ($columns as $column) {
-            if ($column['field']->isUsed()) {
-                $html .= '<td class="tracker_report_table_column_'. $column['field']->getId() .'">';
-                if (!$read_only && $this->report->userCanUpdate(UserManager::instance()->getCurrentUser())) {
-                    if ($column['field']->getAggregateFunctions()) {
-                        $html .= '<div class="tracker_aggregate_function_add_panel">';
-                        $html .= '<select name="tracker_aggregate_function_add[' . (int) $column['field']->getId() . ']">';
-                        $html .= '<option value="" selected="selected">' . $GLOBALS['Language']->getText('plugin_tracker_aggregate', 'toggle') . '</option>';
-                        foreach ($column['field']->getAggregateFunctions() as $f) {
-                            $classname = 'tracker_aggregate_function_add_';
-                            if (isset($aggregates[$column['field']->getId()]) && in_array($f, $aggregates[$column['field']->getId()])) {
-                                $classname .= 'used';
-                            } else {
-                                $classname .= 'unused';
-                            }
-                            $html .= '<option value="' . $hp->purify($f, CODENDI_PURIFIER_CONVERT_HTML) . '" class="'. $classname .'">' . $GLOBALS['Language']->getText('plugin_tracker_aggregate', $f . '_sel') . '</option>';
-                        }
-                        $html .= '</select>';
-                        $html .= '</div>';
-                    }
-                }
-                if (isset($aggregates[$column['field']->getId()])) {
-                    $html .= '<ul class="tracker_function_aggregate_results">';
-                    foreach ($aggregates[$column['field']->getId()] as $f) {
-                        if (isset($results[$column['field']->getName() . '_' . $f])) {
-                            $html .= '<li>';
-                            $html .= '<strong>' . $GLOBALS['Language']->getText('plugin_tracker_aggregate', $f . '_title') . '</strong> ';
-                            if (is_a($results[$column['field']->getName() . '_' . $f], 'DataAccessResult')) {
-                                if ($row = $results[$column['field']->getName() . '_' . $f]->getRow()) {
-                                    if (isset($row[$column['field']->getName() . '_' . $f])) {
-                                        //this case is for multiple selectbox/count
-                                        $html .= $hp->purify($this->formatAggregateResult($row[$column['field']->getName() . '_' . $f]), CODENDI_PURIFIER_CONVERT_HTML);
-                                    } else {
-                                        $html .= '<br />';
-                                        $html .= '<table><tbody>';
-                                        $i = 0;
-                                        foreach ($results[$column['field']->getName() . '_' . $f] as $row) {
-                                            $html .= '<tr class="'. html_get_alt_row_color(++$i) .'"><td style="font-weight:bold;">';
-                                            if ($row['label'] === null) {
-                                                $html .= '<em>'. $GLOBALS['Language']->getText('global', 'null') .'</em>';
-                                            } else {
-                                                $html .= $hp->purify($row['label'], CODENDI_PURIFIER_CONVERT_HTML);
-                                            }
-                                            $html .= '</td><td>';
-                                            $html .= $hp->purify($this->formatAggregateResult($row['value']), CODENDI_PURIFIER_CONVERT_HTML);
-                                            $html .= '</td></tr>';
-                                        }
-                                        $html .= '</tbody></table>';
-                                    }
-                                }
-                            } else {
-                                $html .= $hp->purify($this->formatAggregateResult($results[$column['field']->getName() . '_' . $f]), CODENDI_PURIFIER_CONVERT_HTML);
-                            }
-                            $html .= '</li>';
-                        }
-                    }
-                    $html .= '</ul>';
-                }
-                $html .= '</td>';
-            }
-        }
-        $html .= '</tr>';
+
         return $html;
     }
     
@@ -1073,9 +1178,12 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             if (round($value) == $value) {
                 $decimals = 0;
             }
-            return round($value, $decimals);
+            $value = round($value, $decimals);
+        } else {
+            $value = Codendi_HTMLPurifier::instance()->purify($value);
         }
-        return $value;
+
+        return '<span class="tracker_report_table_aggregates_value">'. $value .'</span>';
     }
     
     /**
@@ -1231,8 +1339,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 $html .= '<input type="hidden" name="masschange_aids_all[]" value="'. $id .'"/>';
             }
             $html .= '<div id="tracker_report_table_masschange_panel">';
-            $html .= '<input id="masschange_btn_checked" type="submit" name="renderer_table[masschange_checked]" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_report', 'mass_change_checked', $first_row, $last_row) .'" />';
-            $html .= '<input id="masschange_btn_all" type="submit" name="renderer_table[masschange_all]" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_report', 'mass_change_all', $total_rows) .'" />';
+            $html .= '<input id="masschange_btn_checked" type="submit" class="btn" name="renderer_table[masschange_checked]" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_report', 'mass_change_checked', $first_row, $last_row) .'" /> ';
+            $html .= '<input id="masschange_btn_all" type="submit" class="btn" name="renderer_table[masschange_all]" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_report', 'mass_change_all', $total_rows) .'" />';
             $html .= '</div>';
             $html .= '</form>';
         }

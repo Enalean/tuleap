@@ -175,10 +175,6 @@ h5.artifack_link_subtitle {
     text-shadow: 1px 1px white;
 }
 
-ul.tracker_function_aggregate_results {
-    padding-left:1em;
-}
-
 #tracker_query {
     list-style-type:none;
     margin:10px 0 0;
@@ -257,14 +253,6 @@ ul.tracker_function_aggregate_results {
 }
 .tracker_aggregate_function_add_panel {
     position: relative;
-}
-ul.tracker_function_aggregate_results {
-    margin-top:0;
-    list-style-type: none;
-    padding-left:0;
-}
-.tracker_function_aggregate_results li table {
-    margin-left:1em;
 }
 .tracker-form-element-artifactlink-gototracker {
     font-size:0.8em;
@@ -1054,11 +1042,6 @@ li.tracker_aggregate_function_add_unused:hover {
 div.tracker_report_table_hide_masschange #tracker_report_table_masschange_form,
 div.tracker_report_table_hide_masschange .tracker_report_table_masschange {
     display:none;
-}
-div.tracker_report_table_show_masschange #tracker_report_table_next_previous_form,
-div.tracker_report_table_show_masschange #tracker_report_table_masschange_form,
-div.tracker_report_table_show_masschange .tracker_report_table_masschange:not([class~=boxtitle]) {
-    background: #ffC;
 }
 
 /* bootstrap: avoid wrapping between toggler and ['details'] in workflow */
@@ -2173,4 +2156,72 @@ body.in_tracker_report .main .content {
 
 #tracker_report_renderer_view_controls {
     float: right;
+}
+
+.tracker_report_table_aggregates > td {
+    background: #FFFFFF !important;
+    border-top: 2px solid #B2B2B2;
+    border-left-color: #E5E5E5 !important;
+    padding: 0;
+
+    > table {
+        width: 100%;
+
+        > thead > tr > th {
+            background: #EEEEEE;
+            border-left: 1px solid #E5E5E5;
+            border-bottom: 1px solid #E5E5E5;
+            padding: 0 8px;
+            font-weight: normal;
+            height: 24px;
+            text-transform: uppercase;
+            font-size: 0.8em;
+            font-weight: bold;
+            vertical-align: middle;
+
+
+            &:last-child {
+                text-align: center;
+            }
+
+            &:first-child,
+            &:last-child {
+                border-left: none;
+            }
+
+            & + th:last-child {
+                text-align: right;
+            }
+
+            > .btn-group {
+                text-align: left;
+                text-transform: none;
+                margin-top: 1px;
+            }
+        }
+
+        > tbody > tr > td {
+            border: none;
+            border-left: 1px solid #DDDDDD;
+            background: #FFFFFF !important;
+
+            &:first-child {
+                border-left: none;
+            }
+
+            > label {
+                font-size: 0.8em;
+                color: #646464;
+                margin-bottom: 0;
+                margin-right: 10px;
+                float: left;
+                cursor: default;
+
+                > .tracker_report_table_aggregates_value {
+                    color: #222;
+                    font-size: 1.2em;
+                }
+            }
+        }
+    }
 }

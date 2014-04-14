@@ -195,6 +195,8 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
 
                         codendi.tracker.report.setHasChanged();
 
+                        tuleap.trackers.report.table.fixAggregatesHeights();
+
                         //reorder
                         codendi.reorder_columns[$('tracker_report_table').identify()].register(new_column);
 
@@ -256,6 +258,8 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
                     $$('.tracker_report_table_column_' + field_id).invoke('hide');
 
                     codendi.tracker.report.table.saveColumnsWidth($('tracker_report_table'));
+
+                    tuleap.trackers.report.table.fixAggregatesHeights();
 
                     dropdown.setUnused(li);
                     codendi.tracker.report.setHasChanged();
@@ -604,6 +608,7 @@ document.observe('dom:loaded', function () {
             TableKit.options.observers.onResizeEnd = function (table) {
                 if (TableKit.Resizable._cell && TableKit.Resizable._cell.id.match(/_\d+$/)) {
                     codendi.tracker.report.table.saveColumnsWidth(table);
+                    tuleap.trackers.report.table.fixAggregatesHeights();
                 }
             };
         }

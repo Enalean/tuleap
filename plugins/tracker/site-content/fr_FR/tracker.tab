@@ -1314,21 +1314,14 @@ plugin_tracker_stat	recent_activity	Activité récente :
 plugin_tracker_stat	last_update	Dernière modification
 plugin_tracker_stat	last_artifact_created	Dernier artifact crée
 
-plugin_tracker_aggregate	AVG_sel	AVG - Moyenne
-plugin_tracker_aggregate	AVG_title	Moyenne&nbsp;:
-plugin_tracker_aggregate	COUNT_sel	COUNT - Nombre
-plugin_tracker_aggregate	COUNT_title	Nombre&nbsp;:
-plugin_tracker_aggregate	COUNT_GRBY_sel	COUNT GROUP BY - Nombre (par groupe)
-plugin_tracker_aggregate	COUNT_GRBY_title	Nombre (par groupe)&nbsp;:
-plugin_tracker_aggregate	MAX_sel	MAX - Maximum
-plugin_tracker_aggregate	MAX_title	Maximum:
-plugin_tracker_aggregate	MIN_sel	MIN - Minimum
-plugin_tracker_aggregate	MIN_title	Minimum:
-plugin_tracker_aggregate	STD_sel	STD - Écart type
-plugin_tracker_aggregate	STD_title	Écart type&nbsp;:
-plugin_tracker_aggregate	SUM_sel	SUM - Somme
-plugin_tracker_aggregate	SUM_title	Somme&nbsp;:
-plugin_tracker_aggregate	toggle	-- Activer une fonction d'aggrégation
+plugin_tracker_aggregate	AVG	Moyenne
+plugin_tracker_aggregate	COUNT	Nombre
+plugin_tracker_aggregate	COUNT_GRBY	Nombre (par groupe)
+plugin_tracker_aggregate	MAX	Maximum
+plugin_tracker_aggregate	MIN	Minimum
+plugin_tracker_aggregate	STD	Écart type
+plugin_tracker_aggregate	SUM	Somme
+plugin_tracker_aggregate	toggle	Activer une fonction d'aggrégation
 
 
 plugin_tracker_search_index	artifact_title	Titre de l'artefact
