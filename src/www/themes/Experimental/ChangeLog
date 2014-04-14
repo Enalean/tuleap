@@ -1,3 +1,6 @@
+Version 0.9.26 - Tuleap 6.13
+    * Fix tasks #6666: Additional lines are not yellow in artifact link
+
 Version 0.9.25 - Tuleap 6.13
     * Submit bar instead of submit buttons in artifacts
 
