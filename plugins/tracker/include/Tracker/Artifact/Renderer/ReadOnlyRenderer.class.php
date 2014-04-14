@@ -35,8 +35,6 @@ class Tracker_Artifact_ReadOnlyRenderer extends Tracker_Artifact_EditRenderer {
         return '<div class="tabForStory1693" id="fieldsFetchedChangeMe">
             <input type="hidden" id="artifact-read-only-page" value="" />
 
-            '. $this->addEditButton($artifact) .'
-
             <table cellspacing="0" cellpadding="0" border="0">
                 <tr valign="top">
                     <td style="padding-right:1em;">'.
@@ -44,19 +42,7 @@ class Tracker_Artifact_ReadOnlyRenderer extends Tracker_Artifact_EditRenderer {
                     '</td>
                 </tr>
             </table>
-
-            '. $this->addEditButton($artifact) .'
-
         </div>';
-    }
-
-    private function addEditButton(Tracker_Artifact $artifact) {
-        return '<p>
-                    <a href="'.TRACKER_BASE_URL.'/?aid='. $artifact->getId() .'&func=edit" class="btn btn-primary">
-                        <i class="icon-edit"></i> '.
-                        $GLOBALS['Language']->getText('plugin_tracker_include_report' ,'edit').
-                    '</a>
-                </p>';
     }
 }
 

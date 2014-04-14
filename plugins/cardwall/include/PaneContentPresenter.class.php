@@ -97,7 +97,7 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter {
     }
 
     public function milestone_edit_url() {
-        return '/plugins/tracker/?aid='.$this->milestone->getArtifactId().'&func=edit';
+        return '/plugins/tracker/?aid='.$this->milestone->getArtifactId();
     }
 
     public function go_to_fullscreen() {

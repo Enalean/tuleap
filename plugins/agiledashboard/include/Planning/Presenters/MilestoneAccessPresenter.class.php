@@ -53,7 +53,7 @@ class Planning_Presenter_MilestoneAccessPresenter {
     }
 
     public function edit_base_link() {
-        return '/plugins/tracker/?func=edit&aid=';
+        return '/plugins/tracker/?aid=';
     }
 }
 ?>

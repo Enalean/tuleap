@@ -51,7 +51,7 @@ class Tracker_Artifact_Presenter_EditArtifactInPlacePresenter {
         $this->artifact          = $artifact;
         $this->artifact_id       = $artifact->getId();
         $this->artifact_title    = $artifact->getTitle();
-        $this->artifact_uri      = $artifact->getUri() . '&func=edit';
+        $this->artifact_uri      = $artifact->getUri();
         $this->last_changeset_id = $artifact->getLastChangeset()->getId();
         $this->form_elements     = $form_elements;
         $this->user              = $user;

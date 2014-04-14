@@ -55,7 +55,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningSubMilestonePresenter {
     }
 
     public function edit_submilestone_url() {
-        return $this->edit_submilestone_url.'&func=edit&'.$this->redirect_to_self;
+        return $this->edit_submilestone_url.'&'.$this->redirect_to_self;
     }
 
     public function planning_id() {

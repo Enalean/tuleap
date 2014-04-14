@@ -67,7 +67,7 @@ abstract class Planning_Presenter_MilestoneSummaryPresenterAbstract {
     }
 
     public function edit_base_link() {
-        return '/plugins/tracker/?func=edit&aid=';
+        return '/plugins/tracker/?aid=';
     }
 }
 ?>

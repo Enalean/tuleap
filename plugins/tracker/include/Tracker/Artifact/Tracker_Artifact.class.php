@@ -602,12 +602,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $GLOBALS['Response']->sendJSON($changeset_factory->getNewChangesetsFormattedForJson($this, $changeset_id));
                 break;
             case 'edit':
-                if ($request->isAjax()) {
-                    echo $this->fetchTooltip($current_user);
-                } else {
-                    $renderer = new Tracker_Artifact_EditRenderer($this->getEventManager(), $this, $this->getFormElementFactory(), $layout);
-                    $renderer->display($request, $current_user);
-                }
+                $GLOBALS['Response']->redirect($this->getUri());
                 break;
             case 'get-edit-in-place':
                 $renderer = new Tracker_Artifact_Renderer_EditInPlaceRenderer($this, $this->getMustacheRenderer());
