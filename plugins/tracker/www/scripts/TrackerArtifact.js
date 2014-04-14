@@ -240,6 +240,13 @@ document.observe('dom:loaded', function () {
             });
         }
     });
+
+    $$('.toggle-diff').each(function(toggle_button) {
+        toggle_button.observe('click', function(event) {
+            Event.stop(event);
+            toggle_button.next().toggle();
+        });
+    });
     
     $$('.tracker_artifact_add_attachment').each(function (attachment) {
             var add = new Element('a', {

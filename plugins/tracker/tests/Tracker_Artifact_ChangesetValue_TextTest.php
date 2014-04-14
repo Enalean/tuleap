@@ -51,7 +51,8 @@ class Tracker_Artifact_ChangesetValue_TextTest extends TuleapTestCase {
         $field  = new MockTracker_FormElement_Field_Text();
         $text_1 = new Tracker_Artifact_ChangesetValue_Text(111, $field, false, 'Problems during <ins> installation', 'text');
         $text_2 = new Tracker_Artifact_ChangesetValue_Text(111, $field, false, 'FullTextSearch does not work on Wiki pages', 'text');
-        $this->assertEqual($text_1->diff($text_2), '<div class="diff">'.
+        $this->assertEqual($text_1->diff($text_2), '<button class="btn btn-small toggle-diff">' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'toggle_diff') . '</button>'.
+                                                    '<div class="diff" style="display: none">'.
                                                     '<div class="block">'.
                                                         '<div class="difftext">'.
                                                             '<div class="original">'.
@@ -67,7 +68,8 @@ class Tracker_Artifact_ChangesetValue_TextTest extends TuleapTestCase {
                                                         '</div>'.
                                                     '</div>'.
                                                     '</div>');
-        $this->assertEqual($text_2->diff($text_1), '<div class="diff">'.
+        $this->assertEqual($text_2->diff($text_1), '<button class="btn btn-small toggle-diff">' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'toggle_diff') . '</button>'.
+                                                    '<div class="diff" style="display: none">'.
                                                     '<div class="block">'.
                                                         '<div class="difftext">'.
                                                             '<div class="original">'.
