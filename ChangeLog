@@ -5,11 +5,11 @@ Version 6.13 (Not Released Yet)
 	* Allow to search for templates in several directories (works with partial too)
 
 	== Themes ==
-	* Experimental: 0.9.26
+	* Experimental: 0.9.27
 	* CodexSTN: 1.14
 
     == Plugins ==
-	* tracker: 5.319
+	* tracker: 5.320
 	* cardwall: 1.29
 	* graphontrackersv5: 5.8
 	* agiledashboard: 1.59
