@@ -1,3 +1,6 @@
+Version 5.316 - Tuleap 6.13
+    * Submission bar should not be displayed at first
+
 Version 5.315 - Tuleap 6.13
     * Fix tasks #6666: Additional lines are not yellow in artifact link
 
