@@ -11,7 +11,9 @@ codendi.locales['tracker_artifact'] = {
     masschange: 'Masschange',
     masschange_check_all: 'Check all',
     masschange_uncheck_all: 'Uncheck all',
-    display_changes: 'Display changes'
+    display_settings: 'Display settings',
+    display_changes: 'Changes are displayed',
+    reverse_order: 'Comments are in reversed order'
 };
 codendi.locales['tracker_renderer'] = {
     order_dragdrop: 'You can order tabs with drag \'n drop'

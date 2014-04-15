@@ -19,7 +19,7 @@
 * along with Codendi; if not, write to the Free Software
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 *
-* 
+*
 */
 
 var codendi = codendi || { };
@@ -45,7 +45,7 @@ document.observe('dom:loaded', function () {
             new codendi.Tooltip(
                 div.up()
                    .previous()
-                   .down('a.direct-link-to-tracker'), 
+                   .down('a.direct-link-to-tracker'),
                 '')
            .createTooltip(
                div.remove()
@@ -55,7 +55,7 @@ document.observe('dom:loaded', function () {
            )
         );
     });
-    
+
     $$('.tracker_artifact_followup_header').each(function (header) {
         if (header.up().next()) {
             header.observe('mouseover', function () {
@@ -70,56 +70,91 @@ document.observe('dom:loaded', function () {
             });
         }
     });
-    
+
     $$('#tracker_artifact_followup_comments').each(function (followup_section) {
         //We only have one followup_section but I'm too lazy to do a if()
 
-        new Ajax.Request(codendi.tracker.base_url + "comments_order.php", {
-            parameters: {
-                tracker: $('tracker_id').value
-            },
-            onSuccess: function (transport) {
-                if (!transport.responseText) {
-                    invertFollowups(followup_section);
-                }
-            }
-        });
+        var comments_inverted = false;
+
+        function toggleCheckForCommentOrder() {
+            $('invert-order-menu-item').down('i').toggle();
+        }
+        function toggleCheckForDisplayChanges() {
+            $('display-changes-menu-item').down('i').toggle();
+        }
+
         var display_changes_classname = 'tracker_artifact_followup_comments-display_changes',
             div = new Element('div').setStyle({
-                    textAlign: 'right'
-                }).insert(new Element('a', {
-                    href: '#invert-order',
-                    title: 'invert order of follow-up comments'
-                }).update('<img src="' + codendi.imgroot + '/ic/reorder-followups.png" alt="invert order of follow-up comments" /> ')
-                .observe('click', function (evt) {
-                    invertFollowups(followup_section);
-                    new Ajax.Request(codendi.tracker.base_url + "invert_comments_order.php", {
-                        parameters: {
-                            tracker: $('tracker_id').value
-                        }
-                    });
-                    Event.stop(evt);
-                    return false;
-                })).insert(
-                    new Element(
-                        'button',
-                        {
-                            'data-toggle': 'button',
-                            'class': 'btn ' + (followup_section.hasClassName(display_changes_classname) ? 'active' : ''),
-                            'type': 'button',
-                            'autocomplete': 'off'
-                        }
-                    ).update('<i class="icon-exchange"></i> ' + codendi.locales.tracker_artifact.display_changes)
-                    .observe('click', function (evt) {
-                        followup_section.toggleClassName(display_changes_classname);
-                        new Ajax.Request(codendi.tracker.base_url + "invert_display_changes.php");
-                    }));
-        if (followup_section.down('.tracker_artifact_followups').childElements().size() < 2) {
-            div.hide();
-        }
-        followup_section.down('legend').insert({
-            after: div
-        });
+                float: 'right'
+            }).insert(
+                new Element('div', {
+                    'class': 'btn-group'
+                }).insert(
+                    new Element('a', {
+                        'href': '#',
+                        'class': 'btn dropdown-toggle',
+                        'data-toggle': 'dropdown'
+                    }).update('<i class="icon-cog"></i> ' + codendi.locales.tracker_artifact.display_settings + ' <span class="caret"></span>')
+
+                ).insert(
+                    new Element('ul', {
+                        'class': 'dropdown-menu pull-right'
+                    })
+                    .insert(
+                        new Element('li')
+                            .insert(new Element ('a', {
+                                'id': 'invert-order-menu-item',
+                                'href': '#invert-order',
+                            })
+                            .update('<i class="icon-ok" style="display: none"></i> ' + codendi.locales.tracker_artifact.reverse_order)
+                            .observe('click', function (evt) {
+                                toggleCheckForCommentOrder();
+                                invertFollowups(followup_section);
+                                new Ajax.Request(codendi.tracker.base_url + "invert_comments_order.php", {
+                                    parameters: {
+                                        tracker: $('tracker_id').value
+                                    }
+                                });
+                                Event.stop(evt);
+                                return false;
+                            }))
+
+                    ).insert(
+                        new Element('li')
+                            .insert(new Element('a', {
+                                'id': 'display-changes-menu-item',
+                                'href': '#'
+                            })
+                            .update('<i class="icon-ok" style="display: none"></i> ' + codendi.locales.tracker_artifact.display_changes)
+                            .observe('click', function (evt) {
+                                followup_section.toggleClassName(display_changes_classname);
+                                toggleCheckForDisplayChanges();
+                                new Ajax.Request(codendi.tracker.base_url + "invert_display_changes.php");
+                                Event.stop(evt);
+                            }))
+                    )
+                )
+            );
+
+            followup_section.down('legend').insert({
+                after: div
+            });
+
+            new Ajax.Request(codendi.tracker.base_url + "comments_order.php", {
+                parameters: {
+                    tracker: $('tracker_id').value
+                },
+                onSuccess: function (transport) {
+                    if (!transport.responseText) {
+                        toggleCheckForCommentOrder();
+                        invertFollowups(followup_section);
+                    }
+                }
+            });
+
+            if (followup_section.hasClassName(display_changes_classname)) {
+                toggleCheckForDisplayChanges();
+            }
     });
 
     $$('.tracker_artifact_field  textarea').each(function (element) {
@@ -159,7 +194,7 @@ document.observe('dom:loaded', function () {
             edit.observe('click', function (evt) {
                 var comment_panel = edit.up().next();
                 if (comment_panel.visible()) {
-                    
+
                     var textarea   = new Element('textarea', {id: 'tracker_followup_comment_edit_'+id});
                     var htmlFormat = false;
 
@@ -170,7 +205,7 @@ document.observe('dom:loaded', function () {
                        textarea.value = data.value;
                        htmlFormat     = data.htmlFormat;
                     }
-                    
+
                     var rteSpan    = new Element('span', { style: 'text-align: left;'}).update(textarea);
                     var edit_panel = new Element('div', { style: 'text-align: right;'}).update(rteSpan);
                     comment_panel.insert({before: edit_panel});
@@ -220,7 +255,7 @@ document.observe('dom:loaded', function () {
                         Event.stop(evt);
                         edit.show();
                     });
-                    
+
                     edit_panel.insert(new Element('br'))
                     .insert(button)
                     .insert(new Element('span').update('&nbsp;'))
@@ -247,17 +282,17 @@ document.observe('dom:loaded', function () {
             toggle_button.next().toggle();
         });
     });
-    
+
     $$('.tracker_artifact_add_attachment').each(function (attachment) {
             var add = new Element('a', {
                 href: '#add-another-file'
             }).update(codendi.locales.tracker_formelement_admin.add_another_file)
             .observe('click', function (evt) {
                 Event.stop(evt);
-                
+
                 //clone the first attachment selector (file and description inputs)
                 var new_attachment = $(attachment.cloneNode(true));
-                
+
                 //clear the cloned input
                 new_attachment.select('input').each(function (input) {
                     input.value = '';
@@ -273,7 +308,7 @@ document.observe('dom:loaded', function () {
                         .update('<span>remove</span>')
                         .observe('click', function (evt) {
                             Event.stop(evt);
-                            new_attachment.remove(); 
+                            new_attachment.remove();
                         }
                     )
                 ));
@@ -283,7 +318,7 @@ document.observe('dom:loaded', function () {
             attachment.insert({ after: add });
         }
     );
-    
+
     if ($('tracker_artifact_canned_response_sb')) {
         var artifact_followup_comment_has_changed = $('tracker_followup_comment_new').value !== '';
         $('tracker_followup_comment_new').observe('change', function () {
@@ -309,7 +344,7 @@ document.observe('dom:loaded', function () {
             }
         });
     }
-    
+
     if ($('tracker_select_tracker')) {
         $('tracker_select_tracker').observe('change', function () {
             this.ownerDocument.location.href = this.ownerDocument.location.href.gsub(/tracker=\d+/, 'tracker='+ this.value);
