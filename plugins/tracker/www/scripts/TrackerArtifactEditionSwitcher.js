@@ -107,6 +107,12 @@ tuleap.tracker.artifact.editionSwitcher = function() {
 
     var bindSubmissionBarToFollowups = function () {
         $('#tracker_followup_comment_new').bind('keyup', toggleSubmissionBar);
+
+        $('#rte_format_selectboxnew').on('change', function() {
+            if (CKEDITOR.instances.tracker_followup_comment_new) {
+                CKEDITOR.instances.tracker_followup_comment_new.on('change', toggleSubmissionBar);
+            }
+        });
     };
 
     var toggleSubmissionBar = function () {
@@ -147,6 +153,10 @@ tuleap.tracker.artifact.editionSwitcher = function() {
     };
 
     var followUpIsEmpty = function () {
+        if (CKEDITOR.instances.tracker_followup_comment_new) {
+            return ! $.trim(CKEDITOR.instances.tracker_followup_comment_new.getData());
+        }
+
         return ! $.trim($("#tracker_followup_comment_new").val());
     };
 
