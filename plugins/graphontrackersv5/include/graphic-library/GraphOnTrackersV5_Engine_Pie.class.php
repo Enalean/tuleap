@@ -78,9 +78,8 @@ class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine {
     }
 
     public function toArray() {
-        return array(
-            'data'   => $this->data,
-            'colors' => $this->colors,
+        return parent::toArray() + array(
+            'type'   => 'pie',
             'title'  => $this->title,
             'height' => $this->height,
             'width'  => $this->width,
