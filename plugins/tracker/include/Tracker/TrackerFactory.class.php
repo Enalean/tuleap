@@ -18,7 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 class TrackerFactory {
 
     /** @var array of Tracker */
@@ -173,7 +172,8 @@ class TrackerFactory {
                     $row['status'],
                     $row['deletion_date'],
                     $row['instantiate_for_new_projects'],
-                    $row['stop_notification']
+                    $row['stop_notification'],
+                    $row['color']
         );
     }
 
@@ -192,15 +192,18 @@ class TrackerFactory {
         // set general settings
         // real id will be set during Database update
         $att = $xml->attributes();
-        $row = array('id' => 0,
-                'name' => $name,
-                'group_id' =>$groupId,
-                'description' => $description,
-                'item_name' => $itemname,
-                'submit_instructions' => (string)$xml->submit_instructions,
-                'browse_instructions' => (string)$xml->browse_instructions,
-                'status' => '',
-                'deletion_date' => '');
+        $row = array(
+            'id'                  => 0,
+            'name'                => $name,
+            'group_id'            => $groupId,
+            'description'         => $description,
+            'item_name'           => $itemname,
+            'submit_instructions' => (string)$xml->submit_instructions,
+            'browse_instructions' => (string)$xml->browse_instructions,
+            'status'              => '',
+            'deletion_date'       => '',
+            'color'               => (string)$xml->color
+        );
         $row['allow_copy'] = isset($att['allow_copy']) ?
                 (int) $att['allow_copy'] : 0;
         $row['instantiate_for_new_projects'] = isset($att['instantiate_for_new_projects']) ?
@@ -892,7 +895,9 @@ class TrackerFactory {
                 '',
                 '',
                 $tracker->instantiate_for_new_projects,
-                $tracker->stop_notification);
+                $tracker->stop_notification,
+                $tracker->color
+        );
         if ($tracker_id) {
             $trackerDB = $this->getTrackerById($tracker_id);
             //create cannedResponses

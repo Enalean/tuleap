@@ -17,6 +17,7 @@ grammar {
         element name { xsd:string }?,
         element item_name { xsd:string }?,
         element description { xsd:string }?,
+        element color { xsd:string }?,
 
         element submit_instructions { xsd:string }?,
         element browse_instructions { xsd:string }?,

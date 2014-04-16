@@ -44,6 +44,7 @@ Mock::generatePartial('Tracker',
                           'getPermissionsByUgroupId',
                           'getFormELements',
                           'getId',
+                          'getColor',
                           'sendXML',
                           'isUsed',
                           'getAllFormElements',
@@ -206,6 +207,7 @@ class TrackerTest extends TuleapTestCase {
         $group_id = 999;
         $this->tracker->setReturnValue('getGroupId', $group_id);
         $this->tracker->setReturnValue('getId', 110);
+        $this->tracker->setReturnValue('getColor', 'inca_gray');
         $this->tracker1->setReturnValue('getGroupId', $group_id);
         $this->tracker1->setReturnValue('getId', 111);
         $this->tracker2->setReturnValue('getGroupId', $group_id);
@@ -1631,6 +1633,17 @@ class TrackerTest extends TuleapTestCase {
         $this->assertEqual((string)$attributes['parent_id'], "T9001");
     }
 
+    public function itExportsTheTrackerColor() {
+        $this->tracker->setReturnValue('getAllFormElements', array());
+        stub($this->workflow_factory)->getGlobalRulesManager()->returns(mock('Tracker_RulesManager'));
+
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
+        $xml = $this->tracker->exportToXML($xml);
+
+        $color = $xml->color;
+        $this->assertEqual((string)$color, 'inca_gray');
+    }
+
     public function testHasErrorNoError() {
         $header = array('summary', 'details');
         $lines = array(
@@ -1806,7 +1819,7 @@ class TrackerTest extends TuleapTestCase {
     }
 
     private function GivenATrackerAndItsFactories() {
-        $tracker = new Tracker(null, null, null, null, null, null, null, null, null, null, null, null);
+        $tracker = new Tracker(null, null, null, null, null, null, null, null, null, null, null, null, null);
         $factory = new MockTracker_FormElementFactory();
         $tracker->setFormElementFactory($factory);
         $sharedFactory = new MockTracker_SharedFormElementFactory();

@@ -121,7 +121,8 @@ class TrackerDao extends DataAccessObject {
                         submit_instructions,
                         browse_instructions,
                         status,
-                        stop_notification)
+                        stop_notification,
+                        color)
                     SELECT
                         $id,
                         $group_id,
@@ -133,7 +134,8 @@ class TrackerDao extends DataAccessObject {
                         submit_instructions,
                         browse_instructions,
                         status,
-                        stop_notification
+                        stop_notification,
+                        color
                     FROM $this->table_name
                     WHERE id = $atid_template";
             if ($this->update($sql)) {
@@ -143,17 +145,20 @@ class TrackerDao extends DataAccessObject {
         return false;
     }
 
-    function create($group_id,
-                    $name,
-                    $description,
-                    $item_name,
-                    $allow_copy,
-                    $submit_instructions,
-                    $browse_instructions,
-                    $status,
-                    $deletion_date,
-                    $instantiate_for_new_projects,
-                    $stop_notification) {
+    function create(
+        $group_id,
+        $name,
+        $description,
+        $item_name,
+        $allow_copy,
+        $submit_instructions,
+        $browse_instructions,
+        $status,
+        $deletion_date,
+        $instantiate_for_new_projects,
+        $stop_notification,
+        $color
+    ) {
         $group_id                     = $this->da->escapeInt($group_id);
         $name                         = $this->da->quoteSmart($name);
         $description                  = $this->da->quoteSmart($description);
@@ -165,6 +170,7 @@ class TrackerDao extends DataAccessObject {
         $deletion_date                = $deletion_date ? $this->da->escapeInt($deletion_date) : 'NULL';
         $instantiate_for_new_projects = $this->da->quoteSmart($instantiate_for_new_projects);
         $stop_notification            = $this->da->escapeInt($stop_notification);
+        $color                        = $this->da->quoteSmart($color);
 
         $id_sharing = new TrackerIdSharingDao();
         if ($id = $id_sharing->generateTrackerId()) {
@@ -181,7 +187,8 @@ class TrackerDao extends DataAccessObject {
                         status,
                         deletion_date,
                         instantiate_for_new_projects,
-                        stop_notification)
+                        stop_notification,
+                        color)
                     VALUES ($id,
                         $group_id,
                         $name,
@@ -193,7 +200,8 @@ class TrackerDao extends DataAccessObject {
                         $status,
                         $deletion_date,
                         $instantiate_for_new_projects,
-                        $stop_notification)";
+                        $stop_notification,
+                        $color)";
             if ($this->update($sql)) {
                 return $id;
             }
@@ -206,6 +214,7 @@ class TrackerDao extends DataAccessObject {
         $group_id                     = $this->da->escapeInt($tracker->group_id);
         $name                         = $this->da->quoteSmart($tracker->name);
         $description                  = $this->da->quoteSmart($tracker->description);
+        $color                        = $this->da->quoteSmart($tracker->color);
         $item_name                    = $this->da->quoteSmart($tracker->item_name);
         $allow_copy                   = $this->da->escapeInt($tracker->allow_copy);
         $submit_instructions          = $this->da->quoteSmart($tracker->submit_instructions);
@@ -218,6 +227,7 @@ class TrackerDao extends DataAccessObject {
                    group_id                     = $group_id,
                    name                         = $name,
                    description                  = $description,
+                   color                        = $color,
                    item_name                    = $item_name,
                    allow_copy                   = $allow_copy,
                    submit_instructions          = $submit_instructions,
@@ -253,4 +263,3 @@ class TrackerDao extends DataAccessObject {
         return "$restriction_clause ($id_enumeration)";
     }
 }
-?>

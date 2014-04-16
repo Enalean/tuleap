@@ -63,6 +63,11 @@
         </element>
       </optional>
       <optional>
+        <element name="color">
+          <data type="string"/>
+        </element>
+      </optional>
+      <optional>
         <element name="submit_instructions">
           <data type="string"/>
         </element>

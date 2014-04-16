@@ -42,6 +42,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
     public $group_id;
     public $name;
     public $description;
+    public $color;
     public $item_name;
     public $allow_copy;
     public $submit_instructions;
@@ -56,6 +57,25 @@ class Tracker implements Tracker_Dispatchable_Interface {
     private $children;
     private $parent = false;
 
+    /** @var array() */
+    private $allowed_color = array(
+       'inca_silver',
+       'chrome_silver',
+       'fiesta_red',
+       'teddy_brown',
+       'clockwork_orange',
+       'graffiti_yellow',
+       'acid_green',
+       'army_green',
+       'sherwood_green',
+       'ocean_turquoise',
+       'daphne_blue',
+       'lake_placid_blue',
+       'deep_blue',
+       'plum_crazy',
+       'peggy_pink',
+       'flamingo_pink',
+    );
     // attributes necessary to to create an intermediate Tracker Object
     // (before Database import) during XML import
     // they are not used after the import
@@ -76,7 +96,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
             $status,
             $deletion_date,
             $instantiate_for_new_projects,
-            $stop_notification) {
+            $stop_notification,
+            $color) {
         $this->id                           = $id;
         $this->group_id                     = $group_id;
         $this->name                         = $name;
@@ -89,6 +110,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $this->deletion_date                = $deletion_date;
         $this->instantiate_for_new_projects = $instantiate_for_new_projects;
         $this->stop_notification            = $stop_notification;
+        $this->color                        = $color;
         $this->formElementFactory           = Tracker_FormElementFactory::instance();
         $this->sharedFormElementFactory     = new Tracker_SharedFormElementFactory($this->formElementFactory, new Tracker_FormElement_Field_List_BindFactory());
     }
@@ -1246,6 +1268,27 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $this->displayAdminHeader($layout, $title, $breadcrumbs);
         echo '<h2>'. $title .'</h2>';
     }
+
+    private function fetchTrackerColors() {
+        $html = '';
+        foreach ($this->allowed_color as $color) {
+            $html .= '<label class="radio inline">
+                        <input
+                            type="radio"
+                            name="tracker_color"
+                            value="'. $color .'"
+                            '. ($color === $this->getColor() ? 'checked' : '') .'>
+                        <div class="tracker_color_selector '. $color .'"></div>
+                      </label>';
+        }
+
+        return $html;
+    }
+
+    public function getColor() {
+        return $this->color;
+    }
+
     protected function displayAdminOptions(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
         $hp = Codendi_HTMLPurifier::instance();
         $this->displayAdminItemHeader($layout, 'editoptions');
@@ -1259,6 +1302,12 @@ class Tracker implements Tracker_Dispatchable_Interface {
               <td width="15%"><b>'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','name').'</b> <font color="red">*</font>:</td>
               <td> 
               <input type="text" name="name" value="'. $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML) .'">
+              </td>
+            </tr>
+            <tr>
+              <td width="15%"><b>'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','color').'</b> <font color="red">*</font>:</td>
+              <td>
+              '. $this->fetchTrackerColors() .'
               </td>
             </tr>
             <tr> 
@@ -1788,13 +1837,14 @@ EOS;
         $old_name = $this->getName();
         $this->name                         = trim($request->getValidated('name', 'string', ''));
         $this->description                  = trim($request->getValidated('description', 'text', ''));
+        $this->color                        = trim($request->getValidated('tracker_color', 'string', ''));
         $this->item_name                    = trim($request->getValidated('item_name', 'string', ''));
         $this->allow_copy                   = $request->getValidated('allow_copy') ? 1 : 0;
         $this->submit_instructions          = $request->getValidated('submit_instructions', 'text', '');
         $this->browse_instructions          = $request->getValidated('browse_instructions', 'text', '');
         $this->instantiate_for_new_projects = $request->getValidated('instantiate_for_new_projects') ? 1 : 0;
 
-        if (!$this->name || !$this->description || !$this->item_name) {
+        if (!$this->name || !$this->description || !$this->color || !$this->item_name) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type','name_requ'));
         } else {
             if ($old_name != $this->name) {
@@ -2196,9 +2246,10 @@ EOS;
         }
 
         // these will not be used at the import
-        $xmlElem->addChild('name', $this->name);
-        $xmlElem->addChild('item_name', $this->item_name);
-        $xmlElem->addChild('description', $this->description);
+        $xmlElem->addChild('name', $this->getName());
+        $xmlElem->addChild('item_name', $this->getItemName());
+        $xmlElem->addChild('description', $this->getDescription());
+        $xmlElem->addChild('color', $this->getColor());
 
         // add only if not empty
         if ($this->submit_instructions) {
@@ -2841,6 +2892,7 @@ EOS;
     }
 
     protected $cache_stats;
+
     /**
      * get stats for this tracker
      *

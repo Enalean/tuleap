@@ -3,6 +3,7 @@
 	<name>Tasks</name>
 	<item_name>task</item_name>
 	<description>Tasks Tracker</description>
+	<color>inca_gray</color>
 	<submit_instructions>some submit instructions</submit_instructions>
 	<browse_instructions>and some for browsing</browse_instructions>
 	<cannedResponses>

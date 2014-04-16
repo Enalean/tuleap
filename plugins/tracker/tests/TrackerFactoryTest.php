@@ -87,7 +87,9 @@ class TrackerFactoryTest extends UnitTestCase {
         //testing general properties
         $this->assertEqual($tracker->submit_instructions, 'some submit instructions');
         $this->assertEqual($tracker->browse_instructions, 'and some for browsing');
-        
+
+        $this->assertEqual($tracker->getColor(), 'inca_gray');
+
         //testing default values
         $this->assertEqual($tracker->allow_copy, 0);
         $this->assertEqual($tracker->instantiate_for_new_projects, 1);
@@ -369,4 +371,3 @@ XML;
     }
     
 }
-?>
