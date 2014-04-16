@@ -126,7 +126,7 @@ tuleap.tracker.report.FieldsDropDown = Class.create({
     setUsed: function (li) {
         li.writeAttribute('data-field-is-used', '1');
         li.select('a').each(function (element) {
-           element.insert({top: new Element('i', {class: "icon-ok"})});
+           element.insert({top: new Element('i', {"class": "icon-ok"})});
         });
     },
     /**

@@ -785,10 +785,7 @@ ul.tracker-form-element-checkbox {
 .tracker_homepage_info > .direct-link-to-tracker > .tracker_color_info {
     display: inline-block;
     margin-right: 5px;
-    border-radius: 50%;
-
-    width: 14px;
-    height: 14px;
+    vertical-align: middle;
 }
 
 #tracker_createnewlink img {
@@ -2269,199 +2266,147 @@ body.in_tracker_report .main .content {
 @peggy_pink_secondary: #FFE9FD;
 @flamingo_pink_secondary: #FFF2F8;
 
-.tracker_color_selector {
-    width: 20px;
-    height: 20px;
+.tracker_settings_colors {
+    margin-bottom: 10px;
+
+    & > .icon-stack {
+        cursor:pointer;
+
+        & > .icon-ok {
+            color: #FFFFFF;
+            visibility: hidden;
+
+            &.selected {
+                visibility: visible;
+            }
+        }
+    }
 }
 
 .inca_silver {
-    background-color: @inca_silver_secondary;
+    color: @inca_silver;
 
     &.xref-in-title {
-        color: @inca_silver;
-    }
-
-    &.settings {
-        background-color: @inca_silver;
+        background-color: @inca_silver_secondary;
     }
 }
 
 .chrome_silver {
-    background-color: @chrome_silver_secondary;
+    color: @chrome_silver;
 
     &.xref-in-title {
-        color: @chrome_silver;
-    }
-
-    &.settings {
-        background-color: @chrome_silver;
+        background-color: @chrome_silver_secondary;
     }
 }
 
 .fiesta_red {
-    background-color: @fiesta_red_secondary;
+    color: @fiesta_red;
 
     &.xref-in-title {
-        color: @fiesta_red;
-    }
-
-    &.settings {
-        background-color: @fiesta_red;
+        background-color: @fiesta_red_secondary;
     }
 }
 
 .teddy_brown {
-    background-color: @teddy_brown_secondary;
+    color: @teddy_brown;
 
     &.xref-in-title {
-        color: @teddy_brown;
-    }
-
-    &.settings {
-        background-color: @teddy_brown;
+        background-color: @teddy_brown_secondary;
     }
 }
 
 .clockwork_orange {
-    background-color: @clockwork_orange_secondary;
+    color: @clockwork_orange;
 
     &.xref-in-title {
-        color: @clockwork_orange;
-    }
-
-    &.settings {
-        background-color: @clockwork_orange;
+        background-color: @clockwork_orange_secondary;
     }
 }
 
 .graffiti_yellow {
-    background-color: @graffiti_yellow_secondary;
+    color: @graffiti_yellow;
 
     &.xref-in-title {
-        color: @graffiti_yellow;
-    }
-
-    &.settings {
-        background-color: @graffiti_yellow;
+        background-color: @graffiti_yellow_secondary;
     }
 }
 
 .acid_green {
-    background-color: @acid_green_secondary;
+    color: @acid_green;
 
     &.xref-in-title {
-        color: @acid_green;
-    }
-
-    &.settings {
-        background-color: @acid_green;
+        background-color: @acid_green_secondary;
     }
 }
 
 .army_green {
-    background-color: @army_green_secondary;
+    color: @army_green;
 
     &.xref-in-title {
-        color: @army_green;
-    }
-
-    &.settings {
-        background-color: @army_green;
+        background-color: @army_green_secondary;
     }
 }
 
 .sherwood_green {
-    background-color: @sherwood_green_secondary;
+    color: @sherwood_green;
 
     &.xref-in-title {
-        color: @sherwood_green;
-    }
-
-    &.settings {
-        background-color: @sherwood_green;
+        background-color: @sherwood_green_secondary;
     }
 }
 
 .ocean_turquoise {
-    background-color: @ocean_turquoise_secondary;
+    color: @ocean_turquoise;
 
     &.xref-in-title {
-        color: @ocean_turquoise;
-    }
-
-    &.settings {
-        background-color: @ocean_turquoise;
+        background-color: @ocean_turquoise_secondary;
     }
 }
 
 .daphne_blue {
-    background-color: @daphne_blue_secondary;
+    color: @daphne_blue;
 
     &.xref-in-title {
-        color: @daphne_blue;
-    }
-
-    &.settings {
-        background-color: @daphne_blue;
+        background-color: @daphne_blue_secondary;
     }
 }
 
 .lake_placid_blue {
-    background-color: @lake_placid_blue_secondary;
+    color: @lake_placid_blue;
 
     &.xref-in-title {
-        color: @lake_placid_blue;
-    }
-
-    &.settings {
-        background-color: @lake_placid_blue;
+        background-color: @lake_placid_blue_secondary;
     }
 }
 
 .deep_blue {
-    background-color: @deep_blue_secondary;
+    color: @deep_blue;
 
     &.xref-in-title {
-        color: @deep_blue;
-    }
-
-    &.settings {
-        background-color: @deep_blue;
+        background-color: @deep_blue_secondary;
     }
 }
 
 .plum_crazy {
-    background-color: @plum_crazy_secondary;
+    color: @plum_crazy;
 
     &.xref-in-title {
-        color: @plum_crazy;
-    }
-
-    &.settings {
-        background-color: @plum_crazy;
+        background-color: @plum_crazy_secondary;
     }
 }
 
 .peggy_pink {
-    background-color: @peggy_pink_secondary;
+    color: @peggy_pink;
 
     &.xref-in-title {
-        color: @peggy_pink;
-    }
-
-    &.settings {
-        background-color: @peggy_pink;
+        background-color: @peggy_pink_secondary;
     }
 }
 
 .flamingo_pink {
-    background-color: @flamingo_pink_secondary;
+    color: @flamingo_pink;
 
     &.xref-in-title {
-        color: @flamingo_pink;
-    }
-
-    &.settings {
-        background-color: @flamingo_pink;
+        background-color: @flamingo_pink_secondary;
     }
 }
