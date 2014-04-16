@@ -27,11 +27,13 @@ class BaseLanguageFactoryTest extends UnitTestCase {
         $this->supportedLanguages = Config::get('sys_supported_languages');
         $this->oldLocale = setlocale(LC_ALL, "0");
         setlocale(LC_ALL, 'fr_FR');
+        $GLOBALS['sys_incdir'] = dirname(__FILE__) . '/_fixtures/var/tmp';
     }
     
     function tearDown() {
         Config::restore();
         setlocale(LC_ALL, $this->oldLocale);
+        unset($GLOBALS['sys_incdir']);
     }
     
     public function testFactoryShouldReturnABaseLanguageAccordingToTheLocale() {
