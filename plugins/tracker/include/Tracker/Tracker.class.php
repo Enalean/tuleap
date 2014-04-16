@@ -1285,7 +1285,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         return $html;
     }
 
-    private function getColor() {
+    public function getColor() {
         return $this->color;
     }
 
@@ -2246,9 +2246,10 @@ EOS;
         }
 
         // these will not be used at the import
-        $xmlElem->addChild('name', $this->name);
-        $xmlElem->addChild('item_name', $this->item_name);
-        $xmlElem->addChild('description', $this->description);
+        $xmlElem->addChild('name', $this->getName());
+        $xmlElem->addChild('item_name', $this->getItemName());
+        $xmlElem->addChild('description', $this->getDescription());
+        $xmlElem->addChild('color', $this->getColor());
 
         // add only if not empty
         if ($this->submit_instructions) {
