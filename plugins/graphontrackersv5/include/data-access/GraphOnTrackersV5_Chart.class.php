@@ -152,6 +152,69 @@ abstract class GraphOnTrackersV5_Chart {
         return $html;
     }
 
+    public function fetchOnReport(GraphOnTrackersV5_Renderer $renderer, PFUser $current_user, $read_only, $store_in_session = true) {
+        return $this->fetchActionButtons($renderer, $current_user, $read_only).$this->fetch($store_in_session);
+    }
+
+    protected function fetchActionButtons(GraphOnTrackersV5_Renderer $renderer, PFUser $current_user, $readonly) {
+        $html = '';
+
+        $add_to_dashboard_params = array(
+            'action' => 'widget',
+            'chart' => array(
+                'title'    => $this->getTitle(),
+                'chart_id' => $this->getId()
+            ),
+        );
+
+        $url = '?'. http_build_query(array(
+            'report'   => $renderer->report->id,
+            'renderer' => $renderer->id,
+            'func'     => 'renderer',
+        ));
+
+        //Add to my dashboard
+        if ($this->getId() > 0) {
+            $html .= '<a title="'. $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'add_chart_dashboard') .'"
+                         href="/widgets/updatelayout.php?'.http_build_query(array_merge(array(
+                            'owner' => 'u'. $current_user->getId(),
+                            'name' => array(
+                                'my_plugin_graphontrackersv5_chart' => array (
+                                    'add' => 1
+                                )
+                            )
+                        ), $add_to_dashboard_params)) .'">'. $GLOBALS['HTML']->getImage('ic/layout_user.png') .'</a> ';
+
+            //Add to project dashboard
+            if ($renderer->report->getTracker()->getProject()->userIsAdmin($current_user)) {
+                $html .= '<a title="'. $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'add_chart_project_dashboard') .'"
+                             href="/widgets/updatelayout.php?'.http_build_query(array_merge(array(
+                                'owner' => 'g' . $renderer->report->getTracker()->getProject()->getGroupId(),
+                                'name' => array(
+                                    'project_plugin_graphontrackersv5_chart' => array (
+                                        'add' => 1
+                                    )
+                                )
+                            ), $add_to_dashboard_params)) .'">'. $GLOBALS['HTML']->getImage('ic/layout_project.png') .'</a> ';
+            }
+        }
+
+        if (!$readonly && $renderer->report->userCanUpdate($current_user)) {
+            //Edit chart
+            $html .= '<a title="'. $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'tooltip_edit') .'"
+                         href="'. $url .'&amp;renderer_plugin_graphontrackersv5[edit_chart]='. $this->getId() .'">
+                       <img src="'. util_get_dir_image_theme() .'ic/edit.png" alt="edit" />
+                      </a>';
+
+            //Delete chart
+            $html .= '<input title="'. $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'tooltip_del') .'"
+                             type="image" src="'. util_get_dir_image_theme() .'ic/cross.png"
+                             onclick="return confirm('.$GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report','confirm_del').');"
+                             name="renderer_plugin_graphontrackersv5[delete_chart]['. $this->getId() .']" />';
+        }
+        return $html;
+    }
+
     /**
      * Fetch chart data as an array
      */

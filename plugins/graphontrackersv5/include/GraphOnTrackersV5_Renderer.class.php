@@ -162,59 +162,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
         foreach($this->getChartFactory()
                      ->getCharts($this) as $chart) {
             $html .= '<div style="float:left; padding:10px; text-align:right;">';
-            
-            if (!$in_dashboard) {
-                $add_to_dashboard_params = array(
-                    'action' => 'widget',
-                    'chart' => array(
-                        'title'    => $chart->getTitle(),
-                        'chart_id' => $chart->getId()
-                    ),
-                );
-                
-                //Add to my dashboard
-                if ($chart->getId() > 0) {
-                    $html .= '<a title="'. $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'add_chart_dashboard') .'"
-                                 href="/widgets/updatelayout.php?'.http_build_query(array_merge(array(
-                                    'owner' => 'u'. UserManager::instance()->getCurrentUser()->getId(),
-                                    'name' => array(
-                                        'my_plugin_graphontrackersv5_chart' => array (
-                                            'add' => 1
-                                        )
-                                    )
-                                ), $add_to_dashboard_params)) .'">'. $GLOBALS['HTML']->getImage('ic/layout_user.png') .'</a> ';
-                    
-                    //Add to project dashboard
-                    if ($this->report->getTracker()->getProject()->userIsAdmin($current_user)) {
-                        $html .= '<a title="'. $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'add_chart_project_dashboard') .'"
-                                     href="/widgets/updatelayout.php?'.http_build_query(array_merge(array(
-                                        'owner' => 'g' . $this->report->getTracker()->getProject()->getGroupId(),
-                                        'name' => array(
-                                            'project_plugin_graphontrackersv5_chart' => array (
-                                                'add' => 1
-                                            )
-                                        )
-                                    ), $add_to_dashboard_params)) .'">'. $GLOBALS['HTML']->getImage('ic/layout_project.png') .'</a> ';
-                    }
-                }
-                
-                if (!$readonly && $this->report->userCanUpdate($current_user)) {
-                    //Edit chart
-                    $html .= '<a title="'. $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'tooltip_edit') .'" 
-                                 href="'. $url .'&amp;renderer_plugin_graphontrackersv5[edit_chart]='. $chart->getId() .'">
-                               <img src="'. util_get_dir_image_theme() .'ic/edit.png" alt="edit" />
-                              </a>';
-                    
-                    //Delete chart
-                    $html .= '<input title="'. $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'tooltip_del') .'" 
-                                     type="image" src="'. util_get_dir_image_theme() .'ic/cross.png" 
-                                     onclick="return confirm('.$GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report','confirm_del').');" 
-                                     name="renderer_plugin_graphontrackersv5[delete_chart]['. $chart->getId() .']" />';
-                }
-            }
-            //Display chart
-            $html .= '<div id="plugin_graphontrackersv5_chart_'.$chart->getId().'"></div>';
-            $html .= $chart->fetch($store_in_session);
+            $html .= $chart->fetchOnReport($this, $current_user, $readonly, $store_in_session);
             $html .= '</div>';
             $chart_array[$chart->id] = $chart->fetchAsArray();
         }
