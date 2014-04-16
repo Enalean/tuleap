@@ -173,7 +173,8 @@ class TrackerFactory {
                     $row['status'],
                     $row['deletion_date'],
                     $row['instantiate_for_new_projects'],
-                    $row['stop_notification']
+                    $row['stop_notification'],
+                    $row['color']
         );
     }
 
@@ -200,7 +201,8 @@ class TrackerFactory {
                 'submit_instructions' => (string)$xml->submit_instructions,
                 'browse_instructions' => (string)$xml->browse_instructions,
                 'status' => '',
-                'deletion_date' => '');
+                'deletion_date' => '',
+                'color' => '');
         $row['allow_copy'] = isset($att['allow_copy']) ?
                 (int) $att['allow_copy'] : 0;
         $row['instantiate_for_new_projects'] = isset($att['instantiate_for_new_projects']) ?

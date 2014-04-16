@@ -206,6 +206,7 @@ class TrackerDao extends DataAccessObject {
         $group_id                     = $this->da->escapeInt($tracker->group_id);
         $name                         = $this->da->quoteSmart($tracker->name);
         $description                  = $this->da->quoteSmart($tracker->description);
+        $color                        = $this->da->quoteSmart($tracker->color);
         $item_name                    = $this->da->quoteSmart($tracker->item_name);
         $allow_copy                   = $this->da->escapeInt($tracker->allow_copy);
         $submit_instructions          = $this->da->quoteSmart($tracker->submit_instructions);
@@ -218,6 +219,7 @@ class TrackerDao extends DataAccessObject {
                    group_id                     = $group_id,
                    name                         = $name,
                    description                  = $description,
+                   color                        = $color,
                    item_name                    = $item_name,
                    allow_copy                   = $allow_copy,
                    submit_instructions          = $submit_instructions,
@@ -253,4 +255,3 @@ class TrackerDao extends DataAccessObject {
         return "$restriction_clause ($id_enumeration)";
     }
 }
-?>

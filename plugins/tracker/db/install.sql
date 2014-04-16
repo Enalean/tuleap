@@ -102,6 +102,7 @@ CREATE TABLE tracker(
     instantiate_for_new_projects INT( 11 ) NOT NULL default '0',
     stop_notification INT( 11 ) NOT NULL default '0',
     from_tv3_id INT(11) NULL,
+    color varchar(64) NOT NULL DEFAULT 'inca_silver',
     INDEX idx_fk_group_id( group_id )
 ) ENGINE=InnoDB;
 

@@ -84,7 +84,22 @@ class Test_Tracker_Builder {
      * @return \Tracker
      */
     public function build() {
-        $tracker = new Tracker($this->id, $this->project_id, $this->name, null, $this->item_name, null, null, null, null, null, null, null);
+        $tracker = new Tracker(
+            $this->id,
+            $this->project_id,
+            $this->name,
+            null,
+            $this->item_name,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        );
+
         if ($this->project) {
             $tracker->setProject($this->project);
         }
