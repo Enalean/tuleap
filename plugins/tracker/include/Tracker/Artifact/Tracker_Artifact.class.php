@@ -401,7 +401,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     public function getXRefAndTitle() {
         $hp = Codendi_HTMLPurifier::instance();
-        return '<span class="xref-in-title">' . $this->getXRef() .'</span>'. $hp->purify($this->getTitle());
+        return '<span class="'. $this->getTracker()->getColor() .' xref-in-title">' .
+                $this->getXRef() .
+                '</span>'.
+                $hp->purify($this->getTitle());
     }
     /**
      * Get the artifact title, or null if no title defined in semantics
