@@ -1911,36 +1911,21 @@ EOS;
      * @return boolean true if the user can view the tracker.
      */
     public function userCanView($user = 0) {
+
+        $user_manager = $this->getUserManager();
+
         if (! $user instanceof PFUser) {
-            $um = UserManager::instance();
             if (!$user) {
-                $user = $um->getCurrentUser();
+                $user = $user_manager->getCurrentUser();
             } else {
-                $user = $um->getUserById((int)$user);
+                $user = $user_manager->getUserById((int)$user);
             }
         }
 
-        if ($user->isSuperUser()) {
-            return true;
-        }
+        $project_manager    = ProjectManager::instance();
+        $permission_checker = new Tracker_Permission_PermissionChecker($user_manager, $project_manager);
 
-        if ($this->userIsAdmin($user)) {
-            return true;
-        }
-
-        if (($user->isRestricted() && ! $user->isMember($this->getProject()->getId()))
-            || (! $this->getProject()->isPublic() && ! $user->isMember($this->getGroupId()))
-        ) {
-            return false;
-        }
-
-        foreach ($this->getPermissionsByUgroupId() as $ugroup_id => $permission_types) {
-            if ($user->isMemberOfUGroup($ugroup_id, $this->getGroupId())) {
-                return true;
-            }
-        }
-
-        return false;
+        return $permission_checker->userCanViewTracker($user, $this);
     }
 
     protected $cache_permissions = null;

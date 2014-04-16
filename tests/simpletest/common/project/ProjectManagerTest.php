@@ -34,8 +34,18 @@ Mock::generate('BaseLanguage');
 
 class ProjectManagerTest extends TuleapTestCase {
 
+    /** @var UserManager */
+    private $user_manager;
+
+    private $project_manager_test_version;
+
     function setUp() {
         $GLOBALS['Language'] = new MockBaseLanguage();
+
+        $this->user_manager = mock('UserManager');
+
+        $this->project_manager_test_version = new ProjectManagerTestVersion();
+        stub($this->project_manager_test_version)->_getUserManager()->returns($this->user_manager);
     }
 
     function tearDown() {
@@ -169,75 +179,62 @@ class ProjectManagerTest extends TuleapTestCase {
     }
 
     function testCheckRestrictedAccessNoRestricted () {
-        $pm = new ProjectManagerTestVersion();
-        $this->assertTrue($pm->checkRestrictedAccess(null));
-        $pm->expectNever('_getUserManager');
+        $this->assertTrue($this->project_manager_test_version->checkRestrictedAccess(null));
     }
 
     function testCheckRestrictedAccessRestrictedNotAllowed () {
         $GLOBALS['sys_allow_restricted_users'] = 0;
-        $pm = new ProjectManagerTestVersion();
-        $this->assertTrue($pm->checkRestrictedAccess(null));
-        $pm->expectNever('_getUserManager');
+
+        $this->assertTrue($this->project_manager_test_version->checkRestrictedAccess(null));
     }
 
     function testCheckRestrictedAccessNoGroup () {
         $GLOBALS['sys_allow_restricted_users'] = 1;
-        $pm = new ProjectManagerTestVersion();
-        $this->assertFalse($pm->checkRestrictedAccess(null));
-        $pm->expectNever('_getUserManager');
+
+        $this->assertFalse($this->project_manager_test_version->checkRestrictedAccess(null));
     }
 
     function testCheckRestrictedAccessNoUser () {
         $GLOBALS['sys_allow_restricted_users'] = 1;
-        $pm = new ProjectManagerTestVersion();
-        $um = new MockUserManager();
-        $um->setReturnValue('getCurrentUser', null);
-        $pm->setReturnValue('_getUserManager', $um);
+        $this->user_manager->setReturnValue('getCurrentUser', null);
         $project = new MockProject();
-        $this->assertFalse($pm->checkRestrictedAccess($project));
-        $pm->expectOnce('_getUserManager');
+        $this->project_manager_test_version->expectOnce('_getUserManager');
+
+        $this->assertFalse($this->project_manager_test_version->checkRestrictedAccess($project));
     }
 
     function testCheckRestrictedAccessUserNotRestricted () {
         $GLOBALS['sys_allow_restricted_users'] = 1;
-        $pm = new ProjectManagerTestVersion();
-        $um = new MockUserManager();
         $user = mock('PFUser');
         $user->setReturnValue('isRestricted', false);
-        $um->setReturnValue('getCurrentUser', $user);
-        $pm->setReturnValue('_getUserManager', $um);
+        $this->user_manager->setReturnValue('getCurrentUser', $user);
         $project = new MockProject();
-        $this->assertTrue($pm->checkRestrictedAccess($project));
-        $pm->expectOnce('_getUserManager');
+        $this->project_manager_test_version->expectOnce('_getUserManager');
+
+        $this->assertTrue($this->project_manager_test_version->checkRestrictedAccess($project));
     }
 
     function testCheckRestrictedAccessUserNotMember () {
         $GLOBALS['sys_allow_restricted_users'] = 1;
-        $pm = new ProjectManagerTestVersion();
-        $um = new MockUserManager();
         $user = mock('PFUser');
         $user->setReturnValue('isRestricted', true);
-        $um->setReturnValue('getCurrentUser', $user);
-        $pm->setReturnValue('_getUserManager', $um);
+        $this->user_manager->setReturnValue('getCurrentUser', $user);
         $project = new MockProject();
         $project->setReturnValue('userIsMember', false);
-        $this->assertFalse($pm->checkRestrictedAccess($project));
-        $pm->expectOnce('_getUserManager');
+        $this->project_manager_test_version->expectOnce('_getUserManager');
+
+        $this->assertFalse($this->project_manager_test_version->checkRestrictedAccess($project));
     }
 
     function testCheckRestrictedAccessUserIsMember () {
         $GLOBALS['sys_allow_restricted_users'] = 1;
-        $pm = new ProjectManagerTestVersion();
-        $um = new MockUserManager();
         $user = mock('PFUser');
         $user->setReturnValue('isRestricted', true);
-        $um->setReturnValue('getCurrentUser', $user);
-        $pm->setReturnValue('_getUserManager', $um);
+        $this->user_manager->setReturnValue('getCurrentUser', $user);
         $project = new MockProject();
         $project->setReturnValue('userIsMember', true);
-        $this->assertTrue($pm->checkRestrictedAccess($project));
-        $pm->expectOnce('_getUserManager');
+        $this->project_manager_test_version->expectOnce('_getUserManager');
+
+        $this->assertTrue($this->project_manager_test_version->checkRestrictedAccess($project));
     }
 }
-?>
