@@ -23,7 +23,7 @@
  
 require_once 'pre.php';
 require_once dirname(__FILE__).'/../include/Git_GitoliteDriver.class.php';
-require_once dirname(__FILE__).'/../include/Git_GitRepositoryUrlManager.class.php';
+require_once dirname(__FILE__).'/../include/GitRepositoryUrlManager.class.php';
 
 if ($argc !== 3) {
     echo "Usage: ".$argv[0]." oldname newname".PHP_EOL;
