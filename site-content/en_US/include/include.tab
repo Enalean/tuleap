@@ -476,7 +476,7 @@ include_common_template	test_project	Test Project
 #
 common_mvc_view	warn	** WARNING!! ** Please confirm you want to $1
 
-include_browser	ie7_deprecated	You are using Internet Explorer 7. This navigator is no longer supported. Please upgrade to a newer version or use an alternative (Firefox, Chrome, etc).
+include_browser	ie7_deprecated	You are using an old version of Internet Explorer. This navigator version is not supported. Please upgrade to a newer version (at least IE9) or use an alternative (Firefox, Chrome, etc).
 include_browser	ie7_deprecated_button	Ok, got it. Please hide this message.
 include_browser	ie7_deprecated_warning_disabled	We won't bother you with the deprecation of IE7.
 include_browser	ie9_compatibility_deprecated	You are using Internet Explorer 9 in "IE7 compatibility mode". This mode can introduce rendering bugs and regressions, you should <a href="http://doc-en.tuleap.net/en/latest/user-guide/troubleshooting.html#configuring-internet-explorer">desactivate it</a>.
