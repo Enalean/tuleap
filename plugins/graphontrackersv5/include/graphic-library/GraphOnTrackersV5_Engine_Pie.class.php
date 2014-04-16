@@ -76,5 +76,16 @@ class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine {
         }          
         return $this->graph;
     }
+
+    public function toArray() {
+        return array(
+            'data'   => $this->data,
+            'colors' => $this->colors,
+            'title'  => $this->title,
+            'height' => $this->height,
+            'width'  => $this->width,
+            'legend' => $this->legend,
+        );
+    }
 }
 ?>

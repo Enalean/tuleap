@@ -157,6 +157,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
 
         }
 
+        $chart_array = array();
         $html .= '<div class="tracker_report_renderer_graphontrackers_charts">';
         foreach($this->getChartFactory()
                      ->getCharts($this) as $chart) {
@@ -212,17 +213,22 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
                 }
             }
             //Display chart
+            $html .= '<div id="plugin_graphontrackersv5_chart_'.$chart->getId().'"></div>';
             $html .= $chart->fetch($store_in_session);
             $html .= '</div>';
+            $chart_array[$chart->id] = $chart->fetchAsArray();
         }
         $html .= '<div style="clear:both;"></div>';
         $html .= '</div>';
         if (!$readonly) {
             $html .='</form>';
         }
+
+        $GLOBALS['HTML']->includeFooterJavascriptSnippet('tuleap.graphontrackersv5.graphs = '.json_encode($chart_array).';');
+
         return $html;
     }
-    
+
     /**
      * Process the request
      * @param Request $request

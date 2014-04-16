@@ -151,8 +151,13 @@ abstract class GraphOnTrackersV5_Chart {
         }
         return $html;
     }
-    
-    
+
+    /**
+     * Fetch chart data as an array
+     */
+    public function fetchAsArray() {
+        return $this->getEngineWithData()->toArray();
+    }
     
     public function getRow() {
         return array_merge(array(
@@ -181,29 +186,39 @@ abstract class GraphOnTrackersV5_Chart {
      * @return GraphOnTracker_Chart_Engine
      */
     protected function buildGraph() {
-        //Define the artifacts which must be added to the chart
-        $artifacts = $this->renderer->report->getMatchingIds();
-        
-        //Get the ChartDataBuilder for this chart
-        $pcdb = $this->getChartDataBuilder($artifacts);
-        
-        //Get the chart engine
-        $e = $this->getEngine();
-        
-        //prepare the propeties for the chart
-        $pcdb->buildProperties($e);
-        
-        if ($e->validData()) {
+        $e = $this->getEngineWithData();
+        if ($e) {
             //build the chart
             $e->buildGraph();
-            
+
             return $e;
         } else {
             return false;
-        }      
-        
+        }
     }
-    
+
+    /**
+     * @return GraphOnTrackersV5_Engine
+     */
+    protected function getEngineWithData() {
+        //Define the artifacts which must be added to the chart
+        $artifacts = $this->renderer->report->getMatchingIds();
+
+        //Get the ChartDataBuilder for this chart
+        $pcdb = $this->getChartDataBuilder($artifacts);
+
+        //Get the chart engine
+        $e = $this->getEngine();
+
+        //prepare the propeties for the chart
+        $pcdb->buildProperties($e);
+
+        if ($e->validData()) {
+            return $e;
+        }
+        return false;
+    }
+
     protected function getTracker() {
         return TrackerFactory::instance()->getTrackerById($this->renderer->report->tracker_id);
     }

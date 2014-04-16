@@ -84,5 +84,16 @@ abstract class GraphOnTrackersV5_Engine {
      * Build graph based on data, title, description given to the engine
      */
     abstract public function buildGraph();
+
+    /**
+     * Return public data as Array (meant to be transformed into Json)
+     * @return array
+     */
+    public function toArray() {
+        return array(
+            'data'   => $this->data,
+            'colors' => $this->colors,
+        );
+    }
 }
 ?>

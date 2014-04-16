@@ -1,23 +1,24 @@
 <?php
-/* 
+/*
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
- *
  * Originally written by Mahmoud MAALEJ, 2006. STMicroelectronics.
  *
- * This file is a part of Codendi.
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once('common/plugin/Plugin.class.php');
@@ -25,7 +26,7 @@ require_once('common/plugin/Plugin.class.php');
 class GraphOnTrackersV5Plugin extends Plugin {
 
     const RENDERER_TYPE = 'plugin_graphontrackersv5';
-    
+
     var $report_id;
     var $chunksz;
     var $offset;
@@ -46,7 +47,7 @@ class GraphOnTrackersV5Plugin extends Plugin {
     function __construct($id) {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
-        
+
         // Do not load the plugin if tracker is not installed & active
         if (defined('TRACKER_BASE_URL')) {
             $this->_addHook('cssfile',                           'cssFile',                           false);
@@ -65,6 +66,9 @@ class GraphOnTrackersV5Plugin extends Plugin {
             $this->_addHook('default_widgets_for_new_owner',     'default_widgets_for_new_owner',     false);
 
             $this->_addHook('graphontrackersv5_load_chart_factories', 'graphontrackersv5_load_chart_factories', false);
+
+            // jsgraphs
+            $this->addHook('javascript_file');
         }
         $this->allowedForProject = array();
     }
@@ -76,7 +80,7 @@ class GraphOnTrackersV5Plugin extends Plugin {
         return array('tracker');
     }
 
-    
+
     /**
      * This hook ask to create a new instance of a renderer
      *
@@ -102,18 +106,18 @@ class GraphOnTrackersV5Plugin extends Plugin {
                 $params['instance']->initiateSession();
             }
             $f = GraphOnTrackersV5_ChartFactory::instance();
-            if (isset($params['row']['charts']) && isset($params['row']['mapping'])) {                
+            if (isset($params['row']['charts']) && isset($params['row']['mapping'])) {
                 $charts = array();
                 foreach ($params['row']['charts']->chart as $chart) {
                    $charts[] = $f->getInstanceFromXML($chart, $params['instance'], $params['row']['mapping'], $params['store_in_session']);
-                }            
+                }
             } else {
                 $charts = $f->getCharts($params['instance'], $params['store_in_session']);
             }
             $params['instance']->setCharts($charts);
         }
     }
-    
+
     /**
      * This hook ask to create a new instance of a renderer from XML
      *
@@ -130,13 +134,13 @@ class GraphOnTrackersV5Plugin extends Plugin {
             $params['row']['id'] = 0;
             $params['row']['name'] = (string)$params['xml']->name;
             $params['row']['description'] = (string)$params['xml']->description;
-            $params['row']['rank'] = (int)$params['xml']->rank;   
-            $params['row']['charts'] = $params['xml']->charts; 
-            $params['row']['mapping'] = $params['mapping'];  
+            $params['row']['rank'] = (int)$params['xml']->rank;
+            $params['row']['charts'] = $params['xml']->charts;
+            $params['row']['mapping'] = $params['mapping'];
         }
     }
-    
-    
+
+
     /**
      * This hook says that a new renderer has been added to a report session
      * Maybe it is time to set default specific parameters of the renderer?
@@ -167,16 +171,16 @@ class GraphOnTrackersV5Plugin extends Plugin {
 
     /**
      * This hook ask for types of report renderer provided by the listener
-     * 
+     *
      * @param array types Output parameter. Expected format: $types['my_type'] => 'Label of the type'
      */
     public function tracker_report_renderer_types($params) {
         $params['types'][self::RENDERER_TYPE] = $GLOBALS['Language']->getText('plugin_tracker_report','charts');
     }
-    
+
      /**
      * This hook adds a  GraphOnTrackersV5_Renderer in a renderers array
-     * 
+     *
      * @param array types Output parameter. Expected format: $types['my_type'] => 'Label of the type'
      */
     public function trackers_get_renderers($params) {
@@ -192,8 +196,8 @@ class GraphOnTrackersV5Plugin extends Plugin {
             );
             $params['renderers'][$params['renderer_key']]->initiateSession();
         }
-    }    
-    
+    }
+
 
     /**
      * Search for an instance of a specific widget
@@ -214,7 +218,7 @@ class GraphOnTrackersV5Plugin extends Plugin {
                 break;
         }
     }
-    
+
     /**
      * Ask for provided widgets.
      * @param (in) string 'owner_type' => the type of the "owner" (user, project, ...)
@@ -234,7 +238,7 @@ class GraphOnTrackersV5Plugin extends Plugin {
                 break;
         }
     }
-    
+
     /**
      * Ask for default widgets instanciated for new users or new projects or new... etc.
      * @param (in) string 'owner_type' => the type of the "owner" (user, project, ...)
@@ -244,12 +248,12 @@ class GraphOnTrackersV5Plugin extends Plugin {
      *                                    Where name is the name of the widget,
      *                                    And column is the default column position
      *                                    And rank is the default rank of the widget.
-     */     
+     */
     public function default_widgets_for_new_owner($params) {
         //no default widget
     }
-    
-    
+
+
     /**
      * function to get plugin info
      */
@@ -274,7 +278,7 @@ class GraphOnTrackersV5Plugin extends Plugin {
         }
         return $this->allowedForProject[$group_id];
     }
-    
+
     function cssFile($params) {
         // Only show the stylesheet if we're actually in the Docman pages.
         // This stops styles inadvertently clashing with the main site.
@@ -282,7 +286,7 @@ class GraphOnTrackersV5Plugin extends Plugin {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />'."\n";
         }
     }
-    
+
     function graphontrackersv5_load_chart_factories($params) {
         require_once('GraphOnTrackersV5_Renderer.class.php');
         require_once('data-access/GraphOnTrackersV5_Chart_Bar.class.php');
@@ -341,5 +345,18 @@ class GraphOnTrackersV5Plugin extends Plugin {
             'title'           => $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report','cumulative_flow'),
         );
     }
+
+    public function javascript_file($params) {
+        echo $this->getJavascriptIncludesForScripts(array(
+            'graphs.js',
+        ));
+    }
+
+    private function getJavascriptIncludesForScripts(array $script_names) {
+        $html = '';
+        foreach ($script_names as $script_name) {
+            $html .= '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/'.$script_name.'"></script>'."\n";
+        }
+        return $html;
+    }
 }
-?>
