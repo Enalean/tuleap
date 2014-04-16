@@ -121,7 +121,8 @@ class TrackerDao extends DataAccessObject {
                         submit_instructions,
                         browse_instructions,
                         status,
-                        stop_notification)
+                        stop_notification,
+                        color)
                     SELECT
                         $id,
                         $group_id,
@@ -133,7 +134,8 @@ class TrackerDao extends DataAccessObject {
                         submit_instructions,
                         browse_instructions,
                         status,
-                        stop_notification
+                        stop_notification,
+                        color
                     FROM $this->table_name
                     WHERE id = $atid_template";
             if ($this->update($sql)) {
