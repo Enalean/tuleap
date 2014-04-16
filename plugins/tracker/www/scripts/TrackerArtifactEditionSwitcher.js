@@ -29,15 +29,21 @@ tuleap.tracker.artifact.editionSwitcher = function() {
         if ($("#artifact_informations").size() > 0) {
             bindClickOnEditableFields();
             bindSubmissionBarToFollowups();
+            disableWarnBeforeUnloadOnSubmitForm();
         }
     };
+
+    var disableWarnBeforeUnloadOnSubmitForm = function() {
+        $('form').submit(function() {
+            window.onbeforeunload = function(){};
+        });
+    }
 
     var bindClickOnEditableFields = function() {
         $(".tracker_artifact_field").each(bindField);
     };
 
     var bindField = function (index, element) {
-
         if (! fieldIsEditable(element)) {
             return;
         }
@@ -89,7 +95,6 @@ tuleap.tracker.artifact.editionSwitcher = function() {
     };
 
     var removeReadOnlyElements = function (element) {
-        console.log($(element).children());
         $(element).children(":not(.tracker_formelement_label, .tracker_hidden_edition_field, .artifact-link-value-reverse)").remove();
     };
 
@@ -165,7 +170,8 @@ tuleap.tracker.artifact.editionSwitcher = function() {
     };
 
     return {
-        init: init
+        init: init,
+        submissionBarIsAlreadyActive: submissionBarIsAlreadyActive
     };
 };
 
