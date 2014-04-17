@@ -1280,7 +1280,19 @@ class Tracker implements Tracker_Dispatchable_Interface {
         }
 
         $html .= '<input type="hidden" name="tracker_color" value="'. $this->getColor() .'"/>';
+        $html .= $this->fetchTrackerPreview();
         $html .= '</div>';
+
+        return $html;
+    }
+
+    private function fetchTrackerPreview() {
+        $html = '<span class="tracker_color_preview">';
+        $html .= '<span class="tracker_color_preview_label">'.
+                $GLOBALS['Language']->getText('plugin_tracker_include_artifact','preview').
+                '</span>';
+        $html .= '<span class="'. $this->getColor() .' xref-in-title">'. $this->getItemName() .' #123 </span>';
+        $html .= '</span>';
 
         return $html;
     }

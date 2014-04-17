@@ -387,6 +387,7 @@ plugin_tracker_include_artifact	permissions_not_restricted	Permissions are not r
 plugin_tracker_include_artifact	permissions_use_default	Use default tracker permissions
 plugin_tracker_include_artifact	comment_cleared	Comment has been cleared
 plugin_tracker_include_artifact	color	Color
+plugin_tracker_include_artifact	preview	Preview:
 
 #
 #-----------------------------------------------

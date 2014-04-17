@@ -379,6 +379,7 @@ plugin_tracker_include_artifact	permissions_not_restricted	Les permissions ne so
 plugin_tracker_include_artifact	permissions_use_default	Utiliser les permissions par défaut de l'outil de suivi
 plugin_tracker_include_artifact	comment_cleared	Commentaire effacé
 plugin_tracker_include_artifact	color	Couleur
+plugin_tracker_include_artifact	preview	Aperçu :
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactReportHtml.class.php
