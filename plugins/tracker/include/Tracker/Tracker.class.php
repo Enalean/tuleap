@@ -1278,7 +1278,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                             name="tracker_color"
                             value="'. $color .'"
                             '. ($color === $this->getColor() ? 'checked' : '') .'>
-                        <div class="tracker_color_selector '. $color .'"></div>
+                        <div class="tracker_color_selector '. $color .' settings"></div>
                       </label>';
         }
 

@@ -495,7 +495,6 @@ h5.artifack_link_subtitle {
     padding: 2px 5px;
     margin-right: 5px;
     font-size: 0.8em;
-    background: #E0E0E0;
     border-radius: 3px;
     position: relative;
     top: -1px;
@@ -782,6 +781,16 @@ ul.tracker-form-element-checkbox {
     font-weight:bold;
     font-size:1.2em;
 }
+
+.tracker_homepage_info > .direct-link-to-tracker > .tracker_color_info {
+    display: inline-block;
+    margin-right: 5px;
+    border-radius: 50%;
+
+    width: 14px;
+    height: 14px;
+}
+
 #tracker_createnewlink img {
     vertical-align:middle;
 }
@@ -2226,7 +2235,7 @@ body.in_tracker_report .main .content {
     }
 }
 
-@inca_silver: #E0E0E0;
+@inca_silver: #767676;
 @chrome_silver: #A5A5A5;
 @fiesta_red: #DC2F2F;
 @teddy_brown: #9B6542;
@@ -2243,71 +2252,216 @@ body.in_tracker_report .main .content {
 @peggy_pink: #E10DCB;
 @flamingo_pink: #FF87C4;
 
+@inca_silver_secondary: #EEEEEE;
+@chrome_silver_secondary: #FAFAFA;
+@fiesta_red_secondary: #FFDFDF;
+@teddy_brown_secondary: #F9EBE1;
+@clockwork_orange_secondary: #FFF0DC;
+@graffiti_yellow_secondary: #FFFFEB;
+@acid_green_secondary: #F5FFDE;
+@army_green_secondary: #E5F2C8;
+@sherwood_green_secondary: #E9FFEB;
+@ocean_turquoise_secondary: #D3FCF2;
+@daphne_blue_secondary: #E3FFFF;
+@lake_placid_blue_secondary: #DFF5FF;
+@deep_blue_secondary: #DEEAFF;
+@plum_crazy_secondary: #F3E2FF;
+@peggy_pink_secondary: #FFE9FD;
+@flamingo_pink_secondary: #FFF2F8;
+
 .tracker_color_selector {
     width: 20px;
     height: 20px;
+}
 
-    &.inca_silver {
+.inca_silver {
+    background-color: @inca_silver_secondary;
+
+    &.xref-in-title {
+        color: @inca_silver;
+    }
+
+    &.settings {
         background-color: @inca_silver;
     }
+}
 
-    &.chrome_silver {
+.chrome_silver {
+    background-color: @chrome_silver_secondary;
+
+    &.xref-in-title {
+        color: @chrome_silver;
+    }
+
+    &.settings {
         background-color: @chrome_silver;
     }
+}
 
-    &.fiesta_red {
+.fiesta_red {
+    background-color: @fiesta_red_secondary;
+
+    &.xref-in-title {
+        color: @fiesta_red;
+    }
+
+    &.settings {
         background-color: @fiesta_red;
     }
+}
 
-    &.teddy_brown {
+.teddy_brown {
+    background-color: @teddy_brown_secondary;
+
+    &.xref-in-title {
+        color: @teddy_brown;
+    }
+
+    &.settings {
         background-color: @teddy_brown;
     }
+}
 
-    &.clockwork_orange {
+.clockwork_orange {
+    background-color: @clockwork_orange_secondary;
+
+    &.xref-in-title {
+        color: @clockwork_orange;
+    }
+
+    &.settings {
         background-color: @clockwork_orange;
     }
+}
 
-    &.graffiti_yellow {
+.graffiti_yellow {
+    background-color: @graffiti_yellow_secondary;
+
+    &.xref-in-title {
+        color: @graffiti_yellow;
+    }
+
+    &.settings {
         background-color: @graffiti_yellow;
     }
+}
 
-    &.acid_green {
+.acid_green {
+    background-color: @acid_green_secondary;
+
+    &.xref-in-title {
+        color: @acid_green;
+    }
+
+    &.settings {
         background-color: @acid_green;
     }
+}
 
-    &.army_green {
+.army_green {
+    background-color: @army_green_secondary;
+
+    &.xref-in-title {
+        color: @army_green;
+    }
+
+    &.settings {
         background-color: @army_green;
     }
+}
 
-    &.sherwood_green {
+.sherwood_green {
+    background-color: @sherwood_green_secondary;
+
+    &.xref-in-title {
+        color: @sherwood_green;
+    }
+
+    &.settings {
         background-color: @sherwood_green;
     }
+}
 
-    &.ocean_turquoise {
+.ocean_turquoise {
+    background-color: @ocean_turquoise_secondary;
+
+    &.xref-in-title {
+        color: @ocean_turquoise;
+    }
+
+    &.settings {
         background-color: @ocean_turquoise;
     }
+}
 
-    &.daphne_blue {
+.daphne_blue {
+    background-color: @daphne_blue_secondary;
+
+    &.xref-in-title {
+        color: @daphne_blue;
+    }
+
+    &.settings {
         background-color: @daphne_blue;
     }
+}
 
-    &.lake_placid_blue {
+.lake_placid_blue {
+    background-color: @lake_placid_blue_secondary;
+
+    &.xref-in-title {
+        color: @lake_placid_blue;
+    }
+
+    &.settings {
         background-color: @lake_placid_blue;
     }
+}
 
-    &.deep_blue {
+.deep_blue {
+    background-color: @deep_blue_secondary;
+
+    &.xref-in-title {
+        color: @deep_blue;
+    }
+
+    &.settings {
         background-color: @deep_blue;
     }
+}
 
-    &.plum_crazy {
+.plum_crazy {
+    background-color: @plum_crazy_secondary;
+
+    &.xref-in-title {
+        color: @plum_crazy;
+    }
+
+    &.settings {
         background-color: @plum_crazy;
     }
+}
 
-    &.peggy_pink {
-        background-color: @peggy_pink;
+.peggy_pink {
+    background-color: @peggy_pink_secondary;
+
+    &.xref-in-title {
+        color: @peggy_pink;
     }
 
-    &.flamingo_pink {
+    &.settings {
+        background-color: @peggy_pink;
+    }
+}
+
+.flamingo_pink {
+    background-color: @flamingo_pink_secondary;
+
+    &.xref-in-title {
+        color: @flamingo_pink;
+    }
+
+    &.settings {
         background-color: @flamingo_pink;
     }
 }
