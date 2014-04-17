@@ -1,3 +1,6 @@
+Version 5.330 - Tuleap 6.13
+    * request #6729: Fix brundown fatal error
+
 Version 5.329 - Tuleap 6.13
     * task #6693 / story #6409 - XrefAndTitle is used in select box and are now broken
 
