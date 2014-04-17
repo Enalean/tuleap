@@ -2270,7 +2270,7 @@ body.in_tracker_report .main .content {
     margin-bottom: 10px;
 
     & > .icon-stack {
-        cursor:pointer;
+        cursor: pointer;
 
         & > .icon-ok {
             color: #FFFFFF;
@@ -2279,6 +2279,20 @@ body.in_tracker_report .main .content {
             &.selected {
                 visibility: visible;
             }
+        }
+    }
+
+    & > .tracker_color_preview {
+        display: block;
+        margin-top: 10px;
+
+        & > .tracker_color_preview_label {
+            font-size: 0.8em;
+        }
+
+        & > .xref-in-title {
+            margin-left: 10px;
+            font-size: 1.2em;
         }
     }
 }
