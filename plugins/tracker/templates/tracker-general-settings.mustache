@@ -1,0 +1,49 @@
+<form name="form1" method="POST" action="{{ action_url }}">
+    <input type="hidden" name="update" value="1">
+    <input type="hidden" name="instantiate_for_new_projects" value="0">
+    <table width="100%" border="0" cellpadding="5">
+      <tr>
+        <td width="15%"><b>{{ tracker_name_label }}</b> <font color="red">*</font>:</td>
+        <td>
+            <input type="text" name="name" value="{{{ tracker_name }}}">
+        </td>
+      </tr>
+      <tr>
+        <td width="15%"><b>{{ tracker_color_label }}</b> <font color="red">*</font>:</td>
+        <td>
+            {{> tracker-color-settings }}
+        </td>
+      </tr>
+      <tr>
+        <td width="15%"><b>{{ tracker_description_label }}</b>: <font color="red">*</font></td>
+        <td>
+          <textarea name="description" rows="3" cols="50">{{{ tracker_description }}}</textarea>
+        </td>
+      </tr>
+      <tr>
+        <td width="15%"><b>{{ tracker_shortname_label }}</b>: <font color="red">*</font></td>
+        <td>
+          <input type="text" name="item_name" value="{{ tracker_shortname }}">
+        </td>
+      </tr>
+    <tr>
+      <td width="15%"><b>{{ tracker_instantiate_label }}:</b></td>
+      <td>
+        <input type="checkbox" name="instantiate_for_new_projects" value="1" {{# is_instatiate_for_new_projects }} checked {{/ is_instatiate_for_new_projects }}>
+      </td>
+    </tr>
+    <tr>
+      <td width="15%"><b>{{ submit_instruction_label }}</b>: <br><i>{{ html_tags }}</i></td>
+      <td>
+        <textarea name="submit_instructions" rows="3" cols="50">{{{ submit_insrtuctions }}}</textarea>
+      </td>
+    </tr>
+    <tr>
+      <td><b>{{ browse_instruction_label }}</b>: <br><i>{{ html_tags }}</i></td>
+      <td>
+        <textarea name="browse_instructions" rows="3" cols="50">{{{ browse_instruction }}}</textarea>
+      </td>
+    </tr>
+  </table>
+  <p align="center"><input type="submit" value="{{ submit_button }}"></p>
+</form>
