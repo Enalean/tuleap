@@ -477,8 +477,9 @@ plugin_tracker_include_type	perm	Permissions
 plugin_tracker_include_type	del_user	Détruire cet utilisateur ?
 plugin_tracker_include_type	no_user	Aucun utilisateur pour cet outil de suivi.
 plugin_tracker_include_type	allow_copy	Autoriser la copie d'artefacts&nbsp;:
-plugin_tracker_include_type	submit_instr	<b>Instructions de soumissions</b>&nbsp;:<br><i>(Balises HTML autorisées)</i>
-plugin_tracker_include_type	browse_instr	<b>Instructions de navigation</b>&nbsp;:<br><i>(Balises HTML autorisées)</i>
+plugin_tracker_include_type	submit_instr	Instructions de soumissions
+plugin_tracker_include_type	browse_instr	Instructions de navigation
+plugin_tracker_include_type	html_tags	(Balises HTML autorisées)
 plugin_tracker_include_type	fill_name	Veuillez remplir le nom de l'outil de suivi.
 plugin_tracker_include_type	fill_desc	Veuillez remplir la description de l'outil de suivi.
 plugin_tracker_include_type	fill_short	Veuillez remplir le nom court de l'outil de suivi.

@@ -486,8 +486,9 @@ plugin_tracker_include_type	perm	Permissions
 plugin_tracker_include_type	del_user	Delete this user?
 plugin_tracker_include_type	no_user	No users for this tracker.
 plugin_tracker_include_type	allow_copy	Allow artifact duplication:
-plugin_tracker_include_type	submit_instr	<b>Submit instructions</b>:<br><i>(HTML tags allowed)</i>
-plugin_tracker_include_type	browse_instr	<b>Browse instructions</b>:<br><i>(HTML tags allowed)</i>
+plugin_tracker_include_type	submit_instr	Submit instructions
+plugin_tracker_include_type	browse_instr	Browse instructions
+plugin_tracker_include_type	html_tags	(HTML tags allowed)
 plugin_tracker_include_type	fill_name	Please, fill the tracker name.
 plugin_tracker_include_type	fill_desc	Please, fill the tracker description.
 plugin_tracker_include_type	fill_short	Please, fill the tracker short name.
