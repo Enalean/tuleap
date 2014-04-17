@@ -44,12 +44,12 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
      *
      * @return string html
      */
-    public function fetchArtifactReadOnly(Tracker_Artifact $artifact) {
-        return $this->fetchWithColumnGroup('fetchArtifactReadOnly', array($artifact));
+    public function fetchArtifactReadOnly(Tracker_Artifact $artifact, $submitted_values = array()) {
+        return $this->fetchWithColumnGroup('fetchArtifactReadOnly', array($artifact, $submitted_values));
     }
 
-    public function fetchArtifactReadOnlyInGroup(Tracker_Artifact $artifact) {
-        return $this->fetchRecursiveArtifact('fetchArtifactReadOnly', array($artifact));
+    public function fetchArtifactReadOnlyInGroup(Tracker_Artifact $artifact, $submitted_values = array()) {
+        return $this->fetchRecursiveArtifact('fetchArtifactReadOnly', array($artifact, $submitted_values));
     }
 
     public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false) {

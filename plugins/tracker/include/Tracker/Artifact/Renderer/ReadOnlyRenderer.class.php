@@ -32,6 +32,12 @@ class Tracker_Artifact_ReadOnlyRenderer extends Tracker_Artifact_EditRenderer {
      * @return string The HTML code for artifact fields
      */
     public function fetchFields(Tracker_Artifact $artifact, $submitted_values = array()) {
-        return $artifact->getTracker()->fetchFormElementsReadOnly($artifact, array($submitted_values));
+        $submitted_artifact = '';
+
+        if ($submitted_values) {
+            $submitted_artifact = "submitted_artifact";
+        }
+
+        return "<div class='".$submitted_artifact."'>".$artifact->getTracker()->fetchFormElementsReadOnly($artifact, array($submitted_values))."</div>";
     }
 }

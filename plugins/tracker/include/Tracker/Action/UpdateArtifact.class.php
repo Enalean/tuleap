@@ -74,7 +74,7 @@ class Tracker_Action_UpdateArtifact {
                 $this->sendAjaxCardsUpdateInfo($current_user, $this->artifact, $this->form_element_factory);
             } else {
                 $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
-                $render = new Tracker_Artifact_EditRenderer($this->event_manager, $this->artifact, $this->form_element_factory, $layout);
+                $render = new Tracker_Artifact_ReadOnlyRenderer($this->event_manager, $this->artifact, $this->form_element_factory, $layout);
                 $render->display($request, $current_user);
             }
         } catch (Tracker_Exception $e) {
@@ -82,7 +82,7 @@ class Tracker_Action_UpdateArtifact {
                 $this->sendAjaxCardsUpdateInfo($current_user, $this->artifact, $this->form_element_factory);
             } else {
                 $GLOBALS['Response']->addFeedback('error', $e->getMessage());
-                $render = new Tracker_Artifact_EditRenderer($this->event_manager, $this->artifact, $this->form_element_factory, $layout);
+                $render = new Tracker_Artifact_ReadOnlyRenderer($this->event_manager, $this->artifact, $this->form_element_factory, $layout);
                 $render->display($request, $current_user);
             }
         }

@@ -218,8 +218,8 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
      *
      * @return string html
      */
-    public function fetchArtifactReadOnly(Tracker_Artifact $artifact) {
-        return $this->fetchRecursiveArtifact('fetchArtifactReadOnly', array($artifact));
+    public function fetchArtifactReadOnly(Tracker_Artifact $artifact, $submitted_values = array()) {
+        return $this->fetchRecursiveArtifact('fetchArtifactReadOnly', array($artifact, $submitted_values));
     }
     
     protected function fetchRecursiveArtifact($method, $params = array()) {

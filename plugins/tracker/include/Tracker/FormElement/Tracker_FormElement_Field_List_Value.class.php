@@ -31,7 +31,7 @@ abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJ
      */
     protected $is_hidden = false;
     
-    public function __construct($id, $is_hidden) {
+    public function __construct($id, $is_hidden = false) {
         $this->id        = $id;
         $this->is_hidden = $is_hidden;
     }
