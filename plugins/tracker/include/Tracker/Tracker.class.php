@@ -1270,17 +1270,17 @@ class Tracker implements Tracker_Dispatchable_Interface {
     }
 
     private function fetchTrackerColors() {
-        $html = '';
+        $html = '<div class="tracker_settings_colors">';
+
         foreach ($this->allowed_color as $color) {
-            $html .= '<label class="radio inline">
-                        <input
-                            type="radio"
-                            name="tracker_color"
-                            value="'. $color .'"
-                            '. ($color === $this->getColor() ? 'checked' : '') .'>
-                        <div class="tracker_color_selector '. $color .' settings"></div>
-                      </label>';
+            $html .= '<span class="icon-stack tracker_color_selector">
+                <i class="icon-sign-blank icon-stack-base '. $color .'" data-color="'. $color .'"></i>
+                <i class="icon-ok '. ($color === $this->getColor() ? 'selected' : '') .'"></i>
+            </span>';
         }
+
+        $html .= '<input type="hidden" name="tracker_color" value="'. $this->getColor() .'"/>';
+        $html .= '</div>';
 
         return $html;
     }
