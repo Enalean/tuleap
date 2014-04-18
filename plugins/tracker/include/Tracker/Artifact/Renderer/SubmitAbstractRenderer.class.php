@@ -42,11 +42,11 @@ abstract class Tracker_Artifact_SubmitAbstractRenderer extends Tracker_Artifact_
 
     protected function fetchFormElements(Codendi_Request $request, PFUser $current_user) {
         $html = '';
-        $html .= '<table><tr><td>';
+        $html .= '<div class="tracker_artifact">';
         foreach($this->tracker->getFormElements() as $form_element) {
             $html .= $form_element->fetchSubmit($request->get('artifact'));
         }
-        $html .= '</td></tr></table>';
+        $html .= '</div>';
 
         return $html;
     }

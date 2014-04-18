@@ -91,15 +91,7 @@ abstract class Tracker_Artifact_ArtifactRenderer {
      * @return string The HTML code for artifact fields
      */
     public function fetchFields(Tracker_Artifact $artifact, $submitted_values = array()) {
-        return '<div class="tabForStory1693" id="fieldsFetchedChangeMe">
-            <table cellspacing="0" cellpadding="0" border="0">
-                <tr valign="top">
-                    <td style="padding-right:1em;">'.
-                        $artifact->getTracker()->fetchFormElements($artifact, array($submitted_values)).
-                    '</td>
-                </tr>
-            </table>
-        </div>';
+        return $artifact->getTracker()->fetchFormElements($artifact, array($submitted_values));
     }
 
     /**

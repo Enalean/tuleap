@@ -222,13 +222,16 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
      */
     protected function fetchSubmitValue() {
         $html = '';
-        $html .= '<div class="tracker_artifact_attachment add-attachement">';
-        $html .= '<p>'.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','add_new_file').'</p>';
-        $html .= '<table class="tracker_artifact_add_attachment">';
-        $html .= '<tr><td><label>'.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','add_new_file_description').'</label></td><td><label>'.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','add_new_file_file').'</label></td></tr>';
-        $html .= '<tr><td><input type="text" id="tracker_field_'. $this->id .'" name="artifact['. $this->id .'][][description]" /></td>';
-        $html .= '<td><input type="file" id="tracker_field_'. $this->id .'" name="artifact['. $this->id .'][][file]" /></td></tr>';
-        $html .= '</table>';
+        $html .= '<div class="add-attachement">';
+        $html .= '<p>'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','add_new_file') .'</p>';
+        $html .= '<div class="tracker_artifact_add_attachment">';
+        $html .= '<p>';
+        $html .= '<input type="file" id="tracker_field_'. $this->id .'" name="artifact['. $this->id .'][][file]" />';
+        $html .= '<label>'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','add_new_file_description');
+        $html .= '</label>';
+        $html .= ' <input type="text" id="tracker_field_'. $this->id .'" name="artifact['. $this->id .'][][description]" />';
+        $html .= '</p>';
+        $html .= '</div>';
         $html .= '</div>';
         return $html;
     }
@@ -240,18 +243,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
      */
     protected function fetchSubmitValueMasschange() {
         return '';  // deactivate mass change for file fields (see issue described in rev #15855)
-
-        $html = '';
-        $html .= '<div class="tracker_artifact_attachment add-attachement">';
-        $html .= '<p>'.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','add_new_file').'</p>';
-        $html .= '<table class="tracker_artifact_add_attachment">';
-        $html .= '<tr><td><label>'.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','add_new_file_description').'</label></td><td><label>'.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','add_new_file_file').'</label></td></tr>';
-        $html .= '<tr><td><input type="text" id="tracker_field_'. $this->id .'" name="artifact['. $this->id .'][][description]" /></td>';
-        $html .= '<td><input type="file" id="tracker_field_'. $this->id .'" name="artifact['. $this->id .'][][file]" /></td></tr>';
-        $html .= '</table>';
-        $html .= '</div>';
-        return $html;
     }
+
     /**
      * Fetch the changes that has been made to this field in a followup
      *
@@ -513,7 +506,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
      */
     protected function fetchAdminFormElement() {
         $html = '';
-        $html .= '<div class="tracker_artifact_attachment">';
+        $html .= '<div>';
         $html .= '<p>'.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','add_new_file').'</p>';
         $html .= '<table class="tracker_artifact_add_attachment">';
         $html .= '<tr><td><label>'.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','add_new_file_description').'</label></td><td><label>'.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','add_new_file_file').'</label></td></tr>';
