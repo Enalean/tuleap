@@ -14,6 +14,7 @@ Version 6.13 (Not Released Yet)
 	* graphontrackersv5: 5.8
 	* agiledashboard: 1.59
 	* mediawiki: 0.27
+	* git: 3.79
 
 	== Bug fix ==
 	Request #6712: More explicit message about IE7 and IE8 support.
