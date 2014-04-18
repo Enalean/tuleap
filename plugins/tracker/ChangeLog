@@ -1,3 +1,6 @@
+Version 5.331 - Tuleap 6.13
+    * tasks #6684: max width for artifact view (960px)
+
 Version 5.330 - Tuleap 6.13
     * request #6729: Fix brundown fatal error
 
