@@ -1,3 +1,6 @@
+Version 5.332 - Tuleap 6.13
+    * Fix request #6731: Artifact link modal window is opening when performing a carriage return
+
 Version 5.331 - Tuleap 6.13
     * tasks #6684: max width for artifact view (960px)
 
