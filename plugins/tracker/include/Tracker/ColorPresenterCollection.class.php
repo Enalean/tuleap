@@ -31,10 +31,10 @@ class Tracker_ColorPresenterCollection implements Iterator {
     private $existing_colors = array(
        'inca_silver',
        'chrome_silver',
-       'fiesta_red',
        'teddy_brown',
+       'red_wine',
+       'fiesta_red',
        'clockwork_orange',
-       'graffiti_yellow',
        'acid_green',
        'army_green',
        'sherwood_green',
