@@ -338,7 +338,9 @@ document.observe('dom:loaded', function () {
     }
 
     function warnOnPageLeave() {
-        if ( $('artifact-read-only-page') != null && $('tracker_followup_comment_new').value != '' ) {
+        var edition_switcher = new tuleap.tracker.artifact.editionSwitcher();
+
+        if (edition_switcher.submissionBarIsAlreadyActive()) {
             return codendi.locales.tracker_formelement_admin.lose_follows;
         }
     }
