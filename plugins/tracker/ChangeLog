@@ -1,3 +1,6 @@
+Version 5.336 - Tuleap 6.13
+    * tasks #6730: Use white/black color for xref-in-title
+
 Version 5.335 - Tuleap 6.13
     * tasks #6672 / story #6409: Hide html diffs by default, display them on click on 'show' button
 
