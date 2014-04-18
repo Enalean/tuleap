@@ -1,3 +1,6 @@
+Version 5.334 - Tuleap 6.13
+    * story #6409 Fix CSS issue on IE8
+
 Version 5.333 - Tuleap 6.13
     * tasks #6627 / story #6409: Warn user on page leave if he has made changes
 
