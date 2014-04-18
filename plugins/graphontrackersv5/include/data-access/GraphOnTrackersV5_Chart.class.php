@@ -239,6 +239,10 @@ abstract class GraphOnTrackersV5_Chart {
      * Fetch chart data as an array
      */
     public function fetchAsArray() {
+        if (! $this->getEngineWithData()) {
+            return array();
+        }
+
         return $this->getEngineWithData()->toArray();
     }
     
@@ -451,6 +455,58 @@ abstract class GraphOnTrackersV5_Chart {
      * Get the dao of the chart
      */
     protected abstract function getDao();
+
+    public function getContent() {
+        $content          = '';
+        $store_in_session = false;
+
+        $chart_array = $this->buildChartData();
+
+        if ($this->isGraphDrawnByD3($chart_array)) {
+            $content .= $this->fetchContentD3Graph($chart_array);
+        } else {
+            $content .= $this->fetchContentJPGraph($store_in_session);
+        }
+
+        return $content;
+    }
+
+    public function getWidgetContent() {
+        $content = $this->getContent();
+
+        if ($this->isGraphDrawnByD3($this->buildChartData())) {
+            $content .= $this->renderer->fetchWidgetGoToReport();
+        }
+
+        return $content;
+    }
+
+    private function isGraphDrawnByD3(array $chart_data) {
+        return isset($chart_data[$this->id]['type']);
+    }
+
+    private function fetchContentJPGraph($store_in_session) {
+        $content = $this->fetch($store_in_session);
+        $content .= '<br />';
+
+        return $content;
+    }
+
+    private function fetchContentD3Graph(array $chart_array) {
+        $GLOBALS['HTML']->includeFooterJavascriptSnippet('tuleap.graphontrackersv5.graphs = '.json_encode($chart_array).';');
+        $content = $this->fetchD3Anchor();
+
+        return $content;
+    }
+
+    /**
+     * Builds the chart data in array
+     *
+     * @return array
+     */
+    private function buildChartData() {
+        return array(
+            $this->id => $this->fetchAsArray()
+        );
+    }
 }
- 
-?>

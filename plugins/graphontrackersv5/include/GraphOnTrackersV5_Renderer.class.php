@@ -96,7 +96,8 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
             //}}}
             $html .= '</td><td style="text-align:center">';
             //{{{ Chart Preview
-            $html .= $this->chart_to_edit->fetch();
+
+            $html .= $this->chart_to_edit->getContent();
             //}}}
             $html .= '</tr>';
             if ($help = $this->chart_to_edit->getHelp()) {

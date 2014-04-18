@@ -38,45 +38,17 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget {
     }
 
     public function getContent() {
-        $content          = '';
-        $store_in_session = false;
-        $chart            = GraphOnTrackersV5_ChartFactory::instance()->getChart(
+        $chart = GraphOnTrackersV5_ChartFactory::instance()->getChart(
             null,
             $this->chart_id,
-            $store_in_session
+            false
         );
 
         if ($chart) {
-            $chart_array = array(
-                $chart->getId() => $chart->fetchAsArray()
-            );
-
-            if ($this->isGraphDrawByD3($chart_array)) {
-                $content .= $this->fetchContentD3Graph($chart, $chart_array);
-            } else {
-                $content .= $this->fetchContentJPGraph($chart, $store_in_session);
-            }
+            $content = $chart->getWidgetContent();
         } else {
-            $content .= '<em>Chart does not exist</em>';
+            $content = '<em>Chart does not exist</em>';
         }
-        return $content;
-    }
-
-    private function isGraphDrawByD3(array $chart_array) {
-        return isset($chart_array[$this->chart_id]['type']);
-    }
-
-    private function fetchContentJPGraph(GraphOnTrackersV5_Chart $chart, $store_in_session) {
-        $content = $chart->fetch($store_in_session);
-        $content .= '<br />';
-
-        return $content;
-    }
-
-    private function fetchContentD3Graph(GraphOnTrackersV5_Chart $chart, $chart_array) {
-        $GLOBALS['HTML']->includeFooterJavascriptSnippet('tuleap.graphontrackersv5.graphs = '.json_encode($chart_array).';');
-        $content = $chart->fetchD3Anchor();
-        $content .= $chart->renderer->fetchWidgetGoToReport();
 
         return $content;
     }
