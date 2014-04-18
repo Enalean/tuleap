@@ -637,9 +637,10 @@ a:hover .xref-in-title {
     margin-bottom: 20px;
     padding: 0 0 1px;
 }
+
 .tracker_artifact_fieldset legend {
     font-size:1.2em;
-    padding: 0 34px;
+    padding: 0 14px 0 34px;
     margin-bottom: 0;
     background-position: 13px center;
     background-color: #FFF;
@@ -660,7 +661,42 @@ a:hover .xref-in-title {
         border-bottom: none;
         border-radius: 3px;
     }
+
+    > table {
+        width: 100%;
+
+        > tbody > tr > td {
+            white-space: nowrap;
+
+            &.tracker_artifact_fieldset_alwayscollapsed {
+                color: #D1D1D1;
+                font-size: 0.85em;
+                text-align: right;
+                padding-left: 13px;
+
+                > i:hover {
+                    color: #222;
+                }
+
+                &.active {
+                    color: #464646;
+                }
+
+                &.active > i:hover:before,
+                &:not(.active) > i:not(:hover):before {
+                    -webkit-transform: rotate(45deg);
+                    -moz-transform: rotate(45deg);
+                    -ms-transform: rotate(45deg);
+                    -o-transform: rotate(45deg);
+                    transform: rotate(45deg);
+                    filter: progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand', M11=0.7071067811865476, M12=-0.7071067811865475, M21=0.7071067811865475, M22=0.7071067811865476); /* IE6,IE7 */
+                    -ms-filter: "progid:DXImageTransform.Microsoft.Matrix(SizingMethod='auto expand', M11=0.7071067811865476, M12=-0.7071067811865475, M21=0.7071067811865475, M22=0.7071067811865476)"; /* IE8 */
+                }
+            }
+        }
+    }
 }
+
 .tracker_artifact_fieldset_content {
     padding-top: 20px;
 }
