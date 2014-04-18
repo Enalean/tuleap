@@ -433,7 +433,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
 
         if ($reverse_artifact_links) {
             $html .= '<div class="artifact-link-value-reverse">';
-            $html .= '<button class="btn" id="display-tracker-form-element-artifactlink-reverse">' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_display_reverse') . '</button>';
+            $html .= '<a href="" class="btn" id="display-tracker-form-element-artifactlink-reverse">' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_display_reverse') . '</a>';
             $html .= '<div id="tracker-form-element-artifactlink-reverse" style="display: none">';
         } else {
             $html .= '<div class="artifact-link-value">';
