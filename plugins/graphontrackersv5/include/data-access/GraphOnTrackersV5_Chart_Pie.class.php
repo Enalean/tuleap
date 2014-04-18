@@ -33,19 +33,7 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart {
     protected $field_base;
 
     public function fetchOnReport(GraphOnTrackersV5_Renderer $renderer, PFUser $current_user, $read_only, $store_in_session = true) {
-        $html = '';
-        $html .= '<div class="widget">';
-        $html .= '<div class="widget_titlebar">';
-        $html .= '<div class="widget_titlebar_title">'. $this->getTitle().'</div>';
-        $html .= '<div class="plugin_graphontrackersv5_widget_actions">';
-        $html .= $this->fetchActionButtons($renderer, $current_user, $read_only);
-        $html .= '</div>';
-        $html .= '</div>';
-        $html .= '<div class="widget_content">';
-        $html .= '<div id="plugin_graphontrackersv5_chart_'.$this->getId().'"></div>';
-        $html .= '</div>'; // content
-        $html .= '</div>'; // widget
-        return $html;
+        return $this->fetchJsOnReport($renderer, $current_user, $read_only);
     }
 
     public function loadFromSession() {

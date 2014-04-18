@@ -152,6 +152,26 @@ abstract class GraphOnTrackersV5_Chart {
         return $html;
     }
 
+    public function fetchD3Anchor() {
+        return '<div id="plugin_graphontrackersv5_chart_'.$this->getId().'" class="tracker_report_renderer_graphontrackers_graph"></div>';
+    }
+
+    protected function fetchJsOnReport(GraphOnTrackersV5_Renderer $renderer, PFUser $current_user, $read_only) {
+        $html = '';
+        $html .= '<div class="widget">';
+        $html .= '<div class="widget_titlebar">';
+        $html .= '<div class="widget_titlebar_title">'. $this->getTitle().'</div>';
+        $html .= '<div class="plugin_graphontrackersv5_widget_actions">';
+        $html .= $this->fetchActionButtons($renderer, $current_user, $read_only);
+        $html .= '</div>';
+        $html .= '</div>';
+        $html .= '<div class="widget_content">';
+        $html .= $this->fetchD3Anchor();
+        $html .= '</div>'; // content
+        $html .= '</div>'; // widget
+        return $html;
+    }
+
     public function fetchOnReport(GraphOnTrackersV5_Renderer $renderer, PFUser $current_user, $read_only, $store_in_session = true) {
         return $this->fetchActionButtons($renderer, $current_user, $read_only).$this->fetch($store_in_session);
     }

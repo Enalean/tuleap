@@ -36,26 +36,60 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget {
         $hp = Codendi_HTMLPurifier::instance();
         return $this->chart_title ?  $hp->purify($this->chart_title, CODENDI_PURIFIER_CONVERT_HTML)  : 'Tracker Chart';
     }
-    function getContent() {
+
+    public function getContent() {
         $content          = '';
         $store_in_session = false;
-        
-        if ($chart = GraphOnTrackersV5_ChartFactory::instance()->getChart(null, $this->chart_id, $store_in_session)) {
-            $content .= $chart->fetch($store_in_session);
-            $content .= '<br />';
-            $content .= $chart->renderer->fetchWidgetGoToReport();
+        $chart            = GraphOnTrackersV5_ChartFactory::instance()->getChart(
+            null,
+            $this->chart_id,
+            $store_in_session
+        );
+
+        if ($chart) {
+            $chart_array = array(
+                $chart->getId() => $chart->fetchAsArray()
+            );
+
+            if ($this->isGraphDrawByD3($chart_array)) {
+                $content .= $this->fetchContentD3Graph($chart, $chart_array);
+            } else {
+                $content .= $this->fetchContentJPGraph($chart, $store_in_session);
+            }
         } else {
             $content .= '<em>Chart does not exist</em>';
         }
         return $content;
     }
-    function isAjax() {
-        return true;
+
+    private function isGraphDrawByD3(array $chart_array) {
+        return isset($chart_array[$this->chart_id]['type']);
     }
-    function getInstallPreferences($owner_id) {
+
+    private function fetchContentJPGraph(GraphOnTrackersV5_Chart $chart, $store_in_session) {
+        $content = $chart->fetch($store_in_session);
+        $content .= '<br />';
+
+        return $content;
+    }
+
+    private function fetchContentD3Graph(GraphOnTrackersV5_Chart $chart, $chart_array) {
+        $GLOBALS['HTML']->includeFooterJavascriptSnippet('tuleap.graphontrackersv5.graphs = '.json_encode($chart_array).';');
+        $content = $chart->fetchD3Anchor();
+        $content .= $chart->renderer->fetchWidgetGoToReport();
+
+        return $content;
+    }
+
+    public function isAjax() {
+        return false;
+    }
+
+    public function getInstallPreferences($owner_id) {
         return $this->getPreferences($owner_id);
     }
-    function getPreferences($owner_id) {
+
+    public function getPreferences($owner_id) {
         $hp = Codendi_HTMLPurifier::instance();
         
         $prefs  = '';
