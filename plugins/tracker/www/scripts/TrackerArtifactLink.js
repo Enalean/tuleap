@@ -533,13 +533,13 @@ document.observe('dom:loaded', function () {
         
         if (location.href.toQueryParams().func != 'new-artifact' && location.href.toQueryParams().func != 'submit-artifact') {
             if (!location.href.toQueryParams().modal) {
-                var link = new Element('button', {
+                var link = new Element('a', {
                     title: codendi.locales.tracker_artifact_link.select
                 })
                 .addClassName('tracker-form-element-artifactlink-selector btn')
                 .update('<img src="'+ codendi.imgroot +'ic/clipboard-search-result.png" />');
                 
-                var link_create = new Element('button', {
+                var link_create = new Element('a', {
                     title: codendi.locales.tracker_artifact_link.create,
                     href: '#'
                 })
