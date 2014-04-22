@@ -69,9 +69,13 @@ codendi.Toggler = {
         //prehide or preshow depending on the initial state of the toggler
         toggler.nextSiblings().invoke(toggler.hasClassName('toggler-hide') || toggler.hasClassName('toggler-hide-noajax')  ? 'hide' : 'show');
         
-        toggler.observe('click', function () {
+        toggler.observe('click', function (evt) {
+            var is_collapsing = toggler.hasClassName('toggler') || toggler.hasClassName('toggler-noajax');
+
+            codendi.Toggler.before(evt, toggler, is_collapsing);
+
             //toggle next siblings
-            toggler.nextSiblings().invoke(toggler.hasClassName('toggler') || toggler.hasClassName('toggler-noajax') ? 'hide' : 'show');
+            toggler.nextSiblings().invoke(is_collapsing ? 'hide' : 'show');
             
             //toggle the state
             if (toggler.hasClassName('toggler-noajax') || toggler.hasClassName('toggler-hide-noajax')) {
@@ -92,6 +96,15 @@ codendi.Toggler = {
                     );
                 }
             }
+        });
+    },
+    before_listeners: [],
+    addBeforeListener: function (callback) {
+        codendi.Toggler.before_listeners.push(callback);
+    },
+    before: function (evt, toggler, is_collapsing) {
+        codendi.Toggler.before_listeners.each(function (callback) {
+            callback(evt, toggler, is_collapsing);
         });
     }
 };

@@ -134,6 +134,7 @@ class trackerPlugin extends Plugin {
                 '/plugins/tracker/scripts/TrackerArtifactEditionSwitcher.js',
                 '/plugins/tracker/scripts/FixAggregatesHeaderHeight.js',
                 '/plugins/tracker/scripts/TrackerSettings.js',
+                '/plugins/tracker/scripts/TrackerCollapseFieldset.js',
             )
         );
     }

@@ -22,18 +22,54 @@ require_once('common/include/Error.class.php');
 
 
 class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Container {
-   
-    
+
+    /**
+     * Process the request
+     *
+     * @param Tracker_IDisplayTrackerLayout  $layout          Displays the page header and footer
+     * @param Codendi_Request                $request         The data coming from the user
+     * @param PFUser                         $current_user    The user who mades the request
+     *
+     * @return void
+     */
+    public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
+        switch ($request->get('func')) {
+            case 'toggle-collapse':
+                $current_user = $request->getCurrentUser();
+                $current_user->togglePreference('fieldset_'. $this->getId(), 1, 0);
+                break;
+            default:
+                parent::process($layout, $request, $current_user);
+        }
+    }
+
     protected function fetchArtifactPrefix() {
-        $html = '';
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp           = Codendi_HTMLPurifier::instance();
+        $current_user = UserManager::instance()->getCurrentUser();
+        $always_collapsed      = '';
+        $fieldset_is_collapsed = $current_user->getPreference('fieldset_'. $this->getId());
+        $fieldset_is_expanded  = ! $fieldset_is_collapsed;
+        if ($fieldset_is_collapsed) {
+            $always_collapsed = 'active';
+        }
+
+        $html  = '';
         $html .= '<fieldset class="tracker_artifact_fieldset">';
         $html .= '<legend title="'. $hp->purify($this->getDescription(), CODENDI_PURIFIER_CONVERT_HTML) .'" 
-                          class="'. Toggler::getClassName('fieldset_'. $this->getId(), true, true) .'" 
-                          id="fieldset_'. $this->getId() .'">';
+                          class="'. Toggler::getClassName('fieldset_'. $this->getId(), $fieldset_is_expanded, true) .'"
+                          id="fieldset_'. $this->getId() .'"
+                          data-id="'. $this->getId() .'">';
+        $html .= '<table><tr><td class="tracker_artifact_fieldset_title">';
         $html .= $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML);
+        $html .= '</td>';
+        $html .= '<td class="tracker_artifact_fieldset_alwayscollapsed '. $always_collapsed .'">';
+        if ($current_user->isLoggedIn()) {
+            $html .= '<i class="icon-pushpin"></i>';
+        }
+        $html .= '</td></tr></table>';
         $html .= '</legend>';
         $html .= '<div class="tracker_artifact_fieldset_content">';
+
         return $html;
     }
     

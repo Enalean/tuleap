@@ -13,7 +13,9 @@ codendi.locales['tracker_artifact'] = {
     masschange_uncheck_all: 'Uncheck all',
     display_settings: 'Display settings',
     display_changes: 'Changes are displayed',
-    reverse_order: 'Comments are in reversed order'
+    reverse_order: 'Comments are in reversed order',
+    always_expand_fieldset: 'This fieldset is always collapsed. Click to always expand it.',
+    always_collapse_fieldset: 'This fieldset is always expanded. Click to always collapse it.'
 };
 codendi.locales['tracker_renderer'] = {
     order_dragdrop: 'You can order tabs with drag \'n drop'
