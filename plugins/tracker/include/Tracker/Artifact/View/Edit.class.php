@@ -55,9 +55,33 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
     public function fetch() {
         $html  = '';
         $html .= '<div class="tracker_artifact">';
+        $html .= $this->fetchArtifactReferencesSidebar();
         $html .= $this->renderer->fetchFields($this->artifact, $this->request->get('artifact'));
         $html .= $this->fetchFollowUps($this->request->get('artifact_followup_comment'));
         $html .= '</div>';
+
+        return $html;
+    }
+
+    private function fetchArtifactReferencesSidebar() {
+        $html             = '';
+        $linked_artifacts = $this->artifact->getLinkedArtifacts($this->user);
+
+        if (count($linked_artifacts) > 0) {
+            $html .= '<div class="artifact-references">';
+            $html .= '<h2>' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'references_title') . '</h2>';
+            $html .= '<ul>';
+
+            foreach ($linked_artifacts as $artifact) {
+                $link  = '/goto?key='.$artifact->getTracker()->getItemName().'&val=' .$artifact->getId() . '&group_id='.$artifact->getTracker()->getProject()->getID();
+                $html .= '<li>';
+                $html .= '<a href="' . $link . '">#' . $artifact->getId() . ' ' . $artifact->getTitle() . '</a>';
+                $html .= '</li>';
+            }
+
+            $html .= '</ul>';
+            $html .= '</div>';
+        }
 
         return $html;
     }
