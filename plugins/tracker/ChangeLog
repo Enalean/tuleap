@@ -1,3 +1,6 @@
+Version 5.341 - Tuleap 6.13
+    * request #6739: Copy-paste does not work for artifact title
+
 Version 5.340 - Tuleap 6.13
     * tasks #6678: List the artifact links in the references sidebar like it's done in modal
 
