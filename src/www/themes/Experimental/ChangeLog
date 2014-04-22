@@ -1,3 +1,9 @@
+Version 0.9.29 - Tuleap 6.13
+    * tasks #6685: save if the fieldset is collapsed by the user
+
+
+tools/utils/changelogs/generate.sh tasks
+
 Version 0.9.28 - Tuleap 6.13
     * tasks #6614: style aggregates
 
