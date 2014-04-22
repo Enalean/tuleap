@@ -1,0 +1,35 @@
+{{# can_be_updated }}
+<div class="widget_titlebar_close">
+    <a
+        href="{{ delete_url }}"
+        onclick="return confirm({{ confirm_label }});"
+        class="icon-remove" title="{{ delete_title }}">
+    </a>
+</div>
+{{/ can_be_updated }}
+
+<div class="widget_titlebar_prefs dropdown">
+    <a class="icon-cog dropdown-toggle" data-toggle="dropdown" href="#" title="#"></a>
+
+    <ul class="dropdown-menu">
+        {{# report_is_created }}
+        <li>
+            <a title="{{ add_to_my_dashboard_label }}" href="{{ my_dashboard_url }}">
+                {{ add_to_my_dashboard_label }}
+            </a>
+        </li>
+        <li>
+            <a title="{{ add_to_project_dashboard_label }}" href="{{ project_dashboard_url }}">
+                {{ add_to_project_dashboard_label }}
+            </a>
+        </li>
+        {{/ report_is_created }}
+        {{# can_be_updated }}
+        <li>
+            <a title="{{ edit_title }}" href="{{ edit_url }}">
+                {{ edit_title }}
+            </a>
+        </li>
+        {{/ can_be_updated }}
+    </ul>
+</div>

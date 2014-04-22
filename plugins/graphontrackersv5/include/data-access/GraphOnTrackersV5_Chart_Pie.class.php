@@ -19,14 +19,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('GraphOnTrackersV5_Chart.class.php');
-require_once(dirname(__FILE__).'/../data-transformation/GraphOnTrackersV5_Chart_PieDataBuilder.class.php');
-require_once(dirname(__FILE__).'/../graphic-library/GraphOnTrackersV5_Engine_Pie.class.php');
-require_once('common/html/HTML_Element_Input_Checkbox.class.php');
-require_once(dirname(__FILE__).'/../common/HTML_Element_Selectbox_TrackerFields_SelectboxesV5.class.php');
-require_once(TRACKER_BASE_DIR .'/Tracker/FormElement/Tracker_FormElementFactory.class.php');
-require_once(TRACKER_BASE_DIR .'/Tracker/Report/Tracker_Report_Session.class.php');
-require_once('GraphOnTrackersV5_Chart_PieDao.class.php');
 
 class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart {
     
