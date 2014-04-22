@@ -155,12 +155,14 @@ abstract class GraphOnTrackersV5_Chart {
     }
 
     public function fetchD3Anchor() {
-        return '<div id="plugin_graphontrackersv5_chart_'.$this->getId().'" class="tracker_report_renderer_graphontrackers_graph"></div>';
+        return '<div class="tracker_report_renderer_graphontrackers_graph plugin_graphontrackersv5_chart"
+                     data-graph-id="'.$this->getId().'">
+                </div>';
     }
 
     protected function fetchJsOnReport(GraphOnTrackersV5_Renderer $renderer, PFUser $current_user, $read_only) {
         $html = '';
-        $html .= '<div class="widget">';
+        $html .= '<div class="widget d3graph">';
         $html .= '<div class="widget_titlebar">';
         $html .= '<div class="widget_titlebar_title">'. $this->getTitle().'</div>';
         $html .= '<div class="plugin_graphontrackersv5_widget_actions">';
@@ -496,10 +498,8 @@ abstract class GraphOnTrackersV5_Chart {
         $content          = '';
         $store_in_session = false;
 
-        $chart_array = $this->buildChartData();
-
-        if ($this->isGraphDrawnByD3($chart_array)) {
-            $content .= $this->fetchContentD3Graph($chart_array);
+        if ($this->isGraphDrawnByD3($this->buildChartData())) {
+            $content .= $this->fetchContentD3Graph($this->fetchAsArray());
         } else {
             $content .= $this->fetchContentJPGraph($store_in_session);
         }
@@ -528,8 +528,8 @@ abstract class GraphOnTrackersV5_Chart {
         return $content;
     }
 
-    private function fetchContentD3Graph(array $chart_array) {
-        $GLOBALS['HTML']->includeFooterJavascriptSnippet('tuleap.graphontrackersv5.graphs = '.json_encode($chart_array).';');
+    private function fetchContentD3Graph(array $chart_data) {
+        $GLOBALS['HTML']->includeFooterJavascriptSnippet('tuleap.graphontrackersv5.graphs['. $this->getId() .'] = '.json_encode($chart_data).';');
         $content = $this->fetchD3Anchor();
 
         return $content;

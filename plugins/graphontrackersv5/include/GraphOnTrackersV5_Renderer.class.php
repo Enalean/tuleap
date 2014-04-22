@@ -162,7 +162,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
         $html .= '<div class="tracker_report_renderer_graphontrackers_charts">';
         foreach($this->getChartFactory()
                      ->getCharts($this) as $chart) {
-            $html .= '<div style="float:left; padding:10px; text-align:right;">';
+            $html .= '<div class="widget_report_graph">';
             $html .= $chart->fetchOnReport($this, $current_user, $readonly, $store_in_session);
             $html .= '</div>';
             $chart_array[$chart->id] = $chart->fetchAsArray();

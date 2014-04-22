@@ -19,6 +19,7 @@
 
 var tuleap = tuleap || { };
 tuleap.graphontrackersv5 = tuleap.graphontrackersv5 || { };
+tuleap.graphontrackersv5.graphs = tuleap.graphontrackersv5.graphs || { };
 
 // Inspired from http://bl.ocks.org/mbostock/3887193
 tuleap.graphontrackersv5.drawDonut = function (id, graph) {
@@ -54,7 +55,7 @@ tuleap.graphontrackersv5.drawDonut = function (id, graph) {
         .innerRadius(radius - 125)
         .outerRadius(radius - 50);
 
-    var svg = d3.select("#plugin_graphontrackersv5_chart_"+id).append("svg")
+    var svg = d3.selectAll(".plugin_graphontrackersv5_chart[data-graph-id="+id+']').append("svg")
         .attr("width", width)
         .attr("height", height)
       .append("g")
