@@ -69,6 +69,9 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
 
         if (count($linked_artifacts) > 0) {
             $html .= '<div class="artifact-references">';
+            $html .= '<div class="grip"><i class="icon-double-angle-left"></i></div>';
+            $html .= '<div class="artifact-references-content">';
+
             $html .= '<h2>' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'references_title') . '</h2>';
             $html .= '<ul>';
 
@@ -80,6 +83,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
             }
 
             $html .= '</ul>';
+            $html .= '</div>';
             $html .= '</div>';
         }
 
