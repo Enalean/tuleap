@@ -130,5 +130,15 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine {
         // end hard coded parameter
         return $b;
     }
+
+    public function toArray() {
+        return parent::toArray() + array(
+            'type'   => 'bar',
+            'title'  => $this->title,
+            'height' => $this->height,
+            'width'  => $this->width,
+            'legend' => array_values($this->legend),
+        );
+    }
 }
 ?>

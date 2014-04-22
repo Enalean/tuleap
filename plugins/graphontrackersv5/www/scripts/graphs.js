@@ -20,9 +20,10 @@
 var tuleap = tuleap || { };
 tuleap.graphontrackersv5 = tuleap.graphontrackersv5 || { };
 tuleap.graphontrackersv5.graphs = tuleap.graphontrackersv5.graphs || { };
+tuleap.graphontrackersv5.draw = {};
 
 // Inspired from http://bl.ocks.org/mbostock/3887193
-tuleap.graphontrackersv5.drawDonut = function (id, graph) {
+tuleap.graphontrackersv5.draw.pie = function (id, graph) {
     var width             = graph.width,
         height            = graph.height,
         radius            = Math.min(width, height) / 2,
@@ -40,11 +41,11 @@ tuleap.graphontrackersv5.drawDonut = function (id, graph) {
         if (c === null) {
             c = color(i);
         }
-
+        var value = parseFloat(graph.data[i]);
         var line = {
             "label": graph.legend[i],
-            "value": graph.data[i],
-            "percentage": ((graph.data[i] / total_values) * 100).toFixed(0),
+            "value": value,
+            "percentage": ((value / total_values) * 100).toFixed(0),
             "color": c
         };
 
@@ -211,14 +212,95 @@ tuleap.graphontrackersv5.drawDonut = function (id, graph) {
     function getDonutSliceClass(value_index) {
         return 'slice_' + id + '_' + value_index;
     }
+};
 
+// Inspired from  http://bl.ocks.org/mbostock/3887051
+tuleap.graphontrackersv5.draw.bar = function (id, graph) {
+    var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    width = graph.width - margin.left - margin.right,
+    height = graph.height - margin.top - margin.bottom,
+    color  = d3.scale.category20();
+
+    var x = d3.scale.ordinal()
+        .rangeRoundBands([0, width], .35);
+
+    var y = d3.scale.linear()
+        .range([height, 0]);
+
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom");
+
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .ticks(5)
+        .tickSize(width)
+        .orient("right");
+
+    var svg = d3.selectAll(".plugin_graphontrackersv5_chart[data-graph-id="+id+']').append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+    // Start with some data
+    var data = [];
+    for (var i = 0; i < graph.data.length; ++i) {
+        var c = graph.colors[i];
+        if (c === null) {
+            c = color(i);
+        }
+        data.push({
+            "label": graph.legend[i],
+            "value": parseFloat(graph.data[i]),
+            "color": c
+        });
+    }
+
+    x.domain(data.map(function(d) { return d.label; }));
+    y.domain([0, d3.max(data, function(d) { return d.value; })]);
+
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+    var gy = svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis);
+
+    // Set the label on the left of the y axis
+    gy.selectAll('text')
+        .attr("x", -30)
+        .attr("dx", ".71em");
+
+    var bar = svg.selectAll(".bar")
+        .data(data).enter();
+
+    bar.append("rect")
+        .style("fill", function(d) { return d.color; })
+        .attr("class", "bar")
+        .attr("x", function(d) { return x(d.label); })
+        .attr("width", x.rangeBand())
+        .attr("y", function(d) { return y(d.value); })
+        .attr("height", function(d) { return height - y(d.value); })
+        .attr('rx', 3)
+        .attr('ry', 3);
+
+    bar.append("text")
+        .attr("x", function(d) { return x(d.label) + (x.rangeBand() / 2); })
+        .attr("y", function(d) { return y(d.value) - 10; })
+        .attr("dy", ".35em")
+        .attr("text-anchor", "middle")
+        .text(function(d) { return d.value; });
 };
 
 !function ($) {
     $(document).ready(function () {
         $.each(tuleap.graphontrackersv5.graphs, function (id, graph) {
-            if (graph.type === 'pie') {
-                tuleap.graphontrackersv5.drawDonut(id, graph);
+            if (tuleap.graphontrackersv5.draw[graph.type] !== undefined) {
+                tuleap.graphontrackersv5.draw[graph.type](id, graph);
             }
         });
     });
