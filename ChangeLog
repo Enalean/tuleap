@@ -1,5 +1,8 @@
 Version 6.13 (Not Released Yet)
 
+	== Enhancement ==
+	* tasks #6676: Glossification <3
+
 	== Developers ==
 	* Foundation for Tuleap tours
 	* Allow to search for templates in several directories (works with partial too)
@@ -9,7 +12,7 @@ Version 6.13 (Not Released Yet)
 	* CodexSTN: 1.14
 
     == Plugins ==
-	* tracker: 5.341
+	* tracker: 5.342
 	* cardwall: 1.29
 	* graphontrackersv5: 5.8
 	* agiledashboard: 1.59
