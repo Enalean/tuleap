@@ -344,6 +344,7 @@ plugin_tracker_include_artifact	group	Group
 plugin_tracker_include_artifact	comment_type	Comment Type:
 plugin_tracker_include_artifact	add_comment	Add a follow-up comment
 plugin_tracker_include_artifact	toggle_diff	Show diff
+plugin_tracker_include_artifact	goto_diff	Go to diff
 plugin_tracker_include_artifact	depend_on	Dependent on:
 plugin_tracker_include_artifact	cc_address	CC Address
 plugin_tracker_include_artifact	comment	Comment

@@ -292,6 +292,19 @@ document.observe('dom:loaded', function () {
         });
     });
 
+    (function showDiffDirectlyIfInUrl() {
+        var url     = document.location.toString(),
+            reg_ex  = /#followup_(\d+)/,
+            matches = url.match(reg_ex);
+
+        if (! matches) {
+            return;
+        }
+
+        var followup_id = matches[1];
+        $('followup_'+followup_id).down('div.diff').toggle();
+    })()
+
     $$('.tracker_artifact_add_attachment').each(function (attachment) {
             var add = new Element('a', {
                 href: '#add-another-file'

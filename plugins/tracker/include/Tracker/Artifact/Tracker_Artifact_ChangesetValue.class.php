@@ -81,6 +81,19 @@ abstract class Tracker_Artifact_ChangesetValue {
      * @return string The difference between another $changeset_value, false if no differences
      */
     public abstract function diff($changeset_value, $format = 'html', PFUser $user = null);
+
+    /**
+     * Returns a mail format diff between current changeset value and changeset value in param
+     *
+     * @param Tracker_Artifact_ChangesetValue $changeset_value The changeset value to compare to this changeset value
+     * @param string                          $format          The format of the diff (html, text, ...)
+     * @param PFUser                          $user            The user or null
+     *
+     * @return string The difference between another $changeset_value, false if no differences
+     */
+    public function mailDiff($changeset_value, $format = 'html', PFUser $user = null, $artifact_id, $changeset_id) {
+        $this->diff($changeset_value, $format, $user);
+    }
     
     /**
      * Returns the SOAP value of this changeset value
