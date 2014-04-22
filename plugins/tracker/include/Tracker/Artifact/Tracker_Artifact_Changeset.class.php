@@ -169,51 +169,51 @@ class Tracker_Artifact_Changeset {
      * @return string html
      */
     public function fetchFollowUp() {
-        $html = '<div class="tracker_artifact_followup_header">';
-        $html .= '<div class="tracker_artifact_followup_title">';
-        //The permalink
-        $html .= '<a href="#followup_'. $this->id .'">';
-        $html .= $this->getImage();
-        $html .= '</a> ';
+        $html = '';
 
-        $html .= '<span class="tracker_artifact_followup_title_user">'. $this->getSubmitterUrl() .'</span>';
-        $html .= '</div>';
-
-        //The date
-        $html .= '<div class="tracker_artifact_followup_date">';
-        $html .= DateHelper::timeAgoInWords($this->submitted_on, false, true);
-        $html .= '</div>';
-
-        $html .= '</div>';
-        
         if (Config::get('sys_enable_avatars')) {
             $html .= '<div class="tracker_artifact_followup_avatar">';
             $html .= $this->getHTMLAvatar();
             $html .= '</div>';
         }
+
+        $html .= '<div class="tracker_artifact_followup_header">';
+        //The permalink
+        $html .= '<a class="tracker_artifact_followup_permalink" href="#followup_'. $this->id .'">';
+        $html .= '<i class="icon-link" title="Link to this followup - #'. (int) $this->id.'"></i> ';
+        $html .= '</a> ';
+
+        if ($this->userCanEdit() ||$this->userCanDelete()) {
+            $html .= '<div class="tracker_artifact_followup_comment_controls">';
+            //edit
+            if ($this->userCanEdit()) {
+                $html .= '<a href="#" class="tracker_artifact_followup_comment_controls_edit">';
+                $html .= '<button class="btn btn-mini"><i class="icon-edit"></i> ' . $GLOBALS['Language']->getText('plugin_tracker_fieldeditor', 'edit') . '</button>';
+                $html .= '</a>';
+            }
+            $html .= '</div>';
+        }
+
+        $html .= '<span class="tracker_artifact_followup_title_user">'. $this->getSubmitterUrl() .'</span>';
+        $html .= DateHelper::timeAgoInWords($this->submitted_on, false, true);
+
+        $html .= '</div>';
+
         // The content
         $html .= '<div class="tracker_artifact_followup_content">';
         //The comment
         if ($comment = $this->getComment()) {
-            if ($this->userCanEdit() ||$this->userCanDelete()) {
-                $html .= '<div class="tracker_artifact_followup_comment_controls">';
-                //edit
-                if ($this->userCanEdit()) {
-                    $html .= '<a href="#" class="tracker_artifact_followup_comment_controls_edit">';
-                    $html .= $GLOBALS['HTML']->getImage('ic/edit.png', array('border' => 0, 'alt' => $GLOBALS['Language']->getText('plugin_tracker_fieldeditor', 'edit')));
-                    $html .= '</a>';
-                }
-                $html .= '</div>';
-            }
-
             $html .= '<div class="tracker_artifact_followup_comment">';
             $html .= $comment->fetchFollowUp();
             $html .= '</div>';
         }
 
+        if ($comment->fetchFollowUp() && $this->diffToPrevious()) {
+            $html .= '<hr size="1" />';
+        }
+
         //The changes
         if ($changes = $this->diffToPrevious()) {
-            $html .= '<hr size="1" />';
             $html .= '<ul class="tracker_artifact_followup_changes">';
             $html .= $changes;
             $html .= '</ul>';
@@ -293,19 +293,34 @@ class Tracker_Artifact_Changeset {
      */
     public function getFollowUpClassnames() {
         $classnames = '';
+
+        $comment = $this->getComment();
         $changes = $this->diffToPrevious();
-        if ($changes) {
+
+        if ($changes || $this->shouldBeDisplayedAsChange($changes, $comment)) {
             $classnames .= ' tracker_artifact_followup-with_changes ';
         }
-        $comment = $this->getComment();
+
         if ($comment && ! $comment->hasEmptyBody()) {
             $classnames .= ' tracker_artifact_followup-with_comment ';
         }
+
         if ($this->submitted_by && $this->submitted_by < 100) {
             $classnames .= ' tracker_artifact_followup-by_system_user ';
         }
 
         return $classnames;
+    }
+
+
+    // This function is used to cover a bug previously introduced where
+    // artifacts can be updated without changes nor comment. We want to
+    // display such changesets as if they were only containing changes,
+    // so we introduced this function to determine wether we're in this
+    // case or not.
+    private function shouldBeDisplayedAsChange($changes, $comment) {
+        // Not comment AND no changes
+        return $comment->hasEmptyBody() && ! $changes;
     }
 
     /**

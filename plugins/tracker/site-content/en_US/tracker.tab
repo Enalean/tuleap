@@ -58,8 +58,8 @@ plugin_tracker_download	file_is_null	Nothing in here - File has a null size
 plugin_tracker_download	file_not_found	Couldn't find attached file  (id #$1)
 #
 #-----------------------------------------------
-plugin_tracker_fieldeditor	edit	edit
-plugin_tracker_fieldeditor	preview	preview
+plugin_tracker_fieldeditor	edit	Edit
+plugin_tracker_fieldeditor	preview	Preview
 plugin_tracker_fieldeditor	warning	Your modifications are not saved. Do not forget to submit the form!
 #
 #-----------------------------------------------

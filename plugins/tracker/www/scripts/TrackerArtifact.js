@@ -62,10 +62,12 @@ document.observe('dom:loaded', function () {
                 header.setStyle({ cursor: 'pointer' });
             });
             header.observe('click', function (evt) {
-                if (Event.element(evt).hasClassName('tracker_artifact_followup_permalink')) {
+                if (Event.element(evt).hasClassName('tracker_artifact_followup_permalink') || Event.element(evt).hasClassName('icon-link')) {
                     header.nextSiblings().invoke('show');
                 } else {
+                    header.down('.tracker_artifact_followup_comment_controls').toggle();
                     header.nextSiblings().invoke('toggle');
+                    header.previousSiblings().invoke('toggle');
                 }
             });
         }
@@ -84,9 +86,10 @@ document.observe('dom:loaded', function () {
         }
 
         var display_changes_classname = 'tracker_artifact_followup_comments-display_changes',
-            div = new Element('div').setStyle({
-                float: 'right'
-            }).insert(
+            div = new Element('div', {
+                'class': 'tracker_artifact_followup_comments_display_settings'
+            })
+            .insert(
                 new Element('div', {
                     'class': 'btn-group'
                 }).insert(
@@ -104,7 +107,7 @@ document.observe('dom:loaded', function () {
                         new Element('li')
                             .insert(new Element ('a', {
                                 'id': 'invert-order-menu-item',
-                                'href': '#invert-order',
+                                'href': '#invert-order'
                             })
                             .update('<i class="icon-ok" style="display: none"></i> ' + codendi.locales.tracker_artifact.reverse_order)
                             .observe('click', function (evt) {
@@ -136,8 +139,8 @@ document.observe('dom:loaded', function () {
                 )
             );
 
-            followup_section.down('legend').insert({
-                after: div
+            followup_section.insert({
+                top: div
             });
 
             new Ajax.Request(codendi.tracker.base_url + "comments_order.php", {
@@ -185,14 +188,15 @@ document.observe('dom:loaded', function () {
         return {value: content, htmlFormat: htmlFormat};
     }
 
-    $$('.tracker_artifact_followup_comment_controls_edit').each(function (edit) {
+    $$('.tracker_artifact_followup_comment_controls_edit button').each(function (edit) {
         var id = edit.up('.tracker_artifact_followup').id;
         var data;
 
         if (id && id.match(/_\d+$/)) {
             id = id.match(/_(\d+)$/)[1];
             edit.observe('click', function (evt) {
-                var comment_panel = edit.up().next();
+                Event.stop(evt);
+                var comment_panel = $('followup_' + id).down('.tracker_artifact_followup_comment');
                 if (comment_panel.visible()) {
 
                     var textarea   = new Element('textarea', {id: 'tracker_followup_comment_edit_'+id});
@@ -210,7 +214,7 @@ document.observe('dom:loaded', function () {
                     var edit_panel = new Element('div', { style: 'text-align: right;'}).update(rteSpan);
                     comment_panel.insert({before: edit_panel});
                     var name = 'comment_format'+id;
-                    new tuleap.trackers.textarea.RTE(textarea, {toggle: true, default_in_html: false, id: id, name: name, htmlFormat: htmlFormat});
+                    new tuleap.trackers.textarea.RTE(textarea, {toggle: true, default_in_html: false, id: id, name: name, htmlFormat: htmlFormat, full_width: true });
 
                     var nb_rows_displayed = 5;
                     var nb_rows_content   = textarea.value.split(/\n/).length;
@@ -221,7 +225,7 @@ document.observe('dom:loaded', function () {
 
                     comment_panel.hide();
                     textarea.focus();
-                    var button = new Element('button').update('Ok').observe('click', function (evt) {
+                    var button = new Element('button', { 'class': 'btn btn-primary' }).update(codendi.locales.tracker_artifact.edit_followup_ok).observe('click', function (evt) {
                         if (CKEDITOR.instances && CKEDITOR.instances['tracker_followup_comment_edit_'+id]) {
                             var content = CKEDITOR.instances['tracker_followup_comment_edit_'+id].getData();
                         } else {
@@ -236,6 +240,9 @@ document.observe('dom:loaded', function () {
                                 comment_format: format
                             },
                             onSuccess: function (transport) {
+                                    if (CKEDITOR.instances['tracker_followup_comment_edit_'+id]) {
+                                        CKEDITOR.instances['tracker_followup_comment_edit_'+id].destroy(true);
+                                    }
                                     edit_panel.remove();
                                     comment_panel.update(transport.responseText).show();
                                     var e = new Effect.Highlight(comment_panel);
@@ -248,16 +255,18 @@ document.observe('dom:loaded', function () {
 
                     edit.hide();
                     var cancel = new Element('a', {
-                        href: '#cancel'
-                    }).update('Cancel').observe('click', function (evt) {
+                        'href': '#cancel',
+                        'class': 'btn'
+                    }).update(codendi.locales.tracker_artifact.edit_followup_cancel).observe('click', function (evt) {
+                        if (CKEDITOR.instances['tracker_followup_comment_edit_'+id]) {
+                            CKEDITOR.instances['tracker_followup_comment_edit_'+id].destroy(true);
+                        }
                         edit_panel.remove();
                         comment_panel.show();
                         Event.stop(evt);
                         edit.show();
                     });
-
-                    edit_panel.insert(new Element('br'))
-                    .insert(button)
+                    edit_panel.insert(button)
                     .insert(new Element('span').update('&nbsp;'))
                     .insert(cancel);
                 }

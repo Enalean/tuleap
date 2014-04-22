@@ -105,8 +105,9 @@ tuleap.trackers.textarea.RTE = Class.create(codendi.RTE, {
 document.observe('dom:loaded', function () {
     var newFollowup = $('tracker_followup_comment_new');
     if (newFollowup) {
-        new tuleap.trackers.textarea.RTE(newFollowup, {toggle: true, default_in_html: false, id : 'new'});
+        new tuleap.trackers.textarea.RTE(newFollowup, {toggle: true, default_in_html: false, id: 'new', full_width: true});
     }
+
     var massChangeFollowup = $('artifact_masschange_followup_comment');
     if (massChangeFollowup) {
         new tuleap.trackers.textarea.RTE(massChangeFollowup, {toggle: true, default_in_html: false, id: 'mass_change'});

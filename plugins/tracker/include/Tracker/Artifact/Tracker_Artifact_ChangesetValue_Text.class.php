@@ -155,7 +155,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
                 $f = new Codendi_HtmlUnifiedDiffFormatter();
                 $diff = $f->format($d);
                 if ($diff) {
-                    $string .= '<button class="btn btn-small toggle-diff">' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'toggle_diff') . '</button>';
+                    $string .= '<button class="btn btn-mini toggle-diff">' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'toggle_diff') . '</button>';
                     $string .= '<div class="diff" style="display: none">'. $diff .'</div>';
                 }
                 break;

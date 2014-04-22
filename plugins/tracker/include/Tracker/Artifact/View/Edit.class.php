@@ -103,9 +103,8 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
         if ($user_preference !== false && $user_preference == 0) {
             $classname = '';
         }
-        $html .= '<fieldset id="tracker_artifact_followup_comments" class="'. $classname .'"><legend
-                          class="'. Toggler::getClassName('tracker_artifact_followups', true, true) .'"
-                          id="tracker_artifact_followups">'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','follow_ups').'</legend>';
+        $html .= '<div id="tracker_artifact_followup_comments" class="'. $classname .'">';
+        $html .= '<h1 id="tracker_artifact_followups">'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','follow_ups').'</h1>';
         $html .= '<ul class="tracker_artifact_followups">';
         $previous_changeset = null;
         $i = 0;
@@ -137,15 +136,14 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
         }
 
         if ($this->artifact->userCanUpdate($this->user)) {
-            $html .= '<b>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'add_comment') .'</b><br />';
-            $html .= '<textarea id="tracker_followup_comment_new" wrap="soft" rows="12" cols="80" style="width:99%;" name="artifact_followup_comment" id="artifact_followup_comment">'. $hp->purify($submitted_comment, CODENDI_PURIFIER_CONVERT_HTML).'</textarea>';
+            $html .= '<textarea id="tracker_followup_comment_new" wrap="soft" rows="8" cols="80" name="artifact_followup_comment" id="artifact_followup_comment">'. $hp->purify($submitted_comment, CODENDI_PURIFIER_CONVERT_HTML).'</textarea>';
             $html .= '</div>';
         }
 
         $html .= '</li>';
 
         $html .= '</ul>';
-        $html .= '</fieldset>';
+        $html .= '</div>';
 
         $html .= '</td></tr></table>'; //see fetchFields
 
