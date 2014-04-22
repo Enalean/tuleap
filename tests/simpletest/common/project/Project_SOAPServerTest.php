@@ -204,6 +204,81 @@ class Project_SOAPServerTest extends TuleapTestCase {
     }
 }
 
+class Project_SOAPServer_6737_RequesterShouldBeProjectAdmin extends TuleapTestCase {
+
+    private $requester;
+    private $requester_hash = '123';
+    private $admin;
+    private $admin_hash = '456';
+    private $user_manager;
+    private $server;
+    private $project_manager;
+    private $template_id = 100;
+    private $project_creator;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->requester = stub('PFUser')->isLoggedIn()->returns(true);
+        $this->admin     = stub('PFUser')->isLoggedIn()->returns(true);
+        stub($this->admin)->isSuperUser()->returns(true);
+
+        $this->user_manager = mock('UserManager');
+        stub($this->user_manager)->getCurrentUser($this->requester_hash)->returns($this->requester);
+        stub($this->user_manager)->getCurrentUser($this->admin_hash)->returns($this->admin);
+
+        $this->project_manager           = mock('ProjectManager');
+        $this->project_creator           = mock('ProjectCreator');
+        $this->guf                       = mock('GenericUserFactory');
+        $this->limitator                 = mock('SOAP_RequestLimitator');
+        $this->description_factory       = mock('Project_CustomDescription_CustomDescriptionFactory');
+        $this->description_manager       = mock('Project_CustomDescription_CustomDescriptionValueManager');
+        $this->description_value_factory = mock('Project_CustomDescription_CustomDescriptionValueFactory');
+        $this->service_usage_factory     = mock('Project_Service_ServiceUsageFactory');
+        $this->service_usage_manager     = mock('Project_Service_ServiceUsageManager');
+        $this->forge_ugroup_perm_manager = mock('User_ForgeUserGroupPermissionsManager');
+
+        $template = stub('Project')->isTemplate()->returns(true);
+        $template->services = array();
+        stub($this->project_manager)->getProject($this->template_id)->returns($template);
+
+        stub($this->project_creator)->create()->returns(mock('Project'));
+
+        $this->server = new Project_SOAPServer(
+                $this->project_manager,
+                $this->project_creator,
+                $this->user_manager,
+                $this->guf,
+                $this->limitator,
+                $this->description_factory,
+                $this->description_manager,
+                $this->description_value_factory,
+                $this->service_usage_factory,
+                $this->service_usage_manager,
+                $this->forge_ugroup_perm_manager
+        );
+    }
+
+    public function itCallsCreateProjectWhileRequesterIsLoggedIn() {
+        expect($this->user_manager)->getCurrentUser()->count(3);
+        // see if it has project approval permissions
+        expect($this->user_manager)->getCurrentUser($this->requester_hash)->at(0);
+        // it is not the case, so check validity of site admin session hash
+        expect($this->user_manager)->getCurrentUser($this->admin_hash)->at(1);
+        // then set the current user to requester
+        expect($this->user_manager)->getCurrentUser($this->requester_hash)->at(2);
+
+        $this->server->addProject(
+            $this->requester_hash,
+            $this->admin_hash,
+            'toto',
+            'Mon Toto',
+            'public',
+            $this->template_id
+        );
+    }
+}
+
 class Project_SOAPServerObjectTest extends Project_SOAPServer {
     public function isRequesterAdmin($sessionKey, $project_id) {
         parent::isRequesterAdmin($sessionKey, $project_id);
