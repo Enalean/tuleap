@@ -24,10 +24,6 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart {
     
     protected $field_base;
 
-    public function fetchOnReport(GraphOnTrackersV5_Renderer $renderer, PFUser $current_user, $read_only, $store_in_session = true) {
-        return $this->fetchJsOnReport($renderer, $current_user, $read_only);
-    }
-
     public function loadFromSession() {
         $this->report_session = self::getSession($this->renderer->report->id, $this->renderer->id);
         $chart_in_session = $this->report_session->get($this->id);

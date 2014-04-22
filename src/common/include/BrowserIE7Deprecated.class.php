@@ -55,4 +55,8 @@ class BrowserIE7Deprecated extends Browser {
 
         return $form;
     }
+
+    public function isCompatibleWithD3() {
+        return false;
+    }
 }

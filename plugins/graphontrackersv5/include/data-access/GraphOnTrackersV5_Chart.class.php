@@ -177,6 +177,10 @@ abstract class GraphOnTrackersV5_Chart {
     }
 
     public function fetchOnReport(GraphOnTrackersV5_Renderer $renderer, PFUser $current_user, $read_only, $store_in_session = true) {
+        if ($this->isGraphDrawnByD3()) {
+            return $this->fetchJsOnReport($renderer, $current_user, $read_only);
+        }
+
         return $this->fetchActionButtons($renderer, $current_user, $read_only).$this->fetch($store_in_session);
     }
 
@@ -222,7 +226,7 @@ abstract class GraphOnTrackersV5_Chart {
         $delete_chart_url = $url .'&renderer_plugin_graphontrackersv5[delete_chart]['. $this->getId() .']';
         $edit_chart_url   = $url .'&renderer_plugin_graphontrackersv5[edit_chart]='. $this->getId();
 
-        if ($this->isGraphDrawnByD3($this->buildChartData())) {
+        if ($this->isGraphDrawnByD3()) {
 
             return $this->mustache_renderer->renderToString(
                 'graph-actions',
@@ -498,7 +502,7 @@ abstract class GraphOnTrackersV5_Chart {
         $content          = '';
         $store_in_session = false;
 
-        if ($this->isGraphDrawnByD3($this->buildChartData())) {
+        if ($this->isGraphDrawnByD3()) {
             $content .= $this->fetchContentD3Graph($this->fetchAsArray());
         } else {
             $content .= $this->fetchContentJPGraph($store_in_session);
@@ -510,15 +514,17 @@ abstract class GraphOnTrackersV5_Chart {
     public function getWidgetContent() {
         $content = $this->getContent();
 
-        if ($this->isGraphDrawnByD3($this->buildChartData())) {
+        if ($this->isGraphDrawnByD3()) {
             $content .= $this->renderer->fetchWidgetGoToReport();
         }
 
         return $content;
     }
 
-    private function isGraphDrawnByD3(array $chart_data) {
-        return isset($chart_data[$this->id]['type']);
+    private function isGraphDrawnByD3() {
+        $chart_data = $this->buildChartData();
+
+        return isset($chart_data[$this->id]['type']) && HTTPRequest::instance()->getBrowser()->isCompatibleWithD3();
     }
 
     private function fetchContentJPGraph($store_in_session) {

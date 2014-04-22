@@ -70,12 +70,15 @@ class HTTPRequest extends Codendi_Request {
 
     public function getBrowser() {
         $is_deprecated = strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 7') !== false;
+        $is_ie8        = strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 8.0') !== false;
         $is_ie9        = strpos($_SERVER['HTTP_USER_AGENT'], 'Trident/5') !== false;
 
         if ($is_deprecated && $is_ie9) {
             return new BrowserIE9CompatibilityModeDeprecated();
-        } else if($is_deprecated) {
+        } else if ($is_deprecated) {
             return new BrowserIE7Deprecated($this->getCurrentUser());
+        } else if ($is_ie8) {
+            return new BrowserIE8();
         }
 
         return new Browser();
