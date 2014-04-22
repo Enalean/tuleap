@@ -556,22 +556,15 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      * @return string html
      */
     protected function fetchSubmitValue($submitted_values = array()) {
-        $html  = '';
         $value = $this->getValueFromSubmitOrDefault($submitted_values);
-        $hp = Codendi_HTMLPurifier::instance();
-        $html .= '<div class="input-append date tracker_artifact_field_date '. ($this->has_errors ? 'has_errors' : '') .'">
-                  <input name="'. $hp->purify('artifact['.$this->id.']', CODENDI_PURIFIER_CONVERT_HTML) .'"
-                         id="'. $hp->purify("tracker_admin_field_".$this->id, CODENDI_PURIFIER_CONVERT_HTML) .'"
-                         data-format="yyyy-MM-dd"
-                         type="text"
-                         value="' . $value . '">
-                  </input>
-                  <span class="add-on">
-                    <i class="icon-calendar" data-time-icon="icon-time" data-date-icon="icon-calendar">
-                    </i>
-                  </span>
-                </div>';
-        return $html;
+
+        return $GLOBALS['HTML']->getBootstrapDatePicker(
+            "tracker_admin_field_".$this->id,
+            'artifact['.$this->id.']',
+            $value,
+            array(),
+            $this->has_errors ? array('has_error') : array()
+        );
     }
 
      /**
