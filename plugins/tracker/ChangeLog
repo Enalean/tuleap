@@ -1,3 +1,6 @@
+Version 5.340 - Tuleap 6.13
+    * tasks #6678: List the artifact links in the references sidebar like it's done in modal
+
 Version 5.339 - Tuleap 6.13
     * tasks #6685: save if the fieldset is collapsed by the user
 
