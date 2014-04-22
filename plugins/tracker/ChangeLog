@@ -1,3 +1,6 @@
+Version 5.338 - Tuleap 6.13
+    * request #6733: Fix datetimepicker on artifact creation
+
 Version 5.337 - Tuleap 6.13
     * tasks #6674 / story #6409: Dropdown for comment order and display changes
 
