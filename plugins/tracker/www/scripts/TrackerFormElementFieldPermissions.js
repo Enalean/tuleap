@@ -22,21 +22,36 @@
 * 
 */
 
-document.observe('dom:loaded', function () {
-        $$('.tracker_field_permissionsonartifact').each(function (element) {
-                var id = element.down('input[type=checkbox]').id.replace('artifact_', '').replace('_use_artifact_permissions', '');
-                if (!$('artifact_' + id + '_use_artifact_permissions').checked) {
-                    $('artifact[' + id + '][u_groups]').disable();
-                }
-                $('artifact_' + id + '_use_artifact_permissions').observe('change', function (evt) {
-                        if (this.checked) {
-                            $('artifact[' + id + '][u_groups]').enable();
-                        } else {
-                            $('artifact[' + id + '][u_groups]').disable();
-                        }
-                    }
-                );
-            }
-        );
-    }
-);
+(function ($) {
+
+    function init() {
+        $('.tracker_field_permissionsonartifact').each(function (index, element) {
+            disablePermissionsFieldIfNeeded(element);
+            bindSwitch(element);
+        });
+    };
+
+    function disablePermissionsFieldIfNeeded(element) {
+        if ($("input[type='checkbox']", element).is(':not(:checked)')) {
+            $(element).siblings('select').attr('disabled', 'disabled');
+        }
+    };
+
+    function bindSwitch(element) {
+        $("input[type='checkbox']", element).bind('change', function() {
+            togglePermissionsField(element);
+        });
+    };
+
+    function togglePermissionsField(element) {
+        if ($("input[type='checkbox']", element).is(':not(:checked)')) {
+            $(element).siblings('select').attr('disabled', 'disabled');
+        } else {
+            $(element).siblings('select').removeAttr('disabled');
+        }
+    };
+
+    $(document).ready(function () {
+        init();
+    });
+})(jQuery);
