@@ -18,7 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 require_once('common/html/HTML_Element_Input_Hidden.class.php');
 require_once('common/html/HTML_Element_Input_Text.class.php');
 require_once('common/html/HTML_Element_Textarea.class.php');
@@ -39,6 +38,8 @@ abstract class GraphOnTrackersV5_Chart {
     protected $height;
     
     public $renderer;
+    private $mustache_renderer;
+
     /**
      * @param Renderer The renderer wich contains the chart
      * @param int The id of the chart
@@ -49,13 +50,14 @@ abstract class GraphOnTrackersV5_Chart {
      * @param int The height of the chart
      */
     public function __construct($renderer, $id, $rank, $title, $description, $width, $height) {
-        $this->renderer       = $renderer;
-        $this->id             = $id;
-        $this->rank           = $rank;
-        $this->title          = $title;
-        $this->description    = $description;
-        $this->width          = $width;
-        $this->height         = $height;
+        $this->renderer          = $renderer;
+        $this->id                = $id;
+        $this->rank              = $rank;
+        $this->title             = $title;
+        $this->description       = $description;
+        $this->width             = $width;
+        $this->height            = $height;
+        $this->mustache_renderer = TemplateRendererFactory::build()->getRenderer(GRAPH_ON_TRACKER_V5_TEMPLATE_DIR);
     }
     
     public function registerInSession() {
@@ -151,8 +153,107 @@ abstract class GraphOnTrackersV5_Chart {
         }
         return $html;
     }
-    
-    
+
+    private function fetchGraphAnchor($content) {
+        return '<div class="tracker_report_renderer_graphontrackers_graph plugin_graphontrackersv5_chart"
+                     data-graph-id="'.$this->getId().'">'. $content .'
+                </div>';
+    }
+
+    public function fetchOnReport(GraphOnTrackersV5_Renderer $renderer, PFUser $current_user, $read_only, $store_in_session = true) {
+        if ($this->isGraphDrawnByD3()) {
+            $content   = '';
+            $classname = 'd3graph';
+        } else {
+            $content   = $this->fetch($store_in_session);
+            $classname = '';
+        }
+
+        $html  = '';
+        $html .= '<div class="widget '. $classname .'">';
+        $html .= '<div class="widget_titlebar">';
+        $html .= '<div class="widget_titlebar_title">'. $this->getTitle().'</div>';
+        $html .= '<div class="plugin_graphontrackersv5_widget_actions">';
+        $html .= $this->fetchActionButtons($renderer, $current_user, $read_only);
+        $html .= '</div>';
+        $html .= '</div>';
+        $html .= '<div class="widget_content">';
+        $html .= $this->fetchGraphAnchor($content);
+        $html .= '</div>'; // content
+        $html .= '</div>'; // widget
+
+        return $html;
+    }
+
+    protected function fetchActionButtons(GraphOnTrackersV5_Renderer $renderer, PFUser $current_user, $readonly) {
+        $html = '';
+
+        $add_to_dashboard_params = array(
+            'action' => 'widget',
+            'chart' => array(
+                'title'    => $this->getTitle(),
+                'chart_id' => $this->getId()
+            ),
+        );
+
+        $url = '?'. http_build_query(array(
+            'report'   => $renderer->report->id,
+            'renderer' => $renderer->id,
+            'func'     => 'renderer',
+        ));
+
+        $my_dashboard_url = '/widgets/updatelayout.php?'.
+            http_build_query(array_merge(array(
+                'owner' => 'u'. $current_user->getId(),
+                'name' => array(
+                    'my_plugin_graphontrackersv5_chart' => array (
+                        'add' => 1
+                    )
+                )
+            ), $add_to_dashboard_params)
+        );
+
+        $project_dashboard_url = '/widgets/updatelayout.php?'.
+            http_build_query(array_merge(array(
+                'owner' => 'g' . $renderer->report->getTracker()->getProject()->getGroupId(),
+                'name' => array(
+                    'project_plugin_graphontrackersv5_chart' => array (
+                        'add' => 1
+                    )
+                )
+            ), $add_to_dashboard_params)
+        );
+
+        $delete_chart_url = $url .'&renderer_plugin_graphontrackersv5[delete_chart]['. $this->getId() .']';
+        $edit_chart_url   = $url .'&renderer_plugin_graphontrackersv5[edit_chart]='. $this->getId();
+
+        return $this->mustache_renderer->renderToString(
+            'graph-actions',
+            new GraphOnTrackersV5_GraphActionsPresenter(
+                $this,
+                $this->graphCanBeUpdated($current_user, $renderer, $readonly),
+                $my_dashboard_url,
+                $project_dashboard_url,
+                $delete_chart_url,
+                $edit_chart_url
+            )
+        );
+    }
+
+    private function graphCanBeUpdated(PFUser $current_user, $renderer, $readonly) {
+        return !$readonly && $renderer->report->userCanUpdate($current_user);
+    }
+
+    /**
+     * Fetch chart data as an array
+     */
+    public function fetchAsArray() {
+        if (! $this->userCanVisualize() || ! $this->getEngineWithData()) {
+            return array();
+        }
+
+        return $this->getEngineWithData()->toArray();
+    }
     
     public function getRow() {
         return array_merge(array(
@@ -181,29 +282,39 @@ abstract class GraphOnTrackersV5_Chart {
      * @return GraphOnTracker_Chart_Engine
      */
     protected function buildGraph() {
-        //Define the artifacts which must be added to the chart
-        $artifacts = $this->renderer->report->getMatchingIds();
-        
-        //Get the ChartDataBuilder for this chart
-        $pcdb = $this->getChartDataBuilder($artifacts);
-        
-        //Get the chart engine
-        $e = $this->getEngine();
-        
-        //prepare the propeties for the chart
-        $pcdb->buildProperties($e);
-        
-        if ($e->validData()) {
+        $e = $this->getEngineWithData();
+        if ($e) {
             //build the chart
             $e->buildGraph();
-            
+
             return $e;
         } else {
             return false;
-        }      
-        
+        }
     }
-    
+
+    /**
+     * @return GraphOnTrackersV5_Engine
+     */
+    protected function getEngineWithData() {
+        //Define the artifacts which must be added to the chart
+        $artifacts = $this->renderer->report->getMatchingIds();
+
+        //Get the ChartDataBuilder for this chart
+        $pcdb = $this->getChartDataBuilder($artifacts);
+
+        //Get the chart engine
+        $e = $this->getEngine();
+
+        //prepare the propeties for the chart
+        $pcdb->buildProperties($e);
+
+        if ($e->validData()) {
+            return $e;
+        }
+        return false;
+    }
+
     protected function getTracker() {
         return TrackerFactory::instance()->getTrackerById($this->renderer->report->tracker_id);
     }
@@ -353,6 +464,58 @@ abstract class GraphOnTrackersV5_Chart {
      * Get the dao of the chart
      */
     protected abstract function getDao();
+
+    public function getContent() {
+        $content          = '';
+        $store_in_session = false;
+
+        if ($this->isGraphDrawnByD3()) {
+            $content .= $this->fetchContentD3Graph($this->fetchAsArray());
+        } else {
+            $content .= $this->fetchContentJPGraph($store_in_session);
+        }
+
+        return $content;
+    }
+
+    public function getWidgetContent() {
+        $content = $this->getContent();
+
+        if ($this->isGraphDrawnByD3()) {
+            $content .= $this->renderer->fetchWidgetGoToReport();
+        }
+
+        return $content;
+    }
+
+    private function isGraphDrawnByD3() {
+        $chart_data = $this->buildChartData();
+
+        return isset($chart_data[$this->id]['type']) && HTTPRequest::instance()->getBrowser()->isCompatibleWithD3();
+    }
+
+    private function fetchContentJPGraph($store_in_session) {
+        $content = $this->fetch($store_in_session);
+        $content .= '<br />';
+
+        return $content;
+    }
+
+    private function fetchContentD3Graph(array $chart_data) {
+        $GLOBALS['HTML']->includeFooterJavascriptSnippet('tuleap.graphontrackersv5.graphs['. $this->getId() .'] = '.json_encode($chart_data).';');
+        $content = $this->fetchGraphAnchor('');
+
+        return $content;
+    }
+
+    /**
+     * Builds the chart data in array
+     *
+     * @return array
+     */
+    private function buildChartData() {
+        return array(
+            $this->id => $this->fetchAsArray()
+        );
+    }
 }
- 
-?>

@@ -1,6 +1,5 @@
 <?php
 /**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  * Copyright (c) Enalean, 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -16,24 +15,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-require_once 'common/widget/WidgetLayoutManager.class.php';
-
-/**
- * Widget_MyTrackerRenderer
- * 
- * Personal tracker renderer
- */
-class Tracker_Widget_MyRenderer extends Tracker_Widget_Renderer {
-    const ID = 'plugin_tracker_myrenderer';
-
-    function __construct() {
-        parent::__construct(self::ID, UserManager::instance()->getCurrentUser()->getId(), WidgetLayoutManager::OWNER_TYPE_USER);
-    }
-
-    public function isAjax() {
-        return false;
-    }
-}
+define('GRAPH_ON_TRACKER_V5_TEMPLATE_DIR', realpath(dirname(__FILE__).'/../templates'));

@@ -22,4 +22,8 @@ class Browser {
     public function getDeprecatedMessage() {
         return '';
     }
+
+    public function isCompatibleWithD3() {
+        return true;
+    }
 }

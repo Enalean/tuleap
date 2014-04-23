@@ -427,4 +427,11 @@ class HTTPRequest_BrowserTests extends TuleapTestCase {
 
         $this->assertNoPattern("/$this->msg_ie7_deprecated_button/", $browser->getDeprecatedMessage());
     }
+
+    public function testBrowserIsIE8() {
+        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0; GTB7.4; InfoPath.2; SV1; .NET CLR 3.3.69573; WOW64; en-US)';
+        $browser = $this->request->getBrowser();
+
+        $this->assertIsA($browser, 'BrowserIE8');
+    }
 }

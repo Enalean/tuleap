@@ -36,26 +36,32 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget {
         $hp = Codendi_HTMLPurifier::instance();
         return $this->chart_title ?  $hp->purify($this->chart_title, CODENDI_PURIFIER_CONVERT_HTML)  : 'Tracker Chart';
     }
-    function getContent() {
-        $content          = '';
-        $store_in_session = false;
-        
-        if ($chart = GraphOnTrackersV5_ChartFactory::instance()->getChart(null, $this->chart_id, $store_in_session)) {
-            $content .= $chart->fetch($store_in_session);
-            $content .= '<br />';
-            $content .= $chart->renderer->fetchWidgetGoToReport();
+
+    public function getContent() {
+        $chart = GraphOnTrackersV5_ChartFactory::instance()->getChart(
+            null,
+            $this->chart_id,
+            false
+        );
+
+        if ($chart) {
+            $content = $chart->getWidgetContent();
         } else {
-            $content .= '<em>Chart does not exist</em>';
+            $content = '<em>Chart does not exist</em>';
         }
+
         return $content;
     }
-    function isAjax() {
-        return true;
+
+    public function isAjax() {
+        return false;
     }
-    function getInstallPreferences($owner_id) {
+
+    public function getInstallPreferences($owner_id) {
         return $this->getPreferences($owner_id);
     }
-    function getPreferences($owner_id) {
+
+    public function getPreferences($owner_id) {
         $hp = Codendi_HTMLPurifier::instance();
         
         $prefs  = '';

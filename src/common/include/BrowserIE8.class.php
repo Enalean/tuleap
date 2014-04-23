@@ -18,11 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class BrowserIE9CompatibilityModeDeprecated extends Browser {
-
-    public function getDeprecatedMessage() {
-        return $GLOBALS['Language']->getText('include_browser', 'ie9_compatibility_deprecated');
-    }
+class BrowserIE8 extends Browser {
 
     public function isCompatibleWithD3() {
         return false;

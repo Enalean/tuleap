@@ -623,7 +623,10 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 $html .= '<div class="tracker_report_renderer" id="tracker_report_renderer_current" data-renderer-id="'. $current_renderer->getId() .'">';
 
                 if ($current_renderer->description) {
-                    $html .= '<p class="tracker_report_renderer_description">'. $hp->purify($current_renderer->description, CODENDI_PURIFIER_BASIC) .'</p>';
+                    $html .= '<p class="tracker_report_renderer_description">';
+                    $html .= '<span>'. $GLOBALS['Language']->getText('plugin_tracker', 'Description:') .' </span>';
+                    $html .= $hp->purify($current_renderer->description, CODENDI_PURIFIER_BASIC);
+                    $html .= '</p>';
                 }
 
                 //  Options menu
