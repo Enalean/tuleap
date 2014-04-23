@@ -281,7 +281,7 @@ abstract class GraphOnTrackersV5_Chart {
      * Fetch chart data as an array
      */
     public function fetchAsArray() {
-        if (! $this->getEngineWithData()) {
+        if (! $this->userCanVisualize() || ! $this->getEngineWithData()) {
             return array();
         }
 
