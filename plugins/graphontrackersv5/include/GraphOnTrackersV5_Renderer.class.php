@@ -167,7 +167,6 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
             $html .= '</div>';
             $chart_array[$chart->id] = $chart->fetchAsArray();
         }
-        $html .= '<div style="clear:both;"></div>';
         $html .= '</div>';
         if (!$readonly) {
             $html .='</form>';

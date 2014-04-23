@@ -154,15 +154,23 @@ abstract class GraphOnTrackersV5_Chart {
         return $html;
     }
 
-    public function fetchD3Anchor() {
+    private function fetchGraphAnchor($content) {
         return '<div class="tracker_report_renderer_graphontrackers_graph plugin_graphontrackersv5_chart"
-                     data-graph-id="'.$this->getId().'">
+                     data-graph-id="'.$this->getId().'">'. $content .'
                 </div>';
     }
 
-    protected function fetchJsOnReport(GraphOnTrackersV5_Renderer $renderer, PFUser $current_user, $read_only) {
-        $html = '';
-        $html .= '<div class="widget d3graph">';
+    public function fetchOnReport(GraphOnTrackersV5_Renderer $renderer, PFUser $current_user, $read_only, $store_in_session = true) {
+        if ($this->isGraphDrawnByD3()) {
+            $content   = '';
+            $classname = 'd3graph';
+        } else {
+            $content   = $this->fetch($store_in_session);
+            $classname = '';
+        }
+
+        $html  = '';
+        $html .= '<div class="widget '. $classname .'">';
         $html .= '<div class="widget_titlebar">';
         $html .= '<div class="widget_titlebar_title">'. $this->getTitle().'</div>';
         $html .= '<div class="plugin_graphontrackersv5_widget_actions">';
@@ -170,18 +178,11 @@ abstract class GraphOnTrackersV5_Chart {
         $html .= '</div>';
         $html .= '</div>';
         $html .= '<div class="widget_content">';
-        $html .= $this->fetchD3Anchor();
+        $html .= $this->fetchGraphAnchor($content);
         $html .= '</div>'; // content
         $html .= '</div>'; // widget
+
         return $html;
-    }
-
-    public function fetchOnReport(GraphOnTrackersV5_Renderer $renderer, PFUser $current_user, $read_only, $store_in_session = true) {
-        if ($this->isGraphDrawnByD3()) {
-            return $this->fetchJsOnReport($renderer, $current_user, $read_only);
-        }
-
-        return $this->fetchActionButtons($renderer, $current_user, $read_only).$this->fetch($store_in_session);
     }
 
     protected function fetchActionButtons(GraphOnTrackersV5_Renderer $renderer, PFUser $current_user, $readonly) {
@@ -226,51 +227,17 @@ abstract class GraphOnTrackersV5_Chart {
         $delete_chart_url = $url .'&renderer_plugin_graphontrackersv5[delete_chart]['. $this->getId() .']';
         $edit_chart_url   = $url .'&renderer_plugin_graphontrackersv5[edit_chart]='. $this->getId();
 
-        if ($this->isGraphDrawnByD3()) {
-
-            return $this->mustache_renderer->renderToString(
-                'graph-actions',
-                new GraphOnTrackersV5_GraphActionsPresenter(
-                    $this,
-                    $this->graphCanBeUpdated($current_user, $renderer, $readonly),
-                    $my_dashboard_url,
-                    $project_dashboard_url,
-                    $delete_chart_url,
-                    $edit_chart_url
-                )
-            );
-
-        } else {
-            //Add to my dashboard
-            if ($this->getId() > 0) {
-                $html .= '<a title="'. $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'add_chart_dashboard') .'"
-                             href="'. $my_dashboard_url .'">'. $GLOBALS['HTML']->getImage('ic/layout_user.png') .'</a> ';
-
-                //Add to project dashboard
-                if ($renderer->report->getTracker()->getProject()->userIsAdmin($current_user)) {
-                    $html .= '<a title="'. $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'add_chart_project_dashboard') .'"
-                                 href="'. $project_dashboard_url .'">'. $GLOBALS['HTML']->getImage('ic/layout_project.png') .'</a> ';
-                }
-            }
-
-            if (!$readonly && $renderer->report->userCanUpdate($current_user)) {
-                //Edit chart
-                $html .= '<a title="'. $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'tooltip_edit') .'"
-                             href="'. $edit_chart_url .'">
-                           <img src="'. util_get_dir_image_theme() .'ic/edit.png" alt="edit" />
-                          </a>';
-
-                //Delete chart
-                $html .= '<input title="'. $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'tooltip_del') .'"
-                                 type="image" src="'. util_get_dir_image_theme() .'ic/cross.png"
-                                 onclick="return confirm('.$GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report','confirm_del').');"
-                                 name="renderer_plugin_graphontrackersv5[delete_chart]['. $this->getId() .']" />';
-            }
-        }
-
-
-
-        return $html;
+        return $this->mustache_renderer->renderToString(
+            'graph-actions',
+            new GraphOnTrackersV5_GraphActionsPresenter(
+                $this,
+                $this->graphCanBeUpdated($current_user, $renderer, $readonly),
+                $my_dashboard_url,
+                $project_dashboard_url,
+                $delete_chart_url,
+                $edit_chart_url
+            )
+        );
     }
 
     private function graphCanBeUpdated(PFUser $current_user, $renderer, $readonly) {
@@ -536,7 +503,7 @@ abstract class GraphOnTrackersV5_Chart {
 
     private function fetchContentD3Graph(array $chart_data) {
         $GLOBALS['HTML']->includeFooterJavascriptSnippet('tuleap.graphontrackersv5.graphs['. $this->getId() .'] = '.json_encode($chart_data).';');
-        $content = $this->fetchD3Anchor();
+        $content = $this->fetchGraphAnchor('');
 
         return $content;
     }

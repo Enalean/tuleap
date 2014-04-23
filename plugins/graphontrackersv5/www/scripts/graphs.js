@@ -107,12 +107,8 @@ tuleap.graphontrackersv5.drawDonut = function (id, graph) {
         .attr("class", function (d, i) {
             return getDonutSliceClass(i);
         })
-        .on("mouseover", function(d, i) {
-            svg.select("." + getLegendClass(i)).style("font-weight", "bold");
-        })
-        .on("mouseout", function(d, i) {
-            svg.select("." + getLegendClass(i)).style("font-weight", "normal");
-        })
+        .on("mouseover", onOverValue)
+        .on("mouseout", onOutValue)
         .transition()
             .duration(750)
             .attrTween('d', function (b) {
@@ -161,16 +157,8 @@ tuleap.graphontrackersv5.drawDonut = function (id, graph) {
         .enter().append("g")
         .attr("class", "legend")
         .attr("transform", function(d, i) { return "translate(0, " + i * 20 + ")"; })
-        .on("mouseover", function(d, i) {
-            svg.select("." + getDonutSliceClass(i))
-                .transition()
-                .attr("transform", "scale(1.05)")
-        })
-        .on("mouseout", function(d, i) {
-            svg.select("." + getDonutSliceClass(i))
-                .transition()
-                .attr("transform", "scale(1)");
-        });
+        .on("mouseover", onOverValue)
+        .on("mouseout", onOutValue);
 
     var colors_range = d3.scale.ordinal().range(graph.colors);
 
@@ -198,6 +186,19 @@ tuleap.graphontrackersv5.drawDonut = function (id, graph) {
             return legend;
         });
 
+    function onOverValue(d, index) {
+        svg.select("." + getDonutSliceClass(index))
+            .transition()
+            .attr("transform", "scale(1.05)");
+        svg.select("." + getLegendClass(index)).style("font-weight", "bold");
+    }
+
+    function onOutValue(d, index) {
+        svg.select("." + getDonutSliceClass(index))
+            .transition()
+            .attr("transform", "scale(1)");
+        svg.select("." + getLegendClass(index)).style("font-weight", "normal");
+    }
 
     function getGradientId(value_index) {
         return 'grad_' + id + '_' + value_index;
