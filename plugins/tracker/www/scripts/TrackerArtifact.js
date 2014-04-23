@@ -139,7 +139,7 @@ document.observe('dom:loaded', function () {
                 )
             );
 
-            followup_section.insert({
+            followup_section.down().insert({
                 top: div
             });
 
