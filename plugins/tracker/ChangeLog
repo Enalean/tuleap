@@ -1,3 +1,6 @@
+Version 5.345 - Tuleap 6.13
+    * tasks #6682 / story #6671 - editing an artifact on one value shows a diff on permission on artifact
+
 Version 5.344 - Tuleap 6.13
     * request #6714 - No submit button after error on update
 
