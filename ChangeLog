@@ -1,3 +1,14 @@
+Version 6.12-2 (Wednesday, April 23rd 2014)
+
+	== Bug Fix ==
+	* Fix request #6731:  Artifact link modal window is opening when performing a carriage return
+	* Fix request #6591: renaming a project messes-up git
+	* Fix request #6609: Activate "require all words" search option by default
+	* Fix request #6618: Fix UI regression
+	* Fix request #6640: Javascript error when creating a new artifact
+	* Fix request #6712: More explicit message about IE7 and IE8 support
+	* Fix request #6737: Requester is not admin when project is created via SOAP
+
 Version 6.12 (Thursday, April 3rd 2014)
 
 	== Plugins ==
