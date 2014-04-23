@@ -26,6 +26,10 @@ tuleap.tracker.artifact = tuleap.tracker.artifact || { };
 tuleap.tracker.artifact.references = function() {
 
     var init = function() {
+        if (tuleap.browserCompatibility.isIE7()) {
+            $('.artifact-references').remove();
+            return;
+        }
         if ($('.artifact-references').size() > 0) {
             handlePaneToggle();
         }
