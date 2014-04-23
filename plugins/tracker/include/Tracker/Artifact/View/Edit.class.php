@@ -108,6 +108,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
             $classname = '';
         }
         $html .= '<div id="tracker_artifact_followup_comments" class="'. $classname .'">';
+        $html .= '<div id="tracker_artifact_followup_comments-content">';
         $html .= '<h1 id="tracker_artifact_followups">'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','follow_ups').'</h1>';
         $html .= '<ul class="tracker_artifact_followups">';
         $previous_changeset = null;
@@ -147,6 +148,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
         $html .= '</li>';
 
         $html .= '</ul>';
+        $html .= '</div>';
         $html .= '</div>';
 
         $html .= '</td></tr></table>'; //see fetchFields
