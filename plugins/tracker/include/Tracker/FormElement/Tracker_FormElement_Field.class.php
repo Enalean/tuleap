@@ -345,7 +345,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             }
             return '';
         }
-        return $this->fetchArtifactReadOnly($artifact);
+        return $this->fetchArtifactReadOnly($artifact, $submitted_values);
     }
 
     public function fetchArtifactForOverlay(Tracker_Artifact $artifact, $submitted_values = array()) {
@@ -363,12 +363,12 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return string html
      */
-    public function fetchArtifactReadOnly(Tracker_Artifact $artifact) {
+    public function fetchArtifactReadOnly(Tracker_Artifact $artifact, $submitted_values = array()) {
         $last_changeset = $artifact->getLastChangeset();
         if ($last_changeset) {
             $value       = $last_changeset->getValue($this);
-            $html_value  = $this->fetchArtifactValueForWebDisplay($artifact, $value);
-            $html_value .= $this->fetchArtifactAdditionnalInfo($value);
+            $html_value  = $this->fetchArtifactValueForWebDisplay($artifact, $value, $submitted_values);
+            $html_value .= $this->fetchArtifactAdditionnalInfo($value, $submitted_values);
             return $this->fetchArtifactField($artifact, $html_value);
         }
         return '';
@@ -520,23 +520,23 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return string
      */
-    public function fetchArtifactValueForWebDisplay(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+    public function fetchArtifactValueForWebDisplay(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         if ($this->userCanUpdate()) {
-            return $this->fetchArtifactValueWithEditionFormIfEditable($artifact, $value);
+            return $this->fetchArtifactValueWithEditionFormIfEditable($artifact, $value, $submitted_values);
         }
         return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
 
-    protected function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
-        return $this->fetchArtifactValueReadOnly($artifact);
+    protected function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+        return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
 
     protected function getNoValueLabel() {
         return "<span class='empty_value'>".$GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'no_value_for_field')."</span>";
     }
 
-    protected function getHiddenArtifactValueForEdition(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
-        return "<div class='tracker_hidden_edition_field' data-field-id=" . $this->getId() . ">" . $this->fetchArtifactValue($artifact, $value) . "</div>";
+    protected function getHiddenArtifactValueForEdition(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+        return "<div class='tracker_hidden_edition_field' data-field-id=" . $this->getId() . ">" . $this->fetchArtifactValue($artifact, $value, $submitted_values) . "</div>";
     }
 
     /**

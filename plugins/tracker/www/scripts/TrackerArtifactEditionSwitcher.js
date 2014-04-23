@@ -30,6 +30,17 @@ tuleap.tracker.artifact.editionSwitcher = function() {
             bindClickOnEditableFields();
             bindSubmissionBarToFollowups();
             disableWarnBeforeUnloadOnSubmitForm();
+            toggleFieldsIfAlreadySubmittedArtifact();
+        }
+    };
+
+    var toggleFieldsIfAlreadySubmittedArtifact = function () {
+        if ($('.submitted_artifact').size() > 0) {
+            $(".tracker_artifact_field").each(function (index, element){
+                if (fieldIsEditable(element)) {
+                    toggleField(element);
+                }
+            });
         }
     };
 
@@ -55,6 +66,7 @@ tuleap.tracker.artifact.editionSwitcher = function() {
     var bindEditionSwitch = function (element) {
         $(element).find('label').on('click', function() {
             toggleField(element);
+            focusField(element);
         });
     };
 
@@ -64,9 +76,12 @@ tuleap.tracker.artifact.editionSwitcher = function() {
         $(element).addClass('in-edition');
         $(element).find('.tracker_hidden_edition_field').show();
         $(element).off('click');
-        $(element).find('input[type=text], textarea, .cke').filter(':visible:first').focus();
         toggleDependencyIfAny(element);
         toggleSubmissionBar();
+    };
+
+    var focusField = function (element) {
+        $(element).find('input[type=text], textarea, .cke').filter(':visible:first').focus();
     };
 
     var toggleDependencyIfAny = function (element) {

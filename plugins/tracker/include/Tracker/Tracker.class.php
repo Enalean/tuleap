@@ -304,10 +304,10 @@ class Tracker implements Tracker_Dispatchable_Interface {
      *
      * @return string
      */
-    public function fetchFormElementsReadOnly($artifact) {
+    public function fetchFormElementsReadOnly($artifact, $submitted_values = array()) {
         $html = '';
         foreach($this->getFormElements() as $formElement) {
-            $html .= $formElement->fetchArtifactReadOnly($artifact);
+            $html .= $formElement->fetchArtifactReadOnly($artifact, $submitted_values);
         }
         return $html;
     }

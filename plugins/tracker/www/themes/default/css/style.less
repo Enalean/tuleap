@@ -741,14 +741,10 @@ a:hover .xref-in-title {
 }
 .tracker_artifact_field.has_errors,
 .tracker_artifact_field.has_errors+td {
-    border:1px dashed red;
-    background: #FEE;
-}
-.tracker_artifact_field.has_errors {
-    border-right:none;
-}
-.tracker_artifact_field.has_errors+td {
-    border-left:none;
+    border: 1px solid #E6CACE;
+    background: #f2dede;
+    border-left: none;
+    border-right: none;
 }
 
 .tracker_artifact_attachment {
@@ -1004,6 +1000,13 @@ div.tracker-admin-field-controls {
             > label.checkbox {
                 display: block;
             }
+        }
+    }
+
+    &.has_errors {
+        > label {
+            background-image: url('/themes/common/images/artifact_editable_field_error.png');
+            cursor: default;
         }
     }
 }
