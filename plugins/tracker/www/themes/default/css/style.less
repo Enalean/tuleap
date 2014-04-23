@@ -2570,3 +2570,91 @@ body.in_tracker_report .main .content {
 .tracker_artifact {
     max-width: 960px;
 }
+
+.artifact-references {
+    position: absolute;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    overflow: hidden;
+    font-size: 0.9em;
+    transition: all 0.2s ease;
+
+    .artifact-references-content {
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        width: 0;
+        height: 0;
+        padding: 0;
+        transition: all 0.2s ease;
+        position: relative;
+        left: 30px;
+        background: rgba(255,255,255,0.95);
+        background: #FFF\9;
+        border: 1px solid #E9E9E9;
+        border-right: none;
+        -webkit-border-bottom-left-radius: 3px;
+        -moz-border-radius-bottomleft: 3px;
+        border-bottom-left-radius: 3px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+
+        h2 {
+            margin-top: 0;
+        }
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+
+            li {
+                margin-bottom: 8px;
+                line-height: 1.2em;
+            }
+        }
+    }
+
+    .grip {
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 1;
+        width: 30px;
+        height: 30px;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        padding-top: 4px;
+        cursor: pointer;
+        text-align: center;
+        font-size: 1.2em;
+        -webkit-border-top-left-radius: 3px;
+        -webkit-border-bottom-left-radius: 3px;
+        -moz-border-radius-topleft: 3px;
+        -moz-border-radius-bottomleft: 3px;
+        border-top-left-radius: 3px;
+        border-bottom-left-radius: 3px;
+        border: 1px solid #222;
+        border-right: none;
+        color: #FFF;
+        transition: all 0.2s ease;
+        background-color: #303030;
+    }
+
+    &.expanded {
+        width: 300px + 30px;
+        height: auto;
+
+        .artifact-references-content {
+            width: 300px;
+            padding: 15px;
+            height: auto;
+        }
+
+        .grip {
+            background-color: rgba(255,255,255,0.95);
+            background-color: #FFF\9;
+            border: 1px solid #E9E9E9;
+            border-right: none;
+            color: #222;
+        }
+    }
+}

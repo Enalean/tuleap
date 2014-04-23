@@ -135,6 +135,7 @@ class trackerPlugin extends Plugin {
                 '/plugins/tracker/scripts/FixAggregatesHeaderHeight.js',
                 '/plugins/tracker/scripts/TrackerSettings.js',
                 '/plugins/tracker/scripts/TrackerCollapseFieldset.js',
+                '/plugins/tracker/scripts/TrackerArtifactReferences.js',
             )
         );
     }
