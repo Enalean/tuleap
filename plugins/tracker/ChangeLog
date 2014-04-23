@@ -1,3 +1,6 @@
+Version 5.346 - Tuleap 6.13
+    * tasks #6679 / story #6307 - hide references sidebar on IE7
+
 Version 5.345 - Tuleap 6.13
     * tasks #6682 / story #6671 - editing an artifact on one value shows a diff on permission on artifact
 
