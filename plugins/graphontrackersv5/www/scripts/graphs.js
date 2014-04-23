@@ -22,6 +22,43 @@ tuleap.graphontrackersv5 = tuleap.graphontrackersv5 || { };
 tuleap.graphontrackersv5.graphs = tuleap.graphontrackersv5.graphs || { };
 tuleap.graphontrackersv5.draw = {};
 
+/**
+ * Utility function to display x axis legend labels with alternate height so
+ * we can read the labels as they no longer overlap
+ *
+ * Not inspired by bl.ocks \o/
+ *
+ * @param {Object} svg
+ * @param {int} height
+ * @param {Object} xAxis
+ */
+tuleap.graphontrackersv5.alternateXAxisLabels = function (svg, height, xAxis) {
+    var x_labels_alternate_delta = 15;
+    var x_labels = svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+    x_labels.selectAll("text")
+        .attr("transform", function (d, i) {
+            var y_delta = 0;
+            if (i % 2 === 0) {
+                y_delta += x_labels_alternate_delta;
+            }
+            return "translate(0," + y_delta + ")";
+        });
+
+    x_labels.selectAll("line")
+        .attr("x2", 0)
+        .attr("y2", function (d, i) {
+            var y_delta = 6;
+            if (i % 2 === 0) {
+                y_delta += x_labels_alternate_delta;
+            }
+            return y_delta;
+        });
+};
+
 // Inspired from http://bl.ocks.org/mbostock/3887193
 tuleap.graphontrackersv5.draw.pie = function (id, graph) {
     var width             = graph.width,
@@ -216,7 +253,7 @@ tuleap.graphontrackersv5.draw.pie = function (id, graph) {
 
 // Inspired from  http://bl.ocks.org/mbostock/3887051
 tuleap.graphontrackersv5.draw.bar = function (id, graph) {
-    var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    var margin = {top: 20, right: 20, bottom: 40, left: 40},
     width = graph.width - margin.left - margin.right,
     height = graph.height - margin.top - margin.bottom,
     color  = d3.scale.category20();
@@ -261,10 +298,7 @@ tuleap.graphontrackersv5.draw.bar = function (id, graph) {
     x.domain(data.map(function(d) { return d.label; }));
     y.domain([0, d3.max(data, function(d) { return d.value; })]);
 
-    svg.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis);
+    tuleap.graphontrackersv5.alternateXAxisLabels(svg, height, xAxis);
 
     var gy = svg.append("g")
         .attr("class", "y axis")
@@ -290,6 +324,100 @@ tuleap.graphontrackersv5.draw.bar = function (id, graph) {
 
     bar.append("text")
         .attr("x", function(d) { return x(d.label) + (x.rangeBand() / 2); })
+        .attr("y", function(d) { return y(d.value) - 10; })
+        .attr("dy", ".35em")
+        .attr("text-anchor", "middle")
+        .text(function(d) { return d.value; });
+};
+
+// Inspired from  http://bl.ocks.org/mbostock/3887051
+tuleap.graphontrackersv5.draw.groupedbar = function (id, graph) {
+    var margin = {top: 20, right: 20, bottom: 40, left: 40},
+    width = graph.width - margin.left - margin.right,
+    height = graph.height - margin.top - margin.bottom,
+    d3_colors  = d3.scale.category20();
+
+    // Fix a d3 color when the backend doesn't define one
+    graph.colors.forEach(function (legend_color) {
+        if (legend_color.color === null) {
+            graph.colors[legend_color.name] = d3_colors(legend_color.name);
+        }
+    });
+
+    var x = d3.scale.ordinal()
+        .rangeRoundBands([0, width], .35);
+
+    var xGrouped = d3.scale.ordinal();
+
+    var y = d3.scale.linear()
+        .range([height, 0]);
+
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom");
+
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .ticks(5)
+        .tickSize(width)
+        .orient("right");
+
+    var svg = d3.selectAll(".plugin_graphontrackersv5_chart[data-graph-id="+id+']').append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    x.domain(graph.values.map(function (d) { return d.name; }));
+    xGrouped.domain(graph.grouped_labels).rangeRoundBands([0, x.rangeBand()]);
+    y.domain(
+        [
+            0,
+            d3.max(
+                graph.values,
+                function(d) {
+                    return d3.max(
+                        d3.values(d.values).map(
+                            function (d) { return parseFloat(d.value); }
+                        )
+                    )
+                }
+            )
+        ]
+    );
+
+    tuleap.graphontrackersv5.alternateXAxisLabels(svg, height, xAxis);
+
+    var gy = svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis);
+
+    // Set the label on the left of the y axis
+    gy.selectAll('text')
+        .attr("x", -30)
+        .attr("dx", ".71em");
+
+    var bar = svg.selectAll(".bar")
+        .data(graph.values).enter().append("g")
+      .attr("class", "g")
+      .attr("transform", function(d) { return "translate(" + x(d.name) + ",0)"; });
+
+    var grouped_bar = bar.selectAll("rect")
+        .data(function(d) { return d.values; })
+      .enter();
+
+    grouped_bar.append("rect")
+        .style("fill", function(d, i) { return graph.colors[d.name]; })
+        .attr("class", "bar")
+        .attr("width", xGrouped.rangeBand())
+        .attr("x", function(d) { return xGrouped(d.name); })
+        .attr("y", function(d) { return y(d.value); })
+        .attr("height", function(d) { return height - y(d.value); })
+        .attr('rx', 3)
+        .attr('ry', 3);
+
+    grouped_bar.append("text")
+        .attr("x", function(d) { return xGrouped(d.name) + (xGrouped.rangeBand() / 2); })
         .attr("y", function(d) { return y(d.value) - 10; })
         .attr("dy", ".35em")
         .attr("text-anchor", "middle")

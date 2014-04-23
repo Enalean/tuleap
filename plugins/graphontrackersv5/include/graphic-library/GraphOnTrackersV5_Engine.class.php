@@ -91,21 +91,27 @@ abstract class GraphOnTrackersV5_Engine {
      */
     public function toArray() {
         return array(
-            'data'   => $this->data,
-            'colors' => is_array($this->colors) ? $this->toArrayColors() : null,
+            'colors' => $this->toArrayColors(),
         );
     }
 
-    private function toArrayColors() {
+    protected function toArrayColors() {
+        return is_array($this->colors) ? $this->getArrayColors() : null;
+    }
+
+    private function getArrayColors() {
         $colors = array();
         foreach($this->colors as $color) {
-            if ($this->isColorUndefined($color)) {
-                $colors[] = null;
-            } else {
-                $colors[] = $this->getHexaColor($color);
-            }
+            $colors[] = $this->getColorOrNull($color);
         }
         return $colors;
+    }
+
+    protected function getColorOrNull($color) {
+        if (! $this->isColorUndefined($color)) {
+            return $this->getHexaColor($color);
+        }
+        return null;
     }
 }
 ?>
