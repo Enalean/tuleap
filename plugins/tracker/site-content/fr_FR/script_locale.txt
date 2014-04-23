@@ -14,7 +14,7 @@ codendi.locales['tracker_artifact'] = {
     display_settings: 'Paramètres d\'affichage',
     display_changes: 'Les changements sont affichés',
     reverse_order: 'L\'ordre des commentaires est inversé',
-    always_expand_fieldset: 'Ce groupe est toujours fermé. Cliquez pour toujours l'ouvrir.',
+    always_expand_fieldset: 'Ce groupe est toujours fermé. Cliquez pour toujours l\'ouvrir.',
     always_collapse_fieldset: 'Ce groupe est toujours ouvert. Cliquez pour toujours le fermer.',
     edit_followup_ok: 'Modifier',
     edit_followup_cancel: 'Annuler'
