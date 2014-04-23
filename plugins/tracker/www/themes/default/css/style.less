@@ -2572,7 +2572,8 @@ body.in_tracker_report .main .content {
 }
 
 .artifact-references {
-    position: absolute;
+    position: fixed;
+    z-index: 1;
     right: 0;
     width: 30px;
     height: 30px;
@@ -2593,13 +2594,14 @@ body.in_tracker_report .main .content {
         background: #FFF\9;
         border: 1px solid #E9E9E9;
         border-right: none;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
         -webkit-border-bottom-left-radius: 3px;
         -moz-border-radius-bottomleft: 3px;
         border-bottom-left-radius: 3px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
 
         h2 {
             margin-top: 0;
+            margin-bottom: 20px;
         }
 
         ul {
@@ -2609,6 +2611,15 @@ body.in_tracker_report .main .content {
             li {
                 margin-bottom: 8px;
                 line-height: 1.2em;
+
+                a {
+                    color: #222;
+
+                    &:hover {
+                        text-decoration: none;
+                        opacity: 0.9;
+                    }
+                }
             }
         }
     }

@@ -78,7 +78,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
             foreach ($linked_artifacts as $artifact) {
                 $link  = '/goto?key='.$artifact->getTracker()->getItemName().'&val=' .$artifact->getId() . '&group_id='.$artifact->getTracker()->getProject()->getID();
                 $html .= '<li>';
-                $html .= '<a href="' . $link . '">#' . $artifact->getId() . ' ' . $artifact->getTitle() . '</a>';
+                $html .= '<a href="' . $link . '">' . $artifact->getXRefAndTitle() . '</a>';
                 $html .= '</li>';
             }
 
