@@ -2579,11 +2579,14 @@ body.in_tracker_report .main .content {
 }
 
 .artifact-references {
+    @grip-size: 40px;
+
     position: fixed;
     z-index: 1;
     right: 0;
-    width: 30px;
-    height: 30px;
+    top: 140px;
+    width: @grip-size;
+    height: @grip-size;
     overflow: hidden;
     font-size: 0.9em;
     transition: all 0.2s ease;
@@ -2596,7 +2599,7 @@ body.in_tracker_report .main .content {
         padding: 0;
         transition: all 0.2s ease;
         position: relative;
-        left: 30px;
+        left: @grip-size;
         background: rgba(255,255,255,0.95);
         background: #FFF\9;
         border: 1px solid #E9E9E9;
@@ -2608,12 +2611,14 @@ body.in_tracker_report .main .content {
 
         h2 {
             margin-top: 0;
-            margin-bottom: 20px;
+            padding: 5px 15px 15px 15px;
         }
 
         ul {
             list-style-type: none;
             margin: 0;
+            padding-left: 15px;
+            padding-right: 15px;
 
             li {
                 margin-bottom: 8px;
@@ -2636,14 +2641,14 @@ body.in_tracker_report .main .content {
         left: 0;
         top: 0;
         z-index: 1;
-        width: 30px;
-        height: 30px;
+        width: @grip-size;
+        height: @grip-size;
         box-sizing: border-box;
         -moz-box-sizing: border-box;
-        padding-top: 4px;
+        padding-top: 8px;
         cursor: pointer;
         text-align: center;
-        font-size: 1.2em;
+        font-size: 1.6em;
         -webkit-border-top-left-radius: 3px;
         -webkit-border-bottom-left-radius: 3px;
         -moz-border-radius-topleft: 3px;
@@ -2658,21 +2663,23 @@ body.in_tracker_report .main .content {
     }
 
     &.expanded {
-        width: 300px + 30px;
+        width: 400px + @grip-size;
         height: auto;
 
         .artifact-references-content {
-            width: 300px;
+            width: 400px;
             padding: 15px;
+            min-height: 100px;
             height: auto;
+            max-height: 400px;
         }
 
         .grip {
             background-color: rgba(255,255,255,0.95);
             background-color: #FFF\9;
             border: 1px solid #E9E9E9;
-            border-right: none;
             color: #222;
+            border-right: none;
         }
     }
 }

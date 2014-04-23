@@ -24,6 +24,7 @@ tuleap.tracker.artifact = tuleap.tracker.artifact || { };
 (function($) {
 
 tuleap.tracker.artifact.references = function() {
+    var api;
 
     var init = function() {
         if (tuleap.browserCompatibility.isIE7()) {
@@ -39,7 +40,23 @@ tuleap.tracker.artifact.references = function() {
         $('.artifact-references .grip').click(function() {
             $('.artifact-references').toggleClass('expanded');
             $('.artifact-references .grip i').toggleClass('icon-double-angle-right');
+            updateCustomScrollbar();
         });
+        initCustomScrollbar();
+    }
+
+    var updateCustomScrollbar = function() {
+        api.destroy();
+        initCustomScrollbar();
+    }
+
+    var initCustomScrollbar = function() {
+        $('.artifact-references-content').jScrollPane({
+            verticalGutter: 0,
+            hideFocus: true,
+            contentWidth: '430px'
+        });
+        api = $('.artifact-references-content').data('jsp');
     }
 
     return {
