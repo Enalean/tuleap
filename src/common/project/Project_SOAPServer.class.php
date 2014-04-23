@@ -144,7 +144,7 @@ class Project_SOAPServer {
         );
 
         if (! $has_special_access) {
-            $this->continueAdminSession($adminSessionKey);
+            $this->checkAdminSessionIsValid($adminSessionKey, $sessionKey);
         }
 
         $template = $this->getTemplateById($templateId, $requester);
@@ -191,9 +191,10 @@ class Project_SOAPServer {
      * 
      * @return PFUser
      */
-    private function continueAdminSession($adminSessionKey) {
+    private function checkAdminSessionIsValid($adminSessionKey, $sessionKey) {
         $admin = $this->userManager->getCurrentUser($adminSessionKey);
         if ($admin && $admin->isLoggedIn() && $admin->isSuperUser()) {
+            $this->continueSession($sessionKey);
             return $admin;
         }
         throw new SoapFault('3200', 'Only site admin is allowed to create project on behalf of users');
