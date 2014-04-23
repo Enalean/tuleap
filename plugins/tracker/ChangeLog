@@ -1,3 +1,6 @@
+Version 5.352 - Tuleap 6.13
+    * Better display of renderer description
+
 Version 5.351 - Tuleap 6.13
     * tasks #6765 / story #6307 - Add a inner scrollbar if there is a lot of references in the sidebar
 
