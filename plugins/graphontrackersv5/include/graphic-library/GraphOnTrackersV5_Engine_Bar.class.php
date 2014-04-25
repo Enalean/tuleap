@@ -167,13 +167,13 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine {
             $grouped_source_values = array();
             foreach ($source_values as $group_by_key => $value) {
                 $grouped_source_values[] = array(
-                    'name'  => $this->legend[$group_by_key],
+                    'label' => $this->legend[$group_by_key],
                     'value' => $value
                 );
             }
 
             $values[] = array(
-                'name'   => $this->xaxis[$source_key],
+                'label'  => $this->xaxis[$source_key],
                 'values' => $grouped_source_values,
             );
         }
@@ -196,7 +196,7 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine {
         $colors = array();
         foreach ($this->legend as $index => $name) {
             $colors[]= array(
-                'name'  => $name,
+                'label' => $name,
                 'color' => $this->getColorOrNull($this->colors[$index]),
             );
         }

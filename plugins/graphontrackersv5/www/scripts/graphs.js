@@ -69,3 +69,86 @@ tuleap.graphontrackersv5.alternateXAxisLabels = function (svg, height, xAxis) {
             return y_delta;
         });
 };
+
+/**
+ * Add a legend on the right of the chart
+ *
+ * @param {type} svg
+ * @param {type} graph
+ * @param {type} margin
+ * @param {type} legend_width
+ * @param {type} colors
+ * @param {type} onOverValue
+ * @param {type} onOutValue
+ * @param {type} getLegendClass
+ */
+tuleap.graphontrackersv5.addLegendBox = function(
+    svg,
+    graph,
+    margin,
+    legend_width,
+    colors,
+    onOverValue,
+    onOutValue,
+    getLegendClass
+) {
+    var legend_x = graph.width - legend_width - margin.right,
+        legend_y = Math.max(0, graph.height / 2 - 20 / 2 * colors.length),
+        legend_group;
+
+    legend_group = svg.append("g")
+        .attr("transform", "translate(" + legend_x + ", " + legend_y + ")");
+
+    var legend = legend_group.selectAll(".legend")
+        .data(colors)
+        .enter().append("g")
+            .attr("class", "legend")
+            .attr("transform", function(d, i) { return "translate(0, " + i * 20 + ")"; })
+            .on("mouseover", onOverValue)
+            .on("mouseout", onOutValue);
+
+    legend.append("rect")
+        .attr("x", 0)
+        .attr("rx", 3)
+        .attr("ry", 3)
+        .attr("width", 16)
+        .attr("height", 16)
+        .style("fill", function (d) { return d.color; });
+
+    legend.append("text")
+        .attr("class", function (d, i) { return getLegendClass(i); })
+        .attr("x", 22)
+        .attr("y", 8)
+        .attr("dy", ".35em")
+        .style("text-anchor", "start")
+        .text(function(d) {
+            var legend = d.label,
+                length = legend.length;
+
+            if (length > 25) {
+                return legend.substr(0, 15) + '…' + legend.substr(length - 10, length);
+            }
+            return legend;
+        });
+}
+
+/**
+ * Add gradients for given colors in svg definitions
+ *
+ * @param {type} svg
+ * @param {type} colors
+ * @param {type} getGradientId
+ */
+tuleap.graphontrackersv5.defineGradients = function(svg, colors, getGradientId) {
+    var grads = svg.append("defs").selectAll("linearGradient")
+            .data(colors)
+        .enter()
+            .append("linearGradient")
+            .attr("x1", 0)
+            .attr("y1", 0)
+            .attr("x2", 0)
+            .attr("y2", 1)
+            .attr("id", function(d, i) { return getGradientId(i); });
+    grads.append("stop").attr("offset", "0%").style("stop-color", function(d, i) { return d3.rgb(d.color).brighter(0.5); });
+    grads.append("stop").attr("offset", "100%").style("stop-color", function(d, i) { return d.color; });
+}

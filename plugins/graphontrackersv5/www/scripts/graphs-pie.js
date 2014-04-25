@@ -19,7 +19,8 @@
 
 // Inspired from http://bl.ocks.org/mbostock/3887193
 tuleap.graphontrackersv5.draw.pie = function (id, graph) {
-    var width             = graph.width,
+    var margin = {top: 0, right: 0, bottom: 0, left: 0},
+        width             = graph.width,
         height            = graph.height,
         radius            = Math.min(width, height) / 2,
         inner_radius_coef = width/550,
@@ -60,127 +61,105 @@ tuleap.graphontrackersv5.draw.pie = function (id, graph) {
         .attr("width", width)
         .attr("height", height);
 
-    var grads = svg.append("defs").selectAll("linearGradient")
-            .data(pie(data))
-        .enter()
-            .append("linearGradient")
-            .attr("x1", 0)
-            .attr("y1", 0)
-            .attr("x2", 0)
-            .attr("y2", 1)
-            .attr("id", function(d, i) { return getGradientId(i); });
-    grads.append("stop").attr("offset", "0%").style("stop-color", function(d, i) { return d3.rgb(d.data.color).brighter(0.5); });
-    grads.append("stop").attr("offset", "100%").style("stop-color", function(d, i) { return d.data.color; });
+    tuleap.graphontrackersv5.defineGradients(svg, data, getGradientId);
 
     var chart = svg.append("g")
         .attr("transform", "translate(" + width / 3 + "," + height / 2 + ")");
 
-    var g = chart.selectAll(".arc")
-          .data(pie(data))
-        .enter().append("g")
-          .attr("class", "arc");
+    drawDonutChart();
 
-    g.append("line")
-        .attr("x1", 0)
-        .attr("x2", 0)
-        .attr("y1", -radius+50)
-        .attr("y2", function(d, i) {
-            if(i % 2 === 0) {
-              return -radius+40;
-            } else {
-              return -radius+25;
-            }
-        })
-        .attr("stroke", "#DDD")
-        .attr("transform", function(d) {
-            radius;
-          return "rotate(" + (d.startAngle+d.endAngle)/2 * (180/Math.PI) + ")";
-        });
+    function drawDonutChart() {
+        var slice = chart.selectAll(".arc")
+              .data(pie(data))
+            .enter().append("g")
+              .attr("class", "arc");
 
-    g.append("path")
-        .attr("d", arc)
-        .style("fill", function(d, i) { return "url(#" + getGradientId(i) + ")"; })
-        .attr("class", function (d, i) {
-            return getDonutSliceClass(i);
-        })
-        .on("mouseover", onOverValue)
-        .on("mouseout", onOutValue)
-        .transition()
-            .duration(750)
-            .attrTween('d', function (b) {
-                var i = d3.interpolate(
-                {
-                    startAngle: 0,
-                    endAngle: 0
-                }, b);
+        drawDonutSlice(slice);
+    }
 
-                return function(t) { return arc(i(t)); };
+    function drawDonutSlice(slice) {
+        drawTick(slice);
+
+        slice.append("path")
+            .attr("d", arc)
+            .style("fill", function(d, i) { return "url(#" + getGradientId(i) + ")"; })
+            .attr("class", function (d, i) {
+                return getDonutSliceClass(i);
+            })
+            .on("mouseover", onOverValue)
+            .on("mouseout", onOutValue)
+            .transition()
+                .duration(750)
+                .attrTween('d', function (b) {
+                    var i = d3.interpolate(
+                        {
+                            startAngle: 0,
+                            endAngle: 0
+                        },
+                        b
+                    );
+
+                    return function(t) { return arc(i(t)); };
+                });
+
+
+    }
+
+    function drawTick(slice) {
+        slice.append("line")
+            .attr("x1", 0)
+            .attr("x2", 0)
+            .attr("y1", -radius+50)
+            .attr("y2", function(d, i) {
+                if(i % 2 === 0) {
+                  return -radius+40;
+                } else {
+                  return -radius+25;
+                }
+            })
+            .attr("stroke", "#DDD")
+            .attr("transform", function(d) {
+                radius;
+              return "rotate(" + (d.startAngle+d.endAngle)/2 * (180/Math.PI) + ")";
             });
 
-      g.append("text")
-          .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
-          .attr("transform", function(d, i) {
-             var dist;
-             if(i % 2 === 0) {
-               dist = radius - 34;
-             } else {
-               dist = radius - 19;
-             }
-             var angle  = (d.startAngle + d.endAngle) / 2, // Middle of wedge
-                 x      = dist * Math.sin(angle),
-                 y      = -dist * Math.cos(angle);
+        slice.append("text")
+            .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+            .attr("transform", function(d, i) {
+               var dist;
+               if(i % 2 === 0) {
+                 dist = radius - 34;
+               } else {
+                 dist = radius - 19;
+               }
+               var angle  = (d.startAngle + d.endAngle) / 2, // Middle of wedge
+                   x      = dist * Math.sin(angle),
+                   y      = -dist * Math.cos(angle);
 
-             return "translate(" + x + "," + y + ")";
-           })
-          .attr("dy", ".35em")
-          .style("text-anchor", function (d) {
-              var angle  = (d.startAngle + d.endAngle) / 2;
+               return "translate(" + x + "," + y + ")";
+             })
+            .attr("dy", ".35em")
+            .style("text-anchor", function (d) {
+                var angle  = (d.startAngle + d.endAngle) / 2;
 
-              if (angle > Math.PI) {
-                  return "end";
-              }
-              return "start";
-           })
-          .text(function(d) { return d.data.percentage+'%'; });
+                if (angle > Math.PI) {
+                    return "end";
+                }
+                return "start";
+             })
+            .text(function(d) { return d.data.percentage+'%'; });
+    }
 
-    var legend_x = 2 * width / 3 + 20;
-    var legend_y = Math.max(0, height / 2 - 20 / 2 * data.length);
-    var legend_group = svg.append("g")
-        .attr("transform", "translate(" + legend_x + ", " + legend_y + ")");
-
-    var legend = legend_group.selectAll(".legend")
-        .data(data)
-        .enter().append("g")
-        .attr("class", "legend")
-        .attr("transform", function(d, i) { return "translate(0, " + i * 20 + ")"; })
-        .on("mouseover", onOverValue)
-        .on("mouseout", onOutValue);
-
-    var colors_range = d3.scale.ordinal().range(graph.colors);
-
-    legend.append("rect")
-        .attr("x", 0)
-        .attr("rx", 3)
-        .attr("ry", 3)
-        .attr("width", 16)
-        .attr("height", 16)
-        .style("fill", function (d) { return d.color; });
-
-    legend.append("text")
-        .attr("class", function (d, i) { return getLegendClass(i); })
-        .attr("x", 22)
-        .attr("y", 8)
-        .attr("dy", ".35em")
-        .style("text-anchor", "start")
-        .text(function(d) {
-            var legend = d.label,
-                length = legend.length;
-
-            if (length > 25) {
-                return legend.substr(0, 15) + '…' + legend.substr(length - 10, length);
-            }
-            return legend;
-        });
+    tuleap.graphontrackersv5.addLegendBox(
+        svg,
+        graph,
+        margin,
+        width / 3,
+        data,
+        onOverValue,
+        onOutValue,
+        getLegendClass
+    );
 
     function onOverValue(d, index) {
         svg.select("." + getDonutSliceClass(index))
