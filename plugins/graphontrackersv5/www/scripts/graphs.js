@@ -22,6 +22,17 @@ tuleap.graphontrackersv5 = tuleap.graphontrackersv5 || { };
 tuleap.graphontrackersv5.graphs = tuleap.graphontrackersv5.graphs || { };
 tuleap.graphontrackersv5.draw = {};
 
+tuleap.graphontrackersv5.topRoundedRect = function(x, y, width, height, radius) {
+    return "M" + (x + radius) + "," + y
+        + "h" + (width - 2 * radius)
+        + "a" + radius + "," + radius + " 0 0 1 " + radius + "," + radius
+        + "v" + (height - radius)
+        + "h" + (- width)
+        + "v" + (- height + radius)
+        + "a" + radius + "," + radius + " 0 0 1 " + radius + "," + -radius
+        + "z";
+};
+
 /**
  * Utility function to display x axis legend labels with alternate height so
  * we can read the labels as they no longer overlap

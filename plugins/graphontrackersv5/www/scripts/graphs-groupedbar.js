@@ -51,9 +51,8 @@ tuleap.graphontrackersv5.draw.groupedbar = function (id, graph) {
 
     var svg = d3.selectAll(".plugin_graphontrackersv5_chart[data-graph-id="+id+']').append("svg")
         .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom);
-
-    var chart = svg.append("g")
+        .attr("height", height + margin.top + margin.bottom)
+      .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     x.domain(graph.values.map(function (d) { return d.name; }));
@@ -74,9 +73,9 @@ tuleap.graphontrackersv5.draw.groupedbar = function (id, graph) {
         ]
     );
 
-    tuleap.graphontrackersv5.alternateXAxisLabels(chart, height, xAxis);
+    tuleap.graphontrackersv5.alternateXAxisLabels(svg, height, xAxis);
 
-    var gy = chart.append("g")
+    var gy = svg.append("g")
         .attr("class", "y axis")
         .call(yAxis);
 
@@ -85,29 +84,42 @@ tuleap.graphontrackersv5.draw.groupedbar = function (id, graph) {
         .attr("x", -30)
         .attr("dx", ".71em");
 
-    var bar = chart.selectAll(".bar")
+    var bar = svg.selectAll(".bar")
         .data(graph.values).enter().append("g")
       .attr("class", "g")
       .attr("transform", function(d) { return "translate(" + x(d.name) + ",0)"; });
 
-    var grouped_bar = bar.selectAll("rect")
+    var grouped_bar = bar.selectAll("path")
         .data(function(d) { return d.values; })
-      .enter();
+      .enter()
+        .append('g');
 
-    grouped_bar.append("rect")
+    grouped_bar.append("path")
         .style("fill", function(d, i) { return graph.colors[d.name]; })
         .attr("class", "bar")
-        .attr("width", xGrouped.rangeBand())
-        .attr("x", function(d) { return xGrouped(d.name); })
-        .attr("y", function(d) { return y(d.value); })
-        .attr("height", function(d) { return height - y(d.value); })
-        .attr('rx', 3)
-        .attr('ry', 3);
+        .transition()
+            .duration(750)
+            .attrTween('d', function (d) {
+                var i = d3.interpolateNumber(height, y(d.value));
+
+                return function(t) {
+                    return tuleap.graphontrackersv5.topRoundedRect(
+                        xGrouped(d.name),
+                        i(t),
+                        xGrouped.rangeBand(),
+                        height - i(t),
+                        3
+                    );
+                };
+            });
 
     grouped_bar.append("text")
         .attr("x", function(d) { return xGrouped(d.name) + (xGrouped.rangeBand() / 2); })
-        .attr("y", function(d) { return y(d.value) - 10; })
+        .attr("y", function(d) { return height; })
         .attr("dy", ".35em")
         .attr("text-anchor", "middle")
-        .text(function(d) { return d.value; });
+        .text(function(d) { return d.value; })
+        .transition()
+            .duration(750)
+            .attr("y", function (d) { return y(d.value) - 10 });
 };

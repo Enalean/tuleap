@@ -78,20 +78,32 @@ tuleap.graphontrackersv5.draw.bar = function (id, graph) {
     var bar = svg.selectAll(".bar")
         .data(data).enter();
 
-    bar.append("rect")
+    bar.append("path")
         .style("fill", function(d) { return d.color; })
         .attr("class", "bar")
-        .attr("x", function(d) { return x(d.label); })
-        .attr("width", x.rangeBand())
-        .attr("y", function(d) { return y(d.value); })
-        .attr("height", function(d) { return height - y(d.value); })
-        .attr('rx', 3)
-        .attr('ry', 3);
+        .transition()
+            .duration(750)
+            .attrTween('d', function (d) {
+                var i = d3.interpolateNumber(height, y(d.value));
+
+                return function(t) {
+                    return tuleap.graphontrackersv5.topRoundedRect(
+                        x(d.label),
+                        i(t),
+                        x.rangeBand(),
+                        height - i(t),
+                        3
+                    );
+                };
+            });
 
     bar.append("text")
         .attr("x", function(d) { return x(d.label) + (x.rangeBand() / 2); })
-        .attr("y", function(d) { return y(d.value) - 10; })
+        .attr("y", function(d) { return height; })
         .attr("dy", ".35em")
         .attr("text-anchor", "middle")
-        .text(function(d) { return d.value; });
+        .text(function(d) { return d.value; })
+        .transition()
+            .duration(750)
+            .attr("y", function (d) { return y(d.value) - 10 });
 };
