@@ -25,9 +25,11 @@ tuleap.graphontrackersv5.draw.groupedbar = function (id, graph) {
     d3_colors  = d3.scale.category20();
 
     // Fix a d3 color when the backend doesn't define one
-    graph.colors.forEach(function (legend_color) {
+    graph.colors.forEach(function (legend_color, i) {
         if (legend_color.color === null) {
-            graph.colors[legend_color.name] = d3_colors(legend_color.name);
+            graph.colors[i].color = d3_colors(legend_color.name);
+        } else {
+            graph.colors[i].color = legend_color.color;
         }
     });
 
@@ -94,8 +96,28 @@ tuleap.graphontrackersv5.draw.groupedbar = function (id, graph) {
       .enter()
         .append('g');
 
+    var grads = svg.append("defs").selectAll("linearGradient")
+            .data(graph.colors)
+        .enter()
+            .append("linearGradient")
+            .attr("x1", 0)
+            .attr("y1", 0)
+            .attr("x2", 0)
+            .attr("y2", 1)
+            .attr("id", function(d, i) {
+                return getGradientId(i);
+            });
+    grads.append("stop").attr("offset", "0%").style("stop-color", function(d, i) {
+        return d3.rgb(d.color).brighter(0.5);
+    });
+    grads.append("stop").attr("offset", "100%").style("stop-color", function(d, i) {
+        return d.color;
+    });
+
     grouped_bar.append("path")
-        .style("fill", function(d, i) { return graph.colors[d.name]; })
+        .style("fill", function(d, i) {
+            return "url(#" + getGradientId(i) + ")";
+        })
         .attr("class", "bar")
         .transition()
             .duration(750)
@@ -122,4 +144,8 @@ tuleap.graphontrackersv5.draw.groupedbar = function (id, graph) {
         .transition()
             .duration(750)
             .attr("y", function (d) { return y(d.value) - 10 });
+
+    function getGradientId(value_index) {
+        return 'grad_' + id + '_' + value_index;
+    }
 };
