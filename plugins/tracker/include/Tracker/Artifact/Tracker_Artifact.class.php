@@ -301,7 +301,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         foreach ( $cs as $changeset ) {
             $comment = $changeset->getComment();
             /* @var $comment Tracker_Artifact_Changeset_Comment */
-            $changes = $changeset->diffToPrevious($format, $recipient, $ignore_perms);
             if (empty($comment) || $comment->hasEmptyBody()) {
                 //do not display empty comment
                 continue;

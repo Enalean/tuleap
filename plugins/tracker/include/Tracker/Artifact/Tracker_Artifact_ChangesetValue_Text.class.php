@@ -123,6 +123,47 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         $next     = explode(PHP_EOL, $this->getText());
         return $this->fetchDiff($previous, $next, $format);
     }
+
+    public function mailDiff($changeset_value, $format = 'html', PFUser $user = null, $artifact_id, $changeset_id) {
+        $previous = explode(PHP_EOL, $changeset_value->getText());
+        $next     = explode(PHP_EOL, $this->getText());
+        $string   = '';
+
+        switch ($format) {
+            case 'html':
+                $callback  = array(Codendi_HTMLPurifier::instance(), 'purify');
+                $formatter = new Codendi_HtmlUnifiedDiffFormatter();
+                $diff      = new Codendi_Diff(
+                    array_map($callback, $previous, array_fill(0, count($previous), CODENDI_PURIFIER_CONVERT_HTML)),
+                    array_map($callback, $next,     array_fill(0, count($next),     CODENDI_PURIFIER_CONVERT_HTML))
+                );
+
+                $formated_diff = $formatter->format($diff);
+                if ($formated_diff) {
+                    $protocol = $this->getServerProtocol();
+                    $url      = $protocol.'://'.$GLOBALS['sys_default_domain'].TRACKER_BASE_URL.'/?aid='.$artifact_id.'#followup_'.$changeset_id;
+                    $string   = '<a href="'.$url.'">' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'goto_diff') . '</a>';
+                }
+                break;
+            case 'text':
+                $diff      = new Codendi_Diff($previous, $next);
+                $formatter = new Codendi_UnifiedDiffFormatter();
+                $string    = PHP_EOL.$formatter->format($diff);
+                break;
+            default:
+                break;
+        }
+
+        return $string;
+    }
+
+    private function getServerProtocol() {
+        if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_force_ssl'] == 1) {
+            return 'https';
+        }
+
+        return 'http';
+    }
     
     /**
      * Returns the "set to" for field added later

@@ -464,35 +464,60 @@ class Tracker_Artifact_Changeset {
     }
 
     /**
+     * Return mail format diff between this changeset and previous one (HTML code)
+     *
+     * @return string The field difference between the previous changeset. or false if no changes
+     */
+    public function mailDiffToPrevious($format = 'html', $user = null, $ignore_perms = false) {
+        return $this->diffToPrevious($format, $user, $ignore_perms, true);
+    }
+
+    /**
      * Return diff between this changeset and previous one (HTML code)
      *
      * @return string The field difference between the previous changeset. or false if no changes
      */
-    public function diffToPrevious($format='html', $user=null, $ignore_perms=false) {
-        if ($previous_changeset = $this->getArtifact()->getPreviousChangeset($this->getId())) {
-            $result = false;
-            $factory = $this->getFormElementFactory();
-            foreach ($this->getValues() as $field_id => $current_changeset_value) {
-                if ($field = $factory->getFieldById($field_id)) {
-                    if ( ( $ignore_perms || $field->userCanRead($user) ) && $current_changeset_value) {
-                        if ($current_changeset_value->hasChanged()) {
-                            if ($previous_changeset_value = $previous_changeset->getValue($field)) {
-                                if ($diff = $current_changeset_value->diff($previous_changeset_value, $format, $user)) {
-                                    $result .= $this->displayDiff($diff, $format, $field);
-                                }
-                            } else {
-                                //Case : field added later (ie : artifact already exists) => no value
-                                if ($diff = $current_changeset_value->nodiff()) {
-                                    $result .= $this->displayDiff($diff, $format, $field);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+    public function diffToPrevious($format = 'html', $user = null, $ignore_perms = false, $for_mail = false) {
+        $result             = '';
+        $factory            = $this->getFormElementFactory();
+        $previous_changeset = $this->getArtifact()->getPreviousChangeset($this->getId());
+
+        if (! $previous_changeset) {
             return $result;
         }
-        return false;
+
+        foreach ($this->getValues() as $field_id => $current_changeset_value) {
+            $field = $factory->getFieldById($field_id);
+            if (! $field) {
+                continue;
+            }
+
+            if ( (! $ignore_perms && ! $field->userCanRead($user) ) || ! $current_changeset_value) {
+                continue;
+            }
+
+            if (! $current_changeset_value->hasChanged()) {
+                continue;
+            }
+
+            $previous_changeset_value = $previous_changeset->getValue($field);
+
+            if ($previous_changeset_value && $for_mail) {
+                $artifact_id = $this->getArtifact()->getId();
+                $changeset_id = $this->getId();
+                if ($diff = $current_changeset_value->mailDiff($previous_changeset_value, $format, $user, $artifact_id, $changeset_id)) {
+                    $result .= $this->displayDiff($diff, $format, $field);
+                }
+            } elseif ($previous_changeset_value) {
+                if ($diff = $current_changeset_value->diff($previous_changeset_value, $format, $user)) {
+                    $result .= $this->displayDiff($diff, $format, $field);
+                }
+            } elseif ($diff = $current_changeset_value->nodiff()) {
+                //Case : field added later (ie : artifact already exists) => no value
+                $result .= $this->displayDiff($diff, $format, $field);
+            }
+        }
+        return $result;
     }
     
     /**
@@ -540,7 +565,7 @@ class Tracker_Artifact_Changeset {
         $tracker = $this->getTracker();
         if ( ! $tracker->isNotificationStopped()) {
             $factory = $this->getFormElementFactory();
-            
+
             // 0. Is update
             $is_update = ! $this->getArtifact()->isFirstChangeset($this);
     
@@ -802,7 +827,7 @@ class Tracker_Artifact_Changeset {
         $art = $this->getArtifact();
         $hp = Codendi_HTMLPurifier::instance();
         $followup = '';
-        $changes = $this->diffToPrevious($format, $recipient_user, $ignore_perms);
+        $changes = $this->mailDiffToPrevious($format, $recipient_user, $ignore_perms);
         // Display latest changes (diff)
         if ($comment = $this->getComment()) {
             $followup = $comment->fetchMailFollowUp($format);

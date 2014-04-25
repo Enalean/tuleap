@@ -336,6 +336,7 @@ plugin_tracker_include_artifact	group	Groupe
 plugin_tracker_include_artifact	comment_type	Type de commentaire&nbsp;:
 plugin_tracker_include_artifact	add_comment	Ajouter un commentaire
 plugin_tracker_include_artifact	toggle_diff	Afficher le diff
+plugin_tracker_include_artifact	goto_diff	Voir la modification
 plugin_tracker_include_artifact	depend_on	Dépend de&nbsp;:
 plugin_tracker_include_artifact	cc_address	Adresse en CC
 plugin_tracker_include_artifact	comment	Commentaire
