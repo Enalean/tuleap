@@ -168,11 +168,12 @@ abstract class GraphOnTrackersV5_Chart {
             $content   = $this->fetch($store_in_session);
             $classname = '';
         }
+        $hp = Codendi_HTMLPurifier::instance();
 
         $html  = '';
         $html .= '<div class="widget '. $classname .'">';
-        $html .= '<div class="widget_titlebar">';
-        $html .= '<div class="widget_titlebar_title">'. $this->getTitle().'</div>';
+        $html .= '<div class="widget_titlebar" title="'. $hp->purify($this->getDescription()) .'">';
+        $html .= '<div class="widget_titlebar_title">'. $hp->purify($this->getTitle()) .'</div>';
         $html .= '<div class="plugin_graphontrackersv5_widget_actions">';
         $html .= $this->fetchActionButtons($renderer, $current_user, $read_only);
         $html .= '</div>';
