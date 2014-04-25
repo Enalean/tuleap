@@ -69,8 +69,7 @@ class GraphOnTrackersV5Plugin extends Plugin {
 
             $this->_addHook('graphontrackersv5_load_chart_factories', 'graphontrackersv5_load_chart_factories', false);
 
-            // jsgraphs
-            $this->addHook('javascript_file');
+            $this->addHook(Event::COMBINED_SCRIPTS);
         }
         $this->allowedForProject = array();
     }
@@ -350,17 +349,19 @@ class GraphOnTrackersV5Plugin extends Plugin {
         );
     }
 
-    public function javascript_file($params) {
-        echo $this->getJavascriptIncludesForScripts(array(
-            'graphs.js',
-        ));
-    }
+    public function combined_scripts($params) {
+        $scripts_path = $this->getPluginPath() .'/scripts/';
 
-    private function getJavascriptIncludesForScripts(array $script_names) {
-        $html = '';
-        foreach ($script_names as $script_name) {
-            $html .= '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/'.$script_name.'"></script>'."\n";
-        }
-        return $html;
+        $params['scripts'] = array_merge(
+            $params['scripts'],
+            array(
+                $scripts_path .'graphs.js',
+                $scripts_path .'graphs.js',
+                $scripts_path .'graphs-pie.js',
+                $scripts_path .'graphs-bar.js',
+                $scripts_path .'graphs-groupedbar.js',
+                $scripts_path .'loadGraphs.js'
+            )
+        );
     }
 }
