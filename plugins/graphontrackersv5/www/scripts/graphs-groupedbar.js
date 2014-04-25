@@ -19,10 +19,15 @@
 
 // Inspired from  http://bl.ocks.org/mbostock/3887051
 tuleap.graphontrackersv5.draw.groupedbar = function (id, graph) {
-    var margin = {top: 20, right: 20, bottom: 40, left: 40},
-    width = graph.width - margin.left - margin.right,
-    height = graph.height - margin.top - margin.bottom,
-    d3_colors  = d3.scale.category20();
+    var margin = {top: 20, right: 20, bottom: 20, left: 20},
+        axis_margin = {bottom: 20, left: 20},
+        width = graph.width - margin.left - margin.right - axis_margin.left,
+        height = graph.height - margin.top - margin.bottom - axis_margin.bottom,
+        d3_colors = d3.scale.category20(),
+        legend_width = 170,
+        legend_margin = 20,
+        margin_left = margin.left + axis_margin.left,
+        chart_width = width - legend_width - legend_margin;
 
     // Fix a d3 color when the backend doesn't define one
     graph.colors.forEach(function (legend_color, i) {
@@ -34,7 +39,7 @@ tuleap.graphontrackersv5.draw.groupedbar = function (id, graph) {
     });
 
     var x = d3.scale.ordinal()
-        .rangeRoundBands([0, width], .35);
+        .rangeRoundBands([0, chart_width], .35);
 
     var xGrouped = d3.scale.ordinal();
 
@@ -48,14 +53,15 @@ tuleap.graphontrackersv5.draw.groupedbar = function (id, graph) {
     var yAxis = d3.svg.axis()
         .scale(y)
         .ticks(5)
-        .tickSize(width)
+        .tickSize(chart_width)
         .orient("right");
 
     var svg = d3.selectAll(".plugin_graphontrackersv5_chart[data-graph-id="+id+']').append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        .attr("width", graph.width)
+        .attr("height", graph.height);
+
+    var chart = svg.append("g")
+        .attr("transform", "translate(" + margin_left + "," + margin.top + ")");
 
     x.domain(graph.values.map(function (d) { return d.name; }));
     xGrouped.domain(graph.grouped_labels).rangeRoundBands([0, x.rangeBand()]);
@@ -75,9 +81,9 @@ tuleap.graphontrackersv5.draw.groupedbar = function (id, graph) {
         ]
     );
 
-    tuleap.graphontrackersv5.alternateXAxisLabels(svg, height, xAxis);
+    tuleap.graphontrackersv5.alternateXAxisLabels(chart, height, xAxis);
 
-    var gy = svg.append("g")
+    var gy = chart.append("g")
         .attr("class", "y axis")
         .call(yAxis);
 
@@ -86,7 +92,7 @@ tuleap.graphontrackersv5.draw.groupedbar = function (id, graph) {
         .attr("x", -30)
         .attr("dx", ".71em");
 
-    var bar = svg.selectAll(".bar")
+    var bar = chart.selectAll(".bar")
         .data(graph.values).enter().append("g")
       .attr("class", "g")
       .attr("transform", function(d) { return "translate(" + x(d.name) + ",0)"; });
@@ -94,9 +100,11 @@ tuleap.graphontrackersv5.draw.groupedbar = function (id, graph) {
     var grouped_bar = bar.selectAll("path")
         .data(function(d) { return d.values; })
       .enter()
-        .append('g');
+        .append('g')
+        .on("mouseover", onOverValue)
+        .on("mouseout", onOutValue);;
 
-    var grads = svg.append("defs").selectAll("linearGradient")
+    var grads = chart.append("defs").selectAll("linearGradient")
             .data(graph.colors)
         .enter()
             .append("linearGradient")
@@ -136,6 +144,7 @@ tuleap.graphontrackersv5.draw.groupedbar = function (id, graph) {
             });
 
     grouped_bar.append("text")
+        .attr('class', function (d, i) { return getTextClass(i); })
         .attr("x", function(d) { return xGrouped(d.name) + (xGrouped.rangeBand() / 2); })
         .attr("y", function(d) { return height; })
         .attr("dy", ".35em")
@@ -145,7 +154,68 @@ tuleap.graphontrackersv5.draw.groupedbar = function (id, graph) {
             .duration(750)
             .attr("y", function (d) { return y(d.value) - 10 });
 
+    addLegendBox(svg, graph, legend_width, graph.colors);
+
     function getGradientId(value_index) {
         return 'grad_' + id + '_' + value_index;
     }
+
+    function getLegendClass(value_index) {
+        return 'legend_' + id + '_' + value_index;
+    }
+
+    function getTextClass(value_index) {
+        return 'text_' + id + '_' + value_index;
+    }
+
+    function onOverValue(d, index) {
+        svg.selectAll("." + getTextClass(index)).style("font-weight", "bold");
+        svg.select("." + getLegendClass(index)).style("font-weight", "bold");
+    }
+
+    function onOutValue(d, index) {
+        svg.selectAll("." + getTextClass(index)).style("font-weight", "normal");
+        svg.select("." + getLegendClass(index)).style("font-weight", "normal");
+    }
+
+    function addLegendBox(svg, graph, legend_width, colors) {
+        var legend_x = graph.width - legend_width - margin.left,
+            legend_y = Math.max(0, graph.height / 2 - 20 / 2 * colors.length),
+            legend_group;
+
+        legend_group = svg.append("g")
+            .attr("transform", "translate(" + legend_x + ", " + legend_y + ")");
+
+        var legend = legend_group.selectAll(".legend")
+            .data(colors)
+            .enter().append("g")
+                .attr("class", "legend")
+                .attr("transform", function(d, i) { return "translate(0, " + i * 20 + ")"; })
+                .on("mouseover", onOverValue)
+                .on("mouseout", onOutValue);
+
+        legend.append("rect")
+            .attr("x", 0)
+            .attr("rx", 3)
+            .attr("ry", 3)
+            .attr("width", 16)
+            .attr("height", 16)
+            .style("fill", function (d) { return d.color; });
+
+        legend.append("text")
+            .attr("class", function (d, i) { return getLegendClass(i); })
+            .attr("x", 22)
+            .attr("y", 8)
+            .attr("dy", ".35em")
+            .style("text-anchor", "start")
+            .text(function(d) {
+                var legend = d.name,
+                    length = legend.length;
+
+                if (length > 25) {
+                    return legend.substr(0, 15) + '…' + legend.substr(length - 10, length);
+                }
+                return legend;
+            });
+        }
 };
