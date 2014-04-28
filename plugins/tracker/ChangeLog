@@ -1,3 +1,6 @@
+Version 5.357 - Tuleap 6.13
+    * Fix aggregates issue in report
+
 Version 5.356 - Tuleap 6.13
     * request #6780: Number of artifacts in ArtifactLink field is wrong
 
