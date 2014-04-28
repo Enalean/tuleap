@@ -37,7 +37,7 @@ plugin_agiledashboard	cardwall	Cardwall
 plugin_agiledashboard	open	ouverts
 plugin_agiledashboard	closed	fermés
 plugin_agiledashboard	no_milestone	Il n'y a aucun jalon pour cette période
-plugin_agiledashboard	project_backlog	Backlog $1
+plugin_agiledashboard	project_backlog	Backlog de $1
 plugin_agiledashboard	past	Terminé
 plugin_agiledashboard	now	En cours
 plugin_agiledashboard	future	À venir
