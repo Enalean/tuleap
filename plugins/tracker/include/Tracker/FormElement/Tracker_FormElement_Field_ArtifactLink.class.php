@@ -615,7 +615,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                                 if ($renderer->getType() === Tracker_Report_Renderer::TABLE) {
                                     $key = $this->id .'_'. $report->id .'_'. $renderer->getId();
                                     $result[$key] = $renderer->fetchAsArtifactLink($matching_ids, $this->getId(), $read_only, $prefill_removed_values, $only_rows);
-                                    $head = '<div>';
+                                    $head = '<div class="tracker-form-element-artifactlink-trackerpanel">';
                                     
                                     $project_name = '';
                                     if ($project->getGroupId() != $this_project_id) {
