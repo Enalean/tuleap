@@ -200,39 +200,10 @@ if ($current_user->isLoggedIn()) {
     }
 }
 
+$theme_manager = new ThemeManager();
+$HTML = $theme_manager->getTheme($current_user);
 
-//Set up the vars and theme functions 
-require_once('theme.php');
-
-
-// HTML layout class, may be overriden by the Theme class
-
-if ($GLOBALS['sys_is_theme_custom']) {
-    $GLOBALS['path_to_theme'] = $GLOBALS['sys_custom_themeroot'].'/'.$GLOBALS['sys_user_theme'];
-} else {
-    $GLOBALS['path_to_theme'] = $GLOBALS['sys_themeroot'].'/'.$GLOBALS['sys_user_theme'];
-}
-$name_of_theme_class = $GLOBALS['sys_user_theme'].'_Theme';
-
-if (!file_exists($GLOBALS['path_to_theme'].'/'.$name_of_theme_class.'.class.php')) {
-    //User wants a theme which doesn't exist
-    //We're looking for default theme
-    $GLOBALS['sys_user_theme'] = $GLOBALS['sys_themedefault'];
-    $name_of_theme_class       = $GLOBALS['sys_user_theme'].'_Theme';
-    if (is_dir($GLOBALS['sys_themeroot'].'/'.$GLOBALS['sys_user_theme'])) {
-        $GLOBALS['sys_is_theme_custom'] = false;
-        $GLOBALS['path_to_theme']       = $GLOBALS['sys_themeroot'].'/'.$GLOBALS['sys_user_theme'];
-    } else {
-        $GLOBALS['sys_is_theme_custom'] = true;
-        $GLOBALS['path_to_theme']       = $GLOBALS['sys_custom_themeroot'].'/'.$GLOBALS['sys_user_theme'];
-    }
-}
-require_once($GLOBALS['path_to_theme'].'/'.$name_of_theme_class.'.class.php');
-$root_for_theme = ($GLOBALS['sys_is_theme_custom']?'/custom/':'/themes/').$GLOBALS['sys_user_theme'];
-$HTML = new $name_of_theme_class($root_for_theme);
-$GLOBALS['Response'] =& $HTML;
-
-// If the Codendi Software license was declined by the site admin
+// If the Software license was declined by the site admin
 // so stop all accesses to the site. Use exlicit path to avoid
 // loading the license.php file in the register directory when
 // invoking project/register.php
