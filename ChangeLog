@@ -22,6 +22,7 @@ Version 6.13 (Not Released Yet)
 	== Bug fix ==
 	* request #6737: Requester is not admin when project is created via SOAP
 	* request #6712: More explicit message about IE7 and IE8 support.
+	* request #6783: Form plugins do not work on phpwiki
 
 Version 6.12 (Thursday, April 3rd 2014)
 
