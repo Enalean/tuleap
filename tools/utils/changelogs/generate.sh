@@ -57,7 +57,7 @@ register_new_version() {
 
 search_modified_added_or_deleted_files_in_git_staging_area() {
     path=$1
-    echo $(git status --porcelain | grep -Pe "^(M|D|A)  $path" | awk -F' ' '{print $2}')
+    git status --porcelain | grep -Pe "^(M|D|A)  $path" | awk -F' ' '{print $2}'
 }
 
 modified_plugins=$(search_modified_added_or_deleted_files_in_git_staging_area "plugins/" | cut -d/ -f1,2 | uniq)
