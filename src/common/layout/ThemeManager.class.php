@@ -29,7 +29,8 @@ class ThemeManager {
         $GLOBALS['Response'] = $this->getFirstValidTheme(array(
             $current_user->getTheme(),
             $GLOBALS['sys_themedefault'],
-            'Tuleap'
+            'FlamingParrot',
+            'Tuleap',
         ));
         return $GLOBALS['Response'];
     }

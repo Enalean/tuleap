@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Experimental_HeaderPresenter {
+class FlamingParrot_HeaderPresenter {
 
     /** @var string */
     private $title;
