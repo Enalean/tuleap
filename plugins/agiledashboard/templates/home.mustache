@@ -1,11 +1,7 @@
 <div id="home">
-    <div class="row-fluid">
-        <div class="backlog span12">
-            <a href="?action=show-top&group_id={{ group_id }}&pane=topblcontent">
-                <h1>{{ project_backlog }}</h1>
-            </a>
-        </div>
-    </div>
+    <a href="?action=show-top&group_id={{ group_id }}&pane=topblcontent" class="btn go-to-backlog">
+        <i class="icon-inbox"></i> {{ project_backlog }}
+    </a>
 
     <div class="date-bar">
         <a href="?group_id={{ group_id }}&period=past" class="{{ past_active }}">{{ past }}</a><!--
