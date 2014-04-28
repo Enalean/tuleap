@@ -1092,7 +1092,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $is_first
     ) {
         $aggregate_functions = $field->getAggregateFunctions();
-        if (! $read_only && $this->report->userCanUpdate($current_user)) {
+
+        if ($read_only || ! $this->report->userCanUpdate($current_user)) {
             return;
         }
 
