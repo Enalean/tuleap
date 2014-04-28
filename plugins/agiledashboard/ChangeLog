@@ -1,3 +1,6 @@
+Version 1.61 - Tuleap 6.13
+    * request #4617: Service of disabled plugin should not be activated
+
 Version 1.60 - Tuleap 6.13
     * request #6725: have a more explicit button for project backlog
 

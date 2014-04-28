@@ -12,13 +12,16 @@ Version 6.13 (Not Released Yet)
 	* CodexSTN: 1.14
 
 	== Plugins ==
-	* tracker: 5.357
+	* tracker: 5.358
 	* cardwall: 1.29
 	* graphontrackersv5: 5.10
-	* agiledashboard: 1.60
-	* mediawiki: 0.27
-	* git: 3.81
-	* docman: 2.26.32
+	* agiledashboard: 1.61
+	* mediawiki: 0.28
+	* git: 3.82
+	* docman: 2.26.33
+	* IM: 1.5.14
+	* hudson: 1.15
+	* proftpd: 0.13
 
 	== Bug fix ==
 	* request #6737: Requester is not admin when project is created via SOAP

@@ -1,3 +1,6 @@
+Version 3.82 - Tuleap 6.13
+    * request #4617: Service of disabled plugin should not be activated
+
 Version 3.81 - Tuleap 6.13
     * request #6658: Fix gitphp line number displaying
 

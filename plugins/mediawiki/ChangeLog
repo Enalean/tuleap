@@ -1,3 +1,6 @@
+Version 0.28 - Tuleap 6.13
+    * request #4617: Service of disabled plugin should not be activated
+
 Version 0.27 - Tuleap 6.13
     * request #6662: Fix Mediawiki UI in experimental theme
 

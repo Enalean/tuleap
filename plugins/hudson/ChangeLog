@@ -1,3 +1,6 @@
+Version 1.15 - Tuleap 6.13
+    * request #4617: Service of disabled plugin should not be activated
+
 Version 1.14 - Tuleap 6.12
     * Fix request #6425 - Cannot add a parametrized job
 

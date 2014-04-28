@@ -1,3 +1,6 @@
+Version 0.13 - Tuleap 6.13
+    * request #4617: Service of disabled plugin should not be activated
+
 Version 0.12 - Tuleap 6.12
     * story #6127: release an SFTP file into FRS
 
