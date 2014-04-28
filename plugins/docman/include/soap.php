@@ -13,6 +13,7 @@ define('invalid_item_fault', '3017');
 define('invalid_document_fault', '3018');
 define('invalid_folder_fault', '3019');
 define('PLUGIN_DOCMAN_SOAP_FAULT_UNAVAILABLE_PLUGIN', '3020');
+define('invalid_operator', '3021');
 
 if (defined('NUSOAP')) {
 
@@ -457,6 +458,24 @@ function listFolder($sessionKey,$group_id,$item_id) {
 }
 $soapFunctions[] = array('listFolder', 'List folder contents', 'tns:ArrayOfDocman_Item');
 
+function operatorToValue($operator) {
+    if ($operator == '=') {
+        return 0;
+    } else if ($operator == '<') {
+        return -1;
+    } else if ($operator == '>') {
+        return 1;
+    }
+}
+
+function isValidOperator($operator) {
+    if($operator == '<' ||
+       $operator == '>' ||
+       $operator == '=') {
+        return true;
+    }
+    return false;
+}
 
 /**
  * Returns all the items that match given criterias
@@ -464,7 +483,12 @@ $soapFunctions[] = array('listFolder', 'List folder contents', 'tns:ArrayOfDocma
 function searchDocmanItem($sessionKey, $group_id, $item_id, $criterias) {
     $params = array('id' => $item_id);
     foreach($criterias as $criteria) {
-        $params[$criteria->field_name] = $criteria->field_value;
+
+        $params[$criteria->field_name.'_value'] = $criteria->field_value;
+        if (!isValidOperator($criteria->operator)) {
+            return new SoapFault(invalid_operator, 'This operator is not valid. Only <, >, = are valid.', 'searchDocmanItem');
+        }
+        $params[$criteria->field_name.'_operator']  = operatorToValue($criteria->operator);
     }
     return _makeDocmanRequest($sessionKey, $group_id, 'search', $params);
 }
