@@ -1,3 +1,6 @@
+Version 5.355 - Tuleap 6.13
+    * request #6779: No more able to drag and drop columns in report table
+
 Version 5.354 - Tuleap 6.13
     * Fix followups headers hovering
 
