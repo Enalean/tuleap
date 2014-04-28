@@ -1,3 +1,6 @@
+Version 0.9.32 - Tuleap 6.13
+    * request #6130: fix french chars on page <title> and collapsed sidebar
+
 Version 0.9.31 - Tuleap 6.13
     * Take into account organization logo medium size in the new theme
 
