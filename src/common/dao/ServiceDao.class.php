@@ -44,6 +44,19 @@ class ServiceDao extends DataAccessObject {
                 $this->da->quoteSmart($service_short_name));
         return $this->retrieve($sql);
     }
+
+    public function searchByProjectIdAndShortNames($project_id, $allowed_shortnames) {
+        $project_id         = $this->da->escapeInt($project_id);
+        $allowed_shortnames = $this->da->quoteSmartImplode(',', $allowed_shortnames);
+
+        $sql = "SELECT *
+                FROM service
+                WHERE group_id = $project_id
+                    AND short_name IN ($allowed_shortnames)
+                ORDER BY rank";
+
+        return $this->retrieve($sql);
+    }
 }
 
 

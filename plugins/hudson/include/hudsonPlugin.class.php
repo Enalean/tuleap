@@ -36,6 +36,10 @@ class hudsonPlugin extends Plugin {
         }
         return $this->pluginInfo;
     }
+
+    public function getServiceShortname() {
+        return 'hudson';
+    }
     
     function cssFile($params) {
         // Only show the stylesheet if we're actually in the hudson pages.

@@ -275,6 +275,15 @@ class Plugin implements PFO_Plugin {
     }
 
     /**
+     * Return the name of the service that is managed by this plugin
+     *
+     * @return string
+     */
+    public function getServiceShortname() {
+        return '';
+    }
+
+    /**
      * @return BackendLogger
      */
     protected function getBackendLogger() {

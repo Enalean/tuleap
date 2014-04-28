@@ -28,10 +28,13 @@ class PluginManagerTest extends UnitTestCase {
 
     function setUp() {
         $this->globals = $GLOBALS;
+        $this->service_manager = mock('ServiceManager');
+        ServiceManager::setInstance($this->service_manager);
     }
 
     function tearDown() {
         $GLOBALS = $this->globals;
+        ServiceManager::clearInstance();
     }
 
     function testLoadPlugins() {
@@ -118,7 +121,10 @@ class PluginManagerTest extends UnitTestCase {
         $phgm->expectAt(2, 'getPriorityForPluginHook', $args_phgm_2);
         $phgm->setReturnValue('getPriorityForPluginHook', 0);
         $phgm->setReturnValueAt(2, 'getPriorityForPluginHook', 10);//124|hook_A
-        
+
+        expect($this->service_manager)->enablePluginBasedService($plugin_1)->at(0);
+        expect($this->service_manager)->enablePluginBasedService($plugin_2)->at(1);
+
         //The plugins manager
         $pm = new PluginManagerTestVersion($this);
         $pm->setReturnReference('_getPluginFactory', $plugin_factory);

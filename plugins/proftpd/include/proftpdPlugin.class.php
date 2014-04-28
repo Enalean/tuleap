@@ -74,8 +74,12 @@ class proftpdPlugin extends Plugin {
         );
     }
 
+    public function getServiceShortname() {
+        return self::SERVICE_SHORTNAME;
+    }
+
     public function service_classnames(array $params) {
-        $params['classnames']['plugin_proftpd'] = 'Tuleap\ProFTPd\ServiceProFTPd';
+        $params['classnames'][$this->getServiceShortname()] = 'Tuleap\ProFTPd\ServiceProFTPd';
     }
 
     public function cssfile($params) {

@@ -72,6 +72,10 @@ class MediaWikiPlugin extends Plugin {
             $this->addHook(Event::SERVICE_CLASSNAMES);
     }
 
+    public function getServiceShortname() {
+        return self::SERVICE_SHORTNAME;
+    }
+
     /**
      * @see Plugin::getDependencies()
      */

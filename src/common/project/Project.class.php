@@ -112,16 +112,16 @@ class Project extends Group implements PFO_Project {
         EventManager::instance()->processEvent(Event::SERVICE_CLASSNAMES, array('classnames' => &$this->serviceClassnames));
         
         // Get Service data
-        $db_res = db_query("SELECT * FROM service WHERE group_id='" . db_es($this->group_id) . "' ORDER BY rank");
-        $rows = db_numrows($db_res);
-        if ($rows < 1) {
+        $allowed_services = ServiceManager::instance()->getListOfAllowedServicesForProject($this);
+        if (count($allowed_services) < 1) {
             $this->service_data_array = array();
         }
-        for ($j = 0 ; $j < $rows ; $j++) {
-            $res_row = db_fetch_array($db_res);
-            $short_name = $res_row['short_name'];
+        $j = 1;
+        foreach ($allowed_services as $service) {
+            $res_row = $service->data;
+            $short_name = $service->getShortName();
             if (! $short_name) {
-                $short_name = $j;
+                $short_name = $j++;
             }
             
             // needed for localisation
@@ -141,24 +141,17 @@ class Project extends Group implements PFO_Project {
                 }
             }
 
-            // Init Service object corresponding to given service
-            try {
-                $classname = $this->getServiceClassName($short_name);
-                $s = new $classname($this, $res_row);
-                $this->service_data_array[$short_name] = $res_row;
-                if ($short_name) {
-                    $this->use_service[$short_name] = $res_row['is_used'];
-                }
-                $this->services[$short_name] = $s;
-                if ($res_row['is_active']) {
-                    $this->cache_active_services[] = $s;
-                }
-            } catch (ServiceNotAllowedForProjectException $e) {
-                //do nothing
+            $this->service_data_array[$short_name] = $res_row;
+            if ($short_name) {
+                $this->use_service[$short_name] = $service->isUsed();
+            }
+            $this->services[$short_name] = $service;
+            if ($service->isActive()) {
+                $this->cache_active_services[] = $service;
             }
         }
     }
-    
+
     /**
      * Return the name of the class to instantiate a service based on its short name
      *

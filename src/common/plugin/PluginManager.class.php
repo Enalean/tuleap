@@ -33,6 +33,7 @@ class PluginManager {
     function loadPlugins() {
         $plugin_factory = $this->_getPluginFactory();
         $event_manager  = $this->_getEventManager();
+        $service_manager = $this->getServiceManager();
         
         $priority_manager = $this->_getPluginHookPriorityManager();
         $priority_manager->cacheAllPrioritiesForPluginHook();
@@ -46,6 +47,7 @@ class PluginManager {
                 $iter->next();
             }
             $plugin->loaded();
+            $service_manager->enablePluginBasedService($plugin);
         }
         $this->plugins_loaded = true;
     }
@@ -420,6 +422,11 @@ class PluginManager {
                 $this->copyDirectory($file->getRealPath(), "$destination/$file");
             }
         }
+    }
+
+    /** @return ServiceManager */
+    private function getServiceManager() {
+        return ServiceManager::instance();
     }
 }
 ?>

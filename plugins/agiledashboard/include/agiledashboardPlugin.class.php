@@ -83,6 +83,10 @@ class AgileDashboardPlugin extends Plugin {
         return array('tracker');
     }
 
+    public function getServiceShortname() {
+        return 'plugin_agiledashboard';
+    }
+
     public function cardwall_event_get_swimline_tracker($params) {
         $planning_factory = $this->getPlanningFactory();
         if ($planning = $planning_factory->getPlanningByPlanningTracker($params['tracker'])) {

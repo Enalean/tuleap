@@ -53,6 +53,10 @@ class IMPlugin extends Plugin {
         }
         return $this->pluginInfo;
     }
+
+    public function getServiceShortname() {
+        return 'IM';
+    }
     
     
     /**

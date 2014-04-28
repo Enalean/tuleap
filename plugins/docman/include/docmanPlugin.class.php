@@ -92,6 +92,10 @@ class DocmanPlugin extends Plugin {
         $this->_addHook(Event::COMBINED_SCRIPTS,           'combinedScripts',             false);
     }
 
+    public function getServiceShortname() {
+        return 'docman';
+    }
+
     function permission_get_name($params) {
         if (!$params['name']) {
             switch($params['permission_type']) {
@@ -225,7 +229,7 @@ class DocmanPlugin extends Plugin {
     }
     
     function service_public_areas($params) {
-        if ($params['project']->usesService('docman')) {
+        if ($params['project']->usesService($this->getServiceShortname())) {
             $params['areas'][] = '<a href="/plugins/docman/?group_id='. $params['project']->getId() .'">' .
                 '<img src="'. $this->getThemePath() .'/images/ic/text.png" />&nbsp;' .
                 $GLOBALS['Language']->getText('plugin_docman', 'descriptor_name') .': '.
@@ -234,7 +238,7 @@ class DocmanPlugin extends Plugin {
         }
     }
     function service_admin_pages($params) {
-        if ($params['project']->usesService('docman')) {
+        if ($params['project']->usesService($this->getServiceShortname())) {
             $params['admin_pages'][] = '<a href="/plugins/docman/?action=admin&amp;group_id='. $params['project']->getId() .'">' .
                 $GLOBALS['Language']->getText('plugin_docman', 'service_lbl_key') .' - '. 
                 $GLOBALS['Language']->getText('plugin_docman', 'admin_title') .
@@ -246,7 +250,7 @@ class DocmanPlugin extends Plugin {
         $controler->installDocman($params['ugroupsMapping'], $params['group_id']);
     }
     function service_is_used($params) {
-        if (isset($params['shortname']) && $params['shortname'] == 'docman') {
+        if (isset($params['shortname']) && $params['shortname'] == $this->getServiceShortname()) {
             if (isset($params['is_used']) && $params['is_used']) {
                 $this->installNewDocman(array('ugroupsMapping' => false));
             }

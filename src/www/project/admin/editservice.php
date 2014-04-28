@@ -277,6 +277,11 @@ else {
             $readonly=true;
         }
     }
+
+    if (! ServiceManager::instance()->isServiceAllowedForProject($project, $service['short_name'])) {
+        exit_error('ERROR', $GLOBALS['Language']->getText('project_admin_servicebar', 'not_allowed'));
+    }
+
     display_service_configuration_form($group_id, $service_id, $service, $readonly, $is_superuser);
 }
 
