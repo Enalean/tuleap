@@ -1,3 +1,6 @@
+Version 3.80 - Tuleap 6.13
+    * Fix request #6775: Bad request when accessing git repositories
+
 Version 3.79 - Tuleap 6.13
     * Fix request #6591: renaming a project messes-up git
 
