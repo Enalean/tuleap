@@ -63,10 +63,10 @@ tuleap.graphontrackersv5.draw.bar = function (id, graph) {
 
     tuleap.graphontrackersv5.defineGradients(svg, data, getGradientId);
 
-    x.domain(data.map(function(d) { return d.label; }));
+    x.domain(data.map(function(d, i) { return i; }));
     y.domain([0, d3.max(data, function(d) { return d.value; })]);
 
-    tuleap.graphontrackersv5.alternateXAxisLabels(svg, height, xAxis);
+    tuleap.graphontrackersv5.alternateXAxisLabels(svg, height, xAxis, graph.legend);
 
     var gy = svg.append("g")
         .attr("class", "y axis")
@@ -85,12 +85,12 @@ tuleap.graphontrackersv5.draw.bar = function (id, graph) {
         .attr("class", "bar")
         .transition()
             .duration(750)
-            .attrTween('d', function (d) {
+            .attrTween('d', function (d, j) {
                 var i = d3.interpolateNumber(height, y(d.value));
 
                 return function(t) {
                     return tuleap.graphontrackersv5.topRoundedRect(
-                        x(d.label),
+                        x(j),
                         i(t),
                         x.rangeBand(),
                         height - i(t),
@@ -100,7 +100,7 @@ tuleap.graphontrackersv5.draw.bar = function (id, graph) {
             });
 
     bar.append("text")
-        .attr("x", function(d) { return x(d.label) + (x.rangeBand() / 2); })
+        .attr("x", function(d, i) { return x(i) + (x.rangeBand() / 2); })
         .attr("y", function(d) { return height; })
         .attr("dy", ".35em")
         .attr("text-anchor", "middle")

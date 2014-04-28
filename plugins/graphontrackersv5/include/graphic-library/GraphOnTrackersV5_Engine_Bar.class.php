@@ -165,10 +165,10 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine {
         $values = array();
         foreach ($this->getGroupedValuesBySource() as $source_key => $source_values) {
             $grouped_source_values = array();
-            foreach ($source_values as $group_by_key => $value) {
+            foreach ($this->legend as $legend_key => $legend_label) {
                 $grouped_source_values[] = array(
-                    'label' => $this->legend[$group_by_key],
-                    'value' => $value
+                    'label' => $legend_label,
+                    'value' => isset($source_values[$legend_key]) ? $source_values[$legend_key] : ''
                 );
             }
 

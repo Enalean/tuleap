@@ -32,7 +32,7 @@ tuleap.graphontrackersv5.draw.groupedbar = function (id, graph) {
     // Fix a d3 color when the backend doesn't define one
     graph.colors.forEach(function (legend_color, i) {
         if (legend_color.color === null) {
-            graph.colors[i].color = d3_colors(legend_color.label);
+            graph.colors[i].color = d3_colors(i);
         } else {
             graph.colors[i].color = legend_color.color;
         }
@@ -65,8 +65,13 @@ tuleap.graphontrackersv5.draw.groupedbar = function (id, graph) {
     var chart = svg.append("g")
         .attr("transform", "translate(" + margin_left + "," + margin.top + ")");
 
-    x.domain(graph.values.map(function (d) { return d.label; }));
-    xGrouped.domain(graph.grouped_labels).rangeRoundBands([0, x.rangeBand()]);
+
+    var xAxisLabels = graph.values.map(function (d) {
+        return d.label;
+    });
+
+    x.domain(graph.values.map(function (d, i) { return i; }));
+    xGrouped.domain(graph.grouped_labels.map(function (d, i) { return i; })).rangeRoundBands([0, x.rangeBand()]);
     y.domain(
         [
             0,
@@ -83,7 +88,7 @@ tuleap.graphontrackersv5.draw.groupedbar = function (id, graph) {
         ]
     );
 
-    tuleap.graphontrackersv5.alternateXAxisLabels(chart, height, xAxis);
+    tuleap.graphontrackersv5.alternateXAxisLabels(chart, height, xAxis, xAxisLabels);
 
     var gy = chart.append("g")
         .attr("class", "y axis")
@@ -97,14 +102,14 @@ tuleap.graphontrackersv5.draw.groupedbar = function (id, graph) {
     var bar = chart.selectAll(".bar")
         .data(graph.values).enter().append("g")
       .attr("class", "g")
-      .attr("transform", function(d) { return "translate(" + x(d.label) + ",0)"; });
+      .attr("transform", function(d, i) { return "translate(" + x(i) + ",0)"; });
 
     var grouped_bar = bar.selectAll("path")
         .data(function(d) { return d.values; })
       .enter()
         .append('g')
         .on("mouseover", onOverValue)
-        .on("mouseout", onOutValue);;
+        .on("mouseout", onOutValue);
 
     grouped_bar.append("path")
         .style("fill", function(d, i) {
@@ -113,15 +118,15 @@ tuleap.graphontrackersv5.draw.groupedbar = function (id, graph) {
         .attr("class", "bar")
         .transition()
             .duration(750)
-            .attrTween('d', function (d) {
-                var i = d3.interpolateNumber(height, y(d.value));
+            .attrTween('d', function (d, i) {
+                var interpolate = d3.interpolateNumber(height, y(d.value));
 
                 return function(t) {
                     return tuleap.graphontrackersv5.topRoundedRect(
-                        xGrouped(d.label),
-                        i(t),
+                        xGrouped(i),
+                        interpolate(t),
                         xGrouped.rangeBand(),
-                        height - i(t),
+                        height - interpolate(t),
                         3
                     );
                 };
@@ -129,7 +134,7 @@ tuleap.graphontrackersv5.draw.groupedbar = function (id, graph) {
 
     grouped_bar.append("text")
         .attr('class', function (d, i) { return getTextClass(i); })
-        .attr("x", function(d) { return xGrouped(d.label) + (xGrouped.rangeBand() / 2); })
+        .attr("x", function(d, i) { return xGrouped(i) + (xGrouped.rangeBand() / 2); })
         .attr("y", function(d) { return height; })
         .attr("dy", ".35em")
         .attr("text-anchor", "middle")
