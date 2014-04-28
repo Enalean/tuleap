@@ -43,12 +43,13 @@ tuleap.graphontrackersv5.topRoundedRect = function(x, y, width, height, radius) 
  * @param {int} height
  * @param {Object} xAxis
  */
-tuleap.graphontrackersv5.alternateXAxisLabels = function (svg, height, xAxis) {
+tuleap.graphontrackersv5.alternateXAxisLabels = function (svg, height, xAxis, legend) {
     var x_labels_alternate_delta = 15;
     var x_labels = svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis);
+
 
     x_labels.selectAll("text")
         .attr("transform", function (d, i) {
@@ -57,7 +58,12 @@ tuleap.graphontrackersv5.alternateXAxisLabels = function (svg, height, xAxis) {
                 y_delta += x_labels_alternate_delta;
             }
             return "translate(0," + y_delta + ")";
-        });
+        })
+
+    if(typeof legend !== "undefined") {
+        x_labels.selectAll("text")
+            .text(function(d, i) {return legend[i];} );
+    }
 
     x_labels.selectAll("line")
         .attr("x2", 0)
