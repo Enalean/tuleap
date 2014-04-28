@@ -1,23 +1,24 @@
 <?php
 /* 
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
  *
  * Originally written by Mahmoud MAALEJ, 2006. STMicroelectronics.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('GraphOnTrackersV5_Engine.class.php');
 
@@ -130,5 +131,84 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine {
         // end hard coded parameter
         return $b;
     }
+
+    public function toArray() {
+        return $this->getChartData(
+            array(
+                'title'  => $this->title,
+                'height' => $this->height,
+                'width'  => $this->width,
+                'legend' => array_values($this->legend)
+            )
+        );
+    }
+
+    private function getChartData(array $info) {
+        list(, $row) = each($this->data);
+        if (is_array($row)) {
+            return $this->getGroupedBarChartData($info);
+        } else {
+            return $this->getBarChartData($info);
+        }
+    }
+
+    private function getGroupedBarChartData(array $info) {
+        return $info + array(
+            'type'           => 'groupedbar',
+            'grouped_labels' => array_values($this->legend),
+            'values'         => $this->buildGroupedBarChartData(),
+            'colors'         => $this->getColorPerLegend(),
+        );
+    }
+
+    private function buildGroupedBarChartData() {
+        $values = array();
+        foreach ($this->getGroupedValuesBySource() as $source_key => $source_values) {
+            $grouped_source_values = array();
+            foreach ($source_values as $group_by_key => $value) {
+                $grouped_source_values[] = array(
+                    'label' => $this->legend[$group_by_key],
+                    'value' => $value
+                );
+            }
+
+            $values[] = array(
+                'label'  => $this->xaxis[$source_key],
+                'values' => $grouped_source_values,
+            );
+        }
+
+        return $values;
+    }
+
+    private function getGroupedValuesBySource() {
+        $grouped_values_by_source = array();
+        foreach ($this->data as $group_by => $source_data_values) {
+            foreach ($source_data_values as $source_data_key => $value) {
+                $grouped_values_by_source[$source_data_key][$group_by] = $value;
+            }
+        }
+
+        return $grouped_values_by_source;
+    }
+
+    private function getColorPerLegend() {
+        $colors = array();
+        foreach ($this->legend as $index => $name) {
+            $colors[]= array(
+                'label' => $name,
+                'color' => $this->getColorOrNull($this->colors[$index]),
+            );
+        }
+
+        return $colors;
+    }
+
+    private function getBarChartData(array $info) {
+        return $info + array(
+                'type'   => 'bar',
+                'data'   => array_values($this->data),
+                'colors' => $this->toArrayColors(),
+            );
+    }
 }
-?>

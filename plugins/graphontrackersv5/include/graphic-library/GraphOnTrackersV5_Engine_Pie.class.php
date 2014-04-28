@@ -84,6 +84,7 @@ class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine {
             'height' => $this->height,
             'width'  => $this->width,
             'legend' => $this->legend,
+            'data'   => $this->data,
         );
     }
 }

@@ -31,7 +31,7 @@ class GraphOnTrackersV5_Chart_Bar extends GraphOnTrackersV5_Chart {
     
     protected $field_base;
     protected $field_group;
-    
+
     public function loadFromSession() {
         $this->report_session = self::getSession($this->renderer->report->id, $this->renderer->id);
         $chart_in_session = $this->report_session->get($this->id);
