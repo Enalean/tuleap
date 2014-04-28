@@ -14,7 +14,13 @@
 #gitphp div.page_path { padding:8px; border:solid #d9d8d1; border-width:0px 0px 1px}
 #gitphp div.page_footer { height:17px; padding:4px 8px; background-color: #d9d8d1; }
 #gitphp div.page_footer_text { float:left; color:#555555; font-style:italic; }
-#gitphp div.page_body { padding:8px; }
+
+#gitphp div.page_body {
+    padding:8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
 #gitphp div.title {
 	display:block; padding:6px 8px;
 	font-weight:bold; background-color:#edece6; text-decoration:none; color:#000000;
@@ -111,11 +117,38 @@
 }
 #gitphp table.code td {
 	padding: 0px 0px;
-	font-family:monospace; font-size:12px; white-space:pre;
+	font-family:monospace;
+        font-size:12px;
 }
-#gitphp table.code td.num {
-	text-align: right;
+#gitphp table.code td.num,
+#gitphp table.code td.ln {
+    text-align: right;
+    border-right: 1px solid #E5E5E5;
+    padding-right: 5px;
 }
-#gitphp table.code td.codeline {
-	padding-left: 5px;
+#gitphp table.code td.codeline,
+#gitphp table.code td.de1 {
+    padding-left: 5px;
+}
+
+#gitphp .ln {
+    border-right: 1px solid #E5E5E5;
+    white-space: normal;
+}
+#gitphp .ln .de1 {
+    text-align: right;
+    color: #CCC;
+}
+
+#gitphp .linenr {
+    color: #CCC;
+}
+
+#gitphp .de1 .de1,
+#gitphp .ln .de1 {
+    white-space: pre;
+    border: none;
+    border-radius: 0;
+    background: none;
+    padding: 0;
 }
