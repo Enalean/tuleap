@@ -330,13 +330,17 @@ class GitDao extends DataAccessObject {
     
     
     public function searchProjectRepositoryByPath($projectId, $repositoryPath) {
+
         $projectId      = $this->da->escapeInt($projectId);
         $repositoryPath = $this->da->quoteSmart($repositoryPath);
+
+        //COLLATE utf8_bin used in query in order to create a case sensitive match
         $query = 'SELECT * '.
                  ' FROM '.$this->getTable().
-                 ' WHERE '.self::REPOSITORY_PATH.'='.$repositoryPath.
+                 ' WHERE '.self::REPOSITORY_PATH.' COLLATE utf8_bin = '.$repositoryPath.
                  ' AND   '.self::FK_PROJECT_ID.'='.$projectId.
                  ' AND   '.self::REPOSITORY_DELETION_DATE.'='."'0000-00-00 00:00:00'";
+
         return $this->retrieve($query);
     }
 
