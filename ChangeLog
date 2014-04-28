@@ -18,6 +18,7 @@ Version 6.13 (Not Released Yet)
 	* agiledashboard: 1.60
 	* mediawiki: 0.27
 	* git: 3.80
+	* docman: 2.26.32
 
 	== Bug fix ==
 	* request #6737: Requester is not admin when project is created via SOAP

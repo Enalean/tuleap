@@ -1,3 +1,6 @@
+Version 2.26.32 - Tuleap 6.13
+    * Fix request #6778: Issue in SOAP function: searchDocmanItem
+
 Version 2.26.31 - Tuleap 6.12
     * Replace TinyMCE by CKEditor in docman (IE9 compat)
 
