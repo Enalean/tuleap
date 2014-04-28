@@ -620,7 +620,12 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             
     
             if ($current_renderer) {
-                $html .= '<div class="tracker_report_renderer" id="tracker_report_renderer_current" data-renderer-id="'. $current_renderer->getId() .'">';
+                $html .= '<div class="tracker_report_renderer"
+                               id="tracker_report_renderer_current"
+                               data-renderer-id="'. $current_renderer->getId() .'"
+                               data-report-id="'. $this->id .'"
+                               data-renderer-func="renderer"
+                          >';
 
                 if ($current_renderer->description) {
                     $html .= '<p class="tracker_report_renderer_description">';

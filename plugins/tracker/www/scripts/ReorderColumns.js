@@ -68,10 +68,13 @@ codendi.ReorderColumns = Class.create({
                 
                 //don't change column order if it is not necessary
                 if (from !== to) {
-                    
+
+                    var renderer_id = $('tracker_report_renderer_current').readAttribute('data-renderer-id');
+                    var report_id   = $('tracker_report_renderer_current').readAttribute('data-report-id');
+
                     var parameters = {
                             func:     'renderer',
-                            renderer: $('tracker_report_table_addcolumn_form').renderer.value
+                            renderer: renderer_id
                         }, 
                         param_name = 'renderer_table[reorder-column][' + dragged.up('th').id.match(/_(\d+)$/)[1] + ']';
                     if (from < to) {
@@ -87,8 +90,7 @@ codendi.ReorderColumns = Class.create({
                     }
                     
                     //save the new column order
-                    var form = $('tracker_report_table_addcolumn_form');
-                    var req = new Ajax.Request(codendi.tracker.base_url + '?report=' + form.report.value + '&renderer=' + form.renderer.value, {
+                    var req = new Ajax.Request(codendi.tracker.base_url + '?report=' + report_id + '&renderer=' + renderer_id, {
                         parameters: parameters,
                         onSuccess: function (transport) {
                             this.reorder(dropped.up('table'), from, to);
