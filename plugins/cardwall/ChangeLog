@@ -1,3 +1,6 @@
+Version 1.30 - Tuleap 6.13
+    * Fix request #6786: None column on the cardwall renderer is empty when the ui is in french
+
 Version 1.29 - Tuleap 6.13
     * task #6624 - Remove edit buttons and action
 

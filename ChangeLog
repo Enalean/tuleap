@@ -13,7 +13,7 @@ Version 6.13 (Not Released Yet)
 
 	== Plugins ==
 	* tracker: 5.359
-	* cardwall: 1.29
+	* cardwall: 1.30
 	* graphontrackersv5: 5.11
 	* agiledashboard: 1.61
 	* mediawiki: 0.28
@@ -28,6 +28,7 @@ Version 6.13 (Not Released Yet)
 	* request #6712: More explicit message about IE7 and IE8 support.
 	* request #6783: Form plugins do not work on phpwiki
 	* Makes Theme loading resilient
+	* request #6786: None column on the cardwall renderer is empty when the ui is in french
 
 Version 6.12 (Thursday, April 3rd 2014)
 
