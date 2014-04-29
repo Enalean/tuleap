@@ -113,7 +113,7 @@ class Cardwall_Column {
     }
 
     private function matchesTheNoneColumn($artifact_status) {
-        return $artifact_status === null && $this->id == 100;
+        return ($artifact_status === null || $artifact_status === 'None') && $this->id == 100;
     }
 
     /**

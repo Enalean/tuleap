@@ -89,4 +89,22 @@ class Cardwall_Column_isInColumnTest extends TuleapTestCase {
     
 }
 
-?>
+class Cardwall_Column_canContainStatusTest extends TuleapTestCase {
+
+    private $column;
+
+    public function setUp() {
+        parent::setUp();
+
+        $id = 100;
+        $label = $bgcolor = $fgcolor = 'whatever';
+        $this->column = new Cardwall_Column($id, $label, $bgcolor, $fgcolor);
+    }
+
+    public function itReturnsTrueOnNoneColumnIfStatusIsNone() {
+        $this->assertTrue($this->column->canContainStatus('None'));
+    }
+    public function itReturnsTrueOnNoneColumnIfStatusIsNull() {
+        $this->assertTrue($this->column->canContainStatus(null));
+    }
+}
