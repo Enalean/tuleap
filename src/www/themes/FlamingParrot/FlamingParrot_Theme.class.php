@@ -28,7 +28,7 @@ require_once 'FooterPresenter.class.php';
 require_once 'NavBarPresenter.class.php';
 require_once 'SearchFormPresenter.class.php';
 
-class Experimental_Theme extends DivBasedTabbedLayout {
+class FlamingParrot_Theme extends DivBasedTabbedLayout {
 
     /**
      * @var TemplateRenderer
@@ -40,9 +40,9 @@ class Experimental_Theme extends DivBasedTabbedLayout {
     function __construct($root) {
         parent::__construct($root);
         $this->renderer = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
-        $this->includeJavascriptFile('/themes/Experimental/js/navbar.js');
-        $this->includeJavascriptFile('/themes/Experimental/js/sidebar.js');
-        $this->includeJavascriptFile('/themes/Experimental/js/motd.js');
+        $this->includeJavascriptFile('/themes/FlamingParrot/js/navbar.js');
+        $this->includeJavascriptFile('/themes/FlamingParrot/js/sidebar.js');
+        $this->includeJavascriptFile('/themes/FlamingParrot/js/motd.js');
     }
 
     private function render($template_name, $presenter) {
@@ -63,7 +63,7 @@ class Experimental_Theme extends DivBasedTabbedLayout {
            $title = $params['title'] .' - '. $title;
         }
 
-        $this->render('header', new Experimental_HeaderPresenter(
+        $this->render('header', new FlamingParrot_HeaderPresenter(
             $title,
             $this->imgroot
         ));
@@ -113,7 +113,7 @@ class Experimental_Theme extends DivBasedTabbedLayout {
         $body_class[] = $has_sidebar;
         $body_class[] = $sidebar_state;
 
-        $this->render('body', new Experimental_BodyPresenter(
+        $this->render('body', new FlamingParrot_BodyPresenter(
             $_SERVER['REQUEST_URI'],
             $params['title'],
             $this->imgroot,
@@ -128,10 +128,10 @@ class Experimental_Theme extends DivBasedTabbedLayout {
 
     private function navbar($params, PFUser $current_user, $selected_top_tab) {
         list($search_options, $hidden_fields) = $this->getSearchEntries();
-        $search_form_presenter                = new Experimental_SearchFormPresenter($search_options, $hidden_fields);
+        $search_form_presenter                = new FlamingParrot_SearchFormPresenter($search_options, $hidden_fields);
         $project_manager                      = ProjectManager::instance();
 
-        $this->render('navbar', new Experimental_NavBarPresenter(
+        $this->render('navbar', new FlamingParrot_NavBarPresenter(
                 $this->imgroot,
                 $current_user,
                 $_SERVER['REQUEST_URI'],
@@ -203,7 +203,7 @@ class Experimental_Theme extends DivBasedTabbedLayout {
             $sidebar_collapsable = (! $current_user->isAnonymous() && $current_user->isLoggedIn()) ? true : false;
         }
 
-        $this->render('container', new Experimental_ContainerPresenter(
+        $this->render('container', new FlamingParrot_ContainerPresenter(
             $this->breadcrumbs,
             $this->toolbar,
             $project_name,
@@ -259,7 +259,7 @@ class Experimental_Theme extends DivBasedTabbedLayout {
 
     public function footer($params) {
         if ($this->canShowFooter($params)) {
-            $this->render('footer', new Experimental_FooterPresenter($this));
+            $this->render('footer', new FlamingParrot_FooterPresenter($this));
         }
 
         $this->endOfPage();

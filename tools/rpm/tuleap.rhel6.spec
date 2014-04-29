@@ -417,14 +417,16 @@ Requires: tuleap
 %description theme-tuleap
 Tuleap theme
 
-%package theme-experimental
-Summary: Experimental theme for Tuleap
+%package theme-flamingparrot
+Summary: FlamingParrot, default theme starting Tuleap 7
 Group: Development/Tools
-Version: @@THEME_EXPERIMENTAL_VERSION@@
+Version: @@THEME_FLAMINGPARROT_VERSION@@
 Release: @@RELEASE@@%{?dist}
 Requires: tuleap
-%description theme-experimental
-Experimental theme for Tuleap
+Provides: tuleap-theme-experimental
+Obsoletes: tuleap-theme-experimental
+%description theme-flamingparrot
+FlamingParrot, default theme starting Tuleap 7
 
 # 
 # Package setup
@@ -1024,9 +1026,9 @@ fi
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/src/www/themes/Tuleap
 
-%files theme-experimental
+%files theme-flamingparrot
 %defattr(-,%{APP_USER},%{APP_USER},-)
-%{APP_DIR}/src/www/themes/Experimental
+%{APP_DIR}/src/www/themes/FlamingParrot
 
 #%doc
 #%config

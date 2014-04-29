@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Experimental_NavBarPresenter {
+class FlamingParrot_NavBarPresenter {
 
     private $imgroot;
 
@@ -32,7 +32,7 @@ class Experimental_NavBarPresenter {
 
     private $title;
 
-    /** @var Experimental_SearchFormPresenter */
+    /** @var FlamingParrot_SearchFormPresenter */
     private $search_form_presenter;
 
     private $selected_top_tab;

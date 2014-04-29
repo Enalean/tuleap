@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Experimental_BodyPresenter {
+class FlamingParrot_BodyPresenter {
 
     /** @var string */
     private $nav;

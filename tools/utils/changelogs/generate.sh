@@ -74,7 +74,7 @@ for item in $modified_plugins $modified_themes ; do
         if [ "$item_name" = 'common' ]; then
             # common theme does not have a version but since Experimental theme
             # depends strongly on it, increase the later one instead
-            item_name='Experimental'
+            item_name='FlamingParrot'
             item="themes/$item_name"
         fi
 
