@@ -338,6 +338,7 @@ document.observe('dom:loaded', function () {
         
         var renderer_panel = $$('.tracker_report_renderer')[0];
         load_behavior_in_renderer_panel(renderer_panel);
+        $('tracker_report_renderer_view_controls').hide();
         
         //links to switch among renderers should load via ajax
         $$('.tracker_report_renderer_tab a').each(function (a) {
@@ -413,13 +414,20 @@ document.observe('dom:loaded', function () {
             checkbox.disabled = true;
         }
     }
-    
+
     function load_behavior_in_renderer_panel(renderer_panel) {
+
+        codendi.tracker.artifact.editor.disableWarnOnPageLeave();
+
+        $('lightwindow_title_bar_close_link').observe('click', function(evt) {
+            window.onbeforeunload = codendi.tracker.artifact.editor.warnOnPageLeave;
+        });
         
         codendi.Tooltip.load(renderer_panel);
+        tuleap.dateTimePicker.init();
         
         //pager links should load via ajax
-        $$('#tracker_report_table_pager a').each(function (a) {
+        $$('.tracker_report_table_pager a').each(function (a) {
             a.observe('click', function (evt) {
                 new Ajax.Updater(renderer_panel, a.href, {
                     onComplete: function (transport) {
