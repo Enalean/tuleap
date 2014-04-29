@@ -92,7 +92,7 @@ abstract class Tracker_Artifact_ChangesetValue {
      * @return string The difference between another $changeset_value, false if no differences
      */
     public function mailDiff($changeset_value, $format = 'html', PFUser $user = null, $artifact_id, $changeset_id) {
-        $this->diff($changeset_value, $format, $user);
+        return $this->diff($changeset_value, $format, $user);
     }
     
     /**
