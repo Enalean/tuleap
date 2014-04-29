@@ -25,7 +25,21 @@
 var codendi = codendi || { };
 codendi.tracker = codendi.tracker || { };
 
-codendi.tracker.artifact = { };
+codendi.tracker.artifact = { };
+
+codendi.tracker.artifact.editor = {
+    disableWarnOnPageLeave: function() {
+        window.onbeforeunload = function(){};
+    },
+
+    warnOnPageLeave: function() {
+        var edition_switcher = new tuleap.tracker.artifact.editionSwitcher();
+
+        if (edition_switcher.submissionBarIsAlreadyActive()) {
+            return codendi.locales.tracker_formelement_admin.lose_follows;
+        }
+    }
+};
 
 function invertFollowups(followupSection) {
     var element  = followupSection.down('.tracker_artifact_followups').cleanWhitespace();
@@ -388,26 +402,14 @@ document.observe('dom:loaded', function () {
     });
 
     $$("div.artifact-submit-button input").each(function (elem) {
-        elem.observe('click', disableWarnOnPageLeave);
+        elem.observe('click', codendi.tracker.artifact.editor.disableWarnOnPageLeave);
     });
 
     // We know it is crappy, but you know what?
     // IE/Chrome/Firefox don't behave the same way!
     // So if you have a better solution…
 
-    window.onbeforeunload = warnOnPageLeave;
-
-    function disableWarnOnPageLeave() {
-        window.onbeforeunload = function(){};
-    }
-
-    function warnOnPageLeave() {
-        var edition_switcher = new tuleap.tracker.artifact.editionSwitcher();
-
-        if (edition_switcher.submissionBarIsAlreadyActive()) {
-            return codendi.locales.tracker_formelement_admin.lose_follows;
-        }
-    }
+    window.onbeforeunload = codendi.tracker.artifact.editor.warnOnPageLeave;
 
 });
 
