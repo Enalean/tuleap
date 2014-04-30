@@ -37,6 +37,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
     const IMPEDIMENT_FIELD_NAME       = "impediment";
     const TYPE_FIELD_NAME             = "type";
     const NO_PARENT                   = -1;
+    const DEFAULT_COLOR               = 'inca_silver';
 
     public $id;
     public $group_id;
@@ -91,10 +92,19 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $this->deletion_date                = $deletion_date;
         $this->instantiate_for_new_projects = $instantiate_for_new_projects;
         $this->stop_notification            = $stop_notification;
-        $this->color                        = $color;
         $this->formElementFactory           = Tracker_FormElementFactory::instance();
         $this->sharedFormElementFactory     = new Tracker_SharedFormElementFactory($this->formElementFactory, new Tracker_FormElement_Field_List_BindFactory());
         $this->renderer                     = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
+
+        $this->setColor($color);
+    }
+
+    private function setColor($color) {
+        if (! $color) {
+            $color = self::DEFAULT_COLOR;
+        }
+
+        $this->color = $color;
     }
     
     public function __toString() {
