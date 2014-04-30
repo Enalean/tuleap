@@ -631,7 +631,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                     }
                     break;
                 case 'order':
-                    if (is_string($value)) {
+                    if (is_string($value) && $value != '') {
                         $ids_in_right_order = explode(',', $value);
                         $value_dao->reorder($ids_in_right_order);
                     }
