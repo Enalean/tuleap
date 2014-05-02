@@ -168,7 +168,7 @@ echo $template->showTypeBox('group_type',$group->getType());
 <BR><?php echo $Language->getText('admin_groupedit','home_box'); ?>:
 <INPUT type="text" name="form_box" value="<?php print $group->getUnixBox(); ?>">
 <BR><?php echo $Language->getText('admin_groupedit','http_domain'); ?>:
-<INPUT size=40 type="text" name="form_domain" value="<?php print $row_grp['http_domain']; ?>">
+<INPUT size=40 type="text" name="form_domain" value="<?php print $group->getHTTPDomain() ?>">
 <BR><INPUT type="submit" name="Update" class="btn btn-primary" value="<?php echo $Language->getText('global','btn_update'); ?>">
 </FORM>
 
