@@ -173,15 +173,15 @@ class Group extends Error {
 	  return $this->data_array['http_domain'];
 	}
 
-
-
 	/**
-	 *	getID - Simply return the group_id for this object.
-	 *
-	 *	@return int group_id.
+	 * @return int group_id | null.
 	 */
-	function getID() {
+	public function getID() {
+            if (isset($this->data_array['group_id'])) {
 		return $this->data_array['group_id'];
+            }
+
+            return null;
 	}
 
 	/**
