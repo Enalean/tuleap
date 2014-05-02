@@ -124,6 +124,10 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         return $this->fetchDiff($previous, $next, $format);
     }
 
+    public function modalDiff($changeset_value, $format = 'modal', PFUser $user = null) {
+        return $this->diff($changeset_value, 'modal', $user);
+    }
+
     public function mailDiff($changeset_value, $format = 'html', PFUser $user = null, $artifact_id, $changeset_id) {
         $previous = explode(PHP_EOL, $changeset_value->getText());
         $next     = explode(PHP_EOL, $this->getText());
@@ -131,14 +135,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
 
         switch ($format) {
             case 'html':
-                $callback  = array(Codendi_HTMLPurifier::instance(), 'purify');
-                $formatter = new Codendi_HtmlUnifiedDiffFormatter();
-                $diff      = new Codendi_Diff(
-                    array_map($callback, $previous, array_fill(0, count($previous), CODENDI_PURIFIER_CONVERT_HTML)),
-                    array_map($callback, $next,     array_fill(0, count($next),     CODENDI_PURIFIER_CONVERT_HTML))
-                );
-
-                $formated_diff = $formatter->format($diff);
+                $formated_diff = $this->getFormatedDiff($previous, $next);
                 if ($formated_diff) {
                     $protocol = $this->getServerProtocol();
                     $url      = $protocol.'://'.$GLOBALS['sys_default_domain'].TRACKER_BASE_URL.'/?aid='.$artifact_id.'#followup_'.$changeset_id;
@@ -187,28 +184,38 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
     public function fetchDiff($previous, $next, $format) {
         $string = '';
         switch ($format) {
-            case 'html':
-                $callback = array(Codendi_HTMLPurifier::instance(), 'purify');
-                $d = new Codendi_Diff(
-                    array_map($callback, $previous, array_fill(0, count($previous), CODENDI_PURIFIER_CONVERT_HTML)),
-                    array_map($callback, $next,     array_fill(0, count($next),     CODENDI_PURIFIER_CONVERT_HTML))
-                );
-                $f = new Codendi_HtmlUnifiedDiffFormatter();
-                $diff = $f->format($d);
-                if ($diff) {
-                    $string .= '<button class="btn btn-mini toggle-diff">' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'toggle_diff') . '</button>';
-                    $string .= '<div class="diff" style="display: none">'. $diff .'</div>';
-                }
-                break;
             case 'text':
                 $diff = new Codendi_Diff($previous, $next);
                 $f    = new Codendi_UnifiedDiffFormatter();
                 $string .= PHP_EOL.$f->format($diff);
                 break;
+            case 'html':
+                $formated_diff = $this->getFormatedDiff($previous, $next);
+                if ($formated_diff) {
+                    $string .= '<button class="btn btn-mini toggle-diff">' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'toggle_diff') . '</button>';
+                    $string .= '<div class="diff" style="display: none">'. $formated_diff .'</div>';
+                }
+                break;
+            case 'modal':
+                $formated_diff = $this->getFormatedDiff($previous, $next);
+                if ($formated_diff) {
+                    $string = '<div class="diff">'. $formated_diff .'</div>';
+                }
             default:
                 break;
         }
         return $string;
+    }
+
+    private function getFormatedDiff($previous, $next) {
+        $callback = array(Codendi_HTMLPurifier::instance(), 'purify');
+        $formater = new Codendi_HtmlUnifiedDiffFormatter();
+        $diff     = new Codendi_Diff(
+            array_map($callback, $previous, array_fill(0, count($previous), CODENDI_PURIFIER_CONVERT_HTML)),
+            array_map($callback, $next,     array_fill(0, count($next),     CODENDI_PURIFIER_CONVERT_HTML))
+        );
+
+        return $formater->format($diff);
     }
 
     public function getContentAsText() {
