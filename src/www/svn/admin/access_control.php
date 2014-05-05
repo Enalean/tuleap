@@ -9,10 +9,10 @@
 //	Originally written by Laurent Julliard 2004, Codendi Team, Xerox
 //
 
-$pm = ProjectManager::instance();
-$project=$pm->getProject($group_id);
-$gname = $project->getUnixName(false);  // don't return a lower case group name
-
+$project_manager = ProjectManager::instance();
+$project         = $project_manager->getProject($group_id);
+$gname           = $project->getUnixName(false);  // don't return a lower case group name
+$dao             = new SVN_AccessFile_DAO();
 
 $request->valid(new Valid_String('post_changes'));
 $request->valid(new Valid_String('SUBMIT'));
@@ -23,11 +23,7 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
         $saf = new SVNAccessFile();
         $form_accessfile = $saf->parseGroupLines($project, $request->get('form_accessfile'), true);
         //store the custom access file in db
-        $sql = "UPDATE groups
-                SET svn_accessfile = '". db_es($form_accessfile) ."'
-                WHERE group_id = ". db_ei($group_id);
-        db_query($sql);
-        
+        $dao->updateAccessFileVersionInProject($group_id, $form_accessfile);
         $buffer = svn_utils_read_svn_access_file_defaults($gname);
         $buffer .= $form_accessfile;
         $ret = svn_utils_write_svn_access_file($gname,$buffer);
@@ -67,4 +63,3 @@ if (svn_utils_svn_repo_exists($gname)) {
       echo '<p>'.$Language->getText('svn_admin_access_control','not_created');
 }
 svn_footer(array());
-?>
