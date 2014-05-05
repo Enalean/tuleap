@@ -241,17 +241,30 @@ function create_project($data, $do_not_exit = false) {
         }
         
         //copy svn infos
+        $sql = "INSERT INTO svn_accessfile_history (version_number, group_id, version_date)
+                VALUES (1, $group_id, CURRENT_TIMESTAMP)";
+
+        $result = db_query($sql);
+        if (!$result) {
+            exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','cant_copy_svn_infos'));
+        }
+
         $sql = "SELECT svn_tracker, svn_preamble, svn_mandatory_ref FROM groups WHERE group_id=$template_id ";
         $result = db_query($sql);
         $arr = db_fetch_array($result);
-        $query = "UPDATE groups SET svn_tracker='".$arr['svn_tracker']."', svn_mandatory_ref='".$arr['svn_mandatory_ref']."', svn_preamble='".db_escape_string($arr['svn_preamble'])."' " .
-                 "WHERE group_id = $group_id";
+        $query = "UPDATE groups, svn_accessfile_history
+                  SET svn_tracker='".$arr['svn_tracker']."',
+                      svn_mandatory_ref='".$arr['svn_mandatory_ref']."',
+                      svn_preamble='".db_escape_string($arr['svn_preamble'])."',
+                      svn_accessfile = svn_accessfile_history.id
+                  WHERE groups.group_id = $group_id
+                      AND groups.group_id = svn_accessfile_history.group_id";
         
         $result=db_query($query);
         if (!$result) {
             exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','cant_copy_svn_infos'));
         }
-        
+
         // Activate other system references not associated with any service
         $reference_manager =& ReferenceManager::instance();
         $reference_manager->addSystemReferencesWithoutService($template_id,$group_id);
