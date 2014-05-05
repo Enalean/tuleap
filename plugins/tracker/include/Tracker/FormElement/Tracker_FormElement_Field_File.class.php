@@ -289,7 +289,6 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
 
                 $link_show = '<a href="'.TRACKER_BASE_URL.'/?'. $query_link .'"
                                  '. ($fileinfo->isImage() ? 'rel="lytebox['. $this->getId() .']" ' : '') .'
-                                 '. ($fileinfo->isImage() ? 'style="cursor:-moz-zoom-in;" '        : '') .'
                                  title="'. $sanitized_description .'">';
 
 
