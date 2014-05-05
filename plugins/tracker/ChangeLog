@@ -1,3 +1,6 @@
+Version 5.366 - Tuleap 6.13
+    * request #6809: STTab theme follow-up comments are separated from artifact content
+
 Version 5.365 - Tuleap 6.13
     * request #6808 - Page leave detection not well managed in not FlamingParrot themes
 

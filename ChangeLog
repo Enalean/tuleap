@@ -8,11 +8,16 @@ Version 6.13 (Not Released Yet)
 	* Allow to search for templates in several directories (works with partial too)
 
 	== Themes ==
-	* CodexSTN: 1.14
+	* CodexSTN: 1.15
 	* FlamingParrot: 1.0
+	* Dawn: 1.12
+	* STTab: 1.14
+	* SteerForge: 1.12
+	* Tuleap: 2.12
+	* savannah: 1.4
 
 	== Plugins ==
-	* tracker: 5.365
+	* tracker: 5.366
 	* cardwall: 1.30
 	* graphontrackersv5: 5.11
 	* agiledashboard: 1.61
