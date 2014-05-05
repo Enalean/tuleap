@@ -1,3 +1,6 @@
+Version 5.364 - Tuleap 6.13
+    * Fix request #6805: diffs do not work on artifact modal comments
+
 Version 5.363 - Tuleap 6.13
     * Fix request #6794 After tracker creation, no default tracker color
 
