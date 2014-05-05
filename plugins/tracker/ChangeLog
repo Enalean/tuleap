@@ -1,3 +1,6 @@
+Version 5.365 - Tuleap 6.13
+    * request #6808 - Page leave detection not well managed in not FlamingParrot themes
+
 Version 5.364 - Tuleap 6.13
     * Fix request #6805: diffs do not work on artifact modal comments
 
