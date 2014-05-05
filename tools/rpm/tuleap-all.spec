@@ -24,7 +24,7 @@ Requires: @@PKG_NAME@@-plugin-hudson
 Requires: @@PKG_NAME@@-plugin-webdav
 Requires: @@PKG_NAME@@-plugin-tracker
 Requires: @@PKG_NAME@@-plugin-graphontrackers
-Requires: @@PKG_NAME@@-theme-tuleap
+Requires: @@PKG_NAME@@-theme-flamingparrot
 Requires: @@PKG_NAME@@-customization-default
 
 Requires: vsftpd
