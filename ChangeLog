@@ -30,6 +30,7 @@ Version 6.13 (Not Released Yet)
 	* Makes Theme loading resilient
 	* request #6786: None column on the cardwall renderer is empty when the ui is in french
 	* Fix request #5703: gibberish and notice shown for http domain on admin -> project management
+	* Fix request #6804: Notice prevents REST /projects:id from returning 404 when in debug mode.
 
 Version 6.12 (Thursday, April 3rd 2014)
 
