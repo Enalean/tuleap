@@ -36,6 +36,7 @@ Version 6.13 (Not Released Yet)
 	* request #6786: None column on the cardwall renderer is empty when the ui is in french
 	* Fix request #5703: gibberish and notice shown for http domain on admin -> project management
 	* Fix request #6804: Notice prevents REST /projects:id from returning 404 when in debug mode.
+	* Fix request #6806: The word "Group" should be "Project" in admin area
 
 Version 6.12 (Thursday, April 3rd 2014)
 
