@@ -1031,6 +1031,17 @@ CREATE TABLE groups (
   KEY idx_groups_unix (unix_group_name),
   KEY idx_groups_type (type)
 );
+
+CREATE TABLE svn_accessfile_history (
+    id INT(11) AUTO_INCREMENT,
+    version_number INT(11) NOT NULL,
+    group_id INT(11) NOT NULL,
+    content TEXT,
+    sha1_content CHAR(40),
+    version_date INT(11),
+    PRIMARY KEY(id)
+);
+
 #
 # Table structure for table 'group_desc'
 #
