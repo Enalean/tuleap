@@ -94,4 +94,32 @@ class SVN_AccessFile_DAO extends DataAccessObject {
 
         return $result;
     }
+    public function getAllVersions($group_id) {
+        $group_id = $this->da->escapeInt($group_id);
+
+        $sql = "SELECT version_number, id
+                FROM svn_accessfile_history
+                WHERE group_id = $group_id";
+
+        return $this->retrieve($sql);
+    }
+
+    public function getCurrentVersionNumber($group_id) {
+        $group_id = $this->da->escapeInt($group_id);
+
+        $sql = "SELECT version_number
+                FROM svn_accessfile_history s
+                    JOIN groups g ON g.group_id = s.group_id
+                WHERE g.group_id = $group_id";
+
+        $result = $this->retrieve($sql);
+
+        if(! $result) {
+            return null;
+        }
+
+        $row = $result->getRow();
+
+        return $row['version_number'];
+    }
 }

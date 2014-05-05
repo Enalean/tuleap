@@ -13,6 +13,10 @@ svn_admin_access_control	access_ctrl_file	Fichier de contrôle d'accès
 svn_admin_access_control	not_created	Votre dépôt Subversion n'a pas été créé. Les permissions d'accès ne peuvent pas encore être définies.
 svn_admin_access_control	no_ugroup	Le groupe "$1" est vide ou n'existe pas
 svn_admin_access_control	invalid_line	La ligne "$1" est invalide
+svn_admin_access_control	button_new_version	Enregistrer une nouvelle version
+svn_admin_access_control	button_old_version	Utiliser une ancienne version
+svn_admin_access_control	old_version	Ancienne version :
+svn_admin_access_control	current_version	Version actuelle :
 #
 #-----------------------------------------------
 # Script: SF/www/svn/admin/general_settings.php

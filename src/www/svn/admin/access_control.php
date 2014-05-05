@@ -13,6 +13,9 @@ $project_manager = ProjectManager::instance();
 $project         = $project_manager->getProject($group_id);
 $gname           = $project->getUnixName(false);  // don't return a lower case group name
 $dao             = new SVN_AccessFile_DAO();
+$path            = realpath(dirname(__FILE__) . '/../../../templates/svn/');
+$renderer        = TemplateRendererFactory::build()->getRenderer($path);
+
 
 $request->valid(new Valid_String('post_changes'));
 $request->valid(new Valid_String('SUBMIT'));
@@ -41,25 +44,25 @@ $hp =& Codendi_HTMLPurifier::instance();
 svn_header_admin(array ('title'=>$Language->getText('svn_admin_access_control','access_ctrl'),
                         'help' => 'svn.html#subversion-access-control'));
 
-echo '
-       <H2>'.$Language->getText('svn_admin_access_control','access_ctrl').'</H2>';
-
-if (svn_utils_svn_repo_exists($gname)) {
-    $svn_accessfile = svn_utils_read_svn_access_file($gname);
-
-    echo'
-       <FORM ACTION="" METHOD="POST">
-       <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
-       <INPUT TYPE="HIDDEN" NAME="func" VALUE="access_control">
-       <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
-      <p>'.$Language->getText('svn_admin_access_control','def_policy',$GLOBALS['sys_name']).' 
-      <h3>'.$Language->getText('svn_admin_access_control','access_ctrl_file').' '. help_button('svn.html#subversion-access-control').':</h3>
-      <p>'.str_replace("\n","<br>",svn_utils_read_svn_access_file_defaults($gname,true)).'
-       <TEXTAREA cols="70" rows="20" wrap="virtual" name="form_accessfile">'.$hp->purify($svn_accessfile).'</TEXTAREA>
-        </p>
-        <p><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'"></p></FORM>';
-
-} else {
-      echo '<p>'.$Language->getText('svn_admin_access_control','not_created');
+$select_options = array();
+foreach ($dao->getAllVersions($group_id) as $row) {
+    $select_options[] = array(
+        'id'      => $row['id'],
+        'version' => $row['version_number']
+    );
 }
+
+$version_number = $dao->getCurrentVersionNumber($group_id);
+
+$renderer->renderToPage(
+    'access-file-form',
+    new SVN_AccessFile_Presenter(
+        $project,
+        svn_utils_read_svn_access_file($gname),
+        svn_utils_read_svn_access_file_defaults($gname, true),
+        $select_options,
+        $version_number
+    )
+);
+
 svn_footer(array());

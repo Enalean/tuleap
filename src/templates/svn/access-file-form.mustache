@@ -1,0 +1,39 @@
+<h2> {{ access_form_title }} </h2>
+{{# svn_repo_exists }}
+    <form action="" method="POST">
+        <input type="hidden" name="group_id" value="{{ project_id }}">
+        <input type="hidden" name="func" value="access_control">
+        <input type="hidden" name="post_changes" value="y">
+
+        <p> {{ policy }} </p>
+        <h3>{{{ access_ctrl_file }}}:</h3>
+        <p> {{{ default_formatted_content }}} </p>
+
+        <div id="access_file_container">
+            <div id="current_access_file_container">
+                <h3> {{ current_version_title }} {{ version_number }} </h3>
+                <textarea class="not_resizable" cols="50" rows="20" wrap="virtual" name="form_accessfile" id="form_accessfile">{{{ content }}}</textarea>
+                <p>
+                    <input type="submit" name="submit_new_version" class="btn btn-primary" value="{{ button_new_version_label }}">
+                </p>
+            </div>
+            <div id="old_access_file_container">
+                <h3> {{ old_version_title }}
+                    <select>
+                        <option value="0">Select your version</option>
+                        {{# select_options }}
+                        <option value="{{ id }}">{{ version }}</option>
+                        {{/ select_options }}
+                    </select>
+                </h3>
+                <textarea class="not_resizable" cols="50" rows="20" wrap="virtual" id="other_version_content" disabled></textarea>
+                <p>
+                    <input type="submit" name="submit_old_version" class="btn btn-primary" value="{{ button_old_version_label }}">
+                </p>
+            </div>
+        </div>
+    </form>
+{{/ svn_repo_exists }}
+{{^ svn_repo_exists }}
+    <p> {{ repo_not_created_label }} </p>
+{{/ svn_repo_exists }}
