@@ -28,10 +28,10 @@ admin_main	header_group	Project administration
 admin_main	display_group	Display projects neginning with :
 admin_main	search_group	Search (group id, unix name, real name) :
 admin_main	all_users	All <a href="$1">users</a>
-admin_main	all_groups	All <a href="$1">groups</a>
-admin_main	incomplete_group	Groups in <a href="$1"><B>I</B> (incomplete) status</A>
-admin_main	pending_group	Groups in <a href="$1"><B>P</B> (pending) status</A>
-admin_main	deleted_group	Groups in <a href="$1"><B>D</B> (deleted) status</A>
+admin_main	all_groups	All <a href="$1">projects</a>
+admin_main	incomplete_group	Projects in <a href="$1"><B>I</B> (incomplete) status</A>
+admin_main	pending_group	Projects in <a href="$1"><B>P</B> (pending) status</A>
+admin_main	deleted_group	Projects in <a href="$1"><B>D</B> (deleted) status</A>
 admin_main	header_svc	Service administration
 admin_main	configure_svc	Configuration of predefined services
 admin_main	header_ref	Reference administration
@@ -161,9 +161,9 @@ admin_groupedit_add	unix_name	New unix group name
 #-----------------------------------------------
 # Script: SF/www/admin/groupedit.php
 #
-admin_groupedit	title	Editing Group
+admin_groupedit	title	Editing Project
 admin_groupedit	feedback_info	Updating Project Info
-admin_groupedit	error_group	Invalid group was passed in.
+admin_groupedit	error_group	Invalid project was passed in.
 admin_groupedit	proj_edit	Edit Project Details
 admin_groupedit	proj_admin	Project Admin
 admin_groupedit	proj_member	View/Edit Project Members
@@ -182,7 +182,7 @@ admin_groupedit	other	Other
 admin_groupedit	license_na	N/A
 admin_groupedit	send_email	Send New Project Instruction Email
 admin_groupedit	other_info	Other Information
-admin_groupedit	grp_name	Group Name
+admin_groupedit	grp_name	Project Name
 admin_groupedit	unix_grp	Unix Group Name
 admin_groupedit	description	Description
 admin_groupedit	license_other	License Other
@@ -198,10 +198,10 @@ admin_groupedit	invalid_short_name	Invalid Short Name
 #-----------------------------------------------
 # Script: SF/www/admin/grouplist.php
 #
-admin_grouplist	title	Group List
-admin_grouplist	add_group	Add Group
-admin_grouplist	for_categ	Group List for Category
-admin_grouplist	begins_with	Groups that begin with $1
+admin_grouplist	title	Project List
+admin_grouplist	add_group	Add Project
+admin_grouplist	for_categ	Project List for Category
+admin_grouplist	begins_with	Projects that begin with $1
 admin_grouplist	all_categ	All Categories
 admin_grouplist	click	(click to edit)
 admin_grouplist	categ	Categories
@@ -249,16 +249,16 @@ admin_newprojectmail	success	Mail successfully sent.
 #-----------------------------------------------
 # Script: SF/www/admin/search.php
 #
-admin_search	title	Administration - Search Users/Groups
+admin_search	title	Administration - Search Users/Projects
 admin_search	header	Administrative Search Functions
-admin_search	maintenance	User/Group/Category Maintenance
+admin_search	maintenance	User/Project/Category Maintenance
 admin_search	criteria	Search Criteria
 admin_search	error_nowholedb	An empty search criteria would display the whole database.
 admin_search	nomatch	No matches
 admin_search	login	Login Name
 admin_search	user_name	User's Name
 admin_search	unix_grp_name	Unix Group Name
-admin_search	grp_name	Group Name
+admin_search	grp_name	Project Name
 #
 #-----------------------------------------------
 # Script: SF/www/admin/show_license.php
@@ -341,8 +341,8 @@ admin_userlist	user_restricted	User Updated to RESTRICTED Status
 admin_userlist	error_uid	Error - Can't find user with ID $1
 admin_userlist	error_noadd	Error - Can't add user to group
 admin_userlist	user_list	User List for
-admin_userlist	all_groups	All Groups
-admin_userlist	group	Group $1
+admin_userlist	all_groups	All Projects
+admin_userlist	group	Project $1
 admin_userlist	uid_toadd	User ID to add
 admin_userlist	active	Active
 admin_userlist	validated	Validated
