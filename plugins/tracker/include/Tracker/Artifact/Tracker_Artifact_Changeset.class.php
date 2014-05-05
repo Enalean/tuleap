@@ -473,11 +473,20 @@ class Tracker_Artifact_Changeset {
     }
 
     /**
+     * Return modal format diff between this changeset and previous one (HTML code)
+     *
+     * @return string The field difference between the previous changeset. or false if no changes
+     */
+    public function modalDiffToPrevious($format = 'html', $user = null, $ignore_perms = false) {
+        return $this->diffToPrevious($format, $user, $ignore_perms, false, true);
+    }
+
+    /**
      * Return diff between this changeset and previous one (HTML code)
      *
      * @return string The field difference between the previous changeset. or false if no changes
      */
-    public function diffToPrevious($format = 'html', $user = null, $ignore_perms = false, $for_mail = false) {
+    public function diffToPrevious($format = 'html', $user = null, $ignore_perms = false, $for_mail = false, $for_modal = false) {
         $result             = '';
         $factory            = $this->getFormElementFactory();
         $previous_changeset = $this->getArtifact()->getPreviousChangeset($this->getId());
@@ -502,18 +511,20 @@ class Tracker_Artifact_Changeset {
 
             $previous_changeset_value = $previous_changeset->getValue($field);
 
-            if ($previous_changeset_value && $for_mail) {
-                $artifact_id = $this->getArtifact()->getId();
+            if (! $previous_changeset_value) {//Case : field added later (ie : artifact already exists) => no value
+                $diff = $current_changeset_value->nodiff();
+            } elseif ($for_mail) {
+                $artifact_id  = $this->getArtifact()->getId();
                 $changeset_id = $this->getId();
-                if ($diff = $current_changeset_value->mailDiff($previous_changeset_value, $format, $user, $artifact_id, $changeset_id)) {
-                    $result .= $this->displayDiff($diff, $format, $field);
-                }
-            } elseif ($previous_changeset_value) {
-                if ($diff = $current_changeset_value->diff($previous_changeset_value, $format, $user)) {
-                    $result .= $this->displayDiff($diff, $format, $field);
-                }
-            } elseif ($diff = $current_changeset_value->nodiff()) {
-                //Case : field added later (ie : artifact already exists) => no value
+
+                $diff = $current_changeset_value->mailDiff($previous_changeset_value, $format, $user, $artifact_id, $changeset_id);
+            } elseif ($for_modal) {
+                $diff = $current_changeset_value->modalDiff($previous_changeset_value, $format, $user);
+            } else {
+                $diff = $current_changeset_value->diff($previous_changeset_value, $format, $user);
+            }
+
+            if ($diff) {
                 $result .= $this->displayDiff($diff, $format, $field);
             }
         }
