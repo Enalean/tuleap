@@ -571,7 +571,7 @@ class Tracker_SOAPServer {
             if ($file_info && $file_info->fileExists()) {
                 $field = $file_info->getField();
                 if ($field->userCanRead($current_user)) {
-                    return $file_info->getSoapContent($offset, $size);
+                    return $file_info->getContent($offset, $size);
                 } else {
                     return new SoapFault(invalid_field_fault, 'Permission denied: you cannot access this field');
                 }
