@@ -29,6 +29,7 @@ Version 6.13 (Not Released Yet)
 	* request #6783: Form plugins do not work on phpwiki
 	* Makes Theme loading resilient
 	* request #6786: None column on the cardwall renderer is empty when the ui is in french
+	* Fix request #5703: gibberish and notice shown for http domain on admin -> project management
 
 Version 6.12 (Thursday, April 3rd 2014)
 
