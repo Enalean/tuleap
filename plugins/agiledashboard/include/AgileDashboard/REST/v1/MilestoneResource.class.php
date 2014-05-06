@@ -69,6 +69,9 @@ class MilestoneResource {
     /** @var ArtifactLinkUpdater */
     private $artifactlink_updater;
 
+    /** @var AgileDashboard_Milestone_Backlog_BacklogStrategyFactory */
+    private $backlog_strategy_factory;
+
     public function __construct() {
         $planning_factory             = PlanningFactory::build();
         $tracker_artifact_factory     = Tracker_ArtifactFactory::instance();
@@ -175,6 +178,16 @@ class MilestoneResource {
      *
      * Get the definition of a given the milestone
      *
+     * Please note that the following fields are deprecated in favor of their
+     * counterpart in 'resources':
+     * <ul>
+     *     <li>sub_milestones_uri</li>
+     *     <li>backlog_uri</li>
+     *     <li>content_uri</li>
+     *     <li>cardwall_uri</li>
+     *     <li>burndown_uri</li>
+     * </ul>
+     *
      * @url GET {id}
      *
      * @param int $id Id of the milestone
@@ -190,7 +203,14 @@ class MilestoneResource {
         $this->sendAllowHeadersForMilestone($milestone);
 
         $milestone_representation = new MilestoneRepresentation();
-        $milestone_representation->build($milestone, $this->milestone_factory->getMilestoneStatusCount($user, $milestone));
+        $milestone_representation->build(
+            $milestone,
+            $this->milestone_factory->getMilestoneStatusCount(
+                $user,
+                $milestone
+            ),
+            $this->getBacklogTrackers($milestone)
+        );
 
         $this->event_manager->processEvent(
             AGILEDASHBOARD_EVENT_REST_GET_MILESTONE,
@@ -255,10 +275,18 @@ class MilestoneResource {
 
         $event_manager     = $this->event_manager;
         $milestone_factory = $this->milestone_factory;
+        $strategy_factory  = $this->backlog_strategy_factory;
         return array_map(
-            function (Planning_Milestone $milestone) use ($user, $event_manager, $milestone_factory) {
+            function (Planning_Milestone $milestone) use ($user, $event_manager, $milestone_factory, $strategy_factory) {
                 $milestone_representation = new MilestoneRepresentation();
-                $milestone_representation->build($milestone, $milestone_factory->getMilestoneStatusCount($user, $milestone));
+                $milestone_representation->build(
+                    $milestone,
+                    $milestone_factory->getMilestoneStatusCount(
+                        $user,
+                        $milestone
+                    ),
+                    $strategy_factory->getBacklogStrategy($milestone)->getDescendantTrackers()
+                );
 
                 $event_manager->processEvent(
                     AGILEDASHBOARD_EVENT_REST_GET_MILESTONE,
@@ -572,20 +600,16 @@ class MilestoneResource {
     }
 
     private function getMilestoneContentItems($milestone) {
-        $strategy_factory = new \AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
-            new \AgileDashboard_BacklogItemDao(),
-            \Tracker_ArtifactFactory::instance(),
-            \PlanningFactory::build()
-        );
-
-        $backlog_strategy = $strategy_factory->getSelfBacklogStrategy($milestone);
-
         return $this->backlog_item_collection_factory->getAllCollection(
             $this->getCurrentUser(),
             $milestone,
-            $backlog_strategy,
+            $this->backlog_strategy_factory->getSelfBacklogStrategy($milestone),
             ''
         );
+    }
+
+    private function getBacklogTrackers(Planning_Milestone $milestone) {
+        return $this->backlog_strategy_factory->getBacklogStrategy($milestone)->getDescendantTrackers();
     }
 
     private function checkContentLimit($limit) {

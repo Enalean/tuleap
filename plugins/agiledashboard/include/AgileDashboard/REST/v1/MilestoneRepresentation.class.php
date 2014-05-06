@@ -20,6 +20,7 @@ namespace Tuleap\AgileDashboard\REST\v1;
 
 use \Tuleap\Project\REST\ProjectReference;
 use \Planning_Milestone;
+use \Tuleap\Tracker\REST\TrackerReference;
 use \Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use \Tuleap\Tracker\REST\Artifact\BurndownRepresentation;
 use \Tuleap\REST\JsonCast;
@@ -139,12 +140,22 @@ class MilestoneRepresentation {
     public $last_modified_date;
 
     /**
-     *
      * @var array
      */
     public $status_count;
 
-    public function build(Planning_Milestone $milestone, array $status_count) {
+    /**
+     * @var array
+     */
+    public $resources = array(
+        'milestones' => null,
+        'backlog'    => null,
+        'content'    => null,
+        'cardwall'   => null,
+        'burndown'   => null,
+    );
+
+    public function build(Planning_Milestone $milestone, array $status_count, array $backlog_trackers) {
         $this->id               = JsonCast::toInt($milestone->getArtifactId());
         $this->uri              = self::ROUTE . '/' . $this->id;
         $this->label            = $milestone->getArtifactTitle();
@@ -186,13 +197,58 @@ class MilestoneRepresentation {
         if($status_count) {
             $this->status_count = $status_count;
         }
+
+        $milestone_tracker = new TrackerReference();
+        $milestone_tracker->build($milestone->getPlanning()->getPlanningTracker());
+        $this->resources['milestones'] = array(
+            'uri'    => $this->uri . '/'. self::ROUTE,
+            'accept' => array(
+                'trackers' => array(
+                    $milestone_tracker
+                )
+            )
+        );
+        $this->resources['backlog'] = array(
+            'uri'    => $this->uri . '/'. BacklogItemRepresentation::BACKLOG_ROUTE,
+            'accept' => array(
+                'trackers' => $this->getTrackersRepresentation($backlog_trackers)
+            )
+        );
+        $this->resources['content'] = array(
+            'uri'    => $this->uri . '/'. BacklogItemRepresentation::CONTENT_ROUTE,
+            'accept' => array(
+                'trackers' => $this->getContentTrackersRepresentation($milestone)
+            )
+        );
+    }
+
+    private function getContentTrackersRepresentation(Planning_Milestone $milestone) {
+        return $this->getTrackersRepresentation(
+            $milestone->getPlanning()->getBacklogTrackers()
+        );
+    }
+
+    private function getTrackersRepresentation(array $trackers) {
+        $trackers_representation = array();
+        foreach ($trackers as $tracker) {
+            $tracker_reference = new TrackerReference();
+            $tracker_reference->build($tracker);
+            $trackers_representation[] = $tracker_reference;
+        }
+        return $trackers_representation;
     }
 
     public function enableCardwall() {
         $this->cardwall_uri = $this->uri . '/'. AgileDashboard_MilestonesCardwallRepresentation::ROUTE;
+        $this->resources['cardwall'] = array(
+            'uri' => $this->cardwall_uri
+        );
     }
 
     public function enableBurndown() {
         $this->burndown_uri = $this->uri . '/'. BurndownRepresentation::ROUTE;
+        $this->resources['burndown'] = array(
+            'uri' => $this->burndown_uri
+        );
     }
 }
