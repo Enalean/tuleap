@@ -126,7 +126,7 @@ tuleap.tracker.artifact.editionSwitcher = function() {
     };
 
     var bindSubmissionBarToFollowups = function () {
-        $('#tracker_followup_comment_new').bind('keyup', toggleSubmissionBar);
+        $('#tracker_followup_comment_new').on('input propertychange', toggleSubmissionBar);
 
         $('#rte_format_selectboxnew').on('change', function() {
             if (CKEDITOR.instances.tracker_followup_comment_new) {
