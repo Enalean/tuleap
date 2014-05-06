@@ -21,7 +21,7 @@
 require_once dirname(__FILE__).'/../lib/autoload.php';
 
 /**
- * @group MilestoneBurndownTest
+ * @group MilestonesTest
  */
 class MilestoneBurndownTest extends RestBase {
 
