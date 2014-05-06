@@ -483,7 +483,8 @@ CREATE TABLE tracker_artifact(
   use_artifact_permissions tinyint(1) NOT NULL default '0',
   per_tracker_artifact_id INT(11) NOT NULL,
   INDEX idx_tracker_id (tracker_id),
-  INDEX idx_my (submitted_by, tracker_id, last_changeset_id)
+  INDEX idx_my (submitted_by, tracker_id, last_changeset_id),
+  INDEX idx_id_changeset_id(id, last_changeset_id)
 ) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS tracker_artifact_priority;
@@ -604,7 +605,8 @@ CREATE TABLE tracker_semantic_status (
     tracker_id INT(11) NOT NULL,
     field_id INT(11) NOT NULL,
     open_value_id INT(11) NOT NULL,
-    INDEX idx(tracker_id, field_id, open_value_id)
+    INDEX idx(tracker_id, field_id, open_value_id),
+    INDEX idx_field_open(field_id, open_value_id)
 ) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS tracker_semantic_contributor;
