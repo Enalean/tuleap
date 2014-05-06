@@ -12,3 +12,7 @@ codendi.locales['cross_ref_fact_include'] = {
 codendi.locales['files'] = {
     error_max_file_size: 'You exceed the max file size'
 };
+
+codendi.locales['svn_accessfile_history'] = {
+    empty: 'This version is empty'
+};

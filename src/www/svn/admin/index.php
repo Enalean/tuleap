@@ -29,7 +29,7 @@ if (!user_ismember($group_id,'A') && !user_ismember($group_id,'SVN_ADMIN')) {
     exit_permission_denied();
 }
 
-$vFunc = new Valid_WhiteList('func', array('general_settings', 'access_control', 'notification'));
+$vFunc = new Valid_WhiteList('func', array('general_settings', 'access_control', 'notification', 'access_control_version'));
 $vFunc->required();
 if($request->valid($vFunc)) {
     $func = $request->get('func');
@@ -40,6 +40,17 @@ if($request->valid($vFunc)) {
         break;
     case 'access_control' :
         require('./access_control.php');
+        break;
+    case 'access_control_version' :
+        if (! $request->exist('accessfile_history_id')) {
+            break;
+        }
+        $version_id = $request->get('accessfile_history_id');
+        $dao = new SVN_AccessFile_DAO();
+        $result = $dao->getVersionContent($version_id);
+
+        $GLOBALS['Response']->sendJSON(array('content' => $result));
+
         break;
     case 'notification' :
         require('./notification.php');

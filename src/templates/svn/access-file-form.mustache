@@ -26,10 +26,12 @@
                         {{/ select_options }}
                     </select>
                 </h3>
-                <textarea class="not_resizable" cols="50" rows="20" wrap="virtual" id="other_version_content" disabled></textarea>
-                <p>
-                    <input type="submit" name="submit_old_version" class="btn btn-primary" value="{{ button_old_version_label }}">
-                </p>
+                <span id="old_access_file_form">
+                    <textarea class="not_resizable" cols="50" rows="20" wrap="virtual" id="other_version_content" class="empty_version" disabled></textarea>
+                    <p>
+                        <input type="submit" name="submit_old_version" class="btn btn-primary" value="{{ button_old_version_label }}">
+                    </p>
+                </span>
             </div>
         </div>
     </form>
