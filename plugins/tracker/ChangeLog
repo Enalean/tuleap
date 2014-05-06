@@ -1,3 +1,6 @@
+Version 5.367 - Tuleap 7.1
+    * Fix request #6817: fatal error getSoapContent
+
 Version 5.366 - Tuleap 6.13
     * request #6809: STTab theme follow-up comments are separated from artifact content
 
