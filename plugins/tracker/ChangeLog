@@ -1,3 +1,6 @@
+Version 5.368 - Tuleap 7.1
+    * Fix request #6818: Peformance issues on Agile Dashboard
+
 Version 5.367 - Tuleap 7.1
     * Fix request #6817: fatal error getSoapContent
 
