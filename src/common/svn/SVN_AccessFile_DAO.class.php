@@ -48,7 +48,15 @@ class SVN_AccessFile_DAO extends DataAccessObject {
         return $result;
     }
 
-    public function updateAccessFileVersionInProject($group_id, $content) {
+    public function updateAccessFileVersionInProject($group_id, $version_id) {
+        try {
+            return $this->linkNewVersionIdToProject($group_id, $version_id);
+        } catch (SVN_SQLRequestNotSuccededException $exception) {
+            return false;
+        }
+    }
+
+    public function saveNewAccessFileVersionInProject($group_id, $content) {
         try {
             $this->startTransaction();
 

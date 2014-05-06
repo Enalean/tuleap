@@ -19,7 +19,7 @@
             </div>
             <div id="old_access_file_container">
                 <h3> {{ old_version_title }}
-                    <select>
+                    <select name="version_selected">
                         <option value="0">Select your version</option>
                         {{# select_options }}
                         <option value="{{ id }}">{{ version }}</option>
@@ -27,7 +27,7 @@
                     </select>
                 </h3>
                 <span id="old_access_file_form">
-                    <textarea class="not_resizable" cols="50" rows="20" wrap="virtual" id="other_version_content" class="empty_version" disabled></textarea>
+                    <textarea class="not_resizable empty_version" cols="50" rows="20" wrap="virtual" name="other_version_content" id="other_version_content" disabled></textarea>
                     <p>
                         <input type="submit" name="submit_old_version" class="btn btn-primary" value="{{ button_old_version_label }}">
                     </p>

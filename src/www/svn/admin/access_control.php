@@ -16,20 +16,31 @@ $dao             = new SVN_AccessFile_DAO();
 $path            = realpath(dirname(__FILE__) . '/../../../templates/svn/');
 $renderer        = TemplateRendererFactory::build()->getRenderer($path);
 
-
 $request->valid(new Valid_String('post_changes'));
 $request->valid(new Valid_String('SUBMIT'));
+
 if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
     $vAccessFile = new Valid_Text('form_accessfile');
     $vAccessFile->setErrorMessage($Language->getText('svn_admin_access_control','upd_fail'));
+
     if($request->valid($vAccessFile)) {
-        $saf = new SVNAccessFile();
-        $form_accessfile = $saf->parseGroupLines($project, $request->get('form_accessfile'), true);
+        $saf             = new SVNAccessFile();
+        $form_accessfile = null;
         //store the custom access file in db
-        $dao->updateAccessFileVersionInProject($group_id, $form_accessfile);
+
+        if ($request->exist('submit_new_version')) {
+            $form_accessfile = $saf->parseGroupLines($project, $request->get('form_accessfile'), true);
+            $dao->saveNewAccessFileVersionInProject($group_id, $form_accessfile);
+        } else {
+            $form_accessfile = $saf->parseGroupLines($project, $request->get('other_version_content'), true);
+            $version_id      = $request->get('version_selected');
+            $dao->updateAccessFileVersionInProject($group_id, $version_id);
+        }
+
         $buffer = svn_utils_read_svn_access_file_defaults($gname);
         $buffer .= $form_accessfile;
-        $ret = svn_utils_write_svn_access_file($gname,$buffer);
+        $ret    = svn_utils_write_svn_access_file($gname, $buffer);
+
         if ($ret) {
             $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_access_control','upd_success'));
         } else {
@@ -37,8 +48,6 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
         }
     }
 }
-
-$hp =& Codendi_HTMLPurifier::instance();
 
 // Display the form
 svn_header_admin(array ('title'=>$Language->getText('svn_admin_access_control','access_ctrl'),
