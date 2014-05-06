@@ -1,3 +1,6 @@
+Version 5.369 - Tuleap 7.1
+    * tasks #6820 & story #6771 - Add parent tracker info in /tracker/:id route
+
 Version 5.368 - Tuleap 7.1
     * Fix request #6818: Peformance issues on Agile Dashboard
 
