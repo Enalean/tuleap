@@ -82,6 +82,7 @@ class TrackersTest extends RestBase {
         $this->assertArrayHasKey('fields', $tracker);
         $this->assertArrayHasKey('semantics', $tracker);
         $this->assertArrayHasKey('workflow', $tracker);
+        $this->assertArrayHasKey('parent', $tracker);
 
         $this->assertEquals($response->getStatusCode(), 200);
     }

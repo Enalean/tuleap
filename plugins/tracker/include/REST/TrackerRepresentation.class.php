@@ -79,6 +79,12 @@ class TrackerRepresentation {
     public $workflow;
 
     /**
+     * @var Tuleap\Tracker\REST\TrackerReference
+     */
+
+    public $parent;
+
+    /**
      * @var array
      */
     public $resources;
@@ -103,5 +109,10 @@ class TrackerRepresentation {
                 'uri'  => $this->uri .'/'. ReportRepresentation::ROUTE
             )
         );
+
+        if ($tracker->getParent()) {
+            $this->parent = new TrackerReference();
+            $this->parent->build($tracker->getParent());
+        }
     }
 }
