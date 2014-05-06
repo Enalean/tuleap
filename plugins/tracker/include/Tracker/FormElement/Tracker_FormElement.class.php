@@ -714,6 +714,8 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      * @return void
      */
     public function exportToXml(SimpleXMLElement $root, &$xmlMapping, &$index) {
+        $cdata_section_factory = new XML_SimpleXMLCDATAFactory();
+
         $root->addAttribute('type', Tracker_FormElementFactory::instance()->getType($this));
         // this id is internal to XML
         $ID = 'F' . $index;
@@ -742,10 +744,10 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         }
 
         $root->addChild('name', $this->name);
-        $root->addChild('label', $this->label);
+        $cdata_section_factory->insert($root, 'label', $this->label);
         // only add if not empty
         if ($this->description) {
-            $root->addChild('description', $this->description);
+            $cdata_section_factory->insert($root, 'description', $this->description);
         }
         if ($this->getProperties()) {
             $this->exportPropertiesToXML($root);

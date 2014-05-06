@@ -708,6 +708,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
      * @param string           $fieldID     XML ID of the binded field
      */
     public function exportToXml(SimpleXMLElement $root, &$xmlMapping, $fieldID) {
+        $cdata_section_factory = new XML_SimpleXMLCDATAFactory();
         $root->addAttribute('is_rank_alpha', $this->is_rank_alpha);
         if ($this->getAllValues()) {
             $child = $root->addChild('items');
@@ -721,7 +722,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                 $grandchild->addAttribute('is_hidden', $val->isHidden());
                 
                 if ($val->getDescription() != '') {
-                    $grandchild->addChild('description', $val->getDescription());
+                    $cdata_section_factory->insert($grandchild, 'description', $val->getDescription());
                 }
                 $i++;
             }
