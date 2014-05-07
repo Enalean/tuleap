@@ -1,3 +1,6 @@
+Version 5.370 - Tuleap 7.1
+    * Fix request #6822 - Submit button does not appear when pasting text in followup
+
 Version 5.369 - Tuleap 7.1
     * tasks #6820 & story #6771 - Add parent tracker info in /tracker/:id route
 
