@@ -91,4 +91,12 @@ class SVN_AccessFile_Presenter {
     public function version_number() {
         return $this->version_number;
     }
+
+    public function saved_on() {
+        return $GLOBALS['Language']->getText('svn_admin_access_control', 'saved_on');
+    }
+
+    public function select_version() {
+        return $GLOBALS['Language']->getText('svn_admin_access_control', 'select_version');
+    }
 }

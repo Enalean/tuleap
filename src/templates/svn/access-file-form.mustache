@@ -20,9 +20,9 @@
             <div id="old_access_file_container">
                 <h3> {{ old_version_title }}
                     <select name="version_selected">
-                        <option value="0">Select your version</option>
+                        <option value="0"> {{ select_version }} </option>
                         {{# select_options }}
-                        <option value="{{ id }}">{{ version }}</option>
+                        <option value="{{ id }}">#{{ version }} ({{ saved_on }} {{ date }})</option>
                         {{/ select_options }}
                     </select>
                 </h3>

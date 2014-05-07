@@ -241,8 +241,10 @@ function create_project($data, $do_not_exit = false) {
         }
         
         //copy svn infos
+        $current_timestamp = db_escape_int($_SERVER['REQUEST_TIME']);
+
         $sql = "INSERT INTO svn_accessfile_history (version_number, group_id, version_date)
-                VALUES (1, $group_id, CURRENT_TIMESTAMP)";
+                VALUES (1, $group_id, $current_timestamp)";
 
         $result = db_query($sql);
         if (!$result) {

@@ -57,7 +57,8 @@ $select_options = array();
 foreach ($dao->getAllVersions($group_id) as $row) {
     $select_options[] = array(
         'id'      => $row['id'],
-        'version' => $row['version_number']
+        'version' => $row['version_number'],
+        'date'    => format_date("Y-m-d", (float)$row['version_date'], '')
     );
 }
 

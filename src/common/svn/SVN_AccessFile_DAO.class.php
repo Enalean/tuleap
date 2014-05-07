@@ -21,6 +21,7 @@ class SVN_AccessFile_DAO extends DataAccessObject {
     private function addNewVersion($group_id, $content) {
         $new_version_number  = 0;
         $last_version_number = $this->getLastVersionNumber($group_id);
+        $current_timestamp   = $this->da->escapeInt($_SERVER['REQUEST_TIME']);
 
         if ($last_version_number) {
             $new_version_number = $last_version_number + 1;
@@ -36,7 +37,7 @@ class SVN_AccessFile_DAO extends DataAccessObject {
                     $new_version_number,
                     $group_id,
                     $content,
-                    CURRENT_TIMESTAMP
+                    $current_timestamp
                 )";
 
         $result = $this->updateAndGetLastId($sql);
@@ -105,7 +106,7 @@ class SVN_AccessFile_DAO extends DataAccessObject {
     public function getAllVersions($group_id) {
         $group_id = $this->da->escapeInt($group_id);
 
-        $sql = "SELECT version_number, id
+        $sql = "SELECT version_number, id, version_date
                 FROM svn_accessfile_history
                 WHERE group_id = $group_id";
 

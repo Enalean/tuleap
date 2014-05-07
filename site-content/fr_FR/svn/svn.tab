@@ -17,6 +17,8 @@ svn_admin_access_control	button_new_version	Enregistrer une nouvelle version
 svn_admin_access_control	button_old_version	Utiliser une ancienne version
 svn_admin_access_control	old_version	Ancienne version :
 svn_admin_access_control	current_version	Version actuelle :
+svn_admin_access_control	saved_on	enregistré le
+svn_admin_access_control	select_version	Choisissez une version
 #
 #-----------------------------------------------
 # Script: SF/www/svn/admin/general_settings.php
