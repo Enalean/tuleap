@@ -256,7 +256,7 @@ function create_project($data, $do_not_exit = false) {
                   SET svn_tracker='".$arr['svn_tracker']."',
                       svn_mandatory_ref='".$arr['svn_mandatory_ref']."',
                       svn_preamble='".db_escape_string($arr['svn_preamble'])."',
-                      svn_accessfile = svn_accessfile_history.id
+                      svn_accessfile_version_id = svn_accessfile_history.id
                   WHERE groups.group_id = $group_id
                       AND groups.group_id = svn_accessfile_history.group_id";
         

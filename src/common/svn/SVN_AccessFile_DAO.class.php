@@ -91,7 +91,7 @@ class SVN_AccessFile_DAO extends DataAccessObject {
 
     private function linkNewVersionIdToProject($group_id, $version_id) {
         $sql = "UPDATE groups
-                SET svn_accessfile = $version_id
+                SET svn_accessfile_version_id = $version_id
                 WHERE group_id = $group_id";
 
         $result = $this->update($sql);
@@ -119,7 +119,7 @@ class SVN_AccessFile_DAO extends DataAccessObject {
                 FROM svn_accessfile_history s
                     JOIN groups g ON g.group_id = s.group_id
                 WHERE g.group_id = $group_id
-                    AND g.svn_accessfile = s.id";
+                    AND g.svn_accessfile_version_id = s.id";
 
         $result = $this->retrieve($sql);
 

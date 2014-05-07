@@ -1024,7 +1024,7 @@ CREATE TABLE groups (
   svn_can_change_log TINYINT(1) NOT NULL default '0',
   svn_events_mailing_header varchar(64) binary DEFAULT NULL,
   svn_preamble text NOT NULL,
-  svn_accessfile INT(11) NULL,
+  svn_accessfile_version_id INT(11) NULL,
   PRIMARY KEY  (group_id),
   KEY idx_groups_status (status),
   KEY idx_groups_public (is_public),
