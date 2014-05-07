@@ -2,6 +2,7 @@ Version 7.1 (Not Yet Released)
 
     == Plugins ==
 	* tracker: 5.370
+	* agiledashboard: 1.62
 
 	== Developers ==
 	* tasks #6824 - Refactor Milestones test
