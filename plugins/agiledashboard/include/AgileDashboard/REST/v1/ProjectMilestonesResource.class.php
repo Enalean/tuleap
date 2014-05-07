@@ -31,6 +31,8 @@ use \Luracast\Restler\RestException;
 use \Tuleap\REST\Header;
 use \AgileDashboard_Milestone_MilestoneStatusCounter;
 use \AgileDashboard_BacklogItemDao;
+use \Planning_Milestone;
+use \AgileDashboard_Milestone_Backlog_BacklogStrategyFactory;
 
 /**
  * Wrapper for milestone related REST methods
@@ -90,7 +92,11 @@ class ProjectMilestonesResource {
 
         foreach($milestones as $milestone) {
             $milestone_representation = new MilestoneRepresentation();
-            $milestone_representation->build($milestone, $this->milestone_factory->getMilestoneStatusCount($user, $milestone));
+            $milestone_representation->build(
+                $milestone,
+                $this->milestone_factory->getMilestoneStatusCount($user, $milestone),
+                $this->getBacklogTrackers($milestone)
+            );
             $milestone_representations[] = $milestone_representation;
         }
 
@@ -98,6 +104,18 @@ class ProjectMilestonesResource {
         $this->sendPaginationHeaders($limit, $offset, count($all_milestones));
 
         return $milestone_representations;
+    }
+
+    private function getStrategyFactory() {
+        return new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
+            new AgileDashboard_BacklogItemDao(),
+            Tracker_ArtifactFactory::instance(),
+            PlanningFactory::build()
+        );
+    }
+
+    private function getBacklogTrackers(Planning_Milestone $milestone) {
+        return $this->getStrategyFactory()->getBacklogStrategy($milestone)->getDescendantTrackers();
     }
 
     private function limitValueIsAcceptable($limit) {
