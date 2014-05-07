@@ -75,7 +75,7 @@ class SVN_AccessFile_DAO extends DataAccessObject {
         }
     }
 
-    private function getLastVersionNumber($group_id) {
+    public function getLastVersionNumber($group_id) {
        $sql = "SELECT max(version_number) as version_number
                 FROM svn_accessfile_history
                 WHERE group_id = $group_id";

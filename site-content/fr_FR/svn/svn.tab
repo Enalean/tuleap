@@ -14,9 +14,10 @@ svn_admin_access_control	not_created	Votre dépôt Subversion n'a pas été cré
 svn_admin_access_control	no_ugroup	Le groupe "$1" est vide ou n'existe pas
 svn_admin_access_control	invalid_line	La ligne "$1" est invalide
 svn_admin_access_control	button_new_version	Enregistrer une nouvelle version
-svn_admin_access_control	button_old_version	Utiliser une ancienne version
-svn_admin_access_control	old_version	Ancienne version :
-svn_admin_access_control	current_version	Version actuelle :
+svn_admin_access_control	button_other_version	Utiliser la version sélectionnée
+svn_admin_access_control	other_versions	Versions enregistrées :
+svn_admin_access_control	last_version	Vous utilisez la dernière version (# $1)
+svn_admin_access_control	previous_version	Vous utilisez une version antérieure (# $1)
 svn_admin_access_control	saved_on	enregistré le
 svn_admin_access_control	select_version	Choisissez une version
 #

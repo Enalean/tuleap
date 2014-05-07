@@ -64,6 +64,22 @@ foreach ($dao->getAllVersions($group_id) as $row) {
 
 $version_number = $dao->getCurrentVersionNumber($group_id);
 
+$current_version_title = '';
+
+if($version_number != $dao->getLastVersionNumber($group_id)) {
+    $current_version_title = $GLOBALS['Language']->getText(
+        'svn_admin_access_control',
+        'previous_version',
+        array($version_number)
+    );
+} else {
+    $current_version_title = $GLOBALS['Language']->getText(
+        'svn_admin_access_control',
+        'last_version',
+        array($version_number)
+    );
+}
+
 $renderer->renderToPage(
     'access-file-form',
     new SVN_AccessFile_Presenter(
@@ -71,7 +87,8 @@ $renderer->renderToPage(
         svn_utils_read_svn_access_file($gname),
         svn_utils_read_svn_access_file_defaults($gname, true),
         $select_options,
-        $version_number
+        $version_number,
+        $current_version_title
     )
 );
 

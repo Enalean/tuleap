@@ -35,12 +35,16 @@ class SVN_AccessFile_Presenter {
     /** @var int */
     private $version_number;
 
-    public function __construct(Project $project, $content, $default_content, array $select_options, $version_number) {
-        $this->project         = $project;
-        $this->content         = $content;
-        $this->default_content = $default_content;
-        $this->select_options  = $select_options;
-        $this->version_number  = $version_number;
+    /** @var string*/
+    public $current_version_title;
+
+    public function __construct(Project $project, $content, $default_content, array $select_options, $version_number, $current_version_title) {
+        $this->project               = $project;
+        $this->content               = $content;
+        $this->default_content       = $default_content;
+        $this->select_options        = $select_options;
+        $this->version_number        = $version_number;
+        $this->current_version_title = $current_version_title;
     }
 
     public function project_id() {
@@ -59,8 +63,8 @@ class SVN_AccessFile_Presenter {
         return $GLOBALS['Language']->getText('svn_admin_access_control', 'button_new_version');
     }
 
-    public function button_old_version_label() {
-        return $GLOBALS['Language']->getText('svn_admin_access_control', 'button_old_version');
+    public function button_other_version_label() {
+        return $GLOBALS['Language']->getText('svn_admin_access_control', 'button_other_version');
     }
 
     public function access_ctrl_file() {
@@ -80,12 +84,8 @@ class SVN_AccessFile_Presenter {
         return $GLOBALS['Language']->getText('svn_admin_access_control','not_created');
     }
 
-    public function old_version_title() {
-        return $GLOBALS['Language']->getText('svn_admin_access_control', 'old_version');
-    }
-
-    public function current_version_title() {
-        return $GLOBALS['Language']->getText('svn_admin_access_control', 'current_version');
+    public function other_version_title() {
+        return $GLOBALS['Language']->getText('svn_admin_access_control', 'other_versions');
     }
 
     public function version_number() {
