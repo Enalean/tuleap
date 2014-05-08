@@ -1,4 +1,4 @@
-<?
+<?php
 //
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 // This file is licensed under the GNU General Public License version 2. See the file COPYING.
@@ -29,5 +29,3 @@
 	<B>Si licence autre&nbsp;:</B><BR>
 	<TEXTAREA name="form_license_other" wrap=virtual cols=60 rows=10>'.$data['project']['form_license_other'].'</TEXTAREA>
 	<P>';
-
-?>

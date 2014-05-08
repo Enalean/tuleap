@@ -1,4 +1,4 @@
-<?
+<?php
 //
 // Codendi
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
@@ -13,5 +13,3 @@ $message = "Thank you for registering on the ".$GLOBALS['sys_name']." web site. 
 . "Your login is: ".$username."\n\n"
 . "Enjoy the site.\n\n"
 . " -- The ".$GLOBALS['sys_name']." Team\n";
-
-?>

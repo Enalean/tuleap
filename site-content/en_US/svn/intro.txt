@@ -1,4 +1,4 @@
-<?
+<?php
 //
 // Codendi
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
@@ -26,4 +26,3 @@ if (strtolower($username) != $username) {
 }
 
 print '<P>'.help_button('svn.html',false,'[More on how to use Subversion &hellip;]');
-?>

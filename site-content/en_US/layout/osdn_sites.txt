@@ -1,4 +1,4 @@
-<?
+<?php
 //
 // Codendi
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
@@ -15,5 +15,3 @@ $osdn_sites[] = array('Slashdot.org' => 'http://www.slashdot.com/');
 $osdn_sites[] = array('SourceForge' => 'http://www.sourceforge.net/');
 $osdn_sites[] = array('Freshmeat' => 'http://www.freshmeat.net/');
 */
-
-?>

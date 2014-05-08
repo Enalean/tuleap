@@ -1,4 +1,4 @@
-<?
+<?php
 //
 // Codendi
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
@@ -36,4 +36,3 @@ print '<P><span class="command">cvs -d:pserver:'.$username.'@'.$cvs_domain.':/cv
 
 
 print '<P>'.help_button('VersionControlWithCVS.html',false,'[More information about CVS&hellip;]');
-?>

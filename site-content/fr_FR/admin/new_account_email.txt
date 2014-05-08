@@ -1,4 +1,4 @@
-<?
+<?php
 //
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 // This file is licensed under the GNU General Public License version 2. See the file COPYING.
@@ -14,6 +14,3 @@ $body = "Vous êtes maintenant un utilisateur enregistré sur ".$GLOBALS['sys_na
 ."(définir votre profil de compétences, vos préférences, etc...)\n\n\nProfitez pleinement du site, envoyez vos suggestions sur "
 ." les améliorations que nous pourrions apporter et n'oubliez pas de parler de "
 .$GLOBALS['sys_name']." autour de vous. \n\n\n-- L'équipe ".$GLOBALS['sys_name'];
-            
-
-?>
