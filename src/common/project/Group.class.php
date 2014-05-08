@@ -268,10 +268,12 @@ class Group extends Error {
 	    }
 	}
 
-	/*
-		User is an admin of the project
-		or admin of the entire site
-	*/
+        /**
+         * This method relies on global state so kittens die everytime you use it
+         *
+         * @deprecated use PFuser::isAdmin() instead
+         * @return boolean
+         */
 	function userIsAdmin() {
 	    if (isset($this->is_admin)) {
 		//have already been through here and set the var
