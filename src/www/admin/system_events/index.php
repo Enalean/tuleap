@@ -79,7 +79,7 @@ if (!$filter_status) {
 }
 $filter_type = $request->get('filter_type');
 if (!$filter_type) {
-    $filter_type = $se->getTypes();
+    $filter_type = array();
 }
 
 echo '<form action="" method="POST">';
@@ -111,19 +111,12 @@ $types = $se->getTypes();
 array_shift($types);
 uksort($types, 'strnatcasecmp');
 foreach(array_chunk($types, ceil(count($types) / 3)) as $col) {
-    echo '<div class="span4">';
     foreach ($col as $type) {
-        echo '<label class="checkbox">';
-        echo '<input type="checkbox" 
-                     name="filter_type[]" 
-                     value="'.  $hp->purify($type, CODENDI_PURIFIER_CONVERT_HTML)  .'" 
-                     id="filter_'.  $hp->purify($type, CODENDI_PURIFIER_CONVERT_HTML)  .'"
-                     '. (in_array($type, $filter_type) ? 'checked="checked"' : '') .'
-                     />';
-        echo $hp->purify($type, CODENDI_PURIFIER_CONVERT_HTML)  .'</label> ';
+        $typesArray[] = array('value' => $type, 'text' => $type);
     }
-    echo '</div>';
 }
+echo html_build_multiple_select_box_from_array($typesArray, "filter_type[]", $filter_type, 10, false, '', true, '', false, '', false);
+
 echo '</div>';
 echo '<hr />';
 echo '<p>';
