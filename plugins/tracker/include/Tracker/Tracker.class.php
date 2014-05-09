@@ -2136,6 +2136,8 @@ EOS;
     public function exportToXML(SimpleXMLElement $xmlElem, &$xmlFieldId = 0) {
         $xmlElem->addAttribute('id', "T". $this->getId());
 
+        $cdata_section_factory = new XML_SimpleXMLCDATAFactory();
+
         $parent_id = $this->getParentId();
         if ($parent_id) {
             $parent_id = "T". $parent_id;
@@ -2156,23 +2158,17 @@ EOS;
         }
 
         // these will not be used at the import
-        $xmlElem->addChild('name', $this->getName());
+        $cdata_section_factory->insert($xmlElem, 'name', $this->getName());
         $xmlElem->addChild('item_name', $this->getItemName());
-        $xmlElem->addChild('description', $this->getDescription());
+        $cdata_section_factory->insert($xmlElem, 'description', $this->getDescription());
         $xmlElem->addChild('color', $this->getColor());
 
         // add only if not empty
         if ($this->submit_instructions) {
-            $n = $xmlElem->addChild('submit_instructions');
-            $node = dom_import_simplexml($n);
-            $no = $node->ownerDocument;
-            $node->appendChild($no->createCDATASection($this->submit_instructions));
+            $cdata_section_factory->insert($xmlElem, 'submit_instructions', $this->submit_instructions);
         }
         if ($this->browse_instructions) {
-            $n = $xmlElem->addChild('browse_instructions');
-            $node = dom_import_simplexml($n);
-            $no = $node->ownerDocument;
-            $node->appendChild($no->createCDATASection($this->browse_instructions));
+            $cdata_section_factory->insert($xmlElem, 'browse_instructions', $this->browse_instructions);
         }
 
         $child = $xmlElem->addChild('cannedResponses');
