@@ -154,6 +154,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function userCanView(PFUser $user = null) {
         $um = $this->getUserManager();
+        $project_manager = $this->getProjectManager();
+
         if (! $user) {
             $user = $um->getCurrentUser();
         }
@@ -162,7 +164,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             if ($this->getTracker()->userIsAdmin() || $user->isSuperUser()) {
                 $this->setUserCanView($user, true);
             } else {
-                $permission_checker = new Tracker_Permission_PermissionChecker($um);
+                $permission_checker = new Tracker_Permission_PermissionChecker($um, $project_manager);
                 $this->setUserCanView($user, $permission_checker->userCanView($user, $this));
             }
         }
@@ -1134,6 +1136,15 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function getUserManager() {
         return UserManager::instance();
+    }
+
+    /**
+     * Get the ProjectManager instance
+     *
+     * @return ProjectManager
+     */
+    private function getProjectManager() {
+        return ProjectManager::instance();
     }
 
     /**

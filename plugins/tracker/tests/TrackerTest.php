@@ -448,6 +448,9 @@ class TrackerTest extends TuleapTestCase {
         $this->workflow_factory = mock('WorkflowFactory');
         WorkflowFactory::setInstance($this->workflow_factory);
 
+        $this->user_manager = mock('UserManager');
+        UserManager::setInstance($this->user_manager);
+
         $GLOBALS['Response'] = new MockLayout();
 
         $GLOBALS['UGROUPS'] = array(
@@ -461,6 +464,7 @@ class TrackerTest extends TuleapTestCase {
 
     public function tearDown() {
         WorkflowFactory::clearInstance();
+        UserManager::clearInstance();
         unset($this->site_admin_user);
         unset($this->project_admin_user);
         unset($this->all_trackers_admin_user);
@@ -1331,6 +1335,7 @@ class TrackerTest extends TuleapTestCase {
             );
         $t_access_anonymous->setReturnReference('getPermissionsByUgroupId', $perms);
         $t_access_anonymous->setReturnReference('getTrackerManager', $this->tracker_manager);
+        $t_access_anonymous->setReturnReference('getUserManager', $this->user_manager);
 
         $this->assertTrue($t_access_anonymous->userCanView($this->anonymous));
         $this->assertTrue($t_access_anonymous->userCanView($this->registered));
@@ -1349,7 +1354,7 @@ class TrackerTest extends TuleapTestCase {
         $t_access_registered->setReturnValue('getGroupId', 101);
         $t_access_registered->setReturnValue('getProject', $this->project);
         $t_access_registered->setReturnReference('getTrackerManager', $this->tracker_manager);
-
+        $t_access_registered->setReturnReference('getUserManager', $this->user_manager);
         $perms = array(
                 2 => array( 101=>'PLUGIN_TRACKER_ACCESS_FULL'),
                 1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
@@ -1378,6 +1383,7 @@ class TrackerTest extends TuleapTestCase {
             );
         $t_access_members->setReturnReference('getPermissionsByUgroupId', $perms);
         $t_access_members->setReturnReference('getTrackerManager', $this->tracker_manager);
+        $t_access_members->setReturnReference('getUserManager', $this->user_manager);
 
         $this->assertFalse($t_access_members->userCanView($this->anonymous));
         $this->assertFalse($t_access_members->userCanView($this->registered));
@@ -1403,6 +1409,8 @@ class TrackerTest extends TuleapTestCase {
 
         $tracker_manager = mock('TrackerManager');
         $t_access_members->setReturnReference('getTrackerManager', $tracker_manager);
+        $t_access_members->setReturnReference('getUserManager', $this->user_manager);
+
         stub($tracker_manager)->userCanAdminAllProjectTrackers($this->all_trackers_forge_admin_user)->returns(true);
 
         $this->assertTrue($t_access_members->userCanView($this->all_trackers_forge_admin_user));
@@ -1419,6 +1427,7 @@ class TrackerTest extends TuleapTestCase {
                 );
         $t_access_admin->setReturnReference('getPermissionsByUgroupId', $perms);
         $t_access_admin->setReturnReference('getTrackerManager', $this->tracker_manager);
+        $t_access_admin->setReturnReference('getUserManager', $this->user_manager);
 
         $this->assertFalse($t_access_admin->userCanView($this->anonymous));
         $this->assertFalse($t_access_admin->userCanView($this->registered));
@@ -1443,6 +1452,7 @@ class TrackerTest extends TuleapTestCase {
             );
         $t_access_submitter->setReturnReference('getPermissionsByUgroupId', $perms);
         $t_access_submitter->setReturnReference('getTrackerManager', $this->tracker_manager);
+        $t_access_submitter->setReturnReference('getUserManager', $this->user_manager);
 
         $this->assertFalse($t_access_submitter->userCanView($this->anonymous));
         $this->assertFalse($t_access_submitter->userCanView($this->registered));
@@ -1467,6 +1477,7 @@ class TrackerTest extends TuleapTestCase {
             );
         $t_access_assignee->setReturnReference('getPermissionsByUgroupId', $perms);
         $t_access_assignee->setReturnReference('getTrackerManager', $this->tracker_manager);
+        $t_access_assignee->setReturnReference('getUserManager', $this->user_manager);
 
         $this->assertFalse($t_access_assignee->userCanView($this->anonymous));
         $this->assertFalse($t_access_assignee->userCanView($this->registered));
@@ -1485,6 +1496,7 @@ class TrackerTest extends TuleapTestCase {
         $t_access_submitterassignee->setReturnValue('getGroupId', 101);
         $t_access_submitterassignee->setReturnValue('getProject', $this->project);
         $t_access_submitterassignee->setReturnReference('getTrackerManager', $this->tracker_manager);
+        $t_access_submitterassignee->setReturnReference('getUserManager', $this->user_manager);
 
         $perms = array(
                 4   => array(101=>'PLUGIN_TRACKER_ACCESS_FULL'),
@@ -1518,6 +1530,7 @@ class TrackerTest extends TuleapTestCase {
 
         $t_access_registered->setReturnReference('getPermissionsByUgroupId', $perms);
         $t_access_registered->setReturnReference('getTrackerManager', $this->tracker_manager);
+        $t_access_registered->setReturnReference('getUserManager', $this->user_manager);
 
         $this->assertFalse($t_access_registered->userCanView($this->anonymous));
         $this->assertFalse($t_access_registered->userCanView($this->registered));

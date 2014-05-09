@@ -41,7 +41,10 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase {
         stub($project)->isPublic()->returns(true);
 
         $this->user_manager       = mock('UserManager');
-        $this->permission_checker = new Tracker_Permission_PermissionChecker($this->user_manager);
+        $this->project_manager    = mock('ProjectManager');
+        $this->project_manager->setReturnValue('checkRestrictedAccess', true);
+
+        $this->permission_checker = new Tracker_Permission_PermissionChecker($this->user_manager, $this->project_manager);
 
         // $assignee and $u_ass are in the same ugroup (UgroupAss - ugroup_id=101)
         // $submitter and $u_sub are in the same ugroup (UgroupSub - ugroup_id=102)
@@ -87,17 +90,42 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase {
         $this->other->setReturnValue('isSuperUser', false);
         $this->other->setReturnValue('isMember', true, array(12));
 
+        $this->restricted = mock('PFUser');
+        $this->restricted->setReturnValue('getId', 126);
+        $this->restricted->setReturnValue('isMemberOfUgroup', true);
+        $this->restricted->setReturnValue('isSuperUser', false);
+        $this->restricted->setReturnValue('isRestricted', true);
+
         $this->user_manager->setReturnReference('getUserById', $this->user, array(120));
         $this->user_manager->setReturnReference('getUserById', $this->assignee, array(121));
         $this->user_manager->setReturnReference('getUserById', $this->u_ass, array(122));
         $this->user_manager->setReturnReference('getUserById', $this->submitter, array(123));
         $this->user_manager->setReturnReference('getUserById', $this->u_sub, array(124));
         $this->user_manager->setReturnReference('getUserById', $this->other, array(125));
+        $this->user_manager->setReturnReference('getUserById', $this->restricted, array(126));
 
         $this->tracker = mock('Tracker');
         $this->tracker->setReturnValue('getId', 666);
         $this->tracker->setReturnValue('getGroupId', 222);
         $this->tracker->setReturnValue('getProject', $project);
+    }
+
+    public function testRestrictedUserCanSeeTrackerBecauseTrackerDoesNotCheckRestrictedAccess() {
+        $project_manager = stub('ProjectManager')->checkRestrictedAccess()->returns(false);
+
+        $permissions = array('PLUGIN_TRACKER_ACCESS_FULL' => array(0 => ProjectUGroup::REGISTERED));
+        $this->tracker->setReturnReference('getAuthorizedUgroupsByPermissionType', $permissions);
+
+        $artifact = mock('Tracker_Artifact');
+        $artifact->setReturnReference('getTracker', $this->tracker);
+        $artifact->setReturnValue('useArtifactPermissions', false);
+
+        $permission_checker = new Tracker_Permission_PermissionChecker(
+            $this->user_manager,
+            $project_manager
+        );
+
+        $this->assertTrue($permission_checker->userCanView($this->restricted, $artifact));
     }
 
     function testUserCanViewTrackerAccessSubmitter() {
@@ -230,6 +258,8 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase {
         $user_manager->setReturnReference('getUserById', $submitter, array(122));
         $user_manager->setReturnReference('getUserById', $other, array(123));
 
+        $project_manager = mock('ProjectManager');
+
         // $artifact_subass has been submitted by $submitter and assigned to $assignee
         // $u should have the right to see it.
         // $other, $submitter and assigned should not have the right to see it
@@ -248,7 +278,7 @@ class Tracker_Permission_PermissionCheckerTest extends TuleapTestCase {
         $artifact_subass->setReturnReference('getValue', $user_changeset_value, array($contributor_field));
 
 
-        $permission_checker = new Tracker_Permission_PermissionChecker($user_manager);
+        $permission_checker = new Tracker_Permission_PermissionChecker($user_manager, $project_manager);
         $this->assertFalse($permission_checker->userCanView($submitter, $artifact_subass));
         $this->assertFalse($permission_checker->userCanView($assignee, $artifact_subass));
         $this->assertFalse($permission_checker->userCanView($other, $artifact_subass));
@@ -275,7 +305,8 @@ abstract class Tracker_Permission_PermissionChecker_SubmitterOnlyBaseTest extend
         stub($project)->isPublic()->returns(true);
 
         $this->user_manager       = mock('UserManager');
-        $this->permission_checker = new Tracker_Permission_PermissionChecker($this->user_manager);
+        $this->project_manager    = mock('ProjectManager');
+        $this->permission_checker = new Tracker_Permission_PermissionChecker($this->user_manager, $this->project_manager);
 
         $this->tracker = mock('Tracker');
         $this->tracker->setReturnValue('getId', 666);

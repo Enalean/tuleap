@@ -433,17 +433,26 @@ class ProjectManager {
         $this->getGroupByIdForSoap($groupId, $method, $byUnixName);
     }
 
+    public function checkRestrictedAccess($group) {
+        return $this->getRestrictedAccessForUserInGroup($group, $this->_getUserManager()->getCurrentUser());
+    }
+
+    public function checkRestrictedAccessForUser($group, PFUser $user) {
+        return $this->getRestrictedAccessForUserInGroup($group, $user);
+    }
+
     /**
-     * Check if the user can access the project $group,
+     * Checks if the user can access the project $group,
      * regarding the restricted access
      *
      * @param Project $group Affected project
+     * @param         $user
+     *
      * @return boolean true if the current session user has access to this project, false otherwise
      */
-    function checkRestrictedAccess($group) {
+    private function getRestrictedAccessForUserInGroup($group, $user) {
         if (array_key_exists('sys_allow_restricted_users', $GLOBALS) && $GLOBALS['sys_allow_restricted_users'] == 1) {
             if ($group) {
-                $user = $this->_getUserManager()->getCurrentUser();
                 if ($user) {
                     if ($user->isRestricted()) {
                         return $group->userIsMember();
