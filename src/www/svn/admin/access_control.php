@@ -47,6 +47,8 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
             $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_access_control','upd_fail'));
         }
     }
+
+    $GLOBALS['Response']->redirect('/svn/admin/?func=access_control&group_id='.$group_id);
 }
 
 // Display the form
