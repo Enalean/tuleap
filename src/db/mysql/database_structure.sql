@@ -1024,13 +1024,24 @@ CREATE TABLE groups (
   svn_can_change_log TINYINT(1) NOT NULL default '0',
   svn_events_mailing_header varchar(64) binary DEFAULT NULL,
   svn_preamble text NOT NULL,
-  svn_accessfile text NULL,
+  svn_accessfile_version_id INT(11) NULL,
   PRIMARY KEY  (group_id),
   KEY idx_groups_status (status),
   KEY idx_groups_public (is_public),
   KEY idx_groups_unix (unix_group_name),
   KEY idx_groups_type (type)
 );
+
+CREATE TABLE svn_accessfile_history (
+    id INT(11) AUTO_INCREMENT,
+    version_number INT(11) NOT NULL,
+    group_id INT(11) NOT NULL,
+    content TEXT,
+    version_date INT(11),
+    PRIMARY KEY(id),
+    INDEX idx_svn_accessfile_group_id(group_id)
+);
+
 #
 # Table structure for table 'group_desc'
 #
