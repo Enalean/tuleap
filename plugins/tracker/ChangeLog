@@ -1,3 +1,6 @@
+Version 5.371 - Tuleap 7.1
+    * Fix request #6716 - Restricted users can't access trackers and artifacts in public projects
+
 Version 5.370 - Tuleap 7.1
     * Fix request #6822 - Submit button does not appear when pasting text in followup
 
