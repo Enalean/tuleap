@@ -27,18 +27,7 @@ require_once 'common/svn/SVN_Hooks.class.php';
 /**
  * I'm responsible of handling what happens in pre-revprop-change subversion hook
  */
-class SVN_Hook_PreRevPropset {
-
-    /** @var SVN_Hooks */
-    private $svn_hooks;
-
-    /** @var ReferenceManager */
-    private $reference_manager;
-
-    public function __construct(SVN_Hooks $svn_hooks, ReferenceManager $reference_manager) {
-        $this->svn_hooks         = $svn_hooks;
-        $this->reference_manager = $reference_manager;
-    }
+class SVN_Hook_PreRevPropset extends SVN_Hook {
 
     /**
      * Check if the property can be modified
@@ -55,9 +44,9 @@ class SVN_Hook_PreRevPropset {
      */
     public function assertCanBeModified($repository, $action, $propname, $commit_message) {
         $this->assertPropsetIsOnLog($action, $propname);
-        $project = $this->svn_hooks->getProjectFromRepositoryPath($repository);
+        $project = $this->getProjectFromRepositoryPath($repository);
         $this->assertCommitMessageCanBeModified($project);
-        $this->assertCommitMessageIsValid($project, $commit_message);
+        $this->message_validator->assertCommitMessageIsValid($project, $commit_message);
     }
 
     private function assertPropsetIsOnLog($action, $propname) {
@@ -71,18 +60,4 @@ class SVN_Hook_PreRevPropset {
             throw new Exception('Project forbid to change log messages');
         }
     }
-
-    private function assertCommitMessageIsValid(Project $project, $commit_message) {
-        if ($project->isSVNMandatoryRef()) {
-            // Marvelous, extractCrossRef depends on globals group_id to find the group
-            // when it's not explicit... yeah!
-            $GLOBALS['group_id'] = $project->getID();
-            if (! $this->reference_manager->stringContainsReferences($commit_message, $project)) {
-                throw new Exception('Commit message must contains references');
-            }
-        }
-    }
 }
-
-
-?>

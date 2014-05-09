@@ -1,7 +1,6 @@
-#!/usr/bin/php
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
+ * Copyright Enalean (c) 2014. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -23,25 +22,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-try {
-    require_once 'env.inc.php';
-    require_once 'pre.php';
-    require_once 'common/svn/hook/PreRevPropset.class.php';
+require_once 'common/svn/SVN_Hooks.class.php';
 
-    $repository         = $argv[1];
-    $propname           = $argv[4];
-    $action             = $argv[5];
-    $new_commit_message = stream_get_contents(STDIN);
+/**
+ * I'm responsible of handling what happens in pre-commit subversion hook
+ */
+class SVN_Hook_PreCommit extends SVN_Hook {
 
-    $svn_commit_message = new SVN_Hook_PreRevPropset(
-        new SVN_Hooks(ProjectManager::instance(), UserManager::instance()),
-        new SVN_CommitMessageValidator(ReferenceManager::instance())
-    );
-    $svn_commit_message->assertCanBeModified($repository, $action, $propname, $new_commit_message);
-    exit(0);
-} catch(Exception $e) {
-    fwrite(STDERR, $e->getMessage().PHP_EOL);
-    exit(1);
+    /**
+     * Check if the commit message is valid
+     *
+     * @param String $repository
+     * @param String $commit_message
+     */
+    public function assertCommitMessageIsValid($repository, $commit_message) {
+        $project = $this->getProjectFromRepositoryPath($repository);
+        $this->message_validator->assertCommitMessageIsValid($project, $commit_message);
+    }
 }
-
-?>
