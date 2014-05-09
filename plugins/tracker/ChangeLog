@@ -1,3 +1,6 @@
+Version 5.372 - Tuleap 7.1
+    * request #6819: Unable to import a tracker if a description contain unknown chars
+
 Version 5.371 - Tuleap 7.1
     * Fix request #6716 - Restricted users can't access trackers and artifacts in public projects
 
