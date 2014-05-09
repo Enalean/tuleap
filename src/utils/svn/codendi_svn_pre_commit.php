@@ -30,17 +30,14 @@ try {
     $repository = $argv[1];
     $txn        = $argv[2];
 
-    $svn_hooks = new SVN_Hooks(ProjectManager::instance(), UserManager::instance());
-    $project   = $svn_hooks->getProjectFromRepositoryPath($repository);
+    $svn_hooks      = new SVN_Hooks(ProjectManager::instance(), UserManager::instance());
+    $commit_message = $svn_hooks->getMessageFromTransaction($repository, $txn);
 
-    if ($project->isSVNMandatoryRef()) {
-        $reference_manager = ReferenceManager::instance();
-        $commit_message    = $svn_hooks->getMessageFromTransaction($repository, $txn);
-        if (! $reference_manager->stringContainsReferences($commit_message, $project)) {
-            fwrite(STDERR, "You must make at least one reference in the commit message");
-            exit(1);
-        }
-    }
+    $hook = new SVN_Hook_PreCommit(
+        $svn_hooks,
+        new SVN_CommitMessageValidator(ReferenceManager::instance())
+    );
+    $hook->assertCommitMessageIsValid($repository, $commit_message);
     exit(0);
 } catch (Exception $exeption) {
     fwrite (STDERR, $exeption->getMessage());
