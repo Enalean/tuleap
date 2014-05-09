@@ -252,6 +252,9 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         } else if ($request->existAndNonEmpty('create_mode') && $request->get('create_mode') == 'tv3') {
             $atid = $request->get('tracker_new_tv3');
             $new_tracker = $this->getTrackerFactory()->createFromTV3($atid, $project, $name, $description, $itemname);
+        } else if ($request->existAndNonEmpty('create_mode') && $request->get('create_mode') == 'migrate_from_tv3') {
+            $GLOBALS['Response']->addFeedback('error','Feature is not implemented yet');
+            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?group_id='. $project->group_id .'&func=create');
         } else {
             // Otherwise tries duplicate
             $duplicate = $this->getTrackerFactory()->create($project->getId(), -1, $atid_template, $name, $description, $itemname);
@@ -309,6 +312,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         $this->displayCreateTrackerFromTemplate($create_mode, $project, $tracker_template);
         $this->displayCreateTrackerFromXML($create_mode, $project);
         $this->displayCreateTrackerFromTV3($create_mode, $project, $request->get('tracker_new_tv3'));
+        $this->displayMigrateFromTV3Option($create_mode, $project, $request->get('tracker_new_tv3'));
 
         echo '</td><td style="padding-left:2em;">';
 
@@ -442,38 +446,52 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
               <div class="tracker_create_mode">
                 <p>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','from_xml_desc', TRACKER_BASE_URL.'/resources/templates/').'</p>
                 <input type="file" name="tracker_new_xml_file" id="tracker_new_xml_file" />
-                
+
               </div>';
     }
 
-    private function displayCreateTrackerFromTV3($requested_create_mode, Project $project, $requested_template_id) {
-        $hp   = Codendi_HTMLPurifier::instance();
-        $html = '';
+    private function getTrackersV3ForProject(Project $project) {
         if ($project->usesService('tracker')) {
             require_once 'common/tracker/ArtifactTypeFactory.class.php';
             $atf         = new ArtifactTypeFactory($project);
-            $trackers_v3 = $atf->getArtifactTypes();
-            if ($trackers_v3) {
-                $radio = $this->getCreateTrackerRadio('tv3', $requested_create_mode);
-                $html .= '<h3><label>'. $radio . $GLOBALS['Language']->getText('plugin_tracker_include_type','from_tv3').'</label></h3>';
-                $html .= '<div class="tracker_create_mode">';
-                $checked = $requested_template_id ? '' : 'checked="checked"';
-                foreach ($trackers_v3 as $tracker_v3) {
-                    $html .= '<p>';
-                    $html .= '<label>';
-                    if ($requested_template_id == $tracker_v3->getID()) {
-                        $checked = 'checked="checked"';
-                    }
-                    $html .= '<input type="radio" name="tracker_new_tv3" value="'. $tracker_v3->getID() .'" '. $checked .' />';
-                    $html .= $hp->purify(SimpleSanitizer::unsanitize($tracker_v3->getName()), CODENDI_PURIFIER_CONVERT_HTML);
-                    $html .= '</label>';
-                    $html .= '</p>';
-                    $checked = '';
-                }
-                $html .= '</div>';
-            }
+            return $atf->getArtifactTypes();
         }
-        echo $html;
+
+        return null;
+    }
+
+    private function displayCreateTrackerFromTV3($requested_create_mode, Project $project, $requested_template_id) {
+        $trackers_v3 = $this->getTrackersV3ForProject($project);
+
+        if ($trackers_v3) {
+            $radio = $this->getCreateTrackerRadio('tv3', $requested_create_mode);
+            echo $this->getSelectBoxForTV3($requested_template_id, $radio, $trackers_v3, $GLOBALS['Language']->getText('plugin_tracker_include_type','from_tv3'));
+
+        }
+    }
+
+    private function getSelectBoxForTV3($requested_template_id, $radio, array $trackers_v3, $label) {
+        $html    = '';
+        $hp      = Codendi_HTMLPurifier::instance();
+        $html   .= '<h3><label>'. $radio . $label .'</label></h3>';
+        $html   .= '<div class="tracker_create_mode">';
+        $checked = $requested_template_id ? '' : 'checked="checked"';
+
+        foreach ($trackers_v3 as $tracker_v3) {
+            $html .= '<p>';
+            $html .= '<label>';
+            if ($requested_template_id == $tracker_v3->getID()) {
+                $checked = 'checked="checked"';
+            }
+            $html .= '<input type="radio" name="tracker_new_tv3" value="'. $tracker_v3->getID() .'" '. $checked .' />';
+            $html .= $hp->purify(SimpleSanitizer::unsanitize($tracker_v3->getName()), CODENDI_PURIFIER_CONVERT_HTML);
+            $html .= '</label>';
+            $html .= '</p>';
+            $checked = '';
+        }
+        $html .= '</div>';
+
+        return $html;
     }
 
     public function getCreateTrackerRadio($create_mode, $requested_create_mode) {
@@ -950,6 +968,20 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
             }
         }
         return $xml_content;
+    }
+
+    private function displayMigrateFromTV3Option($requested_create_mode, Project $project, $requested_template_id) {
+        $html        = '';
+        $trackers_v3 = $this->getTrackersV3ForProject($project);
+
+        if ($trackers_v3) {
+            $html .= '<hr />';
+            $html .= '<p>'. $GLOBALS['Language']->getText('plugin_tracker_include_type', 'tv3_migration_introduction').'</p>';
+            $radio = $this->getCreateTrackerRadio('migrate_from_tv3', $requested_create_mode);
+            $html .= $this->getSelectBoxForTV3($requested_template_id, $radio, $trackers_v3, $GLOBALS['Language']->getText('plugin_tracker_include_type','migrate_from_tv3'));
+
+        }
+        echo $html;
     }
 }
 
