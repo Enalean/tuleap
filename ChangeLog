@@ -1,11 +1,17 @@
 Version 7.1 (Not Yet Released)
 
+	== Enhancement ==
+	* story #6048: Retrieve an old SVNAccessFile. The SVN access control history is now kept. Each time a modification is done on the file (via the web interface), a new version is saved. This allows administrators to retrieve a previous version and to use it if needed.
+
     == Plugins ==
 	* tracker: 5.372
 	* agiledashboard: 1.62
 
 	== Developers ==
 	* tasks #6824 - Refactor Milestones test
+
+    == Themes ==
+	* FlamingParrot: 1.1
 
 Version 6.13 / 7.0 (Monday, May 5th 2014)
 
