@@ -29,6 +29,7 @@ class StatisticsPlugin extends Plugin {
         parent::__construct($id);
         $this->_addHook('cssfile',                  'cssFile',                false);
         $this->_addHook('site_admin_option_hook',   'site_admin_option_hook', false);
+        $this->_addHook('site_admin_disk_widget_hook',   'site_admin_disk_widget_hook', false);
         $this->_addHook('root_daily_start',         'root_daily_start',       false);
         $this->_addHook('widget_instance',          'widget_instance',        false);
         $this->_addHook('widgets',                  'widgets',                false);
@@ -49,6 +50,17 @@ class StatisticsPlugin extends Plugin {
 
     function site_admin_option_hook($params) {
         echo '<li><a href="'.$this->getPluginPath().'/">Statistics</a></li>';
+    }
+
+    function site_admin_disk_widget_hook() {
+        $wDisk = new Widget_Static('Disk Usage');
+        $wDisk->setContent('
+            <ul>
+              <li>'.$GLOBALS['Language']->getText('plugin_statistics', 'disk_usage_report', array( $this->getPluginPath()."/disk_usage.php")).'</li>
+              <li>'.$GLOBALS['Language']->getText('plugin_statistics', 'add_disk_quota', array($this->getPluginPath()."/project_quota.php")).'</li>
+              <li>'.$GLOBALS['Language']->getText('plugin_statistics', 'projects_over_quota', array($this->getPluginPath()."/project_over_quota.php")).'</li>
+            </ul>');
+        $wDisk->display();
     }
 
     /**

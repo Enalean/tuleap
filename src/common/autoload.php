@@ -230,6 +230,7 @@ function autoloada76999560bf2e053d242987566280d65($class) {
             'mailmanager' => '/mail/MailManager.class.php',
             'map' => '/collection/Map.class.php',
             'massmailformpresenter' => '/mail/MassmailFormPresenter.class.php',
+            'diskquotawarningformpresenter' => '/mail/DiskQuotaWarningFormPresenter.class.php',
             'massmailsender' => '/mail/MassmailSender.class.php',
             'mime' => '/include/MIME.class.php',
             'mime_magicrule' => '/include/MIME.class.php',
@@ -700,5 +701,6 @@ function autoloada76999560bf2e053d242987566280d65($class) {
         require dirname(__FILE__) . $classes[$cn];
     }
 }
+
 spl_autoload_register('autoloada76999560bf2e053d242987566280d65');
 // @codeCoverageIgnoreEnd
