@@ -253,8 +253,12 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
             $atid = $request->get('tracker_new_tv3');
             $new_tracker = $this->getTrackerFactory()->createFromTV3($atid, $project, $name, $description, $itemname);
         } else if ($request->existAndNonEmpty('create_mode') && $request->get('create_mode') == 'migrate_from_tv3') {
-            $GLOBALS['Response']->addFeedback('error','Feature is not implemented yet');
-            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?group_id='. $project->group_id .'&func=create');
+            $tracker_id = $request->get('tracker_new_tv3');
+            if ($this->getTV3MigrationManager()->askForMigration($project, $tracker_id, $name, $description, $itemname)) {
+                $GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('plugin_tracker_include_type','tv3_being_migrated'));
+                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?group_id='. $project->group_id);
+            }
+
         } else {
             // Otherwise tries duplicate
             $duplicate = $this->getTrackerFactory()->create($project->getId(), -1, $atid_template, $name, $description, $itemname);
@@ -982,6 +986,14 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
 
         }
         echo $html;
+    }
+
+    private function getTV3MigrationManager() {
+        return new Tracker_Migration_MigrationManager(new Tracker_SystemEventManager(SystemEventManager::instance()), $this->getTrackerFactory(), $this->getArtifactFactory(), $this->getTrackerFormElementFactory(), UserManager::instance(), ProjectManager::instance());
+    }
+
+    private function getTrackerFormElementFactory() {
+        return Tracker_FormElementFactory::instance();
     }
 }
 
