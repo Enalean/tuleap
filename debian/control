@@ -119,7 +119,8 @@ Description: ForumML plugin for Tuleap
 
 Package: tuleap-plugin-git
 Architecture: all
-Depends: tuleap (= ${source:Version}), adduser, git (>= 1:1.6), php-geshi, smarty3, gitolite, ${misc:Depends}, ${perl:Depends}
+Depends: tuleap (= ${source:Version}), adduser, git (>= 1:1.6), php5-cli,
+ php-geshi, php-guzzle, smarty3, gitolite, ${misc:Depends}, ${perl:Depends}
 Description: Git plugin for Tuleap
  Integration of git distributed software configuration management tool together
  with Tuleap.
@@ -193,6 +194,64 @@ Architecture: all
 Depends: tuleap (= ${source:Version}), elasticsearch, ${misc:Depends}
 Description: Full-Text Search for Tuleap
  Allows documents of the docman to be searched in a full-text manner.
+
+Package: tuleap-plugin-fusionforge-compat
+Architecture: all
+Depends: tuleap (= ${source:Version}), ${misc:Depends}
+Description: FusionForge Compatibility
+ Allows some fusionforge plugins to be installed in a Tuleap instance
+
+Package: tuleap-plugin-doaprdf
+Architecture: all
+Depends: tuleap-plugin-fusionforge-compat (= ${source:Version}), ${misc:Depends}
+Description: DOAP RDF documents
+ Provides DOAP RDF documents for projects on projects URLs with content-negociation
+ (application/rdf+xml)
+
+Package: tuleap-plugin-admssw
+Architecture: all
+Depends: tuleap-plugin-doaprdf (= ${source:Version}), php-http, ${misc:Depends}
+Description: ADMS addtions to DOAP RDF documents
+ Provides ADMS.SW additions to the DOAP RDF documents for projects on projects URLs with content-negociation
+ (application/rdf+xml)
+
+Package: tuleap-plugin-archivedeleteditems
+Architecture: all
+Depends: tuleap (= ${source:Version}), ${misc:Depends}
+Description: Archiving plugin
+ Archive deleted items before purging them for filesystem
+
+Package: tuleap-plugin-boomerang
+Architecture: all
+Depends: tuleap (= ${source:Version}), ${misc:Depends}
+Description: Performance evaluation
+ Allows performance evaluation in Tuleap
+
+Package: tuleap-plugin-foafprofiles
+Architecture: all
+Depends: tuleap-plugin-fusionforge-compat (= ${source:Version}), ${misc:Depends}
+Description: Foaf Profiles
+ Provides FOAFPROFILES for projects user (application/rdf+xml)
+
+Package: tuleap-plugin-openid
+Architecture: all
+Depends: tuleap (= ${source:Version}), php-openid, ${misc:Depends}
+Description: Tuleap plugin to allow authentication with OpenId
+ This package allows users to connect to Tuleap with an OpenId
+ identity.
+
+Package: tuleap-plugin-proftpd
+Architecture: all
+Depends: tuleap (= ${source:Version}), proftpd-basic, proftpd-mod-mysql,
+ php-http-download (>= 1.1.4), ${misc:Depends}
+Description: Tuleap plugin enabling the FTP service with Proftpd
+ This package enables Tuleap's FTP service on top of Proftpd.
+
+Package: tuleap-plugin-mediawiki
+Architecture: all
+Depends: tuleap (= ${source:Version}), php5-cli, tuleap-plugin-fusionforge-compat, mediawiki (>= 1.20), ${misc:Depends}
+Description: Plugin Mediawiki
+ Provides Mediawiki integration in Tuleap
 
 Package: tuleap-theme-dawn
 Architecture: all
