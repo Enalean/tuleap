@@ -210,7 +210,7 @@ $hp = Codendi_HTMLPurifier::instance();
 <br/></td></tr>
 
 <tr><td>
-<?php echo $GLOBALS['Language']->getText('account_options', 'codendi_login'); ?>:
+<?php echo $GLOBALS['Language']->getText('account_options', 'tuleap_login'); ?>:
 </td><td>
 <INPUT TYPE="TEXT" NAME="form_loginname" VALUE="<?php echo  $hp->purify($user->getUserName(), CODENDI_PURIFIER_CONVERT_HTML) ; ?>" SIZE="50">
 </td></tr>

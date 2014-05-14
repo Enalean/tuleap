@@ -39,9 +39,9 @@ account_options	comma	virgule
 account_options	semicolon	point-virgule
 account_options	tab	tabulation
 account_options	username_display	Affichage des noms
-account_options	codendi_login_and_name	Login (nom complet)
-account_options	codendi_name_and_login	Nom complet (login)
-account_options	codendi_login	Login
+account_options	tuleap_login_and_name	Login (nom complet)
+account_options	tuleap_name_and_login	Nom complet (login)
+account_options	tuleap_login	Login
 account_options	realname	Nom complet
 account_options	auth_attempt_title	Détails d'authentification
 account_options	auth_attempt_last_success	Dernière connexion :
@@ -75,6 +75,7 @@ account_preferences	error_user_csv_separator	Vérifiez la valeur du séparateur 
 account_preferences	error_user_csv_dateformat	Vérifiez la valeur de format de date CSV
 account_preferences	error_username_display	Vérifiez la valeur de l'affichage des noms
 account_preferences	error_user_tracker_mailformat	Vérifiez la valeur du format de notification
+account_preferences	save_preferences	Sauvegarder les préférences
 #
 #-----------------------------------------------
 # Script: SF/www/account/change_email.php

@@ -47,9 +47,9 @@ account_options	comma	comma
 account_options	semicolon	semicolon
 account_options	tab	tab
 account_options	username_display	Username Display
-account_options	codendi_login_and_name	Login name (Real Name)
-account_options	codendi_name_and_login	Real Name (login name)
-account_options	codendi_login	Login Name
+account_options	tuleap_login_and_name	Login name (Real Name)
+account_options	tuleap_name_and_login	Real Name (login name)
+account_options	tuleap_login	Login Name
 account_options	realname	Real Name
 account_options	auth_attempt_title	Authentication details
 account_options	auth_attempt_last_success	Last successful login:
@@ -83,6 +83,7 @@ account_preferences	error_user_csv_separator	Verify CSV separator value
 account_preferences	error_user_csv_dateformat	Verify CSV date format value
 account_preferences	error_username_display	Verify username display value
 account_preferences	error_user_tracker_mailformat	Verify emails format value
+account_preferences	save_preferences	Save preferences
 #
 #-----------------------------------------------
 # Script: SF/www/account/change_email.php

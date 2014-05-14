@@ -172,17 +172,17 @@ echo html_get_language_popup($Language,'language_id',UserManager::instance()->ge
  	  	 if ($u_display == UserHelper::PREFERENCES_NAME_AND_LOGIN) {
  	  	     print ' selected="selected"';
  	  	 }
-                 print '>'.$Language->getText('account_options','codendi_name_and_login').'</option>';
+                 print '>'.$Language->getText('account_options','tuleap_name_and_login').'</option>';
  	  	 print '<option value="'.UserHelper::PREFERENCES_LOGIN_AND_NAME.'"';
  	  	 if ($u_display == UserHelper::PREFERENCES_LOGIN_AND_NAME) {
  	  	     print ' selected="selected"';
  	  	 }
-                 print '>'.$Language->getText('account_options','codendi_login_and_name').'</option>';
+                 print '>'.$Language->getText('account_options','tuleap_login_and_name').'</option>';
  	  	 print '<option value="'.UserHelper::PREFERENCES_LOGIN.'"';
  	  	 if ($u_display == UserHelper::PREFERENCES_LOGIN) {
  	  	     print ' selected="selected"';
  	  	 }
-                 print '>'.$Language->getText('account_options','codendi_login').'</option>';
+                 print '>'.$Language->getText('account_options','tuleap_login').'</option>';
  	  	 print '<option value="'.UserHelper::PREFERENCES_REAL_NAME.'"';
  	  	 if ($u_display == UserHelper::PREFERENCES_REAL_NAME) {
  	  	     print ' selected="selected"';

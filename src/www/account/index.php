@@ -79,6 +79,112 @@ $em->processEvent(
     )
 );
 
+$labs = array();
+
+$em->processEvent(
+    Event::LAB_FEATURES_DEFINITION_LIST,
+    &$labs
+);
+
+$csrf = new CSRFSynchronizerToken('/account/index.php');
+$mail_manager = new MailManager();
+$tracker_formats = array();
+
+foreach ($mail_manager->getAllMailFormats() as $format) {
+    $tracker_formats[] = array(
+        'format'      => $format,
+        'is_selected' => $format === $mail_manager->getMailPreferencesByUser($user)
+    );
+}
+
+$all_themes = array();
+$themes     = util_get_theme_list();
+natcasesort($themes);
+
+foreach ($themes as $theme) {
+    $all_themes[] = array(
+        'theme_name'  => $theme,
+        'is_selected' => $theme === $user->getTheme(),
+        'is_default'  => $theme === $GLOBALS['sys_themedefault']
+    );
+}
+
+$font_vals  = array(
+    FONT_SIZE_BROWSER,
+    FONT_SIZE_SMALL,
+    FONT_SIZE_NORMAL,
+    FONT_SIZE_LARGE
+);
+$font_texts = array(
+    $Language->getText('account_options', 'font_size_browser'),
+    $Language->getText('account_options', 'font_size_small'),
+    $Language->getText('account_options', 'font_size_normal'),
+    $Language->getText('account_options', 'font_size_large')
+);
+
+$user_fontsize_html = html_build_select_box_from_arrays(
+    $font_vals,
+    $font_texts,
+    "user_fontsize",
+    $user->getFontSize(),
+    false
+);
+
+$languages_html = html_get_language_popup(
+    $Language,
+    'language_id',
+    $user->getLocale()
+);
+
+$user_helper_preferences = array(
+    array(
+        'preference_name'  => UserHelper::PREFERENCES_NAME_AND_LOGIN,
+        'preference_label' => $Language->getText('account_options','tuleap_name_and_login'),
+        'is_selected'      => user_get_preference("username_display") === UserHelper::PREFERENCES_NAME_AND_LOGIN
+    ),
+    array(
+        'preference_name'  => UserHelper::PREFERENCES_LOGIN_AND_NAME,
+        'preference_label' => $Language->getText('account_options','tuleap_login_and_name'),
+        'is_selected'      => user_get_preference("username_display") === UserHelper::PREFERENCES_LOGIN_AND_NAME
+    ),
+    array(
+        'preference_name'  => UserHelper::PREFERENCES_LOGIN,
+        'preference_label' => $Language->getText('account_options','tuleap_login'),
+        'is_selected'      => user_get_preference("username_display") === UserHelper::PREFERENCES_LOGIN
+    ),
+    array(
+        'preference_name'  => UserHelper::PREFERENCES_REAL_NAME,
+        'preference_label' => $Language->getText('account_options','real_name'),
+        'is_selected'      => user_get_preference("username_display") === UserHelper::PREFERENCES_REAL_NAME
+    )
+);
+
+$plugins_prefs = array();
+$em->processEvent(
+    'user_preferences_appearance',
+    array('preferences' => &$plugins_prefs)
+);
+
+$all_csv_separator = array();
+
+foreach ($csv_separators as $separator) {
+    $all_csv_separator[] = array(
+        'separator_name'  => $separator,
+        'separator_label' => $Language->getText('account_options', $separator),
+        'is_selected'     => $separator === user_get_preference("user_csv_separator")
+    );
+}
+
+$all_csv_dateformat = array();
+
+foreach ($csv_dateformats as $dateformat) {
+    $all_csv_dateformat[] = array(
+        'dateformat_name'  => $dateformat,
+        'dateformat_label' => $Language->getText('account_preferences', $dateformat),
+        'is_selected'      => $dateformat === user_get_preference("user_csv_dateformat")
+    );
+}
+
 $presenter = new User_PreferencesPresenter(
     $user,
     $can_change_realname,
@@ -87,10 +193,22 @@ $presenter = new User_PreferencesPresenter(
     $extra_user_info,
     $um->getUserAccessInfo($user),
     $ssh_keys_extra_html,
-    $third_paty_html
+    $third_paty_html,
+    $csrf->fetchHTMLInput(),
+    $tracker_formats,
+    $labs,
+    $all_themes,
+    $user_fontsize_html,
+    $languages_html,
+    $user_helper_preferences,
+    $plugins_prefs,
+    $all_csv_separator,
+    $all_csv_dateformat
 );
 
 $HTML->header(array('title' => $Language->getText('account_options', 'title')));
+
 $renderer = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../../templates/user');
 $renderer->renderToPage('account-maintenance', $presenter);
+
 $HTML->footer(array());

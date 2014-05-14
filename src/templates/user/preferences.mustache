@@ -1,0 +1,189 @@
+<h3> {{ preference_title }} </h3>
+
+<form action="updateprefs.php" method="post">
+    {{{ csrf_input_html }}}
+
+    <div class="row-fluid">
+    <div class="span6">
+        <fieldset>
+            <legend>{{ email_settings }}</legend>
+            <label class="checkbox">
+                <input type="checkbox"
+                     name="form_mail_site"
+                     value="1"
+                     {{# user_has_mail_site_updates }} checked="checked" {{/ user_has_mail_site_updates }}
+                />
+                {{{ site_update_label }}}
+            </label>
+
+            <label class="checkbox">
+                <input type="checkbox"
+                     name="form_mail_va" value="1"
+                     {{# user_has_mail_va }} checked="checked" {{/ user_has_mail_va }}
+                />
+                {{{ community_mail_label }}}
+            </label>
+
+            <p>
+                {{ tracker_mail_format_label }}
+
+                <select name="{{ tracker_mail_format_select_name }}">
+                {{# tracker_formats }}
+                    <option value="{{ format }}" {{# is_selected }} selected="selected" {{/ is_selected }}>
+                        {{ format }}
+                    </option>
+                {{/ tracker_formats }}
+                </select>
+            </p>
+        </fieldset>
+
+        <fieldset>
+            <legend>{{ session_label }}</legend>
+            <label class="checkbox">
+                <input type="checkbox"
+                       name="form_sticky_login"
+                       value="1"
+                       {{# user_has_sticky_login }} checked="checked" {{/ user_has_sticky_login }}
+                />
+                {{{ remember_me }}}
+            </label>
+        </fieldset>
+
+        <fieldset id="account_preferences_lab_features">
+            <legend>{{ lab_features_title }}</legend>
+            <p class="lab_features">{{ lab_features_description }}</p>
+            <p>
+                <label class="checkbox">
+                    <input type="checkbox"
+                           name="form_lab_features"
+                           id="form_lab_features"
+                           value="1"
+                           {{# user_uses_lab_features }} checked="checked" {{/ user_uses_lab_features }}
+                    />
+                    {{{ lab_features_checkbox_label }}}
+                </label>
+            </p>
+
+            {{# lab_features }}
+                <table>
+                    <tr>
+                        <td> {{# image }} {{ . }} {{/ image }}
+                             {{^ image }} {{ lab_features_default_image }} {{/ image }}
+                        </td>
+                        <td>
+                        <p class="account_preferences_lab_feature_title">{{ title }}</p>
+                        <p class="account_preferences_lab_feature_description">{{ description }}</p>
+                        </td>
+                    </tr>
+                </table>
+            {{/ lab_features }}
+
+        </fieldset>
+    </div>
+
+    <div class="span6">
+        <fieldset>
+            <legend>{{ appearance_title }}</legend>
+            <table>
+                <tr>
+                    <td>
+                        {{ theme_label }}
+                    </td>
+                    <td>
+                        <select name="user_theme">
+                            {{# all_themes }}
+                            <option value="{{theme_name}}" {{# is_selected }} selected {{/ is_selected }}>
+                                {{theme_name}} {{# is_default }} ({{ default_theme }}) {{/ is_default}}
+                            </option>
+                            {{/ all_themes }}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{ font_size_label }}
+                    </td>
+                    <td>
+                        {{{ user_font_size_html }}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{ language_label }}
+                    </td>
+                    <td>
+                        {{{ languages_html }}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{ username_display_label }}
+                    </td>
+                    <td>
+                        <select name="username_display">
+                            {{# user_helper_preferences }}
+                                <option value="{{ preference_name }}"
+                                        {{# is_selected }} selected="selected" {{/ is_selected }}
+                                > {{ preference_label }}
+                                </option>
+                            {{/ user_helper_preferences }}
+                        </select>
+                    </td>
+                </tr>
+
+                {{# plugins_prefs }}
+                <tr class="user_preferences_appearance">
+                    <td>{{ name }}</td>
+                    <td>{{{ value }}}</td>
+                </tr>
+                {{/ plugins_prefs }}
+            </table>
+        </fieldset>
+
+        <fieldset>
+            <legend>{{ import_export_title }}</legend>
+            <table>
+                <tr>
+                    <td>
+                        {{{ csv_separator_label }}}
+                    </td>
+                    <td>
+                        <select name="user_csv_separator">
+                            {{# all_csv_separator }}
+                                <option value="{{ separator_name }}"
+                                        {{# is_selected }} selected="selected" {{/ is_selected }}
+                                > {{ separator_label }}
+                                </option>
+                            {{/ all_csv_separator }}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{{ csv_dateformat_label }}}
+                    </td>
+                    <td>
+                        <select name="user_csv_dateformat">
+                            {{# all_csv_dateformat }}
+                                <option value="{{ dateformat_name }}"
+                                        {{# is_selected }} selected="selected" {{/ is_selected }}
+                                > {{ dateformat_label }}
+                                </option>
+                            {{/ all_csv_dateformat }}
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+    </div>
+    <br/>
+    <div class="row-fluid">
+    <div class="span12">
+        <input type="submit"
+               name="Submit"
+               class="btn btn-primary"
+               value="{{ preference_save_button }}"
+        >
+    </div>
+</div>
+</form>

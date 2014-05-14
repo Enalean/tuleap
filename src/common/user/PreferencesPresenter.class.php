@@ -36,6 +36,35 @@ class User_PreferencesPresenter {
 
     private $ssh_keys_extra_html;
 
+    public $csrf_input_html;
+
+    /** @var array */
+    public $tracker_formats;
+
+    /** @var array */
+    public $lab_features;
+
+    /** @var array */
+    public $all_themes;
+
+    /** @var string */
+    public $user_font_size_html;
+
+    /** @var string */
+    public $languages_html;
+
+    /** @var array */
+    public $user_helper_preferences;
+
+    /** @var array */
+    public $plugins_prefs;
+
+    /** @var array */
+    public $all_csv_separator;
+
+    /** @var array */
+    public $all_csv_dateformat;
+
     public function __construct(
         PFUser $user,
         $can_change_real_name,
@@ -44,16 +73,36 @@ class User_PreferencesPresenter {
         array $extra_user_info,
         array $user_access,
         $ssh_keys_extra_html,
-        $third_party_html
+        $third_party_html,
+        $csrf_input_html,
+        array $tracker_formats,
+        array $lab_features,
+        array $all_themes,
+        $user_font_size_html,
+        $languages_html,
+        array $user_helper_preferences,
+        array $plugins_prefs,
+        array $all_csv_separator,
+        array $all_csv_dateformat
     ) {
-        $this->user                 = $user;
+        $this->user = $user;
         $this->can_change_real_name = $can_change_real_name;
-        $this->can_change_email     = $can_change_email;
-        $this->can_change_password  = $can_change_password;
-        $this->extra_user_info      = $extra_user_info;
-        $this->user_access          = $user_access;
-        $this->ssh_keys_extra_html  = $ssh_keys_extra_html;
-        $this->third_party_html     = $third_party_html;
+        $this->can_change_email = $can_change_email;
+        $this->can_change_password = $can_change_password;
+        $this->extra_user_info = $extra_user_info;
+        $this->user_access = $user_access;
+        $this->ssh_keys_extra_html = $ssh_keys_extra_html;
+        $this->third_party_html = $third_party_html;
+        $this->csrf_input_html = $csrf_input_html;
+        $this->tracker_formats = $tracker_formats;
+        $this->lab_features = $lab_features;
+        $this->all_themes = $all_themes;
+        $this->user_font_size_html = $user_font_size_html;
+        $this->languages_html = $languages_html;
+        $this->user_helper_preferences = $user_helper_preferences;
+        $this->plugins_prefs = $plugins_prefs;
+        $this->all_csv_separator = $all_csv_separator;
+        $this->all_csv_dateformat = $all_csv_dateformat;
     }
 
     public function has_avatar() {
@@ -216,5 +265,113 @@ class User_PreferencesPresenter {
 
     public function has_ssh_key() {
         return $this->ssh_keys_count() > 0;
+    }
+
+    /* PREFERENCES */
+
+    public function preference_title() {
+        return $GLOBALS['Language']->getText('account_options', 'preferences');
+    }
+
+    public function email_settings() {
+        return $GLOBALS['Language']->getText('account_preferences', 'email_settings');
+    }
+
+    public function user_has_mail_site_updates() {
+        return $this->user->getMailSiteUpdates();
+    }
+
+    public function user_has_sticky_login() {
+        return $this->user->getStickyLogin();
+    }
+
+    public function user_has_mail_va() {
+        return $this->user->getMailVA();
+    }
+
+    public function site_update_label() {
+        return $GLOBALS['Language']->getText('account_register', 'siteupdate');
+    }
+
+    public function community_mail_label() {
+        return $GLOBALS['Language']->getText('account_register', 'communitymail');
+    }
+
+    public function tracker_mail_format_label() {
+        return $GLOBALS['Language']->getText('account_preferences','tracker_mail_format');
+    }
+
+    public function tracker_mail_format_select_name() {
+        return Codendi_Mail_Interface::PREF_FORMAT;
+    }
+
+    public function session_label() {
+        return $GLOBALS['Language']->getText('account_preferences', 'session');
+    }
+
+    public function remember_me() {
+        return $GLOBALS['Language']->getText('account_options', 'remember_me', $GLOBALS['sys_name']);
+    }
+
+    public function lab_features_title() {
+        return $GLOBALS['Language']->getText('account_preferences', 'lab_features_title',  array($GLOBALS['sys_name']));
+    }
+
+    public function lab_features_description() {
+        return $GLOBALS['Language']->getText('account_preferences', 'lab_features_description', array($GLOBALS['sys_name']));
+    }
+
+    public function user_uses_lab_features() {
+        return $this->user->useLabFeatures();
+    }
+
+    public function lab_features_checkbox_label() {
+        return $GLOBALS['Language']->getText('account_preferences', 'lab_features_cblabel', $GLOBALS['sys_name']);
+    }
+
+    public function lab_features_default_image() {
+        return $GLOBALS['HTML']->getImage('lab_features_default.png');
+    }
+
+    public function appearance_title() {
+        return $GLOBALS['Language']->getText('account_preferences', 'appearance');
+    }
+
+    public function theme_label() {
+        return $GLOBALS['Language']->getText('account_options', 'theme');
+    }
+
+    public function default_theme() {
+        return $GLOBALS['Language']->getText('global', 'default');
+    }
+
+    public function font_size_label() {
+        return $GLOBALS['Language']->getText('account_options', 'font_size');
+    }
+
+    public function language_label() {
+        return $GLOBALS['Language']->getText('account_options', 'language');
+    }
+
+    public function username_display_label() {
+        return $GLOBALS['Language']->getText('account_options', 'username_display');
+    }
+
+    public function import_export_title() {
+        return $GLOBALS['Language']->getText('account_preferences', 'import_export');
+    }
+
+    public function csv_separator_label() {
+        return $GLOBALS['Language']->getText('account_options', 'csv_separator').' '.
+               help_button('citizen.html#account-maintenance');
+    }
+
+    public function csv_dateformat_label() {
+        return $GLOBALS['Language']->getText('account_preferences', 'csv_dateformat').' '.
+               help_button('citizen.html#account-maintenance');
+    }
+
+    public function preference_save_button() {
+        return $GLOBALS['Language']->getText('account_preferences', 'save_preferences');
     }
 }
