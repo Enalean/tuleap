@@ -133,23 +133,6 @@ print "</select>\n";
 ?>
 
 </td></tr>
-<?php
-$font_vals  = array(
-    FONT_SIZE_BROWSER,
-    FONT_SIZE_SMALL,
-    FONT_SIZE_NORMAL,
-    FONT_SIZE_LARGE
-);
-$font_texts = array(
-    $Language->getText('account_options', 'font_size_browser'),
-    $Language->getText('account_options', 'font_size_small'),
-    $Language->getText('account_options', 'font_size_normal'),
-    $Language->getText('account_options', 'font_size_large')
-);
-echo '<tr><td>'.$Language->getText('account_options', 'font_size').': </td>
-          <td>'.html_build_select_box_from_arrays($font_vals, $font_texts, "user_fontsize", $user->getFontSize(), false).'</td>
-      </tr>';
-?>
                     <tr>
                         <td><?php echo $Language->getText('account_options', 'language'); ?>: </td>
                         <td>

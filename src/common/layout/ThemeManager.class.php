@@ -25,7 +25,6 @@
 class ThemeManager {
 
     public function getTheme(PFUser $current_user) {
-        $GLOBALS['sys_user_font_size'] = 2;
         $GLOBALS['Response'] = $this->getFirstValidTheme(array(
             $current_user->getTheme(),
             $GLOBALS['sys_themedefault'],

@@ -43,18 +43,6 @@ if($request->existAndNonEmpty('form_mail_va')) {
     }
 }
 
-$user_fontsize = FONT_SIZE_NORMAL;
-if($request->existAndNonEmpty('user_fontsize')) {
-    if($request->valid(new Valid_WhiteList('user_fontsize', array(FONT_SIZE_BROWSER,
-                                                                  FONT_SIZE_SMALL,
-                                                                  FONT_SIZE_NORMAL,
-                                                                  FONT_SIZE_LARGE)))) {
-        $user_fontsize = (int) $request->get('user_fontsize');
-    } else {
-        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_preferences', 'error_user_fontsize'));
-    }
-}
-
 // $theme_list is defined in /www/include/utils.php
 $user_theme = $GLOBALS['sys_themedefault'];
 $theme_list = util_get_theme_list();
@@ -133,7 +121,6 @@ if ($request->existAndNonEmpty(Codendi_Mail_Interface::PREF_FORMAT)) {
 db_query("UPDATE user SET "
          . "mail_siteupdates=" . $form_mail_site . ","
          . "mail_va=" . $form_mail_va . ","
-         . "fontsize=" . $user_fontsize . ","
          . "theme='" . db_es($user_theme) . "',"
          . "sticky_login=" . $form_sticky_login . ","
          . "language_id='" . db_es($language_id) . "' WHERE "

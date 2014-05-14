@@ -109,27 +109,6 @@ foreach ($themes as $theme) {
     );
 }
 
-$font_vals  = array(
-    FONT_SIZE_BROWSER,
-    FONT_SIZE_SMALL,
-    FONT_SIZE_NORMAL,
-    FONT_SIZE_LARGE
-);
-$font_texts = array(
-    $Language->getText('account_options', 'font_size_browser'),
-    $Language->getText('account_options', 'font_size_small'),
-    $Language->getText('account_options', 'font_size_normal'),
-    $Language->getText('account_options', 'font_size_large')
-);
-
-$user_fontsize_html = html_build_select_box_from_arrays(
-    $font_vals,
-    $font_texts,
-    "user_fontsize",
-    $user->getFontSize(),
-    false
-);
-
 $languages_html = html_get_language_popup(
     $Language,
     'language_id',
@@ -198,7 +177,6 @@ $presenter = new User_PreferencesPresenter(
     $tracker_formats,
     $labs,
     $all_themes,
-    $user_fontsize_html,
     $languages_html,
     $user_helper_preferences,
     $plugins_prefs,

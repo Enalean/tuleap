@@ -115,7 +115,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     protected $people_view_skills;
     protected $people_resume;
     protected $timezone;
-    protected $fontsize;
     protected $theme;
     protected $language_id;
     protected $last_pwd_update;
@@ -208,7 +207,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
         $this->people_view_skills = isset($row['people_view_skills']) ? $row['people_view_skills'] : null;
         $this->people_resume      = isset($row['people_resume'])      ? $row['people_resume']      : null;
         $this->timezone           = isset($row['timezone'])           ? $row['timezone']           : null;
-        $this->fontsize           = isset($row['fontsize'])           ? $row['fontsize']           : null;
         $this->theme              = isset($row['theme'])              ? $row['theme']              : null;
         $this->language_id        = isset($row['language_id'])        ? $row['language_id']        : null;
         $this->last_pwd_update    = isset($row['last_pwd_update'])    ? $row['last_pwd_update']    : null;
@@ -261,7 +259,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
             'people_view_skills' => $this->people_view_skills,
             'people_resume'      => $this->people_resume,
             'timezone'           => $this->timezone,
-            'fontsize'           => $this->fontsize,
             'theme'              => $this->theme,
             'language_id'        => $this->language_id,
             'last_pwd_update'    => $this->last_pwd_update,
@@ -620,12 +617,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      */
     function getStickyLogin() {
         return $this->sticky_login;
-    }
-    /**
-     * @return int font size preference of the user
-     */
-    function getFontSize() {
-        return $this->fontsize;
     }
     /**
      * @return string theme set in user's preferences
@@ -1000,12 +991,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      */
     function setStickyLogin($stickyLogin) {
         $this->sticky_login = $stickyLogin;
-    }
-    /**
-     * @param int font size preference of the user
-     */
-    function setFontSize($fontSize) {
-        $this->fontsize = $fontSize;
     }
     /**
      * @param string theme set in user's preferences

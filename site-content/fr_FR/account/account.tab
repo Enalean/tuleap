@@ -23,11 +23,6 @@ account_options	change_timezone	Changer le fuseau horaire
 account_options	email_address		Adresse e-mail
 account_options	change_email_address	Changer l'adresse e-mail
 account_options	preferences	Préférences
-account_options	font_size	Taille des caractères
-account_options	font_size_browser	Défaut (navigateur)
-account_options	font_size_small	Petite
-account_options	font_size_normal	Normale
-account_options	font_size_large	Grande
 account_options	theme	Thème/Palette de Couleur
 account_options	shell_account_title	 Information compte shell
 account_options	shell_box	Serveur Shell
@@ -68,7 +63,6 @@ account_preferences	lab_features_cblabel	Activer $1 Lab
 account_preferences	tracker_mail_format	Format des notifications de l'outil de suivi :
 account_preferences	error_form_mail_site	Vérifiez la valeur du courrier des mises à jour du site
 account_preferences	error_form_mail_va	Vérifiez la valeur du courrier supplémentaire
-account_preferences	error_user_fontsize	Vérifiez la valeur de la taille des caractères
 account_preferences	error_user_theme	Vérifiez la valeur du thème
 account_preferences	error_form_sticky_login	Vérifiez la valeur du souviens-toi de moi
 account_preferences	error_language_id	Vérifiez la valeur de la langue

@@ -31,11 +31,6 @@ account_options	change_timezone	Change Timezone
 account_options	email_address		Email Addr
 account_options	change_email_address	Change Email Addr
 account_options	preferences	Preferences
-account_options	font_size	Font Size
-account_options	font_size_browser	Browser Default
-account_options	font_size_small	Small
-account_options	font_size_normal	Normal
-account_options	font_size_large	Large
 account_options	theme	Theme/Color Scheme
 account_options	shell_account_title	Shell Account Information
 account_options	shell_box	Shell Box
@@ -76,7 +71,6 @@ account_preferences	lab_features_cblabel	Enable $1 Lab
 account_preferences	tracker_mail_format	Tracker emails format:
 account_preferences	error_form_mail_site	Verify site updates value
 account_preferences	error_form_mail_va	Verify additional community mailings value
-account_preferences	error_user_fontsize	Verify Font size value
 account_preferences	error_user_theme	Verify theme value
 account_preferences	error_form_sticky_login	Verify remember me value
 account_preferences	error_language_id	Verify language value

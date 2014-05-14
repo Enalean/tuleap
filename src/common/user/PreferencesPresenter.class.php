@@ -48,9 +48,6 @@ class User_PreferencesPresenter {
     public $all_themes;
 
     /** @var string */
-    public $user_font_size_html;
-
-    /** @var string */
     public $languages_html;
 
     /** @var array */
@@ -78,7 +75,6 @@ class User_PreferencesPresenter {
         array $tracker_formats,
         array $lab_features,
         array $all_themes,
-        $user_font_size_html,
         $languages_html,
         array $user_helper_preferences,
         array $plugins_prefs,
@@ -97,7 +93,6 @@ class User_PreferencesPresenter {
         $this->tracker_formats = $tracker_formats;
         $this->lab_features = $lab_features;
         $this->all_themes = $all_themes;
-        $this->user_font_size_html = $user_font_size_html;
         $this->languages_html = $languages_html;
         $this->user_helper_preferences = $user_helper_preferences;
         $this->plugins_prefs = $plugins_prefs;
@@ -351,10 +346,6 @@ class User_PreferencesPresenter {
 
     public function default_theme() {
         return $GLOBALS['Language']->getText('global', 'default');
-    }
-
-    public function font_size_label() {
-        return $GLOBALS['Language']->getText('account_options', 'font_size');
     }
 
     public function language_label() {

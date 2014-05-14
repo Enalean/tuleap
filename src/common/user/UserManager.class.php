@@ -732,7 +732,6 @@ class UserManager {
                                 $user->getPeopleViewSkills(),
                                 $user->getPeopleResume(),
                                 $user->getTimeZone(),
-                                $user->getFontSize(),
                                 $user->getTheme(),
                                 $user->getLanguageID(),
                                 $user->getExpiryDate(),

@@ -111,7 +111,7 @@ class UserDao extends DataAccessObject {
     * create a row in the table user 
     * @return true or id(auto_increment) if there is no error
     */
-    function create($user_name, $email, $user_pw, $realname, $register_purpose, $status, $shell, $unix_status, $unix_uid, $unix_box, $ldap_id, $add_date, $confirm_hash, $mail_siteupdates, $mail_va, $sticky_login, $authorized_keys, $email_new, $people_view_skills, $people_resume, $timezone, $fontsize, $theme, $language_id, $expiry_date, $last_pwd_update) {
+    function create($user_name, $email, $user_pw, $realname, $register_purpose, $status, $shell, $unix_status, $unix_uid, $unix_box, $ldap_id, $add_date, $confirm_hash, $mail_siteupdates, $mail_va, $sticky_login, $authorized_keys, $email_new, $people_view_skills, $people_resume, $timezone, $theme, $language_id, $expiry_date, $last_pwd_update) {
 
         $columns = array();
         $values  = array();
@@ -202,10 +202,6 @@ class UserDao extends DataAccessObject {
         if ($timezone !== null) {
             $columns[] = 'timezone';
             $values[]  = $timezone;
-        }
-        if ($fontsize !== null) {
-            $columns[] = 'fontsize';
-            $values[]  = $fontsize;
         }
         if ($theme !== null) {
             $columns[] = 'theme';
