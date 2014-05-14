@@ -1,3 +1,6 @@
+Version 5.373 - Tuleap 7.1
+    * story #6131: introduce radio buttons as a new type of field in trackers. Radio buttons are to selectboxes as checkboxes are to multiselectboxes. (Contrib JTEKT)
+
 Version 5.372 - Tuleap 7.1
     * request #6819: Unable to import a tracker if a description contain unknown chars
 

@@ -1,3 +1,6 @@
+Version 1.3 - Tuleap 7.1
+    * story #6131: introduce radio buttons as a new type of field in trackers. Radio buttons are to selectboxes as checkboxes are to multiselectboxes. (Contrib JTEKT)
+
 Version 1.2 - Tuleap 7.1
     * request #6865: Projects with ampersands in their name are not nicely displayed in FP navbar menu
 
