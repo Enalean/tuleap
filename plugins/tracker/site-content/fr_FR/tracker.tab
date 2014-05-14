@@ -1120,6 +1120,7 @@ plugin_tracker_formelement_admin	switch_to	Transformer en:
 plugin_tracker_formelement_admin	switch_msb	boîte de sélections multiples
 plugin_tracker_formelement_admin	switch_sb	boîte de sélection simple
 plugin_tracker_formelement_admin	switch_cb	cases à cocher
+plugin_tracker_formelement_admin	switch_rb	boutons radio
 plugin_tracker_formelement_admin	switch_type_confirm	Etes-vous certain de vouloir changer le type de ce champ ?
 plugin_tracker_formelement_admin	field_used_in_semantics	Impossible de supprimer ce champ (utilisé en sémantique)
 plugin_tracker_formelement_admin	field_used_in_workflow	Impossible de supprimer ce champ (utilisé pour le workflow)
@@ -1128,6 +1129,8 @@ plugin_tracker_formelement_admin	hide_value_impossible	Vous ne pouvez pas cacher
 plugin_tracker_formelement_admin	hide_value	Afficher/cacher cette valeur
 plugin_tracker_formelement_admin	checkbox	Case à cocher
 plugin_tracker_formelement_admin	checkbox_desc	Case à cocher
+plugin_tracker_formelement_admin	radiobtn	Bouton radio
+plugin_tracker_formelement_admin	radiobtn_desc	Bouton radio
 plugin_tracker_formelement_admin	alpha_ranking_updated	Ordre alphabétique mis à jour
 plugin_tracker_formelement_admin	description_placeholder	Entrez la description…
 

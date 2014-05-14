@@ -20,7 +20,7 @@
 
 class Tracker_FormElement_View_Admin_Field_Selectbox extends Tracker_FormElement_View_Admin_Field_List {
 
-    protected $availableTypes = array('msb', 'cb');
+    protected $availableTypes = array('rb', 'msb', 'cb');
     
     public function fetchTypeForUpdate() {
         $html = '';

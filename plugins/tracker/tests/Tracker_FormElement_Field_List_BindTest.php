@@ -100,6 +100,10 @@ class Tracker_FormElement_Field_List_Bind4Tests extends Tracker_FormElement_Fiel
 
     }
 
+    public function formatChangesetValueWithoutLink($value) {
+
+    }
+
     public function formatCriteriaValue($value_id) {
 
     }

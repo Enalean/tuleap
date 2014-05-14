@@ -45,6 +45,7 @@ class Tracker_FormElementFactory {
         'text'     => 'Tracker_FormElement_Field_Text',
         'sb'       => 'Tracker_FormElement_Field_Selectbox',
         'msb'      => 'Tracker_FormElement_Field_MultiSelectbox',
+        'rb'       => 'Tracker_FormElement_Field_Radiobutton',
         'cb'       => 'Tracker_FormElement_Field_Checkbox',
         'date'     => 'Tracker_FormElement_Field_Date',
         'file'     => 'Tracker_FormElement_Field_File',
@@ -500,7 +501,7 @@ class Tracker_FormElementFactory {
      * @return array All numeric or computed formElements used by the tracker
      */
     public function getUsedPotentiallyContainingNumericValueFields(Tracker $tracker) {
-        return $this->getUsedFormElementsByType($tracker, array('int', 'float', 'computed', 'sb'));
+        return $this->getUsedFormElementsByType($tracker, array('int', 'float', 'computed', 'sb', 'rb'));
     }
 
     /**
@@ -508,7 +509,7 @@ class Tracker_FormElementFactory {
      * @return array All (multi) selectboxes formElements used by the tracker
      */
     public function getUsedListFields($tracker) {
-        return $this->getUsedFormElementsByType($tracker, array('sb', 'msb', 'tbl', 'cb'));
+        return $this->getUsedFormElementsByType($tracker, array('sb', 'msb', 'tbl', 'cb', 'rb'));
     }
 
     /**
@@ -518,7 +519,7 @@ class Tracker_FormElementFactory {
     public function getUsedArtifactLinkFields($tracker) {
         return $this->getUsedFormElementsByType($tracker, array('art_link'));
     }
-    
+
     /**
      * Return the first (and only one) ArtifactLink field (if any)
      *
@@ -531,7 +532,7 @@ class Tracker_FormElementFactory {
         }
         return null;
     }
-    
+
     /**
      * @param Tracker $tracker
      * @return array of Tracker_FormElement_Field_Burndown
@@ -539,7 +540,7 @@ class Tracker_FormElementFactory {
     public function getUsedBurndownFields($tracker) {
         return $this->getUsedFormElementsByType($tracker, array('burndown'));
     }
-    
+
     /**
      * Return the first (and only one) ArtifactLink field (if any)
      *
@@ -610,7 +611,7 @@ class Tracker_FormElementFactory {
     }
 
     public function getUsedListFieldById($tracker, $field_id) {
-        return $this->getUsedFieldByIdAndType($tracker, $field_id, array('sb', 'msb', 'tbl', 'cb'));
+        return $this->getUsedFieldByIdAndType($tracker, $field_id, array('sb', 'msb', 'tbl', 'cb', 'rb'));
     }
 
     public function getUsedSbFields($tracker) {
@@ -645,7 +646,7 @@ class Tracker_FormElementFactory {
      * @return Tracker_FormElement | void
      */
     public function getUsedPotentiallyContainingNumericValueFieldById($tracker, $field_id) {
-        return $this->getUsedFieldByIdAndType($tracker, $field_id, array('int', 'float', 'computed', 'sb'));
+        return $this->getUsedFieldByIdAndType($tracker, $field_id, array('int', 'float', 'computed', 'sb', 'rb'));
     }
 
     /**
@@ -668,7 +669,7 @@ class Tracker_FormElementFactory {
 
         foreach($this->getDao()->searchByTrackerId($from_tracker_id) as $from_row) {
             $has_workflow = false;
-            if($from_row['formElement_type']=='sb') {
+            if(in_array($from_row['formElement_type'], array('sb', 'rb'))) {
                 $field = $this->getFieldById($from_row['id']);
                 if ($field->fieldHasDefineWorkflow()) {
                     $has_workflow = true;
