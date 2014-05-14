@@ -1,3 +1,6 @@
+Version 1.2 - Tuleap 7.1
+    * request #6865: Projects with ampersands in their name are not nicely displayed in FP navbar menu
+
 Version 1.1 - Tuleap 7.1
     * Add style for svn access control (see story #6048)
 
