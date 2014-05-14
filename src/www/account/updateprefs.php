@@ -22,7 +22,7 @@ session_require(array('isloggedin'=>1));
 
 $request = HTTPRequest::instance();
 
-$csrf = new CSRFSynchronizerToken('/account/preferences.php');
+$csrf = new CSRFSynchronizerToken('/account/index.php');
 $csrf->check();
 
 $form_mail_site = 0;
@@ -159,6 +159,6 @@ $em->processEvent('update_user_preferences_appearance', array('request' => $requ
 // Output
 //
 
-session_redirect("/account/preferences.php");
+session_redirect("/account/index.php");
 
 ?>
