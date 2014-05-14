@@ -84,7 +84,29 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
             array('title' => $title,
                   'url'   => TRACKER_BASE_URL.'/?aid='. $this->artifact->getId())
         );
-        $this->tracker->displayHeader($this->layout, $title, $breadcrumbs, null, array('body_class' => array('widgetable')));
+        $toolbar = $this->getToolbar();
+        $this->tracker->displayHeader($this->layout, $title, $breadcrumbs, $toolbar, array('body_class' => array('widgetable')));
+    }
+
+    protected function getToolbar() {
+        $toolbar = $this->tracker->getDefaultToolbar();
+
+        if (UserManager::instance()->getCurrentUser()->isLoggedIn()) {
+            $this->injectCopyItemInToolbar($toolbar);
+        }
+
+        return $toolbar;
+    }
+
+    private function injectCopyItemInToolbar(array &$toolbar) {
+        $position_of_submitnew_item = 0;
+
+        $item = array(
+            'title' => $GLOBALS['Language']->getText('plugin_tracker', 'copy_this_artifact'),
+            'url'   => 'javascript:alert(\'Not yet implemented\');',
+        );
+
+        array_splice($toolbar, $position_of_submitnew_item + 1, 0, array($item));
     }
 
     private function fetchView(Codendi_Request $request, PFUser $user) {

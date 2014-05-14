@@ -1045,33 +1045,40 @@ class Tracker implements Tracker_Dispatchable_Interface {
                     ),
                     $breadcrumbs);
             if (!$toolbar) {
-                $toolbar = array();
-                $toolbar[] = array(
-                        'title' => $GLOBALS['Language']->getText('plugin_tracker', 'submit_new_artifact'),
-                        'url'   => $this->getSubmitUrl(),
-                        'class' => 'tracker-submit-new',
-                );
-                if (UserManager::instance()->getCurrentUser()->isLoggedIn()) {
-                    $toolbar[] = array(
-                            'title' => $GLOBALS['Language']->getText('plugin_tracker', 'notifications'),
-                            'url'   => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=notifications',
-                    );
-                }
-                if ($this->userIsAdmin()) {
-                    $toolbar[] = array(
-                            'title' => $GLOBALS['Language']->getText('plugin_tracker', 'administration'),
-                            'url'   => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=admin'
-                    );
-                }
-                $toolbar[] = array(
-                        'title' => $GLOBALS['Language']->getText('plugin_tracker', 'help'),
-                        'url'   => 'javascript:help_window(\''.get_server_url().'/doc/'.UserManager::instance()->getCurrentUser()->getShortLocale().'/user-guide/tracker.html\');',
-                );
+                $toolbar = $this->getDefaultToolbar();
             }
             $title = ($title ? $title .' - ' : ''). $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML);
             $layout->displayHeader($project, $title, $breadcrumbs, $toolbar, $params);
         }
     }
+
+    public function getDefaultToolbar() {
+        $toolbar = array();
+        $toolbar[] = array(
+                'title' => $GLOBALS['Language']->getText('plugin_tracker', 'submit_new_artifact'),
+                'url'   => $this->getSubmitUrl(),
+                'class' => 'tracker-submit-new',
+        );
+        if (UserManager::instance()->getCurrentUser()->isLoggedIn()) {
+            $toolbar[] = array(
+                    'title' => $GLOBALS['Language']->getText('plugin_tracker', 'notifications'),
+                    'url'   => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=notifications',
+            );
+        }
+        if ($this->userIsAdmin()) {
+            $toolbar[] = array(
+                    'title' => $GLOBALS['Language']->getText('plugin_tracker', 'administration'),
+                    'url'   => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=admin'
+            );
+        }
+        $toolbar[] = array(
+                'title' => $GLOBALS['Language']->getText('plugin_tracker', 'help'),
+                'url'   => 'javascript:help_window(\''.get_server_url().'/doc/'.UserManager::instance()->getCurrentUser()->getShortLocale().'/user-guide/tracker.html\');',
+        );
+
+        return $toolbar;
+    }
+
     public function displayFooter(Tracker_IDisplayTrackerLayout $layout) {
         if ($project = ProjectManager::instance()->getProject($this->group_id)) {
             $layout->displayFooter($project);
