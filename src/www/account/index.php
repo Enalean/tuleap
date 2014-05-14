@@ -206,7 +206,11 @@ $presenter = new User_PreferencesPresenter(
     $all_csv_dateformat
 );
 
-$HTML->header(array('title' => $Language->getText('account_options', 'title')));
+$HTML->header(array(
+    'title'      => $Language->getText('account_options', 'title'),
+    'body_class' => array('account-maintenance')
+    )
+);
 
 $renderer = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../../templates/user');
 $renderer->renderToPage('account-maintenance', $presenter);

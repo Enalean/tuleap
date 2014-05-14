@@ -33,6 +33,7 @@ account_options	shell_account_title	 Information compte shell
 account_options	shell_box	Serveur Shell
 account_options	shell_shared_keys	Clés SSH partagées
 account_options	shell_edit_keys	Editer les Clés
+account_options	shell_delete_ssh_keys	Supprimer les clefs sélectionnées
 account_options	remember_me	"Souviens-toi de moi" <u><span style="color:#666">($1 garde trace de votre login/mot de passe. Vous devez vous déconnecter puis vous reconnecter pour que ce changement prenne effet)</span></u>
 account_options	csv_separator	Séparateur CSV
 account_options	comma	virgule

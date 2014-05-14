@@ -1,88 +1,132 @@
-<div id="account_maintenance">
+<div id="account-handler" class="row-fluid">
 
-    <div id="account_user_info">
+    <div id="account-maintenance" class="span8">
+        <div id="account-user-info">
 
-        {{ welcome_user }}
+            <div class="first-user-info">
+            {{# has_avatar }}
+                <div class="user-personnal-info" id="user-avatar">
+                    <a href="/account/change_avatar.php">{{{ avatar }}}</a>
+                </div>
+            {{/ has_avatar }}
+                <div class="user-personnal-info">
+                    <span class="user-real-name">{{ real_name }}</span>
+                    {{# can_change_real_name }}<a href="change_realname.php" class="btn btn-small">{{ change_real_name }}</a>{{/ can_change_real_name }}
+                    {{# can_change_password }}<a href="change_pw.php" class="btn btn-small">{{ change_password }}</a>{{/ can_change_password }}
+                    <span class="user-username">{{ user_username }}</span>
+                </div>
+            </div>
 
-        <div>
-        {{# has_avatar }}
-            <a href="/account/change_avatar.php">{{{ avatar }}}</a>
-        {{/ has_avatar }}
-        {{ real_name }}
-        {{# can_change_real_name }}<a href="change_realname.php" class="btn">{{ change_real_name }}</a>{{/ can_change_real_name }}
-        {{# can_change_password }}<a href="change_pw.php" class="btn">{{ change_password }}</a>{{/ can_change_password }}
+            <div style="clear:both"></div>
+
+            <table class="user-info-table">
+                <tr>
+                    <td class="user-info-label table-label">{{ user_id_label }}</td>
+                    <td>{{ user_id_value }}</td>
+                </tr>
+                <tr>
+                    <td class="user-info-label table-label">{{ user_email_label }}</td>
+                    <td>{{ user_email_value }} {{# can_change_email }}<a href="change_email.php" class="btn btn-small">{{ change_email }}</a>{{/ can_change_email }}</td>
+                </tr>
+                <tr>
+                    <td class="user-info-label table-label">{{ member_since_label }}</td>
+                    <td>{{member_since_value }}</td>
+                </tr>
+                <tr>
+                    <td class="user-info-label table-label">{{ timezone_label }}</td>
+                    <td>{{ timezone_value }} <a href="change_timezone.php" class="btn btn-small">{{ change_timezone }}</a></td>
+                </tr>
+                {{# extra_user_info }}
+                <tr>
+                    <td class="user-info-label table-label">{{ label }}</td>
+                    <td>{{{ value }}} {{# can_change }}{{{ change }}}{{/ can_change }}</td>
+                </tr>
+                {{/ extra_user_info }}
+            </table>
+
         </div>
 
-        <ul>
-            <li>{{ user_id_label }} {{ user_id_value }}</li>
-            <li>{{ user_email_label }} {{ user_email_value }} {{# can_change_email }}<a href="change_email.php" class="btn">{{ change_email }}</a>{{/ can_change_email }}</li>
-            <li>{{ member_since_label }} {{member_since_value }}</li>
-            <li>{{ timezone_label }} {{ timezone_value }} <a href="change_timezone.php" class="btn">{{ change_timezone }}</a></li>
-            {{# extra_user_info }}
-            <li>{{ label }} {{{ value }}} {{# can_change }}{{{ change }}}{{/ can_change }}</li>
-            {{/ extra_user_info }}
-        </ul>
-    </div>
+        <div id="account-shell">
+            <h3 class="account-title"><i class="icon-terminal"></i> {{ shell_account_title }} </h3>
 
-    <div id="account_shell">
-        <h2 class="account_title"><i class="icon-terminal"></i> {{ shell_account_title }} </h2>
+            <div>
+                <span class="user-info-label">{{ ssh_keys_count_label }}</span> : {{ ssh_keys_count }}
+            </div>
 
-        {{ ssh_keys_count_label }} {{ ssh_keys_count }}
+            {{# has_ssh_key }}
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>{{ ssh_keys_label }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{# ssh_keys_list }}
+                    <tr>
+                        <td>
+                            <input type="checkbox" />
+                        </td>
+                        <td>
+                            {{ ssh_key_value }}
+                        </td>
+                    </tr>
+                    {{/ ssh_keys_list }}
+                </tbody>
+            </table>
+            {{/ has_ssh_key }}
 
-        {{# has_ssh_key }}
-        <table>
-            <thead>
+            {{{ ssh_keys_extra_html }}}
+
+            <div id="user-ssh-keys-action">
+                <a class="btn btn-primary" href="editsshkeys.php">
+                    <i class="icon-plus"> </i> {{ add_ssh_key_button }}
+                </a>
+
+                <a class="btn btn-primary btn-danger" href="#">
+                    <i class="icon-trash"> </i> {{ delete_ssh_key_button }}
+                </a>
+            </div>
+
+        </div>
+
+        <div id="account_details">
+            <h3 class="account-title"><i class="icon-key"></i> {{ authentication_attempts_title }} </h3>
+
+            <table>
                 <tr>
-                    <th></th>
-                    <th>{{ ssh_keys_label }}</th>
+                    <td class="user-info-label table-label">{{ last_successful_login_label }}</td>
+                    <td>{{ last_successful_login_value }}</td>
                 </tr>
-            </thead>
-            <tbody>
-                {{# ssh_keys_list }}
                 <tr>
-                    <td>
-                        <input type="checkbox" />
-                    </td>
-                    <td>
-                        {{ ssh_key_value }}
-                    </td>
+                    <td class="user-info-label table-label">{{ last_login_failure_label }}</td>
+                    <td>{{ last_login_failure_value }}</td>
                 </tr>
-                {{/ ssh_keys_list }}
-            </tbody>
-        </table>
-        {{/ has_ssh_key }}
+                <tr>
+                    <td class="user-info-label table-label">{{ number_login_failure_label }}</td>
+                    <td>{{ number_login_failure_value }}</td>
+                </tr>
+                <tr>
+                    <td class="user-info-label table-label">{{ previous_successful_login_label }}</td>
+                    <td>{{ previous_successful_login_value }}</td>
+                </tr>
+            </table>
+        </div>
 
-        {{{ ssh_keys_extra_html }}}
+        <div id="account_third_party_applications">
+            <h3 class="account-title"><i class="icon-circle-blank"></i> {{ third_party_applications_title }} </h3>
 
-        <a class="btn btn-primary" href="editsshkeys.php">
-            <i class="icon-plus"> </i> {{ add_ssh_key_button }}
-        </a>
+            <ul>
+                {{{ third_party_applications_content }}}
+            </ul>
+        </div>
+
+        {{{ user_legal }}}
+
     </div>
+    <div id="account-preferences" class="span4">
 
-    <div id="account_details">
-        <h2 class="account_title"><i class="icon-key"></i> {{ authentication_attempts_title }} </h2>
+        {{> preferences }}
 
-        <ul>
-            <li>{{ last_successful_login_label }} {{ last_successful_login_value }}</li>
-            <li>{{ last_login_failure_label }} {{ last_login_failure_value }}</li>
-            <li>{{ number_login_failure_label }} {{ number_login_failure_value }}</li>
-            <li>{{ previous_successful_login_label }} {{ previous_successful_login_value }}</li>
-        </ul>
     </div>
-
-    <div id="account_third_party_applications">
-        <h2 class="account_title"><i class="icon-circle-blank"></i> {{ third_party_applications_title }} </h2>
-
-        <ul>
-            {{{ third_party_applications_content }}}
-        </ul>
-    </div>
-
-    {{{ user_legal }}}
-
-</div>
-<div id="account_preferences">
-
-    {{> preferences }}
-
 </div>

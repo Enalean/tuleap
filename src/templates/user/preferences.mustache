@@ -1,12 +1,10 @@
-<h3> {{ preference_title }} </h3>
+<h2>{{ preference_title }}</h2>
 
 <form action="updateprefs.php" method="post">
     {{{ csrf_input_html }}}
 
-    <div class="row-fluid">
-    <div class="span6">
         <fieldset>
-            <legend>{{ email_settings }}</legend>
+            <h3><i class="icon-envelope"></i> {{ email_settings }}</h3>
             <label class="checkbox">
                 <input type="checkbox"
                      name="form_mail_site"
@@ -38,7 +36,7 @@
         </fieldset>
 
         <fieldset>
-            <legend>{{ session_label }}</legend>
+            <h3><i class="icon-user"></i> {{ session_label }}</h3>
             <label class="checkbox">
                 <input type="checkbox"
                        name="form_sticky_login"
@@ -50,8 +48,8 @@
         </fieldset>
 
         <fieldset id="account_preferences_lab_features">
-            <legend>{{ lab_features_title }}</legend>
-            <p class="lab_features">{{ lab_features_description }}</p>
+            <h3><i class="icon-beaker"></i> {{ lab_features_title }}</h3>
+            <p>{{ lab_features_description }}</p>
             <p>
                 <label class="checkbox">
                     <input type="checkbox"
@@ -79,11 +77,9 @@
             {{/ lab_features }}
 
         </fieldset>
-    </div>
 
-    <div class="span6">
         <fieldset>
-            <legend>{{ appearance_title }}</legend>
+            <h3><i class="icon-desktop"></i> {{ appearance_title }}</h3>
             <table>
                 <tr>
                     <td>
@@ -141,7 +137,7 @@
         </fieldset>
 
         <fieldset>
-            <legend>{{ import_export_title }}</legend>
+            <h3><i class="icon-exchange"></i> {{ import_export_title }}</h3>
             <table>
                 <tr>
                     <td>
@@ -175,15 +171,11 @@
                 </tr>
             </table>
         </fieldset>
-    </div>
-    <br/>
-    <div class="row-fluid">
-    <div class="span12">
-        <input type="submit"
-               name="Submit"
-               class="btn btn-primary"
-               value="{{ preference_save_button }}"
-        >
-    </div>
+    <hr/>
+    <input type="submit"
+           name="Submit"
+           class="btn btn-primary"
+           value="{{ preference_save_button }}"
+    >
 </div>
 </form>

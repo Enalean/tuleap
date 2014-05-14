@@ -41,6 +41,7 @@ account_options	shell_account_title	Shell Account Information
 account_options	shell_box	Shell Box
 account_options	shell_shared_keys	SSH Shared Keys
 account_options	shell_edit_keys	Edit Keys
+account_options	shell_delete_ssh_keys	Delete selected keys
 account_options	remember_me	"Remember me" <u><span style="color:#666">($1 remembers your login/password. If you change this preference make sure to logout and login again)</span></u>
 account_options	csv_separator	CSV separator
 account_options	comma	comma

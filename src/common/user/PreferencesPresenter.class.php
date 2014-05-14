@@ -121,6 +121,10 @@ class User_PreferencesPresenter {
         return $this->user->getRealName();
     }
 
+    public function user_username() {
+        return $this->user->getUnixName();
+    }
+
     public function welcome_user() {
         return $GLOBALS['Language']->getText('account_options', 'welcome') . ' ' . $this->user->getRealName();
     }
@@ -261,6 +265,10 @@ class User_PreferencesPresenter {
 
     public function add_ssh_key_button() {
         return $GLOBALS['Language']->getText('account_options', 'shell_edit_keys');
+    }
+
+    public function delete_ssh_key_button() {
+        return $GLOBALS['Language']->getText('account_options', 'shell_delete_ssh_keys');
     }
 
     public function has_ssh_key() {
