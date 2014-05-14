@@ -25,17 +25,18 @@ tuleap.agiledashboard.cardwall.cards = tuleap.agiledashboard.cardwall.cards || {
 tuleap.agiledashboard.cardwall.cards.selectEditors = tuleap.agiledashboard.cardwall.cards.selectEditors || [ ];
 
 tuleap.agiledashboard.cardwall.card.updateAfterAjax = function( transport ) {
+
     var artifacts_modifications = $H(transport.responseJSON);
     var milestone_id;
     var rest_route_url;
 
-    if (! thereIsMilestoneId()) {
-        return;
-    }
-
     artifacts_modifications.each( function ( artifact ) {
         updateArtifact( artifact );
     });
+
+    if (! thereIsMilestoneId()) {
+        return;
+    }
 
     milestone_id   = $F('milestone_id');
     rest_route_url = '/api/v1/milestones/' + milestone_id;
