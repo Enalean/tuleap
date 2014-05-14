@@ -484,7 +484,8 @@ CREATE TABLE tracker_artifact(
   per_tracker_artifact_id INT(11) NOT NULL,
   INDEX idx_tracker_id (tracker_id),
   INDEX idx_my (submitted_by, tracker_id, last_changeset_id),
-  INDEX idx_id_changeset_id(id, last_changeset_id)
+  INDEX idx_id_changeset_id(id, last_changeset_id),
+  INDEX idx_changeset_tracker(last_changeset_id, tracker_id)
 ) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS tracker_artifact_priority;
