@@ -182,10 +182,6 @@ if (($func=='do_create')||($func=='do_update')) {
         exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','cant_make_s'));
     }
 
-    if (! $service_manager->isServiceAllowedForProject($project, $short_name)) {
-        exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','not_allowed'));
-    }
-
     if (!$is_active) {
         if ($is_used) {
             $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_servicebar','set_stat_unused'));
@@ -279,6 +275,11 @@ if ($func=='do_update') {
     if (!$service_id) {
         exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','s_id_missed'));
     }
+
+    if (! $service_manager->isServiceAllowedForProject($project, $service_id)) {
+        exit_error($Language->getText('global','error'),$Language->getText('project_admin_servicebar','not_allowed'));
+    }
+
     $set_server_id = '';
     $server_id = $request->getValidated('server_id', 'uint');
     if (user_is_super_user() && $server_id) {

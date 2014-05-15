@@ -104,7 +104,7 @@ class ServiceManager {
         foreach ($allowed_services_dar as $row) {
             $classname = $project->getServiceClassName($row['short_name']);
             try {
-                $list_of_allowed_services[$row['short_name']] = new $classname($project, $row);
+                $list_of_allowed_services[$row['service_id']] = new $classname($project, $row);
             } catch (ServiceNotAllowedForProjectException $e) {
                 //don't display the row for this servce
             }
@@ -113,9 +113,9 @@ class ServiceManager {
         return $list_of_allowed_services;
     }
 
-    public function isServiceAllowedForProject(Project $project, $service_short_name) {
+    public function isServiceAllowedForProject(Project $project, $service_id) {
         $list_of_allowed_services = $this->getListOfAllowedServicesForProject($project);
 
-        return isset($list_of_allowed_services[$service_short_name]);
+        return isset($list_of_allowed_services[$service_id]);
     }
 }
