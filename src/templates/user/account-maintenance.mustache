@@ -79,7 +79,7 @@
             {{{ ssh_keys_extra_html }}}
 
             <div id="user-ssh-keys-action">
-                <a class="btn btn-primary" href="editsshkeys.php">
+                <a class="btn btn-primary" href="#ssh-keys-modal" data-toggle="modal">
                     <i class="icon-plus"> </i> {{ add_ssh_key_button }}
                 </a>
 
@@ -87,6 +87,8 @@
                     <i class="icon-trash"> </i> {{ delete_ssh_key_button }}
                 </a>
             </div>
+
+            {{> ssh-keys-modal }}
 
         </div>
 

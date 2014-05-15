@@ -43,10 +43,25 @@ class MockEM4UserManager extends BaseMockEventManager {
 
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
  *
+ * This file is a part of Tuleap.
  *
- * Tests the class User
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
+
 class UserManagerTest extends UnitTestCase {
 
     function setUp() {
@@ -858,5 +873,56 @@ class UserManager_GetInstanceFromRowEventsTest extends TuleapTestCase {
     }
 }
 
+class UserManager_ManageSSHKeys extends TuleapTestCase {
 
-?>
+    /** @var UserManager */
+    private $user_manager;
+
+    /** @var PFUser */
+    private $user;
+
+    public function setUp() {
+        parent::setUp();
+
+        $dao = mock('UserDao');
+
+        $this->user_manager = partial_mock(
+            'UserManager',
+            array('getDao', 'updateUserSSHKeys')
+        );
+        stub($this->user_manager)->getDao()->returns($dao);
+
+        $this->user = aUser()->withId(101)->build();
+
+        $this->new_ssh_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7pihW/WsGL8Pmk89ET/x1GTa646GWs/7DHujgxfP4ZH7mt6ta+KwH2tsEj5ESS19EIYG4hQYpckpd65fgihs7SrwLEVG3yO1gZSS+4bBfGaR/zQoFRNlJHiKh9vrr3AZZxCUUM4xpMi2wT4hBlr8lgYaxCQZpgXRqI6CSUSAVDM7e6Ct4zItmp7VqFLHTv7pljeIF+VTyoDWfMSaIBbDmmnZctR9hR3ywSmokvA9iN4a5bWjeXlIQdpjcjqapolvlo2XamN7HRTfxWefFceoVX3yVjTZ7DFkbHJdqwBMIQmAMbG633dx67dQLgeAKfWu/tGbCnalnzzeuMvU9b40f comment";
+    }
+
+    public function itAddsANewSSHKey() {
+        $user_ssh_keys   = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7pihW/WsGL8Pmk89ET/x1GTa646GWs/7DHujgxfP4ZH7mt6ta+KwH2tsEj5ESS19EIYG4hQYpckpd65fgihs7SrwLEVG3yO1gZSS+4bBfGaR/zQoFRNlJHiKh9vrr3AZZxCUUM4xpMi2wT4hBlr8lgYaxCQZpgXRqI6CSUSAVDM7e6Ct4zItmp7VqFLHTv7pljeIF+VTyoDWfMSaIBbDmmnZctR9hR3ywSmokvA9iN4a5bWjeXlIQdpjcjqapolvlo2XamN7HRTfxWefFceoVX3yVjTZ7DFkbHJdqwBMIQmAMbG633dx67dQLgeAKfWu/tGbCnalnzzeuMvU9b4oF comment1';
+        $expected_keys   = array(
+            $user_ssh_keys,
+            $this->new_ssh_key
+        );
+
+        $this->user->setAuthorizedKeys($user_ssh_keys);
+
+        expect($this->user_manager)->updateUserSSHKeys($this->user, $expected_keys)->once();
+
+        $this->user_manager->addSSHKey($this->user, $this->new_ssh_key);
+    }
+
+    public function itDoesNotAddAnExistingSSHKey() {
+        $user_ssh_keys = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7pihW/WsGL8Pmk89ET/x1GTa646GWs/7DHujgxfP4ZH7mt6ta+KwH2tsEj5ESS19EIYG4hQYpckpd65fgihs7SrwLEVG3yO1gZSS+4bBfGaR/zQoFRNlJHiKh9vrr3AZZxCUUM4xpMi2wT4hBlr8lgYaxCQZpgXRqI6CSUSAVDM7e6Ct4zItmp7VqFLHTv7pljeIF+VTyoDWfMSaIBbDmmnZctR9hR3ywSmokvA9iN4a5bWjeXlIQdpjcjqapolvlo2XamN7HRTfxWefFceoVX3yVjTZ7DFkbHJdqwBMIQmAMbG633dx67dQLgeAKfWu/tGbCnalnzzeuMvU9b4oF comment1 ###" . $this->new_ssh_key;
+
+        $expected_keys = array(
+            "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7pihW/WsGL8Pmk89ET/x1GTa646GWs/7DHujgxfP4ZH7mt6ta+KwH2tsEj5ESS19EIYG4hQYpckpd65fgihs7SrwLEVG3yO1gZSS+4bBfGaR/zQoFRNlJHiKh9vrr3AZZxCUUM4xpMi2wT4hBlr8lgYaxCQZpgXRqI6CSUSAVDM7e6Ct4zItmp7VqFLHTv7pljeIF+VTyoDWfMSaIBbDmmnZctR9hR3ywSmokvA9iN4a5bWjeXlIQdpjcjqapolvlo2XamN7HRTfxWefFceoVX3yVjTZ7DFkbHJdqwBMIQmAMbG633dx67dQLgeAKfWu/tGbCnalnzzeuMvU9b4oF comment1",
+            $this->new_ssh_key
+        );
+
+        $this->user->setAuthorizedKeys($user_ssh_keys);
+
+        expect($this->user_manager)->updateUserSSHKeys($this->user, $expected_keys)->once();
+
+        $this->user_manager->addSSHKey($this->user, $this->new_ssh_key);
+    }
+}

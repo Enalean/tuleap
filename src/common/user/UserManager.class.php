@@ -1,21 +1,22 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 class UserManager {
@@ -634,7 +635,7 @@ class UserManager {
      * Update db entry of 'user' table with values in object
      * @param PFUser $user
      */
-    public function updateDb($user) {
+    public function updateDb(PFUser $user) {
         if (!$user->isAnonymous()) {
             $userRow = $user->toRow();
             if ($user->getPassword() != '') {
@@ -652,6 +653,22 @@ class UserManager {
         return false;
     }
 
+    private function getSSHKeyValidator() {
+        return new User_SSHKeyValidator($this, $this->_getEventManager());
+    }
+
+    public function addSSHKey(PFUser $user, $new_ssh_key) {
+        $user_keys = $user->getAuthorizedKeysArray();
+        $all_keys  = array_merge(
+            $user_keys,
+            array($new_ssh_key)
+        );
+
+        $valid_keys = $this->getSSHKeyValidator()->validateAllKeys($all_keys);
+
+        $this->updateUserSSHKeys($user, $valid_keys);
+    }
+
     /**
      * Update ssh keys for a user
      *
@@ -661,12 +678,10 @@ class UserManager {
      * @param PFUser $user
      * @param String $keys
      */
-    public function updateUserSSHKeys(PFUser $user, $keys) {
+    protected function updateUserSSHKeys(PFUser $user, array $keys) {
         $original_authorised_keys = $user->getAuthorizedKeysRaw();
 
-        $ssh_validator = new User_SSHKeyValidator($this, $this->_getEventManager());
-        $valid_keys    = $ssh_validator->filterValidKeys($keys);
-        $user->setAuthorizedKeys(implode('###', $valid_keys));
+        $user->setAuthorizedKeys(implode(PFUser::SSH_KEY_SEPARATOR, $keys));
 
         if ($this->updateDb($user)) {
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('account_editsshkeys', 'update_filesystem'));
