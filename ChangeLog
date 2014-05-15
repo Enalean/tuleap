@@ -2,6 +2,7 @@ Version 7.1 (Not Yet Released)
 
 	== Enhancement ==
 	* story #6048: Retrieve an old SVNAccessFile. The SVN access control history is now kept. Each time a modification is done on the file (via the web interface), a new version is saved. This allows administrators to retrieve a previous version and to use it if needed.
+	* request #6841: Replace the combox by multiselect box in the System events monitor screen
 
 	== Plugins ==
 	* tracker: 5.375
@@ -12,7 +13,7 @@ Version 7.1 (Not Yet Released)
 	* tasks #6824 - Refactor Milestones test
 
 	== Themes ==
-	* FlamingParrot: 1.3
+	* FlamingParrot: 1.4
 
 	== Bug fix ==
 	* Fix request #6839: unable to use project references in svn commit message
