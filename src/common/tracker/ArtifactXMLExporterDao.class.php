@@ -171,6 +171,10 @@ class ArtifactXMLExporterDao extends DataAccessObject {
     }
 
     public function searchUser($user_id) {
+        if (! is_numeric($user_id)) {
+            throw new Exception_TV3XMLInvalidFieldTypeException($user_id);
+        }
+        $user_id = $this->da->escapeInt($user_id);
         $sql = "SELECT user_name, ldap_id, email
                 FROM user
                 WHERE user_id = $user_id";
