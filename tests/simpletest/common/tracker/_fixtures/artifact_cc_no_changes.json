@@ -15,6 +15,7 @@
                 "data_type":    null,
                 "display_type": null,
                 "field_name":   "cc",
+                "value_function": "",
                 "old_value":    "",
                 "new_value":    "john@doe.org,jeanjean",
                 "date":         "1234567890",

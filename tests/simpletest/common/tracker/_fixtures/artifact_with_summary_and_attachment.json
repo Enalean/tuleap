@@ -15,6 +15,7 @@
                 "data_type":    null,
                 "display_type": null,
                 "field_name":   "attachment",
+                "value_function": "",
                 "old_value":    "",
                 "new_value":    "A.png",
                 "date":         "1234567890",

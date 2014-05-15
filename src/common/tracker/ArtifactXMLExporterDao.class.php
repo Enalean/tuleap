@@ -43,6 +43,7 @@ class ArtifactXMLExporterDao extends DataAccessObject {
                     h.artifact_history_id AS id,
                     f.data_type, 
                     f.display_type,
+                    f.value_function,
                     h.field_name,
                     $old_value,
                     h.new_value,
@@ -152,7 +153,7 @@ class ArtifactXMLExporterDao extends DataAccessObject {
     }
 
     public function searchFieldValues($artifact_id) {
-        $sql = "SELECT f.display_type, f.data_type, f.field_name, fv.*
+        $sql = "SELECT f.display_type, f.data_type, f.field_name, f.value_function, fv.*
                 FROM artifact_field_value fv
                     JOIN artifact         a  ON (a.artifact_id = fv.artifact_id)
                     JOIN artifact_field   f  ON (f.field_id = fv.field_id AND f.group_artifact_id = a.group_artifact_id)

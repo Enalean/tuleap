@@ -45,7 +45,7 @@ class ArtifactFieldFactoryXMLExporter {
     }
 
     private function getFieldByHistoryRow(array $history_row) {
-        return $this->getField($history_row['field_name'], $history_row['display_type'], $history_row['data_type']);
+        return $this->getField($history_row['field_name'], $history_row['display_type'], $history_row['data_type'], $history_row['value_function']);
     }
 
     /**
@@ -53,26 +53,42 @@ class ArtifactFieldFactoryXMLExporter {
      * @param string $field_name
      * @param string $display_type
      * @param string $data_type
+     * @param string $value_function
      *
      * @return ArtifactFieldXMLExporter
      *
      * @throws Exception_TV3XMLUnknownFieldTypeException
      */
-    public function getField($field_name, $display_type, $data_type) {
-        $index = $this->getFieldType($field_name, $display_type, $data_type);
+    public function getField($field_name, $display_type, $data_type, $value_function) {
+        $index = $this->getFieldType($field_name, $display_type, $data_type, $value_function);
         if (isset($this->fields[$index])) {
             return $this->fields[$index];
         }
         throw new Exception_TV3XMLUnknownFieldTypeException($field_name);
     }
 
-    private function getFieldType($field_name, $display_type, $data_type) {
+    private function getFieldType($field_name, $display_type, $data_type, $value_function) {
         if ($display_type != null && $data_type != null) {
+            // Deal with some special cases first
+            if ($this->isAMultiSelectBoxWhoseTypeChangedInThePast($display_type, $data_type, $value_function)) {
+                return ArtifactUserMultiListFieldXMLExporter::TV3_TYPE;
+            }
+            if ($this->isASelectBoxWhoseTypeChangedInThePast($display_type, $data_type, $value_function)) {
+                return ArtifactUserListFieldXMLExporter::TV3_TYPE;
+            }
             return $display_type.'_'.$data_type;
         } elseif (isset($this->fields[$field_name])) {
             return $field_name;
         }
         throw new Exception_TV3XMLUnknownFieldTypeException($field_name);
+    }
+
+    private function isAMultiSelectBoxWhoseTypeChangedInThePast($display_type, $data_type, $value_function) {
+        return $value_function != null && $display_type === 'MB' && $data_type === '2';
+    }
+
+    private function isASelectBoxWhoseTypeChangedInThePast($display_type, $data_type, $value_function) {
+        return $value_function != null && $display_type === 'SB' && $data_type === '2';
     }
 
     public function getFieldValue(array $field_value_row) {
@@ -83,7 +99,8 @@ class ArtifactFieldFactoryXMLExporter {
         $field = $this->getField(
             $field_value_row['field_name'],
             $field_value_row['display_type'],
-            $field_value_row['data_type']
+            $field_value_row['data_type'],
+            $field_value_row['value_function']
         );
 
         return $field->getCurrentFieldValue($field_value_row, $tracker_id);

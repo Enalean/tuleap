@@ -1,4 +1,3 @@
-
 <?php
 /**
  * Copyright (c) Enalean, 2014. All Rights Reserved.
@@ -337,7 +336,7 @@ class ArtifactXMLExporter_AttachmentTest extends ArtifactXMLExporter_BaseTest {
 
     public function itCreatesAChangesetWithTwoAttachmentsWithSameName() {
         $this->exportTrackerDataFromFixture('artifact_with_two_attachments_same_name');
-        
+
         $this->assertCount($this->xml->artifact->changeset, 3);
 
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['field_name'], 'attachment');
@@ -859,6 +858,20 @@ class ArtifactXMLExporter_UserListFieldTest extends ArtifactXMLExporter_BaseTest
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['bind'], 'user');
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->submitted_on, $this->toExpectedDate(3234567890));
     }
+
+    /**
+     * @see https://tuleap.net/plugins/tracker/?aid=6880&group_id=101
+     */
+    public function itDealsWithChangeOfDataTypeWhenSBisChangedIntoMSBThenChangedBackIntoSB() {
+        $this->exportTrackerDataFromFixture('artifact_with_user_list_and_type_change');
+
+        $this->assertCount($this->xml->artifact->changeset, 1);
+
+        $field_change = $this->findValue($this->xml->artifact->changeset[0], 'assigned_to');
+        $this->assertEqual((string)$field_change->value, 'jeanjean');
+        $this->assertEqual((string)$field_change['type'], 'list');
+        $this->assertEqual((string)$field_change['bind'], 'user');
+    }
 }
 
 class ArtifactXMLExporter_StaticMultiListFieldTest extends ArtifactXMLExporter_BaseTest {
@@ -1145,5 +1158,20 @@ class ArtifactXMLExporter_UserMultiListFieldTest extends ArtifactXMLExporter_Bas
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['type'], 'list');
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['bind'], 'user');
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->submitted_on, $this->toExpectedDate(3234570000));
+    }
+
+    /**
+     * @see https://tuleap.net/plugins/tracker/?aid=6880&group_id=101
+     */
+    public function itDealsWithChangeOfDataTypeWhenMSBisChangedIntoInSBandThenChangedBackInMSB() {
+        $this->exportTrackerDataFromFixture('artifact_with_user_multi_list_history_with_data_change');
+
+        $this->assertCount($this->xml->artifact->changeset, 1);
+
+        $field_change = $this->findValue($this->xml->artifact->changeset[0], 'multiselect_user');
+        $this->assertEqual((string)$field_change->value[0], 'nicolas');
+        $this->assertEqual((string)$field_change->value[1], 'sandra');
+        $this->assertEqual((string)$field_change['type'], 'list');
+        $this->assertEqual((string)$field_change['bind'], 'user');
     }
 }

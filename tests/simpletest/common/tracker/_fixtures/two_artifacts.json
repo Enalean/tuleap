@@ -22,6 +22,7 @@
                 "data_type":    "1",
                 "display_type": "TF",
                 "field_name":   "summary",
+                "value_function": "",
                 "old_value":    "Le artifact",
                 "new_value":    "The second one",
                 "date":         "2234567890",
