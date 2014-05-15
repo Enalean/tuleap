@@ -4,7 +4,7 @@ Version 7.1 (Not Yet Released)
 	* story #6048: Retrieve an old SVNAccessFile. The SVN access control history is now kept. Each time a modification is done on the file (via the web interface), a new version is saved. This allows administrators to retrieve a previous version and to use it if needed.
 
 	== Plugins ==
-	* tracker: 5.374
+	* tracker: 5.375
 	* agiledashboard: 1.62
 
 	== Developers ==
