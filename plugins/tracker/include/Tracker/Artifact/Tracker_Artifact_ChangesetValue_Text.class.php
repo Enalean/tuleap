@@ -53,6 +53,13 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         $this->text   = $text;
         $this->format = $format;
     }
+
+    /**
+     * @return mixed
+     */
+    public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor) {
+        return $visitor->visitText($this);
+    }
     
     /**
      * Get the text value of this changeset value

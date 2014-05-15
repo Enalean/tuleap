@@ -52,7 +52,7 @@ abstract class Tracker_Artifact_ChangesetValue {
         $this->field       = $field;
         $this->has_changed = $has_changed;
     }
-    
+
     /**
      * Get the id of the value
      *
@@ -60,6 +60,15 @@ abstract class Tracker_Artifact_ChangesetValue {
      */
     public function getId() {
         return $this->id;
+    }
+
+    /**
+     * Get the field of the value
+     *
+     * @return Tracker_FormElement_Field
+     */
+    public function getField() {
+        return $this->field;
     }
     
     /**
@@ -125,6 +134,11 @@ abstract class Tracker_Artifact_ChangesetValue {
      * @return Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation
      */
     public abstract function getRESTValue(PFUser $user);
+
+    /**
+     * @return mixed
+     */
+    public abstract function accept(Tracker_Artifact_ChangesetValueVisitor $visitor);
 
     /**
      * Returns the Json value of this changeset value

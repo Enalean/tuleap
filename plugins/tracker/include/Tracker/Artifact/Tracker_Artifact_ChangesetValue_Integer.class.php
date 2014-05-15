@@ -23,7 +23,14 @@
  * Manage values in changeset for integer fields
  */
 class Tracker_Artifact_ChangesetValue_Integer extends Tracker_Artifact_ChangesetValue_Numeric {
-    
+
+    /**
+     * @return mixed
+     */
+    public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor) {
+        return $visitor->visitInteger($this);
+    }
+
     /**
      * Returns the integer value
      *

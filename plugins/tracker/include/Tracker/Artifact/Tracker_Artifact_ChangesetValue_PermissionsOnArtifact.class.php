@@ -42,6 +42,13 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
         $this->perms = $perms;
         $this->used = $used;
     }
+
+    /**
+     * @return mixed
+     */
+    public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor) {
+        return $visitor->visitPermissionsOnArtifact($this);
+    }
     
     /**
      * Get the permissions

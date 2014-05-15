@@ -39,6 +39,13 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
         parent::__construct($id, $field, $has_changed);
         $this->timestamp = $timestamp;
     }
+
+    /**
+     * @return mixed
+     */
+    public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor) {
+        return $visitor->visitDate($this);
+    }
     
     /**
      * Get timestamp of this changeset value date

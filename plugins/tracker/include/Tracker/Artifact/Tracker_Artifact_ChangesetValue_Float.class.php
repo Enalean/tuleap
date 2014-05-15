@@ -22,7 +22,14 @@
  * Manage values in changeset for float fields
  */
 class Tracker_Artifact_ChangesetValue_Float extends Tracker_Artifact_ChangesetValue_Numeric {
-    
+
+    /**
+     * @return mixed
+     */
+    public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor) {
+        return $visitor->visitFloat($this);
+    }
+
     /**
      * Get the float value
      *
