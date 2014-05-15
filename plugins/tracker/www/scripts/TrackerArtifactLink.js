@@ -38,8 +38,8 @@ codendi.tracker.artifact.artifactLink = {
     set_checkbox_style_as_cross: function(table_cells) {
         
         table_cells.each(function (td) {
-            var unlinked = codendi.imgroot + 'ic/cross.png';
-            var linked   = codendi.imgroot + 'ic/cross-disabled.png';
+            var unlinked = codendi.imgroot + 'ic/cross_red.png';
+            var linked   = codendi.imgroot + 'ic/cross_grey.png';
             if ( td.down('span') ) {
                 td.down('span').hide();
             }
