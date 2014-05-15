@@ -276,15 +276,10 @@ if (isset($params['toptab']) && is_string($params['toptab'])) {
                                                      ,'selected'=>$selected)));
                 
                 $selected = (boolean) strstr(getStringFromServer('REQUEST_URI'),'/account/');
-                $pref_selected = (boolean) strstr(getStringFromServer('REQUEST_URI'),'/account/preferences.php');
                 
                 $mynode->addChild(new TreeNode(array('link'=>'/account/'
                                                      ,'title'=>$Language->getText('my_index','account_maintenance')
-                                                     ,'selected'=>$selected && !$pref_selected)));            
-                
-                $mynode->addChild(new TreeNode(array('link'=>'/account/preferences.php'
-                                                     ,'title'=>$Language->getText('account_options','preferences')
-                                                     ,'selected'=>$pref_selected)));
+                                                     ,'selected'=>$selected)));
             }
             $menuTree->addChild($mynode);
             

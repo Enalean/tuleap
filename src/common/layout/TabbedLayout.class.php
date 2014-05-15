@@ -139,16 +139,14 @@ if (isset($params['group']) && $params['group']) {
         echo $this->tabGenerator(array(
                 '/my/', 
                 '/account/', 
-                '/account/preferences.php'
             ), array(
                 $Language->getText('my_index','my_dashboard'),
                 $Language->getText('my_index','account_maintenance'),
-                $Language->getText('account_options','preferences')
             ),
             true,
             (isset($params['selected_top_tab']) && $params['selected_top_tab'] == '/my/') ||
               strstr(getStringFromServer('REQUEST_URI'),'/my/') ? 0 :
-                (strstr(getStringFromServer('REQUEST_URI'),'/account/preferences.php') ? 2 : 1)
+                (strstr(getStringFromServer('REQUEST_URI'),'/account') ? 2 : 1)
             ,
             'WHITE', //deprecated
             '');

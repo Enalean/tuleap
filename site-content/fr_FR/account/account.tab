@@ -48,7 +48,6 @@ account_options	auth_attempt_sessions	Sessions ouvertes :
 
 #
 #-----------------------------------------------
-# Script: SF/www/account/preferences.php
 #
 account_preferences	email_settings	Courrier électronique
 account_preferences	session	Session

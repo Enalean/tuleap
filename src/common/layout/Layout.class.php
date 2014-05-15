@@ -1856,16 +1856,12 @@ class Layout extends Response {
                 array(
                     'link'  => '/account/',
                     'label' => $Language->getText('my_index','account_maintenance'),
-                ),
-                array(
-                    'link'  => '/account/preferences.php',
-                    'label' => $Language->getText('account_options','preferences')
-                ),
+                )
             );
             echo '<hr SIZE="1" NoShade>';
             foreach($tabs as $tab) {
                 $this->tab_entry($tab['link'],'',$tab['label'],strstr(getStringFromServer('REQUEST_URI'),'/my/') ? 0 :
-                      (strstr(getStringFromServer('REQUEST_URI'),'/account/preferences.php') ? 2 : 1),'');
+                      (strstr(getStringFromServer('REQUEST_URI'),'/account') ? 2 : 1),'');
             }
             echo '<hr SIZE="1" NoShade>';
         }
