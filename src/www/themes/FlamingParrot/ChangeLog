@@ -1,3 +1,6 @@
+Version 1.5 - Tuleap 7.1
+    * request #6877: Red cross to delete artifact from its parent is almost invisible on Google Chrome
+
 Version 1.4 - Tuleap 7.1
     * request #6841 Replace the combox by multiselect box in the System events monitor screen
 

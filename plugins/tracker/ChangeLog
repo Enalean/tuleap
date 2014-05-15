@@ -1,3 +1,6 @@
+Version 5.376 - Tuleap 7.1
+    * request #6877: Red cross to delete artifact from its parent is almost invisible on Google Chrome
+
 Version 5.375 - Tuleap 7.1
     * tasks #6827 Add checkbox/option on TV5 creation page
 

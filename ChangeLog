@@ -5,7 +5,7 @@ Version 7.1 (Not Yet Released)
 	* request #6841: Replace the combox by multiselect box in the System events monitor screen
 
 	== Plugins ==
-	* tracker: 5.375
+	* tracker: 5.376
 	* agiledashboard: 1.62
 	* cardwall: 1.31
 
@@ -13,11 +13,12 @@ Version 7.1 (Not Yet Released)
 	* tasks #6824 - Refactor Milestones test
 
 	== Themes ==
-	* FlamingParrot: 1.4
+	* FlamingParrot: 1.5
 
 	== Bug fix ==
 	* Fix request #6839: unable to use project references in svn commit message
 	* request #6872: Changing remaining effort of a card in cardwall renderer display a json string
+	* request #6877: Red cross to delete artifact from its parent is almost invisible on Google Chrome
 
 Version 6.13 / 7.0 (Monday, May 5th 2014)
 
