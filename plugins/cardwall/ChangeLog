@@ -1,3 +1,6 @@
+Version 1.31 - Tuleap 7.1
+    * request #6872: Changing remaining effort of a card in cardwall renderer display a json string
+
 Version 1.30 - Tuleap 6.13
     * Fix request #6786: None column on the cardwall renderer is empty when the ui is in french
 
