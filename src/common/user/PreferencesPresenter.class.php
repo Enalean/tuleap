@@ -198,8 +198,11 @@ class User_PreferencesPresenter {
 
     public function ssh_keys_list() {
         $keys = array();
-        foreach ($this->user->getAuthorizedKeysArray() as $key) {
-            $keys[] = array('ssh_key_value' => substr($key, 0, 40).'...'.substr($key, -40));
+        foreach ($this->user->getAuthorizedKeysArray() as $ssh_key_number => $ssh_key_value) {
+            $keys[] = array(
+                'ssh_key_value'  => substr($ssh_key_value, 0, 40).'...'.substr($ssh_key_value, -40),
+                'ssh_key_number' => $ssh_key_number
+            );
         }
         return $keys;
     }

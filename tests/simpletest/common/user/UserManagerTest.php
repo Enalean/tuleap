@@ -894,35 +894,49 @@ class UserManager_ManageSSHKeys extends TuleapTestCase {
 
         $this->user = aUser()->withId(101)->build();
 
-        $this->new_ssh_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7pihW/WsGL8Pmk89ET/x1GTa646GWs/7DHujgxfP4ZH7mt6ta+KwH2tsEj5ESS19EIYG4hQYpckpd65fgihs7SrwLEVG3yO1gZSS+4bBfGaR/zQoFRNlJHiKh9vrr3AZZxCUUM4xpMi2wT4hBlr8lgYaxCQZpgXRqI6CSUSAVDM7e6Ct4zItmp7VqFLHTv7pljeIF+VTyoDWfMSaIBbDmmnZctR9hR3ywSmokvA9iN4a5bWjeXlIQdpjcjqapolvlo2XamN7HRTfxWefFceoVX3yVjTZ7DFkbHJdqwBMIQmAMbG633dx67dQLgeAKfWu/tGbCnalnzzeuMvU9b40f comment";
+        $this->an_ssh_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7pihW/WsGL8Pmk89ET/x1GTa646GWs/7DHujgxfP4ZH7mt6ta+KwH2tsEj5ESS19EIYG4hQYpckpd65fgihs7SrwLEVG3yO1gZSS+4bBfGaR/zQoFRNlJHiKh9vrr3AZZxCUUM4xpMi2wT4hBlr8lgYaxCQZpgXRqI6CSUSAVDM7e6Ct4zItmp7VqFLHTv7pljeIF+VTyoDWfMSaIBbDmmnZctR9hR3ywSmokvA9iN4a5bWjeXlIQdpjcjqapolvlo2XamN7HRTfxWefFceoVX3yVjTZ7DFkbHJdqwBMIQmAMbG633dx67dQLgeAKfWu/tGbCnalnzzeuMvU9b40f comment";
     }
 
     public function itAddsANewSSHKey() {
         $user_ssh_keys   = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7pihW/WsGL8Pmk89ET/x1GTa646GWs/7DHujgxfP4ZH7mt6ta+KwH2tsEj5ESS19EIYG4hQYpckpd65fgihs7SrwLEVG3yO1gZSS+4bBfGaR/zQoFRNlJHiKh9vrr3AZZxCUUM4xpMi2wT4hBlr8lgYaxCQZpgXRqI6CSUSAVDM7e6Ct4zItmp7VqFLHTv7pljeIF+VTyoDWfMSaIBbDmmnZctR9hR3ywSmokvA9iN4a5bWjeXlIQdpjcjqapolvlo2XamN7HRTfxWefFceoVX3yVjTZ7DFkbHJdqwBMIQmAMbG633dx67dQLgeAKfWu/tGbCnalnzzeuMvU9b4oF comment1';
         $expected_keys   = array(
             $user_ssh_keys,
-            $this->new_ssh_key
+            $this->an_ssh_key
         );
 
         $this->user->setAuthorizedKeys($user_ssh_keys);
 
         expect($this->user_manager)->updateUserSSHKeys($this->user, $expected_keys)->once();
 
-        $this->user_manager->addSSHKey($this->user, $this->new_ssh_key);
+        $this->user_manager->addSSHKey($this->user, $this->an_ssh_key);
     }
 
     public function itDoesNotAddAnExistingSSHKey() {
-        $user_ssh_keys = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7pihW/WsGL8Pmk89ET/x1GTa646GWs/7DHujgxfP4ZH7mt6ta+KwH2tsEj5ESS19EIYG4hQYpckpd65fgihs7SrwLEVG3yO1gZSS+4bBfGaR/zQoFRNlJHiKh9vrr3AZZxCUUM4xpMi2wT4hBlr8lgYaxCQZpgXRqI6CSUSAVDM7e6Ct4zItmp7VqFLHTv7pljeIF+VTyoDWfMSaIBbDmmnZctR9hR3ywSmokvA9iN4a5bWjeXlIQdpjcjqapolvlo2XamN7HRTfxWefFceoVX3yVjTZ7DFkbHJdqwBMIQmAMbG633dx67dQLgeAKfWu/tGbCnalnzzeuMvU9b4oF comment1 ###" . $this->new_ssh_key;
+        $user_ssh_keys = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7pihW/WsGL8Pmk89ET/x1GTa646GWs/7DHujgxfP4ZH7mt6ta+KwH2tsEj5ESS19EIYG4hQYpckpd65fgihs7SrwLEVG3yO1gZSS+4bBfGaR/zQoFRNlJHiKh9vrr3AZZxCUUM4xpMi2wT4hBlr8lgYaxCQZpgXRqI6CSUSAVDM7e6Ct4zItmp7VqFLHTv7pljeIF+VTyoDWfMSaIBbDmmnZctR9hR3ywSmokvA9iN4a5bWjeXlIQdpjcjqapolvlo2XamN7HRTfxWefFceoVX3yVjTZ7DFkbHJdqwBMIQmAMbG633dx67dQLgeAKfWu/tGbCnalnzzeuMvU9b4oF comment1 ###" . $this->an_ssh_key;
 
         $expected_keys = array(
             "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7pihW/WsGL8Pmk89ET/x1GTa646GWs/7DHujgxfP4ZH7mt6ta+KwH2tsEj5ESS19EIYG4hQYpckpd65fgihs7SrwLEVG3yO1gZSS+4bBfGaR/zQoFRNlJHiKh9vrr3AZZxCUUM4xpMi2wT4hBlr8lgYaxCQZpgXRqI6CSUSAVDM7e6Ct4zItmp7VqFLHTv7pljeIF+VTyoDWfMSaIBbDmmnZctR9hR3ywSmokvA9iN4a5bWjeXlIQdpjcjqapolvlo2XamN7HRTfxWefFceoVX3yVjTZ7DFkbHJdqwBMIQmAMbG633dx67dQLgeAKfWu/tGbCnalnzzeuMvU9b4oF comment1",
-            $this->new_ssh_key
+            $this->an_ssh_key
         );
 
         $this->user->setAuthorizedKeys($user_ssh_keys);
 
         expect($this->user_manager)->updateUserSSHKeys($this->user, $expected_keys)->once();
 
-        $this->user_manager->addSSHKey($this->user, $this->new_ssh_key);
+        $this->user_manager->addSSHKey($this->user, $this->an_ssh_key);
+    }
+
+     public function itRemovesSelectedSSHKeys() {
+        $user_ssh_keys =
+            'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7pihW/WsGL8Pmk89ET/x1GTa646GWs/7DHujgxfP4ZH7mt6ta+KwH2tsEj5ESS19EIYG4hQYpckpd65fgihs7SrwLEVG3yO1gZSS+4bBfGaR/zQoFRNlJHiKh9vrr3AZZxCUUM4xpMi2wT4hBlr8lgYaxCQZpgXRqI6CSUSAVDM7e6Ct4zItmp7VqFLHTv7pljeIF+VTyoDWfMSaIBbDmmnZctR9hR3ywSmokvA9iN4a5bWjeXlIQdpjcjqapolvlo2XamN7HRTfxWefFceoVX3yVjTZ7DFkbHJdqwBMIQmAMbG633dx67dQLgeAKfWu/tGbCnalnzzeuMvU9b4oF comment1'
+            . PFUser::SSH_KEY_SEPARATOR . $this->an_ssh_key;
+
+        $ssh_keys_to_delete_index = array(0);
+
+        $this->user->setAuthorizedKeys($user_ssh_keys);
+
+        expect($this->user_manager)->updateUserSSHKeys($this->user, array($this->an_ssh_key))->once();
+
+        $this->user_manager->deleteSSHKeys($this->user, $ssh_keys_to_delete_index);
     }
 }

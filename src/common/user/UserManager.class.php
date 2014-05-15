@@ -669,6 +669,16 @@ class UserManager {
         $this->updateUserSSHKeys($user, $valid_keys);
     }
 
+    public function deleteSSHKeys(PFUser $user, array $ssh_key_index_to_delete) {
+        $user_keys_to_keep = $user->getAuthorizedKeysArray();
+
+        foreach ($ssh_key_index_to_delete as $ssh_key_index) {
+            unset($user_keys_to_keep[$ssh_key_index]);
+        }
+
+        $this->updateUserSSHKeys($user, array_values($user_keys_to_keep));
+    }
+
     /**
      * Update ssh keys for a user
      *

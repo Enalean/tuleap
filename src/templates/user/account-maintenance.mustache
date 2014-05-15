@@ -54,39 +54,41 @@
             </div>
 
             {{# has_ssh_key }}
-            <table class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>{{ ssh_keys_label }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{# ssh_keys_list }}
-                    <tr>
-                        <td>
-                            <input type="checkbox" />
-                        </td>
-                        <td>
-                            {{ ssh_key_value }}
-                        </td>
-                    </tr>
-                    {{/ ssh_keys_list }}
-                </tbody>
-            </table>
-            {{/ has_ssh_key }}
+            <form action="editsshkeys.php" method="post">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>{{ ssh_keys_label }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{# ssh_keys_list }}
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="ssh_key_selected[]" value="{{ ssh_key_number }}"/>
+                            </td>
+                            <td>
+                                {{ ssh_key_value }}
+                            </td>
+                        </tr>
+                        {{/ ssh_keys_list }}
+                    </tbody>
+                </table>
+                {{/ has_ssh_key }}
 
-            {{{ ssh_keys_extra_html }}}
+                {{{ ssh_keys_extra_html }}}
 
-            <div id="user-ssh-keys-action">
-                <a class="btn btn-primary" href="#ssh-keys-modal" data-toggle="modal">
-                    <i class="icon-plus"> </i> {{ add_ssh_key_button }}
-                </a>
+                <div id="user-ssh-keys-action">
+                    <a class="btn btn-primary" href="#ssh-keys-modal" data-toggle="modal">
+                        <i class="icon-plus"> </i> {{ add_ssh_key_button }}
+                    </a>
 
-                <a class="btn btn-primary btn-danger" href="#">
-                    <i class="icon-trash"> </i> {{ delete_ssh_key_button }}
-                </a>
-            </div>
+                    <button type="submit" name="delete-keys" class="btn btn-primary btn-danger">
+                        <i class="icon-trash"> </i> {{ delete_ssh_key_button }}
+                    </button>
+                </div>
+            </form>
 
             {{> ssh-keys-modal }}
 
