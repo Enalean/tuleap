@@ -75,7 +75,7 @@
                         {{/ ssh_keys_list }}
                     </tbody>
                 </table>
-                {{/ has_ssh_key }}
+            {{/ has_ssh_key }}
 
                 {{{ ssh_keys_extra_html }}}
 
@@ -84,11 +84,15 @@
                         <i class="icon-plus"> </i> {{ add_ssh_key_button }}
                     </a>
 
+                    {{# has_ssh_key }}
                     <button type="submit" name="delete-keys" class="btn btn-primary btn-danger">
                         <i class="icon-trash"> </i> {{ delete_ssh_key_button }}
                     </button>
+                    {{/ has_ssh_key }}
                 </div>
+            {{# has_ssh_key }}
             </form>
+            {{/ has_ssh_key }}
 
             {{> ssh-keys-modal }}
 
