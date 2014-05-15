@@ -271,6 +271,10 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         return $html;
     }
 
+    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, $submitted_values = array()) {
+        return '';
+    }
+
     /**
      * Fetch data to display the field value in mail
      *

@@ -591,6 +591,12 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     public abstract function fetchArtifactReadOnly(Tracker_Artifact $artifact);
 
     /**
+     * @param Tracker_Artifact $artifact
+     * @return mixed
+     */
+    public abstract function fetchArtifactCopyMode(Tracker_Artifact $artifact);
+
+    /**
      * Fetch mail rendering in a given format
      * @param string $format
      * @return string formatted output

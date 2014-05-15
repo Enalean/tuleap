@@ -200,6 +200,10 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
         return $html;
     }
 
+    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, $submitted_values = array()) {
+        return '';
+    }
+
     public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
         return $this->fetchArtifactValueReadOnly($artifact, $value);
     }

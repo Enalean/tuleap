@@ -221,7 +221,14 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
     public function fetchArtifactReadOnly(Tracker_Artifact $artifact, $submitted_values = array()) {
         return $this->fetchRecursiveArtifact('fetchArtifactReadOnly', array($artifact, $submitted_values));
     }
-    
+
+    /**
+     * @see Tracker_FormElement::fetchArtifactCopyMode
+     */
+    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, $submitted_values = array()) {
+        return $this->fetchRecursiveArtifact('fetchArtifactCopyMode', array($artifact, $submitted_values));
+    }
+
     protected function fetchRecursiveArtifact($method, $params = array()) {
         $html = '';
         $content = $this->getContainerContent($method, $params);
@@ -405,5 +412,6 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
     protected function fetchArtifactReadOnlyContent(array $content) {
         return $this->fetchArtifactContent($content);
     }
+
+
 }
-?>

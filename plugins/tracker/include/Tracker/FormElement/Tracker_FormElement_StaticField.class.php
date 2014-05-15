@@ -190,6 +190,14 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement {
     }
     
     protected abstract function fetchReadOnly();
+
+    /**
+     * @see Tracker_FormElement::fetchArtifactCopyMode
+     */
+    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, $submitted_values = array())
+    {
+        return $this->fetchArtifactReadOnly($artifact, $submitted_values);
+    }
 }
 
 ?>

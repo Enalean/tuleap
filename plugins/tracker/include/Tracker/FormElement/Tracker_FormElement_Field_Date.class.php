@@ -953,4 +953,8 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         }
         return $artifacts;
     }
+
+    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, $submitted_values = array()) {
+        return '';
+    }
 }

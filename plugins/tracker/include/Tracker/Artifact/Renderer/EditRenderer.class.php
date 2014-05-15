@@ -32,7 +32,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
     /**
      * @var Tracker_IDisplayTrackerLayout
      */
-    private $layout;
+    protected $layout;
 
     /**
      * @var Tracker_Artifact[]
@@ -103,13 +103,13 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
 
         $item = array(
             'title' => $GLOBALS['Language']->getText('plugin_tracker', 'copy_this_artifact'),
-            'url'   => 'javascript:alert(\'Not yet implemented\');',
+            'url'   => TRACKER_BASE_URL.'/?func=copy-artifact&aid='. $this->artifact->getId()
         );
 
         array_splice($toolbar, $position_of_submitnew_item + 1, 0, array($item));
     }
 
-    private function fetchView(Codendi_Request $request, PFUser $user) {
+    protected function fetchView(Codendi_Request $request, PFUser $user) {
         $view_collection = new Tracker_Artifact_View_ViewCollection();
         $view_collection->add(new Tracker_Artifact_View_Edit($this->artifact, $request, $user, $this));
         if ($this->artifact->getTracker()->getChildren()) {
@@ -119,6 +119,10 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         return $view_collection->fetchRequestedView($request);
     }
 
+    protected function fetchTitle() {
+        return $this->artifact->fetchTitle();
+    }
+
     private function fetchTitleInHierarchy(array $hierarchy) {
         $html  = '';
         $html .= $this->artifact->fetchHiddenTrackerId();
@@ -126,7 +130,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
             array_unshift($hierarchy, $this->artifact);
             $html .= $this->fetchParentsTitle($hierarchy);
         } else {
-            $html .= $this->artifact->fetchTitle();
+            $html .= $this->fetchTitle();
         }
         return $html;
     }

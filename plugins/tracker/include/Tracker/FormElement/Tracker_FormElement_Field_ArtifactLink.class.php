@@ -818,6 +818,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         return $links_tab_read_only . $reverse_links_tab;
     }
 
+    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, $submitted_values = array()) {
+        return '';
+    }
+
     public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         return $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values) . $this->fetchArtifactValueReadOnly($artifact, $value) ;
     }

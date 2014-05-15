@@ -375,6 +375,14 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     }
 
     /**
+     * @see Tracker_FormElement::fetchArtifactCopyMode
+     */
+    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, $submitted_values = array())
+    {
+        return $this->fetchArtifactReadOnly($artifact, $submitted_values);
+    }
+
+    /**
      * @param Tracker_Artifact $artifact   the artifact
      * @param string           $html_value in html
      *

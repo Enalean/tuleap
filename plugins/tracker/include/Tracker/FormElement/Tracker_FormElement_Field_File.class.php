@@ -179,6 +179,10 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         return '';
     }
 
+    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, $submitted_values = array()) {
+        return '';
+    }
+
     /**
      * Fetch the html code to display the field value in Mail
      *

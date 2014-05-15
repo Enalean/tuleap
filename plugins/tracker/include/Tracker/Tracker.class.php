@@ -231,7 +231,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
     public function getFormElements() {
         return Tracker_FormElementFactory::instance()->getUsedFormElementForTracker($this);
     }
-    
+
     /**
      * @param string $name
      * @param mixed  $type A field type name, or an array of field type names, e.g. 'float', or array('float', 'int').
@@ -266,6 +266,21 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $html = '';
         foreach($this->getFormElements() as $formElement) {
             $html .= $formElement->fetchArtifact($artifact, $submitted_values);
+        }
+        return $html;
+    }
+
+    /**
+     * fetch FormElements
+     * @param Tracker_Artifact $artifact
+     * @param array $submitted_values the values already submitted
+     *
+     * @return string
+     */
+    public function fetchFormElementsForCopy($artifact, $submitted_values = array()) {
+        $html = '';
+        foreach($this->getFormElements() as $formElement) {
+            $html .= $formElement->fetchArtifactCopyMode($artifact, $submitted_values);
         }
         return $html;
     }
