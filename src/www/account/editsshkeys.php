@@ -28,7 +28,7 @@ if ($request->isPost()
     && $request->exist('submit')
     && $request->exist('form_authorized_keys')) {
 
-    $user_manager->addSSHKey($user, $request->get('form_authorized_keys'));
+    $user_manager->addSSHKeys($user, $request->get('form_authorized_keys'));
 }
 
 $GLOBALS['Response']->redirect('/account/');

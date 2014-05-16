@@ -657,11 +657,11 @@ class UserManager {
         return new User_SSHKeyValidator($this, $this->_getEventManager());
     }
 
-    public function addSSHKey(PFUser $user, $new_ssh_key) {
+    public function addSSHKeys(PFUser $user, $new_ssh_keys) {
         $user_keys = $user->getAuthorizedKeysArray();
         $all_keys  = array_merge(
             $user_keys,
-            array($new_ssh_key)
+            preg_split("%(\r\n|\n)%", $new_ssh_keys)
         );
 
         $valid_keys = $this->getSSHKeyValidator()->validateAllKeys($all_keys);

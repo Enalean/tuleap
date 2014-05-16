@@ -894,7 +894,8 @@ class UserManager_ManageSSHKeys extends TuleapTestCase {
 
         $this->user = aUser()->withId(101)->build();
 
-        $this->an_ssh_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7pihW/WsGL8Pmk89ET/x1GTa646GWs/7DHujgxfP4ZH7mt6ta+KwH2tsEj5ESS19EIYG4hQYpckpd65fgihs7SrwLEVG3yO1gZSS+4bBfGaR/zQoFRNlJHiKh9vrr3AZZxCUUM4xpMi2wT4hBlr8lgYaxCQZpgXRqI6CSUSAVDM7e6Ct4zItmp7VqFLHTv7pljeIF+VTyoDWfMSaIBbDmmnZctR9hR3ywSmokvA9iN4a5bWjeXlIQdpjcjqapolvlo2XamN7HRTfxWefFceoVX3yVjTZ7DFkbHJdqwBMIQmAMbG633dx67dQLgeAKfWu/tGbCnalnzzeuMvU9b40f comment";
+        $this->an_ssh_key       = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7pihW/WsGL8Pmk89ET/x1GTa646GWs/7DHujgxfP4ZH7mt6ta+KwH2tsEj5ESS19EIYG4hQYpckpd65fgihs7SrwLEVG3yO1gZSS+4bBfGaR/zQoFRNlJHiKh9vrr3AZZxCUUM4xpMi2wT4hBlr8lgYaxCQZpgXRqI6CSUSAVDM7e6Ct4zItmp7VqFLHTv7pljeIF+VTyoDWfMSaIBbDmmnZctR9hR3ywSmokvA9iN4a5bWjeXlIQdpjcjqapolvlo2XamN7HRTfxWefFceoVX3yVjTZ7DFkbHJdqwBMIQmAMbG633dx67dQLgeAKfWu/tGbCnalnzzeuMvU9b40f comment";
+        $this->a_second_ssh_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7pihW/WsGL8Pmk89ET/x1GTa646GWs/7DHujgxfP4ZH7mt6ta+KwH2tsEj5ESS19EIYG4hQYpckpd65fgihs7SrwLEVG3yO1gZSS+4bBfGaR/zQoFRNlJHiKh9vrr3AZZxCUUM4xpMi2wT4hBlr8lgYaxCQZpgXRqI6CSUSAVDM7e6Ct4zItmp7VqFLHTv7pljeIF+VTyoDWfMSaIBbDmmnZctR9hR3ywSmokvA9iN4a5bWjeXlIQdpjcjqapolvlo2XamN7HRTfxWefFceoVX3yVjTZ7DFkbHJdqwBMIQmAMbG633dx67dQLgeAKfWu/tGbCnalnzzeuMvU9b41y comment2";
     }
 
     public function itAddsANewSSHKey() {
@@ -908,7 +909,22 @@ class UserManager_ManageSSHKeys extends TuleapTestCase {
 
         expect($this->user_manager)->updateUserSSHKeys($this->user, $expected_keys)->once();
 
-        $this->user_manager->addSSHKey($this->user, $this->an_ssh_key);
+        $this->user_manager->addSSHKeys($this->user, $this->an_ssh_key);
+    }
+
+    public function itAddsMultipleNewSSHKeys() {
+        $user_ssh_keys   = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7pihW/WsGL8Pmk89ET/x1GTa646GWs/7DHujgxfP4ZH7mt6ta+KwH2tsEj5ESS19EIYG4hQYpckpd65fgihs7SrwLEVG3yO1gZSS+4bBfGaR/zQoFRNlJHiKh9vrr3AZZxCUUM4xpMi2wT4hBlr8lgYaxCQZpgXRqI6CSUSAVDM7e6Ct4zItmp7VqFLHTv7pljeIF+VTyoDWfMSaIBbDmmnZctR9hR3ywSmokvA9iN4a5bWjeXlIQdpjcjqapolvlo2XamN7HRTfxWefFceoVX3yVjTZ7DFkbHJdqwBMIQmAMbG633dx67dQLgeAKfWu/tGbCnalnzzeuMvU9b4oF comment1';
+        $expected_keys   = array(
+            $user_ssh_keys,
+            $this->an_ssh_key,
+            $this->a_second_ssh_key,
+        );
+
+        $this->user->setAuthorizedKeys($user_ssh_keys);
+
+        expect($this->user_manager)->updateUserSSHKeys($this->user, $expected_keys)->once();
+
+        $this->user_manager->addSSHKeys($this->user, $this->an_ssh_key . PHP_EOL . $this->a_second_ssh_key);
     }
 
     public function itDoesNotAddAnExistingSSHKey() {
@@ -923,7 +939,7 @@ class UserManager_ManageSSHKeys extends TuleapTestCase {
 
         expect($this->user_manager)->updateUserSSHKeys($this->user, $expected_keys)->once();
 
-        $this->user_manager->addSSHKey($this->user, $this->an_ssh_key);
+        $this->user_manager->addSSHKeys($this->user, $this->an_ssh_key);
     }
 
      public function itRemovesSelectedSSHKeys() {
