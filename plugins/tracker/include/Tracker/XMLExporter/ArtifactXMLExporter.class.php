@@ -38,6 +38,6 @@ class Tracker_XMLExporter_ArtifactXMLExporter {
         $artifact_xml->addAttribute('id', $artifact->getId());
 
         $changeset = $artifact->getChangeset($changeset_id);
-        $this->changeset_exporter->exportWithoutComments($artifacts_xml, $changeset);
+        $this->changeset_exporter->exportWithoutComments($artifact_xml, $changeset);
     }
 }

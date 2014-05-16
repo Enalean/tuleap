@@ -1548,3 +1548,4 @@ plugin_tracker_modal_artifact	submit_error	The artifact cannot be created becaus
 
 plugin_tracker	Description:	Description:
 plugin_tracker	copy_this_artifact	Copy this artifact
+plugins_tracker	error_create_copy	An error occured while creating a copy of the artifact #$1.

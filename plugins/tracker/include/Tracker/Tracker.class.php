@@ -646,6 +646,15 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 );
                 $action->process($layout, $request, $current_user);
                 break;
+            case 'submit-copy-artifact':
+                $action = new Tracker_Action_CopyArtifact(
+                    $this,
+                    $this->getTrackerArtifactFactory(),
+                    $this->getArtifactXMLExporter(),
+                    $this->getArtifactXMLImporter()
+                );
+                $action->process($layout, $request, $current_user);
+                break;
             case 'submit-artifact-in-place':
                 $action = new Tracker_Action_CreateArtifactFromModal($request, $this, $this->getTrackerArtifactFactory());
                 $action->process($current_user);
@@ -3120,5 +3129,63 @@ EOS;
     public function getUri() {
         return TRACKER_BASE_URL . '/?tracker=' . $this->getId();
     }
+
+    private function getArtifactXMLImporter() {
+        $fields_validator      = new Tracker_Artifact_Changeset_AtGivenDateFieldsValidator(
+            $this->getFormElementFactory()
+        );
+
+        $changeset_dao         = new Tracker_Artifact_ChangesetDao();
+        $changeset_comment_dao = new Tracker_Artifact_Changeset_CommentDao();
+        $logger                = new BackendLogger();
+
+        $artifact_creator = new Tracker_ArtifactCreator(
+            $this->getTrackerArtifactFactory(),
+            $fields_validator,
+            new Tracker_Artifact_Changeset_InitialChangesetAtGivenDateCreator(
+                $fields_validator,
+                $this->getFormElementFactory(),
+                $changeset_dao,
+                $this->getTrackerArtifactFactory()
+            )
+        );
+
+        $new_changeset_creator = new Tracker_Artifact_Changeset_NewChangesetAtGivenDateCreator(
+            $fields_validator,
+            $this->getFormElementFactory(),
+            $changeset_dao,
+            $changeset_comment_dao,
+            $this->getTrackerArtifactFactory(),
+            EventManager::instance(),
+            ReferenceManager::instance()
+        );
+
+        return new Tracker_Artifact_XMLImport(
+            new XML_RNGValidator(),
+            $artifact_creator,
+            $new_changeset_creator,
+            Tracker_FormElementFactory::instance(),
+            new Tracker_Artifact_XMLImport_XMLImportHelper($this->getUserManager()),
+            new Tracker_FormElement_Field_List_Bind_Static_ValueDao(),
+            $logger
+        );
+    }
+
+    private function getArtifactXMLExporter() {
+        $visitor = new Tracker_XMLExporter_ChangesetValueXMLExporterVisitor(
+            new Tracker_XMLExporter_ChangesetValue_ChangesetValueDateXMLExporter(),
+            new Tracker_XMLExporter_ChangesetValue_ChangesetValueFileXMLExporter(
+                new Tracker_XMLExporter_LocalAbsoluteFilePathXMLExporter()
+            ),
+            new Tracker_XMLExporter_ChangesetValue_ChangesetValueFloatXMLExporter(),
+            new Tracker_XMLExporter_ChangesetValue_ChangesetValueIntegerXMLExporter(),
+            new Tracker_XMLExporter_ChangesetValue_ChangesetValueStringXMLExporter(),
+            new Tracker_XMLExporter_ChangesetValue_ChangesetValueTextXMLExporter(),
+            new Tracker_XMLExporter_ChangesetValue_ChangesetValueUnknownXMLExporter()
+        );
+        $values_exporter    = new Tracker_XMLExporter_ChangesetValuesXMLExporter($visitor);
+        $changeset_exporter = new Tracker_XMLExporter_ChangesetXMLExporter($values_exporter);
+
+        return new Tracker_XMLExporter_ArtifactXMLExporter($changeset_exporter);
+    }
 }
-?>
