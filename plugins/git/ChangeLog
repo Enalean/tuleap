@@ -1,3 +1,6 @@
+Version 3.83 - Tuleap 7.1
+    * PHP54: Fix array to string conversion & call by reference
+
 Version 3.82 - Tuleap 6.13
     * request #4617: Service of disabled plugin should not be activated
 

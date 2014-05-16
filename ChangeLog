@@ -8,6 +8,8 @@ Version 7.1 (Not Yet Released)
 	* tracker: 5.376
 	* agiledashboard: 1.62
 	* cardwall: 1.31
+	* git: 3.83
+	* requesthelp: 1.3.5
 
 	== Developers ==
 	* tasks #6824 - Refactor Milestones test
