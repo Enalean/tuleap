@@ -480,11 +480,8 @@ abstract class GraphOnTrackersV5_Chart {
     }
 
     public function getWidgetContent() {
-        $content = $this->getContent();
-
-        if ($this->isGraphDrawnByD3()) {
-            $content .= $this->renderer->fetchWidgetGoToReport();
-        }
+        $content  = $this->getContent();
+        $content .= $this->renderer->fetchWidgetGoToReport();
 
         return $content;
     }
