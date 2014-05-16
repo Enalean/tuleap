@@ -44,11 +44,11 @@
         }
 
         function getSidebarSize() {
-            if (! localStorage.getItem('sidebar-size')) {
-                return '210px';
+            if ($('body').hasClass('sidebar-collapsed')) {
+                return '45px';
             }
 
-            return localStorage.getItem('sidebar-size');
+            return '200px';
         }
 
         /**
