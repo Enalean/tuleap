@@ -85,7 +85,12 @@
                     </a>
 
                     {{# has_ssh_key }}
-                    <button type="submit" name="delete-keys" class="btn btn-primary btn-danger">
+                    <button type="submit"
+                            name="delete-keys"
+                            class="btn btn-primary btn-danger"
+                            id="button-delete-keys"
+                            disabled
+                    >
                         <i class="icon-trash"> </i> {{ delete_ssh_key_button }}
                     </button>
                     {{/ has_ssh_key }}
