@@ -2,10 +2,10 @@ Version 7.1 (Not Yet Released)
 
 	== Enhancement ==
 	* story #6048: Retrieve an old SVNAccessFile. The SVN access control history is now kept. Each time a modification is done on the file (via the web interface), a new version is saved. This allows administrators to retrieve a previous version and to use it if needed.
-	* request #6841: Replace the combox by multiselect box in the System events monitor screen
-
+	* request #6841: Replace the combox by multiselect box in the System events monitor screen (contrib STMicroelectronics)
+	* story #6853: be able to check user in checkbox by clicking on the name (contrib Jtekt)
 	== Plugins ==
-	* tracker: 5.376
+	* tracker: 5.377
 	* agiledashboard: 1.63
 	* cardwall: 1.31
 	* git: 3.83
