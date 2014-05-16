@@ -31,7 +31,7 @@ Mock::generate('AdminDelegation_UserServiceLogDao');
 require_once 'common/user/User.class.php';
 Mock::generate('PFUser');
 
-class AdminDelegation_UserServiceTest extends UnitTestCase {
+class AdminDelegation_UserServiceTest extends TuleapTestCase {
     protected $_keepCurrentTime;
 
     function __construct($name = 'AdminDelegation_UserService test') {
