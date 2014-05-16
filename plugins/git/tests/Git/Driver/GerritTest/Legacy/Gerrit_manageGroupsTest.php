@@ -54,9 +54,8 @@ class Git_Driver_GerritLegacy_manageGroupsTest extends Git_Driver_GerritLegacy_b
     public function itInformsAboutGroupCreation() {
         stub($this->gerrit_driver)->DoesTheGroupExist()->returns(false);
 
-        $user_list    = array ();
         expect($this->logger)->info("Gerrit: Group firefox/project_members successfully created")->once();
-        $this->gerrit_driver->createGroup($this->gerrit_server,  'firefox/project_members', $user_list);
+        $this->gerrit_driver->createGroup($this->gerrit_server,  'firefox/project_members', 'firefox/project_admins');
     }
 
     public function itRaisesAGerritDriverExceptionOnGroupsCreation(){
