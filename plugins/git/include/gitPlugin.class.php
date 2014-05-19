@@ -530,7 +530,6 @@ class GitPlugin extends Plugin {
 
         if (isset($_POST['ssh_key_push'])) {
             $this->pushUserSSHKeysToRemoteServers($user);
-            $GLOBALS['Response']->displayFeedback();
         }
 
         $params['html'] = $html;
