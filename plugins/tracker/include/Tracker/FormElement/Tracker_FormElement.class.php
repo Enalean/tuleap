@@ -353,15 +353,6 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     }
 
     /**
-     * Accessor for visitors
-     *
-     * @param Tracker_FormElement_Visitor $visitor
-     */
-    public function accept(Tracker_FormElement_Visitor $visitor) {
-        $visitor->visit($this);
-    }
-
-    /**
      * Get the rank structure for the selectox
      *
      * @return array html

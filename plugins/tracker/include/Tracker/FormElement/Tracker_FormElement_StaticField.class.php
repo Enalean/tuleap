@@ -198,6 +198,13 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement {
     {
         return $this->fetchArtifactReadOnly($artifact, $submitted_values);
     }
-}
 
-?>
+    /**
+     * Accessor for visitors
+     *
+     * @param Tracker_FormElement_Visitor $visitor
+     */
+    public function accept(Tracker_FormElement_Visitor $visitor) {
+        $visitor->visit($this);
+    }
+}

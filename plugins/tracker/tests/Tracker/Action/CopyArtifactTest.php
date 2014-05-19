@@ -43,7 +43,10 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
     private $new_artifact;
 
     /** @var int */
-    private $new_artifact_id;
+    private $artifact_id = 123;
+
+    /** @var int */
+    private $new_artifact_id = 456;
 
     /** @var Tracker_IDisplayTrackerLayout */
     private $layout;
@@ -51,34 +54,51 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
     /** @var Tracker_Artifact_XMLImport */
     private $xml_importer;
 
+    /** @var Tracker_XMLUpdater_ChangesetXMLUpdater */
+    private $xml_updater;
+
+    /** @var array */
+    private $submitted_values;
+
+    /** @var Tracker_Artifact_Changeset */
+    private $from_changeset;
+
     public function setUp() {
         parent::setUp();
 
-        $artifact_id           = 123;
-        $this->new_artifact_id = 456;
+        $changeset_factory    = mock('Tracker_Artifact_ChangesetFactory');
+        $this->tracker        = aMockTracker()->withId(1)->build();
+        $this->new_artifact   = anArtifact()->withId($this->new_artifact_id)->build();
+        $this->layout         = mock('Tracker_IDisplayTrackerLayout');
+        $this->user           = mock('PFUser');
+        $this->xml_exporter   = mock('Tracker_XMLExporter_ArtifactXMLExporter');
+        $this->xml_importer   = mock('Tracker_Artifact_XMLImport');
+        $this->xml_updater    = mock('Tracker_XMLUpdater_ChangesetXMLUpdater');
+        $this->from_changeset = stub('Tracker_Artifact_Changeset')->getId()->returns($this->changeset_id);
+        $this->from_artifact  = partial_mock('Tracker_Artifact', array('getChangesetFactory'));
+        $this->from_artifact->setId($this->artifact_id);
+        $this->from_artifact->setChangesets(array($this->changeset_id => $this->from_changeset));
+        stub($this->from_artifact)->getChangesetFactory()->returns($changeset_factory);
+        stub($this->from_changeset)->getArtifact()->returns($this->from_artifact);
 
-        $this->tracker       = aMockTracker()->withId(1)->build();
-        $this->from_artifact = anArtifact()->withId($artifact_id)->build();
-        $this->new_artifact  = anArtifact()->withId($this->new_artifact_id)->build();
-        $this->layout        = mock('Tracker_IDisplayTrackerLayout');
-        $this->user          = mock('PFUser');
-        $this->xml_exporter  = mock('Tracker_XMLExporter_ArtifactXMLExporter');
-        $this->xml_importer  = mock('Tracker_Artifact_XMLImport');
+        $this->submitted_values = array();
 
-        $artifact_factory   = aMockArtifactFactory()
+        $artifact_factory = aMockArtifactFactory()
             ->withArtifact($this->from_artifact)
             ->build();
 
         $this->request = aRequest()
-            ->with('from_artifact_id',  $artifact_id)
+            ->with('from_artifact_id',  $this->artifact_id)
             ->with('from_changeset_id', $this->changeset_id)
+            ->with('artifact',          $this->submitted_values)
             ->build();
 
         $this->action = new Tracker_Action_CopyArtifact(
             $this->tracker,
             $artifact_factory,
             $this->xml_exporter,
-            $this->xml_importer
+            $this->xml_importer,
+            $this->xml_updater
         );
     }
 
@@ -123,6 +143,74 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
         stub($this->xml_importer)->importOneArtifactFromXML()->returns(null);
 
         expect($GLOBALS['Response'])->redirect(TRACKER_BASE_URL .'/?tracker=1')->once();
+
+        $this->action->process($this->layout, $this->request, $this->user);
+    }
+
+    public function itUpdatesTheXMLWithIncomingValues() {
+        stub($this->tracker)->userCanSubmitArtifact($this->user)->returns(true);
+
+        expect($this->xml_updater)->update(
+            $this->tracker,
+            '*',
+            $this->submitted_values,
+            $this->user,
+            $_SERVER['REQUEST_TIME']
+        )->once();
+
+        $this->action->process($this->layout, $this->request, $this->user);
+    }
+
+    public function itErrorsIfNoArtifactIdInTheRequest() {
+        stub($this->tracker)->userCanSubmitArtifact($this->user)->returns(true);
+
+        $this->request = aRequest()
+            ->with('from_changeset_id', $this->changeset_id)
+            ->with('artifact',          $this->submitted_values)
+            ->build();
+
+        expect($GLOBALS['Response'])->addFeedback('error', '*')->once();
+        expect($GLOBALS['Response'])->redirect(TRACKER_BASE_URL .'/?tracker=1')->once();
+
+        expect($this->xml_exporter)->exportSnapshotWithoutComments()->never();
+        expect($this->xml_updater)->update()->never();
+        expect($this->xml_importer)->importOneArtifactFromXML()->never();
+
+        $this->action->process($this->layout, $this->request, $this->user);
+    }
+
+    public function itErrorsIfNoChangesetIdInTheRequest() {
+        stub($this->tracker)->userCanSubmitArtifact($this->user)->returns(true);
+
+        $this->request = aRequest()
+            ->with('from_artifact_id', $this->artifact_id)
+            ->with('artifact',         $this->submitted_values)
+            ->build();
+
+        expect($GLOBALS['Response'])->addFeedback('error', '*')->once();
+        expect($GLOBALS['Response'])->redirect(TRACKER_BASE_URL .'/?tracker=1')->once();
+
+        expect($this->xml_exporter)->exportSnapshotWithoutComments()->never();
+        expect($this->xml_updater)->update()->never();
+        expect($this->xml_importer)->importOneArtifactFromXML()->never();
+
+        $this->action->process($this->layout, $this->request, $this->user);
+    }
+
+    public function itErrorsIfNoSubmittedValuesInTheRequest() {
+        stub($this->tracker)->userCanSubmitArtifact($this->user)->returns(true);
+
+        $this->request = aRequest()
+            ->with('from_artifact_id',  $this->artifact_id)
+            ->with('from_changeset_id', $this->changeset_id)
+            ->build();
+
+        expect($GLOBALS['Response'])->addFeedback('error', '*')->once();
+        expect($GLOBALS['Response'])->redirect(TRACKER_BASE_URL .'/?tracker=1')->once();
+
+        expect($this->xml_exporter)->exportSnapshotWithoutComments()->never();
+        expect($this->xml_updater)->update()->never();
+        expect($this->xml_importer)->importOneArtifactFromXML()->never();
 
         $this->action->process($this->layout, $this->request, $this->user);
     }

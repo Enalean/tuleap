@@ -49,7 +49,15 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
     public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false) {
         return $this->fetchMailRecursiveArtifact($format, 'fetchMailArtifact', array($recipient, $artifact, $format, $ignore_perms));
     }
-    
+
+    /**
+     * Accessor for visitors
+     *
+     * @param Tracker_FormElement_Visitor $visitor
+     */
+    public function accept(Tracker_FormElement_Visitor $visitor) {
+        $visitor->visit($this);
+    }
     
     /**
      * Prepare the element to be displayed

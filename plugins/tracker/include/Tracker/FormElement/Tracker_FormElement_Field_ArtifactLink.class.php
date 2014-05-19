@@ -1583,5 +1583,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
 
         return $html;
     }
+
+    public function accept(Tracker_FormElement_FieldVisitor $visitor) {
+        return $visitor->visitArtifactLink($this);
+    }
 }
-?>

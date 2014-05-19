@@ -163,5 +163,8 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
     private function arrayIsEmpty($value) {
         return count($value) == 0;
     }
+
+    public function accept(Tracker_FormElement_FieldVisitor $visitor) {
+        return $visitor->visitMultiSelectbox($this);
+    }
 }
-?>

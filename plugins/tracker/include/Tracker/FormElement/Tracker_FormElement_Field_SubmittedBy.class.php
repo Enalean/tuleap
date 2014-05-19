@@ -369,5 +369,8 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
     public function isNone($value) {
         return false;
     }
+
+    public function accept(Tracker_FormElement_FieldVisitor $visitor) {
+        return $visitor->visitSubmittedBy($this);
+    }
 }
-?>

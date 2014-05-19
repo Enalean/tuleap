@@ -1092,5 +1092,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         }
         parent::deleteChangesetValue($changeset_value_id);
     }
+
+    public function accept(Tracker_FormElement_FieldVisitor $visitor) {
+        return $visitor->visitFile($this);
+    }
 }
-?>

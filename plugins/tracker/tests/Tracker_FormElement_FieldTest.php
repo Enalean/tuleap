@@ -57,7 +57,8 @@ Mock::generatePartial(
         'getLabel',
         'getName',
         'getSoapAvailableValues',
-        'fetchSubmitValueMasschange'
+        'fetchSubmitValueMasschange',
+        'accept'
     )
 );
 
@@ -94,7 +95,8 @@ Mock::generatePartial(
         'isValid',
         'userCanUpdate',
         'setHasErrors',
-        'fetchSubmitValueMasschange'
+        'fetchSubmitValueMasschange',
+        'accept'
     )
 );
 
@@ -309,6 +311,7 @@ class Tracker_FormElement_Field_getSoapValueTest extends TuleapTestCase {
             'fetchSubmitValueMasschange',
             // Methods we want to mock
             'userCanRead',
+            'accept'
         );
 
         $id = $tracker_id = $parent_id = $description = $use_it = $scope = $required = $notifications = $rank = '';

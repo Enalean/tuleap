@@ -281,5 +281,9 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
     public function isEmpty($value) {
         return trim($value) == '';
     }
+
+    public function accept(Tracker_FormElement_FieldVisitor $visitor) {
+        return $visitor->visitString($this);
+    }
 }
 

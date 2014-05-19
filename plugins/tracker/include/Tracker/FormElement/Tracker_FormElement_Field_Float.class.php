@@ -160,5 +160,8 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric 
         }
         return $changeset_value;
     }
+
+    public function accept(Tracker_FormElement_FieldVisitor $visitor) {
+        return $visitor->visitFloat($this);
+    }
 }
-?>

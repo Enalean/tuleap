@@ -450,5 +450,8 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
          $html = $this->fetchSubmitValueMassChange();
          return $html;
      }
+
+    public function accept(Tracker_FormElement_FieldVisitor $visitor) {
+        return $visitor->visitCrossReferences($this);
+    }
 }
-?>

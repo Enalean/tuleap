@@ -666,7 +666,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
                     $this,
                     $this->getTrackerArtifactFactory(),
                     $this->getArtifactXMLExporter(),
-                    $this->getArtifactXMLImporter()
+                    $this->getArtifactXMLImporter(),
+                    $this->getChangesetXMLUpdater()
                 );
                 $action->process($layout, $request, $current_user);
                 break;
@@ -3203,4 +3204,21 @@ EOS;
 
         return new Tracker_XMLExporter_ArtifactXMLExporter($changeset_exporter);
     }
+
+    private function getChangesetXMLUpdater() {
+        $visitor = new Tracker_XMLUpdater_FieldChangeXMLUpdaterVisitor(
+            new Tracker_XMLUpdater_FieldChange_FieldChangeDateXMLUpdater(),
+            new Tracker_XMLUpdater_FieldChange_FieldChangeFloatXMLUpdater(),
+            new Tracker_XMLUpdater_FieldChange_FieldChangeIntegerXMLUpdater(),
+            new Tracker_XMLUpdater_FieldChange_FieldChangeTextXMLUpdater(),
+            new Tracker_XMLUpdater_FieldChange_FieldChangeUnknownXMLUpdater()
+        );
+
+        return new Tracker_XMLUpdater_ChangesetXMLUpdater(
+            $visitor,
+            $this->getFormElementFactory()
+        );
+
+    }
+
 }

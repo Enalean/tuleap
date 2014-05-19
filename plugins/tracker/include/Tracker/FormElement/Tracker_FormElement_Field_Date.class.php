@@ -957,4 +957,8 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
     public function fetchArtifactCopyMode(Tracker_Artifact $artifact, $submitted_values = array()) {
         return '';
     }
+
+    public function accept(Tracker_FormElement_FieldVisitor $visitor) {
+        return $visitor->visitDate($this);
+    }
 }

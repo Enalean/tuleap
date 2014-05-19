@@ -43,6 +43,7 @@ Mock::generatePartial(
         'getTransitionId',
         'isNone',
         'isRequired',
+        'accept'
     )
 );
 
@@ -56,6 +57,7 @@ Mock::generatePartial(
         'getFactoryIconUseIt',
         'getFactoryIconCreate',
         'isNone',
+        'accept'
     )
 );
 

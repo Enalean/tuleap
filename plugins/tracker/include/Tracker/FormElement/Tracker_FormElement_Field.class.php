@@ -26,7 +26,7 @@ require_once('common/user/UserHelper.class.php');
  * The base class for fields in trackers. From int and string to selectboxes.
  * Composite fields are excluded.
  */
-abstract class Tracker_FormElement_Field extends Tracker_FormElement implements Tracker_Report_Field  {
+abstract class Tracker_FormElement_Field extends Tracker_FormElement implements Tracker_Report_Field, Tracker_FormElement_IAcceptFieldVisitor  {
 
     protected $has_errors = false;
 
