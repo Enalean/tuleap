@@ -98,13 +98,7 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
     }
 
     private function canUserPrioritizeBacklog(PFUser $user) {
-        $can_prioritize = true;
-
-        foreach ($this->descendant_trackers as $descendant_tracker) {
-            $can_prioritize = $can_prioritize && $descendant_tracker->userCanSubmitArtifact($user);
-        }
-
-        return $can_prioritize;
+        return $user->isLoggedIn();
     }
 
     public function getTrackersWithoutInitialEffort() {
