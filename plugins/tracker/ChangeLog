@@ -1,3 +1,6 @@
+Version 5.378 - Tuleap 7.1
+    * Fix request #6900: Docker doesn't expose $USER as a environement variable
+
 Version 5.377 - Tuleap 7.1
     * story #6853 be able to check user in checkbox by clicking on the name
 

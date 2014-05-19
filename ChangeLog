@@ -5,7 +5,7 @@ Version 7.1 (Not Yet Released)
 	* request #6841: Replace the combox by multiselect box in the System events monitor screen (contrib STMicroelectronics)
 	* story #6853: be able to check user in checkbox by clicking on the name (contrib Jtekt)
 	== Plugins ==
-	* tracker: 5.377
+	* tracker: 5.378
 	* agiledashboard: 1.63
 	* cardwall: 1.32
 	* git: 3.83
