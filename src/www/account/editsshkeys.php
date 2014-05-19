@@ -25,7 +25,7 @@ if ($request->isPost()
 }
 
 if ($request->isPost()
-    && $request->exist('submit')
+    && $request->exist('add-keys')
     && $request->exist('form_authorized_keys')) {
 
     $user_manager->addSSHKeys($user, $request->get('form_authorized_keys'));

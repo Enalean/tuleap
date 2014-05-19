@@ -506,10 +506,7 @@ class GitPlugin extends Plugin {
         $remote_servers = $this->getGerritServerFactory()->getRemoteServersForUser($user);
 
         if (count($remote_servers) > 0) {
-            $html = '<br />
-                <br />
-                <hr />
-                <br />'.
+            $html = '<br />'.
                 $GLOBALS['Language']->getText('plugin_git', 'push_ssh_keys_info').
                 '<ul>';
 
@@ -524,6 +521,7 @@ class GitPlugin extends Plugin {
             $html .= '</ul>
                 <form action="" method="post">
                     <input type="submit"
+                        class="btn btn-small"
                         title="'.$GLOBALS['Language']->getText('plugin_git', 'push_ssh_keys_button_title').'"
                         value="'.$GLOBALS['Language']->getText('plugin_git', 'push_ssh_keys_button_value').'"
                         name="ssh_key_push"/>

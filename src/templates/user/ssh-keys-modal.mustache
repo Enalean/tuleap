@@ -6,7 +6,7 @@
      aria-hidden="true"
 >
     <div class="modal-header">
-        <h3>Add SSH keys</h3>
+        <h3> {{ add_keys_modal_title }}</h3>
     </div>
 
     <form action="editsshkeys.php" method="post">
@@ -15,8 +15,8 @@
         </div>
 
         <div class="modal-footer">
-            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-            <input type="submit" class="btn btn-primary" name="submit" value="Save changes">
+            <button class="btn" data-dismiss="modal" aria-hidden="true"> {{ btn_close_label }} </button>
+            <input type="submit" class="btn btn-primary" name="add-keys" value="{{ btn_save_keys_label }}">
         </div>
     </form>
 

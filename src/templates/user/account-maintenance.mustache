@@ -1,6 +1,6 @@
 <div id="account-handler" class="row-fluid">
 
-    <div id="account-maintenance" class="span8">
+    <div id="account-maintenance" class="span7">
         <div id="account-user-info">
 
             <div class="first-user-info">
@@ -50,12 +50,12 @@
             <h3 class="account-title"><i class="icon-terminal"></i> {{ shell_account_title }} </h3>
 
             <div>
-                <span class="user-info-label">{{ ssh_keys_count_label }}</span> : {{ ssh_keys_count }}
+                <span class="user-info-label">{{ ssh_keys_count_label }}</span> {{ ssh_keys_count }}
             </div>
 
             {{# has_ssh_key }}
             <form action="editsshkeys.php" method="post">
-                <table class="table table-bordered table-striped">
+                <table class="table table-bordered table-striped ssh-keys-table">
                     <thead>
                         <tr>
                             <th></th>
@@ -77,8 +77,6 @@
                 </table>
             {{/ has_ssh_key }}
 
-                {{{ ssh_keys_extra_html }}}
-
                 <div id="user-ssh-keys-action">
                     <a class="btn btn-primary" href="#ssh-keys-modal" data-toggle="modal">
                         <i class="icon-plus"> </i> {{ add_ssh_key_button }}
@@ -95,11 +93,14 @@
                     </button>
                     {{/ has_ssh_key }}
                 </div>
+
             {{# has_ssh_key }}
             </form>
             {{/ has_ssh_key }}
 
             {{> ssh-keys-modal }}
+
+            {{{ ssh_keys_extra_html }}}
 
         </div>
 
@@ -137,7 +138,7 @@
         {{{ user_legal }}}
 
     </div>
-    <div id="account-preferences" class="span4">
+    <div id="account-preferences" class="span5">
 
         {{> preferences }}
 

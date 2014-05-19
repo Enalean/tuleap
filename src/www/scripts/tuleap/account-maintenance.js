@@ -18,16 +18,25 @@
  */
 
 !(function ($) {
+
     $(document).ready(function(){
         var delete_button = $('#button-delete-keys');
         var checkboxs     = $('input[type="checkbox"][name="ssh_key_selected[]"]');
 
+        initializeHeightValue();
         modifyDeleteKeysButtonStatus(delete_button);
 
         checkboxs.change(function() {
             modifyDeleteKeysButtonStatus(delete_button);
         });
     });
+
+    function initializeHeightValue() {
+        var right_height = $('#account-handler').height();
+
+        $('#account-maintenance').height(right_height);
+        $('#account-preferences').height(right_height);
+    };
 
     function modifyDeleteKeysButtonStatus(delete_button) {
         var nb_checked = $('input[type="checkbox"][name="ssh_key_selected[]"]:checked').length;

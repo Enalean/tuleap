@@ -109,11 +109,14 @@ foreach ($themes as $theme) {
     );
 }
 
-$languages_html = html_get_language_popup(
-    $Language,
-    'language_id',
-    $user->getLocale()
-);
+$languages_html = array();
+foreach($GLOBALS['Language']->getLanguages() as $code => $lang) {
+    $languages_html[] = array(
+        'lang'        => $lang,
+        'code'        => $code,
+        'is_selected' => $user->getLocale() === $code
+    );
+}
 
 $user_helper_preferences = array(
     array(

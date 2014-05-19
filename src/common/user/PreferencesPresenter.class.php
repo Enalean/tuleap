@@ -47,7 +47,7 @@ class User_PreferencesPresenter {
     /** @var array */
     public $all_themes;
 
-    /** @var string */
+    /** @var array */
     public $languages_html;
 
     /** @var array */
@@ -75,29 +75,29 @@ class User_PreferencesPresenter {
         array $tracker_formats,
         array $lab_features,
         array $all_themes,
-        $languages_html,
+        array $languages_html,
         array $user_helper_preferences,
         array $plugins_prefs,
         array $all_csv_separator,
         array $all_csv_dateformat
     ) {
         $this->user = $user;
-        $this->can_change_real_name = $can_change_real_name;
-        $this->can_change_email = $can_change_email;
-        $this->can_change_password = $can_change_password;
-        $this->extra_user_info = $extra_user_info;
-        $this->user_access = $user_access;
-        $this->ssh_keys_extra_html = $ssh_keys_extra_html;
-        $this->third_party_html = $third_party_html;
-        $this->csrf_input_html = $csrf_input_html;
-        $this->tracker_formats = $tracker_formats;
-        $this->lab_features = $lab_features;
-        $this->all_themes = $all_themes;
-        $this->languages_html = $languages_html;
+        $this->can_change_real_name    = $can_change_real_name;
+        $this->can_change_email        = $can_change_email;
+        $this->can_change_password     = $can_change_password;
+        $this->extra_user_info         = $extra_user_info;
+        $this->user_access             = $user_access;
+        $this->ssh_keys_extra_html     = $ssh_keys_extra_html;
+        $this->third_party_html        = $third_party_html;
+        $this->csrf_input_html         = $csrf_input_html;
+        $this->tracker_formats         = $tracker_formats;
+        $this->lab_features            = $lab_features;
+        $this->all_themes              = $all_themes;
+        $this->languages_html          = $languages_html;
         $this->user_helper_preferences = $user_helper_preferences;
-        $this->plugins_prefs = $plugins_prefs;
-        $this->all_csv_separator = $all_csv_separator;
-        $this->all_csv_dateformat = $all_csv_dateformat;
+        $this->plugins_prefs           = $plugins_prefs;
+        $this->all_csv_separator       = $all_csv_separator;
+        $this->all_csv_dateformat      = $all_csv_dateformat;
     }
 
     public function has_avatar() {
@@ -262,7 +262,7 @@ class User_PreferencesPresenter {
     }
 
     public function add_ssh_key_button() {
-        return $GLOBALS['Language']->getText('account_options', 'shell_edit_keys');
+        return $GLOBALS['Language']->getText('account_options', 'shell_add_keys');
     }
 
     public function delete_ssh_key_button() {
@@ -364,16 +364,28 @@ class User_PreferencesPresenter {
     }
 
     public function csv_separator_label() {
-        return $GLOBALS['Language']->getText('account_options', 'csv_separator').' '.
-               help_button('citizen.html#account-maintenance');
+        return $GLOBALS['Language']->getText('account_options', 'csv_separator');
     }
 
     public function csv_dateformat_label() {
-        return $GLOBALS['Language']->getText('account_preferences', 'csv_dateformat').' '.
-               help_button('citizen.html#account-maintenance');
+        return $GLOBALS['Language']->getText('account_preferences', 'csv_dateformat');
     }
 
     public function preference_save_button() {
         return $GLOBALS['Language']->getText('account_preferences', 'save_preferences');
+    }
+
+    /* MODAL */
+
+    public function add_keys_modal_title() {
+        return $GLOBALS['Language']->getText('account_editsshkeys', 'add_keys_title');
+    }
+
+    public function btn_close_label() {
+        return $GLOBALS['Language']->getText('global', 'btn_close');
+    }
+
+    public function btn_save_keys_label() {
+        return $GLOBALS['Language']->getText('account_editsshkeys', 'btn_save_keys');
     }
 }

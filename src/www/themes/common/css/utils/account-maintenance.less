@@ -29,7 +29,7 @@ h3.account-title {
 }
 
 .user-username {
-    font-size: 1.5em;
+    font-size: 1.4em;
     font-weight: bold;
     color: grey;
     display: block;
@@ -85,6 +85,77 @@ h3.account-title {
             margin-right: 25px;
             border-color: #EBEBEB;
         }
-    }
 
+        > fieldset {
+        margin-bottom: 15px;
+
+            > label {
+                margin-bottom: 10px;
+            }
+        }
+
+        select {
+            margin: 0;
+        }
+    }
+}
+
+#account-email-settings {
+    > p {
+        margin: 0;
+    }
+}
+
+.table-content-centered {
+    display: inline;
+    vertical-align: middle;
+}
+
+.button-centered {
+    text-align: center;
+}
+
+.control-label.user-account-label {
+    display: block;
+    text-align: right;
+    color: #9B9B9B;
+}
+
+.control-group.user-account-group {
+    margin: 0;
+}
+
+.form-horizontal.account-form {
+    > fieldset > .control-group {
+
+        > label.control-label {
+            padding-top: 0;
+            width: 170px;
+        }
+
+        > .controls {
+            margin-left: 190px;
+        }
+    }
+}
+
+#user-info-separation {
+    margin-bottom: 30px;
+}
+
+i.help-button {
+    font-size: 1.4em;
+    vertical-align: middle;
+    color: #C2C2C2;
+    text-decoration: none
+}
+
+.ssh-keys-table {
+    width: 100%;
+    max-width: 900px;
+}
+
+.select-user-preferences {
+    width: 80%;
+    max-width: 206px;
 }

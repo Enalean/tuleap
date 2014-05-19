@@ -8,33 +8,33 @@
 account_options	title		Maintenance du compte
 account_options	welcome		Bienvenue
 account_options	welcome_intro	Vous pouvez voir et changer toutes les caractéristiques de votre compte depuis cette page. Vous pouvez aussi consulter votre profil.
-account_options	member_since	Membre depuis
+account_options	member_since	Membre depuis :
 account_options	view_developer_profile	Voir mon profil de développeur
 account_options	edit_skills_profile	Voir mon profil de compétences
-account_options	user_id	Id utilisateur
+account_options	user_id	Id utilisateur :
 account_options	login_name	Nom $1
 account_options	ldap_name	Login LDAP
 account_options	change_password	Changer le mot de passe
 account_options	real_name	Nom complet
 account_options	change_real_name	Changer le nom complet
-account_options	language	Langue
-account_options	timezone	Fuseau horaire
+account_options	language	Langue :
+account_options	timezone	Fuseau horaire :
 account_options	change_timezone	Changer le fuseau horaire
-account_options	email_address		Adresse e-mail
+account_options	email_address		Adresse e-mail :
 account_options	change_email_address	Changer l'adresse e-mail
 account_options	preferences	Préférences
-account_options	theme	Thème/Palette de Couleur
+account_options	theme	Thème/Palette de Couleur :
 account_options	shell_account_title	 Information compte shell
 account_options	shell_box	Serveur Shell
-account_options	shell_shared_keys	Clés SSH partagées
-account_options	shell_edit_keys	Editer les Clés
+account_options	shell_shared_keys	Clés SSH partagées :
+account_options	shell_add_keys	Ajouter des Clés
 account_options	shell_delete_ssh_keys	Supprimer les clefs sélectionnées
 account_options	remember_me	"Souviens-toi de moi" <u><span style="color:#666">($1 garde trace de votre login/mot de passe. Vous devez vous déconnecter puis vous reconnecter pour que ce changement prenne effet)</span></u>
-account_options	csv_separator	Séparateur CSV
+account_options	csv_separator	Séparateur CSV :
 account_options	comma	virgule
 account_options	semicolon	point-virgule
 account_options	tab	tabulation
-account_options	username_display	Affichage des noms
+account_options	username_display	Affichage des noms :
 account_options	tuleap_login_and_name	Login (nom complet)
 account_options	tuleap_name_and_login	Nom complet (login)
 account_options	tuleap_login	Login
@@ -53,11 +53,11 @@ account_preferences	email_settings	Courrier électronique
 account_preferences	session	Session
 account_preferences	appearance	Apparence
 account_preferences	import_export	Import/export
-account_preferences	csv_dateformat	Format de date CSV
+account_preferences	csv_dateformat	Format de date CSV :
 account_preferences	month_day_year	mois/jour/année
 account_preferences	day_month_year	jour/mois/année
 account_preferences	lab_features_title	$1 Lab
-account_preferences	lab_features_description	Fonctionnalités expérimentales $1 en avant première pour les intrépides. N'activez ce mode que si vous savez ce que vous faites. Les fonctionnalités sont listées ci-dessous.
+account_preferences	lab_features_description	Fonctionnalités expérimentales $1 en avant première pour les intrépides. N'activez ce mode que si vous savez ce que vous faites.
 account_preferences	lab_features_cblabel	Activer $1 Lab
 account_preferences	tracker_mail_format	Format des notifications de l'outil de suivi :
 account_preferences	error_form_mail_site	Vérifiez la valeur du courrier des mises à jour du site
@@ -140,12 +140,14 @@ account_deleted	message	Votre compte utilisateur a été détruit. Si vous avez 
 #-----------------------------------------------
 # Script: SF/www/account/editsshkeys.php
 #
-account_editsshkeys	title	Modification des clés SSH partagées
+account_editsshkeys	add_keys_title	Ajouter des clés SSH partagées
 account_editsshkeys	message	Pour éviter d'avoir à taper votre mot de passe à chaque ouverture d'une session shell, vous pouvez enregistrer une ou plusieurs de vos clés publiques SSH qui seront stockées dans votre fichier '~/.ssh/authorized_keys'.<P>Pour générer une clé publique SSH, vous devez utiliser le programme 'ssh-keygen' (ou ssh-keygen1) sur votre station de travail. Ensuite, ouvrez le fichier '~/.ssh/identity.pub' où se trouve la clé publique générée. Consultez la documentation de ssh pour plus d'information sur le partage de clés.
 account_editsshkeys	keys	Clés partagées&nbsp;:<BR><I>Important&nbsp;: Assurez vous qu'il n'y ait aucun saut de ligne dans une clé mais uniquement entre chaque clé. Après avoir soumis vos clés vérifiez que le nombre de clés est bien celui que vous attendiez.</I>
 account_editsshkeys	invalid_key	Clé invalide ignorée : $1
 account_editsshkeys	key_already_added	La clé $1 est déja présente pour l'utilisateur
 account_editsshkeys	update_filesystem	Le(s) clé(s) SSH ont été mise à jour dans la base de donnée. Elle seront propagées sur le système de fichiers dans quelques minutes.
+account_editsshkeys	btn_save_keys	Sauvegarder les clés
+
 #
 #-----------------------------------------------
 # Script: SF/www/account/first.php
