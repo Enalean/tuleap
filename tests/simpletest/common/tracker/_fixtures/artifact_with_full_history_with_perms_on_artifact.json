@@ -40,14 +40,10 @@
     "permissions": {
         "123": [
             {
-                "ugroup_id": "15",
-                "object_id": "123",
-                "permission_type": "TRACKER_ARTIFACT_ACCESS"
+                "ugroup_id": "15"
             },
             {
-                "ugroup_id": "101",
-                "object_id": "123",
-                "permission_type": "TRACKER_ARTIFACT_ACCESS"
+                "ugroup_id": "101"
             }
         ]
     }
