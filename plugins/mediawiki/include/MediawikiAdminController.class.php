@@ -28,7 +28,8 @@ class MediawikiAdminController {
 
     public function __construct() {
         $this->mapper = new MediawikiUserGroupsMapper(
-            new MediawikiDao()
+            new MediawikiDao(),
+            new User_ForgeUserGroupPermissionsDao()
         );
     }
 

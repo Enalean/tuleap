@@ -204,6 +204,16 @@ class MediawikiDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function getAllMediawikiGroups($project) {
+        $group_id = $this->da->escapeInt($project->getID());
+
+        $sql = "SELECT DISTINCT tuleap_mwgroups.real_name
+                FROM plugin_mediawiki_ugroup_mapping AS ugroup_mapping
+                    JOIN plugin_mediawiki_tuleap_mwgroups AS tuleap_mwgroups ON (tuleap_mwgroups.mw_group_name = ugroup_mapping.mw_group_name)
+                WHERE ugroup_mapping.group_id = $group_id";
+        return $this->retrieve($sql);
+    }
+
     public function deleteUserGroup($group_id, $ugroup_id) {
         $group_id  = $this->da->escapeInt($group_id);
         $ugroup_id = $this->da->escapeInt($ugroup_id);

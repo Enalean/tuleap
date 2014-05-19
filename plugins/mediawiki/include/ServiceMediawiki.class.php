@@ -38,6 +38,15 @@ class ServiceMediawiki extends Service {
      * @return bool
      */
     public function userIsAdmin(HTTPRequest $request) {
-        return $request->getCurrentUser()->isMember($request->getProject()->getID(), 'A');
+        $user = $request->getCurrentUser();
+        $forge_user_manager = new User_ForgeUserGroupPermissionsManager(
+            new User_ForgeUserGroupPermissionsDao()
+        );
+        $has_special_permission = $forge_user_manager->doesUserHavePermission(
+            $user,
+            new User_ForgeUserGroupPermission_MediawikiAdminAllProjects()
+        );
+
+        return $has_special_permission || $user->isMember($request->getProject()->getID(), 'A');
     }
 }

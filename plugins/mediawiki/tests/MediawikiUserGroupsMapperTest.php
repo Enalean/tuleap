@@ -36,9 +36,10 @@ class MediawikiUserGroupsMapperTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
-        $this->dao         = mock('MediawikiDao');
-        $this->mapper      = new MediawikiUserGroupsMapper($this->dao);
-        $this->project     = mock('Project');
+        $this->dao             = mock('MediawikiDao');
+        $this->forge_perms_dao = mock('User_ForgeUserGroupPermissionsDao');
+        $this->mapper          = new MediawikiUserGroupsMapper($this->dao, $this->forge_perms_dao);
+        $this->project         = mock('Project');
     }
 
     public function itAddsProjectMembersAsBots() {
@@ -297,10 +298,11 @@ class MediawikiUserGroupsMapper_DefineGroupsTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
-        $this->tuleap_user = stub('PFUser')->getId()->returns(101);
-        $this->project     = stub('Group')->getId()->returns(202);
-        $this->dao         = mock('MediawikiDao');
-        $this->mapper      = new MediawikiUserGroupsMapper($this->dao);
+        $this->tuleap_user    = stub('PFUser')->getId()->returns(101);
+        $this->project        = stub('Group')->getId()->returns(202);
+        $this->dao            = mock('MediawikiDao');
+        $this->forge_pems_dao = mock('User_ForgeUserGroupPermissionsDao');
+        $this->mapper         = new MediawikiUserGroupsMapper($this->dao, $this->forge_pems_dao);
     }
 
     public function itReturnsRightMediawikiGroupsFromDatabase() {
