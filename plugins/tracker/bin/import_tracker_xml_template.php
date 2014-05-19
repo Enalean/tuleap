@@ -3,14 +3,16 @@
 require_once 'www/include/pre.php';
 require_once 'common/include/Response.class.php';
 require_once dirname(__FILE__) .'/../include/Tracker/TrackerFactory.class.php';
-#PERMISSIONS CHECK
 
-$sys_user = getenv("USER");
+// PERMISSIONS CHECK
+
+$posix_user = posix_getpwuid(posix_geteuid());
+$sys_user = $posix_user['name'];
 if ( $sys_user !== 'root' && $sys_user !== 'codendiadm' ) {
     die('Unsufficient privileges for user '.$sys_user.PHP_EOL);
 }
 
-#ARGS RETRIEVAL
+// ARGS RETRIEVAL
 $xmlFile     =  !empty($argv[1]) ? $argv[1] : '';
 $name        =  !empty($argv[2]) ? $argv[2] : '';
 $description =  !empty($argv[3]) ? $argv[3] : '';
