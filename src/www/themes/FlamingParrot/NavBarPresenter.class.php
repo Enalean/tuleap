@@ -113,6 +113,10 @@ class FlamingParrot_NavBarPresenter {
         return $this->project_list;
     }
 
+    public function user_has_projects() {
+        return count($this->project_list) > 0;
+    }
+
     public function display_new_user() {
         return $this->display_new_account;
     }
@@ -143,6 +147,10 @@ class FlamingParrot_NavBarPresenter {
 
     public function menu_projects_text() {
         return $GLOBALS['Language']->getText('include_menu','projects');
+    }
+
+    public function is_trove_cat_enabled() {
+        return $GLOBALS['sys_use_trove'] != 0;
     }
 
     public function browse_projects_text() {

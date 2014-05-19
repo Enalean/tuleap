@@ -1,40 +1,48 @@
 <li class="dropdown projects-nav {{ nav_project_class }}">
     {{# user_is_logged_in }}
         {{^ nav_project_anonymous }}
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            {{ menu_projects_text }}
-            <b class="caret"></b>
-        </a>
-        <ul class="dropdown-menu">
-            <li>
-                <a href="/softwaremap/">{{ browse_projects_text }}
-                </a>
-            </li>
-            {{# project_registration }}
-            <li>
-                <a href="/project/register.php">
-                    {{ include_menu_register_new_proj_text }}
-                </a>
-            </li>
-            {{/ project_registration }}
-            <li class="divider"></li>
-            <li>
-                <input type="text" id="filter-projects" placeholder="{{ filter_project }}" />
-            </li>
-            {{# user_projects }}
-            <li class="project">
-                <a href="/projects/{{ getUnixName }}/">
-                {{{ getPublicName }}}
-                </a>
-            </li>
-            {{/ user_projects }}
-        </ul>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                {{ menu_projects_text }}
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                {{# is_trove_cat_enabled }}
+                    <li>
+                        <a href="/softwaremap/">{{ browse_projects_text }}</a>
+                    </li>
+                {{/ is_trove_cat_enabled }}
+
+                {{# project_registration }}
+                    <li>
+                        <a href="/project/register.php">{{ include_menu_register_new_proj_text }}</a>
+                    </li>
+                {{/ project_registration }}
+
+                {{# user_has_projects }}
+                    <li class="divider"></li>
+                    <li>
+                        <input type="text" id="filter-projects" placeholder="{{ filter_project }}" />
+                    </li>
+
+                    {{# user_projects }}
+                        <li class="project">
+                            <a href="/projects/{{ getUnixName }}/">{{{ getPublicName }}}</a>
+                        </li>
+                    {{/ user_projects }}
+                {{/ user_has_projects }}
+            </ul>
         {{/ nav_project_anonymous }}
+
         {{# nav_project_anonymous }}
-            <a href="/softwaremap/">Projects</a>
+            {{# is_trove_cat_enabled }}
+                <a href="/softwaremap/">{{ menu_projects_text }}</a>
+            {{/ is_trove_cat_enabled }}
         {{/ nav_project_anonymous }}
     {{/ user_is_logged_in }}
+
     {{^ user_is_logged_in }}
-        <a href="/softwaremap/">Projects</a>
+        {{# is_trove_cat_enabled }}
+            <a href="/softwaremap/">{{ menu_projects_text }}</a>
+        {{/ is_trove_cat_enabled }}
     {{/ user_is_logged_in }}
 </li>
