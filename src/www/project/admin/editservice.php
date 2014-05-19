@@ -278,7 +278,7 @@ else {
         }
     }
 
-    if (! ServiceManager::instance()->isServiceAllowedForProject($project, $service['short_name'])) {
+    if (! ServiceManager::instance()->isServiceAllowedForProject($project, $service_id)) {
         exit_error('ERROR', $GLOBALS['Language']->getText('project_admin_servicebar', 'not_allowed'));
     }
 
