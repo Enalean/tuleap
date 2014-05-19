@@ -19,7 +19,7 @@ Version 7.1 (Not Yet Released)
 	* tasks #6824 - Refactor Milestones test
 
 	== Themes ==
-	* FlamingParrot: 1.5
+	* FlamingParrot: 1.6
 
 	== Bug fix ==
 	* Fix request #6839: unable to use project references in svn commit message

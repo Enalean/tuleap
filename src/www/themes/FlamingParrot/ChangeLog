@@ -1,3 +1,6 @@
+Version 1.6 - Tuleap 7.1
+    * request #6837: FlamingParrot doesn't take local.inc trove
+
 Version 1.5 - Tuleap 7.1
     * request #6877: Red cross to delete artifact from its parent is almost invisible on Google Chrome
 
