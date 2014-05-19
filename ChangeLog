@@ -25,6 +25,7 @@ Version 7.1 (Not Yet Released)
 	* Fix request #6839: unable to use project references in svn commit message
 	* request #6872: Changing remaining effort of a card in cardwall renderer display a json string
 	* request #6877: Red cross to delete artifact from its parent is almost invisible on Google Chrome
+	* request #6879: Can't create a custom service
 
 Version 6.13 / 7.0 (Monday, May 5th 2014)
 
