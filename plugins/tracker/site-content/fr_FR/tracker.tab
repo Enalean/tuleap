@@ -1006,6 +1006,8 @@ plugin_tracker_artifact	formelement_artifactlink_title	Artefacts référencés p
 plugin_tracker_artifact	formelement_artifactlink_reverse_title	Artefacts qui référencent cet artefact
 plugin_tracker_artifact	formelement_artifactlink_display_reverse	Afficher les artefacts qui référencent cet artefact
 
+plugin_tracker_artifact	formelement_attachment_copy	Le champ des attachements ne peuvent être modifiés durant une copie d'un artefact.
+
 plugin_tracker_artifact	unable_update	Impossible de mettre à jour l'artefact
 plugin_tracker_artifact	no_changes	Aucun changement pour l'artefact $1
 plugin_tracker_artifact	fields_not_valid	Les champs ne sont pas valides

@@ -1007,6 +1007,8 @@ plugin_tracker_artifact	formelement_artifactlink_title	Artifact links
 plugin_tracker_artifact	formelement_artifactlink_reverse_title	Reverse artifact links
 plugin_tracker_artifact	formelement_artifactlink_display_reverse	Display reverse artifact links
 
+plugin_tracker_artifact	formelement_attachment_copy	Attachment fields cannot be modified during artifact copy.
+
 plugin_tracker_artifact	unable_update	Unable to update the artifact
 plugin_tracker_artifact	no_changes	No changes for artifact $1
 plugin_tracker_artifact	fields_not_valid	Fields are not valid
