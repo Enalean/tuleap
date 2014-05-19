@@ -356,6 +356,19 @@ class Tracker_SOAPServer {
     /**
      * @throws SoapFault if user can't view the tracker
      */
+    private function checkUserCanCreateArtifact(Tracker $tracker, PFUser $user) {
+        $this->checkUserCanAccessProject($user, $tracker->getProject());
+
+        $this->checkUserCanViewTracker($tracker, $user);
+
+        if (! $tracker->userCanSubmitArtifact($user)) {
+            throw new Exception($GLOBALS['Language']->getText('plugin_tracker', 'submit_at_least_one_field'), (string)get_tracker_factory_fault);
+        }
+    }
+
+    /**
+     * @throws SoapFault if user can't view the tracker
+     */
     private function checkUserCanViewTracker(Tracker $tracker, PFUser $user) {
         if (! $tracker->userCanView($user)) {
             throw new Exception('Permission Denied: You are not granted sufficient permission to perform this operation.', (string)get_tracker_factory_fault);
@@ -402,11 +415,9 @@ class Tracker_SOAPServer {
         try {
             $user = $this->soap_request_validator->continueSession($session_key);
             $tracker = $this->getTrackerById($group_id, $tracker_id, 'addArtifact');
-            $this->checkUserCanViewTracker($tracker, $user);
+            $this->checkUserCanCreateArtifact($tracker, $user);
 
             $fields_data = $this->getArtifactDataFromSoapRequest($tracker, $value);
-            $fields_data = $this->formelement_factory->getUsedFieldsWithDefaultValueForSoap($tracker, $fields_data);
-
             if ($artifact = $this->artifact_factory->createArtifact($tracker, $fields_data, $user, null)) {
                 return $artifact->getId();
             } else {
