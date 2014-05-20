@@ -2,3 +2,5 @@ usergroup_forge_permission	project_approval_name	Project Approbation
 usergroup_forge_permission	project_approval_description	This permission grants project approbation abilities for recently created projects
 usergroup_forge_permission	tracker_admin_name	Global Tracker Administrator
 usergroup_forge_permission	tracker_admin_description	This permission grants tracker administration rights on all trackers on all projects
+usergroup_forge_permission	mediawiki_admin_name	Global Mediawiki Administrator
+usergroup_forge_permission	mediawiki_admin_description	This permission grants mediawiki administration rights for each mediawiki of every project
