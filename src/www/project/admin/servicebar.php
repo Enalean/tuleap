@@ -224,7 +224,7 @@ if ($func=='do_create') {
     }
     $is_in_iframe = $request->get('is_in_iframe') ? 1 : 0;
     // Create
-    $sql = "INSERT INTO service (group_id, label, description, short_name, link, is_active, is_used, scope, rank, is_in_iframe) VALUES ($group_id, '$label', '$description', '$short_name', '$link', ".($is_active?"1":"0").", ".($is_used?"1":"0").", '$scope', $rank, $is_in_iframe)";
+    $sql = "INSERT INTO service (group_id, label, description, short_name, link, is_active, is_used, scope, rank, is_in_iframe) VALUES (".db_ei($group_id).", '".db_es($label)."', '".db_es($description)."', '".db_es($short_name)."', '".db_es($link)."', ".($is_active?"1":"0").", ".($is_used?"1":"0").", '".db_es($scope)."', ".db_ei($rank).", $is_in_iframe)";
     $result=db_query($sql);
 
     if (!$result) {
@@ -258,7 +258,7 @@ if ($func=='do_create') {
             }
             $my_link=str_replace('$group_id',$my_group_id,$my_link);
 
-            $sql = "INSERT INTO service (group_id, label, description, short_name, link, is_active, is_used, scope, rank, is_in_iframe) VALUES ($my_group_id, '$label', '$description', '$short_name', '$my_link', ".($is_active?"1":"0").", ".($is_used?"1":"0").", '$scope', $rank, $is_in_iframe)";
+            $sql = "INSERT INTO service (group_id, label, description, short_name, link, is_active, is_used, scope, rank, is_in_iframe) VALUES (".db_ei($my_group_id).", '".db_es($label)."', '".db_es($description)."', '".db_es($short_name)."', '".db_es($my_link)."', ".($is_active?"1":"0").", ".($is_used?"1":"0").", '".db_es($scope)."', ".db_ei($rank).", $is_in_iframe)";
             $result=db_query($sql);
             $nbproj++;
             if (!$result) {
@@ -288,7 +288,7 @@ if ($func=='do_update') {
     $is_in_iframe = $request->get('is_in_iframe') ? 1 : 0;
     $admin_statement = '';
     if (user_is_super_user()) { //is_active and scope can only be change by a siteadmin
-        $admin_statement = ", is_active=". ($is_active ? 1 : 0) .", scope='". $scope ."'";
+        $admin_statement = ", is_active=". ($is_active ? 1 : 0) .", scope='". db_es($scope) ."'";
         
     }
 
@@ -296,8 +296,8 @@ if ($func=='do_update') {
         // Store current 'is_used' value for this service
         $previous_is_used=$project->usesService($short_name);
     }
-    $sql = "UPDATE service SET label='$label', description='$description', link='$link' ". $admin_statement .
-        ", is_used=".($is_used?"1":"0").", rank='$rank' $set_server_id, is_in_iframe=$is_in_iframe WHERE service_id=$service_id";
+    $sql = "UPDATE service SET label='".db_es($label)."', description='".db_es($description)."', link='".db_es($link)."' ". $admin_statement .
+        ", is_used=".($is_used?"1":"0").", rank='".db_ei($rank)."' $set_server_id, is_in_iframe=$is_in_iframe WHERE service_id=".db_ei($service_id);
     $result=db_query($sql);
    
     if (!$result) {
