@@ -661,7 +661,7 @@ class UserManager {
         $user_keys = $user->getAuthorizedKeysArray();
         $all_keys  = array_merge(
             $user_keys,
-            preg_split("%(\r\n|\n)%", $new_ssh_keys)
+            preg_split("%(\r\n|\n)%", trim($new_ssh_keys))
         );
 
         $valid_keys = $this->getSSHKeyValidator()->validateAllKeys($all_keys);
