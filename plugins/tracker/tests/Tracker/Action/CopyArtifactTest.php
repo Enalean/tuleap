@@ -87,9 +87,10 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
 
         $this->submitted_values = array();
 
-        $this->artifact_factory = aMockArtifactFactory()
-            ->withArtifact($this->from_artifact)
-            ->build();
+        $this->artifact_factory = mock('Tracker_ArtifactFactory');
+        stub($this->artifact_factory)
+            ->getArtifactByIdUserCanView($this->user, $this->artifact_id)
+            ->returns($this->from_artifact);
 
         $this->request = aRequest()
             ->with('from_artifact_id',  $this->artifact_id)
@@ -222,7 +223,9 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
     public function itErrorsIfArtifactDoesNotBelongToTracker() {
         $another_tracker = aTracker()->withId(111)->build();
         $artifact_in_another_tracker = anArtifact()->withTracker($another_tracker)->build();
-        stub($this->artifact_factory)->getArtifactById(666)->returns($artifact_in_another_tracker);
+        stub($this->artifact_factory)
+            ->getArtifactByIdUserCanView($this->user, 666)
+            ->returns($artifact_in_another_tracker);
 
         stub($this->tracker)->userCanSubmitArtifact($this->user)->returns(true);
 

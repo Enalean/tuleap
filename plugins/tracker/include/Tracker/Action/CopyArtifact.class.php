@@ -69,7 +69,7 @@ class Tracker_Action_CopyArtifact {
             return;
         }
 
-        $from_artifact = $this->artifact_factory->getArtifactById($request->get('from_artifact_id'));
+        $from_artifact = $this->artifact_factory->getArtifactByIdUserCanView($current_user, $request->get('from_artifact_id'));
         if (! $from_artifact || $from_artifact->getTracker() !== $this->tracker) {
             $this->logsErrorAndRedirectToTracker('plugin_tracker_include_type', 'error_missing_param');
             return;
