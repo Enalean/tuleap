@@ -79,13 +79,6 @@ $em->processEvent(
     )
 );
 
-$labs = array();
-
-$em->processEvent(
-    Event::LAB_FEATURES_DEFINITION_LIST,
-    &$labs
-);
-
 $csrf = new CSRFSynchronizerToken('/account/index.php');
 $mail_manager = new MailManager();
 $tracker_formats = array();
@@ -178,7 +171,6 @@ $presenter = new User_PreferencesPresenter(
     $third_paty_html,
     $csrf->fetchHTMLInput(),
     $tracker_formats,
-    $labs,
     $all_themes,
     $languages_html,
     $user_helper_preferences,

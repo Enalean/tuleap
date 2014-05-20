@@ -42,9 +42,6 @@ class User_PreferencesPresenter {
     public $tracker_formats;
 
     /** @var array */
-    public $lab_features;
-
-    /** @var array */
     public $all_themes;
 
     /** @var array */
@@ -73,7 +70,6 @@ class User_PreferencesPresenter {
         $third_party_html,
         $csrf_input_html,
         array $tracker_formats,
-        array $lab_features,
         array $all_themes,
         array $languages_html,
         array $user_helper_preferences,
@@ -91,7 +87,6 @@ class User_PreferencesPresenter {
         $this->third_party_html        = $third_party_html;
         $this->csrf_input_html         = $csrf_input_html;
         $this->tracker_formats         = $tracker_formats;
-        $this->lab_features            = $lab_features;
         $this->all_themes              = $all_themes;
         $this->languages_html          = $languages_html;
         $this->user_helper_preferences = $user_helper_preferences;

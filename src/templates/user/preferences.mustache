@@ -152,20 +152,6 @@
                     {{{ lab_features_checkbox_label }}}
                 </label>
             </p>
-
-            {{# lab_features }}
-                <table>
-                    <tr>
-                        <td> {{# image }} {{ . }} {{/ image }}
-                             {{^ image }} {{ lab_features_default_image }} {{/ image }}
-                        </td>
-                        <td>
-                        <p class="account_preferences_lab_feature_title">{{ title }}</p>
-                        <p class="account_preferences_lab_feature_description">{{ description }}</p>
-                        </td>
-                    </tr>
-                </table>
-            {{/ lab_features }}
         </fieldset>
 
     <hr/>
