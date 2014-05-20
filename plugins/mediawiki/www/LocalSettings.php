@@ -201,8 +201,12 @@ function TuleapMediawikiAuthentication($user, &$result) {
     return true ;
 }
 
+/**
+ * On every page load, the user's permissions are recalculated. They are based
+ * upon the groups to which the user belongs.
+ */
 function manageMediawikiGroupsForUser(User $mediawiki_user, PFUser $tuleap_user, Group $group) {
-    $groups_mapper    = new MediawikiUserGroupsMapper(new MediawikiDao());
+    $groups_mapper    = new MediawikiUserGroupsMapper(new MediawikiDao(), new User_ForgeUserGroupPermissionsDao());
     $mediawiki_groups = $groups_mapper->defineUserMediawikiGroups($tuleap_user, $group);
 
     foreach ($mediawiki_groups['removed'] as $group_to_remove) {

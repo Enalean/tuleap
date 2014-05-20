@@ -62,8 +62,12 @@ class MediawikiUserGroupsMapper {
     /** @var MediawikiDao */
     private $dao;
 
-    public function __construct(MediawikiDao $dao) {
+    /** User_ForgeUserGroupPermissionsDao */
+    private $forge_permissions_dao;
+
+    public function __construct(MediawikiDao $dao, User_ForgeUserGroupPermissionsDao $forge_permissions_dao) {
         $this->dao = $dao;
+        $this->forge_permissions_dao = $forge_permissions_dao;
     }
 
     /**
@@ -169,13 +173,32 @@ class MediawikiUserGroupsMapper {
         return $mediawiki_groups->getAddedRemoved();
     }
 
+    /**
+     * This method will add missing permissions for a user
+     *
+     */
     private function addGroupsAccordingToMapping(MediawikiGroups $mediawiki_groups, PFUser $user, Group $project) {
         $mediawiki_groups->add('*');
-        if (! $user->isAnonymous()) {
+        if ($user->isAnonymous()) {
+            return;
+        }
+
+        if ($this->doesUserHaveSpecialAdminPermissions($user)) {
+            $dar = $this->dao->getAllMediawikiGroups($project);
+        } else {
             $dar = $this->dao->getMediawikiGroupsMappedForUGroups($user, $project);
-            foreach ($dar as $row) {
-                $mediawiki_groups->add($row['real_name']);
-            }
+        }
+
+        foreach ($dar as $row) {
+            $mediawiki_groups->add($row['real_name']);
         }
     }
+
+    private function doesUserHaveSpecialAdminPermissions(PFUser $user) {
+        return $this->forge_permissions_dao->doesUserHavePermission(
+            $user->getId(),
+            User_ForgeUserGroupPermission_MediawikiAdminAllProjects::ID
+        );
+    }
+
 }
