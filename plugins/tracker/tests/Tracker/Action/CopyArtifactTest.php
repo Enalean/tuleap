@@ -63,6 +63,9 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
     /** @var Tracker_Artifact_Changeset */
     private $from_changeset;
 
+    /** @var Tracker_ArtifactFactory */
+    private $artifact_factory;
+
     public function setUp() {
         parent::setUp();
 
@@ -77,13 +80,14 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
         $this->from_changeset = stub('Tracker_Artifact_Changeset')->getId()->returns($this->changeset_id);
         $this->from_artifact  = partial_mock('Tracker_Artifact', array('getChangesetFactory'));
         $this->from_artifact->setId($this->artifact_id);
+        $this->from_artifact->setTracker($this->tracker);
         $this->from_artifact->setChangesets(array($this->changeset_id => $this->from_changeset));
         stub($this->from_artifact)->getChangesetFactory()->returns($changeset_factory);
         stub($this->from_changeset)->getArtifact()->returns($this->from_artifact);
 
         $this->submitted_values = array();
 
-        $artifact_factory = aMockArtifactFactory()
+        $this->artifact_factory = aMockArtifactFactory()
             ->withArtifact($this->from_artifact)
             ->build();
 
@@ -95,7 +99,7 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
 
         $this->action = new Tracker_Action_CopyArtifact(
             $this->tracker,
-            $artifact_factory,
+            $this->artifact_factory,
             $this->xml_exporter,
             $this->xml_importer,
             $this->xml_updater
@@ -203,6 +207,27 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
         $this->request = aRequest()
             ->with('from_artifact_id',  $this->artifact_id)
             ->with('from_changeset_id', $this->changeset_id)
+            ->build();
+
+        expect($GLOBALS['Response'])->addFeedback('error', '*')->once();
+        expect($GLOBALS['Response'])->redirect(TRACKER_BASE_URL .'/?tracker=1')->once();
+
+        expect($this->xml_exporter)->exportSnapshotWithoutComments()->never();
+        expect($this->xml_updater)->update()->never();
+        expect($this->xml_importer)->importOneArtifactFromXML()->never();
+
+        $this->action->process($this->layout, $this->request, $this->user);
+    }
+
+    public function itErrorsIfArtifactDoesNotBelongToTracker() {
+        $another_tracker = aTracker()->withId(111)->build();
+        $artifact_in_another_tracker = anArtifact()->withTracker($another_tracker)->build();
+        stub($this->artifact_factory)->getArtifactById(666)->returns($artifact_in_another_tracker);
+
+        stub($this->tracker)->userCanSubmitArtifact($this->user)->returns(true);
+
+        $this->request = aRequest()
+            ->with('from_artifact_id', 666)
             ->build();
 
         expect($GLOBALS['Response'])->addFeedback('error', '*')->once();
