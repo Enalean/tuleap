@@ -149,7 +149,6 @@ account_deleted	message	Your account has been deleted. If you have questions reg
 # Script: SF/www/account/editsshkeys.php
 #
 account_editsshkeys	add_keys_title	Add Authorized SSH Keys
-account_editsshkeys	message	To avoid having to type your password every time for your SSH developer account, you may upload your public key(s) here and they will be placed on the server in your '~/.ssh/authorized_keys' file.<P>To generate a public key, run the program 'ssh-keygen' (or ssh-keygen1) on your desktop machine.Then look at the file '~/.ssh/identity.pub' where the generated public key has been stored. Read the ssh documentation for further information on sharing keys.
 account_editsshkeys	keys	Authorized keys:<BR><I>Important: Make sure there are no line breaks except between keys. After submitting, verify that the number of keys in your file is what you expected.</I>
 account_editsshkeys	invalid_key	Skip invalid key $1
 account_editsshkeys	key_already_added	Key $1 already existing for user
