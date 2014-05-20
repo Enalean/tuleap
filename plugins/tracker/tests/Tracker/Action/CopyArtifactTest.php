@@ -105,7 +105,7 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
     public function itExportsTheRequiredSnapshotArtifact() {
         stub($this->tracker)->userCanSubmitArtifact($this->user)->returns(true);
 
-        expect($this->xml_exporter)->exportSnapshotWithoutComments('*', $this->from_artifact, $this->changeset_id)->once();
+        expect($this->xml_exporter)->exportSnapshotWithoutComments('*', $this->from_changeset)->once();
 
         $this->action->process($this->layout, $this->request, $this->user);
     }

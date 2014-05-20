@@ -31,13 +31,11 @@ class Tracker_XMLExporter_ArtifactXMLExporter {
 
     public function exportSnapshotWithoutComments(
         SimpleXMLElement $artifacts_xml,
-        Tracker_Artifact $artifact,
-        $changeset_id
+        Tracker_Artifact_Changeset $changeset
     ) {
         $artifact_xml = $artifacts_xml->addChild('artifact');
-        $artifact_xml->addAttribute('id', $artifact->getId());
+        $artifact_xml->addAttribute('id', $changeset->getArtifact()->getId());
 
-        $changeset = $artifact->getChangeset($changeset_id);
         $this->changeset_exporter->exportWithoutComments($artifact_xml, $changeset);
     }
 }

@@ -98,8 +98,7 @@ class Tracker_Action_CopyArtifact {
         $xml_artifacts = $this->getXMLRootNode();
         $this->xml_exporter->exportSnapshotWithoutComments(
             $xml_artifacts,
-            $from_changeset->getArtifact(),
-            $from_changeset->getId()
+            $from_changeset
         );
 
         $this->xml_updater->update(

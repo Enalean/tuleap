@@ -24,9 +24,6 @@ class Tracker_XMLExporter_ArtifactXMLExporterTest extends TuleapTestCase {
     /** @var Tracker_XMLExporter_ArtifactXMLExporter */
     private $exporter;
 
-    /** @var Tracker_Artifact */
-    private $artifact;
-
     /** @var SimpleXMLElement */
     private $artifacts_xml;
 
@@ -41,15 +38,16 @@ class Tracker_XMLExporter_ArtifactXMLExporterTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->artifacts_xml      = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifacts />');
-        $this->changeset          = mock('Tracker_Artifact_Changeset');
-        $changesets               = array($this->changeset_id => $this->changeset);
-        $this->artifact           = anArtifact()->withId(123)->withChangesets($changesets)->build();
+        $artifact                 = anArtifact()->withId(123)->build();
+        $this->changeset          = stub('Tracker_Artifact_Changeset')->getId()->returns($this->changeset_id);
         $this->changeset_exporter = mock('Tracker_XMLExporter_ChangesetXMLExporter');
         $this->exporter           = new Tracker_XMLExporter_ArtifactXMLExporter($this->changeset_exporter);
+
+        stub($this->changeset)->getArtifact()->returns($artifact);
     }
 
     public function itAppendsArtifactNodeToArtifactsNode() {
-        $this->exporter->exportSnapshotWithoutComments($this->artifacts_xml, $this->artifact, 66);
+        $this->exporter->exportSnapshotWithoutComments($this->artifacts_xml, $this->changeset);
 
         $this->assertEqual(count($this->artifacts_xml->artifact), 1);
         $this->assertEqual($this->artifacts_xml->artifact['id'], 123);
@@ -58,6 +56,6 @@ class Tracker_XMLExporter_ArtifactXMLExporterTest extends TuleapTestCase {
     public function itDelegatesTheExportOfChangeset() {
         expect($this->changeset_exporter)->exportWithoutComments('*', $this->changeset)->once();
 
-        $this->exporter->exportSnapshotWithoutComments($this->artifacts_xml, $this->artifact, 66);
+        $this->exporter->exportSnapshotWithoutComments($this->artifacts_xml, $this->changeset);
     }
 }
