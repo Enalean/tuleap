@@ -15,6 +15,7 @@ Version 7.1 (Not Yet Released)
 	* admindelegation: 2.7
 	* tests: 5.22
 	* webdav: 1.9.5
+	* mediawiki: 0.29
 
 	== Developers ==
 	* tasks #6824 - Refactor Milestones test
