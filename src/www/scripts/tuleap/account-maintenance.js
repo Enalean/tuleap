@@ -20,33 +20,42 @@
 !(function ($) {
 
     $(document).ready(function(){
-        var delete_button = $('#button-delete-keys');
-        var checkboxs     = $('input[type="checkbox"][name="ssh_key_selected[]"]');
+        var $delete_button = $('#button-delete-keys');
+        var $checkboxs     = $('input[type="checkbox"][name="ssh_key_selected[]"]');
 
-        initializeHeightValue();
-        modifyDeleteKeysButtonStatus(delete_button);
+        updateHeightValue();
+        modifyDeleteKeysButtonStatus($delete_button);
 
-        checkboxs.change(function() {
-            modifyDeleteKeysButtonStatus(delete_button);
+        $checkboxs.change(function() {
+            modifyDeleteKeysButtonStatus($delete_button);
         });
+
+        $('[data-ssh_key_value]').one('click', displayFullSSHKey);
     });
 
-    function initializeHeightValue() {
-        var right_height = $('#account-handler').height();
+    function displayFullSSHKey() {
+        var $element = $(this);
+        $element.html($element.attr('data-ssh_key_value'));
+        $element.css('cursor', 'auto');
 
-        $('#account-maintenance').height(right_height);
-        $('#account-preferences').height(right_height);
+        updateHeightValue();
+    }
+
+    function updateHeightValue() {
+        var new_height = $('#account-maintenance').height();
+
+        $('#account-preferences').height(new_height);
     };
 
-    function modifyDeleteKeysButtonStatus(delete_button) {
+    function modifyDeleteKeysButtonStatus($delete_button) {
         var nb_checked = $('input[type="checkbox"][name="ssh_key_selected[]"]:checked').length;
 
         if (nb_checked === 0) {
-            delete_button.attr('disabled', true);
+            $delete_button.attr('disabled', true);
             return;
         }
 
-        delete_button.removeAttr('disabled');
+        $delete_button.removeAttr('disabled');
     };
 
 })(window.jQuery);

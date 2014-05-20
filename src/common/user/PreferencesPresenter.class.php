@@ -195,8 +195,9 @@ class User_PreferencesPresenter {
         $keys = array();
         foreach ($this->user->getAuthorizedKeysArray() as $ssh_key_number => $ssh_key_value) {
             $keys[] = array(
-                'ssh_key_value'  => substr($ssh_key_value, 0, 40).'...'.substr($ssh_key_value, -40),
-                'ssh_key_number' => $ssh_key_number
+                'ssh_key_ellipsis_value' => substr($ssh_key_value, 0, 40).'...'.substr($ssh_key_value, -40),
+                'ssh_key_value'          => $ssh_key_value,
+                'ssh_key_number'         => $ssh_key_number
             );
         }
         return $keys;

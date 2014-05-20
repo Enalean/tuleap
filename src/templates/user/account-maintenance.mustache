@@ -74,8 +74,8 @@
                             <td>
                                 <input type="checkbox" name="ssh_key_selected[]" value="{{ ssh_key_number }}"/>
                             </td>
-                            <td>
-                                {{ ssh_key_value }}
+                            <td data-ssh_key_value="{{ ssh_key_value }}">
+                                {{ ssh_key_ellipsis_value }}
                             </td>
                         </tr>
                         {{/ ssh_keys_list }}
