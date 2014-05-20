@@ -61,6 +61,7 @@ class MediaWikiPlugin extends Plugin {
             $this->_addHook('project_admin_ugroup_remove_user');
             $this->_addHook('project_admin_remove_user_from_project_ugroups');
             $this->_addHook('project_admin_ugroup_deletion');
+            $this->_addHook(Event::HAS_USER_BEEN_DELEGATED_ACCESS, 'has_user_been_delegated_access');
 
             // Search
             $this->_addHook(Event::LAYOUT_SEARCH_ENTRY);
@@ -500,6 +501,29 @@ class MediaWikiPlugin extends Plugin {
             if ($mediawiki_instantiater) {
                 $mediawiki_instantiater->instantiateFromTemplate($params['ugroupsMapping']);
             }
+        }
+    }
+
+    public function has_user_been_delegated_access($params) {
+        if (! isset($_SERVER['REQUEST_URI']) || ! strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            return;
+        }
+
+        $forge_user_manager = new User_ForgeUserGroupPermissionsManager(
+            new User_ForgeUserGroupPermissionsDao()
+        );
+
+        $can_access = $forge_user_manager->doesUserHavePermission(
+            $params['user'],
+            new User_ForgeUserGroupPermission_MediawikiAdminAllProjects()
+        );
+
+        /**
+         * Only change the access rights to the affirmative.
+         * Otherwise, we could overwrite a "true" value set by another plugin.
+         */
+        if ($can_access) {
+            $params['can_access'] = true;
         }
     }
 
