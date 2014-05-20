@@ -35,5 +35,7 @@ class Tracker_XMLExporter_ChangesetValue_ChangesetValueTextXMLExporter extends T
         );
         $cdata_factory = new XML_SimpleXMLCDATAFactory();
         $cdata_factory->insert($field_change, 'value', $changeset_value->getText());
+
+        $field_change->value['format'] = $changeset_value->getFormat();
     }
 }

@@ -51,6 +51,7 @@ grammar {
     field_content =
         attribute field_name { xsd:string },
         ( field_string
+            | field_text
             | field_int
             | field_float
             | field_date
@@ -62,8 +63,12 @@ grammar {
         )
 
     field_string =
-        attribute type { "string" | "text"},
+        attribute type { "string" },
         element value { xsd:string }
+
+    field_text =
+        attribute type {"text"},
+        element value { xsd:string | text_content }
 
     field_int =
         attribute type { "int" },

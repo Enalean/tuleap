@@ -924,13 +924,57 @@ class Tracker_Artifact_XMLImport_PermsOnArtifactTest extends Tracker_Artifact_XM
     }
 }
 
+class Tracker_Artifact_XMLImport_TextTest extends Tracker_Artifact_XMLImportBaseTest {
+
+    private $xml_element;
+
+    private $text_field_id = 369;
+    private $text_field;
+
+    public function setUp() {
+        parent::setUp();
+
+        stub($this->artifact_creator)->create()->returns(mock('Tracker_Artifact'));
+
+        $this->text_field = stub('Tracker_FormElement_Field_Text')->getId()->returns($this->text_field_id);
+
+        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'textarea')->returns(
+            $this->text_field
+        );
+
+        $this->xml_element = new SimpleXMLElement('<?xml version="1.0"?>
+            <artifacts>
+              <artifact id="4918">
+                <changeset>
+                  <submitted_by format="username">john_doe</submitted_by>
+                  <submitted_on format="ISO8601">2014-01-15T10:38:06+01:00</submitted_on>
+                  <field_change type="text" field_name="textarea">
+                    <value format="html">test</value>
+                  </field_change>
+                </changeset>
+              </artifact>
+            </artifacts>');
+    }
+
+    public function itCreatesArtifactWithTextData() {
+        $data = array(
+            $this->text_field_id => array(
+                'format'  => 'html',
+                'content' => 'test'
+            )
+        );
+        expect($this->artifact_creator)->create('*', $data, '*', '*', '*', '*')->once();
+
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+    }
+}
+
 class Tracker_Artifact_XMLImport_AlphanumericTest extends Tracker_Artifact_XMLImportBaseTest {
 
     private $xml_element;
 
     private $string_field_id = 369;
     private $string_field;
-    private $text_field_id = 567;
     private $text_field;
     private $int_field_id = 234;
     private $int_field;
@@ -945,7 +989,6 @@ class Tracker_Artifact_XMLImport_AlphanumericTest extends Tracker_Artifact_XMLIm
         stub($this->artifact_creator)->create()->returns(mock('Tracker_Artifact'));
 
         $this->string_field = stub('Tracker_FormElement_Field_String')->getId()->returns($this->string_field_id);
-        $this->text_field = stub('Tracker_FormElement_Field_Text')->getId()->returns($this->text_field_id);
         $this->int_field = stub('Tracker_FormElement_Field_Integer')->getId()->returns($this->int_field_id);
         $this->float_field = stub('Tracker_FormElement_Field_Float')->getId()->returns($this->float_field_id);
         $this->date_field = stub('Tracker_FormElement_Field_Date')->getId()->returns($this->date_field_id);
@@ -995,7 +1038,6 @@ class Tracker_Artifact_XMLImport_AlphanumericTest extends Tracker_Artifact_XMLIm
     public function itCreatesArtifactWithAlphanumFieldData() {
         $data = array(
             $this->string_field_id => 'Import artifact in tracker v5',
-            $this->text_field_id   => 'My base of support tickets is migrated from Bugzilla to Tuleap',
             $this->int_field_id    => '5',
             $this->float_field_id  => '4.5',
             $this->date_field_id   => '2014-03-20',

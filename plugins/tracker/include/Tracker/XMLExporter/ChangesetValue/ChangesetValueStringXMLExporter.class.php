@@ -23,4 +23,18 @@ class Tracker_XMLExporter_ChangesetValue_ChangesetValueStringXMLExporter extends
     protected function getFieldChangeType() {
         return 'string';
     }
+
+    public function export(
+        SimpleXMLElement $artifact_xml,
+        SimpleXMLElement $changeset_xml,
+        Tracker_Artifact_ChangesetValue $changeset_value
+    ) {
+
+        $field_change = $this->createFieldChangeNodeInChangesetNode(
+            $changeset_value,
+            $changeset_xml
+        );
+        $cdata_factory = new XML_SimpleXMLCDATAFactory();
+        $cdata_factory->insert($field_change, 'value', $changeset_value->getText());
+    }
 }

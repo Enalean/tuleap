@@ -3211,6 +3211,7 @@ EOS;
             new Tracker_XMLUpdater_FieldChange_FieldChangeFloatXMLUpdater(),
             new Tracker_XMLUpdater_FieldChange_FieldChangeIntegerXMLUpdater(),
             new Tracker_XMLUpdater_FieldChange_FieldChangeTextXMLUpdater(),
+            new Tracker_XMLUpdater_FieldChange_FieldChangeStringXMLUpdater(),
             new Tracker_XMLUpdater_FieldChange_FieldChangeUnknownXMLUpdater()
         );
 
