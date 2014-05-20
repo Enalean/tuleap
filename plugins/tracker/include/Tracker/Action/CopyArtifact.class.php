@@ -119,7 +119,7 @@ class Tracker_Action_CopyArtifact {
             $this->redirectToArtifact($artifact);
         } else {
             $this->logsErrorAndRedirectToTracker(
-                'plugins_tracker',
+                'plugin_tracker',
                 'error_create_copy',
                 $from_changeset->getArtifact()->getId()
             );

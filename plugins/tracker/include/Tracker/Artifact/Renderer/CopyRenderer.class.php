@@ -48,8 +48,7 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer {
     }
 
     protected function displayHeader() {
-        $hp          = Codendi_HTMLPurifier::instance();
-        $title       = $hp->purify($this->tracker->getItemName(), CODENDI_PURIFIER_CONVERT_HTML)  .' #'. $this->artifact->getId();
+        $title       = $GLOBALS['Language']->getText('plugin_tracker', 'copy_of', $this->artifact->getXRef());
         $breadcrumbs = array(
             array(
                 'title' => $title,
