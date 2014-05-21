@@ -667,7 +667,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
                     $this->getTrackerArtifactFactory(),
                     $this->getArtifactXMLExporter(),
                     $this->getArtifactXMLImporter(),
-                    $this->getChangesetXMLUpdater()
+                    $this->getChangesetXMLUpdater(),
+                    $this->getFileXMLUpdater()
                 );
                 $action->process($layout, $request, $current_user);
                 break;
@@ -3224,4 +3225,9 @@ EOS;
 
     }
 
+    private function getFileXMLUpdater() {
+        return new Tracker_XMLUpdater_TemporaryFileXMLUpdater(
+            new Tracker_XMLUpdater_TemporaryFileCreator()
+        );
+    }
 }

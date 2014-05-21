@@ -21,6 +21,11 @@
 class Tracker_Action_CopyArtifact {
 
     /**
+     * @var Tracker_XMLUpdater_TemporaryFileXMLUpdater
+     */
+    private $file_updater;
+
+    /**
      * @var Tracker_XMLUpdater_ChangesetXMLUpdater
      */
     private $xml_updater;
@@ -50,13 +55,15 @@ class Tracker_Action_CopyArtifact {
         Tracker_ArtifactFactory $artifact_factory,
         Tracker_XMLExporter_ArtifactXMLExporter $xml_exporter,
         Tracker_Artifact_XMLImport $xml_importer,
-        Tracker_XMLUpdater_ChangesetXMLUpdater $xml_updater
+        Tracker_XMLUpdater_ChangesetXMLUpdater $xml_updater,
+        Tracker_XMLUpdater_TemporaryFileXMLUpdater $file_updater
     ) {
         $this->tracker          = $tracker;
         $this->artifact_factory = $artifact_factory;
         $this->xml_exporter     = $xml_exporter;
         $this->xml_importer     = $xml_importer;
         $this->xml_updater      = $xml_updater;
+        $this->file_updater     = $file_updater;
     }
 
     public function process(
@@ -100,6 +107,8 @@ class Tracker_Action_CopyArtifact {
             $xml_artifacts,
             $from_changeset
         );
+
+        $this->file_updater->update($xml_artifacts->artifact);
 
         $this->xml_updater->update(
             $this->tracker,

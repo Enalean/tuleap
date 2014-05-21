@@ -66,6 +66,9 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
 
+    /** @var Tracker_XMLUpdater_TemporaryFileXMLUpdater */
+    private $file_updater;
+
     public function setUp() {
         parent::setUp();
 
@@ -77,6 +80,7 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
         $this->xml_exporter   = mock('Tracker_XMLExporter_ArtifactXMLExporter');
         $this->xml_importer   = mock('Tracker_Artifact_XMLImport');
         $this->xml_updater    = mock('Tracker_XMLUpdater_ChangesetXMLUpdater');
+        $this->file_updater   = mock('Tracker_XMLUpdater_TemporaryFileXMLUpdater');
         $this->from_changeset = stub('Tracker_Artifact_Changeset')->getId()->returns($this->changeset_id);
         $this->from_artifact  = partial_mock('Tracker_Artifact', array('getChangesetFactory'));
         $this->from_artifact->setId($this->artifact_id);
@@ -103,7 +107,8 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
             $this->artifact_factory,
             $this->xml_exporter,
             $this->xml_importer,
-            $this->xml_updater
+            $this->xml_updater,
+            $this->file_updater
         );
     }
 
@@ -162,6 +167,14 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
             $this->user,
             $_SERVER['REQUEST_TIME']
         )->once();
+
+        $this->action->process($this->layout, $this->request, $this->user);
+    }
+
+    public function itUpdateTheXMLToNotMoveTheOriginalAttachementButToDoACopyInstead() {
+        stub($this->tracker)->userCanSubmitArtifact($this->user)->returns(true);
+
+        expect($this->file_updater)->update()->once();
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
