@@ -1,3 +1,6 @@
+Version 3.84 - Tuleap 7.1
+    * request #6916: Cannot open Git snapshot
+
 Version 3.83 - Tuleap 7.1
     * PHP54: Fix array to string conversion & call by reference
 
