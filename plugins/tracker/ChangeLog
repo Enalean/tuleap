@@ -1,3 +1,6 @@
+Version 5.379 - Tuleap 7.1
+    * request #6907: Cannot filter by milestone if there is no other tracker field in the filter
+
 Version 5.378 - Tuleap 7.1
     * Fix request #6900: Docker doesn't expose $USER as a environement variable
 
