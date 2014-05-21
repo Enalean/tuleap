@@ -70,7 +70,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
             ),
             self::FIELDTYPE_OPENLIST => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList(),
             self::FIELDTYPE_STRING   => $alphanum_strategy,
-            self::FIELDTYPE_TEXT     => $alphanum_strategy,
+            self::FIELDTYPE_TEXT     => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyText(),
             self::FIELDTYPE_INT      => $alphanum_strategy,
             self::FIELDTYPE_FLOAT    => $alphanum_strategy,
             self::FIELDTYPE_DATE     => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyDate(),

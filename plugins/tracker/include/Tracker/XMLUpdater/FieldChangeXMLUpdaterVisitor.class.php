@@ -26,22 +26,27 @@ class Tracker_XMLUpdater_FieldChangeXMLUpdaterVisitor implements Tracker_FormEle
     private $unknown_updater;
 
     /**
-     * @var Tracker_XMLUpdater_FieldChange_FieldChangeUnknownXMLUpdater
+     * @var Tracker_XMLUpdater_FieldChange_FieldChangeTextXMLUpdater
      */
     private $text_updater;
 
     /**
-     * @var Tracker_XMLUpdater_FieldChange_FieldChangeUnknownXMLUpdater
+     * @var Tracker_XMLUpdater_FieldChange_FieldChangeStringXMLUpdater
+     */
+    private $string_updater;
+
+    /**
+     * @var Tracker_XMLUpdater_FieldChange_FieldChangeIntegerXMLUpdater
      */
     private $integer_updater;
 
     /**
-     * @var Tracker_XMLUpdater_FieldChange_FieldChangeUnknownXMLUpdater
+     * @var Tracker_XMLUpdater_FieldChange_FieldChangeFloatXMLUpdater
      */
     private $float_updater;
 
     /**
-     * @var Tracker_XMLUpdater_FieldChange_FieldChangeUnknownXMLUpdater
+     * @var Tracker_XMLUpdater_FieldChange_FieldChangeDateXMLUpdater
      */
     private $date_updater;
 
@@ -50,12 +55,14 @@ class Tracker_XMLUpdater_FieldChangeXMLUpdaterVisitor implements Tracker_FormEle
             Tracker_XMLUpdater_FieldChange_FieldChangeFloatXMLUpdater $float_updater,
             Tracker_XMLUpdater_FieldChange_FieldChangeIntegerXMLUpdater $integer_updater,
             Tracker_XMLUpdater_FieldChange_FieldChangeTextXMLUpdater $text_updater,
+            Tracker_XMLUpdater_FieldChange_FieldChangeStringXMLUpdater $string_updater,
             Tracker_XMLUpdater_FieldChange_FieldChangeUnknownXMLUpdater $unknown_updater
     ) {
         $this->date_updater    = $date_updater;
         $this->float_updater   = $float_updater;
         $this->integer_updater = $integer_updater;
         $this->text_updater    = $text_updater;
+        $this->string_updater  = $string_updater;
         $this->unknown_updater = $unknown_updater;
     }
 
@@ -98,7 +105,7 @@ class Tracker_XMLUpdater_FieldChangeXMLUpdaterVisitor implements Tracker_FormEle
     }
 
     public function visitString(Tracker_FormElement_Field_String $field) {
-        return $this->text_updater;
+        return $this->string_updater;
     }
 
     public function visitText(Tracker_FormElement_Field_Text $field) {
