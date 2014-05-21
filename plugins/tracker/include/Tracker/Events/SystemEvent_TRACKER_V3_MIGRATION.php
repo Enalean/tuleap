@@ -50,14 +50,18 @@ class SystemEvent_TRACKER_V3_MIGRATION extends SystemEvent {
         $tracker_description = (string) $parameters[4];
         $tracker_shortname   = (string) $parameters[5];
 
-        $this->migration_manager->migrate(
-            $username,
-            $project_id,
-            $tv3_id,
-            $tracker_name,
-            $tracker_description,
-            $tracker_shortname
-        );
+        try {
+            $this->migration_manager->migrate(
+                $username,
+                $project_id,
+                $tv3_id,
+                $tracker_name,
+                $tracker_description,
+                $tracker_shortname
+            );
+        } catch (Exception $e) {
+            $this->error($e->getMessage());
+        }
 
         $this->done();
     }
