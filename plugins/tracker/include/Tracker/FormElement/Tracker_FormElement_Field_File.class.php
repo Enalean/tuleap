@@ -382,7 +382,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         $html = '';
         if($values) {
             $html .= '<div class="tracker-artifact-attachement-title-list tracker_artifact_field">';
-            $html .= '<div>' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_attachment_copy') . '</div>';
+            $html .= '<div class="disabled_field">' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_attachment_copy') . '</div>';
             $html .= '<ul>';
             foreach($values as $value) {
                 $description = $value->getDescription();

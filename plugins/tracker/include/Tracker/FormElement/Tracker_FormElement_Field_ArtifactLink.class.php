@@ -819,7 +819,9 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     }
 
     public function fetchArtifactCopyMode(Tracker_Artifact $artifact, $submitted_values = array()) {
-        return '';
+        $last_changeset = $artifact->getLastChangeset();
+
+        return $this->fetchNoArtifactLinksMessage();
     }
 
     public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
@@ -1569,6 +1571,17 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             $new_values[] = $parent;
             $fields_data[$this->getId()]['new_values'] = implode(',', $new_values);
         }
+    }
+
+    private function fetchNoArtifactLinksMessage() {
+        $hp   = Codendi_HTMLPurifier::instance();
+        $html = '';
+        $html .= '<div class="tracker-artifact-attachement-title-list tracker_artifact_field">';
+        $html .= '<label id="tracker_artifact_'. $this->id .'" for="tracker_artifact_'. $this->id .'" title="'. $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) .'" class="tracker_formelement_label">'.  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) .'</label>';
+        $html .= '<div class="disabled_field">' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifact_link_copy') . '</div>';
+        $html .= '</div>';
+
+        return $html;
     }
 }
 ?>

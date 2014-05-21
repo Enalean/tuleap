@@ -1007,7 +1007,7 @@ plugin_tracker_artifact	formelement_artifactlink_title	Artifact links
 plugin_tracker_artifact	formelement_artifactlink_reverse_title	Reverse artifact links
 plugin_tracker_artifact	formelement_artifactlink_display_reverse	Display reverse artifact links
 
-plugin_tracker_artifact	formelement_attachment_copy	Attachment fields cannot be modified during artifact copy.
+plugin_tracker_artifact	formelement_attachment_copy	"Attachment" type field cannot be modified during artifact copy.
 
 plugin_tracker_artifact	unable_update	Unable to update the artifact
 plugin_tracker_artifact	no_changes	No changes for artifact $1
@@ -1029,6 +1029,8 @@ plugin_tracker_artifact	submission_keeper_warning_msg	<p>Someone updated this ar
 
 plugin_tracker_artifact	copy_mode_info	You are currently copying the artifact $1.
 plugin_tracker_artifact	copy_submit_button	Copy
+
+plugin_tracker_artifact	formelement_artifact_link_copy	Artifact field links cannot be copied
 
 plugin_tracker_artifactlink	go_to_tracker	Go see this tracker
 plugin_tracker_artifactlink	manual_panel_desc	If you know the artifact id, feel free to enter it manually in the text field below. Use a comma to separate each ids if you have more than one.

@@ -1006,7 +1006,7 @@ plugin_tracker_artifact	formelement_artifactlink_title	Artefacts référencés p
 plugin_tracker_artifact	formelement_artifactlink_reverse_title	Artefacts qui référencent cet artefact
 plugin_tracker_artifact	formelement_artifactlink_display_reverse	Afficher les artefacts qui référencent cet artefact
 
-plugin_tracker_artifact	formelement_attachment_copy	Le champ des attachements ne peuvent être modifiés durant une copie d'un artefact.
+plugin_tracker_artifact	formelement_attachment_copy	Le champ de type "Fichiers à transmettre" ne peut être modifié durant une copie d'un artefact.
 
 plugin_tracker_artifact	unable_update	Impossible de mettre à jour l'artefact
 plugin_tracker_artifact	no_changes	Aucun changement pour l'artefact $1
@@ -1028,6 +1028,8 @@ plugin_tracker_artifact	submission_keeper_warning_msg	<p>Quelqu'un a modifié l'
 
 plugin_tracker_artifact	copy_mode_info	Vous copiez actuellement l'artefact $1.
 plugin_tracker_artifact	copy_submit_button	Copier
+
+plugin_tracker_artifact	formelement_artifact_link_copy	Les données du champ "liens entre artefacts" ne peuvent pas être copiées
 
 plugin_tracker_artifactlink	go_to_tracker	Aller voir cet outil de suivi
 plugin_tracker_artifactlink	manual_panel_desc	Si vous connaissez l'id de l'artefact, entrez-le manuellement dans le champs texte ci-dessous. Le champs attends une liste d'ids séparés par des virgules.
