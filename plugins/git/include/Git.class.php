@@ -196,6 +196,13 @@ class Git extends PluginController {
         if ($url->getParameters()) {
             parse_str($url->getParameters(), $_GET);
             parse_str($url->getParameters(), $_REQUEST);
+            $this->setNoHeaderIfNeeded();
+        }
+    }
+
+    private function setNoHeaderIfNeeded() {
+        if (isset($_GET['noheader']) && $_GET['noheader'] == 1) {
+            $this->request->set('noheader', '1');
         }
     }
 
