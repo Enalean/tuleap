@@ -21,6 +21,11 @@
 class Tracker_XMLExporter_ChangesetValueXMLExporterVisitor implements Tracker_Artifact_ChangesetValueVisitor {
 
     /**
+     * @var Tracker_XMLExporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter
+     */
+    private $perms_exporter;
+
+    /**
      * @var Tracker_XMLExporter_ChangesetValue_ChangesetValueUnknownXMLExporter
      */
     private $unknown_exporter;
@@ -62,6 +67,7 @@ class Tracker_XMLExporter_ChangesetValueXMLExporterVisitor implements Tracker_Ar
             Tracker_XMLExporter_ChangesetValue_ChangesetValueIntegerXMLExporter $integer_exporter,
             Tracker_XMLExporter_ChangesetValue_ChangesetValueStringXMLExporter $string_exporter,
             Tracker_XMLExporter_ChangesetValue_ChangesetValueTextXMLExporter $text_exporter,
+            Tracker_XMLExporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter $perms_exporter,
             Tracker_XMLExporter_ChangesetValue_ChangesetValueUnknownXMLExporter $unknown_exporter
     ) {
         $this->file_exporter    = $file_exporter;
@@ -71,6 +77,7 @@ class Tracker_XMLExporter_ChangesetValueXMLExporterVisitor implements Tracker_Ar
         $this->string_exporter  = $string_exporter;
         $this->text_exporter    = $text_exporter;
         $this->unknown_exporter = $unknown_exporter;
+        $this->perms_exporter   = $perms_exporter;
     }
 
     public function export(
@@ -112,7 +119,7 @@ class Tracker_XMLExporter_ChangesetValueXMLExporterVisitor implements Tracker_Ar
     }
 
     public function visitPermissionsOnArtifact(Tracker_Artifact_ChangesetValue_PermissionsOnArtifact $changeset_value) {
-        return $this->unknown_exporter;
+        return $this->perms_exporter;
     }
 
     public function visitString(Tracker_Artifact_ChangesetValue_String $changeset_value) {

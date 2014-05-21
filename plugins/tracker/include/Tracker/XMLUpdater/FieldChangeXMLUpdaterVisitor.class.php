@@ -21,6 +21,11 @@
 class Tracker_XMLUpdater_FieldChangeXMLUpdaterVisitor implements Tracker_FormElement_FieldVisitor {
 
     /**
+     * @var Tracker_XMLUpdater_FieldChange_FieldChangePermissionsOnArtifactXMLUpdater
+     */
+    private $perms_updater;
+
+    /**
      * @var Tracker_XMLUpdater_FieldChange_FieldChangeUnknownXMLUpdater
      */
     private $unknown_updater;
@@ -56,6 +61,7 @@ class Tracker_XMLUpdater_FieldChangeXMLUpdaterVisitor implements Tracker_FormEle
             Tracker_XMLUpdater_FieldChange_FieldChangeIntegerXMLUpdater $integer_updater,
             Tracker_XMLUpdater_FieldChange_FieldChangeTextXMLUpdater $text_updater,
             Tracker_XMLUpdater_FieldChange_FieldChangeStringXMLUpdater $string_updater,
+            Tracker_XMLUpdater_FieldChange_FieldChangePermissionsOnArtifactXMLUpdater $perms_updater,
             Tracker_XMLUpdater_FieldChange_FieldChangeUnknownXMLUpdater $unknown_updater
     ) {
         $this->date_updater    = $date_updater;
@@ -64,6 +70,7 @@ class Tracker_XMLUpdater_FieldChangeXMLUpdaterVisitor implements Tracker_FormEle
         $this->text_updater    = $text_updater;
         $this->string_updater  = $string_updater;
         $this->unknown_updater = $unknown_updater;
+        $this->perms_updater   = $perms_updater;
     }
 
     public function update(
@@ -101,7 +108,7 @@ class Tracker_XMLUpdater_FieldChangeXMLUpdaterVisitor implements Tracker_FormEle
     }
 
     public function visitPermissionsOnArtifact(Tracker_FormElement_Field_PermissionsOnArtifact $field) {
-        return $this->unknown_updater;
+        return $this->perms_updater;
     }
 
     public function visitString(Tracker_FormElement_Field_String $field) {
