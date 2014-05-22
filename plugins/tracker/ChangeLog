@@ -1,3 +1,6 @@
+Version 5.381 - Tuleap 7.1
+    * tasks #6829 - At the end, send email to requester with the stack trace
+
 Version 5.380 - Tuleap 7.1
     * tasks #6828 - Launch system event for migration
 
