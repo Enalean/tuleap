@@ -417,7 +417,7 @@ class TrackerFactory {
      *
      * @return bool true if all valid
      */
-    protected function validMandatoryInfoOnCreate($name, $description, $itemname, $group_id) {
+    public function validMandatoryInfoOnCreate($name, $description, $itemname, $group_id) {
         if (!$name || !$description || !$itemname || trim($name) == "" || trim($description) == "" || trim($itemname) == ""  ) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type','name_requ'));
             return false;

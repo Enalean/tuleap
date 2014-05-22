@@ -47,6 +47,9 @@ class trackerPlugin extends Plugin {
         $this->_addHook('permission_user_allowed_to_change',   'permission_user_allowed_to_change', false);
         $this->_addHook('permissions_for_ugroup',              'permissions_for_ugroup',            false);
 
+        $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES,         'system_event_get_types',            false);
+        $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS,         'getSystemEventClass',               false);
+
         $this->_addHook('url_verification_instance',           'url_verification_instance',         false);
 
         $this->_addHook('widget_instance',                     'widget_instance',                   false);
@@ -100,6 +103,26 @@ class trackerPlugin extends Plugin {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/print.css" media="print" />';
             echo '<!--[if lte IE 8]><link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/ieStyle.css" /><![endif]-->';
+        }
+    }
+
+    public function system_event_get_types($params) {
+        $params['types'] = array_merge($params['types'], $this->getTrackerSystemEventManager()->getTypes());
+    }
+
+    /**
+     *This callback make SystemEvent manager knows about Tracker plugin System Events
+     */
+    public function getSystemEventClass($params) {
+        switch($params['type']) {
+            case SystemEvent_TRACKER_V3_MIGRATION::NAME:
+                $params['class'] = 'SystemEvent_TRACKER_V3_MIGRATION';
+                $params['dependencies'] = array(
+                    $this->getMigrationManager(),
+                );
+                break;
+            default:
+                break;
         }
     }
 
@@ -717,6 +740,38 @@ class trackerPlugin extends Plugin {
      private function buildRightVersionOfMilestonesBurndownResource($version) {
         $class_with_right_namespace = '\\Tuleap\\Tracker\\REST\\'.$version.'\\MilestonesBurndownResource';
         return new $class_with_right_namespace;
+    }
+
+    private function getTrackerSystemEventManager() {
+        return new Tracker_SystemEventManager($this->getSystemEventManager());
+    }
+
+    private function getSystemEventManager() {
+        return SystemEventManager::instance();
+    }
+
+    private function getMigrationManager() {
+        return new Tracker_Migration_MigrationManager($this->getTrackerSystemEventManager(), $this->getTrackerFactory(), $this->getArtifactFactory(), $this->getTrackerFormElementFactory(), $this->getUserManager(), $this->getProjectManager());
+    }
+
+    private function getProjectManager() {
+        return ProjectManager::instance();
+    }
+
+    private function getTrackerFactory() {
+        return TrackerFactory::instance();
+    }
+
+    private function getUserManager() {
+        return UserManager::instance();
+    }
+
+    private function getTrackerFormElementFactory() {
+        return Tracker_FormElementFactory::instance();
+    }
+
+    private function getArtifactFactory() {
+        return Tracker_ArtifactFactory::instance();
     }
 }
 
