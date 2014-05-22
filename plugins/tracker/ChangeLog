@@ -1,3 +1,6 @@
+Version 5.380 - Tuleap 7.1
+    * tasks #6828 - Launch system event for migration
+
 Version 5.379 - Tuleap 7.1
     * request #6907: Cannot filter by milestone if there is no other tracker field in the filter
 
