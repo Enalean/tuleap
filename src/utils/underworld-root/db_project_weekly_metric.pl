@@ -56,59 +56,6 @@ $rel = $dbh->prepare($sql);
 $rel->execute();
 
 
-#project manager tasks
-$sql="INSERT INTO project_counts_weekly_tmp 
-SELECT project_group_list.group_id,'tasks',log(4*count(project_task.project_task_id)) AS count 
-FROM project_task,project_group_list 
-WHERE project_task.group_project_id=project_group_list.group_project_id 
-AND end_date > '$last_week'
-AND end_date < '$this_week' 
-GROUP BY group_id";
-
-#print "\n\n".$sql;
-
-$rel = $dbh->prepare($sql);
-$rel->execute();
-
-
-#bugs
-$sql="INSERT INTO project_counts_weekly_tmp 
-SELECT group_id,'bugs',log(3*count(*)) AS count 
-FROM bug 
-WHERE date > '$last_week'
-GROUP BY group_id";
-
-#print "\n\n".$sql;
-
-$rel = $dbh->prepare($sql);
-$rel->execute();
-
-
-#patches
-$sql="INSERT INTO project_counts_weekly_tmp 
-SELECT group_id,'patches',log(10*count(*)) AS count 
-FROM patch 
-WHERE open_date > '$last_week' 
-GROUP BY group_id";
-
-#print "\n\n".$sql;
-
-$rel = $dbh->prepare($sql);
-$rel->execute();
-
-
-#support
-$sql="INSERT INTO project_counts_weekly_tmp 
-SELECT group_id,'support',log(5*count(*)) AS count 
-FROM support 
-WHERE open_date > '$last_week'
-GROUP BY group_id";
-
-#print "\n\n".$sql;
-
-$rel = $dbh->prepare($sql);
-$rel->execute();
-
 # artifacts in trackers
 $sql="INSERT INTO project_counts_weekly_tmp 
 SELECT group_id,'artifacts',log(5*sum(artifact_id)) as count 
