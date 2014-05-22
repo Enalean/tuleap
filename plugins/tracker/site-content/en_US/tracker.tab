@@ -1264,8 +1264,8 @@ plugin_tracker_admin_import	aid_does_not_exist	Artifact Id $1 does not exist
 plugin_tracker_admin_import	field_not_taken_account	The field "$1" will not be taken into account.
 plugin_tracker_admin_import	nb_created_import	$1 Artifact(s) created
 plugin_tracker_admin_import	nb_updated_import	$1 Artifact(s) updated
-plugin_tracker_admin_import	date_format_help	Expected date format is <strong>$1</strong>. <a href="/account/preferences.php">Change import/export date format</a>
-plugin_tracker_admin_import	separator_not_found	CSV separator not found ($1). Either you want to import only one field, or you're using the wrong separator.<br />If so, you can <a href="/account/preferences.php">change the CSV import/export separator</a>
+plugin_tracker_admin_import	date_format_help	Expected date format is <strong>$1</strong>. <a href="/account/">Change import/export date format</a>
+plugin_tracker_admin_import	separator_not_found	CSV separator not found ($1). Either you want to import only one field, or you're using the wrong separator.<br />If so, you can <a href="/account/">change the CSV import/export separator</a>
 
 plugin_tracker_admin_hierarchy	edit_children_title	Edit children of $1
 plugin_tracker_admin_hierarchy	current_full_hierarchy_title	Current Full Hierarchy

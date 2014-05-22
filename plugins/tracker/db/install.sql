@@ -776,7 +776,6 @@ INSERT INTO user SET \
         people_view_skills = 0, \
         people_resume = '', \
         timezone = 'GMT', \
-        fontsize = 0, \
         theme = '', \
         language_id = 'en_US', \
         last_pwd_update = '0';

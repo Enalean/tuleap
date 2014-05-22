@@ -18,11 +18,6 @@ $csv_separators = array("comma", "semicolon", "tab");
 // So we let the user define his prefered date format
 define("DEFAULT_CSV_DATEFORMAT", "month_day_year");
 
-define("FONT_SIZE_BROWSER", 0);
-define("FONT_SIZE_SMALL", 1);
-define("FONT_SIZE_NORMAL", 2);
-define("FONT_SIZE_LARGE", 3);
-
 // array of allowed date formats for CSV export
 $csv_dateformats = array("month_day_year", "day_month_year");
 
@@ -979,34 +974,13 @@ function util_is_valid_filename ($file) {
     }
 }
 
-// Return the string value of fontsize
-function getFontsizeName($value) {
-    switch ( $value ) {
-    case 1:
-        // Small
-        return "_small";
-        break;
-    case 2:
-        // Normal
-        return "_normal";
-        break;
-    case 3:
-        // Large
-        return "_large";
-        break;
-    default:
-        return "_normal";
-        break;
-    }    
-}
-
 // this function get the css file for the theme
-// Requirement: $sys_user_theme and $sys_user_font_size are already
+// Requirement: $sys_user_theme is already
 // set (done by theme.php in pre.php)
 //
 function util_get_css_theme(){
 
-    $path = $GLOBALS['sys_user_theme'].getFontsizeName($GLOBALS['sys_user_font_size']).".css";
+    $path = "style.css";
 
     if ($GLOBALS['sys_is_theme_custom'])
         $path = '/custom/'.$GLOBALS['sys_user_theme'].'/css/'.$path;

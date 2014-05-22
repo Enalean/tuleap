@@ -1,0 +1,166 @@
+<h2>{{ preference_title }}</h2>
+
+<form action="updateprefs.php" method="post" class="form-horizontal acco unt-form">
+    {{{ csrf_input_html }}}
+
+        <fieldset id="account-email-settings">
+            <h3><i class="icon-envelope"></i> {{ email_settings }}</h3>
+            <label class="checkbox">
+                <input type="checkbox"
+                     name="form_mail_site"
+                     value="1"
+                     {{# user_has_mail_site_updates }} checked="checked" {{/ user_has_mail_site_updates }}
+                />
+                {{{ site_update_label }}}
+            </label>
+
+            <label class="checkbox">
+                <input type="checkbox"
+                     name="form_mail_va" value="1"
+                     {{# user_has_mail_va }} checked="checked" {{/ user_has_mail_va }}
+                />
+                {{{ community_mail_label }}}
+            </label>
+
+            <div class="control-group user-account-group">
+                <label class="control-label user-account-label">{{ tracker_mail_format_label }}</label>
+                <div class="controls">
+                    <select name="{{ tracker_mail_format_select_name }}" class="select-user-preferences">
+                    {{# tracker_formats }}
+                        <option value="{{ format }}" {{# is_selected }} selected="selected" {{/ is_selected }}>
+                            {{ format }}
+                        </option>
+                    {{/ tracker_formats }}
+                    </select>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <h3><i class="icon-user"></i> {{ session_label }}</h3>
+            <label class="checkbox">
+                <input type="checkbox"
+                       name="form_sticky_login"
+                       value="1"
+                       {{# user_has_sticky_login }} checked="checked" {{/ user_has_sticky_login }}
+                />
+                {{{ remember_me }}}
+            </label>
+        </fieldset>
+
+        <fieldset>
+            <h3><i class="icon-desktop"></i> {{ appearance_title }}</h3>
+            <div class="control-group user-account-group">
+                <label class="control-label user-account-label">{{ theme_label }}</label>
+                <div class="controls">
+                    <select name="user_theme" class="select-user-preferences">
+                            {{# all_themes }}
+                            <option value="{{theme_name}}" {{# is_selected }} selected {{/ is_selected }}>
+                                {{theme_name}} {{# is_default }} ({{ default_theme }}) {{/ is_default}}
+                            </option>
+                            {{/ all_themes }}
+                        </select>
+                </div>
+            </div>
+            <div class="control-group user-account-group">
+                <label class="control-label user-account-label">{{ language_label }}</label>
+                <div class="controls">
+                    <select name="language_id" class="select-user-preferences">
+                    {{# languages_html }}
+                        <option value="{{{ code }}}"
+                                {{# is_selected}} selected="selected" {{/ is_selected }}
+                        > {{{ lang }}}
+                        </option>
+                    {{/ languages_html }}
+                    </select>
+                </div>
+            </div>
+            <div class="control-group user-account-group">
+                <label class="control-label user-account-label">{{ username_display_label }}</label>
+                <div class="controls">
+                    <select name="username_display" class="select-user-preferences">
+                        {{# user_helper_preferences }}
+                            <option value="{{ preference_name }}"
+                                    {{# is_selected }} selected="selected" {{/ is_selected }}
+                            > {{ preference_label }}
+                            </option>
+                        {{/ user_helper_preferences }}
+                    </select>
+                </div>
+            </div>
+
+            {{# plugins_prefs }}
+                <div class="control-group user-account-group">
+                    <label class="control-label user-account-label">{{ name }}</label>
+                    <div class="controls">
+                        {{{ value }}}
+                    </div>
+                </div>
+            {{/ plugins_prefs }}
+        </fieldset>
+
+        <fieldset>
+            <h3><i class="icon-exchange"></i> {{ import_export_title }}</h3>
+            <div class="control-group user-account-group">
+                <label class="control-label user-account-label">{{{ csv_separator_label }}}</label>
+                <div class="controls">
+                    <select name="user-csv-separator" class="select-user-preferences">
+                        {{# all_csv_separator }}
+                            <option value="{{ separator_name }}"
+                                    {{# is_selected }} selected="selected" {{/ is_selected }}
+                            > {{ separator_label }}
+                            </option>
+                        {{/ all_csv_separator }}
+                    </select>
+
+                    <a href="javascript:help_window('/help/show_help.php?section=citizen.html#account-maintenance')">
+                        <i class="icon-question-sign help-button"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="control-group user-account-group">
+                <label class="control-label user-account-label">{{{ csv_dateformat_label }}}</label>
+                <div class="controls">
+                    <select name="user_csv_dateformat" class="select-user-preferences">
+                        {{# all_csv_dateformat }}
+                            <option value="{{ dateformat_name }}"
+                                    {{# is_selected }} selected="selected" {{/ is_selected }}
+                            > {{ dateformat_label }}
+                            </option>
+                        {{/ all_csv_dateformat }}
+                    </select>
+
+                    <a href="javascript:help_window('/help/show_help.php?section=citizen.html#account-maintenance')">
+                        <i class="icon-question-sign help-button"></i>
+                    </a>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <h3><i class="icon-beaker"></i> {{ lab_features_title }}</h3>
+            <p>{{ lab_features_description }}</p>
+            <p>
+                <label class="checkbox">
+                    <input type="checkbox"
+                           name="form_lab_features"
+                           id="form_lab_features"
+                           value="1"
+                           {{# user_uses_lab_features }} checked="checked" {{/ user_uses_lab_features }}
+                    />
+                    {{{ lab_features_checkbox_label }}}
+                </label>
+            </p>
+        </fieldset>
+
+    <hr/>
+    <div class="button-centered">
+        <input type="submit"
+               name="Submit"
+               class="btn btn-primary"
+               value="{{ preference_save_button }}"
+        >
+    </div>
+</div>
+</form>

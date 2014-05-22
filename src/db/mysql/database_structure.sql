@@ -2001,7 +2001,6 @@ CREATE TABLE user (
   people_view_skills int(11) NOT NULL default '0',
   people_resume text NOT NULL,
   timezone varchar(64) default 'GMT',
-  fontsize INT UNSIGNED NOT NULL DEFAULT 0,
   theme varchar(50),
   language_id VARCHAR( 17 ) NOT NULL DEFAULT 'en_US',
   last_pwd_update int(11) NOT NULL default '0',

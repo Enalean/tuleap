@@ -1315,10 +1315,6 @@ class Layout extends Response {
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/style.css" />';
         $this->displayFontAwesomeStylesheetElements();
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/print.css" media="print" />';
-        $css = $GLOBALS['sys_user_theme'] . $this->getFontSizeName($GLOBALS['sys_user_font_size']) .'.css';
-        if (file_exists($GLOBALS['codendi_dir'].'/src/www'.$this->getStylesheetTheme($css))) {
-            echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme($css) .'" />';
-        }
         echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('style.css') .'" />';
         echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('print.css') .'" media="print" />';
         echo '<link rel="stylesheet" type="text/css" href="/scripts/bootstrap/bootstrap-select/bootstrap-select.css" />';
@@ -1329,10 +1325,6 @@ class Layout extends Response {
     protected function displayFontAwesomeStylesheetElements() {
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/font-awesome.css" />';
         echo '<!--[if IE 7]><link rel="stylesheet" href="/themes/common/css/font-awesome-ie7.css"><![endif]-->';
-    }
-
-    protected function getFontSizeName($p) {
-        return getFontsizeName($GLOBALS['sys_user_font_size']);
     }
 
     /**
@@ -1864,16 +1856,12 @@ class Layout extends Response {
                 array(
                     'link'  => '/account/',
                     'label' => $Language->getText('my_index','account_maintenance'),
-                ),
-                array(
-                    'link'  => '/account/preferences.php',
-                    'label' => $Language->getText('account_options','preferences')
-                ),
+                )
             );
             echo '<hr SIZE="1" NoShade>';
             foreach($tabs as $tab) {
                 $this->tab_entry($tab['link'],'',$tab['label'],strstr(getStringFromServer('REQUEST_URI'),'/my/') ? 0 :
-                      (strstr(getStringFromServer('REQUEST_URI'),'/account/preferences.php') ? 2 : 1),'');
+                      (strstr(getStringFromServer('REQUEST_URI'),'/account') ? 2 : 1),'');
             }
             echo '<hr SIZE="1" NoShade>';
         }

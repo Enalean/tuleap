@@ -1,0 +1,23 @@
+<div id="ssh-keys-modal"
+     class="modal hide fade"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="myModalLabel"
+     aria-hidden="true"
+>
+    <div class="modal-header">
+        <h3> {{ add_keys_modal_title }}</h3>
+    </div>
+
+    <form action="editsshkeys.php" method="post">
+        <div class="modal-body">
+            <textarea rows="10" cols="60" name="form_authorized_keys"></textarea>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true"> {{ btn_close_label }} </button>
+            <input type="submit" class="btn btn-primary" name="add-keys" value="{{ btn_save_keys_label }}">
+        </div>
+    </form>
+
+</div>

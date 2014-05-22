@@ -9,7 +9,7 @@
 require_once 'pre.php';
 require_once 'account.php';
 
-session_require(array('isloggedin'=>1));
+session_require(array('isloggedin' => 1));
 
 $user_manager = UserManager::instance();
 $user         = $user_manager->getCurrentUser();
@@ -17,39 +17,18 @@ $user         = $user_manager->getCurrentUser();
 $request = HTTPRequest::instance();
 
 if ($request->isPost()
-    && $request->exist('Submit')
+    && $request->exist('delete-keys')
+    && $request->exist('ssh_key_selected')
+    && is_array($request->get('ssh_key_selected'))) {
+
+    $user_manager->deleteSSHKeys($user, $request->get('ssh_key_selected'));
+}
+
+if ($request->isPost()
+    && $request->exist('add-keys')
     && $request->exist('form_authorized_keys')) {
 
-    $user_manager->updateUserSSHKeys($user, $request->get('form_authorized_keys'));
-
-    $GLOBALS['Response']->redirect('/account');
+    $user_manager->addSSHKeys($user, $request->get('form_authorized_keys'));
 }
 
-$HTML->header(array('title'=>$Language->getText('account_editsshkeys', 'title')));
-
-?>
-
-<h2><?php echo $Language->getText('account_editsshkeys', 'title').' '.help_button('other-services.html#shell-account'); ?></h2>
-<?php
-        echo $Language->getText('account_editsshkeys', 'message');
-?>
-
-<form action="editsshkeys.php" method="post">
-<p><?php echo $Language->getText('account_editsshkeys', 'keys'); ?>
-<br>
-<textarea rows="10" cols="60" name="form_authorized_keys">
-<?php
-$purifier = Codendi_HTMLPurifier::instance();
-foreach ($user->getAuthorizedKeys(true) as $key) {
-    echo $purifier->purify($key).PHP_EOL;
-}
-?>
-</textarea>
-<p><input type="submit" name="Submit" value="<?php echo $Language->getText('global', 'btn_submit'); ?>">
-</form>
-
-<?php
-
-$HTML->footer(array());
-
-?>
+$GLOBALS['Response']->redirect('/account/');

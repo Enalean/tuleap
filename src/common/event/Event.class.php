@@ -249,17 +249,6 @@ class Event {
     const COMPUTE_MD5SUM = 'compute_md5sum';
     
     /**
-     * List of lab features
-     * 
-     * Parameters:
-     *   'lab_features' => array of lab features
-     * 
-     * Expected results
-     *   array of array('title' => ..., 'description' => ..., 'cssclass' => ...)
-     */
-    const LAB_FEATURES_DEFINITION_LIST = 'lab_features_definition_list';
-    
-    /**
      * Get the additionnal types of system events
      *
      * Parameters:

@@ -30,12 +30,10 @@ class LayoutTest extends UnitTestCase {
 
     function setUp() {
         $GLOBALS['sys_user_theme']     = 'Stuff';
-        $GLOBALS['sys_user_font_size'] = 2;
     }
 
     function tearDown() {
         unset($GLOBALS['sys_user_theme']);
-        unset($GLOBALS['sys_user_font_size']);
     }
 
     function testAddStyleSheet() {
@@ -45,7 +43,7 @@ class LayoutTest extends UnitTestCase {
     }
 
     function testAddedStyleSheetShouldBeRenderedInPageHeaders() {
-        $l = TestHelper::getPartialMock('Layout', array('getEventManager', 'getFontSizeName', 'getStylesheetTheme'));
+        $l = TestHelper::getPartialMock('Layout', array('getEventManager', 'getStylesheetTheme'));
         $l->setReturnValue('getEventManager', new MockEventManager());
 
         $css = '/viewvc-static/styles.css';

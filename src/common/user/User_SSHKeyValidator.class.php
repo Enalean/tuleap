@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,23 +24,27 @@ require_once 'UserManager.class.php';
 class User_SSHKeyValidator {
 
     /**
-     * Ensure keys submitted by user through web interface are valid SSH keys
+     * Ensure all the keys for a user are valid SSH keys
      *
-     * @param String $keys
+     * @param array $all_keys
      *
      * @return Array of String
      */
-    public function filterValidKeys($keys) {
-        $all_keys   = array_map('trim', array_filter(preg_split("%(\r\n|\n)%", $keys)));
-        return $this->validateAllKeys($all_keys);
-    }
 
-    private function validateAllKeys(array $all_keys) {
+    public function validateAllKeys(array $all_keys) {
         $valid_keys = array();
         $key_file   = tempnam(Config::get('codendi_cache_dir'), 'ssh_key_');
         foreach ($all_keys as $key) {
+            $key = trim($key);
+
             if ($this->isValid($key_file, $key)) {
-                $valid_keys[] = $key;
+
+                if (in_array($key, $valid_keys)) {
+                    $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('account_editsshkeys', 'key_already_added', array($key)));
+                } else {
+                    $valid_keys[] = $key;
+                }
+
             } else {
                 $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('account_editsshkeys', 'invalid_key', array($key)));
             }

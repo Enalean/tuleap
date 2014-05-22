@@ -588,8 +588,17 @@ class IMPlugin extends Plugin {
 	 * to display an user's jabber identification JID in web interface developper profil
 	 * @param array $eParams:contains the data which comes from the envent listened.
 	 */
-	function im_process_display_user_jabber_id_in_account ($eParams) {
-		$this->im_process_display_jabber_id ($eParams);
+	function im_process_display_user_jabber_id_in_account (array $params) {
+            $im_object  = $this->_get_im_object();
+            $jabberConf = $im_object->get_server_conf();
+            $value      = $params['user']->getName().'@'.$jabberConf['server_dns'];
+            if ( ! $params['user']->getPreference('plugin_im_hide_users_presence')) {
+                $value = $this->_get_presence_status ($value) .' ';
+            }
+            $params['user_info'][] = new User_ImmutableInfoPresenter(
+                $GLOBALS['Language']->getText('plugin_im','im_user_login'),
+                $value
+            );
 	}
 	
 

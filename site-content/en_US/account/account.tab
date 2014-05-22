@@ -16,40 +16,36 @@
 account_options	title		Account Maintenance
 account_options	welcome		Welcome
 account_options	welcome_intro	You can view or change all of your account features from here. You may also wish to view your profile.
-account_options	member_since	Member since
+account_options	member_since	Member since:
 account_options	view_developer_profile	View My Developer Profile
 account_options	edit_skills_profile	Edit My Skills Profile
-account_options	user_id	User Id
+account_options	user_id	User Id:
 account_options	login_name	$1 Name
 account_options	ldap_name	LDAP Login
 account_options	change_password	Change Password
 account_options	real_name	Real Name
 account_options	change_real_name	Change Real Name
-account_options	language	Language
-account_options	timezone	Timezone
+account_options	language	Language:
+account_options	timezone	Timezone:
 account_options	change_timezone	Change Timezone
-account_options	email_address		Email Addr
+account_options	email_address		Email Addr:
 account_options	change_email_address	Change Email Addr
 account_options	preferences	Preferences
-account_options	font_size	Font Size
-account_options	font_size_browser	Browser Default
-account_options	font_size_small	Small
-account_options	font_size_normal	Normal
-account_options	font_size_large	Large
-account_options	theme	Theme/Color Scheme
+account_options	theme	Theme/Color Scheme:
 account_options	shell_account_title	Shell Account Information
 account_options	shell_box	Shell Box
-account_options	shell_shared_keys	SSH Shared Keys
-account_options	shell_edit_keys	Edit Keys
-account_options	remember_me	"Remember me" <u><span style="color:#666">($1 remembers your login/password. If you change this preference make sure to logout and login again)</span></u>
-account_options	csv_separator	CSV separator
+account_options	shell_shared_keys	SSH Shared Keys:
+account_options	shell_add_keys	Add Keys
+account_options	shell_delete_ssh_keys	Delete selected keys
+account_options	remember_me	"Remember me" <span style="color:#666">($1 remembers your login/password. If you change this preference make sure to logout and login again)</span>
+account_options	csv_separator	CSV separator:
 account_options	comma	comma
 account_options	semicolon	semicolon
 account_options	tab	tab
-account_options	username_display	Username Display
-account_options	codendi_login_and_name	Login name (Real Name)
-account_options	codendi_name_and_login	Real Name (login name)
-account_options	codendi_login	Login Name
+account_options	username_display	Username Display:
+account_options	tuleap_login_and_name	Login name (Real Name)
+account_options	tuleap_name_and_login	Real Name (login name)
+account_options	tuleap_login	Login Name
 account_options	realname	Real Name
 account_options	auth_attempt_title	Authentication details
 account_options	auth_attempt_last_success	Last successful login:
@@ -60,22 +56,20 @@ account_options	auth_attempt_sessions	Open sessions:
 
 #
 #-----------------------------------------------
-# Script: SF/www/account/preferences.php
 #
 account_preferences	email_settings	Email settings
 account_preferences	session	Session
 account_preferences	appearance	Appearance
 account_preferences	import_export	Import/export
-account_preferences	csv_dateformat	CSV Date format
+account_preferences	csv_dateformat	CSV Date format:
 account_preferences	month_day_year	month/day/year
 account_preferences	day_month_year	day/month/year
 account_preferences	lab_features_title	$1 Lab
-account_preferences	lab_features_description	$1 experimental features in preview mode for bleeding edge users. Only use it if you know what you are doing. The lab features are listed below.
+account_preferences	lab_features_description	$1 experimental features in preview mode for bleeding edge users. Only use it if you know what you are doing.
 account_preferences	lab_features_cblabel	Enable $1 Lab
 account_preferences	tracker_mail_format	Tracker emails format:
 account_preferences	error_form_mail_site	Verify site updates value
 account_preferences	error_form_mail_va	Verify additional community mailings value
-account_preferences	error_user_fontsize	Verify Font size value
 account_preferences	error_user_theme	Verify theme value
 account_preferences	error_form_sticky_login	Verify remember me value
 account_preferences	error_language_id	Verify language value
@@ -83,6 +77,7 @@ account_preferences	error_user_csv_separator	Verify CSV separator value
 account_preferences	error_user_csv_dateformat	Verify CSV date format value
 account_preferences	error_username_display	Verify username display value
 account_preferences	error_user_tracker_mailformat	Verify emails format value
+account_preferences	save_preferences	Save preferences
 #
 #-----------------------------------------------
 # Script: SF/www/account/change_email.php
@@ -153,11 +148,12 @@ account_deleted	message	Your account has been deleted. If you have questions reg
 #-----------------------------------------------
 # Script: SF/www/account/editsshkeys.php
 #
-account_editsshkeys	title	Change Authorized SSH Keys
-account_editsshkeys	message	To avoid having to type your password every time for your SSH developer account, you may upload your public key(s) here and they will be placed on the server in your '~/.ssh/authorized_keys' file.<P>To generate a public key, run the program 'ssh-keygen' (or ssh-keygen1) on your desktop machine.Then look at the file '~/.ssh/identity.pub' where the generated public key has been stored. Read the ssh documentation for further information on sharing keys.
+account_editsshkeys	add_keys_title	Add Authorized SSH Keys
 account_editsshkeys	keys	Authorized keys:<BR><I>Important: Make sure there are no line breaks except between keys. After submitting, verify that the number of keys in your file is what you expected.</I>
 account_editsshkeys	invalid_key	Skip invalid key $1
+account_editsshkeys	key_already_added	Key $1 already existing for user
 account_editsshkeys	update_filesystem	SSH key(s) updated in database, will be propagated on filesystem in a few minutes, please be patient.
+account_editsshkeys	btn_save_keys	Save keys
 #
 #-----------------------------------------------
 # Script: SF/www/account/first.php

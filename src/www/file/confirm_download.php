@@ -28,33 +28,6 @@ if($request->valid($vGroupId) && $request->valid($vFileId)) {
     exit_missing_param();
   }
 
-    //determine font for this platform
-    if (browser_is_windows() && browser_is_ie()) {
-    
-            //ie needs smaller fonts
-            $font_size = 'smaller';
-            $font_size_normal = 'small';
-    
-    } else if (browser_is_windows()) {
-    
-            //netscape on wintel
-            $font_size = 'small';
-            $font_size_normal = 'medium';
-    
-    } else if (browser_is_mac()){
-    
-            //mac users need bigger fonts
-            $font_size = 'medium';
-            $font_size_normal = 'medium';
-    
-    } else {
-    
-            //linux and other users
-            $font_size = 'small';
-            $font_size_normal = 'medium';
-    
-    }
-
     if (!$request->existAndNonEmpty('filename')) {
         # Get it from DB
         $res =& $frsff->getFRSFileFromDb($file_id);

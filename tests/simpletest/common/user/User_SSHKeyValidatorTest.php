@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,9 +19,8 @@
 require_once 'common/user/User_SSHKeyValidator.class.php';
 
 class User_SSHKeyValidatorTest extends TuleapTestCase {
-    /**
-     * @var PFUser
-     */
+
+    /** @var PFUser*/
     protected $user;
 
     public function setUp() {
@@ -39,62 +38,97 @@ class User_SSHKeyValidator_KeyValidationTest extends User_SSHKeyValidatorTest {
 
     public function itDoesntRaiseAnErrorWhenTheKeyIsValid() {
         stub($GLOBALS['Response'])->addFeedback()->never();
-        $this->assertEqual(array($this->key1), $this->validator->filterValidKeys($this->key1));
+
+        $this->assertEqual(
+            array($this->key1),
+            $this->validator->validateAllKeys(array($this->key1))
+        );
     }
 
     public function itDoesntRaiseAnErrorWhenAllTheKeysAreValid() {
         stub($GLOBALS['Response'])->addFeedback()->never();
-        $this->assertEqual(array($this->key1, $this->key2), $this->validator->filterValidKeys($this->key1."\n".$this->key2));
+
+        $this->assertEqual(
+            array($this->key1, $this->key2),
+            $this->validator->validateAllKeys(array(
+                $this->key1,
+                $this->key2
+            ))
+        );
     }
 
     public function itRaisesAWarningWhenTheKeyIsInvalid() {
-        $keys = "bla";
+        $keys = array("bla");
+
         stub($GLOBALS['Response'])->addFeedback('warning', '*')->once();
-        $this->assertCount($this->validator->filterValidKeys($keys), 0);
+
+        $this->assertCount($this->validator->validateAllKeys($keys), 0);
     }
 
     public function itRaisesAWarningWhenTheKeyIsInvalidAmongValidKeys() {
-        $keys = $this->key1."\nbla\n".$this->key2;
+        $keys = array(
+            $this->key1,
+            "bla",
+            $this->key2
+        );
+
         stub($GLOBALS['Response'])->addFeedback('warning', '*')->once();
-        $this->assertEqual(array($this->key1, $this->key2), $this->validator->filterValidKeys($keys));
+
+        $this->assertEqual(array($this->key1, $this->key2), $this->validator->validateAllKeys($keys));
+    }
+
+    public function itRaisesAWarningWhenTheSameKeyIsAddedTwice() {
+        $keys = array(
+            $this->key1,
+            $this->key1
+        );
+
+        stub($GLOBALS['Response'])->addFeedback('warning', '*')->once();
+
+        $this->assertCount($this->validator->validateAllKeys($keys), 1);
     }
 }
 
 class User_SSHKeyValidator_InputManagementTest extends User_SSHKeyValidatorTest {
 
     public function itUpdatesWithOneKey() {
-        $keys = $this->validator->filterValidKeys($this->key1);
+        $keys = $this->validator->validateAllKeys(array($this->key1));
+
         $this->assertCount($keys, 1);
         $this->assertEqual($this->key1, $keys[0]);
     }
 
-    public function itUpdatesWithTwoKeysAndUnixSeparator() {
-        $keys = $this->validator->filterValidKeys($this->key1."\n".$this->key2);
-        $this->assertCount($keys, 2);
-        $this->assertEqual($this->key1, $keys[0]);
-        $this->assertEqual($this->key2, $keys[1]);
-    }
+    public function itUpdatesWithTwoKeys() {
+        $keys = $this->validator->validateAllKeys(array(
+            $this->key1,
+            $this->key2
+        ));
 
-    public function itUpdatesWithTwoKeysAndWindowsSeparator() {
-        $keys = $this->validator->filterValidKeys($this->key1."\r\n".$this->key2);
         $this->assertCount($keys, 2);
         $this->assertEqual($this->key1, $keys[0]);
         $this->assertEqual($this->key2, $keys[1]);
     }
 
     public function itUpdatesWithAnExtraSpaceAfterFirstKey() {
-        $keys = $this->validator->filterValidKeys($this->key1." \n".$this->key2);
+        $keys = $this->validator->validateAllKeys(array(
+            $this->key1." ",
+            $this->key2
+        ));
+
         $this->assertCount($keys, 2);
         $this->assertEqual($this->key1, $keys[0]);
         $this->assertEqual($this->key2, $keys[1]);
     }
 
     public function itUpdatesWithAnEmptyKey() {
-        $keys = $this->validator->filterValidKeys($this->key1."\n\n".$this->key2);
+        $keys = $this->validator->validateAllKeys(array(
+            $this->key1,
+            '',
+            $this->key2
+        ));
+
         $this->assertCount($keys, 2);
         $this->assertEqual($this->key1, $keys[0]);
         $this->assertEqual($this->key2, $keys[1]);
     }
 }
-
-?>
