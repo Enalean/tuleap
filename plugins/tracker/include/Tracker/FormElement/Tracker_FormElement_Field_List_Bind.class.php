@@ -401,6 +401,11 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
     public abstract function getBindValues($bindvalue_ids = null);
 
     /**
+     * @return string
+     */
+    public abstract function getType();
+
+    /**
      * Get the html to select a default value
      *
      * @return string html

@@ -183,6 +183,11 @@ class Tracker_FormElement_Field_List_Bind4Tests extends Tracker_FormElement_Fiel
     public static function fetchAdminCreateForm($field) {
 
     }
+
+    public function getType() {
+
+    }
+
 }
 
 ?>

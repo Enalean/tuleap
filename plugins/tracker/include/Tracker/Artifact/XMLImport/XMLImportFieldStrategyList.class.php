@@ -20,7 +20,9 @@
 
 class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Artifact_XMLImport_XMLImportFieldStrategyAlphanumeric {
 
-    const BIND_STATIC = 'static';
+    const BIND_STATIC  = 'static';
+    const BIND_UGROUPS = 'ugroups';
+    const FORMAT_ID    = 'id';
 
     /** @var Tracker_FormElement_Field_List_Bind_Static_ValueDao */
     private $static_value_dao;
@@ -50,9 +52,11 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Arti
 
         if ($bind === self::BIND_STATIC) {
             foreach ($field_change as $value) {
-                $result = $this->static_value_dao->searchValueByLabel($field->getId(), (string) $value);
-                $row    = $result->getRow();
-                $data[] = (int) $row['id'];
+                $data[] = $this->getStaticListDataValue($field, $value);
+            }
+        } elseif ($bind === self::BIND_UGROUPS) {
+            foreach ($field_change as $value) {
+                $data[] = $value;
             }
         } else {
             foreach ($field_change as $value) {
@@ -62,5 +66,16 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Arti
         }
 
         return $data;
+    }
+
+    private function getStaticListDataValue(Tracker_FormElement_Field $field, $value) {
+        if (isset($value['format']) && (string) $value['format'] === self::FORMAT_ID){
+            return (int) $value;
+        }
+
+        $result = $this->static_value_dao->searchValueByLabel($field->getId(), (string) $value);
+        $row    = $result->getRow();
+        return (int) $row['id'];
+
     }
 }

@@ -50,6 +50,7 @@ class Tracker_XMLExporter_ChangesetValueXMLExporterVisitorTest extends TuleapTes
             mock('Tracker_XMLExporter_ChangesetValue_ChangesetValueStringXMLExporter'),
             mock('Tracker_XMLExporter_ChangesetValue_ChangesetValueTextXMLExporter'),
             mock('Tracker_XMLExporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter'),
+            mock('Tracker_XMLExporter_ChangesetValue_ChangesetValueListXMLExporter'),
             mock('Tracker_XMLExporter_ChangesetValue_ChangesetValueUnknownXMLExporter')
         );
 

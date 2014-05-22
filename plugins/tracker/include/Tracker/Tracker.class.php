@@ -3199,6 +3199,7 @@ EOS;
             new Tracker_XMLExporter_ChangesetValue_ChangesetValueStringXMLExporter(),
             new Tracker_XMLExporter_ChangesetValue_ChangesetValueTextXMLExporter(),
             new Tracker_XMLExporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter(),
+            new Tracker_XMLExporter_ChangesetValue_ChangesetValueListXMLExporter(),
             new Tracker_XMLExporter_ChangesetValue_ChangesetValueUnknownXMLExporter()
         );
         $values_exporter    = new Tracker_XMLExporter_ChangesetValuesXMLExporter($visitor);
@@ -3215,6 +3216,7 @@ EOS;
             new Tracker_XMLUpdater_FieldChange_FieldChangeTextXMLUpdater(),
             new Tracker_XMLUpdater_FieldChange_FieldChangeStringXMLUpdater(),
             new Tracker_XMLUpdater_FieldChange_FieldChangePermissionsOnArtifactXMLUpdater(),
+            new Tracker_XMLUpdater_FieldChange_FieldChangeListXMLUpdater(),
             new Tracker_XMLUpdater_FieldChange_FieldChangeUnknownXMLUpdater()
         );
 

@@ -22,6 +22,8 @@ require_once('common/html/HTML_Element_Input_Checkbox.class.php');
 
 class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Field_List_Bind {
 
+    const TYPE = 'static';
+
     /**
      * @var Array of Tracker_FormElement_Field_List_Bind_StaticValue
      */
@@ -818,5 +820,8 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
 
         return $numeric_values;
     }
+
+    public function getType() {
+        return self::TYPE;
+    }
 }
-?>

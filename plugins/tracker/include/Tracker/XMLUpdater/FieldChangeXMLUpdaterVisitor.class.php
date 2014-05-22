@@ -55,6 +55,11 @@ class Tracker_XMLUpdater_FieldChangeXMLUpdaterVisitor implements Tracker_FormEle
      */
     private $date_updater;
 
+    /**
+     * @var Tracker_XMLUpdater_FieldChange_FieldChangeListXMLUpdater
+     */
+    private $list_updater;
+
     public function __construct(
             Tracker_XMLUpdater_FieldChange_FieldChangeDateXMLUpdater $date_updater,
             Tracker_XMLUpdater_FieldChange_FieldChangeFloatXMLUpdater $float_updater,
@@ -62,6 +67,7 @@ class Tracker_XMLUpdater_FieldChangeXMLUpdaterVisitor implements Tracker_FormEle
             Tracker_XMLUpdater_FieldChange_FieldChangeTextXMLUpdater $text_updater,
             Tracker_XMLUpdater_FieldChange_FieldChangeStringXMLUpdater $string_updater,
             Tracker_XMLUpdater_FieldChange_FieldChangePermissionsOnArtifactXMLUpdater $perms_updater,
+            Tracker_XMLUpdater_FieldChange_FieldChangeListXMLUpdater $list_updater,
             Tracker_XMLUpdater_FieldChange_FieldChangeUnknownXMLUpdater $unknown_updater
     ) {
         $this->date_updater    = $date_updater;
@@ -71,6 +77,7 @@ class Tracker_XMLUpdater_FieldChangeXMLUpdaterVisitor implements Tracker_FormEle
         $this->string_updater  = $string_updater;
         $this->unknown_updater = $unknown_updater;
         $this->perms_updater   = $perms_updater;
+        $this->list_updater    = $list_updater;
     }
 
     public function update(
@@ -128,7 +135,7 @@ class Tracker_XMLUpdater_FieldChangeXMLUpdaterVisitor implements Tracker_FormEle
     }
 
     public function visitCheckbox(Tracker_FormElement_Field_Checkbox $field) {
-        return $this->unknown_updater;
+        return $this->list_updater;
     }
 
     public function visitCrossReferences(Tracker_FormElement_Field_CrossReferences $field) {
@@ -140,15 +147,15 @@ class Tracker_XMLUpdater_FieldChangeXMLUpdaterVisitor implements Tracker_FormEle
     }
 
     public function visitMultiSelectbox(Tracker_FormElement_Field_MultiSelectbox $field) {
-        return $this->unknown_updater;
+        return $this->list_updater;
     }
 
     public function visitRadiobutton(Tracker_FormElement_Field_Radiobutton $field) {
-        return $this->unknown_updater;
+        return $this->list_updater;
     }
 
     public function visitSelectbox(Tracker_FormElement_Field_Selectbox $field) {
-        return $this->unknown_updater;
+        return $this->list_updater;
     }
 
     public function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $field) {

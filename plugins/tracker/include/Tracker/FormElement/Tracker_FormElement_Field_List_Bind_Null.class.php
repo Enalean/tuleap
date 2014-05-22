@@ -19,6 +19,8 @@
 
 
 class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field_List_Bind {
+
+    const TYPE = 'null';
     
     public function __construct($field) {
         parent::__construct($field, array(), array());
@@ -208,5 +210,8 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
     protected function getSoapBindingList() { return array(); }
 
     public function getNumericValues(Tracker_Artifact_ChangesetValue $changeset_value) { return array(); }
+
+    public function getType() {
+        return self::TYPE;
+    }
 }
-?>

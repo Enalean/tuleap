@@ -21,6 +21,8 @@
 
 class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Field_List_Bind {
 
+    const TYPE = 'users';
+
     const REGISTERED_USERS_UGROUP_NAME = 'ugroup_2';
 
     const SOAP_BINDING_LIST_ID         = 'ugroup_id';
@@ -859,6 +861,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         // returns an empty array as it doesn't make sense with Users
         return array();
     }
-}
 
-?>
+    public function getType() {
+        return self::TYPE;
+    }
+}
