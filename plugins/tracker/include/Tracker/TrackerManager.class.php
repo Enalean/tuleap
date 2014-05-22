@@ -564,7 +564,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
             }
             $html .= '</p>';
             foreach ($trackers as $tracker) {
-                if ($tracker->userCanView($user)) {
+                if ($this->trackerCanBeDisplayed($tracker, $user)) {
                     $html .= '<dt>';
                     if ($tracker->userCanDeleteTracker()) {
                         $html .= '<div style="float:right;">
@@ -612,7 +612,11 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
             $this->displayFooter($project);
         }
     }
-    
+
+    private function trackerCanBeDisplayed(Tracker $tracker, PFUser $user) {
+        return $tracker->userCanView($user) && ! $this->getTV3MigrationManager()->isTrackerUnderMigration($tracker);
+    }
+
     protected function displayCSVImportOverview($project, $group_id, $user) {
         $hp = Codendi_HTMLPurifier::instance();
         $breadcrumbs = array();
