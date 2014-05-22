@@ -128,6 +128,7 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
         $this->foraceCreateDatabase();
         $this->mysqlLoadFile('src/db/mysql/database_structure.sql');
         $this->mysqlLoadFile('src/db/mysql/database_initvalues.sql');
+        $this->mysqlLoadFile('src/db/mysql/trackerv3structure.sql');
         $this->mysqlLoadFile('src/db/mysql/trackerv3values.sql');
         $this->mysqlLoadFile('plugins/tracker_date_reminder/db/install.sql');
         $this->mysqlLoadFile('plugins/tracker_date_reminder/db/examples.sql');

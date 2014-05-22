@@ -173,11 +173,10 @@ function create_project($data, $do_not_exit = false) {
         if (!$system_template) {
           $template_name = $template_group->getUnixName();
         }
-        
+
         $sql="SELECT * FROM service WHERE group_id=$template_id AND is_active=1";
         $result=db_query($sql);
         while ($arr = db_fetch_array($result)) {
-            
             if (isset($data['project']['services'][$arr['service_id']]['is_used'])) {
                  $is_used = $data['project']['services'][$arr['service_id']]['is_used'];
             } else {
@@ -313,45 +312,46 @@ function create_project($data, $do_not_exit = false) {
         // TBD
         
         // Generic Trackers Creation
-        
-        $atf = new ArtifactTypeFactory($template_group);
-        //$tracker_error = "";
-        // Add all trackers from template project (tracker templates) that need to be instanciated for new trackers.
-        $res = $atf->getTrackerTemplatesForNewProjects();
         $tracker_mapping = array();
-        $report_mapping = array();
-        while ($arr_template = db_fetch_array($res)) {
-            $ath_temp = new ArtifactType($template_group,$arr_template['group_artifact_id']);
-            $report_mapping_for_this_tracker = array();
-            $new_at_id = $atf->create($group_id,$template_id,$ath_temp->getID(),db_escape_string($ath_temp->getName()),db_escape_string($ath_temp->getDescription()),$ath_temp->getItemName(),$ugroup_mapping,$report_mapping_for_this_tracker);
-            if ( !$new_at_id ) {
-                $GLOBALS['Response']->addFeedback('error', $atf->getErrorMessage());
-            } else {
-                $report_mapping = $report_mapping + $report_mapping_for_this_tracker;
-                $tracker_mapping[$ath_temp->getID()] = $new_at_id;
-                
-                // Copy all the artifacts from the template tracker to the new tracker
-                $ath_new = new ArtifactType($group,$new_at_id);
-                
-                // not now. perhaps one day
-                    //if (!$ath_new->copyArtifacts($ath_temp->getID()) ) {
-                //$GLOBALS['Response']->addFeedback('info', $ath_new->getErrorMessage());
-                //}
-                        
-                // Create corresponding reference
-                $ref = new Reference(0, // no ID yet
-                                     strtolower($ath_temp->getItemName()),
-                                     $GLOBALS['Language']->getText('project_reference','reference_art_desc_key'), // description
-                                     '/tracker/?func=detail&aid=$1&group_id=$group_id', // link
-                                     'P', // scope is 'project'
-                                     'tracker',  // service short name
-                                     ReferenceManager::REFERENCE_NATURE_ARTIFACT,   // nature
-                                     '1', // is_used
-                                     $group_id);
-                $result = $reference_manager->createReference($ref,true); // Force reference creation because default trackers use reserved keywords
-           }
+        $report_mapping  = array();
+        if (TrackerV3::instance()->available()) {
+            $atf = new ArtifactTypeFactory($template_group);
+            //$tracker_error = "";
+            // Add all trackers from template project (tracker templates) that need to be instanciated for new trackers.
+            $res = $atf->getTrackerTemplatesForNewProjects();
+            while ($arr_template = db_fetch_array($res)) {
+                $ath_temp = new ArtifactType($template_group,$arr_template['group_artifact_id']);
+                $report_mapping_for_this_tracker = array();
+                $new_at_id = $atf->create($group_id,$template_id,$ath_temp->getID(),db_escape_string($ath_temp->getName()),db_escape_string($ath_temp->getDescription()),$ath_temp->getItemName(),$ugroup_mapping,$report_mapping_for_this_tracker);
+                if ( !$new_at_id ) {
+                    $GLOBALS['Response']->addFeedback('error', $atf->getErrorMessage());
+                } else {
+                    $report_mapping = $report_mapping + $report_mapping_for_this_tracker;
+                    $tracker_mapping[$ath_temp->getID()] = $new_at_id;
+
+                    // Copy all the artifacts from the template tracker to the new tracker
+                    $ath_new = new ArtifactType($group,$new_at_id);
+
+                    // not now. perhaps one day
+                        //if (!$ath_new->copyArtifacts($ath_temp->getID()) ) {
+                    //$GLOBALS['Response']->addFeedback('info', $ath_new->getErrorMessage());
+                    //}
+
+                    // Create corresponding reference
+                    $ref = new Reference(0, // no ID yet
+                                         strtolower($ath_temp->getItemName()),
+                                         $GLOBALS['Language']->getText('project_reference','reference_art_desc_key'), // description
+                                         '/tracker/?func=detail&aid=$1&group_id=$group_id', // link
+                                         'P', // scope is 'project'
+                                         'tracker',  // service short name
+                                         ReferenceManager::REFERENCE_NATURE_ARTIFACT,   // nature
+                                         '1', // is_used
+                                         $group_id);
+                    $result = $reference_manager->createReference($ref,true); // Force reference creation because default trackers use reserved keywords
+               }
+            }
         }
-        
+
         // Clone wiki from the template
         $clone = new WikiCloner($template_id, $group_id);
 

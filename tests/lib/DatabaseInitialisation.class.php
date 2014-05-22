@@ -22,6 +22,7 @@ class DatabaseInitialization {
      * @param String $file
      */
     protected function mysqlLoadFile($file) {
+        echo "Load $file\n";
         $mysql_cmd = 'mysql -h '.$GLOBALS['sys_dbhost'].' -u'.$GLOBALS['sys_dbuser'].' -p'.$GLOBALS['sys_dbpasswd'].' '.$GLOBALS['sys_dbname'];
         $cmd = $mysql_cmd.' < '.$file;
         system($cmd);
@@ -45,10 +46,6 @@ class DatabaseInitialization {
         $this->forceCreateDatabase();
         $this->mysqlLoadFile('src/db/mysql/database_structure.sql');
         $this->mysqlLoadFile('src/db/mysql/database_initvalues.sql');
-        $this->mysqlLoadFile('plugins/tracker_date_reminder/db/install.sql');
-        $this->mysqlLoadFile('plugins/tracker_date_reminder/db/examples.sql');
-        $this->mysqlLoadFile('plugins/graphontrackers/db/install.sql');
-        $this->mysqlLoadFile('plugins/graphontrackers/db/initvalues.sql');
         $this->mysqlLoadFile('plugins/tracker/db/install.sql');
         $this->mysqlLoadFile('plugins/graphontrackersv5/db/install.sql');
         $this->mysqlLoadFile('plugins/agiledashboard/db/install.sql');

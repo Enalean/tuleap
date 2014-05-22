@@ -25,6 +25,9 @@ class ArtifactDao extends DataAccessObject {
     }
 
     public function searchArtifactId($artifact_id){
+        if (! $this->artifactTableExists()) {
+            return false;
+        }
         $artifact_id= $this->da->quoteSmart($artifact_id);
         $sql = "SELECT group_id 
                 FROM $this->table_name, artifact_group_list
@@ -77,5 +80,14 @@ class ArtifactDao extends DataAccessObject {
                 GROUP BY open_date DESC
                 LIMIT $offset, $limit";
         return $this->retrieve($sql);
+    }
+
+    public function artifactTableExists() {
+        $sql = "SHOW TABLES LIKE '{$this->table_name}'";
+        $dar = $this->retrieve($sql);
+        if (count($dar) == 1) {
+            return true;
+        }
+        return false;
     }
 }
