@@ -81,8 +81,12 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer {
     }
 
     protected function fetchTitle() {
-        $html = '';
-        $html .= parent::fetchTitle();
+        $hp    = Codendi_HTMLPurifier::instance();
+        $html  = '';
+        $html .= '<div class="tracker_artifact_title">';
+        $html .= $hp->purify($this->artifact->getTitle());
+        $html .= '</div>';
+
         return $html;
     }
 
