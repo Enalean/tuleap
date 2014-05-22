@@ -6,22 +6,30 @@ Version 7.1 (Not Yet Released)
 	* story #6853: be able to check user in checkbox by clicking on the name (contrib Jtekt)
 	* tasks #6884: be able to choose the permission in the admin area
 	== Plugins ==
-	* tracker: 5.382
+	* tracker: 5.383
 	* agiledashboard: 1.63
 	* cardwall: 1.32
-	* git: 3.84
-	* requesthelp: 1.3.6
-	* IM: 1.5.15
+	* git: 3.85
+	* requesthelp: 1.3.7
+	* IM: 1.5.16
 	* admindelegation: 2.7
 	* tests: 5.22
 	* webdav: 1.9.5
 	* mediawiki: 0.29
+	* ldap: 3.43
+	* openid: 0.4
 
 	== Developers ==
 	* tasks #6824 - Refactor Milestones test
 
 	== Themes ==
-	* FlamingParrot: 1.6
+	* FlamingParrot: 1.8
+	* CodexSTN: 1.16
+	* Dawn: 1.13
+	* STTab: 1.15
+	* SteerForge: 1.13
+	* Tuleap: 2.13
+	* savannah: 1.5
 
 	== Bug fix ==
 	* Fix request #6839: unable to use project references in svn commit message
