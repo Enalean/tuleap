@@ -751,7 +751,14 @@ class trackerPlugin extends Plugin {
     }
 
     private function getMigrationManager() {
-        return new Tracker_Migration_MigrationManager($this->getTrackerSystemEventManager(), $this->getTrackerFactory(), $this->getArtifactFactory(), $this->getTrackerFormElementFactory(), $this->getUserManager(), $this->getProjectManager());
+        return new Tracker_Migration_MigrationManager(
+            $this->getTrackerSystemEventManager(),
+            $this->getTrackerFactory(),
+            $this->getArtifactFactory(),
+            $this->getTrackerFormElementFactory(),
+            $this->getUserManager(),
+            $this->getProjectManager()
+        );
     }
 
     private function getProjectManager() {

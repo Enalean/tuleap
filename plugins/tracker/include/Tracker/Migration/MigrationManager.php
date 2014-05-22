@@ -26,6 +26,8 @@ class Tracker_Migration_MigrationManager {
 
     const INDENT_XSL_RESOURCE = '/xml/indent.xsl';
 
+    const LOG_FILE = 'tv3_to_tv5.log';
+
     /** @var  Tracker_SystemEventManager */
     private $system_event_manager;
 
@@ -44,6 +46,9 @@ class Tracker_Migration_MigrationManager {
     /** @var  Tracker_ArtifactFactory */
     private $artifact_factory;
 
+    /** @var  BackendLogger */
+    private $logger;
+
     public function __construct(Tracker_SystemEventManager $system_event_manager, TrackerFactory $tracker_factory, Tracker_ArtifactFactory $artifact_factory, Tracker_FormElementFactory $form_element_factory, UserManager $user_manager, ProjectManager $project_manager) {
         $this->system_event_manager = $system_event_manager;
         $this->tracker_factory      = $tracker_factory;
@@ -51,6 +56,8 @@ class Tracker_Migration_MigrationManager {
         $this->project_manager      = $project_manager;
         $this->form_element_factory = $form_element_factory;
         $this->artifact_factory     = $artifact_factory;
+
+        $this->logger = new Tracker_Migration_MigrationLogger(new BackendLogger($this->getLogFilePath()));
     }
 
     /**
@@ -74,9 +81,18 @@ class Tracker_Migration_MigrationManager {
     }
 
     public function migrate($username, $project_id, $tv3_id, $tracker_name, $tracker_description, $tracker_short_name) {
+        $this->logger->info('-- Beginning of migration of tracker v3 '.$tv3_id.' to '.$tracker_name.' --');
+
         $tracker_id   = $this->createTrackerStructure($project_id, $tv3_id, $tracker_name, $tracker_description, $tracker_short_name);
         $archive_path = $this->exportTV3Data($tv3_id);
         $this->importArtifactsData($username, $tracker_id, $archive_path);
+
+        $this->logger->info('-- End of migration of tracker v3 '.$tv3_id.' to '.$tracker_name.' --');
+        $this->logger->sendMail($this->user_manager->getUserByUserName($username), $this->project_manager->getProject($project_id), $tv3_id, $tracker_name);
+    }
+
+    private function getLogFilePath() {
+        return Config::get('codendi_log').'/'.self::LOG_FILE;
     }
 
     private function importArtifactsData($username, $tracker_id, $archive_path) {
@@ -89,8 +105,7 @@ class Tracker_Migration_MigrationManager {
             $zip = new ZipArchive();
 
             if ($zip->open($archive_path) !== true) {
-                echo 'Impossible to open archive '.$archive_path.PHP_EOL;
-                exit(1);
+                throw new Tracker_Exception_Migration_OpenArchiveException($archive_path);
             }
 
             $archive = new Tracker_Artifact_XMLImport_XMLImportZipArchive(
@@ -106,7 +121,6 @@ class Tracker_Migration_MigrationManager {
     private function getXMLImporter() {
         $fields_validator = new Tracker_Artifact_Changeset_AtGivenDateFieldsValidator($this->form_element_factory);
         $changeset_dao    = new Tracker_Artifact_ChangesetDao();
-        $logger           = new Log_ConsoleLogger();
 
         return new Tracker_Artifact_XMLImport(
             new XML_RNGValidator(),
@@ -115,7 +129,7 @@ class Tracker_Migration_MigrationManager {
             $this->form_element_factory,
             new Tracker_Artifact_XMLImport_XMLImportHelper($this->user_manager),
             new Tracker_FormElement_Field_List_Bind_Static_ValueDao(),
-            $logger
+            $this->logger
         );
     }
 
@@ -150,18 +164,16 @@ class Tracker_Migration_MigrationManager {
         $archive_path    = $this->generateTemporaryPath();
         $indent_xsl_path = $this->getIndentXSLResourcePath();
         $xml             = new DOMDocument("1.0", "UTF8");
-        $logger          = new Log_ConsoleLogger();
         $archive         = new ZipArchive();
         if ($archive->open($archive_path, ZipArchive::CREATE) !== true) {
-            echo '*** ERROR: Cannot create archive: '.$archive_path;
-            exit(1);
+            throw new Tracker_Exception_Migration_CreateArchiveException($archive_path);
         }
 
         $dao                 = new ArtifactXMLExporterDao();
         $node_helper         = new ArtifactXMLNodeHelper($xml);
         $attachment_exporter = new ArtifactAttachmentXMLExporter($node_helper, $dao, $archive, false);
 
-        $exporter = new ArtifactXMLExporter($dao, $attachment_exporter, $node_helper, $logger);
+        $exporter = new ArtifactXMLExporter($dao, $attachment_exporter, $node_helper, $this->logger);
         $exporter->exportTrackerData($tv3_id);
 
         $xsl = new DOMDocument();
@@ -194,6 +206,7 @@ class Tracker_Migration_MigrationManager {
         $project = $this->project_manager->getProject($project_id);
         $new_tracker = $this->tracker_factory->createFromTV3($tv3_id, $project, $tracker_name, $tracker_description, $tracker_short_name);
         if (! $new_tracker) {
+            throw new Tracker_Exception_Migration_StructureCreationException($tracker_name, $tv3_id);
         }
 
         return $new_tracker->getId();

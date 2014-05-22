@@ -989,7 +989,14 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     }
 
     private function getTV3MigrationManager() {
-        return new Tracker_Migration_MigrationManager(new Tracker_SystemEventManager(SystemEventManager::instance()), $this->getTrackerFactory(), $this->getArtifactFactory(), $this->getTrackerFormElementFactory(), UserManager::instance(), ProjectManager::instance());
+        return new Tracker_Migration_MigrationManager(
+            new Tracker_SystemEventManager(SystemEventManager::instance()),
+            $this->getTrackerFactory(),
+            $this->getArtifactFactory(),
+            $this->getTrackerFormElementFactory(),
+            UserManager::instance(),
+            ProjectManager::instance()
+        );
     }
 
     private function getTrackerFormElementFactory() {
