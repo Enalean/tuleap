@@ -78,7 +78,8 @@ abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase {
             $this->formelement_factory,
             $this->xml_import_helper,
             $this->static_value_dao,
-            $this->logger
+            $this->logger,
+            false
         );
     }
 }
@@ -345,7 +346,8 @@ class Tracker_Artifact_XMLImport_UserTest extends Tracker_Artifact_XMLImportBase
             $this->formelement_factory,
             $this->xml_import_helper,
             $this->static_value_dao,
-            mock('Logger')
+            mock('Logger'),
+            false
         );
     }
 

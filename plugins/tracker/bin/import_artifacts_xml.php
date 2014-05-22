@@ -32,6 +32,7 @@ try {
         $changeset_dao         = new Tracker_Artifact_ChangesetDao();
         $changeset_comment_dao = new Tracker_Artifact_Changeset_CommentDao();
         $logger                = new Log_ConsoleLogger();
+        $send_notifications    = false;
 
         $artifact_creator = new Tracker_ArtifactCreator(
             $artifact_factory,
@@ -61,7 +62,8 @@ try {
             Tracker_FormElementFactory::instance(),
             new Tracker_Artifact_XMLImport_XMLImportHelper($user_manager),
             new Tracker_FormElement_Field_List_Bind_Static_ValueDao(),
-            $logger
+            $logger,
+            $send_notifications
         );
 
         $zip = new ZipArchive();

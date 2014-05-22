@@ -20,6 +20,9 @@
 
 class Tracker_Artifact_XMLImport {
 
+    /** @var boolean */
+    private $send_notifications;
+
     /** @var XML_RNGValidator */
     private $rng_validator;
 
@@ -41,6 +44,16 @@ class Tracker_Artifact_XMLImport {
     /** @var Logger */
     private $logger;
 
+    /**
+     * @param XML_RNGValidator $rng_validator
+     * @param Tracker_ArtifactCreator $artifact_creator
+     * @param Tracker_Artifact_Changeset_NewChangesetCreatorBase $new_changeset_creator
+     * @param Tracker_FormElementFactory $formelement_factory
+     * @param Tracker_Artifact_XMLImport_XMLImportHelper $xml_import_helper
+     * @param Tracker_FormElement_Field_List_Bind_Static_ValueDao $static_value_dao
+     * @param Logger $logger
+     * @param boolean $send_notifications
+     */
     public function __construct(
         XML_RNGValidator $rng_validator,
         Tracker_ArtifactCreator $artifact_creator,
@@ -48,7 +61,8 @@ class Tracker_Artifact_XMLImport {
         Tracker_FormElementFactory $formelement_factory,
         Tracker_Artifact_XMLImport_XMLImportHelper $xml_import_helper,
         Tracker_FormElement_Field_List_Bind_Static_ValueDao $static_value_dao,
-        Logger $logger
+        Logger $logger,
+        $send_notifications
     ) {
 
         $this->rng_validator         = $rng_validator;
@@ -58,6 +72,7 @@ class Tracker_Artifact_XMLImport {
         $this->xml_import_helper     = $xml_import_helper;
         $this->static_value_dao      = $static_value_dao;
         $this->logger                = $logger;
+        $this->send_notifications    = $send_notifications;
     }
 
     public function importFromArchive(Tracker $tracker, Tracker_Artifact_XMLImport_XMLImportZipArchive $archive) {
@@ -142,14 +157,13 @@ class Tracker_Artifact_XMLImport {
         $fields_data = $fields_data_builder->getFieldsData($xml_changeset->field_change);
         if (count($fields_data) > 0) {
             $email              = '';
-            $send_notifications = false;
             $artifact = $this->artifact_creator->create(
                 $tracker,
                 $fields_data,
                 $this->getSubmittedBy($xml_changeset),
                 $email,
                 $this->getSubmittedOn($xml_changeset),
-                $send_notifications
+                $this->send_notifications
             );
             if ($artifact) {
                 return $artifact;
@@ -169,7 +183,6 @@ class Tracker_Artifact_XMLImport {
         foreach($xml_changesets as $xml_changeset) {
             try {
                 $count++;
-                $send_notification = false;
                 $initial_comment_body   = '';
                 $initial_comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
                 if (isset($xml_changeset->comments) && count($xml_changeset->comments->comment) > 0) {
@@ -182,7 +195,7 @@ class Tracker_Artifact_XMLImport {
                     $initial_comment_body,
                     $this->getSubmittedBy($xml_changeset),
                     $this->getSubmittedOn($xml_changeset),
-                    $send_notification,
+                    $this->send_notifications,
                     $initial_comment_format
                 );
                 if (! $changeset) {
