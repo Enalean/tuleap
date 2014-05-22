@@ -91,6 +91,10 @@ class Tracker_Migration_MigrationManager {
         $this->logger->sendMail($this->user_manager->getUserByUserName($username), $this->project_manager->getProject($project_id), $tv3_id, $tracker_name);
     }
 
+    public function isTrackerUnderMigration(Tracker $tracker) {
+        return $this->system_event_manager->isThereAMigrationQueuedForTracker($tracker);
+    }
+
     private function getLogFilePath() {
         return Config::get('codendi_log').'/'.self::LOG_FILE;
     }

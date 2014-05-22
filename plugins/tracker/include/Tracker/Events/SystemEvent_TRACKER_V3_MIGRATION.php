@@ -43,12 +43,12 @@ class SystemEvent_TRACKER_V3_MIGRATION extends SystemEvent {
             return false;
         }
 
-        $username            = (string) $parameters[0];
-        $project_id          = (int) $parameters[1];
-        $tv3_id              = (int) $parameters[2];
-        $tracker_name        = (string) $parameters[3];
-        $tracker_description = (string) $parameters[4];
-        $tracker_shortname   = (string) $parameters[5];
+        $tracker_shortname   = (string) $parameters[0];
+        $tracker_name        = (string) $parameters[1];
+        $tracker_description = (string) $parameters[2];
+        $username            = (string) $parameters[3];
+        $project_id          = (int) $parameters[4];
+        $tv3_id              = (int) $parameters[5];
 
         try {
             $this->migration_manager->migrate(
@@ -68,32 +68,32 @@ class SystemEvent_TRACKER_V3_MIGRATION extends SystemEvent {
 
     private function parametersAreMissing($parameters) {
         if (empty($parameters[0])) {
-            $this->error('Missing argument User');
+            $this->error('Missing argument: shortname');
             return true;
         }
 
         if (empty($parameters[1])) {
-            $this->error('Missing argument project id');
+            $this->error('Missing argument: name');
             return true;
         }
 
         if (empty($parameters[2])) {
-            $this->error('Missing argument tracker v3 id');
+            $this->error('Missing argument: description');
             return true;
         }
 
         if (empty($parameters[3])) {
-            $this->error('Missing argument name');
+            $this->error('Missing argument: User');
             return true;
         }
 
         if (empty($parameters[4])) {
-            $this->error('Missing argument description');
+            $this->error('Missing argument: project id');
             return true;
         }
 
         if (empty($parameters[5])) {
-            $this->error('Missing argument shortname');
+            $this->error('Missing argument: tracker v3 id');
             return true;
         }
 
