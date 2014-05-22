@@ -980,6 +980,11 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
 
     private function displayMigrateFromTV3Option($requested_create_mode, Project $project, $requested_template_id) {
         $html        = '';
+
+        if (! UserManager::instance()->getCurrentUser()->useLabFeatures()) {
+            return $html;
+        }
+
         $trackers_v3 = $this->getTrackersV3ForProject($project);
 
         if ($trackers_v3) {
