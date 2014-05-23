@@ -552,8 +552,25 @@ class URLVerification {
             throw new Project_AccessRestrictedException();
         } elseif ($project->isPublic()) {
             return true;
+        } elseif ($this->userHasBeenDelegatedAccess($user)) {
+            return true;
         }
         throw new Project_AccessPrivateException();
+    }
+
+    private function userHasBeenDelegatedAccess(PFUser $user) {
+        $can_access    = false;
+        $event_manager = EventManager::instance();
+
+        $event_manager->processEvent(
+            Event::HAS_USER_BEEN_DELEGATED_ACCESS,
+            array(
+                'can_access' => &$can_access,
+                'user'       => $user,
+            )
+        );
+
+        return $can_access;
     }
 
     /**

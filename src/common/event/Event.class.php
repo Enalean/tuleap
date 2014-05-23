@@ -742,4 +742,18 @@ class Event {
      *  'src_dir' => string
      */
     const GET_FTP_INCOMING_DIR = 'get_ftp_incoming_dir';
+
+    /**
+     * Sends-out an event to see if the user can access a page.
+     * E.g. a mediawiki page in a private project and the user has
+     * been delegated mediawiki admin rights across the forge
+     *
+     * Parameters:
+     *    'can_access' => boolean
+     *    'user'       => PFUser
+     *
+     * Expected result:
+     *    'can_access' => boolean
+     */
+    const HAS_USER_BEEN_DELEGATED_ACCESS = 'has_user_been_delegated_access';
 }
