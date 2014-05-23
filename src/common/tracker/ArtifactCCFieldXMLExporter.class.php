@@ -27,17 +27,12 @@ class ArtifactCCFieldXMLExporter extends ArtifactFieldXMLExporter {
         $field_node = $this->node_helper->createElement('field_change');
         $field_node->setAttribute('field_name', 'cc');
         $field_node->setAttribute('type', self::TV5_TYPE);
-        $field_node->setAttribute('bind', 'user');
+        $field_node->setAttribute('bind', 'users');
         foreach ($values as $value) {
             $cc_value_node = $this->node_helper->getNodeWithValue('value', $value);
-            $this->node_helper->addUserFormatAttribute($cc_value_node, $this->isValueAnEmailAddress($value));
             $field_node->appendChild($cc_value_node);
         }
         $changeset_node->appendChild($field_node);
-    }
-
-    private function isValueAnEmailAddress($value) {
-        return strpos($value, '@') !== false;
     }
 
     public function getFieldValueIndex() {

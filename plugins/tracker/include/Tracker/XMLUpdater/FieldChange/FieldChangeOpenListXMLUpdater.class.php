@@ -18,36 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_XMLUpdater_FieldChange_FieldChangeListXMLUpdater implements Tracker_XMLUpdater_FieldChange_FieldChangeXMLUpdater {
-
-    /**
+class Tracker_XMLUpdater_FieldChange_FieldChangeOpenListXMLUpdater extends Tracker_XMLUpdater_FieldChange_FieldChangeListXMLUpdater {
+     /**
      * @param SimpleXMLElement $field_change_xml
-     * @param mixed            $submitted_value
+     * @param string            $submitted_value
      */
     public function update(SimpleXMLElement $field_change_xml, $submitted_value) {
         $this->removeExistingValuesNodes($field_change_xml);
 
-        if (! is_array($submitted_value)) {
-            $submitted_value = array($submitted_value);
-        }
+        $submitted_value = explode(',', $submitted_value);
 
         array_walk(
             $submitted_value,
             array($this, 'appendValuesToFieldChangeNode'),
             $field_change_xml
         );
-    }
-
-    protected function appendValuesToFieldChangeNode(
-        $value,
-        $index,
-        SimpleXMLElement $field_xml
-    ) {
-        $value_xml = $field_xml->addChild('value', $value);
-        $value_xml->addAttribute('format', 'id');
-    }
-
-    protected function removeExistingValuesNodes($field_change_xml) {
-        unset($field_change_xml->value);
     }
 }

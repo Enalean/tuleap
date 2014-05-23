@@ -129,5 +129,8 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
         }
         return $this->id;
     }
+
+    public function getXMLExportLabel() {
+        return $this->user_name;
+    }
 }
-?>

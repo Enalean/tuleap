@@ -19,6 +19,7 @@
  */
 
 class Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList implements Tracker_Artifact_XMLImport_XMLImportFieldStrategy {
+    const FORMAT_ID = 'id';
 
     /**
      * Extract Field data from XML input
@@ -31,8 +32,17 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList implements Track
     public function getFieldData(Tracker_FormElement_Field $field, SimpleXMLElement $field_change) {
         $values = array();
         foreach ($field_change->value as $value) {
-            $values[] = (string) $value;
+            $values[] = (string) $this->getFieldChangeId($field, $value);
         }
-        return $field->getFieldData(implode(',', $values));
+
+        return implode(',', $values);
+    }
+
+    private function getFieldChangeId(Tracker_FormElement_Field $field, $value) {
+        if (isset($value['format']) && (string) $value['format'] === self::FORMAT_ID){
+            return (string) $value;
+        }
+
+        return $field->getFieldData((string) $value);
     }
 }

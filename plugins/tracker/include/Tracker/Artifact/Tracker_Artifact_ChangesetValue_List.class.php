@@ -200,7 +200,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
         }
         return $returned_values;
     }
-    
+
     /**
      * Return a string that will be use in SOAP API
      * as the value of this ChangesetValue_List 
