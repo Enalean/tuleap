@@ -1,3 +1,6 @@
+Version 0.30 - Tuleap 7.1
+    * tasks #6904: mediawiki admins can access private projects' mediawikis
+
 Version 0.29 - Tuleap 7.1
     * tasks #6885: applying the forge mediawiki permission
 
