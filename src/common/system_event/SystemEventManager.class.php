@@ -531,17 +531,46 @@ class SystemEventManager {
     }
 
     /**
+     * NOTE: The first Parameter has in fact NOTHING to do with the order of the
+     * arguments this method takes.
      *
-     * @param type $event_type
-     * @param type $parameter
+     * FYI: Each system event is created with a certain amount of parameters.
+     * These parameters are seperated by SystemEvent::PARAMETER_SEPARATOR.
+     * This creates a string of concatenated parameters for each system event.
+     *
+     * This method checks all events of type $event_type to see if the first
+     * element in the concatenated string matches the value $parameter. If there
+     * is a match, it returns true.
+     *
+     * @param string $event_type
+     * @param string | number | boolean $parameter
      * @return boolean
      */
-    public function isThereAnEventAlreadyOnGoing($event_type, $parameter) {
+    public function isThereAnEventAlreadyOnGoingMatchingFirstParameter($event_type, $parameter) {
         $dar = $this->_getDao()->searchWithParam(
             'head',
              $parameter,
              array($event_type),
              array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING)
+        );
+        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     *
+     * @param type $event_type
+     * @param type $parameter
+     * @return boolean
+     */
+    public function isThereAnEventAlreadyOnGoingMatchingParameter($event_type, $parameter) {
+        $dar = $this->_getDao()->searchWithParam(
+            null,
+            $parameter,
+            array($event_type),
+            array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING)
         );
         if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
             return true;
@@ -556,7 +585,7 @@ class SystemEventManager {
      * @return Boolean
      */
     public function canRenameUser($user) {
-        return ! $this->isThereAnEventAlreadyOnGoing(SystemEvent::TYPE_USER_RENAME, $user->getId());
+        return ! $this->isThereAnEventAlreadyOnGoingMatchingFirstParameter(SystemEvent::TYPE_USER_RENAME, $user->getId());
     }
     
     /**
@@ -566,7 +595,7 @@ class SystemEventManager {
      * @return Boolean
      */
     public function canRenameProject($project) {
-        return ! $this->isThereAnEventAlreadyOnGoing(SystemEvent::TYPE_PROJECT_RENAME, $project->getId());
+        return ! $this->isThereAnEventAlreadyOnGoingMatchingFirstParameter(SystemEvent::TYPE_PROJECT_RENAME, $project->getId());
     }
     
     
