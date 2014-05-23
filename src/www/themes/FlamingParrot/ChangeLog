@@ -1,3 +1,10 @@
+Version 1.9 - Tuleap 7.1
+    * Better handling of preference height (follow-up to story #6341)
+
+
+- tasks #6928: bug with footer/account maintenance that overlap each others
+- tasks #6914: resize of browser updates elements height
+
 Version 1.8 - Tuleap 7.1
     * story #6341: see maintenance & preferences pages into a single page
 
