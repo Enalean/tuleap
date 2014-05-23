@@ -23,6 +23,7 @@ function autoload543c47136cf4525069cddba1b2796234($class) {
             'ldap_usermanager' => '/LDAP_UserManager.class.php',
             'ldap_usersync' => '/LDAP_UserSync.class.php',
             'ldap_usersync_orange' => '/LDAP_UserSync_Orange.class.php',
+            'ldap_syncnotificationmanager' => '/LDAP_SyncNotificationManager.class.php',
             'ldapplugin' => '/ldapPlugin.class.php',
             'ldapplugindescriptor' => '/LdapPluginDescriptor.class.php',
             'ldapplugininfo' => '/LdapPluginInfo.class.php',
