@@ -23,7 +23,7 @@ account_options	change_timezone	Changer le fuseau horaire
 account_options	email_address		Adresse e-mail :
 account_options	change_email_address	Changer l'adresse e-mail
 account_options	preferences	Préférences
-account_options	theme	Thème/Palette de Couleur :
+account_options	theme	Thème :
 account_options	shell_account_title	 Information compte shell
 account_options	shell_box	Serveur Shell
 account_options	shell_shared_keys	Clés SSH partagées :
