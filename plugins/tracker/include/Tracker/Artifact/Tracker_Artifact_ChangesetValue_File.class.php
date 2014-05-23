@@ -39,6 +39,13 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
         parent::__construct($id, $field, $has_changed);
         $this->files = $files;
     }
+
+    /**
+     * @return mixed
+     */
+    public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor) {
+        return $visitor->visitFile($this);
+    }
     
     /**
      * spl\Countable

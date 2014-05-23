@@ -491,6 +491,10 @@ h5.artifack_link_subtitle {
     margin: 7px 0 10px;
 }
 
+.copy-mode {
+    .tracker_artifact_title;
+}
+
 .xref-in-title {
     padding: 2px 7px;
     font-size: 0.8em;
@@ -767,6 +771,17 @@ a:hover .xref-in-title {
         filter: alpha(opacity=30);
     }
 }
+
+.tracker-artifact-attachement-title-list {
+    > ul > li > .file-title {
+        color: #222;
+    }
+
+    > ul > li > .file-description {
+        color: #666;
+    }
+}
+
 .tracker_artifact_preview_attachment_hover {
     width: 150px;
     height: 110px;
@@ -1020,6 +1035,10 @@ div.tracker-admin-field-controls {
             background-image: url('/themes/common/images/ic/artifact_editable_field_error.png');
             cursor: default;
         }
+    }
+
+    > .disabled_field {
+        .empty_value;
     }
 }
 .empty_value {
@@ -1946,10 +1965,14 @@ tr.artifact-children-table-head {
     display: none;
 }
 
+.artifact-copy-button {
+    .artifact-submit-button;
+}
+
 body.sidebar-collapsed .artifact-submit-button, body.sidebar-collapsed .hidden-artifact-submit-button {
     padding-left: 45px;
 }
-body.sidebar-expanded .artifact-submit-button, body.sidebar-expanded .hidden-artifact-submit-button {
+body.sidebar-expanded .artifact-submit-button, body.sidebar-expanded .hidden-artifact-submit-button, body.sidebar-expanded .artifact-copy-button {
     padding-left: 200px;
 }
 

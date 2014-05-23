@@ -617,6 +617,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $renderer = new Tracker_Artifact_Renderer_EditInPlaceRenderer($this, $this->getMustacheRenderer());
                 $renderer->updateArtifact($request, $current_user);
                 break;
+            case 'copy-artifact':
+                $art_link = $this->fetchDirectLinkToArtifact();
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'copy_mode_info', array($art_link)), CODENDI_PURIFIER_LIGHT);
+
+                $renderer = new Tracker_Artifact_CopyRenderer($this->getEventManager(), $this, $this->getFormElementFactory(), $layout);
+                $renderer->display($request, $current_user);
+                break;
             default:
                 if ($request->isAjax()) {
                     echo $this->fetchTooltip($current_user);

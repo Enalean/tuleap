@@ -19,6 +19,9 @@
 
 
 class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Field_List_Bind {
+
+    const TYPE = 'ugroups';
+
     /**
      * @var UGroupManager
      */
@@ -623,6 +626,8 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         // returns an empty array as it doesn't make sense with Ugroups
         return array();
     }
-}
 
-?>
+    public function getType() {
+        return self::TYPE;
+    }
+}

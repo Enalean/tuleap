@@ -231,7 +231,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
     public function getFormElements() {
         return Tracker_FormElementFactory::instance()->getUsedFormElementForTracker($this);
     }
-    
+
     /**
      * @param string $name
      * @param mixed  $type A field type name, or an array of field type names, e.g. 'float', or array('float', 'int').
@@ -266,6 +266,21 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $html = '';
         foreach($this->getFormElements() as $formElement) {
             $html .= $formElement->fetchArtifact($artifact, $submitted_values);
+        }
+        return $html;
+    }
+
+    /**
+     * fetch FormElements
+     * @param Tracker_Artifact $artifact
+     * @param array $submitted_values the values already submitted
+     *
+     * @return string
+     */
+    public function fetchFormElementsForCopy($artifact, $submitted_values = array()) {
+        $html = '';
+        foreach($this->getFormElements() as $formElement) {
+            $html .= $formElement->fetchArtifactCopyMode($artifact, $submitted_values);
         }
         return $html;
     }
@@ -643,6 +658,17 @@ class Tracker implements Tracker_Dispatchable_Interface {
                     $this->getTrackerArtifactFactory(),
                     $this->getTrackerFactory(),
                     $this->getFormElementFactory()
+                );
+                $action->process($layout, $request, $current_user);
+                break;
+            case 'submit-copy-artifact':
+                $action = new Tracker_Action_CopyArtifact(
+                    $this,
+                    $this->getTrackerArtifactFactory(),
+                    $this->getArtifactXMLExporter(),
+                    $this->getArtifactXMLImporter(),
+                    $this->getChangesetXMLUpdater(),
+                    $this->getFileXMLUpdater()
                 );
                 $action->process($layout, $request, $current_user);
                 break;
@@ -1045,33 +1071,40 @@ class Tracker implements Tracker_Dispatchable_Interface {
                     ),
                     $breadcrumbs);
             if (!$toolbar) {
-                $toolbar = array();
-                $toolbar[] = array(
-                        'title' => $GLOBALS['Language']->getText('plugin_tracker', 'submit_new_artifact'),
-                        'url'   => $this->getSubmitUrl(),
-                        'class' => 'tracker-submit-new',
-                );
-                if (UserManager::instance()->getCurrentUser()->isLoggedIn()) {
-                    $toolbar[] = array(
-                            'title' => $GLOBALS['Language']->getText('plugin_tracker', 'notifications'),
-                            'url'   => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=notifications',
-                    );
-                }
-                if ($this->userIsAdmin()) {
-                    $toolbar[] = array(
-                            'title' => $GLOBALS['Language']->getText('plugin_tracker', 'administration'),
-                            'url'   => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=admin'
-                    );
-                }
-                $toolbar[] = array(
-                        'title' => $GLOBALS['Language']->getText('plugin_tracker', 'help'),
-                        'url'   => 'javascript:help_window(\''.get_server_url().'/doc/'.UserManager::instance()->getCurrentUser()->getShortLocale().'/user-guide/tracker.html\');',
-                );
+                $toolbar = $this->getDefaultToolbar();
             }
             $title = ($title ? $title .' - ' : ''). $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML);
             $layout->displayHeader($project, $title, $breadcrumbs, $toolbar, $params);
         }
     }
+
+    public function getDefaultToolbar() {
+        $toolbar = array();
+        $toolbar[] = array(
+                'title' => $GLOBALS['Language']->getText('plugin_tracker', 'submit_new_artifact'),
+                'url'   => $this->getSubmitUrl(),
+                'class' => 'tracker-submit-new',
+        );
+        if (UserManager::instance()->getCurrentUser()->isLoggedIn()) {
+            $toolbar[] = array(
+                    'title' => $GLOBALS['Language']->getText('plugin_tracker', 'notifications'),
+                    'url'   => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=notifications',
+            );
+        }
+        if ($this->userIsAdmin()) {
+            $toolbar[] = array(
+                    'title' => $GLOBALS['Language']->getText('plugin_tracker', 'administration'),
+                    'url'   => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=admin'
+            );
+        }
+        $toolbar[] = array(
+                'title' => $GLOBALS['Language']->getText('plugin_tracker', 'help'),
+                'url'   => 'javascript:help_window(\''.get_server_url().'/doc/'.UserManager::instance()->getCurrentUser()->getShortLocale().'/user-guide/tracker.html\');',
+        );
+
+        return $toolbar;
+    }
+
     public function displayFooter(Tracker_IDisplayTrackerLayout $layout) {
         if ($project = ProjectManager::instance()->getProject($this->group_id)) {
             $layout->displayFooter($project);
@@ -3113,5 +3146,92 @@ EOS;
     public function getUri() {
         return TRACKER_BASE_URL . '/?tracker=' . $this->getId();
     }
+
+    private function getArtifactXMLImporter() {
+        $fields_validator      = new Tracker_Artifact_Changeset_AtGivenDateFieldsValidator(
+            $this->getFormElementFactory()
+        );
+
+        $changeset_dao         = new Tracker_Artifact_ChangesetDao();
+        $changeset_comment_dao = new Tracker_Artifact_Changeset_CommentDao();
+        $logger                = new BackendLogger();
+        $send_notifications    = true;
+
+        $artifact_creator = new Tracker_ArtifactCreator(
+            $this->getTrackerArtifactFactory(),
+            $fields_validator,
+            new Tracker_Artifact_Changeset_InitialChangesetAtGivenDateCreator(
+                $fields_validator,
+                $this->getFormElementFactory(),
+                $changeset_dao,
+                $this->getTrackerArtifactFactory()
+            )
+        );
+
+        $new_changeset_creator = new Tracker_Artifact_Changeset_NewChangesetAtGivenDateCreator(
+            $fields_validator,
+            $this->getFormElementFactory(),
+            $changeset_dao,
+            $changeset_comment_dao,
+            $this->getTrackerArtifactFactory(),
+            EventManager::instance(),
+            ReferenceManager::instance()
+        );
+
+        return new Tracker_Artifact_XMLImport(
+            new XML_RNGValidator(),
+            $artifact_creator,
+            $new_changeset_creator,
+            Tracker_FormElementFactory::instance(),
+            new Tracker_Artifact_XMLImport_XMLImportHelper($this->getUserManager()),
+            new Tracker_FormElement_Field_List_Bind_Static_ValueDao(),
+            $logger,
+            $send_notifications
+        );
+    }
+
+    private function getArtifactXMLExporter() {
+        $visitor = new Tracker_XMLExporter_ChangesetValueXMLExporterVisitor(
+            new Tracker_XMLExporter_ChangesetValue_ChangesetValueDateXMLExporter(),
+            new Tracker_XMLExporter_ChangesetValue_ChangesetValueFileXMLExporter(
+                new Tracker_XMLExporter_LocalAbsoluteFilePathXMLExporter()
+            ),
+            new Tracker_XMLExporter_ChangesetValue_ChangesetValueFloatXMLExporter(),
+            new Tracker_XMLExporter_ChangesetValue_ChangesetValueIntegerXMLExporter(),
+            new Tracker_XMLExporter_ChangesetValue_ChangesetValueStringXMLExporter(),
+            new Tracker_XMLExporter_ChangesetValue_ChangesetValueTextXMLExporter(),
+            new Tracker_XMLExporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter(),
+            new Tracker_XMLExporter_ChangesetValue_ChangesetValueListXMLExporter(),
+            new Tracker_XMLExporter_ChangesetValue_ChangesetValueUnknownXMLExporter()
+        );
+        $values_exporter    = new Tracker_XMLExporter_ChangesetValuesXMLExporter($visitor);
+        $changeset_exporter = new Tracker_XMLExporter_ChangesetXMLExporter($values_exporter);
+
+        return new Tracker_XMLExporter_ArtifactXMLExporter($changeset_exporter);
+    }
+
+    private function getChangesetXMLUpdater() {
+        $visitor = new Tracker_XMLUpdater_FieldChangeXMLUpdaterVisitor(
+            new Tracker_XMLUpdater_FieldChange_FieldChangeDateXMLUpdater(),
+            new Tracker_XMLUpdater_FieldChange_FieldChangeFloatXMLUpdater(),
+            new Tracker_XMLUpdater_FieldChange_FieldChangeIntegerXMLUpdater(),
+            new Tracker_XMLUpdater_FieldChange_FieldChangeTextXMLUpdater(),
+            new Tracker_XMLUpdater_FieldChange_FieldChangeStringXMLUpdater(),
+            new Tracker_XMLUpdater_FieldChange_FieldChangePermissionsOnArtifactXMLUpdater(),
+            new Tracker_XMLUpdater_FieldChange_FieldChangeListXMLUpdater(),
+            new Tracker_XMLUpdater_FieldChange_FieldChangeUnknownXMLUpdater()
+        );
+
+        return new Tracker_XMLUpdater_ChangesetXMLUpdater(
+            $visitor,
+            $this->getFormElementFactory()
+        );
+
+    }
+
+    private function getFileXMLUpdater() {
+        return new Tracker_XMLUpdater_TemporaryFileXMLUpdater(
+            new Tracker_XMLUpdater_TemporaryFileCreator()
+        );
+    }
 }
-?>

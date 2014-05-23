@@ -99,5 +99,8 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Multi
         }
         return false;
     }
+
+    public function accept(Tracker_FormElement_FieldVisitor $visitor) {
+        return $visitor->visitCheckbox($this);
+    }
 }
-?>

@@ -25,7 +25,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
     /**
      * @var Tracker_Artifact_ArtifactRenderer
      */
-    private $renderer;
+    protected $renderer;
 
     public function __construct(Tracker_Artifact $artifact, Codendi_Request $request, PFUser $user, Tracker_Artifact_ArtifactRenderer $renderer) {
         parent::__construct($artifact, $request, $user);
@@ -63,7 +63,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
         return $html;
     }
 
-    private function fetchArtifactReferencesSidebar() {
+    protected function fetchArtifactReferencesSidebar() {
         $html             = '';
         $linked_artifacts = $this->artifact->getLinkedArtifacts($this->user);
 

@@ -141,5 +141,7 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
         return $changeset_value;
     }
 
+    public function accept(Tracker_FormElement_FieldVisitor $visitor) {
+        return $visitor->visitInteger($this);
+    }
 }
-?>

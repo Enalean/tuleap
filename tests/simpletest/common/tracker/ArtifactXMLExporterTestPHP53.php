@@ -850,13 +850,13 @@ class ArtifactXMLExporter_UserListFieldTest extends ArtifactXMLExporter_BaseTest
         $this->assertEqual((string)$initial_change->value, '');
         $this->assertEqual((string)$initial_change['field_name'], 'assigned_to');
         $this->assertEqual((string)$initial_change['type'], 'list');
-        $this->assertEqual((string)$initial_change['bind'], 'user');
+        $this->assertEqual((string)$initial_change['bind'], 'users');
 
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value, 'jeanjean');
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value['format'], 'username');
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['field_name'], 'assigned_to');
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['type'], 'list');
-        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['bind'], 'user');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['bind'], 'users');
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->submitted_on, $this->toExpectedDate(3234567890));
     }
 }
@@ -1031,19 +1031,19 @@ class ArtifactXMLExporter_UserMultiListFieldTest extends ArtifactXMLExporter_Bas
         $this->assertEqual((string)$initial_change->value[0], '');
         $this->assertEqual((string)$initial_change['field_name'], 'multiselect_user');
         $this->assertEqual((string)$initial_change['type'], 'list');
-        $this->assertEqual((string)$initial_change['bind'], 'user');
+        $this->assertEqual((string)$initial_change['bind'], 'users');
 
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value[0], 'yannis');
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['field_name'], 'multiselect_user');
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['type'], 'list');
-        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['bind'], 'user');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['bind'], 'users');
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->submitted_on, $this->toExpectedDate(3234567890));
 
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value[0], 'nicolas');
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value[1], 'sandra');
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['field_name'], 'multiselect_user');
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['type'], 'list');
-        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['bind'], 'user');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['bind'], 'users');
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->submitted_on, $this->toExpectedDate(3234570000));
     }
 
@@ -1057,37 +1057,37 @@ class ArtifactXMLExporter_UserMultiListFieldTest extends ArtifactXMLExporter_Bas
         $this->assertEqual((string)$initial_change_msb->value[0], '');
         $this->assertEqual((string)$initial_change_msb['field_name'], 'multiselect_user');
         $this->assertEqual((string)$initial_change_msb['type'], 'list');
-        $this->assertEqual((string)$initial_change_msb['bind'], 'user');
+        $this->assertEqual((string)$initial_change_msb['bind'], 'users');
 
         $this->assertEqual((string)$initial_change_msb_2->value[0], '');
         $this->assertEqual((string)$initial_change_msb_2['field_name'], 'multiselect_user2');
         $this->assertEqual((string)$initial_change_msb_2['type'], 'list');
-        $this->assertEqual((string)$initial_change_msb_2['bind'], 'user');
+        $this->assertEqual((string)$initial_change_msb_2['bind'], 'users');
 
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value[0], 'yannis');
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['field_name'], 'multiselect_user');
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['type'], 'list');
-        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['bind'], 'user');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['bind'], 'users');
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->submitted_on, $this->toExpectedDate(3234567890));
 
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value[0], 'nicolas');
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['field_name'], 'multiselect_user2');
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['type'], 'list');
-        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['bind'], 'user');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['bind'], 'users');
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->submitted_on, $this->toExpectedDate(3234570000));
 
         $this->assertEqual((string)$this->xml->artifact->changeset[3]->field_change->value[0], 'nicolas');
         $this->assertEqual((string)$this->xml->artifact->changeset[3]->field_change->value[1], 'sandra');
         $this->assertEqual((string)$this->xml->artifact->changeset[3]->field_change['field_name'], 'multiselect_user');
         $this->assertEqual((string)$this->xml->artifact->changeset[3]->field_change['type'], 'list');
-        $this->assertEqual((string)$this->xml->artifact->changeset[3]->field_change['bind'], 'user');
+        $this->assertEqual((string)$this->xml->artifact->changeset[3]->field_change['bind'], 'users');
         $this->assertEqual((string)$this->xml->artifact->changeset[3]->submitted_on, $this->toExpectedDate(3234580000));
 
         $this->assertEqual((string)$this->xml->artifact->changeset[4]->field_change->value[0], 'yannis');
         $this->assertEqual((string)$this->xml->artifact->changeset[4]->field_change->value[1], 'sandra');
         $this->assertEqual((string)$this->xml->artifact->changeset[4]->field_change['field_name'], 'multiselect_user2');
         $this->assertEqual((string)$this->xml->artifact->changeset[4]->field_change['type'], 'list');
-        $this->assertEqual((string)$this->xml->artifact->changeset[4]->field_change['bind'], 'user');
+        $this->assertEqual((string)$this->xml->artifact->changeset[4]->field_change['bind'], 'users');
         $this->assertEqual((string)$this->xml->artifact->changeset[4]->submitted_on, $this->toExpectedDate(3234590000));
 
     }
@@ -1101,25 +1101,25 @@ class ArtifactXMLExporter_UserMultiListFieldTest extends ArtifactXMLExporter_Bas
         $this->assertEqual((string)$initial_change_msb->value[0], '');
         $this->assertEqual((string)$initial_change_msb['field_name'], 'multiselect_user');
         $this->assertEqual((string)$initial_change_msb['type'], 'list');
-        $this->assertEqual((string)$initial_change_msb['bind'], 'user');
+        $this->assertEqual((string)$initial_change_msb['bind'], 'users');
 
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value[0], 'yannis');
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['field_name'], 'multiselect_user');
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['type'], 'list');
-        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['bind'], 'user');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['bind'], 'users');
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->submitted_on, $this->toExpectedDate(3234567890));
 
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value[0], '');
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['field_name'], 'multiselect_user');
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['type'], 'list');
-        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['bind'], 'user');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['bind'], 'users');
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->submitted_on, $this->toExpectedDate(3234570000));
 
         $this->assertEqual((string)$this->xml->artifact->changeset[3]->field_change->value[0], 'sandra');
         $this->assertEqual((string)$this->xml->artifact->changeset[3]->field_change->value[1], 'nicolas');
         $this->assertEqual((string)$this->xml->artifact->changeset[3]->field_change['field_name'], 'multiselect_user');
         $this->assertEqual((string)$this->xml->artifact->changeset[3]->field_change['type'], 'list');
-        $this->assertEqual((string)$this->xml->artifact->changeset[3]->field_change['bind'], 'user');
+        $this->assertEqual((string)$this->xml->artifact->changeset[3]->field_change['bind'], 'users');
         $this->assertEqual((string)$this->xml->artifact->changeset[3]->submitted_on, $this->toExpectedDate(3234580000));
     }
 
@@ -1132,18 +1132,18 @@ class ArtifactXMLExporter_UserMultiListFieldTest extends ArtifactXMLExporter_Bas
         $this->assertEqual((string)$initial_change_msb->value[0], '');
         $this->assertEqual((string)$initial_change_msb['field_name'], 'multiselect_user');
         $this->assertEqual((string)$initial_change_msb['type'], 'list');
-        $this->assertEqual((string)$initial_change_msb['bind'], 'user');
+        $this->assertEqual((string)$initial_change_msb['bind'], 'users');
 
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value[0], 'yannis');
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['field_name'], 'multiselect_user');
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['type'], 'list');
-        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['bind'], 'user');
+        $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change['bind'], 'users');
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->submitted_on, $this->toExpectedDate(3234567890));
 
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change->value[0], '');
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['field_name'], 'multiselect_user');
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['type'], 'list');
-        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['bind'], 'user');
+        $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['bind'], 'users');
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->submitted_on, $this->toExpectedDate(3234570000));
     }
 }

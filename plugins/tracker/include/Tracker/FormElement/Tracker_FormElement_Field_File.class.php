@@ -179,6 +179,15 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         return '';
     }
 
+    public function fetchArtifactCopyMode(Tracker_Artifact $artifact) {
+        $last_changeset = $artifact->getLastChangeset();
+        if ($last_changeset) {
+            $value = $last_changeset->getValue($this);
+            return $this->fetchAllAttachmentTitleAndDescription($value);
+        }
+        return '';
+    }
+
     /**
      * Fetch the html code to display the field value in Mail
      *
@@ -367,6 +376,33 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
             $txt .= implode(',', $filenames);
         }
         return $txt;
+    }
+
+    protected function fetchAllAttachmentTitleAndDescription($values) {
+        $html = '';
+        if($values) {
+            $html .= '<div class="tracker-artifact-attachement-title-list tracker_artifact_field">';
+            $html .= '<div class="disabled_field">' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_attachment_copy') . '</div>';
+            $html .= '<ul>';
+            foreach($values as $value) {
+                $description = $value->getDescription();
+
+                $html .= '<li>';
+                $html .= '<span class="file-title">';
+                $html .= $value->getFileName();
+                $html .= '</span>';
+
+                if($description) {
+                    $html .= '<span class="file-description">';
+                    $html .= ' - ' . $description;
+                    $html .= '</span>';
+                }
+                $html .= '</li>';
+            }
+            $html .= '</ul>';
+            $html .= '</div>';
+        }
+        return $html;
     }
 
     /**
@@ -1056,5 +1092,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         }
         parent::deleteChangesetValue($changeset_value_id);
     }
+
+    public function accept(Tracker_FormElement_FieldVisitor $visitor) {
+        return $visitor->visitFile($this);
+    }
 }
-?>

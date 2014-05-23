@@ -300,5 +300,8 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
             $this->getBind()->process($request->get('bind'), $no_redirect = true);
         }
     }
+
+    public function accept(Tracker_FormElement_FieldVisitor $visitor) {
+        return $visitor->visitSelectbox($this);
+    }
 }
-?>

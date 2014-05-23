@@ -42,6 +42,30 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
     protected function getDao() {
         return new Tracker_FormElement_Field_StringDao();
     }
+
+    /**
+     * Get the value of this field
+     *
+     * @param Tracker_Artifact_Changeset $changeset   The changeset (needed in only few cases like 'lud' field)
+     * @param int                        $value_id    The id of the value
+     * @param boolean                    $has_changed If the changeset value has changed from the rpevious one
+     *
+     * @return Tracker_Artifact_ChangesetValue or null if not found
+     */
+    public function getChangesetValue($changeset, $value_id, $has_changed) {
+
+        $changeset_value = null;
+        if ($row = $this->getValueDao()->searchById($value_id, $this->id)->getRow()) {
+            $changeset_value = new Tracker_Artifact_ChangesetValue_String(
+                $value_id,
+                $this,
+                $has_changed,
+                $row['value'],
+                $row['body_format']
+            );
+        }
+        return $changeset_value;
+    }
   
     /**
      * The field is permanently deleted from the db
@@ -280,6 +304,10 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
 
     public function isEmpty($value) {
         return trim($value) == '';
+    }
+
+    public function accept(Tracker_FormElement_FieldVisitor $visitor) {
+        return $visitor->visitString($this);
     }
 }
 

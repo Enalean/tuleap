@@ -32,7 +32,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
     /**
      * @var Tracker_IDisplayTrackerLayout
      */
-    private $layout;
+    protected $layout;
 
     /**
      * @var Tracker_Artifact[]
@@ -84,10 +84,32 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
             array('title' => $title,
                   'url'   => TRACKER_BASE_URL.'/?aid='. $this->artifact->getId())
         );
-        $this->tracker->displayHeader($this->layout, $title, $breadcrumbs, null, array('body_class' => array('widgetable')));
+        $toolbar = $this->getToolbar();
+        $this->tracker->displayHeader($this->layout, $title, $breadcrumbs, $toolbar, array('body_class' => array('widgetable')));
     }
 
-    private function fetchView(Codendi_Request $request, PFUser $user) {
+    protected function getToolbar() {
+        $toolbar = $this->tracker->getDefaultToolbar();
+
+        if (UserManager::instance()->getCurrentUser()->isLoggedIn()) {
+            $this->injectCopyItemInToolbar($toolbar);
+        }
+
+        return $toolbar;
+    }
+
+    private function injectCopyItemInToolbar(array &$toolbar) {
+        $position_of_submitnew_item = 0;
+
+        $item = array(
+            'title' => $GLOBALS['Language']->getText('plugin_tracker', 'copy_this_artifact'),
+            'url'   => TRACKER_BASE_URL.'/?func=copy-artifact&aid='. $this->artifact->getId()
+        );
+
+        array_splice($toolbar, $position_of_submitnew_item + 1, 0, array($item));
+    }
+
+    protected function fetchView(Codendi_Request $request, PFUser $user) {
         $view_collection = new Tracker_Artifact_View_ViewCollection();
         $view_collection->add(new Tracker_Artifact_View_Edit($this->artifact, $request, $user, $this));
         if ($this->artifact->getTracker()->getChildren()) {
@@ -97,6 +119,10 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         return $view_collection->fetchRequestedView($request);
     }
 
+    protected function fetchTitle() {
+        return $this->artifact->fetchTitle();
+    }
+
     private function fetchTitleInHierarchy(array $hierarchy) {
         $html  = '';
         $html .= $this->artifact->fetchHiddenTrackerId();
@@ -104,7 +130,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
             array_unshift($hierarchy, $this->artifact);
             $html .= $this->fetchParentsTitle($hierarchy);
         } else {
-            $html .= $this->artifact->fetchTitle();
+            $html .= $this->fetchTitle();
         }
         return $html;
     }

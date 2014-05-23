@@ -41,6 +41,13 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
         parent::__construct($id, $field, $has_changed);
         $this->list_values = $list_values;
     }
+
+    /**
+     * @return mixed
+     */
+    public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor) {
+        return $visitor->visitList($this);
+    }
     
     /**
      * spl\Countable

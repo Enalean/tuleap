@@ -218,5 +218,8 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
      public function fetchSubmitMasschange($submitted_values=array()) {
          return '';
      }
+
+    public function accept(Tracker_FormElement_FieldVisitor $visitor) {
+        return $visitor->visitArtifactId($this);
+    }
 }
-?>

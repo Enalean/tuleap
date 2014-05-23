@@ -1009,6 +1009,8 @@ plugin_tracker_artifact	formelement_artifactlink_title	Artifact links
 plugin_tracker_artifact	formelement_artifactlink_reverse_title	Reverse artifact links
 plugin_tracker_artifact	formelement_artifactlink_display_reverse	Display reverse artifact links
 
+plugin_tracker_artifact	formelement_attachment_copy	"Attachment" type field cannot be modified during artifact copy.
+
 plugin_tracker_artifact	unable_update	Unable to update the artifact
 plugin_tracker_artifact	no_changes	No changes for artifact $1
 plugin_tracker_artifact	fields_not_valid	Fields are not valid
@@ -1026,6 +1028,11 @@ plugin_tracker_artifact	references_title	References
 
 plugin_tracker_artifact	submission_keeper_warning_title	Warning: concurrent edit
 plugin_tracker_artifact	submission_keeper_warning_msg	<p>Someone updated this artifact while you were editing it.</p><p>Please acknowledge all notifications before submit.</p><p>Beware, on submit, your modifications will be applied on top of previous changes.</p>
+
+plugin_tracker_artifact	copy_mode_info	You are currently copying the artifact $1.
+plugin_tracker_artifact	copy_submit_button	Copy
+
+plugin_tracker_artifact	formelement_artifact_link_copy	Artifact field links cannot be copied
 
 plugin_tracker_artifactlink	go_to_tracker	Go see this tracker
 plugin_tracker_artifactlink	manual_panel_desc	If you know the artifact id, feel free to enter it manually in the text field below. Use a comma to separate each ids if you have more than one.
@@ -1549,3 +1556,6 @@ plugin_tracker_modal_artifact	artifact_to_link_title	The artifact will be linked
 plugin_tracker_modal_artifact	submit_error	The artifact cannot be created because there are several errors:
 
 plugin_tracker	Description:	Description:
+plugin_tracker	copy_this_artifact	Copy this artifact
+plugin_tracker	error_create_copy	An error occured while creating a copy of the artifact #$1.
+plugin_tracker	copy_of	Copy of $1

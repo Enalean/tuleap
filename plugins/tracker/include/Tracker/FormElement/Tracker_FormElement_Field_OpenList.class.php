@@ -839,5 +839,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         return ($value === null || $value === '');
     }
 
+    public function accept(Tracker_FormElement_FieldVisitor $visitor) {
+        return $visitor->visitOpenList($this);
+    }
 }
-?>

@@ -44,6 +44,13 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
         $this->artifact_links = $artifact_links;
         $this->user_manager   = UserManager::instance();
     }
+
+    /**
+     * @return mixed
+     */
+    public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor) {
+        return $visitor->visitArtifactLink($this);
+    }
     
     /**
      * Check if there are changes between current and new value

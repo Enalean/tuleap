@@ -95,7 +95,8 @@ Mock::generatePartial('Tracker_FormElement_Field', 'MockTracker_FormElement_Fiel
         'userCanUpdate',
         'userCanSubmit',
         'setHasErrors',
-        'fetchSubmitValueMasschange'
+        'fetchSubmitValueMasschange',
+        'accept'
     )
 );
 require_once('common/dao/include/DataAccessResult.class.php');

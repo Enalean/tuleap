@@ -296,6 +296,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
 
     public function fetchSubmitMasschange() {
     }
-}
 
-?>
+    public function accept(Tracker_FormElement_FieldVisitor $visitor) {
+        return $visitor->visitComputed($this);
+    }
+}
