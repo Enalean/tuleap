@@ -1,3 +1,6 @@
+Version 3.44 - Tuleap 7.1
+    * request #6545: Notify project admins when ldap users are suspended. (Contrib STMicroelectronics)
+
 Version 3.43 - Tuleap 7.1
     * story #6341: see maintenance & preferences pages into a single page
 
