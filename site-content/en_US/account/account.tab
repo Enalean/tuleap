@@ -31,7 +31,7 @@ account_options	change_timezone	Change Timezone
 account_options	email_address		Email Addr:
 account_options	change_email_address	Change Email Addr
 account_options	preferences	Preferences
-account_options	theme	Theme/Color Scheme:
+account_options	theme	Theme:
 account_options	shell_account_title	Shell Account Information
 account_options	shell_box	Shell Box
 account_options	shell_shared_keys	SSH Shared Keys:

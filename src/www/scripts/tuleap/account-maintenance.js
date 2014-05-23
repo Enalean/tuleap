@@ -31,6 +31,7 @@
         });
 
         $('[data-ssh_key_value]').one('click', displayFullSSHKey);
+        $(window).resize(updateHeightValue);
     });
 
     function displayFullSSHKey() {
@@ -42,7 +43,12 @@
     }
 
     function updateHeightValue() {
-        var new_height = $('#account-maintenance').height();
+        $('#account-maintenance, #account-preferences').height('auto');
+
+        var new_height = Math.max(
+            $('#account-maintenance').height(),
+            $('#account-preferences').height()
+        );
 
         $('#account-preferences').height(new_height);
     };
