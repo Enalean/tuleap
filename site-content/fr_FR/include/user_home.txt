@@ -1,4 +1,4 @@
-<?
+<?php
 //
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 // This file is licensed under the GNU General Public License version 2. See the file COPYING.
@@ -24,5 +24,3 @@ $my_html_ldap_format = '<td colspan="2" align="center"><hr><td>'.
 	   '<tr valign="top"><td>Téléphone #1 :</td><td><b>%telephonenumber%</b></td></tr>'.
 	   '<tr valign="top"><td>Téléphone #2 :</td><td><b>%telephone-office2%</b></td></tr>'.
 	   '<tr valign="top"><td>Fax :</td><td><b>%facsimiletelephonenumber%</b></td></tr>';
-
-?>

@@ -1,4 +1,4 @@
-<?
+<?php
 //
 // Codendi
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
@@ -17,6 +17,3 @@ $body = "You are now a registered user on ".$GLOBALS['sys_name']
 ."the Site Documentation and finalize the setup of your User Profile "
 ."(Define your skills profile, your preferences, etc.)\n\n\nEnjoy the site, provide us with feedback on ways that we can improve "
 .$GLOBALS['sys_name']." and speak of ".$GLOBALS['sys_name']." around you. \n\n\n-- The ".$GLOBALS['sys_name']." Team";
-            
-
-?>

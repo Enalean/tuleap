@@ -1,4 +1,4 @@
-<?
+<?php
 
 // Allow nonymous user to access to following list of URLs
 
@@ -7,4 +7,3 @@ $enable_anonymous_url = false;
 
 // Select Allowed URLs
 $allowed_scripts = array();
-?>

@@ -1,4 +1,4 @@
-<?
+<?php
 //
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 // This file is licensed under the GNU General Public License version 2. See the file COPYING.
@@ -32,4 +32,3 @@ print '<P><span class="command">cvs -d:pserver:'.$username.'@'.$cvs_domain.':/cv
 
 
 print '<P>'.help_button('cvs.html',false,'[Plus d\'information sur CVS&hellip;]');
-?>

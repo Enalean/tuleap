@@ -1,4 +1,4 @@
-<?
+<?php
 //
 // Codendi
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
@@ -32,5 +32,3 @@
 	<B>If Other License:</B><BR>
 	<TEXTAREA name="form_license_other" wrap=virtual cols=60 rows=10>'.$data['project']['form_license_other'].'</TEXTAREA>
 	<P>';
-	
-?>
