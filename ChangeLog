@@ -25,6 +25,7 @@ Version 7.1 (Not Yet Released)
 	* Add a makefile for debian
 	* URLVerification now asks plugins if User has been granted permissions to
 	access even if user should primarily not able to (admin delegation).
+	* Remove short open tags in site-content
 
 	== Themes ==
 	* FlamingParrot: 1.8
