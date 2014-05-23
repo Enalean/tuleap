@@ -59,6 +59,17 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
     public function fetchMailArtifactInGroup($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false) {
         return $this->fetchMailRecursiveArtifact($format, 'fetchMailArtifact', array($recipient, $artifact, $format, $ignore_perms));
     }
+
+    /**
+     * @see Tracker_FormElement::fetchArtifactCopyMode
+     */
+    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, $submitted_values = array()) {
+        return $this->fetchWithColumnGroup('fetchArtifactCopyMode', array($artifact, $submitted_values));
+    }
+
+    public function fetchArtifactCopyModeInGroup(Tracker_Artifact $artifact, $submitted_values = array()) {
+        return $this->fetchRecursiveArtifact('fetchArtifactCopyMode', array($artifact, $submitted_values));
+    }
     
     /**
      * Fetch the element for the submit new artifact form
