@@ -1,3 +1,6 @@
+Version 5.387 - Tuleap 7.1
+    * tasks #6831 - disable tracker for tracker admins during migration
+
 Version 5.386 - Tuleap 7.1
     * tasks #6924: display copy form with columns
 
