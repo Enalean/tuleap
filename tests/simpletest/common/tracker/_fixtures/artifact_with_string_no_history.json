@@ -18,6 +18,7 @@
                 "data_type":    "1",
                 "display_type": "TF",
                 "field_name":   "field_14",
+                "value_function": "",
                 "valueInt":     null,
                 "valueText":    "The error code is not returned",
                 "valueFloat":   null,

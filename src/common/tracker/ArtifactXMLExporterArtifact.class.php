@@ -105,42 +105,47 @@ class ArtifactXMLExporterArtifact {
     private function getCurrentFieldsValues($tracker_id, $artifact_id, array $artifact_row) {
         $fields_values = array(
             array(
-                'field_name'   => 'summary',
-                'display_type' => ArtifactStringFieldXMLExporter::TV3_DISPLAY_TYPE,
-                'data_type'    => ArtifactStringFieldXMLExporter::TV3_DATA_TYPE,
-                'valueText'    => $artifact_row['summary'],
+                'field_name'     => 'summary',
+                'display_type'   => ArtifactStringFieldXMLExporter::TV3_DISPLAY_TYPE,
+                'data_type'      => ArtifactStringFieldXMLExporter::TV3_DATA_TYPE,
+                'valueText'      => $artifact_row['summary'],
+                'value_function' => '',
             )
         );
         if (isset($artifact_row['details'])) {
             $fields_values[] = array(
-                'field_name'   => 'details',
-                'display_type' => ArtifactTextFieldXMLExporter::TV3_DISPLAY_TYPE,
-                'data_type'    => ArtifactTextFieldXMLExporter::TV3_DATA_TYPE,
-                'valueText'    => $artifact_row['details'],
+                'field_name'     => 'details',
+                'display_type'   => ArtifactTextFieldXMLExporter::TV3_DISPLAY_TYPE,
+                'data_type'      => ArtifactTextFieldXMLExporter::TV3_DATA_TYPE,
+                'valueText'      => $artifact_row['details'],
+                'value_function' => '',
             );
         }
         if (isset($artifact_row['severity']) && $artifact_row['severity']) {
             $fields_values[] = array(
-                'field_name'   => 'severity',
-                'display_type' => ArtifactStaticListFieldXMLExporter::TV3_DISPLAY_TYPE,
-                'data_type'    => ArtifactStaticListFieldXMLExporter::TV3_DATA_TYPE,
-                'valueInt'     => $artifact_row['severity'],
+                'field_name'     => 'severity',
+                'display_type'   => ArtifactStaticListFieldXMLExporter::TV3_DISPLAY_TYPE,
+                'data_type'      => ArtifactStaticListFieldXMLExporter::TV3_DATA_TYPE,
+                'valueInt'       => $artifact_row['severity'],
+                'value_function' => '',
             );
         }
         if (isset($artifact_row['close_date']) && $artifact_row['close_date']) {
             $fields_values[] = array(
-                'field_name'   => 'close_date',
-                'display_type' => ArtifactDateFieldXMLExporter::TV3_DISPLAY_TYPE,
-                'data_type'    => ArtifactDateFieldXMLExporter::TV3_DATA_TYPE,
-                'valueDate'    => $artifact_row['close_date'],
+                'field_name'     => 'close_date',
+                'display_type'   => ArtifactDateFieldXMLExporter::TV3_DISPLAY_TYPE,
+                'data_type'      => ArtifactDateFieldXMLExporter::TV3_DATA_TYPE,
+                'valueDate'      => $artifact_row['close_date'],
+                'value_function' => '',
             );
         }
         if (isset($artifact_row['status_id']) && $artifact_row['status_id']) {
             $fields_values[] = array(
-                'field_name'   => 'status_id',
-                'display_type' => ArtifactStaticListFieldXMLExporter::TV3_DISPLAY_TYPE,
-                'data_type'    => ArtifactStaticListFieldXMLExporter::TV3_DATA_TYPE,
-                'valueInt'     => $artifact_row['status_id'],
+                'field_name'     => 'status_id',
+                'display_type'   => ArtifactStaticListFieldXMLExporter::TV3_DISPLAY_TYPE,
+                'data_type'      => ArtifactStaticListFieldXMLExporter::TV3_DATA_TYPE,
+                'valueInt'       => $artifact_row['status_id'],
+                'value_function' => '',
             );
         }
         foreach ($this->dao->searchFieldValues($artifact_id) as $row) {
@@ -159,6 +164,7 @@ class ArtifactXMLExporterArtifact {
                     $field_value['field_name'],
                     $field_value['display_type'],
                     $field_value['data_type'],
+                    $field_value['value_function'],
                     $this->field_factory->getFieldValue($field_value)
                 );
             } catch (Exception_TV3XMLException $exception) {
@@ -167,17 +173,18 @@ class ArtifactXMLExporterArtifact {
         }
     }
 
-    private function updateInitialChangeset($tracker_id, $artifact_id, $field_name, $display_type, $data_type, $value) {
+    private function updateInitialChangeset($tracker_id, $artifact_id, $field_name, $display_type, $data_type, $value_function, $value) {
         if (! isset($this->field_initial_changeset[$field_name])) {
             $this->field_factory->appendValueByType(
                 $this->initial_changeset,
                 $tracker_id,
                 $artifact_id,
                 array(
-                    'display_type' => $display_type,
-                    'data_type'    => $data_type,
-                    'field_name'   => $field_name,
-                    'new_value'    => $value,
+                    'display_type'   => $display_type,
+                    'data_type'      => $data_type,
+                    'field_name'     => $field_name,
+                    'value_function' => $value_function,
+                    'new_value'      => $value,
                 )
             );
             $this->field_initial_changeset[$field_name] = true;
@@ -204,10 +211,11 @@ class ArtifactXMLExporterArtifact {
                 $tracker_id,
                 $artifact_id,
                 array(
-                    'display_type' => $field_value['display_type'],
-                    'data_type'    => $field_value['data_type'],
-                    'field_name'   => $field_value['field_name'],
-                    'new_value'    => $this->field_factory->getFieldValue($field_value),
+                    'display_type'   => $field_value['display_type'],
+                    'data_type'      => $field_value['data_type'],
+                    'field_name'     => $field_value['field_name'],
+                    'value_function' => $field_value['value_function'],
+                    'new_value'      => $this->field_factory->getFieldValue($field_value),
                 )
             );
             return true;
@@ -227,7 +235,8 @@ class ArtifactXMLExporterArtifact {
             $field = $this->field_factory->getField(
                 $field_value['field_name'],
                 $field_value['display_type'],
-                $field_value['data_type']
+                $field_value['data_type'],
+                $field_value['value_function']
             );
 
             return $field->isValueEqual(
@@ -264,7 +273,15 @@ class ArtifactXMLExporterArtifact {
         if ($row['field_name'] == 'comment') {
             $this->comment_exporter->appendComment($changeset_node, $row);
         } else {
-            $this->updateInitialChangeset($tracker_id, $artifact_id, $row['field_name'], $row['display_type'], $row['data_type'], $row['old_value']);
+            $this->updateInitialChangeset(
+                $tracker_id,
+                $artifact_id,
+                $row['field_name'],
+                $row['display_type'],
+                $row['data_type'],
+                $row['value_function'],
+                $row['old_value']
+            );
             $this->fixDataWithArtifactSpecialValues($row);
 
             $this->last_history_recorded[$row['field_name']] = $row['new_value'];

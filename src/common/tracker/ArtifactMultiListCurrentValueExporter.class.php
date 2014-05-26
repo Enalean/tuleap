@@ -27,6 +27,8 @@ class ArtifactMultiListCurrentValueExporter {
     const LABEL_VALUES_INDEX         = 'valueLabelList';
     const TV3_VALUE_INDEX            = 'valueInt';
     const TV3_BIND_TO_USER_DATA_TYPE = '5';
+    /** This happens when a MSB is changed into a SB and back to a MSB */
+    const TV3_ALTERNATE_BIND_TO_USER_DATA_TYPE = '2';
 
     /** @var array */
     private $current_field_values = array();
@@ -82,7 +84,11 @@ class ArtifactMultiListCurrentValueExporter {
         $field_name     = $this->getFieldNameFromRow($field_value_row);
         $current_value  = $this->getCurrentValueLabel($field_value_row);
 
-        $this->current_field_values[$field_name][self::LABEL_VALUES_INDEX] .= ",$current_value";
+        $existing_field_property_values = explode(',', $this->current_field_values[$field_name][self::LABEL_VALUES_INDEX]);
+
+        if (! in_array($current_value, $existing_field_property_values)) {
+            $this->current_field_values[$field_name][self::LABEL_VALUES_INDEX] .= ",$current_value";
+        }
     }
 
     private function getCurrentValueLabel(array $field_value_row) {
@@ -128,7 +134,12 @@ class ArtifactMultiListCurrentValueExporter {
     }
 
     private function fieldIsBindedToUser(array $field_value_row) {
-        return $field_value_row['data_type'] === self::TV3_BIND_TO_USER_DATA_TYPE;
+        return $field_value_row['data_type'] === self::TV3_BIND_TO_USER_DATA_TYPE || $this->isMSBThatWasChangedIntoASB($field_value_row);
+    }
+
+    private function isMSBThatWasChangedIntoASB(array $field_value_row) {
+        return $field_value_row['data_type'] === self::TV3_ALTERNATE_BIND_TO_USER_DATA_TYPE &&
+               $field_value_row['value_function'] != '';
     }
 
     private function fetchAllLabels(array $field_value_row, $tracker_id) {

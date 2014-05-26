@@ -20,12 +20,19 @@
 
 require_once 'pre.php';
 
-$debug        = false;
-$atid         = null;
-$archive_path = null;
-$options      = getopt('d');
-if (isset($options['d'])) {
+$debug           = false;
+$overwrite       = false;
+$atid            = null;
+$archive_path    = null;
+$debug_option    = getopt('d');
+$overwrite_option= getopt('o');
+
+if (isset($debug_option['d'])) {
     $debug = true;
+ }
+
+if (isset($overwrite_option['o'])) {
+    $overwrite = true;
 }
 
 for ($i = 1; $i < $argc; ++$i) {
@@ -44,7 +51,7 @@ if ($atid === null || $archive_path === null) {
     exit(1);
 }
 
-if (file_exists($archive_path)) {
+if (! $overwrite && file_exists($archive_path)) {
     echo "*** ERROR: File $archive_path already exists.".PHP_EOL;
     exit(1);
 }
