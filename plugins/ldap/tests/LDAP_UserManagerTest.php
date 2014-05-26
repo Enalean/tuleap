@@ -182,6 +182,8 @@ class LDAP_UserManager_AuthenticatTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        Config::store();
+        Config::set('sys_logger_level', 'debug');
         $this->empty_ldap_result_iterator   = aLDAPResultIterator()->build();
         $this->john_mc_lane_result_iterator = aLDAPResultIterator()
             ->withParams($this->ldap_params)
@@ -200,7 +202,7 @@ class LDAP_UserManager_AuthenticatTest extends TuleapTestCase {
         $this->ldap = partial_mock(
             'LDAP',
             array('search', 'authenticate', 'searchLogin'),
-            array($this->ldap_params)
+            array($this->ldap_params, mock('TruncateLevelLogger'))
         );
         $this->user_sync         = mock('LDAP_UserSync');
         $this->user_manager      = mock('UserManager');
@@ -210,6 +212,11 @@ class LDAP_UserManager_AuthenticatTest extends TuleapTestCase {
             array($this->ldap, $this->user_sync)
         );
         stub($this->ldap_user_manager)->getUserManager()->returns($this->user_manager);
+    }
+
+    public function tearDown() {
+        Config::restore();
+        parent::tearDown();
     }
 
     public function itDelegatesAutenticateToLDAP() {

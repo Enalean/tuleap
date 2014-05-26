@@ -35,9 +35,13 @@ class LDAP_DirectorySynchronization {
     protected $lum;
     protected $um;
 
-    public function __construct(LDAP $ldap) {
+    /** @var Logger */
+    private $logger;
+
+    public function __construct(LDAP $ldap, Logger $logger) {
         $this->ldapTime = 0;
         $this->ldap     = $ldap;
+        $this->logger   = $logger;
     }
 
     public function syncAll() {
@@ -89,6 +93,14 @@ class LDAP_DirectorySynchronization {
                     $this->getLdapUserManager()->updateLdapUid($user, $lr->getLogin());
                 }
             } elseif (count($lri) == 0) {
+                $this->logger->warn('LDAP user to be suspended: '.$user->getId().' '. $user->getUserName());
+
+                $this->logger->debug(
+                    ' *** PEOPLEDN: '.$PeopleDn.
+                    ' *** LDAP QUERY: '. $ldap_query.
+                    ' *** ATTRIBUTES: '. print_r($attributes, true)
+                );
+
                 // User not found in LDAP directory
                 $modified = true;
                 $user->setStatus('S');
@@ -160,4 +172,3 @@ class LDAP_DirectorySynchronization {
         return new LDAP_CleanUpManager($this->ldap->getLDAPParam('daily_sync_retention_period'));
     }
 }
-?>

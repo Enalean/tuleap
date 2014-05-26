@@ -43,14 +43,18 @@ class LDAP {
     private $bound;
     private $errorsTrapped;
     private $ldapParams;
+
+    /** @var Logger */
+    private $logger;
     
     /**
      * LDAP object constructor. Use gloabals for initialization.
      */
-    function __construct(array $ldapParams) {
+    function __construct(array $ldapParams, Logger $logger) {
         $this->ldapParams    =  $ldapParams;
         $this->bound         = false;
         $this->errorsTrapped = true;
+        $this->logger        = $logger;
     }
     
     /**
@@ -95,10 +99,25 @@ class LDAP {
                     // valid with a bind, If bind success: that's great, if
                     // not, this is a connexion failure.
                     if($this->bind()) {
+                        $this->logger->debug('Bound to LDAP server: '.$ldap_server);
                         return true;
+                    } else {
+                        $this->logger->warn('Cannot bind to LDAP server: '.$ldap_server.
+                            ' ***ERROR MESSSAGE:'. ldap_error($this->ds).
+                            ' ***ERROR no:'. $this->getErrno()
+                        );
                     }
+                } else {
+                    $this->logger->warn('Cannot connect to LDAP server: '.$ldap_server.
+                        ' ***ERROR:'. ldap_error($this->ds) .
+                        ' ***ERROR no:'. $this->getErrno()
+                    );
                 }
             }
+            $this->logger->warn('Cannot connect to any LDAP server: '.$this->ldapParams['server'].
+                ' ***ERROR:'. ldap_error($this->ds).
+                ' ***ERROR no:'. $this->getErrno()
+            );
             return false;
         } else {
             return true;
@@ -127,12 +146,19 @@ class LDAP {
                 // Prevent successful binding if a username is given and the server
                 // accepts anonymous connections
                 //$this->setError($Language->getText('ldap_class','err_bind_nopasswd',$binddn));
+                $this->logger->error('Cannot connect to LDAP server: '.$this->ldapParams['server'].
+                    ' ***ERROR: will not bind if a username is given and the server accepts anonymous connections'
+                );
                 $this->bound = false;
             }
 
             if ($bind_result = @ldap_bind($this->ds, $binddn, $bindpw)) {
                 $this->bound = true;
             } else {
+                $this->logger->error('Unable to bind to LDAP server: '.$this->ldapParams['server'].
+                    ' ***ERROR:'. ldap_error($this->ds) .
+                    ' ***ERROR no:'. $this->getErrno()
+                );
                 //$this->setError($Language->getText('ldap_class','err_bind_invpasswd',$binddn));
                 $this->bound = false;
             }
@@ -271,10 +297,16 @@ class LDAP {
             $this->_restoreErrorHandler();
 
             if ($sr !== false) {
+                $this->logger->debug('LDAP search success '.$filter. ' ***SCOPE: '.$scope . ' ***ATTRIBUTES:'.print_r($attributes, true));
                 $entries = ldap_get_entries($this->ds, $sr);
                 if ($entries !== false) {
                     return new LDAPResultIterator($entries, $this->ldapParams);
                 }
+            } else {
+                $this->logger->warn('LDAP search error: '.$this->ldapParams['server'].
+                    ' ***ERROR:'. ldap_error($this->ds).
+                    ' ***ERROR no:'. $this->getErrno()
+                );
             }
         }
         return false;
@@ -423,8 +455,10 @@ class LDAP {
             }
             if (isset($this->ldapParams['tooltip_search_user'])) {
                 $asr = ldap_search($ds, $peopleDn, $filter, $attrs, $attrsOnly, $sizeLimit, 0, LDAP_DEREF_NEVER);
+                $this->logger->debug('LDAP in-depth search as you type '.$filter. ' ***PEOPLEDN: '.$peopleDn . ' ***errors:'.  ldap_error($link_identifier));
             } else {
                 $asr = ldap_list($ds, $peopleDn, $filter, $attrs, $attrsOnly, $sizeLimit, 0, LDAP_DEREF_NEVER);
+                $this->logger->debug('LDAP high-level search as you type '.$filter. ' ***PEOPLEDN: '.$peopleDn . ' ***errors:'.  ldap_error($link_identifier));
             }
             if ($asr !== false) {
                 foreach ($asr as $sr) {
