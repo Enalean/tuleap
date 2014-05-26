@@ -27,6 +27,7 @@ Version 7.1 (Not Yet Released)
 	access even if user should primarily not able to (admin delegation).
 	* Remove short open tags in site-content
 	* Add method to check running system events against a parameter
+	* Fix tests in ArtifactXMLExporterTestPHP53 (user->users)
 
 	== Themes ==
 	* FlamingParrot: 1.9
