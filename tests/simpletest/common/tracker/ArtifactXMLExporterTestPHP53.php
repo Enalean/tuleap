@@ -870,7 +870,7 @@ class ArtifactXMLExporter_UserListFieldTest extends ArtifactXMLExporter_BaseTest
         $field_change = $this->findValue($this->xml->artifact->changeset[0], 'assigned_to');
         $this->assertEqual((string)$field_change->value, 'jeanjean');
         $this->assertEqual((string)$field_change['type'], 'list');
-        $this->assertEqual((string)$field_change['bind'], 'user');
+        $this->assertEqual((string)$field_change['bind'], 'users');
     }
 }
 
@@ -1172,6 +1172,6 @@ class ArtifactXMLExporter_UserMultiListFieldTest extends ArtifactXMLExporter_Bas
         $this->assertEqual((string)$field_change->value[0], 'nicolas');
         $this->assertEqual((string)$field_change->value[1], 'sandra');
         $this->assertEqual((string)$field_change['type'], 'list');
-        $this->assertEqual((string)$field_change['bind'], 'user');
+        $this->assertEqual((string)$field_change['bind'], 'users');
     }
 }
