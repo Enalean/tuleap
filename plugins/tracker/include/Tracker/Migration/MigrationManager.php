@@ -95,6 +95,10 @@ class Tracker_Migration_MigrationManager {
         return $this->system_event_manager->isThereAMigrationQueuedForTracker($tracker);
     }
 
+    public function thereAreMigrationsOngoingForProject(Project $project) {
+        return $this->system_event_manager->isThereAMigrationQueuedForProject($project);
+    }
+
     private function getLogFilePath() {
         return Config::get('codendi_log').'/'.self::LOG_FILE;
     }

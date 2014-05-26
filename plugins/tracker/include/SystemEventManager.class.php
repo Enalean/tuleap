@@ -46,7 +46,11 @@ class Tracker_SystemEventManager extends SystemEventManager {
     }
 
     public function isThereAMigrationQueuedForTracker(Tracker $tracker) {
-        return $this->system_event_manager->isThereAnEventAlreadyOnGoing(SystemEvent_TRACKER_V3_MIGRATION::NAME, $tracker->getItemName());
+        return $this->system_event_manager->isThereAnEventAlreadyOnGoingMatchingFirstParameter(SystemEvent_TRACKER_V3_MIGRATION::NAME, $tracker->getItemName());
+    }
+
+    public function isThereAMigrationQueuedForProject(Project $project) {
+        return $this->system_event_manager->isThereAnEventAlreadyOnGoingMatchingParameter(SystemEvent_TRACKER_V3_MIGRATION::NAME, $project->getGroupId());
     }
 
     public function getTypes() {

@@ -657,7 +657,7 @@ plugin_tracker_include_type	field_copied_to	This field is used by the following 
 
 plugin_tracker_include_type	migrate_from_tv3	Migrate a Tracker v3 content
 plugin_tracker_include_type	tv3_migration_introduction	Or you can migrate a Tracker v3 …
-plugin_tracker_include_type	tv3_being_migrated	The migration is being processed. Your new tracker will appear as soon as the migration is completed.
+plugin_tracker_include_type	tv3_being_migrated	Some migrations are being processed. Your new trackers will appear as soon as the migrations are completed.
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactCanned.class.php

@@ -255,7 +255,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         } else if ($request->existAndNonEmpty('create_mode') && $request->get('create_mode') == 'migrate_from_tv3') {
             $tracker_id = $request->get('tracker_new_tv3');
             if ($this->getTV3MigrationManager()->askForMigration($project, $tracker_id, $name, $description, $itemname)) {
-                $GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('plugin_tracker_include_type','tv3_being_migrated'));
                 $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?group_id='. $project->group_id);
             }
 
@@ -547,9 +546,12 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         } else {
             $params = array();
 
+            if ($this->userIsTrackerAdmin($project, $user)) {
+                $this->informUserOfOngoingMigrations($project);
+            }
+
             $this->displayHeader($project, $GLOBALS['Language']->getText('plugin_tracker', 'trackers'), $breadcrumbs, $toolbar, $params);
             $this->displayTrackerHomeNav($project);
-            
             $html .= '<p>';
             if (count($trackers)) {
                 $html .= $GLOBALS['Language']->getText('plugin_tracker_index','choose_tracker');
@@ -615,6 +617,16 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
 
     private function trackerCanBeDisplayed(Tracker $tracker, PFUser $user) {
         return $tracker->userCanView($user) && ! $this->getTV3MigrationManager()->isTrackerUnderMigration($tracker);
+    }
+
+    private function userIsTrackerAdmin(Project $project, PFUser $user) {
+        return $this->userCanCreateTracker($project->getGroupId(), $user) || $this->userCanAdminAllProjectTrackers($user);
+    }
+
+    private function informUserOfOngoingMigrations(Project $project) {
+        if ($this->getTV3MigrationManager()->thereAreMigrationsOngoingForProject($project)) {
+            $GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('plugin_tracker_include_type','tv3_being_migrated'));
+        }
     }
 
     protected function displayCSVImportOverview($project, $group_id, $user) {

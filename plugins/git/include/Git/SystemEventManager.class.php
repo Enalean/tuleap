@@ -118,15 +118,15 @@ class Git_SystemEventManager {
     }
 
     public function isRepositoryMigrationToGerritOnGoing(GitRepository $repository) {
-        return $this->system_event_manager->isThereAnEventAlreadyOnGoing(SystemEvent_GIT_GERRIT_MIGRATION::NAME, $repository->getId());
+        return $this->system_event_manager->isThereAnEventAlreadyOnGoingMatchingFirstParameter(SystemEvent_GIT_GERRIT_MIGRATION::NAME, $repository->getId());
     }
 
     public function isProjectDeletionOnGerritOnGoing(GitRepository $repository) {
-        return $this->system_event_manager->isThereAnEventAlreadyOnGoing(SystemEvent_GIT_GERRIT_PROJECT_DELETE::NAME, $repository->getId());
+        return $this->system_event_manager->isThereAnEventAlreadyOnGoingMatchingFirstParameter(SystemEvent_GIT_GERRIT_PROJECT_DELETE::NAME, $repository->getId());
     }
 
     public function isProjectSetReadOnlyOnGerritOnGoing(GitRepository $repository) {
-        return $this->system_event_manager->isThereAnEventAlreadyOnGoing(SystemEvent_GIT_GERRIT_PROJECT_READONLY::NAME, $repository->getId());
+        return $this->system_event_manager->isThereAnEventAlreadyOnGoingMatchingFirstParameter(SystemEvent_GIT_GERRIT_PROJECT_READONLY::NAME, $repository->getId());
     }
 
     public function getTypes() {
