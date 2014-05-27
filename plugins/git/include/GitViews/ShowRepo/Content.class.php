@@ -92,14 +92,27 @@ class GitViews_ShowRepo_Content {
             $html .= $this->getRemoteRepositoryInfo();
         }
         $html .= $this->getCloneUrl();
-
         $html .= '</div>';
+        $html .= $this->getOnlineEditDiv();
         if ($this->repository->isCreated()) {
             $html .= $this->gitphp_viewer->getContent();
         } else {
             $html .= $this->getWaitingForRepositoryCreationInfo();
         }
+        $html .= '</div>';
         echo $html;
+    }
+
+    private function getOnlineEditDiv() {
+        $html = '';
+
+        $classname = 'not_editable';
+        if ($this->repository->userCanEditOnline($this->current_user)) {
+           $classname = 'editable';
+        }
+        $html .= '<div id="plugin_git_onlinemodif" class="'.$classname.'">';
+
+        return $html;
     }
 
     private function getHeader() {
@@ -235,5 +248,3 @@ class GitViews_ShowRepo_Content {
     }
 
 }
-
-?>
