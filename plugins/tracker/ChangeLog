@@ -1,3 +1,6 @@
+Version 5.389 - Tuleap 7.1
+    * request #6946: UI goes crazy on a project created page
+
 Version 5.388 - Tuleap 7.1
     * Fix request #6847: red pencil goes full retard when mandatory selectbox is empty
 

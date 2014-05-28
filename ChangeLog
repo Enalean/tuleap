@@ -8,7 +8,7 @@ Version 7.1 (Not Yet Released)
 	* Fix request #6941: errors when list field values are missing
 
 	== Plugins ==
-	* tracker: 5.388
+	* tracker: 5.389
 	* agiledashboard: 1.63
 	* cardwall: 1.32
 	* git: 3.86
