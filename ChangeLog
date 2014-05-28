@@ -6,6 +6,7 @@ Version 7.1 (Not Yet Released)
 	* story #6853: be able to check user in checkbox by clicking on the name (contrib Jtekt)
 	* tasks #6884: be able to choose the permission in the admin area
 	* Fix request #6941: errors when list field values are missing
+	* Add link to REST API documentation in footer
 
 	== Plugins ==
 	* tracker: 5.389
