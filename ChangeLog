@@ -5,6 +5,7 @@ Version 7.1 (Not Yet Released)
 	* request #6841: Replace the combox by multiselect box in the System events monitor screen (contrib STMicroelectronics)
 	* story #6853: be able to check user in checkbox by clicking on the name (contrib Jtekt)
 	* tasks #6884: be able to choose the permission in the admin area
+	* Fix request #6941: errors when list field values are missing
 
 	== Plugins ==
 	* tracker: 5.387
