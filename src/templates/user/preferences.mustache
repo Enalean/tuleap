@@ -68,7 +68,7 @@
                     <select name="language_id" class="select-user-preferences">
                     {{# languages_html }}
                         <option value="{{{ code }}}"
-                                {{# is_selected}} selected="selected" {{/ is_selected }}
+                                {{# is_selected }} selected="selected" {{/ is_selected }}
                         > {{{ lang }}}
                         </option>
                     {{/ languages_html }}
@@ -104,7 +104,7 @@
             <div class="control-group user-account-group">
                 <label class="control-label user-account-label">{{{ csv_separator_label }}}</label>
                 <div class="controls">
-                    <select name="user-csv-separator" class="select-user-preferences">
+                    <select name="user_csv_separator" class="select-user-preferences">
                         {{# all_csv_separator }}
                             <option value="{{ separator_name }}"
                                     {{# is_selected }} selected="selected" {{/ is_selected }}
