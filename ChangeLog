@@ -1,4 +1,4 @@
-Version 7.1 (Not Yet Released)
+Version 7.1 (Wednesday, May 28th 2014)
 
 	== Enhancement ==
 	* story #6048: Retrieve an old SVNAccessFile. The SVN access control history is now kept. Each time a modification is done on the file (via the web interface), a new version is saved. This allows administrators to retrieve a previous version and to use it if needed.
