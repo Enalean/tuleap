@@ -19,19 +19,14 @@
  */
 
 require_once(dirname(__FILE__).'/../../constants.php');
-require_once('common/reference/CrossReferenceFactory.class.php');
-require_once('common/reference/CrossReferenceManager.class.php');
-require_once('www/project/admin/permissions.php');
-require_once('common/include/Recent_Element_Interface.class.php');
-require_once 'common/project/UGroupLiteralizer.class.php';
-require_once 'common/project/ProjectManager.class.php';
-require_once 'common/templating/TemplateRendererFactory.class.php';
 
 class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interface {
     const REST_ROUTE        = 'artifacts';
     const NO_PARENT         = -1;
     const PERMISSION_ACCESS = 'PLUGIN_TRACKER_ARTIFACT_ACCESS';
     const REFERENCE_NATURE  = 'plugin_tracker_artifact';
+    const STATUS_OPEN       = 'open';
+    const STATUS_CLOSED     = 'closed';
 
     public $id;
     public $tracker_id;
@@ -461,6 +456,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function setStatus($status) {
         $this->status = $status;
+    }
+
+    public function getSemanticStatusValue() {
+        return $this->isOpen() ? self::STATUS_OPEN : self::STATUS_CLOSED;
     }
 
     public function isOpen() {

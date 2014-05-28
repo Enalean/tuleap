@@ -52,8 +52,8 @@ class AgileDashboard_Milestone_MilestoneStatusCounterTest extends AgileDashboard
         expect($this->backlog_dao)->getBacklogArtifacts()->never();
         $result = $this->counter->getStatus($this->user, null);
         $this->assertEqual($result, array(
-           Tracker_ArtifactDao::STATUS_OPEN   => 0,
-           Tracker_ArtifactDao::STATUS_CLOSED => 0,
+           Tracker_Artifact::STATUS_OPEN   => 0,
+           Tracker_Artifact::STATUS_CLOSED => 0,
         ));
     }
 
@@ -61,8 +61,8 @@ class AgileDashboard_Milestone_MilestoneStatusCounterTest extends AgileDashboard
         stub($this->backlog_dao)->getBacklogArtifacts(12)->returnsEmptyDar();
         $result = $this->counter->getStatus($this->user, 12);
         $this->assertEqual($result, array(
-           Tracker_ArtifactDao::STATUS_OPEN   => 0,
-           Tracker_ArtifactDao::STATUS_CLOSED => 0,
+           Tracker_Artifact::STATUS_OPEN   => 0,
+           Tracker_Artifact::STATUS_CLOSED => 0,
         ));
     }
 
@@ -75,14 +75,14 @@ class AgileDashboard_Milestone_MilestoneStatusCounterTest extends AgileDashboard
     public function itFetchesTheStatusOfReturnedArtifacts() {
         stub($this->backlog_dao)->getBacklogArtifacts(12)->returnsDar(array('id' => 35), array('id' => 36));
         stub($this->artifact_dao)->getArtifactsStatusByIds(array(35, 36))->returnsDar(
-            array('id' => 36, 'status' => Tracker_ArtifactDao::STATUS_OPEN),
-            array('id' => 35, 'status' => Tracker_ArtifactDao::STATUS_CLOSED)
+            array('id' => 36, 'status' => Tracker_Artifact::STATUS_OPEN),
+            array('id' => 35, 'status' => Tracker_Artifact::STATUS_CLOSED)
         );
         stub($this->artifact_dao)->getChildrenForArtifacts()->returnsEmptyDar();
         $result = $this->counter->getStatus($this->user, 12);
         $this->assertEqual($result, array(
-           Tracker_ArtifactDao::STATUS_OPEN   => 1,
-           Tracker_ArtifactDao::STATUS_CLOSED => 1,
+           Tracker_Artifact::STATUS_OPEN   => 1,
+           Tracker_Artifact::STATUS_CLOSED => 1,
         ));
     }
 
@@ -90,8 +90,8 @@ class AgileDashboard_Milestone_MilestoneStatusCounterTest extends AgileDashboard
         // Level 0
         stub($this->backlog_dao)->getBacklogArtifacts(12)->returnsDar(array('id' => 35), array('id' => 36));
         stub($this->artifact_dao)->getArtifactsStatusByIds(array(35, 36))->returnsDar(
-            array('id' => 36, 'status' => Tracker_ArtifactDao::STATUS_OPEN),
-            array('id' => 35, 'status' => Tracker_ArtifactDao::STATUS_CLOSED)
+            array('id' => 36, 'status' => Tracker_Artifact::STATUS_OPEN),
+            array('id' => 35, 'status' => Tracker_Artifact::STATUS_CLOSED)
         );
 
         // Level -1
@@ -101,15 +101,15 @@ class AgileDashboard_Milestone_MilestoneStatusCounterTest extends AgileDashboard
             array('id' => 40)
         );
         stub($this->artifact_dao)->getArtifactsStatusByIds(array(38, 39, 40))->returnsDar(
-            array('id' => 38, 'status' => Tracker_ArtifactDao::STATUS_OPEN),
-            array('id' => 39, 'status' => Tracker_ArtifactDao::STATUS_CLOSED),
-            array('id' => 40, 'status' => Tracker_ArtifactDao::STATUS_CLOSED)
+            array('id' => 38, 'status' => Tracker_Artifact::STATUS_OPEN),
+            array('id' => 39, 'status' => Tracker_Artifact::STATUS_CLOSED),
+            array('id' => 40, 'status' => Tracker_Artifact::STATUS_CLOSED)
         );
 
         $result = $this->counter->getStatus($this->user, 12);
         $this->assertEqual($result, array(
-           Tracker_ArtifactDao::STATUS_OPEN   => 2,
-           Tracker_ArtifactDao::STATUS_CLOSED => 3,
+           Tracker_Artifact::STATUS_OPEN   => 2,
+           Tracker_Artifact::STATUS_CLOSED => 3,
         ));
     }
 }
@@ -122,13 +122,13 @@ class AgileDashboard_Milestone_MilestoneStatusCounter_PermissionsTest extends Ag
 
         stub($this->backlog_dao)->getBacklogArtifacts(12)->returnsDar(array('id' => 35), array('id' => 36));
         stub($this->artifact_dao)->getArtifactsStatusByIds(array(36))->returnsDar(
-            array('id' => 36, 'status' => Tracker_ArtifactDao::STATUS_OPEN)
+            array('id' => 36, 'status' => Tracker_Artifact::STATUS_OPEN)
         );
         stub($this->artifact_dao)->getChildrenForArtifacts()->returnsEmptyDar();
         $result = $this->counter->getStatus($this->user, 12);
         $this->assertEqual($result, array(
-           Tracker_ArtifactDao::STATUS_OPEN   => 1,
-           Tracker_ArtifactDao::STATUS_CLOSED => 0,
+           Tracker_Artifact::STATUS_OPEN   => 1,
+           Tracker_Artifact::STATUS_CLOSED => 0,
         ));
     }
 
@@ -139,7 +139,7 @@ class AgileDashboard_Milestone_MilestoneStatusCounter_PermissionsTest extends Ag
 
         stub($this->backlog_dao)->getBacklogArtifacts(12)->returnsDar(array('id' => 36));
         stub($this->artifact_dao)->getArtifactsStatusByIds(array(36))->returnsDar(
-            array('id' => 36, 'status' => Tracker_ArtifactDao::STATUS_OPEN)
+            array('id' => 36, 'status' => Tracker_Artifact::STATUS_OPEN)
         );
         stub($this->artifact_dao)->getChildrenForArtifacts()->returnsDar(
             array('id' => 37),
@@ -147,13 +147,13 @@ class AgileDashboard_Milestone_MilestoneStatusCounter_PermissionsTest extends Ag
         );
 
         stub($this->artifact_dao)->getArtifactsStatusByIds(array(38))->returnsDar(
-            array('id' => 38, 'status' => Tracker_ArtifactDao::STATUS_OPEN)
+            array('id' => 38, 'status' => Tracker_Artifact::STATUS_OPEN)
         );
 
         $result = $this->counter->getStatus($this->user, 12);
         $this->assertEqual($result, array(
-           Tracker_ArtifactDao::STATUS_OPEN   => 2,
-           Tracker_ArtifactDao::STATUS_CLOSED => 0,
+           Tracker_Artifact::STATUS_OPEN   => 2,
+           Tracker_Artifact::STATUS_CLOSED => 0,
         ));
     }
 }
