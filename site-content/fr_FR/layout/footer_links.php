@@ -19,20 +19,12 @@
  */
 
 
-?><h3>Liens Tuleap</h3>
-<ul class="unstyled">
-    <li>
-        <a href="http://www.tuleap.com/?utm_source=forge&utm_medium=forge&utm_campaign=forge">Site web</a>
-    </li>
-    <li>
-        <a href="http://www.tuleap.net/?utm_source=forge&utm_medium=forge&utm_campaign=forge">Communauté</a>
-    </li>
-    <li>
-        <a href="http://tuleap.com/blog?utm_source=forge&utm_medium=forge&utm_campaign=forge">Blog</a>
-    </li>
-    <li>
-        <a href="https://twitter.com/TuleapEnalean">Suivre @TuleapEnalean</a>
-    </li>
-</ul>
+?>
+<h3>A propos de Tuleap</h3>
+Tuleap est la première suite ALM d'Entreprise 100% Libre utilisée par les plus grandes entreprises et start-up innovantes. Plus d'infos sur <a href="http://www.tuleap.org" target="_blank">www.tuleap.org</a>.
+<div style="margin-top: 10px">
+    <a href="https://twitter.com/TuleapOpenALM" target="_blank">Suivre @TuleapOpenALM</a>
+    <br><a href="http://www.linkedin.com/groups/Tuleap-Community-3962145" target="_blank">Rejoindre Tuleap sur LinkedIn</a>
+</div>
 <?php
 ?>

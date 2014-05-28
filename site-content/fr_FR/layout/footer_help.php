@@ -21,8 +21,8 @@
 
 ?><h3>Besoin d'aide?</h3>
 <ul class="unstyled">
-    <li>Consulter la <a href="/site/">documentation</a>
-    </li>
+    <li>Consulter la <a href="/site/">documentation</a></li>
+    <li><a href="http://www.tuleap.net" target="_blank">Communauté Tuleap</a></li>
     <li><a href="/contact.php">Contactez-nous</a></li>
 </ul>
 <?php
