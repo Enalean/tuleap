@@ -400,10 +400,10 @@ function create_project($data, $do_not_exit = false) {
 
         if (!$do_not_exit) {
             $content = '';
+            $GLOBALS['HTML']->header(array('title'=> $GLOBALS['Language']->getText('register_confirmation','registration_complete')));
             include($GLOBALS['Language']->getContent('project/complete'));
-            site_header(array('title'=>$GLOBALS['Language']->getText('register_confirmation','registration_complete')));
             echo $content;
-            site_footer(array());
+            $GLOBALS['HTML']->footer(array());
             exit(0);
         } else {
             return $group_id;
