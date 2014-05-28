@@ -21,7 +21,7 @@
 
 ?><h3>API</h3>
 <ul class="unstyled">
-    <li><?= $GLOBALS['sys_name']?> provides a <a href="/soap/index.php">SOAP&nbsp;API</a>.
+    <li><?= $GLOBALS['sys_name']?> provides a <a href="/soap/index.php">SOAP&nbsp;API</a> and a <a href="/doc/en/rest/auth.html?#rest-authentication" target="_blank">REST API</a>.
     </li>
 </ul>
 <?php
