@@ -80,39 +80,45 @@ abstract class ArtifactXMLExporter_BaseTest extends TuleapTestCase {
         foreach ($json['artifact_history'] as $artifact_id => $history_rows) {
             stub($this->dao)->searchHistory($artifact_id)->returnsDarFromArray($history_rows);
         }
-        if (isset($json['artifact_file'])) {
+        if (isset($json['artifact_file']) && $json['artifact_file'] !== null) {
             foreach ($json['artifact_file'] as $artifact_id => $file_rows) {
                 stub($this->dao)->searchFilesForArtifact($artifact_id)->returnsDarFromArray($file_rows);
             }
         } else {
             stub($this->dao)->searchFilesForArtifact($artifact_id)->returnsEmptyDar();
         }
-        if (isset($json['artifact_file_search'])) {
+        if (isset($json['artifact_file_search']) && $json['artifact_file_search'] !== null) {
             foreach ($json['artifact_file_search'] as $artifact_file) {
                 $params = $artifact_file['parameters'];
                 stub($this->dao)->searchFile($params['artifact_id'], $params['filename'], $params['submitted_by'], $params['date'])->returnsDarFromArray($artifact_file['rows']);
             }
         } else {
-            stub($this->dao)->searchFile($artifact_id)->returnsEmptyDar();
+            foreach ($json['artifact'] as $artifact_data) {
+                stub($this->dao)->searchFile($artifact_data[0]['artifact_id'])->returnsEmptyDar();
+            }
         }
-        if (isset($json['search_file_before'])) {
+        if (isset($json['search_file_before']) && $json['search_file_before'] !== null) {
             foreach ($json['search_file_before'] as $artifact_file) {
                 $params = $artifact_file['parameters'];
                 stub($this->dao)->searchFileBefore($params['artifact_id'], $params['filename'], $params['date'])->returnsDarFromArray($artifact_file['rows']);
             }
         } else {
-            stub($this->dao)->searchFileBefore($artifact_id)->returnsEmptyDar();
+            foreach ($json['artifact'] as $artifact_data) {
+                stub($this->dao)->searchFileBefore($artifact_data[0]['artifact_id'])->returnsEmptyDar();
+            }
         }
-        if (isset($json['search_cc_at'])) {
+        if (isset($json['search_cc_at']) && $json['search_cc_at'] !== null) {
             foreach ($json['search_cc_at'] as $artifact_cc) {
                 $params = $artifact_cc['parameters'];
                 stub($this->dao)->searchCCAt($params['artifact_id'], $params['submitted_by'], $params['date'])->returnsDarFromArray($artifact_cc['rows']);
             }
         } else {
-            stub($this->dao)->searchCCAt($artifact_id)->returnsEmptyDar();
+            foreach ($json['artifact'] as $artifact_data) {
+                stub($this->dao)->searchCCAt($artifact_data[0]['artifact_id'])->returnsEmptyDar();
+            }
         }
 
-        if (isset($json['permissions'])) {
+        if (isset($json['permissions']) && $json['permissions'] !== null) {
             foreach ($json['permissions'] as $artifact_id => $perms) {
                 stub($this->dao)->searchPermsForArtifact($artifact_id)->returnsDarFromArray($perms);
             }
@@ -120,7 +126,7 @@ abstract class ArtifactXMLExporter_BaseTest extends TuleapTestCase {
             stub($this->dao)->searchPermsForArtifact()->returnsEmptyDar();
         }
 
-        if (isset($json['artifact_field_value'])) {
+        if (isset($json['artifact_field_value']) && $json['artifact_field_value'] !== null) {
             foreach ($json['artifact_field_value'] as $artifact_id => $history_rows) {
                 stub($this->dao)->searchFieldValues($artifact_id)->returnsDarFromArray($history_rows);
             }
@@ -128,16 +134,18 @@ abstract class ArtifactXMLExporter_BaseTest extends TuleapTestCase {
             stub($this->dao)->searchFieldValues()->returnsEmptyDar();
         }
 
-        if (isset($json['artifact_field_value_list'])) {
+        if (isset($json['artifact_field_value_list']) && $json['artifact_field_value_list'] !== null) {
             foreach ($json['artifact_field_value_list'] as $artifact_field_value_list) {
                 $params = $artifact_field_value_list['parameters'];
                 stub($this->dao)->searchFieldValuesList($params['group_artifact_id'], $params['field_name'])->returnsDarFromArray($artifact_field_value_list['rows']);
             }
         } else {
-            stub($this->dao)->searchFieldValuesList($artifact_id)->returnsEmptyDar();
+            foreach ($json['artifact'] as $artifact_data) {
+                stub($this->dao)->searchFieldValuesList($artifact_data[0]['artifact_id'])->returnsEmptyDar();
+            }
         }
 
-        if (isset($json['user'])) {
+        if (isset($json['user']) && $json['user'] !== null) {
             $all_users = array();
             foreach ($json['user'] as $user_id => $user_rows) {
                 stub($this->dao)->searchUser("$user_id")->returnsDarFromArray($user_rows);
@@ -375,6 +383,15 @@ class ArtifactXMLExporter_AttachmentTest extends ArtifactXMLExporter_BaseTest {
         $this->assertCount($this->xml->artifact->file, 1);
         $this->assertEqual((string)$this->xml->artifact->file[0]['id'], 'File31');
         $this->assertEqual((string)$this->xml->artifact->file[0]->filename, 'zzz.pdf');
+    }
+
+    public function itCreatesAChangesetWithNullAttachments() {
+        $this->exportTrackerDataFromFixture('artifact_with_null_attachment');
+
+        $this->assertCount($this->xml->artifact->changeset, 1);
+        foreach ($this->xml->artifact->changeset->field_change as $change) {
+            $this->assertNotEqual((string) $change['field_name'], 'attachment');
+        }
     }
 }
 
@@ -836,6 +853,10 @@ class ArtifactXMLExporter_StaticListFieldTest extends ArtifactXMLExporter_BaseTe
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['bind'], 'static');
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->submitted_on, $this->toExpectedDate($_SERVER['REQUEST_TIME']));
     }
+
+    public function itDoesntGetBlockedWhenThereIsNoDataStatusFieldValueList() {
+        $this->exportTrackerDataFromFixture('artifact_with_no_value_list_for_status_field');
+    }
 }
 
 class ArtifactXMLExporter_UserListFieldTest extends ArtifactXMLExporter_BaseTest {
@@ -1171,6 +1192,16 @@ class ArtifactXMLExporter_UserMultiListFieldTest extends ArtifactXMLExporter_Bas
         $field_change = $this->findValue($this->xml->artifact->changeset[0], 'multiselect_user');
         $this->assertEqual((string)$field_change->value[0], 'nicolas');
         $this->assertEqual((string)$field_change->value[1], 'sandra');
+        $this->assertEqual((string)$field_change['type'], 'list');
+        $this->assertEqual((string)$field_change['bind'], 'users');
+    }
+
+
+    public function itIgnoresMissingUser() {
+        $this->exportTrackerDataFromFixture('artifact_with_user_multi_list_and_missing_user');
+        $this->assertCount($this->xml->artifact->changeset, 1);
+        $field_change = $this->findValue($this->xml->artifact->changeset[0], 'assigned_to');
+        $this->assertEqual((string)$field_change->value, '');
         $this->assertEqual((string)$field_change['type'], 'list');
         $this->assertEqual((string)$field_change['bind'], 'users');
     }

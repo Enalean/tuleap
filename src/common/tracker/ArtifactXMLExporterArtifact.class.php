@@ -61,6 +61,7 @@ class ArtifactXMLExporterArtifact {
 
     public function exportArtifact($tracker_id, array $artifact_row) {
         $artifact_id   = (int)$artifact_row['artifact_id'];
+        $this->logger->info("Export artifact: ".$artifact_id);
         $artifact_node = $this->node_helper->createElement('artifact');
         $artifact_node->setAttribute('id', $artifact_row['artifact_id']);
 
@@ -91,15 +92,35 @@ class ArtifactXMLExporterArtifact {
                 }
             } catch (Exception_TV3XMLException $exception) {
                 $this->logger->warn("Artifact $artifact_id: skip changeset (".$row['field_name'].", ".$row['submitted_by'].", ".date('c', $row['date'])."): ".$exception->getMessage());
+            } catch (Exception $exception) {
+                $this->logger->error("Artifact $artifact_id: skip changeset (".$row['field_name'].", ".$row['submitted_by'].", ".date('c', $row['date'])."): ".$exception->getMessage());
             }
         }
 
-        $current_fields_values = $this->getCurrentFieldsValues($tracker_id, $artifact_id, $artifact);
-        $this->updateInitialChangesetVersusCurrentStatus($tracker_id, $artifact_id, $current_fields_values);
+        try {
+            $current_fields_values = $this->getCurrentFieldsValues($tracker_id, $artifact_id, $artifact);
+            $this->updateInitialChangesetVersusCurrentStatus($tracker_id, $artifact_id, $current_fields_values);
+        } catch (Exception_TV3XMLException $exception) {
+            $this->logger->warn("Artifact $artifact_id: skip update of first changeset: ".$exception->getMessage());
+        } catch (Exception $exception) {
+            $this->logger->error("Artifact $artifact_id: skip update of first changeset: ".$exception->getMessage());
+        }
 
-        $this->addLastChangesetIfNoHistoryRecorded($artifact_node, $tracker_id, $artifact_id, $current_fields_values);
+        try {
+            $this->addLastChangesetIfNoHistoryRecorded($artifact_node, $tracker_id, $artifact_id, $current_fields_values);
+        } catch (Exception_TV3XMLException $exception) {
+            $this->logger->warn("Artifact $artifact_id: skip last changeset if no history: ".$exception->getMessage());
+        } catch (Exception $exception) {
+            $this->logger->error("Artifact $artifact_id: skip last changeset if no history: ".$exception->getMessage());
+        }
 
-        $this->addPermissionOnArtifactAtTheVeryEnd($artifact_node, $artifact_id);
+        try {
+            $this->addPermissionOnArtifactAtTheVeryEnd($artifact_node, $artifact_id);
+        } catch (Exception_TV3XMLException $exception) {
+            $this->logger->warn("Artifact $artifact_id: skip permissions on artifact: ".$exception->getMessage());
+        } catch (Exception $exception) {
+            $this->logger->error("Artifact $artifact_id: skip permissions on artifact: ".$exception->getMessage());
+        }
     }
 
     private function getCurrentFieldsValues($tracker_id, $artifact_id, array $artifact_row) {

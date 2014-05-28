@@ -56,7 +56,13 @@ class ArtifactStaticListFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporte
         if ($value == 100) {
             return '';
         }
-        foreach ($this->dao->searchFieldValuesList($tracker_id, $field_name) as $row) {
+
+        $values_list = $this->dao->searchFieldValuesList($tracker_id, $field_name);
+        if (! $values_list) {
+            return '';
+        }
+
+        foreach ($values_list as $row) {
             if ($row['value_id'] == $value) {
                 return $row['value'];
             }

@@ -93,6 +93,9 @@ class ArtifactMultiListCurrentValueExporter {
 
     private function getCurrentValueLabel(array $field_value_row) {
         if ($this->fieldIsBindedToUser($field_value_row)) {
+            if (! isset($this->user_names[$field_value_row[self::TV3_VALUE_INDEX]])) {
+                return '';
+            }
             return $this->user_names[$field_value_row[self::TV3_VALUE_INDEX]];
         }
 

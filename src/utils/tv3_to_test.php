@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -11,26 +11,133 @@
  *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class ArtifactXMLExporterDao extends DataAccessObject {
+require_once 'pre.php';
 
-    public function searchArtifacts($tracker_id) {
-        $tracker_id = $this->da->escapeInt($tracker_id);
+if ($argc != 2) {
+    echo "Usage: tv3_to_json.php artifact_id\n";
+}
+
+class ArtifactDebug {
+    // Hardcoded value for tests
+    const TRACKER_ID = 1;
+
+    private $artifact_id;
+
+    public $artifact;
+    public $artifact_history;
+    public $artifact_file;
+    public $artifact_field_value;
+    public $permissions;
+    public $artifact_field_value_list = array();
+
+    public function __construct($artifact_id) {
+        $this->artifact_id = $artifact_id;
+        $this->artifact_history[$artifact_id] = array();
+    }
+
+    public function setArtifact(array $artifact_row) {
+        $this->artifact[self::TRACKER_ID][] = array(
+            'artifact_id'   => $artifact_row['artifact_id'],
+            'summary'       => $artifact_row['summary'],
+            'details'       => $artifact_row['details'],
+            'severity'      => $artifact_row['severity'],
+            'status_id'     => $artifact_row['status_id'],
+            'open_date'     => $artifact_row['open_date'],
+            'submitted_by'  => $artifact_row['submitted_by'],
+        );
+    }
+
+    public function setHistory($histories) {
+        foreach ($histories as $history) {
+            $this->artifact_history[$this->artifact_id][] = array(
+                "id"             => $history['id'],
+                "data_type"      => $history['data_type'],
+                "display_type"   => $history['display_type'],
+                "field_name"     => $history['field_name'],
+                "value_function" => $history['value_function'],
+                "old_value"      => $history['old_value'],
+                "new_value"      => $history['new_value'],
+                "date"           => $history['date'],
+                "mod_by"         => $history['mod_by'],
+                "submitted_by"   => $history['submitted_by'],
+                "is_anonymous"   => $history['is_anonymous'],
+                "comment"        => $history['comment'],
+                "format"         => $history['format'],
+            );
+        }
+    }
+
+    public function setFiles($files) {
+        foreach ($files as $file) {
+            $this->artifact_file[$this->artifact_id][] = array(
+                "id"          => $file['id'],
+                "description" => $file['description'],
+                "filename"    => $file['filename'],
+                "filesize"    => $file['filesize'],
+                "filetype"    => $file['filetype'],
+            );
+        }
+    }
+
+    public function setFieldValues($field_values) {
+        foreach ($field_values as $values) {
+            $this->artifact_field_value[$this->artifact_id][] = array(
+                "data_type"      => $values['data_type'],
+                "display_type"   => $values['display_type'],
+                "field_name"     => $values['field_name'],
+                "value_function" => $values['value_function'],
+                "valueInt"       => $values['valueInt'],
+                "valueText"      => $values['valueText'],
+                "valueFloat"     => $values['valueFloat'],
+                "valueDate"      => $values['valueDate'],
+            );
+        }
+    }
+
+    public function setPermissions($permissions) {
+        foreach ($permissions as $perms) {
+            $this->permissions[$this->artifact_id][] = array(
+                "ugroup_id"       => $perms['ugroup_id'],
+            );
+        }
+    }
+
+    public function setFieldValuesList($field_name, $field_values_list) {
+        if (count($field_values_list) > 0) {
+            $artifact_field_value_list['parameters']['group_artifact_id'] = self::TRACKER_ID;
+            $artifact_field_value_list['parameters']['field_name'] = $field_name;
+            foreach ($field_values_list as $value) {
+                $artifact_field_value_list['rows'][] = array(
+                    "value_id" => $value['value_id'],
+                    "value"    => $value['value'],
+                );
+            }
+            $this->artifact_field_value_list[] = $artifact_field_value_list;
+        }
+    }
+}
+
+
+class ArtifactXMLDebugExporterDao extends DataAccessObject {
+
+    public function searchArtifact($artifact_id) {
+        $artifact_id = $this->da->escapeInt($artifact_id);
         $summary = $this->unconvertHtmlspecialcharsAlias('artifact.summary', 'summary');
         $details = $this->unconvertHtmlspecialcharsAlias('details', 'details');
 
-        $sql = "SELECT artifact_id, $summary, $details, severity, status_id, open_date, user_name AS submitted_by
+        $sql = "SELECT artifact_id, $summary, $details, severity, status_id, open_date, user_name AS submitted_by, group_artifact_id
                 FROM artifact
                     LEFT JOIN user ON (submitted_by = user_id)
-                WHERE group_artifact_id = $tracker_id";
+                WHERE artifact_id = $artifact_id";
 
-        return $this->retrieve($sql);
+        return $this->retrieve($sql)->getRow();
     }
 
     public function searchHistory($artifact_id) {
@@ -41,10 +148,10 @@ class ArtifactXMLExporterDao extends DataAccessObject {
 
         $sql = "SELECT
                     h.artifact_history_id AS id,
-                    f.data_type, 
+                    f.data_type,
                     f.display_type,
-                    f.value_function,
                     h.field_name,
+                    f.value_function,
                     $old_value,
                     h.new_value,
                     h.date,
@@ -171,10 +278,6 @@ class ArtifactXMLExporterDao extends DataAccessObject {
     }
 
     public function searchUser($user_id) {
-        if (! is_numeric($user_id)) {
-            throw new Exception_TV3XMLInvalidFieldTypeException($user_id);
-        }
-        $user_id = $this->da->escapeInt($user_id);
         $sql = "SELECT user_name, ldap_id, email
                 FROM user
                 WHERE user_id = $user_id";
@@ -187,3 +290,27 @@ class ArtifactXMLExporterDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 }
+
+$options = getopt('a:t:');
+
+$artifact_id = $argv[1];
+
+$artifact_debug = new ArtifactDebug($artifact_id);
+
+$dao = new ArtifactXMLDebugExporterDao();
+$artifact_row = $dao->searchArtifact($artifact_id);
+$tracker_id = $artifact_row['group_artifact_id'];
+$artifact_debug->setArtifact($artifact_row);
+$artifact_debug->setHistory($dao->searchHistory($artifact_id));
+$artifact_debug->setFiles($dao->searchFilesForArtifact($artifact_id));
+$artifact_debug->setPermissions($dao->searchPermsForArtifact($artifact_id));
+$field_values = $dao->searchFieldValues($artifact_id);
+$artifact_debug->setFieldValues($field_values);
+foreach ($field_values as $row) {
+    $artifact_debug->setFieldValuesList(
+        $row['field_name'],
+        $dao->searchFieldValuesList($tracker_id, $row['field_name'])
+    );
+}
+
+echo json_encode($artifact_debug);
