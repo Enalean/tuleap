@@ -46,7 +46,11 @@ abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->tracker  = aTracker()->withId($this->tracker_id)->build();
+
+        $this->tracker = partial_mock('Tracker', array('getWorkflow', 'getId'));
+        stub($this->tracker)->getId()->returns($this->tracker_id);
+        stub($this->tracker)->getWorkflow()->returns(mock('Workflow'));
+
         $this->artifact_creator      = mock('Tracker_ArtifactCreator');
         $this->new_changeset_creator = mock('Tracker_Artifact_Changeset_NewChangesetAtGivenDateCreator');
 
