@@ -115,22 +115,22 @@ $user_helper_preferences = array(
     array(
         'preference_name'  => UserHelper::PREFERENCES_NAME_AND_LOGIN,
         'preference_label' => $Language->getText('account_options','tuleap_name_and_login'),
-        'is_selected'      => user_get_preference("username_display") === UserHelper::PREFERENCES_NAME_AND_LOGIN
+        'is_selected'      => (int) user_get_preference("username_display") === UserHelper::PREFERENCES_NAME_AND_LOGIN
     ),
     array(
         'preference_name'  => UserHelper::PREFERENCES_LOGIN_AND_NAME,
         'preference_label' => $Language->getText('account_options','tuleap_login_and_name'),
-        'is_selected'      => user_get_preference("username_display") === UserHelper::PREFERENCES_LOGIN_AND_NAME
+        'is_selected'      => (int) user_get_preference("username_display") === UserHelper::PREFERENCES_LOGIN_AND_NAME
     ),
     array(
         'preference_name'  => UserHelper::PREFERENCES_LOGIN,
         'preference_label' => $Language->getText('account_options','tuleap_login'),
-        'is_selected'      => user_get_preference("username_display") === UserHelper::PREFERENCES_LOGIN
+        'is_selected'      => (int) user_get_preference("username_display") === UserHelper::PREFERENCES_LOGIN
     ),
     array(
         'preference_name'  => UserHelper::PREFERENCES_REAL_NAME,
         'preference_label' => $Language->getText('account_options','real_name'),
-        'is_selected'      => user_get_preference("username_display") === UserHelper::PREFERENCES_REAL_NAME
+        'is_selected'      => (int) user_get_preference("username_display") === UserHelper::PREFERENCES_REAL_NAME
     )
 );
 
