@@ -6,6 +6,7 @@ Version 7.1 (Not Yet Released)
 	* story #6853: be able to check user in checkbox by clicking on the name (contrib Jtekt)
 	* tasks #6884: be able to choose the permission in the admin area
 	* Fix request #6941: errors when list field values are missing
+	* Fix request #6954 NO way to select value in some selectbox in my account page
 	* Add link to REST API documentation in footer
 
 	== Plugins ==
