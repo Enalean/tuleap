@@ -5,6 +5,7 @@
         <div class="fields">
             {{# prefill_values }}
             <input type="text" id="form_loginname" name="form_loginname" placeholder="{{ login }} *" value="{{ form_loginname }}" required="required" />
-            <input type="email" name="form_email" placeholder="{{ email }} *" value="{{ form_email }}" required="required" />
+            <input type="email" name="form_email" placeholder="{{ email }} *" value="{{ form_email }}" required="required" data-email-suggestion="register-email-suggestion" />
             {{/ prefill_values }}
+            <div class="email-suggestion" id="register-email-suggestion"></div>
         </div>
