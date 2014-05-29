@@ -18,13 +18,25 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('ServiceNotAllowedForProjectException.class.php');
-
 /**
 * Service
 */
 class Service {
-    
+
+    const SUMMARY   = 'summary';
+    const ADMIN     = 'admin';
+    const FORUM     = 'forum';
+    const HOMEPAGE  = 'homepage';
+    const ML        = 'mail';
+    const SURVEY    = 'survey';
+    const NEWS      = 'news';
+    const CVS       = 'cvs';
+    const FILE      = 'file';
+    const SVN       = 'svn';
+    const WIKI      = 'wiki';
+    const TRACKERV3 = 'tracker';
+    const LEGACYDOC = 'doc';
+
     public $data;
     
     /**

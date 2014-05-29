@@ -30,19 +30,19 @@ class ServiceManager {
     /** @var string[] */
     private $list_of_core_services = array(
         self::CUSTOM_SERVICE_SHORTNAME,
-        'summary',
-        'admin',
-        'homepage',
-        'forum',
-        'mail',
-        'survey',
-        'news',
-        'cvs',
-        'file',
-        'svn',
-        'wiki',
-        'tracker',
-        'doc',
+        Service::SUMMARY,
+        Service::ADMIN,
+        Service::HOMEPAGE,
+        Service::FORUM,
+        Service::ML,
+        Service::SURVEY,
+        Service::NEWS,
+        Service::CVS,
+        Service::FILE,
+        Service::SVN,
+        Service::WIKI,
+        Service::TRACKERV3,
+        Service::LEGACYDOC,
     );
 
     /** @var ServiceManager */
@@ -117,5 +117,9 @@ class ServiceManager {
         $list_of_allowed_services = $this->getListOfAllowedServicesForProject($project);
 
         return isset($list_of_allowed_services[$service_id]);
+    }
+
+    public function isServiceAvailableAtSiteLevelByShortName($name) {
+        return $this->dao->isServiceAvailableAtSiteLevelByShortName($name);
     }
 }
