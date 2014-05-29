@@ -18,8 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('include/DataAccessObject.class.php');
-
 /**
  *  Data Access Object for Service 
  */
@@ -57,7 +55,16 @@ class ServiceDao extends DataAccessObject {
 
         return $this->retrieve($sql);
     }
+
+    public function isServiceAvailableAtSiteLevelByShortName($name) {
+        $name = $this->da->quoteSmart($name);
+        $sql  = "SELECT NULL
+                 FROM service
+                 WHERE group_id = 100
+                     AND is_active = 1
+                     AND short_name = $name
+                 LIMIT 1";
+        $dar = $this->retrieve($sql);
+        return $dar->rowCount() === 1;
+    }
 }
-
-
-?>

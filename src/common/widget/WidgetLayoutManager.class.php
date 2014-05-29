@@ -141,6 +141,7 @@ class WidgetLayoutManager {
     * @param  owner_id The id of the newly created user
     */
     function createDefaultLayoutForUser($owner_id) {
+        $service_manager = ServiceManager::instance();
         $owner_type = self::OWNER_TYPE_USER;
         $sql = "INSERT INTO owner_layouts(layout_id, is_default, owner_id, owner_type) VALUES (1, 1, $owner_id, '$owner_type')";
         if (db_query($sql)) {
@@ -148,10 +149,18 @@ class WidgetLayoutManager {
             $sql = "INSERT INTO layouts_contents(owner_id, owner_type, layout_id, column_id, name, rank) VALUES ";
             $sql .= "($owner_id, '$owner_type', 1, 1, 'myprojects', 0)";
             $sql .= ",($owner_id, '$owner_type', 1, 1, 'mybookmarks', 1)";
-            $sql .= ",($owner_id, '$owner_type', 1, 1, 'mymonitoredforums', 2)";
-            $sql .= ",($owner_id, '$owner_type', 1, 1, 'mysurveys', 4)";
-            $sql .= ",($owner_id, '$owner_type', 1, 2, 'myartifacts', 0)";
-            $sql .= ",($owner_id, '$owner_type', 1, 2, 'mymonitoredfp', 1)";
+            if ($service_manager->isServiceAvailableAtSiteLevelByShortName(Service::FORUM)) {
+                $sql .= ",($owner_id, '$owner_type', 1, 1, 'mymonitoredforums', 2)";
+            }
+            if ($service_manager->isServiceAvailableAtSiteLevelByShortName(Service::SURVEY)) {
+                $sql .= ",($owner_id, '$owner_type', 1, 1, 'mysurveys', 4)";
+            }
+            if ($service_manager->isServiceAvailableAtSiteLevelByShortName(Service::TRACKERV3)) {
+                $sql .= ",($owner_id, '$owner_type', 1, 2, 'myartifacts', 10)";
+            }
+            if ($service_manager->isServiceAvailableAtSiteLevelByShortName(Service::FILE)) {
+                $sql .= ",($owner_id, '$owner_type', 1, 2, 'mymonitoredfp', 20)";
+            }
 
             $em = EventManager::instance();
             $widgets = array();

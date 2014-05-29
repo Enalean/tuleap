@@ -52,8 +52,10 @@ class trackerPlugin extends Plugin {
 
         $this->_addHook('url_verification_instance',           'url_verification_instance',         false);
 
-        $this->_addHook('widget_instance',                     'widget_instance',                   false);
-        $this->_addHook('widgets',                             'widgets',                           false);
+        $this->addHook('widget_instance');
+        $this->addHook('widgets');
+        $this->addHook('default_widgets_for_new_owner');
+
         $this->_addHook('project_is_deleted',                  'project_is_deleted',                false);
         $this->_addHook('register_project_creation',           'register_project_creation',         false);
         $this->_addHook('codendi_daily_start',                 'codendi_daily_start',               false);
@@ -67,6 +69,7 @@ class trackerPlugin extends Plugin {
         $this->addHook(Event::REST_GET_PROJECT_TRACKERS);
         $this->addHook(Event::REST_OPTIONS_PROJECT_TRACKERS);
         $this->addHook(Event::REST_PROJECT_RESOURCES);
+
     }
 
     public function getHooksAndCallbacks() {
@@ -487,10 +490,6 @@ class trackerPlugin extends Plugin {
      * @param Array $params
      */
     public function widget_instance($params) {
-        include_once 'Tracker/Widget/Tracker_Widget_MyArtifacts.class.php';
-        include_once 'Tracker/Widget/Tracker_Widget_MyRenderer.class.php';
-        include_once 'Tracker/Widget/Tracker_Widget_ProjectRenderer.class.php';
-
         switch ($params['widget']) {
             case Tracker_Widget_MyArtifacts::ID:
                 $params['instance'] = new Tracker_Widget_MyArtifacts();
@@ -510,11 +509,6 @@ class trackerPlugin extends Plugin {
      * @param Array $params
      */
     public function widgets($params) {
-        include_once 'common/widget/WidgetLayoutManager.class.php';
-        include_once 'Tracker/Widget/Tracker_Widget_MyArtifacts.class.php';
-        include_once 'Tracker/Widget/Tracker_Widget_MyRenderer.class.php';
-        include_once 'Tracker/Widget/Tracker_Widget_ProjectRenderer.class.php';
-
         switch ($params['owner_type']) {
             case WidgetLayoutManager::OWNER_TYPE_USER:
                 $params['codendi_widgets'][] = Tracker_Widget_MyArtifacts::ID;
@@ -523,6 +517,18 @@ class trackerPlugin extends Plugin {
 
             case WidgetLayoutManager::OWNER_TYPE_GROUP:
                 $params['codendi_widgets'][] = Tracker_Widget_ProjectRenderer::ID;
+                break;
+        }
+    }
+
+    public function default_widgets_for_new_owner($params) {
+        switch ($params['owner_type']) {
+            case WidgetLayoutManager::OWNER_TYPE_USER:
+                $params['widgets'][] = array(
+                    'name'   => Tracker_Widget_MyArtifacts::ID,
+                    'column' => '2',
+                    'rank'   => '5',
+                );
                 break;
         }
     }
