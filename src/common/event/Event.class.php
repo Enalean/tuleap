@@ -564,6 +564,8 @@ class Event {
      */
     const LAYOUT_SEARCH_ENTRY = 'layout_search_entry';
 
+    const PLUGINS_POWERED_SEARCH = 'plugins_powered_search';
+
     /**
      * Register REST resources
      *
