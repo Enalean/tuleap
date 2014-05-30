@@ -250,6 +250,13 @@ class Git_GitoliteDriver {
         return $conf;
     }
 
+    private function getUserForOnlineEdition(GitRepository $repository) {
+        if ($repository->hasOnlineEditEnabled()) {
+            return ' id_rsa_gl-adm';
+        }
+
+        return '';
+    }
     /**
      * Fetch the gitolite readable conf for permissions on a repository
      *
@@ -259,13 +266,13 @@ class Git_GitoliteDriver {
         if (!isset(self::$permissions_types[$permission_type])) {
             return '';
         }
-        
+        $git_online_edit_conf_right = $this->getUserForOnlineEdition($repository);
         $ugroup_literalizer = new UGroupLiteralizer();
         $repository_groups  = $ugroup_literalizer->getUGroupsThatHaveGivenPermissionOnObject($project, $repository->getId(), $permission_type);
         if (count($repository_groups) == 0) {
             return '';
         }
-        return self::$permissions_types[$permission_type] . ' = ' . implode(' ', $repository_groups) . PHP_EOL; 
+        return self::$permissions_types[$permission_type] . ' = ' . implode(' ', $repository_groups).$git_online_edit_conf_right . PHP_EOL;
     }
     
     protected function getProjectPermissionConfFile($project) {

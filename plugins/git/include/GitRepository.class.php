@@ -887,5 +887,9 @@ class GitRepository implements DVCSRepository {
         $this->use_online_edit = true;
     }
 
+    public function hasOnlineEditEnabled(){
+        return $this->use_online_edit;
+    }
+
 }
 ?>
