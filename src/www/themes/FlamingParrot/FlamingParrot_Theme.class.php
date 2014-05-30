@@ -122,9 +122,9 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
     }
 
     private function navbar($params, PFUser $current_user, $selected_top_tab) {
-        list($search_options, $hidden_fields) = $this->getSearchEntries();
-        $search_form_presenter                = new FlamingParrot_SearchFormPresenter($search_options, $hidden_fields);
-        $project_manager                      = ProjectManager::instance();
+        list($search_options, $selected_entry, $hidden_fields) = $this->getSearchEntries();
+        $search_form_presenter                                 = new FlamingParrot_SearchFormPresenter($selected_entry, $hidden_fields);
+        $project_manager                                       = ProjectManager::instance();
 
         $this->render('navbar', new FlamingParrot_NavBarPresenter(
                 $this->imgroot,

@@ -3,19 +3,12 @@
         {{# hidden_fields }}
             <input type="hidden" name={{ name }} value={{ value }}/>
         {{/ hidden_fields }}
+        <input type="hidden" name="type_of_search" value="{{{ selected_entry }}}">
+        <input type="hidden" name="exact" value="0">
+
         <div class="input-append">
             <input type="text" name="words" class="span2" placeholder="{{ search_placeholder }}" />
-            <div class="btn-group">
-                <select style="font-size: x-small" class="selectpicker show-tick" data-style="btn-search-bar" id="type_of_search" name="type_of_search">
-                {{# search_options }}
-                    <option data-icon="icon-search" {{# selected }} selected='selected' {{/ selected }} value={{ value }}>&nbsp;{{ label }}</option>
-                {{/ search_options }}
-                </select>
-            </div>
-            <input type="hidden" name="exact" value="0">
-            <script type="text/javascript">
-                jQuery('#type_of_search').selectpicker();
-            </script>
+            <button class="btn"><i class="icon-search"></i></button>
         </div>
     </form>
 {{/ search_form_presenter}}
