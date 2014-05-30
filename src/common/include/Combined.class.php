@@ -81,7 +81,8 @@ class Combined {
             '/scripts/placeholder/jquery.placeholder.js',
             '/scripts/tuleap/datetimepicker.js',
             '/scripts/tuleap/svn.js',
-            '/scripts/tuleap/account-maintenance.js'
+            '/scripts/tuleap/account-maintenance.js',
+            '/scripts/tuleap/search.js'
         );
         EventManager::instance()->processEvent(Event::COMBINED_SCRIPTS, array('scripts' => &$arr));
 

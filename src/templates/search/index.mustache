@@ -1,16 +1,48 @@
-<div class="tabbable tabs-left">
-<ul class="nav nav-tabs">
-    <li>soft</li>
-    <li>people</li>
-    <li>forums</li>
-    <li>snippets</li>
-    <li>all_trackers</li>
-    <li>tracker</li>
-    <li>wiki</li>
-</ul>
-<div class="tab-content">
-    Search box: <input type="text" />
-
-    {{> results }}
+<div class="search-bar">
+    <form action="/search/" method="post">
+        <div class="input-append">
+            <input class="input-xlarge" type="text" name="words" value="{{ words }}">
+            <input type="hidden" name="type_of_search" value="{{ type_of_search }}">
+            <input type="hidden" name="exact" value="0">
+            <button class="btn"><i class="icon-search"></i></button>
+        </div>
+    </form>
 </div>
+<div class="search-page">
+    <div class="accordion" id="search-accordion">
+      <div class="accordion-group">
+        <div class="accordion-heading">
+          <a class="accordion-toggle" data-toggle="collapse" data-parent="#search-accordion" href="#collapseOne">{{ simple_search }}</a>
+        </div>
+        <div id="collapseOne" class="accordion-body collapse in">
+          <div class="accordion-inner">
+            <ul class="nav nav-pills nav-stacked">
+                <li><a href="#">soft</a></li>
+                <li><a href="#">people</a></li>
+                <li><a href="#">forums</a></li>
+                <li><a href="#">snippets</a></li>
+                <li><a href="#">all_trackers</a></li>
+                <li><a href="#">tracker</a></li>
+                <li><a href="#">wiki</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-group">
+        <div class="accordion-heading">
+          <a class="accordion-toggle" data-toggle="collapse" data-parent="#search-accordion" href="#collapseTwo">{{ fulltext_search }}</a>
+        </div>
+        <div id="collapseTwo" class="accordion-body collapse">
+          <div class="accordion-inner">
+            Fulltext facets
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="search-results">
+        {{> results }}
+    </div>
+
+    <div style="clear: both"></div>
 </div>

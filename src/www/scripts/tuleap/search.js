@@ -17,6 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@sidebar-width: 200px;
-@navbar-height: 45px;
-@footer-height: 200px;
+!(function ($) {
+
+    $(document).ready(function() {
+        keepAtLeastOnAccordionOpen();
+    });
+
+    function keepAtLeastOnAccordionOpen() {
+        $('.accordion-toggle').on('click', function(e) {
+            if($(this).parents('.accordion-group').children('.accordion-body').hasClass('in')) {
+                e.stopPropagation();
+                e.preventDefault();
+            }
+        });
+    }
+
+})(window.jQuery);

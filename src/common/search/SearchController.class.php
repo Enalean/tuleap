@@ -40,7 +40,7 @@ class Search_SearchController {
     }
 
     public function index(Codendi_Request $request) {
-        $GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('search_index', 'search')));
+        $GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('search_index', 'search'), 'body_class' => array('search-page')));
         $this->renderer->renderToPage('index', array());
         $GLOBALS['HTML']->footer(array());
     }
@@ -55,7 +55,7 @@ class Search_SearchController {
         $this->validateKeywords($words);
 
         if (! $this->isRedirectedSearch($type_of_search)) {
-            $GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('search_index', 'search')));
+            $GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('search_index', 'search'), 'body_class' => array('search-page')));
             ob_start();
             switch ($type_of_search) {
                 case Search_SearchTrackerV3::NAME:
@@ -87,7 +87,7 @@ class Search_SearchController {
                     break;
             }
             $blob = ob_get_clean();
-            $this->renderer->renderToPage('index', array('blob' => $blob));
+            $this->renderer->renderToPage('index', new Search_SearchPresenter($type_of_search, $words, $blob));
             $GLOBALS['HTML']->footer(array());
         } else {
             switch ($type_of_search) {

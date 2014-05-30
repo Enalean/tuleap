@@ -19,4 +19,24 @@
  */
 
 class Search_SearchPresenter {
+
+    public $type_of_search;
+
+    public $words;
+
+    public $blob;
+
+    public function __construct($type_of_search, $words, $blob) {
+        $this->type_of_search = $type_of_search;
+        $this->words          = $words;
+        $this->blob           = $blob;
+    }
+
+    public function simple_search() {
+        return $GLOBALS['Language']->getText('search_index', 'simple_search');
+    }
+
+    public function fulltext_search() {
+        return $GLOBALS['Language']->getText('search_index', 'fulltext_search');
+    }
 }

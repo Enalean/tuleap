@@ -13,6 +13,8 @@
 # Script: SF/www/search/index.php
 #
 search_index	search	Search
+search_index	simple_search	Simple search
+search_index	fulltext_search	Fulltext search
 search_index	at_least_3_ch	Search must be at least three characters
 search_index	no_match_found	No matches found for $1
 search_index	search_res	Search results for $1 ($2 results)

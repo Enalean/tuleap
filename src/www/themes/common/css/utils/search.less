@@ -1,0 +1,56 @@
+@accordion-width: 200px;
+
+body.search-page .content {
+    padding: 0px;
+}
+
+.search-bar {
+    padding: 18px 20px 16px @accordion-width + 15 + 30 + 15;
+    background: #F5F5F5;
+    border-bottom: 1px solid #DDDDDD;
+
+    form {
+        margin: 0;
+
+        .input-append {
+            margin: 0;
+
+            input {
+                font-size: 16px;
+            }
+
+            .btn {
+                padding-left: 25px;
+                padding-right: 25px;
+            }
+        }
+    }
+}
+
+#search-accordion {
+    float: left;
+    margin: 0 30px 50px 0;
+    min-width: 200px;
+    height: 100%;
+    padding: 15px;
+
+    .accordion-group {
+        border: 1px solid #e9e9e9;
+        background-color: #FFFFFF;
+
+        .accordion-toggle {
+            color: #222;
+
+            &:hover { color: #333; text-decoration: none; }
+        }
+
+        .accordion-inner {
+            border-top: 2px solid #333;
+        }
+    }
+}
+
+.search-results {
+    float: left;
+    padding: 15px 0;
+}
