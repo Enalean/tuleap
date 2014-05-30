@@ -22,34 +22,23 @@
 class Search_SearchSnippet {
     const NAME = 'snippets';
 
-    public function search($words, $crit, $offset) {
-        /*
-          If multiple words, separate them and put LIKE in between
-         */
-        $array = explode(" ", $words);
-        $words1 = implode($array, "%' $crit name LIKE '%");
-        $words2 = implode($array, "%' $crit description LIKE '%");
+    /**
+     * @var SnippetDao
+     */
+    private $dao;
 
-        /*
-          Query to find software
-         */
-        $sql = "SELECT name,snippet_id,description " .
-                "FROM snippet " .
-                "WHERE ((name LIKE '%$words1%') OR (description LIKE '%$words2%')) LIMIT $offset,26";
-        $result = db_query($sql);
-        $rows = $rows_returned = db_numrows($result);
 
-        if (!$result || $rows < 1) {
-            $no_rows = 1;
+    public function __construct(SnippetDao $dao) {
+        $this->dao = $dao;
+    }
+
+    public function search($words, $exact, $offset) {
+        $results = $this->dao->searchGlobal($words, $exact, $offset);
+        $rows_returned = count($results);
+
+        if (! $rows_returned) {
             echo '<H2>' . $GLOBALS['Language']->getText('search_index', 'no_match_found', htmlentities(stripslashes($words), ENT_QUOTES, 'UTF-8')) . '</H2>';
-            echo db_error();
-//		echo $sql;
         } else {
-
-            if ($rows_returned > 25) {
-                $rows = 25;
-            }
-
             echo '<H3>' . $GLOBALS['Language']->getText('search_index', 'search_res', array(htmlentities(stripslashes($words), ENT_QUOTES, 'UTF-8'), $rows_returned)) . "</H3><P>\n\n";
 
             $title_arr = array();
@@ -60,10 +49,10 @@ class Search_SearchSnippet {
 
             echo "\n";
 
-            for ($i = 0; $i < $rows; $i++) {
-                print "<TR class=\"" . html_get_alt_row_color($i) . "\"><TD><A HREF=\"/snippet/detail.php?type=snippet&id=" . db_result($result, $i, 'snippet_id') . "\">"
-                        . "<IMG SRC=\"" . util_get_image_theme('msg.png') . "\" BORDER=0 HEIGHT=12 WIDTH=10> " . db_result($result, $i, 'name') . "</A></TD>"
-                        . "<TD>" . db_result($result, $i, 'description') . "</TD></TR>\n";
+            foreach ($results as $row) {
+                print "<TR><TD><A HREF=\"/snippet/detail.php?type=snippet&id=" . $row['snippet_id'] . "\">"
+                        . "<IMG SRC=\"" . util_get_image_theme('msg.png') . "\" BORDER=0 HEIGHT=12 WIDTH=10> " . $row['name'] . "</A></TD>"
+                        . "<TD>" . $row['description'] . "</TD></TR>\n";
             }
             echo "</TABLE>\n";
         }

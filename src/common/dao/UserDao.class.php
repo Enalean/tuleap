@@ -18,9 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('include/DataAccessObject.class.php');
-
-
 /**
  *  Data Access Object for User 
  */
@@ -746,6 +743,23 @@ class UserDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-}
+    public function searchGlobal($words, $offset, $exact) {
+        $offset = $this->da->escapeInt($offset);
+        if ($exact === true) {
+            $user_name = $this->searchExactMatch($words);
+            $realname  = $this->searchExactMatch($words);
+        } else {
+            $user_name = $this->searchExplodeMatch('user_name', $words);
+            $realname  = $this->searchExplodeMatch('real_name', $words);
+        }
 
-?>
+        $sql = "SELECT user_name, user_id, realname
+                FROM user
+                WHERE (
+                    (user_name LIKE $user_name) OR (realname LIKE $realname)
+                ) AND status IN ('A', 'R')
+                ORDER BY user_name
+                LIMIT $offset,26";
+        return $this->retrieve($sql);
+    }
+}

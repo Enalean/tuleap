@@ -359,5 +359,25 @@ class DataAccessObject {
     public function setGroupConcatLimit() {
         $this->retrieve("SET SESSION group_concat_max_len = 134217728");
     }
+
+    protected function searchExactMatch($string) {
+        return $this->da->quoteSmart("%$string%");
+    }
+
+    /**
+     * Given a sentence, split at every space and prepare for a search on $field with LIKE
+     *
+     * @param String $field
+     * @param String $string
+     * @return String
+     */
+    protected function searchExplodeMatch($field, $string) {
+        return implode(
+            " OR $field LIKE ",
+            array_map(
+                array($this, 'searchExactMatch'),
+                explode(' ', $string)
+            )
+        );
+    }
 }
-?>

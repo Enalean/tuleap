@@ -21,8 +21,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('include/DataAccessObject.class.php');
-
 /**
  *  Data Access Object for wiki db access from other codendi components
  */
@@ -152,7 +150,18 @@ class WikiDao extends DataAccessObject {
                ' WHERE pagename = '.$this->da->quoteSmart($user->getUserName());
         return $this->update($sql);
     }
-    
-}
 
-?>
+    public function searchLanguage($group_id) {
+        $group_id = $this->da->escapeInt($group_id);
+        $sql = "SELECT DISTINCT wiki_group_list.language_id
+                FROM wiki_group_list
+                WHERE wiki_group_list.group_id=$group_id
+                  AND wiki_group_list.language_id <> '0'";
+        $dar = $this->retrieve($sql);
+        if (count($dar) == 1) {
+            $row = $dar->getRow();
+            return $row['language_id'];
+        }
+        return false;
+    }
+}

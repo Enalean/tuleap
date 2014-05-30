@@ -18,8 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('include/DataAccessObject.class.php');
-
 class ProjectDao extends DataAccessObject {
 
     const TABLE_NAME       = 'groups';
@@ -358,5 +356,45 @@ class ProjectDao extends DataAccessObject {
                  WHERE group_id = '.$this->da->escapeInt($groupId);
         return $this->update($sql);
     }
+
+    public function searchGlobal($words, $offset, $exact) {
+        return $this->searchGlobalParams($words, $offset, $exact);
+    }
+
+    public function searchGlobalForRestrictedUsers($words, $offset, $exact, $user_id) {
+        $user_id = $this->da->escapeInt($user_id);
+        $from  = " JOIN user_group ON (user_group.group_id = groups.group_id)";
+        $where = " AND user_group.user_id = $user_id";
+        return $this->searchGlobalParams($words, $offset, $exact, $from, $where);
+    }
+
+    private function searchGlobalParams($words, $offset, $exact, $from = '', $where = '') {
+        $offset = $this->da->escapeInt($offset);
+        if ($exact === true) {
+            $group_name = $this->searchExactMatch($words);
+            $short_desc = $this->searchExactMatch($words);
+            $long_desc  = $this->searchExactMatch($words);
+        } else {
+            $group_name = $this->searchExplodeMatch('group_name', $words);
+            $short_desc = $this->searchExplodeMatch('short_description', $words);
+            $long_desc  = $this->searchExplodeMatch('unix_group_name', $words);
+        }
+
+        $sql = "SELECT DISTINCT group_name, unix_group_name, groups.group_id, short_description
+                FROM groups
+                    LEFT JOIN group_desc_value ON (group_desc_value.group_id = groups.group_id)
+                    $from
+                WHERE status='A'
+                AND is_public='1'
+                AND (
+                        (group_name LIKE $group_name)
+                     OR (short_description LIKE $short_desc)
+                     OR (unix_group_name LIKE $long_desc)
+                     OR (group_desc_value.value LIKE $long_desc)
+                )
+                $where
+                LIMIT $offset,26";
+
+        return $this->retrieve($sql);
+    }
 }
-?>

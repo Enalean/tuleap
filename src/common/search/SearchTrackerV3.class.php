@@ -21,7 +21,17 @@
 class Search_SearchTrackerV3 {
     const NAME = 'tracker';
 
-    public function search($group_id, $words, $crit, $offset, $atid) {
+    /**
+     * @var ArtifactDao
+     */
+    private $dao;
+
+
+    public function __construct(ArtifactDao $dao) {
+        $this->dao = $dao;
+    }
+
+    public function search($group_id, $words, $exact, $offset, $atid) {
         include_once('www/tracker/include/ArtifactTypeHtml.class.php');
         include_once('www/tracker/include/ArtifactHtml.class.php');
         //
@@ -47,56 +57,14 @@ class Search_SearchTrackerV3 {
             exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('global', 'error'));
         }
 
-        // Create field factory
-        $art_field_fact = new ArtifactFieldFactory($ath);
+        $results = $this->dao->searchGlobal($words, $exact, $offset, $atid, UserManager::instance()->getCurrentUser()->getUgroups($group_id, $atid));
+        $rows_returned = $this->dao->foundRows();
 
-        $params = array('title' => $group->getPublicName() . ': \'' . $ath->getName() . '\' ' . $GLOBALS['Language']->getText('tracker_browse', 'search_report'),
-            'titlevals' => array($ath->getName()),
-            'pagename' => 'tracker_browse',
-            'atid' => $ath->getID(),
-            'sectionvals' => array($group->getPublicName()),
-            'pv' => 0,
-            'help' => 'ArtifactBrowsing.html');
-
-        //$ath->header($params);
-        echo '<div id="tracker_toolbar_clear"></div>';
-
-        $array = explode(" ", $words);
-        $words1 = implode($array, "%' $crit artifact.details LIKE '%");
-        $words2 = implode($array, "%' $crit artifact.summary LIKE '%");
-        $words3 = implode($array, "%' $crit artifact_history.new_value LIKE '%");
-
-        $sql = "SELECT SQL_CALC_FOUND_ROWS artifact.artifact_id,
-                   artifact.summary,
-                   artifact.open_date,
-                   user.user_name
-           FROM artifact INNER JOIN user ON user.user_id=artifact.submitted_by
-              LEFT JOIN artifact_history ON artifact_history.artifact_id=artifact.artifact_id
-              LEFT JOIN permissions ON (permissions.object_id = CAST(artifact.artifact_id AS CHAR) AND permissions.permission_type = 'TRACKER_ARTIFACT_ACCESS')
-           WHERE artifact.group_artifact_id='" . db_ei($atid) . "'
-             AND (
-                   artifact.use_artifact_permissions = 0
-                   OR
-                   (
-                       permissions.ugroup_id IN (" . implode(',', UserManager::instance()->getCurrentUser()->getUgroups($group_id, $atid)) . ")
-                   )
-             )
-             AND (
-                   (artifact.details LIKE '%" . db_es($words1) . "%')
-                   OR
-                   (artifact.summary LIKE '%" . db_es($words2) . "%')
-                   OR
-                   (artifact_history.field_name='comment' AND (artifact_history.new_value LIKE '%" . db_es($words3) . "%'))
-             )
-           GROUP BY open_date DESC
-           LIMIT " . db_ei($offset) . ", 25";
-        $result = db_query($sql);
-        $rows_returned = db_result(db_query('SELECT FOUND_ROWS() as nb'), 0, 'nb');
-        if (!$result || $rows_returned < 1) {
-            $no_rows = 1;
+        if ($rows_returned < 1) {
             echo '<H2>' . $GLOBALS['Language']->getText('search_index', 'no_match_found', htmlentities(stripslashes($words), ENT_QUOTES, 'UTF-8')) . '</H2>';
-            echo db_error();
         } else {
+            // Create field factory
+            $art_field_fact = new ArtifactFieldFactory($ath);
 
             echo '<H3>' . $GLOBALS['Language']->getText('search_index', 'search_res', array(htmlentities(stripslashes($words), ENT_QUOTES, 'UTF-8'), $rows_returned)) . "</H3><P>\n";
 
@@ -122,7 +90,7 @@ class Search_SearchTrackerV3 {
 
             $art_displayed = 0;
             $rows = 0;
-            while ($arr = db_fetch_array($result)) {
+            foreach ($results as $arr) {
                 $rows++;
                 $curArtifact = new Artifact($ath, $arr['artifact_id']);
                 if ($curArtifact->isStatusClosed($curArtifact->getStatusID())) {

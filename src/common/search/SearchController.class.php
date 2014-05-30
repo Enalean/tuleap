@@ -49,11 +49,8 @@ class Search_SearchController {
         $type_of_search = $request->get('type_of_search');
         $words          = $request->get('words');
         $offset         = intval($request->getValidated('offset', 'uint', 0));
-        $crit = 'OR';
-        /*if ($request->get('exact') == 1) {
-            $crit = 'AND';
-        }*/
-        $group_id = $request->get('group_id');
+        $exact          = $request->getValidated('exact', 'uint', false);
+        $group_id       = $request->get('group_id');
 
         $this->validateKeywords($words);
 
@@ -62,28 +59,28 @@ class Search_SearchController {
             ob_start();
             switch ($type_of_search) {
                 case Search_SearchTrackerV3::NAME:
-                    $search = new Search_SearchTrackerV3();
-                    $search->search($group_id, $words, $crit, $offset, $request->getValidated('atid', 'uint', 0));
+                    $search = new Search_SearchTrackerV3(new ArtifactDao());
+                    $search->search($group_id, $words, $exact, $offset, $request->getValidated('atid', 'uint', 0));
                     break;
 
                 case Search_SearchProject::NAME:
-                    $search = new Search_SearchProject();
-                    $search->search($words, $crit, $offset);
+                    $search = new Search_SearchProject(new ProjectDao());
+                    $search->search($words, $exact, $offset);
                     break;
 
                 case Search_SearchPeople::NAME:
-                    $search = new Search_SearchPeople();
-                    $search->search($words, $crit, $offset);
+                    $search = new Search_SearchPeople(new UserDao());
+                    $search->search($words, $exact, $offset);
                     break;
 
                 case Search_SearchForum::NAME:
-                    $search = new Search_SearchForum();
-                    $search->search($words, $crit, $offset, $request->getValidated('forum_id', 'uint', 0));
+                    $search = new Search_SearchForum(new ForumDao());
+                    $search->search($words, $exact, $offset, $request->getValidated('forum_id', 'uint', 0));
                     break;
 
                 case Search_SearchSnippet::NAME:
-                    $search = new Search_SearchSnippet();
-                    $search->search($words, $crit, $offset);
+                    $search = new Search_SearchSnippet(new SnippetDao());
+                    $search->search($words, $exact, $offset);
                     break;
 
                 default:
@@ -95,7 +92,7 @@ class Search_SearchController {
         } else {
             switch ($type_of_search) {
                 case Search_SearchWiki::NAME:
-                    $search = new Search_SearchWiki();
+                    $search = new Search_SearchWiki(new WikiDao());
                     $search->search($group_id, $words);
                     break;
 

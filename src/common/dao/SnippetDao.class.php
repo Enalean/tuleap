@@ -18,28 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Search_SearchWiki {
-    const NAME = 'wiki';
+class SnippetDao extends DataAccessObject {
 
-    const SEARCH_PAGENAME_EN = 'FullTextSearch';
-    const SEARCH_PAGENAME_FR = 'RechercheEnTexteIntégral';
-
-    /**
-     * @var WikiDao
-     */
-    private $dao;
-
-
-    public function __construct(WikiDao $dao) {
-        $this->dao = $dao;
-    }
-
-    public function search($group_id, $words) {
-        $search_page = self::SEARCH_PAGENAME_EN;
-        if ($this->dao->searchLanguage($group_id) == 'fr_FR') {
-            $search_page = self::SEARCH_PAGENAME_FR;
+    public function searchGlobal($words, $exact, $offset) {
+        if ($exact) {
+            $name = $this->searchExactMatch($words);
+            $desc = $this->searchExactMatch($words);
+        } else {
+            $name = $this->searchExplodeMatch('name', $words);
+            $desc = $this->searchExplodeMatch('description', $words);
         }
+        $offset = $this->da->escapeInt($offset);
 
-        $GLOBALS['Response']->redirect('/wiki/index.php?group_id=' . $group_id . '&pagename=' . $search_page . '&s=' . urlencode($words));
+        $sql = "SELECT name, snippet_id, description
+                FROM snippet
+                WHERE ((name LIKE $name) OR (description LIKE $desc))
+                LIMIT $offset,26";
+        return $this->retrieve($sql);
     }
 }
