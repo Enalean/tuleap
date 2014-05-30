@@ -55,7 +55,7 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
             $searchResult = $this->client->search($query);
             if (!empty($searchResult['hits']['total'])) {
                 foreach ($searchResult['hits']['hits'] as $hit) {
-                    $results[$hit['fields']['artifact_id']] = $hit['fields']['changeset_id'];
+                    $results[$hit['fields']['artifact_id'][0]] = $hit['fields']['changeset_id'][0];
                 }
             }
         }
@@ -71,7 +71,7 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
         $query  = $this->getSearchDocumentsQuery($terms, $facets, $offset, $user);
         // For debugging purpose, uncomment the statement below to see the
         // content of the request (can be directly injected in a curl request)
-        //var_dump(json_encode($query));
+        // echo "<pre>".json_encode($query)."</pre>";
         $search = $this->client->search($query);
         return new ElasticSearch_SearchResultCollection($search, $facets, $this->project_manager, $this->type);
     }

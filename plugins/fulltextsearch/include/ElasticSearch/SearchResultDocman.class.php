@@ -23,8 +23,8 @@ class ElasticSearch_SearchResultDocman extends ElasticSearch_SearchResult {
     public $url;
           
     public function __construct(array $hit, Project $project) {
-        $this->item_title    = $hit['fields']['title'];
-        $this->url           = '/plugins/docman/?group_id='.$hit['fields']['group_id'].'&id='.$hit['fields']['id'].'&action=details';
+        $this->item_title    = $hit['fields']['title'][0];
+        $this->url           = '/plugins/docman/?group_id='.$hit['fields']['group_id'][0].'&id='.$hit['fields']['id'][0].'&action=details';
         parent::__construct($hit, $project);
     }
 }
