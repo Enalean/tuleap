@@ -1,21 +1,22 @@
 <?php
 /**
   * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+  * Copyright (c) Enalean, 2014. All Rights Reserved.
+  * 
+  * This file is a part of Tuleap.
   *
-  * This file is a part of Codendi.
-  *
-  * Codendi is free software; you can redistribute it and/or modify
+  * Tuleap is free software; you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
   * the Free Software Foundation; either version 2 of the License, or
   * (at your option) any later version.
   *
-  * Codendi is distributed in the hope that it will be useful,
+  * Tuleap is distributed in the hope that it will be useful,
   * but WITHOUT ANY WARRANTY; without even the implied warranty of
   * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
   * GNU General Public License for more details.
   *
   * You should have received a copy of the GNU General Public License
-  * along with Codendi. If not, see <http://www.gnu.org/licenses/
+  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
 /**
@@ -30,34 +31,109 @@
 
 class GitDriver implements DVCSDriver {
 
-    public function __construct() {       
+    public function __construct() {
+    }
+
+    private function execGitAction($cmd, $action_name) {
+        $out = array();
+        $ret = -1;
+        exec($cmd,$out,$ret);
+        if ($ret !== 0) {
+            throw new GitDriverErrorException('Git '.$action_name.' failed on '.$ret.' '.$cmd.PHP_EOL.implode(PHP_EOL, $out));
+        }
+
+        return implode(PHP_EOL, $out);
+    }
+
+    private function checkFileExist($file) {
+        if ( !file_exists($file) ) {
+            throw new GitDriverSourceNotFoundException($file);
+        }
     }
 
     /**
      * Make a clone of a source repository
      * @param <String> $source      source directory
      * @param <String> $destination destination directory
+     * @param <String> $option     String of options.
      * @return <boolean>
      */
-    public function fork($source, $destination) {
-        if ( !file_exists($source) ) {
-            throw new GitDriverSourceNotFoundException($source);
-        }
+    private function cloneRepo($source, $destination, $option) {
+        $this->checkFileExist($source);
 
         //WARNING : never use --shared/--reference options
-        $cmd = 'git clone --bare --local --no-hardlinks '.escapeshellarg($source).' '.escapeshellarg($destination).' 2>&1';
-        $out = array();
-        $ret = -1;
-        exec($cmd, $out, $ret);
-        if ($ret !== 0) {
-            throw new GitDriverErrorException('Git fork failed on '.$cmd.PHP_EOL.implode(PHP_EOL, $out));
-        }
+        $cmd = 'git clone '. $option .' --local --no-hardlinks '.escapeshellarg($source).' '.escapeshellarg($destination).' 2>&1';
+
+        return $this->execGitAction($cmd, "clone");
+    }
+
+    public function fork($source, $destination) {
+        $this->checkFileExist($source);
+
+        $this->cloneRepo($source, $destination, '--bare');
 
         return $this->setUpFreshRepository($destination);
     }
 
+    public function cloneAtSpecifiqBranch($source, $destination, $branch) {
+        $this->checkFileExist($source);
+
+        return $this->cloneRepo($source, $destination, '--branch '.$branch);
+    }
+
+    public function changeGitUserInfo($repositoryPath, $email, $name) {
+        $this->checkFileExist($repositoryPath);
+        $cmdEmail = 'cd '. escapeshellarg($repositoryPath).' && git config --local user.email '.escapeshellarg($email).' 2>&1';
+        $cmdName = 'cd '.escapeshellarg($repositoryPath).' && git config --local user.name '.escapeshellarg($name).' 2>&1';
+
+        return $this->execGitAction($cmdEmail, 'change user email').' '.$this->execGitAction($cmdName, 'change user name');
+    }
+
+    public function add($repositoryPath, $filePathFromRepository) {
+        $this->checkFileExist($repositoryPath);
+        $cmd = 'cd '.escapeshellarg($repositoryPath).' && git add '.escapeshellarg($filePathFromRepository).' 2>&1';
+
+        return $this->execGitAction($cmd, 'add');
+    }
+
+    public function commit($repositoryPath, $message) {
+        $this->checkFileExist($repositoryPath);
+        $cmd = 'cd '.escapeshellarg($repositoryPath).' && git commit --allow-empty -m '.escapeshellarg($message).' 2>&1';
+
+        return $this->execGitAction($cmd, 'commit');
+    }
+
+    public function mergeAndPush($repositoryPath, $bareURL) {
+        $this->checkFileExist($repositoryPath);
+        $cmd = 'cd '.escapeshellarg($repositoryPath).' && git pull --rebase && git push '. $bareURL .' 2>&1';
+
+        return $this->execGitAction($cmd, 'merge and push');
+    }
+
+    public function getInformationsAboutFile($repositoryPath, $filePathFromRepository) {
+        $this->checkFileExist($repositoryPath);
+        $cmd = 'cd '.escapeshellarg($repositoryPath).' && git ls-files --stage '.escapeshellarg($filePathFromRepository).' 2>&1';
+
+        return $this->execGitAction($cmd, 'get informations');
+    }
+
+    public function removeRepository($repositoryPath) {
+        $this->checkFileExist($repositoryPath);
+        $cmd = 'rm --recursive --dir --force '.escapeshellarg($repositoryPath).' 2>&1';
+
+        return $this->execGitAction($cmd, 'rm');
+    }
+
+    public function getGitVersion() {
+        $cmd        = 'git --version';
+        $cmd_result = $this->execGitAction($cmd, 'version');
+        $version    = split(" ", $cmd_result);
+
+        return $version[2];
+    }
+
     /**
-     * Initialize a repository    
+     * Initialize a repository
      * @param Boolean $bare is a bare a repository
      * @return Boolean
      */
@@ -103,7 +179,7 @@ class GitDriver implements DVCSDriver {
         if ( $ret !== 0 ) {
             throw new GitDriverErrorException('Git setup failed on '.$cmd.PHP_EOL.implode(PHP_EOL, $out));
         }
-        
+
         if (!$this->setDescription($path, 'Default description for this project'.PHP_EOL)) {
             throw new GitDriverErrorException('Git setup failed on description update');
         }

@@ -92,3 +92,7 @@ Test
 ----
 After restart, you should be able to clone/push:
 git clone https://example.com/git/projectname/reponame.git
+
+=== Git ===
+
+Minimum version required for online editing >= 1.7.4

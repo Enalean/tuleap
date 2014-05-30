@@ -24,17 +24,34 @@ require_once 'bootstrap.php';
 
 class GitDriverTest extends UnitTestCase {
 
+    private $destinationPath;
+    private $sourcePath;
+
     public function setUp() {
         $this->curDir = getcwd();
         $this->fixturesPath = dirname(__FILE__).'/_fixtures';
+
+        $this->sourcePath = "/var/tmp/".uniqid();
+        mkdir($this->sourcePath, 0770, true);
+        $this->destinationPath = "/var/tmp/".uniqid();
+        mkdir($this->destinationPath, 0770, true);
+        @exec('GIT_DIR='.$this->sourcePath.' git --bare init --shared=group');
     }
 
     public function tearDown() {
         chdir($this->curDir);
         @unlink($this->fixturesPath.'/tmp/hooks/blah');
         @unlink($this->fixturesPath.'/tmp/config');
-        @exec('/bin/rm -rf '.$this->fixturesPath.'/tmp/repo.git');
-        @exec('/bin/rm -rf '.$this->fixturesPath.'/tmp/fork.git');
+        @exec('/bin/rm -rdf '.$this->fixturesPath.'/tmp/repo.git');
+        @exec('/bin/rm -rdf '.$this->fixturesPath.'/tmp/fork.git');
+        @exec('/bin/rm -rdf '.$this->destinationPath);
+        @exec('/bin/rm -rdf '.$this->sourcePath);
+    }
+
+    public function itExtractsTheGitVersion() {
+        $git_driver = partial_mock('execGitAction');
+        stub($git_driver)->execGitAction('git --version', 'version')->returns('git version 1.8.1.2');
+        $this->assertEqual($git_driver->getGitVersion(), "1.8.1.2");
     }
 
     public function testInitBareRepo() {
@@ -65,9 +82,102 @@ class GitDriverTest extends UnitTestCase {
 
         $driver = new GitDriver();
         $driver->fork($srcPath, $dstPath);
-        
+
         $this->assertTrue(file_exists($dstPath.'/HEAD'));
         $this->assertEqual(file_get_contents($dstPath.'/description'), 'Default description for this project'.PHP_EOL);
+    }
+
+    public function testCloneAtSpecifiqBranch() {
+        $driver = new GitDriver();
+        $driver->cloneAtSpecifiqBranch($this->sourcePath, $this->destinationPath, "master");
+
+        $this->assertTrue(file_exists($this->destinationPath));
+    }
+
+    public function testAdd() {
+        $driver = new GitDriver();
+        $driver->cloneAtSpecifiqBranch($this->sourcePath, $this->destinationPath, "master");
+
+        @exec('cd '.$this->destinationPath.' && touch toto');
+        $driver->add($this->destinationPath, 'toto');
+        exec('cd '.$this->destinationPath.' && git status --porcelain',$out,$ret);
+        $this->assertEqual(implode($out), 'A  toto');
+    }
+
+    public function testGetInformationsFile() {
+        $driver = new GitDriver();
+        $driver->cloneAtSpecifiqBranch($this->sourcePath, $this->destinationPath, "master");
+
+        @exec('cd '.$this->destinationPath.' && touch toto');
+        $driver->add($this->destinationPath, 'toto');
+        exec('cd '.$this->destinationPath.' && git ls-files -s toto',$out,$ret);
+        $sha1 = split(" ", implode($out));
+        $this->assertEqual(strlen($sha1[1]), 40);
+    }
+
+    public function testchangeGitUserInfo() {
+            $driver = new GitDriver();
+            $driver->cloneAtSpecifiqBranch($this->sourcePath, $this->destinationPath, "master");
+
+            $driver->changeGitUserInfo($this->destinationPath, "test@example.com", "testman");
+            exec('cd '.$this->destinationPath.' && git config --get user.name',$out,$ret);
+            $this->assertEqual(implode($out), "testman");
+
+            exec('cd '.$this->destinationPath.' && git config --get user.email',$out2,$ret2);
+            $this->assertEqual(implode($out2), "test@example.com");
+    }
+
+    public function testCommit() {
+            $driver = new GitDriver();
+            $driver->cloneAtSpecifiqBranch($this->sourcePath, $this->destinationPath, "master");
+
+            @exec('cd '.$this->destinationPath.' && touch toto');
+
+            $driver->add($this->destinationPath, 'toto');
+            $driver->changeGitUserInfo($this->destinationPath, "test@test.fr", "testman");
+            $driver->commit($this->destinationPath, "test commit");
+
+            exec('cd '.$this->destinationPath.' && git status --porcelain',$out,$ret);
+            $this->assertEqual(implode($out), '');
+    }
+
+    public function testRmREpo() {
+        $driver = new GitDriver();
+        $driver->cloneAtSpecifiqBranch($this->sourcePath, $this->destinationPath, "master");
+        $driver->removeRepository($this->destinationPath);
+        $this->assertTrue(!file_exists($this->destinationPath));
+    }
+
+    public function testMergeAndPush() {
+            $destinationPath2 = "/var/tmp/".uniqid();
+            mkdir($destinationPath2, 0770, true);
+            $destinationPath3 = "/var/tmp/".uniqid();
+            mkdir($destinationPath3, 0770, true);
+
+            $driver = new GitDriver();
+            $driver->cloneAtSpecifiqBranch($this->sourcePath, $this->destinationPath, "master");
+            $driver->changeGitUserInfo($this->destinationPath, "test@test.fr", "testman");
+            @exec('cd '.$this->destinationPath.'&& touch test.txt && git add . && git commit -m "add master" && git push -u '. $this->sourcePath .' master');
+
+            $driver->cloneAtSpecifiqBranch($this->sourcePath, $destinationPath2, "master");
+
+            @exec('cd '.$this->destinationPath.'&& touch toto.txt');
+            $driver->add($this->destinationPath, 'toto.txt');
+            $driver->commit($this->destinationPath, "test commit");
+            $driver->mergeAndPush($this->destinationPath, $this->sourcePath);
+
+            @exec('cd '.$destinationPath2.'&& touch titi.txt');
+            $driver->add($destinationPath2, 'titi.txt');
+            $driver->changeGitUserInfo($destinationPath2, "test2@test.fr", "testman2");
+            $driver->commit($destinationPath2, "test commit");
+            $driver->mergeAndPush($destinationPath2, $this->sourcePath);
+
+            $driver->cloneAtSpecifiqBranch($this->sourcePath, $destinationPath3, "master");
+
+            $this->assertTrue(file_exists($destinationPath3.'/toto.txt') && file_exists($destinationPath3.'/titi.txt'));
+
+            @exec('/bin/rm -rdf '.$destinationPath2);
+            @exec('/bin/rm -rdf '.$destinationPath3);
     }
 
     public function testSetRepositoryAccessPublic() {
@@ -78,7 +188,7 @@ class GitDriverTest extends UnitTestCase {
 
         $driver = new GitDriver();
         $driver->setRepositoryAccess($srcPath, GitRepository::PUBLIC_ACCESS);
-        
+
         clearstatcache();
         $stat = stat($srcPath);
         //system('/bin/ls -ld '.$srcPath);
@@ -93,7 +203,7 @@ class GitDriverTest extends UnitTestCase {
 
         $driver = new GitDriver();
         $driver->setRepositoryAccess($srcPath, GitRepository::PRIVATE_ACCESS);
-        
+
         clearstatcache();
         $stat = stat($srcPath);
         //system('/bin/ls -ld '.$srcPath);
@@ -109,7 +219,7 @@ class GitDriverTest extends UnitTestCase {
 
         $driver = new GitDriver();
         $driver->fork($srcPath, $dstPath);
-        
+
         clearstatcache();
         $stat = stat($dstPath.'/HEAD');
         //system('/bin/ls -ld '.$dstPath.'/HEAD');
@@ -122,7 +232,7 @@ class GitDriverTest extends UnitTestCase {
         $stat = stat($dstPath.'/refs/heads');
         $this->assertEqual(base_convert($stat['mode'], 10, 8), 42775, '/refs/heads must have setgid bit');
     }
-   
+
     public function testActivateHook() {
         copy($this->fixturesPath.'/hooks/post-receive', $this->fixturesPath.'/tmp/hooks/blah');
 
