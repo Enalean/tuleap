@@ -585,12 +585,11 @@ class Tracker_Artifact_Changeset {
 
             // 2. Compute the body of the message + headers
             $messages = array();
-            foreach ($recipients as $recipient => $check_perms) {
-                $user = $this->getUserFromRecipientName($recipient);
-                if ($user) {
-                    $ignore_perms = ! $check_perms;
-                    $this->buildMessage($messages, $is_update, $user, $ignore_perms);
-                }
+
+            if (Config::get('sys_enable_reply_by_mail')) {
+                $messages = $this->buildAMessagePerRecipient($recipients, $is_update);
+            } else {
+                $messages = $this->buildOneMessageForMultipleRecipients($recipients, $is_update);
             }
 
             // 3. Send the notification
@@ -600,13 +599,98 @@ class Tracker_Artifact_Changeset {
                     $m['headers'],
                     $m['subject'],
                     $m['htmlBody'],
-                    $m['txtBody']
+                    $m['txtBody'],
+                    $m['message-id']
                 );
             }
         }
     }
 
-    private function getUserFromRecipientName($recipient_name) {
+    public function buildOneMessageForMultipleRecipients(array $recipients, $is_update) {
+        $messages = array();
+        foreach ($recipients as $recipient => $check_perms) {
+            $user = $this->getUserFromRecipientName($recipient);
+
+            if ($user) {
+                $ignore_perms = !$check_perms;
+                $recipient_mail = $user->getEmail();
+                $message_content = $this->getMessageContent($user, $is_update, $check_perms);
+                $headers = array();
+                $hash = md5($message_content['htmlBody'] . $message_content['txtBody'] . serialize($headers) . serialize($message_content['subject']));
+
+                if (isset($messages[$hash])) {
+                    $messages[$hash]['recipients'][] = $recipient_mail;
+                } else {
+                    $messages[$hash] = $message_content;
+
+                    $messages[$hash]['message-id'] = null;
+                    $messages[$hash]['headers']    = $headers;
+                    $messages[$hash]['recipients'] = array($recipient_mail);
+                }
+            }
+        }
+
+        return $messages;
+    }
+
+    public function buildAMessagePerRecipient(array $recipients, $is_update) {
+        $messages = array();
+        foreach ($recipients as $recipient => $check_perms) {
+            $user = $this->getUserFromRecipientName($recipient);
+
+            if ($user) {
+                $recipient_factory = $this->getRecipientFactory();
+                $headers           = $this->getCustomReplyToHeader();
+                $message_id        = $recipient_factory->getEmailMessageId($user, $this->getArtifact());
+
+                $messages[$message_id] = $this->getMessageContent($user, $is_update, $check_perms);
+
+                $messages[$message_id]['message-id'] = $message_id;
+                $messages[$message_id]['headers']    = $headers;
+                $messages[$message_id]['recipients'] = array($user->getEmail());
+            }
+        }
+
+        return $messages;
+    }
+
+    private function getCustomReplyToHeader() {
+        return array(
+            array(
+                "name" => "Reply-to",
+                "value" => "forge__artifacts@" . Config::get('sys_default_domain')
+            )
+        );
+    }
+
+    private function getMessageContent($user, $is_update, $check_perms) {
+        $ignore_perms = !$check_perms;
+
+        $lang        = $user->getLanguage();
+
+        $mailManager = new MailManager();
+        $format      = $mailManager->getMailPreferencesByUser($user);
+
+
+        $htmlBody = '';
+        if ($format == Codendi_Mail_Interface::FORMAT_HTML) {
+            $htmlBody  .= $this->getBodyHtml($is_update, $user, $lang, $ignore_perms);
+        }
+
+        $txtBody   = $this->getBodyText($is_update, $user, $lang, $ignore_perms);
+        $subject   = $this->getSubject($user, $ignore_perms);
+
+        $message = array();
+
+        $message['htmlBody'] = $htmlBody;
+        $message['txtBody']  = $txtBody;
+        $message['subject']  = $subject;
+
+        return $message;
+
+    }
+
+    protected function getUserFromRecipientName($recipient_name) {
         $um   = $this->getUserManager();
         $user = null;
         if ( strpos($recipient_name, '@') !== false ) {
@@ -633,36 +717,15 @@ class Tracker_Artifact_Changeset {
         return $user;
     }
 
-    public function buildMessage(&$messages, $is_update, $user, $ignore_perms) {
-        $mailManager = new MailManager();
-        
-        $recipient = $user->getEmail();
-        $lang      = $user->getLanguage();
-        $format    = $mailManager->getMailPreferencesByUser($user);
-        
-        //We send multipart mail: html & text body in case of preferences set to html
-        $htmlBody = '';
-        if ($format == Codendi_Mail_Interface::FORMAT_HTML) {
-            $htmlBody  .= $this->getBodyHtml($is_update, $user, $lang, $ignore_perms);
-        }
-        $txtBody = $this->getBodyText($is_update, $user, $lang, $ignore_perms);
-
-        $subject   = $this->getSubject($user, $ignore_perms);
-        $headers   = array(); // TODO
-        $hash = md5($htmlBody . $txtBody . serialize($headers) . serialize($subject));
-        if (isset($messages[$hash])) {
-            $messages[$hash]['recipients'][] = $recipient;
-        } else {
-            $messages[$hash] = array(
-                    'headers'    => $headers,
-                    'htmlBody'   => $htmlBody,
-                    'txtBody'    => $txtBody,
-                    'subject'    => $subject,
-                    'recipients' => array($recipient),
-            );
-        }
+    private function getRecipientFactory() {
+        return new Tracker_Artifact_MailGatewayRecipientFactory(
+            Tracker_ArtifactFactory::instance(),
+            UserManager::instance(),
+            'whatever',
+            Config::get('sys_default_domain')
+        );
     }
-    
+
     /**
      * Send a notification
      *
@@ -671,17 +734,23 @@ class Tracker_Artifact_Changeset {
      * @param string $subject    the subject of the message
      * @param string $htmlBody   the html content of the message
      * @param string $txtBody    the text content of the message
+     * @param string $message_id the id of the message
      *
      * @return void
      */
-    protected function sendNotification($recipients, $headers, $subject, $htmlBody, $txtBody) {
+    protected function sendNotification($recipients, $headers, $subject, $htmlBody, $txtBody, $message_id) {
         $mail = new Codendi_Mail();
-        $hp = Codendi_HTMLPurifier::instance();
+
+        if($message_id) {
+            $mail->getMail()->setMessageId($message_id);
+        }
+
+        $hp          = Codendi_HTMLPurifier::instance();
         $breadcrumbs = array();
-        $groupId = $this->getTracker()->getGroupId();
-        $project = $this->getTracker()->getProject();
-        $trackerId = $this->getTracker()->getID();
-        $artifactId = $this->getArtifact()->getID();
+        $groupId     = $this->getTracker()->getGroupId();
+        $project     = $this->getTracker()->getProject();
+        $trackerId   = $this->getTracker()->getID();
+        $artifactId  = $this->getArtifact()->getID();
 
         $breadcrumbs[] = '<a href="'. get_server_url() .'/projects/'. $project->getUnixName(true) .'" />'. $project->getPublicName() .'</a>';
         $breadcrumbs[] = '<a href="'. get_server_url() .'/plugins/tracker/?tracker='. (int)$trackerId .'" />'. $hp->purify(SimpleSanitizer::unsanitize($this->getTracker()->getName())) .'</a>';
@@ -693,14 +762,18 @@ class Tracker_Artifact_Changeset {
         $mail->addAdditionalHeader("X-Codendi-Project",     $this->getArtifact()->getTracker()->getProject()->getUnixName());
         $mail->addAdditionalHeader("X-Codendi-Tracker",     $this->getArtifact()->getTracker()->getItemName());
         $mail->addAdditionalHeader("X-Codendi-Artifact-ID", $this->getId());
+
         foreach($headers as $header) {
             $mail->addAdditionalHeader($header['name'], $header['value']);
         }
+
         $mail->setTo(implode(', ', $recipients));
         $mail->setSubject($subject);
+
         if ($htmlBody) {
             $mail->setBodyHTML($htmlBody);
         }
+
         $mail->setBodyText($txtBody);
         $mail->send();
     }
@@ -1036,4 +1109,3 @@ class Tracker_Artifact_Changeset {
         return  TRACKER_BASE_URL.'?aid='.$this->getArtifact()->getId().'#followup_'.$this->getId();
     }
 }
-?>

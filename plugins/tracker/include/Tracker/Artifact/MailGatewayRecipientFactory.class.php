@@ -23,7 +23,7 @@
  */
 class Tracker_Artifact_MailGatewayRecipientFactory {
 
-    const EMAIL_PATTERN     = '/^(?P<artifact_id>\d+)-(?P<hash>[^-]+)-(?P<user_id>\d+)@/';
+    const EMAIL_PATTERN     = '/^<(?P<artifact_id>\d+)-(?P<hash>[^-]+)-(?P<user_id>\d+)@/';
     const ARTIFACT_ID_INDEX = 'artifact_id';
     const USER_ID_INDEX     = 'user_id';
     const HASH_INDEX        = 'hash';
@@ -48,7 +48,11 @@ class Tracker_Artifact_MailGatewayRecipientFactory {
         $this->host             = $host;
     }
 
-    /** @return Tracker_Artifact_MailGatewayRecipient */
+    /**
+     * @param string $email the email message id
+     *
+     * @return Tracker_Artifact_MailGatewayRecipient
+     */
     public function getFromEmail($email) {
         preg_match(self::EMAIL_PATTERN, $email, $email_parts);
         $artifact = $this->getArtifact((int)$email_parts[self::ARTIFACT_ID_INDEX]);
@@ -68,8 +72,18 @@ class Tracker_Artifact_MailGatewayRecipientFactory {
         return new Tracker_Artifact_MailGatewayRecipient(
             $user,
             $artifact,
-            $this->getEmail($user, $artifact)
+            $this->getEmailMessageId($user, $artifact)
         );
+    }
+
+    public function getEmailMessageId(PFUser $user, Tracker_Artifact $artifact) {
+        return
+            "<" .
+            $artifact->getId() . "-" .
+            $this->getHash($user, $artifact) . "-" .
+            $user->getId() .
+            "@" . $this->host .
+            ">";
     }
 
     private function getArtifact($artifact_id) {
@@ -100,12 +114,6 @@ class Tracker_Artifact_MailGatewayRecipientFactory {
         return md5($user->getId() . "-" . $artifact->getId() . "-" . $this->salt);
     }
 
-    private function getEmail(PFUser $user, Tracker_Artifact $artifact) {
-        return $artifact->getId() . "-" .
-            $this->getHash($user, $artifact) . "-" .
-            $user->getId() .
-            "@" . $this->host;
-    }
 }
 
 ?>
