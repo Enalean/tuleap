@@ -1187,33 +1187,6 @@ function util_get_ids_from_aid($aid,&$art_group_id,&$atid,&$art_name) {
 }
 
 /**
- * Return group id (i.e. project) the legacy artifact belongs to.
- * 
- * @param atn: the legacy tracker name in lower case: 'bug' 'sr' or 'task' exclusively
- * @param aid: the 'artifact' id
- *
- * @return group_id, or 0 if group does not exist
- */
-function util_get_group_from_legacy_id($atn,$aid) {
-    if ($atn=='bug') {
-        $sql="select group_id from bug where bug_id=".db_ei($aid);
-    } else if ($atn=='sr') {
-        $sql="select group_id from support where support_id=".db_ei($aid);
-    } else if ($atn=='patch') {
-        $sql="select group_id from patch where patch_id=".db_ei($aid);
-    } else if ($atn=='task') {
-        // A bit more complicated since the group_id and project_task_id are not in the same table...
-        $sql="SELECT project_group_list.group_id FROM project_task,project_group_list".
-            " WHERE project_task.group_project_id=project_group_list.group_project_id".
-            " AND project_task.project_task_id=".db_ei($aid);
-    } else {
-        return 0;
-    }
-    $result = db_query($sql);
-    return db_result($result,0,0);
-}    
-
-/**
  * Return the group id (i.e. project) the commit belongs to
  * 
  * @param cid: the commit id
