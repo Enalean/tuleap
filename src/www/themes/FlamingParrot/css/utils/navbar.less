@@ -261,10 +261,6 @@
     .navbar-search {
         margin: 8px 25px 0 0;
 
-        .dropdown-toggle .caret {
-            margin: -2px 0 0 0;
-        }
-
         input[type="text"] {
             border: 1px solid @dark-orange;
 
@@ -274,40 +270,22 @@
             }
         }
 
-        .bootstrap-select {
-            width: 55px;
+        .btn {
+            background-color: @dark-orange;
+            background-image: -moz-linear-gradient(top, lighten(@dark-orange, 10%), @dark-orange);
+            background-image: -webkit-gradient(linear, 0 0, 0 100%, from(lighten(@dark-orange, 10%)), to(@dark-orange));
+            background-image: -webkit-linear-gradient(top, lighten(@dark-orange, 10%), @dark-orange);
+            background-image: -o-linear-gradient(top, lighten(@dark-orange, 10%), @dark-orange);
+            background-image: linear-gradient(to bottom, lighten(@dark-orange, 10%), @dark-orange);
+            border: 1px solid @dark-orange;
+            border-color: @dark-orange;
+            border-bottom-color: darken(@dark-orange, 5%);
+            padding: 3px 18px 5px;
 
-            .btn:focus {
-                outline: none;
+            i {
+                color: #FFFFFF;
+                text-shadow: 0 1px 2px lighten(@dark-grey, 25%);
             }
-
-            ul.dropdown-menu {
-                background-color: @white;
-
-                a {
-                    color: @dark-grey;
-                    font-weight: normal;
-
-                    &:hover, &:focus {
-                        background-color: @light-grey;
-                        color: @dark-grey;
-                    }
-
-                    i:first-child {
-                        display: none;
-                    }
-                }
-            }
-        }
-
-        div.filter-option {
-            font-family: 'SourceSansPro', Arial;
-            font-size: 1em;
-            text-shadow: 0 1px 2px lighten(@dark-grey, 20%);
-        }
-
-        .btn-search-bar {
-            .btn-warning;
         }
 
         .input-append {

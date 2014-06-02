@@ -20,17 +20,17 @@
 
 class FlamingParrot_SearchFormPresenter {
 
-    private $search_options;
+    private $selected_entry;
 
     private $hidden_fields;
 
-    public function __construct($search_options, $hidden_fields) {
-        $this->search_options = $search_options;
+    public function __construct($selected_entry, $hidden_fields) {
+        $this->selected_entry = $selected_entry;
         $this->hidden_fields  = $hidden_fields;
     }
 
-    public function search_options() {
-        return $this->search_options;
+    public function selected_entry() {
+        return $this->selected_entry['value'];
     }
 
     public function hidden_fields() {
