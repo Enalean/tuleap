@@ -2,6 +2,9 @@ Version 7.2 (Not Released Yet)
 	== Bug fix ==
 	* request #6945: Notice on forum message post
 
+	== Developers ==
+	* request #6970: Clean the Augean stables (tracker v1 removal)
+
 Version 7.1 (Wednesday, May 28th 2014)
 
 	== Enhancement ==
