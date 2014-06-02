@@ -1,26 +1,27 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2011, 2012, 2013, 2014. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
- *
- * 
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 class BackendAliases extends Backend {
+
+    const ALIAS_ENTRY_FORMAT = "%-50s%-10s";
 
     protected $need_update=false;   
     protected $userdao = null;
@@ -88,8 +89,9 @@ class BackendAliases extends Backend {
         }
 
         if ((! $this->writeGenericAliases($fp))
-            || (!$this->writeListAliases($fp))
-            || (!$this->writeUserAliases($fp))
+            || (! $this->writeListAliases($fp))
+            || (! $this->writeUserAliases($fp))
+            || (! $this->writeOtherAliases($fp))
         ) {
             $this->log("Can't write aliases to $alias_file_new", Backend::LOG_ERROR);
             return false;
@@ -144,14 +146,12 @@ class BackendAliases extends Backend {
         $allowed_statuses=array('A', 'R'); // Active and restricted users
         $dar = $this->getUserDao()->searchByStatus($allowed_statuses);
         foreach ($dar as $row) {
-            if (($row['email'])&&($row['user_name'])) {
-                fwrite($fp, sprintf("%-50s%-10s", $row['user_name'].":", $row['email']."\n"));
+            if ($row['email'] && $row['user_name']) {
+                $this->writeAlias($fp, new System_Alias($row['user_name'], $row['email']));
             }
         }
         return fwrite($fp, "\n\n");
     }
-
-
 
     /** 
      * Mailing list aliases for mailman 
@@ -169,25 +169,42 @@ class BackendAliases extends Backend {
         foreach ($dar as $row) {
             if ($row['list_name']) {
                 // Convert to lower case
-                $list_name=strtolower($row['list_name']);
+                $list_name = strtolower($row['list_name']);
                 // Remove blank chars
                 $list_name = str_replace(' ', '', $list_name);
                 // Mailman 2.1 aliases
-                fwrite($fp, sprintf("%-50s%-10s", "$list_name:",             "\"|$mm_wrapper post $list_name\"\n"));
-                fwrite($fp, sprintf("%-50s%-10s", "$list_name-admin:",       "\"|$mm_wrapper admin $list_name\"\n"));
-                fwrite($fp, sprintf("%-50s%-10s", "$list_name-bounces:",     "\"|$mm_wrapper bounces $list_name\"\n"));
-                fwrite($fp, sprintf("%-50s%-10s", "$list_name-confirm:",     "\"|$mm_wrapper confirm $list_name\"\n"));
-                fwrite($fp, sprintf("%-50s%-10s", "$list_name-join:",        "\"|$mm_wrapper join $list_name\"\n"));
-                fwrite($fp, sprintf("%-50s%-10s", "$list_name-leave:",       "\"|$mm_wrapper leave $list_name\"\n"));
-                fwrite($fp, sprintf("%-50s%-10s", "$list_name-owner:",       "\"|$mm_wrapper owner $list_name\"\n"));
-                fwrite($fp, sprintf("%-50s%-10s", "$list_name-request:",     "\"|$mm_wrapper request $list_name\"\n"));
-                fwrite($fp, sprintf("%-50s%-10s", "$list_name-subscribe:",   "\"|$mm_wrapper subscribe $list_name\"\n"));
-                fwrite($fp, sprintf("%-50s%-10s", "$list_name-unsubscribe:", "\"|$mm_wrapper unsubscribe $list_name\"\n"));
+                $this->writeAlias($fp, new System_Alias("$list_name",             "\"|$mm_wrapper post $list_name\""));
+                $this->writeAlias($fp, new System_Alias("$list_name-admin",       "\"|$mm_wrapper admin $list_name\""));
+                $this->writeAlias($fp, new System_Alias("$list_name-bounces",     "\"|$mm_wrapper bounces $list_name\""));
+                $this->writeAlias($fp, new System_Alias("$list_name-confirm",     "\"|$mm_wrapper confirm $list_name\""));
+                $this->writeAlias($fp, new System_Alias("$list_name-join",        "\"|$mm_wrapper join $list_name\""));
+                $this->writeAlias($fp, new System_Alias("$list_name-leave",       "\"|$mm_wrapper leave $list_name\""));
+                $this->writeAlias($fp, new System_Alias("$list_name-owner",       "\"|$mm_wrapper owner $list_name\""));
+                $this->writeAlias($fp, new System_Alias("$list_name-request",     "\"|$mm_wrapper request $list_name\""));
+                $this->writeAlias($fp, new System_Alias("$list_name-subscribe",   "\"|$mm_wrapper subscribe $list_name\""));
+                $this->writeAlias($fp, new System_Alias("$list_name-unsubscribe", "\"|$mm_wrapper unsubscribe $list_name\""));
             }
         }
         return fwrite($fp, "\n\n");
     }
 
-}
+    private function writeOtherAliases($fp) {
+        $aliases = array();
+        EventManager::instance()->processEvent(
+            Event::BACKEND_ALIAS_GET_ALIASES,
+            array(
+                'aliases' => &$aliases
+            )
+        );
 
-?>
+        foreach ($aliases as $alias) {
+            $this->writeAlias($fp, $alias);
+        }
+
+        return fwrite($fp, "\n\n");
+    }
+
+    private function writeAlias($fp, System_Alias $alias) {
+        fwrite($fp, sprintf(self::ALIAS_ENTRY_FORMAT, $alias->getName() . ":", $alias->getValue() . "\n"));
+    }
+}

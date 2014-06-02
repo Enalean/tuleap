@@ -756,4 +756,13 @@ class Event {
      *    'can_access' => boolean
      */
     const HAS_USER_BEEN_DELEGATED_ACCESS = 'has_user_been_delegated_access';
+
+    /**
+     * We are writing aliases, so if you have any it is time to give them.
+     *
+     * Expected result:
+     *      'aliases' => System_Alias[]
+     */
+    const BACKEND_ALIAS_GET_ALIASES = 'backend_alias_get_aliases';
+
 }
