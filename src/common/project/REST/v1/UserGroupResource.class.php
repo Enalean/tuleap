@@ -25,7 +25,7 @@ use \ProjectUGroup;
 use \PFUser;
 use \UGroupManager;
 use \Tuleap\Project\REST\UserGroupRepresentation;
-use \Tuleap\Project\REST\UserRepresentation;
+use \Tuleap\User\REST\UserRepresentation;
 use \Tuleap\REST\Header;
 use \Tuleap\REST\ProjectAuthorization;
 use \Luracast\Restler\RestException;
@@ -115,7 +115,7 @@ class UserGroupResource {
      * @throws 404
      * @throws 406
      *
-     * @return Array {@type \Tuleap\Project\REST\UserRepresentation}
+     * @return Array {@type \Tuleap\User\REST\UserRepresentation}
      */
     public function getUsers($id, $limit = 10, $offset = 0) {
         $this->checkLimitValueIsAcceptable($limit);
@@ -188,7 +188,7 @@ class UserGroupResource {
      *
      * @param PFUser $member
      *
-     * @return \Tuleap\Project\REST\UserRepresentation
+     * @return \Tuleap\User\REST\UserRepresentation
      */
     private function getUserRepresentation(PFUser $member) {
         $user_representation = new UserRepresentation();
