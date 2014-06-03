@@ -20,6 +20,8 @@
 
 class Search_SearchController {
 
+    const DEFAULT_SEARCH = Search_SearchProject::NAME;
+
     /**
      * @var EventManager
      */
@@ -41,21 +43,43 @@ class Search_SearchController {
 
     public function index(Codendi_Request $request) {
         $GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('search_index', 'search'), 'body_class' => array('search-page')));
-        $this->renderer->renderToPage('index', array());
+        $this->renderer->renderToPage('index', new Search_SearchPresenter(self::DEFAULT_SEARCH, '', ''));
         $GLOBALS['HTML']->footer(array());
     }
 
+    public function ajaxResults(Codendi_Request $request) {
+        if (! $this->validateKeywords($request->get('words'))) {
+            return;
+        }
+
+        $presenter = $this->doSearch($request);
+        if ($presenter !== null) {
+            $this->renderer->renderToPage('results', $presenter);
+        }
+    }
+
     public function results(Codendi_Request $request) {
+        if (! $this->validateKeywords($request->get('words'))) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('search_index', 'at_least_3_ch'));
+            $GLOBALS['Response']->redirect('/search/');
+        }
+
+        $presenter = $this->doSearch($request);
+        if ($presenter !== null) {
+            $GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('search_index', 'search'), 'body_class' => array('search-page')));
+            $this->renderer->renderToPage('index', $presenter);
+            $GLOBALS['HTML']->footer(array());
+        }
+    }
+
+    private function doSearch(Codendi_Request $request) {
         $type_of_search = $request->get('type_of_search');
         $words          = $request->get('words');
         $offset         = intval($request->getValidated('offset', 'uint', 0));
         $exact          = $request->getValidated('exact', 'uint', false);
         $group_id       = $request->get('group_id');
 
-        $this->validateKeywords($words);
-
         if (! $this->isRedirectedSearch($type_of_search)) {
-            $GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('search_index', 'search'), 'body_class' => array('search-page')));
             ob_start();
             switch ($type_of_search) {
                 case Search_SearchTrackerV3::NAME:
@@ -86,9 +110,11 @@ class Search_SearchController {
                 default:
                     break;
             }
-            $blob = ob_get_clean();
-            $this->renderer->renderToPage('index', new Search_SearchPresenter($type_of_search, $words, $blob));
-            $GLOBALS['HTML']->footer(array());
+            return new Search_SearchPresenter(
+                $type_of_search,
+                $words,
+                ob_get_clean()
+            );
         } else {
             switch ($type_of_search) {
                 case Search_SearchWiki::NAME:
@@ -101,6 +127,7 @@ class Search_SearchController {
                     $search->search($group_id, $type_of_search, $words, $offset);
                     break;
             }
+            return null;
         }
     }
 
@@ -119,8 +146,9 @@ class Search_SearchController {
 
     private function validateKeywords($words) {
         if (strlen($words) < 3) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('search_index', 'at_least_3_ch'));
-            $GLOBALS['Response']->redirect('/search/');
+            return false;
         }
+
+        return true;
     }
 }

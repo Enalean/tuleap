@@ -26,7 +26,11 @@ class Search_SearchRouter {
 
     public function route(Codendi_Request $request) {
         if ($request->existAndNonEmpty('type_of_search')) {
-            $this->controller->results($request);
+            if ($request->isAjax()) {
+                $this->controller->ajaxResults($request);
+            } else {
+                $this->controller->results($request);
+            }
         } else {
             $this->controller->index($request);
         }

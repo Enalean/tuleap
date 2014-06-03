@@ -8,6 +8,7 @@ body.search-page .content {
     padding: 18px 20px 16px @accordion-width + 15 + 30 + 15;
     background: #F5F5F5;
     border-bottom: 1px solid #DDDDDD;
+    border-top: 1px solid #DDDDDD;
 
     form {
         margin: 0;
@@ -53,4 +54,10 @@ body.search-page .content {
 .search-results {
     float: left;
     padding: 15px 0;
+    min-width: 32px;
+    min-height: 32px;
+
+    &.loading {
+        background: url('../images/tuleap-spinner.gif') no-repeat center center;
+    }
 }

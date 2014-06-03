@@ -1,13 +1,14 @@
 <div class="search-bar">
     <form action="/search/" method="post">
         <div class="input-append">
-            <input class="input-xlarge" type="text" name="words" value="{{ words }}">
+            <input class="input-xlarge" type="text" id="words" name="words" value="{{ words }}">
             <input type="hidden" name="type_of_search" value="{{ type_of_search }}">
             <input type="hidden" name="exact" value="0">
             <button class="btn"><i class="icon-search"></i></button>
         </div>
     </form>
 </div>
+
 <div class="search-page">
     <div class="accordion" id="search-accordion">
       <div class="accordion-group">
@@ -17,13 +18,12 @@
         <div id="collapseOne" class="accordion-body collapse in">
           <div class="accordion-inner">
             <ul class="nav nav-pills nav-stacked">
-                <li><a href="#">soft</a></li>
-                <li><a href="#">people</a></li>
-                <li><a href="#">forums</a></li>
-                <li><a href="#">snippets</a></li>
-                <li><a href="#">all_trackers</a></li>
-                <li><a href="#">tracker</a></li>
-                <li><a href="#">wiki</a></li>
+                <li><a href="#" data-search-type="soft">soft</a></li>
+                <li><a href="#" data-search-type="people">people</a></li>
+                <li><a href="#" data-search-type="forums">forums</a></li>
+                <li><a href="#" data-search-type="snippets">snippets</a></li>
+                <li><a href="#" data-search-type="tracker">tracker</a></li>
+                <li><a href="#" data-search-type="wiki">wiki</a></li>
             </ul>
           </div>
         </div>

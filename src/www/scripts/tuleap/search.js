@@ -21,14 +21,35 @@
 
     $(document).ready(function() {
         keepAtLeastOnAccordionOpen();
+        switchSearchType();
     });
 
     function keepAtLeastOnAccordionOpen() {
-        $('.accordion-toggle').on('click', function(e) {
+        $('.accordion-toggle').click(function(e) {
             if($(this).parents('.accordion-group').children('.accordion-body').hasClass('in')) {
                 e.stopPropagation();
                 e.preventDefault();
             }
+        });
+    }
+
+    function switchSearchType() {
+        $('[data-search-type]').click(function() {
+            var type_of_search = $(this).attr('data-search-type');
+            var keywords = $('#words').attr('value');
+
+            $.ajax({
+                url: '/search/?type_of_search='+type_of_search+'&words='+keywords,
+                beforeSend: function() { $('.search-results').html('').addClass('loading'); }
+
+            }).done(function(html) {
+                $('.search-results').removeClass('loading');
+                $('.search-results').html(html);
+
+            }).fail(function() {
+                $('.search-results').removeClass('loading');
+                $('.search-results').html(codendi.locales.search.error);
+            });
         });
     }
 
