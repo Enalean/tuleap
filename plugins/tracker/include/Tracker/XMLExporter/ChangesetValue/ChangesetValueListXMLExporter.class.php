@@ -34,7 +34,6 @@ class Tracker_XMLExporter_ChangesetValue_ChangesetValueListXMLExporter extends T
             $changeset_xml
         );
 
-
         $field_change->addAttribute('bind', $changeset_value->getField()->getBind()->getType());
 
         $values = $changeset_value->getValue();

@@ -41,6 +41,11 @@ class Tracker_XMLExporter_ChangesetValueXMLExporterVisitor implements Tracker_Ar
     private $list_exporter;
 
     /**
+     * @var Tracker_XMLExporter_ChangesetValue_ChangesetValueOpenListXMLExporter
+     */
+    private $open_list_exporter;
+
+    /**
      * @var Tracker_XMLExporter_ChangesetValue_ChangesetValueStringXMLExporter
      */
     private $string_exporter;
@@ -74,17 +79,19 @@ class Tracker_XMLExporter_ChangesetValueXMLExporterVisitor implements Tracker_Ar
             Tracker_XMLExporter_ChangesetValue_ChangesetValueTextXMLExporter $text_exporter,
             Tracker_XMLExporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter $perms_exporter,
             Tracker_XMLExporter_ChangesetValue_ChangesetValueListXMLExporter $list_exporter,
+            Tracker_XMLExporter_ChangesetValue_ChangesetValueOpenListXMLExporter $open_list_exporter,
             Tracker_XMLExporter_ChangesetValue_ChangesetValueUnknownXMLExporter $unknown_exporter
     ) {
-        $this->file_exporter    = $file_exporter;
-        $this->date_exporter    = $date_exporter;
-        $this->float_exporter   = $float_exporter;
-        $this->integer_exporter = $integer_exporter;
-        $this->string_exporter  = $string_exporter;
-        $this->text_exporter    = $text_exporter;
-        $this->list_exporter    = $list_exporter;
-        $this->unknown_exporter = $unknown_exporter;
-        $this->perms_exporter   = $perms_exporter;
+        $this->file_exporter      = $file_exporter;
+        $this->date_exporter      = $date_exporter;
+        $this->float_exporter     = $float_exporter;
+        $this->integer_exporter   = $integer_exporter;
+        $this->string_exporter    = $string_exporter;
+        $this->text_exporter      = $text_exporter;
+        $this->perms_exporter     = $perms_exporter;
+        $this->list_exporter      = $list_exporter;
+        $this->open_list_exporter = $open_list_exporter;
+        $this->unknown_exporter   = $unknown_exporter;
     }
 
     public function export(
@@ -122,7 +129,7 @@ class Tracker_XMLExporter_ChangesetValueXMLExporterVisitor implements Tracker_Ar
     }
 
     public function visitOpenList(Tracker_Artifact_ChangesetValue_OpenList $changeset_value) {
-        return $this->unknown_exporter;
+        return $this->open_list_exporter;
     }
 
     public function visitPermissionsOnArtifact(Tracker_Artifact_ChangesetValue_PermissionsOnArtifact $changeset_value) {

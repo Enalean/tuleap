@@ -21,6 +21,11 @@
 class Tracker_XMLUpdater_FieldChangeXMLUpdaterVisitor implements Tracker_FormElement_FieldVisitor {
 
     /**
+     * @var Tracker_XMLUpdater_FieldChange_FieldChangeOpenListXMLUpdater
+     */
+    private $open_list_updater;
+
+    /**
      * @var Tracker_XMLUpdater_FieldChange_FieldChangePermissionsOnArtifactXMLUpdater
      */
     private $perms_updater;
@@ -68,16 +73,18 @@ class Tracker_XMLUpdater_FieldChangeXMLUpdaterVisitor implements Tracker_FormEle
             Tracker_XMLUpdater_FieldChange_FieldChangeStringXMLUpdater $string_updater,
             Tracker_XMLUpdater_FieldChange_FieldChangePermissionsOnArtifactXMLUpdater $perms_updater,
             Tracker_XMLUpdater_FieldChange_FieldChangeListXMLUpdater $list_updater,
+            Tracker_XMLUpdater_FieldChange_FieldChangeOpenListXMLUpdater $open_list_updater,
             Tracker_XMLUpdater_FieldChange_FieldChangeUnknownXMLUpdater $unknown_updater
     ) {
-        $this->date_updater    = $date_updater;
-        $this->float_updater   = $float_updater;
-        $this->integer_updater = $integer_updater;
-        $this->text_updater    = $text_updater;
-        $this->string_updater  = $string_updater;
-        $this->unknown_updater = $unknown_updater;
-        $this->perms_updater   = $perms_updater;
-        $this->list_updater    = $list_updater;
+        $this->date_updater      = $date_updater;
+        $this->float_updater     = $float_updater;
+        $this->integer_updater   = $integer_updater;
+        $this->text_updater      = $text_updater;
+        $this->string_updater    = $string_updater;
+        $this->unknown_updater   = $unknown_updater;
+        $this->perms_updater     = $perms_updater;
+        $this->list_updater      = $list_updater;
+        $this->open_list_updater = $open_list_updater;
     }
 
     public function update(
@@ -111,7 +118,7 @@ class Tracker_XMLUpdater_FieldChangeXMLUpdaterVisitor implements Tracker_FormEle
     }
 
     public function visitOpenList(Tracker_FormElement_Field_OpenList $field) {
-        return $this->unknown_updater;
+        return $this->open_list_updater;
     }
 
     public function visitPermissionsOnArtifact(Tracker_FormElement_Field_PermissionsOnArtifact $field) {
