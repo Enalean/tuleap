@@ -24,19 +24,25 @@ class Search_SearchPresenter {
 
     public $words;
 
+    public $group_id;
+
     public $blob;
 
-    public function __construct($type_of_search, $words, $blob) {
+    public function __construct($type_of_search, $words, $group_id, $blob) {
         $this->type_of_search = $type_of_search;
         $this->words          = $words;
         $this->blob           = $blob;
     }
 
-    public function simple_search() {
-        return $GLOBALS['Language']->getText('search_index', 'simple_search');
+    public function is_project_wide_search() {
+        return $group_id != null;
     }
 
-    public function fulltext_search() {
-        return $GLOBALS['Language']->getText('search_index', 'fulltext_search');
+    public function site_wide_search() {
+        return $GLOBALS['Language']->getText('search_index', 'site_wide_search');
+    }
+
+    public function project_wide_search() {
+        return $GLOBALS['Language']->getText('search_index', 'project_wide_search', array('***********'));
     }
 }

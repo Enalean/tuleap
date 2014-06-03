@@ -10,33 +10,56 @@
 </div>
 
 <div class="search-page">
-    <div class="accordion" id="search-accordion">
-      <div class="accordion-group">
-        <div class="accordion-heading">
-          <a class="accordion-toggle" data-toggle="collapse" data-parent="#search-accordion" href="#collapseOne">{{ simple_search }}</a>
-        </div>
-        <div id="collapseOne" class="accordion-body collapse in">
-          <div class="accordion-inner">
-            <ul class="nav nav-pills nav-stacked">
-                <li><a href="#" data-search-type="soft">soft</a></li>
-                <li><a href="#" data-search-type="people">people</a></li>
-                <li><a href="#" data-search-type="forums">forums</a></li>
-                <li><a href="#" data-search-type="snippets">snippets</a></li>
-                <li><a href="#" data-search-type="tracker">tracker</a></li>
-                <li><a href="#" data-search-type="wiki">wiki</a></li>
-            </ul>
-          </div>
-        </div>
+    <div class="search-panes">
+      <div class="search-pane">
+            <div class="search-pane-header">{{ project_wide_search }}</div>
+            <div class="search-pane-body">
+                <ul>
+                    <li>
+                        <span>forums</span>
+                        <ul>
+                            <li>
+                                <ul class="sub-facets-list">
+                                    <li>proj1</li>
+                                    <li>proj1</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><a href="#" data-search-type="tracker">tracker</a></li>
+                    <li><a href="#" data-search-type="wiki">wiki <i class="icon-external-link"></i></a></li>
+                </ul>
+            </div>
       </div>
-      <div class="accordion-group">
-        <div class="accordion-heading">
-          <a class="accordion-toggle" data-toggle="collapse" data-parent="#search-accordion" href="#collapseTwo">{{ fulltext_search }}</a>
-        </div>
-        <div id="collapseTwo" class="accordion-body collapse">
-          <div class="accordion-inner">
-            Fulltext facets
-          </div>
-        </div>
+
+      <div class="search-pane">
+            <div class="search-pane-header">{{ site_wide_search }}</div>
+            <div class="search-pane-body">
+                <ul>
+                    <li><a href="#" data-search-type="soft">soft</a></li>
+                    <li><a href="#" data-search-type="people">people</a></li>
+                    <li><a href="#" data-search-type="snippets">snippets</a></li>
+                    <li>
+                        <span>fts</span>
+                        <ul>
+                            <li>
+                                <span class="sub-facets">Projects:</span>
+                                <ul class="sub-facets-list">
+                                    <li>proj1</li>
+                                    <li>proj1</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <span class="sub-facets">Trackers:</span>
+                                <ul class="sub-facets-list">
+                                    <li>t1</li>
+                                    <li>tkel</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
       </div>
     </div>
 

@@ -20,18 +20,8 @@
 !(function ($) {
 
     $(document).ready(function() {
-        keepAtLeastOnAccordionOpen();
         switchSearchType();
     });
-
-    function keepAtLeastOnAccordionOpen() {
-        $('.accordion-toggle').click(function(e) {
-            if($(this).parents('.accordion-group').children('.accordion-body').hasClass('in')) {
-                e.stopPropagation();
-                e.preventDefault();
-            }
-        });
-    }
 
     function switchSearchType() {
         $('[data-search-type]').click(function() {

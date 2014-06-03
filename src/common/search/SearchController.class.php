@@ -43,7 +43,7 @@ class Search_SearchController {
 
     public function index(Codendi_Request $request) {
         $GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('search_index', 'search'), 'body_class' => array('search-page')));
-        $this->renderer->renderToPage('index', new Search_SearchPresenter(self::DEFAULT_SEARCH, '', ''));
+        $this->renderer->renderToPage('index', new Search_SearchPresenter(self::DEFAULT_SEARCH, '', null, ''));
         $GLOBALS['HTML']->footer(array());
     }
 
@@ -113,6 +113,7 @@ class Search_SearchController {
             return new Search_SearchPresenter(
                 $type_of_search,
                 $words,
+                $group_id,
                 ob_get_clean()
             );
         } else {
