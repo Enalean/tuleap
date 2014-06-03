@@ -5,6 +5,11 @@ Version 7.2 (Not Released Yet)
 	== Developers ==
 	* request #6970: Clean the Augean stables (tracker v1 removal)
 
+    == Plugins ==
+	* agiledashboard: 1.64
+	* cardwall: 1.33
+	* tracker: 5.390
+
 Version 7.1 (Wednesday, May 28th 2014)
 
 	== Enhancement ==
