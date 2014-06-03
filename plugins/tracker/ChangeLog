@@ -1,3 +1,6 @@
+Version 5.392 - Tuleap 7.2
+    * tasks #6921: artifact copy deals with open list
+
 Version 5.391 - Tuleap 7.2
     * tasks #6953: Warnings on submit about list fields
 
