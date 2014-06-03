@@ -18,31 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Search_SearchPresenter {
+class Search_Presenter_SearchPresenter {
+
+    public $template = 'site-search';
 
     public $type_of_search;
 
     public $words;
 
-    public $group_id;
-
     public $search_result;
 
-    public function __construct($type_of_search, $words, $group_id, $search_result) {
+    public $search_panes = array();
+
+    public function __construct($type_of_search, $words, $search_result, array $search_panes) {
         $this->type_of_search = $type_of_search;
         $this->words          = $words;
         $this->search_result  = $search_result;
-    }
-
-    public function is_project_wide_search() {
-        return $group_id != null;
-    }
-
-    public function site_wide_search() {
-        return $GLOBALS['Language']->getText('search_index', 'site_wide_search');
-    }
-
-    public function project_wide_search() {
-        return $GLOBALS['Language']->getText('search_index', 'project_wide_search', array('***********'));
+        $this->search_panes   = $search_panes;
     }
 }

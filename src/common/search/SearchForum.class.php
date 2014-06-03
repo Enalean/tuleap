@@ -31,8 +31,8 @@ class Search_SearchForum {
         $this->dao = $dao;
     }
 
-    public function search($words, $exact, $offset, $forum_id) {
-        return $this->getSearchForumResultPresenter($this->dao->searchGlobal($words, $exact, $offset, $forum_id), $words);
+    public function search(Search_SearchQuery $query) {
+        return $this->getSearchForumResultPresenter($this->dao->searchGlobal($query->getWords(), $query->getExact(), $query->getOffset(), $query->getForumId()), $query->getWords());
     }
 
     private function getSearchForumResultPresenter(DataAccessResult $results, $words) {

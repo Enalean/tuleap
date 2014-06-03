@@ -19,46 +19,39 @@
  */
 
 
-class FullTextSearch_Presenter_Search extends FullTextSearch_Presenter_Index {
+class FullTextSearch_Presenter_Search {
     public $template;
     /**
      * @var FullTextSearch_SearchResultCollection
      */
     private $query_result;
-    
-    public function __construct($index_status, $terms, FullTextSearch_SearchResultCollection $query_result) {
-        parent::__construct($index_status, $terms);
+
+    public function __construct(FullTextSearch_SearchResultCollection $query_result) {
         $this->query_result = $query_result;
-        $this->template     = 'search';
+        $this->template     = 'results';
     }
-    
+
     public function has_results() {
         return ($this->query_result->count() > 0);
     }
-    
+
     public function has_facets() {
         return (count($this->facets()) > 0);
     }
-    
+
     public function facets() {
         return $this->query_result->getFacets();
     }
-    
-    public function no_results() {
-        return !$this->has_results();
-    }
-        
+
     public function result_count() {
         return $GLOBALS['Language']->getText('plugin_fulltextsearch', 'result_count', array($this->query_result->count(), number_format($this->query_result->getQueryTime(), 2, '.', '')));
     }
-    
+
     public function search_results() {
         return $this->query_result->getResults();
     }
-    
+
     public function elapsed_time() {
         return $this->query_result->getQueryTime();
     }
 }
-
-?>

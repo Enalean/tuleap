@@ -31,8 +31,8 @@ class Search_SearchPeople {
         $this->manager = $manager;
     }
 
-    public function search($words, $exact, $offset) {
-        return $this->getSearchPeopleResultPresenter($this->manager->getAllUsersByUsernameOrRealname($words, $offset, $exact), $words);
+    public function search(Search_SearchQuery $query) {
+        return $this->getSearchPeopleResultPresenter($this->manager->getAllUsersByUsernameOrRealname($query->getWords(), $query->getOffset(), $query->getExact()), $query->getWords());
     }
 
     private function getSearchPeopleResultPresenter(array $users, $words) {

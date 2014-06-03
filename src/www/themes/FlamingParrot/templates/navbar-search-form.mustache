@@ -1,10 +1,10 @@
 {{# search_form_presenter}}
     <form action="/search/" method="post" class="navbar-search pull-left">
         {{# hidden_fields }}
-            <input type="hidden" name={{ name }} value={{ value }}/>
+            <input type="hidden" name="{{ name }}" value="{{ value }}" />
         {{/ hidden_fields }}
-        <input type="hidden" name="type_of_search" value="{{{ selected_entry }}}">
-        <input type="hidden" name="exact" value="0">
+        <input type="hidden" name="type_of_search" value="{{{ selected_entry }}}" />
+        <input type="hidden" name="exact" value="0" />
 
         <div class="input-append">
             <input type="text" name="words" class="span2" placeholder="{{ search_placeholder }}" />

@@ -34,12 +34,16 @@ class Search_SearchWiki {
         $this->dao = $dao;
     }
 
-    public function search($group_id, $words) {
+    public function search(Search_SearchQuery $query) {
+        if ($query->getProject()->isError()) {
+            return;
+        }
+
         $search_page = self::SEARCH_PAGENAME_EN;
-        if ($this->dao->searchLanguage($group_id) == 'fr_FR') {
+        if ($this->dao->searchLanguage($query->getProject()->getId()) == 'fr_FR') {
             $search_page = self::SEARCH_PAGENAME_FR;
         }
 
-        $GLOBALS['Response']->redirect('/wiki/index.php?group_id=' . $group_id . '&pagename=' . $search_page . '&s=' . urlencode($words));
+        $GLOBALS['Response']->redirect('/wiki/index.php?group_id=' . $query->getProject()->getId() . '&pagename=' . $search_page . '&s=' . urlencode($query->getWords()));
     }
 }

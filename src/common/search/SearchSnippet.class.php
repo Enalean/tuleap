@@ -32,8 +32,8 @@ class Search_SearchSnippet {
         $this->dao = $dao;
     }
 
-    public function search($words, $exact, $offset) {
-        return $this->getSearchSnippetResultPresenter($this->dao->searchGlobal($words, $exact, $offset), $words);
+    public function search(Search_SearchQuery $query) {
+        return $this->getSearchSnippetResultPresenter($this->dao->searchGlobal($query->getWords(), $query->getExact(), $query->getOffset()), $query->getWords());
     }
 
     private function getSearchSnippetResultPresenter(DataAccessResult $results, $words) {

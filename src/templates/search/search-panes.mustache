@@ -1,0 +1,17 @@
+{{# search_panes }}
+<div class="search-pane">
+    <div class="search-pane-header">{{ title }}</div>
+    <div class="search-pane-body">
+        <ul>
+            {{# search_types }}
+            <li>
+                <a href="#" data-search-type="{{ search_type }}">{{ title }}</a>
+                {{# has_facets }}
+                    {{> facets }}
+                {{/ has_facets }}
+            </li>
+            {{/ search_types }}
+        </ul>
+    </div>
+</div>
+{{/ search_panes }}

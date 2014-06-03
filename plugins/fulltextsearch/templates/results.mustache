@@ -1,0 +1,23 @@
+<ul>
+    <li>
+        <span class="sub-facets">Projects</span>
+        <ul class="sub-facets-list">
+            {{# facets }}
+            <li>
+                <label>
+                    <input type="checkbox" class="facets" value="{{value}}" name="facets[{{name}}][]" {{checked}} >{{label}} ({{count}})
+                </label>
+            </li>
+            {{/ facets }}
+        </ul>
+    </li>
+</ul>
+<div id="search-results">
+    <input type="hidden" id="fts_size" value="10" />
+
+    {{> search-results-docman }}
+
+    {{^ search_results }}
+    <p>No results found</p>
+    {{/ search_results }}
+</div>

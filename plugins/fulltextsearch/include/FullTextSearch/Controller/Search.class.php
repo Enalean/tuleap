@@ -51,22 +51,25 @@ class FullTextSearch_Controller_Search extends MVC2_PluginController {
             }
             return $search_result;
         } else {
-            try {
-                $search_result = $this->client->searchDocuments($terms, $facets, $offset, $this->request->getCurrentUser());
-                if ($this->request->isAjax()) {
-                    $presenter = new FullTextSearch_Presenter_SearchOnlyResults($search_result);
-                } else {
-                    $presenter = $this->getSearchPresenter($terms, $search_result);
-                }
-            } catch (ElasticSearchTransportHTTPException $e) {
-                $presenter = new FullTextSearch_Presenter_ErrorNoSearch($e->getMessage());
-            }
-            $this->render($presenter->template, $presenter);
         }
     }
 
-    protected function getSearchPresenter($terms, $search_result) {
-        return new FullTextSearch_Presenter_Search(null, $terms, $search_result);
+    public function siteSearch(array $params) {
+        $params['search_type']        = true;
+        $params['pagination_handled'] = true;
+
+        $terms  = $params['words'];
+        $facets = $this->getFacets();
+        $offset = $params['offset'];
+
+        try {
+            $search_result = $this->client->searchDocuments($terms, $facets, $offset, $this->request->getCurrentUser());
+            $results_presenter = new FullTextSearch_Presenter_Search($search_result);
+        } catch (ElasticSearchTransportHTTPException $e) {
+            $results_presenter = new FullTextSearch_Presenter_ErrorNoSearch($e->getMessage());
+        }
+
+        $params['results'] = $this->renderToString($results_presenter->template, $results_presenter);
     }
 
     private function getFacets() {
@@ -77,5 +80,3 @@ class FullTextSearch_Controller_Search extends MVC2_PluginController {
         return $facets;
     }
 }
-
-?>

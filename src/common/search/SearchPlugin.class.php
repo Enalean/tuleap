@@ -25,32 +25,35 @@ class Search_SearchPlugin {
      */
     private $event_manager;
 
+    private $results = '';
+
     public function __construct(EventManager $event_manager) {
         $this->event_manager = $event_manager;
     }
 
-    public function search($group_id, $type_of_search, $words, $offset) {
+    public function search(Search_SearchQuery $query) {
         $matchingSearchTypeFound = false;
         $pagination_handled = false;
         $rows_returned = 0;
         $rows = 0;
 
         $params = array(
-            'words'              => $words,
-            'offset'             => $offset,
+            'words'              => $query->getWords(),
+            'offset'             => $query->getOffset(),
             'nbRows'             => 25,
-            'type_of_search'     => $type_of_search,
+            'type_of_search'     => $query->getTypeOfSearch(),
             'search_type'        => &$matchingSearchTypeFound,
             'rows_returned'      => &$rows_returned,
             'rows'               => &$rows,
             'pagination_handled' => &$pagination_handled,
-            'group_id'           => $group_id,
+            'group_id'           => $query->getProject()->getId(),
+            'results'            => &$this->results,
         );
 
         $this->event_manager->processEvent('search_type', $params);
+    }
 
-        if (!$matchingSearchTypeFound) {
-            echo '<H1>' . $GLOBALS['Language']->getText('search_index', 'invalid_search') . '</H1>';
-        }
+    public function getResults() {
+        return $this->results;
     }
 }

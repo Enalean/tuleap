@@ -31,22 +31,25 @@ class Search_SearchTrackerV3 {
         $this->dao = $dao;
     }
 
-    public function search($group_id, $words, $exact, $offset, $atid) {
+    public function search(Search_SearchQuery $query) {
         include_once('www/tracker/include/ArtifactTypeHtml.class.php');
         include_once('www/tracker/include/ArtifactHtml.class.php');
-        ob_start();
-        //
-        //      get the Group object
-        //
-        $pm = ProjectManager::instance();
-        $group = $pm->getProject($group_id);
-        if (!$group || !is_object($group) || $group->isError()) {
-            exit_no_group();
+
+        $project = $query->getProject();
+        if ($project->isError()) {
+            return;
         }
+        $group_id = $project->getId();
+        $words    = $query->getWords();
+        $exact    = $query->getExact();
+        $offset   = $query->getOffset();
+        $atid     = $query->getTrackerV3Id();
+
+        ob_start();
         //
         //      Create the ArtifactType object
         //
-        $ath = new ArtifactTypeHtml($group, $atid);
+        $ath = new ArtifactTypeHtml($project, $atid);
         if (!$ath || !is_object($ath)) {
             exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('global', 'error'));
         }

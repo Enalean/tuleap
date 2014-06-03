@@ -566,6 +566,8 @@ class Event {
 
     const PLUGINS_POWERED_SEARCH = 'plugins_powered_search';
 
+    const SEARCH_TYPES_PRESENTERS = 'search_types_presenters';
+
     /**
      * Register REST resources
      *

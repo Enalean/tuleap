@@ -31,13 +31,13 @@ class Search_SearchProject {
         $this->dao = $dao;
     }
 
-    public function search($words, $exact, $offset) {
+    public function search(Search_SearchQuery $query) {
         $user = UserManager::instance()->getCurrentUser();
         if ($user->isRestricted()) {
-            return $this->getSearchProjectResultPresenter($this->dao->searchGlobalForRestrictedUsers($words, $offset, $exact, $user->getId()), $words);
+            return $this->getSearchProjectResultPresenter($this->dao->searchGlobalForRestrictedUsers($query->getWords(), $query->getOffset(), $query->getExact(), $user->getId()), $query->getWords());
         }
 
-        return $this->getSearchProjectResultPresenter($this->dao->searchGlobal($words, $offset, $exact), $words);
+        return $this->getSearchProjectResultPresenter($this->dao->searchGlobal($query->getWords(), $query->getOffset(), $query->getExact()), $query->getWords());
     }
 
     private function getSearchProjectResultPresenter(DataAccessResult $results, $words) {
