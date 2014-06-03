@@ -10,6 +10,9 @@ Version 7.2 (Not Released Yet)
 	* cardwall: 1.33
 	* tracker: 5.390
 
+        == REST API ==
+	story #6934 - REST: route /users/:id GET
+
 Version 7.1 (Wednesday, May 28th 2014)
 
 	== Enhancement ==
