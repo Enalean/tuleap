@@ -32,37 +32,25 @@ class Search_SearchProject {
     }
 
     public function search($words, $exact, $offset) {
-        $hp   = Codendi_HTMLPurifier::instance();
         $user = UserManager::instance()->getCurrentUser();
         if ($user->isRestricted()) {
-            $results = $this->dao->searchGlobalForRestrictedUsers($words, $offset, $exact, $user->getId());
-        } else {
-            $results = $this->dao->searchGlobal($words, $offset, $exact);
+            return $this->getSearchProjectResultPresenter($this->dao->searchGlobalForRestrictedUsers($words, $offset, $exact, $user->getId()), $words);
         }
 
-        $rows_returned = count($results);
-        if ($rows_returned == 0) {
-            echo '<H2>' . $GLOBALS['Language']->getText('search_index', 'no_match_found', htmlentities(stripslashes($words), ENT_QUOTES, 'UTF-8')) . '</H2>';
-        } else {
+        return $this->getSearchProjectResultPresenter($this->dao->searchGlobal($words, $offset, $exact), $words);
+    }
 
-            echo '<H3>' . $GLOBALS['Language']->getText('search_index', 'search_res', array(htmlentities(stripslashes($words), ENT_QUOTES, 'UTF-8'), $rows_returned)) . "</H3><P>\n\n";
+    private function getSearchProjectResultPresenter(DataAccessResult $results, $words) {
+        return new Search_SearchProjectPresenter($this->getResultsPresenters($results), $words);
+    }
 
-            $title_arr = array();
-            $title_arr[] = $GLOBALS['Language']->getText('search_index', 'project_name');
-            $title_arr[] = $GLOBALS['Language']->getText('search_index', 'description');
+    private function getResultsPresenters(DataAccessResult $results) {
+        $results_presenters = array();
 
-            echo html_build_list_table_top($title_arr);
-
-            echo "\n";
-
-            $i = 0;
-            foreach ($results as $row) {
-                print "<TR class=\"" . html_get_alt_row_color($i) . "\"><TD><A HREF=\"/projects/" . $row['unix_group_name'] . "/\">"
-                        . "<IMG SRC=\"" . util_get_image_theme('msg.png') . "\" BORDER=0 HEIGHT=12 WIDTH=10> " . $row['group_name'] . "</A></TD>"
-                        . "<TD>" . $hp->purify(util_unconvert_htmlspecialchars($row['short_description' ]), CODENDI_PURIFIER_LIGHT) . "</TD></TR>\n";
-                $i++;
-            }
-            echo "</TABLE>\n";
+        foreach ($results as $result) {
+            $results_presenters[] = new Search_SearchProjectResultPresenter($result);
         }
+
+        return $results_presenters;
     }
 }

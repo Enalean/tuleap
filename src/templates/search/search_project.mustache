@@ -1,0 +1,11 @@
+{{#has_results}}
+    <h3> {{search_result_title}} </h3>
+    <div class="search_column_title_title"> {{project_name_column_title}} </div>
+    <div class="search_column_description_title"> {{description_column_title}} </div>
+    {{#results}}
+        {{>project_result}}
+    {{/results}}
+{{/has_results}}
+{{^has_results}}
+    <h2> {{no_match_found_string}} </h2>
+{{/has_results}}

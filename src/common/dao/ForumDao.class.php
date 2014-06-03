@@ -23,7 +23,7 @@ class ForumDao extends DataAccessObject {
         parent::__construct($da);
         $this->table_name = 'forum_group_list';
     }
- 
+
     public function searchByGroupForumId($forum_id){
         $forum_id= $this->da->quoteSmart($forum_id);
         $sql = "SELECT group_id 

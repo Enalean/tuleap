@@ -89,7 +89,14 @@ class Search_SearchController {
 
                 case Search_SearchProject::NAME:
                     $search = new Search_SearchProject(new ProjectDao());
-                    $search->search($words, $exact, $offset);
+                    $this->renderer->renderToPage(
+                        'search_project',
+                        $search->search(
+                            $words,
+                            $exact,
+                            $offset
+                        )
+                    );
                     break;
 
                 case Search_SearchPeople::NAME:
