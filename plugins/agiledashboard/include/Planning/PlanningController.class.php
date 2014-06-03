@@ -229,7 +229,14 @@ class Planning_Controller extends MVC2_PluginController {
     private function getMilestoneSummaryPresenters(Planning $last_planning, PFUser $user) {
         $presenters   = array();
         $has_cardwall = $this->hasCardwall($last_planning);
-        $last_planning_current_milestones = $this->getPlanningMilestonesForTimePeriod($last_planning);
+
+        $set_in_time = $this->planning_factory
+            ->canPlanningBeSetInTime($last_planning->getPlanningTracker());
+        if ($set_in_time) {
+            $last_planning_current_milestones = $this->getPlanningMilestonesForTimePeriod($last_planning);
+        } else {
+            $last_planning_current_milestones = $this->getPlanningMilestonesByStatus($last_planning);
+        }
 
         if (empty($last_planning_current_milestones)) {
             return $presenters;
@@ -265,13 +272,7 @@ class Planning_Controller extends MVC2_PluginController {
      * @return Planning_Milestone[]
      */
     private function getPlanningMilestonesForTimePeriod(Planning $planning) {
-        $user        = $this->request->getCurrentUser();
-        $set_in_time = $this->planning_factory
-            ->canPlanningBeSetInTime($planning->getPlanningTracker());
-
-        if (! $set_in_time) {
-            return $this->milestone_factory->getAllMilestonesWithoutPlannedElement($user, $planning);
-        }
+        $user = $this->request->getCurrentUser();
 
         switch ($this->request->get('period')) {
             case self::PAST_PERIOD:
@@ -287,6 +288,29 @@ class Planning_Controller extends MVC2_PluginController {
                 );
             default:
                 return $this->milestone_factory->getAllCurrentMilestones(
+                    $user,
+                    $planning
+                );
+        }
+    }
+
+    private function getPlanningMilestonesByStatus(Planning $planning) {
+        $user = $this->request->getCurrentUser();
+
+        switch ($this->request->get('period')) {
+            case self::PAST_PERIOD:
+                return $this->milestone_factory->getAllClosedMilestones(
+                    $user,
+                    $planning
+                );
+
+            case self::FUTURE_PERIOD:
+                return $this->milestone_factory->getAllOpenMilestones(
+                    $user,
+                    $planning
+                );
+            default:
+                return $this->milestone_factory->getAllOpenMilestones(
                     $user,
                     $planning
                 );

@@ -92,5 +92,12 @@ class Planning_Presenter_HomePresenter {
     public function has_milestone_presenters() {
         return ! empty($this->milestone_presenters);
     }
+
+    public function user_helper() {
+        if ($this->past_active() !== '') {
+            return $GLOBALS['Language']->getText('plugin_agiledashboard','home_user_helper_done');
+        }
+
+        return $GLOBALS['Language']->getText('plugin_agiledashboard','home_user_helper_others');
+    }
 }
-?>
