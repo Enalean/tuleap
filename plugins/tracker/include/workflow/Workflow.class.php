@@ -391,6 +391,10 @@ class Workflow {
         return $this->global_rules_manager;
     }
 
+    public function disable() {
+        $this->is_used = false;
+    }
+
    /**
     * Indicates if permissions on a field can be bypassed
     *

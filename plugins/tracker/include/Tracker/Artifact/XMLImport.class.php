@@ -109,6 +109,9 @@ class Tracker_Artifact_XMLImport {
                 $extraction_path,
                 $this->static_value_dao
             );
+
+            $tracker->getWorkflow()->disable();
+
             return $this->importOneArtifact($tracker, $xml_artifact, $fields_data_builder);
         } catch (Tracker_Artifact_Exception_CannotCreateInitialChangeset $exception) {
             $this->logger->error("Impossible to create artifact: ".$exception->getMessage());
