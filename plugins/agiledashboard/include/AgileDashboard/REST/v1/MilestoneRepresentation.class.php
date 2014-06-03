@@ -100,6 +100,11 @@ class MilestoneRepresentation {
     public $status_value;
 
     /**
+     * @var string
+     */
+    public $semantic_status;
+
+    /**
      * @var \Tuleap\AgileDashboard\REST\v1\MilestoneParentReference | null
      */
     public $parent;
@@ -160,6 +165,7 @@ class MilestoneRepresentation {
         $this->uri              = self::ROUTE . '/' . $this->id;
         $this->label            = $milestone->getArtifactTitle();
         $this->status_value     = $milestone->getArtifact()->getStatus();
+        $this->semantic_status  = $milestone->getArtifact()->getSemanticStatusValue();
         $this->submitted_by     = JsonCast::toInt($milestone->getArtifact()->getFirstChangeset()->getSubmittedBy());
         $this->submitted_on     = JsonCast::toDate($milestone->getArtifact()->getFirstChangeset()->getSubmittedOn());
         $this->capacity         = JsonCast::toFloat($milestone->getCapacity());

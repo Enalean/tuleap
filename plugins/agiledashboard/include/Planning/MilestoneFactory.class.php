@@ -574,8 +574,8 @@ class Planning_MilestoneFactory {
     /**
      * Returns a status array. E.g.
      *  array(
-     *      Tracker_ArtifactDao::STATUS_OPEN   => no_of_opne,
-     *      Tracker_ArtifactDao::STATUS_CLOSED => no_of_closed,
+     *      Tracker_Artifact::STATUS_OPEN   => no_of_opne,
+     *      Tracker_Artifact::STATUS_CLOSED => no_of_closed,
      *  )
      *
      * @return array

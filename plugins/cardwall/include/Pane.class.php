@@ -177,8 +177,8 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         } catch (InitialEffortNotDefinedException $exception) {
             $status_count = $this->milestone_factory->getMilestoneStatusCount($this->user, $this->milestone);
             return new Cardwall_OpenClosedEffortProgressPresenter(
-                $status_count[Tracker_ArtifactDao::STATUS_OPEN],
-                $status_count[Tracker_ArtifactDao::STATUS_CLOSED]
+                $status_count[Tracker_Artifact::STATUS_OPEN],
+                $status_count[Tracker_Artifact::STATUS_CLOSED]
             );
         }
     }
