@@ -112,7 +112,7 @@ NB: Original OsdnNavBar has been removed from first cell. <td align="center">'.$
         $this->generic_header($params);
         ?>
 
-<body class="<?php echo $this->getClassnamesForBodyTag() ?>">
+<body class="<?php echo $this->getClassnamesForBodyTag($params) ?>">
 <div id="wrapper">
 <?php
     $deprecated = $this->getBrowserDeprecatedMessage();
