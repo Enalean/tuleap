@@ -17,16 +17,24 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Project\REST;
+namespace Tuleap\User\REST;
 
 use \PFUser;
 use \Tuleap\REST\JsonCast;
 
 class UserRepresentation {
+
+    const ROUTE = 'users';
+
     /**
      * @var int
      */
     public $id;
+
+    /**
+     * @var string
+     */
+    public $uri;
 
     /**
      * @var String
@@ -51,6 +59,7 @@ class UserRepresentation {
 
     public function build(PFUser $user) {
         $this->id        = JsonCast::toInt($user->getId());
+        $this->uri       = UserRepresentation::ROUTE . '/' . $this->id;
         $this->email     = $user->getEmail();
         $this->real_name = $user->getRealName();
         $this->username  = $user->getUserName();

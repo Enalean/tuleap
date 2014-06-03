@@ -23,6 +23,7 @@ use Luracast\Restler\Restler;
 use \Tuleap\Project\REST\ProjectRepresentation;
 use \Tuleap\Token\REST\TokenRepresentation;
 use \Tuleap\Project\REST\UserGroupRepresentation;
+use \Tuleap\User\REST\UserRepresentation;
 use \Tuleap\Project\REST\ProjectResourceReference;
 use \Project;
 
@@ -35,6 +36,7 @@ class ResourcesInjector {
         $restler->addAPIClass('\\Tuleap\\Project\\REST\\ProjectResource',   ProjectRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\Token\\REST\\TokenResource',       TokenRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\Project\\REST\\UserGroupResource', UserGroupRepresentation::ROUTE);
+        $restler->addAPIClass('\\Tuleap\\User\\REST\\UserResource',         UserRepresentation::ROUTE);
     }
 
     public function declareProjectUserGroupResource(array &$resources, Project $project) {
