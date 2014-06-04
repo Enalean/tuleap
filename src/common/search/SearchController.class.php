@@ -101,7 +101,14 @@ class Search_SearchController {
 
                 case Search_SearchPeople::NAME:
                     $search = new Search_SearchPeople(new UserDao());
-                    $search->search($words, $exact, $offset);
+                    $this->renderer->renderToPage(
+                        'search_people',
+                        $search->search(
+                            $words,
+                            $exact,
+                            $offset
+                        )
+                    );
                     break;
 
                 case Search_SearchForum::NAME:

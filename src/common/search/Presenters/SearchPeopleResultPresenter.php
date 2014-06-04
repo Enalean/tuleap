@@ -18,37 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Search_SearchProjectResultPresenter {
+class Search_SearchPeopleResultPresenter {
 
     /** @var  string */
-    private $project_name;
+    private $user_name;
 
     /** @var  string */
-    private $project_unix_name;
-
-    /** @var  string */
-    private $project_description;
+    private $user_realname;
 
     public function __construct(array $result) {
-        $this->project_name        = $result['group_name'];
-        $this->project_unix_name   = $result['unix_group_name'];
-        $this->project_description = $result['short_description'];
+        $this->user_name        = $result['user_name'];
+        $this->user_realname    = $result['realname'];
     }
 
-    public function project_name() {
-        return $this->project_name;
+    public function user_name() {
+        return $this->user_name;
     }
 
-    public function project_uri() {
-        return '/projects/' . $this->project_unix_name;
+    public function user_realname() {
+        return $this->user_realname;
     }
 
-    public function project_unix_name() {
-        return $this->project_unix_name;
-    }
-
-    public function project_description() {
-        return $this->project_description;
+    public function user_uri() {
+        return '/users/' . $this->user_name;
     }
 
 }

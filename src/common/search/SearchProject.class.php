@@ -41,7 +41,10 @@ class Search_SearchProject {
     }
 
     private function getSearchProjectResultPresenter(DataAccessResult $results, $words) {
-        return new Search_SearchProjectPresenter($this->getResultsPresenters($results), $words);
+        return new Search_SearchResultsPresenter(
+            new Search_SearchResultsIntroPresenter($results, $words),
+            $this->getResultsPresenters($results)
+        );
     }
 
     private function getResultsPresenters(DataAccessResult $results) {

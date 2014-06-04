@@ -32,33 +32,23 @@ class Search_SearchPeople {
     }
 
     public function search($words, $exact, $offset) {
-        $hp = Codendi_HTMLPurifier::instance();
+        return $this->getSearchPeopleResultPresenter($this->dao->searchGlobal($words, $offset, $exact), $words);
+    }
 
-        $results = $this->dao->searchGlobal($words, $offset, $exact);
-        $rows_returned = count($results);
+    private function getSearchPeopleResultPresenter(DataAccessResult $results, $words) {
+        return new Search_SearchResultsPresenter(
+            new Search_SearchResultsIntroPresenter($results, $words),
+            $this->getResultsPresenters($results)
+        );
+    }
 
-        if (! $rows_returned) {
-            echo '<H2>' . $GLOBALS['Language']->getText('search_index', 'no_match_found', $hp->purify($words, CODENDI_PURIFIER_CONVERT_HTML)) . '</H2>';
-        } else {
+    private function getResultsPresenters(DataAccessResult $results) {
+        $results_presenters = array();
 
-            echo '<H3>' . $GLOBALS['Language']->getText('search_index', 'search_res', array(htmlentities(stripslashes($words), ENT_QUOTES, 'UTF-8'), $rows_returned)) . "</H3><P>\n\n";
-
-            $title_arr = array();
-            $title_arr[] = $GLOBALS['Language']->getText('search_index', 'user_n');
-            $title_arr[] = $GLOBALS['Language']->getText('search_index', 'real_n');
-
-            echo html_build_list_table_top($title_arr);
-
-            echo "\n";
-
-            $i = 0;
-            foreach ($results as $row) {
-                $i++;
-                print "<TR class=\"" . html_get_alt_row_color($i) . "\"><TD><A HREF=\"/users/" . $row['user_name'] . "/\">"
-                        . "<IMG SRC=\"" . util_get_image_theme('msg.png') . "\" BORDER=0 HEIGHT=12 WIDTH=10> " . $row['user_name'] . "</A></TD>"
-                        . "<TD>" . $hp->purify($row['realname'], CODENDI_PURIFIER_CONVERT_HTML) . "</TD></TR>\n";
-            }
-            echo "</TABLE>\n";
+        foreach ($results as $result) {
+            $results_presenters[] = new Search_SearchPeopleResultPresenter($result);
         }
+
+        return $results_presenters;
     }
 }
