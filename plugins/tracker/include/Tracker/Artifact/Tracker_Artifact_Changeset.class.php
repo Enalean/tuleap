@@ -718,10 +718,13 @@ class Tracker_Artifact_Changeset {
     }
 
     private function getRecipientFactory() {
+        $dao = new MailGatewaySaltDao();
+        $row = $dao->searchMailSalt()->getRow();
+
         return new Tracker_Artifact_MailGatewayRecipientFactory(
             Tracker_ArtifactFactory::instance(),
             UserManager::instance(),
-            'whatever',
+            $row['salt'],
             Config::get('sys_default_domain')
         );
     }
