@@ -22,8 +22,7 @@
  * Builds instances of MailGatewayRecipient
  */
 class Tracker_Artifact_MailGatewayRecipientFactory {
-
-    const EMAIL_PATTERN     = '/^<(?P<artifact_id>\d+)-(?P<hash>[^-]+)-(?P<user_id>\d+)@/';
+    const EMAIL_PATTERN     = '/^<(?P<artifact_id>\d+)-(?P<hash>[^-]+)-(?P<user_id>\d+)-/';
     const ARTIFACT_ID_INDEX = 'artifact_id';
     const USER_ID_INDEX     = 'user_id';
     const HASH_INDEX        = 'hash';
@@ -40,8 +39,12 @@ class Tracker_Artifact_MailGatewayRecipientFactory {
     /** @var string */
     private $host;
 
-
-    public function __construct(Tracker_ArtifactFactory $artifact_factory, UserManager $user_manager, $salt, $host) {
+    public function __construct(
+            Tracker_ArtifactFactory $artifact_factory,
+            UserManager $user_manager,
+            $salt,
+            $host
+    ) {
         $this->artifact_factory = $artifact_factory;
         $this->user_manager     = $user_manager;
         $this->salt             = $salt;
@@ -68,20 +71,29 @@ class Tracker_Artifact_MailGatewayRecipientFactory {
     }
 
     /** @return Tracker_Artifact_MailGatewayRecipient */
-    public function getFromUserAndArtifact($user, $artifact) {
+    public function getFromUserAndChangeset(
+        PFUser $user,
+        Tracker_Artifact_Changeset $changeset
+    ) {
+        $artifact = $changeset->getArtifact();
         return new Tracker_Artifact_MailGatewayRecipient(
             $user,
             $artifact,
-            $this->getEmailMessageId($user, $artifact)
+            $this->getEmailMessageId($user, $artifact, $changeset)
         );
     }
 
-    public function getEmailMessageId(PFUser $user, Tracker_Artifact $artifact) {
+    public function getEmailMessageId(
+        PFUser $user,
+        Tracker_Artifact $artifact,
+        Tracker_Artifact_Changeset $changeset
+    ) {
         return
             "<" .
             $artifact->getId() . "-" .
             $this->getHash($user, $artifact) . "-" .
-            $user->getId() .
+            $user->getId() . "-" .
+            $changeset->getId() .
             "@" . $this->host .
             ">";
     }
@@ -104,16 +116,20 @@ class Tracker_Artifact_MailGatewayRecipientFactory {
         return $user;
     }
 
-    private function checkHash(PFUser $user, Tracker_Artifact $artifact, $submitted_hash) {
+    private function checkHash(
+        PFUser $user,
+        Tracker_Artifact $artifact,
+        $submitted_hash
+    ) {
         if ($this->getHash($user, $artifact) != $submitted_hash) {
             throw new Tracker_Artifact_MailGatewayRecipientInvalidHashException();
         }
     }
 
-    private function getHash(PFUser $user, Tracker_Artifact $artifact) {
+    private function getHash(
+        PFUser $user,
+        Tracker_Artifact $artifact
+    ) {
         return md5($user->getId() . "-" . $artifact->getId() . "-" . $this->salt);
     }
-
 }
-
-?>

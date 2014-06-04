@@ -641,7 +641,7 @@ class Tracker_Artifact_Changeset {
             if ($user) {
                 $recipient_factory = $this->getRecipientFactory();
                 $headers           = $this->getCustomReplyToHeader();
-                $message_id        = $recipient_factory->getEmailMessageId($user, $this->getArtifact());
+                $message_id        = $recipient_factory->getEmailMessageId($user, $this->getArtifact(), $this);
 
                 $messages[$message_id] = $this->getMessageContent($user, $is_update, $check_perms);
 
