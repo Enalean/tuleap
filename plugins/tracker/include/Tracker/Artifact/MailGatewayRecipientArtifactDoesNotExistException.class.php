@@ -19,6 +19,8 @@
  */
 
 class Tracker_Artifact_MailGatewayRecipientArtifactDoesNotExistException extends Tracker_Exception {
-}
 
-?>
+    public function __construct() {
+        parent::__construct("Artifact does not exist");
+    }
+}
