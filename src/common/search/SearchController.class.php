@@ -126,7 +126,14 @@ class Search_SearchController {
 
                 case Search_SearchSnippet::NAME:
                     $search = new Search_SearchSnippet(new SnippetDao());
-                    $search->search($words, $exact, $offset);
+                    $this->renderer->renderToPage(
+                        'search_snippet',
+                        $search->search(
+                            $words,
+                            $exact,
+                            $offset
+                        )
+                    );
                     break;
 
                 default:
