@@ -33,28 +33,23 @@ class Search_SearchSnippet {
     }
 
     public function search($words, $exact, $offset) {
-        $results = $this->dao->searchGlobal($words, $exact, $offset);
-        $rows_returned = count($results);
+        return $this->getSearchSnippetResultPresenter($this->dao->searchGlobal($words, $exact, $offset), $words);
+    }
 
-        if (! $rows_returned) {
-            echo '<H2>' . $GLOBALS['Language']->getText('search_index', 'no_match_found', htmlentities(stripslashes($words), ENT_QUOTES, 'UTF-8')) . '</H2>';
-        } else {
-            echo '<H3>' . $GLOBALS['Language']->getText('search_index', 'search_res', array(htmlentities(stripslashes($words), ENT_QUOTES, 'UTF-8'), $rows_returned)) . "</H3><P>\n\n";
+    private function getSearchSnippetResultPresenter(DataAccessResult $results, $words) {
+        return new Search_SearchResultsPresenter(
+            new Search_SearchResultsIntroPresenter($results, $words),
+            $this->getResultsPresenters($results)
+        );
+    }
 
-            $title_arr = array();
-            $title_arr[] = $GLOBALS['Language']->getText('search_index', 'snippet_name');
-            $title_arr[] = $GLOBALS['Language']->getText('search_index', 'description');
+    private function getResultsPresenters(DataAccessResult $results) {
+        $results_presenters = array();
 
-            echo html_build_list_table_top($title_arr);
-
-            echo "\n";
-
-            foreach ($results as $row) {
-                print "<TR><TD><A HREF=\"/snippet/detail.php?type=snippet&id=" . $row['snippet_id'] . "\">"
-                        . "<IMG SRC=\"" . util_get_image_theme('msg.png') . "\" BORDER=0 HEIGHT=12 WIDTH=10> " . $row['name'] . "</A></TD>"
-                        . "<TD>" . $row['description'] . "</TD></TR>\n";
-            }
-            echo "</TABLE>\n";
+        foreach ($results as $result) {
+            $results_presenters[] = new Search_SearchSnippetResultPresenter($result);
         }
+
+        return $results_presenters;
     }
 }
