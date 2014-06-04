@@ -1,0 +1,22 @@
+Tracker Email Gateway
+=====================
+
+Ability to update artifact by replying to notifications.
+
+As of today this feature is not complete and should be manually installed/activated.
+
+Installation
+------------
+
+> **Note:** Before doing these steps, please install, configure and use postfix
+
+Add `nobody` in sudoers with visudo (yum install sudo if necessary). See `etc/sudoers.d/tuleap-plugin-tracker`.
+
+You can now test (yum install mailx if necessary). Launch system check events and send an email:
+
+    $root> echo 123 | mail -s "Mail from root" forge__artifacts
+
+You should see debug traces in `/var/log/codendi/codendi_syslog`.
+
+> **Note:** This assumes that your Tuleap is using legacy user/path (codendiadm,
+> /usr/share/codendi, …). You may need to adapt things to your setup.
