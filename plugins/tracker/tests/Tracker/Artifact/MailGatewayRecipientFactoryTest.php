@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -41,7 +41,7 @@ class Tracker_Artifact_MailGatewayRecipientFactoryTest extends TuleapTestCase {
     }
 
     public function itGeneratesAMailGatewayRecipientFromEmail() {
-        $email = '101-5a2a341193b34695885091bbf5f75d68-123@tuleap.example.com';
+        $email = '<101-5a2a341193b34695885091bbf5f75d68-123@tuleap.example.com>';
         $recipient = $this->factory->getFromEmail($email);
 
         $this->assertEqual($recipient->getArtifact(), $this->artifact);
@@ -50,25 +50,25 @@ class Tracker_Artifact_MailGatewayRecipientFactoryTest extends TuleapTestCase {
     }
 
     public function itThrowsAnAxceptionWhenArtifactDoesNotExist() {
-        $email = '000000-5a2a341193b34695885091bbf5f75d68-123@tuleap.example.com';
+        $email = '<000000-5a2a341193b34695885091bbf5f75d68-123@tuleap.example.com>';
         $this->expectException('Tracker_Artifact_MailGatewayRecipientArtifactDoesNotExistException');
         $this->factory->getFromEmail($email);
     }
 
     public function itThrowsAnAxceptionWhenUserDoesNotExist() {
-        $email = '101-5a2a341193b34695885091bbf5f75d68-00000@tuleap.example.com';
+        $email = '<101-5a2a341193b34695885091bbf5f75d68-00000@tuleap.example.com>';
         $this->expectException('Tracker_Artifact_MailGatewayRecipientUserDoesNotExistException');
         $this->factory->getFromEmail($email);
     }
 
     public function itThrowsAnAxceptionWhenHashIsInvalid() {
-        $email = '101-invalidhash-123@tuleap.example.com';
+        $email = '<101-invalidhash-123@tuleap.example.com>';
         $this->expectException('Tracker_Artifact_MailGatewayRecipientInvalidHashException');
         $this->factory->getFromEmail($email);
     }
 
     public function itGeneratesAMailGatewayRecipientFromUserAndArtifact() {
-        $email = '101-5a2a341193b34695885091bbf5f75d68-123@tuleap.example.com';
+        $email = '<101-5a2a341193b34695885091bbf5f75d68-123@tuleap.example.com>';
         $recipient = $this->factory->getFromUserAndArtifact($this->user, $this->artifact);
 
         $this->assertEqual($recipient->getArtifact(), $this->artifact);
@@ -77,5 +77,3 @@ class Tracker_Artifact_MailGatewayRecipientFactoryTest extends TuleapTestCase {
 
     }
 }
-
-?>
