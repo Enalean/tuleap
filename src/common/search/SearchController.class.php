@@ -113,7 +113,15 @@ class Search_SearchController {
 
                 case Search_SearchForum::NAME:
                     $search = new Search_SearchForum(new ForumDao());
-                    $search->search($words, $exact, $offset, $request->getValidated('forum_id', 'uint', 0));
+                    $this->renderer->renderToPage(
+                        'search_forum',
+                        $search->search(
+                            $words,
+                            $exact,
+                            $offset,
+                            $request->getValidated('forum_id', 'uint', 0)
+                        )
+                    );
                     break;
 
                 case Search_SearchSnippet::NAME:
