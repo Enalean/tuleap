@@ -1,3 +1,6 @@
+Version 5.393 - Tuleap 7.2
+    * Send a token in Message-Id header in notifications. This is part of story #6301: reply to a follow-up comment by email
+
 Version 5.392 - Tuleap 7.2
     * tasks #6921: artifact copy deals with open list
 
