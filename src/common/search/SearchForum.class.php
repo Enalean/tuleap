@@ -32,31 +32,23 @@ class Search_SearchForum {
     }
 
     public function search($words, $exact, $offset, $forum_id) {
-        $results = $this->dao->searchGlobal($words, $exact, $offset, $forum_id);
-        $rows_returned = count($results);
+        return $this->getSearchForumResultPresenter($this->dao->searchGlobal($words, $exact, $offset, $forum_id), $words);
+    }
 
-        if (! $rows_returned) {
-            echo '<H2>' . $GLOBALS['Language']->getText('search_index', 'no_match_found', htmlentities(stripslashes($words), ENT_QUOTES, 'UTF-8')) . '</H2>';
-        } else {
-            echo '<H3>' . $GLOBALS['Language']->getText('search_index', 'search_res', array(htmlentities(stripslashes($words), ENT_QUOTES, 'UTF-8'), $rows_returned)) . "</H3><P>\n\n";
+    private function getSearchForumResultPresenter(DataAccessResult $results, $words) {
+        return new Search_SearchResultsPresenter(
+            new Search_SearchResultsIntroPresenter($results, $words),
+            $this->getResultsPresenters($results)
+        );
+    }
 
-            $title_arr = array();
-            $title_arr[] = $GLOBALS['Language']->getText('search_index', 'thread');
-            $title_arr[] = $GLOBALS['Language']->getText('search_index', 'author');
-            $title_arr[] = $GLOBALS['Language']->getText('search_index', 'date');
+    private function getResultsPresenters(DataAccessResult $results) {
+        $results_presenters = array();
 
-            echo html_build_list_table_top($title_arr);
-
-            echo "\n";
-
-            foreach ($results as $row) {
-                print "<TR><TD><A HREF=\"/forum/message.php?msg_id="
-                        . $row["msg_id"] . "\"><IMG SRC=\"" . util_get_image_theme('msg.png') . "\" BORDER=0 HEIGHT=12 WIDTH=10> "
-                        . $row["subject"] . "</A></TD>"
-                        . "<TD>" . $row["user_name"] . "</TD>"
-                        . "<TD>" . format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row["date"]) . "</TD></TR>\n";
-            }
-            echo "</TABLE>\n";
+        foreach ($results as $result) {
+            $results_presenters[] = new Search_SearchForumResultPresenter($result);
         }
+
+        return $results_presenters;
     }
 }
