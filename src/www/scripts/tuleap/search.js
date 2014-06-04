@@ -31,14 +31,13 @@
             $.ajax({
                 url: '/search/?type_of_search='+type_of_search+'&words='+keywords,
                 beforeSend: function() { $('.search-results').html('').addClass('loading'); }
-
             }).done(function(html) {
-                $('.search-results').removeClass('loading');
                 $('.search-results').html(html);
-
             }).fail(function() {
-                $('.search-results').removeClass('loading');
                 $('.search-results').html(codendi.locales.search.error);
+            }).always(function() {
+                $('.search-results').removeClass('loading');
+                $('.search-bar input[name="type_of_search"]').attr('value', type_of_search);
             });
         });
     }
