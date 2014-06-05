@@ -52,6 +52,21 @@ class Tracker_Artifact_MailGatewayRecipientFactory {
     }
 
     /**
+     * @return Tracker_Artifact_MailGatewayRecipientFactory
+     */
+    public static function build() {
+        $dao = new MailGatewaySaltDao();
+        $row = $dao->searchMailSalt()->getRow();
+
+        return new Tracker_Artifact_MailGatewayRecipientFactory(
+            Tracker_ArtifactFactory::instance(),
+            UserManager::instance(),
+            $row['salt'],
+            Config::get('sys_default_domain')
+        );
+    }
+
+    /**
      * @param string $email the email message id
      *
      * @return Tracker_Artifact_MailGatewayRecipient
