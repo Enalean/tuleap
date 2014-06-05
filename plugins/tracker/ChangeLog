@@ -1,3 +1,6 @@
+Version 5.396 - Tuleap 7.2
+    * Refactoring: The MailGatewayFactory builds itself
+
 Version 5.395 - Tuleap 7.2
     * story #6301: reply to a follow-up comment by email (Unique message-id and better salting)
 
