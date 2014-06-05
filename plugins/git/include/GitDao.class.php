@@ -43,6 +43,7 @@ class GitDao extends DataAccessObject {
     const REPOSITORY_BACKEND_TYPE     = 'repository_backend_type';
     const REPOSITORY_SCOPE            = 'repository_scope';
     const REPOSITORY_NAMESPACE        = 'repository_namespace';
+    const ENABLE_ONLINE_EDIT          = "enable_online_edit";
 
     const REPO_NAME_MAX_LENGTH = 255;
 
@@ -52,6 +53,7 @@ class GitDao extends DataAccessObject {
     const REMOTE_SERVER_ID              = 'remote_server_id';
     const REMOTE_SERVER_DISCONNECT_DATE = 'remote_server_disconnect_date';
     const REMOTE_SERVER_DELETE_DATE     = 'remote_project_deleted_date';
+
 
     public function __construct() {
         parent::__construct( CodendiDataAccess::instance() );
@@ -64,7 +66,7 @@ class GitDao extends DataAccessObject {
     public function setTable($tableName) {
         $this->tableName = $tableName;
     }
-    
+
     public function exists($id) {
         if ( empty($id) ) {
             return false;
@@ -486,6 +488,11 @@ class GitDao extends DataAccessObject {
         $repository->setRemoteServerDisconnectDate($result[self::REMOTE_SERVER_DISCONNECT_DATE]);
         $repository->setRemoteProjectDeletionDate($result[self::REMOTE_SERVER_DELETE_DATE]);
         $repository->loadNotifiedMails();
+        /* Here just for reviewer test, will be replaced by real DB data in a future changeset*/
+        $result[self::ENABLE_ONLINE_EDIT] = false;
+        if ($result[self::ENABLE_ONLINE_EDIT] && GitConfig::instance()->isOnlineEditEnabled()) {
+            $repository->enableOnlineEdit();
+        }
     }
 
     /**
@@ -646,4 +653,3 @@ class GitDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 }
-?>

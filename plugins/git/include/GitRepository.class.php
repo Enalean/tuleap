@@ -71,6 +71,8 @@ class GitRepository implements DVCSRepository {
     private $remote_project_deletion_date;
     private $remote_project_is_deleted;
 
+    private $use_online_edit;
+
     protected $backendType;
 
     public function __construct() {
@@ -97,6 +99,7 @@ class GitRepository implements DVCSRepository {
         $this->parentId    = 0;
         $this->loaded      = false;
         $this->scope       = self::REPO_SCOPE_PROJECT;
+        $this->use_online_edit = false;
     }       
 
     /**
@@ -232,7 +235,7 @@ class GitRepository implements DVCSRepository {
     public function getId() {
         return $this->id;
     }
-    
+
     public function hasChild() {
         $this->load();
         return $this->getDao()->hasChild($this);
@@ -761,7 +764,9 @@ class GitRepository implements DVCSRepository {
         return $this->getBackend()->userCanRead($user, $this);
     }
 
-
+    public function userCanEditOnline($user) {
+        return $user->hasPermission(Git::PERM_WRITE, $this->getId(), $this->getProjectId()) && $this->use_online_edit;
+    }
     /**
      * Test if user can modify repository configuration
      *
@@ -877,5 +882,10 @@ class GitRepository implements DVCSRepository {
         $label = basename($this->getName());
         return '<a href="'. $href .'">'. $label .'</a>';
     }
+
+    public function enableOnlineEdit() {
+        $this->use_online_edit = true;
+    }
+
 }
 ?>
