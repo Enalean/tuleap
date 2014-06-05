@@ -33,8 +33,13 @@ $logger->info("Entering email gateway");
 
 $recipient_factory = Tracker_Artifact_MailGatewayRecipientFactory::build();
 
-$parser      = new Tracker_Artifact_MailGateway_Parser($recipient_factory);
-$mailgateway = new Tracker_Artifact_MailGateway_MailGateway($parser, $logger);
+$parser           = new Tracker_Artifact_MailGateway_Parser($recipient_factory);
+$citation_sripper = new Tracker_Artifact_MailGateway_CitationStripper();
+$mailgateway      = new Tracker_Artifact_MailGateway_MailGateway(
+    $parser,
+    $citation_sripper,
+    $logger
+);
 
 try {
     $mailgateway->process($raw_mail);

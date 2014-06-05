@@ -23,21 +23,25 @@ require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 class Tracker_Artifact_MailGateway_MailGatewayTest extends TuleapTestCase {
 
     public function itCreatesANewChangeset(){
-        $artifact  = mock('Tracker_Artifact');
-        $user      = mock('PFUser');
-        $email     = 'whatever';
-        $raw_email = '...';
-        $parser    = mock('Tracker_Artifact_MailGateway_Parser');
-        $logger    = mock('Logger');
-        $recipient = new Tracker_Artifact_MailGatewayRecipient($user, $artifact, $email);
-        $body      = 'justaucorps';
+        $artifact      = mock('Tracker_Artifact');
+        $user          = mock('PFUser');
+        $email         = 'whatever';
+        $raw_email     = '...';
+        $parser        = mock('Tracker_Artifact_MailGateway_Parser');
+        $logger        = mock('Logger');
+        $recipient     = new Tracker_Artifact_MailGatewayRecipient($user, $artifact, $email);
+        $body          = 'justaucorps';
+        $stripped_body = 'stripped justaucorps';
+
+        $citation_stripper = stub('Tracker_Artifact_MailGateway_CitationStripper')
+            ->strip($body)->returns($stripped_body);
 
         $incoming_message = new Tracker_Artifact_MailGateway_IncomingMessage($body, $recipient);
         stub($parser)->parse($raw_email)->returns($incoming_message);
 
-        $mailgateway = new Tracker_Artifact_MailGateway_MailGateway($parser, $logger);
+        $mailgateway = new Tracker_Artifact_MailGateway_MailGateway($parser, $citation_stripper, $logger);
 
-        expect($artifact)->createNewChangeset(array(), $incoming_message->getBody(), $user, '*', '*')->once();
+        expect($artifact)->createNewChangeset(array(), $stripped_body, $user, '*', '*')->once();
 
         $mailgateway->process($raw_email);
     }
