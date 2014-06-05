@@ -53,7 +53,12 @@ class Search_SearchController {
 
     public function index(Codendi_Request $request) {
         $GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('search_index', 'search'), 'body_class' => array('search-page')));
-        $this->renderer->renderToPage('index', new Search_Presenter_SearchPresenter(self::DEFAULT_SEARCH, '', null, ''));
+        $this->renderer->renderToPage('site-search', new Search_Presenter_SearchPresenter(
+            self::DEFAULT_SEARCH,
+            '',
+            '',
+            array($this->getSiteWidePane())
+        ));
         $GLOBALS['HTML']->footer(array('without_content' => true));
     }
 
@@ -116,7 +121,18 @@ class Search_SearchController {
                 )
             );
         }
-        $search_panes[] = new Search_SearchPanePresenter(
+        $search_panes[] = $this->getSiteWidePane($site_search_types);
+
+        return new Search_Presenter_SearchPresenter(
+            $query->getTypeOfSearch(),
+            $query->getWords(),
+            $results,
+            $search_panes
+        );
+    }
+
+    private function getSiteWidePane($site_search_types = array()) {
+        return new Search_SearchPanePresenter(
             $GLOBALS['Language']->getText('search_index', 'site_wide_search'),
             array_merge(
                 array(
@@ -135,13 +151,6 @@ class Search_SearchController {
                 ),
                 $site_search_types
             )
-        );
-
-        return new Search_Presenter_SearchPresenter(
-            $query->getTypeOfSearch(),
-            $query->getWords(),
-            $results,
-            $search_panes
         );
     }
 
