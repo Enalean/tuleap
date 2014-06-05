@@ -98,10 +98,7 @@ class fulltextsearchPlugin extends Plugin {
             $params['site_presenters'][] = new Search_SearchTypePresenter(
                 self::SEARCH_TYPE,
                 $GLOBALS['Language']->getText('plugin_fulltextsearch', 'accordion_type'),
-                new FullTextSearch_Presenter_FacetPresenter(
-                    'Projects',
-                    array()
-                )
+                null
             );
         }
     }

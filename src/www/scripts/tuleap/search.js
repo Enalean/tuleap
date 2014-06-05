@@ -17,10 +17,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+var tuleap = tuleap || {};
+
 !(function ($) {
 
+    tuleap.search = {
+        init : function() {
+            switchSearchType();
+        },
+
+        moveFacetsToSearchPane : function(type_of_search) {
+            var search_pane_entry = $('a[data-search-type="'+type_of_search+'"]').parent();
+
+            if ($('.search-results > ul:first-child').length > 0) {
+                search_pane_entry.find('ul').remove();
+                $('.search-results > ul:first-child').appendTo(search_pane_entry);
+            }
+        }
+    };
+
     $(document).ready(function() {
-        switchSearchType();
+        tuleap.search.init();
     });
 
     function switchSearchType() {
@@ -33,6 +50,7 @@
                 beforeSend: function() { $('.search-results').html('').addClass('loading'); }
             }).done(function(html) {
                 $('.search-results').html(html);
+                tuleap.search.moveFacetsToSearchPane(type_of_search);
             }).fail(function() {
                 $('.search-results').html(codendi.locales.search.error);
             }).always(function() {
