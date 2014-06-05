@@ -12,12 +12,10 @@
         </ul>
     </li>
 </ul>
-<div id="search-results">
-    <input type="hidden" id="fts_size" value="10" />
+<input type="hidden" id="fts_size" value="10" />
 
-    {{> search-results-docman }}
+{{> search-results-docman }}
 
-    {{^ search_results }}
-    <p>No results found</p>
-    {{/ search_results }}
-</div>
+{{^ search_results }}
+    <p class="no-result"><i class="icon-frown"></i> No results found</p>
+{{/ search_results }}
