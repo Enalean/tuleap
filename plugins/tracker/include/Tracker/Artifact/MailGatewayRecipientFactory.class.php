@@ -23,10 +23,22 @@
  */
 class Tracker_Artifact_MailGatewayRecipientFactory {
 
-    const EMAIL_PATTERN     = '/<(?P<artifact_id>\d+)-(?P<hash>[^-]+)-(?P<user_id>\d+)-(?P<changeset_id>\d+)@(?P<domain>.*)>/';
     const ARTIFACT_ID_INDEX = 'artifact_id';
     const USER_ID_INDEX     = 'user_id';
     const HASH_INDEX        = 'hash';
+    const EMAIL_PATTERN     = '/
+        <
+        (?P<artifact_id>\d+)
+        -
+        (?P<hash>[^-]+)
+        -
+        (?P<user_id>\d+)
+        -
+        (?P<changeset_id>\d+)
+        @
+        (?P<domain>.*)
+        >
+        /x';
 
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
@@ -99,11 +111,11 @@ class Tracker_Artifact_MailGatewayRecipientFactory {
         return new Tracker_Artifact_MailGatewayRecipient(
             $user,
             $artifact,
-            $this->getEmailMessageId($user, $artifact, $changeset)
+            $this->getEmail($user, $artifact, $changeset)
         );
     }
 
-    public function getEmailMessageId(
+    private function getEmail(
         PFUser $user,
         Tracker_Artifact $artifact,
         Tracker_Artifact_Changeset $changeset

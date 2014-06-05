@@ -639,9 +639,8 @@ class Tracker_Artifact_Changeset {
             $user = $this->getUserFromRecipientName($recipient);
 
             if ($user) {
-                $recipient_factory = Tracker_Artifact_MailGatewayRecipientFactory::build();
-                $headers           = $this->getCustomReplyToHeader();
-                $message_id        = $recipient_factory->getEmailMessageId($user, $this->getArtifact(), $this);
+                $headers           = array($this->getCustomReplyToHeader());
+                $message_id        = $this->getMessageId($user);
 
                 $messages[$message_id] = $this->getMessageContent($user, $is_update, $check_perms);
 
@@ -654,12 +653,17 @@ class Tracker_Artifact_Changeset {
         return $messages;
     }
 
+    private function getMessageId(PFUser $user) {
+        $recipient_factory = Tracker_Artifact_MailGatewayRecipientFactory::build();
+        $recipient = $recipient_factory->getFromUserAndChangeset($user, $this);
+
+        return $recipient->getEmail();
+    }
+
     private function getCustomReplyToHeader() {
         return array(
-            array(
-                "name" => "Reply-to",
-                "value" => "forge__artifacts@" . Config::get('sys_default_domain')
-            )
+            "name" => "Reply-to",
+            "value" => "forge__artifacts@" . Config::get('sys_default_domain')
         );
     }
 
