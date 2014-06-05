@@ -48,15 +48,45 @@ class Tracker_Artifact_MailGateway_Parser {
     }
 
     private function getBody(stdClass $structure) {
-        if (isset($structure->body)) {
+        if ($this->isTextPlain($structure) && ! $this->isAttachment($structure)) {
             return $structure->body;
         }
 
-        return $structure->parts[0]->body;
+        if ($this->isMultipart($structure)) {
+            return $this->getBodyInMultipart($structure);
+        }
+
+        return '';
+    }
+
+    private function getBodyInMultipart($structure) {
+        foreach ($structure->parts as $part) {
+            $body = $this->getBody($part);
+            if ($body) {
+                return $body;
+            }
+        }
+    }
+
+    private function isMultipart($part) {
+        return $part->ctype_primary === 'multipart';
+    }
+
+    private function isTextPlain($part) {
+        return $part->ctype_primary === 'text' && $part->ctype_secondary === 'plain';
+    }
+
+    private function isAttachment($part) {
+        return isset($part->headers['content-disposition'])
+            && strpos($part->headers['content-disposition'], 'attachment') !== false;
     }
 
     private function getRecipient(stdClass $structure) {
-        preg_match(Tracker_Artifact_MailGatewayRecipientFactory::EMAIL_PATTERN, $structure->headers['references'], $matches);
+        preg_match(
+            Tracker_Artifact_MailGatewayRecipientFactory::EMAIL_PATTERN,
+            $structure->headers['references'],
+            $matches
+        );
 
         return $this->recipient_factory->getFromEmail($matches[0]);
     }

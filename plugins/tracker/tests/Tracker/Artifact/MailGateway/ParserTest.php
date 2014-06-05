@@ -30,7 +30,11 @@ class Tracker_Artifact_MailGateway_Parser_BaseTest extends TuleapTestCase {
         parent::setUp();
         $fixtures_dir = dirname(__FILE__) .'/_fixtures';
 
+        $this->plain_reply            = file_get_contents($fixtures_dir .'/reply-comment.plain.eml');
+        $this->html_reply             = file_get_contents($fixtures_dir .'/reply-comment.html.eml');
         $this->plain_plus_html_reply  = file_get_contents($fixtures_dir .'/reply-comment.plain+html.eml');
+        $this->html_plus_plain_reply  = file_get_contents($fixtures_dir .'/reply-comment.html+plain.eml');
+        $this->with_attachment_reply  = file_get_contents($fixtures_dir .'/reply-comment.(plain+html)+attachment.eml');
         $this->expected_followup_text = file_get_contents($fixtures_dir .'/expected_followup.text.txt');
 
         $this->recipient_factory = mock('Tracker_Artifact_MailGatewayRecipientFactory');
@@ -52,6 +56,30 @@ class Tracker_Artifact_MailGateway_Parser_BodyTest extends Tracker_Artifact_Mail
         $incoming_message = $this->parser->parse($this->plain_plus_html_reply);
 
         $this->assertIdentical($incoming_message->getBody(), $this->expected_followup_text);
+    }
+
+    public function itReturnsTheFollowUpCommentToAddInTextPlainFormatEvenIfTheHtmlPartIsTheFirstOne() {
+        $incoming_message = $this->parser->parse($this->html_plus_plain_reply);
+
+        $this->assertIdentical($incoming_message->getBody(), $this->expected_followup_text);
+    }
+
+    public function itReturnsTheFollowUpCommentToAddInTextPlainFormatEvenIfThereIsAnAttachment() {
+        $incoming_message = $this->parser->parse($this->with_attachment_reply);
+
+        $this->assertIdentical($incoming_message->getBody(), $this->expected_followup_text);
+    }
+
+    public function itReturnsTheFollowUpCommentToAddInTextPlainFormatWhenThereIsOnlyATextPlain() {
+        $incoming_message = $this->parser->parse($this->plain_reply);
+
+        $this->assertIdentical($incoming_message->getBody(), $this->expected_followup_text);
+    }
+
+    public function itReturnsEmptyStringWhenNoTextPlain() {
+        $incoming_message = $this->parser->parse($this->html_reply);
+
+        $this->assertIdentical($incoming_message->getBody(), '');
     }
 }
 
