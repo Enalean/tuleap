@@ -22,7 +22,8 @@
  * Builds instances of MailGatewayRecipient
  */
 class Tracker_Artifact_MailGatewayRecipientFactory {
-    const EMAIL_PATTERN     = '/^<(?P<artifact_id>\d+)-(?P<hash>[^-]+)-(?P<user_id>\d+)-/';
+
+    const EMAIL_PATTERN     = '/<(?P<artifact_id>\d+)-(?P<hash>[^-]+)-(?P<user_id>\d+)-(?P<changeset_id>\d+)@(?P<domain>.*)>/';
     const ARTIFACT_ID_INDEX = 'artifact_id';
     const USER_ID_INDEX     = 'user_id';
     const HASH_INDEX        = 'hash';
@@ -68,6 +69,10 @@ class Tracker_Artifact_MailGatewayRecipientFactory {
 
     /**
      * @param string $email the email message id
+     *
+     * @throws Tracker_Artifact_MailGatewayRecipientArtifactDoesNotExistException
+     * @throws Tracker_Artifact_MailGatewayRecipientUserDoesNotExistException
+     * @throws Tracker_Artifact_MailGatewayRecipientInvalidHashException
      *
      * @return Tracker_Artifact_MailGatewayRecipient
      */

@@ -1,4 +1,3 @@
-#!/usr/share/codendi/src/utils/php-launcher.sh
 <?php
 /**
  * Copyright (c) Enalean, 2014. All Rights Reserved.
@@ -19,26 +18,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require 'pre.php';
+class Tracker_Artifact_MailGateway_IncomingMessage {
 
-$fd = fopen("php://stdin", "r");
-$raw_mail = "";
-while (!feof($fd)) {
-    $raw_mail .= fread($fd, 1024);
+    /**
+     * @var Tracker_Artifact_MailGatewayRecipient
+     */
+    private $recipient;
+
+    /** @var string */
+    private $body;
+
+    public function __construct($body, Tracker_Artifact_MailGatewayRecipient $recipient) {
+        $this->body      = $body;
+        $this->recipient = $recipient;
+    }
+
+    /**
+     * @return string The body of the message
+     */
+    public function getBody() {
+        return $this->body;
+    }
+
+    /**
+     * @return Tracker_Artifact_MailGatewayRecipient
+     */
+    public function getRecipient() {
+        return $this->recipient;
+    }
 }
-fclose($fd);
-
-$logger = new BackendLogger();
-$logger->info("Entering email gateway");
-
-$recipient_factory = Tracker_Artifact_MailGatewayRecipientFactory::build();
-
-$parser      = new Tracker_Artifact_MailGateway_Parser($recipient_factory);
-$mailgateway = new Tracker_Artifact_MailGateway_MailGateway($parser, $logger);
-
-try {
-    $mailgateway->process($raw_mail);
-} catch (Exception $e) {
-    $logger->error($e->getMessage());
-}
-$logger->info("End email gateway");
