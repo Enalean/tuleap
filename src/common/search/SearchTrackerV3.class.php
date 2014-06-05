@@ -34,6 +34,7 @@ class Search_SearchTrackerV3 {
     public function search($group_id, $words, $exact, $offset, $atid) {
         include_once('www/tracker/include/ArtifactTypeHtml.class.php');
         include_once('www/tracker/include/ArtifactHtml.class.php');
+        ob_start();
         //
         //      get the Group object
         //
@@ -120,5 +121,7 @@ class Search_SearchTrackerV3 {
             }
             echo "</TABLE>\n";
         }
+
+        return new Search_SearchTrackerV3ResultPresenter(ob_get_clean());
     }
 }

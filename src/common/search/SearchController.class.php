@@ -80,16 +80,25 @@ class Search_SearchController {
         $group_id       = $request->get('group_id');
 
         if (! $this->isRedirectedSearch($type_of_search)) {
-            ob_start();
+            $search_result = '';
             switch ($type_of_search) {
                 case Search_SearchTrackerV3::NAME:
-                    $search = new Search_SearchTrackerV3(new ArtifactDao());
-                    $search->search($group_id, $words, $exact, $offset, $request->getValidated('atid', 'uint', 0));
+                    $search        = new Search_SearchTrackerV3(new ArtifactDao());
+                    $search_result = $this->renderer->renderToString(
+                        'search_trackerv3',
+                        $search->search(
+                            $group_id,
+                            $words,
+                            $exact,
+                            $offset,
+                            $request->getValidated('atid', 'uint', 0)
+                        )
+                    );
                     break;
 
                 case Search_SearchProject::NAME:
-                    $search = new Search_SearchProject(new ProjectDao());
-                    $this->renderer->renderToPage(
+                    $search        = new Search_SearchProject(new ProjectDao());
+                    $search_result = $this->renderer->renderToString(
                         'search_project',
                         $search->search(
                             $words,
@@ -100,8 +109,8 @@ class Search_SearchController {
                     break;
 
                 case Search_SearchPeople::NAME:
-                    $search = new Search_SearchPeople(new UserDao());
-                    $this->renderer->renderToPage(
+                    $search        = new Search_SearchPeople(new UserDao());
+                    $search_result = $this->renderer->renderToString(
                         'search_people',
                         $search->search(
                             $words,
@@ -112,8 +121,8 @@ class Search_SearchController {
                     break;
 
                 case Search_SearchForum::NAME:
-                    $search = new Search_SearchForum(new ForumDao());
-                    $this->renderer->renderToPage(
+                    $search        = new Search_SearchForum(new ForumDao());
+                    $search_result = $this->renderer->renderToString(
                         'search_forum',
                         $search->search(
                             $words,
@@ -125,8 +134,8 @@ class Search_SearchController {
                     break;
 
                 case Search_SearchSnippet::NAME:
-                    $search = new Search_SearchSnippet(new SnippetDao());
-                    $this->renderer->renderToPage(
+                    $search        = new Search_SearchSnippet(new SnippetDao());
+                    $search_result = $this->renderer->renderToString(
                         'search_snippet',
                         $search->search(
                             $words,
@@ -143,7 +152,7 @@ class Search_SearchController {
                 $type_of_search,
                 $words,
                 $group_id,
-                ob_get_clean()
+                $search_result
             );
         } else {
             switch ($type_of_search) {
