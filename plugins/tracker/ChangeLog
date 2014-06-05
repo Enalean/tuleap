@@ -1,3 +1,6 @@
+Version 5.398 - Tuleap 7.2
+    * story #6301: reply to a follow-up comment by email (tasks #6990 Handle citations in the answer)
+
 Version 5.397 - Tuleap 7.2
     * story #6301: reply to a follow-up comment by email (tasks #6989: Better handling of various email format + Handle mail reception (tasks #6950 + tasks #6951))
 
