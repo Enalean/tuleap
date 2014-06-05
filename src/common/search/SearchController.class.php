@@ -32,12 +32,22 @@ class Search_SearchController {
      */
     private $renderer;
 
+    private $search_types = array();
+
     public function __construct(EventManager $event_manager) {
         $this->event_manager = $event_manager;
         $this->renderer = TemplateRendererFactory::build()->getRenderer(
             array(
                  Config::get('codendi_dir') .'/src/templates/search',
             )
+        );
+        $this->search_types = array(
+            Search_SearchTrackerV3::NAME => new Search_SearchTrackerV3(new ArtifactDao()),
+            Search_SearchProject::NAME   => new Search_SearchProject(new ProjectDao()),
+            Search_SearchPeople::NAME    => new Search_SearchPeople(UserManager::instance()),
+            Search_SearchForum::NAME     => new Search_SearchForum(new ForumDao()),
+            Search_SearchSnippet::NAME   => new Search_SearchSnippet(new SnippetDao()),
+            Search_SearchWiki::NAME      => new Search_SearchWiki(new WikiDao()),
         );
     }
 
@@ -135,58 +145,15 @@ class Search_SearchController {
     }
 
     private function doSearch(Search_SearchQuery $query) {
-        switch ($query->getTypeOfSearch()) {
-            case Search_SearchTrackerV3::NAME:
-                $search = new Search_SearchTrackerV3(new ArtifactDao());
-                $search_result = $this->renderer->renderToString(
-                    'search_trackerv3',
-                    $search->search($query)
-                );
-                break;
-
-            case Search_SearchProject::NAME:
-                $search = new Search_SearchProject(new ProjectDao());
-                $search_result = $this->renderer->renderToString(
-                    'search_project',
-                    $search->search($query)
-                );
-                break;
-
-            case Search_SearchPeople::NAME:
-                $search = new Search_SearchPeople(UserManager::instance());
-                $search_result = $this->renderer->renderToString(
-                    'search_people',
-                    $search->search($query)
-                );
-                break;
-
-            case Search_SearchForum::NAME:
-                $search = new Search_SearchForum(new ForumDao());
-                $search_result = $this->renderer->renderToString(
-                    'search_forum',
-                    $search->search($query)
-                );
-                break;
-
-            case Search_SearchSnippet::NAME:
-                $search = new Search_SearchSnippet(new SnippetDao());
-                $search_result = $this->renderer->renderToString(
-                    'search_snippet',
-                    $search->search($query)
-                );
-                break;
-
-            case Search_SearchWiki::NAME:
-                $search = new Search_SearchWiki(new WikiDao());
-                $search->search($query);
-                break;
-
-            default:
-                $search = new Search_SearchPlugin($this->event_manager);
-                $search->search($query);
-                $search_result = $search->getResults();
-                break;
+        if (isset($this->search_types[$query->getTypeOfSearch()])) {
+            $presenter = $this->search_types[$query->getTypeOfSearch()]->search($query);
+            if ($presenter) {
+                return $this->renderer->renderToString($presenter->getTemplate(), $presenter);
+            }
+        } else {
+            $search = new Search_SearchPlugin($this->event_manager);
+            $search->search($query);
+            return $search->getResults();
         }
-        return $search_result;
     }
 }

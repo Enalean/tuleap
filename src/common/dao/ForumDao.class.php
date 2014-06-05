@@ -19,7 +19,7 @@
  */
 
 class ForumDao extends DataAccessObject {
-    public function __construct($da) {
+    public function __construct($da = null) {
         parent::__construct($da);
         $this->table_name = 'forum_group_list';
     }

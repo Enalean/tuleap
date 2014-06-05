@@ -19,6 +19,9 @@
  */
 
 class Search_SearchResultsPresenter {
+    const TEMPLATE_PREFIX = 'results-';
+
+    private $template;
 
     /** @var array */
     private $results;
@@ -26,9 +29,10 @@ class Search_SearchResultsPresenter {
     /** @var  Search_SearchResultsIntroPresenter*/
     private $results_intro_presenter;
 
-    public function __construct(Search_SearchResultsIntroPresenter $results_intro_presenter, array $results) {
+    public function __construct(Search_SearchResultsIntroPresenter $results_intro_presenter, array $results, $template) {
         $this->results_intro_presenter = $results_intro_presenter;
         $this->results                 = $results;
+        $this->template                = $template;
     }
 
     public function results_intro() {
@@ -41,5 +45,9 @@ class Search_SearchResultsPresenter {
 
     public function results() {
         return $this->results;
+    }
+
+    public function getTemplate() {
+        return self::TEMPLATE_PREFIX.$this->template;
     }
 }

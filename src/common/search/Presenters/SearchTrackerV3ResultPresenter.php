@@ -19,7 +19,6 @@
  */
 
 class Search_SearchTrackerV3ResultPresenter {
-
     /** @var  string */
     private $result_display;
 
@@ -29,5 +28,9 @@ class Search_SearchTrackerV3ResultPresenter {
 
     public function result_display() {
         return $this->result_display;
+    }
+
+    public function getTemplate() {
+        return Search_SearchResultsPresenter::TEMPLATE_PREFIX.Search_SearchTrackerV3::NAME;
     }
 }

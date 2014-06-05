@@ -38,7 +38,8 @@ class Search_SearchPeople {
     private function getSearchPeopleResultPresenter(array $users, $words) {
         return new Search_SearchResultsPresenter(
             new Search_SearchResultsIntroPresenter($users, $words),
-            $this->getResultsPresenters($users)
+            $this->getResultsPresenters($users),
+            self::NAME
         );
     }
 
