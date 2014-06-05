@@ -23,11 +23,13 @@ class Search_SearchTypePresenter {
     public $title;
     public $facets;
     public $has_facets;
+    public $url;
 
-    public function __construct($search_type, $title, $facets = array()) {
+    public function __construct($search_type, $title, $facets = array(), $url = '#') {
         $this->search_type = $search_type;
         $this->title       = $title;
         $this->facets      = $facets;
         $this->has_facets  = count($facets) > 0;
+        $this->url         = $url;
     }
 }

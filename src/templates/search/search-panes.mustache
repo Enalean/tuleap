@@ -10,7 +10,7 @@
                     {{> facets }}
                 {{/ has_facets }}
                 {{^ has_facets }}
-                    <a href="#" class="search-type" data-search-type="{{ search_type }}">{{ title }}</a>
+                    <a href="{{ url }}" class="search-type" data-search-type="{{ search_type }}">{{ title }}</a>
                 {{/ has_facets }}
             </li>
             {{/ search_types }}

@@ -64,9 +64,9 @@ class MediaWikiPlugin extends Plugin {
             $this->_addHook(Event::HAS_USER_BEEN_DELEGATED_ACCESS, 'has_user_been_delegated_access');
 
             // Search
-            $this->_addHook(Event::LAYOUT_SEARCH_ENTRY);
-            $this->_addHook('search_type', 'search_type', false);
-            $this->_addHook('plugins_powered_search', 'plugins_powered_search', false);
+            $this->addHook(Event::LAYOUT_SEARCH_ENTRY);
+            $this->addHook(Event::SEARCH_TYPES_PRESENTERS);
+            $this->addHook(Event::SEARCH_TYPE);
 
             $this->_addHook('plugin_statistics_service_usage');
 
@@ -102,7 +102,7 @@ class MediaWikiPlugin extends Plugin {
             if ($this->isSearchEntryAvailable($project)) {
                 $params['search_entries'][] = array(
                     'value'    => $this->name,
-                    'label'    => 'Mediawiki',
+                    'label'    => $this->text,
                     'selected' => $this->isSearchEntrySelected($params['type_of_search']),
                 );
                 $params['hidden_fields'][] = array(
@@ -110,6 +110,35 @@ class MediaWikiPlugin extends Plugin {
                     'value' => $project->getID()
                 );
             }
+        }
+
+        /**
+         * @see Event::SEARCH_TYPE
+         */
+        public function search_type($params) {
+            if ($params['type_of_search'] == $this->name && $this->isSearchEntryAvailable($params['project'])) {
+                if (! $params['project']->isError()) {
+                   util_return_to($this->getMediawikiSearchURI($params['project'], $params['words']));
+                }
+            }
+        }
+
+        /**
+         * @see Event::SEARCH_TYPES_PRESENTERS
+         */
+        public function search_types_presenters($params) {
+            if ($this->isSearchEntryAvailable($params['project'])) {
+                $params['project_presenters'][] = new Search_SearchTypePresenter(
+                    $this->name,
+                    $this->text,
+                    array(),
+                    $this->getMediawikiSearchURI($params['project'], $params['words'])
+                );
+            }
+        }
+
+        private function getMediawikiSearchURI(Project $project, $words) {
+            return $this->getPluginPath().'/wiki/'. $project->getUnixName() .'/index.php?title=Special%3ASearch&search=' . urlencode($words) . '&go=Go';
         }
 
         private function isSearchEntryAvailable(Project $project = null) {
@@ -137,21 +166,6 @@ class MediaWikiPlugin extends Plugin {
                 }
             }
             return null;
-        }
-
-        public function search_type($params) {
-            if ($params['type_of_search'] == $this->name) {
-                $project = group_get_object($params['group_id']);
-                if (! $project->isError()) {
-                    util_return_to('/plugins/mediawiki/wiki/'. $project->getUnixName() .'/index.php?title=Special%3ASearch&search=' . urlencode($params['words']) . '&go=Go');
-                }
-            }
-        }
-
-        public function plugins_powered_search($params) {
-            if ($params['type_of_search'] == $this->name) {
-                $params['plugins_powered_search'] = true;
-            }
         }
 
         public function cssFile($params) {
