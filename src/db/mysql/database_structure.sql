@@ -2620,6 +2620,14 @@ CREATE TABLE IF NOT EXISTS ugroup_forge_permission (
     permission_id INT(11) NOT NULL,
     INDEX idx_user_group_id (ugroup_id)
 );
+
+
+DROP TABLE IF EXISTS  email_gateway_salt;
+CREATE TABLE email_gateway_salt (
+        salt VARCHAR(255)
+    )
+;
+
 #
 # EOF
 #

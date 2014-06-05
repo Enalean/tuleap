@@ -32,11 +32,14 @@ class Tracker_Artifact_MailGatewayRecipient {
     /** @var Tracker_Artifact */
     private $artifact;
 
-    public function __construct(PFUser $user, Tracker_Artifact $artifact, $email) {
+    public function __construct(
+        PFUser $user,
+        Tracker_Artifact $artifact,
+        $email
+    ) {
         $this->user     = $user;
         $this->artifact = $artifact;
         $this->email    = $email;
-
     }
 
     public function getEmail() {
@@ -50,6 +53,5 @@ class Tracker_Artifact_MailGatewayRecipient {
     public function getUser() {
         return $this->user;
     }
-}
 
-?>
+}

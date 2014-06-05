@@ -1013,6 +1013,14 @@ SET @s = CONCAT("ALTER TABLE tracker_idsharing_tracker AUTO_INCREMENT = ", @last
 PREPARE stmt FROM @s;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
+
+--
+-- Email gateway salt
+--
+INSERT INTO email_gateway_salt (salt)
+    VALUES (SHA1(UUID()))
+;
+
 #
 # EOF
 #

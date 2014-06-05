@@ -641,7 +641,7 @@ class Tracker_Artifact_Changeset {
             if ($user) {
                 $recipient_factory = $this->getRecipientFactory();
                 $headers           = $this->getCustomReplyToHeader();
-                $message_id        = $recipient_factory->getEmailMessageId($user, $this->getArtifact());
+                $message_id        = $recipient_factory->getEmailMessageId($user, $this->getArtifact(), $this);
 
                 $messages[$message_id] = $this->getMessageContent($user, $is_update, $check_perms);
 
@@ -718,10 +718,13 @@ class Tracker_Artifact_Changeset {
     }
 
     private function getRecipientFactory() {
+        $dao = new MailGatewaySaltDao();
+        $row = $dao->searchMailSalt()->getRow();
+
         return new Tracker_Artifact_MailGatewayRecipientFactory(
             Tracker_ArtifactFactory::instance(),
             UserManager::instance(),
-            'whatever',
+            $row['salt'],
             Config::get('sys_default_domain')
         );
     }
