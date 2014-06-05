@@ -46,6 +46,7 @@ class Search_SearchPlugin {
             'rows_returned'      => &$rows_returned,
             'rows'               => &$rows,
             'pagination_handled' => &$pagination_handled,
+            'project'            => $query->getProject(),
             'group_id'           => $query->getProject()->getId(),
             'results'            => &$this->results,
         );

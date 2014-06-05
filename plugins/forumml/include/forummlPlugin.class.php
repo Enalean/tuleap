@@ -21,15 +21,18 @@
 require_once('common/plugin/Plugin.class.php');
 
 class ForumMLPlugin extends Plugin {
+    const SEARCH_TYPE = 'mail';
 
-	function __construct($id) {
+    function __construct($id) {
         parent::__construct($id);
 
         $this->_addHook('browse_archives','forumml_browse_archives',false);
         $this->_addHook('cssfile','cssFile',false);
         $this->_addHook('javascript_file',                   'jsFile',                            false);
-        $this->_addHook('search_type', 'search_type', false);
-        $this->_addHook('plugins_powered_search', 'forumml_search', false);
+
+        // Search
+        $this->addHook(Event::SEARCH_TYPE);
+        $this->addHook(Event::SEARCH_TYPES_PRESENTERS);
         $this->addHook(Event::LAYOUT_SEARCH_ENTRY);
 
         // Stat plugin
@@ -40,7 +43,7 @@ class ForumMLPlugin extends Plugin {
         // Set ForumML plugin scope to 'Projects' wide 
         $this->setScope(Plugin::SCOPE_PROJECT);
         $this->allowedForProject = array();
-	}
+    }
 	
     function &getPluginInfo() {
         if (!is_a($this->pluginInfo, 'ForumMLPluginInfo')) {
@@ -102,18 +105,31 @@ class ForumMLPlugin extends Plugin {
         }
     }
 
-    function forumml_search($params) {
-        if($params['type_of_search'] == 'mail') {
-            $params['plugins_powered_search'] = true;
+    /**
+     * @see Event::SEARCH_TYPES_PRESENTERS
+     */
+    public function search_types_presenters($params) {
+        if ($this->isAllowed() && ! $params['project']->isError()) {
+            $lists = array();
+            $dao = new MailingListDao();
+            foreach ($dao->searchByProject($params['project']->getID()) as $row) {
+                $lists[] = array(
+                    'title' => $row['list_name'],
+                );
+            }
+            $params['project_presenters'][] = new Search_SearchTypePresenter(
+                self::SEARCH_TYPE,
+                $GLOBALS['Language']->getText('plugin_forumml','search_list'),
+                $lists
+            );
         }
     }
 
-    function search_type($params) {
-        if(isset($params['type_of_search']) && $params['type_of_search'] == 'mail') {
-            $request =& HTTPRequest::instance();
-            $group_id = (int) $request->get('group_id');
-            $list = (int) $request->get('list');
-            util_return_to('/plugins/forumml/message.php?group_id='.$group_id.'&list='.$list.'&search='.urlencode($params['words']));
+    public function search_type($params) {
+        if ($params['type_of_search'] == self::SEARCH_TYPE) {
+            $request  = HTTPRequest::instance();
+            $list     = (int) $request->get('list');
+            util_return_to('/plugins/forumml/message.php?group_id='.$params['project']->getId().'&list='.$list.'&search='.urlencode($params['words']));
         }
     }
 

@@ -95,6 +95,7 @@ class Search_SearchController {
         $this->event_manager->processEvent(
             Event::SEARCH_TYPES_PRESENTERS,
             array(
+                'project'            => $query->getProject(),
                 'project_presenters' => &$project_search_types,
                 'site_presenters'    => &$site_search_types,
             )

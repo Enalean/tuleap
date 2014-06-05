@@ -98,3 +98,4 @@ plugin_forumml	toggle_font	Changer la police (courier/normal)
 # Script:plugins/forumml/include/forummlPlugin.class.php
 #
 plugin_forumml	this_list	Cette Liste
+plugin_forumml	search_list	Listes de discussions

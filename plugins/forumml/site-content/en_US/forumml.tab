@@ -98,3 +98,4 @@ plugin_forumml	toggle_font	Toggle font familly (typewriter/normal)
 # Script:plugins/forumml/include/forummlPlugin.class.php
 #
 plugin_forumml	this_list	This Mailing-List
+plugin_forumml	search_list	Mailing list

@@ -568,6 +568,8 @@ class Event {
 
     const SEARCH_TYPES_PRESENTERS = 'search_types_presenters';
 
+    const SEARCH_TYPE = 'search_type';
+
     /**
      * Register REST resources
      *
