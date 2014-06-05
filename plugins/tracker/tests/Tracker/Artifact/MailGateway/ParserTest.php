@@ -37,7 +37,7 @@ class Tracker_Artifact_MailGateway_Parser_BaseTest extends TuleapTestCase {
         $this->with_attachment_reply  = file_get_contents($fixtures_dir .'/reply-comment.(plain+html)+attachment.eml');
         $this->expected_followup_text = file_get_contents($fixtures_dir .'/expected_followup.text.txt');
 
-        $this->recipient_factory = mock('Tracker_Artifact_MailGatewayRecipientFactory');
+        $this->recipient_factory = mock('Tracker_Artifact_MailGateway_RecipientFactory');
 
         $this->parser = new Tracker_Artifact_MailGateway_Parser($this->recipient_factory);
     }
@@ -49,7 +49,7 @@ class Tracker_Artifact_MailGateway_Parser_BodyTest extends Tracker_Artifact_Mail
         parent::setUp();
         stub($this->recipient_factory)
             ->getFromEmail()
-            ->returns(mock('Tracker_Artifact_MailGatewayRecipient'));
+            ->returns(mock('Tracker_Artifact_MailGateway_Recipient'));
     }
 
     public function itReturnsTheFollowUpCommentToAddInTextPlainFormat() {
@@ -90,7 +90,7 @@ class Tracker_Artifact_MailGateway_Parser_RecipientTest extends Tracker_Artifact
     }
 
     public function itReturnsTheCorrespondingRecipient() {
-        $recipient = mock('Tracker_Artifact_MailGatewayRecipient');
+        $recipient = mock('Tracker_Artifact_MailGateway_Recipient');
         stub($this->recipient_factory)
             ->getFromEmail('<1661-08c450c149f11d38955ad983a9b3b857-107-1234@crampons.cro.example.com>')
             ->returns($recipient);

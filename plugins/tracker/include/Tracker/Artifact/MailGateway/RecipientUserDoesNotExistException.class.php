@@ -18,9 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_MailGatewayRecipientArtifactDoesNotExistException extends Tracker_Exception {
+class Tracker_Artifact_MailGateway_RecipientUserDoesNotExistException extends Tracker_Exception {
 
     public function __construct() {
-        parent::__construct("Artifact does not exist");
+        parent::__construct("User does not exist");
     }
 }

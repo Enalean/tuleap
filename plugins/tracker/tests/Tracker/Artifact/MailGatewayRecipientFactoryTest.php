@@ -38,7 +38,7 @@ class Tracker_Artifact_MailGatewayRecipientFactoryTest extends TuleapTestCase {
         $this->artifact_factory  = stub('Tracker_ArtifactFactory')->getArtifactById(101)->returns($this->artifact);
         $this->user_manager      = stub('UserManager')->getUserById(123)->returns($this->user);
 
-        $this->factory = new Tracker_Artifact_MailGatewayRecipientFactory(
+        $this->factory = new Tracker_Artifact_MailGateway_RecipientFactory(
             $this->artifact_factory,
             $this->user_manager,
             $this->salt,
@@ -57,19 +57,19 @@ class Tracker_Artifact_MailGatewayRecipientFactoryTest extends TuleapTestCase {
 
     public function itThrowsAnAxceptionWhenArtifactDoesNotExist() {
         $email = '<000000-5a2a341193b34695885091bbf5f75d68-123-200@tuleap.example.com>';
-        $this->expectException('Tracker_Artifact_MailGatewayRecipientArtifactDoesNotExistException');
+        $this->expectException('Tracker_Artifact_MailGateway_RecipientArtifactDoesNotExistException');
         $this->factory->getFromEmail($email);
     }
 
     public function itThrowsAnAxceptionWhenUserDoesNotExist() {
         $email = '<101-5a2a341193b34695885091bbf5f75d68-00000-200@tuleap.example.com>';
-        $this->expectException('Tracker_Artifact_MailGatewayRecipientUserDoesNotExistException');
+        $this->expectException('Tracker_Artifact_MailGateway_RecipientUserDoesNotExistException');
         $this->factory->getFromEmail($email);
     }
 
     public function itThrowsAnAxceptionWhenHashIsInvalid() {
         $email = '<101-invalidhash-123-200@tuleap.example.com>';
-        $this->expectException('Tracker_Artifact_MailGatewayRecipientInvalidHashException');
+        $this->expectException('Tracker_Artifact_MailGateway_RecipientInvalidHashException');
         $this->factory->getFromEmail($email);
     }
 

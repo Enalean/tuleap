@@ -31,7 +31,7 @@ fclose($fd);
 $logger = new BackendLogger();
 $logger->info("Entering email gateway");
 
-$recipient_factory = Tracker_Artifact_MailGatewayRecipientFactory::build();
+$recipient_factory = Tracker_Artifact_MailGateway_RecipientFactory::build();
 
 $parser           = new Tracker_Artifact_MailGateway_Parser($recipient_factory);
 $citation_sripper = new Tracker_Artifact_MailGateway_CitationStripper();

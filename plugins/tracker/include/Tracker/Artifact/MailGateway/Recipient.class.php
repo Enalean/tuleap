@@ -21,7 +21,7 @@
 /**
  * Value object of a the recipient of email gateway
  */
-class Tracker_Artifact_MailGatewayRecipient {
+class Tracker_Artifact_MailGateway_Recipient {
 
     /** @var string */
     private $email;

@@ -29,7 +29,7 @@ class Tracker_Artifact_MailGateway_MailGatewayTest extends TuleapTestCase {
         $raw_email     = '...';
         $parser        = mock('Tracker_Artifact_MailGateway_Parser');
         $logger        = mock('Logger');
-        $recipient     = new Tracker_Artifact_MailGatewayRecipient($user, $artifact, $email);
+        $recipient     = new Tracker_Artifact_MailGateway_Recipient($user, $artifact, $email);
         $body          = 'justaucorps';
         $stripped_body = 'stripped justaucorps';
 

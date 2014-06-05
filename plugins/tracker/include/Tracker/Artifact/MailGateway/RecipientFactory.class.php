@@ -19,9 +19,9 @@
  */
 
 /**
- * Builds instances of MailGatewayRecipient
+ * Builds instances of Tracker_Artifact_MailGateway_Recipient
  */
-class Tracker_Artifact_MailGatewayRecipientFactory {
+class Tracker_Artifact_MailGateway_RecipientFactory {
 
     const ARTIFACT_ID_INDEX = 'artifact_id';
     const USER_ID_INDEX     = 'user_id';
@@ -65,13 +65,13 @@ class Tracker_Artifact_MailGatewayRecipientFactory {
     }
 
     /**
-     * @return Tracker_Artifact_MailGatewayRecipientFactory
+     * @return Tracker_Artifact_MailGateway_RecipientFactory
      */
     public static function build() {
         $dao = new MailGatewaySaltDao();
         $row = $dao->searchMailSalt()->getRow();
 
-        return new Tracker_Artifact_MailGatewayRecipientFactory(
+        return new Tracker_Artifact_MailGateway_RecipientFactory(
             Tracker_ArtifactFactory::instance(),
             UserManager::instance(),
             $row['salt'],
@@ -82,11 +82,11 @@ class Tracker_Artifact_MailGatewayRecipientFactory {
     /**
      * @param string $email the email message id
      *
-     * @throws Tracker_Artifact_MailGatewayRecipientArtifactDoesNotExistException
-     * @throws Tracker_Artifact_MailGatewayRecipientUserDoesNotExistException
-     * @throws Tracker_Artifact_MailGatewayRecipientInvalidHashException
+     * @throws Tracker_Artifact_MailGateway_RecipientArtifactDoesNotExistException
+     * @throws Tracker_Artifact_MailGateway_RecipientUserDoesNotExistException
+     * @throws Tracker_Artifact_MailGateway_RecipientInvalidHashException
      *
-     * @return Tracker_Artifact_MailGatewayRecipient
+     * @return Tracker_Artifact_MailGateway_Recipient
      */
     public function getFromEmail($email) {
         preg_match(self::EMAIL_PATTERN, $email, $email_parts);
@@ -95,20 +95,20 @@ class Tracker_Artifact_MailGatewayRecipientFactory {
 
         $this->checkHash($user, $artifact, $email_parts[self::HASH_INDEX]);
 
-        return new Tracker_Artifact_MailGatewayRecipient(
+        return new Tracker_Artifact_MailGateway_Recipient(
             $user,
             $artifact,
             $email
         );
     }
 
-    /** @return Tracker_Artifact_MailGatewayRecipient */
+    /** @return Tracker_Artifact_MailGateway_Recipient */
     public function getFromUserAndChangeset(
         PFUser $user,
         Tracker_Artifact_Changeset $changeset
     ) {
         $artifact = $changeset->getArtifact();
-        return new Tracker_Artifact_MailGatewayRecipient(
+        return new Tracker_Artifact_MailGateway_Recipient(
             $user,
             $artifact,
             $this->getEmail($user, $artifact, $changeset)
@@ -133,7 +133,7 @@ class Tracker_Artifact_MailGatewayRecipientFactory {
     private function getArtifact($artifact_id) {
         $artifact = $this->artifact_factory->getArtifactById($artifact_id);
         if (! $artifact) {
-            throw new Tracker_Artifact_MailGatewayRecipientArtifactDoesNotExistException();
+            throw new Tracker_Artifact_MailGateway_RecipientArtifactDoesNotExistException();
         }
 
         return $artifact;
@@ -142,7 +142,7 @@ class Tracker_Artifact_MailGatewayRecipientFactory {
     private function getUser($user_id) {
         $user = $this->user_manager->getUserById($user_id);
         if (! $user) {
-            throw new Tracker_Artifact_MailGatewayRecipientUserDoesNotExistException();
+            throw new Tracker_Artifact_MailGateway_RecipientUserDoesNotExistException();
         }
 
         return $user;
@@ -154,7 +154,7 @@ class Tracker_Artifact_MailGatewayRecipientFactory {
         $submitted_hash
     ) {
         if ($this->getHash($user, $artifact) != $submitted_hash) {
-            throw new Tracker_Artifact_MailGatewayRecipientInvalidHashException();
+            throw new Tracker_Artifact_MailGateway_RecipientInvalidHashException();
         }
     }
 

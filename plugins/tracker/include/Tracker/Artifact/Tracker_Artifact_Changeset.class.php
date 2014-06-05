@@ -654,7 +654,7 @@ class Tracker_Artifact_Changeset {
     }
 
     private function getMessageId(PFUser $user) {
-        $recipient_factory = Tracker_Artifact_MailGatewayRecipientFactory::build();
+        $recipient_factory = Tracker_Artifact_MailGateway_RecipientFactory::build();
         $recipient = $recipient_factory->getFromUserAndChangeset($user, $this);
 
         return $recipient->getEmail();
