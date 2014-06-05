@@ -24,23 +24,32 @@ class Search_SearchPeopleResultPresenter {
     private $user_name;
 
     /** @var  string */
-    private $user_realname;
+    private $real_name;
 
-    public function __construct(array $result) {
-        $this->user_name        = $result['user_name'];
-        $this->user_realname    = $result['realname'];
+    /** @var  string */
+    private $avatar;
+
+
+    public function __construct(PFUser $user) {
+        $this->user_name = $user->getUserName();
+        $this->real_name = $user->getRealName();
+        $this->avatar    = $user->getAvatarUrl();
     }
 
     public function user_name() {
         return $this->user_name;
     }
 
-    public function user_realname() {
-        return $this->user_realname;
+    public function real_name() {
+        return $this->real_name;
     }
 
     public function user_uri() {
         return '/users/' . $this->user_name;
+    }
+
+    public function avatar() {
+        return $this->avatar;
     }
 
 }

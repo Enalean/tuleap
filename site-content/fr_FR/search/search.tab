@@ -9,7 +9,7 @@ search_index	search	Recherche
 search_index	site_wide_search	Recherche forge
 search_index	project_wide_search	Recherche dans $1
 search_index	at_least_3_ch	Le mot-clé recherché doit au moins avoir 3 caractères
-search_index	no_match_found	Aucune correspondance pour $1
+search_index	no_match_found	Aucune correspondance pour <span>$1</span>
 search_index	search_res	Résultats de la recherche pour $1 ($2 résultats)
 search_index	project_name	Nom du projet
 search_index	description	Description

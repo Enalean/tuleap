@@ -109,7 +109,7 @@ class Search_SearchController {
                     break;
 
                 case Search_SearchPeople::NAME:
-                    $search        = new Search_SearchPeople(new UserDao());
+                    $search        = new Search_SearchPeople(UserManager::instance());
                     $search_result = $this->renderer->renderToString(
                         'search_people',
                         $search->search(

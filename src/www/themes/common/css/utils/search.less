@@ -96,4 +96,90 @@ body.search-page {
     &.loading {
         background: url('../images/tuleap-spinner.gif') no-repeat center center;
     }
+
+    p.results-count {
+        margin: 0 0 20px 0;
+        color: #aaa;
+        font-size: 0.9em;
+        font-style: italic;
+    }
+
+    p.no-result {
+        font-size: 1.2em;
+        padding: 10px 0 0;
+
+        span {
+            font-weight: bold;
+        }
+    }
+
+    ul {
+        list-style: none;
+        margin: 0;
+
+        li.result {
+            margin: 0 0 20px 0;
+            padding: 0 0 0 15px;
+            position: relative;
+            max-width: 750px;
+
+            &:before {
+                content: '\F105';
+                font-family: 'FontAwesome';
+                left: 0;
+                top: 6px;
+                position: absolute;
+            }
+
+            .title {
+                display: block;
+                font-size: 1.6em;
+                line-height: 1.4em;
+
+                &:hover {
+                    text-decoration: none;
+                }
+            }
+
+            .subtitle {
+                color: #888;
+                font-style: italic;
+            }
+
+            .description {
+                margin: 0 0 5px;
+                color: #444;
+                font-size: 0.9em;
+            }
+        }
+
+        li.user {
+            margin: 0 0 30px 0;
+
+            .avatar {
+                float: left;
+                position: relative;
+                top: 1px;
+                margin: 0 10px 0 0;
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+            }
+
+            .realname {
+                font-size: 1.6em;
+                line-height: 1.4em;
+
+                &:hover {
+                    text-decoration: none;
+                }
+            }
+
+            .username {
+                margin: 0 0 5px;
+                color: #444;
+                font-size: 0.9em;
+            }
+        }
+    }
 }

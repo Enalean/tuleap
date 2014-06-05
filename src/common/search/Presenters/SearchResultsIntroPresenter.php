@@ -20,13 +20,12 @@
 
 class Search_SearchResultsIntroPresenter {
 
-    /** @var  DataAccessResult */
     private $results;
 
     /** @var  string */
     private $words;
 
-    public function __construct(DataAccessResult $results, $words) {
+    public function __construct($results, $words) {
         $this->results = $results;
         $this->words   = $words;
     }

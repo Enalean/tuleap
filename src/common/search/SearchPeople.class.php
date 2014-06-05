@@ -22,33 +22,33 @@ class Search_SearchPeople {
     const NAME = 'people';
 
     /**
-     * @var UserDao
+     * @var UserManager
      */
-    private $dao;
+    private $manager;
 
 
-    public function __construct(UserDao $dao) {
-        $this->dao = $dao;
+    public function __construct(UserManager $manager) {
+        $this->manager = $manager;
     }
 
     public function search($words, $exact, $offset) {
-        return $this->getSearchPeopleResultPresenter($this->dao->searchGlobal($words, $offset, $exact), $words);
+        return $this->getSearchPeopleResultPresenter($this->manager->getAllUsersByUsernameOrRealname($words, $offset, $exact), $words);
     }
 
-    private function getSearchPeopleResultPresenter(DataAccessResult $results, $words) {
+    private function getSearchPeopleResultPresenter(array $users, $words) {
         return new Search_SearchResultsPresenter(
-            new Search_SearchResultsIntroPresenter($results, $words),
-            $this->getResultsPresenters($results)
+            new Search_SearchResultsIntroPresenter($users, $words),
+            $this->getResultsPresenters($users)
         );
     }
 
-    private function getResultsPresenters(DataAccessResult $results) {
-        $results_presenters = array();
+    private function getResultsPresenters(array $users) {
+        $users_presenters = array();
 
-        foreach ($results as $result) {
-            $results_presenters[] = new Search_SearchPeopleResultPresenter($result);
+        foreach ($users as $user) {
+            $users_presenters[] = new Search_SearchPeopleResultPresenter($user);
         }
 
-        return $results_presenters;
+        return $users_presenters;
     }
 }

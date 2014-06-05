@@ -209,6 +209,14 @@ class UserManager {
         return $users;
     }
 
+    public function getAllUsersByUsernameOrRealname($words, $offset, $exact) {
+        $users = array();
+        foreach ($this->getDao()->searchGlobal($words, $offset, $exact) as $user) {
+            $users[] = $this->getUserInstanceFromRow($user);
+        }
+        return $users;
+    }
+
     /**
      * Returns the user that have the given email address.
      * Returns null if no account is found.
