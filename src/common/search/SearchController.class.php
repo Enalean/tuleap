@@ -44,7 +44,7 @@ class Search_SearchController {
     public function index(Codendi_Request $request) {
         $GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('search_index', 'search'), 'body_class' => array('search-page')));
         $this->renderer->renderToPage('index', new Search_SearchPresenter(self::DEFAULT_SEARCH, '', null, ''));
-        $GLOBALS['HTML']->footer(array());
+        $GLOBALS['HTML']->footer(array('without_content' => true));
     }
 
     public function ajaxResults(Codendi_Request $request) {
@@ -68,7 +68,7 @@ class Search_SearchController {
         if ($presenter !== null) {
             $GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('search_index', 'search'), 'body_class' => array('search-page')));
             $this->renderer->renderToPage('index', $presenter);
-            $GLOBALS['HTML']->footer(array());
+            $GLOBALS['HTML']->footer(array('without_content' => true));
         }
     }
 

@@ -270,6 +270,10 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
      * @return boolean
      */
     private function canShowFooter($params) {
+        if (! empty($params['without_content'])) {
+            return false;
+        }
+
         if (empty($params['group']) && ! $this->show_sidebar) {
             return true;
         }
