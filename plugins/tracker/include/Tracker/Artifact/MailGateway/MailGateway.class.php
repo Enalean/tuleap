@@ -21,6 +21,11 @@
 class Tracker_Artifact_MailGateway_MailGateway {
 
     /**
+     * @var Tracker_Artifact_MailGateway_CitationStripper
+     */
+    private $citation_stripper;
+
+    /**
      * @var Tracker_Artifact_MailGateway_Parser
      */
     private $parser;
@@ -30,9 +35,14 @@ class Tracker_Artifact_MailGateway_MailGateway {
      */
     private $logger;
 
-    public function __construct(Tracker_Artifact_MailGateway_Parser $parser, Logger $logger) {
-        $this->logger = $logger;
-        $this->parser = $parser;
+    public function __construct(
+        Tracker_Artifact_MailGateway_Parser $parser,
+        Tracker_Artifact_MailGateway_CitationStripper $citation_stripper,
+        Logger $logger
+    ) {
+        $this->logger            = $logger;
+        $this->parser            = $parser;
+        $this->citation_stripper = $citation_stripper;
     }
 
     public function process($raw_mail) {
@@ -42,9 +52,11 @@ class Tracker_Artifact_MailGateway_MailGateway {
 
         $this->logger->debug("Receiving new follow-up comment from ". $user->getUserName());
 
+        $body = $this->citation_stripper->strip($incoming_message->getBody());
+
         $artifact->createNewChangeset(
             array(),
-            $incoming_message->getBody(),
+            $body,
             $user,
             true,
             Tracker_Artifact_Changeset_Comment::TEXT_COMMENT
