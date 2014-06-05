@@ -285,7 +285,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
              return intval(array_shift($value['bind_value_ids']));
          }
          throw new Tracker_FormElement_InvalidFieldValueException('List fields values must be passed as an array of ids (integer) in \'bind_value_ids\''
-            . ' Example: {"field_id": 1548, "bind_value_ids": [457]}');
+            .' Expected format for field '.$this->id .' : {"field_id": 1548, "bind_value_ids": [457]}');
      }
 
     /**

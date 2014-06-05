@@ -32,6 +32,8 @@ use \Tracker_FormElementFactory;
 use \Tracker_REST_Artifact_ArtifactUpdater;
 use \Tracker_REST_Artifact_ArtifactValidator;
 use \Tracker_FormElement_InvalidFieldException;
+use \Tracker_FormElement_InvalidFieldValueException;
+use \Tracker_Artifact_Attachment_FileNotFoundException;
 use \Tracker_Exception;
 use \Tuleap\Tracker\REST\ChangesetCommentRepresentation;
 use \Tuleap\Tracker\REST\TrackerReference;
@@ -201,15 +203,29 @@ class ArtifactsResource {
      * Things to take into account:
      * <ol>
      *  <li>You don't need to set all 'values' of the artifact, you can pass only the ones you want to add,
-     *      together with those that are required (depends on a given tracker's configuration).</li>
-     *  <li>Example:
-     *          To attach a file on a file field, the value must contain the ids of the attachements you want to add (eg. : {
-     *                                             "field_id": 101,
-     *                                             "value": [41, 42]
-     *                                           })
-     *          Note that 41 and 42 ids are provided by /artifact_temporary_files routes.
-     *          A user can only add their own temporary files.
-     *          To create a temporary file, use POST on /artifact_temporary_files.
+     *      together with those that are required (depends on a given tracker's configuration).
+     *  </li>
+     *  <li>Note on files:
+     *  To attach a file on a file field, the value must contain the ids of the attachements you want to add 
+     *         (eg. :
+     *               {
+     *                  "field_id": 101,
+     *                  "value": [41, 42]
+     *               }
+     *          )
+     *  Note that 41 and 42 ids are provided by /artifact_temporary_files routes.
+     *  A user can only add their own temporary files.
+     *  To create a temporary file, use POST on /artifact_temporary_files.
+     *  </li>
+     *  <li>Full Example:
+     * {
+     *      "tracker": {"id" : 54},
+     *      "values": [
+     *          {"field_id": 1806, "value" : "my new artifact"},
+     *          {"field_id": 1841, "bind_value_ids" : [254,598,148]}
+     *      ]
+     * }
+     *  </li>
      * </ol>
      *
      * @url POST
@@ -229,6 +245,10 @@ class ArtifactsResource {
             );
             return $updater->create($user, $tracker, $values);
         } catch (Tracker_FormElement_InvalidFieldException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (Tracker_FormElement_InvalidFieldValueException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (Tracker_Artifact_Attachment_FileNotFoundException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException $exception) {
             throw new RestException(500, $exception->getMessage());

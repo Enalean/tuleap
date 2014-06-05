@@ -1176,6 +1176,13 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * @return mixed
      */
     public function getFieldDataFromRESTValue(array $value, Tracker_Artifact $artifact = null) {
+        if (! isset($value['value'])) {
+            throw new Tracker_FormElement_InvalidFieldValueException (
+                'Expected format for field '.$this->id .
+                 ' : {"field_id" : 15458, "value" : some_value'
+            );
+        }
+
         return $this->getFieldData($value['value']);
     }
 
