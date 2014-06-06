@@ -1,3 +1,6 @@
+Version 5.399 - Tuleap 7.2
+    * request #6972 : bug fix- previously hidden fields are now visible and editable for tracker admins
+
 Version 5.398 - Tuleap 7.2
     * story #6301: reply to a follow-up comment by email (tasks #6990 Handle citations in the answer)
 
