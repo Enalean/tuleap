@@ -21,13 +21,48 @@
 class Tracker_Artifact_MailGateway_CitationStripper {
 
     const TEXT_CITATION_PATTERN = '/(\n>\s+.*)+/';
+    const HTML_CITATION_PATTERN = '%<blockquote[^>]*>.*</blockquote>%';
     const DEFAULT_REPLACEMENT   = "\n[citation removed]";
 
-    public function strip($mail_content) {
+    public function stripText($mail_content) {
         return preg_replace(
             self::TEXT_CITATION_PATTERN,
             self::DEFAULT_REPLACEMENT,
             $mail_content
         );
+    }
+
+    public function stripHTML($mail_content) {
+        $doc = new DOMDocument();
+        $doc->loadHTML($mail_content);
+        $this->removeBlockquoteElements($doc);
+
+        return $this->getContentInsideBody($doc);
+    }
+
+    private function removeBlockquoteElements(DOMDocument $doc) {
+        $xpath = new DOMXPath($doc);
+
+        foreach ($xpath->query('//div[@class="gmail_extra"]') as $blockquote) {
+            $this->removeNode($blockquote);
+        }
+
+        foreach ($xpath->query('//blockquote') as $blockquote) {
+            $this->removeNode($blockquote);
+        }
+    }
+
+    private function removeNode(DOMNode $node) {
+        $node->parentNode->removeChild($node);
+    }
+
+    private function getContentInsideBody(DOMDocument $doc) {
+        $xml = simplexml_import_dom($doc);
+        $content = '';
+        foreach ($xml->body->children() as $child) {
+            $content .= $child->asXML();
+        }
+
+        return $content;
     }
 }

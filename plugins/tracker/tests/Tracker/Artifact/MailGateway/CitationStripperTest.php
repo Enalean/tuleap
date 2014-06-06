@@ -30,9 +30,21 @@ class Tracker_Artifact_MailGateway_CitationStripperTest extends TuleapTestCase {
 
         $citation_stripper = new Tracker_Artifact_MailGateway_CitationStripper();
         $this->assertIdentical(
-            $citation_stripper->strip($parsed_text_content),
+            $citation_stripper->stripText($parsed_text_content),
             $text_content_witout_citation
         );
     }
 
+    public function itStripsCitationFromHTMLContent() {
+        $fixtures_dir = dirname(__FILE__) .'/_fixtures';
+
+        $parsed_text_content          = file_get_contents($fixtures_dir .'/expected_followup.html.txt');
+        $text_content_witout_citation = file_get_contents($fixtures_dir .'/expected_followup_without_citation.html.txt');
+
+        $citation_stripper = new Tracker_Artifact_MailGateway_CitationStripper();
+        $this->assertIdentical(
+            $citation_stripper->stripHTML($parsed_text_content),
+            $text_content_witout_citation
+        );
+    }
 }
