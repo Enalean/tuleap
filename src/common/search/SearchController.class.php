@@ -157,15 +157,17 @@ class Search_SearchController {
     }
 
     private function doSearch(Search_SearchQuery $query) {
+        $search = new Search_SearchPlugin($this->event_manager);
+        $plugin_results = $search->search($query);
+        if ($plugin_results !== null) {
+            return $plugin_results;
+        }
         if (isset($this->search_types[$query->getTypeOfSearch()])) {
             $presenter = $this->search_types[$query->getTypeOfSearch()]->search($query);
             if ($presenter) {
                 return $this->renderer->renderToString($presenter->getTemplate(), $presenter);
             }
-        } else {
-            $search = new Search_SearchPlugin($this->event_manager);
-            $search->search($query);
-            return $search->getResults();
         }
+        return '';
     }
 }

@@ -25,36 +25,26 @@ class Search_SearchPlugin {
      */
     private $event_manager;
 
-    private $results = '';
 
     public function __construct(EventManager $event_manager) {
         $this->event_manager = $event_manager;
     }
 
     public function search(Search_SearchQuery $query) {
-        $matchingSearchTypeFound = false;
-        $pagination_handled = false;
-        $rows_returned = 0;
-        $rows = 0;
-
+        $results = null;
         $params = array(
+            'query'              => $query,
             'words'              => $query->getWords(),
             'offset'             => $query->getOffset(),
             'nbRows'             => 25,
             'type_of_search'     => $query->getTypeOfSearch(),
-            'search_type'        => &$matchingSearchTypeFound,
-            'rows_returned'      => &$rows_returned,
-            'rows'               => &$rows,
-            'pagination_handled' => &$pagination_handled,
             'project'            => $query->getProject(),
             'group_id'           => $query->getProject()->getId(),
-            'results'            => &$this->results,
+            'results'            => &$results,
         );
 
-        $this->event_manager->processEvent('search_type', $params);
-    }
+        $this->event_manager->processEvent(Event::SEARCH_TYPE, $params);
 
-    public function getResults() {
-        return $this->results;
+        return $results;
     }
 }

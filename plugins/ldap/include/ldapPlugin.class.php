@@ -41,8 +41,8 @@ class LdapPlugin extends Plugin {
         $this->_addHook('display_newaccount', 'forbidIfLdapAuth', false);
         
         // Search
-        $this->_addHook(Event::LAYOUT_SEARCH_ENTRY);
-        $this->_addHook('search_type', 'ldapSearch', false);
+        $this->addHook(Event::LAYOUT_SEARCH_ENTRY);
+        $this->addHook(Event::SEARCH_TYPE);
 
         // Authentication
         $this->_addHook(Event::SESSION_BEFORE_LOGIN, 'authenticate', false);
@@ -203,83 +203,23 @@ class LdapPlugin extends Plugin {
     }
 
     /**
-     * Hook
-     * 
-     * IN  $params['words']
-     * IN  $params['offset'];
-     * IN  $params['nbRows'];
-     * IN  $params['type_of_search']
-     * OUT $params['search_type']
-     * OUT $params['rows_returned']
-     * OUT $params['rows']
-     * 
-     * @param Array $params
-     * 
-     * @return void
+     * @see Event::SEARCH_TYPE
      */
-    function ldapSearch($params) {
-        global $Language;
-
-        if($params['type_of_search'] === "people_ldap") {
-            $params['search_type'] = true;
-            
-            $ldap = $this->getLdap();
-            $lri  = $ldap->searchUser($params['words']);
-            $rows = $rows_returned = $lri->count();
-  
-            if ($rows < 1) {
-                $no_rows = 1;
-                echo '<H2>'.$Language->getText('search_index','no_match_found',$params['words']).'</H2>';
-            } else {
-
-                if ( $rows_returned > $params['nbRows']) {
-                    $rows = $params['nbRows'];
-                }
-
-                echo '<H3>'.$Language->getText('search_index','search_res', array($params['words'], $rows_returned))."</H3><P>\n\n";
-
-                $title_arr = array();
-                $title_arr[] = $Language->getText('search_index','real_n');
-                $title_arr[] = $Language->getText('search_index','user_n');
-                echo html_build_list_table_top ($title_arr);
-
-                echo "\n";
-
-                $um = UserManager::instance();
-
-                $lri->seek($params['offset']);
-                $i = $params['nbRows'];
-                while($lri->valid() && $i > 0) {
-                    $ldapres = $lri->current();
-
-                    print "<TR class=\"". html_get_alt_row_color($i) ."\">\n";
-
-                    print "<TD>";
-                    print $this->buildLinkToDirectory($ldapres, $ldapres->getCommonName());
-                    print "</TD>\n";
-
-                    print "<TD>";
-                    if ($ldapres->getEdUid() != false) {
-                        $user = $um->getUserByLdapId($ldapres->getEdUid());
-                        if($user) {
-                            print '<a href="/users/'.$user->getUserName().'">'
-                            .'<img src="'.util_get_image_theme('msg.png').'" border="0" height="12" width="10" />&nbsp;'
-                            .$user->getUserName()
-                            .'</a>';
-                        }
-                    }
-                    print "</TD>\n";
-
-                    print "</TR>\n";
-
-                    $lri->next();
-                    $i--;
-                }
-                echo "</TABLE>\n";
-            }
-            $params['rows'] = $rows;
-            $params['rows_returned'] = $rows_returned;
+    public function search_type($params) {
+        if ($GLOBALS['sys_auth_type'] == 'ldap' && $params['type_of_search'] == Search_SearchPeople::NAME) {
+            $search = new LDAP_SearchPeople(UserManager::instance(), $this->getLdap());
+            $presenter = $search->search($params['query'], $params['nbRows']);
+            $params['results'] = $this->getSearchTemplateRenderer()->renderToString($presenter->getTemplate(), $presenter);
         }
+    }
+
+    public function getSearchTemplateRenderer() {
+        return TemplateRendererFactory::build()->getRenderer(
+            array(
+                dirname(__FILE__).'/../templates',
+                Config::get('codendi_dir') .'/src/templates/search',
+            )
+        );
     }
 
     /**

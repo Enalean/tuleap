@@ -1,0 +1,12 @@
+<li class="user">
+    <img class="avatar" src="{{ avatar }}" />
+    {{# has_directory_uri }}
+    <a class="realname" href="{{{ directory_uri }}}">{{ real_name }}</a>
+    {{/ has_directory_uri }}
+    {{^ has_directory_uri }}
+    <p class="realname">{{ real_name }}</p>
+    {{/ has_directory_uri }}
+    {{# is_local }}
+    <a class="username" href="{{ user_uri }}">{{ user_name }}</a>
+    {{/ is_local }}
+</li>
