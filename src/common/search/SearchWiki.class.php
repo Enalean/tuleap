@@ -55,4 +55,14 @@ class Search_SearchWiki {
 
         return $search_page;
     }
+
+    public function getFacets() {
+        return new Search_SearchTypePresenter(
+            Search_SearchWiki::NAME,
+            $GLOBALS['Language']->getText('project_admin_editservice', 'service_wiki_lbl_key')
+        );
+    }
+
+
+
 }

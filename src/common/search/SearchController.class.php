@@ -108,25 +108,13 @@ class Search_SearchController {
             )
         );
 
+        $project_search_types = array_merge($this->getAdditionnalProjectWidePresentersIfNeeded($query->getProject()), $project_search_types);
+
         $search_panes = array();
         if (! $query->getProject()->isError()) {
             $search_panes[] = new Search_SearchPanePresenter(
                 $GLOBALS['Language']->getText('search_index', 'project_wide_search', array($query->getProject()->getPublicName())),
-                array_merge(
-                    array(
-                        new Search_SearchTypePresenter(
-                            Search_SearchWiki::NAME,
-                            'Wiki',
-                            array(),
-                            $this->search_types[Search_SearchWiki::NAME]->getRedirectUrl(
-                                $query->getProject()->getId(),
-                                $this->search_types[Search_SearchWiki::NAME]->getSearchPageName($query),
-                                $query->getWords()
-                            )
-                        ),
-                    ),
-                    $project_search_types
-                )
+                $project_search_types
             );
         }
         $search_panes[] = $this->getSiteWidePane($site_search_types);
@@ -138,6 +126,22 @@ class Search_SearchController {
             $search_panes,
             $query->getProject()
         );
+    }
+
+    private function getAdditionnalProjectWidePresentersIfNeeded(Project $project) {
+        $additionnal_presenters = array();
+
+        if ($project->usesService('wiki')) {
+            $search_wiki              = new Search_SearchWiki(new WikiDao());
+            $additionnal_presenters[] = $search_wiki->getFacets();
+        }
+
+        if ($project->usesService('tracker')) {
+            $search_tracker           = new Search_SearchTrackerV3(new ArtifactDao());
+            $additionnal_presenters[] = $search_tracker->getFacets($project);
+        }
+
+        return $additionnal_presenters;
     }
 
     private function getSiteWidePane($site_search_types = array()) {

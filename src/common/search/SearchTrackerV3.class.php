@@ -127,4 +127,27 @@ class Search_SearchTrackerV3 {
 
         return new Search_SearchTrackerV3ResultPresenter(ob_get_clean());
     }
+
+    public function getFacets(Project $project) {
+        $trackers_v3 = $this->getTrackersV3ForProject($project);
+        $facets      = array();
+
+        foreach ($trackers_v3 as $tracker_v3) {
+            $facets[] = array(
+                'title' => $tracker_v3->getName()
+            );
+        }
+
+        return new Search_SearchTypePresenter(
+            Search_SearchTrackerV3::NAME,
+            $GLOBALS['Language']->getText('project_admin_editservice', 'service_tracker_lbl_key'),
+            $facets
+        );
+    }
+
+    private function getTrackersv3ForProject(Project $project) {
+        $artifact_type_factory = new ArtifactTypeFactory($project);
+
+        return $artifact_type_factory->getArtifactTypes();
+    }
 }
