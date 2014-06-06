@@ -21,14 +21,14 @@
 class Tracker_Artifact_MailGateway_IncomingMessage {
 
     /**
-     * @var Tracker_Artifact_MailGatewayRecipient
+     * @var Tracker_Artifact_MailGateway_Recipient
      */
     private $recipient;
 
     /** @var string */
     private $body;
 
-    public function __construct($body, Tracker_Artifact_MailGatewayRecipient $recipient) {
+    public function __construct($body, Tracker_Artifact_MailGateway_Recipient $recipient) {
         $this->body      = $body;
         $this->recipient = $recipient;
     }
@@ -41,7 +41,7 @@ class Tracker_Artifact_MailGateway_IncomingMessage {
     }
 
     /**
-     * @return Tracker_Artifact_MailGatewayRecipient
+     * @return Tracker_Artifact_MailGateway_Recipient
      */
     public function getRecipient() {
         return $this->recipient;

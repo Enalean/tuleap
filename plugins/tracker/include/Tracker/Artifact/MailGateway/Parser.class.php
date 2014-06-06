@@ -23,11 +23,11 @@ require_once 'Mail/mimeDecode.php';
 class Tracker_Artifact_MailGateway_Parser {
 
     /**
-     * @var Tracker_Artifact_MailGatewayRecipientFactory
+     * @var Tracker_Artifact_MailGateway_RecipientFactory
      */
     private $recipient_factory;
 
-    public function __construct(Tracker_Artifact_MailGatewayRecipientFactory $recipient_factory) {
+    public function __construct(Tracker_Artifact_MailGateway_RecipientFactory $recipient_factory) {
         $this->recipient_factory = $recipient_factory;
     }
 
@@ -83,7 +83,7 @@ class Tracker_Artifact_MailGateway_Parser {
 
     private function getRecipient(stdClass $structure) {
         preg_match(
-            Tracker_Artifact_MailGatewayRecipientFactory::EMAIL_PATTERN,
+            Tracker_Artifact_MailGateway_RecipientFactory::EMAIL_PATTERN,
             $structure->headers['references'],
             $matches
         );
