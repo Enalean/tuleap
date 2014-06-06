@@ -112,9 +112,10 @@ class ForumMLPlugin extends Plugin {
         if ($this->isAllowed() && ! $params['project']->isError()) {
             $lists = array();
             $dao = new MailingListDao();
-            foreach ($dao->searchByProject($params['project']->getID()) as $row) {
+            foreach ($dao->searchByProject($params['project']->getId()) as $row) {
                 $lists[] = array(
-                    'title' => $row['list_name'],
+                    'url'      => $this->getSearchUrl($params['project']->getId(), $row['group_list_id'], $params['words']),
+                    'title'    => $row['list_name']
                 );
             }
             $params['project_presenters'][] = new Search_SearchTypePresenter(
@@ -129,8 +130,12 @@ class ForumMLPlugin extends Plugin {
         if ($params['type_of_search'] == self::SEARCH_TYPE) {
             $request  = HTTPRequest::instance();
             $list     = (int) $request->get('list');
-            util_return_to('/plugins/forumml/message.php?group_id='.$params['project']->getId().'&list='.$list.'&search='.urlencode($params['words']));
+            util_return_to($this->getSearchUrl($params['project']->getId(), $list, $params['words']));
         }
+    }
+
+    private function getSearchUrl($group_id, $list_id, $words) {
+        return '/plugins/forumml/message.php?group_id='.$group_id.'&list='.$list_id.'&search='.urlencode($words);
     }
 
     /**

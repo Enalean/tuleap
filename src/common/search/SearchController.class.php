@@ -101,6 +101,7 @@ class Search_SearchController {
             Event::SEARCH_TYPES_PRESENTERS,
             array(
                 'project'            => $query->getProject(),
+                'words'              => $query->getWords(),
                 'project_presenters' => &$project_search_types,
                 'site_presenters'    => &$site_search_types,
             )

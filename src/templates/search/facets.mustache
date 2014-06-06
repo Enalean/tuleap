@@ -1,7 +1,7 @@
-<ul>
+<ul style="display: none;">
     {{# facets }}
     <li>
-        <span class="sub-facets">{{ title }}</span>
+        <a href="{{{ url }}}" class="sub-facets" data-search-type="{{ search_type }}">{{ title }}</a>
     </li>
     {{/ facets }}
 </ul>

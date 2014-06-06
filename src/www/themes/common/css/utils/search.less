@@ -63,14 +63,26 @@ body.search-page {
                     list-style-type: none;
                     padding: 5px 10px;
 
-                    span {
-                        color: #222;
+                    a, span {
+                        color: #0088cc;
+
+                        &:hover {
+                            text-decoration: none;
+                            color: #005580;
+                            cursor: pointer;
+                        }
                     }
 
-                    span.sub-facets {
+                    .sub-facets {
                         font-size: 0.85em;
                         color: #838383;
                         font-style: italic;
+
+                        &:hover {
+                            text-decoration: none;
+                            color: #aaaaaa;
+                            cursor: pointer;
+                        }
                     }
 
                     ul.sub-facets-list {

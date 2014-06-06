@@ -5,9 +5,12 @@
         <ul>
             {{# search_types }}
             <li>
-                <a href="#" data-search-type="{{ search_type }}">{{ title }}</a>
                 {{# has_facets }}
+                    <span class="search-type">{{ title }}</span>
                     {{> facets }}
+                {{/ has_facets }}
+                {{^ has_facets }}
+                    <a href="#" class="search-type" data-search-type="{{ search_type }}">{{ title }}</a>
                 {{/ has_facets }}
             </li>
             {{/ search_types }}

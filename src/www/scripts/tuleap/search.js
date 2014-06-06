@@ -24,6 +24,7 @@ var tuleap = tuleap || {};
     tuleap.search = {
         init : function() {
             switchSearchType();
+            toggleFacets();
         },
 
         moveFacetsToSearchPane : function(type_of_search) {
@@ -41,22 +42,39 @@ var tuleap = tuleap || {};
     });
 
     function switchSearchType() {
-        $('[data-search-type]').click(function() {
-            var type_of_search = $(this).attr('data-search-type');
-            var keywords = $('#words').attr('value');
+        $('[data-search-type]').click(function(e) {
+            if ($(this).attr('href') == '#') {
+                e.preventDefault();
 
-            $.ajax({
-                url: '/search/?type_of_search='+type_of_search+'&words='+keywords,
-                beforeSend: function() { $('.search-results').html('').addClass('loading'); }
-            }).done(function(html) {
-                $('.search-results').html(html);
-                tuleap.search.moveFacetsToSearchPane(type_of_search);
-            }).fail(function() {
-                $('.search-results').html(codendi.locales.search.error);
-            }).always(function() {
-                $('.search-results').removeClass('loading');
-                $('.search-bar input[name="type_of_search"]').attr('value', type_of_search);
-            });
+                var type_of_search = $(this).attr('data-search-type');
+                var param = $(this).attr('data-search-param');
+                var param_value = $(this).attr('data-search-param-value');
+                var keywords = $('#words').attr('value');
+
+                var additional_params = '';
+                if (param !== '' && param_value !== '') {
+                    additional_params = '&'+param+'='+param_value;
+                }
+
+                $.ajax({
+                    url: '/search/?type_of_search='+type_of_search+'&words='+keywords+additional_params,
+                    beforeSend: function() { $('.search-results').html('').addClass('loading'); }
+                }).done(function(html) {
+                    $('.search-results').html(html);
+                    tuleap.search.moveFacetsToSearchPane(type_of_search);
+                }).fail(function() {
+                    $('.search-results').html(codendi.locales.search.error);
+                }).always(function() {
+                    $('.search-results').removeClass('loading');
+                    $('.search-bar input[name="type_of_search"]').attr('value', type_of_search);
+                });
+            }
+        });
+    }
+
+    function toggleFacets() {
+        $('.search-panes').on('click', '.search-type', function() {
+            $(this).siblings('ul').toggle();
         });
     }
 
