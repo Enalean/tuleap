@@ -1,3 +1,6 @@
+Version 5.404 - Tuleap 7.2
+    * request #6903: Can submit a new artifact even if I doesn't have can
+
 Version 5.403 - Tuleap 7.2
     * story #6301: reply to a follow-up comment by email - user cannot update a comment by email if no perms
 

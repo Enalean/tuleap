@@ -6,9 +6,9 @@ Version 7.2 (Not Released Yet)
 	* request #6970: Clean the Augean stables (tracker v1 removal)
 
         == Plugins ==
-	* agiledashboard: 1.64
+	* agiledashboard: 1.65
 	* cardwall: 1.33
-	* tracker: 5.403
+	* tracker: 5.404
 	* git: 3.87
 
         == REST API ==

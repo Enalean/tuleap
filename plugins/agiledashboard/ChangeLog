@@ -1,3 +1,6 @@
+Version 1.65 - Tuleap 7.2
+    * request #6903: Can submit a new artifact even if I doesn't have can
+
 Version 1.64 - Tuleap 7.2
     * story #6933: add open/closed to milestones and submilestones
 
