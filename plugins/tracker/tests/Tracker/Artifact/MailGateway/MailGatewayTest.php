@@ -22,27 +22,46 @@ require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 class Tracker_Artifact_MailGateway_MailGatewayTest extends TuleapTestCase {
 
-    public function itCreatesANewChangeset(){
-        $artifact      = mock('Tracker_Artifact');
-        $user          = mock('PFUser');
-        $email         = 'whatever';
-        $raw_email     = '...';
-        $parser        = mock('Tracker_Artifact_MailGateway_Parser');
-        $logger        = mock('Logger');
-        $recipient     = new Tracker_Artifact_MailGateway_Recipient($user, $artifact, $email);
-        $body          = 'justaucorps';
-        $stripped_body = 'stripped justaucorps';
+    private $user;
+    private $mailgateway;
+    private $artifact;
+    private $raw_email     = '...';
+    private $body          = 'justaucorps';
+    private $stripped_body = 'stripped justaucorps';
+
+    public function setUp(){
+        $this->artifact      = mock('Tracker_Artifact');
+        $this->user          = mock('PFUser');
+        $email               = 'whatever';
+        $parser              = mock('Tracker_Artifact_MailGateway_Parser');
+        $logger              = mock('Logger');
+        $recipient           = new Tracker_Artifact_MailGateway_Recipient($this->user, $this->artifact, $email);
 
         $citation_stripper = stub('Tracker_Artifact_MailGateway_CitationStripper')
-            ->stripText($body)->returns($stripped_body);
+            ->stripText($this->body)
+            ->returns($this->stripped_body);
 
-        $incoming_message = new Tracker_Artifact_MailGateway_IncomingMessage($body, $recipient);
-        stub($parser)->parse($raw_email)->returns($incoming_message);
+        $incoming_message = new Tracker_Artifact_MailGateway_IncomingMessage($this->body, $recipient);
+        stub($parser)
+            ->parse($this->raw_email)
+            ->returns($incoming_message);
 
-        $mailgateway = new Tracker_Artifact_MailGateway_MailGateway($parser, $citation_stripper, $logger);
+        $this->mailgateway = new Tracker_Artifact_MailGateway_MailGateway($parser, $citation_stripper, $logger);
+    }
 
-        expect($artifact)->createNewChangeset(array(), $stripped_body, $user, '*', '*')->once();
+    public function itCreatesANewChangeset() {
+        stub($this->artifact)->userCanUpdate($this->user)->returns(true);
 
-        $mailgateway->process($raw_email);
+        expect($this->artifact)->createNewChangeset(array(), $this->stripped_body, $this->user, '*', '*')->once();
+
+        $this->mailgateway->process($this->raw_email);
+    }
+
+    public function itDoesNotCreateWhenUserCannotUpdate() {
+        stub($this->artifact)->userCanUpdate($this->user)->returns(false);
+
+        expect($this->artifact)->createNewChangeset()->never();
+
+        $this->mailgateway->process($this->raw_email);
     }
 }

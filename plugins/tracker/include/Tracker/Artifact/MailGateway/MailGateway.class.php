@@ -52,6 +52,11 @@ class Tracker_Artifact_MailGateway_MailGateway {
 
         $this->logger->debug("Receiving new follow-up comment from ". $user->getUserName());
 
+        if (! $artifact->userCanUpdate($user)) {
+            $this->logger->info("User ". $user->getUnixName() ." has no right to update the artifact #" . $artifact->getId());
+            return;
+        }
+
         $body = $this->citation_stripper->stripText($incoming_message->getBody());
 
         $artifact->createNewChangeset(
