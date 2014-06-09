@@ -740,22 +740,23 @@ class Tracker_Artifact_Changeset {
             $mail->getMail()->setMessageId($message_id);
         }
 
-        $hp          = Codendi_HTMLPurifier::instance();
-        $breadcrumbs = array();
-        $groupId     = $this->getTracker()->getGroupId();
-        $project     = $this->getTracker()->getProject();
-        $trackerId   = $this->getTracker()->getID();
-        $artifactId  = $this->getArtifact()->getID();
+        $hp                = Codendi_HTMLPurifier::instance();
+        $breadcrumbs       = array();
+        $tracker           = $this->getTracker();
+        $project           = $tracker->getProject();
+        $artifactId        = $this->getArtifact()->getID();
+        $project_unix_name = $project->getUnixName(true);
+        $tracker_name      = $tracker->getItemName();
 
-        $breadcrumbs[] = '<a href="'. get_server_url() .'/projects/'. $project->getUnixName(true) .'" />'. $project->getPublicName() .'</a>';
-        $breadcrumbs[] = '<a href="'. get_server_url() .'/plugins/tracker/?tracker='. (int)$trackerId .'" />'. $hp->purify(SimpleSanitizer::unsanitize($this->getTracker()->getName())) .'</a>';
+        $breadcrumbs[] = '<a href="'. get_server_url() .'/projects/'. $project_unix_name .'" />'. $project->getPublicName() .'</a>';
+        $breadcrumbs[] = '<a href="'. get_server_url() .'/plugins/tracker/?tracker='. (int)$tracker->getId() .'" />'. $hp->purify(SimpleSanitizer::unsanitize($this->getTracker()->getName())) .'</a>';
         $breadcrumbs[] = '<a href="'. get_server_url().'/plugins/tracker/?aid='.(int)$artifactId.'" />'. $hp->purify($this->getTracker()->getName().' #'.$artifactId) .'</a>';
 
         $mail->getLookAndFeelTemplate()->set('breadcrumbs', $breadcrumbs);
         $mail->getLookAndFeelTemplate()->set('title', $hp->purify($subject));
         $mail->setFrom($GLOBALS['sys_noreply']);
-        $mail->addAdditionalHeader("X-Codendi-Project",     $this->getArtifact()->getTracker()->getProject()->getUnixName());
-        $mail->addAdditionalHeader("X-Codendi-Tracker",     $this->getArtifact()->getTracker()->getItemName());
+        $mail->addAdditionalHeader("X-Codendi-Project",     $project->getUnixName());
+        $mail->addAdditionalHeader("X-Codendi-Tracker",     $tracker_name);
         $mail->addAdditionalHeader("X-Codendi-Artifact-ID", $this->getId());
 
         foreach($headers as $header) {
@@ -766,11 +767,29 @@ class Tracker_Artifact_Changeset {
         $mail->setSubject($subject);
 
         if ($htmlBody) {
+            $htmlBody .= $this->getHTMLBodyFilter($project_unix_name, $tracker_name);
             $mail->setBodyHTML($htmlBody);
         }
 
+        $txtBody .= $this->getTextBodyFilter($project_unix_name, $tracker_name);
         $mail->setBodyText($txtBody);
         $mail->send();
+    }
+
+    private function getTextBodyFilter($project_name, $tracker_name) {
+        $project_filter = '=PROJECT='.$project_name;
+        $tracker_filter = '=TRACKER='.$tracker_name;
+
+        return PHP_EOL . $project_filter . PHP_EOL . $tracker_filter . PHP_EOL;
+    }
+
+    private function getHTMLBodyFilter($project_name, $tracker_name) {
+        $filter  = '<div style="display: none !important;">';
+        $filter .= '=PROJECT=' . $project_name . '<br>';
+        $filter .= '=TRACKER=' . $tracker_name . '<br>';
+        $filter .= '</div>';
+
+        return $filter;
     }
 
     public function removeRecipientsThatMayReceiveAnEmptyNotification(array &$recipients) {
