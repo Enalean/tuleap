@@ -5,18 +5,41 @@ Ability to update artifact by replying to notifications.
 
 As of today this feature is not complete and should be manually installed/activated.
 
+Prerequisite
+------------
+
+This feature requires usage of postfix and sudo.
+
 Installation
 ------------
 
-> **Note:** Before doing these steps, please install, configure and use postfix
-
-Add `nobody` in sudoers with visudo (yum install sudo if necessary). See `etc/sudoers.d/tuleap-plugin-tracker`.
-
-You can now test (yum install mailx if necessary). Launch system check events and send an email:
-
-    $root> echo 123 | mail -s "Mail from root" forge__artifacts
-
-You should see debug traces in `/var/log/codendi/codendi_syslog`.
+* Add `nobody` in sudoers with visudo (yum install sudo if necessary).
+  See `etc/sudoers.d/tuleap-plugin-tracker`.
+* Then activate mail gateway feature in local.inc and wait for system check backend
+  event to be processed (less than 30 minutes). Check you system event monitor to
+  know when it is ok.
+* After that you can test the mail gateway, see next chapter.
 
 > **Note:** This assumes that your Tuleap is using legacy user/path (codendiadm,
 > /usr/share/codendi, …). You may need to adapt things to your setup.
+
+Usage
+-----
+
+To test the feature, you have to update an artifact in order to receive a
+notification. When you reply in your email client to the notification, the mail
+will be sent to forge__artifacts@your.domain.example.com. Send your comment and
+after waiting a little bit (the time the email is routed to your server and it is
+processed) you should see your answer in the follow-up comments in the artifact.
+
+Limitations/known bugs
+----------------------
+
+* We only take the text/plain alternative in the received mail. This means that
+  any formating (bold, …) will be lost.
+* It is not possible to send attachments or update fields of the artifact.
+* Citations will be removed (in order to not include the original notification),
+  but not the introductory sentence (On XXXX, Toto wrote:)
+
+If you encounter any issue (e.g: follow-up comment not added) you should see if
+there are relevant logs in `/var/log/maillog` or `/var/log/codendi/codendi_syslog`.
