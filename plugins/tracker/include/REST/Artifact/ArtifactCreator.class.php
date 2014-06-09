@@ -46,6 +46,9 @@ class Tracker_REST_Artifact_ArtifactCreator {
     public function create(PFUser $user, Tuleap\Tracker\REST\TrackerReference $tracker_reference, array $values) {
         $tracker     = $this->getTracker($tracker_reference);
         $fields_data = $this->artifact_validator->getFieldsDataOnCreate($values, $tracker);
+
+        $this->checkUserCanSubmit($user, $tracker);
+
         return $this->returnReferenceOrError(
             $this->artifact_factory->createArtifact($tracker, $fields_data, $user, '')
         );
@@ -69,6 +72,12 @@ class Tracker_REST_Artifact_ArtifactCreator {
                 throw new \Luracast\Restler\RestException(400, $GLOBALS['Response']->getRawFeedback());
             }
             throw new \Luracast\Restler\RestException(500, 'Unable to create artifact');
+        }
+    }
+
+    public function checkUserCanSubmit(PFUser $user, Tracker $tracker) {
+        if (! $tracker->userCanSubmitArtifact($user)) {
+            throw new \Luracast\Restler\RestException(403, $GLOBALS['Language']->getText('plugin_tracker', 'submit_at_least_one_field'));
         }
     }
 }

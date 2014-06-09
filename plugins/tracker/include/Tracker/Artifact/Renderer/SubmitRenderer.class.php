@@ -34,15 +34,6 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
         $this->layout = $layout;
     }
 
-    public function display(Codendi_Request $request, PFUser $current_user) {
-        if ($this->tracker->userCanSubmitArtifact($current_user)) {
-            parent::display($request, $current_user);
-        } else {
-            $GLOBALS['Response']->addFeedback(Feedback::WARN, $GLOBALS['Language']->getText('plugin_tracker', 'submit_no_anonymous'));
-            $GLOBALS['Response']->redirect($this->tracker->getUri());
-        }
-    }
-
     protected function fetchFormContent(Codendi_Request $request, PFUser $current_user) {
         return $this->fetchNewArtifactForm($request, $current_user);
     }
@@ -62,7 +53,7 @@ class Tracker_Artifact_SubmitRenderer extends Tracker_Artifact_SubmitAbstractRen
     private function fetchNewArtifactForm(Codendi_Request $request, PFUser $current_user) {
         $html = '';
 
-        $html .= $this->fetchFormElements($request, $current_user);
+        $html .= $this->fetchFormElements($request);
 
         $html .= '<div class="artifact-submit-button">';
         $html .= '<input type="hidden" id="submit-type" />';
