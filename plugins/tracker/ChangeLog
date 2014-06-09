@@ -1,3 +1,6 @@
+Version 5.403 - Tuleap 7.2
+    * story #6301: reply to a follow-up comment by email - user cannot update a comment by email if no perms
+
 Version 5.402 - Tuleap 7.2
     * story #6301: reply to a follow-up comment by email - Add possibility to remove blockquotes in html answer
 
