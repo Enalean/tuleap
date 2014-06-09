@@ -52,7 +52,7 @@ class Tracker_Artifact_MailGateway_MailGateway {
 
         $this->logger->debug("Receiving new follow-up comment from ". $user->getUserName());
 
-        $body = $this->citation_stripper->strip($incoming_message->getBody());
+        $body = $this->citation_stripper->stripText($incoming_message->getBody());
 
         $artifact->createNewChangeset(
             array(),

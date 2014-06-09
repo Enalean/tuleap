@@ -34,7 +34,7 @@ class Tracker_Artifact_MailGateway_MailGatewayTest extends TuleapTestCase {
         $stripped_body = 'stripped justaucorps';
 
         $citation_stripper = stub('Tracker_Artifact_MailGateway_CitationStripper')
-            ->strip($body)->returns($stripped_body);
+            ->stripText($body)->returns($stripped_body);
 
         $incoming_message = new Tracker_Artifact_MailGateway_IncomingMessage($body, $recipient);
         stub($parser)->parse($raw_email)->returns($incoming_message);
