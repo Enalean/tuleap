@@ -66,6 +66,7 @@ Requires: %{php_base}-pecl-json
 %else
 Requires: %{php_base}-jpgraph-%{PKG_NAME}
 Requires: %{php_base}-htmlpurifier >= 4.5
+Requires: %{php_base}-markdown
 %endif
 %endif
 Requires: %{php_base}-pecl-apc

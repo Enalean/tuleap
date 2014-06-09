@@ -43,7 +43,7 @@ class Git extends PluginController {
 
     /**
      * Lists all git-related permission types.
-     * 
+     *
      * @return array
      */
     public static function allPermissionTypes() {
@@ -69,22 +69,22 @@ class Git extends PluginController {
      * @var int
      */
     protected $groupId;
-    
+
     /**
      * @var GitRepositoryFactory
      */
     protected $factory;
-    
+
     /**
      * @var UserManager
      */
     private $userManager;
-    
+
     /**
      * @var ProjectManager
      */
     private $projectManager;
-    
+
     /**
      * @var GitPlugin
      */
@@ -252,16 +252,22 @@ class Git extends PluginController {
         $this->request->set('action', 'view');
         $this->request->set('group_id', $repository->getProjectId());
         $this->request->set('repo_id', $repository->getId());
-        if ($url->getParameters()) {
-            parse_str($url->getParameters(), $_GET);
-            parse_str($url->getParameters(), $_REQUEST);
-            $this->setNoHeaderIfNeeded();
-        }
+
+        $this->addUrlParametersToRequest($url);
     }
 
-    private function setNoHeaderIfNeeded() {
-        if (isset($_GET['noheader']) && $_GET['noheader'] == 1) {
-            $this->request->set('noheader', '1');
+    private function addUrlParametersToRequest(Git_URL $url) {
+        $url_parameters_as_string = $url->getParameters();
+        if (! $url_parameters_as_string) {
+            return;
+        }
+
+        parse_str($url_parameters_as_string, $_GET);
+        parse_str($url_parameters_as_string, $_REQUEST);
+
+        parse_str($url_parameters_as_string, $url_parameters);
+        foreach ($url_parameters as $key => $value) {
+            $this->request->set($key, $value);
         }
     }
 
@@ -303,7 +309,7 @@ class Git extends PluginController {
     public function setPermissionsManager(GitPermissionsManager $permissions_manager) {
         $this->permissions_manager = $permissions_manager;
     }
-    
+
     public function setProjectManager($projectManager) {
         $this->projectManager = $projectManager;
     }
@@ -315,19 +321,19 @@ class Git extends PluginController {
     public function setRequest(Codendi_Request $request) {
         $this->request = $request;
     }
-    
+
     public function setUserManager(UserManager $userManager) {
         $this->userManager = $userManager;
     }
-    
+
     public function setAction($action) {
         $this->action = $action;
     }
-    
+
     public function setGroupId($groupId) {
         $this->groupId = $groupId;
     }
-    
+
     public function setPermittedActions($permittedActions) {
         $this->permittedActions = $permittedActions;
     }
@@ -433,7 +439,7 @@ class Git extends PluginController {
         $this->_dispatchActionAndView($this->action, $repoId, $repositoryName, $user);
 
     }
-    
+
     public function _dispatchActionAndView($action, $repoId, $repositoryName, $user) {
         $pane = $this->request->get('pane');
         switch ($action) {
@@ -443,17 +449,17 @@ class Git extends PluginController {
                 break;
             #admin
             case 'view':
-                $this->addAction( 'getRepositoryDetails', array($this->groupId, $repoId) );                
+                $this->addAction( 'getRepositoryDetails', array($this->groupId, $repoId) );
                 $this->addView('view');
                 break;
-           
+
             #ADD REF
             case 'add':
                 $this->addAction('createReference', array($this->groupId, $repositoryName) );
                 $this->addView('index');
                 break;
              #DELETE a repository
-            case 'del':                
+            case 'del':
                 $this->addAction( 'deleteRepository', array($this->groupId, $repoId) );
                 $this->addView('index');
                 break;
@@ -780,7 +786,7 @@ class Git extends PluginController {
 
             #LIST
             default:
-               
+
                 $user_id = null;
                 $valid = new Valid_UInt('user');
                 $valid->required();
@@ -892,7 +898,7 @@ class Git extends PluginController {
                 $GLOBALS['Response']->addFeedback('info', $this->getText('feedback_event_delete', array($repository->getFullName())));
                 break;
             }
-            
+
         }
 
         if ($repoId !== 0) {
@@ -902,7 +908,7 @@ class Git extends PluginController {
             }
         }
     }
-    
+
     /**
      * Instantiate an action based on a given name.
      *
@@ -962,10 +968,10 @@ class Git extends PluginController {
     }
 
     protected function checkSynchronizerToken($url) {
-        $token = new CSRFSynchronizerToken($url);  
+        $token = new CSRFSynchronizerToken($url);
         $token->check();
-    } 
-    
+    }
+
     public function _doDispatchForkRepositories($request, $user) {
         $this->addAction('getProjectRepositoryList', array($this->groupId));
         $this->checkSynchronizerToken('/plugins/git/?group_id='. (int)$this->groupId .'&action=fork_repositories');
@@ -990,7 +996,7 @@ class Git extends PluginController {
         $scope        = GitRepository::REPO_SCOPE_INDIVIDUAL;
         $redirect_url = '/plugins/git/?group_id='. (int)$this->groupId .'&user='. (int)$user->getId();
         $this->addAction('fork', array($repos, $to_project, $path, $scope, $user, $GLOBALS['HTML'], $redirect_url, $forkPermissions));
-        
+
     }
 
     /**
@@ -1023,7 +1029,7 @@ class Git extends PluginController {
 
         return $repositories;
     }
-    
+
     /**
      * Add pushes' logs stuff
      *

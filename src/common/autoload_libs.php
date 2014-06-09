@@ -44,4 +44,33 @@ function autoload_zend($className) {
     }
 }
 spl_autoload_register('autoload_zend');
-?>
+
+
+function autoload_markdown($class) {
+    if (version_compare(phpversion(), '5.3', '<')) {
+        return;
+    }
+    static $classes = null;
+    if ($classes === null) {
+        $classes = array(
+            'michelf\\markdown'          => 'Markdown.php',
+            'michelf\\markdownextra'     => 'MarkdownExtra.php',
+            'michelf\\markdowninterface' => 'MarkdownInterface.php',
+        );
+    }
+    $cn = strtolower($class);
+    if (isset($classes[$cn])) {
+        $potential_paths = array(
+            ForgeConfig::get('markdown_path'),
+            '/usr/share/php-markdown',
+            '/usr/share/php', // php55 from remi repo has a different php path
+        );
+        foreach ($potential_paths as $path) {
+            if (is_dir($path)) {
+                require $path . '/Michelf/' . $classes[$cn];
+                break;
+            }
+        }
+    }
+}
+spl_autoload_register('autoload_markdown');
