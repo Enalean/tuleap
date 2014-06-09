@@ -1,3 +1,6 @@
+Version 5.405 - Tuleap 7.2
+    * request #7020: I can filter tracker v5 notifications (in body) by project unix name and/or tracker name
+
 Version 5.404 - Tuleap 7.2
     * request #6903: Can submit a new artifact even if I doesn't have can
 
