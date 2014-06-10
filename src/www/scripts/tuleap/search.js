@@ -49,9 +49,10 @@ var tuleap = tuleap || {};
 
                 var type_of_search = $(this).attr('data-search-type');
                 var keywords = $('#words').attr('value');
+                var self = this;
 
                 $.ajax({
-                    url: '/search/?type_of_search='+type_of_search+'&words='+keywords,
+                    url: getSearchUrl(self, type_of_search, keywords),
                     beforeSend: function() { $('.search-results').html('').addClass('loading'); }
                 }).done(function(html) {
                     $('.search-results').html(html);
@@ -62,6 +63,7 @@ var tuleap = tuleap || {};
                 }).always(function() {
                     $('.search-results').removeClass('loading');
                     $('.search-bar input[name="type_of_search"]').attr('value', type_of_search);
+                    resetAdditionnalInformations(type_of_search, self);
                 });
             }
         });
@@ -75,6 +77,51 @@ var tuleap = tuleap || {};
                 $(this).html($(this).html() + icon_html);
             }
         });
+    }
+
+    function getSearchUrl(element, type_of_search, keywords) {
+        var url = '/search/?type_of_search='+type_of_search+'&words='+keywords;
+        url     = enrichUrlIfNeeded(element, type_of_search, url);
+
+        return url;
+    }
+
+    function enrichUrlIfNeeded(element, type_of_search, url) {
+        if (type_of_search === 'tracker') {
+            url += '&atid=' + getArtifactTypeId(element);
+            url += '&group_id=' + getGroupId();
+        }
+
+        return url;
+    }
+
+    function getGroupId() {
+        return $('.search-bar input[name="group_id"]').attr('value');
+    }
+
+    function resetAdditionnalInformations(type_of_search, element) {
+        purgeAdditionnalInformations();
+        addAdditionnalInformations(type_of_search, element);
+    }
+
+    function purgeAdditionnalInformations() {
+        $('.search-bar .input-append input[name="atid"]').remove();
+    }
+
+    function addAdditionnalInformations(type_of_search, element) {
+        addArtifactTypeIdToSearchFieldIfNeeded(type_of_search, element);
+    }
+
+    function addArtifactTypeIdToSearchFieldIfNeeded(type_of_search, element) {
+        if (type_of_search === 'tracker') {
+            $('.search-bar .input-append').prepend(
+                "<input name='atid' type='hidden' value='" + getArtifactTypeId(element) + "'>"
+            );
+        }
+    }
+
+    function getArtifactTypeId(element) {
+        return $(element).attr('data-atid');
     }
 
     function toggleFacets() {

@@ -134,7 +134,11 @@ class Search_SearchTrackerV3 {
 
         foreach ($trackers_v3 as $tracker_v3) {
             $facets[] = array(
-                'title' => $tracker_v3->getName()
+                'title'                => $tracker_v3->getName(),
+                'extra-parameters'     => array(
+                    'key'   => 'data-atid',
+                    'value' => $tracker_v3->getID()
+                )
             );
         }
 
