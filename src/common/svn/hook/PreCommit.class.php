@@ -34,9 +34,19 @@ class SVN_Hook_PreCommit extends SVN_Hook {
      *
      * @param String $repository
      * @param String $commit_message
+     *
+     * @throws Exception
      */
     public function assertCommitMessageIsValid($repository, $commit_message) {
+        if ($this->optionDoesNotAllowEmptyCommitMessage() && $commit_message === '') {
+            throw new Exception('Commit message must not be empty');
+        }
+
         $project = $this->getProjectFromRepositoryPath($repository);
         $this->message_validator->assertCommitMessageIsValid($project, $commit_message);
+    }
+
+    private function optionDoesNotAllowEmptyCommitMessage() {
+        return ! Config::get('sys_allow_empty_svn_commit_message');
     }
 }
