@@ -25,6 +25,7 @@ var tuleap = tuleap || {};
         init : function() {
             switchSearchType();
             toggleFacets();
+            decorRedirectedSearch();
         },
 
         moveFacetsToSearchPane : function(type_of_search) {
@@ -62,6 +63,16 @@ var tuleap = tuleap || {};
                     $('.search-results').removeClass('loading');
                     $('.search-bar input[name="type_of_search"]').attr('value', type_of_search);
                 });
+            }
+        });
+    }
+
+    function decorRedirectedSearch() {
+        var icon_html = ' <i class="icon-external-link"></i>';
+
+        $('a.search-type, a.sub-facets').each(function() {
+            if ($(this).attr('href') != '#') {
+                $(this).html($(this).html() + icon_html);
             }
         });
     }
