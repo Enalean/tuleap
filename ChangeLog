@@ -4,6 +4,7 @@ Version 7.2 (Not Released Yet)
 
 	== Developers ==
 	* request #6970: Clean the Augean stables (tracker v1 removal)
+	* request #7025: Remove old programmer-guide
 
         == Plugins ==
 	* agiledashboard: 1.65
