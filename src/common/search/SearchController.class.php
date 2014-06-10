@@ -128,7 +128,8 @@ class Search_SearchController {
             $query->getTypeOfSearch(),
             $query->getWords(),
             $results,
-            $search_panes
+            $search_panes,
+            $query->getProject()
         );
     }
 

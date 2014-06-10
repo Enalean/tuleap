@@ -30,10 +30,16 @@ class Search_Presenter_SearchPresenter {
 
     public $search_panes = array();
 
-    public function __construct($type_of_search, $words, $search_result, array $search_panes) {
+    public $group_id = false;
+
+    public function __construct($type_of_search, $words, $search_result, array $search_panes, $project) {
         $this->type_of_search = $type_of_search;
         $this->words          = $words;
         $this->search_result  = $search_result;
         $this->search_panes   = $search_panes;
+
+        if (! $project->isError()) {
+            $this->group_id   = $project->getId();
+        }
     }
 }

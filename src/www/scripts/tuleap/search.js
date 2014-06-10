@@ -47,17 +47,10 @@ var tuleap = tuleap || {};
                 e.preventDefault();
 
                 var type_of_search = $(this).attr('data-search-type');
-                var param = $(this).attr('data-search-param');
-                var param_value = $(this).attr('data-search-param-value');
                 var keywords = $('#words').attr('value');
 
-                var additional_params = '';
-                if (param !== '' && param_value !== '') {
-                    additional_params = '&'+param+'='+param_value;
-                }
-
                 $.ajax({
-                    url: '/search/?type_of_search='+type_of_search+'&words='+keywords+additional_params,
+                    url: '/search/?type_of_search='+type_of_search+'&words='+keywords,
                     beforeSend: function() { $('.search-results').html('').addClass('loading'); }
                 }).done(function(html) {
                     $('.search-results').html(html);
