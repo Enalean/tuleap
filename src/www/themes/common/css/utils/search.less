@@ -185,16 +185,28 @@ body.search-page {
             .realname {
                 font-size: 1.6em;
                 line-height: 1.4em;
+                min-width: 500px;
 
                 &:hover {
                     text-decoration: none;
                 }
+
+                &.only {
+                    position: relative;
+                    top: 8px;
+                }
             }
 
             .username {
+                min-width: 500px;
                 margin: 0 0 5px;
                 color: #444;
                 font-size: 0.9em;
+
+                &.only {
+                    position: relative;
+                    top: 8px;
+                }
             }
         }
     }
