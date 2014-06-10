@@ -115,7 +115,13 @@ class Search_SearchController {
                     array(
                         new Search_SearchTypePresenter(
                             Search_SearchWiki::NAME,
-                            'Wiki'
+                            'Wiki',
+                            array(),
+                            $this->search_types[Search_SearchWiki::NAME]->getRedirectUrl(
+                                $query->getProject()->getId(),
+                                $this->search_types[Search_SearchWiki::NAME]->getSearchPageName($query),
+                                $query->getWords()
+                            )
                         ),
                     ),
                     $project_search_types
