@@ -57,7 +57,8 @@ class Search_SearchController {
             self::DEFAULT_SEARCH,
             '',
             '',
-            array($this->getSiteWidePane())
+            array($this->getSiteWidePane()),
+            null
         ));
         $GLOBALS['HTML']->footer(array('without_content' => true));
     }

@@ -38,7 +38,7 @@ class Search_Presenter_SearchPresenter {
         $this->search_result  = $search_result;
         $this->search_panes   = $search_panes;
 
-        if (! $project->isError()) {
+        if ($project && ! $project->isError()) {
             $this->group_id   = $project->getId();
         }
     }

@@ -55,8 +55,9 @@ var tuleap = tuleap || {};
                 }).done(function(html) {
                     $('.search-results').html(html);
                     tuleap.search.moveFacetsToSearchPane(type_of_search);
-                }).fail(function() {
-                    $('.search-results').html(codendi.locales.search.error);
+                }).fail(function(error) {
+                    codendi.feedback.clear();
+                    codendi.feedback.log('error', codendi.locales.search.error + ' : ' + error.responseText);
                 }).always(function() {
                     $('.search-results').removeClass('loading');
                     $('.search-bar input[name="type_of_search"]').attr('value', type_of_search);
