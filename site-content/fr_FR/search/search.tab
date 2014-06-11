@@ -30,3 +30,6 @@ search_index	artifact_summary	Résumé de l'artefact
 search_index	invalid_search	ERREUR - Recherche invalide
 search_index	prev_res	Résultats précédents
 search_index	next_res	Résultats suivants
+search_index	soft	Projets
+search_index	people	Personnes
+search_index	snippets	Snippets

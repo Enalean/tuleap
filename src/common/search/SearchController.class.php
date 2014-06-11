@@ -145,25 +145,26 @@ class Search_SearchController {
     }
 
     private function getSiteWidePane($site_search_types = array()) {
+        $search_types = array(
+            new Search_SearchTypePresenter(
+                Search_SearchProject::NAME,
+                $GLOBALS['Language']->getText('search_index', Search_SearchProject::NAME)
+            ),
+            new Search_SearchTypePresenter(
+                Search_SearchPeople::NAME,
+                $GLOBALS['Language']->getText('search_index', Search_SearchPeople::NAME)
+            ),
+        );
+        if (Config::get('sys_use_snippet') == 1) {
+            $search_types []= new Search_SearchTypePresenter(
+                Search_SearchSnippet::NAME,
+                $GLOBALS['Language']->getText('search_index', Search_SearchSnippet::NAME)
+            );
+        }
+
         return new Search_SearchPanePresenter(
             $GLOBALS['Language']->getText('search_index', 'site_wide_search'),
-            array_merge(
-                array(
-                    new Search_SearchTypePresenter(
-                        Search_SearchProject::NAME,
-                        Search_SearchProject::NAME
-                    ),
-                    new Search_SearchTypePresenter(
-                        Search_SearchPeople::NAME,
-                        Search_SearchPeople::NAME
-                    ),
-                    new Search_SearchTypePresenter(
-                        Search_SearchSnippet::NAME,
-                        Search_SearchSnippet::NAME
-                    ),
-                ),
-                $site_search_types
-            )
+            array_merge($search_types, $site_search_types)
         );
     }
 
