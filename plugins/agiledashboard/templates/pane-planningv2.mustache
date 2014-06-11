@@ -1,0 +1,42 @@
+{{=<% %>=}}
+<div ng-app="tuleap.planningApp" class="row-fluid">
+    <div ng-controller="SortCtrl">
+        <div class="backlog span6" ng-controller="MilestoneCtrl" ng-init="init(<% milestone_id %>)" ui-tree="treeOptions">
+            <div class="backlog-header">
+                <h2>To be planned <input type="text" placeholder="filter" class="input-small" ng-model="query.label"/></h2>
+            </div>
+            <ul class="backlog-content" ui-tree-nodes="" ng-model="toBePlanneds" infinite-scroll="loadMore()" infinite-scroll-distance="2">
+                <li class="backlog-item story" ng-repeat="toBePlanned in toBePlanneds | filter:query:strict track by toBePlanned.id" ui-tree-node>
+                    <div class="backlog-item-content" ui-tree-handle>{{ toBePlanned.label }}</div>
+                </li>
+            </ul>
+            <div ng-show="busy">Loading data…</div>
+        </div>
+        <div class="plan span6" ng-controller="SubmilestonesCtrl" ng-init="init(<% milestone_id %>)">
+            <div class="plan-header">
+                <h2>Sprints in Release 7.0
+                    <button class="btn btn-small">add sprint</button>
+                </h2>
+            </div>
+            <div class="plan-content">
+                <div class="plan-content-milestone" ng-repeat="submilestone in submilestones track by submilestone.id" ng-controller="SubmilestoneCtrl">
+                    <div class="plan-content-milestone-header" ng-click="init(submilestone.id)"><input type="checkbox" ng-model="collapse" />  {{ submilestone.label }}</div>
+                    <div class="plan-content-milestone-content" ng-show="collapse" ui-tree="treeOptions" id="submilestone-{{ submilestone.id }}">
+                        <div class="plan-content-milestone-content-header">Remaining effort: {{ submilestone.remaining_effort }}
+                            <!-- input type="text" class="input-small" ng-model="submilestone.remaining_effort" ng-change="change(submilestone)" /-->
+                        </div>
+                        <ul class="plan-content-milestone-content-items" ui-tree-nodes="" ng-model="planned">
+                            <li class="backlog-item story" ng-repeat="backlogItem in planned track by backlogItem.id" ui-tree-node>
+                                <div class="backlog-item-content" ui-tree-handle>{{ backlogItem.label }}</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link href="/plugins/agiledashboard/angular/vendor/angular-ui-tree/dist/angular-ui-tree.min.css" media="all" rel="stylesheet" type="text/css">
+<link href="/plugins/agiledashboard/angular/bin/assets/tuleap.planning-0.0.1.css" media="all" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="/plugins/agiledashboard/angular/bin/assets/tuleap.planning-0.0.1.js"></script>

@@ -445,6 +445,38 @@ class MilestoneResource {
     }
 
     /**
+     * Order content in a given milestone
+     *
+     * Order content in a given milestone
+     *
+     * @url PATCH {id}/content
+     *
+     * @param int $id             Id of the milestone
+     * @param int $moved_artifact Id of the artifact to move
+     * @param int $compared_to    Id of the artifact compared to
+     * @param string $direction   Direction of the move 'before' or 'after'
+     *
+     * @throw 400
+     * @throw 404
+     */
+    protected function patchContent($id, $moved_artifact, $compared_to, $direction = 'after') {
+        $dao = new \Tracker_Artifact_PriorityDao();
+
+        $bl = new \BackendLogger();
+        $bl->debug($moved_artifact);
+        $bl->debug($direction);
+        $bl->debug($compared_to);
+
+        if ($direction == 'before') {
+            $dao->moveArtifactBefore($moved_artifact, $compared_to);
+        } else {
+            $dao->moveArtifactAfter($moved_artifact, $compared_to);
+        }
+
+        $this->sendAllowHeaderForContent();
+    }
+
+    /**
      * Order backlog items
      *
      * Order backlog items in milestone

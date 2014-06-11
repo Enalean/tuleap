@@ -27,6 +27,14 @@ require_once 'common/dao/include/DataAccessObject.class.php';
  */
 class Tracker_Artifact_PriorityDao extends DataAccessObject {
 
+    /** @var Logger */
+    private $logger;
+
+    public function __construct($da = null) {
+        parent::__construct($da);
+        $this->logger = new BackendLogger();
+    }
+
     /**
      * Move an artifact before another one
      *
@@ -40,6 +48,7 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject {
      * @return bool true if success
      */
     public function moveArtifactBefore($artifact_id, $successor_id) {
+        $this->logger->debug("Start ". __METHOD__."($artifact_id, $successor_id)");
         if ($artifact_id == $successor_id) {
             throw new Tracker_Artifact_Exception_CannotRankWithMyself($artifact_id);
         }
@@ -47,9 +56,11 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject {
         $predecessor_id = $this->searchPredecessor($successor_id);
         if ($predecessor_id !== false && $predecessor_id != $artifact_id && $this->removeAndInsert($predecessor_id, $artifact_id)) {
             $this->da->commit();
+            $this->logger->debug("End ". __METHOD__."($artifact_id, $successor_id) 1");
             return true;
         }
         $this->da->rollback();
+        $this->logger->debug("End ". __METHOD__."($artifact_id, $successor_id) 0");
         return false;
     }
 
@@ -66,15 +77,18 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject {
      * @return bool true if success
      */
     public function moveArtifactAfter($artifact_id, $predecessor_id) {
+        $this->logger->debug("Start ". __METHOD__."($artifact_id, $predecessor_id)");
         if ($artifact_id == $predecessor_id) {
             throw new Tracker_Artifact_Exception_CannotRankWithMyself($artifact_id);
         }
         $this->da->startTransaction();
         if ($this->removeAndInsert($predecessor_id, $artifact_id)) {
             $this->da->commit();
+            $this->logger->debug("End ". __METHOD__."($artifact_id, $predecessor_id) 1");
             return true;
         }
         $this->da->rollback();
+        $this->logger->debug("End ". __METHOD__."($artifact_id, $predecessor_id) 0");
         return false;
     }
 

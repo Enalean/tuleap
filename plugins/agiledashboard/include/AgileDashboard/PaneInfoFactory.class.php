@@ -47,6 +47,7 @@ class AgileDashboard_PaneInfoFactory {
         $panes_info = array(
             $this->getContentPaneInfo($milestone),
             $this->getPlanningPaneInfo($milestone),
+            $this->getPlanningv2PaneInfo($milestone),
         );
 
         $this->buildAdditionnalPanesInfo($milestone, $panes_info);
@@ -65,6 +66,15 @@ class AgileDashboard_PaneInfoFactory {
         }
 
         return new AgileDashboard_Milestone_Pane_Planning_PlanningPaneInfo($milestone, $this->theme_path, $submilestone_tracker);
+    }
+
+    public function getPlanningv2PaneInfo(Planning_Milestone $milestone) {
+        $submilestone_tracker = $this->submilestone_finder->findFirstSubmilestoneTracker($milestone);
+        if (! $submilestone_tracker) {
+            return;
+        }
+
+        return new AgileDashboard_Milestone_Pane_Planningv2_Planningv2PaneInfo($milestone, $this->theme_path, $submilestone_tracker);
     }
 
     private function buildAdditionnalPanesInfo(Planning_Milestone $milestone, array &$panes_info) {

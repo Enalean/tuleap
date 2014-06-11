@@ -1,0 +1,43 @@
+/**
+ * This is the main application stylesheet. It should include or import all
+ * stylesheets used throughout the application as this is the only stylesheet in
+ * the Grunt configuration that is automatically processed.
+ */
+
+.backlog-item {
+    border: 1px solid green;
+    margin-bottom: 10px;
+    padding: 4px;
+}
+.backlog-item.story {
+    border-left-width: 8px;
+}
+.backlog-item.bug {
+    border-left: 8px solid red;
+}
+.plan-content-milestone {
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+}
+.plan-content-milestone-header {
+    border-bottom: 2px solid orange;
+    background: #fefefe;
+    padding: 4px;
+}
+.plan-content-milestone-content-header {
+    background: #ccc;
+    padding: 4px;
+}
+.plan-content-milestone-content-items {
+    padding: 4px;
+}
+
+/**
+ * Now that all app-wide styles have been applied, we can load the styles for
+ * all the submodules and components we are using. 
+ *
+ * TODO: In a later version of this boilerplate, I'd like to automate this.
+ */
+
+@import '../app/planning/submilestone/submilestone.less';
+

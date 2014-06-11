@@ -1,0 +1,13 @@
+{
+  "name": "tuleap.planning",
+  "version": "0.0.1",
+  "devDependencies": {
+    "angular": "~1.2",
+    "angular-mocks": "~1.2",
+    "bootstrap": "~3.1",
+    "ngInfiniteScroll": "1.0.0",
+    "angular-resource": "~1.2.18",
+    "angular-ui-tree": "~2.1.4"
+  },
+  "dependencies": {}
+}
