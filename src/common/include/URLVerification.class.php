@@ -307,14 +307,14 @@ class URLVerification {
         $allow_welcome_page=false;       // Allow access to welcome page 
         $allow_news_browsing=false;      // Allow restricted users to read/comment news, including for their project
         $allow_user_browsing=false;      // Allow restricted users to access other user's page (Developer Profile)
-        $allow_access_to_project_forums   = array(1); // Support project help forums are accessible through the 'Discussion Forums' link
-        $allow_access_to_project_trackers = array(1); // Support project trackers are used for support requests
-        $allow_access_to_project_docs     = array(1); // Support project documents and wiki (Note that the User Guide is always accessible)
-        $allow_access_to_project_mail     = array(1); // Support project mailing lists (Developers Channels)
-        $allow_access_to_project_frs      = array(1); // Support project file releases
-        $allow_access_to_project_refs     = array(1); // Support project references
-        $allow_access_to_project_news     = array(1); // Support project news
-       
+        $allow_access_to_project_forums      = array(1); // Support project help forums are accessible through the 'Discussion Forums' link
+        $allow_access_to_project_trackers    = array(1); // Support project trackers are used for support requests
+        $allow_access_to_project_docs        = array(1); // Support project documents and wiki (Note that the User Guide is always accessible)
+        $allow_access_to_project_mail        = array(1); // Support project mailing lists (Developers Channels)
+        $allow_access_to_project_frs         = array(1); // Support project file releases
+        $allow_access_to_project_refs        = array(1); // Support project references
+        $allow_access_to_project_news        = array(1); // Support project news
+        $allow_access_to_project_trackers_v5 = array(1); //Support project trackers v5 are used for support requests
         // List of fully public projects (same access for restricted and unrestricted users)
         $public_projects = array(); 
 
@@ -325,14 +325,15 @@ class URLVerification {
         // For convenient reasons, admin can customize those variables as arrays
         // but for performances reasons we prefer to use hashes (avoid in_array)
         // so we transform array(101) => array(101=>0)
-        $allow_access_to_project_forums   = array_flip($allow_access_to_project_forums); 
-        $allow_access_to_project_trackers = array_flip($allow_access_to_project_trackers);
-        $allow_access_to_project_docs     = array_flip($allow_access_to_project_docs);
-        $allow_access_to_project_mail     = array_flip($allow_access_to_project_mail);
-        $allow_access_to_project_frs      = array_flip($allow_access_to_project_frs);
-        $public_projects                  = array_flip($public_projects);
-        $allow_access_to_project_refs     = array_flip($allow_access_to_project_refs);
-        $allow_access_to_project_news     = array_flip($allow_access_to_project_news);
+        $allow_access_to_project_forums      = array_flip($allow_access_to_project_forums);
+        $allow_access_to_project_trackers    = array_flip($allow_access_to_project_trackers);
+        $allow_access_to_project_docs        = array_flip($allow_access_to_project_docs);
+        $allow_access_to_project_mail        = array_flip($allow_access_to_project_mail);
+        $allow_access_to_project_frs         = array_flip($allow_access_to_project_frs);
+        $public_projects                     = array_flip($public_projects);
+        $allow_access_to_project_refs        = array_flip($allow_access_to_project_refs);
+        $allow_access_to_project_news        = array_flip($allow_access_to_project_news);
+        $allow_access_to_project_trackers_v5 = array_flip($allow_access_to_project_trackers_v5);
 
         foreach ($forbidden_url as $str) {
             $pos = strpos($req_uri,$str);
@@ -387,6 +388,12 @@ class URLVerification {
         // Codendi trackers
         if (strpos($req_uri,'/tracker/') === 0 && 
             isset($allow_access_to_project_trackers[$group_id])) {
+            $user_is_allowed=true;
+        }
+
+        // Trackers v5
+        if (strpos($req_uri,'/plugins/tracker/') === 0 &&
+            isset($allow_access_to_project_trackers_v5[$group_id])) {
             $user_is_allowed=true;
         }
 
