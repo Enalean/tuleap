@@ -62,7 +62,7 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
     }
 
     /**
-     * Update title and description of a document
+     * Update title, description and custom textual metadata of a document
      *
      * @param Docman_Item $item The item
      */
@@ -70,6 +70,8 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
         $update_data = $this->client->initializeSetterData();
         $update_data = $this->client->appendSetterData($update_data, 'title',       $item->getTitle());
         $update_data = $this->client->appendSetterData($update_data, 'description', $item->getDescription());
+        $update_data = $this->updateCustomTextualMetadata($item, $update_data);
+
         $this->client->update($item->getid(), $update_data);
     }
 
@@ -127,5 +129,14 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
         }
 
         return $custom_metadata;
+    }
+
+    private function updateCustomTextualMetadata(Docman_Item $item, array $update_data) {
+        $custom_textual_metadata = $this->getCustomTextualMetadata($item);
+        foreach ($custom_textual_metadata as $metadata_name => $metadata_value) {
+            $update_data = $this->client->appendSetterData($update_data, $metadata_name, $metadata_value);
+        }
+
+        return $update_data;
     }
 }
