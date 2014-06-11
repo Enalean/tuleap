@@ -68,7 +68,7 @@ class fulltextsearchPlugin extends Plugin {
         $this->addHook(Event::LAYOUT_SEARCH_ENTRY);
         $this->addHook(Event::PLUGINS_POWERED_SEARCH);
         $this->addHook(Event::SEARCH_TYPES_PRESENTERS);
-        $this->addHook('search_type');
+        $this->addHook(Event::SEARCH_TYPE, 'search_type');
 
         return parent::getHooksAndCallbacks();
     }
@@ -107,11 +107,15 @@ class fulltextsearchPlugin extends Plugin {
         if ($this->getCurrentUser()->useLabFeatures()) {
             if ($params['type_of_search'] === self::SEARCH_TYPE) {
                 try {
-                    $this->getSearchController()->search();
-                    $this->getSearchController()->siteSearch($params);
+                    $search_controller = $this->getSearchController();
                 } catch (ElasticSearch_ClientNotFoundException $exception) {
-                    $this->clientIsNotFound($exception);
+                    $search_error_controller = $this->getSearchErrorController();
+                    $search_error_controller->clientNotFound($params);
+                    return;
                 }
+
+                $search_controller->search();
+                $search_controller->siteSearch($params);
             }
         }
     }
@@ -475,6 +479,10 @@ class fulltextsearchPlugin extends Plugin {
      */
     private function getSearchController($type = self::SEARCH_DOCMAN_TYPE) {
         return new FullTextSearch_Controller_Search($this->getRequest(), $this->getSearchClient($type));
+    }
+
+    private function getSearchErrorController() {
+        return new FullTextSearch_Controller_SearchError($this->getRequest());
     }
 
     /**
