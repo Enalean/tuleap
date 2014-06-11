@@ -39,11 +39,20 @@ class Search_SearchWiki {
             return;
         }
 
+        $GLOBALS['Response']->redirect($this->getRedirectUrl($query->getProject()->getId(), $this->getSearchPageName(), $query->getWords()));
+    }
+
+    public function getRedirectUrl($project_id, $page_name, $words) {
+        return '/wiki/index.php?group_id=' . $project_id . '&pagename=' . $page_name . '&s=' . urlencode($words);
+    }
+
+    public function getSearchPageName($query) {
         $search_page = self::SEARCH_PAGENAME_EN;
+
         if ($this->dao->searchLanguage($query->getProject()->getId()) == 'fr_FR') {
             $search_page = self::SEARCH_PAGENAME_FR;
         }
 
-        $GLOBALS['Response']->redirect('/wiki/index.php?group_id=' . $query->getProject()->getId() . '&pagename=' . $search_page . '&s=' . urlencode($query->getWords()));
+        return $search_page;
     }
 }
