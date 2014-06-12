@@ -2,7 +2,7 @@ Version 7.2 (Not Released Yet)
 	== Bug fix ==
 	* request #6945: Notice on forum message post
 
-	== Developers ==
+	== Features ==
 	* story #5756: search with nice interface (also story #7019)
 	* tasks #7034: Take in account new option in SVN
 	* tasks #7032: Add new entry for svn in local.inc
@@ -26,6 +26,9 @@ Version 7.2 (Not Released Yet)
 
     == Themes ==
 	* FlamingParrot: 1.11
+
+	== Developers ==
+	* Introduce docker container management for developers (tools/docker/dev_start.sh)
 
 Version 7.1 (Wednesday, May 28th 2014)
 
