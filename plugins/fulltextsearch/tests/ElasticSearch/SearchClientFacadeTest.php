@@ -28,8 +28,21 @@ class ElasticSearch_SearchClientFacadeTest extends TuleapTestCase {
         $this->user                = mock('PFUser');
         $project_manager           = mock('ProjectManager');
         $this->elasticsearchclient = mock('ElasticSearchClient');
-        $this->client              = new ElasticSearch_SearchClientFacade($this->elasticsearchclient, 'whatever', $project_manager);
-        $this->admin_client        = new ElasticSearch_SearchAdminClientFacade($this->elasticsearchclient, 'whatever', $project_manager);
+        $result_factory            = new ElasticSearch_1_2_ResultFactory($project_manager);
+
+        $this->client = new ElasticSearch_SearchClientFacade(
+            $this->elasticsearchclient,
+            'whatever',
+            $project_manager,
+            $result_factory
+        );
+
+        $this->admin_client = new ElasticSearch_SearchAdminClientFacade(
+            $this->elasticsearchclient,
+            'whatever',
+            $project_manager,
+            $result_factory
+        );
     }
 
     public function itAsksToElasticsearchToReturnOnlyResultsWithMatchingPermissions() {
