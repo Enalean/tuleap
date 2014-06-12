@@ -72,7 +72,7 @@ class TokenResource {
                 $this->getTokenManager()->generateTokenForUser($user)
             );
             return $token;
-        } catch(User_InvalidPasswordWithUserException $exception) {
+        } catch(User_LoginException $exception) {
             throw new RestException(401, $exception->getMessage());
         } catch(Exception $exception) {
             throw new RestException(500, $exception->getMessage());
