@@ -32,9 +32,9 @@ class FieldNotEmpty_BaseTest extends TuleapTestCase {
 
         $this->field   = mock('Tracker_FormElement_Field_Selectbox');
         stub($this->field)->getId()->returns(123);
-        stub($this->field)->isEmpty($this->not_empty_data)->returns(false);
-        stub($this->field)->isEmpty($this->empty_data)->returns(true);
-        stub($this->field)->isEmpty(null)->returns(true);
+        stub($this->field)->isEmpty($this->not_empty_data, '*')->returns(false);
+        stub($this->field)->isEmpty($this->empty_data, '*')->returns(true);
+        stub($this->field)->isEmpty(null, '*')->returns(true);
         stub($factory)->getUsedFormElementById(123)->returns($this->field);
 
         Tracker_FormElementFactory::setInstance($factory);

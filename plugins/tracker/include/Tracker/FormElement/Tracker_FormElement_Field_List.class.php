@@ -1279,14 +1279,14 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     public function isValidRegardingRequiredProperty(Tracker_Artifact $artifact, $value) {
         $this->has_errors = false;
 
-        if ($this->isEmpty($value) && $this->isRequired()) {
+        if ($this->isEmpty($value, $artifact) && $this->isRequired()) {
             $this->addRequiredError();
         }
 
         return ! $this->has_errors;
     }
 
-    public function isEmpty($value) {
+    public function isEmpty($value, Tracker_Artifact $artifact) {
         return $this->isNone($value);
     }
 

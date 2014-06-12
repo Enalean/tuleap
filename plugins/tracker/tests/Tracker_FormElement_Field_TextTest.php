@@ -195,12 +195,14 @@ class Tracker_FormElement_Field_TextTest extends TuleapTestCase {
      * @see https://tuleap.net/plugins/tracker?aid=6435
      */
     function itIsEmptyWhenThereIsNoContent() {
-        $field = aTextField()->build();
+        $artifact = new MockTracker_Artifact();
+        $field    = aTextField()->build();
         $this->assertTrue($field->isEmpty(
             array(
                 'format' => 'text',
                 'content' => ''
-            )
+            ),
+            $artifact
         ));
     }
 
@@ -208,12 +210,14 @@ class Tracker_FormElement_Field_TextTest extends TuleapTestCase {
      * @see https://tuleap.net/plugins/tracker?aid=6435
      */
     function itIsEmptyWhenThereIsOnlyWhitespaces() {
-        $field = aTextField()->build();
+        $artifact = new MockTracker_Artifact();
+        $field    = aTextField()->build();
         $this->assertTrue($field->isEmpty(
             array(
                 'format' => 'text',
                 'content' => '   '
-            )
+            ),
+            $artifact
         ));
     }
 
@@ -221,12 +225,14 @@ class Tracker_FormElement_Field_TextTest extends TuleapTestCase {
      * @see https://tuleap.net/plugins/tracker?aid=6435
      */
     function itIsNotEmptyWhenThereIsContent() {
-        $field = aTextField()->build();
+        $artifact = new MockTracker_Artifact();
+        $field    = aTextField()->build();
         $this->assertFalse($field->isEmpty(
             array(
                 'format' => 'text',
                 'content' => 'bla'
-            )
+            ),
+            $artifact
         ));
     }
 }

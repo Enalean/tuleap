@@ -22,7 +22,7 @@ require_once('bootstrap.php');
 Mock::generatePartial(
     'Tracker_FormElement_Field_File',
     'Tracker_FormElement_Field_FileTestVersion', 
-    array('getValueDao', 'getFileInfoDao', 'getSubmittedInfoFromFILES', 'getId', 'isRequired', 'getFileInfo'));
+    array('getValueDao', 'getFileInfoDao', 'getSubmittedInfoFromFILES', 'getId', 'isRequired', 'getFileInfo', 'isPreviousChangesetEmpty', 'checkThatAtLeastOneFileIsUploaded'));
 
 Mock::generate('Tracker_Artifact_ChangesetValue_File');
 
@@ -641,6 +641,78 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
         $f = new Tracker_FormElement_Field_FileTestVersion();
         $f->setReturnValue('getId', 123);
         $this->assertEqual($f->getRootPath(), Config::get('sys_data_dir') .'/tracker/123');
+    }
+
+    public function itReturnsTrueWhenTheFieldIsEmptyAtFieldUpdateAndHasAnEmptyPreviousChangeset(){
+        $formelement_field_file = new Tracker_FormElement_Field_FileTestVersion();
+        $submitted_value = array(
+            array(
+                'description' =>  '',
+                'name'        =>  '',
+                'type'        =>  '',
+                'tmp_name'    =>  '',
+                'error'       =>  UPLOAD_ERR_NO_FILE,
+                'size'        =>  0,
+            )
+        );
+
+        $files_in_previous_changeset = array();
+
+        $formelement_field_file->setReturnValue('checkThatAtLeastOneFileIsUploaded', false);
+        $formelement_field_file->setReturnValue('isPreviousChangesetEmpty', true);
+
+        $this->assertTrue($formelement_field_file->isEmpty($submitted_value, $files_in_previous_changeset));
+    }
+
+    public function itReturnsFalseWhenTheFieldIsEmptyAtFieldUpdateAndHasAPreviousChangeset(){
+        $formelement_field_file = new Tracker_FormElement_Field_FileTestVersion();
+        $submitted_value = array(
+            array(
+                'description' =>  '',
+                'name'        =>  '',
+                'type'        =>  '',
+                'tmp_name'    =>  '',
+                'error'       =>  UPLOAD_ERR_NO_FILE,
+                'size'        =>  0,
+            )
+        );
+
+        $file = new Tracker_FileInfo(123, '*', '*', 'Description 123', 'file123.txt', 123, 'text/xml');
+        $changesets = mock('Tracker_Artifact_ChangesetValue_File');
+        stub($changesets)->getFiles()->returns(array($file));
+        $artifact = mock('Tracker_Artifact');
+        stub($artifact)->getLastChangeset()->returns($changesets);
+
+        $formelement_field_file->setReturnValue('checkThatAtLeastOneFileIsUploaded', false);
+        $formelement_field_file->setReturnValue('isPreviousChangesetEmpty', false);
+
+        $this->assertFalse($formelement_field_file->isEmpty($submitted_value, $artifact));
+    }
+
+    public function itReturnsTrueWhenTheFieldIsEmptyAtFieldUpdateAndHasAPreviousChangesetWhichIsDeleted(){
+        $formelement_field_file = new Tracker_FormElement_Field_FileTestVersion();
+        $submitted_value = array(
+            'delete' => array(123),
+            array(
+                'description' =>  '',
+                'name'        =>  '',
+                'type'        =>  '',
+                'tmp_name'    =>  '',
+                'error'       =>  UPLOAD_ERR_NO_FILE,
+                'size'        =>  0,
+            )
+        );
+
+        $file = new Tracker_FileInfo(123, '*', '*', 'Description 123', 'file123.txt', 123, 'text/xml');
+        $changesets = mock('Tracker_Artifact_ChangesetValue_File');
+        stub($changesets)->getFiles()->returns(array($file));
+        $artifact = mock('Tracker_Artifact');
+        stub($artifact)->getLastChangeset()->returns($changesets);
+
+        $formelement_field_file->setReturnValue('checkThatAtLeastOneFileIsUploaded', false);
+        $formelement_field_file->setReturnValue('isPreviousChangesetEmpty', true);
+
+        $this->assertTrue($formelement_field_file->isEmpty($submitted_value, $artifact));
     }
 }
 

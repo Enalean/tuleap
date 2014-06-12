@@ -546,7 +546,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
         return $this->getFieldData($csv_value);
     }
 
-    public function isEmpty(array $value) {
+    public function isEmpty(array $value, Tracker_Artifact $artifact) {
         if (trim($value['content']) == '') {
             return true;
         }
