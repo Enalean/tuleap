@@ -3,6 +3,7 @@ Version 7.2 (Not Released Yet)
 	* request #6945: Notice on forum message post
 
 	== Developers ==
+	* tasks #7034: Take in account new option in SVN
 	* tasks #7032: Add new entry for svn in local.inc
 	* request #6970: Clean the Augean stables (tracker v1 removal)
 	* request #7025: Remove old programmer-guide
