@@ -35,7 +35,7 @@ class ElasticSearch_SearchResultCollection implements FullTextSearch_SearchResul
         }
         if (isset($result['hits']['hits'])) {
             foreach ($result['hits']['hits'] as $hit) {
-                $project = $project_manager->getProject($hit['fields']['group_id']);
+                $project = $project_manager->getProject($hit['fields']['group_id'][0]);
                 if ($project->isError()) {
                     $this->nb_documents_found--;
                 } else {
