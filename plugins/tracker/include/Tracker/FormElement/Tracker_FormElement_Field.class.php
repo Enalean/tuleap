@@ -965,7 +965,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return (! $this->has_errors);
     }
 
-    public function isEmpty($value) {
+    public function isEmpty($value, Tracker_Artifact $artifact) {
         return ($value === null || $value === '');
     }
 

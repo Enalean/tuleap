@@ -127,7 +127,8 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
         }
 
         $value    = $this->getFieldValue($fields_data,  $artifact, $field);
-        $is_valid = ! $field->isEmpty($value);
+
+        $is_valid = ! $field->isEmpty($value, $artifact);
 
         if (! $is_valid) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('workflow_condition', 'invalid_condition', $field->getLabel(). ' ('. $field->getName() .')'));
