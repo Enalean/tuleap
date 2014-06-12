@@ -2189,8 +2189,9 @@ class Layout extends Response {
         );
 
         $search_entries = $this->forceSelectedOption($search_entries);
+        $selected_entry = $this->getSelectedOption($search_entries);
 
-        return array($search_entries, $hidden);
+        return array($search_entries, $selected_entry, $hidden);
     }
 
     private function forceSelectedOption(array $search_entries) {
@@ -2201,6 +2202,18 @@ class Layout extends Response {
         }
 
         return $search_entries;
+    }
+
+    private function getSelectedOption(array $search_entries) {
+        $selected_option = $search_entries[0];
+
+        foreach ($search_entries as $key => $search_entry) {
+            if ($search_entry['selected']) {
+                return $search_entries[$key];
+            }
+        }
+
+        return $selected_option;
     }
 
     public function getSearchBox() {
@@ -2215,7 +2228,7 @@ class Layout extends Response {
             $exact = 0;
         }
 
-        list($search_entries, $hidden_fields) = $this->getSearchEntries();
+        list($search_entries, $selected_entry, $hidden_fields) = $this->getSearchEntries();
 
         $output = '
                 <form action="/search/" method="post"><table style="text-align:left;float:right"><tr style="vertical-align:top;"><td>

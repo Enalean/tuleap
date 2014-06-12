@@ -16,3 +16,7 @@ codendi.locales['files'] = {
 codendi.locales['svn_accessfile_history'] = {
     empty: 'Cette version est vide'
 };
+
+codendi.locales['search'] = {
+    error: 'Une erreur est survenue'
+};

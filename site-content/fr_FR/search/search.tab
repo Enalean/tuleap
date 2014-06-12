@@ -6,9 +6,10 @@
 # Script: SF/www/search/index.php
 #
 search_index	search	Recherche
+search_index	site_wide_search	Recherche forge
+search_index	project_wide_search	Recherche dans $1
 search_index	at_least_3_ch	Le mot-clé recherché doit au moins avoir 3 caractères
-search_index	enter_s_words	Saisissez les mots à rechercher dans le champs ci-dessus
-search_index	no_match_found	Aucune correspondance pour $1
+search_index	no_match_found	Aucune correspondance pour <span>$1</span>
 search_index	search_res	Résultats de la recherche pour $1 ($2 résultats)
 search_index	project_name	Nom du projet
 search_index	description	Description
@@ -29,3 +30,6 @@ search_index	artifact_summary	Résumé de l'artefact
 search_index	invalid_search	ERREUR - Recherche invalide
 search_index	prev_res	Résultats précédents
 search_index	next_res	Résultats suivants
+search_index	soft	Projets
+search_index	people	Personnes
+search_index	snippets	Snippets

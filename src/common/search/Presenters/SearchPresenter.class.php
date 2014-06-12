@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,14 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+class Search_Presenter_SearchPresenter {
 
-class FullTextSearch_Presenter_SearchOnlyResults extends FullTextSearch_Presenter_Search {
-    public $template;
+    public $template = 'site-search';
 
-    public function __construct(FullTextSearch_SearchResultCollection $query_result) {
-        $this->query_result = $query_result;
-        $this->template = 'search-results-'.$this->query_result->type;
-        parent::__construct(null, null, $query_result);
+    public $type_of_search;
+
+    public $words;
+
+    public $search_result;
+
+    public $search_panes = array();
+
+    public $group_id = false;
+
+    public function __construct($type_of_search, $words, $search_result, array $search_panes, $project) {
+        $this->type_of_search = $type_of_search;
+        $this->words          = $words;
+        $this->search_result  = $search_result;
+        $this->search_panes   = $search_panes;
+
+        if ($project && ! $project->isError()) {
+            $this->group_id   = $project->getId();
+        }
     }
 }
-?>

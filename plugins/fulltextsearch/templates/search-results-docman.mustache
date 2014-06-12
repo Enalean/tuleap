@@ -1,18 +1,20 @@
-{{#has_results}}
-    <ol class="fts_results">
-    {{#search_results}}
-        <li class="fts_result">
-            <div class="fts_title">
-                <a href="{{url}}">{{item_title}}</a>
-            </div>
-            {{#has_highlight}}
-                <p class="fts_highlight">{{{highlight}}}...</p>
-            {{/has_highlight}}
-            <div class="fts_metadata">Project: {{project_name}}</div>
-            {{#display_permissions}}
-            <div class="fts_metadata">Permissions: {{permissions}}</div>
-            {{/display_permissions}}
+{{# has_results}}
+    <p class="results-count">{{ result_count }}</p>
+
+    <ul class="fts_results">
+    {{# search_results }}
+        <li class="result">
+            <a class="title" href="{{ url }}">{{ item_title }}</a>
+            <p class="subtitle">Project: {{ project_name }}<p>
+
+            {{# display_permissions }}
+                <p class="subtitle">Permissions: {{ permissions }}</p>
+            {{/ display_permissions }}
+
+            {{# has_highlight }}
+                <p class="description">{{{ highlight }}}...</p>
+            {{/ has_highlight}}
         </li>
-    {{/search_results}}
-    </ol>
-{{/has_results}}
+    {{/ search_results }}
+    </ul>
+{{/ has_results }}

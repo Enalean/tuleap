@@ -23,9 +23,16 @@ class FullTextSearch_Presenter_ErrorNoSearch {
     public $template = 'error-nosearch';
 
     public $error_message = '';
+
+    public $error_category;
+
+    public $error_intro;
     
     public function __construct($error_message) {
         $this->error_message = $error_message;
+
+        $this->error_category = $GLOBALS['Language']->getText('plugin_fulltextsearch', 'error_category');
+        $this->error_intro    = $GLOBALS['Language']->getText('plugin_fulltextsearch', 'error_intro');
     }
 }
 ?>

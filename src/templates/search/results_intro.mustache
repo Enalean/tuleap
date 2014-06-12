@@ -1,0 +1,7 @@
+{{# has_results }}
+    <p class="results-count">{{ search_result_title }}</p>
+{{/ has_results }}
+
+{{^ has_results }}
+    <p class="no-result"><i class="icon-frown"></i> {{{ no_match_found_string }}}</p>
+{{/ has_results }}

@@ -3,8 +3,12 @@ plugin_fulltextsearch	plugin_description	Recherche en texte intégral dans Tulea
 
 plugin_fulltextsearch	client_library_not_found	Librairie cliente requise
 
+plugin_fulltextsearch	accordion_type	Recherche full text
 plugin_fulltextsearch	result_count	$1 résultats ($2 seconds)
 
 plugin_fulltextsearch	followups_search	Recerche dans les commentaires
 plugin_fulltextsearch	search_followup_comments	Rechercher dans les commentaires
 plugin_fulltextsearch	followup_full_text_warning_search	<strong>Uniquement une partie des commentaires a été indexée pour cet outil de suivi.</strong><br>La recherche est encore en beta.
+plugin_fulltextsearch	error_category	Recherche intégral
+plugin_fulltextsearch	error_intro	Impossible d'effectuer la recherche
+plugin_fulltextsearch	client_not_found	"Client not found at specified path." Veuillez contacter les administrateurs du site.
