@@ -43,6 +43,10 @@ class Tracker_FormElement_Field_List_OpenValue extends Tracker_FormElement_Field
     public function getUsername() {
         return $this->getLabel();
     }
+
+    public function getXMLExportLabel() {
+        return $this->label;
+    }
 }
 
 ?>

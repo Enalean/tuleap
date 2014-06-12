@@ -1,3 +1,6 @@
+Version 1.33 - Tuleap 7.2
+    * story #6933: add open/closed to milestones and submilestones
+
 Version 1.32 - Tuleap 7.1
     * request #6897: AD cardwall is broken when the sidebar is collapsed and you come from the fullscreen view
 

@@ -104,6 +104,17 @@
     </choice>
     <data type="string"/>
   </define>
+  <define name="open_list_content">
+    <optional>
+      <attribute name="format">
+        <choice>
+          <value>label</value>
+          <value>id</value>
+        </choice>
+      </attribute>
+    </optional>
+    <data type="string"/>
+  </define>
   <define name="field_content">
     <attribute name="field_name">
       <data type="string"/>
@@ -119,6 +130,8 @@
       <ref name="field_user_list"/>
       <ref name="field_ugroup_list"/>
       <ref name="field_open_list_user"/>
+      <ref name="field_open_list_ugroup"/>
+      <ref name="field_open_list_static"/>
       <ref name="field_perms_on_artifact"/>
     </choice>
   </define>
@@ -232,11 +245,37 @@
       <value>open_list</value>
     </attribute>
     <attribute name="bind">
-      <value>user</value>
+      <value>users</value>
     </attribute>
     <zeroOrMore>
       <element name="value">
-        <ref name="user_content"/>
+        <ref name="open_list_content"/>
+      </element>
+    </zeroOrMore>
+  </define>
+  <define name="field_open_list_ugroup">
+    <attribute name="type">
+      <value>open_list</value>
+    </attribute>
+    <attribute name="bind">
+      <value>ugroups</value>
+    </attribute>
+    <zeroOrMore>
+      <element name="value">
+        <ref name="open_list_content"/>
+      </element>
+    </zeroOrMore>
+  </define>
+  <define name="field_open_list_static">
+    <attribute name="type">
+      <value>open_list</value>
+    </attribute>
+    <attribute name="bind">
+      <value>static</value>
+    </attribute>
+    <zeroOrMore>
+      <element name="value">
+        <ref name="open_list_content"/>
       </element>
     </zeroOrMore>
   </define>

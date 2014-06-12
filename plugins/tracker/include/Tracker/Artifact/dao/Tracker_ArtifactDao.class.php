@@ -568,7 +568,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
      */
     public function getArtifactsStatusByIds(array $artifact_ids) {
         $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
-        $sql = "SELECT A.id, IF(CVL.bindvalue_id IS NULL, '".self::STATUS_CLOSED."', '".self::STATUS_OPEN."') AS status
+        $sql = "SELECT A.id, IF(CVL.bindvalue_id IS NULL, '".Tracker_Artifact::STATUS_CLOSED."', '".Tracker_Artifact::STATUS_OPEN."') AS status
                 FROM tracker_artifact AS A
                 LEFT JOIN (
                     tracker_changeset_value AS CV

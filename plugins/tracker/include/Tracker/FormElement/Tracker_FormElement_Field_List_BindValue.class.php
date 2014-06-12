@@ -24,7 +24,9 @@ abstract class Tracker_FormElement_Field_List_BindValue extends Tracker_FormElem
     public function getJsonId() {
         return 'b'. $this->getId();
     }
-    
-}
 
-?>
+    public function getXMLExportLabel() {
+        return $this->getLabel();
+    }
+
+}

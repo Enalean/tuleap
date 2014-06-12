@@ -409,11 +409,12 @@ class ArtifactXMLExporter_CCTest extends ArtifactXMLExporter_BaseTest {
         switch($field_change['field_name']) {
             case 'cc':
                 $this->assertEqual((string)$field_change['type'], 'open_list');
-                $this->assertEqual((string)$field_change['bind'], 'user');
+                $this->assertEqual((string)$field_change['bind'], 'users');
                 $this->assertEqual((string)$field_change->value[0], 'john@doe.org');
-                $this->assertEqual((string)$field_change->value[0]['format'], 'email');
                 $this->assertEqual((string)$field_change->value[1], 'jeanjean');
-                $this->assertEqual((string)$field_change->value[1]['format'], 'username');
+
+                $this->assertFalse(isset($field_change->value[0]['format']));
+                $this->assertFalse(isset($field_change->value[1]['format']));
                 break;
             case 'summary':
                 // Ok but we don't care

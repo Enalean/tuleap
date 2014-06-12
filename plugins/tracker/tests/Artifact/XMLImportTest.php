@@ -46,7 +46,11 @@ abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->tracker  = aTracker()->withId($this->tracker_id)->build();
+
+        $this->tracker = partial_mock('Tracker', array('getWorkflow', 'getId'));
+        stub($this->tracker)->getId()->returns($this->tracker_id);
+        stub($this->tracker)->getWorkflow()->returns(mock('Workflow'));
+
         $this->artifact_creator      = mock('Tracker_ArtifactCreator');
         $this->new_changeset_creator = mock('Tracker_Artifact_Changeset_NewChangesetAtGivenDateCreator');
 
@@ -854,8 +858,8 @@ class Tracker_Artifact_XMLImport_CCListTest extends Tracker_Artifact_XMLImportBa
                   <submitted_by format="username">john_doe</submitted_by>
                   <submitted_on format="ISO8601">2014-01-15T10:38:06+01:00</submitted_on>
                   <field_change type="open_list" field_name="cc" bind="user">
-                    <value format="username">homer</value>
-                    <value format="username">jeanjean</value>
+                    <value>homer</value>
+                    <value>jeanjean</value>
                   </field_change>
                 </changeset>
               </artifact>
@@ -863,16 +867,19 @@ class Tracker_Artifact_XMLImport_CCListTest extends Tracker_Artifact_XMLImportBa
     }
 
     public function itDelegatesOpenListComputationToField() {
-        expect($this->open_list_field)->getFieldData('homer,jeanjean')->once();
+        expect($this->open_list_field)->getFieldData()->count(2);
+        expect($this->open_list_field)->getFieldData('homer')->at(0);
+        expect($this->open_list_field)->getFieldData('jeanjean')->at(1);
 
         $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
     }
 
     public function itCreatesArtifactWithCCFieldData() {
-        stub($this->open_list_field)->getFieldData()->returns('!homer,!jeanjean');
+        stub($this->open_list_field)->getFieldData('homer')->returns('!112');
+        stub($this->open_list_field)->getFieldData('jeanjean')->returns('!113');
 
         $data = array(
-            $this->cc_field_id => '!homer,!jeanjean'
+            $this->cc_field_id => '!112,!113'
         );
         expect($this->artifact_creator)->create('*', $data, '*', '*', '*', '*')->once();
 

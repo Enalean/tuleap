@@ -1,3 +1,24 @@
+Version 7.2 (Not Released Yet)
+	== Bug fix ==
+	* request #6945: Notice on forum message post
+
+	== Developers ==
+	* tasks #7034: Take in account new option in SVN
+	* tasks #7032: Add new entry for svn in local.inc
+	* request #6970: Clean the Augean stables (tracker v1 removal)
+	* request #7025: Remove old programmer-guide
+	* request #7021: Now possible to give access to trackers to restricted users
+
+        == Plugins ==
+	* agiledashboard: 1.65
+	* cardwall: 1.33
+	* tracker: 5.405
+	* git: 3.87
+
+        == REST API ==
+	* story #6934 - REST: route /users/:id GET
+        * story #6301 - reply to a follow-up comment by email
+
 Version 7.1 (Wednesday, May 28th 2014)
 
 	== Enhancement ==

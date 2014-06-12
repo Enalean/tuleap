@@ -48,6 +48,10 @@ grammar {
         ),
         xsd:string
 
+    open_list_content =
+        attribute format { "label" | "id" }?,
+        xsd:string
+
     field_content =
         attribute field_name { xsd:string },
         ( field_string
@@ -60,6 +64,8 @@ grammar {
             | field_user_list
             | field_ugroup_list
             | field_open_list_user
+            | field_open_list_ugroup
+            | field_open_list_static
             | field_perms_on_artifact
         )
 
@@ -112,8 +118,18 @@ grammar {
 
     field_open_list_user =
         attribute type { "open_list" },
-        attribute bind { "user" },
-        element value { user_content }*
+        attribute bind { "users" },
+        element value { open_list_content }*
+
+    field_open_list_ugroup =
+        attribute type { "open_list" },
+        attribute bind { "ugroups" },
+        element value { open_list_content }*
+
+    field_open_list_static =
+        attribute type { "open_list" },
+        attribute bind { "static" },
+        element value { open_list_content }*
 
     field_perms_on_artifact =
         attribute type { "permissions_on_artifact" },

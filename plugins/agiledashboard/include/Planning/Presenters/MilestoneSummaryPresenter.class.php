@@ -23,8 +23,8 @@ class Planning_Presenter_MilestoneSummaryPresenter extends Planning_Presenter_Mi
     /**
      * A status array. E.g.
      *  array(
-     *      Tracker_ArtifactDao::STATUS_OPEN   => no_of_opne,
-     *      Tracker_ArtifactDao::STATUS_CLOSED => no_of_closed,
+     *      Tracker_Artifact::STATUS_OPEN   => no_of_opne,
+     *      Tracker_Artifact::STATUS_CLOSED => no_of_closed,
      *  )
      *
      * @var array
@@ -42,11 +42,11 @@ class Planning_Presenter_MilestoneSummaryPresenter extends Planning_Presenter_Mi
     }
 
     public function count_closed_backlog_items() {
-        return $this->status_count[Tracker_ArtifactDao::STATUS_CLOSED];
+        return $this->status_count[Tracker_Artifact::STATUS_CLOSED];
     }
 
     public function count_open_backlog_items() {
-        return $this->status_count[Tracker_ArtifactDao::STATUS_OPEN];
+        return $this->status_count[Tracker_Artifact::STATUS_OPEN];
     }
 
     public function open() {

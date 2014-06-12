@@ -70,13 +70,7 @@ class AgileDashboard_Milestone_Pane_TopContent_TopContentPresenterBuilder {
     }
 
     private function canUserPrioritizeBacklog(PFUser $user, array $item_trackers) {
-        $can_prioritize = true;
-
-        foreach ($item_trackers as $item_tracker) {
-            $can_prioritize = $can_prioritize && $item_tracker->userCanSubmitArtifact($user);
-        }
-
-        return $can_prioritize;
+        return $user->isLoggedIn();
     }
 
     private function getAddItemsToBacklogUrls(PFUser $user, array $item_trackers, $redirect_to_self) {

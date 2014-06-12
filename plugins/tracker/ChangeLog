@@ -1,3 +1,51 @@
+Version 5.405 - Tuleap 7.2
+    * request #7020: I can filter tracker v5 notifications (in body) by project unix name and/or tracker name
+
+Version 5.404 - Tuleap 7.2
+    * request #6903: Can submit a new artifact even if I doesn't have can
+
+Version 5.403 - Tuleap 7.2
+    * story #6301: reply to a follow-up comment by email - user cannot update a comment by email if no perms
+
+Version 5.402 - Tuleap 7.2
+    * story #6301: reply to a follow-up comment by email - Add possibility to remove blockquotes in html answer
+
+Version 5.401 - Tuleap 7.2
+    *  story #6301: reply to a follow-up comment by email - add some documentation
+
+Version 5.400 - Tuleap 7.2
+    * story #6301: reply to a follow-up comment by email (refactorings)
+
+Version 5.399 - Tuleap 7.2
+    * request #6972 : bug fix- previously hidden fields are now visible and editable for tracker admins
+
+Version 5.398 - Tuleap 7.2
+    * story #6301: reply to a follow-up comment by email (tasks #6990 Handle citations in the answer)
+
+Version 5.397 - Tuleap 7.2
+    * story #6301: reply to a follow-up comment by email (tasks #6989: Better handling of various email format + Handle mail reception (tasks #6950 + tasks #6951))
+
+Version 5.396 - Tuleap 7.2
+    * Refactoring: The MailGatewayFactory builds itself
+
+Version 5.395 - Tuleap 7.2
+    * story #6301: reply to a follow-up comment by email (Unique message-id and better salting)
+
+Version 5.394 - Tuleap 7.2
+    * tasks #6974: Trackers is able to receive emails
+
+Version 5.393 - Tuleap 7.2
+    * Send a token in Message-Id header in notifications. This is part of story #6301: reply to a follow-up comment by email
+
+Version 5.392 - Tuleap 7.2
+    * tasks #6921: artifact copy deals with open list
+
+Version 5.391 - Tuleap 7.2
+    * tasks #6953: Warnings on submit about list fields
+
+Version 5.390 - Tuleap 7.2
+    * story #6933: add open/closed to milestones and submilestones
+
 Version 5.389 - Tuleap 7.1
     * request #6946: UI goes crazy on a project created page
 

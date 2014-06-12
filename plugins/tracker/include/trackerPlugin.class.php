@@ -26,6 +26,8 @@ require_once 'autoload.php';
  */
 class trackerPlugin extends Plugin {
 
+    const EMAILGATEWAY_USERNAME = 'forge__artifacts';
+
     public function __construct($id) {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
@@ -67,6 +69,8 @@ class trackerPlugin extends Plugin {
         $this->addHook(Event::REST_GET_PROJECT_TRACKERS);
         $this->addHook(Event::REST_OPTIONS_PROJECT_TRACKERS);
         $this->addHook(Event::REST_PROJECT_RESOURCES);
+
+        $this->addHook(Event::BACKEND_ALIAS_GET_ALIASES);
     }
 
     public function getHooksAndCallbacks() {
@@ -782,6 +786,19 @@ class trackerPlugin extends Plugin {
     private function getArtifactFactory() {
         return Tracker_ArtifactFactory::instance();
     }
-}
 
-?>
+    /**
+     * @see Event::BACKEND_ALIAS_GET_ALIASES
+     */
+    public function backend_alias_get_aliases($params) {
+        if (! Config::get('sys_enable_reply_by_mail')) {
+            return;
+        }
+
+        $path = Config::get('codendi_dir') .'/plugins/tracker/bin/emailgateway.php';
+
+        $command = "sudo -u codendiadm $path";
+
+        $params['aliases'][] = new System_Alias(self::EMAILGATEWAY_USERNAME, "\"|$command\"");
+    }
+}

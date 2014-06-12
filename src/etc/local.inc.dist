@@ -450,5 +450,13 @@ $sys_generic_user_suffix = '';
 // Only used in news service for now
 $sys_max_number_of_emailed_people = 100;
 
+// Allow users to reply by mail to artifact notifications
+// As of today only adding a follow-up comment is supported
+$sys_enable_reply_by_mail = 0;
+
+// Allow (or not) users to do a SVN commit without any commit message
+// Set to 0 to force commit message to not be empty
+$sys_allow_empty_svn_commit_message = 1;
+
 // End of customizations -- place nothing after the closing PHP tag!
 ?>

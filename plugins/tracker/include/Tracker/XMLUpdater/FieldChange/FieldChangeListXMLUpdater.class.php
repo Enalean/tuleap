@@ -38,7 +38,7 @@ class Tracker_XMLUpdater_FieldChange_FieldChangeListXMLUpdater implements Tracke
         );
     }
 
-    private function appendValuesToFieldChangeNode(
+    protected function appendValuesToFieldChangeNode(
         $value,
         $index,
         SimpleXMLElement $field_xml
@@ -47,7 +47,7 @@ class Tracker_XMLUpdater_FieldChange_FieldChangeListXMLUpdater implements Tracke
         $value_xml->addAttribute('format', 'id');
     }
 
-    private function removeExistingValuesNodes($field_change_xml) {
+    protected function removeExistingValuesNodes($field_change_xml) {
         unset($field_change_xml->value);
     }
 }

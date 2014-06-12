@@ -1,95 +1,134 @@
 <?php
-/* 
- * Copyright (c) The Codendi Team, Xerox, 2009. All Rights Reserved.
+/**
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2011, 2012, 2013, 2014. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * 
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 
-require_once('common/backend/BackendAliases.class.php');
+class BackendAliasesTest extends TuleapTestCase {
 
-require_once('common/dao/UserDao.class.php');
-Mock::generate('UserDao');
-require_once('common/dao/MailingListDao.class.php');
-Mock::generate('MailingListDao');
+    private $alias_file;
 
-Mock::generatePartial('BackendAliases', 'BackendAliasesTestVersion', 
-                      array('getUserDao', 
-                            'getMailingListDao',
-                            'system'
-                            ));
+    public function setUp() {
+        $GLOBALS['alias_file'] = dirname(__FILE__) . '/_fixtures/etc/aliases.codendi';
+        $this->alias_file      = $GLOBALS['alias_file'];
 
-class BackendAliasesTest extends UnitTestCase {
-    
-    function __construct($name = 'BackendAliases test') {
-        parent::__construct($name);
+        $udao = mock('UserDao');
+        stub($udao)
+            ->searchByStatus()
+            ->returnsDar(
+                array(
+                    "user_name"=> "user1",
+                    "email"    => "user1@domain1.com"
+                ),
+                array(
+                    "user_name"=> "user2",
+                    "email"    => "user1@domain2.com"
+                ),
+                array(
+                    "user_name"=> "user3",
+                    "email"    => "user1@domain3.com"
+                )
+            );
+
+        $listdao = mock('MailingListDao');
+        stub($listdao)
+            ->searchAllActiveML()
+            ->returnsDar(
+                array("list_name"=> "list1"),
+                array("list_name"=> "list2"),
+                array("list_name"=> "list3"),
+                array("list_name"=> "list4")
+            );
+
+        $this->backend = partial_mock(
+            'BackendAliases',
+            array(
+                'getUserDao',
+                'getMailingListDao',
+                'system'
+            )
+        );
+        stub($this->backend)->getUserDao()->returns($udao);
+        stub($this->backend)->getMailingListDao()->returns($listdao);
+        stub($this->backend)->system()->returns(true);
+
+        $plugin = new BackendAliasesTest_FakePlugin();
+        EventManager::instance()->addListener(
+            Event::BACKEND_ALIAS_GET_ALIASES,
+            $plugin,
+            'hook',
+            false,
+            0
+        );
     }
 
-    function setUp() {
-        $GLOBALS['alias_file'] = dirname(__FILE__) . '/_fixtures/etc/aliases.codendi';   
-    }
-    
-    function tearDown() {
+    public function tearDown() {
+        unlink($GLOBALS['alias_file']);
         unset($GLOBALS['alias_file']);
         //clear the cache between each tests
         Backend::clearInstances();
+        EventManager::clearInstance();
     }
-    
-    function testUpdate() { 
-        $udao = new MockUserDao();
-        $active_users = array("0" =>
-                              array (
-                                     "user_name"=> "user1",
-                                     "email"  => "user1@domain1.com"),
-                              "1" =>
-                              array (
-                                     "user_name"=> "user2",
-                                     "email"  => "user1@domain2.com"),
-                              "2" =>
-                              array (
-                                     "user_name"=> "user3",
-                                     "email"  => "user1@domain3.com"));
-        $udao->setReturnValue('searchByStatus',$active_users);
 
-        $listdao = new MockMailingListDao();
-        $active_ml = array(
-                           "0" => array ( "list_name"=> "list1"),
-                           "1" => array ( "list_name"=> "list2"),
-                           "2" => array ( "list_name"=> "list3"),
-                           "3" => array ( "list_name"=> "list4"));
-        $listdao->setReturnValue('searchAllActiveML',$active_ml);
-        $MA = new BackendAliasesTestVersion($this);
-        $MA->setReturnValue('getUserDao', $udao);
-        $MA->setReturnValue('getMailingListDao', $listdao);
-        $MA->expectOnce('system', array('/usr/bin/newaliases > /dev/null'));
-        $MA->setReturnValue('system', true);
+    public function itReturnsTrueInCaseOfSuccess() {
+        $this->assertEqual($this->backend->update(), true);
+    }
 
-        $this->assertEqual($MA->update(),True);
-        $aliases=file_get_contents($GLOBALS['alias_file']);
+    public function itRunNewaliasesCommand() {
+        expect($this->backend)->system('/usr/bin/newaliases > /dev/null')->once();
+        $this->backend->update();
+    }
+
+    public function itGeneratesAnAliasesFile() {
+        $this->backend->update();
+        $aliases = file_get_contents($this->alias_file);
         $this->assertFalse($aliases === false);
-        $this->assertPattern("/codendi-contact/",$aliases,"Codendi-wide aliases not set");
-        $this->assertPattern("/list1-bounces:/",$aliases,"ML aliases not set");
-        $this->assertPattern("/user3:/",$aliases,"User aliases not set");
-
-        // Cleanup
-        unlink($GLOBALS['alias_file']);
     }
 
+    public function itGenerateSiteWideAliases() {
+        $this->backend->update();
+        $aliases = file_get_contents($this->alias_file);
+        $this->assertPattern("/codendi-contact/", $aliases, "Codendi-wide aliases not set");
+    }
+
+    public function itGeneratesMailingListAliases() {
+        $this->backend->update();
+        $aliases = file_get_contents($this->alias_file);
+        $this->assertPattern("/list1-bounces:/", $aliases, "ML aliases not set");
+    }
+
+    public function itGeneratesUserAliases() {
+        $this->backend->update();
+        $aliases = file_get_contents($this->alias_file);
+        $this->assertPattern("/user3:/", $aliases, "User aliases not set");
+    }
+
+    public function itGeneratesUserAliasesGivenByPlugins() {
+        $this->backend->update();
+        $aliases = file_get_contents($this->alias_file);
+        $this->assertPattern("/forge__tracker:/", $aliases, "Alias of plugins not set");
+    }
 }
-?>
+
+class BackendAliasesTest_FakePlugin {
+
+    public function hook($params) {
+        $params['aliases'][] = new System_Alias('forge__tracker', 'whatever');
+    }
+}

@@ -326,9 +326,47 @@ BODY;
         $user->setReturnValue('getLanguage', $userLanguage);
 
         $changeset = $this->buildChangeSet($user);
+        stub($changeset)->getUserFromRecipientName('user01')->returns($user);
 
-        $messages = array();
-        $changeset->buildMessage($messages, true, $user, false);
+        $recipients = array(
+            'user01' => false
+        );
+
+        $changeset->buildOneMessageForMultipleRecipients($recipients, true);
+    }
+
+    public function testItSendsOneMailPerRecipient() {
+        $userLanguage = new MockBaseLanguage();
+
+        $user1 = mock('PFUser');
+        $user1->setReturnValue('getPreference', 'text', array('user_tracker_mailformat'));
+        $user1->setReturnValue('getLanguage', $userLanguage);
+        stub($user1)->getId()->returns(102);
+
+        $user2 = mock('PFUser');
+        $user2->setReturnValue('getPreference', 'text', array('user_tracker_mailformat'));
+        $user2->setReturnValue('getLanguage', $userLanguage);
+        stub($user2)->getId()->returns(103);
+
+        $user3 = mock('PFUser');
+        $user3->setReturnValue('getPreference', 'text', array('user_tracker_mailformat'));
+        $user3->setReturnValue('getLanguage', $userLanguage);
+        stub($user3)->getId()->returns(104);
+
+        $changeset = $this->buildChangeSet($user1);
+        stub($changeset)->getUserFromRecipientName('user01')->returns($user1);
+        stub($changeset)->getUserFromRecipientName('user02')->returns($user2);
+        stub($changeset)->getUserFromRecipientName('user03')->returns($user3);
+
+        $recipients = array(
+            'user01' => false,
+            'user02' => false,
+            'user03' => false
+        );
+
+        $messages = $changeset->buildAMessagePerRecipient($recipients, true);
+
+        $this->assertEqual(count($messages),3);
     }
 
     private function buildChangeSet($user) {
@@ -337,6 +375,7 @@ BODY;
         $tracker = new MockTracker();
 
         $a = new MockTracker_Artifact();
+        stub($a)->getId()->returns(111);
         $a->setReturnValue('getTracker', $tracker);
 
         $um = new MockUserManager();
@@ -344,7 +383,17 @@ BODY;
 
         $languageFactory = new MockBaseLanguageFactory();
 
-        $changeset = TestHelper::getPartialMock('Tracker_Artifact_Changeset', array('getUserHelper', 'getUserManager', 'getArtifact', 'getComment', 'getLanguageFactory'));
+        $changeset = TestHelper::getPartialMock(
+            'Tracker_Artifact_Changeset',
+            array(
+                'getUserHelper',
+                'getUserManager',
+                'getArtifact',
+                'getComment',
+                'getLanguageFactory',
+                'getUserFromRecipientName'
+            )
+        );
         $changeset->setReturnValue('getUserHelper', $uh);
         $changeset->setReturnValue('getUserManager', $um);
         $changeset->setReturnValue('getArtifact', $a);

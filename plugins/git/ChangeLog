@@ -1,3 +1,6 @@
+Version 3.87 - Tuleap 7.2
+    * first step of story #6971: Git online commit in the Tuleap UI (Display edit button in gitphp UI)
+
 Version 3.86 - Tuleap 7.1
     * tasks #6831 - disable tracker for tracker admins during migration
 

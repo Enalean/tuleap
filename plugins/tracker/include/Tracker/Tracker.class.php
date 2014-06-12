@@ -2106,7 +2106,7 @@ EOS;
      * @return boolean true if user has persission to submit artifacts, false otherwise
      */
     function userCanSubmitArtifact($user = false) {
-        if (!($user instanceof PFUser)) {
+        if (! $user instanceof PFUser) {
             $um = UserManager::instance();
             $user = $um->getCurrentUser();
         }
@@ -2114,7 +2114,18 @@ EOS;
         if ($user->isAnonymous()) {
             return false;
         }
-        return true;
+
+        $can_submit = false;
+        $exists_required_field_user_cannot_submit = false;
+        foreach($this->getFormElementFactory()->getUsedFields($this) as $form_element) {
+            if ($form_element->userCanSubmit($user)) {
+                $can_submit = true;
+            } else if ($form_element->isRequired()) {
+                $exists_required_field_user_cannot_submit = true;
+            }
+        }
+
+        return $can_submit && ! $exists_required_field_user_cannot_submit;
     }
 
     /**
@@ -3202,6 +3213,7 @@ EOS;
             new Tracker_XMLExporter_ChangesetValue_ChangesetValueTextXMLExporter(),
             new Tracker_XMLExporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter(),
             new Tracker_XMLExporter_ChangesetValue_ChangesetValueListXMLExporter(),
+            new Tracker_XMLExporter_ChangesetValue_ChangesetValueOpenListXMLExporter(),
             new Tracker_XMLExporter_ChangesetValue_ChangesetValueUnknownXMLExporter()
         );
         $values_exporter    = new Tracker_XMLExporter_ChangesetValuesXMLExporter($visitor);
@@ -3219,6 +3231,7 @@ EOS;
             new Tracker_XMLUpdater_FieldChange_FieldChangeStringXMLUpdater(),
             new Tracker_XMLUpdater_FieldChange_FieldChangePermissionsOnArtifactXMLUpdater(),
             new Tracker_XMLUpdater_FieldChange_FieldChangeListXMLUpdater(),
+            new Tracker_XMLUpdater_FieldChange_FieldChangeOpenListXMLUpdater(),
             new Tracker_XMLUpdater_FieldChange_FieldChangeUnknownXMLUpdater()
         );
 
