@@ -185,6 +185,20 @@ class TrackersTest extends RestBase {
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
+    /**
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testGetDeletedTrackerReturnsError() {
+        $tracker_uri = $this->getDeletedTrackerId();
+        $response    = $this->getResponse($this->client->get($tracker_uri));
+
+        $this->assertEquals($response->getStatusCode(), 404);
+    }
+
+    private function getDeletedTrackerId() {
+        return 'trackers/' . TestDataBuilder::DELETED_TRACKER_ID;
+    }
+
     private function getReleaseTrackerUri() {
         $response_plannings = $this->getResponse($this->client->get('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/plannings'))->json();
         return $response_plannings[0]['milestone_tracker']['uri'];
