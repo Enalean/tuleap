@@ -1,3 +1,6 @@
+Version 0.27 - Tuleap 7.2
+    * story #5756: search with nice interface (also story #7019)
+
 Version 0.26 - Tuleap 6.10
     * fix fulltextsearch access rights disappearing #6024
 

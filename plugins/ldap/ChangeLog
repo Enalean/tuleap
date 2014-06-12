@@ -1,3 +1,6 @@
+Version 3.45 - Tuleap 7.2
+    * story #5756: search with nice interface (also story #7019)
+
 Version 3.44 - Tuleap 7.1
     * request #6545: Notify project admins when ldap users are suspended. (Contrib STMicroelectronics)
 
