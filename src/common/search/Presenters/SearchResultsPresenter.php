@@ -29,10 +29,13 @@ class Search_SearchResultsPresenter {
     /** @var  Search_SearchResultsIntroPresenter*/
     private $results_intro_presenter;
 
+    public $more_results;
+
     public function __construct(Search_SearchResultsIntroPresenter $results_intro_presenter, array $results, $template) {
         $this->results_intro_presenter = $results_intro_presenter;
         $this->results                 = $results;
         $this->template                = $template;
+        $this->more_results            = $GLOBALS['Language']->getText('plugin_fulltextsearch', 'more_results');
     }
 
     public function results_intro() {

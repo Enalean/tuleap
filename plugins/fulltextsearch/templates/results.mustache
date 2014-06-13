@@ -1,3 +1,4 @@
+{{# has_results }}
 <ul>
     <li>
         <span class="search-type sub-facets">Projects</span>
@@ -12,10 +13,14 @@
         </ul>
     </li>
 </ul>
+{{/ has_results }}
+
 <input type="hidden" id="fts_size" value="10" />
 
-{{> search-results-docman }}
+{{> search-results-main }}
 
-{{^ search_results }}
-    <p class="no-result"><i class="icon-frown"></i> No results found</p>
-{{/ search_results }}
+{{# has_results }}
+    <div id="search-more">
+        <button class="btn btn-primary" id="search-more-button">{{ more_results }}</button>
+    </div>
+{{/ has_results }}

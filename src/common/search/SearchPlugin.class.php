@@ -20,6 +20,8 @@
 
 class Search_SearchPlugin {
 
+    const RESULTS_PER_QUERY = 25;
+
     /**
      * @var EventManager
      */
@@ -36,7 +38,7 @@ class Search_SearchPlugin {
             'query'              => $query,
             'words'              => $query->getWords(),
             'offset'             => $query->getOffset(),
-            'nbRows'             => 25,
+            'nbRows'             => self::RESULTS_PER_QUERY,
             'type_of_search'     => $query->getTypeOfSearch(),
             'project'            => $query->getProject(),
             'group_id'           => $query->getProject()->getId(),
