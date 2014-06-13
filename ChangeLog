@@ -24,6 +24,7 @@ Version 7.2 (Not Released Yet)
         == REST API ==
 	* story #6934 - REST: route /users/:id GET
         * story #6301 - reply to a follow-up comment by email
+        * request #6963 Incorrect error code REST API
 
     == Themes ==
 	* FlamingParrot: 1.11
