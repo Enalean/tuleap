@@ -33,7 +33,11 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
-        $this->client              = mock('FullTextSearch_IIndexDocuments');
+        $this->client = partial_mock(
+            'ElasticSearch_IndexClientFacade',
+            array('index', 'update', 'delete')
+        );
+
         $this->permissions_manager = mock('Docman_PermissionsItemManager');
 
         $metadata01 = stub('Docman_Metadata')->getId()->returns(1);
@@ -63,9 +67,9 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
             ->getPath()
             ->returns(dirname(__FILE__) .'/_fixtures/file.txt');
 
-        stub($this->client)
-            ->initializeSetterData()
-            ->returns(array('script' => '', 'params' => array()));
+//        stub($this->client)
+//            ->initializeSetterData()
+//            ->returns(array('script' => '', 'params' => array()));
 
         $this->params = aSetOfParameters()
             ->withItem($this->item)
@@ -93,15 +97,19 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
     }
 
     public function itCallUpdateOnClientWithTitleIfNew() {
-        $item_id = $this->item->getId();
+        $item_id     = $this->item->getId();
         $update_data = array(
-            'script'=> 'ctx._source.title = title; ctx._source.description = description',
+            'script'=> 'ctx._source.title = title;'.
+                       'ctx._source.description = description;'.
+                       'ctx._source.property_1 = property_1;'.
+                       'ctx._source.property_2 = property_2;',
             'params'=> array(
                 'title'       => $this->item->getTitle(),
-                'description' => $this->item->getDescription()
+                'description' => $this->item->getDescription(),
+                'property_1' => 'val01',
+                'property_2' => 'val02',
             ),
         );
-        stub($this->client)->appendSetterData()->returns($update_data);
 
         $expected = array($item_id, $update_data);
         $this->client->expectOnce('update', $expected);
@@ -116,4 +124,3 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
         $this->actions->delete($this->item);
     }
 }
-?>
