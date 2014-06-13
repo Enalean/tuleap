@@ -1,3 +1,6 @@
+Version 5.407 - Tuleap 7.2
+    * Fix request #6987 deleted trackers are shown in the REST api /trackers/:id
+
 Version 5.406 - Tuleap 7.2
     * Fix request #5145: do not add user widgets for services not activated
 
