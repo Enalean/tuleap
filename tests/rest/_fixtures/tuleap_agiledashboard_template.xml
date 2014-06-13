@@ -1580,6 +1580,25 @@
         <permission scope="field" REF="F131" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
       </permissions>
     </tracker>
+    <tracker id="T220" parent_id="0" instantiate_for_new_projects="1">
+      <name>Delete</name>
+      <item_name>delete</item_name>
+      <description>A tracker to delete for test purpose</description>
+      <cannedResponses/>
+      <formElements>
+      </formElements>
+      <semantics>
+      </semantics>
+      <rules>
+        <date_rules/>
+        <list_rules/>
+      </rules>
+      <reports/>
+      <workflow/>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+      </permissions>
+    </tracker>
   </trackers>
   <cardwall>
     <trackers>

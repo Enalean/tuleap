@@ -272,6 +272,11 @@ class TrackersResource {
     private function getTrackerById(\PFUser $user, $id) {
         $tracker = TrackerFactory::instance()->getTrackerById($id);
         if ($tracker) {
+
+            if ($tracker->isDeleted()) {
+                throw new RestException(404, 'this tracker is deleted');
+            }
+
             if ($tracker->userCanView($user)) {
                 ProjectAuthorization::userCanAccessProject($user, $tracker->getProject(), new Tracker_URLVerification());
                 return $tracker;

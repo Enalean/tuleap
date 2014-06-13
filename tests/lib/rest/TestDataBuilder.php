@@ -78,6 +78,7 @@ class TestDataBuilder {
     const SPRINTS_TRACKER_ID      = 3;
     const TASKS_TRACKER_ID        = 4;
     const USER_STORIES_TRACKER_ID = 5;
+    const DELETED_TRACKER_ID      = 6;
 
     const RELEASE_ARTIFACT_ID  = 1;
     const SPRINT_ARTIFACT_ID   = 2;
@@ -324,6 +325,14 @@ class TestDataBuilder {
         );
         $this->user_manager->forceLogin(self::ADMIN_USER_NAME);
         $xml_importer->import($project_id, dirname(__FILE__).'/../../rest/_fixtures/'.$template);
+    }
+
+    public function deleteTracker() {
+        echo "Delete tracker\n";
+
+        $this->tracker_factory->markAsDeleted(self::DELETED_TRACKER_ID);
+
+        return $this;
     }
 
     public function generateMilestones() {
