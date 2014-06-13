@@ -1,3 +1,10 @@
+Version 0.29 - Tuleap 7.2
+    * tasks #7043: Define indexation format
+
+
+* Text and strings properties are now indexed for new document
+in docman
+
 Version 0.28 - Tuleap 7.2
     * tasks #7044 Adapt to ES 1.2
 
