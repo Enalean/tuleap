@@ -20,6 +20,7 @@
 
 require_once dirname(__FILE__) .'/../include/autoload.php';
 require_once dirname(__FILE__) .'/../../docman/include/Docman_PermissionsItemManager.class.php';
+require_once dirname(__FILE__) .'/../../docman/include/Docman_MetadataFactory.class.php';
 require_once dirname(__FILE__).'/Constants.php';
 require_once dirname(__FILE__).'/builders/Parameters_Builder.php';
 
@@ -34,7 +35,9 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
 
         $this->client              = mock('FullTextSearch_IIndexDocuments');
         $this->permissions_manager = mock('Docman_PermissionsItemManager');
-        $this->actions = new FullTextSearchDocmanActions($this->client, $this->permissions_manager);
+
+        $metadata01 = stub('Docman_Metadata')->getId()->returns(1);
+        $metadata02 = stub('Docman_Metadata')->getId()->returns(2);
 
         $this->item = aDocman_File()
             ->withId(101)
@@ -42,6 +45,15 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
             ->withDescription('Duck typing')
             ->withGroupId(200)
             ->build();
+
+        $this->metadata_factory = stub('Docman_MetadataFactory')->getRealMetadataList()->returns(
+            array($metadata01, $metadata02)
+        );
+
+        stub($this->metadata_factory)->getMetadataValue($this->item, $metadata01)->returns('val01');
+        stub($this->metadata_factory)->getMetadataValue($this->item, $metadata02)->returns('val02');
+
+        $this->actions = new FullTextSearchDocmanActions($this->client, $this->permissions_manager, $this->metadata_factory);
 
         stub($this->permissions_manager)
             ->exportPermissions($this->item)
@@ -70,6 +82,8 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
                                 'description' => 'Duck typing',
                                 'permissions' => array(3, 102),
                                 'file'        => 'aW5kZXggbWUK',
+                                'property_1'  => 'val01',
+                                'property_2'  => 'val02',
                                ),
                           101
                          );

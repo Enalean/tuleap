@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/../../docman/include/Docman_PermissionsItemManager.class.php';
 /**
  * Class responsible to send requests to an indexation server
  */
@@ -26,9 +25,17 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
 
     protected $permissions_manager;
 
-    public function __construct(FullTextSearch_IIndexDocuments $client, Docman_PermissionsItemManager $permissions_manager) {
+    /** @var Docman_MetadataFactory */
+    private $metadata_factory;
+
+    public function __construct(
+        FullTextSearch_IIndexDocuments $client,
+        Docman_PermissionsItemManager $permissions_manager,
+        Docman_MetadataFactory $metadata_factory
+    ) {
         parent::__construct($client);
         $this->permissions_manager = $permissions_manager;
+        $this->metadata_factory    = $metadata_factory;
     }
 
     /**
@@ -94,8 +101,31 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
             'description' => $item->getDescription(),
             'permissions' => $this->permissions_manager->exportPermissions($item),
             'file'        => $this->fileContentEncode($version->getPath())
-        );
+        ) + $this->getCustomTextualMetadata($item);
     }
 
+    /**
+     * Get the user defined item textual metadata
+     *
+     * @param Docman_Item $item The item indexed
+     *
+     * @return array
+     */
+    private function getCustomTextualMetadata(Docman_Item $item) {
+        $this->metadata_factory->setRealGroupId($item->groupId);
+        $item_textual_metadatas = $this->metadata_factory->getRealMetadataList(
+            false,
+            array(
+                PLUGIN_DOCMAN_METADATA_TYPE_TEXT,
+                PLUGIN_DOCMAN_METADATA_TYPE_STRING
+            )
+        );
+
+        $custom_metadata = array();
+        foreach ($item_textual_metadatas as $item_metadata) {
+            $custom_metadata['property_' . $item_metadata->getId()] = $this->metadata_factory->getMetadataValue($item, $item_metadata);
+        }
+
+        return $custom_metadata;
+    }
 }
-?>

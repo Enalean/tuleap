@@ -839,6 +839,8 @@ class Docman_MetadataFactory {
     function _getEventManager() {
         return EventManager::instance();
     }
-}
 
-?>
+    public function setRealGroupId($group_id) {
+        $this->groupId = $group_id;
+    }
+}

@@ -165,9 +165,19 @@ class fulltextsearchPlugin extends Plugin {
     private function getActions() {
         $type = 'docman';
         if (!isset($this->actions) && ($search_client = $this->getIndexClient($type))) {
-            $this->actions = new FullTextSearchDocmanActions($search_client, new Docman_PermissionsItemManager());
+            $this->actions = new FullTextSearchDocmanActions(
+                $search_client,
+                new Docman_PermissionsItemManager(),
+                $this->getBareDocmanMetadataFactory()
+            );
         }
         return $this->actions;
+    }
+
+    private function getBareDocmanMetadataFactory() {
+        $empty_group_id = 0;
+
+        return new Docman_MetadataFactory($empty_group_id);
     }
 
     /**
