@@ -1,3 +1,6 @@
+Version 5.406 - Tuleap 7.2
+    * Fix request #5145: do not add user widgets for services not activated
+
 Version 5.405 - Tuleap 7.2
     * request #7020: I can filter tracker v5 notifications (in body) by project unix name and/or tracker name
 
