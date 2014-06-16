@@ -96,28 +96,12 @@ Create the index: (please note that the number of shards|replicas are for develo
 
 
     $ curl -u superuser:Adm1n -X PUT "localhost:9200/tuleap" -d '{
-      "settings" : { "index" : { "number_of_shards" : 1, "number_of_replicas" : 0 }}
-      }'
+        "settings" : { "index" : { "number_of_shards" : 1, "number_of_replicas" : 0 }}
+    }'
 
-Define the attachment mapping for docman type:
-
-    $ curl -u superuser:Adm1n -X PUT "localhost:9200/tuleap/docman/_mapping" -d '{
-      "docman" : {
-        "properties" : {
-          "file" : {
-            "type" : "attachment",
-            "fields" : {
-              "title" : { "store" : "yes" },
-              "file" : { "term_vector":"with_positions_offsets", "store":"yes" }
-            }
-          },
-          "permissions": {
-            "type": "string",
-            "index": "not_analyzed"
-          }
-        }
-      }
-     }'
+    $ curl -u superuser:Adm1n -X PUT "localhost:9200/docman" -d '{
+        "settings" : { "index" : { "number_of_shards" : 1, "number_of_replicas" : 0 }}
+    }'
 
 Define the attachment mapping for tracker type:
 
@@ -142,6 +126,16 @@ Check it worked:
     ...
 
 Now you can activate the plugin in Tuleap admin interface and start uploading documents
+
+Clean-up
+--------
+
+If you previously used an old configuration for ElasticSearch with Tuleap,
+please delete the index to start over:
+
+    $ curl -X DELETE "localhost:9200/tuleap"
+    $ curl -X DELETE "localhost:9200/docman"
+    $ curl -X DELETE "localhost:9200/tracker"
 
 Development setup
 -----------------
@@ -196,10 +190,3 @@ References
 - http://www.elasticsearch.org/
 - https://github.com/elasticsearch/elasticsearch-mapper-attachments
 - http://www.elasticsearch.org/tutorials/2011/07/18/attachment-type-in-action.html
-
-Clean-up
---------
-
-Delete the index to start over:
-
-    $ curl -X DELETE "localhost:9200/tuleap"
