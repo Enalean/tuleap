@@ -98,24 +98,27 @@ class Tracker_FormElement_Field_StringTest extends TuleapTestCase {
      * @see https://tuleap.net/plugins/tracker?aid=6449
      */
     function itIsEmptyWhenThereIsNoContent() {
-        $field = aStringField()->build();
-        $this->assertTrue($field->isEmpty(''));
+        $artifact = new MockTracker_Artifact();
+        $field    = aStringField()->build();
+        $this->assertTrue($field->isEmpty('', $artifact));
     }
 
     /**
      * @see https://tuleap.net/plugins/tracker?aid=6449
      */
     function itIsEmptyWhenThereIsOnlyWhitespaces() {
-        $field = aStringField()->build();
-        $this->assertTrue($field->isEmpty('  '));
+        $artifact = new MockTracker_Artifact();
+        $field    = aStringField()->build();
+        $this->assertTrue($field->isEmpty('  ', $artifact));
     }
 
     /**
      * @see https://tuleap.net/plugins/tracker?aid=6449
      */
     function itIsNotEmptyWhenThereIsContent() {
-        $field = aStringField()->build();
-        $this->assertFalse($field->isEmpty('sdf'));
+        $artifact = new MockTracker_Artifact();
+        $field    = aStringField()->build();
+        $this->assertFalse($field->isEmpty('sdf', $artifact));
     }
 }
 ?>

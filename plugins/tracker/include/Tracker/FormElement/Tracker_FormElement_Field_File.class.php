@@ -1096,4 +1096,29 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
     public function accept(Tracker_FormElement_FieldVisitor $visitor) {
         return $visitor->visitFile($this);
     }
+
+    public function isPreviousChangesetEmpty(Tracker_Artifact $artifact, $value) {
+        $last_changeset = $artifact->getLastChangeset();
+
+        if ($last_changeset && count($last_changeset->getValue($this)->getFiles()) > 0) {
+            return $this->areAllFilesDeletedFromPreviousChangeset($last_changeset, $value);
+        }
+        return true;
+    }
+
+    private function areAllFilesDeletedFromPreviousChangeset($last_changeset, $value) {
+        $files = $last_changeset->getValue($this)->getFiles();
+        if (isset($value['delete']) && (count($files) == count($value['delete']))) {
+            return true;
+        }
+        return false;
+    }
+
+    public function isEmpty($value, $artifact) {
+        $is_empty = !$this->checkThatAtLeastOneFileIsUploaded($value);
+        if ($is_empty) {
+            $is_empty = $this->isPreviousChangesetEmpty($artifact, $value);
+        }
+        return $is_empty;
+    }
 }
