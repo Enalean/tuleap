@@ -26,16 +26,21 @@ interface FullTextSearch_IIndexDocuments {
     /**
      * Index a new document or update it if existing
      *
+     * PUT /docman/:project_id/:document_id
+     *
      * @return array
+     *
      * @param array $document
+     * @param int $project_id
      * @param mixed $id Optional
      */
-    public function index(array $document, $id = false);
+    public function index(array $document, $project_id, $id = false);
 
     /**
      * Flush this index/type combination
      *
-     * 
+     * DELETE /docman/:project_id/:document_id
+     *
      * @param mixed $id If id is supplied, delete that id for this index
      *                  if not wipe the entire index
      * @param array $options Parameters to pass to delete action
@@ -64,6 +69,27 @@ interface FullTextSearch_IIndexDocuments {
      * @return array
      */
     public function initializeSetterData();
-}
 
-?>
+    /**
+     * Get the project mapping
+     *
+     * GET /docman/:project_id/_mapping
+     *
+     * @param int $project_id
+     *
+     * @return array
+     */
+    public function getProjectMapping($project_id);
+
+    /**
+     * Initialize the project mapping
+     *
+     * PUT /docman/:project_id/_mapping
+     *
+     * @param int   $project_id
+     * @param array $mapping_data
+     *
+     * @return array
+     */
+    public function initializeProjectMapping($project_id, array $mapping_data);
+}

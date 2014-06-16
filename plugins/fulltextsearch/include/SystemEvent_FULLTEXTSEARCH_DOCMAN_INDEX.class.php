@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,12 +23,18 @@ class SystemEvent_FULLTEXTSEARCH_DOCMAN_INDEX extends SystemEvent_FULLTEXTSEARCH
 
     protected function processItem(Docman_Item $item) {
         $version_number = (int)$this->getRequiredParameter(2);
-        $version = $this->getVersion($item, $version_number);
+        $version        = $this->getVersion($item, $version_number);
+        $project_id     = $item->getGroupId();
+
         if ($version) {
+            if (! $this->actions->checkProjectMappingExists($project_id)) {
+                $this->actions->initializeProjetMapping($project_id);
+            }
+
             $this->actions->indexNewDocument($item, $version);
             return true;
         }
+
         $this->error('Version not found');
     }
 }
-?>

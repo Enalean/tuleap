@@ -23,6 +23,8 @@
  */
 class ElasticSearch_ClientFactory {
 
+    const DEFAULT_INDEX = 'tuleap';
+
     /**
      * Build instance of ClientFacade
      *
@@ -96,7 +98,14 @@ class ElasticSearch_ClientFactory {
         require_once $client_path;
 
         $transport  = new ElasticSearch_TransportHTTPBasicAuth($server_host, $server_port, $server_user, $server_password);
-        return new ElasticSearchClient($transport, 'tuleap', $type);
+
+        $index = self::DEFAULT_INDEX;
+
+        if ($type === fulltextsearchPlugin::SEARCH_DOCMAN_TYPE) {
+            $index = fulltextsearchPlugin::SEARCH_DOCMAN_TYPE;
+            $type  = '';
+        }
+
+        return new ElasticSearchClient($transport, $index, $type);
     }
 }
-?>
