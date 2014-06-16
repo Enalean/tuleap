@@ -23,7 +23,10 @@ require_once('common/dao/include/DataAccessObject.class.php');
 class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObject {
     const COPY_BY_REFERENCE = true;
     const COPY_BY_VALUE = false;
-    
+
+    private $cache_canbedeleted_values = array();
+    private $cache_canbehidden_values = array();
+
     function __construct() {
         parent::__construct();
         $this->table_name = 'tracker_field_list_bind_static_value';
@@ -130,79 +133,109 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
                 ORDER BY f.". ($is_rank_alpha ? 'label' : 'rank');
         return $this->retrieve($sql);
     }
-    
+
     public function canValueBeHidden($field_id, $value_id) {
         $field_id = $this->da->escapeInt($field_id);
-        $value_id = $this->da->escapeInt($value_id);
-        $sql = "SELECT null
-                FROM $this->table_name AS v
-                    INNER JOIN tracker_workflow AS w ON (
-                        v.field_id = w.field_id
-                        AND 
-                        (v.id = $value_id OR v.original_value_id = $value_id)
-                    )
-                    INNER JOIN tracker_workflow_transition AS wt ON (
-                        w.workflow_id = wt.workflow_id 
-                        AND
-                        (wt.from_id = v.id AND (v.original_value_id <> 0 OR wt.from_id = v.original_value_id)) 
-                    )
-                UNION
-                SELECT null
-                FROM $this->table_name AS v
-                    INNER JOIN tracker_workflow_transition AS wt ON ((wt.to_id = v.id OR wt.to_id = v.original_value_id) AND (v.id = $value_id OR v.original_value_id = $value_id))
-                    INNER JOIN tracker_workflow AS w ON (w.workflow_id = wt.workflow_id AND v.field_id = w.field_id)
-                UNION 
-                SELECT null
-                FROM $this->table_name AS v
-                    INNER JOIN tracker_semantic_status AS s 
-                    ON ((s.open_value_id = v.id OR s.open_value_id = v.original_value_id)
-                        AND (v.id = $value_id OR v.original_value_id = $value_id)
-                        AND s.field_id = v.field_id)
-                UNION 
-                SELECT null
-                FROM $this->table_name AS v
-                    INNER JOIN tracker_rule_list AS tr
-                    ON ( v.id = $value_id 
-                        AND (
-                            tr.source_field_id = v.field_id 
-                            OR 
-                            tr.target_field_id = v.field_id)
-                        AND (
-                                (tr.source_field_id = $field_id AND tr.source_value_id = $value_id) 
-                                OR 
-                                (tr.target_field_id = $field_id AND tr.target_value_id = $value_id)
-                            )
+
+        if (! isset($this->cache_canbehidden_values[$field_id])) {
+            $sql = "SELECT IF(v.original_value_id, v.original_value_id, v.id) AS id
+                    FROM $this->table_name AS v
+                        INNER JOIN tracker_workflow AS w ON (
+                            v.field_id = w.field_id
                         )
-                UNION
-                SELECT null
-                FROM tracker_field AS original
-                    INNER JOIN tracker_field AS copied_field ON(original.id = copied_field.original_field_id AND original.id = $field_id)
-                    INNER JOIN tracker_field_list_bind_static_value AS copied_value ON (copied_value.field_id = copied_field.id AND copied_value.original_value_id = $value_id)
-                    INNER JOIN tracker_rule_list AS tr ON (
-                        (tr.source_field_id = copied_field.id AND tr.source_value_id = copied_value.id)
-                        OR
-                        (tr.target_field_id = copied_field.id AND tr.target_value_id = copied_value.id)
-                    )
-                ";
-        return count($this->retrieve($sql)) == 0;
+                        INNER JOIN tracker_workflow_transition AS wt ON (
+                            w.workflow_id = wt.workflow_id
+                            AND
+                            (wt.from_id = v.id AND (v.original_value_id <> 0 OR wt.from_id = v.original_value_id))
+                        )
+                    WHERE v.field_id = $field_id
+                    UNION
+                    SELECT IF(v.original_value_id, v.original_value_id, v.id) AS id
+                    FROM $this->table_name AS v
+                        INNER JOIN tracker_workflow AS w ON (
+                            v.field_id = w.field_id
+                        )
+                        INNER JOIN tracker_workflow_transition AS wt ON (
+                            w.workflow_id = wt.workflow_id
+                            AND
+                            (wt.to_id = v.id OR wt.to_id = v.original_value_id)
+                        )
+                    WHERE v.field_id = $field_id
+                    UNION
+                    SELECT IF(v.original_value_id, v.original_value_id, v.id) AS id
+                    FROM $this->table_name AS v
+                        INNER JOIN tracker_semantic_status AS s
+                        ON ((s.open_value_id = v.id OR s.open_value_id = v.original_value_id)
+                            AND s.field_id = v.field_id)
+                    WHERE v.field_id = $field_id
+                    UNION
+                    SELECT v.id AS id
+                    FROM $this->table_name AS v
+                        INNER JOIN tracker_rule_list AS tr
+                        ON (tr.source_field_id = v.field_id AND tr.source_value_id = v.id)
+                    WHERE source_field_id = $field_id
+                    UNION
+                    SELECT v.id AS id
+                    FROM $this->table_name AS v
+                        INNER JOIN tracker_rule_list AS tr
+                        ON (tr.target_field_id = v.field_id AND tr.target_value_id = v.id)
+                    WHERE target_field_id = $field_id
+                    UNION
+                    SELECT copied_value.original_value_id AS id
+                    FROM tracker_field AS original
+                        INNER JOIN tracker_field AS copied_field ON(original.id = copied_field.original_field_id)
+                        INNER JOIN tracker_field_list_bind_static_value AS copied_value ON (copied_value.field_id = copied_field.id)
+                        INNER JOIN tracker_rule_list AS tr ON (
+                            tr.source_field_id = copied_field.id AND tr.source_value_id = copied_value.id
+                        )
+                    WHERE original.id = $field_id
+                    UNION
+                    SELECT copied_value.original_value_id AS id
+                    FROM tracker_field AS original
+                        INNER JOIN tracker_field AS copied_field ON(original.id = copied_field.original_field_id)
+                        INNER JOIN tracker_field_list_bind_static_value AS copied_value ON (copied_value.field_id = copied_field.id)
+                        INNER JOIN tracker_rule_list AS tr ON (
+                            tr.target_field_id = copied_field.id AND tr.target_value_id = copied_value.id
+                        )
+                    WHERE original.id = $field_id
+                    ";
+
+            foreach ($this->retrieve($sql) as $row) {
+                $this->cache_canbehidden_values[$field_id][$row['id']] = true;
+            }
+        }
+
+        return ! isset($this->cache_canbehidden_values[$field_id][$value_id]);
     }
-    
+
     public function canValueBeDeleted($field_id, $value_id) {
         $field_id = $this->da->escapeInt($field_id);
         $value_id = $this->da->escapeInt($value_id);
-        
-        $sql = "SELECT null
-                FROM $this->table_name AS v
-                    INNER JOIN tracker_changeset_value_list AS cvl ON (v.id = cvl.bindvalue_id)
-                    INNER JOIN tracker_changeset_value AS cv ON (cv.id = cvl.changeset_value_id AND cv.field_id = v.field_id)
-                WHERE v.original_value_id = $value_id OR v.id = $value_id
-                UNION
-                SELECT null
-                FROM $this->table_name AS v
-                    INNER JOIN tracker_changeset_value_openlist AS cvl ON (v.id = cvl.bindvalue_id AND v.id = $value_id)
-                    INNER JOIN tracker_changeset_value AS cv ON (cv.id = cvl.changeset_value_id AND cv.field_id = v.field_id AND cv.field_id = $field_id)
-                ";
-        return $this->canValueBeHidden($field_id, $value_id) && count($this->retrieve($sql)) == 0;
+
+        if (! isset($this->cache_canbedeleted_values[$field_id])) {
+            $sql = "SELECT IF (v.original_value_id, v.original_value_id, v.id) AS id
+                    FROM $this->table_name AS v
+                        INNER JOIN tracker_changeset_value_list AS cvl ON (v.id = cvl.bindvalue_id)
+                        INNER JOIN tracker_changeset_value AS cv ON (cv.id = cvl.changeset_value_id AND cv.field_id = v.field_id)
+                    WHERE v.field_id = $field_id
+                    UNION
+                    SELECT v.id AS id
+                    FROM $this->table_name AS v
+                        INNER JOIN tracker_changeset_value_openlist AS cvl ON (v.id = cvl.bindvalue_id)
+                        INNER JOIN tracker_changeset_value AS cv ON (
+                            cv.id = cvl.changeset_value_id
+                            AND cv.field_id = v.field_id
+                        )
+                    WHERE cv.field_id = $field_id
+                    ";
+
+            foreach ($this->retrieve($sql) as $row) {
+                $this->cache_canbedeleted_values[$field_id][$row['id']] = true;
+            }
+
+        }
+
+        return $this->canValueBeHidden($field_id, $value_id) && ! isset($this->cache_canbedeleted_values[$field_id][$value_id]);
     }
     
     public function updateOriginalValueId($field_id, $old_original_value_id, $new_original_value_id) {
