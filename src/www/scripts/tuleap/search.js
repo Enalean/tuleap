@@ -73,7 +73,7 @@ var tuleap = tuleap || {};
     }
 
     function searchFromSidebar(type_of_search, append_to_results) {
-        var keywords       = $('#words').attr('value'),
+        var keywords       = $('#words').val(),
             self           = this;
 
           $.ajax({
