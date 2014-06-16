@@ -580,32 +580,13 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->process($this->tracker_manager, $request_new_artifact, $this->registered_user);
     }
 
-    public function testUserCannotCreateArtifactIfTheyDoNotHaveSubmitPermissionsOnAllRequiredFields() {
+    public function testUserCanCreateArtifactEvenIfTheyDoNotHaveSubmitPermissionsOnAllRequiredFields() {
         $request_new_artifact = new MockCodendi_Request($this);
         $request_new_artifact->setReturnValue('get', 'new-artifact', array('func'));
 
         $tracker_field = mock('Tracker_FormElement_Field_Text');
         stub($tracker_field)->userCanSubmit()->returns(false);
         stub($tracker_field)->isRequired()->returns(true);
-        $tracker_field2 = mock('Tracker_FormElement_Field_Text');
-        stub($tracker_field2)->userCanSubmit()->returns(true);
-        stub($this->formelement_factory)->getUsedFields()->returns(array(
-            $tracker_field,
-            $tracker_field2
-        ));
-
-        // registered user can submit artifacts
-        $this->tracker->expectNever('displaySubmit');
-        $this->tracker->process($this->tracker_manager, $request_new_artifact, $this->registered_user);
-    }
-
-     public function testUserCanCreateArtifactIfTheyHaveSubmitPermissionsOnAllRequiredFields() {
-        $request_new_artifact = new MockCodendi_Request($this);
-        $request_new_artifact->setReturnValue('get', 'new-artifact', array('func'));
-
-        $tracker_field = mock('Tracker_FormElement_Field_Text');
-        stub($tracker_field)->userCanSubmit()->returns(false);
-        stub($tracker_field)->isRequired()->returns(false);
         $tracker_field2 = mock('Tracker_FormElement_Field_Text');
         stub($tracker_field2)->userCanSubmit()->returns(true);
         stub($this->formelement_factory)->getUsedFields()->returns(array(
