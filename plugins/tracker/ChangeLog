@@ -1,3 +1,6 @@
+Version 5.409 - Tuleap 7.2
+    * Fix request #7049: Workflow:The option must
+
 Version 5.408 - Tuleap 7.2
     * Fix request #7058: Can't submit anymore an artifact if I do not have submit rights on all reuired fields
 
