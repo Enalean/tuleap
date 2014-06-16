@@ -2116,16 +2116,13 @@ EOS;
         }
 
         $can_submit = false;
-        $exists_required_field_user_cannot_submit = false;
         foreach($this->getFormElementFactory()->getUsedFields($this) as $form_element) {
             if ($form_element->userCanSubmit($user)) {
                 $can_submit = true;
-            } else if ($form_element->isRequired()) {
-                $exists_required_field_user_cannot_submit = true;
             }
         }
 
-        return $can_submit && ! $exists_required_field_user_cannot_submit;
+        return $can_submit;
     }
 
     /**
