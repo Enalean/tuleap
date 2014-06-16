@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,30 +25,23 @@ class ElasticSearch_SearchResultCollection implements FullTextSearch_SearchResul
     private $facets             = array();
     public  $type;
     
-    public function __construct(array $result, array $submitted_facets, ProjectManager $project_manager, $type) {
-        $this->type = $type;
-        if (isset($result['hits']['total'])) {
-            $this->nb_documents_found = $result['hits']['total'];
-        }
-        if (isset($result['time'])) {
-            $this->query_time = $result['time'];
-        }
-        if (isset($result['hits']['hits'])) {
-            foreach ($result['hits']['hits'] as $hit) {
-                $project = $project_manager->getProject($hit['fields']['group_id'][0]);
-                if ($project->isError()) {
-                    $this->nb_documents_found--;
-                } else {
-                    $class = 'ElasticSearch_SearchResult'.$type;
-                    if(class_exists($class)) { 
-                        $this->results[] = new $class($hit, $project);
-                    }
-                }
-            }
-        }
-        if (isset($result['facets']['projects'])) {
-            $this->facets = new ElasticSearch_SearchResultProjectsFacetCollection($result['facets']['projects'], $project_manager, $submitted_facets);
-        }
+    public function __construct(
+        array $result,
+        array $submitted_facets,
+        ProjectManager $project_manager,
+        $type,
+        ElasticSearch_1_2_ResultFactory $result_factory
+    ) {
+        $this->type       = $type;
+        $this->query_time = $result_factory->getQueryTime($result);
+
+        $this->results = $result_factory->getSearchResults($result, $type);
+        $this->nb_documents_found = count($this->results);
+
+        $this->facets = $result_factory->getSearchResultProjectsFacetCollection(
+                $result,
+                $submitted_facets
+        );
     }
     
     public function count() {

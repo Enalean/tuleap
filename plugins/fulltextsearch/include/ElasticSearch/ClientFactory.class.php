@@ -55,7 +55,12 @@ class ElasticSearch_ClientFactory {
      */
     public function buildSearchClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, ProjectManager $project_manager, $type) {
         $client = $this->getClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, $type);
-        return new ElasticSearch_SearchClientFacade($client, $type, $project_manager);
+        return new ElasticSearch_SearchClientFacade(
+            $client,
+            $type,
+            $project_manager,
+            new ElasticSearch_1_2_ResultFactory($project_manager)
+        );
     }
 
     /**
@@ -73,7 +78,12 @@ class ElasticSearch_ClientFactory {
     public function buildSearchAdminClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, ProjectManager $project_manager) {
         $type   = 'docman';
         $client = $this->getClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, $type);
-        return new ElasticSearch_SearchAdminClientFacade($client, $type, $project_manager);
+        return new ElasticSearch_SearchAdminClientFacade(
+            $client,
+            $type,
+            $project_manager,
+            new ElasticSearch_1_2_ResultFactory($project_manager)
+        );
     }
 
     private function getClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, $type = 'docman') {

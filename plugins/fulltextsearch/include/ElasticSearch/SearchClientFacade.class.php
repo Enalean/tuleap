@@ -36,10 +36,19 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
      */
     protected $project_manager;
 
-    public function __construct(ElasticSearchClient $client, $type, ProjectManager $project_manager) {
+    /** @var ElasticSearch_1_2_ResultFactory */
+    protected $result_factory;
+
+    public function __construct(
+        ElasticSearchClient $client,
+        $type,
+        ProjectManager $project_manager,
+        ElasticSearch_1_2_ResultFactory $result_factory
+    ) {
         parent::__construct($client);
         $this->type            = $type;
         $this->project_manager = $project_manager;
+        $this->result_factory  = $result_factory;
     }
 
     /**
@@ -53,12 +62,10 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
         if ($terms) {
             $query        = $this->getSearchFollowupsQuery($terms, $facets, $offset, $user);
             $searchResult = $this->client->search($query);
-            if (!empty($searchResult['hits']['total'])) {
-                foreach ($searchResult['hits']['hits'] as $hit) {
-                    $results[$hit['fields']['artifact_id'][0]] = $hit['fields']['changeset_id'][0];
-                }
-            }
+
+            $results = $this->result_factory->getChangesetIds($searchResult);
         }
+
         return $results;
     }
 
@@ -73,7 +80,13 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
         // content of the request (can be directly injected in a curl request)
         // echo "<pre>".json_encode($query)."</pre>";
         $search = $this->client->search($query);
-        return new ElasticSearch_SearchResultCollection($search, $facets, $this->project_manager, $this->type);
+        return new ElasticSearch_SearchResultCollection(
+            $search,
+            $facets,
+            $this->project_manager,
+            $this->type,
+            $this->result_factory
+        );
     }
 
     /**
@@ -167,5 +180,3 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
         }
     }
 }
-
-?>
