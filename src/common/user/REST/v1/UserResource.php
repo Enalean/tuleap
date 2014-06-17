@@ -73,7 +73,6 @@ class UserResource {
      * @throws 404
      */
     public function optionsId($id) {
-        $this->checkUserExists($id);
         $this->sendAllowHeadersForUserGroup();
     }
 

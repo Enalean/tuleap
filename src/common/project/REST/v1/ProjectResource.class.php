@@ -162,7 +162,6 @@ class ProjectResource {
      * @throws 404
      */
     public function optionsId($id) {
-        $this->getProjectForUser($id);
         $this->sendAllowHeadersForProject();
     }
 
@@ -241,8 +240,7 @@ class ProjectResource {
      *
      * @param int $id Id of the project
      */
-    protected function optionsPlannings($id) {
-        $this->plannings($id, 10, 0, Event::REST_OPTIONS_PROJECT_PLANNINGS);
+    public function optionsPlannings($id) {
         $this->sendAllowHeadersForProject();
     }
 
@@ -289,8 +287,7 @@ class ProjectResource {
      *
      * @param int $id The id of the project
      */
-    protected function optionsMilestones($id) {
-        $this->milestones($id, 10, 0, Event::REST_OPTIONS_PROJECT_MILESTONES);
+    public function optionsMilestones($id) {
         $this->sendAllowHeadersForProject();
     }
 
@@ -337,8 +334,7 @@ class ProjectResource {
      *
      * @param int $id Id of the project
      */
-    protected function optionsTrackers($id) {
-        $this->getRepresentationsForTrackers($id, 10, 0, Event::REST_OPTIONS_PROJECT_TRACKERS);
+    public function optionsTrackers($id) {
         $this->sendAllowHeadersForProject();
     }
 
@@ -387,8 +383,7 @@ class ProjectResource {
      *
      * @param int $id Id of the project
      */
-    protected function optionsBacklog($id) {
-        $this->backlogItems($id, 10, 0, Event::REST_OPTIONS_PROJECT_BACKLOG);
+    public function optionsBacklog($id) {
         $this->sendAllowHeadersForBacklog();
     }
 

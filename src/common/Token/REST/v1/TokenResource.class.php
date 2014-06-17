@@ -22,7 +22,6 @@ namespace Tuleap\Token\REST\v1;
 use \Luracast\Restler\RestException;
 use \Tuleap\Token\REST\TokenRepresentation;
 use \Tuleap\REST\Header;
-use \User_InvalidPasswordWithUserException;
 use \Exception;
 use UserManager;
 use EventManager;
@@ -132,18 +131,7 @@ class TokenResource {
      *
      * @param string $id Id of the token
      */
-    protected function optionsForToken($id) {
-        try {
-            $this->getTokenManager()->checkToken(
-                new \Rest_Token(
-                    $this->user_manager->getCurrentUser()->getId(),
-                    $id
-                )
-            );
-        } catch(\Rest_Exception_InvalidTokenException $exception) {
-            throw new RestException(404, $exception->getMessage());
-        }
-
+    public function optionsForToken($id) {
         $this->sendAllowHeadersForToken();
     }
 

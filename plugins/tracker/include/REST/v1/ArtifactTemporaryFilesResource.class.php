@@ -257,10 +257,8 @@ class ArtifactTemporaryFilesResource {
      * @throws 401
      * @throws 404
      */
-    protected function optionsId($id) {
+    public function optionsId($id) {
         $this->sendAllowHeadersForArtifactFilesId();
-
-        $this->getFile($id);
     }
 
     /**

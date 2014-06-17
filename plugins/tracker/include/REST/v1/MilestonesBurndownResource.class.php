@@ -27,12 +27,7 @@ use \Luracast\Restler\RestException;
 
 class MilestonesBurndownResource {
 
-    public function options(PFUser $user, Planning_Milestone $milestone) {
-        $artifact = $milestone->getArtifact();
-        $field    = $artifact->getABurndownField($user);
-        if (! $field) {
-            throw new RestException(404);
-        }
+    public function options() {
         Header::allowOptionsGet();
     }
 

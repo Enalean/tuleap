@@ -62,9 +62,7 @@ class ReportsResource {
      *
      * @param string $id Id of the report
      */
-    protected function optionsId($id) {
-        $user = UserManager::instance()->getCurrentUser();
-        $this->getReportById($user, $id);
+    public function optionsId($id) {
         Header::allowOptionsGet();
     }
 
@@ -96,11 +94,8 @@ class ReportsResource {
      *
      * @param string $id Id of the report
      */
-    protected function optionsArtifacts($id) {
-        $user = UserManager::instance()->getCurrentUser();
-        $this->getReportById($user, $id);
+    public function optionsArtifacts($id) {
         Header::allowOptionsGet();
-        Header::sendOptionsPaginationHeaders(self::DEFAULT_LIMIT, self::DEFAULT_OFFSET, self::MAX_LIMIT);
     }
 
     /**

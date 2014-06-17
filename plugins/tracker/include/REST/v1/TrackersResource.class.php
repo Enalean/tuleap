@@ -66,9 +66,7 @@ class TrackersResource {
      *
      * @param string $id Id of the tracker
      */
-    protected function optionsId($id) {
-        $user    = UserManager::instance()->getCurrentUser();
-        $this->getTrackerById($user, $id);
+    public function optionsId($id) {
         $this->sendAllowHeaderForTracker();
     }
 
@@ -97,12 +95,8 @@ class TrackersResource {
      *
      * @param string $id Id of the tracker
      */
-    protected function optionsReports($id) {
-        $user    = UserManager::instance()->getCurrentUser();
-        $this->getTrackerById($user, $id);
-
+    public function optionsReports($id) {
         Header::allowOptionsGet();
-        Header::sendOptionsPaginationHeaders(self::DEFAULT_LIMIT, self::DEFAULT_OFFSET, self::MAX_LIMIT);
     }
 
     /**
@@ -140,6 +134,13 @@ class TrackersResource {
             },
             $reports
         );
+    }
+
+    /**
+     * @url OPTIONS {id}/artifacts
+     */
+    public function optionsArtifacts($id) {
+        Header::allowOptionsGet();
     }
 
     /**

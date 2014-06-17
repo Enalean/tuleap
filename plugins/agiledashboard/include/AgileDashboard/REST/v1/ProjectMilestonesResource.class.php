@@ -123,10 +123,7 @@ class ProjectMilestonesResource {
     }
 
     public function options(PFUser $user, Project $project, $limit, $offset) {
-        $all_milestones = $this->getTopMilestones($user, $project);
-
         $this->sendAllowHeaders();
-        $this->sendPaginationHeaders($limit, $offset, count($all_milestones));
     }
 
     /**

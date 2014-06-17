@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,15 +16,29 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+use Tuleap\REST\TokenIsAllowed;
 
-namespace Tuleap\REST;
-
-use \Luracast\Restler\iAuthenticate;
-
-class TokenAuthentication implements iAuthenticate {
+class Rest_TokenAuthenticationTest extends TuleapTestCase {
     
-    public function __isAllowed() {
-        $tokenIsAllowed = new TokenIsAllowed();
-        return $tokenIsAllowed->isAllowed();
+    private $token_is_allowed;
+    
+    public function skip() {
+        $this->skipIfNotPhp53();
+    }
+
+    public function setUp() {
+        $this->token_is_allowed = new TokenIsAllowed();
+    }
+    
+    public function itAllowsOptions() {
+        $_SERVER['REQUEST_METHOD'] = 'OPTIONS';
+        $this->assertTrue($this->token_is_allowed->isAllowed());
+    }
+    
+    public function itDoesNotAllowedOtherMethods() {
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $this->expectException('DataAccessException');
+        $this->token_is_allowed->isAllowed();
     }
 }
+?>

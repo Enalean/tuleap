@@ -64,10 +64,8 @@ class ArtifactFilesResource {
     /**
      * @url OPTIONS {id}
      */
-    protected function optionsId($id) {
+    public function optionsId($id) {
         $this->sendAllowHeadersForArtifactFilesId();
-
-        $this->getAttachedFileContent($id, 0, 0);
     }
 
     /**

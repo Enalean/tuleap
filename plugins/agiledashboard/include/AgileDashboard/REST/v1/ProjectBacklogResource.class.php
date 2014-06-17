@@ -129,10 +129,7 @@ class ProjectBacklogResource {
     }
 
     public function options(PFUser $user, Project $project, $limit, $offset) {
-        $all_backlog_items = $this->getBacklogItems($user, $project);
-
         $this->sendAllowHeaders();
-        $this->sendPaginationHeaders($limit, $offset, count($all_backlog_items));
     }
 
     public function put(PFUser $user, Project $project, array $ids) {

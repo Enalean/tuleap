@@ -89,11 +89,4 @@ class CardsTest extends RestBase {
         $response = $this->getResponse($this->client->options('cards/'.TestDataBuilder::SPRINT_ARTIFACT_ID .'_'.TestDataBuilder::STORY_1_ARTIFACT_ID));
         $this->assertEquals(array('OPTIONS', 'PUT'), $response->getHeader('Allow')->normalize()->toArray());
     }
-
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
-    public function testOPTIONSCardsOnArtifactNotOnACardwall() {
-        $this->getResponse($this->client->options('cards/'.TestDataBuilder::RELEASE_ARTIFACT_ID .'_'.TestDataBuilder::STORY_4_ARTIFACT_ID));
-    }
 }

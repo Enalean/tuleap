@@ -39,8 +39,7 @@ class MilestonesCardwallResource {
         $this->artifact_factory = Tracker_ArtifactFactory::instance();
     }
 
-    public function options(Planning_Milestone $milestone) {
-        $this->checkCardwallIsEnabled($milestone);
+    public function options() {
         $this->sendAllowHeaderForCardwall();
     }
 

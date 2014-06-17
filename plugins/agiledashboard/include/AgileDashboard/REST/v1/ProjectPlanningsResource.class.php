@@ -60,10 +60,7 @@ class ProjectPlanningsResource {
     }
 
     public function options(PFUser $user, Project $project, $limit, $offset) {
-        $all_plannings = PlanningFactory::build()->getPlannings($user, $project->getID());
-
         $this->sendAllowHeaders();
-        $this->sendPaginationHeaders($limit, $offset, count($all_plannings));
     }
 
     private function sendPaginationHeaders($limit, $offset, $size) {
