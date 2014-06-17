@@ -39,7 +39,11 @@ class Search_SearchWiki {
             return;
         }
 
-        $GLOBALS['Response']->redirect($this->getRedirectUrl($query->getProject()->getId(), $this->getSearchPageName(), $query->getWords()));
+        $GLOBALS['Response']->redirect($this->getRedirectUrl(
+            $query->getProject()->getId(),
+            $this->getSearchPageName($query),
+            $query->getWords()
+        ));
     }
 
     public function getRedirectUrl($project_id, $page_name, $words) {
@@ -48,7 +52,6 @@ class Search_SearchWiki {
 
     public function getSearchPageName($query) {
         $search_page = self::SEARCH_PAGENAME_EN;
-
         if ($this->dao->searchLanguage($query->getProject()->getId()) == 'fr_FR') {
             $search_page = self::SEARCH_PAGENAME_FR;
         }
