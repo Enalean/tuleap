@@ -55,30 +55,33 @@ class FullTextSearch_Controller_Search extends MVC2_PluginController {
     }
 
     public function siteSearch(array $params) {
-        $params['search_type']        = true;
-        $params['pagination_handled'] = true;
-
-        $terms  = $params['words'];
+        $query  = $params['query'];
+        $terms  = $query->getWords();
         $facets = $this->getFacets();
-        $offset = $params['offset'];
+        $offset = $query->getOffset();
 
         try {
-            $search_result = $this->client->searchDocuments($terms, $facets, $offset, $this->request->getCurrentUser());
+            $search_result      = $this->client->searchDocuments($terms, $facets, $offset, $this->request->getCurrentUser(), $query->getNumberOfResults());
+            $results_count      = $search_result->count();
+            $maybe_more_results = ($results_count < $query->getNumberOfResults()) ? false :  true;
             if ($offset > 0) {
                 $results_presenter = new FullTextSearch_Presenter_SearchMore($search_result);
             } else {
-                $results_presenter = new FullTextSearch_Presenter_Search($search_result);
+                $results_presenter = new FullTextSearch_Presenter_Search($search_result, $maybe_more_results, $terms);
             }
+
+            $params['results']->setHasMore($maybe_more_results)->setCountResults($results_count);
         } catch (ElasticSearchTransportHTTPException $e) {
             $results_presenter = new FullTextSearch_Presenter_ErrorNoSearch($e->getMessage());
+            $params['results']->setHasMore(false)->setCountResults(0);
         }
 
-        $params['results'] = $this->renderToString($results_presenter->template, $results_presenter);
+        $params['results']->setResultsHtml($this->renderToString($results_presenter->template, $results_presenter));
     }
 
     private function getFacets() {
         $facets = $this->request->get('facets');
-        if (!is_array($facets)) {
+        if (! is_array($facets)) {
             $facets = array();
         }
         return $facets;

@@ -28,6 +28,7 @@ class Search_SearchQuery {
     private $trackerv3id;
     private $forum_id;
     private $is_ajax;
+    private $number_of_results;
 
     public function __construct(Codendi_Request $request) {
         $this->project        = $request->getProject();
@@ -75,4 +76,13 @@ class Search_SearchQuery {
     public function isAjax() {
         return $this->is_ajax;
     }
+
+    public function setNumberOfResults($number_of_results) {
+        $this->number_of_results = $number_of_results;
+    }
+
+    public function getNumberOfResults() {
+        return $this->number_of_results;
+    }
+
 }

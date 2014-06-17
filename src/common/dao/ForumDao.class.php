@@ -33,7 +33,12 @@ class ForumDao extends DataAccessObject {
     }
 
     public function searchGlobal($words, $exact, $offset, $forum_id) {
+        $this->searchGlobalPaginated($words, $exact, $offset, $forum_id, 26);
+    }
+
+    public function searchGlobalPaginated($words, $exact, $offset, $forum_id, $limit) {
         $offset = $this->da->escapeInt($offset);
+        $limit  = $this->da->escapeInt($limit);
         if ($exact === true) {
             $body    = $this->searchExactMatch($words);
             $subject = $this->searchExactMatch($words);
@@ -49,7 +54,7 @@ class ForumDao extends DataAccessObject {
                 WHERE ((forum.body LIKE $body) OR (forum.subject LIKE $subject))
                     AND forum.group_forum_id = $forum_id
                 GROUP BY msg_id, subject, date, user_name
-                LIMIT $offset,26";
+                LIMIT $offset, $limit";
         return $this->retrieve($sql);
     }
 }

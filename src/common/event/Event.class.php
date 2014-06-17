@@ -573,6 +573,13 @@ class Event {
      */
     const SEARCH_TYPES_PRESENTERS = 'search_types_presenters';
 
+    /**
+     * Sends-out a search a query
+     *
+     * Parameters:
+     *  'query'   => Search_SearchQuery - object representing query details
+     *  'results' => Search_SearchResults - search results object
+     */
     const SEARCH_TYPE = 'search_type';
 
     /**

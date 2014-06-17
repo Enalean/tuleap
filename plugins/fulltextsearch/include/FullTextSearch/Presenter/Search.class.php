@@ -28,10 +28,17 @@ class FullTextSearch_Presenter_Search {
 
     public $more_results;
 
-    public function __construct(FullTextSearch_SearchResultCollection $query_result) {
-        $this->query_result = $query_result;
-        $this->template     = 'results';
-        $this->more_results = $GLOBALS['Language']->getText('plugin_fulltextsearch', 'more_results');
+    public $maybe_more_results;
+
+    public $keywords;
+
+
+    public function __construct(FullTextSearch_SearchResultCollection $query_result, $maybe_more_results, $keywords) {
+        $this->query_result       = $query_result;
+        $this->template           = 'results';
+        $this->more_results       = $GLOBALS['Language']->getText('plugin_fulltextsearch', 'more_results');
+        $this->maybe_more_results = $maybe_more_results;
+        $this->keywords           = $keywords;
     }
 
     public function has_results() {
@@ -56,5 +63,13 @@ class FullTextSearch_Presenter_Search {
 
     public function elapsed_time() {
         return $this->query_result->getQueryTime();
+    }
+
+    public function no_more_results() {
+        return $GLOBALS['Language']->getText('search_index', 'no_more_results');
+    }
+
+    public function no_match_found_string() {
+        return $GLOBALS['Language']->getText('search_index', 'no_match_found', $this->keywords);
     }
 }

@@ -2233,6 +2233,7 @@ class Layout extends Response {
         $output = '
                 <form action="/search/" method="post"><table style="text-align:left;float:right"><tr style="vertical-align:top;"><td>
         ';
+        $output .= '<input type="hidden" name="number_of_page_results" value="'.Search_SearchPlugin::RESULTS_PER_QUERY.'">';
         $output .= '<select style="font-size: x-small" name="type_of_search">';
         foreach ($search_entries as $entry) {
             $selected = '';

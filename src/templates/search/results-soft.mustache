@@ -7,7 +7,12 @@
         {{> project_result }}
     {{/ results}}
     </ul>
-    <div id="search-more">
-        <button class="btn btn-primary" id="search-more-button">{{ more_results }}</button>
+    {{# maybe_more_results }}
+        <div id="search-more">
+            <button class="btn btn-primary" id="search-more-button">{{ more_results }}</button>
+        </div>
+    {{/ maybe_more_results }}
+    <div id="no_more_results" style="display:none;">
+        <p><i class="icon-frown"></i> {{ no_more_results }}</p>
     </div>
 {{/ has_results }}

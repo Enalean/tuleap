@@ -27,7 +27,7 @@ class FullTextSearch_Controller_SearchError extends MVC2_PluginController {
     public function clientNotFound($params) {
         $results_presenter = new FullTextSearch_Presenter_ErrorNoSearch($GLOBALS['Language']->getText('plugin_fulltextsearch', 'client_not_found'));
 
-        $params['results'] = $this->renderToString($results_presenter->template, $results_presenter);
+        $params['results']->setResultsHtml($this->renderToString($results_presenter->template, $results_presenter));
     }
 }
 

@@ -34,6 +34,6 @@ interface FullTextSearch_ISearchDocuments {
      * 
      * @return FullTextSearch_SearchResultCollection
      */
-    public function searchDocuments($terms, array $facets, $offset, PFUser $user);
+    public function searchDocuments($terms, array $facets, $offset, PFUser $user, $size);
 }
 ?>

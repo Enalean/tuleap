@@ -217,6 +217,14 @@ class UserManager {
         return $users;
     }
 
+    public function getPaginatedUsersByUsernameOrRealname($words, $offset, $exact, $limit) {
+        $users = array();
+        foreach ($this->getDao()->searchGlobalPaginated($words, $offset, $exact, $limit) as $user) {
+            $users[] = $this->getUserInstanceFromRow($user);
+        }
+        return $users;
+    }
+
     /**
      * Returns the user that have the given email address.
      * Returns null if no account is found.

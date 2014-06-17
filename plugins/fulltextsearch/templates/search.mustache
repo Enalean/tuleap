@@ -1,6 +1,7 @@
 <div class="container-fluid">
     <form name="fts_query" method="get" action="/search/">
         <input type="hidden" name="type_of_search" value="fulltext" />
+        <input type="hidden" name="number_of_page_results" value="{{ number_of_page_results }}">
         <div class="row">
             <div class="span12">
                 <input type="text" name="words" value="{{terms}}" size="30" />

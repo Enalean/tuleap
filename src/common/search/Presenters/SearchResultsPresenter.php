@@ -31,11 +31,14 @@ class Search_SearchResultsPresenter {
 
     public $more_results;
 
-    public function __construct(Search_SearchResultsIntroPresenter $results_intro_presenter, array $results, $template) {
+    public $maybe_more_results;
+
+    public function __construct(Search_SearchResultsIntroPresenter $results_intro_presenter, array $results, $template, $maybe_more_results) {
         $this->results_intro_presenter = $results_intro_presenter;
         $this->results                 = $results;
         $this->template                = $template;
         $this->more_results            = $GLOBALS['Language']->getText('plugin_fulltextsearch', 'more_results');
+        $this->maybe_more_results      = $maybe_more_results;
     }
 
     public function results_intro() {
@@ -52,5 +55,9 @@ class Search_SearchResultsPresenter {
 
     public function getTemplate() {
         return self::TEMPLATE_PREFIX.$this->template;
+    }
+
+    public function no_more_results() {
+        return $GLOBALS['Language']->getText('search_index', 'no_more_results');
     }
 }

@@ -39,9 +39,10 @@ class Search_SearchWiki {
             return;
         }
 
+        $project_id = $query->getProject()->getId();
         $GLOBALS['Response']->redirect($this->getRedirectUrl(
-            $query->getProject()->getId(),
-            $this->getSearchPageName($query),
+            $project_id,
+            $this->getSearchPageName($project_id),
             $query->getWords()
         ));
     }
@@ -50,19 +51,21 @@ class Search_SearchWiki {
         return '/wiki/index.php?group_id=' . $project_id . '&pagename=' . $page_name . '&s=' . urlencode($words);
     }
 
-    public function getSearchPageName($query) {
+    public function getSearchPageName($project_id) {
         $search_page = self::SEARCH_PAGENAME_EN;
-        if ($this->dao->searchLanguage($query->getProject()->getId()) == 'fr_FR') {
+        if ($this->dao->searchLanguage($project_id) == 'fr_FR') {
             $search_page = self::SEARCH_PAGENAME_FR;
         }
 
         return $search_page;
     }
 
-    public function getFacets() {
+    public function getFacets($project_id, $words = '') {
         return new Search_SearchTypePresenter(
             Search_SearchWiki::NAME,
-            $GLOBALS['Language']->getText('project_admin_editservice', 'service_wiki_lbl_key')
+            $GLOBALS['Language']->getText('project_admin_editservice', 'service_wiki_lbl_key'),
+            array(),
+            $this->getRedirectUrl($project_id, $this->getSearchPageName($project_id), $words)
         );
     }
 

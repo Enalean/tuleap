@@ -116,9 +116,12 @@ class MediaWikiPlugin extends Plugin {
          * @see Event::SEARCH_TYPE
          */
         public function search_type($params) {
-            if ($params['type_of_search'] == $this->name && $this->isSearchEntryAvailable($params['project'])) {
-                if (! $params['project']->isError()) {
-                   util_return_to($this->getMediawikiSearchURI($params['project'], $params['words']));
+            $query   = $params['query'];
+            $project = $query->getProject();
+
+            if ($query->getTypeOfSearch() == $this->name && $this->isSearchEntryAvailable($project)) {
+                if (! $project->isError()) {
+                   util_return_to($this->getMediawikiSearchURI($project, $query->getWords()));
                 }
             }
         }

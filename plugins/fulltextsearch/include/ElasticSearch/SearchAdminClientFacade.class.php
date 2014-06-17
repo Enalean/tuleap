@@ -51,8 +51,8 @@ class ElasticSearch_SearchAdminClientFacade extends ElasticSearch_SearchClientFa
     /**
      * @return array to be used for querying ES
      */
-    protected function getSearchDocumentsQuery($terms, array $facets, $offset, PFUser $user) {
-        $query = parent::getSearchDocumentsQuery($terms, $facets, $offset, $user);
+    protected function getSearchDocumentsQuery($terms, array $facets, $offset, PFUser $user, $size) {
+        $query = parent::getSearchDocumentsQuery($terms, $facets, $offset, $user, $size);
         $query['fields'][] = 'permissions';
         return $query;
     }

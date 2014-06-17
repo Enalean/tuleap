@@ -20,7 +20,7 @@
 
 class Search_SearchPlugin {
 
-    const RESULTS_PER_QUERY = 25;
+    const RESULTS_PER_QUERY = 15;
 
     /**
      * @var EventManager
@@ -32,21 +32,13 @@ class Search_SearchPlugin {
         $this->event_manager = $event_manager;
     }
 
-    public function search(Search_SearchQuery $query) {
-        $results = null;
-        $params = array(
-            'query'              => $query,
-            'words'              => $query->getWords(),
-            'offset'             => $query->getOffset(),
-            'nbRows'             => self::RESULTS_PER_QUERY,
-            'type_of_search'     => $query->getTypeOfSearch(),
-            'project'            => $query->getProject(),
-            'group_id'           => $query->getProject()->getId(),
-            'results'            => &$results,
+    public function search(Search_SearchQuery $query, Search_SearchResults $results) {
+
+        $params   = array(
+            'query'   => $query,
+            'results' => $results,
         );
 
         $this->event_manager->processEvent(Event::SEARCH_TYPE, $params);
-
-        return $results;
     }
 }

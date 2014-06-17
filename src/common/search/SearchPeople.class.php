@@ -31,15 +31,32 @@ class Search_SearchPeople {
         $this->manager = $manager;
     }
 
-    public function search(Search_SearchQuery $query) {
-        return $this->getSearchPeopleResultPresenter($this->manager->getAllUsersByUsernameOrRealname($query->getWords(), $query->getOffset(), $query->getExact()), $query->getWords());
+    public function search(Search_SearchQuery $query, Search_SearchResults $search_results) {
+        $users = $this->manager->getPaginatedUsersByUsernameOrRealname(
+            $query->getWords(),
+            $query->getOffset(),
+            $query->getExact(),
+            $query->getNumberOfResults()
+        );
+
+        $results_count      = count($users);
+        $maybe_more_results = ($results_count < $query->getNumberOfResults()) ? false : true;
+        $search_results->setHasMore($maybe_more_results)
+            ->setCountResults($results_count);
+
+        return $this->getSearchPeopleResultPresenter(
+            $users,
+            $query->getWords(),
+            $maybe_more_results
+        );
     }
 
-    private function getSearchPeopleResultPresenter(array $users, $words) {
+    private function getSearchPeopleResultPresenter(array $users, $words, $maybe_more_results) {
         return new Search_SearchResultsPresenter(
             new Search_SearchResultsIntroPresenter($users, $words),
             $this->getResultsPresenters($users),
-            self::NAME
+            self::NAME,
+            $maybe_more_results
         );
     }
 

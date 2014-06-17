@@ -31,20 +31,28 @@ class Search_SearchProject {
         $this->dao = $dao;
     }
 
-    public function search(Search_SearchQuery $query) {
+    public function search(Search_SearchQuery $query, Search_SearchResults $search_results) {
         $user = UserManager::instance()->getCurrentUser();
         if ($user->isRestricted()) {
-            return $this->getSearchProjectResultPresenter($this->dao->searchGlobalForRestrictedUsers($query->getWords(), $query->getOffset(), $query->getExact(), $user->getId()), $query->getWords());
+            $dao_results = $this->dao->searchGlobalPaginatedForRestrictedUsers($query->getWords(), $query->getOffset(), $query->getExact(), $user->getId(), $query->getNumberOfResults());
+        } else {
+            $dao_results = $this->dao->searchGlobalPaginated($query->getWords(), $query->getOffset(), $query->getExact(), $query->getNumberOfResults());
         }
 
-        return $this->getSearchProjectResultPresenter($this->dao->searchGlobal($query->getWords(), $query->getOffset(), $query->getExact()), $query->getWords());
+        $results_count      = count($dao_results);
+        $maybe_more_results = ($results_count < $query->getNumberOfResults()) ? false : true;
+        $search_results->setHasMore($maybe_more_results)
+            ->setCountResults($results_count);
+
+        return $this->getSearchProjectResultPresenter($dao_results, $query->getWords(), $maybe_more_results);
     }
 
-    private function getSearchProjectResultPresenter(DataAccessResult $results, $words) {
+    private function getSearchProjectResultPresenter(DataAccessResult $results, $words, $maybe_more_results) {
         return new Search_SearchResultsPresenter(
             new Search_SearchResultsIntroPresenter($results, $words),
             $this->getResultsPresenters($results),
-            self::NAME
+            self::NAME,
+            $maybe_more_results
         );
     }
 

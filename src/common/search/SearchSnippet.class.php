@@ -32,15 +32,23 @@ class Search_SearchSnippet {
         $this->dao = $dao;
     }
 
-    public function search(Search_SearchQuery $query) {
-        return $this->getSearchSnippetResultPresenter($this->dao->searchGlobal($query->getWords(), $query->getExact(), $query->getOffset()), $query->getWords());
+    public function search(Search_SearchQuery $query, Search_SearchResults $search_results) {
+        $dao_results = $this->dao->searchGlobalPaginated($query->getWords(), $query->getExact(), $query->getOffset(), $query->getNumberOfResults());
+
+        $results_count      = count($dao_results);
+        $maybe_more_results = ($results_count < $query->getNumberOfResults()) ? false : true;
+        $search_results->setHasMore($maybe_more_results)
+            ->setCountResults($results_count);
+
+        return $this->getSearchSnippetResultPresenter($dao_results, $query->getWords(), $maybe_more_results);
     }
 
-    private function getSearchSnippetResultPresenter(DataAccessResult $results, $words) {
+    private function getSearchSnippetResultPresenter(DataAccessResult $results, $words, $maybe_more_results) {
         return new Search_SearchResultsPresenter(
             new Search_SearchResultsIntroPresenter($results, $words),
             $this->getResultsPresenters($results),
-            self::NAME
+            self::NAME,
+            $maybe_more_results
         );
     }
 

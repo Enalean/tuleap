@@ -21,6 +21,10 @@
 class SnippetDao extends DataAccessObject {
 
     public function searchGlobal($words, $exact, $offset) {
+        return $this->searchGlobalPaginated($words, $exact, $offset, 26);
+    }
+
+    public function searchGlobalPaginated($words, $exact, $offset, $limit) {
         if ($exact) {
             $name = $this->searchExactMatch($words);
             $desc = $this->searchExactMatch($words);
@@ -29,11 +33,12 @@ class SnippetDao extends DataAccessObject {
             $desc = $this->searchExplodeMatch('description', $words);
         }
         $offset = $this->da->escapeInt($offset);
+        $limit  = $this->da->escapeInt($limit);
 
         $sql = "SELECT name, snippet_id, description
                 FROM snippet
                 WHERE ((name LIKE $name) OR (description LIKE $desc))
-                LIMIT $offset,26";
+                LIMIT $offset, $limit";
         return $this->retrieve($sql);
     }
 }

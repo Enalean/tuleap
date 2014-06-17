@@ -206,10 +206,13 @@ class LdapPlugin extends Plugin {
      * @see Event::SEARCH_TYPE
      */
     public function search_type($params) {
-        if ($GLOBALS['sys_auth_type'] == 'ldap' && $params['type_of_search'] == Search_SearchPeople::NAME) {
+        $query  = $params['query'];
+        $result = $params['results'];
+
+        if ($GLOBALS['sys_auth_type'] == 'ldap' && $query->getTypeOfSearch() == Search_SearchPeople::NAME) {
             $search = new LDAP_SearchPeople(UserManager::instance(), $this->getLdap());
-            $presenter = $search->search($params['query'], $params['nbRows']);
-            $params['results'] = $this->getSearchTemplateRenderer()->renderToString($presenter->getTemplate(), $presenter);
+            $presenter = $search->search($query, $query->getNumberOfResults(), $result);
+            $result->setResultsHtml($this->getSearchTemplateRenderer()->renderToString($presenter->getTemplate(), $presenter));
         }
     }
 

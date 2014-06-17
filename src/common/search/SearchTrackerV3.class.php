@@ -31,7 +31,7 @@ class Search_SearchTrackerV3 {
         $this->dao = $dao;
     }
 
-    public function search(Search_SearchQuery $query) {
+    public function search(Search_SearchQuery $query, Search_SearchResults $search_results) {
         include_once('www/tracker/include/ArtifactTypeHtml.class.php');
         include_once('www/tracker/include/ArtifactHtml.class.php');
 
@@ -61,9 +61,10 @@ class Search_SearchTrackerV3 {
             exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('global', 'error'));
         }
 
-        $results = $this->dao->searchGlobal($words, $exact, $offset, $atid, UserManager::instance()->getCurrentUser()->getUgroups($group_id, $atid));
+        $results = $this->dao->searchGlobalPaginated($words, $exact, $offset, $atid, UserManager::instance()->getCurrentUser()->getUgroups($group_id, $atid), $query->getNumberOfResults());
         $rows_returned = $this->dao->foundRows();
 
+        $art_displayed = 0;
         if ($rows_returned < 1) {
             echo '<H2>' . $GLOBALS['Language']->getText('search_index', 'no_match_found', htmlentities(stripslashes($words), ENT_QUOTES, 'UTF-8')) . '</H2>';
         } else {
@@ -92,7 +93,6 @@ class Search_SearchTrackerV3 {
             echo "\n";
 
 
-            $art_displayed = 0;
             $rows = 0;
             foreach ($results as $arr) {
                 $rows++;
@@ -117,13 +117,17 @@ class Search_SearchTrackerV3 {
                         print "<TD>" . $status . "</TD>";
                     print "</TR>";
                     $art_displayed++;
-                    if ($art_displayed > 24) {
+                    if ($art_displayed > $query->getNumberOfResults()) {
                         break;
-                    } // Only display 25 results.
+                    }
                 }
             }
             echo "</TABLE>\n";
         }
+
+        $maybe_more_results = ($art_displayed < $query->getNumberOfResults()) ? false : true;
+        $search_results->setCountResults($art_displayed)
+            ->setHasMore($maybe_more_results);
 
         return new Search_SearchTrackerV3ResultPresenter(ob_get_clean());
     }
