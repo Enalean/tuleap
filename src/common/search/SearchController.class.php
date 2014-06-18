@@ -174,12 +174,17 @@ class Search_SearchController {
         if ($plugin_results !== null) {
             return $plugin_results;
         }
-        if (isset($this->search_types[$query->getTypeOfSearch()])) {
-            $presenter = $this->search_types[$query->getTypeOfSearch()]->search($query);
-            if ($presenter) {
-                return $this->renderer->renderToString($presenter->getTemplate(), $presenter);
-            }
+        if ( ! isset($this->search_types[$query->getTypeOfSearch()])) {
+            return '';
+
         }
-        return '';
+
+        $presenter = $this->search_types[$query->getTypeOfSearch()]->search($query);
+        if ($presenter) {
+            if ($query->isAjax() && $query->getOffset() > 0) {
+                return $this->renderer->renderToString($presenter->getTemplate().'-more', $presenter);
+            }
+            return $this->renderer->renderToString($presenter->getTemplate(), $presenter);
+        }
     }
 }

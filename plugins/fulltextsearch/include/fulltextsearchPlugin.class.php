@@ -58,7 +58,6 @@ class fulltextsearchPlugin extends Plugin {
 
         // assets
         $this->_addHook('cssfile', 'cssfile', false);
-        $this->_addHook(Event::COMBINED_SCRIPTS, 'combined_scripts', false);
 
         // system events
         $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS, 'get_system_event_class', false);
@@ -412,16 +411,6 @@ class fulltextsearchPlugin extends Plugin {
         if ($this->canIncludeAssets()) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
         }
-    }
-
-    function combined_scripts($params) {
-        $params['scripts'] = array_merge(
-            $params['scripts'],
-            array(
-                $this->getPluginPath().'/scripts/script.js',
-                $this->getPluginPath().'/scripts/full-text-search.js',
-            )
-        );
     }
 
     private function canIncludeAssets() {

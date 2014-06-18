@@ -1,0 +1,20 @@
+{{# has_results}}
+    <p class="results-count">{{ result_count }}</p>
+
+    <ul class="fts_results" id="search_results_list">
+    {{# search_results }}
+        <li class="result">
+            <a class="title" href="{{ url }}">{{ item_title }}</a>
+            <p class="subtitle">Project: {{ project_name }}<p>
+
+            {{# display_permissions }}
+                <p class="subtitle">Permissions: {{ permissions }}</p>
+            {{/ display_permissions }}
+
+            {{# has_highlight }}
+                <p class="description">{{{ highlight }}}...</p>
+            {{/ has_highlight}}
+        </li>
+    {{/ search_results }}
+    </ul>
+{{/ has_results }}

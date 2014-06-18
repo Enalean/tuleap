@@ -64,7 +64,11 @@ class FullTextSearch_Controller_Search extends MVC2_PluginController {
 
         try {
             $search_result = $this->client->searchDocuments($terms, $facets, $offset, $this->request->getCurrentUser());
-            $results_presenter = new FullTextSearch_Presenter_Search($search_result);
+            if ($offset > 0) {
+                $results_presenter = new FullTextSearch_Presenter_SearchMore($search_result);
+            } else {
+                $results_presenter = new FullTextSearch_Presenter_Search($search_result);
+            }
         } catch (ElasticSearchTransportHTTPException $e) {
             $results_presenter = new FullTextSearch_Presenter_ErrorNoSearch($e->getMessage());
         }

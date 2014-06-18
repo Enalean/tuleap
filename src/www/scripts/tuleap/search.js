@@ -22,18 +22,22 @@ var tuleap = tuleap || {};
 !(function ($) {
 
     tuleap.search = {
+        default_results_offset : 10,
+
         init : function() {
             switchSearchType();
             toggleFacets();
             decorRedirectedSearch();
+            enableSearchMoreResults();
+            resetSearchResults($('input[name=type_of_search]')[0].value);
         },
 
         moveFacetsToSearchPane : function(type_of_search) {
             var search_pane_entry = $('a[data-search-type="'+type_of_search+'"]').parent();
 
-            if ($('.search-results > ul:first-child').length > 0) {
+            if ($('#search-results > ul:first-child').length > 0) {
                 search_pane_entry.find('ul').remove();
-                $('.search-results > ul:first-child').appendTo(search_pane_entry);
+                $('#search-results > ul:first-child').appendTo(search_pane_entry);
             }
         }
     };
@@ -48,25 +52,57 @@ var tuleap = tuleap || {};
                 e.preventDefault();
 
                 var type_of_search = $(this).attr('data-search-type');
-                var keywords = $('#words').attr('value');
-                var self = this;
 
-                $.ajax({
-                    url: getSearchUrl(self, type_of_search, keywords),
-                    beforeSend: function() { $('.search-results').html('').addClass('loading'); }
-                }).done(function(html) {
-                    $('.search-results').html(html);
-                    tuleap.search.moveFacetsToSearchPane(type_of_search);
-                }).fail(function(error) {
-                    codendi.feedback.clear();
-                    codendi.feedback.log('error', codendi.locales.search.error + ' : ' + error.responseText);
-                }).always(function() {
-                    $('.search-results').removeClass('loading');
-                    $('.search-bar input[name="type_of_search"]').attr('value', type_of_search);
-                    resetAdditionnalInformations(type_of_search, self);
-                });
+                resetSearchResults(type_of_search);
+                searchFromSidebar(type_of_search, false);
             }
         });
+    }
+
+    function resetSearchResults(type_of_search){
+        tuleap.search.type_of_search = type_of_search;
+        tuleap.search.offset = 0;
+    }
+
+    function enableSearchMoreResults() {
+        $('#search-more-button').unbind( "click" );
+        $('#search-more-button').click(function() {
+            tuleap.search.offset += tuleap.search.default_results_offset;
+            searchFromSidebar(tuleap.search.type_of_search, true);
+        });
+    }
+
+    function searchFromSidebar(type_of_search, append_to_results) {
+        var keywords       = $('#words').attr('value'),
+            self           = this;
+
+          $.ajax({
+              url: getSearchUrl(self, type_of_search, keywords),
+              beforeSend: function() {
+                  if (! append_to_results) {
+                      $('#search-results').html('');
+                  }
+                  $('#search-results').addClass('loading');
+              }
+          }).done(function(html) {
+                if (append_to_results) {
+                     $('#search_results_list').append(html);
+                     if ($.trim(html) == '') {
+                         $('#search-more-button').remove();
+                     }
+                } else {
+                     $('#search-results').html(html);
+                }
+                tuleap.search.moveFacetsToSearchPane(type_of_search);
+                enableSearchMoreResults();
+          }).fail(function(error) {
+                codendi.feedback.clear();
+                codendi.feedback.log('error', codendi.locales.search.error + ' : ' + error.responseText);
+          }).always(function() {
+                $('#search-results').removeClass('loading');
+                $('.search-bar input[name="type_of_search"]').attr('value', type_of_search);
+                resetAdditionnalInformations(type_of_search, self);
+          });
     }
 
     function decorRedirectedSearch() {
@@ -80,10 +116,12 @@ var tuleap = tuleap || {};
     }
 
     function getSearchUrl(element, type_of_search, keywords) {
-        var url = '/search/?type_of_search='+type_of_search+'&words='+keywords;
-        url     = enrichUrlIfNeeded(element, type_of_search, url);
+        var offset = tuleap.search.offset,
+            url    = '/search/?type_of_search='+type_of_search+
+                '&words='+keywords+
+                '&offset='+offset;
 
-        return url;
+        return enrichUrlIfNeeded(element, type_of_search, url);
     }
 
     function enrichUrlIfNeeded(element, type_of_search, url) {

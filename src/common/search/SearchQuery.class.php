@@ -27,6 +27,7 @@ class Search_SearchQuery {
     private $exact;
     private $trackerv3id;
     private $forum_id;
+    private $is_ajax;
 
     public function __construct(Codendi_Request $request) {
         $this->project        = $request->getProject();
@@ -36,6 +37,7 @@ class Search_SearchQuery {
         $this->exact          = $request->getValidated('exact', 'uint', false);
         $this->trackerv3id    = $request->getValidated('atid', 'uint', 0);
         $this->forum_id       = $request->getValidated('forum_id', 'uint', 0);
+        $this->is_ajax        = $request->isAjax();
     }
 
     public function isValid() {
@@ -68,5 +70,9 @@ class Search_SearchQuery {
 
     public function getTrackerV3Id() {
         return $this->trackerv3id;
+    }
+
+    public function isAjax() {
+        return $this->is_ajax;
     }
 }

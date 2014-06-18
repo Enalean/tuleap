@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,7 +19,7 @@
  */
 
 
-class FullTextSearch_Presenter_Search {
+class FullTextSearch_Presenter_SearchMore {
     public $template;
     /**
      * @var FullTextSearch_SearchResultCollection
@@ -30,7 +30,7 @@ class FullTextSearch_Presenter_Search {
 
     public function __construct(FullTextSearch_SearchResultCollection $query_result) {
         $this->query_result = $query_result;
-        $this->template     = 'results';
+        $this->template     = 'search-results-more';
         $this->more_results = $GLOBALS['Language']->getText('plugin_fulltextsearch', 'more_results');
     }
 
@@ -38,23 +38,11 @@ class FullTextSearch_Presenter_Search {
         return ($this->query_result->count() > 0);
     }
 
-    public function has_facets() {
-        return (count($this->facets()) > 0);
-    }
-
-    public function facets() {
-        return $this->query_result->getFacets();
-    }
-
-    public function result_count() {
-        return $GLOBALS['Language']->getText('plugin_fulltextsearch', 'result_count', array($this->query_result->count(), number_format($this->query_result->getQueryTime(), 2, '.', '')));
-    }
-
     public function search_results() {
         return $this->query_result->getResults();
     }
 
-    public function elapsed_time() {
-        return $this->query_result->getQueryTime();
+    public function display_more_results_option() {
+        return $this->has_results();
     }
 }

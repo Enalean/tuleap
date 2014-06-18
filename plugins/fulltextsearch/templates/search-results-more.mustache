@@ -1,7 +1,4 @@
 {{# has_results}}
-    <p class="results-count">{{ result_count }}</p>
-
-    <ul class="fts_results">
     {{# search_results }}
         <li class="result">
             <a class="title" href="{{ url }}">{{ item_title }}</a>
@@ -16,5 +13,4 @@
             {{/ has_highlight}}
         </li>
     {{/ search_results }}
-    </ul>
 {{/ has_results }}
