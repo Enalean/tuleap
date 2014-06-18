@@ -28,33 +28,34 @@ interface FullTextSearch_IIndexDocuments {
      *
      * PUT /docman/:project_id/:document_id
      *
-     * @return array
+     * @param array       $document
+     * @param Docman_Item $item
      *
-     * @param array $document
-     * @param int $project_id
-     * @param mixed $id Optional
+     * @return array
      */
-    public function index(array $document, $project_id, $id = false);
+    public function index(array $document, Docman_Item $item);
 
     /**
      * Flush this index/type combination
      *
      * DELETE /docman/:project_id/:document_id
      *
-     * @param mixed $id If id is supplied, delete that id for this index
-     *                  if not wipe the entire index
-     * @param array $options Parameters to pass to delete action
+     * @param Docman_Item $item
+     * @param array       $options Parameters to pass to delete action
      * 
      * @return array
      */
-    public function delete($id = false);
+    public function delete(Docman_Item $item);
 
     /**
      * Update document datas
      *
+     * @param Docman_Item $item
+     * @param array       $data
+     *
      * @return array
      */
-    public function update($item_id, $data);
+    public function update(Docman_Item $item, $data);
 
     /**
      * make and append prepared request to currentData

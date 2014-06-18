@@ -67,7 +67,7 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
      */
     public function indexNewDocument(Docman_Item $item, Docman_Version $version) {
         $indexed_data = $this->getIndexedData($item, $version);
-        $this->client->index($indexed_data, $item->getGroupId(), $item->getId());
+        $this->client->index($indexed_data, $item);
     }
 
     /**
@@ -79,7 +79,7 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
     public function indexNewVersion(Docman_Item $item, Docman_Version $version) {
         $update_data = $this->client->initializeSetterData();
         $update_data = $this->client->appendSetterData($update_data, 'file', $this->fileContentEncode($version->getPath()));
-        $this->client->update($item->getid(), $update_data);
+        $this->client->update($item, $update_data);
     }
 
     /**
@@ -93,7 +93,7 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
         $update_data = $this->client->appendSetterData($update_data, 'description', $item->getDescription());
         $update_data = $this->updateCustomTextualMetadata($item, $update_data);
 
-        $this->client->update($item->getid(), $update_data);
+        $this->client->update($item, $update_data);
     }
 
     /**
@@ -104,7 +104,7 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
     public function updatePermissions(Docman_Item $item) {
         $update_data = $this->client->initializeSetterData();
         $update_data = $this->client->appendSetterData($update_data, 'permissions', $this->permissions_manager->exportPermissions($item));
-        $this->client->update($item->getid(), $update_data);
+        $this->client->update($item, $update_data);
     }
 
     /**
@@ -113,7 +113,7 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
      * @param Docman_Item $item The item to delete
      */
     public function delete(Docman_Item $item) {
-        $this->client->delete($item->getId());
+        $this->client->delete($item);
     }
 
     private function getIndexedData(Docman_Item $item, Docman_Version $version) {
