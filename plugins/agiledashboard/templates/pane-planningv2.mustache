@@ -6,7 +6,7 @@
                 <h2>To be planned <input type="text" placeholder="filter" class="input-small" ng-model="query.label"/></h2>
             </div>
             <ul class="backlog-content" ui-tree-nodes="" ng-model="toBePlanneds" infinite-scroll="loadMore()" infinite-scroll-distance="2">
-                <li class="backlog-item story" ng-repeat="toBePlanned in toBePlanneds | filter:query:strict track by toBePlanned.id" ui-tree-node>
+                <li class="backlog-item story" ng-repeat="toBePlanned in toBePlanneds | filter:query:strict" ui-tree-node>
                     <div class="backlog-item-content" ui-tree-handle>{{ toBePlanned.label }}</div>
                 </li>
             </ul>
@@ -26,7 +26,7 @@
                             <!-- input type="text" class="input-small" ng-model="submilestone.remaining_effort" ng-change="change(submilestone)" /-->
                         </div>
                         <ul class="plan-content-milestone-content-items" ui-tree-nodes="" ng-model="planned">
-                            <li class="backlog-item story" ng-repeat="backlogItem in planned track by backlogItem.id" ui-tree-node>
+                            <li class="backlog-item story" ng-repeat="backlogItem in planned" ui-tree-node>
                                 <div class="backlog-item-content" ui-tree-handle>{{ backlogItem.label }}</div>
                             </li>
                         </ul>
