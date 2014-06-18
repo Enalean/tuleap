@@ -128,4 +128,24 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder {
             count($all_changesets)
         );
     }
+/**
+     * Return an artifact snapshot representation
+     *
+     * @param PFUser $user
+     * @param Tracker_Artifact[] $artifacts
+     *
+     * @return Tuleap\Tracker\REST\Artifact\ArtifactRepresentation[]
+     */
+    public function getListOfArtifactRepresentationWithFieldValues($user, $children) {
+        $tablo = array();
+        foreach ($children as $child) {
+            $tablo[] = array(
+                'id' => $child->getId(),
+                'label' => $child->getTitle()
+            );
+        }
+
+        return $tablo;
+    }
+
 }

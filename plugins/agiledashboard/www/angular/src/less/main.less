@@ -4,19 +4,63 @@
  * the Grunt configuration that is automatically processed.
  */
 
+@borderColor: #CCC;
+
 .backlog-item {
-    border: 1px solid #6F6F6F;
-    margin: 5px 0;
-    padding: 4px;
-    border-radius: 3px;
-    background: #FFF;
-    font-size: 0.9em;
-}
-.backlog-item.story {
-    border-left-width: 6px;
-}
-.backlog-item.bug {
-    border-left: 6px solid red;
+    margin-bottom: 5px;
+
+    .backlog-item-content {
+        border: 1px solid #6F6F6F;
+        padding: 4px;
+        border-radius: 3px;
+        background: #FFF;
+        font-size: 0.9em;
+        padding-bottom: 0;
+    }
+
+    &.story .backlog-item-content {
+        border-left-width: 8px;
+    }
+
+    &.task .backlog-item-content {
+        border-left-width: 8px;
+        border-color: lightblue;
+    }
+
+    .backlog-item-children-wrapper {
+        border: 1px solid @borderColor;
+        border-top: none;
+        border-bottom-right-radius: 3px;
+        border-bottom-left-radius: 3px;
+        margin: 0 2em;
+
+        > .backlog-item-children {
+            margin: 0;
+            list-style-type: none;
+            padding: 8px;
+
+            &.is-closed {
+                display: none;
+            }
+        }
+
+        > a.show-children {
+            color: #333;
+            font-weight: bold;
+            line-height: 6px;
+            padding-bottom: 4px;
+            font-size: 12px;
+            display: block;
+            background: @borderColor;
+            text-align: center;
+            cursor: pointer;
+
+            &:hover {
+                background: darken(@borderColor, 5%);
+                text-decoration: none;
+            }
+        }
+    }
 }
 
 /**

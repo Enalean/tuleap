@@ -118,3 +118,26 @@ controllers.controller('SortCtrl', ['$scope', function ($scope) {
         }
     };
 }]);
+
+controllers.controller('BacklogItemCtrl', ['$scope', 'BacklogItem', function ($scope, BacklogItem) {
+    $scope.showChildren = false;
+
+    $scope.children = false;
+
+    $scope.backlogItemId = false;
+
+    $scope.init = function (id) {
+        $scope.backlogItemId = id;
+    };
+
+    $scope.toggleChildren = function ($event) {
+        console.log($event);
+        $scope.showChildren = ! $scope.showChildren;
+
+        if ($scope.children === false) {
+
+            $scope.children = BacklogItem.children({id: $scope.backlogItemId});
+        }
+    };
+
+}]);

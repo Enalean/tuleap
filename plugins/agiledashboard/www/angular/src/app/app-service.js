@@ -20,3 +20,15 @@ services.factory('Milestone', ['$resource', function ($resource) {
         }
     });
 }]);
+
+services.factory('BacklogItem', ['$resource', function ($resource) {
+    var url = '/api/v1/artifacts/:id';
+
+    return $resource(url, {}, {
+        children: {
+            method: 'GET',
+            url: url + '/children',
+            isArray: true
+        }
+    });
+}]);

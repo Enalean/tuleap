@@ -126,6 +126,25 @@ class ArtifactsResource {
     }
 
     /**
+     * Get children
+     *
+     * Get the children of a given artifact
+     *
+     * @url GET {id}/children
+     *
+     * @param int    $id     Id of the artifact
+     *
+     * @return array {@type Tuleap\Tracker\REST\Artifact\ArtifactRepresentation}
+     */
+    protected function getArtifactChildren($id) {
+        $user     = UserManager::instance()->getCurrentUser();
+        $artifact = $this->getArtifactById($user, $id);
+        $children = $artifact->getChildrenForUser($user);
+
+        return $this->builder->getListOfArtifactRepresentationWithFieldValues($user, $children);
+    }
+
+    /**
      * @url OPTIONS {id}
      *
      * @param int $id Id of the artifact
