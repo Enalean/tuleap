@@ -1,6 +1,8 @@
 var submilestoneController = function($scope, submilestoneService) {
     $scope.name = 'submilestones';
+    $scope.showItems = false;
     $scope.init = function (milestone_id) {
+        $scope.showItems = ! $scope.showItems;
         if ($scope.milestone_id) {
             return;
         }

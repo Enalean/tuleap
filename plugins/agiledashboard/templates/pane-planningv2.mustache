@@ -34,8 +34,8 @@
             <div scrollable>
                 <div class="plan-content">
                     <div class="plan-content-milestone" ng-repeat="submilestone in submilestones track by submilestone.id" ng-controller="SubmilestoneCtrl">
-                        <div class="plan-content-milestone-header" ng-click="init(submilestone.id)"><input type="checkbox" ng-model="collapse" />  {{ submilestone.label }}</div>
-                        <div class="plan-content-milestone-content" ng-show="collapse" ui-tree="treeOptions" id="submilestone-{{ submilestone.id }}">
+                        <div class="plan-content-milestone-header" ng-click="init(submilestone.id)">  {{ submilestone.label }}</div>
+                        <div class="plan-content-milestone-content" ng-show="showItems" ui-tree="treeOptions" id="submilestone-{{ submilestone.id }}">
                             <div class="plan-content-milestone-content-header">Remaining effort: {{ submilestone.remaining_effort }}
                                 <!-- input type="text" class="input-small" ng-model="submilestone.remaining_effort" ng-change="change(submilestone)" /-->
                             </div>

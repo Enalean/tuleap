@@ -28,6 +28,7 @@
     }
 
     .backlog-item-children-wrapper {
+        background: #FFFFFF;
         border: 1px solid @borderColor;
         border-top: none;
         border-bottom-right-radius: 3px;
@@ -109,4 +110,14 @@
 .angular-ui-tree-empty {
     border: none;
     background: transparent;
+
+    &:before {
+        content: 'This element is empty. DragnDrop here.';
+        text-align: center;
+        font-style: italic;
+        color: gray;
+        margin: 0 auto;
+        width: 200px;
+        font-size: 0.9em;
+    }
 }
