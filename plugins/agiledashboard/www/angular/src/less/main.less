@@ -63,6 +63,40 @@
     }
 }
 
+.backlog-content,
+.plan-content {
+    padding: 0 5px;
+}
+
+#planningv2 {
+    [scrollable] {
+        margin-top: 10px;
+        height: 600px;
+        overflow-y: scroll;
+    }
+    .jspVerticalBar {
+        width: 4px;
+        background: transparent;
+    }
+
+    .jspHorizontalBar {
+        height: 4px;
+        background: transparent;
+    }
+
+    .jspTrack {
+        background: #EEE;
+    }
+
+    .jspDrag {
+        background: #BBB;
+        border-radius: 5px;
+    }
+    .jspScrollable:focus {
+        outline: 0;
+    }
+}
+
 /**
  * Now that all app-wide styles have been applied, we can load the styles for
  * all the submodules and components we are using. 

@@ -6,22 +6,24 @@
             <div class="backlog-header">
                 <h2>To be planned <input type="text" placeholder="filter" class="input-small" ng-model="query.label"/></h2>
             </div>
-            <ul class="backlog-content" ui-tree-nodes="" ng-model="toBePlanneds" infinite-scroll="loadMore()" infinite-scroll-distance="2">
-                <li class="backlog-item story" ng-repeat="toBePlanned in toBePlanneds | filter:query:strict" ui-tree-node>
-                    <div ng-controller="BacklogItemCtrl" ng-init="init(toBePlanned.id)">
-                        <div class="backlog-item-content" ui-tree-handle>{{ toBePlanned.label }}</div>
-                        <div class="backlog-item-children-wrapper">
-                            <ul class="backlog-item-children" ng-show="showChildren">
-                                <li class="backlog-item task" ng-repeat="child in children">
-                                    <div class="backlog-item-content">{{ child.label }}</div>
-                                </li>
-                            </ul>
-                            <a class="show-children" ng-click="toggleChildren($event)">…</a>
+            <div scrollable>
+                <ul class="backlog-content" ui-tree-nodes="" ng-model="toBePlanneds" infinite-scroll="loadMore()" infinite-scroll-distance="2">
+                    <li class="backlog-item story" ng-repeat="toBePlanned in toBePlanneds | filter:query:strict" ui-tree-node>
+                        <div ng-controller="BacklogItemCtrl" ng-init="init(toBePlanned.id)">
+                            <div class="backlog-item-content" ui-tree-handle>{{ toBePlanned.label }}</div>
+                            <div class="backlog-item-children-wrapper">
+                                <ul class="backlog-item-children" ng-show="showChildren">
+                                    <li class="backlog-item task" ng-repeat="child in children">
+                                        <div class="backlog-item-content">{{ child.label }}</div>
+                                    </li>
+                                </ul>
+                                <a class="show-children" ng-click="toggleChildren($event)">…</a>
+                            </div>
                         </div>
-                    </div>
-                </li>
-            </ul>
-            <div ng-show="busy">Loading data…</div>
+                    </li>
+                </ul>
+                <div ng-show="busy">Loading data…</div>
+            </div>
         </div>
         <div class="plan span6" ng-controller="SubmilestonesCtrl" ng-init="init(<% milestone_id %>)">
             <div class="plan-header">
@@ -29,28 +31,30 @@
                     <button class="btn btn-small">add sprint</button>
                 </h2>
             </div>
-            <div class="plan-content">
-                <div class="plan-content-milestone" ng-repeat="submilestone in submilestones track by submilestone.id" ng-controller="SubmilestoneCtrl">
-                    <div class="plan-content-milestone-header" ng-click="init(submilestone.id)"><input type="checkbox" ng-model="collapse" />  {{ submilestone.label }}</div>
-                    <div class="plan-content-milestone-content" ng-show="collapse" ui-tree="treeOptions" id="submilestone-{{ submilestone.id }}">
-                        <div class="plan-content-milestone-content-header">Remaining effort: {{ submilestone.remaining_effort }}
-                            <!-- input type="text" class="input-small" ng-model="submilestone.remaining_effort" ng-change="change(submilestone)" /-->
-                        </div>
-                        <ul class="plan-content-milestone-content-items" ui-tree-nodes="" ng-model="planned">
-                            <li class="backlog-item story" ng-repeat="backlogItem in planned" ui-tree-node>
-                                <div ng-controller="BacklogItemCtrl" ng-init="init(backlogItem.id)">
-                                    <div class="backlog-item-content" ui-tree-handle>{{ backlogItem.label }}</div>
-                                    <div class="backlog-item-children-wrapper">
-                                        <ul class="backlog-item-children" ng-show="showChildren">
-                                            <li class="backlog-item task" ng-repeat="child in children">
-                                                <div class="backlog-item-content">{{ child.label }}</div>
-                                            </li>
-                                        </ul>
-                                        <a class="show-children" ng-click="toggleChildren($event)">…</a>
+            <div scrollable>
+                <div class="plan-content">
+                    <div class="plan-content-milestone" ng-repeat="submilestone in submilestones track by submilestone.id" ng-controller="SubmilestoneCtrl">
+                        <div class="plan-content-milestone-header" ng-click="init(submilestone.id)"><input type="checkbox" ng-model="collapse" />  {{ submilestone.label }}</div>
+                        <div class="plan-content-milestone-content" ng-show="collapse" ui-tree="treeOptions" id="submilestone-{{ submilestone.id }}">
+                            <div class="plan-content-milestone-content-header">Remaining effort: {{ submilestone.remaining_effort }}
+                                <!-- input type="text" class="input-small" ng-model="submilestone.remaining_effort" ng-change="change(submilestone)" /-->
+                            </div>
+                            <ul class="plan-content-milestone-content-items" ui-tree-nodes="" ng-model="planned">
+                                <li class="backlog-item story" ng-repeat="backlogItem in planned" ui-tree-node>
+                                    <div ng-controller="BacklogItemCtrl" ng-init="init(backlogItem.id)">
+                                        <div class="backlog-item-content" ui-tree-handle>{{ backlogItem.label }}</div>
+                                        <div class="backlog-item-children-wrapper">
+                                            <ul class="backlog-item-children" ng-show="showChildren">
+                                                <li class="backlog-item task" ng-repeat="child in children">
+                                                    <div class="backlog-item-content">{{ child.label }}</div>
+                                                </li>
+                                            </ul>
+                                            <a class="show-children" ng-click="toggleChildren($event)">…</a>
+                                        </div>
                                     </div>
-                                </div>
-                            </li>
-                        </ul>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
