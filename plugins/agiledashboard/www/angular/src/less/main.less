@@ -5,31 +5,18 @@
  */
 
 .backlog-item {
-    border: 1px solid green;
-    margin-bottom: 10px;
+    border: 1px solid #6F6F6F;
+    margin: 5px 0;
     padding: 4px;
+    border-radius: 3px;
+    background: #FFF;
+    font-size: 0.9em;
 }
 .backlog-item.story {
-    border-left-width: 8px;
+    border-left-width: 6px;
 }
 .backlog-item.bug {
-    border-left: 8px solid red;
-}
-.plan-content-milestone {
-    border: 1px solid #ccc;
-    margin-bottom: 10px;
-}
-.plan-content-milestone-header {
-    border-bottom: 2px solid orange;
-    background: #fefefe;
-    padding: 4px;
-}
-.plan-content-milestone-content-header {
-    background: #ccc;
-    padding: 4px;
-}
-.plan-content-milestone-content-items {
-    padding: 4px;
+    border-left: 6px solid red;
 }
 
 /**
@@ -41,3 +28,7 @@
 
 @import '../app/planning/submilestone/submilestone.less';
 
+.angular-ui-tree-empty {
+    border: none;
+    background: transparent;
+}
