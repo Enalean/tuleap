@@ -3,6 +3,7 @@ Version 7.2 (Not Released Yet)
 	* request #6945: Notice on forum message post
 
 	== Features ==
+	* tasks #6986: infinite scroll on search results
 	* story #5756: search with nice interface (also story #7019)
 	* tasks #7034: Take in account new option in SVN
 	* tasks #7032: Add new entry for svn in local.inc
@@ -16,7 +17,7 @@ Version 7.2 (Not Released Yet)
 	* tracker: 5.409
 	* git: 3.88
 	* forumml: 2.6.18
-	* fulltextsearch: 0.31
+	* fulltextsearch: 0.32
 	* ldap: 3.45
 	* mediawiki: 0.31
 	* docman: 2.26.34
@@ -27,7 +28,7 @@ Version 7.2 (Not Released Yet)
         * request #6963 Incorrect error code REST API
 
     == Themes ==
-	* FlamingParrot: 1.11
+	* FlamingParrot: 1.13
 
 	== Developers ==
 	* Introduce docker container management for developers (tools/docker/dev_start.sh)
