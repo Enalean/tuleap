@@ -10,7 +10,7 @@ services.factory('Milestone', ['$resource', function ($resource) {
             isArray: true
         },
         update_backlog: {
-            method: 'PUT',
+            method: 'PATCH',
             url: url + '/backlog'
         },
         milestones: {

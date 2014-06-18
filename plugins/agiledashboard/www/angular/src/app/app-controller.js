@@ -52,10 +52,21 @@ controllers.controller('MilestoneCtrl', ['$scope', 'Milestone', function ($scope
         var ids;
         if (index) {
             ids = [$scope.toBePlanneds[index - 1].id, $scope.toBePlanneds[index].id];
+            Milestone.update_backlog({
+                milestoneId: $scope.milestone_id,
+                moved_artifact: $scope.toBePlanneds[index].id,
+                compared_to: $scope.toBePlanneds[index - 1].id,
+                direction: 'after'
+            }, ids);
         } else {
             ids = [$scope.toBePlanneds[0].id, $scope.toBePlanneds[1].id];
+            Milestone.update_backlog({
+                milestoneId: $scope.milestone_id,
+                moved_artifact: $scope.toBePlanneds[0].id,
+                compared_to: $scope.toBePlanneds[1].id,
+                direction: 'before'
+            }, ids);
         }
-        Milestone.update_backlog({milestoneId: $scope.milestone_id}, ids);
     };
 
     $scope.loadMore = function () {
