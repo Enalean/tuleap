@@ -12,23 +12,8 @@
             </div>
             <div scrollable>
                 <ul class="backlog-content" ui-tree-nodes="" ng-model="toBePlanneds" infinite-scroll="loadMore()" infinite-scroll-distance="2">
-                    <li class="backlog-item story" ng-repeat="toBePlanned in toBePlanneds | filter:query:strict" ui-tree-node>
-                        <div ng-controller="BacklogItemCtrl" ng-init="init(toBePlanned.id)">
-                            <div class="backlog-item-content dropdown" ui-tree-handle>
-                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">{{ toBePlanned.label }} <b class="caret"></b></a>
-                                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                    <li><a href="#" ng-click="editArtifact(toBePlanned.id)"><i class="icon-edit"></i> Edit</a></li>
-                                    <li><a href="#" ng-click="addChild(toBePlanned.id, toBePlanned.artifact.tracker.id)"><i class="icon-plus"></i> Add a task</a></li>
-                                 </ul>
-                            </div>
-                            <div class="backlog-item-children-wrapper">
-                                <ul class="backlog-item-children" ng-show="showChildren">
-                                    <li class="backlog-item task" ng-repeat="child in children">
-                                        <div class="backlog-item-content">{{ child.label }}</div>
-                                    </li>
-                                </ul>
-                                <a class="show-children" ng-click="toggleChildren($event)">…</a>
-                            </div>
+                    <li class="backlog-item story" ng-repeat="backlogItem in toBePlanneds | filter:query:strict" ui-tree-node>
+                        <div ng-controller="BacklogItemCtrl" ng-init="init(backlogItem.id)" ng-include="template">
                         </div>
                     </li>
                 </ul>
@@ -52,22 +37,7 @@
                             </div>
                             <ul class="plan-content-milestone-content-items" ui-tree-nodes="" ng-model="planned">
                                 <li class="backlog-item story" ng-repeat="backlogItem in planned" ui-tree-node>
-                                    <div ng-controller="BacklogItemCtrl" ng-init="init(backlogItem.id)">
-                                        <div class="backlog-item-content dropdown" ui-tree-handle>
-                                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">{{  backlogItem.label }} <b class="caret"></b></a>
-                                             <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                                <li><a href="#" ng-click="editArtifact( backlogItem.id)"><i class="icon-edit"></i> Edit</a></li>
-                                                <li><a href="#" ng-click="addChild( backlogItem.id,  backlogItem.artifact.tracker.id)"><i class="icon-plus"></i> Add a task</a></li>
-                                             </ul>
-                                        </div>
-                                        <div class="backlog-item-children-wrapper">
-                                            <ul class="backlog-item-children" ng-show="showChildren">
-                                                <li class="backlog-item task" ng-repeat="child in children">
-                                                    <div class="backlog-item-content">{{ child.label }}</div>
-                                                </li>
-                                            </ul>
-                                            <a class="show-children" ng-click="toggleChildren($event)">…</a>
-                                        </div>
+                                    <div ng-controller="BacklogItemCtrl" ng-init="init(backlogItem.id)" ng-include="template">
                                     </div>
                                 </li>
                             </ul>

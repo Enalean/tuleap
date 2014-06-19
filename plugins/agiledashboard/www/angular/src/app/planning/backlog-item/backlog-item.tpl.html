@@ -1,0 +1,15 @@
+<div class="backlog-item-content dropdown" ui-tree-handle>
+    <a class="dropdown-toggle" data-toggle="dropdown" href="#">{{ backlogItem.label }} <b class="caret"></b></a>
+    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+       <li><a href="#" ng-click="editArtifact(backlogItem.id)"><i class="icon-edit"></i> Edit</a></li>
+       <li><a href="#" ng-click="addChild(backlogItem.id, backlogItem.artifact.tracker.id)"><i class="icon-plus"></i> Add a task</a></li>
+    </ul>
+</div>
+<div class="backlog-item-children-wrapper">
+   <ul class="backlog-item-children" ng-show="showChildren" ui-tree-nodes="" ng-model="children">
+       <li class="backlog-item task" ng-repeat="child in children" ui-tree-node>
+           <div class="backlog-item-content" ui-tree-handle>{{ child.label }}</div>
+       </li>
+   </ul>
+   <a class="show-children" ng-click="toggleChildren($event)">…</a>
+</div>

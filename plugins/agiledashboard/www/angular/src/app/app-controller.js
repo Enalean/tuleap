@@ -1,4 +1,4 @@
-var controllers = angular.module('planningControllers', []);
+var controllers = angular.module('planningControllers', ['templates-app']);
 
 controllers.controller('MilestoneCtrl', ['$scope', 'Milestone', function ($scope, Milestone) {
     var resource_params = {
@@ -120,6 +120,8 @@ controllers.controller('SortCtrl', ['$scope', function ($scope) {
 }]);
 
 controllers.controller('BacklogItemCtrl', ['$scope', 'BacklogItem', function ($scope, BacklogItem) {
+    $scope.template = 'planning/backlog-item/backlog-item.tpl.html';
+
     $scope.showChildren = false;
 
     $scope.children = false;
