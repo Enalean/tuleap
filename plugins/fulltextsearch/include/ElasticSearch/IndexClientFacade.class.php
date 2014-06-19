@@ -24,24 +24,29 @@ class ElasticSearch_IndexClientFacade extends ElasticSearch_ClientFacade impleme
     /**
      * @see FullTextSearch_IIndexDocuments::index
      */
-    public function index(array $document, $project_id, $id = false) {
-        $this->client->setType($project_id);
+    public function index(array $document, Docman_Item $item) {
+        $this->client->setType($item->getGroupId());
 
-        $this->client->index($document, $id);
+        $this->client->index($document, $item->getId());
     }
 
     /**
      * @see FullTextSearch_IIndexDocuments::delete
      */
-    public function delete($id = false) {
-        $this->client->delete($id);
+    public function delete(Docman_Item $item) {
+        $this->client->setType($item->getGroupId());
+
+
+        $this->client->delete($item->getId());
     }
 
     /**
      * @see FullTextSearch_IIndexDocuments::update
      */
-    public function update($item_id, $data) {
-        $this->client->request($item_id.'/_update', 'POST', $data);
+    public function update(Docman_Item $item, $data) {
+        $this->client->setType($item->getGroupId());
+
+        $this->client->request($item->getId().'/_update', 'POST', $data);
     }
 
     /**

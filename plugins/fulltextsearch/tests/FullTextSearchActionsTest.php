@@ -124,8 +124,7 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
                 'property_1'  => 'val01',
                 'property_2'  => 'val02',
                ),
-            200,
-            101
+            $this->item
         );
         $this->client->expectOnce('index', $expected);
 
@@ -147,7 +146,7 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
             ),
         );
 
-        $expected = array($item_id, $update_data);
+        $expected = array($this->item, $update_data);
         $this->client->expectOnce('update', $expected);
 
         $this->actions->updateDocument($this->item);
@@ -155,7 +154,7 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
 
     public function itCanDeleteADocumentFromItsId() {
         $expected_id = $this->item->getId();
-        $this->client->expectOnce('delete', array($expected_id));
+        $this->client->expectOnce('delete', array($this->item));
 
         $this->actions->delete($this->item);
     }
