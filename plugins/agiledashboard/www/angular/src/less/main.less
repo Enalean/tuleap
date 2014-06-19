@@ -15,7 +15,15 @@
         border-radius: 3px;
         background: #FFF;
         font-size: 0.9em;
-        padding-bottom: 0;
+
+        a.dropdown-toggle {
+            color: inherit;
+
+            &:hover {
+                color: grey;
+                text-decoration: none;
+            }
+        }
     }
 
     &.story .backlog-item-content {

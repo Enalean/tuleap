@@ -131,7 +131,6 @@ controllers.controller('BacklogItemCtrl', ['$scope', 'BacklogItem', function ($s
     };
 
     $scope.toggleChildren = function ($event) {
-        console.log($event);
         $scope.showChildren = ! $scope.showChildren;
 
         if ($scope.children === false) {
@@ -139,5 +138,13 @@ controllers.controller('BacklogItemCtrl', ['$scope', 'BacklogItem', function ($s
             $scope.children = BacklogItem.children({id: $scope.backlogItemId});
         }
     };
+
+    $scope.editArtifact = function (artifactId) {
+        tuleap.tracker.artifactModalInPlace.loadEditArtifactModal(artifactId);
+    }
+
+    $scope.addChild = function (artifactId, trackerId) {
+        tuleap.tracker.artifactModalInPlace.loadCreateArtifactModal(trackerId, artifactId);
+    }
 
 }]);

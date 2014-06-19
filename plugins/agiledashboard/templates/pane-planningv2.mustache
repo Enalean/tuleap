@@ -1,8 +1,12 @@
 {{=<% %>=}}
+
+<link href="/plugins/agiledashboard/angular/vendor/angular-ui-tree/dist/angular-ui-tree.min.css" media="all" rel="stylesheet" type="text/css">
+<link href="/plugins/agiledashboard/angular/bin/assets/tuleap.planning-0.0.1.css" media="all" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="/plugins/agiledashboard/angular/bin/assets/tuleap.planning-0.0.1.js"></script>
+
 <div ng-app="tuleap.planningApp" class="row-fluid" ng-cloak>
     <div ng-controller="SortCtrl">
-        <div class="backlog span6" ng-controller="MilestoneCtrl" ng-init="init(<% milestone_id %>)" ui-tree="treeOptions">
+        <div class="backlog span6" ng-controller="MilestoneCtrl" ng-init="init(<% milestone_id %>)" ui-tree="treeOptions" data-drag-delay="150">
             <div class="backlog-header">
                 <h2>To be planned <input type="text" placeholder="filter" class="input-small" ng-model="query.label"/></h2>
             </div>
@@ -10,7 +14,13 @@
                 <ul class="backlog-content" ui-tree-nodes="" ng-model="toBePlanneds" infinite-scroll="loadMore()" infinite-scroll-distance="2">
                     <li class="backlog-item story" ng-repeat="toBePlanned in toBePlanneds | filter:query:strict" ui-tree-node>
                         <div ng-controller="BacklogItemCtrl" ng-init="init(toBePlanned.id)">
-                            <div class="backlog-item-content" ui-tree-handle>{{ toBePlanned.label }}</div>
+                            <div class="backlog-item-content dropdown" ui-tree-handle>
+                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">{{ toBePlanned.label }} <b class="caret"></b></a>
+                                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                    <li><a href="#" ng-click="editArtifact(toBePlanned.id)"><i class="icon-edit"></i> Edit</a></li>
+                                    <li><a href="#" ng-click="addChild(toBePlanned.id, toBePlanned.artifact.tracker.id)"><i class="icon-plus"></i> Add a task</a></li>
+                                 </ul>
+                            </div>
                             <div class="backlog-item-children-wrapper">
                                 <ul class="backlog-item-children" ng-show="showChildren">
                                     <li class="backlog-item task" ng-repeat="child in children">
@@ -25,6 +35,7 @@
                 <div ng-show="busy">Loading data…</div>
             </div>
         </div>
+
         <div class="plan span6" ng-controller="SubmilestonesCtrl" ng-init="init(<% milestone_id %>)">
             <div class="plan-header">
                 <h2>Sprints in Release 7.0
@@ -35,14 +46,20 @@
                 <div class="plan-content">
                     <div class="plan-content-milestone" ng-repeat="submilestone in submilestones track by submilestone.id" ng-controller="SubmilestoneCtrl">
                         <div class="plan-content-milestone-header" ng-click="init(submilestone.id)">  {{ submilestone.label }}</div>
-                        <div class="plan-content-milestone-content" ng-show="showItems" ui-tree="treeOptions" id="submilestone-{{ submilestone.id }}">
+                        <div id="submilestone-{{ submilestone.id }}" class="plan-content-milestone-content" ng-show="showItems" ui-tree="treeOptions" data-drag-delay="150">
                             <div class="plan-content-milestone-content-header">Remaining effort: {{ submilestone.remaining_effort }}
                                 <!-- input type="text" class="input-small" ng-model="submilestone.remaining_effort" ng-change="change(submilestone)" /-->
                             </div>
                             <ul class="plan-content-milestone-content-items" ui-tree-nodes="" ng-model="planned">
                                 <li class="backlog-item story" ng-repeat="backlogItem in planned" ui-tree-node>
                                     <div ng-controller="BacklogItemCtrl" ng-init="init(backlogItem.id)">
-                                        <div class="backlog-item-content" ui-tree-handle>{{ backlogItem.label }}</div>
+                                        <div class="backlog-item-content dropdown" ui-tree-handle>
+                                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">{{  backlogItem.label }} <b class="caret"></b></a>
+                                             <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                <li><a href="#" ng-click="editArtifact( backlogItem.id)"><i class="icon-edit"></i> Edit</a></li>
+                                                <li><a href="#" ng-click="addChild( backlogItem.id,  backlogItem.artifact.tracker.id)"><i class="icon-plus"></i> Add a task</a></li>
+                                             </ul>
+                                        </div>
                                         <div class="backlog-item-children-wrapper">
                                             <ul class="backlog-item-children" ng-show="showChildren">
                                                 <li class="backlog-item task" ng-repeat="child in children">
@@ -61,6 +78,3 @@
         </div>
     </div>
 </div>
-
-<link href="/plugins/agiledashboard/angular/vendor/angular-ui-tree/dist/angular-ui-tree.min.css" media="all" rel="stylesheet" type="text/css">
-<link href="/plugins/agiledashboard/angular/bin/assets/tuleap.planning-0.0.1.css" media="all" rel="stylesheet" type="text/css">

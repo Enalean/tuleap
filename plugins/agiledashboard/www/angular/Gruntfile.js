@@ -498,7 +498,7 @@ module.exports = function ( grunt ) {
        */
       less: {
         files: [ 'src/**/*.less' ],
-        tasks: [ 'less:build' ]
+        tasks: [ 'less:build', 'less:compile', 'copy:compile_assets' ]
       },
 
       /**
