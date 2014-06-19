@@ -10,6 +10,8 @@ angular.module('tuleap.planningApp', [
             element.jScrollPane({
                 autoReinitialise: true,
                 verticalGutter: 0
+            }).bind('mousewheel', function(e) {
+                e.preventDefault();
             });
         }
     };
