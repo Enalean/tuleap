@@ -1,6 +1,7 @@
 Version 7.2 (Not Released Yet)
 	== Bug fix ==
 	* request #6945: Notice on forum message post
+	* Fix request #7057 Fatal error when searching in wiki
 
 	== Features ==
 	* tasks #6986: infinite scroll on search results
