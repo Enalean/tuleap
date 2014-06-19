@@ -4,6 +4,7 @@ Version 7.2 (Not Released Yet)
 	* Fix request #7057 Fatal error when searching in wiki
 
 	== Features ==
+	* tasks #7051: fix full text search is not an option when going to /search directly
 	* tasks #7054: fix bug: ajax search does not use text field but some stored DOM value
 	* tasks #6986: infinite scroll on search results
 	* story #5756: search with nice interface (also story #7019)
