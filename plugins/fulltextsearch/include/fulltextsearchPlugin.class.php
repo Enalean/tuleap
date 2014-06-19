@@ -167,7 +167,9 @@ class fulltextsearchPlugin extends Plugin {
                 $search_client,
                 new Docman_PermissionsItemManager(),
                 $this->getBareDocmanMetadataFactory(),
-                new ElasticSearch_1_2_RequestDataFactory()
+                new ElasticSearch_1_2_RequestDataFactory(
+                    $this->getBareDocmanMetadataFactory()
+                )
             );
         }
         return $this->actions;

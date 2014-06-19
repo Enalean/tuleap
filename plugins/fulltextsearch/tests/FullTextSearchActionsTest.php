@@ -35,7 +35,7 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
 
         $this->client = partial_mock(
             'ElasticSearch_IndexClientFacade',
-            array('index', 'update', 'delete', 'getProjectMapping', 'initializeProjectMapping')
+            array('index', 'update', 'delete', 'getProjectMapping', 'defineProjectMapping')
         );
 
         $this->permissions_manager = mock('Docman_PermissionsItemManager');
@@ -84,7 +84,11 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
         stub($this->item)->getCreateDate()->returns(1403160945);
         stub($this->item)->getUpdateDate()->returns(1403160949);
 
-        $this->metadata_factory = stub('Docman_MetadataFactory')->getRealMetadataList()->returns(
+        $first_search_type = array(
+            PLUGIN_DOCMAN_METADATA_TYPE_TEXT,
+            PLUGIN_DOCMAN_METADATA_TYPE_STRING
+        );
+        $this->metadata_factory = stub('Docman_MetadataFactory')->getRealMetadataList(false, $first_search_type)->returns(
             array($metadata01, $metadata02)
         );
 
@@ -92,7 +96,9 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
         stub($this->metadata_factory)->getMetadataValue($this->item, $metadata01)->returns('val01');
         stub($this->metadata_factory)->getMetadataValue($this->item, $metadata02)->returns('val02');
 
-        $this->request_data_factory = new ElasticSearch_1_2_RequestDataFactory();
+        $this->request_data_factory = new ElasticSearch_1_2_RequestDataFactory(
+            $this->metadata_factory
+        );
 
         $this->actions = new FullTextSearchDocmanActions(
             $this->client,
@@ -118,6 +124,12 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
     public function itCallIndexOnClientWithRightParametersWithObsolescenceDate() {
         stub($this->item)->getObsolescenceDate()->returns(1403160959);
 
+        $second_search_type = array(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
+        stub($this->metadata_factory)->getRealMetadataList(false, $second_search_type)->returns(
+            array()
+        );
+
+        stub($this->client)->getProjectMapping()->returns(array());
 
         $expected = array(
             array(
@@ -143,6 +155,12 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
     public function itCallIndexOnClientWithRightParametersWithoutObsolescenceDate() {
         stub($this->item)->getObsolescenceDate()->returns(0);
 
+        $second_search_type = array(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
+        stub($this->metadata_factory)->getRealMetadataList(false, $second_search_type)->returns(
+            array()
+        );
+
+        stub($this->client)->getProjectMapping()->returns(array());
 
         $expected = array(
             array(
@@ -165,7 +183,6 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
     }
 
     public function itCallUpdateOnClientWithTitleIfNew() {
-        $item_id     = $this->item->getId();
         $update_data = array(
             'script'=> 'ctx._source.title = title;'.
                        'ctx._source.description = description;'.
@@ -186,7 +203,6 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
     }
 
     public function itCanDeleteADocumentFromItsId() {
-        $expected_id = $this->item->getId();
         $this->client->expectOnce('delete', array($this->item));
 
         $this->actions->delete($this->item);
@@ -246,8 +262,45 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
             )
         );
 
-        expect($this->client)->initializeProjectMapping(200, $expected_data)->once();
+        expect($this->client)->defineProjectMapping(200, $expected_data)->once();
 
         $this->actions->initializeProjetMapping(200);
+    }
+
+    public function itUpdatesMappingIfANewCustomDateMetadataIsFound() {
+        $metadata03 = stub('Docman_Metadata')->getId()->returns(6);
+
+        $second_search_type = array(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
+        stub($this->metadata_factory)->getRealMetadataList(false, $second_search_type)->returns(
+            array($metadata03)
+        );
+
+        $expected_data = array(
+            '200' => array(
+                'properties' => array(
+                    'property_6' => array(
+                        'type' => 'date'
+                    )
+                )
+            )
+        );
+
+        stub($this->client)->getProjectMapping()->returns(array(
+            'docman' => array(
+                'mappings' => array(
+                    '200' => array(
+                        'properties' => array(
+                            'description' => array(
+                                'type' => 'string'
+                            )
+                        )
+                    )
+                )
+            )
+        ));
+
+        expect($this->client)->defineProjectMapping(200, $expected_data)->once();
+
+        $this->actions->indexNewDocument($this->item, $this->version);
     }
 }

@@ -49,7 +49,7 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
     }
 
     public function initializeProjetMapping($project_id) {
-        $this->client->initializeProjectMapping($project_id, $this->getMappingData($project_id));
+        $this->client->defineProjectMapping($project_id, $this->getMappingData($project_id));
     }
 
     private function getMappingData($project_id) {
@@ -67,6 +67,7 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
      */
     public function indexNewDocument(Docman_Item $item, Docman_Version $version) {
         $indexed_data = $this->getIndexedData($item, $version);
+
         $this->client->index($indexed_data, $item);
     }
 
@@ -79,6 +80,7 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
     public function indexNewVersion(Docman_Item $item, Docman_Version $version) {
         $update_data = $this->client->initializeSetterData();
         $update_data = $this->client->appendSetterData($update_data, 'file', $this->fileContentEncode($version->getPath()));
+
         $this->client->update($item, $update_data);
     }
 
@@ -104,6 +106,7 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
     public function updatePermissions(Docman_Item $item) {
         $update_data = $this->client->initializeSetterData();
         $update_data = $this->client->appendSetterData($update_data, 'permissions', $this->permissions_manager->exportPermissions($item));
+
         $this->client->update($item, $update_data);
     }
 
@@ -132,7 +135,33 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
             $hardcoded_metadata['obsolescence_date'] = date('Y-m-d', $item->getObsolescenceDate());
         }
 
-        return $hardcoded_metadata + $this->getCustomTextualMetadata($item);
+        return $hardcoded_metadata +
+            $this->getCustomTextualMetadata($item) +
+            $this->getCustomDateMetadata($item);
+    }
+
+    /**
+     * Get the user defined item date metadata
+     *
+     * @param Docman_Item $item The item indexed
+     *
+     * @return array
+     */
+
+    private function getCustomDateMetadata(Docman_Item $item) {
+        $this->updateMappingWithNewDateMetadata($item);
+
+        return $this->request_data_factory->getPUTCustomDateData($item);
+    }
+
+    private function updateMappingWithNewDateMetadata(Docman_Item $item) {
+        $this->client->defineProjectMapping(
+            $item->getGroupId(),
+            $this->request_data_factory->getPUTDateMappingMetadata(
+                $item,
+                $this->client->getProjectMapping($item->getGroupId())
+            )
+        );
     }
 
     /**
@@ -143,21 +172,7 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
      * @return array
      */
     private function getCustomTextualMetadata(Docman_Item $item) {
-        $this->metadata_factory->setRealGroupId($item->groupId);
-        $item_textual_metadatas = $this->metadata_factory->getRealMetadataList(
-            false,
-            array(
-                PLUGIN_DOCMAN_METADATA_TYPE_TEXT,
-                PLUGIN_DOCMAN_METADATA_TYPE_STRING
-            )
-        );
-
-        $custom_metadata = array();
-        foreach ($item_textual_metadatas as $item_metadata) {
-            $custom_metadata['property_' . $item_metadata->getId()] = $this->metadata_factory->getMetadataValue($item, $item_metadata);
-        }
-
-        return $custom_metadata;
+        return $this->request_data_factory->getCustomTextualMetadataValue($item);
     }
 
     private function updateCustomTextualMetadata(Docman_Item $item, array $update_data) {

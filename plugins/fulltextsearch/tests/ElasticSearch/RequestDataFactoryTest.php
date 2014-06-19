@@ -22,6 +22,122 @@ require_once dirname(__FILE__) .'/../../include/autoload.php';
 
 class RequestDataFactoryTest extends TuleapTestCase {
 
+    public function setUp() {
+        parent::setUp();
+
+        $this->date_metadata_title = stub('Docman_Metadata')->getLabel()->returns('date01');
+        stub($this->date_metadata_title)->getId()->returns(15);
+
+        $this->date_metadata_title_2 = stub('Docman_Metadata')->getLabel()->returns('date02');
+        stub($this->date_metadata_title_2)->getId()->returns(17);
+
+        $this->text_metadata_title = stub('Docman_Metadata')->getLabel()->returns('text01');
+        stub($this->text_metadata_title)->getId()->returns(4);
+
+        $this->text_metadata_title_2 = stub('Docman_Metadata')->getLabel()->returns('text02');
+        stub($this->text_metadata_title_2)->getId()->returns(3);
+
+        $this->item = stub('Docman_Item')->getGroupId()->returns(200);
+
+        $this->metadata_factory = mock('Docman_MetadataFactory');
+        stub($this->metadata_factory)->getMetadataValue($this->item, $this->date_metadata_title)->returns(1403160945);
+        stub($this->metadata_factory)->getMetadataValue($this->item, $this->date_metadata_title_2)->returns(1403160949);
+        stub($this->metadata_factory)->getMetadataValue($this->item, $this->text_metadata_title)->returns('val01');
+        stub($this->metadata_factory)->getMetadataValue($this->item, $this->text_metadata_title_2)->returns('val02');
+
+        $item_date_metadatas = array(
+            $this->date_metadata_title,
+            $this->date_metadata_title_2
+        );
+
+        stub($this->metadata_factory)->getRealMetadataList(
+            false,
+            array(PLUGIN_DOCMAN_METADATA_TYPE_DATE)
+        )->returns($item_date_metadatas);
+
+        $item_text_metadatas = array(
+            $this->text_metadata_title,
+            $this->text_metadata_title_2
+        );
+
+        stub($this->metadata_factory)->getRealMetadataList(
+            false,
+            array(
+                PLUGIN_DOCMAN_METADATA_TYPE_TEXT,
+                PLUGIN_DOCMAN_METADATA_TYPE_STRING
+            )
+        )->returns($item_text_metadatas);
+
+        $this->request_data_factory = new ElasticSearch_1_2_RequestDataFactory(
+            $this->metadata_factory
+        );
+    }
+
+    public function itBuildsTextMetadataValues() {
+        $expected_data = array(
+            'property_4' => 'val01',
+            'property_3' => 'val02'
+        );
+
+        $this->assertEqual(
+            $expected_data,
+            $this->request_data_factory->getCustomTextualMetadataValue(
+                $this->item
+            )
+        );
+    }
+
+    public function itBuildsCustomDateForMapping() {
+        $expected_data = array(
+            '200' => array(
+                'properties' => array(
+                    'property_15' => array(
+                        'type' => 'date'
+                    ),
+                    'property_17' => array(
+                        'type' => 'date'
+                    )
+                )
+            )
+        );
+
+        $mapping = array(
+            'docman' => array(
+                'mappings' => array(
+                    '200' => array(
+                        'properties' => array(
+                            'title' => array(
+                                'type' => 'string'
+                            )
+                        )
+                    )
+                )
+            )
+        );
+
+        $this->assertEqual(
+            $expected_data,
+            $this->request_data_factory->getPUTDateMappingMetadata(
+                $this->item,
+                $mapping
+            )
+        );
+    }
+
+    public function itBuildsCustomDateDataForItem() {
+        $expected_data = array(
+            'property_15' => '2014-06-19',
+            'property_17' => '2014-06-19',
+        );
+
+        $this->assertEqual(
+            $expected_data,
+            $this->request_data_factory->getPUTCustomDateData(
+                $this->item
+            )
+        );
+    }
+
     public function itBuildsDataForPutRequestCreateMapping() {
         $hardcoded_metadata_title = stub('Docman_Metadata')->getLabel()->returns('title');
         stub($hardcoded_metadata_title)->getType()->returns(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
@@ -55,8 +171,6 @@ class RequestDataFactoryTest extends TuleapTestCase {
         );
 
         $project_id = 200;
-
-        $request_data_factory = new ElasticSearch_1_2_RequestDataFactory();
 
         $expected_data = array(
             '200' => array(
@@ -102,7 +216,7 @@ class RequestDataFactoryTest extends TuleapTestCase {
 
         $this->assertEqual(
             $expected_data,
-            $request_data_factory->getPUTMappingData($hardcoded_metadata, $project_id)
+            $this->request_data_factory->getPUTMappingData($hardcoded_metadata, $project_id)
         );
     }
 

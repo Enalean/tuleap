@@ -77,7 +77,7 @@ class ElasticSearch_IndexClientFacade extends ElasticSearch_ClientFacade impleme
         return $this->client->request('/_mapping', 'GET', array(), true);
     }
 
-    public function initializeProjectMapping($project_id, array $mapping_data) {
+    public function defineProjectMapping($project_id, array $mapping_data) {
         $this->client->setType($project_id);
 
         $this->client->request('/_mapping', 'PUT', $mapping_data, true);
