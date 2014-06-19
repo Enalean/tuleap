@@ -182,16 +182,29 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
     }
 
     public function itCallUpdateOnClientWithTitleIfNew() {
+        $metadata03 = stub('Docman_Metadata')->getId()->returns(6);
+
+        $second_search_type = array(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
+        stub($this->metadata_factory)->getRealMetadataList(false, $second_search_type)->returns(
+            array($metadata03)
+        );
+
+        stub($this->metadata_factory)->getMetadataValue($this->item, $metadata03)->returns(1403160959);
+
+        stub($this->client)->getProjectMapping()->returns(array());
+
         $update_data = array(
             'script'=> 'ctx._source.title = title;'.
                        'ctx._source.description = description;'.
                        'ctx._source.property_1 = property_1;'.
-                       'ctx._source.property_2 = property_2;',
+                       'ctx._source.property_2 = property_2;'.
+                       'ctx._source.property_6 = property_6;',
             'params'=> array(
                 'title'       => $this->item->getTitle(),
                 'description' => $this->item->getDescription(),
                 'property_1' => 'val01',
                 'property_2' => 'val02',
+                'property_6' => '2014-06-19',
             ),
         );
 

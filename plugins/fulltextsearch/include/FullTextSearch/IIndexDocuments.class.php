@@ -58,20 +58,6 @@ interface FullTextSearch_IIndexDocuments {
     public function update(Docman_Item $item, $data);
 
     /**
-     * make and append prepared request to currentData
-     *
-     * @return array
-     */
-    public function appendSetterData(array $current_data, $name, $value);
-
-    /**
-     * Return the base to build a setter data
-     *
-     * @return array
-     */
-    public function initializeSetterData();
-
-    /**
      * Get the project mapping
      *
      * GET /docman/:project_id/_mapping

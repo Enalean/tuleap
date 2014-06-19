@@ -79,14 +79,14 @@ class ElasticSearch_1_2_RequestDataFactory {
 
     /**
      * Builds the custom date data
-     * needed for PUT /docman/:project_id/;document_id
+     * needed for PUT /docman/:project_id/:document_id (creation and update)
      *
      * @param Docman_Item $item
      *
      * @return array
      */
 
-    public function getPUTCustomDateData(Docman_Item $item) {
+    public function getCustomDateMetadataValues(Docman_Item $item) {
         $custom_metadata = array();
 
         foreach ($this->getCustomDateMetadata($item) as $item_metadata) {
@@ -168,6 +168,56 @@ class ElasticSearch_1_2_RequestDataFactory {
         }
 
         return $hardcoded_metadata;
+    }
+
+    public function getCurrentPermissions(Docman_Item $item) {
+        return $this->permissions_manager->exportPermissions($item);
+    }
+
+    /**
+     * make a parameter with name $name and value $value
+     * then append it to current_data as script and var
+     */
+    public function appendSetterData(array $current_data, $name, $value) {
+        $current_data['script']       .= "ctx._source.$name = $name;";
+        $current_data['params'][$name] = $value;
+        return $current_data;
+    }
+
+    /**
+     * Return the base to build a setter data
+     *
+     * @return array
+     */
+    public function initializeSetterData() {
+        return array(
+            'script' => '',
+            'params' => array()
+        );
+    }
+
+    public function updateCustomTextualMetadata(Docman_Item $item, array $update_data) {
+        $custom_textual_metadata = $this->getCustomTextualMetadataValue($item);
+
+        foreach ($custom_textual_metadata as $metadata_name => $metadata_value) {
+            $update_data = $this->appendSetterData($update_data, $metadata_name, $metadata_value);
+        }
+
+        return $update_data;
+    }
+
+    public function updateCustomDateMetadata(Docman_Item $item, array $update_data) {
+        $custom_date_metadata = $this->getCustomDateMetadataValues($item);
+
+        foreach ($custom_date_metadata as $metadata_name => $metadata_value) {
+            $update_data = $this->appendSetterData(
+                $update_data,
+                $metadata_name,
+                $metadata_value
+            );
+        }
+
+        return $update_data;
     }
 
     /**

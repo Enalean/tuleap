@@ -64,8 +64,8 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
      * @param Docman_Version $version The version to index
      */
     public function indexNewVersion(Docman_Item $item, Docman_Version $version) {
-        $update_data = $this->client->initializeSetterData();
-        $update_data = $this->client->appendSetterData($update_data, 'file', $this->fileContentEncode($version->getPath()));
+        $update_data = $this->request_data_factory->initializeSetterData();
+        $update_data = $this->request_data_factory->appendSetterData($update_data, 'file', $this->fileContentEncode($version->getPath()));
 
         $this->client->update($item, $update_data);
     }
@@ -76,10 +76,12 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
      * @param Docman_Item $item The item
      */
     public function updateDocument(Docman_Item $item) {
-        $update_data = $this->client->initializeSetterData();
-        $update_data = $this->client->appendSetterData($update_data, 'title',       $item->getTitle());
-        $update_data = $this->client->appendSetterData($update_data, 'description', $item->getDescription());
-        $update_data = $this->updateCustomTextualMetadata($item, $update_data);
+        $update_data = $this->request_data_factory->initializeSetterData();
+        $update_data = $this->request_data_factory->appendSetterData($update_data, 'title',       $item->getTitle());
+        $update_data = $this->request_data_factory->appendSetterData($update_data, 'description', $item->getDescription());
+
+        $update_data = $this->request_data_factory->updateCustomTextualMetadata($item, $update_data);
+        $update_data = $this->updateCustomDateMetadata($item, $update_data);
 
         $this->client->update($item, $update_data);
     }
@@ -90,8 +92,12 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
      * @param Docman_Item the document
      */
     public function updatePermissions(Docman_Item $item) {
-        $update_data = $this->client->initializeSetterData();
-        $update_data = $this->client->appendSetterData($update_data, 'permissions', $this->permissions_manager->exportPermissions($item));
+        $update_data = $this->request_data_factory->initializeSetterData();
+        $update_data = $this->request_data_factory->appendSetterData(
+            $update_data,
+            'permissions',
+            $this->request_data_factory->getCurrentPermissions($item)
+        );
 
         $this->client->update($item, $update_data);
     }
@@ -107,7 +113,7 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
 
     private function getIndexedData(Docman_Item $item, Docman_Version $version) {
         return $this->request_data_factory->getIndexedDataForItemVersion($item, $version) +
-            $this->getCustomTextualMetadata($item) +
+            $this->request_data_factory->getCustomTextualMetadataValue($item) +
             $this->getCustomDateMetadata($item);
     }
 
@@ -122,7 +128,14 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
     private function getCustomDateMetadata(Docman_Item $item) {
         $this->updateMappingWithNewDateMetadata($item);
 
-        return $this->request_data_factory->getPUTCustomDateData($item);
+        return $this->request_data_factory->getCustomDateMetadataValues($item);
+    }
+
+
+    private function updateCustomDateMetadata(Docman_Item $item, array $update_data) {
+        $this->updateMappingWithNewDateMetadata($item);
+
+        return $this->request_data_factory->updateCustomDateMetadata($item, $update_data);
     }
 
     private function updateMappingWithNewDateMetadata(Docman_Item $item) {
@@ -133,25 +146,5 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
                 $this->client->getProjectMapping($item->getGroupId())
             )
         );
-    }
-
-    /**
-     * Get the user defined item textual metadata
-     *
-     * @param Docman_Item $item The item indexed
-     *
-     * @return array
-     */
-    private function getCustomTextualMetadata(Docman_Item $item) {
-        return $this->request_data_factory->getCustomTextualMetadataValue($item);
-    }
-
-    private function updateCustomTextualMetadata(Docman_Item $item, array $update_data) {
-        $custom_textual_metadata = $this->getCustomTextualMetadata($item);
-        foreach ($custom_textual_metadata as $metadata_name => $metadata_value) {
-            $update_data = $this->client->appendSetterData($update_data, $metadata_name, $metadata_value);
-        }
-
-        return $update_data;
     }
 }
