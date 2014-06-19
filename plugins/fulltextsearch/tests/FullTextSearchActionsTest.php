@@ -97,13 +97,12 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
         stub($this->metadata_factory)->getMetadataValue($this->item, $metadata02)->returns('val02');
 
         $this->request_data_factory = new ElasticSearch_1_2_RequestDataFactory(
-            $this->metadata_factory
+            $this->metadata_factory,
+            $this->permissions_manager
         );
 
         $this->actions = new FullTextSearchDocmanActions(
             $this->client,
-            $this->permissions_manager,
-            $this->metadata_factory,
             $this->request_data_factory
         );
 

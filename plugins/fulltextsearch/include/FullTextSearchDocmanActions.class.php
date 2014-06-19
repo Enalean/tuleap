@@ -23,24 +23,14 @@
  */
 class FullTextSearchDocmanActions extends FullTextSearchActions {
 
-    /** @var Docman_PermissionsItemManager */
-    protected $permissions_manager;
-
-    /** @var Docman_MetadataFactory */
-    private $metadata_factory;
-
     /** @var ElasticSearch_1_2_RequestDataFactory */
     private $request_data_factory;
 
     public function __construct(
         FullTextSearch_IIndexDocuments $client,
-        Docman_PermissionsItemManager $permissions_manager,
-        Docman_MetadataFactory $metadata_factory,
         ElasticSearch_1_2_RequestDataFactory $request_data_factory
     ) {
         parent::__construct($client);
-        $this->permissions_manager  = $permissions_manager;
-        $this->metadata_factory     = $metadata_factory;
         $this->request_data_factory = $request_data_factory;
     }
 
@@ -49,14 +39,10 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
     }
 
     public function initializeProjetMapping($project_id) {
-        $this->client->defineProjectMapping($project_id, $this->getMappingData($project_id));
-    }
-
-    private function getMappingData($project_id) {
-        $this->metadata_factory->setRealGroupId($project_id);
-        $hardcoded_metadata = $this->metadata_factory->getHardCodedMetadataList();
-
-        return $this->request_data_factory->getPUTMappingData($hardcoded_metadata, $project_id);
+        $this->client->defineProjectMapping(
+            $project_id,
+            $this->request_data_factory->getPUTMappingData($project_id)
+        );
     }
 
     /**
@@ -120,22 +106,7 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
     }
 
     private function getIndexedData(Docman_Item $item, Docman_Version $version) {
-        $hardcoded_metadata = array(
-            'id'          => $item->getId(),
-            'group_id'    => $item->getGroupId(),
-            'title'       => $item->getTitle(),
-            'description' => $item->getDescription(),
-            'create_date' => date('Y-m-d', $item->getCreateDate()),
-            'update_date' => date('Y-m-d', $item->getUpdateDate()),
-            'permissions' => $this->permissions_manager->exportPermissions($item),
-            'file'        => $this->fileContentEncode($version->getPath()),
-        );
-
-        if ($item->getObsolescenceDate()) {
-            $hardcoded_metadata['obsolescence_date'] = date('Y-m-d', $item->getObsolescenceDate());
-        }
-
-        return $hardcoded_metadata +
+        return $this->request_data_factory->getIndexedDataForItemVersion($item, $version) +
             $this->getCustomTextualMetadata($item) +
             $this->getCustomDateMetadata($item);
     }

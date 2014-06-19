@@ -39,24 +39,30 @@ class ElasticSearch_1_2_RequestDataFactory {
     /** @var Docman_MetadataFactory */
     private $metadata_factory;
 
-    public function __construct(Docman_MetadataFactory $metadata_factory) {
-        $this->metadata_factory = $metadata_factory;
+     /** @var Docman_PermissionsItemManager */
+    private $permissions_manager;
+
+    public function __construct(
+        Docman_MetadataFactory $metadata_factory,
+        Docman_PermissionsItemManager $permissions_manager
+    ) {
+        $this->metadata_factory    = $metadata_factory;
+        $this->permissions_manager = $permissions_manager;
     }
 
     /**
      * Builds the data needed for
      * the very first PUT /docman/:project_id/_mapping
      *
-     * @param array $hardcoded_metadata
      * @param type  $project_id
      *
      * @return array
      */
-    public function getPUTMappingData(array $hardcoded_metadata, $project_id) {
+    public function getPUTMappingData($project_id) {
         $mapping_data                   = $this->initializePUTMappingData($project_id);
         $hardcoded_metadata_for_mapping = array();
 
-        foreach ($hardcoded_metadata as $metadata) {
+        foreach ($this->getHardcodedMetadata($project_id) as $metadata) {
             $hardcoded_metadata_for_mapping[$metadata->getLabel()] = array(
                 'type' => $this->getElasticSearchMappingType($metadata->getType())
             );
@@ -69,6 +75,118 @@ class ElasticSearch_1_2_RequestDataFactory {
         $mapping_data[$project_id][self::MAPPING_PROPERTIES_KEY] = $hardcoded_metadata_for_mapping;
 
         return $mapping_data;
+    }
+
+    /**
+     * Builds the custom date data
+     * needed for PUT /docman/:project_id/;document_id
+     *
+     * @param Docman_Item $item
+     *
+     * @return array
+     */
+
+    public function getPUTCustomDateData(Docman_Item $item) {
+        $custom_metadata = array();
+
+        foreach ($this->getCustomDateMetadata($item) as $item_metadata) {
+            $custom_metadata[$this->getCustomPropertyName($item_metadata)] = date(
+                'Y-m-d',
+                (int) $this->metadata_factory->getMetadataValue($item, $item_metadata)
+            );
+        }
+
+        return $custom_metadata;
+    }
+
+    /**
+     * Builds the data needed for
+     * the PUT /docman/:project_id/_mapping
+     * when adding new date fields
+     *
+     * @param Docman_Item $item
+     * @param array       $mapping
+     *
+     * @return array
+     */
+    public function getPUTDateMappingMetadata(Docman_Item $item, array $mapping) {
+        $mapping_data = $this->initializePUTMappingData($item->getGroupId());
+
+        $custom_metadata_to_define = array();
+        foreach ($this->getCustomDateMetadata($item) as $item_metadata) {
+            if (! $this->dateMetadataIsInMapping($mapping, $item, $item_metadata)) {
+                $custom_metadata_to_define[$this->getCustomPropertyName($item_metadata)] = array(
+                    'type' => 'date'
+                );
+            }
+        }
+
+        $mapping_data[$item->getGroupId()][self::MAPPING_PROPERTIES_KEY] = $custom_metadata_to_define;
+
+        return $mapping_data;
+    }
+
+    /**
+     * Get the custom text metadata values for item
+     *
+     * @param Docman_Item $item
+     *
+     * @return array
+     */
+    public function getCustomTextualMetadataValue(Docman_Item $item) {
+        $custom_metadata = array();
+        foreach ($this->getCustomTextualMetadata($item) as $item_metadata) {
+            $custom_metadata[$this->getCustomPropertyName($item_metadata)] =
+                $this->metadata_factory->getMetadataValue($item, $item_metadata);
+        }
+
+        return $custom_metadata;
+    }
+
+    /**
+     * Builds the indexed data for first indexation
+     *
+     * @param Docman_Item    $item
+     * @param Docman_Version $version
+     *
+     * @return array
+     */
+    public function getIndexedDataForItemVersion(Docman_Item $item, Docman_Version $version) {
+        $hardcoded_metadata = array(
+            'id'          => $item->getId(),
+            'group_id'    => $item->getGroupId(),
+            'title'       => $item->getTitle(),
+            'description' => $item->getDescription(),
+            'create_date' => date('Y-m-d', $item->getCreateDate()),
+            'update_date' => date('Y-m-d', $item->getUpdateDate()),
+            'permissions' => $this->permissions_manager->exportPermissions($item),
+            'file'        => $this->fileContentEncode($version->getPath()),
+        );
+
+        if ($item->getObsolescenceDate()) {
+            $hardcoded_metadata['obsolescence_date'] = date('Y-m-d', $item->getObsolescenceDate());
+        }
+
+        return $hardcoded_metadata;
+    }
+
+    /**
+     * Get file contents and encode them with base64
+     *
+     * @param string $file_name
+     * @return string
+     */
+    private function fileContentEncode($file_name) {
+        if (is_file($file_name)) {
+            return base64_encode(file_get_contents($file_name));
+        }
+        return '';
+    }
+
+    private function getHardcodedMetadata($project_id) {
+        $this->metadata_factory->setRealGroupId($project_id);
+
+        return $this->metadata_factory->getHardCodedMetadataList();
     }
 
     private function initializePUTMappingData($project_id) {
@@ -121,55 +239,6 @@ class ElasticSearch_1_2_RequestDataFactory {
         return $types[$type];
     }
 
-    /**
-     * Builds the custom date data
-     * needed for PUT /docman/:project_id/;document_id
-     *
-     * @param Docman_Item $item
-     *
-     * @return array
-     */
-
-    public function getPUTCustomDateData(Docman_Item $item) {
-        $custom_metadata = array();
-
-        foreach ($this->getCustomDateMetadata($item) as $item_metadata) {
-            $custom_metadata[$this->getCustomPropertyName($item_metadata)] = date(
-                'Y-m-d',
-                (int) $this->metadata_factory->getMetadataValue($item, $item_metadata)
-            );
-        }
-
-        return $custom_metadata;
-    }
-
-    /**
-     * Builds the data needed for
-     * the PUT /docman/:project_id/_mapping
-     * when adding new date fields
-     *
-     * @param Docman_Item $item
-     * @param array       $mapping
-     *
-     * @return array
-     */
-    public function getPUTDateMappingMetadata(Docman_Item $item, array $mapping) {
-        $mapping_data = $this->initializePUTMappingData($item->getGroupId());
-
-        $custom_metadata_to_define = array();
-        foreach ($this->getCustomDateMetadata($item) as $item_metadata) {
-            if (! $this->dateMetadataIsInMapping($mapping, $item, $item_metadata)) {
-                $custom_metadata_to_define[$this->getCustomPropertyName($item_metadata)] = array(
-                    'type' => 'date'
-                );
-            }
-        }
-
-        $mapping_data[$item->getGroupId()][self::MAPPING_PROPERTIES_KEY] = $custom_metadata_to_define;
-
-        return $mapping_data;
-    }
-
     private function dateMetadataIsInMapping(
         array $mapping,
         Docman_Item $item,
@@ -199,23 +268,6 @@ class ElasticSearch_1_2_RequestDataFactory {
             );
     }
 
-    /**
-     * Get the custom text metadata values for item
-     *
-     * @param Docman_Item $item
-     *
-     * @return array
-     */
-    public function getCustomTextualMetadataValue(Docman_Item $item) {
-        $custom_metadata = array();
-        foreach ($this->getCustomTextualMetadata($item) as $item_metadata) {
-            $custom_metadata[$this->getCustomPropertyName($item_metadata)] =
-                $this->metadata_factory->getMetadataValue($item, $item_metadata);
-        }
-
-        return $custom_metadata;
-    }
-
     private function getCustomTextualMetadata(Docman_Item $item) {
         $this->metadata_factory->setRealGroupId($item->getGroupId());
 
@@ -240,4 +292,5 @@ class ElasticSearch_1_2_RequestDataFactory {
     private function getCustomPropertyName(Docman_Metadata $item_metadata) {
         return self::CUSTOM_PROPERTY_PREFIX . '_' . $item_metadata->getId();
     }
+
 }

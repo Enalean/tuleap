@@ -165,10 +165,9 @@ class fulltextsearchPlugin extends Plugin {
         if (!isset($this->actions) && ($search_client = $this->getIndexClient(self::SEARCH_DOCMAN_TYPE))) {
             $this->actions = new FullTextSearchDocmanActions(
                 $search_client,
-                new Docman_PermissionsItemManager(),
-                $this->getBareDocmanMetadataFactory(),
                 new ElasticSearch_1_2_RequestDataFactory(
-                    $this->getBareDocmanMetadataFactory()
+                    $this->getBareDocmanMetadataFactory(),
+                    new Docman_PermissionsItemManager()
                 )
             );
         }

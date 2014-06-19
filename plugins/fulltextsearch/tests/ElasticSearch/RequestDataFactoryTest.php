@@ -68,8 +68,47 @@ class RequestDataFactoryTest extends TuleapTestCase {
             )
         )->returns($item_text_metadatas);
 
+        $hardcoded_metadata_title = stub('Docman_Metadata')->getLabel()->returns('title');
+        stub($hardcoded_metadata_title)->getType()->returns(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
+
+        $hardcoded_metadata_description = stub('Docman_Metadata')->getLabel()->returns('description');
+        stub($hardcoded_metadata_description)->getType()->returns(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
+
+        $hardcoded_metadata_owner = stub('Docman_Metadata')->getLabel()->returns('owner');
+        stub($hardcoded_metadata_owner)->getType()->returns(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
+
+        $hardcoded_metadata_create_date = stub('Docman_Metadata')->getLabel()->returns('create_date');
+        stub($hardcoded_metadata_create_date)->getType()->returns(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
+
+        $hardcoded_metadata_update_date = stub('Docman_Metadata')->getLabel()->returns('update_date');
+        stub($hardcoded_metadata_update_date)->getType()->returns(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
+
+        $hardcoded_metadata_status = stub('Docman_Metadata')->getLabel()->returns('status');
+        stub($hardcoded_metadata_status)->getType()->returns(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
+
+        $hardcoded_metadata_obsolescence_date = stub('Docman_Metadata')->getLabel()->returns('obsolescence_date');
+        stub($hardcoded_metadata_obsolescence_date)->getType()->returns(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
+
+        $hardcoded_metadata = array(
+            $hardcoded_metadata_title,
+            $hardcoded_metadata_description,
+            $hardcoded_metadata_owner,
+            $hardcoded_metadata_create_date,
+            $hardcoded_metadata_update_date,
+            $hardcoded_metadata_update_date,
+            $hardcoded_metadata_obsolescence_date
+        );
+
+        stub($this->metadata_factory)->getHardCodedMetadataList()->returns($hardcoded_metadata);
+
+        $this->permissions_manager = stub('Docman_PermissionsItemManager')
+            ->exportPermissions($this->item)
+            ->returns(array(3, 102)
+        );
+
         $this->request_data_factory = new ElasticSearch_1_2_RequestDataFactory(
-            $this->metadata_factory
+            $this->metadata_factory,
+            $this->permissions_manager
         );
     }
 
@@ -139,37 +178,6 @@ class RequestDataFactoryTest extends TuleapTestCase {
     }
 
     public function itBuildsDataForPutRequestCreateMapping() {
-        $hardcoded_metadata_title = stub('Docman_Metadata')->getLabel()->returns('title');
-        stub($hardcoded_metadata_title)->getType()->returns(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
-
-        $hardcoded_metadata_description = stub('Docman_Metadata')->getLabel()->returns('description');
-        stub($hardcoded_metadata_description)->getType()->returns(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
-
-        $hardcoded_metadata_owner = stub('Docman_Metadata')->getLabel()->returns('owner');
-        stub($hardcoded_metadata_owner)->getType()->returns(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
-
-        $hardcoded_metadata_create_date = stub('Docman_Metadata')->getLabel()->returns('create_date');
-        stub($hardcoded_metadata_create_date)->getType()->returns(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
-
-        $hardcoded_metadata_update_date = stub('Docman_Metadata')->getLabel()->returns('update_date');
-        stub($hardcoded_metadata_update_date)->getType()->returns(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
-
-        $hardcoded_metadata_status = stub('Docman_Metadata')->getLabel()->returns('status');
-        stub($hardcoded_metadata_status)->getType()->returns(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
-
-        $hardcoded_metadata_obsolescence_date = stub('Docman_Metadata')->getLabel()->returns('obsolescence_date');
-        stub($hardcoded_metadata_obsolescence_date)->getType()->returns(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
-
-        $hardcoded_metadata = array(
-            $hardcoded_metadata_title,
-            $hardcoded_metadata_description,
-            $hardcoded_metadata_owner,
-            $hardcoded_metadata_create_date,
-            $hardcoded_metadata_update_date,
-            $hardcoded_metadata_update_date,
-            $hardcoded_metadata_obsolescence_date
-        );
-
         $project_id = 200;
 
         $expected_data = array(
@@ -216,7 +224,7 @@ class RequestDataFactoryTest extends TuleapTestCase {
 
         $this->assertEqual(
             $expected_data,
-            $this->request_data_factory->getPUTMappingData($hardcoded_metadata, $project_id)
+            $this->request_data_factory->getPUTMappingData($project_id)
         );
     }
 
