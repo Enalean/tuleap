@@ -1,3 +1,6 @@
+Version 0.35 - Tuleap 7.2
+    * tasks #7072: Adapt existing action with new ES docman route
+
 Version 0.34 - Tuleap 7.2
     * tasks #7062 Create default mapping for docaman
 
