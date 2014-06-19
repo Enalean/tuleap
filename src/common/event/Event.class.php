@@ -566,6 +566,11 @@ class Event {
 
     const PLUGINS_POWERED_SEARCH = 'plugins_powered_search';
 
+    /**
+     * Fetches the sidebar options for searching on the serach homepgae. This is
+     * only for display; it does not execute any search query whilst fetching
+     * the search sidebar options.
+     */
     const SEARCH_TYPES_PRESENTERS = 'search_types_presenters';
 
     const SEARCH_TYPE = 'search_type';

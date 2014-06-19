@@ -53,13 +53,11 @@ class Search_SearchController {
 
     public function index(Codendi_Request $request) {
         $GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('search_index', 'search'), 'body_class' => array('search-page')));
-        $this->renderer->renderToPage('site-search', new Search_Presenter_SearchPresenter(
-            self::DEFAULT_SEARCH,
-            '',
-            '',
-            array($this->getSiteWidePane()),
-            null
-        ));
+
+        $query   = new Search_SearchQuery($request);
+        $results = '';
+        $this->renderer->renderToPage('site-search', $this->getSearchPresenter($query, $results));
+
         $GLOBALS['HTML']->footer(array('without_content' => true));
     }
 
