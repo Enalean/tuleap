@@ -117,14 +117,22 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
     }
 
     private function getIndexedData(Docman_Item $item, Docman_Version $version) {
-        return array(
+        $hardcoded_metadata = array(
             'id'          => $item->getId(),
             'group_id'    => $item->getGroupId(),
             'title'       => $item->getTitle(),
             'description' => $item->getDescription(),
+            'create_date' => date('Y-m-d', $item->getCreateDate()),
+            'update_date' => date('Y-m-d', $item->getUpdateDate()),
             'permissions' => $this->permissions_manager->exportPermissions($item),
-            'file'        => $this->fileContentEncode($version->getPath())
-        ) + $this->getCustomTextualMetadata($item);
+            'file'        => $this->fileContentEncode($version->getPath()),
+        );
+
+        if ($item->getObsolescenceDate()) {
+            $hardcoded_metadata['obsolescence_date'] = date('Y-m-d', $item->getObsolescenceDate());
+        }
+
+        return $hardcoded_metadata + $this->getCustomTextualMetadata($item);
     }
 
     /**
