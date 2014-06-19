@@ -32,3 +32,14 @@ services.factory('BacklogItem', ['$resource', function ($resource) {
         }
     });
 }]);
+
+services.factory('Artifact', ['$resource', function ($resource) {
+    var url = '/api/v1/artifacts/:id';
+
+    return $resource(url, {}, {
+        reorder: {
+            method: 'PATCH',
+            url: url
+        }
+    });
+}]);

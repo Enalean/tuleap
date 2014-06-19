@@ -6,10 +6,6 @@ var submilestoneService = function($resource) {
             method: 'GET',
             url: url + '/content',
             isArray: true
-        },
-        update_content: {
-            method: 'PATCH',
-            url: url + '/content'
         }
     });
 };

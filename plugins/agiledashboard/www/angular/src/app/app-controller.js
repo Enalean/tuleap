@@ -1,6 +1,6 @@
 var controllers = angular.module('planningControllers', ['templates-app']);
 
-controllers.controller('MilestoneCtrl', ['$scope', 'Milestone', function ($scope, Milestone) {
+controllers.controller('MilestoneCtrl', ['$scope', 'Milestone', 'Artifact', function ($scope, Milestone, Artifact) {
     var resource_params = {
         milestoneId: 0,
         offset: 0,
@@ -49,24 +49,22 @@ controllers.controller('MilestoneCtrl', ['$scope', 'Milestone', function ($scope
     };
 
     $scope.update = function (index) {
-        var ids;
+        var id, params;
+
         if (index) {
-            ids = [$scope.toBePlanneds[index - 1].id, $scope.toBePlanneds[index].id];
-            Milestone.update_backlog({
-                milestoneId: $scope.milestone_id,
-                moved_artifact: $scope.toBePlanneds[index].id,
+            id = $scope.toBePlanneds[index].id;
+            params = {
                 compared_to: $scope.toBePlanneds[index - 1].id,
                 direction: 'after'
-            }, ids);
+            };
         } else {
-            ids = [$scope.toBePlanneds[0].id, $scope.toBePlanneds[1].id];
-            Milestone.update_backlog({
-                milestoneId: $scope.milestone_id,
-                moved_artifact: $scope.toBePlanneds[0].id,
+            id = $scope.toBePlanneds[0].id;
+            params = {
                 compared_to: $scope.toBePlanneds[1].id,
                 direction: 'before'
-            }, ids);
+            };
         }
+        Artifact.reorder({id: id}, params);
     };
 
     $scope.loadMore = function () {
@@ -94,6 +92,7 @@ controllers.controller('SortCtrl', ['$scope', function ($scope) {
             function findScope(direction) {
                 var suitable_scope = event[direction].nodesScope;
                 while (suitable_scope &&
+                    suitable_scope.name !== 'backlogitem' &&
                     suitable_scope.name !== 'submilestones' &&
                     suitable_scope.name !== 'backlog'
                 ) {
@@ -119,7 +118,9 @@ controllers.controller('SortCtrl', ['$scope', function ($scope) {
     };
 }]);
 
-controllers.controller('BacklogItemCtrl', ['$scope', 'BacklogItem', function ($scope, BacklogItem) {
+controllers.controller('BacklogItemCtrl', ['$scope', 'BacklogItem', 'Artifact', function ($scope, BacklogItem, Artifact) {
+    $scope.name = 'backlogitem';
+
     $scope.template = 'planning/backlog-item/backlog-item.tpl.html';
 
     $scope.showChildren = false;
@@ -143,10 +144,28 @@ controllers.controller('BacklogItemCtrl', ['$scope', 'BacklogItem', function ($s
 
     $scope.editArtifact = function (artifactId) {
         tuleap.tracker.artifactModalInPlace.loadEditArtifactModal(artifactId);
-    }
+    };
 
     $scope.addChild = function (artifactId, trackerId) {
         tuleap.tracker.artifactModalInPlace.loadCreateArtifactModal(trackerId, artifactId);
-    }
+    };
 
+    $scope.update = function (index) {
+        var id, params;
+
+        if (index) {
+            id = $scope.children[index].id;
+            params = {
+                compared_to: $scope.children[index - 1].id,
+                direction: 'after'
+            };
+        } else {
+            id = $scope.children[0].id;
+            params = {
+                compared_to: $scope.children[1].id,
+                direction: 'before'
+            };
+        }
+        Artifact.reorder({id: id}, params);
+    };
 }]);

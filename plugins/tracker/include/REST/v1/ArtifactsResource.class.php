@@ -126,6 +126,32 @@ class ArtifactsResource {
     }
 
     /**
+     * Order artifacts
+     *
+     * Change the order of artifacts globally
+     *
+     * @url PATCH {id}
+     *
+     * @param int $id           Id of the artifact to move
+     * @param int $compared_to  Id of the artifact compared to
+     * @param string $direction Direction of the move 'before' or 'after'
+     *
+     * @throw 400
+     * @throw 404
+     */
+    protected function patchId($id, $compared_to, $direction = 'after') {
+        $dao = new \Tracker_Artifact_PriorityDao();
+
+        if ($direction == 'before') {
+            $dao->moveArtifactBefore($id, $compared_to);
+        } else {
+            $dao->moveArtifactAfter($id, $compared_to);
+        }
+
+        $this->sendAllowHeaderForContent();
+    }
+
+    /**
      * Get children
      *
      * Get the children of a given artifact

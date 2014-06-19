@@ -1,4 +1,4 @@
-var submilestoneController = function($scope, submilestoneService) {
+var submilestoneController = function($scope, submilestoneService, Artifact) {
     $scope.name = 'submilestones';
     $scope.showItems = false;
     $scope.init = function (milestone_id) {
@@ -14,26 +14,22 @@ var submilestoneController = function($scope, submilestoneService) {
     };
 
     $scope.update = function (index) {
-        var ids;
+        var id, params;
 
         if (index) {
-            submilestoneService.update_content({
-                milestoneId: $scope.milestone_id,
-                moved_artifact: $scope.planned[index].id,
+            id = $scope.planned[index].id;
+            params = {
                 compared_to: $scope.planned[index - 1].id,
                 direction: 'after'
-            }, ids);
-            // ids = [$scope.planned[index - 1].id, $scope.planned[index].id];
-            //
+            };
         } else {
-            submilestoneService.update_content({
-                milestoneId: $scope.milestone_id,
-                moved_artifact: $scope.planned[0].id,
+            id = $scope.planned[0].id;
+            params = {
                 compared_to: $scope.planned[1].id,
                 direction: 'before'
-            }, ids);
-            // ids = [$scope.planned[0].id, $scope.planned[1].id];
+            };
         }
+        Artifact.reorder({id: id}, params);
     };
 
 //    $scope.change = function(submilestone) {
