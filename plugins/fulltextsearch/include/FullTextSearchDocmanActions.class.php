@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,19 +23,40 @@
  */
 class FullTextSearchDocmanActions extends FullTextSearchActions {
 
+    /** @var Docman_PermissionsItemManager */
     protected $permissions_manager;
 
     /** @var Docman_MetadataFactory */
     private $metadata_factory;
 
+    /** @var ElasticSearch_1_2_RequestDataFactory */
+    private $request_data_factory;
+
     public function __construct(
         FullTextSearch_IIndexDocuments $client,
         Docman_PermissionsItemManager $permissions_manager,
-        Docman_MetadataFactory $metadata_factory
+        Docman_MetadataFactory $metadata_factory,
+        ElasticSearch_1_2_RequestDataFactory $request_data_factory
     ) {
         parent::__construct($client);
-        $this->permissions_manager = $permissions_manager;
-        $this->metadata_factory    = $metadata_factory;
+        $this->permissions_manager  = $permissions_manager;
+        $this->metadata_factory     = $metadata_factory;
+        $this->request_data_factory = $request_data_factory;
+    }
+
+    public function checkProjectMappingExists($project_id) {
+        return count($this->client->getProjectMapping($project_id)) > 0;
+    }
+
+    public function initializeProjetMapping($project_id) {
+        $this->client->initializeProjectMapping($project_id, $this->getMappingData($project_id));
+    }
+
+    private function getMappingData($project_id) {
+        $this->metadata_factory->setRealGroupId($project_id);
+        $hardcoded_metadata = $this->metadata_factory->getHardCodedMetadataList();
+
+        return $this->request_data_factory->getPUTMappingData($hardcoded_metadata, $project_id);
     }
 
     /**
@@ -46,7 +67,7 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
      */
     public function indexNewDocument(Docman_Item $item, Docman_Version $version) {
         $indexed_data = $this->getIndexedData($item, $version);
-        $this->client->index($indexed_data, $item->getId());
+        $this->client->index($indexed_data, $item->getGroupId(), $item->getId());
     }
 
     /**

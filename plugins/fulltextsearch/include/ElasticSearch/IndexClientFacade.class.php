@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,7 +24,9 @@ class ElasticSearch_IndexClientFacade extends ElasticSearch_ClientFacade impleme
     /**
      * @see FullTextSearch_IIndexDocuments::index
      */
-    public function index(array $document, $id = false) {
+    public function index(array $document, $project_id, $id = false) {
+        $this->client->setType($project_id);
+
         $this->client->index($document, $id);
     }
 
@@ -36,14 +38,14 @@ class ElasticSearch_IndexClientFacade extends ElasticSearch_ClientFacade impleme
     }
 
     /**
-     * @see FullTextSearch_IIndexDocuments::delete
+     * @see FullTextSearch_IIndexDocuments::update
      */
     public function update($item_id, $data) {
         $this->client->request($item_id.'/_update', 'POST', $data);
     }
 
     /**
-     * make a parameter with name $nname and value $value
+     * make a parameter with name $name and value $value
      * then append it to current_data as script and var
      */
     public function appendSetterData(array $current_data, $name, $value) {
@@ -63,5 +65,14 @@ class ElasticSearch_IndexClientFacade extends ElasticSearch_ClientFacade impleme
             'params' => array()
         );
     }
+
+    public function getProjectMapping($project_id) {
+        return $this->client->request($project_id.'/_mapping', 'GET', array(), true);
+    }
+
+    public function initializeProjectMapping($project_id, array $mapping_data) {
+        try {
+            $this->client->request($project_id.'/_mapping', 'PUT', $mapping_data, true);
+        } catch (Exception $ex) {}
+    }
 }
-?>

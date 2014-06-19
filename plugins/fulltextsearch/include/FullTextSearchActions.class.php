@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,11 +27,24 @@ class FullTextSearchActions {
      * @var FullTextSearch_IIndexDocuments
      */
     protected $client;
+
     protected $permissions;
 
     public function __construct(FullTextSearch_IIndexDocuments $client) {
-        $this->client              = $client;
+        $this->client = $client;
     }
+
+    /**
+     * Checks if a mpping is defined for project $project_id
+     *
+     */
+    public function checkProjectMappingExists() {}
+
+    /**
+     * Initialize the project mapping
+     *
+     */
+    public function initializeProjetMapping() {}
 
     /**
      * Index a new document with permissions

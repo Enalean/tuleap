@@ -22,9 +22,12 @@ abstract class SystemEvent_FULLTEXTSEARCH_DOCMANTest extends TuleapTestCase {
 
     protected $klass;
 
+    /** @var Docman_Item */
+    protected $item;
+
     public function setUp() {
         parent::setUp();
-        $this->item    = mock('Docman_Item');
+        $this->item    = stub('Docman_Item')->getGroupId()->returns(101);
         $this->version = mock('Docman_Version');
         $this->actions = mock('FullTextSearchDocmanActions');
 

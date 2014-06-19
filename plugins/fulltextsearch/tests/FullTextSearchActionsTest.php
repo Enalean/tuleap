@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,13 +35,44 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
 
         $this->client = partial_mock(
             'ElasticSearch_IndexClientFacade',
-            array('index', 'update', 'delete')
+            array('index', 'update', 'delete', 'getProjectMapping', 'initializeProjectMapping')
         );
 
         $this->permissions_manager = mock('Docman_PermissionsItemManager');
 
         $metadata01 = stub('Docman_Metadata')->getId()->returns(1);
         $metadata02 = stub('Docman_Metadata')->getId()->returns(2);
+
+        $hardcoded_metadata_title = stub('Docman_Metadata')->getLabel()->returns('title');
+        stub($hardcoded_metadata_title)->getType()->returns(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
+
+        $hardcoded_metadata_description = stub('Docman_Metadata')->getLabel()->returns('description');
+        stub($hardcoded_metadata_description)->getType()->returns(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
+
+        $hardcoded_metadata_owner = stub('Docman_Metadata')->getLabel()->returns('owner');
+        stub($hardcoded_metadata_owner)->getType()->returns(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
+
+        $hardcoded_metadata_create_date = stub('Docman_Metadata')->getLabel()->returns('create_date');
+        stub($hardcoded_metadata_create_date)->getType()->returns(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
+
+        $hardcoded_metadata_update_date = stub('Docman_Metadata')->getLabel()->returns('update_date');
+        stub($hardcoded_metadata_update_date)->getType()->returns(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
+
+        $hardcoded_metadata_status = stub('Docman_Metadata')->getLabel()->returns('status');
+        stub($hardcoded_metadata_status)->getType()->returns(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
+
+        $hardcoded_metadata_obsolescence_date = stub('Docman_Metadata')->getLabel()->returns('obsolescence_date');
+        stub($hardcoded_metadata_obsolescence_date)->getType()->returns(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
+
+        $hardcoded_metadata = array(
+            $hardcoded_metadata_title,
+            $hardcoded_metadata_description,
+            $hardcoded_metadata_owner,
+            $hardcoded_metadata_create_date,
+            $hardcoded_metadata_update_date,
+            $hardcoded_metadata_update_date,
+            $hardcoded_metadata_obsolescence_date
+        );
 
         $this->item = aDocman_File()
             ->withId(101)
@@ -54,10 +85,18 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
             array($metadata01, $metadata02)
         );
 
+        stub($this->metadata_factory)->getHardCodedMetadataList()->returns($hardcoded_metadata);
         stub($this->metadata_factory)->getMetadataValue($this->item, $metadata01)->returns('val01');
         stub($this->metadata_factory)->getMetadataValue($this->item, $metadata02)->returns('val02');
 
-        $this->actions = new FullTextSearchDocmanActions($this->client, $this->permissions_manager, $this->metadata_factory);
+        $this->request_data_factory = new ElasticSearch_1_2_RequestDataFactory();
+
+        $this->actions = new FullTextSearchDocmanActions(
+            $this->client,
+            $this->permissions_manager,
+            $this->metadata_factory,
+            $this->request_data_factory
+        );
 
         stub($this->permissions_manager)
             ->exportPermissions($this->item)
@@ -67,10 +106,6 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
             ->getPath()
             ->returns(dirname(__FILE__) .'/_fixtures/file.txt');
 
-//        stub($this->client)
-//            ->initializeSetterData()
-//            ->returns(array('script' => '', 'params' => array()));
-
         $this->params = aSetOfParameters()
             ->withItem($this->item)
             ->withVersion($this->version)
@@ -79,18 +114,19 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
 
     public function itCallIndexOnClientWithRightParameters() {
         $expected = array(
-                          array(
-                                'id'          => 101,
-                                'group_id'    => 200,
-                                'title'       => 'Coin',
-                                'description' => 'Duck typing',
-                                'permissions' => array(3, 102),
-                                'file'        => 'aW5kZXggbWUK',
-                                'property_1'  => 'val01',
-                                'property_2'  => 'val02',
-                               ),
-                          101
-                         );
+            array(
+                'id'          => 101,
+                'group_id'    => 200,
+                'title'       => 'Coin',
+                'description' => 'Duck typing',
+                'permissions' => array(3, 102),
+                'file'        => 'aW5kZXggbWUK',
+                'property_1'  => 'val01',
+                'property_2'  => 'val02',
+               ),
+            200,
+            101
+        );
         $this->client->expectOnce('index', $expected);
 
         $this->actions->indexNewDocument($this->item, $this->version);
@@ -122,5 +158,64 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
         $this->client->expectOnce('delete', array($expected_id));
 
         $this->actions->delete($this->item);
+    }
+
+    public function itReturnsTrueIfMappingIsNotEmptyForProject() {
+        stub($this->client)->getProjectMapping(200)->returns(array(
+            'mappings' => array(
+                '200' => array(
+                    'properties' => array()
+                )
+            )
+        ));
+
+        $this->assertTrue($this->actions->checkProjectMappingExists(200));
+    }
+
+    public function itInitializeProjectMapping() {
+        $expected_data = array(
+            '200' => array(
+                'properties' => array(
+                    'title' => array(
+                        'type' => 'string'
+                    ),
+                    'description' => array(
+                        'type' => 'string'
+                    ),
+                    'owner' => array(
+                        'type' => 'string'
+                    ),
+                    'create_date' => array(
+                        'type' => 'date'
+                    ),
+                    'update_date' => array(
+                        'type' => 'date'
+                    ),
+                    'obsolescence_date' => array(
+                        'type' => 'date'
+                    ),
+                    'file' => array(
+                        'type'   => 'attachment',
+                        'fields' => array(
+                            'title' => array(
+                                'store' => 'yes'
+                            ),
+                            'file' => array(
+                                'term_vector' => 'with_positions_offsets',
+                                'store'       => 'yes'
+                            )
+                        )
+                    ),
+                    'permissions' => array(
+                        'type'  => 'string',
+                        'index' => 'not_analyzed'
+                    )
+                )
+            )
+        );
+
+        expect($this->client)->initializeProjectMapping(200, $expected_data)->once();
+
+        $this->actions->initializeProjetMapping(200);
     }
 }

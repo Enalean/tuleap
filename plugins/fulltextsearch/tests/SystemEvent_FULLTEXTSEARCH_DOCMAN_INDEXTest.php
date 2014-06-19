@@ -34,9 +34,29 @@ class SystemEvent_FULLTEXTSEARCH_DOCMAN_INDEXTest extends SystemEvent_FULLTEXTSE
 
     public function itFailsIfVersionIsNotFound() {
         $event = $this->aSystemEventWithParameter('101::103::version_that_does_not_exist');
+        expect($this->actions)->checkProjectMappingExists()->never();
+        expect($this->actions)->initializeProjetMapping()->never();
+        expect($this->actions)->indexNewDocument()->never();
+
         $this->assertFalse($event->process());
         $this->assertEqual($event->getLog(), 'Version not found');
         $this->assertEqual($event->getStatus(), SystemEvent::STATUS_ERROR);
+    }
+
+    public function itAsksToToFullTextSearchActionsIfProjectMappingAlreadyExists() {
+        $event = $this->aSystemEventWithParameter('101::103::2');
+        expect($this->actions)->checkProjectMappingExists(101)->once();
+
+        $this->assertTrue($event->process());
+    }
+
+     public function itAddsDefaultProjectMappingIfProjectMappingDoesNotExist() {
+        $event = $this->aSystemEventWithParameter('101::103::2');
+        stub($this->actions)->checkProjectMappingExists(101)->returns(false);
+
+        expect($this->actions)->initializeProjetMapping(101)->once();
+
+        $this->assertTrue($event->process());
     }
 
     public function itDelegatesIndexingToFullTextSearchActions() {
@@ -47,4 +67,3 @@ class SystemEvent_FULLTEXTSEARCH_DOCMAN_INDEXTest extends SystemEvent_FULLTEXTSE
         $this->assertEqual($event->getStatus(), SystemEvent::STATUS_DONE);
     }
 }
-?>
