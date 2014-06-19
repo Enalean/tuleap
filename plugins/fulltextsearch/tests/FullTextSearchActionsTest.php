@@ -81,6 +81,9 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
             ->withGroupId(200)
             ->build();
 
+        stub($this->item)->getCreateDate()->returns(1403160945);
+        stub($this->item)->getUpdateDate()->returns(1403160949);
+
         $this->metadata_factory = stub('Docman_MetadataFactory')->getRealMetadataList()->returns(
             array($metadata01, $metadata02)
         );
@@ -112,17 +115,47 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
             ->build();
     }
 
-    public function itCallIndexOnClientWithRightParameters() {
+    public function itCallIndexOnClientWithRightParametersWithObsolescenceDate() {
+        stub($this->item)->getObsolescenceDate()->returns(1403160959);
+
+
         $expected = array(
             array(
-                'id'          => 101,
-                'group_id'    => 200,
-                'title'       => 'Coin',
-                'description' => 'Duck typing',
-                'permissions' => array(3, 102),
-                'file'        => 'aW5kZXggbWUK',
-                'property_1'  => 'val01',
-                'property_2'  => 'val02',
+                'id'                => 101,
+                'group_id'          => 200,
+                'title'             => 'Coin',
+                'description'       => 'Duck typing',
+                'create_date'       => '2014-06-19',
+                'update_date'       => '2014-06-19',
+                'permissions'       => array(3, 102),
+                'file'              => 'aW5kZXggbWUK',
+                'obsolescence_date' => '2014-06-19',
+                'property_1'        => 'val01',
+                'property_2'        => 'val02',
+               ),
+            $this->item
+        );
+        $this->client->expectOnce('index', $expected);
+
+        $this->actions->indexNewDocument($this->item, $this->version);
+    }
+
+    public function itCallIndexOnClientWithRightParametersWithoutObsolescenceDate() {
+        stub($this->item)->getObsolescenceDate()->returns(0);
+
+
+        $expected = array(
+            array(
+                'id'                => 101,
+                'group_id'          => 200,
+                'title'             => 'Coin',
+                'description'       => 'Duck typing',
+                'create_date'       => '2014-06-19',
+                'update_date'       => '2014-06-19',
+                'permissions'       => array(3, 102),
+                'file'              => 'aW5kZXggbWUK',
+                'property_1'        => 'val01',
+                'property_2'        => 'val02',
                ),
             $this->item
         );
