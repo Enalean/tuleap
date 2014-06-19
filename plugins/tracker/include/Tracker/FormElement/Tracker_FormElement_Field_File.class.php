@@ -1012,8 +1012,17 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         //Transform array to object
         $value = json_decode(json_encode($rest_value), FALSE);
 
+        $this->validateDataFromREST($value);
+
         $file_manager = $this->getFileManager();
         return $file_manager->buildFieldDataForREST($value, $artifact);
+    }
+
+    private function validateDataFromREST($data) {
+        if (! property_exists($data, 'value') || ! is_array($data->value)){
+            throw new Tracker_FormElement_InvalidFieldException('Invalid format for file field "'.$data->field_id.'". '
+                . ' Correct format is {"field_id" : 425, "value" : [457, 258]}');
+        }
     }
 
     /**
