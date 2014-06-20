@@ -1,3 +1,6 @@
+Version 1.16 - Tuleap 7.2
+    * request #7084: Custom scrolling in child pane scroll parent when it comes to end
+
 Version 1.15 - Tuleap 7.2
     * tasks #7050: make search behaviour more obvious
 
