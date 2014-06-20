@@ -26,6 +26,8 @@
             autoReinitialise: true,
             hideFocus: true,
             verticalGutter: 0
+        }).bind('mousewheel', function(e) {
+            e.preventDefault();
         });
     }
 

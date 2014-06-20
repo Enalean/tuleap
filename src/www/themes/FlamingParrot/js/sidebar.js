@@ -135,6 +135,8 @@
             verticalGutter: 0,
             hideFocus: true,
             contentWidth: getSidebarUserPreference()
+        }).bind('mousewheel', function(e) {
+            e.preventDefault();
         });
         api = $('.sidebar-nav').data('jsp');
 
