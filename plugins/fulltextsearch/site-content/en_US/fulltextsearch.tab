@@ -3,7 +3,7 @@ plugin_fulltextsearch	plugin_description	Full-Text Search capabilities on Tuleap
 
 plugin_fulltextsearch	client_library_not_found	Client library is required.
 
-plugin_fulltextsearch	accordion_type	Full text search
+plugin_fulltextsearch	accordion_type	Indexed items search
 plugin_fulltextsearch	result_count	$1 results ($2 seconds)
 
 plugin_fulltextsearch	followups_search	Followups search

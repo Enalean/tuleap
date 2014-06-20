@@ -106,7 +106,14 @@ class FlamingParrot_NavBarPresenter {
     }
 
     public function search_form_presenter() {
+        if ($this->userIsOnPageWithItsOwnSearchForm()) {
+            return null;
+        }
         return $this->search_form_presenter;
+    }
+
+    private function userIsOnPageWithItsOwnSearchForm() {
+        return $this->getClassnameNavItemActive('/search/');
     }
 
     public function user_projects() {
