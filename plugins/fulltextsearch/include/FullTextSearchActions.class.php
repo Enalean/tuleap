@@ -81,17 +81,4 @@ class FullTextSearchActions {
     private function getIndexedData() {
     }
 
-    /**
-     * Get file contents and encode them with base64
-     *
-     * @param string $file_name
-     * @return string
-     */
-    protected function fileContentEncode($file_name) {
-        if (is_file($file_name)) {
-            return base64_encode(file_get_contents($file_name));
-        }
-        return '';
-    }
 }
-?>
