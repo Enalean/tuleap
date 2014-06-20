@@ -26,19 +26,28 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
     /** @var ElasticSearch_1_2_RequestDataFactory */
     private $request_data_factory;
 
+    /** @var BackendLogger */
+    private $logger;
+
     public function __construct(
         FullTextSearch_IIndexDocuments $client,
-        ElasticSearch_1_2_RequestDataFactory $request_data_factory
+        ElasticSearch_1_2_RequestDataFactory $request_data_factory,
+        BackendLogger $logger
     ) {
         parent::__construct($client);
         $this->request_data_factory = $request_data_factory;
+        $this->logger               = $logger;
     }
 
     public function checkProjectMappingExists($project_id) {
+        $this->logger->debug('ElasticSearch: get the mapping for project #' . $project_id);
+
         return count($this->client->getProjectMapping($project_id)) > 0;
     }
 
     public function initializeProjetMapping($project_id) {
+        $this->logger->debug('ElasticSearch: initialize the mapping for project #' . $project_id);
+
         $this->client->defineProjectMapping(
             $project_id,
             $this->request_data_factory->getPUTMappingData($project_id)
@@ -52,6 +61,8 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
      * @param Docman_Version $version The version to index
      */
     public function indexNewDocument(Docman_Item $item, Docman_Version $version) {
+        $this->logger->debug('ElasticSearch: index new document #' . $item->getId());
+
         $indexed_data = $this->getIndexedData($item, $version);
 
         $this->client->index($indexed_data, $item);
@@ -64,6 +75,10 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
      * @param Docman_Version $version The version to index
      */
     public function indexNewVersion(Docman_Item $item, Docman_Version $version) {
+        $this->logger->debug('ElasticSearch: index new  version (# ' . $version->getId() .
+            ' for document #' . $item->getId()
+        );
+
         $update_data = $this->request_data_factory->initializeSetterData();
         $update_data = $this->request_data_factory->appendSetterData($update_data, 'file', $this->fileContentEncode($version->getPath()));
 
@@ -76,6 +91,8 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
      * @param Docman_Item $item The item
      */
     public function updateDocument(Docman_Item $item) {
+        $this->logger->debug('ElasticSearch: update metadata of document #' . $item->getId());
+
         $update_data = $this->request_data_factory->initializeSetterData();
         $update_data = $this->request_data_factory->appendSetterData($update_data, 'title',       $item->getTitle());
         $update_data = $this->request_data_factory->appendSetterData($update_data, 'description', $item->getDescription());
@@ -92,6 +109,8 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
      * @param Docman_Item the document
      */
     public function updatePermissions(Docman_Item $item) {
+        $this->logger->debug('ElasticSearch: update permissions of document #' . $item->getId());
+
         $update_data = $this->request_data_factory->initializeSetterData();
         $update_data = $this->request_data_factory->appendSetterData(
             $update_data,
@@ -108,6 +127,8 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
      * @param Docman_Item $item The item to delete
      */
     public function delete(Docman_Item $item) {
+        $this->logger->debug('ElasticSearch: delete document #' . $item->getId());
+
         $this->client->delete($item);
     }
 
@@ -139,12 +160,26 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
     }
 
     private function updateMappingWithNewDateMetadata(Docman_Item $item) {
+        $mapping_data = $this->request_data_factory->getPUTDateMappingMetadata(
+            $item,
+            $this->client->getProjectMapping($item->getGroupId())
+        );
+
+        if (! $this->mappingNeedsToBoUpdated($item, $mapping_data)) {
+            return;
+        }
+
+        $this->logger->debug('ElasticSearch: update mapping of project #' . $item->getGroupId() .
+            'with new custom date metadata');
+
         $this->client->defineProjectMapping(
             $item->getGroupId(),
-            $this->request_data_factory->getPUTDateMappingMetadata(
-                $item,
-                $this->client->getProjectMapping($item->getGroupId())
-            )
+            $mapping_data
         );
+    }
+
+    private function mappingNeedsToBoUpdated(Docman_Item $item, array $mapping_data) {
+        return $mapping_data[$item->getGroupId()][ElasticSearch_1_2_RequestDataFactory::MAPPING_PROPERTIES_KEY]
+            !== array();
     }
 }

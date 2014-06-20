@@ -168,7 +168,8 @@ class fulltextsearchPlugin extends Plugin {
                 new ElasticSearch_1_2_RequestDataFactory(
                     $this->getBareDocmanMetadataFactory(),
                     new Docman_PermissionsItemManager()
-                )
+                ),
+                new BackendLogger()
             );
         }
         return $this->actions;

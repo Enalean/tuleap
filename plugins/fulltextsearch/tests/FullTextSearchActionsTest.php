@@ -103,7 +103,8 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
 
         $this->actions = new FullTextSearchDocmanActions(
             $this->client,
-            $this->request_data_factory
+            $this->request_data_factory,
+            mock('BackendLogger')
         );
 
         stub($this->permissions_manager)
