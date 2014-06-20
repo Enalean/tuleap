@@ -83,7 +83,7 @@ interface FullTextSearch_IIndexDocuments {
     public function getProjectMapping($project_id);
 
     /**
-     * Initialize the project mapping
+     * Define the project mapping (create and update)
      *
      * PUT /docman/:project_id/_mapping
      *
@@ -92,5 +92,5 @@ interface FullTextSearch_IIndexDocuments {
      *
      * @return array
      */
-    public function initializeProjectMapping($project_id, array $mapping_data);
+    public function defineProjectMapping($project_id, array $mapping_data);
 }
