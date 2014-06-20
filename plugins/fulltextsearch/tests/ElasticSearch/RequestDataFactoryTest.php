@@ -171,7 +171,7 @@ class RequestDataFactoryTest extends TuleapTestCase {
 
         $this->assertEqual(
             $expected_data,
-            $this->request_data_factory->getPUTCustomDateData(
+            $this->request_data_factory->getCustomDateMetadataValues(
                 $this->item
             )
         );
