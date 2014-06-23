@@ -19,11 +19,28 @@
  */
 
 class Search_SearchPanePresenter {
-    public $title;
-    public $search_types = array();
 
-    public function __construct($title, array $search_types) {
-        $this->title        = $title;
-        $this->search_types = $search_types;
+    /** @var string */
+    public $title;
+
+    /** @var array */
+    public $search_types;
+
+    /** @var array */
+    public $has_search_types;
+
+    /** @var string */
+    public $no_search_types;
+
+    /**
+     * @param string $title
+     * @param array $search_types
+     * @param string $no_search_types
+     */
+    public function __construct($title, array $search_types, $no_search_types) {
+        $this->title            = $title;
+        $this->search_types     = $search_types;
+        $this->has_search_types = ! empty($search_types);
+        $this->no_search_types  = $no_search_types;
     }
 }

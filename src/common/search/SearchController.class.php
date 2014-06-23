@@ -125,7 +125,8 @@ class Search_SearchController {
             $project_name = util_unconvert_htmlspecialchars($query->getProject()->getPublicName());
             $search_panes[] = new Search_SearchPanePresenter(
                 $GLOBALS['Language']->getText('search_index', 'project_wide_search', $project_name),
-                $project_search_types
+                $project_search_types,
+                $GLOBALS['Language']->getText('search_index', 'no_searchable_services')
             );
         }
         $search_panes[] = $this->getSiteWidePane($site_search_types);
@@ -175,7 +176,8 @@ class Search_SearchController {
 
         return new Search_SearchPanePresenter(
             $GLOBALS['Language']->getText('search_index', 'site_wide_search'),
-            array_merge($search_types, $site_search_types)
+            array_merge($search_types, $site_search_types),
+            ''
         );
     }
 

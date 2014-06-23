@@ -2,19 +2,26 @@
 <div class="search-pane">
     <div class="search-pane-header">{{ title }}</div>
     <div class="search-pane-body">
-        <ul>
-            {{# search_types }}
-            <li>
-                {{# has_facets }}
-                    <span class="search-type">{{ title }}</span>
-                    {{> facets }}
-                {{/ has_facets }}
-                {{^ has_facets }}
-                    <a href="{{ url }}" class="search-type" data-search-type="{{ search_type }}">{{ title }}</a>
-                {{/ has_facets }}
-            </li>
-            {{/ search_types }}
-        </ul>
+        {{# has_search_types }}
+            <ul>
+                {{# search_types }}
+                <li>
+                    {{# has_facets }}
+                        <span class="search-type">{{ title }}</span>
+                        {{> facets }}
+                    {{/ has_facets }}
+                    {{^ has_facets }}
+                        <a href="{{ url }}" class="search-type" data-search-type="{{ search_type }}">{{ title }}</a>
+                    {{/ has_facets }}
+                </li>
+                {{/ search_types }}
+            </ul>
+        {{/ has_search_types }}
+        {{^ has_search_types }}
+            <div class="search-pane-body-no-types">
+                {{ no_search_types }}
+            </div>
+        {{/ has_search_types }}
     </div>
 </div>
 {{/ search_panes }}
