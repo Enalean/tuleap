@@ -1,3 +1,6 @@
+Version 1.18 - Tuleap 7.2
+    * story #5756: search with nice interface (tasks #7101: The 'Recherche dans <MyProject>' box may be empty, tasks #7103 HTML entities displayed in the name of the project in the search boxes (eg: R&D))
+
 Version 1.17 - Tuleap 7.2
     * tasks #7069: cleaning-up search use
 

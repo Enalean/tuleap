@@ -33,7 +33,7 @@ Version 7.2 (Not Released Yet)
         * request #6963 Incorrect error code REST API
 
     == Themes ==
-	* FlamingParrot: 1.17
+	* FlamingParrot: 1.18
 
 	== Developers ==
 	* Introduce docker container management for developers (tools/docker/dev_start.sh)
