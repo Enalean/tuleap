@@ -38,12 +38,14 @@ class LDAP_SearchPeople extends Search_SearchPeople {
             $users = $this->getMatchingUsers($query, $limit);
         }
 
-        $result->setHasMore(count($users) == $limit ? true : false);
+        $has_more = count($users) == $limit ? true : false;
+        $result->setHasMore($has_more);
 
         return new Search_SearchResultsPresenter(
             new Search_SearchResultsIntroPresenter($users, $query->getWords()),
             $users,
-            self::NAME
+            self::NAME,
+            $has_more
         );
     }
 
