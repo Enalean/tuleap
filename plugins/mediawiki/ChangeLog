@@ -1,3 +1,10 @@
+Version 0.32 - Tuleap 7.2
+    * tasks #7069: cleaning-up search use
+
+
+- all searches have same pagination
+- search more is coherant for end-user
+
 Version 0.31 - Tuleap 7.2
     * story #5756: search with nice interface (also story #7019)
 

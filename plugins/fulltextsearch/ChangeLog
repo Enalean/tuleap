@@ -1,3 +1,10 @@
+Version 0.43 - Tuleap 7.2
+    * tasks #7069: cleaning-up search use
+
+
+- all searches have same pagination
+- search more is coherant for end-user
+
 Version 0.42 - Tuleap 7.2
     * story #7060 Initiate the new ElasticSearch indexation format (tasks #7080: update deployment instructions)
 

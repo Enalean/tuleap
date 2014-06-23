@@ -1,3 +1,10 @@
+Version 1.17 - Tuleap 7.2
+    * tasks #7069: cleaning-up search use
+
+
+- all searches have same pagination
+- search more is coherant for end-user
+
 Version 1.16 - Tuleap 7.2
     * request #7084: Custom scrolling in child pane scroll parent when it comes to end
 
