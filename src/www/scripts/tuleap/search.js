@@ -120,7 +120,7 @@ var tuleap = tuleap || {};
             enableSearchMoreResults();
         }).fail(function(error) {
               codendi.feedback.clear();
-              codendi.feedback.log('error', codendi.locales.search.error + ' : ' + error.responseText);
+              codendi.feedback.log('error', codendi.locales.search.error + ' : ' + JSON.parse(error.responseText));
         }).always(function() {
               $('#search-results').removeClass('loading');
               $('.search-bar input[name="type_of_search"]').attr('value', type_of_search);
