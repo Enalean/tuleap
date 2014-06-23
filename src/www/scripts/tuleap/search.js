@@ -58,6 +58,7 @@ var tuleap = tuleap || {};
                 var type_of_search  = $(this).attr('data-search-type');
 
                 resetSearchResults(type_of_search);
+                codendi.feedback.clear();
                 searchFromSidebar(type_of_search, false);
                 highlightSearchCategory(type_of_search);
             }
@@ -67,7 +68,6 @@ var tuleap = tuleap || {};
     function resetSearchResults(type_of_search){
         tuleap.search.type_of_search = type_of_search;
         tuleap.search.offset         = 0;
-        codendi.feedback.clear();
     }
 
     function enableSearchMoreResults() {
