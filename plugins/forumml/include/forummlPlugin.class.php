@@ -114,8 +114,9 @@ class ForumMLPlugin extends Plugin {
             $dao = new MailingListDao();
             foreach ($dao->searchByProject($params['project']->getId()) as $row) {
                 $lists[] = array(
-                    'url'      => $this->getSearchUrl($params['project']->getId(), $row['group_list_id'], $params['words']),
-                    'title'    => $row['list_name']
+                    'url'              => $this->getSearchUrl($params['project']->getId(), $row['group_list_id'], $params['words']),
+                    'title'            => $row['list_name'],
+                    'extra-parameters' => false
                 );
             }
             $params['project_presenters'][] = new Search_SearchTypePresenter(
