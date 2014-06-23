@@ -178,6 +178,17 @@ class Tracker_ArtifactFactory {
         }
         return $artifacts;
     }
+
+    public function getClosedArtifactsByTrackerIdUserCanView(PFUser $user, $tracker_id) {
+        $artifacts = array();
+        foreach ($this->getDao()->searchClosedByTrackerId($tracker_id) as $row) {
+            $artifact = $this->getInstanceFromRow($row);
+            if ($artifact->userCanView($user)) {
+                $artifacts[$row['id']] = $artifact;
+            }
+        }
+        return $artifacts;
+    }
     
     /**
      * Returns the "open" artifacts 

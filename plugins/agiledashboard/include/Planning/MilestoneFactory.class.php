@@ -497,6 +497,24 @@ class Planning_MilestoneFactory {
     }
 
     /**
+     * Create Milestones corresponding to an array of artifacts
+     *
+     * @param Tracker_Artifact[] $artifact
+     *
+     * @return Planning_ArtifactMilestone[]
+     */
+    private function getReverseKeySortedMilestonesFromArtifacts($artifacts) {
+        krsort($artifacts);
+
+        $milestones = array();
+        foreach ($artifacts as $artifact) {
+            $milestones[] = $this->getMilestoneFromArtifact($artifact);
+        }
+
+        return $milestones;
+    }
+
+    /**
      * Returns an array with all Parent milestone of given milestone.
      *
      * The array starts with current milestone, until the "oldest" ancestor
@@ -703,6 +721,28 @@ class Planning_MilestoneFactory {
         $start_date  = $this->getTimestamp($user, $milestone_artifact, Planning_Milestone::START_DATE_FIELD_NAME);
 
         return (bool) $start_date;
+    }
+
+    /**
+     * @param PFUser $user
+     * @param Planning $planning
+     * @return Planning_ArtifactMilestone[]
+     */
+    public function getAllClosedMilestones(PFUser $user, Planning $planning) {
+        $artifacts = $this->artifact_factory->getClosedArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
+
+        return $this->getReverseKeySortedMilestonesFromArtifacts($artifacts);
+    }
+
+    /**
+     * @param PFUser $user
+     * @param Planning $planning
+     * @return Planning_ArtifactMilestone[]
+     */
+    public function getAllOpenMilestones(PFUser $user, Planning $planning) {
+        $artifacts = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
+
+        return $this->getReverseKeySortedMilestonesFromArtifacts($artifacts);
     }
 
 }
