@@ -92,7 +92,8 @@ class Search_SearchController {
 
         if (! $query->isValid()) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('search_index', 'at_least_3_ch'));
-            $GLOBALS['Response']->redirect('/search/');
+            $this->index($request);
+            return;
         }
 
         $results = $this->doSearch($query);
