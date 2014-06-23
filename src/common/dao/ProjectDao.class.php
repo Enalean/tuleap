@@ -358,18 +358,27 @@ class ProjectDao extends DataAccessObject {
     }
 
     public function searchGlobal($words, $offset, $exact) {
-        return $this->searchGlobalParams($words, $offset, $exact);
+        return $this->searchGlobalPaginated($words, $offset, $exact, 26);
+    }
+
+    public function searchGlobalPaginated($words, $offset, $exact, $limit) {
+        return $this->searchGlobalParams($words, $offset, $exact, '', '', $limit);
     }
 
     public function searchGlobalForRestrictedUsers($words, $offset, $exact, $user_id) {
+        return $this->searchGlobalPaginatedForRestrictedUsers($words, $offset, $exact, $user_id, 26);
+    }
+
+    public function searchGlobalPaginatedForRestrictedUsers($words, $offset, $exact, $user_id, $limit) {
         $user_id = $this->da->escapeInt($user_id);
         $from  = " JOIN user_group ON (user_group.group_id = groups.group_id)";
         $where = " AND user_group.user_id = $user_id";
-        return $this->searchGlobalParams($words, $offset, $exact, $from, $where);
+        return $this->searchGlobalParams($words, $offset, $exact, $from, $where, $limit);
     }
 
-    private function searchGlobalParams($words, $offset, $exact, $from = '', $where = '') {
+    private function searchGlobalParams($words, $offset, $exact, $from = '', $where = '', $limit = 26) {
         $offset = $this->da->escapeInt($offset);
+        $limit  = $this->da->escapeInt($limit);
         if ($exact === true) {
             $group_name = $this->searchExactMatch($words);
             $short_desc = $this->searchExactMatch($words);
@@ -393,7 +402,7 @@ class ProjectDao extends DataAccessObject {
                      OR (group_desc_value.value LIKE $long_desc)
                 )
                 $where
-                LIMIT $offset,26";
+                LIMIT $offset, $limit";
 
         return $this->retrieve($sql);
     }

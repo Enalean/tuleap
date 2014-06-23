@@ -50,6 +50,8 @@ class FlamingParrot_NavBarPresenter {
     /** @var array */
     private $extra_tabs;
 
+    public $number_of_page_results;
+
     public function __construct(
         $imgroot,
         PFUser $user,
@@ -63,18 +65,19 @@ class FlamingParrot_NavBarPresenter {
         $motd,
         $extra_tabs
     ) {
-        $this->imgroot               = $imgroot;
-        $this->user                  = $user;
-        $this->request_uri           = $request_uri;
-        $this->request               = $request;
-        $this->selected_top_tab      = $selected_top_tab;
-        $this->title                 = $title;
-        $this->search_form_presenter = $search_form_presenter;
-        $this->project_list          = $project_list;
-        $this->display_new_account   = $display_new_account;
-        $this->motd                  = $motd;
-        $this->has_motd              = ! empty($motd);
-        $this->extra_tabs            = $extra_tabs;
+        $this->imgroot                = $imgroot;
+        $this->user                   = $user;
+        $this->request_uri            = $request_uri;
+        $this->request                = $request;
+        $this->selected_top_tab       = $selected_top_tab;
+        $this->title                  = $title;
+        $this->search_form_presenter  = $search_form_presenter;
+        $this->project_list           = $project_list;
+        $this->display_new_account    = $display_new_account;
+        $this->motd                   = $motd;
+        $this->has_motd               = ! empty($motd);
+        $this->extra_tabs             = $extra_tabs;
+        $this->number_of_page_results = Search_SearchPlugin::RESULTS_PER_QUERY;
     }
 
     public function imgroot() {

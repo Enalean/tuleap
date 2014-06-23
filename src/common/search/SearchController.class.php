@@ -63,26 +63,38 @@ class Search_SearchController {
 
     public function ajaxResults(Codendi_Request $request) {
         $query = new Search_SearchQuery($request);
+        $query->setNumberOfResults(Search_SearchPlugin::RESULTS_PER_QUERY);
+
         if (! $query->isValid()) {
             $GLOBALS['Response']->send400JSONErrors($GLOBALS['Language']->getText('search_index', 'at_least_3_ch'));
         }
 
         $results = $this->doSearch($query);
-        if ($results !== null) {
-            $this->renderer->renderToPage('results', array('search_result' => $results));
+        $output  = array(
+            'has_more'      => $results->hasMore(),
+            'html'          => '',
+            'results_count' => $results->getCountResults(),
+        );
+
+        if ($results->getResultsHtml() !== null) {
+            $output['html'] = $this->renderer->renderToString('results', array('search_result' => $results->getResultsHtml()));
         }
+
+        echo json_encode($output);
     }
 
     public function results(Codendi_Request $request) {
         $query = new Search_SearchQuery($request);
+        $query->setNumberOfResults(Search_SearchPlugin::RESULTS_PER_QUERY);
+
         if (! $query->isValid()) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('search_index', 'at_least_3_ch'));
             $GLOBALS['Response']->redirect('/search/');
         }
 
         $results = $this->doSearch($query);
-        if ($results !== null) {
-            $this->renderResults($query, $results);
+        if ($results->getResultsHtml() !== null) {
+            $this->renderResults($query, $results->getResultsHtml());
         }
     }
 
@@ -106,7 +118,7 @@ class Search_SearchController {
             )
         );
 
-        $project_search_types = array_merge($this->getAdditionnalProjectWidePresentersIfNeeded($query->getProject()), $project_search_types);
+        $project_search_types = array_merge($this->getAdditionnalProjectWidePresentersIfNeeded($query->getProject(), $query->getWords()), $project_search_types);
 
         $search_panes = array();
         if (! $query->getProject()->isError()) {
@@ -126,12 +138,12 @@ class Search_SearchController {
         );
     }
 
-    private function getAdditionnalProjectWidePresentersIfNeeded(Project $project) {
+    private function getAdditionnalProjectWidePresentersIfNeeded(Project $project, $words) {
         $additionnal_presenters = array();
 
         if ($project->usesService('wiki')) {
             $search_wiki              = new Search_SearchWiki(new WikiDao());
-            $additionnal_presenters[] = $search_wiki->getFacets();
+            $additionnal_presenters[] = $search_wiki->getFacets($project->getID(), $words);
         }
 
         if ($project->usesService('tracker')) {
@@ -166,23 +178,31 @@ class Search_SearchController {
         );
     }
 
+    /**
+     * @param Search_SearchQuery $query
+     * @return Search_SearchResults
+     */
     private function doSearch(Search_SearchQuery $query) {
+        $results = new Search_SearchResults();
+
         $search = new Search_SearchPlugin($this->event_manager);
-        $plugin_results = $search->search($query);
-        if ($plugin_results !== null) {
-            return $plugin_results;
+        $search->search($query, $results);
+        if ($results->getResultsHtml() !== null) {
+            return $results;
         }
         if ( ! isset($this->search_types[$query->getTypeOfSearch()])) {
-            return '';
-
+            return $results;
         }
 
-        $presenter = $this->search_types[$query->getTypeOfSearch()]->search($query);
+        $presenter = $this->search_types[$query->getTypeOfSearch()]->search($query, $results);
         if ($presenter) {
             if ($query->isAjax() && $query->getOffset() > 0) {
-                return $this->renderer->renderToString($presenter->getTemplate().'-more', $presenter);
+                $results->setResultsHtml($this->renderer->renderToString($presenter->getTemplate().'-more', $presenter));
+            } else {
+                $results->setResultsHtml($this->renderer->renderToString($presenter->getTemplate(), $presenter));
             }
-            return $this->renderer->renderToString($presenter->getTemplate(), $presenter);
         }
+
+        return $results;
     }
 }

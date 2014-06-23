@@ -15,12 +15,18 @@
 </ul>
 {{/ has_results }}
 
-<input type="hidden" id="fts_size" value="10" />
-
 {{> search-results-main }}
 
 {{# has_results }}
-    <div id="search-more">
-        <button class="btn btn-primary" id="search-more-button">{{ more_results }}</button>
+    {{# maybe_more_results }}
+        <div id="search-more">
+            <button class="btn btn-primary" id="search-more-button">{{ more_results }}</button>
+        </div>
+    {{/ maybe_more_results }}
+    <div id="no_more_results" style="display:none;">
+        <p><i class="icon-frown"></i> {{ no_more_results }}</p>
     </div>
+{{/ has_results }}
+{{^ has_results }}
+    <p class="no-result"><i class="icon-frown"></i> {{{ no_match_found_string }}}</p>
 {{/ has_results }}

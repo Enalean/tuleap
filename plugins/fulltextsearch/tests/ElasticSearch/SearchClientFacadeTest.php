@@ -107,19 +107,21 @@ class ElasticSearch_SearchClientFacadeTest extends TuleapTestCase {
     private function assertExpectedQuery(QueryExpectation $query_excpectation) {
         $some_results = array();
         stub($this->elasticsearchclient)->search($query_excpectation)->once()->returns($some_results);
+        $size = 10;
 
         $offset                     = 666;
         $no_facet_submitted_by_user = array();
-        $this->client->searchDocuments('some terms', $no_facet_submitted_by_user, $offset, $this->user);
+        $this->client->searchDocuments('some terms', $no_facet_submitted_by_user, $offset, $this->user, $size);
     }
 
     private function assertExpectedAdminQuery(QueryExpectation $query_excpectation) {
         $some_results = array();
         stub($this->elasticsearchclient)->search($query_excpectation)->once()->returns($some_results);
+        $size = 10;
 
         $offset                     = 666;
         $no_facet_submitted_by_user = array();
-        $this->admin_client->searchDocuments('some terms', $no_facet_submitted_by_user, $offset, $this->user);
+        $this->admin_client->searchDocuments('some terms', $no_facet_submitted_by_user, $offset, $this->user, $size);
     }
 }
 

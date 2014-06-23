@@ -32,6 +32,8 @@ class Search_Presenter_SearchPresenter {
 
     public $group_id = false;
 
+    public $number_of_page_results;
+
     public function __construct($type_of_search, $words, $search_result, array $search_panes, $project) {
         $this->type_of_search = $type_of_search;
         $this->words          = $words;
@@ -41,5 +43,7 @@ class Search_Presenter_SearchPresenter {
         if ($project && ! $project->isError()) {
             $this->group_id   = $project->getId();
         }
+
+        $this->number_of_page_results = Search_SearchPlugin::RESULTS_PER_QUERY;
     }
 }

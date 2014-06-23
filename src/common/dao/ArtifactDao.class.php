@@ -34,6 +34,10 @@ class ArtifactDao extends DataAccessObject {
     }
 
     public function searchGlobal($words, $exact, $offset, $atid, array $user_ugroups) {
+        $this->searchGlobalPaginated($words, $exact, $offset, $atid, $user_ugroups, 25);
+    }
+
+    public function searchGlobalPaginated($words, $exact, $offset, $atid, array $user_ugroups, $limit) {
         if ($exact) {
             $details = $this->searchExactMatch($words);
             $summary = $this->searchExactMatch($words);
@@ -45,6 +49,7 @@ class ArtifactDao extends DataAccessObject {
         }
         $offset       = $this->da->escapeInt($offset);
         $atid         = $this->da->escapeInt($atid);
+        $limit        = $this->da->escapeInt($limit);
         $user_ugroups = $this->da->escapeIntImplode($user_ugroups);
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS artifact.artifact_id,
@@ -70,7 +75,7 @@ class ArtifactDao extends DataAccessObject {
                         (artifact_history.field_name='comment' AND (artifact_history.new_value LIKE $history))
                   )
                 GROUP BY open_date DESC
-                LIMIT $offset, 25";
+                LIMIT $offset, $limit";
         return $this->retrieve($sql);
     }
 }

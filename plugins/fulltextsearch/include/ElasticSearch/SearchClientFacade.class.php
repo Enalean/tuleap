@@ -74,11 +74,11 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
      *
      * @return ElasticSearch_SearchResultCollection
      */
-    public function searchDocuments($terms, array $facets, $offset, PFUser $user) {
-        $query  = $this->getSearchDocumentsQuery($terms, $facets, $offset, $user);
+    public function searchDocuments($terms, array $facets, $offset, PFUser $user, $size) {
+        $query  = $this->getSearchDocumentsQuery($terms, $facets, $offset, $user, $size);
         // For debugging purpose, uncomment the statement below to see the
         // content of the request (can be directly injected in a curl request)
-        // echo "<pre>".json_encode($query)."</pre>";
+//         echo "<pre>".json_encode($query)."</pre>";
         $search = $this->client->search($query);
         return new ElasticSearch_SearchResultCollection(
             $search,
@@ -115,9 +115,10 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
     /**
      * @return array to be used for querying ES
      */
-    protected function getSearchDocumentsQuery($terms, array $facets, $offset, PFUser $user) {
+    protected function getSearchDocumentsQuery($terms, array $facets, $offset, PFUser $user, $size) {
         $query = array(
             'from' => (int)$offset,
+            'size' => $size,
             'query' => array(
                 'query_string' => array(
                     'query' => $terms

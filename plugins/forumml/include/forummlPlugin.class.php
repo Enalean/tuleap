@@ -114,10 +114,16 @@ class ForumMLPlugin extends Plugin {
             $dao = new MailingListDao();
             foreach ($dao->searchByProject($params['project']->getId()) as $row) {
                 $lists[] = array(
-                    'url'      => $this->getSearchUrl($params['project']->getId(), $row['group_list_id'], $params['words']),
-                    'title'    => $row['list_name']
+                    'url'              => $this->getSearchUrl($params['project']->getId(), $row['group_list_id'], $params['words']),
+                    'title'            => $row['list_name'],
+                    'extra-parameters' => false
                 );
             }
+
+            if (! $lists) {
+                return;
+            }
+
             $params['project_presenters'][] = new Search_SearchTypePresenter(
                 self::SEARCH_TYPE,
                 $GLOBALS['Language']->getText('plugin_forumml','search_list'),
@@ -127,10 +133,12 @@ class ForumMLPlugin extends Plugin {
     }
 
     public function search_type($params) {
-        if ($params['type_of_search'] == self::SEARCH_TYPE) {
+        $query = $params['query'];
+
+        if ($query->getTypeOfSearch() == self::SEARCH_TYPE) {
             $request  = HTTPRequest::instance();
             $list     = (int) $request->get('list');
-            util_return_to($this->getSearchUrl($params['project']->getId(), $list, $params['words']));
+            util_return_to($this->getSearchUrl($query->getProject()->getId(), $list, $query->getWords()));
         }
     }
 

@@ -22,7 +22,6 @@ var tuleap = tuleap || {};
 !(function ($) {
 
     tuleap.search = {
-        default_results_offset : 10,
 
         init : function() {
             var type_of_search = $('input[name=type_of_search]').val();
@@ -32,7 +31,7 @@ var tuleap = tuleap || {};
             toggleFacets();
             decorRedirectedSearch();
             enableSearchMoreResults();
-            resetSearchResults();
+            resetSearchResults(type_of_search);
             highlightSearchCategory(type_of_search);
         },
 
@@ -55,7 +54,8 @@ var tuleap = tuleap || {};
             if ($(this).attr('href') == '#') {
                 e.preventDefault();
 
-                var type_of_search = $(this).attr('data-search-type');
+                tuleap.search.facet = $(this);
+                var type_of_search  = $(this).attr('data-search-type');
 
                 resetSearchResults(type_of_search);
                 searchFromSidebar(type_of_search, false);
@@ -66,13 +66,14 @@ var tuleap = tuleap || {};
 
     function resetSearchResults(type_of_search){
         tuleap.search.type_of_search = type_of_search;
-        tuleap.search.offset = 0;
+        tuleap.search.offset         = 0;
+        codendi.feedback.clear();
     }
 
     function enableSearchMoreResults() {
         $('#search-more-button').unbind( "click" );
         $('#search-more-button').click(function() {
-            tuleap.search.offset += tuleap.search.default_results_offset;
+            tuleap.search.offset += parseInt($('input[name=number_of_page_results]').val());
             searchFromSidebar(tuleap.search.type_of_search, true);
         });
     }
@@ -90,34 +91,40 @@ var tuleap = tuleap || {};
 
     function searchFromSidebar(type_of_search, append_to_results) {
         var keywords       = $('#words').val(),
-            self           = this;
+            element        = tuleap.search.facet;
 
-        $.ajax({
-            url: getSearchUrl(self, type_of_search, keywords),
-            beforeSend: function() {
-                if (! append_to_results) {
-                    $('#search-results').html('');
-                }
-                $('#search-results').addClass('loading');
+        (function beforeSend() {
+            if (! append_to_results) {
+                $('#search-results').html('');
             }
-        }).done(function(html) {
-              if (append_to_results) {
-                   $('#search_results_list').append(html);
-                   if ($.trim(html) == '') {
-                       $('#search-more-button').remove();
-                   }
-              } else {
-                   $('#search-results').html(html);
-              }
-              tuleap.search.moveFacetsToSearchPane(type_of_search);
-              enableSearchMoreResults();
+            $('#search-results').addClass('loading');
+        })()
+        $.getJSON(getSearchUrl(element, type_of_search, keywords)
+        ).done(function(json) {
+            if (append_to_results) {
+                $('#search_results_list').append(json.html);
+            } else {
+                 $('#search-results').html(json.html);
+            }
+            if (json.has_more == true ) {
+                $('#search-more-button').show();
+            } else {
+                $('#search-more-button').hide();
+            }
+            if (json.results_count == 0) {
+                $('#no_more_results').show();
+            } else {
+                $('#no_more_results').hide();
+            }
+            tuleap.search.moveFacetsToSearchPane(type_of_search);
+            enableSearchMoreResults();
         }).fail(function(error) {
               codendi.feedback.clear();
               codendi.feedback.log('error', codendi.locales.search.error + ' : ' + error.responseText);
         }).always(function() {
               $('#search-results').removeClass('loading');
               $('.search-bar input[name="type_of_search"]').attr('value', type_of_search);
-              resetAdditionnalInformations(type_of_search, self);
+              resetAdditionnalInformations(type_of_search, element);
         });
     }
 
@@ -150,7 +157,7 @@ var tuleap = tuleap || {};
     }
 
     function getGroupId() {
-        return $('.search-bar input[name="group_id"]').attr('value');
+        return $('.search-bar input[name="group_id"]').val();
     }
 
     function resetAdditionnalInformations(type_of_search, element) {

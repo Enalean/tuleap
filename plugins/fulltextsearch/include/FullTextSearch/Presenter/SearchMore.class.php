@@ -45,4 +45,8 @@ class FullTextSearch_Presenter_SearchMore {
     public function display_more_results_option() {
         return $this->has_results();
     }
+
+    public function no_more_results() {
+        return $GLOBALS['Language']->getText('search_index', 'no_more_results');
+    }
 }

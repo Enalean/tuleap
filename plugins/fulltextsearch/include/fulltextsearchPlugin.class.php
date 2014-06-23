@@ -104,7 +104,7 @@ class fulltextsearchPlugin extends Plugin {
 
     public function search_type($params) {
         if ($this->getCurrentUser()->useLabFeatures()) {
-            if ($params['type_of_search'] === self::SEARCH_TYPE) {
+            if ($params['query']->getTypeOfSearch() === self::SEARCH_TYPE) {
                 try {
                     $search_controller = $this->getSearchController();
                 } catch (ElasticSearch_ClientNotFoundException $exception) {

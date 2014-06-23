@@ -31,12 +31,14 @@ class LDAP_SearchPeople extends Search_SearchPeople {
         $this->ldap    = $ldap;
     }
 
-    public function search(Search_SearchQuery $query, $limit) {
+    public function search(Search_SearchQuery $query, $limit, Search_SearchResults $result) {
         if (! $this->ldap->connect()) {
             $users = array();
         } else {
             $users = $this->getMatchingUsers($query, $limit);
         }
+
+        $result->setHasMore(count($users) == $limit ? true : false);
 
         return new Search_SearchResultsPresenter(
             new Search_SearchResultsIntroPresenter($users, $query->getWords()),
