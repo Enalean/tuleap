@@ -52,9 +52,12 @@ class Search_SearchController {
     }
 
     public function index(Codendi_Request $request) {
+        $query = new Search_SearchQuery($request);
+        if ($query->getTypeOfSearch() == '') {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('search_index', 'please_choose_search_type'));
+        }
         $GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('search_index', 'search'), 'body_class' => array('search-page')));
 
-        $query   = new Search_SearchQuery($request);
         $results = '';
         $this->renderer->renderToPage('site-search', $this->getSearchPresenter($query, $results));
 
@@ -89,7 +92,8 @@ class Search_SearchController {
 
         if (! $query->isValid()) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('search_index', 'at_least_3_ch'));
-            $GLOBALS['Response']->redirect('/search/');
+            $this->index($request);
+            return;
         }
 
         $results = $this->doSearch($query);
