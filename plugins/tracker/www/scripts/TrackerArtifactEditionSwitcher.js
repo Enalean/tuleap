@@ -31,6 +31,7 @@ tuleap.tracker.artifact.editionSwitcher = function() {
             bindSubmissionBarToFollowups();
             disableWarnBeforeUnloadOnSubmitForm();
             toggleFieldsIfAlreadySubmittedArtifact();
+            toggleEmptyMandatoryFields();
         }
     };
 
@@ -42,6 +43,15 @@ tuleap.tracker.artifact.editionSwitcher = function() {
                 }
             });
         }
+    };
+
+    var toggleEmptyMandatoryFields = function () {
+        $('.editable').each(function() {
+            var field = $(this);
+            if (field.find('.highlight').size() > 0 && field.find('.empty_value').size() > 0) {
+                toggleField(field);
+            }
+        });
     };
 
     var disableWarnBeforeUnloadOnSubmitForm = function() {
