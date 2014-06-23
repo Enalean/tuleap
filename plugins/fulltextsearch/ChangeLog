@@ -1,3 +1,6 @@
+Version 0.41 - Tuleap 7.2
+    * tasks #7071 Add logs for elasticsearch operations
+
 Version 0.40 - Tuleap 7.2
     * tasks #7050: make search behaviour more obvious
 
