@@ -1,3 +1,6 @@
+Version 0.42 - Tuleap 7.2
+    * story #7060 Initiate the new ElasticSearch indexation format (tasks #7080: update deployment instructions)
+
 Version 0.41 - Tuleap 7.2
     * tasks #7071 Add logs for elasticsearch operations
 
