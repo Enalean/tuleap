@@ -22,54 +22,50 @@ You need to install elasticsearch server packages:
 
 Security
 --------
-If you install elasticsearch on a dedicated server, it's worth considering setting up permissions. 
-See https://github.com/sonian/elasticsearch-jetty
-
-If you install elasticsearch on the same server than tuleap the very minimal setup is to restrict 
-server port binding to localhost only (otherwise anybody can query index anonymously):
+The very minimal setup is to restrict  server port binding to localhost only (otherwise anybody can query index anonymously):
 
     $ edit /etc/elasticsearch/elasticsearch.yml
       ...
       network.host: 127.0.0.1
       ...
 
-Setup same credentials in plugin properties (fulltextsearch_user, fulltextsearch_password) than 
-in elasticsearch/conf/realm.properties.
+To improve this (mandatory for a production deployment) you shall setup a reverse proxy
 
-Edit elasticsearch/conf/jetty.xml to restrict access to ES server:
+    $> yum install scl-utils
+    $> rpm -i https://www.softwarecollections.org/en/scls/rhscl/nginx14/epel-6-x86_64/download/rhscl-nginx14-epel-6-x86_64-1-2.noarch.rpm
+    $> yum install nginx14-nginx
+    $> yum install httpd-tools # needed to generate htpassword file
 
-    <New class="org.eclipse.jetty.http.security.Constraint"
-         id="NoneSecurityConstraint">
-        <Set name="authenticate">true</Set>
-        <Set name="name">BASIC</Set>
-        <Set name="roles">
-            <Array type="java.lang.String">
-                <Item>readwrite</Item>
-            </Array>
-        </Set>
-    </New>
 
-    <New class="org.eclipse.jetty.http.security.Constraint"
-         id="ReadOnlyUserDataSecurityConstraint">
-        <Set name="authenticate">true</Set>
-        <Set name="name">BASIC</Set>
-        <Set name="roles">
-            <Array type="java.lang.String">
-                <Item>readwrite</Item>
-            </Array>
-        </Set>
-    </New>
+Generate a password file:
 
-    <New class="org.eclipse.jetty.http.security.Constraint"
-         id="ReadOnlyClusterDataSecurityConstraint">
-        <Set name="authenticate">true</Set>
-        <Set name="name">BASIC</Set>
-        <Set name="roles">
-            <Array type="java.lang.String">
-                <Item>readwrite</Item>
-            </Array>
-        </Set>
-    </New>
+   $> htpasswd -c /opt/rh/nginx14/root/etc/nginx/htpasswd elasticsearch
+
+Then, setup reverse proxy. Edit ``/opt/rh/nginx14/root/etc/nginx/nginx.conf`` and add following snippet in ``http`` section:
+
+       listen 9222;
+
+       location / {
+            proxy_set_header X-Forwarded-Host $host;
+            proxy_set_header X-Forwarded-Server $host;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_pass http://127.0.0.1:9200/;
+            proxy_redirect off;
+
+            # Password
+            auth_basic "Elasticsearch for Tuleap Restricted";
+            auth_basic_user_file /opt/rh/nginx14/root/etc/nginx/htpasswd;
+
+            # Don't forward auth header
+            proxy_set_header   Authorization "";
+        }
+
+Finally, start the proxy (password is the one you defined in previous step):
+
+    $> chkconfig nginx14-nginx on
+    $> service nginx14-nginx start
+    $> curl -u elasticsearch:password http://localhost:9222/
+
 
 Cluster
 -------
