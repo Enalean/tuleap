@@ -17,9 +17,9 @@ Version 7.2 (Not Released Yet)
     * story #7026: ElasticSearch - Initiate the new ElasticSearch indexation format
 
         == Plugins ==
-	* agiledashboard: 1.65
+	* agiledashboard: 1.66
 	* cardwall: 1.33
-	* tracker: 5.412
+	* tracker: 5.413
 	* git: 3.88
 	* forumml: 2.6.19
 	* fulltextsearch: 0.44

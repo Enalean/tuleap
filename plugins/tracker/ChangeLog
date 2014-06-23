@@ -1,3 +1,6 @@
+Version 5.413 - Tuleap 7.2
+    * request #6441: Enhance agiledashbord homepage behaviour
+
 Version 5.412 - Tuleap 7.2
     * request #7088: Cannot update artifact when a field is mandatory and empty: JS error
 
