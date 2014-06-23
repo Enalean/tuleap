@@ -122,8 +122,9 @@ class Search_SearchController {
 
         $search_panes = array();
         if (! $query->getProject()->isError()) {
+            $project_name = util_unconvert_htmlspecialchars($query->getProject()->getPublicName());
             $search_panes[] = new Search_SearchPanePresenter(
-                $GLOBALS['Language']->getText('search_index', 'project_wide_search', array($query->getProject()->getPublicName())),
+                $GLOBALS['Language']->getText('search_index', 'project_wide_search', $project_name),
                 $project_search_types
             );
         }
