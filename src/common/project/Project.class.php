@@ -358,6 +358,15 @@ class Project extends Group implements PFO_Project {
         return $this->project_data_array['svn_accessfile'];
     }
 
+    /**
+     * SVN root path must have project name in mixed case.
+     *
+     * @return String
+     */
+    public function getSVNRootPath() {
+        return Config::get('svn_prefix') . DIRECTORY_SEPARATOR . $this->getUnixNameMixedCase();
+    }
+
     function getProjectsCreatedFrom() {
         $sql = 'SELECT * FROM groups WHERE built_from_template = '. $this->getGroupId() ." AND status <> 'D'";
         $subprojects = array();

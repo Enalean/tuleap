@@ -474,10 +474,8 @@ function svn_utils_format_svn_history($group_id) {
 }
 
 // read permission access file. The default settings part.
-function svn_utils_read_svn_access_file_defaults($gname,$display=false) {
-    global $feedback,$svn_prefix;
-
-    $filename = "$svn_prefix/$gname/.SVNAccessFile";
+function svn_utils_read_svn_access_file_defaults($project_svnroot, $display=false) {
+    $filename = "$project_svnroot/.SVNAccessFile";
 
     $fd = @fopen("$filename", "r");
     $buffer = '';
@@ -501,11 +499,11 @@ function svn_utils_read_svn_access_file_defaults($gname,$display=false) {
 }
 
 // read permission access file. The project specific part.
-function svn_utils_read_svn_access_file($gname) {
+function svn_utils_read_svn_access_file($project_svnroot) {
 
-    global $feedback,$Language,$svn_prefix;
+    global $Language;
 
-    $filename = "$svn_prefix/$gname/.SVNAccessFile";
+    $filename = "$project_svnroot/.SVNAccessFile";
     $buffer = '';
 
     $fd = @fopen("$filename", "r");
@@ -525,11 +523,11 @@ function svn_utils_read_svn_access_file($gname) {
     return $buffer;
 }
 
-function svn_utils_write_svn_access_file($gname, $contents) {
+function svn_utils_write_svn_access_file($project_svnroot, $contents) {
 
-    global $feedback,$Language,$svn_prefix;
+    global $feedback,$Language;
 
-    $filename = "$svn_prefix/$gname/.SVNAccessFile";
+    $filename = "$project_svnroot/.SVNAccessFile";
     $fd = fopen("$filename", "w+");
     if ($fd) {
 	if (fwrite($fd, str_replace("\r",'',$contents)) === false) {
@@ -546,9 +544,8 @@ function svn_utils_write_svn_access_file($gname, $contents) {
     return $ret;
 }
 
-function svn_utils_svn_repo_exists($gname) {
-    global $svn_prefix;
-    return is_dir("$svn_prefix/$gname");
+function svn_utils_svn_repo_exists($project_svnroot) {
+    return is_dir("$project_svnroot");
 }
 
 
@@ -559,7 +556,7 @@ $GLOBALS['SVNGROUPS'] = "None";
  * Function svn_utils_parse_access_file : parse the .SVNAccessFile of the project $gname 
  * and populate the global arrays $SVNACCESS and $SVNGROUPS.
  * 
- * @param string $gname the unix name of the group (project) we want to parse the access file
+ * @param string $project_svnroot the unix name of the group (project) we want to parse the access file
  * @global array $SVNACCESS the array populated with the rights for each user for this project $gname
  * @global array $SVNGROUPS the array populated with the members of each ugroup of this project
  *
@@ -569,16 +566,16 @@ $GLOBALS['SVNGROUPS'] = "None";
  *    the corresponding Python code needs to be updated too.
  *    (see src/utils/svn/svnaccess.py)
  */
-function svn_utils_parse_access_file($gname) {
-  global $SVNACCESS, $SVNGROUPS,$Language,$svn_prefix;
-  $filename = "$svn_prefix/$gname/.SVNAccessFile";
+function svn_utils_parse_access_file($project_svnroot) {
+  global $SVNACCESS, $SVNGROUPS,$Language;
+  $filename = "$project_svnroot/.SVNAccessFile";
   $SVNACCESS = array();
   $SVNGROUPS = array();
 
 
   $f = @fopen($filename, "rb");
   if ($f === false) {
-    $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_utils','file_err',$filename));
+      $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_utils','file_err',$filename));
   } else {
     $path_pat    = '/^\s*\[(.*)\]/'; // assume no repo name 'repo:'
     $perm_pat    = '/^\s*([^ ]*)\s*=\s*(.*)$/';
@@ -649,16 +646,16 @@ function svn_utils_parse_access_file($gname) {
 }
 
 
-function svn_utils_get_forbidden_paths($username,$gname) {
-    global $SVNACCESS, $SVNGROUPS;
+function svn_utils_get_forbidden_paths($username, $project_svnroot) {
+    global $SVNACCESS;
 
     if ($SVNACCESS == "None") {
-        svn_utils_parse_access_file($gname);
+        svn_utils_parse_access_file($project_svnroot);
     }
 
     $em = EventManager::instance();
-    $em->processEvent('svn_check_access_username', array('username'  => &$username,
-                                                       'groupname' => $gname));
+    $em->processEvent('svn_check_access_username', array('username'        => &$username,
+                                                         'project_svnroot' => $project_svnroot));
 
     $forbidden = array();
     if (!user_is_super_user()) {   // super user have all the rights (no forbidden paths)
@@ -688,7 +685,7 @@ function svn_utils_get_forbidden_paths($username,$gname) {
  * regarding the global arrays $SVNACCESS and $SVNGROUPS.
  * 
  * @param string $username the login name of the user we want to check the perms
- * @param string $gname the unix name of the group (project)
+ * @param string $project_svnroot the unix name of the group (project)
  * @param string $svnpath the subversion path to check
  * @global array $SVNACCESS the array populated with the rights for each user for this project $gname
  * @global array $SVNGROUPS the array populated with the members of each ugroup of this project
@@ -700,18 +697,18 @@ function svn_utils_get_forbidden_paths($username,$gname) {
  *    (see src/utils/svn/svnaccess.py)
  */
 
-function svn_utils_check_access($username, $gname, $svnpath) {
-  global $SVNACCESS, $SVNGROUPS;
+function svn_utils_check_access($username, $project_svnroot, $svnpath) {
+  global $SVNACCESS;
 
   if ( (user_getname()==$username) && (user_is_super_user())) return true;
 
   $em =& EventManager::instance();
-  $em->processEvent('svn_check_access_username', array('username'  => &$username,
-                                                       'groupname' => $gname));
+  $em->processEvent('svn_check_access_username', array('username'        => &$username,
+                                                       'project_svnroot' => $project_svnroot));
   $username = strtolower($username);
 
   if ($SVNACCESS == "None") {
-    svn_utils_parse_access_file($gname);
+    svn_utils_parse_access_file($project_svnroot);
   }
 
   $perm = '';
@@ -743,19 +740,18 @@ function svn_utils_check_access($username, $gname, $svnpath) {
   }
 }
 
-function svn_utils_is_there_specific_permission($gname) {
-    $specifics = svn_utils_read_svn_access_file($gname);
+function svn_utils_is_there_specific_permission($project_svnroot) {
+    $specifics = svn_utils_read_svn_access_file($project_svnroot);
     return !$specifics || $specifics != '';
 }
 
-function svn_get_revisions(&$project, $offset, $chunksz, $_rev_id = '', $_commiter = '', $_srch = '', $order_by = '', $pv = 0, $foundRows=true) {
+function svn_get_revisions(Project $project, $offset, $chunksz, $_rev_id = '', $_commiter = '', $_srch = '', $order_by = '', $pv = 0, $foundRows=true) {
     global $_path;
-    global $SVNACCESS, $SVNGROUPS;
 
     $um = UserManager::instance();
 
     //check user access rights
-    $forbidden = svn_utils_get_forbidden_paths($um->getCurrentUser()->getName(), $project->getUnixName(false));
+    $forbidden = svn_utils_get_forbidden_paths($um->getCurrentUser()->getName(), $project->getSVNRootPath());
 
     $select   = 'SELECT';
     $group_by = '';

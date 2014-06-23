@@ -79,8 +79,7 @@ class BackendSVN extends Backend {
         if (!$project) {
             return false;
         }
-        $unix_group_name=$project->getUnixName(false); // May contain upper-case letters
-        $svn_dir=$GLOBALS['svn_prefix']."/".$unix_group_name;
+        $svn_dir = $project->getSVNRootPath();
         if (!is_dir($svn_dir)) {
             // Let's create a SVN repository for this group
             if (!mkdir($svn_dir)) {
@@ -89,6 +88,7 @@ class BackendSVN extends Backend {
             }
             system($GLOBALS['svnadmin_cmd']." create $svn_dir --fs-type fsfs");
 
+            $unix_group_name=$project->getUnixNameMixedCase(); // May contain upper-case letters
             $this->recurseChownChgrp($svn_dir, $this->getHTTPUser(), $unix_group_name);
             system("chmod g+rw $svn_dir");
         }
@@ -112,12 +112,8 @@ class BackendSVN extends Backend {
      * @param Project
      * @return true is repository already exists, false otherwise
      */
-    function repositoryExists($project) {
-        $unix_group_name=$project->getUnixName(false); // May contain upper-case letters
-        $svn_dir=$GLOBALS['svn_prefix']."/".$unix_group_name;
-        if (is_dir($svn_dir)) {
-          return true;
-        } else return false; 
+    function repositoryExists(Project $project) {
+        return is_dir($project->getSVNRootPath());
     }
 
 
@@ -129,9 +125,9 @@ class BackendSVN extends Backend {
      * 
      * @return boolean true on success or false on failure
      */
-    public function updateHooks($project) {
-        $unix_group_name=$project->getUnixName(false); // May contain upper-case letters
-        $svn_dir=$GLOBALS['svn_prefix']."/".$unix_group_name;
+    public function updateHooks(Project $project) {
+        $unix_group_name=$project->getUnixNameMixedCase(); // May contain upper-case letters
+        $svn_dir=$project->getSVNRootPath();
 
         if ($project->isSVNTracked()) {
             $filename = "$svn_dir/hooks/post-commit";
@@ -214,12 +210,12 @@ class BackendSVN extends Backend {
 
         if ($project->canChangeSVNLog()) {
             try {
-                $this->enableCommitMessageUpdate($unix_group_name);
+                $this->enableCommitMessageUpdate($svn_dir);
             } catch (BackendSVNFileForSimlinkAlreadyExistsException $exception) {
                 throw $exception;
             }
         } else {
-            $this->disableCommitMessageUpdate($unix_group_name);
+            $this->disableCommitMessageUpdate($svn_dir);
         }
 
         return true;
@@ -248,12 +244,12 @@ class BackendSVN extends Backend {
         if (!$project) {
             return false;
         }
-        $unix_group_name = $project->getUnixName(false); // May contain upper-case letters
-        $svn_dir = $GLOBALS['svn_prefix']."/".$unix_group_name;
-        if (!is_dir($svn_dir)) {
-            $this->log("Can't update SVN Access file: project SVN repo is missing: $svn_dir", Backend::LOG_ERROR);
+        if (! $this->repositoryExists($project)) {
+            $this->log("Can't update SVN Access file: project SVN repo is missing: ".$project->getSVNRootPath(), Backend::LOG_ERROR);
             return false;
         }
+        $svn_dir = $project->getSVNRootPath();
+        $unix_group_name = $project->getUnixNameMixedCase();
 
         $svnaccess_file = $svn_dir."/.SVNAccessFile";
         $svnaccess_file_old = $svnaccess_file.".old";
@@ -323,14 +319,13 @@ class BackendSVN extends Backend {
         if (!$project) {
             return false;
         }
-        $unix_group_name = $project->getUnixName(false); // May contain upper-case letters
-        $svn_dir = $GLOBALS['svn_prefix']."/".$unix_group_name;
-        if (!is_dir($svn_dir)) {
-            $this->log("Can't update SVN Access file: project SVN repo is missing: $svn_dir", Backend::LOG_ERROR);
+
+        if (! $this->repositoryExists($project)) {
+            $this->log("Can't update SVN Access file: project SVN repo is missing: ".$project->getSVNRootPath(), Backend::LOG_ERROR);
             return false;
         }
         
-        $svnaccess_file = $svn_dir."/.SVNAccessFile";
+        $svnaccess_file = $project->getSVNRootPath()."/.SVNAccessFile";
         
         if (!is_file($svnaccess_file)) {
             return $this->updateSVNAccess($group_id);
@@ -518,11 +513,13 @@ class BackendSVN extends Backend {
         if (!$project) {
             return false;
         }
-        $mydir=$GLOBALS['svn_prefix']."/".$project->getUnixName(false);
-        $backupfile=$GLOBALS['tmp_dir']."/".$project->getUnixName(false)."-svn.tgz";
+        $mydir      = $project->getSVNRootPath();
+        $repopath   = dirname($mydir);
+        $reponame   = basename($mydir);
+        $backupfile = $GLOBALS['tmp_dir']."/$reponame-svn.tgz";
 
         if (is_dir($mydir)) {
-            system("cd ".$GLOBALS['svn_prefix']."; tar cfz $backupfile ".$project->getUnixName(false));
+            system("cd $repopath; tar cfz $backupfile $reponame");
             chmod($backupfile, 0600);
             $this->recurseDeleteInDir($mydir);
             rmdir($mydir);
@@ -538,9 +535,9 @@ class BackendSVN extends Backend {
      * 
      * @return boolean true if success
      */
-    public function setSVNPrivacy($project, $is_private) {
-        $perms = $is_private ? 0770 : 0775;
-        $svnroot = $GLOBALS['svn_prefix'] . '/' . $project->getUnixName(false);
+    public function setSVNPrivacy(Project $project, $is_private) {
+        $perms   = $is_private ? 0770 : 0775;
+        $svnroot = $project->getSVNRootPath();
         return is_dir($svnroot) && $this->chmod($svnroot, $perms);
     }
 
@@ -552,9 +549,9 @@ class BackendSVN extends Backend {
      * 
      * @return boolean true if success
      */
-    public function checkSVNMode($project) {
-        $unix_group_name =  $project->getUnixName(false);
-        $svnroot = $GLOBALS['svn_prefix'] . '/' . $unix_group_name;
+    public function checkSVNMode(Project $project) {
+        $unix_group_name =  $project->getUnixNameMixedCase();
+        $svnroot = $project->getSVNRootPath();
         $is_private = !$project->isPublic() || $project->isSVNPrivate();
         if ($is_private) {
             $perms = fileperms($svnroot);
@@ -607,17 +604,17 @@ class BackendSVN extends Backend {
      * 
      * @return Boolean
      */
-    public function renameSVNRepository($project, $newName) {
-        return rename($GLOBALS['svn_prefix'].'/'.$project->getUnixName(false), $GLOBALS['svn_prefix'].'/'.$newName);
+    public function renameSVNRepository(Project $project, $newName) {
+        return rename($project->getSVNRootPath(), $GLOBALS['svn_prefix'].'/'.$newName);
     }
 
-    private function enableCommitMessageUpdate($unix_group_name) {
+    private function enableCommitMessageUpdate($project_svnroot) {
         $hook_names = array('pre-revprop-change', 'post-revprop-change');
         $hook_error = array();
 
         foreach ($hook_names as $hook_name) {
-            if(! $this->enableHook($unix_group_name, $hook_name, Config::get('codendi_bin_prefix').'/'.$hook_name.'.php')) {
-                $hook_error[] = $this->getHookPath($unix_group_name, $hook_name);
+            if(! $this->enableHook($project_svnroot, $hook_name, Config::get('codendi_bin_prefix').'/'.$hook_name.'.php')) {
+                $hook_error[] = $this->getHookPath($project_svnroot, $hook_name);
             }
         }
 
@@ -637,8 +634,8 @@ class BackendSVN extends Backend {
         return $exception_message;
     }
 
-    private function enableHook($unix_group_name, $hook_name, $source_tool) {
-        $path = $this->getHookPath($unix_group_name, $hook_name);
+    private function enableHook($project_svnroot, $hook_name, $source_tool) {
+        $path = $this->getHookPath($project_svnroot, $hook_name);
 
         if (file_exists($path) && ! $this->isLinkToTool($source_tool, $path)) {
             $message = "file $path already exists";
@@ -658,21 +655,19 @@ class BackendSVN extends Backend {
         return is_link($path) && realpath($tool_reference_path) == realpath(readlink($path));
     }
 
-    private function disableCommitMessageUpdate($unix_group_name) {
-        $this->deleteHook($unix_group_name, 'pre-revprop-change');
-        $this->deleteHook($unix_group_name, 'post-revprop-change');
+    private function disableCommitMessageUpdate($project_svnroot) {
+        $this->deleteHook($project_svnroot, 'pre-revprop-change');
+        $this->deleteHook($project_svnroot, 'post-revprop-change');
     }
 
-    private function deleteHook($unix_group_name, $hook_name) {
-        $path = $this->getHookPath($unix_group_name, $hook_name);
+    private function deleteHook($project_svnroot, $hook_name) {
+        $path = $this->getHookPath($project_svnroot, $hook_name);
         if (is_link($path)) {
             unlink($path);
         }
     }
 
-    private function getHookPath($unix_group_name, $hook_name) {
-        return $GLOBALS['svn_prefix'].'/'.$unix_group_name.'/hooks/'.$hook_name;
+    private function getHookPath($project_svnroot, $hook_name) {
+        return $project_svnroot.'/hooks/'.$hook_name;
     }
 }
-
-?>

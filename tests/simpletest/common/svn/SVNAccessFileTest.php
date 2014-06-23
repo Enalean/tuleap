@@ -16,18 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/project/Project.class.php');
-Mock::generate('Project');
-require_once('common/svn/SVNAccessFile.class.php');
-Mock::generatePartial('SVNAccessFile', 'SVNAccessFileTestVersion', array('isGroupDefined'));
-
-class SVNAccessFileTest extends UnitTestCase {
-
-    function getPartialMock($className, $methods) {
-        $partialName = $className.'Partial'.uniqid();
-        Mock::generatePartial($className, $partialName, $methods);
-        return new $partialName($this);
-    }
+class SVNAccessFileTest extends TuleapTestCase {
 
     function testisGroupDefinedInvalidSyntax() {
         $saf = new SVNAccessFile();
@@ -54,7 +43,7 @@ class SVNAccessFileTest extends UnitTestCase {
     }
 
     function testValidateUGroupLine() {
-        $saf = new SVNAccessFileTestVersion();
+        $saf = partial_mock('SVNAccessFile', array('isGroupDefined'));
         $saf->setReturnValue('isGroupDefined', true);
         $groups = array('uGroup1' => false, 'uGroup2' => false, 'uGroup3' => true, 'uGroup33' => true);
         $this->assertEqual(' uGroup1 = rw', $saf->validateUGroupLine($groups, ' uGroup1 = rw', null));
@@ -87,9 +76,9 @@ class SVNAccessFileTest extends UnitTestCase {
     }
 
     function testParseGroupLines() {
-        $project = new MockProject();
+        $project = aMockProject()->build();
         
-        $saf = $this->getPartialMock('SVNAccessFile', array('getPlatformBlock'));
+        $saf = partial_mock('SVNAccessFile', array('getPlatformBlock'));
         $saf->setReturnValue('getPlatformBlock', "[groups]\nmembers = user1, user2\nuGroup1 = user3\n\n[/]\n*=\n@members=rw\n");
         
         $this->assertEqual("[/]\n@members=rw\n# @group1 = r", $saf->parseGroupLines($project, "[/]\n@members=rw\n@group1 = r"));
@@ -138,15 +127,12 @@ class SVNAccessFileTest extends UnitTestCase {
     }
 
     function testSvnAccessFileShouldCallsvn_utils_read_svn_access_file_defaultsWithCaseSensitiveRepositoryName() {
-        $project = new MockProject();
-        $project->setReturnValue('getUnixName', 'MyTestProject', array(false));
-        $project->setReturnValue('getUnixName', 'mytestproject');
+        $project = aMockProject()->build();
+        stub($project)->getSVNRootPath()->returns('/svnroot/mytestproject');
         
-        $saf = $this->getPartialMock('SVNAccessFile', array('getPlatformBlock'));
-        $saf->expectOnce('getPlatformBlock', array('MyTestProject'));
+        $saf = partial_mock('SVNAccessFile', array('getPlatformBlock'));
+        expect($saf)->getPlatformBlock('/svnroot/mytestproject')->once();
         
         $saf->parseGroupLines($project, '');
     }
 }
-
-?>

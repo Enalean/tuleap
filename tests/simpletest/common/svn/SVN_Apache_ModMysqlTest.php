@@ -39,7 +39,7 @@ class SVN_Apache_ModMysqlTest extends UnitTestCase {
     }
     
     private function GivenAnApacheAuthenticationConfForGuineaPigProject() {
-        $project_db_row = array('unix_group_name' => 'gpig',
+        $project_db_row = array('unix_group_name' => 'GPig',
                                 'group_name'      => 'Guinea Pig',
                                 'group_id'        => 101);
         $apacheConf = new SVN_Apache_ModMysql($project_db_row);
@@ -49,7 +49,8 @@ class SVN_Apache_ModMysqlTest extends UnitTestCase {
     
     function testGetApacheAuthShouldContainsDefaultValues() {
         $conf = $this->GivenAnApacheAuthenticationConfForGuineaPigProject();
-        
+
+        $this->assertPattern('/Location \/svnroot\/GPig>/', $conf);
         $this->assertPattern('/Require valid-user/', $conf);
         $this->assertPattern('/AuthType Basic/', $conf);
         $this->assertPattern('/AuthName "Subversion Authorization \(Guinea Pig\)"/', $conf);

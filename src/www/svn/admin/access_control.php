@@ -14,7 +14,7 @@
 
 $project_manager = ProjectManager::instance();
 $project         = $project_manager->getProject($group_id);
-$gname           = $project->getUnixName(false);  // don't return a lower case group name
+$project_svnroot = $project->getSVNRootPath();
 $dao             = new SVN_AccessFile_DAO();
 $path            = realpath(dirname(__FILE__) . '/../../../templates/svn/');
 $renderer        = TemplateRendererFactory::build()->getRenderer($path);
@@ -40,9 +40,9 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
             $dao->updateAccessFileVersionInProject($group_id, $version_id);
         }
 
-        $buffer = svn_utils_read_svn_access_file_defaults($gname);
+        $buffer = svn_utils_read_svn_access_file_defaults($project_svnroot);
         $buffer .= $form_accessfile;
-        $ret    = svn_utils_write_svn_access_file($gname, $buffer);
+        $ret    = svn_utils_write_svn_access_file($project_svnroot, $buffer);
 
         if ($ret) {
             $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_access_control','upd_success'));
@@ -58,7 +58,7 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
 svn_header_admin(array ('title'=>$Language->getText('svn_admin_access_control','access_ctrl'),
                         'help' => 'svn.html#subversion-access-control'));
 
-if (svn_utils_svn_repo_exists($gname)) {
+if (svn_utils_svn_repo_exists($project_svnroot)) {
     $select_options = array();
     foreach ($dao->getAllVersions($group_id) as $row) {
         $select_options[] = array(
@@ -90,8 +90,8 @@ if (svn_utils_svn_repo_exists($gname)) {
         'access-file-form',
         new SVN_AccessFile_Presenter(
             $project,
-            svn_utils_read_svn_access_file($gname),
-            svn_utils_read_svn_access_file_defaults($gname, true),
+            svn_utils_read_svn_access_file($project_svnroot),
+            svn_utils_read_svn_access_file_defaults($project_svnroot, true),
             $select_options,
             $version_number,
             $current_version_title

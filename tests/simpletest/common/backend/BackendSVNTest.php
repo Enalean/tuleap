@@ -90,10 +90,10 @@ class BackendSVNTest extends TuleapTestCase {
     }
     
 
-    function testArchiveProjectSVN() { 
+    function testArchiveProjectSVN() {
         $project = new MockProject($this);
-        $project->setReturnValue('getUnixName', 'TestProj',array(false));
-        $project->setReturnValue('getUnixName', 'testproj',array(true));
+        $project->setReturnValue('getUnixNameMixedCase', 'TestProj');
+        $project->setReturnValue('getSVNRootPath', $GLOBALS['svn_prefix'].'/TestProj');
 
         $pm = new MockProjectManager();
         $pm->setReturnReference('getProject', $project, array(142));
@@ -119,10 +119,10 @@ class BackendSVNTest extends TuleapTestCase {
     }
 
 
-    function testCreateProjectSVN() { 
+    function testCreateProjectSVN() {
         $project = new MockProject($this);
-        $project->setReturnValue('getUnixName', 'TestProj',array(false));
-        $project->setReturnValue('getUnixName', 'testproj',array(true));
+        $project->setReturnValue('getUnixNameMixedCase', 'TestProj');
+        $project->setReturnValue('getSVNRootPath', $GLOBALS['svn_prefix'].'/TestProj');
         $project->setReturnValue('isSVNTracked',true);
         $proj_members = array("0" =>
                               array (
@@ -179,8 +179,8 @@ class BackendSVNTest extends TuleapTestCase {
 
     function testUpdateSVNAccess() {
         $project = new MockProject($this);
-        $project->setReturnValue('getUnixName', 'TestProj',array(false));
-        $project->setReturnValue('getUnixName', 'testproj',array(true));
+        $project->setReturnValue('getUnixNameMixedCase', 'TestProj');
+        $project->setReturnValue('getSVNRootPath', $GLOBALS['svn_prefix'].'/TestProj');
         $project->setReturnValue('isSVNTracked',true);
         $proj_members = array("0" =>
                               array (
@@ -296,7 +296,8 @@ class BackendSVNTest extends TuleapTestCase {
         $backend->expectOnce('chmod', array($GLOBALS['svn_prefix'] . '/' . 'toto', 0770));
         
         $project = new MockProject($this);
-        $project->setReturnValue('getUnixName', 'toto');
+        $project->setReturnValue('getUnixNameMixedCase', 'toto');
+        $project->setReturnValue('getSVNRootPath', $GLOBALS['svn_prefix'].'/toto');
         
         $this->assertTrue($backend->setSVNPrivacy($project, true));
     }
@@ -307,7 +308,8 @@ class BackendSVNTest extends TuleapTestCase {
         $backend->expectOnce('chmod', array($GLOBALS['svn_prefix'] . '/' . 'toto', 0775));
         
         $project = new MockProject($this);
-        $project->setReturnValue('getUnixName', 'toto');
+        $project->setReturnValue('getUnixNameMixedCase', 'toto');
+        $project->setReturnValue('getSVNRootPath', $GLOBALS['svn_prefix'].'/toto');
         
         $this->assertTrue($backend->setSVNPrivacy($project, false));
     }
@@ -319,7 +321,8 @@ class BackendSVNTest extends TuleapTestCase {
         $backend->expectNever('chmod');
         
         $project = new MockProject($this);
-        $project->setReturnValue('getUnixName', $path_that_doesnt_exist);
+        $project->setReturnValue('getUnixNameMixedCase', $path_that_doesnt_exist);
+        $project->setReturnValue('getSVNRootPath', $GLOBALS['svn_prefix'].'/'.$path_that_doesnt_exist);
         
         $this->assertFalse($backend->setSVNPrivacy($project, true));
         $this->assertFalse($backend->setSVNPrivacy($project, false));
@@ -327,8 +330,8 @@ class BackendSVNTest extends TuleapTestCase {
     
     public function testRenameSVNRepository() {
         $project = new MockProject($this);
-        $project->setReturnValue('getUnixName', 'TestProj',array(false));
-        $project->setReturnValue('getUnixName', 'testproj',array(true));
+        $project->setReturnValue('getUnixNameMixedCase', 'TestProj');
+        $project->setReturnValue('getSVNRootPath', $GLOBALS['svn_prefix'].'/TestProj');
         $project->setReturnValue('isSVNTracked',false);
 
         $project->setReturnValue('getMembersUserNames',array());
@@ -397,55 +400,57 @@ class BackendSVNTest extends TuleapTestCase {
 
 class BackendSVN_EnableLogChangeHooks_Test extends TuleapTestCase {
 
+    private $project;
     private $bin_dir;
     private $fake_revprop;
+    private $svn_prefix;
 
     public function setUp() {
         parent::setUp();
-        $GLOBALS['svn_prefix'] = dirname(__FILE__) . '/_fixtures/svnroot';
-        mkdir($GLOBALS['svn_prefix'] . '/toto/hooks', 0777, true);
+        $this->svn_prefix = dirname(__FILE__) . '/_fixtures/svnroot';
+        mkdir($this->svn_prefix . '/toto/hooks', 0777, true);
         Config::store();
         $this->bin_dir = dirname(__FILE__) . '/_fixtures';
         $this->fake_revprop = $this->bin_dir.'/post-revprop-change.php';
         Config::set('codendi_bin_prefix', $this->bin_dir);
+        $this->project = stub('Project')->getUnixName()->returns('toto');
+        stub($this->project)->getSVNRootPath()->returns($this->svn_prefix.'/toto');
     }
 
     public function tearDown() {
-        $this->recurseDeleteInDir($GLOBALS['svn_prefix'] . '/toto');
-        rmdir($GLOBALS['svn_prefix'] . '/toto');
-        unset($GLOBALS['svn_prefix']);
+        $this->recurseDeleteInDir($this->svn_prefix . '/toto');
+        rmdir($this->svn_prefix . '/toto');
+        unset($this->svn_prefix);
         Config::restore();
         parent::tearDown();
     }
 
 
     public function testItThrowsAnExceptionIfFileForSimlinkAlreadyExists() {
-        $project = stub('Project')->getUnixName()->returns('toto');
         $backend = partial_mock('BackendSVN', array('log', 'chgrp', 'chown'));
-        $path    = $GLOBALS['svn_prefix'] . '/toto/hooks';
+        $path    = $this->svn_prefix . '/toto/hooks';
         touch($path.'/post-revprop-change');
 
-        stub($project)->isSVNTracked()->returns(true);
-        stub($project)->canChangeSVNLog()->returns(true);
+        stub($this->project)->isSVNTracked()->returns(true);
+        stub($this->project)->canChangeSVNLog()->returns(true);
         expect($backend)->log()->once();
 
         $this->expectException('BackendSVNFileForSimlinkAlreadyExistsException');
-        $backend->updateHooks($project);
+        $backend->updateHooks($this->project);
     }
 
     public function testDoesntThrowAnExceptionIfTheHookIsALinkToOurImplementation() {
-        $project = stub('Project')->getUnixName()->returns('toto');
         $backend = partial_mock('BackendSVN', array('log', 'chgrp', 'chown'));
-        $path    = $GLOBALS['svn_prefix'] . '/toto/hooks';
+        $path    = $this->svn_prefix . '/toto/hooks';
 
         // Create link to fake post-revprop-change
         symlink($this->fake_revprop, $path.'/post-revprop-change');
 
-        stub($project)->isSVNTracked()->returns(true);
-        stub($project)->canChangeSVNLog()->returns(true);
+        stub($this->project)->isSVNTracked()->returns(true);
+        stub($this->project)->canChangeSVNLog()->returns(true);
         expect($backend)->log()->never();
 
-        $backend->updateHooks($project);
+        $backend->updateHooks($this->project);
     }
 }
 ?>

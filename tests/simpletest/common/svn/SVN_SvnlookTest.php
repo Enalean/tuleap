@@ -20,7 +20,6 @@
 class SVN_Svnlook_getDirectoryListingTest extends TuleapTestCase {
 
     private $svn_prefix;
-    private $project_name;
     private $svnrepo;
     private $project;
     private $svnlook;
@@ -29,9 +28,9 @@ class SVN_Svnlook_getDirectoryListingTest extends TuleapTestCase {
     public function __construct() {
         parent::__construct();
         $this->svn_prefix = dirname(__FILE__).'/_fixtures';
-        $this->project_name = 'svnrepo';
-        $this->project = stub('Project')->getUnixName()->returns($this->project_name);
-        $this->svnrepo = $this->svn_prefix . '/' . $this->project_name;
+        $project_name = 'svnrepo';
+        $this->project = stub('Project')->getSVNRootPath()->returns($this->svn_prefix . '/' . $project_name);
+        $this->svnrepo = $this->svn_prefix . '/' . $project_name;
         exec("svnadmin create $this->svnrepo");
         exec("svn mkdir --username donald_duck --parents -m 'this is 1.0' file://$this->svnrepo/tags/1.0");
         exec("svn mkdir --parents -m 'that is 2.0' file://$this->svnrepo/tags/2.0");
@@ -43,7 +42,7 @@ class SVN_Svnlook_getDirectoryListingTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->svnlook = new SVN_Svnlook($this->svn_prefix);
+        $this->svnlook = new SVN_Svnlook();
     }
 
     public function itGetADirectoryContents() {

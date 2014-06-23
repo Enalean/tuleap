@@ -21,13 +21,14 @@ if (user_isloggedin()) {
     if($group_id === false) {
         exit_no_group();
     }
+    $project = ProjectManager::instance()->getProject($group_id);
 
     $vRootType = new Valid_WhiteList('roottype', array('svn'));
     $vRootType->setErrorMessage($Language->getText('svn_viewvc','bad_roottype'));
     $vRootType->required();
     if($request->valid($vRootType)) {
 
-  if (!svn_utils_check_access(user_getname(), $root, viewvc_utils_getfile("/svn/viewvc.php"))) {
+  if (!svn_utils_check_access(user_getname(), $project->getSVNRootPath(), viewvc_utils_getfile("/svn/viewvc.php"))) {
     exit_error($Language->getText('svn_viewvc','access_denied'), 
 	       $Language->getText('svn_viewvc','acc_den_comment',session_make_url("/project/memberlist.php?group_id=$group_id")));
   }
