@@ -76,14 +76,6 @@ class SVN_AccessFile_Presenter {
         return $GLOBALS['Language']->getText('svn_admin_access_control','access_ctrl');
     }
 
-    public function svn_repo_exists() {
-        return svn_utils_svn_repo_exists($this->project->getUnixName());
-    }
-
-    public function repo_not_created_label() {
-        return $GLOBALS['Language']->getText('svn_admin_access_control','not_created');
-    }
-
     public function other_version_title() {
         return $GLOBALS['Language']->getText('svn_admin_access_control', 'other_versions');
     }

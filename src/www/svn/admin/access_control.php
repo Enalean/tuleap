@@ -1,5 +1,8 @@
 <?php
 //
+// Copyright (c) Enalean, 2014. All Rights Reserved.
+// This file is part of Tuleap
+//
 // Codendi
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 // http://www.codendi.com
@@ -55,43 +58,50 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
 svn_header_admin(array ('title'=>$Language->getText('svn_admin_access_control','access_ctrl'),
                         'help' => 'svn.html#subversion-access-control'));
 
-$select_options = array();
-foreach ($dao->getAllVersions($group_id) as $row) {
-    $select_options[] = array(
-        'id'      => $row['id'],
-        'version' => $row['version_number'],
-        'date'    => format_date("Y-m-d", (float)$row['version_date'], '')
-    );
-}
+if (svn_utils_svn_repo_exists($gname)) {
+    $select_options = array();
+    foreach ($dao->getAllVersions($group_id) as $row) {
+        $select_options[] = array(
+            'id'      => $row['id'],
+            'version' => $row['version_number'],
+            'date'    => format_date("Y-m-d", (float)$row['version_date'], '')
+        );
+    }
 
-$version_number = $dao->getCurrentVersionNumber($group_id);
+    $version_number = $dao->getCurrentVersionNumber($group_id);
 
-$current_version_title = '';
+    $current_version_title = '';
 
-if($version_number != $dao->getLastVersionNumber($group_id)) {
-    $current_version_title = $GLOBALS['Language']->getText(
-        'svn_admin_access_control',
-        'previous_version',
-        array($version_number)
+    if($version_number != $dao->getLastVersionNumber($group_id)) {
+        $current_version_title = $GLOBALS['Language']->getText(
+            'svn_admin_access_control',
+            'previous_version',
+            array($version_number)
+        );
+    } else {
+        $current_version_title = $GLOBALS['Language']->getText(
+            'svn_admin_access_control',
+            'last_version',
+            array($version_number)
+        );
+    }
+
+    $renderer->renderToPage(
+        'access-file-form',
+        new SVN_AccessFile_Presenter(
+            $project,
+            svn_utils_read_svn_access_file($gname),
+            svn_utils_read_svn_access_file_defaults($gname, true),
+            $select_options,
+            $version_number,
+            $current_version_title
+        )
     );
 } else {
-    $current_version_title = $GLOBALS['Language']->getText(
-        'svn_admin_access_control',
-        'last_version',
-        array($version_number)
+    $renderer->renderToPage(
+        'access-file-nofile',
+        new SVN_AccessFile_NoFilePresenter()
     );
 }
-
-$renderer->renderToPage(
-    'access-file-form',
-    new SVN_AccessFile_Presenter(
-        $project,
-        svn_utils_read_svn_access_file($gname),
-        svn_utils_read_svn_access_file_defaults($gname, true),
-        $select_options,
-        $version_number,
-        $current_version_title
-    )
-);
 
 svn_footer(array());
