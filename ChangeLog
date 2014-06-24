@@ -2,6 +2,7 @@ Version 7.2 (Not Released Yet)
 	== Bug fix ==
 	* request #6945: Notice on forum message post
 	* Fix request #7057 Fatal error when searching in wiki
+        * Fix request #7104 Subversion access control history doesnt manage uppercase repo
 
 	== Features ==
 	* tasks #7051: fix full text search is not an option when going to /search directly
@@ -14,7 +15,7 @@ Version 7.2 (Not Released Yet)
 	* request #7025: Remove old programmer-guide
 	* request #7021: Now possible to give access to trackers to restricted users
 	* story #7060: Initiate the new ElasticSearch indexation format
-    * story #7026: ElasticSearch - Initiate the new ElasticSearch indexation format
+        * story #7026: ElasticSearch - Initiate the new ElasticSearch indexation format
 
         == Plugins ==
 	* agiledashboard: 1.66
