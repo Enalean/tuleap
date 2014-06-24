@@ -26,7 +26,7 @@
 
                     {{# user_projects }}
                         <li class="project">
-                            <a href="/projects/{{ getUnixName }}/">{{{ getPublicName }}}</a>
+                            <a href="{{ project_uri }}">{{ project_name }}</a>
                         </li>
                     {{/ user_projects }}
                 {{/ user_has_projects }}

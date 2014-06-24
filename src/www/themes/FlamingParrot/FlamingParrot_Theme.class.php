@@ -25,6 +25,7 @@ require_once 'HeaderPresenter.class.php';
 require_once 'BodyPresenter.class.php';
 require_once 'ContainerPresenter.class.php';
 require_once 'FooterPresenter.class.php';
+require_once 'NavBarProjectPresenter.class.php';
 require_once 'NavBarPresenter.class.php';
 require_once 'SearchFormPresenter.class.php';
 
@@ -123,8 +124,11 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
 
     private function navbar($params, PFUser $current_user, $selected_top_tab) {
         list($search_options, $selected_entry, $hidden_fields) = $this->getSearchEntries();
-        $search_form_presenter                                 = new FlamingParrot_SearchFormPresenter($selected_entry, $hidden_fields);
-        $project_manager                                       = ProjectManager::instance();
+
+        $search_form_presenter = new FlamingParrot_SearchFormPresenter($selected_entry, $hidden_fields);
+        $project_manager       = ProjectManager::instance();
+        $projects              = $project_manager->getActiveProjectsForUser($current_user);
+        $projects_presenters   = $this->getPresentersForProjects($projects);
 
         $this->render('navbar', new FlamingParrot_NavBarPresenter(
                 $this->imgroot,
@@ -134,7 +138,7 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
                 HTTPRequest::instance(),
                 $params['title'],
                 $search_form_presenter,
-                $project_manager->getActiveProjectsForUser($current_user),
+                $projects_presenters,
                 $this->displayNewAccount(),
                 $this->getMOTD(),
                 $this->getExtraTabs()
@@ -142,6 +146,15 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
         );
 
         $this->container($params, $project_manager, $current_user);
+    }
+
+    private function getPresentersForProjects($list_of_projects) {
+        $presenters = array();
+        foreach ($list_of_projects as $project) {
+            $presenters[] = new FlamingParrot_NavBarProjectPresenter($project);
+        }
+
+        return $presenters;
     }
 
     private function getExtraTabs() {
