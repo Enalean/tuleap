@@ -31,7 +31,7 @@ class FullTextSearch_Presenter_SearchMore {
     public function __construct(FullTextSearch_SearchResultCollection $query_result) {
         $this->query_result = $query_result;
         $this->template     = 'search-results-more';
-        $this->more_results = $GLOBALS['Language']->getText('plugin_fulltextsearch', 'more_results');
+        $this->more_results = $GLOBALS['Language']->getText('search_index', 'more_results');
     }
 
     public function has_results() {

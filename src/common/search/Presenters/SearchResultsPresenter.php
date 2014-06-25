@@ -37,7 +37,7 @@ class Search_SearchResultsPresenter {
         $this->results_intro_presenter = $results_intro_presenter;
         $this->results                 = $results;
         $this->template                = $template;
-        $this->more_results            = $GLOBALS['Language']->getText('plugin_fulltextsearch', 'more_results');
+        $this->more_results            = $GLOBALS['Language']->getText('search_index', 'more_results');
         $this->maybe_more_results      = $maybe_more_results;
     }
 

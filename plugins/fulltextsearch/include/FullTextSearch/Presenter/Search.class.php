@@ -36,7 +36,7 @@ class FullTextSearch_Presenter_Search {
     public function __construct(FullTextSearch_SearchResultCollection $query_result, $maybe_more_results, $keywords) {
         $this->query_result       = $query_result;
         $this->template           = 'results';
-        $this->more_results       = $GLOBALS['Language']->getText('plugin_fulltextsearch', 'more_results');
+        $this->more_results       = $GLOBALS['Language']->getText('search_index', 'more_results');
         $this->maybe_more_results = $maybe_more_results;
         $this->keywords           = $keywords;
     }
