@@ -1,3 +1,6 @@
+Version 1.20 - Tuleap 7.2
+    * tasks #7105: Add media queries to search page
+
 Version 1.19 - Tuleap 7.2
     * tasks #7106, request #6405: Proper sanitization of project public name in search
 

@@ -7,6 +7,7 @@ Version 7.2 (Not Released Yet)
         * Fix request #7104 Subversion access control history doesnt manage uppercase repo
 
 	== Features ==
+	* tasks #7105: Add media queries to search page
 	* tasks #7051: fix full text search is not an option when going to /search directly
 	* tasks #7054: fix bug: ajax search does not use text field but some stored DOM value
 	* tasks #6986: infinite scroll on search results
@@ -36,7 +37,7 @@ Version 7.2 (Not Released Yet)
         * request #6963 Incorrect error code REST API
 
     == Themes ==
-	* FlamingParrot: 1.19
+	* FlamingParrot: 1.20
 
 	== Developers ==
 	* Introduce docker container management for developers (tools/docker/dev_start.sh)
