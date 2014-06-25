@@ -12,7 +12,7 @@ $weeks_number   = 12;
 
 // Tell to Tuleap that an HTTPS server for git is available at the given
 // address
-// $git_http_url = "https://git.tuleap.example.com/p";
+// $git_http_url = "https://%sys_domain_name%/git";
 
 // Tell tuleap to use user friendly URLs in Git Plugin (eg: /git/plugins/project_name/repo_path)
 $git_use_friendly_urls = 1;
