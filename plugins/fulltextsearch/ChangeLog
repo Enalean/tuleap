@@ -1,3 +1,6 @@
+Version 0.45 - Tuleap 7.2
+    * request #7113: fix notice on search page when fulltextsearch not installed
+
 Version 0.44 - Tuleap 7.2
     * story #5756: search with nice interface (tasks #7102: fix facets on search page)
 

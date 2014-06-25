@@ -1,5 +1,6 @@
 Version 7.2 (Not Released Yet)
 	== Bug fix ==
+	* request #7113: fix notice on search page when fulltextsearch not installed
 	* request #6945: Notice on forum message post
 	* Fix request #7057 Fatal error when searching in wiki
         * Fix request #7104 Subversion access control history doesnt manage uppercase repo
@@ -23,7 +24,7 @@ Version 7.2 (Not Released Yet)
 	* tracker: 5.413
 	* git: 3.88
 	* forumml: 2.6.19
-	* fulltextsearch: 0.44
+	* fulltextsearch: 0.45
 	* ldap: 3.47
 	* mediawiki: 0.32
 	* docman: 2.26.34
