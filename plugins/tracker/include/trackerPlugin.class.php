@@ -800,9 +800,10 @@ class trackerPlugin extends Plugin {
             return;
         }
 
-        $path = Config::get('codendi_dir') .'/plugins/tracker/bin/emailgateway.php';
+        $src_dir  = Config::get('codendi_dir');
+        $script   = $src_dir .'/plugins/tracker/bin/emailgateway-wrapper.sh';
 
-        $command = "sudo -u codendiadm $path";
+        $command = "sudo -u codendiadm $script";
 
         $params['aliases'][] = new System_Alias(self::EMAILGATEWAY_USERNAME, "\"|$command\"");
     }
