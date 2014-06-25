@@ -1,5 +1,6 @@
 Version 7.2 (Not Released Yet)
 	== Bug fix ==
+	* tasks #7106, request #6405: Proper sanitization of project public name in search
 	* request #7113: fix notice on search page when fulltextsearch not installed
 	* request #6945: Notice on forum message post
 	* Fix request #7057 Fatal error when searching in wiki
@@ -35,7 +36,7 @@ Version 7.2 (Not Released Yet)
         * request #6963 Incorrect error code REST API
 
     == Themes ==
-	* FlamingParrot: 1.18
+	* FlamingParrot: 1.19
 
 	== Developers ==
 	* Introduce docker container management for developers (tools/docker/dev_start.sh)
