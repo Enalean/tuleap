@@ -115,8 +115,7 @@ class FlamingParrot_ContainerPresenter {
     }
 
     public function projectName() {
-        $hp = Codendi_HTMLPurifier::instance();
-        return $hp->purify($this->project_name);
+        return util_unconvert_htmlspecialchars($this->project_name);
     }
 
     public function projectLink() {
