@@ -12,4 +12,3 @@ plugin_fulltextsearch	followup_full_text_warning_search	<strong>Uniquement une p
 plugin_fulltextsearch	error_category	Recherche intégral
 plugin_fulltextsearch	error_intro	Impossible d'effectuer la recherche
 plugin_fulltextsearch	client_not_found	"Client not found at specified path." Veuillez contacter les administrateurs du site.
-plugin_fulltextsearch	more_results	Plus de résultats

@@ -12,4 +12,3 @@ plugin_fulltextsearch	followup_full_text_warning_search	<strong>Only part of com
 plugin_fulltextsearch	error_category	Full Text Search
 plugin_fulltextsearch	error_intro	Cannot complete full text search
 plugin_fulltextsearch	client_not_found	Client not found at specified path. Please contact your site administrators.
-plugin_fulltextsearch	more_results	More results
