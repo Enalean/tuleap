@@ -5,5 +5,11 @@ codendi.locales['git'] = {
     cannot_get_gerrit_config: 'Unable to retrieve the configuration',
     cannot_get_template: 'Unable to retrieve the template',
     cannot_delete_template: 'Unable to delete the template',
-    edit_button_value: 'Edit'
+    edit_button_value: 'Edit',
+    cancel_button_value: 'Cancel',
+    commit_button_value: 'Commit',
+    commit_message: 'Commit message',
+    commit_message_value: 'Update of ',
+    commit_description_value: 'Commit description',
+    not_top_branch : 'You can\'t edit a file wich is not at the top of a branch'
 };
