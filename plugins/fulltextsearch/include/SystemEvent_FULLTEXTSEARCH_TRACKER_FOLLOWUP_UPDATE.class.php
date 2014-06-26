@@ -32,7 +32,7 @@ class SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP_UPDATE extends SystemEvent_FUL
      * @return Boolean
      */
     protected function action($groupId, $artifactId, $changesetId, $text) {
-        $this->actions->indexNewVersion($groupId, $artifactId, $changesetId, $text);
+        $this->actions->indexFollowUpUpdate($groupId, $artifactId, $changesetId, $text);
         return true;
     }
 

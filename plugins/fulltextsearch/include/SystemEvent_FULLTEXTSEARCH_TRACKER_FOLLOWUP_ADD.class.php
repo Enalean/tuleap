@@ -33,7 +33,7 @@ class SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP_ADD extends SystemEvent_FULLTE
      * @return Boolean
      */
     protected function action($groupId, $artifactId, $changesetId, $text) {
-        $this->actions->indexNewDocument($groupId, $artifactId, $changesetId, $text);
+        $this->actions->indexNewFollowUp($groupId, $artifactId, $changesetId, $text);
         return true;
     }
 

@@ -58,7 +58,7 @@ class FullTextSearch_TrackerSystemEventManager {
         if ($this->plugin->isAllowed($group_id)) {
             $this->system_event_manager->createEvent(
                 SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP_ADD::NAME,
-                $this->implodeParams(array($artifact_id, $changeset_id, $text)),
+                $this->implodeParams(array($group_id, $artifact_id, $changeset_id, $text)),
                 SystemEvent::PRIORITY_MEDIUM
             );
         }
@@ -68,7 +68,7 @@ class FullTextSearch_TrackerSystemEventManager {
         if ($this->plugin->isAllowed($group_id)) {
             $this->system_event_manager->createEvent(
                 SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP_UPDATE::NAME,
-                $this->implodeParams(array($artifact_id, $changeset_id, $text)),
+                $this->implodeParams(array($group_id, $artifact_id, $changeset_id, $text)),
                 SystemEvent::PRIORITY_MEDIUM
             );
         }

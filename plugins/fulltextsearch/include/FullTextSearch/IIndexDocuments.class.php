@@ -26,57 +26,79 @@ interface FullTextSearch_IIndexDocuments {
     /**
      * Index a new document or update it if existing
      *
-     * PUT /docman/:project_id/:document_id
+     * PUT /:index/:type/:document_id
      *
-     * @param array       $document
-     * @param Docman_Item $item
+     * @param string $type
+     * @param string $document_id
+     * @param array  $document
      *
      * @return array
      */
-    public function index(array $document, Docman_Item $item);
+    public function index($type, $document_id, array $document);
 
     /**
      * Flush this index/type combination
      *
-     * DELETE /docman/:project_id/:document_id
+     * DELETE /:index/:type/:document_id
      *
-     * @param Docman_Item $item
-     * @param array       $options Parameters to pass to delete action
+     * @param string $type
+     * @param string $document_id
+     * @param array  $options Parameters to pass to delete action
      * 
      * @return array
      */
-    public function delete(Docman_Item $item);
+    public function delete($type, $document_id);
 
     /**
-     * Update document datas
+     * Update document data
      *
-     * @param Docman_Item $item
-     * @param array       $data
+     * @param string $type
+     * @param string $document_id
+     * @param array  $document
      *
      * @return array
      */
-    public function update(Docman_Item $item, $data);
+    public function update($type, $document_id, array $document);
 
     /**
-     * Get the project mapping
+     * Get the mapping
      *
-     * GET /docman/:project_id/_mapping
+     * GET /:index/:type/_mapping
      *
-     * @param int $project_id
+     * @param string $type
      *
      * @return array
      */
-    public function getProjectMapping($project_id);
+    public function getMapping($type);
 
     /**
      * Define the project mapping (create and update)
      *
-     * PUT /docman/:project_id/_mapping
+     * PUT /:index/:type/_mapping
      *
-     * @param int   $project_id
-     * @param array $mapping_data
+     * @param string $type
+     * @param array  $mapping_data
      *
      * @return array
      */
-    public function defineProjectMapping($project_id, array $mapping_data);
+    public function setMapping($type, array $mapping_data);
+
+    /**
+     * Make a parameter with name $name and value $value
+     * then append it to current_data as script and var*
+     *
+     * @param array  $current_data
+     * @param string $name
+     * @param string $value
+     *
+     * @return array
+     */
+    public function appendSetterData(array $current_data, $name, $value);
+
+    /**
+     * Return the base to build a setter data
+     *
+     * @return array
+     */
+    public function initializeSetterData();
 }
