@@ -1,3 +1,6 @@
+Version 1.21 - Tuleap 7.3
+    * story #6003 be able to change the Experimental theme color (tasks #7122 Color variable managment)
+
 Version 1.20 - Tuleap 7.2
     * tasks #7105: Add media queries to search page
 
