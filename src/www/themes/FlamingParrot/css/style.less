@@ -22,9 +22,7 @@
 @import '../../common/css/utils/utils.less';
 @import '../../common/css/bootstrap-2.3.2/variables.less';
 @import '../../common/css/bootstrap-2.3.2/mixins.less';
-
-@import 'utils/variables-orange.less';
-
+@import 'utils/variables-common.less';
 @import 'utils/fonts.less';
 
 html, body {
@@ -32,6 +30,15 @@ html, body {
 }
 
 body {
+    @import 'utils/variables-orange.less';
+    .definitions;
+
+    //Keep it for when we will have more than one color in FlamingParrot theme
+    &.blue {
+        @import 'utils/variables-blue.less';
+        .definitions;
+    }
+
     padding: @navbar-height 0 0 0;
 
     &.widgetable {
@@ -42,89 +49,160 @@ body {
         min-height: 100%;
         position: relative;
     }
-}
 
-@import 'utils/navbar.less';
-@import 'utils/sidebar.less';
-@import 'utils/content.less';
-@import 'utils/footer.less';
-@import 'utils/register.less';
+    &.has_sidebar.sidebar-collapsed {
+        .sidebar-nav {
+            width: 45px;
 
-@import 'utils/widget.less';
-@import 'utils/avatar.less';
-@import 'utils/search.less';
+            .project-title-container {
+                width: @sidebar-width;
+                visibility: hidden;
+            }
 
-/* {{{ BOOTSTRAP OVERRIDES */
-h2 {
-    font-size: 2em;
-}
-h3 {
-    font-size: 1.3em;
-}
-blockquote p {
-    font-size: 1em;
-}
-input[type="file"] {
-    margin-top: -13px;
-}
-.tooltip.in {
-    opacity: 1;
-}
-.tooltip.right .tooltip-arrow {
-    border-right-color: @dark-grey;
-}
-.tooltip-inner {
-    background-color: @dark-grey;
-}
-.tour-backdrop {
-    opacity: 0.3;
-}
-.popover[class*="tour"] {
-    background: #0e73c2;
-    color: @white;
-    padding: 0;
-    border: none;
-    font-size: 0.85em;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+            li a {
+                width: 45px;
 
-    &.top .arrow:after    { border-top-color: #0e73c2; }
-    &.right .arrow:after  { border-right-color: #0e73c2; }
-    &.bottom .arrow:after { border-bottom-color: darken(#0e73c2, 5%); }
-    &.left .arrow:after   { border-left-color: #0e73c2; }
+                & > span {
+                    display: none;
+                }
+            }
 
-    .popover-title {
-        background: darken(#0e73c2, 5%);
-        color: @white;
-        border: none;
-        font-size: 1.1em;
+            .sidebar-about {
+                display: none;
+            }
+        }
+
+        .main {
+            margin-left: 45px;
+        }
     }
 
-    .popover-navigation [data-role=prev], .popover-navigation [data-role=next] {
-        float: left;
-        margin-right: 5px;
-    }
-}
-legend {
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
-.dropdown-menu {
-    z-index: 3000;
-}
-.popover {
-    z-index: 4000;
-
-    .project-privacy {
-        font-size: 0.9em;
-    }
-}
-.modal {
-    form {
+    .main {
         margin: 0;
     }
 
-    .modal-body {
-        max-height: none;
+    &.has_sidebar .main {
+        margin: 0 0 0 @sidebar-width;
+    }
+
+    &.admin_register {
+        #register-form form label .label-help {
+            display: none;
+        }
+
+        #register-background {
+            background-color: #FFF;
+            background-image: none;
+        }
+    }
+
+    &.register-page:not(.admin_register) {
+        > .wrapper {
+            background-color: #FBFBFB;
+        }
+
+        .content {
+            background-color: #FBFBFB;
+            padding: 0;
+        }
+    }
+
+    &.search-page {
+        .navbar-search, .header_searchbox {
+            display: none;
+        }
+    }
+
+    &.search-page .main .content {
+        padding: 0px;
     }
 }
+
+.definitions() {
+
+    @import 'utils/navbar.less';
+    @import 'utils/sidebar.less';
+    @import 'utils/content.less';
+    @import 'utils/footer.less';
+    @import 'utils/register.less';
+
+    @import 'utils/widget.less';
+    @import 'utils/avatar.less';
+    @import 'utils/search.less';
+
+    /* {{{ BOOTSTRAP OVERRIDES */
+    h2 {
+        font-size: 2em;
+    }
+    h3 {
+        font-size: 1.3em;
+    }
+    blockquote p {
+        font-size: 1em;
+    }
+    input[type="file"] {
+        margin-top: -13px;
+    }
+    .tooltip.in {
+        opacity: 1;
+    }
+    .tooltip.right .tooltip-arrow {
+        border-right-color: @dark-grey;
+    }
+    .tooltip-inner {
+        background-color: @dark-grey;
+    }
+    .tour-backdrop {
+        opacity: 0.3;
+    }
+    .popover[class*="tour"] {
+        background: #0e73c2;
+        color: @white;
+        padding: 0;
+        border: none;
+        font-size: 0.85em;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+
+        &.top .arrow:after    { border-top-color: #0e73c2; }
+        &.right .arrow:after  { border-right-color: #0e73c2; }
+        &.bottom .arrow:after { border-bottom-color: darken(#0e73c2, 5%); }
+        &.left .arrow:after   { border-left-color: #0e73c2; }
+
+        .popover-title {
+            background: darken(#0e73c2, 5%);
+            color: @white;
+            border: none;
+            font-size: 1.1em;
+        }
+
+        .popover-navigation [data-role=prev], .popover-navigation [data-role=next] {
+            float: left;
+            margin-right: 5px;
+        }
+    }
+    legend {
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+    .dropdown-menu {
+        z-index: 3000;
+    }
+    .popover {
+        z-index: 4000;
+
+        .project-privacy {
+            font-size: 0.9em;
+        }
+    }
+    .modal {
+        form {
+            margin: 0;
+        }
+
+        .modal-body {
+            max-height: none;
+        }
+    }
+}
+
 /* }}} */
