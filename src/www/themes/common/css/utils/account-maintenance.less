@@ -164,6 +164,80 @@ i.help-button {
     max-width: 206px;
 }
 
+@-webkit-keyframes bounce-picker {
+   0% {
+       -webkit-transform: scale(0.75);
+   }
+
+   50% {
+        -webkit-transform: scale(1);
+   }
+
+   75% {
+        -webkit-transform: scale(0.9);
+   }
+
+   100% {
+        -webkit-transform: scale(1);
+   }
+}
+
+@keyframes bounce-picker {
+   0% {
+       transform: scale(0.75);
+   }
+
+   50% {
+        transform: scale(1);
+   }
+
+   75% {
+        transform: scale(0.9);
+   }
+
+   100% {
+        transform: scale(1);
+   }
+}
+
+.theme_picker_container {
+    margin-left: 3px;
+    cursor: pointer;
+    display: inline-block;
+
+    > .theme_variant {
+        display: block;
+        border-left: 20px solid;
+        border-bottom: 20px solid ;
+    }
+
+    &.checked {
+        border: 2px solid #0088cd;
+        animation: bounce-picker 400ms ease-out;
+        -webkit-animation: bounce-picker 400ms ease-out;
+
+        > .theme_variant {
+            border-left-width: 16px;
+            border-bottom-width: 16px;
+        }
+
+    }
+}
+
+@import "src/www/themes/FlamingParrot/css/utils/picker.less";
+
+#theme_variant_group {
+    display: none;
+
+    > label {
+        font-size: 0.8em;
+    }
+}
+
+#theme_variant_list {
+    padding-top: 5px;
+}
+
 [data-ssh_key_value] {
     word-break: break-all;
     cursor: pointer;

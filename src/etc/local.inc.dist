@@ -458,5 +458,11 @@ $sys_enable_reply_by_mail = 0;
 // Set to 0 to force commit message to not be empty
 $sys_allow_empty_svn_commit_message = 1;
 
+// Default theme variant in forge
+$sys_default_theme_variant = 'FlamingParrot_Orange';
+
+// List of available theme variant in forge
+$sys_available_theme_variants = 'FlamingParrot_Orange,FlamingParrot_Blue';
+
 // End of customizations -- place nothing after the closing PHP tag!
 ?>

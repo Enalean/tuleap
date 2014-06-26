@@ -20,3 +20,7 @@ codendi.locales['svn_accessfile_history'] = {
 codendi.locales['search'] = {
     error: 'An error has occured'
 };
+
+codendi.locales['account'] = {
+    theme_variant_preview : 'This is a preview. You have to save your preferences to apply this modification.'
+};
