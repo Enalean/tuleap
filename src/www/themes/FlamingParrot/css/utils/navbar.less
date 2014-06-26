@@ -7,13 +7,13 @@
     .logo-background;
 }
 .logo-background {
-    background: @orange url('../images/organization_logo.png') no-repeat center center;
+    background: @navbar-color url('../images/organization_logo.png') no-repeat center center;
 }
 .logo-background-medium {
-    background: @orange url('../images/organization_logo_medium.png') no-repeat center center;
+    background: @navbar-color url('../images/organization_logo_medium.png') no-repeat center center;
 }
 .logo-background-small {
-    background: @orange url('../images/organization_logo_small.png') no-repeat center center;
+    background: @navbar-color url('../images/organization_logo_small.png') no-repeat center center;
 }
 
 @media screen and (max-width: 1366px) {
@@ -44,7 +44,7 @@
 }
 
 .navbar {
-    background: @orange;
+    background: @navbar-color;
     box-shadow: 0 1px 10px rgba(0, 0, 0, 0.3);
     height: @navbar-height;
 
@@ -76,9 +76,9 @@
 .navbar .navbar-inner {
     font-family: 'SourceSansPro', Arial;
     font-size: 1.1em;
-    background: @orange;
+    background: @navbar-color;
     filter: none;
-    border-bottom: 1px solid @dark-orange;
+    border-bottom: 1px solid @dark-main;
     color: @white;
     padding: 0;
     height: @navbar-height;
@@ -122,7 +122,7 @@
         li.active > a, li.active > a:hover, li.active > a:focus,
         li.dropdown.active > .dropdown-toggle {
             color: @white;
-            background-color: @dark-orange;
+            background-color: @navbar-color-hover;
             box-shadow: none;
         }
 
@@ -156,7 +156,7 @@
         }
 
         li.current-project > a {
-            background-color: darken(@dark-orange, 5%);
+            background-color: darken(@dark-main, 5%);
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
@@ -175,7 +175,7 @@
             }
         }
         li.current-project:hover > a:hover, li.current-project:focus > a:focus {
-            background-color: darken(@dark-orange, 7%);
+            background-color: darken(@dark-main, 7%);
         }
 
         ul.dropdown-menu {
@@ -262,7 +262,7 @@
         margin: 8px 25px 0 0;
 
         input[type="text"] {
-            border: 1px solid @dark-orange;
+            border: 1px solid @dark-main;
 
             &:focus {
                 box-shadow: none;
@@ -271,15 +271,15 @@
         }
 
         .btn {
-            background-color: @dark-orange;
-            background-image: -moz-linear-gradient(top, lighten(@dark-orange, 10%), @dark-orange);
-            background-image: -webkit-gradient(linear, 0 0, 0 100%, from(lighten(@dark-orange, 10%)), to(@dark-orange));
-            background-image: -webkit-linear-gradient(top, lighten(@dark-orange, 10%), @dark-orange);
-            background-image: -o-linear-gradient(top, lighten(@dark-orange, 10%), @dark-orange);
-            background-image: linear-gradient(to bottom, lighten(@dark-orange, 10%), @dark-orange);
-            border: 1px solid @dark-orange;
-            border-color: @dark-orange;
-            border-bottom-color: darken(@dark-orange, 5%);
+            background-color: @dark-main;
+            background-image: -moz-linear-gradient(top, lighten(@dark-main, 10%), @dark-main);
+            background-image: -webkit-gradient(linear, 0 0, 0 100%, from(lighten(@dark-main, 10%)), to(@dark-main));
+            background-image: -webkit-linear-gradient(top, lighten(@dark-main, 10%), @dark-main);
+            background-image: -o-linear-gradient(top, lighten(@dark-main, 10%), @dark-main);
+            background-image: linear-gradient(to bottom, lighten(@dark-main, 10%), @dark-main);
+            border: 1px solid @dark-main;
+            border-color: @dark-main;
+            border-bottom-color: darken(@dark-main, 5%);
             padding: 3px 18px 5px;
 
             i {
