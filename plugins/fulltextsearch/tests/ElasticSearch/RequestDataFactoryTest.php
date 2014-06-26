@@ -216,12 +216,24 @@ class RequestDataFactoryTest extends TuleapTestCase {
                     'permissions' => array(
                         'type'  => 'string',
                         'index' => 'not_analyzed'
+                    ),
+                    'approval_table_comments' => array(
+                        'properties' => array(
+                            'user_id' => array(
+                                'type' => 'integer',
+                            ),
+                            'date_added' => array(
+                                'type' => 'date',
+                            ),
+                            'comment' => array(
+                                'type' => 'string',
+                            ),
+                        )
                     )
                 )
             )
-
         );
-
+        
         $this->assertEqual(
             $expected_data,
             $this->request_data_factory->getPUTMappingData($project_id)
