@@ -1,4 +1,4 @@
-Version 7.2 (Not Released Yet)
+Version 7.2 (Thursday, June 26th 2014)
 	== Bug fix ==
 	* tasks #7106, request #6405: Proper sanitization of project public name in search
 	* request #7113: fix notice on search page when fulltextsearch not installed
