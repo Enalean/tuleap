@@ -18,7 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 class SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP_ADD extends SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP {
+    const NAME = 'FULLTEXTSEARCH_TRACKER_FOLLOWUP_ADD';
 
     /**
      * Execute action

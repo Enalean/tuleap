@@ -18,9 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN.class.php';
-
 class SystemEvent_FULLTEXTSEARCH_DOCMAN_DELETE extends SystemEvent_FULLTEXTSEARCH_DOCMAN {
+    const NAME = 'FULLTEXTSEARCH_DOCMAN_DELETE';
 
     protected function processItem(Docman_Item $item) {
         $this->actions->delete($item);

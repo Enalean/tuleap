@@ -2006,9 +2006,10 @@ class Docman_Actions extends Actions {
             $this->event_manager->processEvent(
                 PLUGIN_DOCMAN_EVENT_APPROVAL_TABLE_COMMENT,
                 array(
-                    'item'   => $item,
-                    'table'  => $atrf->getTable(),
-                    'review' => $review,
+                    'item'       => $item,
+                    'version_nb' => $sVersion,
+                    'table'      => $atrf->getTable(),
+                    'review'     => $review,
                 )
             );
             $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'approval_review_success'));

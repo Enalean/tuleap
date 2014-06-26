@@ -19,6 +19,7 @@
  */
 
 class SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP_UPDATE extends SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP {
+    const NAME = 'FULLTEXTSEARCH_TRACKER_FOLLOWUP_UPDATE';
 
     /**
      * Execute action
