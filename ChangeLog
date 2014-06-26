@@ -1,3 +1,8 @@
+Version 7.3 (Not Released Yet)
+
+    == Plugins ==
+	* git: 3.89
+
 Version 7.2 (Thursday, June 26th 2014)
 	== Bug fix ==
 	* tasks #7106, request #6405: Proper sanitization of project public name in search
