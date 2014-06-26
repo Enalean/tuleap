@@ -49,6 +49,13 @@ class Docman_ApprovalTableReviewerFactory {
         $this->notificationManager = $notificationManager;
     }
 
+    /**
+     * @return Docman_ApprovalTable
+     */
+    public function getTable() {
+        return $this->table;
+    }
+
     function createReviewerFromRow($row) {
         $reviewer = new Docman_ApprovalReviewer();
         $reviewer->initFromRow($row);
