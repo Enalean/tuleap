@@ -796,6 +796,12 @@ class LdapPlugin extends Plugin {
             $ldapQuery = new LDAP_DirectorySynchronization($this->getLdap());
             $ldapQuery->syncAll();
 
+            $retentionPeriod = $this->getLdap()->getLDAPParam('daily_sync_retention_period');
+            if($retentionPeriod != NULL && $retentionPeriod!= "") {
+                $ldapCleanUpManager = new LDAP_CleanUpManager($retentionPeriod);
+                $ldapCleanUpManager->cleanAll();
+            }
+
             //Synchronize the ugroups with the ldap ones
             $ldapUserGroupManager = new LDAP_UserGroupManager($this->getLdap());
             $ldapUserGroupManager->synchronizeUgroups();

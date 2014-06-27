@@ -100,6 +100,7 @@ class LDAP_DirectorySynchronization {
                 if ($retentionPeriod = $this->ldap->getLDAPParam('daily_sync_retention_period')) {
                     $projectManager = $this->getProjectManager();
                     $this->getLdapSyncNotificationManager($projectManager, $retentionPeriod)->processNotification($user);
+                    $this->getCleanUpManager()->addUserDeletionForecastDate($user);
                 }
             }
         }
@@ -130,6 +131,10 @@ class LDAP_DirectorySynchronization {
 
     protected function getProjectManager() {
         return ProjectManager::instance();
+    }
+
+    protected function getCleanUpManager(){
+        return new LDAP_CleanUpManager($this->ldap->getLDAPParam('daily_sync_retention_period'));
     }
 }
 ?>
