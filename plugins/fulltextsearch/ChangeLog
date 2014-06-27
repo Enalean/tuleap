@@ -1,3 +1,6 @@
+Version 0.48 - Tuleap 7.3
+    * tasks #7133: Refactor FullTextSearch system events
+
 Version 0.47 - Tuleap 7.3
     * tasks #7124 add event when comment is added/ modified
 
