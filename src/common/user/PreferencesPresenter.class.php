@@ -347,6 +347,10 @@ class User_PreferencesPresenter {
         return $GLOBALS['Language']->getText('global', 'default');
     }
 
+    public function theme_variant_label() {
+        return $GLOBALS['Language']->getText('account_options', 'theme_variant');
+    }
+
     public function language_label() {
         return $GLOBALS['Language']->getText('account_options', 'language');
     }

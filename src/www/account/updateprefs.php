@@ -54,6 +54,21 @@ if($request->existAndNonEmpty('user_theme')) {
     }
 }
 
+$user_theme_variant = null;
+$requested_variant  = 'current_theme_variant';
+$theme_variant      = new ThemeVariant();
+if ($request->existAndNonEmpty($requested_variant)) {
+    $validator = new Valid_WhiteList(
+        'current_theme_variant',
+        $theme_variant->getAllowedVariants()
+    );
+    if ($request->valid($validator)) {
+        $user_theme_variant = $request->get($requested_variant);
+    } else {
+        $user_theme_variant = $theme_variant->getDefault();
+    }
+}
+
 $form_sticky_login = 0;
 if($request->existAndNonEmpty('form_sticky_login')) {
     if($request->valid(new Valid_WhiteList('form_sticky_login', array(0, 1)))) {
@@ -137,6 +152,9 @@ if($username_display !== null) {
 $user = UserManager::instance()->getCurrentUser();
 $user->setLabFeatures($request->existAndNonEmpty('form_lab_features'));
 
+if ($user_theme_variant) {
+    $user->setPreference('theme_variant', $user_theme_variant);
+}
 
 //plugins specific preferences
 $em = EventManager::instance();

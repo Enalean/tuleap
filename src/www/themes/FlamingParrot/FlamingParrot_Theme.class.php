@@ -102,6 +102,8 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
         $has_sidebar      = isset($params['group']) ? 'has_sidebar' : '';
         $sidebar_state    = 'sidebar-expanded';
 
+        $this->addBodyClassDependingThemeVariant($current_user, $body_class);
+
         if ($current_user->getPreference('sidebar_state')) {
             $sidebar_state = $current_user->getPreference('sidebar_state');
         }
@@ -119,7 +121,12 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
         ));
 
         $this->navbar($params, $current_user, $selected_top_tab);
+    }
 
+    private function addBodyClassDependingThemeVariant(PFUser $user, array &$body_class) {
+        $theme_variant   = new ThemeVariant();
+        $current_variant = $theme_variant->getVariantForUser($user);
+        $body_class[]    = $current_variant;
     }
 
     private function navbar($params, PFUser $current_user, $selected_top_tab) {

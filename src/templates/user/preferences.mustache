@@ -59,7 +59,14 @@
                                 {{theme_name}} {{# is_default }} ({{ default_theme }}) {{/ is_default}}
                             </option>
                             {{/ all_themes }}
-                        </select>
+                    </select>
+                </div>
+            </div>
+            <div id="theme_variant_group" class="control-group user-account-group">
+                <label class="control-label user-account-label">{{ theme_variant_label }}</label>
+                <div class="controls">
+                    <div id="theme_variant_list"></div>
+                    <input type="hidden" name="current_theme_variant" id="current_theme_variant" value=""/>
                 </div>
             </div>
             <div class="control-group user-account-group">
