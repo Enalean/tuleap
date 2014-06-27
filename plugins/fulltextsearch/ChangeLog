@@ -1,3 +1,8 @@
+Version 0.46 - Tuleap 7.3
+    * tasks #7125: modify docman mapping template to accomodate approval comments
+
+Part of story #7030 Include approval table comments
+
 Version 0.45 - Tuleap 7.2
     * request #7113: fix notice on search page when fulltextsearch not installed
 
