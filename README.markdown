@@ -5,7 +5,7 @@ What's Tuleap ?
 Development occurs in realtime on [http://tuleap.net](http://tuleap.net)
 You can find mirrors on [Github](https://github.com/Enalean/tuleap)
 
-Use case, screenshot & more on [http://tuleap.com](http://tuleap.com).
+Use case, screenshot & more on [http://tuleap.org](http://tuleap.org).
 
 How to use it ?
 ===============
@@ -20,5 +20,5 @@ The [tuleap-devel](https://tuleap.net/mailman/listinfo/tuleap-devel/) mailing li
 I want to contribute !
 ======================
 
-You can start looking at [the tuleap developer guide](https://tuleap.net/wiki/?group_id=101&pagename=DeveloperGuide) and of course you should subscribe [tuleap-devel](https://tuleap.net/mailman/listinfo/tuleap-devel/) mailing list.
+You can start looking at [the tuleap developer guide](http://doc-en.tuleap.net/en/latest/index.html#tuleap-developer-guide) and of course you should subscribe [tuleap-devel](https://tuleap.net/mailman/listinfo/tuleap-devel/) mailing list.
 
