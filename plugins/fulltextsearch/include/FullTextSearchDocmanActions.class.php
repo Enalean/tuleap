@@ -74,6 +74,22 @@ class FullTextSearchDocmanActions {
     }
 
     /**
+     * Update document approval comments
+     *
+     * @param Docman_Item $item
+     * @param Docman_Version $version
+     */
+    public function indexDocumentApprovalComment(Docman_Item $item, Docman_Version $version) {
+        $this->logger->debug('ElasticSearch: index new document approval comment #' . $item->getId());
+
+        $update_data = array(
+            'approval_table_comments' => $this->request_data_factory->getDocumentApprovalTableComments($item, $version)
+        );
+
+        $this->client->update($item->getGroupId(), $item->getId(), $update_data);
+    }
+
+    /**
      * Index a new document with permissions
      *
      * @param Docman_Item    $item    The docman item

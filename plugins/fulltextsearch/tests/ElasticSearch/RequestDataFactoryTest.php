@@ -19,8 +19,12 @@
  */
 
 require_once dirname(__FILE__) .'/../../include/autoload.php';
+require_once dirname(__FILE__) .'/../../../docman/include/autoload.php';
 
 class RequestDataFactoryTest extends TuleapTestCase {
+
+    /* @var ElasticSearch_1_2_RequestDataFactory */
+    protected $request_data_factory;
 
     public function setUp() {
         parent::setUp();
@@ -101,6 +105,8 @@ class RequestDataFactoryTest extends TuleapTestCase {
 
         stub($this->metadata_factory)->getHardCodedMetadataList()->returns($hardcoded_metadata);
 
+        $this->approval_table_factories_factory = mock('Docman_ApprovalTableFactoriesFactory');
+
         $this->permissions_manager = stub('Docman_PermissionsItemManager')
             ->exportPermissions($this->item)
             ->returns(array(3, 102)
@@ -108,7 +114,8 @@ class RequestDataFactoryTest extends TuleapTestCase {
 
         $this->request_data_factory = new ElasticSearch_1_2_RequestDataFactory(
             $this->metadata_factory,
-            $this->permissions_manager
+            $this->permissions_manager,
+            $this->approval_table_factories_factory
         );
     }
 
@@ -240,4 +247,71 @@ class RequestDataFactoryTest extends TuleapTestCase {
         );
     }
 
+}
+
+class getDocumentApprovalTableComments extends RequestDataFactoryTest {
+
+    private $other_item;
+    private $approval_table_file_factory;
+    private $version;
+    
+    public function setUp() {
+        parent::setUp();
+
+        $this->other_item = aDocman_File()
+            ->withId(101)
+            ->withTitle('Coin')
+            ->withDescription('Duck typing')
+            ->withGroupId(200)
+            ->build();
+
+        $this->approval_table_file_factory = mock('Docman_ApprovalTableFileFactory');
+        $this->version                     = mock('Docman_Version');
+    }
+
+    public function itReturnsEmptyArrayIfNoTableForDoc() {
+        stub($this->approval_table_file_factory)->getTable()->returns(null);
+        stub($this->approval_table_factories_factory)
+            ->getSpecificFactoryFromItem($this->other_item)->returns($this->approval_table_file_factory);
+
+        $comments = $this->request_data_factory->getDocumentApprovalTableComments($this->other_item, $this->version);
+
+        $this->assertEqual($comments, array());
+    }
+
+    public function itReturnsArrayOfReviews() {
+        $review_1 = mock('Docman_ApprovalReviewer');
+        stub($review_1)->getId()->returns(4580);
+        stub($review_1)->getReviewDate()->returns(012154465325);
+        stub($review_1)->getComment()->returns('I like it like that');
+
+        $review_2 = mock('Docman_ApprovalReviewer');
+        stub($review_2)->getId()->returns(333);
+        stub($review_2)->getReviewDate()->returns(25448);
+        stub($review_2)->getComment()->returns('Looks good to me, approved');
+
+        $reviewer_factory = mock('Docman_ApprovalTableReviewerFactory');
+        stub($reviewer_factory)->getReviewerListForLatestVersion()->returns(
+            array($review_1,$review_2)
+        );
+
+        stub($this->approval_table_file_factory)->getTable()->returns(mock('Docman_ApprovalTable'));
+        stub($this->approval_table_factories_factory)->getReviewerFactory()->returns($reviewer_factory);
+
+        stub($this->approval_table_factories_factory)
+            ->getSpecificFactoryFromItem($this->other_item)->returns($this->approval_table_file_factory);
+
+        $comments = $this->request_data_factory->getDocumentApprovalTableComments($this->other_item, $this->version);
+
+        $this->assertCount($comments, 2);
+
+        $this->assertEqual($comments[0]['user_id'], 4580);
+        $this->assertEqual($comments[1]['user_id'], 333);
+
+        $this->assertEqual($comments[0]['date_added'], 012154465325);
+        $this->assertEqual($comments[1]['date_added'], 25448);
+
+        $this->assertEqual($comments[0]['comment'], 'I like it like that');
+        $this->assertEqual($comments[1]['comment'], 'Looks good to me, approved');
+    }
 }

@@ -96,9 +96,13 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
         stub($this->metadata_factory)->getMetadataValue($this->item, $metadata01)->returns('val01');
         stub($this->metadata_factory)->getMetadataValue($this->item, $metadata02)->returns('val02');
 
+        $this->approval_table_factories_factory = mock('Docman_ApprovalTableFactoriesFactory');
+        stub($this->approval_table_factories_factory)->getSpecificFactoryFromItem($this->item)->returns(mock('Docman_ApprovalTableFileFactory'));
+
         $this->request_data_factory = new ElasticSearch_1_2_RequestDataFactory(
             $this->metadata_factory,
-            $this->permissions_manager
+            $this->permissions_manager,
+            $this->approval_table_factories_factory
         );
 
         $this->actions = new FullTextSearchDocmanActions(
@@ -135,17 +139,18 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
             200,
             101,
             array(
-                'id'                => 101,
-                'group_id'          => 200,
-                'title'             => 'Coin',
-                'description'       => 'Duck typing',
-                'create_date'       => '2014-06-19',
-                'update_date'       => '2014-06-19',
-                'permissions'       => array(3, 102),
-                'file'              => 'aW5kZXggbWUK',
-                'obsolescence_date' => '2014-06-19',
-                'property_1'        => 'val01',
-                'property_2'        => 'val02',
+                'id'                      => 101,
+                'group_id'                => 200,
+                'title'                   => 'Coin',
+                'description'             => 'Duck typing',
+                'create_date'             => '2014-06-19',
+                'update_date'             => '2014-06-19',
+                'permissions'             => array(3, 102),
+                'file'                    => 'aW5kZXggbWUK',
+                'approval_table_comments' => array(),
+                'obsolescence_date'       => '2014-06-19',
+                'property_1'              => 'val01',
+                'property_2'              => 'val02',
                ),
         );
         $this->client->expectOnce('index', $expected);
@@ -167,16 +172,17 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
             200,
             101,
             array(
-                'id'                => 101,
-                'group_id'          => 200,
-                'title'             => 'Coin',
-                'description'       => 'Duck typing',
-                'create_date'       => '2014-06-19',
-                'update_date'       => '2014-06-19',
-                'permissions'       => array(3, 102),
-                'file'              => 'aW5kZXggbWUK',
-                'property_1'        => 'val01',
-                'property_2'        => 'val02',
+                'id'                      => 101,
+                'group_id'                => 200,
+                'title'                   => 'Coin',
+                'description'             => 'Duck typing',
+                'create_date'             => '2014-06-19',
+                'update_date'             => '2014-06-19',
+                'permissions'             => array(3, 102),
+                'file'                    => 'aW5kZXggbWUK',
+                'approval_table_comments' => array(),
+                'property_1'              => 'val01',
+                'property_2'              => 'val02',
                ),
         );
         $this->client->expectOnce('index', $expected);

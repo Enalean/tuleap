@@ -42,5 +42,9 @@ class Docman_ApprovalTableFactoriesFactory {
     public function getSpecificFactoryFromItem($item, $version=null) {
         return self::getFromItem($item, $version);
     }
+
+    public function getReviewerFactory(Docman_ApprovalTable $table, Docman_Item $item) {
+        return new Docman_ApprovalTableReviewerFactory($table, $item);
+    }
 }
 ?>
