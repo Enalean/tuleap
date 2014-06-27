@@ -144,6 +144,9 @@
                         theme_picker
                     )
                 );
+                if ((i + 1) % 6 === 0) {
+                    theme_variant_list.append('<br />');
+                }
             }
         }
     }
