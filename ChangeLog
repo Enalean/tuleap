@@ -3,6 +3,7 @@ Version 7.3 (Not Released Yet)
     == Plugins ==
 	* git: 3.90
 	* tracker: 5.415
+	* ldap: 3.48
 
     == Themes ==
 	* FlamingParrot: 1.22

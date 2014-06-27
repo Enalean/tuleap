@@ -1,3 +1,6 @@
+Version 3.48 - Tuleap 7.3
+    * request #6570: users that Tuleap can no-longer find on a LDAP server are automatically set to deleted
+
 Version 3.47 - Tuleap 7.2
     * story #5756: search with nice interface (tasks #7102: fix facets on search page)
 
