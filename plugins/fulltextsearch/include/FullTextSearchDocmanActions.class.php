@@ -21,7 +21,12 @@
 /**
  * Class responsible to send requests to an indexation server
  */
-class FullTextSearchDocmanActions extends FullTextSearchActions {
+class FullTextSearchDocmanActions {
+
+    /**
+     * @var FullTextSearch_IIndexDocuments
+     */
+    private $client;
 
     /** @var ElasticSearch_1_2_RequestDataFactory */
     private $request_data_factory;
@@ -34,7 +39,7 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
         ElasticSearch_1_2_RequestDataFactory $request_data_factory,
         BackendLogger $logger
     ) {
-        parent::__construct($client);
+        $this->client               = $client;
         $this->request_data_factory = $request_data_factory;
         $this->logger               = $logger;
     }
@@ -42,13 +47,13 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
     public function checkProjectMappingExists($project_id) {
         $this->logger->debug('ElasticSearch: get the mapping for project #' . $project_id);
 
-        return count($this->client->getProjectMapping($project_id)) > 0;
+        return count($this->client->getMapping($project_id)) > 0;
     }
 
     public function initializeProjetMapping($project_id) {
         $this->logger->debug('ElasticSearch: initialize the mapping for project #' . $project_id);
 
-        $this->client->defineProjectMapping(
+        $this->client->setMapping(
             $project_id,
             $this->request_data_factory->getPUTMappingData($project_id)
         );
@@ -65,7 +70,7 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
 
         $indexed_data = $this->getIndexedData($item, $version);
 
-        $this->client->index($indexed_data, $item);
+        $this->client->index($item->getGroupId(), $item->getId(), $indexed_data);
     }
 
     /**
@@ -79,10 +84,10 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
             ' for document #' . $item->getId()
         );
 
-        $update_data = $this->request_data_factory->initializeSetterData();
-        $update_data = $this->request_data_factory->appendSetterData($update_data, 'file', $this->fileContentEncode($version->getPath()));
+        $update_data = array();
+        $this->request_data_factory->setUpdatedData($update_data, 'file', $this->fileContentEncode($version->getPath()));
 
-        $this->client->update($item, $update_data);
+        $this->client->update($item->getGroupId(), $item->getId(), $update_data);
     }
 
     /**
@@ -93,14 +98,14 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
     public function updateDocument(Docman_Item $item) {
         $this->logger->debug('ElasticSearch: update metadata of document #' . $item->getId());
 
-        $update_data = $this->request_data_factory->initializeSetterData();
-        $update_data = $this->request_data_factory->appendSetterData($update_data, 'title',       $item->getTitle());
-        $update_data = $this->request_data_factory->appendSetterData($update_data, 'description', $item->getDescription());
+        $update_data = array();
+        $this->request_data_factory->setUpdatedData($update_data, 'title',       $item->getTitle());
+        $this->request_data_factory->setUpdatedData($update_data, 'description', $item->getDescription());
 
         $update_data = $this->request_data_factory->updateCustomTextualMetadata($item, $update_data);
         $update_data = $this->updateCustomDateMetadata($item, $update_data);
 
-        $this->client->update($item, $update_data);
+        $this->client->update($item->getGroupId(), $item->getId(), $update_data);
     }
 
     /**
@@ -111,14 +116,14 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
     public function updatePermissions(Docman_Item $item) {
         $this->logger->debug('ElasticSearch: update permissions of document #' . $item->getId());
 
-        $update_data = $this->request_data_factory->initializeSetterData();
-        $update_data = $this->request_data_factory->appendSetterData(
+        $update_data = array();
+        $this->request_data_factory->setUpdatedData(
             $update_data,
             'permissions',
             $this->request_data_factory->getCurrentPermissions($item)
         );
 
-        $this->client->update($item, $update_data);
+        $this->client->update($item->getGroupId(), $item->getId(), $update_data);
     }
 
     /**
@@ -129,7 +134,7 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
     public function delete(Docman_Item $item) {
         $this->logger->debug('ElasticSearch: delete document #' . $item->getId());
 
-        $this->client->delete($item);
+        $this->client->delete($item->getGroupId(), $item->getId());
     }
 
     private function getIndexedData(Docman_Item $item, Docman_Version $version) {
@@ -162,7 +167,7 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
     private function updateMappingWithNewDateMetadata(Docman_Item $item) {
         $mapping_data = $this->request_data_factory->getPUTDateMappingMetadata(
             $item,
-            $this->client->getProjectMapping($item->getGroupId())
+            $this->client->getMapping($item->getGroupId())
         );
 
         if (! $this->mappingNeedsToBoUpdated($item, $mapping_data)) {
@@ -172,7 +177,7 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
         $this->logger->debug('ElasticSearch: update mapping of project #' . $item->getGroupId() .
             'with new custom date metadata');
 
-        $this->client->defineProjectMapping(
+        $this->client->setMapping(
             $item->getGroupId(),
             $mapping_data
         );

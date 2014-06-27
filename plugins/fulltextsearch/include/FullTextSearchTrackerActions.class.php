@@ -21,7 +21,12 @@
 /**
  * Class responsible to send indexation requests for tracker changesets to an indexation server
  */
-class FullTextSearchTrackerActions extends FullTextSearchActions {
+class FullTextSearchTrackerActions {
+
+    /**
+     * @var FullTextSearch_IIndexDocuments
+     */
+    private $client;
 
     /** Constructor
      *
@@ -30,7 +35,7 @@ class FullTextSearchTrackerActions extends FullTextSearchActions {
      * @return Void
      */
     public function __construct(FullTextSearch_IIndexDocuments $client) {
-        parent::__construct($client);
+        $this->client = $client;
     }
 
     /**
@@ -43,9 +48,9 @@ class FullTextSearchTrackerActions extends FullTextSearchActions {
      *
      * @return Void
      */
-    public function indexNewDocument($groupId, $artifactId, $changesetId, $text) {
+    public function indexNewFollowUp($groupId, $artifactId, $changesetId, $text) {
         $indexedData = $this->getIndexedData($groupId, $artifactId, $changesetId, $text);
-        $this->client->index($indexedData, $changesetId);
+        $this->client->index(fulltextsearchPlugin::SEARCH_TRACKER_TYPE, $changesetId, $indexedData);
     }
 
     /**
@@ -58,10 +63,10 @@ class FullTextSearchTrackerActions extends FullTextSearchActions {
      *
      * @return Void
      */
-    public function indexNewVersion($groupId, $artifactId, $changesetId, $text) {
+    public function indexFollowUpUpdate($groupId, $artifactId, $changesetId, $text) {
         $updateData = $this->client->initializeSetterData();
         $updateData = $this->client->appendSetterData($updateData, 'followup', $text);
-        $this->client->update($changesetId, $updateData);
+        $this->client->update(fulltextsearchPlugin::SEARCH_TRACKER_TYPE, $changesetId, $updateData);
     }
 
     /**

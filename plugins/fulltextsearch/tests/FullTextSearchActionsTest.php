@@ -35,7 +35,7 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
 
         $this->client = partial_mock(
             'ElasticSearch_IndexClientFacade',
-            array('index', 'update', 'delete', 'getProjectMapping', 'defineProjectMapping')
+            array('index', 'update', 'delete', 'getMapping', 'setMapping')
         );
 
         $this->permissions_manager = mock('Docman_PermissionsItemManager');
@@ -129,9 +129,11 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
             array()
         );
 
-        stub($this->client)->getProjectMapping()->returns(array());
+        stub($this->client)->getMapping()->returns(array());
 
         $expected = array(
+            200,
+            101,
             array(
                 'id'                => 101,
                 'group_id'          => 200,
@@ -145,7 +147,6 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
                 'property_1'        => 'val01',
                 'property_2'        => 'val02',
                ),
-            $this->item
         );
         $this->client->expectOnce('index', $expected);
 
@@ -160,9 +161,11 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
             array()
         );
 
-        stub($this->client)->getProjectMapping()->returns(array());
+        stub($this->client)->getMapping()->returns(array());
 
         $expected = array(
+            200,
+            101,
             array(
                 'id'                => 101,
                 'group_id'          => 200,
@@ -175,7 +178,6 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
                 'property_1'        => 'val01',
                 'property_2'        => 'val02',
                ),
-            $this->item
         );
         $this->client->expectOnce('index', $expected);
 
@@ -192,37 +194,30 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
 
         stub($this->metadata_factory)->getMetadataValue($this->item, $metadata03)->returns(1403160959);
 
-        stub($this->client)->getProjectMapping()->returns(array());
+        stub($this->client)->getMapping()->returns(array());
 
         $update_data = array(
-            'script'=> 'ctx._source.title = title;'.
-                       'ctx._source.description = description;'.
-                       'ctx._source.property_1 = property_1;'.
-                       'ctx._source.property_2 = property_2;'.
-                       'ctx._source.property_6 = property_6;',
-            'params'=> array(
-                'title'       => $this->item->getTitle(),
-                'description' => $this->item->getDescription(),
-                'property_1' => 'val01',
-                'property_2' => 'val02',
-                'property_6' => '2014-06-19',
-            ),
+            'title'       => $this->item->getTitle(),
+            'description' => $this->item->getDescription(),
+            'property_1'  => 'val01',
+            'property_2'  => 'val02',
+            'property_6'  => '2014-06-19',
         );
 
-        $expected = array($this->item, $update_data);
+        $expected = array(200, 101, $update_data);
         $this->client->expectOnce('update', $expected);
 
         $this->actions->updateDocument($this->item);
     }
 
     public function itCanDeleteADocumentFromItsId() {
-        $this->client->expectOnce('delete', array($this->item));
+        $this->client->expectOnce('delete', array(200, 101));
 
         $this->actions->delete($this->item);
     }
 
     public function itReturnsTrueIfMappingIsNotEmptyForProject() {
-        stub($this->client)->getProjectMapping(200)->returns(array(
+        stub($this->client)->getMapping(200)->returns(array(
             'mappings' => array(
                 '200' => array(
                     'properties' => array()
@@ -288,7 +283,7 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
             )
         );
 
-        expect($this->client)->defineProjectMapping(200, $expected_data)->once();
+        expect($this->client)->setMapping(200, $expected_data)->once();
 
         $this->actions->initializeProjetMapping(200);
     }
@@ -311,7 +306,7 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
             )
         );
 
-        stub($this->client)->getProjectMapping()->returns(array(
+        stub($this->client)->getMapping()->returns(array(
             'docman' => array(
                 'mappings' => array(
                     '200' => array(
@@ -325,7 +320,7 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
             )
         ));
 
-        expect($this->client)->defineProjectMapping(200, $expected_data)->once();
+        expect($this->client)->setMapping(200, $expected_data)->once();
 
         $this->actions->indexNewDocument($this->item, $this->version);
     }

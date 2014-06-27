@@ -24,40 +24,68 @@ class ElasticSearch_IndexClientFacade extends ElasticSearch_ClientFacade impleme
     /**
      * @see FullTextSearch_IIndexDocuments::index
      */
-    public function index(array $document, Docman_Item $item) {
-        $this->client->setType($item->getGroupId());
+    public function index($type, $document_id, array $document) {
+        $this->client->setType($type);
 
-        $this->client->index($document, $item->getId());
+        $this->client->index($document, $document_id);
     }
 
     /**
      * @see FullTextSearch_IIndexDocuments::delete
      */
-    public function delete(Docman_Item $item) {
-        $this->client->setType($item->getGroupId());
+    public function delete($type, $document_id) {
+        $this->client->setType($type);
 
 
-        $this->client->delete($item->getId());
+        $this->client->delete($document_id);
     }
 
     /**
      * @see FullTextSearch_IIndexDocuments::update
      */
-    public function update(Docman_Item $item, $data) {
-        $this->client->setType($item->getGroupId());
+    public function update($type, $document_id, array $document) {
+        $this->client->setType($type);
 
-        $this->client->request($item->getId().'/_update', 'POST', $data);
+        $formatted_data = $this->initializeSetterData();
+
+        foreach ($document as $name => $value) {
+            $formatted_data = $this->appendSetterData($formatted_data, $name, $value);
+        }
+
+        $this->client->request($document_id.'/_update', 'POST', $formatted_data, true);
     }
 
-    public function getProjectMapping($project_id) {
-        $this->client->setType($project_id);
+    public function getMapping($type) {
+        $this->client->setType($type);
 
         return $this->client->request('/_mapping', 'GET', array(), true);
     }
 
-    public function defineProjectMapping($project_id, array $mapping_data) {
-        $this->client->setType($project_id);
+    public function setMapping($type, array $mapping_data) {
+        $this->client->setType($type);
 
         $this->client->request('/_mapping', 'PUT', $mapping_data, true);
+    }
+
+    /**
+     * make a parameter with name $name and value $value
+     * then append it to current_data as script and var
+     */
+    public function appendSetterData(array $current_data, $name, $value) {
+        $current_data['script']       .= "ctx._source.$name = $name;";
+        $current_data['params'][$name] = $value;
+        return $current_data;
+    }
+
+    /**
+     * Return the base to build a setter data
+     *
+     * @return array
+     */
+    public function initializeSetterData() {
+        return array(
+            'script' => '',
+            'params' => array()
+        );
     }
 }
