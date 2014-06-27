@@ -20,6 +20,7 @@
 
 
 class SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA extends SystemEvent_FULLTEXTSEARCH_DOCMAN {
+    const NAME = 'FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA';
 
     protected function processItem(Docman_Item $item) {
         $this->actions->updateDocument($item);

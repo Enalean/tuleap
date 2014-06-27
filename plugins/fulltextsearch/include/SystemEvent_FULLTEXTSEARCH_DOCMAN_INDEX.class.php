@@ -20,6 +20,7 @@
 
 
 class SystemEvent_FULLTEXTSEARCH_DOCMAN_INDEX extends SystemEvent_FULLTEXTSEARCH_DOCMAN {
+    const NAME = 'FULLTEXTSEARCH_DOCMAN_INDEX';
 
     protected function processItem(Docman_Item $item) {
         $version_number = (int)$this->getRequiredParameter(2);
