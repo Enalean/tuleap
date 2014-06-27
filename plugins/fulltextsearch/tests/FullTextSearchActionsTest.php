@@ -233,7 +233,7 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
         $this->assertTrue($this->actions->checkProjectMappingExists(200));
     }
 
-    public function itInitializeProjectMapping() {
+    public function itInitializesProjectMapping() {
         $expected_data = array(
             '200' => array(
                 'properties' => array(
@@ -270,6 +270,19 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
                     'permissions' => array(
                         'type'  => 'string',
                         'index' => 'not_analyzed'
+                    ),
+                    'approval_table_comments' => array(
+                        'properties' => array(
+                            'user_id' => array(
+                                'type' => 'integer',
+                            ),
+                            'date_added' => array(
+                                'type' => 'date',
+                            ),
+                            'comment' => array(
+                                'type' => 'string',
+                            ),
+                        )
                     )
                 )
             )

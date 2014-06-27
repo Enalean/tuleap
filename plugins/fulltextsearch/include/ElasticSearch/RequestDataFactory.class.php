@@ -71,10 +71,27 @@ class ElasticSearch_1_2_RequestDataFactory {
         $this->removeUnparsableMetadata($hardcoded_metadata_for_mapping);
         $this->addStandardFileMetadata($hardcoded_metadata_for_mapping);
         $this->addStandardPermissionsMetadata($hardcoded_metadata_for_mapping);
+        $this->addApprovalTableMetadata($hardcoded_metadata_for_mapping);
 
         $mapping_data[$project_id][self::MAPPING_PROPERTIES_KEY] = $hardcoded_metadata_for_mapping;
 
         return $mapping_data;
+    }
+
+    private function addApprovalTableMetadata(array &$hardcoded_metadata_for_mapping) {
+        $hardcoded_metadata_for_mapping['approval_table_comments'] = array(
+            'properties' => array(
+                'user_id' => array(
+                    'type' => 'integer',
+                ),
+                'date_added' => array(
+                    'type' => 'date',
+                ),
+                'comment' => array(
+                    'type' => 'string',
+                ),
+            )
+        );
     }
 
     /**
