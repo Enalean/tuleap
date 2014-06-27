@@ -27,6 +27,8 @@ class fulltextsearchPlugin extends Plugin {
     const SEARCH_DOCMAN_TYPE  = 'docman';
     const SEARCH_TRACKER_TYPE = 'tracker';
 
+    const SYSTEM_EVENT_APPROVAL_TABLE_COMMENT = 'FULLTEXTSEARCH_DOCMAN_APPROVAL_TABLE_COMMENT';
+
     private $actions;
     private $trackerActions;
 
@@ -38,11 +40,14 @@ class fulltextsearchPlugin extends Plugin {
 
     public function getHooksAndCallbacks() {
         // docman
-        $this->_addHook('plugin_docman_after_new_document', 'plugin_docman_after_new_document', false);
-        $this->_addHook('plugin_docman_event_del', 'plugin_docman_event_del', false);
-        $this->_addHook('plugin_docman_event_update', 'plugin_docman_event_update', false);
-        $this->_addHook('plugin_docman_event_perms_change', 'plugin_docman_event_perms_change', false);
-        $this->_addHook('plugin_docman_event_new_version', 'plugin_docman_event_new_version', false);
+        if (defined('PLUGIN_DOCMAN_EVENT_APPROVAL_TABLE_COMMENT')) {
+            $this->addHook('plugin_docman_after_new_document');
+            $this->addHook('plugin_docman_event_del');
+            $this->addHook('plugin_docman_event_update');
+            $this->addHook('plugin_docman_event_perms_change');
+            $this->addHook('plugin_docman_event_new_version');
+            $this->addHook(PLUGIN_DOCMAN_EVENT_APPROVAL_TABLE_COMMENT);
+        }
 
         // tracker
         if (defined('TRACKER_BASE_URL')) {
@@ -126,6 +131,7 @@ class fulltextsearchPlugin extends Plugin {
         $params['types'][] = 'FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA';
         $params['types'][] = 'FULLTEXTSEARCH_DOCMAN_DELETE';
         $params['types'][] = 'FULLTEXTSEARCH_DOCMAN_UPDATE';
+        $params['types'][] = self::SYSTEM_EVENT_APPROVAL_TABLE_COMMENT;
         $params['types'][] = 'FULLTEXTSEARCH_TRACKER_FOLLOWUP_ADD';
         $params['types'][] = 'FULLTEXTSEARCH_TRACKER_FOLLOWUP_UPDATE';
     }
@@ -210,7 +216,7 @@ class fulltextsearchPlugin extends Plugin {
      * @param array $params
      */
     public function plugin_docman_after_new_document($params) {
-        $this->createDocmanSystemEvent('FULLTEXTSEARCH_DOCMAN_INDEX', SystemEvent::PRIORITY_MEDIUM, $params['item'], $params['version']->getNumber());
+        $this->createDocmanSystemEvent('FULLTEXTSEARCH_DOCMAN_INDEX', SystemEvent::PRIORITY_MEDIUM, $params['item'], array($params['version']->getNumber()));
     }
 
     /**
@@ -236,8 +242,24 @@ class fulltextsearchPlugin extends Plugin {
         // will be done in plugin_docman_after_new_document since we
         // receive both event for a new document
         if ($params['version']->getNumber() > 1) {
-            $this->createDocmanSystemEvent('FULLTEXTSEARCH_DOCMAN_UPDATE', SystemEvent::PRIORITY_MEDIUM, $params['item'], $params['version']->getNumber());
+            $this->createDocmanSystemEvent('FULLTEXTSEARCH_DOCMAN_UPDATE', SystemEvent::PRIORITY_MEDIUM, $params['item'], array($params['version']->getNumber()));
         }
+    }
+
+    /**
+     * @see PLUGIN_DOCMAN_EVENT_APPROVAL_TABLE_COMMENT
+     * @param array $params
+     */
+    public function plugin_docman_approval_table_comment(array $params) {
+        $this->createDocmanSystemEvent(
+            self::SYSTEM_EVENT_APPROVAL_TABLE_COMMENT,
+            SystemEvent::PRIORITY_MEDIUM,
+            $params['item'],
+            array(
+                $params['table']->getId(),
+                $params['review']->getId()
+            )
+        );
     }
 
     /**
@@ -369,14 +391,14 @@ class fulltextsearchPlugin extends Plugin {
      *
      * @return Void
      */
-    private function createDocmanSystemEvent($type, $priority, Docman_Item $item, $additional_params = '') {
+    private function createDocmanSystemEvent($type, $priority, Docman_Item $item, array $additional_params = array()) {
         if ($this->isAllowed($item->getGroupId())) {
 
-            $params = $item->getGroupId() . SystemEvent::PARAMETER_SEPARATOR . $item->getId();
-            if ($additional_params) {
-                $params .= SystemEvent::PARAMETER_SEPARATOR . $additional_params;
-            }
-            SystemEventManager::instance()->createEvent($type, $params, $priority);
+            $all_params = array_merge(
+                array($item->getGroupId(), $item->getId()),
+                $additional_params
+            );
+            SystemEventManager::instance()->createEvent($type, implode(SystemEvent::PARAMETER_SEPARATOR, $all_params), $priority);
         }
     }
 
