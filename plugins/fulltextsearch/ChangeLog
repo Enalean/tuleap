@@ -1,3 +1,6 @@
+Version 0.47 - Tuleap 7.3
+    * tasks #7124 add event when comment is added/ modified
+
 Version 0.46 - Tuleap 7.3
     * tasks #7125: modify docman mapping template to accomodate approval comments
 
