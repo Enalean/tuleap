@@ -465,11 +465,8 @@ class fulltextsearchPlugin extends Plugin {
         return new FullTextSearch_Controller_SearchError($this->getRequest());
     }
 
-    /**
-     * @throws ElasticSearch_ClientNotFoundException
-     */
     private function getAdminController() {
-        return new FullTextSearch_Controller_Admin($this->getRequest(), $this->getSearchAdminClient());
+        return new FullTextSearch_Controller_Admin($this->getRequest());
     }
 
     private function getProjectManager() {
@@ -487,15 +484,12 @@ class fulltextsearchPlugin extends Plugin {
             header('Location: ' . get_server_url());
         }
 
-        try {
-            $controller = $this->getAdminController();
-            if ($request->get('words')) {
-                $controller->search();
-            } else {
-                $controller->index();
-            }
-        } catch (ElasticSearch_ClientNotFoundException $exception) {
-            $this->clientIsNotFound($exception);
+        $controller = $this->getAdminController();
+        $group_id   = $request->get('group_id');
+        if ($group_id) {
+            $controller->reindex($group_id);
+        } else {
+            $controller->index();
         }
     }
 
