@@ -1,3 +1,6 @@
+Version 3.49 - Tuleap 7.3
+    * Update autoload
+
 Version 3.48 - Tuleap 7.3
     * request #6570: users that Tuleap can no-longer find on a LDAP server are automatically set to deleted
 
