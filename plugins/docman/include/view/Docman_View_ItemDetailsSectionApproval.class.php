@@ -57,7 +57,7 @@ extends Docman_View_ItemDetailsSection {
             $this->version = $request->get('version');
         }
 
-        $this->atf =& Docman_ApprovalTableFactory::getFromItem($this->item, $this->version);
+        $this->atf =& Docman_ApprovalTableFactoriesFactory::getFromItem($this->item, $this->version);
         $this->table =& $this->atf->getTable();
     }
 

@@ -40,7 +40,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
         if (is_a($this->item, 'Docman_File')) {
             $content .= '<h3>'. $GLOBALS['Language']->getText('plugin_docman','details_history_versions') .'</h3>';
             $version_factory =& new Docman_VersionFactory();
-            $approvalFactory =& Docman_ApprovalTableFactory::getFromItem($this->item);
+            $approvalFactory =& Docman_ApprovalTableFactoriesFactory::getFromItem($this->item);
             if ($versions = $version_factory->getAllVersionForItem($this->item)) {
                 if (count($versions)) {
                     $titles = array();
