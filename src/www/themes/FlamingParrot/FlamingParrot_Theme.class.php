@@ -28,6 +28,7 @@ require_once 'FooterPresenter.class.php';
 require_once 'NavBarProjectPresenter.class.php';
 require_once 'NavBarPresenter.class.php';
 require_once 'SearchFormPresenter.class.php';
+require_once 'FlamingParrot_CSSFilesProvider.class.php';
 
 class FlamingParrot_Theme extends DivBasedTabbedLayout {
 
@@ -85,13 +86,23 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
         echo '<link rel="stylesheet" type="text/css" href="/scripts/bootstrap/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/scripts/jscrollpane/jquery.jscrollpane.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/scripts/jscrollpane/jquery.jscrollpane-tuleap.css" />';
-        echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('style.css') .'" />';
+        echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme($this->getCSSThemeFile()) .'" />';
         echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('print.css') .'" media="print" />';
 
         $custom_dir = $GLOBALS['codendi_dir'].'/src/www'.$this->getStylesheetTheme('').'custom';
         foreach(glob($custom_dir.'/*.css') as $custom_css_file) {
             echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('custom/'.basename($custom_css_file)) .'" />';
         }
+    }
+
+    private function getCSSThemeFile() {
+        $current_user = UserManager::instance()->getCurrentUser();
+
+        $theme_variant     = new ThemeVariant();
+        $css_file_provider = new FlamingParrot_CSSFilesProvider($theme_variant);
+        $variant_used      = $theme_variant->getVariantForUser($current_user);
+
+        return $css_file_provider->getCSSFileForVariant($variant_used);
     }
 
     private function body($params) {

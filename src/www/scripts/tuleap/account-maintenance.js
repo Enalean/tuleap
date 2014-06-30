@@ -73,11 +73,14 @@
         if ($('.select-user-preferences[name="user_theme"]').length > 0) {
             bindThemeSelect();
             fetchThemeVariants();
-            $('.navbar-inner').attr('data-content',codendi.locales.account.theme_variant_preview);
-            $('.navbar-inner').popover({
-                placement: 'bottom',
-                trigger: 'manual'
-            });
+
+            if (! tuleap.browserCompatibility.isIE()) {
+                $('.navbar-inner').attr('data-content',codendi.locales.account.theme_variant_preview);
+                $('.navbar-inner').popover({
+                    placement: 'bottom',
+                    trigger: 'manual'
+                });
+            }
         }
     }
 
@@ -122,6 +125,10 @@
         theme_variant_group.css('display', 'none');
 
         if (themes_length > 0) {
+            if (! tuleap.browserCompatibility.isIE()) {
+                addCSSFilestoDOM(themes.css_files);
+            }
+
             theme_variant_group.css('display', 'block');
             for (i = 0; i < themes_length; ++i) {
                 theme_picker_container = $('<span></span>')
@@ -151,6 +158,18 @@
         }
     }
 
+    function addCSSFilestoDOM(css_files) {
+        if ($('body[class*=FlamingParrot_]').length === 0) {
+            return;
+        }
+
+        css_files.forEach(function(file) {
+            if ($('link[rel*=style][href="'+file+'"]').length === 0) {
+                $("head").append('<link rel="stylesheet" type="text/css" href="'+file+'"/>');
+            }
+        });
+    }
+
     function selectThemeVariant() {
         var current_theme_variant = $('#current_theme_variant'),
             theme_variant_list    = $('#theme_variant_list');
@@ -169,6 +188,10 @@
     }
 
     function applyThemeVariantToBody(theme_variant) {
+        if (tuleap.browserCompatibility.isIE()) {
+            return;
+        }
+
         for (var i = 0, themes_length = themes_list.length ; i < themes_length; ++i) {
             $(document.body).removeClass(themes_list[i]);
         }
