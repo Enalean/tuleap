@@ -1,3 +1,6 @@
+Version 0.51 - Tuleap 7.3
+    * fix tasks #7142: system event error on new version of document (not introduced in this story)
+
 Version 0.50 - Tuleap 7.3
     * Update autoload
 
