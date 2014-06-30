@@ -85,7 +85,7 @@ class FullTextSearchDocmanActions {
         );
 
         $update_data = array();
-        $this->request_data_factory->setUpdatedData($update_data, 'file', $this->fileContentEncode($version->getPath()));
+        $this->request_data_factory->updateFile($update_data, $version->getPath());
 
         $this->client->update($item->getGroupId(), $item->getId(), $update_data);
     }

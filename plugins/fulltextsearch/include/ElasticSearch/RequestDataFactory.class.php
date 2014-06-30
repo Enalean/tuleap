@@ -195,6 +195,10 @@ class ElasticSearch_1_2_RequestDataFactory {
         $current_data[$name] = $value;
     }
 
+    public function updateFile(array &$update_data, $file_path) {
+        $update_data['file'] = $this->fileContentEncode($file_path);
+    }
+
     public function updateCustomTextualMetadata(Docman_Item $item, array $update_data) {
         $custom_textual_metadata = $this->getCustomTextualMetadataValue($item);
 
