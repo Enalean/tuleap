@@ -1,3 +1,9 @@
+Version 5.417 - Tuleap 7.3
+    * FlamingParrot has new variants
+
+
+Implements tasks #7130: add new colors
+
 Version 5.416 - Tuleap 7.3
     * story #6003: be able to change the Experimental (tasks #7123: Select theme variant in user preferences)
 
