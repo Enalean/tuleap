@@ -1,3 +1,6 @@
+Version 2.26.38 - Tuleap 7.3
+    * tasks #7128: update the elasticsearch database via the system event
+
 Version 2.26.37 - Tuleap 7.3
     * tasks #7140: split Docman_ApprovalTableFactory into Docman_ApprovalTableFactoriesFactory
 

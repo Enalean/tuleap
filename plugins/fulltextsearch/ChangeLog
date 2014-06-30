@@ -1,3 +1,6 @@
+Version 0.52 - Tuleap 7.3
+    * tasks #7128: update the elasticsearch database via the system event
+
 Version 0.51 - Tuleap 7.3
     * fix tasks #7142: system event error on new version of document (not introduced in this story)
 
