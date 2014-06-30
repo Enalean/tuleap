@@ -149,6 +149,8 @@
                 }
             }
         }
+
+        updateHeightValue();
     }
 
     function selectThemeVariant() {
