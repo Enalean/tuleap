@@ -156,6 +156,8 @@
                 }
             }
         }
+
+        updateHeightValue();
     }
 
     function addCSSFilestoDOM(css_files) {
