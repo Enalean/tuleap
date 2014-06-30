@@ -42,7 +42,7 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
     function _getApprovalTable() {
         $html = '';
 
-        $atf =& Docman_ApprovalTableFactory::getFromItem($this->item);
+        $atf =& Docman_ApprovalTableFactoriesFactory::getFromItem($this->item);
         if($atf->tableExistsForItem()) {
             $html .= '<dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_update_apptable') .'</dt><dd>';
             $html .= '<dd>';

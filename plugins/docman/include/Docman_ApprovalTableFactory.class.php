@@ -49,30 +49,10 @@ require_once('Docman_ApprovalTableReviewerFactory.class.php');
     }
 
     /**
-     * Return the right ApprovalTableFactory depending of the item.
-     */
-    static function getFromItem($item, $version=null) {
-        $appTableFactory = null;
-        if($item instanceof Docman_File) {
-            $appTableFactory = new Docman_ApprovalTableFileFactory($item, $version);
-        }
-        elseif($item instanceof Docman_Wiki) {
-            $appTableFactory = new Docman_ApprovalTableWikiFactory($item, $version);
-        }
-        elseif($item instanceof Docman_Empty) {
-            // there is no approval table for empty documents.
-        }
-        else {
-            $appTableFactory = new Docman_ApprovalTableItemFactory($item);
-        }
-        return $appTableFactory;
-    }
-
-    /**
      * Return the ApprovalTableReviewerFactory that correspond to the item.
      */
      /*static*/ function &getReviewerFactoryFromItem($item) {
-        $appTableFactory = Docman_ApprovalTableFactory::getFromItem($item);
+        $appTableFactory = Docman_ApprovalTableFactoriesFactory::getFromItem($item);
         if($appTableFactory !== null) {
             $table =& $appTableFactory->getTable();
             return $appTableFactory->_getReviewerFactory($table, $item);

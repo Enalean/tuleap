@@ -300,7 +300,7 @@ class Docman_Actions extends Actions {
                     $newVersion =& new Docman_Version($vArray);
                     $item->setCurrentVersion($newVersion);
 
-                    $atf =& Docman_ApprovalTableFactory::getFromItem($item);
+                    $atf =& Docman_ApprovalTableFactoriesFactory::getFromItem($item);
                     $atf->createTable($user->getId(), $request->get('app_table_import'));
                 }
             }
@@ -1906,7 +1906,7 @@ class Docman_Actions extends Actions {
         $import       = $this->_controler->_actionParams['import'];
         $owner        = $this->_controler->_actionParams['table_owner'];
 
-        $atf =& Docman_ApprovalTableFactory::getFromItem($item, $version);
+        $atf =& Docman_ApprovalTableFactoriesFactory::getFromItem($item, $version);
         $table = $atf->getTable();
         $oldTable = null;
         if($table !== null) {
@@ -1958,7 +1958,7 @@ class Docman_Actions extends Actions {
         // Params
         $item = $this->_controler->_actionParams['item'];
         $version = $this->_controler->_actionParams['version'];
-        $atf =& Docman_ApprovalTableFactory::getFromItem($item, $version);
+        $atf =& Docman_ApprovalTableFactoriesFactory::getFromItem($item, $version);
         $deleted = $atf->deleteTable();
         if($deleted) {
             $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'approval_tabledel_success'));

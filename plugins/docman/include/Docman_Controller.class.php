@@ -1211,7 +1211,7 @@ class Docman_Controller extends Controler {
             break;
 
         case 'approval_user_commit':
-            $atf =& Docman_ApprovalTableFactory::getFromItem($item);
+            $atf =& Docman_ApprovalTableFactoriesFactory::getFromItem($item);
             $table = $atf->getTable();
             $atrf =& new Docman_ApprovalTableReviewerFactory($table, $item);
             if (!$this->userCanRead($item->getId())
@@ -1574,7 +1574,7 @@ class Docman_Controller extends Controler {
     }
  
     function _validateApprovalTable($request, $item) {
-        $atf = Docman_ApprovalTableFactory::getFromItem($item);
+        $atf = Docman_ApprovalTableFactoriesFactory::getFromItem($item);
         if($atf && $atf->tableExistsForItem()) {
             $vAppTable = new Valid_WhiteList('app_table_import', array('copy', 'reset', 'empty'));
             $vAppTable->required();
