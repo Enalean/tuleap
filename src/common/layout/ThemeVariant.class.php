@@ -30,11 +30,21 @@ class ThemeVariant {
 
     public function __construct() {
         $this->default = Config::get('sys_default_theme_variant');
+        $this->setAllowedVartiants();
+    }
 
+    private function setAllowedVartiants() {
         $this->allowed = Config::get('sys_available_theme_variants');
         $this->allowed = explode(',', $this->allowed);
         $this->allowed = array_map('trim', $this->allowed);
         $this->allowed = array_filter($this->allowed);
+
+        if (! is_file('../../www/themes/FlamingParrot/FlamingParrot_Theme.class.php')) {
+            return;
+        }
+
+        require_once '../../www/themes/FlamingParrot/FlamingParrot_Theme.class.php';
+        $this->unsetInvalidThemes();
     }
 
     public function getVariantForUser(PFUser $user) {
@@ -62,4 +72,13 @@ class ThemeVariant {
         return $this->default;
     }
 
+    private function unsetInvalidThemes() {
+        foreach ($this->allowed as $index => $item) {
+            if (! in_array($item, FlamingParrot_Theme::getVariants())) {
+               unset($this->allowed[$index]);
+            }
+        }
+
+        $this->allowed = array_values($this->allowed);
+    }
 }

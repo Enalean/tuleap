@@ -27,22 +27,6 @@ class FlamingParrot_CSSFilesProvider {
 
     const FULL_PATH = '/themes/FlamingParrot/css/';
 
-    /** @var array */
-    private $color_style_files = array(
-            'FlamingParrot_Orange'       => 'style-orange.css',
-            'FlamingParrot_Blue'         => 'style-blue.css',
-            'FlamingParrot_BlueGrey'     => 'style-bluegrey.css',
-            'FlamingParrot_DarkBeige'    => 'style-darkbeige.css',
-            'FlamingParrot_DarkBlue'     => 'style-darkblue.css',
-            'FlamingParrot_DarkBlueGrey' => 'style-darkbluegrey.css',
-            'FlamingParrot_DarkGreen'    => 'style-darkgreen.css',
-            'FlamingParrot_DarkOrange'   => 'style-darkorange.css',
-            'FlamingParrot_DarkPurple'   => 'style-darkpurple.css',
-            'FlamingParrot_Green'        => 'style-green.css',
-            'FlamingParrot_Purple'       => 'style-purple.css',
-            'FlamingParrot_Beige'        => 'style-beige.css',
-    );
-
     /**
      * @var ThemeVariant
      */
@@ -53,7 +37,7 @@ class FlamingParrot_CSSFilesProvider {
     }
 
     public function getCSSFileForVariant($variant_name) {
-        return $this->color_style_files[$variant_name];
+        return $variant_name . '.css';
     }
 
     public function getCSSFilesForAllAvailableVariants() {
@@ -61,7 +45,7 @@ class FlamingParrot_CSSFilesProvider {
 
         $css_files = array();
         foreach ($available_variants as $variant) {
-            $css_files[] = self::FULL_PATH . $this->color_style_files[$variant];
+            $css_files[] = self::FULL_PATH . $variant . '.css';
         }
 
         return $css_files;

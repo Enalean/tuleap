@@ -55,6 +55,23 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
         return dirname(__FILE__) . '/templates/';
     }
 
+    public static function getVariants() {
+        return array(
+            "FlamingParrot_Orange",
+            "FlamingParrot_Blue",
+            "FlamingParrot_Green",
+            "FlamingParrot_BlueGrey",
+            "FlamingParrot_Purple",
+            "FlamingParrot_Beige",
+            "FlamingParrot_DarkOrange",
+            "FlamingParrot_DarkBlue",
+            "FlamingParrot_DarkGreen",
+            "FlamingParrot_DarkBlueGrey",
+            "FlamingParrot_DarkPurple",
+            "FlamingParrot_DarkBeige"
+        );
+    }
+
     public function isLabFeature() {
         return false;
     }
