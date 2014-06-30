@@ -1,13 +1,16 @@
 Version 7.3 (Not Released Yet)
 
-    == Plugins ==
+        == Features ==
+	* story #6003 be able to change the Experimental theme color
+
+        == Plugins ==
 	* git: 3.90
 	* tracker: 5.418
 	* ldap: 3.49
 	* fulltextsearch: 0.51
 	* docman: 2.26.37
 
-    == Themes ==
+        == Themes ==
 	* FlamingParrot: 1.28
 
 Version 7.2 (Thursday, June 26th 2014)
