@@ -17,15 +17,92 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.theme_picker_container > .theme_variant {
-    &.FlamingParrot_Orange {
-        @import "variables-orange.less";
-        border-left-color: @main;
-        border-bottom-color: @grey;
+.theme_picker_container {
+
+    > .theme_variant {
+
+        &.FlamingParrot_Orange {
+            @import "variables-orange.less";
+            .picker;
+        }
+
+        &.FlamingParrot_Blue {
+            @import "variables-blue.less";
+            .picker;
+        }
+
+        &.FlamingParrot_Green {
+            @import 'variables-green.less';
+            .picker;
+        }
+
+        &.FlamingParrot_BlueGrey {
+            @import 'variables-bluegrey.less';
+            .picker;
+        }
+
+        &.FlamingParrot_Purple {
+            @import 'variables-purple.less';
+            .picker;
+        }
+
+        &.FlamingParrot_Beige {
+            @import 'variables-beige.less';
+            .picker;
+        }
+
+        &.FlamingParrot_DarkOrange {
+            @import 'variables-darkorange.less';
+            .dark-picker;
+        }
+
+        &.FlamingParrot_DarkBlue {
+            @import 'variables-darkblue.less';
+            .dark-picker;
+        }
+
+        &.FlamingParrot_DarkGreen {
+            @import 'variables-darkgreen.less';
+            .dark-picker;
+        }
+
+        &.FlamingParrot_DarkBlueGrey {
+            @import 'variables-darkbluegrey.less';
+            .dark-picker;
+        }
+
+        &.FlamingParrot_DarkPurple {
+            @import 'variables-darkpurple.less';
+            .dark-picker;
+        }
+
+        &.FlamingParrot_DarkBeige {
+            @import 'variables-darkbeige.less';
+            .dark-picker;
+        }
+
+        .picker() {
+            border-left-color: @main;
+            border-bottom-color: @dark-grey;
+        }
+
+        .dark-picker() {
+            border-left: none;
+            width: 20px;
+            height: 9px;
+            border-bottom: 3px solid @main;
+        }
     }
-    &.FlamingParrot_Blue {
-        @import "variables-blue.less";
-        border-left-color: @main;
-        border-bottom-color: @grey;
+
+    &.checked > .theme_variant {
+        &.FlamingParrot_DarkOrange,
+        &.FlamingParrot_DarkBlue,
+        &.FlamingParrot_DarkGreen,
+        &.FlamingParrot_DarkBlueGrey,
+        &.FlamingParrot_DarkPurple,
+        &.FlamingParrot_DarkBeige {
+            width: 16px;
+            height: 7px;
+        }
     }
 }

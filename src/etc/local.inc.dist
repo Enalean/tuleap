@@ -462,7 +462,17 @@ $sys_allow_empty_svn_commit_message = 1;
 $sys_default_theme_variant = 'FlamingParrot_Orange';
 
 // List of available theme variant in forge
-$sys_available_theme_variants = 'FlamingParrot_Orange,FlamingParrot_Blue';
-
-// End of customizations -- place nothing after the closing PHP tag!
-?>
+// Available variants:
+// * FlamingParrot_Orange
+// * FlamingParrot_Blue
+// * FlamingParrot_Green
+// * FlamingParrot_BlueGrey
+// * FlamingParrot_Purple
+// * FlamingParrot_Beige
+// * FlamingParrot_DarkOrange
+// * FlamingParrot_DarkBlue
+// * FlamingParrot_DarkGreen
+// * FlamingParrot_DarkBlueGrey
+// * FlamingParrot_DarkPurple
+// * FlamingParrot_DarkBeige
+$sys_available_theme_variants = 'FlamingParrot_Orange,FlamingParrot_Blue,FlamingParrot_Green,FlamingParrot_BlueGrey,FlamingParrot_Purple,FlamingParrot_Beige,FlamingParrot_DarkOrange,FlamingParrot_DarkBlue,FlamingParrot_DarkGreen,FlamingParrot_DarkBlueGrey,FlamingParrot_DarkPurple,FlamingParrot_DarkBeige';
