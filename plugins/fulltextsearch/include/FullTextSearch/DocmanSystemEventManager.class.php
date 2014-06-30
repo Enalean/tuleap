@@ -52,19 +52,12 @@ class FullTextSearch_DocmanSystemEventManager {
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS::NAME:
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA::NAME:
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_DELETE::NAME:
+            case SystemEvent_FULLTEXTSEARCH_DOCMAN_APPROVAL_TABLE_COMMENT::NAME:
                 $class = 'SystemEvent_'. $type;
                 $dependencies = array(
                     $this->getDocmanActions(),
                     new Docman_ItemFactory(),
                     new Docman_VersionFactory()
-                );
-                break;
-
-            case SystemEvent_FULLTEXTSEARCH_DOCMAN_APPROVAL_TABLE_COMMENT::NAME:
-                $class = 'SystemEvent_'. $type;
-                $dependencies = array(
-                    $this->getDocmanActions(),
-                    new Docman_ItemFactory()
                 );
                 break;
         }
@@ -75,7 +68,8 @@ class FullTextSearch_DocmanSystemEventManager {
             $this->index_client,
             new ElasticSearch_1_2_RequestDataFactory(
                 $this->getBareDocmanMetadataFactory(),
-                new Docman_PermissionsItemManager()
+                new Docman_PermissionsItemManager(),
+                new Docman_ApprovalTableFactoriesFactory()
             ),
             new BackendLogger()
         );

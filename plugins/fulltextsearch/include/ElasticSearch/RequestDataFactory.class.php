@@ -39,15 +39,20 @@ class ElasticSearch_1_2_RequestDataFactory {
     /** @var Docman_MetadataFactory */
     private $metadata_factory;
 
-     /** @var Docman_PermissionsItemManager */
+    /** @var Docman_PermissionsItemManager */
     private $permissions_manager;
+
+    /** @var Docman_ApprovalTableFactoriesFactory */
+    private $approval_table_factory;
 
     public function __construct(
         Docman_MetadataFactory $metadata_factory,
-        Docman_PermissionsItemManager $permissions_manager
+        Docman_PermissionsItemManager $permissions_manager,
+        Docman_ApprovalTableFactoriesFactory $approval_table_factory
     ) {
-        $this->metadata_factory    = $metadata_factory;
-        $this->permissions_manager = $permissions_manager;
+        $this->metadata_factory       = $metadata_factory;
+        $this->permissions_manager    = $permissions_manager;
+        $this->approval_table_factory = $approval_table_factory;
     }
 
     /**
@@ -170,14 +175,15 @@ class ElasticSearch_1_2_RequestDataFactory {
      */
     public function getIndexedDataForItemVersion(Docman_Item $item, Docman_Version $version) {
         $hardcoded_metadata = array(
-            'id'          => $item->getId(),
-            'group_id'    => $item->getGroupId(),
-            'title'       => $item->getTitle(),
-            'description' => $item->getDescription(),
-            'create_date' => date('Y-m-d', $item->getCreateDate()),
-            'update_date' => date('Y-m-d', $item->getUpdateDate()),
-            'permissions' => $this->permissions_manager->exportPermissions($item),
-            'file'        => $this->fileContentEncode($version->getPath()),
+            'id'                      => $item->getId(),
+            'group_id'                => $item->getGroupId(),
+            'title'                   => $item->getTitle(),
+            'description'             => $item->getDescription(),
+            'create_date'             => date('Y-m-d', $item->getCreateDate()),
+            'update_date'             => date('Y-m-d', $item->getUpdateDate()),
+            'permissions'             => $this->permissions_manager->exportPermissions($item),
+            'file'                    => $this->fileContentEncode($version->getPath()),
+            'approval_table_comments' => $this->getDocumentApprovalTableComments($item, $version)
         );
 
         if ($item->getObsolescenceDate()) {
@@ -185,6 +191,29 @@ class ElasticSearch_1_2_RequestDataFactory {
         }
 
         return $hardcoded_metadata;
+    }
+
+    public function getDocumentApprovalTableComments(Docman_Item $item, Docman_Version $version) {
+        $comments               = array();
+        $approval_table_factory = $this->approval_table_factory->getSpecificFactoryFromItem($item);
+        $table                  = $approval_table_factory->getTable();
+        if (! $table) {
+            return $comments;
+        }
+
+        $review_factory = $this->approval_table_factory->getReviewerFactory($table, $item);
+        $reviews        = $review_factory->getReviewerListForLatestVersion($version);
+
+        foreach ($reviews as $review) {
+            /* @var $review Docman_ApprovalReviewer */
+            $comments[] = array(
+                'user_id'    => $review->getId(),
+                'date_added' => $review->getReviewDate(),
+                'comment'    => $review->getComment()
+            );
+        }
+
+        return $comments;
     }
 
     public function getCurrentPermissions(Docman_Item $item) {
@@ -345,5 +374,4 @@ class ElasticSearch_1_2_RequestDataFactory {
     private function getCustomPropertyName(Docman_Metadata $item_metadata) {
         return self::CUSTOM_PROPERTY_PREFIX . '_' . $item_metadata->getId();
     }
-
 }

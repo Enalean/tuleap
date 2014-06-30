@@ -46,10 +46,9 @@ class ElasticSearch_IndexClientFacade extends ElasticSearch_ClientFacade impleme
     public function update($type, $document_id, array $document) {
         $this->client->setType($type);
 
-        $formatted_data = $this->initializeSetterData();
-
+        $formatted_data = $this->initializeUpdateData();
         foreach ($document as $name => $value) {
-            $formatted_data = $this->appendSetterData($formatted_data, $name, $value);
+            $formatted_data = $this->appendUpdateData($formatted_data, $name, $value);
         }
 
         $this->client->request($document_id.'/_update', 'POST', $formatted_data, true);
@@ -65,6 +64,15 @@ class ElasticSearch_IndexClientFacade extends ElasticSearch_ClientFacade impleme
         $this->client->setType($type);
 
         $this->client->request('/_mapping', 'PUT', $mapping_data, true);
+    }
+
+    /**
+     * make a parameter with name $name and value $value
+     * then append it to current_data as var
+     */
+    public function appendUpdateData(array $current_data, $name, $value) {
+        $current_data['doc'][$name] = $value;
+        return $current_data;
     }
 
     /**
@@ -86,6 +94,17 @@ class ElasticSearch_IndexClientFacade extends ElasticSearch_ClientFacade impleme
         return array(
             'script' => '',
             'params' => array()
+        );
+    }
+
+    /**
+     * Return the base to build update data
+     *
+     * @return array
+     */
+    public function initializeUpdateData() {
+        return array(
+            'doc' => array()
         );
     }
 }

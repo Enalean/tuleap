@@ -144,6 +144,25 @@ class Docman_ApprovalTableReviewerFactory {
     }
 
     /**
+     * @return Docman_ApprovalReviewer[]
+     */
+    public function getReviewerListForLatestVersion(Docman_Version $version) {
+        $list = array();
+        if ($this->reviewerCache === null) {
+            $this->reviewerCache = array();
+
+            $dao = $this->_getDao();
+            foreach ($dao->getReviewerList($this->table->getId()) as $row) {
+                $this->reviewerCache[$row['reviewer_id']] = true;
+
+                $list[] = $this->createReviewerFromRow($row);
+            }
+        }
+
+        return $list;
+    }
+
+    /**
      * Return true if given userid is member of the current table or not.
      * There is a cache for this information (the membership of users).
      */
