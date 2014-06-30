@@ -26,9 +26,13 @@ $available_theme_variants = array(
 );
 
 if ($request->get('theme') === 'FlamingParrot') {
-    $theme_variant = new ThemeVariant();
-    $available_theme_variants['selected'] = $theme_variant->getVariantForUser($request->getCurrentUser());
-    $available_theme_variants['values']   = $theme_variant->getAllowedVariants();
+    require_once '../themes/FlamingParrot/FlamingParrot_CSSFilesProvider.class.php';
+    $theme_variant     = new ThemeVariant();
+    $css_file_selector = new FlamingParrot_CSSFilesProvider($theme_variant);
+
+    $available_theme_variants['selected']  = $theme_variant->getVariantForUser($request->getCurrentUser());
+    $available_theme_variants['values']    = $theme_variant->getAllowedVariants();
+    $available_theme_variants['css_files'] = $css_file_selector->getCSSFilesForAllAvailableVariants();
 }
 
 $GLOBALS['Response']->sendJSON($available_theme_variants);

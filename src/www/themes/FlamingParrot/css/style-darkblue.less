@@ -1,5 +1,7 @@
 /**
- * Copyright (c) Enalean SAS - 2014. All rights reserved
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,24 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-var tuleap = tuleap || { };
+@import 'utils/pre-definitions.less';
 
-// Search for a class in loaded stylesheets
-(function ($) {
-    tuleap.browserCompatibility = {
-        isIE7 : function() {
-            if (typeof(navigator) == 'undefined'
-                || typeof(navigator.appVersion) == 'undefined'
-                || navigator.appVersion.indexOf( "MSIE 7." ) != -1
-            ) {
-                return true;
-            }
-
-            return false;
-        },
-
-        isIE : function() {
-            return eval('/*@cc_on !@*/false');
-        }
-    };
-})(jQuery);
+body.FlamingParrot_DarkBlue {
+    @import 'utils/variables-darkblue.less';
+    @import 'utils/definitions.less';
+}
