@@ -21,43 +21,34 @@
 /**
  * Controller for site admin views
  */
-class FullTextSearch_Controller_Admin extends FullTextSearch_Controller_Search {
+class FullTextSearch_Controller_Admin extends MVC2_PluginController {
 
-    public function __construct(Codendi_Request                         $request,
-                                FullTextSearch_ISearchDocumentsForAdmin $client) {
-        parent::__construct($request, $client);
-    }
-
-    public function getIndexStatus() {
-        return $this->client->getStatus();
+    public function __construct(Codendi_Request $request) {
+        parent::__construct('fulltextsearch', $request);
     }
 
     public function index() {
-        try {
-            $index_status = $this->getIndexStatus();
-            $presenter    = new FullTextSearch_Presenter_Index($index_status);
-        } catch (ElasticSearchTransportHTTPException $e) {
-            $presenter = new FullTextSearch_Presenter_ErrorNoSearch($e->getMessage());
-        }
-        $this->render($presenter->template, $presenter);
+        $project_manager    = ProjectManager::instance();
+        $project_presenters = $this->getProjectPresenters($project_manager->getProjectsByStatus(Project::STATUS_ACTIVE));
+
+        $GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('plugin_fulltextsearch', 'admin_title')));
+        $this->renderer->renderToPage('admin', new FullTextSearch_Presenter_AdminPresenter($project_presenters));
+        $GLOBALS['HTML']->footer(array());
     }
 
-    protected function getSearchPresenter($terms, $search_result) {
-        $index_status  = $this->getIndexStatus();
-        return new FullTextSearch_Presenter_AdminSearch($index_status, $terms, $search_result);
+    public function reindex($group_id) {
+        $project = $this->request->getProject();
+
+        $this->addFeedback('info', $GLOBALS['Language']->getText('plugin_fulltextsearch', 'waiting_for_reindexation', array(util_unconvert_htmlspecialchars($project->getPublicName()))));
+        $this->index();
     }
 
-    protected function render($template, $presenter) {
-        if (!$this->request->isAjax()) {
-            $GLOBALS['HTML']->header(array('title' => 'Full text search', 'selected_top_tab' => 'admin'));
+    private function getProjectPresenters($projects) {
+        $presenters = array();
+        foreach ($projects as $project) {
+            $presenters[] = new FullTextSearch_Presenter_ProjectPresenter($project);
         }
 
-        parent::render($presenter->template, $presenter);
-
-        if (!$this->request->isAjax()) {
-            $GLOBALS['HTML']->footer(array());
-        }
+        return $presenters;
     }
 }
-
-?>

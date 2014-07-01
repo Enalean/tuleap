@@ -43,7 +43,8 @@ class ProjectDao extends DataAccessObject {
         $status = $this->da->quoteSmart($status);
         $sql = "SELECT *
                 FROM $this->table_name
-                WHERE status = $status";
+                WHERE status = $status
+                ORDER BY group_name";
         return $this->retrieve($sql);
     }
     

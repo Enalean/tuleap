@@ -1,0 +1,22 @@
+<div class="fts-admin">
+    <h1>{{ title }}</h1>
+
+    <form action="/plugins/fulltextsearch/" method="POST">
+        <fieldset>
+            <legend>{{ reindex_title }}</legend>
+            <p class="description">{{ reindex_help }}</p>
+            <div class="control-group">
+                <label class="control-label" for="group_id">{{ reindex_project_label }}</label>
+                <div class="controls">
+                    <select id="group_id" name="group_id">
+                        {{# projects }}
+                            <option value="{{ group_id }}">{{ name }}</option>
+                        {{/ projects }}
+                    </select>
+                </div>
+            </div>
+
+            <input type="submit" class="btn btn-primary" value="{{ submit_project_label }}">
+        </fieldset>
+    </form>
+</div>
