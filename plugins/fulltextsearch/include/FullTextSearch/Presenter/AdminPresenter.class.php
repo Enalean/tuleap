@@ -41,6 +41,10 @@ class FullTextSearch_Presenter_AdminPresenter {
         return $GLOBALS['Language']->getText('plugin_fulltextsearch', 'reindex_project_label');
     }
 
+    public function reindex_help() {
+        return $GLOBALS['Language']->getText('plugin_fulltextsearch', 'reindex_help');
+    }
+
     public function submit_project_label() {
         return $GLOBALS['Language']->getText('plugin_fulltextsearch', 'submit_project_label');
     }
