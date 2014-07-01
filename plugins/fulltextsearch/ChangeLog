@@ -1,3 +1,6 @@
+Version 0.54 - Tuleap 7.3
+    * tasks #7153: Fix project homepage fatal error due to previous refactoring
+
 Version 0.53 - Tuleap 7.3
     * * tasks #7145: Add a form in FTS admin allowing to reindex docman items
 * tasks #7150: Glossification
