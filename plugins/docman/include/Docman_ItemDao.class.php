@@ -117,6 +117,26 @@ class Docman_ItemDao extends DataAccessObject {
     }
 
     /**
+     * @return DataAccessResult
+     */
+    public function searchPaginatedWithVersionByGroupId($groupId, $limit, $offset) {
+        $groupId  = $this->da->escapeInt($groupId);
+        $limit    = $this->da->escapeInt($limit);
+        $offset   = $this->da->escapeInt($offset);
+
+        $params = array(
+            'limit'           => $limit,
+            'offset'          => $offset,
+            'ignore_deleted'  => true,
+            'ignore_obselete' => true
+        );
+
+        $where = " i.group_id = $groupId AND v.id IS NOT NULL";
+
+        return $this->_searchWithCurrentVersion($where, '', '', array(), $params);
+    }
+
+    /**
      * Return the list of items for a given projet according to filters
      *
      * @return DataAccessResult
@@ -236,7 +256,17 @@ class Docman_ItemDao extends DataAccessObject {
         // Related to the 2 LEFT JOIN on docman_version in _getItemSearchFromStmt()
         $sql .= ' v2.id IS NULL AND ';
 
-        $sql .= $where . $group . $order;
+        $limit = '';
+        if (isset($params['offset']) && isset($params['limit'])) {
+            $search_limit = $this->da->escapeInt($params['limit']);
+            $offset       = $this->da->escapeInt($params['offset']);
+            $limit        = " LIMIT ". $offset .", " . $search_limit;
+        }
+
+        $sql .= $where . $group . $order . $limit;
+
+
+
         //print $sql."<br>";
         return $this->retrieve($sql);
     }

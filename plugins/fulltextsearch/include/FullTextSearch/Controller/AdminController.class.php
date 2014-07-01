@@ -23,8 +23,13 @@
  */
 class FullTextSearch_Controller_Admin  extends FullTextSearch_Controller_Search {
 
-    public function __construct(Codendi_Request $request, FullTextSearch_ISearchDocumentsForAdmin $client) {
+    /* FullTextSearch_DocmanSystemEventManager */
+    private $system_event_manager;
+
+    public function __construct(Codendi_Request $request, FullTextSearch_ISearchDocumentsForAdmin $client, FullTextSearch_DocmanSystemEventManager $system_event_manager) {
         parent::__construct($request, $client);
+
+        $this->system_event_manager = $system_event_manager;
     }
 
     public function getIndexStatus() {
@@ -42,6 +47,8 @@ class FullTextSearch_Controller_Admin  extends FullTextSearch_Controller_Search 
 
     public function reindex($group_id) {
         $project = $this->request->getProject();
+
+        $this->system_event_manager->queueNewProjectReindexation($group_id);
 
         $this->addFeedback('info', $GLOBALS['Language']->getText('plugin_fulltextsearch', 'waiting_for_reindexation', array(util_unconvert_htmlspecialchars($project->getPublicName()))));
         $this->index();

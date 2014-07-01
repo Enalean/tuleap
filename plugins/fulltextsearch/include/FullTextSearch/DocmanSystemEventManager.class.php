@@ -53,6 +53,7 @@ class FullTextSearch_DocmanSystemEventManager {
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA::NAME:
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_DELETE::NAME:
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_APPROVAL_TABLE_COMMENT::NAME:
+            case SystemEvent_FULLTEXTSEARCH_DOCMAN_REINDEX_PROJECT::NAME:
                 $class = 'SystemEvent_'. $type;
                 $dependencies = array(
                     $this->getDocmanActions(),
@@ -66,7 +67,7 @@ class FullTextSearch_DocmanSystemEventManager {
     private function getDocmanActions() {
         return new FullTextSearchDocmanActions(
             $this->index_client,
-            new ElasticSearch_1_2_RequestDataFactory(
+            new ElasticSearch_1_2_RequestDocmanDataFactory(
                 $this->getBareDocmanMetadataFactory(),
                 new Docman_PermissionsItemManager(),
                 new Docman_ApprovalTableFactoriesFactory()
@@ -139,6 +140,16 @@ class FullTextSearch_DocmanSystemEventManager {
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_APPROVAL_TABLE_COMMENT::NAME,
                 $this->getDocmanSerializedParameters($item, array($version_nb, $table->getId(), $review->getId())),
                 SystemEvent::PRIORITY_MEDIUM
+            );
+        }
+    }
+
+    public function queueNewProjectReindexation($project_id) {
+        if ($this->plugin->isAllowed($project_id)) {
+            $this->system_event_manager->createEvent(
+                SystemEvent_FULLTEXTSEARCH_DOCMAN_REINDEX_PROJECT::NAME,
+                $project_id,
+                SystemEvent::PRIORITY_LOW
             );
         }
     }
