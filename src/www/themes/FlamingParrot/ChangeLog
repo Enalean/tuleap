@@ -1,3 +1,6 @@
+Version 1.29 - Tuleap 7.3
+    * tasks #7148 - No picker is displayed for Themes with names which does not exist.
+
 Version 1.28 - Tuleap 7.3
     * story #6003: be able to change the Experimental theme color (tasks #7141: BUG: IE9 cannot deal with 4095+ css rules in one file)
 
