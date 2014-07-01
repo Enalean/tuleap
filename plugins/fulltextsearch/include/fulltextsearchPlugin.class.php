@@ -466,7 +466,7 @@ class fulltextsearchPlugin extends Plugin {
     }
 
     private function getAdminController() {
-        return new FullTextSearch_Controller_Admin($this->getRequest());
+        return new FullTextSearch_Controller_Admin($this->getRequest(), $this->getSearchAdminClient());
     }
 
     private function getProjectManager() {

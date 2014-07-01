@@ -21,10 +21,14 @@
 /**
  * Controller for site admin views
  */
-class FullTextSearch_Controller_Admin extends MVC2_PluginController {
+class FullTextSearch_Controller_Admin  extends FullTextSearch_Controller_Search {
 
-    public function __construct(Codendi_Request $request) {
-        parent::__construct('fulltextsearch', $request);
+    public function __construct(Codendi_Request $request, FullTextSearch_ISearchDocumentsForAdmin $client) {
+        parent::__construct($request, $client);
+    }
+
+    public function getIndexStatus() {
+        return $this->client->getStatus();
     }
 
     public function index() {
