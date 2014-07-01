@@ -1,3 +1,6 @@
+Version 5.419 - Tuleap 7.3
+    * Fix request #7116: Can't reply by mail to a tracker
+
 Version 5.418 - Tuleap 7.3
     * story #6003 be able to change the Experimental theme color (tasks #7144 avatars are very small on tuleap.net (cardwall view))
 
