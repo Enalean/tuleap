@@ -53,6 +53,24 @@ class TestingPlugin extends Plugin {
             );
         }
 
+        $trackers = TrackerFactory::instance()->getTrackersByGroupIdUserCanView(
+            $project->getID(),
+            $request->getCurrentUser()
+        );
+        foreach ($trackers as $tracker) {
+            if ($tracker->getItemName() === 'campaign') {
+                break;
+            }
+        }
+        if (! $tracker || $tracker->getItemName() !== 'campaign') {
+            exit_error(
+                $GLOBALS['Language']->getText('global', 'error'),
+                'No suitable tracker found. Please ajust your settings'
+            );
+            return;
+        }
+        $campaign_tracker_id = $tracker->getId();
+
         $title       = $GLOBALS['Language']->getText('plugin_testing', 'title');
         $toolbar     = array();
         $breadcrumbs = array();
@@ -60,7 +78,7 @@ class TestingPlugin extends Plugin {
 
         $renderer  = TemplateRendererFactory::build()->getRenderer(TESTING_TEMPLATE_DIR);
         $renderer->renderToPage('testing', array(
-            'campaign_tracker_id' => 93
+            'campaign_tracker_id' => $campaign_tracker_id
         ));
 
         $GLOBALS['HTML']->footer(array());
