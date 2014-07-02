@@ -76,8 +76,11 @@ $gconfig_dir = forge_get_config('mwdata_path', 'mediawiki');
 $project_dir = forge_get_config('projects_path', 'mediawiki') . "/"
 	. $fusionforgeproject ;
 
-if (!is_dir($project_dir)) {
-    exit_error (sprintf(_('Mediawiki for project %s not created yet, please wait for a few minutes.'), $fusionforgeproject.':'.$project_dir)) ;
+if (! is_dir($project_dir)) {
+    $project_dir = forge_get_config('projects_path', 'mediawiki') . "/" . $group->getUnixName();
+    if (! is_dir($project_dir)) {
+        exit_error (sprintf(_('Mediawiki for project %s not created yet, please wait for a few minutes.'), $group->getPublicName().' : '.$project_dir)) ;
+    }
 }
 
 $path = array( $IP, "$IP/includes", "$IP/languages" );
@@ -104,7 +107,11 @@ $wgDBserver         = forge_get_config('database_host') ;
 
 if (forge_get_config('mw_dbtype', 'mediawiki') == 'mysql') {
     // At the time writing schema in mysql is synonym for database
-    $wgDBname    = MediawikiDao::getMediawikiDatabaseName($group);
+    $dao      = new MediawikiDao();
+    $wgDBname = $dao->getMediawikiDatabaseName($group, false);
+    if (! $wgDBname) {
+        exit_error (sprintf(_('Mediawiki for project %s cannot be found, please contact your system admininistrators.'), $fusionforgeproject.':'.$project_dir)) ;
+    }
     $wgDBprefix = 'mw';
 } else {
     $wgDBname = forge_get_config('database_name');

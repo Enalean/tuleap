@@ -22,7 +22,7 @@
 class MediawikiDao extends DataAccessObject {
 
     public function getMediawikiPagesNumberOfAProject(Project $project) {
-        $database_name = self::getMediawikiDatabaseName($project);
+        $database_name = $this->getMediawikiDatabaseName($project);
         $group_id      = $this->da->escapeInt($project->getID());
 
         $sql = "SELECT $group_id AS group_id, COUNT(1) AS result
@@ -32,7 +32,7 @@ class MediawikiDao extends DataAccessObject {
     }
 
     public function getModifiedMediawikiPagesNumberOfAProjectBetweenStartDateAndEndDate(Project $project, $start_date, $end_date) {
-        $database_name = self::getMediawikiDatabaseName($project);
+        $database_name = $this->getMediawikiDatabaseName($project);
         $group_id      = $this->da->escapeInt($project->getID());
 
         $start_date    = date("YmdHis", strtotime($start_date));
@@ -50,7 +50,7 @@ class MediawikiDao extends DataAccessObject {
     }
 
     public function getCreatedPagesNumberSinceStartDate(Project $project, $start_date) {
-        $database_name = self::getMediawikiDatabaseName($project);
+        $database_name = $this->getMediawikiDatabaseName($project);
         $group_id      = $this->da->escapeInt($project->getID());
 
         $start_date    = date("YmdHis", strtotime($start_date));
@@ -67,7 +67,7 @@ class MediawikiDao extends DataAccessObject {
     }
 
     public function getMediawikiGroupsForUser(PFUser $user, Project $project) {
-        $database_name = self::getMediawikiDatabaseName($project);
+        $database_name = $this->getMediawikiDatabaseName($project);
         $user_name     = $this->da->quoteSmart($this->getMediawikiUserName($user->getUnixName()));
 
         $sql = "SELECT ug_group
@@ -79,7 +79,7 @@ class MediawikiDao extends DataAccessObject {
     }
 
     public function removeUser(PFUser $user, Project $project) {
-        $database_name   = self::getMediawikiDatabaseName($project);
+        $database_name   = $this->getMediawikiDatabaseName($project);
         $user_id         = $this->getMediawikiUserId($user, $project);
         $escaped_user_id = $this->da->escapeInt($user_id);
 
@@ -105,7 +105,7 @@ class MediawikiDao extends DataAccessObject {
     }
 
     public function removeAdminsGroupsForUser(PFUser $user, Project $project) {
-        $database_name   = self::getMediawikiDatabaseName($project);
+        $database_name   = $this->getMediawikiDatabaseName($project);
         $user_id         = $this->getMediawikiUserId($user, $project);
         $escaped_user_id = $this->da->escapeInt($user_id);
 
@@ -122,7 +122,7 @@ class MediawikiDao extends DataAccessObject {
     }
 
     public function renameUser(Project $project, $old_user_name, $new_user_name) {
-        $database_name = self::getMediawikiDatabaseName($project);
+        $database_name = $this->getMediawikiDatabaseName($project);
         $old_user_name = $this->da->quoteSmart($this->getMediawikiUserName($old_user_name));
         $new_user_name = $this->da->quoteSmart($this->getMediawikiUserName($new_user_name));
 
@@ -146,7 +146,7 @@ class MediawikiDao extends DataAccessObject {
     }
 
     private function getMediawikiUserId(PFUser $user, Project $project) {
-        $database_name = self::getMediawikiDatabaseName($project);
+        $database_name = $this->getMediawikiDatabaseName($project);
         $user_name     = $this->da->quoteSmart($user->getUnixName());
 
         $sql = "SELECT user_id
@@ -231,7 +231,7 @@ class MediawikiDao extends DataAccessObject {
      * @return boolean
      */
     public function resetUserGroups(Project $project) {
-        $database_name = self::getMediawikiDatabaseName($project);
+        $database_name = $this->getMediawikiDatabaseName($project);
         $group_id      = $this->da->escapeInt($project->getID());
 
         $this->update("TRUNCATE TABLE $database_name.mwuser_groups");
@@ -239,7 +239,7 @@ class MediawikiDao extends DataAccessObject {
     }
 
     public function resetUserGroupsForUser(PFUser $user, Project $project) {
-        $database_name  = self::getMediawikiDatabaseName($project);
+        $database_name  = $this->getMediawikiDatabaseName($project);
         $group_id       = $this->da->escapeInt($project->getID());
         $forge_user_id  = $this->da->escapeInt($user->getId());
         $user_name      = $this->da->quoteSmart($this->getMediawikiUserName($user->getUnixName()));
@@ -348,8 +348,22 @@ class MediawikiDao extends DataAccessObject {
         return str_replace ('_', ' ', $user_name_with_first_char_uppercase);
     }
 
-    public static function getMediawikiDatabaseName(Project $project) {
-        return str_replace ('-', '_', "plugin_mediawiki_". $project->getUnixName());
+    public function getMediawikiDatabaseName(Project $project, $return_default = true) {
+        $project_id = $this->da->escapeInt($project->getID());
+
+        $sql  = "SELECT database_name FROM plugin_mediawiki_database WHERE project_id = $project_id";
+        $name = $this->retrieveFirstRow($sql);
+
+        if ($name) {
+            return $name['database_name'];
+        }
+
+        if ($return_default) {
+            //old behaviour
+            return str_replace ('-', '_', "plugin_mediawiki_". $project->getUnixName());
+        }
+
+        return false;
     }
 
     public function addDatabase($schema, $project_id) {
