@@ -143,6 +143,7 @@ class fulltextsearchPlugin extends Plugin {
             $params['types'],
             array(
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_INDEX::NAME,
+                SystemEvent_FULLTEXTSEARCH_DOCMAN_REINDEX_PROJECT::NAME,
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE::NAME,
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS::NAME,
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA::NAME,
