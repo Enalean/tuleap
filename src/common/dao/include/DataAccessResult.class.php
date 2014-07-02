@@ -170,5 +170,9 @@ class DataAccessResult implements IProvideDataAccessResult {
     }
 
     //}}}
+
+    public function freeMemory() {
+        mysql_free_result($this->result);
+    }
 }
 ?>

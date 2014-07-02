@@ -21,9 +21,9 @@
 require_once dirname(__FILE__) .'/../../include/autoload.php';
 require_once dirname(__FILE__) .'/../../../docman/include/autoload.php';
 
-class RequestDataFactoryTest extends TuleapTestCase {
+class RequestDocmanDataFactoryTest extends TuleapTestCase {
 
-    /* @var ElasticSearch_1_2_RequestDataFactory */
+    /* @var ElasticSearch_1_2_RequestDocmanDataFactory */
     protected $request_data_factory;
 
     public function setUp() {
@@ -112,7 +112,7 @@ class RequestDataFactoryTest extends TuleapTestCase {
             ->returns(array(3, 102)
         );
 
-        $this->request_data_factory = new ElasticSearch_1_2_RequestDataFactory(
+        $this->request_data_factory = new ElasticSearch_1_2_RequestDocmanDataFactory(
             $this->metadata_factory,
             $this->permissions_manager,
             $this->approval_table_factories_factory
@@ -249,7 +249,7 @@ class RequestDataFactoryTest extends TuleapTestCase {
 
 }
 
-class getDocumentApprovalTableComments extends RequestDataFactoryTest {
+class getDocumentApprovalTableComments extends RequestDocmanDataFactoryTest {
 
     private $other_item;
     private $approval_table_file_factory;

@@ -23,7 +23,7 @@
  * I build data for ElasticSearch 1.2 requests
  */
 
-class ElasticSearch_1_2_RequestDataFactory {
+class ElasticSearch_1_2_RequestDocmanDataFactory {
 
     const EXCLUDED_HARDCODED_METADATA = 'status';
     const MAPPING_PROPERTIES_KEY      = 'properties';

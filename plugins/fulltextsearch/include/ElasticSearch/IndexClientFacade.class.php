@@ -18,7 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+/**
+ * @see https://github.com/nervetattoo/elasticsearch
+ */
 class ElasticSearch_IndexClientFacade extends ElasticSearch_ClientFacade implements FullTextSearch_IIndexDocuments {
     
     /**
@@ -38,6 +40,11 @@ class ElasticSearch_IndexClientFacade extends ElasticSearch_ClientFacade impleme
 
 
         $this->client->delete($document_id);
+    }
+
+    public function deleteForProject($project_id) {
+        $this->client->setType($project_id);
+        $this->client->request('/', 'DELETE', false, true);
     }
 
     /**

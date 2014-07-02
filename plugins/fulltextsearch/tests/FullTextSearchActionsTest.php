@@ -99,7 +99,7 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
         $this->approval_table_factories_factory = mock('Docman_ApprovalTableFactoriesFactory');
         stub($this->approval_table_factories_factory)->getSpecificFactoryFromItem($this->item)->returns(mock('Docman_ApprovalTableFileFactory'));
 
-        $this->request_data_factory = new ElasticSearch_1_2_RequestDataFactory(
+        $this->request_data_factory = new ElasticSearch_1_2_RequestDocmanDataFactory(
             $this->metadata_factory,
             $this->permissions_manager,
             $this->approval_table_factories_factory

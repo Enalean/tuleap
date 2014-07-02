@@ -28,7 +28,7 @@ class FullTextSearchDocmanActions {
      */
     private $client;
 
-    /** @var ElasticSearch_1_2_RequestDataFactory */
+    /** @var ElasticSearch_1_2_RequestDocmanDataFactory */
     private $request_data_factory;
 
     /** @var BackendLogger */
@@ -36,7 +36,7 @@ class FullTextSearchDocmanActions {
 
     public function __construct(
         FullTextSearch_IIndexDocuments $client,
-        ElasticSearch_1_2_RequestDataFactory $request_data_factory,
+        ElasticSearch_1_2_RequestDocmanDataFactory $request_data_factory,
         BackendLogger $logger
     ) {
         $this->client               = $client;
@@ -153,6 +153,30 @@ class FullTextSearchDocmanActions {
         $this->client->delete($item->getGroupId(), $item->getId());
     }
 
+    public function reIndexProjectDocuments(Docman_ProjectItemsBatchIterator $document_iterator, $project_id) {
+        $this->deleteForProject($project_id);
+        $this->indexAllProjectDocuments($document_iterator, $project_id);
+    }
+
+    private function deleteForProject($project_id) {
+        $this->logger->debug('ElasticSearch: deleting all project documents #' . $project_id);
+
+        $this->client->deleteForProject($project_id);
+    }
+
+    private function indexAllProjectDocuments(Docman_ProjectItemsBatchIterator $document_iterator, $project_id) {
+        $this->logger->debug('ElasticSearch: indexing all project documents #' . $project_id);
+
+        $this->initializeProjetMapping($project_id);
+        $document_iterator->rewind();
+        while ($batch = $document_iterator->next()) {
+            foreach ($batch as $item) {
+                /* @var Docman_File $item*/
+                $this->indexNewDocument($item, $item->getCurrentVersion());
+            }
+        }
+    }
+
     private function getIndexedData(Docman_Item $item, Docman_Version $version) {
         return $this->request_data_factory->getIndexedDataForItemVersion($item, $version) +
             $this->request_data_factory->getCustomTextualMetadataValue($item) +
@@ -200,7 +224,7 @@ class FullTextSearchDocmanActions {
     }
 
     private function mappingNeedsToBoUpdated(Docman_Item $item, array $mapping_data) {
-        return $mapping_data[$item->getGroupId()][ElasticSearch_1_2_RequestDataFactory::MAPPING_PROPERTIES_KEY]
+        return $mapping_data[$item->getGroupId()][ElasticSearch_1_2_RequestDocmanDataFactory::MAPPING_PROPERTIES_KEY]
             !== array();
     }
 }

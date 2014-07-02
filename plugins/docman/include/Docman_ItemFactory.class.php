@@ -655,6 +655,24 @@ class Docman_ItemFactory {
     }
 
     /**
+     * @param int $limit
+     * @param int $offset
+     * @return Docman_File[]
+     */
+    public function searchPaginatedWithVersionByGroupId($limit, $offset) {
+        $result = $this->_getItemDao()->searchPaginatedWithVersionByGroupId($this->groupId, $limit, $offset);
+
+        $items = array();
+        foreach ($result as $row) {
+            $items[] = $this->getItemFromRow($row);
+        }
+
+        $result->freeMemory();
+
+        return $items;
+    }
+
+    /**
      *
      */
     function findByTitle($user, $title, $groupId) {
@@ -709,9 +727,12 @@ class Docman_ItemFactory {
     }
 
     var $dao;
-    function &_getItemDao() {
-        if (!$this->dao) {
-            $this->dao =& new Docman_ItemDao(CodendiDataAccess::instance());
+    /**
+     * @return Docman_ItemDao
+     */
+    function _getItemDao() {
+        if (! $this->dao) {
+            $this->dao = new Docman_ItemDao(CodendiDataAccess::instance());
         }
         return $this->dao;
     }
