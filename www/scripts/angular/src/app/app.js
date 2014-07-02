@@ -1,5 +1,3 @@
-angular.module( 'testing', []);
-
-angular.module('testing').controller('Main', function ($scope) {
-    $scope.coco = 'Tric';
-});
+var testing = angular.module('testing', [
+    'campaign-list'
+]);

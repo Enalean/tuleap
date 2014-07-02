@@ -59,7 +59,9 @@ class TestingPlugin extends Plugin {
         $service->displayHeader($title, $breadcrumbs, $toolbar);
 
         $renderer  = TemplateRendererFactory::build()->getRenderer(TESTING_TEMPLATE_DIR);
-        $renderer->renderToPage('testing', array());
+        $renderer->renderToPage('testing', array(
+            'campaign_tracker_id' => 93
+        ));
 
         $GLOBALS['HTML']->footer(array());
     }
