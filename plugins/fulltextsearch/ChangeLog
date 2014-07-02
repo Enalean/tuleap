@@ -1,3 +1,6 @@
+Version 0.55 - Tuleap 7.3
+    * tasks #7149: delete all indexed documents and index new ones for a project
+
 Version 0.54 - Tuleap 7.3
     * tasks #7153: Fix project homepage fatal error due to previous refactoring
 
