@@ -33,22 +33,25 @@ class Tuleap_Tour_Step {
     /**
      * @var string
      */
-    public $element = '';
+    public $element;
 
     /**
      * @var string
      */
-    public $placement = 'bottom';
+    public $placement;
 
     /**
      * @var boolean
      */
-    public $backdrop = false;
+    public $backdrop;
 
 
-    public function __construct($title, $content) {
+    public function __construct($title, $content, $placement = 'bottom', $element = '', $backdrop = false) {
         $this->title     = $title;
         $this->content   = $content;
+        $this->element   = $element;
+        $this->placement = $placement;
+        $this->backdrop  = $backdrop;
     }
 
     public function setElement($element) {

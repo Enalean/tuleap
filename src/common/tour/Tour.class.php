@@ -28,7 +28,7 @@ abstract class Tuleap_Tour {
     /**
      * @var boolean
      */
-    public $storage = 'window.localStorage';
+    public $storage = false;
 
     /**
      * @var boolean
@@ -43,22 +43,33 @@ abstract class Tuleap_Tour {
     /**
      * @var string
      */
-    public $template = '<div class="popover tour">
-        <div class="arrow"></div>
-        <h3 class="popover-title"></h3>
-        <div class="popover-content"></div>
-        <div class="popover-navigation">
-            <button class="btn btn-small" data-role="prev">« Prev</button>
-            <button class="btn btn-small" data-role="next">Next »</button>
-            <button class="btn btn-small" data-role="end">End tour</button>
-            <div style="clear: both"></div>
-        </div>
-        </nav>
-    </div>';
+    public $template;
 
     public function __construct($name, array $steps) {
         $this->name  = $name;
         $this->steps = $steps;
+
+        $this->initTemplate();
     }
 
+    private function initTemplate() {
+        $this->template = '<div class="popover tour">
+        <div class="arrow"></div>
+        <h3 class="popover-title"></h3>
+        <div class="popover-content"></div>
+        <div class="popover-navigation">
+            <button class="btn btn-small" data-role="prev">
+                '. $GLOBALS['Language']->getText('tour', 'previous_button') .'
+            </button>
+            <button class="btn btn-small" data-role="next">
+                '. $GLOBALS['Language']->getText('tour', 'next_button') .'
+            </button>
+            <button class="btn btn-small" data-role="end">
+                '. $GLOBALS['Language']->getText('tour', 'end_button') .'
+            </button>
+            <div style="clear: both"></div>
+        </div>
+        </nav>
+    </div>';
+    }
 }

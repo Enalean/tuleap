@@ -2628,6 +2628,17 @@ CREATE TABLE email_gateway_salt (
     )
 ;
 
+DROP TABLE IF EXISTS tour_usage_statistics;
+CREATE TABLE tour_usage_statistics (
+    id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id INT(11) NOT NULL,
+    executed_on INT(11) UNSIGNED NOT NULL,
+    tour_name VARCHAR(255) NOT NULL,
+    nb_steps TINYINT(4) UNSIGNED NOT NULL,
+    current_step TINYINT(4) UNSIGNED NOT NULL,
+    the_end TINYINT(1) NOT NULL
+);
+
 #
 # EOF
 #
