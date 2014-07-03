@@ -1,3 +1,6 @@
+Version 0.56 - Tuleap 7.3
+    * tasks #7154: fix system event not appearing in list
+
 Version 0.55 - Tuleap 7.3
     * tasks #7149: delete all indexed documents and index new ones for a project
 
