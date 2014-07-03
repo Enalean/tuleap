@@ -1,3 +1,6 @@
+Version 0.33 - Tuleap 7.3
+    * Fix request #7163 mediawiki page broken on new Tuleap themes
+
 Version 0.32 - Tuleap 7.2
     * tasks #7069: cleaning-up search use
 
