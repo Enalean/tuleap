@@ -53,6 +53,7 @@ class MediaWikiPlugin extends Plugin {
             $this->_addHook('register_project_creation');
 
             $this->_addHook(Event::SERVICE_REPLACE_TEMPLATE_NAME_IN_LINK);
+            $this->_addHook(Event::RENAME_PROJECT, 'rename_project');
 
             //User permissions
             $this->_addHook('project_admin_remove_user');
@@ -662,5 +663,52 @@ class MediaWikiPlugin extends Plugin {
     public function service_classnames(array $params) {
         include_once 'ServiceMediawiki.class.php';
         $params['classnames']['plugin_mediawiki'] = 'ServiceMediawiki';
+    }
+
+    public function rename_project($params) {
+        $project         = $params['project'];
+        $project_manager = ProjectManager::instance();
+        $new_link        = '/plugins/mediawiki/wiki/'. $params['new_name'];
+
+        if (! $project_manager->renameProjectPluginServiceLink($project->getID(), self::SERVICE_SHORTNAME, $new_link)) {
+            $params['success'] = false;
+            return;
+        }
+
+        $this->updateMediawikiDirectory($project);
+        $this->clearMediawikiCache($project);
+    }
+
+    private function updateMediawikiDirectory(Project $project) {
+        $logger         = new BackendLogger();
+        $project_id_dir = forge_get_config('projects_path', 'mediawiki') . "/". $project->getID() ;
+
+        if (is_dir($project_id_dir)) {
+            return true;
+        }
+
+
+        $project_name_dir = forge_get_config('projects_path', 'mediawiki') . "/" . $project->getUnixName();
+        if (is_dir($project_name_dir)) {
+            exec("mv $project_name_dir $project_id_dir");
+            return true;
+        }
+
+        $logger->error('Project Rename: Can\'t find mediawiki directory for project: '.$project->getID());
+        return false;
+    }
+
+    private function clearMediawikiCache(Project $project) {
+        $schema = $this->getDao()->getMediawikiDatabaseName($project, false);
+        $logger = new BackendLogger();
+
+        if ($schema) {
+            $delete = $this->getDao()->clearPageCacheForSchema($schema);
+            if (! $delete) {
+                $logger->error('Project Clear cache: Can\'t delete mediawiki cache for schema: '.$schema);
+            }
+        } else  {
+            $logger->error('Project Clear cache: Can\'t find mediawiki db for project: '.$project->getID());
+        }
     }
 }

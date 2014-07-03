@@ -375,5 +375,12 @@ class MediawikiDao extends DataAccessObject {
 
         return $this->update($sql);
     }
+
+    public function clearPageCacheForSchema($schema) {
+        $schema = $this->da->quoteSmartSchema($schema);;
+
+        $sql = "DELETE FROM $schema.mwobjectcache";
+        return $this->update($sql);
+    }
 }
 

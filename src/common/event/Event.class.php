@@ -783,4 +783,12 @@ class Event {
      */
     const BACKEND_ALIAS_GET_ALIASES = 'backend_alias_get_aliases';
 
+    /**
+     *  Parameters:
+     *      'project'     => Project
+     *      'success'     => boolean (true by default)
+     *      'new_name'    => string
+     */
+    const RENAME_PROJECT = 'rename_project';
+
 }

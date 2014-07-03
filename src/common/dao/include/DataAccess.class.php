@@ -216,6 +216,25 @@ class DataAccess {
     }
 
     /**
+     * Quote schema name to make safe
+     * @see http://php.net/mysql-real-escape-string
+     *
+     * @return string
+     */
+    public function quoteSmartSchema($value, $params = array()) {
+        // Quote if not integer
+        if ($this->db) {
+            $value = mysql_real_escape_string($value, $this->db);
+        } else {
+            $value = mysql_escape_string($value);
+        }
+        if (!is_numeric($value) || (isset($params['force_string']) && $params['force_string'])) {
+            $value = "`" . $value . "`";
+        }
+        return $value;
+    }
+
+    /**
      * Safe implode function to use with SQL queries
      * @static
      */
