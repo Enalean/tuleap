@@ -12,6 +12,7 @@ Packager: Manuel VACELET <manuel.vacelet@enalean.com>
 
 AutoReqProv: no
 
+Requires: php(language) >= 5.3
 Requires: tuleap, tuleap-plugin-tracker, tuleap-core-rest
 
 %description

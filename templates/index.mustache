@@ -1,0 +1,9 @@
+{{^ properly_configured }}
+    <div class="alert alert-info"><strong>{{ misconfigured_title }}</strong> {{ misconfigured_message }}</div>
+    <img src="yuno.jpg" />
+{{/ properly_configured }}
+{{# properly_configured }}
+    <div ng-app="testing" ng-controller="TestingCtrl" ng-init="init({{ campaign_tracker_id }})" ui-view="main">
+    </div>
+    <script src="scripts/angular/bin/assets/testing.js"></script>
+{{/ properly_configured }}

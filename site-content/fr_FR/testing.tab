@@ -4,3 +4,8 @@ plugin_testing	descriptor_name	Testing
 plugin_testing	title	Testing
 plugin_testing	service_lbl_key	Testage
 
+plugin_testing	admin_campaign_tracker	Tracker de Campagnes
+plugin_testing	admin_campaign_tracker_placeholder	Entrez l'id du tracker…
+
+plugin_testing	misconfigured_title	Nom de Zeus !
+plugin_testing	misconfigured_message	Vous devriez configurer la chose avant de pouvoir utiliser ce service.

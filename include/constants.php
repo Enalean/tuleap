@@ -17,4 +17,4 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-define('TESTING_TEMPLATE_DIR', __DIR__.'/../templates/');
+define('TESTING_BASE_URL', '/plugins/testing');

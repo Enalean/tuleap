@@ -4,3 +4,8 @@ plugin_testing	descriptor_name	Testing
 plugin_testing	title	Testing
 plugin_testing	service_lbl_key	Testing
 
+plugin_testing	admin_campaign_tracker	Campaigns Tracker
+plugin_testing	admin_campaign_tracker_placeholder	Enter the tracker id…
+
+plugin_testing	misconfigured_title	Great Scott!
+plugin_testing	misconfigured_message	You should configure things before being able to use this service.

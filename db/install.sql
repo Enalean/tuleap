@@ -1,3 +1,7 @@
+CREATE TABLE IF NOT EXISTS plugin_testing(
+    project_id INT(11) UNSIGNED NOT NULL PRIMARY KEY,
+    campaign_tracker_id INT(11) NOT NULL
+);
 
 -- Enable service for project 1 and 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES ( 100 , 'plugin_testing:service_lbl_key' , 'plugin_testing:service_desc_key' , 'testing', '/plugins/testing/?group_id=$group_id', 1 , 1 , 'system',  250 );

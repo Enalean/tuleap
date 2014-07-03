@@ -41,46 +41,8 @@ class TestingPlugin extends Plugin {
     }
     
     function process(Codendi_Request $request) {
-        $project = $request->getProject();
-        $service = $project->getService('plugin_testing');
-        if (! $service) {
-            exit_error(
-                $GLOBALS['Language']->getText('global', 'error'),
-                $GLOBALS['Language']->getText(
-                    'project_service',
-                    'service_not_used',
-                    $GLOBALS['Language']->getText('plugin_testing', 'service_lbl_key'))
-            );
-        }
-
-        $trackers = TrackerFactory::instance()->getTrackersByGroupIdUserCanView(
-            $project->getID(),
-            $request->getCurrentUser()
-        );
-        foreach ($trackers as $tracker) {
-            if ($tracker->getItemName() === 'campaign') {
-                break;
-            }
-        }
-        if (! $tracker || $tracker->getItemName() !== 'campaign') {
-            exit_error(
-                $GLOBALS['Language']->getText('global', 'error'),
-                'No suitable tracker found. Please ajust your settings'
-            );
-            return;
-        }
-        $campaign_tracker_id = $tracker->getId();
-
-        $title       = $GLOBALS['Language']->getText('plugin_testing', 'title');
-        $toolbar     = array();
-        $breadcrumbs = array();
-        $service->displayHeader($title, $breadcrumbs, $toolbar);
-
-        $renderer  = TemplateRendererFactory::build()->getRenderer(TESTING_TEMPLATE_DIR);
-        $renderer->renderToPage('testing', array(
-            'campaign_tracker_id' => $campaign_tracker_id
-        ));
-
-        $GLOBALS['HTML']->footer(array());
+        $config = new \Tuleap\Testing\Config(new \Tuleap\Testing\Dao());
+        $router = new Tuleap\Testing\Router($this, $config);
+        $router->route($request);
     }
 }
