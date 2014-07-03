@@ -1,9 +1,5 @@
 module.exports = function ( grunt ) {
   
-  /** 
-   * Load required Grunt tasks. These are installed based on the versions listed
-   * in `package.json` when you do `npm install` in this directory.
-   */
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-jshint');
@@ -157,31 +153,10 @@ module.exports = function ( grunt ) {
           'module.prefix', 
           '<%= build_dir %>/src/**/*.js', 
           '<%= html2js.app.dest %>', 
-          '<%= html2js.common.dest %>', 
           '<%= vendor_files.js %>', 
           'module.suffix' 
         ],
         dest: '<%= compile_dir %>/assets/<%= pkg.name %>.js'
-      }
-    },
-
-    /**
-     * `grunt coffee` compiles the CoffeeScript sources. To work well with the
-     * rest of the build, we have a separate compilation task for sources and
-     * specs so they can go to different places. For example, we need the
-     * sources to live with the rest of the copied JavaScript so we can include
-     * it in the final build, but we don't want to include our specs there.
-     */
-    coffee: {
-      source: {
-        options: {
-          bare: true
-        },
-        expand: true,
-        cwd: '.',
-        src: [ '<%= app_files.coffee %>' ],
-        dest: '<%= build_dir %>',
-        ext: '.js'
       }
     },
 
@@ -277,24 +252,6 @@ module.exports = function ( grunt ) {
     },
 
     /**
-     * `coffeelint` does the same as `jshint`, but for CoffeeScript.
-     * CoffeeScript is not the default in ngBoilerplate, so we're just using
-     * the defaults here.
-     */
-    coffeelint: {
-      src: {
-        files: {
-          src: [ '<%= app_files.coffee %>' ]
-        }
-      },
-      test: {
-        files: {
-          src: [ '<%= app_files.coffeeunit %>' ]
-        }
-      }
-    },
-
-    /**
      * HTML2JS is a Grunt plugin that takes all of your template files and
      * places them into JavaScript files as strings that are added to
      * AngularJS's template cache. This means that the templates too become
@@ -310,17 +267,6 @@ module.exports = function ( grunt ) {
         },
         src: [ '<%= app_files.atpl %>' ],
         dest: '<%= build_dir %>/templates-app.js'
-      },
-
-      /**
-       * These are the templates from `src/common`.
-       */
-      common: {
-        options: {
-          base: 'src/common'
-        },
-        src: [ '<%= app_files.ctpl %>' ],
-        dest: '<%= build_dir %>/templates-common.js'
       }
     },
 
@@ -341,45 +287,6 @@ module.exports = function ( grunt ) {
     },
 
     /**
-     * The `index` task compiles the `index.html` file as a Grunt template. CSS
-     * and JS files co-exist here but they get split apart later.
-     */
-    index: {
-
-      /**
-       * During development, we don't want to have wait for compilation,
-       * concatenation, minification, etc. So to avoid these steps, we simply
-       * add all script files directly to the `<head>` of `index.html`. The
-       * `src` property contains the list of included files.
-       */
-      build: {
-        dir: '<%= build_dir %>',
-        src: [
-          '<%= vendor_files.js %>',
-          '<%= build_dir %>/src/**/*.js',
-          '<%= html2js.common.dest %>',
-          '<%= html2js.app.dest %>',
-          '<%= vendor_files.css %>',
-          '<%= recess.build.dest %>'
-        ]
-      },
-
-      /**
-       * When it is time to have a completely compiled application, we can
-       * alter the above to include only a single JavaScript and a single CSS
-       * file. Now we're back!
-       */
-      compile: {
-        dir: '<%= compile_dir %>',
-        src: [
-          '<%= concat.compile_js.dest %>',
-          '<%= vendor_files.css %>',
-          '<%= recess.compile.dest %>'
-        ]
-      }
-    },
-
-    /**
      * This task compiles the karma template so that changes to its file array
      * don't have to be managed manually.
      */
@@ -389,7 +296,6 @@ module.exports = function ( grunt ) {
         src: [ 
           '<%= vendor_files.js %>',
           '<%= html2js.app.dest %>',
-          '<%= html2js.common.dest %>',
           'vendor/angular-mocks/angular-mocks.js'
         ]
       }
@@ -436,18 +342,7 @@ module.exports = function ( grunt ) {
         files: [ 
           '<%= app_files.js %>'
         ],
-        tasks: [ 'jshint:src', 'karma:unit:run', 'copy:build_appjs' ]
-      },
-
-      /**
-       * When our CoffeeScript source files change, we want to run lint them and
-       * run our unit tests.
-       */
-      coffeesrc: {
-        files: [ 
-          '<%= app_files.coffee %>'
-        ],
-        tasks: [ 'coffeelint:src', 'coffee:source', 'karma:unit:run', 'copy:build_appjs' ]
+        tasks: [ 'jshint:src', 'karma:continuous', 'copy:build_appjs', 'copy:compile_assets', 'concat' ]
       },
 
       /**
@@ -459,14 +354,6 @@ module.exports = function ( grunt ) {
           'src/assets/**/*'
         ],
         tasks: [ 'copy:build_assets' ]
-      },
-
-      /**
-       * When index.html changes, we need to compile it.
-       */
-      html: {
-        files: [ '<%= app_files.html %>' ],
-        tasks: [ 'index:build' ]
       },
 
       /**
@@ -500,20 +387,6 @@ module.exports = function ( grunt ) {
         options: {
           livereload: false
         }
-      },
-
-      /**
-       * When a CoffeeScript unit test file changes, we only want to lint it and
-       * run the unit tests. We don't want to do any live reloading.
-       */
-      coffeeunit: {
-        files: [
-          '<%= app_files.coffeeunit %>'
-        ],
-        tasks: [ 'coffeelint:test', 'karma:unit:run' ],
-        options: {
-          livereload: false
-        }
       }
     }
   };
@@ -528,7 +401,7 @@ module.exports = function ( grunt ) {
    * before watching for changes.
    */
   grunt.renameTask( 'watch', 'delta' );
-  grunt.registerTask( 'watch', [ 'build', 'karma:unit', 'delta' ] );
+  grunt.registerTask( 'watch', [ 'default', 'delta' ] );
 
   /**
    * The default task is to build and compile.
@@ -539,9 +412,15 @@ module.exports = function ( grunt ) {
    * The `build` task gets your app ready to run for development and testing.
    */
   grunt.registerTask( 'build', [
-    'clean', 'html2js', 'jshint', 'coffeelint', 'coffee','recess:build',
-    'copy:build_assets', 'copy:build_appjs', 'copy:build_vendorjs',
-    'index:build', 'karmaconfig', 'karma:continuous' 
+    'clean',
+    'html2js',
+    'jshint',
+    'recess:build',
+    'copy:build_assets', 
+    'copy:build_appjs',
+    'copy:build_vendorjs',
+    'karmaconfig',
+    'karma:continuous'
   ]);
 
   /**
@@ -549,7 +428,20 @@ module.exports = function ( grunt ) {
    * minifying your code.
    */
   grunt.registerTask( 'compile', [
-    'recess:compile', 'copy:compile_assets', /*'ngmin',*/ 'concat', /*'uglify',*/ 'index:compile'
+    'recess:compile', 
+    'copy:compile_assets',
+    'ngmin',
+    'concat',
+    'uglify'
+  ]);
+
+  /**
+   * Concatenates the code without minifying it (useful for dev)
+   */
+  grunt.registerTask( 'soft-compile', [
+    'recess:compile',
+    'copy:compile_assets',
+    'concat'
   ]);
 
   /**
@@ -569,34 +461,6 @@ module.exports = function ( grunt ) {
       return file.match( /\.css$/ );
     });
   }
-
-  /** 
-   * The index.html template includes the stylesheet and javascript sources
-   * based on dynamic names calculated in this Gruntfile. This task assembles
-   * the list into variables for the template to use and then runs the
-   * compilation.
-   */
-  grunt.registerMultiTask( 'index', 'Process index.html template', function () {
-    var dirRE = new RegExp( '^('+grunt.config('build_dir')+'|'+grunt.config('compile_dir')+')\/', 'g' );
-    var jsFiles = filterForJS( this.filesSrc ).map( function ( file ) {
-      return file.replace( dirRE, '' );
-    });
-    var cssFiles = filterForCSS( this.filesSrc ).map( function ( file ) {
-      return file.replace( dirRE, '' );
-    });
-
-    grunt.file.copy('src/index.html', this.data.dir + '/index.html', { 
-      process: function ( contents, path ) {
-        return grunt.template.process( contents, {
-          data: {
-            scripts: jsFiles,
-            styles: cssFiles,
-            version: grunt.config( 'pkg.version' )
-          }
-        });
-      }
-    });
-  });
 
   /**
    * In order to avoid having to specify manually the files needed for karma to
