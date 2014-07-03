@@ -80,6 +80,10 @@ class SkinTuleap extends SkinTemplate {
         }
 
         $bodyAttrs['class'] .= ' has_sidebar ' . $sidebar_state;
+
+        if ($current_user->getTheme() === 'FlamingParrot') {
+            $bodyAttrs['class'] .= ' ' . $current_user->getPreference('theme_variant');
+        }
     }
 }
 
