@@ -351,5 +351,15 @@ class MediawikiDao extends DataAccessObject {
     public static function getMediawikiDatabaseName(Project $project) {
         return str_replace ('-', '_', "plugin_mediawiki_". $project->getUnixName());
     }
+
+    public function addDatabase($schema, $project_id) {
+        $project_id = $this->da->escapeInt($project_id);
+        $schema     = $this->da->quoteSmart($schema);
+
+        $sql = "INSERT INTO plugin_mediawiki_database (project_id, database_name)
+                VALUES ($project_id, $schema)";
+
+        return $this->update($sql);
+    }
 }
 
