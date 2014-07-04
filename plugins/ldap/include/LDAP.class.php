@@ -280,6 +280,16 @@ class LDAP {
         return false;
     }
 
+    private function getDefaultAttributes() {
+        return array(
+            $this->ldapParams['mail'],
+            $this->ldapParams['cn'],
+            $this->ldapParams['uid'],
+            $this->ldapParams['eduid'],
+            'dn'
+        );
+    }
+
     /**
      * Search a specific Distinguish Name
      *
@@ -289,6 +299,7 @@ class LDAP {
      * @return LDAPResultIterator
      */
     function searchDn($dn, $attributes=array()) {
+        $attributes = count($attributes) > 0 ? $attributes : $this->getDefaultAttributes();
         return $this->search($dn, 'objectClass=*', self::SCOPE_BASE, $attributes);
     }
 
@@ -302,9 +313,8 @@ class LDAP {
      */    
     function searchLogin($name) {
         $filter = $this->ldapParams['uid'].'='.$name;
-        return $this->search($this->ldapParams['dn'], $filter, self::SCOPE_SUBTREE);
+        return $this->search($this->ldapParams['dn'], $filter, self::SCOPE_SUBTREE, $this->getDefaultAttributes());
     }
-
     
     /**
      * Search if given argument correspond to a LDAP Identifier. This is the
@@ -316,9 +326,8 @@ class LDAP {
      */  
     function searchEdUid($name) {
         $filter = $this->ldapParams['eduid'].'='.$name;
-        return $this->search($this->ldapParams['dn'], $filter, self::SCOPE_SUBTREE);
+        return $this->search($this->ldapParams['dn'], $filter, self::SCOPE_SUBTREE, $this->getDefaultAttributes());
     }
-
 
     /**
      * Search if a LDAP user match a filter defined in local conf.
@@ -329,11 +338,7 @@ class LDAP {
      */
     function searchUser($words) {
         $filter = str_replace("%words%", $words, $this->ldapParams['search_user']);
-        $attributes = array($this->getLDAPParam('cn'),
-                            $this->getLDAPParam('eduid'),
-                            $this->getLDAPParam('mail'),
-                            $this->getLDAPParam('uid'));
-        return $this->search($this->ldapParams['dn'], $filter, self::SCOPE_SUBTREE, $attributes);
+        return $this->search($this->ldapParams['dn'], $filter, self::SCOPE_SUBTREE, $this->getDefaultAttributes());
     }
 
     /**
@@ -345,7 +350,7 @@ class LDAP {
      */
     function searchCommonName($name) {
         $filter = $this->ldapParams['cn'].'='.$name;
-        return $this->search($this->ldapParams['dn'], $filter, self::SCOPE_SUBTREE);
+        return $this->search($this->ldapParams['dn'], $filter, self::SCOPE_SUBTREE, $this->getDefaultAttributes());
     }
 
     /**
