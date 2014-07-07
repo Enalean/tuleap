@@ -136,6 +136,7 @@ tuleap.tracker = tuleap.tracker || { };
             codendi.Toggler.init(tuleap_modal);
             tuleap.dateTimePicker.init();
             codendi.tracker.textboxlist.init();
+            tuleap.mention.init('.tuleap-modal input[type="text"].user-mention, .tuleap-modal textarea.user-mention');
         },
 
         beforeSubmit : function() {

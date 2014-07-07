@@ -92,6 +92,11 @@ codendi.RTE = Class.create(
 
             this.rte = CKEDITOR.replace(this.element.id, replace_options);
 
+            this.rte.on('instanceReady', function (evt) {
+                this.document.getBody().$.contentEditable = true;
+                tuleap.mention.init(this.document.getBody().$);
+            });
+
             CKEDITOR.on('instanceCreated', function (evt) {
                 if (evt.editor === this.rte) {
                     this.options.onLoad();

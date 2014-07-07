@@ -88,7 +88,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
         $html  = '';
         $value = $this->getValueFromSubmitOrDefault($submitted_values);
         $hp    = Codendi_HTMLPurifier::instance();
-        $html .= '<input type="text" 
+        $html .= '<input type="text" class="user-mention"
                          name="artifact['. $this->id .']"  
                          '. ($this->isRequired() ? 'required' : '') .' 
                          size="'. $this->getProperty('size') .'"
@@ -111,7 +111,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
             $html .= '<input type="text" readonly="readonly" value="'.$value.'" title="'.$GLOBALS['Language']->getText('plugin_tracker_artifact_masschange', 'cannot_masschange_title').'" />';
         } else {
             $hp = Codendi_HTMLPurifier::instance();
-            $html .= '<input type="text"
+            $html .= '<input type="text" class="user-mention"
                              name="artifact['. $this->id .']"
                              size="'. $this->getProperty('size') .'"
                              '. ($this->getProperty('maxchars') ? 'maxlength="'. $this->getProperty('maxchars') .'"' : '')  .'
@@ -158,7 +158,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
             }
         }
         $hp = Codendi_HTMLPurifier::instance();
-        $html .= '<input type="text" 
+        $html .= '<input type="text" class="user-mention"
                          name="artifact['. $this->id .']"  
                          '. ($this->isRequired() ? 'required' : '') .' 
                          size="'. $this->getProperty('size') .'"

@@ -27,6 +27,7 @@ plugins/maillog
 !src/www/scripts/bootstrap/bootstrap-tour/*.css
 !src/www/scripts/bootstrap/bootstrap-datetimepicker/css/*.css
 !src/www/scripts/jscrollpane/*.css
+!src/www/scripts/vendor/at/css/*.css
 !src/www/svn/repos-web/*.css
 !src/www/themes/common/css/bootstrap-2.3.0.min.css
 !src/www/themes/common/css/bootstrap-responsive-2.3.0.min.css

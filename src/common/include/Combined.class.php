@@ -52,6 +52,8 @@ class Combined {
             '/scripts/jscrollpane/jquery.mousewheel.js',
             '/scripts/jscrollpane/jquery.jscrollpane.min.js',
             '/scripts/select2/select2.min.js',
+            '/scripts/vendor/at/js/caret.min.js',
+            '/scripts/vendor/at/js/atwho.min.js',
             '/scripts/AZHU/storage.js',
             '/scripts/codendi/common.js',
             '/scripts/tuleap/systray.js',
@@ -82,7 +84,8 @@ class Combined {
             '/scripts/tuleap/datetimepicker.js',
             '/scripts/tuleap/svn.js',
             '/scripts/tuleap/account-maintenance.js',
-            '/scripts/tuleap/search.js'
+            '/scripts/tuleap/search.js',
+            '/scripts/tuleap/tuleap-mention.js'
         );
         EventManager::instance()->processEvent(Event::COMBINED_SCRIPTS, array('scripts' => &$arr));
 
