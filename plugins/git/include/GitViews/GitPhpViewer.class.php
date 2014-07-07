@@ -56,6 +56,7 @@ class GitViews_GitPhpViewer {
         $_REQUEST['project_dir']   = $this->repository->getProject()->getUnixName();
         $_REQUEST['git_root_path'] = $this->repository->getGitRootPath();
         $_REQUEST['action']        = 'view';
+        $this->preSanitizeRequestForGitphp();
         if ( empty($_REQUEST['noheader']) ) {
             echo '<div id="gitphp" class="plugin_git_gitphp">';
         }
@@ -66,6 +67,16 @@ class GitViews_GitPhpViewer {
             echo '</div>';
         }
     }
+
+    private function preSanitizeRequestForGitphp() {
+        $hp = Codendi_HTMLPurifier::instance();
+        foreach(array('h', 'hb', 'hp') as $parameter) {
+            if (isset($_REQUEST[$parameter])) {
+                $_GET[$parameter] = $hp->purify($_REQUEST[$parameter]);
+            }
+        }
+    }
+
     /**
      * inverse the source and destination params in the URL to match the Git PHP
      * template
