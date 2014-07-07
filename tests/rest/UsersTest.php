@@ -32,12 +32,13 @@ class UsersTest extends RestBase {
         $this->assertEquals(
             $response->json(),
             array(
-                'id'        => TestDataBuilder::TEST_USER_1_ID,
-                'uri'       => 'users/'.TestDataBuilder::TEST_USER_1_ID,
-                'email'     => TestDataBuilder::TEST_USER_1_EMAIL,
-                'real_name' => TestDataBuilder::TEST_USER_1_REALNAME,
-                'username'  => TestDataBuilder::TEST_USER_1_NAME,
-                'ldap_id'   => TestDataBuilder::TEST_USER_1_LDAPID,
+                'id'         => TestDataBuilder::TEST_USER_1_ID,
+                'uri'        => 'users/'.TestDataBuilder::TEST_USER_1_ID,
+                'email'      => TestDataBuilder::TEST_USER_1_EMAIL,
+                'real_name'  => TestDataBuilder::TEST_USER_1_REALNAME,
+                'username'   => TestDataBuilder::TEST_USER_1_NAME,
+                'ldap_id'    => TestDataBuilder::TEST_USER_1_LDAPID,
+                'avatar_url' => '/themes/common/images/avatar_default.png'
             )
         );
         $this->assertEquals($response->getStatusCode(), 200);

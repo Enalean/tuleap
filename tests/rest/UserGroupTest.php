@@ -100,36 +100,40 @@ class UserGroupTest extends RestBase {
             $response->json(),
             array(
                 array(
-                    'id'        => TestDataBuilder::ADMIN_ID,
-                    'uri'       => 'users/'.TestDataBuilder::ADMIN_ID,
-                    'email'     => TestDataBuilder::ADMIN_EMAIL,
-                    'real_name' => TestDataBuilder::ADMIN_REAL_NAME,
-                    'username'  => TestDataBuilder::ADMIN_USER_NAME,
-                    'ldap_id'   => ''
+                    'id'         => TestDataBuilder::ADMIN_ID,
+                    'uri'        => 'users/'.TestDataBuilder::ADMIN_ID,
+                    'email'      => TestDataBuilder::ADMIN_EMAIL,
+                    'real_name'  => TestDataBuilder::ADMIN_REAL_NAME,
+                    'username'   => TestDataBuilder::ADMIN_USER_NAME,
+                    'ldap_id'    => '',
+                    'avatar_url' => '/themes/common/images/avatar_default.png'
                 ),
                 array(
-                    'id'        => TestDataBuilder::TEST_USER_1_ID,
-                    'uri'       => 'users/'.TestDataBuilder::TEST_USER_1_ID,
-                    'email'     => TestDataBuilder::TEST_USER_1_EMAIL,
-                    'real_name' => TestDataBuilder::TEST_USER_1_REALNAME,
-                    'username'  => TestDataBuilder::TEST_USER_1_NAME,
-                    'ldap_id'   => TestDataBuilder::TEST_USER_1_LDAPID
+                    'id'         => TestDataBuilder::TEST_USER_1_ID,
+                    'uri'        => 'users/'.TestDataBuilder::TEST_USER_1_ID,
+                    'email'      => TestDataBuilder::TEST_USER_1_EMAIL,
+                    'real_name'  => TestDataBuilder::TEST_USER_1_REALNAME,
+                    'username'   => TestDataBuilder::TEST_USER_1_NAME,
+                    'ldap_id'    => TestDataBuilder::TEST_USER_1_LDAPID,
+                    'avatar_url' => '/themes/common/images/avatar_default.png'
                 ),
                 array(
-                    'id'        => TestDataBuilder::TEST_USER_2_ID,
-                    'uri'       => 'users/'.TestDataBuilder::TEST_USER_2_ID,
-                    'email'     => '',
-                    'real_name' => '',
-                    'username'  => TestDataBuilder::TEST_USER_2_NAME,
-                    'ldap_id'   => ''
+                    'id'         => TestDataBuilder::TEST_USER_2_ID,
+                    'uri'        => 'users/'.TestDataBuilder::TEST_USER_2_ID,
+                    'email'      => '',
+                    'real_name'  => '',
+                    'username'   => TestDataBuilder::TEST_USER_2_NAME,
+                    'ldap_id'    => '',
+                    'avatar_url' => '/themes/common/images/avatar_default.png'
                 ),
                 array(
-                    'id'        => TestDataBuilder::TEST_USER_3_ID,
-                    'uri'       => 'users/'.TestDataBuilder::TEST_USER_3_ID,
-                    'email'     => '',
-                    'real_name' => '',
-                    'username'  => TestDataBuilder::TEST_USER_3_NAME,
-                    'ldap_id'   => ''
+                    'id'         => TestDataBuilder::TEST_USER_3_ID,
+                    'uri'        => 'users/'.TestDataBuilder::TEST_USER_3_ID,
+                    'email'      => '',
+                    'real_name'  => '',
+                    'username'   => TestDataBuilder::TEST_USER_3_NAME,
+                    'ldap_id'    => '',
+                    'avatar_url' => '/themes/common/images/avatar_default.png'
                 )
             )
         );
@@ -143,12 +147,13 @@ class UserGroupTest extends RestBase {
             $response->json(),
             array(
                 array(
-                    'id'        => TestDataBuilder::TEST_USER_1_ID,
-                    'uri'       => 'users/'.TestDataBuilder::TEST_USER_1_ID,
-                    'email'     => TestDataBuilder::TEST_USER_1_EMAIL,
-                    'real_name' => TestDataBuilder::TEST_USER_1_REALNAME,
-                    'username'  => TestDataBuilder::TEST_USER_1_NAME,
-                    'ldap_id'   => TestDataBuilder::TEST_USER_1_LDAPID,
+                    'id'         => TestDataBuilder::TEST_USER_1_ID,
+                    'uri'        => 'users/'.TestDataBuilder::TEST_USER_1_ID,
+                    'email'      => TestDataBuilder::TEST_USER_1_EMAIL,
+                    'real_name'  => TestDataBuilder::TEST_USER_1_REALNAME,
+                    'username'   => TestDataBuilder::TEST_USER_1_NAME,
+                    'ldap_id'    => TestDataBuilder::TEST_USER_1_LDAPID,
+                    'avatar_url' => '/themes/common/images/avatar_default.png'
                 )
             )
         );
@@ -162,20 +167,22 @@ class UserGroupTest extends RestBase {
             $response->json(),
             array(
                 array(
-                    'id'        => TestDataBuilder::TEST_USER_1_ID,
-                    'uri'       => 'users/'.TestDataBuilder::TEST_USER_1_ID,
-                    'email'     => TestDataBuilder::TEST_USER_1_EMAIL,
-                    'real_name' => TestDataBuilder::TEST_USER_1_REALNAME,
-                    'username'  => TestDataBuilder::TEST_USER_1_NAME,
-                    'ldap_id'   => TestDataBuilder::TEST_USER_1_LDAPID
+                    'id'         => TestDataBuilder::TEST_USER_1_ID,
+                    'uri'        => 'users/'.TestDataBuilder::TEST_USER_1_ID,
+                    'email'      => TestDataBuilder::TEST_USER_1_EMAIL,
+                    'real_name'  => TestDataBuilder::TEST_USER_1_REALNAME,
+                    'username'   => TestDataBuilder::TEST_USER_1_NAME,
+                    'ldap_id'    => TestDataBuilder::TEST_USER_1_LDAPID,
+                    'avatar_url' => '/themes/common/images/avatar_default.png'
                 ),
                 array(
-                    'id'        => TestDataBuilder::TEST_USER_2_ID,
-                    'uri'       => 'users/'.TestDataBuilder::TEST_USER_2_ID,
-                    'email'     => '',
-                    'real_name' => '',
-                    'username'  => TestDataBuilder::TEST_USER_2_NAME,
-                    'ldap_id'   => ''
+                    'id'         => TestDataBuilder::TEST_USER_2_ID,
+                    'uri'        => 'users/'.TestDataBuilder::TEST_USER_2_ID,
+                    'email'      => '',
+                    'real_name'  => '',
+                    'username'   => TestDataBuilder::TEST_USER_2_NAME,
+                    'ldap_id'    => '',
+                    'avatar_url' => '/themes/common/images/avatar_default.png'
                 )
             )
         );
