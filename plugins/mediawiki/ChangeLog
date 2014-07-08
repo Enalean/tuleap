@@ -1,3 +1,6 @@
+Version 0.35 - Tuleap 7.3
+    * bugtasks #7165: proper synch of databases upon mw creation and deletion
+
 Version 0.34 - Tuleap 7.3
     * bugtasks #7160: forge upgrade for link table on mw databases
 
