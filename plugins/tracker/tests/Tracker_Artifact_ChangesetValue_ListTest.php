@@ -80,7 +80,7 @@ class Tracker_Artifact_ChangesetValue_ListTest extends TuleapTestCase {
         $GLOBALS['Language']->setReturnValue('getText', 'set to', array('plugin_tracker_artifact','set_to'));
         $this->assertEqual($list_1->diff($list_2), ' set to Sandra, Manon');
     }
-    
+
     function testDiff_changedfrom() {
         $bind_value_1 = new MockTracker_FormElement_Field_List_BindValue();
         $bind_value_1->setReturnValue('__toString', 'Sandra');
@@ -95,6 +95,22 @@ class Tracker_Artifact_ChangesetValue_ListTest extends TuleapTestCase {
         $GLOBALS['Language']->setReturnValue('getText', 'to', array('plugin_tracker_artifact','to'));
         $this->assertEqual($list_1->diff($list_2), ' changed from Manon to Sandra');
         $this->assertEqual($list_2->diff($list_1), ' changed from Sandra to Manon');
+    }
+
+    function testDiff_changedfromWithPurification() {
+        $bind_value_1 = new MockTracker_FormElement_Field_List_BindValue();
+        $bind_value_1->setReturnValue('__toString', 'Sandra <b>');
+        $bind_value_1->setReturnValue('getLabel', 'Sandra <b>');
+        $bind_value_2 = new MockTracker_FormElement_Field_List_BindValue();
+        $bind_value_2->setReturnValue('__toString', 'Manon <i>');
+        $bind_value_2->setReturnValue('getLabel', 'Manon <i>');
+        $field  = new $this->field_class();
+        $list_1 = new $this->changesetvalue_class(111, $field, false, array($bind_value_1));
+        $list_2 = new $this->changesetvalue_class(111, $field, false, array($bind_value_2));
+        $GLOBALS['Language']->setReturnValue('getText', 'changed from', array('plugin_tracker_artifact','changed_from'));
+        $GLOBALS['Language']->setReturnValue('getText', 'to', array('plugin_tracker_artifact','to'));
+        $this->assertEqual($list_1->diff($list_2), ' changed from Manon &lt;i&gt; to Sandra &lt;b&gt;');
+        $this->assertEqual($list_2->diff($list_1), ' changed from Sandra &lt;b&gt; to Manon &lt;i&gt;');
     }
     
     function testDiff_added() {

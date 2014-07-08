@@ -246,41 +246,75 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
     public function diff($changeset_value, $format = 'html', PFUser $user = null) {
         $previous = $changeset_value->getListValues();
         $next     = $this->getListValues();
-        $changes = false;
-        if ($previous != $next) {
-            $removed_elements = array_diff($previous, $next);
-            $removed_arr = array();
-            foreach ($removed_elements as $removed_element) {
-                $removed_arr[] = $removed_element->getLabel();
-            }
-            $removed = implode(', ', $removed_arr);
-            $added_elements = array_diff($next, $previous);
-            $added_arr = array();
-            foreach ($added_elements as $added_element) {
-                $added_arr[] = $added_element->getLabel();
-            }
-            $added   = implode(', ', $added_arr);
-            if (empty($next)) {
-                $changes = ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','cleared');
-            } else if (empty($previous)) {
-                $changes = ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' '.$added;
-            } else if (count($previous) == 1 && count($next) == 1) {
-                $changes = ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','changed_from'). ' '.$removed .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','to').' '.$added;
-            } else {
-                if ($removed) {
-                    $changes = $removed .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','removed');
-                }
-                if ($added) {
-                    if ($changes) {
-                        $changes .= PHP_EOL;
-                    }
-                    $changes .= $added .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','added');
-                }
-            }
+
+        if ($previous == $next) {
+            return false;
         }
+
+        $removed = $this->getRemoved($previous, $next, $format);
+        $added   = $this->getAdded($previous, $next, $format);
+
+        return $this->getChangesSentence($previous, $next, $added, $removed);
+    }
+
+    private function getAdded(array $previous, array $next, $format) {
+        $added_elements = array_diff($next, $previous);
+        $added_arr = array();
+        foreach ($added_elements as $added_element) {
+            /* @var $added_element Tracker_FormElement_Field_List_Value */
+            $added_arr[] = $added_element->getLabel();
+        }
+
+        return $this->format(implode(', ', $added_arr), $format);
+    }
+
+    private function getRemoved(array $previous, array $next, $format) {
+        $removed_elements = array_diff($previous, $next);
+        $removed_arr = array();
+        foreach ($removed_elements as $removed_element) {
+            /* @var $removed_element Tracker_FormElement_Field_List_Value */
+            $removed_arr[] = $removed_element->getLabel();
+        }
+
+        return $this->format(implode(', ', $removed_arr), $format);
+    }
+
+    private function format($value, $format) {
+        if ($format === 'text') {
+            return $value;
+        }
+
+        return Codendi_HTMLPurifier::instance()->purify($value);
+    }
+
+    private function getChangesSentence(array $previous, array $next, $added, $removed) {
+        if (empty($next)) {
+            return ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','cleared');
+        }
+
+        if (empty($previous)) {
+            return ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' '.$added;
+        }
+
+        if (count($previous) == 1 && count($next) == 1) {
+            return ' '. $GLOBALS['Language']->getText('plugin_tracker_artifact','changed_from'). ' '.$removed
+                . ' '. $GLOBALS['Language']->getText('plugin_tracker_artifact','to').' '.$added;
+        }
+
+        $changes = '';
+        if ($removed) {
+            $changes = $removed .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','removed');
+        }
+        if ($added) {
+            if ($changes) {
+                $changes .= PHP_EOL;
+            }
+            $changes .= $added .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','added');
+        }
+
         return $changes;
     }
-    
+
     public function nodiff() {
         $next = $this->getListValues();
         $added_arr = array();
