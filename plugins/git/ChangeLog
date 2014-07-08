@@ -1,3 +1,6 @@
+Version 3.91 - Tuleap 7.3
+    * request #7183: Some parameters are not properly sanitized
+
 Version 3.90 - Tuleap 7.3
     * Update git http configuration
 

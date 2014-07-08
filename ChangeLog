@@ -4,12 +4,13 @@ Version 7.3 (Not Released Yet)
 	* story #6003 be able to change the Experimental theme color
 
         == Plugins ==
-	* git: 3.90
+	* git: 3.91
 	* tracker: 5.420
 	* ldap: 3.50
 	* fulltextsearch: 0.56
 	* docman: 2.26.39
 	* mediawiki: 0.33
+	* forumml: 2.6.20
 
         == Themes ==
 	* FlamingParrot: 1.30

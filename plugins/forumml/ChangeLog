@@ -1,3 +1,6 @@
+Version 2.6.20 - Tuleap 7.3
+    * request #7183: Some parameters are not properly sanitized
+
 Version 2.6.19 - Tuleap 7.2
     * tasks #7069: cleaning-up search use
 
