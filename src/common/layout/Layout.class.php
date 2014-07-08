@@ -2103,7 +2103,9 @@ class Layout extends Response {
                             'name'        => $name,
                             'label'       => $label,
                             'enabled'     => $enabled,
-                            'description' => $hp->purify($service_data['description']));
+                            'description' => $hp->purify($service_data['description']),
+                            'id'          => 'sidebar-'.$short_name
+                    );
         }
         return $tabs;
     }

@@ -1,11 +1,11 @@
 <li class="dropdown projects-nav {{ nav_project_class }}">
     {{# user_is_logged_in }}
         {{^ nav_project_anonymous }}
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <a id="navbar-project" href="#" class="dropdown-toggle" data-toggle="dropdown">
                 {{ menu_projects_text }}
                 <b class="caret"></b>
             </a>
-            <ul class="dropdown-menu">
+            <ul id="dropdown-project" class="dropdown-menu">
                 {{# is_trove_cat_enabled }}
                     <li>
                         <a href="/softwaremap/">{{ browse_projects_text }}</a>

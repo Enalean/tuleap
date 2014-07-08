@@ -3,7 +3,7 @@
 
     {{# user_is_logged_in }}
         <li class="dropdown user-menu {{ nav_user_class }}">
-            <a href="#" class="dropdown-toggle username" data-toggle="dropdown">
+            <a id="navbar-user-navigation" href="#" class="dropdown-toggle username" data-toggle="dropdown">
                 {{# has_user_avatar }}
                     <img class="user-avatar" src="{{user_avatar}}" />
                 {{/ has_user_avatar }}
@@ -15,7 +15,7 @@
     {{/ user_is_logged_in }}
     {{^ user_is_logged_in }}
         <li>
-            <a href="/account/login.php">
+            <a id="navbar-user-login" href="/account/login.php">
                 {{ include_menu_login_text }}
             </a>
         </li>
