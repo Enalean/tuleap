@@ -1,0 +1,3 @@
+RewriteEngine On
+
+RewriteRule ^wiki/([-a-zA-Z0-9_]*)/images/(.*) /plugins/mediawiki/images.php
