@@ -19,6 +19,7 @@
  */
 
 require_once('common/date/DateHelper.class.php');
+require_once 'common/encoding/SupportedXmlCharEncoding.class.php';
 
 class Tracker_Artifact_Changeset_Comment {
 
@@ -251,7 +252,8 @@ class Tracker_Artifact_Changeset_Comment {
 
     public function exportToSOAP(array &$soap) {
         if ($this->body) {
-            $soap['body'] = $this->body;
+            $body = Encoding_SupportedXmlCharEncoding::getXMLCompatibleString($this->body);
+            $soap['body'] = $body;
             return $soap;
         }
     }
