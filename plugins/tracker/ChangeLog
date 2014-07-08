@@ -1,3 +1,6 @@
+Version 5.420 - Tuleap 7.3
+    * Fix request #7118: List values are not properly sanitized in changesets
+
 Version 5.419 - Tuleap 7.3
     * Fix request #7116: Can't reply by mail to a tracker
 
