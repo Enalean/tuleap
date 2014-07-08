@@ -341,3 +341,13 @@ if (is_file("$project_dir/ProjectSettings.php")) {
 }
 
 }
+
+// ParserFunctions Extension inclusion
+require_once( "$IP/extensions/ParserFunctions/ParserFunctions.php" );
+$wgPFEnableStringFunctions = true;
+
+// SyntaxHighlight_GeSHi Extension inclusion
+require_once "$IP/extensions/SyntaxHighlight_GeSHi/SyntaxHighlight_GeSHi.php";
+
+// PdfBook Extension inclusion
+require_once("$IP/extensions/PdfBook/PdfBook.php");
