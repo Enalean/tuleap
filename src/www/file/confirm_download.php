@@ -96,6 +96,8 @@ if (isset($GLOBALS['sys_exchange_policy_url'])) {
     $exchangePolicyUrl = "/plugins/docman/?group_id=1";
 }
 
+$hp       = Codendi_HTMLPurifier::instance();
+$filename = $hp->purify($filename);
 echo $Language->getText('file_confirm_download', 'download_explain', array($GLOBALS['sys_org_name'], $GLOBALS['sys_email_contact'], $exchangePolicyUrl));
 ?><br>
 

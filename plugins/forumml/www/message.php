@@ -168,9 +168,14 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
         }
         echo "</td>";
 
+        $hp = Codendi_HTMLPurifier::instance();
+        $purified_search = "";
+        if ($request->exist('search')) {
+            $purified_search = $hp->purify($request->get('search'));
+        }
         echo "
 			<td align='right'>
-				(<a href='/plugins/forumml/message.php?group_id=".$group_id."&list=".$list_id."&topic=".$topic."&offset=".$offset."&search=".($request->exist('search') ? $request->get('search') : "")."&pv=1'>
+				(<a href='/plugins/forumml/message.php?group_id=".$group_id."&list=".$list_id."&topic=".$topic."&offset=".$offset."&search=".$purified_search."&pv=1'>
 					<img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$GLOBALS['Language']->getText('global','printer_version')."
 				</a>)
 			</td>
@@ -211,7 +216,7 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
 						' AND mh.value LIKE "%s"',
 						FORUMML_SUBJECT,db_ei($list_id),db_es($pattern));
 		$result = db_query($sql);
-		echo "<H3>".$GLOBALS['Language']->getText('plugin_forumml','search_result',$request->get('search'))." (".db_numrows($result)." ".$GLOBALS["Language"]->getText('plugin_forumml','found').")</H3>";
+		echo "<H3>".$GLOBALS['Language']->getText('plugin_forumml','search_result',$purified_search)." (".db_numrows($result)." ".$GLOBALS["Language"]->getText('plugin_forumml','found').")</H3>";
 		if (db_numrows($result) > 0) {
 			plugin_forumml_show_search_results($p,$result,$group_id,$list_id);
 		}
