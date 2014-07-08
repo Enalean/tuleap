@@ -39,6 +39,9 @@ class MediaWikiInstantiater {
     /** @var project */
     private $project;
 
+    /** @var int */
+    private $project_id;
+
     /**
      * @param string $project
      */
@@ -47,6 +50,7 @@ class MediaWikiInstantiater {
         $this->project          = $project;
         $this->project_name     = $project->getUnixName();
         $this->project_name_dir = forge_get_config('projects_path', 'mediawiki') . '/' . $this->project_name;
+        $this->project_id       = $project->getID();
     }
 
     /**
@@ -89,6 +93,7 @@ class MediaWikiInstantiater {
         $schema = strtr('plugin_mediawiki_' . $this->project_name, '-', '_');
         $src_path = forge_get_config('src_path', 'mediawiki');
         $table_file = $src_path . '/maintenance/tables.sql';
+        $main_db = Config::get('sys_dbname');
 
         db_query('START TRANSACTION;');
 
@@ -100,7 +105,7 @@ class MediaWikiInstantiater {
             }
 
             $this->logger->info('Updating mediawiki database.');
-            if (!file_exists($table_file)) {
+            if (! file_exists($table_file)) {
                 throw new Exception('Error: Couldn\'t find Mediawiki Database Creation File ' . $table_file);
             }
 
@@ -115,15 +120,22 @@ class MediaWikiInstantiater {
             if (!$add_tables) {
                 throw new Exception('Error: Mediawiki Database Creation Failed: ' . db_error());
             }
+
+            $this->logger->info('Updating list of mediawiki databases (' . $schema . ')');
+            db_query('USE '.$main_db);
+            $dao = new MediawikiDao();
+            $update = $dao->addDatabase($schema, $this->project_id);
+            if (! $update) {
+                throw new Exception('Error: Mediawiki Database list update failed: ' . mysql_error());
+            }
         } catch (Exception $e) {
              db_query('ROLLBACK;');
             $this->logger->error($e->getMessage());
         }
 
         db_query('COMMIT;');
-        
-        $this->logger->info('Using schema: codendi');
-        $main_db = Config::get('sys_dbname');
+
+        $this->logger->info('Using schema: ' . $main_db);
         db_query('USE '.$main_db);
     }
 

@@ -124,6 +124,16 @@ while ( $row = db_fetch_array($project_res) ) {
 			exit;
 		}
 
+                $dao = new MediawikiDao();
+                $update = $dao->addDatabase($schema, $this->project_id);
+                if (! $update) {
+                    $err = 'Error: Mediawiki Database list update failed: (' .$schema . ':'. $this->project_id.')'. mysql_error();
+                    cron_debug($err);
+                    cron_entry(23,$err);
+                    db_rollback();
+                    exit;
+                }
+
 		if (!db_commit()) {
 			$err =  "Error: DB Commit Failed: " .
 				db_error();
