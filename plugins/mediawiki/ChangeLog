@@ -1,3 +1,6 @@
+Version 0.34 - Tuleap 7.3
+    * bugtasks #7160: forge upgrade for link table on mw databases
+
 Version 0.33 - Tuleap 7.3
     * Fix request #7163 mediawiki page broken on new Tuleap themes
 
