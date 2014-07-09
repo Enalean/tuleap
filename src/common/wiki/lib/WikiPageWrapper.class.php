@@ -115,14 +115,33 @@ class WikiPageWrapper {
                                             array($projectPageName));
     }
 
+    $page_created = $dbi->getPage($pagename);
+    if ($this->wikiPageDoesNotExistInCreatedAndEmptyPages($page_created, $pagename)) {
+        $event_manager = EventManager::instance();
+        $user_manager  = UserManager::instance();
+        $user          = $user_manager->getCurrentUser();
+        $event_manager->processEvent(
+            "wiki_page_created",
+            array(
+                'group_id'         => $this->gid,
+                'wiki_page'        => $pagename,
+                'user'             => $user,
+                'version'          => $version
+            )
+        );
+    }
+
     $text .= "\n* [$pagename]";
     $meta['summary'] =  $GLOBALS['Language']->getText('wiki_lib_wikipagewrap',
                                                       'page_added',
                                                       array($pagename));
-      $meta['author'] = user_getname();
+    $meta['author'] = user_getname();
     $pagehandle->save($text, $version + 1, $meta);
   }
 
+  private function wikiPageDoesNotExistInCreatedAndEmptyPages($page_created, $pagename) {
+      return ! $page_created->exists() && ! in_array($pagename, $this->getProjectEmptyLinks());
+  }
 
     function addUploadPage() {
         // Dirty hack to 'give' a WikiRequest object to phpwiki
