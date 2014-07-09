@@ -37,6 +37,11 @@ if (user_isloggedin()) {
 
     $lm = new WidgetLayoutManager();
     $lm->displayLayout(user_getid(), WidgetLayoutManager::OWNER_TYPE_USER);
+
+    if (! $current_user->getPreference(Tuleap_Tour_WelcomeTour::TOUR_NAME)) {
+        $GLOBALS['Response']->addTour(new Tuleap_Tour_WelcomeTour($current_user));
+    }
+
     ?>
     </span>
 <?php

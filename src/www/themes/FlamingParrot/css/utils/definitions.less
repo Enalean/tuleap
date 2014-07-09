@@ -54,20 +54,24 @@ input[type="file"] {
     opacity: 0.3;
 }
 .popover[class*="tour"] {
-    background: #0e73c2;
+    @import 'variables-blue.less';
+    background: @main;
     color: @white;
     padding: 0;
     border: none;
     font-size: 0.85em;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 
-    &.top .arrow:after    { border-top-color: #0e73c2; }
-    &.right .arrow:after  { border-right-color: #0e73c2; }
-    &.bottom .arrow:after { border-bottom-color: darken(#0e73c2, 5%); }
-    &.left .arrow:after   { border-left-color: #0e73c2; }
+    max-width: 370px;
+    min-width: 370px;
+
+    &.top .arrow:after    { border-top-color: @main; }
+    &.right .arrow:after  { border-right-color: @main; }
+    &.bottom .arrow:after { border-bottom-color: @dark-main; }
+    &.left .arrow:after   { border-left-color: @main; }
 
     .popover-title {
-        background: darken(#0e73c2, 5%);
+        background: @dark-main;
         color: @white;
         border: none;
         font-size: 1.1em;

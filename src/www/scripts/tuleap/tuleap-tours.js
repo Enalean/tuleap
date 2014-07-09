@@ -20,10 +20,38 @@
  */
 (function ($) {
     $(document).ready(function () {
-        for (var t in tuleap.tours) {
-            var tour = new Tour(tuleap.tours[t]);
+        if (typeof tuleap.tours === 'undefined') {
+            return;
+        }
+
+        tuleap.tours.forEach(function(tour_options) {
+            var tour;
+
+            tour_options['onEnd'] = function (tour) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/tour/end-tour.php',
+                    data: {
+                        tour_name:    tour_options.name,
+                        current_step: tour.getCurrentStep()
+                    }
+                });
+            };
+
+            tour_options['onShown'] = function (tour) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/tour/step-shown.php',
+                    data: {
+                        tour_name:    tour_options.name,
+                        current_step: tour.getCurrentStep()
+                    }
+                });
+            };
+
+            tour = new Tour(tour_options);
             tour.init();
             tour.start();
-        }
+        });
     });
 })(jQuery);

@@ -113,3 +113,24 @@ my_redirect	default_txt	Vous êtes sur la page de redirection de Codendi. Vous t
 #
 my_monitored_forum	title	Arrêt de la surveillance d'un forum.
 my_monitored_forum	stop_monitoring	La surveillance du forum est arrêtée. Vous ne recevrez plus de courrier électronique en provenance de ce forum.
+
+my_tour	welcome_title	Bienvenue sur Tuleap !
+my_tour	welcome	Ravi de te rencontrer $1 ! Il s'agit de ta première connexion sur Tuleap. Nous allons te montrer comment utiliser l'outil.
+
+my_tour	my_personnal_page_title	Ma page personnelle
+my_tour	my_personnal_page	Il s'agit de ta page personnelle (là où tu te trouves). Tu pourras trouver ici un ensemble d'informations te concernant .
+
+my_tour	projects_title	Mes projets
+my_tour	projects	Il s'agit de l'onglet où tu peux créer ton premier projet. Tu y trouveras également la liste des projets auxquels tu peux accéder.
+
+my_tour	help_title	Aide
+my_tour	help	Tu pourras trouver à cet endroit différentes aides telles que les adresses de contact ou la documentation.
+
+my_tour	search_title	Recherche globale
+my_tour	search	Il s'agit de la recherche globale de Tuleap. Tu pourras rechercher des données au travers différents projets et services.
+
+my_tour	user_menu_title	Menu utilisateur
+my_tour	user_menu	Tu trouveras à cet endroit les informations de ton compte où tu pourras changer ton avatar, ton thème ou encore ajouter tes clefs SSH.
+
+my_tour	end_tour_title	Tu es prêt à utiliser Tuleap
+my_tour	end_tour	C'est la fin de cette présentation de bienvenue. Tu peux dès à présent commencer à utiliser Tuleap.
