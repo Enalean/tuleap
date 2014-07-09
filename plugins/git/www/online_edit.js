@@ -51,8 +51,12 @@
 
     function getParameterByName(name) {
         var regex = new RegExp(name + "=([^&#=]*)");
+        var name_value_array = regex.exec(window.location.search);
+        if(name_value_array !== null) {
+            return decodeURIComponent(name_value_array[1]);
+        }
 
-        return decodeURIComponent(regex.exec(window.location.search)[1]);
+        return false;
     }
 
     function createEditButtonAndCommitForm() {
