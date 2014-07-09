@@ -566,31 +566,24 @@ class Request_SessionVars {
     }
     
     function get($key) {
-        $vars = &$GLOBALS['HTTP_SESSION_VARS'];
-        if (isset($vars[$key]))
-            return $vars[$key];
+        if (isset($_SESSION[$key]))
+            return $_SESSION[$key];
         return false;
     }
     
     function set($key, $val) {
-        $vars = &$GLOBALS['HTTP_SESSION_VARS'];
         if (!function_usable('get_cfg_var') or get_cfg_var('register_globals')) {
             // This is funky but necessary, at least in some PHP's
             $GLOBALS[$key] = $val;
         }
-        $vars[$key] = $val;
-        if (isset($_SESSION))
-            $_SESSION[$key] = $val;
-        session_register($key);
+        $_SESSION[$key] = $val;
     }
     
     function delete($key) {
-        $vars = &$GLOBALS['HTTP_SESSION_VARS'];
         if (!function_usable('ini_get') or ini_get('register_globals'))
             unset($GLOBALS[$key]);
         if (DEBUG) trigger_error("delete session $key", E_USER_WARNING);
-        unset($vars[$key]);
-        session_unregister($key);
+        unset($_SESSION[$key]);
     }
 }
 
