@@ -237,19 +237,10 @@ class ArtifactFilesTest extends RestBase {
     /**
      * @depends testPostArtifactFile
      */
-    public function testOptionsArtifactId_isForbiddenForADifferentUser($file_id) {
+    public function testOptionsArtifactId_isAllowedForADifferentUser($file_id) {
         $request = $this->client->options('artifact_temporary_files/'.$file_id);
-
-        $unauthorised = false;
-        try {
-            $response = $this->getResponseForDifferentUser($request);
-            var_dump($response->getBody(true));
-        } catch (Exception $e) {
-            $unauthorised = true;
-            $this->assertEquals($e->getResponse()->getStatusCode(), 401);
-        }
-
-        $this->assertTrue($unauthorised);
+        $response = $this->getResponseForDifferentUser($request);
+        $this->assertEquals($response->getStatusCode(), 200);
     }
 
     public function testAttachFileToPostArtifact() {

@@ -37,13 +37,6 @@ class MilestoneBurndownTest extends RestBase {
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
-    public function testOPTIONSBurndownGives404() {
-        $this->getResponse($this->client->options('milestones/'.TestDataBuilder::RELEASE_ARTIFACT_ID.'/burndown'));
-    }
-
     public function testGetBurndown() {
         $response = $this->getResponse($this->client->get('milestones/'.TestDataBuilder::SPRINT_ARTIFACT_ID.'/burndown'));
         $burndown = $response->json();

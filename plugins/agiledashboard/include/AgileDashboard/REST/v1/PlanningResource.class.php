@@ -80,15 +80,14 @@ class PlanningResource {
     /**
      * @url OPTIONS
      */
-    protected function options() {
+    public function options() {
         $this->sendAllowHeaders();
     }
 
     /**
      * @url OPTIONS {id}/milestones
      */
-    protected function optionsForMilestones($id) {
-        $this->getPlanning($id);
+    public function optionsForMilestones($id) {
         $this->sendAllowHeadersForMilestones();
     }
 

@@ -32,13 +32,6 @@ class MilestonesCardwallTest extends RestBase {
         );
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
-    public function testOPTIONSCardwallOnReleaseGives404() {
-        $this->getResponse($this->client->options('milestones/'.TestDataBuilder::RELEASE_ARTIFACT_ID.'/cardwall'));
-    }
-
     public function testOPTIONSCardwallOnSprintGivesOPTIONSandGET() {
         $response = $this->getResponse($this->client->options('milestones/'.TestDataBuilder::SPRINT_ARTIFACT_ID.'/cardwall'));
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());

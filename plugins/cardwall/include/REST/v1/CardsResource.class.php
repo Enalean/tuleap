@@ -88,9 +88,7 @@ class CardsResource {
      * @throws 403
      * @throws 404
      */
-    protected function optionsId($id) {
-        $current_user = $this->user_manager->getCurrentUser();
-        $this->getSingleCard($current_user, $id);
+    public function optionsId($id) {
         Header::allowOptionsPut();
     }
 

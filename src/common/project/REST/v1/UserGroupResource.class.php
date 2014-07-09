@@ -90,10 +90,6 @@ class UserGroupResource {
      * @throws 404
      */
     public function optionsId($id) {
-        $this->checkIdIsWellFormed($id);
-        list($project_id, $ugroup_id) = explode('_', $id);
-
-        $this->userCanSeeUserGroups($project_id);
         $this->sendAllowHeadersForUserGroup();
     }
 
@@ -146,20 +142,8 @@ class UserGroupResource {
      * @url OPTIONS {id}/users
      *
      * @param int $id Id of the ugroup (format: projectId_ugroupId)
-     *
-     * @access protected
-     *
-     * @throws 400
-     * @throws 403
-     * @throws 404
      */
     public function optionsUsers($id) {
-        $this->checkIdIsWellFormed($id);
-        list($project_id, $ugroup_id) = explode('_', $id);
-
-        $this->checkUserGroupIdExists($ugroup_id);
-        $this->userCanSeeUserGroups($project_id);
-
         $this->sendAllowHeadersForUserGroup();
     }
 

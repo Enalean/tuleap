@@ -1,7 +1,7 @@
 <IfModule mod_headers.c>
-    Header set Access-Control-Allow-Origin *
+    Header set Access-Control-Allow-Origin "*"
     Header set Access-Control-Allow-Credentials true
-    Header set Access-Control-Allow-Headers "Accept, Accept-Charset, Authorization, Content-Type, Origin"
+    Header set Access-Control-Allow-Headers "Accept, Accept-Charset, Authorization, Content-Type, Origin, X-Auth-UserId, X-Auth-Token"
 </IfModule>
 <IfModule mod_rewrite.c>
     RewriteEngine On

@@ -47,10 +47,6 @@ class ArtifactsChangesetsTest extends RestBase {
     public function testOptionsArtifactId() {
         $response = $this->getResponse($this->client->options($this->artifact_resource['uri'].'/changesets'));
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
-
-        $this->assertTrue($response->hasHeader('X-PAGINATION-LIMIT'));
-        $this->assertTrue($response->hasHeader('X-PAGINATION-OFFSET'));
-        $this->assertTrue($response->hasHeader('X-PAGINATION-LIMIT-MAX'));
     }
 
     /**

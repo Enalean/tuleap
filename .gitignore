@@ -37,3 +37,6 @@ plugins/maillog
 !tools/plugins/plugincreationwizard/*.css
 vendor/*
 composer.*
+/.idea/
+/.config/
+npm-debug.log

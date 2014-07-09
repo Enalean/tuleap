@@ -62,10 +62,7 @@ class ProjectTrackersResource {
     }
 
     public function options(PFUser $user, Project $project, $limit, $offset) {
-        $all_trackers = TrackerFactory::instance()->getTrackersByGroupIdUserCanView($project->getId(), $user);
-
         $this->sendAllowHeaders();
-        $this->sendPaginationHeaders($limit, $offset, count($all_trackers));
     }
 
     private function sendPaginationHeaders($limit, $offset, $size) {

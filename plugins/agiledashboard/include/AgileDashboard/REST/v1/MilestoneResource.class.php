@@ -235,9 +235,8 @@ class MilestoneResource {
      * @throws 403
      * @throws 404
      */
-    protected function optionsId($id) {
-        $milestone = $this->getMilestoneById($this->getCurrentUser(), $id);
-        $this->sendAllowHeadersForMilestone($milestone);
+    public function optionsId($id) {
+        Header::allowOptionsGet();
     }
 
     /**
@@ -248,8 +247,7 @@ class MilestoneResource {
      * @throws 403
      * @throws 404
      */
-    protected function optionsSubmilestones($id) {
-        $this->getMilestoneById($this->getCurrentUser(), $id);
+    public function optionsSubmilestones($id) {
         $this->sendAllowHeaderForSubmilestones();
     }
 
@@ -348,8 +346,7 @@ class MilestoneResource {
      * @throws 403
      * @throws 404
      */
-    protected function optionsContent($id) {
-        $this->getMilestoneById($this->getCurrentUser(), $id);
+    public function optionsContent($id) {
         $this->sendAllowHeaderForContent();
     }
 
@@ -398,8 +395,7 @@ class MilestoneResource {
      * @throws 403
      * @throws 404
      */
-    protected function optionsBacklog($id) {
-        $this->getMilestoneById($this->getCurrentUser(), $id);
+    public function optionsBacklog($id) {
         $this->sendAllowHeaderForBacklog();
     }
 
@@ -488,14 +484,8 @@ class MilestoneResource {
      * @throws 403
      * @throws 404
      */
-    protected function optionsCardwall($id) {
-        $this->event_manager->processEvent(
-            AGILEDASHBOARD_EVENT_REST_OPTIONS_CARDWALL,
-            array(
-                'version'   => 'v1',
-                'milestone' => $this->getMilestoneById($this->getCurrentUser(), $id)
-            )
-        );
+    public function optionsCardwall($id) {
+        $this->sendAllowHeadersForCardwall();
     }
 
     /**
@@ -533,15 +523,8 @@ class MilestoneResource {
      *
      * @return \Tuleap\Tracker\REST\Artifact\BurndownRepresentation
      */
-    protected function optionsBurndown($id) {
-        $this->event_manager->processEvent(
-            AGILEDASHBOARD_EVENT_REST_OPTIONS_BURNDOWN,
-            array(
-                'version'   => 'v1',
-                'user'      => $this->getCurrentUser(),
-                'milestone' => $this->getMilestoneById($this->getCurrentUser(), $id)
-            )
-        );
+    public function optionsBurndown($id) {
+        $this->sendAllowHeadersForBurndown();
     }
 
     /**
@@ -626,7 +609,7 @@ class MilestoneResource {
         Header::allowOptionsGetPut();
     }
 
-     private function sendPaginationHeaders($limit, $offset, $size) {
+    private function sendPaginationHeaders($limit, $offset, $size) {
         Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
     }
 
@@ -642,5 +625,13 @@ class MilestoneResource {
         $date = $milestone->getLastModifiedDate();
         Header::allowOptionsGet();
         Header::lastModified($date);
+    }
+
+    private function sendAllowHeadersForCardwall(){
+        Header::allowOptionsGet();
+    }
+
+    private function sendAllowHeadersForBurndown(){
+        Header::allowOptionsGet();
     }
 }

@@ -95,12 +95,8 @@ class ArtifactsResource {
      *
      * @param int $id Id of the artifact
      */
-    protected function optionsArtifactChangesets($id) {
-        $user     = UserManager::instance()->getCurrentUser();
-        $artifact = $this->getArtifactById($user, $id);
-
-        $this->sendAllowHeadersForChangesets($artifact);
-        Header::sendOptionsPaginationHeaders(self::DEFAULT_LIMIT, self::DEFAULT_OFFSET, self::MAX_LIMIT);
+    public function optionsArtifactChangesets($id) {
+        $this->sendAllowHeadersForChangesets();
     }
 
     /**
@@ -132,10 +128,8 @@ class ArtifactsResource {
      *
      * @param int $id Id of the artifact
      */
-    protected function optionsId($id) {
-        $user     = UserManager::instance()->getCurrentUser();
-        $artifact = $this->getArtifactById($user, $id);
-        $this->sendAllowHeadersForArtifact($artifact);
+    public function optionsId($id) {
+        $this->sendAllowHeadersForArtifact();
     }
 
     /**
@@ -272,15 +266,11 @@ class ArtifactsResource {
         throw new RestException(404);
     }
 
-    private function sendAllowHeadersForChangesets(Tracker_Artifact $artifact) {
-        $date = $artifact->getLastUpdateDate();
+    private function sendAllowHeadersForChangesets() {
         Header::allowOptionsGet();
-        Header::lastModified($date);
     }
 
-    private function sendAllowHeadersForArtifact(Tracker_Artifact $artifact) {
-        $date = $artifact->getLastUpdateDate();
+    private function sendAllowHeadersForArtifact() {
         Header::allowOptionsGetPut();
-        Header::lastModified($date);
     }
 }
