@@ -1,3 +1,11 @@
+Version 7.2-2 (Wednesday, July 9th 2014)
+	== Bug Fix ==
+	* request #7116 Can't reply by mail to a tracker
+	* request #7183 Some parameters are not properly sanitized
+	* request #7118 List values are not properly sanitized in changesets
+	* request #7192 SOAP artifacts method break if vertical tab is within artifact follow up
+	* request #7151 LDAP connector doesn't fetch eduid
+
 Version 7.2 (Thursday, June 26th 2014)
 	== Bug fix ==
 	* tasks #7106, request #6405: Proper sanitization of project public name in search
