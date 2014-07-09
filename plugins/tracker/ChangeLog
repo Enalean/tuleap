@@ -1,3 +1,6 @@
+Version 5.421 - Tuleap 7.3
+    * Fix request #7192: SOAP artifacts method break if vertical tab is within artifact follow up
+
 Version 5.420 - Tuleap 7.3
     * Fix request #7118: List values are not properly sanitized in changesets
 

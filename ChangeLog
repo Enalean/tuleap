@@ -5,7 +5,7 @@ Version 7.3 (Not Released Yet)
 
         == Plugins ==
 	* git: 3.91
-	* tracker: 5.420
+	* tracker: 5.421
 	* ldap: 3.50
 	* fulltextsearch: 0.56
 	* docman: 2.26.39
