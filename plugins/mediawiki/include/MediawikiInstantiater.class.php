@@ -22,6 +22,7 @@
 
 require_once 'www/env.inc.php';
 require_once 'pre.php';
+require_once 'MediawikiInstantiaterException.class.php';
 require_once 'common/backend/BackendLogger.class.php';
 require_once 'MediawikiUserGroupsMapper.class.php';
 
@@ -42,6 +43,9 @@ class MediaWikiInstantiater {
     /** @var project */
     private $project;
 
+    /* @var MediawikiDao */
+    private $dao;
+
     /**
      * @param string $project
      */
@@ -50,7 +54,7 @@ class MediaWikiInstantiater {
         $this->project          = $project;
         $this->project_name     = $project->getUnixName();
         $this->project_id       = $project->getID();
-        $this->project_name_dir = forge_get_config('projects_path', 'mediawiki') . '/' . $this->project_id;
+        $this->dao              = new MediawikiDao();
     }
 
     /**
@@ -69,7 +73,14 @@ class MediaWikiInstantiater {
     }
 
     private function initMediawiki() {
-        if ($this->projectExists()) {
+        try {
+            $exists = $this->checkForExistingProject();
+        } catch (MediawikiInstantiaterException $e) {
+            $this->logger->error($e->getMessage());
+            return false;
+        }
+
+        if ($exists) {
             $this->logger->info('Project dir ' . $this->project_name_dir . ' exists, so I assume the project already exists.');
             return false;
         } else {
@@ -79,9 +90,56 @@ class MediaWikiInstantiater {
         }
     }
 
-    private function projectExists() {
-        $this->logger->info('Checking ' . $this->project_name);
-        return is_dir($this->project_name_dir);
+    /**
+     * @return boolean
+     * @throws MediawikiInstantiaterException
+     */
+    private function checkForExistingProject() {
+        $this->logger->info('Checking project dir for: ' . $this->project_name);
+
+        $dir_exists = $this->doesDirectoryExist();
+        $db_name    = $this->dao->findSchemaForExistingProject($this->project);
+
+        if (! $dir_exists && ! $db_name) {
+            return false;
+        }
+
+        if ($dir_exists && ! $db_name) {
+            throw new MediawikiInstantiaterException('Project dir ' . $this->project_name_dir . ' exists, but database '.$db_name.' cannot be found');
+        }
+
+        if (! $dir_exists && $db_name) {
+            throw new MediawikiInstantiaterException('Project dir ' . $this->project_name_dir . ' does not exist, but database '.$db_name.' found');
+        }
+
+        $this->ensureDatabaseIsCorrect($db_name);
+        return true;
+
+    }
+
+    private function ensureDatabaseIsCorrect($db_name) {
+        $this->dao->updateDatabaseName($this->project_id, $db_name);
+    }
+
+    /**
+     * @return boolean
+     */
+    private function doesDirectoryExist() {
+        $name_with_id        = forge_get_config('projects_path', 'mediawiki') . '/' . $this->project_id;
+        $name_with_shortname = forge_get_config('projects_path', 'mediawiki') . '/' . $this->project_name;
+
+        if (is_dir($name_with_id) ) {
+            $this->project_name_dir = $name_with_id;
+            $dir_exists = true;
+        } elseif (is_dir($name_with_shortname) ) {
+            $this->project_name_dir = $name_with_shortname;
+            $dir_exists = true;
+        } else {
+            $this->project_name_dir = $name_with_id;
+            $dir_exists = false;
+        }
+
+        return $dir_exists;
     }
 
     private function createDirectory() {
@@ -123,8 +181,7 @@ class MediaWikiInstantiater {
 
             $this->logger->info('Updating list of mediawiki databases (' . $schema . ')');
             db_query('USE '.$main_db);
-            $dao = new MediawikiDao();
-            $update = $dao->addDatabase($schema, $this->project_id);
+            $update = $this->dao->addDatabase($schema, $this->project_id);
             if (! $update) {
                 throw new Exception('Error: Mediawiki Database list update failed: ' . mysql_error());
             }
