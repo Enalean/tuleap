@@ -13,7 +13,7 @@ Version 7.3 (Not Released Yet)
 	* forumml: 2.6.20
 
         == Themes ==
-	* FlamingParrot: 1.30
+	* FlamingParrot: 1.31
 
 	== Bug fix ==
 	* request #7170: prevent make less to compile node_modules

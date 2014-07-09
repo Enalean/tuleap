@@ -1,3 +1,6 @@
+Version 1.31 - Tuleap 7.3
+    * request #7198: Report table doesn't show priority colors in TV3 with FlamingParrot
+
 Version 1.30 - Tuleap 7.3
     * tasks #7154: fix system event not appearing in list
 
