@@ -806,6 +806,7 @@ fi
 %{APP_DIR}/src/www/themes/common
 %{APP_DIR}/src/www/top
 %{APP_DIR}/src/www/tos
+%{APP_DIR}/src/www/tour
 %{APP_DIR}/src/www/tracker
 %{APP_DIR}/src/www/user
 %{APP_DIR}/src/www/users
