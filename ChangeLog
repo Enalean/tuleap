@@ -9,11 +9,11 @@ Version 7.3 (Not Released Yet)
 	* ldap: 3.50
 	* fulltextsearch: 0.56
 	* docman: 2.26.39
-	* mediawiki: 0.35
+	* mediawiki: 0.36
 	* forumml: 2.6.20
 
         == Themes ==
-	* FlamingParrot: 1.32
+	* FlamingParrot: 1.33
 
 	== Bug fix ==
 	* request #7170: prevent make less to compile node_modules

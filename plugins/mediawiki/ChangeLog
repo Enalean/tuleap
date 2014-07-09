@@ -1,3 +1,6 @@
+Version 0.36 - Tuleap 7.3
+    * request #7199: Mediawiki style with FlamingParrot is broken
+
 Version 0.35 - Tuleap 7.3
     * bugtasks #7165: proper synch of databases upon mw creation and deletion
 
