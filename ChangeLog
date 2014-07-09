@@ -20,6 +20,7 @@ Version 7.3 (Not Released Yet)
 	== Bug fix ==
 	* request #7170: prevent make less to compile node_modules
 	* request #7068: Allow Cross Origin Resources Sharing for REST API, fixing test
+	* request #7204: links in readme are outdated
 
 Version 7.2 (Thursday, June 26th 2014)
 	== Bug fix ==
