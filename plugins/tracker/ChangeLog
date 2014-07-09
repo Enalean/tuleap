@@ -1,3 +1,6 @@
+Version 5.422 - Tuleap 7.3
+    * request #7068 Allow Cross Origin Resources Sharing for REST API, fixing test
+
 Version 5.421 - Tuleap 7.3
     * Fix request #7192: SOAP artifacts method break if vertical tab is within artifact follow up
 

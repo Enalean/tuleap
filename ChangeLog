@@ -5,18 +5,21 @@ Version 7.3 (Not Released Yet)
 
         == Plugins ==
 	* git: 3.91
-	* tracker: 5.421
+	* tracker: 5.422
 	* ldap: 3.50
 	* fulltextsearch: 0.56
 	* docman: 2.26.39
 	* mediawiki: 0.36
 	* forumml: 2.6.20
+	* agiledashboard: 1.67
+	* cardwall: 1.34
 
         == Themes ==
 	* FlamingParrot: 1.33
 
 	== Bug fix ==
 	* request #7170: prevent make less to compile node_modules
+	* request #7068: Allow Cross Origin Resources Sharing for REST API, fixing test
 
 Version 7.2 (Thursday, June 26th 2014)
 	== Bug fix ==

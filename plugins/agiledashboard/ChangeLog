@@ -1,3 +1,6 @@
+Version 1.67 - Tuleap 7.3
+    * request #7068 Allow Cross Origin Resources Sharing for REST API, fixing test
+
 Version 1.66 - Tuleap 7.2
     * request #6441: Enhance agiledashbord homepage behaviour
 
