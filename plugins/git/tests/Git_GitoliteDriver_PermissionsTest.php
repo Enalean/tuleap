@@ -134,6 +134,12 @@ class Git_GitoliteDriver_PermissionsTest extends TuleapTestCase {
         $this->assertIdentical(' R   = @ug_666 @site_active @'. $this->project->getUnixName() .'_project_members' . PHP_EOL, $result);
     }
 
-}
+    public function itReturnsAllGroupsSeparatedBySpaceIfItHasDifferentGroupsAndAddCodendiadmIfOnlineEditIsEnable() {
+        $this->permissions_manager->setReturnValue('getAuthorizedUgroupIds', array(666, $GLOBALS['UGROUP_REGISTERED']));
+        $this->repository->setReturnValue('hasOnlineEditEnabled', true);
+        $result = $this->driver->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
+        $this->assertIdentical(' R   = @ug_666 @site_active @'. $this->project->getUnixName() .'_project_members' . ' id_rsa_gl-adm' . PHP_EOL, $result);
+    }
 
+}
 ?>
