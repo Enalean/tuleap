@@ -1,3 +1,6 @@
+Version 3.93 - Tuleap 7.3
+    * story #6971: Git online commit in the Tuleap UI (Give right to codendiadm on all git repository)
+
 Version 3.92 - Tuleap 7.3
     * Fix request #7201: JavaScript fatal error appear in some page of Git plugin
 

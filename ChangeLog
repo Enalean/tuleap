@@ -4,7 +4,7 @@ Version 7.3 (Not Released Yet)
 	* story #6003 be able to change the Experimental theme color
 
         == Plugins ==
-	* git: 3.92
+	* git: 3.93
 	* tracker: 5.422
 	* ldap: 3.50
 	* fulltextsearch: 0.56
