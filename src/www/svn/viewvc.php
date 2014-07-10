@@ -17,11 +17,12 @@ if (user_isloggedin()) {
         exit_no_group();
     }
     $root = $request->get('root');
-    $group_id = group_getid_by_name($root);
-    if($group_id === false) {
+    $project_manager = ProjectManager::instance();
+    $project = $project_manager->getProjectByUnixName($root);
+    if (! $project) {
         exit_no_group();
     }
-    $project = ProjectManager::instance()->getProject($group_id);
+    $group_id = $project->getID();
 
     $vRootType = new Valid_WhiteList('roottype', array('svn'));
     $vRootType->setErrorMessage($Language->getText('svn_viewvc','bad_roottype'));
