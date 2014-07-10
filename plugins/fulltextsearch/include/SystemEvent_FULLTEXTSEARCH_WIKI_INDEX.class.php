@@ -22,7 +22,11 @@
 class SystemEvent_FULLTEXTSEARCH_WIKI_INDEX extends SystemEvent_FULLTEXTSEARCH_WIKI {
     const NAME = 'FULLTEXTSEARCH_WIKI_INDEX';
 
-    protected function processItem(WikiPage $wiki_page, $group_id) {
+    protected function processItem(WikiPage $wiki_page, $project_id) {
+        if (! $this->actions->checkProjectMappingExists($project_id)) {
+            $this->actions->initializeProjetMapping($project_id);
+        }
+
         return true;
     }
 }

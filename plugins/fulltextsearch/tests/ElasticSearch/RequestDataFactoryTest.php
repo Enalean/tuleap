@@ -20,6 +20,7 @@
 
 require_once dirname(__FILE__) .'/../../include/autoload.php';
 require_once dirname(__FILE__) .'/../../../docman/include/autoload.php';
+require_once dirname(__FILE__).'/../builders/Docman_File_Builder.php';
 
 class RequestDocmanDataFactoryTest extends TuleapTestCase {
 
@@ -313,5 +314,49 @@ class getDocumentApprovalTableComments extends RequestDocmanDataFactoryTest {
 
         $this->assertEqual($comments[0]['comment'], 'I like it like that');
         $this->assertEqual($comments[1]['comment'], 'Looks good to me, approved');
+    }
+}
+
+class RequestWikiDataFactoryTest extends TuleapTestCase {
+
+     /* @var ElasticSearch_1_2_RequestWikiDataFactory */
+    protected $request_data_factory;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->request_data_factory = new ElasticSearch_1_2_RequestWikiDataFactory();
+    }
+
+    public function itBuildsDataForPutRequestCreateMapping() {
+        $project_id = 200;
+
+        $expected_data = array(
+            '200' => array(
+                'properties' => array(
+                    'last_modified_date' => array(
+                        'type' => 'date'
+                    ),
+                    'last_author' => array(
+                        'type' => 'string'
+                    ),
+                    'last_summary' => array(
+                        'type' => 'string'
+                    ),
+                    'content' => array(
+                        'type' => 'string'
+                    ),
+                    'permissions' => array(
+                        'type'  => 'string',
+                        'index' => 'not_analyzed'
+                    )
+                )
+            )
+        );
+
+        $this->assertEqual(
+            $expected_data,
+            $this->request_data_factory->getPUTMappingData($project_id)
+        );
     }
 }
