@@ -33,41 +33,54 @@ require_once('www/project/admin/permissions.php');
  * @license http://opensource.org/licenses/gpl-license.php GPL
  */
 class WikiPage {
-  /* private int */   var $id;       /* wiki_page.id */
-  /* private string*/ var $pagename; /* wiki_page.pagename */
-  /* private int */   var $gid;      /* wiki_page.group_id */
-  /* private bool */  var $empty;    /* */
+ /* private int */   var $id;       /* wiki_page.id */
+ /* private string*/ var $pagename; /* wiki_page.pagename */
+ /* private int */   var $gid;      /* wiki_page.group_id */
+ /* private bool */  var $empty;    /* */
+
+    /** @var WikiPageWrapper */
+    private $wrapper;
 
   /*
    * Constructor
    */
   function WikiPage($id=0, $pagename='') {
-    $this->empty=null;
+        $this->empty = null;
 
-    if($id != 0) {
-      if(empty($pagename)) {
-	//Given number is the WikiPage id from wiki_page table
-	$this->id = (int) $id;
-	$this->_initFromDb();
-      }
-      else {
-	//Given number is group_id from wiki_page table
-	$this->gid      = (int) $id;
-	$this->pagename = $pagename;
-	$this->_findPageId();
-      }
-    }
-    else {
-      $this->id=0;
-      $this->pagename='';
-      $this->gid=0;
-    }
+        if($id != 0) {
+          if(empty($pagename)) {
+            //Given number is the WikiPage id from wiki_page table
+            $this->id = (int) $id;
+            $this->initFromDb();
+          }
+          else {
+            //Given number is group_id from wiki_page table
+            $this->gid      = (int) $id;
+            $this->pagename = $pagename;
+            $this->findPageId();
+          }
+        }
+        else {
+          $this->id       =0;
+          $this->pagename ='';
+          $this->gid      =0;
+        }
+
+        $this->wrapper = new WikiPageWrapper($this->gid);
   }
-  
-  /**
-   * @access private
-   */
-  function _findPageId() {
+
+  public function getMetadata() {
+        if ($this->isEmpty()) {
+            return array('mtime' => time());
+        }
+
+        $current_revision_metadata = $this->wrapper->getRequest()->getPage()->getCurrentRevision()->getMetaData();
+        $page_metadata             = $this->wrapper->getRequest()->getPage()->getMetaData();
+
+        return $page_metadata + $current_revision_metadata;
+  }
+
+  private function findPageId() {
     $res = db_query(' SELECT id FROM wiki_page'.
 		    ' WHERE group_id="'.$this->gid.'"'.
 		    ' AND pagename="'.addslashes($this->pagename).'"');
@@ -81,10 +94,7 @@ class WikiPage {
   } 
 
 
-  /**
-   * @access private
-   */
-  function _initFromDb() {
+  private function initFromDb() {
     $res = db_query(' SELECT id, pagename, group_id FROM wiki_page'.
 		    ' WHERE id="'.$this->id.'"');
     if(db_numrows($res) > 1) {
@@ -418,4 +428,3 @@ class WikiPage {
        ,"BacÀSable",);
   }
 }
-?>

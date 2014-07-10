@@ -37,12 +37,21 @@ class SystemEvent_FULLTEXTSEARCH_WIKI_INDEXTest extends SystemEvent_FULLTEXTSEAR
     public function itAddsDefaultProjectMappingIfProjectMappingDoesNotExist() {
         $event = $this->aSystemEventWithParameter('101::wiki_page');
         stub($event)->getWikiPage(101, 'wiki_page')->returns($this->wiki_page);
-
         stub($this->actions)->checkProjectMappingExists(101)->returns(false);
 
         expect($this->actions)->initializeProjetMapping(101)->once();
 
         $this->assertTrue($event->process());
+    }
+
+    public function itDelegatesIndexingToFullTextSearchActions() {
+        $event = $this->aSystemEventWithParameter('101::wiki_page');
+        stub($event)->getWikiPage(101, 'wiki_page')->returns($this->wiki_page);
+        stub($this->actions)->indexNewWikiPage($this->wiki_page)->once();
+
+        $this->assertTrue($event->process());
+        $this->assertEqual($event->getLog(), 'OK');
+        $this->assertEqual($event->getStatus(), SystemEvent::STATUS_DONE);
     }
 
 }

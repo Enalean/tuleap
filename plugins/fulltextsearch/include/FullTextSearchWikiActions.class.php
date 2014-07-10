@@ -58,4 +58,17 @@ class FullTextSearchWikiActions {
             $this->request_data_factory->getPUTMappingData($project_id)
         );
     }
+
+    /**
+     * Index a new wiki page
+     *
+     * @param WikiPage $wiki_page The wiki page
+     */
+    public function indexNewWikiPage(WikiPage $wiki_page) {
+        $this->logger->debug('[Wiki] ElasticSearch: index new document #' . $wiki_page->getGid());
+
+        $indexed_data = $this->request_data_factory->getIndexedWikiPageData($wiki_page);
+
+        $this->client->index($wiki_page->getGid(), $wiki_page->getId(), $indexed_data);
+    }
 }
