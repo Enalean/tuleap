@@ -27,6 +27,9 @@ Version 7.3 (Not Released Yet)
 	* request #7223: Fatal error when accessing account page
 	* request #7053:  Issue with field attachment required
 
+	== Development ==
+	* Fix request #7218: Building autoload takes 20 minutes
+
 Version 7.2 (Thursday, June 26th 2014)
 	== Bug fix ==
 	* tasks #7106, request #6405: Proper sanitization of project public name in search
