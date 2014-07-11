@@ -1,3 +1,6 @@
+Version 0.41 - Tuleap 7.3
+    * bugtasks #7193: fix images for mediawiki
+
 Version 0.40 - Tuleap 7.3
     * bugtasks #7175: script to identify broken mw in projects
 
