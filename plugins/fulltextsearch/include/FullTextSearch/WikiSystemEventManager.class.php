@@ -48,6 +48,7 @@ class FullTextSearch_WikiSystemEventManager {
         switch($type) {
             case SystemEvent_FULLTEXTSEARCH_WIKI_INDEX::NAME:
             case SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE::NAME:
+            case SystemEvent_FULLTEXTSEARCH_WIKI_DELETE::NAME:
                 $class = 'SystemEvent_'. $type;
                 $dependencies = array(
                     $this->getWikiActions()
@@ -78,6 +79,16 @@ class FullTextSearch_WikiSystemEventManager {
         if ($this->plugin->isAllowed($params['group_id'])) {
             $this->system_event_manager->createEvent(
                 SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE::NAME,
+                $this->getWikiSerializedParameters($params),
+                SystemEvent::PRIORITY_MEDIUM
+            );
+        }
+    }
+
+    public function queueDeleteWikiPage(array $params) {
+        if ($this->plugin->isAllowed($params['group_id'])) {
+            $this->system_event_manager->createEvent(
+                SystemEvent_FULLTEXTSEARCH_WIKI_DELETE::NAME,
                 $this->getWikiSerializedParameters($params),
                 SystemEvent::PRIORITY_MEDIUM
             );

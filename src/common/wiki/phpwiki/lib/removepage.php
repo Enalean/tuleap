@@ -49,7 +49,7 @@ function RemovePage (&$request) {
                      HTML::p(fmt("Since you started the deletion process, someone has saved a new version of %s.  Please check to make sure you still want to permanently remove the page from the database.", $pagelink)));
     }
     else {
-        // Codendi specific: remove the deleted wiki page from ProjectWantedPages       
+        // Codendi specific: remove the deleted wiki page from ProjectWantedPages
         $projectPageName='ProjectWantedPages';
         $pagename = $page->getName();
         
@@ -81,6 +81,20 @@ function RemovePage (&$request) {
         $dbi = $request->getDbh();
         $dbi->deletePage($pagename);
         $dbi->touch();
+
+        $event_manager = EventManager::instance();
+        $user_manager  = UserManager::instance();
+        $user          = $user_manager->getCurrentUser();
+        $event_manager->processEvent(
+            "wiki_page_deleted",
+            array(
+                'group_id'  => GROUP_ID,
+                'wiki_page' => $pagename,
+                'user'      => $user,
+                'version'   => $version
+            )
+        );
+
         $link = HTML::a(array('href' => 'javascript:history.go(-2)'), 
                         _("Back to the previous page."));
         $html = HTML(HTML::h2(fmt("Removed page '%s' successfully.", $pagename)),

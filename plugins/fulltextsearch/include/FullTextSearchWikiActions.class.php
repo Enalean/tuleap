@@ -84,4 +84,15 @@ class FullTextSearchWikiActions {
 
         $this->client->index($wiki_page->getGid(), $wiki_page->getId(), $indexed_data);
     }
+
+    /**
+     * Remove an indexed wiki page
+     *
+     * @param WikiPage $wiki_page The item to delete
+     */
+    public function delete(WikiPage $wiki_page) {
+        $this->logger->debug('[Wiki] ElasticSearch: delete wiki page #' . $wiki_page->getId());
+
+        $this->client->delete($wiki_page->getGid(), $wiki_page->getId());
+    }
 }
