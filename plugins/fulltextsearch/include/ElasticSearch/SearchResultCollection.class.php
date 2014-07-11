@@ -23,19 +23,15 @@ class ElasticSearch_SearchResultCollection implements FullTextSearch_SearchResul
     private $query_time         = 0;
     private $results            = array();
     private $facets             = array();
-    public  $type;
     
     public function __construct(
         array $result,
         array $submitted_facets,
-        ProjectManager $project_manager,
-        $type,
         ElasticSearch_1_2_ResultFactory $result_factory
     ) {
-        $this->type       = $type;
         $this->query_time = $result_factory->getQueryTime($result);
 
-        $this->results = $result_factory->getSearchResults($result, $type);
+        $this->results = $result_factory->getSearchResults($result);
         $this->nb_documents_found = count($this->results);
 
         $this->facets = $result_factory->getSearchResultProjectsFacetCollection(

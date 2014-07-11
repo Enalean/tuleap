@@ -28,7 +28,7 @@ class ElasticSearch_1_2_RequestDocmanDataFactory {
     const EXCLUDED_HARDCODED_METADATA = 'status';
     const MAPPING_PROPERTIES_KEY      = 'properties';
     const MAPPING_MAPPINGS_KEY        = 'mappings';
-    const MAPPING_DOCMAN_ROOT_KEY     = 'docman';
+    const MAPPING_DOCMAN_ROOT_KEY     = '';
 
     const CUSTOM_PROPERTY_PREFIX      = 'property';
 

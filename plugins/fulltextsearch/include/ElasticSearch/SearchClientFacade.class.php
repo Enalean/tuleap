@@ -22,14 +22,14 @@ require_once 'common/project/UGroupLiteralizer.class.php';
 require_once 'common/project/ProjectManager.class.php';
 
 /**
- * Allow to perform search on ElasticSearch Index
+ * Allow to perform search on ElasticSearch
  */
 class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implements FullTextSearch_ISearchDocuments {
 
     /**
      * @var mixed
      */
-    protected $type;
+    protected $index;
 
     /**
      * @var ProjectManager
@@ -41,12 +41,12 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
 
     public function __construct(
         ElasticSearchClient $client,
-        $type,
+        $index,
         ProjectManager $project_manager,
         ElasticSearch_1_2_ResultFactory $result_factory
     ) {
         parent::__construct($client);
-        $this->type            = $type;
+        $this->index           = $index;
         $this->project_manager = $project_manager;
         $this->result_factory  = $result_factory;
     }
@@ -79,12 +79,11 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
         // For debugging purpose, uncomment the statement below to see the
         // content of the request (can be directly injected in a curl request)
 //         echo "<pre>".json_encode($query)."</pre>";
+
         $search = $this->client->search($query);
         return new ElasticSearch_SearchResultCollection(
             $search,
             $facets,
-            $this->project_manager,
-            $this->type,
             $this->result_factory
         );
     }
@@ -116,25 +115,22 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
      * @return array to be used for querying ES
      */
     protected function getSearchDocumentsQuery($terms, array $facets, $offset, PFUser $user, $size) {
+        $returned_fields = array_merge($this->getReturnedFieldsForDocman(), $this->getReturnedFieldsForWiki());
+        $returned_fields = array_merge($returned_fields, array('id', 'group_id'));
+
         $query = array(
-            'from' => (int)$offset,
-            'size' => $size,
+            'from'  => (int)$offset,
+            'size'  => $size,
             'query' => array(
                 'query_string' => array(
                     'query' => $terms
                 )
             ),
-            'fields' => array(
-                'id',
-                'group_id',
-                'title',
-            ),
+            'fields'    => $returned_fields,
             'highlight' => array(
                 'pre_tags' => array('<em class="fts_word">'),
                 'post_tags' => array('</em>'),
-                'fields' => array(
-                    'file' => new stdClass()
-                )
+                'fields' => $this->getHighlightFieldsForDocman() + $this->getHighlightFieldsForWiki()
             ),
             'facets' => array(
                 'projects' => array(
@@ -147,6 +143,22 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
         $this->filterWithGivenFacets($query, $facets);
         $this->filterQueryWithPermissions($query, $user);
         return $query;
+    }
+
+    private function getReturnedFieldsForDocman() {
+        return array('title');
+    }
+
+    private function getReturnedFieldsForWiki() {
+        return array('page_name');
+    }
+
+    private function getHighlightFieldsForDocman() {
+        return array('file' => new stdClass());
+    }
+
+    private function getHighlightFieldsForWiki() {
+        return array('content' => new stdClass());
     }
 
     protected function filterQueryWithPermissions(array &$query, PFUser $user) {

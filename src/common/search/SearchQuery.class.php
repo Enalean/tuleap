@@ -32,13 +32,27 @@ class Search_SearchQuery {
 
     public function __construct(Codendi_Request $request) {
         $this->project        = $request->getProject();
-        $this->type_of_search = $request->get('type_of_search');
+        $this->type_of_search = $this->setTypeOfSearch($request);
         $this->words          = $request->get('words');
         $this->offset         = intval($request->getValidated('offset', 'uint', 0));
         $this->exact          = $request->getValidated('exact', 'uint', false);
         $this->trackerv3id    = $request->getValidated('atid', 'uint', 0);
         $this->forum_id       = $request->getValidated('forum_id', 'uint', 0);
         $this->is_ajax        = $request->isAjax();
+    }
+
+    private function setTypeOfSearch(Codendi_Request $request) {
+        $plugin_manager  = PluginManager::instance();
+        $fulltext_plugin = $plugin_manager->getPluginByName('fulltextsearch');
+
+        if (
+            $request->get('type_of_search') === Search_SearchWiki::NAME &&
+            $plugin_manager->isPluginAvailable($fulltext_plugin)
+        ) {
+            return fulltextsearchPlugin::SEARCH_TYPE;
+        }
+
+        return $request->get('type_of_search');
     }
 
     public function isValid() {

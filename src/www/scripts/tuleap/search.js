@@ -42,6 +42,10 @@ var tuleap = tuleap || {};
                 search_pane_entry.find('ul').remove();
                 $('#search-results > ul:first-child').appendTo(search_pane_entry);
             }
+
+            if (typeof(tuleap.search.fulltext) != 'undefined') {
+                tuleap.search.fulltext.handleFulltextFacets(type_of_search)
+            }
         }
     };
 
@@ -148,7 +152,7 @@ var tuleap = tuleap || {};
     }
 
     function enrichUrlIfNeeded(element, type_of_search, url) {
-        if (type_of_search === 'tracker') {
+        if (type_of_search === 'tracker' || type_of_search === 'wiki') {
             url += '&atid=' + getArtifactTypeId(element);
             url += '&group_id=' + getGroupId();
         }

@@ -48,6 +48,10 @@ class ElasticSearch_1_2_ResultFactory {
         return $hit_data['fields']['group_id'][0];
     }
 
+    private function extractIndexFromHit(array $hit_data) {
+        return $hit_data['_index'];
+    }
+
     public function getQueryTime(array $data) {
         if (isset($data['time'])) {
             return $data['time'];
@@ -69,19 +73,37 @@ class ElasticSearch_1_2_ResultFactory {
         }
     }
 
-    public function getSearchResults(array $result, $type) {
+    public function getSearchResults(array $result) {
         $results = array();
 
-        if (isset($result['hits']['hits'])) {
-            foreach ($result['hits']['hits'] as $hit) {
-                $project = $this->project_manager->getProject($this->extractGroupIdFromHit($hit));
+        if (! isset($result['hits']['hits'])) {
+            return $results;
+        }
 
-                if (! $project->isError()) {
-                    $class = 'ElasticSearch_SearchResult'.$type;
-                    if (class_exists($class)) {
-                        $results[] = new $class($hit, $project);
+        $user_manager = UserManager::instance();
+        $user         = $user_manager->getCurrentUser();
+
+        foreach ($result['hits']['hits'] as $hit) {
+            $project          = $this->project_manager->getProject($this->extractGroupIdFromHit($hit));
+            $index            = $this->extractIndexFromHit($hit);
+            $url_verification = new URLVerification();
+
+            if ($project->isError() || ! $url_verification->userCanAccessProject($user, $project)) {
+                continue;
+            }
+
+            switch ($index) {
+                case fulltextsearchPlugin::SEARCH_DOCMAN_TYPE:
+                    $results[] = new ElasticSearch_SearchResultDocman($hit, $project);
+                    break;
+                case fulltextsearchPlugin::SEARCH_WIKI_TYPE:
+                    $wiki = new Wiki($project->getID());
+
+                    if ($wiki->isAutorized($user->getId())) {
+                        $results[] = new ElasticSearch_SearchResultWiki($hit, $project);
                     }
-                }
+                    break;
+                default :
             }
         }
 

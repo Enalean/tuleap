@@ -25,9 +25,8 @@ class ElasticSearch_SearchResult {
     public $highlight;
         
     public function __construct(array $hit, Project $project) {
-        $this->project_name  = $project->getPublicName();
-        $this->highlight     = isset($hit['highlight']['file']) ? array_shift($hit['highlight']['file']) : '';
-        $this->has_highlight = !empty($this->highlight);
+        $this->project_name        = $project->getPublicName();
+        $this->has_highlight       = ! empty($this->highlight);
         $this->display_permissions = isset($hit['fields']['permissions']);
         if ($this->display_permissions) {
             $this->permissions = implode(', ', $hit['fields']['permissions']);

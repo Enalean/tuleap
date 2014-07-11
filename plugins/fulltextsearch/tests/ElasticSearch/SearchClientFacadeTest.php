@@ -68,9 +68,10 @@ class ElasticSearch_SearchClientFacadeTest extends TuleapTestCase {
     public function itAsksToElasticsearchToReturnOnlyRelevantFields() {
         $this->assertExpectedQuery(new QueryExpectation(array(
             'fields' => array(
+                'title',
+                'page_name',
                 'id',
                 'group_id',
-                'title',
             )
         )));
     }
@@ -78,9 +79,10 @@ class ElasticSearch_SearchClientFacadeTest extends TuleapTestCase {
     public function itAsksToElasticsearchToReturnAlsoPermissionsForSiteAdminQuery() {
         $this->assertExpectedAdminQuery(new QueryExpectation(array(
             'fields' => array(
+                'title',
+                'page_name',
                 'id',
                 'group_id',
-                'title',
                 'permissions'
             )
         )));
@@ -111,7 +113,8 @@ class ElasticSearch_SearchClientFacadeTest extends TuleapTestCase {
 
         $offset                     = 666;
         $no_facet_submitted_by_user = array();
-        $this->client->searchDocuments('some terms', $no_facet_submitted_by_user, $offset, $this->user, $size);
+        $search_type = null;
+        $this->client->searchDocuments('some terms', $no_facet_submitted_by_user, $offset, $this->user, $size, $search_type);
     }
 
     private function assertExpectedAdminQuery(QueryExpectation $query_excpectation) {
@@ -121,7 +124,8 @@ class ElasticSearch_SearchClientFacadeTest extends TuleapTestCase {
 
         $offset                     = 666;
         $no_facet_submitted_by_user = array();
-        $this->admin_client->searchDocuments('some terms', $no_facet_submitted_by_user, $offset, $this->user, $size);
+        $search_type = null;
+        $this->admin_client->searchDocuments('some terms', $no_facet_submitted_by_user, $offset, $this->user, $size, $search_type);
     }
 }
 

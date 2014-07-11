@@ -61,7 +61,14 @@ class FullTextSearch_Controller_Search extends MVC2_PluginController {
         $offset = $query->getOffset();
 
         try {
-            $search_result      = $this->client->searchDocuments($terms, $facets, $offset, $this->request->getCurrentUser(), $query->getNumberOfResults());
+            $search_result = $this->client->searchDocuments(
+                $terms,
+                $facets,
+                $offset,
+                $this->request->getCurrentUser(),
+                $query->getNumberOfResults()
+            );
+
             $results_count      = $search_result->count();
             $maybe_more_results = ($results_count < $query->getNumberOfResults()) ? false :  true;
             if ($offset > 0) {
