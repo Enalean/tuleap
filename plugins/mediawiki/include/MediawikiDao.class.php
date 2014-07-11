@@ -382,5 +382,43 @@ class MediawikiDao extends DataAccessObject {
         $sql = "DELETE FROM $schema.mwobjectcache";
         return $this->update($sql);
     }
+
+    public function updateDatabaseName($project_id, $db_name) {
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql = "DELETE FROM plugin_mediawiki_database WHERE project_id = $project_id";
+        $this->update($sql);
+
+        return $this->addDatabase($db_name, $project_id);
+    }
+
+    /**
+     * Tries to find an existing schema for a project.
+     * Checks using, the ID then the shortname then the list table
+     * 
+     * @return string | false
+     */
+    public function findSchemaForExistingProject(Project $project) {
+        $dbname_with_id   = str_replace ('-', '_', "plugin_mediawiki_". $project->getID());
+        $dbname_with_name = str_replace ('-', '_', "plugin_mediawiki_". $project->getUnixName());
+
+        $dbname_with_id   = $this->da->quoteSmart($dbname_with_id);
+        $dbname_with_name = $this->da->quoteSmart($dbname_with_name);
+
+
+        $sql  = "SELECT SCHEMA_NAME AS 'name' FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = $dbname_with_id";
+        $row = $this->retrieveFirstRow($sql);
+        if ($row) {
+            return $row['name'];
+        }
+
+        $sql  = "SELECT SCHEMA_NAME AS 'name' FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = $dbname_with_name";
+        $row = $this->retrieveFirstRow($sql);
+        if ($row) {
+            return $row['name'];
+        }
+
+        return $this->getMediawikiDatabaseName($project, false);
+    }
 }
 

@@ -739,7 +739,6 @@ class MediaWikiPlugin extends Plugin {
             return true;
         }
 
-
         $project_name_dir = forge_get_config('projects_path', 'mediawiki') . "/" . $project->getUnixName();
         if (is_dir($project_name_dir)) {
             exec("mv $project_name_dir $project_id_dir");
