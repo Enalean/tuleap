@@ -25,6 +25,7 @@ class fulltextsearchPlugin extends Plugin {
 
     const SEARCH_TYPE         = 'fulltext';
     const SEARCH_DOCMAN_TYPE  = 'docman';
+    const SEARCH_WIKI_TYPE    = 'wiki';
     const SEARCH_TRACKER_TYPE = 'tracker';
 
     public function __construct($id) {
@@ -54,7 +55,11 @@ class fulltextsearchPlugin extends Plugin {
         }
 
         // site admin
-        $this->_addHook('site_admin_option_hook',   'site_admin_option_hook', false);
+        $this->_addHook('site_admin_option_hook', 'site_admin_option_hook', false);
+
+        // wiki
+        $this->_addHook('wiki_page_updated', 'wiki_page_updated', false);
+        $this->_addHook('wiki_page_created', 'wiki_page_created', false);
 
         // assets
         $this->_addHook('cssfile', 'cssfile', false);
@@ -128,6 +133,14 @@ class fulltextsearchPlugin extends Plugin {
         );
     }
 
+    private function getWikiSystemEventManager() {
+        return new FullTextSearch_WikiSystemEventManager(
+            SystemEventManager::instance(),
+            $this->getIndexClient(self::SEARCH_WIKI_TYPE),
+            $this
+        );
+    }
+
     private function getTrackerSystemEventManager() {
         return new FullTextSearch_TrackerSystemEventManager(
             SystemEventManager::instance(),
@@ -151,6 +164,8 @@ class fulltextsearchPlugin extends Plugin {
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_APPROVAL_TABLE_COMMENT::NAME,
                 SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP_ADD::NAME,
                 SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP_UPDATE::NAME,
+                SystemEvent_FULLTEXTSEARCH_WIKI_INDEX::NAME,
+                SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE::NAME,
             )
         );
     }
@@ -161,6 +176,7 @@ class fulltextsearchPlugin extends Plugin {
     public function get_system_event_class($params) {
         $providers = array(
             $this->getDocmanSystemEventManager(),
+            $this->getWikiSystemEventManager(),
             $this->getTrackerSystemEventManager(),
         );
         $i = 0;
@@ -186,6 +202,14 @@ class fulltextsearchPlugin extends Plugin {
             $this->allowed_for_project[$group_id] = PluginManager::instance()->isPluginAllowedForProject($this, $group_id);
         }
         return $this->allowed_for_project[$group_id];
+    }
+
+    public function wiki_page_updated($params) {
+        $this->getWikiSystemEventManager()->queueUpdateWikiPage($params);
+    }
+
+    public function wiki_page_created($params) {
+        $this->getWikiSystemEventManager()->queueIndexWikiPage($params);
     }
 
     /**

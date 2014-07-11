@@ -285,11 +285,17 @@ class PageEditor
             $eM =& EventManager::instance();
             $uM =& UserManager::instance();
             $user =& $uM->getCurrentUser();
-            $eM->processEvent("wiki_page_updated", array('group_id' => GROUP_ID, 
-                                                         'wiki_page' => $page->getName(),
-                                                         'diff_link' => $difflink,
-                                                         'user' => $user,
-                                                         'version' => $this->version));
+            $eM->processEvent(
+                "wiki_page_updated",
+                array(
+                    'group_id'         => GROUP_ID,
+                    'wiki_page'        => $page->getName(),
+                    'wiki_page_object' => $page,
+                    'diff_link'        => $difflink,
+                    'user'             => $user,
+                    'version'          => $this->version
+                )
+            );
         }
         
         // New contents successfully saved...

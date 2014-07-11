@@ -99,6 +99,10 @@ Create the index: (please note that the number of shards|replicas are for develo
         "settings" : { "index" : { "number_of_shards" : 1, "number_of_replicas" : 0 }}
     }'
 
+    $ curl -u superuser:Adm1n -X PUT "localhost:9200/wiki" -d '{
+        "settings" : { "index" : { "number_of_shards" : 1, "number_of_replicas" : 0 }}
+    }'
+
 Define the attachment mapping for tracker type:
 
     $ curl -u superuser:Adm1n -X PUT "localhost:9200/tuleap/tracker/_mapping" -d '{
@@ -131,6 +135,7 @@ please delete the index to start over:
 
     $ curl -X DELETE "localhost:9200/tuleap"
     $ curl -X DELETE "localhost:9200/docman"
+    $ curl -X DELETE "localhost:9200/wiki"
     $ curl -X DELETE "localhost:9200/tracker"
 
 Development setup

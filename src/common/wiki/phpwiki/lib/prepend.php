@@ -111,6 +111,8 @@ else
 require_once(dirname(__FILE__).'/ErrorManager.php');
 require_once(dirname(__FILE__).'/WikiCallback.php');
 
+$ErrorManager = $GLOBALS['ErrorManager'];
+
 // FIXME: deprecated
 function ExitWiki($errormsg = false)
 {
