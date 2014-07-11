@@ -328,7 +328,11 @@ class RequestWikiDataFactoryTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
-        $this->request_data_factory = new ElasticSearch_1_2_RequestWikiDataFactory();
+        $this->permissions_manager = mock('Wiki_PermissionsManager');
+
+        $this->request_data_factory = new ElasticSearch_1_2_RequestWikiDataFactory(
+            $this->permissions_manager
+        );
 
         $this->wiki_page = stub('WikiPage')->getPagename()->returns('wiki_page');
         stub($this->wiki_page)->getId()->returns(1940);
@@ -340,6 +344,10 @@ class RequestWikiDataFactoryTest extends TuleapTestCase {
             'mtime' => 1405061249,
         ));
 
+        stub($this->permissions_manager)->getFromattedUgroupsThatCanReadWikiPage()->returns(array(
+            '@site_active'
+        ));
+
         $expected_data = array(
             'id'                 => 1940,
             'group_id'           => 200,
@@ -348,7 +356,7 @@ class RequestWikiDataFactoryTest extends TuleapTestCase {
             'last_author'        => '',
             'last_summary'       => '',
             'content'            => '',
-            'permissions'        => ''
+            'permissions'        => array('@site_active')
         );
 
         $this->assertEqual(

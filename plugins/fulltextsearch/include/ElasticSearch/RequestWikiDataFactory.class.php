@@ -38,6 +38,13 @@ class ElasticSearch_1_2_RequestWikiDataFactory {
     const ELASTICSEARCH_DATE_TYPE     = 'date';
     const UNPARSABLE_TYPE             =  null;
 
+    /** @var Wiki_PermissionsManager */
+    private $permissions_manager;
+
+    public function __construct(Wiki_PermissionsManager $permissions_manager) {
+        $this->permissions_manager = $permissions_manager;
+    }
+
     /**
      * Builds the data needed for
      * the very first PUT /wiki/:project_id/_mapping
@@ -67,7 +74,7 @@ class ElasticSearch_1_2_RequestWikiDataFactory {
             'last_summary'       => isset($wiki_page_metadata[self::PHPWIKI_METADATA_SUMMARY]) ?
                 $wiki_page_metadata[self::PHPWIKI_METADATA_SUMMARY] : '',
             'content'            => '',
-            'permissions'        => ''
+            'permissions'        => $this->permissions_manager->getFromattedUgroupsThatCanReadWikiPage($wiki_page)
         );
     }
 

@@ -59,7 +59,7 @@ class FullTextSearch_WikiSystemEventManager {
     private function getWikiActions() {
         return new FullTextSearchWikiActions(
             $this->index_client,
-            new ElasticSearch_1_2_RequestWikiDataFactory(),
+            new ElasticSearch_1_2_RequestWikiDataFactory(new Wiki_PermissionsManager()),
             new BackendLogger()
         );
     }
