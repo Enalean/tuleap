@@ -6,7 +6,7 @@ Version 7.3 (Not Released Yet)
 
         == Plugins ==
 	* git: 3.93
-	* tracker: 5.422
+	* tracker: 5.423
 	* ldap: 3.50
 	* fulltextsearch: 0.58
 	* docman: 2.26.39
@@ -25,6 +25,7 @@ Version 7.3 (Not Released Yet)
 	* request #7068: Allow Cross Origin Resources Sharing for REST API, fixing test
 	* request #7204: links in readme are outdated
 	* request #7223: Fatal error when accessing account page
+	* request #7053:  Issue with field attachment required
 
 Version 7.2 (Thursday, June 26th 2014)
 	== Bug fix ==

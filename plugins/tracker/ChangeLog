@@ -1,3 +1,6 @@
+Version 5.423 - Tuleap 7.3
+    * Fix request #7053:  Issue with field attachment required
+
 Version 5.422 - Tuleap 7.3
     * request #7068 Allow Cross Origin Resources Sharing for REST API, fixing test
 
