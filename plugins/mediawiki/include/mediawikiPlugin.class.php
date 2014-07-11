@@ -160,11 +160,20 @@ class MediaWikiPlugin extends Plugin {
             return preg_match('%'.$this->getPluginPath().'/wiki/.*%', $_SERVER['REQUEST_URI']);
         }
 
+        /**
+         *
+         * @return Project | null
+         */
         private function getProjectFromRequest() {
             $matches = array();
             preg_match('%'.$this->getPluginPath().'/wiki/([^/]+)/.*%', $_SERVER['REQUEST_URI'], $matches);
             if (isset($matches[1])) {
                 $project = ProjectManager::instance()->getProjectByUnixName($matches[1]);
+
+                if ($project->isError()) {
+                    $project = ProjectManager::instance()->getProject($matches[1]);
+                }
+
                 if (! $project->isError()) {
                     return $project;
                 }
@@ -177,6 +186,49 @@ class MediaWikiPlugin extends Plugin {
             if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
                 strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0) {
                 echo '<link rel="stylesheet" type="text/css" href="/plugins/mediawiki/themes/default/css/style.css" />';
+            }
+        }
+
+        public function showImage(Codendi_Request $request) {
+            $project = $this->getProjectFromRequest();
+            $user    = $request->getCurrentUser();
+
+            if (! $project) {
+                exit;
+            }
+
+            if ((! $project->isPublic() || $user->isRestricted())
+                && ! $project->userIsMember()
+                && ! $user->isSuperUser()) {
+                exit;
+            }
+
+            preg_match('%'.$this->getPluginPath().'/wiki/[^/]+/images(.*)%', $_SERVER['REQUEST_URI'], $matches);
+            $file_location = $matches[1];
+
+            $folder_location = '';
+            if (is_dir('/var/lib/codendi/mediawiki/projects/' . $project->getUnixName())) {
+                $folder_location = '/var/lib/codendi/mediawiki/projects/' . $project->getUnixName().'/images';
+            } elseif (is_dir('/var/lib/codendi/mediawiki/projects/' . $project->getId())) {
+                $folder_location = '/var/lib/codendi/mediawiki/projects/' . $project->getId().'/images';
+            } else {
+                exit;
+            }
+
+            $file = $folder_location.$file_location;
+            if (! file_exists($file)) {
+                exit;
+            }
+
+            $size = getimagesize($file);
+            $fp   = fopen($file, 'r');
+
+            if ($size and $fp) {
+                header('Content-Type: '.$size['mime']);
+                header('Content-Length: '.filesize($file));
+
+                readfile($file);
+                exit;
             }
         }
 
