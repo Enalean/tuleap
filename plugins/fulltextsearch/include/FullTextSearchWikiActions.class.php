@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -45,17 +45,17 @@ class FullTextSearchWikiActions {
     }
 
     public function checkProjectMappingExists($project_id) {
-        $this->logger->debug('ElasticSearch: get the mapping for project #' . $project_id);
+        $this->logger->debug('[Wiki] ElasticSearch: get the mapping for project #' . $project_id);
 
         return count($this->client->getMapping($project_id)) > 0;
     }
 
-    public function initializeProjetMapping(WikiDB_Page $wiki_page, $project_id) {
-        $this->logger->debug('ElasticSearch: initialize the mapping for project #' . $project_id);
+    public function initializeProjetMapping($project_id) {
+        $this->logger->debug('[Wiki] ElasticSearch: initialize the mapping for project #' . $project_id);
 
         $this->client->setMapping(
             $project_id,
-            $this->request_data_factory->getPUTMappingData($wiki_page, $project_id)
+            $this->request_data_factory->getPUTMappingData($project_id)
         );
     }
 }

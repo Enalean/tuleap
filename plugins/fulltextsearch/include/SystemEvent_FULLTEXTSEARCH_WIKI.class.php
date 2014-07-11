@@ -45,7 +45,7 @@ abstract class SystemEvent_FULLTEXTSEARCH_WIKI extends SystemEvent {
             $group_id       = (int)$this->getRequiredParameter(0);
             $wiki_page_name = (string)$this->getRequiredParameter(1);
 
-            $wiki_page = new WikiPage($group_id, $wiki_page_name);
+            $wiki_page = $this->getWikiPage($group_id, $wiki_page_name);
 
             if ($wiki_page) {
                 if ($this->processItem($wiki_page, $group_id)) {
@@ -61,12 +61,16 @@ abstract class SystemEvent_FULLTEXTSEARCH_WIKI extends SystemEvent {
         return false;
     }
 
+    protected function getWikiPage($group_id, $wiki_page_name) {
+        return new WikiPage($group_id, $wiki_page_name);
+    }
+
     /**
      * Execute action on the given item
      *
      * @see process()
      *
-     * @param WikiDB_Page $wiki_page The wiki page
+     * @param WikiPage $wiki_page The wiki page
      *
      * @return bool true if success (means status=done), false otherwise
      */

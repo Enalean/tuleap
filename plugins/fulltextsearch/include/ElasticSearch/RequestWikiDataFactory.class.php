@@ -20,7 +20,7 @@
  */
 
 /**
- * I build data for ElasticSearch 1.2 requests
+ * I build data for ElasticSearch 1.2 wiki requests
  */
 
 class ElasticSearch_1_2_RequestWikiDataFactory {
@@ -37,24 +37,14 @@ class ElasticSearch_1_2_RequestWikiDataFactory {
      * Builds the data needed for
      * the very first PUT /wiki/:project_id/_mapping
      *
-     * @param WikiDB_Page  $wiki_page
-     * @param int          $project_id
+     * @param int $project_id
      *
      * @return array
      */
-    public function getPUTMappingData(WikiDB_Page $wiki_page, $project_id) {
+    public function getPUTMappingData($project_id) {
         $mapping_data                   = $this->initializePUTMappingData($project_id);
-        $hardcoded_metadata_for_mapping = array();
 
-        foreach ($this->getMetadata($page) as $metadata) {
-            $hardcoded_metadata_for_mapping[$metadata->getLabel()] = array(
-                'type' => $this->getElasticSearchMappingType($metadata->getType())
-            );
-        }
-
-        $this->removeUnparsableMetadata($hardcoded_metadata_for_mapping);
-
-        $mapping_data[$project_id][self::MAPPING_PROPERTIES_KEY] = $hardcoded_metadata_for_mapping;
+        $mapping_data[$project_id][self::MAPPING_PROPERTIES_KEY] = $this->getHardcodedMetadata();
 
         return $mapping_data;
     }
@@ -67,7 +57,24 @@ class ElasticSearch_1_2_RequestWikiDataFactory {
         );
     }
 
-    private function getMetadata(WikiDB_Page $wiki_page) {
-        return $wiki_page->getMetaData();
+    private function getHardcodedMetadata() {
+        return array(
+            'last_modified_date' => array(
+                'type' => 'date'
+            ),
+            'last_author' => array(
+                'type' => 'string'
+            ),
+            'last_summary' => array(
+                'type' => 'string'
+            ),
+            'content' => array(
+                'type' => 'string'
+            ),
+            'permissions' => array(
+                'type'  => 'string',
+                'index' => 'not_analyzed'
+            )
+        );
     }
 }

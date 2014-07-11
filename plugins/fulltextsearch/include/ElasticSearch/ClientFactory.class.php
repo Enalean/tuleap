@@ -104,6 +104,10 @@ class ElasticSearch_ClientFactory {
         if ($type === fulltextsearchPlugin::SEARCH_DOCMAN_TYPE) {
             $index = fulltextsearchPlugin::SEARCH_DOCMAN_TYPE;
             $type  = '';
+
+        } elseif ($type === fulltextsearchPlugin::SEARCH_WIKI_TYPE) {
+            $index = fulltextsearchPlugin::SEARCH_WIKI_TYPE;
+            $type  = '';
         }
 
         return new ElasticSearchClient($transport, $index, $type);

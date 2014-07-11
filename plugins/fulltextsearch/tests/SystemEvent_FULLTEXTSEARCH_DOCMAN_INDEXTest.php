@@ -50,7 +50,7 @@ class SystemEvent_FULLTEXTSEARCH_DOCMAN_INDEXTest extends SystemEvent_FULLTEXTSE
         $this->assertTrue($event->process());
     }
 
-     public function itAddsDefaultProjectMappingIfProjectMappingDoesNotExist() {
+    public function itAddsDefaultProjectMappingIfProjectMappingDoesNotExist() {
         $event = $this->aSystemEventWithParameter('101::103::2');
         stub($this->actions)->checkProjectMappingExists(101)->returns(false);
 
