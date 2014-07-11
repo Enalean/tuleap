@@ -183,17 +183,37 @@ class WikiServiceAdminActions extends WikiActions {
    *
    */
   function setWikiPagePerms() {
-      global $feedback;
+    global $feedback;
 
     $wp = new WikiPage($_POST['object_id']);
-    if ($_POST['reset']) 
+
+    if ($_POST['reset']) {
         $ret = $wp->resetPermissions();
-    else
-        $ret = $wp->setPermissions($_POST['ugroups']);
-    if(!$ret) {
-        exit_error($GLOBALS['Language']->getText('global','error'),
-                   $GLOBALS['Language']->getText('wiki_actions_wikiserviceadmin', 'update_page_perm_err', array($feedback)));
     }
+    else {
+        $ret = $wp->setPermissions($_POST['ugroups']);
+    }
+
+    if(!$ret) {
+        exit_error(
+            $GLOBALS['Language']->getText('global','error'),
+            $GLOBALS['Language']->getText(
+                'wiki_actions_wikiserviceadmin',
+                'update_page_perm_err',
+                array($feedback)
+            )
+        );
+    }
+
+    $event_manager = EventManager::instance();
+    $event_manager->processEvent(
+        "wiki_page_permissions_updated",
+        array(
+            'group_id'         => $wp->getGid(),
+            'wiki_page'        => $wp->getPagename(),
+        )
+    );
+
   }
 
 
