@@ -1,3 +1,6 @@
+Version 0.43 - Tuleap 7.3
+    * bugtasks #7202 :mediawiki must work if service is disabled and re-enabled
+
 Version 0.42 - Tuleap 7.3
     * story #7184 have MW extensions: ParserFunctions, SyntaxHighlight_GeSHi, PdfBook
 
