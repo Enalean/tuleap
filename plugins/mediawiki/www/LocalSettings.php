@@ -47,7 +47,6 @@ require_once dirname(__FILE__) .'/../include/MediawikiUserGroupsMapper.class.php
 sysdebug_lazymode(true);
 
 $IP = forge_get_config('src_path', 'mediawiki');
-
 if (!isset ($fusionforgeproject)) {
     $gr=new Group(1);
     $fusionforgeproject=$gr->getUnixName();
@@ -71,10 +70,11 @@ while (count ($exppath) >= 4) {
             array_shift ($exppath) ;
     }
 }
+$group = group_get_object_by_name($fusionforgeproject) ;
 
 $gconfig_dir = forge_get_config('mwdata_path', 'mediawiki');
 $project_dir = forge_get_config('projects_path', 'mediawiki') . "/"
-	. $fusionforgeproject ;
+	. $group->getID() ;
 
 if (! is_dir($project_dir)) {
     $project_dir = forge_get_config('projects_path', 'mediawiki') . "/" . $group->getUnixName();
@@ -95,8 +95,6 @@ if ( $wgCommandLineMode ) {
             die( "This script must be run from the command line\n" );
     }
 }
-
-$group = group_get_object_by_name($fusionforgeproject) ;
 
 $wgSitename         = $group->getPublicName() . " Wiki";
 $wgScriptPath       = "/plugins/mediawiki/wiki/$fusionforgeproject" ;

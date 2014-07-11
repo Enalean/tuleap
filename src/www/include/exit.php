@@ -6,7 +6,7 @@
 //
 // 
 
-function exit_error($title,$text) {
+function exit_error($title, $text = '') {
     global $HTML,$Language;
     $GLOBALS['feedback'] .= $title;
     

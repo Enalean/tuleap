@@ -33,14 +33,14 @@ class MediaWikiInstantiater {
     /** @var string */
     private $project_name;
 
+    /** @var int */
+    private $project_id;
+
     /** @var string */
     private $project_name_dir;
 
     /** @var project */
     private $project;
-
-    /** @var int */
-    private $project_id;
 
     /**
      * @param string $project
@@ -49,8 +49,8 @@ class MediaWikiInstantiater {
         $this->logger           = new BackendLogger();
         $this->project          = $project;
         $this->project_name     = $project->getUnixName();
-        $this->project_name_dir = forge_get_config('projects_path', 'mediawiki') . '/' . $this->project_name;
         $this->project_id       = $project->getID();
+        $this->project_name_dir = forge_get_config('projects_path', 'mediawiki') . '/' . $this->project_id;
     }
 
     /**
@@ -90,7 +90,7 @@ class MediaWikiInstantiater {
     }
 
     private function createDatabase() {
-        $schema = strtr('plugin_mediawiki_' . $this->project_name, '-', '_');
+        $schema = strtr('plugin_mediawiki_' . $this->project_id, '-', '_');
         $src_path = forge_get_config('src_path', 'mediawiki');
         $table_file = $src_path . '/maintenance/tables.sql';
         $main_db = Config::get('sys_dbname');
