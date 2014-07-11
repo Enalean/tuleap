@@ -283,11 +283,39 @@ class ProjectManager {
      *
      * @return Boolean
      */
-    public function renameProject($project,$new_name){
+    public function renameProject($project, $new_name){
         //Remove the project from the cache, because it will be modified
         $this->clear($project->getId());
         $dao = $this->_getDao();
-        return $dao->renameProject($project, $new_name);
+
+        $rename = $dao->renameProject($project, $new_name);
+
+        if ($rename) {
+            $success = true;
+            $event_manager = EventManager::instance();
+            $event_manager->processEvent(
+                Event::RENAME_PROJECT,
+                array(
+                    'project'     => $project,
+                    'success'     => &$success,
+                    'new_name'    => $new_name,
+                )
+            );
+
+            return $success;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param int $project_id
+     * @param string $plugin_name
+     * @param string $new_link
+     * @return boolean
+     */
+    public function renameProjectPluginServiceLink($project_id, $plugin_name, $new_link) {
+        return $this->_getDao()->renameProjectPluginServiceLink($project_id, $plugin_name, $new_link);
     }
 
     /**
