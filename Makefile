@@ -46,6 +46,9 @@ autoload:
 	     (cd "plugins/$$path/include"; phpab -q --compat -o autoload.php .) \
         done;
 
+autoload-dev:
+	@tools/utils/autoload.sh
+
 less:
 	@tools/utils/less.sh less `pwd`
 
