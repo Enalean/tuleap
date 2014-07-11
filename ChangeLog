@@ -9,7 +9,7 @@ Version 7.3 (Not Released Yet)
 	* ldap: 3.50
 	* fulltextsearch: 0.56
 	* docman: 2.26.39
-	* mediawiki: 0.38
+	* mediawiki: 0.39
 	* forumml: 2.6.20
 	* agiledashboard: 1.67
 	* cardwall: 1.34
@@ -18,6 +18,7 @@ Version 7.3 (Not Released Yet)
 	* FlamingParrot: 1.33
 
 	== Bug fix ==
+	* bugtasks #7164: change the link in sidebar so that it uses current project shortname dynamically
 	* bugtasks #7157: fixed notice in src/www/include/exit.php
 	* request #7170: prevent make less to compile node_modules
 	* request #7068: Allow Cross Origin Resources Sharing for REST API, fixing test
