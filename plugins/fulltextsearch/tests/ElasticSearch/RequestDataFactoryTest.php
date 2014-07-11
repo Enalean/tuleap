@@ -365,6 +365,35 @@ class RequestWikiDataFactoryTest extends TuleapTestCase {
         );
     }
 
+    public function itBuildsDataForFirstIndexationOfWikiPageOnUpdate() {
+        stub($this->wiki_page)->getMetadata()->returns(array(
+            'mtime'   => 1405061249,
+            'author'  => 'user',
+            'content' => 'cont',
+            'summary' => 'sum'
+        ));
+
+        stub($this->permissions_manager)->getFromattedUgroupsThatCanReadWikiPage()->returns(array(
+            '@site_active'
+        ));
+
+        $expected_data = array(
+            'id'                 => 1940,
+            'group_id'           => 200,
+            'page_name'          => 'wiki_page',
+            'last_modified_date' => 1405061249,
+            'last_author'        => 'user',
+            'last_summary'       => 'sum',
+            'content'            => 'cont',
+            'permissions'        => array('@site_active')
+        );
+
+        $this->assertEqual(
+            $expected_data,
+            $this->request_data_factory->getIndexedWikiPageData($this->wiki_page)
+        );
+    }
+
     public function itBuildsDataForPutRequestCreateMapping() {
         $project_id = 200;
 

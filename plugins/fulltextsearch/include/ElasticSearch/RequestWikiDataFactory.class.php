@@ -73,7 +73,8 @@ class ElasticSearch_1_2_RequestWikiDataFactory {
                 $wiki_page_metadata[self::PHPWIKI_METADATA_AUTHOR] : '',
             'last_summary'       => isset($wiki_page_metadata[self::PHPWIKI_METADATA_SUMMARY]) ?
                 $wiki_page_metadata[self::PHPWIKI_METADATA_SUMMARY] : '',
-            'content'            => '',
+            'content'            => isset($wiki_page_metadata[self::PHPWIKI_METADATA_CONTENT]) ?
+                $wiki_page_metadata[self::PHPWIKI_METADATA_CONTENT] : '',
             'permissions'        => $this->permissions_manager->getFromattedUgroupsThatCanReadWikiPage($wiki_page)
         );
     }

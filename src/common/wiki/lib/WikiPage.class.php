@@ -77,10 +77,49 @@ class WikiPage {
             return array('mtime' => time());
         }
 
-        $current_revision_metadata = $this->wrapper->getRequest()->getPage()->getCurrentRevision()->getMetaData();
-        $page_metadata             = $this->wrapper->getRequest()->getPage()->getMetaData();
 
-        return $page_metadata + $current_revision_metadata;
+        $current_revision_metadata = $this->wrapper->getRequest()->getPage($this->pagename)
+            ->getCurrentRevision()->getMetaData();
+
+        $content = array(
+            'content' => $this->getLastVersionContent()
+        );
+        $summary = array(
+            'summary' => $this->getSummaryForCurrentRevision()
+        );
+
+        return $current_revision_metadata + $content + $summary;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    private function getSummaryForCurrentRevision() {
+        $summary_content = $this->wrapper->getRequest()->getPage($this->pagename)
+            ->getCurrentRevision()->get('summary');
+
+        if ($summary_content) {
+            return $summary_content;
+        }
+
+        return '';
+    }
+
+    private function getLastVersionContent() {
+        $res = db_query(
+            'SELECT content
+            FROM wiki_version
+            WHERE id='.$this->id .' ORDER BY version DESC LIMIT 1'
+        );
+
+        if (db_numrows($res) !== 1) {
+            return '';
+        }
+
+        $results = db_fetch_array($res);
+
+        return $results['content'];
     }
 
     private function findPageId() {

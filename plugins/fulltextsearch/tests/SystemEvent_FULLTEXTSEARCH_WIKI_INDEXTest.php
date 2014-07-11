@@ -47,7 +47,7 @@ class SystemEvent_FULLTEXTSEARCH_WIKI_INDEXTest extends SystemEvent_FULLTEXTSEAR
     public function itDelegatesIndexingToFullTextSearchActions() {
         $event = $this->aSystemEventWithParameter('101::wiki_page');
         stub($event)->getWikiPage(101, 'wiki_page')->returns($this->wiki_page);
-        stub($this->actions)->indexNewWikiPage($this->wiki_page)->once();
+        stub($this->actions)->indexNewEmptyWikiPage($this->wiki_page)->once();
 
         $this->assertTrue($event->process());
         $this->assertEqual($event->getLog(), 'OK');

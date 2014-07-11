@@ -64,8 +64,21 @@ class FullTextSearchWikiActions {
      *
      * @param WikiPage $wiki_page The wiki page
      */
-    public function indexNewWikiPage(WikiPage $wiki_page) {
-        $this->logger->debug('[Wiki] ElasticSearch: index new document #' . $wiki_page->getGid());
+    public function indexNewEmptyWikiPage(WikiPage $wiki_page) {
+        $this->logger->debug('[Wiki] ElasticSearch: index new empty wiki page #' . $wiki_page->getId());
+
+        $indexed_data = $this->request_data_factory->getIndexedWikiPageData($wiki_page);
+
+        $this->client->index($wiki_page->getGid(), $wiki_page->getId(), $indexed_data);
+    }
+
+    /**
+     * Index a new wiki page
+     *
+     * @param WikiPage $wiki_page The wiki page
+     */
+    public function indexWikiPage(WikiPage $wiki_page) {
+        $this->logger->debug('[Wiki] ElasticSearch: index wiki page #' . $wiki_page->getId());
 
         $indexed_data = $this->request_data_factory->getIndexedWikiPageData($wiki_page);
 

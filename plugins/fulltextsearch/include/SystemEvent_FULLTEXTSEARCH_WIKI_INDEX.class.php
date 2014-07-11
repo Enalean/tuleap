@@ -27,7 +27,7 @@ class SystemEvent_FULLTEXTSEARCH_WIKI_INDEX extends SystemEvent_FULLTEXTSEARCH_W
             $this->actions->initializeProjetMapping($project_id);
         }
 
-        $this->actions->indexNewWikiPage($wiki_page);
+        $this->actions->indexNewEmptyWikiPage($wiki_page);
         return true;
     }
 }
