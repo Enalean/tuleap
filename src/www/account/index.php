@@ -160,13 +160,23 @@ foreach ($csv_dateformats as $dateformat) {
     );
 }
 
+$user_access_info = $um->getUserAccessInfo($user);
+if (! $user_access_info) {
+    $user_access_info = array(
+        'last_auth_success' => false,
+        'last_auth_failure' => false,
+        'nb_auth_failure'   => false,
+        'prev_auth_success' => false,
+    );
+}
+
 $presenter = new User_PreferencesPresenter(
     $user,
     $can_change_realname,
     $can_change_email,
     $can_change_password,
     $extra_user_info,
-    $um->getUserAccessInfo($user),
+    $user_access_info,
     $ssh_keys_extra_html,
     $third_paty_html,
     $csrf->fetchHTMLInput(),
