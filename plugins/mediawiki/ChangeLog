@@ -1,3 +1,6 @@
+Version 0.40 - Tuleap 7.3
+    * bugtasks #7175: script to identify broken mw in projects
+
 Version 0.39 - Tuleap 7.3
     * bugtasks #7164: change the link in sidebar so that it uses current project shortname dynamically
 
