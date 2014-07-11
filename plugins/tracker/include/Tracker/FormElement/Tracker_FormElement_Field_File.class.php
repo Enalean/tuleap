@@ -678,7 +678,10 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
     public function isValidRegardingRequiredProperty(Tracker_Artifact $artifact, $value) {
         $this->has_errors = false;
 
-        if (is_array($value) && $this->isRequired() && ! $this->checkThatAtLeastOneFileIsUploaded($value)) {
+        if (is_array($value) &&
+            $this->isRequired() &&
+            ! $this->checkThatAtLeastOneFileIsUploaded($value) &&
+            $this->isPreviousChangesetEmpty($artifact, $value)) {
             $this->addRequiredError();
         }
 

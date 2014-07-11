@@ -443,6 +443,7 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
         
         $required_file = new Tracker_FormElement_Field_FileTestVersion();
         $required_file->setReturnValue('isRequired', true);
+        $required_file->setReturnValue('isPreviousChangesetEmpty', true);
         $this->assertFalse($required_file->isValidRegardingRequiredProperty($artifact, $value));
         
         $not_required_file = new Tracker_FormElement_Field_FileTestVersion();
@@ -473,6 +474,7 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
         
         $required_file = new Tracker_FormElement_Field_FileTestVersion();
         $required_file->setReturnValue('isRequired', true);
+        $required_file->setReturnValue('isPreviousChangesetEmpty', true);
         $this->assertFalse($required_file->isValidRegardingRequiredProperty($artifact, $value));
         
         $not_required_file = new Tracker_FormElement_Field_FileTestVersion();
@@ -545,7 +547,26 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
         $not_required_file->setReturnValue('isRequired', false);
         $this->assertTrue($not_required_file->isValid($artifact, $value));
     }
-    
+
+    function itIsValidWhenFieldIsRequiredButHasAFileFromPreviousChangeset() {
+        $artifact = new MockTracker_Artifact();
+        $value = array(
+            array(
+                'description' =>  "Capture d'ecran",
+                'name'        =>  'Screenshot.png',
+                'type'        =>  'image/png',
+                'tmp_name'    =>  $this->tmp_name,
+                'error'       =>  UPLOAD_ERR_OK,
+                'size'        =>  0,
+            )
+        );
+
+        $required_file = new Tracker_FormElement_Field_FileTestVersion();
+        $required_file->setReturnValue('isRequired', true);
+        $required_file->setReturnValue('isPreviousChangesetEmpty', false);
+        $this->assertTrue($required_file->isValid($artifact, $value));
+    }
+
     function test_isValid_two_files_ok() {
         $artifact = new MockTracker_Artifact();
         $value = array(
