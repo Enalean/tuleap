@@ -23,6 +23,7 @@ class SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE_PERMISSIONS extends SystemEvent_FUL
     const NAME = 'FULLTEXTSEARCH_WIKI_UPDATE_PERMISSIONS';
 
     protected function processItem(WikiPage $wiki_page, $group_id) {
+        $this->actions->updatePermissions($wiki_page);
         return true;
     }
 }

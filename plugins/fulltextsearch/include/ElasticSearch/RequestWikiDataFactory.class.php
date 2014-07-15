@@ -75,8 +75,16 @@ class ElasticSearch_1_2_RequestWikiDataFactory {
                 $wiki_page_metadata[self::PHPWIKI_METADATA_SUMMARY] : '',
             'content'            => isset($wiki_page_metadata[self::PHPWIKI_METADATA_CONTENT]) ?
                 $wiki_page_metadata[self::PHPWIKI_METADATA_CONTENT] : '',
-            'permissions'        => $this->permissions_manager->getFromattedUgroupsThatCanReadWikiPage($wiki_page)
+            'permissions'        => $this->getCurrentPermissions($wiki_page)
         );
+    }
+
+    public function getCurrentPermissions(WikiPage $wiki_page) {
+        return $this->permissions_manager->getFromattedUgroupsThatCanReadWikiPage($wiki_page);
+    }
+
+    public function setUpdatedData(array &$current_data, $name, $value) {
+        $current_data[$name] = $value;
     }
 
     private function initializePUTMappingData($project_id) {
