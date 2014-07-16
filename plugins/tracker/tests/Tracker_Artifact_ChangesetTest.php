@@ -61,6 +61,7 @@ class Tracker_Artifact_ChangesetTest extends TuleapTestCase {
         $GLOBALS['Language']           = new MockBaseLanguage();
         $GLOBALS['sys_default_domain'] = 'localhost';
         $GLOBALS['sys_force_ssl']      = 0;
+        $this->recipient_factory       = mock('Tracker_Artifact_MailGateway_RecipientFactory');
     }
 
     function tearDown() {
@@ -358,6 +359,14 @@ BODY;
         stub($changeset)->getUserFromRecipientName('user02')->returns($user2);
         stub($changeset)->getUserFromRecipientName('user03')->returns($user3);
 
+        $recipient1 = stub('Tracker_Artifact_MailGateway_Recipient')->getEmail()->returns('email1');
+        $recipient2 = stub('Tracker_Artifact_MailGateway_Recipient')->getEmail()->returns('email2');
+        $recipient3 = stub('Tracker_Artifact_MailGateway_Recipient')->getEmail()->returns('email3');
+
+        stub($this->recipient_factory)->getFromUserAndChangeset($user1, '*')->returns($recipient1);
+        stub($this->recipient_factory)->getFromUserAndChangeset($user2, '*')->returns($recipient2);
+        stub($this->recipient_factory)->getFromUserAndChangeset($user3, '*')->returns($recipient3);
+
         $recipients = array(
             'user01' => false,
             'user02' => false,
@@ -391,13 +400,16 @@ BODY;
                 'getArtifact',
                 'getComment',
                 'getLanguageFactory',
-                'getUserFromRecipientName'
+                'getUserFromRecipientName',
+                'getRecipientFactory'
             )
         );
         $changeset->setReturnValue('getUserHelper', $uh);
         $changeset->setReturnValue('getUserManager', $um);
         $changeset->setReturnValue('getArtifact', $a);
         $changeset->setReturnValue('getLanguageFactory', $languageFactory);
+        $changeset->setReturnValue('getRecipientFactory', $this->recipient_factory);
+
         return $changeset;
     }
 

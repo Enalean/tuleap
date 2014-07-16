@@ -639,8 +639,8 @@ class Tracker_Artifact_Changeset {
             $user = $this->getUserFromRecipientName($recipient);
 
             if ($user) {
-                $headers           = array($this->getCustomReplyToHeader());
-                $message_id        = $this->getMessageId($user);
+                $headers    = array($this->getCustomReplyToHeader());
+                $message_id = $this->getMessageId($user);
 
                 $messages[$message_id] = $this->getMessageContent($user, $is_update, $check_perms);
 
@@ -654,10 +654,17 @@ class Tracker_Artifact_Changeset {
     }
 
     private function getMessageId(PFUser $user) {
-        $recipient_factory = Tracker_Artifact_MailGateway_RecipientFactory::build();
-        $recipient = $recipient_factory->getFromUserAndChangeset($user, $this);
+        $recipient_factory = $this->getRecipientFactory();
+        $recipient         = $recipient_factory->getFromUserAndChangeset($user, $this);
 
         return $recipient->getEmail();
+    }
+
+    /**
+     * @return Tracker_Artifact_MailGateway_RecipientFactory
+     */
+    protected function getRecipientFactory() {
+        return Tracker_Artifact_MailGateway_RecipientFactory::build();
     }
 
     private function getCustomReplyToHeader() {
