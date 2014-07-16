@@ -1,3 +1,6 @@
+Version 5.424 - Tuleap 7.3
+    * Fix request #7234 tracker_ artifact_ changeset test fails on master
+
 Version 5.423 - Tuleap 7.3
     * Fix request #7053:  Issue with field attachment required
 
