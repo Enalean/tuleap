@@ -50,6 +50,7 @@ class FilterTestCase extends FilterIterator {
 
     private function fileCanBeSelectedIntoTestSuite($file) {
         return (strpos($file->getPathname(), '/_') === false &&
+               $this->isNotATestsRestDirectory($file->getPathname()) &&
                (preg_match('/Test.php$/', $file->getFilename()) || ($this->phpVersionIsGreaterOrEqualThanPhp53() && preg_match('/TestPHP53.php$/', $file->getFilename())))
         );
     }
@@ -57,6 +58,10 @@ class FilterTestCase extends FilterIterator {
 
     private function phpVersionIsGreaterOrEqualThanPhp53() {
         return version_compare(phpversion(), '5.3', '>=');
+    }
+
+    private function isNotATestsRestDirectory($pathName) {
+        return !(preg_match("/^.*\/tests\/rest(\/.+|$)$/", $pathName));
     }
 }
 

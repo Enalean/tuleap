@@ -72,6 +72,9 @@ api_test_bootstrap:
 
 api_test: api_test_bootstrap
 	$(PHPUNIT) $(REST_TESTS_OPTIONS) tests/rest
+	@if [ -e plugins/*/tests/rest ]; then \
+		$(PHPUNIT) $(REST_TESTS_OPTIONS) plugins/*/tests/rest; \
+	fi
 
 ci_api_test_setup: composer_update
 	mkdir -p $(WORKSPACE)/etc
