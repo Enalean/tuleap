@@ -21,14 +21,9 @@ require_once 'SVN_SvnlookException.class.php';
 
 class SVN_Svnlook {
     private $svnlook = '/usr/bin/svnlook';
-    private $svn_prefix;
-
-    public function __construct($svn_prefix) {
-        $this->svn_prefix = $svn_prefix;
-    }
 
     public function getDirectoryListing(Project $project, $svn_path) {
-        $command = 'tree --non-recursive --full-paths '.escapeshellarg($this->getRepositoryPath($project)).' '.escapeshellarg($svn_path);
+        $command = 'tree --non-recursive --full-paths '.escapeshellarg($project->getSVNRootPath()).' '.escapeshellarg($svn_path);
         return $this->execute($command);
     }
 
@@ -38,7 +33,7 @@ class SVN_Svnlook {
      * @return array
      */
     public function getPathLastHistory(Project $project, $svn_path) {
-        $command = 'history --limit 1 '.escapeshellarg($this->getRepositoryPath($project)).' '.escapeshellarg($svn_path);
+        $command = 'history --limit 1 '.escapeshellarg($project->getSVNRootPath()).' '.escapeshellarg($svn_path);
         return $this->execute($command);
     }
 
@@ -58,12 +53,8 @@ class SVN_Svnlook {
      * @return array
      */
     public function getInfo(Project $project, $revision) {
-        $command = 'info -r ' . escapeshellarg($revision) . ' ' . escapeshellarg($this->getRepositoryPath($project));
+        $command = 'info -r ' . escapeshellarg($revision) . ' ' . escapeshellarg($project->getSVNRootPath());
         return $this->execute($command);
-    }
-
-    private function getRepositoryPath(Project $project) {
-        return $this->svn_prefix. DIRECTORY_SEPARATOR . $project->getUnixName();
     }
 
     private function execute($command) {

@@ -625,18 +625,18 @@ class LdapPlugin extends Plugin {
     }
 
     /**
-     * Modify the Codendi user name before to check if user has access to given
+     * Modify the user name before to check if user has access to given
      * ldap ressource (because users in .SVNAccessFile are defined with their
      * ldap login
      *
-     * $params['groupname']
+     * $params['project_svnroot']
      * $params['username']
      */
     function svn_check_access_username($params) {
         $svnProjectManager = new LDAP_ProjectManager();
         if($GLOBALS['sys_auth_type'] == 'ldap'
-           && isset($params['groupname'])
-           && $svnProjectManager->hasSVNLDAPAuthByName($params['groupname'])) {
+           && isset($params['project_svnroot'])
+           && $svnProjectManager->hasSVNLDAPAuthByName(basename($params['project_svnroot']))) {
                $ldapUm = $this->_getLdapUserManager();
                $lr     = $ldapUm->getLdapFromUserName($params['username']);
                if($lr !== false) {

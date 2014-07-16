@@ -151,8 +151,16 @@ class Group extends Error {
     }
 
 	function getUnixName($tolower = true) {
-		return $tolower ? strtolower($this->data_array['unix_group_name']) : $this->data_array['unix_group_name'];
+		return $tolower ? $this->getUnixNameLowerCase() : $this->getUnixNameMixedCase();
 	}
+
+        public function getUnixNameLowerCase() {
+            return strtolower($this->getUnixNameMixedCase());
+        }
+
+        public function getUnixNameMixedCase() {
+            return $this->data_array['unix_group_name'];
+        }
 
 	function getPublicName() {
 	  return $this->data_array['group_name'];
