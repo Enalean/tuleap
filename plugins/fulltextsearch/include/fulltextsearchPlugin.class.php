@@ -180,6 +180,14 @@ class fulltextsearchPlugin extends Plugin {
             $this->getTrackerSystemEventManager(),
         );
         $i = 0;
+
+        $allowed_types = array('types' => array());
+        $this->system_event_get_types(&$allowed_types);
+
+        if (! in_array($params['type'], $allowed_types['types'])) {
+            return;
+        }
+
         do {
             $providers[$i]->getSystemEventClass(
                 $params['type'],
