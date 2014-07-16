@@ -1,0 +1,113 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace Tuleap\Testing\REST\v1;
+
+use \Tracker_Artifact;
+use \Tracker_FormElementFactory;
+use \PFUser;
+
+class CampaignRepresentation {
+
+    const ROUTE = 'campaigns';
+
+    const FIELD_NAME = "name";
+
+    const STATUS_NOT_RUN = "Not Run";
+    const STATUS_PASSED  = "Passed";
+    const STATUS_FAILED  = "Failed";
+    const STATUS_BLOCKED = "Blocked";
+
+    /** @var Tracker_FormElementFactory */
+    private $form_element_factory;
+
+    /** @var int */
+    private $tracker_id;
+
+    /** @var Tracker_Artifact */
+    private $artifact;
+
+    /** @var PFUser */
+    private $user;
+
+    /** @var int ID of the artifact */
+    public $id;
+
+    /** @var String Name of the campaign */
+    public $name;
+
+    /** @var String Status of the campaign */
+    public $status;
+
+    /** @var String */
+    public $uri;
+
+    /** @var int */
+    public $nb_of_not_run;
+
+    /** @var int */
+    public $nb_of_passed;
+
+    /** @var int */
+    public $nb_of_failed;
+
+    /** @var int */
+    public $nb_of_blocked;
+
+    public function build(Tracker_Artifact $artifact, Tracker_FormElementFactory $form_element_factory, PFUser $user) {
+        $this->artifact             = $artifact;
+        $this->tracker_id           = $artifact->getTrackerId();
+        $this->form_element_factory = $form_element_factory;
+        $this->user                 = $user;
+
+        $this->id            = $artifact->getId();
+        $this->uri           = self::ROUTE . '/' . $this->id;
+        $this->name          = $this->getFieldValue(self::FIELD_NAME)->getValue();
+        $this->status        = $this->artifact->getStatus();
+
+        $executions_status   = $this->getExecutionsStatus();
+
+        $this->nb_of_not_run = $executions_status[self::STATUS_NOT_RUN];
+        $this->nb_of_passed  = $executions_status[self::STATUS_PASSED];
+        $this->nb_of_failed  = $executions_status[self::STATUS_FAILED];
+        $this->nb_of_blocked = $executions_status[self::STATUS_BLOCKED];
+    }
+
+    private function getFieldValue($field_shortname) {
+        $field = $this->form_element_factory->getUsedFieldByNameForUser($this->tracker_id, $field_shortname, $this->user);
+        return $this->artifact->getValue($field);
+    }
+
+    private function getExecutionsStatus() {
+        $executions = array (
+            self::STATUS_NOT_RUN => 0,
+            self::STATUS_BLOCKED => 0,
+            self::STATUS_PASSED  => 0,
+            self::STATUS_FAILED  => 0
+        );
+        $linked_artifacts = $this->artifact->getLinkedArtifacts($this->user);
+
+        foreach($linked_artifacts as $artifact) {
+            $executions[$artifact->getStatus()] ++;
+        }
+
+        return $executions;
+    }
+}

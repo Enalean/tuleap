@@ -15,6 +15,8 @@ class TestingPlugin extends Plugin {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
         $this->_addHook('cssfile', 'cssfile', false);
+        $this->_addHook(Event::REST_PROJECT_RESOURCES);
+        $this->_addHook(Event::REST_RESOURCES);
     }
 
     public function getServiceShortname() {
@@ -45,5 +47,21 @@ class TestingPlugin extends Plugin {
         $config = new \Tuleap\Testing\Config(new \Tuleap\Testing\Dao());
         $router = new Tuleap\Testing\Router($this, $config);
         $router->route($request);
+    }
+
+    /**
+     * @see REST_RESOURCES
+     */
+    public function rest_resources(array $params) {
+        $injector = new Testing_REST_ResourcesInjector();
+        $injector->populate($params['restler']);
+    }
+
+    /**
+     * @see REST_PROJECT_RESOURCES
+     */
+    function rest_project_resources(array $params) {
+        $injector = new Testing_REST_ResourcesInjector();
+        $injector->declareProjectResource($params['resources'], $params['project']);
     }
 }
