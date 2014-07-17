@@ -1,3 +1,14 @@
+Version 0.59 - Tuleap 7.3
+    * Part of story #7028 Search in wiki pages
+
+tasks #7225 Update permission on page permissions change
+tasks #7219 Catch wiki page permissions changed event
+tasks #7209: Delete wikipage
+tasks #7220 Update wiki page
+tasks #7208 Index permissions
+tasks #7188 Index data in ElasticSearch
+
+
 Version 0.58 - Tuleap 7.3
     * tasks #7186 Define a FTS mapping for wiki pages
 
