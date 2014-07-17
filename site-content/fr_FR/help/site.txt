@@ -4,14 +4,12 @@
 Vous avez une question sur Tuleap ou êtes bloqué?  
 Nous vous suggérons de commencer par regarder dans la documentation:
 <ul>
-	<li><a href="/doc/fr/index.html">Guide Utilisateur</a></li>
-	<li><a href="/plugins/docman/?group_id=1">Autre documentation</li></a>
+	<li><a href="/doc/fr/">Guide Utilisateur</a></li>
+	<li><a href="/doc/en/">Guide Utilisateur (anglais)</a></li>
 </ul>
 
 <h3>Posez vos questions</h3>
 Question technique, problème, bug? Poster vos questions, obtenez des réponses en écrivant à la 
-liste de distribution <a href="/plugins/forumml/message.php?group_id=101&list=1">tuleap-devel</a>. 
-Pour consulter les discussions actuelles ou en soumettre une nouvelle, <a href="/account/register.php">créer un compte utilisateur</a> sur Tuleap.
+liste de distribution de la communauté Tuleap <a href="http://tuleap.net/plugins/forumml/message.php?group_id=101&list=1">tuleap-devel</a>.
 
-<h3><a href="/contact.php">Contact Us</a></h3>
-Pour toutes autres besoins, <a href="/contact.php">contactez-nous</a>.
+Pour consulter les discussions actuelles ou en soumettre une nouvelle, <a href="http://tuleap.net/account/register.php">enregistrez vous </a> sur la forge communautaire de Tuleap.
