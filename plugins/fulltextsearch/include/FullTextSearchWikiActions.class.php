@@ -58,4 +58,58 @@ class FullTextSearchWikiActions {
             $this->request_data_factory->getPUTMappingData($project_id)
         );
     }
+
+    /**
+     * Index a new wiki page
+     *
+     * @param WikiPage $wiki_page The wiki page
+     */
+    public function indexNewEmptyWikiPage(WikiPage $wiki_page) {
+        $this->logger->debug('[Wiki] ElasticSearch: index new empty wiki page #' . $wiki_page->getId());
+
+        $indexed_data = $this->request_data_factory->getIndexedWikiPageData($wiki_page);
+
+        $this->client->index($wiki_page->getGid(), $wiki_page->getId(), $indexed_data);
+    }
+
+    /**
+     * Index a new wiki page
+     *
+     * @param WikiPage $wiki_page The wiki page
+     */
+    public function indexWikiPage(WikiPage $wiki_page) {
+        $this->logger->debug('[Wiki] ElasticSearch: index wiki page #' . $wiki_page->getId());
+
+        $indexed_data = $this->request_data_factory->getIndexedWikiPageData($wiki_page);
+
+        $this->client->index($wiki_page->getGid(), $wiki_page->getId(), $indexed_data);
+    }
+
+    /**
+     * Remove an indexed wiki page
+     *
+     * @param WikiPage $wiki_page The item to delete
+     */
+    public function delete(WikiPage $wiki_page) {
+        $this->logger->debug('[Wiki] ElasticSearch: delete wiki page #' . $wiki_page->getId());
+
+        $this->client->delete($wiki_page->getGid(), $wiki_page->getId());
+    }
+
+    /**
+     *
+     * @param WikiPage $wiki_page
+     */
+    public function updatePermissions(WikiPage $wiki_page) {
+        $this->logger->debug('[Wiki] ElasticSearch: update permissions of document #' . $wiki_page->getId());
+
+        $update_data = array();
+        $this->request_data_factory->setUpdatedData(
+            $update_data,
+            'permissions',
+            $this->request_data_factory->getCurrentPermissions($wiki_page)
+        );
+
+        $this->client->update($wiki_page->getGid(), $wiki_page->getId(), $update_data);
+    }
 }

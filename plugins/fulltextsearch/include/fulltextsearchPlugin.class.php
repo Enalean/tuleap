@@ -60,6 +60,8 @@ class fulltextsearchPlugin extends Plugin {
         // wiki
         $this->_addHook('wiki_page_updated', 'wiki_page_updated', false);
         $this->_addHook('wiki_page_created', 'wiki_page_created', false);
+        $this->_addHook('wiki_page_deleted', 'wiki_page_deleted', false);
+        $this->_addHook('wiki_page_permissions_updated', 'wiki_page_permissions_updated', false);
 
         // assets
         $this->_addHook('cssfile', 'cssfile', false);
@@ -166,6 +168,8 @@ class fulltextsearchPlugin extends Plugin {
                 SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP_UPDATE::NAME,
                 SystemEvent_FULLTEXTSEARCH_WIKI_INDEX::NAME,
                 SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE::NAME,
+                SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE_PERMISSIONS::NAME,
+                SystemEvent_FULLTEXTSEARCH_WIKI_DELETE::NAME,
             )
         );
     }
@@ -210,6 +214,14 @@ class fulltextsearchPlugin extends Plugin {
 
     public function wiki_page_created($params) {
         $this->getWikiSystemEventManager()->queueIndexWikiPage($params);
+    }
+
+    public function wiki_page_deleted($params) {
+        $this->getWikiSystemEventManager()->queueDeleteWikiPage($params);
+    }
+
+    public function wiki_page_permissions_updated($params) {
+        $this->getWikiSystemEventManager()->queueUpdateWikiPagePermissions($params);
     }
 
     /**

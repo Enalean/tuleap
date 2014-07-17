@@ -23,6 +23,7 @@ class SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE extends SystemEvent_FULLTEXTSEARCH_
     const NAME = 'FULLTEXTSEARCH_WIKI_UPDATE';
 
     protected function processItem(WikiPage $wiki_page, $group_id) {
+        $this->actions->indexWikiPage($wiki_page);
         return true;
     }
 }

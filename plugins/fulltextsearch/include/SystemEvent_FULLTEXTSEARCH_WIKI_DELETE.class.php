@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,15 +19,11 @@
  */
 
 
-class SystemEvent_FULLTEXTSEARCH_WIKI_INDEX extends SystemEvent_FULLTEXTSEARCH_WIKI {
-    const NAME = 'FULLTEXTSEARCH_WIKI_INDEX';
+class SystemEvent_FULLTEXTSEARCH_WIKI_DELETE extends SystemEvent_FULLTEXTSEARCH_WIKI {
+    const NAME = 'FULLTEXTSEARCH_WIKI_DELETE';
 
     protected function processItem(WikiPage $wiki_page, $project_id) {
-        if (! $this->actions->checkProjectMappingExists($project_id)) {
-            $this->actions->initializeProjetMapping($project_id);
-        }
-
-        $this->actions->indexNewEmptyWikiPage($wiki_page);
+        $this->actions->delete($wiki_page);
         return true;
     }
 }

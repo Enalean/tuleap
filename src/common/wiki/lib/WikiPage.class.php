@@ -1,31 +1,34 @@
 <?php
 /* 
  * Copyright 2005, STMicroelectronics
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 require_once('WikiPageWrapper.class.php');
 require_once('www/project/admin/permissions.php');
 
 /**
- * Codendi manipulation of WikiPages
+ * Tuleap manipulation of WikiPages
  *
- * This class is Codendi representation of wiki_page table in database.
+ * This class is Tuleap representation of wiki_page table in database.
  *
  * @package WikiService
  * @copyright STMicroelectronics, 2005
@@ -33,114 +36,155 @@ require_once('www/project/admin/permissions.php');
  * @license http://opensource.org/licenses/gpl-license.php GPL
  */
 class WikiPage {
-  /* private int */   var $id;       /* wiki_page.id */
-  /* private string*/ var $pagename; /* wiki_page.pagename */
-  /* private int */   var $gid;      /* wiki_page.group_id */
-  /* private bool */  var $empty;    /* */
+ /* private int */   var $id;       /* wiki_page.id */
+ /* private string*/ var $pagename; /* wiki_page.pagename */
+ /* private int */   var $gid;      /* wiki_page.group_id */
+ /* private bool */  var $empty;    /* */
 
-  /*
-   * Constructor
-   */
-  function WikiPage($id=0, $pagename='') {
-    $this->empty=null;
+    /** @var WikiPageWrapper */
+    private $wrapper;
 
-    if($id != 0) {
-      if(empty($pagename)) {
-	//Given number is the WikiPage id from wiki_page table
-	$this->id = (int) $id;
-	$this->_initFromDb();
-      }
-      else {
-	//Given number is group_id from wiki_page table
-	$this->gid      = (int) $id;
-	$this->pagename = $pagename;
-	$this->_findPageId();
-      }
-    }
-    else {
-      $this->id=0;
-      $this->pagename='';
-      $this->gid=0;
-    }
-  }
-  
-  /**
-   * @access private
-   */
-  function _findPageId() {
-    $res = db_query(' SELECT id FROM wiki_page'.
-		    ' WHERE group_id="'.$this->gid.'"'.
-		    ' AND pagename="'.addslashes($this->pagename).'"');
-    if(db_numrows($res) > 1) {
-        exit_error($GLOBALS['Language']->getText('global','error'), 
-                   $GLOBALS['Language']->getText('wiki_lib_wikipage', 
-                                                 'notunique_err'));
-    }
-    $row = db_fetch_array($res);
-    $this->id =  $row['id'];
-  } 
+    /*
+     * Constructor
+     */
+    function WikiPage($id=0, $pagename='') {
+        $this->empty = null;
 
+        if($id != 0) {
+          if(empty($pagename)) {
+            //Given number is the WikiPage id from wiki_page table
+            $this->id = (int) $id;
+            $this->initFromDb();
+          }
+          else {
+            //Given number is group_id from wiki_page table
+            $this->gid      = (int) $id;
+            $this->pagename = $pagename;
+            $this->findPageId();
+          }
+        }
+        else {
+          $this->id       =0;
+          $this->pagename ='';
+          $this->gid      =0;
+        }
 
-  /**
-   * @access private
-   */
-  function _initFromDb() {
-    $res = db_query(' SELECT id, pagename, group_id FROM wiki_page'.
-		    ' WHERE id="'.$this->id.'"');
-    if(db_numrows($res) > 1) {
-        exit_error($GLOBALS['Language']->getText('global','error'), 
-                   $GLOBALS['Language']->getText('wiki_lib_wikipage', 
-                                                 'notunique_err'));
-    }
-    $row = db_fetch_array($res);
-
-    $this->gid =  $row['group_id'];
-    $this->pagename =  $row['pagename'];
-  }
-
-
-  /**
-   * @todo transfer to Wrapper
-   */
-  function isEmpty() {
-    // If this value is already computed, return now !
-    if($this->empty != null) {
-      return $this->empty;
-    }
-  
-    // Else compute
-    $this->empty=true;
-    if($this->exist()) {
-      $res = db_query(' SELECT wiki_page.id'
-		      .' FROM wiki_page, wiki_nonempty'
-		      .' WHERE wiki_page.group_id="'.$this->gid.'"'
-		      .' AND wiki_page.id="'.$this->id.'"'
-		      .' AND wiki_nonempty.id=wiki_page.id');
-      if(db_numrows($res) == 1) {
-	$this->empty = false;
-      }
+        $this->wrapper = new WikiPageWrapper($this->gid);
     }
 
-    return $this->empty;
-  }
+    public function getMetadata() {
+        if ($this->isEmpty()) {
+            return array('mtime' => time());
+        }
 
 
-  /**
-   * @access public
-   */
-  function permissionExist() {
-    if (permission_exist('WIKIPAGE_READ', $this->id))
-      return true;
-    else
-      return false;
-  }
+        $current_revision_metadata = $this->wrapper->getRequest()->getPage($this->pagename)
+            ->getCurrentRevision()->getMetaData();
+
+        $content = array(
+            'content' => $this->getLastVersionContent()
+        );
+        $summary = array(
+            'summary' => $this->getSummaryForCurrentRevision()
+        );
+
+        return $current_revision_metadata + $content + $summary;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    private function getSummaryForCurrentRevision() {
+        $summary_content = $this->wrapper->getRequest()->getPage($this->pagename)
+            ->getCurrentRevision()->get('summary');
+
+        if ($summary_content) {
+            return $summary_content;
+        }
+
+        return '';
+    }
+
+    private function getLastVersionContent() {
+        $res = db_query(
+            'SELECT content
+            FROM wiki_version
+            WHERE id='.$this->id .' ORDER BY version DESC LIMIT 1'
+        );
+
+        if (db_numrows($res) !== 1) {
+            return '';
+        }
+
+        $results = db_fetch_array($res);
+
+        return $results['content'];
+    }
+
+    private function findPageId() {
+        $res = db_query(' SELECT id FROM wiki_page'.
+                        ' WHERE group_id="'.$this->gid.'"'.
+                        ' AND pagename="'.addslashes($this->pagename).'"');
+        if(db_numrows($res) > 1) {
+            exit_error($GLOBALS['Language']->getText('global','error'),
+                       $GLOBALS['Language']->getText('wiki_lib_wikipage',
+                                                     'notunique_err'));
+        }
+        $row = db_fetch_array($res);
+        $this->id =  $row['id'];
+    }
 
 
-  /**
-   * @access public
-   */
-    function isAutorized($uid) {            
-        //Check for Docman Perms 
+    private function initFromDb() {
+        $res = db_query(' SELECT id, pagename, group_id FROM wiki_page'.
+                        ' WHERE id="'.$this->id.'"');
+        if(db_numrows($res) > 1) {
+            exit_error($GLOBALS['Language']->getText('global','error'),
+                       $GLOBALS['Language']->getText('wiki_lib_wikipage',
+                                                     'notunique_err'));
+        }
+        $row = db_fetch_array($res);
+
+        $this->gid =  $row['group_id'];
+        $this->pagename =  $row['pagename'];
+    }
+
+
+    /**
+     * @todo transfer to Wrapper
+     */
+    function isEmpty() {
+        // If this value is already computed, return now !
+        if($this->empty != null) {
+          return $this->empty;
+        }
+
+        // Else compute
+        $this->empty=true;
+        if($this->exist()) {
+          $res = db_query(' SELECT wiki_page.id'
+                          .' FROM wiki_page, wiki_nonempty'
+                          .' WHERE wiki_page.group_id="'.$this->gid.'"'
+                          .' AND wiki_page.id="'.$this->id.'"'
+                          .' AND wiki_nonempty.id=wiki_page.id');
+          if(db_numrows($res) == 1) {
+            $this->empty = false;
+          }
+        }
+
+        return $this->empty;
+    }
+
+    public function permissionExist() {
+      if (permission_exist(Wiki_PermissionsManager::WIKI_PERMISSION_READ, $this->id))
+        return true;
+      else
+        return false;
+    }
+
+    public function isAutorized($uid) {
+        //Check for Docman Perms
         $eM =& EventManager::instance();
         $referenced = false;
         $eM->processEvent('isWikiPageReferenced', array(
@@ -161,7 +205,7 @@ class WikiPage {
         } else {
             // Check if user is authorized.
             if($this->permissionExist()) {
-                if (!permission_is_authorized('WIKIPAGE_READ', $this->id, $uid, $this->gid)) {
+                if (!permission_is_authorized(Wiki_PermissionsManager::WIKI_PERMISSION_READ, $this->id, $uid, $this->gid)) {
                     return false;
                 }
             }
@@ -169,148 +213,129 @@ class WikiPage {
         return true;
     }
 
-  
-  /**
-   *@access public
-   */
-  function setPermissions($groups) {
-    global $feedback;
+    public function setPermissions($groups) {
+        global $feedback;
 
-    list ($ret, $feedback) = permission_process_selection_form($this->gid, 
-							       'WIKIPAGE_READ', 
-							       $this->id, 
-							       $groups);
-    return $ret;
-  }
-  
+        list ($ret, $feedback) = permission_process_selection_form(
+            $this->gid,
+            Wiki_PermissionsManager::WIKI_PERMISSION_READ,
+            $this->id,
+            $groups
+        );
 
-  /**
-   *@access public
-   */
-  function resetPermissions() {
-    return permission_clear_all($this->gid, 
-                                'WIKIPAGE_READ', 
-                                $this->id);
-  }
-  
-
-  /**
-   * @todo transfer to Wrapper
-   */
-  function exist() {
-    return($this->id != 0);
-  }
-
-
-  /**
-   * @access public
-   */
-  function log($user_id) {
-    $sql = "INSERT INTO wiki_log(user_id,group_id,pagename,time) "
-          ."VALUES ('".$user_id."','".$this->gid."','".$this->pagename."','".time()."')";
-    db_query($sql);
-  }
-
-
-  /**
-   * @access public
-   */
-  function render($lite=false, $full_screen=false) {
-    $wpw = new WikiPageWrapper($this->gid);
-    $wpw->render($lite, $full_screen);
-  }
-
-
-  /**
-   * @access public
-   * @return int Page identifier
-   */
-  function getId() { 
-    return $this->id; 
-  }
-
-  /**
-   * @access public
-   * @return string Page name
-   */
-  function getPagename() { 
-    return $this->pagename; 
-  }
-
-  /**
-   * @access public
-   * @return int Group Identifier
-   */
-  function getGid() { 
-    return $this->gid; 
-  }
-
-  /**
-   * @access public
-   * @return string[] List of pagename 
-   */
-  function &getAllAdminPages() {
-    $WikiPageAdminPages = WikiPage::getAdminPages();
-    
-    $allPages = array();
-    
-    $res = db_query(' SELECT pagename'
-		    .' FROM wiki_page, wiki_nonempty'
-		    .' WHERE wiki_page.group_id="'.$this->gid.'"'
-		    .' AND wiki_nonempty.id=wiki_page.id'
-		    .' AND wiki_page.pagename IN ("'.implode('","', $WikiPageAdminPages).'")');
-    while($row = db_fetch_array($res)) {
-      $allPages[]=$row[0];
-    }
-    
-    return $allPages;
-  }
-
-
-  /**
-   * @access public
-   * @return string[] List of pagename 
-   */
-  function &getAllInternalPages() {
-    $WikiPageDefaultPages = WikiPage::getDefaultPages();
-    
-    $allPages = array();
-    
-    $res = db_query(' SELECT pagename'
-		    .' FROM wiki_page, wiki_nonempty'
-		    .' WHERE wiki_page.group_id="'.$this->gid.'"'
-		    .' AND wiki_nonempty.id=wiki_page.id'
-		    .' AND wiki_page.pagename IN ("'.implode('","', $WikiPageDefaultPages).'")');
-    while($row = db_fetch_array($res)) {
-      $allPages[]=$row[0];
-    }
-    
-    return $allPages;
-  }
-
-
-  /**
-   * @access public
-   * @return string[] List of pagename 
-   */
-  function &getAllUserPages() {
-    $WikiPageAdminPages = WikiPage::getAdminPages();
-    $WikiPageDefaultPages = WikiPage::getDefaultPages();
-
-    $allPages = array();
-    
-    $res = db_query(' SELECT pagename'
-		    .' FROM wiki_page, wiki_nonempty'
-		    .' WHERE wiki_page.group_id="'.$this->gid.'"'
-		    .' AND wiki_nonempty.id=wiki_page.id'
-		    .' AND wiki_page.pagename NOT IN ("'.implode('","', $WikiPageDefaultPages).'",
-                                                      "'.implode('","', $WikiPageAdminPages).'")');
-    while($row = db_fetch_array($res)) {
-      $allPages[]=$row[0];
+        return $ret;
     }
 
-    return $allPages;
-  }
+    public function resetPermissions() {
+        return permission_clear_all(
+            $this->gid,
+            Wiki_PermissionsManager::WIKI_PERMISSION_READ,
+            $this->id
+        );
+    }
+
+    /**
+     * @todo transfer to Wrapper
+     */
+    function exist() {
+      return($this->id != 0);
+    }
+
+    public function log($user_id) {
+      $sql = "INSERT INTO wiki_log(user_id,group_id,pagename,time) "
+            ."VALUES ('".$user_id."','".$this->gid."','".$this->pagename."','".time()."')";
+      db_query($sql);
+    }
+
+    public function render($lite=false, $full_screen=false) {
+      $wpw = new WikiPageWrapper($this->gid);
+      $wpw->render($lite, $full_screen);
+    }
+
+    /**
+     * @return int Page identifier
+     */
+    public function getId() {
+        return $this->id;
+    }
+
+    /**
+     * @return string Page name
+     */
+    public function getPagename() {
+        return $this->pagename;
+    }
+
+    /**
+     * @return int Group Identifier
+     */
+    public function getGid() {
+        return $this->gid;
+    }
+
+    /**
+     * @return string[] List of pagename
+     */
+    public function &getAllAdminPages() {
+        $WikiPageAdminPages = WikiPage::getAdminPages();
+
+        $allPages = array();
+
+        $res = db_query(' SELECT pagename'
+                        .' FROM wiki_page, wiki_nonempty'
+                        .' WHERE wiki_page.group_id="'.$this->gid.'"'
+                        .' AND wiki_nonempty.id=wiki_page.id'
+                        .' AND wiki_page.pagename IN ("'.implode('","', $WikiPageAdminPages).'")');
+        while($row = db_fetch_array($res)) {
+          $allPages[]=$row[0];
+        }
+
+        return $allPages;
+    }
+
+
+    /**
+     * @return string[] List of pagename
+     */
+    public function &getAllInternalPages() {
+        $WikiPageDefaultPages = WikiPage::getDefaultPages();
+
+        $allPages = array();
+
+        $res = db_query(' SELECT pagename'
+                        .' FROM wiki_page, wiki_nonempty'
+                        .' WHERE wiki_page.group_id="'.$this->gid.'"'
+                        .' AND wiki_nonempty.id=wiki_page.id'
+                        .' AND wiki_page.pagename IN ("'.implode('","', $WikiPageDefaultPages).'")');
+        while($row = db_fetch_array($res)) {
+          $allPages[]=$row[0];
+        }
+
+        return $allPages;
+    }
+
+
+    /**
+     * @return string[] List of pagename
+     */
+    public function &getAllUserPages() {
+        $WikiPageAdminPages = WikiPage::getAdminPages();
+        $WikiPageDefaultPages = WikiPage::getDefaultPages();
+
+        $allPages = array();
+
+        $res = db_query(' SELECT pagename'
+                        .' FROM wiki_page, wiki_nonempty'
+                        .' WHERE wiki_page.group_id="'.$this->gid.'"'
+                        .' AND wiki_nonempty.id=wiki_page.id'
+                        .' AND wiki_page.pagename NOT IN ("'.implode('","', $WikiPageDefaultPages).'",
+                                                          "'.implode('","', $WikiPageAdminPages).'")');
+        while($row = db_fetch_array($res)) {
+          $allPages[]=$row[0];
+        }
+
+        return $allPages;
+    }
 
   /**
    * List all default PhpWiki pages
@@ -318,11 +343,9 @@ class WikiPage {
    * Following list include all pages (excepted Admin pages) created by PhpWiki
    * out-of-the-box during initialisation.
    *
-   * @static
-   * @access public
    * @return string[] List of pagename 
    */
-    function getDefaultPages() {
+    public static function getDefaultPages() {
         return array
             ( // Plugin documentation pages
              "AddCommentPlugin","AppendTextPlugin","AuthorHistoryPlugin"
@@ -400,22 +423,20 @@ class WikiPage {
    * List all PhpWiki Admin pages 
    *
    * @see getDefaultPages
-   * @static
-   * @access public
    * @return string[] List of pagename 
    */
-  function getAdminPages() {
-    return array
-      ("HomePage" ,"PhpWikiAdministration","WikiAdminSelect"
-       ,"PhpWikiAdministration/Remove"
-       ,"PhpWikiAdministration/Rename", "PhpWikiAdministration/Replace"
-       ,"PhpWikiAdministration/Chmod","PhpWikiAdministration/Chown"
-       ,"PhpWikiAdministration/SetAcl" ,"SandBox", "ProjectWantedPages",
-       
-       "PageAccueil" ,"AdministrationDePhpWiki","AdministrationDePhpWiki/Supprimer"
-       ,"AdministrationDePhpWiki/Remplacer"
-       ,"AdministrationDePhpWiki/Renommer", "AdministrationDePhpWiki/Droits"
-       ,"BacÀSable",);
-  }
+    public static function getAdminPages() {
+        return array(
+            "HomePage" ,"PhpWikiAdministration","WikiAdminSelect"
+            ,"PhpWikiAdministration/Remove"
+            ,"PhpWikiAdministration/Rename", "PhpWikiAdministration/Replace"
+            ,"PhpWikiAdministration/Chmod","PhpWikiAdministration/Chown"
+            ,"PhpWikiAdministration/SetAcl" ,"SandBox", "ProjectWantedPages",
+
+            "PageAccueil" ,"AdministrationDePhpWiki","AdministrationDePhpWiki/Supprimer"
+            ,"AdministrationDePhpWiki/Remplacer"
+            ,"AdministrationDePhpWiki/Renommer", "AdministrationDePhpWiki/Droits"
+            ,"BacÀSable",
+        );
+    }
 }
-?>

@@ -319,13 +319,79 @@ class getDocumentApprovalTableComments extends RequestDocmanDataFactoryTest {
 
 class RequestWikiDataFactoryTest extends TuleapTestCase {
 
-     /* @var ElasticSearch_1_2_RequestWikiDataFactory */
+    /* @var ElasticSearch_1_2_RequestWikiDataFactory */
     protected $request_data_factory;
+
+    /* @var WikiPage */
+    protected $wiki_page;
 
     public function setUp() {
         parent::setUp();
 
-        $this->request_data_factory = new ElasticSearch_1_2_RequestWikiDataFactory();
+        $this->permissions_manager = mock('Wiki_PermissionsManager');
+
+        $this->request_data_factory = new ElasticSearch_1_2_RequestWikiDataFactory(
+            $this->permissions_manager
+        );
+
+        $this->wiki_page = stub('WikiPage')->getPagename()->returns('wiki_page');
+        stub($this->wiki_page)->getId()->returns(1940);
+        stub($this->wiki_page)->getGid()->returns(200);
+    }
+
+    public function itBuildsDataForFirstIndexationOfWikiPage() {
+        stub($this->wiki_page)->getMetadata()->returns(array(
+            'mtime' => 1405061249,
+        ));
+
+        stub($this->permissions_manager)->getFromattedUgroupsThatCanReadWikiPage()->returns(array(
+            '@site_active'
+        ));
+
+        $expected_data = array(
+            'id'                 => 1940,
+            'group_id'           => 200,
+            'page_name'          => 'wiki_page',
+            'last_modified_date' => 1405061249,
+            'last_author'        => '',
+            'last_summary'       => '',
+            'content'            => '',
+            'permissions'        => array('@site_active')
+        );
+
+        $this->assertEqual(
+            $expected_data,
+            $this->request_data_factory->getIndexedWikiPageData($this->wiki_page)
+        );
+    }
+
+    public function itBuildsDataForFirstIndexationOfWikiPageOnUpdate() {
+        stub($this->wiki_page)->getMetadata()->returns(array(
+            'mtime'   => 1405061249,
+            'author'  => 'user',
+            'content' => 'cont',
+            'summary' => 'sum'
+        ));
+
+        stub($this->permissions_manager)->getFromattedUgroupsThatCanReadWikiPage()->returns(array(
+            '@site_active'
+        ));
+
+        $expected_data = array(
+            'id'                 => 1940,
+            'group_id'           => 200,
+            'page_name'          => 'wiki_page',
+            'last_modified_date' => 1405061249,
+            'last_author'        => 'user',
+            'last_summary'       => 'sum',
+            'content'            => 'cont',
+            'permissions'        => array('@site_active')
+        );
+
+        $this->assertEqual(
+            $expected_data,
+            $this->request_data_factory->getIndexedWikiPageData($this->wiki_page)
+        );
     }
 
     public function itBuildsDataForPutRequestCreateMapping() {
@@ -334,6 +400,9 @@ class RequestWikiDataFactoryTest extends TuleapTestCase {
         $expected_data = array(
             '200' => array(
                 'properties' => array(
+                    'page_name' => array(
+                        'type' => 'string'
+                    ),
                     'last_modified_date' => array(
                         'type' => 'date'
                     ),

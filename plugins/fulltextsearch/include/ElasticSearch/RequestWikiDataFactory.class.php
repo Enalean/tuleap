@@ -29,9 +29,21 @@ class ElasticSearch_1_2_RequestWikiDataFactory {
     const MAPPING_MAPPINGS_KEY        = 'mappings';
     const MAPPING_WIKI_ROOT_KEY       = 'wiki';
 
+    const PHPWIKI_METADATA_LAST_MODIFIED_DATE = 'mtime';
+    const PHPWIKI_METADATA_AUTHOR             = 'author';
+    const PHPWIKI_METADATA_SUMMARY            = 'summary';
+    const PHPWIKI_METADATA_CONTENT            = 'content';
+
     const ELASTICSEARCH_STRING_TYPE   = 'string';
     const ELASTICSEARCH_DATE_TYPE     = 'date';
     const UNPARSABLE_TYPE             =  null;
+
+    /** @var Wiki_PermissionsManager */
+    private $permissions_manager;
+
+    public function __construct(Wiki_PermissionsManager $permissions_manager) {
+        $this->permissions_manager = $permissions_manager;
+    }
 
     /**
      * Builds the data needed for
@@ -49,6 +61,32 @@ class ElasticSearch_1_2_RequestWikiDataFactory {
         return $mapping_data;
     }
 
+    public function getIndexedWikiPageData(WikiPage $wiki_page) {
+        $wiki_page_metadata = $wiki_page->getMetadata();
+
+        return array(
+            'id'                 => $wiki_page->getId(),
+            'group_id'           => $wiki_page->getGid(),
+            'page_name'          => $wiki_page->getPagename(),
+            'last_modified_date' => $wiki_page_metadata[self::PHPWIKI_METADATA_LAST_MODIFIED_DATE],
+            'last_author'        => isset($wiki_page_metadata[self::PHPWIKI_METADATA_AUTHOR]) ?
+                $wiki_page_metadata[self::PHPWIKI_METADATA_AUTHOR] : '',
+            'last_summary'       => isset($wiki_page_metadata[self::PHPWIKI_METADATA_SUMMARY]) ?
+                $wiki_page_metadata[self::PHPWIKI_METADATA_SUMMARY] : '',
+            'content'            => isset($wiki_page_metadata[self::PHPWIKI_METADATA_CONTENT]) ?
+                $wiki_page_metadata[self::PHPWIKI_METADATA_CONTENT] : '',
+            'permissions'        => $this->getCurrentPermissions($wiki_page)
+        );
+    }
+
+    public function getCurrentPermissions(WikiPage $wiki_page) {
+        return $this->permissions_manager->getFromattedUgroupsThatCanReadWikiPage($wiki_page);
+    }
+
+    public function setUpdatedData(array &$current_data, $name, $value) {
+        $current_data[$name] = $value;
+    }
+
     private function initializePUTMappingData($project_id) {
         return array(
             (string) $project_id => array(
@@ -59,6 +97,9 @@ class ElasticSearch_1_2_RequestWikiDataFactory {
 
     private function getHardcodedMetadata() {
         return array(
+            'page_name' =>  array(
+                'type' => 'string'
+            ),
             'last_modified_date' => array(
                 'type' => 'date'
             ),
