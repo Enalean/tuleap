@@ -301,7 +301,7 @@ abstract class LDAP_GroupManager
      */
     public function getLdapGroupMembersIds($groupDn) 
     {
-        $ldapUserManager = new LDAP_UserManager($this->getLdap());
+        $ldapUserManager = new LDAP_UserManager($this->getLdap(), LDAP_UserSync::instance());
         $ldapGroupMembers = $this->getLdapGroupMembers($groupDn);
         $ldapGroupUserIds = $ldapUserManager->getUserIdsForLdapUser($ldapGroupMembers);
         return $ldapGroupUserIds;

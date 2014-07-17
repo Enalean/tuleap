@@ -108,7 +108,7 @@ else {
     }
     $timezone = $request->get('timezone');
 
-    $ldapUm = new LDAP_UserManager($ldapPlugin->getLdap());
+    $ldapUm = $ldapPlugin->getLdapUserManager();
     $lr = $ldapUm->getLdapFromUserId($user_id);
     $ldap_name = $lr->getLogin();
 

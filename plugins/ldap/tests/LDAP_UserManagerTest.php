@@ -21,7 +21,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once(dirname(__FILE__).'/../include/LDAP_UserManager.class.php');
+require_once 'bootstrap.php';
 
 Mock::generatePartial('LDAP_UserManager', 'LDAP_UserManagerGenerateLogin', array('getLoginFromString', 'userNameIsAvailable'));
 Mock::generate('LDAP');
@@ -30,11 +30,12 @@ Mock::generate('PFUser');
 Mock::generate('BackendSVN');
 Mock::generate('SystemEventManager');
 
+
 class LDAP_UserManagerTest extends UnitTestCase {
 
     function testGetLoginFromString() {
         $ldap = new MockLDAP($this);
-        $lum = new LDAP_UserManager($ldap);
+        $lum = new LDAP_UserManager($ldap, mock('LDAP_UserSync'));
         
         $this->assertEqual($lum->getLoginFromString('coincoin'), 'coincoin');
         
@@ -159,4 +160,210 @@ class LDAP_UserManagerTest extends UnitTestCase {
         $lum->triggerRenameOfUsers();
     }
 }
-?>
+
+class LDAP_UserManager_AuthenticatTest extends TuleapTestCase {
+
+    private $username    = 'toto';
+    private $password    = 'welcome0';
+    private $ldap_params = array(
+        'dn'          => 'dc=tuleap,dc=local',
+        'mail'        => 'mail',
+        'cn'          => 'cn',
+        'uid'         => 'uid',
+        'eduid'       => 'uuid',
+        'search_user' => '(|(uid=%words%)(cn=%words%)(mail=%words%))',
+    );
+
+    private $ldap;
+    private $user_sync;
+    private $ldap_user_manager;
+    private $empty_ldap_result_iterator;
+    private $john_mc_lane_result_iterator;
+
+    public function setUp() {
+        parent::setUp();
+        $this->empty_ldap_result_iterator   = aLDAPResultIterator()->build();
+        $this->john_mc_lane_result_iterator = aLDAPResultIterator()
+            ->withParams($this->ldap_params)
+            ->withInfo(
+                array(
+                    array(
+                        'cn'   => 'John Mac Lane',
+                        'uid'  => 'john_lane',
+                        'mail' => 'john.mc.lane@nypd.gov',
+                        'uuid' => 'ed1234',
+                        'dn'   => 'uid=john_lane,ou=people,dc=tuleap,dc=local'
+                    )
+                )
+            )
+            ->build();
+        $this->ldap = partial_mock(
+            'LDAP',
+            array('search', 'authenticate', 'searchLogin'),
+            array($this->ldap_params)
+        );
+        $this->user_sync         = mock('LDAP_UserSync');
+        $this->user_manager      = mock('UserManager');
+        $this->ldap_user_manager = partial_mock(
+            'LDAP_UserManager',
+            array('getUserManager', 'createAccountFromLdap', 'synchronizeUser'),
+            array($this->ldap, $this->user_sync)
+        );
+        stub($this->ldap_user_manager)->getUserManager()->returns($this->user_manager);
+    }
+
+    public function itDelegatesAutenticateToLDAP() {
+        stub($this->user_sync)->getSyncAttributes()->returns(array());
+        stub($this->ldap)->authenticate()->returns(true);
+        stub($this->ldap)->searchLogin()->returns($this->john_mc_lane_result_iterator);
+
+        expect($this->ldap)->authenticate($this->username, $this->password)->once();
+
+        $this->ldap_user_manager->authenticate($this->username, $this->password);
+    }
+
+    public function itRaisesAnExceptionIfAuthenticationFailed() {
+        $this->expectException('LDAP_AuthenticationFailedException');
+
+        stub($this->ldap)->authenticate()->returns(false);
+
+        $this->ldap_user_manager->authenticate($this->username, $this->password);
+    }
+
+    public function itFetchLDAPUserInfoBasedOnLogin() {
+        stub($this->user_sync)->getSyncAttributes()->returns(array());
+        stub($this->ldap)->authenticate()->returns(true);
+        stub($this->ldap)->searchLogin()->returns($this->john_mc_lane_result_iterator);
+
+        expect($this->ldap)->searchLogin($this->username, '*')->once();
+
+        $this->ldap_user_manager->authenticate($this->username, $this->password);
+    }
+
+    public function itFetchesLDAPUserInfoWithExtendedAttributesDefinedInUserSync() {
+        $attributes = array('mail', 'cn', 'uid', 'uuid', 'dn', 'employeeType');
+        stub($this->user_sync)->getSyncAttributes()->returns($attributes);
+        stub($this->ldap)->authenticate()->returns(true);
+        stub($this->ldap)->searchLogin()->returns($this->john_mc_lane_result_iterator);
+
+        expect($this->ldap)->searchLogin('*', $attributes)->once();
+
+        $this->ldap_user_manager->authenticate($this->username, $this->password);
+    }
+
+    public function itFetchesStandardLDAPInfosEvenWhenNotSpecifiedInSyncAttributes() {
+        $attributes = array('employeeType');
+        stub($this->user_sync)->getSyncAttributes()->returns($attributes);
+        stub($this->ldap)->authenticate()->returns(true);
+        stub($this->ldap)->searchLogin()->returns($this->john_mc_lane_result_iterator);
+
+        expect($this->ldap)->searchLogin('*', array('mail', 'cn', 'uid', 'uuid', 'dn', 'employeeType'))->once();
+
+        $this->ldap_user_manager->authenticate($this->username, $this->password);
+    }
+
+    public function itTriesToFindTheTuleapUserBasedOnLdapId() {
+        stub($this->user_sync)->getSyncAttributes()->returns(array());
+        stub($this->ldap)->authenticate()->returns(true);
+        stub($this->ldap)->searchLogin()->returns($this->john_mc_lane_result_iterator);
+
+        expect($this->user_manager)->getUserByLdapId('ed1234')->once();
+
+        $this->ldap_user_manager->authenticate($this->username, $this->password);
+    }
+
+    public function itRaisesAnExceptionWhenLDAPUserIsNotFound() {
+        stub($this->user_sync)->getSyncAttributes()->returns(array());
+        stub($this->ldap)->authenticate()->returns(true);
+        stub($this->ldap)->searchLogin()->returns($this->empty_ldap_result_iterator);
+
+        $this->expectException('LDAP_UserNotFoundException');
+
+        $this->ldap_user_manager->authenticate($this->username, $this->password);
+    }
+
+    public function itRaisesAnExceptionWhenSeveralLDAPUsersAreFound() {
+        stub($this->user_sync)->getSyncAttributes()->returns(array());
+        stub($this->ldap)->authenticate()->returns(true);
+        stub($this->ldap)->searchLogin()->returns(
+            aLDAPResultIterator()
+            ->withParams($this->ldap_params)
+            ->withInfo(
+                array(
+                    array(
+                        'cn'   => 'John Mac Lane',
+                        'uid'  => 'john_lane',
+                        'mail' => 'john.mc.lane@nypd.gov',
+                        'uuid' => 'ed1234',
+                        'dn'   => 'uid=john_lane,ou=people,dc=tuleap,dc=local'
+                    ),
+                    array(
+                        'cn'   => 'William Wallas',
+                        'uid'  => 'will_wall',
+                        'mail' => 'will_wall@edimburgh.co.uk',
+                        'uuid' => 'ed5432',
+                        'dn'   => 'uid=will_wall,ou=people,dc=tuleap,dc=local'
+                    )
+                )
+            )
+            ->build()
+        );
+
+        $this->expectException('LDAP_UserNotFoundException');
+
+        $this->ldap_user_manager->authenticate($this->username, $this->password);
+    }
+
+    public function itCreatesUserAccountWhenUserDoesntExist() {
+        stub($this->user_sync)->getSyncAttributes()->returns(array());
+        stub($this->ldap)->authenticate()->returns(true);
+        stub($this->ldap)->searchLogin()->returns($this->john_mc_lane_result_iterator);
+        stub($this->user_manager)->getUserByLdapId()->returns(null);
+
+        expect($this->ldap_user_manager)->createAccountFromLdap('*')->once();
+
+        $this->ldap_user_manager->authenticate($this->username, $this->password);
+    }
+
+    public function itReturnsUserOnAccountCreation() {
+        $expected_user = aUser()->withId(123)->build();
+        stub($this->user_sync)->getSyncAttributes()->returns(array());
+        stub($this->ldap)->authenticate()->returns(true);
+        stub($this->ldap)->searchLogin()->returns($this->john_mc_lane_result_iterator);
+        stub($this->user_manager)->getUserByLdapId()->returns(null);
+
+        stub($this->ldap_user_manager)->createAccountFromLdap()->returns($expected_user);
+
+        $user = $this->ldap_user_manager->authenticate($this->username, $this->password);
+        $this->assertIdentical($user, $expected_user);
+    }
+
+    public function itUpdateUserAccountsIfAlreadyExists() {
+        $expected_user = aUser()->withId(123)->build();
+        stub($this->user_sync)->getSyncAttributes()->returns(array());
+        stub($this->ldap)->authenticate()->returns(true);
+        stub($this->ldap)->searchLogin()->returns($this->john_mc_lane_result_iterator);
+        stub($this->user_manager)->getUserByLdapId()->returns($expected_user);
+
+        expect($this->ldap_user_manager)->synchronizeUser(
+            $expected_user,
+            new LDAPResultExpectation('John Mac Lane'),
+            $this->password
+        )->once();
+
+        $this->ldap_user_manager->authenticate($this->username, $this->password);
+    }
+
+    public function itReturnsUserOnAccountUpdate() {
+        $expected_user = aUser()->withId(123)->build();
+        stub($this->user_sync)->getSyncAttributes()->returns(array());
+        stub($this->ldap)->authenticate()->returns(true);
+        stub($this->ldap)->searchLogin()->returns($this->john_mc_lane_result_iterator);
+        stub($this->user_manager)->getUserByLdapId()->returns($expected_user);
+
+        stub($this->ldap_user_manager)->synchronizeUser()->returns(true);
+
+        $user = $this->ldap_user_manager->authenticate($this->username, $this->password);
+        $this->assertIdentical($user, $expected_user);
+    }
+}

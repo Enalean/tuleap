@@ -57,7 +57,7 @@ if(isset($arg['ldapid'])
         echo "Error: ldap id already in the database\n";
         exit;
     } else {
-        $ldapUm = new LDAP_UserManager($ldapPlugin->getLdap());
+        $ldapUm = $ldapPlugin->getLdapUserManager();
         $user = $ldapUm->createAccount($arg['ldapid'], $arg['uid'], $arg['realname'], $arg['email']);
         if($user) {
             echo "ID=".$user->getId().":STATUS=".$user->getStatus()."\n";

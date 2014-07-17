@@ -116,7 +116,7 @@ class LDAP_DirectorySynchronization {
 
     protected function getLdapUserManager() {
         if (!isset($this->lum)) {
-            $this->lum = new LDAP_UserManager($this->ldap);
+            $this->lum = new LDAP_UserManager($this->ldap, LDAP_UserSync::instance());
         }
         return $this->lum;
     }

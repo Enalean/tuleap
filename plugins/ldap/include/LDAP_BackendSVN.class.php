@@ -170,7 +170,7 @@ class LDAP_BackendSVN extends BackendSVN {
      */
     protected function getLDAPUserManager() {
         if ($this->ldapUserManager === null) {
-            $this->ldapUserManager = new LDAP_UserManager($this->ldap);
+            $this->ldapUserManager = new LDAP_UserManager($this->ldap, LDAP_UserSync::instance());
         }
         return $this->ldapUserManager;
     }
