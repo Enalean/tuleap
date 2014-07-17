@@ -29,8 +29,8 @@ class TestingDataBuilder extends TestDataBuilder {
     const PROJECT_TEST_MGMT_SHORTNAME = 'test-mgmt';
 
     const CAMPAIGN_TRACKER_ID         = 18;
-    const TEST_EXEC_TRACKER_ID        = 19;
-    const TEST_DEF_TRACKER_ID         = 20;
+    const TEST_DEF_TRACKER_ID         = 19;
+    const TEST_EXEC_TRACKER_ID        = 20;
 
     public function setUp() {
 

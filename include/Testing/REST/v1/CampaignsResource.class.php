@@ -28,7 +28,6 @@ use UserManager;
 use Tuleap\Testing\ConfigConformanceValidator;
 use Tuleap\Testing\Config;
 use Tuleap\Testing\Dao;
-use Tuleap\User\REST\UserRepresentation;
 use PFUser;
 use Tracker_Artifact;
 
@@ -48,12 +47,28 @@ class CampaignsResource {
     /** @var ConfigConformanceValidator */
     private $conformance_validator;
 
+    /** @var ExecutionRepresentationBuilder */
+    private $execution_representation_builder;
+
+    /** @var AssignedToRepresentationBuilder */
+    private $assigned_to_representation_builder;
+
     public function __construct() {
         $this->user_manager                 = UserManager::instance();
         $this->tracker_artifact_factory     = Tracker_ArtifactFactory::instance();
         $this->tracker_form_element_factory = Tracker_FormElementFactory::instance();
         $this->conformance_validator        = new ConfigConformanceValidator(
             new Config(new Dao())
+        );
+
+        $this->assigned_to_representation_builder = new AssignedToRepresentationBuilder(
+            $this->tracker_form_element_factory,
+            $this->user_manager
+        );
+        $this->execution_representation_builder   = new ExecutionRepresentationBuilder(
+            $this->tracker_form_element_factory,
+            $this->conformance_validator,
+            $this->assigned_to_representation_builder
         );
     }
 
@@ -91,6 +106,30 @@ class CampaignsResource {
     }
 
     /**
+     * Get executions
+     *
+     * Get executions of a given campaign
+     *
+     * @url GET {id}/executions
+     *
+     * @param int $id Id of the campaign
+     * @param int $limit  Number of elements displayed per page {@from path}
+     * @param int $offset Position of the first element to display {@from path}
+     *
+     * @return array {@type Tuleap\Testing\REST\v1\ExecutionRepresentation}
+     */
+    protected function getExecutions($id, $limit = 10, $offset = 0) {
+        $user     = $this->user_manager->getCurrentUser();
+        $campaign = $this->getCampaignFromId($id, $user);
+
+        $execution_representations = $this->execution_representation_builder->getAllExecutionsRepresentationsForCampaign($user, $campaign);
+
+        $this->sendPaginationHeaders($limit, $offset, count($execution_representations));
+
+        return array_slice($execution_representations, $offset, $limit);
+    }
+
+    /**
      * Get assignees
      *
      * Get all users that are assigned to at least one test execution of the
@@ -118,53 +157,22 @@ class CampaignsResource {
     private function getAssigneesForCampaign(PFUser $user, Tracker_Artifact $campaign) {
         $assignees = array();
 
-        $executions = $this->getExecutionsForCampaign($user, $campaign);
+        $executions = $this->execution_representation_builder->getExecutionsForCampaign($user, $campaign);
         foreach ($executions as $execution) {
-            $field_value = $this->getExecutionAssignedToFieldValue($user, $execution);
-            $user_id = array_pop($field_value);
-            if (! $user_id) {
+            $assigned_to_representation = $this->assigned_to_representation_builder->getAssignedToRepresentationForExecution($user, $execution);
+
+            if (! $assigned_to_representation) {
                 continue;
             }
 
-            if (isset($assignees[$user_id])) {
+            if (isset($assignees[$assigned_to_representation->id])) {
                 continue;
             }
 
-            $user = $this->user_manager->getUserById($user_id);
-            if (! $user) {
-                continue;
-            }
-
-            $user_representation = new UserRepresentation();
-            $user_representation->build($user);
-
-            $assignees[$user_id] = $user_representation;
+            $assignees[$assigned_to_representation->id] = $assigned_to_representation;
         }
 
         return $assignees;
-    }
-
-    private function getExecutionsForCampaign(PFUser $user, Tracker_Artifact $campaign) {
-        $executions = array();
-
-        foreach ($campaign->getLinkedArtifacts($user) as $child_artifact) {
-            if ($this->conformance_validator->isArtifactAnExecutionOfCampaign($child_artifact, $campaign)) {
-                $executions[] = $child_artifact;
-            }
-        }
-
-        return $executions;
-    }
-
-    private function getExecutionAssignedToFieldValue(PFUser $user, Tracker_Artifact $execution) {
-        $assigned_to_field = $this->tracker_form_element_factory
-            ->getUsedFieldByNameForUser(
-                $execution->getTrackerId(),
-                'assigned_to',
-                $user
-            );
-
-        return $execution->getValue($assigned_to_field)->getValue();
     }
 
     private function getCampaignFromId($id, PFUser $user) {

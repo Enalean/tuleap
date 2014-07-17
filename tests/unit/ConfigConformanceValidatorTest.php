@@ -41,9 +41,13 @@ class ConfigConformanceAsserterTest extends TuleapTestCase {
     /** @var \Tracker_Artifact */
     private $campaign_artifact;
 
+    /** @var \Tracker_Artifact */
+    private $definition_artifact;
+
     private $project_id                   = 101;
     private $campaign_tracker_id          = 444;
     private $execution_tracker_id         = 555;
+    private $definition_tracker_id        = 666;
     private $another_project_id           = 102;
     private $another_execution_tracker_id = 666;
 
@@ -54,6 +58,11 @@ class ConfigConformanceAsserterTest extends TuleapTestCase {
 
         $campaign_tracker = aTracker()
             ->withId($this->campaign_tracker_id)
+            ->withProject($project)
+            ->build();
+
+        $definition_tracker = aTracker()
+            ->withId($this->definition_tracker_id)
             ->withProject($project)
             ->build();
 
@@ -71,6 +80,9 @@ class ConfigConformanceAsserterTest extends TuleapTestCase {
         stub($config)
             ->getCampaignTrackerId($project)
             ->returns($campaign_tracker->getId());
+        stub($config)
+            ->getTestDefinitionTrackerId($project)
+            ->returns($definition_tracker->getId());
         stub($config)
             ->getTestExecutionTrackerId($project)
             ->returns($execution_tracker->getId());
@@ -98,6 +110,10 @@ class ConfigConformanceAsserterTest extends TuleapTestCase {
 
         $this->campaign_artifact = anArtifact()
             ->withTracker($campaign_tracker)
+            ->build();
+
+        $this->definition_artifact = anArtifact()
+            ->withTracker($definition_tracker)
             ->build();
     }
 
@@ -133,6 +149,24 @@ class ConfigConformanceAsserterTest extends TuleapTestCase {
             $this->validator->isArtifactAnExecutionOfCampaign(
                 $this->another_execution_artifact,
                 $this->campaign_artifact
+            )
+        );
+    }
+
+    public function itReturnsTrueWhenExecutionBelongsToDefinition() {
+        $this->assertTrue(
+            $this->validator->isArtifactAnExecutionOfDefinition(
+                $this->execution_artifact,
+                $this->definition_artifact
+            )
+        );
+    }
+
+    public function itReturnsFalseWhenExecutionDoesNotBelongsToDefinition() {
+        $this->assertFalse(
+            $this->validator->isArtifactAnExecutionOfDefinition(
+                $this->another_execution_artifact,
+                $this->definition_artifact
             )
         );
     }

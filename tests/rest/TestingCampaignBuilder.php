@@ -27,12 +27,18 @@ use \Test\Rest\RequestWrapper;
 class TestingCampaignBuilder {
 
     private $campaigns_data = array(
-        array('label' => 'Tuleap 7.1', 'status' => 'Passed', 'executions' => array()),
-        array('label' => 'Tuleap 7.2', 'status' => 'Passed', 'executions' => array()),
-        array('label' => 'Tuleap 7.3', 'status' => 'Not Run', 'executions' => array(
-            array('label' => 'First execution', 'status' => 'Passed'),
-            array('label' => 'Second execution', 'status' => 'Passed'),
-            array('label' => 'Third execution', 'status' => 'Failed'),
+        array('label' => 'Tuleap 7.1', 'status' => 'Closed', 'executions' => array()),
+        array('label' => 'Tuleap 7.2', 'status' => 'Closed', 'executions' => array()),
+        array('label' => 'Tuleap 7.3', 'status' => 'Open', 'executions' => array(
+            array('status' => 'Passed', 'definition' => array(
+                'summary' => 'Create a repository', 'description' => 'This is a description', 'category' => 'Git'
+            )),
+            array('status' => 'Passed', 'definition' => array(
+                'summary' => 'Delete a repository', 'description' => 'This is a description', 'category' => 'Git'
+            )),
+            array('status' => 'Failed', 'definition' => array(
+                'summary' => 'Import default template', 'description' => 'This is a description', 'category' => 'AgileDashboard'
+            )),
         )),
     );
 
@@ -77,7 +83,12 @@ class TestingCampaignBuilder {
     private function createExecutionsForCampaign(array $executions_data) {
         $executions_ids = array();
         foreach ($executions_data as $execution_data) {
-            $execution = $this->createExecution($execution_data['label'], $execution_data['status']);
+            $definition = $this->createDefinition($execution_data['definition']);
+
+            $execution = $this->createExecution(
+                $execution_data['status'],
+                $definition['id']
+            );
 
             $executions_ids[] = $execution['id'];
         }
@@ -85,23 +96,34 @@ class TestingCampaignBuilder {
         return $executions_ids;
     }
 
-    private function createCampaign($label, $status,array $executions) {
+    private function createCampaign($label, $status, array $executions) {
         $tracker = $this->tracker_factory->getTrackerRest('campaign');
         return $tracker->createArtifact(
             array(
                 $tracker->getSubmitTextValue('Label', $label),
                 $tracker->getSubmitListValue('Status', $status),
-                $tracker->getSubmitArtifactLinkValue($executions),
+                $tracker->getSubmitArtifactLinkValue($executions)
             )
         );
     }
 
-    private function createExecution($label, $status) {
-        $tracker= $this->tracker_factory->getTrackerRest('test_exec');
+    private function createExecution($status, $definition_id) {
+        $tracker = $this->tracker_factory->getTrackerRest('test_exec');
         return $tracker->createArtifact(
             array(
-                $tracker->getSubmitTextValue('Label', $label),
-                $tracker->getSubmitListValue('Status', $status)
+                $tracker->getSubmitListValue('Status', $status),
+                $tracker->getSubmitArtifactLinkValue(array($definition_id))
+            )
+        );
+    }
+
+    private function createDefinition($definition_data) {
+        $tracker = $this->tracker_factory->getTrackerRest('test_def');
+        return $tracker->createArtifact(
+            array(
+                $tracker->getSubmitTextValue('Summary', $definition_data['summary']),
+                $tracker->getSubmitTextValue('Description', $definition_data['description']),
+                $tracker->getSubmitListValue('Category', $definition_data['category'])
             )
         );
     }

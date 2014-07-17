@@ -56,6 +56,18 @@ class ConfigConformanceValidator {
 
         return $execution_tracker_id === $tracker->getId();
     }
+
+    /**
+     * @return boolean
+     */
+    public function isArtifactADefinition(Tracker_Artifact $artifact) {
+        $tracker = $artifact->getTracker();
+        $project = $tracker->getProject();
+
+        $definition_tracker_id = $this->config->getTestDefinitionTrackerId($project);
+
+        return $definition_tracker_id === $tracker->getId();
+    }
     
     /**
      * @return boolean
@@ -73,5 +85,23 @@ class ConfigConformanceValidator {
         $execution_project = $execution->getTracker()->getProject();
 
         return $campaign_project == $execution_project;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isArtifactAnExecutionOfDefinition(Tracker_Artifact $execution, Tracker_Artifact $definition) {
+        if (! $this->isArtifactADefinition($definition)) {
+            return false;
+        }
+
+        if (! $this->isArtifactAnExecution($execution)) {
+            return false;
+        }
+
+        $definition_project = $definition->getTracker()->getProject();
+        $execution_project  = $execution->getTracker()->getProject();
+
+        return $definition_project == $execution_project;
     }
 }

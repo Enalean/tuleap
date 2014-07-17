@@ -38,17 +38,17 @@ class ProjectTest extends BaseTest {
         $first_campaign = $campaigns[0];
         $this->assertArrayHasKey('id', $first_campaign);
         $this->assertEquals($first_campaign['label'], 'Tuleap 7.3');
-        $this->assertEquals($first_campaign['status'], 'Not Run');
+        $this->assertEquals($first_campaign['status'], 'Open');
 
         $second_campaign = $campaigns[1];
         $this->assertArrayHasKey('id', $second_campaign);
         $this->assertEquals($second_campaign['label'], 'Tuleap 7.2');
-        $this->assertEquals($second_campaign['status'], 'Passed');
+        $this->assertEquals($second_campaign['status'], 'Closed');
 
         $third_campaign = $campaigns[2];
         $this->assertArrayHasKey('id', $third_campaign);
         $this->assertEquals($third_campaign['label'], 'Tuleap 7.1');
-        $this->assertEquals($third_campaign['status'], 'Passed');
+        $this->assertEquals($third_campaign['status'], 'Closed');
     }
 
     public function testStatusOfExecutionsAreCorrect() {

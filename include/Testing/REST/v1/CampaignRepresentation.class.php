@@ -93,6 +93,7 @@ class CampaignRepresentation {
 
     private function getFieldValue($field_shortname) {
         $field = $this->form_element_factory->getUsedFieldByNameForUser($this->tracker_id, $field_shortname, $this->user);
+
         return $this->artifact->getValue($field);
     }
 
