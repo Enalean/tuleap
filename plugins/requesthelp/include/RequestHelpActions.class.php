@@ -316,7 +316,7 @@ class RequestHelpActions extends PluginAction {
         $pluginManager = $this->_getPluginManager();
         $ldapPlugin    = $pluginManager->getPluginByName('ldap');
         if ($ldapPlugin && $pluginManager->isPluginAvailable($ldapPlugin)) {
-            $ldapUm = new LDAP_UserManager($ldapPlugin->getLdap());
+            $ldapUm = $ldapPlugin->getLdapUserManager();
             $userId[] = $user->getId();
             $ldapLogin = $ldapUm->getLdapLoginFromUserIds($userId);
             if ($ldapLogin && !$ldapLogin->isError()&& $ldapLogin->rowCount()> 0) {

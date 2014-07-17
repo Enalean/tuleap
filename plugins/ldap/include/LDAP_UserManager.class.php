@@ -33,6 +33,8 @@ require_once 'system_event/SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN.class.php';
  * Manage interaction between an LDAP group and Codendi user_group.
  */
 class LDAP_UserManager {
+
+
     const EVENT_UPDATE_LOGIN = 'PLUGIN_LDAP_UPDATE_LOGIN';
     
     /**
@@ -51,12 +53,18 @@ class LDAP_UserManager {
     private $usersLoginChanged = array();
 
     /**
+     * @var LDAP_UserSync
+     */
+    private $user_sync;
+
+    /**
      * Constructor
      *
      * @param LDAP $ldap Ldap access object
      */
-    function __construct(LDAP $ldap) {
-        $this->ldap = $ldap;
+    function __construct(LDAP $ldap, LDAP_UserSync $user_sync) {
+        $this->ldap      = $ldap;
+        $this->user_sync = $user_sync;
     }
 
     /**
@@ -297,6 +305,51 @@ class LDAP_UserManager {
             return $u;
         }
         return false;
+    }
+
+    /**
+     * @return PFUser
+     * @throws LDAP_AuthenticationFailedException
+     * @throws LDAP_UserNotFoundException
+     */
+    public function authenticate($username, $password) {
+        if (! $this->ldap->authenticate($username, $password)) {
+            throw new LDAP_AuthenticationFailedException();
+        }
+
+        $ldap_user = $this->getUserFromServer($username);
+        $user      = $this->getUserManager()->getUserByLdapId($ldap_user->getEdUid());
+        if ($user === null) {
+            return $this->createAccountFromLdap($ldap_user);
+        }
+        $this->synchronizeUser($user, $ldap_user, $password);
+
+        return $user;
+    }
+
+    private function mergeDefaultAttributesAndSiteAttributes() {
+        return
+        array_values(
+            array_unique(
+                array_merge(
+                    $this->ldap->getDefaultAttributes(),
+                    $this->user_sync->getSyncAttributes($this->ldap)
+                )
+            )
+        );
+    }
+
+    private function getUserFromServer($username) {
+        $ldap_results_iterator = $this->ldap->searchLogin(
+            $username,
+            $this->mergeDefaultAttributesAndSiteAttributes()
+        );
+
+        if (count($ldap_results_iterator) !== 1) {
+            throw new LDAP_UserNotFoundException();
+        }
+
+        return $ldap_results_iterator->current();
     }
 
     /**

@@ -280,7 +280,7 @@ class LDAP {
         return false;
     }
 
-    private function getDefaultAttributes() {
+    public function getDefaultAttributes() {
         return array(
             $this->ldapParams['mail'],
             $this->ldapParams['cn'],
@@ -308,12 +308,17 @@ class LDAP {
      * correspond to ldap 'uid' field).
      *
      * @param String $name login
-     * 
+     * @param array $attributes
+     *
      * @return LDAPResultIterator
      */    
-    function searchLogin($name) {
+    public function searchLogin($name, $attributes = array()) {
+        if (! $attributes) {
+            $attributes = $this->getDefaultAttributes();
+        }
+
         $filter = $this->ldapParams['uid'].'='.$name;
-        return $this->search($this->ldapParams['dn'], $filter, self::SCOPE_SUBTREE, $this->getDefaultAttributes());
+        return $this->search($this->ldapParams['dn'], $filter, self::SCOPE_SUBTREE, $attributes);
     }
     
     /**
