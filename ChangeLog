@@ -29,6 +29,7 @@ Version 7.3 (Not Released Yet)
 	* request #7234: tracker_ artifact_ changeset test fails on master
 	* Follow-up request #7104: DRY on subversion repository path
 	* request #7107: SOAP getSvn* doesnt work on projects with project shortname in mixed case
+	* Fix request #7232 Improve french help page
 
 	== Development ==
 	* Fix request #7218: Building autoload takes 20 minutes
