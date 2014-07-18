@@ -54,6 +54,8 @@ class FullTextSearch_DocmanSystemEventManager {
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_DELETE::NAME:
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_APPROVAL_TABLE_COMMENT::NAME:
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_REINDEX_PROJECT::NAME:
+            case SystemEvent_FULLTEXTSEARCH_DOCMAN_WIKI_INDEX::NAME:
+            case SystemEvent_FULLTEXTSEARCH_DOCMAN_WIKI_UPDATE::NAME:
                 $class = 'SystemEvent_'. $type;
                 $dependencies = array(
                     $this->getDocmanActions(),
@@ -102,6 +104,16 @@ class FullTextSearch_DocmanSystemEventManager {
         }
     }
 
+    public function queueNewWikiDocument(Docman_Item $item) {
+        if ($this->plugin->isAllowed($item->getGroupId())) {
+            $this->system_event_manager->createEvent(
+                SystemEvent_FULLTEXTSEARCH_DOCMAN_WIKI_INDEX::NAME,
+                $this->getDocmanSerializedParameters($item),
+                SystemEvent::PRIORITY_MEDIUM
+            );
+        }
+    }
+
     public function queueDeleteDocument(Docman_Item $item) {
         if ($this->plugin->isAllowed($item->getGroupId())) {
             $this->system_event_manager->createEvent(
@@ -129,6 +141,16 @@ class FullTextSearch_DocmanSystemEventManager {
             $this->system_event_manager->createEvent(
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE::NAME,
                 $this->getDocmanSerializedParameters($item, array($version->getNumber())),
+                SystemEvent::PRIORITY_MEDIUM
+            );
+        }
+    }
+
+    public function queueNewWikiDocumentVersion(Docman_Item $item, $wiki_metadata) {
+        if ($this->plugin->isAllowed($item->getGroupId())) {
+            $this->system_event_manager->createEvent(
+                SystemEvent_FULLTEXTSEARCH_DOCMAN_WIKI_UPDATE::NAME,
+                $this->getDocmanSerializedParameters($item, array($wiki_metadata)),
                 SystemEvent::PRIORITY_MEDIUM
             );
         }

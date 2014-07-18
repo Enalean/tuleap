@@ -146,7 +146,7 @@ class Docman_ApprovalTableReviewerFactory {
     /**
      * @return Docman_ApprovalReviewer[]
      */
-    public function getReviewerListForLatestVersion(Docman_Version $version) {
+    public function getReviewerListForLatestVersion() {
         $list = array();
         if ($this->reviewerCache === null) {
             $this->reviewerCache = array();

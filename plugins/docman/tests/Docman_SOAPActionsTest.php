@@ -357,7 +357,8 @@ class Docman_SOAPActionsTest extends UnitTestCase {
         $action->event_manager->expectAt(0, 'processEvent', array('plugin_docman_event_add', '*'));
         $action->event_manager->expectAt(1, 'processEvent', array('plugin_docman_event_metadata_update', '*'));
         $action->event_manager->expectAt(2, 'processEvent', array('plugin_docman_event_metadata_update', '*'));
-        $action->event_manager->expectAt(3, 'processEvent', array('send_notifications', '*'));
+        $action->event_manager->expectAt(3, 'processEvent', array('plugin_docman_event_new_wikipage', '*'));
+        $action->event_manager->expectAt(4, 'processEvent', array('send_notifications', '*'));
         $action->getControler()->feedback->expectOnce('log', array('info', '*'));
         
         $action->createItem();
@@ -391,7 +392,8 @@ class Docman_SOAPActionsTest extends UnitTestCase {
         $action->getControler()->request = $request;
         
         $action->event_manager->expectAt(0, 'processEvent', array('plugin_docman_event_add', '*'));
-        $action->event_manager->expectAt(1, 'processEvent', array('send_notifications', '*'));
+        $action->event_manager->expectAt(1, 'processEvent', array('plugin_docman_event_new_wikipage', '*'));
+        $action->event_manager->expectAt(2, 'processEvent', array('send_notifications', '*'));
         
         $action->createItem();
     }

@@ -146,11 +146,11 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
                 'create_date'             => '2014-06-19',
                 'update_date'             => '2014-06-19',
                 'permissions'             => array(3, 102),
-                'file'                    => 'aW5kZXggbWUK',
                 'approval_table_comments' => array(),
                 'obsolescence_date'       => '2014-06-19',
                 'property_1'              => 'val01',
                 'property_2'              => 'val02',
+                'file'                    => 'aW5kZXggbWUK',
                ),
         );
         $this->client->expectOnce('index', $expected);
@@ -179,10 +179,10 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
                 'create_date'             => '2014-06-19',
                 'update_date'             => '2014-06-19',
                 'permissions'             => array(3, 102),
-                'file'                    => 'aW5kZXggbWUK',
                 'approval_table_comments' => array(),
                 'property_1'              => 'val01',
                 'property_2'              => 'val02',
+                'file'                    => 'aW5kZXggbWUK',
                ),
         );
         $this->client->expectOnce('index', $expected);
@@ -267,6 +267,9 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
                                 'store'       => 'yes'
                             )
                         )
+                    ),
+                    'content' => array(
+                        'type'  => 'string'
                     ),
                     'permissions' => array(
                         'type'  => 'string',
