@@ -29,6 +29,7 @@ class Testing_REST_ResourcesInjector {
     public function populate(Luracast\Restler\Restler $restler) {
         $restler->addAPIClass('\\Tuleap\\Testing\\REST\\v1\\ProjectResource', 'projects');
         $restler->addAPIClass('\\Tuleap\\Testing\\REST\\v1\\CampaignsResource', 'testing_campaigns');
+        $restler->addAPIClass('\\Tuleap\\Testing\\REST\\v1\\DefinitionsResource', 'testing_definitions');
     }
 
     public function declareProjectResource(array &$resources, Project $project) {

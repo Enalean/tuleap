@@ -1,13 +1,18 @@
 @passed: #468847;  /* badge-success */
-@failed: #b94a48;   /* badge-important */
-@blocked: #3a87ad; /* badge-info */
+@failed: #B94A48;  /* badge-important */
+@blocked: #3A87AD; /* badge-info */
+@notrun: #AAAAAA;
 
 #executions {
     height: 100%;
-    max-width: 1200px;
+    width: 100%;
+    background: #FCFCFC;
 
     #executions-pane {
+        float: left;
         height: 100%;
+        width: 40%;
+        background: #FFFFFF;
         box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.16);
 
         h1 {
@@ -17,7 +22,6 @@
         #execution-filter {
             padding: 0 12px;
             margin: 0 0 10px;
-
             .row-fluid {
                 margin: 0 0 10px;
             }
@@ -31,9 +35,31 @@
             }
 
             .btn-group > label {
+                position: relative;
                 width: 25%;
+                height: 29px;
                 -moz-box-sizing: border-box;
                 box-sizing: border-box;
+
+                > img {
+                    max-width: auto;
+                    position: absolute;
+                    left: 50%;
+                    top: 50%;
+                    margin: -9px 0 0 -8px;
+                }
+            }
+
+            @media screen and (max-width: 1060px) {
+                .row-fluid {
+                    margin: 0;
+                }
+
+                [class*="span"] {
+                    float: none;
+                    width: 100%;
+                    margin: 0 0 10px;
+                }
             }
         }
 
@@ -44,38 +70,157 @@
             text-transform: uppercase;
             font-size: 0.8em;
         }
-        .execution-list {
-            & > .execution-item {
-                border-bottom: 1px solid #DDD;
 
-                & > .execution-item-content {
-                    border-left: 4px solid white;
-                    margin: 0 5px 0 0;
-                    padding: 8px 20px 8px 7px;
+        .execution-item {
+            cursor: pointer;
+            border-bottom: 1px solid #DDD;
 
-                    &.passed {
-                        border-left-color: @passed;
-                        color: @passed;
-                        background: url('status-passed-color.png') no-repeat right center;
-                    }
+            &:hover, &.active {
+                background-color: #F5F5F5;
+            }
 
-                    &.failed {
-                        border-left-color: @failed;
-                        color: @failed;
-                        background: url('status-failed-color.png') no-repeat right center;
-                    }
+            & > .execution-item-content {
+                border-left: 8px solid white;
+                margin: 0 5px 0 0;
+                padding: 8px 20px 8px 7px;
 
-                    &.blocked {
-                        border-left-color: @blocked;
-                        color: @blocked;
-                        background: url('status-blocked-color.png') no-repeat right center;
-                    }
+                &.passed {
+                    border-left-color: @passed;
+                    color: @passed;
+                    background: url('status-passed-color.png') no-repeat right center;
+                }
+
+                &.failed {
+                    border-left-color: @failed;
+                    color: @failed;
+                    background: url('status-failed-color.png') no-repeat right center;
+                }
+
+                &.blocked {
+                    border-left-color: @blocked;
+                    color: @blocked;
+                    background: url('status-blocked-color.png') no-repeat right center;
                 }
             }
         }
     }
 
+    .in {
+        animation-name: in;
+        -webkit-animation-name: in;
+        animation-duration: 0.3s;
+        -webkit-animation-duration: 0.3s;
+        animation-timing-function: ease;
+        -webkit-animation-timing-function: ease;
+    }
+    @keyframes in {
+        0%  { opacity: 0; -webkit-transform: translateY(200%); }
+        100% { opacity: 1; -webkit-transform: translateY(0%); }
+    }
+    @-webkit-keyframes in {
+        0%  { opacity: 0; transform: translateY(200%); }
+        100% { opacity: 1; transform: translateY(0%); }
+    }
+
+    #no-current-execution, #current-execution {
+        float: left;
+        margin: 2%;
+        min-height: 80%;
+        width: 60% - 4%;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    #no-current-execution {
+        padding: 20% 30px 0;
+        text-align: center;
+        font-size: 2em;
+        font-weight: 300;
+        letter-spacing: 0.03em;
+        line-height: 1.2em;
+        color: #CCC;
+    }
+
     #current-execution {
-        background: #FCFCFC;
+        position: relative;
+        z-index: 1;
+        background: #FFFFFF;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
+        padding: 1px;
+
+        h2 {
+            margin: 0;
+            padding: 10px;
+            color: #FFFFFF;
+            font-weight: 300;
+            letter-spacing: 0.01em;
+            background-color: @notrun;
+            -webkit-border-top-left-radius: 3px;
+            -webkit-border-top-right-radius: 3px;
+            -moz-border-radius-topleft: 3px;
+            -moz-border-radius-topright: 3px;
+            border-top-left-radius: 3px;
+            border-top-right-radius: 3px;
+
+            &.passed {
+                background-color: @passed;
+                transition: all 0.08s linear;
+            }
+
+            &.failed {
+                background-color: @failed;
+                transition: all 0.08s linear;
+            }
+
+            &.blocked {
+                background-color: @blocked;
+                transition: all 0.08s linear;
+            }
+        }
+
+        .current-execution-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin: 0 0 7px;
+        }
+
+        #current-execution-last-execution {
+            padding: 10px;
+
+            .last-execution-details {
+                font-size: 0.9em;
+                margin: 0;
+
+                span {
+                    color: #888;
+                    margin: 0 5px 0 0;
+                }
+            }
+        }
+
+        #current-execution-assigned-to {
+            padding: 10px;
+
+            img {
+                border-radius: 50%;
+                margin: 0 5px 0 0;
+            }
+        }
+
+        #current-execution-description {
+            padding: 10px;
+            margin: 20px 0 0;
+
+            > div {
+                border-left: 4px solid #F0F0F0;
+                padding-left: 10px;
+                font-size: 0.9em;
+            }
+        }
+
+        #current-execution-result {
+
+        }
     }
 }

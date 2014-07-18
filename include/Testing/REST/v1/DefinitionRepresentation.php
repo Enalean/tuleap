@@ -28,10 +28,11 @@ use \PFUser;
 
 class DefinitionRepresentation {
 
-    const ROUTE = 'NOT_IMPLEMENTED_YET';
+    const ROUTE = 'testing_definitions';
 
-    const FIELD_SUMMARY  = 'summary';
-    const FIELD_CATEGORY = 'category';
+    const FIELD_SUMMARY     = 'summary';
+    const FIELD_DESCRIPTION = 'details';
+    const FIELD_CATEGORY    = 'category';
 
     /**
      * @var int ID of the artifact
@@ -47,6 +48,11 @@ class DefinitionRepresentation {
      * @var String
      */
     public $summary;
+
+    /**
+     * @var String
+     */
+    public $description;
 
     /**
      * @var String
@@ -73,14 +79,17 @@ class DefinitionRepresentation {
      */
     private $user;
 
+
     public function build(Tracker_Artifact $artifact, Tracker_FormElementFactory $form_element_factory, PFUser $user) {
+        $this->form_element_factory = $form_element_factory;
         $this->artifact             = $artifact;
         $this->tracker_id           = $artifact->getTrackerId();
-        $this->form_element_factory = $form_element_factory;
         $this->user                 = $user;
+
         $this->id                   = JsonCast::toInt($artifact->getId());
         $this->uri                  = self::ROUTE . '/' . $this->id;
         $this->summary              = $this->getFieldValue(self::FIELD_SUMMARY)->getValue();
+        $this->description          = $this->getFieldValue(self::FIELD_DESCRIPTION)->getValue();
         $this->category             = $this->getCategory();
     }
 
