@@ -125,8 +125,8 @@ my_monitored_forum	title	Stop monitoring a forum.
 my_tour	welcome_title	Welcome to Tuleap!
 my_tour	welcome	Nice to meet you $1! This is your first usage of Tuleap, so we will show you how to begin.
 
-my_tour	my_personnal_page_title	My personnal page
-my_tour	my_personnal_page	This is your personnal page (where you are). You can find here your personnal dashboard with your own data.
+my_tour	my_personal_page_title	My personal page
+my_tour	my_personal_page	This is your personal page (where you are). You can find here your personal dashboard with your own data.
 
 my_tour	projects_title	Projects
 my_tour	projects	This is the tab where you can create your first project. You will also find projects you can access.
