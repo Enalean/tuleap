@@ -68,7 +68,7 @@ class ElasticSearch_1_2_RequestWikiDataFactory {
             'id'                 => $wiki_page->getId(),
             'group_id'           => $wiki_page->getGid(),
             'page_name'          => $wiki_page->getPagename(),
-            'last_modified_date' => $wiki_page_metadata[self::PHPWIKI_METADATA_LAST_MODIFIED_DATE],
+            'last_modified_date' => date('Y-m-d', $wiki_page_metadata[self::PHPWIKI_METADATA_LAST_MODIFIED_DATE]),
             'last_author'        => isset($wiki_page_metadata[self::PHPWIKI_METADATA_AUTHOR]) ?
                 $wiki_page_metadata[self::PHPWIKI_METADATA_AUTHOR] : '',
             'last_summary'       => isset($wiki_page_metadata[self::PHPWIKI_METADATA_SUMMARY]) ?
