@@ -8,7 +8,7 @@ Version 7.3 (Not Released Yet)
 	* git: 3.93
 	* tracker: 5.425
 	* ldap: 3.51
-	* fulltextsearch: 0.59
+	* fulltextsearch: 0.60
 	* docman: 2.26.39
 	* mediawiki: 0.43
 	* forumml: 2.6.20
@@ -32,6 +32,7 @@ Version 7.3 (Not Released Yet)
 	* Fix request #7232 Improve french help page
 	* request #7211: Fatal error while accessing to a specific svn revision.
 	* request #7247: New theme variant
+	* request #7236: fatal error on system events UI- foreign events not rejected by fulltext
 
 	== Development ==
 	* Fix request #7218: Building autoload takes 20 minutes

@@ -1,3 +1,6 @@
+Version 0.60 - Tuleap 7.3
+    * request #7236: fatal error on system events UI- foreign events not rejected by fulltext
+
 Version 0.59 - Tuleap 7.3
     * Part of story #7028 Search in wiki pages
 
