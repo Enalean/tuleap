@@ -17,12 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@white: #FFFFFF;
-@main: #CC8F7C;
-@dark-main: @main;
-@navbar-color: #2B2B2B;
-@navbar-color-hover: @main;
-@light-grey: #EBEBEB;
-@grey: #9D9D9D;
-@medium-grey: #686868;
-@dark-grey: #373737;
+@import 'utils/pre-definitions.less';
+
+body.FlamingParrot_Red {
+    @import 'utils/variables-red.less';
+    @import 'utils/definitions.less';
+}
