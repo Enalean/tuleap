@@ -468,11 +468,11 @@ $sys_default_theme_variant = 'FlamingParrot_Orange';
 // * FlamingParrot_Green
 // * FlamingParrot_BlueGrey
 // * FlamingParrot_Purple
-// * FlamingParrot_Beige
+// * FlamingParrot_Red
 // * FlamingParrot_DarkOrange
 // * FlamingParrot_DarkBlue
 // * FlamingParrot_DarkGreen
 // * FlamingParrot_DarkBlueGrey
 // * FlamingParrot_DarkPurple
-// * FlamingParrot_DarkBeige
-$sys_available_theme_variants = 'FlamingParrot_Orange,FlamingParrot_Blue,FlamingParrot_Green,FlamingParrot_BlueGrey,FlamingParrot_Purple,FlamingParrot_Beige,FlamingParrot_DarkOrange,FlamingParrot_DarkBlue,FlamingParrot_DarkGreen,FlamingParrot_DarkBlueGrey,FlamingParrot_DarkPurple,FlamingParrot_DarkBeige';
+// * FlamingParrot_DarkRed
+$sys_available_theme_variants = 'FlamingParrot_Orange,FlamingParrot_Blue,FlamingParrot_Green,FlamingParrot_BlueGrey,FlamingParrot_Purple,FlamingParrot_Red,FlamingParrot_DarkOrange,FlamingParrot_DarkBlue,FlamingParrot_DarkGreen,FlamingParrot_DarkBlueGrey,FlamingParrot_DarkPurple,FlamingParrot_DarkRed';

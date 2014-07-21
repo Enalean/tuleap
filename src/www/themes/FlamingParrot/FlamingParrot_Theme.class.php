@@ -62,13 +62,13 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
             "FlamingParrot_Green",
             "FlamingParrot_BlueGrey",
             "FlamingParrot_Purple",
-            "FlamingParrot_Beige",
+            "FlamingParrot_Red",
             "FlamingParrot_DarkOrange",
             "FlamingParrot_DarkBlue",
             "FlamingParrot_DarkGreen",
             "FlamingParrot_DarkBlueGrey",
             "FlamingParrot_DarkPurple",
-            "FlamingParrot_DarkBeige"
+            "FlamingParrot_DarkRed"
         );
     }
 
