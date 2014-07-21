@@ -32,8 +32,8 @@ class Tuleap_Tour_WelcomeTour extends Tuleap_Tour {
                 $GLOBALS['Language']->getText('my_tour', 'welcome', $user_name)
             ),
             new Tuleap_Tour_Step(
-                $GLOBALS['Language']->getText('my_tour', 'my_personnal_page_title'),
-                $GLOBALS['Language']->getText('my_tour', 'my_personnal_page'),
+                $GLOBALS['Language']->getText('my_tour', 'my_personal_page_title'),
+                $GLOBALS['Language']->getText('my_tour', 'my_personal_page'),
                 'bottom',
                 'ul.nav > li:first-child'
             ),
