@@ -1,3 +1,6 @@
+Version 5.425 - Tuleap 7.3
+    * request #7247: New theme variant
+
 Version 5.424 - Tuleap 7.3
     * Fix request #7234 tracker_ artifact_ changeset test fails on master
 
