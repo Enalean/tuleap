@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,14 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ElasticSearch_SearchResultDocman extends ElasticSearch_SearchResult {
+class ElasticSearch_SearchResultWiki extends ElasticSearch_SearchResult {
     public $item_title;
     public $url;
-          
+
     public function __construct(array $hit, Project $project) {
-        $this->item_title    = $hit['fields']['title'][0];
-        $this->url           = '/plugins/docman/?group_id='.$hit['fields']['group_id'][0].'&id='.$hit['fields']['id'][0].'&action=details';
-        $this->highlight     = isset($hit['highlight']['file']) ? array_shift($hit['highlight']['file']) : '';
+        $page_name        = $hit['fields']['page_name'][0];
+        $project_id       = $hit['fields']['group_id'][0];
+
+        $page_identifier  = urlencode($page_name);
+
+        $this->item_title = $page_name;
+        $this->url        = '/wiki/index.php?group_id='.$project_id.'&pagename='.$page_identifier;
+        $this->highlight  = isset($hit['highlight']['content']) ? array_shift($hit['highlight']['content']) : '';
 
         parent::__construct($hit, $project);
     }

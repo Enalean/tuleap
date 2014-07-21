@@ -23,8 +23,6 @@
  */
 class ElasticSearch_ClientFactory {
 
-    const DEFAULT_INDEX = 'tuleap';
-
     /**
      * Build instance of ClientFacade
      *
@@ -33,12 +31,12 @@ class ElasticSearch_ClientFactory {
      * @param String $server_port                  The port of the search server
      * @param String $server_user                  The user of the search server (Basic Auth)
      * @param String $server_password              The pass of the search server (Basic Auth)
-     * @param String $type                         Type of the client
+     * @param String $index                        Type of the items to search
      *
      * @return ElasticSearch_ClientFacade
      */
-    public function buildIndexClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, $type) {
-        $client = $this->getClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, $type);
+    public function buildIndexClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, $index, $type) {
+        $client = $this->getClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, $index, $type);
         return new ElasticSearch_IndexClientFacade($client);
     }
 
@@ -51,15 +49,15 @@ class ElasticSearch_ClientFactory {
      * @param string         $server_user                  the user of the search server (Basic Auth)
      * @param string         $server_password              the pass of the search server (Basic Auth)
      * @param ProjectManager $project_manager              The project manager
-     * @param string         $type                         The type of the index
+     * @param string         $index                        Type of the items to search
      *
      * @return ElasticSearch_ClientFacade
      */
-    public function buildSearchClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, ProjectManager $project_manager, $type) {
-        $client = $this->getClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, $type);
+    public function buildSearchClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, ProjectManager $project_manager, $index, $type) {
+        $client = $this->getClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, $index, $type);
         return new ElasticSearch_SearchClientFacade(
             $client,
-            $type,
+            $index,
             $project_manager,
             new ElasticSearch_1_2_ResultFactory($project_manager)
         );
@@ -78,37 +76,26 @@ class ElasticSearch_ClientFactory {
      * @return ElasticSearch_ClientFacade
      */
     public function buildSearchAdminClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, ProjectManager $project_manager) {
-        $type   = 'docman';
-        $client = $this->getClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, $type);
+        $index  = fulltextsearchPlugin::SEARCH_DEFAULT;
+        $type   = '';
+        $client = $this->getClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, $index, $type);
         return new ElasticSearch_SearchAdminClientFacade(
             $client,
-            $type,
+            $index,
             $project_manager,
             new ElasticSearch_1_2_ResultFactory($project_manager)
         );
     }
 
-    private function getClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, $type = 'docman') {
+    private function getClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, $index, $type) {
         //todo use installation dir defined by elasticsearch rpm
         $client_path = $path_to_elasticsearch_client .'/ElasticSearchClient.php';
         if (! file_exists($client_path)) {
             throw new ElasticSearch_ClientNotFoundException();
         }
-
         require_once $client_path;
 
         $transport  = new ElasticSearch_TransportHTTPBasicAuth($server_host, $server_port, $server_user, $server_password);
-
-        $index = self::DEFAULT_INDEX;
-
-        if ($type === fulltextsearchPlugin::SEARCH_DOCMAN_TYPE) {
-            $index = fulltextsearchPlugin::SEARCH_DOCMAN_TYPE;
-            $type  = '';
-
-        } elseif ($type === fulltextsearchPlugin::SEARCH_WIKI_TYPE) {
-            $index = fulltextsearchPlugin::SEARCH_WIKI_TYPE;
-            $type  = '';
-        }
 
         return new ElasticSearchClient($transport, $index, $type);
     }

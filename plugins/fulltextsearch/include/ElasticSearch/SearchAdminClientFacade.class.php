@@ -34,7 +34,7 @@ class ElasticSearch_SearchAdminClientFacade extends ElasticSearch_SearchClientFa
     public function getStatus() {
         $this->client->setType('');
         $result = $this->client->request(array('_status'), 'GET', $payload = false, $verbose = true);
-        $this->client->setType($this->type);
+        $this->client->setType($this->index);
 
         $status = array(
             'size'    => isset($result['indices']['tuleap']['index']['size']) ? $result['indices']['tuleap']['index']['size'] : '0',

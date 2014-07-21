@@ -27,6 +27,7 @@ class fulltextsearchPlugin extends Plugin {
     const SEARCH_DOCMAN_TYPE  = 'docman';
     const SEARCH_WIKI_TYPE    = 'wiki';
     const SEARCH_TRACKER_TYPE = 'tracker';
+    const SEARCH_DEFAULT      = '';
 
     public function __construct($id) {
         parent::__construct($id);
@@ -107,14 +108,28 @@ class fulltextsearchPlugin extends Plugin {
                 $GLOBALS['Language']->getText('plugin_fulltextsearch', 'accordion_type'),
                 null
             );
+
+            $params['redirect_to_services'] = false;//swallow searches from services
         }
     }
 
     public function search_type($params) {
+        $search_types_managed = array(
+            self::SEARCH_DEFAULT,
+            self::SEARCH_DOCMAN_TYPE,
+            self::SEARCH_WIKI_TYPE,
+            self::SEARCH_TYPE
+        );
+
         if ($this->getCurrentUser()->useLabFeatures()) {
-            if ($params['query']->getTypeOfSearch() === self::SEARCH_TYPE) {
+            $type_of_search = $params['query']->getTypeOfSearch();
+            $index          = ($type_of_search == self::SEARCH_TYPE ) ? self::SEARCH_DEFAULT : $type_of_search;
+            $type           = ($index === self::SEARCH_TRACKER_TYPE && ! $params['query']->getProject()->isError()) ?
+                $params['query']->getProject()->getID() : '';
+
+            if (in_array($index, $search_types_managed)) {
                 try {
-                    $search_controller = $this->getSearchController();
+                    $search_controller = $this->getSearchController($index, $type);
                 } catch (ElasticSearch_ClientNotFoundException $exception) {
                     $search_error_controller = $this->getSearchErrorController();
                     $search_error_controller->clientNotFound($params);
@@ -447,35 +462,37 @@ class fulltextsearchPlugin extends Plugin {
     /**
      * Obtain index client
      *
-     * @param String $type Type of the index
+     * @param String $index Type of the index
      *
      * @return ElasticSearch_IndexClientFacade
      */
-    private function getIndexClient($type) {
+    private function getIndexClient($index) {
         $factory         = $this->getClientFactory();
         $client_path     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_path');
         $server_host     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_host');
         $server_port     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_port');
         $server_user     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_user');
         $server_password = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_password');
-        return $factory->buildIndexClient($client_path, $server_host, $server_port, $server_user, $server_password, $type);
+        $type            = '';
+
+        return $factory->buildIndexClient($client_path, $server_host, $server_port, $server_user, $server_password, $index, $type);
     }
 
     /**
      * Obtain search client
      *
-     * @param String $type Type of the index
+     * @param String $index Type of items to search (e.g. docman, wiki, '', ...)
      *
      * @return ElasticSearch_SearchClientFacade
      */
-    private function getSearchClient($type) {
+    private function getSearchClient($index, $type = '') {
         $factory         = $this->getClientFactory();
         $client_path     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_path');
         $server_host     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_host');
         $server_port     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_port');
         $server_user     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_user');
         $server_password = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_password');
-        return $factory->buildSearchClient($client_path, $server_host, $server_port, $server_user, $server_password, $this->getProjectManager(), $type);
+        return $factory->buildSearchClient($client_path, $server_host, $server_port, $server_user, $server_password, $this->getProjectManager(), $index, $type);
     }
 
     private function getSearchAdminClient() {
@@ -502,8 +519,8 @@ class fulltextsearchPlugin extends Plugin {
     /**
      * @throws ElasticSearch_ClientNotFoundException
      */
-    private function getSearchController($type = self::SEARCH_DOCMAN_TYPE) {
-        return new FullTextSearch_Controller_Search($this->getRequest(), $this->getSearchClient($type));
+    private function getSearchController($index = self::SEARCH_DEFAULT, $type = '') {
+        return new FullTextSearch_Controller_Search($this->getRequest(), $this->getSearchClient($index, $type));
     }
 
     private function getSearchErrorController() {

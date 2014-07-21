@@ -34,6 +34,9 @@ class Search_SearchController {
 
     private $search_types = array();
 
+    /** @var PluginManager */
+    private $plugin_manager;
+
     public function __construct(EventManager $event_manager) {
         $this->event_manager = $event_manager;
         $this->renderer = TemplateRendererFactory::build()->getRenderer(
@@ -49,6 +52,8 @@ class Search_SearchController {
             Search_SearchSnippet::NAME   => new Search_SearchSnippet(new SnippetDao()),
             Search_SearchWiki::NAME      => new Search_SearchWiki(new WikiDao()),
         );
+
+        $this->plugin_manager = PluginManager::instance();
     }
 
     public function index(Codendi_Request $request) {
@@ -111,18 +116,25 @@ class Search_SearchController {
     private function getSearchPresenter(Search_SearchQuery $query, $results) {
         $project_search_types = array();
         $site_search_types    = array();
+        $redirect_to_services = true;
 
         $this->event_manager->processEvent(
             Event::SEARCH_TYPES_PRESENTERS,
             array(
-                'project'            => $query->getProject(),
-                'words'              => $query->getWords(),
-                'project_presenters' => &$project_search_types,
-                'site_presenters'    => &$site_search_types,
+                'project'              => $query->getProject(),
+                'words'                => $query->getWords(),
+                'project_presenters'   => &$project_search_types,
+                'site_presenters'      => &$site_search_types,
+                'redirect_to_services' => &$redirect_to_services
             )
         );
 
-        $project_search_types = array_merge($this->getAdditionnalProjectWidePresentersIfNeeded($query->getProject(), $query->getWords()), $project_search_types);
+        $additional_project_search_types = $this->getAdditionnalProjectWidePresentersIfNeeded(
+            $query->getProject(),
+            $query->getWords(),
+            $redirect_to_services
+        );
+        $project_search_types = array_merge($additional_project_search_types, $project_search_types);
 
         $search_panes = array();
         if (! $query->getProject()->isError()) {
@@ -144,10 +156,10 @@ class Search_SearchController {
         );
     }
 
-    private function getAdditionnalProjectWidePresentersIfNeeded(Project $project, $words) {
+    private function getAdditionnalProjectWidePresentersIfNeeded(Project $project, $words, $redirect_to_services) {
         $additionnal_presenters = array();
 
-        if ($project->usesService('wiki')) {
+        if ($project->usesService('wiki') && ! $this->useFulltextSearch()) {
             $search_wiki              = new Search_SearchWiki(new WikiDao());
             $additionnal_presenters[] = $search_wiki->getFacets($project->getID(), $words);
         }
@@ -212,4 +224,11 @@ class Search_SearchController {
 
         return $results;
     }
+
+    private function useFulltextSearch() {
+        $fulltext_plugin = $this->plugin_manager->getPluginByName('fulltextsearch');
+
+        return $this->plugin_manager->isPluginAvailable($fulltext_plugin);
+    }
+
 }
