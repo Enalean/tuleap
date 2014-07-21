@@ -1,5 +1,8 @@
+Version 0.62 - Tuleap 7.3
+    * tasks #7238 Deal with default pages
+
 Version 0.61 - Tuleap 7.3
-    * tasks #7229 Deal with date values & tasks #7238 Deal with default pages
+    * tasks #7229 Deal with date values
 
 Version 0.60 - Tuleap 7.3
     * request #7236: fatal error on system events UI- foreign events not rejected by fulltext
