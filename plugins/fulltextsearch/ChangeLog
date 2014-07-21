@@ -1,3 +1,6 @@
+Version 0.63 - Tuleap 7.3
+    * tasks #7189: Search in Wiki does not redirect to the Wiki service if FTS is enabled
+
 Version 0.62 - Tuleap 7.3
     * tasks #7238 Deal with default pages
 
