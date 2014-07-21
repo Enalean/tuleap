@@ -27,14 +27,9 @@
 */
 
 function group_get_object_by_name($groupname) {
-	$pm = ProjectManager::instance();
-    return $pm->getProject(group_getid_by_name($groupname));
-}
+    $pm = ProjectManager::instance();
 
-function group_getid_by_name($groupname) {
-	$res = db_query("SELECT group_id FROM groups WHERE unix_group_name='".db_es($groupname)."'");
-	if (db_numrows($res) == 0) return false;
-	else return db_result($res,0,'group_id');
+    return $pm->getProjectByUnixName($groupname);
 }
 
 class Group extends Error {

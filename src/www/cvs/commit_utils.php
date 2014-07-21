@@ -624,8 +624,8 @@ function get_user_shell($user_id) {
 }
 
 function check_cvs_access($username, $group_name, $cvspath) {
- 
-  $group_id = group_getid_by_name($group_name);
+  $pm = ProjectManager::instance();
+  $project = $pm->getProjectByUnixName($group_name);
 
   //accept old url containing a .diff at the end of the filename
   if (strpos($cvspath, '.diff') == (strlen($cvspath)-5)) {
@@ -645,7 +645,7 @@ function check_cvs_access($username, $group_name, $cvspath) {
 
   // A directory that is not world readable can only be viewed
   // through viewvc if the user is a project member
-  if ($group_id && (($mode_top & 0x0004) == 0 || ($mode & 0x0004) == 0) && !user_ismember($group_id)) {
+  if ($project && (($mode_top & 0x0004) == 0 || ($mode & 0x0004) == 0) && !user_ismember($project->getID())) {
     return false;
   } else {
     return true;
@@ -656,7 +656,13 @@ function check_cvs_access($username, $group_name, $cvspath) {
 // Return the group ID from a repository name
 // Repository names look like '/cvsroot/groupname', without trailing slash!
 function get_group_id_from_repository($repository) {
-    return group_getid_by_name(basename($repository));
+    $pm = ProjectManager::instance();
+    $project = $pm->getProjectByUnixName(basename($repository));
+    if (! $project) {
+        return false;
+    }
+
+    return $project->getID();
 }
 
 function cvs_get_revisions(&$project, $offset, $chunksz, $_tag = 100, $_branch = 100, $_commit_id = '', $_commiter = 100, $_srch = '', $order_by = '', $pv = 0) {
