@@ -1,3 +1,6 @@
+Version 2.26.40 - Tuleap 7.3
+    * tasks #7191: Wiki page referenced in docman is indexed like a docman file
+
 Version 2.26.39 - Tuleap 7.3
     * tasks #7149: delete all indexed documents and index new ones for a project
 

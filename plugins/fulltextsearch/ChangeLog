@@ -1,3 +1,6 @@
+Version 0.64 - Tuleap 7.3
+    * tasks #7191: Wiki page referenced in docman is indexed like a docman file
+
 Version 0.63 - Tuleap 7.3
     * tasks #7189: Search in Wiki does not redirect to the Wiki service if FTS is enabled
 
