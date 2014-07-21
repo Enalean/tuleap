@@ -93,7 +93,13 @@ class FullTextSearchWikiActions {
     public function delete(WikiPage $wiki_page) {
         $this->logger->debug('[Wiki] ElasticSearch: delete wiki page #' . $wiki_page->getId());
 
-        $this->client->delete($wiki_page->getGid(), $wiki_page->getId());
+        try{
+            $this->client->getIndexedElement($wiki_page->getGid(), $wiki_page->getId());
+            $this->client->delete($wiki_page->getGid(), $wiki_page->getId());
+        } catch (ElasticSearch_ElementNotIndexed $exception) {
+            $this->logger->debug('[Wiki] ElasticSearch: wiki page #' . $wiki_page->getId() . ' not indexed, nothing to delete');
+            return;
+        }
     }
 
     /**

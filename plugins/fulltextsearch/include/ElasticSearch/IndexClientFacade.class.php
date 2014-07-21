@@ -61,6 +61,17 @@ class ElasticSearch_IndexClientFacade extends ElasticSearch_ClientFacade impleme
         $this->client->request($document_id.'/_update', 'POST', $formatted_data, true);
     }
 
+    public function getIndexedElement($type, $element_id) {
+        $this->client->setType($type);
+
+        try {
+            $this->client->request($element_id, 'GET', array(), true);
+        } catch (ElasticSearchTransportHTTPException $exception) {
+            throw new ElasticSearch_ElementNotIndexed();
+        }
+
+    }
+
     public function getMapping($type) {
         $this->client->setType($type);
 

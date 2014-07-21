@@ -61,6 +61,18 @@ interface FullTextSearch_IIndexDocuments {
     public function update($type, $document_id, array $document);
 
     /**
+     * Get the indexed element
+     *
+     * GET /:index/:type/:element_id
+     *
+     * @param string $type
+     * @param string $element_id
+     *
+     * @return array
+     */
+    public function getIndexedElement($type, $element_id);
+
+    /**
      * Get the mapping
      *
      * GET /:index/:type/_mapping
