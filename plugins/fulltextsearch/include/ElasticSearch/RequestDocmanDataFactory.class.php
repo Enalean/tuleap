@@ -75,6 +75,7 @@ class ElasticSearch_1_2_RequestDocmanDataFactory {
 
         $this->removeUnparsableMetadata($hardcoded_metadata_for_mapping);
         $this->addStandardFileMetadata($hardcoded_metadata_for_mapping);
+        $this->addStandardContentMetadata($hardcoded_metadata_for_mapping);
         $this->addStandardPermissionsMetadata($hardcoded_metadata_for_mapping);
         $this->addApprovalTableMetadata($hardcoded_metadata_for_mapping);
 
@@ -173,7 +174,7 @@ class ElasticSearch_1_2_RequestDocmanDataFactory {
      *
      * @return array
      */
-    public function getIndexedDataForItemVersion(Docman_Item $item, Docman_Version $version) {
+    public function getIndexedDataForItemVersion(Docman_Item $item) {
         $hardcoded_metadata = array(
             'id'                      => $item->getId(),
             'group_id'                => $item->getGroupId(),
@@ -182,8 +183,7 @@ class ElasticSearch_1_2_RequestDocmanDataFactory {
             'create_date'             => date('Y-m-d', $item->getCreateDate()),
             'update_date'             => date('Y-m-d', $item->getUpdateDate()),
             'permissions'             => $this->permissions_manager->exportPermissions($item),
-            'file'                    => $this->fileContentEncode($version->getPath()),
-            'approval_table_comments' => $this->getDocumentApprovalTableComments($item, $version)
+            'approval_table_comments' => $this->getDocumentApprovalTableComments($item)
         );
 
         if ($item->getObsolescenceDate()) {
@@ -193,7 +193,7 @@ class ElasticSearch_1_2_RequestDocmanDataFactory {
         return $hardcoded_metadata;
     }
 
-    public function getDocumentApprovalTableComments(Docman_Item $item, Docman_Version $version) {
+    public function getDocumentApprovalTableComments(Docman_Item $item) {
         $comments               = array();
         $approval_table_factory = $this->approval_table_factory->getSpecificFactoryFromItem($item);
         $table                  = $approval_table_factory->getTable();
@@ -202,7 +202,7 @@ class ElasticSearch_1_2_RequestDocmanDataFactory {
         }
 
         $review_factory = $this->approval_table_factory->getReviewerFactory($table, $item);
-        $reviews        = $review_factory->getReviewerListForLatestVersion($version);
+        $reviews        = $review_factory->getReviewerListForLatestVersion();
 
         foreach ($reviews as $review) {
             /* @var $review Docman_ApprovalReviewer */
@@ -226,6 +226,10 @@ class ElasticSearch_1_2_RequestDocmanDataFactory {
 
     public function updateFile(array &$update_data, $file_path) {
         $update_data['file'] = $this->fileContentEncode($file_path);
+    }
+
+    public function updateContent(array &$update_data, $content) {
+        $update_data['content'] = $content;
     }
 
     public function updateCustomTextualMetadata(Docman_Item $item, array $update_data) {
@@ -303,6 +307,12 @@ class ElasticSearch_1_2_RequestDocmanDataFactory {
         );
     }
 
+    private function addStandardContentMetadata(array &$hardcoded_metadata_for_mapping) {
+        $hardcoded_metadata_for_mapping['content'] = array(
+            'type' => 'string'
+        );
+    }
+
     private function addStandardPermissionsMetadata(array &$hardcoded_metadata_for_mapping) {
         $hardcoded_metadata_for_mapping['permissions'] = array(
             'type'  => 'string',
@@ -373,5 +383,13 @@ class ElasticSearch_1_2_RequestDocmanDataFactory {
 
     private function getCustomPropertyName(Docman_Metadata $item_metadata) {
         return self::CUSTOM_PROPERTY_PREFIX . '_' . $item_metadata->getId();
+    }
+
+    public function getFileContent(Docman_Version $version) {
+        return array('file' => $this->fileContentEncode($version->getPath()));
+    }
+
+    public function getWikiContent(array $wiki_metadata) {
+        return array('content' => $wiki_metadata['content']);
     }
 }

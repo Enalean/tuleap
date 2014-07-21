@@ -285,12 +285,13 @@ class PageEditor
             $eM =& EventManager::instance();
             $uM =& UserManager::instance();
             $user =& $uM->getCurrentUser();
+            $wiki_page = new WikiPage(GROUP_ID, $page->getName());
             $eM->processEvent(
                 "wiki_page_updated",
                 array(
                     'group_id'         => GROUP_ID,
                     'wiki_page'        => $page->getName(),
-                    'wiki_page_object' => $page,
+                    'referenced'       => $wiki_page->isReferenced(),
                     'diff_link'        => $difflink,
                     'user'             => $user,
                     'version'          => $this->version

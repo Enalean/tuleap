@@ -221,6 +221,9 @@ class RequestDocmanDataFactoryTest extends TuleapTestCase {
                             )
                         )
                     ),
+                    'content' => array(
+                        'type'  => 'string'
+                    ),
                     'permissions' => array(
                         'type'  => 'string',
                         'index' => 'not_analyzed'

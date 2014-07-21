@@ -113,23 +113,33 @@ class Docman_WikiController extends Docman_Controller {
     function wikiPageUpdated() {
         $event_manager =& $this->_getEventManager();
         $item_factory =& $this->_getItemFactory();
-        
-        $wiki_page = $this->request->get('wiki_page');
-        $group_id = $this->request->get('group_id');
-        $documents = $item_factory->getWikiPageReferencers($wiki_page, $group_id);
-        $item_dao =& new Docman_ItemDao(CodendiDataAccess::instance());
-        foreach($documents as $key => $document) {
+
+        $wiki_page_name = $this->request->get('wiki_page');
+        $group_id       = $this->request->get('group_id');
+        $documents      = $item_factory->getWikiPageReferencers($wiki_page_name, $group_id);
+        $item_dao       =& new Docman_ItemDao(CodendiDataAccess::instance());
+        $user           = $this->request->get('user');
+        $diff_link      = $this->request->get('diff_link');
+        $version        = $this->request->get('version');
+
+        foreach($documents as $document) {
+            $wiki_page     = new WikiPage($group_id, $wiki_page_name);
+            $wiki_metadata = $wiki_page->getMetadata();
+
             // Update the item's update date attribute.
             $item_dao->updateById($document->getId(), null, null, null, null, null, $update_date=time(), 
                         null, null, null, null, null, null);
+
             $event_manager->processEvent('plugin_docman_event_wikipage_update', array(
-                            'group_id'  => $group_id,
-                            'item'      => $document,
-                            'user'      => $this->request->get('user'),
-                            'url'       => $this->request->get('diff_link'),
-                            'wiki_page' => $wiki_page,
-                            'old_value' => $this->request->get('version'),
-                            'new_value' => $this->request->get('version') + 1)
+                    'group_id'       => $group_id,
+                    'item'           => $document,
+                    'wiki_content'   => $wiki_metadata['content'],
+                    'user'           => $user,
+                    'url'            => $diff_link,
+                    'wiki_page'      => $wiki_page_name,
+                    'old_value'      => $version,
+                    'new_value'      => $version + 1
+                )
             );
         }
         $event_manager->processEvent('send_notifications', array());

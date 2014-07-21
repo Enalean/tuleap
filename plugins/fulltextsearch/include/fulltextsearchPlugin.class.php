@@ -37,12 +37,14 @@ class fulltextsearchPlugin extends Plugin {
 
     public function getHooksAndCallbacks() {
         // docman
-        if (defined('PLUGIN_DOCMAN_EVENT_APPROVAL_TABLE_COMMENT')) {
+        if ($this->isDocmanPluginActivated()) {
             $this->addHook('plugin_docman_after_new_document');
             $this->addHook('plugin_docman_event_del');
             $this->addHook('plugin_docman_event_update');
             $this->addHook('plugin_docman_event_perms_change');
             $this->addHook('plugin_docman_event_new_version');
+            $this->addHook('plugin_docman_event_new_wikipage');
+            $this->addHook('plugin_docman_event_wikipage_update');
             $this->addHook(PLUGIN_DOCMAN_EVENT_APPROVAL_TABLE_COMMENT);
         }
 
@@ -79,6 +81,10 @@ class fulltextsearchPlugin extends Plugin {
         $this->addHook(Event::SEARCH_TYPE, 'search_type');
 
         return parent::getHooksAndCallbacks();
+    }
+
+    private function isDocmanPluginActivated() {
+        return defined('PLUGIN_DOCMAN_EVENT_APPROVAL_TABLE_COMMENT');
     }
 
     private function getCurrentUser() {
@@ -179,6 +185,8 @@ class fulltextsearchPlugin extends Plugin {
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA::NAME,
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_DELETE::NAME,
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_APPROVAL_TABLE_COMMENT::NAME,
+                SystemEvent_FULLTEXTSEARCH_DOCMAN_WIKI_INDEX::NAME,
+                SystemEvent_FULLTEXTSEARCH_DOCMAN_WIKI_UPDATE::NAME,
                 SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP_ADD::NAME,
                 SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP_UPDATE::NAME,
                 SystemEvent_FULLTEXTSEARCH_WIKI_INDEX::NAME,
@@ -232,7 +240,9 @@ class fulltextsearchPlugin extends Plugin {
     }
 
     public function wiki_page_updated($params) {
-        $this->getWikiSystemEventManager()->queueUpdateWikiPage($params);
+        if (! $this->isDocmanPluginActivated() || ! $params['referenced']) {
+            $this->getWikiSystemEventManager()->queueUpdateWikiPage($params);
+        }
     }
 
     public function wiki_page_created($params) {
@@ -248,21 +258,21 @@ class fulltextsearchPlugin extends Plugin {
     }
 
     /**
-     * Event triggered when a document is updated
-     *
-     * @param array $params
-     */
-    public function plugin_docman_event_update($params) {
-        $this->getDocmanSystemEventManager()->queueUpdateMetadata($params['item']);
-    }
-
-    /**
      * Event triggered when a document is created
      *
      * @param array $params
      */
     public function plugin_docman_after_new_document($params) {
         $this->getDocmanSystemEventManager()->queueNewDocument($params['item'], $params['version']);
+    }
+
+    /**
+     * Event triggered when a document is updated
+     *
+     * @param array $params
+     */
+    public function plugin_docman_event_update($params) {
+        $this->getDocmanSystemEventManager()->queueUpdateMetadata($params['item']);
     }
 
     /**
@@ -286,6 +296,20 @@ class fulltextsearchPlugin extends Plugin {
      */
     public function plugin_docman_event_new_version($params) {
         $this->getDocmanSystemEventManager()->queueNewDocumentVersion($params['item'], $params['version']);
+    }
+
+    /**
+     * Event triggered when a wiki document is updated
+     */
+    public function plugin_docman_event_new_wikipage($params) {
+        $this->getDocmanSystemEventManager()->queueNewWikiDocument($params['item']);
+    }
+
+    /**
+     * Event triggered when a wiki document is updated
+     */
+    public function plugin_docman_event_wikipage_update($params) {
+        $this->getDocmanSystemEventManager()->queueNewWikiDocumentVersion($params['item'], $params['wiki_content']);
     }
 
     /**

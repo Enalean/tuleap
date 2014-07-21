@@ -457,6 +457,10 @@ class Docman_Actions extends Actions {
                                                            'version'  => $new_version,
                                                            'docmanControler' => $this->_controler)
                         );
+                    } else {
+                        $this->event_manager->processEvent('plugin_docman_event_new_wikipage', array(
+                            'item' => $new_item
+                        ));
                     }
                 }
             }

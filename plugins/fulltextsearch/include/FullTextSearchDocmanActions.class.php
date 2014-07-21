@@ -68,7 +68,20 @@ class FullTextSearchDocmanActions {
     public function indexNewDocument(Docman_Item $item, Docman_Version $version) {
         $this->logger->debug('ElasticSearch: index new document #' . $item->getId());
 
-        $indexed_data = $this->getIndexedData($item, $version);
+        $indexed_data = $this->getIndexedData($item) + $this->getItemContent($version);
+
+        $this->client->index($item->getGroupId(), $item->getId(), $indexed_data);
+    }
+
+    /**
+     * Index a new wiki document with permissions
+     *
+     * @param Docman_Item    $item          The docman item
+     */
+    public function indexNewWikiDocument(Docman_Item $item) {
+        $this->logger->debug('ElasticSearch: index new wiki document #' . $item->getId());
+
+        $indexed_data = $this->getIndexedData($item);
 
         $this->client->index($item->getGroupId(), $item->getId(), $indexed_data);
     }
@@ -102,6 +115,22 @@ class FullTextSearchDocmanActions {
 
         $update_data = array();
         $this->request_data_factory->updateFile($update_data, $version->getPath());
+
+        $this->client->update($item->getGroupId(), $item->getId(), $update_data);
+    }
+
+    /**
+     * Index a new wiki document with permissions
+     *
+     * @param Docman_Item    $item    The docman item
+     * @param Docman_Version $version The version to index
+     * @param string         $wiki_content WikiPage metadata
+     */
+    public function indexNewWikiVersion(Docman_Item $item, $wiki_content) {
+        $this->logger->debug('ElasticSearch: index new version for wiki document #' . $item->getId());
+
+        $update_data = array();
+        $this->request_data_factory->updateContent($update_data, $wiki_content);
 
         $this->client->update($item->getGroupId(), $item->getId(), $update_data);
     }
@@ -177,10 +206,18 @@ class FullTextSearchDocmanActions {
         }
     }
 
-    private function getIndexedData(Docman_Item $item, Docman_Version $version) {
-        return $this->request_data_factory->getIndexedDataForItemVersion($item, $version) +
+    private function getIndexedData(Docman_Item $item) {
+        return $this->request_data_factory->getIndexedDataForItemVersion($item) +
             $this->request_data_factory->getCustomTextualMetadataValue($item) +
             $this->getCustomDateMetadata($item);
+    }
+
+    private function getItemContent(Docman_Version $version) {
+        return $this->request_data_factory->getFileContent($version);
+    }
+
+    private function getWikiContent(array $wiki_metadata) {
+        return $this->request_data_factory->getWikiContent($wiki_metadata);
     }
 
     /**

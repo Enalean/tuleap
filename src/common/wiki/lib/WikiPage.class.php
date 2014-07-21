@@ -44,6 +44,9 @@ class WikiPage {
     /** @var WikiPageWrapper */
     private $wrapper;
 
+    /** @var bool */
+    private $referenced;
+
     /*
      * Constructor
      */
@@ -70,6 +73,11 @@ class WikiPage {
         }
 
         $this->wrapper = new WikiPageWrapper($this->gid);
+        $this->referenced = $this->isWikiPageReferenced();
+    }
+
+    public function isReferenced() {
+        return $this->referenced;
     }
 
     public function getMetadata() {
@@ -183,17 +191,26 @@ class WikiPage {
         return false;
     }
 
-    public function isAutorized($uid) {
+    private function isWikiPageReferenced() {
+        $referenced = false;
+
         //Check for Docman Perms
         $eM =& EventManager::instance();
-        $referenced = false;
-        $eM->processEvent('isWikiPageReferenced', array(
-                        'referenced' => &$referenced,
-                        'wiki_page'  => $this->pagename,
-                        'group_id' => $this->gid
-                        ));
-        if($referenced == true) {
+        $eM->processEvent(
+            'isWikiPageReferenced', array(
+                'referenced' => &$referenced,
+                'wiki_page'  => $this->pagename,
+                'group_id'   => $this->gid
+            )
+        );
+
+        return $referenced;
+    }
+
+    public function isAutorized($uid) {
+        if($this->referenced == true) {
             $userCanAccess = false;
+            $eM =& EventManager::instance();
             $eM->processEvent('userCanAccessWikiDocument', array(
                             'canAccess' => &$userCanAccess,
                             'wiki_page'  => $this->pagename,
