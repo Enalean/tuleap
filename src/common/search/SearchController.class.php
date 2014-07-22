@@ -228,6 +228,10 @@ class Search_SearchController {
     private function useFulltextSearch() {
         $fulltext_plugin = $this->plugin_manager->getPluginByName('fulltextsearch');
 
+        if (! $fulltext_plugin) {
+            return false;
+        }
+
         return $this->plugin_manager->isPluginAvailable($fulltext_plugin);
     }
 
