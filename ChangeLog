@@ -36,6 +36,7 @@ Version 7.3 (Not Released Yet)
 	* request #7211: Fatal error while accessing to a specific svn revision.
 	* request #7247: New theme variant
 	* request #7236: fatal error on system events UI- foreign events not rejected by fulltext
+	* Fix request #7257: Fatal error when using search bar on wiki service
 
 	== Development ==
 	* Fix request #7218: Building autoload takes 20 minutes
