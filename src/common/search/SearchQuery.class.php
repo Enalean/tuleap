@@ -47,6 +47,7 @@ class Search_SearchQuery {
 
         if (
             $request->get('type_of_search') === Search_SearchWiki::NAME &&
+            $fulltext_plugin &&
             $plugin_manager->isPluginAvailable($fulltext_plugin)
         ) {
             return fulltextsearchPlugin::SEARCH_TYPE;
