@@ -21,6 +21,7 @@ Version 7.3 (Not Released Yet)
 	* FlamingParrot: 1.34
 
 	== Bug fix ==
+	* request #7252: Fatal error on search when FTS plugin not installed
 	* bugtasks #7164: change the link in sidebar so that it uses current project shortname dynamically
 	* bugtasks #7157: fixed notice in src/www/include/exit.php
 	* request #7170: prevent make less to compile node_modules
