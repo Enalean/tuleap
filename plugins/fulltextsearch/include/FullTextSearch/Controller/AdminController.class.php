@@ -45,13 +45,12 @@ class FullTextSearch_Controller_Admin  extends FullTextSearch_Controller_Search 
         $GLOBALS['HTML']->footer(array());
     }
 
-    public function reindex($group_id) {
-        $project = $this->request->getProject();
+    public function reindexDocman($group_id) {
+        $this->system_event_manager->queueDocmanProjectReindexation($group_id);
+    }
 
-        $this->system_event_manager->queueNewProjectReindexation($group_id);
-
-        $this->addFeedback('info', $GLOBALS['Language']->getText('plugin_fulltextsearch', 'waiting_for_reindexation', array(util_unconvert_htmlspecialchars($project->getPublicName()))));
-        $this->index();
+    public function reindexWiki($group_id) {
+        $this->system_event_manager->queueWikiProjectReindexation($group_id);
     }
 
     private function getProjectPresenters($projects) {

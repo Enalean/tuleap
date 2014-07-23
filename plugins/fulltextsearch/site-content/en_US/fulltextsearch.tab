@@ -14,8 +14,8 @@ plugin_fulltextsearch	error_intro	Cannot complete full text search
 plugin_fulltextsearch	client_not_found	Client not found at specified path. Please contact your site administrators.
 
 plugin_fulltextsearch	admin_title	Full-Text Search administation
-plugin_fulltextsearch	reindex_title	Reindex all the documents of a project
+plugin_fulltextsearch	reindex_title	Reindex all the documents and wiki pages of a project
 plugin_fulltextsearch	reindex_project_label	Project
-plugin_fulltextsearch	reindex_help	You can reindex all the documents (docman) of a given project. This action launches a system event.
-plugin_fulltextsearch	submit_project_label	Reindex documents
-plugin_fulltextsearch	waiting_for_reindexation	Reindexing documents of $1
+plugin_fulltextsearch	reindex_help	You can reindex all the documents (docman) and wiki pages (phpwiki) of a given project. This action launches a system event.
+plugin_fulltextsearch	submit_project_label	Reindex
+plugin_fulltextsearch	waiting_for_reindexation	Reindexing documents and wiki pages of $1
