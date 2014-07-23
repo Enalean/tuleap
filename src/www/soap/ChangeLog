@@ -1,3 +1,6 @@
+7.1 - Tuleap 7.3
+	* Follow-up request #7104: DRY on subversion repository path
+
 6.5 - Tuleap 6.12
 	* story #5998 - Delegate the validation of projects to users
 
