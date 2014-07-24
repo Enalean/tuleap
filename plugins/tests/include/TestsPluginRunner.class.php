@@ -128,7 +128,9 @@ class TestsPluginRunner {
     public function isSuite($test, $append = '') {
         $pathName = $test->getPathname();
         $baseName = baseName($pathName);
-        return  is_dir($pathName . $append) && !in_array($baseName[0], array('_', '.'));
+        return  is_dir($pathName . $append) &&
+                !in_array($baseName[0], array('_', '.')) &&
+                $this->isNotATestsRestDirectory($pathName);
     }
 
     public function isTest($test) {
@@ -185,6 +187,10 @@ class TestsPluginRunner {
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__) . '/../templates');
         $renderer->renderToPage($template, $presenter);
         $this->renderDone = true;
+    }
+
+    private function isNotATestsRestDirectory($pathName) {
+        return !(preg_match("/^.*\/tests\/rest(\/.+|$)$/", $pathName));
     }
 }
 ?>
