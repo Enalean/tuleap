@@ -1,3 +1,6 @@
+Version 0.44 - Tuleap 7.3
+    * request #7260 - project with dashed name are not processed by forgeupgrade
+
 Version 0.43 - Tuleap 7.3
     * bugtasks #7202 :mediawiki must work if service is disabled and re-enabled
 
