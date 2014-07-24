@@ -169,14 +169,24 @@ class WikiServiceAdminActions extends WikiActions {
       global $feedback;
 
     $w = new Wiki($this->gid);
-    if ($_POST['reset']) 
+    if ($_POST['reset']) {
         $ret = $w->resetPermissions();
-    else
+    } else {
         $ret = $w->setPermissions($_POST['ugroups']);
+    }
+
     if(!$ret) {
         exit_error($GLOBALS['Language']->getText('global','error'),
                    $GLOBALS['Language']->getText('wiki_actions_wikiserviceadmin', 'update_perm_err', array($feedback)));
     }
+
+    $event_manager = EventManager::instance();
+    $event_manager->processEvent(
+        "wiki_service_permissions_updated",
+        array(
+            'group_id' => $this->gid
+        )
+    );
   }
 
   /**

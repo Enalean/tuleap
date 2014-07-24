@@ -50,6 +50,7 @@ class FullTextSearch_WikiSystemEventManager {
             case SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE::NAME:
             case SystemEvent_FULLTEXTSEARCH_WIKI_DELETE::NAME:
             case SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE_PERMISSIONS::NAME:
+            case SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE_SERVICE_PERMISSIONS::NAME:
             case SystemEvent_FULLTEXTSEARCH_WIKI_REINDEX_PROJECT::NAME:
                 $class = 'SystemEvent_'. $type;
                 $dependencies = array(
@@ -62,7 +63,11 @@ class FullTextSearch_WikiSystemEventManager {
     private function getWikiActions() {
         return new FullTextSearchWikiActions(
             $this->index_client,
-            new ElasticSearch_1_2_RequestWikiDataFactory(new Wiki_PermissionsManager()),
+            new ElasticSearch_1_2_RequestWikiDataFactory(new Wiki_PermissionsManager(
+                PermissionsManager::instance(),
+                ProjectManager::instance(),
+                new UGroupLiteralizer()
+            )),
             new BackendLogger()
         );
     }
@@ -101,6 +106,16 @@ class FullTextSearch_WikiSystemEventManager {
         if ($this->plugin->isAllowed($params['group_id'])) {
             $this->system_event_manager->createEvent(
                 SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE_PERMISSIONS::NAME,
+                $this->getWikiSerializedParameters($params),
+                SystemEvent::PRIORITY_MEDIUM
+            );
+        }
+    }
+
+    public function queueUpdateWikiServicePermissions(array $params) {
+        if ($this->plugin->isAllowed($params['group_id'])) {
+            $this->system_event_manager->createEvent(
+                SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE_SERVICE_PERMISSIONS::NAME,
                 $this->getWikiSerializedParameters($params),
                 SystemEvent::PRIORITY_MEDIUM
             );
