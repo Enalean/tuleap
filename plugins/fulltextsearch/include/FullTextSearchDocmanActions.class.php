@@ -188,9 +188,16 @@ class FullTextSearchDocmanActions {
     }
 
     private function deleteForProject($project_id) {
-        $this->logger->debug('ElasticSearch: deleting all project documents #' . $project_id);
+        $this->logger->debug('[Docman] ElasticSearch: deleting all project documents #' . $project_id);
 
-        $this->client->deleteForProject($project_id);
+        try{
+            $this->client->getIndexedType($project_id);
+            $this->client->deleteForProject($project_id);
+
+        } catch (ElasticSearch_TypeNotIndexed $exception) {
+            $this->logger->debug('[Docman] ElasticSearch: project #' . $project_id . ' not indexed, nothing to delete');
+            return;
+        }
     }
 
     private function indexAllProjectDocuments(Docman_ProjectItemsBatchIterator $document_iterator, $project_id) {
