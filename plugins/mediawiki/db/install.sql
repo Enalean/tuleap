@@ -139,5 +139,5 @@ VALUES
 CREATE TABLE IF NOT EXISTS plugin_mediawiki_database (
     project_id INT(11) UNSIGNED NOT NULL,
     database_name VARCHAR(255) NULL,
-    INDEX project_id_idx(project_id)
+    PRIMARY KEY (project_id)
     ) ENGINE=InnoDB;
