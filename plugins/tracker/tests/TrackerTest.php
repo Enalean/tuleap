@@ -1932,6 +1932,13 @@ class Tracker_WorkflowTest extends TuleapTestCase {
         $this->assertIdentical($this->tracker->getWorkflow(), $workflow);
     }
 
+    public function itAlwaysHaveTheSameDefaultWorkflow() {
+        stub($this->workflow_factory)->getWorkflowByTrackerId()->returns(false);
+        stub($this->workflow_factory)->getWorkflowWithoutTransition()->returnsAt(0, aWorkflow()->withTrackerId(12)->build());
+        stub($this->workflow_factory)->getWorkflowWithoutTransition()->returnsAt(1, aWorkflow()->withTrackerId(33)->build());
+        $this->assertIdentical($this->tracker->getWorkflow(), $this->tracker->getWorkflow());
+    }
+
     public function itHasAWorkflowFromTheFactoryWhenThereAreTransitions() {
         $workflow = aWorkflow()->withTrackerId($this->tracker_id)->build();
         stub($this->workflow_factory)->getWorkflowByTrackerId($this->tracker_id)->returns($workflow);

@@ -3141,11 +3141,13 @@ EOS;
      * @return Workflow
      */
     public function getWorkflow() {
-        $workflow = $this->getWorkflowFactory()->getWorkflowByTrackerId($this->getId());
-        if (! $workflow) {
-            $workflow = $this->getWorkflowFactory()->getWorkflowWithoutTransition($this);
+        if (! $this->workflow) {
+            $this->workflow = $this->getWorkflowFactory()->getWorkflowByTrackerId($this->getId());
+            if (! $this->workflow) {
+                $this->workflow = $this->getWorkflowFactory()->getWorkflowWithoutTransition($this);
+            }
         }
-        return $workflow;
+        return $this->workflow;
     }
 
     /**

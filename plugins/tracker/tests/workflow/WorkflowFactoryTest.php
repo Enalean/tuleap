@@ -168,4 +168,35 @@ class WorkflowFactory_IsFieldUsedInWorkflowTest extends TuleapTestCase {
     }
 }
 
-?>
+class WorkflowFactory_CacheTest extends TuleapTestCase {
+
+    /** @var WorkflowFactory */
+    private $workflow_factory;
+
+    public function setUp() {
+        parent::setUp();
+        $this->workflow_factory = partial_mock(
+            'WorkflowFactory',
+            array('getDao'),
+            array(
+                mock('TransitionFactory'),
+                stub('TrackerFactory')->getTrackerById()->returns(aMockTracker()->build()),
+                mock('Tracker_FormElementFactory'),
+                mock('Tracker_Workflow_Trigger_RulesManager'),
+                mock('WorkflowBackendLogger')
+            )
+        );
+        $this->dao = mock('Workflow_Dao');
+        stub($this->workflow_factory)->getDao()->returns($this->dao);
+    }
+
+    public function itReturnsSameObjectWhenUsingSameTrackerId() {
+        stub($this->dao)->searchByTrackerId(112)->returnsDar(array('tracker_id' => 112, 'workflow_id' => 34, 'field_id' => 56, 'is_used' => 1));
+        $this->assertIdentical(
+            $this->workflow_factory->getWorkflowByTrackerId(112),
+            $this->workflow_factory->getWorkflowByTrackerId(112)
+        );
+    }
+
+
+}
