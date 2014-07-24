@@ -23,16 +23,16 @@ class SystemEvent_FULLTEXTSEARCH_WIKI_REINDEX_PROJECT extends SystemEvent {
     const NAME = 'FULLTEXTSEARCH_WIKI_REINDEX_PROJECT';
 
     /**
-     * @var FullTextSearchDocmanActions
+     * @var FullTextSearchWikiActions
      */
     protected $actions;
 
-    public function injectDependencies(FullTextSearchDocmanActions $actions) {
+    public function injectDependencies(FullTextSearchWikiActions $actions) {
         parent::injectDependencies();
         $this->setFullTextSearchActions($actions);
     }
 
-    public function setFullTextSearchActions(FullTextSearchDocmanActions $actions) {
+    public function setFullTextSearchActions(FullTextSearchWikiActions $actions) {
         $this->actions = $actions;
         return $this;
     }
@@ -53,6 +53,8 @@ class SystemEvent_FULLTEXTSEARCH_WIKI_REINDEX_PROJECT extends SystemEvent {
     public function process() {
         try {
             $project_id = (int) $this->getRequiredParameter(0);
+
+            $this->actions->reIndexProjectWikiPages($project_id);
 
             $this->done();
             return true;

@@ -50,6 +50,7 @@ class FullTextSearch_WikiSystemEventManager {
             case SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE::NAME:
             case SystemEvent_FULLTEXTSEARCH_WIKI_DELETE::NAME:
             case SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE_PERMISSIONS::NAME:
+            case SystemEvent_FULLTEXTSEARCH_WIKI_REINDEX_PROJECT::NAME:
                 $class = 'SystemEvent_'. $type;
                 $dependencies = array(
                     $this->getWikiActions()
@@ -114,5 +115,15 @@ class FullTextSearch_WikiSystemEventManager {
                 $additional_params
             )
         );
+    }
+
+    public function queueWikiProjectReindexation($project_id) {
+        if ($this->plugin->isAllowed($project_id)) {
+            $this->system_event_manager->createEvent(
+                SystemEvent_FULLTEXTSEARCH_WIKI_REINDEX_PROJECT::NAME,
+                $project_id,
+                SystemEvent::PRIORITY_LOW
+            );
+        }
     }
 }
