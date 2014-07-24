@@ -105,7 +105,14 @@ class FullTextSearchWikiActions {
     private function deleteForProject($project_id) {
         $this->logger->debug('[Wiki] ElasticSearch: deleting all project wiki pages #' . $project_id);
 
-        $this->client->deleteForProject($project_id);
+        try{
+            $this->client->getIndexedType($project_id);
+            $this->client->deleteForProject($project_id);
+
+        } catch (ElasticSearch_TypeNotIndexed $exception) {
+            $this->logger->debug('[Wiki] ElasticSearch: project #' . $project_id . ' not indexed, nothing to delete');
+            return;
+        }
     }
 
     /**

@@ -22,7 +22,7 @@
  * @see https://github.com/nervetattoo/elasticsearch
  */
 class ElasticSearch_IndexClientFacade extends ElasticSearch_ClientFacade implements FullTextSearch_IIndexDocuments {
-    
+
     /**
      * @see FullTextSearch_IIndexDocuments::index
      */
@@ -65,11 +65,20 @@ class ElasticSearch_IndexClientFacade extends ElasticSearch_ClientFacade impleme
         $this->client->setType($type);
 
         try {
-            $this->client->request('/', 'GET', false, true);
+            $result = $this->client->request('/_search', 'GET', false, true);
+
+            if ($this->requestHasNoResult($result)) {
+                throw new ElasticSearch_TypeNotIndexed();
+            }
+
         } catch (ElasticSearchTransportHTTPException $exception) {
             throw new ElasticSearch_TypeNotIndexed();
         }
 
+    }
+
+    private function requestHasNoResult($result) {
+        return (! isset($result['hits']) || ! isset($result['hits']['total']) || $result['hits']['total'] === 0);
     }
 
     public function getIndexedElement($type, $element_id) {
