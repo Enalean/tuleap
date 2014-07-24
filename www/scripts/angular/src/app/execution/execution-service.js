@@ -5,14 +5,18 @@ angular
 ExecutionService.$inject = ['Restangular', '$q'];
 
 function ExecutionService(Restangular, $q) {
-    var rest = Restangular.withConfig(function(RestangularConfigurer) {
-        RestangularConfigurer.setFullResponse(true);
-        RestangularConfigurer.setBaseUrl('/api/v1');
-    });
+    var baseurl = '/api/v1',
+        rest = Restangular.withConfig(setRestangularConfig);
 
     return {
-        getExecutions: getExecutions
+        getExecutions: getExecutions,
+        putExecution: putExecution
     };
+
+    function setRestangularConfig(RestangularConfigurer) {
+        RestangularConfigurer.setFullResponse(true);
+        RestangularConfigurer.setBaseUrl(baseurl);
+    }
 
     function getExecutions(campaign_id, limit, offset) {
         var data = $q.defer();
@@ -33,5 +37,14 @@ function ExecutionService(Restangular, $q) {
             });
 
         return data.promise;
+    }
+
+    function putExecution(execution) {
+        // Unfortunately, we cannot use execution.save() or execution.put() since
+        // the nested resources in restangular use nested uri. This means that
+        // execution.put() will call /campaigns/:id/executions/:id instead of
+        // /executions/:id
+        rest.oneUrl('testing_executions', baseurl + '/' + execution.uri)
+            .put(execution.plain());
     }
 }

@@ -115,7 +115,7 @@ class ExecutionRepresentationBuilder {
             return '';
         }
 
-        return $changeset_value->getValue();
+        return $changeset_value->getText();
     }
 
     private function getExecutionEnvironment(PFUser $user, Tracker_Artifact $execution) {

@@ -30,6 +30,7 @@ class Testing_REST_ResourcesInjector {
         $restler->addAPIClass('\\Tuleap\\Testing\\REST\\v1\\ProjectResource', 'projects');
         $restler->addAPIClass('\\Tuleap\\Testing\\REST\\v1\\CampaignsResource', 'testing_campaigns');
         $restler->addAPIClass('\\Tuleap\\Testing\\REST\\v1\\DefinitionsResource', 'testing_definitions');
+        $restler->addAPIClass('\\Tuleap\\Testing\\REST\\v1\\ExecutionsResource', 'testing_executions');
     }
 
     public function declareProjectResource(array &$resources, Project $project) {

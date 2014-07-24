@@ -30,13 +30,13 @@ class TestingCampaignBuilder {
         array('label' => 'Tuleap 7.1', 'status' => 'Closed', 'executions' => array()),
         array('label' => 'Tuleap 7.2', 'status' => 'Closed', 'executions' => array()),
         array('label' => 'Tuleap 7.3', 'status' => 'Open', 'executions' => array(
-            array('status' => 'Passed', 'environment' => 'CentOS 5 - PHP 5.3', 'definition' => array(
+            array('status' => 'passed', 'environment' => 'CentOS 5 - PHP 5.3', 'definition' => array(
                 'summary' => 'Create a repository', 'description' => 'This is a description', 'category' => 'Git'
             )),
-            array('status' => 'Passed', 'environment' => 'CentOS 6 - PHP 5.3', 'definition' => array(
+            array('status' => 'passed', 'environment' => 'CentOS 6 - PHP 5.3', 'definition' => array(
                 'summary' => 'Delete a repository', 'description' => 'This is a description', 'category' => 'Git'
             )),
-            array('status' => 'Failed', 'environment' => 'CentOS 6 - PHP 5.3', 'definition' => array(
+            array('status' => 'failed', 'environment' => 'CentOS 6 - PHP 5.3', 'definition' => array(
                 'summary' => 'Import default template', 'description' => 'This is a description', 'category' => 'AgileDashboard'
             )),
         )),

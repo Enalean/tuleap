@@ -19,9 +19,6 @@
  */
 namespace Testing;
 
-use TestingDataBuilder;
-use TestingCampaignBuilder;
-
 require_once dirname(__FILE__).'/../bootstrap.php';
 
 /**
@@ -67,17 +64,5 @@ class CampaignsTest extends BaseTest {
         $this->assertEquals('Import default template', $executions[0]['definition']['summary']);
         $this->assertEquals('Create a repository', $executions[1]['definition']['summary']);
         $this->assertEquals('Delete a repository', $executions[2]['definition']['summary']);
-    }
-
-    public function getValid73Campaign() {
-        $all_campaigns_request  = $this->client->get('projects/'.TestingDataBuilder::PROJECT_TEST_MGMT_ID.'/testing_campaigns');
-        $all_campaigns_response = $this->getResponse($all_campaigns_request);
-        $campaigns = $all_campaigns_response->json();
-
-        $index_of_valid73_when_sorted_by_id = 0;
-        $campaign = $campaigns[$index_of_valid73_when_sorted_by_id];
-        $this->assertEquals($campaign['label'], 'Tuleap 7.3');
-
-        return $campaign;
     }
 }

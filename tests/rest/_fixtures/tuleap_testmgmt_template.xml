@@ -431,10 +431,10 @@
                   <label><![CDATA[Status]]></label>
                   <bind type="static" is_rank_alpha="0">
                     <items>
-                      <item ID="F15-V0" label="Not Run" is_hidden="0"/>
-                      <item ID="F15-V1" label="Passed" is_hidden="0"/>
-                      <item ID="F15-V2" label="Failed" is_hidden="0"/>
-                      <item ID="F15-V3" label="Blocked" is_hidden="0"/>
+                      <item ID="F15-V0" label="notrun" is_hidden="0"/>
+                      <item ID="F15-V1" label="passed" is_hidden="0"/>
+                      <item ID="F15-V2" label="failed" is_hidden="0"/>
+                      <item ID="F15-V3" label="blocked" is_hidden="0"/>
                     </items>
                     <default_values>
                       <value REF="F15-V0"/>

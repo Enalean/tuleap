@@ -72,6 +72,8 @@
         }
 
         .execution-item {
+            display: block;
+            text-decoration: none;
             cursor: pointer;
             border-bottom: 1px solid #DDD;
 
@@ -142,12 +144,14 @@
     }
 
     #current-execution {
+        @result-form-height: 160px;
+
         position: relative;
         z-index: 1;
         background: #FFFFFF;
         box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
         border-radius: 3px;
-        padding: 1px;
+        padding: 1px 1px @result-form-height;
 
         h2 {
             margin: 0;
@@ -220,7 +224,39 @@
         }
 
         #current-execution-result {
+            position: absolute;
+            bottom: 0;
+            padding: 10px;
+            width: 100%;
+            height: @result-form-height;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            border-top: 1px solid #E5E5E5;
 
+            form {
+                height: 100%;
+
+                textarea {
+                    width: 78%;
+                    height: 100%;
+                    -moz-box-sizing: border-box;
+                    box-sizing: border-box;
+                }
+
+                #result-choices {
+                    float: right;
+                    width: 20%;
+                    -moz-box-sizing: border-box;
+                    box-sizing: border-box;
+
+                    > button {
+                        display: block;
+                        width: 100%;
+                        margin: 0 0 5px;
+                        padding: 8px 19px;
+                    }
+                }
+            }
         }
     }
 }

@@ -31,10 +31,10 @@ class CampaignRepresentation {
 
     const FIELD_NAME = "label";
 
-    const STATUS_NOT_RUN = "Not Run";
-    const STATUS_PASSED  = "Passed";
-    const STATUS_FAILED  = "Failed";
-    const STATUS_BLOCKED = "Blocked";
+    const STATUS_NOT_RUN = "notrun";
+    const STATUS_PASSED  = "passed";
+    const STATUS_FAILED  = "failed";
+    const STATUS_BLOCKED = "blocked";
 
     /** @var Tracker_FormElementFactory */
     private $form_element_factory;

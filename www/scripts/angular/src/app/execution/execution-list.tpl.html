@@ -15,10 +15,10 @@
                         </select>
                     </div>
                     <div class="btn-group span4">
-                        <label class="btn" ng-model="status.passed"  btn-checkbox><img src="scripts/angular/bin/assets/status-passed.png" alt="Passed"></label>
-                        <label class="btn" ng-model="status.failed"  btn-checkbox><img src="scripts/angular/bin/assets/status-failed.png" alt="Failed"></label>
-                        <label class="btn" ng-model="status.blocked" btn-checkbox><img src="scripts/angular/bin/assets/status-blocked.png" alt="Blocked"></label>
-                        <label class="btn" ng-model="status.notrun"  btn-checkbox><img src="scripts/angular/bin/assets/status-notrun.png" alt="Not run"></label>
+                        <label class="btn" ng-model="status.passed"  title="Passed" btn-checkbox><img src="scripts/angular/bin/assets/status-passed.png" alt="Passed"></label>
+                        <label class="btn" ng-model="status.failed"  title="Failed" btn-checkbox><img src="scripts/angular/bin/assets/status-failed.png" alt="Failed"></label>
+                        <label class="btn" ng-model="status.blocked" title="Blocked" btn-checkbox><img src="scripts/angular/bin/assets/status-blocked.png" alt="Blocked"></label>
+                        <label class="btn" ng-model="status.notrun"  title="Not run" btn-checkbox><img src="scripts/angular/bin/assets/status-notrun.png" alt="Not run"></label>
                     </div>
                 </div>
                 <div class="row-fluid">
@@ -29,41 +29,18 @@
 
         <div ng-repeat="category in categories">
             <div class="category">{{ category.label }}</div>
-            <div class="execution-item" ng-repeat="execution in category.executions | ExecutionListFilter:search:status:selected_assignee:selected_environment track by $index" ng-click="openExecution(execution)" ng-class="{ active: isExecutionActive(execution) }">
+            <a class="execution-item"
+                 ng-repeat="execution in category.executions | ExecutionListFilter:search:status:selected_assignee:selected_environment track by $index"
+                 ui-sref=".detail({ defid: execution.definition.id, defslug: '{{ execution.definition.summary | slugify }}' })"
+                 ui-sref-active="active">
                 <div class="execution-item-content {{ execution.status | dasherize }}" ng-bind-html="getExecutionTitle(execution)"></div>
-            </div>
+            </a>
         </div>
     </div>
 
-    <div id="no-current-execution" ng-if="! current_execution">
-        <i class="icon-hand-left"></i> Please select an execution
-    </div>
-    <div id="current-execution" class="in" ng-if="current_execution">
-        <h2 class="{{ current_execution.status | dasherize }}">{{ current_execution.definition.summary }}</h2>
-
-        <div class="row-fluid">
-            <!-- <div id="current-execution-last-execution" class="span6">
-                <p class="current-execution-title">Last execution</p>
-                <p class="last-execution-details"><span>Date:</span>{{ current_execution.assigned_to.real_name }}</p>
-                <p class="last-execution-details"><span>Status:</span>{{ current_execution.assigned_to.real_name }}</p>
-                <p class="last-execution-details"><span>By:</span>{{ current_execution.assigned_to.real_name }}</p>
-                <p class="last-execution-details"><span>Campaign:</span>{{ current_execution.assigned_to.real_name }}</p>
-            </div> -->
-            <div id="current-execution-assigned-to" class="span12">
-                <p class="current-execution-title">Assigned to</p>
-                <div><img ng-src="{{ sanitizeHtml(current_execution.assigned_to.avatar_url) }}" alt="avatar">{{ current_execution.assigned_to.real_name }}</div>
-            </div>
+    <div ui-view>
+        <div id="no-current-execution">
+            <i class="icon-hand-left"></i> Please select an execution
         </div>
-
-        <div class="row-fluid">
-            <div id="current-execution-description">
-                <p class="current-execution-title">Test execution</p>
-                <div ng-bind-html="sanitizeHtml(current_execution.definition.description)"></div>
-            </div>
-        </div>
-
-        <div id="current-execution-result">
-
-        </div>
-    </div>
+     </div>
 </div>
