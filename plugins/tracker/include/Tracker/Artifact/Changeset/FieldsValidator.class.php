@@ -45,7 +45,6 @@ abstract class Tracker_Artifact_Changeset_FieldsValidator {
         $used_fields = $this->formelement_factory->getUsedFields($artifact->getTracker());
         foreach ($used_fields as $field) {
             $submitted_value = $this->getSubmittedValue($field, $fields_data);
-
             if ($this->canValidateField($artifact, $field)) {
                 $is_valid = $this->validateField($artifact, $field, $submitted_value) && $is_valid;
             }

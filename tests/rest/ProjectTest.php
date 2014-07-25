@@ -42,6 +42,7 @@ class ProjectTest extends RestBase {
                 TestDataBuilder::PROJECT_PUBLIC_ID,
                 TestDataBuilder::PROJECT_PUBLIC_MEMBER_ID,
                 TestDataBuilder::PROJECT_PBI_ID,
+                TestDataBuilder::PROJECT_TEST_MGMT_ID
             ),
             $this->getIds($json_projects)
         );
