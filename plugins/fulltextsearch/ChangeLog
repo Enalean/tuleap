@@ -1,3 +1,14 @@
+Version 0.65 - Tuleap 7.4
+    * tasks #7259: Launch wiki reindex event
+
+
+This task is part of story #7185
+
+ * Rename reindex to reindexDocman
+ * i18n
+ * Add wiki reindex event
+ * Add tests for docman reindexation
+
 Version 0.64 - Tuleap 7.3
     * tasks #7191: Wiki page referenced in docman is indexed like a docman file
 
