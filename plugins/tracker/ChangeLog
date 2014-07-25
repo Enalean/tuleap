@@ -1,3 +1,6 @@
+Version 5.426 - Tuleap 7.4
+    * Fix regression introduced by commit 4b3eedc in tasks #6918: Send notifications after copy
+
 Version 5.425 - Tuleap 7.3
     * request #7247: New theme variant
 

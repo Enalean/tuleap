@@ -1,7 +1,11 @@
 Version 7.4 (Not released yet)
 
-    == Plugins ==
+	== Plugins ==
 	* fulltextsearch: 0.65
+	* tracker: 5.426
+
+	== Bug fix ==
+	* Fix regression introduced by commit 4b3eedc in tasks #6918: Send notifications after copy
 
 Version 7.3 (Thursday, July 24th 2014)
 
