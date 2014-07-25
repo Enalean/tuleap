@@ -53,6 +53,21 @@ function viewvc_utils_display_header() {
   }
 }  
 
+function viewvc_utils_wrap_utf8_file_name($path) {
+    $current_locales = setlocale(LC_ALL, "0");
+    setlocale(LC_CTYPE, "en_US.UTF-8");// to allow $path filenames with French characters
+    $path = escapeshellarg($path);
+    setlocale(LC_ALL, $current_locales);
+    return $path;
+}
+
+function viewvc_utils_wrap_utf8_exec($command) {
+    ob_start();
+    putenv("LC_CTYPE=en_US.UTF-8");
+    passthru($command);
+    return ob_get_clean();
+}
+
 /**
  * call the viewvc.cgi and echo the parsed output
  */
@@ -82,19 +97,14 @@ function viewvc_utils_passcommand() {
            'HTTP_USER_AGENT="'.getStringFromServer('HTTP_USER_AGENT').'" '.
            'HTTP_ACCEPT_ENCODING="'.getStringFromServer('HTTP_ACCEPT_ENCODING').'" '.
            'HTTP_ACCEPT_LANGUAGE="'.getStringFromServer('HTTP_ACCEPT_LANGUAGE').'" '.
-           'PATH_INFO='.escapeshellarg($path).' '.
+           'PATH_INFO='.viewvc_utils_wrap_utf8_file_name($path).' '.
            'PATH="'.getStringFromServer('PATH').'" '.
            'HTTP_HOST="'.getStringFromServer('HTTP_HOST').'" '.
            'DOCUMENT_ROOT="'.getStringFromServer('DOCUMENT_ROOT').'" '.
            'CODENDI_LOCAL_INC="'.getStringFromServer('CODENDI_LOCAL_INC').'" '. 
            '/var/www/cgi-bin/viewvc.cgi 2>&1';
 
-  ob_start();
-  passthru($command);
-
-  $content = ob_get_contents();
-  ob_end_clean();
-
+  $content = viewvc_utils_wrap_utf8_exec($command);
   list($headers, $body) = http_split_header_body($content);
 
   // Set content type header from the value set by ViewVC
@@ -171,7 +181,7 @@ function viewvc_utils_passcommand() {
 	header('Location: '.$viewvc_location);
 	exit(1);
     }
-    header('Content-Type:' . $viewvc_content_type);
+    header('Content-Type:' . $viewvc_content_type.'; charset=utf-8');
     echo $body;
   }
 }
