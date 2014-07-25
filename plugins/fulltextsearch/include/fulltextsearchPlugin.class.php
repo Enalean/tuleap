@@ -556,7 +556,8 @@ class fulltextsearchPlugin extends Plugin {
         return new FullTextSearch_Controller_Admin(
             $this->getRequest(),
             $this->getSearchAdminClient(),
-            $this->getDocmanSystemEventManager()
+            $this->getDocmanSystemEventManager(),
+            $this->getWikiSystemEventManager()
         );
     }
 

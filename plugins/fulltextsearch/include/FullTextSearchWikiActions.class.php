@@ -65,7 +65,7 @@ class FullTextSearchWikiActions {
      * @param WikiPage $wiki_page The wiki page
      */
     public function indexNewEmptyWikiPage(WikiPage $wiki_page) {
-        $this->logger->debug('[Wiki] ElasticSearch: index new empty wiki page #' . $wiki_page->getId());
+        $this->logger->debug('[Wiki] ElasticSearch: index new empty wiki page ' . $wiki_page->getPagename() . ' #' . $wiki_page->getId());
 
         $indexed_data = $this->request_data_factory->getIndexedWikiPageData($wiki_page);
 
@@ -78,7 +78,7 @@ class FullTextSearchWikiActions {
      * @param WikiPage $wiki_page The wiki page
      */
     public function indexWikiPage(WikiPage $wiki_page) {
-        $this->logger->debug('[Wiki] ElasticSearch: index wiki page #' . $wiki_page->getId());
+        $this->logger->debug('[Wiki] ElasticSearch: index wiki page ' . $wiki_page->getPagename() . ' #' . $wiki_page->getId());
 
         $indexed_data = $this->request_data_factory->getIndexedWikiPageData($wiki_page);
 
@@ -91,15 +91,21 @@ class FullTextSearchWikiActions {
      * @param WikiPage $wiki_page The item to delete
      */
     public function delete(WikiPage $wiki_page) {
-        $this->logger->debug('[Wiki] ElasticSearch: delete wiki page #' . $wiki_page->getId());
+        $this->logger->debug('[Wiki] ElasticSearch: delete wiki page ' . $wiki_page->getPagename() . ' #' . $wiki_page->getId());
 
         try{
             $this->client->getIndexedElement($wiki_page->getGid(), $wiki_page->getId());
             $this->client->delete($wiki_page->getGid(), $wiki_page->getId());
         } catch (ElasticSearch_ElementNotIndexed $exception) {
-            $this->logger->debug('[Wiki] ElasticSearch: wiki page #' . $wiki_page->getId() . ' not indexed, nothing to delete');
+            $this->logger->debug('[Wiki] ElasticSearch: wiki page ' . $wiki_page->getPagename() . ' #' . $wiki_page->getId() . ' not indexed, nothing to delete');
             return;
         }
+    }
+
+    private function deleteForProject($project_id) {
+        $this->logger->debug('[Wiki] ElasticSearch: deleting all project wiki pages #' . $project_id);
+
+        $this->client->deleteForProject($project_id);
     }
 
     /**
@@ -107,7 +113,7 @@ class FullTextSearchWikiActions {
      * @param WikiPage $wiki_page
      */
     public function updatePermissions(WikiPage $wiki_page) {
-        $this->logger->debug('[Wiki] ElasticSearch: update permissions of document #' . $wiki_page->getId());
+        $this->logger->debug('[Wiki] ElasticSearch: update permissions of wiki page ' . $wiki_page->getPagename() . ' #' . $wiki_page->getId());
 
         $update_data = array();
         $this->request_data_factory->setUpdatedData(
@@ -117,5 +123,28 @@ class FullTextSearchWikiActions {
         );
 
         $this->client->update($wiki_page->getGid(), $wiki_page->getId(), $update_data);
+    }
+
+    private function indexAllProjectWikiPages($project_id) {
+        $indexable_pages = $this->getAllIndexablePagesForProject($project_id);
+
+        foreach($indexable_pages as $indexable_page) {
+            $this->indexWikiPage($indexable_page);
+        }
+    }
+
+    protected function getAllIndexablePagesForProject($project_id) {
+        $wiki_page = new WikiPage();
+        return $wiki_page->getAllIndexablePages($project_id);
+    }
+
+    /**
+     *
+     * @param int $project_id
+     */
+    public function reIndexProjectWikiPages($project_id) {
+        $this->deleteForProject($project_id);
+        $this->initializeProjetMapping($project_id);
+        $this->indexAllProjectWikiPages($project_id);
     }
 }

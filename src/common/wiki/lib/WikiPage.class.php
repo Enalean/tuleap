@@ -64,16 +64,22 @@ class WikiPage {
             $this->gid      = (int) $id;
             $this->pagename = $pagename;
             $this->findPageId();
+            $this->wrapper  = new WikiPageWrapper($this->gid);
           }
         }
         else {
-          $this->id       =0;
-          $this->pagename ='';
-          $this->gid      =0;
+          $this->id       = 0;
+          $this->pagename = '';
+          $this->gid      = 0;
+          $this->wrapper  = null;
         }
 
-        $this->wrapper = new WikiPageWrapper($this->gid);
         $this->referenced = $this->isWikiPageReferenced();
+    }
+
+    private function setGid($project_id) {
+        $this->gid     = $project_id;
+        $this->wrapper = new WikiPageWrapper($project_id);
     }
 
     public function isReferenced() {
@@ -352,6 +358,40 @@ class WikiPage {
         }
 
         return $allPages;
+    }
+
+    public function getAllIndexablePages($project_id) {
+        $this->setGid($project_id);
+
+        $indexable_pages = array();
+        $this->getIndexablePageFromAllUserPages($indexable_pages);
+        $this->getIndexablePageFromDefaultAndAdminPages($indexable_pages);
+
+        return $indexable_pages;
+    }
+
+    private function getIndexablePageFromAllUserPages(array &$indexable_pages) {
+        $all_internal_pages = array_merge($this->getAllUserPages(), $this->wrapper->getProjectEmptyLinks());
+
+        foreach ($all_internal_pages as $internal_page_name) {
+            $wiki_page = new WikiPage($this->gid, $internal_page_name);
+
+            if (! $wiki_page->isReferenced()) {
+                $indexable_pages[] = $wiki_page;
+            }
+        }
+    }
+
+    private function getIndexablePageFromDefaultAndAdminPages(array &$indexable_pages) {
+        $default_pages_used = array_merge($this->getAllInternalPages(), $this->getAdminPages());
+
+        foreach ($default_pages_used as $default_page_name) {
+            $wiki_page = new WikiPage($this->gid, $default_page_name);
+            $version   = $this->wrapper->getRequest()->getPage($default_page_name)->getCurrentRevision()->getVersion();
+            if ($version > 1) {
+                $indexable_pages[] = $wiki_page;
+            }
+        }
     }
 
   /**

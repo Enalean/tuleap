@@ -40,7 +40,7 @@ class FullTextSearchWikiActionsTests extends TuleapTestCase {
 
         $this->client = partial_mock(
             'ElasticSearch_IndexClientFacade',
-            array('index', 'update', 'delete', 'getMapping', 'setMapping', 'getIndexedElement')
+            array('index', 'update', 'delete', 'deleteForProject', 'getMapping', 'setMapping', 'getIndexedElement', 'getIndexedType')
         );
 
         $this->wiki_page = mock('WikiPage');
@@ -55,11 +55,16 @@ class FullTextSearchWikiActionsTests extends TuleapTestCase {
             $this->permissions_manager
         );
 
-        $this->actions = new FullTextSearchWikiActions(
-            $this->client,
-            $this->request_data_factory,
-            mock('BackendLogger')
+        $this->actions = partial_mock(
+            'FullTextSearchWikiActions',
+            array('getAllIndexablePagesForProject'),
+            array(
+                $this->client,
+                $this->request_data_factory,
+                mock('BackendLogger')
+            )
         );
+
 
     }
 
@@ -171,5 +176,23 @@ class FullTextSearchWikiActionsTests extends TuleapTestCase {
         expect($this->client)->setMapping(200, $expected_data)->once();
 
         $this->actions->initializeProjetMapping(200);
+    }
+
+    public function itReindexAllTheWikiPagesForAGivenProject() {
+        $wiki_page_1 = stub('WikiPage')->getId()->returns(101);
+        $wiki_page_2 = stub('WikiPage')->getId()->returns(102);
+
+        stub($wiki_page_1)->getGid()->returns(200);
+        stub($wiki_page_2)->getGid()->returns(200);
+
+        stub($this->actions)->getAllIndexablePagesForProject(200)->returns(
+            array($wiki_page_1, $wiki_page_2)
+        );
+
+        expect($this->client)->deleteForProject(200)->once();
+        expect($this->client)->index(200, 101, '*')->at(0);
+        expect($this->client)->index(200, 102, '*')->at(1);
+
+        $this->actions->reIndexProjectWikiPages(200);
     }
 }
