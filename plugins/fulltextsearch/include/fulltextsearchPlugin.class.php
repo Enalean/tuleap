@@ -309,6 +309,11 @@ class fulltextsearchPlugin extends Plugin {
      * Event triggered when a wiki document is updated
      */
     public function plugin_docman_event_new_wikipage($params) {
+        $this->getWikiSystemEventManager()->queueDeleteWikiPage(array(
+            'group_id'  => $params['group_id'],
+            'wiki_page' => $params['wiki_page']
+        ));
+
         $this->getDocmanSystemEventManager()->queueNewWikiDocument($params['item']);
     }
 
