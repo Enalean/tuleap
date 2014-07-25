@@ -1,3 +1,9 @@
+Version 0.67 - Tuleap 7.4
+    * tasks #7266: Delete docman index when there is no data doesn't throw any error
+
+
+This task is part of story #7185 Search in existing wiki pages
+
 Version 0.66 - Tuleap 7.4
     * tasks #7261: Process wiki reindex event
 
