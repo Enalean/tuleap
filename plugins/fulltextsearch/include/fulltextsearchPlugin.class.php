@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -193,6 +193,7 @@ class fulltextsearchPlugin extends Plugin {
                 SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE::NAME,
                 SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE_PERMISSIONS::NAME,
                 SystemEvent_FULLTEXTSEARCH_WIKI_DELETE::NAME,
+                SystemEvent_FULLTEXTSEARCH_WIKI_REINDEX_PROJECT::NAME
             )
         );
     }
@@ -576,11 +577,24 @@ class fulltextsearchPlugin extends Plugin {
 
         $controller = $this->getAdminController();
         $group_id   = $request->get('group_id');
+
         if ($group_id) {
-            $controller->reindex($group_id);
-        } else {
-            $controller->index();
+            $project = $request->getProject();
+
+            $controller->reindexDocman($group_id);
+            $controller->reindexWiki($group_id);
+
+            $GLOBALS['Response']->addFeedback(
+                'info',
+                $GLOBALS['Language']->getText(
+                    'plugin_fulltextsearch',
+                    'waiting_for_reindexation',
+                    array(util_unconvert_htmlspecialchars($project->getPublicName()))
+                )
+            );
         }
+
+        $controller->index();
     }
 
     private function clientIsNotFound(ElasticSearch_ClientNotFoundException $exception) {
@@ -589,5 +603,3 @@ class fulltextsearchPlugin extends Plugin {
         die();
     }
 }
-
-?>
