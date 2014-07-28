@@ -25,11 +25,13 @@ class SystemEventProcessor_RootTest extends TuleapTestCase {
     private $system_event_dao;
     private $processor;
     private $sys_http_user = 'www-data';
+    private $logger;
 
     public function setUp() {
         parent::setUp();
         $this->system_event_manager = mock('SystemEventManager');
         $this->system_event_dao     = mock('SystemEventDao');
+        $this->logger               = mock('Logger');
         $this->processor = partial_mock(
             'SystemEventProcessor_Root',
             array('launchAs'),
@@ -37,7 +39,7 @@ class SystemEventProcessor_RootTest extends TuleapTestCase {
                 new SystemEventProcessRoot(),
                 $this->system_event_manager,
                 $this->system_event_dao,
-                mock('Logger'),
+                $this->logger,
                 mock('BackendAliases'),
                 mock('BackendCVS'),
                 mock('BackendSVN'),
@@ -79,6 +81,12 @@ class SystemEventProcessor_RootTest extends TuleapTestCase {
         expect($this->processor)->launchAs($this->sys_http_user, $command)->once();
         $this->processor->execute();
     }
-}
 
-?>
+    public function itCatchesExceptionsThrownInPostActions() {
+        stub($this->processor)->launchAs()->throws(new Exception('Something weird happend'));
+
+        expect($this->logger)->error()->once();
+
+        $this->processor->execute();
+    }
+}
