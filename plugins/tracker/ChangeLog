@@ -1,3 +1,6 @@
+Version 5.427 - Tuleap 7.4
+    * Init a test_mgmt project for rest tests
+
 Version 5.426 - Tuleap 7.4
     * Fix regression introduced by commit 4b3eedc in tasks #6918: Send notifications after copy
 
