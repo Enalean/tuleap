@@ -1,0 +1,2027 @@
+<project>
+    <trackers>
+        <tracker id="T93" parent_id="0" instantiate_for_new_projects="1">
+            <name>Validation Campaign</name>
+            <item_name>campaign</item_name>
+            <description>Release</description>
+            <color>inca_silver</color>
+            <cannedResponses/>
+            <formElements>
+                <formElement type="fieldset" ID="F1" rank="94">
+                    <name>creation_details</name>
+                    <label>Creation Details</label>
+                    <formElements>
+                        <formElement type="column" ID="F2" rank="0">
+                            <name>col1</name>
+                            <label>col1</label>
+                            <formElements>
+                                <formElement type="aid" ID="F3" rank="0">
+                                    <name>artifact_id</name>
+                                    <label>Artifact ID</label>
+                                    <description>Unique artifact identifier</description>
+                                </formElement>
+                            </formElements>
+                        </formElement>
+                        <formElement type="column" ID="F4" rank="1">
+                            <name>col2</name>
+                            <label>col2</label>
+                            <formElements>
+                                <formElement type="subby" ID="F5" rank="0">
+                                    <name>submitted_by</name>
+                                    <label>Created By</label>
+                                    <description>User who originally created the test</description>
+                                </formElement>
+                            </formElements>
+                        </formElement>
+                        <formElement type="column" ID="F6" rank="2">
+                            <name>col3</name>
+                            <label>col3</label>
+                            <formElements>
+                                <formElement type="subon" ID="F7" rank="0">
+                                    <name>open_date</name>
+                                    <label>Date Created</label>
+                                    <description>Date and time for the test was created</description>
+                                </formElement>
+                            </formElements>
+                        </formElement>
+                        <formElement type="column" ID="F8" rank="3">
+                            <name>col4</name>
+                            <label>col4</label>
+                            <formElements>
+                                <formElement type="lud" ID="F9" rank="0">
+                                    <name>last_update_date</name>
+                                    <label>Last Execution Time</label>
+                                    <description>Date and time of the latest modification in an artifact</description>
+                                </formElement>
+                            </formElements>
+                        </formElement>
+                    </formElements>
+                </formElement>
+                <formElement type="fieldset" ID="F10" rank="104" required="1">
+                    <name>fieldset_1</name>
+                    <label>Description</label>
+                    <description>fieldset_default_tasks_desc_key</description>
+                    <formElements>
+                        <formElement type="column" ID="F11" rank="0">
+                            <name>descc1</name>
+                            <label>Desc::C1</label>
+                            <formElements>
+                                <formElement type="string" ID="F12" rank="0" required="1">
+                                    <name>name</name>
+                                    <label>Name</label>
+                                    <description>One line description of the artifact</description>
+                                    <properties maxchars="150" size="80"/>
+                                </formElement>
+                            </formElements>
+                        </formElement>
+                        <formElement type="column" ID="F13" rank="2">
+                            <name>descc2</name>
+                            <label>Desc::C2</label>
+                            <formElements>
+                                <formElement type="sb" ID="F14" rank="0">
+                                    <name>status</name>
+                                    <label>Status</label>
+                                    <bind type="static" is_rank_alpha="0">
+                                        <items>
+                                            <item ID="F14-V0" label="Not Run" is_hidden="0"/>
+                                            <item ID="F14-V1" label="Passed" is_hidden="0"/>
+                                            <item ID="F14-V2" label="Failed" is_hidden="0"/>
+                                            <item ID="F14-V3" label="Blocked" is_hidden="0"/>
+                                        </items>
+                                        <default_values>
+                                            <value REF="F14-V0"/>
+                                        </default_values>
+                                    </bind>
+                                </formElement>
+                            </formElements>
+                        </formElement>
+                        <formElement type="sb" ID="F15" rank="15" use_it="0">
+                            <name>subproject</name>
+                            <label>Subproject</label>
+                            <description>Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)</description>
+                            <bind type="static" is_rank_alpha="0"/>
+                        </formElement>
+                    </formElements>
+                </formElement>
+                <formElement type="fieldset" ID="F16" rank="118">
+                    <name>links_1</name>
+                    <label>Links</label>
+                    <formElements>
+                        <formElement type="column" ID="F17" rank="0">
+                            <name>link1</name>
+                            <label>link1</label>
+                            <formElements>
+                                <formElement type="art_link" ID="F18" rank="0">
+                                    <name>artifact_links</name>
+                                    <label>Artifact Links</label>
+                                </formElement>
+                            </formElements>
+                        </formElement>
+                    </formElements>
+                </formElement>
+                <formElement type="int" ID="F19" rank="8" use_it="0">
+                    <name>initial_effort_111</name>
+                    <label>Initial Effort Estimate</label>
+                    <description>Initial estimation of effort</description>
+                    <properties size="5"/>
+                </formElement>
+                <formElement type="int" ID="F20" rank="11" use_it="0">
+                    <name>current_effort_11</name>
+                    <label>Current Effort Estimate</label>
+                    <description>Current estimation of effort</description>
+                    <properties size="5"/>
+                </formElement>
+                <formElement type="date" ID="F21" rank="27" use_it="0">
+                    <name>close_date_11</name>
+                    <label>Close Date</label>
+                    <description>Close Date</description>
+                    <properties default_value="today"/>
+                </formElement>
+                <formElement type="sb" ID="F22" rank="28" use_it="0">
+                    <name>stage_11</name>
+                    <label>Stage</label>
+                    <description>Stage in the life cycle of the artifact</description>
+                    <bind type="static" is_rank_alpha="0">
+                        <items>
+                            <item ID="F22-V0" label="New" is_hidden="0">
+                                <description>The artifact has just been submitted</description>
+                            </item>
+                            <item ID="F22-V1" label="Analyzed" is_hidden="0">
+                                <description>The cause of the artifact has been identified and documented</description>
+                            </item>
+                            <item ID="F22-V2" label="Accepted" is_hidden="0">
+                                <description>The artifact will be worked on.</description>
+                            </item>
+                            <item ID="F22-V3" label="Under Implementation" is_hidden="0">
+                                <description>The artifact is being worked on.</description>
+                            </item>
+                            <item ID="F22-V4" label="Ready for Review" is_hidden="0">
+                                <description>Updated/Created non-software work product (e.g. documentation) is ready for review and approval.</description>
+                            </item>
+                            <item ID="F22-V5" label="Ready for Test" is_hidden="0">
+                                <description>Updated/Created software is ready to be included in the next build</description>
+                            </item>
+                            <item ID="F22-V6" label="In Test" is_hidden="0">
+                                <description>Updated/Created software is in the build and is ready to enter the test phase</description>
+                            </item>
+                            <item ID="F22-V7" label="Approved" is_hidden="0">
+                                <description>The artifact fix has been succesfully tested. It is approved and awaiting release.</description>
+                            </item>
+                            <item ID="F22-V8" label="Declined" is_hidden="0">
+                                <description>The artifact was not accepted.</description>
+                            </item>
+                            <item ID="F22-V9" label="Done" is_hidden="0">
+                                <description>The artifact is closed.</description>
+                            </item>
+                        </items>
+                    </bind>
+                </formElement>
+                <formElement type="float" ID="F23" rank="31" use_it="0">
+                    <name>effort_11</name>
+                    <label>Effort</label>
+                    <description>Number of hours of work needed to fix the artifact (including testing)</description>
+                    <properties maxchars="5" size="5" default_value="0.0000"/>
+                </formElement>
+                <formElement type="sb" ID="F24" rank="41" use_it="0">
+                    <name>subproject_11</name>
+                    <label>Subproject</label>
+                    <description>Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)</description>
+                    <bind type="static" is_rank_alpha="0"/>
+                </formElement>
+                <formElement type="msb" ID="F25" rank="49" use_it="0">
+                    <name>release_number</name>
+                    <label>Release Number</label>
+                    <properties size="7"/>
+                    <bind type="static" is_rank_alpha="0">
+                        <items>
+                            <item ID="F25-V0" label="7.1" is_hidden="0"/>
+                            <item ID="F25-V1" label="7.2" is_hidden="0"/>
+                            <item ID="F25-V2" label="7.3" is_hidden="0"/>
+                            <item ID="F25-V3" label="7.4" is_hidden="0"/>
+                            <item ID="F25-V4" label="7.5" is_hidden="0"/>
+                            <item ID="F25-V5" label="7.6" is_hidden="0"/>
+                        </items>
+                    </bind>
+                </formElement>
+                <formElement type="column" ID="F26" rank="52" use_it="0">
+                    <name>exec2</name>
+                    <label>exec2</label>
+                    <formElements/>
+                </formElement>
+                <formElement type="column" ID="F27" rank="54" use_it="0">
+                    <name>exec3</name>
+                    <label>exec3</label>
+                    <formElements/>
+                </formElement>
+                <formElement type="column" ID="F28" rank="55" use_it="0">
+                    <name>exec1</name>
+                    <label>exec1</label>
+                    <formElements/>
+                </formElement>
+                <formElement type="msb" ID="F29" rank="56" use_it="0" notifications="1">
+                    <name>assigned_to</name>
+                    <label>Assigned to</label>
+                    <description>Who is in charge of this artifact</description>
+                    <properties size="7"/>
+                    <bind type="users">
+                        <items>
+                            <item label="group_members"/>
+                        </items>
+                    </bind>
+                </formElement>
+                <formElement type="text" ID="F30" rank="59" use_it="0" required="1">
+                    <name>details</name>
+                    <label>Description</label>
+                    <description>A full description of the artifact</description>
+                    <properties rows="10" cols="103"/>
+                </formElement>
+                <formElement type="sb" ID="F31" rank="61" use_it="0">
+                    <name>category_1</name>
+                    <label>Category</label>
+                    <bind type="static" is_rank_alpha="0">
+                        <items>
+                            <item ID="F31-V0" label="AgileDashboard" is_hidden="0"/>
+                            <item ID="F31-V1" label="Git" is_hidden="0"/>
+                            <item ID="F31-V2" label="Svn" is_hidden="0"/>
+                            <item ID="F31-V3" label="Docman" is_hidden="0"/>
+                            <item ID="F31-V4" label="Admin" is_hidden="0"/>
+                            <item ID="F31-V5" label="Trackers" is_hidden="0"/>
+                            <item ID="F31-V6" label="Webdav" is_hidden="0"/>
+                            <item ID="F31-V7" label="FTP" is_hidden="0"/>
+                            <item ID="F31-V8" label="PHP wiki" is_hidden="0"/>
+                            <item ID="F31-V9" label="Mediawiki" is_hidden="0"/>
+                            <item ID="F31-V10" label="Theme" is_hidden="0"/>
+                            <item ID="F31-V11" label="SOAP" is_hidden="0"/>
+                            <item ID="F31-V12" label="REST" is_hidden="0"/>
+                            <item ID="F31-V13" label="CLI" is_hidden="0"/>
+                            <item ID="F31-V14" label="FRS" is_hidden="0"/>
+                        </items>
+                    </bind>
+                </formElement>
+                <formElement type="column" ID="F32" rank="82" use_it="0">
+                    <name>column1</name>
+                    <label>Creation details</label>
+                    <formElements/>
+                </formElement>
+                <formElement type="fieldset" ID="F33" rank="97" use_it="0" required="1">
+                    <name>fieldset_2</name>
+                    <label>Test Execution</label>
+                    <formElements>
+                        <formElement type="int" ID="F34" rank="0" use_it="0">
+                            <name>initial_effort</name>
+                            <label>Initial Effort Estimate</label>
+                            <description>Initial estimation of effort</description>
+                            <properties size="5"/>
+                        </formElement>
+                        <formElement type="int" ID="F35" rank="7" use_it="0">
+                            <name>current_effort</name>
+                            <label>Current Effort Estimate</label>
+                            <description>Current estimation of effort</description>
+                            <properties size="5"/>
+                        </formElement>
+                        <formElement type="date" ID="F36" rank="15" use_it="0">
+                            <name>close_date</name>
+                            <label>Close Date</label>
+                            <description>Close Date</description>
+                            <properties default_value="today"/>
+                        </formElement>
+                        <formElement type="sb" ID="F37" rank="16" use_it="0">
+                            <name>stage</name>
+                            <label>Stage</label>
+                            <description>Stage in the life cycle of the artifact</description>
+                            <bind type="static" is_rank_alpha="0">
+                                <items>
+                                    <item ID="F37-V0" label="New" is_hidden="0">
+                                        <description>The artifact has just been submitted</description>
+                                    </item>
+                                    <item ID="F37-V1" label="Analyzed" is_hidden="0">
+                                        <description>The cause of the artifact has been identified and documented</description>
+                                    </item>
+                                    <item ID="F37-V2" label="Accepted" is_hidden="0">
+                                        <description>The artifact will be worked on.</description>
+                                    </item>
+                                    <item ID="F37-V3" label="Under Implementation" is_hidden="0">
+                                        <description>The artifact is being worked on.</description>
+                                    </item>
+                                    <item ID="F37-V4" label="Ready for Review" is_hidden="0">
+                                        <description>Updated/Created non-software work product (e.g. documentation) is ready for review and approval.</description>
+                                    </item>
+                                    <item ID="F37-V5" label="Ready for Test" is_hidden="0">
+                                        <description>Updated/Created software is ready to be included in the next build</description>
+                                    </item>
+                                    <item ID="F37-V6" label="In Test" is_hidden="0">
+                                        <description>Updated/Created software is in the build and is ready to enter the test phase</description>
+                                    </item>
+                                    <item ID="F37-V7" label="Approved" is_hidden="0">
+                                        <description>The artifact fix has been succesfully tested. It is approved and awaiting release.</description>
+                                    </item>
+                                    <item ID="F37-V8" label="Declined" is_hidden="0">
+                                        <description>The artifact was not accepted.</description>
+                                    </item>
+                                    <item ID="F37-V9" label="Done" is_hidden="0">
+                                        <description>The artifact is closed.</description>
+                                    </item>
+                                </items>
+                            </bind>
+                        </formElement>
+                        <formElement type="float" ID="F38" rank="18" use_it="0">
+                            <name>effort</name>
+                            <label>Effort</label>
+                            <description>Number of hours of work needed to fix the artifact (including testing)</description>
+                            <properties maxchars="5" size="5" default_value="0.0000"/>
+                        </formElement>
+                    </formElements>
+                </formElement>
+                <formElement type="file" ID="F39" rank="125" use_it="0">
+                    <name>attachment</name>
+                    <label>Attachments</label>
+                </formElement>
+                <formElement type="float" ID="F40" rank="127" use_it="0">
+                    <name>remaining_effort</name>
+                    <label>Remaining effort</label>
+                    <properties size="5"/>
+                </formElement>
+                <formElement type="column" ID="F41" rank="128" use_it="0">
+                    <name>column6</name>
+                    <label>Column Progress 2</label>
+                    <formElements/>
+                </formElement>
+                <formElement type="cross" ID="F42" rank="130" use_it="0">
+                    <name>cross_references</name>
+                    <label>Cross references</label>
+                </formElement>
+                <formElement type="int" ID="F43" rank="132" use_it="0">
+                    <name>iteration</name>
+                    <label>Iteration</label>
+                    <properties size="5"/>
+                </formElement>
+                <formElement type="column" ID="F44" rank="134" use_it="0">
+                    <name>column5</name>
+                    <label>Column Progress 1</label>
+                    <formElements/>
+                </formElement>
+                <formElement type="float" ID="F45" rank="135" use_it="0">
+                    <name>initial_effort_11</name>
+                    <label>Initial effort</label>
+                    <properties size="5"/>
+                </formElement>
+                <formElement type="sb" ID="F46" rank="1334" use_it="0">
+                    <name>priority</name>
+                    <label>Priority</label>
+                    <description>How quickly the artifact must be completed</description>
+                    <bind type="static" is_rank_alpha="0">
+                        <items>
+                            <item ID="F46-V0" label="1 - Lowest" is_hidden="0"/>
+                            <item ID="F46-V1" label="2" is_hidden="0"/>
+                            <item ID="F46-V2" label="3" is_hidden="0"/>
+                            <item ID="F46-V3" label="4" is_hidden="0"/>
+                            <item ID="F46-V4" label="5 - Medium" is_hidden="0"/>
+                            <item ID="F46-V5" label="6" is_hidden="0"/>
+                            <item ID="F46-V6" label="7" is_hidden="0"/>
+                            <item ID="F46-V7" label="8" is_hidden="0"/>
+                            <item ID="F46-V8" label="9 - Highest" is_hidden="0"/>
+                        </items>
+                    </bind>
+                </formElement>
+                <formElement type="sb" ID="F47" rank="1337" use_it="0">
+                    <name>component</name>
+                    <label>Component</label>
+                    <bind type="static" is_rank_alpha="0">
+                        <items>
+                            <item ID="F47-V0" label="Tracker" is_hidden="0"/>
+                            <item ID="F47-V1" label="Agile Dashboard" is_hidden="0"/>
+                            <item ID="F47-V2" label="SCM/Gerrit" is_hidden="0"/>
+                        </items>
+                    </bind>
+                </formElement>
+                <formElement type="sb" ID="F48" rank="1340" use_it="0">
+                    <name>category</name>
+                    <label>Category</label>
+                    <bind type="static" is_rank_alpha="0"/>
+                </formElement>
+                <formElement type="column" ID="F49" rank="1403" use_it="0">
+                    <name>column3</name>
+                    <label>Column Details 1</label>
+                    <formElements/>
+                </formElement>
+                <formElement type="column" ID="F50" rank="1404" use_it="0">
+                    <name>column4</name>
+                    <label>Column Details 2</label>
+                    <formElements/>
+                </formElement>
+                <formElement type="date" ID="F51" rank="1599" use_it="0">
+                    <name>due_date</name>
+                    <label>Due Date</label>
+                    <description>Due Date</description>
+                    <properties/>
+                </formElement>
+                <formElement type="int" ID="F52" rank="1601" use_it="0">
+                    <name>percent</name>
+                    <label>Percentage of completion (1-100)</label>
+                    <description>Integer value between 0-100</description>
+                    <properties size="5"/>
+                </formElement>
+                <formElement type="sb" ID="F53" rank="1618" use_it="0">
+                    <name>status_id</name>
+                    <label>Old Status</label>
+                    <description>Artifact Status</description>
+                    <bind type="static" is_rank_alpha="0">
+                        <items>
+                            <item ID="F53-V0" label="Open" is_hidden="0">
+                                <description>The artifact has been submitted</description>
+                            </item>
+                            <item ID="F53-V1" label="Closed" is_hidden="0">
+                                <description>The artifact is no longer active. See the Resolution field for details on how it was resolved.</description>
+                            </item>
+                        </items>
+                    </bind>
+                </formElement>
+                <formElement type="date" ID="F54" rank="1621" use_it="0">
+                    <name>end_date</name>
+                    <label>End Date</label>
+                    <description>End Date</description>
+                    <properties/>
+                </formElement>
+                <formElement type="date" ID="F55" rank="1626" use_it="0">
+                    <name>start_date</name>
+                    <label>Start Date</label>
+                    <description>Start Date</description>
+                    <properties default_value="today"/>
+                </formElement>
+                <formElement type="int" ID="F56" rank="1662" use_it="0">
+                    <name>initial_effort_1</name>
+                    <label>Initial Effort Estimate</label>
+                    <description>Initial estimation of effort</description>
+                    <properties size="5"/>
+                </formElement>
+                <formElement type="int" ID="F57" rank="1695" use_it="0">
+                    <name>current_effort_1</name>
+                    <label>Current Effort Estimate</label>
+                    <description>Current estimation of effort</description>
+                    <properties size="5"/>
+                </formElement>
+                <formElement type="date" ID="F58" rank="1706" use_it="0">
+                    <name>close_date_1</name>
+                    <label>Close Date</label>
+                    <description>Close Date</description>
+                    <properties default_value="today"/>
+                </formElement>
+                <formElement type="sb" ID="F59" rank="1708" use_it="0">
+                    <name>stage_1</name>
+                    <label>Stage</label>
+                    <description>Stage in the life cycle of the artifact</description>
+                    <bind type="static" is_rank_alpha="0">
+                        <items>
+                            <item ID="F59-V0" label="New" is_hidden="0">
+                                <description>The artifact has just been submitted</description>
+                            </item>
+                            <item ID="F59-V1" label="Analyzed" is_hidden="0">
+                                <description>The cause of the artifact has been identified and documented</description>
+                            </item>
+                            <item ID="F59-V2" label="Accepted" is_hidden="0">
+                                <description>The artifact will be worked on.</description>
+                            </item>
+                            <item ID="F59-V3" label="Under Implementation" is_hidden="0">
+                                <description>The artifact is being worked on.</description>
+                            </item>
+                            <item ID="F59-V4" label="Ready for Review" is_hidden="0">
+                                <description>Updated/Created non-software work product (e.g. documentation) is ready for review and approval.</description>
+                            </item>
+                            <item ID="F59-V5" label="Ready for Test" is_hidden="0">
+                                <description>Updated/Created software is ready to be included in the next build</description>
+                            </item>
+                            <item ID="F59-V6" label="In Test" is_hidden="0">
+                                <description>Updated/Created software is in the build and is ready to enter the test phase</description>
+                            </item>
+                            <item ID="F59-V7" label="Approved" is_hidden="0">
+                                <description>The artifact fix has been succesfully tested. It is approved and awaiting release.</description>
+                            </item>
+                            <item ID="F59-V8" label="Declined" is_hidden="0">
+                                <description>The artifact was not accepted.</description>
+                            </item>
+                            <item ID="F59-V9" label="Done" is_hidden="0">
+                                <description>The artifact is closed.</description>
+                            </item>
+                        </items>
+                    </bind>
+                </formElement>
+                <formElement type="float" ID="F60" rank="1710" use_it="0">
+                    <name>effort_1</name>
+                    <label>Effort</label>
+                    <description>Number of hours of work needed to fix the artifact (including testing)</description>
+                    <properties maxchars="5" size="5" default_value="0.0000"/>
+                </formElement>
+                <formElement type="sb" ID="F61" rank="1711" use_it="0">
+                    <name>subproject_1</name>
+                    <label>Subproject</label>
+                    <description>Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)</description>
+                    <bind type="static" is_rank_alpha="0"/>
+                </formElement>
+                <formElement type="column" ID="F62" rank="2916" use_it="0">
+                    <name>column2</name>
+                    <label>Column Top 2</label>
+                    <formElements/>
+                </formElement>
+                <formElement type="fieldset" ID="F63" rank="2946" use_it="0">
+                    <name>fieldset1</name>
+                    <label>Attachments</label>
+                    <formElements/>
+                </formElement>
+                <formElement type="fieldset" ID="F64" rank="2948" use_it="0">
+                    <name>fieldset1_1</name>
+                    <label>References</label>
+                    <formElements/>
+                </formElement>
+                <formElement type="sb" ID="F65" rank="15" use_it="0">
+                    <name>subproject</name>
+                    <label>Subproject</label>
+                    <description>Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)</description>
+                    <bind type="static" is_rank_alpha="0"/>
+                </formElement>
+                <formElement type="int" ID="F66" rank="0" use_it="0">
+                    <name>initial_effort</name>
+                    <label>Initial Effort Estimate</label>
+                    <description>Initial estimation of effort</description>
+                    <properties size="5"/>
+                </formElement>
+                <formElement type="int" ID="F67" rank="7" use_it="0">
+                    <name>current_effort</name>
+                    <label>Current Effort Estimate</label>
+                    <description>Current estimation of effort</description>
+                    <properties size="5"/>
+                </formElement>
+                <formElement type="date" ID="F68" rank="15" use_it="0">
+                    <name>close_date</name>
+                    <label>Close Date</label>
+                    <description>Close Date</description>
+                    <properties default_value="today"/>
+                </formElement>
+                <formElement type="sb" ID="F69" rank="16" use_it="0">
+                    <name>stage</name>
+                    <label>Stage</label>
+                    <description>Stage in the life cycle of the artifact</description>
+                    <bind type="static" is_rank_alpha="0">
+                        <items>
+                            <item ID="F69-V0" label="New" is_hidden="0">
+                                <description>The artifact has just been submitted</description>
+                            </item>
+                            <item ID="F69-V1" label="Analyzed" is_hidden="0">
+                                <description>The cause of the artifact has been identified and documented</description>
+                            </item>
+                            <item ID="F69-V2" label="Accepted" is_hidden="0">
+                                <description>The artifact will be worked on.</description>
+                            </item>
+                            <item ID="F69-V3" label="Under Implementation" is_hidden="0">
+                                <description>The artifact is being worked on.</description>
+                            </item>
+                            <item ID="F69-V4" label="Ready for Review" is_hidden="0">
+                                <description>Updated/Created non-software work product (e.g. documentation) is ready for review and approval.</description>
+                            </item>
+                            <item ID="F69-V5" label="Ready for Test" is_hidden="0">
+                                <description>Updated/Created software is ready to be included in the next build</description>
+                            </item>
+                            <item ID="F69-V6" label="In Test" is_hidden="0">
+                                <description>Updated/Created software is in the build and is ready to enter the test phase</description>
+                            </item>
+                            <item ID="F69-V7" label="Approved" is_hidden="0">
+                                <description>The artifact fix has been succesfully tested. It is approved and awaiting release.</description>
+                            </item>
+                            <item ID="F69-V8" label="Declined" is_hidden="0">
+                                <description>The artifact was not accepted.</description>
+                            </item>
+                            <item ID="F69-V9" label="Done" is_hidden="0">
+                                <description>The artifact is closed.</description>
+                            </item>
+                        </items>
+                    </bind>
+                </formElement>
+                <formElement type="float" ID="F70" rank="18" use_it="0">
+                    <name>effort</name>
+                    <label>Effort</label>
+                    <description>Number of hours of work needed to fix the artifact (including testing)</description>
+                    <properties maxchars="5" size="5" default_value="0.0000"/>
+                </formElement>
+            </formElements>
+            <semantics>
+                <semantic type="title">
+                    <shortname>title</shortname>
+                    <label>Title</label>
+                    <description>Define the title of an artifact</description>
+                    <field REF="F12"/>
+                </semantic>
+                <semantic type="status">
+                    <shortname>status</shortname>
+                    <label>Status</label>
+                    <description>Define the status of an artifact</description>
+                    <field REF="F14"/>
+                    <open_values>
+                        <open_value REF="F14-V0"/>
+                        <open_value REF="F14-V2"/>
+                        <open_value REF="F14-V3"/>
+                    </open_values>
+                </semantic>
+                <semantic type="tooltip">
+                    <field REF="F3"/>
+                    <field REF="F12"/>
+                    <field REF="F14"/>
+                </semantic>
+                <semantic type="plugin_cardwall_card_fields"/>
+            </semantics>
+            <rules>
+                <date_rules/>
+                <list_rules/>
+            </rules>
+            <reports>
+                <report is_default="0">
+                    <name>Default</name>
+                    <description>Tasks Report</description>
+                    <criterias>
+                        <criteria rank="0">
+                            <field REF="F9"/>
+                        </criteria>
+                        <criteria rank="1">
+                            <field REF="F14"/>
+                        </criteria>
+                    </criterias>
+                    <renderers>
+                        <renderer type="table" rank="0" chunksz="15">
+                            <name>Results</name>
+                            <columns/>
+                        </renderer>
+                    </renderers>
+                </report>
+            </reports>
+            <workflow/>
+            <permissions>
+                <permission scope="tracker" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+                <permission scope="field" REF="F3" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F5" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F7" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F9" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F12" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F12" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F12" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F14" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F14" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F14" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F18" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F18" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F18" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+            </permissions>
+        </tracker>
+        <tracker id="T95" parent_id="0" instantiate_for_new_projects="1">
+            <name>Validation Test Execution</name>
+            <item_name>test_exec</item_name>
+            <description>Execution of a test case in a campaign</description>
+            <color>inca_silver</color>
+            <cannedResponses/>
+            <formElements>
+                <formElement type="fieldset" ID="F71" rank="57">
+                    <name>creation_details</name>
+                    <label>Creation Details</label>
+                    <formElements>
+                        <formElement type="column" ID="F72" rank="0">
+                            <name>col1</name>
+                            <label>col1</label>
+                            <formElements>
+                                <formElement type="aid" ID="F73" rank="0">
+                                    <name>artifact_id</name>
+                                    <label>Artifact ID</label>
+                                    <description>Unique artifact identifier</description>
+                                </formElement>
+                            </formElements>
+                        </formElement>
+                        <formElement type="column" ID="F74" rank="1">
+                            <name>col2</name>
+                            <label>col2</label>
+                            <formElements>
+                                <formElement type="subby" ID="F75" rank="0">
+                                    <name>submitted_by</name>
+                                    <label>Created By</label>
+                                    <description>User who originally created the test</description>
+                                </formElement>
+                            </formElements>
+                        </formElement>
+                        <formElement type="column" ID="F76" rank="2">
+                            <name>col3</name>
+                            <label>col3</label>
+                            <formElements>
+                                <formElement type="subon" ID="F77" rank="0">
+                                    <name>open_date</name>
+                                    <label>Date Created</label>
+                                    <description>Date and time for the test was created</description>
+                                </formElement>
+                            </formElements>
+                        </formElement>
+                        <formElement type="column" ID="F78" rank="3">
+                            <name>col4</name>
+                            <label>col4</label>
+                            <formElements>
+                                <formElement type="lud" ID="F79" rank="0">
+                                    <name>last_update_date</name>
+                                    <label>Last Execution Time</label>
+                                    <description>Date and time of the latest modification in an artifact</description>
+                                </formElement>
+                            </formElements>
+                        </formElement>
+                    </formElements>
+                </formElement>
+                <formElement type="fieldset" ID="F80" rank="67" required="1">
+                    <name>fieldset_1</name>
+                    <label>Description</label>
+                    <description>fieldset_default_tasks_desc_key</description>
+                    <formElements>
+                        <formElement type="column" ID="F81" rank="0">
+                            <name>descc1</name>
+                            <label>Desc::C1</label>
+                            <formElements>
+                                <formElement type="string" ID="F82" rank="0" required="1">
+                                    <name>name</name>
+                                    <label>Name</label>
+                                    <description>One line description of the artifact</description>
+                                    <properties maxchars="150" size="80"/>
+                                </formElement>
+                                <formElement type="text" ID="F83" rank="1">
+                                    <name>results</name>
+                                    <label>Results</label>
+                                    <properties rows="10" cols="50"/>
+                                </formElement>
+                            </formElements>
+                        </formElement>
+                        <formElement type="column" ID="F84" rank="2">
+                            <name>descc2</name>
+                            <label>Desc::C2</label>
+                            <formElements>
+                                <formElement type="sb" ID="F85" rank="0">
+                                    <name>status</name>
+                                    <label>Status</label>
+                                    <bind type="static" is_rank_alpha="0">
+                                        <items>
+                                            <item ID="F85-V0" label="Not Run" is_hidden="0"/>
+                                            <item ID="F85-V1" label="Passed" is_hidden="0"/>
+                                            <item ID="F85-V2" label="Failed" is_hidden="0"/>
+                                            <item ID="F85-V3" label="Blocked" is_hidden="0"/>
+                                        </items>
+                                        <default_values>
+                                            <value REF="F85-V0"/>
+                                        </default_values>
+                                    </bind>
+                                </formElement>
+                                <formElement type="sb" ID="F86" rank="1" notifications="1">
+                                    <name>assigned_to_1</name>
+                                    <label>Assigned to</label>
+                                    <bind type="users">
+                                        <items>
+                                            <item label="group_members"/>
+                                        </items>
+                                    </bind>
+                                </formElement>
+                            </formElements>
+                        </formElement>
+                        <formElement type="sb" ID="F87" rank="15" use_it="0">
+                            <name>subproject</name>
+                            <label>Subproject</label>
+                            <description>Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)</description>
+                            <bind type="static" is_rank_alpha="0"/>
+                        </formElement>
+                    </formElements>
+                </formElement>
+                <formElement type="fieldset" ID="F88" rank="74">
+                    <name>links_1</name>
+                    <label>Links</label>
+                    <formElements>
+                        <formElement type="column" ID="F89" rank="0">
+                            <name>link1</name>
+                            <label>link1</label>
+                            <formElements>
+                                <formElement type="art_link" ID="F90" rank="0">
+                                    <name>artifact_links</name>
+                                    <label>Artifact Links</label>
+                                </formElement>
+                            </formElements>
+                        </formElement>
+                    </formElements>
+                </formElement>
+                <formElement type="int" ID="F91" rank="5" use_it="0">
+                    <name>initial_effort_111</name>
+                    <label>Initial Effort Estimate</label>
+                    <description>Initial estimation of effort</description>
+                    <properties size="5"/>
+                </formElement>
+                <formElement type="int" ID="F92" rank="7" use_it="0">
+                    <name>current_effort_11</name>
+                    <label>Current Effort Estimate</label>
+                    <description>Current estimation of effort</description>
+                    <properties size="5"/>
+                </formElement>
+                <formElement type="date" ID="F93" rank="15" use_it="0">
+                    <name>close_date_11</name>
+                    <label>Close Date</label>
+                    <description>Close Date</description>
+                    <properties default_value="today"/>
+                </formElement>
+                <formElement type="sb" ID="F94" rank="16" use_it="0">
+                    <name>stage_11</name>
+                    <label>Stage</label>
+                    <description>Stage in the life cycle of the artifact</description>
+                    <bind type="static" is_rank_alpha="0">
+                        <items>
+                            <item ID="F94-V0" label="New" is_hidden="0">
+                                <description>The artifact has just been submitted</description>
+                            </item>
+                            <item ID="F94-V1" label="Analyzed" is_hidden="0">
+                                <description>The cause of the artifact has been identified and documented</description>
+                            </item>
+                            <item ID="F94-V2" label="Accepted" is_hidden="0">
+                                <description>The artifact will be worked on.</description>
+                            </item>
+                            <item ID="F94-V3" label="Under Implementation" is_hidden="0">
+                                <description>The artifact is being worked on.</description>
+                            </item>
+                            <item ID="F94-V4" label="Ready for Review" is_hidden="0">
+                                <description>Updated/Created non-software work product (e.g. documentation) is ready for review and approval.</description>
+                            </item>
+                            <item ID="F94-V5" label="Ready for Test" is_hidden="0">
+                                <description>Updated/Created software is ready to be included in the next build</description>
+                            </item>
+                            <item ID="F94-V6" label="In Test" is_hidden="0">
+                                <description>Updated/Created software is in the build and is ready to enter the test phase</description>
+                            </item>
+                            <item ID="F94-V7" label="Approved" is_hidden="0">
+                                <description>The artifact fix has been succesfully tested. It is approved and awaiting release.</description>
+                            </item>
+                            <item ID="F94-V8" label="Declined" is_hidden="0">
+                                <description>The artifact was not accepted.</description>
+                            </item>
+                            <item ID="F94-V9" label="Done" is_hidden="0">
+                                <description>The artifact is closed.</description>
+                            </item>
+                        </items>
+                    </bind>
+                </formElement>
+                <formElement type="float" ID="F95" rank="18" use_it="0">
+                    <name>effort_11</name>
+                    <label>Effort</label>
+                    <description>Number of hours of work needed to fix the artifact (including testing)</description>
+                    <properties maxchars="5" size="5" default_value="0.0000"/>
+                </formElement>
+                <formElement type="sb" ID="F96" rank="20" use_it="0">
+                    <name>subproject_11</name>
+                    <label>Subproject</label>
+                    <description>Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)</description>
+                    <bind type="static" is_rank_alpha="0"/>
+                </formElement>
+                <formElement type="msb" ID="F97" rank="29" use_it="0">
+                    <name>release_number</name>
+                    <label>Release Number</label>
+                    <properties size="7"/>
+                    <bind type="static" is_rank_alpha="0">
+                        <items>
+                            <item ID="F97-V0" label="7.1" is_hidden="0"/>
+                            <item ID="F97-V1" label="7.2" is_hidden="0"/>
+                            <item ID="F97-V2" label="7.3" is_hidden="0"/>
+                            <item ID="F97-V3" label="7.4" is_hidden="0"/>
+                            <item ID="F97-V4" label="7.5" is_hidden="0"/>
+                            <item ID="F97-V5" label="7.6" is_hidden="0"/>
+                        </items>
+                    </bind>
+                </formElement>
+                <formElement type="column" ID="F98" rank="32" use_it="0">
+                    <name>exec2</name>
+                    <label>exec2</label>
+                    <formElements/>
+                </formElement>
+                <formElement type="column" ID="F99" rank="33" use_it="0">
+                    <name>exec3</name>
+                    <label>exec3</label>
+                    <formElements/>
+                </formElement>
+                <formElement type="column" ID="F100" rank="34" use_it="0">
+                    <name>exec1</name>
+                    <label>exec1</label>
+                    <formElements/>
+                </formElement>
+                <formElement type="msb" ID="F101" rank="35" use_it="0" notifications="1">
+                    <name>assigned_to</name>
+                    <label>Assigned to</label>
+                    <description>Who is in charge of this artifact</description>
+                    <properties size="7"/>
+                    <bind type="users">
+                        <items>
+                            <item label="group_members"/>
+                        </items>
+                    </bind>
+                </formElement>
+                <formElement type="text" ID="F102" rank="37" use_it="0" required="1">
+                    <name>details</name>
+                    <label>Description</label>
+                    <description>A full description of the artifact</description>
+                    <properties rows="10" cols="103"/>
+                </formElement>
+                <formElement type="sb" ID="F103" rank="38" use_it="0">
+                    <name>category_1</name>
+                    <label>Category</label>
+                    <bind type="static" is_rank_alpha="0">
+                        <items>
+                            <item ID="F103-V0" label="AgileDashboard" is_hidden="0"/>
+                            <item ID="F103-V1" label="Git" is_hidden="0"/>
+                            <item ID="F103-V2" label="Svn" is_hidden="0"/>
+                            <item ID="F103-V3" label="Docman" is_hidden="0"/>
+                            <item ID="F103-V4" label="Admin" is_hidden="0"/>
+                            <item ID="F103-V5" label="Trackers" is_hidden="0"/>
+                            <item ID="F103-V6" label="Webdav" is_hidden="0"/>
+                            <item ID="F103-V7" label="FTP" is_hidden="0"/>
+                            <item ID="F103-V8" label="PHP wiki" is_hidden="0"/>
+                            <item ID="F103-V9" label="Mediawiki" is_hidden="0"/>
+                            <item ID="F103-V10" label="Theme" is_hidden="0"/>
+                            <item ID="F103-V11" label="SOAP" is_hidden="0"/>
+                            <item ID="F103-V12" label="REST" is_hidden="0"/>
+                            <item ID="F103-V13" label="CLI" is_hidden="0"/>
+                            <item ID="F103-V14" label="FRS" is_hidden="0"/>
+                        </items>
+                    </bind>
+                </formElement>
+                <formElement type="column" ID="F104" rank="53" use_it="0">
+                    <name>column1</name>
+                    <label>Creation details</label>
+                    <formElements/>
+                </formElement>
+                <formElement type="fieldset" ID="F105" rank="60" use_it="0" required="1">
+                    <name>fieldset_2</name>
+                    <label>Test Execution</label>
+                    <formElements>
+                        <formElement type="int" ID="F106" rank="0" use_it="0">
+                            <name>initial_effort</name>
+                            <label>Initial Effort Estimate</label>
+                            <description>Initial estimation of effort</description>
+                            <properties size="5"/>
+                        </formElement>
+                        <formElement type="int" ID="F107" rank="7" use_it="0">
+                            <name>current_effort</name>
+                            <label>Current Effort Estimate</label>
+                            <description>Current estimation of effort</description>
+                            <properties size="5"/>
+                        </formElement>
+                        <formElement type="date" ID="F108" rank="15" use_it="0">
+                            <name>close_date</name>
+                            <label>Close Date</label>
+                            <description>Close Date</description>
+                            <properties default_value="today"/>
+                        </formElement>
+                        <formElement type="sb" ID="F109" rank="16" use_it="0">
+                            <name>stage</name>
+                            <label>Stage</label>
+                            <description>Stage in the life cycle of the artifact</description>
+                            <bind type="static" is_rank_alpha="0">
+                                <items>
+                                    <item ID="F109-V0" label="New" is_hidden="0">
+                                        <description>The artifact has just been submitted</description>
+                                    </item>
+                                    <item ID="F109-V1" label="Analyzed" is_hidden="0">
+                                        <description>The cause of the artifact has been identified and documented</description>
+                                    </item>
+                                    <item ID="F109-V2" label="Accepted" is_hidden="0">
+                                        <description>The artifact will be worked on.</description>
+                                    </item>
+                                    <item ID="F109-V3" label="Under Implementation" is_hidden="0">
+                                        <description>The artifact is being worked on.</description>
+                                    </item>
+                                    <item ID="F109-V4" label="Ready for Review" is_hidden="0">
+                                        <description>Updated/Created non-software work product (e.g. documentation) is ready for review and approval.</description>
+                                    </item>
+                                    <item ID="F109-V5" label="Ready for Test" is_hidden="0">
+                                        <description>Updated/Created software is ready to be included in the next build</description>
+                                    </item>
+                                    <item ID="F109-V6" label="In Test" is_hidden="0">
+                                        <description>Updated/Created software is in the build and is ready to enter the test phase</description>
+                                    </item>
+                                    <item ID="F109-V7" label="Approved" is_hidden="0">
+                                        <description>The artifact fix has been succesfully tested. It is approved and awaiting release.</description>
+                                    </item>
+                                    <item ID="F109-V8" label="Declined" is_hidden="0">
+                                        <description>The artifact was not accepted.</description>
+                                    </item>
+                                    <item ID="F109-V9" label="Done" is_hidden="0">
+                                        <description>The artifact is closed.</description>
+                                    </item>
+                                </items>
+                            </bind>
+                        </formElement>
+                        <formElement type="float" ID="F110" rank="18" use_it="0">
+                            <name>effort</name>
+                            <label>Effort</label>
+                            <description>Number of hours of work needed to fix the artifact (including testing)</description>
+                            <properties maxchars="5" size="5" default_value="0.0000"/>
+                        </formElement>
+                    </formElements>
+                </formElement>
+                <formElement type="file" ID="F111" rank="81" use_it="0">
+                    <name>attachment</name>
+                    <label>Attachments</label>
+                </formElement>
+                <formElement type="float" ID="F112" rank="83" use_it="0">
+                    <name>remaining_effort</name>
+                    <label>Remaining effort</label>
+                    <properties size="5"/>
+                </formElement>
+                <formElement type="column" ID="F113" rank="84" use_it="0">
+                    <name>column6</name>
+                    <label>Column Progress 2</label>
+                    <formElements/>
+                </formElement>
+                <formElement type="cross" ID="F114" rank="86" use_it="0">
+                    <name>cross_references</name>
+                    <label>Cross references</label>
+                </formElement>
+                <formElement type="int" ID="F115" rank="88" use_it="0">
+                    <name>iteration</name>
+                    <label>Iteration</label>
+                    <properties size="5"/>
+                </formElement>
+                <formElement type="column" ID="F116" rank="90" use_it="0">
+                    <name>column5</name>
+                    <label>Column Progress 1</label>
+                    <formElements/>
+                </formElement>
+                <formElement type="float" ID="F117" rank="91" use_it="0">
+                    <name>initial_effort_11</name>
+                    <label>Initial effort</label>
+                    <properties size="5"/>
+                </formElement>
+                <formElement type="sb" ID="F118" rank="1284" use_it="0">
+                    <name>priority</name>
+                    <label>Priority</label>
+                    <description>How quickly the artifact must be completed</description>
+                    <bind type="static" is_rank_alpha="0">
+                        <items>
+                            <item ID="F118-V0" label="1 - Lowest" is_hidden="0"/>
+                            <item ID="F118-V1" label="2" is_hidden="0"/>
+                            <item ID="F118-V2" label="3" is_hidden="0"/>
+                            <item ID="F118-V3" label="4" is_hidden="0"/>
+                            <item ID="F118-V4" label="5 - Medium" is_hidden="0"/>
+                            <item ID="F118-V5" label="6" is_hidden="0"/>
+                            <item ID="F118-V6" label="7" is_hidden="0"/>
+                            <item ID="F118-V7" label="8" is_hidden="0"/>
+                            <item ID="F118-V8" label="9 - Highest" is_hidden="0"/>
+                        </items>
+                    </bind>
+                </formElement>
+                <formElement type="sb" ID="F119" rank="1287" use_it="0">
+                    <name>component</name>
+                    <label>Component</label>
+                    <bind type="static" is_rank_alpha="0">
+                        <items>
+                            <item ID="F119-V0" label="Tracker" is_hidden="0"/>
+                            <item ID="F119-V1" label="Agile Dashboard" is_hidden="0"/>
+                            <item ID="F119-V2" label="SCM/Gerrit" is_hidden="0"/>
+                        </items>
+                    </bind>
+                </formElement>
+                <formElement type="sb" ID="F120" rank="1290" use_it="0">
+                    <name>category</name>
+                    <label>Category</label>
+                    <bind type="static" is_rank_alpha="0"/>
+                </formElement>
+                <formElement type="column" ID="F121" rank="1349" use_it="0">
+                    <name>column3</name>
+                    <label>Column Details 1</label>
+                    <formElements/>
+                </formElement>
+                <formElement type="column" ID="F122" rank="1350" use_it="0">
+                    <name>column4</name>
+                    <label>Column Details 2</label>
+                    <formElements/>
+                </formElement>
+                <formElement type="date" ID="F123" rank="1534" use_it="0">
+                    <name>due_date</name>
+                    <label>Due Date</label>
+                    <description>Due Date</description>
+                    <properties/>
+                </formElement>
+                <formElement type="int" ID="F124" rank="1536" use_it="0">
+                    <name>percent</name>
+                    <label>Percentage of completion (1-100)</label>
+                    <description>Integer value between 0-100</description>
+                    <properties size="5"/>
+                </formElement>
+                <formElement type="sb" ID="F125" rank="1553" use_it="0">
+                    <name>status_id</name>
+                    <label>Old Status</label>
+                    <description>Artifact Status</description>
+                    <bind type="static" is_rank_alpha="0">
+                        <items>
+                            <item ID="F125-V0" label="Open" is_hidden="0">
+                                <description>The artifact has been submitted</description>
+                            </item>
+                            <item ID="F125-V1" label="Closed" is_hidden="0">
+                                <description>The artifact is no longer active. See the Resolution field for details on how it was resolved.</description>
+                            </item>
+                        </items>
+                    </bind>
+                </formElement>
+                <formElement type="date" ID="F126" rank="1555" use_it="0">
+                    <name>end_date</name>
+                    <label>End Date</label>
+                    <description>End Date</description>
+                    <properties/>
+                </formElement>
+                <formElement type="date" ID="F127" rank="1560" use_it="0">
+                    <name>start_date</name>
+                    <label>Start Date</label>
+                    <description>Start Date</description>
+                    <properties default_value="today"/>
+                </formElement>
+                <formElement type="int" ID="F128" rank="1590" use_it="0">
+                    <name>initial_effort_1</name>
+                    <label>Initial Effort Estimate</label>
+                    <description>Initial estimation of effort</description>
+                    <properties size="5"/>
+                </formElement>
+                <formElement type="int" ID="F129" rank="1619" use_it="0">
+                    <name>current_effort_1</name>
+                    <label>Current Effort Estimate</label>
+                    <description>Current estimation of effort</description>
+                    <properties size="5"/>
+                </formElement>
+                <formElement type="date" ID="F130" rank="1630" use_it="0">
+                    <name>close_date_1</name>
+                    <label>Close Date</label>
+                    <description>Close Date</description>
+                    <properties default_value="today"/>
+                </formElement>
+                <formElement type="sb" ID="F131" rank="1632" use_it="0">
+                    <name>stage_1</name>
+                    <label>Stage</label>
+                    <description>Stage in the life cycle of the artifact</description>
+                    <bind type="static" is_rank_alpha="0">
+                        <items>
+                            <item ID="F131-V0" label="New" is_hidden="0">
+                                <description>The artifact has just been submitted</description>
+                            </item>
+                            <item ID="F131-V1" label="Analyzed" is_hidden="0">
+                                <description>The cause of the artifact has been identified and documented</description>
+                            </item>
+                            <item ID="F131-V2" label="Accepted" is_hidden="0">
+                                <description>The artifact will be worked on.</description>
+                            </item>
+                            <item ID="F131-V3" label="Under Implementation" is_hidden="0">
+                                <description>The artifact is being worked on.</description>
+                            </item>
+                            <item ID="F131-V4" label="Ready for Review" is_hidden="0">
+                                <description>Updated/Created non-software work product (e.g. documentation) is ready for review and approval.</description>
+                            </item>
+                            <item ID="F131-V5" label="Ready for Test" is_hidden="0">
+                                <description>Updated/Created software is ready to be included in the next build</description>
+                            </item>
+                            <item ID="F131-V6" label="In Test" is_hidden="0">
+                                <description>Updated/Created software is in the build and is ready to enter the test phase</description>
+                            </item>
+                            <item ID="F131-V7" label="Approved" is_hidden="0">
+                                <description>The artifact fix has been succesfully tested. It is approved and awaiting release.</description>
+                            </item>
+                            <item ID="F131-V8" label="Declined" is_hidden="0">
+                                <description>The artifact was not accepted.</description>
+                            </item>
+                            <item ID="F131-V9" label="Done" is_hidden="0">
+                                <description>The artifact is closed.</description>
+                            </item>
+                        </items>
+                    </bind>
+                </formElement>
+                <formElement type="float" ID="F132" rank="1634" use_it="0">
+                    <name>effort_1</name>
+                    <label>Effort</label>
+                    <description>Number of hours of work needed to fix the artifact (including testing)</description>
+                    <properties maxchars="5" size="5" default_value="0.0000"/>
+                </formElement>
+                <formElement type="sb" ID="F133" rank="1635" use_it="0">
+                    <name>subproject_1</name>
+                    <label>Subproject</label>
+                    <description>Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)</description>
+                    <bind type="static" is_rank_alpha="0"/>
+                </formElement>
+                <formElement type="column" ID="F134" rank="2834" use_it="0">
+                    <name>column2</name>
+                    <label>Column Top 2</label>
+                    <formElements/>
+                </formElement>
+                <formElement type="fieldset" ID="F135" rank="2864" use_it="0">
+                    <name>fieldset1</name>
+                    <label>Attachments</label>
+                    <formElements/>
+                </formElement>
+                <formElement type="fieldset" ID="F136" rank="2866" use_it="0">
+                    <name>fieldset1_1</name>
+                    <label>References</label>
+                    <formElements/>
+                </formElement>
+                <formElement type="sb" ID="F137" rank="15" use_it="0">
+                    <name>subproject</name>
+                    <label>Subproject</label>
+                    <description>Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)</description>
+                    <bind type="static" is_rank_alpha="0"/>
+                </formElement>
+                <formElement type="int" ID="F138" rank="0" use_it="0">
+                    <name>initial_effort</name>
+                    <label>Initial Effort Estimate</label>
+                    <description>Initial estimation of effort</description>
+                    <properties size="5"/>
+                </formElement>
+                <formElement type="int" ID="F139" rank="7" use_it="0">
+                    <name>current_effort</name>
+                    <label>Current Effort Estimate</label>
+                    <description>Current estimation of effort</description>
+                    <properties size="5"/>
+                </formElement>
+                <formElement type="date" ID="F140" rank="15" use_it="0">
+                    <name>close_date</name>
+                    <label>Close Date</label>
+                    <description>Close Date</description>
+                    <properties default_value="today"/>
+                </formElement>
+                <formElement type="sb" ID="F141" rank="16" use_it="0">
+                    <name>stage</name>
+                    <label>Stage</label>
+                    <description>Stage in the life cycle of the artifact</description>
+                    <bind type="static" is_rank_alpha="0">
+                        <items>
+                            <item ID="F141-V0" label="New" is_hidden="0">
+                                <description>The artifact has just been submitted</description>
+                            </item>
+                            <item ID="F141-V1" label="Analyzed" is_hidden="0">
+                                <description>The cause of the artifact has been identified and documented</description>
+                            </item>
+                            <item ID="F141-V2" label="Accepted" is_hidden="0">
+                                <description>The artifact will be worked on.</description>
+                            </item>
+                            <item ID="F141-V3" label="Under Implementation" is_hidden="0">
+                                <description>The artifact is being worked on.</description>
+                            </item>
+                            <item ID="F141-V4" label="Ready for Review" is_hidden="0">
+                                <description>Updated/Created non-software work product (e.g. documentation) is ready for review and approval.</description>
+                            </item>
+                            <item ID="F141-V5" label="Ready for Test" is_hidden="0">
+                                <description>Updated/Created software is ready to be included in the next build</description>
+                            </item>
+                            <item ID="F141-V6" label="In Test" is_hidden="0">
+                                <description>Updated/Created software is in the build and is ready to enter the test phase</description>
+                            </item>
+                            <item ID="F141-V7" label="Approved" is_hidden="0">
+                                <description>The artifact fix has been succesfully tested. It is approved and awaiting release.</description>
+                            </item>
+                            <item ID="F141-V8" label="Declined" is_hidden="0">
+                                <description>The artifact was not accepted.</description>
+                            </item>
+                            <item ID="F141-V9" label="Done" is_hidden="0">
+                                <description>The artifact is closed.</description>
+                            </item>
+                        </items>
+                    </bind>
+                </formElement>
+                <formElement type="float" ID="F142" rank="18" use_it="0">
+                    <name>effort</name>
+                    <label>Effort</label>
+                    <description>Number of hours of work needed to fix the artifact (including testing)</description>
+                    <properties maxchars="5" size="5" default_value="0.0000"/>
+                </formElement>
+            </formElements>
+            <semantics>
+                <semantic type="title">
+                    <shortname>title</shortname>
+                    <label>Title</label>
+                    <description>Define the title of an artifact</description>
+                    <field REF="F82"/>
+                </semantic>
+                <semantic type="status">
+                    <shortname>status</shortname>
+                    <label>Status</label>
+                    <description>Define the status of an artifact</description>
+                    <field REF="F85"/>
+                    <open_values>
+                        <open_value REF="F85-V0"/>
+                        <open_value REF="F85-V2"/>
+                        <open_value REF="F85-V3"/>
+                    </open_values>
+                </semantic>
+                <semantic type="contributor">
+                    <shortname>contributor</shortname>
+                    <label>Contributor/assignee</label>
+                    <description>Define the contributor/assignee of an artifact</description>
+                    <field REF="F86"/>
+                </semantic>
+                <semantic type="tooltip">
+                    <field REF="F73"/>
+                    <field REF="F82"/>
+                    <field REF="F85"/>
+                </semantic>
+                <semantic type="plugin_cardwall_card_fields"/>
+            </semantics>
+            <rules>
+                <date_rules/>
+                <list_rules/>
+            </rules>
+            <reports>
+                <report is_default="0">
+                    <name>Default</name>
+                    <description>Tasks Report</description>
+                    <criterias>
+                        <criteria rank="0">
+                            <field REF="F79"/>
+                        </criteria>
+                        <criteria rank="1">
+                            <field REF="F85"/>
+                        </criteria>
+                    </criterias>
+                    <renderers>
+                        <renderer type="table" rank="0" chunksz="15">
+                            <name>Results</name>
+                            <columns/>
+                        </renderer>
+                    </renderers>
+                </report>
+            </reports>
+            <workflow/>
+            <permissions>
+                <permission scope="tracker" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+                <permission scope="field" REF="F73" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F75" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F77" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F79" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F82" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F82" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F82" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F83" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F83" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F83" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F85" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F85" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F85" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F86" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F86" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F86" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F90" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F90" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F90" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+            </permissions>
+        </tracker>
+        <tracker id="T94" parent_id="0" instantiate_for_new_projects="1">
+            <name>Validation Tests</name>
+            <item_name>test</item_name>
+            <description>Validation Tests</description>
+            <color>inca_silver</color>
+            <cannedResponses/>
+            <formElements>
+                <formElement type="fieldset" ID="F143" rank="68">
+                    <name>creation_details</name>
+                    <label>Creation Details</label>
+                    <formElements>
+                        <formElement type="column" ID="F144" rank="0">
+                            <name>col1</name>
+                            <label>col1</label>
+                            <formElements>
+                                <formElement type="aid" ID="F145" rank="0">
+                                    <name>artifact_id</name>
+                                    <label>Artifact ID</label>
+                                    <description>Unique artifact identifier</description>
+                                </formElement>
+                            </formElements>
+                        </formElement>
+                        <formElement type="column" ID="F146" rank="1">
+                            <name>col2</name>
+                            <label>col2</label>
+                            <formElements>
+                                <formElement type="subby" ID="F147" rank="0">
+                                    <name>submitted_by</name>
+                                    <label>Created By</label>
+                                    <description>User who originally created the test</description>
+                                </formElement>
+                            </formElements>
+                        </formElement>
+                        <formElement type="column" ID="F148" rank="2">
+                            <name>col3</name>
+                            <label>col3</label>
+                            <formElements>
+                                <formElement type="subon" ID="F149" rank="0">
+                                    <name>open_date</name>
+                                    <label>Date Created</label>
+                                    <description>Date and time for the test was created</description>
+                                </formElement>
+                            </formElements>
+                        </formElement>
+                        <formElement type="column" ID="F150" rank="3">
+                            <name>col4</name>
+                            <label>col4</label>
+                            <formElements>
+                                <formElement type="lud" ID="F151" rank="0">
+                                    <name>last_update_date</name>
+                                    <label>Last Execution Time</label>
+                                    <description>Date and time of the latest modification in an artifact</description>
+                                </formElement>
+                            </formElements>
+                        </formElement>
+                    </formElements>
+                </formElement>
+                <formElement type="fieldset" ID="F152" rank="79" required="1">
+                    <name>fieldset_1</name>
+                    <label>Description</label>
+                    <description>fieldset_default_tasks_desc_key</description>
+                    <formElements>
+                        <formElement type="string" ID="F153" rank="0" required="1">
+                            <name>summary</name>
+                            <label>Summary</label>
+                            <description>One line description of the artifact</description>
+                            <properties maxchars="150" size="80"/>
+                        </formElement>
+                        <formElement type="text" ID="F154" rank="1" required="1">
+                            <name>details</name>
+                            <label>Description</label>
+                            <description>A full description of the artifact</description>
+                            <properties rows="10" cols="103"/>
+                        </formElement>
+                        <formElement type="sb" ID="F155" rank="2">
+                            <name>category_1</name>
+                            <label>Category</label>
+                            <bind type="static" is_rank_alpha="0">
+                                <items>
+                                    <item ID="F155-V0" label="AgileDashboard" is_hidden="0"/>
+                                    <item ID="F155-V1" label="Git" is_hidden="0"/>
+                                    <item ID="F155-V2" label="Svn" is_hidden="0"/>
+                                    <item ID="F155-V3" label="Docman" is_hidden="0"/>
+                                    <item ID="F155-V4" label="Admin" is_hidden="0"/>
+                                    <item ID="F155-V5" label="Trackers" is_hidden="0"/>
+                                    <item ID="F155-V6" label="Webdav" is_hidden="0"/>
+                                    <item ID="F155-V7" label="FTP" is_hidden="0"/>
+                                    <item ID="F155-V8" label="PHP wiki" is_hidden="0"/>
+                                    <item ID="F155-V9" label="Mediawiki" is_hidden="0"/>
+                                    <item ID="F155-V10" label="Theme" is_hidden="0"/>
+                                    <item ID="F155-V11" label="SOAP" is_hidden="0"/>
+                                    <item ID="F155-V12" label="REST" is_hidden="0"/>
+                                    <item ID="F155-V13" label="CLI" is_hidden="0"/>
+                                    <item ID="F155-V14" label="FRS" is_hidden="0"/>
+                                </items>
+                            </bind>
+                        </formElement>
+                        <formElement type="sb" ID="F156" rank="12" use_it="0">
+                            <name>subproject</name>
+                            <label>Subproject</label>
+                            <description>Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)</description>
+                            <bind type="static" is_rank_alpha="0"/>
+                        </formElement>
+                    </formElements>
+                </formElement>
+                <formElement type="fieldset" ID="F157" rank="85" required="1">
+                    <name>fieldset_2</name>
+                    <label>Test Execution</label>
+                    <formElements>
+                        <formElement type="column" ID="F158" rank="0">
+                            <name>exec1</name>
+                            <label>exec1</label>
+                            <formElements>
+                                <formElement type="msb" ID="F159" rank="0" notifications="1">
+                                    <name>assigned_to</name>
+                                    <label>Assigned to</label>
+                                    <description>Who is in charge of this artifact</description>
+                                    <properties size="7"/>
+                                    <bind type="users">
+                                        <items>
+                                            <item label="group_members"/>
+                                        </items>
+                                    </bind>
+                                </formElement>
+                            </formElements>
+                        </formElement>
+                        <formElement type="column" ID="F160" rank="2">
+                            <name>exec3</name>
+                            <label>exec3</label>
+                            <formElements>
+                                <formElement type="sb" ID="F161" rank="0">
+                                    <name>status</name>
+                                    <label>Status</label>
+                                    <bind type="static" is_rank_alpha="0">
+                                        <items>
+                                            <item ID="F161-V0" label="Not Run" is_hidden="0"/>
+                                            <item ID="F161-V1" label="Passed" is_hidden="0"/>
+                                            <item ID="F161-V2" label="Failed" is_hidden="0"/>
+                                            <item ID="F161-V3" label="Blocked" is_hidden="0"/>
+                                        </items>
+                                        <default_values>
+                                            <value REF="F161-V0"/>
+                                        </default_values>
+                                    </bind>
+                                </formElement>
+                            </formElements>
+                        </formElement>
+                        <formElement type="int" ID="F162" rank="5" use_it="0">
+                            <name>initial_effort</name>
+                            <label>Initial Effort Estimate</label>
+                            <description>Initial estimation of effort</description>
+                            <properties size="5"/>
+                        </formElement>
+                        <formElement type="int" ID="F163" rank="7" use_it="0">
+                            <name>current_effort</name>
+                            <label>Current Effort Estimate</label>
+                            <description>Current estimation of effort</description>
+                            <properties size="5"/>
+                        </formElement>
+                        <formElement type="date" ID="F164" rank="15" use_it="0">
+                            <name>close_date</name>
+                            <label>Close Date</label>
+                            <description>Close Date</description>
+                            <properties default_value="today"/>
+                        </formElement>
+                        <formElement type="sb" ID="F165" rank="16" use_it="0">
+                            <name>stage</name>
+                            <label>Stage</label>
+                            <description>Stage in the life cycle of the artifact</description>
+                            <bind type="static" is_rank_alpha="0">
+                                <items>
+                                    <item ID="F165-V0" label="New" is_hidden="0">
+                                        <description>The artifact has just been submitted</description>
+                                    </item>
+                                    <item ID="F165-V1" label="Analyzed" is_hidden="0">
+                                        <description>The cause of the artifact has been identified and documented</description>
+                                    </item>
+                                    <item ID="F165-V2" label="Accepted" is_hidden="0">
+                                        <description>The artifact will be worked on.</description>
+                                    </item>
+                                    <item ID="F165-V3" label="Under Implementation" is_hidden="0">
+                                        <description>The artifact is being worked on.</description>
+                                    </item>
+                                    <item ID="F165-V4" label="Ready for Review" is_hidden="0">
+                                        <description>Updated/Created non-software work product (e.g. documentation) is ready for review and approval.</description>
+                                    </item>
+                                    <item ID="F165-V5" label="Ready for Test" is_hidden="0">
+                                        <description>Updated/Created software is ready to be included in the next build</description>
+                                    </item>
+                                    <item ID="F165-V6" label="In Test" is_hidden="0">
+                                        <description>Updated/Created software is in the build and is ready to enter the test phase</description>
+                                    </item>
+                                    <item ID="F165-V7" label="Approved" is_hidden="0">
+                                        <description>The artifact fix has been succesfully tested. It is approved and awaiting release.</description>
+                                    </item>
+                                    <item ID="F165-V8" label="Declined" is_hidden="0">
+                                        <description>The artifact was not accepted.</description>
+                                    </item>
+                                    <item ID="F165-V9" label="Done" is_hidden="0">
+                                        <description>The artifact is closed.</description>
+                                    </item>
+                                </items>
+                            </bind>
+                        </formElement>
+                        <formElement type="float" ID="F166" rank="18" use_it="0">
+                            <name>effort</name>
+                            <label>Effort</label>
+                            <description>Number of hours of work needed to fix the artifact (including testing)</description>
+                            <properties maxchars="5" size="5" default_value="0.0000"/>
+                        </formElement>
+                    </formElements>
+                </formElement>
+                <formElement type="fieldset" ID="F167" rank="93">
+                    <name>links_1</name>
+                    <label>Links</label>
+                    <formElements>
+                        <formElement type="column" ID="F168" rank="0">
+                            <name>link1</name>
+                            <label>link1</label>
+                            <formElements>
+                                <formElement type="art_link" ID="F169" rank="0">
+                                    <name>artifact_links</name>
+                                    <label>Artifact Links</label>
+                                </formElement>
+                            </formElements>
+                        </formElement>
+                    </formElements>
+                </formElement>
+                <formElement type="int" ID="F170" rank="6" use_it="0">
+                    <name>initial_effort_111</name>
+                    <label>Initial Effort Estimate</label>
+                    <description>Initial estimation of effort</description>
+                    <properties size="5"/>
+                </formElement>
+                <formElement type="int" ID="F171" rank="9" use_it="0">
+                    <name>current_effort_11</name>
+                    <label>Current Effort Estimate</label>
+                    <description>Current estimation of effort</description>
+                    <properties size="5"/>
+                </formElement>
+                <formElement type="sb" ID="F172" rank="19" use_it="0">
+                    <name>subproject_11</name>
+                    <label>Subproject</label>
+                    <description>Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)</description>
+                    <bind type="static" is_rank_alpha="0"/>
+                </formElement>
+                <formElement type="date" ID="F173" rank="21" use_it="0">
+                    <name>close_date_11</name>
+                    <label>Close Date</label>
+                    <description>Close Date</description>
+                    <properties default_value="today"/>
+                </formElement>
+                <formElement type="sb" ID="F174" rank="22" use_it="0">
+                    <name>stage_11</name>
+                    <label>Stage</label>
+                    <description>Stage in the life cycle of the artifact</description>
+                    <bind type="static" is_rank_alpha="0">
+                        <items>
+                            <item ID="F174-V0" label="New" is_hidden="0">
+                                <description>The artifact has just been submitted</description>
+                            </item>
+                            <item ID="F174-V1" label="Analyzed" is_hidden="0">
+                                <description>The cause of the artifact has been identified and documented</description>
+                            </item>
+                            <item ID="F174-V2" label="Accepted" is_hidden="0">
+                                <description>The artifact will be worked on.</description>
+                            </item>
+                            <item ID="F174-V3" label="Under Implementation" is_hidden="0">
+                                <description>The artifact is being worked on.</description>
+                            </item>
+                            <item ID="F174-V4" label="Ready for Review" is_hidden="0">
+                                <description>Updated/Created non-software work product (e.g. documentation) is ready for review and approval.</description>
+                            </item>
+                            <item ID="F174-V5" label="Ready for Test" is_hidden="0">
+                                <description>Updated/Created software is ready to be included in the next build</description>
+                            </item>
+                            <item ID="F174-V6" label="In Test" is_hidden="0">
+                                <description>Updated/Created software is in the build and is ready to enter the test phase</description>
+                            </item>
+                            <item ID="F174-V7" label="Approved" is_hidden="0">
+                                <description>The artifact fix has been succesfully tested. It is approved and awaiting release.</description>
+                            </item>
+                            <item ID="F174-V8" label="Declined" is_hidden="0">
+                                <description>The artifact was not accepted.</description>
+                            </item>
+                            <item ID="F174-V9" label="Done" is_hidden="0">
+                                <description>The artifact is closed.</description>
+                            </item>
+                        </items>
+                    </bind>
+                </formElement>
+                <formElement type="float" ID="F175" rank="24" use_it="0">
+                    <name>effort_11</name>
+                    <label>Effort</label>
+                    <description>Number of hours of work needed to fix the artifact (including testing)</description>
+                    <properties maxchars="5" size="5" default_value="0.0000"/>
+                </formElement>
+                <formElement type="msb" ID="F176" rank="39" use_it="0">
+                    <name>release_number</name>
+                    <label>Release Number</label>
+                    <properties size="7"/>
+                    <bind type="static" is_rank_alpha="0">
+                        <items>
+                            <item ID="F176-V0" label="7.1" is_hidden="0"/>
+                            <item ID="F176-V1" label="7.2" is_hidden="0"/>
+                            <item ID="F176-V2" label="7.3" is_hidden="0"/>
+                            <item ID="F176-V3" label="7.4" is_hidden="0"/>
+                            <item ID="F176-V4" label="7.5" is_hidden="0"/>
+                            <item ID="F176-V5" label="7.6" is_hidden="0"/>
+                        </items>
+                    </bind>
+                </formElement>
+                <formElement type="column" ID="F177" rank="40" use_it="0">
+                    <name>exec2</name>
+                    <label>exec2</label>
+                    <formElements/>
+                </formElement>
+                <formElement type="column" ID="F178" rank="70" use_it="0">
+                    <name>column1</name>
+                    <label>Creation details</label>
+                    <formElements/>
+                </formElement>
+                <formElement type="file" ID="F179" rank="106" use_it="0">
+                    <name>attachment</name>
+                    <label>Attachments</label>
+                </formElement>
+                <formElement type="float" ID="F180" rank="108" use_it="0">
+                    <name>remaining_effort</name>
+                    <label>Remaining effort</label>
+                    <properties size="5"/>
+                </formElement>
+                <formElement type="column" ID="F181" rank="109" use_it="0">
+                    <name>column6</name>
+                    <label>Column Progress 2</label>
+                    <formElements/>
+                </formElement>
+                <formElement type="cross" ID="F182" rank="111" use_it="0">
+                    <name>cross_references</name>
+                    <label>Cross references</label>
+                </formElement>
+                <formElement type="int" ID="F183" rank="113" use_it="0">
+                    <name>iteration</name>
+                    <label>Iteration</label>
+                    <properties size="5"/>
+                </formElement>
+                <formElement type="column" ID="F184" rank="115" use_it="0">
+                    <name>column5</name>
+                    <label>Column Progress 1</label>
+                    <formElements/>
+                </formElement>
+                <formElement type="float" ID="F185" rank="116" use_it="0">
+                    <name>initial_effort_11</name>
+                    <label>Initial effort</label>
+                    <properties size="5"/>
+                </formElement>
+                <formElement type="sb" ID="F186" rank="1312" use_it="0">
+                    <name>priority</name>
+                    <label>Priority</label>
+                    <description>How quickly the artifact must be completed</description>
+                    <bind type="static" is_rank_alpha="0">
+                        <items>
+                            <item ID="F186-V0" label="1 - Lowest" is_hidden="0"/>
+                            <item ID="F186-V1" label="2" is_hidden="0"/>
+                            <item ID="F186-V2" label="3" is_hidden="0"/>
+                            <item ID="F186-V3" label="4" is_hidden="0"/>
+                            <item ID="F186-V4" label="5 - Medium" is_hidden="0"/>
+                            <item ID="F186-V5" label="6" is_hidden="0"/>
+                            <item ID="F186-V6" label="7" is_hidden="0"/>
+                            <item ID="F186-V7" label="8" is_hidden="0"/>
+                            <item ID="F186-V8" label="9 - Highest" is_hidden="0"/>
+                        </items>
+                    </bind>
+                </formElement>
+                <formElement type="sb" ID="F187" rank="1315" use_it="0">
+                    <name>component</name>
+                    <label>Component</label>
+                    <bind type="static" is_rank_alpha="0">
+                        <items>
+                            <item ID="F187-V0" label="Tracker" is_hidden="0"/>
+                            <item ID="F187-V1" label="Agile Dashboard" is_hidden="0"/>
+                            <item ID="F187-V2" label="SCM/Gerrit" is_hidden="0"/>
+                        </items>
+                    </bind>
+                </formElement>
+                <formElement type="sb" ID="F188" rank="1318" use_it="0">
+                    <name>category</name>
+                    <label>Category</label>
+                    <bind type="static" is_rank_alpha="0"/>
+                </formElement>
+                <formElement type="column" ID="F189" rank="1379" use_it="0">
+                    <name>column3</name>
+                    <label>Column Details 1</label>
+                    <formElements/>
+                </formElement>
+                <formElement type="column" ID="F190" rank="1380" use_it="0">
+                    <name>column4</name>
+                    <label>Column Details 2</label>
+                    <formElements/>
+                </formElement>
+                <formElement type="date" ID="F191" rank="1569" use_it="0">
+                    <name>due_date</name>
+                    <label>Due Date</label>
+                    <description>Due Date</description>
+                    <properties/>
+                </formElement>
+                <formElement type="int" ID="F192" rank="1571" use_it="0">
+                    <name>percent</name>
+                    <label>Percentage of completion (1-100)</label>
+                    <description>Integer value between 0-100</description>
+                    <properties size="5"/>
+                </formElement>
+                <formElement type="sb" ID="F193" rank="1588" use_it="0">
+                    <name>status_id</name>
+                    <label>Old Status</label>
+                    <description>Artifact Status</description>
+                    <bind type="static" is_rank_alpha="0">
+                        <items>
+                            <item ID="F193-V0" label="Open" is_hidden="0">
+                                <description>The artifact has been submitted</description>
+                            </item>
+                            <item ID="F193-V1" label="Closed" is_hidden="0">
+                                <description>The artifact is no longer active. See the Resolution field for details on how it was resolved.</description>
+                            </item>
+                        </items>
+                    </bind>
+                </formElement>
+                <formElement type="date" ID="F194" rank="1591" use_it="0">
+                    <name>end_date</name>
+                    <label>End Date</label>
+                    <description>End Date</description>
+                    <properties/>
+                </formElement>
+                <formElement type="date" ID="F195" rank="1596" use_it="0">
+                    <name>start_date</name>
+                    <label>Start Date</label>
+                    <description>Start Date</description>
+                    <properties default_value="today"/>
+                </formElement>
+                <formElement type="int" ID="F196" rank="1627" use_it="0">
+                    <name>initial_effort_1</name>
+                    <label>Initial Effort Estimate</label>
+                    <description>Initial estimation of effort</description>
+                    <properties size="5"/>
+                </formElement>
+                <formElement type="int" ID="F197" rank="1660" use_it="0">
+                    <name>current_effort_1</name>
+                    <label>Current Effort Estimate</label>
+                    <description>Current estimation of effort</description>
+                    <properties size="5"/>
+                </formElement>
+                <formElement type="date" ID="F198" rank="1671" use_it="0">
+                    <name>close_date_1</name>
+                    <label>Close Date</label>
+                    <description>Close Date</description>
+                    <properties default_value="today"/>
+                </formElement>
+                <formElement type="sb" ID="F199" rank="1673" use_it="0">
+                    <name>stage_1</name>
+                    <label>Stage</label>
+                    <description>Stage in the life cycle of the artifact</description>
+                    <bind type="static" is_rank_alpha="0">
+                        <items>
+                            <item ID="F199-V0" label="New" is_hidden="0">
+                                <description>The artifact has just been submitted</description>
+                            </item>
+                            <item ID="F199-V1" label="Analyzed" is_hidden="0">
+                                <description>The cause of the artifact has been identified and documented</description>
+                            </item>
+                            <item ID="F199-V2" label="Accepted" is_hidden="0">
+                                <description>The artifact will be worked on.</description>
+                            </item>
+                            <item ID="F199-V3" label="Under Implementation" is_hidden="0">
+                                <description>The artifact is being worked on.</description>
+                            </item>
+                            <item ID="F199-V4" label="Ready for Review" is_hidden="0">
+                                <description>Updated/Created non-software work product (e.g. documentation) is ready for review and approval.</description>
+                            </item>
+                            <item ID="F199-V5" label="Ready for Test" is_hidden="0">
+                                <description>Updated/Created software is ready to be included in the next build</description>
+                            </item>
+                            <item ID="F199-V6" label="In Test" is_hidden="0">
+                                <description>Updated/Created software is in the build and is ready to enter the test phase</description>
+                            </item>
+                            <item ID="F199-V7" label="Approved" is_hidden="0">
+                                <description>The artifact fix has been succesfully tested. It is approved and awaiting release.</description>
+                            </item>
+                            <item ID="F199-V8" label="Declined" is_hidden="0">
+                                <description>The artifact was not accepted.</description>
+                            </item>
+                            <item ID="F199-V9" label="Done" is_hidden="0">
+                                <description>The artifact is closed.</description>
+                            </item>
+                        </items>
+                    </bind>
+                </formElement>
+                <formElement type="float" ID="F200" rank="1675" use_it="0">
+                    <name>effort_1</name>
+                    <label>Effort</label>
+                    <description>Number of hours of work needed to fix the artifact (including testing)</description>
+                    <properties maxchars="5" size="5" default_value="0.0000"/>
+                </formElement>
+                <formElement type="sb" ID="F201" rank="1676" use_it="0">
+                    <name>subproject_1</name>
+                    <label>Subproject</label>
+                    <description>Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)</description>
+                    <bind type="static" is_rank_alpha="0"/>
+                </formElement>
+                <formElement type="column" ID="F202" rank="2878" use_it="0">
+                    <name>column2</name>
+                    <label>Column Top 2</label>
+                    <formElements/>
+                </formElement>
+                <formElement type="fieldset" ID="F203" rank="2908" use_it="0">
+                    <name>fieldset1</name>
+                    <label>Attachments</label>
+                    <formElements/>
+                </formElement>
+                <formElement type="fieldset" ID="F204" rank="2910" use_it="0">
+                    <name>fieldset1_1</name>
+                    <label>References</label>
+                    <formElements/>
+                </formElement>
+                <formElement type="sb" ID="F205" rank="12" use_it="0">
+                    <name>subproject</name>
+                    <label>Subproject</label>
+                    <description>Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)</description>
+                    <bind type="static" is_rank_alpha="0"/>
+                </formElement>
+                <formElement type="int" ID="F206" rank="5" use_it="0">
+                    <name>initial_effort</name>
+                    <label>Initial Effort Estimate</label>
+                    <description>Initial estimation of effort</description>
+                    <properties size="5"/>
+                </formElement>
+                <formElement type="int" ID="F207" rank="7" use_it="0">
+                    <name>current_effort</name>
+                    <label>Current Effort Estimate</label>
+                    <description>Current estimation of effort</description>
+                    <properties size="5"/>
+                </formElement>
+                <formElement type="date" ID="F208" rank="15" use_it="0">
+                    <name>close_date</name>
+                    <label>Close Date</label>
+                    <description>Close Date</description>
+                    <properties default_value="today"/>
+                </formElement>
+                <formElement type="sb" ID="F209" rank="16" use_it="0">
+                    <name>stage</name>
+                    <label>Stage</label>
+                    <description>Stage in the life cycle of the artifact</description>
+                    <bind type="static" is_rank_alpha="0">
+                        <items>
+                            <item ID="F209-V0" label="New" is_hidden="0">
+                                <description>The artifact has just been submitted</description>
+                            </item>
+                            <item ID="F209-V1" label="Analyzed" is_hidden="0">
+                                <description>The cause of the artifact has been identified and documented</description>
+                            </item>
+                            <item ID="F209-V2" label="Accepted" is_hidden="0">
+                                <description>The artifact will be worked on.</description>
+                            </item>
+                            <item ID="F209-V3" label="Under Implementation" is_hidden="0">
+                                <description>The artifact is being worked on.</description>
+                            </item>
+                            <item ID="F209-V4" label="Ready for Review" is_hidden="0">
+                                <description>Updated/Created non-software work product (e.g. documentation) is ready for review and approval.</description>
+                            </item>
+                            <item ID="F209-V5" label="Ready for Test" is_hidden="0">
+                                <description>Updated/Created software is ready to be included in the next build</description>
+                            </item>
+                            <item ID="F209-V6" label="In Test" is_hidden="0">
+                                <description>Updated/Created software is in the build and is ready to enter the test phase</description>
+                            </item>
+                            <item ID="F209-V7" label="Approved" is_hidden="0">
+                                <description>The artifact fix has been succesfully tested. It is approved and awaiting release.</description>
+                            </item>
+                            <item ID="F209-V8" label="Declined" is_hidden="0">
+                                <description>The artifact was not accepted.</description>
+                            </item>
+                            <item ID="F209-V9" label="Done" is_hidden="0">
+                                <description>The artifact is closed.</description>
+                            </item>
+                        </items>
+                    </bind>
+                </formElement>
+                <formElement type="float" ID="F210" rank="18" use_it="0">
+                    <name>effort</name>
+                    <label>Effort</label>
+                    <description>Number of hours of work needed to fix the artifact (including testing)</description>
+                    <properties maxchars="5" size="5" default_value="0.0000"/>
+                </formElement>
+            </formElements>
+            <semantics>
+                <semantic type="title">
+                    <shortname>title</shortname>
+                    <label>Title</label>
+                    <description>Define the title of an artifact</description>
+                    <field REF="F153"/>
+                </semantic>
+                <semantic type="tooltip">
+                    <field REF="F145"/>
+                    <field REF="F153"/>
+                    <field REF="F161"/>
+                </semantic>
+                <semantic type="plugin_cardwall_card_fields">
+                    <field REF="F159"/>
+                </semantic>
+            </semantics>
+            <rules>
+                <date_rules/>
+                <list_rules/>
+            </rules>
+            <reports>
+                <report is_default="0">
+                    <name>Default</name>
+                    <description>Tasks Report</description>
+                    <criterias>
+                        <criteria rank="0">
+                            <field REF="F151"/>
+                        </criteria>
+                        <criteria rank="1">
+                            <field REF="F155"/>
+                        </criteria>
+                    </criterias>
+                    <renderers>
+                        <renderer type="table" rank="0" chunksz="15">
+                            <name>Results</name>
+                            <columns/>
+                        </renderer>
+                    </renderers>
+                </report>
+            </reports>
+            <workflow/>
+            <permissions>
+                <permission scope="tracker" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+                <permission scope="field" REF="F145" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F147" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F149" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F151" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F153" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F153" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F153" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F154" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F154" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F154" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F155" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F155" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F155" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F169" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F169" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F169" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+            </permissions>
+        </tracker>
+    </trackers>
+    <cardwall>
+        <trackers/>
+    </cardwall>
+    <agiledashboard>
+        <plannings/>
+    </agiledashboard>
+</project>
