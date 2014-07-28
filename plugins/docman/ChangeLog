@@ -1,3 +1,9 @@
+Version 2.26.41 - Tuleap 7.4
+    * tasks #7264: Delete wiki index when there is no data doesn't throw any error
+tasks #7227 & tasks #7226: Catch and Update wiki service permissions change
+tasks #7267: When I reference an existing wiki page in docman, reindex it in docman, delete it from wiki index
+
+
 Version 2.26.40 - Tuleap 7.3
     * tasks #7191: Wiki page referenced in docman is indexed like a docman file
 
