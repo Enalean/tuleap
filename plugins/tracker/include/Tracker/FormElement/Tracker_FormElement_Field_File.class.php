@@ -295,11 +295,10 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                     )
                 );
                 $sanitized_description = $hp->purify($fileinfo->getDescription(), CODENDI_PURIFIER_CONVERT_HTML);
-
-                $link_show = '<a href="'.TRACKER_BASE_URL.'/?'. $query_link .'"
-                                 '. ($fileinfo->isImage() ? 'rel="lytebox['. $this->getId() .']" ' : '') .'
+               
+                $link_show = '<a href="'.TRACKER_BASE_URL.'/?'. $query_link .'"'.
+                                 $this->getVisioningAttributeForLink($fileinfo, $read_only) .'
                                  title="'. $sanitized_description .'">';
-
 
                 $add = '<div class="tracker_artifact_attachment">';
                 if (!$read_only) {
@@ -335,7 +334,10 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                     $add .= '<div class="tracker_artifact_preview_attachment"></div>';
                 }
 
-                $add .= '<div class="tracker_artifact_attachment_name">' . $link_show . $hp->purify($fileinfo->getFilename(), CODENDI_PURIFIER_CONVERT_HTML) .'</a></div>';
+
+                $link_goto = '<a href="'.TRACKER_BASE_URL.'/?'. $query_link .'"'.
+                                 'title="'. $sanitized_description .'">';
+                $add .= '<div class="tracker_artifact_attachment_name">' . $link_goto . $hp->purify($fileinfo->getFilename(), CODENDI_PURIFIER_CONVERT_HTML) .'</a></div>';
 
                 if ($sanitized_description) {
                     $add .= '<div class="tracker_artifact_attachment_description">' . $sanitized_description . '</div>';
@@ -352,6 +354,18 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         }
 
         return $html;
+    }
+
+    private function getVisioningAttributeForLink($fileinfo, $read_only) {
+        if (! $fileinfo->isImage()) {
+            return '';
+        }
+
+        if ($read_only) {
+            return 'rel="lytebox['. $this->getId() .']"';
+        }
+
+        return 'data-rel="lytebox['. $this->getId() .']"';
     }
 
     private function fetchDeleteCheckbox(Tracker_FileInfo $fileinfo, $submitted_values) {
