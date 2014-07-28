@@ -29,8 +29,17 @@ class SystemEvent_FULLTEXTSEARCH_DOCMAN_WIKI_INDEX extends SystemEvent_FULLTEXTS
             $this->actions->initializeProjetMapping($project_id);
         }
 
-        $this->actions->indexNewWikiDocument($item);
+        $wiki_page = $this->getWikiPage($item, $project_id);
+
+        $this->actions->indexNewWikiDocument($item, $wiki_page->getMetadata());
 
         return true;
+    }
+
+    /**
+     * @return WikiPage
+     */
+    protected function getWikiPage(Docman_Item $item, $project_id) {
+        return new WikiPage($project_id, $item->getPagename());
     }
 }

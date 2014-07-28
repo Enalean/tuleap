@@ -76,12 +76,13 @@ class FullTextSearchDocmanActions {
     /**
      * Index a new wiki document with permissions
      *
-     * @param Docman_Item    $item          The docman item
+     * @param Docman_Item    $item                The docman item
+     * @param array          $wiki_page_metadata  The wiki page metadata
      */
-    public function indexNewWikiDocument(Docman_Item $item) {
-        $this->logger->debug('ElasticSearch: index new wiki document #' . $item->getId());
+    public function indexNewWikiDocument(Docman_Item $item, array $wiki_page_metadata) {
+        $this->logger->debug('[Docman] ElasticSearch: index new docman wiki document #' . $item->getId());
 
-        $indexed_data = $this->getIndexedData($item);
+        $indexed_data = $this->getIndexedData($item) + $this->getWikiContent($wiki_page_metadata);
 
         $this->client->index($item->getGroupId(), $item->getId(), $indexed_data);
     }
@@ -259,7 +260,7 @@ class FullTextSearchDocmanActions {
         }
 
         $this->logger->debug('ElasticSearch: update mapping of project #' . $item->getGroupId() .
-            'with new custom date metadata');
+            ' with new custom date metadata');
 
         $this->client->setMapping(
             $item->getGroupId(),

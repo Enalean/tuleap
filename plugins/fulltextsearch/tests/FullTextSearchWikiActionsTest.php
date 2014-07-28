@@ -189,6 +189,7 @@ class FullTextSearchWikiActionsTests extends TuleapTestCase {
             array($wiki_page_1, $wiki_page_2)
         );
 
+        expect($this->client)->getIndexedtype(200)->once();
         expect($this->client)->deleteForProject(200)->once();
         expect($this->client)->index(200, 101, '*')->at(0);
         expect($this->client)->index(200, 102, '*')->at(1);

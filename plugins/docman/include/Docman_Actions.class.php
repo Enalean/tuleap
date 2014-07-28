@@ -457,9 +457,12 @@ class Docman_Actions extends Actions {
                                                            'version'  => $new_version,
                                                            'docmanControler' => $this->_controler)
                         );
-                    } else {
+
+                    } elseif ($item_factory->getItemTypeForItem($new_item) === PLUGIN_DOCMAN_ITEM_TYPE_WIKI) {
                         $this->event_manager->processEvent('plugin_docman_event_new_wikipage', array(
-                            'item' => $new_item
+                            'item'      => $new_item,
+                            'group_id'  => $new_item->getGroupId(),
+                            'wiki_page' => $new_item->getPagename()
                         ));
                     }
                 }

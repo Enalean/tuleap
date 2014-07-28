@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,6 +25,23 @@ class SystemEvent_FULLTEXTSEARCH_DOCMAN_WIKI_INDEXTest extends SystemEvent_FULLT
 
     protected $klass = 'SystemEvent_FULLTEXTSEARCH_DOCMAN_WIKI_INDEX';
 
+    public function aSystemEventWithParameter($parameters) {
+        $id = $type = $owner = $priority = $status = $create_date = $process_date = $end_date = $log = null;
+        $event = partial_mock(
+            'SystemEvent_FULLTEXTSEARCH_DOCMAN_WIKI_INDEX',
+            array('getWikiPage'),
+            array($id, $type, $owner, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log)
+        );
+
+        $this->wiki_page = stub('WikiPage')->getMetadata()->returns(array());
+        stub($event)->getWikiPage()->returns($this->wiki_page);
+
+        $event->setFullTextSearchActions($this->actions)
+            ->setItemFactory($this->item_factory)
+            ->setVersionFactory($this->version_factory);
+        return $event;
+    }
+
     public function itAsksToToFullTextSearchActionsIfProjectMappingAlreadyExists() {
         $event = $this->aSystemEventWithParameter('101::103::2');
         expect($this->actions)->checkProjectMappingExists(101)->once();
@@ -43,7 +60,7 @@ class SystemEvent_FULLTEXTSEARCH_DOCMAN_WIKI_INDEXTest extends SystemEvent_FULLT
 
     public function itDelegatesIndexingToFullTextSearchActions() {
         $event = $this->aSystemEventWithParameter('101::103::2');
-        stub($this->actions)->indexNewWikiDocument($this->item)->once();
+        stub($this->actions)->indexNewWikiDocument($this->item, array())->once();
         $this->assertTrue($event->process());
         $this->assertEqual($event->getLog(), 'OK');
         $this->assertEqual($event->getStatus(), SystemEvent::STATUS_DONE);

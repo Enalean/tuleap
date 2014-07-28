@@ -34,7 +34,8 @@ class UGroupLiteralizer {
         ProjectUGroup::ANONYMOUS       => '@site_active @%s_project_members',
         ProjectUGroup::REGISTERED      => '@site_active @%s_project_members',
         ProjectUGroup::PROJECT_MEMBERS => '@%s_project_members',
-        ProjectUGroup::PROJECT_ADMIN   => '@%s_project_admin'
+        ProjectUGroup::PROJECT_ADMIN   => '@%s_project_admin',
+        ProjectUGroup::WIKI_ADMIN      => '@%s_wiki_admin'
     );
 
     /**
