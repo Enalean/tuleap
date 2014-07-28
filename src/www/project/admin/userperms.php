@@ -38,7 +38,7 @@ if ($project->isError()) {
 }
 
 // ########################### form submission, make updates
-if (isset($submit)) {
+if ($request->exist('submit')) {
     group_add_history ('changed_member_perm','',$group_id);
     
     $res_dev = db_query("SELECT * FROM user_group WHERE group_id=$group_id");
@@ -50,7 +50,7 @@ if (isset($submit)) {
         //
             if (user_getid() == $row_dev['user_id']) {
                 $admin_flags="admin_user_$row_dev[user_id]";
-                if ($$admin_flags != 'A') {
+                if ($request->get($admin_flags) != 'A') {
                     $other_admin_exists=false;
                     // Check that there is still at least one admin
                     $sql = "SELECT NULL FROM user_group WHERE user_id != ".db_ei($row_dev['user_id'])." AND admin_flags='A' AND group_id=".db_ei($group_id).' LIMIT 1';
@@ -83,10 +83,10 @@ if (isset($submit)) {
                 'news_flags',
                 'svn_flags'
             );
-            $sql = "UPDATE user_group SET admin_flags='".$$admin_flags."'";
+            $sql = "UPDATE user_group SET admin_flags='". db_es($request->get($admin_flags)) ."'";
             foreach ($flags as $flag) {
-                if (isset($$$flag)) {
-                    $sql .= ", $flag = '".$$$flag."'";
+                if ($request->get($$flag)) {
+                    $sql .= ", $flag = '". db_es($request->get($$flag)) ."'";
                 }
             }
             $sql .= " WHERE user_id='$row_dev[user_id]' AND group_id='$group_id'";
