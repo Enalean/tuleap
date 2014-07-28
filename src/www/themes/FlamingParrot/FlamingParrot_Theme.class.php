@@ -330,7 +330,10 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
     }
 
     private function endOfPage() {
-        $this->appendJsonEncodedVariable('tuleap.tours', $this->tours);
+        if (! empty($this->tours)) {
+            $this->appendJsonEncodedVariable('tuleap.tours', $this->tours);
+        }
+
         $this->displayFooterJavascriptElements();
 
         if ($this->isInDebugMode()) {
