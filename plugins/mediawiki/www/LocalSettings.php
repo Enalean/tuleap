@@ -47,6 +47,12 @@ require_once dirname(__FILE__) .'/../include/MediawikiUserGroupsMapper.class.php
 sysdebug_lazymode(true);
 
 $IP = forge_get_config('src_path', 'mediawiki');
+if (forge_get_config('sys_https_host')) {
+    $wgServer = 'https://'. forge_get_config('sys_https_host');
+} else {
+    $wgServer = 'http://'. forge_get_config('sys_default_domain');
+}
+
 if (!isset ($fusionforgeproject)) {
     $gr=new Group(1);
     $fusionforgeproject=$gr->getUnixName();
