@@ -7,6 +7,7 @@ Version 7.4 (Not released yet)
 
 	== Bug fix ==
 	* Fix regression introduced by commit 4b3eedc in tasks #6918: Send notifications after copy
+	* Fix request #7143: Use of register globals in user permissions page (Contribution Nicolas Lafont - WDMédia)
 
 Version 7.3 (Thursday, July 24th 2014)
 
