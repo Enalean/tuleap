@@ -164,10 +164,40 @@ class FullTextSearchDocmanActions {
         $this->request_data_factory->setUpdatedData($update_data, 'title',       $item->getTitle());
         $this->request_data_factory->setUpdatedData($update_data, 'description', $item->getDescription());
 
+        $this->updateContent($item, $update_data);
+
         $update_data = $this->request_data_factory->updateCustomTextualMetadata($item, $update_data);
         $update_data = $this->updateCustomDateMetadata($item, $update_data);
 
         $this->client->update($item->getGroupId(), $item->getId(), $update_data);
+    }
+
+    private function updateContent(Docman_Item $item, array &$update_data) {
+        $item_factory = Docman_ItemFactory::instance($item->getGroupId());
+        $item_type    = $item_factory->getItemTypeForItem($item);
+
+        switch ($item_type) {
+            case PLUGIN_DOCMAN_ITEM_TYPE_EMPTY:
+                break;
+
+            case PLUGIN_DOCMAN_ITEM_TYPE_WIKI:
+                $wiki_page = new WikiPage($item->getGroupId(), $item->getPagename());
+                $this->request_data_factory->updateContent($update_data, $wiki_page->getContent());
+                break;
+
+            case PLUGIN_DOCMAN_ITEM_TYPE_LINK:
+                $this->request_data_factory->updateContent($update_data, $item->getUrl());
+                break;
+
+            case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
+            case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
+                $this->request_data_factory->updateFile($update_data, $item->getCurrentVersion()->getPath());
+                break;
+
+            default:
+                $this->logger->debug("[Docman] ElasticSearch: unrecognized item type, can't update content");
+                break;
+        }
     }
 
     /**

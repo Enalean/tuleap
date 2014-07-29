@@ -29,6 +29,7 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
     protected $actions;
     protected $params;
     protected $permissions_manager;
+    protected $item_factory;
 
     public function setUp() {
         parent::setUp();
@@ -37,6 +38,9 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
             'ElasticSearch_IndexClientFacade',
             array('index', 'update', 'delete', 'getMapping', 'setMapping', 'getIndexedElement')
         );
+
+        $this->item_factory = mock('Docman_ItemFactory');
+        Docman_ItemFactory::setInstance(200, $this->item_factory);
 
         $this->permissions_manager = mock('Docman_PermissionsItemManager');
 
@@ -190,7 +194,7 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
         $this->actions->indexNewDocument($this->item, $this->version);
     }
 
-    public function itCallUpdateOnClientWithTitleIfNew() {
+    public function itCallUpdateOnClientWithMetadataAndContent() {
         $metadata03 = stub('Docman_Metadata')->getId()->returns(6);
 
         $second_search_type = array(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
@@ -199,15 +203,17 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
         );
 
         stub($this->metadata_factory)->getMetadataValue($this->item, $metadata03)->returns(1403160959);
-
+        stub($this->item_factory)->getItemTypeForItem($this->item)->returns(PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
+        stub($this->item)->getCurrentVersion()->returns($this->version);
         stub($this->client)->getMapping()->returns(array());
 
         $update_data = array(
             'title'       => $this->item->getTitle(),
             'description' => $this->item->getDescription(),
+            'file'        => 'aW5kZXggbWUK',
             'property_1'  => 'val01',
             'property_2'  => 'val02',
-            'property_6'  => '2014-06-19',
+            'property_6'  => '2014-06-19'
         );
 
         $expected = array(200, 101, $update_data);

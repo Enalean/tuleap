@@ -105,6 +105,16 @@ class WikiPage {
         return $current_revision_metadata + $content + $summary;
     }
 
+    public function getContent() {
+        $metadata = $this->getMetadata();
+
+        if (isset($metadata['content'])) {
+            return $metadata['content'];
+        }
+
+        return "";
+    }
+
     /**
      *
      * @return string
