@@ -92,9 +92,24 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
             if(!$params['cascadeWikiPageDeletion']) {
                 // grant a wiki permission only to wiki admins on the corresponding wiki page.
                 $this->restrictAccess($item, $params);
+
+                $wiki_page = new WikiPage($item->getGroupId(), $item->getPageName());
+
+                if ($wiki_page->getId()) {
+                    $event_manager = EventManager::instance();
+                    $event_manager->processEvent(
+                        "wiki_page_updated",
+                        array(
+                            'group_id'   => $item->getGroupId(),
+                            'wiki_page'  => $item->getPageName(),
+                            'referenced' => false,
+                        )
+                    );
+                }
+
             } else { // User have choosen to delete wiki page from wiki service too
                 $dIF =& $this->_getItemFactory();
-                if($dIF->deleteWikiPage($item->getPageName(), $item->getGroupId())){
+                if ($dIF->deleteWikiPage($item->getPageName(), $item->getGroupId())) {
                     $this->response->addFeedback('info', $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_delete_wiki_page_success'));
                 } else {
                     $this->response->addFeedback('error', $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_delete_wiki_page_failed'));
