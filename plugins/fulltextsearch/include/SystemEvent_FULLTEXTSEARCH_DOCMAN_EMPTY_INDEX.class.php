@@ -18,23 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Event raised when someone comments an approval table
- *
- * parameters =>
- *   'item'       => Docman_Item
- *   'version_nb' => Docman_Version
- *   'table'      => Docman_ApprovalTable
- *   'review'     => Docman_ApprovalReviewer
- */
-define('PLUGIN_DOCMAN_EVENT_APPROVAL_TABLE_COMMENT', 'plugin_docman_approval_table_comment');
 
+class SystemEvent_FULLTEXTSEARCH_DOCMAN_EMPTY_INDEX extends SystemEvent_FULLTEXTSEARCH_DOCMAN_INDEX {
+    const NAME = 'FULLTEXTSEARCH_DOCMAN_EMPTY_INDEX';
 
+    protected function processItem(Docman_Item $item) {
+        $project_id = $item->getGroupId();
 
-/**
- * Event raised when a nex empty doc is created
- *
- * Parameters:
- *      'item' => Docman_Item
- */
-define('PLUGIN_DOCMAN_EVENT_NEW_EMPTY', 'plugin_docman_event_new_empty');
+        $this->initializeMapping($project_id);
+        $this->actions->indexNewEmptyDocument($item);
+
+        return true;
+    }
+}

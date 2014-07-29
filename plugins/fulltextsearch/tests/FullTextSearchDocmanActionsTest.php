@@ -35,7 +35,7 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
 
         $this->client = partial_mock(
             'ElasticSearch_IndexClientFacade',
-            array('index', 'update', 'delete', 'getMapping', 'setMapping')
+            array('index', 'update', 'delete', 'getMapping', 'setMapping', 'getIndexedElement')
         );
 
         $this->permissions_manager = mock('Docman_PermissionsItemManager');
@@ -218,6 +218,8 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
 
     public function itCanDeleteADocumentFromItsId() {
         $this->client->expectOnce('delete', array(200, 101));
+
+        stub($this->client)->getIndexedElement()->returns(true);
 
         $this->actions->delete($this->item);
     }

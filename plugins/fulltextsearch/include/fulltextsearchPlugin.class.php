@@ -46,6 +46,7 @@ class fulltextsearchPlugin extends Plugin {
             $this->addHook('plugin_docman_event_new_wikipage');
             $this->addHook('plugin_docman_event_wikipage_update');
             $this->addHook(PLUGIN_DOCMAN_EVENT_APPROVAL_TABLE_COMMENT);
+            $this->addHook(PLUGIN_DOCMAN_EVENT_NEW_EMPTY);
         }
 
         // tracker
@@ -180,6 +181,7 @@ class fulltextsearchPlugin extends Plugin {
             $params['types'],
             array(
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_INDEX::NAME,
+                SystemEvent_FULLTEXTSEARCH_DOCMAN_EMPTY_INDEX::NAME,
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_REINDEX_PROJECT::NAME,
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE::NAME,
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS::NAME,
@@ -271,6 +273,15 @@ class fulltextsearchPlugin extends Plugin {
      */
     public function plugin_docman_after_new_document($params) {
         $this->getDocmanSystemEventManager()->queueNewDocument($params['item'], $params['version']);
+    }
+
+    /**
+     * Event triggered when a new empty document is created
+     *
+     * @param array $params
+     */
+    public function plugin_docman_event_new_empty($params) {
+        $this->getDocmanSystemEventManager()->queueNewEmptyDocument($params['item']);
     }
 
     /**

@@ -790,5 +790,4 @@ class Event {
      *      'new_name'    => string
      */
     const RENAME_PROJECT = 'rename_project';
-
 }

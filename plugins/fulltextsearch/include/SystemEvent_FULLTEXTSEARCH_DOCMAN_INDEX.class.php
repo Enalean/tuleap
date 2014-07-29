@@ -28,14 +28,18 @@ class SystemEvent_FULLTEXTSEARCH_DOCMAN_INDEX extends SystemEvent_FULLTEXTSEARCH
         $project_id     = $item->getGroupId();
 
         if ($version) {
-            if (! $this->actions->checkProjectMappingExists($project_id)) {
-                $this->actions->initializeProjetMapping($project_id);
-            }
-
+            $this->initializeMapping($project_id);
             $this->actions->indexNewDocument($item, $version);
+
             return true;
         }
 
         $this->error('Version not found');
+    }
+
+    protected function initializeMapping($project_id) {
+        if (! $this->actions->checkProjectMappingExists($project_id)) {
+            $this->actions->initializeProjetMapping($project_id);
+        }
     }
 }
