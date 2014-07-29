@@ -1,3 +1,9 @@
+Version 0.69 - Tuleap 7.4
+    * story #7231 reindex all the phpwiki pages and docman files
+
+
+Theses actions are launched for a project when its visibilty changed
+
 Version 0.68 - Tuleap 7.4
     * tasks #7264: Delete wiki index when there is no data doesn't throw any error
 tasks #7227 & tasks #7226: Catch and Update wiki service permissions change
