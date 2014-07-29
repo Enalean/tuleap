@@ -59,6 +59,7 @@ class fulltextsearchPlugin extends Plugin {
 
         // site admin
         $this->_addHook('site_admin_option_hook', 'site_admin_option_hook', false);
+        $this->_addHook('project_is_private', 'project_is_private', false);
 
         // wiki
         $this->_addHook('wiki_page_updated', 'wiki_page_updated', false);
@@ -587,14 +588,12 @@ class fulltextsearchPlugin extends Plugin {
             header('Location: ' . get_server_url());
         }
 
-        $controller = $this->getAdminController();
-        $group_id   = $request->get('group_id');
+        $project_id = $request->get('group_id');
 
-        if ($group_id) {
+        if ($project_id) {
             $project = $request->getProject();
 
-            $controller->reindexDocman($group_id);
-            $controller->reindexWiki($group_id);
+            $this->reindexAll($project_id);
 
             $GLOBALS['Response']->addFeedback(
                 'info',
@@ -606,12 +605,23 @@ class fulltextsearchPlugin extends Plugin {
             );
         }
 
-        $controller->index();
+        $this->redirectToIndex();
     }
 
-    private function clientIsNotFound(ElasticSearch_ClientNotFoundException $exception) {
-        $GLOBALS['Response']->addFeedback('error', $exception->getMessage());
-        $GLOBALS['HTML']->redirect('/');
-        die();
+    private function redirectToIndex() {
+        $this->getAdminController()->index();
+    }
+
+    public function project_is_private($params) {
+        $project_id = $params['group_id'];
+
+        $this->reindexAll($project_id);
+    }
+
+    private function reindexAll($project_id) {
+        $controller = $this->getAdminController();
+
+        $controller->reindexDocman($project_id);
+        $controller->reindexWiki($project_id);
     }
 }
