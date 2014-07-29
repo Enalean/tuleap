@@ -1,3 +1,6 @@
+Version 2.26.42 - Tuleap 7.4
+    * tasks #7271: When docman wiki is deleted, reindex in wiki if not a cascade deletion
+
 Version 2.26.41 - Tuleap 7.4
     * tasks #7264: Delete wiki index when there is no data doesn't throw any error
 tasks #7227 & tasks #7226: Catch and Update wiki service permissions change
