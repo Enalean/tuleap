@@ -81,6 +81,14 @@ class FullTextSearchDocmanActions {
         $this->client->index($item->getGroupId(), $item->getId(), $indexed_data);
     }
 
+    public function indexNewLinkDocument(Docman_Item $item) {
+        $this->logger->debug('[Docman] ElasticSearch: index new link document #' . $item->getId());
+
+        $indexed_data = $this->getIndexedData($item) + $this->getLinkContent($item);
+
+        $this->client->index($item->getGroupId(), $item->getId(), $indexed_data);
+    }
+
     /**
      * Index a new wiki document with permissions
      *
@@ -244,6 +252,10 @@ class FullTextSearchDocmanActions {
         return $this->request_data_factory->getWikiContent($wiki_metadata);
     }
 
+    private function getLinkContent(Docman_Item $item) {
+        return $this->request_data_factory->getLinkContent($item);
+    }
+
     /**
      * Get the user defined item date metadata
      *
@@ -288,4 +300,5 @@ class FullTextSearchDocmanActions {
         return $mapping_data[$item->getGroupId()][ElasticSearch_1_2_RequestDocmanDataFactory::MAPPING_PROPERTIES_KEY]
             !== array();
     }
+
 }

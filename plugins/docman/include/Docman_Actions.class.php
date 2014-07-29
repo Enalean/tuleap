@@ -488,6 +488,16 @@ class Docman_Actions extends Actions {
 
                             break;
 
+                        case PLUGIN_DOCMAN_ITEM_TYPE_LINK:
+                            $this->event_manager->processEvent(
+                                PLUGIN_DOCMAN_EVENT_NEW_LINK,
+                                array(
+                                    'item' => $new_item
+                                )
+                            );
+
+                            break;
+
                         default:
                             break;
                     }

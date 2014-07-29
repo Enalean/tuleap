@@ -396,4 +396,8 @@ class ElasticSearch_1_2_RequestDocmanDataFactory {
     public function getWikiContent(array $wiki_metadata) {
         return array('content' => $wiki_metadata['content']);
     }
+
+    public function getLinkContent(Docman_Item $item) {
+        return array('content' => $item->getUrl());
+    }
 }
