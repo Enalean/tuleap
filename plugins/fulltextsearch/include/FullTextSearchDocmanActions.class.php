@@ -206,10 +206,18 @@ class FullTextSearchDocmanActions {
 
         $this->initializeProjetMapping($project_id);
         $document_iterator->rewind();
+        $docman_item_factory = Docman_ItemFactory::instance($project_id);
         while ($batch = $document_iterator->next()) {
             foreach ($batch as $item) {
-                /* @var Docman_File $item*/
-                $this->indexNewDocument($item, $item->getCurrentVersion());
+                $item_type = $docman_item_factory->getItemTypeForItem($item);
+
+                if ($item_type === PLUGIN_DOCMAN_ITEM_TYPE_WIKI) {
+                    $wiki_page = new WikiPage($project_id, $item->getPagename());
+                    $this->indexNewWikiDocument($item, $wiki_page->getMetadata());
+
+                } elseif ($item_type === PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE || $item_type === PLUGIN_DOCMAN_ITEM_TYPE_FILE) {
+                    $this->indexNewDocument($item, $item->getCurrentVersion());
+                }
             }
         }
     }

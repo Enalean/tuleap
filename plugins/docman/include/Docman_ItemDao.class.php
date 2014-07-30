@@ -131,7 +131,7 @@ class Docman_ItemDao extends DataAccessObject {
             'ignore_obselete' => true
         );
 
-        $where = " i.group_id = $groupId AND v.id IS NOT NULL";
+        $where = " i.group_id = $groupId AND i.delete_date IS NULL";
 
         return $this->_searchWithCurrentVersion($where, '', '', array(), $params);
     }
@@ -264,7 +264,6 @@ class Docman_ItemDao extends DataAccessObject {
         }
 
         $sql .= $where . $group . $order . $limit;
-
 
 
         //print $sql."<br>";
