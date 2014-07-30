@@ -449,21 +449,67 @@ class Docman_Actions extends Actions {
                     $folderFactory = $this->_getFolderFactory();
                     $folderFactory->expand($parent);
 
-                    // Warn users about watermarking
-                    if($new_version !== null) {
-                        $this->event_manager->processEvent('plugin_docman_after_new_document', array(
-                                                           'item'     => $new_item,
-                                                           'user'     => $user,
-                                                           'version'  => $new_version,
-                                                           'docmanControler' => $this->_controler)
-                        );
+                    $item_type = $item_factory->getItemTypeForItem($new_item);
 
-                    } elseif ($item_factory->getItemTypeForItem($new_item) === PLUGIN_DOCMAN_ITEM_TYPE_WIKI) {
-                        $this->event_manager->processEvent('plugin_docman_event_new_wikipage', array(
-                            'item'      => $new_item,
-                            'group_id'  => $new_item->getGroupId(),
-                            'wiki_page' => $new_item->getPagename()
-                        ));
+                    switch ($item_type) {
+                        case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
+                        case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
+                            // Warn users about watermarking
+                            $this->event_manager->processEvent(
+                                'plugin_docman_after_new_document',
+                                array(
+                                    'item'     => $new_item,
+                                    'user'     => $user,
+                                    'version'  => $new_version,
+                                    'docmanControler' => $this->_controler
+                                )
+                            );
+
+                            break;
+
+                        case PLUGIN_DOCMAN_ITEM_TYPE_WIKI:
+                            $this->event_manager->processEvent(
+                                'plugin_docman_event_new_wikipage',
+                                array(
+                                    'item'      => $new_item,
+                                    'group_id'  => $new_item->getGroupId(),
+                                    'wiki_page' => $new_item->getPagename()
+                                ));
+
+                            break;
+
+                        case PLUGIN_DOCMAN_ITEM_TYPE_EMPTY:
+                            $this->event_manager->processEvent(
+                                PLUGIN_DOCMAN_EVENT_NEW_EMPTY,
+                                array(
+                                    'item' => $new_item
+                                )
+                            );
+
+                            break;
+
+                        case PLUGIN_DOCMAN_ITEM_TYPE_LINK:
+                            $this->event_manager->processEvent(
+                                PLUGIN_DOCMAN_EVENT_NEW_LINK,
+                                array(
+                                    'item' => $new_item
+                                )
+                            );
+
+                            break;
+
+                        case PLUGIN_DOCMAN_ITEM_TYPE_FOLDER:
+                            $this->event_manager->processEvent(
+                                PLUGIN_DOCMAN_EVENT_NEW_FOLDER,
+                                array(
+                                    'item' => $new_item
+                                )
+                            );
+
+                            break;
+
+                        default:
+                            break;
                     }
                 }
             }

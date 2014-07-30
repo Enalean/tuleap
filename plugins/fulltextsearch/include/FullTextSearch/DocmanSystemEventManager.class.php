@@ -48,6 +48,9 @@ class FullTextSearch_DocmanSystemEventManager {
     public function getSystemEventClass($type, &$class, &$dependencies) {
         switch($type) {
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_INDEX::NAME:
+            case SystemEvent_FULLTEXTSEARCH_DOCMAN_EMPTY_INDEX::NAME:
+            case SystemEvent_FULLTEXTSEARCH_DOCMAN_LINK_INDEX::NAME:
+            case SystemEvent_FULLTEXTSEARCH_DOCMAN_FOLDER_INDEX::NAME:
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE::NAME:
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS::NAME:
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA::NAME:
@@ -99,6 +102,36 @@ class FullTextSearch_DocmanSystemEventManager {
             $this->system_event_manager->createEvent(
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_INDEX::NAME,
                 $this->getDocmanSerializedParameters($item, array($version->getNumber())),
+                SystemEvent::PRIORITY_MEDIUM
+            );
+        }
+    }
+
+    public function queueNewEmptyDocument(Docman_Item $item) {
+        if ($this->plugin->isAllowed($item->getGroupId())) {
+            $this->system_event_manager->createEvent(
+                SystemEvent_FULLTEXTSEARCH_DOCMAN_EMPTY_INDEX::NAME,
+                $this->getDocmanSerializedParameters($item),
+                SystemEvent::PRIORITY_MEDIUM
+            );
+        }
+    }
+
+    public function queueNewLinkDocument(Docman_Item $item) {
+        if ($this->plugin->isAllowed($item->getGroupId())) {
+            $this->system_event_manager->createEvent(
+                SystemEvent_FULLTEXTSEARCH_DOCMAN_LINK_INDEX::NAME,
+                $this->getDocmanSerializedParameters($item),
+                SystemEvent::PRIORITY_MEDIUM
+            );
+        }
+    }
+
+    public function queueNewDocmanFolder(Docman_Item $item) {
+        if ($this->plugin->isAllowed($item->getGroupId())) {
+            $this->system_event_manager->createEvent(
+                SystemEvent_FULLTEXTSEARCH_DOCMAN_FOLDER_INDEX::NAME,
+                $this->getDocmanSerializedParameters($item),
                 SystemEvent::PRIORITY_MEDIUM
             );
         }

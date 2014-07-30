@@ -45,13 +45,13 @@ class FullTextSearchDocmanActions {
     }
 
     public function checkProjectMappingExists($project_id) {
-        $this->logger->debug('ElasticSearch: get the mapping for project #' . $project_id);
+        $this->logger->debug('[Docman] ElasticSearch: get the mapping for project #' . $project_id);
 
         return count($this->client->getMapping($project_id)) > 0;
     }
 
     public function initializeProjetMapping($project_id) {
-        $this->logger->debug('ElasticSearch: initialize the mapping for project #' . $project_id);
+        $this->logger->debug('[Docman] ElasticSearch: initialize the mapping for project #' . $project_id);
 
         $this->client->setMapping(
             $project_id,
@@ -66,9 +66,33 @@ class FullTextSearchDocmanActions {
      * @param Docman_Version $version The version to index
      */
     public function indexNewDocument(Docman_Item $item, Docman_Version $version) {
-        $this->logger->debug('ElasticSearch: index new document #' . $item->getId());
+        $this->logger->debug('[Docman] ElasticSearch: index new document #' . $item->getId());
 
         $indexed_data = $this->getIndexedData($item) + $this->getItemContent($version);
+
+        $this->client->index($item->getGroupId(), $item->getId(), $indexed_data);
+    }
+
+    public function indexNewEmptyDocument(Docman_Item $item) {
+        $this->logger->debug('[Docman] ElasticSearch: index new empty document #' . $item->getId());
+
+        $indexed_data = $this->getIndexedData($item);
+
+        $this->client->index($item->getGroupId(), $item->getId(), $indexed_data);
+    }
+
+    public function indexNewLinkDocument(Docman_Item $item) {
+        $this->logger->debug('[Docman] ElasticSearch: index new link document #' . $item->getId());
+
+        $indexed_data = $this->getIndexedData($item) + $this->getLinkContent($item);
+
+        $this->client->index($item->getGroupId(), $item->getId(), $indexed_data);
+    }
+
+    public function indexNewDocmanFolder(Docman_Item $item) {
+        $this->logger->debug('[Docman] ElasticSearch: index new folder #' . $item->getId());
+
+        $indexed_data = $this->getIndexedData($item);
 
         $this->client->index($item->getGroupId(), $item->getId(), $indexed_data);
     }
@@ -94,7 +118,7 @@ class FullTextSearchDocmanActions {
      * @param Docman_Version $version
      */
     public function indexDocumentApprovalComment(Docman_Item $item, Docman_Version $version) {
-        $this->logger->debug('ElasticSearch: index new document approval comment #' . $item->getId());
+        $this->logger->debug('[Docman] ElasticSearch: index new document approval comment #' . $item->getId());
 
         $update_data = array(
             'approval_table_comments' => $this->request_data_factory->getDocumentApprovalTableComments($item, $version)
@@ -110,7 +134,7 @@ class FullTextSearchDocmanActions {
      * @param Docman_Version $version The version to index
      */
     public function indexNewVersion(Docman_Item $item, Docman_Version $version) {
-        $this->logger->debug('ElasticSearch: index new  version (# ' . $version->getId() .
+        $this->logger->debug('[Docman] ElasticSearch: index new  version (# ' . $version->getId() .
             ' for document #' . $item->getId()
         );
 
@@ -128,7 +152,7 @@ class FullTextSearchDocmanActions {
      * @param string         $wiki_content WikiPage metadata
      */
     public function indexNewWikiVersion(Docman_Item $item, $wiki_content) {
-        $this->logger->debug('ElasticSearch: index new version for wiki document #' . $item->getId());
+        $this->logger->debug('[Docman] ElasticSearch: index new version for wiki document #' . $item->getId());
 
         $update_data = array();
         $this->request_data_factory->updateContent($update_data, $wiki_content);
@@ -142,16 +166,46 @@ class FullTextSearchDocmanActions {
      * @param Docman_Item $item The item
      */
     public function updateDocument(Docman_Item $item) {
-        $this->logger->debug('ElasticSearch: update metadata of document #' . $item->getId());
+        $this->logger->debug('[Docman] ElasticSearch: update metadata of document #' . $item->getId());
 
         $update_data = array();
         $this->request_data_factory->setUpdatedData($update_data, 'title',       $item->getTitle());
         $this->request_data_factory->setUpdatedData($update_data, 'description', $item->getDescription());
 
+        $this->updateContent($item, $update_data);
+
         $update_data = $this->request_data_factory->updateCustomTextualMetadata($item, $update_data);
         $update_data = $this->updateCustomDateMetadata($item, $update_data);
 
         $this->client->update($item->getGroupId(), $item->getId(), $update_data);
+    }
+
+    private function updateContent(Docman_Item $item, array &$update_data) {
+        $item_factory = Docman_ItemFactory::instance($item->getGroupId());
+        $item_type    = $item_factory->getItemTypeForItem($item);
+
+        switch ($item_type) {
+            case PLUGIN_DOCMAN_ITEM_TYPE_EMPTY:
+                break;
+
+            case PLUGIN_DOCMAN_ITEM_TYPE_WIKI:
+                $wiki_page = new WikiPage($item->getGroupId(), $item->getPagename());
+                $this->request_data_factory->updateContent($update_data, $wiki_page->getContent());
+                break;
+
+            case PLUGIN_DOCMAN_ITEM_TYPE_LINK:
+                $this->request_data_factory->updateContent($update_data, $item->getUrl());
+                break;
+
+            case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
+            case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
+                $this->request_data_factory->updateFile($update_data, $item->getCurrentVersion()->getPath());
+                break;
+
+            default:
+                $this->logger->debug("[Docman] ElasticSearch: unrecognized item type, can't update content");
+                break;
+        }
     }
 
     /**
@@ -160,7 +214,7 @@ class FullTextSearchDocmanActions {
      * @param Docman_Item the document
      */
     public function updatePermissions(Docman_Item $item) {
-        $this->logger->debug('ElasticSearch: update permissions of document #' . $item->getId());
+        $this->logger->debug('[Docman] ElasticSearch: update permissions of document #' . $item->getId());
 
         $update_data = array();
         $this->request_data_factory->setUpdatedData(
@@ -178,9 +232,17 @@ class FullTextSearchDocmanActions {
      * @param Docman_Item $item The item to delete
      */
     public function delete(Docman_Item $item) {
-        $this->logger->debug('ElasticSearch: delete document #' . $item->getId());
+        $this->logger->debug('[Docman] ElasticSearch: delete document #' . $item->getId());
 
-        $this->client->delete($item->getGroupId(), $item->getId());
+        try{
+            $this->client->getIndexedElement($item->getGroupId(), $item->getId());
+            $this->client->delete($item->getGroupId(), $item->getId());
+
+        } catch (ElasticSearch_ElementNotIndexed $exception) {
+            $this->logger->debug('[Docman] ElasticSearch: element #' . $item->getId() . ' not indexed, nothing to delete');
+            return;
+        }
+
     }
 
     public function reIndexProjectDocuments(Docman_ProjectItemsBatchIterator $document_iterator, $project_id) {
@@ -202,7 +264,7 @@ class FullTextSearchDocmanActions {
     }
 
     private function indexAllProjectDocuments(Docman_ProjectItemsBatchIterator $document_iterator, $project_id) {
-        $this->logger->debug('ElasticSearch: indexing all project documents #' . $project_id);
+        $this->logger->debug('[Docman] ElasticSearch: indexing all project documents #' . $project_id);
 
         $this->initializeProjetMapping($project_id);
         $document_iterator->rewind();
@@ -236,6 +298,10 @@ class FullTextSearchDocmanActions {
         return $this->request_data_factory->getWikiContent($wiki_metadata);
     }
 
+    private function getLinkContent(Docman_Item $item) {
+        return $this->request_data_factory->getLinkContent($item);
+    }
+
     /**
      * Get the user defined item date metadata
      *
@@ -267,7 +333,7 @@ class FullTextSearchDocmanActions {
             return;
         }
 
-        $this->logger->debug('ElasticSearch: update mapping of project #' . $item->getGroupId() .
+        $this->logger->debug('[Docman] ElasticSearch: update mapping of project #' . $item->getGroupId() .
             ' with new custom date metadata');
 
         $this->client->setMapping(
@@ -280,4 +346,5 @@ class FullTextSearchDocmanActions {
         return $mapping_data[$item->getGroupId()][ElasticSearch_1_2_RequestDocmanDataFactory::MAPPING_PROPERTIES_KEY]
             !== array();
     }
+
 }

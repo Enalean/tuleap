@@ -196,7 +196,11 @@ class ElasticSearch_1_2_RequestDocmanDataFactory {
     public function getDocumentApprovalTableComments(Docman_Item $item) {
         $comments               = array();
         $approval_table_factory = $this->approval_table_factory->getSpecificFactoryFromItem($item);
-        $table                  = $approval_table_factory->getTable();
+        if (! $approval_table_factory) {
+            return $comments;
+        }
+
+        $table = $approval_table_factory->getTable();
         if (! $table) {
             return $comments;
         }
@@ -391,5 +395,9 @@ class ElasticSearch_1_2_RequestDocmanDataFactory {
 
     public function getWikiContent(array $wiki_metadata) {
         return array('content' => $wiki_metadata['content']);
+    }
+
+    public function getLinkContent(Docman_Item $item) {
+        return array('content' => $item->getUrl());
     }
 }
