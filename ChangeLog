@@ -1,10 +1,10 @@
 Version 7.4 (Not released yet)
 
 	== Plugins ==
-	* fulltextsearch: 0.69
+	* fulltextsearch: 0.70
 	* tracker: 5.427
 	* mediawiki: 0.45
-	* docman: 2.26.42
+	* docman: 2.26.43
 
         == Themes ==
 	* FlamingParrot: 1.35

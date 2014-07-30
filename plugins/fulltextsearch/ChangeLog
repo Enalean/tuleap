@@ -1,3 +1,6 @@
+Version 0.70 - Tuleap 7.4
+    * request #7288: Wiki document are not reindexed in project reindexation
+
 Version 0.69 - Tuleap 7.4
     * story #7231 reindex all the phpwiki pages and docman files
 
