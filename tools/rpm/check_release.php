@@ -70,7 +70,6 @@ $themes    = array();
 $toCheck   = array();
 $soap      = false;
 $cli       = false;
-$userGuide = false;
 $diff = simplexml_load_string(shell_exec('svn diff --xml --summarize '.$tagUrl.' '.$rootSvnUrl));
 foreach ($diff->xpath('paths/path') as $path) {
     $fullURL = (string) $path;
@@ -83,9 +82,7 @@ foreach ($diff->xpath('paths/path') as $path) {
     if (preg_match('%^/documentation/cli/%', $p)) {
         $cli = true;
     }
-    if (preg_match('%^/documentation/user_guide/%', $p)) {
-        $userGuide = true;
-    }
+
     $match = array();
     if (preg_match('%^(/plugins/[^/]+)/%', $p, $match)) {
         $plugins[$match[1]] = true;
@@ -131,9 +128,3 @@ if ($soap) {
 if ($cli) {
     echo "CLI sources or documentation path changed, please check (not automated yet)".PHP_EOL;
 }
-
-if ($userGuide) {
-    echo "User Guide path changed, please check (not automated yet)".PHP_EOL;
-}
-
-?>

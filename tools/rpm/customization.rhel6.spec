@@ -19,7 +19,6 @@ Group: Development/Tools
 URL: http://tuleap.net
 Source0: %{PKG_NAME}-%{version}.tar.gz
 Source1: cli_ParametersLocal.dtd
-Source2: user_guide_ParametersLocal.dtd
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: zip
 
@@ -41,7 +40,6 @@ cat > local.inc <<EOF
 EOF
 
 %{__cp} %{SOURCE1} cli_ParametersLocal.dtd
-%{__cp} %{SOURCE2} user_guide_ParametersLocal.dtd
 
 tools/rpm/build_release.sh
 
@@ -52,12 +50,6 @@ tools/rpm/build_release.sh
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DIR}/documentation/cli
 %{__cp} -ar documentation/cli/html $RPM_BUILD_ROOT/%{APP_DIR}/documentation/cli
 %{__cp} -ar documentation/cli/icons $RPM_BUILD_ROOT/%{APP_DIR}/documentation/cli
-
-# Doc: Administration Guide
-%{__cp} -ar documentation/administration_guide $RPM_BUILD_ROOT/%{APP_DIR}/documentation
-
-# Doc: Installation Guide
-%{__cp} -ar documentation/installation_guide $RPM_BUILD_ROOT/%{APP_DIR}/documentation
 
 # CLI package
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DIR}/downloads
