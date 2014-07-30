@@ -392,6 +392,24 @@ class Tracker_FormElementFactory {
     }
 
     /**
+     * Returns FormElements used by a tracker, except those already in REST Basic Info
+     *
+     * @param Tracker $tracker
+     *
+     * @return Tracker_FormElement_Field[]
+     */
+    public function getUsedFieldsForREST(Tracker $tracker) {
+        $element_already_in_rest_basic_info = array(
+            'aid',
+            'lud',
+            'subby',
+            'subon',
+        );
+        $field_types = array_diff($this->getFieldsSQLTypes(), $element_already_in_rest_basic_info);
+        return $this->getUsedFormElementsByType($tracker, $field_types);
+    }
+
+    /**
      * Returns FormElements used by a tracker, except those already in SOAP Basic Info
      *
      * @param Tracker $tracker

@@ -32,7 +32,7 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_BasicTest extends Tule
         $this->tracker  = aTracker()->withId(888)->withProject($project)->build();
         $this->user     = aUser()->withId(111)->build();
         $formelement_factory = mock('Tracker_FormElementFactory');
-        stub($formelement_factory)->getUsedFieldsForSoap($this->tracker)->returns(array());
+        stub($formelement_factory)->getUsedFieldsForREST($this->tracker)->returns(array());
         $this->builder  = new Tracker_REST_Artifact_ArtifactRepresentationBuilder($formelement_factory);
 
         $this->changeset = mock('Tracker_Artifact_Changeset');
@@ -83,13 +83,13 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_FieldsTest extends Tul
     }
 
     public function itGetsTheFieldsFromTheFactory() {
-        expect($this->formelement_factory)->getUsedFieldsForSoap($this->tracker)->once();
-        stub($this->formelement_factory)->getUsedFieldsForSoap()->returns(array());
+        expect($this->formelement_factory)->getUsedFieldsForREST($this->tracker)->once();
+        stub($this->formelement_factory)->getUsedFieldsForREST()->returns(array());
         $this->builder->getArtifactRepresentationWithFieldValues($this->user, $this->artifact);
     }
 
     public function itHasNoValuesWhenThereAreNoFields() {
-        stub($this->formelement_factory)->getUsedFieldsForSoap()->returns(array());
+        stub($this->formelement_factory)->getUsedFieldsForREST()->returns(array());
         $representation = $this->builder->getArtifactRepresentationWithFieldValues($this->user, $this->artifact);
 
         $this->assertEqual($representation->values, array());
@@ -107,7 +107,7 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_FieldsTest extends Tul
         expect($field2)->getRESTValue($this->user, $this->changeset)->once();
         expect($field3)->getRESTValue($this->user, $this->changeset)->never();
 
-        stub($this->formelement_factory)->getUsedFieldsForSoap($this->tracker)->returns(array($field1, $field2, $field3));
+        stub($this->formelement_factory)->getUsedFieldsForREST($this->tracker)->returns(array($field1, $field2, $field3));
 
         $this->builder->getArtifactRepresentationWithFieldValues($this->user, $this->artifact);
     }
@@ -119,7 +119,7 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder_FieldsTest extends Tul
         stub($field2)->userCanRead($this->user)->returns(true);
         stub($field2)->getRESTValue()->returns('whatever');
 
-        stub($this->formelement_factory)->getUsedFieldsForSoap($this->tracker)->returns(array($field1, $field2, $field3));
+        stub($this->formelement_factory)->getUsedFieldsForREST($this->tracker)->returns(array($field1, $field2, $field3));
 
         $representation = $this->builder->getArtifactRepresentationWithFieldValues($this->user, $this->artifact);
 
