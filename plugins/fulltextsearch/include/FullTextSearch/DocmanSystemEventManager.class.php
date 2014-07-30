@@ -50,6 +50,7 @@ class FullTextSearch_DocmanSystemEventManager {
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_INDEX::NAME:
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_EMPTY_INDEX::NAME:
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_LINK_INDEX::NAME:
+            case SystemEvent_FULLTEXTSEARCH_DOCMAN_FOLDER_INDEX::NAME:
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE::NAME:
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS::NAME:
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA::NAME:
@@ -120,6 +121,16 @@ class FullTextSearch_DocmanSystemEventManager {
         if ($this->plugin->isAllowed($item->getGroupId())) {
             $this->system_event_manager->createEvent(
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_LINK_INDEX::NAME,
+                $this->getDocmanSerializedParameters($item),
+                SystemEvent::PRIORITY_MEDIUM
+            );
+        }
+    }
+
+    public function queueNewDocmanFolder(Docman_Item $item) {
+        if ($this->plugin->isAllowed($item->getGroupId())) {
+            $this->system_event_manager->createEvent(
+                SystemEvent_FULLTEXTSEARCH_DOCMAN_FOLDER_INDEX::NAME,
                 $this->getDocmanSerializedParameters($item),
                 SystemEvent::PRIORITY_MEDIUM
             );

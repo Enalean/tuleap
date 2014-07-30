@@ -46,3 +46,11 @@ define('PLUGIN_DOCMAN_EVENT_NEW_EMPTY', 'plugin_docman_event_new_empty');
  *      'item' => Docman_Item
  */
 define('PLUGIN_DOCMAN_EVENT_NEW_LINK', 'plugin_docman_event_new_link');
+
+/**
+ * Event raised when a new folder is created
+ *
+ * Parameters:
+ *      'item' => Docman_Item
+ */
+define('PLUGIN_DOCMAN_EVENT_NEW_FOLDER', 'plugin_docman_event_new_folder');

@@ -89,6 +89,14 @@ class FullTextSearchDocmanActions {
         $this->client->index($item->getGroupId(), $item->getId(), $indexed_data);
     }
 
+    public function indexNewDocmanFolder(Docman_Item $item) {
+        $this->logger->debug('[Docman] ElasticSearch: index new folder #' . $item->getId());
+
+        $indexed_data = $this->getIndexedData($item);
+
+        $this->client->index($item->getGroupId(), $item->getId(), $indexed_data);
+    }
+
     /**
      * Index a new wiki document with permissions
      *

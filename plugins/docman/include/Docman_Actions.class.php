@@ -498,6 +498,16 @@ class Docman_Actions extends Actions {
 
                             break;
 
+                        case PLUGIN_DOCMAN_ITEM_TYPE_FOLDER:
+                            $this->event_manager->processEvent(
+                                PLUGIN_DOCMAN_EVENT_NEW_FOLDER,
+                                array(
+                                    'item' => $new_item
+                                )
+                            );
+
+                            break;
+
                         default:
                             break;
                     }
