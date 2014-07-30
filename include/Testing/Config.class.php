@@ -33,8 +33,23 @@ class Config {
         $this->dao = $dao;
     }
 
+    public function setProjectConfiguration(Project $project, $campaign_tracker_id, $test_definition_tracker_id, $test_execution_tracker_id) {
+        return $this->dao->saveProjectConfig($project->getId(), $campaign_tracker_id, $test_definition_tracker_id, $test_execution_tracker_id);
+    }
+
     public function getCampaignTrackerId(Project $project) {
-        $key        = 'campaign_tracker_id';
+        return $this->getProperty($project, 'campaign_tracker_id');
+    }
+
+    public function getTestExecutionTrackerId(Project $project) {
+        return $this->getProperty($project, 'test_execution_tracker_id');
+    }
+
+    public function getTestDefinitionTrackerId(Project $project) {
+        return $this->getProperty($project, 'test_definition_tracker_id');
+    }
+
+    private function getProperty(Project $project, $key) {
         $properties = $this->dao->searchByProjectId($project->getId())->getRow();
 
         if (! isset($properties[$key])) {
@@ -42,9 +57,5 @@ class Config {
         }
 
         return $properties[$key];
-    }
-
-    public function setCampaignTrackerId(Project $project, $campaign_tracker_id) {
-        return $this->dao->saveCampaignTrackerId($project->getId(), $campaign_tracker_id);
     }
 }

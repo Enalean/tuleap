@@ -9,7 +9,9 @@ var testing = angular.module('testing', [
 })
 
 .controller('TestingCtrl', ['$scope', 'shared-properties-service', function ($scope, SharedPropertiesService) {
-    $scope.init = function (campaign_tracker_id) {
+    $scope.init = function (campaign_tracker_id, test_definition_tracker_id, test_execution_tracker_id) {
         SharedPropertiesService.setCampaignTrackerId(campaign_tracker_id);
+        SharedPropertiesService.setTestDefinitionTrackerId(test_definition_tracker_id);
+        SharedPropertiesService.setTestExecutionTrackerId(test_execution_tracker_id);
     };
 }]);

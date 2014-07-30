@@ -1,6 +1,8 @@
 CREATE TABLE IF NOT EXISTS plugin_testing(
     project_id INT(11) UNSIGNED NOT NULL PRIMARY KEY,
-    campaign_tracker_id INT(11) NOT NULL
+    campaign_tracker_id INT(11) NOT NULL,
+    test_definition_tracker_id INT(11) NOT NULL,
+    test_execution_tracker_id INT(11) NOT NULL
 );
 
 -- Enable service for project 1 and 100

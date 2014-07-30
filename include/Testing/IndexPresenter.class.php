@@ -25,20 +25,29 @@ class IndexPresenter {
     /** @var int */
     public $campaign_tracker_id;
 
-    /** @var bool */
-    public $properly_configured;
+    /** @var int */
+    public $test_definition_tracker_id;
+
+    /** @var int */
+    public $test_execution_tracker_id;
 
     /** @var string */
     public $misconfigured_title;
 
     /** @var string */
     public $misconfigured_message;
+    
+    /** @var Boolean */
+    public $is_properly_configured;
 
-    public function __construct($campaign_tracker_id) {
-        $this->campaign_tracker_id = $campaign_tracker_id;
-        $this->properly_configured = (bool) $campaign_tracker_id;
+    public function __construct($campaign_tracker_id, $test_definition_tracker_id, $test_execution_tracker_id) {
+        $this->campaign_tracker_id        = $campaign_tracker_id;
+        $this->test_definition_tracker_id = $test_definition_tracker_id;
+        $this->test_execution_tracker_id  = $test_execution_tracker_id;
 
         $this->misconfigured_title   = $GLOBALS['Language']->getText('plugin_testing', 'misconfigured_title');
         $this->misconfigured_message = $GLOBALS['Language']->getText('plugin_testing', 'misconfigured_message');
+        
+        $this->is_properly_configured = $this->campaign_tracker_id && $this->test_definition_tracker_id && $this->test_execution_tracker_id;
     }
 }

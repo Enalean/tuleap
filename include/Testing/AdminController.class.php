@@ -25,14 +25,20 @@ class AdminController extends TestingController {
     public function admin() {
         return $this->renderToString(
             'admin',
-            new AdminPresenter($this->config->getCampaignTrackerId($this->project))
+            new AdminPresenter(
+                $this->config->getCampaignTrackerId($this->project),
+                $this->config->getTestDefinitionTrackerId($this->project),
+                $this->config->getTestExecutionTrackerId($this->project)
+            )
         );
     }
 
     public function update() {
-        $this->config->setCampaignTrackerId(
+        $this->config->setProjectConfiguration(
             $this->project,
-            $this->request->get('campaign_tracker_id')
+            $this->request->get('campaign_tracker_id'),
+            $this->request->get('test_definition_tracker_id'),
+            $this->request->get('test_execution_tracker_id')
         );
     }
 }

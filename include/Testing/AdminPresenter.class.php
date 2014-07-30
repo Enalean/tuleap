@@ -25,6 +25,12 @@ class AdminPresenter {
     /** @var int */
     public $campaign_tracker_id;
 
+    /** @var int */
+    public $test_definition_tracker_id;
+
+    /** @var int */
+    public $test_execution_tracker_id;
+
     /** @var string */
     public $title;
 
@@ -32,17 +38,27 @@ class AdminPresenter {
     public $campaigns;
 
     /** @var string */
+    public $definitions;
+
+    /** @var string */
+    public $executions;
+
+    /** @var string */
     public $submit;
 
     /** @var string */
     public $placeholder;
 
-    public function __construct($campaign_tracker_id) {
-        $this->campaign_tracker_id = $campaign_tracker_id;
+    public function __construct($campaign_tracker_id, $test_definition_tracker_id, $test_execution_tracker_id) {
+        $this->campaign_tracker_id        = $campaign_tracker_id;
+        $this->test_definition_tracker_id = $test_definition_tracker_id;
+        $this->test_execution_tracker_id  = $test_execution_tracker_id;
 
         $this->title       = $GLOBALS['Language']->getText('global', 'Administration');
         $this->campaigns   = $GLOBALS['Language']->getText('plugin_testing', 'admin_campaign_tracker');
+        $this->definitions = $GLOBALS['Language']->getText('plugin_testing', 'admin_definition_tracker');
+        $this->executions  = $GLOBALS['Language']->getText('plugin_testing', 'admin_execution_tracker');
         $this->submit      = $GLOBALS['Language']->getText('global', 'btn_submit');
-        $this->placeholder = $GLOBALS['Language']->getText('plugin_testing', 'admin_campaign_tracker_placeholder');
+        $this->placeholder = $GLOBALS['Language']->getText('plugin_testing', 'admin_tracker_placeholder');
     }
 }
