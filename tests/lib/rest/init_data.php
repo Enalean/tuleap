@@ -32,4 +32,5 @@ $data_builder
     ->generateBacklogItems()
     ->generateTopBacklogItems()
     ->deleteTracker()
-    ->activateDebug();
+    ->activateDebug()
+    ->initPlugins();
