@@ -29,17 +29,27 @@ class GitConfigTest extends TuleapTestCase {
         parent::setUp();
 
         $this->plugin    = mock('gitPlugin');
-        $this->gitconfig = new GitConfig($this->plugin);
+        $this->driver    = mock('GitDriver');
+        $this->gitconfig = new GitConfig($this->plugin, $this->driver);
     }
 
     public function itReturnsTrueWhenConfigParameterIs1() {
+        stub($this->driver)->getGitVersion()->returns("1.7.4");
         stub($this->plugin)->getConfigurationParameter('enable_online_edit')->returns('1');
 
         $this->assertTrue($this->gitconfig->isOnlineEditEnabled());
     }
 
     public function itReturnsFalseWhenConfigParameterIS0() {
+        stub($this->driver)->getGitVersion()->returns("1.7.4");
         stub($this->plugin)->getConfigurationParameter('enable_online_edit')->returns('0');
+
+        $this->assertFalse($this->gitconfig->isOnlineEditEnabled());
+    }
+
+    public function itReturnsFalseWhenGitIsLowerThan1_7_4() {
+        stub($this->driver)->getGitVersion()->returns("1.7.3");
+        stub($this->plugin)->getConfigurationParameter('enable_online_edit')->returns('1');
 
         $this->assertFalse($this->gitconfig->isOnlineEditEnabled());
     }

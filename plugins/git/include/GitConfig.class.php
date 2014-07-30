@@ -24,7 +24,7 @@
  */
 class GitConfig {
 
-    const CONFPARAMETER = 'enable_online_edit';
+    const CONFIG_PARAMETER = 'enable_online_edit';
 
     /**
      * @var gitPlugin
@@ -32,12 +32,18 @@ class GitConfig {
     private $plugin;
 
     /**
+     * @var GitDriver
+     */
+    private $driver;
+
+    /**
      * @var GitConfig
      */
     private static $_instance;
 
-    public function __construct(gitPlugin $plugin) {
+    public function __construct(gitPlugin $plugin, GitDriver $driver) {
         $this->plugin = $plugin;
+        $this->driver = $driver;
     }
 
     /**
@@ -46,13 +52,19 @@ class GitConfig {
     public static function instance() {
         if (!isset(self::$_instance)) {
             $plugin = PluginManager::instance()->getPluginByName('git');
-            self::$_instance = new GitConfig($plugin);
+            $driver = new GitDriver();
+            self::$_instance = new GitConfig($plugin, $driver);
         }
         return self::$_instance;
     }
 
     public function isOnlineEditEnabled() {
-        return $this->plugin->getConfigurationParameter(self::CONFPARAMETER) === '1';
+        return $this->plugin->getConfigurationParameter(self::CONFIG_PARAMETER) === '1' && $this->isGitVersionSuperiorOrEqualThan1_7_4();
+    }
+
+    public function isGitVersionSuperiorOrEqualThan1_7_4() {
+        $version = $this->driver->getGitVersion();
+        return version_compare($version, '1.7.4', '>=');
     }
 
 }
