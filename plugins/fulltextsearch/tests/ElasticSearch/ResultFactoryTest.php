@@ -28,9 +28,25 @@ class ResultFactoryTest extends TuleapTestCase {
     /** @var array */
     private $serach_data;
 
+    /** @var URLVerification */
+    private $url_verification;
+
+    /** @var ProjectManager */
+    private $project_manager;
+
     public function setUp() {
         parent::setUp();
-        $this->result_factory = new ElasticSearch_1_2_ResultFactory(mock('ProjectManager'));
+
+        $user_manager = stub('UserManager')->getCurrentUser()->returns(mock('PFUser'));
+        UserManager::setInstance($user_manager);
+
+        $this->project_manager  = mock('ProjectManager');
+        $this->url_verification = mock('URLVerification');
+
+        $this->result_factory = new ElasticSearch_1_2_ResultFactory(
+            $this->project_manager,
+            $this->url_verification
+        );
 
         $this->serach_data = array(
             'took' => 2,
@@ -108,5 +124,22 @@ class ResultFactoryTest extends TuleapTestCase {
 
     public function itReturns0IfNoTimeInSearchData() {
         $this->assertEqual($this->result_factory->getQueryTime(array()), 0);
+    }
+
+    public function itSkipsResultIfUserCannotAccessProject() {
+        $query_result = json_decode(
+            file_get_contents(dirname(__FILE__) . '/../_fixtures/ES_query_result_01.txt'),
+            true
+        );
+
+        $project_01 = mock('Project');
+        $project_02 = mock('Project');
+
+        stub($this->project_manager)->getProject(116)->returns($project_01);
+        stub($this->project_manager)->getProject(168)->returns($project_02);
+        stub($this->url_verification)->userCanAccessProject('*', $project_01)->returns(true);
+        stub($this->url_verification)->userCanAccessProject('*', $project_02)->throws(new Project_AccessPrivateException());
+
+        $this->assertCount($this->result_factory->getSearchResults($query_result), 2);
     }
 }

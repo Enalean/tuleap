@@ -29,8 +29,15 @@ class ElasticSearch_1_2_ResultFactory {
     /** @var ProjectManager */
     private $project_manager;
 
-    public function __construct(ProjectManager $project_manager) {
-        $this->project_manager = $project_manager;
+    /** @var URLVerification */
+    private $url_verification;
+
+    public function __construct(
+        ProjectManager $project_manager,
+        URLVerification $url_verification
+    ) {
+        $this->project_manager  = $project_manager;
+        $this->url_verification = $url_verification;
     }
 
     public function getChangesetIds(array $data) {
@@ -84,11 +91,16 @@ class ElasticSearch_1_2_ResultFactory {
         $user         = $user_manager->getCurrentUser();
 
         foreach ($result['hits']['hits'] as $hit) {
-            $project          = $this->project_manager->getProject($this->extractGroupIdFromHit($hit));
-            $index            = $this->extractIndexFromHit($hit);
-            $url_verification = new URLVerification();
+            $project = $this->project_manager->getProject($this->extractGroupIdFromHit($hit));
+            $index   = $this->extractIndexFromHit($hit);
 
-            if ($project->isError() || ! $url_verification->userCanAccessProject($user, $project)) {
+            if ($project->isError()) {
+                continue;
+            }
+
+            try{
+                $this->url_verification->userCanAccessProject($user, $project);
+            } catch (Project_AccessPrivateException $exception) {
                 continue;
             }
 
