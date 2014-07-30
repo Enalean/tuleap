@@ -45,6 +45,7 @@ class fulltextsearchPlugin extends Plugin {
             $this->addHook('plugin_docman_event_new_version');
             $this->addHook('plugin_docman_event_new_wikipage');
             $this->addHook('plugin_docman_event_wikipage_update');
+            $this->addHook('plugin_docman_event_move');
             $this->addHook(PLUGIN_DOCMAN_EVENT_APPROVAL_TABLE_COMMENT);
             $this->addHook(PLUGIN_DOCMAN_EVENT_NEW_EMPTY);
             $this->addHook(PLUGIN_DOCMAN_EVENT_NEW_LINK);
@@ -313,6 +314,15 @@ class fulltextsearchPlugin extends Plugin {
      */
     public function plugin_docman_event_update($params) {
         $this->getDocmanSystemEventManager()->queueUpdateMetadata($params['item']);
+    }
+
+    /**
+     * Event triggered when a document is moved
+     *
+     * @param array $params
+     */
+    public function plugin_docman_event_move($params) {
+        $this->getDocmanSystemEventManager()->queueUpdateDocumentPermissions($params['item']);
     }
 
     /**
