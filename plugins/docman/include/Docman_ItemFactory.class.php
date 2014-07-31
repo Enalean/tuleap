@@ -309,6 +309,30 @@ class Docman_ItemFactory {
         $iIter = new ArrayIterator($itemArray);
         return $iIter;
     }
+
+    public function getAllChildrenFromParent(Docman_Item $item) {
+        $children      = array();
+        $item_iterator = $this->getChildrenFromParent($item);
+
+        foreach($item_iterator as $child) {
+            $item_type = $this->getItemTypeForItem($child);
+
+            if ($item_type === PLUGIN_DOCMAN_ITEM_TYPE_FILE || $item_type === PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
+                $docman_version_factory = new Docman_VersionFactory();
+                $item_current_version   = $docman_version_factory->getCurrentVersionForItem($child);
+
+                $child->setCurrentVersion($item_current_version);
+            }
+
+            $children[] = $child;
+
+            if ($item_type === PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
+                $children = array_merge($children, $this->getAllChildrenFromParent($child));
+            }
+        }
+
+        return $children;
+    }
     
     /**
      * Retreive list of collapsed items for given user
