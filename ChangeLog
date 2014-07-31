@@ -2,7 +2,7 @@ Version 7.4 (Not released yet)
 
 	== Plugins ==
 	* fulltextsearch: 0.73
-	* tracker: 5.427
+	* tracker: 5.428
 	* mediawiki: 0.45
 	* docman: 2.26.44
 	* git: 3.94
@@ -14,6 +14,7 @@ Version 7.4 (Not released yet)
 	* Fix regression introduced by commit 4b3eedc in tasks #6918: Send notifications after copy
 	* Fix request #7143: Use of register globals in user permissions page (Contribution Nicolas Lafont - WDMédia)
 	* Parts of request #7265: XML import enforces field dependencies but not workflow
+	* request #7270: Export Per Tracker ID in CSV
 
 	== Features ==
 	* Third step of story #6971: Git online commit in the Tuleap UI
