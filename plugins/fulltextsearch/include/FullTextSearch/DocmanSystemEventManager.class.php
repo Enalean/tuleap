@@ -180,11 +180,11 @@ class FullTextSearch_DocmanSystemEventManager {
         }
     }
 
-    public function queueNewWikiDocumentVersion(Docman_Item $item, $wiki_metadata) {
+    public function queueNewWikiDocumentVersion(Docman_Item $item) {
         if ($this->plugin->isAllowed($item->getGroupId())) {
             $this->system_event_manager->createEvent(
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_WIKI_UPDATE::NAME,
-                $this->getDocmanSerializedParameters($item, array($wiki_metadata)),
+                $this->getDocmanSerializedParameters($item),
                 SystemEvent::PRIORITY_MEDIUM
             );
         }

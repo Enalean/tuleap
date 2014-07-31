@@ -134,7 +134,6 @@ class Docman_WikiController extends Docman_Controller {
             $event_manager->processEvent('plugin_docman_event_wikipage_update', array(
                     'group_id'       => $group_id,
                     'item'           => $document,
-                    'wiki_content'   => $wiki_metadata['content'],
                     'user'           => $user,
                     'url'            => $diff_link,
                     'wiki_page'      => $wiki_page_name,

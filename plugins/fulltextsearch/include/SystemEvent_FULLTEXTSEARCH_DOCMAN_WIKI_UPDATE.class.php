@@ -23,11 +23,24 @@ class SystemEvent_FULLTEXTSEARCH_DOCMAN_WIKI_UPDATE extends SystemEvent_FULLTEXT
     const NAME = 'FULLTEXTSEARCH_DOCMAN_WIKI_UPDATE';
 
     protected function processItem(Docman_Item $item) {
-        $wiki_content = $this->getRequiredParameter(2);
+        $project_id = $item->getGroupId();
 
-        $this->actions->indexNewWikiVersion($item, $wiki_content);
+        if (! $this->actions->checkProjectMappingExists($project_id)) {
+            $this->actions->initializeProjetMapping($project_id);
+        }
+
+        $wiki_page = $this->getWikiPage($item, $project_id);
+
+        $this->actions->indexNewWikiVersion($item, $wiki_page->getMetadata());
 
         return true;
+    }
+
+    /**
+     * @return WikiPage
+     */
+    protected function getWikiPage(Docman_Item $item, $project_id) {
+        return new WikiPage($project_id, $item->getPagename());
     }
 }
 ?>
