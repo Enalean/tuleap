@@ -1665,7 +1665,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $lines = array();
         $head  = array('aid');
         foreach ($fields as $field) {
-            if ($field->isUsed() && $field->userCanRead() && ! is_a($field, 'Tracker_FormElement_Field_ArtifactId')) {
+            if ($this->canFieldBeExportedToCSV($field)) {
                 $head[] = $field->getName();
             }
         }
@@ -1698,7 +1698,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 $line = array();
                 $line[] = $row['id'];
                 foreach($fields as $field) {
-                    if($field->isUsed() && $field->userCanRead() && ! is_a($field, 'Tracker_FormElement_Field_ArtifactId')) {
+                    if($this->canFieldBeExportedToCSV($field)) {
                         $value  = isset($row[$field->getName()]) ? $row[$field->getName()] : null;
                         $line[] = $field->fetchCSVChangesetValue($row['id'], $row['changeset_id'], $value);
                     }
@@ -1732,6 +1732,14 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         } else {
             $GLOBALS['Response']->addFeedback('error', 'Unable to export (too many fields?)');
         }
+    }
+
+    private function canFieldBeExportedToCSV(Tracker_FormElement_Field $field) {
+        return $field->isUsed()
+            && $field->userCanRead()
+            && (! is_a($field, 'Tracker_FormElement_Field_ArtifactId')
+                || is_a($field, 'Tracker_FormElement_Field_PerTrackerArtifactId')
+            );
     }
     
     /**
