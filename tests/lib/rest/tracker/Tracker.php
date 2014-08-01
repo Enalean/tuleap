@@ -84,6 +84,22 @@ class Tracker {
         );
     }
 
+    public function getSubmitArtifactLinkValue(array $ids) {
+        return array(
+            'field_id' => $this->getArtifactLinkFieldId(),
+            'links' => array_map(function ($id) { return array('id' => $id); }, $ids)
+        );
+    }
+
+    private function getArtifactLinkFieldId() {
+        foreach ($this->tracker['fields'] as $field) {
+            if ($field['type'] == 'art_link') {
+                return $field['field_id'];
+            }
+        }
+        throw new \Exception('No artifact link field for tracker');
+    }
+
     private function getListValueIdByLabel(array $field, $field_value_label) {
         foreach ($field['values'] as $value) {
             if ($value['label'] == $field_value_label) {
