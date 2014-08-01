@@ -90,6 +90,11 @@ class ResultFactoryTest extends TuleapTestCase {
         );
     }
 
+    public function tearDown() {
+        parent::tearDown();
+        UserManager::clearInstance();
+    }
+
     public function itExtractChangesetIdsPerHits() {
         $expected_result = array(
             22 => 3923,
