@@ -21,6 +21,9 @@ Version 7.4 (Not released yet)
 	== Features ==
 	* Third step of story #6971: Git online commit in the Tuleap UI
 
+	== Enhancement ==
+	* Adapt test output dir to run tests in Docker
+
 Version 7.3 (Thursday, July 24th 2014)
 
         == Features ==
