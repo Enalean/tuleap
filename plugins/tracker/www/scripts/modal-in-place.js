@@ -103,10 +103,10 @@ tuleap.tracker = tuleap.tracker || { };
 
         },
 
-        loadEditArtifactModal : function(artifact_id, update_callback) {
+        loadEditArtifactModal : function(artifact_id, update_callback, load_callback) {
             var self = this;
 
-            if (typeof(update_callback) == 'undefined') {
+            if (typeof update_callback === 'undefined') {
                 update_callback = this.defaultCallback;
             }
 
@@ -122,6 +122,10 @@ tuleap.tracker = tuleap.tracker || { };
                 $('.tuleap-modal-main-panel form textarea').each( function(){
                     var element = $(this).get(0); //transform to prototype
                     self.enableRichTextArea(element);
+
+                    if (typeof load_callback !== 'undefined') {
+                        load_callback();
+                    }
                 });
             }).fail(function() {
                 tuleap.modal.hideLoad();
@@ -239,17 +243,7 @@ tuleap.tracker = tuleap.tracker || { };
                     self.submitDone(modal, callback);
 
                 }).fail( function(response) {
-                    var data = JSON.parse(response.responseText);
-
-                    self.afterSubmit();
-
-                    $('#artifact-form-errors h5').html(data.message);
-                    $.each(data.errors, function() {
-                      $('#artifact-form-errors ul').html('').append('<li>' + this + '</li>');
-                    });
-
-                    $('.tuleap-modal-main-panel .tuleap-modal-content').scrollTop(0);
-                    $('#artifact-form-errors').show();
+                    self.showSubmitFailFeedback(response.responseText);
                 });
 
                 return false;
@@ -270,6 +264,20 @@ tuleap.tracker = tuleap.tracker || { };
             for (instance in CKEDITOR.instances) {
                 CKEDITOR.instances[instance].destroy();
             }
+        },
+
+        showSubmitFailFeedback : function(responseText) {
+            var data = JSON.parse(responseText);
+
+            this.afterSubmit();
+
+            $('#artifact-form-errors h5').html(data.message);
+            $.each(data.errors, function() {
+              $('#artifact-form-errors ul').html('').append('<li>' + this + '</li>');
+            });
+
+            $('.tuleap-modal-main-panel .tuleap-modal-content').scrollTop(0);
+            $('#artifact-form-errors').show();
         }
     };
 

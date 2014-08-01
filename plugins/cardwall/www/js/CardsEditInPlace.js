@@ -219,9 +219,6 @@ tuleap.cardwall = tuleap.cardwall || { };
         return $('div.hidden[data-planning-id]').attr('data-planning-id');
     }
 
-    function isOnAgiledashboard() {
-        return $('div.hidden[data-planning-id]').length > 0;
-    }
 
     function disableOverlay() {
         overlay_window.deactivate();
@@ -240,9 +237,14 @@ tuleap.cardwall = tuleap.cardwall || { };
         });
     }
 
+    tuleap.cardwall.isOnAgiledashboard = function() {
+        return $('div.hidden[data-planning-id]').length > 0;
+    }
+
     tuleap.cardwall.cardsEditInPlace = {
         init: function() {
-            if (! isOnAgiledashboard()) {
+            var self = this;
+            if (! tuleap.cardwall.isOnAgiledashboard()) {
                 return;
             }
 
@@ -257,12 +259,7 @@ tuleap.cardwall = tuleap.cardwall || { };
                     return;
                 }
 
-                var callback = function() {
-                    var planning_id = getConcernedPlanningId();
-                    getNewCardData(artifact_id, planning_id);
-                }
-
-                tuleap.tracker.artifactModalInPlace.loadEditArtifactModal(artifact_id, callback);
+                tuleap.tracker.artifactModalInPlace.loadEditArtifactModal(artifact_id, self.moveCardCallback(artifact_id));
             });
         },
 
@@ -270,6 +267,11 @@ tuleap.cardwall = tuleap.cardwall || { };
             var planning_id = getConcernedPlanningId();
             getNewCardData(artifact_id, planning_id);
             disableOverlay();
+        },
+
+        moveCardCallback: function(artifact_id) {
+            var planning_id = getConcernedPlanningId();
+            getNewCardData(artifact_id, planning_id);
         }
     };
 
