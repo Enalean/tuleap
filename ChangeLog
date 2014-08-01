@@ -6,6 +6,7 @@ Version 7.4 (Not released yet)
 	* mediawiki: 0.45
 	* docman: 2.26.44
 	* git: 3.94
+	* graphontrackersv5: 5.13
 
         == Themes ==
 	* FlamingParrot: 1.35
@@ -15,6 +16,7 @@ Version 7.4 (Not released yet)
 	* Fix request #7143: Use of register globals in user permissions page (Contribution Nicolas Lafont - WDMédia)
 	* Parts of request #7265: XML import enforces field dependencies but not workflow
 	* request #7270: Export Per Tracker ID in CSV
+	* request #7298: fix some tracker graphs not showing on project homepage
 
 	== Features ==
 	* Third step of story #6971: Git online commit in the Tuleap UI

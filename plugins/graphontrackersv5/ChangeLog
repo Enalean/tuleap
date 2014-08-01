@@ -1,3 +1,6 @@
+Version 5.13 - Tuleap 7.4
+    * request #7298: fix some tracker graphs not showing on project homepage
+
 Version 5.12 - Tuleap 7.1
     * request #6888: Link "Go to report" is no more shown in Gantt widget
 
