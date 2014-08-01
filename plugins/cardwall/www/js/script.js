@@ -107,7 +107,8 @@ document.observe('dom:loaded', function () {
             }
 
             function ajaxUpdate( dragged, value_id ) {
-                var field_id,
+                var artifact_id = dragged.id.split( '-' )[ 1 ],
+                    field_id,
                     url,
                     parameters = {};
 
@@ -118,14 +119,32 @@ document.observe('dom:loaded', function () {
                     value_id = $F( 'cardwall_column_mapping_' + value_id + '_' + field_id );
                 }
 
-                url = codendi.tracker.base_url + '?func=artifact-update&aid=' + dragged.id.split( '-' )[ 1 ];
+                url = codendi.tracker.base_url + '?func=update-in-place&aid=' + artifact_id;
                 parameters[ 'artifact[' + field_id + ']' ] = value_id;
 
                 //save the new state
                 new Ajax.Request( url, {
                     method : 'POST',
                     parameters : parameters,
-                    onComplete : afterAjaxUpdate
+                    onComplete : afterAjaxUpdate,
+                    onFailure: function(response) {
+                        function update_callback(){
+                            if (tuleap.cardwall.isOnAgiledashboard()) {
+                                tuleap.cardwall.cardsEditInPlace.moveCardCallback(artifact_id);
+                            } else {
+                                tuleap.tracker.artifactModalInPlace.defaultCallback()
+                            }
+                        }
+                        function resetCard() {
+                           $$('.tuleap-modal-close').invoke('observe', 'click', update_callback);
+                        }
+                        function load_modal_callback(){
+                            tuleap.tracker.artifactModalInPlace.showSubmitFailFeedback(response.responseText);
+                            resetCard();
+                        }
+
+                        tuleap.tracker.artifactModalInPlace.loadEditArtifactModal(artifact_id, update_callback, load_modal_callback);
+                    }
                 });
             }
 
