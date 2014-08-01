@@ -172,7 +172,9 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
             $html .='</form>';
         }
 
-        $GLOBALS['HTML']->includeFooterJavascriptSnippet('tuleap.graphontrackersv5.graphs = '.json_encode($chart_array).';');
+        foreach ($chart_array as $graph_id => $data) {
+            $GLOBALS['HTML']->includeFooterJavascriptSnippet('tuleap.graphontrackersv5.graphs['.$graph_id.'] = '.json_encode($data).';');
+        }
 
         return $html;
     }
