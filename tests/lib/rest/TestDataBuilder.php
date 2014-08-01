@@ -48,14 +48,12 @@ class TestDataBuilder {
     const PROJECT_PUBLIC_ID         = 103;
     const PROJECT_PUBLIC_MEMBER_ID  = 104;
     const PROJECT_PBI_ID            = 105;
-    const PROJECT_TEST_MGMT_ID      = 106;
 
     const PROJECT_PRIVATE_MEMBER_SHORTNAME = 'private-member';
     const PROJECT_PRIVATE_SHORTNAME        = 'private';
     const PROJECT_PUBLIC_SHORTNAME         = 'public';
     const PROJECT_PUBLIC_MEMBER_SHORTNAME  = 'public-member';
     const PROJECT_PBI_SHORTNAME            = 'pbi-6348';
-    const PROJECT_TEST_MGMT_SHORTNAME      = 'test-mgmt';
 
     const STATIC_UGROUP_1_ID    = 101;
     const STATIC_UGROUP_1_LABEL = 'static_ugroup_1';
@@ -81,9 +79,6 @@ class TestDataBuilder {
     const TASKS_TRACKER_ID        = 4;
     const USER_STORIES_TRACKER_ID = 5;
     const DELETED_TRACKER_ID      = 6;
-    const CAMPAIGN_TRACKER_ID     = 18;
-    const TEST_EXEC_TRACKER_ID    = 19;
-    const TEST_DEF_TRACKER_ID     = 20;
 
     const RELEASE_ARTIFACT_ID     = 1;
     const SPRINT_ARTIFACT_ID      = 2;
@@ -99,22 +94,12 @@ class TestDataBuilder {
     const EPIC_5_ARTIFACT_ID      = 12;
     const EPIC_6_ARTIFACT_ID      = 13;
     const EPIC_7_ARTIFACT_ID      = 14;
-    const CAMPAIGN_1_ARTIFACT_ID  = 15;
-    const CAMPAIGN_2_ARTIFACT_ID  = 16;
-    const TEST_EXEC_1_ARTIFACT_ID = 17;
-    const TEST_EXEC_2_ARTIFACT_ID = 18;
-    const TEST_EXEC_3_ARTIFACT_ID = 19;
-    const TEST_EXEC_4_ARTIFACT_ID = 20;
-    const TEST_EXEC_5_ARTIFACT_ID = 21;
-    const TEST_DEF_1_ARTIFACT_ID  = 22;
-    const TEST_DEF_2_ARTIFACT_ID  = 23;
-    const TEST_DEF_3_ARTIFACT_ID  = 24;
 
     /** @var ProjectManager */
-    private $project_manager;
+    protected $project_manager;
 
     /** @var UserManager */
-    private $user_manager;
+    protected $user_manager;
 
     /** @var ProjectCreator */
     private $project_creator;
@@ -158,7 +143,13 @@ class TestDataBuilder {
         return $this;
     }
 
-    private function activatePlugin($name) {
+    public function initPlugins() {
+        foreach (glob(dirname(__FILE__).'/../../../plugins/*/tests/rest/init_test_data.php') as $init_file) {
+            require_once $init_file;
+        }
+    }
+
+    protected function activatePlugin($name) {
         $plugin_factory = PluginFactory::instance();
         $plugin = $plugin_factory->createPlugin($name);
         $plugin_factory->availablePlugin($plugin);
@@ -251,14 +242,6 @@ class TestDataBuilder {
             array()
         );
 
-        $project_6 = $this->createProject(
-            self::PROJECT_TEST_MGMT_SHORTNAME,
-            'Test-mgmt',
-            true,
-            array($user_test_rest_1),
-            array($user_test_rest_1)
-        );
-
         unset($GLOBALS['svn_prefix']);
         unset($GLOBALS['cvs_prefix']);
         unset($GLOBALS['grpdir_prefix']);
@@ -277,7 +260,7 @@ class TestDataBuilder {
      * @param array  $project_members
      * @param array  $project_admins
      */
-    private function createProject(
+    protected function createProject(
         $project_short_name,
         $project_long_name,
         $is_public,
@@ -337,7 +320,6 @@ class TestDataBuilder {
 
         $this->importTemplateInProject(self::PROJECT_PRIVATE_MEMBER_ID, 'tuleap_agiledashboard_template.xml');
         $this->importTemplateInProject(self::PROJECT_PBI_ID, 'tuleap_agiledashboard_template_pbi_6348.xml');
-        $this->importTemplateInProject(self::PROJECT_TEST_MGMT_ID, 'tuleap_testmgmt_template.xml');
 
         return $this;
     }

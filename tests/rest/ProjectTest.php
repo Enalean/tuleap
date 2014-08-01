@@ -36,48 +36,79 @@ class ProjectTest extends RestBase {
         $response      = $this->getResponse($this->client->get('projects'));
         $json_projects = $response->json();
 
-        $this->assertEquals(
-            array(
-                TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID,
-                TestDataBuilder::PROJECT_PUBLIC_ID,
-                TestDataBuilder::PROJECT_PUBLIC_MEMBER_ID,
-                TestDataBuilder::PROJECT_PBI_ID,
-                TestDataBuilder::PROJECT_TEST_MGMT_ID
-            ),
-            $this->getIds($json_projects)
-        );
-
-        $this->assertEquals(
-            $json_projects[0],
-            array(
-                'id'        => TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID,
-                'uri'       => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID,
-                'label'     => 'Private member',
-                'resources' => array(
-                    array(
-                        'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/trackers',
-                        'type' => 'trackers',
-                    ),
-                    array(
-                        'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/backlog',
-                        'type' => 'backlog',
-                    ),
-                    array(
-                        'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/milestones',
-                        'type' => 'milestones',
-                    ),
-                    array(
-                        'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/plannings',
-                        'type' => 'plannings',
-                    ),
-                    array(
-                        'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/user_groups',
-                        'type' => 'user_groups',
-                    ),
-                )
+        $this->assertTrue(
+            $this->valuesArePresent(
+                array(
+                    TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID,
+                    TestDataBuilder::PROJECT_PUBLIC_ID,
+                    TestDataBuilder::PROJECT_PUBLIC_MEMBER_ID,
+                    TestDataBuilder::PROJECT_PBI_ID,
+                ),
+                $this->getIds($json_projects)
             )
         );
+
+        $this->assertArrayHasKey('resources', $json_projects[0]);
+        $this->assertContains(
+            array(
+                'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/trackers',
+                'type' => 'trackers',
+            ),
+            $json_projects[0]['resources']
+        );
+
+        $this->assertContains(
+            array(
+                'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/backlog',
+                'type' => 'backlog',
+            ),
+            $json_projects[0]['resources']
+        );
+
+        $this->assertContains(
+            array(
+                'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/milestones',
+                'type' => 'milestones',
+            ),
+            $json_projects[0]['resources']
+        );
+
+        $this->assertContains(
+            array(
+                'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/plannings',
+                'type' => 'plannings',
+            ),
+            $json_projects[0]['resources']
+        );
+
+        $this->assertContains(
+            array(
+                'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/user_groups',
+                'type' => 'user_groups',
+            ),
+            $json_projects[0]['resources']
+        );
+
+        $this->assertArrayHasKey('id', $json_projects[0]);
+        $this->assertEquals(TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID, $json_projects[0]['id']);
+
+        $this->assertArrayHasKey('uri', $json_projects[0]);
+        $this->assertEquals('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID, $json_projects[0]['uri']);
+
+        $this->assertArrayHasKey('label', $json_projects[0]);
+        $this->assertEquals('Private member', $json_projects[0]['label']);
+
         $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    private function valuesArePresent(array $values, array $array) {
+        foreach ($values as $value) {
+            if (! in_array($value, $array)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private function getIds(array $json_with_id) {
@@ -91,36 +122,58 @@ class ProjectTest extends RestBase {
     public function testGETbyIdForAdmin() {
         $response = $this->getResponseByName(TestDataBuilder::ADMIN_USER_NAME, $this->client->get('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID));
 
-        $this->assertEquals(
-            $response->json(),
+        $json_project = $response->json();
+
+        $this->assertArrayHasKey('resources', $json_project);
+        $this->assertContains(
             array(
-                'id'        => TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID,
-                'uri'       => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID,
-                'label'     => 'Private member',
-                'resources' => array(
-                    array(
-                        'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/trackers',
-                        'type' => 'trackers',
-                    ),
-                    array(
-                        'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/backlog',
-                        'type' => 'backlog',
-                    ),
-                    array(
-                        'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/milestones',
-                        'type' => 'milestones',
-                    ),
-                    array(
-                        'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/plannings',
-                        'type' => 'plannings',
-                    ),
-                    array(
-                        'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/user_groups',
-                        'type' => 'user_groups',
-                    ),
-                )
-            )
+                'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/trackers',
+                'type' => 'trackers',
+            ),
+            $json_project['resources']
         );
+
+        $this->assertContains(
+            array(
+                'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/backlog',
+                'type' => 'backlog',
+            ),
+            $json_project['resources']
+        );
+
+        $this->assertContains(
+            array(
+                'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/milestones',
+                'type' => 'milestones',
+            ),
+            $json_project['resources']
+        );
+
+        $this->assertContains(
+            array(
+                'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/plannings',
+                'type' => 'plannings',
+            ),
+            $json_project['resources']
+        );
+
+        $this->assertContains(
+            array(
+                'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/user_groups',
+                'type' => 'user_groups',
+            ),
+            $json_project['resources']
+        );
+
+        $this->assertArrayHasKey('id', $json_project);
+        $this->assertEquals(TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID, $json_project['id']);
+
+        $this->assertArrayHasKey('uri', $json_project);
+        $this->assertEquals('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID, $json_project['uri']);
+
+        $this->assertArrayHasKey('label', $json_project);
+        $this->assertEquals('Private member', $json_project['label']);
+
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
