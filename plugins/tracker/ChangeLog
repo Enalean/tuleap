@@ -1,3 +1,6 @@
+Version 5.428 - Tuleap 7.4
+    * request #7270: Export Per Tracker ID in CSV
+
 Version 5.427 - Tuleap 7.4
     * Init a test_mgmt project for rest tests
 
