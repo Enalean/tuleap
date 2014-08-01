@@ -7,9 +7,10 @@ PHP_INCLUDE_PATH=/usr/share/php:/usr/share/pear:$(TULEAP_INCLUDE_PATH):/usr/shar
 PHP=php -q -d date.timezone=Europe/Paris -d include_path=$(PHP_INCLUDE_PATH) -d memory_limit=256M -d display_errors=On
 
 ifeq ($(BUILD_ENV),ci)
+OUTPUT_DIR=$(WORKSPACE)
 SIMPLETEST_OPTIONS=-x
-REST_TESTS_OPTIONS=--log-junit $(WORKSPACE)/rest_tests.xml
-PHPUNIT_TESTS_OPTIONS=--log-junit $(WORKSPACE)/phpunit_tests.xml --coverage-html $(WORKSPACE)/phpunit_coverage --coverage-clover $(WORKSPACE)/phpunit_coverage/coverage.xml
+REST_TESTS_OPTIONS=
+PHPUNIT_TESTS_OPTIONS=--log-junit $(OUTPUT_DIR)/phpunit_tests.xml --coverage-html $(OUTPUT_DIR)/phpunit_coverage --coverage-clover $(OUTPUT_DIR)/phpunit_coverage/coverage.xml
 PHPUNIT_OPTIONS=
 TULEAP_LOCAL_INC=$(WORKSPACE)/etc/integration_tests.inc
 COMPOSER=/usr/local/bin/composer.phar
@@ -81,7 +82,9 @@ ci_api_test_setup: composer_update
 	cat tests/rest/bin/integration_tests.inc.dist | perl -pe "s%/usr/share/codendi%$(CURDIR)%" > $(TULEAP_LOCAL_INC)
 	cp tests/rest/bin/dbtest.inc.dist $(WORKSPACE)/etc/dbtest.inc
 
-ci_api_test: ci_api_test_setup api_test
+ci_api_test: ci_api_test_setup api_test_bootstrap
+	php tests/bin/generate-phpunit-testsuite.php $(OUTPUT_DIR) > /tmp/suite.xml
+	$(PHPUNIT) --configuration /tmp/suite.xml
 
 phpunit:
 	$(PHPUNIT) $(PHPUNIT_TESTS_OPTIONS) --bootstrap tests/phpunit_boostrap.php plugins/proftpd/phpunit
