@@ -73,7 +73,7 @@ class PermissionsManager {
     * @param  array   $ugroups         The user's ugroups
     * @return boolean 
     */
-    public function userHasPermission($object_id, $permission_type, $ugroups) {
+    public function userHasPermission($object_id, $permission_type, array $ugroups) {
         if (!isset($this->_permissions[$object_id])) {
             $this->_permissions[$object_id] = array();
         }
