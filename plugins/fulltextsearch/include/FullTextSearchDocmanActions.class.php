@@ -270,16 +270,23 @@ class FullTextSearchDocmanActions {
      * @param Docman_Item the document
      */
     public function updatePermissions(Docman_Item $item) {
-        $this->logger->debug('[Docman] ElasticSearch: update permissions of document #' . $item->getId());
+        $this->logger->debug('[Docman] ElasticSearch: update permissions of document #' . $item->getId(). ' and its children');
 
-        $update_data = array();
-        $this->request_data_factory->setUpdatedData(
-            $update_data,
-            'permissions',
-            $this->request_data_factory->getCurrentPermissions($item)
-        );
+        $item_factory = $this->getDocmanItemFactory($item);
+        $items        = array_merge(array($item), $item_factory->getAllChildrenFromParent($item));
 
-        $this->client->update($item->getGroupId(), $item->getId(), $update_data);
+        foreach($items as $item_to_index) {
+            $this->logger->debug('[Docman] ElasticSearch: update permissions of item #' . $item_to_index->getId());
+
+            $update_data = array();
+            $this->request_data_factory->setUpdatedData(
+                $update_data,
+                'permissions',
+                $this->request_data_factory->getCurrentPermissions($item)
+            );
+
+            $this->client->update($item_to_index->getGroupId(), $item_to_index->getId(), $update_data);
+        }
     }
 
     /**
