@@ -222,6 +222,24 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
         $this->actions->updateDocument($this->item);
     }
 
+    public function itIndexesCopiedElementAndItsChildren() {
+        $sub_item           = stub('Docman_Item')->getId()->returns(102);
+        stub($sub_item)->getGroupId()->returns(200);
+        $second_search_type = array(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
+
+        stub($this->client)->getMapping()->returns(array());
+        stub($this->metadata_factory)->getRealMetadataList(false, $second_search_type)->returns(array());
+        stub($this->item_factory)->getItemTypeForItem($this->item)->returns(PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
+        stub($this->item_factory)->getAllChildrenFromParent($this->item)->returns(array($sub_item));
+
+        $this->client->expectCallCount('index', 2);
+
+        expect($this->client)->index(200, 101, '*')->at(0);
+        expect($this->client)->index(200, 102, '*')->at(1);
+
+        $this->actions->indexCopiedItem($this->item);
+    }
+
     public function itCanDeleteADocumentFromItsId() {
         $this->client->expectOnce('delete', array(200, 101));
 

@@ -46,6 +46,7 @@ class fulltextsearchPlugin extends Plugin {
             $this->addHook('plugin_docman_event_new_wikipage');
             $this->addHook('plugin_docman_event_wikipage_update');
             $this->addHook('plugin_docman_event_move');
+            $this->addHook(PLUGIN_DOCMAN_EVENT_COPY);
             $this->addHook(PLUGIN_DOCMAN_EVENT_APPROVAL_TABLE_COMMENT);
             $this->addHook(PLUGIN_DOCMAN_EVENT_NEW_EMPTY);
             $this->addHook(PLUGIN_DOCMAN_EVENT_NEW_LINK);
@@ -188,6 +189,7 @@ class fulltextsearchPlugin extends Plugin {
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_LINK_INDEX::NAME,
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_FOLDER_INDEX::NAME,
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_REINDEX_PROJECT::NAME,
+                SystemEvent_FULLTEXTSEARCH_DOCMAN_COPY::NAME,
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE::NAME,
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS::NAME,
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA::NAME,
@@ -323,6 +325,15 @@ class fulltextsearchPlugin extends Plugin {
      */
     public function plugin_docman_event_move($params) {
         $this->getDocmanSystemEventManager()->queueUpdateDocumentPermissions($params['item']);
+    }
+
+    /**
+     * Event triggered when a document is copied
+     *
+     * @param array $params
+     */
+    public function plugin_docman_event_copy($params) {
+        $this->getDocmanSystemEventManager()->queueCopyDocument($params['item']);
     }
 
     /**

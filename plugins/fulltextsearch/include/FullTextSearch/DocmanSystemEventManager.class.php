@@ -57,6 +57,7 @@ class FullTextSearch_DocmanSystemEventManager {
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_DELETE::NAME:
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_APPROVAL_TABLE_COMMENT::NAME:
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_REINDEX_PROJECT::NAME:
+            case SystemEvent_FULLTEXTSEARCH_DOCMAN_COPY::NAME:
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_WIKI_INDEX::NAME:
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_WIKI_UPDATE::NAME:
                 $class = 'SystemEvent_'. $type;
@@ -205,6 +206,16 @@ class FullTextSearch_DocmanSystemEventManager {
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_REINDEX_PROJECT::NAME,
                 $project_id,
                 SystemEvent::PRIORITY_LOW
+            );
+        }
+    }
+
+    public function queueCopyDocument(Docman_Item $item) {
+        if ($this->plugin->isAllowed($item->getGroupId())) {
+            $this->system_event_manager->createEvent(
+                SystemEvent_FULLTEXTSEARCH_DOCMAN_COPY::NAME,
+                $this->getDocmanSerializedParameters($item),
+                SystemEvent::PRIORITY_MEDIUM
             );
         }
     }

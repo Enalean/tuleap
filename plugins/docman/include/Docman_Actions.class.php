@@ -842,8 +842,8 @@ class Docman_Actions extends Actions {
 
         //
         // Action
-        $itemFactory = $this->_getItemFactory();
-        $itemFactory->cloneItems($itemToPaste->getGroupId(),
+        $itemFactory  = $this->_getItemFactory();
+        $item_mapping = $itemFactory->cloneItems($itemToPaste->getGroupId(),
             $newParentItem->getGroupId(),
             $user,
             $mdMapping,
@@ -852,6 +852,12 @@ class Docman_Actions extends Actions {
             $itemToPaste->getId(),
             $newParentItem->getId(),
             $ordering);
+
+
+        $event_manager = EventManager::instance();
+        $event_manager->processEvent(PLUGIN_DOCMAN_EVENT_COPY, array(
+            'item' => $itemFactory->getItemFromDb($item_mapping[$itemToPaste->getId()])
+        ));
 
         $itemFactory->delCopyPreference();
         $itemFactory->delCutPreference();

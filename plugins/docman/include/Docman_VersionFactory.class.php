@@ -68,7 +68,17 @@ class Docman_VersionFactory {
         }
         return $versions;
     }
-    
+
+    public function getCurrentVersionForItem($item) {
+        $all_versions = $this->getAllVersionForItem($item);
+
+        if (! empty($all_versions)) {
+            return $all_versions[0];
+        }
+
+        return null;
+    }
+
     function getSpecificVersion($item, $number) {
         $dao = $this->_getVersionDao();
         $dar = $dao->searchByNumber($item->getId(), $number);

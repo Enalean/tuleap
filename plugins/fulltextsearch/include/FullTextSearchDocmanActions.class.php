@@ -97,6 +97,62 @@ class FullTextSearchDocmanActions {
         $this->client->index($item->getGroupId(), $item->getId(), $indexed_data);
     }
 
+    public function indexCopiedItem(Docman_Item $item) {
+        $this->logger->debug('[Docman] ElasticSearch: index new copied item #' . $item->getId() . ' and its children');
+
+        $item_factory = $this->getDocmanItemFactory($item);
+        $items        = array_merge(array($item), $item_factory->getAllChildrenFromParent($item));
+
+        foreach($items as $item_to_index) {
+            $this->logger->debug('[Docman] ElasticSearch: index item #' . $item_to_index->getId());
+
+            $indexed_data = $this->getIndexedData($item_to_index) + $this->getContent($item_to_index);
+            $this->client->index($item_to_index->getGroupId(), $item_to_index->getId(), $indexed_data);
+        }
+    }
+
+    /**
+     * @param Docman_Item $item
+     *
+     * @return Docman_ItemFactory
+     */
+    private function getDocmanItemFactory(Docman_Item $item) {
+        return Docman_ItemFactory::instance($item->getGroupId());
+    }
+
+    private function getContent(Docman_Item $item) {
+        $item_factory = $this->getDocmanItemFactory($item);
+        $item_type    = $item_factory->getItemTypeForItem($item);
+
+        switch ($item_type) {
+            case PLUGIN_DOCMAN_ITEM_TYPE_EMPTY:
+            case PLUGIN_DOCMAN_ITEM_TYPE_FOLDER:
+                return array();
+                break;
+
+            case PLUGIN_DOCMAN_ITEM_TYPE_WIKI:
+                $wiki_page = new WikiPage($item->getGroupId(), $item->getPagename());
+
+                return $this->getWikiContent($wiki_page->getMetadata());
+                break;
+
+            case PLUGIN_DOCMAN_ITEM_TYPE_LINK:
+                return $this->getLinkContent($item);
+                break;
+
+            case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
+            case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
+                return $this->getItemContent($item->getCurrentVersion());
+                break;
+
+            default:
+                $this->logger->debug("[Docman] ElasticSearch: unrecognized item type, can't index content");
+
+                return array();
+                break;
+        }
+    }
+
     /**
      * Index a new wiki document with permissions
      *
@@ -134,7 +190,7 @@ class FullTextSearchDocmanActions {
      * @param Docman_Version $version The version to index
      */
     public function indexNewVersion(Docman_Item $item, Docman_Version $version) {
-        $this->logger->debug('[Docman] ElasticSearch: index new  version (# ' . $version->getId() .
+        $this->logger->debug('[Docman] ElasticSearch: index new version #' . $version->getId() .
             ' for document #' . $item->getId()
         );
 
