@@ -1,3 +1,6 @@
+Version 0.76 - Tuleap 7.4
+    * story #7296: Reindex children when parent's perms are modified
+
 Version 0.75 - Tuleap 7.4
     * request #7295: Copy/Paste doesn't index new document
 
