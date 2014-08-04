@@ -9,7 +9,7 @@ PHP=php -q -d date.timezone=Europe/Paris -d include_path=$(PHP_INCLUDE_PATH) -d 
 ifeq ($(BUILD_ENV),ci)
 OUTPUT_DIR=$(WORKSPACE)
 SIMPLETEST_OPTIONS=-x
-REST_TESTS_OPTIONS=
+REST_TESTS_OPTIONS=--log-junit $(OUTPUT_DIR)/rest_tests.xml
 PHPUNIT_TESTS_OPTIONS=--log-junit $(OUTPUT_DIR)/phpunit_tests.xml --coverage-html $(OUTPUT_DIR)/phpunit_coverage --coverage-clover $(OUTPUT_DIR)/phpunit_coverage/coverage.xml
 PHPUNIT_OPTIONS=
 TULEAP_LOCAL_INC=$(WORKSPACE)/etc/integration_tests.inc
@@ -71,7 +71,7 @@ api_test_bootstrap:
 	php tests/lib/rest/init_db.php
 	$(PHP) tests/lib/rest/init_data.php
 
-api_test: api_test_bootstrap
+api_test: composer_update api_test_bootstrap
 	$(PHPUNIT) $(REST_TESTS_OPTIONS) tests/rest
 	@if [ -e plugins/*/tests/rest ]; then \
 		$(PHPUNIT) $(REST_TESTS_OPTIONS) plugins/*/tests/rest; \
@@ -81,10 +81,16 @@ ci_api_test_setup: composer_update
 	mkdir -p $(WORKSPACE)/etc
 	cat tests/rest/bin/integration_tests.inc.dist | perl -pe "s%/usr/share/codendi%$(CURDIR)%" > $(TULEAP_LOCAL_INC)
 	cp tests/rest/bin/dbtest.inc.dist $(WORKSPACE)/etc/dbtest.inc
+	mkdir -p /tmp/run
+	php tests/bin/generate-phpunit-testsuite.php /tmp/run $(OUTPUT_DIR)
 
-ci_api_test: ci_api_test_setup api_test_bootstrap
-	php tests/bin/generate-phpunit-testsuite.php $(OUTPUT_DIR) > /tmp/suite.xml
-	$(PHPUNIT) --configuration /tmp/suite.xml
+ci_api_test: ci_api_test_setup api_test
+
+docker_api_all:
+	$(PHP) /tmp/run/vendor/phpunit/phpunit/phpunit.php --configuration /tmp/run/suite.xml
+
+docker_api_partial:
+	$(PHP) /tmp/run/vendor/phpunit/phpunit/phpunit.php $(REST_TESTS_OPTIONS)
 
 phpunit:
 	$(PHPUNIT) $(PHPUNIT_TESTS_OPTIONS) --bootstrap tests/phpunit_boostrap.php plugins/proftpd/phpunit

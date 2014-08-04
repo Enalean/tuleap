@@ -20,7 +20,6 @@
 
 require_once dirname(__FILE__).'/../autoload.php';
 require_once 'common/autoload.php';
-require_once dirname(__FILE__).'/../../../vendor/autoload.php';
 
 use \Guzzle\Http\Client;
 use \Test\Rest\RequestWrapper;

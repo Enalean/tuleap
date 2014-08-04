@@ -18,11 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$output_dir = $argv[1];
+$run_dir    = $argv[1];
+$output_dir = $argv[2];
 
 $xml = simplexml_load_string(<<<XML
 <?xml version='1.0'?>
-<phpunit>
+<phpunit bootstrap="$run_dir/bootstrap.php">
   <testsuites>
     <testsuite name="Tuleap REST tests">
     </testsuite>
@@ -42,4 +43,8 @@ foreach (glob($src_dir.'/plugins/*/tests/rest') as $directory) {
     $xml->testsuites[0]->testsuite[0]->addChild('directory', $directory);
 }
 
-echo $xml->asXML();
+// Write the XML config
+$xml->asXML("$run_dir/suite.xml");
+
+// Write the bootstrap file
+file_put_contents("$run_dir/bootstrap.php", '<?php'.PHP_EOL.'require_once "'.$run_dir.'/vendor/autoload.php";');
