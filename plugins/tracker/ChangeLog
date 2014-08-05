@@ -1,3 +1,6 @@
+Version 5.429 - Tuleap 7.4
+    * request #7303: Ability to easily reference a user (@mentions)
+
 Version 5.428 - Tuleap 7.4
     * request #7270: Export Per Tracker ID in CSV
 

@@ -1,3 +1,9 @@
+Version 1.37 - Tuleap 7.4
+    * request #7303: Ability to easily reference a user (@mentions)
+
+Version 1.36 - Tuleap 7.4
+    * request #7303: Ability to easily reference a user (@mentions)
+
 Version 1.35 - Tuleap 7.4
     * request #7279 - Do not create tuleap.tours js variable if no tours defined
 
