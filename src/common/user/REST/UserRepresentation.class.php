@@ -56,13 +56,19 @@ class UserRepresentation {
      */
     public $ldap_id;
 
+    /**
+     *
+     * @var string
+     */
+    public $avatar_url;
 
     public function build(PFUser $user) {
-        $this->id        = JsonCast::toInt($user->getId());
-        $this->uri       = UserRepresentation::ROUTE . '/' . $this->id;
-        $this->email     = $user->getEmail();
-        $this->real_name = $user->getRealName();
-        $this->username  = $user->getUserName();
-        $this->ldap_id   = $user->getLdapId();
+        $this->id         = JsonCast::toInt($user->getId());
+        $this->uri        = UserRepresentation::ROUTE . '/' . $this->id;
+        $this->email      = $user->getEmail();
+        $this->real_name  = $user->getRealName();
+        $this->username   = $user->getUserName();
+        $this->ldap_id    = $user->getLdapId();
+        $this->avatar_url = $user->getAvatarUrl();
     }
 }

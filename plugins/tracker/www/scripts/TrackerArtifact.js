@@ -213,7 +213,7 @@ document.observe('dom:loaded', function () {
                 var comment_panel = $('followup_' + id).down('.tracker_artifact_followup_comment');
                 if (comment_panel.visible()) {
 
-                    var textarea   = new Element('textarea', {id: 'tracker_followup_comment_edit_'+id});
+                    var textarea   = new Element('textarea', {id: 'tracker_followup_comment_edit_'+id, 'class': 'user-mention'});
                     var htmlFormat = false;
 
                     if (comment_panel.empty()) {
@@ -239,6 +239,8 @@ document.observe('dom:loaded', function () {
 
                     comment_panel.hide();
                     textarea.focus();
+                    tuleap.mention.init('#tracker_followup_comment_edit_'+id);
+
                     var button = new Element('button', { 'class': 'btn btn-primary' }).update(codendi.locales.tracker_artifact.edit_followup_ok).observe('click', function (evt) {
                         if (CKEDITOR.instances && CKEDITOR.instances['tracker_followup_comment_edit_'+id]) {
                             var content = CKEDITOR.instances['tracker_followup_comment_edit_'+id].getData();

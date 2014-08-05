@@ -141,7 +141,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
         }
 
         if ($this->artifact->userCanUpdate($this->user)) {
-            $html .= '<textarea id="tracker_followup_comment_new" wrap="soft" rows="8" cols="80" name="artifact_followup_comment" id="artifact_followup_comment">'. $hp->purify($submitted_comment, CODENDI_PURIFIER_CONVERT_HTML).'</textarea>';
+            $html .= '<textarea id="tracker_followup_comment_new" class="user-mention" wrap="soft" rows="8" cols="80" name="artifact_followup_comment" id="artifact_followup_comment">'. $hp->purify($submitted_comment, CODENDI_PURIFIER_CONVERT_HTML).'</textarea>';
             $html .= '</div>';
         }
 

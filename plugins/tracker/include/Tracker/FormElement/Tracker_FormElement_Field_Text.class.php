@@ -166,7 +166,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
                          name="artifact['. $this->id .']_body_format"
                          value="'.Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT.'" />';
 
-        $html .= '<textarea id = field_'.$this->id.'
+        $html .= '<textarea id = field_'.$this->id.' class="user-mention"
                             name="artifact['. $this->id .'][content]"
                             rows="'. $this->getProperty('rows') .'"
                             cols="'. $this->getProperty('cols') .'"
@@ -192,7 +192,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
             $html .= '<textarea readonly="readonly" title="'.$GLOBALS['Language']->getText('plugin_tracker_artifact_masschange', 'cannot_masschange_title').'">'.$value.'</textarea>';
         } else {
             $hp = Codendi_HTMLPurifier::instance();
-            $html .= '<textarea id = field_'.$this->id.'
+            $html .= '<textarea id = field_'.$this->id.' class="user-mention"
                                 name="artifact['. $this->id .'][content]"
                                 rows="'. $this->getProperty('rows') .'"
                                 cols="'. $this->getProperty('cols') .'">';
@@ -235,7 +235,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
                          id="artifact['. $this->id .']_body_format"
                          name="artifact['. $this->id .']_body_format"
                          value="'.$format.'" />';
-        $html .= '<textarea id = field_'.$this->id.'
+        $html .= '<textarea id = field_'.$this->id.' class="user-mention"
                             name="artifact['. $this->id .'][content]"
                             rows="'. $this->getProperty('rows') .'"
                             cols="'. $this->getProperty('cols') .'"
