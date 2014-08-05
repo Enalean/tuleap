@@ -24,6 +24,7 @@ Version 7.4 (Not released yet)
 	== Enhancement ==
 	* Adapt test output dir to run tests in Docker
 	* Add REST route to be able to search for users (part of request #7303)
+	* Convert @mentions into clickable links (part of request #7303)
 
 Version 7.3 (Thursday, July 24th 2014)
 
