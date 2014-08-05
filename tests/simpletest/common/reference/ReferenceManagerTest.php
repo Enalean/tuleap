@@ -197,6 +197,22 @@ class ReferenceManagerTest extends TuleapTestCase {
             $this->assertEqual($post_encoding, 'ISO-8859-15');
         }
     }
-}
 
-?>
+    public function itInsertsLinkForMentionAtTheBeginningOfTheString() {
+        $html = '@username';
+        $this->rm->insertReferences($html, 0);
+        $this->assertEqual($html, '<a href="/users/username">@username</a>');
+    }
+
+    public function itInsertsLinkForMentionAtTheMiddleOfTheString() {
+        $html = '/cc @username';
+        $this->rm->insertReferences($html, 0);
+        $this->assertEqual($html, '/cc <a href="/users/username">@username</a>');
+    }
+
+    public function itDoesNotBreakEmailAddress() {
+        $html = 'toto@userna.me';
+        $this->rm->insertReferences($html, 0);
+        $this->assertEqual($html, 'toto@userna.me');
+    }
+}

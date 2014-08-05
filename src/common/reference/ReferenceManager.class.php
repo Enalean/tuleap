@@ -443,9 +443,18 @@ class ReferenceManager {
 
             $html = $this->convertToUTF8($html);
             $html = preg_replace_callback($exp, array($this,"_insertRefCallback"), $html);
+            $this->insertLinksForMentions($html);
         }
         setlocale(LC_CTYPE, $locale);
         $this->tmpGroupIdForCallbackFunction = null;
+    }
+
+    private function insertLinksForMentions(&$html) {
+        $html = preg_replace(
+            '/(^|\W)@(\w+)/',
+            '$1<a href="/users/$2">@$2</a>',
+            $html
+        );
     }
 
     /**
