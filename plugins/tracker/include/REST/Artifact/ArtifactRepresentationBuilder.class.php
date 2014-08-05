@@ -63,7 +63,7 @@ class Tracker_REST_Artifact_ArtifactRepresentationBuilder {
     private function getFieldsValues(PFUser $user, Tracker_Artifact $artifact) {
         $changeset = $artifact->getLastChangeset();
         return $this->mapAndFilter(
-            $this->formelement_factory->getUsedFieldsForSoap($artifact->getTracker()),
+            $this->formelement_factory->getUsedFieldsForREST($artifact->getTracker()),
             $this->getFieldsValuesFilter($user, $changeset)
         );
     }

@@ -23,6 +23,9 @@ require_once('common/reference/CrossReferenceFactory.class.php');
 
 class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly {
     
+    const REST_REF_INDEX = 'ref';
+    const REST_REF_URL   = 'url';
+
     public $default_properties = array();
     
     public function getCriteriaFrom($criteria) {
@@ -47,7 +50,48 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
             }
         }
     }
-    
+
+    public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
+        $crf  = new CrossReferenceFactory(
+            $changeset->getArtifact()->getId(), Tracker_Artifact::REFERENCE_NATURE,
+            $this->getTracker()->getGroupId()
+        );
+        $crf->fetchDatas();
+
+        $list = array();
+        $refs = $crf->getFormattedCrossReferences();
+        if (! empty($refs['target']) ) {
+            foreach ($refs['target'] as $refTgt) {
+                $list[] = array(
+                    self::REST_REF_INDEX => $refTgt['ref'],
+                    self::REST_REF_URL   => $refTgt['url'],
+                );
+            }
+        }
+        if (! empty($refs['source']) ) {
+            foreach ($refs['source'] as $refSrc) {
+                $list[] = array(
+                    self::REST_REF_INDEX => $refSrc['ref'],
+                    self::REST_REF_URL   => $refSrc['url'],
+                );
+            }
+        }
+        if (! empty($refs['both']) ) {
+            foreach ($refs['both'] as $refBoth) {
+                $list[] = array(
+                    self::REST_REF_INDEX => $refBoth['ref'],
+                    self::REST_REF_URL   => $refBoth['url'],
+                );
+            }
+        }
+
+        return array(
+            'field_id' => $this->getId(),
+            'label'    => $this->getLabel(),
+            'value'    => $list
+        );
+    }
+
     public function getCriteriaWhere($criteria) {
         return '';
     }

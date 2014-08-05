@@ -293,7 +293,7 @@ class ArtifactFilesTest extends RestBase {
 
         $response = $this->getResponse($this->client->get('artifacts/' . $posted_artifact['id']));
         $posted_artifact = $response->json();
-        $this->assertCount(3, $posted_artifact['values']);
+        $this->assertCount(4, $posted_artifact['values']);
     }
 
     /**
@@ -326,7 +326,7 @@ class ArtifactFilesTest extends RestBase {
 
         $response = $this->getResponse($this->client->get('artifacts/' . $artifact_id));
         $posted_artifact = $response->json();
-        $this->assertCount(4, $posted_artifact['values']);
+        $this->assertCount(5, $posted_artifact['values']);
 
         return $file_id;
     }
