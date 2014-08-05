@@ -743,11 +743,7 @@ class UserDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchGlobal($words, $offset, $exact) { 
-        return $this->searchGlobalPaginated($words, $offset, $exact, 26);
-    }
-
-    public function searchGlobalPaginated($words, $offset, $exact, $limit) {
+    public function searchGlobalPaginated($words, $exact, $offset, $limit) {
         $offset = $this->da->escapeInt($offset);
         $limit  = $this->da->escapeInt($limit);
         if ($exact === true) {
@@ -755,7 +751,7 @@ class UserDao extends DataAccessObject {
             $realname  = $this->searchExactMatch($words);
         } else {
             $user_name = $this->searchExplodeMatch('user_name', $words);
-            $realname  = $this->searchExplodeMatch('real_name', $words);
+            $realname  = $this->searchExplodeMatch('realname', $words);
         }
 
         $sql = "SELECT user_name, user_id, realname, has_avatar

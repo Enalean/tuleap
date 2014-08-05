@@ -209,20 +209,15 @@ class UserManager {
         return $users;
     }
 
-    public function getAllUsersByUsernameOrRealname($words, $offset, $exact) {
+    /**
+     * @return PaginatedUserCollection
+     */
+    public function getPaginatedUsersByUsernameOrRealname($words, $exact, $offset, $limit) {
         $users = array();
-        foreach ($this->getDao()->searchGlobal($words, $offset, $exact) as $user) {
+        foreach ($this->getDao()->searchGlobalPaginated($words, $exact, $offset, $limit) as $user) {
             $users[] = $this->getUserInstanceFromRow($user);
         }
-        return $users;
-    }
-
-    public function getPaginatedUsersByUsernameOrRealname($words, $offset, $exact, $limit) {
-        $users = array();
-        foreach ($this->getDao()->searchGlobalPaginated($words, $offset, $exact, $limit) as $user) {
-            $users[] = $this->getUserInstanceFromRow($user);
-        }
-        return $users;
+        return new PaginatedUserCollection($users, $this->getDao()->foundRows());
     }
 
     /**

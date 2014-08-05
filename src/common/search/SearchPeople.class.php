@@ -32,38 +32,42 @@ class Search_SearchPeople {
     }
 
     public function search(Search_SearchQuery $query, Search_SearchResults $search_results) {
-        $users = $this->manager->getPaginatedUsersByUsernameOrRealname(
+        $user_collection = $this->manager->getPaginatedUsersByUsernameOrRealname(
             $query->getWords(),
-            $query->getOffset(),
             $query->getExact(),
+            $query->getOffset(),
             $query->getNumberOfResults()
         );
 
-        $results_count      = count($users);
+        $results_count      = count($user_collection);
         $maybe_more_results = ($results_count < $query->getNumberOfResults()) ? false : true;
         $search_results->setHasMore($maybe_more_results)
             ->setCountResults($results_count);
 
         return $this->getSearchPeopleResultPresenter(
-            $users,
+            $user_collection,
             $query->getWords(),
             $maybe_more_results
         );
     }
 
-    private function getSearchPeopleResultPresenter(array $users, $words, $maybe_more_results) {
+    private function getSearchPeopleResultPresenter(
+        PaginatedUserCollection $user_collection,
+        $words,
+        $maybe_more_results
+    ) {
         return new Search_SearchResultsPresenter(
-            new Search_SearchResultsIntroPresenter($users, $words),
-            $this->getResultsPresenters($users),
+            new Search_SearchResultsIntroPresenter($user_collection->getUsers(), $words),
+            $this->getResultsPresenters($user_collection),
             self::NAME,
             $maybe_more_results
         );
     }
 
-    private function getResultsPresenters(array $users) {
+    private function getResultsPresenters(PaginatedUserCollection $user_collection) {
         $users_presenters = array();
 
-        foreach ($users as $user) {
+        foreach ($user_collection->getUsers() as $user) {
             $users_presenters[] = new Search_SearchPeopleResultPresenter($user);
         }
 

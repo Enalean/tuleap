@@ -29,6 +29,10 @@ use \Luracast\Restler\RestException;
  */
 class UserResource {
 
+    const MAX_LIMIT      = 50;
+    const DEFAULT_LIMIT  = 10;
+    const DEFAULT_OFFSET = 0;
+
     /** @var UserManager */
     private $user_manager;
 
@@ -73,7 +77,58 @@ class UserResource {
      * @throws 404
      */
     public function optionsId($id) {
-        $this->sendAllowHeadersForUserGroup();
+        $this->sendAllowHeaders();
+    }
+
+    /**
+     * @url OPTIONS
+     *
+     * @access public
+     */
+    public function options() {
+        $this->sendAllowHeaders();
+    }
+
+    /**
+     * Get users
+     *
+     * Get all users matching the query
+     *
+     * @param string $query  Search string (3 chars min in length) {@from query} {@min 3}
+     * @param int    $limit  Number of elements displayed per page
+     * @param int    $offset Position of the first element to display
+     *
+     * @return \Tuleap\User\REST\UserRepresentation[]
+     */
+    public function get(
+        $query,
+        $limit = self::DEFAULT_LIMIT,
+        $offset = self::DEFAULT_OFFSET
+    ) {
+        $exact = false;
+
+        $this->sendAllowHeaders();
+        $user_collection = $this->user_manager->getPaginatedUsersByUsernameOrRealname(
+            $query,
+            $exact,
+            $offset,
+            $limit
+        );
+        Header::sendPaginationHeaders(
+            $limit,
+            $offset,
+            $user_collection->getTotalCount(),
+            self::MAX_LIMIT
+        );
+
+        $list_of_user_representation = array();
+        foreach ($user_collection->getUsers() as $user) {
+            $user_representation = new UserRepresentation();
+            $user_representation->build($user);
+            $list_of_user_representation[] = $user_representation;
+        }
+
+        return $list_of_user_representation;
     }
 
     private function checkUserExists($id) {
@@ -86,7 +141,7 @@ class UserResource {
         return true;
     }
 
-    private function sendAllowHeadersForUser() {
+    private function sendAllowHeaders() {
         Header::allowOptionsGet();
     }
 }
