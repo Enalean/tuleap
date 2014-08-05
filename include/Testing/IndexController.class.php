@@ -26,6 +26,7 @@ class IndexController extends TestingController {
         return $this->renderToString(
             'index',
             new IndexPresenter(
+                $this->project->getId(),
                 $this->config->getCampaignTrackerId($this->project),
                 $this->config->getTestDefinitionTrackerId($this->project),
                 $this->config->getTestExecutionTrackerId($this->project)

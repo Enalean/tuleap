@@ -23,6 +23,9 @@ namespace Tuleap\Testing;
 class IndexPresenter {
 
     /** @var int */
+    public $project_id;
+
+    /** @var int */
     public $campaign_tracker_id;
 
     /** @var int */
@@ -40,7 +43,8 @@ class IndexPresenter {
     /** @var Boolean */
     public $is_properly_configured;
 
-    public function __construct($campaign_tracker_id, $test_definition_tracker_id, $test_execution_tracker_id) {
+    public function __construct($project_id, $campaign_tracker_id, $test_definition_tracker_id, $test_execution_tracker_id) {
+        $this->project_id                 = $project_id;
         $this->campaign_tracker_id        = $campaign_tracker_id;
         $this->test_definition_tracker_id = $test_definition_tracker_id;
         $this->test_execution_tracker_id  = $test_execution_tracker_id;

@@ -1,9 +1,25 @@
 <h2>Campaigns list</h2>
-        <table class="table table-striped table-bordered">
-            <tr>
-                <th>Id</th>
-            </tr>
-            <tr ng-repeat="row in list">
-                <td>{{ row.id }}</td>
-            </tr>
-        </table>
+<table class="table table-striped table-bordered campaign-list">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Total</th>
+            <th>Passed</th>
+            <th>Blocked</th>
+            <th>Failed</th>
+            <th>Not run</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="campaign in campaigns">
+            <td>{{ campaign.name }}</td>
+            <td>0</td>
+            <td><span class="badge badge-success">{{ campaign.nb_of_passed }}</span></td>
+            <td><span class="badge badge-info">{{ campaign.nb_of_blocked }}</span></td>
+            <td><span class="badge badge-important">{{ campaign.nb_of_failed }}</span></td>
+            <td><span class="badge">{{ campaign.nb_of_not_run }}</span></td>
+            <td><button class="btn btn-small">Details</button></td>
+        </tr>
+    </tbody>
+</table>

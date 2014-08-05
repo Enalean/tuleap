@@ -1,16 +1,16 @@
 var SharedPropertiesService = function () {
     var property = {
-        campaign_tracker_id: undefined,
+        project_id: undefined,
         test_definition_tracker_id: undefined,
         test_execution_tracker_id: undefined
     };
 
     return {
-        getCampaignTrackerId: function () {
-            return property.campaign_tracker_id;
+        getProjectId: function () {
+            return property.project_id;
         },
-        setCampaignTrackerId: function (campaign_tracker_id) {
-            property.campaign_tracker_id = campaign_tracker_id;
+        setProjectId: function (project_id) {
+            property.project_id = project_id;
         },
         getTestDefinitionTrackerId: function () {
             return property.test_definition_tracker_id;

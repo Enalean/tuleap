@@ -1,4 +1,4 @@
 var campaign_list_controller = function ($scope, service, sharedPropertiesService) {
-    var campaign_tracker_id = sharedPropertiesService.getCampaignTrackerId();
-    $scope.list = service.campaigns(campaign_tracker_id);
+    var project_id   = sharedPropertiesService.getProjectId();
+    $scope.campaigns = service.campaigns(project_id);
 };
