@@ -77,17 +77,14 @@ api_test: api_test_bootstrap
 		$(PHPUNIT) $(REST_TESTS_OPTIONS) plugins/*/tests/rest; \
 	fi
 
-ci_api_test_setup:
+ci_api_test_setup: composer_update
 	mkdir -p $(WORKSPACE)/etc
 	cat tests/rest/bin/integration_tests.inc.dist | perl -pe "s%/usr/share/codendi%$(CURDIR)%" > $(TULEAP_LOCAL_INC)
 	cp tests/rest/bin/dbtest.inc.dist $(WORKSPACE)/etc/dbtest.inc
 
 ci_api_test: ci_api_test_setup api_test_bootstrap
-	mkdir -p /tmp/run
-	cp tests/rest/bin/composer.json /tmp/run
-	cd /tmp/run && php $(COMPOSER) install
 	php tests/bin/generate-phpunit-testsuite.php $(OUTPUT_DIR) > /tmp/suite.xml
-	$(PHP) /tmp/run/vendor/phpunit/phpunit/phpunit.php --configuration /tmp/suite.xml
+	$(PHPUNIT) --configuration /tmp/suite.xml
 
 phpunit:
 	$(PHPUNIT) $(PHPUNIT_TESTS_OPTIONS) --bootstrap tests/phpunit_boostrap.php plugins/proftpd/phpunit
