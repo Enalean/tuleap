@@ -20,24 +20,33 @@
 
 require_once 'MediawikiAdminPresenter.class.php';
 require_once 'MediawikiUserGroupsMapper.class.php';
+require_once 'MediawikiAdminManager.class.php';
 
 class MediawikiAdminController {
 
     /** @var MediawikiUserGroupsMapper */
     private $mapper;
 
+    /** @var MediawikiAdminManager */
+    private $manager;
+
     public function __construct() {
+        $dao = new MediawikiDao();
         $this->mapper = new MediawikiUserGroupsMapper(
-            new MediawikiDao(),
+            $dao,
             new User_ForgeUserGroupPermissionsDao()
         );
+
+        $this->manager = new MediawikiAdminManager($dao);
     }
 
     public function index(ServiceMediawiki $service, HTTPRequest $request) {
         $this->assertUserIsProjectAdmin($service, $request);
-        $project = $request->getProject();
-
         $GLOBALS['HTML']->includeFooterJavascriptFile(MEDIAWIKI_BASE_URL.'/forgejs/admin.js');
+
+        $project = $request->getProject();
+        $options = $this->manager->getOptions($project);
+
         $service->renderInPage(
             $request,
             $GLOBALS['Language']->getText('global', 'Administration'),
@@ -45,7 +54,8 @@ class MediawikiAdminController {
             new MediawikiAdminPresenter(
                 $project,
                 $this->getMappedGroupPresenter($project),
-                $this->mapper->isDefaultMapping($project)
+                $this->mapper->isDefaultMapping($project),
+                $options
             )
         );
     }
@@ -98,6 +108,13 @@ class MediawikiAdminController {
             $project          = $request->getProject();
             $new_mapping_list = $this->getSelectedMappingsFromRequest($request, $project);
             $this->mapper->saveMapping($new_mapping_list, $project);
+
+            $options = array();
+            foreach (array_keys($this->manager->getDefaultOptions()) as $key) {
+                $options[$key] = $request->get($key);
+            }
+
+            $this->manager->saveOptions($project, $options);
         }
 
         $GLOBALS['Response']->redirect(MEDIAWIKI_BASE_URL .'/forge_admin?'. http_build_query(
