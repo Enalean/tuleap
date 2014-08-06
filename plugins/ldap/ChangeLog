@@ -1,3 +1,17 @@
+Version 3.52 - Tuleap 7.4
+    * request #7239 - LDAP/Tuleap user synchronization no longer retrieve extra attributes
+
+
+Regression introduced by request #7151 (commit feb42fe)
+
+Before that modification, Tuleap retrieved all LDAP default attributed.
+After this patch, if a site use a custom LDAP_UserSync (in
+/etc/tuleap/plugins/ldap/site-content/synchronize_user.txt) and rely on extra
+paramters for custom synchronization, the process will be broken.
+
+This commit rewrite (with test) the LDAP authentication and ensure that extra
+params are fetched if they are defined.
+
 Version 3.51 - Tuleap 7.3
     * Follow-up request #7104: DRY on subversion repository path
 
