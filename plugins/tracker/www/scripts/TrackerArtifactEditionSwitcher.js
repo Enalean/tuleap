@@ -88,6 +88,7 @@ tuleap.tracker.artifact.editionSwitcher = function() {
         $(element).off('click');
         toggleDependencyIfAny(element);
         toggleSubmissionBar();
+        toggleHiddenImageViewing();
     };
 
     var focusField = function (element) {
@@ -151,6 +152,14 @@ tuleap.tracker.artifact.editionSwitcher = function() {
         }
 
         displaySubmissionBarIfNeeded();
+    };
+
+    var toggleHiddenImageViewing = function () {
+        $('a[data-rel^=lytebox]').each(function() {
+            $(this).attr('rel', $(this).attr('data-rel'));
+        });
+
+        new LyteBox();
     };
 
     var displaySubmissionBarIfNeeded = function () {
