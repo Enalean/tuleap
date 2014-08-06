@@ -364,7 +364,7 @@ module.exports = function ( grunt ) {
           '<%= app_files.atpl %>', 
           '<%= app_files.ctpl %>'
         ],
-        tasks: [ 'html2js' ]
+        tasks: [ 'html2js', 'concat' ]
       },
 
       /**
@@ -401,7 +401,7 @@ module.exports = function ( grunt ) {
    * before watching for changes.
    */
   grunt.renameTask( 'watch', 'delta' );
-  grunt.registerTask( 'watch', [ 'default', 'delta' ] );
+  grunt.registerTask( 'watch', [ 'build-dev', 'soft-compile', 'delta' ] );
 
   /**
    * The default task is to build and compile.
@@ -421,6 +421,20 @@ module.exports = function ( grunt ) {
     'copy:build_vendorjs',
     'karmaconfig',
     'karma:continuous'
+  ]);
+
+  /**
+   * The `build` task gets your app ready to run for development and testing.
+   */
+  grunt.registerTask( 'build-dev', [
+    'clean',
+    'html2js',
+    'jshint',
+    'recess:build',
+    'copy:build_assets',
+    'copy:build_appjs',
+    'copy:build_vendorjs',
+    'karmaconfig'
   ]);
 
   /**
