@@ -20,14 +20,14 @@
 
 require_once 'MediawikiAdminPresenter.class.php';
 require_once 'MediawikiUserGroupsMapper.class.php';
-require_once 'MediawikiAdminManager.class.php';
+require_once 'MediawikiManager.class.php';
 
 class MediawikiAdminController {
 
     /** @var MediawikiUserGroupsMapper */
     private $mapper;
 
-    /** @var MediawikiAdminManager */
+    /** @var MediawikiManager */
     private $manager;
 
     public function __construct() {
@@ -37,7 +37,7 @@ class MediawikiAdminController {
             new User_ForgeUserGroupPermissionsDao()
         );
 
-        $this->manager = new MediawikiAdminManager($dao);
+        $this->manager = new MediawikiManager($dao);
     }
 
     public function index(ServiceMediawiki $service, HTTPRequest $request) {

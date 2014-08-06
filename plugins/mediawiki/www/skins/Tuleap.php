@@ -10,7 +10,7 @@
  * @ingroup Skins
  */
 
-require_once MEDIAWIKI_BASE_DIR.'/MediawikiAdminManager.class.php';
+require_once MEDIAWIKI_BASE_DIR.'/MediawikiManager.class.php';
 
 if( !defined( 'MEDIAWIKI' ) )
 	die( -1 );
@@ -240,13 +240,10 @@ class TuleapTemplate extends BaseTemplate {
      }
 
      private function isCompatibilityViewEnabled() {
-        $plugin_has_view_enabled = (bool) forge_get_config('enable_compatibility_view', 'mediawiki');
+        $manager = new MediawikiManager(new MediawikiDao());
+        $project = $GLOBALS['group'];
 
-        $admin_manager   = new MediawikiAdminManager(new MediawikiDao());
-        $project         = $GLOBALS['group'];
-        $project_options = $admin_manager->getOptions($project);
-
-        return ($plugin_has_view_enabled && $project_options['enable_compatibility_view']);
+        return $manager->isCompatibilityViewEnabled($project);
      }
 
      private function addForgeBackLinksToSidebar() {

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class MediawikiAdminManager {
+class MediawikiManager {
 
     /** @var MediawikiDao */
     private $dao;
@@ -50,5 +50,15 @@ class MediawikiAdminManager {
         $enable_compatibility_view = (bool) isset($options['enable_compatibility_view']) ? $options['enable_compatibility_view'] : 0;
 
         return $this->dao->updateAdminOptions($project_id, $enable_compatibility_view);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCompatibilityViewEnabled(Project $project) {
+        $plugin_has_view_enabled = (bool) forge_get_config('enable_compatibility_view', 'mediawiki');
+        $project_options         = $this->getOptions($project);
+
+        return ($plugin_has_view_enabled && $project_options['enable_compatibility_view']);
     }
 }
