@@ -511,19 +511,19 @@ setup_mysql() {
     pass_opt=""
     if [ -z "$mysql_remote_server" ]; then
         # See if MySQL root account is password protected
-        $MYSQLSHOW -uroot 2>&1 | grep password
+        $MYSQLSHOW -u$mysql_user 2>&1 | grep password
         while [ $? -eq 0 ]; do
-            read -s -p "Existing DB is password protected. What is the Mysql root password?: " old_passwd
+            read -s -p "Existing DB is password protected. What is the Mysql $mysql_user password?: " old_passwd
             echo
-            $MYSQLSHOW -uroot --password=$old_passwd 2>&1 | grep password
+            $MYSQLSHOW -u$mysql_user --password=$old_passwd 2>&1 | grep password
         done
         if [ "X$old_passwd" != "X" ]; then
-            pass_opt="-uroot --password=$old_passwd"
+            pass_opt="-u$mysql_user --password=$old_passwd"
         else
-            pass_opt="-uroot"
+            pass_opt="-u$mysql_user"
         fi
     else
-        pass_opt="-uroot --password=$rt_passwd"
+        pass_opt="-u$mysql_user --password=$rt_passwd"
     fi
 
     # Test if tuleap DB already exists
@@ -546,12 +546,12 @@ setup_mysql() {
 GRANT ALL PRIVILEGES on $PROJECT_NAME.* TO '$PROJECT_ADMIN'@'$mysql_httpd_host' identified by '$codendiadm_passwd';
 GRANT ALL PRIVILEGES ON \`cx_%\` . * TO '$PROJECT_ADMIN'@'$mysql_httpd_host' identified by '$codendiadm_passwd' WITH GRANT OPTION;
 GRANT ALL PRIVILEGES ON \`plugin_mediawiki_%\` . * TO '$PROJECT_ADMIN'@'$mysql_httpd_host' identified by '$codendiadm_passwd';
-GRANT ALL PRIVILEGES on *.* to 'root'@'$mysql_httpd_host' identified by '$rt_passwd';
+GRANT ALL PRIVILEGES on *.* to '$mysql_user'@'$mysql_httpd_host' identified by '$rt_passwd';
 FLUSH PRIVILEGES;
 EOF
     fi
     # Password has changed
-    pass_opt="-uroot --password=$rt_passwd"
+    pass_opt="-u$mysql_user --password=$rt_passwd"
 
     if [ $freshdb -eq 1 ]; then
         echo "Populating the Tuleap database..."
@@ -580,12 +580,12 @@ test_mysql_host() {
     echo -n "Testing Mysql connexion means... "
     # Root access: w/o password
     if [ -z "$rt_passwd" ]; then
-        if ! $MYSQLSHOW -uroot >/dev/null 2>&1; then
-            die "You didn't provide any root password for $mysql_host but one seems required"
+        if ! $MYSQLSHOW -u$mysql_user >/dev/null 2>&1; then
+            die "You didn't provide any $mysql_user password for $mysql_host but one seems required"
         fi
     fi
-    if ! $MYSQLSHOW -uroot -p$rt_passwd >/dev/null 2>&1; then
-        die "The Mysql root password you provided for $mysql_host doesn't work"
+    if ! $MYSQLSHOW -u$mysql_user -p$rt_passwd >/dev/null 2>&1; then
+        die "The Mysql $mysql_user password you provided for $mysql_host doesn't work"
     fi
     echo "[OK]"
 }
@@ -832,7 +832,8 @@ Options:
   Mysql remote server configuration:
   --mysql-host=<host>              Hostname (or IP) of mysql server
   --mysql-port=<integer>           Port if not default (3306)
-  --mysql-root-password=<password> Mysql root user password on remote host
+  --mysql-user=<user>              Mysql User used to create database and grant permissions (default: root)
+  --mysql-user-password=<password> Mysql user password on remote host
   --mysql-httpd-host=<host>        Name or IP of the current server as seen by
                                    remote host
 EOF
@@ -860,10 +861,11 @@ mysql_httpd_host="localhost"
 mysql_remote_server=""
 mysql_my_cnf="y"
 mysql_package_name="mysql-server"
+mysql_user="root"
 rt_passwd=""
 restart_httpd="y"
 
-options=`getopt -o h -l auto,disable-auto-passwd,enable-bind-config,mysql-host:,mysql-port:,mysql-root-password:,mysql-httpd-host:,sys-default-domain:,sys-fullname:,sys-ip-address:,sys-org-name:,sys-long-org-name:,enable-subdomains,disable-httpd-restart,disable-generate-ssl-certs,mysql-server-package:,disable-mysql-configuration -- "$@"`
+options=`getopt -o h -l auto,disable-auto-passwd,enable-bind-config,mysql-host:,mysql-port:,mysql-user:,mysql-user-password:,mysql-httpd-host:,sys-default-domain:,sys-fullname:,sys-ip-address:,sys-org-name:,sys-long-org-name:,enable-subdomains,disable-httpd-restart,disable-generate-ssl-certs,mysql-server-package:,disable-mysql-configuration -- "$@"`
 
 if [ $? != 0 ] ; then echo "Terminating..." >&2 ; usage $0 ;exit 1 ; fi
 
@@ -919,7 +921,9 @@ do
 		MYSQLSHOW="$MYSQLSHOW -P$mysql_port"
 		mysql_remote_server=true
 		;;
-	--mysql-root-password)
+    --mysql-user)
+        mysql_user="$2";shift 2 ;;
+	--mysql-user-password)
 		rt_passwd="$2";shift 2
 		;;
 	--mysql-httpd-host)
@@ -1060,7 +1064,7 @@ if [ "$auto_passwd" = "true" ]; then
     # Mysql Root password (what if remote DB ?)
     if [ -z "$rt_passwd" ]; then
         rt_passwd=$(generate_passwd)
-        echo "Mysql root (root): $rt_passwd" >> $passwd_file
+        echo "Mysql user ($mysql_user) : $rt_passwd" >> $passwd_file
     fi
 
     # For both DB and system
@@ -1090,7 +1094,7 @@ else
     # Ask for user passwords
 
     if [ -z "$rt_passwd" ]; then
-        rt_passwd=$(input_password "MySQL root")
+        rt_passwd=$(input_password "MySQL $mysql_user")
     fi
 
     codendiadm_passwd=$(input_password "$PROJECT_ADMIN user")
