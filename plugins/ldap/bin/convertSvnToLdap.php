@@ -161,7 +161,7 @@ function svn_utils_convert_access_file_to_ldap(LDAP_UserManager $ldapUm, $srcFil
 $pluginManager = PluginManager::instance();
 $ldapPlugin    = $pluginManager->getPluginByName('ldap');
 if ($ldapPlugin && $plugin_manager->isPluginAvailable($ldapPlugin)) {
-    $ldapUm = new LDAP_UserManager($ldapPlugin->getLdap());
+    $ldapUm = $ldapPlugin->getLdapUserManager();
 
     $args = extract_params($_SERVER['argv']);
     if(isset($args['src']) && isset($args['dst'])) {
