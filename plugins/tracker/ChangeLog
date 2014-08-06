@@ -1,3 +1,6 @@
+Version 5.431 - Tuleap 7.4
+    * Fix request #7280: artifact images slideshow shows each one twice (both hidden and displayed versions)
+
 Version 5.430 - Tuleap 7.4
     * story #7299: Return cross references as a field in tracker artifact list for REST
 
