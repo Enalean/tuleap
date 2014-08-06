@@ -19,6 +19,7 @@ Version 7.4 (Not released yet)
 	* Parts of request #7265: XML import enforces field dependencies but not workflow
 	* request #7270: Export Per Tracker ID in CSV
 	* request #7298: fix some tracker graphs not showing on project homepage
+	* request #7177: PhpWiki and PHP 5.4 (Contrib Nicolas Lafont)
 
 	== Features ==
 	* Third step of story #6971: Git online commit in the Tuleap UI
