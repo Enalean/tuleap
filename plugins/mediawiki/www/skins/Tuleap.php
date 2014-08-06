@@ -10,6 +10,8 @@
  * @ingroup Skins
  */
 
+require_once MEDIAWIKI_BASE_DIR.'/MediawikiAdminManager.class.php';
+
 if( !defined( 'MEDIAWIKI' ) )
 	die( -1 );
 
@@ -110,20 +112,16 @@ class TuleapTemplate extends BaseTemplate {
             $this->html( 'headelement' );
 
             echo "\n<!-- FUSIONFORGE BodyHeader BEGIN -->\n";
-            $GLOBALS['HTML']->header($this->params);
-            $pfuser = UserManager::instance()->getCurrentUser();
 
-            $forge_user_manager = new User_ForgeUserGroupPermissionsManager(
-                new User_ForgeUserGroupPermissionsDao()
-            );
-            $has_special_permission = $forge_user_manager->doesUserHavePermission(
-                $pfuser,
-                new User_ForgeUserGroupPermission_MediawikiAdminAllProjects()
-            );
-
-            if ($pfuser->isMember($GLOBALS['group']->getId(), 'A') || $has_special_permission) {
-                echo '<ul class="nav nav-pills toolbar"><li><a href="/plugins/mediawiki/forge_admin?group_id='.$GLOBALS['group']->getId().'">'.$GLOBALS['Language']->getText('global', 'Administration').'</a></li></ul>';
+            if ($this->isCompatibilityViewEnabled()) {
+                $this->addForgeBackLinksToSidebar();
+            } else  {
+                $GLOBALS['HTML']->header($this->params);
+                if ($this->IsUserAdmin()) {
+                    echo '<ul class="nav nav-pills toolbar"><li><a href="/plugins/mediawiki/forge_admin?group_id='.$GLOBALS['group']->getId().'">'.$GLOBALS['Language']->getText('global', 'Administration').'</a></li></ul>';
+                }
             }
+ 
             echo "<div id=\"ff-mw-wrapper\"><div style=\"font-size:x-small;\">\n";
             echo "<!-- FUSIONFORGE BodyHeader END -->\n";
 
@@ -228,9 +226,49 @@ class TuleapTemplate extends BaseTemplate {
         wfRestoreWarnings();
     } // end of execute() method
 
-	/*************************************************************************************************/
+     private function IsUserAdmin() {
+        $pfuser             = UserManager::instance()->getCurrentUser();
+        $forge_user_manager = new User_ForgeUserGroupPermissionsManager(
+            new User_ForgeUserGroupPermissionsDao()
+        );
+        $has_special_permission = $forge_user_manager->doesUserHavePermission(
+            $pfuser,
+            new User_ForgeUserGroupPermission_MediawikiAdminAllProjects()
+        );
 
-	protected function renderPortals( $sidebar ) {
+        return $pfuser->isMember($GLOBALS['group']->getId(), 'A') || $has_special_permission;
+     }
+
+     private function isCompatibilityViewEnabled() {
+        $plugin_has_view_enabled = (bool) forge_get_config('enable_compatibility_view', 'mediawiki');
+
+        $admin_manager   = new MediawikiAdminManager(new MediawikiDao());
+        $project         = $GLOBALS['group'];
+        $project_options = $admin_manager->getOptions($project);
+
+        return ($plugin_has_view_enabled && $project_options['enable_compatibility_view']);
+     }
+
+     private function addForgeBackLinksToSidebar() {
+        $forge_name    = forge_get_config('sys_fullname');
+        $added_toolbox = array(
+            array(
+                'text' => $GLOBALS['Language']->getText('plugin_mediawiki', 'back_to_forge', array($forge_name)),
+                'href' => '/projects/'.$GLOBALS['group']->getUnixName()
+            )
+        );
+
+        if ($this->IsUserAdmin()) {
+            $added_toolbox []= array(
+                'text' => $GLOBALS['Language']->getText('global', 'Administration'),
+                'href' => '/plugins/mediawiki/forge_admin?group_id='.$GLOBALS['group']->getId()
+            );
+        }
+
+        $this->data['sidebar'][$forge_name] = $added_toolbox;
+     }
+
+     protected function renderPortals( $sidebar ) {
 		if ( !isset( $sidebar['SEARCH'] ) ) $sidebar['SEARCH'] = true;
 		if ( !isset( $sidebar['TOOLBOX'] ) ) $sidebar['TOOLBOX'] = true;
 		if ( !isset( $sidebar['LANGUAGES'] ) ) $sidebar['LANGUAGES'] = true;

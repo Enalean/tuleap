@@ -41,6 +41,10 @@ class MediawikiAdminPresenter {
         return $GLOBALS['Language']->getText('plugin_mediawiki', 'admin_title');
     }
 
+    public function can_show_options() {
+        return forge_get_config('enable_compatibility_view', 'mediawiki');
+    }
+
     public function is_compatibility_enabled_value() {
         return $this->is_compatibility_view_enabled;
     }

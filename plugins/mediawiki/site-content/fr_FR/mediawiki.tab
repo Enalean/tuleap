@@ -20,3 +20,5 @@ plugin_mediawiki	group_tuleap	Groupes $1
 plugin_mediawiki	or_string	ou
 plugin_mediawiki	restore_defaults	Restaurer choix par défaut
 
+plugin_mediawiki	back_to_forge	Retour à $1
+
