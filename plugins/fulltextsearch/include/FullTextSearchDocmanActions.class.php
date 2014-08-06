@@ -97,6 +97,20 @@ class FullTextSearchDocmanActions {
         $this->client->index($item->getGroupId(), $item->getId(), $indexed_data);
     }
 
+    /**
+     * Index a new wiki document with permissions
+     *
+     * @param Docman_Item    $item                The docman item
+     * @param array          $wiki_page_metadata  The wiki page metadata
+     */
+    public function indexNewWikiDocument(Docman_Item $item, array $wiki_page_metadata) {
+        $this->logger->debug('[Docman] ElasticSearch: index new docman wiki document #' . $item->getId());
+
+        $indexed_data = $this->getIndexedData($item) + $this->getWikiContent($wiki_page_metadata);
+
+        $this->client->index($item->getGroupId(), $item->getId(), $indexed_data);
+    }
+
     public function indexCopiedItem(Docman_Item $item) {
         $this->logger->debug('[Docman] ElasticSearch: index new copied item #' . $item->getId() . ' and its children');
 
@@ -154,20 +168,6 @@ class FullTextSearchDocmanActions {
     }
 
     /**
-     * Index a new wiki document with permissions
-     *
-     * @param Docman_Item    $item                The docman item
-     * @param array          $wiki_page_metadata  The wiki page metadata
-     */
-    public function indexNewWikiDocument(Docman_Item $item, array $wiki_page_metadata) {
-        $this->logger->debug('[Docman] ElasticSearch: index new docman wiki document #' . $item->getId());
-
-        $indexed_data = $this->getIndexedData($item) + $this->getWikiContent($wiki_page_metadata);
-
-        $this->client->index($item->getGroupId(), $item->getId(), $indexed_data);
-    }
-
-    /**
      * Update document approval comments
      *
      * @param Docman_Item $item
@@ -180,7 +180,7 @@ class FullTextSearchDocmanActions {
             'approval_table_comments' => $this->request_data_factory->getDocumentApprovalTableComments($item, $version)
         );
 
-        $this->client->update($item->getGroupId(), $item->getId(), $update_data);
+        $this->indexOrUpdate($item->getGroupId(), $item->getId(), $update_data);
     }
 
     /**
@@ -190,30 +190,42 @@ class FullTextSearchDocmanActions {
      * @param Docman_Version $version The version to index
      */
     public function indexNewVersion(Docman_Item $item, Docman_Version $version) {
-        $this->logger->debug('[Docman] ElasticSearch: index new version #' . $version->getId() .
-            ' for document #' . $item->getId()
-        );
+        try {
+            $this->client->getIndexedElement($item->getGroupId(), $item->getId());
 
-        $update_data = array();
-        $this->request_data_factory->updateFile($update_data, $version->getPath());
+            $this->logger->debug('[Docman] ElasticSearch: index new version #' . $version->getId() . ' for document #' . $item->getId());
 
-        $this->client->update($item->getGroupId(), $item->getId(), $update_data);
+            $update_data = array();
+            $this->request_data_factory->updateFile($update_data, $version->getPath());
+            $this->client->update($item->getGroupId(), $item->getId(), $update_data);
+
+        } catch (ElasticSearch_ElementNotIndexed $exception) {
+            $this->indexNewDocument($item, $version);
+            return;
+        }
     }
 
     /**
      * Index a new wiki document with permissions
      *
-     * @param Docman_Item    $item    The docman item
-     * @param Docman_Version $version The version to index
-     * @param string         $wiki_content WikiPage metadata
+     * @param Docman_Item    $item               The docman item
+     * @param Docman_Version $version            The version to index
+     * @param array          $wiki_page_metadata WikiPage metadata
      */
-    public function indexNewWikiVersion(Docman_Item $item, $wiki_content) {
-        $this->logger->debug('[Docman] ElasticSearch: index new version for wiki document #' . $item->getId());
+    public function indexNewWikiVersion(Docman_Item $item, array $wiki_page_metadata) {
+        try {
+            $this->client->getIndexedElement($item->getGroupId(), $item->getId());
 
-        $update_data = array();
-        $this->request_data_factory->updateContent($update_data, $wiki_content);
+            $this->logger->debug('[Docman] ElasticSearch: index new version for wiki document #' . $item->getId());
 
-        $this->client->update($item->getGroupId(), $item->getId(), $update_data);
+            $update_data = array();
+            $this->request_data_factory->updateContent($update_data, $wiki_page_metadata['content']);
+            $this->client->update($item->getGroupId(), $item->getId(), $update_data);
+
+        } catch (ElasticSearch_ElementNotIndexed $exception) {
+            $this->indexNewWikiDocument($item, $wiki_page_metadata);
+            return;
+        }
     }
 
     /**
@@ -222,18 +234,59 @@ class FullTextSearchDocmanActions {
      * @param Docman_Item $item The item
      */
     public function updateDocument(Docman_Item $item) {
-        $this->logger->debug('[Docman] ElasticSearch: update metadata of document #' . $item->getId());
+        try {
+            $this->client->getIndexedElement($item->getGroupId(), $item->getId());
 
-        $update_data = array();
-        $this->request_data_factory->setUpdatedData($update_data, 'title',       $item->getTitle());
-        $this->request_data_factory->setUpdatedData($update_data, 'description', $item->getDescription());
+            $this->logger->debug('[Docman] ElasticSearch: update document #' . $item->getId());
 
-        $this->updateContent($item, $update_data);
+            $update_data = array();
+            $this->request_data_factory->setUpdatedData($update_data, 'title',       $item->getTitle());
+            $this->request_data_factory->setUpdatedData($update_data, 'description', $item->getDescription());
 
-        $update_data = $this->request_data_factory->updateCustomTextualMetadata($item, $update_data);
-        $update_data = $this->updateCustomDateMetadata($item, $update_data);
+            $this->updateContent($item, $update_data);
 
-        $this->client->update($item->getGroupId(), $item->getId(), $update_data);
+            $update_data = $this->request_data_factory->updateCustomTextualMetadata($item, $update_data);
+            $update_data = $this->updateCustomDateMetadata($item, $update_data);
+
+            $this->client->update($item->getGroupId(), $item->getId(), $update_data);
+
+        } catch (ElasticSearch_ElementNotIndexed $exception) {
+            $this->indexNonexistantDocument($item);
+            return;
+        }
+    }
+
+    private function indexNonexistantDocument(Docman_Item $item) {
+        $item_factory = $this->getDocmanItemFactory($item);
+        $item_type    = $item_factory->getItemTypeForItem($item);
+
+        switch ($item_type) {
+            case PLUGIN_DOCMAN_ITEM_TYPE_EMPTY:
+                $this->indexNewEmptyDocument($item);
+                break;
+
+            case PLUGIN_DOCMAN_ITEM_TYPE_FOLDER:
+                $this->indexNewDocmanFolder($item);
+                break;
+
+            case PLUGIN_DOCMAN_ITEM_TYPE_WIKI:
+                $wiki_page = new WikiPage($item->getGroupId(), $item->getPagename());
+                $this->indexNewWikiDocument($item, $wiki_page->getMetadata());
+                break;
+
+            case PLUGIN_DOCMAN_ITEM_TYPE_LINK:
+                $this->indexNewLinkDocument($item);
+                break;
+
+            case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
+            case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
+                $this->indexNewDocument($item);
+                break;
+
+            default:
+                $this->logger->debug("[Docman] ElasticSearch: unrecognized item type, can't index it");
+                break;
+        }
     }
 
     private function updateContent(Docman_Item $item, array &$update_data) {
@@ -276,16 +329,24 @@ class FullTextSearchDocmanActions {
         $items        = array_merge(array($item), $item_factory->getAllChildrenFromParent($item));
 
         foreach($items as $item_to_index) {
-            $this->logger->debug('[Docman] ElasticSearch: update permissions of item #' . $item_to_index->getId());
+            try {
+                $this->client->getIndexedElement($item->getGroupId(), $item->getId());
 
-            $update_data = array();
-            $this->request_data_factory->setUpdatedData(
-                $update_data,
-                'permissions',
-                $this->request_data_factory->getCurrentPermissions($item)
-            );
+                $this->logger->debug('[Docman] ElasticSearch: update permissions of item #' . $item_to_index->getId());
 
-            $this->client->update($item_to_index->getGroupId(), $item_to_index->getId(), $update_data);
+                $update_data = array();
+                $this->request_data_factory->setUpdatedData(
+                    $update_data,
+                    'permissions',
+                    $this->request_data_factory->getCurrentPermissions($item)
+                );
+
+                $this->client->update($item_to_index->getGroupId(), $item_to_index->getId(), $update_data);
+
+            } catch(ElasticSearch_ElementNotIndexed $exception) {
+                $this->indexNonexistantDocument($item_to_index);
+                return;
+            }
         }
     }
 

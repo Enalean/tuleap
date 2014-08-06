@@ -44,6 +44,17 @@ class FullTextSearchWikiActions {
         $this->logger               = $logger;
     }
 
+    private function indexOrUpdate($project_id, $wiki_page_id, $data) {
+        try {
+            $this->client->getIndexedElement($project_id, $wiki_page_id);
+            $this->client->update($project_id, $wiki_page_id, $data);
+
+        } catch (ElasticSearch_ElementNotIndexed $exception) {
+            $this->client->index($project_id, $wiki_page_id, $data);
+            return;
+        }
+    }
+
     public function checkProjectMappingExists($project_id) {
         $this->logger->debug('[Wiki] ElasticSearch: get the mapping for project #' . $project_id);
 
@@ -129,7 +140,7 @@ class FullTextSearchWikiActions {
             $this->request_data_factory->getCurrentPermissions($wiki_page)
         );
 
-        $this->client->update($wiki_page->getGid(), $wiki_page->getId(), $update_data);
+        $this->indexOrUpdate($wiki_page->getGid(), $wiki_page->getId(), $update_data);
     }
 
     private function indexAllProjectWikiPages($project_id) {

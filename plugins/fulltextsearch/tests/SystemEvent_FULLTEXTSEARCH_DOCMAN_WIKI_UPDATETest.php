@@ -25,9 +25,26 @@ class SystemEvent_FULLTEXTSEARCH_DOCMAN_WIKI_UPDATETest extends SystemEvent_FULL
 
     protected $klass = 'SystemEvent_FULLTEXTSEARCH_DOCMAN_WIKI_UPDATE';
 
+    public function aSystemEventWithParameter($parameters) {
+        $id = $type = $owner = $priority = $status = $create_date = $process_date = $end_date = $log = null;
+        $event = partial_mock(
+            'SystemEvent_FULLTEXTSEARCH_DOCMAN_WIKI_UPDATE',
+            array('getWikiPage'),
+            array($id, $type, $owner, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log)
+        );
+
+        $this->wiki_page = stub('WikiPage')->getMetadata()->returns(array());
+        stub($event)->getWikiPage()->returns($this->wiki_page);
+
+        $event->setFullTextSearchActions($this->actions)
+            ->setItemFactory($this->item_factory)
+            ->setVersionFactory($this->version_factory);
+        return $event;
+    }
+
     public function itDelegatesIndexingToFullTextSearchActions() {
-        $event = $this->aSystemEventWithParameter('101::103::this is my content');
-        stub($this->actions)->indexNewWikiVersion($this->item, 'this is my content')->once();
+        $event = $this->aSystemEventWithParameter('101::103');
+        stub($this->actions)->indexNewWikiVersion($this->item, array())->once();
         $this->assertTrue($event->process());
         $this->assertEqual($event->getLog(), 'OK');
         $this->assertEqual($event->getStatus(), SystemEvent::STATUS_DONE);

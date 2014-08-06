@@ -127,6 +127,26 @@ class FullTextSearchWikiActionsTests extends TuleapTestCase {
         $this->actions->delete($this->wiki_page);
     }
 
+    public function itDontUpdateAWikiPageIfitsNotPreviouslyIndexed() {
+        stub($this->client)->getIndexedElement()->throws(new ElasticSearch_ElementNotIndexed);
+        stub($this->client)->update()->never();
+
+        $this->actions->updatePermissions($this->wiki_page);
+    }
+
+    public function itCanUpdateAWikiPageFromItsId() {
+        $expected = array(
+            200,
+            101,
+            array(
+                'permissions' => array('@site_active')
+            )
+        );
+        $this->client->expectOnce('update', $expected);
+
+        $this->actions->updatePermissions($this->wiki_page);
+    }
+
     public function itDontDeleteADocumentIfitsNotPreviouslyIndexed() {
         stub($this->client)->getIndexedElement()->throws(new ElasticSearch_ElementNotIndexed);
         stub($this->client)->delete()->never();

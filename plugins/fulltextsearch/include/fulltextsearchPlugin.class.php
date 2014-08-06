@@ -375,7 +375,7 @@ class fulltextsearchPlugin extends Plugin {
      * Event triggered when a wiki document is updated
      */
     public function plugin_docman_event_wikipage_update($params) {
-        $this->getDocmanSystemEventManager()->queueNewWikiDocumentVersion($params['item'], $params['wiki_content']);
+        $this->getDocmanSystemEventManager()->queueNewWikiDocumentVersion($params['item']);
     }
 
     /**

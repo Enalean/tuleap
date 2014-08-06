@@ -222,6 +222,14 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
         $this->actions->updateDocument($this->item);
     }
 
+    public function itDontUpdateADocumentIfitsNotPreviouslyIndexed() {
+        stub($this->item_factory)->getAllChildrenFromParent($this->item)->returns(array());
+        stub($this->client)->getIndexedElement()->throws(new ElasticSearch_ElementNotIndexed);
+        stub($this->client)->update()->never();
+
+        $this->actions->updatePermissions($this->item);
+    }
+
     public function itIndexesCopiedElementAndItsChildren() {
         $sub_item           = stub('Docman_Item')->getId()->returns(102);
         stub($sub_item)->getGroupId()->returns(200);
