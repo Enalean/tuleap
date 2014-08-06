@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "homepage": "http://tuleap.net",
   "licenses": {
-    "type": "GPLv2"
+    "type": "Copyright Enalean 2014"
   },
   "dependencies": {},
   "devDependencies": {

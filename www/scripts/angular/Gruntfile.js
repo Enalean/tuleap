@@ -114,6 +114,16 @@ module.exports = function ( grunt ) {
           }
         ]
       },
+      build_appmodules: {
+        files: [
+          {
+            src: [ '<%= app_files.modules %>' ],
+            dest: '<%= build_dir %>/modules',
+            cwd: '.',
+            expand: true
+          }
+        ]
+      },
       build_vendorjs: {
         files: [
           {
@@ -151,6 +161,7 @@ module.exports = function ( grunt ) {
         src: [ 
           '<%= vendor_files.js %>', 
           'module.prefix', 
+          '<%= build_dir %>/modules/**/*.js',
           '<%= build_dir %>/src/**/*.js', 
           '<%= html2js.app.dest %>', 
           '<%= vendor_files.js %>', 
@@ -296,7 +307,10 @@ module.exports = function ( grunt ) {
         src: [ 
           '<%= vendor_files.js %>',
           '<%= html2js.app.dest %>',
-          'vendor/angular-mocks/angular-mocks.js'
+          'vendor/angular-mocks/angular-mocks.js',
+          '<%= app_files.modules %>',
+          '<%= app_files.js %>',
+          '<%= app_files.jsunit %>'
         ]
       }
     },
@@ -342,7 +356,7 @@ module.exports = function ( grunt ) {
         files: [ 
           '<%= app_files.js %>'
         ],
-        tasks: [ 'jshint:src', 'karma:continuous', 'copy:build_appjs', 'copy:compile_assets', 'concat' ]
+        tasks: [ 'jshint:src', 'karma:continuous', 'copy:build_appmodules', 'copy:build_appjs', 'copy:compile_assets', 'concat' ]
       },
 
       /**
@@ -417,6 +431,7 @@ module.exports = function ( grunt ) {
     'jshint',
     'recess:build',
     'copy:build_assets', 
+    'copy:build_appmodules',
     'copy:build_appjs',
     'copy:build_vendorjs',
     'karmaconfig',
