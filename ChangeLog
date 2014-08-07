@@ -31,6 +31,9 @@ Version 7.4 (Not released yet)
 	* Convert @mentions into clickable links (part of request #7303)
 	* Configure tests for clean run in Docker
 
+    == Development ==
+	* request #7314: Remove legacy DB tables creation (Do not create docman v1 tables in 2014)
+
 Version 7.3 (Thursday, July 24th 2014)
 
         == Features ==
