@@ -1,3 +1,6 @@
+Version 0.50 - Tuleap 7.4
+    * tasks #7307: load wiki editor plugin only in correct view
+
 Version 0.49 - Tuleap 7.4
     * tasks #7308: adapt mediawiki Tuleap skin to options
 
