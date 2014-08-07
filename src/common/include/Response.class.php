@@ -61,6 +61,13 @@ class Response {
         $this->tours[] = $tour;
     }
 
+    /**
+     * @return Tuleap_Tour[]
+     */
+    function getTours() {
+        return $this->tours;
+    }
+
     function addFeedback($level, $message,  $purify=CODENDI_PURIFIER_CONVERT_HTML) {
         $this->_feedback->log($level, $message, $purify);
     }
