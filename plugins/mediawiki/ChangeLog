@@ -1,3 +1,6 @@
+Version 0.48 - Tuleap 7.4
+    * tasks #7313: refactor Tuleap.php so the file can be worked with
+
 Version 0.47 - Tuleap 7.4
     * tasks #7306: Project admin can choose its Mediawiki (embedded or not)
 
