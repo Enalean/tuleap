@@ -1,0 +1,8 @@
+www/scripts/angular/*.sw*
+www/scripts/angular/*~
+www/scripts/angular/build/
+www/scripts/angular/bin/
+www/scripts/angular/node_modules/
+www/scripts/angular/vendor/
+www/scripts/angular/src/**/*.css
+www/themes/**/*.css

@@ -77,17 +77,18 @@ class CampaignRepresentation {
         $this->form_element_factory = $form_element_factory;
         $this->user                 = $user;
 
-        $this->id            = $artifact->getId();
-        $this->uri           = self::ROUTE . '/' . $this->id;
-        $this->name          = $this->getFieldValue(self::FIELD_NAME)->getValue();
-        $this->status        = $this->artifact->getStatus();
+        $this->id                   = $artifact->getId();
+        $this->uri                  = self::ROUTE . '/' . $this->id;
+        $this->name                 = $this->getFieldValue(self::FIELD_NAME)->getValue();
+        $this->status               = $this->artifact->getStatus();
 
-        $executions_status   = $this->getExecutionsStatus();
+        $executions_status          = $this->getExecutionsStatus();
 
-        $this->nb_of_not_run = $executions_status[self::STATUS_NOT_RUN];
-        $this->nb_of_passed  = $executions_status[self::STATUS_PASSED];
-        $this->nb_of_failed  = $executions_status[self::STATUS_FAILED];
-        $this->nb_of_blocked = $executions_status[self::STATUS_BLOCKED];
+        $this->nb_of_not_run        = $executions_status[self::STATUS_NOT_RUN];
+        $this->nb_of_passed         = $executions_status[self::STATUS_PASSED];
+        $this->nb_of_failed         = $executions_status[self::STATUS_FAILED];
+        $this->nb_of_blocked        = $executions_status[self::STATUS_BLOCKED];
+        $this->total                = $this->nb_of_not_run + $this->nb_of_passed + $this->nb_of_failed + $this->nb_of_blocked;
     }
 
     private function getFieldValue($field_shortname) {
