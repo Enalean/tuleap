@@ -21,6 +21,7 @@ Version 7.4 (Not released yet)
 	* request #7270: Export Per Tracker ID in CSV
 	* request #7298: fix some tracker graphs not showing on project homepage
 	* request #7177: PhpWiki and PHP 5.4 (Contrib Nicolas Lafont)
+	* Fix request #7273: Files with French characters in name do not open in SVN
 
 	== Features ==
 	* Third step of story #6971: Git online commit in the Tuleap UI
