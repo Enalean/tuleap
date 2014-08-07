@@ -6,7 +6,7 @@ ExecutionConfig.$inject = ['$stateProvider'];
 
 function ExecutionConfig($stateProvider) {
     $stateProvider.state('executions', {
-        url: '/campaigns/:id/executions',
+        url: '/campaigns/:id-:slug',
         views: {
             "main": {
                 controller: 'ExecutionListCtrl',

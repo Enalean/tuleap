@@ -1,1 +1,8 @@
-<div>TODO</div>
+<div ng-repeat="category in categories">
+    <div class="category">{{ category.label }}</div>
+    <div class="execution-list" ng-repeat="execution in category.executions">
+        <div class="execution-item">
+            <div class="execution-item-content {{ execution.status | dasherize }}">#{{ execution.test_def.id }} {{ execution.test_def.summary }}</div>
+        </div>
+    </div>
+</div>
