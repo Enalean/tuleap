@@ -270,20 +270,7 @@ function create_project($data, $do_not_exit = false) {
         // Activate other system references not associated with any service
         $reference_manager =& ReferenceManager::instance();
         $reference_manager->addSystemReferencesWithoutService($template_id,$group_id);
-        
-        
-        // Create default document group
-        $query = "INSERT INTO doc_groups(groupname,group_id,group_rank) " 
-            ."values ("
-            ."'Documents',"
-            ."'$group_id',"
-            ."'10')";
-        
-        $result=db_query($query);
-        if (!$result) {
-            exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','cant_create_docgroup'));
-        }
-        
+
         //Copy ugroups
         $ugroup_mapping = array();
         ugroup_copy_ugroups($template_id,$group_id,$ugroup_mapping);
