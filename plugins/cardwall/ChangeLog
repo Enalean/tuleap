@@ -1,3 +1,6 @@
+Version 1.35 - Tuleap 7.4
+    * request #7301: Fix bug- Cardwalls don't take transition and dependencies into account on drag 'n' drop
+
 Version 1.34 - Tuleap 7.3
     * request #7068 Allow Cross Origin Resources Sharing for REST API, fixing test
 

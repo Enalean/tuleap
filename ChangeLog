@@ -2,13 +2,14 @@ Version 7.4 (Not released yet)
 
 	== Plugins ==
 	* fulltextsearch: 0.77
-	* tracker: 5.431
+	* tracker: 5.432
 	* mediawiki: 0.48
 	* docman: 2.26.46
 	* git: 3.94
 	* graphontrackersv5: 5.13
 	* ldap: 3.52
 	* requesthelp: 1.3.8
+	* cardwall: 1.35
 
         == Themes ==
 	* FlamingParrot: 1.37
