@@ -362,3 +362,21 @@ require_once "$IP/extensions/SyntaxHighlight_GeSHi/SyntaxHighlight_GeSHi.php";
 
 // PdfBook Extension inclusion
 require_once("$IP/extensions/PdfBook/PdfBook.php");
+
+require_once MEDIAWIKI_BASE_DIR.'/MediawikiManager.class.php';
+$manager = new MediawikiManager(new MediawikiDao());
+
+if ($manager->isCompatibilityViewEnabled($group)) {
+    // WikiEditor Extension inclusion
+    require_once("$IP/extensions/WikiEditor/WikiEditor.php");
+
+    # Enables use of WikiEditor by default but still allow users to disable it in preferences
+    $wgDefaultUserOptions['usebetatoolbar'] = 1;
+    $wgDefaultUserOptions['usebetatoolbar-cgd'] = 1;
+
+    # Displays the Preview and Changes tabs
+    $wgDefaultUserOptions['wikieditor-preview'] = 1;
+
+    # Displays the Publish and Cancel buttons on the top right side
+    $wgDefaultUserOptions['wikieditor-publish'] = 1;
+}
