@@ -2,7 +2,7 @@ Version 7.4 (Not released yet)
 
 	== Plugins ==
 	* fulltextsearch: 0.77
-	* tracker: 5.432
+	* tracker: 5.433
 	* mediawiki: 0.49
 	* docman: 2.26.46
 	* git: 3.94
@@ -17,7 +17,7 @@ Version 7.4 (Not released yet)
 	== Bug fix ==
 	* Fix regression introduced by commit 4b3eedc in tasks #6918: Send notifications after copy
 	* Fix request #7143: Use of register globals in user permissions page (Contribution Nicolas Lafont - WDMédia)
-	* Parts of request #7265: XML import enforces field dependencies but not workflow
+	* request #7265: XML import enforces field dependencies but not workflow
 	* request #7270: Export Per Tracker ID in CSV
 	* request #7298: fix some tracker graphs not showing on project homepage
 	* request #7177: PhpWiki and PHP 5.4 (Contrib Nicolas Lafont)
