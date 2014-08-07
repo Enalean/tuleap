@@ -93,7 +93,7 @@ class SkinTuleap extends SkinTemplate {
  */
 class TuleapTemplate extends BaseTemplate {
 
-        var $project = false;
+        public $project = false;
 
 	/**
 	 * Template filter callback for FusionForge skin.
@@ -101,125 +101,132 @@ class TuleapTemplate extends BaseTemplate {
 	 * class, and a wrapper for MediaWiki's localization database, and
 	 * outputs a formatted page.
 	 *
-	 * @access private
 	 */
-	function execute() {
-		global $wgHtml5;
-		// Suppress warnings to prevent notices about missing indexes in $this->data
-		wfSuppressWarnings();
+	public function execute() {
+            global $wgHtml5;
+            // Suppress warnings to prevent notices about missing indexes in $this->data
+            wfSuppressWarnings();
 
-		$this->html( 'headelement' );
+            $this->html( 'headelement' );
 
-		echo "\n<!-- FUSIONFORGE BodyHeader BEGIN -->\n";
-		$GLOBALS['HTML']->header($this->params);
-                $pfuser = UserManager::instance()->getCurrentUser();
+            echo "\n<!-- FUSIONFORGE BodyHeader BEGIN -->\n";
+            $GLOBALS['HTML']->header($this->params);
+            $pfuser = UserManager::instance()->getCurrentUser();
 
-                $forge_user_manager = new User_ForgeUserGroupPermissionsManager(
-                    new User_ForgeUserGroupPermissionsDao()
-                );
-                $has_special_permission = $forge_user_manager->doesUserHavePermission(
-                    $pfuser,
-                    new User_ForgeUserGroupPermission_MediawikiAdminAllProjects()
-                );
+            $forge_user_manager = new User_ForgeUserGroupPermissionsManager(
+                new User_ForgeUserGroupPermissionsDao()
+            );
+            $has_special_permission = $forge_user_manager->doesUserHavePermission(
+                $pfuser,
+                new User_ForgeUserGroupPermission_MediawikiAdminAllProjects()
+            );
 
-                if ($pfuser->isMember($GLOBALS['group']->getId(), 'A') || $has_special_permission) {
-                    echo '<ul class="nav nav-pills toolbar"><li><a href="/plugins/mediawiki/forge_admin?group_id='.$GLOBALS['group']->getId().'">'.$GLOBALS['Language']->getText('global', 'Administration').'</a></li></ul>';
-                }
-		echo "<div id=\"ff-mw-wrapper\"><div style=\"font-size:x-small;\">\n";
-		echo "<!-- FUSIONFORGE BodyHeader END -->\n";
+            if ($pfuser->isMember($GLOBALS['group']->getId(), 'A') || $has_special_permission) {
+                echo '<ul class="nav nav-pills toolbar"><li><a href="/plugins/mediawiki/forge_admin?group_id='.$GLOBALS['group']->getId().'">'.$GLOBALS['Language']->getText('global', 'Administration').'</a></li></ul>';
+            }
+            echo "<div id=\"ff-mw-wrapper\"><div style=\"font-size:x-small;\">\n";
+            echo "<!-- FUSIONFORGE BodyHeader END -->\n";
 
-?><div id="globalWrapper">
-<div id="column-content"><div id="content">
-	<a id="top"></a>
-	<?php if($this->data['sitenotice']) { ?><div id="siteNotice"><?php $this->html('sitenotice') ?></div><?php } ?>
+            ?>
+            <div id="globalWrapper">
+                <div id="column-content">
+                    <div id="content">
+                        <a id="top"></a>
+                        <?php if($this->data['sitenotice']) { ?>
+                            <div id="siteNotice"><?php $this->html('sitenotice') ?></div><?php
 
-	<h1 id="firstHeading" class="firstHeading"><span<?php if ($wgHtml5) echo ' dir="auto"'; ?>><?php $this->html('title') ?></span></h1>
-	<div id="bodyContent" class="mw-body">
-		<div id="siteSub"><?php $this->msg('tagline') ?></div>
-		<div id="contentSub"<?php $this->html('userlangattributes') ?>><?php $this->html('subtitle') ?></div>
-<?php if($this->data['undelete']) { ?>
-		<div id="contentSub2"><?php $this->html('undelete') ?></div>
-<?php } ?><?php if($this->data['newtalk'] ) { ?>
-		<div class="usermessage"><?php $this->html('newtalk')  ?></div>
-<?php } ?><?php if($this->data['showjumplinks']) { ?>
-		<div id="jump-to-nav" class="mw-jump"><?php $this->msg('jumpto') ?> <a href="#column-one"><?php $this->msg('jumptonavigation') ?></a>, <a href="#searchInput"><?php $this->msg('jumptosearch') ?></a></div>
-<?php } ?>
-		<!-- start content -->
-<?php $this->html('bodytext') ?>
-		<?php if($this->data['catlinks']) { $this->html('catlinks'); } ?>
-		<!-- end content -->
-		<?php if($this->data['dataAfterContent']) { $this->html ('dataAfterContent'); } ?>
-		<div class="visualClear"></div>
-	</div>
-</div></div>
-<div id="column-one"<?php $this->html('userlangattributes')  ?>>
-<?php $this->cactions(); ?>
-	<div class="portlet" id="p-personal">
-		<h5><?php $this->msg('personaltools') ?></h5>
-		<div class="pBody">
-<?php
-	$ul_shown = false;
-	foreach ($this->getPersonalTools() as $key => $item) {
-		if (!$ul_shown) {
-?>
-			<ul<?php $this->html('userlangattributes') ?>>
-<?php
-			$ul_shown = true;
-		}
-		echo "\n" . $this->makeListItem($key, $item);
-	}
-	if ($ul_shown) {
-		echo "\n</ul>\n";
-	}
-?>
-		</div>
-	</div>
-<?php
-	$this->renderPortals( $this->data['sidebar'] );
-?>
-</div><!-- end of the left (by default at least) column -->
-<div class="visualClear"></div>
-<?php
-	$validFooterIcons = $this->getFooterIcons( "icononly" );
-	$validFooterLinks = $this->getFooterLinks( "flat" ); // Additional footer links
+                        } ?>
 
-	if ( count( $validFooterIcons ) + count( $validFooterLinks ) > 0 ) { ?>
-<div id="footer"<?php $this->html('userlangattributes') ?>>
-<?php
-		$footerEnd = '</div>';
-	} else {
-		$footerEnd = '';
-	}
-	foreach ( $validFooterIcons as $blockName => $footerIcons ) { ?>
-	<div id="f-<?php echo htmlspecialchars($blockName); ?>ico">
-<?php foreach ( $footerIcons as $icon ) { ?>
-		<?php echo $this->getSkin()->makeFooterIcon( $icon ); ?>
+                        <h1 id="firstHeading" class="firstHeading">
+                            <span<?php if ($wgHtml5) echo ' dir="auto"'; ?>><?php $this->html('title') ?>
+                            </span>
+                        </h1>
+                        <div id="bodyContent" class="mw-body">
+                            <div id="siteSub"><?php $this->msg('tagline') ?></div>
+                            <div id="contentSub"<?php $this->html('userlangattributes') ?>><?php $this->html('subtitle') ?>
+                            </div>
+                            <?php if($this->data['undelete']) { ?>
+                                <div id="contentSub2"><?php $this->html('undelete') ?></div>
+                            <?php } ?>
+                            <?php if($this->data['newtalk'] ) { ?>
+                                <div class="usermessage"><?php $this->html('newtalk')  ?></div>
+                            <?php } ?>
+                            <?php if($this->data['showjumplinks']) { ?>
+                                <div id="jump-to-nav" class="mw-jump"><?php $this->msg('jumpto') ?> <a href="#column-one"><?php $this->msg('jumptonavigation') ?></a>, <a href="#searchInput"><?php $this->msg('jumptosearch') ?></a></div>
+                            <?php } ?>
+                            <!-- start content -->
+                            <?php $this->html('bodytext') ?>
+                            <?php if($this->data['catlinks']) { $this->html('catlinks'); } ?>
+                            <!-- end content -->
+                            <?php if($this->data['dataAfterContent']) { $this->html ('dataAfterContent'); } ?>
+                            <div class="visualClear"></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="column-one"<?php $this->html('userlangattributes')  ?>>
+                    <?php $this->cactions(); ?>
+                    <div class="portlet" id="p-personal">
+                        <h5><?php $this->msg('personaltools') ?></h5>
+                        <div class="pBody">
+                            <?php
+                                $ul_shown = false;
+                                foreach ($this->getPersonalTools() as $key => $item) {
+                                    if (! $ul_shown) {
+                                        echo '<ul' . $this->html('userlangattributes') . '>';
+                                            $ul_shown = true;
+                                    }
+                                    echo "\n" . $this->makeListItem($key, $item);
+                                }
+                                if ($ul_shown) {
+                                    echo "\n</ul>\n";
+                                }
+                            ?>
+                        </div>
+                    </div>
+                    <?php
+                        $this->renderPortals( $this->data['sidebar'] );
+                    ?>
+                </div><!-- end of the left (by default at least) column -->
+                <div class="visualClear"></div>
+                    <?php
+                        $validFooterIcons = $this->getFooterIcons( "icononly" );
+                        $validFooterLinks = $this->getFooterLinks( "flat" ); // Additional footer links
 
-<?php }
-?>
-	</div>
-<?php }
+                        if ( count( $validFooterIcons ) + count( $validFooterLinks ) > 0 ) { ?>
+                            <div id="footer"<?php $this->html('userlangattributes') ?>>
+                            <?php
+                            $footerEnd = '</div>';
+                        } else {
+                            $footerEnd = '';
+                        }
+                        foreach ( $validFooterIcons as $blockName => $footerIcons ) { ?>
+                            <div id="f-<?php echo htmlspecialchars($blockName); ?>ico">
+                                <?php foreach ( $footerIcons as $icon ) { ?>
+                                                <?php echo $this->getSkin()->makeFooterIcon( $icon ); ?>
 
-		if ( count( $validFooterLinks ) > 0 ) {
-?>	<ul id="f-list">
-<?php
-			foreach( $validFooterLinks as $aLink ) { ?>
-		<li id="<?php echo $aLink ?>"><?php $this->html($aLink) ?></li>
-<?php
-			}
-?>
-	</ul>
-<?php	}
-echo $footerEnd;
-?>
+                                <?php } ?>
+                            </div>
+                            <?php
+                        }
 
-</div>
-<?php
-		$this->printTrail();
-		echo "</div></div>\n";
-		$GLOBALS['HTML']->footer($this->params);
-		wfRestoreWarnings();
-	} // end of execute() method
+                        if ( count( $validFooterLinks ) > 0 ) { ?>
+                            <ul id="f-list">
+                                <?php
+                                foreach( $validFooterLinks as $aLink ) { ?>
+                                    <li id="<?php echo $aLink ?>"><?php $this->html($aLink) ?></li>
+                                    <?php
+                                } ?>
+                            </ul>
+                            <?php
+                        }
+                        echo $footerEnd; ?>
+                </div>
+        <?php
+        $this->printTrail();
+        echo "</div></div>\n";
+        $GLOBALS['HTML']->footer($this->params);
+        wfRestoreWarnings();
+    } // end of execute() method
 
 	/*************************************************************************************************/
 
