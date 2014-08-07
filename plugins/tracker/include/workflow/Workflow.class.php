@@ -56,6 +56,8 @@ class Workflow {
     /** @var WorkflowBackendLogger */
     private $logger;
 
+    private $disabled = false;
+
     public function __construct(
         Tracker_RulesManager $global_rules_manager,
         Tracker_Workflow_Trigger_RulesManager $trigger_rules_manager,
@@ -373,14 +375,12 @@ class Workflow {
      * @throws Tracker_Workflow_GlobalRulesViolationException
      */
     public function checkGlobalRules(array $fields_data) {
+        if ($this->disabled) {
+            return true;
+        }
         if (! $this->global_rules_manager->validate($this->tracker_id, $fields_data)) {
             throw new Tracker_Workflow_GlobalRulesViolationException();
         }
-    }
-
-    /** @return array of Tracker_Rule */
-    public function getGlobalRules() {
-        return $this->global_rules_manager->getRules($tracker);
     }
 
     /**
@@ -392,7 +392,8 @@ class Workflow {
     }
 
     public function disable() {
-        $this->is_used = false;
+        $this->is_used  = false;
+        $this->disabled = true;
     }
 
    /**

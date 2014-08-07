@@ -514,4 +514,57 @@ class Workflow_checkGlobalRulesTest extends TuleapTestCase {
         }
     }
 }
-?>
+
+class Workflow_DisableTest extends TuleapTestCase {
+
+    private $transition;
+    private $field_id = 42;
+    private $workflow;
+    private $artifact;
+    private $rules_manager;
+    private $tracker_id  = 123;
+
+    public function setUp() {
+        parent::setUp();
+
+        $value_from  = null;
+        $value_to    = stub('Tracker_FormElement_Field_List_Value')->getId()->returns(66);
+        $this->transition  = mock('Transition');
+        stub($this->transition)->getFieldValueFrom()->returns($value_from);
+        stub($this->transition)->getFieldValueTo()->returns($value_to);
+        stub($this->transition)->validate()->returns(false);
+        $this->workflow    = aWorkflow()->withFieldId($this->field_id)->withTransitions(array($this->transition))->build();
+        $this->artifact    = mock('Tracker_Artifact');
+        $this->rules_manager = mock ('Tracker_RulesManager');
+    }
+
+    public function itIsNotValidWhenTheWOrkflowIsEnabled() {
+        $fields_data = array($this->field_id => 66);
+        $this->assertFalse($this->workflow->validate($fields_data, $this->artifact));
+    }
+
+    public function itDisablesTheValidationOfTransitions() {
+        $this->workflow->disable();
+
+        $fields_data = array($this->field_id => 66);
+        $this->assertTrue($this->workflow->validate($fields_data, $this->artifact));
+    }
+
+    public function itDisablesTheGlobalRulesValidation() {
+        $fields_data = array();
+
+        stub($this->rules_manager)->validate()->returns(false);
+        $workflow = aWorkflow()
+            ->withGlobalRulesManager($this->rules_manager)
+            ->withTrackerId($this->tracker_id)
+            ->build();
+
+        $workflow->disable();
+
+        try {
+            $workflow->checkGlobalRules($fields_data);
+        } catch (Exception $e) {
+            $this->fail('Should not throw an exception: '. get_class($e));
+        }
+    }
+}
