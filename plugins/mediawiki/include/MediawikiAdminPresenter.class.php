@@ -28,10 +28,25 @@ class MediawikiAdminPresenter {
     /** @var Boolean */
     private $is_default_mapping;
 
-    public function __construct(Project $project, array $groups_permissions, $is_default_mapping) {
-        $this->project            = $project;
-        $this->groups_permissions = $groups_permissions;
-        $this->is_default_mapping = $is_default_mapping;
+    private $is_compatibility_view_enabled = true;
+
+    public function __construct(Project $project, array $groups_permissions, $is_default_mapping, array $options) {
+        $this->project                       = $project;
+        $this->groups_permissions            = $groups_permissions;
+        $this->is_default_mapping            = $is_default_mapping;
+        $this->is_compatibility_view_enabled = $enable_compatibility_view = (bool) isset($options['enable_compatibility_view']) ? $options['enable_compatibility_view'] : 0;
+    }
+
+    public function admin_title() {
+        return $GLOBALS['Language']->getText('plugin_mediawiki', 'admin_title');
+    }
+
+    public function is_compatibility_enabled_value() {
+        return $this->is_compatibility_view_enabled;
+    }
+
+    public function compatibility_view_text() {
+        return $GLOBALS['Language']->getText('plugin_mediawiki', 'compatibility_view_text');
     }
 
     public function title() {

@@ -377,7 +377,7 @@ class MediawikiDao extends DataAccessObject {
     }
 
     public function clearPageCacheForSchema($schema) {
-        $schema = $this->da->quoteSmartSchema($schema);;
+        $schema = $this->da->quoteSmartSchema($schema);
 
         $sql = "DELETE FROM $schema.mwobjectcache";
         return $this->update($sql);
@@ -419,6 +419,29 @@ class MediawikiDao extends DataAccessObject {
         }
 
         return $this->getMediawikiDatabaseName($project, false);
+    }
+
+    public function getAdminOptions($project_id) {
+        $project_id = $this->da->escapeInt($project_id);
+        $sql = "SELECT * FROM plugin_mediawiki_admin_options WHERE project_id = $project_id";
+
+        return $this->retrieveFirstRow($sql);
+    }
+
+    /**
+     *
+     * @param int $project_id
+     * @param bool $enable_compatibility_view
+     * @return boolean true if success
+     */
+    public function updateAdminOptions($project_id, $enable_compatibility_view) {
+        $project_id = $this->da->escapeInt($project_id);
+        $enable_compatibility_view = $this->da->escapeInt($enable_compatibility_view);
+
+        $sql = "REPLACE INTO plugin_mediawiki_admin_options
+                VALUES($project_id, $enable_compatibility_view)";
+
+        return $this->update($sql);
     }
 }
 
