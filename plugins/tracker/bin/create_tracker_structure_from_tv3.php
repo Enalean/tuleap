@@ -53,7 +53,7 @@ if (! $tv3->userCanView()) {
     fwrite(STDERR, 'ERROR: You cannot access the tracker '. $tv3_tracker_id . PHP_EOL);
     exit(1);
 }
-$new_tracker = TrackerFactory::instance()->createFromTV3($tv3_tracker_id, $project, $name, $description, $itemname);
+$new_tracker = TrackerFactory::instance()->createFromTV3(UserManager::instance()->getCurrentUser(), $tv3_tracker_id, $project, $name, $description, $itemname);
 if (! $new_tracker) {
     fwrite(STDERR, $GLOBALS['Response']->getRawFeedback());
     fwrite(STDERR, 'ERROR: Unable to migrate the tracker structure'. PHP_EOL);

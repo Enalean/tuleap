@@ -950,30 +950,30 @@ class TrackerFactory {
     /**
      * Create a tracker v5 from a tracker v3
      *
+     * @param PFUser         $user           the user who requested the creation
      * @param int            $atid           the id of the tracker v3
      * @param Project        $project        the Id of the project to create the tracker
      * @param string         $name           the name of the tracker (label)
      * @param string         $description    the description of the tracker
      * @param string         $itemname       the short name of the tracker
      *
+     * @throws Tracker_Exception_Migration_GetTv3Exception
+     *
      * @return Tracker
      */
-    public function createFromTV3($atid, Project $project, $name, $description, $itemname) {
+    public function createFromTV3(PFUser $user, $atid, Project $project, $name, $description, $itemname) {
         require_once 'common/tracker/ArtifactType.class.php';
         $tv3 = new ArtifactType($project, $atid);
-        if (!$tv3 || !is_object($tv3)) {
-            exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('tracker_index','not_create_at'));
-        }
         if ($tv3->isError()) {
-            exit_error($GLOBALS['Language']->getText('global','error'),$tv3->getErrorMessage());
+            throw new Tracker_Exception_Migration_GetTv3Exception($tv3->getErrorMessage());
         }
         // Check if this tracker is valid (not deleted)
-        if ( !$tv3->isValid() ) {
-            exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('tracker_add','invalid'));
+        if (! $tv3->isValid() ) {
+            throw new Tracker_Exception_Migration_GetTv3Exception($GLOBALS['Language']->getText('tracker_add','invalid'));
         }
         //Check if the user can view the artifact
-        if (!$tv3->userCanView()) {
-            exit_permission_denied();
+        if (! $tv3->userCanView($user->getId())) {
+            throw new Tracker_Exception_Migration_GetTv3Exception($GLOBALS['Language']->getText('include_exit','no_perm'));
         }
 
         $tracker = null;
@@ -985,4 +985,3 @@ class TrackerFactory {
         return $tracker;
     }
 }
-?>

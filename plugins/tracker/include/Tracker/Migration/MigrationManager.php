@@ -83,12 +83,13 @@ class Tracker_Migration_MigrationManager {
     public function migrate($username, $project_id, $tv3_id, $tracker_name, $tracker_description, $tracker_short_name) {
         $this->logger->info('-- Beginning of migration of tracker v3 '.$tv3_id.' to '.$tracker_name.' --');
 
-        $tracker_id   = $this->createTrackerStructure($project_id, $tv3_id, $tracker_name, $tracker_description, $tracker_short_name);
+        $user         = $this->user_manager->getUserByUserName($username);
+        $tracker_id   = $this->createTrackerStructure($user, $project_id, $tv3_id, $tracker_name, $tracker_description, $tracker_short_name);
         $archive_path = $this->exportTV3Data($tv3_id);
         $this->importArtifactsData($username, $tracker_id, $archive_path);
 
         $this->logger->info('-- End of migration of tracker v3 '.$tv3_id.' to '.$tracker_name.' --');
-        $this->logger->sendMail($this->user_manager->getUserByUserName($username), $this->project_manager->getProject($project_id), $tv3_id, $tracker_name);
+        $this->logger->sendMail($user, $this->project_manager->getProject($project_id), $tv3_id, $tracker_name);
     }
 
     public function isTrackerUnderMigration(Tracker $tracker) {
@@ -104,6 +105,7 @@ class Tracker_Migration_MigrationManager {
     }
 
     private function importArtifactsData($username, $tracker_id, $archive_path) {
+        $this->logger->info('--> Import into TV5 ');
         $this->user_manager->forceLogin($username);
 
         $tracker = $this->tracker_factory->getTrackerById($tracker_id);
@@ -112,8 +114,9 @@ class Tracker_Migration_MigrationManager {
 
             $zip = new ZipArchive();
 
-            if ($zip->open($archive_path) !== true) {
-                throw new Tracker_Exception_Migration_OpenArchiveException($archive_path);
+            $open_state = $zip->open($archive_path);
+            if ($open_state !== true) {
+                throw new Tracker_Exception_Migration_OpenArchiveException($archive_path, $open_state);
             }
 
             $archive = new Tracker_Artifact_XMLImport_XMLImportZipArchive(
@@ -124,6 +127,7 @@ class Tracker_Migration_MigrationManager {
 
             $xml_import->importFromArchive($tracker, $archive);
         }
+        $this->logger->info('<-- TV5 imported '.PHP_EOL);
     }
 
     private function getXMLImporter() {
@@ -170,6 +174,7 @@ class Tracker_Migration_MigrationManager {
     }
 
     private function exportTV3Data($tv3_id) {
+        $this->logger->info('--> Export TV3 data ');
         $archive_path    = $this->generateTemporaryPath();
         $indent_xsl_path = $this->getIndentXSLResourcePath();
         $xml             = new DOMDocument("1.0", "UTF8");
@@ -194,6 +199,7 @@ class Tracker_Migration_MigrationManager {
         $archive->addFromString('artifacts.xml', $proc->transformToXML($xml));
 
         $archive->close();
+        $this->logger->info('<-- TV3 data exported '.PHP_EOL);
 
         return $archive_path;
     }
@@ -211,12 +217,14 @@ class Tracker_Migration_MigrationManager {
         return $file_path;
     }
 
-    private function createTrackerStructure($project_id, $tv3_id, $tracker_name, $tracker_description, $tracker_short_name) {
+    private function createTrackerStructure(PFUser $user, $project_id, $tv3_id, $tracker_name, $tracker_description, $tracker_short_name) {
         $project = $this->project_manager->getProject($project_id);
-        $new_tracker = $this->tracker_factory->createFromTV3($tv3_id, $project, $tracker_name, $tracker_description, $tracker_short_name);
+        $this->logger->info('--> Migrate structure ');
+        $new_tracker = $this->tracker_factory->createFromTV3($user, $tv3_id, $project, $tracker_name, $tracker_description, $tracker_short_name);
         if (! $new_tracker) {
             throw new Tracker_Exception_Migration_StructureCreationException($tracker_name, $tv3_id);
         }
+        $this->logger->info('<-- Structure migrated '.PHP_EOL);
 
         return $new_tracker->getId();
     }

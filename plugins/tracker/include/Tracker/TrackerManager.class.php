@@ -251,7 +251,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
             }
         } else if ($request->existAndNonEmpty('create_mode') && $request->get('create_mode') == 'tv3') {
             $atid = $request->get('tracker_new_tv3');
-            $new_tracker = $this->getTrackerFactory()->createFromTV3($atid, $project, $name, $description, $itemname);
+            $user = UserManager::instance()->getCurrentUser();
+            $new_tracker = $this->getTrackerFactory()->createFromTV3($user, $atid, $project, $name, $description, $itemname);
         } else if ($request->existAndNonEmpty('create_mode') && $request->get('create_mode') == 'migrate_from_tv3') {
             $tracker_id = $request->get('tracker_new_tv3');
             if ($this->getTV3MigrationManager()->askForMigration($project, $tracker_id, $name, $description, $itemname)) {
