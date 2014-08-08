@@ -362,6 +362,7 @@ require_once "$IP/extensions/SyntaxHighlight_GeSHi/SyntaxHighlight_GeSHi.php";
 
 // PdfBook Extension inclusion
 require_once("$IP/extensions/PdfBook/PdfBook.php");
+$wgPdfBookTab = true;
 
 require_once MEDIAWIKI_BASE_DIR.'/MediawikiManager.class.php';
 $manager = new MediawikiManager(new MediawikiDao());
