@@ -1,3 +1,6 @@
+Version 0.51 - Tuleap 7.4
+    * request #7328 Pdfbook download option is not displayed
+
 Version 0.50 - Tuleap 7.4
     * tasks #7307: load wiki editor plugin only in correct view
 
