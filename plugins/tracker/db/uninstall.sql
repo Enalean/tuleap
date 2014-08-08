@@ -89,3 +89,5 @@ DELETE FROM cross_references WHERE source_type = 'plugin_tracker_artifact' OR ta
 DELETE FROM user_preferences WHERE preference_name LIKE 'tracker\_%\_last\_renderer';
 DELETE FROM user_preferences WHERE preference_name LIKE 'tracker\_%\_last\_report';
 
+DELETE FROM user_access WHERE user_id = 90;
+DELETE FROM user WHERE user_id = 90;
