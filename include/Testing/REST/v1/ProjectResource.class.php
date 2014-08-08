@@ -112,10 +112,12 @@ class ProjectResource {
         foreach ($artifact_list as $artifact) {
             $campaign_representation = new CampaignRepresentation();
             $campaign_representation->build($artifact, $this->tracker_form_element_factory, $this->user);
-            $result[] = $campaign_representation;
+            $result[$artifact->getId()] = $campaign_representation;
         }
 
         $this->sendPaginationHeaders($limit, $offset, count($result));
+
+        krsort($result);
 
         return array_slice($result, $offset, $limit);
     }

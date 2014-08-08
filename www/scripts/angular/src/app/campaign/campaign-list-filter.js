@@ -26,6 +26,6 @@ function CampaignListFilter($filter) {
             }
         });
 
-        return _.uniq(result, function(campaign) { return campaign.id; });
+        return _.sortBy(_.uniq(result, function(campaign) { return campaign.id; }), 'id').reverse();
     };
 }

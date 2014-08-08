@@ -401,7 +401,7 @@ module.exports = function ( grunt ) {
         files: [
           '<%= app_files.jsunit %>'
         ],
-        tasks: [ 'jshint:test', 'karma:unit:run' ],
+        tasks: [ 'jshint:test', 'karma:continuous' ],
         options: {
           livereload: false
         }
