@@ -47,6 +47,19 @@ autoload:
 	     (cd "plugins/$$path/include"; phpab -q --compat -o autoload.php .) \
         done;
 
+autoload-with-userid:
+	@echo "Generate core"
+	@(cd src/common; phpab -q --compat -o autoload.php --exclude "./wiki/phpwiki/*" .;chown $(USER_ID):$(USER_ID) autoload.php)
+	@echo "Generate tests"
+	@(cd tests/lib; phpab  -q --compat -o autoload.php .;chown $(USER_ID):$(USER_ID) autoload.php)
+	@for path in `ls plugins | egrep -v "$(AUTOLOAD_EXCLUDES)"`; do \
+		echo "Generate plugin $$path"; \
+		(cd "plugins/$$path/include"; phpab -q --compat -o autoload.php .;chown $(USER_ID):$(USER_ID) autoload.php) \
+		done;
+
+autoload-docker:
+	@docker run --rm=true -v $(CURDIR):/tuleap enalean/tuleap-dev-swissarmyknife --user-id `id -u` --autoload
+
 autoload-dev:
 	@tools/utils/autoload.sh
 
@@ -55,6 +68,9 @@ less:
 
 less-dev:
 	@tools/utils/less.sh watch `pwd`
+
+less-docker:
+	@docker run --rm=true -v $(CURDIR):/tuleap enalean/tuleap-dev-swissarmyknife --user-id `id -u` --less
 
 composer_update:
 	cp tests/rest/bin/composer.json .

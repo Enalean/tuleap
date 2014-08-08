@@ -21,6 +21,13 @@
 mode=$1
 basedir=$2
 
+set_user_id()
+{
+    if [ -n "$USER_ID" ]; then
+        chown $USER_ID:$USER_ID $1;
+    fi
+}
+
 clean_process()
 {
     kill -9 `ps aux | grep inotifywait | grep -v grep | awk '{print $2}'`
@@ -41,6 +48,7 @@ compile_less()
         if [[ $can_compile_to_css == 1 ]]; then
             echo "Compiling $1"
             recess --compile "$path/$filename.less" > "$path/$filename.css"
+            set_user_id "$path/$filename.css"
             nb_generated_lines=$(wc -l "$path/$filename.css" | awk '{print $1}')
 
             if [[ $nb_generated_lines == 0 ]]; then
@@ -58,7 +66,9 @@ less()
     done
 
     recess --compile --compress "$1/src/www/themes/common/css/bootstrap-2.3.2/bootstrap.less" > "$1/src/www/themes/common/css/bootstrap-2.3.2.min.css"
+    set_user_id "$1/src/www/themes/common/css/bootstrap-2.3.2.min.css"
     recess --compile --compress "$1/src/www/themes/common/css/bootstrap-2.3.2/responsive.less" > "$1/src/www/themes/common/css/bootstrap-responsive-2.3.2.min.css"
+    set_user_id "$1/src/www/themes/common/css/bootstrap-responsive-2.3.2.min.css"
 }
 
 less_dev()
