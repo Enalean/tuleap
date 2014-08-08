@@ -9,6 +9,13 @@ function ExecutionListCtrl($scope, $state, ExecutionService) {
         executions  = ExecutionService.getExecutions(campaign_id);
 
     $scope.categories = groupExecutionsByCategory(executions);
+    $scope.search     = '';
+    $scope.status     = {
+        passed:  false,
+        failed:  false,
+        blocked: false,
+        notrun:  false
+    };
 
     function groupExecutionsByCategory(executions) {
         var categories = {};

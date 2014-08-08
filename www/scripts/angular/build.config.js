@@ -55,7 +55,8 @@ module.exports = {
       'vendor/angular-ui-utils/modules/route/route.js',
       'vendor/lodash/dist/lodash.min.js',
       'vendor/restangular/dist/restangular.js',
-      'vendor/angular-filter-pack/dist/angular-filter-pack.min.js'
+      'vendor/angular-filter-pack/dist/angular-filter-pack.min.js',
+      'vendor/angular-bootstrap/ui-bootstrap.js'
     ],
     css: [
     ]

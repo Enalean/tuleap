@@ -6,7 +6,8 @@
     "angular-mocks": "~1.0.7",
     "angular-ui-router": "~0.2.10",
     "restangular": "~1.4.0",
-    "angular-filter-pack": "~0.2.0"
+    "angular-filter-pack": "~0.2.0",
+    "angular-bootstrap": "~0.8.0"
   },
   "dependencies": {},
   "resolutions": {

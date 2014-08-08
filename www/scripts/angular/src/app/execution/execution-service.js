@@ -17,7 +17,7 @@ function ExecutionService(Restangular) {
                 "id": 24605,
                 "uri": "executions/24605",
                 "results": "",
-                "status": "Passed",
+                "status": "passed",
                 "last_update_date": null,
                 "assigned_to": {
                     "id": 100,
@@ -53,7 +53,7 @@ function ExecutionService(Restangular) {
                 "id": 24606,
                 "uri": "executions/24606",
                 "results": "",
-                "status": "Failed",
+                "status": "failed",
                 "last_update_date": null,
                 "assigned_to": {
                     "id": 100,
@@ -89,7 +89,7 @@ function ExecutionService(Restangular) {
                 "id": 24607,
                 "uri": "executions/24607",
                 "results": "",
-                "status": "Blocked",
+                "status": "blocked",
                 "last_update_date": null,
                 "assigned_to": {
                     "id": 100,
@@ -125,7 +125,7 @@ function ExecutionService(Restangular) {
                 "id": 24608,
                 "uri": "executions/24608",
                 "results": "",
-                "status": "Not Run",
+                "status": "notrun",
                 "last_update_date": null,
                 "assigned_to": {
                     "id": 100,
@@ -161,7 +161,7 @@ function ExecutionService(Restangular) {
                 "id": 24609,
                 "uri": "executions/24609",
                 "results": "",
-                "status": "Not Run",
+                "status": "notrun",
                 "last_update_date": null,
                 "assigned_to": {
                     "id": 100,

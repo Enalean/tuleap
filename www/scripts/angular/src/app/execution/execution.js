@@ -1,5 +1,6 @@
 angular.module('execution', [
     'restangular',
     'angularFilterPack',
-    'templates-app'
+    'templates-app',
+    'ui.bootstrap'
 ]);
