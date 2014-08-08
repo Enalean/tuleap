@@ -1,12 +1,12 @@
 <div class="navbar navbar-fixed-top">
     {{# has_motd }}<div class="motd">{{{ motd }}}</div>{{/ has_motd }}
-    <a href="/"><div class="logo"></div></a>
+    <a id="navbar-logo" href="/"><div class="logo"></div></a>
     <div class="navbar-inner">
         <div class="container-fluid">
             <ul class="nav">
                 {{# user_is_logged_in }}
                 <li class={{ nav_my_class }}>
-                    <a href="/my/">
+                    <a id="navbar-my" href="/my/">
                         {{ menu_my_personnal_page_text }}
                     </a>
                 </li>

@@ -1,6 +1,6 @@
 <div class="sidebar-nav">
     <div class="project-title-container" data-content="{{{ project_privacy }}}">
-        <a href="{{ projectLink }}" class="project-title">
+        <a href="{{ projectLink }}" id="sidebar-dashboard" class="project-title">
             {{#projectIsPublic}}
                 <i class="icon-unlock-alt"></i>
             {{/projectIsPublic}}
@@ -14,12 +14,12 @@
     <ul class="nav nav-list">
         {{#sidebar}}
             <li {{#enabled}}class="active"{{/enabled}}>
-                <a href="{{{ link }}}" title="{{{ name }}}"><i class="{{ icon }}"></i> {{{ label }}}</a>
+                <a id="{{ id }}" href="{{{ link }}}" title="{{{ name }}}"><i class="{{ icon }}"></i> {{{ label }}}</a>
             </li>
         {{/sidebar}}
     </ul>
     {{# is_sidebar_collapsable }}
-        <i class="icon-chevron-left sidebar-collapse"></i>
+        <i id="sidebar-collapser" class="icon-chevron-left sidebar-collapse"></i>
     {{/ is_sidebar_collapsable }}
     <div class="sidebar-about">
         <p>{{{ powered_by }}}</p>

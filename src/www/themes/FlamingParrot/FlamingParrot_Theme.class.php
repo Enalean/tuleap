@@ -29,6 +29,7 @@ require_once 'NavBarProjectPresenter.class.php';
 require_once 'NavBarPresenter.class.php';
 require_once 'SearchFormPresenter.class.php';
 require_once 'FlamingParrot_CSSFilesProvider.class.php';
+require_once 'keyboard_navigation/KeyboardNavigationModalPresenter.class.php';
 
 class FlamingParrot_Theme extends DivBasedTabbedLayout {
 
@@ -45,6 +46,9 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
         $this->includeJavascriptFile('/themes/FlamingParrot/js/navbar.js');
         $this->includeJavascriptFile('/themes/FlamingParrot/js/sidebar.js');
         $this->includeJavascriptFile('/themes/FlamingParrot/js/motd.js');
+        $this->includeJavascriptFile('/themes/FlamingParrot/js/keymaster/keymaster.js');
+        $this->includeJavascriptFile('/themes/FlamingParrot/js/keymaster-sequence/keymaster.sequence.min.js');
+        $this->includeJavascriptFile('/themes/FlamingParrot/js/keyboard-navigation.js');
     }
 
     private function render($template_name, $presenter) {
@@ -260,6 +264,8 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
             $this->getForgeVersion(),
             $sidebar_collapsable
         ));
+
+        $this->keyboardModal();
     }
 
     private function getProjectPrivacy(Project $project) {
@@ -281,6 +287,10 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
 
     private function getForgeVersion() {
         return trim(file_get_contents($GLOBALS['codendi_dir'].'/VERSION'));
+    }
+
+    private function keyboardModal() {
+        $this->render('keyboard_navigation_help_modal', new KeyboardNavigationModalPresenter());
     }
 
     /**
