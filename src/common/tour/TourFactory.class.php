@@ -20,14 +20,22 @@
 
 class Tuleap_TourFactory {
 
-    const CUSTOM_TOURS_LIST_FILE = 'tour.json';
+    /** @var ProjectManager */
+    private $project_manager;
+
+    /** @var URL */
+    private $url_processor;
+
+    public function __construct(ProjectManager $project_manager, URL $url_processor) {
+        $this->project_manager = $project_manager;
+        $this->url_processor   = $url_processor;
+    }
 
     /**
      * Instantiate a Tuleap_Tour by its name
      *
-     * @throws Exception when tour is unknown
-     *
-     * @param type $tour_name
+     * @throws Tuleap_UnknownTourException
+     * @throws Tuleap_InvalidTourException
      *
      * @return Tuleap_Tour
      */
@@ -37,50 +45,22 @@ class Tuleap_TourFactory {
                 $tour = new Tuleap_Tour_WelcomeTour($user);
                 break;
             default:
-                throw new Exception("Unknown tour '$tour_name'");
+                $tour = $this->getCustomTour($user, $tour_name);
         }
 
         return $tour;
     }
 
-    public function getCustomToursForPage(PFUser $user, $request_uri) {
-        $tour_folder   = $this->getTourFolder($user);
-        $enabled_tours = $this->getEnabledTours($tour_folder);
-        if (! $enabled_tours) {
-            return array();
-        }
-        $custom_tours = array();
-        foreach ($enabled_tours as $enabled_tour) {
-            $file_name = $tour_folder.$enabled_tour['tour_name'].'.json';
-            if (! file_exists($file_name)) {
-                continue;
-            }
-
-            $tour = json_decode(file_get_contents($file_name), true);
-            if ($enabled_tour['url'] == $request_uri) {
-                $custom_tours[$enabled_tour['tour_name']] = $tour;
-            }
-        }
-
-        return $custom_tours;
+    private function getCustomTour($user, $tour_name) {
+        $custom_tours_factory = new Tuleap_CustomToursFactory($this->project_manager, $this->url_processor);
+        return $custom_tours_factory->getTour($user, $tour_name);
     }
 
-    private function getEnabledTours($tour_folder) {
-        $config_file = $tour_folder.self::CUSTOM_TOURS_LIST_FILE;
-        if (! is_dir($tour_folder) || ! file_exists($config_file)) {
-            return;
-        }
-
-        $enabled_tours = json_decode(file_get_contents($config_file), true);
-        if (! is_array($enabled_tours)) {
-            return;
-        }
-
-        return $enabled_tours;
-    }
-
-    private function getTourFolder(PFUser $user) {
-        $user_lang = $user->getLocale();
-        return Config::get('sys_custom_incdir').'/'.$user_lang.'/tour/';
+    /**
+     * @return Tuleap_Tour[]
+     */
+    public function getToursForPage(PFUser $user, $current_location) {
+        $custom_tours_factory = new Tuleap_CustomToursFactory($this->project_manager, $this->url_processor);
+        return $custom_tours_factory->getToursForPage($user, $current_location);
     }
 }

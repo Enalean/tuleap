@@ -48,6 +48,22 @@ Mock::generatePartial(
           'checkNotActiveProject')
 );
 
+Mock::generatePartial(
+    'URLVerification',
+    'URLVerificationTestVersion4',
+    array('isException',
+          'verifyProtocol',
+          'verifyHost',
+          'verifyRequest',
+          'getUrlChunks',
+          'checkRestrictedAccess',
+          'checkPrivateAccess',
+          'getRedirectionURL',
+          'header',
+          'checkNotActiveProject',
+          'getUrl')
+);
+
 require_once('common/event/EventManager.class.php');
 Mock::generate('EventManager');
 
@@ -505,7 +521,10 @@ class URLVerificationTest extends TuleapTestCase {
     }
 
     function testAssertValidUrlWithNoRedirection() {
-        $urlVerification = new URLVerificationTestVersion3($this);
+        $urlVerification = new URLVerificationTestVersion4($this);
+
+        stub($urlVerification)->getUrl()->returns(mock('URL'));
+
         $urlVerification->setReturnValue('isException', false);
         $urlVerification->setReturnValue('getUrlChunks', null);
 
@@ -517,7 +536,10 @@ class URLVerificationTest extends TuleapTestCase {
     }
 
     function testAssertValidUrlWithRedirection() {
-        $urlVerification = new URLVerificationTestVersion3($this);
+        $urlVerification = new URLVerificationTestVersion4($this);
+
+        stub($urlVerification)->getUrl()->returns(mock('URL'));
+
         $urlVerification->setReturnValue('isException', false);
         $urlVerification->setReturnValue('getUrlChunks', array('protocol' => 'https', 'host' => 'secure.example.com'));
 
@@ -578,7 +600,9 @@ class URLVerificationTest extends TuleapTestCase {
     }
 
     function testUserCanAccessPrivateShouldLetUserPassWhenNotInAProject() {
-        $urlVerification = TestHelper::getPartialMock('URLVerification', array('getProjectManager', 'exitError', 'displayRestrictedUserError', 'displayPrivateProjectError'));
+        $urlVerification = TestHelper::getPartialMock('URLVerification', array('getProjectManager', 'exitError', 'displayRestrictedUserError', 'displayPrivateProjectError', 'getUrl'));
+
+        stub($urlVerification)->getUrl()->returns(mock('URL'));
 
         $urlVerification->expectNever('exitError');
         $urlVerification->expectNever('displayRestrictedUserError');

@@ -72,6 +72,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(Event::REST_GET_PROJECT_BACKLOG);
             $this->addHook(Event::REST_PUT_PROJECT_BACKLOG);
             $this->addHook(Event::REST_OPTIONS_PROJECT_BACKLOG);
+            $this->addHook(Event::GET_PROJECTID_FROM_URL);
         }
         return parent::getHooksAndCallbacks();
     }
@@ -694,6 +695,13 @@ class AgileDashboardPlugin extends Plugin {
             new Tracker_ArtifactDao(),
             $this->getArtifactFactory()
         );
+    }
+
+    /** @see Event::GET_PROJECTID_FROM_URL */
+    public function get_projectid_from_url($params) {
+        if (strpos($params['url'],'/plugins/agiledashboard/') === 0) {
+            $params['project_id'] = $params['request']->get('group_id');
+        }
     }
 }
 

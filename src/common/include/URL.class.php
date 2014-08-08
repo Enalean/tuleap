@@ -69,7 +69,7 @@ class URL {
     function getGroupIdFromUrl($url) {
         $req_uri='/'.trim($url, "/");
         // /projects/ and /viewvc/
-        if ((strpos($req_uri,'/projects/') === 0)||(strpos($req_uri,'/viewvc.php/') !== false)) {
+        if ((strpos($req_uri,'/projects/') === 0) || (strpos($req_uri,'/viewvc.php/') !== false)) {
             if (strpos($req_uri,'/viewvc.php/') !== false) {
                 $this_proj_name = $this->getGroupNameFromSVNUrl($req_uri);
             } else if (strpos($req_uri,'/projects/') !== false) {
@@ -124,33 +124,23 @@ class URL {
             }
         }
 
-        if (strpos($req_uri,'/plugins/mediawiki/wiki/') === 0) {
-            $pieces       = explode("/", $req_uri);
-            $project_name = $pieces[4];
-            
-            $dao          = $this->getProjectDao();
-            $dao_results  = $dao->searchByUnixGroupName($project_name);
-
-            if ($dao_results->rowCount() < 1) {
-                // project does not exist
-                return false;
-            }
-
-            $project_data = $dao_results->getRow();
-            $group_id     = $project_data['group_id'];
-        }
-
         EventManager::instance()->processEvent(
             Event::GET_PROJECTID_FROM_URL,
             array(
-                'url'        => $req_uri,
-                'project_id' => &$group_id
+                'url'         => $req_uri,
+                'project_id'  => &$group_id,
+                'project_dao' => $this->getProjectDao(),
+                'request'     => new Codendi_Request($_REQUEST)
             )
         );
 
-        if (isset($group_id)) {
+        if ($group_id) {
             return $group_id;
-        } else return null;
+        } elseif (isset($_REQUEST['group_id'])) {
+            return $_REQUEST['group_id'];
+        }
+
+        return null;
     }
 
     function getProjectDao() {

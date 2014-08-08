@@ -73,6 +73,7 @@ class trackerPlugin extends Plugin {
         $this->addHook(Event::REST_PROJECT_RESOURCES);
 
         $this->addHook(Event::BACKEND_ALIAS_GET_ALIASES);
+        $this->addHook(Event::GET_PROJECTID_FROM_URL);
     }
 
     public function getHooksAndCallbacks() {
@@ -807,4 +808,18 @@ class trackerPlugin extends Plugin {
 
         $params['aliases'][] = new System_Alias(self::EMAILGATEWAY_USERNAME, "\"|$command\"");
     }
+    public function get_projectid_from_url($params) {
+        $url = $params['url'];
+        if (strpos($url,'/plugins/tracker/') === 0) {
+            if (! $params['request']->get('tracker')) {
+                return;
+            }
+
+            $tracker = TrackerFactory::instance()->getTrackerById($params['request']->get('tracker'));
+            if ($tracker) {
+                $params['project_id'] = $tracker->getGroupId();
+            }
+        }
+    }
+
 }
