@@ -12,7 +12,7 @@ Version 7.4 (Not released yet)
 	* cardwall: 1.35
 
         == Themes ==
-	* FlamingParrot: 1.37
+	* FlamingParrot: 1.38
 
 	== Bug fix ==
 	* Fix regression introduced by commit 4b3eedc in tasks #6918: Send notifications after copy

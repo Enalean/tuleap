@@ -1,3 +1,43 @@
+Version 1.38 - Tuleap 7.4
+    * First step for keyboard navigation in Tuleap
+
+
+Available shortcuts:
+
+Sidebar (project)
+-----------------
+
+s : Open/Collapse the sidebar
+p then h : Dashboard of the project
+p then a : Agile Dashboard
+p then p : Project web site
+p then d : Documents
+p then m : Mediawiki
+p then w : Wiki
+p then t : Tracker
+p then g : Git
+p then s : SVN
+p then c : CVS
+p then f : Files
+p then b : Forums
+p then n : News
+p then l : Lists
+p then i : Instant messaging
+
+Navebar
+-------
+
+g then h : Homepage
+g then m : My personnal page
+g then p : Open Projects dropdown
+g then a : Open the account management dropdown (need to be connected)
+
+And more...
+-----------
+
+Esc : Escape from input/textarea, close dropdown or modal
+? : Open/Close the shortcut window
+
 Version 1.37 - Tuleap 7.4
     * request #7303: Ability to easily reference a user (@mentions)
 
