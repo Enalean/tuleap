@@ -2,20 +2,26 @@ angular
     .module('execution')
     .controller('ExecutionListCtrl', ExecutionListCtrl);
 
-ExecutionListCtrl.$inject = ['$scope', '$state', 'ExecutionService'];
+ExecutionListCtrl.$inject = ['$scope', '$state', 'ExecutionService', 'CampaignService'];
 
-function ExecutionListCtrl($scope, $state, ExecutionService) {
-    var campaign_id = $state.params.id,
-        executions  = ExecutionService.getExecutions(campaign_id);
+function ExecutionListCtrl($scope, $state, ExecutionService, CampaignService) {
+    var campaign_id     = $state.params.id,
+        executions      = ExecutionService.getExecutions(campaign_id),
+        total_campaigns = 0;
 
-    $scope.categories = groupExecutionsByCategory(executions);
-    $scope.search     = '';
-    $scope.status     = {
+    $scope.loading           = true;
+    $scope.categories        = groupExecutionsByCategory(executions);
+    $scope.assignees         = [];
+    $scope.search            = '';
+    $scope.selected_assignee = null;
+    $scope.status            = {
         passed:  false,
         failed:  false,
         blocked: false,
         notrun:  false
     };
+
+    $scope.assignees = CampaignService.getAssignees(campaign_id, 50, 0);
 
     function groupExecutionsByCategory(executions) {
         var categories = {};
@@ -33,4 +39,17 @@ function ExecutionListCtrl($scope, $state, ExecutionService) {
 
         return categories;
     }
+
+    /*function getAssignees(campaign_id, limit, offset) {
+        CampaignService.getAssignees(campaign_id, limit, offset).then(function(data) {
+            $scope.assignees = $scope.assignees.concat(data.results);
+            total_campaigns  = data.total;
+
+            if ($scope.assignees.length < total_campaigns) {
+                getAssignees(campaign_id, limit, offset + limit);
+            } else {
+                $scope.loading = false;
+            }
+        });
+    }*/
 }

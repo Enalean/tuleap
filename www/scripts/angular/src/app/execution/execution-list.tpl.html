@@ -1,16 +1,21 @@
 <div class="execution-filter">
-    <input type="text" class="filter" placeholder="Filter..." ng-model="search">
-    <div class="btn-group">
-        <label class="btn" ng-model="status.passed"  btn-checkbox><img src="scripts/angular/bin/assets/status-passed.png" alt="Passed"></label>
-        <label class="btn" ng-model="status.failed"  btn-checkbox><img src="scripts/angular/bin/assets/status-failed.png" alt="Failed"></label>
-        <label class="btn" ng-model="status.blocked" btn-checkbox><img src="scripts/angular/bin/assets/status-blocked.png" alt="Blocked"></label>
-        <label class="btn" ng-model="status.notrun"  btn-checkbox><img src="scripts/angular/bin/assets/status-notrun.png" alt="Not run"></label>
-    </div>
+    <form class="form-inline">
+        <input type="text" class="filter" placeholder="Filter..." ng-model="search">
+        <div class="btn-group">
+            <label class="btn" ng-model="status.passed"  btn-checkbox><img src="scripts/angular/bin/assets/status-passed.png" alt="Passed"></label>
+            <label class="btn" ng-model="status.failed"  btn-checkbox><img src="scripts/angular/bin/assets/status-failed.png" alt="Failed"></label>
+            <label class="btn" ng-model="status.blocked" btn-checkbox><img src="scripts/angular/bin/assets/status-blocked.png" alt="Blocked"></label>
+            <label class="btn" ng-model="status.notrun"  btn-checkbox><img src="scripts/angular/bin/assets/status-notrun.png" alt="Not run"></label>
+        </div>
+        <select ng-model="selected_assignee" ng-options="assignee as assignee.username for assignee in assignees">
+            <option value="">Everybody</option>
+        </select>
+    </form>
 </div>
 
 <div ng-repeat="category in categories">
     <div class="category">{{ category.label }}</div>
-    <div class="execution-list" ng-repeat="execution in category.executions | ExecutionListFilter:search:status track by $index">
+    <div class="execution-list" ng-repeat="execution in category.executions | ExecutionListFilter:search:status:selected_assignee track by $index">
         <div class="execution-item">
             <div class="execution-item-content {{ execution.status }}">#{{ execution.test_def.id }} {{ execution.test_def.summary }}</div>
         </div>

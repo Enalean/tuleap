@@ -20,13 +20,13 @@ function ExecutionService(Restangular) {
                 "status": "passed",
                 "last_update_date": null,
                 "assigned_to": {
-                    "id": 100,
-                    "uri": "users/100",
-                    "email": "noreply@paelut",
-                    "real_name": "0",
-                    "username": "None",
-                    "ldap_id": null,
-                    "avatar_url": "/themes/common/images/avatar_default.png"
+                    "id": 101,
+                    "uri": "users/101",
+                    "email": "hugo@example.com",
+                    "real_name": "hugo",
+                    "username": "hugo",
+                    "ldap_id": "",
+                    "avatar_url": "https://paelut/users/hugo/avatar.png"
                 },
                 "previous_execution": {
                     "changeset_id": 25120,
@@ -55,15 +55,7 @@ function ExecutionService(Restangular) {
                 "results": "",
                 "status": "failed",
                 "last_update_date": null,
-                "assigned_to": {
-                    "id": 100,
-                    "uri": "users/100",
-                    "email": "noreply@paelut",
-                    "real_name": "0",
-                    "username": "None",
-                    "ldap_id": null,
-                    "avatar_url": "/themes/common/images/avatar_default.png"
-                },
+                "assigned_to": null,
                 "previous_execution": {
                     "changeset_id": 25121,
                     "last_change_date": "2014-08-07T10:35:55+02:00",
@@ -91,15 +83,7 @@ function ExecutionService(Restangular) {
                 "results": "",
                 "status": "blocked",
                 "last_update_date": null,
-                "assigned_to": {
-                    "id": 100,
-                    "uri": "users/100",
-                    "email": "noreply@paelut",
-                    "real_name": "0",
-                    "username": "None",
-                    "ldap_id": null,
-                    "avatar_url": "/themes/common/images/avatar_default.png"
-                },
+                "assigned_to": null,
                 "previous_execution": {
                     "changeset_id": 25122,
                     "last_change_date": "2014-08-07T10:36:38+02:00",
@@ -128,13 +112,13 @@ function ExecutionService(Restangular) {
                 "status": "notrun",
                 "last_update_date": null,
                 "assigned_to": {
-                    "id": 100,
-                    "uri": "users/100",
-                    "email": "noreply@paelut",
-                    "real_name": "0",
-                    "username": "None",
-                    "ldap_id": null,
-                    "avatar_url": "/themes/common/images/avatar_default.png"
+                    "id": 102,
+                    "uri": "users/102",
+                    "email": "nico@example.com",
+                    "real_name": "nico",
+                    "username": "nico",
+                    "ldap_id": "",
+                    "avatar_url": "https://paelut/users/nico/avatar.png"
                 },
                 "previous_execution": {
                     "changeset_id": 25123,
@@ -164,13 +148,13 @@ function ExecutionService(Restangular) {
                 "status": "notrun",
                 "last_update_date": null,
                 "assigned_to": {
-                    "id": 100,
-                    "uri": "users/100",
-                    "email": "noreply@paelut",
-                    "real_name": "0",
-                    "username": "None",
-                    "ldap_id": null,
-                    "avatar_url": "/themes/common/images/avatar_default.png"
+                    "id": 102,
+                    "uri": "users/102",
+                    "email": "nico@example.com",
+                    "real_name": "nico",
+                    "username": "nico",
+                    "ldap_id": "",
+                    "avatar_url": "https://paelut/users/nico/avatar.png"
                 },
                 "previous_execution": {
                     "changeset_id": 25124,

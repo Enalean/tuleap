@@ -5,21 +5,25 @@ angular
 ExecutionListFilter.$inject = ['$filter'];
 
 function ExecutionListFilter($filter) {
-    return function(list, keywords, status) {
+    return function(list, keywords, status, assignee) {
         var keyword_list  = _.compact(keywords.split(' ')),
             status_list   = _.compact(_.map(status, function(value, key) { return (value) ? key : false; })),
             all_results   = [];
 
-        if (keyword_list.length === 0 && status_list.length === 0) {
+        if (! hasAtLeastOneFilter(keyword_list, status_list, assignee)) {
             return list;
         }
 
-        if (keyword_list.length > 0) {
+        if (hasKeywords(keyword_list)) {
             all_results.push(keywordsMatcher(keyword_list, list));
         }
 
-        if (status_list.length > 0) {
+        if (hasStatus(status_list)) {
             all_results.push(statusMatcher(status_list, list));
+        }
+
+        if (hasAssignee(assignee)) {
+            all_results.push(assigneeMatcher(assignee, list));
         }
 
         all_results = _.intersection.apply(null, all_results);
@@ -33,6 +37,22 @@ function ExecutionListFilter($filter) {
 
     function getSortByKey(execution) {
         return execution.test_def.id;
+    }
+
+    function hasAtLeastOneFilter(keyword_list, status_list, assignee) {
+        return hasKeywords(keyword_list) || hasStatus(status_list) || hasAssignee(assignee);
+    }
+
+    function hasKeywords(keyword_list) {
+        return keyword_list.length > 0;
+    }
+
+    function hasStatus(status_list) {
+        return status_list.length > 0;
+    }
+
+    function hasAssignee(assignee) {
+        return assignee !== null;
     }
 
     function keywordsMatcher(keyword_list, list) {
@@ -61,5 +81,9 @@ function ExecutionListFilter($filter) {
         });
 
         return result;
+    }
+
+    function assigneeMatcher(assignee, list) {
+        return $filter('filter')(list, {assigned_to: {id: assignee.id}});
     }
 }

@@ -10,7 +10,8 @@ describe('ExecutionListFilter', function() {
             "results": "",
             "status": "passed",
             "last_update_date": null,
-            //…
+            "assigned_to": null,
+            //...
             "test_def": {
                 "id": 24600,
                 "uri": "testdef/24600",
@@ -24,7 +25,16 @@ describe('ExecutionListFilter', function() {
             "results": "",
             "status": "failed",
             "last_update_date": null,
-            //…
+            "assigned_to": {
+                "id": 101,
+                "uri": "users/101",
+                "email": "renelataupe@example.com",
+                "real_name": "rtaupe",
+                "username": "rtaupe",
+                "ldap_id": "",
+                "avatar_url": "https://paelut/users/rtaupe/avatar.png"
+            },
+            //...
             "test_def": {
                 "id": 24601,
                 "uri": "testdef/24601",
@@ -38,6 +48,15 @@ describe('ExecutionListFilter', function() {
             "results": "",
             "status": "passed",
             "last_update_date": null,
+            "assigned_to": {
+                "id": 102,
+                "uri": "users/102",
+                "email": "joelclodo@example.com",
+                "real_name": "jclodo",
+                "username": "jclodo",
+                "ldap_id": "",
+                "avatar_url": "https://paelut/users/jclodo/avatar.png"
+            },
             //…
             "test_def": {
                 "id": 24602,
@@ -53,40 +72,61 @@ describe('ExecutionListFilter', function() {
     }));
 
     it('it filters on category', inject(function($filter) {
-        var results = $filter('ExecutionListFilter')(list, 'soap', {});
+        var results = $filter('ExecutionListFilter')(list, 'soap', {}, null);
         expect(results.length).toEqual(1);
         expect(results[0]).toEqual(jasmine.objectContaining({ id: 24606 }));
     }));
 
     it('it filters on summary', inject(function($filter) {
-        var results = $filter('ExecutionListFilter')(list, 'workflow', {});
+        var results = $filter('ExecutionListFilter')(list, 'workflow', {}, null);
         expect(results.length).toEqual(1);
         expect(results[0]).toEqual(jasmine.objectContaining({ id: 24605 }));
     }));
 
     it('it filters on test def id', inject(function($filter) {
-        var results = $filter('ExecutionListFilter')(list, '24601', {});
+        var results = $filter('ExecutionListFilter')(list, '24601', {}, null);
         expect(results.length).toEqual(1);
         expect(results[0]).toEqual(jasmine.objectContaining({ id: 24606 }));
     }));
 
     it('it filters on execution status', inject(function($filter) {
-        var results = $filter('ExecutionListFilter')(list, '', {passed: true});
+        var results = $filter('ExecutionListFilter')(list, '', {passed: true}, null);
         expect(results.length).toEqual(2);
         expect(results[0]).toEqual(jasmine.objectContaining({ id: 24605 }));
     }));
 
     it('it filters on execution multiple status', inject(function($filter) {
-        var results = $filter('ExecutionListFilter')(list, '', {passed: true, failed: true});
+        var results = $filter('ExecutionListFilter')(list, '', {passed: true, failed: true}, null);
         expect(results.length).toEqual(3);
         expect(results[0]).toEqual(jasmine.objectContaining({ id: 24605 }));
         expect(results[1]).toEqual(jasmine.objectContaining({ id: 24606 }));
         expect(results[2]).toEqual(jasmine.objectContaining({ id: 24607 }));
     }));
 
-    it('it filters on summary and execution status', inject(function($filter) {
-        var results = $filter('ExecutionListFilter')(list, 'tracker', {passed: true});
+    it('it filters on assignee', inject(function($filter) {
+        var results = $filter('ExecutionListFilter')(list, '', {}, {
+            "id": 101,
+            "uri": "users/101",
+            "email": "renelataupe@example.com",
+            "real_name": "rtaupe",
+            "username": "rtaupe",
+            "ldap_id": "",
+            "avatar_url": "https://paelut/users/rtaupe/avatar.png"
+        });
         expect(results.length).toEqual(1);
-        expect(results[0]).toEqual(jasmine.objectContaining({ id: 24605 }));
+        expect(results[0]).toEqual(jasmine.objectContaining({ id: 24606 }));
+    }));
+
+    it('it filters on summary and execution status', inject(function($filter) {
+        var results = $filter('ExecutionListFilter')(list, 'tracker', {passed: true}, {
+            "id": 101,
+            "uri": "users/101",
+            "email": "renelataupe@example.com",
+            "real_name": "rtaupe",
+            "username": "rtaupe",
+            "ldap_id": "",
+            "avatar_url": "https://paelut/users/rtaupe/avatar.png"
+        });
+        expect(results.length).toEqual(0);
     }));
 });
