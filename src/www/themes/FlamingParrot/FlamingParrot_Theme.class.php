@@ -249,6 +249,7 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
 
         $this->render('container', new FlamingParrot_ContainerPresenter(
             $this->breadcrumbs,
+            $this->force_breadcrumbs,
             $this->toolbar,
             $project_name,
             $project_link,

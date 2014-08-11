@@ -23,6 +23,9 @@ class FlamingParrot_ContainerPresenter {
     /** @var array */
     private $breadcrumbs;
 
+    /** @var boolean */
+    private $force_breadcrumbs;
+
     /** @var array */
     private $toolbar;
 
@@ -54,6 +57,7 @@ class FlamingParrot_ContainerPresenter {
 
     function __construct(
         $breadcrumbs,
+        $force_breadcrumbs,
         $toolbar,
         $project_name,
         $project_link,
@@ -66,6 +70,7 @@ class FlamingParrot_ContainerPresenter {
         $sidebar_collapsable
     ) {
         $this->breadcrumbs         = $breadcrumbs;
+        $this->force_breadcrumbs   = $force_breadcrumbs;
         $this->toolbar             = $toolbar;
         $this->project_name        = $project_name;
         $this->project_link        = $project_link;
@@ -79,7 +84,7 @@ class FlamingParrot_ContainerPresenter {
     }
 
     public function hasBreadcrumbs() {
-        return (count($this->breadcrumbs) > 0);
+        return (count($this->breadcrumbs) > 0 || $this->force_breadcrumbs);
     }
 
     public function breadcrumbs() {
