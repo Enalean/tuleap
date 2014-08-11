@@ -5,13 +5,18 @@ angular
 CampaignConfig.$inject = ['$stateProvider'];
 
 function CampaignConfig($stateProvider) {
-    $stateProvider.state('campaigns', {
-        url: '/campaigns',
-        views: {
-            "main": {
-                controller: 'CampaignListCtrl',
-                templateUrl: 'campaign/campaign-list.tpl.html'
+    $stateProvider
+        .state('campaigns', {
+            abstract: true,
+            url: '/campaigns',
+            template: '<ui-view />',
+            data: {
+                ncyBreadcrumbLabel: 'Campaigns'
             }
-        }
-    });
+        })
+        .state('campaigns.list', {
+            url: '',
+            controller: 'CampaignListCtrl',
+            templateUrl: 'campaign/campaign-list.tpl.html'
+        });
 }

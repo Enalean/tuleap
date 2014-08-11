@@ -14,13 +14,19 @@ class TestingPlugin extends Plugin {
     function __construct($id) {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
-        $this->_addHook('cssfile', 'cssfile', false);
-        $this->_addHook(Event::REST_PROJECT_RESOURCES);
-        $this->_addHook(Event::REST_RESOURCES);
+        $this->addHook('cssfile');
+        $this->addHook('javascript_file');
+        $this->addHook(Event::REST_PROJECT_RESOURCES);
+        $this->addHook(Event::REST_RESOURCES);
+        $this->addHook(Event::SERVICE_CLASSNAMES);
     }
 
     public function getServiceShortname() {
         return 'plugin_testing';
+    }
+
+    public function service_classnames($params) {
+        $params['classnames'][$this->getServiceShortname()] = 'Testing\\Service';
     }
 
     /**
@@ -40,6 +46,12 @@ class TestingPlugin extends Plugin {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getPluginPath().'/scripts/angular/bin/assets/testing.css" />';
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
+        }
+    }
+
+    public function javascript_file() {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            echo '<script type="text/javascript" src="scripts/move-breadcrumb.js"></script>'."\n";
         }
     }
     

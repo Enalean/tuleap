@@ -3,7 +3,9 @@
     <img src="yuno.jpg" />
 {{/ is_properly_configured }}
 {{# is_properly_configured }}
-    <div ng-app="testing" ng-controller="TestingCtrl" ng-init="init({{ project_id }}, {{ test_definition_tracker_id }}, {{ test_execution_tracker_id }})" ui-view="main">
+    <div ng-app="testing">
+        <div ncy-breadcrumb></div>
+        <div ng-controller="TestingCtrl" ng-init="init({{ project_id }}, {{ test_definition_tracker_id }}, {{ test_execution_tracker_id }})" ui-view></div>
     </div>
     <script src="scripts/angular/bin/assets/testing.js"></script>
 {{/ is_properly_configured }}

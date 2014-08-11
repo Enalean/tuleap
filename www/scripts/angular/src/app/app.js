@@ -2,5 +2,7 @@ angular.module('testing', [
     'ui.router',
     'campaign',
     'execution',
-    'sharedProperties'
+    'sharedProperties',
+    'ncy-angular-breadcrumb',
+    'ngSanitize'
 ]);
