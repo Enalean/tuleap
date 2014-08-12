@@ -20,14 +20,10 @@
 
 require_once dirname(__FILE__).'/bootstrap.php';
 
-use Test\Rest\Tracker\TrackerFactory;
-
 /**
  * @group ArtifactsTest
  */
 class TestingProjectTest extends RestBase {
-
-    private $tracker_test_helper;
 
     protected function getResponse($request) {
         return $this->getResponseByToken(
@@ -38,14 +34,12 @@ class TestingProjectTest extends RestBase {
 
     public function setUp() {
         parent::setUp();
-        $this->tracker_test_helper = new TrackerFactory(
-            $this->client,
-            $this->rest_request,
-            TestingDataBuilder::PROJECT_TEST_MGMT_ID,
-            TestDataBuilder::TEST_USER_1_NAME
-        );
 
-        $this->createCampaigns();
+        $campaign_builder = new TestingCampaignBuilder(
+            $this->client,
+            $this->rest_request
+        );
+        $campaign_builder->setUp();
     }
 
     public function testGetCampaigns() {
@@ -88,36 +82,5 @@ class TestingProjectTest extends RestBase {
 
         $this->assertArrayHasKey('nb_of_blocked', $first_campaign);
         $this->assertEquals($first_campaign['nb_of_blocked'], 0);
-    }
-
-    private function createCampaigns() {
-        $exec1 = $this->createExecutions('First execution', 'Passed');
-        $exec2 = $this->createExecutions('Second execution', 'Passed');
-        $exec3 = $this->createExecutions('Third execution', 'Failed');
-
-        $this->createCampaign('Tuleap 7.1', 'Passed', array());
-        $this->createCampaign('Tuleap 7.2', 'Passed', array());
-        $this->createCampaign('Tuleap 7.3', 'Not Run', array($exec1['id'], $exec2['id'], $exec3['id']));
-    }
-
-    private function createCampaign($name, $status,array $executions) {
-        $tracker = $this->tracker_test_helper->getTrackerRest('campaign');
-        return $tracker->createArtifact(
-            array(
-                $tracker->getSubmitTextValue('Name', $name),
-                $tracker->getSubmitListValue('Status', $status),
-                $tracker->getSubmitArtifactLinkValue($executions),
-            )
-        );
-    }
-
-    private function createExecutions($name, $status) {
-        $tracker= $this->tracker_test_helper->getTrackerRest('test_exec');
-        return $tracker->createArtifact(
-            array(
-                $tracker->getSubmitTextValue('Name', $name),
-                $tracker->getSubmitListValue('Status', $status)
-            )
-        );
     }
 }

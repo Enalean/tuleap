@@ -20,3 +20,4 @@
 
 require_once dirname(__FILE__).'/../../../../tests/lib/autoload.php';
 require_once dirname(__FILE__).'/TestingDataBuilder.php';
+require_once dirname(__FILE__).'/TestingCampaignBuilder.php';
