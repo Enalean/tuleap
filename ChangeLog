@@ -2,7 +2,7 @@ Version 7.4 (Not released yet)
 
 	== Plugins ==
 	* fulltextsearch: 0.77
-	* tracker: 5.433
+	* tracker: 5.434
 	* mediawiki: 0.51
 	* docman: 2.26.46
 	* git: 3.94
@@ -22,6 +22,7 @@ Version 7.4 (Not released yet)
 	* request #7298: fix some tracker graphs not showing on project homepage
 	* request #7177: PhpWiki and PHP 5.4 (Contrib Nicolas Lafont)
 	* Fix request #7273: Files with French characters in name do not open in SVN
+	* request #7332: Cannot uninstall and re-install tracker plugin from web interface
 
 	== Features ==
 	* Third step of story #6971: Git online commit in the Tuleap UI
