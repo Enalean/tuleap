@@ -4,7 +4,7 @@ Version 7.4 (Not released yet)
 	* fulltextsearch: 0.77
 	* tracker: 5.434
 	* mediawiki: 0.51
-	* docman: 2.26.46
+	* docman: 2.26.47
 	* git: 3.94
 	* graphontrackersv5: 5.13
 	* ldap: 3.52
@@ -33,6 +33,7 @@ Version 7.4 (Not released yet)
 	* Convert @mentions into clickable links (part of request #7303)
 	* Configure tests for clean run in Docker
 	* request #7334: Force the display of the breadcrumb even if it is empty
+	* request #7330: Replace legacy admin doc by new Sphinx one
 
     == Development ==
 	* request #7314: Remove legacy DB tables creation (Do not create docman v1 tables in 2014)

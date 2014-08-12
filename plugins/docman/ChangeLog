@@ -1,3 +1,6 @@
+Version 2.26.47 - Tuleap 7.4
+    * request #7330 - Replace legacy admin doc by new Sphinx one
+
 Version 2.26.46 - Tuleap 7.4
     * request #7300: Index an docman/phpwiki item instead of update it when it's not already indexed
 
