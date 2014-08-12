@@ -6,11 +6,11 @@ ExecutionConfig.$inject = ['$stateProvider'];
 
 function ExecutionConfig($stateProvider) {
     $stateProvider.state('campaigns.executions', {
-        url: '/:id-:slug',
+        url: '/{id:[0-9]+}-{slug}',
         controller: 'ExecutionListCtrl',
         templateUrl: 'execution/execution-list.tpl.html',
         data: {
-            ncyBreadcrumbLabel: '{{ campaign_label }}',
+            ncyBreadcrumbLabel: '{{ campaign.name }}',
             ncyBreadcrumbParent: 'campaigns.list'
         }
     });

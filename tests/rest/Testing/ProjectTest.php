@@ -17,30 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
+namespace Testing;
 
-require_once dirname(__FILE__).'/bootstrap.php';
+use TestingDataBuilder;
+
+require_once dirname(__FILE__).'/../bootstrap.php';
 
 /**
  * @group ArtifactsTest
  */
-class TestingProjectTest extends RestBase {
-
-    protected function getResponse($request) {
-        return $this->getResponseByToken(
-            $this->getTokenForUserName(TestDataBuilder::TEST_USER_1_NAME),
-            $request
-        );
-    }
-
-    public function setUp() {
-        parent::setUp();
-
-        $campaign_builder = new TestingCampaignBuilder(
-            $this->client,
-            $this->rest_request
-        );
-        $campaign_builder->setUp();
-    }
+class ProjectTest extends BaseTest {
 
     public function testGetCampaigns() {
 

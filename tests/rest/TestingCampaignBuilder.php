@@ -39,7 +39,17 @@ class TestingCampaignBuilder {
     }
 
     public function setUp() {
+        if ($this->areCampaignAlreadyCreated()) {
+            return;
+        }
+
         $this->createCampaigns();
+    }
+
+    private function areCampaignAlreadyCreated() {
+        $tracker = $this->tracker_factory->getTrackerRest('campaign');
+
+        return $tracker->countArtifacts() > 0;
     }
 
     private function createCampaigns() {

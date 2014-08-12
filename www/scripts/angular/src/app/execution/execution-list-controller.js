@@ -9,7 +9,7 @@ function ExecutionListCtrl($scope, $state, ExecutionService, CampaignService) {
         executions      = ExecutionService.getExecutions(campaign_id),
         total_campaigns = 0;
 
-    $scope.campaign_label    = 'Label';
+    $scope.campaign          = CampaignService.getCampaign(campaign_id);
     $scope.loading           = true;
     $scope.categories        = groupExecutionsByCategory(executions);
     $scope.assignees         = [];

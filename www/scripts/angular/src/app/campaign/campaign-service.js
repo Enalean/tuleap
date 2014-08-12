@@ -11,9 +11,14 @@ function CampaignService(Restangular, $q) {
     });
 
     return {
+        getCampaign: getCampaign,
         getCampaigns: getCampaigns,
         getAssignees: getAssignees
     };
+
+    function getCampaign(campaign_id) {
+        return rest.one('campaigns', campaign_id).get().$object;
+    }
 
     function getCampaigns(project_id, limit, offset) {
         var data = $q.defer();
