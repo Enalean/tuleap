@@ -614,6 +614,14 @@ class Tracker_ArtifactDao extends DataAccessObject {
         }
         return array();
     }
+
+    public function getUnsubscribersIds($artifact_id) {
+        $artifact_id = $this->da->escapeInt($artifact_id);
+        $sql = "SELECT user_id
+                FROM tracker_artifact_unsubscribe
+                WHERE artifact_id = $artifact_id";
+        return $this->retrieve($sql);
+    }
 }
 
 ?>

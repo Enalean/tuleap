@@ -486,6 +486,33 @@ BODY;
         $current_changeset->removeRecipientsThatMayReceiveAnEmptyNotification($recipients);
         $this->assertEqual($recipients, array());
     }
+
+    public function itCleansUserFromRecipientsWhenUserHasUnsubscribedFromArtifact() {
+        $artifact          = mock('Tracker_Artifact');
+        $current_changeset = new Tracker_Artifact_ChangesetTestVersion();
+        $um                = new MockUserManager();
+        $current_changeset->setReturnReference('getUserManager', $um);
+        $current_changeset->setReturnReference('getArtifact', $artifact);
+        $recipients   = array("recipient1" => true, "recipient2" => true, "recipient3" => true);
+
+        $user1 = stub('PFUser')->getUserName()->returns('recipient1');
+        $user2 = stub('PFUser')->getUserName()->returns('recipient2');
+        $user3 = stub('PFUser')->getUserName()->returns('recipient3');
+
+        $um->setReturnReference('getUserByUserName', $user1);
+        $um->setReturnReference('getUserByUserName', $user2);
+        $um->setReturnReference('getUserByUserName', $user3);
+
+        $user1->setReturnValue('getId', 101);
+        $user2->setReturnValue('getId', 102);
+        $user3->setReturnValue('getId', 103);
+
+        $unsubscribers = array(101, 102, 103);
+        $artifact->setReturnValue('getUnsubscribersIds', $unsubscribers);
+
+        $current_changeset->removeRecipientsThatHaveUnsubscribedArtifactNotification($recipients);
+        $this->assertEqual($recipients, array());
+    }
 }
 
 class Tracker_Artifact_ChangesetDeleteTest extends TuleapTestCase {
