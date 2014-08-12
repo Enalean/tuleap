@@ -28,7 +28,7 @@ class CampaignRepresentation {
 
     const ROUTE = 'campaigns';
 
-    const FIELD_NAME = "name";
+    const FIELD_NAME = "label";
 
     const STATUS_NOT_RUN = "Not Run";
     const STATUS_PASSED  = "Passed";
@@ -50,8 +50,8 @@ class CampaignRepresentation {
     /** @var int ID of the artifact */
     public $id;
 
-    /** @var String Name of the campaign */
-    public $name;
+    /** @var String Label of the campaign */
+    public $label;
 
     /** @var String Status of the campaign */
     public $status;
@@ -79,7 +79,7 @@ class CampaignRepresentation {
 
         $this->id                   = $artifact->getId();
         $this->uri                  = self::ROUTE . '/' . $this->id;
-        $this->name                 = $this->getFieldValue(self::FIELD_NAME)->getValue();
+        $this->label                = $this->getFieldValue(self::FIELD_NAME)->getValue();
         $this->status               = $this->artifact->getStatus();
 
         $executions_status          = $this->getExecutionsStatus();

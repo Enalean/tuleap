@@ -10,7 +10,7 @@ function ExecutionConfig($stateProvider) {
         controller: 'ExecutionListCtrl',
         templateUrl: 'execution/execution-list.tpl.html',
         data: {
-            ncyBreadcrumbLabel: '{{ campaign.name }}',
+            ncyBreadcrumbLabel: '{{ campaign.label }}',
             ncyBreadcrumbParent: 'campaigns.list'
         }
     });

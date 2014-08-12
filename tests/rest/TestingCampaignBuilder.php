@@ -62,22 +62,22 @@ class TestingCampaignBuilder {
         $this->createCampaign('Tuleap 7.3', 'Not Run', array($exec1['id'], $exec2['id'], $exec3['id']));
     }
 
-    private function createCampaign($name, $status,array $executions) {
+    private function createCampaign($label, $status,array $executions) {
         $tracker = $this->tracker_factory->getTrackerRest('campaign');
         return $tracker->createArtifact(
             array(
-                $tracker->getSubmitTextValue('Name', $name),
+                $tracker->getSubmitTextValue('Label', $label),
                 $tracker->getSubmitListValue('Status', $status),
                 $tracker->getSubmitArtifactLinkValue($executions),
             )
         );
     }
 
-    private function createExecutions($name, $status) {
+    private function createExecutions($label, $status) {
         $tracker= $this->tracker_factory->getTrackerRest('test_exec');
         return $tracker->createArtifact(
             array(
-                $tracker->getSubmitTextValue('Name', $name),
+                $tracker->getSubmitTextValue('Label', $label),
                 $tracker->getSubmitListValue('Status', $status)
             )
         );

@@ -15,7 +15,7 @@ function CampaignListFilter($filter) {
             result   = [];
 
         keywords.forEach(function(keyword) {
-            lookup = $filter('filter')(list, {'name': keyword});
+            lookup = $filter('filter')(list, {'label': keyword});
             if (lookup.length > 0) {
                 result = result.concat(lookup);
             }

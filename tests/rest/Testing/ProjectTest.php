@@ -37,17 +37,17 @@ class ProjectTest extends BaseTest {
 
         $first_campaign = $campaigns[0];
         $this->assertArrayHasKey('id', $first_campaign);
-        $this->assertEquals($first_campaign['name'], 'Tuleap 7.3');
+        $this->assertEquals($first_campaign['label'], 'Tuleap 7.3');
         $this->assertEquals($first_campaign['status'], 'Not Run');
 
         $second_campaign = $campaigns[1];
         $this->assertArrayHasKey('id', $second_campaign);
-        $this->assertEquals($second_campaign['name'], 'Tuleap 7.2');
+        $this->assertEquals($second_campaign['label'], 'Tuleap 7.2');
         $this->assertEquals($second_campaign['status'], 'Passed');
 
         $third_campaign = $campaigns[2];
         $this->assertArrayHasKey('id', $third_campaign);
-        $this->assertEquals($third_campaign['name'], 'Tuleap 7.1');
+        $this->assertEquals($third_campaign['label'], 'Tuleap 7.1');
         $this->assertEquals($third_campaign['status'], 'Passed');
     }
 

@@ -18,14 +18,14 @@
         </thead>
         <tbody>
             <tr ng-repeat="campaign in campaigns | CampaignListFilter:search track by $index">
-                <td>{{ campaign.name }}</td>
+                <td>{{ campaign.label }}</td>
                 <td>{{ campaign.status }}</td>
                 <td>{{ campaign.total }}</td>
                 <td><span class="badge badge-success">{{ campaign.nb_of_passed }}</span></td>
                 <td><span class="badge badge-info">{{ campaign.nb_of_blocked }}</span></td>
                 <td><span class="badge badge-important">{{ campaign.nb_of_failed }}</span></td>
                 <td><span class="badge">{{ campaign.nb_of_not_run }}</span></td>
-                <td><button class="btn btn-small" ui-sref="campaigns.executions({ id: campaign.id, slug: '{{ campaign.name | slugify }}' })">Details</button></td>
+                <td><button class="btn btn-small" ui-sref="campaigns.executions({ id: campaign.id, slug: '{{ campaign.label | slugify }}' })">Details</button></td>
             </tr>
         </tbody>
     </table>

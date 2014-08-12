@@ -68,8 +68,8 @@
               <label><![CDATA[Desc::C1]]></label>
               <formElements>
                 <formElement type="string" ID="F12" rank="0" required="1">
-                  <name>name</name>
-                  <label><![CDATA[Name]]></label>
+                  <name>label</name>
+                  <label><![CDATA[Label]]></label>
                   <description><![CDATA[One line description of the artifact]]></description>
                   <properties maxchars="150" size="80"/>
                 </formElement>
@@ -737,8 +737,8 @@
               <label><![CDATA[Desc::C1]]></label>
               <formElements>
                 <formElement type="string" ID="F82" rank="0" required="1">
-                  <name>name</name>
-                  <label><![CDATA[Name]]></label>
+                  <name>label</name>
+                  <label><![CDATA[Label]]></label>
                   <description><![CDATA[One line description of the artifact]]></description>
                   <properties maxchars="150" size="80"/>
                 </formElement>
