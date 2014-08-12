@@ -26,6 +26,16 @@ use \Test\Rest\RequestWrapper;
 
 class TestingCampaignBuilder {
 
+    private $campaigns_data = array(
+        array('label' => 'Tuleap 7.1', 'status' => 'Passed', 'executions' => array()),
+        array('label' => 'Tuleap 7.2', 'status' => 'Passed', 'executions' => array()),
+        array('label' => 'Tuleap 7.3', 'status' => 'Not Run', 'executions' => array(
+            array('label' => 'First execution', 'status' => 'Passed'),
+            array('label' => 'Second execution', 'status' => 'Passed'),
+            array('label' => 'Third execution', 'status' => 'Failed'),
+        )),
+    );
+
     /** @var TrackerFactory */
     private $tracker_factory;
 
@@ -53,13 +63,26 @@ class TestingCampaignBuilder {
     }
 
     private function createCampaigns() {
-        $exec1 = $this->createExecutions('First execution', 'Passed');
-        $exec2 = $this->createExecutions('Second execution', 'Passed');
-        $exec3 = $this->createExecutions('Third execution', 'Failed');
+        foreach ($this->campaigns_data as $campaign_data) {
+            $executions_ids = $this->createExecutionsForCampaign($campaign_data['executions']);
 
-        $this->createCampaign('Tuleap 7.1', 'Passed', array());
-        $this->createCampaign('Tuleap 7.2', 'Passed', array());
-        $this->createCampaign('Tuleap 7.3', 'Not Run', array($exec1['id'], $exec2['id'], $exec3['id']));
+            $this->createCampaign(
+                $campaign_data['label'],
+                $campaign_data['status'],
+                $executions_ids
+            );
+        }
+    }
+
+    private function createExecutionsForCampaign(array $executions_data) {
+        $executions_ids = array();
+        foreach ($executions_data as $execution_data) {
+            $execution = $this->createExecution($execution_data['label'], $execution_data['status']);
+
+            $executions_ids[] = $execution['id'];
+        }
+
+        return $executions_ids;
     }
 
     private function createCampaign($label, $status,array $executions) {
@@ -73,7 +96,7 @@ class TestingCampaignBuilder {
         );
     }
 
-    private function createExecutions($label, $status) {
+    private function createExecution($label, $status) {
         $tracker= $this->tracker_factory->getTrackerRest('test_exec');
         return $tracker->createArtifact(
             array(
