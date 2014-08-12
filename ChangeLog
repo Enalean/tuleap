@@ -41,6 +41,7 @@ Version 7.4 (Not released yet)
 	* request #7314: Remove legacy DB tables creation (Do not create docman v1 tables in 2014)
 	* Development: return the number of artifacts in rest lib
 	* build less and autoload files with docker
+	* Adding an option to install without mysql root user
 
 Version 7.3 (Thursday, July 24th 2014)
 
