@@ -1,3 +1,6 @@
+Version 1.41 - Tuleap 7.4
+    * tasks #7317: load custom json tour files for page
+
 Version 1.40 - Tuleap 7.4
     * request #7334: Force the display of the breadcrumb even if it is empty
 
