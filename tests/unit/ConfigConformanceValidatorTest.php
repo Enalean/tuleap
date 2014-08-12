@@ -36,15 +36,22 @@ class ConfigConformanceAsserterTest extends TuleapTestCase {
     private $execution_artifact;
 
     /** @var \Tracker_Artifact */
+    private $another_execution_artifact;
+
+    /** @var \Tracker_Artifact */
     private $campaign_artifact;
 
-    private $project_id           = 101;
-    private $campaign_tracker_id  = 444;
-    private $execution_tracker_id = 555;
+    private $project_id                   = 101;
+    private $campaign_tracker_id          = 444;
+    private $execution_tracker_id         = 555;
+    private $another_project_id           = 102;
+    private $another_execution_tracker_id = 666;
 
     public function setUp() {
         parent::setUp();
-        $project = stub('Project')->getId()->returns($this->project_id);
+        $project         = stub('Project')->getId()->returns($this->project_id);
+        $another_project = stub('Project')->getId()->returns($this->another_project_id);
+
         $campaign_tracker = aTracker()
             ->withId($this->campaign_tracker_id)
             ->withProject($project)
@@ -55,10 +62,21 @@ class ConfigConformanceAsserterTest extends TuleapTestCase {
             ->withProject($project)
             ->build();
 
+        $another_execution_tracker = aTracker()
+            ->withId($this->another_execution_tracker_id)
+            ->withProject($another_project)
+            ->build();
+
         $config = mock('Tuleap\\Testing\\Config');
         stub($config)
             ->getCampaignTrackerId($project)
             ->returns($campaign_tracker->getId());
+        stub($config)
+            ->getTestExecutionTrackerId($project)
+            ->returns($execution_tracker->getId());
+        stub($config)
+            ->getTestExecutionTrackerId($another_project)
+            ->returns($another_execution_tracker->getId());
 
         $this->validator = new ConfigConformanceValidator($config);
 
@@ -66,12 +84,16 @@ class ConfigConformanceAsserterTest extends TuleapTestCase {
             ->withTracker(
                 aTracker()
                     ->withId(111)
-                    ->withProject(mock('Project'))
+                    ->withProject($another_project)
                     ->build()
             )->build();
 
         $this->execution_artifact = anArtifact()
             ->withTracker($execution_tracker)
+            ->build();
+
+        $this->another_execution_artifact = anArtifact()
+            ->withTracker($another_execution_tracker)
             ->build();
 
         $this->campaign_artifact = anArtifact()
@@ -94,6 +116,24 @@ class ConfigConformanceAsserterTest extends TuleapTestCase {
     public function itReturnsTrueWhenTrackerIsACampaignTracker() {
         $this->assertTrue(
             $this->validator->isArtifactACampaign($this->campaign_artifact)
+        );
+    }
+
+    public function itReturnsTrueWhenExecutionBelongsToCampaign() {
+        $this->assertTrue(
+            $this->validator->isArtifactAnExecutionOfCampaign(
+                $this->execution_artifact,
+                $this->campaign_artifact
+            )
+        );
+    }
+
+    public function itReturnsFalseWhenExecutionDoesNotBelongsToCampaign() {
+        $this->assertFalse(
+            $this->validator->isArtifactAnExecutionOfCampaign(
+                $this->another_execution_artifact,
+                $this->campaign_artifact
+            )
         );
     }
 }

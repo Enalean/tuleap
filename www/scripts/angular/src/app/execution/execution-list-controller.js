@@ -7,12 +7,11 @@ ExecutionListCtrl.$inject = ['$scope', '$state', 'ExecutionService', 'CampaignSe
 function ExecutionListCtrl($scope, $state, ExecutionService, CampaignService) {
     var campaign_id     = $state.params.id,
         executions      = ExecutionService.getExecutions(campaign_id),
-        total_campaigns = 0;
+        total_assignees = 0;
 
     $scope.campaign          = CampaignService.getCampaign(campaign_id);
-    $scope.loading           = true;
     $scope.categories        = groupExecutionsByCategory(executions);
-    $scope.assignees         = [];
+    $scope.assignees         = getAssignees(campaign_id, 50, 0);
     $scope.search            = '';
     $scope.selected_assignee = null;
     $scope.status            = {
@@ -21,8 +20,6 @@ function ExecutionListCtrl($scope, $state, ExecutionService, CampaignService) {
         blocked: false,
         notrun:  false
     };
-
-    $scope.assignees = CampaignService.getAssignees(campaign_id, 50, 0);
 
     function groupExecutionsByCategory(executions) {
         var categories = {};
@@ -41,16 +38,16 @@ function ExecutionListCtrl($scope, $state, ExecutionService, CampaignService) {
         return categories;
     }
 
-    /*function getAssignees(campaign_id, limit, offset) {
+    function getAssignees(campaign_id, limit, offset) {
         CampaignService.getAssignees(campaign_id, limit, offset).then(function(data) {
             $scope.assignees = $scope.assignees.concat(data.results);
-            total_campaigns  = data.total;
+            total_assignees  = data.total;
 
-            if ($scope.assignees.length < total_campaigns) {
+            if ($scope.assignees.length < total_assignees) {
                 getAssignees(campaign_id, limit, offset + limit);
-            } else {
-                $scope.loading = false;
             }
         });
-    }*/
+
+        return [];
+    }
 }

@@ -24,10 +24,11 @@ use Project;
 
 class Config {
 
-    /**
-     * @var Dao
-     */
+    /** @var Dao */
     private $dao;
+
+    /** @var array */
+    private $cache_properties = array();
 
     public function __construct(Dao $dao) {
         $this->dao = $dao;
@@ -50,12 +51,20 @@ class Config {
     }
 
     private function getProperty(Project $project, $key) {
-        $properties = $this->dao->searchByProjectId($project->getId())->getRow();
+        $properties = $this->getPropertiesForProject($project);
 
         if (! isset($properties[$key])) {
             return false;
         }
 
         return $properties[$key];
+    }
+
+    private function getPropertiesForProject(Project $project) {
+        if (! array_key_exists($project->getID(), $this->cache_properties)) {
+            $this->cache_properties[$project->getID()] = $this->dao->searchByProjectId($project->getId())->getRow();
+        }
+
+        return $this->cache_properties[$project->getID()];
     }
 }
