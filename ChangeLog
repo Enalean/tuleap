@@ -12,7 +12,7 @@ Version 7.4 (Not released yet)
 	* cardwall: 1.35
 
         == Themes ==
-	* FlamingParrot: 1.38
+	* FlamingParrot: 1.40
 
 	== Bug fix ==
 	* Fix regression introduced by commit 4b3eedc in tasks #6918: Send notifications after copy
@@ -32,6 +32,7 @@ Version 7.4 (Not released yet)
 	* Add REST route to be able to search for users (part of request #7303)
 	* Convert @mentions into clickable links (part of request #7303)
 	* Configure tests for clean run in Docker
+	* request #7334: Force the display of the breadcrumb even if it is empty
 
     == Development ==
 	* request #7314: Remove legacy DB tables creation (Do not create docman v1 tables in 2014)

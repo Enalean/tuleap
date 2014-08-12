@@ -1,3 +1,9 @@
+Version 1.40 - Tuleap 7.4
+    * request #7334: Force the display of the breadcrumb even if it is empty
+
+Version 1.39 - Tuleap 7.4
+    * request #7334: Force the display of the breadcrumb even if it is empty
+
 Version 1.38 - Tuleap 7.4
     * First step for keyboard navigation in Tuleap
 
