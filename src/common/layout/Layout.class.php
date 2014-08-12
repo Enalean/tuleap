@@ -75,6 +75,7 @@ class Layout extends Response {
     protected $javascriptFooter;
 
     protected $breadcrumbs;
+    protected $force_breadcrumbs = false;
     protected $toolbar;
 
     /**
@@ -902,9 +903,13 @@ class Layout extends Response {
         }
     }
 
+    public function setForceBreadcrumbs($force) {
+        $this->force_breadcrumbs = $force;
+    }
+
     function getBreadCrumbs() {
         $html = '';
-        if (count($this->breadcrumbs)) {
+        if (count($this->breadcrumbs) || $this->force_breadcrumbs) {
             $html .= '<ul class="breadcrumb"><li>';
             $html .= implode('</li><li><span class="breadcrumb-sep">&raquo;</span>', $this->breadcrumbs);
             $html .= '</ul>';
