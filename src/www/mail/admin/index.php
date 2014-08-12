@@ -19,43 +19,51 @@ if ($group_id && user_ismember($group_id,'A')) {
 
     $list_server = get_list_server_url();
 
-    if (isset($post_changes)) {
+    if ($request->existAndNonEmpty('post_changes')) {
 		/*
 			Update the DB to reflect the changes
 		*/
 
-		if ($add_list) {
+		if ($request->existAndNonEmpty('add_list')) {
 			$list_password = substr(md5($GLOBALS['session_hash'] . time() . rand(0,40000)),0,16);
+                        $list_name = $request->getValidated('list_name', 'string', '');
 			if (!$list_name || strlen($list_name) < Config::get('sys_lists_name_min_length')) {
 				exit_error($Language->getText('global','error'),$Language->getText('mail_admin_index','provide_correct_list_name'));
 			}
             if (! ereg('(^([a-zA-Z\_0-9\.-]*))$' , $list_name)) {
                 exit_error($Language->getText('global','error'),$Language->getText('mail_admin_index','list_name_unauthorized_char'));
             }
-			if (user_is_super_user())
+			if (user_is_super_user()) {
 			    $new_list_name = strtolower($list_name);
-			else
-                $new_list_name=Config::get('sys_lists_prefix').strtolower($pm->getProject($group_id)->getUnixName().'-'.$list_name).Config::get('sys_lists_suffix');
+                        } else {
+                            $new_list_name=Config::get('sys_lists_prefix').strtolower($pm->getProject($group_id)->getUnixName().'-'.$list_name).Config::get('sys_lists_suffix');
+                        }
 
 			//see if that's a valid email address
 			if (validate_email($new_list_name.'@'.$sys_lists_domain)) {
 
-				$result=db_query("SELECT * FROM mail_group_list WHERE lower(list_name)='$new_list_name'");
+				$result=db_query("SELECT * FROM mail_group_list WHERE lower(list_name)='".db_es($new_list_name)."'");
 
 				if (db_numrows($result) > 0) {
 
 					$feedback .= ' '.$Language->getText('mail_admin_index','list_exists_err').' ';
 
 				} else {
-					$sql = "INSERT INTO mail_group_list "
-					. "(group_id,list_name,is_public,password,list_admin,status,description) VALUES ("
-					. "$group_id,"
-					. "'$new_list_name',"
-					. "'$is_public',"
-					. "'$list_password',"
-					. "'".user_getid()."',"
-					. "1,"
-					. "'". htmlspecialchars($description) ."')";
+                                        $group_id      = db_ei($group_id);
+                                        $is_public     = db_ei($request->getValidated('is_public', 'int', 0));
+                                        $description   = db_es(htmlspecialchars($request->getValidated('description', 'string', '')));
+                                        $new_list_name = db_es($new_list_name);
+                                        $list_password = db_es($list_password);
+                                        $user_id       = user_getid();
+                                        $sql = "INSERT INTO mail_group_list
+                                            (group_id,list_name,is_public,password,list_admin,status,description) VALUES (
+                                            $group_id,
+                                            '$new_list_name',
+                                            $is_public,
+                                            '$list_password',
+                                            $user_id,
+                                            1,
+                                            '$description')";
 
 
 					$result=db_query($sql);
@@ -94,13 +102,16 @@ if ($group_id && user_ismember($group_id,'A')) {
 
 			}
 
-		} else if ($change_status) {
+		} elseif ($request->existAndNonEmpty('change_status')) {
 			/*
 				Change a list to public/private and description
 			*/
-			$sql="UPDATE mail_group_list SET is_public='$is_public', ".
-				"description='". htmlspecialchars($description) ."' ".
-				"WHERE group_list_id='$group_list_id' AND group_id='$group_id'";
+                        $is_public     = $request->getValidated('is_public', 'int', 0);
+                        $description   = $request->getValidated('description', 'string', '');
+                        $group_list_id = $request->getValidated('group_list_id', 'int', 0);
+			$sql="UPDATE mail_group_list SET is_public='".db_ei($is_public)."', ".
+				"description='". db_es(htmlspecialchars($description)) ."' ".
+				"WHERE group_list_id='".db_ei($group_list_id)."' AND group_id='".db_ei($group_id)."'";
 			$result=db_query($sql);
 			if (!$result || db_affected_rows($result) < 1) {
 				$feedback .= ' '.$Language->getText('mail_admin_index','upate_status_err').' ';
@@ -116,7 +127,7 @@ if ($group_id && user_ismember($group_id,'A')) {
 
 	} 
 
-    if (isset($add_list)) {
+    if ($request->existAndNonEmpty('add_list')) {
 		/*
 			Show the form for adding mailing list
 		*/
@@ -157,7 +168,7 @@ if ($group_id && user_ismember($group_id,'A')) {
 
 		mail_footer(array());
 
-    } else if (isset($change_status)) {
+    } elseif ($request->existAndNonEmpty('change_status')) {
 		/*
 			Change a forum to public/private
 		*/
@@ -166,7 +177,7 @@ if ($group_id && user_ismember($group_id,'A')) {
 
 		$sql="SELECT list_name,group_list_id,is_public,description ".
 			"FROM mail_group_list ".
-			"WHERE group_id='$group_id'";
+			"WHERE group_id='".db_ei($group_id)."'";
 		$result=db_query($sql);
 		$rows=db_numrows($result);
 
@@ -251,4 +262,3 @@ if ($group_id && user_ismember($group_id,'A')) {
 		exit_permission_denied();
 	}
 }
-?>
