@@ -1148,8 +1148,6 @@ build_dir /etc/skel_$PROJECT_NAME root root 755
 build_dir /etc/$PROJECT_NAME $PROJECT_ADMIN $PROJECT_ADMIN 755
 build_dir /etc/$PROJECT_NAME/conf $PROJECT_ADMIN $PROJECT_ADMIN 700
 build_dir /etc/$PROJECT_NAME/documentation $PROJECT_ADMIN $PROJECT_ADMIN 755
-build_dir /etc/$PROJECT_NAME/documentation/user_guide $PROJECT_ADMIN $PROJECT_ADMIN 755
-build_dir /etc/$PROJECT_NAME/documentation/user_guide/xml $PROJECT_ADMIN $PROJECT_ADMIN 755
 build_dir /etc/$PROJECT_NAME/documentation/cli $PROJECT_ADMIN $PROJECT_ADMIN 755
 build_dir /etc/$PROJECT_NAME/documentation/cli/xml $PROJECT_ADMIN $PROJECT_ADMIN 755
 build_dir /etc/$PROJECT_NAME/site-content $PROJECT_ADMIN $PROJECT_ADMIN 755
