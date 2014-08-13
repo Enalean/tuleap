@@ -2,11 +2,12 @@
     <h1>{{ admin_title }}</h1>
     {{# can_show_options }}
         <h2> Options </h2>
-        <p>
-            <input type="checkbox" name="enable_compatibility_view" {{# is_compatibility_enabled_value }} checked="checked" {{/ is_compatibility_enabled_value }} value="1"/>
-            {{ compatibility_view_text }}
-        </p>
-        <br>
+        <div class="mediawiki-options">
+            <label class="checkbox" for="mw-embedded">
+                <input type="checkbox" id="mw-embedded" name="enable_compatibility_view" {{# is_compatibility_enabled_value }} checked="checked" {{/ is_compatibility_enabled_value }} value="1" />
+                {{ compatibility_view_text }}
+            </label>
+        </div>
     {{/ can_show_options }}
     <h2>{{ title }}</h2>
 
