@@ -2,7 +2,7 @@ Version 7.4 (Not released yet)
 
 	== Plugins ==
 	* fulltextsearch: 0.77
-	* tracker: 5.437
+	* tracker: 5.438
 	* mediawiki: 0.52
 	* docman: 2.26.47
 	* git: 3.95
@@ -25,6 +25,7 @@ Version 7.4 (Not released yet)
 	* Fix request #7273: Files with French characters in name do not open in SVN
 	* request #7332: Cannot uninstall and re-install tracker plugin from web interface
 	* request #7327 Tv3 export to Tv5: cannot migrate trackers not readable by anonymous
+	* request #7345: Tv3 export to Tv5: import failure when field name is not unique
 
 	== Features ==
 	* Third step of story #6971: Git online commit in the Tuleap UI
