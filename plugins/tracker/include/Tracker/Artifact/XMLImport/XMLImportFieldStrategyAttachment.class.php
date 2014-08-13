@@ -60,17 +60,22 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
                     $files_infos[] = $this->getFileInfoForAttachment($file);
                     $this->files_importer->markAsImported($file_id);
                 }
-            } catch (Tracker_Artifact_XMLImport_Exception_FileNotFound $exception) {
+            } catch (Tracker_Artifact_XMLImport_Exception_FileNotFoundException $exception) {
                 $this->logger->warn('Skipped attachment field: ' . $exception->getMessage());
             }
         }
+
+        if (count($files_infos) === 0) {
+            throw new Tracker_Artifact_XMLImport_Exception_NoAttachementsException();
+        }
+
         return $files_infos;
     }
 
     private function getFileInfoForAttachment(SimpleXMLElement $file_xml) {
         $file_path =  $this->extraction_path .'/'. (string) $file_xml->path;
         if (! is_file($file_path)) {
-            throw new Tracker_Artifact_XMLImport_Exception_FileNotFound($file_path);
+            throw new Tracker_Artifact_XMLImport_Exception_FileNotFoundException($file_path);
         }
         return array(
             self::FILE_INFO_COPY_OPTION => true,

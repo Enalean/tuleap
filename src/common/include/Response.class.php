@@ -95,6 +95,12 @@ class Response {
         return $this->_feedback->fetchAsPlainText();
     }
 
+    public function getAndClearRawFeedback() {
+        $feedback = $this->getRawFeedback();
+        $this->clearFeedback();
+        return $feedback;
+    }
+
     /**
      * @return array of error messages
      */

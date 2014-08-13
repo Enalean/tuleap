@@ -55,15 +55,10 @@ class Tracker_ArtifactCreator {
         Tracker $tracker,
         array $fields_data,
         PFUser $user,
-        $email,
         $submitted_on,
         $send_notification
     ) {
         $artifact = $this->getBareArtifact($tracker, $user, $submitted_on);
-
-        if ($user->isAnonymous()) {
-            $user->setEmail($email);
-        }
 
         if (! $this->fields_validator->validate($artifact, $fields_data)) {
             return;
@@ -86,7 +81,7 @@ class Tracker_ArtifactCreator {
             $artifact,
             $artifact->getSubmittedBy(),
             $artifact->getSubmittedOn(),
-            $email
+            $user->getEmail()
         );
 
         if ($send_notification) {

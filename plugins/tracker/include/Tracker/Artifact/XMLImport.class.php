@@ -168,22 +168,31 @@ class Tracker_Artifact_XMLImport {
     ) {
         $fields_data = $fields_data_builder->getFieldsData($xml_changeset->field_change);
         if (count($fields_data) > 0) {
-            $email              = '';
             $artifact = $this->artifact_creator->create(
                 $tracker,
                 $fields_data,
                 $this->getSubmittedBy($xml_changeset),
-                $email,
                 $this->getSubmittedOn($xml_changeset),
                 $this->send_notifications
             );
             if ($artifact) {
                 return $artifact;
             } else {
-                throw new Tracker_Artifact_Exception_CannotCreateInitialChangeset();
+                return $this->createFakeInitialChangeset($tracker, $xml_changeset);
             }
         }
         throw new Tracker_Artifact_Exception_EmptyChangesetException();
+    }
+
+    private function createFakeInitialChangeset(Tracker $tracker, SimpleXMLElement $xml_changeset) {
+        $this->logger->warn("Impossible to create artifact with first changeset, create a fake one instead: ".$GLOBALS['Response']->getAndClearRawFeedback());
+        return $this->artifact_creator->create(
+            $tracker,
+            array(),
+            $this->getSubmittedBy($xml_changeset),
+            $this->getSubmittedOn($xml_changeset),
+            $this->send_notifications
+        );
     }
 
     private function importRemainingChangesets(
@@ -210,12 +219,15 @@ class Tracker_Artifact_XMLImport {
                     $this->send_notifications,
                     $initial_comment_format
                 );
-                if (! $changeset) {
-                    throw new Tracker_Artifact_Exception_CannotCreateNewChangeset();
+                if ($changeset) {
+                    $this->updateComments($changeset, $xml_changeset);
+                } else {
+                    $this->logger->warn("Impossible to create changeset $count: ".$GLOBALS['Response']->getAndClearRawFeedback());
                 }
-                $this->updateComments($changeset, $xml_changeset);
             } catch (Tracker_NoChangeException $exception) {
                 $this->logger->warn("No Change for changeset $count");
+            } catch (Exception $exception) {
+                $this->logger->warn("Unexpected error at changeset $count: ".$exception->getMessage());
             }
         }
     }

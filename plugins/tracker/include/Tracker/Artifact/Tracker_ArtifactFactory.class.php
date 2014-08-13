@@ -345,8 +345,12 @@ class Tracker_ArtifactFactory {
         );
         $creator = new Tracker_ArtifactCreator($this, $fields_validator, $changeset_creator);
 
+        if ($user->isAnonymous()) {
+            $user->setEmail($email);
+        }
+
         $submitted_on = $_SERVER['REQUEST_TIME'];
-        return $creator->create($tracker, $fields_data, $user, $email, $submitted_on, $send_notification);
+        return $creator->create($tracker, $fields_data, $user, $submitted_on, $send_notification);
     }
 
     public function save(Tracker_Artifact $artifact) {
