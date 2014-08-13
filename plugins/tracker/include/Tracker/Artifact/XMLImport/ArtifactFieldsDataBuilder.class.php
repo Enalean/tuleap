@@ -85,7 +85,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
         $data = array();
 
         foreach ($xml_field_change as $field_change) {
-            $field = $this->formelement_factory->getFormElementByName(
+            $field = $this->formelement_factory->getUsedFieldByName(
                 $this->tracker->getId(),
                 (string) $field_change['field_name']
             );
