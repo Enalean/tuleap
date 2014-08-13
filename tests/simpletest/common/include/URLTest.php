@@ -37,7 +37,7 @@ Mock::generate('ArtifactDao');
 require_once('common/valid/Rule.class.php');
 Mock::generate('Rule_ProjectName');
 
-class URLTest extends UnitTestCase {
+class URLTest extends TuleapTestCase {
     function setUp() {
         $GLOBALS['sys_news_group'] = 46;
     }
@@ -250,7 +250,7 @@ class URLTest extends UnitTestCase {
     }
     
     function testFileDownload() {
-        $url = new URL();
+        $url = partial_mock('URL', array('getProjectDao'));
         $GLOBALS['PATH_INFO'] = '/101/1/p9_r4/toto.csv';
         $this->assertEqual($url->getGroupIdFromURL('/file/download.php/101/1/p9_r4/toto.csv'), 101);
         $this->assertNotEqual($url->getGroupIdFromURL('/toto/file/download.php/101/1/p9_r4/toto.csv'), 101);

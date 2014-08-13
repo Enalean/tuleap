@@ -24,52 +24,43 @@ class TourFactoryTest extends TuleapTestCase {
 
     protected $fixtures_dir;
 
+    /** @var ProjectManager */
+    protected $project_manager;
+
+    /** @var PFUser */
+    protected $user;
+
     public function setUp() {
         parent::setUp();
 
-        Config::set('sys_custom_incdir', $this->fixtures_dir);
+        $this->fixtures_dir    = dirname(__FILE__) .'/_fixtures';
+        $this->project_manager = mock('ProjectManager');
+        $this->factory         = new Tuleap_TourFactory($this->project_manager, mock('Url'));
+        $this->user            = mock('PFUser');
 
-        $this->factory      = new Tuleap_TourFactory();
-        $this->fixtures_dir = dirname(__FILE__) .'/_fixtures';
+        Config::set('sys_custom_incdir', $this->fixtures_dir);
     }
 }
 
-class TourFactoryTest_loadToursForPage extends TourFactoryTest {
+class TourFactoryTest_getTour extends TourFactoryTest {
 
-    /** @var PFUser */
-    private $user;
-
-    public function setUp() {
-        parent::setUp();
-        $GLOBALS['Response'] = partial_mock('Response', array());
-        $this->user = mock('PFUser');
+    public function itReturnsTheWelcomeTour() {
+        $tour = $this->factory->getTour($this->user, Tuleap_Tour_WelcomeTour::TOUR_NAME);
+        $this->assertIsA($tour, 'Tuleap_Tour_WelcomeTour');
     }
 
-    public function itDoesNotAddToursIfCustomTourFolderDoesntExist() {
-        $request_uri = '';
-        Config::set('sys_custom_incdir', $this->fixtures_dir.'/somewhereElse');
+    public function itReturnsACustomTour() {
         stub($this->user)->getLocale()->returns('en_US');
 
-        $tours = $this->factory->getCustomToursForPage($this->user, $request_uri);
-        $this->assertEqual(count($tours), 0);
+        $tour = $this->factory->getTour($this->user, 'lala_tour');
+        $this->assertIsA($tour, 'Tuleap_Tour');
     }
 
-    public function itLoadsAllToursInTheCustomToursListForPage() {
-        $request_uri = '/plugins/lala';
-        stub($this->user)->getLocale()->returns('en_US');
+    public function itThrowsExceptionIfTourIsNotFound() {
+        stub($this->user)->getLocale()->returns('fr_US');
 
-        $tours = $this->factory->getCustomToursForPage($this->user, $request_uri);
-        $this->assertEqual(count($tours), 1);
+        $this->expectException('Tuleap_UnknownTourException');
 
-        $this->assertArrayNotEmpty($tours);
-    }
-
-    public function itLoadsToursInCorrectLanguage() {
-        stub($this->user)->getLocale()->returns('fr_FR');
-        $request_uri         = '/plugins/lala';
-        $factory             = new Tuleap_TourFactory();
-
-        $tours = $factory->getCustomToursForPage($this->user, $request_uri);
-        $this->assertEqual(count($tours), 0);
+        $this->factory->getTour($this->user, 'woofwoof_tour');
     }
 }

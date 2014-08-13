@@ -18,15 +18,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('pre.php');
-
-$tour_factory = new Tuleap_TourFactory(ProjectManager::instance(), new Url());
-$current_tour = $tour_factory->getTour($current_user, $request->get('tour_name'));
-
-$stats_dao  = new Tuleap_TourUsageStatsDao();
-$tour_usage = new Tuleap_TourUsage($stats_dao);
-$tour_usage->endTour(
-    $current_user,
-    $current_tour,
-    $request->getValidated('current_step', 'uint')
-);
+class Tuleap_InvalidTourException extends Exception {}

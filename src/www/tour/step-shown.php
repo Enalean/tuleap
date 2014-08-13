@@ -20,7 +20,7 @@
 
 require_once('pre.php');
 
-$tour_factory = new Tuleap_TourFactory();
+$tour_factory = new Tuleap_TourFactory(ProjectManager::instance(), new URL());
 $current_tour = $tour_factory->getTour($current_user, $request->get('tour_name'));
 
 $stats_dao  = new Tuleap_TourUsageStatsDao();

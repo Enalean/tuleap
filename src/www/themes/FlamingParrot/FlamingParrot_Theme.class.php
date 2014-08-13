@@ -342,12 +342,14 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
     }
 
     private function endOfPage() {
-        $user         = UserManager::instance()->getCurrentUser();
-        $tour_factory = new Tuleap_TourFactory();
-        $custom_tours = $tour_factory->getCustomToursForPage($user, $_SERVER['REQUEST_URI']);
+        $current_user = UserManager::instance()->getCurrentUser();
+        $tour_factory = new Tuleap_TourFactory(ProjectManager::instance(), new URL());
+        $custom_tours = $tour_factory->getToursForPage($current_user, $_SERVER['REQUEST_URI']);
 
-        foreach ($custom_tours as $name => $custom_tour) {
-            $this->addTour(new Tuleap_Tour($name, $custom_tour['steps']));
+        foreach ($custom_tours as $custom_tour) {
+            if (! $current_user->getPreference($custom_tour->name)) {
+                $this->addTour($custom_tour);
+            }
         }
 
         if (! empty($this->tours)) {

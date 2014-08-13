@@ -72,6 +72,7 @@ class MediaWikiPlugin extends Plugin {
             $this->_addHook('plugin_statistics_service_usage');
 
             $this->addHook(Event::SERVICE_CLASSNAMES);
+            $this->addHook(Event::GET_PROJECTID_FROM_URL);
     }
 
     public function getServiceShortname() {
@@ -760,6 +761,25 @@ class MediaWikiPlugin extends Plugin {
             }
         } else  {
             $logger->error('Project Clear cache: Can\'t find mediawiki db for project: '.$project->getID());
+        }
+    }
+
+    public function get_projectid_from_url($params) {
+        $url = $params['url'];
+
+        if (strpos($url,'/plugins/mediawiki/wiki/') === 0) {
+            $pieces       = explode("/", $url);
+            $project_name = $pieces[4];
+
+            $dao          = $params['project_dao'];
+            $dao_results  = $dao->searchByUnixGroupName($project_name);
+            if ($dao_results->rowCount() < 1) {
+                // project does not exist
+                return false;
+            }
+
+            $project_data         = $dao_results->getRow();
+            $params['project_id'] = $project_data['group_id'];
         }
     }
 }

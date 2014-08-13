@@ -39,6 +39,9 @@ class Git_URL {
         %x';
 
     /** @var string */
+    private $standard_index_pattern = '%^/plugins/git/\?group_id=(?P<project_id>\d+)$%x';
+
+    /** @var string */
     private $uri;
 
     /** @var bool **/
@@ -93,7 +96,11 @@ class Git_URL {
      */
     public function getProject() {
         if (! $this->repository) {
-            return null;
+            if (! preg_match($this->standard_index_pattern, $this->uri, $matches)) {
+                return null;
+            }
+
+            return $this->project_manager->getProject($matches['project_id']);
         }
 
         return $this->repository->getProject();
