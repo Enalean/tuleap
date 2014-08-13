@@ -108,6 +108,15 @@ docker_api_all:
 docker_api_partial:
 	$(PHP) /tmp/run/vendor/phpunit/phpunit/phpunit.php $(REST_TESTS_OPTIONS)
 
+tests_php51:
+	docker run --rm=true -v $(CURDIR):/tuleap enalean/tuleap-test-ut-c5-php51
+
+tests_php53:
+	docker run --rm=true -v $(CURDIR):/tuleap enalean/tuleap-test-ut-c6-php53
+
+tests_phpunit:
+	docker run -ti --rm=true -v $(CURDIR):/tuleap enalean/tuleap-test-phpunit-c6-php53
+
 phpunit:
 	$(PHPUNIT) $(PHPUNIT_TESTS_OPTIONS) --bootstrap tests/phpunit_boostrap.php plugins/proftpd/phpunit
 

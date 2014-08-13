@@ -20,7 +20,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('PHPWIKI_DIR',$GLOBALS['codendi_dir'].'/src/common/wiki/phpwiki');
+define('PHPWIKI_DIR', dirname(__FILE__).'/../phpwiki');
 require_once(PHPWIKI_DIR.'/lib/prepend.php');
 require_once(PHPWIKI_DIR.'/lib/IniConfig.php');
 require_once('common/wiki/lib/WikiEntry.class.php');
