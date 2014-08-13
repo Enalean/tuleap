@@ -2,17 +2,18 @@ Version 7.4 (Not released yet)
 
 	== Plugins ==
 	* fulltextsearch: 0.77
-	* tracker: 5.435
-	* mediawiki: 0.51
+	* tracker: 5.436
+	* mediawiki: 0.52
 	* docman: 2.26.47
-	* git: 3.94
+	* git: 3.95
 	* graphontrackersv5: 5.13
 	* ldap: 3.52
 	* requesthelp: 1.3.8
 	* cardwall: 1.35
+	* agiledashboard: 1.68
 
         == Themes ==
-	* FlamingParrot: 1.41
+	* FlamingParrot: 1.42
 
 	== Bug fix ==
 	* Fix regression introduced by commit 4b3eedc in tasks #6918: Send notifications after copy
