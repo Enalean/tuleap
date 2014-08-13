@@ -2,50 +2,76 @@
 @failed: #b94a48;   /* badge-important */
 @blocked: #3a87ad; /* badge-info */
 
-.execution-filter {
-    margin: 0 0 10px;
+#executions {
+    height: 100%;
+    max-width: 1200px;
 
-    & > input {
-        margin: 0;
-    }
+    #executions-pane {
+        height: 100%;
+        box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.16);
 
-    .icon-stack-base {
-        font-size: 1.4em;
-    }
-    .icon-light {
-        text-shadow: none;
-        top: -1px;
-    }
-}
-.category {
-    padding-left: 10px;
-    font-weight: bold;
-    background-color: #DDD;
-    text-transform: uppercase;
-    font-size: 0.8em;
-}
-.execution-list {
-    & > .execution-item {
-        border-bottom: 1px solid #DDD;
+        h1 {
+            padding: 5px 12px 10px;
+        }
 
-        & > .execution-item-content {
-            border-left: 4px solid white;
-            padding: 8px 15px;
+        #execution-filter {
+            padding: 0 12px;
+            margin: 0 0 10px;
 
-            &.passed {
-                border-left-color: @passed;
-                color: @passed;
+            .row-fluid {
+                margin: 0 0 10px;
             }
 
-            &.failed {
-                border-left-color: @failed;
-                color: @failed;
+            input {
+                margin: 0;
             }
 
-            &.blocked {
-                border-left-color: @blocked;
-                color: @blocked;
+            select {
+                width: 100%;
+            }
+
+            .btn-group > label {
+                width: 25%;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
             }
         }
+
+        .category {
+            padding-left: 10px;
+            font-weight: bold;
+            background-color: #DDD;
+            text-transform: uppercase;
+            font-size: 0.8em;
+        }
+        .execution-list {
+            & > .execution-item {
+                border-bottom: 1px solid #DDD;
+
+                & > .execution-item-content {
+                    border-left: 4px solid white;
+                    padding: 8px 15px;
+
+                    &.passed {
+                        border-left-color: @passed;
+                        color: @passed;
+                    }
+
+                    &.failed {
+                        border-left-color: @failed;
+                        color: @failed;
+                    }
+
+                    &.blocked {
+                        border-left-color: @blocked;
+                        color: @blocked;
+                    }
+                }
+            }
+        }
+    }
+
+    #current-execution {
+        background: #FCFCFC;
     }
 }

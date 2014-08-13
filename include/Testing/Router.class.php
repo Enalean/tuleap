@@ -175,7 +175,7 @@ class Router {
                 ))
             );
         }
-        $service->displayHeader($title, $breadcrumbs->getCrumbs(), $toolbar);
+        $service->displayHeader($title, $breadcrumbs->getCrumbs(), $toolbar, array('body_class' => array('testing')));
     }
 
     private function userIsAdmin(Codendi_Request $request) {
