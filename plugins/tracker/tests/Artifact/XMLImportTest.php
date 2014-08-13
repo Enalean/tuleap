@@ -56,7 +56,7 @@ abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase {
 
         $this->summary_field_id = 50;
         $this->formelement_factory = mock('Tracker_FormElementFactory');
-        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'summary')->returns(
+        stub($this->formelement_factory)->getUsedFieldByName($this->tracker_id, 'summary')->returns(
             aStringField()->withId(50)->build()
         );
 
@@ -642,7 +642,7 @@ class Tracker_Artifact_XMLImport_OneArtifactWithAttachementTest extends Tracker_
 
     public function itCreatesAChangesetWithOneFileElement() {
         stub($this->artifact_creator)->create()->returns(mock('Tracker_Artifact'));
-        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'attachment')->returns(
+        stub($this->formelement_factory)->getUsedFieldByName($this->tracker_id, 'attachment')->returns(
             aFileField()->withId($this->file_field_id)->build()
         );
 
@@ -709,7 +709,7 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsTest extends
 
     public function itCreatesAChangesetWithTwoFileElements() {
         stub($this->artifact_creator)->create()->returns(mock('Tracker_Artifact'));
-        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'attachment')->returns(
+        stub($this->formelement_factory)->getUsedFieldByName($this->tracker_id, 'attachment')->returns(
             aFileField()->withId($this->file_field_id)->build()
         );
 
@@ -794,7 +794,7 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsAndChangeset
         $artifact = mock('Tracker_Artifact');
         stub($this->artifact_creator)->create()->returns($artifact);
         stub($this->new_changeset_creator)->create()->returns(mock('Tracker_Artifact_Changeset'));
-        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'attachment')->returns(
+        stub($this->formelement_factory)->getUsedFieldByName($this->tracker_id, 'attachment')->returns(
             aFileField()->withId($this->file_field_id)->build()
         );
 
@@ -847,7 +847,7 @@ class Tracker_Artifact_XMLImport_CCListTest extends Tracker_Artifact_XMLImportBa
 
         $this->open_list_field = stub('Tracker_FormElement_Field_OpenList')->getId()->returns($this->cc_field_id);
 
-        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'cc')->returns(
+        stub($this->formelement_factory)->getUsedFieldByName($this->tracker_id, 'cc')->returns(
             $this->open_list_field
         );
 
@@ -901,7 +901,7 @@ class Tracker_Artifact_XMLImport_PermsOnArtifactTest extends Tracker_Artifact_XM
 
         $this->perms_field = stub('Tracker_FormElement_Field_PermissionsOnArtifact')->getId()->returns($this->perms_field_id);
 
-        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'permissions_on_artifact')->returns(
+        stub($this->formelement_factory)->getUsedFieldByName($this->tracker_id, 'permissions_on_artifact')->returns(
             $this->perms_field
         );
 
@@ -947,7 +947,7 @@ class Tracker_Artifact_XMLImport_TextTest extends Tracker_Artifact_XMLImportBase
 
         $this->text_field = stub('Tracker_FormElement_Field_Text')->getId()->returns($this->text_field_id);
 
-        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'textarea')->returns(
+        stub($this->formelement_factory)->getUsedFieldByName($this->tracker_id, 'textarea')->returns(
             $this->text_field
         );
 
@@ -1002,19 +1002,19 @@ class Tracker_Artifact_XMLImport_AlphanumericTest extends Tracker_Artifact_XMLIm
         $this->float_field = stub('Tracker_FormElement_Field_Float')->getId()->returns($this->float_field_id);
         $this->date_field = stub('Tracker_FormElement_Field_Date')->getId()->returns($this->date_field_id);
 
-        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'i_want_to')->returns(
+        stub($this->formelement_factory)->getUsedFieldByName($this->tracker_id, 'i_want_to')->returns(
             $this->string_field
         );
-        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'so_that')->returns(
+        stub($this->formelement_factory)->getUsedFieldByName($this->tracker_id, 'so_that')->returns(
             $this->text_field
         );
-        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'initial_effort')->returns(
+        stub($this->formelement_factory)->getUsedFieldByName($this->tracker_id, 'initial_effort')->returns(
             $this->int_field
         );
-        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'remaining_effort')->returns(
+        stub($this->formelement_factory)->getUsedFieldByName($this->tracker_id, 'remaining_effort')->returns(
             $this->float_field
         );
-        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'start_date')->returns(
+        stub($this->formelement_factory)->getUsedFieldByName($this->tracker_id, 'start_date')->returns(
             $this->date_field
         );
 
@@ -1095,10 +1095,10 @@ class Tracker_Artifact_XMLImport_SelectboxTest extends Tracker_Artifact_XMLImpor
         $this->status_field = stub('Tracker_FormElement_Field_String')->getId()->returns($this->status_field_id);
         $this->assto_field = stub('Tracker_FormElement_Field_String')->getId()->returns($this->assto_field_id);
 
-        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'status_id')->returns(
+        stub($this->formelement_factory)->getUsedFieldByName($this->tracker_id, 'status_id')->returns(
             $this->status_field
         );
-        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'assigned_to')->returns(
+        stub($this->formelement_factory)->getUsedFieldByName($this->tracker_id, 'assigned_to')->returns(
             $this->assto_field
         );
 
@@ -1153,7 +1153,7 @@ class Tracker_Artifact_XMLImport_StaticMultiSelectboxTest extends Tracker_Artifa
 
         $this->static_multi_selectbox_field = stub('Tracker_FormElement_Field_String')->getId()->returns($this->static_multi_selectbox_field_id);
 
-        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'multi_select_box')->returns(
+        stub($this->formelement_factory)->getUsedFieldByName($this->tracker_id, 'multi_select_box')->returns(
             $this->static_multi_selectbox_field
         );
 
@@ -1207,7 +1207,7 @@ class Tracker_Artifact_XMLImport_UserMultiSelectboxTest extends Tracker_Artifact
 
         $this->user_multi_selectbox_field = stub('Tracker_FormElement_Field_String')->getId()->returns($this->user_multi_selectbox_field_id);
 
-        stub($this->formelement_factory)->getFormElementByName($this->tracker_id, 'multi_select_box_user')->returns(
+        stub($this->formelement_factory)->getUsedFieldByName($this->tracker_id, 'multi_select_box_user')->returns(
             $this->user_multi_selectbox_field
         );
 
