@@ -22,10 +22,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Exception_Migration_OpenArchiveException extends Exception {
-
-    public function __construct($archive_path, $error_code) {
-        $message = 'Impossible to open archive '.$archive_path.' error: '.$error_code;
-        parent::__construct($message);
-    }
+class Tracker_Exception_Migration_GetTv3Exception extends Exception {
 }
