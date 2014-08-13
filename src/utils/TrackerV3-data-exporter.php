@@ -68,7 +68,7 @@ try {
 
     $dao                 = new ArtifactXMLExporterDao();
     $node_helper         = new ArtifactXMLNodeHelper($xml);
-    $attachment_exporter = new ArtifactAttachmentXMLExporter($node_helper, $dao, $archive, $debug);
+    $attachment_exporter = new ArtifactAttachmentXMLZipper($node_helper, $dao, $archive, $debug);
 
     $exporter = new ArtifactXMLExporter($dao, $attachment_exporter, $node_helper, $logger);
     $exporter->exportTrackerData($atid);

@@ -20,15 +20,22 @@
 
 class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tracker_Artifact_XMLImport_XMLImportFieldStrategy {
 
+
+    const FILE_INFO_COPY_OPTION = 'is_migrated';
+
     /** @var string */
     private $extraction_path;
+
+    /** @var Logger */
+    private $logger;
 
     /** @var Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact */
     private $files_importer;
 
-    public function __construct($extraction_path, Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact $files_importer) {
+    public function __construct($extraction_path, Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact $files_importer, Logger $logger) {
         $this->extraction_path = $extraction_path;
-        $this->files_importer   = $files_importer;
+        $this->files_importer  = $files_importer;
+        $this->logger          = $logger;
     }
 
     /**
@@ -44,27 +51,35 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
         $files_infos = array();
 
         foreach ($values as $value) {
-            $attributes = $value->attributes();
-            $file_id    = (string) $attributes['ref'];
-            $file       = $this->files_importer->getFileXML($file_id);
+            try {
+                $attributes = $value->attributes();
+                $file_id    = (string) $attributes['ref'];
+                $file       = $this->files_importer->getFileXML($file_id);
 
-            if (! $this->files_importer->fileIsAlreadyImported($file_id)) {
-                $files_infos[] = $this->getFileInfoForAttachment($file);
-                $this->files_importer->markAsImported($file_id);
+                if (! $this->files_importer->fileIsAlreadyImported($file_id)) {
+                    $files_infos[] = $this->getFileInfoForAttachment($file);
+                    $this->files_importer->markAsImported($file_id);
+                }
+            } catch (Tracker_Artifact_XMLImport_Exception_FileNotFound $exception) {
+                $this->logger->warn('Skipped attachment field: ' . $exception->getMessage());
             }
         }
         return $files_infos;
     }
 
     private function getFileInfoForAttachment(SimpleXMLElement $file_xml) {
+        $file_path =  $this->extraction_path .'/'. (string) $file_xml->path;
+        if (! is_file($file_path)) {
+            throw new Tracker_Artifact_XMLImport_Exception_FileNotFound($file_path);
+        }
         return array(
-            'is_migrated' => true,
-            'name'        => (string) $file_xml->filename,
-            'type'        => (string) $file_xml->filetype,
-            'description' => (string) $file_xml->description,
-            'size'        => (int) $file_xml->filesize,
-            'tmp_name'    => $this->extraction_path .'/'. (string) $file_xml->path,
-            'error'       => UPLOAD_ERR_OK,
+            self::FILE_INFO_COPY_OPTION => true,
+            'name'                      => (string) $file_xml->filename,
+            'type'                      => (string) $file_xml->filetype,
+            'description'               => (string) $file_xml->description,
+            'size'                      => (int) $file_xml->filesize,
+            'tmp_name'                  => $file_path,
+            'error'                     => UPLOAD_ERR_OK,
         );
     }
 }

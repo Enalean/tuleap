@@ -85,8 +85,9 @@ class Tracker_Migration_MigrationManager {
 
         $user         = $this->user_manager->getUserByUserName($username);
         $tracker_id   = $this->createTrackerStructure($user, $project_id, $tv3_id, $tracker_name, $tracker_description, $tracker_short_name);
-        $archive_path = $this->exportTV3Data($tv3_id);
-        $this->importArtifactsData($username, $tracker_id, $archive_path);
+        $xml_path     = $this->exportTV3Data($tv3_id);
+        $this->importArtifactsData($username, $tracker_id, $xml_path);
+        unlink($xml_path);
 
         $this->logger->info('-- End of migration of tracker v3 '.$tv3_id.' to '.$tracker_name.' --');
         $this->logger->sendMail($user, $this->project_manager->getProject($project_id), $tv3_id, $tracker_name);
@@ -104,7 +105,7 @@ class Tracker_Migration_MigrationManager {
         return Config::get('codendi_log').'/'.self::LOG_FILE;
     }
 
-    private function importArtifactsData($username, $tracker_id, $archive_path) {
+    private function importArtifactsData($username, $tracker_id, $xml_file_path) {
         $this->logger->info('--> Import into TV5 ');
         $this->user_manager->forceLogin($username);
 
@@ -112,20 +113,7 @@ class Tracker_Migration_MigrationManager {
         if ($tracker) {
             $xml_import = $this->getXMLImporter();
 
-            $zip = new ZipArchive();
-
-            $open_state = $zip->open($archive_path);
-            if ($open_state !== true) {
-                throw new Tracker_Exception_Migration_OpenArchiveException($archive_path, $open_state);
-            }
-
-            $archive = new Tracker_Artifact_XMLImport_XMLImportZipArchive(
-                $tracker,
-                $zip,
-                Config::get('tmp_dir')
-            );
-
-            $xml_import->importFromArchive($tracker, $archive);
+            $xml_import->importFromFile($tracker, $xml_file_path, Config::get('sys_data_dir') . DIRECTORY_SEPARATOR . 'trackerv3');
         }
         $this->logger->info('<-- TV5 imported '.PHP_EOL);
     }
@@ -175,20 +163,17 @@ class Tracker_Migration_MigrationManager {
 
     private function exportTV3Data($tv3_id) {
         $this->logger->info('--> Export TV3 data ');
-        $archive_path    = $this->generateTemporaryPath();
+        $xml_path    = $this->generateTemporaryPath();
         $indent_xsl_path = $this->getIndentXSLResourcePath();
         $xml             = new DOMDocument("1.0", "UTF8");
-        $archive         = new ZipArchive();
-        if ($archive->open($archive_path, ZipArchive::CREATE) !== true) {
-            throw new Tracker_Exception_Migration_CreateArchiveException($archive_path);
-        }
 
         $dao                 = new ArtifactXMLExporterDao();
         $node_helper         = new ArtifactXMLNodeHelper($xml);
-        $attachment_exporter = new ArtifactAttachmentXMLExporter($node_helper, $dao, $archive, false);
+        $attachment_exporter = new ArtifactAttachmentXMLLinker($node_helper, $dao, $archive, false);
 
         $exporter = new ArtifactXMLExporter($dao, $attachment_exporter, $node_helper, $this->logger);
         $exporter->exportTrackerData($tv3_id);
+        $this->logger->info('<-- TV3 data exported '.PHP_EOL);
 
         $xsl = new DOMDocument();
         $xsl->load($indent_xsl_path);
@@ -196,12 +181,13 @@ class Tracker_Migration_MigrationManager {
         $proc = new XSLTProcessor();
         $proc->importStyleSheet($xsl);
 
-        $archive->addFromString('artifacts.xml', $proc->transformToXML($xml));
+        $xml_string = $proc->transformToXML($xml);
 
-        $archive->close();
-        $this->logger->info('<-- TV3 data exported '.PHP_EOL);
+        if (file_put_contents($xml_path, $xml_string) !== strlen($xml_string)) {
+            throw new Exception('Something went wrong when writing tv3 xml in '.$xml_path);
+        }
 
-        return $archive_path;
+        return $xml_path;
     }
 
     private function getIndentXSLResourcePath() {
