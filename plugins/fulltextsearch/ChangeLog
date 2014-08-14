@@ -1,3 +1,6 @@
+Version 0.78 - Tuleap 7.4
+    * Allow to run unit tests in docker containers
+
 Version 0.77 - Tuleap 7.4
     * request #7300: Index an docman/phpwiki item instead of update it when it's not already indexed
 

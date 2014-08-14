@@ -1,3 +1,6 @@
+Version 1.69 - Tuleap 7.4
+    * Allow to run unit tests in docker containers
+
 Version 1.68 - Tuleap 7.4
     * story #7290: be able to add custom tours on my forge
 
