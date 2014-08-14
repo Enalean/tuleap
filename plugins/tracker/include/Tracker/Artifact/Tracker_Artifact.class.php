@@ -1125,6 +1125,19 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     /**
+     * Returns ids of user who unsubscribed to artifact notification
+     *
+     * @return array
+     */
+    public function getUnsubscribersIds() {
+        $unsubscribers_ids = array();
+        foreach ($this->getDao()->getUnsubscribersIds($this->id) as $row) {
+            $unsubscribers_ids[] = $row['user_id'];
+        }
+        return $unsubscribers_ids;
+    }
+
+    /**
      * Return Workflow the artifact should respect
      *
      * @return Workflow

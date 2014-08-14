@@ -816,6 +816,18 @@ class Tracker_Artifact_Changeset {
         }
     }
 
+    public function removeRecipientsThatHaveUnsubscribedArtifactNotification(array &$recipients) {
+        $unsubscribers = $this->getArtifact()->getUnsubscribersIds();
+
+        foreach ($recipients as $recipient => $check_perms) {
+            $user = $this->getUserFromRecipientName($recipient);
+
+            if (! $user || in_array($user->getId(), $unsubscribers)) {
+                unset($recipients[$recipient]);
+            }
+        }
+    }
+
     private function userCanReadAtLeastOneChangedField(PFUser $user) {
         $factory = $this->getFormElementFactory();
 
@@ -871,8 +883,8 @@ class Tracker_Artifact_Changeset {
                 }
             }
         }
-
         $this->removeRecipientsThatMayReceiveAnEmptyNotification($tablo);
+        $this->removeRecipientsThatHaveUnsubscribedArtifactNotification($tablo);
 
         return $tablo;
     }
