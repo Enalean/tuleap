@@ -50,21 +50,25 @@
 
                 & > .execution-item-content {
                     border-left: 4px solid white;
-                    padding: 8px 15px;
+                    margin: 0 5px 0 0;
+                    padding: 8px 20px 8px 7px;
 
                     &.passed {
                         border-left-color: @passed;
                         color: @passed;
+                        background: url('status-passed-color.png') no-repeat right center;
                     }
 
                     &.failed {
                         border-left-color: @failed;
                         color: @failed;
+                        background: url('status-failed-color.png') no-repeat right center;
                     }
 
                     &.blocked {
                         border-left-color: @blocked;
                         color: @blocked;
+                        background: url('status-blocked-color.png') no-repeat right center;
                     }
                 }
             }
