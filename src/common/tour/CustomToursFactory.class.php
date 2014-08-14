@@ -167,7 +167,8 @@ class Tuleap_CustomToursFactory {
             $attributes = (isset($uri_parts[1])) ? explode('&', $uri_parts[1]) : array();
             foreach ($attributes as $attribute) {
                 $key_value = explode('=', $attribute);
-                $url       = preg_replace("/$key_value[0]=$placeholder/", $attribute, $url);
+                $key       = preg_quote($key_value[0]);
+                $url       = preg_replace("/$key=$placeholder/", $attribute, $url);
             }
         }
     }
