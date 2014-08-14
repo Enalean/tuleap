@@ -30,8 +30,9 @@ Version 7.4 (Not released yet)
 
 	== Features ==
 	* Third step of story #6971: Git online commit in the Tuleap UI
-	* Steps of story #729: Be able to add custom tours on my forge
+	* story #729: Be able to add custom tours on my forge
 	* story #7304: use wiki editor
+	* Parts of story #2501: be able to unsuscribe to an artifact
 
 	== Enhancement ==
 	* Adapt test output dir to run tests in Docker
