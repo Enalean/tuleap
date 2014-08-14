@@ -1,3 +1,6 @@
+Version 1.43 - Tuleap 7.4
+    * development: request #7346: Update sidebar font, request #7344: FlamingParrot sidebar resize take into account content css position
+
 Version 1.42 - Tuleap 7.4
     * story #7290: be able to add custom tours on my forge
 

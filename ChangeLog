@@ -13,7 +13,7 @@ Version 7.4 (Not released yet)
 	* agiledashboard: 1.68
 
         == Themes ==
-	* FlamingParrot: 1.42
+	* FlamingParrot: 1.43
 
 	== Bug fix ==
 	* Fix regression introduced by commit 4b3eedc in tasks #6918: Send notifications after copy
