@@ -5,13 +5,14 @@ angular
 ExecutionListCtrl.$inject = ['$scope', '$state', 'ExecutionService', 'CampaignService'];
 
 function ExecutionListCtrl($scope, $state, ExecutionService, CampaignService) {
-    var campaign_id     = $state.params.id,
-        executions      = ExecutionService.getExecutions(campaign_id),
-        total_assignees = 0;
+    var campaign_id      = $state.params.id,
+        executions       = [],
+        total_executions = 0,
+        total_assignees  = 0;
 
     $scope.campaign          = CampaignService.getCampaign(campaign_id);
-    $scope.categories        = groupExecutionsByCategory(executions);
-    $scope.assignees         = getAssignees(campaign_id, 50, 0);
+    $scope.categories        = {};
+    $scope.assignees         = [];
     $scope.search            = '';
     $scope.selected_assignee = null;
     $scope.status            = {
@@ -21,22 +22,8 @@ function ExecutionListCtrl($scope, $state, ExecutionService, CampaignService) {
         notrun:  false
     };
 
-    function groupExecutionsByCategory(executions) {
-        var categories = {};
-
-        executions.forEach(function(execution) {
-            if (typeof categories[execution.test_def.category] === "undefined") {
-                categories[execution.test_def.category] = {
-                    label     : execution.test_def.category,
-                    executions: []
-                };
-            }
-
-            categories[execution.test_def.category].executions.push(execution);
-        });
-
-        return categories;
-    }
+    getAssignees(campaign_id, 50, 0);
+    getExecutions(campaign_id, 50, 0);
 
     function getAssignees(campaign_id, limit, offset) {
         CampaignService.getAssignees(campaign_id, limit, offset).then(function(data) {
@@ -47,7 +34,32 @@ function ExecutionListCtrl($scope, $state, ExecutionService, CampaignService) {
                 getAssignees(campaign_id, limit, offset + limit);
             }
         });
+    }
 
-        return [];
+    function getExecutions(campaign_id, limit, offset) {
+        ExecutionService.getExecutions(campaign_id, limit, offset).then(function(data) {
+            executions        = executions.concat(data.results);
+            total_executions  = data.total;
+
+            groupExecutionsByCategory(data.results);
+            console.log($scope.categories);
+
+            if (executions.length < total_executions) {
+                getExecutions(campaign_id, limit, offset + limit);
+            }
+        });
+    }
+
+    function groupExecutionsByCategory(executions) {
+        executions.forEach(function(execution) {
+            if (typeof $scope.categories[execution.test_definition.category] === "undefined") {
+                $scope.categories[execution.test_definition.category] = {
+                    label     : execution.test_definition.category,
+                    executions: []
+                };
+            }
+
+            $scope.categories[execution.test_definition.category].executions.push(execution);
+        });
     }
 }

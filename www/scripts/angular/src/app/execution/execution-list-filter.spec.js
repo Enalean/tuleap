@@ -12,7 +12,7 @@ describe('ExecutionListFilter', function() {
             "last_update_date": null,
             "assigned_to": null,
             //...
-            "test_def": {
+            "test_definition": {
                 "id": 24600,
                 "uri": "testdef/24600",
                 "summary": "Tracker Rule date verifications for a workflow",
@@ -35,7 +35,7 @@ describe('ExecutionListFilter', function() {
                 "avatar_url": "https://paelut/users/rtaupe/avatar.png"
             },
             //...
-            "test_def": {
+            "test_definition": {
                 "id": 24601,
                 "uri": "testdef/24601",
                 "summary": "Html notification for tracker v5",
@@ -58,7 +58,7 @@ describe('ExecutionListFilter', function() {
                 "avatar_url": "https://paelut/users/jclodo/avatar.png"
             },
             //…
-            "test_def": {
+            "test_definition": {
                 "id": 24602,
                 "uri": "testdef/24602",
                 "summary": "Git test",
