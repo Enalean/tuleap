@@ -41,7 +41,7 @@ class Tracker_Artifact_XMLImport {
     /** @var Tracker_FormElement_Field_List_Bind_Static_ValueDao */
     private $static_value_dao;
 
-    /** @var Logger */
+    /** @var WrapperLogger */
     private $logger;
 
     /**
@@ -71,7 +71,7 @@ class Tracker_Artifact_XMLImport {
         $this->formelement_factory   = $formelement_factory;
         $this->xml_import_helper     = $xml_import_helper;
         $this->static_value_dao      = $static_value_dao;
-        $this->logger                = $logger;
+        $this->logger                = new WrapperLogger($logger, 'XML import');
         $this->send_notifications    = $send_notifications;
     }
 
@@ -108,6 +108,7 @@ class Tracker_Artifact_XMLImport {
     public function importOneArtifactFromXML(Tracker $tracker, SimpleXMLElement $xml_artifact, $extraction_path) {
         try {
             $this->logger->info("Import {$xml_artifact['id']}");
+
             $files_importer = new Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact($xml_artifact);
             $fields_data_builder = new Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder(
                 $this->formelement_factory,
@@ -139,6 +140,7 @@ class Tracker_Artifact_XMLImport {
         SimpleXMLElement $xml_artifact,
         Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder $fields_data_builder
     ) {
+        $this->logger->push('tv3 #'.(string)$xml_artifact['id']);
         if (count($xml_artifact->changeset) > 0) {
             $changesets      = $this->getSortedBySubmittedOn($xml_artifact->changeset);
             $first_changeset = array_shift($changesets);
@@ -147,7 +149,7 @@ class Tracker_Artifact_XMLImport {
             if (count($changesets)) {
                 $this->importRemainingChangesets($artifact, $changesets, $fields_data_builder);
             }
-
+            $this->logger->pop();
             return $artifact;
         }
     }
@@ -201,9 +203,11 @@ class Tracker_Artifact_XMLImport {
         Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder $fields_data_builder
     ) {
         $count = 0;
+        $this->logger->push('tv5 #'.$artifact->getId());
         foreach($xml_changesets as $xml_changeset) {
             try {
                 $count++;
+                $this->logger->push("changeset $count");
                 $initial_comment_body   = '';
                 $initial_comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
                 if (isset($xml_changeset->comments) && count($xml_changeset->comments->comment) > 0) {
@@ -224,12 +228,16 @@ class Tracker_Artifact_XMLImport {
                 } else {
                     $this->logger->warn("Impossible to create changeset $count: ".$GLOBALS['Response']->getAndClearRawFeedback());
                 }
+                $this->logger->pop();
             } catch (Tracker_NoChangeException $exception) {
                 $this->logger->warn("No Change for changeset $count");
+                $this->logger->pop();
             } catch (Exception $exception) {
                 $this->logger->warn("Unexpected error at changeset $count: ".$exception->getMessage());
+                $this->logger->pop();
             }
         }
+        $this->logger->pop();
     }
 
     private function updateComments(Tracker_Artifact_Changeset $changeset, SimpleXMLElement $xml_changeset) {
