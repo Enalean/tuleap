@@ -63,6 +63,10 @@
         $('.main').animate({
             marginLeft: new_width
         }, duration);
+
+        if ($('.content').css('position') === 'absolute') {
+            $('.content').css('padding-left', new_width);
+        }
     }
 
     function updateNavbar(new_width) {
