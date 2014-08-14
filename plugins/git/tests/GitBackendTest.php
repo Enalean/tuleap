@@ -30,7 +30,7 @@ Mock::generate('GitDao');
 Mock::generate('Project');
 Mock::generate('SystemEventManager');
 
-class GitBackendTest extends UnitTestCase {
+class GitBackendTest extends TuleapTestCase {
 
     protected $_globals;
 

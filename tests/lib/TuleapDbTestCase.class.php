@@ -29,6 +29,8 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
 
     private $development_on_going = false;
 
+    private $src_dir = '';
+
     public function __construct() {
         parent::__construct();
         $this->loadConfiguration();
@@ -36,6 +38,7 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
         if (!$this->mysqli->real_connect($GLOBALS['sys_dbhost'], $GLOBALS['sys_dbuser'], $GLOBALS['sys_dbpasswd'])) {
             $this->mysqli = false;
         }
+        $this->src_dir = realpath(dirname(__FILE__)."/../..");
     }
 
     public function setUp() {
@@ -98,7 +101,7 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
      */
     protected function mysqlLoadFile($file) {
         $mysql_cmd = 'mysql -u'.$GLOBALS['sys_dbuser'].' -p'.$GLOBALS['sys_dbpasswd'].' '.$GLOBALS['sys_dbname'];
-        $cmd = $mysql_cmd.' < '.$file;
+        $cmd = $mysql_cmd.' < '.$this->src_dir.'/'.$file;
         system($cmd);
     }
 

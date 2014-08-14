@@ -221,7 +221,7 @@ class fulltextsearchPlugin extends Plugin {
         $i = 0;
 
         $allowed_types = array('types' => array());
-        $this->system_event_get_types(&$allowed_types);
+        $this->system_event_get_types($allowed_types);
 
         if (! in_array($params['type'], $allowed_types['types'])) {
             return;

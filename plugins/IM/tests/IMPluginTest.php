@@ -1,31 +1,9 @@
 <?php
 
-require_once('common/language/BaseLanguage.class.php');
-
-require_once(dirname(__FILE__).'/../include/IMPlugin.class.php');
-//require_once(dirname(__FILE__).'/../include/jabbex_api/Jabbex.php');
-
-require_once('common/project/Project.class.php');
-Mock::generate('Project');
-require_once('common/project/ProjectManager.class.php');
-Mock::generate('ProjectManager');
-
-require_once('common/user/User.class.php');
-Mock::generate('PFUser');
-require_once('common/user/UserManager.class.php');
-Mock::generate('UserManager');
-
-require_once(dirname(__FILE__).'/../include/jabbex_api/Jabbex.php');
-Mock::generate('Jabbex');
-
-Mock::generatePartial(
-    'IMPlugin',
-    'IMPluginTestVersion',
-    array('project_get_object', 'getMembersId', 'user_getrealname', '_this_muc_exist', '_get_im_object', 'getUserManager', 'getProjectManager')
-);
-
+require_once dirname(__FILE__).'/../include/autoload.php';
 
 /**
+ * Copyright (c) Enalean, 2014. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  * 
  * 
@@ -42,29 +20,39 @@ class IMPluginTest extends TuleapTestCase {
     var $jabbex;
 
     function setUp() {
-        $this->implugin = new IMPluginTestVersion($this);
+        mkdir('/tmp/plugins/IM/etc/', 0755, true);
+        copy(dirname(__FILE__).'/../include/jabbex_api/installation/resources/jabbex_conf.tpl.xml', '/tmp/plugins/IM/etc/jabbex_conf.xml');
+        $GLOBALS['sys_custom_dir'] = '/tmp';
+
+        $GLOBALS['codendi_log'] = '/tmp';
+
+        $this->implugin = partial_mock('IMPlugin', array('project_get_object', 'getMembersId', 'user_getrealname', '_this_muc_exist', '_get_im_object', 'getUserManager', 'getProjectManager'));
         
-        $this->project = new MockProject($this);
+        $this->project = mock('Project');
         $this->project->setReturnValue('getUnixName', 'mockproject');
         $this->project->setReturnValue('getPublicName', 'My Mock Project');
         $this->project->setReturnValue('getDescription', 'Description of my Mock Project');
         $this->project->setReturnValue('getMembersId', array(125, 456));
-        $this->project_manager = new MockProjectManager($this);
+        $this->project_manager = mock('ProjectManager');
         $this->project_manager->setReturnReference('getProject', $this->project);
         $this->implugin->setReturnReference('getProjectManager', $this->project_manager);
         
         $this->user = mock('PFUser');
         $this->user->setReturnValue('getName', 'mockuser');
-        $this->user_manager = new MockUserManager($this);
+        $this->user_manager = mock('UserManager');
         $this->user_manager->setReturnReference('getUserById', $this->user);
         $this->implugin->setReturnReference('getUserManager', $this->user_manager);
         
-        $this->jabbex = new MockJabbex($this);
+        $this->jabbex = mock('Jabbex');
         $this->implugin->setReturnValue('_get_im_object', $this->jabbex);
         
     }
     
     function tearDown() {
+        $this->recurseDeleteInDir('/tmp/plugins');
+        rmdir('/tmp/plugins');
+        unset($GLOBALS['sys_custom_dir']);
+        unset($GLOBALS['codendi_log']);
         unset($this->implugin);
         unset($this->project);
         unset($this->project_manager);
@@ -208,5 +196,3 @@ class IMPluginTest extends TuleapTestCase {
     }
     
 }
-
-?>

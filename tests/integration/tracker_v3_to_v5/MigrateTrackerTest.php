@@ -83,7 +83,11 @@ abstract class MigrateDefaultTrackersTest extends TuleapDbTestCase {
 
     protected function convertBugTracker() {
         $res = db_query('SELECT * FROM artifact_group_list WHERE item_name = "bug"');
+        if (db_numrows($res) !== 1) {
+            die('No Tracker v3 data. Migration impossible');
+        }
         $row = db_fetch_array($res);
+
 
         $defect_trackerv3_id = $row['group_artifact_id'];
         $v3_migration = new Tracker_Migration_V3(TrackerFactory::instance());
