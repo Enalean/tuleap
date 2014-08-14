@@ -1560,3 +1560,6 @@ plugin_tracker	Description:	Description:
 plugin_tracker	copy_this_artifact	Copy this artifact
 plugin_tracker	error_create_copy	An error occured while creating a copy of the artifact #$1.
 plugin_tracker	copy_of	Copy of $1
+
+plugin_tracker	disable_notifications	Disable notifications
+plugin_tracker	enable_notifications	Enable notifications

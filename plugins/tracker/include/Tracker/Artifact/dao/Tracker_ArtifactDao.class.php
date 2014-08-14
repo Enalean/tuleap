@@ -620,7 +620,41 @@ class Tracker_ArtifactDao extends DataAccessObject {
         $sql = "SELECT user_id
                 FROM tracker_artifact_unsubscribe
                 WHERE artifact_id = $artifact_id";
+
         return $this->retrieve($sql);
+    }
+
+    public function doesUserHaveUnsubscribedFromNotifications($artifact_id, $user_id) {
+        $artifact_id = $this->da->escapeInt($artifact_id);
+        $user_id     = $this->da->escapeInt($user_id);
+
+        $sql = "SELECT user_id
+                FROM tracker_artifact_unsubscribe
+                WHERE artifact_id = $artifact_id
+                  AND user_id = $user_id";
+
+        return $this->retrieve($sql)->count() > 0;
+    }
+
+    public function createUnsubscribeNotification($artifact_id, $user_id) {
+        $artifact_id = $this->da->escapeInt($artifact_id);
+        $user_id     = $this->da->escapeInt($user_id);
+
+        $sql = "INSERT INTO tracker_artifact_unsubscribe (artifact_id, user_id)
+                VALUE ($artifact_id, $user_id)";
+
+        $this->update($sql);
+    }
+
+    public function deleteUnsubscribeNotification($artifact_id, $user_id) {
+        $artifact_id = $this->da->escapeInt($artifact_id);
+        $user_id     = $this->da->escapeInt($user_id);
+
+        $sql = "DELETE FROM tracker_artifact_unsubscribe
+                WHERE artifact_id = $artifact_id
+                    AND user_id = $user_id";
+
+        $this->update($sql);
     }
 }
 

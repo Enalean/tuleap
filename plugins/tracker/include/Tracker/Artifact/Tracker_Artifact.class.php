@@ -387,8 +387,34 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $html .= '<div class="tracker_artifact_title">';
         $html .= $prefix;
         $html .= $this->getXRefAndTitle();
+        $html .= $this->fetchUnsubscribeButton();
         $html .= '</div>';
         return $html;
+    }
+
+    private function fetchUnsubscribeButton() {
+        $html = '<div class="tracker_artifact_notification">';
+        $html .= '<a href="#" class="btn">';
+        $html .= '<i class="icon-bell-alt"></i>';
+        $html .= $this->getUnsubscribeButtonLabel();
+        $html .= '</a>';
+        $html .= '</div>';
+
+        return $html;
+    }
+
+    private function getUnsubscribeButtonLabel() {
+        $user = $this->getUserManager()->getCurrentUser();
+
+        if ($this->doesUserHaveUnsubscribedFromNotification($user)) {
+            return $GLOBALS['Language']->getText('plugin_tracker', 'enable_notifications');
+        }
+
+        return $GLOBALS['Language']->getText('plugin_tracker', 'disable_notifications');
+    }
+
+    private function doesUserHaveUnsubscribedFromNotification(PFUser $user) {
+        return $this->getDao()->doesUserHaveUnsubscribedFromNotifications($this->id, $user->getId());
     }
 
     public function fetchHiddenTrackerId() {

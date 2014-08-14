@@ -87,6 +87,41 @@ document.observe('dom:loaded', function () {
         }
     });
 
+    $$('.tracker_artifact_title').each(function(title_section) {
+        var unsubscribe_buttons = $$('div.tracker_artifact_notification > a');
+
+        unsubscribe_buttons.each(function(button) {
+            button.on('click', function() {
+
+                new Ajax.Request(codendi.tracker.base_url + "unsubscribe_notifications.php", {
+                    parameters: {
+                        artifact: $('artifact_informations').getAttribute('data-artifact-id')
+                    },
+                    onSuccess: function(response) {
+                        codendi.feedback.clear();
+                        codendi.feedback.log('info', codendi.locales.tracker_artifact.notification_update_ok);
+
+                        updateButtonLabel(button, response.responseJSON.notification);
+                        return true;
+                    },
+                    onFailure: function(response) {
+                        codendi.feedback.clear();
+                        codendi.feedback.log('error', codendi.locales.tracker_artifact.notification_update_error);
+                        return false;
+                    }
+                });
+            })
+        })
+
+        function updateButtonLabel(button, notification) {
+            if (notification === true) {
+                button.update('<i class="icon-bell-alt"></i>' + codendi.locales.tracker_artifact.disable_notifications);
+            } else {
+                button.update('<i class="icon-bell-alt"></i>' + codendi.locales.tracker_artifact.enable_notifications);
+            }
+        }
+    });
+
     $$('#tracker_artifact_followup_comments').each(function (followup_section) {
         //We only have one followup_section but I'm too lazy to do a if()
 
