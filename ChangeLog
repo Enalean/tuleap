@@ -26,6 +26,7 @@ Version 7.4 (Not released yet)
 	* request #7332: Cannot uninstall and re-install tracker plugin from web interface
 	* request #7327 Tv3 export to Tv5: cannot migrate trackers not readable by anonymous
 	* request #7345: Tv3 export to Tv5: import failure when field name is not unique
+	* request #7335: Tuleap mailing list admin doesn't work in php 5.4
 
 	== Features ==
 	* Third step of story #6971: Git online commit in the Tuleap UI
