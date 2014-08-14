@@ -126,6 +126,8 @@ class CampaignsResource {
 
         $this->sendPaginationHeaders($limit, $offset, count($execution_representations));
 
+        $this->sortByCategoryAndId($execution_representations);
+
         return array_slice($execution_representations, $offset, $limit);
     }
 
@@ -187,6 +189,20 @@ class CampaignsResource {
         }
 
         return $campaign;
+    }
+
+    private function sortByCategoryAndId(array &$execution_representations) {
+        usort($execution_representations, function ($a, $b) {
+            $def_a = $a->test_definition;
+            $def_b = $b->test_definition;
+
+            $category_cmp = strnatcasecmp($def_a->category, $def_b->category);
+            if ($category_cmp !== 0) {
+                return $category_cmp;
+            }
+
+            return strcmp($def_a->id, $def_b->id);
+        });
     }
 
     private function isACampaign($campaign) {

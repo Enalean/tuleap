@@ -47,9 +47,13 @@ class CampaignsTest extends BaseTest {
 
         $executions = $all_executions_response->json();
         $this->assertCount(3, $executions);
-        $this->assertEquals('Create a repository', $executions[0]['test_definition']['summary']);
-        $this->assertEquals('Delete a repository', $executions[1]['test_definition']['summary']);
-        $this->assertEquals('Import default template', $executions[2]['test_definition']['summary']);
+        $this->assertExecutionsAreSortedByCategoryAndId($executions);
+    }
+
+    private function assertExecutionsAreSortedByCategoryAndId($executions) {
+        $this->assertEquals('Import default template', $executions[0]['test_definition']['summary']);
+        $this->assertEquals('Create a repository', $executions[1]['test_definition']['summary']);
+        $this->assertEquals('Delete a repository', $executions[2]['test_definition']['summary']);
     }
 
     public function getValid73Campaign() {
