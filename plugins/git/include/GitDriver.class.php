@@ -105,7 +105,7 @@ class GitDriver implements DVCSDriver {
 
     public function mergeAndPush($repositoryPath, $bareURL) {
         $this->checkFileExist($repositoryPath);
-        $cmd = 'cd '.escapeshellarg($repositoryPath).' && git pull --rebase && git push '. $bareURL .' 2>&1';
+        $cmd = 'cd '.escapeshellarg($repositoryPath).' && git pull --quiet --rebase && git push '. $bareURL .' 2>&1';
 
         return $this->execGitAction($cmd, 'merge and push');
     }

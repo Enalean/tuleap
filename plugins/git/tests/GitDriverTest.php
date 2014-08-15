@@ -157,7 +157,7 @@ class GitDriverTest extends UnitTestCase {
             $driver = new GitDriver();
             $driver->cloneAtSpecifiqBranch($this->sourcePath, $this->destinationPath, "master");
             $driver->changeGitUserInfo($this->destinationPath, "test@test.fr", "testman");
-            @exec('cd '.$this->destinationPath.'&& touch test.txt && git add . && git commit -m "add master" && git push -u '. $this->sourcePath .' master');
+            @exec('cd '.$this->destinationPath.'&& touch test.txt && git add . && git commit -m "add master" && git push --quiet -u '. $this->sourcePath .' master');
 
             $driver->cloneAtSpecifiqBranch($this->sourcePath, $destinationPath2, "master");
 
