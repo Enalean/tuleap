@@ -1392,7 +1392,7 @@ class Tracker_Artifact_XMLImport_ChangesetsCreationFailureTest extends Tracker_A
 
         stub($this->response)->getAndClearRawFeedback()->returns('field error');
 
-        expect($this->logger)->warn("Impossible to create changeset 1: field error")->once();
+        expect($this->logger)->warn(new PatternExpectation("/.*Impossible to create changeset 1: field error$/"), '*')->once();
 
         $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
     }

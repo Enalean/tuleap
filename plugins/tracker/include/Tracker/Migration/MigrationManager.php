@@ -46,8 +46,11 @@ class Tracker_Migration_MigrationManager {
     /** @var  Tracker_ArtifactFactory */
     private $artifact_factory;
 
-    /** @var  BackendLogger */
+    /** @var Logger */
     private $logger;
+
+    /** @var Tracker_Migration_MailLogger */
+    private $mail_logger;
 
     public function __construct(Tracker_SystemEventManager $system_event_manager, TrackerFactory $tracker_factory, Tracker_ArtifactFactory $artifact_factory, Tracker_FormElementFactory $form_element_factory, UserManager $user_manager, ProjectManager $project_manager) {
         $this->system_event_manager = $system_event_manager;
@@ -57,7 +60,14 @@ class Tracker_Migration_MigrationManager {
         $this->form_element_factory = $form_element_factory;
         $this->artifact_factory     = $artifact_factory;
 
-        $this->logger = new Tracker_Migration_MigrationLogger(new BackendLogger($this->getLogFilePath()));
+        // Log everything in Backend
+        // Only Warn and errors by email
+        $backend_logger    = new BackendLogger($this->getLogFilePath());
+        $this->mail_logger = new Tracker_Migration_MailLogger($backend_logger);
+        $this->logger      = new Tracker_Migration_MigrationLogger(
+            $backend_logger,
+            $this->mail_logger
+        );
     }
 
     /**
@@ -90,7 +100,7 @@ class Tracker_Migration_MigrationManager {
         unlink($xml_path);
 
         $this->logger->info('-- End of migration of tracker v3 '.$tv3_id.' to '.$tracker_name.' --');
-        $this->logger->sendMail($user, $this->project_manager->getProject($project_id), $tv3_id, $tracker_name);
+        $this->mail_logger->sendMail($user, $this->project_manager->getProject($project_id), $tv3_id, $tracker_name);
     }
 
     public function isTrackerUnderMigration(Tracker $tracker) {
