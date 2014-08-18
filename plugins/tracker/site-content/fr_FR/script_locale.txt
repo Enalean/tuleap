@@ -17,7 +17,11 @@ codendi.locales['tracker_artifact'] = {
     always_expand_fieldset: 'Ce groupe est toujours fermé. Cliquez pour toujours l\'ouvrir.',
     always_collapse_fieldset: 'Ce groupe est toujours ouvert. Cliquez pour toujours le fermer.',
     edit_followup_ok: 'Modifier',
-    edit_followup_cancel: 'Annuler'
+    edit_followup_cancel: 'Annuler',
+    disable_notifications: 'Désactiver les notifications',
+    enable_notifications: 'Activer les notifications',
+    notification_update_ok: 'Paramètre de notification enregistré',
+    notification_update_error: 'Une erreur est survenue lors de la modification de vos paramaètres de notification'
 };
 codendi.locales['tracker_renderer'] = {
     order_dragdrop: 'Vous pouvez ordonner les onglets avec le glisser/déposer'
