@@ -40,13 +40,13 @@
                         return items.sort(function(a, b) {
                             return a.atwho_order - b.atwho_order;
                         });
-                    },
+                    }
                 }
             });
 
             return this;
         }
-    }
+    };
 
     $(document).ready(function () {
         tuleap.mention.init('input[type="text"].user-mention, textarea.user-mention');
