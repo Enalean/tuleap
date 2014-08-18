@@ -86,24 +86,6 @@ CREATE TABLE activity_log_old_old (
 );
 
 #
-# Table structure for table 'db_images'
-#
-
-CREATE TABLE db_images (
-  id int(11) NOT NULL auto_increment,
-  group_id int(11) NOT NULL default '0',
-  description text NOT NULL,
-  bin_data longblob NOT NULL,
-  filename text NOT NULL,
-  filesize int(11) NOT NULL default '0',
-  filetype text NOT NULL,
-  width int(11) NOT NULL default '0',
-  height int(11) NOT NULL default '0',
-  PRIMARY KEY  (id),
-  KEY idx_db_images_group (group_id)
-);
-
-#
 # Table structure for table 'filedownload_log'
 #
 
@@ -264,22 +246,6 @@ CREATE TABLE forum_saved_place (
 CREATE TABLE forum_thread_id (
   thread_id int(11) NOT NULL auto_increment,
   PRIMARY KEY  (thread_id)
-);
-
-
-#
-# Table structure for table 'frs_dlstats_agg'
-#
-
-CREATE TABLE frs_dlstats_agg (
-  file_id int(11) NOT NULL default '0',
-  day int(11) NOT NULL default '0',
-  downloads_http int(11) NOT NULL default '0',
-  downloads_ftp int(11) NOT NULL default '0',
-  KEY file_id_idx (file_id),
-  KEY day_idx (day),
-  KEY downloads_http_idx (downloads_http),
-  KEY downloads_ftp_idx (downloads_ftp)
 );
 
 #
@@ -615,26 +581,6 @@ CREATE TABLE group_desc_value (
   value text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
   PRIMARY KEY (desc_value_id)
 );
-
-#
-# Table structure for table 'image'
-#
-
-CREATE TABLE image (
-  image_id int(11) NOT NULL auto_increment,
-  image_category int(11) NOT NULL default '1',
-  image_type varchar(40) NOT NULL default '',
-  image_data blob,
-  group_id int(11) NOT NULL default '0',
-  image_bytes int(11) NOT NULL default '0',
-  image_caption text,
-  organization_id int(11) NOT NULL default '0',
-  PRIMARY KEY  (image_id),
-  KEY image_category_idx (image_category),
-  KEY image_type_idx (image_type),
-  KEY group_id_idx (group_id)
-);
-
 
 CREATE TABLE mail_group_list (
   group_list_id int(11) NOT NULL auto_increment,
