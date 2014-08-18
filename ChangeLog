@@ -2,7 +2,7 @@ Version 7.4 (Not released yet)
 
 	== Plugins ==
 	* fulltextsearch: 0.78
-	* tracker: 5.439
+	* tracker: 5.440
 	* mediawiki: 0.53
 	* docman: 2.26.47
 	* git: 3.96
@@ -29,6 +29,7 @@ Version 7.4 (Not released yet)
 	* request #7345: Tv3 export to Tv5: import failure when field name is not unique
 	* request #7335: Tuleap mailing list admin doesn't work in php 5.4
 	* request #7342 Tv3 export to Tv5: migration abort when files are deleted on file system
+	* request #7347: Tv3 export to Tv5: migration is to restrictive, should not stop creating when something cannot be imported
 
 	== Features ==
 	* Third step of story #6971: Git online commit in the Tuleap UI
