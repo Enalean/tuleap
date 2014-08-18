@@ -71,6 +71,9 @@ class CampaignRepresentation {
     /** @var int */
     public $nb_of_blocked;
 
+    /** @var array */
+    public $resources;
+
     public function build(Tracker_Artifact $artifact, Tracker_FormElementFactory $form_element_factory, PFUser $user) {
         $this->artifact             = $artifact;
         $this->tracker_id           = $artifact->getTrackerId();
@@ -89,6 +92,13 @@ class CampaignRepresentation {
         $this->nb_of_failed         = $executions_status[self::STATUS_FAILED];
         $this->nb_of_blocked        = $executions_status[self::STATUS_BLOCKED];
         $this->total                = $this->nb_of_not_run + $this->nb_of_passed + $this->nb_of_failed + $this->nb_of_blocked;
+
+        $this->resources = array(
+            array(
+                'type' => 'executions',
+                'uri'  => 'campaigns/'. $this->id .'/executions'
+            )
+        );
     }
 
     private function getFieldValue($field_shortname) {
