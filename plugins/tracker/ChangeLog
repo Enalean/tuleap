@@ -1,3 +1,6 @@
+Version 5.439 - Tuleap 7.4
+    * request #7342 Tv3 export to Tv5: migration abort when files are deleted on file system
+
 Version 5.438 - Tuleap 7.4
     * request #7345: Tv3 export to Tv5: import failure when field name is not unique
 
