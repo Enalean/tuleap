@@ -446,7 +446,7 @@ FlamingParrot, default theme starting Tuleap 7
 #
 # Install tuleap application
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DIR}
-for i in tools cli plugins site-content src ChangeLog VERSION; do
+for i in tools cli plugins site-content src ChangeLog VERSION AUTHORS; do
 	%{__cp} -ar $i $RPM_BUILD_ROOT/%{APP_DIR}
 done
 # Remove old scripts: not used and add unneeded perl depedencies to the package
@@ -751,9 +751,9 @@ fi
 %{APP_DIR}/site-content
 %{APP_DIR}/ChangeLog
 %{APP_DIR}/VERSION
+%{APP_DIR}/AUTHORS
 # Split src for src/www/themes
 %dir %{APP_DIR}/src
-%{APP_DIR}/AUTHORS
 %{APP_DIR}/src/common
 %{APP_DIR}/src/COPYING
 %{APP_DIR}/src/db
