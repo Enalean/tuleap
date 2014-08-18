@@ -868,15 +868,12 @@ fi
 %{APP_DIR}/VERSION
 # Split src for src/www/themes
 %dir %{APP_DIR}/src
-%{APP_DIR}/src/AUTHORS
+%{APP_DIR}/AUTHORS
 %{APP_DIR}/src/common
-%{APP_DIR}/src/CONTRIBUTING
 %{APP_DIR}/src/COPYING
 %{APP_DIR}/src/db
 %{APP_DIR}/src/etc
 %{APP_DIR}/src/forgeupgrade
-%{APP_DIR}/src/INSTALL
-%{APP_DIR}/src/README
 %{APP_DIR}/src/templates
 %{APP_DIR}/src/updates
 %{APP_DIR}/src/utils
@@ -926,7 +923,6 @@ fi
 %{APP_DIR}/src/www/tracker
 %{APP_DIR}/src/www/user
 %{APP_DIR}/src/www/users
-%{APP_DIR}/src/www/VERSION
 %{APP_DIR}/src/www/widgets
 %{APP_DIR}/src/www/wiki
 # Plugins dir
