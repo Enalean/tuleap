@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-interface ArtifactAttachmentXMLExporter {
-
-    public function addFilesToArtifact(DOMElement $artifact_node, $artifact_type_id, $artifact_id);
+class Tracker_Artifact_XMLImport_Exception_FileNotFound extends Tracker_Exception {
+    public function __construct($file) {
+        parent::__construct('File not found: '.$file);
+    }
 }

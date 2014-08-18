@@ -48,25 +48,31 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
     /** @var Tracker_Artifact_XMLImport_XMLImportFieldStrategy[] */
     private $strategies;
 
+    /** @var Logger */
+    private $logger;
+
     public function __construct(
         Tracker_FormElementFactory $formelement_factory,
         Tracker_Artifact_XMLImport_XMLImportHelper $xml_import_helper,
         Tracker $tracker,
         Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact $files_importer,
         $extraction_path,
-        Tracker_FormElement_Field_List_Bind_Static_ValueDao $static_value_dao
+        Tracker_FormElement_Field_List_Bind_Static_ValueDao $static_value_dao,
+        Logger $logger
     ) {
         $this->formelement_factory  = $formelement_factory;
         $this->tracker              = $tracker;
         $this->files_importer       = $files_importer;
         $this->extraction_path      = $extraction_path;
+        $this->logger               = $logger;
 
         $alphanum_strategy = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyAlphanumeric();
         $this->strategies  = array(
             self::FIELDTYPE_PERMS_ON_ARTIFACT => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyPermissionsOnArtifact(),
             self::FIELDTYPE_ATTACHEMENT => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment(
                 $this->extraction_path,
-                $this->files_importer
+                $this->files_importer,
+                $this->logger
             ),
             self::FIELDTYPE_OPENLIST => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList(),
             self::FIELDTYPE_STRING   => $alphanum_strategy,

@@ -872,13 +872,18 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                 $method   = 'rename';
                 $tmp_name = $temporary->getPath();
 
-            } else if (isset($file_info['is_migrated']) && $file_info['is_migrated']) {
-                $method   = 'rename';
+            } else if ($this->isImportOfArtifact($file_info)) {
+                $method   = 'copy';
             }
 
             return $this->moveAttachmentToFinalPlace($attachment, $method, $tmp_name);
         }
         return false;
+    }
+
+    private function isImportOfArtifact(array $file_info) {
+        return isset($file_info[Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment::FILE_INFO_COPY_OPTION]) &&
+            $file_info[Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment::FILE_INFO_COPY_OPTION];
     }
 
     protected function createAttachmentForRest(Tracker_FileInfo $attachment, $file_info) {
@@ -907,8 +912,6 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
 
             $temporary->removeTemporaryFileInDBByTemporaryName($filename);
 
-        } else if (isset($file_info['is_migrated']) && $file_info['is_migrated']) {
-            $method   = 'rename';
         }
 
         return $this->moveAttachmentToFinalPlace($attachment, $method, $tmp_name);

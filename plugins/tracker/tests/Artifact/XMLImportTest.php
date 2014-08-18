@@ -69,7 +69,7 @@ abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase {
 
         $this->artifact = mock('Tracker_Artifact');
 
-        $this->extraction_path = '/some/random/path';
+        $this->extraction_path = dirname(__FILE__) . '/_fixtures';
 
         $this->static_value_dao = mock('Tracker_FormElement_Field_List_Bind_Static_ValueDao');
 
@@ -619,7 +619,7 @@ class Tracker_Artifact_XMLImport_OneArtifactWithAttachementTest extends Tracker_
                     </changeset>
                     <file id="File33">
                         <filename>A.png</filename>
-                        <path>data/34_File33.png</path>
+                        <path>34_File33.png</path>
                         <filesize>87947</filesize>
                         <filetype>image/png</filetype>
                         <description>None</description>
@@ -627,7 +627,12 @@ class Tracker_Artifact_XMLImport_OneArtifactWithAttachementTest extends Tracker_
                 </artifact>
             </artifacts>
         ');
+        touch($this->extraction_path.'/34_File33.png');
+    }
 
+    public function tearDown() {
+        parent::tearDown();
+        unlink($this->extraction_path.'/34_File33.png');
     }
 
     public function itCreatesAChangesetWithSummaryWhenFileFormElementDoesNotExist() {
@@ -654,7 +659,7 @@ class Tracker_Artifact_XMLImport_OneArtifactWithAttachementTest extends Tracker_
                     'type'        => 'image/png',
                     'description' => 'None',
                     'size'        => 87947,
-                    'tmp_name'    => $this->extraction_path.'/data/34_File33.png',
+                    'tmp_name'    => $this->extraction_path.'/34_File33.png',
                     'error'       => UPLOAD_ERR_OK,
                )
             ),
@@ -689,14 +694,14 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsTest extends
                     </changeset>
                     <file id="File33">
                         <filename>A.png</filename>
-                        <path>data/34_File33.png</path>
+                        <path>34_File33.png</path>
                         <filesize>87947</filesize>
                         <filetype>image/png</filetype>
                         <description>None</description>
                     </file>
                     <file id="File34">
                         <filename>B.pdf</filename>
-                        <path>data/34_File34.pdf</path>
+                        <path>34_File34.pdf</path>
                         <filesize>84895</filesize>
                         <filetype>application/x-download</filetype>
                         <description>A Zuper File</description>
@@ -704,7 +709,14 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsTest extends
                 </artifact>
             </artifacts>
         ');
+        touch($this->extraction_path.'/34_File33.png');
+        touch($this->extraction_path.'/34_File34.pdf');
+    }
 
+    public function tearDown() {
+        parent::tearDown();
+        unlink($this->extraction_path.'/34_File33.png');
+        unlink($this->extraction_path.'/34_File34.pdf');
     }
 
     public function itCreatesAChangesetWithTwoFileElements() {
@@ -721,7 +733,7 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsTest extends
                     'type'        => 'image/png',
                     'description' => 'None',
                     'size'        => 87947,
-                    'tmp_name'    => $this->extraction_path.'/data/34_File33.png',
+                    'tmp_name'    => $this->extraction_path.'/34_File33.png',
                     'error'       => UPLOAD_ERR_OK,
                 ),
                 array(
@@ -730,7 +742,7 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsTest extends
                     'type'        => 'application/x-download',
                     'description' => 'A Zuper File',
                     'size'        => 84895,
-                    'tmp_name'    => $this->extraction_path.'/data/34_File34.pdf',
+                    'tmp_name'    => $this->extraction_path.'/34_File34.pdf',
                     'error'       => UPLOAD_ERR_OK,
                 )
             ),
@@ -772,14 +784,14 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsAndChangeset
                     </changeset>
                     <file id="File33">
                         <filename>A.png</filename>
-                        <path>data/34_File33.png</path>
+                        <path>34_File33.png</path>
                         <filesize>87947</filesize>
                         <filetype>image/png</filetype>
                         <description>None</description>
                     </file>
                     <file id="File34">
                         <filename>B.pdf</filename>
-                        <path>data/34_File34.pdf</path>
+                        <path>34_File34.pdf</path>
                         <filesize>84895</filesize>
                         <filetype>application/x-download</filetype>
                         <description>A Zuper File</description>
@@ -787,8 +799,16 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsAndChangeset
                 </artifact>
             </artifacts>
         ');
-
+        touch($this->extraction_path.'/34_File33.png');
+        touch($this->extraction_path.'/34_File34.pdf');
     }
+
+    public function tearDown() {
+        parent::tearDown();
+        unlink($this->extraction_path.'/34_File33.png');
+        unlink($this->extraction_path.'/34_File34.pdf');
+    }
+
 
     public function itCreatesChangesetsThatOnlyReferenceConcernedFiles() {
         $artifact = mock('Tracker_Artifact');
@@ -806,7 +826,7 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsAndChangeset
                     'type'        => 'image/png',
                     'description' => 'None',
                     'size'        => 87947,
-                    'tmp_name'    => $this->extraction_path.'/data/34_File33.png',
+                    'tmp_name'    => $this->extraction_path.'/34_File33.png',
                     'error'       => UPLOAD_ERR_OK,
                 )
             ),
@@ -821,7 +841,7 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsAndChangeset
                     'type'        => 'application/x-download',
                     'description' => 'A Zuper File',
                     'size'        => 84895,
-                    'tmp_name'    => $this->extraction_path.'/data/34_File34.pdf',
+                    'tmp_name'    => $this->extraction_path.'/34_File34.pdf',
                     'error'       => UPLOAD_ERR_OK,
                 )
             )

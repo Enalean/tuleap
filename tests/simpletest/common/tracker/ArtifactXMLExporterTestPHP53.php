@@ -42,7 +42,7 @@ abstract class ArtifactXMLExporter_BaseTest extends TuleapTestCase {
         $this->dom                = new DOMDocument("1.0", "UTF8");
         $this->archive            = mock('ZipArchive');
         $node_helper              = new ArtifactXMLNodeHelper($this->dom);
-        $attachment_exporter      = new ArtifactAttachmentXMLExporter($node_helper, $this->dao, $this->archive, false);
+        $attachment_exporter      = new ArtifactAttachmentXMLZipper($node_helper, $this->dao, $this->archive, false);
         $this->logger             = mock('Logger');
         $this->exporter           = new ArtifactXMLExporter($this->dao, $attachment_exporter, $node_helper, $this->logger);
         $this->fixtures_dir       = dirname(__FILE__) .'/_fixtures/';

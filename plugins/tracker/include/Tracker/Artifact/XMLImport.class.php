@@ -83,6 +83,14 @@ class Tracker_Artifact_XMLImport {
         $archive->cleanUp();
     }
 
+    public function importFromFile(Tracker $tracker, $xml_file_path, $data_path) {
+        $this->importFromXML(
+            $tracker,
+            simplexml_load_file($xml_file_path),
+            $data_path
+        );
+    }
+
     public function importFromXML(Tracker $tracker, SimpleXMLElement $xml_element, $extraction_path) {
         $this->rng_validator->validate($xml_element);
         foreach ($xml_element->artifact as $artifact) {
@@ -107,7 +115,8 @@ class Tracker_Artifact_XMLImport {
                 $tracker,
                 $files_importer,
                 $extraction_path,
-                $this->static_value_dao
+                $this->static_value_dao,
+                $this->logger
             );
 
             $tracker->getWorkflow()->disable();
