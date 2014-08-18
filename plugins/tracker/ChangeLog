@@ -1,3 +1,6 @@
+Version 5.441 - Tuleap 7.4
+    * request #7350 Tv3 export to Tv5: Improve logging
+
 Version 5.440 - Tuleap 7.4
     * request #7347: Tv3 export to Tv5: migration is to restrictive, should not stop creating when something cannot be imported
 
