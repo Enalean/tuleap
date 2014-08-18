@@ -1,44 +1,57 @@
 ----------------------------------------------------------------------------
-The Codendi Team at Xerox
+Current active commiters
 ----------------------------------------------------------------------------
-Stéphane Bouhet
+
+People with at least one commit since 1 year:
+
+Christan Bayle <christian.bayle@orange.com>
+Dylan Bowden <dylan.bowden@enalean.com>
+Yoann Celton <yoann.celton@jtekt-eu.com>
+Benjamin Dauton <benjamin.dauton@enalean.com>
+Mohamed Amine Doghri <mohamedamin.doghri@st.com>
+Sandra Echinard <sandra.echinard@enalean.com>
+Anthony Gauchy <anthony.gauchy@enalean.com>
+Martin Goyot <martin.goyot@enalean.com>
+Raphaël Hertzog <hertzog@debian.org>
+Ahmed Hosni <ahmed.hosni@st.com>
+Hugo Kelfani <hugo.kelfani@enalean.com>
+Savinien Richter <savinien.richter@enalean.com>
+Yannis Rossetto <yannis.rossetto@enalean.com>
+Nicolas Terray <nicolas.terray@enalean.com>
+Nouha Terzi <nouha.terzi@st.com>
+Manuel Vacelet <manuel.vacelet@enalean.com>
+
+----------------------------------------------------------------------------
+Previous contributors, no longer active commiters
+----------------------------------------------------------------------------
+
+Hatem Ounis
+Sebastien Nicoulaud
+Johan Martinsson
+Gregory Salvan
 Nicolas Guérin          <nicolas.guerin@xrce.xerox.com>
+Marc Nazarian           <marc.nazarian@xrce.xerox.com>
+Sabri Labbene
+Mahmoud Maalej
+Mohamed Chaari
+Patrice Karatchenzeff
+Stéphane Bouhet
 Thierry Jacquin		<thierry.jacquin@xrce.xerox.com>
 Laurent Julliard
 Jim Mayer		<jmayer@crt.xerox.com>
 Marie-Luise Schneider   <marie-luise.schneider@xrce.xerox.com>
 John Stidd
 Vicki Tuttle		<vtuttle@crt.xerox.com>
-Marc Nazarian           <marc.nazarian@xrce.xerox.com>
-Nicolas Terray          <nicolas.terray@xrce.xerox.com>
 Anne Hardyau
-Sandra Echinard         <sandra.echinard@xrce.xerox.com>
-
-And hundreds of Xerox employess and Codendi customers who have
-contributed patches, bug report and fixes, new feature requests,etc.
-In particular, Manuel Vacelet.
-
-----------------------------------------------------------------------------
-The SourceForge 2.0 Crew 
-----------------------------------------------------------------------------
 Dan Bressler		<db@valinux.com>
 Quentin Cregan		<q@sourceforge.net>
 Tim Perdue		<bigdisk@sourceforge.net>
 Uriah Welcome		<precision@sourceforge.net>
-
-Past Crew:
 Tony Guntharp		<fusion94@sourceforge.net>
 Drew Streib		<dtype@sourceforge.net>
-
-New Crew:
 Matthew Snelham		<matthew@valinux.com>
 Darrell Brogdon		<dbrogdon@valinux.com>
 Patrick McGovern	<pmcgovern@valinux.com>
-
-----------------------------------------------------------------------------
-The Following are volunteers that have contributed documentation, misc patches,
-ideas, etc..
-----------------------------------------------------------------------------
 David HM Spector	<spector@zeitgeist.com>
 Loic Dachary		<loic@users.sourceforge.net>
 Wallace Lee		<wallace@users.sourceforge.net>
@@ -52,13 +65,6 @@ Uwe Hermann		<uh1763@users.sourceforge.net>
 Eduardo Blanco		<ejbs@netlabs.com.uy>
 Rik Faith		<faith@precisioninsight.com>
 Lion Templin		<lion@leonine.com>
-
-
-----------------------------------------------------------------------------
-The Following are people that we would like to Thank.  Without them 
-SourceForge would never have been possible.  They have contributed time,
-code, ideas,  moral support, etc..
-----------------------------------------------------------------------------
 Larry Augustin 		<lma@valinux.com>
 Brian Biles		<bbiles@valinux.com>
 John Hall		<johnhall@valinux.com>
@@ -87,3 +93,6 @@ Thanks to http://www.famfamfam.com/lab/icons/silk/   for somes nice icons under 
 ----------------------------------------------------------------------------
 Any others whose names we probably forgot to add (email us and we'll put you
 in here)
+
+And hundreds of employess and customers who have
+contributed patches, bug report and fixes, new feature requests,etc.
