@@ -97,10 +97,37 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
             );
 
             if ($field) {
-                $data[$field->getId()] = $this->getFieldData($field, $field_change);
+                $this->appendValidValue($data, $field, $field_change);
+            } else {
+                $this->logger->debug("Skipped unknown/unused field ".(string) $field_change['field_name']);
             }
         }
         return $data;
+    }
+
+    private function appendValidValue(array &$data, Tracker_FormElement_Field $field, SimpleXMLElement $field_change) {
+        try {
+            $submitted_value = $this->getFieldData($field, $field_change);
+            if ($field->validateField($this->createFakeArtifact(), $submitted_value)) {
+                $data[$field->getId()] = $submitted_value;
+            } else {
+                $this->logger->warn("Skipped invalid value ".(string)$submitted_value." for field ".$field->getName());
+            }
+        } catch(Tracker_Artifact_XMLImport_Exception_NoAttachementsException $exception) {
+            $this->logger->warn("Skipped invalid value for field ".$field->getName().': '.$exception->getMessage());
+        }
+    }
+
+    /**
+     * A fake artifact is needed for validateField to work
+     *
+     * An artifact is needed by List type of field to do Workflow check
+     * But as workflow is disabled we don't care
+     *
+     * @return Tracker_Artifact
+     */
+    private function createFakeArtifact() {
+        return new Tracker_Artifact(-1, -1, -1, -1, -1);
     }
 
     private function getFieldData(Tracker_FormElement_Field $field, SimpleXMLElement $field_change) {
