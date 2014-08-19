@@ -180,7 +180,7 @@ class fulltextsearchPlugin extends Plugin {
         );
     }
 
-    public function system_event_get_types($params) {
+    public function system_event_get_types(array &$params) {
         $params['types'] = array_merge(
             $params['types'],
             array(
