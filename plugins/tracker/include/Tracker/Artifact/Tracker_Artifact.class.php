@@ -374,7 +374,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return $html;
     }
 
-    /**
+    public function fetchTitleWithoutUnsubscribeButton($prefix) {
+        return $this->fetchTitleContent($prefix, false);
+    }
+
+     /**
      * Returns HTML code to display the artifact title
      *
      * @param string $prefix The prefix to display before the title of the artifact. Default is blank.
@@ -382,17 +386,23 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return string The HTML code for artifact title
      */
     public function fetchTitle($prefix = '') {
+        return $this->fetchTitleContent($prefix, true);
+    }
+
+    private function fetchTitleContent($prefix = '', $unsubscribe_button) {
         $html = '';
         $html .= $this->fetchHiddenTrackerId();
         $html .= '<div class="tracker_artifact_title">';
         $html .= $prefix;
         $html .= $this->getXRefAndTitle();
-        $html .= $this->fetchUnsubscribeButton();
+        if ($unsubscribe_button) {
+            $html .= $this->fetchUnsubscribeButton();
+        }
         $html .= '</div>';
         return $html;
     }
 
-    private function fetchUnsubscribeButton() {
+    public function fetchUnsubscribeButton() {
         $html = '<div class="tracker_artifact_notification">';
         $html .= '<a href="#" class="btn">';
         $html .= '<i class="icon-bell-alt"></i>';
