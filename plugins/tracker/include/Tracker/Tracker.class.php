@@ -829,7 +829,10 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 $GLOBALS['Response']->addFeedback('error', 'Something is wrong with your request');
                 $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?aid='. $linked_artifact->getId());
             }
-            echo $linked_artifact->fetchTitle($GLOBALS['Language']->getText('plugin_tracker_artifactlink', 'title_prefix'));
+
+            echo $linked_artifact->fetchTitleWithoutUnsubscribeButton(
+                $GLOBALS['Language']->getText('plugin_tracker_artifactlink', 'title_prefix')
+            );
             
             echo '<input type="hidden" id="link-artifact-id" value="'. (int)$link_artifact_id .'" />';
             

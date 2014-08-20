@@ -147,6 +147,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
                 $html .= $parent->fetchDirectLinkToArtifactWithTitle();
             } else {
                 $html .= $parent->getXRefAndTitle();
+                $html .= $parent->fetchUnsubscribeButton();
             }
             if ($parents) {
                 $html .= '</a>';
