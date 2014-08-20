@@ -156,6 +156,42 @@ class CampaignsResource {
         return array_slice($assignees, $offset, $limit);
     }
 
+    /**
+     * Get environments
+     *
+     * Get all environments that are used by at least one test execution of the
+     * given campaign
+     *
+     * @url GET {id}/environments
+     *
+     * @param int $id Id of the campaign
+     * @param int $limit  Number of elements displayed per page {@from path}
+     * @param int $offset Position of the first element to display {@from path}
+     *
+     * @return array {@type Tuleap\User\REST\UserRepresentation}
+     */
+    protected function getEnvironments($id, $limit = 10, $offset = 0) {
+        $user     = $this->user_manager->getCurrentUser();
+        $campaign = $this->getCampaignFromId($id, $user);
+
+        $environments = $this->getEnvironmentsForCampaign($user, $campaign);
+
+        $this->sendPaginationHeaders($limit, $offset, count($environments));
+
+        return array_slice($environments, $offset, $limit);
+    }
+
+    private function getEnvironmentsForCampaign(PFUser $user, Tracker_Artifact $campaign) {
+        $environments = array();
+
+        $execution_representations = $this->execution_representation_builder->getAllExecutionsRepresentationsForCampaign($user, $campaign);
+        foreach ($execution_representations as $execution_representation) {
+            $environments[] = $execution_representation->environment;
+        }
+
+        return array_unique($environments);
+    }
+
     private function getAssigneesForCampaign(PFUser $user, Tracker_Artifact $campaign) {
         $assignees = array();
 

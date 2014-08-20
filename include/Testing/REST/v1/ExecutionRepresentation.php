@@ -28,6 +28,7 @@ class ExecutionRepresentation {
     const ROUTE = 'executions';
 
     const FIELD_RESULTS      = 'results';
+    const FIELD_ENVIRONMENT  = 'environment';
     const FIELD_ASSIGNED_TO  = 'assigned_to';
     const FIELD_STATUS       = 'status';
 
@@ -54,6 +55,11 @@ class ExecutionRepresentation {
     /**
      * @var String
      */
+    public $environment;
+
+    /**
+     * @var String
+     */
     public $last_update_date;
 
     /**
@@ -69,6 +75,7 @@ class ExecutionRepresentation {
     public function build(
         $artifact_id,
         $status,
+        $environment,
         $results,
         $last_update_date,
         $assigned_to,
@@ -79,6 +86,7 @@ class ExecutionRepresentation {
         $this->uri                = self::ROUTE . '/' . $this->id;
         $this->results            = $results;
         $this->status             = $status;
+        $this->environment        = $environment;
         $this->last_update_date   = JsonCast::toDate($last_update_date);
         $this->test_definition    = $test_definition;
         $this->assigned_to        = $assigned_to;

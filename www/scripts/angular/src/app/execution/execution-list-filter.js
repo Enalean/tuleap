@@ -5,12 +5,12 @@ angular
 ExecutionListFilter.$inject = ['$filter'];
 
 function ExecutionListFilter($filter) {
-    return function(list, keywords, status, assignee) {
+    return function(list, keywords, status, assignee, environment) {
         var keyword_list  = _.compact(keywords.split(' ')),
             status_list   = _.compact(_.map(status, function(value, key) { return (value) ? key : false; })),
             all_results   = [];
 
-        if (! hasAtLeastOneFilter(keyword_list, status_list, assignee)) {
+        if (! hasAtLeastOneFilter(keyword_list, status_list, assignee, environment)) {
             return list;
         }
 
@@ -26,6 +26,10 @@ function ExecutionListFilter($filter) {
             all_results.push(assigneeMatcher(assignee, list));
         }
 
+        if (hasEnvironment(environment)) {
+            all_results.push(environmentMatcher(environment, list));
+        }
+
         all_results = _.intersection.apply(null, all_results);
 
         return _.sortBy(_.uniq(all_results, getUniqKey), getSortByKey);
@@ -39,8 +43,8 @@ function ExecutionListFilter($filter) {
         return execution.test_definition.id;
     }
 
-    function hasAtLeastOneFilter(keyword_list, status_list, assignee) {
-        return hasKeywords(keyword_list) || hasStatus(status_list) || hasAssignee(assignee);
+    function hasAtLeastOneFilter(keyword_list, status_list, assignee, environment) {
+        return hasKeywords(keyword_list) || hasStatus(status_list) || hasAssignee(assignee) || hasEnvironment(environment);
     }
 
     function hasKeywords(keyword_list) {
@@ -53,6 +57,10 @@ function ExecutionListFilter($filter) {
 
     function hasAssignee(assignee) {
         return assignee !== null;
+    }
+
+    function hasEnvironment(environment) {
+        return environment !== null;
     }
 
     function keywordsMatcher(keyword_list, list) {
@@ -85,5 +93,9 @@ function ExecutionListFilter($filter) {
 
     function assigneeMatcher(assignee, list) {
         return $filter('filter')(list, {assigned_to: {id: assignee.id}});
+    }
+
+    function environmentMatcher(environment, list) {
+        return $filter('filter')(list, {environment: environment});
     }
 }

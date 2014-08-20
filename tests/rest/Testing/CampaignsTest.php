@@ -50,6 +50,19 @@ class CampaignsTest extends BaseTest {
         $this->assertExecutionsAreSortedByCategoryAndId($executions);
     }
 
+
+    public function testGetEnvironments() {
+        $campaign = $this->getValid73Campaign();
+
+        $all_environments_request  = $this->client->get('campaigns/'. $campaign['id'] .'/environments');
+        $all_environments_response = $this->getResponse($all_environments_request);
+
+        $environments = $all_environments_response->json();
+        $this->assertCount(2, $environments);
+        $this->assertEquals('CentOS 5 - PHP 5.3', $environments[0]);
+        $this->assertEquals('CentOS 6 - PHP 5.3', $environments[1]);
+    }
+
     private function assertExecutionsAreSortedByCategoryAndId($executions) {
         $this->assertEquals('Import default template', $executions[0]['test_definition']['summary']);
         $this->assertEquals('Create a repository', $executions[1]['test_definition']['summary']);

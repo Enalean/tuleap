@@ -4,16 +4,21 @@
         <div id="execution-filter">
             <form class="form-inline">
                 <div class="row-fluid">
-                    <div class="btn-group span6">
+                    <div class="span4">
+                        <select ng-model="selected_environment" ng-options="environment for environment in environments">
+                            <option value="">All environments</option>
+                        </select>
+                    </div>
+                    <div class="span4">
+                        <select ng-model="selected_assignee" ng-options="assignee as assignee.username for assignee in assignees">
+                            <option value="">Everybody</option>
+                        </select>
+                    </div>
+                    <div class="btn-group span4">
                         <label class="btn" ng-model="status.passed"  btn-checkbox><img src="scripts/angular/bin/assets/status-passed.png" alt="Passed"></label>
                         <label class="btn" ng-model="status.failed"  btn-checkbox><img src="scripts/angular/bin/assets/status-failed.png" alt="Failed"></label>
                         <label class="btn" ng-model="status.blocked" btn-checkbox><img src="scripts/angular/bin/assets/status-blocked.png" alt="Blocked"></label>
                         <label class="btn" ng-model="status.notrun"  btn-checkbox><img src="scripts/angular/bin/assets/status-notrun.png" alt="Not run"></label>
-                    </div>
-                    <div class="span6">
-                        <select ng-model="selected_assignee" ng-options="assignee as assignee.username for assignee in assignees">
-                            <option value="">Everybody</option>
-                        </select>
                     </div>
                 </div>
                 <div class="row-fluid">
@@ -24,7 +29,7 @@
 
         <div ng-repeat="category in categories">
             <div class="category">{{ category.label }}</div>
-            <div class="execution-list" ng-repeat="execution in category.executions | ExecutionListFilter:search:status:selected_assignee track by $index">
+            <div class="execution-list" ng-repeat="execution in category.executions | ExecutionListFilter:search:status:selected_assignee:selected_environment track by $index">
                 <div class="execution-item">
                     <div class="execution-item-content {{ execution.status | dasherize }}">#{{ execution.test_definition.id }} {{ execution.test_definition.summary }}</div>
                 </div>

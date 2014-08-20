@@ -11,9 +11,10 @@ function CampaignService(Restangular, $q) {
     });
 
     return {
-        getCampaign: getCampaign,
-        getCampaigns: getCampaigns,
-        getAssignees: getAssignees
+        getCampaign    : getCampaign,
+        getCampaigns   : getCampaigns,
+        getAssignees   : getAssignees,
+        getEnvironments: getEnvironments
     };
 
     function getCampaign(campaign_id) {
@@ -46,6 +47,27 @@ function CampaignService(Restangular, $q) {
 
         rest.one('campaigns', campaign_id)
             .all('assignees')
+            .getList({
+                limit: limit,
+                offset: offset
+            })
+            .then(function(response) {
+                result = {
+                    results: response.data,
+                    total: response.headers('X-PAGINATION-SIZE')
+                };
+
+                data.resolve(result);
+            });
+
+        return data.promise;
+    }
+
+    function getEnvironments(campaign_id, limit, offset) {
+        var data = $q.defer();
+
+        rest.one('campaigns', campaign_id)
+            .all('environments')
             .getList({
                 limit: limit,
                 offset: offset
