@@ -30,13 +30,13 @@ class TestingCampaignBuilder {
         array('label' => 'Tuleap 7.1', 'status' => 'Closed', 'executions' => array()),
         array('label' => 'Tuleap 7.2', 'status' => 'Closed', 'executions' => array()),
         array('label' => 'Tuleap 7.3', 'status' => 'Open', 'executions' => array(
-            array('status' => 'Passed', 'definition' => array(
+            array('status' => 'Passed', 'environment' => 'CentOS 5 - PHP 5.3', 'definition' => array(
                 'summary' => 'Create a repository', 'description' => 'This is a description', 'category' => 'Git'
             )),
-            array('status' => 'Passed', 'definition' => array(
+            array('status' => 'Passed', 'environment' => 'CentOS 6 - PHP 5.3', 'definition' => array(
                 'summary' => 'Delete a repository', 'description' => 'This is a description', 'category' => 'Git'
             )),
-            array('status' => 'Failed', 'definition' => array(
+            array('status' => 'Failed', 'environment' => 'CentOS 6 - PHP 5.3', 'definition' => array(
                 'summary' => 'Import default template', 'description' => 'This is a description', 'category' => 'AgileDashboard'
             )),
         )),
@@ -87,6 +87,7 @@ class TestingCampaignBuilder {
 
             $execution = $this->createExecution(
                 $execution_data['status'],
+                $execution_data['environment'],
                 $definition['id']
             );
 
@@ -107,11 +108,12 @@ class TestingCampaignBuilder {
         );
     }
 
-    private function createExecution($status, $definition_id) {
+    private function createExecution($status, $environment, $definition_id) {
         $tracker = $this->tracker_factory->getTrackerRest('test_exec');
         return $tracker->createArtifact(
             array(
                 $tracker->getSubmitListValue('Status', $status),
+                $tracker->getSubmitListValue('Environment', $environment),
                 $tracker->getSubmitArtifactLinkValue(array($definition_id))
             )
         );
