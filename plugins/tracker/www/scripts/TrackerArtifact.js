@@ -89,13 +89,14 @@ document.observe('dom:loaded', function () {
 
     $$('.tracker_artifact_title').each(function(title_section) {
         var unsubscribe_buttons = $$('div.tracker_artifact_notification > a');
+        var artifact_id = $('artifact_informations').getAttribute('data-artifact-id');
 
         unsubscribe_buttons.each(function(button) {
             button.on('click', function() {
 
-                new Ajax.Request(codendi.tracker.base_url + "unsubscribe_notifications.php", {
+                new Ajax.Request(codendi.tracker.base_url + "?aid="+ artifact_id +"&func=manage-subscription", {
                     parameters: {
-                        artifact: $('artifact_informations').getAttribute('data-artifact-id')
+                        artifact: artifact_id
                     },
                     onSuccess: function(response) {
                         codendi.feedback.clear();

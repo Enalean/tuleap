@@ -1034,6 +1034,12 @@ plugin_tracker_artifact	copy_submit_button	Copier
 
 plugin_tracker_artifact	formelement_artifact_link_copy	Les données du champ "liens entre artefacts" ne peuvent pas être copiées
 
+plugin_tracker_artifact	user_already_unsubscribed	Vous êtes déjà désinscrit des notifications
+plugin_tracker_artifact	user_subscribed	Vous avez réactivé les notifications pour cet artefact
+plugin_tracker_artifact	user_unsubscribed	Vous êtes désinscrit des notifications
+plugin_tracker_artifact	request_not_valid	La requête n'est pas valide
+plugin_tracker_artifact	mail_unsubscribe	Se désinscrire
+
 plugin_tracker_artifactlink	go_to_tracker	Aller voir cet outil de suivi
 plugin_tracker_artifactlink	manual_panel_desc	Si vous connaissez l'id de l'artefact, entrez-le manuellement dans le champs texte ci-dessous. Le champs attends une liste d'ids séparés par des virgules.
 plugin_tracker_artifactlink	manual_panel_label	Artefact id(s)

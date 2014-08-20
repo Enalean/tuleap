@@ -760,6 +760,7 @@ class Tracker_Artifact_Changeset {
         $breadcrumbs[] = '<a href="'. get_server_url().'/plugins/tracker/?aid='.(int)$artifactId.'" />'. $hp->purify($this->getTracker()->getName().' #'.$artifactId) .'</a>';
 
         $mail->getLookAndFeelTemplate()->set('breadcrumbs', $breadcrumbs);
+        $mail->getLookAndFeelTemplate()->set('unsubscribe_link', $this->getUnsubscribeLink());
         $mail->getLookAndFeelTemplate()->set('title', $hp->purify($subject));
         $mail->setFrom($GLOBALS['sys_noreply']);
         $mail->addAdditionalHeader("X-Codendi-Project",     $project->getUnixName());
@@ -994,12 +995,15 @@ class Tracker_Artifact_Changeset {
                     </tr>';
             }
 
+            $artifact_link = get_server_url().'/plugins/tracker/?aid='.(int)$art->getId();
+
             $output .=
                 '<tr>
                     <td> </td>
                     <td align="right">'.
-                        $this->fetchHtmlAnswerButton(get_server_url().'/plugins/tracker/?aid='.(int)$art->getId()).
-                    '</td>
+                        $this->fetchHtmlAnswerButton($artifact_link).
+                        '</span>
+                    </td>
                 </tr>';
         }
         $output .= '</table>';
@@ -1015,12 +1019,23 @@ class Tracker_Artifact_Changeset {
     /**
      * @return string html call to action button to include in an html mail
      */
-    public function fetchHtmlAnswerButton($artifact_href) {
-        return '<p align="right" class="cta">
-            <a href="'. $artifact_href .'" target="_blank">' .
-            $GLOBALS['Language']->getText('tracker_include_artifact','mail_answer_now') .
+    private function fetchHtmlAnswerButton($artifact_link) {
+        return '<span class="cta">
+            <a href="'. $artifact_link .'" target="_blank">' .
+                $GLOBALS['Language']->getText('tracker_include_artifact','mail_answer_now') .
             '</a>
-            </p>';
+        </span>';
+    }
+
+    /**
+     * @return string html call to action button to include in an html mail
+     */
+    private function getUnsubscribeLink() {
+        $link = get_server_url().'/plugins/tracker/?aid='.(int)$this->getArtifact()->getId().'&func=manage-subscription';
+
+        return '<a href="'. $link .'" target="_blank">' .
+            $GLOBALS['Language']->getText('plugin_tracker_artifact','mail_unsubscribe') .
+        '</a>';
     }
 
     /**

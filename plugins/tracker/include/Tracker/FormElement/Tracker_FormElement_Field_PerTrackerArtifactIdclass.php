@@ -75,7 +75,7 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
         switch ($format) {
             case 'html':
                 $proto = ($GLOBALS['sys_force_ssl']) ? 'https' : 'http';
-                $output .= '<a href= "'.$proto.'://'. $GLOBALS['sys_default_domain'].TRACKER_BASE_URL.'/?'. http_build_query(array('aid' => (int)$artifact->id )).'">'. $value .'</a>';
+                $output .= '<a href= "'.$proto.'://'. $GLOBALS['sys_default_domain'].TRACKER_BASE_URL.'/?'. http_build_query(array('aid' => (int)$artifact->id )).'">'. $value->getValue() .'</a>';
                 break;
             default:
                 $output .= $artifact->getPerTrackerArtifactId();

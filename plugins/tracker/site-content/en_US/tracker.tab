@@ -1035,6 +1035,12 @@ plugin_tracker_artifact	copy_submit_button	Copy
 
 plugin_tracker_artifact	formelement_artifact_link_copy	Artifact field links cannot be copied
 
+plugin_tracker_artifact	user_already_unsubscribed	You are already unsubscribed from artifact notifications
+plugin_tracker_artifact	user_subscribed	You reactivate notification for this artifact
+plugin_tracker_artifact	user_unsubscribed	You are unsubscribed from artifact notifications
+plugin_tracker_artifact	request_not_valid	The request is not valid
+plugin_tracker_artifact	mail_unsubscribe	Unsubscribe
+
 plugin_tracker_artifactlink	go_to_tracker	Go see this tracker
 plugin_tracker_artifactlink	manual_panel_desc	If you know the artifact id, feel free to enter it manually in the text field below. Use a comma to separate each ids if you have more than one.
 plugin_tracker_artifactlink	manual_panel_label	Artifact id(s)
