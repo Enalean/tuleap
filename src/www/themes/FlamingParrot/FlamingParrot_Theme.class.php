@@ -115,6 +115,22 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
         foreach(glob($custom_dir.'/*.css') as $custom_css_file) {
             echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('custom/'.basename($custom_css_file)) .'" />';
         }
+
+        $this->displayStylesheetForPluginsSidebarIcons();
+    }
+
+    private function displayStylesheetForPluginsSidebarIcons() {
+        echo '<style>'. PHP_EOL;
+        $list_of_icon_unicodes = array();
+
+        EventManager::instance()->processEvent('service_icon', array(
+            'list_of_icon_unicodes' => &$list_of_icon_unicodes
+        ));
+
+        foreach ($list_of_icon_unicodes as $service_name => $unicode) {
+            echo ".tuleap-services-$service_name:before { content: '$unicode'; }". PHP_EOL;
+        }
+        echo '</style>';
     }
 
     private function getCSSThemeFile() {

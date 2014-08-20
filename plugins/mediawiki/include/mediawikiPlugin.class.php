@@ -48,6 +48,7 @@ class MediaWikiPlugin extends Plugin {
             $this->_addHook("clone_project_from_template") ;
             $this->_addHook('group_delete');
             $this->_addHook('cssfile');
+            $this->addHook(Event::SERVICE_ICON);
 
             $this->_addHook('service_is_used');
             $this->_addHook('register_project_creation');
@@ -77,6 +78,10 @@ class MediaWikiPlugin extends Plugin {
 
     public function getServiceShortname() {
         return self::SERVICE_SHORTNAME;
+    }
+
+    public function service_icon($params) {
+        $params['list_of_icon_unicodes'][$this->getServiceShortname()] = '\e812';
     }
 
     /**

@@ -54,6 +54,8 @@ class trackerPlugin extends Plugin {
 
         $this->_addHook('url_verification_instance',           'url_verification_instance',         false);
 
+        $this->addHook(Event::SERVICE_ICON);
+
         $this->addHook('widget_instance');
         $this->addHook('widgets');
         $this->addHook('default_widgets_for_new_owner');
@@ -505,6 +507,10 @@ class trackerPlugin extends Plugin {
                 $params['instance'] = new Tracker_Widget_ProjectRenderer();
                 break;
         }
+    }
+
+    public function service_icon($params) {
+        $params['list_of_icon_unicodes'][$this->getServiceShortname()] = '\e80d';
     }
 
     /**

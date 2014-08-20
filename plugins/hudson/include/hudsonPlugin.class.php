@@ -17,6 +17,7 @@ class hudsonPlugin extends Plugin {
         parent::__construct($id);
         $this->_addHook('javascript_file', 'jsFile', false);
         $this->_addHook('cssfile', 'cssFile', false);
+        $this->addHook(Event::SERVICE_ICON);
         
         $this->_addHook('project_is_deleted', 'projectIsDeleted', false);
         
@@ -39,6 +40,10 @@ class hudsonPlugin extends Plugin {
 
     public function getServiceShortname() {
         return 'hudson';
+    }
+
+    public function service_icon($params) {
+        $params['list_of_icon_unicodes'][$this->getServiceShortname()] = '\e811';
     }
     
     function cssFile($params) {
