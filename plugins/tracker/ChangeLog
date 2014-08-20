@@ -1,3 +1,6 @@
+Version 5.443 - Tuleap 7.4
+    * tasks #7369 enable/disable notification button is also displayed in the artifact links popup
+
 Version 5.442 - Tuleap 7.4
     * tasks #7338: Add unsuscribe button on each artifact
 
