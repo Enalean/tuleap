@@ -19,10 +19,15 @@ class TestingPlugin extends Plugin {
         $this->addHook(Event::REST_PROJECT_RESOURCES);
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::SERVICE_CLASSNAMES);
+        $this->addHook(Event::SERVICE_ICON);
     }
 
     public function getServiceShortname() {
         return 'plugin_testing';
+    }
+
+    public function service_icon($params) {
+        $params['list_of_icon_unicodes'][$this->getServiceShortname()] = '\e813';
     }
 
     public function service_classnames($params) {
