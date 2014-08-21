@@ -30,6 +30,7 @@ class proftpdPlugin extends Plugin {
         $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES);
         $this->addHook(Event::GET_FTP_INCOMING_DIR);
+        $this->addHook(Event::SERVICE_ICON);
     }
 
     public function getPluginInfo() {
@@ -76,6 +77,10 @@ class proftpdPlugin extends Plugin {
 
     public function getServiceShortname() {
         return self::SERVICE_SHORTNAME;
+    }
+
+    public function service_icon($params) {
+        $params['list_of_icon_unicodes'][$this->getServiceShortname()] = '\e801';
     }
 
     public function service_classnames(array $params) {

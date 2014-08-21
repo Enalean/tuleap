@@ -42,6 +42,8 @@ class IMPlugin extends Plugin {
         $this->_addHook('update_user_preferences_appearance', 'update_user_preferences_appearance', false);
         $this->_addHook('project_export_entry', 'provide_exportable_items', false);
         $this->_addHook('get_available_reference_natures', 'getAvailableReferenceNatures', false);
+        $this->addHook(Event::SERVICE_ICON);
+
         $this->debug=$debug;
         
     }
@@ -58,6 +60,9 @@ class IMPlugin extends Plugin {
         return 'IM';
     }
     
+    public function service_icon($params) {
+        $params['list_of_icon_unicodes'][$this->getServiceShortname()] = '\e809';
+    }
     
     /**
      * Functions used for "tests"

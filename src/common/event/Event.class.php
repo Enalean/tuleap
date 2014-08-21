@@ -790,4 +790,10 @@ class Event {
      *      'new_name'    => string
      */
     const RENAME_PROJECT = 'rename_project';
+
+    /**
+     *  Parameters:
+     *      'list_of_icon_unicodes' => array
+     */
+    const SERVICE_ICON = 'service_icon';
 }

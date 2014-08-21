@@ -61,6 +61,7 @@ class GitPlugin extends Plugin {
         $this->_addHook('SystemEvent_PROJECT_RENAME',                      'systemEventProjectRename',                     false);
         $this->_addHook('project_is_deleted',                              'project_is_deleted',                           false);
         $this->_addHook('file_exists_in_data_dir',                         'file_exists_in_data_dir',                      false);
+        $this->addHook(Event::SERVICE_ICON);
 
         // Stats plugin
         $this->_addHook('plugin_statistics_disk_usage_collect_project',    'plugin_statistics_disk_usage_collect_project', false);
@@ -118,6 +119,10 @@ class GitPlugin extends Plugin {
 
     public function getServiceShortname() {
         return self::SERVICE_SHORTNAME;
+    }
+
+    public function service_icon($params) {
+        $params['list_of_icon_unicodes'][$this->getServiceShortname()] = '\e806';
     }
 
     public function site_admin_option_hook() {

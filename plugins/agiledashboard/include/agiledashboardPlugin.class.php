@@ -59,6 +59,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(TRACKER_EVENT_REPORT_PROCESS_ADDITIONAL_QUERY);
             $this->addHook(TRACKER_EVENT_REPORT_SAVE_ADDITIONAL_CRITERIA);
             $this->addHook(TRACKER_EVENT_REPORT_LOAD_ADDITIONAL_CRITERIA);
+            $this->addHook(Event::SERVICE_ICON);
 
             $this->_addHook(Event::SYSTRAY);
             $this->_addHook(Event::IMPORT_XML_PROJECT_CARDWALL_DONE);
@@ -86,6 +87,10 @@ class AgileDashboardPlugin extends Plugin {
 
     public function getServiceShortname() {
         return 'plugin_agiledashboard';
+    }
+
+    public function service_icon($params) {
+        $params['list_of_icon_unicodes'][$this->getServiceShortname()] = '\e80e';
     }
 
     public function cardwall_event_get_swimline_tracker($params) {

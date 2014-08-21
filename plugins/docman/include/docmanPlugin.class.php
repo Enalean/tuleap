@@ -75,6 +75,7 @@ class DocmanPlugin extends Plugin {
         $this->_addHook('SystemEvent_PROJECT_RENAME',        'renameProject',                     false);
         $this->_addHook('file_exists_in_data_dir',           'file_exists_in_data_dir',           false);
         $this->_addHook('webdav_root_for_service',           'webdav_root_for_service',           false);
+        $this->addHook(Event::SERVICE_ICON);
         // Stats plugin
         $this->_addHook('plugin_statistics_disk_usage_collect_project', 'plugin_statistics_disk_usage_collect_project', false);
         $this->_addHook('plugin_statistics_disk_usage_service_label',   'plugin_statistics_disk_usage_service_label',   false);
@@ -95,6 +96,10 @@ class DocmanPlugin extends Plugin {
 
     public function getServiceShortname() {
         return 'docman';
+    }
+
+    public function service_icon($params) {
+        $params['list_of_icon_unicodes'][$this->getServiceShortname()] = '\e80c';
     }
 
     function permission_get_name($params) {
