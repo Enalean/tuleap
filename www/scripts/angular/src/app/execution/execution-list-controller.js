@@ -66,14 +66,20 @@ function ExecutionListCtrl($scope, $state, ExecutionService, CampaignService) {
 
     function groupExecutionsByCategory(executions) {
         executions.forEach(function(execution) {
-            if (typeof $scope.categories[execution.test_definition.category] === "undefined") {
-                $scope.categories[execution.test_definition.category] = {
-                    label     : execution.test_definition.category,
+            var category = execution.test_definition.category;
+            if (! category) {
+                category = 'Uncategorized';
+                execution.test_definition._uncategorized = category;
+            }
+
+            if (typeof $scope.categories[category] === "undefined") {
+                $scope.categories[category] = {
+                    label     : category,
                     executions: []
                 };
             }
 
-            $scope.categories[execution.test_definition.category].executions.push(execution);
+            $scope.categories[category].executions.push(execution);
         });
     }
 }

@@ -68,7 +68,7 @@ function ExecutionListFilter($filter) {
             lookup = '';
 
         keyword_list.forEach(function(keyword) {
-            lookup = $filter('filter')(list, {test_definition: {summary: keyword, id: keyword, category: keyword}});
+            lookup = $filter('filter')(list, {test_definition: {summary: keyword, id: keyword, category: keyword, _uncategorized: keyword}});
             if (lookup.length > 0) {
                 result = result.concat(lookup);
             }
