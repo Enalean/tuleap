@@ -144,6 +144,8 @@ tuleap.tracker.artifact.editionSwitcher = function() {
                 CKEDITOR.instances.tracker_followup_comment_new.on('change', toggleSubmissionBar);
             }
         });
+
+        $('#tracker_artifact_canned_response_sb').on('change', toggleSubmissionBar);
     };
 
     var toggleSubmissionBar = function () {
