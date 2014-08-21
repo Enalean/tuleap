@@ -24,13 +24,17 @@ class Tracker_FormElement_Field_Radiobutton extends Tracker_FormElement_Field_Se
 
 
     protected function fetchFieldContainerStart($id, $name) {
-        $html  = '<div ' . $id . '">';
-        $html .= '<input type="hidden" '.$name.' value="0"  />';
+        $html  = "<div $id>";
+        $html .= '<input type="hidden" '.$name.' value="100" />';
         return $html;
     }
 
     protected function fetchFieldValue(Tracker_FormElement_Field_List_Value $value, $name, $is_selected) {
         if ($value->getId() == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
+            if ($this->isRequired()) {
+                return '';
+            }
+
             $is_selected = true; //Hackalert: "None" selected by default. Overrided when other value is selected
         }
         $label = $this->getBind()->formatChangesetValueWithoutLink($value);
