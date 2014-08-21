@@ -48,6 +48,14 @@ class Tracker_ArtifactNotificationSubscriber {
         return;
     }
 
+    public function unsubscribeUserWithoutRedirect(PFUser $user, Codendi_Request $request) {
+        if (! $this->doesUserCanViewArtifact($user, $request)) {
+            return;
+        }
+
+        $this->unsubscribe($user);
+    }
+
     public function subscribeUser(PFUser $user, Codendi_Request $request) {
         if (! $this->doesUserCanViewArtifact($user, $request)) {
             return;

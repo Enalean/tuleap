@@ -1708,57 +1708,32 @@ EOS;
 
     public function displayMasschangeForm(Tracker_IDisplayTrackerLayout $layout, $masschange_aids) {
         $breadcrumbs = array(
-                array(
-                        'title' => $GLOBALS['Language']->getText('plugin_tracker_index', 'mass_change'),
-                        'url'   => '#' //TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=display-masschange-form',
-                ),
+            array(
+                'title' => $GLOBALS['Language']->getText('plugin_tracker_index', 'mass_change'),
+                'url'   => '#' //TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=display-masschange-form',
+            ),
         );
         $this->displayHeader($layout, $this->name, $breadcrumbs);
-        
-        $html = '';
-        
-        $html .= '<strong>' . $GLOBALS['Language']->getText('plugin_tracker_artifact_masschange', 'changing_items', array(count($masschange_aids))) . '</strong>';
-        $html .= '<p class="masschange_artifact_ids">';
-        foreach ($masschange_aids as $art_id) {
-            $html .= '<a href="'.TRACKER_BASE_URL.'/?aid='.$art_id.'">#' . $art_id . '</a> ';
-        }
-        $html .= '</p>';
-        
-        $html .= '<form id="masschange_form" enctype="multipart/form-data" action="" method="POST">';
-        $html .= '<input type="hidden" name="func" value="update-masschange-aids">';
-        foreach ( $masschange_aids as $aid ) {
-            $html .= '<input type="hidden" name="masschange_aids[]" value="'.(int)$aid.'" />';
-        }       
-        $html .= $this->fetchFormElementsMasschange();
-        
-        // Follow-up comment
-        $html .= '<b>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'add_comment') .'</b><br />';
-        $html .= '<textarea wrap="soft" rows="12" cols="80" name="artifact_masschange_followup_comment" id="artifact_masschange_followup_comment">'.$GLOBALS['Language']->getText('plugin_tracker_index', 'mass_change').'</textarea>';
-        $html .= '<br />';
 
-        // Send notification checkbox
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_import','send_notifications');
-        $html .= '<input type="checkbox" name="notify" value="ok" />';
-        $html .= '<br />';
-        
-        $html .= '<input type="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'submit_mass_change').'"/>';
-        $html .= '</form>';
-        echo $html;
+        $this->renderer->renderToPage(
+            'masschange',
+            new Tracker_Masschange_Presenter(
+                $masschange_aids,
+                $this->fetchFormElementsMasschange()
+            )
+        );
 
         $this->displayFooter($layout);
     }
 
-    public function updateArtifactsMasschange($submitter , $masschange_aids, $masschange_data, $comment, $send_notifications, $comment_format) {
-        //building data for update
-        $fields_data  = array();
-        foreach ( $masschange_data as $field_id => $data ) {
-            //skip unchanged value
-            if ( $data === $GLOBALS['Language']->getText('global','unchanged') ||
-                    (is_array($data) && in_array($GLOBALS['Language']->getText('global','unchanged'), $data)) ) {
-                continue;
-            }
-            $fields_data[$field_id] = $data;
-        }
+    public function updateArtifactsMasschange(
+        $submitter,
+        $masschange_aids,
+        $fields_data,
+        $comment,
+        $send_notifications,
+        $comment_format
+    ) {
         $this->augmentDataFromRequest($fields_data);
 
         $not_updated_aids = array();

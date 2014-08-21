@@ -919,30 +919,8 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 }
                 break;
              case 'update-masschange-aids':
-                if ($tracker->userIsAdmin($current_user)) {
-                    $masschange_aids = $request->get('masschange_aids');
-                    if ( empty($masschange_aids) ) {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_masschange_detail', 'no_items_selected'));
-                        $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker->getId());
-                    }
-                    $masschange_data = $request->get('artifact');
-                    if ( empty($masschange_data) ) {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_masschange_detail', 'no_items_selected'));
-                        $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker->getId());
-                    }
-                    $send_notifications = false; // by default, don't send notifications.
-                    if ($request->exist('notify')) {
-                        if ($request->get('notify') == 'ok') {
-                            $send_notifications = true;
-                        }
-                    }
-                    $comment_format = $request->get('comment_formatmass_change');
-                    $tracker->updateArtifactsMasschange($current_user, $masschange_aids, $masschange_data, $request->get('artifact_masschange_followup_comment'), $send_notifications, $comment_format);
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker->getId());
-                } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
-                }
+                $masschange_updater = new Tracker_MasschangeUpdater($tracker, $this);
+                $masschange_updater->updateArtifacts($current_user, $request);
                 break;
            case 'remove-criteria':
                 if ($this->userCanUpdate($current_user) && $request->get('field')) {
