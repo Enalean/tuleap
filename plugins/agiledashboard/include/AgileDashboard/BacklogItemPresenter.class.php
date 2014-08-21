@@ -47,6 +47,9 @@ class AgileDashboard_BacklogItemPresenter implements
     /** @var String */
     private $status;
 
+    /** @var String */
+    private $color;
+
     /** @var Tracker_Artifact */
     private $artifact;
 
@@ -60,6 +63,7 @@ class AgileDashboard_BacklogItemPresenter implements
         $this->redirect_to_self = $redirect_to_self;
         $this->artifact         = $artifact;
         $this->type             = $this->artifact->getTracker()->getName();
+        $this->color            = $this->artifact->getTracker()->getColor();
     }
 
     public function setParent(Tracker_Artifact $parent) {
@@ -140,6 +144,8 @@ class AgileDashboard_BacklogItemPresenter implements
     public function getArtifact() {
         return $this->artifact;
     }
-}
 
-?>
+    public function color() {
+        return $this->color;
+    }
+}
