@@ -1,3 +1,6 @@
+Version 1.70 - Tuleap 7.5
+    * request #7371: Remove plugin service icon from core
+
 Version 1.69 - Tuleap 7.4
     * Allow to run unit tests in docker containers
 

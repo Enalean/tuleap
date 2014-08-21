@@ -1,3 +1,6 @@
+Version 0.14 - Tuleap 7.5
+    * request #7371: Remove plugin service icon from core
+
 Version 0.13 - Tuleap 6.13
     * request #4617: Service of disabled plugin should not be activated
 
