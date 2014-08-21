@@ -18,14 +18,14 @@ function CampaignService(Restangular, $q) {
     };
 
     function getCampaign(campaign_id) {
-        return rest.one('campaigns', campaign_id).get().$object;
+        return rest.one('testing_campaigns', campaign_id).get().$object;
     }
 
     function getCampaigns(project_id, limit, offset) {
         var data = $q.defer();
 
         rest.one('projects', project_id)
-            .all('campaigns')
+            .all('testing_campaigns')
             .getList({
                 limit: limit,
                 offset: offset
@@ -45,8 +45,8 @@ function CampaignService(Restangular, $q) {
     function getAssignees(campaign_id, limit, offset) {
         var data = $q.defer();
 
-        rest.one('campaigns', campaign_id)
-            .all('assignees')
+        rest.one('testing_campaigns', campaign_id)
+            .all('testing_assignees')
             .getList({
                 limit: limit,
                 offset: offset
@@ -66,8 +66,8 @@ function CampaignService(Restangular, $q) {
     function getEnvironments(campaign_id, limit, offset) {
         var data = $q.defer();
 
-        rest.one('campaigns', campaign_id)
-            .all('environments')
+        rest.one('testing_campaigns', campaign_id)
+            .all('testing_environments')
             .getList({
                 limit: limit,
                 offset: offset

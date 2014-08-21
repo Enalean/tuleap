@@ -98,9 +98,9 @@ class ExecutionRepresentationBuilder {
         $art_links = $execution->getLinkedArtifacts($user);
         foreach ($art_links as $art_link) {
             if ($this->conformance_validator->isArtifactAnExecutionOfDefinition($execution, $art_link)) {
-                $test_def_representation = new TestDefinitionRepresentation();
-                $test_def_representation->build($art_link, $this->tracker_form_element_factory, $user);
-                return $test_def_representation;
+                $definition_representation = new DefinitionRepresentation();
+                $definition_representation->build($art_link, $this->tracker_form_element_factory, $user);
+                return $definition_representation;
             }
         }
 

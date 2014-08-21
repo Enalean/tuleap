@@ -40,7 +40,7 @@ function ExecutionListFilter($filter) {
     }
 
     function getSortByKey(execution) {
-        return execution.test_definition.id;
+        return execution.definition.id;
     }
 
     function hasAtLeastOneFilter(keyword_list, status_list, assignee, environment) {
@@ -68,7 +68,7 @@ function ExecutionListFilter($filter) {
             lookup = '';
 
         keyword_list.forEach(function(keyword) {
-            lookup = $filter('filter')(list, {test_definition: {summary: keyword, id: keyword, category: keyword, _uncategorized: keyword}});
+            lookup = $filter('filter')(list, {definition: {summary: keyword, id: keyword, category: keyword, _uncategorized: keyword}});
             if (lookup.length > 0) {
                 result = result.concat(lookup);
             }

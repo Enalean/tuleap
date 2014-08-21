@@ -32,7 +32,7 @@ class CampaignsTest extends BaseTest {
     public function testGetCampaign() {
         $expected_campaign = $this->getValid73Campaign();
 
-        $response  = $this->getResponse($this->client->get('campaigns/'. $expected_campaign['id']));
+        $response  = $this->getResponse($this->client->get('testing_campaigns/'. $expected_campaign['id']));
         $campaign = $response->json();
 
         $this->assertEquals($expected_campaign, $campaign);
@@ -42,7 +42,7 @@ class CampaignsTest extends BaseTest {
     public function testGetExecutions() {
         $campaign = $this->getValid73Campaign();
 
-        $all_executions_request  = $this->client->get('campaigns/'. $campaign['id'] .'/executions');
+        $all_executions_request  = $this->client->get('testing_campaigns/'. $campaign['id'] .'/testing_executions');
         $all_executions_response = $this->getResponse($all_executions_request);
 
         $executions = $all_executions_response->json();
@@ -54,7 +54,7 @@ class CampaignsTest extends BaseTest {
     public function testGetEnvironments() {
         $campaign = $this->getValid73Campaign();
 
-        $all_environments_request  = $this->client->get('campaigns/'. $campaign['id'] .'/environments');
+        $all_environments_request  = $this->client->get('testing_campaigns/'. $campaign['id'] .'/testing_environments');
         $all_environments_response = $this->getResponse($all_environments_request);
 
         $environments = $all_environments_response->json();
@@ -64,13 +64,13 @@ class CampaignsTest extends BaseTest {
     }
 
     private function assertExecutionsAreSortedByCategoryAndId($executions) {
-        $this->assertEquals('Import default template', $executions[0]['test_definition']['summary']);
-        $this->assertEquals('Create a repository', $executions[1]['test_definition']['summary']);
-        $this->assertEquals('Delete a repository', $executions[2]['test_definition']['summary']);
+        $this->assertEquals('Import default template', $executions[0]['definition']['summary']);
+        $this->assertEquals('Create a repository', $executions[1]['definition']['summary']);
+        $this->assertEquals('Delete a repository', $executions[2]['definition']['summary']);
     }
 
     public function getValid73Campaign() {
-        $all_campaigns_request  = $this->client->get('projects/'.TestingDataBuilder::PROJECT_TEST_MGMT_ID.'/campaigns');
+        $all_campaigns_request  = $this->client->get('projects/'.TestingDataBuilder::PROJECT_TEST_MGMT_ID.'/testing_campaigns');
         $all_campaigns_response = $this->getResponse($all_campaigns_request);
         $campaigns = $all_campaigns_response->json();
 

@@ -30,7 +30,7 @@ class ProjectTest extends BaseTest {
 
     public function testGetCampaigns() {
 
-        $response  = $this->getResponse($this->client->get('projects/'.TestingDataBuilder::PROJECT_TEST_MGMT_ID.'/campaigns'));
+        $response  = $this->getResponse($this->client->get('projects/'.TestingDataBuilder::PROJECT_TEST_MGMT_ID.'/testing_campaigns'));
         $campaigns = $response->json();
 
         $this->assertCount(3, $campaigns);
@@ -53,7 +53,7 @@ class ProjectTest extends BaseTest {
 
     public function testStatusOfExecutionsAreCorrect() {
 
-        $response  = $this->getResponse($this->client->get('projects/'.TestingDataBuilder::PROJECT_TEST_MGMT_ID.'/campaigns'));
+        $response  = $this->getResponse($this->client->get('projects/'.TestingDataBuilder::PROJECT_TEST_MGMT_ID.'/testing_campaigns'));
         $campaigns = $response->json();
 
         $first_campaign = $campaigns[0];

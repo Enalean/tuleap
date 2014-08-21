@@ -25,7 +25,7 @@ use Tuleap\REST\JsonCast;
 
 class ExecutionRepresentation {
 
-    const ROUTE = 'executions';
+    const ROUTE = 'testing_executions';
 
     const FIELD_RESULTS      = 'results';
     const FIELD_ENVIRONMENT  = 'environment';
@@ -68,9 +68,9 @@ class ExecutionRepresentation {
     public $assigned_to;
 
     /**
-     * @var Tuleap\Testing\REST\v1\TestDefinitionRepresentation
+     * @var Tuleap\Testing\REST\v1\DefinitionRepresentation
      */
-    public $test_definition;
+    public $definition;
 
     public function build(
         $artifact_id,
@@ -79,7 +79,7 @@ class ExecutionRepresentation {
         $results,
         $last_update_date,
         $assigned_to,
-        $test_definition
+        $definition
     ) {
 
         $this->id                 = JsonCast::toInt($artifact_id);
@@ -88,7 +88,7 @@ class ExecutionRepresentation {
         $this->status             = $status;
         $this->environment        = $environment;
         $this->last_update_date   = JsonCast::toDate($last_update_date);
-        $this->test_definition    = $test_definition;
+        $this->definition         = $definition;
         $this->assigned_to        = $assigned_to;
     }
 }

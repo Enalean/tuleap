@@ -26,7 +26,7 @@ use \Tracker_FormElementFactory;
 use \PFUser;
 
 
-class TestDefinitionRepresentation {
+class DefinitionRepresentation {
 
     const ROUTE = 'NOT_IMPLEMENTED_YET';
 

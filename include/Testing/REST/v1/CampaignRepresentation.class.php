@@ -20,13 +20,14 @@
 
 namespace Tuleap\Testing\REST\v1;
 
-use \Tracker_Artifact;
-use \Tracker_FormElementFactory;
-use \PFUser;
+use Tracker_Artifact;
+use Tracker_FormElementFactory;
+use Tuleap\Testing\REST\v1\ExecutionRepresentation;
+use PFUser;
 
 class CampaignRepresentation {
 
-    const ROUTE = 'campaigns';
+    const ROUTE = 'testing_campaigns';
 
     const FIELD_NAME = "label";
 
@@ -95,8 +96,8 @@ class CampaignRepresentation {
 
         $this->resources = array(
             array(
-                'type' => 'executions',
-                'uri'  => 'campaigns/'. $this->id .'/executions'
+                'type' => ExecutionRepresentation::ROUTE,
+                'uri'  => self::ROUTE . '/' . $this->id . '/' . ExecutionRepresentation::ROUTE
             )
         );
     }

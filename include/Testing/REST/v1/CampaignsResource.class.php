@@ -110,7 +110,7 @@ class CampaignsResource {
      *
      * Get executions of a given campaign
      *
-     * @url GET {id}/executions
+     * @url GET {id}/testing_executions
      *
      * @param int $id Id of the campaign
      * @param int $limit  Number of elements displayed per page {@from path}
@@ -137,7 +137,7 @@ class CampaignsResource {
      * Get all users that are assigned to at least one test execution of the
      * given campaign
      *
-     * @url GET {id}/assignees
+     * @url GET {id}/testing_assignees
      *
      * @param int $id Id of the campaign
      * @param int $limit  Number of elements displayed per page {@from path}
@@ -162,7 +162,7 @@ class CampaignsResource {
      * Get all environments that are used by at least one test execution of the
      * given campaign
      *
-     * @url GET {id}/environments
+     * @url GET {id}/testing_environments
      *
      * @param int $id Id of the campaign
      * @param int $limit  Number of elements displayed per page {@from path}
@@ -229,8 +229,8 @@ class CampaignsResource {
 
     private function sortByCategoryAndId(array &$execution_representations) {
         usort($execution_representations, function ($a, $b) {
-            $def_a = $a->test_definition;
-            $def_b = $b->test_definition;
+            $def_a = $a->definition;
+            $def_b = $b->definition;
 
             $category_cmp = strnatcasecmp($def_a->category, $def_b->category);
             if ($category_cmp !== 0) {

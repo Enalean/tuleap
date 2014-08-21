@@ -73,7 +73,7 @@ class ProjectResource {
      *
      * Get testing campaigns for a given project
      *
-     * @url GET {id}/campaigns
+     * @url GET {id}/testing_campaigns
      *
      * @param int $id Id of the project
      * @param int $limit  Number of elements displayed per page {@from path}
@@ -81,7 +81,7 @@ class ProjectResource {
      *
      * @return array {@type Tuleap\Testing\REST\v1\CampaignRepresentation}
      */
-    protected function getId($id, $limit = 10, $offset = 0) {
+    protected function getCampaigns($id, $limit = 10, $offset = 0) {
         $project    = $this->project_manager->getProject($id);
         $this->user = UserManager::instance()->getCurrentUser();
 

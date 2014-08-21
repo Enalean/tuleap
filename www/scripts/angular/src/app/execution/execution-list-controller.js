@@ -66,10 +66,10 @@ function ExecutionListCtrl($scope, $state, ExecutionService, CampaignService) {
 
     function groupExecutionsByCategory(executions) {
         executions.forEach(function(execution) {
-            var category = execution.test_definition.category;
+            var category = execution.definition.category;
             if (! category) {
                 category = 'Uncategorized';
-                execution.test_definition._uncategorized = category;
+                execution.definition._uncategorized = category;
             }
 
             if (typeof $scope.categories[category] === "undefined") {

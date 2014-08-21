@@ -31,7 +31,7 @@
             <div class="category">{{ category.label }}</div>
             <div class="execution-list" ng-repeat="execution in category.executions | ExecutionListFilter:search:status:selected_assignee:selected_environment track by $index">
                 <div class="execution-item">
-                    <div class="execution-item-content {{ execution.status | dasherize }}">#{{ execution.test_definition.id }} {{ execution.test_definition.summary }}</div>
+                    <div class="execution-item-content {{ execution.status | dasherize }}">#{{ execution.definition.id }} {{ execution.definition.summary }}</div>
                 </div>
             </div>
         </div>

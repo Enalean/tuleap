@@ -17,8 +17,8 @@ function ExecutionService(Restangular, $q) {
     function getExecutions(campaign_id, limit, offset) {
         var data = $q.defer();
 
-        rest.one('campaigns', campaign_id)
-            .all('executions')
+        rest.one('testing_campaigns', campaign_id)
+            .all('testing_executions')
             .getList({
                 limit: limit,
                 offset: offset
