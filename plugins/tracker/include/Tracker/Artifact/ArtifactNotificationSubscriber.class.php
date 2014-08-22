@@ -96,7 +96,7 @@ class Tracker_ArtifactNotificationSubscriber {
 
     private function sendResponse(Codendi_Request $request, $feedback_level, $message, $unsubscribe) {
         if ($request->isAjax()) {
-            $this->sendAjaxResponse($unsubscribe);
+            $this->sendAjaxResponse($unsubscribe, $message);
             return;
         }
 
@@ -107,8 +107,9 @@ class Tracker_ArtifactNotificationSubscriber {
         $GLOBALS['Response']->redirect($this->artifact->getUri());
     }
 
-    private function sendAjaxResponse($unsubscribe) {
+    private function sendAjaxResponse($unsubscribe, $message) {
         $response["notification"] = ! $unsubscribe;
+        $response["message"]      = $message;
         $GLOBALS['Response']->sendJSON($response);
     }
 }
