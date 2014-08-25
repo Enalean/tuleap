@@ -1,3 +1,6 @@
+Version 1.71 - Tuleap 7.5
+    * Fix request #7375: Display color of trackers in the agiledashboard
+
 Version 1.70 - Tuleap 7.5
     * request #7371: Remove plugin service icon from core
 
