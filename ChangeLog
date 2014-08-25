@@ -1,3 +1,7 @@
+Version 7.5 (Not released yet)
+	== Bug Fix ==
+	* Fix request #7373: Remove "target" settings for link in CKeditor configuration
+	== Plugins ==
 Version 7.4 (Thursday, August 21st 2014)
 
 	== Plugins ==
