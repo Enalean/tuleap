@@ -1,3 +1,6 @@
+Version 5.445 - Tuleap 7.5
+    * Fix request #7374: Submit bar does not appear with canned responses
+
 Version 5.444 - Tuleap 7.5
     * request #7371: Remove plugin service icon from core
 
