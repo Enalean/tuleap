@@ -92,6 +92,21 @@ codendi.RTE = Class.create(
 
             this.rte = CKEDITOR.replace(this.element.id, replace_options);
 
+            CKEDITOR.on('dialogDefinition', function (ev) {
+                var tab,
+                    dialog     = ev.data.name,
+                    definition = ev.data.definition;
+
+                if (dialog === 'link') {
+                   definition.removeContents('target');
+                }
+
+                if (dialog === 'image') {
+                    tab = definition.getContents('Link');
+                    tab.remove('cmbTarget');
+                }
+            });
+
             this.rte.on('instanceReady', function (evt) {
                 this.document.getBody().$.contentEditable = true;
                 tuleap.mention.init(this.document.getBody().$);
