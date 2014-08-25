@@ -336,6 +336,9 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     public function delete(GitRepository $repository) {
         $this->updateRepoConf($repository);
         $path = $this->getGitRootPath().$repository->getPath();
+        $gitBackupDirectory = $this->getGitPlugin()->getConfigurationParameter('git_backup_dir');
+        $repositoryName     = $repository->getName();
+        $this->getDriver()->backup($path, $gitBackupDirectory ,$repositoryName);
         $this->getDriver()->delete($path);
     }
 
