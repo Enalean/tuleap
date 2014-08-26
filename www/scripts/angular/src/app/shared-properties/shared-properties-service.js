@@ -9,8 +9,8 @@ function SharedPropertiesService() {
     };
 
     return {
-        getProjectId: getProjectId,
-        setProjectId: setProjectId,
+        getProjectId:   getProjectId,
+        setProjectId:   setProjectId,
         getCurrentUser: getCurrentUser,
         setCurrentUser: setCurrentUser
     };

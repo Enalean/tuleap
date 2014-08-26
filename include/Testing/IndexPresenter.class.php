@@ -50,6 +50,9 @@ class IndexPresenter {
     /** @var string */
     public $current_user;
 
+    /** @var string */
+    public $lang;
+
     public function __construct(
         $project_id,
         $campaign_tracker_id,
@@ -57,6 +60,7 @@ class IndexPresenter {
         $test_execution_tracker_id,
         PFUser $current_user
     ) {
+        $this->lang                   = $this->getLanguageAbbreviation($current_user);
         $this->project_id             = $project_id;
         $this->misconfigured_title    = $GLOBALS['Language']->getText('plugin_testing', 'misconfigured_title');
         $this->misconfigured_message  = $GLOBALS['Language']->getText('plugin_testing', 'misconfigured_message');
@@ -65,5 +69,11 @@ class IndexPresenter {
         $user_representation = new UserRepresentation();
         $user_representation->build($current_user);
         $this->current_user = json_encode($user_representation);
+    }
+
+    private function getLanguageAbbreviation($current_user) {
+        list($lang, $country) = explode('_', $current_user->getLocale());
+
+        return $lang;
     }
 }

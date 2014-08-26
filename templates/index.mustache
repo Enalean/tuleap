@@ -3,7 +3,7 @@
     <img src="yuno.jpg" />
 {{/ is_properly_configured }}
 {{# is_properly_configured }}
-    <div id="testing-app" ng-app="testing" ng-controller="TestingCtrl" ng-init="init({{ project_id }}, {{ current_user }})">
+    <div id="testing-app" ng-app="testing" ng-controller="TestingCtrl" ng-init="init({{ project_id }}, {{ current_user }}, '{{ lang }}')">
         <div ncy-breadcrumb></div>
         <ui-view></ui-view>
     </div>

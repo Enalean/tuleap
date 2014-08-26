@@ -11,10 +11,11 @@ function ExecutionDetailCtrl($scope, $state, $sce, executions, ExecutionService,
         return execution.definition.id === definition_id;
     });
 
-    $scope.sanitizeHtml = sanitizeHtml;
-    $scope.pass         = pass;
-    $scope.fail         = fail;
-    $scope.block        = block;
+    $scope.pass           = pass;
+    $scope.fail           = fail;
+    $scope.block          = block;
+    $scope.sanitizeHtml   = sanitizeHtml;
+    $scope.getStatusLabel = getStatusLabel;
 
     function sanitizeHtml(html) {
         if (html) {
@@ -45,5 +46,16 @@ function ExecutionDetailCtrl($scope, $state, $sce, executions, ExecutionService,
             execution.previous_result.submitted_on = new Date();
             execution.previous_result.submitted_by = SharedPropertiesService.getCurrentUser();
         });
+    }
+
+    function getStatusLabel(status) {
+        var labels = {
+            passed: 'Passed',
+            failed: 'Failed',
+            blocked: 'Blocked',
+            notrun: 'Not Run'
+        };
+
+        return labels[status];
     }
 }

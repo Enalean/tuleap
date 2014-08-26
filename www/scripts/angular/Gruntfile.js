@@ -14,6 +14,7 @@ module.exports = function ( grunt ) {
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-ngmin');
   grunt.loadNpmTasks('grunt-html2js');
+  grunt.loadNpmTasks('grunt-angular-gettext');
 
   /**
    * Load in our build configuration file.
@@ -382,7 +383,7 @@ module.exports = function ( grunt ) {
           '<%= app_files.atpl %>',
           '<%= app_files.ctpl %>'
         ],
-        tasks: [ 'html2js', 'concat' ]
+        tasks: [ 'nggettext_extract', 'html2js', 'concat' ]
       },
 
       /**
@@ -404,6 +405,27 @@ module.exports = function ( grunt ) {
         tasks: [ 'jshint:test', 'karma:continuous' ],
         options: {
           livereload: false
+        }
+      },
+
+      po: {
+        files: [ 'po/*.po' ],
+        tasks: [ 'nggettext_compile', 'copy:build_appmodules', 'concat' ]
+      }
+    },
+
+    nggettext_extract: {
+      pot: {
+        files: {
+          'po/template.pot': ['src/**/*.html']
+        }
+      }
+    },
+
+    nggettext_compile: {
+      all: {
+        files: {
+          '<%= build_dir %>/src/translations.js': ['po/*.po']
         }
       }
     }
@@ -431,6 +453,7 @@ module.exports = function ( grunt ) {
    */
   grunt.registerTask( 'build', [
     'clean',
+    'nggettext_extract',
     'html2js',
     'jshint',
     'recess:build',
@@ -447,6 +470,7 @@ module.exports = function ( grunt ) {
    * minifying your code.
    */
   grunt.registerTask( 'compile', [
+    'nggettext_compile',
     'recess:compile',
     'copy:compile_assets',
     'ngmin',
@@ -458,6 +482,7 @@ module.exports = function ( grunt ) {
    * Concatenates the code without minifying it (useful for dev)
    */
   grunt.registerTask( 'soft-compile', [
+    'nggettext_compile',
     'recess:compile',
     'copy:compile_assets',
     'concat'

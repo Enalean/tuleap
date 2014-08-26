@@ -6,23 +6,23 @@
                 <div class="row-fluid">
                     <div class="span4">
                         <select ng-model="selected_environment" ng-options="environment for environment in environments">
-                            <option value="">All environments</option>
+                            <option value="" translate>All environments</option>
                         </select>
                     </div>
                     <div class="span4">
                         <select ng-model="selected_assignee" ng-options="assignee as assignee.username for assignee in assignees">
-                            <option value="">Everybody</option>
+                            <option value="" translate>Anybody</option>
                         </select>
                     </div>
                     <div class="btn-group span4">
-                        <label class="btn" ng-model="status.passed"  title="Passed" btn-checkbox><img src="scripts/angular/bin/assets/status-passed.png" alt="Passed"></label>
-                        <label class="btn" ng-model="status.failed"  title="Failed" btn-checkbox><img src="scripts/angular/bin/assets/status-failed.png" alt="Failed"></label>
-                        <label class="btn" ng-model="status.blocked" title="Blocked" btn-checkbox><img src="scripts/angular/bin/assets/status-blocked.png" alt="Blocked"></label>
-                        <label class="btn" ng-model="status.notrun"  title="Not run" btn-checkbox><img src="scripts/angular/bin/assets/status-notrun.png" alt="Not run"></label>
+                        <label class="btn" ng-model="status.passed"  title="{{ 'Passed' | translate }}" btn-checkbox><img src="scripts/angular/bin/assets/status-passed.png" alt="{{ 'Passed' | translate }}"></label>
+                        <label class="btn" ng-model="status.failed"  title="{{ 'Failed' | translate }}" btn-checkbox><img src="scripts/angular/bin/assets/status-failed.png" alt="{{ 'Failed' | translate }}"></label>
+                        <label class="btn" ng-model="status.blocked" title="{{ 'Blocked' | translate }}" btn-checkbox><img src="scripts/angular/bin/assets/status-blocked.png" alt="{{ 'Blocked' | translate }}"></label>
+                        <label class="btn" ng-model="status.notrun"  title="{{ 'Not run' | translate }}" btn-checkbox><img src="scripts/angular/bin/assets/status-notrun.png" alt="{{ 'Not run' | translate }}"></label>
                     </div>
                 </div>
                 <div class="row-fluid">
-                    <input type="text" class="filter span12" placeholder="Filter..." ng-model="search">
+                    <input type="text" class="filter span12" placeholder="{{ 'Filter...' | translate }}" ng-model="search">
                 </div>
             </form>
         </div>
@@ -40,7 +40,7 @@
 
     <div ui-view>
         <div id="no-current-execution">
-            <i class="icon-hand-left"></i> Please select an execution
+            <i class="icon-hand-left"></i> {{ 'Please select a test' | translate }}
         </div>
      </div>
 </div>

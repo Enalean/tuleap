@@ -4,5 +4,6 @@ angular.module('testing', [
     'execution',
     'sharedProperties',
     'ncy-angular-breadcrumb',
-    'ngSanitize'
+    'ngSanitize',
+    'gettext'
 ]);

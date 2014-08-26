@@ -1,0 +1,105 @@
+#
+# Translators:
+# Nicolas Terray <nicolas.terray@enalean.com>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Test\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2014-08-26 16:44-0000\n"
+"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
+"Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
+"fr/)\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 1.5.4\n"
+
+#: src/app/execution/execution-list.tpl.html
+msgid "All environments"
+msgstr "Tous les environnements"
+
+#: src/app/execution/execution-list.tpl.html
+msgid "Anybody"
+msgstr "N'importe qui"
+
+#: src/app/execution/execution-detail.tpl.html
+msgid "Assigned to"
+msgstr "Assigné à"
+
+#: src/app/campaign/campaign-list.tpl.html
+#: src/app/execution/execution-detail.tpl.html
+#: src/app/execution/execution-list.tpl.html
+msgid "Blocked"
+msgstr "Bloqué"
+
+#: src/app/execution/execution-detail.tpl.html
+msgid "By:"
+msgstr "Par :"
+
+#: src/app/campaign/campaign-list.tpl.html
+msgid "Campaign"
+msgstr "Campagne"
+
+#: src/app/campaign/campaign-list.tpl.html
+msgid "Campaigns list"
+msgstr "Liste des campagnes"
+
+#: src/app/execution/execution-detail.tpl.html
+msgid "Comments..."
+msgstr "Commentaires…"
+
+#: src/app/execution/execution-detail.tpl.html
+msgid "Date:"
+msgstr "Date :"
+
+#: src/app/campaign/campaign-list.tpl.html
+msgid "Details"
+msgstr "Détails"
+
+#: src/app/campaign/campaign-list.tpl.html
+#: src/app/execution/execution-detail.tpl.html
+#: src/app/execution/execution-list.tpl.html
+msgid "Failed"
+msgstr "Échoué"
+
+#: src/app/campaign/campaign-list.tpl.html
+#: src/app/execution/execution-list.tpl.html
+msgid "Filter..."
+msgstr "Filtrer..."
+
+#: src/app/execution/execution-detail.tpl.html
+msgid "Last execution in this campaign"
+msgstr "Dernière exécution dans cette campagne"
+
+#: src/app/campaign/campaign-list.tpl.html
+#: src/app/execution/execution-list.tpl.html
+msgid "Not run"
+msgstr "Non exécuté"
+
+#: src/app/campaign/campaign-list.tpl.html
+#: src/app/execution/execution-detail.tpl.html
+#: src/app/execution/execution-list.tpl.html
+msgid "Passed"
+msgstr "Succès"
+
+#: src/app/execution/execution-list.tpl.html
+msgid "Please select a test"
+msgstr "Merci de sélectionner un test"
+
+#: src/app/campaign/campaign-list.tpl.html
+msgid "Status"
+msgstr "Status"
+
+#: src/app/execution/execution-detail.tpl.html
+msgid "Status:"
+msgstr "Status :"
+
+#: src/app/execution/execution-detail.tpl.html
+msgid "Test definition"
+msgstr "Définition du test"
+
+#: src/app/campaign/campaign-list.tpl.html
+msgid "Total"
+msgstr "Total"

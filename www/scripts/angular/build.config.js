@@ -28,8 +28,7 @@ module.exports = {
         '!src/**/*-config.js',
         '!src/**/*-directive.js',
         '!src/**/*-factory.js',
-        '!src/**/*-filter.js',
-        '!src/**/*-run.js'
+        '!src/**/*-filter.js'
     ],
     js: [
         'src/**/*-service.js',
@@ -38,7 +37,6 @@ module.exports = {
         'src/**/*-directive.js',
         'src/**/*-factory.js',
         'src/**/*-filter.js',
-        'src/**/*-run.js',
         '!src/**/*.spec.js'
     ],
     jsunit: [ 'src/**/*.spec.js' ],
@@ -77,12 +75,13 @@ module.exports = {
       'vendor/angular-filter-pack/dist/angular-filter-pack.min.js',
       'vendor/angular-bootstrap/ui-bootstrap.js',
       'vendor/angular-breadcrumb/dist/angular-breadcrumb.min.js',
-      'vendor/moment/moment.js',
+      'vendor/moment/min/moment.min.js',
       'vendor/moment/lang/fr.js',
       'vendor/angular-moment/angular-moment.min.js',
-      'vendor/angular-sanitize/angular-sanitize.min.js'
+      'vendor/angular-sanitize/angular-sanitize.min.js',
+      'vendor/angular-gettext/dist/angular-gettext.min.js'
     ],
     css: [
     ]
-  },
+  }
 };

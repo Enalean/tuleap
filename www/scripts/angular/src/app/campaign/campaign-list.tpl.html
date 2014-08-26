@@ -1,18 +1,18 @@
 <div id="campaign-list-container">
-    <h1>Campaigns list</h1>
+    <h1 translate>Campaigns list</h1>
 
-    <input type="text" class="filter" placeholder="Filter..." ng-model="search">
+    <input type="text" class="filter" placeholder="{{ 'Filter...' | translate }}" ng-model="search">
 
     <table class="table table-striped table-bordered campaign-list">
         <thead>
             <tr>
-                <th>Name</th>
-                <th>Status</th>
-                <th>Total</th>
-                <th>Passed</th>
-                <th>Blocked</th>
-                <th>Failed</th>
-                <th>Not run</th>
+                <th translate>Campaign</th>
+                <th translate>Status</th>
+                <th translate>Total</th>
+                <th translate>Passed</th>
+                <th translate>Blocked</th>
+                <th translate>Failed</th>
+                <th translate>Not run</th>
                 <th></th>
             </tr>
         </thead>
@@ -25,7 +25,7 @@
                 <td><span class="badge badge-info">{{ campaign.nb_of_blocked }}</span></td>
                 <td><span class="badge badge-important">{{ campaign.nb_of_failed }}</span></td>
                 <td><span class="badge">{{ campaign.nb_of_not_run }}</span></td>
-                <td><button class="btn btn-small" ui-sref="campaigns.executions({ id: campaign.id, slug: '{{ campaign.label | slugify }}' })">Details</button></td>
+                <td><button class="btn btn-small" ui-sref="campaigns.executions({ id: campaign.id, slug: '{{ campaign.label | slugify }}' })" translate>Details</button></td>
             </tr>
         </tbody>
     </table>

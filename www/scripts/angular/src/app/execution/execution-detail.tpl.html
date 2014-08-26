@@ -3,36 +3,43 @@
 
     <div class="row-fluid">
         <div id="current-execution-last-execution" class="span6">
-            <p class="current-execution-title">Last execution in this campaign</p>
-            <p class="last-execution-details"><span>Date:</span>{{ execution.previous_result.submitted_on | amCalendar }}</p>
-            <p class="last-execution-details"><span>Status:</span> <img ng-src="scripts/angular/bin/assets/status-{{ execution.previous_result.status }}-color.png" > {{ execution.previous_result.status }}</p>
-            <p class="last-execution-details"><span>By:</span>{{ execution.previous_result.submitted_by.real_name }}</p>
+            <p class="current-execution-title" translate>Last execution in this campaign</p>
+            <p class="last-execution-details">
+                <span translate>Date:</span> {{ execution.previous_result.submitted_on | amCalendar }}
+            </p>
+            <p class="last-execution-details">
+                <span translate>Status:</span> <img ng-src="scripts/angular/bin/assets/status-{{ execution.previous_result.status }}-color.png" >
+                {{ getStatusLabel(execution.previous_result.status) | translate }}
+            </p>
+            <p class="last-execution-details">
+                <span translate>By:</span> {{ execution.previous_result.submitted_by.real_name }}
+            </p>
         </div>
         <div id="current-execution-assigned-to" class="span6">
-            <p class="current-execution-title">Assigned to</p>
+            <p class="current-execution-title" translate>Assigned to</p>
             <div><img ng-src="{{ sanitizeHtml(execution.assigned_to.avatar_url) }}" alt="avatar">{{ execution.assigned_to.real_name }}</div>
         </div>
     </div>
 
     <div class="row-fluid">
         <div id="current-execution-description">
-            <p class="current-execution-title">Test execution</p>
+            <p class="current-execution-title" translate>Test definition</p>
             <div ng-bind-html="sanitizeHtml(execution.definition.description)"></div>
         </div>
     </div>
 
     <div id="current-execution-result">
         <form>
-            <textarea placeholder="Comments..." ng-model="execution.results"></textarea>
+            <textarea placeholder="{{ 'Comments...' | translate }}" ng-model="execution.results"></textarea>
             <div id="result-choices">
-                <button class="btn btn-large btn-success" title="Passed" ng-click="pass(execution)">
-                   <img src="scripts/angular/bin/assets/status-passed-white-big.png" alt="Passed">
+                <button class="btn btn-large btn-success" title="{{ 'Passed' | translate }}" ng-click="pass(execution)">
+                   <img src="scripts/angular/bin/assets/status-passed-white-big.png" alt="{{ 'Passed' | translate }}">
                 </button>
-                <button class="btn btn-large btn-danger" title="Failed" ng-click="fail(execution)">
-                   <img src="scripts/angular/bin/assets/status-failed-white-big.png" alt="Failed">
+                <button class="btn btn-large btn-danger" title="{{ 'Failed' | translate }}" ng-click="fail(execution)">
+                   <img src="scripts/angular/bin/assets/status-failed-white-big.png" alt="{{ 'Failed' | translate }}">
                 </button>
-                <button class="btn btn-large btn-info" title="Blocked" ng-click="block(execution)">
-                   <img src="scripts/angular/bin/assets/status-blocked-white-big.png" alt="Blocked">
+                <button class="btn btn-large btn-info" title="{{ 'Blocked' | translate }}" ng-click="block(execution)">
+                   <img src="scripts/angular/bin/assets/status-blocked-white-big.png" alt="{{ 'Blocked' | translate }}">
                 </button>
             </div>
         </form>

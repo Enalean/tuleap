@@ -1,0 +1,92 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/app/execution/execution-list.tpl.html
+msgid "All environments"
+msgstr ""
+
+#: src/app/execution/execution-list.tpl.html
+msgid "Anybody"
+msgstr ""
+
+#: src/app/execution/execution-detail.tpl.html
+msgid "Assigned to"
+msgstr ""
+
+#: src/app/campaign/campaign-list.tpl.html
+#: src/app/execution/execution-detail.tpl.html
+#: src/app/execution/execution-list.tpl.html
+msgid "Blocked"
+msgstr ""
+
+#: src/app/execution/execution-detail.tpl.html
+msgid "By:"
+msgstr ""
+
+#: src/app/campaign/campaign-list.tpl.html
+msgid "Campaign"
+msgstr ""
+
+#: src/app/campaign/campaign-list.tpl.html
+msgid "Campaigns list"
+msgstr ""
+
+#: src/app/execution/execution-detail.tpl.html
+msgid "Comments..."
+msgstr ""
+
+#: src/app/execution/execution-detail.tpl.html
+msgid "Date:"
+msgstr ""
+
+#: src/app/campaign/campaign-list.tpl.html
+msgid "Details"
+msgstr ""
+
+#: src/app/campaign/campaign-list.tpl.html
+#: src/app/execution/execution-detail.tpl.html
+#: src/app/execution/execution-list.tpl.html
+msgid "Failed"
+msgstr ""
+
+#: src/app/campaign/campaign-list.tpl.html
+#: src/app/execution/execution-list.tpl.html
+msgid "Filter..."
+msgstr ""
+
+#: src/app/execution/execution-detail.tpl.html
+msgid "Last execution in this campaign"
+msgstr ""
+
+#: src/app/campaign/campaign-list.tpl.html
+#: src/app/execution/execution-list.tpl.html
+msgid "Not run"
+msgstr ""
+
+#: src/app/campaign/campaign-list.tpl.html
+#: src/app/execution/execution-detail.tpl.html
+#: src/app/execution/execution-list.tpl.html
+msgid "Passed"
+msgstr ""
+
+#: src/app/execution/execution-list.tpl.html
+msgid "Please select a test"
+msgstr ""
+
+#: src/app/campaign/campaign-list.tpl.html
+msgid "Status"
+msgstr ""
+
+#: src/app/execution/execution-detail.tpl.html
+msgid "Status:"
+msgstr ""
+
+#: src/app/execution/execution-detail.tpl.html
+msgid "Test definition"
+msgstr ""
+
+#: src/app/campaign/campaign-list.tpl.html
+msgid "Total"
+msgstr ""
