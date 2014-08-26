@@ -66,6 +66,7 @@ class CampaignsResource {
             $this->user_manager
         );
         $this->execution_representation_builder   = new ExecutionRepresentationBuilder(
+            $this->user_manager,
             $this->tracker_form_element_factory,
             $this->conformance_validator,
             $this->assigned_to_representation_builder

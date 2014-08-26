@@ -2,14 +2,13 @@
     <h2 class="{{ execution.status | dasherize }}">{{ execution.definition.summary }}</h2>
 
     <div class="row-fluid">
-        <!-- <div id="current-execution-last-execution" class="span6">
-            <p class="current-execution-title">Last execution</p>
-            <p class="last-execution-details"><span>Date:</span>{{ execution.assigned_to.real_name }}</p>
-            <p class="last-execution-details"><span>Status:</span>{{ execution.assigned_to.real_name }}</p>
-            <p class="last-execution-details"><span>By:</span>{{ execution.assigned_to.real_name }}</p>
-            <p class="last-execution-details"><span>Campaign:</span>{{ execution.assigned_to.real_name }}</p>
-        </div> -->
-        <div id="current-execution-assigned-to" class="span12">
+        <div id="current-execution-last-execution" class="span6">
+            <p class="current-execution-title">Last execution in this campaign</p>
+            <p class="last-execution-details"><span>Date:</span>{{ execution.previous_result.submitted_on | amCalendar }}</p>
+            <p class="last-execution-details"><span>Status:</span> <img ng-src="scripts/angular/bin/assets/status-{{ execution.previous_result.status }}-color.png" > {{ execution.previous_result.status }}</p>
+            <p class="last-execution-details"><span>By:</span>{{ execution.previous_result.submitted_by.real_name }}</p>
+        </div>
+        <div id="current-execution-assigned-to" class="span6">
             <p class="current-execution-title">Assigned to</p>
             <div><img ng-src="{{ sanitizeHtml(execution.assigned_to.avatar_url) }}" alt="avatar">{{ execution.assigned_to.real_name }}</div>
         </div>

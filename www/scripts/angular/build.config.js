@@ -20,8 +20,27 @@ module.exports = {
    * app's unit tests.
    */
   app_files: {
-    modules: [ 'src/**/*.js', '!src/**/*.spec.js', '!src/**/*-service.js', '!src/**/*-controller.js', '!src/**/*-config.js', '!src/**/*-directive.js', '!src/**/*-factory.js', '!src/**/*-filter.js' ],
-    js: [ 'src/**/*-service.js', 'src/**/*-controller.js', 'src/**/*-config.js', 'src/**/*-directive.js', 'src/**/*-factory.js', 'src/**/*-filter.js', '!src/**/*.spec.js' ],
+    modules: [
+        'src/**/*.js',
+        '!src/**/*.spec.js',
+        '!src/**/*-service.js',
+        '!src/**/*-controller.js',
+        '!src/**/*-config.js',
+        '!src/**/*-directive.js',
+        '!src/**/*-factory.js',
+        '!src/**/*-filter.js',
+        '!src/**/*-run.js'
+    ],
+    js: [
+        'src/**/*-service.js',
+        'src/**/*-controller.js',
+        'src/**/*-config.js',
+        'src/**/*-directive.js',
+        'src/**/*-factory.js',
+        'src/**/*-filter.js',
+        'src/**/*-run.js',
+        '!src/**/*.spec.js'
+    ],
     jsunit: [ 'src/**/*.spec.js' ],
     
     coffee: [ 'src/**/*.coffee', '!src/**/*.spec.coffee' ],
@@ -58,6 +77,9 @@ module.exports = {
       'vendor/angular-filter-pack/dist/angular-filter-pack.min.js',
       'vendor/angular-bootstrap/ui-bootstrap.js',
       'vendor/angular-breadcrumb/dist/angular-breadcrumb.min.js',
+      'vendor/moment/moment.js',
+      'vendor/moment/lang/fr.js',
+      'vendor/angular-moment/angular-moment.min.js',
       'vendor/angular-sanitize/angular-sanitize.min.js'
     ],
     css: [

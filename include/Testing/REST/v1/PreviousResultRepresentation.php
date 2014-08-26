@@ -18,20 +18,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Testing;
+namespace Tuleap\Testing\REST\v1;
 
-class IndexController extends TestingController {
+use Tuleap\REST\JsonCast;
+use Tuleap\User\REST\UserRepresentation;
 
-    public function index() {
-        return $this->renderToString(
-            'index',
-            new IndexPresenter(
-                $this->project->getId(),
-                $this->config->getCampaignTrackerId($this->project),
-                $this->config->getTestDefinitionTrackerId($this->project),
-                $this->config->getTestExecutionTrackerId($this->project),
-                $this->request->getCurrentUser()
-            )
-        );
+class PreviousResultRepresentation {
+
+    /**
+     * @var DateTime
+     */
+    public $submitted_on;
+
+    /**
+     * @var UserRepresentation
+     */
+    public $submitted_by;
+
+    /**
+     * @var String
+     */
+    public $status;
+
+    /**
+     * @var String
+     */
+    public $result;
+
+    public function build($submitted_on, UserRepresentation $submitted_by, $status, $result) {
+        $this->submitted_on = JsonCast::toDate($submitted_on);
+        $this->submitted_by = $submitted_by;
+        $this->status       = $status;
+        $this->result       = $result;
     }
 }

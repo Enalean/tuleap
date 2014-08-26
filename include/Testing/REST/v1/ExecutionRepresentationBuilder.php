@@ -21,11 +21,18 @@
 namespace Tuleap\Testing\REST\v1;
 
 use Tuleap\Testing\ConfigConformanceValidator;
+use Tuleap\User\REST\UserRepresentation;
 use Tracker_Artifact;
 use PFUser;
 use Tracker_FormElementFactory;
+use UserManager;
 
 class ExecutionRepresentationBuilder {
+
+    /**
+     * @var UserManager
+     */
+    private $user_manager;
 
     /**
      * @var AssignedToRepresentationBuilder
@@ -43,10 +50,12 @@ class ExecutionRepresentationBuilder {
     private $conformance_validator;
 
     public function __construct(
+        UserManager $user_manager,
         Tracker_FormElementFactory $tracker_form_element_factory,
         ConfigConformanceValidator $conformance_validator,
         AssignedToRepresentationBuilder $assigned_to_representation_builder
     ) {
+        $this->user_manager                       = $user_manager;
         $this->tracker_form_element_factory       = $tracker_form_element_factory;
         $this->conformance_validator              = $conformance_validator;
         $this->assigned_to_representation_builder = $assigned_to_representation_builder;
@@ -60,15 +69,17 @@ class ExecutionRepresentationBuilder {
         $executions                 = $this->getExecutionsForCampaign($user, $artifact);
 
         foreach($executions as $execution) {
-            $definition_representation    = $this->getDefinitionRepresentationForExecution($user, $execution);
-            $execution_representation     = new ExecutionRepresentation();
+            $previous_result_representation = $this->getPreviousResultRepresentationForExecution($user, $execution);
+            $definition_representation      = $this->getDefinitionRepresentationForExecution($user, $execution);
+            $execution_representation       = new ExecutionRepresentation();
             $execution_representation->build(
                 $execution->getId(),
                 $execution->getStatus(),
                 $this->getExecutionEnvironment($user, $execution),
-                $this->getExecutionResults($user, $execution),
+                $this->getExecutionResult($user, $execution),
                 $execution->getLastUpdateDate(),
                 $this->assigned_to_representation_builder->getAssignedToRepresentationForExecution($user, $execution),
+                $previous_result_representation,
                 $definition_representation
             );
 
@@ -107,7 +118,7 @@ class ExecutionRepresentationBuilder {
         return null;
     }
 
-    private function getExecutionResults(PFUser $user, Tracker_Artifact $execution) {
+    private function getExecutionResult(PFUser $user, Tracker_Artifact $execution) {
         $results_field = $this->tracker_form_element_factory->getUsedFieldByNameForUser($execution->getTrackerId(), ExecutionRepresentation::FIELD_RESULTS, $user);
 
         $changeset_value = $execution->getValue($results_field);
@@ -132,5 +143,41 @@ class ExecutionRepresentationBuilder {
         }
 
         return $first_value->getLabel();
+    }
+
+    private function getPreviousResultRepresentationForExecution(
+        PFUser $user,
+        Tracker_Artifact $execution
+    ) {
+        $last_but_one_changeset = $this->getLastButOneChangeset($execution);
+        if (! $last_but_one_changeset) {
+            return null;
+        }
+
+        $submitted_by = $this->user_manager->getUserById($last_but_one_changeset->getSubmittedBy());
+        $user_representation = new UserRepresentation();
+	$user_representation->build($submitted_by);
+
+        $previous_result_representation = new PreviousResultRepresentation();
+        $previous_result_representation->build(
+            $last_but_one_changeset->getSubmittedOn(),
+            $user_representation,
+            $execution->getStatusForChangeset($last_but_one_changeset),
+            $this->getExecutionResult($user, $execution)
+        );
+
+        return $previous_result_representation;
+    }
+
+    /**
+     * @return Tracker_Artifact_Changeset|null
+     */
+    private function getLastButOneChangeset(Tracker_Artifact $execution) {
+	$last_changeset = $execution->getLastChangeset();
+	if (! $last_changeset) {
+            return null;
+	}
+
+	return $execution->getPreviousChangeset($last_changeset->getId());
     }
 }

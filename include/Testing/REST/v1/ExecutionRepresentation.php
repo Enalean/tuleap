@@ -68,6 +68,11 @@ class ExecutionRepresentation {
     public $assigned_to;
 
     /**
+     * @var Tuleap\Testing\REST\v1\PreviousResultRepresentation
+     */
+    public $previous_result;
+
+    /**
      * @var Tuleap\Testing\REST\v1\DefinitionRepresentation
      */
     public $definition;
@@ -79,16 +84,18 @@ class ExecutionRepresentation {
         $results,
         $last_update_date,
         $assigned_to,
+        $previous_result,
         $definition
     ) {
 
-        $this->id                 = JsonCast::toInt($artifact_id);
-        $this->uri                = self::ROUTE . '/' . $this->id;
-        $this->results            = $results;
-        $this->status             = $status;
-        $this->environment        = $environment;
-        $this->last_update_date   = JsonCast::toDate($last_update_date);
-        $this->definition         = $definition;
-        $this->assigned_to        = $assigned_to;
+        $this->id               = JsonCast::toInt($artifact_id);
+        $this->uri              = self::ROUTE . '/' . $this->id;
+        $this->results          = $results;
+        $this->status           = $status;
+        $this->environment      = $environment;
+        $this->last_update_date = JsonCast::toDate($last_update_date);
+        $this->definition       = $definition;
+        $this->previous_result  = $previous_result;
+        $this->assigned_to      = $assigned_to;
     }
 }

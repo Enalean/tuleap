@@ -4,18 +4,15 @@ angular
 
 function SharedPropertiesService() {
     var property = {
-        project_id: undefined,
-        test_definition_tracker_id: undefined,
-        test_execution_tracker_id: undefined
+        project_id:   undefined,
+        current_user: undefined
     };
 
     return {
         getProjectId: getProjectId,
         setProjectId: setProjectId,
-        getTestDefinitionTrackerId: getTestDefinitionTrackerId,
-        setTestDefinitionTrackerId: setTestDefinitionTrackerId,
-        getTestExecutionTrackerId: getTestExecutionTrackerId,
-        setTestExecutionTrackerId: setTestExecutionTrackerId
+        getCurrentUser: getCurrentUser,
+        setCurrentUser: setCurrentUser
     };
 
     function getProjectId() {
@@ -26,19 +23,11 @@ function SharedPropertiesService() {
         property.project_id = project_id;
     }
 
-    function getTestDefinitionTrackerId() {
-        return property.test_definition_tracker_id;
+    function getCurrentUser() {
+        return property.current_user;
     }
 
-    function setTestDefinitionTrackerId(test_definition_tracker_id) {
-        property.test_definition_tracker_id = test_definition_tracker_id;
-    }
-
-    function getTestExecutionTrackerId() {
-        return property.test_execution_tracker_id;
-    }
-
-    function setTestExecutionTrackerId(test_execution_tracker_id) {
-        property.test_execution_tracker_id = test_execution_tracker_id;
+    function setCurrentUser(current_user) {
+        property.current_user = current_user;
     }
 }

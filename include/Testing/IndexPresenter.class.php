@@ -20,6 +20,10 @@
 
 namespace Tuleap\Testing;
 
+use PFUser;
+use Codendi_HTMLPurifier;
+use Tuleap\User\REST\UserRepresentation;
+
 class IndexPresenter {
 
     /** @var int */
@@ -43,15 +47,23 @@ class IndexPresenter {
     /** @var Boolean */
     public $is_properly_configured;
 
-    public function __construct($project_id, $campaign_tracker_id, $test_definition_tracker_id, $test_execution_tracker_id) {
-        $this->project_id                 = $project_id;
-        $this->campaign_tracker_id        = $campaign_tracker_id;
-        $this->test_definition_tracker_id = $test_definition_tracker_id;
-        $this->test_execution_tracker_id  = $test_execution_tracker_id;
+    /** @var string */
+    public $current_user;
 
-        $this->misconfigured_title   = $GLOBALS['Language']->getText('plugin_testing', 'misconfigured_title');
-        $this->misconfigured_message = $GLOBALS['Language']->getText('plugin_testing', 'misconfigured_message');
-        
-        $this->is_properly_configured = $this->campaign_tracker_id && $this->test_definition_tracker_id && $this->test_execution_tracker_id;
+    public function __construct(
+        $project_id,
+        $campaign_tracker_id,
+        $test_definition_tracker_id,
+        $test_execution_tracker_id,
+        PFUser $current_user
+    ) {
+        $this->project_id             = $project_id;
+        $this->misconfigured_title    = $GLOBALS['Language']->getText('plugin_testing', 'misconfigured_title');
+        $this->misconfigured_message  = $GLOBALS['Language']->getText('plugin_testing', 'misconfigured_message');
+        $this->is_properly_configured = $campaign_tracker_id && $test_definition_tracker_id && $test_execution_tracker_id;
+
+        $user_representation = new UserRepresentation();
+        $user_representation->build($current_user);
+        $this->current_user = json_encode($user_representation);
     }
 }
