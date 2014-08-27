@@ -36,7 +36,7 @@ class SystemEventProcessor_RootTest extends TuleapTestCase {
             'SystemEventProcessor_Root',
             array('launchAs'),
             array(
-                new SystemEventProcessRoot(),
+                new SystemEventProcessRootDefault(),
                 $this->system_event_manager,
                 $this->system_event_dao,
                 $this->logger,
@@ -57,9 +57,11 @@ class SystemEventProcessor_RootTest extends TuleapTestCase {
     }
 
     public function itFetchesEventsForRoot() {
-        expect($this->system_event_dao)->checkOutNextEvent('root')->once();
+        $category = SystemEvent::DEFAULT_QUEUE;
+
+        expect($this->system_event_dao)->checkOutNextEvent('root', null)->once();
         stub($this->system_event_dao)->checkOutNextEvent()->returns(false);
-        $this->processor->execute();
+        $this->processor->execute($category);
     }
 
     public function itCatchExceptionsInSystemEvents() {
@@ -70,7 +72,8 @@ class SystemEventProcessor_RootTest extends TuleapTestCase {
 
         $system_event->throwOn('process', new RuntimeException('Something wrong happened'));
 
-        $this->processor->execute();
+        $category = SystemEvent::DEFAULT_QUEUE;
+        $this->processor->execute($category);
 
         $this->assertEqual($system_event->getStatus(), SystemEvent::STATUS_ERROR);
         $this->assertEqual($system_event->getLog(), 'Something wrong happened');
@@ -79,7 +82,8 @@ class SystemEventProcessor_RootTest extends TuleapTestCase {
     public function itProcessApplicationOwnerEvents() {
         $command   = '/usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/src/utils/process_system_events.php '.SystemEvent::OWNER_APP;
         expect($this->processor)->launchAs($this->sys_http_user, $command)->once();
-        $this->processor->execute();
+        $category = SystemEvent::DEFAULT_QUEUE;
+        $this->processor->execute($category);
     }
 
     public function itCatchesExceptionsThrownInPostActions() {
@@ -87,6 +91,7 @@ class SystemEventProcessor_RootTest extends TuleapTestCase {
 
         expect($this->logger)->error()->once();
 
-        $this->processor->execute();
+        $category = SystemEvent::DEFAULT_QUEUE;
+        $this->processor->execute($category);
     }
 }

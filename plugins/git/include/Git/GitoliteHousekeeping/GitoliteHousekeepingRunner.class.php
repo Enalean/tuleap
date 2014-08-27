@@ -39,7 +39,7 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingRunner {
 
     public function __construct(
         SystemEventProcessManager $process_manager,
-        SystemEventProcessRoot $process,
+        SystemEventProcessRootDefault $process,
         Git_GitoliteHousekeeping_GitoliteHousekeepingDao $housekeeping_dao,
         Git_GitoliteHousekeeping_GitoliteHousekeepingResponse $response,
         BackendService $backend_service,

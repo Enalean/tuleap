@@ -20,7 +20,7 @@
 
 require_once 'common/backend/BackendService.class.php';
 require_once 'common/system_event/SystemEventProcessManager.class.php';
-require_once 'common/system_event/SystemEventProcessRoot.class.php';
+require_once 'common/system_event/SystemEventProcessRootDefault.class.php';
 
 /**
  * I am checking that the events are not currently processed
@@ -33,7 +33,7 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_CheckRunningEvents extends 
     public function __construct(
         Git_GitoliteHousekeeping_GitoliteHousekeepingResponse $response,
         SystemEventProcessManager $process_manager,
-        SystemEventProcessRoot $process
+        SystemEventProcessRootDefault $process
     ) {
         parent::__construct();
         $this->process_manager = $process_manager;

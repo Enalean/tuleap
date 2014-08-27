@@ -59,8 +59,8 @@ abstract class SystemEventProcessor implements IRunInAMutex {
         return $this->process;
     }
 
-    public function execute() {
-        $this->loopOverEventsForOwner($this->getOwner());
+    public function execute($queue) {
+        $this->loopOverEventsForOwner($this->getOwner(), $queue);
         try {
             $this->postEventsActions();
         } catch(Exception $exception) {
@@ -68,8 +68,9 @@ abstract class SystemEventProcessor implements IRunInAMutex {
         }
     }
 
-    protected function loopOverEventsForOwner($owner) {
-        while (($dar=$this->dao->checkOutNextEvent($owner)) != null) {
+    protected function loopOverEventsForOwner($owner, $queue) {
+        $types = $this->system_event_manager->getTypesForQueue($queue);
+        while (($dar=$this->dao->checkOutNextEvent($owner, $types)) != null) {
             $sysevent = $this->getSystemEventFromDar($dar);
             if ($sysevent) {
                 $this->executeSystemEvent($sysevent);

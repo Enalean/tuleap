@@ -31,13 +31,18 @@ class SystemEventProcessorMutex_ProcessingTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->object = mock('IRunInAMutex');
+
+        $this->process         = mock('SystemEventProcess');
+        $this->object          = mock('IRunInAMutex');
         $this->process_manager = mock('SystemEventProcessManager');
-        $this->mutex  = partial_mock(
+        $this->mutex           = partial_mock(
             'SystemEventProcessorMutex',
             array('checkCurrentUserProcessOwner'),
             array($this->process_manager, $this->object)
         );
+
+        stub($this->object)->getProcess()->returns($this->process);
+        stub($this->process)->getQueue()->returns(SystemEvent::DEFAULT_QUEUE);
     }
 
     public function itChecksIfAlreadyRunning() {

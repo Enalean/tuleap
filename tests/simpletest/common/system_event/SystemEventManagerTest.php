@@ -29,7 +29,7 @@ Mock::generate('PFUser');
 require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 
-class SystemEventManagerTest extends UnitTestCase {
+class SystemEventManagerTest extends TuleapTestCase {
     
     public function testConcatParameters() {
         $sem = new SystemEventManagerTestVersion($this);
@@ -112,6 +112,104 @@ class SystemEventManagerTest extends UnitTestCase {
         $se->setReturnValue('_getDao', $seDao);
 
         $this->assertFalse($se->isUserNameAvailable('titi'));
+    }
+}
+
+Mock::generate('EventManager');
+class MockEventManager_GetTypesForQueue extends MockEventManager {
+   function processEvent($event, $params) {
+       switch ($event) {
+           case Event::SYSTEM_EVENT_GET_FULL_TEXT_SEARCH_TYPES:
+               $params['types'] = array(
+                    'search_wiki',
+                    'find_mickey',
+                    'remove_goofy',
+                );
+               break;
+           case Event::SYSTEM_EVENT_GET_TYPES:
+               $params['types'] = array(
+                    'feed_mini',
+                    'walk_pluto',
+                    'search_wiki',
+                    'find_mickey',
+                    'remove_goofy',
+                );
+           default:
+               break;
+       }
+   }
+}
+
+class SystemEventManagerGetTypesForQueueTest extends TuleapTestCase {
+
+    private $event_manager;
+
+    private $fts_events = array(
+        'search_wiki',
+        'find_mickey',
+        'remove_goofy',
+    );
+
+    private $default_events = array(
+        'feed_mini',
+        'walk_pluto',
+    );
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->event_manager = new MockEventManager_GetTypesForQueue();
+        EventManager::setInstance($this->event_manager);
+    }
+
+    public function itReturnsEmptyArrayIfFantasyQueueIsPassed() {
+        $manager = partial_mock('SystemEventManager', array('__construct'));
+
+        $types = $manager->getTypesForQueue('Unicorne');
+        $this->assertArrayEmpty($types);
+    }
+
+    public function itReturnsEmptyArrayIfNoQueueIsPassed() {
+        $manager = partial_mock('SystemEventManager', array());
+
+        $types = $manager->getTypesForQueue(null);
+        $this->assertArrayEmpty($types);
+    }
+
+    public function itReturnsTypesForFullTextSearch() {
+        $manager = partial_mock('SystemEventManager', array());
+
+        $types = $manager->getTypesForQueue(SystemEvent::FULL_TEXT_SEARCH_QUEUE);
+        $this->assertArrayNotEmpty($types);
+
+        $this->assertEqual($types, $this->fts_events);
+    }
+
+    public function itReturnsTypesForDefault() {
+        $manager = partial_mock('SystemEventManager', array());
+
+        $types = $manager->getTypesForQueue(SystemEvent::DEFAULT_QUEUE);
+        $this->assertArrayNotEmpty($types);
+
+        $this->assertEqual($types, $this->default_events);
+    }
+
+    public function itReturnsTypesForAppOwner() {
+        $manager = partial_mock('SystemEventManager', array());
+
+        $types = $manager->getTypesForQueue(SystemEvent::APP_OWNER_QUEUE);
+        $this->assertArrayNotEmpty($types);
+
+        $this->assertEqual($types, array_merge($this->default_events, $this->fts_events));
+    }
+
+    public function itDoesNotReturnDefaultTypesForFullTextSearch() {
+        $manager = partial_mock('SystemEventManager', array());
+
+        $types = $manager->getTypesForQueue(SystemEvent::FULL_TEXT_SEARCH_QUEUE);
+        $this->assertArrayNotEmpty($types);
+
+        $this->assertFalse(in_array('walk_pluto', $types));
     }
 }
 ?>

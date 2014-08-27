@@ -22,14 +22,14 @@
 require_once 'pre.php';
 require_once dirname(__FILE__).'/../include/autoload.php';
 require_once 'common/system_event/SystemEventProcessManager.class.php';
-require_once 'common/system_event/SystemEventProcessRoot.class.php';
+require_once 'common/system_event/SystemEventProcessRootDefault.class.php';
 
 $gitolite_var_path       = $GLOBALS['sys_data_dir'] . '/gitolite';
 $remote_admin_repository = 'gitolite@gl-adm:gitolite-admin';
 
 $runner = new Git_GitoliteHousekeeping_GitoliteHousekeepingRunner(
     new SystemEventProcessManager(),
-    new SystemEventProcessRoot(),
+    new SystemEventProcessRootDefault(),
     new Git_GitoliteHousekeeping_GitoliteHousekeepingDao(),
     new Git_GitoliteHousekeeping_GitoliteHousekeepingResponse(),
     new BackendService(),

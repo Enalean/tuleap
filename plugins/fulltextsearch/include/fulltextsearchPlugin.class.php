@@ -79,6 +79,7 @@ class fulltextsearchPlugin extends Plugin {
         // system events
         $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS, 'get_system_event_class', false);
         $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES, 'system_event_get_types', false);
+        $this->_addHook(Event::SYSTEM_EVENT_GET_FULL_TEXT_SEARCH_TYPES, 'system_event_get_types');
 
         // Search
         $this->addHook(Event::LAYOUT_SEARCH_ENTRY);
