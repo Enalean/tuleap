@@ -35,6 +35,7 @@ Version 7.4 (Thursday, August 21st 2014)
 	* request #7342 Tv3 export to Tv5: migration abort when files are deleted on file system
 	* request #7347: Tv3 export to Tv5: migration is to restrictive, should not stop creating when something cannot be imported
 	* request #7350 Tv3 export to Tv5: Improve logging
+	* request #7379: Delete sflogo.php no longer used (since 2008)
 
 	== Features ==
 	* Third step of story #6971: Git online commit in the Tuleap UI
