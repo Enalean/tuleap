@@ -474,16 +474,30 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function getStatus() {
         if ( ! isset($this->status)) {
-            if ($status_field = Tracker_Semantic_Status::load($this->getTracker())->getField()) {
-                if ($status_field->userCanRead()) {
-                    $last_changeset = $this->getLastChangeset();
-                    if ($last_changeset) {
-                        $this->status = $status_field->getFirstValueFor($last_changeset);
-                    }
-                }
+            $last_changeset = $this->getLastChangeset();
+            if ($last_changeset) {
+                $this->status = $this->getStatusForChangeset($last_changeset);
             }
         }
+
         return $this->status;
+    }
+
+    /**
+     * Get the artifact status, or null if no status defined in semantics
+     *
+     * @return string the status of the artifact, or null if no status defined in semantics
+     */
+    public function getStatusForChangeset(Tracker_Artifact_Changeset $changeset) {
+        $status_field = Tracker_Semantic_Status::load($this->getTracker())->getField();
+        if (! $status_field) {
+            return null;
+        }
+        if (! $status_field->userCanRead()) {
+            return null;
+        }
+
+        return $status_field->getFirstValueFor($changeset);
     }
 
 
