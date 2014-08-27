@@ -659,6 +659,17 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $renderer = new Tracker_Artifact_CopyRenderer($this->getEventManager(), $this, $this->getFormElementFactory(), $layout);
                 $renderer->display($request, $current_user);
                 break;
+            case 'manage-subscription':
+                $artifact_subscriber = new Tracker_ArtifactNotificationSubscriber($this, $this->getDao());
+
+                if ($this->doesUserHaveUnsubscribedFromNotification($current_user)) {
+                    $artifact_subscriber->subscribeUser($current_user, $request);
+                    break;
+                }
+
+                $artifact_subscriber->unsubscribeUser($current_user, $request);
+                break;
+
             default:
                 if ($request->isAjax()) {
                     echo $this->fetchTooltip($current_user);

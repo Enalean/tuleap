@@ -362,18 +362,20 @@ height:auto;
     border:1px solid #ccc;
     padding: 1px;
 }
-.bodyContent p.cta a, 
-.bodyContent p.cta a:link, 
-.bodyContent p.cta a:visited, 
-.bodyContent p.cta a:hover, 
-.bodyContent p.cta a:active {
+.bodyContent span.cta a,
+.bodyContent span.cta a:link,
+.bodyContent span.cta a:visited,
+.bodyContent span.cta a:hover,
+.bodyContent span.cta a:active {
     background: orange;
     font-weight: bold;
     line-height: 150%;
     color: white;
     padding: 0.5em 1em;
+    margin-right: 5px;
     text-decoration: none;
     text-shadow:1px 1px 1px darkorange;
+    float: right;
 }
 .bodyContent hr {
   width: 100%;
@@ -411,7 +413,7 @@ height:auto;
 }
 /* }}} */
 
-.bodyContent div.breadcrumbs {
+.bodyContent div.content-header {
 /*@editable*/ color:#707070;
 /*@editable*/ font-family:Arial;
 /*@editable*/ font-size:10px;
@@ -524,11 +526,6 @@ display:inline;
                                              <img src="<?php echo $img_path ?>/organization_logo_mail.png" alt="<?php echo $GLOBALS['sys_name'] ?>" />
                                          </div>
                                       </td>
-                                      <td valign="bottom" width="300">
-                                         <div style="float:right;">
-                                             <?php echo $txt_display_not_correct ?><br /><a href="<?php echo get_server_url() ?>/account/preferences.php" target="_blank"><?php echo $txt_update_prefs ?></a>.
-                                         </div>
-                                      </td>
                                     </tr>
                                 </table>
                              <!-- // End Module: Standard Preheader \ -->
@@ -548,7 +545,16 @@ display:inline;
                                             <table border="0" cellpadding="20" cellspacing="0" width="100%">
                                                 <tr>
                                                     <td valign="top">
-                                                        <?php echo !empty($breadcrumbs) ? '<div class="breadcrumbs">'. implode(' &raquo; ', $breadcrumbs) .'</div>' : ''; ?>
+                                                        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                                                            <tr>
+                                                                <td>
+                                                                    <?php echo !empty($breadcrumbs) ? '<div class="content-header">'. implode(' &raquo; ', $breadcrumbs) .'</div>' : ''; ?>
+                                                                </td>
+                                                                <td align="right">
+                                                                    <?php echo !empty($unsubscribe_link) ? '<div class="content-header">'. $unsubscribe_link .'</div>' : ''; ?>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
                                                         <?php echo $body ?>
                                                     </td>
                                                 </tr>
