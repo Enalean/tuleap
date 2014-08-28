@@ -445,6 +445,9 @@ admin_system_events	title	Événements Système
 admin_system_events	notifications	Alertes
 admin_system_events	send_email	Envoyer un email à :
 admin_system_events	nobody	Personne
+admin_system_events	default_queue	File d'attente globale
+admin_system_events	fts_queue	File d'attente d'indexation
+admin_system_events	tv3tv5_queue	File d'attente migration TV3 -> TV5
 
 #-----------------------------------------------
 # Script: SF/www/admin/show_pending_documents.php

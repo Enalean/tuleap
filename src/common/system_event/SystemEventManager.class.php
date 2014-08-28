@@ -439,7 +439,7 @@ class SystemEventManager {
      *
      * @return string html
      */
-    public function fetchLastEventsStatus($offset = 0, $limit = 10, $full = false, $filter_status = false, $filter_type = false, CSRFSynchronizerToken $csrf = null) {
+    public function fetchLastEventsStatus($offset = 0, $limit = 10, $full = false, $filter_status = false, $filter_type = false, CSRFSynchronizerToken $csrf = null, $queue = null) {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
 
@@ -483,11 +483,22 @@ class SystemEventManager {
                 SystemEvent::STATUS_ERROR,
             );
         }
-        if (!$filter_type) {
-            $filter_type = $this->getTypes();
+
+        if ($queue) {
+            $allowed_types = $this->getTypesForQueue($queue);
+        } else {
+            $allowed_types = $this->getTypesForQueue(SystemEvent::DEFAULT_QUEUE);
         }
-        $i = 0;
-        foreach($this->dao->searchLastEvents($offset, $limit, $filter_status, $filter_type) as $row) {
+
+        if ($filter_type) {
+            $filter_type = array_intersect($filter_type, $allowed_types);
+        } else {
+            $filter_type = $allowed_types;
+        }
+
+        $events = $this->dao->searchLastEvents($offset, $limit, $filter_status, $filter_type);
+        list(,$num_total_rows) = each($this->dao->retrieve("SELECT FOUND_ROWS() AS nb")->getRow());
+        foreach($events as $row) {
             if ($sysevent = $this->getInstanceFromRow($row)) {
                 $html .= '<tr>';
                 
@@ -512,7 +523,9 @@ class SystemEventManager {
                     $replay_link = '';
                     if ($sysevent->getStatus() == SystemEvent::STATUS_ERROR) {
                         $replay_action_params['replay'] = $sysevent->getId();
-                        $replay_link .= '<a href="/admin/system_events/?'. http_build_query($replay_action_params) .'" title="Replay this event">'; 
+                        $replay_link .= '<a href="/admin/system_events/?'.
+                            ($queue !== SystemEvent::DEFAULT_QUEUE ? 'queue='.$queue.'&' : '').
+                            http_build_query($replay_action_params) .'" title="Replay this event">';
                         $replay_link .= $GLOBALS['HTML']->getImage('ic/arrow-circle.png');
                         $replay_link .= '</a>';
                     }
@@ -532,8 +545,6 @@ class SystemEventManager {
         $html .= '</tbody></table>';
         if ($full) {
             //Pagination
-            list(,$num_total_rows) = each($this->dao->retrieve("SELECT FOUND_ROWS() AS nb")->getRow());
-            
             $nb_of_pages = ceil($num_total_rows / $limit);
             $current_page = round($offset / $limit);
             $html .= '<div class="pagination"><ul>';
@@ -549,6 +560,7 @@ class SystemEventManager {
                             'offset'        => (int)($i * $limit),
                             'filter_status' => $filter_status,
                             'filter_type'   => $filter_type,
+                            'queue'         => $queue
                         )).
                         '">';
                     $html .= $i + 1;
