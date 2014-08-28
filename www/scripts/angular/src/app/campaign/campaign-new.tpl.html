@@ -1,0 +1,15 @@
+<div id="campaign-new-container">
+    <h1 translate>Create a campaign</h1>
+
+    <label translate>Campaign label</label>
+    <input type="text" ng-model="campaign.label" required="required" ng-trim/>
+
+</div>
+
+<div id="campaign-new-button-bar">
+    <button
+        type="btn"
+        class="btn btn-large btn-primary"
+        ng-click="createCampaign(campaign)"
+        translate>Create campaign</button>
+</div>

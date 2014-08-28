@@ -7,17 +7,26 @@ CampaignConfig.$inject = ['$stateProvider'];
 function CampaignConfig($stateProvider) {
     $stateProvider
         .state('campaigns', {
-            abstract: true,
-            url: '/campaigns',
-            template: '<ui-view />',
+            abstract:   true,
+            url:        '/campaigns',
+            template:   '<ui-view />',
             controller: 'CampaignCtrl',
             data: {
                 ncyBreadcrumbLabel: 'Campaigns'
             }
         })
         .state('campaigns.list', {
-            url: '',
-            controller: 'CampaignListCtrl',
+            url:         '',
+            controller:  'CampaignListCtrl',
             templateUrl: 'campaign/campaign-list.tpl.html'
+        })
+        .state('campaigns.new', {
+            url:         '/new',
+            controller:  'CampaignNewCtrl',
+            templateUrl: 'campaign/campaign-new.tpl.html',
+            data: {
+                ncyBreadcrumbLabel: '{{ breadcrumb_label }}',
+                ncyBreadcrumbParent: 'campaigns.list'
+            }
         });
 }

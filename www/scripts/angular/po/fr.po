@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Test\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2014-08-29 13:57-0000\n"
+"PO-Revision-Date: 2014-09-03 11:42+0100\n"
 "Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -42,7 +42,15 @@ msgstr "Par :"
 msgid "Campaign"
 msgstr "Campagne"
 
-#: src/app/campaign/campaign-config.js
+#: src/app/campaign/campaign-new-controller.js
+msgid "Campaign creation"
+msgstr "Création de campagne"
+
+#: src/app/campaign/campaign-new.tpl.html
+msgid "Campaign label"
+msgstr "Nom de la campagne"
+
+#: src/app/campaign/campaign-controller.js
 msgid "Campaigns"
 msgstr "Campagnes"
 
@@ -53,6 +61,14 @@ msgstr "Liste des campagnes"
 #: src/app/execution/execution-detail.tpl.html
 msgid "Comments..."
 msgstr "Commentaires…"
+
+#: src/app/campaign/campaign-new.tpl.html
+msgid "Create a campaign"
+msgstr "Créer une campagne"
+
+#: src/app/campaign/campaign-new.tpl.html
+msgid "Create campaign"
+msgstr "Créer la campagne"
 
 #: src/app/execution/execution-detail.tpl.html
 msgid "Date:"
@@ -76,6 +92,10 @@ msgstr "Filtrer..."
 #: src/app/execution/execution-detail.tpl.html
 msgid "Last execution in this campaign"
 msgstr "Dernière exécution dans cette campagne"
+
+#: src/app/campaign/campaign-list.tpl.html
+msgid "New campaign"
+msgstr "Nouvelle campagne"
 
 #: src/app/campaign/campaign-list.tpl.html
 #: src/app/execution/execution-list.tpl.html
@@ -107,3 +127,7 @@ msgstr "Définition du test"
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Total"
 msgstr "Total"
+
+#: src/app/campaign/campaign-new.tpl.html
+msgid "toto"
+msgstr "titi"

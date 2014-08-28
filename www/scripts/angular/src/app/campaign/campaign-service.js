@@ -14,7 +14,8 @@ function CampaignService(Restangular, $q) {
         getCampaign    : getCampaign,
         getCampaigns   : getCampaigns,
         getAssignees   : getAssignees,
-        getEnvironments: getEnvironments
+        getEnvironments: getEnvironments,
+        createCampaign : createCampaign
     };
 
     function getCampaign(campaign_id) {
@@ -82,5 +83,10 @@ function CampaignService(Restangular, $q) {
             });
 
         return data.promise;
+    }
+
+    function createCampaign(campaign) {
+        return rest.all('testing_campaigns')
+            .post(campaign);
     }
 }
