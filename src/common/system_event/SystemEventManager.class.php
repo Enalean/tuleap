@@ -386,21 +386,39 @@ class SystemEventManager {
     }
 
     public function getTypesForQueue($queue) {
+        switch ($queue) {
+            case SystemEvent::FULL_TEXT_SEARCH_QUEUE :
+                return $this->getFullTextSearchTypes();
+            case SystemEvent::TV3_TV5_MIGRATION_QUEUE :
+                return $this->getTv3Tv5MigrationTypes();
+            case SystemEvent::DEFAULT_QUEUE :
+            case SystemEvent::APP_OWNER_QUEUE :
+                return array_diff(array_values($this->getTypes()), $this->getNonDefaultTypes());
+            default :
+                return array();
+        }
+    }
+
+    private function getFullTextSearchTypes() {
         $full_text_types = array();
         EventManager::instance()->processEvent(
             Event::SYSTEM_EVENT_GET_FULL_TEXT_SEARCH_TYPES, array('types' => &$full_text_types)
         );
 
-        switch ($queue) {
-            case SystemEvent::FULL_TEXT_SEARCH_QUEUE :
-                return $full_text_types;
-            case SystemEvent::DEFAULT_QUEUE :
-                return array_diff(array_values($this->getTypes()), $full_text_types);
-            case SystemEvent::APP_OWNER_QUEUE :
-                return $this->getTypes();
-            default :
-                return array();
-        }
+        return $full_text_types;
+    }
+
+    private function getTv3Tv5MigrationTypes() {
+        $tv3_tv5_types = array();
+        EventManager::instance()->processEvent(
+            Event::SYSTEM_EVENT_GET_TV3_TV5_MIGRATION_TYPES, array('types' => &$tv3_tv5_types)
+        );
+
+        return $tv3_tv5_types;
+    }
+
+    private function getNonDefaultTypes() {
+        return array_merge($this->getTv3Tv5MigrationTypes(), $this->getFullTextSearchTypes());
     }
     
     protected function filterConstants(&$item, $key) {

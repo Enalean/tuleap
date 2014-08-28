@@ -59,7 +59,10 @@ class SystemEventProcessor_RootTest extends TuleapTestCase {
     public function itFetchesEventsForRoot() {
         $category = SystemEvent::DEFAULT_QUEUE;
 
-        expect($this->system_event_dao)->checkOutNextEvent('root', null)->once();
+        $types = array('some_type');
+        stub($this->system_event_manager)->getTypesForQueue()->returns($types);
+
+        expect($this->system_event_dao)->checkOutNextEvent('root', $types)->once();
         stub($this->system_event_dao)->checkOutNextEvent()->returns(false);
         $this->processor->execute($category);
     }
@@ -67,6 +70,9 @@ class SystemEventProcessor_RootTest extends TuleapTestCase {
     public function itCatchExceptionsInSystemEvents() {
         $system_event = partial_mock('SysteEvent_For_Testing_Purpose', array('process', 'notify', 'verbalizeParameters'));
 
+        $types = array('some_type');
+        stub($this->system_event_manager)->getTypesForQueue()->returns($types);
+        
         $this->system_event_dao->setReturnValueAt(0, 'checkOutNextEvent', TestHelper::arrayToDar(array('whatever')));
         stub($this->system_event_manager)->getInstanceFromRow()->returns($system_event);
 

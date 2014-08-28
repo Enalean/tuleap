@@ -52,6 +52,8 @@ class trackerPlugin extends Plugin {
         $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES,         'system_event_get_types',            false);
         $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS,         'getSystemEventClass',               false);
 
+        $this->_addHook(Event::SYSTEM_EVENT_GET_TV3_TV5_MIGRATION_TYPES);
+
         $this->_addHook('url_verification_instance',           'url_verification_instance',         false);
 
         $this->addHook(Event::SERVICE_ICON);
@@ -828,4 +830,12 @@ class trackerPlugin extends Plugin {
         }
     }
 
+    public function system_event_get_tv3_tv5_migration_types($params) {
+        $params['types'] = array_merge(
+            $params['types'],
+            array(
+                SystemEvent_TRACKER_V3_MIGRATION::NAME
+            )
+        );
+    }
 }

@@ -70,6 +70,9 @@ abstract class SystemEventProcessor implements IRunInAMutex {
 
     protected function loopOverEventsForOwner($owner, $queue) {
         $types = $this->system_event_manager->getTypesForQueue($queue);
+        if (! $types) {
+            return;
+        }
         while (($dar=$this->dao->checkOutNextEvent($owner, $types)) != null) {
             $sysevent = $this->getSystemEventFromDar($dar);
             if ($sysevent) {

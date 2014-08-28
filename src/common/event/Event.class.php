@@ -271,6 +271,17 @@ class Event {
     const SYSTEM_EVENT_GET_FULL_TEXT_SEARCH_TYPES = 'system_event_get_full_text_search_types';
 
     /**
+     * Get the types of system events that are used in tv3 -> tv5 migration
+     *
+     * Parameters:
+     *  'types' => array of system event types
+     *
+     * Expected results
+     *  array of string
+     */
+    const SYSTEM_EVENT_GET_TV3_TV5_MIGRATION_TYPES = 'system_event_get_tv3_tv5_migration_types';
+
+    /**
      * Display javascript snippets in the page footer (just before </body>)
      *
      * No Parameters.
