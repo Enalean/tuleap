@@ -1,8 +1,13 @@
 Version 7.5 (Not released yet)
 	== Bug Fix ==
 	* Fix request #7373: Remove "target" settings for link in CKeditor configuration
+	* request #7379: Delete sflogo.php no longer used (since 2008)
+
 	== Plugins ==
-	* tracker: 5.446
+	* tracker: 5.447
+
+	== Development ==
+	* Development: be able to fetch the status for a given changeset
 
 Version 7.4 (Thursday, August 21st 2014)
 
@@ -37,7 +42,6 @@ Version 7.4 (Thursday, August 21st 2014)
 	* request #7342 Tv3 export to Tv5: migration abort when files are deleted on file system
 	* request #7347: Tv3 export to Tv5: migration is to restrictive, should not stop creating when something cannot be imported
 	* request #7350 Tv3 export to Tv5: Improve logging
-	* request #7379: Delete sflogo.php no longer used (since 2008)
 
 	== Features ==
 	* Third step of story #6971: Git online commit in the Tuleap UI

@@ -1,3 +1,6 @@
+Version 5.447 - Tuleap 7.5
+    * Development: be able to fetch the status for a given changeset
+
 Version 5.446 - Tuleap 7.5
     * story #7354: finish story unsubscribe to artifact notification (tasks #7367 Add link in notification)
 
