@@ -52,9 +52,9 @@ class SystemEventProcessorMutex {
     public function execute() {
         $process = $this->runnable->getProcess();
         $this->checkCurrentUserProcessOwner();
-        if (!$this->process_manager->isAlreadyRunning($process)) {
+        if (! $this->process_manager->isAlreadyRunning($process)) {
             $this->process_manager->createPidFile($process);
-            call_user_func(array($this->runnable, 'execute'));
+            $this->runnable->execute($process->getQueue());
             $this->process_manager->deletePidFile($process);
         }
     }

@@ -260,6 +260,17 @@ class Event {
     const SYSTEM_EVENT_GET_TYPES = 'system_event_get_types';
 
     /**
+     * Get the types of system events that are used in full text search
+     *
+     * Parameters:
+     *  'types' => array of system event types
+     *
+     * Expected results
+     *  array of string
+     */
+    const SYSTEM_EVENT_GET_FULL_TEXT_SEARCH_TYPES = 'system_event_get_full_text_search_types';
+
+    /**
      * Display javascript snippets in the page footer (just before </body>)
      *
      * No Parameters.

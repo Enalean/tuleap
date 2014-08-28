@@ -26,7 +26,7 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_CheckRunningEventsTest exte
     public function setUp() {
         parent::setUp();
         $this->process_manager = mock('SystemEventProcessManager');
-        $this->process         = mock('SystemEventProcessRoot');
+        $this->process         = mock('SystemEventProcessRootDefault');
         $this->response        = mock('Git_GitoliteHousekeeping_GitoliteHousekeepingResponse');
         $this->next            = mock('Git_GitoliteHousekeeping_ChainOfResponsibility_Command');
 

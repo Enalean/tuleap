@@ -32,7 +32,7 @@ interface IRunInAMutex {
      *
      * @return void
      */
-    public function execute();
+    public function execute($queue);
 
     /**
      * The unix user who should run the code

@@ -27,6 +27,8 @@
  */
 interface SystemEventProcess {
 
+    public function getQueue();
+
     /**
      * Return the path to the process identifier
      *

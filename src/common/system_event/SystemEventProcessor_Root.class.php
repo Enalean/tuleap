@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'SystemEventProcessRoot.class.php';
+require_once 'SystemEventProcessRootDefault.class.php';
 require_once 'SystemEventProcessApplicationOwner.class.php';
 require_once 'SystemEventProcessor.class.php';
 require_once 'common/backend/BackendAliases.class.php';
@@ -53,7 +53,7 @@ class SystemEventProcessor_Root extends SystemEventProcessor {
     protected $backend_system;
 
     public function __construct(
-        SystemEventProcessRoot $process,
+        SystemEventProcess $process,
         SystemEventManager $system_event_manager,
         SystemEventDao     $dao,
         Logger             $logger,

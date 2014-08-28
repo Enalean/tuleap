@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
+ * Copyright Enalean (c) 2014. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -24,12 +24,16 @@
 
 require_once 'SystemEventProcess.class.php';
 
-class SystemEventProcessRoot implements SystemEventProcess {
+class SystemEventProcessRootFullTextSearch implements SystemEventProcess {
 
     /**
      * @see SystemEventProcess::getPidFile()
      */
     public function getPidFile() {
-        return '/var/run/tuleap_process_system_events.pid';
+        return '/var/run/tuleap_process_system_events_full_text_search.pid';
+    }
+
+    public function getQueue() {
+        return SystemEvent::FULL_TEXT_SEARCH_QUEUE;
     }
 }

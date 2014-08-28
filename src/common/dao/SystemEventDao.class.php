@@ -65,9 +65,16 @@ class SystemEventDao extends DataAccessObject {
      * And set the event status to 'RUNNING'
      * @return DataAccessResult
     */
-    function checkOutNextEvent($owner) {
+    function checkOutNextEvent($owner, $types) {
+        $owner    = $this->da->quoteSmart($owner);
+        $types    = $this->da->quoteSmartImplode(',', $types);
+
         // Get Id of next event to process
-        $sql = "SELECT id FROM system_event WHERE status='".SystemEvent::STATUS_NEW."' and owner=".$this->da->quoteSmart($owner)." ORDER BY priority, create_date LIMIT 1";
+        $sql = "SELECT id FROM system_event
+                WHERE status='".SystemEvent::STATUS_NEW."'
+                    AND owner = $owner
+                    AND type IN ($types)
+                    ORDER BY priority, create_date LIMIT 1";
         $dar = $this->retrieve($sql);
         if($dar && !$dar->isError()) {
             // Mark event as 'RUNNING'

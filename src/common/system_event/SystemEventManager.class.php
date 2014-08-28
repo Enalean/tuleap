@@ -384,6 +384,24 @@ class SystemEventManager {
         EventManager::instance()->processEvent(Event::SYSTEM_EVENT_GET_TYPES, array('types' => &$types));
         return $types;
     }
+
+    public function getTypesForQueue($queue) {
+        $full_text_types = array();
+        EventManager::instance()->processEvent(
+            Event::SYSTEM_EVENT_GET_FULL_TEXT_SEARCH_TYPES, array('types' => &$full_text_types)
+        );
+
+        switch ($queue) {
+            case SystemEvent::FULL_TEXT_SEARCH_QUEUE :
+                return $full_text_types;
+            case SystemEvent::DEFAULT_QUEUE :
+                return array_diff(array_values($this->getTypes()), $full_text_types);
+            case SystemEvent::APP_OWNER_QUEUE :
+                return $this->getTypes();
+            default :
+                return array();
+        }
+    }
     
     protected function filterConstants(&$item, $key) {
         if (strpos($key, 'TYPE_') !== 0) {

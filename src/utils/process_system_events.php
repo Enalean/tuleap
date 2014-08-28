@@ -34,8 +34,18 @@ if (isset($argv[1]) && $argv[1] == SystemEvent::OWNER_APP) {
     );
 } else {
     require_once 'common/system_event/SystemEventProcessor_Root.class.php';
+    $queue = (isset($argv[1])) ? $argv[1] : SystemEvent::DEFAULT_QUEUE;
+    switch ($queue) {
+        case SystemEvent::FULL_TEXT_SEARCH_QUEUE :
+            $process = new SystemEventProcessRootFullTextSearch();
+            break;
+        case SystemEvent::DEFAULT_QUEUE :
+        default :
+            $process = new SystemEventProcessRootDefault;
+    }
+
     $processor = new SystemEventProcessor_Root(
-        new SystemEventProcessRoot(),
+        $process,
         $system_event_manager,
         new SystemEventDao(),
         new BackendLogger(),
