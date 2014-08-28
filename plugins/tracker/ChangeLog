@@ -1,3 +1,6 @@
+Version 5.448 - Tuleap 7.5
+    * story #7354: finish story unsubscribe to artifact notification (tasks #736:6 Handle mass change & tasks #7370 Enhance messages)
+
 Version 5.447 - Tuleap 7.5
     * Development: be able to fetch the status for a given changeset
 

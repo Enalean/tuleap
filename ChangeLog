@@ -4,7 +4,7 @@ Version 7.5 (Not released yet)
 	* request #7379: Delete sflogo.php no longer used (since 2008)
 
 	== Plugins ==
-	* tracker: 5.447
+	* tracker: 5.448
 
 	== Development ==
 	* Development: be able to fetch the status for a given changeset
