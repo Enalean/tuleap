@@ -640,7 +640,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
         $artifact_id = $this->da->escapeInt($artifact_id);
         $user_id     = $this->da->escapeInt($user_id);
 
-        $sql = "INSERT INTO tracker_artifact_unsubscribe (artifact_id, user_id)
+        $sql = "REPLACE INTO tracker_artifact_unsubscribe (artifact_id, user_id)
                 VALUE ($artifact_id, $user_id)";
 
         $this->update($sql);

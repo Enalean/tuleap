@@ -151,11 +151,15 @@ plugin_tracker_index	report_definition_updated	Définition du rapport mise à jo
 #
 plugin_tracker_masschange_detail	selected_items	Mettre à jour les artefacts sélectionnés
 plugin_tracker_masschange_detail	no_items_selected	Aucun artefact sélectionné
+plugin_tracker_masschange_detail	unsubscribe_aids	Vous êtes desinscrit des notifications des artefacts $1
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/masschange.php
 #
 plugin_tracker_masschange	mass_change_report	Rapport de mise à jour massive
+plugin_tracker_masschange	info	Informations de la modification en masse
+plugin_tracker_masschange	send_notifications	Envoyer les notifications aux personnes suivant ces artefacts
+plugin_tracker_masschange	unsubscribe	Me désinscrire des notifications de ces artefacts
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/tracker_import_utils.php
@@ -383,6 +387,9 @@ plugin_tracker_include_artifact	permissions_use_default	Utiliser les permissions
 plugin_tracker_include_artifact	comment_cleared	Commentaire effacé
 plugin_tracker_include_artifact	color	Couleur
 plugin_tracker_include_artifact	preview	Aperçu :
+plugin_tracker_include_artifact	unsubscribe	Se désinscrire des notifications
+plugin_tracker_include_artifact	artifact_fields_title	Liste des champs des artefacts
+
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactReportHtml.class.php

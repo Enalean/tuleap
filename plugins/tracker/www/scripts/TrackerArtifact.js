@@ -100,7 +100,7 @@ document.observe('dom:loaded', function () {
                     },
                     onSuccess: function(response) {
                         codendi.feedback.clear();
-                        codendi.feedback.log('info', codendi.locales.tracker_artifact.notification_update_ok);
+                        codendi.feedback.log('info', response.responseJSON.message);
 
                         updateButtonLabel(button, response.responseJSON.notification);
                         return true;

@@ -160,11 +160,16 @@ plugin_tracker_index	report_definition_updated	Report definition updated.
 #
 plugin_tracker_masschange_detail	selected_items	Mass Change Selected Artifacts
 plugin_tracker_masschange_detail	no_items_selected	No artifacts have been selected
+plugin_tracker_masschange_detail	unsubscribe_aids	You are unsubscribed from notifications of artifacts $1
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/masschange.php
 #
 plugin_tracker_masschange	mass_change_report	Mass Change Report
+plugin_tracker_masschange	info	Masschange information
+plugin_tracker_masschange	send_notifications	Send notifications to people monitoring these artifacts
+plugin_tracker_masschange	unsubscribe	Unsubscribe me from these artifacts' notifications
+
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/tracker_import_utils.php
@@ -391,6 +396,8 @@ plugin_tracker_include_artifact	permissions_use_default	Use default tracker perm
 plugin_tracker_include_artifact	comment_cleared	Comment has been cleared
 plugin_tracker_include_artifact	color	Color
 plugin_tracker_include_artifact	preview	Preview:
+plugin_tracker_include_artifact	unsubscribe	Unsubscribe from notifications
+plugin_tracker_include_artifact	artifact_fields_title	Artifacts fields
 
 #
 #-----------------------------------------------
