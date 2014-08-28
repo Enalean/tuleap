@@ -1,3 +1,6 @@
+Version 3.98 - Tuleap 7.5
+    * tasks #7378: make all fts system events be run in their own process
+
 Version 3.97 - Tuleap 7.5
     * request #7371: Remove plugin service icon from core
 

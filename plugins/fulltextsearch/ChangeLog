@@ -1,3 +1,6 @@
+Version 0.80 - Tuleap 7.5
+    * tasks #7378: make all fts system events be run in their own process
+
 Version 0.79 - Tuleap 7.4
     * Fix request #7361: missing return for fulltext allowed types
 
