@@ -1,3 +1,13 @@
+Version 7.3-3 (Friday, August 29th 2014)
+
+	== Bug fix ==
+	* request #7279: Do not create tuleap.tours js variable if no tours defined
+	* request #7239: LDAP/Tuleap user synchronization no longer retrieve extra attributes
+	* request #7280: artifact images slideshow shows each one twice (both hidden and displayed versions)
+	* request #7301: Fix bug- Cardwalls don't take transition and dependencies into account on drag 'n' drop
+	* request #7273: Files with French characters in name do not open in SVN
+	* request #7298: fix some tracker graphs not showing on project homepage
+
 Version 7.3 (Thursday, July 24th 2014)
 
         == Features ==
