@@ -200,7 +200,8 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         }
 
         $workflow = $artifact->getWorkflow();
-        $fields_data = $this->addDatesToRequestData($artifact, $fields_data);
+        $fields_data = $this->field_initializator->process($artifact, $fields_data);
+
         if ($workflow) {
             /*
              * We need to run the post actions to validate the data

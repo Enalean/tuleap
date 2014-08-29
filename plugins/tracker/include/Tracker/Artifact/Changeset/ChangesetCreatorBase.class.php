@@ -33,6 +33,9 @@ abstract class Tracker_Artifact_Changeset_ChangesetCreatorBase {
     /** @var Tracker_ArtifactFactory */
     protected $artifact_factory;
 
+    /** @var Tracker_Artifact_Changeset_ChangesetDataInitializator */
+    protected $field_initializator;
+
     public function __construct(
         Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
         Tracker_FormElementFactory $formelement_factory,
@@ -41,6 +44,7 @@ abstract class Tracker_Artifact_Changeset_ChangesetCreatorBase {
         $this->fields_validator    = $fields_validator;
         $this->formelement_factory = $formelement_factory;
         $this->artifact_factory    = $artifact_factory;
+        $this->field_initializator = new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->formelement_factory);
     }
 
     /**
@@ -48,50 +52,6 @@ abstract class Tracker_Artifact_Changeset_ChangesetCreatorBase {
      */
     protected function isFieldSubmitted(Tracker_FormElement_Field $field, array $fields_data) {
         return isset($fields_data[$field->getId()]);
-    }
-
-    /**
-     * Used when validating the rules of a new/ initial changset creating.
-     *
-     * @param array $fields_data
-     * @return array
-     */
-    protected function addDatesToRequestData(Tracker_Artifact $artifact, array $fields_data) {
-        $tracker_data = array();
-
-        //only when a previous changeset exists
-        if(! $artifact->getLastChangeset() instanceof Tracker_Artifact_Changeset_Null) {
-            foreach ($artifact->getLastChangeset()->getValues() as $key => $field) {
-                if($field instanceof Tracker_Artifact_ChangesetValue_Date){
-                    $tracker_data[$key] = $field->getValue();
-                }
-            }
-        }
-
-        //replace where appropriate with submitted values
-        foreach ($fields_data as $key => $value) {
-            $tracker_data[$key] = $value;
-        }
-
-        $elements = $this->formelement_factory->getAllFormElementsForTracker($artifact->getTracker());
-
-        //addlastUpdateDate and submitted on if available
-        foreach ($elements as $elm ) {
-            if($elm instanceof Tracker_FormElement_Field_LastUpdateDate ) {
-                 $tracker_data[$elm->getId()] = date("Y-m-d");
-            }
-            if($elm instanceof Tracker_FormElement_Field_SubmittedOn ) {
-                 $tracker_data[$elm->getId()] = $artifact->getSubmittedOn();
-            }
-
-            if($elm instanceof Tracker_FormElement_Field_Date &&
-                    ! array_key_exists($elm->getId(), $tracker_data)) {
-                //user doesn't have access to field
-                $tracker_data[$elm->getId()] = $elm->getValue($elm->getId());
-            }
-        }
-
-        return $tracker_data;
     }
 
     /**
