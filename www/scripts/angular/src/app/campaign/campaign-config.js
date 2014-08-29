@@ -10,6 +10,7 @@ function CampaignConfig($stateProvider) {
             abstract: true,
             url: '/campaigns',
             template: '<ui-view />',
+            controller: 'CampaignCtrl',
             data: {
                 ncyBreadcrumbLabel: 'Campaigns'
             }

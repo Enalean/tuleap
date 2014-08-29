@@ -361,7 +361,7 @@ module.exports = function ( grunt ) {
         files: [
           '<%= app_files.js %>'
         ],
-        tasks: [ 'jshint:src', 'karma:continuous', 'copy:build_appmodules', 'copy:build_appjs', 'copy:compile_assets', 'concat' ]
+        tasks: [ 'jshint:src', 'nggettext_extract', 'karma:continuous', 'copy:build_appmodules', 'copy:build_appjs', 'copy:compile_assets', 'concat']
       },
 
       /**
@@ -417,7 +417,7 @@ module.exports = function ( grunt ) {
     nggettext_extract: {
       pot: {
         files: {
-          'po/template.pot': ['src/**/*.html']
+          'po/template.pot': ['src/**/*.html', 'src/**/*.js']
         }
       }
     },

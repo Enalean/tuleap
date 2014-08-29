@@ -29,6 +29,10 @@ msgstr ""
 msgid "Campaign"
 msgstr ""
 
+#: src/app/campaign/campaign-controller.js
+msgid "Campaigns"
+msgstr ""
+
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Campaigns list"
 msgstr ""

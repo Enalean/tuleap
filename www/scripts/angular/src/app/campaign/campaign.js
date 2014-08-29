@@ -2,5 +2,6 @@ angular.module('campaign', [
     'restangular',
     'execution',
     'templates-app',
-    'sharedProperties'
+    'sharedProperties',
+    'gettext'
 ]);
