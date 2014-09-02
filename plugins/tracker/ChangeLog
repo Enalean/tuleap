@@ -1,3 +1,9 @@
+Version 5.450 - Tuleap 7.5
+    * tasks #7377: make all tracker migration system events be run in their own process
+
+
+-also fixing fatal bug infor those who haven't activated fts plugin
+
 Version 5.449 - Tuleap 7.5
     * Fix request #7372: Radio button: useless none value
 
