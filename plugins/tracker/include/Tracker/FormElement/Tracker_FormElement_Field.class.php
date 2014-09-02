@@ -544,7 +544,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     }
 
     protected function getHiddenArtifactValueForEdition(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
-        return "<div class='tracker_hidden_edition_field' data-field-id=" . $this->getId() . ">" . $this->fetchArtifactValue($artifact, $value, $submitted_values) . "</div>";
+        return '<div class="tracker_hidden_edition_field" data-field-id="'. $this->getId() .'">' . $this->fetchArtifactValue($artifact, $value, $submitted_values) . '</div>';
     }
 
     /**
