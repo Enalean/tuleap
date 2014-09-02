@@ -117,7 +117,7 @@ class Jenkins_Client {
             );
         }
 
-        return 'json=' . urlencode(json_encode($parameters));
+        return 'json=' . json_encode($parameters);
     }
 }
 

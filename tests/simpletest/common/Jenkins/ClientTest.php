@@ -24,7 +24,7 @@ class Jenkins_ClientTest extends TuleapTestCase {
 
     private $http_client;
     private $jenkins_client;
-    
+
     public function setUp() {
         parent::setUp();
         $this->http_client = mock('Http_Client');
@@ -46,13 +46,12 @@ class Jenkins_ClientTest extends TuleapTestCase {
         );
 
         $json_params = '{"parameter":[{"name":"my_param","value":"mickey mooouse"}]}';
-        $expected_url_params = urlencode($json_params);
 
         $expected_options = array(
             CURLOPT_URL             => $job_url . '/build',
             CURLOPT_SSL_VERIFYPEER  => false,
             CURLOPT_POST            => true,
-            CURLOPT_POSTFIELDS      => 'json='. $expected_url_params,
+            CURLOPT_POSTFIELDS      => 'json='. $json_params,
         );
 
         stub($this->http_client)->doRequest()->once();
