@@ -1,3 +1,6 @@
+Version 5.449 - Tuleap 7.5
+    * Fix request #7372: Radio button: useless none value
+
 Version 5.448 - Tuleap 7.5
     * story #7354: finish story unsubscribe to artifact notification (tasks #736:6 Handle mass change & tasks #7370 Enhance messages)
 
