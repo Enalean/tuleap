@@ -20,16 +20,17 @@
 
 namespace Tuleap\Testing\REST\v1;
 
-use \Luracast\Restler\RestException;
-use \Tuleap\REST\Header;
-use \UserManager;
-use \TrackerFactory;
-use \Tracker_ArtifactFactory;
-use \Tracker_FormElementFactory;
-use \PFUser;
-use \Tuleap\Testing\Config;
-use \ProjectManager;
-use \Tuleap\Testing\Dao;
+use Luracast\Restler\RestException;
+use Tuleap\REST\Header;
+use UserManager;
+use TrackerFactory;
+use Tracker_ArtifactFactory;
+use Tracker_FormElementFactory;
+use PFUser;
+use Tuleap\Testing\Config;
+use Tuleap\Testing\ConfigConformanceValidator;
+use ProjectManager;
+use Tuleap\Testing\Dao;
 
 class ProjectResource {
 
@@ -53,12 +54,24 @@ class ProjectResource {
     /** @var Tracker_FormElementFactory */
     private $tracker_form_element_factory;
 
+    /** @var DefinitionRepresentationBuilder */
+    private $definition_representation_builder;
+
     public function __construct() {
-        $this->config                       = new Config(new Dao());
-        $this->project_manager              = ProjectManager::instance();
-        $this->tracker_factory              = TrackerFactory::instance();
-        $this->tracker_artifact_factory     = Tracker_ArtifactFactory::instance();
-        $this->tracker_form_element_factory = Tracker_FormElementFactory::instance();
+        $this->config                            = new Config(new Dao());
+        $this->project_manager                   = ProjectManager::instance();
+        $this->tracker_factory                   = TrackerFactory::instance();
+        $this->tracker_artifact_factory          = Tracker_ArtifactFactory::instance();
+        $this->tracker_form_element_factory      = Tracker_FormElementFactory::instance();
+        $this->user_manager                      = UserManager::instance();
+        $this->user                              = UserManager::instance()->getCurrentUser();
+        $this->definition_representation_builder = new DefinitionRepresentationBuilder(
+            $this->user_manager,
+            $this->tracker_form_element_factory,
+            new ConfigConformanceValidator(
+                $this->config
+            )
+        );
     }
 
     /**
@@ -83,7 +96,6 @@ class ProjectResource {
      */
     protected function getCampaigns($id, $limit = 10, $offset = 0) {
         $project    = $this->project_manager->getProject($id);
-        $this->user = UserManager::instance()->getCurrentUser();
 
         if ($project->isError()) {
             throw new RestException(404, 'Project not found');
@@ -118,6 +130,58 @@ class ProjectResource {
         $this->sendPaginationHeaders($limit, $offset, count($result));
 
         krsort($result);
+
+        return array_slice($result, $offset, $limit);
+    }
+
+    /**
+     * Get test definitions
+     *
+     * Get all test projects for a given project
+     *
+     * @url GET {id}/testing_definitions
+     *
+     * @param int $id Id of the project
+     * @param int $limit  Number of elements displayed per page {@from path}
+     * @param int $offset Position of the first element to display {@from path}
+     *
+     * @return array {DefinitionRepresentation}
+     */
+    protected function getDefinitions($id, $limit = 10, $offset = 0) {
+        $project = $this->project_manager->getProject($id);
+
+        if ($project->isError()) {
+            throw new RestException(404, 'Project not found');
+        }
+
+        $tracker_id = $this->config->getTestDefinitionTrackerId($project);
+        $tracker    = $this->tracker_factory->getTrackerById($tracker_id);
+
+        if (! $tracker) {
+            throw new RestException(400, 'The test definition tracker id is not well configured');
+        }
+
+        if (! $tracker->userCanView($this->user)) {
+            throw new RestException(403, 'Access denied to the test definition tracker');
+        }
+
+        $artifact_list = $this->tracker_artifact_factory->getArtifactsByTrackerId($tracker_id);
+        $result = array();
+
+        foreach ($artifact_list as $artifact) {
+            if (! $artifact->userCanView($this->user)) {
+                continue;
+            }
+
+            $definition_representation = $this->definition_representation_builder->getDefinitionRepresentation($this->user, $artifact);
+
+            if ($definition_representation) {
+                $result[] = $this->definition_representation_builder->getDefinitionRepresentation($this->user, $artifact);
+            }
+        }
+
+        $this->sendPaginationHeaders($limit, $offset, count($result));
+        $this->optionsId($id);
 
         return array_slice($result, $offset, $limit);
     }

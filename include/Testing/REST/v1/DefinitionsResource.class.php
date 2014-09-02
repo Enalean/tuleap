@@ -25,7 +25,9 @@ use Tuleap\REST\Header;
 use UserManager;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
-use PFUser;
+use Tuleap\Testing\ConfigConformanceValidator;
+use Tuleap\Testing\Config;
+use Tuleap\Testing\Dao;
 
 class DefinitionsResource {
 
@@ -38,10 +40,23 @@ class DefinitionsResource {
     /** @var Tracker_FormElementFactory */
     private $tracker_form_element_factory;
 
+    /** @var DefinitionRepresentationBuilder */
+    private $definition_representation_builder;
+
     public function __construct() {
-        $this->user_manager                 = UserManager::instance();
-        $this->tracker_artifact_factory     = Tracker_ArtifactFactory::instance();
-        $this->tracker_form_element_factory = Tracker_FormElementFactory::instance();
+        $this->user_manager                      = UserManager::instance();
+        $this->tracker_artifact_factory          = Tracker_ArtifactFactory::instance();
+        $this->tracker_form_element_factory      = Tracker_FormElementFactory::instance();
+        $this->definition_representation_builder = new DefinitionRepresentationBuilder(
+            $this->user_manager,
+            $this->tracker_form_element_factory,
+            new ConfigConformanceValidator(
+                new Config(
+                    new Dao()
+                )
+            )
+        );
+
     }
 
     /**
@@ -70,9 +85,6 @@ class DefinitionsResource {
             throw new RestException(404, 'The test definition does not exist or is not visible');
         }
 
-        $definition_representation = new DefinitionRepresentation();
-        $definition_representation->build($definition, $this->tracker_form_element_factory, $user);
-
-        return $definition_representation;
+        return $this->definition_representation_builder->getDefinitionRepresentation($user, $definition);
     }
 }

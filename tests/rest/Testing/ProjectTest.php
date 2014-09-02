@@ -69,4 +69,12 @@ class ProjectTest extends BaseTest {
         $this->assertArrayHasKey('nb_of_blocked', $first_campaign);
         $this->assertEquals($first_campaign['nb_of_blocked'], 0);
     }
+
+    public function testGetDefinitions() {
+
+        $response    = $this->getResponse($this->client->get('projects/'.TestingDataBuilder::PROJECT_TEST_MGMT_ID.'/testing_definitions'));
+        $definitions = $response->json();
+
+        $this->assertEquals(sizeof($definitions), 3);
+    }
 }
