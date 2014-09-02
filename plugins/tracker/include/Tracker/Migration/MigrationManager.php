@@ -179,7 +179,7 @@ class Tracker_Migration_MigrationManager {
 
         $dao                 = new ArtifactXMLExporterDao();
         $node_helper         = new ArtifactXMLNodeHelper($xml);
-        $attachment_exporter = new ArtifactAttachmentXMLLinker($node_helper, $dao, $archive, false);
+        $attachment_exporter = new ArtifactAttachmentXMLLinker($node_helper, $dao);
 
         $exporter = new ArtifactXMLExporter($dao, $attachment_exporter, $node_helper, $this->logger);
         $exporter->exportTrackerData($tv3_id);
