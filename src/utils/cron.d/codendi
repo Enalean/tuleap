@@ -58,3 +58,4 @@
 
 # Daily Tuleap PHP cron (obsolete documents...)
 10 0 * * * codendiadm /usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/src/utils/codendi_daily.php
+* * * * * codendiadm (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php tv3_tv5_migration)

@@ -126,6 +126,12 @@ class MockEventManager_GetTypesForQueue extends MockEventManager {
                     'remove_goofy',
                 );
                break;
+           case Event::SYSTEM_EVENT_GET_TV3_TV5_MIGRATION_TYPES:
+               $params['types'] = array(
+                    'track_me',
+                    'track_you',
+                );
+               break;
            case Event::SYSTEM_EVENT_GET_TYPES:
                $params['types'] = array(
                     'feed_mini',
@@ -133,6 +139,8 @@ class MockEventManager_GetTypesForQueue extends MockEventManager {
                     'search_wiki',
                     'find_mickey',
                     'remove_goofy',
+                    'track_me',
+                    'track_you',
                 );
            default:
                break;
@@ -148,6 +156,11 @@ class SystemEventManagerGetTypesForQueueTest extends TuleapTestCase {
         'search_wiki',
         'find_mickey',
         'remove_goofy',
+    );
+
+    private $tv3tv5_events = array(
+        'track_me',
+        'track_you',
     );
 
     private $default_events = array(
@@ -194,13 +207,22 @@ class SystemEventManagerGetTypesForQueueTest extends TuleapTestCase {
         $this->assertEqual($types, $this->default_events);
     }
 
+    public function itReturnsTypesForTv3_Tv5_Migration() {
+        $manager = partial_mock('SystemEventManager', array());
+
+        $types = $manager->getTypesForQueue(SystemEvent::TV3_TV5_MIGRATION_QUEUE);
+        $this->assertArrayNotEmpty($types);
+
+        $this->assertEqual($types, $this->tv3tv5_events);
+    }
+
     public function itReturnsTypesForAppOwner() {
         $manager = partial_mock('SystemEventManager', array());
 
         $types = $manager->getTypesForQueue(SystemEvent::APP_OWNER_QUEUE);
         $this->assertArrayNotEmpty($types);
 
-        $this->assertEqual($types, array_merge($this->default_events, $this->fts_events));
+        $this->assertEqual($types, array_merge($this->default_events));
     }
 
     public function itDoesNotReturnDefaultTypesForFullTextSearch() {
