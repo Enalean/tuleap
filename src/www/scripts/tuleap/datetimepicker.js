@@ -26,6 +26,11 @@ var tuleap = tuleap || { };
                  language: codendi.locale,
                  pickTime: false
             });
+
+            $('.tuleap_field_datetime').datetimepicker({
+                 language: codendi.locale,
+                 pickTime: true
+            });
         }
     };
 

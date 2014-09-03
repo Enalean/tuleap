@@ -1407,14 +1407,22 @@ class Layout extends Response {
      * Helper for the calendar picker. It returns the html snippet which will
      * enable user to specify a date with the help of little dhtml
      *
-     * @param string $id the id of the input element
-     * @param string $name the name of the input element
-     * @param array $critria_selector list of extra criterias to be listed in a prepended select
-     * @params array $classes extra css classes if needed
+     * @param string  $id the id of the input element
+     * @param string  $name the name of the input element
+     * @param array   $critria_selector list of extra criterias to be listed in a prepended select
+     * @param array   $classes extra css classes if needed
+     * @param boolean $is_time_displayed to know if the time need to be displayed
      *
      * @return string The calendar picker
      */
-    public function getBootstrapDatePicker($id, $name, $value, array $criteria_selector, array $classes) {
+    public function getBootstrapDatePicker(
+        $id,
+        $name,
+        $value,
+        array $criteria_selector,
+        array $classes,
+        $is_time_displayed
+    ) {
         $hp = Codendi_HTMLPurifier::instance();
         $html  = '';
         $html .= '<div class="input-prepend dropdown input-append date ' . implode(' ', $classes) . '">';
@@ -1428,11 +1436,19 @@ class Layout extends Response {
             $html .= '</select>';
         }
 
+        $format = "yyyy-MM-dd";
+        $span_class = 'tuleap_field_date';
+
+        if ($is_time_displayed) {
+            $format = "yyyy-MM-dd hh:mm:ss";
+            $span_class = 'tuleap_field_datetime';
+        }
+
         $html .= '
-            <span class="tuleap_field_date">
+            <span class="'.$span_class.'">
                 <input name="'. $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) .'"
                        id="'. $hp->purify($id, CODENDI_PURIFIER_CONVERT_HTML) .'"
-                       data-format="yyyy-MM-dd"
+                       data-format="'.$format.'"
                        type="text"
                        value="' . $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) . '">
                 </input>
