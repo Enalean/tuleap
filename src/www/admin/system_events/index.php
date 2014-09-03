@@ -18,6 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once 'pre.php';
+require_once 'adminPresenter.class.php';
 require_once 'common/dao/SystemEventsFollowersDao.class.php';
 require_once 'common/include/Toggler.class.php';
 require_once 'common/include/CSRFSynchronizerToken.class.php';
@@ -28,41 +29,84 @@ $token  = new CSRFSynchronizerToken('/admin/system_events/');
 $se     = SystemEventManager::instance();
 $sefdao = new SystemEventsFollowersDao(CodendiDataAccess::instance());
 
+$request_queue = $request->get('queue');
+
 $default_new_followers_email = 'Type logins, emails or mailing lists. Multiple values separated by coma.';
 if ($new_followers = $request->get('new_followers')) {
     if (isset($new_followers['emails']) && $new_followers['emails'] && $new_followers['emails'] != $default_new_followers_email) {
         if (count($new_followers['types'])) {
             $sefdao->create($new_followers['emails'], implode(',', $new_followers['types']));
-            $GLOBALS['Response']->redirect('/admin/system_events/');
+            $GLOBALS['Response']->redirect('/admin/system_events/?queue='.$request_queue);
         }
     }
 }
 if ($request->get('delete')) {
     $token->check();
     $sefdao->delete($request->get('delete'));
-    $GLOBALS['Response']->redirect('/admin/system_events/');
+    $GLOBALS['Response']->redirect('/admin/system_events/?queue='.$request_queue);
 }
 if ($request->get('cancel')) {
-    $GLOBALS['Response']->redirect('/admin/system_events/');
+    $GLOBALS['Response']->redirect('/admin/system_events/?queue='.$request_queue);
 }
 if ($request->get('save') && ($followers = $request->get('followers'))) {
     $token->check();
     list($id, $info) = each($followers);
     $sefdao->save($id, $info['emails'], implode(',', $info['types']));
-    $GLOBALS['Response']->redirect('/admin/system_events/');
+    $GLOBALS['Response']->redirect('/admin/system_events/?queue='.$request_queue);
 }
 $id_to_replay = $request->get('replay');
 if ($id_to_replay) {
     $token->check();
     $se->replay($id_to_replay);
-    $GLOBALS['Response']->redirect('/admin/system_events/');
+    $GLOBALS['Response']->redirect('/admin/system_events/?queue='.$request_queue);
 }
 
-$hp = Codendi_HTMLPurifier::instance();
+$hp           = Codendi_HTMLPurifier::instance();
+$template_dir = Config::get('codendi_dir') .'/src/templates/admin/system_events/';
+$renderer     = TemplateRendererFactory::build()->getRenderer($template_dir);
 
 $title = $Language->getText('admin_system_events', 'title');
 $HTML->header(array('title' => $title));
-echo '<h2>'.  $hp->purify($title, CODENDI_PURIFIER_CONVERT_HTML)  .'</h2>';
+
+$queue_links = array();
+switch ($request_queue) {
+    case SystemEvent::FULL_TEXT_SEARCH_QUEUE:
+        $queue         = SystemEvent::FULL_TEXT_SEARCH_QUEUE;
+        $queue_name    = $Language->getText('admin_system_events', 'fts_queue');
+        break;
+    case SystemEvent::TV3_TV5_MIGRATION_QUEUE:
+        $queue         = SystemEvent::TV3_TV5_MIGRATION_QUEUE;
+        $queue_name    = $Language->getText('admin_system_events', 'tv3tv5_queue');
+        break;
+    default:
+        $queue         = SystemEvent::DEFAULT_QUEUE;
+        $queue_name = $Language->getText('admin_system_events', 'default_queue');
+        break;
+}
+
+$queue_links[] = array(
+    'href'   => '?',
+    'label'  => $Language->getText('admin_system_events', 'default_queue'),
+    'active' => $queue === SystemEvent::DEFAULT_QUEUE
+);
+
+$fts_types = $se->getTypesForQueue(SystemEvent::FULL_TEXT_SEARCH_QUEUE);
+if ($fts_types) {
+    $queue_links[] = array(
+        'href'   => '?queue=fts',
+        'label'  => $Language->getText('admin_system_events', 'fts_queue'),
+        'active' => $queue === SystemEvent::FULL_TEXT_SEARCH_QUEUE
+    );
+}
+
+$tv3_5_types = $se->getTypesForQueue(SystemEvent::TV3_TV5_MIGRATION_QUEUE);
+if ($tv3_5_types) {
+    $queue_links[] = array(
+        'href'   => '?queue=tv3_tv5_migration',
+        'label'  => $Language->getText('admin_system_events', 'tv3tv5_queue'),
+        'active' => $queue === SystemEvent::TV3_TV5_MIGRATION_QUEUE
+    );
+}
 
 $offset        = $request->get('offset') && !$request->exist('filter') ? (int)$request->get('offset') : 0;
 $limit         = 50;
@@ -77,120 +121,129 @@ if (!$filter_status) {
         SystemEvent::STATUS_ERROR,
     );
 }
-$filter_type = $request->get('filter_type');
-if (!$filter_type) {
+$filter_type     = $request->get('filter_type');
+$filter_type_any = '0';
+
+if (! $filter_type || (count($filter_type) === 1 && $filter_type[0] === $filter_type_any)) {
     $filter_type = array();
 }
 
-echo '<form action="" method="POST">';
-echo $token->fetchHTMLInput();
-echo '<fieldset>';
-echo '<legend id="system_events_filter" class="'. Toggler::getClassname('system_events_filter') .'">Filter:</legend>';
-echo '<strong>'. 'Status:'. '</strong> <input type="hidden" name="filter_status[]" value="'.  $hp->purify(SystemEvent::STATUS_NONE, CODENDI_PURIFIER_CONVERT_HTML)  .'" />';
-echo '<br />';
-foreach(array(
-    SystemEvent::STATUS_NEW, 
-    SystemEvent::STATUS_RUNNING, 
-    SystemEvent::STATUS_DONE, 
-    SystemEvent::STATUS_WARNING, 
-    SystemEvent::STATUS_ERROR,) as $status
-) {
-    echo '<label class="checkbox inline">';
-    echo '<input type="checkbox" 
-                 name="filter_status[]" 
-                 value="'.  $hp->purify($status, CODENDI_PURIFIER_CONVERT_HTML)  .'" 
-                 id="filter_'.  $hp->purify($status, CODENDI_PURIFIER_CONVERT_HTML)  .'"
-                 '. (in_array($status, $filter_status) ? 'checked="checked"' : '') .'
-                 /> ';
-    echo $hp->purify($status, CODENDI_PURIFIER_CONVERT_HTML)  .'</label> ';
-}
-echo '<hr />';
-echo '<strong>'. 'Types:'. '</strong> <input type="hidden" name="filter_type[]" value="-" />';
-echo '<div class="row-fluid">';
-$types = $se->getTypes();
-array_shift($types);
+
+$all_status = array(
+    array(
+        'label'   => SystemEvent::STATUS_NEW,
+        'checked' => in_array(SystemEvent::STATUS_NEW, $filter_status)
+    ),
+    array(
+        'label'   => SystemEvent::STATUS_RUNNING,
+        'checked' => in_array(SystemEvent::STATUS_RUNNING, $filter_status)
+    ),
+    array(
+        'label'   => SystemEvent::STATUS_DONE,
+        'checked' => in_array(SystemEvent::STATUS_DONE, $filter_status)
+    ),
+    array(
+        'label'   => SystemEvent::STATUS_WARNING,
+        'checked' => in_array(SystemEvent::STATUS_WARNING, $filter_status)
+    ),
+    array(
+        'label'   => SystemEvent::STATUS_ERROR,
+        'checked' => in_array(SystemEvent::STATUS_ERROR, $filter_status)
+    )
+);
+
+
+$types = $se->getTypesForQueue($queue);
 uksort($types, 'strnatcasecmp');
 foreach(array_chunk($types, ceil(count($types) / 3)) as $col) {
     foreach ($col as $type) {
         $typesArray[] = array('value' => $type, 'text' => $type);
     }
 }
-echo html_build_multiple_select_box_from_array($typesArray, "filter_type[]", $filter_type, 10, false, '', true, '', false, '', false);
 
-echo '</div>';
-echo '<hr />';
-echo '<p>';
-echo '<input type="submit" name="filter" class="btn" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
-echo '</p>';
-echo '</fieldset>';
-echo $se->fetchLastEventsStatus($offset, $limit, $full, $filter_status, $filter_type, $token);
+$selectbox = html_build_multiple_select_box_from_array(
+    $typesArray,
+    "filter_type[]",
+    array_values($filter_type),
+    10,
+    false,
+    '',
+    true,
+    '',
+    false,
+    '',
+    false
+);
 
-echo '<h3>'. $Language->getText('admin_system_events', 'notifications') .'</h3>';
-echo $GLOBALS['Language']->getText('admin_system_events', 'send_email');
+$events = $se->fetchLastEventsStatus($offset, $limit, $full, $filter_status, $filter_type, $token, $queue);
+
+$system_event_followers = array();
 $dar = $sefdao->searchAll();
-if (!$dar->rowCount()) {
-    echo '<em>'. $GLOBALS['Language']->getText('admin_system_events', 'nobody') .'</em>';
-}
-echo '<table class="table table-striped table-bordered">';
-echo '<thead>';
-echo '<tr><th>'. 'emails' .'</th><th>'. 'listen' .'</th><th>&nbsp;</th></tr>';
-echo '</thead>';
-echo '<tbody>';
-foreach($dar as $row) {
-    echo '<tr valign="top"><td>';
-    if ($request->get('edit') == $row['id']) {
-        echo '<textarea name="followers['. $row['id'] .'][emails]" rows="4" cols="40">';
-        echo  $hp->purify($row['emails'], CODENDI_PURIFIER_CONVERT_HTML) ;
-        echo '</textarea>';
-    } else {
-        echo  $hp->purify($row['emails'], CODENDI_PURIFIER_CONVERT_HTML) ;
-    }
-    echo '</td><td>';
-    $types = explode(',', $row['types']);
-    if ($request->get('edit') == $row['id']) {
-        echo '<select name="followers['. $row['id'] .'][types][]" size="5" multiple="multiple">';
-        echo '<option value="'. SystemEvent::STATUS_NEW .'"     '. (in_array(SystemEvent::STATUS_NEW    , $types) ? 'selected="true"' : '') .'">'. SystemEvent::STATUS_NEW     .'</option>';
-        echo '<option value="'. SystemEvent::STATUS_DONE .'"    '. (in_array(SystemEvent::STATUS_DONE   , $types) ? 'selected="true"' : '') .'">'. SystemEvent::STATUS_DONE    .'</option>';
-        echo '<option value="'. SystemEvent::STATUS_WARNING .'" '. (in_array(SystemEvent::STATUS_WARNING, $types) ? 'selected="true"' : '') .'">'. SystemEvent::STATUS_WARNING .'</option>';
-        echo '<option value="'. SystemEvent::STATUS_ERROR .'"   '. (in_array(SystemEvent::STATUS_ERROR  , $types) ? 'selected="true"' : '') .'">'. SystemEvent::STATUS_ERROR   .'</option>';
-        echo '</select>';
-    } else {
-        echo $row['types'];
-    }
-    echo '</td><td>';
-    if ($request->get('edit') == $row['id']) {
-        echo '<input type="submit" class="btn btn-primary" name="save" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /> ';
-        echo '<input type="submit" class="btn" name="cancel" value="'. $GLOBALS['Language']->getText('global', 'btn_cancel') .'" /> ';
-    } else {
-        echo '<a href="?edit='. $row['id'] .'">'. $GLOBALS['HTML']->getImage('ic/edit.png') .'</a>';
-    }
-    echo '<a onclick="return confirm(\''.  $hp->purify('Are you sure that you want to delete?', CODENDI_PURIFIER_JS_QUOTE)  .'\');" href="?delete='. $row['id'] .'">'. $GLOBALS['HTML']->getImage('ic/cross.png') .'</a>';
-    echo '</td></tr>';
-}
-if (!$request->get('edit')) {
-    echo '<tr valign="top"><td><textarea name="new_followers[emails]" id="new_followers_email" rows="4" cols="40">';
-    echo  $hp->purify($default_new_followers_email, CODENDI_PURIFIER_CONVERT_HTML) ;
-    echo '</textarea>';
-    echo '</td><td>';
-    echo '<select name="new_followers[types][]" size="5" multiple="multiple">';
-    echo '<option value="'. SystemEvent::STATUS_NEW .'"     >'. SystemEvent::STATUS_NEW     .'</option>';
-    echo '<option value="'. SystemEvent::STATUS_DONE .'"    >'. SystemEvent::STATUS_DONE    .'</option>';
-    echo '<option value="'. SystemEvent::STATUS_WARNING .'" selected="true">'. SystemEvent::STATUS_WARNING .'</option>';
-    echo '<option value="'. SystemEvent::STATUS_ERROR .'"   selected="true">'. SystemEvent::STATUS_ERROR   .'</option>';
-    echo '</select>';
-    echo '</td><td>';
-    echo '<input type="submit" class="btn" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
-    echo '</td></tr>';
-}
-echo '</tbody>';
-echo '</table>';
-echo '</form>';
-echo '<script type="text/javascript">';
-echo "
-document.observe('dom:loaded', function() {
-    $('new_followers_email').defaultValueActsAsHint();
-});
-</script>";
-$HTML->footer(array());
 
-?>
+foreach ($dar as $row) {
+    $types_selected = explode(',', $row['types']);
+    $types = array(
+        array(
+            'label'   => SystemEvent::STATUS_NEW,
+            'selected' => in_array(SystemEvent::STATUS_NEW, $types_selected)
+        ),
+        array(
+            'label'   => SystemEvent::STATUS_RUNNING,
+            'selected' => in_array(SystemEvent::STATUS_RUNNING, $types_selected)
+        ),
+        array(
+            'label'   => SystemEvent::STATUS_DONE,
+            'selected' => in_array(SystemEvent::STATUS_DONE, $types_selected)
+        ),
+        array(
+            'label'   => SystemEvent::STATUS_WARNING,
+            'selected' => in_array(SystemEvent::STATUS_WARNING, $types_selected)
+        ),
+        array(
+            'label'   => SystemEvent::STATUS_ERROR,
+            'selected' => in_array(SystemEvent::STATUS_ERROR, $types_selected)
+        )
+    );
+
+    $system_event_followers[] = array_merge(
+        $row,
+        array(
+            'edit'           => ($request->get('edit') == $row['id']),
+            'email'          => $hp->purify($row['emails'], CODENDI_PURIFIER_CONVERT_HTML),
+            'types-selected' => $types
+        )
+    );
+}
+
+$status_new_followers = array(
+    array(
+        'label' => SystemEvent::STATUS_NEW
+    ),
+    array(
+        'label' => SystemEvent::STATUS_DONE
+    ),
+    array(
+        'label' => SystemEvent::STATUS_WARNING
+    ),
+    array(
+        'label' => SystemEvent::STATUS_ERROR
+    )
+);
+
+$renderer->renderToPage(
+    'admin-system-events',
+    new SystemEvents_adminPresenter(
+        $hp,
+        $queue_links,
+        $token,
+        $all_status,
+        $selectbox,
+        $events,
+        $system_event_followers,
+        $request->get('edit'),
+        $status_new_followers,
+        $request_queue
+    )
+);
+
+$HTML->footer(array());

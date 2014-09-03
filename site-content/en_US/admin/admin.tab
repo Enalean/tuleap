@@ -455,6 +455,9 @@ admin_system_events	title	System Events
 admin_system_events	notifications	Notifications
 admin_system_events	send_email	Send an email to:
 admin_system_events	nobody	Nobody
+admin_system_events	default_queue	Default Queue
+admin_system_events	fts_queue	Full Text Search Queue
+admin_system_events	tv3tv5_queue	TV3 -> TV5 Migration Queue
 
 #-----------------------------------------------
 # Script: SF/www/admin/show_pending_documents.php
