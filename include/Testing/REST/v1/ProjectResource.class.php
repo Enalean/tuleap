@@ -31,6 +31,7 @@ use Tuleap\Testing\Config;
 use Tuleap\Testing\ConfigConformanceValidator;
 use ProjectManager;
 use Tuleap\Testing\Dao;
+use Tracker_FormElement_Field_List_Bind;
 
 class ProjectResource {
 
@@ -178,6 +179,60 @@ class ProjectResource {
             if ($definition_representation) {
                 $result[] = $this->definition_representation_builder->getDefinitionRepresentation($this->user, $artifact);
             }
+        }
+
+        $this->sendPaginationHeaders($limit, $offset, count($result));
+        $this->optionsId($id);
+
+        return array_slice($result, $offset, $limit);
+    }
+
+    /**
+     * Get test environments
+     *
+     * Get all test environments for a given project
+     *
+     * @url GET {id}/testing_environments
+     *
+     * @param int $id Id of the project
+     * @param int $limit  Number of elements displayed per page {@from path}
+     * @param int $offset Position of the first element to display {@from path}
+     *
+     * @return array
+     */
+    protected function getEnvironments($id, $limit = 10, $offset = 0) {
+        $project = $this->project_manager->getProject($id);
+
+        if ($project->isError()) {
+            throw new RestException(404, 'Project not found');
+        }
+
+        $tracker_id = $this->config->getTestExecutionTrackerId($project);
+        $tracker    = $this->tracker_factory->getTrackerById($tracker_id);
+
+        if (! $tracker) {
+            throw new RestException(400, 'The execution tracker id is not well configured');
+        }
+
+        if (! $tracker->userCanView($this->user)) {
+            throw new RestException(403, 'Access denied to the test definition tracker');
+        }
+
+        $execution_field = $this->tracker_form_element_factory->getUsedFieldByNameForUser($tracker_id, ExecutionRepresentation::FIELD_ENVIRONMENT, $this->user);
+
+        if (! $execution_field) {
+            throw new RestException(400, 'The environment field of execution tracker is not well configured');
+        }
+
+        $soap_values = $execution_field->getSoapAvailableValues();
+
+        $result = array();
+
+        foreach($soap_values as $value) {
+            $result[] = array(
+                'id'    => $value[Tracker_FormElement_Field_List_Bind::SOAP_ID_KEY],
+                'label' => $value[Tracker_FormElement_Field_List_Bind::SOAP_LABEL_KEY]
+            );
         }
 
         $this->sendPaginationHeaders($limit, $offset, count($result));
