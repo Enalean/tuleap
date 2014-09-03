@@ -46,9 +46,12 @@ class Tracker_FormElement_Field_DateDao extends Tracker_FormElement_SpecificProp
         } else {
             $default_value_type = isset($row['default_value']) ? 1 : 0;
         }
-        
-        $sql = "REPLACE INTO $this->table_name (field_id, default_value, default_value_type)
-                VALUES ($field_id, $default_value, $default_value_type)";
+
+        $display_time = (int) (isset($row['display_time']) && $row['display_time']);
+
+        $sql = "REPLACE INTO $this->table_name (field_id, default_value, default_value_type, display_time)
+                VALUES ($field_id, $default_value, $default_value_type, $display_time)";
+
         return $this->update($sql);
     }
     
@@ -71,4 +74,3 @@ class Tracker_FormElement_Field_DateDao extends Tracker_FormElement_SpecificProp
         return $this->update($sql);
     }
 }
-?>

@@ -40,7 +40,11 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
                     'value' => '',
                 ),
             )
-        )
+        ),
+        'display_time' => array(
+            'value' => 0,
+            'type'  => 'checkbox',
+        ),
     );
 
     public function setCriteriaValueFromSOAP(Tracker_Report_Criteria $criteria, StdClass $soap_criteria_value) {
@@ -960,5 +964,9 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
 
     public function accept(Tracker_FormElement_FieldVisitor $visitor) {
         return $visitor->visitDate($this);
+    }
+
+    public function isTimeDisplayed() {
+        return ($this->getProperty('display_time') == 1);
     }
 }

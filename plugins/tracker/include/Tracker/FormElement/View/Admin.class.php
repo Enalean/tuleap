@@ -150,7 +150,7 @@ class Tracker_FormElement_View_Admin {
         $originalTrackerName = $this->formElement->getOriginalTracker()->getName();
         $originalProjectName = $this->formElement->getOriginalProject()->getPublicName();
         $originalEditUrl     = $this->formElement->getOriginalField()->getAdminEditUrl();
-        
+
         $html = '';
         $html .= '<span class="tracker-admin-form-element-help">';
         $html .= $GLOBALS['Language']->getText('plugin_tracker_include_type', 'field_copied_from', array($originalTrackerName, $originalProjectName, $originalEditUrl));
@@ -214,7 +214,6 @@ class Tracker_FormElement_View_Admin {
      * @return string html
      */
     protected function fetchAdminSpecificProperty($key, $property) {
-        
         $html = '';
         switch ($property['type']) {
         case 'string':
@@ -257,6 +256,10 @@ class Tracker_FormElement_View_Admin {
                 $html .= '&nbsp;'.$this->fetchAdminSpecificProperty($key_choice, $choice);
                 $html .= '</div>';
             }
+            break;
+        case 'checkbox':
+            $checked = $property['value'] ? 'checked="checked"' : '';
+            $html .= '<input type="checkbox" name="formElement_data[specific_properties]['. $key .']" id="formElement_properties_'.$key.'" '. $checked .' />';
             break;
         case 'label':
             $html .= '<label for="formElement_properties_'. $key .'">'. $this->formElement->getPropertyLabel($key) .'</label>';
