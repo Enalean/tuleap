@@ -9,7 +9,7 @@ Version 7.5 (Not released yet)
 	* git: 3.98
 
 	== Features ==
-	* part of story #7349: SystemEvent to be processed independently
+	* story #7349: SystemEvent to be processed independently
 
 	== Development ==
 	* Development: be able to fetch the status for a given changeset
