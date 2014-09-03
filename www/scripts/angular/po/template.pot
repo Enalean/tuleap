@@ -85,10 +85,28 @@ msgstr ""
 msgid "Not run"
 msgstr ""
 
+#: src/app/campaign/campaign-new.tpl.html
+msgid "Oh no!"
+msgstr ""
+
 #: src/app/campaign/campaign-list.tpl.html
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Passed"
+msgstr ""
+
+#: src/app/campaign/campaign-new.tpl.html
+msgid "Please choose the environments for \"{{ campaign.label }}\" campaign:"
+msgstr ""
+
+#: src/app/campaign/campaign-new.tpl.html
+msgid "Please choose the environments for the new campaign:"
+msgstr ""
+
+#: src/app/campaign/campaign-new.tpl.html
+msgid ""
+"Please configure the test execution tracker and\n"
+"                    add environments in order to be able to go further."
 msgstr ""
 
 #: src/app/execution/execution-list.tpl.html
@@ -107,6 +125,14 @@ msgstr ""
 msgid "Test definition"
 msgstr ""
 
+#: src/app/campaign/campaign-new.tpl.html
+msgid "Tests are run in an environment."
+msgstr ""
+
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Total"
+msgstr ""
+
+#: src/app/campaign/campaign-new.tpl.html
+msgid "You have not any environment defined."
 msgstr ""

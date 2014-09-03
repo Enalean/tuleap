@@ -2,8 +2,46 @@
     <h1 translate>Create a campaign</h1>
 
     <label translate>Campaign label</label>
-    <input type="text" ng-model="campaign.label" required="required" ng-trim/>
+    <input type="text" ng-model="campaign.label" required="required" ng-trim />
 
+    <tabset>
+        <tab
+            ng-repeat="environment in campaign.environments | filter:{is_choosen:true}"
+            heading="{{ environment.label }}"
+        >
+            Next step: display paginated tests here
+        </tab>
+        <tab>
+            <tab-heading>
+                <i class="icon icon-plus"></i>
+            </tab-heading>
+            <p translate>Tests are run in an environment.</p>
+            <p ng-if="! campaign.label" translate>Please choose the environments for the new campaign:</p>
+            <p ng-if="campaign.label" translate>Please choose the environments for "{{ campaign.label }}" campaign:</p>
+
+            <label ng-repeat="environment in campaign.environments" class="checkbox">
+                <input type="checkbox" ng-model="environment.is_choosen" />
+                {{ environment.label }}
+            </label>
+
+            <img src="scripts/angular/bin/assets/loader.gif"
+                 ng-if="loading_environments"
+                 class="loader" />
+
+            <div class="alert alert-error error-no-environment-defined"
+                 ng-if="! campaign.environments.length && ! loading_environments">
+                <img src="scripts/angular/bin/assets/sad-cat.jpg" alt="sad cat is sad" />
+                <p>
+                    <strong translate>Oh no!</strong>
+                    <span translate>You have not any environment defined.</span>
+                </p>
+                <p>
+                    <span translate>Please configure the test execution tracker and
+                    add environments in order to be able to go further.</span>
+                </p>
+            </div>
+        </tab>
+    </tabset>
 </div>
 
 <div id="campaign-new-button-bar">

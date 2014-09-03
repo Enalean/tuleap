@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Test\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2014-09-03 14:55+0100\n"
+"PO-Revision-Date: 2014-09-03 16:19+0100\n"
 "Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -98,11 +98,33 @@ msgstr "Nouvelle campagne"
 msgid "Not run"
 msgstr "Non exécuté"
 
+#: src/app/campaign/campaign-new.tpl.html
+msgid "Oh no!"
+msgstr "Oh non !"
+
 #: src/app/campaign/campaign-list.tpl.html
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Passed"
 msgstr "Succès"
+
+#: src/app/campaign/campaign-new.tpl.html
+msgid "Please choose the environments for \"{{ campaign.label }}\" campaign:"
+msgstr ""
+"Merci de choisir les environnements pour la campagne \"{{ campaign."
+"label }}\" :"
+
+#: src/app/campaign/campaign-new.tpl.html
+msgid "Please choose the environments for the new campaign:"
+msgstr "Merci de choisir les environnements pour la nouvelle campagne :"
+
+#: src/app/campaign/campaign-new.tpl.html
+msgid ""
+"Please configure the test execution tracker and\n"
+"                    add environments in order to be able to go further."
+msgstr ""
+"Merci de configurer l'outil de suivi d'exécution des tests et d'ajouter des "
+"environnements afin de pouvoir continuer."
 
 #: src/app/execution/execution-list.tpl.html
 msgid "Please select a test"
@@ -120,10 +142,14 @@ msgstr "Status :"
 msgid "Test definition"
 msgstr "Définition du test"
 
+#: src/app/campaign/campaign-new.tpl.html
+msgid "Tests are run in an environment."
+msgstr "Les tests sont exécutés pour un environnement."
+
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Total"
 msgstr "Total"
 
 #: src/app/campaign/campaign-new.tpl.html
-msgid "toto"
-msgstr "titi"
+msgid "You have not any environment defined."
+msgstr "Vous n'avez pas d'environnement défini."
