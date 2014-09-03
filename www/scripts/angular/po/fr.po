@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Test\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2014-09-03 11:42+0100\n"
+"PO-Revision-Date: 2014-09-03 14:55+0100\n"
 "Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -73,10 +73,6 @@ msgstr "Créer la campagne"
 #: src/app/execution/execution-detail.tpl.html
 msgid "Date:"
 msgstr "Date :"
-
-#: src/app/campaign/campaign-list.tpl.html
-msgid "Details"
-msgstr "Détails"
 
 #: src/app/campaign/campaign-list.tpl.html
 #: src/app/execution/execution-detail.tpl.html

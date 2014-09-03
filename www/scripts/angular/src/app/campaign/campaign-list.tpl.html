@@ -15,19 +15,17 @@
                 <th translate>Blocked</th>
                 <th translate>Failed</th>
                 <th translate>Not run</th>
-                <th></th>
             </tr>
         </thead>
         <tbody>
             <tr ng-repeat="campaign in campaigns | CampaignListFilter:search track by $index">
-                <td>{{ campaign.label }}</td>
+                <td><a ui-sref="campaigns.executions({ id: campaign.id, slug: '{{ campaign.label | slugify }}' })">{{ campaign.label }}</a></td>
                 <td>{{ campaign.status }}</td>
                 <td>{{ campaign.total }}</td>
                 <td><span class="badge badge-success">{{ campaign.nb_of_passed }}</span></td>
                 <td><span class="badge badge-info">{{ campaign.nb_of_blocked }}</span></td>
                 <td><span class="badge badge-important">{{ campaign.nb_of_failed }}</span></td>
                 <td><span class="badge">{{ campaign.nb_of_not_run }}</span></td>
-                <td><button class="btn btn-small" ui-sref="campaigns.executions({ id: campaign.id, slug: '{{ campaign.label | slugify }}' })" translate>Details</button></td>
             </tr>
         </tbody>
     </table>

@@ -62,10 +62,6 @@ msgid "Date:"
 msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html
-msgid "Details"
-msgstr ""
-
-#: src/app/campaign/campaign-list.tpl.html
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Failed"
