@@ -1,3 +1,6 @@
+Version 5.451 - Tuleap 7.5
+    * tasks #7407 Add option to display time in date field
+
 Version 5.450 - Tuleap 7.5
     * tasks #7377: make all tracker migration system events be run in their own process
 
