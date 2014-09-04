@@ -103,6 +103,10 @@ class Tracker_FormElement_DateFormatter {
         );
     }
 
+    public function getFieldDataForCSVPreview(array $date_explode) {
+        return $date_explode[0] . '-' . $date_explode[1] . '-' . $date_explode[2];
+    }
+
     /**
      * Format a timestamp into Y-m-d format
      */
