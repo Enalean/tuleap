@@ -1,3 +1,6 @@
+Version 5.455 - Tuleap 7.5
+    * tasks #7411 Duplicate artifact date time fields properly
+
 Version 5.454 - Tuleap 7.5
     * tasks #7413: fix wrong hour when setting time in field of NEW artifact
 
