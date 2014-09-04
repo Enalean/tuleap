@@ -79,6 +79,20 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
         $this->assertTrue($date_field->hasDefaultValue());
         $this->assertEqual($date_field->getDefaultValue(), 'date-of-today');
     }
+
+    public function itDisplayTime() {
+        $date_field = new Tracker_FormElement_Field_DateTestVersion();
+        $date_field->setReturnValue('getProperty', 1, array('display_time'));
+
+        $this->assertTrue($date_field->isTimeDisplayed());
+    }
+
+    public function itDontDisplayTime() {
+        $date_field = new Tracker_FormElement_Field_DateTestVersion();
+        $date_field->setReturnValue('getProperty', 0, array('display_time'));
+
+        $this->assertFalse($date_field->isTimeDisplayed());
+    }
     
     function testGetChangesetValue() {
         $value_dao = new MockTracker_FormElement_Field_Value_DateDao();

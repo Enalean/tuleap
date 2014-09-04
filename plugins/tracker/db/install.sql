@@ -169,7 +169,8 @@ DROP TABLE IF EXISTS tracker_field_date;
 CREATE TABLE tracker_field_date(
     field_id INT(11) NOT NULL PRIMARY KEY,
     default_value INT(11) NULL,
-    default_value_type TINYINT(1) NULL
+    default_value_type TINYINT(1) NULL,
+    display_time TINYINT DEFAULT 0
 ) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS tracker_field_list;
