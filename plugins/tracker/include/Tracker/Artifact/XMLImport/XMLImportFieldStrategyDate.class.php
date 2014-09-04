@@ -31,7 +31,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyDate extends Tracker_Arti
     public function getFieldData(Tracker_FormElement_Field $field, SimpleXMLElement $field_change) {
         $timestamp = strtotime((string) $field_change->value);
         if ($timestamp > 0) {
-            return date('Y-m-d', strtotime((string) $field_change->value));
+            return $field->formatDate(strtotime($field_change->value));
         }
         return '';
     }

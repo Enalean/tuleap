@@ -1084,7 +1084,10 @@ class Tracker_Artifact_XMLImport_AlphanumericTest extends Tracker_Artifact_XMLIm
         $this->float_field  = mock('Tracker_FormElement_Field_Float');
         stub($this->float_field)->getId()->returns($this->float_field_id);
         stub($this->float_field)->validateField()->returns(true);
-        $this->date_field   = mock('Tracker_FormElement_Field_Date');
+        $this->date_field   = partial_mock(
+            'Tracker_FormElement_Field_Date',
+            array('getId', 'validateField', 'isTimeDisplayed')
+        );
         stub($this->date_field)->getId()->returns($this->date_field_id);
         stub($this->date_field)->validateField()->returns(true);
 
@@ -1137,6 +1140,24 @@ class Tracker_Artifact_XMLImport_AlphanumericTest extends Tracker_Artifact_XMLIm
             $this->float_field_id  => '4.5',
             $this->date_field_id   => '2014-03-20',
         );
+
+        stub($this->date_field)->isTimeDisplayed()->returns(false);
+
+        expect($this->artifact_creator)->create('*', $data, '*', '*', '*')->once();
+
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+    }
+
+     public function itCreatesArtifactWithAlphanumFieldDataAndTimeDisplayedDate() {
+        $data = array(
+            $this->string_field_id => 'Import artifact in tracker v5',
+            $this->int_field_id    => '5',
+            $this->float_field_id  => '4.5',
+            $this->date_field_id   => '2014-03-20 10:13:07',
+        );
+
+        stub($this->date_field)->isTimeDisplayed()->returns(true);
+
         expect($this->artifact_creator)->create('*', $data, '*', '*', '*')->once();
 
         $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
