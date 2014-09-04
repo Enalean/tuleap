@@ -31,7 +31,7 @@
             <div class="category">{{ category.label }}</div>
             <a class="execution-item"
                  ng-repeat="execution in category.executions | ExecutionListFilter:search:status:selected_assignee:selected_environment track by $index"
-                 ui-sref=".detail({ defid: execution.definition.id, defslug: '{{ execution.definition.summary | slugify }}' })"
+                 ui-sref=".detail({ execid: execution.id, defid: execution.definition.id, defslug: '{{ execution.definition.summary | slugify }}' })"
                  ui-sref-active="active">
                 <div class="execution-item-content {{ execution.status | dasherize }}">
                     #{{ execution.definition.id }} {{ execution.definition.summary}}

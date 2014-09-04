@@ -22,7 +22,7 @@
                 ncyBreadcrumbParent: 'campaigns.list'
             }
         }).state('campaigns.executions.detail', {
-            url:         '/{defid:[0-9]+}-{defslug}',
+            url:         '/{execid:[0-9]+}/{defid:[0-9]+}-{defslug}',
             controller:  'ExecutionDetailCtrl',
             templateUrl: 'execution/execution-detail.tpl.html',
             data: {

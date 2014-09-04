@@ -5,10 +5,10 @@ angular
 ExecutionDetailCtrl.$inject = ['$scope', '$state', '$sce', 'executions', 'ExecutionService', 'SharedPropertiesService'];
 
 function ExecutionDetailCtrl($scope, $state, $sce, executions, ExecutionService, SharedPropertiesService) {
-    var definition_id = +$state.params.defid;
+    var execution_id = +$state.params.execid;
 
     $scope.execution = _.find(_.flatten(executions, 'executions'), function (execution) {
-        return execution.definition.id === definition_id;
+        return execution.id === execution_id;
     });
 
     $scope.pass           = pass;
