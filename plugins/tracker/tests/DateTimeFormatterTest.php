@@ -35,6 +35,13 @@ class Tracker_FormElement_DateTimeFormatterTest extends TuleapTestCase {
 
     public function itFormatsTimestampInRightFormat() {
         $timestamp = 1409752174;
+        $expected  = '2014-09-03 15:49:34';
+
+        $this->assertEqual($expected, $this->date_formatter->formatDate($timestamp));
+    }
+
+    public function itFormatsTimestampInRightFormatForHoursBeforeNoon() {
+        $timestamp = 1409708974;
         $expected  = '2014-09-03 03:49:34';
 
         $this->assertEqual($expected, $this->date_formatter->formatDate($timestamp));
