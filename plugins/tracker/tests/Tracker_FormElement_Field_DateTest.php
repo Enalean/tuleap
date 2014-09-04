@@ -324,6 +324,50 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
         $attr = $root->properties->attributes();
         $this->assertEqual('1234567890', ((string)$attr->default_value));
     }
+
+    public function testExportPropertiesToXMLDisplayTime() {
+        $xml_test = simplexml_load_file(dirname(__FILE__) . '/_fixtures/ImportTrackerFormElementDatePropertiesDisplayTime.xml');
+
+        $date_field = new Tracker_FormElement_Field_DateTestVersion();
+        $properties = array(
+            'display_time' => array(
+                'type'    => 'checkbox',
+                'value'   => 1
+            )
+        );
+
+        $date_field->setReturnReference('getProperties', $properties);
+        $date_field->setReturnValue('getProperty', 1, array('display_time'));
+
+        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
+        $date_field->exportPropertiesToXML($root);
+        $this->assertEqual((string)$xml_test->properties, (string)$root->properties);
+        $this->assertEqual(count($root->properties->attributes()), 1);
+        $attr = $root->properties->attributes();
+        $this->assertEqual('1', ((string)$attr->display_time));
+    }
+
+    public function testExportPropertiesToXMLDisplayTimeWhenDisplayTimeIsZero() {
+        $xml_test = simplexml_load_file(dirname(__FILE__) . '/_fixtures/ImportTrackerFormElementDatePropertiesDisplayTimeZero.xml');
+
+        $date_field = new Tracker_FormElement_Field_DateTestVersion();
+        $properties = array(
+            'display_time' => array(
+                'type'    => 'checkbox',
+                'value'   => 0
+            )
+        );
+
+        $date_field->setReturnReference('getProperties', $properties);
+        $date_field->setReturnValue('getProperty', 0, array('display_time'));
+
+        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
+        $date_field->exportPropertiesToXML($root);
+        $this->assertEqual((string)$xml_test->properties, (string)$root->properties);
+        $this->assertEqual(count($root->properties->attributes()), 1);
+        $attr = $root->properties->attributes();
+        $this->assertEqual('0', ((string)$attr->display_time));
+    }
     
     function testImport_realdate() {
         $xml = new SimpleXMLElement('<?xml version="1.0" standalone="yes"?>
