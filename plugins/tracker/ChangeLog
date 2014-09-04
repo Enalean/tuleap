@@ -1,3 +1,6 @@
+Version 5.454 - Tuleap 7.5
+    * tasks #7413: fix wrong hour when setting time in field of NEW artifact
+
 Version 5.453 - Tuleap 7.5
     * tasks #7403 Export / import XML
 
