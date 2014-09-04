@@ -88,7 +88,7 @@ class DefinitionRepresentation {
 
         $this->id                   = JsonCast::toInt($artifact->getId());
         $this->uri                  = self::ROUTE . '/' . $this->id;
-        $this->summary              = $this->getFieldValue(self::FIELD_SUMMARY)->getValue();
+        $this->summary              = $this->getFieldValue(self::FIELD_SUMMARY)->getText();
         $this->description          = $this->getFieldValue(self::FIELD_DESCRIPTION)->getValue();
         $this->category             = $this->getCategory();
     }

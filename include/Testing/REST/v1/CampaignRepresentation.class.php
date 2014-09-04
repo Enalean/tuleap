@@ -84,7 +84,7 @@ class CampaignRepresentation {
 
         $this->id                   = $artifact->getId();
         $this->uri                  = self::ROUTE . '/' . $this->id;
-        $this->label                = $this->getFieldValue(self::FIELD_NAME)->getValue();
+        $this->label                = $this->getFieldValue(self::FIELD_NAME)->getText();
         $this->status               = $this->artifact->getStatus();
 
         $executions_status          = $this->getExecutionsStatus();

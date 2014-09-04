@@ -2,9 +2,9 @@ angular
     .module('execution')
     .controller('ExecutionListCtrl', ExecutionListCtrl);
 
-ExecutionListCtrl.$inject = ['$scope', '$state', '$sce', 'executions', 'environments', 'assignees', 'CampaignService'];
+ExecutionListCtrl.$inject = ['$scope', '$state', 'executions', 'environments', 'assignees', 'CampaignService'];
 
-function ExecutionListCtrl($scope, $state, $sce, executions, environments, assignees, CampaignService) {
+function ExecutionListCtrl($scope, $state, executions, environments, assignees, CampaignService) {
     var campaign_id           = $state.params.id,
         total_assignees       = 0,
         total_environments    = 0;
@@ -22,18 +22,4 @@ function ExecutionListCtrl($scope, $state, $sce, executions, environments, assig
         blocked: false,
         notrun:  false
     };
-    $scope.getExecutionTitle = getExecutionTitle;
-    $scope.sanitizeHtml      = sanitizeHtml;
-
-    function sanitizeHtml(html) {
-        if (html) {
-            return $sce.trustAsHtml(html);
-        }
-
-        return null;
-    }
-
-    function getExecutionTitle(execution) {
-        return '#' + execution.definition.id + ' ' + sanitizeHtml(execution.definition.summary);
-    }
 }
