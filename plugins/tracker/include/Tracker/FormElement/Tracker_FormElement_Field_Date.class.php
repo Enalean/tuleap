@@ -592,10 +592,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      * @return string html
      */
     protected function fetchSubmitValueMasschange() {
-        $html = '';
-        $value = $GLOBALS['Language']->getText('global','unchanged');
-        $html .= $GLOBALS['HTML']->getDatePicker("tracker_admin_field_".$this->id, "artifact[". $this->id ."]", $value);
-        return $html;
+        return $this->getFormatter()->fetchSubmitValueMasschange();
     }   
 
     /**

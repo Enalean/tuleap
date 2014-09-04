@@ -96,6 +96,13 @@ class Tracker_FormElement_DateFormatter {
         return $is_valid;
     }
 
+    public function fetchSubmitValueMasschange() {
+        return $this->getDatePicker(
+            $GLOBALS['Language']->getText('global','unchanged'),
+            array()
+        );
+    }
+
     /**
      * Format a timestamp into Y-m-d format
      */
