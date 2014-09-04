@@ -45,6 +45,10 @@ msgstr ""
 msgid "Campaigns list"
 msgstr ""
 
+#: src/app/campaign/campaign-new.tpl.html
+msgid "Category"
+msgstr ""
+
 #: src/app/execution/execution-detail.tpl.html
 msgid "Comments..."
 msgstr ""
@@ -106,7 +110,7 @@ msgstr ""
 #: src/app/campaign/campaign-new.tpl.html
 msgid ""
 "Please configure the test execution tracker and\n"
-"                    add environments in order to be able to go further."
+"                        add environments in order to be able to go further."
 msgstr ""
 
 #: src/app/execution/execution-list.tpl.html
@@ -123,6 +127,10 @@ msgstr ""
 
 #: src/app/execution/execution-detail.tpl.html
 msgid "Test definition"
+msgstr ""
+
+#: src/app/campaign/campaign-new.tpl.html
+msgid "Test name"
 msgstr ""
 
 #: src/app/campaign/campaign-new.tpl.html

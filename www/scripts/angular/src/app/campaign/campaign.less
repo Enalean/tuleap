@@ -40,6 +40,33 @@
     }
 }
 
+.test-definition-list {
+    > thead > tr {
+        background: #E4E4E4;
+
+        & > th {
+            vertical-align: top;
+            border-left-color: #D2D2D2;
+            border-bottom: 2px solid #B2B2B2;
+        }
+    }
+
+    > tbody > tr:first-child > td {
+        border-top: none;
+    }
+
+    > thead > tr > th, & > tbody > tr > td {
+        vertical-align: middle;
+    }
+
+    > thead > tr > th:nth-child(3), & > tbody > tr > td:nth-child(3) {
+        width: 70%;
+    }
+    > thead > tr > th:nth-child(4), & > tbody > tr > td:nth-child(4) {
+        width: 30%;
+    }
+}
+
 #new-campaign-btn {
     float: right;
 }
