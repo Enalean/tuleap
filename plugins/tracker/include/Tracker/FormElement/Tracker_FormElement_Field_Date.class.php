@@ -162,6 +162,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      */
     public function continueGetInstanceFromXML($xml, &$xmlMapping) {
         parent::continueGetInstanceFromXML($xml, $xmlMapping);
+
         // add children
         if (isset($this->default_properties['default_value'])) {
             if ($this->default_properties['default_value'] === 'today') {
@@ -186,22 +187,36 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      */
     public function exportPropertiesToXML(&$root) {
         $child = $root->addChild('properties');
+
         foreach ($this->getProperties() as $name => $property) {
-            $value_type = $property['value'];
-            if ($value_type == '1') {
-                // a date
-                $prop = $property['choices']['default_value'];
-                if (!empty($prop['value'])) {
-                    // a specific date
-                    $child->addAttribute('default_value', $prop['value']);
-                } // else no default value, nothing to do
-            } else {
-                // today
-                $prop = $property['choices']['default_value_today'];
-                // $prop['value'] is the string 'today'
-                $child->addAttribute('default_value', $prop['value']);
+            if ($name === 'default_value_type' ) {
+                $this->exportDefaultValueToXML($child, $property);
+                continue;
             }
+
+            $this->exportDisplayTimeToXML($child);
         }
+    }
+
+    private function exportDefaultValueToXML(SimpleXMLElement &$xml_element, array $property) {
+        $value_type = $property['value'];
+        if ($value_type == '1') {
+            // a date
+            $prop = $property['choices']['default_value'];
+            if (!empty($prop['value'])) {
+                // a specific date
+                $xml_element->addAttribute('default_value', $prop['value']);
+            } // else no default value, nothing to do
+        } else {
+            // today
+            $prop = $property['choices']['default_value_today'];
+            // $prop['value'] is the string 'today'
+            $xml_element->addAttribute('default_value', $prop['value']);
+        }
+    }
+
+    private function exportDisplayTimeToXML(SimpleXMLElement &$xml_element) {
+        $xml_element->addAttribute('display_time', $this->isTimeDisplayed() ? '1' : '0');
     }
     
     /**

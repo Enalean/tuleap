@@ -342,6 +342,14 @@
             </choice>
           </attribute>
         </optional>
+        <optional>
+          <attribute name="display_time">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </attribute>
+        </optional>
       </element>
     </optional>
     <choice>
