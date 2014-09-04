@@ -29,7 +29,8 @@ class CampaignRepresentation {
 
     const ROUTE = 'testing_campaigns';
 
-    const FIELD_NAME = "label";
+    const FIELD_NAME           = "label";
+    const FIELD_ARTIFACT_LINKS = "artifact_links";
 
     const STATUS_NOT_RUN = "notrun";
     const STATUS_PASSED  = "passed";

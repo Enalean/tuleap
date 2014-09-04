@@ -32,7 +32,6 @@ use Tuleap\Testing\Config;
 use Tuleap\Testing\Dao;
 use Tracker_Artifact;
 use TrackerFactory;
-use Tuleap\Tracker\REST\TrackerReference;
 use Tracker_REST_Artifact_ArtifactCreator;
 use Tracker_REST_Artifact_ArtifactValidator;
 
@@ -58,24 +57,18 @@ class CampaignsResource {
     /** @var AssignedToRepresentationBuilder */
     private $assigned_to_representation_builder;
 
-    /** @var Config */
-    private $config;
-
     /** @var ProjectManager */
     private $project_manager;
-
-    /** @var TrackerFactory */
-    private $tracker_factory;
 
     public function __construct() {
         $this->project_manager       = ProjectManager::instance();
         $this->user_manager          = UserManager::instance();
-        $this->tracker_factory       = TrackerFactory::instance();
+        $tracker_factory             = TrackerFactory::instance();
         $this->artifact_factory      = Tracker_ArtifactFactory::instance();
         $this->formelement_factory   = Tracker_FormElementFactory::instance();
-        $this->config                = new Config(new Dao());
+        $config                      = new Config(new Dao());
         $this->conformance_validator = new ConfigConformanceValidator(
-            $this->config
+            $config
         );
 
         $this->assigned_to_representation_builder = new AssignedToRepresentationBuilder(
@@ -87,6 +80,31 @@ class CampaignsResource {
             $this->formelement_factory,
             $this->conformance_validator,
             $this->assigned_to_representation_builder
+        );
+
+        $artifact_creator = new Tracker_REST_Artifact_ArtifactCreator(
+            new Tracker_REST_Artifact_ArtifactValidator(
+                $this->formelement_factory
+            ),
+            $this->artifact_factory,
+            $tracker_factory
+        );
+
+        $execution_creator = new ExecutionCreator(
+            $this->formelement_factory,
+            $config,
+            $this->project_manager,
+            $tracker_factory,
+            $artifact_creator
+        );
+
+        $this->campaign_creator = new CampaignCreator(
+            $this->formelement_factory,
+            $config,
+            $this->project_manager,
+            $tracker_factory,
+            $artifact_creator,
+            $execution_creator
         );
     }
 
@@ -213,50 +231,18 @@ class CampaignsResource {
      *
      * @url POST
      *
-     * @param int $project_id Id of the project the campaign will belong to
+     * @param int    $project_id   Id of the project the campaign will belong to
+     * @param string $label        The label of the new campaign
+     * @param array  $environments Associated environments and test definitions
      */
-    protected function post($project_id, $label) {
-        $tracker_reference = $this->getTrackerReferenceForProject($project_id);
-
-        try {
-            $user    = UserManager::instance()->getCurrentUser();
-            $values  = $this->getFieldValuesForArtifactCreation($tracker_reference, $user, $label);
-            $updater = new Tracker_REST_Artifact_ArtifactCreator(
-                new Tracker_REST_Artifact_ArtifactValidator(
-                    $this->formelement_factory
-                ),
-                $this->artifact_factory,
-                $this->tracker_factory
-            );
-            return $updater->create($user, $tracker_reference, $values);
-        } catch (Tracker_FormElement_InvalidFieldException $exception) {
-            throw new RestException(400, $exception->getMessage());
-        } catch (Tracker_FormElement_InvalidFieldValueException $exception) {
-            throw new RestException(400, $exception->getMessage());
-        } catch (Tracker_Artifact_Attachment_FileNotFoundException $exception) {
-            throw new RestException(400, $exception->getMessage());
-        } catch (Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException $exception) {
-            throw new RestException(400, $exception->getMessage());
-        }
+    protected function post($project_id, $label, $environments) {
         $this->options();
-    }
-
-    private function getTrackerReferenceForProject($project_id) {
-        $project = $this->project_manager->getProject($project_id);
-        if ($project->isError()) {
-            throw new RestException(404, 'Project not found');
-        }
-
-        $campaign_tracker_id = $this->config->getCampaignTrackerId($project);
-        $campaign_tracker    = $this->tracker_factory->getTrackerById($campaign_tracker_id);
-        if (! $campaign_tracker) {
-            throw new RestException(400, 'The project does not contain a campaign tracker');
-        }
-
-        $tracker_reference = new TrackerReference();
-        $tracker_reference->build($campaign_tracker);
-
-        return $tracker_reference;
+        return $this->campaign_creator->createCampaignAndExecutions(
+            UserManager::instance()->getCurrentUser(),
+            $project_id,
+            $label,
+            $environments
+        );
     }
 
     private function getEnvironmentsForCampaign(PFUser $user, Tracker_Artifact $campaign) {
@@ -326,37 +312,4 @@ class CampaignsResource {
     private function sendPaginationHeaders($limit, $offset, $size) {
         Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
     }
-
-    private function getFieldValuesForArtifactCreation(
-        TrackerReference $tracker_reference,
-        PFUser $user,
-        $label
-    ) {
-        $values = array();
-
-        $label_field = $this->getLabelField($tracker_reference, $user);
-        $values[]    = array(
-            'field_id' => (int)$label_field->getId(),
-            'value'    => $label
-        );
-
-        return $values;
-    }
-
-    private function getLabelField(
-        TrackerReference $tracker_reference,
-        PFUser $user
-    ) {
-        $label_field = $this->formelement_factory->getUsedFieldByNameForUser(
-            $tracker_reference->id,
-            CampaignRepresentation::FIELD_NAME,
-            $user
-        );
-        if (! $label_field) {
-            throw new RestException(500, 'Campaign tracker misconfigured');
-        }
-
-        return $label_field;
-    }
-
 }

@@ -27,10 +27,11 @@ class ExecutionRepresentation {
 
     const ROUTE = 'testing_executions';
 
-    const FIELD_RESULTS      = 'results';
-    const FIELD_ENVIRONMENT  = 'environment';
-    const FIELD_ASSIGNED_TO  = 'assigned_to';
-    const FIELD_STATUS       = 'status';
+    const FIELD_RESULTS        = 'results';
+    const FIELD_ENVIRONMENT    = 'environment';
+    const FIELD_ASSIGNED_TO    = 'assigned_to';
+    const FIELD_STATUS         = 'status';
+    const FIELD_ARTIFACT_LINKS = "artifact_links";
 
     /**
      * @var int ID of the artifact
