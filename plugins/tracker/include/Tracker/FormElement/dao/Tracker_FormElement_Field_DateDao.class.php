@@ -67,8 +67,8 @@ class Tracker_FormElement_Field_DateDao extends Tracker_FormElement_SpecificProp
         $from_field_id  = $this->da->escapeInt($from_field_id);
         $to_field_id  = $this->da->escapeInt($to_field_id);
         
-        $sql = "REPLACE INTO $this->table_name (field_id, default_value, default_value_type)
-                SELECT $to_field_id, default_value, default_value_type 
+        $sql = "REPLACE INTO $this->table_name (field_id, default_value, default_value_type, display_time)
+                SELECT $to_field_id, default_value, default_value_type, display_time
                 FROM $this->table_name 
                 WHERE field_id = $from_field_id";
         return $this->update($sql);
