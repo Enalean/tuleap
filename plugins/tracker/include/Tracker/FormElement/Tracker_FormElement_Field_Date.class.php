@@ -472,7 +472,8 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
                 "criteria[". $this->id ."][to_date]",
                 $value,
                 $criteria_selector,
-                array()
+                array(),
+                $this->getBootstrapDateFormat()
             );
             $html .= '</div>';
         }
@@ -560,15 +561,13 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      * @return string html
      */
     protected function fetchSubmitValue($submitted_values = array()) {
-        $value = $this->getValueFromSubmitOrDefault($submitted_values);
+        $errors = $this->has_errors ? array('has_error') : array();
 
-        return $GLOBALS['HTML']->getBootstrapDatePicker(
-            "tracker_admin_field_".$this->id,
-            'artifact['.$this->id.']',
-            $value,
-            array(),
-            $this->has_errors ? array('has_error') : array()
-        );
+        if (! $submitted_values) {
+            $submitted_values = array();
+        }
+
+        return $this->getFormatter()->fetchSubmitValue($submitted_values, $errors);
     }
 
      /**
@@ -593,24 +592,14 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      *
      * @return string
      */
-    protected function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
-        $html = '';
-        if (! empty($submitted_values) && is_array($submitted_values[0])) {
-            $value=$submitted_values[0][$this->getId()];
-        } else {
-            if ($value != null) {
-                $value = $value->getTimestamp();
-                $value = $value ? $this->formatDate($value) : '';
-            }
-        }
+    protected function fetchArtifactValue(
+        Tracker_Artifact $artifact,
+        Tracker_Artifact_ChangesetValue $value = null,
+        $submitted_values = array()
+    ) {
+        $errors = $this->has_errors ? array('has_error') : array();
 
-        return $GLOBALS['HTML']->getBootstrapDatePicker(
-            "tracker_admin_field_".$this->id,
-            'artifact['.$this->id.']',
-            $value,
-            array(),
-            $this->has_errors ? array('has_error') : array()
-        );
+        return $this->getFormatter()->fetchArtifactValue($artifact, $value, $submitted_values, $errors);
     }
 
     /**
@@ -630,6 +619,14 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
 
+    public function getNoValueLabel() {
+        return parent::getNoValueLabel();
+    }
+
+    public function getValueFromSubmitOrDefault($submitted_values) {
+        return parent::getValueFromSubmitOrDefault($submitted_values);
+    }
+
     /**
      * Fetch the html code to display the field value in artifact in read only mode
      *
@@ -639,14 +636,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      * @return string
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
-        $html  = '';
-        if ( empty($value) || ! $value->getTimestamp() ) {
-            return $this->getNoValueLabel();
-        }
-        $value_timestamp = $value->getTimestamp();
-        $value_timestamp = $value_timestamp ? $this->formatDate($value_timestamp) : '';
-        $html .= $value_timestamp;
-        return $html;
+        return $this->getFormatter()->fetchArtifactValueReadOnly($artifact, $value);
     }
 
     public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
@@ -681,7 +671,8 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
             '',
             $this->hasDefaultValue() ? $this->getDefaultValue() : '',
             array(),
-            array()
+            array(),
+            $this->isTimeDisplayed()
         );
     }
 
@@ -737,14 +728,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      * @return bool true if the value is considered ok
      */
     protected function validate(Tracker_Artifact $artifact, $value) {
-        $is_valid = true;
-        if ($value) {
-            $r = new Rule_Date();
-            if (!($is_valid = $r->isValid($value))) {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_date_value', array($this->getLabel())));
-            }
-        }
-        return $is_valid;
+        return $this->getFormatter()->validate($value);
     }
     
     /**
@@ -968,5 +952,24 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
 
     public function isTimeDisplayed() {
         return ($this->getProperty('display_time') == 1);
+    }
+
+    private function getBootstrapDateFormat() {
+        return $this->getFormatter()->getFormat();
+    }
+
+    public function formatDate($date) {
+        return $this->getFormatter()->formatDate($date);
+    }
+
+    /**
+     * @return Tracker_FormElement_DateFormatter
+     */
+    public function getFormatter() {
+        if ($this->isTimeDisplayed()) {
+            return new Tracker_FormElement_DateTimeFormatter($this);
+        }
+
+        return new Tracker_FormElement_DateFormatter($this);
     }
 }
