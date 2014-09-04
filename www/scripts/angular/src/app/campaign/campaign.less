@@ -67,6 +67,10 @@
     }
 }
 
+.definitions-pagination-container {
+    text-align: center;
+}
+
 #new-campaign-btn {
     float: right;
 }
@@ -84,11 +88,18 @@
     z-index: 999;
 }
 
-#campaign-new-container > .tabbable {
-    margin-top: 14px;
+#campaign-new-container {
+    margin-bottom: 90px;
 
-    > .nav-tabs > li:not(.active) > a {
-        cursor: pointer;
+    > .tabbable {
+        margin-top: 14px;
+    }
+
+    > .tabbable > .nav-tabs,
+    .pagination > ul {
+        > li:not(.active) > a {
+            cursor: pointer
+        }
     }
 }
 

@@ -20,7 +20,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="definition in definitions track by $index">
+                        <tr ng-repeat="definition in definitions | CurrentPageFilter:environment.current_page:ITEMS_PER_PAGE track by $index ">
                             <td><input type="checkbox" ng-model="environment.definitions[definition.id]" /></td>
                             <td>{{ definition.id }}</td>
                             <td>{{ definition.summary }}</td>
@@ -30,8 +30,23 @@
                 </table>
 
                 <img src="scripts/angular/bin/assets/loader.gif"
-                     ng-if="loading_definitions"
+                     ng-if="loading_definitions && environment.current_page * ITEMS_PER_PAGE > definitions.length"
                      class="loader" />
+
+                <div class="definitions-pagination-container">
+                    <pagination
+                        total-items="nb_total_definitions"
+                        items-per-page="{{ ITEMS_PER_PAGE }}"
+                        max-size="5"
+                        page="environment.current_page"
+                        class="pagination-sm"
+                        boundary-links="true"
+                        previous-text="&lsaquo;"
+                        next-text="&rsaquo;"
+                        first-text="&laquo;"
+                        last-text="&raquo;"
+                    ></pagination>
+                </div>
             </tab>
             <tab>
                 <tab-heading>

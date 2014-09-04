@@ -25,6 +25,8 @@
         var project_id = SharedPropertiesService.getProjectId();
 
         _.extend($scope, {
+            ITEMS_PER_PAGE:       15,
+            nb_total_definitions: 0,
             loading_environments: true,
             loading_definitions:  true,
             breadcrumb_label:     gettextCatalog.getString('Campaign creation'),
@@ -88,18 +90,22 @@
 
         function addPossibleEnvironmentInCampaign(environment) {
             $scope.campaign.environments.push({
-                label:      environment.label,
-                id:         environment.id,
-                is_choosen: false,
-                definitions: {}
+                label:        environment.label,
+                id:           environment.id,
+                is_choosen:   false,
+                current_page: 1,
+                definitions:  {}
             });
         }
 
         function getDefinitions(project_id, limit, offset) {
             DefinitionService.getDefinitions(project_id, limit, offset).then(function(data) {
-                $scope.definitions = $scope.definitions.concat(data.results);
+                _.extend($scope, {
+                    definitions:          $scope.definitions.concat(data.results),
+                    nb_total_definitions: data.total
+                });
 
-                if ($scope.definitions.length < data.total) {
+                if ($scope.definitions.length < $scope.nb_total_definitions) {
                     getDefinitions(project_id, limit, offset + limit);
                 } else {
                     $scope.loading_definitions = false;
