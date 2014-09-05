@@ -127,10 +127,11 @@ class CampaignsResource {
      * @return Tuleap\Testing\REST\v1\CampaignRepresentation
      */
     protected function getId($id) {
+        $this->optionsId($id);
+
         $user     = $this->user_manager->getCurrentUser();
         $campaign = $this->getCampaignFromId($id, $user);
 
-        Header::allowOptionsGet();
         $campaign_representation = new CampaignRepresentation();
         $campaign_representation->build(
             $campaign,
@@ -139,6 +140,13 @@ class CampaignsResource {
         );
 
         return $campaign_representation;
+    }
+
+    /**
+     * @url OPTIONS {id}/testing_executions
+     */
+    public function optionsExecutions($id) {
+        Header::allowOptionsGet();
     }
 
     /**
@@ -155,6 +163,8 @@ class CampaignsResource {
      * @return array {@type Tuleap\Testing\REST\v1\ExecutionRepresentation}
      */
     protected function getExecutions($id, $limit = 10, $offset = 0) {
+        $this->optionsExecutions($id);
+
         $user     = $this->user_manager->getCurrentUser();
         $campaign = $this->getCampaignFromId($id, $user);
 
@@ -165,6 +175,13 @@ class CampaignsResource {
         $this->sortByCategoryAndId($execution_representations);
 
         return array_slice($execution_representations, $offset, $limit);
+    }
+
+    /**
+     * @url OPTIONS {id}/testing_assignees
+     */
+    public function optionsAssignees($id) {
+        Header::allowOptionsGet();
     }
 
     /**
@@ -182,6 +199,8 @@ class CampaignsResource {
      * @return array {@type Tuleap\User\REST\UserRepresentation}
      */
     protected function getAssignees($id, $limit = 10, $offset = 0) {
+        $this->optionsAssignees($id);
+
         $user     = $this->user_manager->getCurrentUser();
         $campaign = $this->getCampaignFromId($id, $user);
 
@@ -190,6 +209,13 @@ class CampaignsResource {
         $this->sendPaginationHeaders($limit, $offset, count($assignees));
 
         return array_slice($assignees, $offset, $limit);
+    }
+
+    /**
+     * @url OPTIONS {id}/testing_environments
+     */
+    public function optionsEnvironments($id) {
+        Header::allowOptionsGet();
     }
 
     /**
@@ -207,6 +233,8 @@ class CampaignsResource {
      * @return array {@type Tuleap\User\REST\UserRepresentation}
      */
     protected function getEnvironments($id, $limit = 10, $offset = 0) {
+        $this->optionsEnvironments($id);
+
         $user     = $this->user_manager->getCurrentUser();
         $campaign = $this->getCampaignFromId($id, $user);
 

@@ -76,9 +76,9 @@ class ProjectResource {
     }
 
     /**
-     * @url OPTIONS {id}
+     * @url OPTIONS {id}/testing_campaigns
      */
-    public function optionsId($id) {
+    public function optionsCampaigns($id) {
         Header::allowOptionsGet();
     }
 
@@ -96,20 +96,16 @@ class ProjectResource {
      * @return array {@type Tuleap\Testing\REST\v1\CampaignRepresentation}
      */
     protected function getCampaigns($id, $limit = 10, $offset = 0) {
-        $project    = $this->project_manager->getProject($id);
+        $this->optionsCampaigns($id);
 
-        if ($project->isError()) {
-            throw new RestException(404, 'Project not found');
-        }
+        $project = $this->getProject($id);
 
         $campaign_tracker_id = $this->config->getCampaignTrackerId($project);
-
         if (! $campaign_tracker_id) {
             throw new RestException(400, 'The campaign tracker id is not well configured');
         }
 
         $campaign_tracker = $this->tracker_factory->getTrackerById($campaign_tracker_id);
-
         if (! $campaign_tracker) {
             throw new RestException(404, 'The campaign tracker does not exist');
         }
@@ -136,6 +132,13 @@ class ProjectResource {
     }
 
     /**
+     * @url OPTIONS {id}/testing_definitions
+     */
+    public function optionsDefinitions($id) {
+        Header::allowOptionsGet();
+    }
+
+    /**
      * Get test definitions
      *
      * Get all test projects for a given project
@@ -149,15 +152,12 @@ class ProjectResource {
      * @return array {DefinitionRepresentation}
      */
     protected function getDefinitions($id, $limit = 10, $offset = 0) {
-        $project = $this->project_manager->getProject($id);
+        $this->optionsDefinitions($id);
 
-        if ($project->isError()) {
-            throw new RestException(404, 'Project not found');
-        }
+        $project = $this->getProject($id);
 
         $tracker_id = $this->config->getTestDefinitionTrackerId($project);
         $tracker    = $this->tracker_factory->getTrackerById($tracker_id);
-
         if (! $tracker) {
             throw new RestException(400, 'The test definition tracker id is not well configured');
         }
@@ -182,9 +182,15 @@ class ProjectResource {
         }
 
         $this->sendPaginationHeaders($limit, $offset, count($result));
-        $this->optionsId($id);
 
         return array_slice($result, $offset, $limit);
+    }
+
+    /**
+     * @url OPTIONS {id}/testing_environments
+     */
+    public function optionsEnvironments($id) {
+        Header::allowOptionsGet();
     }
 
     /**
@@ -201,15 +207,12 @@ class ProjectResource {
      * @return array
      */
     protected function getEnvironments($id, $limit = 10, $offset = 0) {
-        $project = $this->project_manager->getProject($id);
+        $this->optionsEnvironments($id);
 
-        if ($project->isError()) {
-            throw new RestException(404, 'Project not found');
-        }
+        $project = $this->getProject($id);
 
         $tracker_id = $this->config->getTestExecutionTrackerId($project);
         $tracker    = $this->tracker_factory->getTrackerById($tracker_id);
-
         if (! $tracker) {
             throw new RestException(400, 'The execution tracker id is not well configured');
         }
@@ -237,9 +240,17 @@ class ProjectResource {
         }
 
         $this->sendPaginationHeaders($limit, $offset, count($result));
-        $this->optionsId($id);
 
         return array_slice($result, $offset, $limit);
+    }
+
+    private function getProject($id) {
+        $project = $this->project_manager->getProject($id);
+        if ($project->isError()) {
+            throw new RestException(404, 'Project not found');
+        }
+
+        return $project;
     }
 
     private function sendPaginationHeaders($limit, $offset, $size) {
