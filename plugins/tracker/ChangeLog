@@ -1,3 +1,6 @@
+Version 5.457 - Tuleap 7.5
+    * tasks #7410 Ensure artifact masschange handles dates and datetimes
+
 Version 5.456 - Tuleap 7.5
     * tasks #7405 make sure artifact dates are copied correctly
 
