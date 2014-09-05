@@ -10,6 +10,7 @@
                 ng-repeat="environment in campaign.environments | filter:{is_choosen:true}"
                 heading="{{ environment.label }}"
             >
+                <input type="text" placeholder="{{ 'Filter...' | translate }}" ng-model="environment.filter" ng-trim>
                 <table class="table table-striped table-bordered test-definition-list">
                     <thead>
                         <tr>
@@ -20,7 +21,11 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="definition in definitions | CurrentPageFilter:environment.current_page:ITEMS_PER_PAGE track by $index ">
+                        <tr ng-repeat="definition in getFilteredDefinitions(environment.filter)
+                            | orderBy:'id'
+                            | CurrentPageFilter:environment.current_page:ITEMS_PER_PAGE
+                            track by $index"
+                        >
                             <td><input type="checkbox" ng-model="environment.definitions[definition.id]" /></td>
                             <td>{{ definition.id }}</td>
                             <td>{{ definition.summary }}</td>
@@ -30,12 +35,12 @@
                 </table>
 
                 <img src="scripts/angular/bin/assets/loader.gif"
-                     ng-if="loading_definitions && environment.current_page * ITEMS_PER_PAGE > definitions.length"
+                     ng-if="loading_definitions && (environment.filter || environment.current_page * ITEMS_PER_PAGE > definitions.length)"
                      class="loader" />
 
                 <div class="definitions-pagination-container">
                     <pagination
-                        total-items="nb_total_definitions"
+                        total-items="environment.filter ? getFilteredDefinitions(environment.filter).length : nb_total_definitions"
                         items-per-page="{{ ITEMS_PER_PAGE }}"
                         max-size="5"
                         page="environment.current_page"

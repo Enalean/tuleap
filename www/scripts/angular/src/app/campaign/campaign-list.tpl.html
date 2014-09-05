@@ -18,7 +18,11 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="campaign in campaigns | CampaignListFilter:search track by $index">
+            <tr ng-repeat="campaign in campaigns
+                | InPropertiesFilter:search:['label', 'status']
+                | orderBy:'id':true
+                track by $index"
+            >
                 <td><a ui-sref="campaigns.executions({ id: campaign.id, slug: '{{ campaign.label | slugify }}' })">{{ campaign.label }}</a></td>
                 <td>{{ campaign.status }}</td>
                 <td>{{ campaign.total }}</td>

@@ -6,6 +6,7 @@
     CampaignNewCtrl.$inject = [
         '$scope',
         '$state',
+        '$filter',
         'gettextCatalog',
         'CampaignService',
         'EnvironmentService',
@@ -16,22 +17,24 @@
     function CampaignNewCtrl(
         $scope,
         $state,
+        $filter,
         gettextCatalog,
         CampaignService,
         EnvironmentService,
         DefinitionService,
         SharedPropertiesService
     ) {
-        var project_id = SharedPropertiesService.getProjectId();
+        var project_id = SharedPropertiesService.getProjectId(),
+            definitions = [];
 
         _.extend($scope, {
-            ITEMS_PER_PAGE:       15,
-            nb_total_definitions: 0,
-            loading_environments: true,
-            loading_definitions:  true,
-            breadcrumb_label:     gettextCatalog.getString('Campaign creation'),
-            definitions:          [],
-            createCampaign:       createCampaign,
+            ITEMS_PER_PAGE:         15,
+            nb_total_definitions:   0,
+            loading_environments:   true,
+            loading_definitions:    true,
+            breadcrumb_label:       gettextCatalog.getString('Campaign creation'),
+            getFilteredDefinitions: getFilteredDefinitions,
+            createCampaign:         createCampaign,
             campaign: {
                 label:        '',
                 environments: []
@@ -94,23 +97,31 @@
                 id:           environment.id,
                 is_choosen:   false,
                 current_page: 1,
+                filter:       '',
                 definitions:  {}
             });
         }
 
         function getDefinitions(project_id, limit, offset) {
             DefinitionService.getDefinitions(project_id, limit, offset).then(function(data) {
-                _.extend($scope, {
-                    definitions:          $scope.definitions.concat(data.results),
-                    nb_total_definitions: data.total
-                });
+                $scope.nb_total_definitions = data.total;
 
-                if ($scope.definitions.length < $scope.nb_total_definitions) {
+                definitions = definitions.concat(data.results);
+
+                if (definitions.length < $scope.nb_total_definitions) {
                     getDefinitions(project_id, limit, offset + limit);
                 } else {
                     $scope.loading_definitions = false;
                 }
             });
+        }
+
+        function getFilteredDefinitions(filter) {
+            return $filter('InPropertiesFilter')(
+                definitions,
+                filter,
+                ['id','summary','category']
+            );
         }
     }
 })();

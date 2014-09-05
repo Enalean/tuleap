@@ -72,6 +72,7 @@ msgid "Failed"
 msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html
+#: src/app/campaign/campaign-new.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Filter..."
 msgstr ""
