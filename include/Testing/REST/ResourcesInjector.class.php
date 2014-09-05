@@ -20,6 +20,8 @@
 
 use Tuleap\Project\REST\ProjectResourceReference;
 use Tuleap\Testing\REST\v1\CampaignRepresentation;
+use Tuleap\Testing\REST\v1\DefinitionRepresentation;
+use Tuleap\Testing\REST\v1\EnvironmentRepresentation;
 
 /**
  * Inject resource into restler
@@ -35,7 +37,9 @@ class Testing_REST_ResourcesInjector {
 
     public function declareProjectResource(array &$resources, Project $project) {
         $routes = array(
-            CampaignRepresentation::ROUTE
+            CampaignRepresentation::ROUTE,
+            DefinitionRepresentation::ROUTE,
+            EnvironmentRepresentation::ROUTE,
         );
         foreach ($routes as $route) {
             $resource_reference = new ProjectResourceReference();

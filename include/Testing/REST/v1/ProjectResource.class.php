@@ -224,15 +224,16 @@ class ProjectResource {
             throw new RestException(400, 'The environment field of execution tracker is not well configured');
         }
 
-        $soap_values = $execution_field->getSoapAvailableValues();
 
         $result = array();
-
-        foreach($soap_values as $value) {
-            $result[] = array(
-                'id'    => $value[Tracker_FormElement_Field_List_Bind::SOAP_ID_KEY],
-                'label' => $value[Tracker_FormElement_Field_List_Bind::SOAP_LABEL_KEY]
+        $field_as_json = $execution_field->fetchFormattedForJson();
+        foreach($field_as_json['values'] as $value) {
+            $environment = new EnvironmentRepresentation();
+            $environment->build(
+                $value['id'],
+                $value['label']
             );
+            $result[] = $environment;
         }
 
         $this->sendPaginationHeaders($limit, $offset, count($result));
