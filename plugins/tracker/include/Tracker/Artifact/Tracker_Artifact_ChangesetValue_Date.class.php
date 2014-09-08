@@ -76,7 +76,7 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
         if ($timestamp === null) {
             return '';
         } else {
-            return date($GLOBALS['Language']->getText('system', 'datefmt_short'), $timestamp);
+            return $this->field->formatDateForDisplay($timestamp);
         }
     }
     

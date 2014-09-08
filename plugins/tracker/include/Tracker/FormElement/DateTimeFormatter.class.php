@@ -49,6 +49,10 @@ class Tracker_FormElement_DateTimeFormatter extends Tracker_FormElement_DateForm
         return format_date(self::DATE_TIME_FORMAT, (float)$timestamp, '');
     }
 
+    public function formatDateForDisplay($timestamp) {
+        return format_date($GLOBALS['Language']->getText('system', 'datefmt_short') . ' H:i:s', (float) $timestamp, '');
+    }
+
     protected function getDatePicker($value, array $errors) {
         return $GLOBALS['HTML']->getBootstrapDatePicker(
             "tracker_admin_field_". $this->field->getId(),

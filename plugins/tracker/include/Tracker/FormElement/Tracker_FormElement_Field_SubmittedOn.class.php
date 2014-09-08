@@ -209,9 +209,10 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
         if (!$value) {
             $value = new Tracker_Artifact_ChangesetValue_Date(null, $this, false, $artifact->getSubmittedOn());
         }
-        $value = $value->getTimestamp();
-        $value = $value ? $this->formatDateTime($value) : '';
+        $timestamp = $value->getTimestamp();
+        $value     = $timestamp ? $this->formatDateForDisplay($timestamp) : '';
         $html .= $value;
+
         return $html;
     }
 

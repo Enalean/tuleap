@@ -27,21 +27,23 @@ class Tracker_Artifact_ChangesetValue_DateTest extends TuleapTestCase {
     
     function setUp() {
         $GLOBALS['Language'] = new MockBaseLanguage();
-        $this->user          = mock('PFUser');
+
+        $this->user = mock('PFUser');
     }
-    
-    function tearDown() {
-    }
-    
+
     function testDates() {
-        $GLOBALS['Language']->setReturnValueAt(0, 'getText', "Y-m-d", array('system', 'datefmt_short'));
-        $GLOBALS['Language']->setReturnValueAt(1, 'getText', "d/m/Y", array('system', 'datefmt_short'));
-        $GLOBALS['Language']->setReturnValueAt(2, 'getText', "Y-m-d", array('system', 'datefmt_short'));
         $field = new MockTracker_FormElement_Field_Date();
+        stub($field)->formatDateForDisplay(1221221466)->returns("12/09/2008");
+        $date = new Tracker_Artifact_ChangesetValue_Date(111, $field, false, 1221221466);
+        $this->assertEqual($date->getTimestamp(), 1221221466);
+        $this->assertEqual($date->getDate(), "12/09/2008");
+
+        $field = new MockTracker_FormElement_Field_Date();
+        stub($field)->formatDateForDisplay(1221221466)->returns("2008-09-12");
         $date = new Tracker_Artifact_ChangesetValue_Date(111, $field, false, 1221221466);
         $this->assertEqual($date->getTimestamp(), 1221221466);
         $this->assertEqual($date->getDate(), "2008-09-12");
-        $this->assertEqual($date->getDate(), "12/09/2008");
+
         $this->assertEqual($date->getSoapValue($this->user), array('value' => 1221221466));
         $this->assertEqual($date->getValue(), "2008-09-12");
         
@@ -68,6 +70,9 @@ class Tracker_Artifact_ChangesetValue_DateTest extends TuleapTestCase {
         $GLOBALS['Language']->setReturnValue('getText', "Y-m-d", array('system', 'datefmt_short'));
         
         $field = new MockTracker_FormElement_Field_Date();
+         stub($field)->formatDateForDisplay(1221221466)->returns("2008-09-12");
+         stub($field)->formatDateForDisplay(1234567890)->returns("2009-02-14");
+
         $date_1 = new Tracker_Artifact_ChangesetValue_Date(111, $field, false, 1221221466);
         $date_2 = new Tracker_Artifact_ChangesetValue_Date(111, $field, false, 1234567890);
         $this->assertEqual($date_1->diff($date_2), 'changed from 2009-02-14 to 2008-09-12');
