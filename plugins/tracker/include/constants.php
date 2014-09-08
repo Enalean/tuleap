@@ -172,4 +172,3 @@ define('TRACKER_EVENT_REPORT_SAVE_ADDITIONAL_CRITERIA', 'tracker_event_report_sa
  * 'report'                        Tracker_Report        (IN)
  */
 define('TRACKER_EVENT_REPORT_LOAD_ADDITIONAL_CRITERIA', 'tracker_event_report_load_additional_criteria');
-?>

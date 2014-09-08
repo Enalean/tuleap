@@ -24,6 +24,16 @@
 class FullTextSearchTrackerActions {
 
     /**
+     * @var Logger
+     */
+    private $logger;
+
+    /**
+     * @var ElasticSearch_1_2_RequestTrackerDataFactory
+     */
+    private $tracker_data_factory;
+
+    /**
      * @var FullTextSearch_IIndexDocuments
      */
     private $client;
@@ -34,8 +44,10 @@ class FullTextSearchTrackerActions {
      *
      * @return Void
      */
-    public function __construct(FullTextSearch_IIndexDocuments $client) {
-        $this->client = $client;
+    public function __construct(FullTextSearch_IIndexDocuments $client, ElasticSearch_1_2_RequestTrackerDataFactory $tracker_data_factory, Logger $logger) {
+        $this->client               = $client;
+        $this->tracker_data_factory = $tracker_data_factory;
+        $this->logger               = $logger;
     }
 
     /**
@@ -48,9 +60,25 @@ class FullTextSearchTrackerActions {
      *
      * @return Void
      */
-    public function indexNewFollowUp($groupId, $artifactId, $changesetId, $text) {
-        $indexedData = $this->getIndexedData($groupId, $artifactId, $changesetId, $text);
-        $this->client->index(fulltextsearchPlugin::SEARCH_TRACKER_TYPE, $changesetId, $indexedData);
+    public function indexNewFollowUp(Tracker_Artifact $artifact) {
+        $this->initializeMapping($artifact->getTracker());
+        $this->logger->debug('[Tracker] Elasticsearch index artifact #' . $artifact->getId() . ' in tracker #' . $artifact->getTrackerId());
+        $this->client->index(
+            $artifact->getTrackerId(),
+            $artifact->getId(),
+            $this->tracker_data_factory->getFormattedArtifact($artifact)
+        );
+    }
+
+    private function initializeMapping(Tracker $tracker) {
+        if (! $this->mappingExists($tracker)) {
+            $this->logger->debug('[Tracker] Elasticsearch set mapping for tracker #'.$tracker->getId());
+            $this->client->setMapping((string) $tracker->getId(), $this->tracker_data_factory->getTrackerMapping($tracker));
+        }
+    }
+
+    private function mappingExists(Tracker $tracker) {
+        return count($this->client->getMapping((string) $tracker->getId())) > 0;
     }
 
     /**
@@ -68,26 +96,4 @@ class FullTextSearchTrackerActions {
         $updateData = $this->client->appendSetterData($updateData, 'followup', $text);
         $this->client->update(fulltextsearchPlugin::SEARCH_TRACKER_TYPE, $changesetId, $updateData);
     }
-
-    /**
-     * Format data to be indexed
-     *
-     * @param Integer $groupId     Id of the project
-     * @param Integer $artifactId  Id of the artifact
-     * @param Integer $changesetId Id of the changeset
-     * @param String  $text        Body of the followup comment
-     *
-     * @return Array
-     */
-    private function getIndexedData($groupId, $artifactId, $changesetId, $text) {
-        return array(
-            'id'           => $changesetId,
-            'group_id'     => $groupId,
-            'artifact_id'  => $artifactId,
-            'changeset_id' => $changesetId,
-            'followup'     => $text
-        );
-    }
-
 }
-?>

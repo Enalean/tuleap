@@ -412,7 +412,11 @@ class Tracker_Artifact_Changeset {
         return $this->latest_comment;
     }
 
-    public function setLatestComment(Tracker_Artifact_Changeset_Comment $comment) {
+    /**
+     *
+     * @param Tracker_Artifact_Changeset_Comment|-1 $comment
+     */
+    public function setLatestComment($comment) {
         $this->latest_comment = $comment;
     }
 

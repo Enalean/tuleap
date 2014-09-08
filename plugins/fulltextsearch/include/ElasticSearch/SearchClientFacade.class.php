@@ -102,12 +102,9 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
             'fields' => array(
                 'id',
                 'group_id',
-                'artifact_id',
-                'changeset_id'
+                'last_changeset_id'
             )
         );
-        //$this->filterWithGivenFacets($query, $facets);
-        //$this->filterQueryWithPermissions($query, $user);
         return $query;
     }
 

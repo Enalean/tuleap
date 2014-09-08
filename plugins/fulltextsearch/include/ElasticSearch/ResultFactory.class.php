@@ -44,7 +44,7 @@ class ElasticSearch_1_2_ResultFactory {
         $results = array();
         if (! empty($data['hits']['total'])) {
             foreach ($data['hits']['hits'] as $hit) {
-                $results[$hit['fields']['artifact_id'][0]] = $hit['fields']['changeset_id'][0];
+                $results[$hit['fields']['id'][0]] = $hit['fields']['last_changeset_id'][0];
             }
         }
 

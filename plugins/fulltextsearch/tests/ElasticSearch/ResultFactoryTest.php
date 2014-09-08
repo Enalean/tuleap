@@ -67,9 +67,8 @@ class ResultFactoryTest extends TuleapTestCase {
                         '_score' => 1.3838634,
                         'fields' => array (
                             'group_id' => array (0 => 116, ),
-                            'id' => array ( 0 => 3923, ),
-                            'changeset_id' => array ( 0 => 3923, ),
-                            'artifact_id' => array ( 0 => 22, ),
+                            'id' => array ( 0 => 22, ),
+                            'last_changeset_id' => array ( 0 => 3923, ),
                         ),
                     ),
                     1 => array(
@@ -79,9 +78,8 @@ class ResultFactoryTest extends TuleapTestCase {
                         '_score' => 1.3838634,
                         'fields' => array (
                             'group_id' => array (0 => 116, ),
-                            'id' => array ( 0 => 3924, ),
-                            'changeset_id' => array ( 0 => 3924, ),
-                            'artifact_id' => array ( 0 => 23, ),
+                            'id' => array ( 0 => 23, ),
+                            'last_changeset_id' => array ( 0 => 3924, ),
                         ),
                     ),
                 ),
