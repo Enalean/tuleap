@@ -175,7 +175,7 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
 
     private function setUpFields(Tracker_FormElementFactory $formelement_factory) {
         $list_field    = aSelectboxField()->withId(323)->isUsed()->build();
-        $date_field    = aDateField()->withId(322)->isUsed()->build();
+        $date_field    = aMockDateWithoutTimeField()->withId(322)->isUsed()->build();
         $integer_field = anIntegerField()->withId(321)->isUsed()->build();
 
         $static_bind = aBindStatic()->withField($list_field)->withValues(array(aFieldListStaticValue()->withId($this->static_value_open_bind_id)->withLabel('Open')->build()))->build();
@@ -244,12 +244,12 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
 
     private function getFromForDateFieldEqualsTo() {
         return new FromFragmentsExpectation(array('/ tracker_changeset_value_date AS ..322.* ..'.
-            preg_quote('322.value BETWEEN 12334567') .'\s* '. preg_quote('AND 12334567 + 24 * 60 * 60') .'/s'));
+            preg_quote('322.value BETWEEN 12334567') .'\s* '. preg_quote('AND 12334567 + 86400') .'/s'));
     }
 
     private function getFromForDateFieldAdvanced() {
         return new FromFragmentsExpectation(array('/ tracker_changeset_value_date AS ..322.* ..'.
-            preg_quote('322.value BETWEEN 1337') .'\s* '. preg_quote('AND 1338 + 24 * 60 * 60') .'/s'));
+            preg_quote('322.value BETWEEN 1337') .'\s* '. preg_quote('AND 1338 + 86400') .'/s'));
     }
 
     private function getFromForListField() {

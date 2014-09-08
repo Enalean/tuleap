@@ -358,4 +358,8 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
     public function accept(Tracker_FormElement_FieldVisitor $visitor) {
         return $visitor->visitLastUpdateDate($this);
     }
+
+    public function isTimeDisplayed() {
+        return true;
+    }
 }

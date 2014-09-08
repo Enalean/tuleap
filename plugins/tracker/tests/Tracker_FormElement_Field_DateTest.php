@@ -577,3 +577,176 @@ class Tracker_FormElement_Field_DateTest_setCriteriaValueFromREST extends Tuleap
     }
 
 }
+
+class DayFieldTestVersion extends Tracker_FormElement_Field_Date {
+    public function __construct() {}
+
+    public function getSQLCompareDate($is_advanced, $op, $from, $to, $column) {
+        return parent::getSQLCompareDate($is_advanced, $op, $from, $to, $column);
+    }
+
+    public function isTimeDisplayed() {
+        return false;
+    }
+}
+
+class Tracker_FormElement_Field_DateTest_getSQLCompareDate_DAY extends TuleapTestCase {
+
+    /* @var DayFieldTestVersion */
+    private $day_field;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->day_field = new DayFieldTestVersion();
+    }
+
+    public function itReturnsTheCorrectCriteriaForBetween() {
+        $is_advanced = true;
+        $column      = 'my_date_column';
+        $from        = strtotime('2014-07-05');
+        $to          = strtotime('2014-07-07');
+
+        $sql = $this->day_field->getSQLCompareDate($is_advanced, "=", $from, $to, $column);
+        $this->makeStringCheckable($sql);
+        $this->assertEqual($sql, "my_date_column BETWEEN $from AND $to + 86400 - 1");
+    }
+
+    public function itReturnsTheCorrectCriteriaForBefore_IncludingTheToDay() {
+        $is_advanced = true;
+        $column      = 'my_date_column';
+        $to          = strtotime('2014-07-07');
+
+        $sql = $this->day_field->getSQLCompareDate($is_advanced, "=", null, $to, $column);
+        $this->makeStringCheckable($sql);
+        $this->assertEqual($sql, "my_date_column <= $to + 86400 - 1");
+    }
+
+    public function itReturnsTheCorrectCriteriaForEquals() {
+        $is_advanced = false;
+        $column      = 'my_date_column';
+        $from        = null;
+        $to          = strtotime('2014-07-07');
+
+        $sql = $this->day_field->getSQLCompareDate($is_advanced, "=", $from, $to, $column);
+        $this->makeStringCheckable($sql);
+        $this->assertEqual($sql, "my_date_column BETWEEN $to AND $to + 86400 - 1");
+    }
+
+    public function itReturnsTheCorrectCriteriaForBefore() {
+        $is_advanced = false;
+        $column      = 'my_date_column';
+        $from        = null;
+        $to          = strtotime('2014-07-07');
+
+        $sql = $this->day_field->getSQLCompareDate($is_advanced, "<", $from, $to, $column);
+        $this->makeStringCheckable($sql);
+        $this->assertEqual($sql, "my_date_column < $to");
+    }
+
+    public function itReturnsTheCorrectCriteriaForAfter() {
+        $is_advanced = false;
+        $column      = 'my_date_column';
+        $from        = null;
+        $to          = strtotime('2014-07-07');
+
+        $sql = $this->day_field->getSQLCompareDate($is_advanced, ">", $from, $to, $column);
+        $this->makeStringCheckable($sql);
+        $this->assertEqual($sql, "my_date_column > $to + 86400");
+    }
+
+    private function makeStringCheckable(&$string) {
+        $string = str_replace(PHP_EOL, ' ', trim($string));
+
+        while(strstr($string, '  ')) {
+            $string = str_replace('  ', ' ', $string);
+        }
+    }
+}
+
+class DateTimeFieldTestVersion extends Tracker_FormElement_Field_Date {
+    public function __construct() {}
+
+    public function getSQLCompareDate($is_advanced, $op, $from, $to, $column) {
+        return parent::getSQLCompareDate($is_advanced, $op, $from, $to, $column);
+    }
+
+    public function isTimeDisplayed() {
+        return true;
+    }
+}
+
+class Tracker_FormElement_Field_DateTest_getSQLCompareDate_DATETIME extends TuleapTestCase {
+
+    /* @var DateTimeFieldTestVersion */
+    private $datetime_field;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->datetime_field = new DateTimeFieldTestVersion();
+    }
+
+    public function itReturnsTheCorrectCriteriaForBetween() {
+        $is_advanced = true;
+        $column      = 'my_date_column';
+        $from        = strtotime('2014-07-05 01:05:48');
+        $to          = strtotime('2014-07-07 18:26:00');
+
+        $sql = $this->datetime_field->getSQLCompareDate($is_advanced, null, $from, $to, $column);
+        $this->makeStringCheckable($sql);
+ 
+        $this->assertEqual($sql, "my_date_column BETWEEN $from AND $to");
+    }
+
+    public function itReturnsTheCorrectCriteriaForBefore_IncludingTheTheExactTime() {
+        $is_advanced = true;
+        $column      = 'my_date_column';
+        $to          = strtotime('2014-07-07 18:26:00');
+
+        $sql = $this->datetime_field->getSQLCompareDate($is_advanced, null, null, $to, $column);
+        $this->makeStringCheckable($sql);
+        $this->assertEqual($sql, "my_date_column <= $to");
+    }
+
+    public function itReturnsTheCorrectCriteriaForEquals() {
+        $is_advanced = false;
+        $column      = 'my_date_column';
+        $from        = null;
+        $to          = strtotime('2014-07-07 18:26:00');
+
+        $sql = $this->datetime_field->getSQLCompareDate($is_advanced, "=", $from, $to, $column);
+        $this->makeStringCheckable($sql);
+        $this->assertEqual($sql, "my_date_column = $to");
+    }
+
+    public function itReturnsTheCorrectCriteriaForBefore() {
+        $is_advanced = false;
+        $column      = 'my_date_column';
+        $from        = null;
+        $to          = strtotime('2014-07-07 18:26:00');
+
+        $sql = $this->datetime_field->getSQLCompareDate($is_advanced, "<", $from, $to, $column);
+        $this->makeStringCheckable($sql);
+        $this->assertEqual($sql, "my_date_column < $to");
+    }
+
+    public function itReturnsTheCorrectCriteriaForAfter() {
+        $is_advanced = false;
+        $column      = 'my_date_column';
+        $from        = null;
+        $to          = strtotime('2014-07-07 18:26:00');
+
+        $sql = $this->datetime_field->getSQLCompareDate($is_advanced, ">", $from, $to, $column);
+        $this->makeStringCheckable($sql);
+        $this->assertEqual($sql, "my_date_column > $to");
+    }
+
+    private function makeStringCheckable(&$string) {
+        $string = str_replace(PHP_EOL, ' ', trim($string));
+
+        while(strstr($string, '  ')) {
+            $string = str_replace('  ', ' ', $string);
+        }
+    }
+}

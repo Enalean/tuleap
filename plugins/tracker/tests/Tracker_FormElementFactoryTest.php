@@ -243,16 +243,37 @@ class Tracker_FormElementFactory_GetAllSharedFieldsOfATrackerTest extends Tracke
         $factory = $this->GivenSearchAllSharedTargetsOfProjectReturnsDar($dar, $project_id);
         
         $textField = aTextField()->withId(999)->build();
-        $dateField = aDateField()->withId(666)->build();
+        $dateField = aMockDateWithoutTimeField()->withId(666)->build();
 
-        $this->ThenICompareProjectSharedFieldsWithExpectedResult($factory, $project_id, array($textField, $dateField));
+
+        $project = new MockProject();
+        $project->setReturnValue('getId', $project_id);
+
+        $expected = $factory->getProjectSharedFields($project);
+
+        $this->assertCount($expected, 2);
+
+        $found_fields = array();
+        foreach ($expected as $field) {
+            if ($field instanceof Tracker_FormElement_Field_Date) {
+                $found_fields['date'] = true;
+                $this->assertEqual($field->getId(), 666);
+            }
+
+            if ($field instanceof Tracker_FormElement_Field_Text) {
+                $found_fields['text'] = true;
+                $this->assertEqual($field->getId(), 999);
+            }
+        }
+
+         $this->assertEqual($found_fields, array('date' => true, 'text' => true));
     }
 
     
     private function ThenICompareProjectSharedFieldsWithExpectedResult($factory, $project_id, $expectedResult) {
         $project = new MockProject();
         $project->setReturnValue('getId', $project_id);
-        
+
         $this->assertEqual($factory->getProjectSharedFields($project), $expectedResult);
     }
 

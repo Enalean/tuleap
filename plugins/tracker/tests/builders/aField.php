@@ -40,8 +40,8 @@ function aStringField() {
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_String');
 }
 
-function aDateField() {
-    return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_Date');
+function aMockDateWithoutTimeField() {
+    return new Test_Tracker_FormElementDateWithoutTime_Builder('Tracker_FormElement_Field_Date');
 }
 
 function anOpenListField() {
@@ -73,15 +73,15 @@ function aFileField() {
 }
 
 class Test_Tracker_FormElement_Builder {
-    private $klass;
-    private $id;
-    private $name;
-    private $tracker;
-    private $trackerId;
-    private $originalField;
-    private $use_it;
-    private $bind;
-    private $label;
+    protected $klass;
+    protected $id;
+    protected $name;
+    protected $tracker;
+    protected $trackerId;
+    protected $originalField;
+    protected $use_it;
+    protected $bind;
+    protected $label;
 
     public function __construct($klass) {
         $this->klass = $klass;
@@ -140,5 +140,26 @@ class Test_Tracker_FormElement_Builder {
         return $object;
     }
 }
+class Test_Tracker_FormElementDateWithoutTime_Builder extends Test_Tracker_FormElement_Builder {
+    public function build() {
+        $object = partial_mock(
+            'Tracker_FormElement_Field_Date',
+            array('isTimeDisplayed'),
+            array($this->id, $this->trackerId, null, $this->name, $this->label, null, $this->use_it, null, null, null, null, $this->originalField)
+        );
+
+        stub($object)->isTimeDisplayed()->returns(false);
+
+        if ($this->tracker) {
+            $object->setTracker($this->tracker);
+        }
+        if ($this->bind) {
+            $object->setBind($this->bind);
+        }
+
+        return $object;
+    }
+}
+
 
 ?>

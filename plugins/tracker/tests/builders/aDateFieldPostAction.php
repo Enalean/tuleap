@@ -38,7 +38,7 @@ class Test_Transition_PostAction_Field_Date_Builder {
     }
     
     public function withFieldId($field_id) {
-        $this->field = aDateField()->withId($field_id)->build();
+        $this->field = aMockDateWithoutTimeField()->withId($field_id)->build();
         return $this;
     }
     
