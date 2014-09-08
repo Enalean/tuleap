@@ -1,3 +1,12 @@
+Version 5.458 - Tuleap 7.5
+    * tasks #7404 Export / Import CSV
+
+
+This task is part of story #7161 Create a date-time field
+
+The export / import CSV process take in account time for date field that
+activated the option.
+
 Version 5.457 - Tuleap 7.5
     * tasks #7410 Ensure artifact masschange handles dates and datetimes
 
