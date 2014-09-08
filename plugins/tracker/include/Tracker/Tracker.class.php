@@ -2373,7 +2373,7 @@ EOS;
                 if ($is_valid) {
                     if (count($lines) >= 2) {
                         $is_valid = $this->isValidCSV($lines, $separator);
-                        
+
                         //header
                         $items = $this->getAdminItems();
                         $title = $items['csvimport']['title'];
@@ -2384,7 +2384,7 @@ EOS;
                         //body
                         if (count($lines) > 1) {
                             $html_table = '';
-                            $html_table .= '<table>';
+                            $html_table .= '<table class="table table-bordered table-striped csv-import-preview">';
                             $html_table .=  '<thead>';
                             $header = array_shift($lines);
                             $html_table .=  '<tr class="boxtable">';
@@ -2447,7 +2447,7 @@ EOS;
                                 if ($request->exist('notify') && $request->get('notify') == 'ok') {
                                     echo '<input type="hidden" name="notify" value="ok">';
                                 }
-                                echo '<input type="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_import','import_new_hdr').'">';
+                                echo '<input type="submit" class="csv-preview-import-button" value="'.$GLOBALS['Language']->getText('plugin_tracker_import','import_new_hdr').'">';
                             }
                             echo $html_table;
                             if ($is_valid) {

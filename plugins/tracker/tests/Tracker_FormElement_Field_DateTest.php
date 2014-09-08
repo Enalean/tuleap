@@ -176,21 +176,41 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
     function testExplodeXlsDateFmtDDMMYYYY() {
         $f = new Tracker_FormElement_Field_DateTestVersion();
         $f->setReturnValue('_getUserCSVDateFormat', 'day_month_year');
-        $this->assertEqual(array('1981', '04', '25', '0', '0'), $f->explodeXlsDateFmt('25/04/1981'));
-        $this->assertNull($f->explodeXlsDateFmt('04/25/1981'));
-        $this->assertNull($f->explodeXlsDateFmt('04/25/81'));
-        $this->assertNull($f->explodeXlsDateFmt('25/04/81'));
-        $this->assertNull($f->explodeXlsDateFmt('25/04/81 10AM'));
+        $this->assertEqual(array('1981', '04', '25', '0', '0', '0'), $f->explodeXlsDateFmt('25/04/1981'));
+        $this->assertArrayEmpty($f->explodeXlsDateFmt('04/25/1981'));
+        $this->assertArrayEmpty($f->explodeXlsDateFmt('04/25/81'));
+        $this->assertArrayEmpty($f->explodeXlsDateFmt('25/04/81'));
+        $this->assertArrayEmpty($f->explodeXlsDateFmt('25/04/81 10AM'));
     }
     
     function testExplodeXlsDateFmtMMDDYYYY() {
         $f = new Tracker_FormElement_Field_DateTestVersion();
         $f->setReturnValue('_getUserCSVDateFormat', 'month_day_year');
-        $this->assertEqual(array('1981', '04', '25', '0', '0'), $f->explodeXlsDateFmt('04/25/1981'));
-        $this->assertNull($f->explodeXlsDateFmt('25/04/1981'));
-        $this->assertNull($f->explodeXlsDateFmt('25/04/81'));
-        $this->assertNull($f->explodeXlsDateFmt('04/25/81'));
-        $this->assertNull($f->explodeXlsDateFmt('04/25/81 10AM'));
+        $this->assertEqual(array('1981', '04', '25', '0', '0', '0'), $f->explodeXlsDateFmt('04/25/1981'));
+        $this->assertArrayEmpty($f->explodeXlsDateFmt('25/04/1981'));
+        $this->assertArrayEmpty($f->explodeXlsDateFmt('25/04/81'));
+        $this->assertArrayEmpty($f->explodeXlsDateFmt('04/25/81'));
+        $this->assertArrayEmpty($f->explodeXlsDateFmt('04/25/81 10AM'));
+    }
+
+    public function itExplodesDateWithHoursInDDMMYYYYFormat() {
+        $field = new Tracker_FormElement_Field_DateTestVersion();
+        $field->setReturnValue('_getUserCSVDateFormat', 'day_month_year');
+
+        $this->assertEqual(
+            array('1981', '04', '25', '10', '00', '01'),
+            $field->explodeXlsDateFmt('25/04/1981 10:00:01')
+        );
+    }
+
+    public function itExplodesDateWithHoursInMMDDYYYYFormat() {
+        $field = new Tracker_FormElement_Field_DateTestVersion();
+        $field->setReturnValue('_getUserCSVDateFormat', 'month_day_year');
+
+        $this->assertEqual(
+            array('1981', '04', '25', '01', '02', '03'),
+            $field->explodeXlsDateFmt('04/25/1981 01:02:03')
+        );
     }
     
     function testNbDigits() {

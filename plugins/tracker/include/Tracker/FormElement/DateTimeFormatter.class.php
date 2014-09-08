@@ -49,6 +49,11 @@ class Tracker_FormElement_DateTimeFormatter extends Tracker_FormElement_DateForm
         return $is_valid;
     }
 
+    public function getFieldDataForCSVPreview(array $date_explode) {
+        return $date_explode[0] . '-' . $date_explode[1] . '-' . $date_explode[2]
+            . ' ' . $date_explode[3].':'.$date_explode[4].':'.$date_explode[5];
+    }
+
     public function formatDate($timestamp) {
         return format_date(self::DATE_TIME_FORMAT, (float)$timestamp, '');
     }

@@ -76,4 +76,20 @@ class Tracker_FormElement_DateTimeFormatterTest extends TuleapTestCase {
 
         $this->assertFalse($this->date_formatter->validate($value));
     }
+
+    public function itReturnsWellFormedDateForCSV() {
+        $date_exploded = array(
+            '2014',
+            '09',
+            '03',
+            '08',
+            '06',
+            '12'
+        );
+
+        $expected = '2014-09-03 08:06:12';
+
+        $this->assertEqual($expected, $this->date_formatter->getFieldDataForCSVPreview($date_exploded));
+    }
+
 }

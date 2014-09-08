@@ -824,38 +824,62 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      * @return array the five parts of the date array(YYYY,MM,DD,H,i)
      */
     public function explodeXlsDateFmt($date) {
-        $u_pref = $this->_getUserCSVDateFormat();
-        
-        $res = preg_match("/\s*(\d+)\/(\d+)\/(\d+) (\d+):(\d+)/",$date,$match);
-        if ($res == 0) {
-            //if it doesn't work try (n/j/Y) only
-            $res = preg_match("/\s*(\d+)\/(\d+)\/(\d+)/",$date,$match);
-            if ($res == 0) {
-              // nothing is valid return Epoch time
-              $year = '1970'; $month='1'; $day='1'; $hour='0'; $minute='0';
-            } else {
-                if ($u_pref == "day_month_year") {
-                    list(,$day,$month,$year) = $match; $hour='0'; $minute='0';
-                } else {
-                    list(,$month,$day,$year) = $match; $hour='0'; $minute='0';
-                }
-            }
-        } else {
-            if ($u_pref == "day_month_year") {
-                list(,$day,$month,$year,$hour,$minute) = $match;
-            } else {
-                list(,$month,$day,$year,$hour,$minute) = $match;
-            }
+        $user_preference = $this->_getUserCSVDateFormat();
+        $match           = array();
+
+        if (preg_match("/\s*(\d+)\/(\d+)\/(\d+) (\d+):(\d+):(\d+)/", $date, $match)) {
+            return $this->getCSVDateComponantsWithHours($match, $user_preference);
+        } elseif (preg_match("/\s*(\d+)\/(\d+)\/(\d+)/", $date, $match)) {
+            return $this->getCSVDateComponantsWithoutHours($match, $user_preference);
         }
-        if (checkdate($month,$day,$year)) {
-            if ($this->_nbDigits($year) == 4) {
-                return array($year,$month,$day,$hour,$minute);
-            } else {
-                return null;
-            }
-        } else {
-            return null;
+
+        return $this->getCSVDefaultDateComponants();
+    }
+
+    /**
+     * @return array()
+     */
+    private function getCSVWellFormedDateComponants($month, $day, $year, $hour, $minute, $second) {
+        if (checkdate($month, $day, $year) && $this->_nbDigits($year) ===  4) {
+           return array($year, $month, $day, $hour, $minute, $second);
         }
+
+        return array();
+    }
+
+    private function getCSVDateComponantsWithoutHours(array $match, $user_preference) {
+        $hour   = '0';
+        $minute = '0';
+        $second = '0';
+
+        if ($user_preference == "day_month_year") {
+            list(,$day,$month,$year) = $match;
+        } else {
+            list(,$month,$day,$year) = $match;
+        }
+
+        return $this->getCSVWellFormedDateComponants($month, $day, $year, $hour, $minute, $second);
+    }
+
+    private function getCSVDateComponantsWithHours(array $match, $user_preference) {
+        if ($user_preference == "day_month_year") {
+            list(, $day, $month, $year, $hour, $minute, $second) = $match;
+        } else {
+            list(, $month, $day, $year, $hour, $minute, $second) = $match;
+        }
+
+        return $this->getCSVWellFormedDateComponants($month, $day, $year, $hour, $minute, $second);
+    }
+
+    private function getCSVDefaultDateComponants() {
+        $year   = '1970';
+        $month  = '1';
+        $day    = '1';
+        $hour   = '0';
+        $minute = '0';
+        $second = '0';
+
+        return $this->getCSVWellFormedDateComponants($month, $day, $year, $hour, $minute, $second);
     }
 
     /**
@@ -868,9 +892,9 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
     public function getFieldDataForCSVPreview($data_cell) {
         if ($data_cell !== '') {
             $date_explode = $this->explodeXlsDateFmt($data_cell);
-            if ($date_explode != null) {
+            if (isset($date_explode[0])) {
                 if ($this->_nbDigits($date_explode[0]) == 4) {
-                    return $date_explode[0] . '-' . $date_explode[1] . '-' . $date_explode[2];
+                    return $this->getFormatter()->getFieldDataForCSVPreview($date_explode);
                 } else {
                     return null;
                 }
@@ -903,7 +927,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
             }
         } elseif(intval($soap_value) == $soap_value) {
             // Assume it's a timestamp
-            return date('Y-m-d', (int) $soap_value);
+            return $this->getFormatter()->formatDate((int) $soap_value);
         }
         return null;
     }
