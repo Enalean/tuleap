@@ -90,7 +90,9 @@
         <button
             type="submit"
             class="btn btn-large btn-primary"
-            ng-disabled="! newCampaignForm.$valid"
-            translate>Create campaign</button>
+            ng-disabled="submitting_campaign || ! newCampaignForm.$valid">
+            <i class="icon-spinner icon-spin" ng-if="submitting_campaign"></i>
+            <span translate>Create campaign</span>
+        </button>
     </div>
 </form>

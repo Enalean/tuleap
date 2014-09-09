@@ -32,6 +32,7 @@
             nb_total_definitions:   0,
             loading_environments:   true,
             loading_definitions:    true,
+            submitting_campaign:    false,
             breadcrumb_label:       gettextCatalog.getString('Campaign creation'),
             getFilteredDefinitions: getFilteredDefinitions,
             createCampaign:         createCampaign,
@@ -46,6 +47,8 @@
 
         function createCampaign(campaign) {
             var environments = extractChoosenDefinitionsByEnvironment(campaign);
+
+            $scope.submitting_campaign = true;
 
             CampaignService
                 .createCampaign({
