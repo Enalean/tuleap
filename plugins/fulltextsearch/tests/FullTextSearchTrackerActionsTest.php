@@ -48,7 +48,7 @@ class FullTextSearchTrackerActions_DefineMappingTest extends TuleapTestCase {
 
         expect($this->client)->setMapping('455', array('dat result'))->once();
 
-        $this->actions->indexNewFollowUp($this->artifact);
+        $this->actions->indexArtifactUpdate($this->artifact);
     }
 
     public function itLogsMappingUpdates() {
@@ -57,7 +57,7 @@ class FullTextSearchTrackerActions_DefineMappingTest extends TuleapTestCase {
         expect($this->logger)->debug()->count(2);
         expect($this->logger)->debug('[Tracker] Elasticsearch set mapping for tracker #455')->at(0);
 
-        $this->actions->indexNewFollowUp($this->artifact);
+        $this->actions->indexArtifactUpdate($this->artifact);
     }
 
     public function itDoesntSetMappingIfAlreadyExists() {
@@ -65,7 +65,7 @@ class FullTextSearchTrackerActions_DefineMappingTest extends TuleapTestCase {
 
         expect($this->client)->setMapping()->never();
 
-        $this->actions->indexNewFollowUp($this->artifact);
+        $this->actions->indexArtifactUpdate($this->artifact);
     }
 }
 
@@ -94,7 +94,7 @@ class FullTextSearchTrackerActions_PushArtifactBaseTest extends TuleapTestCase {
 
         expect($this->client)->index(455, 44, array('formatted artifact'))->once();
 
-        $this->actions->indexNewFollowUp($this->artifact);
+        $this->actions->indexArtifactUpdate($this->artifact);
     }
 
     public function itLogsTheArtifactUpdate() {
@@ -103,6 +103,6 @@ class FullTextSearchTrackerActions_PushArtifactBaseTest extends TuleapTestCase {
 
         expect($this->logger)->debug('[Tracker] Elasticsearch index artifact #44 in tracker #455')->once();
 
-        $this->actions->indexNewFollowUp($this->artifact);
+        $this->actions->indexArtifactUpdate($this->artifact);
     }
 }

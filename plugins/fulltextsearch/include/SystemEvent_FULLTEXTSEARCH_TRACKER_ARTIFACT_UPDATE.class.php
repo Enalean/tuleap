@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2012. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,23 +19,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP extends SystemEvent {
+class SystemEvent_FULLTEXTSEARCH_TRACKER_ARTIFACT_UPDATE extends SystemEvent {
+
+    const NAME = 'FULLTEXTSEARCH_TRACKER_ARTIFACT_UPDATE';
 
     /**
      * @var FullTextSearchTrackerActions
      */
-    protected $actions;
+    private $actions;
 
     /**
-     * Inject dependencies
-     *
-     * @param FullTextSearchTrackerActions $actions Dependency
-     *
-     * @return Void
+     * @var Tracker_ArtifactFactory
      */
-    public function injectDependencies(FullTextSearchTrackerActions $actions) {
+    private $artifact_factory;
+
+    public function injectDependencies(FullTextSearchTrackerActions $actions, Tracker_ArtifactFactory $artifact_factory) {
         parent::injectDependencies();
         $this->setFullTextSearchTrackerActions($actions);
+        $this->artifact_factory = $artifact_factory;
     }
 
     /**
@@ -42,7 +44,7 @@ abstract class SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP extends SystemEvent {
      *
      * @param FullTextSearchTrackerActions $actions Dependency
      *
-     * @return SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP
+     * @return SystemEvent_FULLTEXTSEARCH_TRACKER_ARTIFACT_UPDATE
      */
     public function setFullTextSearchTrackerActions(FullTextSearchTrackerActions $actions) {
         $this->actions = $actions;
@@ -56,9 +58,9 @@ abstract class SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP extends SystemEvent {
      */
     public function process() {
         try {
-            list($groupId, $artifactId, $changesetId, $text) = $this->getFollowUpParameters();
+            $artifact_id = (int)$this->getRequiredParameter(0);
 
-            if ($this->action($groupId, $artifactId, $changesetId, $text)) {
+            if ($this->action($artifact_id)) {
                 $this->done();
                 return true;
             } else {
@@ -70,22 +72,13 @@ abstract class SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP extends SystemEvent {
         return false;
     }
 
-    /**
-     * Execute action
-     *
-     * @param Integer $groupId     Project Id
-     * @param Integer $artifactId  Artifact Id
-     * @param Integer $changesetId Changeset Id
-     * @param String  $text        Comment body
-     *
-     * @return Boolean
-     */
-    protected abstract function action($groupId, $artifactId, $changesetId, $text);
+    private function action($artifact_id) {
+        $this->actions->indexArtifactUpdate($this->artifact_factory->getArtifactById($artifact_id));
+        return true;
+    }
 
     /**
      * Verbalize parameters
-     * We display only a substring of the output of the indexed text of big comments
-     * may clutter the interface in systemevent monitor console.
      *
      * @param Boolean $withLink Create link for the params
      *
@@ -94,12 +87,9 @@ abstract class SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP extends SystemEvent {
     public function verbalizeParameters($withLink) {
         $txt = '';
         try {
-            list($groupId, $artifactId, $changesetId, $text) = $this->getFollowUpParameters();
+            $artifact_id = (int)$this->getRequiredParameter(0);
 
-            if (strlen($text)>15) {
-                $text = substr($text, 0, 15).'...';
-            }
-            $txt = 'Project: '.$this->verbalizeProjectId($groupId, $withLink).', Artifact: '.$this->verbalizeArtifactId($artifactId, $changesetId, $withLink).', Text: '.$text;
+            $txt = 'Artifact: '.$this->verbalizeArtifactId($artifact_id, $withLink);
         } catch (Exception $e) {
             return $e->getMessage();
         }
@@ -107,34 +97,19 @@ abstract class SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP extends SystemEvent {
     }
 
     /**
-     * @return array(groupId, artifactId, changesetId, text)
-     */
-    private function getFollowUpParameters() {
-        return array(
-            (int)$this->getRequiredParameter(0),
-            (int)$this->getRequiredParameter(1),
-            (int)$this->getRequiredParameter(2),
-            ''. $this->getParameter(3),
-        );
-    }
-
-    /**
      * Verbalize artifact & changeset
      *
-     * @param Integer $artifactId  Id of the artifact
-     * @param Integer $changesetId Id of th changeset
+     * @param Integer $artifact_id  Id of the artifact
      * @param Boolean $withLink    Create link for the params
      *
      * @return String
      */
-    private function verbalizeArtifactId($artifactId, $changesetId, $withLink) {
-        $txt = '#'.$artifactId;
+    private function verbalizeArtifactId($artifact_id, $withLink) {
+        $txt = '#'.$artifact_id;
         if ($withLink) {
-            $txt = '<a href="/plugins/tracker/?aid='. $artifactId .'#followup_'.$changesetId.'">'. $txt .'</a>';
+            $txt = '<a href="/plugins/tracker/?aid='. $artifact_id .'">'. $txt .'</a>';
         }
         return $txt;
     }
 
 }
-
-?>
