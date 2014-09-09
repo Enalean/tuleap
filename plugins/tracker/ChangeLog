@@ -1,3 +1,9 @@
+Version 5.459 - Tuleap 7.5
+    * tasks #7418: make datetime searchable and shown in the reports
+
+
+- includes submitted on and last modified fields
+
 Version 5.458 - Tuleap 7.5
     * tasks #7404 Export / Import CSV
 
