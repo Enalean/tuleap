@@ -116,8 +116,10 @@ document.observe('dom:loaded', function () {
 
         function updateButtonLabel(button, notification) {
             if (notification === true) {
+                button.title = codendi.locales.tracker_artifact.disable_notifications_alternate_text;
                 button.update('<i class="icon-bell-alt"></i>' + codendi.locales.tracker_artifact.disable_notifications);
             } else {
+                button.title = codendi.locales.tracker_artifact.enable_notifications_alternate_text;
                 button.update('<i class="icon-bell-alt"></i>' + codendi.locales.tracker_artifact.enable_notifications);
             }
         }
