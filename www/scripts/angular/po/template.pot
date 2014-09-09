@@ -3,6 +3,14 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: src/app/campaign/campaign-new.tpl.html
+msgid "All <strong>{{ environment.nb_selected_all }}</strong> tests are selected."
+msgstr ""
+
+#: src/app/campaign/campaign-new.tpl.html
+msgid "All <strong>{{ environment.nb_selected_all }}</strong> tests on this page are selected."
+msgstr ""
+
 #: src/app/execution/execution-list.tpl.html
 msgid "All environments"
 msgstr ""
@@ -85,6 +93,10 @@ msgstr ""
 msgid "New campaign"
 msgstr ""
 
+#: src/app/campaign/campaign-new.tpl.html
+msgid "No tests on this page are selected."
+msgstr ""
+
 #: src/app/campaign/campaign-list.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Not run"
@@ -116,6 +128,10 @@ msgstr ""
 
 #: src/app/execution/execution-list.tpl.html
 msgid "Please select a test"
+msgstr ""
+
+#: src/app/campaign/campaign-new.tpl.html
+msgid "Select all <strong>{{ environment.nb_selected_all_total }}</strong> tests."
 msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html

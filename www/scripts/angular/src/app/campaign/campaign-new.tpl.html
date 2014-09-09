@@ -14,19 +14,29 @@
                 <table class="table table-striped table-bordered test-definition-list">
                     <thead>
                         <tr>
-                            <th></th>
+                            <th><input type="checkbox" ng-model="environment.select_all" ng-change="selectAll(environment, ITEMS_PER_PAGE)" /></th>
                             <th>#</th>
                             <th translate>Test name</th>
                             <th translate>Category</th>
                         </tr>
                     </thead>
                     <tbody>
+                        <tr ng-if="environment.select_all && (environment.nb_selected_all > ITEMS_PER_PAGE || environment.nb_selected_all !== environment.nb_selected_all_total)">
+                            <td colspan="4" class="selected-all">
+                                <span ng-if="environment.nb_selected_all === environment.nb_selected_all_total" translate>All <strong>{{ environment.nb_selected_all }}</strong> tests are selected.</span>
+                                <span ng-if="environment.nb_selected_all !== environment.nb_selected_all_total">
+                                    <span ng-if="environment.page_selected_all === environment.current_page" translate>All <strong>{{ environment.nb_selected_all }}</strong> tests on this page are selected.</span>
+                                    <span ng-if="environment.page_selected_all !== environment.current_page" translate>No tests on this page are selected.</span>
+                                    <a ng-click="selectAllTotal(environment)" translate>Select all <strong>{{ environment.nb_selected_all_total }}</strong> tests.</a>
+                                </span>
+                            </td>
+                        </tr>
                         <tr ng-repeat="definition in getFilteredDefinitions(environment.filter)
                             | orderBy:'id'
                             | CurrentPageFilter:environment.current_page:ITEMS_PER_PAGE
                             track by $index"
                         >
-                            <td><input type="checkbox" ng-model="environment.definitions[definition.id]" /></td>
+                            <td><input type="checkbox" ng-model="environment.definitions[definition.id]" ng-click="selectADefinitionForEnvironment(environment)" /></td>
                             <td>{{ definition.id }}</td>
                             <td>{{ definition.summary }}</td>
                             <td>{{ definition.category }}</td>

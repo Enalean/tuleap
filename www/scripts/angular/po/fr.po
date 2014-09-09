@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Test\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2014-09-03 16:19+0100\n"
+"PO-Revision-Date: 2014-09-09 18:53+0100\n"
 "Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -15,6 +15,21 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 1.5.4\n"
+
+#: src/app/campaign/campaign-new.tpl.html
+msgid ""
+"All <strong>{{ environment.nb_selected_all }}</strong> tests are selected."
+msgstr ""
+"Les <strong>{{ environment.nb_selected_all }}</strong> tests sont "
+"sélectionnés."
+
+#: src/app/campaign/campaign-new.tpl.html
+msgid ""
+"All <strong>{{ environment.nb_selected_all }}</strong> tests on this page "
+"are selected."
+msgstr ""
+"Les <strong>{{ environment.nb_selected_all }}</strong> tests sur cette page "
+"sont sélectionnés."
 
 #: src/app/execution/execution-list.tpl.html
 msgid "All environments"
@@ -58,6 +73,10 @@ msgstr "Campagnes"
 msgid "Campaigns list"
 msgstr "Liste des campagnes"
 
+#: src/app/campaign/campaign-new.tpl.html
+msgid "Category"
+msgstr "Catégorie"
+
 #: src/app/execution/execution-detail.tpl.html
 msgid "Comments..."
 msgstr "Commentaires…"
@@ -81,6 +100,7 @@ msgid "Failed"
 msgstr "Échoué"
 
 #: src/app/campaign/campaign-list.tpl.html
+#: src/app/campaign/campaign-new.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Filter..."
 msgstr "Filtrer..."
@@ -92,6 +112,10 @@ msgstr "Dernière exécution dans cette campagne"
 #: src/app/campaign/campaign-list.tpl.html
 msgid "New campaign"
 msgstr "Nouvelle campagne"
+
+#: src/app/campaign/campaign-new.tpl.html
+msgid "No tests on this page are selected."
+msgstr "Aucun test sur cette page n'est sélectionné."
 
 #: src/app/campaign/campaign-list.tpl.html
 #: src/app/execution/execution-list.tpl.html
@@ -121,7 +145,7 @@ msgstr "Merci de choisir les environnements pour la nouvelle campagne :"
 #: src/app/campaign/campaign-new.tpl.html
 msgid ""
 "Please configure the test execution tracker and\n"
-"                    add environments in order to be able to go further."
+"                        add environments in order to be able to go further."
 msgstr ""
 "Merci de configurer l'outil de suivi d'exécution des tests et d'ajouter des "
 "environnements afin de pouvoir continuer."
@@ -129,6 +153,13 @@ msgstr ""
 #: src/app/execution/execution-list.tpl.html
 msgid "Please select a test"
 msgstr "Merci de sélectionner un test"
+
+#: src/app/campaign/campaign-new.tpl.html
+msgid ""
+"Select all <strong>{{ environment.nb_selected_all_total }}</strong> tests."
+msgstr ""
+"Sélectionner les <strong>{{ environment.nb_selected_all_total }}</strong> "
+"tests."
 
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Status"
@@ -141,6 +172,10 @@ msgstr "Status :"
 #: src/app/execution/execution-detail.tpl.html
 msgid "Test definition"
 msgstr "Définition du test"
+
+#: src/app/campaign/campaign-new.tpl.html
+msgid "Test name"
+msgstr "Nom du test"
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid "Tests are run in an environment."
