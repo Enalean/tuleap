@@ -324,7 +324,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
             if ( empty($value['op']) || ($value['op'] !== '<' && $value['op'] !== '=' && $value['op'] !== '>')) {
                 $value['op'] = '=';
             }
-            
+
             return $value;
         }
     }
@@ -341,30 +341,68 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      * @return string sql statement
      */
     protected function getSQLCompareDate($is_advanced, $op, $from, $to, $column) {
+        if ($this->isTimeDisplayed()) {
+            return $this->getSQLCompareDateTime($is_advanced, $op, $from, $to, $column);
+        }
+
+        return $this->getSQLCompareDay($is_advanced, $op, $from, $to, $column);
+    }
+
+    private function getSQLCompareDay($is_advanced, $op, $from, $to, $column) {
+        $seconds_in_a_day = DateHelper::SECONDS_IN_A_DAY;
+
         if ($is_advanced) {
             if ( ! $to ) {
                 $to = $_SERVER['REQUEST_TIME'];
             }
             if ( empty($from) ) {
-                $and_compare_date = "$column <= ". $to ." + 24 * 60 * 60 - 1 ";
+                $and_compare_date = "$column <=  $to + $seconds_in_a_day - 1 ";
             } else {
-                $and_compare_date = "$column BETWEEN ". $from ."
-                                                           AND ". $to ." + 24 * 60 * 60 - 1";
+                $and_compare_date = "$column BETWEEN $from
+                                             AND $to + $seconds_in_a_day - 1";
             }
         } else {
             switch ($op) {
                 case '<':
-                    $and_compare_date = "$column < ". $to; 
+                    $and_compare_date = "$column < $to";
                     break;
                 case '=':
-                    $and_compare_date = "$column BETWEEN ". $to ."
-                                                           AND ". $to ." + 24 * 60 * 60 - 1";
+                    $and_compare_date = "$column BETWEEN $to 
+                                                 AND $to + $seconds_in_a_day - 1";
                     break;
                 default:
-                    $and_compare_date = "$column > ". $to ." + 24 * 60 * 60";
+                    $and_compare_date = "$column > $to + $seconds_in_a_day";
                     break;
             }
         }
+
+        return $and_compare_date;
+    }
+
+    private function getSQLCompareDateTime($is_advanced, $op, $from, $to, $column) {
+        if ($is_advanced) {
+            if ( ! $to ) {
+                $to = $_SERVER['REQUEST_TIME'];
+            }
+            if ( empty($from) ) {
+                $and_compare_date = "$column <= ". $to;
+            } else {
+                $and_compare_date = "$column BETWEEN $from AND $to";
+            }
+        } else {
+            switch ($op) {
+                case '<':
+                    $and_compare_date = "$column < ". $to;
+                    break;
+                case '=':
+                    $and_compare_date = "$column = $to";
+                    break;
+                default:
+                    $and_compare_date = "$column > $to";
+                    break;
+            }
+        }
+
         return $and_compare_date;
     }
 
@@ -420,7 +458,8 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
             "criteria[". $this->id ."][from_date]",
             $value,
             array(),
-            array()
+            array(),
+            $this->isTimeDisplayed()
         );
         $html .= '</label>';
         $value = isset($criteria_value['to_date']) ? $this->formatDate($criteria_value['to_date']) : '';
@@ -431,7 +470,8 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
             "criteria[". $this->id ."][to_date]",
             $value,
             array(),
-            array()
+            array(),
+            $this->isTimeDisplayed()
         );
         $html .= '</label>';
         $html .= '</div>';
@@ -488,7 +528,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
                 $value,
                 $criteria_selector,
                 array(),
-                $this->getBootstrapDateFormat()
+                $this->isTimeDisplayed()
             );
             $html .= '</div>';
         }
@@ -988,10 +1028,6 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
 
     public function isTimeDisplayed() {
         return ($this->getProperty('display_time') == 1);
-    }
-
-    private function getBootstrapDateFormat() {
-        return $this->getFormatter()->getFormat();
     }
 
     public function formatDate($date) {

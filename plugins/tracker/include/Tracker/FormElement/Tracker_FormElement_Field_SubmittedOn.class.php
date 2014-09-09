@@ -353,4 +353,8 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
     public function accept(Tracker_FormElement_FieldVisitor $visitor) {
         return $visitor->visitSubmittedOn($this);
     }
+
+    public function isTimeDisplayed() {
+        return true;
+    }
 }

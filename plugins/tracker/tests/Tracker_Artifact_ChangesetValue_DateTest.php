@@ -23,7 +23,7 @@ Mock::generate('Tracker_FormElement_Field_Date');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
-class Tracker_Artifact_ChangesetValue_DateTest extends UnitTestCase {
+class Tracker_Artifact_ChangesetValue_DateTest extends TuleapTestCase {
     
     function setUp() {
         $GLOBALS['Language'] = new MockBaseLanguage();

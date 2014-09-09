@@ -29,7 +29,7 @@ class Tracker_FormElement_DateTimeFormatterTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
-        $this->field          = aDateField()->withId(07)->build();
+        $this->field          = aMockDateWithoutTimeField()->withId(07)->build();
         $this->date_formatter = new Tracker_FormElement_DateTimeFormatter($this->field);
     }
 
