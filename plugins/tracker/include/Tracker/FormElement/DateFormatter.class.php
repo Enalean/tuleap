@@ -60,13 +60,12 @@ class Tracker_FormElement_DateFormatter {
         Tracker_Artifact $artifact,
         Tracker_Artifact_ChangesetValue $value = null
     ) {
-
         if ( empty($value) || ! $value->getTimestamp() ) {
             return $this->field->getNoValueLabel();
         }
 
         $value_timestamp = $value->getTimestamp();
-        $formatted_value = $value_timestamp ? $this->formatDate($value_timestamp) : '';
+        $formatted_value = $value_timestamp ? $this->formatDateForDisplay($value_timestamp) : '';
 
         return $formatted_value;
     }
@@ -112,6 +111,10 @@ class Tracker_FormElement_DateFormatter {
      */
     public function formatDate($timestamp) {
         return format_date(self::DATE_FORMAT, (float)$timestamp, '');
+    }
+
+    public function formatDateForDisplay($timestamp) {
+        return format_date($GLOBALS['Language']->getText('system', 'datefmt_short'), (float) $timestamp, '');
     }
 
     protected function getDatePicker($value, array $errors) {

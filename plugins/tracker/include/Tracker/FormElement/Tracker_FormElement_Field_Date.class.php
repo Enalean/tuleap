@@ -1034,6 +1034,10 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         return $this->getFormatter()->formatDate($date);
     }
 
+    public function formatDateForDisplay($timestamp) {
+        return $this->getFormatter()->formatDateForDisplay($timestamp);
+    }
+
     /**
      * @return Tracker_FormElement_DateFormatter
      */

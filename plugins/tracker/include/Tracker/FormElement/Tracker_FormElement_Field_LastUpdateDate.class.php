@@ -202,9 +202,10 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
             // see @todo in the comment
             $value = $this->getChangesetValue($artifact->getLastChangeset(), null, false);
         }
-        $value = $value->getTimestamp();
-        $value = $value ? $this->formatDateTime($value) : '';
+        $timestamp = $value->getTimestamp();
+        $value     = $timestamp ? $this->formatDateForDisplay($timestamp) : '';
         $html .= $value;
+
         return $html;
     }
 

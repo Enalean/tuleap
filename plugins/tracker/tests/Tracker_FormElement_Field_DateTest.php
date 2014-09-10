@@ -55,7 +55,13 @@ Mock::generate('DataAccessResult');
 require_once('common/valid/Rule.class.php');    // unit test not really unit...
 
 class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
-    
+
+    public function tearDown() {
+        unset($GLOBALS['sys_incdir']);
+        unset($GLOBALS['sys_custom_incdir']);
+        unset($GLOBALS['Language']);
+    }
+
     function testNoDefaultValue() {
         $date_field = new Tracker_FormElement_Field_DateTestVersion();
         $this->assertFalse($date_field->hasDefaultValue());
@@ -480,20 +486,48 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
         $this->assertEqual('-', $date->fetchMailArtifactValue($artifact, $user, null, null));
     }
     
-    function testFieldDateShouldSendAMailWithAReadableDate() {
+    function testFieldDateShouldSendAMailWithAReadableDate_EnUS() {
+        $GLOBALS['sys_incdir'] = TRACKER_BASE_DIR. '/../../../site-content';
+        $GLOBALS['sys_custom_incdir'] = TRACKER_BASE_DIR. '/../../../site-content';
+
+        $GLOBALS['Language'] = new BaseLanguage('en_US', 'en_US');
+        $GLOBALS['Language']->lang = 'en_US';;
+
         $user     = mock('PFUser');
         $artifact = new MockTracker_Artifact();
-        
-        $date = new Tracker_FormElement_Field_DateTestVersion();
-        $date->setReturnValue('formatDate', '2011-12-01', array(1322752769));
-        
+
+        $date = partial_mock('Tracker_FormElement_Field_Date', array('formatDateForDisplay', 'isTimeDisplayed'));
+        stub($date)->formatDateForDisplay('2011-12-01')->returns(1322752769);
+        stub($date)->isTimeDisplayed()->returns(false);
+
         $value = new MockTracker_Artifact_ChangesetValue_Date();
         $value->setReturnValue('getTimestamp', 1322752769);
         
         $this->assertEqual('2011-12-01', $date->fetchMailArtifactValue($artifact, $user, $value, 'text'));
         $this->assertEqual('2011-12-01', $date->fetchMailArtifactValue($artifact, $user, $value, 'html'));
     }
-    
+
+    function testFieldDateShouldSendAMailWithAReadableDate_frFR() {
+        $GLOBALS['sys_incdir'] = TRACKER_BASE_DIR. '/../../../site-content';
+        $GLOBALS['sys_custom_incdir'] = TRACKER_BASE_DIR. '/../../../site-content';
+
+        $GLOBALS['Language'] = new BaseLanguage('fr_FR', 'fr_FR');
+        $GLOBALS['Language']->lang = 'fr_FR';
+
+        $user     = mock('PFUser');
+        $artifact = new MockTracker_Artifact();
+
+        $date = partial_mock('Tracker_FormElement_Field_Date', array('formatDateForDisplay', 'isTimeDisplayed'));
+        stub($date)->formatDateForDisplay('2011-12-01')->returns(1322752769);
+        stub($date)->isTimeDisplayed()->returns(false);
+
+        $value = new MockTracker_Artifact_ChangesetValue_Date();
+        $value->setReturnValue('getTimestamp', 1322752769);
+
+        $this->assertEqual('01/12/2011', $date->fetchMailArtifactValue($artifact, $user, $value, 'text'));
+        $this->assertEqual('01/12/2011', $date->fetchMailArtifactValue($artifact, $user, $value, 'html'));
+    }
+
     function testFieldDateShouldSendEmptyMailWhenThereIsNoDateDefined() {
         $user     = mock('PFUser');
         $artifact = new MockTracker_Artifact();
