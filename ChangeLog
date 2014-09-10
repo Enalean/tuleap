@@ -8,6 +8,7 @@ Version 7.5 (Not released yet)
 	* tracker: 5.460
 	* fulltextsearch: 0.80
 	* git: 3.98
+	* mediawiki: 0.55
 
 	== Features ==
 	* story #7349: SystemEvent to be processed independently

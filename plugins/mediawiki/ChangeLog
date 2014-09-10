@@ -1,3 +1,6 @@
+Version 0.55 - Tuleap 7.5
+    * Fix request #7424: Change the compatibility mode text in Mediawiki
+
 Version 0.54 - Tuleap 7.5
     * request #7371: Remove plugin service icon from core
 
