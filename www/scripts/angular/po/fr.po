@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Test\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2014-09-09 18:53+0100\n"
+"PO-Revision-Date: 2014-09-10 15:32+0100\n"
 "Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.6.9\n"
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid ""
@@ -34,6 +34,10 @@ msgstr ""
 #: src/app/execution/execution-list.tpl.html
 msgid "All environments"
 msgstr "Tous les environnements"
+
+#: src/app/execution/execution-detail-controller.js
+msgid "An error has occured. Please contact an administrator."
+msgstr "Une erreur s'est produite. Veuillez contacter un administrateur."
 
 #: src/app/execution/execution-list.tpl.html
 msgid "Anybody"
@@ -78,8 +82,12 @@ msgid "Category"
 msgstr "Catégorie"
 
 #: src/app/execution/execution-detail.tpl.html
-msgid "Comments..."
-msgstr "Commentaires…"
+msgid "Comment..."
+msgstr "Commentaire..."
+
+#: src/app/execution/execution-detail.tpl.html
+msgid "Comment:"
+msgstr "Commentaire :"
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid "Create a campaign"
@@ -166,10 +174,6 @@ msgid "Status"
 msgstr "Status"
 
 #: src/app/execution/execution-detail.tpl.html
-msgid "Status:"
-msgstr "Status :"
-
-#: src/app/execution/execution-detail.tpl.html
 msgid "Test definition"
 msgstr "Définition du test"
 
@@ -188,3 +192,6 @@ msgstr "Total"
 #: src/app/campaign/campaign-new.tpl.html
 msgid "You have not any environment defined."
 msgstr "Vous n'avez pas d'environnement défini."
+
+#~ msgid "Status:"
+#~ msgstr "Status :"

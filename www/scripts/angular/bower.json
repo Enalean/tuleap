@@ -4,6 +4,7 @@
   "devDependencies": {
     "angular": "1.2.21",
     "angular-mocks": "~1.0.7",
+    "angular-animate": "1.2.24",
     "angular-ui-router": "~0.2.10",
     "restangular": "~1.4.0",
     "angular-filter-pack": "~0.2.0",

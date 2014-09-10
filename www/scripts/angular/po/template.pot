@@ -15,6 +15,10 @@ msgstr ""
 msgid "All environments"
 msgstr ""
 
+#: src/app/execution/execution-detail-controller.js
+msgid "An error has occured. Please contact an administrator."
+msgstr ""
+
 #: src/app/execution/execution-list.tpl.html
 msgid "Anybody"
 msgstr ""
@@ -58,7 +62,11 @@ msgid "Category"
 msgstr ""
 
 #: src/app/execution/execution-detail.tpl.html
-msgid "Comments..."
+msgid "Comment..."
+msgstr ""
+
+#: src/app/execution/execution-detail.tpl.html
+msgid "Comment:"
 msgstr ""
 
 #: src/app/campaign/campaign-new.tpl.html
@@ -136,10 +144,6 @@ msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Status"
-msgstr ""
-
-#: src/app/execution/execution-detail.tpl.html
-msgid "Status:"
 msgstr ""
 
 #: src/app/execution/execution-detail.tpl.html

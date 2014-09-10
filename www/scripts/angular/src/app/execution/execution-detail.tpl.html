@@ -1,21 +1,23 @@
+<div class="alert alert-error " ng-if="error_message">{{ error_message }}</div>
+
 <div id="current-execution" class="in">
     <h2 class="{{ execution.status | dasherize }}">{{ execution.definition.summary }}</h2>
 
     <div class="row-fluid">
-        <div id="current-execution-last-execution" class="span6">
+        <div id="current-execution-last-execution" class="span6" ng-if="(execution.status | dasherize) !== 'notrun'">
             <p class="current-execution-title" translate>Last execution in this campaign</p>
-            <p class="last-execution-details">
-                <span translate>Date:</span> {{ execution.previous_result.submitted_on | amCalendar }}
+            <p class="last-execution-details" ng-if="execution.previous_result.submitted_on">
+                <span translate>Date:</span> {{ execution.previous_result.submitted_on | amCalendar }}
             </p>
-            <p class="last-execution-details">
-                <span translate>Status:</span> <img ng-src="scripts/angular/bin/assets/status-{{ execution.previous_result.status }}-color.png" >
-                {{ getStatusLabel(execution.previous_result.status) | translate }}
+            <p class="last-execution-details" ng-if="execution.previous_result.submitted_by.real_name">
+                <span translate>By:</span> {{ execution.previous_result.submitted_by.real_name }}
             </p>
-            <p class="last-execution-details">
-                <span translate>By:</span> {{ execution.previous_result.submitted_by.real_name }}
+            <p class="last-execution-details" id="last-execution-comment" ng-if="execution.previous_result.result">
+                <span translate>Comment:</span> {{ execution.previous_result.result }}
+                <span class="read-more" ng-if="execution.previous_result.result.length > 150"></span>
             </p>
         </div>
-        <div id="current-execution-assigned-to" class="span6">
+        <div id="current-execution-assigned-to" class="span6" ng-if="execution.assigned_to">
             <p class="current-execution-title" translate>Assigned to</p>
             <div><img ng-src="{{ sanitizeHtml(execution.assigned_to.avatar_url) }}" alt="avatar">{{ execution.assigned_to.real_name }}</div>
         </div>
@@ -30,7 +32,7 @@
 
     <div id="current-execution-result">
         <form>
-            <textarea placeholder="{{ 'Comments...' | translate }}" ng-model="execution.results"></textarea>
+            <textarea placeholder="{{ 'Comment...' | translate }}" ng-model="execution.results"></textarea>
             <div id="result-choices">
                 <button class="btn btn-large btn-success" title="{{ 'Passed' | translate }}" ng-click="pass(execution)">
                    <img src="scripts/angular/bin/assets/status-passed-white-big.png" alt="{{ 'Passed' | translate }}">

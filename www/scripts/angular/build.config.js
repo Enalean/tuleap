@@ -73,6 +73,7 @@ module.exports = {
       'vendor/lodash/dist/lodash.min.js',
       'vendor/restangular/dist/restangular.js',
       'vendor/angular-filter-pack/dist/angular-filter-pack.min.js',
+      'vendor/angular-animate/angular-animate.min.js',
       'vendor/angular-bootstrap/ui-bootstrap.min.js',
       'vendor/angular-bootstrap/ui-bootstrap-tpls.min.js',
       'vendor/angular-breadcrumb/dist/angular-breadcrumb.min.js',

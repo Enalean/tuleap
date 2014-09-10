@@ -149,35 +149,23 @@ class ExecutionRepresentationBuilder {
         PFUser $user,
         Tracker_Artifact $execution
     ) {
-        $last_but_one_changeset = $this->getLastButOneChangeset($execution);
-        if (! $last_but_one_changeset) {
+        $last_changeset = $execution->getLastChangeset();
+        if (! $last_changeset) {
             return null;
         }
 
-        $submitted_by = $this->user_manager->getUserById($last_but_one_changeset->getSubmittedBy());
+        $submitted_by = $this->user_manager->getUserById($last_changeset->getSubmittedBy());
         $user_representation = new UserRepresentation();
-	$user_representation->build($submitted_by);
+        $user_representation->build($submitted_by);
 
         $previous_result_representation = new PreviousResultRepresentation();
         $previous_result_representation->build(
-            $last_but_one_changeset->getSubmittedOn(),
+            $last_changeset->getSubmittedOn(),
             $user_representation,
-            $execution->getStatusForChangeset($last_but_one_changeset),
+            $execution->getStatusForChangeset($last_changeset),
             $this->getExecutionResult($user, $execution)
         );
 
         return $previous_result_representation;
-    }
-
-    /**
-     * @return Tracker_Artifact_Changeset|null
-     */
-    private function getLastButOneChangeset(Tracker_Artifact $execution) {
-	$last_changeset = $execution->getLastChangeset();
-	if (! $last_changeset) {
-            return null;
-	}
-
-	return $execution->getPreviousChangeset($last_changeset->getId());
     }
 }

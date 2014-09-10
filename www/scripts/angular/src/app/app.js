@@ -4,6 +4,7 @@ angular.module('testing', [
     'execution',
     'sharedProperties',
     'ncy-angular-breadcrumb',
+    'ngAnimate',
     'ngSanitize',
     'gettext'
 ]);

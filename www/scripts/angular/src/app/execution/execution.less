@@ -77,6 +77,10 @@
             text-decoration: none;
             cursor: pointer;
             padding: 0;
+            -webkit-transition: all 0.1s;
+            -moz-transition: all 0.1s;
+            -ms-transition: all 0.1s;
+            transition: all 0.1s;
 
             & > .execution-item-content {
                 display: block;
@@ -124,20 +128,10 @@
     }
 
     .in {
-        animation-name: in;
-        -webkit-animation-name: in;
-        animation-duration: 0.2s;
-        -webkit-animation-duration: 0.2s;
-        animation-timing-function: ease;
-        -webkit-animation-timing-function: ease;
-    }
-    @keyframes in {
-        0%  { opacity: 0; }
-        100% { opacity: 1; }
-    }
-    @-webkit-keyframes in {
-        0%  { opacity: 0; }
-        100% { opacity: 1; }
+        -webkit-animation: fadeIn 0.2s ease;
+        -moz-animation: fadeIn 0.2s ease;
+        -ms-animation: fadeIn 0.2s ease;
+        animation: fadeIn 0.2s ease;
     }
 
     #no-current-execution, #current-execution {
@@ -157,6 +151,32 @@
         letter-spacing: 0.03em;
         line-height: 1.2em;
         color: #CCC;
+    }
+
+    .alert-error {
+        float: left;
+        position: relative;
+        margin: 2% 2% 0;
+        z-index: 1;
+        width: 56%;
+        box-sizing: border-box;
+        -webkit-transition: all;
+        -moz-transition: all;
+        -ms-transition: all;
+        transition: all;
+
+        &.ng-enter {
+            -webkit-animation: fadeIn 0.2s;
+            -moz-animation: fadeIn 0.2s;
+            -ms-animation: fadeIn 0.2s;
+            animation: fadeIn 0.2s;
+        }
+        &.ng-leave {
+            -webkit-animation: fadeOut 0.2s;
+            -moz-animation: fadeOut 0.2s;
+            -ms-animation: fadeOut 0.2s;
+            animation: fadeOut 0.2s;
+        }
     }
 
     #current-execution {
@@ -214,7 +234,43 @@
 
                 span {
                     color: #888;
-                    margin: 0 5px 0 0;
+                }
+
+                &#last-execution-comment {
+                    max-height: 60px;
+                    position: relative;
+                    overflow-y: hidden;
+                    -webkit-transition: max-height 0.3s;
+                    -moz-transition: max-height 0.3s;
+                    -ms-transition: max-height 0.3s;
+                    transition: max-height 0.3s;
+
+                    .read-more {
+                        display: block;
+                        position: absolute;
+                        bottom: 0;
+                        height: 25px;
+                        width: 100%;
+                        background: -moz-linear-gradient(top,  rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+                        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,0)), color-stop(100%,rgba(255,255,255,1)));
+                        background: -webkit-linear-gradient(top,  rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%);
+                        background: -o-linear-gradient(top,  rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%);
+                        background: -ms-linear-gradient(top,  rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%);
+                        background: linear-gradient(to bottom,  rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%);
+                        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=0 );
+                        -webkit-transition: all 0.3s;
+                        -moz-transition: all 0.3s;
+                        -ms-transition: all 0.3s;
+                        transition: all 0.3s;
+                    }
+
+                    &:hover {
+                        max-height: 1000px;
+
+                        .read-more {
+                            bottom: -25px;
+                        }
+                    }
                 }
             }
         }
