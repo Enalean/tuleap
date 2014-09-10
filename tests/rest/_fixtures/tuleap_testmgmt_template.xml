@@ -79,7 +79,7 @@
               <name>descc2</name>
               <label><![CDATA[Desc::C2]]></label>
               <formElements>
-                <formElement type="sb" ID="F14" rank="0">
+                <formElement type="sb" ID="F14" rank="0" required="1">
                   <name>status</name>
                   <label><![CDATA[Status]]></label>
                   <bind type="static" is_rank_alpha="0">
@@ -87,6 +87,9 @@
                       <item ID="F14-V0" label="Open" is_hidden="0"/>
                       <item ID="F14-V1" label="Closed" is_hidden="0"/>
                     </items>
+                    <default_values>
+                      <value REF="F14-V0"/>
+                    </default_values>
                   </bind>
                 </formElement>
               </formElements>

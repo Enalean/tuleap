@@ -32,6 +32,7 @@ class CampaignRepresentation {
 
     const FIELD_NAME           = "label";
     const FIELD_ARTIFACT_LINKS = "artifact_links";
+    const FIELD_STATUS         = "status";
 
     const STATUS_NOT_RUN = "notrun";
     const STATUS_PASSED  = "passed";
