@@ -1,7 +1,7 @@
 plugin_mediawiki	service_lbl_key	Mediawiki
 plugin_mediawiki	service_desc_key	Mediawiki
 plugin_mediawiki	admin_title	Mediawiki Administration
-plugin_mediawiki	compatibility_view_text	Tick this box if you want to use Mediawiki plugins that are not compatible with the standard embedded view
+plugin_mediawiki	compatibility_view_text	Tick this box if you want to activate Mediawiki in full screen. This compatibility mode will let you use WikiEditor extension, not available in standard embedded view.
 plugin_mediawiki	title	Mediawiki Plugin
 plugin_mediawiki	descriptor_description	Mediawiki integration in the forge
 plugin_mediawiki	descriptor_name	Plugin Mediawiki
