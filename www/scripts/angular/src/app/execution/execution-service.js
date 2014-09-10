@@ -44,7 +44,8 @@ function ExecutionService(Restangular, $q) {
         // the nested resources in restangular use nested uri. This means that
         // execution.put() will call /campaigns/:id/executions/:id instead of
         // /executions/:id
-        return rest.oneUrl('testing_executions', baseurl + '/' + execution.uri)
-            .put(execution.plain());
+        return rest
+            .restangularizeElement(null, execution, 'testing_executions')
+            .put();
     }
 }
