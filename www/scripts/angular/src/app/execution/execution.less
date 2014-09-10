@@ -78,10 +78,6 @@
             cursor: pointer;
             border-bottom: 1px solid #DDD;
 
-            &:hover, &.active {
-                background-color: #F5F5F5;
-            }
-
             & > .execution-item-content {
                 border-left: 8px solid white;
                 margin: 0 5px 0 0;
@@ -103,6 +99,14 @@
                     border-left-color: @blocked;
                     color: @blocked;
                     background: url('status-blocked-color.png') no-repeat right center;
+                }
+            }
+
+            &:hover, &.active {
+                background-color: #F5F5F5;
+
+                > .execution-item-content.notrun {
+                    border-left-color: #F5F5F5;
                 }
             }
         }
