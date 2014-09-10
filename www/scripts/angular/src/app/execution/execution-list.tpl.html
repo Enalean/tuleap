@@ -29,13 +29,15 @@
 
         <div ng-repeat="category in categories">
             <div class="category">{{ category.label }}</div>
-            <a class="execution-item"
+            <a class="execution-item {{ execution.status | dasherize }}"
                  ng-repeat="execution in category.executions | ExecutionListFilter:search:status:selected_assignee:selected_environment track by $index"
                  ui-sref=".detail({ execid: execution.id, defid: execution.definition.id, defslug: '{{ execution.definition.summary | slugify }}' })"
                  ui-sref-active="active">
-                <div class="execution-item-content {{ execution.status | dasherize }}">
-                    #{{ execution.definition.id }} {{ execution.definition.summary}}
-                </div>
+                <span class="execution-item-content">
+                    <span class="execution-item-content-title">
+                        #{{ execution.definition.id }} {{ execution.definition.summary}}
+                    </span>
+                </span>
             </a>
         </div>
     </div>

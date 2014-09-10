@@ -76,38 +76,49 @@
             color: #333;
             text-decoration: none;
             cursor: pointer;
-            border-bottom: 1px solid #DDD;
+            padding: 0;
 
             & > .execution-item-content {
-                border-left: 8px solid white;
-                margin: 0 5px 0 0;
-                padding: 8px 20px 8px 7px;
+                display: block;
+                border-bottom: 1px solid #DDD;
 
-                &.passed {
-                    border-left-color: @passed;
-                    color: @passed;
+                & > .execution-item-content-title {
+                    display: block;
+                    margin-right: 5px;
+                    padding: 8px 20px 8px 7px;
+                }
+            }
+
+            &.notrun > .execution-item-content {
+                padding-left: 8px;
+            }
+
+            &.passed {
+                border-left: 8px solid @passed;
+                color: @passed;
+                & > .execution-item-content > .execution-item-content-title {
                     background: url('status-passed-color.png') no-repeat right center;
                 }
+            }
 
-                &.failed {
-                    border-left-color: @failed;
-                    color: @failed;
+            &.failed {
+                border-left: 8px solid @failed;
+                color: @failed;
+                & > .execution-item-content > .execution-item-content-title {
                     background: url('status-failed-color.png') no-repeat right center;
                 }
+            }
 
-                &.blocked {
-                    border-left-color: @blocked;
-                    color: @blocked;
+            &.blocked {
+                border-left: 8px solid @blocked;
+                color: @blocked;
+                & > .execution-item-content > .execution-item-content-title {
                     background: url('status-blocked-color.png') no-repeat right center;
                 }
             }
 
             &:hover, &.active {
                 background-color: #F5F5F5;
-
-                > .execution-item-content.notrun {
-                    border-left-color: #F5F5F5;
-                }
             }
         }
     }
