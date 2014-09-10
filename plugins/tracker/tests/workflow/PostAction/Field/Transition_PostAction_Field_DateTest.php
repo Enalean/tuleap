@@ -29,7 +29,7 @@ class Transition_PostAction_Field_DateTest extends UnitTestCase {
     
     public function setUp() {
         $GLOBALS['Language'] = new MockBaseLanguage();
-        $GLOBALS['Language']->setReturnValue('getText', 'Y-m-d', array('system', 'datefmt_short'));
+        $GLOBALS['Language']->setReturnValue('getText', Tracker_FormElement_DateFormatter::DATE_FORMAT, array('system', 'datefmt_short'));
     }
     public function tearDown() {
         unset($GLOBALS['Language']);

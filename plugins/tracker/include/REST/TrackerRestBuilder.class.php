@@ -154,14 +154,14 @@ class Tracker_REST_TrackerRestBuilder {
             array_values(
                 array_filter(
                     array_map(
-                        $this->getRESTFieldUserCanReadFilter($user),
+                        $this->getFunctionToFilterOutFieldsUserCannotRead($user),
                         $this->formelement_factory->getUsedFields($tracker)
                     )
                 )
         );
     }
 
-    private function getRESTFieldUserCanReadFilter(PFUser $user) {
+    private function getFunctionToFilterOutFieldsUserCannotRead(PFUser $user) {
         $formelement_factory = $this->formelement_factory;
 
         return function (Tracker_FormElement_Field $field) use ($user, $formelement_factory) {
@@ -169,7 +169,12 @@ class Tracker_REST_TrackerRestBuilder {
                 return false;
             }
 
-            $field_representation = new Tracker_REST_FieldRepresentation();
+            if ($field instanceof Tracker_FormElement_Field_Date) {
+                $field_representation = new Tracker_REST_FieldDateRepresentation();
+            } else {
+                $field_representation = new Tracker_REST_FieldRepresentation();
+            }
+
             $field_representation->build(
                 $field,
                 $formelement_factory->getType($field),

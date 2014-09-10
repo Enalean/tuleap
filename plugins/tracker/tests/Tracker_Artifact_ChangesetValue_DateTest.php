@@ -67,7 +67,7 @@ class Tracker_Artifact_ChangesetValue_DateTest extends TuleapTestCase {
         
         $GLOBALS['Language']->setReturnValue('getText', "changed from", array('plugin_tracker_artifact','changed_from'));
         $GLOBALS['Language']->setReturnValue('getText', "to", array('plugin_tracker_artifact','to'));        
-        $GLOBALS['Language']->setReturnValue('getText', "Y-m-d", array('system', 'datefmt_short'));
+        $GLOBALS['Language']->setReturnValue('getText', Tracker_FormElement_DateFormatter::DATE_FORMAT, array('system', 'datefmt_short'));
         
         $field = new MockTracker_FormElement_Field_Date();
          stub($field)->formatDateForDisplay(1221221466)->returns("2008-09-12");

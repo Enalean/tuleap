@@ -543,7 +543,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      * Format a timestamp into Y-m-d H:i format
      */
     protected function formatDateTime($date) {
-        return format_date("Y-m-d H:i", (float)$date, '');
+        return format_date(Tracker_FormElement_DateTimeFormatter::DATE_TIME_FORMAT, (float)$date, '');
     }
     
     /**
@@ -980,10 +980,15 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      * @return type
      */
     public function getFieldDataFromRESTValue(array $value, Tracker_Artifact $artifact = null) {
-        if ($value['value']) {
-            return date('Y-m-d', strtotime($value['value']));
+        if (! $value['value']) {
+            return '';
         }
-        return '';
+
+        if ($this->isTimeDisplayed()) {
+            return date(Tracker_FormElement_DateTimeFormatter::DATE_TIME_FORMAT, strtotime($value['value']));
+        }
+
+        return date(Tracker_FormElement_DateFormatter::DATE_FORMAT, strtotime($value['value']));
     }
 
     /**
