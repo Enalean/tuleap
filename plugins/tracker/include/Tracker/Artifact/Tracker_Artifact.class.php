@@ -82,6 +82,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /** @var Boolean[] */
     private $can_view_cache = array();
 
+    /** @var PFUser*/
+    private $submitted_by_user;
+
     /**
      * Constructor
      *
@@ -1173,7 +1176,24 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return $this->submitted_by;
     }
 
-	/**
+    /**
+     * The user who created the artifact
+     *
+     * @return PFUser
+     */
+    public function getSubmittedByUser() {
+        if (! isset($this->submitted_by_user)) {
+            $this->submitted_by_user = $this->getUserManager()->getUserById($this->submitted_by);
+        }
+        return $this->submitted_by_user;
+    }
+
+    public function setSubmittedByUser(PFUser $user) {
+        $this->submitted_by_user = $user;
+        $this->submitted_by      = $user->getId();
+    }
+
+    /**
      * Returns the id of the artifact in this tracker
      *
      * @return int the artifact id

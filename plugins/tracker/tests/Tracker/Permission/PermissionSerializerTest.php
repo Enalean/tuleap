@@ -1,0 +1,676 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
+
+class Tracker_Permission_PermissionSerializer_ArtifactBuilder {
+    private $artifact_builder;
+    private $assignee_retriever;
+    private $assignees = array();
+    private $submitter;
+
+    public function __construct($artifact_builder, $assignee_retriever, $default_submitter) {
+        $this->artifact_builder   = $artifact_builder;
+        $this->assignee_retriever = $assignee_retriever;
+        $this->submitter          = $default_submitter;
+    }
+
+    public function withSubmitter(PFUser $user) {
+        $this->submitter = $user;
+        return $this;
+    }
+
+    public function withAssignees(array $assignees) {
+        $this->assignees = $assignees;
+        return $this;
+    }
+
+    public function build() {
+        $artifact = $this->artifact_builder->withSubmitter($this->submitter)->build();
+        stub($this->assignee_retriever)->getAssignees($artifact)->returns($this->assignees);
+        return $artifact;
+    }
+}
+
+abstract class Tracker_Permission_PermissionSerializer extends TuleapTestCase {
+
+    protected $project_id = 333;
+
+    protected $marketing_ugroup_id = 115;
+    protected $support_ugroup_id   = 114;
+
+    protected $support_member_only;
+    protected $support_and_project_member;
+    protected $user_project_member;
+    protected $user_not_project_member;
+    protected $marketing_member_only;
+
+    protected $tracker;
+    protected $artifact;
+    protected $project;
+    protected $artifact_builder;
+    protected $assignee_retriever;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->setUpUsers();
+
+        $this->project = stub('Project')->getId()->returns($this->project_id);
+        $this->tracker = aMockTracker()
+            ->withId(120)
+            ->withProject($this->project)
+            ->build();
+        $this->artifact_builder   = anArtifact()->withTracker($this->tracker);
+
+        $this->assignee_retriever = mock('Tracker_Permission_PermissionRetrieveAssignee');
+
+        $this->serializer         = new Tracker_Permission_PermissionsSerializer($this->assignee_retriever);
+    }
+
+    private function setUpUsers() {
+        $this->user_project_member        = $this->getUserWithGroups(array(ProjectUGroup::PROJECT_MEMBERS));
+        $this->user_not_project_member    = $this->getUserWithGroups(array());
+        $this->support_member_only        = $this->getUserWithGroups(array($this->support_ugroup_id));
+        $this->marketing_member_only      = $this->getUserWithGroups(array($this->marketing_ugroup_id));
+        $this->support_and_project_member = $this->getUserWithGroups(array(ProjectUGroup::PROJECT_MEMBERS, $this->support_ugroup_id));
+    }
+
+    private function getUserWithGroups(array $ugroup_ids) {
+        return stub('PFUser')->getUgroups($this->project_id, '*')->returns($ugroup_ids);
+    }
+
+    protected function assertUGroupIdsWithoutAdminsEquals(Tracker_Artifact $artifact, array $expected_values) {
+        $this->assertEqual(
+            array_values($this->serializer->getUserGroupsThatCanViewArtifact($artifact)),
+            $expected_values
+        );
+    }
+
+    protected function assertUGroupIdsEquals(Tracker_Artifact $artifact, array $expected_values) {
+        $this->assertUGroupIdsWithoutAdminsEquals($artifact, array_merge(array(ProjectUGroup::PROJECT_ADMIN), $expected_values));
+    }
+
+    protected function anArtifact() {
+        return new Tracker_Permission_PermissionSerializer_ArtifactBuilder($this->artifact_builder, $this->assignee_retriever, $this->user_not_project_member);
+    }
+}
+
+class Tracker_Permission_PermissionSerializer_ProjectAdminAccessTest extends Tracker_Permission_PermissionSerializer {
+
+    public function itAlwaysReturnsProjectAdminWhenAllUsersHaveAccessToAllArtifacts() {
+        stub($this->tracker)->getAuthorizedUgroupsByPermissionType()->returns(
+            array()
+        );
+
+        $this->assertUGroupIdsWithoutAdminsEquals(
+            $this->anArtifact()
+                ->build(),
+            array(
+                ProjectUGroup::PROJECT_ADMIN
+            )
+        );
+    }
+}
+
+class Tracker_Permission_PermissionSerializer_FullAccessTest extends Tracker_Permission_PermissionSerializer {
+
+    public function itReturnsAnonymousWhenAllUsersHaveAccessToAllArtifacts() {
+        stub($this->tracker)->getAuthorizedUgroupsByPermissionType()->returns(
+            array(
+                Tracker::PERMISSION_FULL => array(ProjectUGroup::ANONYMOUS)
+            )
+        );
+
+        $this->assertUGroupIdsEquals(
+            $this->anArtifact()
+                ->build(),
+            array(
+                ProjectUGroup::ANONYMOUS
+            )
+        );
+    }
+
+    public function itReturnsRegisteredUsersWhenTheyAreGranted() {
+        stub($this->tracker)->getAuthorizedUgroupsByPermissionType()->returns(
+            array(
+                Tracker::PERMISSION_FULL => array(ProjectUGroup::REGISTERED)
+            )
+        );
+
+        $this->assertUGroupIdsEquals(
+            $this->anArtifact()
+                ->build(),
+            array(
+                ProjectUGroup::REGISTERED
+            )
+        );
+    }
+
+    public function itReturnsProjectMemberWhenTheyAreGranted() {
+        stub($this->tracker)->getAuthorizedUgroupsByPermissionType()->returns(
+            array(
+                Tracker::PERMISSION_FULL => array(ProjectUGroup::PROJECT_MEMBERS)
+            )
+        );
+
+        $this->assertUGroupIdsEquals(
+            $this->anArtifact()
+                ->build(),
+            array(
+                ProjectUGroup::PROJECT_MEMBERS
+            )
+        );
+    }
+
+    public function itReturnsOneDynamicUserGroupWhenTheyAreGranted() {
+        stub($this->tracker)->getAuthorizedUgroupsByPermissionType()->returns(
+            array(
+                Tracker::PERMISSION_FULL => array($this->support_ugroup_id)
+            )
+        );
+
+        $this->assertUGroupIdsEquals(
+            $this->anArtifact()
+                ->build(),
+            array(
+                $this->support_ugroup_id
+            )
+        );
+    }
+
+    public function itReturnsDynamicUsersAndProjectMembersGroupWhenTheyAreGranted() {
+        stub($this->tracker)->getAuthorizedUgroupsByPermissionType()->returns(
+            array(
+                Tracker::PERMISSION_FULL => array($this->support_ugroup_id, ProjectUGroup::PROJECT_MEMBERS)
+            )
+        );
+
+        $this->assertUGroupIdsEquals(
+            $this->anArtifact()
+                ->build(),
+            array(
+                $this->support_ugroup_id,
+                ProjectUGroup::PROJECT_MEMBERS
+            )
+        );
+    }
+}
+
+class Tracker_Permission_PermissionSerializer_TrackerAdminTest extends Tracker_Permission_PermissionSerializer {
+
+    public function itReturnsProjectMemberWhenTheyAreGranted() {
+        stub($this->tracker)->getAuthorizedUgroupsByPermissionType()->returns(
+            array(
+                Tracker::PERMISSION_ADMIN => array(ProjectUGroup::PROJECT_MEMBERS)
+            )
+        );
+
+        $this->assertUGroupIdsEquals(
+            $this->anArtifact()
+                ->build(),
+            array(
+                ProjectUGroup::PROJECT_MEMBERS
+            )
+        );
+    }
+
+    public function itReturnsOneDynamicUserGroupWhenTheyAreGranted() {
+        stub($this->tracker)->getAuthorizedUgroupsByPermissionType()->returns(
+            array(
+                Tracker::PERMISSION_ADMIN => array($this->support_ugroup_id)
+            )
+        );
+
+        $this->assertUGroupIdsEquals(
+            $this->anArtifact()
+                ->build(),
+            array(
+                $this->support_ugroup_id
+            )
+        );
+    }
+
+    public function itReturnsDynamicUsersAndProjectMembersGroupWhenTheyAreGranted() {
+        stub($this->tracker)->getAuthorizedUgroupsByPermissionType()->returns(
+            array(
+                Tracker::PERMISSION_ADMIN => array($this->support_ugroup_id, ProjectUGroup::PROJECT_MEMBERS)
+            )
+        );
+
+        $this->assertUGroupIdsEquals(
+            $this->anArtifact()
+                ->build(),
+            array(
+                $this->support_ugroup_id,
+                ProjectUGroup::PROJECT_MEMBERS
+            )
+        );
+    }
+}
+
+class Tracker_Permission_PermissionSerializer_SubmittedBy_OneGroupOnlyTest extends Tracker_Permission_PermissionSerializer {
+
+    public function setUp() {
+        parent::setUp();
+        stub($this->tracker)->getAuthorizedUgroupsByPermissionType()->returns(
+            array(
+                Tracker::PERMISSION_SUBMITTER => array(ProjectUGroup::PROJECT_MEMBERS)
+            )
+        );
+    }
+
+    public function itReturnsProjectMembersWhenTheArtifactIsSubmittedByAMemberOfTheProject() {
+        $this->assertUGroupIdsEquals(
+            $this->anArtifact()
+                ->withSubmitter($this->user_project_member)
+                ->build(),
+            array(
+                ProjectUGroup::PROJECT_MEMBERS
+            )
+        );
+    }
+
+    public function itReturnsEmptyArrayWhenArtifactIsSubmittedByNonProjectMember() {
+        $this->assertUGroupIdsEquals(
+            $this->anArtifact()
+                ->withSubmitter($this->user_not_project_member)
+                ->build(),
+            array()
+        );
+    }
+}
+
+class Tracker_Permission_PermissionSerializer_SubmittedBy_TwoGroupsTest extends Tracker_Permission_PermissionSerializer {
+
+    public function setUp() {
+        parent::setUp();
+        stub($this->tracker)->getAuthorizedUgroupsByPermissionType()->returns(
+            array(
+                Tracker::PERMISSION_SUBMITTER => array(ProjectUGroup::PROJECT_MEMBERS, $this->support_ugroup_id)
+            )
+        );
+    }
+
+    public function itReturnsProjectMembersWhenTheArtifactIsSubmittedByAMemberOfTheProject() {
+        $this->assertUGroupIdsEquals(
+            $this->anArtifact()
+                ->withSubmitter($this->user_project_member)
+                ->build(),
+            array(
+                ProjectUGroup::PROJECT_MEMBERS
+            )
+        );
+    }
+
+    public function itReturnsSupportMembersWhenTheArtifactIsSubmittedByAMemberOfSupportTeam() {
+        $this->assertUGroupIdsEquals(
+            $this->anArtifact()
+                ->withSubmitter($this->support_member_only)
+                ->build(),
+            array(
+                $this->support_ugroup_id
+            )
+        );
+    }
+
+    public function itReturnsSupportMembersAndProjectMembersWhenTheArtifactIsSubmittedByAMemberOfBothTeams() {
+        $this->assertUGroupIdsEquals(
+            $this->anArtifact()
+                ->withSubmitter($this->support_and_project_member)
+                ->build(),
+            array(
+                ProjectUGroup::PROJECT_MEMBERS,
+                $this->support_ugroup_id
+            )
+        );
+    }
+}
+
+class Tracker_Permission_PermissionSerializer_AssignedTo_OneGroupOnlyTest extends Tracker_Permission_PermissionSerializer {
+
+    public function setUp() {
+        parent::setUp();
+        stub($this->tracker)->getAuthorizedUgroupsByPermissionType()->returns(
+            array(
+                Tracker::PERMISSION_ASSIGNEE => array(ProjectUGroup::PROJECT_MEMBERS)
+            )
+        );
+    }
+
+    public function itReturnsProjectMembersWhenTheArtifactIsAssignedToAMemberOfTheProject() {
+        $this->assertUGroupIdsEquals(
+            $this->anArtifact()
+                ->withSubmitter($this->user_not_project_member)
+                ->withAssignees(array($this->user_project_member))
+                ->build(),
+            array(
+                ProjectUGroup::PROJECT_MEMBERS
+            )
+        );
+    }
+
+    public function itReturnsEmptyArrayWhenTheArtifactIsAssignedToANonProjectMember() {
+        $this->assertUGroupIdsEquals(
+            $this->anArtifact()
+                ->withSubmitter($this->user_not_project_member)
+                ->withAssignees(array($this->user_not_project_member))
+                ->build(),
+            array()
+        );
+    }
+
+    public function itReturnsEmptyArrayWhenTheArtifactIsAssignedToAMemberOfAnotherUGroup() {
+        $this->assertUGroupIdsEquals(
+            $this->anArtifact()
+                ->withSubmitter($this->user_not_project_member)
+                ->withAssignees(array($this->support_member_only))
+                ->build(),
+            array()
+        );
+    }
+}
+
+class Tracker_Permission_PermissionSerializer_AssignedTo_TwoGroupsTest extends Tracker_Permission_PermissionSerializer {
+
+    public function setUp() {
+        parent::setUp();
+        stub($this->tracker)->getAuthorizedUgroupsByPermissionType()->returns(
+            array(
+                Tracker::PERMISSION_ASSIGNEE => array(ProjectUGroup::PROJECT_MEMBERS, $this->support_ugroup_id)
+            )
+        );
+    }
+
+
+    public function itReturnsProjectMembersWhenTheArtifactIsAssignedToAMemberOfTheProject() {
+        $this->assertUGroupIdsEquals(
+            $this->anArtifact()
+                ->withSubmitter($this->user_not_project_member)
+                ->withAssignees(array($this->user_project_member))
+                ->build(),
+            array(
+                ProjectUGroup::PROJECT_MEMBERS
+            )
+        );
+    }
+
+    public function itReturnsSupportMembersWhenTheArtifactIsAssignedToAMemberOfSupportTeam() {
+        $this->assertUGroupIdsEquals(
+            $this->anArtifact()
+                ->withSubmitter($this->user_not_project_member)
+                ->withAssignees(array($this->support_member_only))
+                ->build(),
+            array(
+                $this->support_ugroup_id
+            )
+        );
+    }
+
+    public function itReturnsSupportMembersAndProjectMembersWhenTheArtifactIsAssignedToAMemberOfBothTeams() {
+        $this->assertUGroupIdsEquals(
+            $this->anArtifact()
+                ->withSubmitter($this->user_not_project_member)
+                ->withAssignees(array($this->support_and_project_member))
+                ->build(),
+            array(
+                ProjectUGroup::PROJECT_MEMBERS,
+                $this->support_ugroup_id
+            )
+        );
+    }
+}
+
+class Tracker_Permission_PermissionSerializer_AssignedTo_TwoPeopleTest extends Tracker_Permission_PermissionSerializer {
+
+    public function setUp() {
+        parent::setUp();
+        stub($this->tracker)->getAuthorizedUgroupsByPermissionType()->returns(
+            array(
+                Tracker::PERMISSION_ASSIGNEE => array($this->support_ugroup_id, $this->marketing_ugroup_id)
+            )
+        );
+        $this->artifact = $this->artifact_builder->build();
+    }
+
+    public function itReturnsSupportAndMarketingTeamsWhenTheArtifactIsAssignedToOnePeopleOfEachGroup() {
+        $this->assertUGroupIdsEquals(
+            $this->anArtifact()
+                ->withSubmitter($this->user_not_project_member)
+                ->withAssignees(array($this->support_member_only, $this->marketing_member_only))
+                ->build(),
+            array(
+                $this->support_ugroup_id,
+                $this->marketing_ugroup_id
+            )
+        );
+    }
+
+    public function itReturnsSupportTeamWhenTheArtifactIsAssignedToPeopleFromProjectAndSupport() {
+        $this->assertUGroupIdsEquals(
+            $this->anArtifact()
+                ->withSubmitter($this->user_not_project_member)
+                ->withAssignees(array($this->user_project_member, $this->support_member_only))
+                ->build(),
+            array(
+                $this->support_ugroup_id,
+            )
+        );
+    }
+
+    public function itReturnsNobodyWhenTheArtifactIsAssignedToPeopleFromOtherTeams() {
+        $this->assertUGroupIdsEquals(
+            $this->anArtifact()
+                ->withSubmitter($this->user_not_project_member)
+                ->withAssignees(array($this->user_project_member, $this->user_not_project_member))
+                ->build(),
+            array()
+        );
+
+    }
+}
+
+class Tracker_Permission_PermissionSerializer_SubmittedByOrAssignedTo_OneGroupTest extends Tracker_Permission_PermissionSerializer {
+
+    public function setUp() {
+        parent::setUp();
+        stub($this->tracker)->getAuthorizedUgroupsByPermissionType()->returns(
+            array(
+                Tracker::PERMISSION_SUBMITTER => array(ProjectUGroup::PROJECT_MEMBERS),
+                Tracker::PERMISSION_ASSIGNEE  => array(ProjectUGroup::PROJECT_MEMBERS),
+            )
+        );
+    }
+
+    public function itReturnsProjectMembersWhenAProjectMemberSubmittedTheArtifact() {
+        $this->assertUGroupIdsEquals(
+            $this->anArtifact()
+                ->withSubmitter($this->user_project_member)
+                ->build(),
+            array(
+                ProjectUGroup::PROJECT_MEMBERS
+            )
+        );
+    }
+
+    public function itReturnsProjectMembersWhenAProjectMemberIsAssignedToTheArtifact() {
+        $this->assertUGroupIdsEquals(
+            $this->anArtifact()
+                ->withSubmitter($this->support_member_only)
+                ->withAssignees(array($this->user_project_member))
+                ->build(),
+            array(
+                ProjectUGroup::PROJECT_MEMBERS
+            )
+        );
+    }
+
+    public function itReturnsEmptyWhenNoProjectMembersAreAssignedNorSubmitterToTheArtifact() {
+        $this->assertUGroupIdsEquals(
+            $this->anArtifact()
+                ->withSubmitter($this->support_member_only)
+                ->withAssignees(array($this->user_not_project_member))
+                ->build(),
+            array()
+        );
+    }
+}
+
+class Tracker_Permission_PermissionSerializer_SubmittedByOrAssignedTo_TwoGroupsTest extends Tracker_Permission_PermissionSerializer {
+
+    public function setUp() {
+        parent::setUp();
+        stub($this->tracker)->getAuthorizedUgroupsByPermissionType()->returns(
+            array(
+                Tracker::PERMISSION_SUBMITTER => array(ProjectUGroup::PROJECT_MEMBERS, $this->support_ugroup_id),
+                Tracker::PERMISSION_ASSIGNEE  => array(ProjectUGroup::PROJECT_MEMBERS, $this->support_ugroup_id),
+            )
+        );
+    }
+
+     public function itReturnsSupportTeamWhenSubmittedBySupportMember() {
+        $this->assertUGroupIdsEquals(
+            $this->anArtifact()
+                ->withSubmitter($this->support_member_only)
+                ->build(),
+            array(
+                $this->support_ugroup_id
+            )
+        );
+    }
+
+    public function itReturnsSupportTeamWhenAssignedToSupportTeam() {
+        $this->assertUGroupIdsEquals(
+            $this->anArtifact()
+                ->withSubmitter($this->user_not_project_member)
+                ->withAssignees(array($this->support_member_only))
+                ->build(),
+            array(
+                $this->support_ugroup_id
+            )
+        );
+    }
+
+    public function itReturnsBothWhenSubmittedByProjectMemberAndAssignedToSupportTeam() {
+        $this->assertUGroupIdsEquals(
+            $this->anArtifact()
+                ->withSubmitter($this->user_project_member)
+                ->withAssignees(array($this->support_member_only))
+                ->build(),
+            array(
+                ProjectUGroup::PROJECT_MEMBERS,
+                $this->support_ugroup_id
+            )
+        );
+    }
+
+    public function itReturnsEmptyArrayWhenNeitherGroupsAreInvolved() {
+        $this->assertUGroupIdsEquals(
+            $this->anArtifact()
+                ->withSubmitter($this->user_not_project_member)
+                ->withAssignees(array($this->marketing_member_only))
+                ->build(),
+            array()
+        );
+    }
+}
+
+class Tracker_Permission_PermissionSerializer_SeveralPermissions_Test extends Tracker_Permission_PermissionSerializer {
+
+    /**
+     * Support team have full access
+     * Project members can see artifacts submitted or assigned to groups
+     * Marketing can see artifacts submitted by group
+     */
+    public function setUp() {
+        parent::setUp();
+        stub($this->tracker)->getAuthorizedUgroupsByPermissionType()->returns(
+            array(
+                Tracker::PERMISSION_FULL      => array($this->support_ugroup_id),
+                Tracker::PERMISSION_SUBMITTER => array(ProjectUGroup::PROJECT_MEMBERS, $this->marketing_ugroup_id),
+                Tracker::PERMISSION_ASSIGNEE  => array(ProjectUGroup::PROJECT_MEMBERS),
+            )
+        );
+    }
+
+     public function itHasAnExternaSubmitter() {
+        $this->assertUGroupIdsEquals(
+            $this->anArtifact()
+                ->withSubmitter($this->user_not_project_member)
+                ->build(),
+            array(
+                $this->support_ugroup_id
+            )
+        );
+    }
+
+    public function itHasAnExternalSubmitterAndProjectMemberAssignee() {
+        $this->assertUGroupIdsEquals(
+            $this->anArtifact()
+                ->withSubmitter($this->user_not_project_member)
+                ->withAssignees(array($this->user_project_member))
+                ->build(),
+            array(
+                $this->support_ugroup_id,
+                ProjectUGroup::PROJECT_MEMBERS
+            )
+        );
+    }
+
+    public function itHasAnExternalSubmitterAndMarketingAssignee() {
+        $this->assertUGroupIdsEquals(
+            $this->anArtifact()
+                ->withSubmitter($this->user_not_project_member)
+                ->withAssignees(array($this->marketing_member_only))
+                ->build(),
+            array(
+                $this->support_ugroup_id,
+            )
+        );
+    }
+
+    public function itHasAMarketingSubmitterAndProjectMemberAssignee() {
+        $this->assertUGroupIdsEquals(
+            $this->anArtifact()
+                ->withSubmitter($this->marketing_member_only)
+                ->withAssignees(array($this->user_project_member))
+                ->build(),
+            array(
+                $this->support_ugroup_id,
+                $this->marketing_ugroup_id,
+                ProjectUGroup::PROJECT_MEMBERS,
+            )
+        );
+    }
+
+    public function itHasAMarketingSubmitterAndMultiTeamAssignee() {
+        $this->assertUGroupIdsEquals(
+            $this->anArtifact()
+                ->withSubmitter($this->marketing_member_only)
+                ->withAssignees(array($this->support_and_project_member))
+                ->build(),
+            array(
+                $this->support_ugroup_id,
+                $this->marketing_ugroup_id,
+                ProjectUGroup::PROJECT_MEMBERS,
+            )
+        );
+    }
+}

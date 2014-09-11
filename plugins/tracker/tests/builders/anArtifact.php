@@ -41,6 +41,7 @@ class Test_Artifact_Builder {
     private $submitted_by;
     private $submitted_on;
     private $user_can_view = array();
+    private $submitted_by_user;
 
     public function withId($id) {
         $this->id = $id;
@@ -115,6 +116,11 @@ class Test_Artifact_Builder {
         return $this;
     }
 
+    public function withSubmitter(PFUser $user) {
+        $this->submitted_by_user = $user;
+        return $this;
+    }
+
     public function build() {
         $artifact = new Tracker_Artifact($this->id, $this->tracker_id, $this->submitted_by, $this->submitted_on, null);
         if ($this->tracker) {
@@ -137,6 +143,9 @@ class Test_Artifact_Builder {
         }
         if ($this->parent_without_permission_checking) {
             $artifact->setParentWithoutPermissionChecking($this->parent_without_permission_checking);
+        }
+        if ($this->submitted_by_user) {
+            $artifact->setSubmittedByUser($this->submitted_by_user);
         }
         foreach ($this->user_can_view as $user) {
             $artifact->setUserCanView($user, true);
