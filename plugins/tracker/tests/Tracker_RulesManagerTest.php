@@ -902,13 +902,38 @@ class Tracker_RulesManager_exportToSOAPTest extends TuleapTestCase {
             array($tracker, mock('Tracker_FormElementFactory'))
         );
 
-        $this->dates = array(new Tracker_Rule_Date(), new Tracker_Rule_Date());
-        $this->dates[0]->setSourceFieldId(1)
+        $date_rule1 = new Tracker_Rule_Date();
+        $date_rule2 = new Tracker_Rule_Date();
+
+        $date_field_1 = mock('Tracker_FormElement_Field_Date');
+        stub($date_field_1)->getId()->returns(1);
+        stub($date_field_1)->isCompatibleWithSoap()->returns(true);
+
+        $date_field_2 = mock('Tracker_FormElement_Field_Date');
+        stub($date_field_2)->getId()->returns(2);
+        stub($date_field_2)->isCompatibleWithSoap()->returns(true);
+
+        $date_field_3 = mock('Tracker_FormElement_Field_Date');
+        stub($date_field_3)->getId()->returns(3);
+        stub($date_field_3)->isCompatibleWithSoap()->returns(true);
+
+        $date_field_4 = mock('Tracker_FormElement_Field_Date');
+        stub($date_field_4)->getId()->returns(4);
+        stub($date_field_4)->isCompatibleWithSoap()->returns(true);
+
+        $date_rule1->setSourceFieldId(1)
             ->setTargetFieldId(2)
+            ->setSourceField($date_field_1)
+            ->setTargetField($date_field_2)
             ->setComparator('<');
-        $this->dates[1]->setSourceFieldId(3)
+
+        $date_rule2->setSourceFieldId(3)
             ->setTargetFieldId(4)
+            ->setSourceField($date_field_3)
+            ->setTargetField($date_field_4)
             ->setComparator('=');
+
+        $this->dates = array($date_rule1, $date_rule2);
 
         $this->lists = array(
             new Tracker_Rule_List(1, $this->tracker_id, 15, 16, 17, 18),

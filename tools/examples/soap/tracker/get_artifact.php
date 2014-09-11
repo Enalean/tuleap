@@ -21,8 +21,8 @@
 
 // format : project_id  tracker_id  artifact_id value [comment]
 
-if ($argc < 1) {
-    die('Usage: ".$argv[0]." artifact_id'.PHP_EOL);
+if ($argc < 2) {
+    die("Usage: ".$argv[0]." artifact_id".PHP_EOL);
 }
 
 $serverURL = isset($_SERVER['TULEAP_SERVER']) ? $_SERVER['TULEAP_SERVER'] : 'http://sonde.cro.enalean.com';

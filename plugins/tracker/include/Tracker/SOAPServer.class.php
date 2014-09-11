@@ -303,7 +303,7 @@ class Tracker_SOAPServer {
     private function trackerfields_to_soap(PFUser $user, Tracker $tracker, $tracker_fields) {
         $return = array();
         foreach ($tracker_fields as $tracker_field) {
-            if ($tracker_field->userCanRead($user)) {
+            if ($tracker_field->userCanRead($user) && $tracker_field->isCompatibleWithSoap()) {
                 $return[] = array(
                     'tracker_id'  => $tracker->getId(),
                     'field_id'    => $tracker_field->getId(),
@@ -488,7 +488,12 @@ class Tracker_SOAPServer {
             $user = $this->soap_request_validator->continueSession($session_key);
             $artifact = $this->getArtifactById($artifact_id, $user, 'updateArtifact');
 
-            $fields_data = $this->getArtifactDataFromSoapRequest($artifact->getTracker(), $value, $artifact);
+            try {
+                $fields_data = $this->getArtifactDataFromSoapRequest($artifact->getTracker(), $value, $artifact);
+            } catch (Exception $e) {
+                return new SoapFault(update_artifact_fault, $e->getMessage());
+            }
+
             try {
                 $artifact->createNewChangeset($fields_data, $comment, $user, null, true, $comment_format);
                 return $artifact_id;

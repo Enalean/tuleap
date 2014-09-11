@@ -425,7 +425,16 @@ class Tracker_FormElementFactory {
             'cross',
         );
         $field_types = array_diff($this->getFieldsSQLTypes(), $element_already_in_soap_basic_info);
-        return $this->getUsedFormElementsByType($tracker, $field_types);
+
+        $fields = $this->getUsedFormElementsByType($tracker, $field_types);
+
+        foreach ($fields as $key => $field) {
+            if (! $field->isCompatibleWithSoap()) {
+                unset($fields[$key]);
+            }
+        }
+
+        return $fields;
     }
 
     /**

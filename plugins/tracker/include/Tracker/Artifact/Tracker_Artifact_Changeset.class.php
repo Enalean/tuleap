@@ -1105,7 +1105,8 @@ class Tracker_Artifact_Changeset {
         $soap['last_comment'] = $comment->getSoapValue();
         $factory = $this->getFormElementFactory();
         foreach ($this->getValueDao()->searchById($this->id) as $row) {
-            if ($field = $factory->getFieldById($row['field_id'])) {
+            $field = $factory->getFieldById($row['field_id']);
+            if ($field && $field->isCompatibleWithSoap()) {
                 $soap['fields'][] = $field->getSoapValue($user, $this);
             }
         }

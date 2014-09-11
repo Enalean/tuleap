@@ -21,7 +21,7 @@
 // format : project_id  tracker_id  value
 
 if ($argc != 4) {
-    die("Usage: ".$argv[0]." project_id  tracker_id  value\n");
+    die("Usage: ".$argv[0]." project_id  tracker_id  summary\n");
 }
 
 $serverURL = isset($_SERVER['TULEAP_SERVER']) ? $_SERVER['TULEAP_SERVER'] : 'http://sonde.cro.enalean.com';
@@ -50,7 +50,7 @@ $value       = array(
         'field_label' => 'start',
         'field_value' => date("Y-m-d")
     ),
-    
+
     array(
         'field_name' => 'end',
         'field_label' => 'end',

@@ -358,4 +358,8 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
     public function isTimeDisplayed() {
         return true;
     }
+
+    public function isCompatibleWithSoap() {
+        return true;
+    }
 }

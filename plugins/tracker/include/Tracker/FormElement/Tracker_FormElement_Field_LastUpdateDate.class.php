@@ -363,4 +363,8 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
     public function isTimeDisplayed() {
         return true;
     }
+
+    public function isCompatibleWithSoap() {
+        return true;
+    }
 }

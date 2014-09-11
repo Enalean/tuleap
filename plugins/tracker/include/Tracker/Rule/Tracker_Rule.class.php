@@ -170,5 +170,12 @@ abstract class Tracker_Rule {
 
     /** @return mixed */
     public abstract function exportToSOAP();
+
+    protected function fieldsAreCompatibleWithSoap() {
+       return (
+           $this->source_field_obj->isCompatibleWithSoap()
+           && $this->target_field_obj->isCompatibleWithSoap()
+       );
+    }
 }
 ?>

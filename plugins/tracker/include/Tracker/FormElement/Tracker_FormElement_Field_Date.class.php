@@ -1048,4 +1048,16 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
 
         return new Tracker_FormElement_DateFormatter($this);
     }
+
+    public function isCompatibleWithSoap() {
+        return (! $this->isTimeDisplayed());
+    }
+
+    public function getFieldDataFromSoapValue(stdClass $soap_value, Tracker_Artifact $artifact = null) {
+        if ($this->isTimeDisplayed()) {
+            throw new Exception('DEPRECATION ERROR: Date Fields with time are not compatible with SOAP methods. Please change the field property or use REST.');
+        }
+
+        return parent::getFieldDataFromSoapValue($soap_value, $artifact);
+    }
 }

@@ -45,6 +45,10 @@ class Tracker_Rule_Date extends Tracker_Rule {
 
     /** @return mixed */
     public function exportToSOAP() {
+        if (! $this->fieldsAreCompatibleWithSoap()) {
+            return;
+        }
+
         return array(
             'source_field_id' => $this->getSourceFieldId(),
             'target_field_id' => $this->getTargetFieldId(),
