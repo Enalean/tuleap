@@ -131,7 +131,8 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
         $workflow = $artifact->getWorkflow();
         if ($workflow) {
             $workflow->before($fields_data, $submitter, $artifact);
-            $augmented_data = $this->addDatesToRequestData($artifact, $fields_data);
+            $augmented_data = $this->field_initializator->process($artifact, $fields_data);
+
             try {
                 $workflow->checkGlobalRules($augmented_data, $this->formelement_factory);
             } catch (Tracker_Workflow_GlobalRulesViolationException $e) {
