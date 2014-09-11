@@ -164,10 +164,8 @@ class Tracker_Permission_PermissionChecker {
                     foreach ($ugroups as $ugroup) {
                         if ($this->userBelongsToGroup($user, $artifact, $ugroup)) {
                             // check that one of the assignees is also a member
-                            $permission_assignee = new Tracker_Permission_PermissionRetrieveAssignee();
-                            $assignees = $permission_assignee->getAssigneeIds($artifact);
-                            foreach ($assignees as $assignee_id) {
-                                $assignee = $this->user_manager->getUserById($assignee_id);
+                            $permission_assignee = new Tracker_Permission_PermissionRetrieveAssignee($this->user_manager);
+                            foreach ($permission_assignee->getAssignees($artifact) as $assignee) {
                                 if ($this->userBelongsToGroup($assignee, $artifact, $ugroup)) {
                                     return true;
                                 }
