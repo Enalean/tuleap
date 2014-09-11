@@ -35,8 +35,9 @@
                  ui-sref-active="active">
                 <span class="execution-item-content">
                     <span class="execution-item-content-title">
-                        #{{ execution.definition.id }} {{ execution.definition.summary}}
+                        <span class="execution-item-content-id">#{{ execution.definition.id }}</span>{{ execution.definition.summary}}
                     </span>
+                    <span class="execution-item-content-environment">{{ execution.environment }}</span>
                 </span>
             </a>
         </div>
