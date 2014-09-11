@@ -1,3 +1,6 @@
+Version 5.461 - Tuleap 7.5
+    * request #7388 Cardwalls don't take field dependencies into account on drag 'n' drop
+
 Version 5.460 - Tuleap 7.5
     * tasks #7420: displaying hours in the date diffs in the following comments
 
