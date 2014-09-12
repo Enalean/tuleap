@@ -93,17 +93,15 @@ class Tracker_Rule_Date extends Tracker_Rule {
      * @return boolean
      */
     public function validate($source_value, $target_value) {
-        
         //if one of the value is empty then return true
         if ($source_value == null || $target_value == null) {
             return true;
         }
-        
-        $source_parts = explode('-', $source_value);
-        $target_parts = explode('-', $target_value);
-        
-        $source_date = mktime(0, 0, 0, $source_parts[1], $source_parts[2], $source_parts[0]);
-        $target_date = mktime(0, 0, 0, $target_parts[1], $target_parts[2], $target_parts[0]);
+
+        $date_only   = $this->isOneValueDateOnly($source_value, $target_value);
+
+        $source_date = $this->getTimestamp($source_value, $date_only);
+        $target_date = $this->getTimestamp($target_value, $date_only);
         
         switch ($this->getComparator()) {
             case self::COMPARATOR_EQUALS :
@@ -120,6 +118,28 @@ class Tracker_Rule_Date extends Tracker_Rule {
                 return $source_date <= $target_date;
             default :
                 throw new Tracker_Rule_Date_MissingComparatorException();
+        }
+    }
+
+    private function isOneValueDateOnly($source_value, $target_value) {
+        return (preg_match(Rule_Date::DAY_REGEX, $source_value) || preg_match(Rule_Date::DAY_REGEX, $target_value));
+    }
+
+    private function getTimestamp($date, $date_only) {
+        if (preg_match(Rule_Timestamp::TIMESTAMP_REGEX, $date) && $date_only) {
+            //transform timestamps for "submitted on" and "last updated date"
+            $date = date(Tracker_FormElement_DateFormatter::DATE_FORMAT, $date);
+        } elseif (preg_match(Rule_Timestamp::TIMESTAMP_REGEX, $date)) {
+            return $date;
+        }
+
+        if (preg_match(Rule_Date_Time::DAYTIME_REGEX, $date, $matches)) {
+            if ($date_only) {
+                return mktime(0, 0, 0, $matches[2], $matches[3], $matches[1]);
+            }
+            return mktime($matches[4], $matches[5], 0, $matches[2], $matches[3], $matches[1]);
+        } elseif (preg_match(Rule_Date::DAY_REGEX, $date, $matches)) {
+            return mktime(0, 0, 0, $matches[2], $matches[3], $matches[1]);
         }
     }
 }
