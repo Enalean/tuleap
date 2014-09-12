@@ -1,3 +1,6 @@
+Version 0.35 - Tuleap 7.5
+    * request #6728 - Provide a list of project that are above disk quota for the siteadmin
+
 Version 0.34 - Tuleap 6.8
     * Fix request #3262: Jean Pierre Graph font configuration fails on centos6
 
