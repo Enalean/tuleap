@@ -56,8 +56,8 @@ class fulltextsearchPlugin extends Plugin {
         if (defined('TRACKER_BASE_URL')) {
             $this->_addHook(TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA);
             $this->_addHook(TRACKER_EVENT_REPORT_PROCESS_ADDITIONAL_QUERY);
-            $this->_addHook('tracker_followup_event_add', 'tracker_followup_event_add', false);
-            $this->_addHook('tracker_followup_event_update', 'tracker_followup_event_update', false);
+            $this->_addHook('tracker_followup_event_add', 'tracker_artifact_update', false);
+            $this->_addHook('tracker_followup_event_update', 'tracker_artifact_update', false);
             $this->_addHook('tracker_report_followup_warning', 'tracker_report_followup_warning', false);
         }
 
@@ -175,7 +175,9 @@ class fulltextsearchPlugin extends Plugin {
         return new FullTextSearch_TrackerSystemEventManager(
             SystemEventManager::instance(),
             new FullTextSearchTrackerActions(
-                $this->getIndexClient(self::SEARCH_TRACKER_TYPE)
+                $this->getIndexClient(self::SEARCH_TRACKER_TYPE),
+                new ElasticSearch_1_2_RequestTrackerDataFactory(),
+                new BackendLogger()
             ),
             $this
         );
@@ -394,24 +396,8 @@ class fulltextsearchPlugin extends Plugin {
      *
      * @return Void
      */
-    public function tracker_followup_event_add($params) {
+    public function tracker_artifact_update($params) {
         $this->getTrackerSystemEventManager()->queueAddFollowup(
-            $params['group_id'],
-            $params['artifact_id'],
-            $params['changeset_id'],
-            $params['text']
-        );
-    }
-
-    /**
-     * Index updated followup comment
-     *
-     * @param Array $params Hook params
-     *
-     * @return Void
-     */
-    public function tracker_followup_event_update($params) {
-        $this->getTrackerSystemEventManager()->queueUpdateFollowup(
             $params['group_id'],
             $params['artifact_id'],
             $params['changeset_id'],
