@@ -10,6 +10,7 @@ Version 7.5 (Not released yet)
 	* git: 3.98
 	* mediawiki: 0.55
 	* statistics: 0.35
+	* archivedeleteditems: 0.3
 
 	== Features ==
 	* request #6728: Provide a list of project that are above disk quota for the siteadmin
