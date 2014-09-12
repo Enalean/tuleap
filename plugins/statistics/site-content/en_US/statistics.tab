@@ -80,3 +80,13 @@ plugin_statistics	quota_added	Quota for project "$1" is now $2 GB
 plugin_statistics	quota_deleted	Quota deleted for $1
 plugin_statistics	no_search_result	No result correspond to the search
 plugin_statistics	services_usage	Services usage statistics
+plugin_statistics	current_size	Current project size
+plugin_statistics	project_name	Project name
+plugin_statistics	exceeding_size	Exceeding size
+plugin_statistics	warn_administrators	Warn administrators?
+plugin_statistics	projects_over_quota_title	Projects exceeding their disk quota
+plugin_statistics	disk_quota_warning_subject	[Disk quota] [Warning] Project $1 is exceeding allowed disk quota
+plugin_statistics	disk_quota_warning_body	Dear project administrator,<br><br>The size of the project <A href="/projects/$1" >$1</A> is: "$2".<br>We advise you to delete unneeded data in order to decrease the project size growth. <br>(please note that deleting items from a subversion repository has no effect on the disk size, on the contrary, it may increase your server repository size).<br>We advise you to avoid storing binaries into your Subversion repository.<br>For Documents, you can remove oldest versions in order to decrease the project's size.<br><br>--<br>Please note that without any actions from you, for the safety of the entire platform, your project may be suspended until we find a solution.
+plugin_statistics	disk_usage_report	Disk Usage <a href="$1">Report</a>
+plugin_statistics	add_disk_quota	<a href="$1">Add disk quota</a>
+plugin_statistics	projects_over_quota	<a href="$1">Projects over quota</a>

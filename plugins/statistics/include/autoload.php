@@ -8,6 +8,8 @@ function autoload902a9a736e13b729569b0c6f0dd931c2($class) {
         $classes = array(
             'projectquotahtml' => '/ProjectQuotaHtml.class.php',
             'projectquotamanager' => '/ProjectQuotaManager.class.php',
+            'projectsoverquotatablepresenter' => '/ProjectsOverQuotaTablePresenter.class.php',
+            'projectsoverquotatableheaderpresenter' => '/ProjectsOverQuotaTableHeaderPresenter.class.php',
             'statistics_diskusagedao' => '/Statistics_DiskUsageDao.class.php',
             'statistics_diskusagegraph' => '/Statistics_DiskUsageGraph.class.php',
             'statistics_diskusagehtml' => '/Statistics_DiskUsageHtml.class.php',

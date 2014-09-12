@@ -263,6 +263,7 @@ echo '<div class="row-fluid">';
 echo '<div class="span4">';
 $wUser->display();
 $wProject->display();
+$em->processEvent('site_admin_disk_widget_hook', array());
 echo '</div>';
 
 echo '<div class="span4">';

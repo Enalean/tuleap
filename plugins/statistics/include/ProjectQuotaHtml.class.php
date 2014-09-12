@@ -392,6 +392,81 @@ class ProjectQuotaHtml {
         }
     }
 
+    /**
+     * Display the content of the projects over disk quota table
+     *
+     * @return Void
+     */
+    private function displayProjectsOverQuotaTableContent() {
+        $output            = '';
+        $exceedingProjects = $this->projectQuotaManager->getProjectsOverQuota();
+        foreach ($exceedingProjects as $key => $value) {
+            $output .= '<tr class="'.util_get_alt_row_color($key).'">'.
+                       '<td><b><a href="disk_usage.php?func=show_one_project&group_id='.$value['group_id'].'">'.$value['project_name'].'</a></b></td>'.
+                       '<td ><b>'.$value['current_disk_space'].'</b></td>'.
+                       '<td ><b>'.$value['disk_quota'].'</b></td>'.
+                       '<td ><b>'.$value['exceed'].'</b></td>';
+            $output .= '<td>';
+            $output .= '<a href="#massmail_'.$value['group_id'].'" class="project_home_contact_admins"  data-toggle="modal"><span class="icon-envelope-alt"></span></a>';
+            $output .= $this->fetchMailForm($value['group_id'], $value['project_name'], $value['current_disk_space']);
+            $output .= '</td>';
+            $output .= '</tr>';
+        }
+        $presenter        = new ProjectsOverQuotaTablePresenter($output);
+        $template_factory = TemplateRendererFactory::build();
+        $renderer         = $template_factory->getRenderer($presenter->getTemplateDir());
+        $renderer->renderToPage('projects-over-quota',$presenter);
+    }
+
+    /**
+     * Display the header of the projects over disk quota table
+     *
+     * @return Void
+     */
+    private function displayProjectsOverQuotaTableHeader() {
+        $header_presenter = new ProjectsOverQuotaTableHeaderPresenter();
+        $template_factory = TemplateRendererFactory::build();
+        $renderer         = $template_factory->getRenderer($header_presenter->getTemplateDir());
+        $renderer->renderToPage('projects-over-quota-table-header',$header_presenter);
+    }
+
+    /**
+     * Display the list of the projects over disk quota
+     *
+     * @return Void
+     */
+    public function displayProjectsOverQuota() {
+        $this->displayProjectsOverQuotaTableHeader();
+        $this->displayProjectsOverQuotaTableContent();
+    }
+
+    /**
+     * Display a modal mass mail form with the default warning content
+     * to be sent to project administrators.
+     *
+     * @param Integer $group_id Id of the project we want to warn its admins
+     * @param String  $project_name The unix name of the project
+     * @param String  $current_disk_space The current disk size we want reduce
+     *
+     * @return String
+     */
+    private function fetchMailForm($group_id, $project_name, $current_disk_space) {
+        $token           = new CSRFSynchronizerToken('');
+        $subject_content = $GLOBALS['Language']->getText('plugin_statistics', 'disk_quota_warning_subject', array($project_name));
+        $body_content    = $GLOBALS['Language']->getText('plugin_statistics', 'disk_quota_warning_body', array($project_name, $current_disk_space));
+        $presenter       = new DiskQuotaWarningFormPresenter(
+                                $group_id,
+                                $token,
+                                'Massmail to project administrators',
+                                '/include/massmail_to_project_admins.php',
+                                $subject_content,
+                                $body_content
+                            );
+        $template_factory = TemplateRendererFactory::build();
+        $renderer         = $template_factory->getRenderer($presenter->getTemplateDir());
+        return $renderer->renderToString('disk-quota-warning',$presenter);
+    }
+
 }
 
 ?>
