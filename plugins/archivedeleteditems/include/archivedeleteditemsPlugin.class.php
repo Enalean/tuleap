@@ -99,15 +99,19 @@ class ArchivedeleteditemsPlugin extends Plugin {
 
         $ret_val         = null;
         $exec_res        = null;
-        $destinationPath = $archivePath.$archivePrefix.'_'.basename($sourcePath);
-        $cmd             = $this->archiveScript." ".$sourcePath." " .$destinationPath;
-        exec($cmd, $exec_res, $ret_val);
-
-        if ($ret_val == 0) {
-            $params['status'] = true;
-            return true;
+        if (file_exists($sourcePath)) {
+            $destinationPath = $archivePath.$archivePrefix.'_'.basename($sourcePath);
+            $cmd             = $this->archiveScript." ".$sourcePath." " .$destinationPath;
+            exec($cmd, $exec_res, $ret_val);
+            if ($ret_val == 0) {
+                $params['status'] = true;
+                return true;
+            } else {
+                $params['error'] = 'Archiving of "'.$sourcePath.'" in "'.$destinationPath.'" failed';
+                return false;
+            }
         } else {
-            $params['error'] = 'Archiving of "'.$sourcePath.'" in "'.$destinationPath.'" failed';
+            $params['error'] = 'Skipping file "'.$sourcePath.'": not found in file system.';
             return false;
         }
     }
