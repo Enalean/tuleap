@@ -115,6 +115,8 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
             $previous_changeset
         );
 
+        $this->event_manager->processEvent(TRACKER_EVENT_ARTIFACT_POST_UPDATE, array('artifact' => $artifact));
+
         if ($send_notification) {
             $artifact->getChangeset($changeset_id)->notify();
         }
@@ -155,16 +157,6 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         if (! $comment_added) {
             return;
         }
-
-        $this->event_manager->processEvent(
-            'tracker_followup_event_add',
-            array(
-                'group_id'     => $artifact->getTracker()->getGroupId(),
-                'artifact_id'  => $artifact->getId(),
-                'changeset_id' => $changeset_id,
-                'text'         => $comment
-            )
-        );
 
         $this->reference_manager->extractCrossRef(
             $comment,

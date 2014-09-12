@@ -19,6 +19,12 @@
  */
 
 class FullTextSearch_TrackerSystemEventManager {
+
+    /**
+     * @var Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
+
     /**
      * @var fulltextsearchPlugin
      */
@@ -37,38 +43,29 @@ class FullTextSearch_TrackerSystemEventManager {
     public function __construct(
             SystemEventManager $system_event_manager,
             FullTextSearchTrackerActions $actions,
+            Tracker_ArtifactFactory $artifact_factory,
             fulltextsearchPlugin $plugin
             ) {
         $this->system_event_manager = $system_event_manager;
         $this->actions              = $actions;
+        $this->artifact_factory     = $artifact_factory;
         $this->plugin               = $plugin;
     }
 
     public function getSystemEventClass($type, &$class, &$dependencies) {
         switch($type) {
-            case SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP_ADD::NAME:
-            case SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP_UPDATE::NAME:
+            case SystemEvent_FULLTEXTSEARCH_TRACKER_ARTIFACT_UPDATE::NAME:
                 $class        = 'SystemEvent_'. $type;
-                $dependencies = array($this->actions);
+                $dependencies = array($this->actions, $this->artifact_factory);
                 break;
         }
     }
 
-    public function queueAddFollowup($group_id, $artifact_id, $changeset_id, $text) {
-        if ($this->plugin->isAllowed($group_id)) {
+    public function queueArtifactUpdate(Tracker_Artifact $artifact) {
+        if ($this->plugin->isAllowed($artifact->getTracker()->getGroupId())) {
             $this->system_event_manager->createEvent(
-                SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP_ADD::NAME,
-                $this->implodeParams(array($group_id, $artifact_id, $changeset_id, $text)),
-                SystemEvent::PRIORITY_MEDIUM
-            );
-        }
-    }
-
-    public function queueUpdateFollowup($group_id, $artifact_id, $changeset_id, $text) {
-        if ($this->plugin->isAllowed($group_id)) {
-            $this->system_event_manager->createEvent(
-                SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP_UPDATE::NAME,
-                $this->implodeParams(array($group_id, $artifact_id, $changeset_id, $text)),
+                SystemEvent_FULLTEXTSEARCH_TRACKER_ARTIFACT_UPDATE::NAME,
+                $this->implodeParams(array($artifact->getId())),
                 SystemEvent::PRIORITY_MEDIUM
             );
         }

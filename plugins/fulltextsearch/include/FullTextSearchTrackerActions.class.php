@@ -51,16 +51,11 @@ class FullTextSearchTrackerActions {
     }
 
     /**
-     * Index a new followup comment
+     * Index an artifact
      *
-     * @param Integer $groupId     Id of the project
-     * @param Integer $artifactId  Id of the artifact
-     * @param Integer $changesetId Id of the changeset
-     * @param String  $text        Body of the followup comment
-     *
-     * @return Void
+     * @param Tracker_Artifact $artifact The artifact to index
      */
-    public function indexNewFollowUp(Tracker_Artifact $artifact) {
+    public function indexArtifactUpdate(Tracker_Artifact $artifact) {
         $this->initializeMapping($artifact->getTracker());
         $this->logger->debug('[Tracker] Elasticsearch index artifact #' . $artifact->getId() . ' in tracker #' . $artifact->getTrackerId());
         $this->client->index(
@@ -79,21 +74,5 @@ class FullTextSearchTrackerActions {
 
     private function mappingExists(Tracker $tracker) {
         return count($this->client->getMapping((string) $tracker->getId())) > 0;
-    }
-
-    /**
-     * Index an updated followup comment
-     *
-     * @param Integer $groupId     Id of the project
-     * @param Integer $artifactId  Id of the artifact
-     * @param Integer $changesetId Id of the changeset
-     * @param String  $text        Body of the followup comment
-     *
-     * @return Void
-     */
-    public function indexFollowUpUpdate($groupId, $artifactId, $changesetId, $text) {
-        $updateData = $this->client->initializeSetterData();
-        $updateData = $this->client->appendSetterData($updateData, 'followup', $text);
-        $this->client->update(fulltextsearchPlugin::SEARCH_TRACKER_TYPE, $changesetId, $updateData);
     }
 }

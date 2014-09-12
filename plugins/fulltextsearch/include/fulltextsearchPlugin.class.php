@@ -56,8 +56,8 @@ class fulltextsearchPlugin extends Plugin {
         if (defined('TRACKER_BASE_URL')) {
             $this->_addHook(TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA);
             $this->_addHook(TRACKER_EVENT_REPORT_PROCESS_ADDITIONAL_QUERY);
-            $this->_addHook('tracker_followup_event_add', 'tracker_artifact_update', false);
-            $this->_addHook('tracker_followup_event_update', 'tracker_artifact_update', false);
+            $this->_addHook(TRACKER_EVENT_ARTIFACT_POST_UPDATE);
+            $this->_addHook('tracker_followup_event_update', 'tracker_event_artifact_post_update', false);
             $this->_addHook('tracker_report_followup_warning', 'tracker_report_followup_warning', false);
         }
 
@@ -179,6 +179,7 @@ class fulltextsearchPlugin extends Plugin {
                 new ElasticSearch_1_2_RequestTrackerDataFactory(),
                 new BackendLogger()
             ),
+            Tracker_ArtifactFactory::instance(),
             $this
         );
     }
@@ -200,8 +201,7 @@ class fulltextsearchPlugin extends Plugin {
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_APPROVAL_TABLE_COMMENT::NAME,
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_WIKI_INDEX::NAME,
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_WIKI_UPDATE::NAME,
-                SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP_ADD::NAME,
-                SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP_UPDATE::NAME,
+                SystemEvent_FULLTEXTSEARCH_TRACKER_ARTIFACT_UPDATE::NAME,
                 SystemEvent_FULLTEXTSEARCH_WIKI_INDEX::NAME,
                 SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE::NAME,
                 SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE_PERMISSIONS::NAME,
@@ -393,16 +393,11 @@ class fulltextsearchPlugin extends Plugin {
      * Index added followup comment
      *
      * @param Array $params Hook params
-     *
+     * @see TRACKER_EVENT_ARTIFACT_POST_UPDATE
      * @return Void
      */
-    public function tracker_artifact_update($params) {
-        $this->getTrackerSystemEventManager()->queueAddFollowup(
-            $params['group_id'],
-            $params['artifact_id'],
-            $params['changeset_id'],
-            $params['text']
-        );
+    public function tracker_event_artifact_post_update($params) {
+        $this->getTrackerSystemEventManager()->queueArtifactUpdate($params['artifact']);
     }
 
     /**

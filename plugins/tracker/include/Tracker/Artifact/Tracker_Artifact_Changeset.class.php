@@ -380,7 +380,7 @@ class Tracker_Artifact_Changeset {
             unset($this->latest_comment);
             if ($commentUpdated) {
                 $params = array('group_id'     => $this->getArtifact()->getTracker()->getGroupId(),
-                                'artifact_id'  => $this->getArtifact()->getId(),
+                                'artifact'     => $this->getArtifact(),
                                 'changeset_id' => $this->getId(),
                                 'text'         => $body);
                 EventManager::instance()->processEvent('tracker_followup_event_update', $params);
