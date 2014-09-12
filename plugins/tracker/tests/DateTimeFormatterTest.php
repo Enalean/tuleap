@@ -35,26 +35,26 @@ class Tracker_FormElement_DateTimeFormatterTest extends TuleapTestCase {
 
     public function itFormatsTimestampInRightFormat() {
         $timestamp = 1409752174;
-        $expected  = '2014-09-03 15:49:34';
+        $expected  = '2014-09-03 15:49';
 
         $this->assertEqual($expected, $this->date_formatter->formatDate($timestamp));
     }
 
     public function itFormatsTimestampInRightFormatForHoursBeforeNoon() {
         $timestamp = 1409708974;
-        $expected  = '2014-09-03 03:49:34';
+        $expected  = '2014-09-03 03:49';
 
         $this->assertEqual($expected, $this->date_formatter->formatDate($timestamp));
     }
 
     public function itValidatesWellFormedValue() {
-        $value    = '2014-09-03 03:49:34';
+        $value    = '2014-09-03 03:49';
 
         $this->assertTrue($this->date_formatter->validate($value));
     }
 
     public function itDoesNotValidateNotWellFormedDate() {
-        $value    = '2014/09/03 03:49:34';
+        $value    = '2014/09/03 03:49';
 
         $this->assertFalse($this->date_formatter->validate($value));
     }
@@ -66,7 +66,7 @@ class Tracker_FormElement_DateTimeFormatterTest extends TuleapTestCase {
     }
 
     public function itDoesNotValidateDateIfNoSpaceBetweenDateAndTime() {
-        $value    = '2014-09-0303:49:34';
+        $value    = '2014-09-0303:49';
 
         $this->assertFalse($this->date_formatter->validate($value));
     }
