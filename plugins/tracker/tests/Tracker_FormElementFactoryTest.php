@@ -525,6 +525,7 @@ class Tracker_FormElementFactory_GetUsedFieldsForSOAP extends TuleapTestCase {
         parent::setUp();
         $this->tracker = mock('Tracker');
         $this->factory = partial_mock('Tracker_FormElementFactory', array('getUsedFormElementsByType'), array());
+        stub($this->factory)->getUsedFormElementsByType()->returns(array());
     }
 
     public function itFiltersOutFieldsThatAreAlreadyReturnedBySOAPBasicInfo() {

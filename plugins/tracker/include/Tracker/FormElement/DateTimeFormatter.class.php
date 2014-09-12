@@ -20,7 +20,7 @@
  */
 
 class Tracker_FormElement_DateTimeFormatter extends Tracker_FormElement_DateFormatter {
-    const DATE_TIME_FORMAT = 'Y-m-d H:i:s';
+    const DATE_TIME_FORMAT = 'Y-m-d H:i';
 
     public function __construct(Tracker_FormElement_Field_Date $field) {
         parent::__construct($field);
@@ -55,7 +55,7 @@ class Tracker_FormElement_DateTimeFormatter extends Tracker_FormElement_DateForm
     }
 
     public function formatDateForDisplay($timestamp) {
-        return format_date($GLOBALS['Language']->getText('system', 'datefmt_short') . ' H:i:s', (float) $timestamp, '');
+        return format_date($GLOBALS['Language']->getText('system', 'datefmt_short') . ' H:i', (float) $timestamp, '');
     }
 
     protected function getDatePicker($value, array $errors) {

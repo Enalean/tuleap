@@ -23,6 +23,11 @@ $host     = getenv('TULEAP_SERVER')   ? getenv('TULEAP_SERVER')   : 'http://sond
 $login    = getenv('TULEAP_USER')     ? getenv('TULEAP_USER')     : 'testman';
 $password = getenv('TULEAP_PASSWORD') ? getenv('TULEAP_PASSWORD') : 'testpwd';
 
+
+if ($argc < 2) {
+    die("Usage: ".$argv[0]." report_id".PHP_EOL);
+}
+
 $report_id  = $argv[1];
 $offset     = 0;
 $limit = 10;

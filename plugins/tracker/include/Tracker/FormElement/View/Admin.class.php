@@ -197,7 +197,6 @@ class Tracker_FormElement_View_Admin {
         $html = '';
         foreach ($this->formElement->getProperties() as $key => $property) {
             $html .= '<p>';
-            $html .= '<label for="formElement_properties_'. $key .'">'. $this->formElement->getPropertyLabel($key) .'</label> ';
             $html .= $this->fetchAdminSpecificProperty($key, $property);
             $html .= '</p>';
         }
@@ -217,6 +216,7 @@ class Tracker_FormElement_View_Admin {
         $html = '';
         switch ($property['type']) {
         case 'string':
+            $html .= '<label for="formElement_properties_'. $key .'">'. $this->formElement->getPropertyLabel($key) .'</label> ';
             $html .= '<input type="text" 
                              size="'. $property['size'] .'"
                              name="formElement_data[specific_properties]['. $key .']" 
@@ -224,10 +224,12 @@ class Tracker_FormElement_View_Admin {
                              value="'. $property['value'] .'" />';
             break;
         case 'date':
+            $html .= '<label for="formElement_properties_'. $key .'">'. $this->formElement->getPropertyLabel($key) .'</label> ';
             $value = $property['value'] ? $this->formElement->formatDate($property['value']) : '';
             $html .= $GLOBALS['HTML']->getDatePicker("formElement_properties_".$key, "formElement_data[specific_properties][$key]", $value);
             break;
         case 'text':
+            $html .= '<label for="formElement_properties_'. $key .'">'. $this->formElement->getPropertyLabel($key) .'</label> ';
             $html .= '<textarea
                            cols="50" rows="10"
                            name="formElement_data[specific_properties]['. $key .']"
@@ -235,6 +237,7 @@ class Tracker_FormElement_View_Admin {
                        $property['value'] . '</textarea>';
             break;
         case 'rich_text':
+            $html .= '<label for="formElement_properties_'. $key .'">'. $this->formElement->getPropertyLabel($key) .'</label> ';
             $html .= '<textarea
                            class="tracker-field-richtext"
                            cols="50" rows="10"  
@@ -243,6 +246,7 @@ class Tracker_FormElement_View_Admin {
                        $property['value'] . '</textarea>';
             break;
         case 'radio':
+            $html .= '<label for="formElement_properties_'. $key .'">'. $this->formElement->getPropertyLabel($key) .'</label> ';
             foreach ($property['choices'] as $key_choice => $choice) {
                 $checked = '';
                 if ($this->formElement->getProperty($key) == $choice['radio_value']) {
@@ -259,9 +263,15 @@ class Tracker_FormElement_View_Admin {
             break;
         case 'checkbox':
             $checked = $property['value'] ? 'checked="checked"' : '';
-            $html .= '<input type="checkbox" name="formElement_data[specific_properties]['. $key .']" id="formElement_properties_'.$key.'" '. $checked .' />';
+            $html .= '<label class="checkbox">
+                        <input  type="checkbox"
+                                name="formElement_data[specific_properties]['. $key .']"
+                                id="formElement_properties_'.$key.'" '. $checked .' />
+                        '.$this->formElement->getPropertyLabel($key)
+                    .'</label>';
             break;
         case 'label':
+            $html .= '<label for="formElement_properties_'. $key .'">'. $this->formElement->getPropertyLabel($key) .'</label> ';
             $html .= '<label for="formElement_properties_'. $key .'">'. $this->formElement->getPropertyLabel($key) .'</label>';
             
         default:

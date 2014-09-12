@@ -57,7 +57,7 @@ class Tracker_History {
                 
                 $change = '<tr valign="top" class="'. html_get_alt_row_color($i++) .'" id="'. $id .'">';
                 //date
-                $change .= '<td>'. format_date('Y-m-d H:i:s', $row['submitted_on']) .'</td>';
+                $change .= '<td>'. format_date('Y-m-d H:i', $row['submitted_on']) .'</td>';
                 //user
                 $change .= '<td>';
                 if ($row['submitted_by']) {

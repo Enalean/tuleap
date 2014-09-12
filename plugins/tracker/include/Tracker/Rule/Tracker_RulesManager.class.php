@@ -794,7 +794,10 @@ class Tracker_RulesManager {
                 $soap['lists'][] = $rule->exportToSOAP();
             }
             foreach ($this->getAllDateRulesByTrackerId($this->tracker->getId()) as $rule) {
-                $soap['dates'][] = $rule->exportToSOAP();
+                $export = $rule->exportToSOAP();
+                if ($export) {
+                    $soap['dates'][] = $rule->exportToSOAP();
+                }
             }
         }
         return $soap;

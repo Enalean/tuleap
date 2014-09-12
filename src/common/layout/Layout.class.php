@@ -1440,7 +1440,7 @@ class Layout extends Response {
         $span_class = 'tuleap_field_date';
 
         if ($is_time_displayed) {
-            $format = "yyyy-MM-dd hh:mm:ss";
+            $format = "yyyy-MM-dd hh:mm";
             $span_class = 'tuleap_field_datetime';
         }
 

@@ -1153,7 +1153,7 @@ class Tracker_Artifact_XMLImport_AlphanumericTest extends Tracker_Artifact_XMLIm
             $this->string_field_id => 'Import artifact in tracker v5',
             $this->int_field_id    => '5',
             $this->float_field_id  => '4.5',
-            $this->date_field_id   => '2014-03-20 10:13:07',
+            $this->date_field_id   => '2014-03-20 10:13',
         );
 
         stub($this->date_field)->isTimeDisplayed()->returns(true);

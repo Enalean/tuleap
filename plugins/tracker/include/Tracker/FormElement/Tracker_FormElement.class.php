@@ -1166,5 +1166,9 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     public function setCriteriaValueFromREST(Tracker_Report_Criteria $criteria, array $rest_criteria_value) {
         return false;
     }
+
+    public function isCompatibleWithSoap() {
+        return true;
+    }
 }
 ?>

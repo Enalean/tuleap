@@ -22,12 +22,12 @@
 // format : project_id  tracker_id  artifact_id value [comment]
 
 if ($argc < 2) {
-    die('Usage: ".$argv[0]." artifact_id value \n');
+    die("Usage: ".$argv[0]." artifact_id" .PHP_EOL);
 }
 
-$serverURL = isset($_SERVER['TULEAP_SERVER']) ? $_SERVER['TULEAP_SERVER'] : 'http://sonde.cro.enalean.com';
-$login     = isset($_SERVER['TULEAP_USER']) ? $_SERVER['TULEAP_USER'] : 'testman';
-$password  = isset($_SERVER['TULEAP_PASSWORD']) ? $_SERVER['TULEAP_PASSWORD'] : 'testpwd';
+$serverURL = getenv('TULEAP_SERVER')   ? getenv('TULEAP_SERVER')   : 'http://sonde.cro.enalean.com';
+$login     = getenv('TULEAP_USER')     ? getenv('TULEAP_USER')     : 'testman';
+$password  = getenv('TULEAP_PASSWORD') ? getenv('TULEAP_PASSWORD') : 'testpwd';
 
 $soapLogin = new SoapClient($serverURL.'/soap/?wsdl', array('cache_wsdl' => WSDL_CACHE_NONE));
 
@@ -44,7 +44,7 @@ $value       = array(
         'field_name'  => 'list_field',
         'field_label' => '',
         'field_value' => array('bind_value' =>
-            array(
+    array(
                 array(
                     'bind_value_id' => '106',
                     'bind_value_label' => 'roger'

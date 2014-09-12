@@ -540,10 +540,10 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
     }
     
     /**
-     * Format a timestamp into Y-m-d H:i:s format
+     * Format a timestamp into Y-m-d H:i format
      */
     protected function formatDateTime($date) {
-        return format_date("Y-m-d H:i:s", (float)$date, '');
+        return format_date("Y-m-d H:i", (float)$date, '');
     }
     
     /**
@@ -562,13 +562,13 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         $date_csv_export_pref = $this->_getUserCSVDateFormat();
         switch ($date_csv_export_pref) {
             case "month_day_year";
-                $fmt = 'm/d/Y H:i:s';
+                $fmt = 'm/d/Y H:i';
                 break;
             case "day_month_year";
-                $fmt = 'd/m/Y H:i:s';
+                $fmt = 'd/m/Y H:i';
                 break;
             default:
-                $fmt = 'm/d/Y H:i:s';
+                $fmt = 'm/d/Y H:i';
                 break;
         }
         return format_date($fmt, (float)$date, '');
@@ -1047,5 +1047,17 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         }
 
         return new Tracker_FormElement_DateFormatter($this);
+    }
+
+    public function isCompatibleWithSoap() {
+        return (! $this->isTimeDisplayed());
+    }
+
+    public function getFieldDataFromSoapValue(stdClass $soap_value, Tracker_Artifact $artifact = null) {
+        if ($this->isTimeDisplayed()) {
+            throw new Exception('DEPRECATION ERROR: Date Fields with time are not compatible with SOAP methods. Please change the field property or use REST.');
+        }
+
+        return parent::getFieldDataFromSoapValue($soap_value, $artifact);
     }
 }
