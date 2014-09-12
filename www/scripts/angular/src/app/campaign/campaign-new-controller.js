@@ -24,7 +24,8 @@
         DefinitionService,
         SharedPropertiesService
     ) {
-        var project_id = SharedPropertiesService.getProjectId();
+        var project_id              = SharedPropertiesService.getProjectId(),
+            controller_is_destroyed = false;
 
         _.extend($scope, {
             ITEMS_PER_PAGE:         15,
@@ -48,6 +49,10 @@
 
         getEnvironments(project_id, 50, 0);
         getDefinitions(project_id, 750, 0);
+
+        $scope.$on('$destroy', function iVeBeenDismissed() {
+            controller_is_destroyed = true;
+        });
 
         function createCampaign(campaign) {
             var environments = extractChoosenDefinitionsByEnvironment(campaign);
@@ -116,7 +121,7 @@
                 $scope.definitions = $scope.definitions.concat(data.results);
                 $scope.nb_total_definitions = data.total;
 
-                if ($scope.definitions.length < $scope.nb_total_definitions) {
+                if (! controller_is_destroyed && $scope.definitions.length < $scope.nb_total_definitions) {
                     getDefinitions(project_id, limit, offset + limit);
                 } else {
                     $scope.loading_definitions = false;
