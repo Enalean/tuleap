@@ -1,3 +1,6 @@
+Version 0.81 - Tuleap 7.5
+    * tasks #7422: Define base mapping format for fts of trackers
+
 Version 0.80 - Tuleap 7.5
     * tasks #7378: make all fts system events be run in their own process
 

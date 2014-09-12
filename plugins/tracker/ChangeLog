@@ -1,3 +1,6 @@
+Version 5.463 - Tuleap 7.5
+    * tasks #7422: Define base mapping format for fts of trackers
+
 Version 5.462 - Tuleap 7.5
     * * tasks #7432: SOAP for datetime
 * tasks #7438: align checkbox in field admin area
