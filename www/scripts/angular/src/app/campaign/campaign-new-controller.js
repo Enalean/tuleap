@@ -24,14 +24,14 @@
         DefinitionService,
         SharedPropertiesService
     ) {
-        var project_id = SharedPropertiesService.getProjectId(),
-            definitions = [];
+        var project_id = SharedPropertiesService.getProjectId();
 
         _.extend($scope, {
             ITEMS_PER_PAGE:         15,
             nb_total_definitions:   0,
-            loading_environments:   true,
             loading_definitions:    true,
+            loading_environments:   true,
+            definitions:            [],
             submitting_campaign:    false,
             select_all:             false,
             breadcrumb_label:       gettextCatalog.getString('Campaign creation'),
@@ -47,7 +47,7 @@
         });
 
         getEnvironments(project_id, 50, 0);
-        getDefinitions(project_id, 50, 0);
+        getDefinitions(project_id, 750, 0);
 
         function createCampaign(campaign) {
             var environments = extractChoosenDefinitionsByEnvironment(campaign);
@@ -113,11 +113,10 @@
 
         function getDefinitions(project_id, limit, offset) {
             DefinitionService.getDefinitions(project_id, limit, offset).then(function(data) {
+                $scope.definitions = $scope.definitions.concat(data.results);
                 $scope.nb_total_definitions = data.total;
 
-                definitions = definitions.concat(data.results);
-
-                if (definitions.length < $scope.nb_total_definitions) {
+                if ($scope.definitions.length < $scope.nb_total_definitions) {
                     getDefinitions(project_id, limit, offset + limit);
                 } else {
                     $scope.loading_definitions = false;
@@ -127,7 +126,7 @@
 
         function getFilteredDefinitions(filter) {
             return $filter('InPropertiesFilter')(
-                definitions,
+                $scope.definitions,
                 filter,
                 ['id','summary','category']
             );

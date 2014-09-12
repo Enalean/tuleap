@@ -35,7 +35,7 @@ use Tracker_FormElement_Field_List_Bind;
 
 class ProjectResource {
 
-    const MAX_LIMIT = 50;
+    const MAX_LIMIT = 1000;
 
     /** @var PFUser */
     private $user;
@@ -166,10 +166,10 @@ class ProjectResource {
             throw new RestException(403, 'Access denied to the test definition tracker');
         }
 
-        $artifact_list = $this->tracker_artifact_factory->getArtifactsByTrackerId($tracker_id);
+        $paginated_artifacts = $this->tracker_artifact_factory->getPaginatedArtifactsByTrackerId($tracker_id, $limit, $offset);
         $result = array();
 
-        foreach ($artifact_list as $artifact) {
+        foreach ($paginated_artifacts->getArtifacts() as $artifact) {
             if (! $artifact->userCanView($this->user)) {
                 continue;
             }
@@ -181,9 +181,9 @@ class ProjectResource {
             }
         }
 
-        $this->sendPaginationHeaders($limit, $offset, count($result));
+        $this->sendPaginationHeaders($limit, $offset, $paginated_artifacts->getSize());
 
-        return array_slice($result, $offset, $limit);
+        return $result;
     }
 
     /**

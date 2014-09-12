@@ -4,6 +4,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: src/app/campaign/campaign-new.tpl.html
+msgid "<span class=\"total-definitions\">{{ getFilteredDefinitions(environment.filter).length }}</span> test"
+msgid_plural "<span class='total-definitions'>{{ getFilteredDefinitions(environment.filter).length }}</span> tests"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/app/campaign/campaign-new.tpl.html
 msgid "All <strong>{{ environment.nb_selected_all }}</strong> tests are selected."
 msgstr ""
 
