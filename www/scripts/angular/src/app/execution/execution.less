@@ -224,30 +224,30 @@
 
         h2 {
             margin: 0;
-            padding: 10px;
+            padding: 10px 45px 10px 10px;
             color: #FFFFFF;
             font-weight: 300;
             letter-spacing: 0.01em;
-            background-color: @notrun;
             -webkit-border-top-left-radius: 3px;
             -webkit-border-top-right-radius: 3px;
             -moz-border-radius-topleft: 3px;
             -moz-border-radius-topright: 3px;
             border-top-left-radius: 3px;
             border-top-right-radius: 3px;
+            background: @notrun no-repeat right 10px center;
 
             &.passed {
-                background-color: @passed;
+                background: @passed url('status-passed-white-big.png') no-repeat right 10px center;
                 transition: all 0.08s linear;
             }
 
             &.failed {
-                background-color: @failed;
+                background: @failed url('status-failed-white-big.png') no-repeat right 10px center;
                 transition: all 0.08s linear;
             }
 
             &.blocked {
-                background-color: @blocked;
+                background: @blocked url('status-blocked-white-big.png') no-repeat right 10px center;
                 transition: all 0.08s linear;
             }
         }
