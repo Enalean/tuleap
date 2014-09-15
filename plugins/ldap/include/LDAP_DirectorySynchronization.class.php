@@ -97,7 +97,7 @@ class LDAP_DirectorySynchronization {
 
             if ($modified) {
                 $this->getUserManager()->updateDb($user);
-                if ($retentionPeriod = $this->ldap->getLDAPParam('daily_sync_retention_period')) {
+                if ($retentionPeriod = $this->ldap->getLDAPParam('daily_sync_retention_period') && $user->getStatus() == 'S') {
                     $projectManager = $this->getProjectManager();
                     $this->getLdapSyncNotificationManager($projectManager, $retentionPeriod)->processNotification($user);
                     $this->getCleanUpManager()->addUserDeletionForecastDate($user);
