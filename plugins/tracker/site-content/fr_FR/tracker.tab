@@ -1041,9 +1041,9 @@ plugin_tracker_artifact	copy_submit_button	Copier
 
 plugin_tracker_artifact	formelement_artifact_link_copy	Les données du champ "liens entre artefacts" ne peuvent pas être copiées
 
-plugin_tracker_artifact	user_already_unsubscribed	Vous êtes déjà désinscrit des notifications
-plugin_tracker_artifact	user_subscribed	Vous avez réactivé les notifications pour cet artefact
-plugin_tracker_artifact	user_unsubscribed	Vous êtes désinscrit des notifications
+plugin_tracker_artifact	user_already_unsubscribed	Vous êtes déjà désinscrit des notifications.
+plugin_tracker_artifact	user_subscribed	Vous avez réactivé les notifications pour cet artefact.
+plugin_tracker_artifact	user_unsubscribed	Vous êtes désinscrit des notifications de cet artefact.
 plugin_tracker_artifact	request_not_valid	La requête n'est pas valide
 plugin_tracker_artifact	mail_unsubscribe	Se désinscrire
 
@@ -1575,3 +1575,5 @@ plugin_tracker	copy_of	Copie de $1
 
 plugin_tracker	disable_notifications	Désactiver les notifications
 plugin_tracker	enable_notifications	Activer les notifications
+plugin_tracker	disable_notifications_alternate_text	Ne plus recevoir les notifications de cet artefact
+plugin_tracker	enable_notifications_alternate_text	Recevoir les notifications de cet artefact

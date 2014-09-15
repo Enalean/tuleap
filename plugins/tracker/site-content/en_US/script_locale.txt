@@ -20,6 +20,8 @@ codendi.locales['tracker_artifact'] = {
     edit_followup_cancel: 'Cancel',
     disable_notifications: 'Disable notifications',
     enable_notifications: 'Enable notifications',
+    disable_notifications_alternate_text: 'Stop receiving notifications for this artifact',
+    enable_notifications_alternate_text: 'Receive notifications for this artifact',
     notification_update_error: 'An error occured while saving your notification settings'
 };
 

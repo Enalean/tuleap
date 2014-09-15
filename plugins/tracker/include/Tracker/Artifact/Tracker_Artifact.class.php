@@ -403,8 +403,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     public function fetchUnsubscribeButton() {
+        $alternate_text = $this->getUnsubscribeButtonAlternateText();
+
         $html = '<div class="tracker_artifact_notification">';
-        $html .= '<a href="#" class="btn">';
+        $html .= '<a href="#" class="btn"';
+        $html .= 'title="'.$alternate_text.'">';
         $html .= '<i class="icon-bell-alt"></i>';
         $html .= $this->getUnsubscribeButtonLabel();
         $html .= '</a>';
@@ -421,6 +424,16 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
 
         return $GLOBALS['Language']->getText('plugin_tracker', 'disable_notifications');
+    }
+
+    private function getUnsubscribeButtonAlternateText() {
+        $user = $this->getUserManager()->getCurrentUser();
+
+        if ($this->doesUserHaveUnsubscribedFromNotification($user)) {
+            return $GLOBALS['Language']->getText('plugin_tracker', 'enable_notifications_alternate_text');
+        }
+
+        return $GLOBALS['Language']->getText('plugin_tracker', 'disable_notifications_alternate_text');
     }
 
     private function doesUserHaveUnsubscribedFromNotification(PFUser $user) {
