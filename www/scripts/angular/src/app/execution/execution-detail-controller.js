@@ -11,6 +11,7 @@ function ExecutionDetailCtrl($scope, $state, $sce, gettextCatalog, executions, E
         return execution.id === execution_id;
     });
     $scope.execution.results = '';
+    $scope.execution.saving  = false;
     $scope.error_message     = '';
     $scope.pass              = pass;
     $scope.fail              = fail;
@@ -39,8 +40,14 @@ function ExecutionDetailCtrl($scope, $state, $sce, gettextCatalog, executions, E
     }
 
     function setNewStatus(execution, new_status) {
-        var previous_status = execution.status;
-        ExecutionService.putExecution(execution).then(function() {
+        var previous_status   = execution.status,
+            execution_to_save = angular.copy(execution);
+
+        execution_to_save.status = new_status;
+
+        execution.saving = true;
+
+        ExecutionService.putExecution(execution_to_save).then(function() {
             execution.status = new_status;
             execution.previous_result.status       = previous_status;
             execution.previous_result.submitted_on = new Date();
@@ -49,8 +56,12 @@ function ExecutionDetailCtrl($scope, $state, $sce, gettextCatalog, executions, E
             execution.results                      = '';
             $scope.error_message                   = '';
 
+            execution.saving = false;
+
         }, function() {
             $scope.error_message = gettextCatalog.getString('An error has occured. Please contact an administrator.');
+
+            execution.saving = false;
         });
     }
 
