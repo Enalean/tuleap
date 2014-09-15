@@ -341,10 +341,6 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      * @return string sql statement
      */
     protected function getSQLCompareDate($is_advanced, $op, $from, $to, $column) {
-        if ($this->isTimeDisplayed()) {
-            return $this->getSQLCompareDateTime($is_advanced, $op, $from, $to, $column);
-        }
-
         return $this->getSQLCompareDay($is_advanced, $op, $from, $to, $column);
     }
 
@@ -450,7 +446,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         $html = '';
         $criteria_value = $this->getCriteriaValue($criteria);
         $html .= '<div style="text-align:right">';
-        $value = isset($criteria_value['from_date']) ? $this->formatDate($criteria_value['from_date']) : '';
+        $value = isset($criteria_value['from_date']) ? $this->formatDateForReport($criteria_value['from_date']) : '';
         $html .= '<label>';
         $html .= $GLOBALS['Language']->getText('plugin_tracker_include_field','start').' ';
         $html .= $GLOBALS['HTML']->getBootstrapDatePicker(
@@ -459,10 +455,10 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
             $value,
             array(),
             array(),
-            $this->isTimeDisplayed()
+            false
         );
         $html .= '</label>';
-        $value = isset($criteria_value['to_date']) ? $this->formatDate($criteria_value['to_date']) : '';
+        $value = isset($criteria_value['to_date']) ? $this->formatDateForReport($criteria_value['to_date']) : '';
         $html .= '<label>';
         $html .= $GLOBALS['Language']->getText('plugin_tracker_include_field','end').' ';
         $html .= $GLOBALS['HTML']->getBootstrapDatePicker(
@@ -471,7 +467,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
             $value,
             array(),
             array(),
-            $this->isTimeDisplayed()
+            false
         );
         $html .= '</label>';
         $html .= '</div>';
@@ -520,7 +516,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
                 )
             );
 
-            $value = $criteria_value ? $this->formatDate($criteria_value['to_date']) : '';
+            $value = $criteria_value ? $this->formatDateForReport($criteria_value['to_date']) : '';
 
             $html .= $GLOBALS['HTML']->getBootstrapDatePicker(
                 "tracker_report_criteria_".$this->id,
@@ -528,11 +524,16 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
                 $value,
                 $criteria_selector,
                 array(),
-                $this->isTimeDisplayed()
+                false
             );
             $html .= '</div>';
         }
         return $html;
+    }
+
+    private function formatDateForReport($criteria_value) {
+        $date_formatter = new Tracker_FormElement_DateFormatter($this);
+        return $date_formatter->formatDate($criteria_value);
     }
 
     public function fetchMasschange() {
