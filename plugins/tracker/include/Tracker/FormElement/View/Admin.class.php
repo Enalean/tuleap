@@ -272,7 +272,6 @@ class Tracker_FormElement_View_Admin {
             break;
         case 'label':
             $html .= '<label for="formElement_properties_'. $key .'">'. $this->formElement->getPropertyLabel($key) .'</label> ';
-            $html .= '<label for="formElement_properties_'. $key .'">'. $this->formElement->getPropertyLabel($key) .'</label>';
             
         default:
             //Unknown type. raise exception?
