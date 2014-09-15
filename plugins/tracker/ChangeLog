@@ -1,3 +1,6 @@
+Version 5.466 - Tuleap 7.5
+    * Fix request #7423: Add alternate text to button Enable
+
 Version 5.465 - Tuleap 7.5
     * Fix request #7409 Tv3 export to Tv5: Notice in system event email
 
