@@ -20,6 +20,9 @@
 var tuleap = tuleap || { };
 
 (function ($) {
+    /**
+     * @see http://tarruda.github.io/bootstrap-datetimepicker/
+     */
     tuleap.dateTimePicker = {
         init: function() {
             $('.tuleap_field_date').datetimepicker({
@@ -29,7 +32,8 @@ var tuleap = tuleap || { };
 
             $('.tuleap_field_datetime').datetimepicker({
                  language: codendi.locale,
-                 pickTime: true
+                 pickTime: true,
+                 pickSeconds: false
             });
         }
     };
