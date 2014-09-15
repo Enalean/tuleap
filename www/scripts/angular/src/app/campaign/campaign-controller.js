@@ -2,8 +2,8 @@ angular
     .module('campaign')
     .controller('CampaignCtrl', CampaignCtrl);
 
-CampaignCtrl.$inject = ['$state','gettextCatalog'];
+CampaignCtrl.$inject = ['$scope','gettextCatalog'];
 
-function CampaignCtrl($state, gettextCatalog) {
-    $state.current.data.ncyBreadcrumbLabel = gettextCatalog.getString('Campaigns');
+function CampaignCtrl($scope, gettextCatalog) {
+    $scope.campaign_breadcrumb_label = gettextCatalog.getString('Campaigns');
 }

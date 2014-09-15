@@ -12,7 +12,7 @@ function CampaignConfig($stateProvider) {
             template:   '<ui-view />',
             controller: 'CampaignCtrl',
             data: {
-                ncyBreadcrumbLabel: 'Campaigns'
+                ncyBreadcrumbLabel: '{{ campaign_breadcrumb_label }}'
             }
         })
         .state('campaigns.list', {
