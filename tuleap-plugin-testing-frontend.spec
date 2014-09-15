@@ -1,9 +1,11 @@
-Summary: Test and tracability plugin for Tuleap
-Name: tuleap-plugin-testmgmt
+%{!?APP_NAME: %define APP_NAME tuleap}
+
+Summary: Test and tracability plugin for Tuleap (Web front end)
+Name: tuleap-plugin-testing-frontend
 Version: @@VERSION@@
 Release: @@RELEASE@@%{?dist}
 BuildArch: noarch
-License: GPL
+License: Enalean
 Group: Development/Tools
 URL: http://tuleap.net
 Source0: %{name}-%{version}.tar.gz
@@ -12,12 +14,10 @@ Packager: Manuel VACELET <manuel.vacelet@enalean.com>
 
 AutoReqProv: no
 
-Requires: php(language) >= 5.3
-Requires: tuleap, tuleap-plugin-tracker, tuleap-core-rest
+Requires: tuleap-plugin-testing-backend
 
 %description
 Test and tracability plugin
-
 
 # 
 # Package setup
@@ -34,8 +34,8 @@ Test and tracability plugin
 %install
 %{__rm} -rf $RPM_BUILD_ROOT
 
-%{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/testmgmt
-%{__cp} -ar * $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/testmgmt
+%{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/%{APP_NAME}/plugins/testing/www/scripts/angular
+%{__cp} -ar www/scripts/angular/bin $RPM_BUILD_ROOT/%{_datadir}/%{APP_NAME}/plugins/testing/www/scripts/angular
 
 %pre
 if [ "$1" -eq "1" ]; then
@@ -55,8 +55,8 @@ fi
 #
 %files
 %defattr(-,root,root,-)
-%{_datadir}/tuleap/plugins/testmgmt
+%{_datadir}/%{APP_NAME}/plugins/testing/www/scripts/angular
 
 %changelog
-* Wed Jul 2 2014 Manuel VACELET <manuel.vacelet@enalean.com> -
+* Mon Sep 15 2014 Manuel VACELET <manuel.vacelet@enalean.com> -
 - First package
