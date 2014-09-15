@@ -11,11 +11,9 @@
             controller:  'ExecutionListCtrl',
             templateUrl: 'execution/execution-list.tpl.html',
             resolve: {
-                executionService: 'ExecutionService',
-                campaignService:  'CampaignService',
-                executions:       resolveExecutionsGroupedByCategory,
-                assignees:        resolveAssignees,
-                environments:     resolveEnvironments
+                executions:       ['ExecutionService', '$stateParams', resolveExecutionsGroupedByCategory],
+                assignees:        ['CampaignService', '$stateParams', resolveAssignees],
+                environments:     ['CampaignService', '$stateParams', resolveEnvironments]
             },
             data: {
                 ncyBreadcrumbLabel:  '{{ campaign.label }}',
