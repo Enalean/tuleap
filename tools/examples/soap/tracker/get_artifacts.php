@@ -19,12 +19,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$serverURL = isset($_SERVER['TULEAP_SERVER']) ? $_SERVER['TULEAP_SERVER'] : 'http://sonde.cro.enalean.com';
-$login     = isset($_SERVER['TULEAP_USER']) ? $_SERVER['TULEAP_USER'] : 'testman';
-$password  = isset($_SERVER['TULEAP_PASSWORD']) ? $_SERVER['TULEAP_PASSWORD'] : 'testpwd';
+$serverURL = isset($_SERVER['TULEAP_SERVER']) ? $_SERVER['TULEAP_SERVER'] : 'http://foudre';
+$login     = isset($_SERVER['TULEAP_USER']) ? $_SERVER['TULEAP_USER'] : 'michelle';
+$password  = isset($_SERVER['TULEAP_PASSWORD']) ? $_SERVER['TULEAP_PASSWORD'] : 'welcome0';
 
 $project_id = 0; //not needed
-$tracker_id = 274;
+$tracker_id = 52;
 $offset     = 0;
 $limit      = 100;
 $criteria = array(
@@ -38,19 +38,19 @@ $criteria = array(
 //            'date' => array('op' => '>', 'to_date' => mktime(0,0,0,10,1,2012))
 //        )
 //    ),
-//    array(
-//        'field_name' => 'submitted_on',
-//        'value' => array(
-//            'dateAdvanced' => array(
-//                'from_date' => mktime(0, 0, 0, 8, 14, 2012),
-//                'to_date'   => mktime(0, 0, 0, 8, 20, 2012)
-//            )
-//        )
-//    ),
     array(
-        'field_name' => 'status',
-        'value' => array('value' => '4731')
-    )
+        'field_name' => 'open_date',
+        'value' => array(
+            'dateAdvanced' => array(
+                'from_date' =>  mktime(0,0,0,9,4,2014),
+                'to_date'   =>  mktime(1,0,0,9,5,2014)
+            )
+        )
+    ),
+//    array(
+//        'field_name' => 'status',
+//        'value' => array('value' => '4731')
+//    )
 );
 
 $soap_options = array(

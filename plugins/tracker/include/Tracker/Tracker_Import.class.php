@@ -357,7 +357,7 @@ function getUsedFields() {
               $hp->purify($val, CODENDI_PURIFIER_CONVERT_HTML) )));
 	      return false;
 	    }
-	    $date = format_date("Y-m-d",$unix_time);
+	    $date = format_date(Tracker_FormElement_DateFormatter::DATE_FORMAT, $unix_time);
 	    $data[$c] = $date;
 	  }
 	}

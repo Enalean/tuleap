@@ -70,7 +70,7 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
      *
      * @param int $timestamp The date
      *
-     * @return string the date in the format Y-m-d (user pref?), or '' if date is null (none)
+     * @return string the date in the format Y-m-d with maybe hours and minutes or '' if date is null (none)
      */
     protected function formatDate($timestamp) {
         if ($timestamp === null) {

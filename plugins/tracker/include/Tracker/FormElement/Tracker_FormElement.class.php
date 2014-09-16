@@ -1142,7 +1142,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      * Format a timestamp into Y-m-d format
      */
     public function formatDate($date) {
-        return format_date("Y-m-d", (float)$date, '');
+        return format_date(Tracker_FormElement_DateFormatter::DATE_FORMAT, (float)$date, '');
     }
 
     public function exportCurrentUserPermissionsToSOAP(PFUser $user) {

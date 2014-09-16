@@ -332,7 +332,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
      * @return date
      */
     public function getLastValue(Tracker_Artifact $artifact) {
-        return date("Y-m-d", $artifact->getLastChangeset()->getSubmittedOn());
+        return date(Tracker_FormElement_DateFormatter::DATE_FORMAT, $artifact->getLastChangeset()->getSubmittedOn());
     }
 
     /**
