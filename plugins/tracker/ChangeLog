@@ -1,3 +1,6 @@
+Version 5.470 - Tuleap 7.5
+    * tasks #7448: Date criteria are always date. They never allow to search on date time.
+
 Version 5.469 - Tuleap 7.5
     * tasks #7406: ensure REST is compatible with date-time fields
 
