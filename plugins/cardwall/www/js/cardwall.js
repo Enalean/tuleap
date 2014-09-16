@@ -93,6 +93,10 @@ tuleap.agiledashboard.cardwall.card.updateAfterAjax = function( transport ) {
         var nb_total;
         var element;
 
+        if (typeof milestone_info.status_count === 'undefined') {
+            return;
+        }
+
         nb_open        = parseInt(milestone_info["status_count"]["open"]);
         nb_closed      = parseInt(milestone_info["status_count"]["closed"]);
         nb_total       = nb_open + nb_closed;

@@ -273,9 +273,12 @@ tuleap.tracker = tuleap.tracker || { };
             this.afterSubmit();
 
             $('#artifact-form-errors h5').html(data.message);
-            $.each(data.errors, function() {
-              $('#artifact-form-errors ul').html('').append('<li>' + this + '</li>');
-            });
+
+            if (data.errors) {
+                $.each(data.errors, function() {
+                  $('#artifact-form-errors ul').html('').append('<li>' + this + '</li>');
+                });
+            }
 
             $('.tuleap-modal-main-panel .tuleap-modal-content').scrollTop(0);
             $('#artifact-form-errors').show();
