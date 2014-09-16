@@ -13,6 +13,7 @@ Version 7.5 (Not released yet)
 	* archivedeleteditems: 0.3
 
 	== Features ==
+	* tasks #7444: remove seconds from the timepicker in the UI
 	* tasks #7440: make tracker workflow rules work with datetime
 	* request #6728: Provide a list of project that are above disk quota for the siteadmin
 	* story #7349: SystemEvent to be processed independently
