@@ -5,11 +5,11 @@ Version 7.5 (Not released yet)
 	* request #7379: Delete sflogo.php no longer used (since 2008)
 
 	== Plugins ==
-	* tracker: 5.468
+	* tracker: 5.469
 	* fulltextsearch: 0.82
 	* git: 3.98
 	* mediawiki: 0.55
-	* statistics: 0.35
+	* statistics: 0.36
 	* archivedeleteditems: 0.3
 
 	== Features ==

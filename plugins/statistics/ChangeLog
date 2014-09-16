@@ -1,3 +1,6 @@
+Version 0.36 - Tuleap 7.5
+    * tasks #7406: ensure REST is compatible with date-time fields
+
 Version 0.35 - Tuleap 7.5
     * request #6728 - Provide a list of project that are above disk quota for the siteadmin
 

@@ -1,3 +1,6 @@
+Version 5.469 - Tuleap 7.5
+    * tasks #7406: ensure REST is compatible with date-time fields
+
 Version 5.468 - Tuleap 7.5
     * requests #7445: fix admin area of date field shows double label for 'today'
 
