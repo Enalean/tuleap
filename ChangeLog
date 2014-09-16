@@ -5,7 +5,7 @@ Version 7.5 (Not released yet)
 	* request #7379: Delete sflogo.php no longer used (since 2008)
 
 	== Plugins ==
-	* tracker: 5.466
+	* tracker: 5.467
 	* fulltextsearch: 0.82
 	* git: 3.98
 	* mediawiki: 0.55
@@ -13,6 +13,7 @@ Version 7.5 (Not released yet)
 	* archivedeleteditems: 0.3
 
 	== Features ==
+	* tasks #7440: make tracker workflow rules work with datetime
 	* request #6728: Provide a list of project that are above disk quota for the siteadmin
 	* story #7349: SystemEvent to be processed independently
 
