@@ -1,3 +1,6 @@
+Version 5.468 - Tuleap 7.5
+    * requests #7445: fix admin area of date field shows double label for 'today'
+
 Version 5.467 - Tuleap 7.5
     * tasks #7440: make tracker workflow rules work with datetime
 
