@@ -1,3 +1,6 @@
+Version 1.36 - Tuleap 7.5
+    * request #7443: cardwall modal opens with an error message when anonymous user moves card
+
 Version 1.35 - Tuleap 7.4
     * request #7301: Fix bug- Cardwalls don't take transition and dependencies into account on drag 'n' drop
 

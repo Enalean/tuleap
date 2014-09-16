@@ -1,3 +1,6 @@
+Version 5.471 - Tuleap 7.5
+    * request #7443: cardwall modal opens with an error message when anonymous user moves card
+
 Version 5.470 - Tuleap 7.5
     * tasks #7448: Date criteria are always date. They never allow to search on date time.
 
