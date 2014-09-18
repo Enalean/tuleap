@@ -25,6 +25,8 @@ tuleap.tracker.artifact = tuleap.tracker.artifact || { };
 
 tuleap.tracker.artifact.editionSwitcher = function() {
 
+    var pair_fields_toggled = {};
+
     var init = function() {
         if ($("#artifact_informations").size() > 0) {
             bindClickOnEditableFields();
@@ -96,16 +98,19 @@ tuleap.tracker.artifact.editionSwitcher = function() {
     };
 
     var toggleDependencyIfAny = function (element) {
-        if (! codendi.tracker.rules_definitions) {
+        var field_id = $(element).find('.tracker_hidden_edition_field').attr('data-field-id');
+
+        if (! codendi.tracker.rules_definitions || typeof field_id == 'undefined')  {
             return;
         }
 
-        var field_id = $(element).find('.tracker_hidden_edition_field').attr('data-field-id');
-
-        $(codendi.tracker.rules_definitions).each( function() {
+        $(codendi.tracker.rules_definitions).each(function() {
             if (this.source_field == field_id) {
-                var target_field = getTargetField(this.target_field);
-                if (target_field) {
+                var target_field    = getTargetField(this.target_field);
+                var target_field_id = $(target_field).find('.tracker_hidden_edition_field').attr('data-field-id');
+
+                if (target_field.length > 0 && ! pair_fields_toggled[field_id + '_' + target_field_id]) {
+                    pair_fields_toggled[field_id + '_' + target_field_id] = true;
                     toggleField(target_field);
                 }
             }
