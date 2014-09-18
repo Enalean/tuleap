@@ -204,14 +204,23 @@ class MilestoneRepresentation {
             $this->status_count = $status_count;
         }
 
-        $milestone_tracker = new TrackerReference();
-        $milestone_tracker->build($milestone->getPlanning()->getPlanningTracker());
+        $finder = new \AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder(
+            \Tracker_HierarchyFactory::instance(),
+            \PlanningFactory::build()
+        );
+        $submilestone_tracker = $finder->findFirstSubmilestoneTracker($milestone);
+
+        $submilestone_trackers = array();
+        if ($submilestone_tracker) {
+            $submilestone_tracker_ref = new TrackerReference();
+            $submilestone_tracker_ref->build($finder->findFirstSubmilestoneTracker($milestone));
+            $submilestone_trackers = array($submilestone_tracker_ref);
+        }
+
         $this->resources['milestones'] = array(
             'uri'    => $this->uri . '/'. self::ROUTE,
             'accept' => array(
-                'trackers' => array(
-                    $milestone_tracker
-                )
+                'trackers' => $submilestone_trackers
             )
         );
         $this->resources['backlog'] = array(
