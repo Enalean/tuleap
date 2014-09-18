@@ -445,16 +445,18 @@ class Tracker_FormElementFactory {
      *
      * @return Array $fields_data
      */
-    public function getUsedFieldsWithDefaultValueForSoap(Tracker $tracker, Array $fields_data) {
+    public function getUsedFieldsWithDefaultValue(Tracker $tracker, Array $fields_data, PFUser $user) {
         $fields = $this->getUsedFields($tracker);
         foreach ($fields as $field) {
-            $fields_data = $this->augmentFieldsDataWithDefaultValue($field, $fields_data);
+            if ($field->userCanSubmit()) {
+                $fields_data = $this->augmentFieldsDataWithDefaultValue($field, $fields_data);
+            }
         }
         return $fields_data;
     }
 
     private function augmentFieldsDataWithDefaultValue($field, $fields_data) {
-        if (!array_key_exists($field->getId(), $fields_data)) {
+        if (!array_key_exists($field->getId(), $fields_data) && $field->hasDefaultValue()) {
             $fields_data[$field->getId()] = $field->getDefaultValue();
         }
         return $fields_data;

@@ -418,6 +418,8 @@ class Tracker_SOAPServer {
             $this->checkUserCanCreateArtifact($tracker, $user);
 
             $fields_data = $this->getArtifactDataFromSoapRequest($tracker, $value);
+            $fields_data = $this->formelement_factory->getUsedFieldsWithDefaultValue($tracker, $fields_data, $user);
+
             if ($artifact = $this->artifact_factory->createArtifact($tracker, $fields_data, $user, null)) {
                 return $artifact->getId();
             } else {
