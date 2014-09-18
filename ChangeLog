@@ -1,4 +1,5 @@
-Version 7.5 (Not released yet)
+Version 7.5 (Thursday, September 18th 2014)
+
 	== Bug Fix ==
 	* request #7408: No value returned for the specified parameters in the build
 	* Fix request #7373: Remove "target" settings for link in CKeditor configuration
