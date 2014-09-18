@@ -293,7 +293,7 @@ class ArtifactFilesTest extends RestBase {
 
         $response = $this->getResponse($this->client->get('artifacts/' . $posted_artifact['id']));
         $posted_artifact = $response->json();
-        $this->assertCount(4, $posted_artifact['values']);
+        $this->assertCount(6, $posted_artifact['values']);
     }
 
     /**

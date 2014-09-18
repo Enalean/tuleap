@@ -47,6 +47,11 @@ class Tracker_REST_Artifact_ArtifactValidator {
         return $new_values;
     }
 
+    public function getUsedFieldsWithDefaultValue(Tracker $tracker, array $fields_data, PFUser $user) {
+        $fields_data = $this->formelement_factory->getUsedFieldsWithDefaultValue($tracker, $fields_data, $user);
+        return $fields_data;
+    }
+
     private function getField(array $indexed_fields, array $value) {
         if (! isset($value['field_id']) || (isset($value['field_id']) && ! is_int($value['field_id']))) {
             throw new Tracker_FormElement_InvalidFieldException('No \'field_id\' or invalid id in submitted value. Field IDs must be integers');
