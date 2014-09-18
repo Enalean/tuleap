@@ -1208,6 +1208,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     }
 
     protected function permission_is_authorized($type, $transition_id, $user_id, $group_id) {
+        include_once 'www/project/admin/permissions.php';
+
         return permission_is_authorized($type, $transition_id, $user_id, $group_id);
     }
 
