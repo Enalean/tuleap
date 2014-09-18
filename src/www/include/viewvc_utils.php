@@ -87,21 +87,21 @@ function viewvc_utils_passcommand() {
   }
   
   // "view=auto" is not well supported in wrapped mode. See SR 341 on Partners.
-  $query_string = str_replace("view=auto","view=markup",getStringFromServer('QUERY_STRING'));
+  $query_string = str_replace("view=auto","view=markup",viewvc_utils_escape_string_from_server('QUERY_STRING'));
 
-  $command = 'HTTP_COOKIE="'.getStringFromServer('HTTP_COOKIE').'" '.
-           'REMOTE_ADDR="'.getStringFromServer('REMOTE_ADDR').'" '.
-           'QUERY_STRING="'.$query_string.'" '.
-           'SERVER_SOFTWARE="'.getStringFromServer('SERVER_SOFTWARE').'" '.
-           'SCRIPT_NAME="'.getStringFromServer('SCRIPT_NAME').'" '.
-           'HTTP_USER_AGENT="'.getStringFromServer('HTTP_USER_AGENT').'" '.
-           'HTTP_ACCEPT_ENCODING="'.getStringFromServer('HTTP_ACCEPT_ENCODING').'" '.
-           'HTTP_ACCEPT_LANGUAGE="'.getStringFromServer('HTTP_ACCEPT_LANGUAGE').'" '.
+  $command = 'HTTP_COOKIE='.viewvc_utils_escape_string_from_server('HTTP_COOKIE').' '.
+           'HTTP_USER_AGENT='.viewvc_utils_escape_string_from_server('HTTP_USER_AGENT').' '.
+           'REMOTE_ADDR='.viewvc_utils_escape_string_from_server('REMOTE_ADDR').' '.
+           'QUERY_STRING='.$query_string.' '.
+           'SERVER_SOFTWARE='.viewvc_utils_escape_string_from_server('SERVER_SOFTWARE').' '.
+           'SCRIPT_NAME='.viewvc_utils_escape_string_from_server('SCRIPT_NAME').' '.
+           'HTTP_ACCEPT_ENCODING='.viewvc_utils_escape_string_from_server('HTTP_ACCEPT_ENCODING').' '.
+           'HTTP_ACCEPT_LANGUAGE='.viewvc_utils_escape_string_from_server('HTTP_ACCEPT_LANGUAGE').' '.
            'PATH_INFO='.viewvc_utils_wrap_utf8_file_name($path).' '.
-           'PATH="'.getStringFromServer('PATH').'" '.
-           'HTTP_HOST="'.getStringFromServer('HTTP_HOST').'" '.
-           'DOCUMENT_ROOT="'.getStringFromServer('DOCUMENT_ROOT').'" '.
-           'CODENDI_LOCAL_INC="'.getStringFromServer('CODENDI_LOCAL_INC').'" '. 
+           'PATH='.viewvc_utils_escape_string_from_server('PATH').' '.
+           'HTTP_HOST='.viewvc_utils_escape_string_from_server('HTTP_HOST').' '.
+           'DOCUMENT_ROOT='.viewvc_utils_escape_string_from_server('DOCUMENT_ROOT').' '.
+           'CODENDI_LOCAL_INC='.viewvc_utils_escape_string_from_server('CODENDI_LOCAL_INC').' '.
            '/var/www/cgi-bin/viewvc.cgi 2>&1';
 
   $content = viewvc_utils_wrap_utf8_exec($command);
@@ -186,6 +186,11 @@ function viewvc_utils_passcommand() {
   }
 }
 
+function viewvc_utils_escape_string_from_server($key) {
+    $string = getStringFromServer($key);
+
+    return escapeshellarg($string);
+}
 
 function viewvc_utils_track_browsing($group_id, $type) {
   $query_string = getStringFromServer('QUERY_STRING');
