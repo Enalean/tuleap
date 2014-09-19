@@ -106,3 +106,5 @@ plugin_ldap	invalid_ldap_group_name	Group LDAP invalide (ce groupe n'existe pas 
 #
 plugin_ldap	ldap_sync_mail_notification_subject	[Synchronisation LDAP quotidienne] $1 est suspendu, veuillez nettoyez le projet $2.
 plugin_ldap	ldap_sync_mail_notification_body	Chers administrateurs de projet,<br/> l'utilisateur $1 <$2> a été suspendu aprés la synchronisation LDAP quotidienne.<br/>Veuillez nettoyer les données de votre projet ($3) qui font référence à cet utilisateur (telque les assignements d'artefacts, les groupes d'utilisateurs,etc.).<br> Ce nettoyage sera fait automatiquement arpès $4 jours; l'utilisateur concerné sera supprimé de touts les projets et son statut sera modifié de Suspendu à Détruit.
+plugin_ldap	ldap_sync_reminder_mail_notification_subject	[Rappel][Synchronisation LDAP] L'utilisateur $1 sera détruit demain
+plugin_ldap	ldap_sync_reminder_mail_notification_body	Chers administrateurs de projet,<br/>L'utilisateur $1 <$2> sera automatiquement supprimé de votre projet ($3) demain. Son statut sera modifié de Suspendu à Détruit.<br/>Veuillez nettoyer les données de votre projet qui font référence à cet utilisateur.

@@ -22,13 +22,14 @@
  */
 
 require_once dirname(__FILE__).'/../include/LDAP_DirectorySynchronization.class.php';
+require_once dirname(__FILE__).'/../include/LDAP_SyncReminderNotificationManager.class.php';
 require_once 'common/language/BaseLanguage.class.php';
 require_once 'common/user/UserManager.class.php';
 require_once dirname(__FILE__).'/../include/LDAP_CleanUpManager.class.php';
 
 // Needed because of bad type checking in SimpleTest
 Mock::generatePartial('LDAP', 'MockInhLDAP', array('search', 'getErrno', 'getLDAPParam'));
-Mock::generatePartial('LDAP_DirectorySynchronization', 'LDAP_DirectorySynchronizationTestVersion', array('getUserManager', 'getLdapUserManager', 'getLdapUserSync', 'getLdapSyncNotificationManager','getCleanUpManager'));
+Mock::generatePartial('LDAP_DirectorySynchronization', 'LDAP_DirectorySynchronizationTestVersion', array('getUserManager', 'getLdapUserManager', 'getLdapUserSync', 'getLdapSyncNotificationManager','getCleanUpManager', 'getLdapSyncReminderNotificationManager'));
 Mock::generate('LDAPResultIterator');
 Mock::generate('LDAPResult');
 Mock::generate('BaseLanguage');
@@ -37,6 +38,8 @@ Mock::generate('PFUser');
 Mock::generate('LDAP_UserManager');
 Mock::generate('LDAP_UserSync');
 Mock::generate('LDAP_CleanUpManager');
+Mock::generate('LDAP_SyncReminderNotificationManager');
+Mock::generate('LDAP_SyncNotificationManager');
 
 // Ensure user is suspended
 class MyUmMock4Suspended extends MockUserManager {
@@ -83,6 +86,9 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
         $lum->expectNever('updateLdapUid');
         $sync->setReturnValue('getLdapUserManager', $lum);
 
+        $syncReminderManager = new MockLDAP_SyncReminderNotificationManager($this);
+        $sync->setReturnValue('getLdapSyncReminderNotificationManager', $syncReminderManager);
+
         $lus = new MockLDAP_UserSync($this);
         $lus->expectNever('sync');
         $sync->setReturnValue('getLdapUserSync', $lus);
@@ -110,6 +116,9 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
         $lum = new MockLDAP_UserManager($this);
         $lum->expectNever('updateLdapUid');
         $sync->setReturnValue('getLdapUserManager', $lum);
+
+        $syncReminderManager = new MockLDAP_SyncReminderNotificationManager($this);
+        $sync->setReturnValue('getLdapSyncReminderNotificationManager', $syncReminderManager);
 
         $lus = new MockLDAP_UserSync($this);
         $lus->expectNever('sync');
@@ -139,12 +148,15 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
         $lum->expectNever('updateLdapUid');
         $sync->setReturnValue('getLdapUserManager', $lum);
 
-        $syncNotifManager = mock('LDAP_SyncNotificationManager');
+        $syncNotifManager = new MockLDAP_SyncNotificationManager($this);
         $sync->setReturnValue('getLdapSyncNotificationManager', $syncNotifManager);
 
         $clm = new MockLDAP_CleanUpManager($this);
         $clm->expectOnce('addUserDeletionForecastDate');
         $sync->setReturnValue('getCleanUpManager', $clm);
+
+        $syncReminderManager = new MockLDAP_SyncReminderNotificationManager($this);
+        $sync->setReturnValue('getLdapSyncReminderNotificationManager', $syncReminderManager);
 
         $lus = new MockLDAP_UserSync($this);
         $lus->expectNever('sync');
@@ -184,8 +196,11 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
         $lum->expectOnce('updateLdapUid', array(new PFUser($row), 'mis_1234'));
         $sync->setReturnValue('getLdapUserManager', $lum);
 
-        $syncNotifManager = mock('LDAP_SyncNotificationManager');
+        $syncNotifManager = new MockLDAP_SyncNotificationManager($this);
         $sync->setReturnValue('getLdapSyncNotificationManager', $syncNotifManager);
+
+        $syncReminderManager = new MockLDAP_SyncReminderNotificationManager($this);
+        $sync->setReturnValue('getLdapSyncReminderNotificationManager', $syncReminderManager);
 
         $lus = new MockLDAP_UserSync($this);
         $lus->setReturnValue('sync', false);
@@ -226,8 +241,11 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
         $lum->expectNever('updateLdapUid');
         $sync->setReturnValue('getLdapUserManager', $lum);
 
-        $syncNotifManager = mock('LDAP_SyncNotificationManager');
+        $syncNotifManager = new MockLDAP_SyncNotificationManager($this);
         $sync->setReturnValue('getLdapSyncNotificationManager', $syncNotifManager);
+
+        $syncReminderManager = new MockLDAP_SyncReminderNotificationManager($this);
+        $sync->setReturnValue('getLdapSyncReminderNotificationManager', $syncReminderManager);
 
         $lus = new MockLDAP_UserSync($this);
         $lus->setReturnValue('sync', true);
@@ -273,6 +291,9 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
         $lus->expectOnce('sync');
         $sync->setReturnValue('getLdapUserSync', $lus);
 
+        $syncReminderManager = new MockLDAP_SyncReminderNotificationManager($this);
+        $sync->setReturnValue('getLdapSyncReminderNotificationManager', $syncReminderManager);
+
         $row = array('user_id'  => '4321',
                      'ldap_id'  => 'ed1234',
                      'ldap_uid' => 'mis_1234'
@@ -316,11 +337,15 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
         $lus->expectOnce('sync');
         $sync->setReturnValue('getLdapUserSync', $lus);
 
+        $syncReminderManager = new MockLDAP_SyncReminderNotificationManager($this);
+        $sync->setReturnValue('getLdapSyncReminderNotificationManager', $syncReminderManager);
+
         $row = array('user_id'  => '4321',
                      'ldap_id'  => 'ed1234',
                      'ldap_uid' => 'mis_1234'
                      );
         $sync->ldapSync($row);
     }
+
 }
 ?>

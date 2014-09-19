@@ -21,47 +21,11 @@
 
 class LDAP_SyncNotificationManager {
 
-    private $projectManager;
     private $retentionPeriod;
-    private $logger;
 
     function __construct(ProjectManager $projectManager, $retentionPeriod){
-        $this->projectManager  = $projectManager;
+        $this->ldapSyncMail    = new LDAP_SyncMail($projectManager);
         $this->retentionPeriod = $retentionPeriod;
-        $this->logger          = new BackendLogger();
-    }
-
-    /**
-     * Retrieve a collection of active projects the non valid user is member of.
-     *
-     * @param PFUser $user Suspended user after LDAP daily synchro
-     *
-     * @return Array
-     */
-    protected function getProjectsForUser(PFUser $user) {
-        return $this->projectManager->getActiveProjectsForUser($user);
-    }
-
-    /**
-     * Retrieve the emails of administrators by project the user is member of.
-     *
-     * @param PFUser $user Suspended user after LDAP daily synchro
-     *
-     * @return Array
-     */
-    protected function getNotificationRecipients(PFUser $user) {
-        $projectList = $this->getProjectsForUser($user);
-        $recipient   = array();
-        foreach ($projectList as $project) {
-            $projectRecipient = array();
-            $projectAdmins    = $project->getAdmins();
-            $projectName      = $project->getPublicName();
-            foreach($projectAdmins as $admin) {
-                $projectRecipient[$admin->getId()] = $admin->getEmail();
-            }
-            $recipient[$projectName] = $projectRecipient;
-        }
-        return $recipient;
     }
 
     /**
@@ -72,60 +36,38 @@ class LDAP_SyncNotificationManager {
      * @return void
      */
     public function processNotification(PFUser $user) {
-        $to = '';
-        $adminsEmails = $this->getNotificationRecipients($user);
+        $recipients   = '';
+        $adminsEmails = $this->ldapSyncMail->getNotificationRecipients($user);
         foreach ($adminsEmails as $projectName => $emailList) {
-            $to = implode(";", $emailList);
-            $this->notifyProjectsAdmins($to, $projectName, $user);
+            $subject    = $this->getSubject($projectName, $user);
+            $body       = $this->getBody($projectName, $user);
+            $recipients = implode(";", $emailList);
+            $this->ldapSyncMail->notifyProjectsAdmins($recipients, $projectName, $user, $subject, $body);
         }
     }
 
     /**
-     * Send mail to project administrators after daliy user sync.
+     * Prepare the body of the notification mail
      *
-     * @param String $to          List of project administrators emails we want to notify
-     * @param String $projectName Public name of the project we want to notify its administrators
-     * @param PFUser  $user       Suspended user after LDAP daily synchro
-     *
-     * @return boolean
-     */
-    private function notifyProjectsAdmins($to, $projectName, $user) {
-        $notificationStatus = true;
-        try {
-            $mail = $this->prepareMail($to, $projectName, $user);
-            if (!$mail->send()) {
-                $this->logger->error("LDAP daily synchro job has suspended this user ".$user->getRealName()." (".$user->getEmail().", but failed to notify administrators of <$projectName> project :".$e->getMessage());
-                $notificationStatus = false;
-            }
-        } catch (InvalidArgumentException $e) {
-            $this->logger->warn("LDAP daily synchro job has suspended this user ".$user->getRealName()." (".$user->getEmail().":".$e->getMessage());
-            $notificationStatus = false;
-        } catch (Zend_Mail_Exception $e) {
-            $this->logger->error("LDAP daily synchro job has suspended this user ".$user->getRealName()." (".$user->getEmail()."), but faced an issue during project administrators notification :".$e->getMessage());
-        }
-        return $notificationStatus;
-    }
-
-    /**
-     * Prepare the mail to be sent after daily user sync
-     *
-     * @param String  $to          List of project administrators emails we want to notify
      * @param Integer $projectName Public name of the project we want to notify its administrators
      * @param PFUser  $user        Suspended user after LDAP daily synchro
      *
-     * @return Codendi_Mail
+     * @return String
      */
-    private function prepareMail($to, $projectName, $user) {
-        $mail = new Codendi_Mail();
-        $mail->setFrom($GLOBALS['sys_noreply']);
-        if (empty($to)) {
-            throw new InvalidArgumentException('Cannot send notification without any valid receiver, Perhaps the project <'.$projectName.'> has no administrators.');
-        }
-        $mail->setSubject($GLOBALS['Language']->getText('plugin_ldap','ldap_sync_mail_notification_subject', array($user->getRealName(), $projectName)));
-        $mail->setTo($to);
-        $body = $GLOBALS['Language']->getText('plugin_ldap','ldap_sync_mail_notification_body', array($user->getRealName(),$user->getEmail(),$projectName, $this->retentionPeriod));
-        $mail->setBody($body);
-        return $mail;
+    private function getBody($projectName, $user) {
+        return $GLOBALS['Language']->getText('plugin_ldap','ldap_sync_mail_notification_body', array($user->getRealName(),$user->getEmail(),$projectName, $this->retentionPeriod));
+    }
+
+    /**
+     * Prepare the subject of the notification mail
+     *
+     * @param Integer $projectName Public name of the project we want to notify its administrators
+     * @param PFUser  $user        Suspended user after LDAP daily synchro
+     *
+     * @return String
+     */
+    private function getSubject($projectName, $user) {
+        return  $GLOBALS['Language']->getText('plugin_ldap','ldap_sync_mail_notification_subject', array($user->getRealName(), $projectName));
     }
 }
 ?>

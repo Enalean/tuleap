@@ -104,6 +104,29 @@ class LDAP_DirectorySynchronization {
                 }
             }
         }
+        $this->remindAdminsBeforeCleanUp();
+    }
+
+    /**
+     * Send reminder notification for all projects administrators having users the automatic clean up process will delete
+     *
+     * @return void
+     */
+    public function remindAdminsBeforeCleanUp() {
+        if ($retentionPeriod = $this->ldap->getLDAPParam('daily_sync_retention_period')) {
+            $projectManager = $this->getProjectManager();
+            $userManager    = $this->getUserManager();
+            $this->getLdapSyncReminderNotificationManager($projectManager, $userManager)->processReminders();
+       }
+    }
+
+    /**
+     * Wrapper for LDAP_SyncReminderNotificationManager object
+     *
+     * @return LDAP_SyncReminderNotificationManager
+     */
+    protected function getLdapSyncReminderNotificationManager($projectManager, $userManager) {
+       return new LDAP_SyncReminderNotificationManager($projectManager, $userManager);
     }
 
     public function getElapsedLdapTime() {

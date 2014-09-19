@@ -19,6 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+
 class LDAP_DirectoryCleanUpDao extends DataAccessObject{
 
     public function __construct(DataAccess $da) {
@@ -69,6 +70,26 @@ class LDAP_DirectoryCleanUpDao extends DataAccessObject{
                ' WHERE deletion_date <= '.$this->da->escapeInt($deletionDate).
                ' AND deletion_date <> 0';
         return $this->retrieve($sql);
+    }
+
+    /**
+     * Return all ldap suspended users to be deleted tomorrow
+     *
+     * @return DataAccessResult
+     */
+    public function getUsersDeletedTomorrow () {
+        $today      = strtotime('tomorrow midnight');
+        $tomorrow   = strtotime('+1 day', $today);
+        $sql        = 'SELECT user_id'.
+                      ' FROM plugin_ldap_suspended_user'.
+                      ' WHERE deletion_date BETWEEN '.$this->da->escapeInt($today).
+                      ' AND '.$this->da->escapeInt($tomorrow);
+        $dataResult = $this->retrieve($sql);
+        if ($dataResult->isError()) {
+            return false;
+        } else {
+            return $dataResult;
+        }
     }
 }
 ?>
