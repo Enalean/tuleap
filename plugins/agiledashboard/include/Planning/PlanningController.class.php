@@ -195,7 +195,7 @@ class Planning_Controller extends MVC2_PluginController {
         foreach ($plannings as $planning) {
             $milestone_type      = $planning->getPlanningTracker();
             $milestone_presenter = new Planning_Presenter_MilestoneAccessPresenter(
-                $this->getPlanningMilestonesForTimePeriod($planning),
+                $this->getPlanningMilestonesDependingOnTimePeriodOrStatus($planning),
                 $milestone_type->getName()
             );
 
@@ -203,6 +203,18 @@ class Planning_Controller extends MVC2_PluginController {
         }
 
         return $milestone_access_presenters;
+    }
+
+    private function getPlanningMilestonesDependingOnTimePeriodOrStatus(Planning $planning) {
+        $set_in_time = $this->planning_factory->canPlanningBeSetInTime($planning->getPlanningTracker());
+
+        if ($set_in_time) {
+            $milestones = $this->getPlanningMilestonesForTimePeriod($planning);
+        } else {
+            $milestones = $this->getPlanningMilestonesByStatus($planning);
+        }
+
+        return $milestones;
     }
 
     /**
@@ -230,13 +242,7 @@ class Planning_Controller extends MVC2_PluginController {
         $presenters   = array();
         $has_cardwall = $this->hasCardwall($last_planning);
 
-        $set_in_time = $this->planning_factory
-            ->canPlanningBeSetInTime($last_planning->getPlanningTracker());
-        if ($set_in_time) {
-            $last_planning_current_milestones = $this->getPlanningMilestonesForTimePeriod($last_planning);
-        } else {
-            $last_planning_current_milestones = $this->getPlanningMilestonesByStatus($last_planning);
-        }
+        $last_planning_current_milestones = $this->getPlanningMilestonesDependingOnTimePeriodOrStatus($last_planning);
 
         if (empty($last_planning_current_milestones)) {
             return $presenters;
