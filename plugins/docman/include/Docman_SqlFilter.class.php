@@ -133,13 +133,15 @@ extends Docman_MetadataSqlQueryChunk {
     function getSearchType($qv) {
         $res = array();
         if (preg_match ('/^\*(.+)$/', $qv)) {
-            if (preg_match ('/^\*(.+)\*$/', $qv)) {
-                $pattern = preg_replace ('/^\*(.+)\*$/', '"%$1%"', $qv);
+            $matches = array();
+            if (preg_match ('/^\*(.+)\*$/', $qv, $matches)) {
+                $pattern = '"%'.db_es($matches[1]).'%"';
             } else  {
-                 $pattern = preg_replace ('/^\*(.+)$/', '"%$1"', $qv);
+                $qv_without_star = substr($qv, 1);
+                $pattern = '"%'.db_es($qv_without_star).'"';
             }
             $res['like']     = true;
-            $res ['pattern'] = $pattern; 
+            $res['pattern'] = $pattern;
         } else {
             $res['like'] = false;
         }
@@ -306,7 +308,7 @@ extends Docman_SqlFilter {
             if ($searchType['like']) {
                 $stmt[] =  $this->field.' LIKE '.$searchType['pattern'];
             } else {
-                $stmt[] = "MATCH (".$this->field.") AGAINST ('".$qv."' ".Docman_SqlFilter::BOOLEAN_SEARCH_TYPE.")";
+                $stmt[] = "MATCH (".$this->field.") AGAINST ('".db_es($qv)."' ".Docman_SqlFilter::BOOLEAN_SEARCH_TYPE.")";
             }
         }
         return $stmt;
@@ -347,11 +349,11 @@ extends Docman_SqlFilterText {
                 
                 $stmt[] = '('.implode(' OR ', $matches).')';
             } else {
-                $matches[] = "MATCH (i.title, i.description) AGAINST ('".$qv."' ".Docman_SqlFilter::BOOLEAN_SEARCH_TYPE.")";
-                $matches[] = "MATCH (v.label, v.changelog, v.filename) AGAINST ('".$qv."' ".Docman_SqlFilter::BOOLEAN_SEARCH_TYPE.")";
+                $matches[] = "MATCH (i.title, i.description) AGAINST ('".db_es($qv)."' ".Docman_SqlFilter::BOOLEAN_SEARCH_TYPE.")";
+                $matches[] = "MATCH (v.label, v.changelog, v.filename) AGAINST ('".db_es($qv)."' ".Docman_SqlFilter::BOOLEAN_SEARCH_TYPE.")";
                 
                 foreach($this->filter->dynTextFields as $f) {
-                    $matches[] = "MATCH (mdv_".$f.".valueText, mdv_".$f.".valueString) AGAINST ('".$qv."' ".Docman_SqlFilter::BOOLEAN_SEARCH_TYPE.")";
+                    $matches[] = "MATCH (mdv_".$f.".valueText, mdv_".$f.".valueString) AGAINST ('".db_es($qv)."' ".Docman_SqlFilter::BOOLEAN_SEARCH_TYPE.")";
                 }
                 
                 $stmt[] = '('.implode(' OR ', $matches).')';
