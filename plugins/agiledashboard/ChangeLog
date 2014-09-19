@@ -1,3 +1,6 @@
+Version 1.72 - Tuleap 7.6
+    * request #6909: Fix the list of submilestone trackers for a milestone
+
 Version 1.71 - Tuleap 7.5
     * Fix request #7375: Display color of trackers in the agiledashboard
 
