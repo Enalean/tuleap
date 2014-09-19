@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,18 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-if ($argc != 2) {
-    die("Usage: ".basename($argv[0]).". /path/to/BookInfo.xml
-Example:
-".basename($argv[0])." documentation/user_guide/xml/en_US/BookInfo.xml
-");
+class TuleapSOAPServer extends SoapServer {
+
+    public function __construct($wsdl, array $options = null) {
+        $xml_security = new XML_Security();
+        $xml_security->enableExternalLoadOfEntities();
+        parent::__construct($wsdl, $options);
+        $xml_security->disableExternalLoadOfEntities();
+    }
 }
-
-$bookinfo = simplexml_load_file($argv[1], 'SimpleXMLElement', LIBXML_NOWARNING );
-
-$last_revision = $bookinfo->xpath('/bookinfo/revhistory/revision[last()]');
-
-$rev_number = (string) $last_revision[0]->revnumber;
-
-echo $rev_number.PHP_EOL;
-?>

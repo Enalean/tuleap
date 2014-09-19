@@ -38,7 +38,8 @@ EOT;
 
 $project = ProjectManager::instance()->getProject($argv[1]);
 if ($project && !$project->isError()) {
-    $oxml = simplexml_load_file($argv[2]);
+    $xml_security = new XML_Security();
+    $oxml = $xml_security->loadFile($argv[2]);
     if ($oxml !== false) {
         $tracker_factory = TrackerFactory::instance();
         foreach($oxml->tracker as $tracker_xml) {

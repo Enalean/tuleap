@@ -216,7 +216,7 @@ class StatisticsPlugin extends Plugin {
         $disk_usage_manager     = new Statistics_DiskUsageManager();
         $project_quota_manager  = new ProjectQuotaManager();
         
-        $server = new SoapServer($uri.'/?wsdl', array('cache_wsdl' => WSDL_CACHE_NONE));
+        $server = new TuleapSOAPServer($uri.'/?wsdl', array('cache_wsdl' => WSDL_CACHE_NONE));
         $server->setClass($service_class, $soap_request_validator, $disk_usage_manager, $project_quota_manager);
         $server->handle();
     }

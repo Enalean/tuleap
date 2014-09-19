@@ -31,40 +31,35 @@ if ( !is_readable($xmlFile) ) {
     die('Unable to read xml file'.PHP_EOL);
 }
 
-if ( empty($name) || empty($description) || empty($item_name)  ) {
-    $oxml = simplexml_load_file($xmlFile);
-    if( empty($oxml) ) {
-        die('Can not open file '.$xmlFile.PHP_EOL);
-    }
+$xml_security = new XML_Security();
+$xml_element  = $xml_security->loadFile($xml_file_path);
+if (empty($xml_element)) {
+    echo 'Can not open file '.$xmlFile.PHP_EOL;
+    exit(1);
 }
 
 if ( empty($name) ) {
     echo 'Fetching name from XML'.PHP_EOL;
-    $name = $oxml->name;
+    $name = $xml_element->name;
 }
 
 if ( empty($description) ) {
     echo 'Fetching description from XML'.PHP_EOL;
-    $description = $oxml->description;
+    $description = $xml_element->description;
 }
 
 if ( empty($item_name) ) {
     echo 'Fetching item name from XML'.PHP_EOL;
-    $item_name = $oxml->item_name;
+    $item_name = $xml_element->item_name;
 }
 
 #FILE PROCESSING
 $output = '';
 ob_start();
 $tf      = TrackerFactory::instance();
-if (($xml_element = simplexml_load_file($xmlFile)) !== false) {
-    $tracker = $tf->createFromXML($xml_element, $group_id, $name, $description, $item_name, null );
-    $output = ob_get_contents();
-    ob_end_flush();
-} else {
-    echo 'Invalid File'.PHP_EOL;
-    exit(1);
-}
+$tracker = $tf->createFromXML($xml_element, $group_id, $name, $description, $item_name, null);
+$output  = ob_get_contents();
+ob_end_flush();
 
 #WARN AND ERRORS PARSING
 $matches = array();

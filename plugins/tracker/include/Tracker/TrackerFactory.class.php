@@ -758,7 +758,12 @@ class TrackerFactory {
             // XML validation before creating a new tracker
             $dom = $this->simpleXmlElementToDomDocument($xml_element);
             $rng = realpath(dirname(__FILE__).'/../../www/resources/tracker.rng');
-            if(!@$dom->relaxNGValidate($rng)) { //hide warning since we will extract the errors below
+            $xml_security = new XML_Security();
+            $xml_security->enableExternalLoadOfEntities();
+            $is_relaxng_valid = @$dom->relaxNGValidate($rng); //hide warning since we will extract the errors below
+            $xml_security->disableExternalLoadOfEntities();
+
+            if (!$is_relaxng_valid) {
                 //try to be more verbose for the end user (RelaxNG notices are hidden)
                 $hp       = Codendi_HTMLPurifier::instance();
                 $indent   = $GLOBALS['codendi_utils_prefix'] .'/xml/indent.xsl';

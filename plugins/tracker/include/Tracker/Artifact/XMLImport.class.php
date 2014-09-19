@@ -84,9 +84,11 @@ class Tracker_Artifact_XMLImport {
     }
 
     public function importFromFile(Tracker $tracker, $xml_file_path, $data_path) {
+        $xml_security = new XML_Security();
+        $xml = $xml_security->loadFile($xml_file_path);
         $this->importFromXML(
             $tracker,
-            simplexml_load_file($xml_file_path),
+            $xml,
             $data_path
         );
     }

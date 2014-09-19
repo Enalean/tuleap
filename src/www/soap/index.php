@@ -24,7 +24,7 @@ $event_manager = EventManager::instance();
 
 try {
 
-    $server = new SoapServer($uri.'/soap/codendi.wsdl.php?wsdl',array('trace' => 1, 'soap_version' => SOAP_1_1));
+    $server = new TuleapSOAPServer($uri.'/soap/codendi.wsdl.php?wsdl',array('trace' => 1, 'soap_version' => SOAP_1_1));
 
     require_once('utils_soap.php');
     require_once('common/session.php');

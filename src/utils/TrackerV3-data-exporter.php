@@ -78,6 +78,9 @@ try {
         $validator->validate(simplexml_import_dom($xml));
     }
 
+    $xml_security = new XML_Security();
+    $xml_security->enableExternalLoadOfEntities();
+
     $xsl = new DOMDocument();
     $xsl->load(dirname(__FILE__).'/xml/indent.xsl');
 
@@ -85,6 +88,7 @@ try {
     $proc->importStyleSheet($xsl);
 
     $archive->addFromString('artifacts.xml', $proc->transformToXML($xml));
+    $xml_security->disableExternalLoadOfEntities();
 
     $archive->close();
 } catch (XML_ParseException $exception) {

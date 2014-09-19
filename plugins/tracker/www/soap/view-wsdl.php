@@ -21,17 +21,7 @@
 
 require_once ('pre.php');
 
-// Load WSDL
-$xmlDoc = new DOMDocument();
-$src    = dirname(dirname($_SERVER['SCRIPT_URI']))."/soap/?wsdl";
-$xml    = file_get_contents($src);
-$xmlDoc->loadXML($xml);
+$src = dirname(dirname($_SERVER['SCRIPT_URI']))."/soap/?wsdl";
 
-// Apply XSLT transform
-$xslDoc = new DOMDocument();
-$xslDoc->load(Config::get('codendi_dir')."/src/www/soap/wsdl-viewer.xsl");
-
-$proc = new XSLTProcessor();
-$proc->importStylesheet($xslDoc);
-echo $proc->transformToXML($xmlDoc);
-?>
+$wsdl_renderer = new SOAP_WSDLRenderer();
+$wsdl_renderer->render($src);

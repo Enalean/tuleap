@@ -10,14 +10,5 @@ if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || Config::get('sys
 }
 $uri = $protocol.'://'.Config::get('sys_default_domain');
 
-$proc = new XSLTProcessor();
-
-$xslDoc = new DOMDocument();
-$xslDoc->load("../wsdl-viewer.xsl");
-$proc->importStylesheet($xslDoc);
-
-$xmlDoc = new DOMDocument();
-$xmlDoc->loadXML(file_get_contents($uri."/soap/project/?wsdl"));
-echo $proc->transformToXML($xmlDoc);
-
-?>
+$wsdl_renderer = new SOAP_WSDLRenderer();
+$wsdl_renderer->render($uri."/soap/project/?wsdl");

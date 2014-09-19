@@ -54,6 +54,8 @@ define('TTF_DIR',isset($GLOBALS['ttf_font_dir']) ? $GLOBALS['ttf_font_dir'] : '/
 require_once('common/autoload_zend.php');
 require_once('common/autoload.php');
 
+$xml_security = new XML_Security();
+$xml_security->disableExternalLoadOfEntities();
 
 // Detect whether this file is called by a script running in cli mode, or in normal web mode
 if (!defined('IS_SCRIPT')) {
