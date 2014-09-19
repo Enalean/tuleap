@@ -1,3 +1,6 @@
+Version 1.73 - Tuleap 7.6
+    * request #7462: AgileDashboard milestones display rules are not taken into account for non last level milestones
+
 Version 1.72 - Tuleap 7.6
     * request #6909: Fix the list of submilestone trackers for a milestone
 
