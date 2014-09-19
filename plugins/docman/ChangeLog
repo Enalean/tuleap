@@ -1,3 +1,6 @@
+Version 2.26.49 - Tuleap 7.6
+    * request #7461 SQL injection on docman global search
+
 Version 2.26.48 - Tuleap 7.5
     * request #7371: Remove plugin service icon from core
 
