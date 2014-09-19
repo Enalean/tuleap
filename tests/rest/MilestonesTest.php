@@ -54,8 +54,8 @@ class MilestonesTest extends RestBase {
                 'accept' => array(
                     'trackers' => array(
                         array(
-                            'id'  => TestDataBuilder::RELEASES_TRACKER_ID,
-                            'uri' => 'trackers/'.TestDataBuilder::RELEASES_TRACKER_ID,
+                            'id'  => TestDataBuilder::SPRINTS_TRACKER_ID,
+                            'uri' => 'trackers/'.TestDataBuilder::SPRINTS_TRACKER_ID,
                         )
                     )
                 ),
