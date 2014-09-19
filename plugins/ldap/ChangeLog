@@ -1,3 +1,6 @@
+Version 3.53 - Tuleap 7.6
+    * request #7251 - Send a reminder to project admins about the automatic cleanup of suspended LDAP users
+
 Version 3.52 - Tuleap 7.4
     * request #7239 - LDAP/Tuleap user synchronization no longer retrieve extra attributes
 
