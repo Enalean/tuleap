@@ -1,3 +1,6 @@
+Version 5.473 - Tuleap 7.6
+    * Fix request #7463: (un)numbered lists lose their margin in follow-up comments
+
 Version 5.472 - Tuleap 7.6
     * Fix request #7460: Unresponsive
 
