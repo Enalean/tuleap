@@ -5,6 +5,9 @@ Version 7.6 (Not released yet)
 	* docman: 2.26.49
 	* tracker: 5.472
 
+    == Bug Fix ==
+	* request #7457: Remote Command Execution Vulnerability
+
 Version 7.5 (Thursday, September 18th 2014)
 
 	== Bug Fix ==
