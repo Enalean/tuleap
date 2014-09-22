@@ -1,3 +1,10 @@
+Version 7.5-2 (Monday, September 22th 2014)
+
+	== Bug Fix ==
+	* request #7461: SQL injection on docman global search
+	* request #7462: AgileDashboard milestones display rules are not taken into account for non last level milestones
+	* request #6909: Fix the list of submilestone trackers for a milestone.
+
 Version 7.5 (Thursday, September 18th 2014)
 
 	== Bug Fix ==
