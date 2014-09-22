@@ -1,3 +1,6 @@
+Version 5.474 - Tuleap 7.6
+    * request #7419 Error 500 on POST /artifacts or PUT /artifacts/123 when status field not empty
+
 Version 5.473 - Tuleap 7.6
     * Fix request #7463: (un)numbered lists lose their margin in follow-up comments
 
