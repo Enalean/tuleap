@@ -1,3 +1,6 @@
+Version 5.472 - Tuleap 7.6
+    * Fix request #7460: Unresponsive
+
 Version 5.471 - Tuleap 7.5
     * request #7443: cardwall modal opens with an error message when anonymous user moves card
 
