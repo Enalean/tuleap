@@ -233,10 +233,6 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
         $um->expectOnce('updateDb');
         $sync->setReturnValue('getUserManager', $um);
 
-        $clm = new MockLDAP_CleanUpManager($this);
-        $clm->expectOnce('addUserDeletionForecastDate');
-        $sync->setReturnValue('getCleanUpManager', $clm);
-
         $lum = new MockLDAP_UserManager($this);
         $lum->expectNever('updateLdapUid');
         $sync->setReturnValue('getLdapUserManager', $lum);
