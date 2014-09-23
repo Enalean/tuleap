@@ -71,6 +71,17 @@ class MilestoneContentUpdater {
         $this->artifactlink_updater->unlinkAndLinkElements($artifact, $fields_data, $current_user, $linked_artifact_ids);
     }
 
+    public function appendElementToMilestoneBacklog($linked_artifact_id, PFUser $current_user, Planning_Milestone $milestone) {
+        $linked_artifact_ids = $this->artifactlink_updater->getElementsAlreadyLinkedToMilestone(
+            $milestone->getArtifact(),
+            $current_user
+        );
+
+        array_push($linked_artifact_ids, $linked_artifact_id);
+
+        $this->updateMilestoneContent(array_unique($linked_artifact_ids), $current_user, $milestone);
+    }
+
     private function getFieldsDataForNewChangeset(
         Tracker_FormElement_Field_ArtifactLink $artlink_field,
         Planning_Milestone $milestone,

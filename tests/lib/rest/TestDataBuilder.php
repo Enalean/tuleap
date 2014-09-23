@@ -91,9 +91,10 @@ class TestDataBuilder {
     const STORY_3_ARTIFACT_ID     = 9;
     const STORY_4_ARTIFACT_ID     = 10;
     const STORY_5_ARTIFACT_ID     = 11;
-    const EPIC_5_ARTIFACT_ID      = 12;
-    const EPIC_6_ARTIFACT_ID      = 13;
-    const EPIC_7_ARTIFACT_ID      = 14;
+    const STORY_6_ARTIFACT_ID     = 12;
+    const EPIC_5_ARTIFACT_ID      = 13;
+    const EPIC_6_ARTIFACT_ID      = 14;
+    const EPIC_7_ARTIFACT_ID      = 15;
 
     /** @var ProjectManager */
     protected $project_manager;
@@ -391,6 +392,7 @@ class TestDataBuilder {
         $this->createUserStory($user, 'Hughhhhhhh', '205');
         $this->createUserStory($user, 'Kill you', '205');
         $this->createUserStory($user, 'Back', '205');
+        $this->createUserStory($user, 'Forward', '205');
 
         $release = $this->tracker_artifact_factory->getArtifactById(self::RELEASE_ARTIFACT_ID);
         $release->linkArtifact(self::STORY_1_ARTIFACT_ID, $user);
