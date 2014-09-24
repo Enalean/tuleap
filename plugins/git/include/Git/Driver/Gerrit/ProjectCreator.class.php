@@ -113,6 +113,7 @@ class Git_Driver_Gerrit_ProjectCreator {
      *
      * @throws Git_Driver_Gerrit_ProjectCreator_ProjectAlreadyexistsException
      * @throws Git_Driver_Gerrit_Exception
+     * @throws Git_Command_Exception
      */
     public function createGerritProject(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository, $template_id) {
         $project          = $repository->getProject();
@@ -200,10 +201,11 @@ class Git_Driver_Gerrit_ProjectCreator {
         return $gerrit_server->getCloneSSHUrl($this->driver_factory->getDriver($gerrit_server)->getGerritProjectName($repository));
     }
 
-    private function exportGitBranches(Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project, GitRepository $repository) {
-        $gerrit_project_url = escapeshellarg($gerrit_server->getCloneSSHUrl($gerrit_project));
-        $cmd                = "cd ".$repository->getFullPath()."; git push $gerrit_project_url refs/heads/*:refs/heads/*; git push $gerrit_project_url refs/tags/*:refs/tags/*";
-        `$cmd`;
+    protected function exportGitBranches(Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project, GitRepository $repository) {
+        $gerrit_project_url = $gerrit_server->getCloneSSHUrl($gerrit_project);
+
+        $executor = new Git_Exec($repository->getFullPath(), $repository->getFullPath());
+        $executor->exportBranchesAndTags($gerrit_project_url);
     }
 
     private function initiateGerritPermissions(GitRepository $repository, Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url, array $ugroups, $replication_group, $template_id) {

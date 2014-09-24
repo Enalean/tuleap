@@ -273,7 +273,21 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
     }
 
     public function itDoesNotSetPermsIfMigrateAccessRightIsFalse() {
-        $this->project_creator->createGerritProject($this->server, $this->repository_in_a_private_project, false);
+        $project_creator = partial_mock(
+            'Git_Driver_Gerrit_ProjectCreator',
+            array('exportGitBranches'),
+            array($this->gerrit_tmpdir,
+                $this->gerrit_driver_factory,
+                $this->userfinder,
+                $this->ugroup_manager,
+                $this->membership_manager,
+                $this->umbrella_manager,
+                $this->template_factory,
+                $this->template_processor
+            )
+        );
+
+        $project_creator->createGerritProject($this->server, $this->repository_in_a_private_project, false);
 
         $this->assertFileExists("$this->gerrit_tmpdir/project.config");
         $this->assertNoPattern('/group mozilla\//', file_get_contents("$this->gerrit_tmpdir/project.config"));
@@ -281,12 +295,26 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
     }
 
     public function itDoesNotSetPermsOnRegisteredUsersIfProjectIsPrivate() {
+        $project_creator = partial_mock(
+            'Git_Driver_Gerrit_ProjectCreator',
+            array('exportGitBranches'),
+            array($this->gerrit_tmpdir,
+                $this->gerrit_driver_factory,
+                $this->userfinder,
+                $this->ugroup_manager,
+                $this->membership_manager,
+                $this->umbrella_manager,
+                $this->template_factory,
+                $this->template_processor
+            )
+        );
+
         stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_READ)->returns(array(ProjectUGroup::REGISTERED));
         stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WRITE)->returns(array());
         stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WPLUS)->returns(array());
 
-        $this->project_creator->createGerritProject($this->server, $this->repository_in_a_private_project, $this->migrate_access_rights);
-        $this->project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
+        $project_creator->createGerritProject($this->server, $this->repository_in_a_private_project, $this->migrate_access_rights);
+        $project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
 
         $this->assertNoPattern('/Registered Users/', file_get_contents("$this->gerrit_tmpdir/project.config"));
     }
