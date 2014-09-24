@@ -86,6 +86,9 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
     /** @var Git_Driver_Gerrit_Template_TemplateProcessor */
     protected $template_processor;
 
+    /** @var GitDriver */
+    protected $git_driver;
+
     public function setUp() {
         parent::setUp();
         Config::store();
@@ -168,6 +171,7 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
         stub($this->template_factory)->getTemplatesAvailableForRepository()->returns(array($this->template));
 
         $this->gerrit_tmpdir = $this->tmpdir.'/gerrit_tbd';
+        $this->git_driver    = mock('GitDriver');
 
         $this->project_creator = new Git_Driver_Gerrit_ProjectCreator(
                     $this->gerrit_tmpdir,
@@ -177,7 +181,8 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
                     $this->membership_manager,
                     $this->umbrella_manager,
                     $this->template_factory,
-                    $this->template_processor
+                    $this->template_processor,
+                    $this->git_driver
         );
 
         stub($this->repository)->getProject()->returns($this->project);
@@ -264,7 +269,8 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
                     $this->membership_manager,
                     $this->umbrella_manager,
                     $this->template_factory,
-                    $this->template_processor
+                    $this->template_processor,
+                    $this->git_driver
         );
         $this->expectException('Git_Driver_Gerrit_ProjectCreator_ProjectAlreadyExistsException');
 
@@ -475,8 +481,7 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
         $this->project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
         $this->assertEqual($this->gerrit_project, $project_name);
 
-        $this->assertAllGitBranchesPushedToTheServer();
-        $this->assertAllGitTagsPushedToTheServer();
+        expect($this->git_driver)->exportBranches($this->tmpdir.'/'.$this->gitolite_project, $this->gerrit_git_url)->once();
     }
 
     public function itCreatesProjectMembersGroup() {
@@ -518,49 +523,6 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
 
         $this->project_creator->createGerritProject($this->server, $this->repository, $this->migrate_access_rights);
         $this->project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
-    }
-
-    private function assertAllGitBranchesPushedToTheServer() {
-        $cwd = getcwd();
-        chdir("$this->tmpdir/$this->gitolite_project");
-
-        exec("git show-ref --heads", $refs_cmd, $ret_val);
-
-        $expected_result = array("To $this->gerrit_git_url");
-
-        foreach ($refs_cmd as $ref) {
-            $ref               = substr($ref, strpos($ref, ' ') + 1);
-            $expected_result[] = "=\t$ref:$ref\t[up to date]";
-        }
-
-        $expected_result[] = "Done";
-
-        exec("git push $this->gerrit_git_url refs/heads/*:refs/heads/* --porcelain", $output, $ret_val);
-        chdir($cwd);
-
-        $this->assertEqual($output, $expected_result);
-        $this->assertEqual($ret_val, 0);
-    }
-
-    private function assertAllGitTagsPushedToTheServer() {
-        $cwd = getcwd();
-        chdir("$this->tmpdir/$this->gitolite_project");
-
-        exec("git show-ref --tags", $refs_cmd, $ret_val);
-        $expected_result = array("To $this->gerrit_git_url");
-
-        foreach ($refs_cmd as $ref) {
-            $ref               = substr($ref, strpos($ref, ' ') + 1);
-            $expected_result[] = "=\t$ref:$ref\t[up to date]";
-        }
-
-        $expected_result[] = "Done";
-
-        exec("git push $this->gerrit_git_url refs/tags/*:refs/tags/* --porcelain", $output, $ret_val);
-        chdir($cwd);
-
-        $this->assertEqual($output, $expected_result);
-        $this->assertEqual($ret_val, 0);
     }
 }
 

@@ -133,6 +133,20 @@ class GitDriver implements DVCSDriver {
     }
 
     /**
+     * @throws GitDriverErrorException
+     */
+    public function exportBranches($repository_path, $destination_url) {
+        $repository_path = escapeshellarg($repository_path);
+        $destination_url = escapeshellarg($destination_url);
+
+        $cmd  = "cd $repository_path ;"
+            ." git push $destination_url refs/heads/*:refs/heads/*;"
+            ." git push $destination_url refs/tags/*:refs/tags/*";
+
+        $this->execGitAction($cmd, 'Export Git Branches');
+    }
+
+    /**
      * Initialize a repository
      * @param Boolean $bare is a bare a repository
      * @return Boolean

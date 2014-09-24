@@ -84,6 +84,9 @@ class Git_Driver_Gerrit_ProjectCreator {
     /** @var Git_Driver_Gerrit_Template_TemplateFactory */
     private $template_factory;
 
+    /** @var GitDriver */
+    private $git_driver;
+
     public function __construct(
         $dir,
         Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
@@ -92,7 +95,8 @@ class Git_Driver_Gerrit_ProjectCreator {
         Git_Driver_Gerrit_MembershipManager $membership_manager,
         Git_Driver_Gerrit_UmbrellaProjectManager $umbrella_manager,
         Git_Driver_Gerrit_Template_TemplateFactory $template_factory,
-        Git_Driver_Gerrit_Template_TemplateProcessor $template_processor
+        Git_Driver_Gerrit_Template_TemplateProcessor $template_processor,
+        GitDriver $git_driver
     ) {
         $this->dir                = $dir;
         $this->driver_factory     = $driver_factory;
@@ -102,6 +106,7 @@ class Git_Driver_Gerrit_ProjectCreator {
         $this->umbrella_manager   = $umbrella_manager;
         $this->template_factory   = $template_factory;
         $this->template_processor = $template_processor;
+        $this->git_driver         = $git_driver;
     }
 
     /**
@@ -113,6 +118,7 @@ class Git_Driver_Gerrit_ProjectCreator {
      *
      * @throws Git_Driver_Gerrit_ProjectCreator_ProjectAlreadyexistsException
      * @throws Git_Driver_Gerrit_Exception
+     * @throws GitDriverErrorException
      */
     public function createGerritProject(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository, $template_id) {
         $project          = $repository->getProject();
@@ -201,9 +207,9 @@ class Git_Driver_Gerrit_ProjectCreator {
     }
 
     private function exportGitBranches(Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project, GitRepository $repository) {
-        $gerrit_project_url = escapeshellarg($gerrit_server->getCloneSSHUrl($gerrit_project));
-        $cmd                = "cd ".$repository->getFullPath()."; git push $gerrit_project_url refs/heads/*:refs/heads/*; git push $gerrit_project_url refs/tags/*:refs/tags/*";
-        `$cmd`;
+        $gerrit_project_url = $gerrit_server->getCloneSSHUrl($gerrit_project);
+
+        $this->git_driver->exportBranches($repository->getFullPath(), $gerrit_project_url);
     }
 
     private function initiateGerritPermissions(GitRepository $repository, Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url, array $ugroups, $replication_group, $template_id) {

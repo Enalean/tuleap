@@ -68,6 +68,8 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
             $this->logError("gerrit: ", "Gerrit failure: ", $e);
         } catch (Git_Driver_Gerrit_Exception $e) {
             $this->logError("gerrit: ", "Gerrit failure: ", $e);
+        } catch (GitDriverErrorException $e) {
+            $this->logError("gerrit: ", "Gerrit failure: ", $e);
         } catch (Exception $e) {
             $this->logError("", "An error occured while processing event: ", $e);
         }
