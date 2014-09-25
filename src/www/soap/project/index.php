@@ -73,7 +73,7 @@ if ($request->exist('wsdl')) {
         new User_ForgeUserGroupPermissionsDao()
     );
 
-    $server = new SoapServer($uri.'/?wsdl',
+    $server = new TuleapSOAPServer($uri.'/?wsdl',
                              array('cache_wsdl' => WSDL_CACHE_NONE));
     $server->setClass(
         $serviceClass,

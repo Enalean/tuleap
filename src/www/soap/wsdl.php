@@ -1,14 +1,8 @@
 <?php
-   $xslDoc = new DOMDocument();
-   $xslDoc->load("wsdl-viewer.xsl");
 
-   $xmlDoc = new DOMDocument();
-   $src = dirname(dirname($_SERVER['SCRIPT_URI']))."/soap/index.php?wsdl";
-   $xml = file_get_contents($src);
-   $xmlDoc->loadXML($xml);
+require_once 'pre.php';
 
-   $proc = new XSLTProcessor();
-   $proc->importStylesheet($xslDoc);
-   echo $proc->transformToXML($xmlDoc);
+$src = dirname(dirname($_SERVER['SCRIPT_URI']))."/soap/index.php?wsdl";
 
-?>
+$wsdl_renderer = new SOAP_WSDLRenderer();
+$wsdl_renderer->render($src);

@@ -740,7 +740,9 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      */
     protected function importTracker($project, $name, $description, $itemname, $filename) {
         //TODO: add restrictions for the file
-        if (($xml_element = simplexml_load_file($filename)) !== false) {
+        $xml_security = new XML_Security();
+        $xml_element  = $xml_security->loadFile($filename);
+        if ($xml_element) {
             return $this->getTrackerFactory()->createFromXML($xml_element, $project->group_id, $name, $description, $itemname, $this);
         }
     }

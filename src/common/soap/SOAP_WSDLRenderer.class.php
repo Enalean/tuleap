@@ -29,6 +29,9 @@ class SOAP_WSDLRenderer {
      * @param string $wsdl_uri https://example.com/plugins/statistics/soap/?wsdl
      */
     public function render($wsdl_uri) {
+        $xml_security = new XML_Security();
+        $xml_security->enableExternalLoadOfEntities();
+
         $proc = new XSLTProcessor();
 
         $xslDoc = new DOMDocument();
@@ -38,6 +41,7 @@ class SOAP_WSDLRenderer {
         $xmlDoc = new DOMDocument();
         $xmlDoc->loadXML(file_get_contents($wsdl_uri));
         echo $proc->transformToXML($xmlDoc);
+
+        $xml_security->disableExternalLoadOfEntities();
     }
 }
-?>

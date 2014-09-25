@@ -32,7 +32,13 @@ class XmlValidator {
      */
     public function nodeIsValid(SimpleXMLElement $xml_node, $rng_path) {
         $dom = $this->simpleXmlElementToDomDocument($xml_node);
-        return $dom->relaxNGValidate($rng_path);
+
+        $xml_security = new XML_Security();
+        $xml_security->enableExternalLoadOfEntities();
+        $is_valid = $dom->relaxNGValidate($rng_path);
+        $xml_security->disableExternalLoadOfEntities();
+
+        return $is_valid;
     }
 
     /**

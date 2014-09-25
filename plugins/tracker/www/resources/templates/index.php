@@ -20,10 +20,11 @@
  
 if ($files = glob('*.xml')) {
     echo '<ul>';
-    foreach ($files as $f) {
-        $xml = simplexml_load_file($f);
+    foreach ($files as $filename) {
+        $xml_security = new XML_Security();
+        $xml = $xml_security->loadFile($filename);
         echo '<li><p>';
-        echo '<strong><a href="'. $f .'">'. $xml->name .'</a></strong><br/>';
+        echo '<strong><a href="'. $filename .'">'. $xml->name .'</a></strong><br/>';
         echo ''. $xml->description .'</p>';
         echo '</li>';
     }

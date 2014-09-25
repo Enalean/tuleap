@@ -185,6 +185,8 @@ class Tracker_Migration_MigrationManager {
         $exporter->exportTrackerData($tv3_id);
         $this->logger->info('<-- TV3 data exported '.PHP_EOL);
 
+        $xml_security = new XML_Security();
+        $xml_security->enableExternalLoadOfEntities();
         $xsl = new DOMDocument();
         $xsl->load($indent_xsl_path);
 
@@ -192,6 +194,7 @@ class Tracker_Migration_MigrationManager {
         $proc->importStyleSheet($xsl);
 
         $xml_string = $proc->transformToXML($xml);
+        $xml_security->disableExternalLoadOfEntities();
 
         if (file_put_contents($xml_path, $xml_string) !== strlen($xml_string)) {
             throw new Exception('Something went wrong when writing tv3 xml in '.$xml_path);

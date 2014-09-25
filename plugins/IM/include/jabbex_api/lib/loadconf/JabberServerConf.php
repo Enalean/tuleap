@@ -20,10 +20,15 @@ class JabberServerConf
 	public function load_conf($conf_xml_file)
 	{
 
-		if( (!file_exists($conf_xml_file)) || (!$xml = simplexml_load_file($conf_xml_file)) ){
-			throw new Exception("Unable to load configuration file $conf_xml_file.",3017);
-		}
-		else{
+		if (! file_exists($conf_xml_file)) {
+                    throw new Exception("Unable to load configuration file $conf_xml_file.", 3017);
+                }
+
+                $xml_security = new XML_Security();
+                $xml = $xml_security->loadFile($conf_xml_file);
+                if (! $xml) {
+                    throw new Exception("Unable to load configuration file $conf_xml_file.", 3017);
+		} else {
 
 			$this->server = "".$xml->server["name"];
 			$this->server_dns = "".$xml->server->server_uri;

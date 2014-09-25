@@ -66,7 +66,7 @@ if ($request->exist('wsdl')) {
     $formelement_factory = Tracker_FormElementFactory::instance();
     $artifact_factory    = Tracker_ArtifactFactory::instance();
 
-    $server = new SoapServer($uri.'/?wsdl', $soap_options);
+    $server = new TuleapSOAPServer($uri.'/?wsdl', $soap_options);
 
     $server->setClass(
         'Tracker_SOAPServer',
