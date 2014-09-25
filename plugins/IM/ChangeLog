@@ -1,3 +1,6 @@
+Version 1.5.19 - Tuleap 7.6
+    * Fix request #7458: External XML Entity Injection
+
 Version 1.5.18 - Tuleap 7.5
     * request #7371: Remove plugin service icon from core
 

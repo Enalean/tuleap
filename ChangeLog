@@ -3,8 +3,10 @@ Version 7.6 (Not released yet)
 	* ldap 3.53
 	* agiledashboard: 1.73
 	* docman: 2.26.49
-	* tracker: 5.474
+	* tracker: 5.475
 	* ldap: 3.54
+	* IM: 1.5.19
+	* statistics: 0.37
 
     == Bug Fix ==
 	* request #7457: Remote Command Execution Vulnerability
