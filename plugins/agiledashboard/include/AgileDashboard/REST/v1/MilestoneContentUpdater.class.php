@@ -86,9 +86,36 @@ class MilestoneContentUpdater {
             $linked_artifact_ids
         );
 
+
+        $changeset_data  = $this->getOldChangesetData($milestone->getArtifact());
         $linked_elements = $this->artifactlink_updater->getElementsToLink($elements_already_linked, $linked_artifact_ids);
 
-        return $this->artifactlink_updater->formatFieldDatas($artlink_field, $linked_elements, $unlinked_elements);
+        $values_for_linked_elements = $this->artifactlink_updater->formatFieldDatas(
+            $artlink_field,
+            $linked_elements,
+            $unlinked_elements
+        );
+
+        return $this->addLinkedElementsDataToOtherFieldsData($values_for_linked_elements, $changeset_data);
+    }
+
+    private function addLinkedElementsDataToOtherFieldsData(array $values_for_linked_elements, array $changeset_data) {
+        foreach ($values_for_linked_elements as $field_id => $values_for_linked_element) {
+            $changeset_data[$field_id] = $values_for_linked_element;
+        }
+
+        return $changeset_data;
+    }
+
+    private function getOldChangesetData(Tracker_Artifact $artifact) {
+        $old_changeset_values = $artifact->getLastChangeset()->getValues();
+        $changeset_data       = array();
+
+        foreach ($old_changeset_values as $field_id => $old_changeset_value) {
+            $changeset_data[$field_id] = $old_changeset_value->getValue();
+        }
+
+        return $changeset_data;
     }
 
     /**
