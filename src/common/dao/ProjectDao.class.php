@@ -405,7 +405,7 @@ class ProjectDao extends DataAccessObject {
 
         $sql = "SELECT DISTINCT group_name, unix_group_name, groups.group_id, short_description
                 FROM groups
-                    LEFT JOIN group_desc_value ON (group_desc_value.group_id = groups.group_id)
+                    INNER JOIN group_desc_value ON (group_desc_value.group_id = groups.group_id)
                     $from
                 WHERE status='A'
                 AND is_public='1'
