@@ -29,7 +29,7 @@ class Git_Admin_process_Test extends TuleapTestCase {
         $this->request = aRequest()->build();
         $this->csrf    = mock('CSRFSynchronizerToken');
         $this->factory = mock('Git_RemoteServer_GerritServerFactory');
-        $this->admin   = new Git_Admin($this->factory, $this->csrf);
+        $this->admin   = new Git_AdminGerritController($this->csrf, $this->factory);
 
         $this->request_new_server = array(
             'host'              => 'host',
@@ -94,6 +94,7 @@ class Git_Admin_process_Test extends TuleapTestCase {
         ));
 
         $this->request->set($this->csrf->getTokenName(), $this->csrf->getToken());
+        $this->request->set('action', 'gerrit-servers');
     }
 
     public function itDoesNotSaveAnythingIfTheRequestIsNotValid() {

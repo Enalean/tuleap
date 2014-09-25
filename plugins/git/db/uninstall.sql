@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS plugin_git_remote_servers;
 DROP TABLE IF EXISTS plugin_git_remote_ugroups;
 DROP TABLE IF EXISTS plugin_git_housekeeping;
 DROP TABLE IF EXISTS plugin_git_gerrit_config_template;
+DROP TABLE IF EXISTS plugin_git_mirrors;
 
 DELETE FROM service WHERE short_name='plugin_git';
 DELETE FROM reference_group WHERE reference_id=30;

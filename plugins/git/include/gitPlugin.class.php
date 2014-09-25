@@ -317,9 +317,16 @@ class GitPlugin extends Plugin {
      */
     public function processAdmin(Codendi_Request $request) {
         require_once 'common/include/CSRFSynchronizerToken.class.php';
-        $admin = new Git_Admin($this->getGerritServerFactory(), new CSRFSynchronizerToken('/plugin/git/admin/'));
+        $admin = new Git_AdminRouter(
+            $this->getGerritServerFactory(),
+            new CSRFSynchronizerToken('/plugin/git/admin/'),
+            new Git_Mirror_MirrorDataMapper(
+                new Git_Mirror_MirrorDao(),
+                UserManager::instance()
+            )
+        );
         $admin->process($request);
-        $admin->display();
+        $admin->display($request);
     }
 
     /**
