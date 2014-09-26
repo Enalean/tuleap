@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -193,6 +193,19 @@ class Git_Exec {
     }
 
     /**
+     * @throws Git_Command_Exception
+     */
+    public function exportBranchesAndTags($destination_url) {
+        $destination_url = escapeshellarg($destination_url);
+
+        $push_heads = "push $destination_url refs/heads/*:refs/heads/*";
+        $push_tags  = "push $destination_url refs/tags/*:refs/tags/*";
+
+        $this->gitCmd($push_heads);
+        $this->gitCmd($push_tags);
+    }
+
+    /**
      * Return true if working directory is clean (nothing to commit)
      *
      * @return boolean
@@ -233,9 +246,7 @@ class Git_Exec {
         if ($retVal == 0) {
             return true;
         } else {
-            throw new Git_Command_Exception($cmd, $output, $retVal);
+            throw new Git_Command_Exception("$git $cmd", $output, $retVal);
         }
     }
 }
-
-?>
