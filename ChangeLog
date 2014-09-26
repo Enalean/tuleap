@@ -10,6 +10,7 @@ Version 7.6 (Not released yet)
 
     == Bug Fix ==
 	* request #7457: Remote Command Execution Vulnerability
+	* request #7484: Search in projects can take a very long time
 
 Version 7.5 (Thursday, September 18th 2014)
 
