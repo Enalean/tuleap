@@ -1,3 +1,6 @@
+Version 5.476 - Tuleap 7.6
+    * Fix request #7455: Default values are not submitted a new artifact with SOAP
+
 Version 5.475 - Tuleap 7.6
     * Fix request #7458: External XML Entity Injection
 
