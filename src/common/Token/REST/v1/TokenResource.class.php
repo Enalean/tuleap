@@ -19,14 +19,16 @@
 
 namespace Tuleap\Token\REST\v1;
 
-use \Luracast\Restler\RestException;
-use \Tuleap\Token\REST\TokenRepresentation;
-use \Tuleap\REST\Header;
-use \Exception;
+use Luracast\Restler\RestException;
+use Tuleap\Token\REST\TokenRepresentation;
+use Tuleap\REST\Header;
+use Exception;
 use UserManager;
 use EventManager;
 use User_LoginManager;
-use \User_PasswordExpirationChecker;
+use User_InvalidPasswordWithUserException;
+use User_InvalidPasswordException;
+use User_PasswordExpirationChecker;
 
 /**
  * Wrapper for token related REST methods
@@ -72,6 +74,10 @@ class TokenResource {
             );
             return $token;
         } catch(User_LoginException $exception) {
+            throw new RestException(401, $exception->getMessage());
+        } catch(User_InvalidPasswordWithUserException $exception) {
+            throw new RestException(401, $exception->getMessage());
+        } catch(User_InvalidPasswordException $exception) {
             throw new RestException(401, $exception->getMessage());
         } catch(Exception $exception) {
             throw new RestException(500, $exception->getMessage());
