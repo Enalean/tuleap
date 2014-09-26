@@ -30,9 +30,9 @@ class Tracker_REST_Artifact_ArtifactCreator {
     private $tracker_factory;
 
     public function __construct(Tracker_REST_Artifact_ArtifactValidator $artifact_validator, Tracker_ArtifactFactory $artifact_factory, TrackerFactory $tracker_factory) {
-        $this->artifact_validator = $artifact_validator;
-        $this->artifact_factory   = $artifact_factory;
-        $this->tracker_factory    = $tracker_factory;
+        $this->artifact_validator  = $artifact_validator;
+        $this->artifact_factory    = $artifact_factory;
+        $this->tracker_factory     = $tracker_factory;
     }
 
     /**
@@ -46,7 +46,7 @@ class Tracker_REST_Artifact_ArtifactCreator {
     public function create(PFUser $user, Tuleap\Tracker\REST\TrackerReference $tracker_reference, array $values) {
         $tracker     = $this->getTracker($tracker_reference);
         $fields_data = $this->artifact_validator->getFieldsDataOnCreate($values, $tracker);
-
+        $fields_data = $this->artifact_validator->getUsedFieldsWithDefaultValue($tracker, $fields_data, $user);
         $this->checkUserCanSubmit($user, $tracker);
 
         return $this->returnReferenceOrError(
