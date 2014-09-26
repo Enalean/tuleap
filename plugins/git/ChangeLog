@@ -1,3 +1,6 @@
+Version 3.99 - Tuleap 7.6
+    * tasks #7472: catch git
+
 Version 3.98 - Tuleap 7.5
     * tasks #7378: make all fts system events be run in their own process
 
