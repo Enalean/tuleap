@@ -1,3 +1,6 @@
+Version 1.74 - Tuleap 7.6
+    * story #6935 REST: be able to append a backlog item directly to a milestone
+
 Version 1.73 - Tuleap 7.6
     * request #7462: AgileDashboard milestones display rules are not taken into account for non last level milestones
 
