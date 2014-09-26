@@ -11,6 +11,7 @@ Version 7.6 (Not released yet)
     == Bug Fix ==
 	* request #7457: Remote Command Execution Vulnerability
 	* request #7484: Search in projects can take a very long time
+	* request #7478: REST POST /tokens should not return 500 when the password is wrong
 
 Version 7.5 (Thursday, September 18th 2014)
 
