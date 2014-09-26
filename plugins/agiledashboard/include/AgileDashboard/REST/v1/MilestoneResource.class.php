@@ -19,6 +19,7 @@
  */
 namespace Tuleap\AgileDashboard\REST\v1;
 
+use \BacklogItemReference;
 use \Tuleap\REST\TokenAuthentication;
 use \Tuleap\REST\ProjectAuthorization;
 use \Tuleap\REST\Header;
@@ -72,19 +73,22 @@ class MilestoneResource {
     /** @var AgileDashboard_Milestone_Backlog_BacklogStrategyFactory */
     private $backlog_strategy_factory;
 
+    /** @var Tracker_ArtifactFactory */
+    private $tracker_artifact_factory;
+
     public function __construct() {
-        $planning_factory             = PlanningFactory::build();
-        $tracker_artifact_factory     = Tracker_ArtifactFactory::instance();
-        $tracker_form_element_factory = Tracker_FormElementFactory::instance();
-        $status_counter               = new AgileDashboard_Milestone_MilestoneStatusCounter(
+        $planning_factory               = PlanningFactory::build();
+        $this->tracker_artifact_factory = Tracker_ArtifactFactory::instance();
+        $tracker_form_element_factory   = Tracker_FormElementFactory::instance();
+        $status_counter                 = new AgileDashboard_Milestone_MilestoneStatusCounter(
             new AgileDashboard_BacklogItemDao(),
             new Tracker_ArtifactDao(),
-            $tracker_artifact_factory
+            $this->tracker_artifact_factory
         );
 
         $this->milestone_factory = new Planning_MilestoneFactory(
             $planning_factory,
-            $tracker_artifact_factory,
+            $this->tracker_artifact_factory,
             $tracker_form_element_factory,
             TrackerFactory::instance(),
             $status_counter
@@ -92,13 +96,13 @@ class MilestoneResource {
 
         $this->backlog_strategy_factory = new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
             new AgileDashboard_BacklogItemDao(),
-            $tracker_artifact_factory,
+            $this->tracker_artifact_factory,
             $planning_factory
         );
 
         $this->backlog_item_collection_factory = new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
             new AgileDashboard_BacklogItemDao(),
-            $tracker_artifact_factory,
+            $this->tracker_artifact_factory,
             $tracker_form_element_factory,
             $this->milestone_factory,
             $planning_factory,
@@ -107,7 +111,7 @@ class MilestoneResource {
 
         $this->milestone_validator = new MilestoneResourceValidator(
             $planning_factory,
-            $tracker_artifact_factory,
+            $this->tracker_artifact_factory,
             $tracker_form_element_factory,
             $this->backlog_strategy_factory,
             $this->milestone_factory,
@@ -471,7 +475,63 @@ class MilestoneResource {
             throw new RestException(400, $exception->getMessage());
         }
 
-        $this->sendAllowHeaderForContent();
+        $this->sendAllowHeaderForBacklog();
+    }
+
+    /**
+     * Add an item to the backlog of a milestone
+     *
+     * Add an item to the backlog of a milestone
+     *
+     * The item must  be of the allowed types (defined in the planning configuration).
+     * The body of the request should be of the form :
+     * {
+     *      "artifact" : {
+     *          "id" : 458
+     *      }
+     * }
+     *
+     * @url POST {id}/backlog
+     *
+     * @param int                  $id   Id of the milestone
+     * @param BacklogItemReference $item Reference of the Backlog Item {@from body} {@type BacklogItemReference}
+     *
+     * @throw 400
+     * @throw 403
+     * @throw 404
+     */
+    protected function postBacklog($id, BacklogItemReference $item) {
+        $user        = $this->getCurrentUser();
+        $milestone   = $this->getMilestoneById($user, $id);
+
+        $item_id  = $item->getArtifactId();
+        $artifact = $this->getBacklogItemAsArtifact($user, $item_id);
+
+        $allowed_trackers = $this->backlog_strategy_factory->getBacklogStrategy($milestone)->getDescendantTrackers();
+        if (! $this->milestone_validator->canBacklogItemBeAddedToMilestone($artifact, $allowed_trackers)) {
+            throw new RestException(400, "Item of type '".$artifact->getTracker()->getName(). "' cannot be added.");
+        }
+
+        try {
+            $this->milestone_content_updater->appendElementToMilestoneBacklog($item_id, $user, $milestone);
+        } catch (Tracker_NoChangeException $e) {
+        }
+
+        $this->sendAllowHeaderForBacklog();
+    }
+
+    private function getBacklogItemAsArtifact($user, $artifact_id) {
+        $artifact = $this->tracker_artifact_factory->getArtifactById($artifact_id);
+
+        if (! $artifact) {
+            throw new RestException(400, 'Item does not exist');
+        }
+
+        if (! $artifact->userCanView()) {
+            throw new  RestException(403, 'Cannot link this item');
+        }
+
+        return $artifact;
     }
 
     /**
@@ -614,7 +674,7 @@ class MilestoneResource {
     }
 
     private function sendAllowHeaderForBacklog() {
-        Header::allowOptionsGetPut();
+        Header::allowOptionsGetPutPost();
     }
 
     private function sendAllowHeaderForSubmilestones() {

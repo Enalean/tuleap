@@ -28,6 +28,7 @@ namespace Tuleap\AgileDashboard\REST\v1;
 use \PlanningFactory;
 use \Tracker_ArtifactFactory;
 use \Tracker_Artifact;
+use \Tracker;
 use \Tracker_FormElementFactory;
 use \AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use \AgileDashboard_Milestone_Backlog_BacklogStrategyFactory;
@@ -224,5 +225,17 @@ class MilestoneResourceValidator {
         if($sub_milestone->getParent() && $sub_milestone->getParent()->getArtifactId() != $milestone->getArtifactId()) {
             throw new SubMilestoneAlreadyHasAParentException($sub_milesone_id);
         }
+    }
+
+    public function canBacklogItemBeAddedToMilestone(Tracker_Artifact $artifact, array $allowed_trackers) {
+        $artifact_tracker_id = $artifact->getTrackerId();
+
+        foreach ($allowed_trackers as $tracker) {
+            if ($tracker->getId() == $artifact_tracker_id) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
