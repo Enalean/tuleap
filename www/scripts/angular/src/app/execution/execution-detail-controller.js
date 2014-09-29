@@ -2,22 +2,44 @@ angular
     .module('execution')
     .controller('ExecutionDetailCtrl', ExecutionDetailCtrl);
 
-ExecutionDetailCtrl.$inject = ['$scope', '$state', '$sce', 'gettextCatalog', 'executions', 'ExecutionService', 'SharedPropertiesService'];
+ExecutionDetailCtrl.$inject = ['$scope', '$state', '$sce', '$rootScope','gettextCatalog', 'ExecutionService', 'SharedPropertiesService'];
 
-function ExecutionDetailCtrl($scope, $state, $sce, gettextCatalog, executions, ExecutionService, SharedPropertiesService) {
-    var execution_id = +$state.params.execid;
+function ExecutionDetailCtrl($scope, $state, $sce, $rootScope, gettextCatalog, ExecutionService, SharedPropertiesService) {
+    var execution_id = +$state.params.execid,
+        campaign_id  = +$state.params.id;
 
-    $scope.execution = _.find(_.flatten(executions, 'executions'), function (execution) {
-        return execution.id === execution_id;
-    });
-    $scope.execution.results = '';
-    $scope.execution.saving  = false;
-    $scope.error_message     = '';
-    $scope.pass              = pass;
-    $scope.fail              = fail;
-    $scope.block             = block;
-    $scope.sanitizeHtml      = sanitizeHtml;
-    $scope.getStatusLabel    = getStatusLabel;
+    ExecutionService.loadExecutions(campaign_id);
+    if (isCurrentExecutionLoaded()) {
+        retrieveCurrentExecution();
+    } else {
+        waitForExecutionToBeLoaded();
+    }
+
+    $scope.error_message  = '';
+    $scope.pass           = pass;
+    $scope.fail           = fail;
+    $scope.block          = block;
+    $scope.sanitizeHtml   = sanitizeHtml;
+    $scope.getStatusLabel = getStatusLabel;
+
+    function waitForExecutionToBeLoaded() {
+        var unbind = $rootScope.$on('bunchOfExecutionsLoaded', function () {
+            if (isCurrentExecutionLoaded()) {
+                retrieveCurrentExecution();
+            }
+        });
+        $scope.$on('$destroy', unbind);
+    }
+
+    function retrieveCurrentExecution() {
+        $scope.execution         = ExecutionService.executions[execution_id];
+        $scope.execution.results = '';
+        $scope.execution.saving  = false;
+    }
+
+    function isCurrentExecutionLoaded() {
+        return typeof ExecutionService.executions[execution_id] !== 'undefined';
+    }
 
     function sanitizeHtml(html) {
         if (html) {
