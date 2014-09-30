@@ -21,96 +21,40 @@ namespace Tuleap\REST;
 
 use \Luracast\Restler\RestException;
 
-use EventManager;
-use UserManager;
-use User_LoginManager;
-use User_PasswordExpirationChecker;
+use Rest_Exception_InvalidTokenException;
+use User_LoginException;
+use Exception;
 
 class TokenIsAllowed {
     
     /** @var UserManager */
     private $user_manager;
 
-    const HTTP_TOKEN_HEADER     = 'X-Auth-Token';
-    const PHP_HTTP_TOKEN_HEADER = 'HTTP_X_AUTH_TOKEN';
-
-    const HTTP_USER_HEADER      = 'X-Auth-UserId';
-    const PHP_HTTP_USER_HEADER  = 'HTTP_X_AUTH_USERID';
-    
     public function __construct() {
-        $this->user_manager = UserManager::instance();
+        $this->user_manager = UserManager::build();
     }
-    
+
     public function isAllowed() {
         try {
-            if ($this->requestIsOption()) {
+            if ($this->requestIsOption() || $this->currentUserIsNotAnonymous()) {
                 return true;
-            } elseif (! $this->cookieBasedAuthentication()) {
-                $this->tokenBasedAuthentication();
             }
-            return true;
-        } catch (\User_LoginException $exception) {
+        } catch (User_LoginException $exception) {
             throw new RestException(403, $exception->getMessage());
-        } catch (\Rest_Exception_InvalidTokenException $exception) {
+        } catch (Rest_Exception_InvalidTokenException $exception) {
             throw new RestException(401, $exception->getMessage());
         }
-        throw new RestException(401, 'Authentication required (headers: ' .self::HTTP_TOKEN_HEADER. ', ' .self::HTTP_USER_HEADER. ')');
+        throw new RestException(401, 'Authentication required (headers: ' .  UserManager::HTTP_TOKEN_HEADER . ', ' .  UserManager::HTTP_USER_HEADER . ')');
     }
-    
+
     private function requestIsOption() {
         return strtoupper($_SERVER['REQUEST_METHOD']) === 'OPTIONS';
     }
-    
-    /**
-     * We need it to browse the API as we are logged in through the Web UI
-     */
-    private function cookieBasedAuthentication() {
-        $current_user                = $this->user_manager->getCurrentUser();
-        if (! $current_user->isAnonymous()) {
-            $password_expiration_checker = new User_PasswordExpirationChecker();
-            $password_expiration_checker->checkPasswordLifetime($current_user);
+
+    private function currentUserIsNotAnonymous() {
+        $user = $this->user_manager->getCurrentUser();
+        if ($user && ! $user->isAnonymous()) {
             return true;
         }
-        return false;
-    }
-
-    private function tokenBasedAuthentication() {
-        $login_manager = new User_LoginManager(
-            EventManager::instance(),
-            $this->user_manager,
-            new User_PasswordExpirationChecker()
-        );
-        $login_manager->validateAndSetCurrentUser(
-            $this->getUserFromToken()
-        );
-    }
-
-    /**
-     * @return PFUser
-     * @throws RestException
-     * @throws \Rest_Exception_InvalidTokenException
-     */
-    private function getUserFromToken() {
-        if (! isset($_SERVER[self::PHP_HTTP_TOKEN_HEADER])) {
-            throw new RestException(401, self::HTTP_TOKEN_HEADER.' HTTP header required');
-        }
-
-        if (! isset($_SERVER[self::PHP_HTTP_USER_HEADER])) {
-            throw new RestException(401, self::HTTP_USER_HEADER.' HTTP header required');
-        }
-
-        $token = new \Rest_Token(
-            $_SERVER[self::PHP_HTTP_USER_HEADER],
-            $_SERVER[self::PHP_HTTP_TOKEN_HEADER]
-        );
-
-        $token_dao = new \Rest_TokenDao();
-        $token_manager = new \Rest_TokenManager(
-            $token_dao,
-            new \Rest_TokenFactory($token_dao),
-            $this->user_manager
-        );
-        return $token_manager->checkToken($token);
     }
 }
-?>

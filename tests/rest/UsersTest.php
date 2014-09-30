@@ -50,4 +50,55 @@ class UsersTest extends RestBase {
     public function testGETIdDoesNotWorkIfUserDoesNotExist() {
         $this->client->get('users/1')->send();
     }
+
+    public function testGetUsersWithMatching() {
+        $response = $this->getResponseByName(TestDataBuilder::TEST_USER_1_NAME, $this->client->get('users?query=rest_api_tester&limit=10'));
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $json = $response->json();
+        $this->assertCount(3, $json);
+    }
+
+    public function testGetUserWithExactSearch() {
+        $search = urlencode(
+            json_encode(
+                array(
+                    'username' => TestDataBuilder::TEST_USER_1_NAME
+                )
+            )
+        );
+
+        $response = $this->getResponseByName(TestDataBuilder::TEST_USER_1_NAME, $this->client->get("users?query=$search&limit=10"));
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $json = $response->json();
+        $this->assertCount(1, $json);
+        $this->assertEquals(TestDataBuilder::TEST_USER_1_ID, $json[0]['id']);
+    }
+
+    public function testGetUserWithExactSearchWithoutResult() {
+        $search = urlencode(
+            json_encode(
+                array(
+                    'username' => 'muppet'
+                )
+            )
+        );
+
+        $response = $this->getResponseByName(TestDataBuilder::TEST_USER_1_NAME, $this->client->get("users?query=$search&limit=10"));
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $json = $response->json();
+        $this->assertCount(0, $json);
+    }
+
+    /**
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testGetUserWithInvalidJson() {
+        $search = urlencode('{jeanclaude}');
+
+        $response = $this->getResponseByName(TestDataBuilder::TEST_USER_1_NAME, $this->client->get("users?query=$search&limit=10"));
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
 }
