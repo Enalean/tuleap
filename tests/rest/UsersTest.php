@@ -26,29 +26,70 @@ require_once dirname(__FILE__).'/../lib/autoload.php';
  */
 class UsersTest extends RestBase {
 
-    public function testGETId() {
-        $response = $this->client->get('users/'.TestDataBuilder::TEST_USER_1_ID)->send();
-
-        $this->assertEquals(
-            $response->json(),
-            array(
-                'id'         => TestDataBuilder::TEST_USER_1_ID,
-                'uri'        => 'users/'.TestDataBuilder::TEST_USER_1_ID,
-                'email'      => TestDataBuilder::TEST_USER_1_EMAIL,
-                'real_name'  => TestDataBuilder::TEST_USER_1_REALNAME,
-                'username'   => TestDataBuilder::TEST_USER_1_NAME,
-                'ldap_id'    => TestDataBuilder::TEST_USER_1_LDAPID,
-                'avatar_url' => '/themes/common/images/avatar_default.png'
-            )
-        );
-        $this->assertEquals($response->getStatusCode(), 200);
+    public function testGetIdAsAnonymousIsForbidden() {
+        $exception_thrown = false;
+        try {
+            $this->client->get('users/'.TestDataBuilder::TEST_USER_1_ID)->send();
+        } catch(Guzzle\Http\Exception\ClientErrorResponseException $e) {
+            $this->assertEquals(401, $e->getResponse()->getStatusCode());
+            $exception_thrown = true;
+        }
+        $this->assertTrue($exception_thrown);
     }
 
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
+    public function testGETIdAsRegularUser() {
+        $response = $this->getResponseByName(TestDataBuilder::TEST_USER_1_NAME, $this->client->get('users/'.TestDataBuilder::TEST_USER_1_ID));
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $json = $response->json();
+        $this->assertEquals(TestDataBuilder::TEST_USER_1_ID, $json['id']);
+        $this->assertEquals('users/'.TestDataBuilder::TEST_USER_1_ID, $json['uri']);
+        $this->assertEquals(TestDataBuilder::TEST_USER_1_EMAIL, $json['email']);
+        $this->assertEquals(TestDataBuilder::TEST_USER_1_REALNAME, $json['real_name']);
+        $this->assertEquals(TestDataBuilder::TEST_USER_1_NAME, $json['username']);
+        $this->assertEquals(TestDataBuilder::TEST_USER_1_LDAPID, $json['ldap_id']);
+        $this->assertEquals('/themes/common/images/avatar_default.png', $json['avatar_url']);
+    }
+
     public function testGETIdDoesNotWorkIfUserDoesNotExist() {
-        $this->client->get('users/1')->send();
+        $exception_thrown = false;
+        try {
+            $this->getResponseByName(TestDataBuilder::TEST_USER_1_NAME, $this->client->get('users/1'));
+        } catch(Guzzle\Http\Exception\ClientErrorResponseException $e) {
+            $this->assertEquals(404, $e->getResponse()->getStatusCode());
+            $exception_thrown = true;
+        }
+        $this->assertTrue($exception_thrown);
+    }
+
+    public function testGETMembershipBySelfReturnsUserGroups() {
+        $response = $this->getResponseByName(TestDataBuilder::TEST_USER_2_NAME, $this->client->get('users/'.TestDataBuilder::TEST_USER_2_ID.'/membership'));
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $json = $response->json();
+        $this->assertCount(3, $json);
+        $this->assertContains('site_active', $json);
+        $this->assertContains('private-member_project_members', $json);
+        $this->assertContains('ug_102', $json);
+    }
+
+    public function testUserCannotSeeGroupOfAnotherUser() {
+        $exception_thrown = false;
+        try {
+            $this->getResponseByName(TestDataBuilder::TEST_USER_1_NAME, $this->client->get('users/'.TestDataBuilder::TEST_USER_2_ID.'/membership'));
+         } catch(Guzzle\Http\Exception\ClientErrorResponseException $e) {
+            $this->assertEquals(403, $e->getResponse()->getStatusCode());
+            $exception_thrown = true;
+        }
+        $this->assertTrue($exception_thrown);
+    }
+
+    public function testSiteAdminCanSeeGroupOfAnyUser() {
+        $response = $this->getResponseByName(TestDataBuilder::ADMIN_USER_NAME, $this->client->get('users/'.TestDataBuilder::TEST_USER_2_ID.'/membership'));
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $json = $response->json();
+        $this->assertCount(3, $json);
     }
 
     public function testGetUsersWithMatching() {

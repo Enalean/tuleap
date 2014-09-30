@@ -70,5 +70,6 @@ class UserRepresentation {
         $this->username   = $user->getUserName();
         $this->ldap_id    = $user->getLdapId();
         $this->avatar_url = $user->getAvatarUrl();
+        return $this;
     }
 }

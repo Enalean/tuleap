@@ -19,11 +19,14 @@
 
 namespace Tuleap\User\REST\v1;
 
+use PFUser;
 use UserManager;
+use UGroupLiteralizer;
 use PaginatedUserCollection;
 use Tuleap\User\REST\UserRepresentation;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
+use Tuleap\REST\UserManager as RestUserManager;
 use Luracast\Restler\RestException;
 
 /**
@@ -41,9 +44,17 @@ class UserResource {
     /** @var JsonDecoder */
     private $json_decoder;
 
+    /** @var UGroupLiteralizer */
+    private $ugroup_literalizer;
+
+    /** @var \Tuleap\REST\UserManager */
+    private $rest_user_manager;
+
     public function __construct() {
         $this->user_manager       = UserManager::instance();
         $this->json_decoder       = new JsonDecoder();
+        $this->ugroup_literalizer = new UGroupLiteralizer();
+        $this->rest_user_manager  = RestUserManager::build();
     }
 
     /**
@@ -63,12 +74,10 @@ class UserResource {
      *
      * @return \Tuleap\User\REST\UserRepresentation
      */
-    public function getId($id) {
-        $this->checkUserExists($id);
+    protected function getId($id) {
+        $user                = $this->getUserById($id);
         $user_representation = new UserRepresentation();
-        $user_representation->build($this->user_manager->getUserById($id));
-
-        return $user_representation;
+        return $user_representation->build($user);
     }
 
     /**
@@ -109,7 +118,7 @@ class UserResource {
      * @param int         $limit  Number of elements displayed per page
      * @param int         $offset Position of the first element to display
      *
-     * @return \Tuleap\User\REST\UserRepresentation[]
+     * @return array {@type \Tuleap\User\REST\UserRepresentation}
      */
     protected function get(
         $query,
@@ -164,21 +173,65 @@ class UserResource {
         $list_of_user_representation = array();
         foreach ($user_collection->getUsers() as $user) {
             $user_representation = new UserRepresentation();
-            $user_representation->build($user);
-            $list_of_user_representation[] = $user_representation;
+            $list_of_user_representation[] = $user_representation->build($user);
         }
 
         return $list_of_user_representation;
     }
 
-    private function checkUserExists($id) {
+    /**
+     * Get the list of user groups the given user is member of
+     *
+     * This list of groups is displayed as an array of string:
+     * <pre>
+     * [
+     *     "site_active",
+     *     "%project-name%_project_members",
+     *     "%project-name%_project_admin",
+     *     "ug_101"
+     *     ...
+     * ]
+     * </pre>
+     *
+     * @url GET {id}/membership
+     *
+     * @param int $id Id of the desired user
+     *
+     * @access public
+     *
+     * @throws 400
+     * @throws 403
+     * @throws 404
+     *
+     * @return array {@type string}
+     */
+    protected function getMembership($id) {
+        $watchee = $this->getUserById($id);
+        $watcher = $this->rest_user_manager->getCurrentUser();
+        if ($this->checkUserCanSeeOtherUser($watcher, $watchee)) {
+            return $this->ugroup_literalizer->getUserGroupsForUser($watchee);
+        }
+        throw new RestException(403, "Cannot see other's membreship");
+    }
+
+    private function checkUserCanSeeOtherUser(PFUser $watcher, PFuser $watchee) {
+        if ($watcher->isSuperUser()) {
+            return true;
+        }
+        if ($watcher->getId() === $watchee->getId()) {
+            return true;
+        }
+        return false;
+    }
+
+    private function getUserById($id) {
         $user = $this->user_manager->getUserById($id);
 
         if (! $user) {
             throw new RestException(404, 'User Id not found');
         }
 
-        return true;
+        return $user;
     }
 
     private function sendAllowHeaders() {

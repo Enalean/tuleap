@@ -63,9 +63,9 @@ class RequestWrapper {
      */
     private function generateToken(PFUser $user) {
         $dao             = new Rest_TokenDao();
-        $generated_hash = 'gbgfb5gfb6bfdb6db5dbdbd6b5rd'.  rand(0, 152125415);
+        $generated_hash = 'hash_for_rest_tests';
 
-        $dao->addTokenForUserId($user->getId(), $generated_hash, mktime());
+        $dao->addTokenForUserId($user->getId(), $generated_hash, time());
 
         return new Rest_Token(
             $user->getId(),
