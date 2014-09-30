@@ -6,6 +6,9 @@ TULEAP_INCLUDE_PATH=$(CURDIR)/src/www/include:$(CURDIR)/src:/usr/share/codendi/s
 PHP_INCLUDE_PATH=/usr/share/php:/usr/share/pear:$(TULEAP_INCLUDE_PATH):/usr/share/jpgraph:.
 PHP=php -q -d date.timezone=Europe/Paris -d include_path=$(PHP_INCLUDE_PATH) -d memory_limit=256M -d display_errors=On
 
+DOCKER_REST_TESTS_IMAGE=enalean/tuleap-test-rest
+DOCKER_REST_TESTS_IMGINIT=$(DOCKER_REST_TESTS_IMAGE)-init
+
 ifeq ($(BUILD_ENV),ci)
 OUTPUT_DIR=$(WORKSPACE)
 SIMPLETEST_OPTIONS=-x
@@ -128,3 +131,20 @@ simpletest:
 ci_simpletest: simpletest
 
 test: simpletest phpunit api_test
+
+rest_docker_snapshot:
+	@docker run -ti --name=rest-init -v $(CURDIR):/tuleap $(DOCKER_REST_TESTS_IMAGE) --init
+	@docker commit rest-init $(DOCKER_REST_TESTS_IMGINIT)
+	@docker rm -f rest-init
+	@echo "Image ready: $(DOCKER_REST_TESTS_IMGINIT)"
+	@echo "You can use it like:"
+	@echo "# docker run --rm=true -v $(CURDIR):/tuleap $(DOCKER_REST_TESTS_IMGINIT) --run"
+	@echo "# docker run --rm=true -v $(CURDIR):/tuleap $(DOCKER_REST_TESTS_IMGINIT) --run tests/rest/ArtifactsTest.php"
+
+rest_docker_clean:
+	@docker rmi $(DOCKER_REST_TESTS_IMGINIT)
+
+rest_docker_snap_run:
+	@echo "Once inside the container, just run:"
+	@echo "# ./run.sh --run tests/rest/UsersTest.php"
+	@docker run -ti --rm=true -v $(CURDIR):/tuleap --entrypoint=/bin/bash $(DOCKER_REST_TESTS_IMGINIT) +x

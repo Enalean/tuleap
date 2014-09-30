@@ -754,7 +754,7 @@ class UserDao extends DataAccessObject {
             $realname  = $this->searchExplodeMatch('realname', $words);
         }
 
-        $sql = "SELECT user_name, user_id, realname, has_avatar
+        $sql = "SELECT *
                 FROM user
                 WHERE (
                     (user_name LIKE $user_name) OR (realname LIKE $realname)
