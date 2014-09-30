@@ -1,3 +1,6 @@
+Version 5.478 - Tuleap 7.6
+    * story #7456: Index artifact permissions (tasks #7442: get artifact permissions usable by ES)
+
 Version 5.477 - Tuleap 7.6
     * story #6935 REST: be able to append a backlog item directly to a milestone
 
