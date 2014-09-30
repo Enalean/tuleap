@@ -14,6 +14,9 @@ Version 7.6 (Not released yet)
 	* request #7484: Search in projects can take a very long time
 	* request #7478: REST POST /tokens should not return 500 when the password is wrong
 
+	== Features ==
+	* REST API: can now search for a user with exact match: GET /users?query={username:jcdusse}
+
 Version 7.5 (Thursday, September 18th 2014)
 
 	== Bug Fix ==
