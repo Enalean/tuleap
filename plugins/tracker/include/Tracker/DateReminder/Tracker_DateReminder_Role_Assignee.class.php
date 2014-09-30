@@ -45,18 +45,7 @@ class Tracker_DateReminder_Role_Assignee implements Tracker_DateReminder_Role {
      * @return Array of PFUser
      */
     function getRecipientsFromArtifact(Tracker_Artifact $artifact) {
-        $recipients = array();
-        $um = $artifact->getUserManager();
-        $permission_assignee = new Tracker_Permission_PermissionRetrieveAssignee();
-        $assignees = $permission_assignee->getAssigneeIds($artifact);
-        foreach ($assignees as $assigneeId) {
-            $user = $um->getUserById($assigneeId);
-            if ($user) {
-                $recipients[$assigneeId] = $user;
-            }
-        }
-        return $recipients;
+        $permission_assignee = new Tracker_Permission_PermissionRetrieveAssignee($artifact->getUserManager());
+        return $permission_assignee->getAssignees($artifact);
     }
-
 }
-?>
