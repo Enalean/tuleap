@@ -1,3 +1,6 @@
+Version 5.479 - Tuleap 7.6
+    * request #7491 Table columns are not saved during XML tracker import
+
 Version 5.478 - Tuleap 7.6
     * story #7456: Index artifact permissions (tasks #7442: get artifact permissions usable by ES)
 
