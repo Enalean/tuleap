@@ -105,10 +105,6 @@ class Git_Driver_Gerrit_ProjectCreator {
     }
 
     /**
-     *
-     * @param Git_RemoteServer_GerritServer $gerrit_server
-     * @param GitRepository $repository
-     * @param Boolean $migrate_access_rights
      * @return string Gerrit project name
      *
      * @throws Git_Driver_Gerrit_ProjectCreator_ProjectAlreadyexistsException
@@ -116,10 +112,10 @@ class Git_Driver_Gerrit_ProjectCreator {
      * @throws Git_Command_Exception
      */
     public function createGerritProject(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository, $template_id) {
-        $project          = $repository->getProject();
-        $project_name     = $project->getUnixName();
-        $ugroups          = $this->ugroup_manager->getUGroups($project);
-        $driver           = $this->driver_factory->getDriver($gerrit_server);
+        $project      = $repository->getProject();
+        $project_name = $project->getUnixName();
+        $ugroups      = $this->ugroup_manager->getUGroups($project);
+        $driver       = $this->driver_factory->getDriver($gerrit_server);
 
         $name = $driver->getGerritProjectName($repository);
         if ($driver->doesTheProjectExist($gerrit_server, $name)) {
@@ -132,16 +128,15 @@ class Git_Driver_Gerrit_ProjectCreator {
 
         $gerrit_project_name = $driver->createProject($gerrit_server, $repository, $project_name);
 
-        $this->initiateGerritPermissions(
+        $this->pushMinimalPermissionsToMigrateTuleapRepoOnGerrit($gerrit_server, $repository);
+        $this->exportGitBranches($gerrit_server, $gerrit_project_name, $repository);
+        $this->pushFullTuleapAccessRightsToGerrit(
                 $repository,
                 $gerrit_server,
-                $this->getGerritProjectUrl($gerrit_server, $repository),
                 $migrated_ugroups,
                 Config::get('sys_default_domain') .'-'. self::GROUP_REPLICATION,
                 $template_id
         );
-
-        $this->exportGitBranches($gerrit_server, $gerrit_project_name, $repository);
 
         return $gerrit_project_name;
     }
@@ -208,15 +203,17 @@ class Git_Driver_Gerrit_ProjectCreator {
         $executor->exportBranchesAndTags($gerrit_project_url);
     }
 
-    private function initiateGerritPermissions(GitRepository $repository, Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url, array $ugroups, $replication_group, $template_id) {
-        $this->cloneGerritProjectConfig($gerrit_server, $gerrit_project_url);
+    private function pushFullTuleapAccessRightsToGerrit(GitRepository $repository, Git_RemoteServer_GerritServer $gerrit_server, array $ugroups, $replication_group, $template_id) {
+        foreach (self::$MIGRATION_MINIMAL_PERMISSIONS as $permission) {
+            $this->addToSection($permission['reference'], $permission['permission'], $permission['group']);
+        }
+
         foreach ($ugroups as $ugroup) {
             $this->addGroupToGroupFile($gerrit_server, $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName());
         }
         $this->addGroupToGroupFile($gerrit_server, $replication_group);
         $this->addGroupToGroupFile($gerrit_server, 'Administrators');
         $this->addRegisteredUsersGroupToGroupFile();
-        $this->addMinimalPermissionsToMigrateTuleapRepoOnGerritWithoutTuleapAccessRigths();
 
         if ($this->defaultPermissionsMigrationRequested($template_id)) {
             $this->addPermissionsToProjectConf($repository, $ugroups, $replication_group);
@@ -358,10 +355,13 @@ class Git_Driver_Gerrit_ProjectCreator {
         }
     }
 
-    private function addMinimalPermissionsToMigrateTuleapRepoOnGerritWithoutTuleapAccessRigths() {
+    private function pushMinimalPermissionsToMigrateTuleapRepoOnGerrit(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository) {
         foreach (self::$MIGRATION_MINIMAL_PERMISSIONS as $permission) {
             $this->addToSection($permission['reference'], $permission['permission'], $permission['group']);
         }
+
+        $this->cloneGerritProjectConfig($gerrit_server, $this->getGerritProjectUrl($gerrit_server, $repository));
+        $this->pushToServer();
     }
 
     private function shouldAddRegisteredUsersToGroup(GitRepository $repository, $permission, $group) {
