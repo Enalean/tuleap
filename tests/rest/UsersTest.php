@@ -84,6 +84,17 @@ class UsersTest extends RestBase {
         $this->assertTrue($exception_thrown);
     }
 
+    public function testUserCanSeeGroupOfAnotherUserIfSheHasDelegatedPermissions() {
+        $response = $this->getResponseByName(TestDataBuilder::TEST_USER_3_NAME, $this->client->get('users/'.TestDataBuilder::TEST_USER_2_ID.'/membership'));
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $json = $response->json();
+        $this->assertCount(3, $json);
+        $this->assertContains('site_active', $json);
+        $this->assertContains('private-member_project_members', $json);
+        $this->assertContains('ug_102', $json);
+    }
+
     public function testSiteAdminCanSeeGroupOfAnyUser() {
         $response = $this->getResponseByName(TestDataBuilder::ADMIN_USER_NAME, $this->client->get('users/'.TestDataBuilder::TEST_USER_2_ID.'/membership'));
         $this->assertEquals($response->getStatusCode(), 200);

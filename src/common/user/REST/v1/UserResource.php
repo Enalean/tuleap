@@ -28,6 +28,9 @@ use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\UserManager as RestUserManager;
 use Luracast\Restler\RestException;
+use User_ForgeUserGroupPermission_RetrieveUserMembershipInformation;
+use User_ForgeUserGroupPermissionsManager;
+use User_ForgeUserGroupPermissionsDao;
 
 /**
  * Wrapper for users related REST methods
@@ -50,11 +53,18 @@ class UserResource {
     /** @var \Tuleap\REST\UserManager */
     private $rest_user_manager;
 
+    /** @var User_ForgeUserGroupPermissionsManager */
+    private $forge_ugroup_permissions_manager;
+
     public function __construct() {
         $this->user_manager       = UserManager::instance();
         $this->json_decoder       = new JsonDecoder();
         $this->ugroup_literalizer = new UGroupLiteralizer();
         $this->rest_user_manager  = RestUserManager::build();
+
+        $this->forge_ugroup_permissions_manager = new User_ForgeUserGroupPermissionsManager(
+            new User_ForgeUserGroupPermissionsDao()
+        );
     }
 
     /**
@@ -221,7 +231,10 @@ class UserResource {
         if ($watcher->getId() === $watchee->getId()) {
             return true;
         }
-        return false;
+
+        return $this->forge_ugroup_permissions_manager->doesUserHavePermission(
+            $watcher, new User_ForgeUserGroupPermission_RetrieveUserMembershipInformation()
+        );
     }
 
     private function getUserById($id) {
