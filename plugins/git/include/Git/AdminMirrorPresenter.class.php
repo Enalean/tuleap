@@ -70,4 +70,8 @@ class Git_AdminMirrorPresenter extends Git_AdminPresenter {
     public function update_button() {
         return $GLOBALS['Language']->getText('plugin_git','admin_update_button');
     }
+
+    public function delete_button() {
+        return $GLOBALS['Language']->getText('plugin_git','admin_delete_button');
+    }
 }

@@ -296,6 +296,8 @@ plugin_git	admin_mirror_fields_required	Tous les champs sont requis
 plugin_git	admin_mirror_cannot_update	Impossible de mettre à jour le miroir
 plugin_git	admin_mirror_no_changes	Pas de nouveau changements pour le miroir
 plugin_git	admin_mirror_updated	Miroir modifié !
+plugin_git	admin_mirror_cannot_delete	Impossible de supprimer le miroir
+plugin_git	admin_mirror_deleted	Miroir supprimé!
 plugin_git	add_mirror	Ajouter un nouveau miroir
 plugin_git	admin_mirror_list	Miroirs exitants
 plugin_git	mirror_section_title	Administration des miroirs
@@ -304,3 +306,4 @@ plugin_git	owner_label	Propriétaire
 plugin_git	ssh_key_label	Clé SSH
 plugin_git	pwd_label	Mot de pass du propriétaire
 plugin_git	admin_update_button	Modifier
+plugin_git	admin_delete_button	Supprimer
