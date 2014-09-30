@@ -66,4 +66,8 @@ class Git_AdminMirrorPresenter extends Git_AdminPresenter {
     public function list_of_mirrors_not_empty() {
         return count($this->list_of_mirrors) > 0;
     }
+
+    public function update_button() {
+        return $GLOBALS['Language']->getText('plugin_git','admin_update_button');
+    }
 }

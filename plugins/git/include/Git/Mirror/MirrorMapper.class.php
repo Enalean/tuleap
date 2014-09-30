@@ -83,6 +83,42 @@ class Git_Mirror_MirrorDataMapper {
     }
 
     /**
+     * @return bool
+     * @throws Git_Mirror_MirrorNoChangesException
+     * @throws Git_Mirror_MirrorNotFoundException
+     * @throws Git_Mirror_MissingDataException
+     */
+    public function update($id, $url, $ssh_key) {
+        $mirror = $this->fetch($id);
+
+        if ($url == $mirror->url && $ssh_key == $mirror->ssh_key) {
+            throw new Git_Mirror_MirrorNoChangesException();
+        }
+
+        if (! $url || ! $ssh_key) {
+            throw new Git_Mirror_MissingDataException();
+        }
+
+        return $this->dao->updateMirror($id, $url, $ssh_key);
+    }
+
+
+    /**
+     * @return Git_Mirror_Mirror
+     * @throws Git_Mirror_MirrorNotFoundException
+     */
+    private function fetch($id) {
+        $row = $this->dao->fetch($id);
+
+        if (! $row) {
+            throw new Git_Mirror_MirrorNotFoundException();
+        }
+        $owner = $this->getMirrorOwner($row['id']);
+
+        return $this->getInstanceFromRow($owner, $row);
+    }
+
+    /**
      * @return Git_Mirror_Mirror
      */
     private function getInstanceFromRow(PFUser $owner, $row) {
@@ -102,5 +138,4 @@ class Git_Mirror_MirrorDataMapper {
             self::MIRROR_OWNER_PREFIX.$mirror_id
         );
     }
-
 }
