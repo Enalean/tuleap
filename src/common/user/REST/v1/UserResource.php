@@ -19,10 +19,12 @@
 
 namespace Tuleap\User\REST\v1;
 
-use \UserManager;
-use \Tuleap\User\REST\UserRepresentation;
-use \Tuleap\REST\Header;
-use \Luracast\Restler\RestException;
+use UserManager;
+use PaginatedUserCollection;
+use Tuleap\User\REST\UserRepresentation;
+use Tuleap\REST\Header;
+use Tuleap\REST\JsonDecoder;
+use Luracast\Restler\RestException;
 
 /**
  * Wrapper for users related REST methods
@@ -36,8 +38,12 @@ class UserResource {
     /** @var UserManager */
     private $user_manager;
 
+    /** @var JsonDecoder */
+    private $json_decoder;
+
     public function __construct() {
-        $this->user_manager = UserManager::instance();
+        $this->user_manager       = UserManager::instance();
+        $this->json_decoder       = new JsonDecoder();
     }
 
     /**
@@ -58,7 +64,6 @@ class UserResource {
      * @return \Tuleap\User\REST\UserRepresentation
      */
     public function getId($id) {
-
         $this->checkUserExists($id);
         $user_representation = new UserRepresentation();
         $user_representation->build($this->user_manager->getUserById($id));
@@ -94,26 +99,61 @@ class UserResource {
      *
      * Get all users matching the query
      *
-     * @param string $query  Search string (3 chars min in length) {@from query} {@min 3}
-     * @param int    $limit  Number of elements displayed per page
-     * @param int    $offset Position of the first element to display
+     * $query can be either:
+     * <ul>
+     *   <li>a simple string, then it will search on "real_name" and "username" with wildcard</li>
+     *   <li>a json object to search on username with exact match: {"username": "john_doe"}</li>
+     * </ul>
+     *
+     * @param string|json $query  Search string (3 chars min in length) {@from query} {@min 3}
+     * @param int         $limit  Number of elements displayed per page
+     * @param int         $offset Position of the first element to display
      *
      * @return \Tuleap\User\REST\UserRepresentation[]
      */
-    public function get(
+    protected function get(
         $query,
         $limit = self::DEFAULT_LIMIT,
         $offset = self::DEFAULT_OFFSET
     ) {
-        $exact = false;
 
-        $this->sendAllowHeaders();
-        $user_collection = $this->user_manager->getPaginatedUsersByUsernameOrRealname(
+        if ($this->json_decoder->looksLikeJson($query)) {
+            $user_collection = $this->getUserFromExactSearch($query);
+        } else {
+            $user_collection = $this->getUsersFromPatternSearch($query, $offset, $limit);
+        }
+
+        return $this->getUsersListRepresentation($user_collection, $offset, $limit);
+    }
+
+    private function getUserFromExactSearch($query) {
+        $json_query = $this->json_decoder->decodeAsAnArray('query', $query);
+        if (! isset($json_query['username'])) {
+            throw new RestException(400, 'You can only search on "username"');
+        }
+        $user  = $this->user_manager->getUserByUserName($json_query['username']);
+        $users = array();
+        if ($user !== null) {
+            $users[] = $user;
+        }
+        return new PaginatedUserCollection(
+            $users,
+            count($users)
+        );
+    }
+
+    private function getUsersFromPatternSearch($query, $offset, $limit) {
+        $exact = false;
+        return $this->user_manager->getPaginatedUsersByUsernameOrRealname(
             $query,
             $exact,
             $offset,
             $limit
         );
+    }
+
+    private function getUsersListRepresentation(PaginatedUserCollection $user_collection, $offset, $limit) {
+        $this->sendAllowHeaders();
         Header::sendPaginationHeaders(
             $limit,
             $offset,
