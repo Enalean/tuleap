@@ -1,3 +1,13 @@
+Version 7.5-3 (Tuesday, September 30th 2014)
+
+	== Bug Fix ==
+	* request #7460: "Unresponsive script" error message when I turn on a field and there're many field dependencies rules
+	* request #7463: (un)numbered lists lose their margin in follow-up comments
+	* request #7419: Error 500 on POST /artifacts or PUT /artifacts/123 when status field not empty
+	* request #7457: Remote Command Execution Vulnerability
+	* request #7484: Search in projects can take a very long time
+	* request #7478: REST POST /tokens should not return 500 when the password is wrong
+
 Version 7.5-2 (Monday, September 22th 2014)
 
 	== Bug Fix ==
