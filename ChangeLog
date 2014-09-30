@@ -7,7 +7,7 @@ Version 7.6 (Not released yet)
 	* ldap: 3.54
 	* IM: 1.5.19
 	* statistics: 0.37
-	* git: 3.99
+	* git: 3.100
 
     == Bug Fix ==
 	* request #7457: Remote Command Execution Vulnerability

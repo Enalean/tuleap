@@ -1,3 +1,6 @@
+Version 3.100 - Tuleap 7.6
+    * tasks #7473: not allowing replication until content is migrated
+
 Version 3.99 - Tuleap 7.6
     * tasks #7472: catch git
 
