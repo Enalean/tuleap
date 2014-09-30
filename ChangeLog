@@ -17,6 +17,7 @@ Version 7.6 (Not released yet)
 	== Features ==
 	* REST API: can now search for a user with exact match: GET /users?query={username:jcdusse}
 	* REST API: story #7322: retrieve user membership from master
+	* New site wide permission delegation: retrieve user membership
 
 Version 7.5 (Thursday, September 18th 2014)
 
