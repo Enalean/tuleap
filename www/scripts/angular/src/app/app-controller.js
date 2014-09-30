@@ -5,9 +5,9 @@ angular
 TestingCtrl.$inject = ['$scope', 'amMoment', 'gettextCatalog', 'SharedPropertiesService'];
 
 function TestingCtrl($scope, amMoment, gettextCatalog, SharedPropertiesService) {
-    $scope.init = function (project_id, current_user, lang) {
+    $scope.init = function(node_server_id, project_id, lang) {
         SharedPropertiesService.setProjectId(project_id);
-        SharedPropertiesService.setCurrentUser(current_user);
+        SharedPropertiesService.setNodeServerAddress(node_server_id);
         amMoment.changeLanguage(lang);
         gettextCatalog.setCurrentLanguage(lang);
     };

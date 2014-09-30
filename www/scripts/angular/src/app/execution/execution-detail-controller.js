@@ -2,9 +2,9 @@ angular
     .module('execution')
     .controller('ExecutionDetailCtrl', ExecutionDetailCtrl);
 
-ExecutionDetailCtrl.$inject = ['$scope', '$state', '$sce', '$rootScope','gettextCatalog', 'ExecutionService', 'SharedPropertiesService'];
+ExecutionDetailCtrl.$inject = ['$scope', '$state', '$sce', '$rootScope','gettextCatalog', 'ExecutionService', 'SharedPropertiesService', 'SocketService'];
 
-function ExecutionDetailCtrl($scope, $state, $sce, $rootScope, gettextCatalog, ExecutionService, SharedPropertiesService) {
+function ExecutionDetailCtrl($scope, $state, $sce, $rootScope, gettextCatalog, ExecutionService, SharedPropertiesService, SocketService) {
     var execution_id = +$state.params.execid,
         campaign_id  = +$state.params.id;
 
@@ -15,12 +15,24 @@ function ExecutionDetailCtrl($scope, $state, $sce, $rootScope, gettextCatalog, E
         waitForExecutionToBeLoaded();
     }
 
-    $scope.error_message  = '';
     $scope.pass           = pass;
     $scope.fail           = fail;
     $scope.block          = block;
     $scope.sanitizeHtml   = sanitizeHtml;
     $scope.getStatusLabel = getStatusLabel;
+
+    viewTestExecution(execution_id, SharedPropertiesService.getCurrentUser());
+
+    $scope.$on('$destroy', function iVeBeenDismissed() {
+        viewTestExecution(execution_id, null);
+    });
+
+    function viewTestExecution(execution_id, user) {
+        SocketService.viewTestExecution({
+            id: execution_id,
+            user: user
+        });
+    }
 
     function waitForExecutionToBeLoaded() {
         var unbind = $rootScope.$on('bunchOfExecutionsLoaded', function () {
@@ -62,29 +74,15 @@ function ExecutionDetailCtrl($scope, $state, $sce, $rootScope, gettextCatalog, E
     }
 
     function setNewStatus(execution, new_status) {
-        var previous_status   = execution.status,
-            execution_to_save = angular.copy(execution);
+        var execution_to_save = angular.copy(execution);
 
-        execution_to_save.status = new_status;
+        execution.saving               = true;
+        execution.error                = null;
+        execution_to_save.error        = null;
+        execution_to_save.status       = new_status;
+        execution_to_save.submitted_by = SharedPropertiesService.getCurrentUser();
 
-        execution.saving = true;
-
-        ExecutionService.putExecution(execution_to_save).then(function() {
-            execution.status = new_status;
-            execution.previous_result.status       = previous_status;
-            execution.previous_result.submitted_on = new Date();
-            execution.previous_result.submitted_by = SharedPropertiesService.getCurrentUser();
-            execution.previous_result.result       = execution.results;
-            execution.results                      = '';
-            $scope.error_message                   = '';
-
-            execution.saving = false;
-
-        }, function() {
-            $scope.error_message = gettextCatalog.getString('An error has occured. Please contact an administrator.');
-
-            execution.saving = false;
-        });
+        SocketService.updateTestExecution(execution_to_save);
     }
 
     function getStatusLabel(status) {

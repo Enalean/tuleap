@@ -23,6 +23,7 @@ namespace Tuleap\Testing;
 use PFUser;
 use Codendi_HTMLPurifier;
 use Tuleap\User\REST\UserRepresentation;
+use Config as TuleapConfig;
 
 class IndexPresenter {
 
@@ -75,5 +76,9 @@ class IndexPresenter {
         list($lang, $country) = explode('_', $current_user->getLocale());
 
         return $lang;
+    }
+
+    public function node_server_address() {
+        return TuleapConfig::get('node_server_address', true);
     }
 }

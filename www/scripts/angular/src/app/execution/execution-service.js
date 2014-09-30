@@ -13,7 +13,6 @@ function ExecutionService(Restangular, $q, $rootScope) {
     self.executions                            = {};
     self.loading                               = {};
     self.loadExecutions                        = loadExecutions;
-    self.putExecution                          = putExecution;
 
     function loadExecutions(campaign_id) {
         if (self.executions_by_categories_by_campaigns[campaign_id]) {
@@ -90,15 +89,5 @@ function ExecutionService(Restangular, $q, $rootScope) {
     function setRestangularConfig(RestangularConfigurer) {
         RestangularConfigurer.setFullResponse(true);
         RestangularConfigurer.setBaseUrl(baseurl);
-    }
-
-    function putExecution(execution) {
-        // Unfortunately, we cannot use execution.save() or execution.put() since
-        // the nested resources in restangular use nested uri. This means that
-        // execution.put() will call /campaigns/:id/executions/:id instead of
-        // /executions/:id
-        return rest
-            .restangularizeElement(null, execution, 'testing_executions')
-            .put();
     }
 }

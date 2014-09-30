@@ -7,6 +7,7 @@
 
     function ExecutionConfig($stateProvider) {
         $stateProvider.state('campaigns.executions', {
+            authenticate: true,
             url:         '/{id:[0-9]+}-{slug}',
             controller:  'ExecutionListCtrl',
             templateUrl: 'execution/execution-list.tpl.html',
@@ -15,6 +16,7 @@
                 ncyBreadcrumbParent: 'campaigns.list'
             }
         }).state('campaigns.executions.detail', {
+            authenticate: true,
             url:         '/{execid:[0-9]+}/{defid:[0-9]+}-{defslug}',
             controller:  'ExecutionDetailCtrl',
             templateUrl: 'execution/execution-detail.tpl.html',

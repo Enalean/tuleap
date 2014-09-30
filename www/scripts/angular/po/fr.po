@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Test\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2014-09-12 16:16+0100\n"
+"PO-Revision-Date: 2014-10-01 09:36+0100\n"
 "Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -48,10 +48,6 @@ msgstr ""
 #: src/app/execution/execution-list.tpl.html
 msgid "All environments"
 msgstr "Tous les environnements"
-
-#: src/app/execution/execution-detail-controller.js
-msgid "An error has occured. Please contact an administrator."
-msgstr "Une erreur s'est produite. Veuillez contacter un administrateur."
 
 #: src/app/execution/execution-list.tpl.html
 msgid "Anybody"
@@ -131,6 +127,10 @@ msgstr "Filtrer..."
 msgid "Last execution in this campaign"
 msgstr "Dernière exécution dans cette campagne"
 
+#: src/app/user/user-login.tpl.html src/app/user/user-login-controller.js
+msgid "Login"
+msgstr "Connexion"
+
 #: src/app/campaign/campaign-list.tpl.html
 msgid "New campaign"
 msgstr "Nouvelle campagne"
@@ -153,6 +153,10 @@ msgstr "Oh non !"
 #: src/app/execution/execution-list.tpl.html
 msgid "Passed"
 msgstr "Succès"
+
+#: src/app/user/user-login.tpl.html
+msgid "Password"
+msgstr "Mot de passe"
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid "Please choose the environments for \"{{ campaign.label }}\" campaign:"
@@ -203,9 +207,26 @@ msgstr "Les tests sont exécutés pour un environnement."
 msgid "Total"
 msgstr "Total"
 
+#: src/app/user/user-login-controller.js
+msgid "Unable to generate a token: wrong username and/or password."
+msgstr ""
+"Erreur lors de la génération du jeton: mauvais nom d'utilisateur et/ou mot "
+"de passe."
+
+#: src/app/user/user-login-controller.js
+msgid "Unable to retrieve the user"
+msgstr "Erreur lors de la récupération des informations de l'utilisateur"
+
+#: src/app/user/user-login.tpl.html
+msgid "Username"
+msgstr "Utilisateur"
+
 #: src/app/campaign/campaign-new.tpl.html
 msgid "You have not any environment defined."
 msgstr "Vous n'avez pas d'environnement défini."
+
+#~ msgid "An error has occured. Please contact an administrator."
+#~ msgstr "Une erreur s'est produite. Veuillez contacter un administrateur."
 
 #~ msgid "1 test"
 #~ msgid_plural ""

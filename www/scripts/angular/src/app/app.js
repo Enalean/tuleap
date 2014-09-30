@@ -1,5 +1,7 @@
 angular.module('testing', [
     'ui.router',
+    'user',
+    'socket',
     'campaign',
     'execution',
     'sharedProperties',

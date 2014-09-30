@@ -21,10 +21,6 @@ msgstr ""
 msgid "All environments"
 msgstr ""
 
-#: src/app/execution/execution-detail-controller.js
-msgid "An error has occured. Please contact an administrator."
-msgstr ""
-
 #: src/app/execution/execution-list.tpl.html
 msgid "Anybody"
 msgstr ""
@@ -103,6 +99,11 @@ msgstr ""
 msgid "Last execution in this campaign"
 msgstr ""
 
+#: src/app/user/user-login.tpl.html
+#: src/app/user/user-login-controller.js
+msgid "Login"
+msgstr ""
+
 #: src/app/campaign/campaign-list.tpl.html
 msgid "New campaign"
 msgstr ""
@@ -124,6 +125,10 @@ msgstr ""
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Passed"
+msgstr ""
+
+#: src/app/user/user-login.tpl.html
+msgid "Password"
 msgstr ""
 
 #: src/app/campaign/campaign-new.tpl.html
@@ -166,6 +171,18 @@ msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Total"
+msgstr ""
+
+#: src/app/user/user-login-controller.js
+msgid "Unable to generate a token: wrong username and/or password."
+msgstr ""
+
+#: src/app/user/user-login-controller.js
+msgid "Unable to retrieve the user"
+msgstr ""
+
+#: src/app/user/user-login.tpl.html
+msgid "Username"
 msgstr ""
 
 #: src/app/campaign/campaign-new.tpl.html

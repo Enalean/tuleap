@@ -2,9 +2,9 @@ angular
     .module('execution')
     .controller('ExecutionListCtrl', ExecutionListCtrl);
 
-ExecutionListCtrl.$inject = ['$scope', '$state', 'ExecutionService', 'CampaignService'];
+ExecutionListCtrl.$inject = ['$scope', '$state', 'ExecutionService', 'CampaignService', 'SocketService'];
 
-function ExecutionListCtrl($scope, $state, ExecutionService, CampaignService) {
+function ExecutionListCtrl($scope, $state, ExecutionService, CampaignService, SocketService) {
     var campaign_id = $state.params.id;
 
     ExecutionService.loadExecutions(campaign_id);
@@ -26,6 +26,9 @@ function ExecutionListCtrl($scope, $state, ExecutionService, CampaignService) {
 
     getAssignees(campaign_id, 50, 0);
     getEnvironments(campaign_id, 50, 0);
+
+    SocketService.listenToExecutionUpdated();
+    SocketService.listenToExecutionViewed();
 
     function getEnvironments(campaign_id, limit, offset) {
         CampaignService.getEnvironments(campaign_id, limit, offset).then(function(data) {

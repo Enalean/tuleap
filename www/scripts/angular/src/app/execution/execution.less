@@ -91,12 +91,34 @@
                     display: table;
                     width: 100%;
                     border-bottom: 1px solid #DDD;
+                    line-height: 1.9em;
 
                     & > .execution-item-content-title {
                         display: table-cell;
                         margin-right: 5px;
                         padding: 8px;
                         font-size: 0.9em;
+
+                        & > .avatar {
+                            margin: 0 5px 0 0;
+                            border-radius: 50%;
+                            width: 24px;
+                            height: 24px;
+
+                            &.ng-enter {
+                                -webkit-animation: bounceIn 0.3s;
+                                -moz-animation: bounceIn 0.3s;
+                                -ms-animation: bounceIn 0.3s;
+                                animation: bounceIn 0.3s;
+                            }
+
+                            &.ng-leave {
+                                -webkit-animation: fadeOut 0.15s;
+                                -moz-animation: fadeOut 0.15s;
+                                -ms-animation: fadeOut 0.15s;
+                                animation: fadeOut 0.15s;
+                            }
+                        }
 
                         & > .execution-item-content-id {
                             margin-right: 10px;

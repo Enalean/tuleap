@@ -1,4 +1,4 @@
-<div class="alert alert-error " ng-if="error_message">{{ error_message }}</div>
+<div class="alert alert-error " ng-if="execution.error">{{ execution.error }}</div>
 
 <div id="current-execution" class="in">
     <h2 class="{{ execution.status | dasherize }}">{{ execution.definition.summary }}</h2>

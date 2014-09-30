@@ -1,5 +1,6 @@
 angular.module('execution', [
     'campaign',
+    'socket',
     'restangular',
     'angularFilterPack',
     'templates-app',
