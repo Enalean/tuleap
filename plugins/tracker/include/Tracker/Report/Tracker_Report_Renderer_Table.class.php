@@ -1881,12 +1881,16 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     /**
      * Finnish saving renderer to database by creating colunms
      * 
-     * @param Report_Renderer $renderer containing the columns 
+     * @param Tracker_Report_Renderer $renderer containing the columns
      */
     public function afterSaveObject($renderer) {
-        $this->saveColumns($renderer->getColumns());
+        $renderer->injectUnsavedColumnsInRendererDB($this);
         $this->saveAggregates($renderer->getAggregates());
         $this->saveSort($renderer->getSort());
+    }
+
+    public function injectUnsavedColumnsInRendererDB(Tracker_Report_Renderer_Table $renderer) {
+        $renderer->saveColumns($this->_columns);
     }
     
     /**
