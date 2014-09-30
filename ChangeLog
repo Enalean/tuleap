@@ -1,3 +1,8 @@
+Version 7.4-4 (Tuesday, September 30th 2014)
+	== Bug Fix ==
+	* request #7457: Remote Command Execution Vulnerability
+	* request #7461: SQL injection on docman global search
+
 Version 7.4 (Thursday, August 21st 2014)
 
 	== Plugins ==
