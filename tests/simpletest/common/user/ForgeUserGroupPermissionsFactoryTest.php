@@ -71,11 +71,13 @@ class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends Use
         $expected_id1    = User_ForgeUserGroupPermission_ProjectApproval::ID;
         $expected_id2    = User_ForgeUserGroupPermission_TrackerAdminAllProjects::ID;
         $expected_id3    = User_ForgeUserGroupPermission_MediawikiAdminAllProjects::ID;
+        $expected_id4    = User_ForgeUserGroupPermission_RetrieveUserMembershipInformation::ID;
 
         $permission_ids = array (
             array('permission_id' => $expected_id1),
             array('permission_id' => $expected_id2),
             array('permission_id' => $expected_id3),
+            array('permission_id' => $expected_id4),
         );
 
         stub($this->dao)->getPermissionsForForgeUGroup(101)->returns($permission_ids);

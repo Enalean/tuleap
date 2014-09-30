@@ -38,6 +38,8 @@ class User_ForgeUserGroupPermissionsFactory {
         switch ($permission_id) {
             case User_ForgeUserGroupPermission_ProjectApproval::ID :
                 return new User_ForgeUserGroupPermission_ProjectApproval();
+            case User_ForgeUserGroupPermission_RetrieveUserMembershipInformation::ID :
+                return new User_ForgeUserGroupPermission_RetrieveUserMembershipInformation();
             case User_ForgeUserGroupPermission_TrackerAdminAllProjects::ID :
                 return new User_ForgeUserGroupPermission_TrackerAdminAllProjects();
             case User_ForgeUserGroupPermission_MediawikiAdminAllProjects::ID :
@@ -90,7 +92,8 @@ class User_ForgeUserGroupPermissionsFactory {
         return array(
             new User_ForgeUserGroupPermission_ProjectApproval(),
             new User_ForgeUserGroupPermission_TrackerAdminAllProjects(),
-            new User_ForgeUserGroupPermission_MediawikiAdminAllProjects()
+            new User_ForgeUserGroupPermission_MediawikiAdminAllProjects(),
+            new User_ForgeUserGroupPermission_RetrieveUserMembershipInformation()
         );
     }
 

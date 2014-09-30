@@ -186,6 +186,28 @@ class TestDataBuilder {
         return $this;
     }
 
+    public function delegatePermissionsToRetrieveMembership() {
+        $user = $this->user_manager->getUserById(self::TEST_USER_3_ID);
+
+        // Create group
+        $user_group_dao     = new UserGroupDao();
+        $user_group_factory = new User_ForgeUserGroupFactory($user_group_dao);
+        $user_group         = $user_group_factory->createForgeUGroup('grokmirror users', '');
+
+        // Grant Retrieve Membership permissions
+        $permission                     = new User_ForgeUserGroupPermission_RetrieveUserMembershipInformation();
+        $permissions_dao                = new User_ForgeUserGroupPermissionsDao();
+        $user_group_permissions_manager = new User_ForgeUserGroupPermissionsManager($permissions_dao);
+        $user_group_permissions_manager->addPermission($user_group, $permission);
+
+        // Add user to group
+        $user_group_users_dao     = new User_ForgeUserGroupUsersDao();
+        $user_group_users_manager = new User_ForgeUserGroupUsersManager($user_group_users_dao);
+        $user_group_users_manager->addUserToForgeUserGroup($user, $user_group);
+
+        return $this;
+    }
+
     public function generateProject() {
         $GLOBALS['svn_prefix'] = '/tmp';
         $GLOBALS['cvs_prefix'] = '/tmp';

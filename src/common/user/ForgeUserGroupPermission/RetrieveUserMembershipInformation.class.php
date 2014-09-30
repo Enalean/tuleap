@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All rights reserved
+ * Copyright (c) Enalean, 2014. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,20 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once 'pre.php';
-require_once dirname(__FILE__).'/../autoload.php';
+class User_ForgeUserGroupPermission_RetrieveUserMembershipInformation implements User_ForgeUserGroupPermission {
 
-$data_builder = new TestDataBuilder();
-$data_builder
-    ->activatePlugins()
-    ->generateUsers()
-    ->generateProject()
-    ->delegatePermissionsToRetrieveMembership()
-    ->importAgileTemplate()
-    ->generateMilestones()
-    ->generateContentItems()
-    ->generateBacklogItems()
-    ->generateTopBacklogItems()
-    ->deleteTracker()
-    ->activateDebug()
-    ->initPlugins();
+    const ID = 4;
+
+    public function getId() {
+        if (self::ID) {
+            return self::ID;
+        }
+    }
+
+    public function getName() {
+        return $GLOBALS['Language']->getText('usergroup_forge_permission', 'user_membership_name');
+    }
+
+    public function getDescription() {
+        return $GLOBALS['Language']->getText('usergroup_forge_permission', 'user_membership_description');
+    }
+}
