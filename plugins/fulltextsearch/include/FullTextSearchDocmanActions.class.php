@@ -280,7 +280,7 @@ class FullTextSearchDocmanActions {
 
             case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
             case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
-                $this->indexNewDocument($item);
+                $this->indexNewDocument($item, $item->getCurrentVersion());
                 break;
 
             default:
@@ -395,15 +395,7 @@ class FullTextSearchDocmanActions {
         $docman_item_factory = Docman_ItemFactory::instance($project_id);
         while ($batch = $document_iterator->next()) {
             foreach ($batch as $item) {
-                $item_type = $docman_item_factory->getItemTypeForItem($item);
-
-                if ($item_type === PLUGIN_DOCMAN_ITEM_TYPE_WIKI) {
-                    $wiki_page = new WikiPage($project_id, $item->getPagename());
-                    $this->indexNewWikiDocument($item, $wiki_page->getMetadata());
-
-                } elseif ($item_type === PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE || $item_type === PLUGIN_DOCMAN_ITEM_TYPE_FILE) {
-                    $this->indexNewDocument($item, $item->getCurrentVersion());
-                }
+                $this->indexNonexistantDocument($item);
             }
         }
     }
