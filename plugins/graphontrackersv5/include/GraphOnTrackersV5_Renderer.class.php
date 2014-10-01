@@ -205,9 +205,14 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
                         $this->chart_to_edit = $this->getChartFactory()
                                                     ->getChart($this, $renderer_parameters['edit_chart']);
                         if (isset($renderer_parameters['update_chart']) && is_array($request->get('chart'))) {
-                            if ($this->chart_to_edit->update($request->get('chart'))) {
+                            $chart_data = $request->get('chart');
+                            if ($this->chart_to_edit->update($chart_data)) {
                                 //force the rank for all charts
-                                $this->getChartFactory()->forceChartsRankInSession($this);
+                                $this->getChartFactory()->forceChartsRankInSession(
+                                    $this,
+                                    $this->chart_to_edit,
+                                    $chart_data['rank']
+                                );
                                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report','updated_report'));
                             }
                         }
