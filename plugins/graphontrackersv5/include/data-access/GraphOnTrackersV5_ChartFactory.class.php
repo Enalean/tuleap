@@ -89,18 +89,19 @@ class GraphOnTrackersV5_ChartFactory {
         }
         return $this->charts[$renderer->id];
     }
-    
-    public function forceChartsRankInSession($renderer) {  
+
+    public function forceChartsRankInSession(
+        GraphOnTrackersV5_Renderer $renderer,
+        GraphOnTrackersV5_Chart $edited_chart,
+        $wanted_position
+    ) {
         $session = new Tracker_Report_Session($renderer->report->id);
         $session->changeSessionNamespace("renderers.{$renderer->id}");
-        $i = 0;
-        foreach ($this->getCharts($renderer) as $id => $chart) {
-            $session->set("charts.$id.rank", $i);
-            $chart->setRank($i);
-            ++$i;
-        }
+
+        $sorter = new GraphOnTrackersV5_InSessionChartSorter($session);
+        $sorter->sortChartInSession($this->getCharts($renderer), $edited_chart, $wanted_position);
     }
-    
+
     public function sortArrayByRank($a, $b) {
         return $a['rank'] - $b['rank'];
     }

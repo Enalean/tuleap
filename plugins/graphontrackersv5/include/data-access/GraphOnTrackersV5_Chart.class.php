@@ -329,11 +329,8 @@ abstract class GraphOnTrackersV5_Chart {
      * @return array
      */
     public function getProperties() {
-        $siblings = array();
-        $dao = new GraphOnTrackersV5_ChartDao(CodendiDataAccess::instance());
-        foreach($dao->getSiblings($this->getId()) as $row) {
-            $siblings[] = array('id' => $row['id'], 'name' => $row['title'], 'rank' => $row['rank']);
-        }
+        $siblings = $this->getSiblingsForRankSelectbox();
+
         return array(
             'id'          => new HTML_Element_Input_Hidden($GLOBALS['Language']->getText('plugin_graphontrackersv5_property','id'), 'chart[id]', $this->getId()),
             'title'       => new HTML_Element_Input_Text($GLOBALS['Language']->getText('plugin_graphontrackersv5_property','title'), 'chart[title]', $this->getTitle()),
@@ -344,6 +341,24 @@ abstract class GraphOnTrackersV5_Chart {
                                 new HTML_Element_Input_Text($GLOBALS['Language']->getText('plugin_graphontrackersv5_property','height'), 'chart[height]', $this->getHeight(), 4)
                              ),
         );
+    }
+
+    private function getSiblingsForRankSelectbox() {
+        $siblings = array();
+        $session  = new Tracker_Report_Session($this->renderer->report->id);
+        $session->changeSessionNamespace("renderers.{$this->renderer->id}");
+
+        $charts = $session->get('charts');
+        uasort($charts, array(GraphOnTrackersV5_ChartFactory::instance(), 'sortArrayByRank'));
+        foreach ($charts as $sibling) {
+            $siblings[] = array(
+                'id'   => $sibling['id'],
+                'name' => $sibling['title'],
+                'rank' => $sibling['rank']
+            );
+        }
+
+        return $siblings;
     }
     
     /**
