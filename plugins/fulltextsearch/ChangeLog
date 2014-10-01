@@ -1,3 +1,6 @@
+Version 0.83 - Tuleap 7.6
+    * Fix request #7487: Existing folder, links and empty docs in docman aren't taken into account during project reindexation
+
 Version 0.82 - Tuleap 7.5
     * tasks #7427 Index at artifact updates
 
