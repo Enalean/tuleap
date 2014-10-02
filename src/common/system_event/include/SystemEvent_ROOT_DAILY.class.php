@@ -25,10 +25,10 @@
 class SystemEvent_ROOT_DAILY extends SystemEvent {
 
     /**
-     * Verbalize the parameters so they are readable and much user friendly in 
+     * Verbalize the parameters so they are readable and much user friendly in
      * notifications
-     * 
-     * @param bool $with_link true if you want links to entities. The returned 
+     *
+     * @param bool $with_link true if you want links to entities. The returned
      * string will be html instead of plain/text
      *
      * @return string
@@ -48,6 +48,10 @@ class SystemEvent_ROOT_DAILY extends SystemEvent {
         $backend_system = Backend::instance('System');
         $backend_system->dumpSSHKeys();
 
+        // User home sanity check should be done only once a day as
+        // it is slooow (due to libnss-mysql)
+        $this->userHomeSanityCheck($backend_system);
+
         $this->_getEventManager()->processEvent('root_daily_start', array());
         $this->done();
         return true;
@@ -55,12 +59,21 @@ class SystemEvent_ROOT_DAILY extends SystemEvent {
 
     /**
      * Wrapper for EventManager
-     * 
+     *
      * @return EventManager
      */
     protected function _getEventManager() {
         return EventManager::instance();
     }
-}
 
-?>
+    private function userHomeSanityCheck(BackendSystem $backend_system) {
+        $dao   = new UserDao();
+        $users = $dao
+            ->searchByStatus(array(PFUser::STATUS_ACTIVE, PFUser::STATUS_RESTRICTED))
+            ->instanciateWith(array(UserManager::instance(), 'getUserInstanceFromRow'));
+
+        foreach($users as $user) {
+            $backend_system->userHomeSanityCheck($user);
+        }
+    }
+}

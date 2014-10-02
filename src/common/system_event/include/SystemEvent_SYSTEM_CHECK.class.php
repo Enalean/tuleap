@@ -84,20 +84,7 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
             }
             // TODO what about lists that changed their setting (description, public/private) ?
         }
-        
-        // Check users
-        // (re-)create missing home directories
-        $user_manager     = UserManager::instance();
-        $userdao          = new UserDao();
-        $allowed_statuses = array(PFUser::STATUS_ACTIVE, PFUser::STATUS_RESTRICTED);
-        $dar              = $userdao->searchByStatus($allowed_statuses);
-        foreach($dar as $row) {
-            $user = $user_manager->getUserInstanceFromRow($row);
-            if ($user) {
-                $backendSystem->userHomeSanityCheck($user);
-            }
-        }
-        
+
         $project_manager = ProjectManager::instance();
         foreach($project_manager->getProjectsByStatus(Project::STATUS_ACTIVE) as $project) {
             
@@ -176,7 +163,7 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
             return false;
         }
 
-        $this->expireRestTokens($user_manager);
+        $this->expireRestTokens(UserManager::instance());
         
         $this->done();
         return true;
