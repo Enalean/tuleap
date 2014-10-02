@@ -16,6 +16,7 @@ require_once('pre.php');
 require_once('www/project/admin/permissions.php');
 require('./doc_utils.php');
 
+$docid = $request->getValidated('docid', 'uint', 0);
 
 if ($docid) {
 

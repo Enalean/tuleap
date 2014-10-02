@@ -55,6 +55,7 @@ function group_main_page($group_id) {
 
 
 //begin to seek out what this page has been called to do.
+$func = $request->getValidated('func', 'string', '');
 if (isset($func)&&$func=='update_permissions') {
     list ($return_code, $feedback) = permission_process_selection_form($_POST['group_id'], $_POST['permission_type'], $_POST['object_id'], $_POST['ugroups']);
     if (!$return_code) exit_error('Error',$Language->getText('docman_admin_index','error_updating_perm').'<p>'.$feedback);
@@ -69,7 +70,7 @@ if (isset($_POST['reset'])) {
     }
  }
 
-if (!isset($mode)) $mode="";
+$mode = $request->getValidated('mode', 'string', '');
 if (strstr($mode,"docedit")) {
     $query = "select * from doc_data,doc_groups "
 	."where docid='$docid' "
