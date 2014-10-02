@@ -3,9 +3,9 @@
         .module('socket')
         .service('SocketService', SocketService);
 
-    SocketService.$inject = ['SocketFactory', 'SharedPropertiesService', 'ExecutionService'];
+    SocketService.$inject = ['SocketFactory', 'SharedPropertiesService', 'ExecutionService', 'ngAudio'];
 
-    function SocketService(SocketFactory, SharedPropertiesService, ExecutionService) {
+    function SocketService(SocketFactory, SharedPropertiesService, ExecutionService, ngAudio) {
         return {
             viewTestExecution: viewTestExecution,
             listenToExecutionViewed: listenToExecutionViewed,
@@ -60,6 +60,20 @@
                     execution.submitted_by                 = null;
                     execution.results                      = '';
                     execution.error                        = '';
+
+                    if (execution.previous_result.submitted_by.id !== SharedPropertiesService.getCurrentUser().id) {
+                        switch (response.data.status) {
+                            case 'failed':
+                                ngAudio.play('sound-failed');
+                                break;
+                            case 'passed':
+                                ngAudio.play('sound-passed');
+                                break;
+                            case 'blocked':
+                                ngAudio.play('sound-blocked');
+                                break;
+                        }
+                    }
                 }
             });
         }

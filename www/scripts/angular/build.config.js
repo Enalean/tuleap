@@ -84,7 +84,8 @@ module.exports = {
       'vendor/angular-moment/angular-moment.min.js',
       'vendor/angular-sanitize/angular-sanitize.min.js',
       'vendor/angular-gettext/dist/angular-gettext.min.js',
-      'vendor/angular-socket-io/socket.min.js'
+      'vendor/angular-socket-io/socket.min.js',
+      'vendor/angular-audio/angular.audio.js'
     ],
     css: [
     ]
