@@ -85,6 +85,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /** @var PFUser*/
     private $submitted_by_user;
 
+    /** @var array */
+    private $authorized_ugroups;
+
     /**
      * Constructor
      *
@@ -180,6 +183,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return true;
     }
 
+    /**
+     * @deprecated
+     */
     public function permission_db_authorized_ugroups( $permission_type ) {
         $result = array();
         $res    = permission_db_authorized_ugroups($permission_type, $this->getId());
@@ -193,6 +199,23 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
     }
 
+    public function getAuthorizedUGroups() {
+        if (! isset($this->authorized_ugroups)) {
+            $this->authorized_ugroups = array();
+
+            if ($this->useArtifactPermissions()) {
+                foreach ($this->permission_db_authorized_ugroups(self::PERMISSION_ACCESS) as $ugroups) {
+                    $this->authorized_ugroups[] = $ugroups['ugroup_id'];
+                }
+            }
+        }
+
+        return $this->authorized_ugroups;
+    }
+
+    public function setAuthorizedUGroups(array $ugroups) {
+        $this->authorized_ugroups = $ugroups;
+    }
 
     /**
      * This method returns the artifact mail rendering

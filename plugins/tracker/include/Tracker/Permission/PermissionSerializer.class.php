@@ -29,7 +29,7 @@ class Tracker_Permission_PermissionsSerializer {
         $this->assignee_retriever = $assignee_retriever;
     }
 
-    public function getUserGroupsThatCanViewArtifact(Tracker_Artifact $artifact) {
+    public function getUserGroupsThatCanViewTracker(Tracker_Artifact $artifact) {
         $authorized_ugroups = array(ProjectUGroup::PROJECT_ADMIN);
         $tracker_permissions = $artifact->getTracker()->getAuthorizedUgroupsByPermissionType();
 
@@ -39,6 +39,17 @@ class Tracker_Permission_PermissionsSerializer {
         $this->appendMatchingUGroups($authorized_ugroups, $tracker_permissions, Tracker::PERMISSION_ASSIGNEE, $this->getAssigneesUGroups($artifact));
 
         return $authorized_ugroups;
+    }
+
+    public function getUserGroupsThatCanViewArtifact(Tracker_Artifact $artifact) {
+        $authorized_ugroups  = array(ProjectUGroup::PROJECT_ADMIN);
+        $artifact_ugroup_ids = $artifact->getAuthorizedUGroups();
+
+        if ($artifact_ugroup_ids) {
+            $authorized_ugroups = array_merge($authorized_ugroups, $artifact_ugroup_ids);
+        }
+
+        return array_unique($authorized_ugroups);
     }
 
     private function appendAllUGroups(array &$authorized_ugroups, array $tracker_permissions, $permission_type) {
