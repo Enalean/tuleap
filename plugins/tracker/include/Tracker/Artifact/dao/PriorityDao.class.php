@@ -185,5 +185,24 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject {
                 WHERE new_parent.curr_id $equals_predecessor_id";
         return $this->update($sql);
     }
+
+    /**
+    * Get Global rank of the artifact
+    * @return int global rank of the artifact, null otherwise
+    */
+    public function getGlobalRank($artifact_id) {
+        $artifact_id = $this->da->escapeInt($artifact_id);
+
+        $sql = "SELECT rank FROM tracker_artifact_priority
+                WHERE curr_id = $artifact_id";
+
+        $result = $this->retrieve($sql);
+        if (!$result) {
+            return;
+        }
+
+        $row = $result->getRow();
+        return $row['rank'];
+    }
 }
 ?>

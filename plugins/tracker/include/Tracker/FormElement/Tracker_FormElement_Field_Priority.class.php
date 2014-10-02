@@ -22,7 +22,28 @@
 class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integer implements Tracker_FormElement_Field_ReadOnly {
 
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
-        return $this->getValue();
+        return $this->getArtifactRank($artifact_id);
+    }
+
+    /**
+     * @return array the available aggreagate functions for this field. empty array if none or irrelevant.
+     */
+    public function getAggregateFunctions() {
+        return array();
+    }
+
+    /**
+     * Display the field as a Changeset value.
+     * Used in CSV data export.
+     *
+     * @param int $artifact_id the corresponding artifact id
+     * @param int $changeset_id the corresponding changeset
+     * @param mixed $value the value of the field
+     *
+     * @return string
+     */
+    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value) {
+        return $this->getArtifactRank($artifact_id);
     }
 
     /**
@@ -47,11 +68,12 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
      * @return string
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
-        return '<span>' . $this->getValue() . '</span>';
+        return '<span>' . $this->getArtifactRank($artifact->getID()) . '</span>';
     }
 
-    public function getValue() {
-        return '';
+    private function getArtifactRank($artifact_id) {
+        $dao = $this->getPriorityDao();
+        return $dao->getGlobalRank($artifact_id);
     }
 
     /**
@@ -67,10 +89,10 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
         switch ($format) {
             case 'html':
                 $proto = ($GLOBALS['sys_force_ssl']) ? 'https' : 'http';
-                $output .= '<span>' . $this->getValue() . '</span>';
+                $output .= '<span>' . $this->getArtifactRank($artifact->getID()) . '</span>';
                 break;
             default:
-                $output .= $this->getValue();
+                $output .= $this->getArtifactRank($artifact->getID());
                 break;
         }
         return $output;
@@ -85,7 +107,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
      * @return string html
      */
     protected function fetchAdminFormElement() {
-        return '<span>' . $this->getValue() . '</span>';
+        return '<span>314116</span>';
     }
 
     /**
@@ -124,7 +146,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
      * @return string The html code to display the field value in tooltip
      */
     protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
-        return $this->getValue();
+        return $this->getArtifactRank($artifact->getID());
     }
 
     /**
@@ -159,5 +181,9 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
 
     public function accept(Tracker_FormElement_FieldVisitor $visitor) {
         return $visitor->visitPriority($this);
+    }
+
+    private function getPriorityDao() {
+        return new Tracker_Artifact_PriorityDao();
     }
 }
