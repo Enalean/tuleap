@@ -109,11 +109,11 @@ class OngoingIntelligentStub {
         return $this;
     }
 
-    public function once() {
+    public function once($message = '%s') {
         if (empty($this->arguments)) {
-            $this->mock->expectOnce($this->method);
+            $this->mock->expectOnce($this->method, false, $message);
         } else {
-            $this->mock->expectOnce($this->method, $this->arguments);
+            $this->mock->expectOnce($this->method, $this->arguments, $message);
         }
         return $this;
     }
