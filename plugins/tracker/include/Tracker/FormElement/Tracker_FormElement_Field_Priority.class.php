@@ -199,6 +199,28 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
         return $visitor->visitPriority($this);
     }
 
+    /**
+     * Return REST value of the priority
+     *
+     * @param PFUser $user
+     * @param Tracker_Artifact_Changeset $changeset
+     *
+     * @return mixed | null if no values
+     */
+    public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
+        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation';
+
+        $artifact_field_value_representation = new $classname_with_namespace;
+        $artifact_field_value_representation->build(
+            $this->id,
+            $this->label,
+            $this->getArtifactRank($changeset->getArtifact()->getID())
+        );
+
+        return $artifact_field_value_representation;
+    }
+
+
     private function getPriorityDao() {
         return new Tracker_Artifact_PriorityDao();
     }
