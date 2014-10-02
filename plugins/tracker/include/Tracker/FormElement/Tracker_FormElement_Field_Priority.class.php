@@ -202,4 +202,16 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
     private function getPriorityDao() {
         return new Tracker_Artifact_PriorityDao();
     }
+
+    public function getSoapValue() {
+        return null;
+    }
+
+    public function isCompatibleWithSoap() {
+        return false;
+    }
+
+    public function getFieldDataFromSoapValue(stdClass $soap_value, Tracker_Artifact $artifact = null) {
+        throw new Exception('DEPRECATION ERROR: Priority field is not compatible with SOAP methods. If you need it, please use REST.');
+    }
 }
