@@ -65,7 +65,8 @@ class Tracker_FormElementFactory {
         'subon'     => 'Tracker_FormElement_Field_SubmittedOn',
         'cross'     => 'Tracker_FormElement_Field_CrossReferences',
         'burndown'  => 'Tracker_FormElement_Field_Burndown',
-        'computed'  => 'Tracker_FormElement_Field_Computed'
+        'computed'  => 'Tracker_FormElement_Field_Computed',
+        'priority'  => 'Tracker_FormElement_Field_Priority'
     );
     protected $group_classnames       = array(
         'fieldset' => 'Tracker_FormElement_Container_Fieldset',

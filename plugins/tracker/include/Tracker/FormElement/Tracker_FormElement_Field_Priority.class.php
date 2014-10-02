@@ -1,0 +1,163 @@
+<?php
+
+/**
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integer implements Tracker_FormElement_Field_ReadOnly {
+
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
+        return $this->getValue();
+    }
+
+    /**
+     * Fetch the html code to display the field value in artifact
+     *
+     * @param Tracker_Artifact                $artifact         The artifact
+     * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
+     * @param array                           $submitted_values The value already submitted by the user
+     *
+     * @return string
+     */
+    protected function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+        return $this->fetchArtifactValueReadOnly($artifact, $value);
+    }
+
+    /**
+     * Fetch the html code to display the field value in artifact in read only mode
+     *
+     * @param Tracker_Artifact                $artifact The artifact
+     * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
+     *
+     * @return string
+     */
+    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+        return '<span>' . $this->getValue() . '</span>';
+    }
+
+    public function getValue() {
+        return '';
+    }
+
+    /**
+     * Fetch artifact value for email
+     * @param Tracker_Artifact $artifact
+     * @param PFUser $user
+     * @param Tracker_Artifact_ChangesetValue $value
+     * @param string $format
+     * @return string
+     */
+    public function fetchMailArtifactValue(Tracker_Artifact $artifact, PFUser $user, Tracker_Artifact_ChangesetValue $value = null, $format='text') {
+        $output = '';
+        switch ($format) {
+            case 'html':
+                $proto = ($GLOBALS['sys_force_ssl']) ? 'https' : 'http';
+                $output .= '<span>' . $this->getValue() . '</span>';
+                break;
+            default:
+                $output .= $this->getValue();
+                break;
+        }
+        return $output;
+    }
+
+    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+        return $this->fetchArtifactValueReadOnly($artifact, $value);
+    }
+
+    /**
+     * Display the html field in the admin ui
+     * @return string html
+     */
+    protected function fetchAdminFormElement() {
+        return '<span>' . $this->getValue() . '</span>';
+    }
+
+    /**
+     * @return the label of the field (mainly used in admin part)
+     */
+    public static function getFactoryLabel() {
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'priority_label');
+    }
+
+    /**
+     * @return the description of the field (mainly used in admin part)
+     */
+    public static function getFactoryDescription() {
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'priority_description');
+    }
+
+    /**
+     * @return the path to the icon
+     */
+    public static function getFactoryIconUseIt() {
+        return $GLOBALS['HTML']->getImagePath('ic/priority.png');
+    }
+
+    /**
+     * @return the path to the icon
+     */
+    public static function getFactoryIconCreate() {
+        return $GLOBALS['HTML']->getImagePath('ic/priority.png');
+    }
+
+    /**
+     * Fetch the html code to display the field value in tooltip
+     *
+     * @param Tracker_Artifact $artifact
+     * @param Tracker_Artifact_ChangesetValue_Integer $value The changeset value of this field
+     * @return string The html code to display the field value in tooltip
+     */
+    protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+        return $this->getValue();
+    }
+
+    /**
+     * Validate a value
+     *
+     * @param Tracker_Artifact $artifact The artifact
+     * @param mixed            $value    data coming from the request.
+     *
+     * @return bool true if the value is considered ok
+     */
+    protected function validate(Tracker_Artifact $artifact, $value) {
+        return true;
+    }
+
+    /**
+     * Fetch the element for the submit new artifact form
+     *
+     * @return string html
+     */
+    public function fetchSubmit() {
+        return '';
+    }
+
+    /**
+     * Fetch the element for the submit new artifact form
+     *
+     * @return string html
+     */
+    public function fetchSubmitMasschange($submitted_values=array()) {
+        return '';
+    }
+
+    public function accept(Tracker_FormElement_FieldVisitor $visitor) {
+        return $visitor->visitPriority($this);
+    }
+}
