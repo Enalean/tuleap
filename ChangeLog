@@ -15,6 +15,7 @@ Version 7.6 (Not released yet)
 	* request #7484: Search in projects can take a very long time
 	* request #7478: REST POST /tokens should not return 500 when the password is wrong
 	* request #7487: Existing folder, links and empty docs in docman aren't taken into account during project reindexation
+	* request #7499: User home sanity check is too slow
 
 	== Features ==
 	* REST API: can now search for a user with exact match: GET /users?query={username:jcdusse}
