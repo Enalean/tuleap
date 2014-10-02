@@ -197,7 +197,9 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     }
 
     private function addFeedbackOnPermissionsSave(array $success) {
-        $GLOBALS['Response']->addFeedback($success[0] ? 'info' : 'error', $success[1]);
+        if (!$success[0]) {
+            $GLOBALS['Response']->addFeedback('error', $success[1]);
+        }
         return $success[0];
     }
 
