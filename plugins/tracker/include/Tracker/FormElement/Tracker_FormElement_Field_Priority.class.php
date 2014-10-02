@@ -21,8 +21,38 @@
 
 class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integer implements Tracker_FormElement_Field_ReadOnly {
 
+    public function getCriteriaFrom($criteria) {
+        return ' INNER JOIN tracker_artifact_priority ON artifact.id = tracker_artifact_priority.curr_id';
+    }
+
+    public function getCriteriaWhere($criteria) {
+        if ($criteria_value = $this->getCriteriaValue($criteria)) {
+            return $this->buildMatchExpression('tracker_artifact_priority.rank', $criteria_value);
+        }
+        return '';
+    }
+
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
         return $this->getArtifactRank($artifact_id);
+    }
+
+    /**
+     * Get the "select" statement to retrieve field values
+     * @return string
+     * @see getQueryFrom
+     */
+    public function getQuerySelect() {
+        return "tracker_artifact_priority.rank AS `$this->name`";
+    }
+
+    /**
+     * Get the "from" statement to retrieve field values
+     * You can join on artifact AS a, tracker_changeset AS c
+     * which tables used to retrieve the last changeset of matching artifacts.
+     * @return string
+     */
+    public function getQueryFrom() {
+        return "INNER JOIN tracker_artifact_priority ON a.id = tracker_artifact_priority.curr_id";
     }
 
     /**
@@ -30,20 +60,6 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
      */
     public function getAggregateFunctions() {
         return array();
-    }
-
-    /**
-     * Display the field as a Changeset value.
-     * Used in CSV data export.
-     *
-     * @param int $artifact_id the corresponding artifact id
-     * @param int $changeset_id the corresponding changeset
-     * @param mixed $value the value of the field
-     *
-     * @return string
-     */
-    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value) {
-        return $this->getArtifactRank($artifact_id);
     }
 
     /**
