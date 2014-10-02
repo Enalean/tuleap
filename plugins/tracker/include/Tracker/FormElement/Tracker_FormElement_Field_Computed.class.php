@@ -164,7 +164,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
         return $this->getComputedValue($current_user, $artifact);
     }
 
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null) {
         $current_user = UserManager::instance()->getCurrentUser();
         $artifact     = Tracker_ArtifactFactory::instance()->getArtifactById($artifact_id);
         return $this->getComputedValue($current_user, $artifact);

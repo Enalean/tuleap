@@ -75,7 +75,7 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric 
      *
      * @return string the string value of the float field (or '' if none)
      */
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null) {
         if ($value === null) {
             return '';
         } else {

@@ -480,7 +480,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
      *
      * @return string
      */
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null) {
         $arr = array();
         $bindtable = $this->getBind()->getBindtableSqlFragment();
         $values = $this->getDao()->searchChangesetValues(
@@ -526,7 +526,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
      *
      * @return string
      */
-    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value) {
+    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report) {
         $arr = array();
         $bindtable = $this->getBind()->getBindtableSqlFragment();
         $values = $this->getDao()->searchChangesetValues(

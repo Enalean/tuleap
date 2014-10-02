@@ -750,7 +750,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                                  id="tracker_report_table_column_'. $column['field']->id .'_parent" 
                                  value="'. $column['field']->parent_id .'" />';
                                  
-                $label = $column['field']->getLabel();
+                $label = $column['field']->getLabel($this->report);
                 
                 if ($with_sort_links) {
                     $sort_url = $url . $column['field']->id;
@@ -915,7 +915,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                             $field_name = $column['field']->name;
                             $value      = isset($row[$field_name]) ? $row[$field_name] : null;
                             $html      .= '<td class="tracker_report_table_column_'. $column['field']->id .'">';
-                            $html      .= $column['field']->fetchChangesetValue($row['id'], $row['changeset_id'], $value, $from_aid);
+                            $html      .= $column['field']->fetchChangesetValue($row['id'], $row['changeset_id'], $value, $this->report, $from_aid);
                             $html      .= '</td>';
                         }
                     }
@@ -1700,7 +1700,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 foreach($fields as $field) {
                     if($this->canFieldBeExportedToCSV($field)) {
                         $value  = isset($row[$field->getName()]) ? $row[$field->getName()] : null;
-                        $line[] = $field->fetchCSVChangesetValue($row['id'], $row['changeset_id'], $value);
+                        $line[] = $field->fetchCSVChangesetValue($row['id'], $row['changeset_id'], $value, $this->report);
                     }
                 }
                 $lines[] = $line;

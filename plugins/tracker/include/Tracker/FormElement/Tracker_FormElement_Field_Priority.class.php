@@ -21,6 +21,48 @@
 
 class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integer implements Tracker_FormElement_Field_ReadOnly {
 
+    public function getLabel($report = null) {
+        if ($report) {
+            return $this->label . $this->fetchAdditionalInformationsForLabel($report);
+        }
+
+        return $this->label;
+    }
+
+    private function fetchAdditionalInformationsForLabel(Tracker_Report $report) {
+        $html = '';
+
+        EventManager::instance()->processEvent(
+            TRACKER_EVENT_FIELD_AUGMENT_COLUMN_TITLE_FOR_REPORT,
+            array(
+                'additional_criteria' => $report->getAdditionalCriteria(),
+                'result'              => &$result,
+                'field'               => $this
+            )
+        );
+
+        if (! $result) {
+            return;
+        }
+
+        return $this->getRenderedAdditionalInformationsForLabel($result);
+    }
+
+    private function getRenderedAdditionalInformationsForLabel($additional_informations) {
+        $html = $this->getTemplateRenderer()->renderToString(
+            'additional_column_title',
+            array(
+                'additional_title' => $additional_informations
+            )
+        );
+
+        return $html;
+    }
+
+    private function getTemplateRenderer() {
+        return TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR.'/report');
+    }
+
     public function getCriteriaFrom($criteria) {
         return ' INNER JOIN tracker_artifact_priority ON artifact.id = tracker_artifact_priority.curr_id';
     }
@@ -32,8 +74,30 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
         return '';
     }
 
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
-        return $this->getArtifactRank($artifact_id);
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null) {
+        $value = $this->getArtifactRank($artifact_id);
+
+        if (! $report) {
+            return $value;
+        }
+
+        return $value . " " . $this->getAugmentedFieldValue($artifact_id, $report);;
+    }
+
+    private function getAugmentedFieldValue($artifact_id, Tracker_Report $report) {
+        $result = '';
+
+        EventManager::instance()->processEvent(
+            TRACKER_EVENT_FIELD_AUGMENT_DATA_FOR_REPORT,
+            array(
+                'additional_criteria' => $report->getAdditionalCriteria(),
+                'result'              => &$result,
+                'artifact_id'         => $artifact_id,
+                'field'               => $this
+            )
+        );
+
+        return $result;
     }
 
     /**

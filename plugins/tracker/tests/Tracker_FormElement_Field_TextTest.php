@@ -86,13 +86,14 @@ class Tracker_FormElement_Field_TextTest extends TuleapTestCase {
     }
     
     function testSpecialCharactersInCSVExport() {
-        $text_field = new Tracker_FormElement_Field_TextTestVersion();
-        $this->assertEqual("Une chaine sans accent", $text_field->fetchCSVChangesetValue(null, null, "Une chaine sans accent"));
-        $this->assertEqual("Lé chaîne avé lê àccent dô où ça", $text_field->fetchCSVChangesetValue(null, null, "Lé chaîne avé lê àccent dô où ça"));
-        $this->assertEqual("This, or that", $text_field->fetchCSVChangesetValue(null, null, "This, or that"));
-        $this->assertEqual("This; or that", $text_field->fetchCSVChangesetValue(null, null, "This; or that"));
-        $this->assertEqual("This thing is > that thing", $text_field->fetchCSVChangesetValue(null, null, "This thing is > that thing"));
-        $this->assertEqual("This thing & that thing", $text_field->fetchCSVChangesetValue(null, null, "This thing & that thing"));
+        $whatever_report = mock('Tracker_Report');
+        $text_field      = new Tracker_FormElement_Field_TextTestVersion();
+        $this->assertEqual("Une chaine sans accent", $text_field->fetchCSVChangesetValue(null, null, "Une chaine sans accent", $whatever_report));
+        $this->assertEqual("Lé chaîne avé lê àccent dô où ça", $text_field->fetchCSVChangesetValue(null, null, "Lé chaîne avé lê àccent dô où ça", $whatever_report));
+        $this->assertEqual("This, or that", $text_field->fetchCSVChangesetValue(null, null, "This, or that", $whatever_report));
+        $this->assertEqual("This; or that", $text_field->fetchCSVChangesetValue(null, null, "This; or that", $whatever_report));
+        $this->assertEqual("This thing is > that thing", $text_field->fetchCSVChangesetValue(null, null, "This thing is > that thing", $whatever_report));
+        $this->assertEqual("This thing & that thing", $text_field->fetchCSVChangesetValue(null, null, "This thing & that thing", $whatever_report));
     }
     
     function testIsValid() {

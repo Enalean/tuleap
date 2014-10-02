@@ -71,7 +71,7 @@ class Tracker_CrossSearch_SemanticTitleReportField implements Tracker_Report_Fie
         return $this->id;
     }
     
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report = null, $from_aid = null) {
         return $this->semantic_value_factory->getTitle($artifact_id, $changeset_id);
     }
 }
