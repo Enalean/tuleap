@@ -1,3 +1,6 @@
+Version 5.14 - Tuleap 7.6
+    * request #7498: Changing rank on graph is not working
+
 Version 5.13 - Tuleap 7.4
     * request #7298: fix some tracker graphs not showing on project homepage
 
