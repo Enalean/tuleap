@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+define('PLUGIN_DOCMAN_BASE_DIR', dirname(__FILE__));
+
 /**
  * Event raised when someone comments an approval table
  *

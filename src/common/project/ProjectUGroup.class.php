@@ -52,7 +52,7 @@ class ProjectUGroup implements User_UGroup {
         self::SVN_ADMIN,
     );
 
-    private $normalized_names = array(
+    public static $normalized_names = array(
         self::NONE               => 'nobody',
         self::ANONYMOUS          => 'all_users',
         self::REGISTERED         => 'registered_users',
@@ -168,7 +168,7 @@ class ProjectUGroup implements User_UGroup {
      */
     public function getNormalizedName() {
         if ($this->is_dynamic) {
-            return $this->normalized_names[$this->id];
+            return self::$normalized_names[$this->id];
         }
         return $this->name;
     }
