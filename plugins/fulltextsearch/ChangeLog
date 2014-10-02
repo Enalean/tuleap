@@ -1,3 +1,9 @@
+Version 0.84 - Tuleap 7.6
+    * Adapt tracker Elasticsearch mapping
+
+
+This task is part of story #7456 Index artifact permissions
+
 Version 0.83 - Tuleap 7.6
     * Fix request #7487: Existing folder, links and empty docs in docman aren't taken into account during project reindexation
 
