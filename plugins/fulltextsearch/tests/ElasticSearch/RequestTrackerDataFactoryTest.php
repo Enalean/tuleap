@@ -62,17 +62,39 @@ class RequestTrackerDataFactory_TrackerMappingTest extends TuleapTestCase {
             $mapping['455']['properties']['followup_comments'],
             array(
                 'properties' => array(
-                     'user_id' => array(
-                         'type' => 'integer',
-                     ),
-                     'date_added' => array(
-                         'type' => 'date',
-                     ),
-                     'comment' => array(
-                         'type' => 'string',
-                     ),
-                 )
-             )
+                    'user_id' => array(
+                        'type' => 'integer',
+                    ),
+                    'date_added' => array(
+                        'type' => 'date',
+                    ),
+                    'comment' => array(
+                        'type' => 'string',
+                    ),
+                )
+            )
+        );
+    }
+
+    public function itHasBaseMappingWithTrackerPermissions() {
+        $mapping = $this->data_factory->getTrackerMapping($this->tracker);
+        $this->assertEqual(
+            $mapping['455']['properties']['tracker_permissions'],
+            array(
+                'type'  => 'string',
+                'index' => 'not_analyzed'
+            )
+        );
+    }
+
+    public function itHasBaseMappingWithArtifactPermissions() {
+        $mapping = $this->data_factory->getTrackerMapping($this->tracker);
+        $this->assertEqual(
+            $mapping['455']['properties']['artifact_permissions'],
+            array(
+                'type'  => 'string',
+                'index' => 'not_analyzed'
+            )
         );
     }
 }

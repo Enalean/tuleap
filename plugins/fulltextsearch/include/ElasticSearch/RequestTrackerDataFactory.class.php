@@ -50,8 +50,10 @@ class ElasticSearch_1_2_RequestTrackerDataFactory {
     }
 
     public function getTrackerMapping(Tracker $tracker) {
-        return array(
-            $tracker->getId() => array(
+        $tracker_id = $tracker->getId();
+
+        $mapping_data = array(
+            $tracker_id => array(
                 'properties' => array(
                     'id' => array(
                         'type' => 'integer'
@@ -80,6 +82,25 @@ class ElasticSearch_1_2_RequestTrackerDataFactory {
                     )
                 )
             )
+        );
+
+        $this->addStandardTrackerPermissionsMetadata($mapping_data[$tracker_id]['properties']);
+        $this->addStandardArtifactPermissionsMetadata($mapping_data[$tracker_id]['properties']);
+
+        return $mapping_data;
+    }
+
+    private function addStandardTrackerPermissionsMetadata(array &$mapping_data) {
+        $mapping_data['tracker_permissions'] = array(
+            'type'  => 'string',
+            'index' => 'not_analyzed'
+        );
+    }
+
+    private function addStandardArtifactPermissionsMetadata(array &$mapping_data) {
+        $mapping_data['artifact_permissions'] = array(
+            'type'  => 'string',
+            'index' => 'not_analyzed'
         );
     }
 }
