@@ -1,3 +1,9 @@
+Version 0.85 - Tuleap 7.6
+    * Permissions are saved on artifact indexation
+
+
+This task is part of story #7456 Index artifact permissions
+
 Version 0.84 - Tuleap 7.6
     * Adapt tracker Elasticsearch mapping
 
