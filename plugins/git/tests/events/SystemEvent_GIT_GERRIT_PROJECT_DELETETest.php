@@ -65,7 +65,7 @@ class SystemEvent_GIT_GERRIT_PROJECT_DELETE_BaseTest extends TuleapTestCase {
         $gerrit_project_full_name = $this->forge_project_name. '/'. $this->repository_name;
 
         expect($this->driver)->deleteProject($this->server, $gerrit_project_full_name)->once();
-        expect($this->backend)->setGerritProjectAsDeleted()->once($this->repository);
+        expect($this->backend)->setGerritProjectAsDeleted()->once();
 
         $this->event->process();
     }
