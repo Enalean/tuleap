@@ -1,3 +1,6 @@
+Version 3.102 - Tuleap 7.6
+    * Fix unit tests in stable
+
 Version 3.101 - Tuleap 7.6
     * request #7475 Misleading message displayed after access rights update on a git repository
 
