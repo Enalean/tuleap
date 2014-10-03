@@ -29,7 +29,9 @@ class RequestTrackerDataFactory_TrackerMappingTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->tracker      = aTracker()->withId(455)->build();
-        $this->data_factory = new ElasticSearch_1_2_RequestTrackerDataFactory();
+        $this->data_factory = new ElasticSearch_1_2_RequestTrackerDataFactory(
+            mock('Tracker_Permission_PermissionsSerializer')
+        );
     }
 
     public function itHasBaseMappingWithId() {
@@ -79,7 +81,7 @@ class RequestTrackerDataFactory_TrackerMappingTest extends TuleapTestCase {
     public function itHasBaseMappingWithTrackerPermissions() {
         $mapping = $this->data_factory->getTrackerMapping($this->tracker);
         $this->assertEqual(
-            $mapping['455']['properties']['tracker_permissions'],
+            $mapping['455']['properties']['tracker_ugroups'],
             array(
                 'type'  => 'string',
                 'index' => 'not_analyzed'
@@ -90,7 +92,7 @@ class RequestTrackerDataFactory_TrackerMappingTest extends TuleapTestCase {
     public function itHasBaseMappingWithArtifactPermissions() {
         $mapping = $this->data_factory->getTrackerMapping($this->tracker);
         $this->assertEqual(
-            $mapping['455']['properties']['artifact_permissions'],
+            $mapping['455']['properties']['artifact_ugroups'],
             array(
                 'type'  => 'string',
                 'index' => 'not_analyzed'
@@ -112,7 +114,15 @@ abstract class RequestTrackerDataFactory_ArtifactBaseFormatting extends TuleapTe
             ->withTracker($this->tracker)
             ->withChangesets(array(aChangeset()->withId(12561)->build()))
             ->build();
-        $this->data_factory = new ElasticSearch_1_2_RequestTrackerDataFactory();
+
+        $permissions_serializer = mock('Tracker_Permission_PermissionsSerializer');
+
+        stub($permissions_serializer)->getLiteralizedUserGroupsThatCanViewTracker($this->artifact)->returns('@site_active, @project_members');
+        stub($permissions_serializer)->getLiteralizedUserGroupsThatCanViewArtifact($this->artifact)->returns('@ug_114, @project_members');
+
+        $this->data_factory = new ElasticSearch_1_2_RequestTrackerDataFactory(
+            $permissions_serializer
+        );
     }
 }
 
@@ -147,6 +157,22 @@ class RequestTrackerDataFactory_ArtifactBaseFormattingTest extends RequestTracke
         $this->assertEqual(
             $document['last_changeset_id'],
             12561
+        );
+    }
+
+    public function itPushesTrackerPermissions() {
+        $document = $this->data_factory->getFormattedArtifact($this->artifact);
+        $this->assertEqual(
+            $document['tracker_ugroups'],
+            '@site_active, @project_members'
+        );
+    }
+
+    public function itPushesArtifactPermissions() {
+        $document = $this->data_factory->getFormattedArtifact($this->artifact);
+        $this->assertEqual(
+            $document['artifact_ugroups'],
+            '@ug_114, @project_members'
         );
     }
 }

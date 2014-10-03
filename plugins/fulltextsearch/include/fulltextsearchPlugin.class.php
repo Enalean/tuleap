@@ -176,7 +176,11 @@ class fulltextsearchPlugin extends Plugin {
             SystemEventManager::instance(),
             new FullTextSearchTrackerActions(
                 $this->getIndexClient(self::SEARCH_TRACKER_TYPE),
-                new ElasticSearch_1_2_RequestTrackerDataFactory(),
+                new ElasticSearch_1_2_RequestTrackerDataFactory(
+                    new Tracker_Permission_PermissionsSerializer(
+                        new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
+                    )
+                ),
                 new BackendLogger()
             ),
             Tracker_ArtifactFactory::instance(),
