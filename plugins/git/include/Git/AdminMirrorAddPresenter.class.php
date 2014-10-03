@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -11,21 +11,20 @@
  *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_Mirror_Mirror {
+class Git_AdminMirrorAddPresenter extends Git_AdminMirrorPresenter{
+
+    public $btn_submit;
 
     public $id;
 
     public $url;
-
-     /** @var PFUser */
-    public $owner;
 
     public $owner_name;
 
@@ -33,14 +32,15 @@ class Git_Mirror_Mirror {
 
     public $ssh_key;
 
+    public $add_a_mirror = true;
 
-    public function __construct(PFUser $owner, $id, $url) {
-        $this->id       = $id;
-        $this->url      = $url;
-        $this->owner    = $owner;
+    public function __construct($title, CSRFSynchronizerToken $csrf) {
+        parent::__construct($title, $csrf);
 
-        $this->ssh_key    = ($owner->getAuthorizedKeysRaw()) ? $owner->getAuthorizedKeysRaw() : '';
-        $this->owner_name = $owner->getName();
-        $this->owner_id   = $owner->getId();
+        $this->btn_submit = $GLOBALS['Language']->getText('global', 'btn_submit');
+    }
+
+    public function add_mirror() {
+        return $GLOBALS['Language']->getText('plugin_git','add_mirror');
     }
 }
