@@ -41,4 +41,29 @@ class Git_Mirror_MirrorDao extends DataAccessObject{
 
         return $this->retrieve($sql);
     }
+
+    /**
+     * @return DataAccessObject
+     */
+    public function fetch($id) {
+        $id  = $this->da->escapeInt($id);
+
+        $sql = "SELECT * FROM plugin_git_mirrors WHERE id = $id";
+        return $this->retrieveFirstRow($sql);
+    }
+
+    /**
+     * @return bool
+     */
+    public function updateMirror($id, $url, $ssh_key) {
+        $url      = $this->da->quoteSmart($url);
+        $ssh_key  = $this->da->quoteSmart($ssh_key);
+
+        $sql = "UPDATE plugin_git_mirrors
+                SET url = $url, ssh_key = $ssh_key
+                WHERE id = $id";
+
+        return $this->update($sql);
+    }
+
 }

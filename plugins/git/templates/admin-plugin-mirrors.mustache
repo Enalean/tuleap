@@ -7,13 +7,13 @@
         <div class="control-group">
             <label class="control-label" for="new_mirror_url">{{ url_label }}</label>
             <div class="controls">
-                <input name="new_mirror_url" id="new_mirror_url" type="text" required/>
+                <input name="new_mirror_url" type="text" required/>
             </div>
         </div>
         <div class="control-group">
             <label class="control-label" for="new_mirror_key">{{ ssh_key_label }}</label>
             <div class="controls">
-                <textarea name="new_mirror_key" id="new_mirror_key" cols="23" required></textarea>
+                <textarea name="new_mirror_key" cols="23" required></textarea>
             </div>
         </div>
         <div class="control-group">
@@ -29,31 +29,42 @@
             </div>
         </div>
     </dl>
-    {{# list_of_mirrors_not_empty }}
-        <h3>{{ existing_mirrors }}</h3>
-    {{/ list_of_mirrors_not_empty }}
-    {{# list_of_mirrors }}
+</form>
+
+{{# list_of_mirrors_not_empty }}
+    <h3>{{ existing_mirrors }}</h3>
+{{/ list_of_mirrors_not_empty }}
+{{# list_of_mirrors }}
+    <form method="POST" action="?pane=mirrors_admin&action=modify-mirror" class="admin_mirror_config form-horizontal">
+        {{{ csrf_input }}}
         <div class="git_admin_mirror">
             <br>
             <div class="control-group">
-                <label class="control-label" for="mirror_owner_{{ id }}">{{ owner_label }}</label>
+                <label class="control-label" for="mirror_owner">{{ owner_label }}</label>
                 <div class="controls git_admin_mirror_owner_link">
                     <a name="mirror_owner" href="/admin/usergroup.php?user_id={{ owner_id }}">{{ owner_name }}</a>
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="mirror_url_{{ id }}">{{ url_label }}</label>
+                <label class="control-label" for="mirror_url">{{ url_label }}</label>
                 <div class="controls">
-                    <input id="mirror_url_{{ id }}" type="text" value="{{ url }}" readonly/>
+                    <input name="mirror_url" type="text" value="{{ url }}" required/>
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="mirror_key_{{ id }}">{{ ssh_key_label }}</label>
+                <label class="control-label" for="mirror_key">{{ ssh_key_label }}</label>
                 <div class="controls">
-                    <textarea id="mirror_key_{{ id }}" cols="23" readonly>{{ ssh_key }}</textarea>
+                    <textarea name="mirror_key" cols="23" required>{{ ssh_key }}</textarea>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <div class="controls">
+                    <input type="hidden" value="{{ id }}" name="mirror_id"/>
+                    <button class="btn btn-primary update_mirror">{{ update_button }}</button>
                 </div>
             </div>
         </div>
-    {{/ list_of_mirrors }}
-</form>
+    </form>
+{{/ list_of_mirrors }}
 

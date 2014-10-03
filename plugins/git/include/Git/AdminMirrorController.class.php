@@ -26,14 +26,16 @@ class Git_AdminMirrorController {
     /** @var CSRFSynchronizerToken */
     private $csrf;
 
-    public function __construct(CSRFSynchronizerToken $csrf, Git_Mirror_MirrorDataMapper $git_mirror_factory) {
+    public function __construct(CSRFSynchronizerToken $csrf, Git_Mirror_MirrorDataMapper $git_mirror_mapper) {
         $this->csrf              = $csrf;
-        $this->git_mirror_mapper = $git_mirror_factory;
+        $this->git_mirror_mapper = $git_mirror_mapper;
     }
 
     public function process(Codendi_Request $request) {
         if ($request->get('action') == 'add-mirror') {
             $this->createMirror($request);
+        } elseif ($request->get('action') == 'modify-mirror') {
+            $this->modifyMirror($request);
         }
     }
 
@@ -65,6 +67,32 @@ class Git_AdminMirrorController {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','admin_mirror_fields_required'));
         } catch (Git_Mirror_CreateException $e) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','admin_mirror_save_failed'));
+        }
+
+        $GLOBALS['Response']->redirect('/plugins/git/admin/?pane=mirrors_admin');
+    }
+
+    private function modifyMirror(Codendi_Request $request) {
+        try {
+            $this->csrf->check();
+
+            $update = $this->git_mirror_mapper->update(
+                $request->get('mirror_id'),
+                $request->get('mirror_url'),
+                $request->get('mirror_key')
+            );
+
+            if (! $update) {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','admin_mirror_cannot_update'));
+            } else  {
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git','admin_mirror_updated'));
+            }
+        } catch (Git_Mirror_MirrorNotFoundException $e) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','admin_mirror_cannot_update'));
+        } catch (Git_Mirror_MirrorNoChangesException $e) {
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git','admin_mirror_no_changes'));
+        } catch (Git_Mirror_MissingDataException $e) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','admin_mirror_fields_required'));
         }
 
         $GLOBALS['Response']->redirect('/plugins/git/admin/?pane=mirrors_admin');
