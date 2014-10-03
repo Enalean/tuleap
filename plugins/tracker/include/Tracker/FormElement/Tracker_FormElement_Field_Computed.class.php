@@ -69,6 +69,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
     private function getValueOrContinueComputing(PFUser $user, Tracker_Artifact $linked_artifact, array $row, $timestamp, array &$computed_artifact_ids) {
         if ($row['type'] == 'computed') {
             return $this->getUniqueFieldValue($user, $linked_artifact, $timestamp, $computed_artifact_ids);
+        } else if (! isset($row[$row['type'].'_value'])) {
+            return null;
         } else {
             return $row[$row['type'].'_value'];
         }

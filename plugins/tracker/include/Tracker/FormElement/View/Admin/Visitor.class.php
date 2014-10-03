@@ -208,6 +208,11 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
         $this->adminElement = new Tracker_FormElement_View_Admin_Shared($element, $this->allUsedElements);
     }
     
+    public function visitPriority(Tracker_FormElement_Field_Priority $element) {
+        $this->element = $element;
+        $this->adminElement = new Tracker_FormElement_View_Admin_Priority($element, $this->allUsedElements);
+    }
+
     /**
      * Return the AdminEdition element corresponding to the visited element
      * 
