@@ -73,33 +73,36 @@ class GitRepository implements DVCSRepository {
 
     private $use_online_edit;
 
+    private $is_mirrored;
+
     protected $backendType;
 
     public function __construct() {
 
-        $this->hash        = '';        
-        $this->rootPath    = '';
-        $this->path        = '';        
+        $this->hash            = '';
+        $this->rootPath        = '';
+        $this->path            = '';
 
-        $this->name           = '';
-        $this->description    = '';
-        $this->creationDate   = '';
-        $this->creator        = null;
-        $this->deletionDate   = '';
-        $this->isInitialized  = 0;
-        $this->access         = 'private';
-        $this->mailPrefix     = self::DEFAULT_MAIL_PREFIX;
-        $this->notifiedMails = array();
+        $this->name            = '';
+        $this->description     = '';
+        $this->creationDate    = '';
+        $this->creator         = null;
+        $this->deletionDate    = '';
+        $this->isInitialized   = 0;
+        $this->access          = 'private';
+        $this->mailPrefix      = self::DEFAULT_MAIL_PREFIX;
+        $this->notifiedMails   = array();
 
-        $this->hooks       = array();
-        $this->branches    = array();
+        $this->hooks           = array();
+        $this->branches        = array();
 
-        $this->config      = array();
-        $this->parent      = null;
-        $this->parentId    = 0;
-        $this->loaded      = false;
-        $this->scope       = self::REPO_SCOPE_PROJECT;
+        $this->config          = array();
+        $this->parent          = null;
+        $this->parentId        = 0;
+        $this->loaded          = false;
+        $this->scope           = self::REPO_SCOPE_PROJECT;
         $this->use_online_edit = false;
+        $this->is_mirrored     = false;
     }       
 
     /**
@@ -889,6 +892,14 @@ class GitRepository implements DVCSRepository {
 
     public function hasOnlineEditEnabled(){
         return $this->use_online_edit;
+    }
+
+    public function setIsMirrored($is_mirrored) {
+        $this->is_mirrored = (boolean)$is_mirrored;
+    }
+
+    public function getIsMirrored() {
+        return $this->is_mirrored;
     }
 
 }

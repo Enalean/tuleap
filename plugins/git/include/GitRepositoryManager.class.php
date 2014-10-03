@@ -221,7 +221,13 @@ class GitRepositoryManager {
         return substr($path, 0, strrpos($path, '.git'));
     }
 
+    public function mirror($repository_id) {
+        return $this->dao->updateMirrorStatus($repository_id, true);
+    }
 
+    public function unmirror($repository_id) {
+        return $this->dao->updateMirrorStatus($repository_id, false);
+    }
 }
 
 ?>

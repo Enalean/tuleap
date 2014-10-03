@@ -51,6 +51,16 @@ plugin_git	admin_save_submit	Enregistrer
 
 plugin_git	admin_mail	Notifications
 
+plugin_git	admin_mirroring	Réplication
+plugin_git	mirroring_title	Réplication
+plugin_git	mirroring_info	Vous êtes sur le point de répliquer le dépôt <b>$1</b> sur tous ces miroirs:
+plugin_git	mirroring_mirror	Répliquer ce dépôt
+plugin_git	mirroring_unmirror	Supprimer la réplication ce dépôt
+plugin_git	mirroring_mirror_successful	Le dépôt est en cours de réplication.
+plugin_git	mirroring_mirror_error	Erreur lors de la réplication du dépôt.
+plugin_git	mirroring_unmirror_successful	La suppression de la réplication du dépôt est en cours.
+plugin_git	mirroring_unmirror_error	Erreur lors de la suppression de la réplication du dépôt.
+
 plugin_git	controller_access_denied	Vous n'êtes pas autorisé à accéder à cette page
 
 plugin_git	dao_delete_error	Impossible de supprimer le dépôt de la base de données
