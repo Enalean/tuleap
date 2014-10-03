@@ -1,3 +1,10 @@
+Version 5.482 - Tuleap 7.6
+    * request #7501: Undefined variable: xml_file_path
+
+
+This is a follow-up of commit #9afcd2f. Installation of Tuleap since
+then was failing.
+
 Version 5.481 - Tuleap 7.6
     * story #7437:
 		It can be used as source of a computed value and not generate notices
