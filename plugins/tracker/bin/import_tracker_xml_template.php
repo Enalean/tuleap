@@ -32,7 +32,7 @@ if ( !is_readable($xmlFile) ) {
 }
 
 $xml_security = new XML_Security();
-$xml_element  = $xml_security->loadFile($xml_file_path);
+$xml_element  = $xml_security->loadFile($xmlFile);
 if (empty($xml_element)) {
     echo 'Can not open file '.$xmlFile.PHP_EOL;
     exit(1);
