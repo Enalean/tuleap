@@ -34,9 +34,14 @@ sub trigger_hudson_builds() {
             my $token = $trigger_row->{'token'};
             my $token_url = '';
             if ($token ne '') {
-              $token_url = "?token=$token";
+              $token_url = "token=$token";
             }
-            my $req = POST "$job_url/build$token_url";
+            if (index($job_url, '?') != -1) {
+                $job_url = "$job_url&$token_url";
+            } else {
+                $job_url = "$job_url/build?$token_url";
+            }
+            my $req = POST "$job_url";
             my $response = $ua->request($req);
             
             if ($response->is_success) {
@@ -48,7 +53,7 @@ sub trigger_hudson_builds() {
                 my $logfile = "$codendi_log/hudson_log";
                 my $statusline = $response->status_line;
                 if (open(LOGFILE, ">> $logfile")) {
-                  print LOGFILE "Hudson build error with build url $job_url/build$token_url : $statusline \n";
+                  print LOGFILE "Hudson build error with build url $job_url : $statusline \n";
                   close LOGFILE;
                 }
               }
