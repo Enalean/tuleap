@@ -1,3 +1,6 @@
+Version 5.483 - Tuleap 7.6
+    * request #7476 Remove mod-Lab for Tv3 to Tv5 migration (Contrib STMicroelectronics)
+
 Version 5.482 - Tuleap 7.6
     * request #7501: Undefined variable: xml_file_path
 
