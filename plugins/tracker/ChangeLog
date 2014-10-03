@@ -1,3 +1,12 @@
+Version 5.481 - Tuleap 7.6
+    * story #7437:
+		It can be used as source of a computed value and not generate notices
+		Definition is given through REST
+		Definition is NOT given through SOAP
+		Check the field in report (sort, search, chart, aggregates, cardwall)
+		Display global rank in the field value
+		Add a new priority field which does'nt display anything at that time
+
 Version 5.480 - Tuleap 7.6
     * Extract artifact permissions
 
