@@ -1,3 +1,6 @@
+Version 3.104 - Tuleap 7.6
+    * story #7323 Create/update/delete a mirror (tasks #7483: be able to edit git mirrors)
+
 Version 3.103 - Tuleap 7.6
     * story #7323 Create/update/delete a mirror (tasks #7480: add a section for git mirrors in the admin UI of the the git plugin)
 
