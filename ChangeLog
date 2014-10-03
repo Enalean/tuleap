@@ -7,7 +7,7 @@ Version 7.6 (Not released yet)
 	* ldap: 3.54
 	* IM: 1.5.19
 	* statistics: 0.37
-	* git: 3.102
+	* git: 3.103
 	* fulltextsearch: 0.84
 	* graphontrackersv5: 5.14
 
@@ -23,6 +23,9 @@ Version 7.6 (Not released yet)
 	* REST API: can now search for a user with exact match: GET /users?query={username:jcdusse}
 	* REST API: story #7322: retrieve user membership from master
 	* New site wide permission delegation: retrieve user membership
+
+    == Themes ==
+	* FlamingParrot: 1.45
 
 Version 7.5 (Thursday, September 18th 2014)
 
