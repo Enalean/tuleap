@@ -292,3 +292,15 @@ plugin_git	admin_gerrit_version_label	Gerrit server version:
 plugin_git	admin_gerrit_v2_8plus	2.8+
 plugin_git	admin_gerrit_v2_5	2.5
 plugin_git	admin_gerrit_http_password_label	HTTP password:
+
+plugin_git	gerrit_tab_name	Gerrit
+plugin_git	mirror_tab_name	Mirrors
+plugin_git	admin_mirror_save_failed	Failed to add new mirror
+plugin_git	admin_mirror_fields_required	Failed to add new mirror: all fields are required
+plugin_git	add_mirror	Add a new mirror
+plugin_git	admin_mirror_list	Existing mirrors
+plugin_git	mirror_section_title	Git mirror administration
+plugin_git	url_label	Url
+plugin_git	owner_label	Owner
+plugin_git	ssh_key_label	SSH Key
+plugin_git	pwd_label	Owner's password

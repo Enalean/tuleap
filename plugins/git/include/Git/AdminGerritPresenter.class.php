@@ -18,32 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_AdminPresenter {
+class Git_AdminGerritPresenter extends Git_AdminPresenter {
 
-    public $title;
+    public $manage_gerrit = true;
 
-    public $csrf_input;
+    public $gerrit_active = 'active';
 
-    public $manage_gerrit = false;
+    public $list_of_servers;
 
-    public $manage_mirrors = false;
+    public $can_use_gerrit_2_8;
 
-    public $mirrors_active = '';
+    public $btn_submit;
 
-    public $gerrit_active = '';
+    public function __construct($title, CSRFSynchronizerToken $csrf, array $list_of_gerrits) {
+        parent::__construct($title, $csrf);
 
-    public function __construct($title, CSRFSynchronizerToken $csrf) {
-        $this->title      = $title;
-        $this->csrf_input = $csrf->fetchHTMLInput();
+        $this->list_of_servers    = $list_of_gerrits;
+        $this->can_use_gerrit_2_8 = server_is_php_version_equal_or_greater_than_53();
+        $this->btn_submit         = $GLOBALS['Language']->getText('global', 'btn_submit');
     }
-
-    public function gerrit_tab_name() {
-        return $GLOBALS['Language']->getText('plugin_git','gerrit_tab_name');
-    }
-
-    public function mirror_tab_name() {
-        return $GLOBALS['Language']->getText('plugin_git','mirror_tab_name');
-    }
-
-
 }

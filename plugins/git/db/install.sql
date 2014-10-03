@@ -124,3 +124,10 @@ CREATE TABLE IF NOT EXISTS plugin_git_gerrit_config_template (
     PRIMARY KEY (id),
     INDEX idx_gerrit_config_template_by_project (group_id)
 );
+
+CREATE TABLE IF NOT EXISTS plugin_git_mirrors (
+    id INT(11) unsigned NOT NULL auto_increment,
+    url VARCHAR(255) NOT NULL,
+    ssh_key TEXT NOT NULL,
+    PRIMARY KEY (id)
+);

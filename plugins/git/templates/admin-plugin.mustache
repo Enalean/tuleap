@@ -1,12 +1,25 @@
 <h1>{{ title }}</h1>
 
-<form method="POST" action="">
-    {{{ csrf_input }}}
-    <h2>Admin gerrit servers</h2>
-    <dl>
-        {{# list_of_servers }}
-            {{> admin-plugin-gerrit-server }}
-        {{/ list_of_servers }}
-    </dl>
-    <p><input type="submit" value="{{ btn_submit }}" /></p>
-</form>
+<div class="tabbable">
+    <ul class="nav nav-tabs">
+        <li  class="{{ gerrit_active }}">
+            <a href="?pane=gerrit_servers_admin">{{ gerrit_tab_name }}</a>
+        </li>
+        <li class="{{ mirrors_active }}">
+            <a href="?pane=mirrors_admin">{{ mirror_tab_name }}</a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        {{# manage_gerrit }}
+            <div>
+                {{> admin-plugin-gerrit-server }}
+            </div>
+        {{/ manage_gerrit }}
+        {{# manage_mirrors }}
+            <div>
+                {{> admin-plugin-mirrors }}
+            </div>
+        {{/ manage_mirrors }}
+    </div>
+</div>

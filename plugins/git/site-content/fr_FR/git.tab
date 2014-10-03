@@ -288,3 +288,15 @@ plugin_git	admin_gerrit_version_label	Version du serveur gerrit :
 plugin_git	admin_gerrit_v2_8plus	2.8+
 plugin_git	admin_gerrit_v2_5	2.5
 plugin_git	admin_gerrit_http_password_label	HTTP password :
+
+plugin_git	gerrit_tab_name	Gerrit
+plugin_git	mirror_tab_name	Miroirs
+plugin_git	admin_mirror_save_failed	Impossible d'enregistrer le miroir
+plugin_git	admin_mirror_fields_required	Impossible d'enregistrer le miroir : tous les champs sont requis
+plugin_git	add_mirror	Ajouter un nouveau miroir
+plugin_git	admin_mirror_list	Miroirs exitants
+plugin_git	mirror_section_title	Administration des miroirs
+plugin_git	url_label	Url
+plugin_git	owner_label	Propriétaire
+plugin_git	ssh_key_label	Clé SSH
+plugin_git	pwd_label	Mot de pass du propriétaire

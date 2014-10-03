@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,13 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/include/CSRFSynchronizerToken.class.php';
+class Git_AdminGerritController {
 
-/**
- * This handles site admin part of Git
- */
-class Git_Admin {
-    
     private $servers;
 
     /** @var Git_RemoteServer_GerritServerFactory */
@@ -33,18 +28,28 @@ class Git_Admin {
     /** @var CSRFSynchronizerToken */
     private $csrf;
 
-    public function __construct(Git_RemoteServer_GerritServerFactory $gerrit_server_factory, CSRFSynchronizerToken $csrf) {
+    public function __construct(
+        CSRFSynchronizerToken                $csrf,
+        Git_RemoteServer_GerritServerFactory $gerrit_server_factory
+    ) {
         $this->gerrit_server_factory = $gerrit_server_factory;
         $this->csrf                  = $csrf;
     }
 
     public function process(Codendi_Request $request) {
+       if ($request->get('action') == 'gerrit-servers') {
+            $this->updateGerritServers($request);
+        }
+    }
+
+    private function updateGerritServers(Codendi_Request $request) {
         $request_gerrit_servers = $request->get('gerrit_servers');
+
         if (is_array($request_gerrit_servers)) {
             $this->csrf->check();
             $this->fetchGerritServers();
             $this->updateServers($request_gerrit_servers);
-            $GLOBALS['Response']->redirect('/plugins/git/admin/');
+            $GLOBALS['Response']->redirect('/plugins/git/admin/?pane=gerrit_servers_admin');
         }
     }
 
@@ -52,10 +57,10 @@ class Git_Admin {
         $title    = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
 
-        $admin_presenter = new Git_AdminPresenter(
+        $admin_presenter = new Git_AdminGerritPresenter(
             $title,
             $this->csrf,
-            $this->getListOfServersPresenters()
+            $this->getListOfGerritServersPresenters()
         );
 
         $GLOBALS['HTML']->header(array('title' => $title, 'selected_top_tab' => 'admin'));
@@ -71,7 +76,7 @@ class Git_Admin {
         $this->servers["0"] = new Git_RemoteServer_GerritServer(0, '', '', '', '', '', '', false, Git_RemoteServer_GerritServer::DEFAULT_GERRIT_VERSION, '');
     }
 
-    private function getListOfServersPresenters() {
+    private function getListOfGerritServersPresenters() {
         $this->fetchGerritServers();
 
         $list_of_presenters = array();
