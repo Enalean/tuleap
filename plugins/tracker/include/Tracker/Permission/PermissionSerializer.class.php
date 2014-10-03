@@ -29,6 +29,26 @@ class Tracker_Permission_PermissionsSerializer {
         $this->assignee_retriever = $assignee_retriever;
     }
 
+    public function getLiteralizedUserGroupsThatCanViewTracker(Tracker_Artifact $artifact) {
+        return $this->literalize(
+            $this->getUserGroupsThatCanViewTracker($artifact),
+            $artifact->getTracker()->getProject()
+        );
+    }
+
+    public function getLiteralizedUserGroupsThatCanViewArtifact(Tracker_Artifact $artifact) {
+        return $this->literalize(
+            $this->getUserGroupsThatCanViewArtifact($artifact),
+            $artifact->getTracker()->getProject()
+        );
+    }
+
+    private function literalize(array $ugroups_ids, Project $project) {
+        $literalizer = new UGroupLiteralizer();
+
+        return $literalizer->ugroupIdsToString($ugroups_ids, $project);
+    }
+
     public function getUserGroupsThatCanViewTracker(Tracker_Artifact $artifact) {
         $authorized_ugroups = array(ProjectUGroup::PROJECT_ADMIN);
         $tracker_permissions = $artifact->getTracker()->getAuthorizedUgroupsByPermissionType();

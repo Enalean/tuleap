@@ -24,6 +24,13 @@
  */
 class ElasticSearch_1_2_RequestTrackerDataFactory {
 
+    /** @var Tracker_Permission_PermissionsSerializer */
+    private $permissions_serializer;
+
+    public function __construct(Tracker_Permission_PermissionsSerializer $permissions_serializer) {
+        $this->permissions_serializer = $permissions_serializer;
+    }
+
     public function getFormattedArtifact(Tracker_Artifact $artifact) {
         $es_document = $this->getBaseArtifact($artifact);
         foreach ($artifact->getChangesets() as $changeset) {
@@ -45,6 +52,8 @@ class ElasticSearch_1_2_RequestTrackerDataFactory {
             'group_id'          => $artifact->getTracker()->getGroupId(),
             'tracker_id'        => $artifact->getTrackerId(),
             'last_changeset_id' => $artifact->getLastChangeset()->getId(),
+            'tracker_ugroups'   => $this->permissions_serializer->getLiteralizedUserGroupsThatCanViewTracker($artifact),
+            'artifact_ugroups'  => $this->permissions_serializer->getLiteralizedUserGroupsThatCanViewArtifact($artifact),
             'followup_comments' => array(),
         );
     }
@@ -91,14 +100,14 @@ class ElasticSearch_1_2_RequestTrackerDataFactory {
     }
 
     private function addStandardTrackerPermissionsMetadata(array &$mapping_data) {
-        $mapping_data['tracker_permissions'] = array(
+        $mapping_data['tracker_ugroups'] = array(
             'type'  => 'string',
             'index' => 'not_analyzed'
         );
     }
 
     private function addStandardArtifactPermissionsMetadata(array &$mapping_data) {
-        $mapping_data['artifact_permissions'] = array(
+        $mapping_data['artifact_ugroups'] = array(
             'type'  => 'string',
             'index' => 'not_analyzed'
         );
