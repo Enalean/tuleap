@@ -1,3 +1,6 @@
+Version 2.26.51 - Tuleap 7.6
+    * Import docman v1 content into docman v2
+
 Version 2.26.50 - Tuleap 7.6
     * Part of story #7412 import docman v1 files in docman plugin (Fix some globally registered variables & Import manage default permissions and none
 

@@ -2,7 +2,7 @@ Version 7.6 (Not released yet)
 	== Plugins ==
 	* ldap 3.53
 	* agiledashboard: 1.74
-	* docman: 2.26.50
+	* docman: 2.26.51
 	* tracker: 5.486
 	* ldap: 3.54
 	* IM: 1.5.19
@@ -26,8 +26,9 @@ Version 7.6 (Not released yet)
 	* REST API: can now search for a user with exact match: GET /users?query={username:jcdusse}
 	* REST API: story #7322: retrieve user membership from master
 	* New site wide permission delegation: retrieve user membership
+	* Import docman v1 content into docman v2
 
-    == Themes ==
+	== Themes ==
 	* FlamingParrot: 1.46
 
 Version 7.5 (Thursday, September 18th 2014)
