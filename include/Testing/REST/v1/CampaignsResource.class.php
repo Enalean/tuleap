@@ -168,13 +168,16 @@ class CampaignsResource {
         $user     = $this->user_manager->getCurrentUser();
         $campaign = $this->getCampaignFromId($id, $user);
 
-        $execution_representations = $this->execution_representation_builder->getAllExecutionsRepresentationsForCampaign($user, $campaign);
+        $execution_representations = $this->execution_representation_builder->getPaginatedExecutionsRepresentationsForCampaign(
+            $user,
+            $campaign,
+            $limit,
+            $offset
+        );
 
-        $this->sendPaginationHeaders($limit, $offset, count($execution_representations));
+        $this->sendPaginationHeaders($limit, $offset, $execution_representations->getTotalSize());
 
-        $this->sortByCategoryAndId($execution_representations);
-
-        return array_slice($execution_representations, $offset, $limit);
+        return $execution_representations->getRepresentations();
     }
 
     /**

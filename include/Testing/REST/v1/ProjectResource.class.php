@@ -181,7 +181,7 @@ class ProjectResource {
             }
         }
 
-        $this->sendPaginationHeaders($limit, $offset, $paginated_artifacts->getSize());
+        $this->sendPaginationHeaders($limit, $offset, $paginated_artifacts->getTotalSize());
 
         return $result;
     }

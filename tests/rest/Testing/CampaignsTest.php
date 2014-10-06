@@ -44,7 +44,9 @@ class CampaignsTest extends BaseTest {
 
         $executions = $all_executions_response->json();
         $this->assertCount(3, $executions);
-        $this->assertExecutionsAreSortedByCategoryAndId($executions);
+        $this->assertExecutionsContains($executions, 'Import default template');
+        $this->assertExecutionsContains($executions, 'Create a repository');
+        $this->assertExecutionsContains($executions, 'Delete a repository');
     }
 
 
@@ -60,9 +62,13 @@ class CampaignsTest extends BaseTest {
         $this->assertEquals('CentOS 6 - PHP 5.3', $environments[1]);
     }
 
-    private function assertExecutionsAreSortedByCategoryAndId($executions) {
-        $this->assertEquals('Import default template', $executions[0]['definition']['summary']);
-        $this->assertEquals('Create a repository', $executions[1]['definition']['summary']);
-        $this->assertEquals('Delete a repository', $executions[2]['definition']['summary']);
+    private function assertExecutionsContains($executions, $summary) {
+        foreach ($executions as $execution) {
+            if ($summary === $execution['definition']['summary']) {
+                $this->assertTrue(true);
+                return;
+            }
+        }
+        $this->fail();
     }
 }

@@ -30,7 +30,7 @@ class ExecutionsTest extends BaseTest {
         $initial_value = 'failed';
         $new_value     = 'blocked';
 
-        $execution = $this->getFirstExecutionForValid73Campaign();
+        $execution = $this->getLastExecutionForValid73Campaign();
         $this->assertEquals($initial_value, $execution['status']);
 
         $response = $this->getResponse($this->client->put('testing_executions/'. $execution['id'], null, json_encode(array(
@@ -39,7 +39,7 @@ class ExecutionsTest extends BaseTest {
 
         $this->assertEquals($response->getStatusCode(), 200);
 
-        $updated_execution = $this->getFirstExecutionForValid73Campaign();
+        $updated_execution = $this->getLastExecutionForValid73Campaign();
         $this->assertEquals($new_value, $updated_execution['status']);
 
         $this->getResponse($this->client->put('testing_executions/'. $execution['id'], null, json_encode(array(
@@ -47,16 +47,16 @@ class ExecutionsTest extends BaseTest {
         ))));
     }
 
-    private function getFirstExecutionForValid73Campaign() {
+    private function getLastExecutionForValid73Campaign() {
         $campaign = $this->getValid73Campaign();
 
         $all_executions_request  = $this->client->get('testing_campaigns/'. $campaign['id'] .'/testing_executions');
         $all_executions_response = $this->getResponse($all_executions_request);
 
-        $executions      = $all_executions_response->json();
-        $first_execution = $executions[0];
-        $this->assertEquals('Import default template', $first_execution['definition']['summary']);
+        $executions     = $all_executions_response->json();
+        $last_execution = end($executions);
+        $this->assertEquals('Import default template', $last_execution['definition']['summary']);
 
-        return $first_execution;
+        return $last_execution;
     }
 }

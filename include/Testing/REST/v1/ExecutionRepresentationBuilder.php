@@ -23,6 +23,7 @@ namespace Tuleap\Testing\REST\v1;
 use Tuleap\Testing\ConfigConformanceValidator;
 use Tuleap\User\REST\UserRepresentation;
 use Tracker_Artifact;
+use Tracker_Artifact_PaginatedArtifacts;
 use PFUser;
 use Tracker_FormElementFactory;
 use UserManager;
@@ -65,8 +66,28 @@ class ExecutionRepresentationBuilder {
      * @return \Tuleap\Testing\REST\v1\ExecutionRepresentation
      */
     public function getAllExecutionsRepresentationsForCampaign(PFUser $user, Tracker_Artifact $artifact) {
+        $executions = $this->getExecutionsForCampaign($user, $artifact);
+
+        return $this->getListOfRepresentations($user, $executions);
+    }
+
+    /**
+     * @return \Tuleap\Testing\REST\v1\SlicedExecutionRepresentations
+     */
+    public function getPaginatedExecutionsRepresentationsForCampaign(
+        PFUser $user,
+        Tracker_Artifact $artifact,
+        $limit,
+        $offset
+    ) {
+        $executions      = $this->getSlicedExecutionsForCampaign($user, $artifact, $limit, $offset);
+        $representations = $this->getListOfRepresentations($user, $executions->getArtifacts());
+
+        return new SlicedExecutionRepresentations($representations, $executions->getTotalSize());
+    }
+
+    private function getListOfRepresentations(PFUser $user, array $executions) {
         $executions_representations = array();
-        $executions                 = $this->getExecutionsForCampaign($user, $artifact);
 
         foreach($executions as $execution) {
             $previous_result_representation = $this->getPreviousResultRepresentationForExecution($user, $execution);
@@ -90,19 +111,38 @@ class ExecutionRepresentationBuilder {
     }
 
     /**
+     * @return Tracker_Artifact_PaginatedArtifacts
+     */
+    private function getSlicedExecutionsForCampaign(
+        PFUser $user,
+        Tracker_Artifact $campaign_artifact,
+        $limit,
+        $offset
+    ) {
+        $artifact_links = $campaign_artifact->getSlicedLinkedArtifacts($user, $limit, $offset);
+        $executions     = $artifact_links->getArtifacts();
+        $this->removeArtifactsThatAreNotExecution($executions, $campaign_artifact);
+
+        return new Tracker_Artifact_PaginatedArtifacts($executions, $artifact_links->getTotalSize());
+    }
+
+    /**
      * @return Tracker_Artifact[]
      */
     public function getExecutionsForCampaign(PFUser $user, Tracker_Artifact $campaign_artifact) {
-        $executions = array();
-        $artifact_links = $campaign_artifact->getLinkedArtifacts($user);
+        $executions = $campaign_artifact->getLinkedArtifacts($user);
 
-        foreach ($artifact_links as $child_artifact) {
-            if ($this->conformance_validator->isArtifactAnExecutionOfCampaign($child_artifact, $campaign_artifact)) {
-                $executions[] = $child_artifact;
-            }
-        }
+        $this->removeArtifactsThatAreNotExecution($executions, $campaign_artifact);
 
         return $executions;
+    }
+
+    private function removeArtifactsThatAreNotExecution(array &$artifacts, Tracker_Artifact $campaign_artifact) {
+        foreach ($artifacts as $key => $child_artifact) {
+            if (! $this->conformance_validator->isArtifactAnExecutionOfCampaign($child_artifact, $campaign_artifact)) {
+                unset($artifacts[$key]);
+            }
+        }
     }
 
     private function getDefinitionRepresentationForExecution(PFUser $user, Tracker_Artifact $execution) {
