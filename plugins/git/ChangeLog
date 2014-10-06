@@ -1,3 +1,6 @@
+Version 3.107 - Tuleap 7.6
+    * Part of request #7466 Tuleap test suite should run on php 5.4 and onward: Fix bad usage of partial_mock
+
 Version 3.106 - Tuleap 7.6
     * story #7323: Create/update/delete a mirror (tasks #7492: be able to delete details of a new git mirror)
 
