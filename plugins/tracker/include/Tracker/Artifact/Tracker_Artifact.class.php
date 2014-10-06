@@ -1346,6 +1346,26 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     /**
+     * Get artifacts linked to the current artifact
+     *
+     * @see Tracker_FormElement_Field_ArtifactLink::getSlicedLinkedArtifacts()
+     *
+     * @param PFUser $user   The user who should see the artifacts
+     * @param int    $limit  The number of artifact to fetch
+     * @param int    $offset The offset
+     *
+     * @return Tracker_Artifact_PaginatedArtifacts
+     */
+    public function getSlicedLinkedArtifacts(PFUser $user, $limit, $offset) {
+        $artifact_link_field = $this->getAnArtifactLinkField($user);
+        if (! $artifact_link_field) {
+            return new Tracker_Artifact_PaginatedArtifacts(array(), 0);
+        }
+
+        return $artifact_link_field->getSlicedLinkedArtifacts($this->getLastChangeset(), $user, $limit, $offset);
+    }
+
+    /**
      * Get artifacts linked to the current artifact and sub artifacts
      *
      * @param PFUser $user The user who should see the artifacts

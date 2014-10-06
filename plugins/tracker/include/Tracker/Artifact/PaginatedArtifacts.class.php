@@ -24,24 +24,24 @@ class Tracker_Artifact_PaginatedArtifacts {
      * @var Tracker_Artifact[]
      */
     private $artifacts;
-    
+
     /**
-     * @var int 
+     * @var int
      */
-    private $size;
+    private $total_size;
 
     /**
      *
      * @param Tracker_Artifact[] $artifacts
-     * @param int $size
+     * @param int $total_size
      */
-    public function __construct(array $artifacts, $size) {
-        $this->artifacts = $artifacts;
-        $this->size      = $size;
+    public function __construct(array $artifacts, $total_size) {
+        $this->artifacts  = $artifacts;
+        $this->total_size = $total_size;
     }
 
-    public function getSize() {
-        return $this->size;
+    public function getTotalSize() {
+        return $this->total_size;
     }
 
     /**
