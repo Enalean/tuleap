@@ -1,3 +1,6 @@
+Version 1.37 - Tuleap 7.6
+    * Part of request #7466 Tuleap test suite should run on php 5.4 and onward: Better type checking
+
 Version 1.36 - Tuleap 7.5
     * request #7443: cardwall modal opens with an error message when anonymous user moves card
 

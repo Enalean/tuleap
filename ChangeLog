@@ -10,6 +10,7 @@ Version 7.6 (Not released yet)
 	* git: 3.106
 	* fulltextsearch: 0.85
 	* graphontrackersv5: 5.14
+	* cardwall: 1.37
 
 	== Bug Fix ==
 	* request #7457: Remote Command Execution Vulnerability
