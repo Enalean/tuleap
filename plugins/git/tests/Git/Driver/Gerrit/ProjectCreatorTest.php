@@ -226,10 +226,6 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
         stub($this->membership_manager)->createArrayOfGroupsForServer()->returns(array($this->project_members, $this->another_ugroup, $this->project_admins));
     }
 
-    public function tearDown() {
-        parent::tearDown();
-    }
-
     public function itPushesTheUpdatedConfigToTheServer() {
         stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_READ)->returns(array(ProjectUGroup::REGISTERED));
         stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WRITE)->returns(array(ProjectUGroup::PROJECT_MEMBERS, 120));
@@ -480,10 +476,6 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
         stub($this->userfinder)->getUgroups()->returns(array());
     }
 
-    public function tearDown() {
-        parent::tearDown();
-    }
-
     public function itCreatesAProjectAndExportGitBranchesAndTagsWithoutCreateParentProject() {
         //ssh gerrit gerrit create tuleap.net-Firefox/all/mobile
 
@@ -591,6 +583,3 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
         $this->assertEqual($ret_val, 0);
     }
 }
-
-
-?>

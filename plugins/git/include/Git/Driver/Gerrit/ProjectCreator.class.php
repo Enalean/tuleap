@@ -228,12 +228,14 @@ class Git_Driver_Gerrit_ProjectCreator {
 
     private function cloneGerritProjectConfig(Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url) {
         $gerrit_project_url = escapeshellarg($gerrit_project_url);
-        `mkdir $this->dir`;
-        `cd $this->dir; git init`;
-        $this->setUpCommitter($gerrit_server);
-        `cd $this->dir; git remote add origin $gerrit_project_url`;
-        `cd $this->dir; git pull origin refs/meta/config`;
-        `cd $this->dir; git checkout FETCH_HEAD`;
+        if (! is_dir($this->dir)) {
+            mkdir($this->dir);
+            `cd $this->dir; git init`;
+            $this->setUpCommitter($gerrit_server);
+            `cd $this->dir; git remote add origin $gerrit_project_url`;
+        }
+        `cd $this->dir; git pull --quiet origin refs/meta/config`;
+        `cd $this->dir; git checkout --quiet FETCH_HEAD`;
     }
 
     /**
