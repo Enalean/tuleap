@@ -44,6 +44,10 @@ require_once 'common/user/UserManager.class.php';
 require_once dirname(__FILE__) .'/../include/MediawikiDao.class.php';
 require_once dirname(__FILE__) .'/../include/MediawikiUserGroupsMapper.class.php';
 
+//Trust Mediawiki security
+$xml_security = new XML_Security();
+$xml_security->enableExternalLoadOfEntities();
+
 sysdebug_lazymode(true);
 
 $IP = forge_get_config('src_path', 'mediawiki');
