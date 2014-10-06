@@ -40,12 +40,13 @@ class CombinedTest extends TuleapTestCase {
 
     private $fixtures_dir;
     private $destination_dir;
-    
+    private $_scripts;
+
     public function setUp() {
         parent::setUp();
 
         $this->fixtures_dir    = dirname(__FILE__). '/_fixtures/combined';
-        $this->destination_dir = $this->fixtures_dir .'/src/www/scripts/combined';
+        $this->destination_dir = $this->fixtures_dir .'/results';
 
         $GLOBALS['codendi_dir']     = $this->fixtures_dir;
         $GLOBALS['sys_pluginsroot'] = $this->fixtures_dir .'/plugins';
@@ -56,14 +57,14 @@ class CombinedTest extends TuleapTestCase {
             $this->fixtures_dir. '/plugins/docman/www/docman.js'   => '',
             $this->fixtures_dir. '/src/www/scripts/calendar.js'    => '',
             $this->fixtures_dir. '/in_the_future/in_the_future.js' => '',
-            $class->getFileName() => '',
+            $class->getFileName()                                  => '',
         );
-        
+
         foreach($this->_scripts as $file => $nop) {
             $this->_scripts[$file] = filemtime($file);
             touch($file, $_SERVER['REQUEST_TIME'] - 2 * 3600);
         }
-        
+
         file_put_contents($this->destination_dir .'/codendi-1.js', "//Prototype file\n//Docman file\n");
     }
     
@@ -78,10 +79,19 @@ class CombinedTest extends TuleapTestCase {
     }
     
     public function testGetScripts() {
-        $c = new CombinedTestVersion($this);
+        $c = partial_mock(
+            'Combined',
+            array(
+                'getCombinedScripts',
+                'getSourceDir',
+                'onTheFly',
+            ),
+            array(
+                $this->destination_dir
+            )
+        );
         //in this test, combined script is made of prototype+docman
         $c->setReturnValue('getCombinedScripts', array('/scripts/prototype.js', '/plugins/docman/docman.js'));
-        $c->setReturnValue('getDestinationDir', $this->destination_dir);
         $c->setReturnValue('onTheFly', false);
         
         $expected_combined     = '<script type="text/javascript" src="/scripts/combined/codendi-1.js"></script>';
@@ -91,27 +101,35 @@ class CombinedTest extends TuleapTestCase {
         $this->assertEqual($c->getScripts('/plugins/docman/docman.js'), $expected_combined);
         $this->assertEqual($c->getScripts('/scripts/calendar.js'),      $expected_not_combined);
         
-        $this->assertEqual($c->getScripts(array('/scripts/prototype.js', 
+        $this->assertEqual($c->getScripts(array('/scripts/prototype.js',
                                                 '/plugins/docman/docman.js')), $expected_combined);
-        $this->assertEqual($c->getScripts(array('/scripts/prototype.js', 
+        $this->assertEqual($c->getScripts(array('/scripts/prototype.js',
                                                 '/scripts/calendar.js')), $expected_combined . $expected_not_combined);
-        $this->assertEqual($c->getScripts(array('/scripts/prototype.js', 
+        $this->assertEqual($c->getScripts(array('/scripts/prototype.js',
                                                 '/plugins/docman/docman.js', 
                                                 '/scripts/calendar.js')), $expected_combined . $expected_not_combined);
-        $this->assertEqual($c->getScripts(array('/scripts/prototype.js', 
+        $this->assertEqual($c->getScripts(array('/scripts/prototype.js',
                                                 '/scripts/calendar.js',
                                                 '/plugins/docman/docman.js')), $expected_combined . $expected_not_combined);
     }
     
     public function testGenerate() {
-        
-        $c = new CombinedTestVersion($this);
+        $c = partial_mock(
+            'Combined',
+            array(
+                'getCombinedScripts',
+                'getSourceDir',
+                'onTheFly',
+            ),
+            array(
+                $this->destination_dir
+            )
+        );
         //in this test, combined script is made of prototype+docman
         $c->setReturnValue('getCombinedScripts', array('/scripts/prototype.js', '/plugins/docman/docman.js'));
         $c->setReturnValue('getSourceDir',       $this->fixtures_dir. '/src/www/scripts/prototype.js', array('/scripts/prototype.js'));
         $c->setReturnValue('getSourceDir',       $this->fixtures_dir. '/in_the_future/in_the_future.js', array('/in_the_future/in_the_future.js'));
         $c->setReturnValue('getSourceDir',       $this->fixtures_dir. '/plugins/docman/www/docman.js', array('/plugins/docman/docman.js'));
-        $c->setReturnValue('getDestinationDir',  $this->fixtures_dir. '/src/www/scripts/combined/');
         $c->setReturnValue('onTheFly', false);
         
         $c->generate();
@@ -126,13 +144,23 @@ class CombinedTest extends TuleapTestCase {
     }
     
     public function testGetSourceDir() {
-        $c = new WhiteBox_Combined();
+        $c = new WhiteBox_Combined('/tmp');
         $this->assertEqual($c->getSourceDir_exposed('/plugins/docman/docman.js'), $GLOBALS['sys_pluginsroot']. '/docman/www/docman.js');
         $this->assertEqual($c->getSourceDir_exposed('/scripts/prototype.js'), $GLOBALS['codendi_dir']. '/src/www/scripts/prototype.js');
     }
     
     public function testAutoGenerate() {
-        $c = new CombinedTestVersion($this);
+        $c = partial_mock(
+            'Combined',
+            array(
+                'getCombinedScripts',
+                'getSourceDir',
+                'onTheFly',
+            ),
+            array(
+                $this->destination_dir
+            )
+        );
         $c->setReturnValue('onTheFly', true);
         
         //in this test, combined script is made of prototype+docman
@@ -142,7 +170,6 @@ class CombinedTest extends TuleapTestCase {
         $c->setReturnValue('getSourceDir',       $this->fixtures_dir. '/plugins/docman/www/docman.js', array('/plugins/docman/docman.js'));
         $c->setReturnValue('getSourceDir',       $this->destination_dir .'/codendi-', array('/scripts/combined/codendi-'));
         $c->setReturnValue('getSourceDir',       $this->destination_dir .'/codendi-1.js', array('/scripts/combined/codendi-1.js'));
-        $c->setReturnValue('getDestinationDir',  $this->destination_dir);
         
         $c->autoGenerate();
         
@@ -169,4 +196,3 @@ class CombinedTest extends TuleapTestCase {
         $this->assertPattern('/in the future/', $generated_content); //Now we expect that the file has been updated
     }
 }
-?>
