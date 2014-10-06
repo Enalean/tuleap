@@ -1,3 +1,6 @@
+Version 0.56 - Tuleap 7.6
+    * Fix request #7504: No ability to make search in mediawiki compatibility mode
+
 Version 0.55 - Tuleap 7.5
     * Fix request #7424: Change the compatibility mode text in Mediawiki
 

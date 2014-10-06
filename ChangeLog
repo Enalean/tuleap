@@ -11,6 +11,7 @@ Version 7.6 (Not released yet)
 	* fulltextsearch: 0.85
 	* graphontrackersv5: 5.14
 	* cardwall: 1.37
+	* mediawiki: 0.56
 
 	== Bug Fix ==
 	* request #7457: Remote Command Execution Vulnerability
