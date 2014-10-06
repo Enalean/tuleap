@@ -1,3 +1,6 @@
+Version 5.485 - Tuleap 7.6
+    * story #7437: CSV import should raise a warning instead of an error
+
 Version 5.484 - Tuleap 7.6
     * Permissions are saved on artifact indexation
 
