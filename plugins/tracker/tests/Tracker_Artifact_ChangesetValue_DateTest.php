@@ -62,8 +62,8 @@ class Tracker_Artifact_ChangesetValue_DateTest extends TuleapTestCase {
     }
     
     function testDiff() {
-        $tz = ini_get('date.timezone');
-        ini_set('date.timezone', 'Europe/Paris');
+        $tz = date_default_timezone_get();
+        date_default_timezone_set('Europe/Paris');
         
         $GLOBALS['Language']->setReturnValue('getText', "changed from", array('plugin_tracker_artifact','changed_from'));
         $GLOBALS['Language']->setReturnValue('getText', "to", array('plugin_tracker_artifact','to'));        
@@ -78,7 +78,7 @@ class Tracker_Artifact_ChangesetValue_DateTest extends TuleapTestCase {
         $this->assertEqual($date_1->diff($date_2), 'changed from 2009-02-14 to 2008-09-12');
         $this->assertEqual($date_2->diff($date_1), 'changed from 2008-09-12 to 2009-02-14');
         
-        ini_set('date.timezone', $tz);
+        date_default_timezone_set($tz);
     }
 }
 ?>
