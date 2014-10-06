@@ -1,3 +1,9 @@
+Version 2.26.50 - Tuleap 7.6
+    * Part of story #7412 import docman v1 files in docman plugin (Fix some globally registered variables & Import manage default permissions and none
+
+
+
+
 Version 2.26.49 - Tuleap 7.6
     * request #7461 SQL injection on docman global search
 
