@@ -1,3 +1,6 @@
+Version 5.486 - Tuleap 7.6
+    * Part of request #7466 Tuleap test suite should run on php 5.4 and onward: Properly catch and restore timezone
+
 Version 5.485 - Tuleap 7.6
     * story #7437: CSV import should raise a warning instead of an error
 
