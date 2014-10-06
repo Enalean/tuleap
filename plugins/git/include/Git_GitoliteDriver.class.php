@@ -412,5 +412,28 @@ class Git_GitoliteDriver {
         return self::OLD_AUTHORIZED_KEYS_PATH;
     }
 
+    /**
+     * Backup gitolite repository
+     *
+     * @param String $path               The repository path
+     * @param String $gitBackupDirectory The repository backup directory path
+     * @param String $repositoryName
+     *
+     */
+    public function backup($path, $gitBackupDirectory, $repositoryName) {
+        if (empty($path) || !is_readable($path)) {
+            throw new GitDriverErrorException('Gitolite backup: Empty path or permission denied '.$path);
+        }
+        else if (empty($gitBackupDirectory) || !is_writable($gitBackupDirectory)) {
+            throw new GitDriverErrorException('Gitolite backup: Empty backup path or permission denied '.$gitBackupDirectory);
+        }
+        $returnCode = 0;
+        $backupPath = $gitBackupDirectory.$repositoryName.'.tar.gz';
+        $command = 'tar cvzf '.escapeshellarg($backupPath).' '.escapeshellarg($path);
+        system($command, $returnCode);
+        if ($returnCode != 0) {
+            throw new GitDriverErrorException('Unable to backup '.$path.' into '. $backupPath);
+        }
+    }
 }
 ?>
