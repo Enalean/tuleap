@@ -76,10 +76,12 @@ class GitViews_RepoManagement {
 
         $panes[] = new GitViews_RepoManagement_Pane_AccessControl($repository, $this->request);
 
-        $mirrors = $this->getGitDataMapper()->fetchAll();
+        $mirrors = $this->getMirrorDataMapper()->fetchAll();
         if (count($mirrors) > 0) {
-            $panes[] = new GitViews_RepoManagement_Pane_Mirrors($repository, $this->request, $mirrors);
+            $repository_mirrors = $this->getMirrorDataMapper()->fetchAllRepositoryMirrors($repository->getId());
+            $panes[]            = new GitViews_RepoManagement_Pane_Mirroring($repository, $this->request, $mirrors, $repository_mirrors);
         }
+
         $panes[] = new GitViews_RepoManagement_Pane_Notification($repository, $this->request);
         $panes[] = new GitViews_RepoManagement_Pane_Delete($repository, $this->request);
 
@@ -92,7 +94,7 @@ class GitViews_RepoManagement {
         return $indexed_panes;
     }
 
-    private function getGitDataMapper() {
+    private function getMirrorDataMapper() {
         return new Git_Mirror_MirrorDataMapper(
             new Git_Mirror_MirrorDao(),
             UserManager::instance()

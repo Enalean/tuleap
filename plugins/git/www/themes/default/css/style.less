@@ -369,14 +369,40 @@ fieldset.gerrit_disconnect {
     padding-left: 5px;
 }
 
-#mirrors-list {
-  margin: 0 0 30px 25px;
+.mirrors-list {
+    max-width: 800px;
 
-  > li {
-    > span {
-      font-style: italic;
-      color: #888;
-      font-size: 0.9em;
+    & > thead > tr {
+        background: #E4E4E4;
+
+        & > th {
+            vertical-align: top;
+            border-left-color: #D2D2D2;
+            border-bottom: 2px solid #B2B2B2;
+        }
     }
-  }
+
+    & > tbody > tr:first-child > td {
+        border-top: none;
+    }
+
+    & > thead > tr > th, & > tbody > tr > td {
+        min-width: 100px;
+        vertical-align: middle;
+    }
+
+    & > thead > tr > th:first-child, & > tbody > tr > td:first-child {
+        min-width: 20px;
+        max-width: 20px;
+    }
+
+    & > thead > tr > th.url, & > tbody > tr > td.url {
+        width: 100%;
+        white-space: nowrap;
+    }
+
+    & > thead > tr > th.used, & > tbody > tr > td.used {
+        white-space: nowrap;
+        text-align: center;
+    }
 }

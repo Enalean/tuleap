@@ -37,9 +37,56 @@ class Git_Mirror_MirrorDao extends DataAccessObject{
      * @return DataAccessObject
      */
     public function fetchAll() {
-        $sql = "SELECT * FROM plugin_git_mirrors";
+        $sql = "SELECT * FROM plugin_git_mirrors ORDER BY id";
 
         return $this->retrieve($sql);
+    }
+
+    /**
+     * @return DataAccessObject
+     */
+    public function fetchByIds($selected_mirror_ids) {
+        $sql = "SELECT * FROM plugin_git_mirrors WHERE id IN (" . $this->da->escapeIntImplode($selected_mirror_ids) . ")";
+
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * @return DataAccessObject
+     */
+    public function fetchAllRepositoryMirrors($repository_id) {
+        $repository_id = $this->da->escapeInt($repository_id);
+
+        $sql = "SELECT plugin_git_mirrors.* FROM plugin_git_mirrors
+                INNER JOIN plugin_git_repository_mirrors ON plugin_git_mirrors.id = plugin_git_repository_mirrors.mirror_id
+                WHERE repository_id = " . $repository_id . "
+                ORDER BY id";
+
+        return $this->retrieve($sql);
+    }
+
+    public function unmirrorRepository($repository_id) {
+        $repository_id = $this->da->escapeInt($repository_id);
+
+        $sql = "DELETE FROM plugin_git_repository_mirrors WHERE repository_id = " . $repository_id;
+
+        return $this->update($sql);
+    }
+
+    public function mirrorRepositoryTo($repository_id, $selected_mirror_ids) {
+        $repository_id = $this->da->escapeInt($repository_id);
+
+        $sql = 'INSERT INTO plugin_git_repository_mirrors (repository_id, mirror_id) VALUES ';
+
+        $values = array();
+        foreach ($selected_mirror_ids as $selected_mirror_id) {
+            $selected_mirror_id = $this->da->escapeInt($selected_mirror_id);
+            $values[]           = "($repository_id, $selected_mirror_id)";
+        }
+
+        $sql .= implode(', ', $values);
+
+        return $this->update($sql);
     }
 
     /**

@@ -21,46 +21,25 @@
 class GitPresenters_MirrorPresenter {
 
     /**
-     * @var GitRepository
+     * @var int
      */
-    private $repository;
+    public $id;
 
     /**
-     * @var Git_Mirror_Mirror[]
+     * @var string
      */
-    public $mirrors;
+    public $url;
 
-    public function __construct(GitRepository $repository, $mirrors) {
-        $this->repository = $repository;
-        $this->mirrors    = $mirrors;
-    }
+    /**
+     * @var boolean
+     */
+    public $is_used;
 
-    public function repository_id() {
-        return $this->repository->getId();
-    }
 
-    public function repository_is_mirrored() {
-        return $this->repository->getIsMirrored();
-    }
-
-    public function project_id() {
-        return $this->repository->getProjectId();
-    }
-
-    public function mirroring_title() {
-        return $GLOBALS['Language']->getText('plugin_git', 'mirroring_title');
-    }
-
-    public function mirroring_info() {
-        return $GLOBALS['Language']->getText('plugin_git', 'mirroring_info', array($this->repository->getName()));
-    }
-
-    public function mirroring_mirror() {
-        return $GLOBALS['Language']->getText('plugin_git', 'mirroring_mirror');
-    }
-
-    public function mirroring_unmirror() {
-        return $GLOBALS['Language']->getText('plugin_git', 'mirroring_unmirror');
+    public function __construct(Git_Mirror_Mirror $mirror, $is_used) {
+        $this->id      = $mirror->id;
+        $this->url     = $mirror->url;
+        $this->is_used = $is_used;
     }
 
 }

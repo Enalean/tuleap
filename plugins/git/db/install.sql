@@ -131,3 +131,9 @@ CREATE TABLE IF NOT EXISTS plugin_git_mirrors (
     ssh_key TEXT NOT NULL,
     PRIMARY KEY (id)
 );
+
+CREATE TABLE IF NOT EXISTS plugin_git_repository_mirrors (
+    repository_id INT(10) NOT NULL,
+    mirror_id INT(10) NOT NULL,
+    PRIMARY KEY (repository_id, mirror_id)
+);

@@ -18,27 +18,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class GitViews_RepoManagement_Pane_Mirrors extends GitViews_RepoManagement_Pane {
+class GitViews_RepoManagement_Pane_Mirroring extends GitViews_RepoManagement_Pane {
 
     /**
      * @var Git_Mirror_Mirror[]
      */
     private $mirrors;
 
+    /**
+     * @var Git_Mirror_Mirror[]
+     */
+    private $repository_mirrors;
+
     public function __construct(
         GitRepository $repository,
         Codendi_Request $request,
-        array $mirrors
+        array $mirrors,
+        array $repository_mirrors
     ) {
         parent::__construct($repository, $request);
-        $this->mirrors = $mirrors;
+        $this->mirrors            = $mirrors;
+        $this->repository_mirrors = $repository_mirrors;
     }
 
     /**
      * @see GitViews_RepoManagement_Pane::getIdentifier()
      */
     public function getIdentifier() {
-        return 'mirrors';
+        return 'mirroring';
     }
 
     /**
@@ -52,10 +59,25 @@ class GitViews_RepoManagement_Pane_Mirrors extends GitViews_RepoManagement_Pane 
      * @see GitViews_RepoManagement_Pane::getContent()
      */
     public function getContent() {
-        $presenter = new GitPresenters_MirrorPresenter($this->repository, $this->mirrors);
+        $presenter = new GitPresenters_MirroringPresenter($this->repository, $this->getMirrorPresenters());
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
 
-        return $renderer->renderToString('mirrors', $presenter);
+        return $renderer->renderToString('mirroring', $presenter);
+    }
+
+    private function getMirrorPresenters() {
+        $mirror_presenters = array();
+
+        foreach($this->mirrors as $mirror) {
+            $is_used = false;
+            if (in_array($mirror, $this->repository_mirrors)) {
+                $is_used = true;
+            }
+
+            $mirror_presenters[] = new GitPresenters_MirrorPresenter($mirror, $is_used);
+        }
+
+        return $mirror_presenters;
     }
 
 }
