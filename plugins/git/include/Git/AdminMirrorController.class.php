@@ -34,8 +34,10 @@ class Git_AdminMirrorController {
     public function process(Codendi_Request $request) {
         if ($request->get('action') == 'add-mirror') {
             $this->createMirror($request);
-        } elseif ($request->get('action') == 'modify-mirror') {
+        } elseif ($request->get('action') == 'modify-mirror' && $request->get('update_mirror')) {
             $this->modifyMirror($request);
+        } elseif ($request->get('action') == 'modify-mirror' && $request->get('delete_mirror')) {
+            $this->deleteMirror($request);
         }
     }
 
@@ -93,6 +95,23 @@ class Git_AdminMirrorController {
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git','admin_mirror_no_changes'));
         } catch (Git_Mirror_MissingDataException $e) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','admin_mirror_fields_required'));
+        }
+
+        $GLOBALS['Response']->redirect('/plugins/git/admin/?pane=mirrors_admin');
+    }
+
+    private function deleteMirror(Codendi_Request $request) {
+        try {
+            $this->csrf->check();
+
+            $id     = $request->get('mirror_id');
+            $delete = $this->git_mirror_mapper->delete($id);
+
+            if (! $delete) {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','admin_mirror_cannot_delete'));
+            }
+        } catch (Git_Mirror_MirrorNotFoundException $e) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','admin_mirror_cannot_delete'));
         }
 
         $GLOBALS['Response']->redirect('/plugins/git/admin/?pane=mirrors_admin');

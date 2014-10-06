@@ -66,4 +66,16 @@ class Git_Mirror_MirrorDao extends DataAccessObject{
         return $this->update($sql);
     }
 
+    /**
+     * @return bool
+     */
+    public function delete($id) {
+        $id  = $this->da->escapeInt($id);
+
+        $sql = "DELETE FROM plugin_git_mirrors
+                WHERE id = $id";
+
+        return $this->update($sql);
+    }
+
 }

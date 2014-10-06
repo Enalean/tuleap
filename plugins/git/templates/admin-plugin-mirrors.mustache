@@ -61,7 +61,8 @@
             <div class="control-group">
                 <div class="controls">
                     <input type="hidden" value="{{ id }}" name="mirror_id"/>
-                    <button class="btn btn-primary update_mirror">{{ update_button }}</button>
+                    <button class="btn btn-primary" name="update_mirror" value="true">{{ update_button }}</button>
+                    <button class="btn btn-danger"  name="delete_mirror" value="true">{{ delete_button }}</button>
                 </div>
             </div>
         </div>

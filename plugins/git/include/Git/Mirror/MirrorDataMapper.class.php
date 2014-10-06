@@ -102,6 +102,23 @@ class Git_Mirror_MirrorDataMapper {
         return $this->dao->updateMirror($id, $url, $ssh_key);
     }
 
+    /**
+     * @return bool
+     * @throws Git_Mirror_MirrorNotFoundException
+     */
+    public function delete($id) {
+        $mirror = $this->fetch($id);
+
+        if (! $this->dao->delete($id)) {
+            return false;
+        }
+
+        $user = $this->user_manager->getUserById($mirror->owner_id);
+        $user->setStatus(PFUser::STATUS_DELETED);
+        $this->user_manager->updateDb($user);
+
+        return true;
+    }
 
     /**
      * @return Git_Mirror_Mirror
@@ -109,7 +126,6 @@ class Git_Mirror_MirrorDataMapper {
      */
     private function fetch($id) {
         $row = $this->dao->fetch($id);
-
         if (! $row) {
             throw new Git_Mirror_MirrorNotFoundException();
         }
