@@ -12,7 +12,7 @@
 require_once('pre.php');
 require_once('www/project/admin/permissions.php');
 
-
+$docid = $request->getValidated('docid', 'uint', 0);
 
 $sql="SELECT description,data,filename,filesize,filetype,doc_group FROM doc_data WHERE docid='$docid'";
 $result=db_query($sql);

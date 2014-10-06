@@ -40,7 +40,28 @@ class XMLDocmanImport {
     private $hardCodedMetadata = array();
 
     // Group map
-    private $ugroupMap = array();
+    private $ugroupMap = array(
+        'nobody' => array(
+            'ugroup_id' => '100',
+            'members' => array(),
+        ),
+        'all_users' => array(
+            'ugroup_id' => '1',
+            'members' => array(),
+        ),
+        'registered_users' => array(
+            'ugroup_id' => '2',
+            'members' => array(),
+        ),
+        'project_members' => array(
+            'ugroup_id' => '3',
+            'members' => array(),
+        ),
+        'project_admins' => array(
+            'ugroup_id' => '4',
+            'members' => array(),
+        ),
+    );
     
     // User map (identifier => "unix" user name)
     private $userMap = array();
@@ -927,7 +948,7 @@ class XMLDocmanImport {
             case 'write':   $type = 'PLUGIN_DOCMAN_WRITE'; break;
             case 'manage':  $type = 'PLUGIN_DOCMAN_MANAGE'; break;
             case 'none':
-            default:        $type = 'PLUGIN_DOCMAN_NONE';
+            default:        $type = '';
         }
 
         $permissions[] = array('ugroup_id' => $this->ugroupMap[$ugroupName]['ugroup_id'], 'type' => $type);
