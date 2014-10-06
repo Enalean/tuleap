@@ -101,7 +101,9 @@ class Rest_TokenManager {
     }
 
     private function generateNewToken() {
-        include_once '/usr/share/php-password-compat/lib/password.php';
+        if (!function_exists('password_hash')) {
+            include_once '/usr/share/php-password-compat/lib/password.php';
+        }
 
         $random_bytes = openssl_random_pseudo_bytes(self::RANDOM_BYTES_LENGTH);
         $token_value  = password_hash(
