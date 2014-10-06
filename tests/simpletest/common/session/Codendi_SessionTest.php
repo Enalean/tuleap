@@ -69,7 +69,7 @@ class Codendi_SessionTest extends UnitTestCase {
     public function test_set() {
         $session = &$this->codendi_session->getSessionNamespace();
         $this->codendi_session->set('fifi.riri.loulou.oncle', 'picsou');
-        $expected = array ('fifi'=>array('riri'=>array('loulou'=>array ('oncle' => 'picsou'))));        
+        $expected = array ('fifi'=>array('riri'=>array('loulou'=>array ('oncle' => 'picsou'))));
         $this->assertEqual($expected, $session);
     }
 
@@ -90,7 +90,7 @@ class Codendi_SessionTest extends UnitTestCase {
     public function test_cleanNamespace() {
         $session = &$this->codendi_session->getSessionNamespace();
         $session['fifi']['riri']['loulou'] = array('oncle'=>'picsou');
-        $this->codendi_session->cleanNamespace();        
+        $this->codendi_session->cleanNamespace();
         $this->assertTrue( $session === '');
     }
 
@@ -116,25 +116,25 @@ class Codendi_SessionTest extends UnitTestCase {
     }
 
     public function test_get_notArrayValue() {
-        $session = &$this->codendi_session->getSessionNamespace(); 
+        $session = &$this->codendi_session->getSessionNamespace();
         $session['fifi']['riri']['loulou'] = 'tutu';
         $value = $this->codendi_session->get('fifi.riri.loulou');
         $this->assertEqual($value, 'tutu');
     }
 
     public function test_getArrayValue() {
-        $session = &$this->codendi_session->getSessionNamespace(); 
+        $session = &$this->codendi_session->getSessionNamespace();
         $session['fifi']['riri']['loulou'] = array('tutu');
         $value = $this->codendi_session->get('fifi.riri.loulou');
         $this->assertEqual($value, array('tutu'));
     }
 
    public function test_get_uncompletePath() {
-        $session = &$this->codendi_session->getSessionNamespace(); 
+        $session = &$this->codendi_session->getSessionNamespace();
         $session['fifi']['riri'] = 'tutu';
         $value = $this->codendi_session->get('fifi.riri.loulou');
         $this->assertEqual($value, null);
-   } 
+   }
 
    public function test_changeSessionNamespace_Relative_AlreadyExists() {
          $session = &$this->codendi_session->getSessionNamespace();
@@ -146,9 +146,9 @@ class Codendi_SessionTest extends UnitTestCase {
 
     public function test_changeSessionNamespace_Relative_DoesntExist() {
          $session = &$this->codendi_session->getSessionNamespace();
-         $this->codendi_session->changeSessionNamespace('fifi.riri');         
+         $this->codendi_session->changeSessionNamespace('fifi.riri');
          $this->codendi_session->changeSessionNamespace('.Codendi_SessionTest');
-         $new_session = $this->codendi_session->getSessionNamespace();         
+         $new_session = $this->codendi_session->getSessionNamespace();
          $this->assertEqual($new_session, array('fifi'=>array('riri'=>array())));
     }
 
@@ -165,12 +165,12 @@ class Codendi_SessionTest extends UnitTestCase {
     public function test_changeSessionNamespace_gotoRoot() {
          $session = &$this->codendi_session->getSessionNamespace();
          $this->codendi_session->changeSessionNamespace('.');
-         $session_bis = &$this->codendi_session->getSessionNamespace();         
+         $session_bis = &$this->codendi_session->getSessionNamespace();
          $this->assertEqual($session, array());
          $this->assertEqual($session_bis, array('Codendi_SessionTest'=>array()));
     }
-    
-    
+
+
     public function test_Overloading() {
         $pseudo_php_session = array();
         $session = new Codendi_Session($pseudo_php_session);
@@ -185,7 +185,20 @@ class Codendi_SessionTest extends UnitTestCase {
         $this->assertFalse(isset($session->riri));
         $this->assertFalse(isset($pseudo_php_session['riri']));
     }
-    
+
+    public function testItRaisesAnErrorWhenTryingToUseAStringAsAStringOffset() {
+        if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
+            $pseudo_php_session = array();
+            $session = new Codendi_Session($pseudo_php_session);
+            $session->changeSessionNamespace('riri');
+            $session->fifi = 'blop';
+            $session->changeSessionNamespace('.riri.fifi');
+
+            $this->expectError();
+            $session->tutu = 'fist';
+        }
+    }
+
     public function test_Overloading_namespace() {
         $pseudo_php_session = array();
         $session = new Codendi_Session($pseudo_php_session);
@@ -198,33 +211,28 @@ class Codendi_SessionTest extends UnitTestCase {
         $session->fifi = 'loulou';
         $this->assertEqual($pseudo_php_session['riri']['fifi'], 'loulou');
         $this->assertEqual($session->fifi, 'loulou');
-        
+
         $session->mickey = array('friend' => 'pluto');
         $session->changeSessionNamespace('mickey');
         $this->assertEqual($session->friend, 'pluto');
         $this->assertEqual($session->get('friend'), 'pluto');
         $this->assertEqual($pseudo_php_session['riri']['mickey']['friend'], 'pluto');
-        
+
         $session->changeSessionNamespace('.');
         $this->assertNull($session->friend);
         $this->assertTrue(isset($session->riri));
-        
+
         $session->changeSessionNamespace('.riri');
         $this->assertTrue(isset($session->mickey));
-        
+
         $session->changeSessionNamespace('.');
         $session->changeSessionNamespace('riri.mickey');
         $this->assertTrue(isset($session->friend));
-        
+
         $session->changeSessionNamespace('.riri.mickey');
         $this->assertTrue(isset($session->friend));
-        
-        $session->changeSessionNamespace('.riri.fifi');
-        $session->tutu = 1;
-        $session->changeSessionNamespace('.riri');
-        $this->assertNotEqual($session->fifi, 'loulou');
-        
-        // {{{ PHP prevents us to do thing like that. Which is too bad        
+
+        // {{{ PHP prevents us to do thing like that. Which is too bad
         $session->changeSessionNamespace('.riri');
 
         //
@@ -236,11 +244,11 @@ class Codendi_SessionTest extends UnitTestCase {
         }
         //here you get the variable value not the reference
         $a =& $session->fifi;
-        $a = 66;        
-        $this->assertEqual($session->fifi, 1);
-        // the workaround:         
+        $a = 66;
+        $this->assertEqual($session->fifi, 'loulou');
+        // the workaround:
         //here you get the reference
-        $b =& $session->get('fifi');       
+        $b =& $session->get('fifi');
         $b = 66;
         $this->assertEqual($session->fifi, 66);
         // }}}
