@@ -878,4 +878,26 @@ class GitActions extends PluginActions {
 
         return true;
     }
+
+    public function mirror($repository_id) {
+        try {
+            if ($this->manager->mirror($repository_id)) {
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git', 'mirroring_mirror_successful'));
+            }
+
+        } catch(GitDaoException $exception) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'mirroring_mirror_error'));
+        }
+    }
+
+    public function unmirror($repository_id) {
+        try {
+            if ($this->manager->unmirror($repository_id)) {
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git', 'mirroring_unmirror_successful'));
+            }
+
+        } catch(GitDaoException $exception) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'mirroring_unmirror_error'));
+        }
+    }
 }

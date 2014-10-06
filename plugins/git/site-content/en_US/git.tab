@@ -51,6 +51,16 @@ plugin_git	admin_save_submit	Save
 
 plugin_git	admin_mail	Notifications
 
+plugin_git	admin_mirroring	Mirroring
+plugin_git	mirroring_title	Mirroring
+plugin_git	mirroring_info	You are about to mirror the repository <b>$1</b> to all of these mirrors:
+plugin_git	mirroring_mirror	Mirror this repository
+plugin_git	mirroring_unmirror	Unmirror this repository
+plugin_git	mirroring_mirror_successful	The repository is currently being mirrored.
+plugin_git	mirroring_mirror_error	Error during the mirroring of this repository.
+plugin_git	mirroring_unmirror_successful	The repository is currently being unmirrored.
+plugin_git	mirroring_unmirror_error	Error during the unmirroring of this repository.
+
 plugin_git	admin_settings	General settings
 plugin_git	gerrit_pane_title	Gerrit
 plugin_git	gerrit_title	Migration to Gerrit
