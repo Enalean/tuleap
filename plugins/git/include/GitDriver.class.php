@@ -34,7 +34,7 @@ class GitDriver implements DVCSDriver {
     public function __construct() {
     }
 
-    private function execGitAction($cmd, $action_name) {
+    protected function execGitAction($cmd, $action_name) {
         $out = array();
         $ret = -1;
         exec($cmd,$out,$ret);

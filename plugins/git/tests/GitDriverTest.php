@@ -22,7 +22,7 @@
 require_once 'bootstrap.php';
 
 
-class GitDriverTest extends UnitTestCase {
+class GitDriverTest extends TuleapTestCase {
 
     private $destinationPath;
     private $sourcePath;
@@ -49,7 +49,7 @@ class GitDriverTest extends UnitTestCase {
     }
 
     public function itExtractsTheGitVersion() {
-        $git_driver = partial_mock('execGitAction');
+        $git_driver = partial_mock('GitDriver', array('execGitAction'));
         stub($git_driver)->execGitAction('git --version', 'version')->returns('git version 1.8.1.2');
         $this->assertEqual($git_driver->getGitVersion(), "1.8.1.2");
     }
