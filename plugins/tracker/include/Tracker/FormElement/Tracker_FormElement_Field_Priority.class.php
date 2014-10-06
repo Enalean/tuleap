@@ -236,4 +236,24 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
     public function getFieldDataFromSoapValue(stdClass $soap_value, Tracker_Artifact $artifact = null) {
         throw new Exception('DEPRECATION ERROR: Priority field is not compatible with SOAP methods. If you need it, please use REST.');
     }
+
+    /**
+     * Validate a field
+     *
+     * @param Tracker_Artifact                $artifact             The artifact to check
+     * @param mixed                           $submitted_value      The submitted value
+     * @param Tracker_Artifact_ChangesetValue $last_changeset_value The last changeset value of the field (give null if no old value)
+     *
+     * @return boolean true on success or false on failure
+     */
+    public function validateFieldWithPermissionsAndRequiredStatus(Tracker_Artifact $artifact, $submitted_value, Tracker_Artifact_ChangesetValue $last_changeset_value = null) {
+        $is_valid = true;
+
+        if ($submitted_value !== null && ! $this->userCanUpdate()) {
+            $is_valid = true;
+            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'field_not_taken_account', array($this->getName())));
+        }
+
+        return $is_valid;
+    }
 }
