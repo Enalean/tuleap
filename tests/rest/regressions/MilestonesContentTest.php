@@ -111,7 +111,8 @@ class Regressions_MilestonesContentTest extends RestBase {
         $tracker = $this->tracker_test_helper->getTrackerRest('releases');
         return $tracker->createArtifact(
             array(
-                $tracker->getSubmitTextValue('Version Number', $release)
+                $tracker->getSubmitTextValue('Version Number', $release),
+                $tracker->getSubmitListValue('Progress', 'To be defined'),
             )
         );
     }
