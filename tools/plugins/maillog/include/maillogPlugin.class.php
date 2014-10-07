@@ -92,19 +92,18 @@ class maillogPlugin extends Plugin {
             $row = $dar->current();
 
             $dar2 = $dao->getAllHeaders($row['id_message']);
-            echo "<div style=\"background-color: lightgrey;\">\n";
+            echo '<table class="table table-bordered table-striped"><tbody>';
             while($dar2->valid()) {
                 $row2 = $dar2->current();
-                echo "<strong>".$hp->purify($row2['name']).":</strong> ".$hp->purify($row2['value'])."<br>\n";
+                echo "<tr><th>".$hp->purify($row2['name']).":</th><td>".$hp->purify($row2['value'])."</td></tr>";
                 $dar2->next();
             }
-            echo "</div>\n";
             $input = preg_replace("/=\r?\n/", '', $row['html_body']);
             $input = preg_replace('/=([a-f0-9]{2})/ie', "chr(hexdec('\\1'))", $input);
-            echo $input;
-            echo '<div style="width: 80em; font-family: monospace; margin-bottom: 0.5em;">'."\n";
-            echo $hp->purify($row['body'], CODENDI_PURIFIER_BASIC);
-            echo "</div>\n";
+            echo '<tr><th></th><td>';
+            var_dump(substr($input, 0, 400));
+            echo '</td></tr>';
+            echo "</table>\n";
 
             $dar->next();
         }

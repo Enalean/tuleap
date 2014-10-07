@@ -116,7 +116,7 @@ if (isset($send_mail)) {
 $valid = new Valid_Text('cc');
 $valid->required();
 if ($request->valid($valid)) {
-    $requestCc = $request->get('cc');
+    $cc = $request->get('cc');
 }
 
 $mailMgr = new MailManager();
@@ -137,13 +137,9 @@ if (isset($touser)) {
     $dest = $to;
 }
 
-if (isset($requestCc) && strlen($requestCc) > 0) {
-    $mailArray = split('[,;]', $requestCc);
-    $ccArray = $um->retreiveUsersFromMails($mailArray);
-    if (!empty($ccArray['users'])) {
-        $cc = $mail->setCcUser($ccArray['users']);
-        $dest .= ','.implode(',', $cc);
-    }
+if (isset($cc) && strlen($cc) > 0) {
+    $mail->setCc($cc);
+    $dest .= ','. $cc;
 }
 
 $mail->setSubject($subject);

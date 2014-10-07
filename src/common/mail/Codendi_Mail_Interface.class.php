@@ -35,7 +35,6 @@ interface Codendi_Mail_Interface {
     const FORMAT_TEXT = 'text';
     
     public function send();
-    public function _validateRecipient($list);
 
     public function setCc($cc);
     public function setBcc($bcc);

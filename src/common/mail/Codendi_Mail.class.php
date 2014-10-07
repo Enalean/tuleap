@@ -46,12 +46,18 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      * @var Tuleap_Template_Mail 
      */
     protected $look_and_feel_template;
-    
+
+    /**
+     * @var Mail_RecipientListBuilder
+     */
+    private $recipient_list_builder;
+
     /**
      * Constructor
      */
     function __construct() {
-        $this->mail = new Zend_Mail('UTF-8');
+        $this->mail                   = new Zend_Mail('UTF-8');
+        $this->recipient_list_builder = new Mail_RecipientListBuilder(UserManager::instance());
     }
 
     /**
@@ -79,19 +85,12 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     /**
      * Check if given user is autorised to get mails (Ie. Active or Restricted) user.
      *
-     * @param Array of users $recipArray
+     * @param Array of users $recipients
      *
      * @return Array of user_name and mail
      */
-    function _validateRecipient($recipArray) {
-        $retArray = array();
-        $allowedStatus = array('A', 'R', 'P', 'V', 'W');
-        foreach($recipArray as $user) {
-            if (in_array($user->getStatus(), $allowedStatus)) {
-                $retArray[] = array('real_name' => $user->getRealName(), 'email' => $user->getEmail());
-            }
-        }
-        return $retArray;
+    private function validateArrayOfUsers(array $users) {
+        return $this->recipient_list_builder->getValidRecipientsFromUsers($users);
     }
 
     /**
@@ -122,20 +121,8 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      *
      * @return Array of real_name and mail
      */
-    function _validateRecipientMail($mailList) {
-        $mailArray = split('[;,]', $mailList);
-        $retArray = array();
-        $userManager = UserManager::instance();
-        $usersArray = $userManager->retreiveUsersFromMails($mailArray);
-        if (!empty($usersArray))  {
-            //Recuperate an array of valid Users passed on the users array
-            $retArray = $this->_validateRecipient($usersArray['users']);
-            //Recuperate an array of mails passed on the emails array
-            foreach ($usersArray['emails'] as $ident) {
-                $retArray[] = array('email' =>$ident, 'real_name' =>'');
-            }
-        }
-        return $retArray;
+    private function validateCommaSeparatedListOfAddresses($comma_separeted_addresses) {
+        return $this->recipient_list_builder->getValidRecipientsFromAddresses(split('[;,]', $comma_separeted_addresses));
     }
 
     /**
@@ -190,7 +177,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     function setTo($to, $raw=false) {
         list($to,) = $this->_cleanupMailFormat($to);
         if(!$raw) {
-            $to = $this->_validateRecipientMail($to);
+            $to = $this->validateCommaSeparatedListOfAddresses($to);
             if (!empty($to)) {
                 foreach ($to as $row) {
                     $this->mail->addTo($row['email'], $row['real_name']);
@@ -217,7 +204,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      */
     function setBcc($bcc, $raw=false) {
         if(!$raw) {
-            $bcc = $this->_validateRecipientMail($bcc);
+            $bcc = $this->validateCommaSeparatedListOfAddresses($bcc);
             if (!empty($bcc)) {
                 foreach ($bcc as $row) {
                     $this->mail->addBcc($row['email'], $row['real_name']);
@@ -244,7 +231,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      */
     function setCc($cc, $raw=false) {
         if(!$raw) {
-            $cc = $this->_validateRecipientMail($cc);
+            $cc = $this->validateCommaSeparatedListOfAddresses($cc);
             if (!empty($cc)) {
                 foreach ($cc as $row) {
                     $this->mail->addCc($row['email'], $row['real_name']);
@@ -357,7 +344,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      * @return Array
      */
     function setToUser($to) {
-        $arrayTo = $this->_validateRecipient($to);
+        $arrayTo = $this->validateArrayOfUsers($to);
         $arrayToRealName = array();
         foreach ($arrayTo as $to) {
             $this->mail->addTo($to['email'], $to['real_name']);
@@ -373,7 +360,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      * @return Array;
      */
     function setBccUser($bcc) {
-        $arrayBcc = $this->_validateRecipient($bcc);
+        $arrayBcc = $this->validateArrayOfUsers($bcc);
         $arrayBccRealName = array();
         foreach ($arrayBcc as $user) {
             $this->mail->addBcc($user['email'], $user['real_name']);
@@ -389,7 +376,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      * @return Array
      */
     function setCcUser($cc) {
-        $arrayCc = $this->_validateRecipient($cc);
+        $arrayCc = $this->validateArrayOfUsers($cc);
         $arrayCcRealName = array();
         foreach ($arrayCc as $user) {
             $this->mail->addCc($user['email'], $user['real_name']);

@@ -23,8 +23,19 @@ require_once 'common/mail/MailManager.class.php';
 Mock::generate('PFUser');
 Mock::generate('UserManager');
 
-class MailManagerTest extends UnitTestCase {
-    
+class MailManagerTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $user_manager = mock('UserManager');
+        UserManager::setInstance($user_manager);
+    }
+
+    public function tearDown() {
+        UserManager::clearInstance();
+        parent::tearDown();
+    }
+
     function testMailShouldCreateHtmlMailForUserByDefault() {
         $mm = TestHelper::getPartialMock('MailManager', array('getConfig'));
         

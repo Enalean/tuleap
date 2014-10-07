@@ -30,26 +30,6 @@ class FakeZend_Mail {
 
 class Codendi_MailTest extends UnitTestCase {
 
-    function testValidateRecipient() {
-        $mail = new Codendi_MailTestVersion($this);
-
-        $user1 = mock('PFUser');
-        $user1->setReturnValue('getRealName', 'user 1');
-        $user1->setReturnValue('getEmail', 'user_1@tuleap.net');
-        $user1->setReturnValue('getStatus', 'A');
-
-        $user2 = mock('PFUser');
-        $user2->setReturnValue('getRealName', 'user 2');
-        $user2->setReturnValue('getEmail', 'user_2@tuleap.net');
-        $user2->setReturnValue('getStatus', 'S');
-
-        $recipArray = array($user1, $user2);
-
-        $recipients = $mail->_validateRecipient($recipArray);
-        $retArray = array(array('real_name' => $user1->getRealName(), 'email' => $user1->getEmail()));
-        $this->assertEqual($recipients, $retArray);
-    }
-
     function testCleanupMailFormat() {
         $mail = new Codendi_MailTestVersion();
         $this->assertEqual(array('john.doe@example.com', 'Tuleap'), $mail->_cleanupMailFormat('"Tuleap" <john.doe@example.com>'));
