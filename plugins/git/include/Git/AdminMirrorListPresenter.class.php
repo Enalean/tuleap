@@ -18,20 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class Git_AdminMirrorPresenter extends Git_AdminPresenter {
+class Git_AdminMirrorListPresenter extends Git_AdminMirrorPresenter {
 
-    public $manage_mirrors = true;
+    public $see_all = true;
 
-    public $mirrors_active = 'active';
+    public $list_of_mirrors;
 
-    public $add_a_mirror = false;
-
-    public $modify_a_mirror = false;
-
-    public $see_all = false;
-
-    public function __construct($title, CSRFSynchronizerToken $csrf) {
+    public function __construct($title, CSRFSynchronizerToken $csrf, array $list_of_mirrors) {
         parent::__construct($title, $csrf);
+
+        $this->list_of_mirrors = $list_of_mirrors;
+        $this->btn_submit      = $GLOBALS['Language']->getText('global', 'btn_submit');
+    }
+
+    public function add_mirror() {
+        return $GLOBALS['Language']->getText('plugin_git','add_mirror');
     }
 
     public function mirror_section_title() {
@@ -52,5 +53,9 @@ abstract class Git_AdminMirrorPresenter extends Git_AdminPresenter {
 
     public function pwd_label() {
         return $GLOBALS['Language']->getText('plugin_git','pwd_label');
+    }
+
+    public function list_of_mirrors_not_empty() {
+        return count($this->list_of_mirrors) > 0;
     }
 }

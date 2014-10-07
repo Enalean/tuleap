@@ -23,12 +23,11 @@ class Git_Mirror_MirrorDao extends DataAccessObject{
     /**
      * @return int | false
      */
-    public function save($url, $ssh_key) {
-        $url      = $this->da->quoteSmart($url);
-        $ssh_key  = $this->da->quoteSmart($ssh_key);
+    public function save($url) {
+        $url = $this->da->quoteSmart($url);
 
-        $sql = "INSERT INTO plugin_git_mirrors (url, ssh_key)
-                VALUES($url, $ssh_key)";
+        $sql = "INSERT INTO plugin_git_mirrors (url)
+                VALUES($url)";
 
         return $this->updateAndGetLastId($sql);
     }
@@ -55,12 +54,11 @@ class Git_Mirror_MirrorDao extends DataAccessObject{
     /**
      * @return bool
      */
-    public function updateMirror($id, $url, $ssh_key) {
+    public function updateMirror($id, $url) {
         $url      = $this->da->quoteSmart($url);
-        $ssh_key  = $this->da->quoteSmart($ssh_key);
 
         $sql = "UPDATE plugin_git_mirrors
-                SET url = $url, ssh_key = $ssh_key
+                SET url = $url
                 WHERE id = $id";
 
         return $this->update($sql);

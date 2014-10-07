@@ -18,29 +18,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class Git_Mirror_Mirror {
+class b201410061023_modify_table_plugin_git_mirrors extends ForgeUpgrade_Bucket {
 
-    public $id;
+    public function description() {
+        return <<<EOT
+Modify plugin_git_mirrors table to drop ssh key column.
+EOT;
+    }
 
-    public $url;
+    public function preUp() {
+        $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
+    }
 
-     /** @var PFUser */
-    public $owner;
+    public function up() {
+        $sql = "ALTER TABLE plugin_git_mirrors
+            DROP COLUMN ssh_key";
 
-    public $owner_name;
-
-    public $owner_id;
-
-    public $ssh_key;
-
-
-    public function __construct(PFUser $owner, $id, $url) {
-        $this->id       = $id;
-        $this->url      = $url;
-        $this->owner    = $owner;
-
-        $this->ssh_key    = ($owner->getAuthorizedKeysRaw()) ? $owner->getAuthorizedKeysRaw() : '';
-        $this->owner_name = $owner->getName();
-        $this->owner_id   = $owner->getId();
+        $res = $this->db->dbh->exec($sql);
+        if ($res === false) {
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while dropping ssh_key column in plugin_git_mirrors table.');
+        }
     }
 }

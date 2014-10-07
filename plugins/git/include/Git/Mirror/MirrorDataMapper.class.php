@@ -43,25 +43,25 @@ class Git_Mirror_MirrorDataMapper {
             throw new Git_Mirror_MissingDataException();
         }
 
-        $mirror_id = $this->dao->save($url, $ssh_key);
+        $mirror_id = $this->dao->save($url);
         if (! $mirror_id) {
             throw new Git_Mirror_CreateException();
         }
 
-        $user = $this->createUserForMirror($mirror_id, $password);
+        $user = $this->createUserForMirror($mirror_id, $password, $ssh_key);
 
         return $this->getInstanceFromRow($user, array(
             'id'      => $mirror_id,
-            'url'     => $url,
-            'ssh_key' => $ssh_key
+            'url'     => $url
         ));
     }
 
-    private function createUserForMirror($mirror_id, $password) {
+    private function createUserForMirror($mirror_id, $password, $ssh_key) {
         $user = new PFUser(array(
             'user_name' => self::MIRROR_OWNER_PREFIX.$mirror_id,
         ));
         $user->setPassword($password);
+        $user->setAuthorizedKeys($ssh_key);
         $this->user_manager->createAccount($user);
 
         return $user;
@@ -99,7 +99,16 @@ class Git_Mirror_MirrorDataMapper {
             throw new Git_Mirror_MissingDataException();
         }
 
-        return $this->dao->updateMirror($id, $url, $ssh_key);
+        if ($ssh_key != $mirror->ssh_key) {
+            $this->updateUserKeyForMirror($mirror->owner, $ssh_key);
+        }
+
+        return $this->dao->updateMirror($id, $url);
+    }
+
+    private function updateUserKeyForMirror(PFUser $owner, $ssh_key) {
+        $owner->setAuthorizedKeys($ssh_key);
+        $this->user_manager->updateDb($owner);
     }
 
     /**
@@ -124,7 +133,7 @@ class Git_Mirror_MirrorDataMapper {
      * @return Git_Mirror_Mirror
      * @throws Git_Mirror_MirrorNotFoundException
      */
-    private function fetch($id) {
+    public function fetch($id) {
         $row = $this->dao->fetch($id);
         if (! $row) {
             throw new Git_Mirror_MirrorNotFoundException();
@@ -141,8 +150,7 @@ class Git_Mirror_MirrorDataMapper {
         return new Git_Mirror_Mirror(
             $owner,
             $row['id'],
-            $row['url'],
-            $row['ssh_key']
+            $row['url']
         );
     }
 

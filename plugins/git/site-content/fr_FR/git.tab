@@ -309,11 +309,12 @@ plugin_git	admin_mirror_updated	Miroir modifié !
 plugin_git	admin_mirror_cannot_delete	Impossible de supprimer le miroir
 plugin_git	admin_mirror_deleted	Miroir supprimé!
 plugin_git	add_mirror	Ajouter un nouveau miroir
-plugin_git	admin_mirror_list	Miroirs exitants
 plugin_git	mirror_section_title	Administration des miroirs
 plugin_git	url_label	Url
 plugin_git	owner_label	Propriétaire
-plugin_git	ssh_key_label	Clé SSH
-plugin_git	pwd_label	Mot de pass du propriétaire
+plugin_git	ssh_key_label	Clé SSH du propriétaire
+plugin_git	pwd_label	Mot de passe du propriétaire
 plugin_git	admin_update_button	Modifier
 plugin_git	admin_delete_button	Supprimer
+plugin_git	change_pwd	cliquer ici pour modifier
+plugin_git	or	ou
