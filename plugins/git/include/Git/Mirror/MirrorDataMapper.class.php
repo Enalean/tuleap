@@ -83,6 +83,33 @@ class Git_Mirror_MirrorDataMapper {
     }
 
     /**
+     * @return Git_Mirror_Mirror[]
+     */
+    public function fetchAllRepositoryMirrors($repository_id) {
+        $rows = $this->dao->fetchAllRepositoryMirrors($repository_id);
+
+        $mirrors = array();
+        foreach ($rows as $row) {
+            $owner     = $this->getMirrorOwner($row['id']);
+            $mirrors[] = $this->getInstanceFromRow($owner, $row);
+        }
+
+        return $mirrors;
+    }
+
+    public function doesAllSelectedMirrorIdsExist($selected_mirror_ids) {
+        return count($selected_mirror_ids) === count($this->dao->fetchByIds($selected_mirror_ids));
+    }
+
+    public function unmirrorRepository($repository_id) {
+        return $this->dao->unmirrorRepository($repository_id);
+    }
+
+    public function mirrorRepositoryTo($repository_id, $selected_mirror_ids) {
+        return $this->dao->mirrorRepositoryTo($repository_id, $selected_mirror_ids);
+    }
+
+    /**
      * @return bool
      * @throws Git_Mirror_MirrorNoChangesException
      * @throws Git_Mirror_MirrorNotFoundException

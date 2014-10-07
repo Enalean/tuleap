@@ -53,13 +53,13 @@ plugin_git	admin_mail	Notifications
 
 plugin_git	admin_mirroring	Mirroring
 plugin_git	mirroring_title	Mirroring
-plugin_git	mirroring_info	You are about to mirror the repository <b>$1</b> to all of these mirrors:
-plugin_git	mirroring_mirror	Mirror this repository
-plugin_git	mirroring_unmirror	Unmirror this repository
-plugin_git	mirroring_mirror_successful	The repository is currently being mirrored.
-plugin_git	mirroring_mirror_error	Error during the mirroring of this repository.
-plugin_git	mirroring_unmirror_successful	The repository is currently being unmirrored.
-plugin_git	mirroring_unmirror_error	Error during the unmirroring of this repository.
+plugin_git	mirroring_info	Select the mirrors where you want to replicate the repository <b>$1</b>:
+plugin_git	mirroring_mirror_name	Name
+plugin_git	mirroring_mirror_url	URL
+plugin_git	mirroring_mirror_used	Used by this repository?
+plugin_git	mirroring_update_mirroring	Update mirroring of this repository
+plugin_git	mirroring_mirroring_successful	The repository will be replicated on the selected mirrors shortly.
+plugin_git	mirroring_mirroring_error	Error when defining on which mirrors the repository is replicated.
 
 plugin_git	admin_settings	General settings
 plugin_git	gerrit_pane_title	Gerrit

@@ -879,25 +879,20 @@ class GitActions extends PluginActions {
         return true;
     }
 
-    public function mirror($repository_id) {
-        try {
-            if ($this->manager->mirror($repository_id)) {
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git', 'mirroring_mirror_successful'));
-            }
+    public function updateMirroring($repository_id, $selected_mirror_ids) {
+        $mirror_data_mapper = new Git_Mirror_MirrorDataMapper(
+            new Git_Mirror_MirrorDao(),
+            UserManager::instance()
+        );
 
-        } catch(GitDaoException $exception) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'mirroring_mirror_error'));
-        }
-    }
+        if ($mirror_data_mapper->doesAllSelectedMirrorIdsExist($selected_mirror_ids)
+            && $mirror_data_mapper->unmirrorRepository($repository_id)
+            && $mirror_data_mapper->mirrorRepositoryTo($repository_id, $selected_mirror_ids)) {
 
-    public function unmirror($repository_id) {
-        try {
-            if ($this->manager->unmirror($repository_id)) {
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git', 'mirroring_unmirror_successful'));
-            }
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git', 'mirroring_mirroring_successful'));
 
-        } catch(GitDaoException $exception) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'mirroring_unmirror_error'));
+        } else {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'mirroring_mirroring_error'));
         }
     }
 }

@@ -1,0 +1,36 @@
+<h3>{{ mirroring_title }}</h3>
+
+<form action="/plugins/git/?group_id={{ project_id }}&pane=mirroring" id="repoAction" name="repoAction" method="POST">
+    <p>{{{ mirroring_info }}}</p>
+
+    <table class="table table-striped table-bordered mirrors-list">
+        <thead>
+            <tr>
+                <th></th>
+                <th class="url">{{ mirroring_mirror_url }}</th>
+                <th class="used">{{ mirroring_mirror_used }}</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{# mirror_presenters }}
+            <tr>
+                <td>
+                    <input type="checkbox" name="selected_mirror_ids[]" value="{{ id }}" {{# is_used }}checked{{/ is_used }}>
+                </td>
+                <td class="url">{{ url }}</td>
+                <td class="used">
+                    {{# is_used }}
+                        <i class="icon-ok"></i>
+                    {{/ is_used }}
+                </td>
+            </tr>
+        {{/ mirror_presenters }}
+        </tbody>
+    </table>
+    </ul>
+
+    <input type="hidden" name="action" value="update_mirroring">
+    <input type="hidden" name="repo_id" value="{{ repository_id }}">
+
+    <input type="submit" class="btn btn-primary" name="mirror" value="{{ mirroring_update_mirroring }}">
+</form>

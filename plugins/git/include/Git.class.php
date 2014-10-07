@@ -311,8 +311,7 @@ class Git extends PluginController {
                                             'migrate_to_gerrit',
                                             'disconnect_gerrit',
                                             'delete_gerrit_project',
-                                            'mirror',
-                                            'unmirror',
+                                            'update_mirroring'
             );
         } else {
             $this->addPermittedAction('index');
@@ -667,21 +666,15 @@ class Git extends PluginController {
                 $this->addAction('redirectToRepoManagementWithMigrationAccessRightInformation', array($this->groupId, $repoId, $pane));
                 break;
 
-            case 'mirror':
+            case 'update_mirroring':
                 if (! $this->factory->getRepositoryById($repoId)) {
                     $this->addError($this->getText('actions_repo_not_found'));
                 }
 
-                $this->addAction('mirror', array($repoId));
-                $this->addAction('redirectToRepoManagement', array($this->groupId, $repoId, $pane));
-                break;
-
-            case 'unmirror':
-                if (! $this->factory->getRepositoryById($repoId)) {
-                    $this->addError($this->getText('actions_repo_not_found'));
-                }
-
-                $this->addAction('unmirror', array($repoId));
+                $this->addAction('updateMirroring', array(
+                    $repoId,
+                    $this->request->get('selected_mirror_ids')
+                ));
                 $this->addAction('redirectToRepoManagement', array($this->groupId, $repoId, $pane));
                 break;
 

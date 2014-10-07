@@ -43,7 +43,6 @@ class GitDao extends DataAccessObject {
     const REPOSITORY_BACKEND_TYPE     = 'repository_backend_type';
     const REPOSITORY_SCOPE            = 'repository_scope';
     const REPOSITORY_NAMESPACE        = 'repository_namespace';
-    const REPOSITORY_IS_MIRRORED      = 'repository_is_mirrored';
     const ENABLE_ONLINE_EDIT          = "enable_online_edit";
 
     const REPO_NAME_MAX_LENGTH = 255;
@@ -94,21 +93,6 @@ class GitDao extends DataAccessObject {
         return true;
     }
 
-    public function updateMirrorStatus($repository_id, $is_mirrored) {
-        $repository_id = $this->da->escapeInt($repository_id);
-        $is_mirrored   = $this->da->escapeInt($is_mirrored);
-
-        $query = ' UPDATE ' . $this->getTable() .
-                    ' SET ' . self::REPOSITORY_IS_MIRRORED . '=' . $is_mirrored .
-                  ' WHERE ' . self::REPOSITORY_ID . '=' . $repository_id;
-
-        if ($this->update($query) === false) {
-            throw new GitDaoException( $GLOBALS['Language']->getText('plugin_git', 'dao_update_error').' : '.$this->da->isError());
-        }
-
-        return true;
-    }
-
     public function save($repository) {
         $id          = (int)$repository->getId();
 
@@ -131,7 +115,6 @@ class GitDao extends DataAccessObject {
         $isInitialized  = $repository->getIsInitialized();
         $creationUserId = $repository->getCreatorId();
         $access         = $repository->getAccess();
-        $is_mirrored    = $this->da->escapeInt($repository->getIsMirrored());
         //protect parameters
         $id             = $this->da->escapeInt($id);
         $name           = $this->da->quoteSmart($name);
@@ -151,8 +134,7 @@ class GitDao extends DataAccessObject {
                      ' SET '.self::REPOSITORY_DESCRIPTION.'='.$description.','.
                             self::REPOSITORY_IS_INITIALIZED.'='.$isInitialized.','.
                             self::REPOSITORY_ACCESS.'='.$access.','.
-                            self::REPOSITORY_MAIL_PREFIX.'='.$mailPrefix.','.
-                            self::REPOSITORY_IS_MIRRORED.'='.$is_mirrored.' '.
+                            self::REPOSITORY_MAIL_PREFIX.'='.$mailPrefix.
                      'WHERE '.self::REPOSITORY_ID.'='.$id;
         } else {
             if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
@@ -173,8 +155,7 @@ class GitDao extends DataAccessObject {
                                                          self::REPOSITORY_ACCESS.','.
                                                          self::REPOSITORY_BACKEND_TYPE.','.
                                                          self::REPOSITORY_SCOPE.','.
-                                                         self::REPOSITORY_NAMESPACE.','.
-                                                         self::REPOSITORY_IS_MIRRORED.
+                                                         self::REPOSITORY_NAMESPACE.
                                                     ') values ('.
                                                         "".$name.",".
                                                         "".$path.",".
@@ -507,7 +488,6 @@ class GitDao extends DataAccessObject {
         $repository->setRemoteServerId($result[self::REMOTE_SERVER_ID]);
         $repository->setRemoteServerDisconnectDate($result[self::REMOTE_SERVER_DISCONNECT_DATE]);
         $repository->setRemoteProjectDeletionDate($result[self::REMOTE_SERVER_DELETE_DATE]);
-        $repository->setIsMirrored($result[self::REPOSITORY_IS_MIRRORED]);
         $repository->loadNotifiedMails();
         /* Here just for reviewer test, will be replaced by real DB data in a future changeset*/
         $result[self::ENABLE_ONLINE_EDIT] = false;
