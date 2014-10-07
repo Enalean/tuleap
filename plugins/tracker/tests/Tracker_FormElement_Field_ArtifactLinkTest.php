@@ -219,6 +219,17 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
         $this->assertIdentical(array(), $artifacts);
     }
 
+    public function itReturnsAnEmptyPaginatedListWhenThereAreNoValuesInTheChangeset() {
+        $field = anArtifactLinkField()->build();
+        $changeset = new MockTracker_Artifact_Changeset();
+        $changeset->setReturnValue('getValue', null, array($this));
+        $user = aUser()->build();
+
+        $sliced = $field->getSlicedLinkedArtifacts($changeset, $user, 10, 0);
+        $this->assertIdentical(array(), $sliced->getArtifacts());
+        $this->assertEqual(0, $sliced->getTotalSize());
+    }
+
     public function itCreatesAListOfArtifactsBasedOnTheIdsInTheChangesetField() {
         $user = aUser()->build();
         
@@ -242,6 +253,76 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
         $this->assertEqual($expected_artifacts, $artifacts);
     }
 
+    public function itCreatesAPaginatedListOfArtifactsBasedOnTheIdsInTheChangesetField() {
+        $user = aUser()->build();
+
+        $artifact_1 = mock('Tracker_Artifact');
+        stub($artifact_1)->getId()->returns(123);
+        stub($artifact_1)->userCanView()->returns(true);
+        $artifact_2 = mock('Tracker_Artifact');
+        stub($artifact_2)->getId()->returns(345);
+        stub($artifact_2)->userCanView()->returns(true);
+
+        $field = anArtifactLinkField()->build();
+        $field->setArtifactFactory($this->GivenAnArtifactFactory(array($artifact_1, $artifact_2)));
+
+        $changeset = $this->GivenAChangesetValueWithArtifactIds($field, array(123, 345));
+
+        $sliced             = $field->getSlicedLinkedArtifacts($changeset, $user, 10, 0);
+        $expected_artifacts = array(
+            $artifact_1,
+            $artifact_2
+        );
+        $this->assertEqual($expected_artifacts, $sliced->getArtifacts());
+        $this->assertEqual(2, $sliced->getTotalSize());
+    }
+
+    public function itCreatesAFirstPageOfPaginatedListOfArtifactsBasedOnTheIdsInTheChangesetField() {
+        $user = aUser()->build();
+
+        $artifact_1 = mock('Tracker_Artifact');
+        stub($artifact_1)->getId()->returns(123);
+        stub($artifact_1)->userCanView()->returns(true);
+        $artifact_2 = mock('Tracker_Artifact');
+        stub($artifact_2)->getId()->returns(345);
+        stub($artifact_2)->userCanView()->returns(true);
+
+        $field = anArtifactLinkField()->build();
+        $field->setArtifactFactory($this->GivenAnArtifactFactory(array($artifact_1, $artifact_2)));
+
+        $changeset = $this->GivenAChangesetValueWithArtifactIds($field, array(123, 345));
+
+        $sliced             = $field->getSlicedLinkedArtifacts($changeset, $user, 1, 0);
+        $expected_artifacts = array(
+            $artifact_1
+        );
+        $this->assertEqual($expected_artifacts, $sliced->getArtifacts());
+        $this->assertEqual(2, $sliced->getTotalSize());
+    }
+
+    public function itCreatesASecondPageOfPaginatedListOfArtifactsBasedOnTheIdsInTheChangesetField() {
+        $user = aUser()->build();
+
+        $artifact_1 = mock('Tracker_Artifact');
+        stub($artifact_1)->getId()->returns(123);
+        stub($artifact_1)->userCanView()->returns(true);
+        $artifact_2 = mock('Tracker_Artifact');
+        stub($artifact_2)->getId()->returns(345);
+        stub($artifact_2)->userCanView()->returns(true);
+
+        $field = anArtifactLinkField()->build();
+        $field->setArtifactFactory($this->GivenAnArtifactFactory(array($artifact_1, $artifact_2)));
+
+        $changeset = $this->GivenAChangesetValueWithArtifactIds($field, array(123, 345));
+
+        $sliced             = $field->getSlicedLinkedArtifacts($changeset, $user, 1, 1);
+        $expected_artifacts = array(
+            $artifact_2
+        );
+        $this->assertEqual($expected_artifacts, $sliced->getArtifacts());
+        $this->assertEqual(2, $sliced->getTotalSize());
+    }
+
     public function itIgnoresIdsThatDontExist() {
         $user     = aUser()->build();
         $artifact = mock('Tracker_Artifact');
@@ -257,6 +338,24 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
         $artifacts          = $field->getLinkedArtifacts($changeset, $user);
         $expected_artifacts = array($artifact);
         $this->assertEqual($expected_artifacts, $artifacts);
+    }
+
+    public function itIgnoresInPaginatedListIdsThatDontExist() {
+        $user     = aUser()->build();
+        $artifact = mock('Tracker_Artifact');
+        stub($artifact)->getId()->returns(123);
+        stub($artifact)->userCanView()->returns(true);
+
+        $field = anArtifactLinkField()->build();
+        $field->setArtifactFactory($this->GivenAnArtifactFactory(array($artifact)));
+
+        $non_existing_id = 666;
+        $changeset = $this->GivenAChangesetValueWithArtifactIds($field, array(123, $non_existing_id));
+
+        $sliced             = $field->getSlicedLinkedArtifacts($changeset, $user, 10, 0);
+        $expected_artifacts = array($artifact);
+        $this->assertEqual($expected_artifacts, $sliced->getArtifacts());
+        $this->assertEqual(2, $sliced->getTotalSize());
     }
 
     public function itReturnsOnlyArtifactsAccessibleByGivenUser() {
@@ -279,7 +378,76 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
         );
         $this->assertEqual($expected_artifacts, $artifacts);
     }
-            
+
+    public function itReturnsOnlyPaginatedArtifactsAccessibleByGivenUser() {
+        $user = aUser()->build();
+
+        $artifact_1 = mock('Tracker_Artifact');
+        stub($artifact_1)->getId()->returns(123);
+        $artifact_2 = mock('Tracker_Artifact');
+        stub($artifact_2)->getId()->returns(345);
+        stub($artifact_2)->userCanView($user)->returns(true);
+
+        $field = anArtifactLinkField()->build();
+        $field->setArtifactFactory($this->GivenAnArtifactFactory(array($artifact_1, $artifact_2)));
+
+        $changeset = $this->GivenAChangesetValueWithArtifactIds($field, array(123, 345));
+
+        $sliced             = $field->getSlicedLinkedArtifacts($changeset, $user, 10, 0);
+        $expected_artifacts = array(
+            $artifact_2
+        );
+        $this->assertEqual($expected_artifacts, $sliced->getArtifacts());
+        $this->assertEqual(2, $sliced->getTotalSize());
+    }
+
+    public function itReturnsAFirstPageOfOnlyPaginatedArtifactsAccessibleByGivenUser() {
+        $user = aUser()->build();
+
+        $artifact_1 = mock('Tracker_Artifact');
+        stub($artifact_1)->getId()->returns(123);
+        $artifact_2 = mock('Tracker_Artifact');
+        stub($artifact_2)->getId()->returns(345);
+        stub($artifact_2)->userCanView($user)->returns(true);
+
+        $field = anArtifactLinkField()->build();
+        $field->setArtifactFactory($this->GivenAnArtifactFactory(array($artifact_1, $artifact_2)));
+
+        $changeset = $this->GivenAChangesetValueWithArtifactIds($field, array(123, 345));
+
+        $sliced             = $field->getSlicedLinkedArtifacts($changeset, $user, 1, 0);
+        $expected_artifacts = array(
+        );
+        $this->assertEqual($expected_artifacts, $sliced->getArtifacts());
+        $this->assertEqual(2, $sliced->getTotalSize());
+    }
+
+    public function itReturnsASecondPageOfOnlyPaginatedArtifactsAccessibleByGivenUser() {
+        $user = aUser()->build();
+
+        $artifact_1 = mock('Tracker_Artifact');
+        stub($artifact_1)->getId()->returns(123);
+        $artifact_2 = mock('Tracker_Artifact');
+        stub($artifact_2)->getId()->returns(345);
+        stub($artifact_2)->userCanView($user)->returns(true);
+
+        $field = anArtifactLinkField()->build();
+        $field->setArtifactFactory($this->GivenAnArtifactFactory(array($artifact_1, $artifact_2)));
+
+        $changeset = $this->GivenAChangesetValueWithArtifactIds($field, array(123, 345));
+
+        $sliced             = $field->getSlicedLinkedArtifacts($changeset, $user, 1, 1);
+        $expected_artifacts = array(
+            $artifact_2
+        );
+        $this->assertEqual($expected_artifacts, $sliced->getArtifacts());
+        $this->assertEqual(2, $sliced->getTotalSize());
+    }
+
+    public function itReturnsPaginatedListOfArtifacts() {
+
+    }
+
     private function GivenAChangesetValueWithArtifactIds($field, $ids) {
         $changeset_value = new MockTracker_Artifact_ChangesetValue_ArtifactLink();
         $changeset_value->setReturnValue('getArtifactIds', $ids);

@@ -1540,13 +1540,60 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $changeset_value = $changeset->getValue($this);
         if ($changeset_value) {
             foreach ($changeset_value->getArtifactIds() as $id) {
-                $artifact = $this->getArtifactFactory()->getArtifactById($id);
-                if ($artifact && $artifact->userCanView($user)) {
-                    $artifacts[] = $artifact;
-                }
+                $this->addArtifactUserCanViewFromId($artifacts, $id, $user);
             }
         }
         return $artifacts;
+    }
+
+
+
+
+    /**
+     * Retrieve sliced linked artifacts according to user's permissions
+     *
+     * This is nearly the same as a paginated list however, for performance
+     * reasons, the total size may be different than the sum of total paginated
+     * artifacts.
+     *
+     * Example to illustrate the difference between paginated and sliced:
+     *
+     * Given that artifact links are [12, 13, 24, 39, 65, 69]
+     * And that the user cannot see artifact #39
+     * When I request linked artifacts by bunchs of 2
+     * Then I get [[12, 13], [24], [65, 69]]  # instead of [[12, 13], [24, 65], [69]]
+     * And total size will be 6               # instead of 5
+     *
+     * @param Tracker_Artifact_Changeset $changeset The changeset you want to retrieve artifact from
+     * @param PFUser                     $user      The user who will see the artifacts
+     * @param int                        $limit     The number of artifact to fetch
+     * @param int                        $offset    The offset
+     *
+     * @return Tracker_Artifact_PaginatedArtifacts
+     */
+    public function getSlicedLinkedArtifacts(Tracker_Artifact_Changeset $changeset, PFUser $user, $limit, $offset) {
+        $changeset_value = $changeset->getValue($this);
+        if (! $changeset_value) {
+            return new Tracker_Artifact_PaginatedArtifacts(array(), 0);
+        }
+
+        $artifact_ids = $changeset_value->getArtifactIds();
+        $size = count($artifact_ids);
+
+        $artifacts = array();
+        foreach (array_slice($artifact_ids, $offset, $limit) as $id) {
+            $this->addArtifactUserCanViewFromId($artifacts, $id, $user);
+        }
+
+        return new Tracker_Artifact_PaginatedArtifacts($artifacts, $size);
+    }
+
+    /** @return Tracker_Artifact|null */
+    private function addArtifactUserCanViewFromId(array &$artifacts, $id, PFUser $user) {
+        $artifact = $this->getArtifactFactory()->getArtifactById($id);
+        if ($artifact && $artifact->userCanView($user)) {
+            $artifacts[] = $artifact;
+        }
     }
 
     /**

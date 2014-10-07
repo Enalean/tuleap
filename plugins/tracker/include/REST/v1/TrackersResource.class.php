@@ -190,7 +190,7 @@ class TrackersResource {
             $artifacts = $this->getArtifactsMatchingQuery($user, $valid_tracker, $query, $offset, $limit);
         } else {
             $pagination = $this->getTrackerArtifactFactory()->getPaginatedArtifactsByTrackerId($id, $limit, $offset);
-            $nb_matching = $pagination->getSize();
+            $nb_matching = $pagination->getTotalSize();
             $artifacts   = $pagination->getArtifacts();
             Header::sendPaginationHeaders($limit, $offset, $nb_matching, self::MAX_LIMIT);
         }
