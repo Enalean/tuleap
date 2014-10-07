@@ -1,3 +1,6 @@
+Version 5.487 - Tuleap 7.6
+    * request #7474 - Error 500 when updating an artifact without status
+
 Version 5.486 - Tuleap 7.6
     * Part of request #7466 Tuleap test suite should run on php 5.4 and onward: Properly catch and restore timezone
 
