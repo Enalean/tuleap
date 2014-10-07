@@ -7,7 +7,7 @@ Version 7.6 (Not released yet)
 	* ldap: 3.54
 	* IM: 1.5.19
 	* statistics: 0.37
-	* git: 3.109
+	* git: 3.110
 	* fulltextsearch: 0.85
 	* graphontrackersv5: 5.14
 	* cardwall: 1.37
@@ -29,7 +29,7 @@ Version 7.6 (Not released yet)
 	* Import docman v1 content into docman v2
 
 	== Themes ==
-	* FlamingParrot: 1.46
+	* FlamingParrot: 1.47
 
 Version 7.5 (Thursday, September 18th 2014)
 
