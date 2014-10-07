@@ -1,3 +1,12 @@
+Version 7.5-4 (Tuesday, October 7th 2014)
+
+	== Bug Fix ==
+	* request #7504: No ability to make search in mediawiki compatibility mode
+	* request #7503: CI job bad parameters with svn
+	* request #7498: Changing rank on graph is not working
+	* request #7499: User home sanity check is too slow
+	* request #7458: External XML Entity Injection
+
 Version 7.5-3 (Tuesday, September 30th 2014)
 
 	== Bug Fix ==
