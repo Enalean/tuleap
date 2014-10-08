@@ -49,6 +49,7 @@
                                 </tr>
                                 <tr ng-repeat="definition in getFilteredDefinitions(environment.filter)
                                     | orderBy:'id'
+                                    | unique: 'id'
                                     | CurrentPageFilter:environment.current_page:ITEMS_PER_PAGE
                                     track by $index"
                                 >

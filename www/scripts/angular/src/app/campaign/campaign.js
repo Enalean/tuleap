@@ -5,5 +5,6 @@ angular.module('campaign', [
     'definition',
     'templates-app',
     'sharedProperties',
-    'gettext'
+    'gettext',
+    'ui.unique'
 ]);
