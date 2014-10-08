@@ -1,3 +1,6 @@
+Version 3.112 - Tuleap 7.6
+    * story #7497: Fix error when loading gitphp.css using FlamingParrot & Fix repository update SQL query)
+
 Version 3.111 - Tuleap 7.6
     * story #7497: choose on which mirrors my repository is mirrored
 
