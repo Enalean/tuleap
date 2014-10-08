@@ -33,6 +33,8 @@ interface Tracker_FormElement_IComputeValues {
      * @return float
      */
     public function getComputedValue(PFUser $user, Tracker_Artifact $artifact, $timestamp = null);
+
+    public function getCachedValue(PFUser $user, Tracker_Artifact $artifact, $timestamp = null);
 }
 
 ?>

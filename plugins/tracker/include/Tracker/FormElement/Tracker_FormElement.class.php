@@ -955,6 +955,10 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             return true;
         }
 
+        if ($permission_type === self::PERMISSION_READ && $user instanceof Tracker_UserWithReadAllPermission) {
+            return true;
+        }
+
         if (! $user) {
             $user = $this->getCurrentUser();
         }
@@ -978,6 +982,10 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      * @return bool
      */
     public function userCanRead(PFUser $user = null) {
+        if (! $user) {
+            $user = $this->getCurrentUser();
+        }
+
         return $this->userHasPermission(self::PERMISSION_READ, $user)
               || $this->userHasPermission(self::PERMISSION_UPDATE, $user);
     }

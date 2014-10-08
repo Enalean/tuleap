@@ -262,16 +262,25 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             return;
         }
 
-        $tonight       = mktime(23, 59, 59, date('n'), date('j'), date('Y'));
+        $tonight = mktime(23, 59, 59, date('n'), date('j'), date('Y'));
 
         foreach($time_period->getDayOffsets() as $day_offset) {
             $timestamp = strtotime("+$day_offset day 23 hours 59 minutes 59 seconds", $start_date);
 
             if ($timestamp <= $tonight) {
-                $remaining_effort = $field->getComputedValue($user, $artifact, $timestamp);
+                $remaining_effort = $this->getCachedValueOrComputeValue($field, $user, $artifact, $timestamp);
                 $burndown_data->addEffortAt($day_offset, $remaining_effort);
             }
         }
+    }
+
+    private function getCachedValueOrComputeValue(Tracker_FormElement_IComputeValues $field, PFUser $user,Tracker_Artifact  $artifact, $timestamp) {
+        $last_night = mktime(0, 0, 0, date('n'), date('j'), date('Y')) - 1;
+        if (! $this->use_cache() || $timestamp > $last_night) {
+            return $field->getComputedValue($user, $artifact, $timestamp);
+        }
+
+        return $field->getCachedValue(new Tracker_UserWithReadAllPermission($user), $artifact, $timestamp);
     }
 
     /**

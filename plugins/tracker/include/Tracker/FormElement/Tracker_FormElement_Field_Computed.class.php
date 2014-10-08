@@ -340,4 +340,19 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
     public function accept(Tracker_FormElement_FieldVisitor $visitor) {
         return $visitor->visitComputed($this);
     }
+
+    /**
+     * @return int | null if no value found
+     */
+    public function getCachedValue(PFUser $user, Tracker_Artifact $artifact, $timestamp = null) {
+        $dao   = Tracker_FormElement_Field_ComputedDaoCache::instance();
+        $value = $dao->getCachedFieldValueAtTimestamp($artifact->getId(), $this->getId(), $timestamp);
+
+        if ($value === false) {
+            $value = $this->getComputedValue($user, $artifact, $timestamp);
+            $dao->saveCachedFieldValueAtTimestamp($artifact->getId(), $this->getId(), $timestamp, $value);
+        }
+
+        return $value;
+    }
 }

@@ -265,6 +265,10 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
         return null;
     }
 
+    public function getCachedValue(PFUser $user, Tracker_Artifact $artifact, $timestamp = null) {
+        return $this->getComputedValue($user, $artifact, $timestamp);
+    }
+
     private function getCurrentValue(Tracker_Artifact $artifact) {
         $changeset_value = $artifact->getValue($this);
 
