@@ -206,19 +206,12 @@ class Git_GitoliteDriver {
     }
 
     protected function fetchReposConfig(Project $project, GitRepository $repository) {
+        $permissions_serializer = new Git_Gitolite_ConfigPermissionsSerializer();
+
         $repo_full_name   = $this->repoFullName($repository, $project->getUnixName());
         $repo_config  = 'repo '. $repo_full_name . PHP_EOL;
         $repo_config .= $this->fetchMailHookConfig($project, $repository);
-        $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_READ);
-        if ($repository->isMigratedToGerrit()) {
-            $key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
-            $key->setGerritHostId($repository->getRemoteServerId());
-            $repo_config .= self::$permissions_types[Git::PERM_WPLUS] . ' = ' .$key->getUserName() . PHP_EOL;
-        } else {
-            $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WRITE);
-            $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WPLUS);
-        }
-        
+        $repo_config .= $permissions_serializer->getForRepository($repository);
         $description = preg_replace( "%\s+%", ' ', $repository->getDescription());
         $repo_config .= "$repo_full_name = \"$description\"".PHP_EOL;
         
@@ -250,31 +243,6 @@ class Git_GitoliteDriver {
         return $conf;
     }
 
-    private function getUserForOnlineEdition(GitRepository $repository) {
-        if ($repository->hasOnlineEditEnabled()) {
-            return ' id_rsa_gl-adm';
-        }
-
-        return '';
-    }
-    /**
-     * Fetch the gitolite readable conf for permissions on a repository
-     *
-     * @return string
-     */
-    public function fetchConfigPermissions($project, $repository, $permission_type) {
-        if (!isset(self::$permissions_types[$permission_type])) {
-            return '';
-        }
-        $git_online_edit_conf_right = $this->getUserForOnlineEdition($repository);
-        $ugroup_literalizer = new UGroupLiteralizer();
-        $repository_groups  = $ugroup_literalizer->getUGroupsThatHaveGivenPermissionOnObject($project, $repository->getId(), $permission_type);
-        if (count($repository_groups) == 0) {
-            return '';
-        }
-        return self::$permissions_types[$permission_type] . ' = ' . implode(' ', $repository_groups).$git_online_edit_conf_right . PHP_EOL;
-    }
-    
     protected function getProjectPermissionConfFile($project) {
         $prjConfDir = 'conf/projects';
         if (!is_dir($prjConfDir)) {

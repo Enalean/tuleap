@@ -21,7 +21,7 @@
 require_once 'Git_GitoliteTestCase.class.php';
 
 class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
-    
+
     protected function _GivenARepositoryWithNameAndNamespace($name, $namespace) {
         $repo = new GitRepository();
         $repo->setName($name);
@@ -122,6 +122,7 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
                     ->withName($repo_name)
                     ->withNamespace('')
                     ->withDescription($repo_description)
+                    ->withProject($prj)
                     ->build()
             )
         );
@@ -167,6 +168,7 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
                     ->withName($repo_name)
                     ->withNamespace('')
                     ->withDescription($repo_description)
+                    ->withProject($prj)
                     ->build()
             )
         );
