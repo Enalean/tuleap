@@ -27,7 +27,7 @@
                     </div>
                 </form>
             </div>
-            <div ng-repeat="category in categories">
+            <div ng-repeat="category in categories" ng-if="canCategoryBeDisplayed(category)">
                 <div class="category">{{ category.label }}</div>
                 <a class="execution-item {{ execution.status | dasherize }}"
                      ng-repeat="execution in category.executions | ExecutionListFilter:search:status:selected_assignee:selected_environment track by $index"
