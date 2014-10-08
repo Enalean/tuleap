@@ -14,8 +14,7 @@
     "angular-moment": "~0.8.0",
     "angular-gettext": "~1.1.0",
     "ngSocket": "~0.2.1",
-    "angular-socket-io": "~0.6.0",
-    "angular-audio": "*"
+    "angular-socket-io": "~0.6.0"
   },
   "dependencies": {},
   "resolutions": {
