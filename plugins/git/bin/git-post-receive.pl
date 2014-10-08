@@ -33,4 +33,9 @@ while (<PHP_LAUNCHER>) {
     }
 }
 close(PHP_LAUNCHER);
-exec "/usr/bin/php $PHP_PARAMS /usr/share/codendi/plugins/git/hooks/post-receive.php $ARGV[0] $ARGV[1] $ARGV[2] $ARGV[3] $ARGV[4]";
+
+if ($ARGV[0] eq "--init") {
+    exec "/usr/bin/php $PHP_PARAMS /usr/share/codendi/plugins/git/hooks/post-receive.php --init $ARGV[1] $ARGV[2]";
+} else {
+    exec "/usr/bin/php $PHP_PARAMS /usr/share/codendi/plugins/git/hooks/post-receive.php $ARGV[0] $ARGV[1] $ARGV[2] $ARGV[3] $ARGV[4]";
+}

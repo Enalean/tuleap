@@ -25,52 +25,75 @@
 
 require_once 'pre.php';
 
-$logger = new BackendLogger();
+$logger = new TruncateLevelLogger(
+    new BackendLogger(),
+    Config::get('sys_logger_level')
+);
+$git_dao                = new GitDao();
+$user_manager           = UserManager::instance();
+$git_repository_factory = new GitRepositoryFactory(
+    $git_dao,
+    ProjectManager::instance()
+);
 
-$repository_path = $argv[1];
-$user_name       = $argv[2];
-$old_rev         = $argv[3];
-$new_rev         = $argv[4];
-$refname         = $argv[5];
-try {
+if ($argv[1] == "--init") {
+    $repository_path = $argv[2];
+    $user_name       = $argv[3];
 
-    $git_exec = new Git_Exec($repository_path, $repository_path);
-    $git_dao  = new GitDao();
+    $git_plugin = PluginManager::instance()->getPluginByName('git');
 
-
-    $post_receive = new Git_Hook_PostReceive(
-        new Git_Hook_LogAnalyzer(
-            $git_exec,
-            $logger
+    $manifest_manager = new Git_Mirror_ManifestManager(
+        new Git_Mirror_MirrorDataMapper(
+            new Git_Mirror_MirrorDao(),
+            $user_manager
         ),
-        new GitRepositoryFactory(
-            $git_dao,
-            ProjectManager::instance()
-        ),
-        UserManager::instance(),
-        new Git_Ci_Launcher(
-            new Jenkins_Client(
-                new Http_Client()
-            ),
-            new Git_Ci_Dao(),
-            $logger
-        ),
-        new Git_Hook_ParseLog(
-            new Git_Hook_LogPushes(
-                $git_dao
-            ),
-            new Git_Hook_ExtractCrossReferences(
-                $git_exec,
-                ReferenceManager::instance()
-            ),
-            $logger
-        )
+        $logger,
+        $git_plugin->getConfigurationParameter('grokmanifest_path')
     );
+    $repository = $git_repository_factory->getFromFullPath($repository_path);
+    if ($repository) {
+        $manifest_manager->triggerUpdate($repository);
+    }
+} else {
+    $repository_path = $argv[1];
+    $user_name       = $argv[2];
+    $old_rev         = $argv[3];
+    $new_rev         = $argv[4];
+    $refname         = $argv[5];
+    try {
 
-    $post_receive->execute($repository_path, $user_name, $old_rev, $new_rev, $refname);
-} catch (Exception $exception) {
-    $logger->error("[git post-receive] $repository_path $user_name $refname $old_rev $new_rev ".$exception->getMessage());
-    exit(1);
+        $git_exec = new Git_Exec($repository_path, $repository_path);
+
+
+        $post_receive = new Git_Hook_PostReceive(
+            new Git_Hook_LogAnalyzer(
+                $git_exec,
+                $logger
+            ),
+            $git_repository_factory,
+            $user_manager,
+            new Git_Ci_Launcher(
+                new Jenkins_Client(
+                    new Http_Client()
+                ),
+                new Git_Ci_Dao(),
+                $logger
+            ),
+            new Git_Hook_ParseLog(
+                new Git_Hook_LogPushes(
+                    $git_dao
+                ),
+                new Git_Hook_ExtractCrossReferences(
+                    $git_exec,
+                    ReferenceManager::instance()
+                ),
+                $logger
+            )
+        );
+
+        $post_receive->execute($repository_path, $user_name, $old_rev, $new_rev, $refname);
+    } catch (Exception $exception) {
+        $logger->error("[git post-receive] $repository_path $user_name $refname $old_rev $new_rev ".$exception->getMessage());
+        exit(1);
+    }
 }
-
-?>
