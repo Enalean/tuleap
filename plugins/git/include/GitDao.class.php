@@ -168,8 +168,7 @@ class GitDao extends DataAccessObject {
                                                         $access.','.                    
                                                         $this->da->quoteSmart($backendType).','.
                                                         $scope.','.
-                                                        $namespace.','.
-                                                        $is_mirrored.
+                                                        $namespace.
                                                         ')';
         }
 
