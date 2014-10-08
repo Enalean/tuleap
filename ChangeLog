@@ -31,6 +31,9 @@ Version 7.6 (Not released yet)
 	== Themes ==
 	* FlamingParrot: 1.47
 
+	== Development ==
+	* Allow to define a directory for combined script outside sources
+
 Version 7.5 (Thursday, September 18th 2014)
 
 	== Bug Fix ==
