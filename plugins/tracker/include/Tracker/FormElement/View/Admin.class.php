@@ -264,11 +264,15 @@ class Tracker_FormElement_View_Admin {
         case 'checkbox':
             $checked = $property['value'] ? 'checked="checked"' : '';
             $html .= '<label class="checkbox">
+                        <input  type="hidden"
+                                name="formElement_data[specific_properties]['. $key .']"
+                                value="0"/>
                         <input  type="checkbox"
                                 name="formElement_data[specific_properties]['. $key .']"
-                                id="formElement_properties_'.$key.'" '. $checked .' />
-                        '.$this->formElement->getPropertyLabel($key)
-                    .'</label>';
+                                id="formElement_properties_'.$key.'" '. $checked .'
+                                value="1"/>
+                        '.$this->formElement->getPropertyLabel($key).'
+                    </label>';
             break;
         case 'label':
             $html .= '<label for="formElement_properties_'. $key .'">'. $this->formElement->getPropertyLabel($key) .'</label> ';

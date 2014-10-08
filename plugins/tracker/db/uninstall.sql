@@ -24,6 +24,7 @@ DROP TABLE IF EXISTS tracker_field_list_bind_users;
 DROP TABLE IF EXISTS tracker_field_list_bind_static;
 DROP TABLE IF EXISTS tracker_field_list_bind_defaultvalue;
 DROP TABLE IF EXISTS tracker_field_list_bind_static_value;
+DROP TABLE IF EXISTS tracker_field_burndown;
 DROP TABLE IF EXISTS tracker_changeset;
 DROP TABLE IF EXISTS tracker_changeset_comment;
 DROP TABLE IF EXISTS tracker_changeset_value;
