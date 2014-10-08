@@ -20,6 +20,13 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 class Combined {
+
+    private $destination_dir;
+
+    public function __construct($destination_dir) {
+        $this->destination_dir = $destination_dir;
+    }
+
     protected function getCombinedScripts() {
         $arr = array(
             '/scripts/polyphills/json2.js',
@@ -98,11 +105,11 @@ class Combined {
     public function isCombined($script) {
         return in_array($script, $this->getCombinedScripts());
     }
-    
+
     protected function getDestinationDir() {
-        return $GLOBALS['codendi_dir'] .'/src/www/scripts/combined';
+        return $this->destination_dir;
     }
-    
+
     protected function getSourceDir($script) {
         $matches = array();
         if (preg_match('`/plugins/([^/]+)/(.*)`', $script, $matches)) {
@@ -133,7 +140,7 @@ class Combined {
             $src = null;
             if (in_array($script, $combined_scripts)) {
                 if (!$combined) {
-                    $src = $combined_script;
+                    $src = '/scripts/combined/'.$combined_script;
                     $combined = true;
                 }
             } else {
@@ -164,7 +171,7 @@ class Combined {
         $files = glob($src .'*.js');
         if ( !empty($files) ) {
             rsort($files);
-            return '/scripts/combined/'. basename($files[0]);
+            return basename($files[0]);
         }
         return '';
     }
@@ -175,7 +182,7 @@ class Combined {
         if ( empty($combined_script) ) {
             $this->generate();
         } else {
-            $date = filemtime($this->getSourceDir($combined_script));
+            $date = filemtime($this->destination_dir . '/' .$combined_script);
             if (filemtime(__FILE__) < $date) {
                 $auto_generate = false;
                 foreach($this->getCombinedScripts() as $script) {
@@ -187,7 +194,7 @@ class Combined {
                 }
             }
             if ($auto_generate) {
-                unlink($this->getSourceDir($combined_script));
+                unlink($this->destination_dir . '/' .$combined_script);
                 $this->generate();
             }
         }

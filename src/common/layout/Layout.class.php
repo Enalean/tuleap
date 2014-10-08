@@ -1171,7 +1171,11 @@ class Layout extends Response {
      * @see includeJavascriptSnippet
      */
     public function displayJavascriptElements() {
-        $c = new Combined();
+        $combined_dir = Config::get('sys_combined_dir');
+        if (! is_dir($combined_dir)) {
+            $combined_dir = $GLOBALS['codendi_dir'] . '/src/www/scripts/combined';
+        }
+        $c = new Combined($combined_dir);
         echo $c->getScripts(array('/scripts/codendi/common.js'));
 
         $ckeditor_path         = '/scripts/ckeditor-4.3.2/';
