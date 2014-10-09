@@ -58,11 +58,13 @@ class Git_Mirror_MirrorDataMapper {
 
     private function createUserForMirror($mirror_id, $password, $ssh_key) {
         $user = new PFUser(array(
-            'user_name' => self::MIRROR_OWNER_PREFIX.$mirror_id,
+            'user_name'       => self::MIRROR_OWNER_PREFIX.$mirror_id,
+            'status'          => 'A',
+            'unix_status'     => 'A'
         ));
         $user->setPassword($password);
-        $user->setAuthorizedKeys($ssh_key);
         $this->user_manager->createAccount($user);
+        $this->user_manager->addSSHKeys($user, $ssh_key);
 
         return $user;
     }
@@ -127,15 +129,10 @@ class Git_Mirror_MirrorDataMapper {
         }
 
         if ($ssh_key != $mirror->ssh_key) {
-            $this->updateUserKeyForMirror($mirror->owner, $ssh_key);
+            $this->user_manager->updateUserSSHKeys($mirror->owner, array($ssh_key));
         }
 
         return $this->dao->updateMirror($id, $url);
-    }
-
-    private function updateUserKeyForMirror(PFUser $owner, $ssh_key) {
-        $owner->setAuthorizedKeys($ssh_key);
-        $this->user_manager->updateDb($owner);
     }
 
     /**
