@@ -27,6 +27,7 @@ class proftpdPlugin extends Plugin {
         $this->addHook('cssfile');
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook('service_is_used');
+        $this->addHook('approve_pending_project');
         $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES);
         $this->addHook(Event::GET_FTP_INCOMING_DIR);
@@ -112,12 +113,26 @@ class proftpdPlugin extends Plugin {
 
     public function service_is_used($params) {
         if ($params['shortname'] == self::SERVICE_SHORTNAME && $params['is_used']) {
-            $group_id = $params['group_id'];
-            $project_manager = ProjectManager::instance();
-            $project = $project_manager->getProject($group_id);
-
-            $this->getProftpdSystemEventManager()->queueDirectoryCreate($project->getUnixName());
+            $project = $this->getProject($params['group_id']);
+            $this->createDirectory($project);
         }
+    }
+
+    public function approve_pending_project($params) {
+        $project = $this->getProject($params['group_id']);
+        if ($project->usesService($this->getServiceShortname())) {
+            $this->createDirectory($project);
+        }
+    }
+
+    private function getProject($group_id) {
+        $project_manager = ProjectManager::instance();
+
+        return $project_manager->getProject($group_id);
+    }
+
+    private function createDirectory(Project $project) {
+        $this->getProftpdSystemEventManager()->queueDirectoryCreate($project->getUnixName());
     }
 
     public function system_event_get_types($params) {
