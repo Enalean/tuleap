@@ -1,3 +1,6 @@
+Version 3.113 - Tuleap 7.6
+    * request #7515: Git mirror user ssh key is not deployed
+
 Version 3.112 - Tuleap 7.6
     * story #7497: Fix error when loading gitphp.css using FlamingParrot & Fix repository update SQL query)
 

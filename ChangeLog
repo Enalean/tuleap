@@ -7,13 +7,14 @@ Version 7.6 (Not released yet)
 	* ldap: 3.54
 	* IM: 1.5.19
 	* statistics: 0.37
-	* git: 3.112
+	* git: 3.113
 	* fulltextsearch: 0.85
 	* graphontrackersv5: 5.14
 	* cardwall: 1.37
 	* mediawiki: 0.56
 
 	== Bug Fix ==
+	* request #7515: Git mirror user ssh key is not deployed
 	* request #7457: Remote Command Execution Vulnerability
 	* request #7484: Search in projects can take a very long time
 	* request #7478: REST POST /tokens should not return 500 when the password is wrong
