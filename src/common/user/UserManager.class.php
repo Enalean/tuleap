@@ -699,7 +699,7 @@ class UserManager {
      * @param PFUser $user
      * @param String $keys
      */
-    protected function updateUserSSHKeys(PFUser $user, array $keys) {
+    public function updateUserSSHKeys(PFUser $user, array $keys) {
         $original_authorised_keys = $user->getAuthorizedKeysRaw();
 
         $user->setAuthorizedKeys(implode(PFUser::SSH_KEY_SEPARATOR, $keys));
