@@ -341,7 +341,7 @@
         <permission scope="field" REF="F31" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
       </permissions>
     </tracker>
-    <tracker id="T453" parent_id="T452" instantiate_for_new_projects="1">
+    <tracker id="T453" parent_id="T452" instantiate_for_new_projects="1" stop_notification="1">
       <name><![CDATA[Validation Test Execution]]></name>
       <item_name>test_exec</item_name>
       <description><![CDATA[Execution of a test case in a campaign]]></description>
