@@ -667,15 +667,16 @@ class Git extends PluginController {
                 break;
 
             case 'update_mirroring':
+                $repository = $this->factory->getRepositoryById($repoId);
                 if (! $this->factory->getRepositoryById($repoId)) {
                     $this->addError($this->getText('actions_repo_not_found'));
                 }
 
                 $this->addAction('updateMirroring', array(
-                    $repoId,
+                    $repository,
                     $this->request->get('selected_mirror_ids')
                 ));
-                $this->addAction('redirectToRepoManagement', array($this->groupId, $repoId, $pane));
+                $this->addAction('redirectToRepoManagement', array($this->groupId, $repository->getId(), $pane));
                 break;
 
             #LIST

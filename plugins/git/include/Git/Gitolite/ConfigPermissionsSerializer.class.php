@@ -20,26 +20,42 @@
 
 class Git_Gitolite_ConfigPermissionsSerializer {
 
+    /**
+     * @var Git_Mirror_MirrorDataMapper
+     */
+    private $data_mapper;
+
     private static $permissions_types = array(
         Git::PERM_READ  => ' R  ',
         Git::PERM_WRITE => ' RW ',
         Git::PERM_WPLUS => ' RW+'
     );
 
+    public function __construct(Git_Mirror_MirrorDataMapper $data_mapper) {
+        $this->data_mapper = $data_mapper;
+    }
+
     public function getForRepository(GitRepository $repository) {
         $project = $repository->getProject();
         $repo_config = '';
         $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_READ);
-
+        $repo_config .= $this->formatPermission(Git::PERM_READ, $this->getMirrorUserNames($repository));
         if ($repository->isMigratedToGerrit()) {
             $key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
             $key->setGerritHostId($repository->getRemoteServerId());
-            $repo_config .= self::$permissions_types[Git::PERM_WPLUS] . ' = ' .$key->getUserName() . PHP_EOL;
+            $repo_config .= $this->formatPermission(Git::PERM_WPLUS, array($key->getUserName()));
         } else {
             $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WRITE);
             $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WPLUS);
         }
         return $repo_config;
+    }
+
+    private function formatPermission($permission_type, array $granted) {
+        if (count($granted)) {
+            return self::$permissions_types[$permission_type] . ' = ' . implode(' ', $granted).PHP_EOL;
+        }
+        return '';
     }
 
     /**
@@ -54,17 +70,25 @@ class Git_Gitolite_ConfigPermissionsSerializer {
         $git_online_edit_conf_right = $this->getUserForOnlineEdition($repository);
         $ugroup_literalizer = new UGroupLiteralizer();
         $repository_groups  = $ugroup_literalizer->getUGroupsThatHaveGivenPermissionOnObject($project, $repository->getId(), $permission_type);
-        if (count($repository_groups) == 0) {
-            return '';
+        if ($git_online_edit_conf_right) {
+            $repository_groups[] = $git_online_edit_conf_right;
         }
-        return self::$permissions_types[$permission_type] . ' = ' . implode(' ', $repository_groups).$git_online_edit_conf_right . PHP_EOL;
+        return $this->formatPermission($permission_type, $repository_groups);
     }
 
     private function getUserForOnlineEdition(GitRepository $repository) {
         if ($repository->hasOnlineEditEnabled()) {
-            return ' id_rsa_gl-adm';
+            return 'id_rsa_gl-adm';
         }
 
         return '';
+    }
+
+    private function getMirrorUserNames(GitRepository $repository) {
+        $names = array();
+        foreach ($this->data_mapper->fetchAllRepositoryMirrors($repository->getId()) as $mirror) {
+            $names[] = $mirror->owner->getUserName();
+        }
+        return $names;
     }
 }

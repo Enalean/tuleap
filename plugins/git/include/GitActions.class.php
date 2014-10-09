@@ -879,15 +879,16 @@ class GitActions extends PluginActions {
         return true;
     }
 
-    public function updateMirroring($repository_id, $selected_mirror_ids) {
+    public function updateMirroring(GitRepository $repository, $selected_mirror_ids) {
         $mirror_data_mapper = new Git_Mirror_MirrorDataMapper(
             new Git_Mirror_MirrorDao(),
             UserManager::instance()
         );
 
         if ($mirror_data_mapper->doesAllSelectedMirrorIdsExist($selected_mirror_ids)
-            && $mirror_data_mapper->unmirrorRepository($repository_id)
-            && $mirror_data_mapper->mirrorRepositoryTo($repository_id, $selected_mirror_ids)) {
+            && $mirror_data_mapper->unmirrorRepository($repository->getId())
+            && $mirror_data_mapper->mirrorRepositoryTo($repository->getId(), $selected_mirror_ids)) {
+            $this->git_system_event_manager->queueRepositoryUpdate($repository);
 
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git', 'mirroring_mirroring_successful'));
 

@@ -104,7 +104,8 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
             $this->url_manager,
             $this->_glAdmDir,
             $this->gitExec,
-            $this->repository_factory
+            $this->repository_factory,
+            $this->gitolite_permissions_serializer
         );
 
         $repo_description = 'Vive tuleap';
@@ -149,7 +150,8 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
             $this->url_manager,
             $this->_glAdmDir,
             $this->gitExec,
-            $this->repository_factory
+            $this->repository_factory,
+            $this->gitolite_permissions_serializer
         );
 
         $repo_description = 'Vive
@@ -199,7 +201,8 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
             $this->url_manager,
             $this->_glAdmDir,
             $this->gitExec,
-            $this->repository_factory
+            $this->repository_factory,
+            $this->gitolite_permissions_serializer
         );
 
         $prj = new MockProject($this);
@@ -259,7 +262,8 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
             $this->url_manager,
             $this->_glAdmDir,
             $this->gitExec,
-            $this->repository_factory
+            $this->repository_factory,
+            $this->gitolite_permissions_serializer
         );
 
         $prj = new MockProject($this);

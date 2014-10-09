@@ -40,6 +40,8 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
     protected $dumper;
     /** @var GitRepositoryFactory */
     protected $repository_factory;
+    /** @var Git_Gitolite_ConfigPermissionsSerializer */
+    protected $gitolite_permissions_serializer;
 
     /** @var Git_GitRepositoryUrlManager */
     protected $url_manager;
@@ -75,7 +77,11 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
         $git_plugin        = stub('GitPlugin')->areFriendlyUrlsActivated()->returns(false);
         $this->url_manager = new Git_GitRepositoryUrlManager($git_plugin);
 
-        $this->driver = new Git_GitoliteDriver($this->url_manager, $this->_glAdmDir, $this->gitExec, $this->repository_factory);
+        $this->gitolite_permissions_serializer = new Git_Gitolite_ConfigPermissionsSerializer(
+            stub('Git_Mirror_MirrorDataMapper')->fetchAllRepositoryMirrors()->returns(array())
+        );
+
+        $this->driver = new Git_GitoliteDriver($this->url_manager, $this->_glAdmDir, $this->gitExec, $this->repository_factory, $this->gitolite_permissions_serializer);
     }
     
     public function tearDown() {
