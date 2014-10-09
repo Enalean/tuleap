@@ -32,6 +32,8 @@ class SystemEvent_PROFTPD_UPDATE_ACLTest extends PHPUnit_Framework_TestCase {
     /** @var String */
     private $path;
     /** @var String */
+    private $mixed_case_group_unix_name;
+    /** @var String */
     private $group_unix_name;
     /** @var String */
     private $ftp_directory;
@@ -45,31 +47,59 @@ class SystemEvent_PROFTPD_UPDATE_ACLTest extends PHPUnit_Framework_TestCase {
         $this->event   = $this->getMockBuilder('Tuleap\ProFTPd\SystemEvent\PROFTPD_UPDATE_ACL')->setMethods(array('done'))->disableOriginalConstructor()->getMock();
         $this->acl_updater = $this->getMockBuilder('Tuleap\ProFTPd\Admin\ACLUpdater')->disableOriginalConstructor()->getMock();
 
-        $this->group_unix_name = "project_name";
+        $group_unix_name            = "project_name";
+        $mixed_case_group_unix_name = "MiXeDCaSePrOjEcTNaMe";
+
+        $this->group_unix_name            = $group_unix_name;
+        $this->mixed_case_group_unix_name = $mixed_case_group_unix_name;
+
         $this->ftp_directory = dirname(__FILE__).'/../_fixtures';
-        $this->path = realpath($this->ftp_directory . "/" . $this->group_unix_name);
+        $this->path            = realpath($this->ftp_directory . "/" . $this->group_unix_name);
+        $this->mixed_case_path = realpath($this->ftp_directory . "/" . $this->mixed_case_group_unix_name);
 
         $GLOBALS['sys_http_user'] = 'httpuser';
 
         $this->permissions_manager = $this->getMockBuilder('Tuleap\ProFTPd\Admin\PermissionsManager')->disableOriginalConstructor()->getMock();
 
-        $this->project = $this->getMockBuilder('Project')->disableOriginalConstructor()->getMock();
+        $project       = $this->getMockBuilder('Project')->disableOriginalConstructor()->getMock();
+        $this->project = $project;
         $this->project
              ->expects($this->any())
              ->method('getUnixName')
+             ->will($this->returnValue(strtolower($this->group_unix_name)));
+        $this->project
+             ->expects($this->any())
+             ->method('getUnixNameMixedCase')
              ->will($this->returnValue($this->group_unix_name));
 
-        $this->project_manager     = $this->getMockBuilder('ProjectManager')->disableOriginalConstructor()->getMock();
+        $mixed_case_project = $this->getMockBuilder('Project')->disableOriginalConstructor()->getMock();
+        $mixed_case_project
+             ->expects($this->any())
+             ->method('getUnixName')
+             ->will($this->returnValue(strtolower($this->mixed_case_group_unix_name)));
+        $mixed_case_project
+             ->expects($this->any())
+             ->method('getUnixNameMixedCase')
+             ->will($this->returnValue($this->mixed_case_group_unix_name));
+
+        $this->project_manager = $this->getMockBuilder('ProjectManager')->disableOriginalConstructor()->getMock();
         $this->project_manager
              ->expects($this->any())
              ->method('getProjectByUnixName')
-             ->will($this->returnValue($this->project));
+             ->will($this->returnCallback(function ($unix_name) use ($group_unix_name, $mixed_case_group_unix_name, $project, $mixed_case_project) {
+                 switch ($unix_name) {
+                    case $group_unix_name:
+                        return $project;
+                    case $mixed_case_group_unix_name:
+                        return $mixed_case_project;
+                 }
+             }));
 
-        $this->event->setParameters($this->group_unix_name);
         $this->event->injectDependencies($this->acl_updater, $this->permissions_manager, $this->project_manager, $this->ftp_directory);
     }
 
     public function testItSetsACLWithWritersAndReaders() {
+        $this->event->setParameters($this->group_unix_name);
         $this->permissions_manager
              ->expects($this->any())
              ->method('getUGroupSystemNameFor')
@@ -87,7 +117,30 @@ class SystemEvent_PROFTPD_UPDATE_ACLTest extends PHPUnit_Framework_TestCase {
         $this->event->process();
     }
 
+    public function testItUsesTheUnixNameInMixedCase() {
+        $this->event->setParameters($this->mixed_case_group_unix_name);
+        $this->permissions_manager
+             ->expects($this->any())
+             ->method('getUGroupSystemNameFor')
+             ->will($this->returnCallback(function ($project, $permission) {
+                 switch ($permission) {
+                    case PermissionsManager::PERM_READ:
+                        return 'gpig-ftp_readers';
+                    case PermissionsManager::PERM_WRITE:
+                        return 'gpig-ftp_writers';
+                 }
+             }));
+
+        $this->acl_updater
+            ->expects($this->once())
+            ->method('recursivelyApplyACL')
+            ->with($this->mixed_case_path, 'httpuser', 'gpig-ftp_writers', 'gpig-ftp_readers');
+
+        $this->event->process();
+    }
+
     public function testItMarksAsDone() {
+        $this->event->setParameters($this->group_unix_name);
         $this->event->expects($this->once())->method('done');
         $this->event->process();
     }
