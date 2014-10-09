@@ -1,0 +1,9 @@
+repo    gitolite-admin
+    RW+     =   id_rsa_gl-adm
+
+repo @all
+    R = daemon gitweb
+
+{{# project_names }}
+include "projects/{{ . }}.conf"
+{{/ project_names }}

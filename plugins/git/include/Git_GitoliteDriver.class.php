@@ -58,6 +58,9 @@ class Git_GitoliteDriver {
     /** @var Git_GitRepositoryUrlManager */
     private $url_manager;
 
+    /** Git_Gitolite_ConfigPermissionsSerializer */
+    private $permissions_serializer;
+
     public static $permissions_types = array(
         Git::PERM_READ  => ' R  ',
         Git::PERM_WRITE => ' RW ',
@@ -96,7 +99,8 @@ class Git_GitoliteDriver {
             new Git_Mirror_MirrorDataMapper(
                 new Git_Mirror_MirrorDao,
                 UserManager::instance()
-            )
+            ),
+            PluginManager::instance()->getPluginByName('git')->getEtcTemplatesPath()
         );
     }
 
@@ -170,29 +174,21 @@ class Git_GitoliteDriver {
     }
 
     public function updateMainConfIncludes($project) {
-        if (is_file($this->confFilePath)) {
-            $conf = file_get_contents($this->confFilePath);
-        } else {
-            $conf = '';
+        $project_names = $this->getProjectList();
+        $main_config   = $this->permissions_serializer->getGitoliteDotConf($project_names);
+        file_put_contents($this->confFilePath, $main_config);
+        return $this->gitExec->add($this->confFilePath);
+    }
+
+    private function getProjectList() {
+        $project_names = array();
+        $dir = new DirectoryIterator(dirname($this->confFilePath).'/projects');
+        foreach ($dir as $file) {
+            if (! $file->isDot()) {
+                $project_names[] = basename($file->getFilename(), '.conf');
+            }
         }
-        if (strpos($conf, 'include "projects/'.$project->getUnixName().'.conf"') === false) {
-            $backend = Backend::instance();
-            if ($conf) {
-                $backend->removeBlock($this->confFilePath);
-            }
-            $newConf = '';
-            $dir = new DirectoryIterator('conf/projects');
-            foreach ($dir as $file) {
-                if (!$file->isDot()) {
-                    $newConf .= 'include "projects/'.basename($file->getFilename()).'"'.PHP_EOL;
-                }
-            }
-            if ($backend->addBlock($this->confFilePath, $newConf)) {
-                return $this->gitExec->add($this->confFilePath);
-            }
-            return false;
-        }
-        return true;
+        return $project_names;
     }
 
     /**

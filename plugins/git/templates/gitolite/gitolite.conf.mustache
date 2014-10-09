@@ -1,0 +1,6 @@
+repo    gitolite-admin
+    RW+     =   id_rsa_gl-adm
+
+{{# project_names }}
+include "projects/{{ . }}.conf"
+{{/ project_names }}
