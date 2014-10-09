@@ -57,6 +57,7 @@ class TestingPlugin extends Plugin {
     public function javascript_file() {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             echo '<script type="text/javascript" src="scripts/move-breadcrumb.js"></script>'."\n";
+            echo '<script type="text/javascript" src="scripts/resize-content.js"></script>'."\n";
         }
     }
     
