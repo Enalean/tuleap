@@ -77,8 +77,12 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
         $git_plugin        = stub('GitPlugin')->areFriendlyUrlsActivated()->returns(false);
         $this->url_manager = new Git_GitRepositoryUrlManager($git_plugin);
 
+        $mirror_data_mapper = mock('Git_Mirror_MirrorDataMapper');
+        stub($mirror_data_mapper)->fetchAllRepositoryMirrors()->returns(array());
+        stub($mirror_data_mapper)->fetchAll()->returns(array());
+
         $this->gitolite_permissions_serializer = new Git_Gitolite_ConfigPermissionsSerializer(
-            stub('Git_Mirror_MirrorDataMapper')->fetchAllRepositoryMirrors()->returns(array()),
+            $mirror_data_mapper,
             'whatever'
         );
 
