@@ -146,21 +146,6 @@ class Workflow {
     }
 
     /**
-     * Return value for a given id
-     *
-     * @param type $value_id
-     */
-    public function getFieldValueById($value_id) {
-        $field_values = $this->getAllFieldValues();
-
-        if (array_key_exists($value_id, $field_values)) {
-            return $field_values[$value_id];
-        }
-
-        return null;
-    }
-
-    /**
      * Return the tracker of this workflow
      *
      * @return Tracker
@@ -185,40 +170,17 @@ class Workflow {
      * @param Integer $field_value_id_from
      * @param Integer $field_value_id_to
      *
-     * @return mixed Transition or SameStateTransition if values are the same
-     * or InvalidTransition if no value match
+     * @return Transition or null if no transition match
      */
     public function getTransition($field_value_id_from, $field_value_id_to) {
-        if ($field_value_id_from === $field_value_id_to) {
-            return new SameStateTransition();
-        }
-
         foreach ($this->getTransitions() as $transition) {
-           if ($this->doesTransitionMatcheParameters($transition, $field_value_id_from, $field_value_id_to)) {
-               return $transition;
-           }
+            $from = $transition->getFieldValueFrom();
+            if ($from === null && $field_value_id_from === null || $from !== null && $from->getId() == $field_value_id_from) {
+                if ($transition->getFieldValueTo()->getId() == $field_value_id_to) {
+                    return $transition;
+                }
+            }
         }
-
-        return new InvalidTransition(
-            $this->getFieldValueById($field_value_id_from),
-            $this->getFieldValueById($field_value_id_to)
-        );
-    }
-
-    private function doesTransitionMatcheParameters($transition, $field_value_id_from, $field_value_id_to) {
-        return $this->transitionHasSameFromValueAsParameter($transition, $field_value_id_from) &&
-            $this->transitionHasSameToValueAsParameter($transition, $field_value_id_to);
-    }
-
-    private function transitionHasSameFromValueAsParameter($transition, $field_value_id_from) {
-        $from = $transition->getFieldValueFrom();
-
-        return ($from === null && $field_value_id_from === null) ||
-               ($from !== null && $from->getId() == $field_value_id_from);
-    }
-
-    private function transitionHasSameToValueAsParameter($transition, $field_value_id_to) {
-        return $transition->getFieldValueTo()->getId() == $field_value_id_to;
     }
 
     /**
@@ -382,26 +344,17 @@ class Workflow {
         }
 
         $transition = $this->getCurrentTransition($fields_data, $artifact->getLastChangeset());
-        $is_valid   = $transition->validate($fields_data, $artifact);
-
-        if (! $is_valid) {
-            $this->notifyInvalidWorkflow($transition);
+        if (isset($transition)) {
+            return $transition->validate($fields_data, $artifact);
         }
-
-        return $is_valid;
+        return true;
     }
 
-    /**
-     * @param type $fields_data
-     * @param Tracker_Artifact_Changeset $changeset
-     * @return Transition or InvalidTransition or ValidTransition
-     */
-    public function getCurrentTransition($fields_data, Tracker_Artifact_Changeset $changeset = null) {
+    private function getCurrentTransition($fields_data, Tracker_Artifact_Changeset $changeset = null) {
         $oldValues = null;
         if ($changeset) {
             $oldValues = $changeset->getValue($this->getField());
         }
-
         $from      = null;
         if ($oldValues) {
             if ($v = $oldValues->getValue()) {
@@ -410,25 +363,12 @@ class Workflow {
                 $from = (int)$from;
             }
         }
-
-        $to = null;
         if (isset($fields_data[$this->getFieldId()])) {
-            $field_value = $fields_data[$this->getFieldId()];
-
-            if (is_array($field_value)) {
-                $field_value = $field_value[0];
-            }
-
-            $to         = (int)$field_value;
+            $to         = (int)$fields_data[$this->getFieldId()];
             $transition = $this->getTransition($from, $to);
-
             return $transition;
         }
-
-        return new InvalidTransition(
-            $this->getFieldValueById($from),
-            $this->getFieldValueById($to)
-        );
+        return null;
     }
 
     /**
@@ -472,27 +412,5 @@ class Workflow {
         }
         return false;
     }
-
-    private function notifyInvalidWorkflow($transition) {
-        $field_value_to = $transition->getFieldValueTo();
-
-        if ($field_value_to) {
-            $GLOBALS['Response']->addFeedback(
-                'error',
-                $GLOBALS['Language']->getText(
-                    'plugin_tracker_common_artifact',
-                    'transition_not_valid',
-                    array($field_value_to->getLabel())
-                )
-            );
-        } else {
-            $GLOBALS['Response']->addFeedback(
-                'error',
-                $GLOBALS['Language']->getText(
-                    'plugin_tracker_common_artifact',
-                    'transition_to_none'
-                )
-            );
-        }
-    }
 }
+?>
