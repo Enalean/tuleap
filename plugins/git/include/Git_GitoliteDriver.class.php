@@ -78,7 +78,8 @@ class Git_GitoliteDriver {
         Git_GitRepositoryUrlManager $url_manager,
         $adminPath                               = null,
         Git_Exec $gitExec                        = null,
-        GitRepositoryFactory $repository_factory = null
+        GitRepositoryFactory $repository_factory = null,
+        Git_Gitolite_ConfigPermissionsSerializer $permissions_serializer = null
     ) {
         if (!$adminPath) {
             $adminPath = $GLOBALS['sys_data_dir'] . '/gitolite/admin';
@@ -91,6 +92,12 @@ class Git_GitoliteDriver {
         );
 
         $this->url_manager = $url_manager;
+        $this->permissions_serializer = $permissions_serializer ? $permissions_serializer : new Git_Gitolite_ConfigPermissionsSerializer(
+            new Git_Mirror_MirrorDataMapper(
+                new Git_Mirror_MirrorDao,
+                UserManager::instance()
+            )
+        );
     }
 
     public function repoFullName(GitRepository $repo, $unix_name) {
@@ -206,12 +213,10 @@ class Git_GitoliteDriver {
     }
 
     protected function fetchReposConfig(Project $project, GitRepository $repository) {
-        $permissions_serializer = new Git_Gitolite_ConfigPermissionsSerializer();
-
         $repo_full_name   = $this->repoFullName($repository, $project->getUnixName());
         $repo_config  = 'repo '. $repo_full_name . PHP_EOL;
         $repo_config .= $this->fetchMailHookConfig($project, $repository);
-        $repo_config .= $permissions_serializer->getForRepository($repository);
+        $repo_config .= $this->permissions_serializer->getForRepository($repository);
         $description = preg_replace( "%\s+%", ' ', $repository->getDescription());
         $repo_config .= "$repo_full_name = \"$description\"".PHP_EOL;
         
