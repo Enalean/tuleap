@@ -22,7 +22,8 @@
  */
  
 require_once 'pre.php';
-require_once dirname(__FILE__).'/../include/Git_Gitolite_SSHKeyMassDumper.class.php';
+
+$git_plugin = PluginManager::instance()->getPluginByName('git');
 
 $adminPath = $GLOBALS['sys_data_dir'] . '/gitolite/admin';
 $gitExec   = new Git_Exec($adminPath);
@@ -36,6 +37,8 @@ if (isset($argv[1])) {
     $mass_dumper = new Git_Gitolite_SSHKeyMassDumper($dumper, $user_manager);
     $result = $mass_dumper->dumpSSHKeys();
 }
+
+$git_plugin->getGitSystemEventManager()->queueGrokMirrorManifest(new GitRepositoryGitoliteAdmin());
 
 if ($result) {
     echo "SSH Keys dump done!\n";

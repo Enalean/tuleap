@@ -87,8 +87,12 @@ class Git_Mirror_MirrorDataMapper {
     /**
      * @return Git_Mirror_Mirror[]
      */
-    public function fetchAllRepositoryMirrors($repository_id) {
-        $rows = $this->dao->fetchAllRepositoryMirrors($repository_id);
+    public function fetchAllRepositoryMirrors(GitRepository $repository) {
+        if ($repository instanceof GitRepositoryGitoliteAdmin) {
+            return $this->fetchAll();
+        }
+
+        $rows = $this->dao->fetchAllRepositoryMirrors($repository->getId());
 
         $mirrors = array();
         foreach ($rows as $row) {

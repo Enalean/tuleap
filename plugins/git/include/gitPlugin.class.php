@@ -241,6 +241,13 @@ class GitPlugin extends Plugin {
                     UserManager::instance()
                 );
                 break;
+            case SystemEvent_GIT_GROKMIRROR_MANIFEST::NAME:
+                $params['class'] = 'SystemEvent_GIT_GROKMIRROR_MANIFEST';
+                $params['dependencies'] = array(
+                    $this->getRepositoryFactory(),
+                    $this->getManifestManager(),
+                );
+                break;
             default:
                 break;
         }
@@ -1033,7 +1040,7 @@ class GitPlugin extends Plugin {
         );
     }
 
-    private function getGitSystemEventManager() {
+    public function getGitSystemEventManager() {
         return new Git_SystemEventManager(SystemEventManager::instance());
     }
 
@@ -1207,5 +1214,20 @@ class GitPlugin extends Plugin {
      */
     private function getGitRepositoryUrlManager() {
         return new Git_GitRepositoryUrlManager($this);
+    }
+
+    public function getManifestManager() {
+        $logger = new TruncateLevelLogger(
+            $this->getLogger(),
+            Config::get('sys_logger_level')
+        );
+        return new Git_Mirror_ManifestManager(
+            new Git_Mirror_MirrorDataMapper(
+                new Git_Mirror_MirrorDao(),
+                UserManager::instance()
+            ),
+            $logger,
+            $this->getConfigurationParameter('grokmanifest_path')
+        );
     }
 }

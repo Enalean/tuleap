@@ -109,7 +109,7 @@ class Git_Gitolite_ConfigPermissionsSerializer {
 
     private function getMirrorUserNames(GitRepository $repository) {
         $names = array();
-        foreach ($this->data_mapper->fetchAllRepositoryMirrors($repository->getId()) as $mirror) {
+        foreach ($this->data_mapper->fetchAllRepositoryMirrors($repository) as $mirror) {
             $names[] = $mirror->owner->getUserName();
         }
         return $names;
