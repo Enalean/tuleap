@@ -12,6 +12,7 @@ Version 7.6 (Not released yet)
 	* graphontrackersv5: 5.14
 	* cardwall: 1.37
 	* mediawiki: 0.56
+	* proftpd: 0.15
 
 	== Bug Fix ==
 	* request #7515: Git mirror user ssh key is not deployed
