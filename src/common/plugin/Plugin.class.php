@@ -132,6 +132,10 @@ class Plugin implements PFO_Plugin {
     public function getPluginEtcRoot() {
         return $GLOBALS['sys_custompluginsroot'] . '/' . $this->getName() .'/etc';
     }
+
+    public function getEtcTemplatesPath() {
+        return $GLOBALS['sys_custompluginsroot'] . '/' . $this->getName() . '/templates';
+    }
     
     public function _getPluginPath() {
         $trace = debug_backtrace();

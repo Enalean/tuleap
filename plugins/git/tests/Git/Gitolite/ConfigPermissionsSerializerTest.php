@@ -51,7 +51,8 @@ class Git_Gitolite_ConfigPermissionsSerializerTest extends TuleapTestCase {
         $this->permissions_manager = PermissionsManager::instance();
 
         $this->serializer = new Git_Gitolite_ConfigPermissionsSerializer(
-            stub('Git_Mirror_MirrorDataMapper')->fetchAllRepositoryMirrors()->returns(array())
+            stub('Git_Mirror_MirrorDataMapper')->fetchAllRepositoryMirrors()->returns(array()),
+            'whatever'
         );
     }
 
@@ -143,7 +144,7 @@ class Git_Gitolite_ConfigPermissionsSerializer_MirrorsTest extends TuleapTestCas
     public function setUp() {
         parent::setUp();
         $this->mirror_mapper = mock('Git_Mirror_MirrorDataMapper');
-        $this->serializer    = new Git_Gitolite_ConfigPermissionsSerializer($this->mirror_mapper);
+        $this->serializer    = new Git_Gitolite_ConfigPermissionsSerializer($this->mirror_mapper, 'whatever');
         $this->project       = stub('Project')->getUnixName()->returns('foo');
         $this->repository    = aGitRepository()->withId(115)->withProject($this->project)->build();
 
@@ -194,5 +195,31 @@ class Git_Gitolite_ConfigPermissionsSerializer_MirrorsTest extends TuleapTestCas
 
         $result = $this->serializer->getForRepository($this->repository);
         $this->assertEqual('', $result);
+    }
+}
+
+class Git_Gitolite_ConfigPermissionsSerializer_GitoliteConfTest extends TuleapTestCase {
+
+    private $mirror_mapper;
+
+    public function setUp() {
+        parent::setUp();
+        $this->mirror_mapper     = mock('Git_Mirror_MirrorDataMapper');
+    }
+
+    public function itDumpsTheConf() {
+        $serializer = new Git_Gitolite_ConfigPermissionsSerializer($this->mirror_mapper, 'whatever');
+        $this->assertEqual(
+            file_get_contents(dirname(__FILE__).'/_fixtures/default_gitolite.conf'),
+            $serializer->getGitoliteDotConf(array('projecta', 'projectb'))
+        );
+    }
+
+    public function itAllowsOverrideBySiteAdmin() {
+        $serializer = new Git_Gitolite_ConfigPermissionsSerializer($this->mirror_mapper, dirname(__FILE__).'/_fixtures/etc_templates');
+        $this->assertEqual(
+            file_get_contents(dirname(__FILE__).'/_fixtures/override_gitolite.conf'),
+            $serializer->getGitoliteDotConf(array('projecta', 'projectb'))
+        );
     }
 }

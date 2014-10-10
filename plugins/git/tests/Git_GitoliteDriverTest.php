@@ -30,8 +30,6 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
     }
 
     public function testGitoliteConfUpdate() {
-        // Test base: one gitolite conf + 1 project file
-        file_put_contents($this->_glAdmDir.'/conf/gitolite.conf', '@test = coin'.PHP_EOL);
         touch($this->_glAdmDir.'/conf/projects/project1.conf');
         $prj = new MockProject($this);
         $prj->setReturnValue('getUnixName', 'project1');
@@ -39,8 +37,7 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
         $this->driver->updateMainConfIncludes($prj);
 
         $gitoliteConf = $this->getGitoliteConf();
-        // Original content still here
-        $this->assertWantedPattern('#^@test = coin$#m', $gitoliteConf);
+
         $this->assertWantedPattern('#^include "projects/project1.conf"$#m', $gitoliteConf);
     }
 

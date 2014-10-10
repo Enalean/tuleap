@@ -20,6 +20,13 @@
 
 class Git_Gitolite_ConfigPermissionsSerializer {
 
+    const TEMPLATES_PATH = 'gitolite';
+
+    /**
+     * @var TemplateRenderer
+     */
+    private $template_renderer;
+
     /**
      * @var Git_Mirror_MirrorDataMapper
      */
@@ -31,8 +38,21 @@ class Git_Gitolite_ConfigPermissionsSerializer {
         Git::PERM_WPLUS => ' RW+'
     );
 
-    public function __construct(Git_Mirror_MirrorDataMapper $data_mapper) {
-        $this->data_mapper = $data_mapper;
+    public function __construct(Git_Mirror_MirrorDataMapper $data_mapper, $etc_templates_path) {
+        $this->data_mapper       = $data_mapper;
+        $template_dirs = array();
+        if (is_dir($etc_templates_path)) {
+            $template_dirs[] = $etc_templates_path . '/' . self::TEMPLATES_PATH;
+        }
+        $template_dirs[] = GIT_TEMPLATE_DIR . '/' . self::TEMPLATES_PATH;
+        $this->template_renderer = TemplateRendererFactory::build()->getRenderer($template_dirs);
+    }
+
+    public function getGitoliteDotConf(array $project_names) {
+        return $this->template_renderer->renderToString(
+            'gitolite.conf',
+            new Git_Gitolite_Presenter_GitoliteConfPresenter($project_names)
+        );
     }
 
     public function getForRepository(GitRepository $repository) {

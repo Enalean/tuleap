@@ -100,7 +100,10 @@ class Git_Mirror_MirrorDataMapper {
     }
 
     public function doesAllSelectedMirrorIdsExist($selected_mirror_ids) {
-        return count($selected_mirror_ids) === count($this->dao->fetchByIds($selected_mirror_ids));
+        if ($selected_mirror_ids !== false) {
+            return count($selected_mirror_ids) === count($this->dao->fetchByIds($selected_mirror_ids));
+        }
+        return true;
     }
 
     public function unmirrorRepository($repository_id) {
@@ -108,7 +111,10 @@ class Git_Mirror_MirrorDataMapper {
     }
 
     public function mirrorRepositoryTo($repository_id, $selected_mirror_ids) {
-        return $this->dao->mirrorRepositoryTo($repository_id, $selected_mirror_ids);
+        if ($selected_mirror_ids !== false) {
+            return $this->dao->mirrorRepositoryTo($repository_id, $selected_mirror_ids);
+        }
+        return true;
     }
 
     /**

@@ -78,7 +78,8 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
         $this->url_manager = new Git_GitRepositoryUrlManager($git_plugin);
 
         $this->gitolite_permissions_serializer = new Git_Gitolite_ConfigPermissionsSerializer(
-            stub('Git_Mirror_MirrorDataMapper')->fetchAllRepositoryMirrors()->returns(array())
+            stub('Git_Mirror_MirrorDataMapper')->fetchAllRepositoryMirrors()->returns(array()),
+            'whatever'
         );
 
         $this->driver = new Git_GitoliteDriver($this->url_manager, $this->_glAdmDir, $this->gitExec, $this->repository_factory, $this->gitolite_permissions_serializer);

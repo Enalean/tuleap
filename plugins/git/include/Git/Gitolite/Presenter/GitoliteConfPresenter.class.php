@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2014. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -11,13 +11,21 @@
  *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-define('GIT_BASE_URL', '/plugins/git');
-define('GIT_BASE_DIR', dirname(__FILE__));
-define('GIT_TEMPLATE_DIR', GIT_BASE_DIR . '/../templates');
+class Git_Gitolite_Presenter_GitoliteConfPresenter {
+
+    /**
+     * @var array
+     */
+    public $project_names;
+
+    public function __construct(array $project_names) {
+        $this->project_names = $project_names;
+    }
+}
