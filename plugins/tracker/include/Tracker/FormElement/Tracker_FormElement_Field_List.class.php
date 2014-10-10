@@ -616,17 +616,21 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @return bool true if the value is considered ok
      */
     protected function validate(Tracker_Artifact $artifact, $value) {
-        $valid = true;
+        $valid          = true;
+        $field_value_to = null;
+
         if ($this->fieldHasEnableWorkflow()) {
 
             $last_changeset = $artifact->getLastChangeset();
-            $field_value_to = $this->getBind()->getValue($value);
-            if (!$last_changeset) {
-                 if (!$this->isTransitionValid(null, $field_value_to)) {
-                        $this->has_errors = true;
-                        $valid = false;
-                 }
-            } else {
+
+            try {
+                $field_value_to = $this->getBind()->getValue($value);
+                if (!$last_changeset) {
+                    if (!$this->isTransitionValid(null, $field_value_to)) {
+                           $this->has_errors = true;
+                           $valid = false;
+                    }
+                } else {
                 if ($last_changeset->getValue($this)!=null) {
                     foreach ($last_changeset->getValue($this)->getListValues() as $id => $value) {
                         if ($value != $field_value_to) {
@@ -636,12 +640,15 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
                             }
                         }
                     }
-                }else {
+                } else {
                     if (!$this->isTransitionValid(null, $field_value_to)) {
                         $this->has_errors = true;
                         $valid = false;
                     }
                 }
+            }
+            } catch (Tracker_FormElement_InvalidFieldValueException $exexption) {
+                $valid = false;
             }
 
             if ($valid) {
