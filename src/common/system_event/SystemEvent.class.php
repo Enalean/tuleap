@@ -86,10 +86,8 @@ abstract class SystemEvent {
     const OWNER_ROOT = 'root';
     const OWNER_APP  = 'app';
 
-    const APP_OWNER_QUEUE         = 'owner';
-    const DEFAULT_QUEUE           = 'default';
-    const FULL_TEXT_SEARCH_QUEUE  = 'fts';
-    const TV3_TV5_MIGRATION_QUEUE = 'tv3_tv5_migration';
+    const APP_OWNER_QUEUE = 'owner';
+    const DEFAULT_QUEUE   = 'default';
 
     /**
      * Constructor

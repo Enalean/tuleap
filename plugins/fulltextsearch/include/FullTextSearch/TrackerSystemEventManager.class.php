@@ -66,7 +66,8 @@ class FullTextSearch_TrackerSystemEventManager {
             $this->system_event_manager->createEvent(
                 SystemEvent_FULLTEXTSEARCH_TRACKER_ARTIFACT_UPDATE::NAME,
                 $this->implodeParams(array($artifact->getId())),
-                SystemEvent::PRIORITY_MEDIUM
+                SystemEvent::PRIORITY_MEDIUM,
+                SystemEvent::OWNER_APP
             );
         }
     }

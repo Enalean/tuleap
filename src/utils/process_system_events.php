@@ -21,26 +21,32 @@
  */
 
 require_once 'pre.php';
-require_once 'common/system_event/SystemEventProcessorMutex.class.php';
-require_once 'common/system_event/SystemEventProcessApplicationOwner.class.php';
 
-$queue = (isset($argv[1])) ? $argv[1] : SystemEvent::DEFAULT_QUEUE;
-switch ($queue) {
-    case SystemEvent::OWNER_APP :
-        $process = new SystemEventProcessApplicationOwner();
-        break;
-    case SystemEvent::TV3_TV5_MIGRATION_QUEUE :
-        $process = new SystemEventProcessAppOwnerTV3TV5Migration();
-        break;
-    case SystemEvent::FULL_TEXT_SEARCH_QUEUE :
-        $process = new SystemEventProcessRootFullTextSearch();
-        break;
-    case SystemEvent::DEFAULT_QUEUE :
-    default :
-        $process = new SystemEventProcessRootDefault;
+$request_queue = (isset($argv[1])) ? $argv[1] : SystemEvent::DEFAULT_QUEUE;
+
+$owner  = SystemEvent::OWNER_APP;
+$queues = array();
+EventManager::instance()->processEvent(
+    Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES,
+    array(
+        'queues' => &$queues,
+    )
+);
+if (isset($queues[$request_queue])) {
+    $process = new SystemEventProcessCustomQueue($request_queue);
+} else {
+    switch ($request_queue) {
+        case SystemEvent::OWNER_APP:
+            $process = new SystemEventProcessApplicationOwnerDefaultQueue();
+            break;
+        case SystemEvent::DEFAULT_QUEUE:
+        default:
+            $owner   = SystemEvent::OWNER_ROOT;
+            $process = new SystemEventProcessRootDefaultQueue();
+    }
 }
 
-if (in_array($queue, array(SystemEvent::OWNER_APP, SystemEvent::TV3_TV5_MIGRATION_QUEUE))) {
+if ($owner === SystemEvent::OWNER_APP) {
     require_once 'common/system_event/SystemEventProcessor_ApplicationOwner.class.php';
     $processor = new SystemEventProcessor_ApplicationOwner(
         $process,
@@ -64,4 +70,3 @@ if (in_array($queue, array(SystemEvent::OWNER_APP, SystemEvent::TV3_TV5_MIGRATIO
 
 $mutex = new SystemEventProcessorMutex(new SystemEventProcessManager(), $processor);
 $mutex->execute();
-?>

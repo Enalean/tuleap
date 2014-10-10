@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2014. All rights reserved.
+ * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -24,16 +24,16 @@
 
 require_once 'SystemEventProcess.class.php';
 
-class SystemEventProcessAppOwnerTV3TV5Migration implements SystemEventProcess {
+class SystemEventProcessApplicationOwnerDefaultQueue implements SystemEventProcess {
 
     /**
      * @see SystemEventProcess::getPidFile()
      */
     public function getPidFile() {
-        return '/var/tmp/tuleap_process_system_events_tv3_tv5_migration.pid';
+        return '/var/tmp/tuleap_process_system_event_'.SystemEvent::OWNER_APP.'.pid';
     }
 
     public function getQueue() {
-        return SystemEvent::TV3_TV5_MIGRATION_QUEUE;
+        return SystemEvent::APP_OWNER_QUEUE;
     }
 }

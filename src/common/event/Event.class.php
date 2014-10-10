@@ -249,7 +249,7 @@ class Event {
     const COMPUTE_MD5SUM = 'compute_md5sum';
     
     /**
-     * Get the additionnal types of system events
+     * Get the additionnal types of system events for default queue
      *
      * Parameters:
      *  'types' => array of system event types
@@ -257,29 +257,27 @@ class Event {
      * Expected results
      *  array of string
      */
-    const SYSTEM_EVENT_GET_TYPES = 'system_event_get_types';
+    const SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE = 'system_event_get_types_for_default_queue';
 
     /**
-     * Get the types of system events that are used in full text search
+     * Get the types of system events that are used in a custom queue
      *
      * Parameters:
+     *  'queue' => the name of the queue
      *  'types' => array of system event types
      *
      * Expected results
      *  array of string
      */
-    const SYSTEM_EVENT_GET_FULL_TEXT_SEARCH_TYPES = 'system_event_get_full_text_search_types';
+    const SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE = 'system_event_get_types_for_custom_queue';
 
     /**
-     * Get the types of system events that are used in tv3 -> tv5 migration
+     * Get system event custom queues
      *
-     * Parameters:
-     *  'types' => array of system event types
-     *
-     * Expected results
-     *  array of string
+     * Expected results:
+     *   'queues' => SystemEventQueue[] indexed by queue name
      */
-    const SYSTEM_EVENT_GET_TV3_TV5_MIGRATION_TYPES = 'system_event_get_tv3_tv5_migration_types';
+    const SYSTEM_EVENT_GET_CUSTOM_QUEUES = 'system_event_get_custom_queues';
 
     /**
      * Display javascript snippets in the page footer (just before </body>)

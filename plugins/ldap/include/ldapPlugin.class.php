@@ -105,7 +105,7 @@ class LdapPlugin extends Plugin {
         $this->_addHook('codendi_daily_start', 'codendi_daily_start', false);
         
         // SystemEvent
-        $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES, 'system_event_get_types', false);
+        $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
         $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS, 'get_system_event_class', false);
 
         // Ask for LDAP Username of a User
@@ -822,7 +822,7 @@ class LdapPlugin extends Plugin {
         return false;
     }
     
-    public function system_event_get_types($params) {
+    public function system_event_get_types_for_default_queue($params) {
         $params['types'][] = 'PLUGIN_LDAP_UPDATE_LOGIN';
     }
     

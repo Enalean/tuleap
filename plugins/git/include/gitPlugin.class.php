@@ -69,7 +69,7 @@ class GitPlugin extends Plugin {
         $this->_addHook('plugin_statistics_color',                         'plugin_statistics_color',                      false);
 
         $this->_addHook(Event::LIST_SSH_KEYS,                              'getRemoteServersForUser',                      false);
-        $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES,                     'system_event_get_types',                       false);
+        $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
         $this->_addHook(Event::DUMP_SSH_KEYS);
         $this->_addHook(Event::PROCCESS_SYSTEM_CHECK);
 
@@ -171,7 +171,7 @@ class GitPlugin extends Plugin {
         include $GLOBALS['Language']->getContent('script_locale', null, 'git');
     }
 
-    public function system_event_get_types($params) {
+    public function system_event_get_types_for_default_queue($params) {
         $params['types'] = array_merge($params['types'], $this->getGitSystemEventManager()->getTypes());
     }
 

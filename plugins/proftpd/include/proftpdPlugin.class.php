@@ -29,7 +29,7 @@ class proftpdPlugin extends Plugin {
         $this->addHook('service_is_used');
         $this->addHook('approve_pending_project');
         $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
-        $this->addHook(Event::SYSTEM_EVENT_GET_TYPES);
+        $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
         $this->addHook(Event::GET_FTP_INCOMING_DIR);
         $this->addHook(Event::SERVICE_ICON);
     }
@@ -135,7 +135,7 @@ class proftpdPlugin extends Plugin {
         $this->getProftpdSystemEventManager()->queueDirectoryCreate($project->getUnixName());
     }
 
-    public function system_event_get_types($params) {
+    public function system_event_get_types_for_default_queue($params) {
         $params['types'] = array_merge($params['types'], $this->getProftpdSystemEventManager()->getTypes());
     }
 

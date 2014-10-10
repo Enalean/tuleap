@@ -68,43 +68,30 @@ $renderer     = TemplateRendererFactory::build()->getRenderer($template_dir);
 $title = $Language->getText('admin_system_events', 'title');
 $HTML->header(array('title' => $title));
 
-$queue_links = array();
-switch ($request_queue) {
-    case SystemEvent::FULL_TEXT_SEARCH_QUEUE:
-        $queue         = SystemEvent::FULL_TEXT_SEARCH_QUEUE;
-        $queue_name    = $Language->getText('admin_system_events', 'fts_queue');
-        break;
-    case SystemEvent::TV3_TV5_MIGRATION_QUEUE:
-        $queue         = SystemEvent::TV3_TV5_MIGRATION_QUEUE;
-        $queue_name    = $Language->getText('admin_system_events', 'tv3tv5_queue');
-        break;
-    default:
-        $queue         = SystemEvent::DEFAULT_QUEUE;
-        $queue_name = $Language->getText('admin_system_events', 'default_queue');
-        break;
-}
-
-$queue_links[] = array(
-    'href'   => '?',
-    'label'  => $Language->getText('admin_system_events', 'default_queue'),
-    'active' => $queue === SystemEvent::DEFAULT_QUEUE
+$available_queues = array(
+    SystemEventQueue::NAME => new SystemEventQueue()
+);
+EventManager::instance()->processEvent(
+    Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES,
+    array('queues' => &$available_queues)
 );
 
-$fts_types = $se->getTypesForQueue(SystemEvent::FULL_TEXT_SEARCH_QUEUE);
-if ($fts_types) {
-    $queue_links[] = array(
-        'href'   => '?queue=fts',
-        'label'  => $Language->getText('admin_system_events', 'fts_queue'),
-        'active' => $queue === SystemEvent::FULL_TEXT_SEARCH_QUEUE
-    );
+$selected_queue_name = SystemEventQueue::NAME;
+if (isset($available_queues[$request_queue])) {
+    $selected_queue_name = $request_queue;
 }
 
-$tv3_5_types = $se->getTypesForQueue(SystemEvent::TV3_TV5_MIGRATION_QUEUE);
-if ($tv3_5_types) {
+$queue_links = array();
+foreach ($available_queues as $queue) {
+    $href = '?';
+    if ($queue->getName() !== SystemEventQueue::NAME) {
+        $href .= 'queue=' . $queue->getName();
+    }
+
     $queue_links[] = array(
-        'href'   => '?queue=tv3_tv5_migration',
-        'label'  => $Language->getText('admin_system_events', 'tv3tv5_queue'),
-        'active' => $queue === SystemEvent::TV3_TV5_MIGRATION_QUEUE
+        'href'   => $href,
+        'label'  => $queue->getLabel(),
+        'active' => $selected_queue_name === $queue->getName()
     );
 }
 
@@ -153,7 +140,7 @@ $all_status = array(
 );
 
 
-$types = $se->getTypesForQueue($queue);
+$types = $se->getTypesForQueue($selected_queue_name);
 uksort($types, 'strnatcasecmp');
 foreach(array_chunk($types, ceil(count($types) / 3)) as $col) {
     foreach ($col as $type) {
@@ -175,7 +162,7 @@ $selectbox = html_build_multiple_select_box_from_array(
     false
 );
 
-$events = $se->fetchLastEventsStatus($offset, $limit, $full, $filter_status, $filter_type, $token, $queue);
+$events = $se->fetchLastEventsStatus($offset, $limit, $full, $filter_status, $filter_type, $token, $selected_queue_name);
 
 $system_event_followers = array();
 $dar = $sefdao->searchAll();
@@ -242,7 +229,7 @@ $renderer->renderToPage(
         $system_event_followers,
         $request->get('edit'),
         $status_new_followers,
-        $request_queue
+        $selected_queue_name
     )
 );
 
