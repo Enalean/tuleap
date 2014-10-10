@@ -69,7 +69,7 @@ class PROFTPD_UPDATE_ACL extends \SystemEvent {
     }
 
     private function getDirectoryPath(Project $project) {
-        return realpath($this->ftp_directory . DIRECTORY_SEPARATOR . $project->getUnixName());
+        return realpath($this->ftp_directory . DIRECTORY_SEPARATOR . $project->getUnixNameMixedCase());
     }
     
     private function getProjectFromParameters() {
