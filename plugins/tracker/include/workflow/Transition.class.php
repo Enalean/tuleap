@@ -1,26 +1,23 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ * This file is a part of Codendi.
  *
- * Tuleap is free software; you can redistribute it and/or modify
+ * Codendi is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Tuleap is distributed in the hope that it will be useful,
+ * Codendi is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-
-class Transition implements Transition_Interface {
-
+class Transition {
     public $transition_id;
     public $workflow_id;
 

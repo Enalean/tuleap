@@ -616,17 +616,76 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @return bool true if the value is considered ok
      */
     protected function validate(Tracker_Artifact $artifact, $value) {
-        return true;
+        $valid = true;
+        if ($this->fieldHasEnableWorkflow()) {
+
+            $last_changeset = $artifact->getLastChangeset();
+            $field_value_to = $this->getBind()->getValue($value);
+            if (!$last_changeset) {
+                 if (!$this->isTransitionValid(null, $field_value_to)) {
+                        $this->has_errors = true;
+                        $valid = false;
+                 }
+            } else {
+                if ($last_changeset->getValue($this)!=null) {
+                    foreach ($last_changeset->getValue($this)->getListValues() as $id => $value) {
+                        if ($value != $field_value_to) {
+                            if (!$this->isTransitionValid($value, $field_value_to)) {
+                                $this->has_errors = true;
+                                $valid = false;
+                            }
+                        }
+                    }
+                }else {
+                    if (!$this->isTransitionValid(null, $field_value_to)) {
+                        $this->has_errors = true;
+                        $valid = false;
+                    }
+                }
+            }
+
+            if ($valid) {
+                //Check permissions on transition
+                if (!$last_changeset || $last_changeset->getValue($this) == null) {
+                    $from = null;
+                    $to = $value;
+                } else {
+                    list(, $from) = each ($last_changeset->getValue($this)->getListValues());
+                    if (!is_string($value)) {
+                        $to = $value->getId();
+                    }else {
+                        $to = $value;
+                    }
+                }
+                $transition_id = $this->getTransitionId($from, $to);
+                if (!$this->userCanMakeTransition($transition_id)) {
+                        $valid = false;
+                 }
+            }
+        }
+
+        if ($valid) {
+            return true;
+        } else {
+            if ($field_value_to !== null) {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'transition_not_valid', array($field_value_to->getLabel())));
+            } else {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'transition_to_none'));
+            }
+            return false;
+        }
     }
 
 
     protected function isTransitionValid($field_value_from, $field_value_to){
-        if (! $this->fieldHasEnableWorkflow()) {
+        if (!$this->fieldHasEnableWorkflow()) {
             return true;
+        }else {
+            $workflow = $this->getWorkflow();
+            if ($workflow->isTransitionExist($field_value_from, $field_value_to)) {
+                return true;
+            }else return false;
         }
-
-        $workflow = $this->getWorkflow();
-        return $workflow->isTransitionExist($field_value_from, $field_value_to);
     }
 
     protected function getSelectedValue($selected_values) {

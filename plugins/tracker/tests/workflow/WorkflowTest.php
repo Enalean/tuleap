@@ -463,121 +463,9 @@ class Workflow_ExportToSOAP_rulesTest extends Workflow_ExportToSOAP_BaseTest {
 
 class Workflow_validateTest extends TuleapTestCase {
 
-    protected $value_null;
-    protected $value_v1;
-    protected $value_v2;
-    protected $value_v3;
-    protected $changeset_value_v1;
-    protected $changeset_value_v2;
-    protected $changeset_value_v3;
-    protected $changeset_v1;
-    protected $changeset_v2;
-    protected $changeset_v3;
-    protected $transition_null_to_v1;
-    protected $transition_v1_to_v2;
-    protected $transition_v2_to_v1;
-    protected $transition_v2_to_v3;
-    protected $transition_v3_to_v2;
-    protected $field_id;
-    protected $workflow;
-    protected $fields_data_null;
-    protected $fields_data_v1;
-    protected $fields_data_v3;
-    protected $fields_data_v2;
-
-    public function setUp() {
-        $this->changeset_value_v1 = mock('Tracker_Artifact_ChangesetValue_List');
-        stub($this->changeset_value_v1)->getId()->returns(66);
-        stub($this->changeset_value_v1)->getValue()->returns(array(66));
-
-        $this->changeset_value_v2 = mock('Tracker_Artifact_ChangesetValue_List');
-        stub($this->changeset_value_v2)->getId()->returns(67);
-        stub($this->changeset_value_v2)->getValue()->returns(array(67));
-
-        $this->changeset_value_v3 = mock('Tracker_Artifact_ChangesetValue_List');
-        stub($this->changeset_value_v3)->getId()->returns(68);
-        stub($this->changeset_value_v3)->getValue()->returns(array(68));
-
-        $this->value_null = null;
-
-        $this->value_v1 = mock('Tracker_FormElement_Field_List_Value');
-        stub($this->value_v1)->getId()->returns(66);
-
-        $this->value_v2 = mock('Tracker_FormElement_Field_List_Value');
-        stub($this->value_v2)->getId()->returns(67);
-
-        $this->value_v3 = mock('Tracker_FormElement_Field_List_Value');
-        stub($this->value_v3)->getId()->returns(68);
-
-        $this->changeset_v1 = stub('Tracker_Artifact_Changeset')->getValue()->returns($this->changeset_value_v1);
-        $this->changeset_v2 = stub('Tracker_Artifact_Changeset')->getValue()->returns($this->changeset_value_v2);
-        $this->changeset_v3 = stub('Tracker_Artifact_Changeset')->getValue()->returns($this->changeset_value_v3);
-
-        $this->field_id = 42;
-
-        $bind = mock('Tracker_FormElement_Field_List_Bind_Static');
-        stub($bind)
-            ->getAllValues()
-            ->returns(
-                array(
-                    $this->value_v1,
-                    $this->value_v2,
-                    $this->value_v3
-                )
-            );
-        $field = mock('Tracker_FormElement_Field_List');
-        stub($field)->getBind()->returns($bind);
-        stub($field)->getId()->returns(42);
-        $factory = stub('Tracker_FormElementFactory')->getUsedFormElementById($this->field_id)->returns($field);
-
-        // Transitions referenced by the workflow will always be valid for this test.
-        // Tests on validate method for transitions are described in Transition/Condition tests.
-
-        $this->transition_null_to_v1 = mock('Transition');
-        stub($this->transition_null_to_v1)->getFieldValueFrom()->returns($this->value_null);
-        stub($this->transition_null_to_v1)->getFieldValueTo()->returns($this->value_v1);
-        stub($this->transition_null_to_v1)->validate()->returns(true);
-
-        $this->transition_v1_to_v2 = mock('Transition');
-        stub($this->transition_v1_to_v2)->getFieldValueFrom()->returns($this->value_v1);
-        stub($this->transition_v1_to_v2)->getFieldValueTo()->returns($this->value_v2);
-        stub($this->transition_v1_to_v2)->validate()->returns(true);
-
-        $this->transition_v1_to_v3 = mock('Transition');
-        stub($this->transition_v1_to_v3)->getFieldValueFrom()->returns($this->value_v1);
-        stub($this->transition_v1_to_v3)->getFieldValueTo()->returns($this->value_v3);
-        stub($this->transition_v1_to_v3)->validate()->returns(true);
-
-        $this->transition_v2_to_v3 = mock('Transition');
-        stub($this->transition_v2_to_v3)->getFieldValueFrom()->returns($this->value_v2);
-        stub($this->transition_v2_to_v3)->getFieldValueTo()->returns($this->value_v3);
-        stub($this->transition_v2_to_v3)->validate()->returns(true);
-
-        $this->workflow =
-            aWorkflow()->
-            withFieldId($this->field_id)->
-            withTransitions(array(
-                $this->transition_null_to_v1,
-                $this->transition_v1_to_v2,
-                $this->transition_v1_to_v3,
-                $this->transition_v2_to_v3
-            ))->build();
-
-        $this->fields_data_null    = array($this->field_id => null);
-        $this->fields_data_no_data = array();
-        $this->fields_data_v1      = array($this->field_id => 66);
-        $this->fields_data_v2      = array($this->field_id => 67);
-        $this->fields_data_v3      = array($this->field_id => 68);
-        $this->fields_data_v4      = array($this->field_id => array(68, 75));
-        $this->fields_data_v5      = array($this->field_id => array(75, 68));
-
-        Tracker_FormElementFactory::setInstance($factory);
-    }
-
-    public function _itReturnsTrueIfWorkflowIsNotEnabled() {
+    public function itReturnsTrueIfWorkflowIsNotEnabled() {
         $is_used     = 0;
         $workflow    = aWorkflow()->withIsUsed($is_used)->build();
-
         $fields_data = array();
         $artifact    = mock('Tracker_Artifact');
 
@@ -585,98 +473,19 @@ class Workflow_validateTest extends TuleapTestCase {
     }
 
     public function itReturnsFalseIfWorkflowIsEnabledAndTransitionNotValid() {
+        $value_from  = null;
+        $value_to    = stub('Tracker_FormElement_Field_List_Value')->getId()->returns(66);
+        $transition  = mock('Transition');
+        stub($transition)->getFieldValueFrom()->returns($value_from);
+        stub($transition)->getFieldValueTo()->returns($value_to);
+        $is_used     = 1;
+        $field_id    = 42;
+        $workflow    = aWorkflow()->withFieldId($field_id)->withTransitions(array($transition))->build();
+        $fields_data = array($field_id => 66);
         $artifact    = mock('Tracker_Artifact');
 
-        // v2 -> v1
-        $transition  = $this->workflow->getCurrentTransition($this->fields_data_v1, $this->changeset_v2);
-        $this->assertFalse($transition->validate($this->fields_data_v1, $artifact));
-    }
-
-    public function itReturnsFalseIfWorkflowIsEnabledAndTransitionIsOnANullValue() {
-        $artifact    = mock('Tracker_Artifact');
-
-        // v1 -> null
-        $transition  = $this->workflow->getCurrentTransition($this->fields_data_null, $this->changeset_v1);
-        $this->assertFalse($transition->validate($this->fields_data_null, $artifact));
-    }
-
-    public function itReturnsFalseOnSubmitIfWorkflowIsEnabledAndTransitionIsInvalid() {
-        $artifact    = mock('Tracker_Artifact');
-
-        // (new artifact == null) -> v2
-        $transition  = $this->workflow->getCurrentTransition($this->fields_data_v2, null);
-        $this->assertFalse($transition->validate($this->fields_data_v2, $artifact));
-    }
-
-    public function itReturnsFalseOnSubmitIfWorkflowIsEnabledAndTransitionIsOnANullValue() {
-        $artifact    = mock('Tracker_Artifact');
-
-        // (new artifact == null) -> null
-        $transition  = $this->workflow->getCurrentTransition($this->fields_data_null, null);
-        $this->assertFalse($transition->validate($this->fields_data_null, $artifact));
-    }
-
-    public function itReturnsFalseOnSubmitIfWorkflowIsEnabledAndNoValueIsSubmitted() {
-        $artifact    = mock('Tracker_Artifact');
-
-        // (new artifact == null) -> no_data
-        $transition  = $this->workflow->getCurrentTransition($this->fields_data_no_data, null);
-        $this->assertFalse($transition->validate($this->fields_data_no_data, $artifact));
-    }
-
-    public function itReturnsTrueIfWorkflowIsEnabledAndTransitionIsValid() {
-        $artifact    = mock('Tracker_Artifact');
-
-        // (new artifact == null) -> v1
-        $transition  = $this->workflow->getCurrentTransition($this->fields_data_v1, null);
-        $this->assertTrue($transition->validate($this->fields_data_v1, $artifact));
-
-        // v1 -> v2
-        $transition  = $this->workflow->getCurrentTransition($this->fields_data_v2, $this->changeset_v1);
-        $this->assertTrue($transition->validate($this->fields_data_v2, $artifact));
-
-        // v2 -> v3
-        $transition  = $this->workflow->getCurrentTransition($this->fields_data_v3, $this->changeset_v2);
-        $this->assertTrue($transition->validate($this->fields_data_v3, $artifact));
-
-        // v1 -> v3
-        $transition  = $this->workflow->getCurrentTransition($this->fields_data_v3, $this->changeset_v1);
-        $this->assertTrue($transition->validate($this->fields_data_v3, $artifact));
-
-        // v1 -> v1
-        $transition  = $this->workflow->getCurrentTransition($this->fields_data_v1, $this->changeset_v1);
-        $this->assertTrue($transition->validate($this->fields_data_v1, $artifact));
-    }
-
-    public function itReturnsTrueIfWorkflowIsEnabledAndTransitionIsOnTheSamevalue() {
-        $artifact    = mock('Tracker_Artifact');
-
-        // v1 -> v1
-        $transition  = $this->workflow->getCurrentTransition($this->fields_data_v1, $this->changeset_v1);
-        $this->assertTrue($transition->validate($this->fields_data_v1, $artifact));
-    }
-
-    public function itTakesInAccountFirstValueInTransitionIfMultipleValues() {
-        $artifact    = mock('Tracker_Artifact');
-
-        $transition  = $this->workflow->getCurrentTransition($this->fields_data_v4, $this->changeset_v1);
-        $this->assertTrue($transition->validate($this->fields_data_v1, $artifact));
-
-        $transition  = $this->workflow->getCurrentTransition($this->fields_data_v5, $this->changeset_v1);
-        $this->assertFalse($transition->validate($this->fields_data_v1, $artifact));
-    }
-
-    public function itReturnsTrueOnSubmitIfWorkflowIsEnabledAndTransitionIsValid() {
-        $artifact    = mock('Tracker_Artifact');
-
-        // (new artifact == null) -> v1
-        $transition  = $this->workflow->getCurrentTransition($this->fields_data_v1, null);
-        $this->assertTrue($transition->validate($this->fields_data_v1, $artifact));
-    }
-
-    public function tearDown() {
-        parent::tearDown();
-        Tracker_FormElementFactory::clearInstance();
+        expect($transition)->validate()->once()->returns(false);
+        $this->assertFalse($workflow->validate($fields_data, $artifact));
     }
 }
 
