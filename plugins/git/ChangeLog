@@ -1,3 +1,6 @@
+Version 3.120 - Tuleap 7.6
+    * Part of story #7516: Generate one manifest per mirror
+
 Version 3.119 - Tuleap 7.6
     * Part of story #7516: All mirrors should be allowed to read gitolite admin repo
 
