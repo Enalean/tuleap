@@ -7,7 +7,7 @@ Version 7.6 (Not released yet)
 	* ldap: 3.55
 	* IM: 1.5.20
 	* statistics: 0.38
-	* git: 3.117
+	* git: 3.118
 	* fulltextsearch: 0.86
 	* graphontrackersv5: 5.15
 	* cardwall: 1.38
@@ -43,6 +43,7 @@ Version 7.6 (Not released yet)
 	* Part of request #7466: PHP 5.5 comes with password_hash built-in
 
 	== Features ==
+	* story #7516: (part of) have my repositories replicated on selected mirror
 	* REST API: can now search for a user with exact match: GET /users?query={username:jcdusse}
 	* REST API: story #7322: retrieve user membership from master
 	* New site wide permission delegation: retrieve user membership
