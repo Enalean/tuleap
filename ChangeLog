@@ -1,18 +1,36 @@
 Version 7.6 (Not released yet)
 	== Plugins ==
 	* ldap 3.53
-	* agiledashboard: 1.76
-	* docman: 2.26.51
-	* tracker: 5.489
-	* ldap: 3.54
-	* IM: 1.5.19
-	* statistics: 0.37
-	* git: 3.113
-	* fulltextsearch: 0.85
-	* graphontrackersv5: 5.14
-	* cardwall: 1.37
+	* agiledashboard: 1.77
+	* docman: 2.26.52
+	* tracker: 5.490
+	* ldap: 3.55
+	* IM: 1.5.20
+	* statistics: 0.38
+	* git: 3.114
+	* fulltextsearch: 0.86
+	* graphontrackersv5: 5.15
+	* cardwall: 1.38
 	* mediawiki: 0.56
-	* proftpd: 0.15
+	* proftpd: 0.16
+	* admindelegation: 2.8
+	* admssw: 0.4
+	* archivedeleteditems: 0.4
+	* boomerang: 0.3
+	* doaprdf: 0.4
+	* docmanwatermark: 2.6
+	* foafprofiles: 0.4
+	* forumml: 2.6.21
+	* fusionforge_compat: 0.7
+	* graphontrackers: 1.11
+	* hudson: 1.17
+	* openid: 0.5
+	* pluginsadministration: 1.5
+	* projectlinks: 2.6
+	* requesthelp: 1.3.9
+	* tracker_date_reminder: 1.2.8
+	* userlog: 1.4
+	* webdav: 1.9.6
 
 	== Bug Fix ==
 	* request #7515: Git mirror user ssh key is not deployed

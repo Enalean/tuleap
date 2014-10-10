@@ -1,3 +1,9 @@
+Version 1.77 - Tuleap 7.6
+    * story #7494 - See backlog sequence ID inside reports
+
+    * Autoloads modified due to my newer version of
+      autoload which adds newline at the end of files.
+
 Version 1.76 - Tuleap 7.6
     * request #7517: Revert fix for request #7474
 

@@ -1,3 +1,6 @@
+Version 1.38 - Tuleap 7.6
+    * Update to latest autoload/phpab version
+
 Version 1.37 - Tuleap 7.6
     * Part of request #7466 Tuleap test suite should run on php 5.4 and onward: Better type checking
 

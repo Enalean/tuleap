@@ -1,3 +1,6 @@
+Version 3.55 - Tuleap 7.6
+    * Update to latest autoload/phpab version
+
 Version 3.54 - Tuleap 7.6
     * request #7441 Notification email after LDAP daily syncro sent to project admins while user is not suspended
 

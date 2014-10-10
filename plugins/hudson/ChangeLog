@@ -1,3 +1,6 @@
+Version 1.17 - Tuleap 7.6
+    * Update to latest autoload/phpab version
+
 Version 1.16 - Tuleap 7.5
     * request #7371: Remove plugin service icon from core
 

@@ -1,3 +1,6 @@
+Version 0.86 - Tuleap 7.6
+    * Update to latest autoload/phpab version
+
 Version 0.85 - Tuleap 7.6
     * Permissions are saved on artifact indexation
 

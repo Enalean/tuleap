@@ -1,3 +1,6 @@
+Version 0.4 - Tuleap 7.6
+    * Update to latest autoload/phpab version
+
 Version 0.3 - Tuleap 7.5
     * request #7355: Archive deleted item plugin should check if the deleted item exists in the FS
 
