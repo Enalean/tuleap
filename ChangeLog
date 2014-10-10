@@ -33,6 +33,7 @@ Version 7.6 (Not released yet)
 	* webdav: 1.9.6
 
 	== Bug Fix ==
+	* request #7513: Pick active user when email is used by 2+ accounts
 	* request #7515: Git mirror user ssh key is not deployed
 	* request #7457: Remote Command Execution Vulnerability
 	* request #7484: Search in projects can take a very long time
