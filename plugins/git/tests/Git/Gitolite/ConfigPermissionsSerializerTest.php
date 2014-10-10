@@ -201,13 +201,21 @@ class Git_Gitolite_ConfigPermissionsSerializer_MirrorsTest extends TuleapTestCas
 class Git_Gitolite_ConfigPermissionsSerializer_GitoliteConfTest extends TuleapTestCase {
 
     private $mirror_mapper;
+    private $mirror_1;
+    private $mirror_2;
 
     public function setUp() {
         parent::setUp();
-        $this->mirror_mapper     = mock('Git_Mirror_MirrorDataMapper');
+        $this->mirror_mapper = mock('Git_Mirror_MirrorDataMapper');
+
+        $user_mirror1        = aUser()->withUserName('forge__gitmirror_1')->build();
+        $this->mirror_1      = new Git_Mirror_Mirror($user_mirror1, 1, 'url');
+        $user_mirror2        = aUser()->withUserName('forge__gitmirror_2')->build();
+        $this->mirror_2      = new Git_Mirror_Mirror($user_mirror2, 2, 'url');
     }
 
     public function itDumpsTheConf() {
+        stub($this->mirror_mapper)->fetchAll()->returns(array());
         $serializer = new Git_Gitolite_ConfigPermissionsSerializer($this->mirror_mapper, 'whatever');
         $this->assertEqual(
             file_get_contents(dirname(__FILE__).'/_fixtures/default_gitolite.conf'),
@@ -216,9 +224,19 @@ class Git_Gitolite_ConfigPermissionsSerializer_GitoliteConfTest extends TuleapTe
     }
 
     public function itAllowsOverrideBySiteAdmin() {
+        stub($this->mirror_mapper)->fetchAll()->returns(array());
         $serializer = new Git_Gitolite_ConfigPermissionsSerializer($this->mirror_mapper, dirname(__FILE__).'/_fixtures/etc_templates');
         $this->assertEqual(
             file_get_contents(dirname(__FILE__).'/_fixtures/override_gitolite.conf'),
+            $serializer->getGitoliteDotConf(array('projecta', 'projectb'))
+        );
+    }
+
+    public function __only__itGrantsReadAccessToGitoliteAdminForMirrorUsers() {
+        stub($this->mirror_mapper)->fetchAll()->returns(array($this->mirror_1, $this->mirror_2));
+        $serializer = new Git_Gitolite_ConfigPermissionsSerializer($this->mirror_mapper, 'whatever');
+        $this->assertEqual(
+            file_get_contents(dirname(__FILE__).'/_fixtures/mirrors_gitolite.conf'),
             $serializer->getGitoliteDotConf(array('projecta', 'projectb'))
         );
     }

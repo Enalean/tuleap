@@ -23,9 +23,21 @@ class Git_Gitolite_Presenter_GitoliteConfPresenter {
     /**
      * @var array
      */
+    public $mirrors = array();
+
+    /**
+     * @var array
+     */
     public $project_names;
 
-    public function __construct(array $project_names) {
+    public function __construct(array $project_names, array $mirrors) {
         $this->project_names = $project_names;
+        foreach ($mirrors as $mirror) {
+            $this->mirrors[] = $mirror->owner->getUserName();
+        }
+    }
+
+    public function has_mirror() {
+        return count($this->mirrors);
     }
 }

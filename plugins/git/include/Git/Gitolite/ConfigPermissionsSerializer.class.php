@@ -51,7 +51,10 @@ class Git_Gitolite_ConfigPermissionsSerializer {
     public function getGitoliteDotConf(array $project_names) {
         return $this->template_renderer->renderToString(
             'gitolite.conf',
-            new Git_Gitolite_Presenter_GitoliteConfPresenter($project_names)
+            new Git_Gitolite_Presenter_GitoliteConfPresenter(
+                $project_names,
+                $this->data_mapper->fetchAll()
+            )
         );
     }
 
