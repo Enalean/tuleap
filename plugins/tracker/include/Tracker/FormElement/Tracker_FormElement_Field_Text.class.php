@@ -115,7 +115,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
         return new Tracker_Report_Criteria_Text_ValueDao();
     }
 
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null) {
         $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($artifact_id);
         $format   = $this->getRightBodyFormat($artifact, $value);
         $hp = Codendi_HTMLPurifier::instance();
@@ -126,7 +126,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
         return $hp->purify($value, CODENDI_PURIFIER_BASIC, $this->getTracker()->getGroupId());
     }
 
-    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value) {
+    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report) {
         return $value;
     }
 

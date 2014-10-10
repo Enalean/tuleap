@@ -328,10 +328,10 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     public function getQueryFrom() {
     }
 
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null) {
     }
 
-    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value) {
+    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report) {
     }
 
     public function fetchCriteriaValue($criteria) {

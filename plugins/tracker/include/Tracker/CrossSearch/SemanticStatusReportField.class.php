@@ -92,7 +92,7 @@ class Tracker_CrossSearch_SemanticStatusReportField implements Tracker_Report_Fi
         return $this->id;
     }
     
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report =null, $from_aid = null) {
         return $this->semantic_value_factory->getStatus($artifact_id, $changeset_id);
     }
     

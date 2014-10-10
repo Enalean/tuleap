@@ -41,7 +41,7 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
         return "a.per_tracker_artifact_id";
     }
 
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null) {
         $from_aid_content = "";
         if ($from_aid != null) {
             $from_aid_content = "&from_aid=$from_aid";

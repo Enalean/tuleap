@@ -101,7 +101,7 @@ MARKUP;
     * @param mixed $value the value of the field
     * @return string
     */
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report = null, $from_aid = null) {
         
         
     }

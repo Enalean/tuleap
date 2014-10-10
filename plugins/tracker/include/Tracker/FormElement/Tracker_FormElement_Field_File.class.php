@@ -83,7 +83,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         return new Tracker_Report_Criteria_File_ValueDao();
     }
 
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null) {
         $html = '';
         $submitter_needed = true;
         $html .= $this->fetchAllAttachment($artifact_id, $this->getChangesetValues($changeset_id), $submitter_needed, array());
@@ -100,7 +100,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
      *
      * @return string
      */
-    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value) {
+    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report) {
         return $this->fetchAllAttachmentForCSV($artifact_id, $this->getChangesetValues($changeset_id));
     }
 

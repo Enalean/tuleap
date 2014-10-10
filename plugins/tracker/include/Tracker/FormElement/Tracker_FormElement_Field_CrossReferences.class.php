@@ -118,7 +118,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
                     .Tracker_Artifact::REFERENCE_NATURE."')";
     }
     
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null) {
         $html = '';
         $crossref_fact= new CrossReferenceFactory($artifact_id, Tracker_Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupId());
         $crossref_fact->fetchDatas();
@@ -130,7 +130,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         return $html;
     }
     
-    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value) {
+    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report) {
         // TODO: implement it if required
         $html = '';
         return $html;

@@ -1303,7 +1303,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         return $this->name;
     }
 
-    private function getAdditionalCriteria() {
+    public function getAdditionalCriteria() {
         $session_additional_criteria = null;
         if (isset($this->report_session)) {
             $session_additional_criteria = &$this->report_session->getAdditionalCriteria();

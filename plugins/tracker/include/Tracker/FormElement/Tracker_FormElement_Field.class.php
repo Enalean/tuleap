@@ -51,8 +51,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return string the value of the field for artifact_id and changeset_id, formatted for CSV
      */
-    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value) {
-        return $this->fetchChangesetValue($artifact_id, $changeset_id, $value);
+    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report) {
+        return $this->fetchChangesetValue($artifact_id, $changeset_id, $value, $report);
     }
 
     /**

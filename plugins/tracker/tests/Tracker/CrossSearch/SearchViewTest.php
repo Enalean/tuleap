@@ -199,8 +199,8 @@ class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
     }
     
     private function GivenCriteria() {
-        $criterion        = new stdClass();
-        $criterion->field = new MockTracker_FormElement_Field_List();
+        $criterion          = new stdClass();
+        $criterion->field   = new MockTracker_FormElement_Field_List();
         $criterion->field->setReturnValue('fetchChangesetValue', 'shared field value', array('6', '12345', null));
         $criteria = array($criterion);
         return $criteria;

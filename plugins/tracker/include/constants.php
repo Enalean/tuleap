@@ -180,3 +180,24 @@ define('TRACKER_EVENT_REPORT_LOAD_ADDITIONAL_CRITERIA', 'tracker_event_report_lo
  *   'artifact' Tracker_Artifact (IN)
  */
 define('TRACKER_EVENT_ARTIFACT_POST_UPDATE', 'tracker_event_artifact_post_update');
+
+/**
+ * Event emitted when a field data can be augmented by plugins
+ *
+ * Parameters:
+ *   'additional_criteria'    Tracker_Report_AdditionalCriteria[]  (IN)
+ *   'result'                 String (OUT)
+ *   'artifact_id'            Int (IN)
+ *   'field'                  Tracker_FormElement_Field (IN)
+ */
+define('TRACKER_EVENT_FIELD_AUGMENT_DATA_FOR_REPORT', 'tracker_event_field_augment_data_for_report');
+
+/**
+ * Event emitted when a column title can be augmented by plugins
+ *
+ * Parameters:
+ *   'additional_criteria'    Tracker_Report_AdditionalCriteria[]  (IN)
+ *   'result'                 String (OUT)
+ *   'field'                  Tracker_FormElement_Field (IN)
+ */
+define('TRACKER_EVENT_FIELD_AUGMENT_COLUMN_TITLE_FOR_REPORT', 'tracker_event_field_augment_column_title_for_report');
