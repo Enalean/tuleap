@@ -41,7 +41,7 @@ class Config {
      * @return boolean true if success false otherwise
      */
     public static function load($file) {
-        if (is_file($file) && is_readable($file)) {
+        if (is_file($file)) {
             // include the file in the local scope
             include($file);
             

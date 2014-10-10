@@ -19,3 +19,7 @@ $git_use_friendly_urls = 1;
 
 // Tell if online commits are allowed
 $enable_online_edit = 0;
+
+// Grokmirror
+// Un-comment if you have grokmirror installed somewhere
+//$grokmanifest_path = '/usr/bin/grok-manifest';

@@ -49,7 +49,7 @@ class PluginFileInfo extends PluginInfo
      */
     function loadProperties() 
     {
-        if (file_exists($this->conf_path)) {
+        if (is_file($this->conf_path)) {
             $this->checkConfigurationFiles($this->conf_path);
             $variables = $this->getVariablesFromConfigurationFile($this->conf_path);
             foreach ($variables as $variable) {

@@ -485,3 +485,14 @@ $sys_available_theme_variants = 'FlamingParrot_Orange,FlamingParrot_Blue,Flaming
 // see src/etc/combined.conf.dist for reference
 //
 // $sys_combined_dir = $codendi_cache_dir . '/combined';
+
+// Set the reporting level for logging
+//
+//  Possible levels:
+// - debug
+// - info
+// - warn
+// - error
+//
+// Note: as of today, not all loggers respects this value
+$sys_logger_level = 'warn';

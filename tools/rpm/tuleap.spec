@@ -606,6 +606,7 @@ done
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitroot
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/repositories
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/grokmirror
 touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__ln_s} var/lib/%{APP_NAME}/gitroot $RPM_BUILD_ROOT
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/smarty
@@ -1010,6 +1011,7 @@ fi
 %dir %{APP_DATA_DIR}/gitroot
 %dir %{APP_DATA_DIR}/gitolite
 %attr(00770,gitolite,gitolite)  %{APP_DATA_DIR}/gitolite/repositories
+%attr(00770,gitolite,gitolite)  %{APP_DATA_DIR}/gitolite/grokmirror
 %attr(00660,gitolite,gitolite)  %{APP_DATA_DIR}/gitolite/projects.list
 %attr(-,root,root) /gitroot
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}/smarty

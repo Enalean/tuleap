@@ -30,6 +30,8 @@ else
     user_name="$GL_USER"
 fi
 
+/usr/lib/codendi/bin/git-post-receive.pl --init $repository_path $user_name
+
 count=0
 while read oldrev newrev refname
     do
