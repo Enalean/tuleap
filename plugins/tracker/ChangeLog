@@ -1,3 +1,6 @@
+Version 5.491 - Tuleap 7.6
+    * request #7474 Error 500 when updating an artifact without status
+
 Version 5.490 - Tuleap 7.6
     * story #7494 - See backlog sequence ID inside reports
 
