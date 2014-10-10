@@ -42,6 +42,16 @@ class UserTestBuilder {
         return $this;
     }
 
+    function withRealName($realname) {
+        $this->params['realname'] = $realname;
+        return $this;
+    }
+
+    function withEmail($email) {
+        $this->params['email'] = $email;
+        return $this;
+    }
+
     function withId($id) {
         $this->params['user_id'] = $id;
         return $this;
