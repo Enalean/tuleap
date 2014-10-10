@@ -1,3 +1,6 @@
+Version 5.489 - Tuleap 7.6
+    * request #7517: Revert fix for request #7474
+
 Version 5.488 - Tuleap 7.6
     * Development: be able to fetch a paginated list of artifact links
 

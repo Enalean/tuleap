@@ -1,3 +1,6 @@
+Version 1.76 - Tuleap 7.6
+    * request #7517: Revert fix for request #7474
+
 Version 1.75 - Tuleap 7.6
     * request #7474 - Error 500 when updating an artifact without status
 
