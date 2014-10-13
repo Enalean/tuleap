@@ -114,7 +114,7 @@ class Tracker_FormElement_Field_TextTest extends TuleapTestCase {
         
         $text = new Tracker_FormElement_Field_TextTestVersion();
         
-        $this->assertTrue($text->hasChanges($value, 'v2'));
+        $this->assertTrue($text->hasChanges($value, array('content' => 'v2')));
     }
     
     function testIsValidRequiredField() {
