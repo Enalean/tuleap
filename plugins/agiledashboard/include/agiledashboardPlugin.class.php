@@ -63,7 +63,6 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(TRACKER_EVENT_REPORT_SAVE_ADDITIONAL_CRITERIA);
             $this->addHook(TRACKER_EVENT_REPORT_LOAD_ADDITIONAL_CRITERIA);
             $this->addHook(TRACKER_EVENT_FIELD_AUGMENT_DATA_FOR_REPORT);
-            $this->addHook(TRACKER_EVENT_FIELD_AUGMENT_COLUMN_TITLE_FOR_REPORT);
             $this->addHook(Event::SERVICE_ICON);
 
             $this->_addHook(Event::SYSTRAY);
@@ -726,20 +725,6 @@ class AgileDashboardPlugin extends Plugin {
             UserManager::instance()->getCurrentUser(),
             $params['additional_criteria'],
             $params['artifact_id']
-        );
-    }
-
-    /**
-     * @see TRACKER_EVENT_FIELD_AUGMENT_COLUMN_TITLE_FOR_REPORT
-     */
-    public function tracker_event_field_augment_column_title_for_report($params) {
-        if (! $this->isFieldPriority($params['field'])) {
-            return;
-        }
-
-        $params['result'] = $this->getFieldPriorityAugmenter()->getAugmentedTitleForFieldPriority(
-            UserManager::instance()->getCurrentUser(),
-            $params['additional_criteria']
         );
     }
 

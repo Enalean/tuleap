@@ -38,13 +38,7 @@ class AgileDashboard_FieldPriorityAugmenter {
             return;
         }
 
-        return "- ". $sequence_id;
-    }
-
-    public function getAugmentedTitleForFieldPriority(PFUser $user, $additional_criteria) {
-        if ($this->getMilestoneFromCriteria($user, $additional_criteria)) {
-            return $GLOBALS['Language']->getText('plugin_agiledashboard', 'augmented_title_field_priority');
-        }
+        return $sequence_id;
     }
 
     private function getSequenceIdForFieldPriority(PFUser $user, $additional_criteria, $artifact_id) {

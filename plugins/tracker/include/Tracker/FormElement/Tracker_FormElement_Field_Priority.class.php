@@ -22,30 +22,7 @@
 class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integer implements Tracker_FormElement_Field_ReadOnly {
 
     public function getLabel($report = null) {
-        if ($report) {
-            return $this->label . $this->fetchAdditionalInformationsForLabel($report);
-        }
-
         return $this->label;
-    }
-
-    private function fetchAdditionalInformationsForLabel(Tracker_Report $report) {
-        $html = '';
-
-        EventManager::instance()->processEvent(
-            TRACKER_EVENT_FIELD_AUGMENT_COLUMN_TITLE_FOR_REPORT,
-            array(
-                'additional_criteria' => $report->getAdditionalCriteria(),
-                'result'              => &$result,
-                'field'               => $this
-            )
-        );
-
-        if (! $result) {
-            return;
-        }
-
-        return $this->getRenderedAdditionalInformationsForLabel($result);
     }
 
     private function getRenderedAdditionalInformationsForLabel($additional_informations) {
@@ -81,7 +58,21 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
             return $value;
         }
 
-        return $value . " " . $this->getAugmentedFieldValue($artifact_id, $report);;
+        $augmented_value = $this->getAugmentedFieldValue($artifact_id, $report);
+        if ($augmented_value) {
+            return $augmented_value;
+        }
+
+        return '<span class="non-displayable" title="' . $GLOBALS['Language']->getText('plugin_tracker_report', 'non_displayable_tooltip') . '">' . $GLOBALS['Language']->getText('plugin_tracker_report', 'non_displayable') . '</span>';
+    }
+
+    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report) {
+        $augmented_value = $this->getAugmentedFieldValue($artifact_id, $report);
+        if ($augmented_value) {
+            return $augmented_value;
+        }
+
+        return $GLOBALS['Language']->getText('plugin_tracker_report', 'non_displayable');
     }
 
     private function getAugmentedFieldValue($artifact_id, Tracker_Report $report) {

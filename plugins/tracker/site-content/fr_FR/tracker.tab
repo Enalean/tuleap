@@ -1343,6 +1343,8 @@ plugin_tracker_report	haschanged_isobsolete_explanations	Le rapport a été modi
 plugin_tracker_report	renderer_name_mandatory	Le nom est obligatoire.
 plugin_tracker_report	set_default_report	Mettre ce rapport par défaut
 plugin_tracker_report	search	Rechercher
+plugin_tracker_report	non_displayable	N/A
+plugin_tracker_report	non_displayable_tooltip	Le rang de l'artifact n'ayant du sens que dans le cadre d'un jalon, vous devez sélectionner un jalon pour connaître son rang.
 
 plugin_tracker_report_widget	go_to_report	Voir le rapport
 
