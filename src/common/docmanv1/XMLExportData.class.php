@@ -97,9 +97,9 @@ class DocmanV1_XMLExportData {
         }
     }
 
-    public function getTree(Project $project) {
+    public function getTree(Project $project, PFUser $admin_user) {
         $root = $this->createFolder(self::ROOT_FOLDER_NAME, "Documentation imported from Docman v1");
-        $this->appendGroups($root, $project);
+        $this->appendGroups($root, $project, $admin_user);
         return $root;
     }
 
@@ -177,20 +177,20 @@ class DocmanV1_XMLExportData {
         $node->appendChild($sub_node);
     }
 
-    private function appendGroups(DOMElement $parent_node, Project $project) {
+    private function appendGroups(DOMElement $parent_node, Project $project, PFUser $admin_user) {
         foreach ($this->dao->searchAllGroups($project->getID()) as $row) {
             $folder = $this->createFolder($row['groupname'], '');
             $this->appendPermissions($folder, $row['doc_group'], self::FOLDER_PERMISSION_TYPE);
-            $this->appendDocuments($folder, $row['doc_group']);
+            $this->appendDocuments($folder, $admin_user, $row['doc_group']);
             $parent_node->appendChild($folder);
         }
     }
 
-    private function appendDocuments(DOMElement $parent_node, $doc_group_id) {
+    private function appendDocuments(DOMElement $parent_node, PFUser $admin_user, $doc_group_id) {
         foreach ($this->dao->searchAllDocs($doc_group_id) as $row) {
-            $creator_name = 'admin';
+            $creator_name = $admin_user->getUserName();
             $creator = $this->user_manager->getUserById($row['created_by']);
-            if ($creator !== null) {
+            if ($creator !== null && ($creator->isActive() || $creator->isRestricted())) {
                 $creator_name = $creator->getUnixName();
             }
 
