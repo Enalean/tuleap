@@ -185,11 +185,10 @@ class TrackerXmlImportTest extends TuleapTestCase {
         $expected_hierarchy = array(444 => array(555));
         $mapper = array("T101" => 444, "T102" => 555);
         $hierarchy = $this->tracker_xml_importer->buildTrackersHierarchy($hierarchy, $this->xml_tracker2, $mapper);
-        $diff = array_diff($hierarchy, $expected_hierarchy);
 
         $this->assertTrue(! empty($hierarchy));
         $this->assertNotNull($hierarchy[444]);
-        $this->assertTrue(empty($diff));
+        $this->assertIdentical($hierarchy, $expected_hierarchy);
     }
 
     public function itAddsTrackersHierarchyOnExistingHierarchy() {
@@ -205,11 +204,10 @@ class TrackerXmlImportTest extends TuleapTestCase {
         );
 
         $hierarchy = $this->tracker_xml_importer->buildTrackersHierarchy($hierarchy, $xml_tracker, $mapper);
-        $diff = array_diff($hierarchy, $expected_hierarchy);
 
         $this->assertTrue(! empty($hierarchy));
         $this->assertNotNull($hierarchy[444]);
-        $this->assertTrue(empty($diff));
+        $this->assertIdentical($expected_hierarchy, $hierarchy);
     }
 }
 ?>
