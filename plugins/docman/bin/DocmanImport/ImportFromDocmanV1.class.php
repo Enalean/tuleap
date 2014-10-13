@@ -46,7 +46,8 @@ class Docman_ImportFromDocmanV1 {
     private function dumpDocmanV1(Project $project) {
         $XMLExport = new DocmanV1_XMLExport(
             $project,
-            $this->temporary_directory
+            $this->temporary_directory,
+            $this->user_login
         );
 
         $XMLExport->dumpPackage();

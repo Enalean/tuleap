@@ -22,12 +22,16 @@ class DocmanV1_XMLExport {
     private $project;
     private $data_path;
     private $package_path;
+    private $admin_user;
+    private $user_manager;
 
-    public function __construct(Project $project, $archive_name) {
+    public function __construct(Project $project, $archive_name, $admin_name) {
         $this->project      = $project;
         $this->archive_name = basename($archive_name);
         $this->package_path = $archive_name;
         $this->data_path    = $this->package_path.'/'.$this->archive_name;
+        $this->user_manager = UserManager::instance();
+        $this->admin_user   = $this->user_manager->getUserByUserName($admin_name);
     }
 
     public function createDomDocument() {
@@ -57,7 +61,7 @@ class DocmanV1_XMLExport {
     public function appendDocman(DOMDocument $doc) {
         $export = new DocmanV1_XMLExportData(
             new DocmanV1_XMLExportDao(),
-            UserManager::instance(),
+            $this->user_manager,
             new UGroupManager(),
             $doc,
             $this->data_path
@@ -69,7 +73,7 @@ class DocmanV1_XMLExport {
         $ugroups = $doc->createElement('ugroups');
         $docman->appendChild($ugroups);
 
-        $docman->appendChild($export->getTree($this->project, $ugroups));
+        $docman->appendChild($export->getTree($this->project, $this->admin_user));
         $export->appendUGroups($ugroups, $this->project);
     }
 
