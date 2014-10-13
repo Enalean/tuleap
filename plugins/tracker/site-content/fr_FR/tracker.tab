@@ -1079,9 +1079,9 @@ plugin_tracker_formelement_admin	submittedon_help	Le champ est automatiquement r
 plugin_tracker_formelement_admin	lastupdatedate_label	Date de dernière mise à jour
 plugin_tracker_formelement_admin	lastupdatedate_description	Affiche la date de dernière mise à jour de l'artéfact
 plugin_tracker_formelement_admin	lastupdatedate_help	Le champ est automatiquement renseigné avec la date de dernière modification de l'artéfact
-plugin_tracker_formelement_admin	priority_label	Priorité
-plugin_tracker_formelement_admin	priority_description	Priorité
-plugin_tracker_formelement_admin	priority_help	La valeur de ce champ est définie par le plugin AgileDashboard. Elle représente la priorité globale de l'artifact par rapport à la plateforme.
+plugin_tracker_formelement_admin	priority_label	Rang
+plugin_tracker_formelement_admin	priority_description	Rang
+plugin_tracker_formelement_admin	priority_help	La valeur de ce champ est donnée par le plugin AgileDashboard. Elle représente le rang de l'artifact dans le contexte d'un jalon. Veuillez noter que ce champ évoluera dans le futur.
 plugin_tracker_formelement_admin	artifactid_label	ID de l'artéfact
 plugin_tracker_formelement_admin	artifactid_description	Affiche l'identifiant de l'artéfact
 plugin_tracker_formelement_admin	artifactid_help	Le champ est automatiquement renseigné avec un Identifiant unique
