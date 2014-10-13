@@ -76,7 +76,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     }
 
     private function checkFieldsAreDifferent($source_field, $target_field) {
-        $fields_are_different = $source_field != $target_field;
+        $fields_are_different = $source_field !== $target_field;
         if (! $fields_are_different) {
             $error_msg = $GLOBALS['Language']->getText('workflow_admin', 'same_field');
             $GLOBALS['Response']->addFeedback('error', $error_msg);
