@@ -15,9 +15,9 @@
     "angular-gettext": "~1.1.0",
     "ngSocket": "~0.2.1",
     "angular-socket-io": "~0.6.0",
-    "angular-ui-utils": "bower-unique"
+    "angular-ui-utils": "bower-unique",
+    "angular-audio": "v0.9"
   },
-  "dependencies": {},
   "resolutions": {
     "angular": "1.2.21"
   }
