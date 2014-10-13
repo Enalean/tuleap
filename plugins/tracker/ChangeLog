@@ -1,3 +1,6 @@
+Version 5.492 - Tuleap 7.6
+    * array_diff throw notices in 5.4+ and seems unreliable for recursive array
+
 Version 5.491 - Tuleap 7.6
     * request #7474 Error 500 when updating an artifact without status
 
