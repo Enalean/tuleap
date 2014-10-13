@@ -345,7 +345,6 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     }
 
     public function markAsDeleted(GitRepository $repository) {
-        $this->deletePermissions($repository);
         $this->getDao()->delete($repository);
     }
 

@@ -233,6 +233,23 @@ class GitRepositoryFactory {
     public function getAllRepositoriesOfProject(Project $project) {
         return $this->dao->getAllGitoliteRespositories($project->getId())->instanciateWith(array($this, 'instanciateFromRow'));
     }
+
+    /**
+     * Get the list of all archived repositories to purge
+     *
+     * @param int $retention_period
+     *
+     * @return GitRepository[]
+     */
+    public function getArchivedRepositoriesToPurge($retention_period) {
+        $archived_repositories = array();
+        $deleted_repositories  = $this->dao->getDeletedRepositoriesToPurge($retention_period);
+        foreach ($deleted_repositories as $deleted_repository) {
+            $repository = $this->instanciateFromRow($deleted_repository);
+            array_push($archived_repositories, $repository);
+        }
+        return $archived_repositories;
+    }
 }
 
 ?>

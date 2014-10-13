@@ -90,6 +90,7 @@ class GitPlugin extends Plugin {
         $this->_addHook('logs_daily',                                       'logsDaily',                                   false);
         $this->_addHook('widget_instance',                                  'myPageBox',                                   false);
         $this->_addHook('widgets',                                          'widgets',                                     false);
+        $this->_addHook('codendi_daily_start',                              'codendiDaily',                                false);
 
         $this->_addHook('SystemEvent_USER_RENAME', 'systemevent_user_rename');
 
@@ -1048,7 +1049,8 @@ class GitPlugin extends Plugin {
         return new GitRepositoryManager(
             $this->getRepositoryFactory(),
             $this->getGitSystemEventManager(),
-            $this->getGitDao()
+            $this->getGitDao(),
+            $this->getConfigurationParameter('git_backup_dir')
         );
     }
 
@@ -1229,5 +1231,12 @@ class GitPlugin extends Plugin {
             $logger,
             $this->getConfigurationParameter('grokmanifest_path')
         );
+    }
+
+    /**
+     * Hook: called by daily codendi script.
+     */
+    function codendiDaily() {
+        $this->getRepositoryManager()->purgeArchivedRepositories($this->getLogger());
     }
 }

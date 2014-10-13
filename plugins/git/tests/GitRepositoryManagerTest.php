@@ -25,6 +25,7 @@ class GitRepositoryManager_DeleteAllRepositoriesTest extends TuleapTestCase {
     private $git_repository_manager;
     private $git_system_event_manager;
     private $dao;
+    private $backup_directory;
 
     public function setUp() {
         parent::setUp();
@@ -33,8 +34,9 @@ class GitRepositoryManager_DeleteAllRepositoriesTest extends TuleapTestCase {
         $this->repository_factory   = mock('GitRepositoryFactory');
         $this->git_system_event_manager = mock('Git_SystemEventManager');
         $this->dao                  = mock('GitDao');
+        $this->backup_directory     = "/tmp/";
 
-        $this->git_repository_manager = new GitRepositoryManager($this->repository_factory, $this->git_system_event_manager, $this->dao);
+        $this->git_repository_manager = new GitRepositoryManager($this->repository_factory, $this->git_system_event_manager, $this->dao, $this->backup_directory);
     }
 
     public function itDeletesNothingWhenThereAreNoRepositories() {
@@ -76,6 +78,7 @@ class GitRepositoryManager_IsRepositoryNameAlreadyUsedTest extends TuleapTestCas
     private $project_id;
     private $project_name;
     private $dao;
+    private $backup_directory;
 
     public function setUp() {
         parent::setUp();
@@ -85,9 +88,10 @@ class GitRepositoryManager_IsRepositoryNameAlreadyUsedTest extends TuleapTestCas
         stub($this->project)->getID()->returns($this->project_id);
         stub($this->project)->getUnixName()->returns($this->project_name);
         $this->dao = mock('GitDao');
+        $this->backup_directory = "/tmp/";
 
         $this->factory    = mock('GitRepositoryFactory');
-        $this->manager    = new GitRepositoryManager($this->factory, mock('Git_SystemEventManager'), $this->dao);
+        $this->manager    = new GitRepositoryManager($this->factory, mock('Git_SystemEventManager'), $this->dao, $this->backup_directory);
     }
 
     private function aRepoWithPath($path) {
@@ -153,6 +157,7 @@ class GitRepositoryManager_CreateTest extends TuleapTestCase {
     private $creator;
     private $dao;
     private $git_system_event_manager;
+    private $backup_directory;
 
     public function setUp() {
         parent::setUp();
@@ -161,6 +166,7 @@ class GitRepositoryManager_CreateTest extends TuleapTestCase {
 
         $this->git_system_event_manager = mock('Git_SystemEventManager');
         $this->dao                  = mock('GitDao');
+        $this->backup_directory = "/tmp/";
 
         $this->manager = partial_mock(
             'GitRepositoryManager',
@@ -168,7 +174,8 @@ class GitRepositoryManager_CreateTest extends TuleapTestCase {
             array(
                 mock('GitRepositoryFactory'),
                 $this->git_system_event_manager,
-                $this->dao
+                $this->dao,
+                $this->backup_directory
             )
         );
     }
@@ -244,6 +251,7 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
     private $manager;
     private $forkPermissions;
     private $git_system_event_manager;
+    private $backup_directory;
 
     public function setUp() {
         parent::setUp();
@@ -256,6 +264,7 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
         $this->project = stub('Project')->getId()->returns(101);
 
         $this->git_system_event_manager = mock('Git_SystemEventManager');
+        $this->backup_directory = "/tmp/";
 
         $this->manager = partial_mock(
             'GitRepositoryManager',
@@ -263,7 +272,8 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
             array(
                 mock('GitRepositoryFactory'),
                 $this->git_system_event_manager,
-                mock('GitDao')
+                mock('GitDao'),
+                $this->backup_directory
             )
         );
         $this->forkPermissions = array();
