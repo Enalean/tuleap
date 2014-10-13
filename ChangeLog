@@ -1,2 +1,11 @@
+Version 0.1.1 - Tuleap 7.6
+	* request #13227: Remove unneeded Scrollbar
+	* story #13236: Remove notifications of the test execution tracker (edit XML)
+	* bugs #13244: During campaign creation, remove duplicate test definitions when I filter
+	* bugs #13225: Hide categories in list execution when they have no test
+	* task #13106: Do not use array_slice to generate executions
+	* story #13162: Have test execution and "who's seeing what" updated in real time
+	* task #13105: Do not inject loaded executions in controller
+
 Version 0.1 - Tuleap 7.5
 	* Early version of the plugin. User can create and execute test campaigns.
