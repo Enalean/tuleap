@@ -1345,6 +1345,8 @@ plugin_tracker_report	haschanged_isobsolete_explanations	Report has been modifie
 plugin_tracker_report	renderer_name_mandatory	Renderer name is mandatory.
 plugin_tracker_report	set_default_report	Set default report
 plugin_tracker_report	search	Search
+plugin_tracker_report	non_displayable	N/A
+plugin_tracker_report	non_displayable_tooltip	The rank of an artifact only exists in the context of a milestone. You must filter by milestone to view artifact ranks.
 
 plugin_tracker_report_widget	go_to_report	Go to report
 
