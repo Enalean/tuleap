@@ -1,3 +1,6 @@
+Version 5.493 - Tuleap 7.6
+    * Object comparison seems to be different in 5.4
+
 Version 5.492 - Tuleap 7.6
     * array_diff throw notices in 5.4+ and seems unreliable for recursive array
 
