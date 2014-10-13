@@ -1,3 +1,6 @@
+Version 2.26.53 - Tuleap 7.6
+    * Fix request #7523 Docman import from v1 block when users are deleted
+
 Version 2.26.52 - Tuleap 7.6
     * Update to latest autoload/phpab version
 
