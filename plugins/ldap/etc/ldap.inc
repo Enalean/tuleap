@@ -88,5 +88,8 @@ $sys_ldap_grp_dn        = 'ou=groups,dc=tuleap,dc=net';
 $sys_ldap_grp_cn        = 'cn';
 // Field that indicate the membership of a user in a group
 $sys_ldap_grp_member    = 'uniquemember';
+// Threshold for users to be suspended
+// On beyond of this value expressed in percentage no users will be suspended
+$sys_ldap_threshold_users_suspension = '';
 
 ?>

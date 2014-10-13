@@ -55,8 +55,10 @@ class LDAP_DirectorySynchronization {
 
         $res = db_query($sql);
         if ($res && !db_error($res)) {
+            $nbr_all_users         = mysql_num_rows($res);
+            $users_are_suspendable = $this->getLdapUserManager()->areUsersSupendable($nbr_all_users);
             while($row = db_fetch_array($res)) {
-                $this->ldapSync($row);
+                $this->ldapSync($row, $users_are_suspendable);
             }
             $this->getLdapUserManager()->triggerRenameOfUsers();
         } else {
@@ -64,9 +66,8 @@ class LDAP_DirectorySynchronization {
         }
     }
 
-    public function ldapSync($row) {
+    public function ldapSync($row, $users_are_suspendable = true) {
         $ldap_query = $this->ldap->getLDAPParam('eduid').'='.$row['ldap_id'];
-
         $userSync = $this->getLdapUserSync();
         $attributes = $userSync->getSyncAttributes($this->ldap);
 
@@ -92,7 +93,7 @@ class LDAP_DirectorySynchronization {
                 if ($row['ldap_uid'] != $lr->getLogin()) {
                     $this->getLdapUserManager()->updateLdapUid($user, $lr->getLogin());
                 }
-            } elseif (count($lri) == 0) {
+            } elseif (count($lri) == 0 && $users_are_suspendable) {
                 $this->logger->warn('LDAP user to be suspended: '.$user->getId().' '. $user->getUserName());
 
                 $this->logger->debug(
@@ -108,11 +109,15 @@ class LDAP_DirectorySynchronization {
             }
 
             if ($modified) {
-                $this->getUserManager()->updateDb($user);
-                if ($retentionPeriod = $this->ldap->getLDAPParam('daily_sync_retention_period') && $user->getStatus() == 'S') {
-                    $projectManager = $this->getProjectManager();
-                    $this->getLdapSyncNotificationManager($projectManager, $retentionPeriod)->processNotification($user);
-                    $this->getCleanUpManager()->addUserDeletionForecastDate($user);
+                if ($user->getStatus() == 'S' && $users_are_suspendable) {
+                    $this->getUserManager()->updateDb($user);
+                    if ($retentionPeriod = $this->ldap->getLDAPParam('daily_sync_retention_period')) {
+                        $projectManager = $this->getProjectManager();
+                        $this->getLdapSyncNotificationManager($projectManager, $retentionPeriod)->processNotification($user);
+                        $this->getCleanUpManager()->addUserDeletionForecastDate($user);
+                    }
+                } else if ($user->getStatus() != 'S'){
+                    $this->getUserManager()->updateDb($user);
                 }
             }
         }
@@ -149,7 +154,7 @@ class LDAP_DirectorySynchronization {
         return UserManager::instance();
     }
 
-    protected function getLdapUserManager() {
+    public function getLdapUserManager() {
         if (!isset($this->lum)) {
             $this->lum = new LDAP_UserManager($this->ldap, LDAP_UserSync::instance());
         }

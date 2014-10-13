@@ -159,6 +159,40 @@ extends DataAccessObject
                ' WHERE user_id = '.$this->da->quoteSmart($userId);
         return $this->update($sql);
     }
+
+    /**
+     * Return number of active users
+     *
+     * @return int
+     *
+     */
+    public function getNbrActiveUsers() {
+        $sql = 'SELECT count(u.user_id) as count
+        FROM user u
+         JOIN plugin_ldap_user ldap_user ON (ldap_user.user_id = u.user_id)
+        WHERE status IN ("A", "R")
+        AND u.user_id > 101
+        AND ldap_id IS NOT NULL
+        AND ldap_id <> ""';
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * Return all active users
+     *
+     * @return DataAccessResult
+     *
+     */
+    public function getActiveUsers() {
+        $sql = 'SELECT u.user_id, user_name, email, ldap_id, status, realname, ldap_uid
+        FROM user u
+         JOIN plugin_ldap_user ldap_user ON (ldap_user.user_id = u.user_id)
+        WHERE status IN ("A", "R")
+        AND u.user_id > 101
+        AND ldap_id IS NOT NULL
+        AND ldap_id <> ""';
+        return $this->retrieve($sql);
+    }
 }
 
 ?>

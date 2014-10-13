@@ -438,6 +438,106 @@ class LDAP_UserManager {
     }
 
     /**
+     * Return array of users that will be suspended
+     *
+     * @return array of PFUser
+     *
+     */
+    public function getUsersToBeSuspended() {
+        $users_to_be_suspended = array();
+        $active_users          = $this->getDao()->getActiveUsers();
+        foreach ($active_users as $active_user) {
+            if($this->isUserDeletedFromLdap($active_user)) {
+                $user = new PFUser($active_user);
+                array_push($users_to_be_suspended, $user);
+            }
+        }
+        return $users_to_be_suspended;
+    }
+
+    /**
+     * Return number of active users
+     *
+     * @return int
+     *
+     */
+    public function getNbrActiveUsers() {
+        $row = $this->getDao()->getNbrActiveUsers()->getRow();
+        return $row["count"];
+    }
+
+    /**
+     * Return true if users could be suspended
+     *
+     * @param int $nbr_all_users
+     *
+     * @return Boolean
+     *
+     */
+    public function areUsersSupendable($nbr_all_users) {
+        $nbr_users_to_suspend = count($this->getUsersToBeSuspended());
+        if ((!$threshold_users_suspension = $this->ldap->getLDAPParam('threshold_users_suspension')) || $nbr_users_to_suspend == 0) {
+            return true;
+        }
+        return $this->checkThreshold($nbr_users_to_suspend, $nbr_all_users);
+    }
+
+    /**
+     * Check that threshold is upper then percentage of users that will be suspended
+     *
+     * @param int $nbr_users_to_suspend
+     * @param int $nbr_all_users
+     *
+     * @return Boolean
+     *
+     */
+    public function checkThreshold($nbr_users_to_suspend, $nbr_all_users) {
+        if($nbr_users_to_suspend == 0 || $nbr_all_users == 0) {
+            return true;
+        }
+        $percentage_users_to_suspend = ($nbr_users_to_suspend / $nbr_all_users) *100;
+        $threshold_users_suspension  = $this->ldap->getLDAPParam('threshold_users_suspension');
+        $logger = new BackendLogger();
+        if($percentage_users_to_suspend <= $threshold_users_suspension) {
+            $logger->info("[LDAP] Percentage of suspended users is ( ".$percentage_users_to_suspend."% ) and threshold is ( ".$threshold_users_suspension."% )");
+            $logger->info("[LDAP] Number of suspended users is ( ".$nbr_users_to_suspend." ) and number of active users is ( ".$nbr_all_users." )");
+            return true;
+        } else {
+            $logger->warn("[LDAP] Users not suspended: the percentage of users to suspend is ( ".$percentage_users_to_suspend."% ) higher then threshold ( ".$threshold_users_suspension."% )");
+            $logger->warn("[LDAP] Number of users not suspended is ( ".$nbr_users_to_suspend." ) and number of active users is ( ".$nbr_all_users." )");
+            return false;
+        }
+    }
+
+
+    /**
+     * Return true if user is deleted from ldap server
+     *
+     * @param array $row
+     *
+     * @return Boolean
+     *
+     */
+    public function isUserDeletedFromLdap ($row) {
+        $ldap_query = $this->ldap->getLDAPParam('eduid').'='.$row['ldap_id'];
+        $attributes = $this->user_sync->getSyncAttributes($this->ldap);
+        $ldapSearch = false;
+
+        foreach (split(';', $this->ldap->getLDAPParam('people_dn')) as $people_dn) {
+            $ldapSearch = $this->ldap->search($people_dn, $ldap_query, LDAP::SCOPE_ONELEVEL, $attributes);
+            if (count($ldapSearch) == 1 && $ldapSearch != false) {
+                break;
+            }
+        }
+        if ($this->ldap->getErrno() === LDAP::ERR_SUCCESS && $ldapSearch) {
+           if (count($ldapSearch) == 0) {
+               return true;
+           }
+        }
+        return false;
+    }
+
+    /**
      * Wrapper for DAO
      *
      * @return LDAP_UserDao
