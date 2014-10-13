@@ -31,6 +31,16 @@ es:
    - tuleap_es_data
   command: -Des.script.disable_dynamic=false
 
+gerrit:
+  image: enalean/gerrit-tuleap:2.8
+  volumes_from:
+   - tuleap_gerrit_data
+  env_file:
+   - .env
+  links:
+   - ldap:ldap
+   - web:tuleap
+
 db:
   image: mysql:5.5
   env_file:
