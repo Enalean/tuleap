@@ -1080,9 +1080,9 @@ plugin_tracker_formelement_admin	submittedon_help	The field is automatically set
 plugin_tracker_formelement_admin	lastupdatedate_label	Last Update Date
 plugin_tracker_formelement_admin	lastupdatedate_description	Display the last update date of the artifact
 plugin_tracker_formelement_admin	lastupdatedate_help	The field is automatically set to last artifact update date
-plugin_tracker_formelement_admin	priority_label	Priority
-plugin_tracker_formelement_admin	priority_description	Priority
-plugin_tracker_formelement_admin	priority_help	Display the artifact priority in the context of the platform. The value is set by the AgileDashboard plugin.
+plugin_tracker_formelement_admin	priority_label	Rank
+plugin_tracker_formelement_admin	priority_description	Rank
+plugin_tracker_formelement_admin	priority_help	Display the artifact rank in the context of a milestone. The value is given by the AgileDashboard plugin. Please note that this field will evolve in the future.
 plugin_tracker_formelement_admin	artifactid_label	Artifact ID
 plugin_tracker_formelement_admin	artifactid_description	Display the id of the artifact
 plugin_tracker_formelement_admin	artifactInTrackerId_label	Per tracker id
