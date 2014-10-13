@@ -86,7 +86,7 @@ module.exports = {
       'vendor/angular-gettext/dist/angular-gettext.min.js',
       'vendor/angular-socket-io/socket.min.js',
       'vendor/angular-ui-utils/unique.min.js',
-      'vendor/angular-audio/angular.audio.js'
+      'vendor/angular-audio/app/angular.audio.js'
     ],
     css: [
     ]

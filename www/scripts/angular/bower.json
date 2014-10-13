@@ -16,7 +16,7 @@
     "ngSocket": "~0.2.1",
     "angular-socket-io": "~0.6.0",
     "angular-ui-utils": "bower-unique",
-    "angular-audio": "v0.9"
+    "angular-audio": "e4338e2733a9ccbee2aadb25fbf72456e027b7bd"
   },
   "resolutions": {
     "angular": "1.2.21"
