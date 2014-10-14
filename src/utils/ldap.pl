@@ -41,7 +41,8 @@ sub ldap_connect {
             #print "LDAP lookup\n";
             my $result = $ldap->search(
                 filter => "$sys_ldap_uid=$ldapLogin",
-                base   => "$sys_ldap_dn"
+                base   => "$sys_ldap_dn",
+                attrs  => [$sys_ldap_uid, $sys_ldap_cn, $sys_ldap_mail, $sys_ldap_eduid]
             );
             if ( $result->count() == 1 ) {
                 my @entries = $result->entries;
@@ -69,7 +70,8 @@ sub ldap_connect {
 
         my $result = $ldap->search(
             filter => "$sys_ldap_eduid=$ldapId",
-            base   => "$sys_ldap_dn"
+            base   => "$sys_ldap_dn",
+            attrs  => [$sys_ldap_uid, $sys_ldap_cn, $sys_ldap_mail, $sys_ldap_eduid]
         );
         if ( $result->count() == 1 ) {
             my @entries = $result->entries;
@@ -110,7 +112,8 @@ sub ldap_connect {
 
         my $result = $ldap->search(
             filter => "$sys_ldap_uid=$ldapLogin",
-            base   => "$sys_ldap_dn"
+            base   => "$sys_ldap_dn",
+            attrs  => [$sys_ldap_uid, $sys_ldap_cn, $sys_ldap_mail, $sys_ldap_eduid]
         );
         if ( $result->count() == 1 ) {
             my @entries = $result->entries;
