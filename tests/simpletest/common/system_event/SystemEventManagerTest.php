@@ -119,29 +119,15 @@ Mock::generate('EventManager');
 class MockEventManager_GetTypesForQueue extends MockEventManager {
    function processEvent($event, $params) {
        switch ($event) {
-           case Event::SYSTEM_EVENT_GET_FULL_TEXT_SEARCH_TYPES:
-               $params['types'] = array(
-                    'search_wiki',
-                    'find_mickey',
-                    'remove_goofy',
-                );
-               break;
-           case Event::SYSTEM_EVENT_GET_TV3_TV5_MIGRATION_TYPES:
-               $params['types'] = array(
-                    'track_me',
-                    'track_you',
-                );
-               break;
-           case Event::SYSTEM_EVENT_GET_TYPES:
-               $params['types'] = array(
-                    'feed_mini',
-                    'walk_pluto',
-                    'search_wiki',
-                    'find_mickey',
-                    'remove_goofy',
-                    'track_me',
-                    'track_you',
-                );
+           case Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE:
+                if ($params['queue'] === SystemEventManagerGetTypesForQueueTest::CUSTOM_QUEUE) {
+                    $params['types'][] = 'track_me';
+                    $params['types'][] = 'track_you';
+                }
+                break;
+           case Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE:
+               $params['types'][] = 'feed_mini';
+               $params['types'][] = 'search_wiki';
            default:
                break;
        }
@@ -152,21 +138,7 @@ class SystemEventManagerGetTypesForQueueTest extends TuleapTestCase {
 
     private $event_manager;
 
-    private $fts_events = array(
-        'search_wiki',
-        'find_mickey',
-        'remove_goofy',
-    );
-
-    private $tv3tv5_events = array(
-        'track_me',
-        'track_you',
-    );
-
-    private $default_events = array(
-        'feed_mini',
-        'walk_pluto',
-    );
+    const CUSTOM_QUEUE = 'custom_queue';
 
     public function setUp() {
         parent::setUp();
@@ -176,9 +148,10 @@ class SystemEventManagerGetTypesForQueueTest extends TuleapTestCase {
     }
 
     public function itReturnsEmptyArrayIfFantasyQueueIsPassed() {
-        $manager = partial_mock('SystemEventManager', array('__construct'));
+        $manager = partial_mock('SystemEventManager', array());
 
         $types = $manager->getTypesForQueue('Unicorne');
+
         $this->assertArrayEmpty($types);
     }
 
@@ -186,52 +159,52 @@ class SystemEventManagerGetTypesForQueueTest extends TuleapTestCase {
         $manager = partial_mock('SystemEventManager', array());
 
         $types = $manager->getTypesForQueue(null);
+
         $this->assertArrayEmpty($types);
     }
 
-    public function itReturnsTypesForFullTextSearch() {
-        $manager = partial_mock('SystemEventManager', array());
-
-        $types = $manager->getTypesForQueue(SystemEvent::FULL_TEXT_SEARCH_QUEUE);
-        $this->assertArrayNotEmpty($types);
-
-        $this->assertEqual($types, $this->fts_events);
-    }
-
-    public function itReturnsTypesForDefault() {
+    public function itReturnsTypesForDefaultQueue() {
         $manager = partial_mock('SystemEventManager', array());
 
         $types = $manager->getTypesForQueue(SystemEvent::DEFAULT_QUEUE);
-        $this->assertArrayNotEmpty($types);
 
-        $this->assertEqual($types, $this->default_events);
-    }
-
-    public function itReturnsTypesForTv3_Tv5_Migration() {
-        $manager = partial_mock('SystemEventManager', array());
-
-        $types = $manager->getTypesForQueue(SystemEvent::TV3_TV5_MIGRATION_QUEUE);
-        $this->assertArrayNotEmpty($types);
-
-        $this->assertEqual($types, $this->tv3tv5_events);
+        $this->assertTrue(in_array('feed_mini', $types));
+        $this->assertTrue(in_array('search_wiki', $types));
     }
 
     public function itReturnsTypesForAppOwner() {
         $manager = partial_mock('SystemEventManager', array());
 
         $types = $manager->getTypesForQueue(SystemEvent::APP_OWNER_QUEUE);
-        $this->assertArrayNotEmpty($types);
 
-        $this->assertEqual($types, array_merge($this->default_events));
+        $this->assertTrue(in_array('feed_mini', $types));
+        $this->assertTrue(in_array('search_wiki', $types));
     }
 
-    public function itDoesNotReturnDefaultTypesForFullTextSearch() {
+    public function itReturnsTypesForCustomQueue() {
         $manager = partial_mock('SystemEventManager', array());
 
-        $types = $manager->getTypesForQueue(SystemEvent::FULL_TEXT_SEARCH_QUEUE);
-        $this->assertArrayNotEmpty($types);
+        $types = $manager->getTypesForQueue(self::CUSTOM_QUEUE);
 
-        $this->assertFalse(in_array('walk_pluto', $types));
+        $this->assertTrue(in_array('track_me', $types));
+        $this->assertTrue(in_array('track_you', $types));
+    }
+
+    public function itDoesNotReturnDefaultTypesForCustomQueue() {
+        $manager = partial_mock('SystemEventManager', array());
+
+        $types = $manager->getTypesForQueue(self::CUSTOM_QUEUE);
+
+        $this->assertFalse(in_array('feed_mini', $types));
+        $this->assertFalse(in_array('search_wiki', $types));
+    }
+
+    public function itDoesNotReturnCustomTypesForDefaultQueue() {
+        $manager = partial_mock('SystemEventManager', array());
+
+        $types = $manager->getTypesForQueue(SystemEvent::DEFAULT_QUEUE);
+
+        $this->assertFalse(in_array('track_me', $types));
+        $this->assertFalse(in_array('track_you', $types));
     }
 }
-?>

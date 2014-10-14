@@ -1,10 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2014. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,18 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'SystemEventProcess.class.php';
+class FullTextSearchSystemEventQueue extends SystemEventQueue {
 
-class SystemEventProcessRootFullTextSearch implements SystemEventProcess {
+    const NAME = 'fts';
 
-    /**
-     * @see SystemEventProcess::getPidFile()
-     */
-    public function getPidFile() {
-        return '/var/run/tuleap_process_system_events_full_text_search.pid';
+    public function getName() {
+        return self::NAME;
     }
 
-    public function getQueue() {
-        return SystemEvent::FULL_TEXT_SEARCH_QUEUE;
+    public function getLabel() {
+        return $GLOBALS['Language']->getText('admin_system_events', 'fts_queue');
     }
 }

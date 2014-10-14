@@ -49,10 +49,9 @@ class trackerPlugin extends Plugin {
         $this->_addHook('permission_user_allowed_to_change',   'permission_user_allowed_to_change', false);
         $this->_addHook('permissions_for_ugroup',              'permissions_for_ugroup',            false);
 
-        $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES,         'system_event_get_types',            false);
+        $this->_addHook(Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES);
+        $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE);
         $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS,         'getSystemEventClass',               false);
-
-        $this->_addHook(Event::SYSTEM_EVENT_GET_TV3_TV5_MIGRATION_TYPES);
 
         $this->_addHook('url_verification_instance',           'url_verification_instance',         false);
 
@@ -117,10 +116,6 @@ class trackerPlugin extends Plugin {
                 echo '<!--[if lte IE 8]><link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/ieStyle.css" /><![endif]-->';
             }
         }
-    }
-
-    public function system_event_get_types($params) {
-        $params['types'] = array_merge($params['types'], $this->getTrackerSystemEventManager()->getTypes());
     }
 
     /**
@@ -830,12 +825,15 @@ class trackerPlugin extends Plugin {
         }
     }
 
-    public function system_event_get_tv3_tv5_migration_types($params) {
-        $params['types'] = array_merge(
-            $params['types'],
-            array(
-                SystemEvent_TRACKER_V3_MIGRATION::NAME
-            )
-        );
+    /** @see Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES */
+    public function system_event_get_custom_queues(array $params) {
+        $params['queues'][Tracker_SystemEvent_Tv3Tv5Queue::NAME] = new Tracker_SystemEvent_Tv3Tv5Queue();
+    }
+
+    /** @see Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE */
+    public function system_event_get_types_for_custom_queue($params) {
+        if ($params['queue'] === Tracker_SystemEvent_Tv3Tv5Queue::NAME) {
+            $params['types'][] = SystemEvent_TRACKER_V3_MIGRATION::NAME;
+        }
     }
 }

@@ -26,7 +26,7 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingRunnerTest extends TuleapTest
     public function setUp() {
         parent::setUp();
         $this->process_manager  = mock('SystemEventProcessManager');
-        $this->process          = mock('SystemEventProcessRootDefault');
+        $this->process          = mock('SystemEventProcess');
         $this->housekeeping_dao = mock('Git_GitoliteHousekeeping_GitoliteHousekeepingDao');
         $this->response         = mock('Git_GitoliteHousekeeping_GitoliteHousekeepingResponse');
         $this->backend_service  = mock('BackendService');

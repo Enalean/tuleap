@@ -29,7 +29,7 @@ $remote_admin_repository = 'gitolite@gl-adm:gitolite-admin';
 
 $runner = new Git_GitoliteHousekeeping_GitoliteHousekeepingRunner(
     new SystemEventProcessManager(),
-    new SystemEventProcessRootDefault(),
+    new SystemEventProcessRootDefaultQueue(),
     new Git_GitoliteHousekeeping_GitoliteHousekeepingDao(),
     new Git_GitoliteHousekeeping_GitoliteHousekeepingResponse(),
     new BackendService(),

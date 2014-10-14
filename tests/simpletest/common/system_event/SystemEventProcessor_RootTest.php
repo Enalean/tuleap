@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once 'builders/aSystemEvent.php';
-require_once 'common/system_event/SystemEventProcessor_Root.class.php';
 
 class SystemEventProcessor_RootTest extends TuleapTestCase {
     private $system_event_manager;
@@ -36,7 +35,7 @@ class SystemEventProcessor_RootTest extends TuleapTestCase {
             'SystemEventProcessor_Root',
             array('launchAs'),
             array(
-                new SystemEventProcessRootDefault(),
+                new SystemEventProcessRootDefaultQueue(),
                 $this->system_event_manager,
                 $this->system_event_dao,
                 $this->logger,

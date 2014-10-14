@@ -22,15 +22,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'SystemEventProcessRootDefault.class.php';
-require_once 'SystemEventProcessApplicationOwner.class.php';
-require_once 'SystemEventProcessor.class.php';
-require_once 'common/backend/BackendAliases.class.php';
-require_once 'common/backend/BackendCVS.class.php';
-require_once 'common/backend/BackendSVN.class.php';
-require_once 'common/backend/BackendSystem.class.php';
-require_once 'SystemEventProcessor_ApplicationOwner.class.php';
-
 class SystemEventProcessor_Root extends SystemEventProcessor {
     /**
      * @var BackendAliases
@@ -101,7 +92,7 @@ class SystemEventProcessor_Root extends SystemEventProcessor {
     }
 
     protected function triggerApplicationOwnerEventsProcessing() {
-        $app = new SystemEventProcessor_ApplicationOwner(new SystemEventProcessApplicationOwner(), $this->system_event_manager, $this->dao, $this->logger);
+        $app = new SystemEventProcessor_ApplicationOwner(new SystemEventProcessApplicationOwnerDefaultQueue(), $this->system_event_manager, $this->dao, $this->logger);
         $command   = Config::get('codendi_dir').'/src/utils/php-launcher.sh '.Config::get('codendi_dir').'/src/utils/process_system_events.php '.SystemEvent::OWNER_APP;
         $this->launchAs($app->getProcessOwner(), $command);
     }

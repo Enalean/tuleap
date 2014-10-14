@@ -29,6 +29,29 @@ class fulltextsearchPlugin extends Plugin {
     const SEARCH_TRACKER_TYPE = 'tracker';
     const SEARCH_DEFAULT      = '';
 
+    private $allowed_system_events = array(
+        SystemEvent_FULLTEXTSEARCH_DOCMAN_INDEX::NAME,
+        SystemEvent_FULLTEXTSEARCH_DOCMAN_EMPTY_INDEX::NAME,
+        SystemEvent_FULLTEXTSEARCH_DOCMAN_LINK_INDEX::NAME,
+        SystemEvent_FULLTEXTSEARCH_DOCMAN_FOLDER_INDEX::NAME,
+        SystemEvent_FULLTEXTSEARCH_DOCMAN_REINDEX_PROJECT::NAME,
+        SystemEvent_FULLTEXTSEARCH_DOCMAN_COPY::NAME,
+        SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE::NAME,
+        SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS::NAME,
+        SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA::NAME,
+        SystemEvent_FULLTEXTSEARCH_DOCMAN_DELETE::NAME,
+        SystemEvent_FULLTEXTSEARCH_DOCMAN_APPROVAL_TABLE_COMMENT::NAME,
+        SystemEvent_FULLTEXTSEARCH_DOCMAN_WIKI_INDEX::NAME,
+        SystemEvent_FULLTEXTSEARCH_DOCMAN_WIKI_UPDATE::NAME,
+        SystemEvent_FULLTEXTSEARCH_TRACKER_ARTIFACT_UPDATE::NAME,
+        SystemEvent_FULLTEXTSEARCH_WIKI_INDEX::NAME,
+        SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE::NAME,
+        SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE_PERMISSIONS::NAME,
+        SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE_SERVICE_PERMISSIONS::NAME,
+        SystemEvent_FULLTEXTSEARCH_WIKI_DELETE::NAME,
+        SystemEvent_FULLTEXTSEARCH_WIKI_REINDEX_PROJECT::NAME
+    );
+
     public function __construct($id) {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
@@ -78,8 +101,8 @@ class fulltextsearchPlugin extends Plugin {
 
         // system events
         $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS, 'get_system_event_class', false);
-        $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES, 'system_event_get_types', false);
-        $this->_addHook(Event::SYSTEM_EVENT_GET_FULL_TEXT_SEARCH_TYPES, 'system_event_get_types');
+        $this->_addHook(Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES);
+        $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE);
 
         // Search
         $this->addHook(Event::LAYOUT_SEARCH_ENTRY);
@@ -188,31 +211,20 @@ class fulltextsearchPlugin extends Plugin {
         );
     }
 
-    public function system_event_get_types(array &$params) {
+    /** @see Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES */
+    public function system_event_get_custom_queues(array $params) {
+        $params['queues'][FullTextSearchSystemEventQueue::NAME] = new FullTextSearchSystemEventQueue();
+    }
+
+    /** @see Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE */
+    public function system_event_get_types_for_custom_queue(array &$params) {
+        if ($params['queue'] !== FullTextSearchSystemEventQueue::NAME) {
+            return;
+        }
+
         $params['types'] = array_merge(
             $params['types'],
-            array(
-                SystemEvent_FULLTEXTSEARCH_DOCMAN_INDEX::NAME,
-                SystemEvent_FULLTEXTSEARCH_DOCMAN_EMPTY_INDEX::NAME,
-                SystemEvent_FULLTEXTSEARCH_DOCMAN_LINK_INDEX::NAME,
-                SystemEvent_FULLTEXTSEARCH_DOCMAN_FOLDER_INDEX::NAME,
-                SystemEvent_FULLTEXTSEARCH_DOCMAN_REINDEX_PROJECT::NAME,
-                SystemEvent_FULLTEXTSEARCH_DOCMAN_COPY::NAME,
-                SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE::NAME,
-                SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS::NAME,
-                SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA::NAME,
-                SystemEvent_FULLTEXTSEARCH_DOCMAN_DELETE::NAME,
-                SystemEvent_FULLTEXTSEARCH_DOCMAN_APPROVAL_TABLE_COMMENT::NAME,
-                SystemEvent_FULLTEXTSEARCH_DOCMAN_WIKI_INDEX::NAME,
-                SystemEvent_FULLTEXTSEARCH_DOCMAN_WIKI_UPDATE::NAME,
-                SystemEvent_FULLTEXTSEARCH_TRACKER_ARTIFACT_UPDATE::NAME,
-                SystemEvent_FULLTEXTSEARCH_WIKI_INDEX::NAME,
-                SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE::NAME,
-                SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE_PERMISSIONS::NAME,
-                SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE_SERVICE_PERMISSIONS::NAME,
-                SystemEvent_FULLTEXTSEARCH_WIKI_DELETE::NAME,
-                SystemEvent_FULLTEXTSEARCH_WIKI_REINDEX_PROJECT::NAME
-            )
+            $this->allowed_system_events
         );
     }
 
@@ -227,10 +239,7 @@ class fulltextsearchPlugin extends Plugin {
         );
         $i = 0;
 
-        $allowed_types = array('types' => array());
-        $this->system_event_get_types($allowed_types);
-
-        if (! in_array($params['type'], $allowed_types['types'])) {
+        if (! in_array($params['type'], $this->allowed_system_events)) {
             return;
         }
 

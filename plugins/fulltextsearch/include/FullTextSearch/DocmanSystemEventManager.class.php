@@ -93,7 +93,8 @@ class FullTextSearch_DocmanSystemEventManager {
             $this->system_event_manager->createEvent(
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA::NAME,
                 $this->getDocmanSerializedParameters($item),
-                SystemEvent::PRIORITY_MEDIUM
+                SystemEvent::PRIORITY_MEDIUM,
+                SystemEvent::OWNER_APP
             );
         }
     }
@@ -103,7 +104,8 @@ class FullTextSearch_DocmanSystemEventManager {
             $this->system_event_manager->createEvent(
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_INDEX::NAME,
                 $this->getDocmanSerializedParameters($item, array($version->getNumber())),
-                SystemEvent::PRIORITY_MEDIUM
+                SystemEvent::PRIORITY_MEDIUM,
+                SystemEvent::OWNER_APP
             );
         }
     }
@@ -113,7 +115,8 @@ class FullTextSearch_DocmanSystemEventManager {
             $this->system_event_manager->createEvent(
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_EMPTY_INDEX::NAME,
                 $this->getDocmanSerializedParameters($item),
-                SystemEvent::PRIORITY_MEDIUM
+                SystemEvent::PRIORITY_MEDIUM,
+                SystemEvent::OWNER_APP
             );
         }
     }
@@ -123,7 +126,8 @@ class FullTextSearch_DocmanSystemEventManager {
             $this->system_event_manager->createEvent(
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_LINK_INDEX::NAME,
                 $this->getDocmanSerializedParameters($item),
-                SystemEvent::PRIORITY_MEDIUM
+                SystemEvent::PRIORITY_MEDIUM,
+                SystemEvent::OWNER_APP
             );
         }
     }
@@ -133,7 +137,8 @@ class FullTextSearch_DocmanSystemEventManager {
             $this->system_event_manager->createEvent(
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_FOLDER_INDEX::NAME,
                 $this->getDocmanSerializedParameters($item),
-                SystemEvent::PRIORITY_MEDIUM
+                SystemEvent::PRIORITY_MEDIUM,
+                SystemEvent::OWNER_APP
             );
         }
     }
@@ -143,7 +148,8 @@ class FullTextSearch_DocmanSystemEventManager {
             $this->system_event_manager->createEvent(
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_WIKI_INDEX::NAME,
                 $this->getDocmanSerializedParameters($item),
-                SystemEvent::PRIORITY_MEDIUM
+                SystemEvent::PRIORITY_MEDIUM,
+                SystemEvent::OWNER_APP
             );
         }
     }
@@ -153,7 +159,8 @@ class FullTextSearch_DocmanSystemEventManager {
             $this->system_event_manager->createEvent(
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_DELETE::NAME,
                 $this->getDocmanSerializedParameters($item),
-                SystemEvent::PRIORITY_HIGH
+                SystemEvent::PRIORITY_HIGH,
+                SystemEvent::OWNER_APP
             );
         }
     }
@@ -163,7 +170,8 @@ class FullTextSearch_DocmanSystemEventManager {
             $this->system_event_manager->createEvent(
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS::NAME,
                 $this->getDocmanSerializedParameters($item),
-                SystemEvent::PRIORITY_HIGH
+                SystemEvent::PRIORITY_HIGH,
+                SystemEvent::OWNER_APP
             );
         }
     }
@@ -175,7 +183,8 @@ class FullTextSearch_DocmanSystemEventManager {
             $this->system_event_manager->createEvent(
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE::NAME,
                 $this->getDocmanSerializedParameters($item, array($version->getNumber())),
-                SystemEvent::PRIORITY_MEDIUM
+                SystemEvent::PRIORITY_MEDIUM,
+                SystemEvent::OWNER_APP
             );
         }
     }
@@ -185,7 +194,8 @@ class FullTextSearch_DocmanSystemEventManager {
             $this->system_event_manager->createEvent(
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_WIKI_UPDATE::NAME,
                 $this->getDocmanSerializedParameters($item),
-                SystemEvent::PRIORITY_MEDIUM
+                SystemEvent::PRIORITY_MEDIUM,
+                SystemEvent::OWNER_APP
             );
         }
     }
@@ -195,7 +205,8 @@ class FullTextSearch_DocmanSystemEventManager {
             $this->system_event_manager->createEvent(
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_APPROVAL_TABLE_COMMENT::NAME,
                 $this->getDocmanSerializedParameters($item, array($version_nb, $table->getId(), $review->getId())),
-                SystemEvent::PRIORITY_MEDIUM
+                SystemEvent::PRIORITY_MEDIUM,
+                SystemEvent::OWNER_APP
             );
         }
     }
@@ -205,7 +216,8 @@ class FullTextSearch_DocmanSystemEventManager {
             $this->system_event_manager->createEvent(
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_REINDEX_PROJECT::NAME,
                 $project_id,
-                SystemEvent::PRIORITY_LOW
+                SystemEvent::PRIORITY_LOW,
+                SystemEvent::OWNER_APP
             );
         }
     }
@@ -215,7 +227,8 @@ class FullTextSearch_DocmanSystemEventManager {
             $this->system_event_manager->createEvent(
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_COPY::NAME,
                 $this->getDocmanSerializedParameters($item),
-                SystemEvent::PRIORITY_MEDIUM
+                SystemEvent::PRIORITY_MEDIUM,
+                SystemEvent::OWNER_APP
             );
         }
     }

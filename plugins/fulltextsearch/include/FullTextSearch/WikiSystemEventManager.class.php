@@ -77,7 +77,8 @@ class FullTextSearch_WikiSystemEventManager {
             $this->system_event_manager->createEvent(
                 SystemEvent_FULLTEXTSEARCH_WIKI_INDEX::NAME,
                 $this->getWikiSerializedParameters($params),
-                SystemEvent::PRIORITY_MEDIUM
+                SystemEvent::PRIORITY_MEDIUM,
+                SystemEvent::OWNER_APP
             );
         }
     }
@@ -87,7 +88,8 @@ class FullTextSearch_WikiSystemEventManager {
             $this->system_event_manager->createEvent(
                 SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE::NAME,
                 $this->getWikiSerializedParameters($params),
-                SystemEvent::PRIORITY_MEDIUM
+                SystemEvent::PRIORITY_MEDIUM,
+                SystemEvent::OWNER_APP
             );
         }
     }
@@ -97,7 +99,8 @@ class FullTextSearch_WikiSystemEventManager {
             $this->system_event_manager->createEvent(
                 SystemEvent_FULLTEXTSEARCH_WIKI_DELETE::NAME,
                 $this->getWikiSerializedParameters($params),
-                SystemEvent::PRIORITY_MEDIUM
+                SystemEvent::PRIORITY_MEDIUM,
+                SystemEvent::OWNER_APP
             );
         }
     }
@@ -107,7 +110,8 @@ class FullTextSearch_WikiSystemEventManager {
             $this->system_event_manager->createEvent(
                 SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE_PERMISSIONS::NAME,
                 $this->getWikiSerializedParameters($params),
-                SystemEvent::PRIORITY_MEDIUM
+                SystemEvent::PRIORITY_MEDIUM,
+                SystemEvent::OWNER_APP
             );
         }
     }
@@ -117,7 +121,8 @@ class FullTextSearch_WikiSystemEventManager {
             $this->system_event_manager->createEvent(
                 SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE_SERVICE_PERMISSIONS::NAME,
                 $this->getWikiSerializedParameters($params),
-                SystemEvent::PRIORITY_MEDIUM
+                SystemEvent::PRIORITY_MEDIUM,
+                SystemEvent::OWNER_APP
             );
         }
     }
@@ -137,7 +142,8 @@ class FullTextSearch_WikiSystemEventManager {
             $this->system_event_manager->createEvent(
                 SystemEvent_FULLTEXTSEARCH_WIKI_REINDEX_PROJECT::NAME,
                 $project_id,
-                SystemEvent::PRIORITY_LOW
+                SystemEvent::PRIORITY_LOW,
+                SystemEvent::OWNER_APP
             );
         }
     }

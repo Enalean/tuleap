@@ -27,7 +27,7 @@
 
 # Once a minute, process Tuleap system events
 * * * * * root (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php default)
-* * * * * root (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php fts)
+* * * * * codendiadm (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php fts)
 
 #
 # Regularly launch a system_check event (e.g. every half-hour)
