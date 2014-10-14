@@ -54,6 +54,13 @@ class GitRepositoryFactoryTest extends TuleapTestCase {
 
         $this->factory->getFromFullPath('/data/tuleap/gitroot/garden/diskinstaller.git');
     }
+
+    public function itReturnsSpecialRepositoryWhenIdMatches() {
+        $this->assertIsA(
+            $this->factory->getRepositoryById(GitRepositoryGitoliteAdmin::ID),
+            'GitRepositoryGitoliteAdmin'
+        );
+    }
 }
 
 class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupTest extends TuleapTestCase {

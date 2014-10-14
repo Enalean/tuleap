@@ -78,7 +78,7 @@ class GitViews_RepoManagement {
 
         $mirrors = $this->getMirrorDataMapper()->fetchAll();
         if (count($mirrors) > 0) {
-            $repository_mirrors = $this->getMirrorDataMapper()->fetchAllRepositoryMirrors($repository->getId());
+            $repository_mirrors = $this->getMirrorDataMapper()->fetchAllRepositoryMirrors($repository);
             $panes[]            = new GitViews_RepoManagement_Pane_Mirroring($repository, $this->request, $mirrors, $repository_mirrors);
         }
 

@@ -20,6 +20,8 @@
 
 class Git_Mirror_ManifestManager {
 
+    const FILE_PREFIX = 'manifest_mirror_';
+
     /**
      * @var BackendLogger
      */
@@ -30,11 +32,23 @@ class Git_Mirror_ManifestManager {
      */
     private $data_mapper;
     private $grokmanifest_path;
+    private $manifest_directory;
 
     public function __construct(Git_Mirror_MirrorDataMapper $data_mapper, Logger $logger, $grokmanifest_path) {
-        $this->data_mapper       = $data_mapper;
-        $this->logger            = $logger;
-        $this->grokmanifest_path = $grokmanifest_path;
+        $this->data_mapper        = $data_mapper;
+        $this->logger             = $logger;
+        $this->grokmanifest_path  = $grokmanifest_path;
+        $this->manifest_directory =  Config::get('sys_data_dir').'/gitolite/grokmirror';
+    }
+
+    public function triggerUpdateByRoot(GitRepository $repository) {
+        $this->triggerUpdate($repository);
+        if (is_dir($this->manifest_directory)) {
+            foreach (glob($this->manifest_directory . '/' . self::FILE_PREFIX . '*') as $file) {
+                chown($file, 'gitolite');
+                chgrp($file, 'gitolite');
+            }
+        }
     }
 
     public function triggerUpdate(GitRepository $repository) {
@@ -42,7 +56,7 @@ class Git_Mirror_ManifestManager {
             $this->logger->debug("[git post receive] no grokmirror-manifest executable found. Check git config");
             return false;
         }
-        $mirrors = $this->data_mapper->fetchAllRepositoryMirrors($repository->getId());
+        $mirrors = $this->data_mapper->fetchAllRepositoryMirrors($repository);
         if (count($mirrors) == 0) {
             $this->logger->debug("[git post receive] no mirrors on which replicate");
             return false;
@@ -52,14 +66,14 @@ class Git_Mirror_ManifestManager {
         $current_directory      = realpath($repository->getFullPath());
 
         foreach ($mirrors as $mirror) {
-            $this->logger->debug("[git post receive] update manifest for ".$repositories_base_path);
+            $this->logger->debug("[git post receive] update mirror {$mirror->url} (id: {$mirror->id}) manifest for ".$current_directory);
             $manifest_path = escapeshellarg($this->getManifestPathForMirror($mirror));
             $this->exec("{$this->grokmanifest_path} -m $manifest_path -t $repositories_base_path -n $current_directory");
         }
     }
 
     private function getManifestPathForMirror(Git_Mirror_Mirror $mirror) {
-        return Config::get('sys_data_dir')."/gitolite/grokmirror/manifest_mirror_{$mirror->id}.js.gz";
+        return $this->manifest_directory."/manifest_mirror_{$mirror->id}.js.gz";
     }
 
     private function exec($cmd) {
@@ -71,6 +85,5 @@ class Git_Mirror_ManifestManager {
         } else {
             $this->logger->error("[git post receive] an error was raised by grokmirror command: $cmd\n".implode("\n", $output));
         }
-
     }
 }

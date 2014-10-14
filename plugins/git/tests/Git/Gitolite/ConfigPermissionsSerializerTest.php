@@ -163,7 +163,7 @@ class Git_Gitolite_ConfigPermissionsSerializer_MirrorsTest extends TuleapTestCas
     }
 
     public function itGrantsReadPermissionToOneMirror() {
-        stub($this->mirror_mapper)->fetchAllRepositoryMirrors(115)->returns(
+        stub($this->mirror_mapper)->fetchAllRepositoryMirrors($this->repository)->returns(
             array(
                 $this->mirror_1
             )
@@ -175,7 +175,7 @@ class Git_Gitolite_ConfigPermissionsSerializer_MirrorsTest extends TuleapTestCas
     }
 
     public function itGrantsReadPermissionToTwoMirrors() {
-        stub($this->mirror_mapper)->fetchAllRepositoryMirrors(115)->returns(
+        stub($this->mirror_mapper)->fetchAllRepositoryMirrors($this->repository)->returns(
             array(
                 $this->mirror_1,
                 $this->mirror_2,
@@ -188,7 +188,7 @@ class Git_Gitolite_ConfigPermissionsSerializer_MirrorsTest extends TuleapTestCas
     }
 
     public function itHasNoMirrors() {
-        stub($this->mirror_mapper)->fetchAllRepositoryMirrors(115)->returns(
+        stub($this->mirror_mapper)->fetchAllRepositoryMirrors($this->repository)->returns(
             array()
         );
         stub($this->permissions_manager)->getAuthorizedUgroupIds()->returns(array());

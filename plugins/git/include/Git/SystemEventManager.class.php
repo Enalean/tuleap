@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
+ * Copyright Enalean (c) 2011, 2012, 2013, 2014. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -22,8 +22,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/system_event/SystemEventManager.class.php';
-
 /**
  * I'm responsible to create system events with the right parameters
  */
@@ -43,6 +41,7 @@ class Git_SystemEventManager {
                 SystemEvent::PRIORITY_HIGH,
                 SystemEvent::OWNER_APP
             );
+            $this->queueGrokMirrorManifest($repository);
         }
     }
 
@@ -117,6 +116,15 @@ class Git_SystemEventManager {
         );
     }
 
+    public function queueGrokMirrorManifest(GitRepository $repository) {
+        $this->system_event_manager->createEvent(
+            SystemEvent_GIT_GROKMIRROR_MANIFEST::NAME,
+            $repository->getId(),
+            SystemEvent::PRIORITY_LOW,
+            SystemEvent::OWNER_ROOT
+        );
+    }
+
     public function isRepositoryMigrationToGerritOnGoing(GitRepository $repository) {
         return $this->system_event_manager->isThereAnEventAlreadyOnGoingMatchingFirstParameter(SystemEvent_GIT_GERRIT_MIGRATION::NAME, $repository->getId());
     }
@@ -138,7 +146,8 @@ class Git_SystemEventManager {
             SystemEvent_GIT_GERRIT_MIGRATION::NAME,
             SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP::NAME,
             SystemEvent_GIT_GERRIT_PROJECT_DELETE::NAME,
-            SystemEvent_GIT_GERRIT_PROJECT_READONLY::NAME
+            SystemEvent_GIT_GERRIT_PROJECT_READONLY::NAME,
+            SystemEvent_GIT_GROKMIRROR_MANIFEST::NAME
         );
     }
 }

@@ -35,24 +35,15 @@ $git_repository_factory = new GitRepositoryFactory(
     $git_dao,
     ProjectManager::instance()
 );
+$git_plugin = PluginManager::instance()->getPluginByName('git');
 
 if ($argv[1] == "--init") {
     $repository_path = $argv[2];
     $user_name       = $argv[3];
 
-    $git_plugin = PluginManager::instance()->getPluginByName('git');
-
-    $manifest_manager = new Git_Mirror_ManifestManager(
-        new Git_Mirror_MirrorDataMapper(
-            new Git_Mirror_MirrorDao(),
-            $user_manager
-        ),
-        $logger,
-        $git_plugin->getConfigurationParameter('grokmanifest_path')
-    );
     $repository = $git_repository_factory->getFromFullPath($repository_path);
     if ($repository) {
-        $manifest_manager->triggerUpdate($repository);
+        $git_plugin->getManifestManager()->triggerUpdate($repository);
     }
 } else {
     $repository_path = $argv[1];
@@ -63,7 +54,6 @@ if ($argv[1] == "--init") {
     try {
 
         $git_exec = new Git_Exec($repository_path, $repository_path);
-
 
         $post_receive = new Git_Hook_PostReceive(
             new Git_Hook_LogAnalyzer(

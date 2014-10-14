@@ -43,6 +43,9 @@ class GitRepositoryFactory {
      * @return GitRepository the repository or null if not found
      */
     public function getRepositoryById($id) {
+        if ($id == GitRepositoryGitoliteAdmin::ID) {
+            return new GitRepositoryGitoliteAdmin();
+        }
         $dar = $this->dao->searchProjectRepositoryById($id);
         return $this->getRepositoryFromDar($dar);
     }
