@@ -1,3 +1,6 @@
+Version 3.122 - Tuleap 7.6
+    * story #7506 have my mirrored repository replicated
+
 Version 3.121 - Tuleap 7.6
     * Refactoring: plugins should not leak into the core
 
