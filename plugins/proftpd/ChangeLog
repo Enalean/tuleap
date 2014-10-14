@@ -1,3 +1,6 @@
+Version 0.17 - Tuleap 7.6
+    * Refactoring: plugins should not leak into the core
+
 Version 0.16 - Tuleap 7.6
     * Update to latest autoload/phpab version
 

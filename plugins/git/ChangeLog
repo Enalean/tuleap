@@ -1,3 +1,6 @@
+Version 3.121 - Tuleap 7.6
+    * Refactoring: plugins should not leak into the core
+
 Version 3.120 - Tuleap 7.6
     * Part of story #7516: Generate one manifest per mirror
 

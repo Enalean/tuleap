@@ -1,3 +1,6 @@
+Version 5.497 - Tuleap 7.6
+    * Refactoring: plugins should not leak into the core
+
 Version 5.496 - Tuleap 7.6
     * story #7437: replace global rank by N/A
 

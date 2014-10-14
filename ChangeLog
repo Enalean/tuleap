@@ -3,16 +3,16 @@ Version 7.6 (Not released yet)
 	* ldap 3.53
 	* agiledashboard: 1.78
 	* docman: 2.26.53
-	* tracker: 5.496
-	* ldap: 3.55
+	* tracker: 5.497
+	* ldap: 3.56
 	* IM: 1.5.20
 	* statistics: 0.38
-	* git: 3.120
-	* fulltextsearch: 0.86
+	* git: 3.121
+	* fulltextsearch: 0.87
 	* graphontrackersv5: 5.15
 	* cardwall: 1.38
 	* mediawiki: 0.56
-	* proftpd: 0.16
+	* proftpd: 0.17
 	* admindelegation: 2.8
 	* admssw: 0.4
 	* archivedeleteditems: 0.4
@@ -33,6 +33,7 @@ Version 7.6 (Not released yet)
 	* webdav: 1.9.6
 
 	== Bug Fix ==
+	* Refactoring: plugins should not leak into the core
 	* request #7513: Pick active user when email is used by 2+ accounts
 	* request #7515: Git mirror user ssh key is not deployed
 	* request #7457: Remote Command Execution Vulnerability
