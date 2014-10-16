@@ -38,6 +38,31 @@ class Git_Exec {
         }
     }
 
+    public function init() {
+        $this->gitCmd('init');
+    }
+
+    public function setLocalCommiter($name, $email) {
+        $this->gitCmd('config --add user.name '.escapeshellarg($name));
+        $this->gitCmd('config --add user.email '.escapeshellarg($email));
+    }
+
+    public function remoteAdd($remote) {
+        $this->gitCmd('remote add origin '.escapeshellarg($remote));
+    }
+
+    public function pullBranch($remote, $branch) {
+        $this->gitCmd('pull --quiet '.$remote.' '.$branch);
+    }
+
+    public function checkoutBranch($branch) {
+        $this->gitCmd('checkout --quiet '.$branch);
+    }
+
+    public function configFile($file, $config) {
+        $this->gitCmd('config -f '. escapeshellarg($file) .' '. $config);
+    }
+
     /**
      * git help mv
      *
