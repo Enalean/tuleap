@@ -33,6 +33,7 @@ Version 7.6 (Not released yet)
 	* webdav: 1.9.6
 
 	== Bug Fix ==
+	* request #7529: Errors with System Event when the queue is unknown
 	* Refactoring: plugins should not leak into the core
 	* request #7513: Pick active user when email is used by 2+ accounts
 	* request #7515: Git mirror user ssh key is not deployed
