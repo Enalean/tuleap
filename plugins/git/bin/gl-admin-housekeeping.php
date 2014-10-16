@@ -21,8 +21,6 @@
 
 require_once 'pre.php';
 require_once dirname(__FILE__).'/../include/autoload.php';
-require_once 'common/system_event/SystemEventProcessManager.class.php';
-require_once 'common/system_event/SystemEventProcessRootDefault.class.php';
 
 $gitolite_var_path       = $GLOBALS['sys_data_dir'] . '/gitolite';
 $remote_admin_repository = 'gitolite@gl-adm:gitolite-admin';
