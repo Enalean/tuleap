@@ -1,3 +1,6 @@
+Version 3.124 - Tuleap 7.6
+    * request #7528: Fatal error on gl-admin-housekeeping.php
+
 Version 3.123 - Tuleap 7.6
     * request #7530: rights and heads not pushed to gerrit if certain permissions are not pre-set
 
