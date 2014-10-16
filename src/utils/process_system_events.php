@@ -24,6 +24,7 @@ require_once 'pre.php';
 
 $request_queue = (isset($argv[1])) ? $argv[1] : SystemEvent::DEFAULT_QUEUE;
 
+$logger = new BackendLogger();
 $owner  = SystemEvent::OWNER_APP;
 $queues = array();
 EventManager::instance()->processEvent(
@@ -33,16 +34,22 @@ EventManager::instance()->processEvent(
     )
 );
 if (isset($queues[$request_queue])) {
+    $logger->debug('Processing '. $request_queue .' queue.');
     $process = new SystemEventProcessCustomQueue($request_queue);
 } else {
     switch ($request_queue) {
         case SystemEvent::OWNER_APP:
+            $logger->debug('Processing default queue as app user.');
             $process = new SystemEventProcessApplicationOwnerDefaultQueue();
             break;
         case SystemEvent::DEFAULT_QUEUE:
-        default:
+            $logger->debug('Processing default queue as root user.');
             $owner   = SystemEvent::OWNER_ROOT;
             $process = new SystemEventProcessRootDefaultQueue();
+            break;
+        default:
+            $logger->debug('Ignoring '. $request_queue .' queue.');
+            exit(0);
     }
 }
 
@@ -52,7 +59,7 @@ if ($owner === SystemEvent::OWNER_APP) {
         $process,
         $system_event_manager,
         new SystemEventDao(),
-        new BackendLogger()
+        $logger
     );
 } else {
     require_once 'common/system_event/SystemEventProcessor_Root.class.php';
@@ -60,7 +67,7 @@ if ($owner === SystemEvent::OWNER_APP) {
         $process,
         $system_event_manager,
         new SystemEventDao(),
-        new BackendLogger(),
+        $logger,
         Backend::instance('Aliases'),
         Backend::instance('CVS'),
         Backend::instance('SVN'),
