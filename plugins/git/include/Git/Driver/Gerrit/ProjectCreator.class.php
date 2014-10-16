@@ -130,6 +130,7 @@ class Git_Driver_Gerrit_ProjectCreator {
 
         $this->pushMinimalPermissionsToMigrateTuleapRepoOnGerrit($gerrit_server, $repository);
         $this->exportGitBranches($gerrit_server, $gerrit_project_name, $repository);
+        // This method behaviour & all should be transfered into "finalizeGerritProjectCreation"
         $this->pushFullTuleapAccessRightsToGerrit(
                 $repository,
                 $gerrit_server,
@@ -204,15 +205,10 @@ class Git_Driver_Gerrit_ProjectCreator {
     }
 
     private function pushFullTuleapAccessRightsToGerrit(GitRepository $repository, Git_RemoteServer_GerritServer $gerrit_server, array $ugroups, $replication_group, $template_id) {
-        foreach (self::$MIGRATION_MINIMAL_PERMISSIONS as $permission) {
-            $this->addToSection($permission['reference'], $permission['permission'], $permission['group']);
-        }
-
         foreach ($ugroups as $ugroup) {
             $this->addGroupToGroupFile($gerrit_server, $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName());
         }
         $this->addGroupToGroupFile($gerrit_server, $replication_group);
-        $this->addGroupToGroupFile($gerrit_server, 'Administrators');
         $this->addRegisteredUsersGroupToGroupFile();
 
         if ($this->defaultPermissionsMigrationRequested($template_id)) {
@@ -227,15 +223,15 @@ class Git_Driver_Gerrit_ProjectCreator {
     }
 
     private function cloneGerritProjectConfig(Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url) {
-        $gerrit_project_url = escapeshellarg($gerrit_project_url);
+        $git_exec = new Git_Exec($this->dir);
         if (! is_dir($this->dir)) {
             mkdir($this->dir);
-            `cd $this->dir; git init`;
-            $this->setUpCommitter($gerrit_server);
-            `cd $this->dir; git remote add origin $gerrit_project_url`;
+            $git_exec->init();
+            $git_exec->setLocalCommiter($gerrit_server->getLogin(), 'codendiadm@'. Config::get('sys_default_domain'));
+            $git_exec->remoteAdd($gerrit_project_url);
         }
-        `cd $this->dir; git pull --quiet origin refs/meta/config`;
-        `cd $this->dir; git checkout --quiet FETCH_HEAD`;
+        $git_exec->pullBranch('origin', 'refs/meta/config');
+        $git_exec->checkoutBranch('FETCH_HEAD');
     }
 
     /**
@@ -251,13 +247,6 @@ class Git_Driver_Gerrit_ProjectCreator {
         $this->cloneGerritProjectConfig($gerrit_server, $gerrit_project_url);
 
         return file_get_contents($this->dir . '/project.config');
-    }
-
-    private function setUpCommitter(Git_RemoteServer_GerritServer $gerrit_server) {
-        $name  = escapeshellarg($gerrit_server->getLogin());
-        $email = escapeshellarg('codendiadm@'. Config::get('sys_default_domain'));
-        `cd $this->dir; git config --add user.name $name`;
-        `cd $this->dir; git config --add user.email $email`;
     }
 
     private function addGroupToGroupFile(Git_RemoteServer_GerritServer $gerrit_server, $group) {
@@ -358,11 +347,13 @@ class Git_Driver_Gerrit_ProjectCreator {
     }
 
     private function pushMinimalPermissionsToMigrateTuleapRepoOnGerrit(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository) {
+        $this->cloneGerritProjectConfig($gerrit_server, $this->getGerritProjectUrl($gerrit_server, $repository));
+
         foreach (self::$MIGRATION_MINIMAL_PERMISSIONS as $permission) {
             $this->addToSection($permission['reference'], $permission['permission'], $permission['group']);
         }
+        $this->addGroupToGroupFile($gerrit_server, 'Administrators');
 
-        $this->cloneGerritProjectConfig($gerrit_server, $this->getGerritProjectUrl($gerrit_server, $repository));
         $this->pushToServer();
     }
 
@@ -373,11 +364,13 @@ class Git_Driver_Gerrit_ProjectCreator {
     }
 
     private function removeFromSection($section, $permission, $value) {
-        `cd $this->dir; git config -f project.config --unset access.$section/*.$permission '$value'`;
+        $exec = new Git_Exec($this->dir);
+        $exec->configFile($this->dir.'/project.config', "--unset access.$section/*.$permission '$value'");
     }
 
     private function addToSection($section, $permission, $value) {
-        `cd $this->dir; git config -f project.config --add access.$section/*.$permission '$value'`;
+        $exec = new Git_Exec($this->dir);
+        $exec->configFile($this->dir.'/project.config', "--add access.$section/*.$permission '$value'");
     }
     private function pushToServer() {
         $exec = new Git_Exec($this->dir);
