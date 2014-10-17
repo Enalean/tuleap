@@ -129,6 +129,7 @@ class TestDataBuilder {
         );
 
         $GLOBALS['Language'] = new BaseLanguage('en_US', 'en_US');
+        $GLOBALS['sys_lf'] = '\n';
     }
 
     public function activatePlugins() {
