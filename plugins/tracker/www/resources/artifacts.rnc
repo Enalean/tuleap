@@ -99,7 +99,6 @@ grammar {
         attribute type { "list" },
         attribute bind { "static" },
         element value  {
-            attribute format { "id", "label" }?,
             xsd:string
         }*
 
