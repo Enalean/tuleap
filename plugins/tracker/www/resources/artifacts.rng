@@ -199,14 +199,6 @@
     </attribute>
     <zeroOrMore>
       <element name="value">
-        <optional>
-          <attribute name="format">
-            <group>
-              <value>id</value>
-              <value>label</value>
-            </group>
-          </attribute>
-        </optional>
         <data type="string"/>
       </element>
     </zeroOrMore>
