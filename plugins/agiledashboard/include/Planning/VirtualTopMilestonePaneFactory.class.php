@@ -176,7 +176,7 @@ class Planning_VirtualTopMilestonePaneFactory {
             $pane_info->setActive(true);
             $this->active_pane[$milestone_artifact_id] = new AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane(
                 $pane_info,
-                new AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter($this->request->getCurrentUser())
+                new AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter($this->request->getCurrentUser(), $this->request->getProject(), $milestone_artifact_id)
             );
         }
 

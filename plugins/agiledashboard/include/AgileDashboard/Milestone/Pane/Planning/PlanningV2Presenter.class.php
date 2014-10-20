@@ -24,11 +24,19 @@
 
 class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter {
 
+    /** @var int */
+    public $project_id;
+
+    /** @var int */
+    public $milestone_id;
+
     /** @var string */
     public $lang;
 
-    public function __construct(PFUser $current_user) {
-        $this->lang = $this->getLanguageAbbreviation($current_user);
+    public function __construct(PFUser $current_user, Project $project, $milestone_id) {
+        $this->lang         = $this->getLanguageAbbreviation($current_user);
+        $this->project_id   = $project->getId();
+        $this->milestone_id = $milestone_id;
     }
 
     private function getLanguageAbbreviation($current_user) {
@@ -36,5 +44,4 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter {
 
         return $lang;
     }
-
 }

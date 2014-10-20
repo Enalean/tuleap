@@ -45,6 +45,7 @@ class AgileDashboardPlugin extends Plugin {
         if (defined('TRACKER_BASE_URL')) {
             require_once dirname(__FILE__) .'/../../tracker/include/autoload.php';
             $this->_addHook('cssfile', 'cssfile', false);
+            $this->_addHook('javascript_file');
             $this->_addHook(Event::JAVASCRIPT, 'javascript', false);
             $this->_addHook(Event::COMBINED_SCRIPTS, 'combined_scripts', false);
             $this->_addHook(TRACKER_EVENT_INCLUDE_CSS_FILE, 'tracker_event_include_css_file', false);
@@ -294,6 +295,13 @@ class AgileDashboardPlugin extends Plugin {
         // This stops styles inadvertently clashing with the main site.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
+            echo '<link rel="stylesheet" type="text/css" href="'.$this->getPluginPath().'/js/angular/bin/assets/planning-v2.css" />';
+        }
+    }
+
+    public function javascript_file() {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            echo '<script type="text/javascript" src="' . $this->getPluginPath() . '/js/angular/bin/assets/planning-v2.js"></script>';
         }
     }
 

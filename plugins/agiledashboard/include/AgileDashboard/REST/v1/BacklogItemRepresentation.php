@@ -47,7 +47,17 @@ class BacklogItemRepresentation {
     /**
      * @var String
      */
+    public $short_type;
+
+    /**
+     * @var String
+     */
     public $status;
+
+    /**
+     * @var String
+     */
+    public $color;
 
     /**
      * @var Float
@@ -74,7 +84,9 @@ class BacklogItemRepresentation {
         $this->label          = $backlog_item->title();
         $this->status         = $backlog_item->status();
         $this->type           = $backlog_item->type();
+        $this->short_type     = $backlog_item->short_type();
         $this->initial_effort = JsonCast::toFloat($backlog_item->getInitialEffort());
+        $this->color          = $backlog_item->color();
 
         $this->artifact = new ArtifactReference();
         $this->artifact->build($backlog_item->getArtifact());
