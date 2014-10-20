@@ -32,18 +32,41 @@ Mock::generate('DataAccessResult');
 Mock::generate('Project');
 Mock::generate('PermissionsManager');
 
-class Git_Backend_GitoliteTest extends TuleapTestCase {
+abstract class Git_Backend_GitoliteCommonTest extends TuleapTestCase {
+
+    protected function _GivenAGitRepoWithNameAndNamespace($name, $namespace) {
+        $repository = new GitRepository();
+        $repository->setName($name);
+        $repository->setNamespace($namespace);
+
+        $project = new MockProject();
+        $project->setReturnValue('getUnixName', 'gpig');
+        $project->setReturnValue('getId', 123);
+        $repository->setProject($project);
+
+        return $repository;
+    }
+
+    protected function _GivenABackendGitolite() {
+        $driver             = mock('Git_GitoliteDriver');
+        $dao                = mock('GitDao');
+        $permissionsManager = mock('PermissionsManager');
+        $gitPlugin          = mock('GitPlugin');
+        $backend = new Git_Backend_Gitolite($driver);
+        $backend->setDao($dao);
+        $backend->setPermissionsManager($permissionsManager);
+        $backend->setGitPlugin($gitPlugin);
+        return $backend;
+    }
+}
+
+class Git_Backend_GitoliteTest extends Git_Backend_GitoliteCommonTest {
     
     protected $fixturesPath;
 
-    protected $unset_servername = false;
     private   $forkPermissions;
 
     public function setUp() {
-        if (!isset($_SERVER['SERVER_NAME'])) {
-            $this->unset_servername = true;
-            $_SERVER['SERVER_NAME'] = '_dummy_';
-        }
         $this->fixtureRenamePath = dirname(__FILE__).'/_fixtures/rename';
         
         if (file_exists($this->fixtureRenamePath)){
@@ -63,9 +86,6 @@ class Git_Backend_GitoliteTest extends TuleapTestCase {
     }
     
     public function tearDown() {
-        if ($this->unset_servername) {
-            unset($_SERVER['SERVER_NAME']);
-        }
         @rmdir($this->fixtureRenamePath .'/legacy');
         @rmdir($this->fixtureRenamePath .'/newone');
         @rmdir($this->fixtureRenamePath);
@@ -221,65 +241,6 @@ class Git_Backend_GitoliteTest extends TuleapTestCase {
 
         $backend->fork($old_repo, $new_repo, $this->forkPermissions);
     }
-
-    
-    public function _GivenAGitRepoWithNameAndNamespace($name, $namespace) {
-        $repository = new GitRepository();
-        $repository->setName($name);
-        $repository->setNamespace($namespace);
-        
-        $project = new MockProject();
-        $project->setReturnValue('getUnixName', 'gpig');
-        $project->setReturnValue('getId', 123);
-        $repository->setProject($project);
-        
-        return $repository;
-    }
-
-    protected function _GivenABackendGitolite() {
-        $driver             = mock('Git_GitoliteDriver');
-        $dao                = mock('GitDao');
-        $permissionsManager = mock('PermissionsManager');
-        $gitPlugin          = mock('GitPlugin');
-        $backend = new Git_Backend_Gitolite($driver);
-        $backend->setDao($dao);
-        $backend->setPermissionsManager($permissionsManager);
-        $backend->setGitPlugin($gitPlugin);
-        return $backend;
-    }
-
-    public function testGetAccessTypeShouldUseGitoliteSshUser() {
-        $repository = $this->_GivenAGitRepoWithNameAndNamespace('bionic', 'u/johndoe/uber');
-        $backend    = $this->_GivenABackendGitolite();
-        
-        $urls = $backend->getAccessUrl($repository);
-        $url  = array_shift($urls);
-
-        // url starts by gitolite
-        $this->assertPattern('%^gitolite@%', $url);
-    }
-
-    public function testGetAccessTypeShouldIncludesNameSpace() {
-        $repository = $this->_GivenAGitRepoWithNameAndNamespace('bionic', 'u/johndoe/uber');
-        $backend    = $this->_GivenABackendGitolite();
-        
-        $urls = $backend->getAccessUrl($repository);
-        $url  = array_shift($urls);
-
-        // url ends by the namespace + name
-        $this->assertPattern('%:gpig/u/johndoe/uber/bionic\.git$%', $url);
-    }
-    
-    public function testGetAccessTypeWithoutNameSpace() {
-        $repository = $this->_GivenAGitRepoWithNameAndNamespace('bionic', '');
-        $backend    = $this->_GivenABackendGitolite();
-        
-        $urls = $backend->getAccessUrl($repository);
-        $url  = array_shift($urls);
-
-        // url ends by the namespace + name
-        $this->assertPattern('%:gpig/bionic\.git$%', $url);
-    }
     
     public function testClonePermsWithPersonalFork() {
         $old_repo_id = 110;
@@ -347,4 +308,134 @@ class Git_Backend_Gitolite_disconnectFromGerrit extends TuleapTestCase {
         $this->backend->disconnectFromGerrit($this->repository);
     }
 }
-?>
+
+class Git_Backend_Gitolite_UrlTests extends Git_Backend_GitoliteCommonTest {
+
+    private $unset_servername = false;
+    private $backend;
+    private $git_plugin;
+    private $project;
+    private $repository;
+
+    public function setUp() {
+        if (!isset($_SERVER['SERVER_NAME'])) {
+            $this->unset_servername = true;
+            $_SERVER['SERVER_NAME'] = '_dummy_';
+        }
+
+        $this->project = new MockProject();
+        $this->project->setReturnValue('getUnixName', 'gpig');
+        $this->project->setReturnValue('getId', 123);
+
+        $this->repository   = aGitRepository()->withProject($this->project)->withName('bionic')->build();
+
+        $driver             = mock('Git_GitoliteDriver');
+        $dao                = mock('GitDao');
+        $permissionsManager = mock('PermissionsManager');
+        $this->git_plugin   = mock('GitPlugin');
+        $this->backend = new Git_Backend_Gitolite($driver);
+        $this->backend->setDao($dao);
+        $this->backend->setPermissionsManager($permissionsManager);
+        $this->backend->setGitPlugin($this->git_plugin);
+    }
+
+    public function tearDown() {
+        if ($this->unset_servername) {
+            unset($_SERVER['SERVER_NAME']);
+        }
+    }
+
+    public function testGetAccessTypeShouldUseGitoliteSshUser() {
+        $repository = aGitRepository()
+            ->withName('bionic')
+            ->withNamespace('u/johndoe/uber')
+            ->withProject($this->project)
+            ->build();
+
+        $urls = $this->backend->getAccessUrl($repository);
+        $url  = array_shift($urls);
+
+        // url starts by gitolite
+        $this->assertPattern('%^ssh://gitolite@%', $url);
+    }
+
+    public function testGetAccessTypeShouldIncludesNameSpace() {
+        $repository = aGitRepository()
+            ->withName('bionic')
+            ->withNamespace('u/johndoe/uber')
+            ->withProject($this->project)
+            ->build();
+
+        $urls = $this->backend->getAccessUrl($repository);
+        $url  = array_shift($urls);
+
+        // url ends by the namespace + name
+        $this->assertPattern('%/gpig/u/johndoe/uber/bionic\.git$%', $url);
+    }
+
+    public function testGetAccessTypeWithoutNameSpace() {
+        $urls = $this->backend->getAccessUrl($this->repository);
+        $url  = array_shift($urls);
+
+        // url ends by the namespace + name
+        $this->assertPattern('%/gpig/bionic\.git$%', $url);
+    }
+
+    public function itReturnsNoSSHUrlWhenParameterIsSetToEmpty() {
+        stub($this->git_plugin)->getConfigurationParameter('git_ssh_url')->returns('');
+
+        $this->assertArrayEmpty($this->backend->getAccessUrl($this->repository));
+    }
+
+    public function itReturnsOnlyHttpUrl() {
+        stub($this->git_plugin)->getConfigurationParameter('git_ssh_url')->returns('');
+        stub($this->git_plugin)->getConfigurationParameter('git_http_url')->returns('https://stuf');
+
+        $urls = $this->backend->getAccessUrl($this->repository);
+        $this->assertCount($urls, 1);
+        $this->assertTrue(isset($urls['http']));
+    }
+
+    public function itReturnsAnHttpUrl() {
+        stub($this->git_plugin)->getConfigurationParameter('git_ssh_url')->returns('');
+        stub($this->git_plugin)->getConfigurationParameter('git_http_url')->returns('https://stuf');
+
+        $urls = $this->backend->getAccessUrl($this->repository);
+        $this->assertEqual('https://stuf/gpig/bionic.git', $urls['http']);
+    }
+
+    public function itReturnsBothSSHAndHttpUrl() {
+        stub($this->git_plugin)->getConfigurationParameter('git_http_url')->returns('https://stuf');
+
+        $urls = $this->backend->getAccessUrl($this->repository);
+        $this->assertCount($urls, 2);
+        $this->assertTrue(isset($urls['ssh']));
+        $this->assertTrue(isset($urls['http']));
+    }
+
+    public function itReturnsACustomSSHURl() {
+        stub($this->git_plugin)->getConfigurationParameter('git_ssh_url')->returns('ssh://git@stuf:2222');
+
+        $urls = $this->backend->getAccessUrl($this->repository);
+        $this->assertEqual('ssh://git@stuf:2222/gpig/bionic.git', $urls['ssh']);
+    }
+
+    public function itReturnsDefaultSSHURl() {
+        $urls = $this->backend->getAccessUrl($this->repository);
+        $this->assertEqual('ssh://gitolite@_dummy_/gpig/bionic.git', $urls['ssh']);
+    }
+
+    public function itReplaceServerNameInSSHUrl() {
+        stub($this->git_plugin)->getConfigurationParameter('git_ssh_url')->returns('ssh://git@%server_name%:2222');
+
+        $urls = $this->backend->getAccessUrl($this->repository);
+        $this->assertEqual('ssh://git@_dummy_:2222/gpig/bionic.git', $urls['ssh']);
+    }
+
+    public function itReplacesServerNameInHTTPUrl() {
+        stub($this->git_plugin)->getConfigurationParameter('git_http_url')->returns('http://%server_name%');
+
+        $urls = $this->backend->getAccessUrl($this->repository);
+        $this->assertEqual('http://_dummy_/gpig/bionic.git', $urls['http']);
+    }
+}

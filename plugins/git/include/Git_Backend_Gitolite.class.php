@@ -109,7 +109,11 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      * @return String
      */
     public function getAccessURL(GitRepository $repository) {
-        $transports = array('ssh' => $this->getSSHAccessURL($repository));
+        $transports = array();
+        $ssh_transport = $this->getSSHAccessURL($repository);
+        if ($ssh_transport) {
+            $transports['ssh'] = $ssh_transport;
+        }
         $http_transport = $this->getHTTPAccessURL($repository);
         if ($http_transport) {
             $transports['http'] = $http_transport;
@@ -118,18 +122,28 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     }
 
     private function getSSHAccessURL(GitRepository $repository) {
-        $serverName = $_SERVER['SERVER_NAME'];
-        return  'gitolite@'.$serverName.':'.$repository->getProject()->getUnixName().'/'.$repository->getFullName().'.git';
+        $ssh_url = $this->getConfigurationParameter('git_ssh_url');
+        if ($ssh_url === '') {
+            return '';
+        } elseif (! $ssh_url) {
+            $ssh_url = 'ssh://gitolite@'.$_SERVER['SERVER_NAME'];
+        }
+        return  $ssh_url.'/'.$repository->getProject()->getUnixName().'/'.$repository->getFullName().'.git';
     }
 
     public function getHTTPAccessURL(GitRepository $repository) {
-        $git_plugin = $this->getGitPlugin();
-        if ($git_plugin) {
-            $http_url = $git_plugin->getConfigurationParameter('git_http_url');
-            if ($http_url) {
-                return  $http_url.'/'.$repository->getProject()->getUnixName().'/'.$repository->getFullName().'.git';
-            }
+        $http_url = $this->getConfigurationParameter('git_http_url');
+        if ($http_url) {
+            return  $http_url.'/'.$repository->getProject()->getUnixName().'/'.$repository->getFullName().'.git';
         }
+    }
+
+    private function getConfigurationParameter($key) {
+        $value = $this->getGitPlugin()->getConfigurationParameter($key);
+        if ($value !== false && $value !== null) {
+            $value = str_replace('%server_name%', $_SERVER['SERVER_NAME'], $value);
+        }
+        return $value;
     }
 
     /**
