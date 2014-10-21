@@ -384,7 +384,9 @@ class Tracker_Artifact_Changeset {
                                 'changeset_id' => $this->getId(),
                                 'text'         => $body);
                 EventManager::instance()->processEvent('tracker_followup_event_update', $params);
+                $this->notify();
             }
+
         }
     }
 
