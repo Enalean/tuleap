@@ -47,6 +47,12 @@ news_admin_index	items_approved_last_week	These items were approved this past we
 news_admin_index	permission_denied	Permission Denied.
 news_admin_index	need_to_be_admin	Permission Denied. You have to be an admin on the News service of this project.
 news_admin_index	news_admin	News Administration
+news_admin_index	news_row_label	News
+news_admin_index	choose_display	Choose which items are displayed in the widget
+news_admin_index	promoted_row_label	Displayed
+news_admin_index	update_news_list	Display select items in widget
+news_admin_index	info_text	Only the first ten news items will be displayed
+news_admin_index	no_news_items	Please add news items to choose which ones will be displayed in the widget
 #
 #-----------------------------------------------
 # Script: SF/www/news/index.php

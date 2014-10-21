@@ -34,6 +34,11 @@ function news_header($params) {
 	$params['toptab']='news';
 	$params['group']=$group_id;
 
+        if (isset($params['project_id'])) {
+            $params['group'] = $params['project_id'];
+            $group_id        = $params['project_id'];
+        }
+
 	/*
 		Show horizontal links
 	*/
@@ -82,13 +87,13 @@ function news_show_latest($group_id = '', $limit = 10, $show_projectname = true,
     /*
     Show a simple list of the latest news items with a link to the forum
     */
-    
+
     if ($group_id != $sys_news_group) {
-        $wclause = "news_bytes.group_id = ". db_ei($group_id) ." AND news_bytes.is_approved <> '4'";
+        $wclause = "news_bytes.group_id = ". db_ei($group_id) ." AND news_bytes.is_approved < 4";
     } else {
         $wclause = 'news_bytes.is_approved = 1';
     }
-    
+
     $sql = "SELECT groups.group_name,
                     groups.unix_group_name,
                     news_bytes.submitted_by,
@@ -107,7 +112,7 @@ function news_show_latest($group_id = '', $limit = 10, $show_projectname = true,
     
     $result = db_query($sql);
     $rows   = db_numrows($result);
-    
+
     if (!$result || $rows < 1) {
         $return .= '<b>'.$Language->getText('news_utils','no_news_item_found').'</b>';
     } else {

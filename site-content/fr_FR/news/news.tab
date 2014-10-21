@@ -40,6 +40,12 @@ news_admin_index	items_approved_last_week	Annonces approuvées la semaine passé
 news_admin_index	permission_denied	Permission refusée
 news_admin_index	need_to_be_admin	Permission refusée. Vous devez être administrateur du service Annonce.
 news_admin_index	news_admin	Administration des annonces
+news_admin_index	news_row_label	Nouvelles
+news_admin_index	choose_display	Choisir quelles nouvelles afficher sur le widget
+news_admin_index	promoted_row_label	Affichées
+news_admin_index	update_news_list	Afficher les nouvelles sélectionnées dans le widget
+news_admin_index	info_text	Seulement les dix premières nouvelles seront affichées
+news_admin_index	no_news_items	Veuillez ajouter des nouvelles pour pouvoir choisir lesquelles seront affichées
 #
 #-----------------------------------------------
 # Script: SF/www/news/index.php

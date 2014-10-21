@@ -96,6 +96,7 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($grou
 			  'help'=>'communication.html#news-service'));
     
     echo '<H3>'.$Language->getText('news_admin_index','news_admin').'</H3>';
+    echo '<a href="/news/admin/choose_items.php?project_id='.$group_id.'">'.$Language->getText('news_admin_index','choose_display').'</a>';
     
 	if (!$request->get('post_changes') && $request->get('approve')) {
 		/*
