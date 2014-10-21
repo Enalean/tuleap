@@ -8,4 +8,3 @@ ForceType application/x-httpd-php
 <Files goto>
 ForceType application/x-httpd-php
 </Files>
-

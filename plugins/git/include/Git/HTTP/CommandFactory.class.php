@@ -1,0 +1,108 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+class Git_HTTP_CommandFactory {
+
+    /**
+     * @var Logger
+     */
+    private $logger;
+
+    /**
+     * @var PermissionsManager
+     */
+    private $permissions_manager;
+
+    /**
+     * @var User_LoginManager
+     */
+    private $login_manager;
+
+    /**
+     * @var GitRepositoryFactory
+     */
+    private $repository_factory;
+
+    public function __construct(GitRepositoryFactory $repository_factory, User_LoginManager $login_manager, PermissionsManager $permissions_manager, Logger $logger) {
+        $this->repository_factory  = $repository_factory;
+        $this->login_manager       = $login_manager;
+        $this->permissions_manager = $permissions_manager;
+        $this->logger              = $logger;
+    }
+
+    public function getCommand() {
+        $repository = $this->repository_factory->getByHttpPathInfo($_SERVER['PATH_INFO']);
+        $command    = $this->getGitHttpBackendCommand();
+        if ($this->needAuthentication($repository)) {
+            $this->logger->debug('Repository '.$repository->getFullName().' need authentication');
+            return $this->authenticate($command);
+        }
+        return $command;
+    }
+
+    private function getGitHttpBackendCommand() {
+        $command = new Git_HTTP_CommandCentos5GitHttpBackend();
+        if (is_file('/usr/libexec/git-core/git-http-backend')) {
+            $command = new Git_HTTP_CommandCentos6GitHttpBackend();
+        }
+        return $command;
+    }
+
+    private function needAuthentication(GitRepository $repository) {
+        $ugroup_ids = $this->permissions_manager->getAuthorizedUgroupIds($repository->getId(), Git::PERM_READ);
+        $need_authentication = true;
+        foreach ($ugroup_ids as $ugroup_id) {
+            if ($ugroup_id == ProjectUGroup::ANONYMOUS) {
+                return false;
+            }
+        }
+        return $need_authentication;
+    }
+
+    private function basicAuthenticationChallenge() {
+        header('WWW-Authenticate: Basic realm="'.Config::get('sys_name').' git authentication"');
+        header('HTTP/1.0 401 Unauthorized');
+        exit;
+    }
+
+    private function authenticate(Git_HTTP_Command $command) {
+        if (! isset($_SERVER['PHP_AUTH_USER']) || $_SERVER['PHP_AUTH_USER'] == '') {
+            $this->basicAuthenticationChallenge();
+        } else {
+            try {
+                $user = $this->login_manager->authenticate($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+
+                $this->logger->debug('LOGGED AS '.$user->getUnixName());
+
+                return $this->getGitoliteCommand($user, $command);
+            } catch (Exception $exception) {
+                $this->logger->debug('LOGIN ERROR '.$exception->getMessage());
+                $this->basicAuthenticationChallenge();
+            }
+        }
+    }
+
+    private function getGitoliteCommand(PFUser $user, Git_HTTP_Command $command) {
+         if (is_file('/usr/share/gitolite3/gitolite-shell')) {
+            return new Git_HTTP_CommandGitolite3($user, $command);
+        }
+        return new Git_HTTP_CommandGitolite($user, $command);
+    }
+}

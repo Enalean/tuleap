@@ -1127,7 +1127,7 @@ class GitPlugin extends Plugin {
         );
     }
 
-    private function getRepositoryFactory() {
+    public function getRepositoryFactory() {
         return new GitRepositoryFactory($this->getGitDao(), ProjectManager::instance());
     }
 

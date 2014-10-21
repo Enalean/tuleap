@@ -306,4 +306,53 @@ class GitRepositoryFactory_getAllGerritRepositoriesFromProjectTest extends Tulea
         );
     }
 }
-?>
+
+class GitRepositoryFactory_GitHttpGetTest extends TuleapTestCase {
+    private $dao;
+    private $project_manager;
+    private $project;
+    private $factory;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->dao             = mock('GitDao');
+        $this->project_manager = mock('ProjectManager');
+        $this->project         = mock('Project');
+
+        stub($this->project)->getID()->returns(101);
+        stub($this->project)->getUnixName()->returns('mozilla');
+
+        stub($this->project_manager)->getProjectByUnixName('mozilla')->returns($this->project);
+
+        $this->factory  = new GitRepositoryFactory($this->dao, $this->project_manager);
+    }
+
+    public function itGetForHEAD() {
+        expect($this->dao)->searchProjectRepositoryByPath(101, 'mozilla/firefox.git')->once();
+        stub($this->dao)->searchProjectRepositoryByPath()->returnsDar(array('id' => 12));
+
+        $this->factory->getByHttpPathInfo('/mozilla/firefox.git/HEAD');
+    }
+
+    public function itGetForInfoRefs() {
+        expect($this->dao)->searchProjectRepositoryByPath(101, 'mozilla/firefox.git')->once();
+        stub($this->dao)->searchProjectRepositoryByPath()->returnsDar(array('id' => 12));
+
+        $this->factory->getByHttpPathInfo('/mozilla/firefox.git/info/refs');
+    }
+
+    public function itGetForUploadPack() {
+        expect($this->dao)->searchProjectRepositoryByPath(101, 'mozilla/firefox.git')->once();
+        stub($this->dao)->searchProjectRepositoryByPath()->returnsDar(array('id' => 12));
+
+        $this->factory->getByHttpPathInfo('/mozilla/firefox.git/git-upload-pack');
+    }
+
+    public function itGetForReceivePack() {
+        expect($this->dao)->searchProjectRepositoryByPath(101, 'mozilla/firefox.git')->once();
+        stub($this->dao)->searchProjectRepositoryByPath()->returnsDar(array('id' => 12));
+
+        $this->factory->getByHttpPathInfo('/mozilla/firefox.git/git-receive-pack');
+    }
+}
