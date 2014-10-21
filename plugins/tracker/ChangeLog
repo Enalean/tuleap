@@ -1,3 +1,9 @@
+Version 5.498 - Tuleap 7.7
+    * Fix request #7534 typo in artifact.rnc
+
+
+Remove unneeded attribute format for static list
+
 Version 5.497 - Tuleap 7.6
     * Refactoring: plugins should not leak into the core
 

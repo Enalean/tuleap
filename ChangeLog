@@ -4,6 +4,9 @@ Version 7.7 (Not released yet)
 	* request #7526: Missing attrs in ldap queries
 	* request #7503: CI job bad parameters with svn
 
+    == Plugins ==
+	* tracker: 5.498
+
 Version 7.6 (Monday, October 20th 2014)
 	== Plugins ==
 	* ldap 3.53
