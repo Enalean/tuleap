@@ -49,6 +49,36 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function getShortNameOfActiveProjectsBeforeEndDate() {
+        $sql = "SELECT group_id, unix_group_name AS result
+            FROM groups
+            WHERE status='A'
+               AND register_time <= $this->end_date
+            GROUP BY group_id";
+
+        return $this->retrieve($sql);
+    }
+
+    public function getIdsOfActiveProjectsBeforeEndDate() {
+        $sql = "SELECT group_id, group_id AS result
+            FROM groups
+            WHERE status='A'
+               AND register_time <= $this->end_date
+            GROUP BY group_id";
+
+        return $this->retrieve($sql);
+    }
+
+    public function getPrivacyOfActiveProjectsBeforeEndDate() {
+        $sql = "SELECT group_id, is_public AS result
+            FROM groups
+            WHERE status='A'
+               AND register_time <= $this->end_date
+            GROUP BY group_id";
+
+        return $this->retrieve($sql);
+    }
+
     public function getDescriptionOfActiveProjectsBeforeEndDate() {
         $sql = "SELECT group_id, REPLACE(REPLACE (short_description, CHAR(13),' '),CHAR(10),' ') AS result
                 FROM groups

@@ -85,7 +85,10 @@ if (!$error && $request->exist('export')) {
     $csv_exporter = new Statistics_Services_UsageFormatter(new Statistics_Formatter($startDate, $endDate));
 
     //Project admin
-    $csv_exporter->buildDatas($dao->getNameOfActiveProjectsBeforeEndDate(), "Project");
+    $csv_exporter->buildDatas($dao->getIdsOfActiveProjectsBeforeEndDate(), "Project ID");
+    $csv_exporter->buildDatas($dao->getNameOfActiveProjectsBeforeEndDate(), "Project Name");
+    $csv_exporter->buildDatas($dao->getShortNameOfActiveProjectsBeforeEndDate(), "Project Short Name");
+    $csv_exporter->buildDatas($dao->getPrivacyOfActiveProjectsBeforeEndDate(), "Public Project");
     $csv_exporter->buildDatas($dao->getDescriptionOfActiveProjectsBeforeEndDate(), "Description");
     $csv_exporter->buildDatas($dao->getRegisterTimeOfActiveProjectsBeforeEndDate(), "Creation date");
     $csv_exporter->buildDatas($dao->getInfosFromTroveGroupLink(), "Organization");
