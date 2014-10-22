@@ -314,6 +314,7 @@ plugin_git	url_label	Url
 plugin_git	owner_label	Propriétaire
 plugin_git	ssh_key_label	Clé SSH du propriétaire
 plugin_git	pwd_label	Mot de passe du propriétaire
+plugin_git	mirrored_repo_label	Liste des dépôts présents sur ce mirroir
 plugin_git	admin_update_button	Modifier
 plugin_git	admin_delete_button	Supprimer
 plugin_git	change_pwd	cliquer ici pour modifier

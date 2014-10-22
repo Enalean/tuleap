@@ -318,6 +318,7 @@ plugin_git	url_label	Url
 plugin_git	owner_label	Owner
 plugin_git	ssh_key_label	Owner's SSH Key
 plugin_git	pwd_label	Owner's Password
+plugin_git	mirrored_repo_label	Repositories on this mirror
 plugin_git	admin_update_button	Update
 plugin_git	admin_delete_button	Delete
 plugin_git	change_pwd	click here to change

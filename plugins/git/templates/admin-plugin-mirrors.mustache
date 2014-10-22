@@ -19,6 +19,7 @@
                     <th>{{ url_label }}</th>
                     <th>{{ owner_label }}</th>
                     <th>{{ ssh_key_label }}</th>
+                    <th>{{ mirrored_repo_label }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -42,7 +43,10 @@
                         </a>
                     </td>
                     <td>
-                        <span name="mirror_key" class="git_admin_mirror_big_span">{{ ssh_key }}</span>
+                        <span name="mirror_key" class="git_admin_mirror_big_span" data-ssh_key_value="{{ ssh_key_value }}">{{ ssh_key_ellipsis_value }}</span>
+                    </td>
+                    <td>
+                        n/a
                     </td>
                 </tr>
             {{/ list_of_mirrors }}
