@@ -3,7 +3,9 @@
         <h2 translate>To be planned</h2>
 
         <ul class="backlog-items">
-            <li ng-repeat="backlog_item in backlog_items track by $index" class="backlog-item {{ backlog_item.status | lowercase }} {{ backlog_item.color }}">
+            <li ng-repeat="backlog_item in backlog_items track by $index" 
+                class="backlog-item {{ backlog_item.status | lowercase }} {{ backlog_item.color }}"
+            >
                 <div class="type-border"></div>
 
                 <span ng-if="backlog_item.initial_effort"
@@ -13,7 +15,8 @@
                     translate-plural="{{ backlog_item.initial_effort }} pts"
                 >{{ backlog_item.initial_effort }} pt</span>
 
-                <span class="id">{{ backlog_item.short_type | lowercase }} {{ backlog_item.id }}</span> <span class="summary">{{ backlog_item.label }}</span>
+                <span class="id">{{ backlog_item.short_type | lowercase }} {{ backlog_item.id }}</span>
+                <span class="summary">{{ backlog_item.label }}</span>
                 <span class="parent">{{ backlog_item.parent.label }}</span>
             </li>
         </ul>
@@ -21,5 +24,15 @@
     </div>
 
     <div class="span6">
+        <h2 translate>Milestones</h2>
+
+        <div class="milestones">
+            <fieldset ng-repeat="milestone in milestones track by $index" class="milestone">
+                <legend>{{ milestone.label }}</legend>
+                <div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="loading" ng-if="loading_milestones"></div>
     </div>
 </div>

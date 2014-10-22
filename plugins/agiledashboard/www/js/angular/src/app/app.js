@@ -3,6 +3,7 @@
         'ui.router',
         'gettext',
         'shared-properties',
-        'backlog-item'
+        'backlog-item',
+        'milestone'
     ]);
 })();

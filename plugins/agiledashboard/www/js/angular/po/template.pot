@@ -4,6 +4,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: src/app/planning.tpl.html
+msgid "Milestones"
+msgstr ""
+
+#: src/app/planning.tpl.html
 msgid "To be planned"
 msgstr ""
 
