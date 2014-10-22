@@ -1,3 +1,6 @@
+Version 3.125 - Tuleap 7.7
+    * request #7536 - Make git urls more customizable
+
 Version 3.124 - Tuleap 7.6
     * request #7528: Fatal error on gl-admin-housekeeping.php
 
