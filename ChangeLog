@@ -5,10 +5,13 @@ Version 7.7 (Not released yet)
 	* request #7503: CI job bad parameters with svn
 
     == Plugins ==
-	* tracker: 5.498
+	* tracker: 5.499
 	* git: 3.125
 	* statistics: 0.39
-	* agiledashboard: 1.79
+	* agiledashboard: 1.80
+
+    == Themes ==
+	* FlamingParrot: 1.48
 
 Version 7.6 (Monday, October 20th 2014)
 	== Plugins ==
