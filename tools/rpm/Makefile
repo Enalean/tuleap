@@ -1,6 +1,7 @@
 RPM_TMP=$(HOME)/rpmbuild
 PHP_BASE=php
 BASE_DIR=$(shell cd ../..; pwd)
+SHELL=/bin/bash
 
 version=$(shell LANG=C cat $(BASE_DIR)/VERSION)
 
@@ -11,13 +12,9 @@ CORE_REST_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/api/VERSION)
 
 PLUGIN_FORUMML_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/forumml/VERSION)
 PLUGIN_GIT_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/git/VERSION)
-PLUGIN_SVNTODIMENSIONS_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/svntodimensions/VERSION)
-PLUGIN_CVSTODIMENSIONS_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/cvstodimensions/VERSION)
 PLUGIN_DOCMANWATERMARK_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/docmanwatermark/VERSION)
 PLUGIN_LDAP_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/ldap/VERSION)
 PLUGIN_IM_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/IM/VERSION)
-PLUGIN_JRI_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/codendijri/VERSION)
-PLUGIN_ECLIPSE_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/eclipse/VERSION)
 PLUGIN_HUDSON_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/hudson/VERSION)
 PLUGIN_WEBDAV_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/webdav/VERSION)
 PLUGIN_REQUESTHELP_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/requesthelp/VERSION)
@@ -91,23 +88,34 @@ $(RPM_TMP):
 tarball: rpmprep $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz
 
 less:
-	$(MAKE) -C ../.. less
+	$(MAKE) -C $(BASE_DIR) less
 
-$(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: less
+node:
+	cd $(BASE_DIR)/plugins/agiledashboard/www/js/angular &&\
+		npm install &&\
+		bower install --allow-root --config.interactive=false &&\
+		grunt
+
+$(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: less node
 	[ -h $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version) ] || ln -s $(BASE_DIR) $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version)
 	cd $(RPM_TMP)/SOURCES && \
-		find $(PKG_NAME)-$(version)/ \(\
-			 -path '*/.svn' -o\
-			 -name '*.less' -o\
-			 -name ".git" -o\
-			 -name ".gitignore" -o\
-			 -name ".gitmodules" -o\
-			 -path "*/.DS_Store" -o\
-			 -path $(PKG_NAME)-$(version)/plugins/tests -o\
-			 -path $(PKG_NAME)-$(version)/plugins/maillog \)\
-			-prune -o -print |\
-		 cpio -o -H ustar --quiet |\
-		 gzip > $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz
+		{ \
+			find $(PKG_NAME)-$(version)/ \(\
+				-path '*/.svn' -o\
+			 	-name '*.less' -o\
+			 	-name ".git" -o\
+			 	-name ".gitignore" -o\
+			 	-name ".gitmodules" -o\
+			 	-path "*/.DS_Store" -o\
+			 	-path $(PKG_NAME)-$(version)/plugins/tests -o\
+			 	-path $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/angular -o\
+			 	-path $(PKG_NAME)-$(version)/plugins/maillog \)\
+				-prune -o -print \
+			&& \
+		  	find $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/angular/bin; \
+		} | \
+		cpio -o -H ustar --quiet |\
+		gzip > $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz
 
 ##
 ## Build RPM
@@ -115,7 +123,12 @@ $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: less
 
 rpm: tarball $(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-$(version)-$(RELEASE).noarch.rpm
 
-$(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-$(version)-$(RELEASE).noarch.rpm: $(SPEC_FILE)
+srpms: clean rpmprep tarball $(RPM_TMP)/SRPMS/$(PKG_NAME)-$(version)-$(RELEASE).src.rpm $(RPM_TMP)/SRPMS/$(PKG_NAME)-all-deps-$(version)-$(RELEASE).src.rpm $(RPM_TMP)/SRPMS/$(PKG_NAME)-all-$(version)-$(RELEASE).src.rpm $(RPM_TMP)/SRPMS/$(PKG_NAME)-customization-default-$(version)-$(RELEASE).src.rpm
+
+$(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-$(version)-$(RELEASE).noarch.rpm: $(RPM_TMP)/SRPMS/$(PKG_NAME)-$(version)-$(RELEASE).src.rpm
+	rpmbuild --rebuild $<
+
+$(RPM_TMP)/SRPMS/$(PKG_NAME)-$(version)-$(RELEASE).src.rpm: $(SPEC_FILE)
 	cat $(SPEC_FILE) |\
 		sed -e 's/@@VERSION@@/$(version)/g' |\
 		sed -e 's/@@RELEASE@@/$(RELEASE)/g' |\
@@ -125,13 +138,9 @@ $(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-$(version)-$(RELEASE).noarch.rpm: $(SPEC_FILE
 		sed -e 's/@@CORE_REST_VERSION@@/$(CORE_REST_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_FORUMML_VERSION@@/$(PLUGIN_FORUMML_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_GIT_VERSION@@/$(PLUGIN_GIT_VERSION)/g' |\
-		sed -e 's/@@PLUGIN_SVNTODIMENSIONS_VERSION@@/$(PLUGIN_SVNTODIMENSIONS_VERSION)/g' |\
-		sed -e 's/@@PLUGIN_CVSTODIMENSIONS_VERSION@@/$(PLUGIN_CVSTODIMENSIONS_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_DOCMANWATERMARK_VERSION@@/$(PLUGIN_DOCMANWATERMARK_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_LDAP_VERSION@@/$(PLUGIN_LDAP_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_IM_VERSION@@/$(PLUGIN_IM_VERSION)/g' |\
-		sed -e 's/@@PLUGIN_JRI_VERSION@@/$(PLUGIN_JRI_VERSION)/g' |\
-		sed -e 's/@@PLUGIN_ECLIPSE_VERSION@@/$(PLUGIN_ECLIPSE_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_HUDSON_VERSION@@/$(PLUGIN_HUDSON_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_WEBDAV_VERSION@@/$(PLUGIN_WEBDAV_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_REQUESTHELP_VERSION@@/$(PLUGIN_REQUESTHELP_VERSION)/g' |\
@@ -158,9 +167,12 @@ $(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-$(version)-$(RELEASE).noarch.rpm: $(SPEC_FILE
 		sed -e 's/@@THEME_FLAMINGPARROT_VERSION@@/$(THEME_FLAMINGPARROT_VERSION)/g' |\
 		sed -e 's/@@PKG_NAME@@/$(PKG_NAME)/g' \
 		> $(RPM_TMP)/SPECS/$(SPEC_FILE)
-	rpmbuild -bb $(RPM_TMP)/SPECS/$(SPEC_FILE)
+	rpmbuild -bs $(RPM_TMP)/SPECS/$(SPEC_FILE)
 
-custom_rpm: tarball
+custom_rpm: $(RPM_TMP)/SRPMS/$(PKG_NAME)-customization-default-$(version)-$(RELEASE).src.rpm
+	export DOCBOOK_TOOLS_DIR=$(DOCBOOK_TOOLS_DIR); rpmbuild --rebuild $<
+
+$(RPM_TMP)/SRPMS/$(PKG_NAME)-customization-default-$(version)-$(RELEASE).src.rpm: tarball
 	cat $(CUSTOM_SPEC_FILE) |\
 		sed -e 's/@@PLATFORM@@/default/' |\
 		sed -e 's/@@SYS_DEFAULT_DOMAIN@@/tuleap.net/' |\
@@ -170,30 +182,36 @@ custom_rpm: tarball
 		> $(RPM_TMP)/SPECS/codendi-customization.spec
 	cp *_ParametersLocal.dtd $(RPM_TMP)/SOURCES/
 	cp $(BASE_DIR)/src/www/themes/common/images/organization_logo.png $(RPM_TMP)/SOURCES/organization_logo.png
-	export DOCBOOK_TOOLS_DIR=$(DOCBOOK_TOOLS_DIR); rpmbuild -bb $(RPM_TMP)/SPECS/codendi-customization.spec
+	rpmbuild -bs $(RPM_TMP)/SPECS/codendi-customization.spec
 
-rpm-all-deps: codendi-all-deps.spec
+rpm-all-deps: $(RPM_TMP)/SRPMS/$(PKG_NAME)-all-deps-$(version)-$(RELEASE).src.rpm
+	rpmbuild --rebuild $<
+
+$(RPM_TMP)/SRPMS/$(PKG_NAME)-all-deps-$(version)-$(RELEASE).src.rpm: codendi-all-deps.spec
 	cat $< |\
 		sed -e 's/@@VERSION@@/$(version)/g' |\
 		sed -e 's/@@PKG_NAME@@/$(PKG_NAME)/g' \
 		> $(RPM_TMP)/SPECS/$<
 	cp README.all-deps $(RPM_TMP)/SOURCES/
-	rpmbuild -bb $(RPM_TMP)/SPECS/$<
+	rpmbuild -bs $(RPM_TMP)/SPECS/$<
 
-tuleap-all: tuleap-all.spec
+tuleap-all:	$(RPM_TMP)/SRPMS/$(PKG_NAME)-all-$(version)-$(RELEASE).src.rpm
+	rpmbuild --rebuild $<
+
+$(RPM_TMP)/SRPMS/$(PKG_NAME)-all-$(version)-$(RELEASE).src.rpm:	tuleap-all.spec
 	cat $< |\
 		sed -e 's/@@VERSION@@/$(version)/g' |\
 		sed -e 's/@@PKG_NAME@@/$(PKG_NAME)/g' \
 		> $(RPM_TMP)/SPECS/$<
 	cp README.all $(RPM_TMP)/SOURCES/
-	rpmbuild -bb $(RPM_TMP)/SPECS/$<
+	rpmbuild -bs $(RPM_TMP)/SPECS/$<
 
 clean:
 	-rm -Rf $(RPM_TMP)/*
 	@[ ! -d $(RPM_TMP) ] || rmdir $(RPM_TMP)
 	-rm -Rf ~/.rpmmacros
 
-dist: 
+dist:
 	mkdir -p $(RPM_TMP)/yum
 	cp -ar $(RPM_TMP)/RPMS/* $(RPM_TMP)/yum
 	createrepo $(RPM_TMP)/yum
