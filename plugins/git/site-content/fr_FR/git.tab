@@ -53,13 +53,13 @@ plugin_git	admin_mail	Notifications
 
 plugin_git	admin_mirroring	Réplication
 plugin_git	mirroring_title	Réplication
-plugin_git	mirroring_info	Sélectionnez les miroirs sur lesquels vous souhaitez répliquer le dépôt <b>$1</b>:
+plugin_git	mirroring_info	Sélectionnez les mirroirs sur lesquels vous souhaitez répliquer le dépôt <b>$1</b>:
 plugin_git	mirroring_mirror_name	Nom
 plugin_git	mirroring_mirror_url	URL
 plugin_git	mirroring_mirror_used	Utilisé par ce dépôt ?
 plugin_git	mirroring_update_mirroring	Mettre à jour les réplications de ce dépôt
-plugin_git	mirroring_mirroring_successful	Le dépôt va être rapidement répliqué sur les miroirs sélectionnés.
-plugin_git	mirroring_mirroring_error	Erreur lors de la mise à jour des miroirs sur lesquels le dépôt est répliqué.
+plugin_git	mirroring_mirroring_successful	Le dépôt va être rapidement répliqué sur les mirroirs sélectionnés.
+plugin_git	mirroring_mirroring_error	Erreur lors de la mise à jour des mirroirs sur lesquels le dépôt est répliqué.
 
 plugin_git	controller_access_denied	Vous n'êtes pas autorisé à accéder à cette page
 
@@ -137,8 +137,8 @@ plugin_git	gerrit_pane_title	Gerrit
 plugin_git	gerrit_title	Migration vers Gerrit
 plugin_git	gerrit_url	Veuillez choisir le serveur Gerrit de destination :
 plugin_git	gerrit_migration_description	Vous vous apprêtez à effectuer la migration de votre dépôt <em>$1</em> vers l'outil Gerrit.
-plugin_git	gerrit_migration_more_description	La gestion du dépôt (permissions, ...) sera déléguée à Gerrit : <ul><li>Un projet <em>$1</em> sera créé sur le serveur sélectionné.</li><li>Le dépot courant deviendra un miroir de la référence sur Gerrit.</li></ul>
-plugin_git	gerrit_migrated_more_description	Pour rappel, la gestion du dépôt (permissions, ...) à été déléguée à Gerrit : <ul><li>Un projet <em>$1</em> a été créé sur le serveur $2.</li><li>Le dépot courant est maintenant un miroir de la référence sur Gerrit.</li></ul>
+plugin_git	gerrit_migration_more_description	La gestion du dépôt (permissions, ...) sera déléguée à Gerrit : <ul><li>Un projet <em>$1</em> sera créé sur le serveur sélectionné.</li><li>Le dépot courant deviendra un mirroir de la référence sur Gerrit.</li></ul>
+plugin_git	gerrit_migrated_more_description	Pour rappel, la gestion du dépôt (permissions, ...) à été déléguée à Gerrit : <ul><li>Un projet <em>$1</em> a été créé sur le serveur $2.</li><li>Le dépot courant est maintenant un mirroir de la référence sur Gerrit.</li></ul>
 plugin_git	gerrit_migrate_to	Migrer repo vers Gerrit
 plugin_git	gerrit_past_project_warn	Ce dépôt a déjà été migré sur Gerrit et existe encore. Il n'est pas possible de migrer ce dépôt sur ce même serveur avant de l'avoir supprimé.
 plugin_git	gerrit_past_project_delete	Supprimer ce projet sur Gerrit
@@ -301,15 +301,15 @@ plugin_git	admin_gerrit_http_password_label	HTTP password :
 
 plugin_git	gerrit_tab_name	Gerrit
 plugin_git	mirror_tab_name	Miroirs
-plugin_git	admin_mirror_save_failed	Impossible d'enregistrer le miroir
+plugin_git	admin_mirror_save_failed	Impossible d'enregistrer le mirroir
 plugin_git	admin_mirror_fields_required	Tous les champs sont requis
-plugin_git	admin_mirror_cannot_update	Impossible de mettre à jour le miroir
-plugin_git	admin_mirror_no_changes	Pas de nouveau changements pour le miroir
+plugin_git	admin_mirror_cannot_update	Impossible de mettre à jour le mirroir
+plugin_git	admin_mirror_no_changes	Pas de nouveau changements pour le mirroir
 plugin_git	admin_mirror_updated	Miroir modifié !
-plugin_git	admin_mirror_cannot_delete	Impossible de supprimer le miroir
+plugin_git	admin_mirror_cannot_delete	Impossible de supprimer le mirroir
 plugin_git	admin_mirror_deleted	Miroir supprimé!
-plugin_git	add_mirror	Ajouter un nouveau miroir
-plugin_git	mirror_section_title	Administration des miroirs
+plugin_git	add_mirror	Ajouter un nouveau mirroir
+plugin_git	mirror_section_title	Administration des mirroirs
 plugin_git	url_label	Url
 plugin_git	owner_label	Propriétaire
 plugin_git	ssh_key_label	Clé SSH du propriétaire
@@ -319,3 +319,7 @@ plugin_git	admin_update_button	Modifier
 plugin_git	admin_delete_button	Supprimer
 plugin_git	change_pwd	cliquer ici pour modifier
 plugin_git	or	ou
+plugin_git	mirror_no_repository	Aucun dépôt sur ce mirroir
+plugin_git	mirror_repo_name	Nom
+plugin_git	mirror_title	Liste des dépôts sur $1
+plugin_git	mirror_back	Retourner à la liste des mirroirs

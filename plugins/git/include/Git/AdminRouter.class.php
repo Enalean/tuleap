@@ -51,7 +51,7 @@ class Git_AdminRouter {
     public function display(Codendi_Request $request) {
         $controller = $this->getControllerFromRequest($request);
 
-        $controller->display();
+        $controller->display($request);
     }
 
     private function getControllerFromRequest(Codendi_Request $request) {

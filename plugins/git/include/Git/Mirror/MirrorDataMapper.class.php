@@ -103,6 +103,27 @@ class Git_Mirror_MirrorDataMapper {
         return $mirrors;
     }
 
+    public function fetchRepositoriesPerMirrorPresenters(Git_Mirror_Mirror $mirror) {
+        $presenters = array();
+
+        $previous_group_id = -1;
+        foreach ($this->dao->fetchAllRepositoryMirroredByMirror($mirror->id) as $row) {
+            if ($previous_group_id !== $row['group_id']) {
+                $project_presenter = new Git_AdminRepositoryListForProjectPresenter($row['group_id'], $row['group_name']);
+                $presenters[]      = $project_presenter;
+            }
+
+            $project_presenter->repositories[] = array(
+                'repository_id'   => $row['repository_id'],
+                'repository_name' => $row['repository_name'],
+            );
+
+            $previous_group_id = $row['group_id'];
+        }
+
+        return $presenters;
+    }
+
     public function doesAllSelectedMirrorIdsExist($selected_mirror_ids) {
         if ($selected_mirror_ids !== false) {
             return count($selected_mirror_ids) === count($this->dao->fetchByIds($selected_mirror_ids));

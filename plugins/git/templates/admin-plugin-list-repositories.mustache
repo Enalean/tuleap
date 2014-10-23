@@ -1,0 +1,38 @@
+<a href="{{ base_url }}/admin/?pane=mirrors_admin"><i class="icon-long-arrow-left"></i> {{ mirror_back }}</a>
+
+<h1>{{ mirror_title }}</h1>
+
+{{# has_repositories }}
+
+    {{# repository_list_for_projects }}
+
+    <h2> {{{ project_name }}} </h2>
+
+        <table class="table table-hover table-bordered table-striped git_admin_mirror_details">
+
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>{{ mirror_repo_name }}</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            {{# repositories }}
+
+                <tr>
+                    <td>{{ repository_id }}</td>
+                    <td><a href="{{ base_url }}/?group_id={{ project_id }}&repo_id={{ repository_id }}&action=repo_management&pane=mirroring">{{ repository_name }}</a></td>
+                </tr>
+
+            {{/ repositories }}
+            </tbody>
+
+        </table>
+
+    {{/ repository_list_for_projects }}
+
+{{/ has_repositories }}
+{{^ has_repositories }}
+    <p>{{ no_repositories }}</p>
+{{/ has_repositories }}

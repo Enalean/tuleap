@@ -20,6 +20,8 @@
 
 class Git_AdminMirrorListPresenter extends Git_AdminMirrorPresenter {
 
+    const TEMPLATE = 'admin-plugin';
+
     public $see_all = true;
 
     public $list_of_mirrors;
