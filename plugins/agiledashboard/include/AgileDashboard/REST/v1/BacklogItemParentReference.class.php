@@ -32,6 +32,11 @@ class BacklogItemParentReference {
     public $id;
 
     /**
+     * @var String
+     */
+    public $label;
+
+    /**
      * @var string URI of backlog item
      */
     public $uri;
@@ -42,9 +47,9 @@ class BacklogItemParentReference {
     public $tracker;
 
     public function build(Tracker_Artifact $backlog_item) {
-        $this->id = JsonCast::toInt($backlog_item->getId());
-
-        $this->uri = ResourceReference::NO_ROUTE;
+        $this->id    = JsonCast::toInt($backlog_item->getId());
+        $this->label = $backlog_item->getTitle();
+        $this->uri   = ResourceReference::NO_ROUTE;
 
         $this->tracker = new TrackerReference();
         $this->tracker->build($backlog_item->getTracker());

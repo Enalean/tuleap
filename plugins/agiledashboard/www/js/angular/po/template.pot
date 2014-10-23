@@ -1,0 +1,14 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/app/planning.tpl.html
+msgid "To be planned"
+msgstr ""
+
+#: src/app/planning.tpl.html
+msgid "{{ backlog_item.initial_effort }} pt"
+msgid_plural "{{ backlog_item.initial_effort }} pts"
+msgstr[0] ""
+msgstr[1] ""

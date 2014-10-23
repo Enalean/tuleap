@@ -1,0 +1,15 @@
+{
+  "name": "planning-v2",
+  "version": "0.0.1",
+  "devDependencies": {
+    "angular": "1.2.25",
+    "angular-mocks": "~1.0.7",
+    "angular-gettext": "~1.1.0",
+    "angular-ui-router": "~0.2.10",
+    "restangular": "~1.4.0"
+  },
+  "dependencies": {},
+  "resolutions": {
+    "angular": "1.2.25"
+  }
+}

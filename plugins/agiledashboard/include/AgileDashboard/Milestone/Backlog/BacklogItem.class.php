@@ -34,6 +34,9 @@ class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Mil
     private $type;
 
     /** @var String */
+    private $short_type;
+
+    /** @var String */
     private $url;
 
     /** @var Int */
@@ -42,6 +45,9 @@ class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Mil
     /** @var String */
     private $status;
 
+    /** @var String */
+    private $color;
+
     /** @var Tracker_Artifact */
     private $artifact;
 
@@ -49,11 +55,13 @@ class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Mil
     private $parent;
 
     public function __construct(Tracker_Artifact $artifact) {
-        $this->id               = $artifact->getId();
-        $this->title            = $artifact->getTitle();
-        $this->url              = $artifact->getUri();
-        $this->artifact         = $artifact;
-        $this->type             = $this->artifact->getTracker()->getName();
+        $this->id         = $artifact->getId();
+        $this->title      = $artifact->getTitle();
+        $this->url        = $artifact->getUri();
+        $this->artifact   = $artifact;
+        $this->color      = $this->artifact->getTracker()->getColor();
+        $this->type       = $this->artifact->getTracker()->getName();
+        $this->short_type = $this->artifact->getTracker()->getItemName();
     }
 
     public function setParent(Tracker_Artifact $parent) {
@@ -91,6 +99,10 @@ class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Mil
         return $this->type;
     }
 
+    public function short_type() {
+        return $this->short_type;
+    }
+
     public function points() {
         return $this->initial_effort;
     }
@@ -103,6 +115,10 @@ class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Mil
 
     public function status() {
         return $this->status;
+    }
+
+    public function color() {
+        return $this->color;
     }
 
     /**
