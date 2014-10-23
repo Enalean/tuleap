@@ -6,31 +6,28 @@
     PlanningCtrl.$inject = ['$scope', 'SharedPropertiesService', 'BacklogItemService', 'MilestoneService'];
 
     function PlanningCtrl($scope, SharedPropertiesService, BacklogItemService, MilestoneService) {
-        var project_id          = SharedPropertiesService.getProjectId(),
-            milestone_id        = SharedPropertiesService.getMilestoneId();
+        var project_id        = SharedPropertiesService.getProjectId(),
+            milestone_id      = SharedPropertiesService.getMilestoneId(),
+            pagination_limit  = 50,
+            pagination_offset = 0;
 
         _.extend($scope, {
             backlog_items         : [],
             milestones            : [],
             loading_backlog_items : true,
-            loading_milestones    : true
+            loading_milestones    : true,
+            toggle                : toggle
         });
 
         displayBacklogItems();
         displayMilestones();
 
         function displayBacklogItems() {
-            var fetch;
-
             if (typeof milestone_id === 'undefined') {
-                fetch = fetchProjectBacklogItems(project_id, 50, 0);
+                fetchProjectBacklogItems(project_id, pagination_limit, pagination_offset);
             } else {
-                fetch = fetchMilestoneBacklogItems(milestone_id, 50, 0);
+                fetchMilestoneBacklogItems(milestone_id, pagination_limit, pagination_offset);
             }
-
-            fetch.then(function(){
-                $scope.loading_backlog_items = false;
-            });
         }
 
         function fetchProjectBacklogItems(project_id, limit, offset) {
@@ -39,6 +36,8 @@
 
                 if ($scope.backlog_items.length < data.total) {
                     fetchProjectBacklogItems(milestone_id, limit, offset + limit);
+                } else {
+                    $scope.loading_backlog_items = false;
                 }
             });
         }
@@ -49,22 +48,18 @@
 
                 if ($scope.backlog_items.length < data.total) {
                     fetchMilestoneBacklogItems(milestone_id, limit, offset + limit);
+                } else {
+                    $scope.loading_backlog_items = false;
                 }
             });
         }
 
         function displayMilestones() {
-            var fetch;
-
             if (typeof milestone_id === 'undefined') {
-                fetch = fetchMilestones(project_id, 50, 0);
+                fetchMilestones(project_id, pagination_limit, pagination_offset);
             } else {
-                fetch = fetchSubMilestones(milestone_id, 50, 0);
+                fetchSubMilestones(milestone_id, pagination_limit, pagination_offset);
             }
-
-            fetch.then(function(){
-                $scope.loading_milestones = false;
-            });
         }
 
         function fetchMilestones(project_id, limit, offset) {
@@ -73,6 +68,8 @@
 
                 if ($scope.milestones.length < data.total) {
                     fetchMilestones(project_id, limit, offset + limit);
+                } else {
+                    $scope.loading_milestones = false;
                 }
             });
         }
@@ -83,8 +80,22 @@
 
                 if ($scope.milestones.length < data.total) {
                     fetchSubMilestones(milestone_id, limit, offset + limit);
+                } else {
+                    $scope.loading_milestones = false;
                 }
             });
+        }
+
+        function toggle(milestone) {
+            if (! milestone.alreadyLoaded && milestone.content.length === 0) {
+                milestone.getContent();
+            }
+
+            if (milestone.collapsed) {
+                return milestone.collapsed = false;
+            }
+
+            return milestone.collapsed = true;
         }
     }
 })();

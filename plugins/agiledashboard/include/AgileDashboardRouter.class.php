@@ -212,7 +212,8 @@ class AgileDashboardRouter {
      */
     private function displayHeader(MVC2_Controller $controller,
                                    Codendi_Request $request,
-                                                   $title) {
+                                                   $title,
+                                             array $header_options = array()) {
         $service = $this->getService($request);
         if (! $service) {
             exit_error(
@@ -235,7 +236,7 @@ class AgileDashboardRouter {
                 ))
             );
         }
-        $service->displayHeader($title, $breadcrumbs->getCrumbs(), $toolbar);
+        $service->displayHeader($title, $breadcrumbs->getCrumbs(), $toolbar, $header_options);
     }
 
     private function userIsAdmin(Codendi_Request $request) {
@@ -282,10 +283,11 @@ class AgileDashboardRouter {
     protected function renderAction(MVC2_Controller $controller,
                                                     $action_name,
                                     Codendi_Request $request,
-                                    array           $args = array()) {
+                                    array           $args = array(),
+                                    array           $header_options = array()) {
         $content = $this->executeAction($controller, $action_name, $args);
 
-        $this->displayHeader($controller, $request, $this->getHeaderTitle($action_name));
+        $this->displayHeader($controller, $request, $this->getHeaderTitle($action_name), $header_options);
         echo $content;
         $this->displayFooter($request);
     }
@@ -327,7 +329,7 @@ class AgileDashboardRouter {
             default:
                 $controller = $this->milestone_controller_factory->getMilestoneController($request);
                 $action_arguments = array();
-                $this->renderAction($controller, 'show', $request, $action_arguments);
+                $this->renderAction($controller, 'show', $request, $action_arguments, array('body_class' => array('agiledashboard_planning')));
         }
     }
 
@@ -360,7 +362,7 @@ class AgileDashboardRouter {
         }
 
         $no_breadcrumbs = new BreadCrumb_NoCrumb();
-        $service->displayHeader($this->getHeaderTitle('showTop'), $no_breadcrumbs, $toolbar);
+        $service->displayHeader($this->getHeaderTitle('showTop'), $no_breadcrumbs, $toolbar, array('body_class' => array('agiledashboard_planning')));
         $controller = $this->milestone_controller_factory->getVirtualTopMilestoneController($request);
 
         $this->executeAction($controller, 'showTop', array());

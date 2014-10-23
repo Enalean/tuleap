@@ -73,7 +73,10 @@ module.exports = {
       'vendor/lodash/dist/lodash.min.js',
       'vendor/angular-gettext/dist/angular-gettext.min.js',
       'vendor/angular-ui-router/release/angular-ui-router.js',
-      'vendor/restangular/dist/restangular.js'
+      'vendor/restangular/dist/restangular.js',
+      'vendor/moment/min/moment.min.js',
+      'vendor/moment/locale/fr.js',
+      'vendor/angular-moment/angular-moment.min.js'
     ],
     css: [
     ]

@@ -80,13 +80,17 @@ class ProjectMilestonesResource {
     /**
      * Get the top milestones of a given project
      */
-    public function get(PFUser $user, $project, $limit, $offset) {
+    public function get(PFUser $user, $project, $limit, $offset, $order) {
 
         if (! $this->limitValueIsAcceptable($limit)) {
              throw new RestException(406, 'Maximum value for limit exceeded');
         }
 
-        $all_milestones            = $this->getTopMilestones($user, $project);
+        $all_milestones = $this->getTopMilestones($user, $project);
+        if ($order === 'desc') {
+            $all_milestones = array_reverse($all_milestones);
+        }
+
         $milestones                = array_slice($all_milestones, $offset, $limit);
         $milestone_representations = array();
 

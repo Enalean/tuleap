@@ -269,14 +269,15 @@ class ProjectResource {
      *
      * @url GET {id}/milestones
      *
-     * @param int $id     Id of the project
-     * @param int $limit  Number of elements displayed per page {@from path}
-     * @param int $offset Position of the first element to display {@from path}
+     * @param int    $id     Id of the project
+     * @param int    $limit  Number of elements displayed per page {@from path}
+     * @param int    $offset Position of the first element to display {@from path}
+     * @param string $order  In which order milestones are fetched. Default is asc {@from path}{@choice asc,desc}
      *
      * @return array {@type Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation}
      */
-    protected function getMilestones($id, $limit = 10, $offset = 0) {
-        $milestones = $this->milestones($id, $limit, $offset, Event::REST_GET_PROJECT_MILESTONES);
+    protected function getMilestones($id, $limit = 10, $offset = 0, $order = 'asc') {
+        $milestones = $this->milestones($id, $limit, $offset, $order, Event::REST_GET_PROJECT_MILESTONES);
         $this->sendAllowHeadersForProject();
 
         return $milestones;
@@ -291,7 +292,7 @@ class ProjectResource {
         $this->sendAllowHeadersForProject();
     }
 
-    private function milestones($id, $limit, $offset, $event) {
+    private function milestones($id, $limit, $offset, $order, $event) {
         $project = $this->getProjectForUser($id);
         $result  = array();
 
@@ -302,6 +303,7 @@ class ProjectResource {
                 'project' => $project,
                 'limit'   => $limit,
                 'offset'  => $offset,
+                'order'   => $order,
                 'result'  => &$result,
             )
         );
