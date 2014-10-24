@@ -18,6 +18,7 @@ Version 7.7 (Not released yet)
 
 	== Development ==
 	* Update build system to generate intermediate srpms
+	* Be able to build RPMs in docker containers
 
 Version 7.6 (Monday, October 20th 2014)
 	== Plugins ==
