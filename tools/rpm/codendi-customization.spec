@@ -20,7 +20,7 @@ URL: http://tuleap.net
 Source0: %{PKG_NAME}-%{version}.tar.gz
 Source1: cli_ParametersLocal.dtd
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: zip
+BuildRequires: zip libxslt
 
 %description
 This package provides the documentation, CLI package and themes modifications

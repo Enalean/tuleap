@@ -52,6 +52,8 @@ endif
 
 PKG_NAME=tuleap
 
+DIST=
+
 ifeq ($(strip $(OS)),rhel6)
 SPEC_FILE=tuleap.rhel6.spec
 CUSTOM_SPEC_FILE=customization.rhel6.spec
@@ -60,9 +62,16 @@ SPEC_FILE=tuleap.spec
 CUSTOM_SPEC_FILE=codendi-customization.spec
 endif
 
+.PHONY: all clean rpmprep rpm custom_rpm rpm-all-deps tuleap-all tarball less node srpms dist
+
+.PRECIOUS: $(RPM_TMP) $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz
+
+.SECONDARY:
+
 default: all
 
-all: clean rpmprep rpm custom_rpm rpm-all-deps tuleap-all
+all: srpms
+	rpmbuild --rebuild $(RPM_TMP)/SRPMS/$(PKG_NAME)-$(version)-$(RELEASE)$(DIST).src.rpm $(RPM_TMP)/SRPMS/$(PKG_NAME)-all-deps-$(version)-$(RELEASE)$(DIST).src.rpm $(RPM_TMP)/SRPMS/$(PKG_NAME)-all-$(version)-$(RELEASE)$(DIST).src.rpm $(RPM_TMP)/SRPMS/$(PKG_NAME)-customization-default-$(version)-$(RELEASE)$(DIST).src.rpm
 
 ##
 ## Setup environment
@@ -77,9 +86,10 @@ rpmprep: $(RPM_TMP) ~/.rpmmacros
 	@echo '%_buildroot %{_tmppath}/%{name}-root' >> ~/.rpmmacros
 	@echo '%_sysconfdir /etc' >> ~/.rpmmacros
 	@echo '%php_base $(PHP_BASE)' >> ~/.rpmmacros
+	@echo '%undefine dist' >> ~/.rpmmacros
 
 $(RPM_TMP):
-	@[ -d $@ ] || mkdir -p $@ $@/BUILD $@/RPMS $@/SOURCES $@/SPECS $@/SRPMS $@/TMP
+	[ -d $@ ] || mkdir -p $@ $@/BUILD $@/RPMS $@/SOURCES $@/SPECS $@/SRPMS $@/TMP
 
 ##
 ## Build tarball
@@ -96,7 +106,7 @@ node:
 		bower install --allow-root --config.interactive=false &&\
 		grunt
 
-$(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: less
+$(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep less
 	[ -h $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version) ] || ln -s $(BASE_DIR) $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version)
 	cd $(RPM_TMP)/SOURCES && \
 		{ \
@@ -121,14 +131,14 @@ $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: less
 ## Build RPM
 ##
 
-rpm: tarball $(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-$(version)-$(RELEASE).noarch.rpm
+rpm: tarball $(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-$(version)-$(RELEASE)$(DIST).noarch.rpm
 
-srpms: clean rpmprep tarball $(RPM_TMP)/SRPMS/$(PKG_NAME)-$(version)-$(RELEASE).src.rpm $(RPM_TMP)/SRPMS/$(PKG_NAME)-all-deps-$(version)-$(RELEASE).src.rpm $(RPM_TMP)/SRPMS/$(PKG_NAME)-all-$(version)-$(RELEASE).src.rpm $(RPM_TMP)/SRPMS/$(PKG_NAME)-customization-default-$(version)-$(RELEASE).src.rpm
+srpms: clean rpmprep tarball $(RPM_TMP)/SRPMS/$(PKG_NAME)-$(version)-$(RELEASE)$(DIST).src.rpm $(RPM_TMP)/SRPMS/$(PKG_NAME)-all-deps-$(version)-$(RELEASE)$(DIST).src.rpm $(RPM_TMP)/SRPMS/$(PKG_NAME)-all-$(version)-$(RELEASE)$(DIST).src.rpm $(RPM_TMP)/SRPMS/$(PKG_NAME)-customization-default-$(version)-$(RELEASE)$(DIST).src.rpm
 
-$(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-$(version)-$(RELEASE).noarch.rpm: $(RPM_TMP)/SRPMS/$(PKG_NAME)-$(version)-$(RELEASE).src.rpm
+$(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-$(version)-$(RELEASE)$(DIST).noarch.rpm: $(RPM_TMP)/SRPMS/$(PKG_NAME)-$(version)-$(RELEASE)$(DIST).src.rpm
 	rpmbuild --rebuild $<
 
-$(RPM_TMP)/SRPMS/$(PKG_NAME)-$(version)-$(RELEASE).src.rpm: $(SPEC_FILE)
+$(RPM_TMP)/SRPMS/$(PKG_NAME)-$(version)-$(RELEASE)$(DIST).src.rpm: $(SPEC_FILE) $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz
 	cat $(SPEC_FILE) |\
 		sed -e 's/@@VERSION@@/$(version)/g' |\
 		sed -e 's/@@RELEASE@@/$(RELEASE)/g' |\
@@ -169,10 +179,12 @@ $(RPM_TMP)/SRPMS/$(PKG_NAME)-$(version)-$(RELEASE).src.rpm: $(SPEC_FILE)
 		> $(RPM_TMP)/SPECS/$(SPEC_FILE)
 	rpmbuild -bs $(RPM_TMP)/SPECS/$(SPEC_FILE)
 
-custom_rpm: $(RPM_TMP)/SRPMS/$(PKG_NAME)-customization-default-$(version)-$(RELEASE).src.rpm
-	export DOCBOOK_TOOLS_DIR=$(DOCBOOK_TOOLS_DIR); rpmbuild --rebuild $<
+custom_rpm: $(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-customization-default-$(version)-$(RELEASE)$(DIST).noarch.rpm
 
-$(RPM_TMP)/SRPMS/$(PKG_NAME)-customization-default-$(version)-$(RELEASE).src.rpm: tarball
+$(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-customization-default-$(version)-$(RELEASE)$(DIST).noarch.rpm: $(RPM_TMP)/SRPMS/$(PKG_NAME)-customization-default-$(version)-$(RELEASE)$(DIST).src.rpm
+	rpmbuild --rebuild $<
+
+$(RPM_TMP)/SRPMS/$(PKG_NAME)-customization-default-$(version)-$(RELEASE)$(DIST).src.rpm: $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz
 	cat $(CUSTOM_SPEC_FILE) |\
 		sed -e 's/@@PLATFORM@@/default/' |\
 		sed -e 's/@@SYS_DEFAULT_DOMAIN@@/tuleap.net/' |\
@@ -184,10 +196,12 @@ $(RPM_TMP)/SRPMS/$(PKG_NAME)-customization-default-$(version)-$(RELEASE).src.rpm
 	cp $(BASE_DIR)/src/www/themes/common/images/organization_logo.png $(RPM_TMP)/SOURCES/organization_logo.png
 	rpmbuild -bs $(RPM_TMP)/SPECS/codendi-customization.spec
 
-rpm-all-deps: $(RPM_TMP)/SRPMS/$(PKG_NAME)-all-deps-$(version)-$(RELEASE).src.rpm
+rpm-all-deps: $(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-all-deps-$(version)-$(RELEASE)$(DIST).noarch.rpm
+
+$(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-all-deps-$(version)-$(RELEASE)$(DIST).noarch.rpm: $(RPM_TMP)/SRPMS/$(PKG_NAME)-all-deps-$(version)-$(RELEASE)$(DIST).src.rpm
 	rpmbuild --rebuild $<
 
-$(RPM_TMP)/SRPMS/$(PKG_NAME)-all-deps-$(version)-$(RELEASE).src.rpm: codendi-all-deps.spec
+$(RPM_TMP)/SRPMS/$(PKG_NAME)-all-deps-$(version)-$(RELEASE)$(DIST).src.rpm: codendi-all-deps.spec
 	cat $< |\
 		sed -e 's/@@VERSION@@/$(version)/g' |\
 		sed -e 's/@@PKG_NAME@@/$(PKG_NAME)/g' \
@@ -195,10 +209,12 @@ $(RPM_TMP)/SRPMS/$(PKG_NAME)-all-deps-$(version)-$(RELEASE).src.rpm: codendi-all
 	cp README.all-deps $(RPM_TMP)/SOURCES/
 	rpmbuild -bs $(RPM_TMP)/SPECS/$<
 
-tuleap-all:	$(RPM_TMP)/SRPMS/$(PKG_NAME)-all-$(version)-$(RELEASE).src.rpm
+tuleap-all: $(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-all-$(version)-$(RELEASE)$(DIST).noarch.rpm
+
+$(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-all-$(version)-$(RELEASE)$(DIST).noarch.rpm: $(RPM_TMP)/SRPMS/$(PKG_NAME)-all-$(version)-$(RELEASE)$(DIST).src.rpm
 	rpmbuild --rebuild $<
 
-$(RPM_TMP)/SRPMS/$(PKG_NAME)-all-$(version)-$(RELEASE).src.rpm:	tuleap-all.spec
+$(RPM_TMP)/SRPMS/$(PKG_NAME)-all-$(version)-$(RELEASE)$(DIST).src.rpm:	tuleap-all.spec
 	cat $< |\
 		sed -e 's/@@VERSION@@/$(version)/g' |\
 		sed -e 's/@@PKG_NAME@@/$(PKG_NAME)/g' \
@@ -210,28 +226,3 @@ clean:
 	-rm -Rf $(RPM_TMP)/*
 	@[ ! -d $(RPM_TMP) ] || rmdir $(RPM_TMP)
 	-rm -Rf ~/.rpmmacros
-
-dist:
-	mkdir -p $(RPM_TMP)/yum
-	cp -ar $(RPM_TMP)/RPMS/* $(RPM_TMP)/yum
-	createrepo $(RPM_TMP)/yum
-
-build-depends: /usr/bin/rpmbuild /usr/bin/createrepo /usr/bin/zip $(DOCBOOK_TOOLS_DIR)
-
-/usr/bin/rpmbuild:
-	yum -y install rpm-build
-
-/usr/bin/createrepo:
-	yum -y install createrepo
-
-/usr/bin/zip:
-	yum -y install zip
-
-$(DOCBOOK_TOOLS_DIR):
-	@echo "Using DOCBOOK_TOOLS_DIR=$@"
-	@[ ! -d $@ ] && echo "DOCBOOK_TOOLS_DIR is missing, I suggest you take tarball from $(DOCBOOKTARBALL)" ; exit 1
-
-# Legacy naming
-codendi: rpm
-custom_codendi: custom_rpm
-codendi-all-deps: rpm-all-deps
