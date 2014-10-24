@@ -662,6 +662,22 @@ class Tracker_FormElementFactory {
 
     /**
      * @param Tracker $tracker
+     * @return Tracker_FormElement_Field_Text[] All text formElements used by the tracker
+     */
+    public function getUsedTextFieldsUserCanRead(Tracker $tracker, PFUser $user) {
+        $fields = $this->getUsedFormElementsByType($tracker, array('text', 'string', 'ref'));
+
+        foreach ($fields as $key => $field) {
+            if (! $field->userCanRead($user)) {
+                unset($fields[$key]);
+            }
+        }
+
+        return $fields;
+    }
+
+    /**
+     * @param Tracker $tracker
      * @param int $field_id
      * @return Tracker_FormElement | void
      */

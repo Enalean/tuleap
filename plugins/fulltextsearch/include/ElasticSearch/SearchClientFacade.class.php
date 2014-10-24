@@ -56,11 +56,11 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
      *
      * @return ElasticSearch_SearchResultCollection
      */
-    public function searchFollowups($request, array $facets, $offset, PFUser $user) {
-        $terms   = trim($request->getValidated('search_followups', 'string', ''));
+    public function searchInFields(array $fields, $request, $offset) {
+        $terms   = trim($request->getValidated('search_fulltext', 'string', ''));
         $results = array();
         if ($terms) {
-            $query        = $this->getSearchFollowupsQuery($terms, $facets, $offset, $user);
+            $query        = $this->getSearchInFieldsQuery($terms, $fields, $offset);
             $searchResult = $this->client->search($query);
 
             $results = $this->result_factory->getChangesetIds($searchResult);
@@ -91,12 +91,13 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
     /**
      * @return array to be used for querying ES
      */
-    protected function getSearchFollowupsQuery($terms, array $facets, $offset, PFUser $user) {
+    protected function getSearchInFieldsQuery($terms, $fields, $offset) {
         $query = array(
             'from' => (int)$offset,
             'query' => array(
-                'query_string' => array(
-                    'query' => $terms
+                'multi_match' => array(
+                    'query'  => $terms,
+                    'fields' => $fields
                 )
             ),
             'fields' => array(

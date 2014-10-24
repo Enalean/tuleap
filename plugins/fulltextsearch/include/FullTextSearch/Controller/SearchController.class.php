@@ -36,22 +36,22 @@ class FullTextSearch_Controller_Search extends MVC2_PluginController {
         $this->client = $client;
     }
 
-    public function search($request = NULL) {
-        $terms  = $this->request->getValidated('words', 'string', '');
-        $facets = $this->getFacets();
+    public function searchSpecial(array $fields, $request = null) {
         $offset = $this->request->getValidated('offset', 'uint', 0);
-        if(!empty($request)) {
-            /* This request should return a simple array with artifact ids as keys and changesets ids as values
-            then delegate search result presentation to TV5 report */
-            $search_result = array();
-            try {
-                $search_result = $this->client->searchFollowups($request, $facets, $offset, $this->request->getCurrentUser());
-            } catch (ElasticSearchTransportHTTPException $e) {
-                echo $e->getMessage();
-            }
-            return $search_result;
-        } else {
+
+        if (empty($request)) {
+            return array();
         }
+
+        /* This request should return a simple array with artifact ids as keys and changesets ids as values
+        then delegate search result presentation to TV5 report */
+        try {
+            return $this->client->searchInFields($fields, $request, $offset);
+        } catch (ElasticSearchTransportHTTPException $e) {
+            echo $e->getMessage();
+        }
+
+        return array();
     }
 
     public function siteSearch(array $params) {
