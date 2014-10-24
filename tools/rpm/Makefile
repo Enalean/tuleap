@@ -96,7 +96,7 @@ node:
 		bower install --allow-root --config.interactive=false &&\
 		grunt
 
-$(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: less node
+$(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: less
 	[ -h $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version) ] || ln -s $(BASE_DIR) $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version)
 	cd $(RPM_TMP)/SOURCES && \
 		{ \
