@@ -19,7 +19,16 @@
  */
 
 /**
+ * This facade is used for all types of items such as wiki, docman or trackers.
+ *
+ * If you want to figure-out what $this->client is doing then
  * @see https://github.com/nervetattoo/elasticsearch
+ *
+ * Here's a few examples of the curl that is going on behind
+
+ * e.g. get an artifact   : curl -u superuser:Adm1n "localhost:9200/tracker/[tracker_id]/[artifact_id]/?pretty"
+ * e.g. update an artifact: curl -u superuser:Adm1n -XPOST 'http://localhost:9200/tracker/[tracker_id]/[artifact_id]' -d '{big fat JSON that corresponds to the item}'
+ *
  */
 class ElasticSearch_IndexClientFacade extends ElasticSearch_ClientFacade implements FullTextSearch_IIndexDocuments {
 

@@ -28,9 +28,18 @@ class RequestTrackerDataFactory_TrackerMappingTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+
+        $text_field = mock('Tracker_FormElement_Field_Text');
+        stub($text_field)->getName()->returns('title');
+        stub($text_field)->getId()->returns(1001);
+
+        $form_element_factory = mock('Tracker_FormElementFactory');
+        stub($form_element_factory)->getUsedTextFields()->returns(array($text_field));
+
         $this->tracker      = aTracker()->withId(455)->build();
         $this->data_factory = new ElasticSearch_1_2_RequestTrackerDataFactory(
-            mock('Tracker_Permission_PermissionsSerializer')
+            mock('Tracker_Permission_PermissionsSerializer'),
+            $form_element_factory
         );
     }
 
@@ -99,6 +108,17 @@ class RequestTrackerDataFactory_TrackerMappingTest extends TuleapTestCase {
             )
         );
     }
+
+    public function itHasAdditionalFields() {
+        $mapping = $this->data_factory->getTrackerMapping($this->tracker);
+        $this->assertEqual(
+            $mapping['455']['properties']['title'],
+            array(
+                'type'  => 'string',
+            )
+        );
+    }
+
 }
 
 abstract class RequestTrackerDataFactory_ArtifactBaseFormatting extends TuleapTestCase {
@@ -120,8 +140,12 @@ abstract class RequestTrackerDataFactory_ArtifactBaseFormatting extends TuleapTe
         stub($permissions_serializer)->getLiteralizedUserGroupsThatCanViewTracker($this->artifact)->returns('@site_active, @project_members');
         stub($permissions_serializer)->getLiteralizedUserGroupsThatCanViewArtifact($this->artifact)->returns('@ug_114, @project_members');
 
+        $form_element_factory = mock('Tracker_FormElementFactory');
+        stub($form_element_factory)->getUsedTextFields()->returns(array());
+
         $this->data_factory = new ElasticSearch_1_2_RequestTrackerDataFactory(
-            $permissions_serializer
+            $permissions_serializer,
+            $form_element_factory
         );
     }
 }
