@@ -1,0 +1,30 @@
+Hi Manuel,
+
+I think pagination would go a long way in solving this. Seeing the 10 (or however many) most recent changes would be totally reasonable and should scale well. I think that’s probably the best approach.
+
+-Isaac
+
+From: tuleap-devel-bounces@tuleap.net [mailto:tuleap-devel-bounces@tuleap.net] On Behalf Of Vacelet, Manuel
+Sent: September-01-14 7:47 AM
+To: tuleap-devel@tuleap.net
+Subject: Re: [Tuleap-devel] Follows ups in tracker release
+
+Hi Isaac,
+
+On Wed, Aug 27, 2014 at 8:07 PM, Isaac Campbell <isaac.campbell@ericsson.com<mailto:isaac.campbell@ericsson.com>> wrote:
+Hi,
+
+We have a project with a large number of Follow-Ups, approx. 120. The main page content loads quickly, but then takes many minutes to slowly load the followups at the bottom of the page (which it seems to load one-by-one).
+
+There is probably a performance imporvement to be made here.
+
+
+There is a ‘Display Settings’ option for ‘Changes are Displayed’: is it possible to make this disabled by default or stop the changes from being loaded unless the user wants to see each change?
+
+This can be done is the code (ie. not by configuration)
+But I'm wondering if it's the right option, maybe the issue here is that it's not a good idea to display 120 (or more) follow-up at once.
+
+Maybe it would be better to do an infinit scroll (ala twitter/FB/...) or a simple pagination to reduce the amount of element to display.
+
+What do you think ?
+

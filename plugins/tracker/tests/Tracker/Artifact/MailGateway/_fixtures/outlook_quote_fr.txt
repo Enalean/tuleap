@@ -1,0 +1,22 @@
+Non, il n’y a pas de log mysql.
+
+De : Tuleap [mailto:noreply@example.com]
+Envoyé : jeudi 4 septembre 2014 09:11
+À : Sender
+Objet : [sla #12358] php_laucher.php .../codendi_daily.php renvoie un message d'erreur : DB error...DataAccessObject.class.php152
+
+[Image supprimée par l'expéditeur. Tuleap]
+
+_________________________________________________________________________________________________________________________
+
+Ce message et ses pieces jointes peuvent contenir des informations confidentielles ou privilegiees et ne doivent donc
+pas etre diffuses, exploites ou copies sans autorisation. Si vous avez recu ce message par erreur, veuillez le signaler
+a l'expediteur et le detruire ainsi que les pieces jointes. Les messages electroniques etant susceptibles d'alteration,
+Orange decline toute responsabilite si ce message a ete altere, deforme ou falsifie. Merci.
+
+This message and its attachments may contain confidential or privileged information that may be protected by law;
+they should not be distributed, used or copied without authorisation.
+If you have received this email in error, please notify the sender and delete this message and its attachments.
+As emails may be altered, Orange is not liable for messages that have been modified, changed or falsified.
+Thank you.
+

@@ -24,12 +24,42 @@ class Tracker_Artifact_MailGateway_CitationStripper {
     const HTML_CITATION_PATTERN = '%<blockquote[^>]*>.*</blockquote>%';
     const DEFAULT_REPLACEMENT   = "\n[citation removed]";
 
+    private $outlook_header = array(
+        'en' => array(
+            'from'    => 'From:',
+            'sent'    => 'Sent:',
+            'to'      => 'To:',
+            'subject' => 'Subject:',
+        ),
+        'fr' => array(
+            'from'    => 'De :',
+            'sent'    => 'Envoyé :',
+            'to'      => 'À :',
+            'subject' => 'Objet :',
+        ),
+    );
+
     public function stripText($mail_content) {
+        return $this->stripOutlookTextQuote(
+            $this->stripStandardTextQuote($mail_content)
+        );
+    }
+
+    private function stripStandardTextQuote($mail_content) {
         return preg_replace(
             self::TEXT_CITATION_PATTERN,
             self::DEFAULT_REPLACEMENT,
             $mail_content
         );
+    }
+
+    private function stripOutlookTextQuote($mail_content) {
+        if (Config::get('sys_strip_outlook') == 1) {
+            return $this->stripOutlook(
+                $this->stripOutlook($mail_content, 'en'),
+                'fr'
+            );
+        }
     }
 
     public function stripHTML($mail_content) {
@@ -64,5 +94,18 @@ class Tracker_Artifact_MailGateway_CitationStripper {
         }
 
         return $content;
+    }
+
+    private function stripOutlook($body, $lang) {
+        $pos_from    = strpos($body, "\r\n" . $this->outlook_header[$lang]['from']);
+        $pos_sent    = strpos($body, "\r\n" . $this->outlook_header[$lang]['sent'],    $pos_from);
+        $pos_to      = strpos($body, "\r\n" . $this->outlook_header[$lang]['to'],      $pos_sent);
+        $pos_subject = strpos($body, "\r\n" . $this->outlook_header[$lang]['subject'], $pos_to);
+        $pos_body    = strpos($body, "\r\n\r\n", $pos_subject);
+
+        if ($pos_from !== false && $pos_sent !== false && $pos_to !== false && $pos_subject !== false && $pos_body !== false) {
+            return substr($body, 0, $pos_from);
+        }
+        return $body;
     }
 }

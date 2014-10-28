@@ -1,0 +1,1 @@
+Non, il n’y a pas de log mysql.

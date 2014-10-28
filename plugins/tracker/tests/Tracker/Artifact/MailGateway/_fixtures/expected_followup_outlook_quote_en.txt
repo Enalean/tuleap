@@ -1,0 +1,5 @@
+Hi Manuel,
+
+I think pagination would go a long way in solving this. Seeing the 10 (or however many) most recent changes would be totally reasonable and should scale well. I think that’s probably the best approach.
+
+-Isaac
