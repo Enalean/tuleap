@@ -57,20 +57,35 @@ class ElasticSearch_1_2_RequestTrackerDataFactory {
 
     private function getBaseArtifact(Tracker_Artifact $artifact) {
         $last_changeset = $artifact->getLastChangeset();
+        $last_changeset_id = ($last_changeset) ? $last_changeset->getId() : -1;
 
         $properties = array(
             'id'                => $artifact->getId(),
             'group_id'          => $artifact->getTracker()->getGroupId(),
             'tracker_id'        => $artifact->getTrackerId(),
-            'last_changeset_id' => $last_changeset->getId(),
+            'last_changeset_id' => $last_changeset_id,
             'tracker_ugroups'   => $this->permissions_serializer->getLiteralizedUserGroupsThatCanViewTracker($artifact),
             'artifact_ugroups'  => $this->permissions_serializer->getLiteralizedUserGroupsThatCanViewArtifact($artifact),
             'followup_comments' => array(),
         );
 
-        $text_fields = $this->form_element_factory->getUsedTextFields($artifact->getTracker());
+        if ($last_changeset) {
+            $properties = array_merge($properties, $this->getTextFieldsValuesForProperties($artifact->getTracker(), $last_changeset));
+        }
+
+        return $properties;
+    }
+
+    private function getTextFieldsValuesForProperties(Tracker $tracker, Tracker_Artifact_Changeset $last_changeset) {
+        $properties  = array();
+        $text_fields = $this->form_element_factory->getUsedTextFields($tracker);
+
         foreach ($text_fields as $text_field) {
-            $properties[$text_field->getName()] = $last_changeset->getValue($text_field)->getValue();
+            $last_changeset_value = $last_changeset->getValue($text_field);
+
+            if ($last_changeset->getValue($text_field) && $last_changeset_value) {
+                $properties[$text_field->getName()] = $last_changeset_value->getValue();
+            }
         }
 
         return $properties;

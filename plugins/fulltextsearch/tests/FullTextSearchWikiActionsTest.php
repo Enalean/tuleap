@@ -40,7 +40,7 @@ class FullTextSearchWikiActionsTests extends TuleapTestCase {
 
         $this->client = partial_mock(
             'ElasticSearch_IndexClientFacade',
-            array('index', 'update', 'delete', 'deleteForProject', 'getMapping', 'setMapping', 'getIndexedElement', 'getIndexedType')
+            array('index', 'update', 'delete', 'deleteType', 'getMapping', 'setMapping', 'getIndexedElement', 'getIndexedType')
         );
 
         $this->wiki_page = mock('WikiPage');
@@ -210,7 +210,7 @@ class FullTextSearchWikiActionsTests extends TuleapTestCase {
         );
 
         expect($this->client)->getIndexedtype(200)->once();
-        expect($this->client)->deleteForProject(200)->once();
+        expect($this->client)->deleteType(200)->once();
         expect($this->client)->index(200, 101, '*')->at(0);
         expect($this->client)->index(200, 102, '*')->at(1);
 

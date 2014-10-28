@@ -44,6 +44,7 @@ class fulltextsearchPlugin extends Plugin {
         SystemEvent_FULLTEXTSEARCH_DOCMAN_WIKI_INDEX::NAME,
         SystemEvent_FULLTEXTSEARCH_DOCMAN_WIKI_UPDATE::NAME,
         SystemEvent_FULLTEXTSEARCH_TRACKER_ARTIFACT_UPDATE::NAME,
+        SystemEvent_FULLTEXTSEARCH_TRACKER_REINDEX_PROJECT::NAME,
         SystemEvent_FULLTEXTSEARCH_WIKI_INDEX::NAME,
         SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE::NAME,
         SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE_PERMISSIONS::NAME,
@@ -207,6 +208,7 @@ class fulltextsearchPlugin extends Plugin {
                 new BackendLogger()
             ),
             Tracker_ArtifactFactory::instance(),
+            TrackerFactory::instance(),
             $this
         );
     }
@@ -625,7 +627,8 @@ class fulltextsearchPlugin extends Plugin {
             $this->getRequest(),
             $this->getSearchAdminClient(),
             $this->getDocmanSystemEventManager(),
-            $this->getWikiSystemEventManager()
+            $this->getWikiSystemEventManager(),
+            $this->getTrackerSystemEventManager()
         );
     }
 
@@ -679,5 +682,6 @@ class fulltextsearchPlugin extends Plugin {
 
         $controller->reindexDocman($project_id);
         $controller->reindexWiki($project_id);
+        $controller->reindexTrackers($project_id);
     }
 }

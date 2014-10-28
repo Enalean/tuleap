@@ -21,7 +21,7 @@
 /**
  * Controller for site admin views
  */
-class FullTextSearch_Controller_Admin  extends FullTextSearch_Controller_Search {
+class FullTextSearch_Controller_Admin extends FullTextSearch_Controller_Search {
 
     /* FullTextSearch_DocmanSystemEventManager */
     private $docman_system_event_manager;
@@ -29,16 +29,21 @@ class FullTextSearch_Controller_Admin  extends FullTextSearch_Controller_Search 
     /* FullTextSearch_WikiSystemEventManager */
     private $wiki_system_event_manager;
 
+    /* FullTextSearch_TrackerSystemEventManager */
+    private $tracker_system_event_manager;
+
     public function __construct(
         Codendi_Request $request,
         FullTextSearch_ISearchDocumentsForAdmin $client,
         FullTextSearch_DocmanSystemEventManager $docman_system_event_manager,
-        FullTextSearch_WikiSystemEventManager $wiki_system_event_manager
+        FullTextSearch_WikiSystemEventManager $wiki_system_event_manager,
+        FullTextSearch_TrackerSystemEventManager $tracker_system_event_manager
     ) {
         parent::__construct($request, $client);
 
-        $this->docman_system_event_manager = $docman_system_event_manager;
-        $this->wiki_system_event_manager = $wiki_system_event_manager;
+        $this->docman_system_event_manager  = $docman_system_event_manager;
+        $this->wiki_system_event_manager    = $wiki_system_event_manager;
+        $this->tracker_system_event_manager = $tracker_system_event_manager;
     }
 
     public function getIndexStatus() {
@@ -60,6 +65,10 @@ class FullTextSearch_Controller_Admin  extends FullTextSearch_Controller_Search 
 
     public function reindexWiki($group_id) {
         $this->wiki_system_event_manager->queueWikiProjectReindexation($group_id);
+    }
+
+    public function reindexTrackers($group_id) {
+        $this->tracker_system_event_manager->queueTrackersProjectReindexation($group_id);
     }
 
     private function getProjectPresenters($projects) {

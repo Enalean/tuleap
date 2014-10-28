@@ -118,7 +118,7 @@ class FullTextSearchWikiActions {
 
         try{
             $this->client->getIndexedType($project_id);
-            $this->client->deleteForProject($project_id);
+            $this->client->deleteType($project_id);
 
         } catch (ElasticSearch_TypeNotIndexed $exception) {
             $this->logger->debug('[Wiki] ElasticSearch: project #' . $project_id . ' not indexed, nothing to delete');
