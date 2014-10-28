@@ -1,3 +1,9 @@
+Version 7.6-2 (Tuesday, October 28th 2014)
+	== Bug Fix ==
+	* request #7503: CI job bad parameters with svn
+	* request #7534: Fix typo in artifact.rnc
+	* request #7526: Missing attrs in ldap queries
+
 Version 7.6 (Monday, October 20th 2014)
 	== Plugins ==
 	* ldap 3.53
