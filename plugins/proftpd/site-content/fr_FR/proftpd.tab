@@ -3,7 +3,7 @@ plugin_proftpd	descriptor_description	Gestion de Proftpd en tant que serveur FTP
 plugin_proftpd	descriptor_name	Proftpd
 
 plugin_proftpd	file_column_name	Fichier
-plugin_proftpd	size_column_name	Taille (KB)
+plugin_proftpd	size_column_name	Taille (Octets)
 plugin_proftpd	date_added_column_name	Date d'ajout
 plugin_proftpd	cannot_open_project	Impossible d'ouvrir le projet
 
