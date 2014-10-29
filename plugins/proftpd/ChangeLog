@@ -1,3 +1,6 @@
+Version 0.18 - Tuleap 7.7
+    * Fix request #7573: sftp browser information: wrong size unit shown
+
 Version 0.17 - Tuleap 7.6
     * Refactoring: plugins should not leak into the core
 
