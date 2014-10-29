@@ -2,6 +2,7 @@ Version 7.7 (Not released yet)
 
 	== Features ==
 	* story #7505: select the news I want to display in widget 'latest news'
+	* story #7326: see list of repositories mirrored
 
 	== Bug Fix ==
 	* request #7526: Missing attrs in ldap queries
@@ -9,7 +10,7 @@ Version 7.7 (Not released yet)
 
 	== Plugins ==
 	* tracker: 5.499
-	* git: 3.125
+	* git: 3.126
 	* statistics: 0.39
 	* agiledashboard: 1.80
 
