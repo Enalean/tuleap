@@ -2,9 +2,7 @@
 
 set -e
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
-options=`getopt -o h -l output-dir: -- "$@"`
+options=`getopt -o h -l output-dir:,src-dir: -- "$@"`
 
 eval set -- "$options"
 while true
@@ -13,6 +11,9 @@ do
     --output-dir)
         RPM_DIR=$2;
         shift 2;;
+    --src-dir)
+        SRC_DIR=$2;
+        shift 2;;
     --)
         shift 1; break ;;
     *)
@@ -20,15 +21,15 @@ do
     esac
 done
 
-if [ -z "$RPM_DIR" ]; then
-    echo "You must specify --output-dir argument";
+if [ -z "$RPM_DIR" ] || [ -z "$SRC_DIR" ]; then
+    echo "You must specify --output-dir and --src-dir arguments";
     exit 1;
 fi
 
 docker rm srpms-builder || true
 docker rm rpm-builder   || true
 
-docker run -ti --name srpms-builder -v $DIR/../..:/tuleap enalean/tuleap-buildsrpms
+docker run -ti --name srpms-builder -v $SRC_DIR:/tuleap enalean/tuleap-buildsrpms
 
 docker run -ti --name rpm-builder --volumes-from srpms-builder enalean/tuleap-buildrpms:centos5 --php php53 --folder rhel5
 docker cp rpm-builder:/tmp/build/RPMS/noarch $RPM_DIR/rhel5-53
