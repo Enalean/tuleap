@@ -1,3 +1,6 @@
+Version 5.500 - Tuleap 7.7
+    * Fix request #7541: TV3 to TV5 : bad path in attachments path migration
+
 Version 5.499 - Tuleap 7.7
     * story #7508: Fetch all to
 

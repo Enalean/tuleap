@@ -7,9 +7,10 @@ Version 7.7 (Not released yet)
 	== Bug Fix ==
 	* request #7526: Missing attrs in ldap queries
 	* request #7503: CI job bad parameters with svn
+	* request #7541: TV3 to TV5 : bad path in attachments path migration
 
 	== Plugins ==
-	* tracker: 5.499
+	* tracker: 5.500
 	* git: 3.126
 	* statistics: 0.39
 	* agiledashboard: 1.80
