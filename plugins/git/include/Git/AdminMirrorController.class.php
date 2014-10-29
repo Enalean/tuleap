@@ -45,19 +45,60 @@ class Git_AdminMirrorController {
         }
     }
 
-    public function display() {
+    public function display(Codendi_Request $request) {
         $title    = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
 
-        $admin_presenter = new Git_AdminMirrorListPresenter(
+        switch ($request->get('action')) {
+            case 'list-repositories':
+                $presenter = $this->getListRepositoriesPresenter($request);
+                break;
+            default:
+                $presenter = $this->getAllMirrorsPresenter($title);
+                break;
+
+        }
+        $GLOBALS['HTML']->header(array('title' => $title, 'selected_top_tab' => 'admin'));
+        $renderer->renderToPage($presenter::TEMPLATE, $presenter);
+        $GLOBALS['HTML']->footer(array());
+    }
+
+    private function getAllMirrorsPresenter($title) {
+        return new Git_AdminMirrorListPresenter(
             $title,
             $this->csrf,
-            $this->git_mirror_mapper->fetchAll()
+            $this->getMirrorPresenters($this->git_mirror_mapper->fetchAll())
         );
+    }
 
-        $GLOBALS['HTML']->header(array('title' => $title, 'selected_top_tab' => 'admin'));
-        $renderer->renderToPage('admin-plugin', $admin_presenter);
-        $GLOBALS['HTML']->footer(array());
+    /**
+     * @param Git_Mirror_Mirror[] $mirrors
+     * @return array
+     */
+    private function getMirrorPresenters(array $mirrors) {
+        $mirror_presenters = array();
+        foreach($mirrors as $mirror) {
+            $mirror_presenters[] = array(
+                'id'                     => $mirror->id,
+                'url'                    => $mirror->url,
+                'owner_id'               => $mirror->owner_id,
+                'owner_name'             => $mirror->owner_name,
+                'ssh_key_value'          => $mirror->ssh_key,
+                'ssh_key_ellipsis_value' => substr($mirror->ssh_key, 0, 40).'...'.substr($mirror->ssh_key, -40),
+            );
+        }
+        return $mirror_presenters;
+    }
+
+    private function getListRepositoriesPresenter(Codendi_Request $request) {
+        $mirror_id = $request->get('mirror_id');
+
+        $mirror = $this->git_mirror_mapper->fetch($mirror_id);
+
+        return new Git_AdminMRepositoryListPresenter(
+            $mirror->url,
+            $this->git_mirror_mapper->fetchRepositoriesPerMirrorPresenters($mirror)
+        );
     }
 
     private function createMirror(Codendi_Request $request) {

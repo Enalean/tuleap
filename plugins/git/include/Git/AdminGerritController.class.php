@@ -53,7 +53,7 @@ class Git_AdminGerritController {
         }
     }
 
-    public function display() {
+    public function display(Codendi_Request $request) {
         $title    = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
 

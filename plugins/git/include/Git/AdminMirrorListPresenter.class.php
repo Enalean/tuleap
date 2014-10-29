@@ -20,6 +20,8 @@
 
 class Git_AdminMirrorListPresenter extends Git_AdminMirrorPresenter {
 
+    const TEMPLATE = 'admin-plugin';
+
     public $see_all = true;
 
     public $list_of_mirrors;
@@ -53,6 +55,10 @@ class Git_AdminMirrorListPresenter extends Git_AdminMirrorPresenter {
 
     public function pwd_label() {
         return $GLOBALS['Language']->getText('plugin_git','pwd_label');
+    }
+
+    public function mirrored_repo_label() {
+        return $GLOBALS['Language']->getText('plugin_git','mirrored_repo_label');
     }
 
     public function list_of_mirrors_not_empty() {
