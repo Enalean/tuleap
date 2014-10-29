@@ -21,6 +21,7 @@ Version 7.7 (Not released yet)
 	* Update build system to generate intermediate srpms
 	* Be able to build RPMs in docker containers
 	* set src-dir as parameter in docker_generate_package script
+	* adding a Makefile target and removing -t option for CI purpose
 
 Version 7.6 (Monday, October 20th 2014)
 	== Plugins ==
