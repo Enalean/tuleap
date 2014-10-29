@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AgileDashboard Planning\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2014-10-21 14:53+0100\n"
+"PO-Revision-Date: 2014-10-28 14:58+0100\n"
 "Last-Translator: Benjamin Dauton <benjamin.dauton@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -17,11 +17,52 @@ msgstr ""
 "X-Generator: Poedit 1.6.9\n"
 
 #: src/app/planning.tpl.html
+msgid "Burndown"
+msgstr "Burndown"
+
+#: src/app/planning.tpl.html
+msgid "Capacity:"
+msgstr "Capacité:"
+
+#: src/app/planning.tpl.html
+msgid "Content"
+msgstr "Contenu"
+
+#: src/app/planning.tpl.html
+msgid "Initial effort:"
+msgstr "Effort estimé:"
+
+#: src/app/planning.tpl.html
+msgid "Milestones"
+msgstr "Jalons"
+
+#: src/app/planning.tpl.html
+msgid "N/A"
+msgstr "N/A"
+
+#: src/app/planning.tpl.html
+msgid "Planning"
+msgstr "Planification"
+
+#: src/app/planning.tpl.html
+msgid "There is no backlog item yet."
+msgstr "Aucun élément"
+
+#: src/app/planning.tpl.html
 msgid "To be planned"
 msgstr "A planifier"
 
-#: src/app/planning.tpl.html
+#: src/app/backlog-item/backlog-item.tpl.html
 msgid "{{ backlog_item.initial_effort }} pt"
 msgid_plural "{{ backlog_item.initial_effort }} pts"
 msgstr[0] "{{ backlog_item.initial_effort }} pt"
 msgstr[1] "{{ backlog_item.initial_effort }} pts"
+
+#~ msgid "<i class=\"icon-bar-chart\"></i> Burndown"
+#~ msgstr "<i class=\"icon-bar-chart\"></i> Burndown"
+
+#~ msgid "<i class=\"icon-list-ul\"></i> Content"
+#~ msgstr "<i class=\"icon-list-ul\"></i> Contenu"
+
+#~ msgid "<i class=\"icon-signin\"></i> Planning"
+#~ msgstr "<i class=\"icon-signin\"></i> Planification"

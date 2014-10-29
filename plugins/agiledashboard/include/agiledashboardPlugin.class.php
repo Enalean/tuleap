@@ -633,7 +633,8 @@ class AgileDashboardPlugin extends Plugin {
             $user,
             $params['project'],
             $params['limit'],
-            $params['offset']
+            $params['offset'],
+            $params['order']
         );
     }
 

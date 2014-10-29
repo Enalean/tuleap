@@ -1,0 +1,150 @@
+div.milestones {
+
+    > fieldset.milestone {
+        padding: 0 0 1px;
+        margin-bottom: 20px;
+        background: #FFFFFF;
+        border-radius: 3px;
+        box-shadow: inset 1px 0 #E9E9E9, inset 0px -1px #E9E9E9, inset -1px 0 #E9E9E9;
+
+        > legend {
+            padding: 0 10px 0 30px;
+            margin-bottom: 0;
+            font-size: 1.2em;
+            background: #FFF url('/themes/common/images/toggle-fontawesome-minus.png') no-repeat 10px 14px;
+            border-top: 1px solid #E9E9E9;
+            border-right: 1px solid #E9E9E9;
+            border-left: 1px solid #E9E9E9;
+            border-bottom: 2px solid #B2B2B2;
+            border-top-left-radius: 3px;
+            border-top-right-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.1s linear;
+
+            &:hover {
+                background-color: #FAFAFA;
+                transition: background-color 0.1s linear;
+            }
+
+            > span.date {
+                float: right;
+                font-size: 0.7em;
+                color: #7F7F7F;
+            }
+
+            > span.status {
+                float: right;
+                position: relative;
+                top: 10px;
+                margin: 0 0 0 10px;
+
+                &.open {
+                    background-color: #6AB537;
+                }
+            }
+        }
+
+        > div.content {
+            padding: 0 1px;
+
+            > div.info {
+                margin: 0 0 10px;
+                padding: 6px 10px 4px;
+                background: #F2F2F2;
+                box-shadow: 0px 1px 0px 0px #E5E5E5;
+
+                > span.capacity, > span.initial-effort {
+                    font-size: 0.9em;
+                    color: #7F7F7F;
+                }
+
+                > span.capacity-value, > span.initial-effort-value {
+                    font-size: 1em;
+                    font-weight: 700;
+                    color: #555;
+                    margin: 0 15px 0 0;
+                }
+
+                > span.initial-effort-value {
+                    color: #6AB537;
+
+                    &.non-applicable {
+                        color: #555;
+                    }
+
+                    &.higher {
+                        color: #DD0000;
+                    }
+                }
+
+                > ul {
+                    margin: 0;
+                    float: right;
+
+                    > li {
+                        float: left;
+                        list-style-type: none;
+                        margin: 0 15px 0 0;
+                        font-size: 0.9em;
+
+                        &:last-child {
+                            margin: 0;
+                        }
+
+                        > a {
+                            color: #444444;
+                            transition: all 0.05s linear;
+
+                            &:hover {
+                                text-decoration: none;
+                                color: #888888;
+                            }
+                        }
+                    }
+                }
+            }
+
+            > p.empty-milestone {
+                padding: 20px 0;
+                color: #C8C8C8;
+                text-align: center;
+                font-size: 0.9em;
+                font-style: italic;
+            }
+
+            > .loading {
+                margin: 0 0 10px;
+            }
+
+            > ul.backlog-items {
+                margin: 12px 10px;
+            }
+        }
+
+        &.collapsed {
+            box-shadow: none;
+
+            > legend {
+                border-bottom: 1px solid #E9E9E9;
+                border-bottom-left-radius: 3px;
+                border-bottom-right-radius: 3px;
+                background: #FFF url('/themes/common/images/toggle-fontawesome-plus.png') no-repeat 10px center;
+
+                &:hover {
+                    background-color: #FAFAFA;
+                    transition: background-color 0.1s linear;
+                }
+            }
+
+            > div.content {
+                overflow: hidden;
+                height: 0;
+
+                div.type-border {
+                    display: none;
+                }
+            }
+        }
+    }
+
+}

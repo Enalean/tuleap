@@ -251,7 +251,7 @@ class MilestoneResource {
      * @throws 403
      * @throws 404
      */
-    public function optionsSubmilestones($id) {
+    public function optionsMilestones($id) {
         $this->sendAllowHeaderForSubmilestones();
     }
 
@@ -263,14 +263,15 @@ class MilestoneResource {
      *
      * @url GET {id}/milestones
      *
-     * @param int $id Id of the milestone
+     * @param int    $id Id of the milestone
+     * @param string $order  In which order milestones are fetched. Default is asc {@from path}{@choice asc,desc}
      *
      * @return Array {@type Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation}
      *
      * @throws 403
      * @throws 404
      */
-    protected function getSubmilestones($id) {
+    protected function getMilestones($id, $order = 'asc') {
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
         $this->sendAllowHeaderForSubmilestones();
@@ -278,7 +279,8 @@ class MilestoneResource {
         $event_manager     = $this->event_manager;
         $milestone_factory = $this->milestone_factory;
         $strategy_factory  = $this->backlog_strategy_factory;
-        return array_map(
+
+        $milestones = array_map(
             function (Planning_Milestone $milestone) use ($user, $event_manager, $milestone_factory, $strategy_factory) {
                 $milestone_representation = new MilestoneRepresentation();
                 $milestone_representation->build(
@@ -305,6 +307,12 @@ class MilestoneResource {
             },
             $this->milestone_factory->getSubMilestones($user, $milestone)
         );
+
+        if ($order === 'desc') {
+            return array_reverse($milestones);
+        }
+
+        return $milestones;
     }
 
     /**

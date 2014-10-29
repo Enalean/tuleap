@@ -4,10 +4,42 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: src/app/planning.tpl.html
-msgid "To be planned"
+msgid "Burndown"
 msgstr ""
 
 #: src/app/planning.tpl.html
+msgid "Capacity:"
+msgstr ""
+
+#: src/app/planning.tpl.html
+msgid "Content"
+msgstr ""
+
+#: src/app/planning.tpl.html
+msgid "Initial effort:"
+msgstr ""
+
+#: src/app/planning.tpl.html
+msgid "Milestones"
+msgstr ""
+
+#: src/app/planning.tpl.html
+msgid "N/A"
+msgstr ""
+
+#: src/app/planning.tpl.html
+msgid "Planning"
+msgstr ""
+
+#: src/app/planning.tpl.html
+msgid "There is no backlog item yet."
+msgstr ""
+
+#: src/app/planning.tpl.html
+msgid "To be planned"
+msgstr ""
+
+#: src/app/backlog-item/backlog-item.tpl.html
 msgid "{{ backlog_item.initial_effort }} pt"
 msgid_plural "{{ backlog_item.initial_effort }} pts"
 msgstr[0] ""

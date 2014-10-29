@@ -11,7 +11,7 @@
         $stateProvider.state('planning', {
             url: "/planning",
             controller: 'PlanningCtrl',
-            templateUrl: "/plugins/agiledashboard/js/angular/src/app/planning.tpl.html"
+            templateUrl: "planning.tpl.html"
         });
     }
 })();

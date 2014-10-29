@@ -673,6 +673,7 @@ class Event {
      *     'project' => Project
      *     'limit'   => int
      *     'offset'  => int
+     *     'order'   => string
      *     'result'  => array
      */
     const REST_GET_PROJECT_MILESTONES = 'rest_get_project_milestones';
