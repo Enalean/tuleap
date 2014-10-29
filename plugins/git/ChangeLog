@@ -1,3 +1,6 @@
+Version 3.127 - Tuleap 7.7
+    * request #7485: Automatic purge of archived gitolite repositories (Contrib STMicroelectronics)
+
 Version 3.126 - Tuleap 7.7
     * story #7326 see list of repositories mirrored
 
