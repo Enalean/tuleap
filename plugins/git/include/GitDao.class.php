@@ -652,4 +652,21 @@ class GitDao extends DataAccessObject {
 
         return $this->retrieve($sql);
     }
+
+    /**
+     * Get the list of all deleted Git repositories to be purged
+     *
+     * @param int $retention_period
+     *
+     * @return DataAccessResult | false
+     */
+    public function getDeletedRepositoriesToPurge($retention_period) {
+        $retention_period = $this->da->escapeInt($retention_period);
+        $query = 'SELECT * '.
+                 ' FROM '.$this->getTable().
+                 ' WHERE '.self::REPOSITORY_DELETION_DATE." != '0000-00-00 00:00:00'".
+                 ' AND '.self::REPOSITORY_BACKEND_TYPE." = '".self::BACKEND_GITOLITE."'".
+                 ' AND TO_DAYS(NOW()) - TO_DAYS('.self::REPOSITORY_DELETION_DATE.') >='.$retention_period;
+        return $this->retrieve($query);
+    }
 }

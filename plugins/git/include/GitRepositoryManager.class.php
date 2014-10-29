@@ -45,13 +45,20 @@ class GitRepositoryManager {
     private $dao;
 
     /**
+     * @var String
+     */
+    private $backup_directory;
+
+    /**
      * @param GitRepositoryFactory $repository_factory
      * @param Git_SystemEventManager   $git_system_event_manager
+     * @param backup_directory
      */
-    public function __construct(GitRepositoryFactory $repository_factory, Git_SystemEventManager $git_system_event_manager, GitDao $dao) {
+    public function __construct(GitRepositoryFactory $repository_factory, Git_SystemEventManager $git_system_event_manager, GitDao $dao, $backup_directory) {
         $this->repository_factory       = $repository_factory;
         $this->git_system_event_manager = $git_system_event_manager;
         $this->dao                      = $dao;
+        $this->backup_directory         = $backup_directory;
     }
 
     /**
@@ -220,6 +227,56 @@ class GitRepositoryManager {
     private function stripFinalDotGit($path) {
         return substr($path, 0, strrpos($path, '.git'));
     }
-}
 
+    /**
+     *
+     * Purge archived Gitolite repositories
+     *
+     * @param BackendLogger $logger
+     *
+     */
+    public function purgeArchivedRepositories(BackendLogger $logger) {
+        if(!isset($GLOBALS['sys_file_deletion_delay'])) {
+            $logger->warn("Purge of archived Gitolite repositories is disabled: sys_file_deletion_delay is missing in local.inc file");
+            return;
+        }
+        $retention_period      = intval($GLOBALS['sys_file_deletion_delay']);
+        $archived_repositories = $this->repository_factory->getArchivedRepositoriesToPurge($retention_period);
+        foreach ($archived_repositories as $repository) {
+            $repository->getBackend()->deletePermissions($repository);
+            $this->deleteArchivedRepository($repository, $logger);
+        }
+    }
+
+    /**
+     *
+     * Delete archived repository
+     *
+     * @param GitRepository $repository
+     *
+     * @param BackendLogger $logger
+     *
+     */
+    private function deleteArchivedRepository(GitRepository $repository, BackendLogger $logger){
+        $archive = $this->backup_directory.$repository->getName().".tar.gz";
+        if (is_file($archive)) {
+            if(!unlink($archive)) {
+                $logger->error("Unable to purge archived Gitolite repository: ".$archive);
+            } else {
+                $logger->info("Purge of archived Gitolite repository: ".$archive);
+            }
+        }
+    }
+
+    /**
+     * Get git Plugin
+     *
+     * @return GitPlugin
+     */
+    public function getGitPlugin() {
+        $plugin_manager = PluginManager::instance();
+        return $plugin_manager->getPluginByName('git');
+    }
+
+}
 ?>
