@@ -3,7 +3,7 @@ plugin_proftpd	descriptor_description	Control and interfact with Proftpd as FTP 
 plugin_proftpd	descriptor_name	Proftpd
 
 plugin_proftpd	file_column_name	File
-plugin_proftpd	size_column_name	Size (KB)
+plugin_proftpd	size_column_name	Size (Bytes)
 plugin_proftpd	date_added_column_name	Date Added
 plugin_proftpd	cannot_open_project	Cannot open project
 
