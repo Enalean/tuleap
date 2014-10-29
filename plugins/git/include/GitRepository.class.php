@@ -65,6 +65,7 @@ class GitRepository implements DVCSRepository {
     private $loaded;    
     private $dao;
     private $namespace;
+    private $backup_path;
     private $scope;
     private $remote_server_id;
     private $remote_server_disconnect_date;
@@ -904,5 +905,11 @@ class GitRepository implements DVCSRepository {
         return $this->is_mirrored;
     }
 
+    public function getBackupPath() {
+        return $this->backup_path;
+    }
+
+    public function setBackupPath($path) {
+        $this->backup_path = $path;
+    }
 }
-?>

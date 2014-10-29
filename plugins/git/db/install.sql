@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS `plugin_git` (
   `repository_backend_type` varchar(16) DEFAULT 'gitshell',
   `repository_scope` varchar(1) NOT NULL,
   `repository_namespace` varchar(255),
+  `repository_backup_path` text NULL,
   `remote_server_id` INT(11) UNSIGNED NULL,
   `remote_server_disconnect_date` INT(11) NULL,
   `remote_project_deleted` TINYINT DEFAULT '0',

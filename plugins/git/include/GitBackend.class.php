@@ -281,13 +281,10 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
      * @param <type> $repository
      * @return <type>
      */
-    public function archive($repository) {
+    public function archive(GitRepository $repository) {
         chdir( $this->getGitRootPath() );
         $path = $repository->getPath();
-        $name = $repository->getName();
-        $date = $repository->getDeletionDate();
-        $projectName = $repository->getProject()->getUnixName();
-        $archiveName = $projectName.'_'.$name.'_'.strtotime($date).'.tar.bz2 ';
+        $archiveName = $repository->getBackupPath().'.tar.bz2';
         $cmd    = ' tar cjf '.$archiveName.' '.$path.' 2>&1';
         $rcode  = 0 ;
         $output = $this->system( $cmd, $rcode );        
@@ -437,6 +434,8 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
     public function isNameValid($name) {
         throw new Exception('not implemented');
     }
-}
 
-?>
+    public function deleteArchivedRepository(GitRepository $repository) {
+
+    }
+}
