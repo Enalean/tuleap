@@ -1,3 +1,6 @@
+Version 0.89 - Tuleap 7.7
+    * story #7395: fts in report takes into account permisions on fields
+
 Version 0.88 - Tuleap 7.7
     * story #7395: be able to search in all text fields in tracker report
 
