@@ -29,9 +29,17 @@ class SystemEvent_GIT_REPO_UPDATE extends SystemEvent {
     /** @var SystemEventDao */
     private $system_event_dao;
 
-    public function injectDependencies(GitRepositoryFactory $repository_factory, SystemEventDao $system_event_dao) {
+    /** @var Git_Mirror_ManifestManager */
+    private $manifest_manager;
+
+    public function injectDependencies(
+        GitRepositoryFactory $repository_factory,
+        SystemEventDao $system_event_dao,
+        Git_Mirror_ManifestManager $manifest_manager
+    ) {
         $this->repository_factory = $repository_factory;
         $this->system_event_dao   = $system_event_dao;
+        $this->manifest_manager   = $manifest_manager;
     }
 
     public static function queueInSystemEventManager(SystemEventManager $system_event_manager, GitRepository $repository) {
@@ -58,6 +66,8 @@ class SystemEvent_GIT_REPO_UPDATE extends SystemEvent {
             $this->warning('Unable to find repository, perhaps it was deleted in the mean time?');
             return;
         }
+
+        $this->manifest_manager->triggerUpdate($repository);
 
         $events_to_repos = $this->getAllEvents();
         $event_ids       = $this->getEventIds($events_to_repos);

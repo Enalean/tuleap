@@ -20,30 +20,63 @@
 
 class Git_Mirror_ManifestFileGenerator {
 
-    const FILE_PREFIX = 'manifest_mirror_';
+    /** @var Logger */
+    private $logger;
 
     /** @var string */
     private $manifest_directory;
+
+    /** @var string */
     private $gladm_path = '/gitolite-admin.git';
 
-    public function __construct($manifest_directory) {
+    const FILE_PREFIX = 'manifest_mirror_';
+
+    public function __construct(Logger $logger, $manifest_directory) {
         $this->manifest_directory = $manifest_directory;
+        $this->logger             = $logger;
+    }
+
+    public function getManifestDirectory() {
+        return $this->manifest_directory;
     }
 
     public function addRepositoryToManifestFile(Git_Mirror_Mirror $mirror, GitRepository $repository) {
-        $filename = $this->manifest_directory
-            . DIRECTORY_SEPARATOR
-            . self::FILE_PREFIX . $mirror->id . '.js.gz';
+        $filename = $this->getManifestFilenameForMirror($mirror);
 
         $list_of_repositories = $this->getListOfRepositoriesFromManifest($filename);
-        $this->setCurrentTimeForRepository($list_of_repositories, $repository);
+        $this->setCurrentTimeForRepository($mirror, $list_of_repositories, $repository);
 
         $this->writeManifest($filename, $list_of_repositories);
     }
 
-    private function setCurrentTimeForRepository(array &$list_of_repositories, GitRepository $repository) {
+    public function removeRepositoryFromManifestFile(Git_Mirror_Mirror $mirror, GitRepository $repository) {
+        $filename = $this->getManifestFilenameForMirror($mirror);
+
+        $list_of_repositories = $this->getListOfRepositoriesFromManifest($filename);
         $key = $this->getRepositoryKey($repository);
-        if (! isset($list_of_repositories[$key])) {
+        if (isset($list_of_repositories[$key])) {
+            $this->logger->debug("removing {$key} from manifest of mirror {$mirror->url} (id: {$mirror->id})");
+            unset($list_of_repositories[$key]);
+            $this->writeManifest($filename, $list_of_repositories);
+        }
+    }
+
+    private function getManifestFilenameForMirror(Git_Mirror_Mirror $mirror) {
+        return $this->manifest_directory
+            . DIRECTORY_SEPARATOR
+            . self::FILE_PREFIX . $mirror->id . '.js.gz';
+    }
+
+    private function setCurrentTimeForRepository(
+        Git_Mirror_Mirror $mirror,
+        array &$list_of_repositories,
+        GitRepository $repository
+    ) {
+        $key = $this->getRepositoryKey($repository);
+        if (isset($list_of_repositories[$key])) {
+            $this->logger->debug("updating {$key} to manifest of mirror {$mirror->url} (id: {$mirror->id})");
+        } else {
+            $this->logger->debug("adding {$key} to manifest of mirror {$mirror->url} (id: {$mirror->id})");
             $this->makeSureThatGitoliteAdminRepositoryIsInTheManifest($list_of_repositories);
             $list_of_repositories[$key] = $this->getRepositoryInformation($repository);
         }

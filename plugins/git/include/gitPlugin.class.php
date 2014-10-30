@@ -187,6 +187,7 @@ class GitPlugin extends Plugin {
                 $params['dependencies'] = array(
                     $this->getRepositoryFactory(),
                     $this->getSystemEventDao(),
+                    $this->getManifestManager(),
                 );
                 break;
             case SystemEvent_GIT_REPO_DELETE::NAME:
@@ -1228,7 +1229,7 @@ class GitPlugin extends Plugin {
                 new Git_Mirror_MirrorDao(),
                 UserManager::instance()
             ),
-            $logger
+            new Git_Mirror_ManifestFileGenerator($logger, Config::get('sys_data_dir').'/gitolite/grokmirror')
         );
     }
 

@@ -43,4 +43,8 @@ class Git_Mirror_Mirror {
         $this->owner_name = $owner->getName();
         $this->owner_id   = $owner->getId();
     }
+
+    public function __toString() {
+        return __CLASS__ .' '. $this->id;
+    }
 }

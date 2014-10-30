@@ -51,25 +51,12 @@ class Git_SystemEventManagerTest extends TuleapTestCase {
     }
 
     public function itCreatesRepositoryUpdateEvent() {
-        expect($this->system_event_manager)->createEvent()->count(2);
         expect($this->system_event_manager)->createEvent(
             SystemEvent_GIT_REPO_UPDATE::NAME,
             54,
             SystemEvent::PRIORITY_HIGH,
             SystemEvent::OWNER_APP
-        )->at(0);
-
-        $this->git_system_event_manager->queueRepositoryUpdate($this->gitolite_repository);
-    }
-
-    public function itUpdatesGrokManifestWhenRepositoryIsUpdated() {
-        expect($this->system_event_manager)->createEvent()->count(2);
-        expect($this->system_event_manager)->createEvent(
-        SystemEvent_GIT_GROKMIRROR_MANIFEST::NAME,
-            54,
-            SystemEvent::PRIORITY_LOW,
-            SystemEvent::OWNER_ROOT
-        )->at(1);
+        )->once();
 
         $this->git_system_event_manager->queueRepositoryUpdate($this->gitolite_repository);
     }
