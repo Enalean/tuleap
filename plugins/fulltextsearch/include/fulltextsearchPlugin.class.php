@@ -46,6 +46,7 @@ class fulltextsearchPlugin extends Plugin {
         SystemEvent_FULLTEXTSEARCH_TRACKER_ARTIFACT_UPDATE::NAME,
         SystemEvent_FULLTEXTSEARCH_TRACKER_REINDEX_PROJECT::NAME,
         SystemEvent_FULLTEXTSEARCH_TRACKER_ARTIFACT_DELETE::NAME,
+        SystemEvent_FULLTEXTSEARCH_TRACKER_TRACKER_DELETE::NAME,
         SystemEvent_FULLTEXTSEARCH_WIKI_INDEX::NAME,
         SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE::NAME,
         SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE_PERMISSIONS::NAME,
@@ -83,6 +84,7 @@ class fulltextsearchPlugin extends Plugin {
             $this->_addHook(TRACKER_EVENT_REPORT_PROCESS_ADDITIONAL_QUERY);
             $this->_addHook(TRACKER_EVENT_ARTIFACT_POST_UPDATE);
             $this->_addHook(TRACKER_EVENT_ARTIFACT_DELETE);
+            $this->_addHook(TRACKER_EVENT_TRACKER_DELETE);
             $this->_addHook('tracker_followup_event_update', 'tracker_event_artifact_post_update', false);
             $this->_addHook('tracker_report_followup_warning', 'tracker_report_followup_warning', false);
         }
@@ -419,6 +421,10 @@ class fulltextsearchPlugin extends Plugin {
 
     public function tracker_event_artifact_delete($params) {
         $this->getTrackerSystemEventManager()->queueArtifactDelete($params['artifact']);
+    }
+
+    public function tracker_event_tracker_delete($params) {
+        $this->getTrackerSystemEventManager()->queueTrackerDelete($params['tracker']);
     }
 
     /**

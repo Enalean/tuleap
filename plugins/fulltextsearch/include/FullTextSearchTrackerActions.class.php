@@ -121,4 +121,9 @@ class FullTextSearchTrackerActions {
         );
     }
 
+    public function deleteTrackerIndex($tracker_id) {
+        $this->client->deleteType(
+            $tracker_id
+        );
+    }
 }

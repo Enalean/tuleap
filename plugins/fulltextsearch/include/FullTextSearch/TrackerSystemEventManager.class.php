@@ -73,6 +73,10 @@ class FullTextSearch_TrackerSystemEventManager {
                 $class        = 'SystemEvent_'. $type;
                 $dependencies = array($this->actions);
                 break;
+            case SystemEvent_FULLTEXTSEARCH_TRACKER_TRACKER_DELETE::NAME:
+                $class        = 'SystemEvent_'. $type;
+                $dependencies = array($this->actions);
+                break;
         }
     }
 
@@ -113,4 +117,14 @@ class FullTextSearch_TrackerSystemEventManager {
         }
     }
 
+    public function queueTrackerDelete(Tracker $tracker) {
+        if ($this->plugin->isAllowed($tracker->getGroupId())) {
+            $this->system_event_manager->createEvent(
+                SystemEvent_FULLTEXTSEARCH_TRACKER_TRACKER_DELETE::NAME,
+                $this->implodeParams(array($tracker->getId())),
+                SystemEvent::PRIORITY_MEDIUM,
+                SystemEvent::OWNER_APP
+            );
+        }
+    }
 }

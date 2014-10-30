@@ -201,3 +201,11 @@ define('TRACKER_EVENT_FIELD_AUGMENT_DATA_FOR_REPORT', 'tracker_event_field_augme
  *   'artifact'    Tracker_Artifact
  */
 define('TRACKER_EVENT_ARTIFACT_DELETE', 'tracker_event_artifact_delete');
+
+/**
+ * Event emitted when a tracker is deleted
+ *
+ * Parameters:
+ *   'tracker'    Tracker
+ */
+define('TRACKER_EVENT_TRACKER_DELETE', 'tracker_event_tracker_delete');
