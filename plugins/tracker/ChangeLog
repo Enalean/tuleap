@@ -1,3 +1,6 @@
+Version 5.504 - Tuleap 7.7
+    * request #7570 Reply by email: outlook quote not properly stripped
+
 Version 5.503 - Tuleap 7.7
     * story #7395: site admin can re-index a tracker (like docman or wiki)
 
