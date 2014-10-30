@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -112,4 +113,12 @@ class FullTextSearchTrackerActions {
     private function mappingExists(Tracker $tracker) {
         return count($this->client->getMapping((string) $tracker->getId())) > 0;
     }
+
+    public function deleteArtifactIndex($artifact_id, $tracker_id) {
+        $this->client->delete(
+            $tracker_id,
+            $artifact_id
+        );
+    }
+
 }

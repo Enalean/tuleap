@@ -1633,6 +1633,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $this->getDao()->deletePriority($this->getId());
         $this->getDao()->delete($this->getId());
         $this->getDao()->commit();
+
+        EventManager::instance()->processEvent(
+            TRACKER_EVENT_ARTIFACT_DELETE,
+            array(
+                'artifact' => $this,
+            )
+        );
     }
 
     /**
