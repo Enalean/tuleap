@@ -3159,7 +3159,8 @@ EOS;
                 $fields_validator,
                 $this->getFormElementFactory(),
                 $changeset_dao,
-                $this->getTrackerArtifactFactory()
+                $this->getTrackerArtifactFactory(),
+                EventManager::instance()
             )
         );
 

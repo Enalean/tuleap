@@ -29,9 +29,6 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
     /** @var Tracker_Artifact_Changeset_CommentDao */
     protected $changeset_comment_dao;
 
-    /** @var EventManager */
-    protected $event_manager;
-
     public function __construct(
         Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
         Tracker_FormElementFactory $formelement_factory,
@@ -41,10 +38,9 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         EventManager $event_manager,
         ReferenceManager $reference_manager
     ) {
-        parent::__construct($fields_validator, $formelement_factory, $artifact_factory);
+        parent::__construct($fields_validator, $formelement_factory, $artifact_factory, $event_manager);
         $this->changeset_dao         = $changeset_dao;
         $this->changeset_comment_dao = $changeset_comment_dao;
-        $this->event_manager         = $event_manager;
         $this->reference_manager     = $reference_manager;
     }
 

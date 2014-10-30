@@ -341,7 +341,8 @@ class Tracker_ArtifactFactory {
             $fields_validator,
             $formelement_factory,
             new Tracker_Artifact_ChangesetDao(),
-            $this
+            $this,
+            EventManager::instance()
         );
         $creator = new Tracker_ArtifactCreator($this, $fields_validator, $changeset_creator);
 

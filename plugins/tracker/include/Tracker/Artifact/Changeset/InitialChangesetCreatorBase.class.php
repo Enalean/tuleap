@@ -28,11 +28,12 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
 
     public function __construct(
         Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
-        Tracker_FormElementFactory $formelement_factory,
-        Tracker_Artifact_ChangesetDao $changeset_dao,
-        Tracker_ArtifactFactory $artifact_factory
+        Tracker_FormElementFactory                 $formelement_factory,
+        Tracker_Artifact_ChangesetDao              $changeset_dao,
+        Tracker_ArtifactFactory                    $artifact_factory,
+        EventManager                               $event_manager
     ) {
-        parent::__construct($fields_validator, $formelement_factory, $artifact_factory);
+        parent::__construct($fields_validator, $formelement_factory, $artifact_factory, $event_manager);
         $this->changeset_dao = $changeset_dao;
     }
 
@@ -71,6 +72,8 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
         );
 
         $artifact->clearChangesets();
+
+        $this->event_manager->processEvent(TRACKER_EVENT_ARTIFACT_POST_UPDATE, array('artifact' => $artifact));
 
         return $changeset_id;
     }

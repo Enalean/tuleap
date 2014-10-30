@@ -41,7 +41,8 @@ try {
                 $fields_validator,
                 $formelement_factory,
                 $changeset_dao,
-                $artifact_factory
+                $artifact_factory,
+                EventManager::instance()
             )
         );
 

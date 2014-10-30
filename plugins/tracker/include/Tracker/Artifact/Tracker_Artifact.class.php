@@ -893,7 +893,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             new Tracker_Artifact_Changeset_InitialChangesetFieldsValidator($this->getFormElementFactory()),
             $this->getFormElementFactory(),
             $this->getChangesetDao(),
-            $this->getArtifactFactory()
+            $this->getArtifactFactory(),
+            $this->getEventManager()
         );
 
         return $creator->create($this, $fields_data, $submitter, $submitted_on);
