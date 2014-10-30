@@ -1,3 +1,6 @@
+Version 5.501 - Tuleap 7.7
+    * story #7395: be able to search in all text fields in tracker report
+
 Version 5.500 - Tuleap 7.7
     * Fix request #7541: TV3 to TV5 : bad path in attachments path migration
 

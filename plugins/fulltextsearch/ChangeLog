@@ -1,3 +1,6 @@
+Version 0.88 - Tuleap 7.7
+    * story #7395: be able to search in all text fields in tracker report
+
 Version 0.87 - Tuleap 7.6
     * Refactoring: plugins should not leak into the core
 
