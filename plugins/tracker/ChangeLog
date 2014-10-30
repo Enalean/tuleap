@@ -1,3 +1,6 @@
+Version 5.503 - Tuleap 7.7
+    * story #7395: site admin can re-index a tracker (like docman or wiki)
+
 Version 5.502 - Tuleap 7.7
     * story #7395: fts in report takes into account permisions on fields
 
