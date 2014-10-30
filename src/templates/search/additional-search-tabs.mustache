@@ -1,0 +1,12 @@
+{{# has_additional_search_tabs }}
+    <ul class="additional-search-tabs">
+        <li>
+            <a href="/search?{{# group_id }}&group_id={{ group_id }}{{/ group_id }}">{{ classic_search_tab_label }}</a>
+        </li>
+        {{# additional_search_tabs }}
+        <li data-search-type="{{ type_of_search }}">
+            <a href="{{{ url }}}{{# group_id }}&group_id={{ group_id }}{{/ group_id }}">{{{ name }}}</a>
+        </li>
+        {{/ additional_search_tabs }}
+    </ul>
+{{/ has_additional_search_tabs }}

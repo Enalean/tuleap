@@ -107,8 +107,8 @@ class fulltextsearchPlugin extends Plugin {
         // Search
         $this->addHook(Event::LAYOUT_SEARCH_ENTRY);
         $this->addHook(Event::PLUGINS_POWERED_SEARCH);
-        $this->addHook(Event::SEARCH_TYPES_PRESENTERS);
         $this->addHook(Event::SEARCH_TYPE, 'search_type');
+        $this->addHook(Event::FETCH_ADDITIONAL_SEARCH_TABS);
 
         return parent::getHooksAndCallbacks();
     }
@@ -137,15 +137,13 @@ class fulltextsearchPlugin extends Plugin {
         }
     }
 
-    public function search_types_presenters($params) {
+    public function fetch_additional_search_tabs($params) {
         if ($this->getCurrentUser()->useLabFeatures()) {
-            $params['site_presenters'][] = new Search_SearchTypePresenter(
-                self::SEARCH_TYPE,
-                $GLOBALS['Language']->getText('plugin_fulltextsearch', 'accordion_type'),
-                null
+            $params['additional_search_tabs'][] = new Search_AdditionalSearchTabsPresenter(
+                '<i class="icon-beaker"></i> ' . $GLOBALS['Language']->getText('plugin_fulltextsearch', 'additional_search_tab'),
+                '/search?type_of_search=' . self::SEARCH_TYPE,
+                self::SEARCH_TYPE
             );
-
-            $params['redirect_to_services'] = false;//swallow searches from services
         }
     }
 

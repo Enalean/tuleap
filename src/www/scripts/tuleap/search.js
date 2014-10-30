@@ -26,27 +26,19 @@ var tuleap = tuleap || {};
         init : function() {
             var type_of_search = $('input[name=type_of_search]').val();
 
-            this.moveFacetsToSearchPane(type_of_search);
+            if (typeof(tuleap.search.fulltext) !== 'undefined') {
+                tuleap.search.fulltext.handleFulltextFacets(type_of_search);
+            }
+
+            handleAdditionalSearchTabs();
             switchSearchType();
             toggleFacets();
             decorRedirectedSearch();
             enableSearchMoreResults();
             resetSearchResults(type_of_search);
             highlightSearchCategory(type_of_search);
-        },
-
-        moveFacetsToSearchPane : function(type_of_search) {
-            var search_pane_entry = $('a[data-search-type="'+type_of_search+'"]').parent();
-
-            if ($('#search-results > ul:first-child').length > 0) {
-                search_pane_entry.find('ul').remove();
-                $('#search-results > ul:first-child').appendTo(search_pane_entry);
-            }
-
-            if (typeof(tuleap.search.fulltext) != 'undefined') {
-                tuleap.search.fulltext.handleFulltextFacets(type_of_search)
-            }
         }
+
     };
 
     $(document).ready(function() {
@@ -75,7 +67,7 @@ var tuleap = tuleap || {};
     }
 
     function enableSearchMoreResults() {
-        $('#search-more-button').unbind( "click" );
+        $('#search-more-button').unbind("click");
         $('#search-more-button').click(function() {
             tuleap.search.offset += parseInt($('input[name=number_of_page_results]').val());
             searchFromSidebar(tuleap.search.type_of_search, true);
@@ -85,12 +77,28 @@ var tuleap = tuleap || {};
     function highlightSearchCategory(type_of_search) {
         var highlighted_class = 'active';
 
-        $('.search-type').each(function() {
-            $(this).removeClass(highlighted_class);
-            if ($(this).attr('data-search-type') == type_of_search) {
-                $(this).addClass(highlighted_class);
+        $('.search-type, .additional-search-tabs > li').each(function() {
+            highlightElement($(this));
+        });
+
+        if ($('.additional-search-tabs > li.active').length == 0) {
+            $('.additional-search-tabs > li:first-child').addClass(highlighted_class);
+        }
+
+        function highlightElement(element) {
+            element.removeClass(highlighted_class);
+
+            if (element.attr('data-search-type') == type_of_search) {
+                element.addClass(highlighted_class);
             }
-        })
+        }
+    }
+
+    function handleAdditionalSearchTabs() {
+        $('.additional-search-tabs > li > a').click(function(event) {
+            event.preventDefault();
+            window.location.href = $(this).attr("href") + '&words=' + $('#words').val();
+        });
     }
 
     function searchFromSidebar(type_of_search, append_to_results) {
@@ -110,21 +118,29 @@ var tuleap = tuleap || {};
             } else {
                  $('#search-results').html(json.html);
             }
+
             if (json.has_more == true ) {
                 $('#search-more-button').show();
             } else {
                 $('#search-more-button').hide();
             }
+
             if (json.results_count == 0) {
                 $('#no_more_results').show();
             } else {
                 $('#no_more_results').hide();
             }
-            tuleap.search.moveFacetsToSearchPane(type_of_search);
+
+            if (typeof(tuleap.search.fulltext) !== 'undefined') {
+                tuleap.search.fulltext.handleFulltextFacets(type_of_search);
+            }
+
             enableSearchMoreResults();
+
         }).fail(function(error) {
               codendi.feedback.clear();
               codendi.feedback.log('error', codendi.locales.search.error + ' : ' + JSON.parse(error.responseText));
+
         }).always(function() {
               $('#search-results').removeClass('loading');
               $('.search-bar input[name="type_of_search"]').attr('value', type_of_search);

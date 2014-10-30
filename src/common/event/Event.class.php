@@ -594,6 +594,11 @@ class Event {
     const SEARCH_TYPES_PRESENTERS = 'search_types_presenters';
 
     /**
+     * Fetech another types of search
+     */
+    const FETCH_ADDITIONAL_SEARCH_TABS = 'fetch_additional_search_tabs';
+
+    /**
      * Sends-out a search a query
      *
      * Parameters:

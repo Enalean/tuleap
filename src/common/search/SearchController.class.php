@@ -57,15 +57,18 @@ class Search_SearchController {
     }
 
     public function index(Codendi_Request $request) {
-        $query = new Search_SearchQuery($request);
-        if ($query->getTypeOfSearch() == '') {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('search_index', 'please_choose_search_type'));
+        if (! $request->get('type_of_search')) {
+            $request->set('type_of_search', Search_SearchProject::NAME);
         }
+
+        $this->results($request);
+    }
+
+    public function error(Codendi_Request $request, Search_SearchQuery $query) {
+        $empty_result = new Search_SearchResults();
+
         $GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('search_index', 'search'), 'body_class' => array('search-page')));
-
-        $results = '';
-        $this->renderer->renderToPage('site-search', $this->getSearchPresenter($query, $results));
-
+        $this->renderer->renderToPage('site-search', $this->getSearchPresenter($query, $empty_result->getResultsHtml()));
         $GLOBALS['HTML']->footer(array('without_content' => true));
     }
 
@@ -84,7 +87,7 @@ class Search_SearchController {
             'results_count' => $results->getCountResults(),
         );
 
-        if ($results->getResultsHtml() !== null) {
+        if ($results->getResultsHtml() !== '') {
             $output['html'] = $this->renderer->renderToString('results', array('search_result' => $results->getResultsHtml()));
         }
 
@@ -97,12 +100,12 @@ class Search_SearchController {
 
         if (! $query->isValid()) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('search_index', 'at_least_3_ch'));
-            $this->index($request);
+            $this->error($request, $query);
             return;
         }
 
         $results = $this->doSearch($query);
-        if ($results->getResultsHtml() !== null) {
+        if ($results->getResultsHtml() !== '') {
             $this->renderResults($query, $results->getResultsHtml());
         }
     }
@@ -114,9 +117,10 @@ class Search_SearchController {
     }
 
     private function getSearchPresenter(Search_SearchQuery $query, $results) {
-        $project_search_types = array();
-        $site_search_types    = array();
-        $redirect_to_services = true;
+        $project_search_types   = array();
+        $site_search_types      = array();
+        $additional_search_tabs = array();
+        $redirect_to_services   = true;
 
         $this->event_manager->processEvent(
             Event::SEARCH_TYPES_PRESENTERS,
@@ -147,11 +151,19 @@ class Search_SearchController {
         }
         $search_panes[] = $this->getSiteWidePane($site_search_types);
 
+        $this->event_manager->processEvent(
+            Event::FETCH_ADDITIONAL_SEARCH_TABS,
+            array(
+                'additional_search_tabs' => &$additional_search_tabs
+            )
+        );
+
         return new Search_Presenter_SearchPresenter(
             $query->getTypeOfSearch(),
             $query->getWords(),
             $results,
             $search_panes,
+            $additional_search_tabs,
             $query->getProject()
         );
     }
@@ -206,7 +218,8 @@ class Search_SearchController {
 
         $search = new Search_SearchPlugin($this->event_manager);
         $search->search($query, $results);
-        if ($results->getResultsHtml() !== null) {
+
+        if ($results->getResultsHtml() !== '') {
             return $results;
         }
         if ( ! isset($this->search_types[$query->getTypeOfSearch()])) {

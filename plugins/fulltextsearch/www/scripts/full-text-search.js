@@ -23,34 +23,61 @@ tuleap.search = tuleap.search || {};
 !(function ($) {
 
     tuleap.search.fulltext = {
+        full_text_search : 'fulltext',
 
         handleFulltextFacets : function (type_of_search) {
-            var $facets = $('a.search-type[data-search-type="'+type_of_search+'"]').siblings('ul').find('.facets');
+            if (type_of_search !== tuleap.search.fulltext.full_text_search) {
+                return;
+            }
 
-            $facets.on('change', function() {
-                var keywords = $('#words').val();
-                var facets   = $('a.search-type[data-search-type="'+type_of_search+'"]').siblings('ul').find('.facets');
+            replaceSearchPanesByFacets();
+            updateResults();
 
-                (function beforeSend() {
-                    $('#search-results').html('').addClass('loading')
-                })();
+            function replaceSearchPanesByFacets() {
+                var facets_pane = $('#search-results > .search-pane:first-child');
 
-                var url = '/search/?type_of_search='+type_of_search+'&words='+keywords+'&'+facets.serialize();
-                if (type_of_search === 'wiki') {
-                    url += '&group_id=' + $('.search-bar input[name="group_id"]').val();
+                if (facets_pane.length == 0) {
+                    $('.search-panes').remove();
+                    $('#search-results').addClass('no-search-panes');
+
+                } else {
+                    $('.search-panes').html('');
+                    $('#search-results').removeClass('no-search-panes');
+                    facets_pane.appendTo($('.search-panes'));
                 }
 
-                $.getJSON(url)
-                    .done(function(json) {
-                        $('#search-results').html(json.html);
-                        tuleap.search.moveFacetsToSearchPane(type_of_search);
-                    }).fail(function(error) {
-                        codendi.feedback.clear();
-                        codendi.feedback.log('error', codendi.locales.search.error + ' : ' + error.responseText);
-                    }).always(function() {
-                        $('#search-results').removeClass('loading');
-                    });
-            });
+            }
+
+            function updateResults() {
+                var facets = $('.facets');
+
+                facets.on('change', function() {
+                    var keywords = $('#words').val();
+
+                    (function beforeSend() {
+                        $('#search-results').html('').addClass('loading')
+                    })();
+
+                    var url = '/search/?type_of_search=' + tuleap.search.fulltext.full_text_search + '&' +
+                        'words=' + keywords + '&' +
+                        facets.serialize() + '&' +
+                        'group_id=' + $('.search-bar input[name="group_id"]').val();
+
+                    $.getJSON(url)
+                        .done(function(json) {
+                            $('#search-results').html(json.html);
+                            tuleap.search.fulltext.handleFulltextFacets(type_of_search);
+
+                        }).fail(function(error) {
+                            codendi.feedback.clear();
+                            codendi.feedback.log('error', codendi.locales.search.error + ' : ' + error.responseText);
+
+                        }).always(function() {
+                            $('#search-results').removeClass('loading');
+                        });
+                });
+            }
         }
+
     };
 })(window.jQuery);

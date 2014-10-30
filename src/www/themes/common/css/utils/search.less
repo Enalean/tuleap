@@ -11,7 +11,9 @@ body.search-page {
 }
 
 .search-bar {
-    padding: 18px 20px 16px @accordion-width + 15 + 30 + 15;
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid #DDDDDD;
 
     form {
         margin: 0;
@@ -20,12 +22,60 @@ body.search-page {
             margin: 0;
 
             input {
-                font-size: 16px;
+                font-size: 18px;
+                padding: 10px;
             }
 
             .btn {
-                padding-left: 25px;
-                padding-right: 25px;
+                font-size: 18px;
+                padding: 10px 30px;
+            }
+        }
+    }
+}
+
+.additional-search-tabs {
+    width: 100%;
+    margin: 0;
+
+    li {
+        float: left;
+        width: 50%;
+        list-style-type: none;
+        text-align: center;
+        box-sizing: border-box;
+        font-size: 1.2em;
+        letter-spacing: 0.1em;
+
+        > a {
+            display: block;
+            padding: 15px 0;
+            transition: all 0.1s linear;
+            border-left: 1px solid #DDDDDD;
+            box-shadow: inset 0 -1px 0 #DDDDDD;
+            color: #777;
+            background: #FFFFFF;
+
+            &:hover {
+                color: #444;
+                text-decoration: none;
+                transition: all 0.1s linear;
+                box-shadow: inset 0 -2px 0 #444;
+            }
+        }
+
+        &:first-child {
+            > a {
+                border-left: none;
+            }
+        }
+
+        &.active {
+            > a {
+                color: #444;
+                text-decoration: none;
+                transition: all 0.1s linear;
+                box-shadow: inset 0 -2px 0 #444;
             }
         }
     }
@@ -46,8 +96,8 @@ body.search-page {
 
         .search-pane-header {
             padding: 8px 12px 10px;
-            border-bottom: 2px solid #333;
-            color: #222;
+            border-bottom: 2px solid #444;
+            color: #444;
         }
 
         .search-pane-body {
@@ -75,7 +125,8 @@ body.search-page {
                         color: #0088cc;
 
                         &.active {
-                            color : #F79514
+                            color : darken(#0088cc, 10%);
+                            text-decoration: underline;
                         }
 
                         &:hover {
@@ -123,6 +174,10 @@ body.search-page {
 
     &.loading {
         background: url('../images/tuleap-spinner.gif') no-repeat center center;
+    }
+
+    &.no-search-panes {
+        padding-left: 20px;
     }
 
     p.results-count {
