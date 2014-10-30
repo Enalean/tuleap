@@ -45,7 +45,7 @@ class Tracker_FormElement_Field_ComputedDaoCache {
     public function getFieldValuesAtTimestamp($source_id, $target_name, $timestamp) {
         $index = $source_id.'_'.$target_name.'_'.$timestamp;
         if (! isset($this->field_values_at_timestamp[$index])) {
-            $this->field_values_at_timestamp[$index] = $this->dao->getFieldValuesAtTimestamp($source_id, $target_name, $timestamp);
+            $this->field_values_at_timestamp[$index] = $this->dao->getFieldValuesAtTimestamp(array($source_id), $target_name, $timestamp);
         }
         return $this->field_values_at_timestamp[$index];
     }

@@ -95,7 +95,7 @@ class FakeDataAccessResult extends DataAccessResult {
     public function rowCount() {
         return count($this->data);
     }
-    
-}
 
-?>
+    public function freeMemory() {
+    }
+}

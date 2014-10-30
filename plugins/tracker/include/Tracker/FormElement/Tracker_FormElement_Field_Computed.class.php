@@ -27,7 +27,15 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
             'type'  => 'string',
             'size'  => 40,
         ),
+        'fast_compute' => array(
+            'value' => 0,
+            'type'  => 'checkbox',
+        ),
     );
+
+    private function useFastCompute() {
+        return $this->getProperty('fast_compute') == 1;
+    }
 
     /**
      * Given an artifact, return a numerical value of the field for this artifact.
@@ -39,12 +47,42 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
      * @return float|null if there are no data (/!\ it's on purpose, otherwise we can mean to distinguish if there is data but 0 vs no data at all, for the graph plot)
      */
     public function getComputedValue(PFUser $user, Tracker_Artifact $artifact, $timestamp = null, array &$computed_artifact_ids = array()) {
+        if ($this->useFastCompute()) {
+            return $this->getFastComputedValue($artifact->getId(), $timestamp);
+        }
+
         if ($timestamp === null) {
-            $dar = $this->getDao()->getFieldValues($artifact->getId(), $this->getProperty('target_field_name'));
+            $dar = $this->getDao()->getFieldValues(array($artifact->getId()), $this->getProperty('target_field_name'));
         } else {
             $dar = Tracker_FormElement_Field_ComputedDaoCache::instance()->getFieldValuesAtTimestamp($artifact->getId(), $this->getProperty('target_field_name'), $timestamp);
         }
         return $this->computeValuesVersion($dar, $user, $timestamp, $computed_artifact_ids);
+    }
+
+    private function getFastComputedValue($artifact_id, $timestamp = null) {
+        $sum                   = null;
+        $target_field_name     = $this->getProperty('target_field_name');
+        $artifact_ids_to_fetch = array($artifact_id);
+        $already_seen          = array($artifact_id => true);
+        do {
+            if ($timestamp !== null) {
+                $dar = $this->getDao()->getFieldValuesAtTimestamp($artifact_ids_to_fetch, $target_field_name, $timestamp);
+            } else {
+                $dar = $this->getDao()->getFieldValues($artifact_ids_to_fetch, $target_field_name);
+            }
+            $artifact_ids_to_fetch = array();
+            foreach ($dar as $row) {
+                if ($row['type'] == 'computed' && ! isset($already_seen[$row['id']])) {
+                    $artifact_ids_to_fetch[] = $row['id'];
+                    $already_seen[$row['id']] = true;
+                } elseif (isset($row[$row['type'].'_value'])) {
+                    $sum += $row[$row['type'].'_value'];
+                }
+            }
+            $dar->freeMemory();
+        } while(count($artifact_ids_to_fetch) > 0);
+
+        return $sum;
     }
 
     private function computeValuesVersion(DataAccessResult $dar, PFUser $user, $timestamp, array &$computed_artifact_ids) {

@@ -1066,7 +1066,7 @@ plugin_tracker_artifact_changeset	header_html_changeset	Latest modifications
 plugin_tracker_artifact_changeset	header_html_snapshot	Snapshot
 
 plugin_tracker_formelement_admin	aggregate_label	Computed value
-plugin_tracker_formelement_admin	aggregate_description	Compute value (sum of numerical field) from linked artifacts.
+plugin_tracker_formelement_admin	aggregate_description	Compute value (sum of numerical field) from linked artifacts.<p><strong>Note</strong>: "Fast computation" will not check linked artifacts permissions AND will only calculate the field values of linked artifacts that have the same "Target field" name.</p>
 plugin_tracker_formelement_admin	crossreferences_label	Cross References
 plugin_tracker_formelement_admin	crossreferences_description	Display the cross references for the artifact
 plugin_tracker_formelement_admin	burndown_label	Burndown Chart
@@ -1178,6 +1178,7 @@ plugin_tracker_formelement_property	use_capacity	Use "capacity" field for ideal 
 plugin_tracker_formelement_property	include_weekends	Include week-ends
 plugin_tracker_formelement_property	display_time	Display time
 plugin_tracker_formelement_property	use_cache	Use cache
+plugin_tracker_formelement_property	fast_compute	Fast computation
 
 plugin_tracker_formelement_exception	wrong_field_id	There is no field with ID:$1
 plugin_tracker_formelement_exception	permission_denied	Permission Denied
