@@ -25,17 +25,18 @@ class Tracker_Artifact_MailGateway_Parser_BaseTest extends TuleapTestCase {
     protected $plain_plus_html_reply;
     protected $parser;
     protected $recipient_factory;
+    protected $fixtures_dir;
 
     public function setUp() {
         parent::setUp();
-        $fixtures_dir = dirname(__FILE__) .'/_fixtures';
+        $this->fixtures_dir = dirname(__FILE__) .'/_fixtures';
 
-        $this->plain_reply            = file_get_contents($fixtures_dir .'/reply-comment.plain.eml');
-        $this->html_reply             = file_get_contents($fixtures_dir .'/reply-comment.html.eml');
-        $this->plain_plus_html_reply  = file_get_contents($fixtures_dir .'/reply-comment.plain+html.eml');
-        $this->html_plus_plain_reply  = file_get_contents($fixtures_dir .'/reply-comment.html+plain.eml');
-        $this->with_attachment_reply  = file_get_contents($fixtures_dir .'/reply-comment.(plain+html)+attachment.eml');
-        $this->expected_followup_text = file_get_contents($fixtures_dir .'/expected_followup.text.txt');
+        $this->plain_reply            = file_get_contents($this->fixtures_dir .'/reply-comment.plain.eml');
+        $this->html_reply             = file_get_contents($this->fixtures_dir .'/reply-comment.html.eml');
+        $this->plain_plus_html_reply  = file_get_contents($this->fixtures_dir .'/reply-comment.plain+html.eml');
+        $this->html_plus_plain_reply  = file_get_contents($this->fixtures_dir .'/reply-comment.html+plain.eml');
+        $this->with_attachment_reply  = file_get_contents($this->fixtures_dir .'/reply-comment.(plain+html)+attachment.eml');
+        $this->expected_followup_text = file_get_contents($this->fixtures_dir .'/expected_followup.text.txt');
 
         $this->recipient_factory = mock('Tracker_Artifact_MailGateway_RecipientFactory');
 
@@ -50,6 +51,11 @@ class Tracker_Artifact_MailGateway_Parser_BodyTest extends Tracker_Artifact_Mail
         stub($this->recipient_factory)
             ->getFromEmail()
             ->returns(mock('Tracker_Artifact_MailGateway_Recipient'));
+    }
+
+    private function utility_function_to_generate_message_body() {
+        $body = $this->parser->parse(file_get_contents($this->fixtures_dir .'/outlook_2.msg'))->getBody();
+        file_put_contents($this->fixtures_dir.'/outlook_quote_fr.msg', $body);
     }
 
     public function itReturnsTheFollowUpCommentToAddInTextPlainFormat() {

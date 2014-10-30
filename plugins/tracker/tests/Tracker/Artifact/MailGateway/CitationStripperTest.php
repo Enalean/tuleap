@@ -22,28 +22,59 @@ require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 class Tracker_Artifact_MailGateway_CitationStripperTest extends TuleapTestCase {
 
+    private $fixtures_dir;
+    /** @var Tracker_Artifact_MailGateway_CitationStripper */
+    private $citation_stripper;
+
+    public function setUp() {
+        parent::setUp();
+        $this->fixtures_dir      = dirname(__FILE__) .'/_fixtures';
+        $this->citation_stripper = new Tracker_Artifact_MailGateway_CitationStripper();
+        Config::store();
+        Config::set('sys_strip_outlook', 1);
+    }
+
+    public function tearDown() {
+        parent::tearDown();
+        Config::restore();
+    }
+
     public function itStripsCitationFromTextContent() {
-        $fixtures_dir = dirname(__FILE__) .'/_fixtures';
+        $parsed_text_content          = file_get_contents($this->fixtures_dir .'/expected_followup.text.txt');
+        $text_content_witout_citation = file_get_contents($this->fixtures_dir .'/expected_followup_without_citation.text.txt');
 
-        $parsed_text_content          = file_get_contents($fixtures_dir .'/expected_followup.text.txt');
-        $text_content_witout_citation = file_get_contents($fixtures_dir .'/expected_followup_without_citation.text.txt');
-
-        $citation_stripper = new Tracker_Artifact_MailGateway_CitationStripper();
         $this->assertIdentical(
-            $citation_stripper->stripText($parsed_text_content),
+            $this->citation_stripper->stripText($parsed_text_content),
             $text_content_witout_citation
         );
     }
 
     public function itStripsCitationFromHTMLContent() {
-        $fixtures_dir = dirname(__FILE__) .'/_fixtures';
+        $parsed_text_content          = file_get_contents($this->fixtures_dir .'/expected_followup.html.txt');
+        $text_content_witout_citation = file_get_contents($this->fixtures_dir .'/expected_followup_without_citation.html.txt');
 
-        $parsed_text_content          = file_get_contents($fixtures_dir .'/expected_followup.html.txt');
-        $text_content_witout_citation = file_get_contents($fixtures_dir .'/expected_followup_without_citation.html.txt');
-
-        $citation_stripper = new Tracker_Artifact_MailGateway_CitationStripper();
         $this->assertIdentical(
-            $citation_stripper->stripHTML($parsed_text_content),
+            $this->citation_stripper->stripHTML($parsed_text_content),
+            $text_content_witout_citation
+        );
+    }
+
+    public function itStripsCitationFromFrenchOutlook() {
+        $parsed_text_content          = file_get_contents($this->fixtures_dir .'/outlook_quote_fr.txt');
+        $text_content_witout_citation = file_get_contents($this->fixtures_dir .'/expected_followup_outlook_quote_fr.txt');
+
+        $this->assertIdentical(
+            $this->citation_stripper->stripText($parsed_text_content),
+            $text_content_witout_citation
+        );
+    }
+
+    public function itStripsCitationFromEnglishOutlook() {
+        $parsed_text_content          = file_get_contents($this->fixtures_dir .'/outlook_quote_en.txt');
+        $text_content_witout_citation = file_get_contents($this->fixtures_dir .'/expected_followup_outlook_quote_en.txt');
+
+        $this->assertIdentical(
+            $this->citation_stripper->stripText($parsed_text_content),
             $text_content_witout_citation
         );
     }
