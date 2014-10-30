@@ -2,6 +2,7 @@ plugin_tracker	descriptor_description	Outil de suivi nouvelle génération
 plugin_tracker	descriptor_name	Tracker
 
 plugin_tracker	title	Tracker
+plugin_tracker	cannot_delete_tracker	Ce tracker ne peut pas être supprimé car il est utilisé dans: $1
 
 plugin_tracker	service_lbl_key	Suivi
 plugin_tracker	service_desc_key	Outils de suivi du projet

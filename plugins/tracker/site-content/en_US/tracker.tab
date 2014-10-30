@@ -3,6 +3,7 @@ plugin_tracker	descriptor_description	Trackers new generation
 plugin_tracker	descriptor_name	Tracker
 
 plugin_tracker	title	Tracker
+plugin_tracker	cannot_delete_tracker	You can't delete this tracker because it is used in: $1
 
 plugin_tracker	service_lbl_key	Trackers
 plugin_tracker	service_desc_key	Project Trackers

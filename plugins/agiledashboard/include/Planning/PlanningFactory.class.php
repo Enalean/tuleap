@@ -393,6 +393,14 @@ class PlanningFactory {
         }
     }
 
+    public function isTrackerIdUsedInAPlanning($tracker_id) {
+        $planning = $this->dao->searchByPlanningTrackerId($tracker_id)->getRow();
+        if ($planning) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Returns all the Planning that use given tracker as backlog tracker
      *
@@ -491,6 +499,15 @@ class PlanningFactory {
 
     public function getPlanningTrackerIdsByGroupId($group_id) {
         return $this->dao->searchPlanningTrackerIdsByGroupId($group_id);
+    }
+
+    public function isTrackerUsedInBacklog($tracker_id) {
+        $backlog = $this->dao->searchBacklogItemsByTrackerId($tracker_id)->getRow();
+
+        if ($backlog) {
+            return true;
+        }
+        return false;
     }
 
     /**

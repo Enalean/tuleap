@@ -569,13 +569,23 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
             foreach ($trackers as $tracker) {
                 if ($this->trackerCanBeDisplayed($tracker, $user)) {
                     $html .= '<dt>';
+
+                    $used_in_other_services_infos = $tracker->getInformationsFromOtherServicesAboutUsage();
+
                     if ($tracker->userCanDeleteTracker()) {
-                        $html .= '<div style="float:right;">
-                                <a href="'.TRACKER_BASE_URL.'/?tracker='. $tracker->id .'&amp;func=delete" 
-                                   onclick="return confirm(\'Do you want to delete this tracker?\');"
-                                   title=" ' . $GLOBALS['Language']->getText('plugin_tracker', 'delete_tracker', array($hp->purify($tracker->name, CODENDI_PURIFIER_CONVERT_HTML))) . '">';
-                        $html .= $GLOBALS['HTML']->getImage('ic/bin_closed.png', array('alt' => 'delete'));
-                        $html .= '</a></div>';
+                        if ($used_in_other_services_infos['can_be_deleted']) {
+                            $html .= '<div style="float:right;">
+                                    <a href="'.TRACKER_BASE_URL.'/?tracker='. $tracker->id .'&amp;func=delete"
+                                       onclick="return confirm(\'Do you want to delete this tracker?\');"
+                                       title=" ' . $GLOBALS['Language']->getText('plugin_tracker', 'delete_tracker', array($hp->purify($tracker->name, CODENDI_PURIFIER_CONVERT_HTML))) . '">';
+                            $html .= $GLOBALS['HTML']->getImage('ic/bin_closed.png', array('alt' => 'delete'));
+                            $html .= '</a></div>';
+                        } else {
+                            $cannot_delete_message = $GLOBALS['Language']->getText('plugin_tracker','cannot_delete_tracker', array($used_in_other_services_infos['message']));
+                            $html .= '<div style="float:right;" class="tracker-cant-delete">';
+                            $html .= $GLOBALS['HTML']->getImage('ic/bin_closed.png', array('title' => $cannot_delete_message));
+                            $html .= '</div>';
+                        }
                     }
                     $html .= '<div class="tracker_homepage_info">';
                     $html .= '<a class="direct-link-to-tracker" href="'.TRACKER_BASE_URL.'/?tracker='. $tracker->id .'">';
