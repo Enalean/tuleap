@@ -1228,8 +1228,7 @@ class GitPlugin extends Plugin {
                 new Git_Mirror_MirrorDao(),
                 UserManager::instance()
             ),
-            $logger,
-            $this->getConfigurationParameter('grokmanifest_path')
+            $logger
         );
     }
 
