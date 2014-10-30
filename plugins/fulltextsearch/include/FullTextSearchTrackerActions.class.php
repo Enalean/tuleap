@@ -65,6 +65,43 @@ class FullTextSearchTrackerActions {
         );
     }
 
+    public function reIndexProjectArtifacts(array $trackers) {
+        foreach ($trackers as $tracker) {
+            $this->deleteTracker($tracker);
+            $this->indexAllProjectArtifacts($tracker);
+        }
+    }
+
+    private function deleteTracker($tracker) {
+        $tracker_id = $tracker->getId();
+
+        $this->logger->debug('[Tracker] ElasticSearch: deleting all artifacts of tracker #' . $tracker_id);
+
+        try {
+            $this->client->getIndexedType($tracker_id);
+            $this->client->deleteType($tracker_id);
+
+        } catch (ElasticSearch_TypeNotIndexed $e) {
+            $this->logger->debug('[Tracker] ElasticSearch: tracker #' . $tracker_id . ' has not previously been indexed, nothing to delete');
+            return;
+        }
+    }
+
+    private function indexAllProjectArtifacts($tracker) {
+        $tracker_id                = $tracker->getId();
+        $tracker_artifact_factory  = Tracker_ArtifactFactory::instance();
+        $tracker_artifact_iterator = new Tracker_Artifact_BatchIterator($tracker_artifact_factory, $tracker_id);
+
+        $this->logger->debug('[Tracker] ElasticSearch: indexing all artifacts of tracker #' . $tracker_id);
+
+        $tracker_artifact_iterator->rewind();
+        while ($batch = $tracker_artifact_iterator->next()) {
+            foreach ($batch as $artifact) {
+                $this->indexArtifactUpdate($artifact);
+            }
+        }
+    }
+
     private function initializeMapping(Tracker $tracker) {
         if (! $this->mappingExists($tracker)) {
             $this->logger->debug('[Tracker] Elasticsearch set mapping for tracker #'.$tracker->getId());

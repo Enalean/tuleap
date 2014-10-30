@@ -26,6 +26,11 @@ class FullTextSearch_TrackerSystemEventManager {
     private $artifact_factory;
 
     /**
+     * @var TrackerFactory
+     */
+    private $tracker_factory;
+
+    /**
      * @var fulltextsearchPlugin
      */
     private $plugin;
@@ -44,11 +49,13 @@ class FullTextSearch_TrackerSystemEventManager {
             SystemEventManager $system_event_manager,
             FullTextSearchTrackerActions $actions,
             Tracker_ArtifactFactory $artifact_factory,
+            TrackerFactory $tracker_factory,
             fulltextsearchPlugin $plugin
             ) {
         $this->system_event_manager = $system_event_manager;
         $this->actions              = $actions;
         $this->artifact_factory     = $artifact_factory;
+        $this->tracker_factory      = $tracker_factory;
         $this->plugin               = $plugin;
     }
 
@@ -57,6 +64,10 @@ class FullTextSearch_TrackerSystemEventManager {
             case SystemEvent_FULLTEXTSEARCH_TRACKER_ARTIFACT_UPDATE::NAME:
                 $class        = 'SystemEvent_'. $type;
                 $dependencies = array($this->actions, $this->artifact_factory);
+                break;
+            case SystemEvent_FULLTEXTSEARCH_TRACKER_REINDEX_PROJECT::NAME:
+                $class        = 'SystemEvent_'. $type;
+                $dependencies = array($this->actions, $this->tracker_factory);
                 break;
         }
     }
@@ -67,6 +78,17 @@ class FullTextSearch_TrackerSystemEventManager {
                 SystemEvent_FULLTEXTSEARCH_TRACKER_ARTIFACT_UPDATE::NAME,
                 $this->implodeParams(array($artifact->getId())),
                 SystemEvent::PRIORITY_MEDIUM,
+                SystemEvent::OWNER_APP
+            );
+        }
+    }
+
+    public function queueTrackersProjectReindexation($project_id) {
+        if ($this->plugin->isAllowed($project_id)) {
+            $this->system_event_manager->createEvent(
+                SystemEvent_FULLTEXTSEARCH_TRACKER_REINDEX_PROJECT::NAME,
+                $project_id,
+                SystemEvent::PRIORITY_LOW,
                 SystemEvent::OWNER_APP
             );
         }
