@@ -650,7 +650,7 @@ class Tracker_FormElementFactory {
 
     /**
      * @param Tracker $tracker
-     * @return array All text formElements used by the tracker
+     * @return Tracker_FormElement_Field_Text[] All text formElements used by the tracker
      */
     public function getUsedTextFields($tracker) {
         return $this->getUsedFormElementsByType($tracker, array('text', 'string', 'ref'));

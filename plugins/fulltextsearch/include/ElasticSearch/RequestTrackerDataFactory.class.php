@@ -27,8 +27,15 @@ class ElasticSearch_1_2_RequestTrackerDataFactory {
     /** @var Tracker_Permission_PermissionsSerializer */
     private $permissions_serializer;
 
-    public function __construct(Tracker_Permission_PermissionsSerializer $permissions_serializer) {
+    /** @var Tracker_FormElementFactory */
+    private $form_element_factory;
+
+    public function __construct(
+        Tracker_Permission_PermissionsSerializer $permissions_serializer,
+        Tracker_FormElementFactory $form_element_factory
+    ) {
         $this->permissions_serializer = $permissions_serializer;
+        $this->form_element_factory   = $form_element_factory;
     }
 
     public function getFormattedArtifact(Tracker_Artifact $artifact) {
@@ -47,15 +54,24 @@ class ElasticSearch_1_2_RequestTrackerDataFactory {
     }
 
     private function getBaseArtifact(Tracker_Artifact $artifact) {
-        return array(
+        $last_changeset = $artifact->getLastChangeset();
+
+        $properties = array(
             'id'                => $artifact->getId(),
             'group_id'          => $artifact->getTracker()->getGroupId(),
             'tracker_id'        => $artifact->getTrackerId(),
-            'last_changeset_id' => $artifact->getLastChangeset()->getId(),
+            'last_changeset_id' => $last_changeset->getId(),
             'tracker_ugroups'   => $this->permissions_serializer->getLiteralizedUserGroupsThatCanViewTracker($artifact),
             'artifact_ugroups'  => $this->permissions_serializer->getLiteralizedUserGroupsThatCanViewArtifact($artifact),
             'followup_comments' => array(),
         );
+
+        $text_fields = $this->form_element_factory->getUsedTextFields($artifact->getTracker());
+        foreach ($text_fields as $text_field) {
+            $properties[$text_field->getName()] = $last_changeset->getValue($text_field)->getValue();
+        }
+
+        return $properties;
     }
 
     public function getTrackerMapping(Tracker $tracker) {
@@ -96,6 +112,8 @@ class ElasticSearch_1_2_RequestTrackerDataFactory {
         $this->addStandardTrackerPermissionsMetadata($mapping_data[$tracker_id]['properties']);
         $this->addStandardArtifactPermissionsMetadata($mapping_data[$tracker_id]['properties']);
 
+        $this->addTrackerFieldsToMapping($mapping_data, $tracker);
+
         return $mapping_data;
     }
 
@@ -111,5 +129,14 @@ class ElasticSearch_1_2_RequestTrackerDataFactory {
             'type'  => 'string',
             'index' => 'not_analyzed'
         );
+    }
+
+    private function addTrackerFieldsToMapping(array &$mapping_data, Tracker $tracker) {
+        $text_fields = $this->form_element_factory->getUsedTextFields($tracker);
+
+        $string_map = array('type' => 'string');
+        foreach ($text_fields as $field) {
+            $mapping_data[$tracker->getId()]['properties'][$field->getName()] = $string_map;
+        }
     }
 }

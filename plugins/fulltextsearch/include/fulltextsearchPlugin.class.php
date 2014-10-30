@@ -202,7 +202,8 @@ class fulltextsearchPlugin extends Plugin {
                 new ElasticSearch_1_2_RequestTrackerDataFactory(
                     new Tracker_Permission_PermissionsSerializer(
                         new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
-                    )
+                    ),
+                    Tracker_FormElementFactory::instance()
                 ),
                 new BackendLogger()
             ),
@@ -431,12 +432,11 @@ class fulltextsearchPlugin extends Plugin {
             $filter  = $hp->purify($request->getValidated('search_followups', 'string', ''));
 
             $additional_criteria  = '';
-            $additional_criteria .='<span class ="lab_features">';
-            $additional_criteria .= '<label title="'.$GLOBALS['Language']->getText('plugin_fulltextsearch', 'search_followup_comments').'" for="tracker_report_crit_followup_search">';
-            $additional_criteria .= $GLOBALS['Language']->getText('plugin_fulltextsearch', 'followups_search');
+            $additional_criteria .= '<label title="'.$GLOBALS['Language']->getText('plugin_fulltextsearch', 'global_search_tooltip').'" for="tracker_report_crit_followup_search">';
+            $additional_criteria .= '<i class="icon-beaker"></i> '. $GLOBALS['Language']->getText('plugin_fulltextsearch', 'global_search_label');
             $additional_criteria .= '</label>';
             $additional_criteria .= '<input id="tracker_report_crit_followup_search" type="text" name="search_followups" value="'.$filter.'" />';
-            $additional_criteria .= '</span>';
+
             $params['array_of_html_criteria'][] = $additional_criteria;
         }
     }
@@ -451,7 +451,7 @@ class fulltextsearchPlugin extends Plugin {
     public function tracker_report_followup_warning($params) {
         if ($this->tracker_followup_check_preconditions($params['group_id'])) {
             if ($params['request']->get('search_followups')) {
-                $params['html'] .= '<div id="tracker_report_selection" class="tracker_report_haschanged_and_isobsolete" style="z-index: 2;position: relative;">';
+                $params['html'] .= '<div id="tracker_report_selection" class="tracker_report_haschanged_and_isobsolete report_warning">';
                 $params['html'] .= $GLOBALS['HTML']->getimage('ic/warning.png', array('style' => 'vertical-align:top;'));
                 $params['html'] .= $GLOBALS['Language']->getText('plugin_fulltextsearch', 'followup_full_text_warning_search');
                 $params['html'] .= '</div>';
