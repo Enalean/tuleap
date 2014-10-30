@@ -24,6 +24,8 @@
  */
 class ElasticSearch_1_2_RequestTrackerDataFactory {
 
+    const COMMENT_FIELD_NAME = 'comment';
+
     /** @var Tracker_Permission_PermissionsSerializer */
     private $permissions_serializer;
 

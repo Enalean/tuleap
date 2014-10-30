@@ -152,6 +152,8 @@ define('TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA', 'tracker_event_report
  * 'search_performed'       Boolean
  * 'tracker'                Tracker  (IN)     the current tracker
  * 'additional_criteria'    Tracker_Report_AdditionalCriteria[]  (IN)
+ * 'user'                   PFUser
+ * 'form_element_factory'   Tracker_FormElementFactory
  */
 define('TRACKER_EVENT_REPORT_PROCESS_ADDITIONAL_QUERY', 'tracker_event_report_process_additional_query');
 

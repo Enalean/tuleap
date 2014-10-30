@@ -172,7 +172,6 @@ class fulltextsearchPlugin extends Plugin {
                     return;
                 }
 
-                $search_controller->search();
                 $search_controller->siteSearch($params);
             }
         }
@@ -429,13 +428,13 @@ class fulltextsearchPlugin extends Plugin {
         if ($this->tracker_followup_check_preconditions($params['tracker']->getGroupId())) {
             $request = HTTPRequest::instance();
             $hp      = Codendi_HTMLPurifier::instance();
-            $filter  = $hp->purify($request->getValidated('search_followups', 'string', ''));
+            $filter  = $hp->purify($request->getValidated('search_fulltext', 'string', ''));
 
             $additional_criteria  = '';
             $additional_criteria .= '<label title="'.$GLOBALS['Language']->getText('plugin_fulltextsearch', 'global_search_tooltip').'" for="tracker_report_crit_followup_search">';
             $additional_criteria .= '<i class="icon-beaker"></i> '. $GLOBALS['Language']->getText('plugin_fulltextsearch', 'global_search_label');
             $additional_criteria .= '</label>';
-            $additional_criteria .= '<input id="tracker_report_crit_followup_search" type="text" name="search_followups" value="'.$filter.'" />';
+            $additional_criteria .= '<input id="tracker_report_crit_followup_search" type="text" name="search_fulltext" value="'.$filter.'" />';
 
             $params['array_of_html_criteria'][] = $additional_criteria;
         }
@@ -450,7 +449,7 @@ class fulltextsearchPlugin extends Plugin {
      */
     public function tracker_report_followup_warning($params) {
         if ($this->tracker_followup_check_preconditions($params['group_id'])) {
-            if ($params['request']->get('search_followups')) {
+            if ($params['request']->get('search_fulltext')) {
                 $params['html'] .= '<div id="tracker_report_selection" class="tracker_report_haschanged_and_isobsolete report_warning">';
                 $params['html'] .= $GLOBALS['HTML']->getimage('ic/warning.png', array('style' => 'vertical-align:top;'));
                 $params['html'] .= $GLOBALS['Language']->getText('plugin_fulltextsearch', 'followup_full_text_warning_search');
@@ -487,25 +486,34 @@ class fulltextsearchPlugin extends Plugin {
      * @return Void
      */
     public function tracker_event_report_process_additional_query($params) {
+        if (! $params['request'] || ! $params['tracker'] || ! $params['user'] || ! $params['form_element_factory']) {
+            return;
+        }
+
         $group_id = $params['tracker']->getGroupId();
         if (! $this->tracker_followup_check_preconditions($group_id)) {
             return;
         }
 
-        if (! $params['request']) {
-            return;
-        }
-
-        $filter = $params['request']->get('search_followups');
+        $filter = $params['request']->get('search_fulltext');
         if (empty($filter)) {
             return;
         }
 
+        $field_names = array();
+        $formElementFactory = $params['form_element_factory'];
+        $fields = $formElementFactory->getUsedTextFieldsUserCanRead($params['tracker'], $params['user']);
+        foreach ($fields as $field) {
+            $field_names[] = $field->getName();
+        }
+
+        $field_names[] = ElasticSearch_1_2_RequestTrackerDataFactory::COMMENT_FIELD_NAME;
+
         try {
             $controller         = $this->getSearchController('tracker');
-            $params['result'][] = $controller->search($params['request']);
+            $params['result'][] = $controller->searchSpecial($field_names, $params['request']);
             $params['search_performed'] = true;
-        } catch (ElasticSearch_ClientNotFoundException $exception) {
+        } catch (ElasticSearch_ClientNotFoundException $e) {
             // do nothing
         }
     }

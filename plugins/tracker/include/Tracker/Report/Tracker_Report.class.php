@@ -223,11 +223,13 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             EventManager::instance()->processEvent(
                 TRACKER_EVENT_REPORT_PROCESS_ADDITIONAL_QUERY,
                 array(
-                    'request'             => $request,
-                    'result'              => &$result,
-                    'search_performed'    => &$search_performed,
-                    'tracker'             => $this->getTracker(),
-                    'additional_criteria' => $additional_criteria
+                    'request'              => $request,
+                    'result'               => &$result,
+                    'search_performed'     => &$search_performed,
+                    'tracker'              => $this->getTracker(),
+                    'additional_criteria'  => $additional_criteria,
+                    'user'                 => $user,
+                    'form_element_factory' => $this->getFormElementFactory()
                 )
             );
             if ($search_performed) {
