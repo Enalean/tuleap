@@ -26,6 +26,20 @@ require_once('common/system_event/SystemEvent.class.php');
 class SystemEvent_GIT_REPO_DELETE extends SystemEvent {
     const NAME = 'GIT_REPO_DELETE';
 
+    /** @var GitRepositoryFactory */
+    private $repository_factory;
+
+    /** @var Git_Mirror_ManifestManager */
+    private $manifest_manager;
+
+    public function injectDependencies(
+        GitRepositoryFactory $repository_factory,
+        Git_Mirror_ManifestManager $manifest_manager
+    ) {
+        $this->repository_factory = $repository_factory;
+        $this->manifest_manager   = $manifest_manager;
+    }
+
     public function process() {
         $parameters   = $this->getParametersAsArray();
         //project id
@@ -44,8 +58,8 @@ class SystemEvent_GIT_REPO_DELETE extends SystemEvent {
             $this->error('Missing argument repository id');
             return false;
         }
-        
-        $repository = $this->getRepositoryFactory()->getDeletedRepository($repositoryId);
+
+        $repository = $this->repository_factory->getDeletedRepository($repositoryId);
         if ($repository->getProjectId() != $projectId) {
             $this->error('Bad project id');
             return false;
@@ -56,6 +70,7 @@ class SystemEvent_GIT_REPO_DELETE extends SystemEvent {
 
     private function deleteRepo(GitRepository $repository) {
         try {
+            $this->manifest_manager->triggerDelete($repository);
             $repository->delete();
         } catch (Exception $e) {
             $this->error($e->getMessage());
@@ -69,10 +84,4 @@ class SystemEvent_GIT_REPO_DELETE extends SystemEvent {
         return $this->parameters;
     }
 
-    protected function getRepositoryFactory() {
-        return new GitRepositoryFactory(new GitDao(), ProjectManager::instance());
-    }
-
 }
-
-?>

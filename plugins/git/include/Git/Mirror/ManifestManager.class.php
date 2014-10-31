@@ -44,8 +44,8 @@ class Git_Mirror_ManifestManager {
         $manifest_directory = $this->generator->getManifestDirectory();
         if (is_dir($manifest_directory)) {
             foreach (glob($manifest_directory . '/' . Git_Mirror_ManifestFileGenerator::FILE_PREFIX . '*') as $file) {
-                chown($file, 'gitolite');
-                chgrp($file, 'gitolite');
+                chown($file, Config::get('sys_http_user'));
+                chgrp($file, Config::get('sys_http_user'));
             }
         }
     }
@@ -60,6 +60,13 @@ class Git_Mirror_ManifestManager {
 
         $not_repository_mirrors = array_diff($all_mirrors, $repository_mirrors);
         foreach ($not_repository_mirrors as $mirror) {
+            $this->generator->removeRepositoryFromManifestFile($mirror, $repository);
+        }
+    }
+
+    public function triggerDelete(GitRepository $repository) {
+        $all_mirrors = $this->data_mapper->fetchAll();
+        foreach ($all_mirrors as $mirror) {
             $this->generator->removeRepositoryFromManifestFile($mirror, $repository);
         }
     }

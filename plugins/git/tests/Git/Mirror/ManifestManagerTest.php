@@ -67,7 +67,7 @@ class Git_Mirror_ManifestManagerTest extends TuleapTestCase {
             array($this->noida_mirror, $this->singapour_mirror)
         );
 
-        expect($this->generator)->addRepositoryToManifestFile($this->noida_mirror, $this->repository)->count(2);
+        expect($this->generator)->addRepositoryToManifestFile('*', $this->repository)->count(2);
         expect($this->generator)->addRepositoryToManifestFile($this->noida_mirror, $this->repository)->at(0);
         expect($this->generator)->addRepositoryToManifestFile($this->singapour_mirror, $this->repository)->at(1);
 
@@ -83,5 +83,13 @@ class Git_Mirror_ManifestManagerTest extends TuleapTestCase {
         expect($this->generator)->removeRepositoryFromManifestFile($this->singapour_mirror, $this->repository)->once();
 
         $this->manager->triggerUpdate($this->repository);
+    }
+
+    public function itAsksToDeleteTheRepositoryFromAllManifests() {
+        expect($this->generator)->removeRepositoryFromManifestFile('*', $this->repository)->count(2);
+        expect($this->generator)->removeRepositoryFromManifestFile($this->singapour_mirror, $this->repository)->at(0);
+        expect($this->generator)->removeRepositoryFromManifestFile($this->noida_mirror, $this->repository)->at(1);
+
+        $this->manager->triggerDelete($this->repository);
     }
 }

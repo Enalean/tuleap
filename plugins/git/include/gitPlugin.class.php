@@ -192,6 +192,10 @@ class GitPlugin extends Plugin {
                 break;
             case SystemEvent_GIT_REPO_DELETE::NAME:
                 $params['class'] = 'SystemEvent_GIT_REPO_DELETE';
+                $params['dependencies'] = array(
+                    $this->getRepositoryFactory(),
+                    $this->getManifestManager(),
+                );
                 break;
             case SystemEvent_GIT_REPO_ACCESS::NAME:
                 $params['class'] = 'SystemEvent_GIT_REPO_ACCESS';

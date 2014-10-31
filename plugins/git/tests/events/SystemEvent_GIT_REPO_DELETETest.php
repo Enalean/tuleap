@@ -22,11 +22,14 @@
 require_once dirname(__FILE__).'/../bootstrap.php';
 
 class SystemEvent_GIT_REPO_DELETETest extends TuleapTestCase {
-    protected $project_id;
-    protected $repository_id;
-    protected $repository;
-    protected $system_event_manager;
-    protected $git_repository_factory;
+    private $project_id;
+    private $repository_id;
+    private $repository;
+    private $repository_factory;
+    private $manifest_manager;
+
+    /** @var SystemEvent_GIT_REPO_DELETE */
+    private $event;
 
     public function setUp() {
         parent::setUp();
@@ -38,19 +41,28 @@ class SystemEvent_GIT_REPO_DELETETest extends TuleapTestCase {
         stub($this->repository)->getId()->returns($this->repository_id);
         stub($this->repository)->getProjectId()->returns($this->project_id);
 
-        $this->system_event_manager   = mock('SystemEventManager');
-        $this->git_repository_factory = mock('GitRepositoryFactory');
+        $this->repository_factory = mock('GitRepositoryFactory');
+        stub($this->repository_factory)->getDeletedRepository($this->repository_id)->returns($this->repository);
 
-        stub($this->git_repository_factory)->getDeletedRepository($this->repository_id)->returns($this->repository);
+        $this->manifest_manager = mock('Git_Mirror_ManifestManager');
+
+        $this->event = partial_mock('SystemEvent_GIT_REPO_DELETE', array('done', 'warning', 'error', 'getId'));
+        $this->event->setParameters($this->project_id . SystemEvent::PARAMETER_SEPARATOR . $this->repository_id);
+        $this->event->injectDependencies(
+            $this->repository_factory,
+            $this->manifest_manager
+        );
     }
 
     public function itDeletesTheRepository() {
-        $event = TestHelper::getPartialMock('SystemEvent_GIT_REPO_DELETE', array('getRepositoryFactory'));
-        $event->setParameters($this->project_id.SystemEvent::PARAMETER_SEPARATOR.$this->repository_id);
-        stub($event)->getRepositoryFactory()->returns($this->git_repository_factory);
-        
-        $event->process();
+        expect($this->repository)->delete()->once();
+
+        $this->event->process();
+    }
+
+    public function itAsksToDeleteRepositoryFromManifestFiles() {
+        expect($this->manifest_manager)->triggerDelete($this->repository)->once();
+
+        $this->event->process();
     }
 }
-
-?>
