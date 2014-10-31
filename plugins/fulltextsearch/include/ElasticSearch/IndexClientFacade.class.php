@@ -47,8 +47,6 @@ class ElasticSearch_IndexClientFacade extends ElasticSearch_ClientFacade impleme
      */
     public function delete($type, $document_id) {
         $this->client->setType($type);
-
-
         $this->client->delete($document_id);
     }
 
