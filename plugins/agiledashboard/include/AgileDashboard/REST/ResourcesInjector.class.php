@@ -31,13 +31,14 @@ class AgileDashboard_REST_ResourcesInjector {
     public function populate(Luracast\Restler\Restler $restler) {
         $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\v1\\MilestoneResource', MilestoneRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\v1\\PlanningResource',  PlanningRepresentation::ROUTE);
+        $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\v1\\BacklogItemResource',  BacklogItemRepresentation::ROUTE);
     }
 
     public function declareProjectPlanningResource(array &$resources, Project $project) {
         $routes = array(
             BacklogItemRepresentation::BACKLOG_ROUTE,
             MilestoneRepresentation::ROUTE,
-            PlanningRepresentation::ROUTE,
+            PlanningRepresentation::ROUTE
         );
         foreach ($routes as $route) {
             $resource_reference = new ProjectResourceReference();
