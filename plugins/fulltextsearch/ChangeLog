@@ -1,3 +1,6 @@
+Version 0.91 - Tuleap 7.7
+    * fts: deleted tracker and artifacts are also deleted in elastic search
+
 Version 0.90 - Tuleap 7.7
     * story #7395: site admin can re-index a tracker (like docman or wiki)
 

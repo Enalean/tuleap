@@ -1,3 +1,6 @@
+Version 3.128 - Tuleap 7.7
+    * fts: deleted tracker and artifacts are also deleted in elastic search
+
 Version 3.127 - Tuleap 7.7
     * request #7485: Automatic purge of archived gitolite repositories (Contrib STMicroelectronics)
 

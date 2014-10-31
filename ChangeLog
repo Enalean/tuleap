@@ -4,6 +4,7 @@ Version 7.7 (Not released yet)
 	* story #7505: select the news I want to display in widget 'latest news'
 	* story #7326: see list of repositories mirrored
 	* story #7395: Index all text fields
+	* story #7393: FTS tracker: Reindex on tracker events
 
 	== Bug Fix ==
 	* request #7526: Missing attrs in ldap queries
@@ -12,12 +13,13 @@ Version 7.7 (Not released yet)
 	* request #7535 TV3 to TV5 : a float field with no value generate errors in XML import
 
 	== Plugins ==
-	* tracker: 5.505
-	* git: 3.127
+	* tracker: 5.506
+	* git: 3.128
 	* statistics: 0.39
 	* agiledashboard: 1.81
 	* proftpd: 0.18
-	* fulltextsearch: 0.90
+	* fulltextsearch: 0.91
+	* ldap: 3.57
 
 	 == Themes ==
 	* FlamingParrot: 1.49
