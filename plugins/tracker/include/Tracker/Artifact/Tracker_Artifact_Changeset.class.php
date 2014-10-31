@@ -597,14 +597,15 @@ class Tracker_Artifact_Changeset {
             }
 
             // 3. Send the notification
-            foreach ($messages as $m) {
+            foreach ($messages as $message) {
                 $this->sendNotification(
-                    $m['recipients'],
-                    $m['headers'],
-                    $m['subject'],
-                    $m['htmlBody'],
-                    $m['txtBody'],
-                    $m['message-id']
+                    $message['recipients'],
+                    $message['headers'],
+                    $message['subject'],
+                    $message['htmlBody'],
+                    $message['txtBody'],
+                    $message['message-id'],
+                    $message['from']
                 );
             }
         }
@@ -631,6 +632,8 @@ class Tracker_Artifact_Changeset {
                     $messages[$hash]['headers']    = $headers;
                     $messages[$hash]['recipients'] = array($recipient_mail);
                 }
+
+                $messages[$hash]['from'] = Config::get('sys_noreply');
             }
         }
 
@@ -638,19 +641,30 @@ class Tracker_Artifact_Changeset {
     }
 
     public function buildAMessagePerRecipient(array $recipients, $is_update) {
-        $messages = array();
+        $messages       = array();
+        $anonymous_mail = 0;
+
         foreach ($recipients as $recipient => $check_perms) {
             $user = $this->getUserFromRecipientName($recipient);
 
-            if ($user) {
+            if (! $user->isAnonymous()) {
                 $headers    = array($this->getCustomReplyToHeader());
                 $message_id = $this->getMessageId($user);
 
-                $messages[$message_id] = $this->getMessageContent($user, $is_update, $check_perms);
-
+                $messages[$message_id]               = $this->getMessageContent($user, $is_update, $check_perms);
+                $messages[$message_id]['from']       = $this->getForgeArtifactEmail();
                 $messages[$message_id]['message-id'] = $message_id;
                 $messages[$message_id]['headers']    = $headers;
                 $messages[$message_id]['recipients'] = array($user->getEmail());
+
+            } else {
+                $messages[$anonymous_mail]               = $this->getMessageContent($user, $is_update, $check_perms);
+                $messages[$anonymous_mail]['from']       = Config::get('sys_noreply');
+                $messages[$anonymous_mail]['message-id'] = null;
+                $messages[$anonymous_mail]['headers']    = array();
+                $messages[$anonymous_mail]['recipients'] = array($user->getEmail());
+
+                $anonymous_mail += 1;
             }
         }
 
@@ -674,7 +688,7 @@ class Tracker_Artifact_Changeset {
     private function getCustomReplyToHeader() {
         return array(
             "name" => "Reply-to",
-            "value" => "forge__artifacts@" . Config::get('sys_default_domain')
+            "value" => $this->getForgeArtifactEmail()
         );
     }
 
@@ -741,10 +755,11 @@ class Tracker_Artifact_Changeset {
      * @param string $htmlBody   the html content of the message
      * @param string $txtBody    the text content of the message
      * @param string $message_id the id of the message
+     * @param string $from       the from email address
      *
      * @return void
      */
-    protected function sendNotification($recipients, $headers, $subject, $htmlBody, $txtBody, $message_id) {
+    protected function sendNotification($recipients, $headers, $subject, $htmlBody, $txtBody, $message_id, $from) {
         $mail = new Codendi_Mail();
 
         if($message_id) {
@@ -766,7 +781,7 @@ class Tracker_Artifact_Changeset {
         $mail->getLookAndFeelTemplate()->set('breadcrumbs', $breadcrumbs);
         $mail->getLookAndFeelTemplate()->set('unsubscribe_link', $this->getUnsubscribeLink());
         $mail->getLookAndFeelTemplate()->set('title', $hp->purify($subject));
-        $mail->setFrom($GLOBALS['sys_noreply']);
+        $mail->setFrom($from);
         $mail->addAdditionalHeader("X-Codendi-Project",     $project->getUnixName());
         $mail->addAdditionalHeader("X-Codendi-Tracker",     $tracker_name);
         $mail->addAdditionalHeader("X-Codendi-Artifact-ID", $this->getId());
@@ -786,6 +801,16 @@ class Tracker_Artifact_Changeset {
         $txtBody .= $this->getTextBodyFilter($project_unix_name, $tracker_name);
         $mail->setBodyText($txtBody);
         $mail->send();
+    }
+
+    private function getForgeArtifactEmail() {
+        $email_domain = Config::get('sys_default_mail_domain');
+
+        if (! $email_domain) {
+            $email_domain = Config::get('sys_default_domain');
+        }
+
+        return "forge__artifacts@" . $email_domain;
     }
 
     private function getTextBodyFilter($project_name, $tracker_name) {

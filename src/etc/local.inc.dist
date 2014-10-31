@@ -499,3 +499,8 @@ $sys_available_theme_variants = 'FlamingParrot_Orange,FlamingParrot_Blue,Flaming
 //
 // Note: as of today, not all loggers respects this value
 $sys_logger_level = 'warn';
+
+
+// Define the email domain for email gateway feature
+// By default, email domain = default Tuleap domain (see $sys_default_domain)
+$sys_default_mail_domain = "";
