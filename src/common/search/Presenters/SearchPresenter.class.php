@@ -30,20 +30,31 @@ class Search_Presenter_SearchPresenter {
 
     public $search_panes = array();
 
+    public $additional_search_tabs = array();
+
     public $group_id = false;
 
     public $number_of_page_results;
 
-    public function __construct($type_of_search, $words, $search_result, array $search_panes, $project) {
-        $this->type_of_search = $type_of_search;
-        $this->words          = $words;
-        $this->search_result  = $search_result;
-        $this->search_panes   = $search_panes;
+    public function __construct($type_of_search, $words, $search_result, array $search_panes, array $additional_search_tabs, $project) {
+        $this->type_of_search         = $type_of_search;
+        $this->words                  = $words;
+        $this->search_result          = $search_result;
+        $this->search_panes           = $search_panes;
+        $this->additional_search_tabs = $additional_search_tabs;
 
         if ($project && ! $project->isError()) {
             $this->group_id   = $project->getId();
         }
 
         $this->number_of_page_results = Search_SearchPlugin::RESULTS_PER_QUERY;
+    }
+
+    public function has_additional_search_tabs() {
+        return count($this->additional_search_tabs) > 0;
+    }
+
+    public function classic_search_tab_label() {
+        return $GLOBALS['Language']->getText('search_index', 'search_tab');
     }
 }

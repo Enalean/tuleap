@@ -25,7 +25,7 @@ class Search_SearchResults {
     private $results_count;
 
     public function getResultsHtml() {
-        return $this->results_html;
+        return ($this->results_html) ? $this->results_html : '';
     }
 
     public function getFacetsHtml() {

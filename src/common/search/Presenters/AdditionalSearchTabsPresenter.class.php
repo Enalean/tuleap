@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,19 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ElasticSearch_SearchResult {
-    public $display_permissions;
-    public $permissions;
-    public $project_name;
-    public $highlight;
-        
-    public function __construct(array $hit, Project $project) {
-        $this->project_name        = util_unconvert_htmlspecialchars($project->getPublicName());
-        $this->has_highlight       = ! empty($this->highlight);
-        $this->display_permissions = isset($hit['fields']['permissions']);
-        if ($this->display_permissions) {
-            $this->permissions = implode(', ', $hit['fields']['permissions']);
-        }
+class Search_AdditionalSearchTabsPresenter {
+
+    public $name;
+
+    public $url;
+
+    public $type_of_search;
+
+    public function __construct($name, $url, $type_of_search) {
+        $this->name           = $name;
+        $this->url            = $url;
+        $this->type_of_search = $type_of_search;
     }
+
 }
-?>

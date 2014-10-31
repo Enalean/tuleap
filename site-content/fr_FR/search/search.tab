@@ -6,11 +6,11 @@
 # Script: SF/www/search/index.php
 #
 search_index	search	Recherche
+search_index	search_tab	Recherche classique
 search_index	site_wide_search	Recherche forge
 search_index	project_wide_search	Recherche dans $1
 search_index	no_searchable_services	Aucun service de ce projet ne permet la recherche
 search_index	at_least_3_ch	Le mot-clé recherché doit au moins avoir 3 caractères
-search_index	please_choose_search_type	Aucune catégorie de recherche choisie
 search_index	no_match_found	Aucune correspondance pour <span>$1</span>
 search_index	no_more_results	Plus de correspondance aux critères trouvées
 search_index	more_results	Plus de résultats

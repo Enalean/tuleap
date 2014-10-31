@@ -1,8 +1,8 @@
 {{# has_results }}
-<ul>
-    <li>
-        <span class="search-type sub-facets">Projects</span>
-        <ul class="sub-facets-list">
+<div class="search-pane">
+    <div class="search-pane-header">Projects</div>
+    <div class="search-pane-body">
+        <ul>
             {{# facets }}
             <li>
                 <label class="checkbox">
@@ -11,8 +11,8 @@
             </li>
             {{/ facets }}
         </ul>
-    </li>
-</ul>
+    </div>
+</div>
 {{/ has_results }}
 
 {{> search-results-main }}

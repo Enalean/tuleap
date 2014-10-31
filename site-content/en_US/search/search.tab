@@ -13,11 +13,11 @@
 # Script: SF/www/search/index.php
 #
 search_index	search	Search
+search_index	search_tab	Classic search
 search_index	site_wide_search	Site-wide search
 search_index	project_wide_search	Search in $1
 search_index	no_searchable_services	No searchable services in this project
 search_index	at_least_3_ch	Search must be at least three characters
-search_index	please_choose_search_type	Please choose a search type
 search_index	no_match_found	No matches found for <span>$1</span>
 search_index	no_more_results	No more matches found
 search_index	more_results	More results
