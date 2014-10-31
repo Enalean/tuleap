@@ -1,0 +1,5 @@
+/var/log/%PROJECT_NAME%/codendi_syslog {
+    missingok
+    weekly
+    rotate 4
+}
