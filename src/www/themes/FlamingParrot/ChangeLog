@@ -1,3 +1,9 @@
+Version 1.51 - Tuleap 7.7
+    * story #7465: split legacy search and FTS search in two panes
+
+Version 1.50 - Tuleap 7.7
+    * story #7465: split legacy search and FTS search in two panes
+
 Version 1.49 - Tuleap 7.7
     * story #7505: select the news I want to display in widget 'latest news'
 

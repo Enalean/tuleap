@@ -1,3 +1,6 @@
+Version 0.92 - Tuleap 7.7
+    * story #7465: split legacy search and FTS search in two panes
+
 Version 0.91 - Tuleap 7.7
     * fts: deleted tracker and artifacts are also deleted in elastic search
 
