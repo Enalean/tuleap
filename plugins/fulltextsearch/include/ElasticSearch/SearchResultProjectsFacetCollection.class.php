@@ -20,35 +20,53 @@
 
 class ElasticSearch_SearchResultProjectsFacetCollection implements IteratorAggregate, Countable {
 
+    private $identifier = 'group_id';
+
     /**
      * @var array
      */
-    private $facets = array();
+    private $values = array();
 
     public function __construct(array $results, ProjectManager $project_manager, array $submitted_facets) {
         if (isset($results['terms'])) {
             foreach ($results['terms'] as $result) {
                 $project = $project_manager->getProject($result['term']);
                 if ($project && !$project->isError()) {
-                    $checked = isset($submitted_facets['group_id']) && in_array($project->getGroupId(), $submitted_facets['group_id']);
-                    $this->facets[] = new ElasticSearch_SearchResultProjectsFacet($project, $result['count'], $checked);
+                    $checked = isset($submitted_facets[$this->identifier]) && in_array($project->getGroupId(), $submitted_facets[$this->identifier]);
+                    $this->values[] = new ElasticSearch_SearchResultProjectsFacet($project, $result['count'], $checked);
                 }
             }
         }
+    }
+
+    public function label() {
+        return $GLOBALS['Language']->getText('plugin_fulltextsearch', 'facet_project_label');
+    }
+
+    public function placeholder() {
+        return $GLOBALS['Language']->getText('plugin_fulltextsearch', 'facet_project_placeholder');
+    }
+
+    public function identifier() {
+        return $this->identifier;
+    }
+
+    public function values() {
+        return $this->values;
     }
 
     /**
      * @see IteratorAggregate
      */
     public function getIterator() {
-        return new ArrayIterator($this->facets);
+        return new ArrayIterator($this->values);
     }
 
     /**
      * @see Countable
      */
     public function count() {
-        return count($this->facets);
+        return count($this->values);
     }
 }
 ?>

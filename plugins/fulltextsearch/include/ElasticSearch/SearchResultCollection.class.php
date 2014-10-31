@@ -34,10 +34,7 @@ class ElasticSearch_SearchResultCollection implements FullTextSearch_SearchResul
         $this->results = $result_factory->getSearchResults($result);
         $this->nb_documents_found = count($this->results);
 
-        $this->facets = $result_factory->getSearchResultProjectsFacetCollection(
-                $result,
-                $submitted_facets
-        );
+        $this->facets[] = $result_factory->getSearchResultProjectsFacetCollection($result, $submitted_facets);
     }
     
     public function count() {
@@ -56,5 +53,3 @@ class ElasticSearch_SearchResultCollection implements FullTextSearch_SearchResul
         return $this->facets;
     }
 }
-
-?>

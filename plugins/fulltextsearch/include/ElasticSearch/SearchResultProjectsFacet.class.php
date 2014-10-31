@@ -31,11 +31,6 @@ class ElasticSearch_SearchResultProjectsFacet {
     public $count;
 
     /**
-     * @var string
-     */
-    public $name = 'group_id';
-
-    /**
      * @var int
      */
     public $value;
@@ -43,15 +38,13 @@ class ElasticSearch_SearchResultProjectsFacet {
     /**
      * @var string
      */
-    public $checked = '';
+    public $selected = '';
 
-    public function __construct(Project $project, $count, $checked) {
-        $this->label   = $project->getUnixName();
-        $this->count   = $count;
-        $this->value   = $project->getGroupId();
-        if ($checked) {
-            $this->checked = 'checked="checked"';
-        }
+    public function __construct(Project $project, $count, $selected) {
+        $this->label    = $project->getUnixName();
+        $this->count    = $count;
+        $this->value    = $project->getGroupId();
+        $this->selected = $selected;
     }
 }
 ?>

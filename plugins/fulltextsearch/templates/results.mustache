@@ -1,18 +1,16 @@
 {{# has_results }}
-<div class="search-pane">
-    <div class="search-pane-header">Projects</div>
-    <div class="search-pane-body">
-        <ul>
-            {{# facets }}
-            <li>
-                <label class="checkbox">
-                    <input type="checkbox" class="facets" value="{{value}}" name="facets[{{name}}][]" {{checked}} >{{label}} ({{count}})
-                </label>
-            </li>
-            {{/ facets }}
-        </ul>
+    {{# facets }}
+    <div class="search-pane">
+        <div class="search-pane-header">{{ label }}</div>
+        <div class="search-pane-body">
+            <select class="facet" multiple name="facets[{{ identifier }}][]" data-placeholder="{{ placeholder }}">
+            {{# values }}
+                <option value="{{ value }}" {{# selected }}selected{{/ selected }}>{{ label }} ({{ count }})</option>
+            {{/ values }}
+            </select>
+        </div>
     </div>
-</div>
+    {{/ facets }}
 {{/ has_results }}
 
 {{> search-results-main }}

@@ -31,25 +31,28 @@ tuleap.search = tuleap.search || {};
             }
 
             replaceSearchPanesByFacets();
+            initFacets();
             updateResults();
 
             function replaceSearchPanesByFacets() {
-                var facets_pane = $('#search-results > .search-pane:first-child');
+                var facets_pane = $('#search-results > .search-pane');
 
                 if (facets_pane.length == 0) {
                     $('.search-panes').remove();
                     $('#search-results').addClass('no-search-panes');
 
                 } else {
-                    $('.search-panes').html('');
-                    $('#search-results').removeClass('no-search-panes');
-                    facets_pane.appendTo($('.search-panes'));
+                    $('.search-pane').remove();
+                    $('.search-panes').append(facets_pane);
                 }
+            }
 
+            function initFacets() {
+                $('select.facet').select2();
             }
 
             function updateResults() {
-                var facets = $('.facets');
+                var facets = $('.search-pane .facet');
 
                 facets.on('change', function() {
                     var keywords = $('#words').val();
