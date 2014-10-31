@@ -155,7 +155,9 @@ class GitActions extends PluginActions {
         $projectId  = intval( $projectId );
 
         try {
-            $backend    = new Git_Backend_Gitolite(new Git_GitoliteDriver($this->url_manager));
+            $backend = new Git_Backend_Gitolite(
+                new Git_GitoliteDriver($this->git_system_event_manager, $this->url_manager)
+            );
             $repository = new GitRepository();
             $repository->setBackend($backend);
             $repository->setDescription(GitRepository::DEFAULT_DESCRIPTION);
@@ -697,7 +699,8 @@ class GitActions extends PluginActions {
     }
 
     public static function isNameAvailable($newName, &$error, $url_manager) {
-        $b1 = new Git_Backend_Gitolite(new Git_GitoliteDriver($url_manager));
+        $git_system_event_manager = new Git_SystemEventManager(SystemEventManager::instance());
+        $b1 = new Git_Backend_Gitolite(new Git_GitoliteDriver($git_system_event_manager, $url_manager));
         $b2 = Backend::instance('Git','GitBackend', array($url_manager));
         if (!$b1->isNameAvailable($newName) && !$b2->isNameAvailable($newName)) {
             $error = $GLOBALS['Language']->getText('plugin_git', 'actions_name_not_available');

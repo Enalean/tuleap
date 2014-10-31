@@ -696,7 +696,10 @@ class GitPlugin extends Plugin {
             $params['logger'],
             $this->getGitoliteAdminPath()
         );
-        $gitolite_driver = new Git_GitoliteDriver($this->getGitRepositoryUrlManager());
+        $gitolite_driver = new Git_GitoliteDriver(
+            $this->getGitSystemEventManager(),
+            $this->getGitRepositoryUrlManager()
+        );
 
         $gitolite_driver->checkAuthorizedKeys();
         $gitgc->cleanUpGitoliteAdminWorkingCopy();
