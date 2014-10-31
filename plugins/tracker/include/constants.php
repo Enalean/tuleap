@@ -209,3 +209,11 @@ define('TRACKER_EVENT_ARTIFACT_DELETE', 'tracker_event_artifact_delete');
  *   'tracker'    Tracker
  */
 define('TRACKER_EVENT_TRACKER_DELETE', 'tracker_event_tracker_delete');
+
+/**
+ * Event emitted when a tracker has its permissions changed
+ *
+ * Parameters:
+ *   'tracker'    Tracker
+ */
+define('TRACKER_EVENT_TRACKER_PERMISSIONS_CHANGE', 'tracker_event_tracker_permisssions_change');

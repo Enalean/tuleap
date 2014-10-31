@@ -33,21 +33,8 @@ class SystemEvent_FULLTEXTSEARCH_TRACKER_REINDEX_PROJECT extends SystemEvent {
     private $tracker_factory;
 
     public function injectDependencies(FullTextSearchTrackerActions $actions, TrackerFactory $tracker_factory) {
-        parent::injectDependencies();
-        $this->setFullTextSearchTrackerActions($actions);
+        $this->actions         = $actions;
         $this->tracker_factory = $tracker_factory;
-    }
-
-    /**
-     * Set dependency
-     *
-     * @param FullTextSearchTrackerActions $actions Dependency
-     *
-     * @return SystemEvent_FULLTEXTSEARCH_TRACKER_REINDEX_PROJECT
-     */
-    public function setFullTextSearchTrackerActions(FullTextSearchTrackerActions $actions) {
-        $this->actions = $actions;
-        return $this;
     }
 
     /**

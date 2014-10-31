@@ -21,8 +21,17 @@
 class Tracker_Permission_PermissionManager {
 
     public function save(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permission_setter) {
-        if ($this->checkPermissionValidity($request, $permission_setter->getTracker())) {
+        $tracker = $permission_setter->getTracker();
+
+        if ($this->checkPermissionValidity($request, $tracker)) {
             $this->getChainOfResponsability()->apply($request, $permission_setter);
+
+            EventManager::instance()->processEvent(
+                TRACKER_EVENT_TRACKER_PERMISSIONS_CHANGE,
+                array(
+                    'tracker' => $tracker,
+                )
+            );
         }
     }
 

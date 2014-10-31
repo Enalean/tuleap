@@ -71,6 +71,10 @@ class FullTextSearch_Controller_Admin extends FullTextSearch_Controller_Search {
         $this->tracker_system_event_manager->queueTrackersProjectReindexation($group_id);
     }
 
+    public function reindexTracker(Tracker $tracker) {
+        $this->tracker_system_event_manager->queueTrackerReindexation($tracker);
+    }
+
     private function getProjectPresenters($projects) {
         $presenters = array();
         foreach ($projects as $project) {

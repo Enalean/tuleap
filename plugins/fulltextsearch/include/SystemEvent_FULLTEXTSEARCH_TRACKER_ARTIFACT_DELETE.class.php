@@ -28,17 +28,7 @@ class SystemEvent_FULLTEXTSEARCH_TRACKER_ARTIFACT_DELETE extends SystemEvent {
     private $actions;
 
     public function injectDependencies(FullTextSearchTrackerActions $actions) {
-        parent::injectDependencies();
-        $this->setFullTextSearchTrackerActions($actions);
-    }
-
-
-    /**
-     * @return SystemEvent_FULLTEXTSEARCH_TRACKER_ARTIFACT_DELETE
-     */
-    public function setFullTextSearchTrackerActions(FullTextSearchTrackerActions $actions) {
         $this->actions = $actions;
-        return $this;
     }
 
     /**

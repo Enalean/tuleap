@@ -68,9 +68,13 @@ class FullTextSearchTrackerActions {
 
     public function reIndexProjectArtifacts(array $trackers) {
         foreach ($trackers as $tracker) {
-            $this->deleteTracker($tracker);
-            $this->indexAllProjectArtifacts($tracker);
+            $this->reIndexTracker($tracker);
         }
+    }
+
+    public function reIndexTracker(Tracker $tracker) {
+        $this->deleteTracker($tracker);
+        $this->indexAllArtifacts($tracker);
     }
 
     private function deleteTracker($tracker) {
@@ -88,7 +92,7 @@ class FullTextSearchTrackerActions {
         }
     }
 
-    private function indexAllProjectArtifacts($tracker) {
+    private function indexAllArtifacts(Tracker $tracker) {
         $tracker_id                = $tracker->getId();
         $tracker_artifact_factory  = Tracker_ArtifactFactory::instance();
         $tracker_artifact_iterator = new Tracker_Artifact_BatchIterator($tracker_artifact_factory, $tracker_id);
