@@ -21,6 +21,12 @@
 
 
 class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backend_Interface {
+
+    /**
+     * @var Logger
+     */
+    private $logger;
+
     /**
      * @var Git_GitoliteDriver
      */
@@ -46,8 +52,9 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      * 
      * @param Git_GitoliteDriver $driver
      */
-    public function __construct($driver) {
+    public function __construct(Git_GitoliteDriver $driver, Logger $logger) {
         $this->driver = $driver;
+        $this->logger = $logger;
     }
 
     /**
@@ -350,6 +357,8 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
 
     public function delete(GitRepository $repository) {
         $this->updateRepoConf($repository);
+
+        $this->logger->debug('Backuping '. $repository->getPath());
         $path = $this->getGitRootPath().$repository->getPath();
         $gitBackupDirectory = $this->getGitPlugin()->getConfigurationParameter('git_backup_dir');
         $repositoryName     = $repository->getName();

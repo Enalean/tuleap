@@ -50,7 +50,8 @@ class SystemEvent_GIT_REPO_DELETETest extends TuleapTestCase {
         $this->event->setParameters($this->project_id . SystemEvent::PARAMETER_SEPARATOR . $this->repository_id);
         $this->event->injectDependencies(
             $this->repository_factory,
-            $this->manifest_manager
+            $this->manifest_manager,
+            mock('Logger')
         );
     }
 

@@ -42,6 +42,11 @@ require_once 'common/project/UGroupLiteralizer.class.php';
 class Git_GitoliteDriver {
 
     /**
+     * @var Logger
+     */
+    private $logger;
+
+    /**
      * @var Git_SystemEventManager
      */
     private $git_system_event_manager;
@@ -83,6 +88,7 @@ class Git_GitoliteDriver {
      *                          Default is $sys_data_dir . "/gitolite/admin"
      */
     public function __construct(
+        Logger $logger,
         Git_SystemEventManager $git_system_event_manager,
         Git_GitRepositoryUrlManager $url_manager,
         $adminPath                               = null,
@@ -90,6 +96,7 @@ class Git_GitoliteDriver {
         GitRepositoryFactory $repository_factory = null,
         Git_Gitolite_ConfigPermissionsSerializer $permissions_serializer = null
     ) {
+        $this->logger                   = $logger;
         $this->git_system_event_manager = $git_system_event_manager;
         if (!$adminPath) {
             $adminPath = $GLOBALS['sys_data_dir'] . '/gitolite/admin';
@@ -175,7 +182,9 @@ class Git_GitoliteDriver {
     }
 
     public function push() {
+        $this->logger->debug('Pushing in gitolite admin repository...');
         $res = $this->gitExec->push();
+        $this->logger->debug('Pushing in gitolite admin repository: done');
         chdir($this->oldCwd);
 
         $this->git_system_event_manager->queueGrokMirrorManifest(new GitRepositoryGitoliteAdmin());
@@ -207,7 +216,9 @@ class Git_GitoliteDriver {
      * @param Project $project
      */
     public function dumpProjectRepoConf($project) {
-        $project_config   = '';
+        $this->logger->debug("Dumping project repo conf for: ". $project->getUnixName());
+
+        $project_config = '';
         foreach ($this->repository_factory->getAllRepositoriesOfProject($project) as $repository) {
             $project_config .= $this->fetchReposConfig($project, $repository);
         }
@@ -339,10 +350,12 @@ class Git_GitoliteDriver {
            throw new GitDriverErrorException('Empty path or permission denied '.$path);
         }
         $rcode = 0;
+        $this->logger->debug('Removing physically the repository...');
         $output = system('rm -fr '.escapeshellarg($path), $rcode);
         if ( $rcode != 0 ) {
-           throw new GitDriverErrorException('Unable to delete path '.$path);
+            throw new GitDriverErrorException('Unable to delete path '.$path);
         }
+        $this->logger->debug('Removing physically the repository: done');
         return true;
     }
     

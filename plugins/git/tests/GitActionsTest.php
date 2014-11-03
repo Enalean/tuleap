@@ -66,7 +66,9 @@ class GitActionsTest extends TuleapTestCase {
                 mock('Git_Driver_Gerrit_Template_TemplateFactory'),
                 mock('ProjectManager'),
                 mock('GitPermissionsManager'),
-                $url_manager
+                $url_manager,
+                mock('Logger'),
+                mock('Git_Backend_Gitolite')
             )
         );
     }
@@ -471,7 +473,9 @@ class GitActions_Delete_Tests extends TuleapTestCase {
             mock('Git_Driver_Gerrit_Template_TemplateFactory'),
             mock('ProjectManager'),
             mock('GitPermissionsManager'),
-            $url_manager
+            $url_manager,
+            mock('Logger'),
+            mock('Git_Backend_Gitolite')
         );
     }
 
@@ -524,7 +528,9 @@ class GitActions_ForkTests extends TuleapTestCase {
             mock('Git_Driver_Gerrit_Template_TemplateFactory'),
             mock('ProjectManager'),
             mock('GitPermissionsManager'),
-            $url_manager
+            $url_manager,
+            mock('Logger'),
+            mock('Git_Backend_Gitolite')
         );
     }
 
@@ -652,7 +658,9 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
             mock('Git_Driver_Gerrit_Template_TemplateFactory'),
             mock('ProjectManager'),
             mock('GitPermissionsManager'),
-            $url_manager
+            $url_manager,
+            mock('Logger'),
+            mock('Git_Backend_Gitolite')
         );
     }
 
@@ -714,7 +722,9 @@ class GitActions_disconnectFromGerritTest extends TuleapTestCase {
             mock('Git_Driver_Gerrit_Template_TemplateFactory'),
             mock('ProjectManager'),
             mock('GitPermissionsManager'),
-            $url_manager
+            $url_manager,
+            mock('Logger'),
+            mock('Git_Backend_Gitolite')
         );
     }
 
@@ -795,7 +805,9 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
             mock('Git_Driver_Gerrit_Template_TemplateFactory'),
             mock('ProjectManager'),
             $this->git_permissions_manager,
-            $url_manager
+            $url_manager,
+            mock('Logger'),
+            mock('Git_Backend_Gitolite')
         );
 
     }

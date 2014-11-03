@@ -29,6 +29,16 @@ require_once('common/layout/Layout.class.php');
 class GitActions extends PluginActions {
 
     /**
+     * @var Git_Backend_Gitolite
+     */
+    private $backend_gitolite;
+
+    /**
+     * @var Logger
+     */
+    private $logger;
+
+    /**
      * @var Git_SystemEventManager
      */
     protected $git_system_event_manager;
@@ -95,7 +105,9 @@ class GitActions extends PluginActions {
         Git_Driver_Gerrit_Template_TemplateFactory $template_factory,
         ProjectManager $project_manager,
         GitPermissionsManager $git_permissions_manager,
-        Git_GitRepositoryUrlManager $url_manager
+        Git_GitRepositoryUrlManager $url_manager,
+        Logger $logger,
+        Git_Backend_Gitolite $backend_gitolite
     ) {
         parent::__construct($controller);
         $this->git_system_event_manager = $system_event_manager;
@@ -109,6 +121,8 @@ class GitActions extends PluginActions {
         $this->project_manager          = $project_manager;
         $this->git_permissions_manager  = $git_permissions_manager;
         $this->url_manager              = $url_manager;
+        $this->logger                   = $logger;
+        $this->backend_gitolite         = $backend_gitolite;
     }
 
     protected function getText($key, $params = array()) {
@@ -155,17 +169,14 @@ class GitActions extends PluginActions {
         $projectId  = intval( $projectId );
 
         try {
-            $backend = new Git_Backend_Gitolite(
-                new Git_GitoliteDriver($this->git_system_event_manager, $this->url_manager)
-            );
             $repository = new GitRepository();
-            $repository->setBackend($backend);
+            $repository->setBackend($this->backend_gitolite);
             $repository->setDescription(GitRepository::DEFAULT_DESCRIPTION);
             $repository->setCreator(UserManager::instance()->getCurrentUser());
             $repository->setProject(ProjectManager::instance()->getProject($projectId));
             $repository->setName($repositoryName);
 
-            $this->manager->create($repository, $backend);
+            $this->manager->create($repository, $this->backend_gitolite);
             $this->redirectToRepo($repository);
         } catch (Exception $exception) {
             $controller->addError($exception->getMessage());
@@ -698,17 +709,6 @@ class GitActions extends PluginActions {
         return $r->renameProject($project, $newName);
     }
 
-    public static function isNameAvailable($newName, &$error, $url_manager) {
-        $git_system_event_manager = new Git_SystemEventManager(SystemEventManager::instance());
-        $b1 = new Git_Backend_Gitolite(new Git_GitoliteDriver($git_system_event_manager, $url_manager));
-        $b2 = Backend::instance('Git','GitBackend', array($url_manager));
-        if (!$b1->isNameAvailable($newName) && !$b2->isNameAvailable($newName)) {
-            $error = $GLOBALS['Language']->getText('plugin_git', 'actions_name_not_available');
-            return false;
-        }
-        return true;
-    }
-
     function _loadRepository($projectId, $repositoryId) {
         $repository = $this->getGitRepository($repositoryId);
         if ($repository) {
@@ -780,8 +780,7 @@ class GitActions extends PluginActions {
                 $this->gerrit_server_factory->getServerById($remote_server_id);
                 $this->git_system_event_manager->queueMigrateToGerrit($repository, $remote_server_id, $gerrit_template_id);
             } catch (Exception $e) {
-                $logger = new BackendLogger();
-                $logger->log($e->getMessage(), Feedback::ERROR);
+                $this->logger->log($e->getMessage(), Feedback::ERROR);
             }
         }
     }

@@ -32,14 +32,19 @@ class SystemEvent_GIT_REPO_UPDATE extends SystemEvent {
     /** @var Git_Mirror_ManifestManager */
     private $manifest_manager;
 
+    /** @var Logger */
+    private $logger;
+
     public function injectDependencies(
         GitRepositoryFactory $repository_factory,
         SystemEventDao $system_event_dao,
-        Git_Mirror_ManifestManager $manifest_manager
+        Git_Mirror_ManifestManager $manifest_manager,
+        Logger $logger
     ) {
         $this->repository_factory = $repository_factory;
         $this->system_event_dao   = $system_event_dao;
         $this->manifest_manager   = $manifest_manager;
+        $this->logger             = $logger;
     }
 
     public static function queueInSystemEventManager(SystemEventManager $system_event_manager, GitRepository $repository) {
@@ -72,8 +77,11 @@ class SystemEvent_GIT_REPO_UPDATE extends SystemEvent {
         $events_to_repos = $this->getAllEvents();
         $event_ids       = $this->getEventIds($events_to_repos);
 
+        $nb_events = count($event_ids);
+        $this->logger->debug("Found {$nb_events} UPDATE events to be executed");
+
         $this->system_event_dao->markAsRunning($event_ids);
-        $repositories   = $this->getOneRepoPerProject($events_to_repos);
+        $repositories = $this->getOneRepoPerProject($events_to_repos);
 
         $repository->getBackend()->updateAllRepoConf($repositories);
         $this->system_event_dao->markAsDone($event_ids);

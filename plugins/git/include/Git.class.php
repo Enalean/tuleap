@@ -27,6 +27,7 @@ require_once 'common/include/CSRFSynchronizerToken.class.php';
  * @author Guillaume Storchi
  */
 class Git extends PluginController {
+
     const PERM_READ  = 'PLUGIN_GIT_READ';
     const PERM_WRITE = 'PLUGIN_GIT_WRITE';
     const PERM_WPLUS = 'PLUGIN_GIT_WPLUS';
@@ -47,6 +48,16 @@ class Git extends PluginController {
     public static function allPermissionTypes() {
         return array(Git::PERM_READ, Git::PERM_WRITE, Git::PERM_WPLUS);
     }
+
+    /**
+     * @var Git_Backend_Gitolite
+     */
+    private $backend_gitolite;
+
+    /**
+     * @var Logger
+     */
+    private $logger;
 
     /**
      * @var int
@@ -117,7 +128,9 @@ class Git extends PluginController {
         Git_Driver_Gerrit_ProjectCreator $project_creator,
         Git_Driver_Gerrit_Template_TemplateFactory $template_factory,
         GitPermissionsManager $permissions_manager,
-        Git_GitRepositoryUrlManager $url_manager
+        Git_GitRepositoryUrlManager $url_manager,
+        Logger $logger,
+        Git_Backend_Gitolite $backend_gitolite
     ) {
         parent::__construct($user_manager, $request);
 
@@ -135,6 +148,8 @@ class Git extends PluginController {
         $this->permissions_manager      = $permissions_manager;
         $this->plugin                   = $plugin;
         $this->url_manager              = $url_manager;
+        $this->logger                   = $logger;
+        $this->backend_gitolite         = $backend_gitolite;
 
         $url = new Git_URL(
             $this->projectManager,
@@ -826,7 +841,9 @@ class Git extends PluginController {
             $this->template_factory,
             $this->projectManager,
             $this->permissions_manager,
-            $this->url_manager
+            $this->url_manager,
+            $this->logger,
+            $this->backend_gitolite
         );
     }
 

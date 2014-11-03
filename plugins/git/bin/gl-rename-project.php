@@ -33,7 +33,11 @@ if ($argc !== 3) {
 /* @var $git_plugin GitPlugin */
 $git_plugin  = PluginManager::instance()->getPluginByName('git');
 $url_manager = new Git_GitRepositoryUrlManager($git_plugin);
-$driver      = new Git_GitoliteDriver($git_plugin->getGitSystemEventManager(), $url_manager);
+$driver      = new Git_GitoliteDriver(
+    $git_plugin->getLogger(),
+    $git_plugin->getGitSystemEventManager(),
+    $url_manager
+);
 if ($driver->renameProject($argv[1], $argv[2])) {
     echo "Rename done!\n";
     exit(0);
