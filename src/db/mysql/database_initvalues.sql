@@ -157,7 +157,8 @@ INSERT INTO groups SET \
   svn_tracker = '1', \
   svn_mandatory_ref = '0', \
   svn_events_mailing_header = '', \
-  svn_preamble = '' ;
+  svn_preamble = '', \
+  svn_commit_to_tag_denied ='0' ;
 
 INSERT INTO groups SET \
   group_id = '46', \
@@ -195,7 +196,8 @@ INSERT INTO groups SET \
   svn_tracker = '0', \
   svn_mandatory_ref = '0', \
   svn_events_mailing_header = '', \
-  svn_preamble = '' ;
+  svn_preamble = '', \
+  svn_commit_to_tag_denied ='0' ;
 
 
 INSERT INTO groups SET \
@@ -234,7 +236,8 @@ INSERT INTO groups SET \
   svn_tracker = '1', \
   svn_mandatory_ref = '0', \
   svn_events_mailing_header = '', \
-  svn_preamble = '' ;
+  svn_preamble = '', \
+  svn_commit_to_tag_denied ='0' ;
 
 
 INSERT INTO groups_notif_delegation_message SET \

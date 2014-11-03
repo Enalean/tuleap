@@ -539,6 +539,7 @@ CREATE TABLE groups (
   svn_events_mailing_header varchar(64) binary DEFAULT NULL,
   svn_preamble text NOT NULL,
   svn_accessfile_version_id INT(11) NULL,
+  svn_commit_to_tag_denied TINYINT(1) NOT NULL DEFAULT '0',
   PRIMARY KEY  (group_id),
   KEY idx_groups_status (status),
   KEY idx_groups_public (is_public),

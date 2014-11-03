@@ -38,6 +38,21 @@ class SVN_Svnlook {
     }
 
     /**
+     * Returns transaction path
+     *
+     * @param Project $project
+     * @param int $transaction
+     *
+     * @throw SVN_SvnlookException
+     *
+     * @return array
+     */
+    public function getTransactionPath(Project $project, $transaction) {
+        $command = 'changed -t ' . escapeshellarg($transaction) . ' ' .escapeshellarg($project->getSVNRootPath());
+        return $this->execute($command);
+    }
+
+    /**
      * Returns revision info for a project E.g. array(
      *      lucky luke,     //author
      *      1545654656,     //datestamp

@@ -341,6 +341,14 @@ class Project extends Group implements PFO_Project {
         return $this->project_data_array['svn_mandatory_ref'];
     }
 
+    /**
+     * Check if update/delete are no more allowed on tags for this subversion repository when this option is enabled
+     *
+     */
+    function isCommitToTagDenied() {
+        return $this->project_data_array['svn_commit_to_tag_denied'];
+    }
+
     function canChangeSVNLog(){
         return $this->project_data_array['svn_can_change_log'];
     }

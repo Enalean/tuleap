@@ -49,4 +49,43 @@ class SVN_Hook_PreCommit extends SVN_Hook {
     private function optionDoesNotAllowEmptyCommitMessage() {
         return ! Config::get('sys_allow_empty_svn_commit_message');
     }
+
+    /**
+     * Check if the commit is done on an allowed path
+     * @param String  $repository
+     * @param Integer $transaction
+     * @throws Exception
+     */
+    public function assertCommitToTagIsAllowed($repository, $transaction) {
+        $project = $this->getProjectFromRepositoryPath($repository);
+        if ($project->isCommitToTagDenied() && $this->assertItIsAllowedOperationToTag($project, $transaction)) {
+            throw new Exception("Commit to tag is not allowed");
+        }
+    }
+
+   /**
+     * Check if the commit target is tags
+     * @param Project $project
+     * @param Integer $transaction
+     *
+     * @return Boolean
+     */
+    public function assertItIsAllowedOperationToTag($project, $transaction) {
+        $svnlook = new SVN_Svnlook();
+        $path = $svnlook->getTransactionPath($project, $transaction);
+        return $this->isItUpdateOrDeleteToTag($path[0]);
+    }
+
+   /**
+     * Check if it is an update or delete to tags
+     * @param String $path
+     *
+     * @return Boolean
+     */
+    public function isItUpdateOrDeleteToTag($path) {
+        if (preg_match("/^[U|D]\W.*\/tags\//", $path)) {
+            return true;
+        }
+        return false;
+    }
 }
