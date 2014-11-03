@@ -46,6 +46,9 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
     /** @var Git_GitRepositoryUrlManager */
     protected $url_manager;
 
+    /** @var Git_SystemEventManager */
+    protected $git_system_event_manager;
+
     public function setUp() {
         parent::setUp();
         $this->cwd           = getcwd();
@@ -86,7 +89,16 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
             'whatever'
         );
 
-        $this->driver = new Git_GitoliteDriver($this->url_manager, $this->_glAdmDir, $this->gitExec, $this->repository_factory, $this->gitolite_permissions_serializer);
+        $this->git_system_event_manager = mock('Git_SystemEventManager');
+
+        $this->driver = new Git_GitoliteDriver(
+            $this->git_system_event_manager,
+            $this->url_manager,
+            $this->_glAdmDir,
+            $this->gitExec,
+            $this->repository_factory,
+            $this->gitolite_permissions_serializer
+        );
     }
     
     public function tearDown() {

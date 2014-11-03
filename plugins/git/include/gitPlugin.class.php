@@ -187,10 +187,15 @@ class GitPlugin extends Plugin {
                 $params['dependencies'] = array(
                     $this->getRepositoryFactory(),
                     $this->getSystemEventDao(),
+                    $this->getManifestManager(),
                 );
                 break;
             case SystemEvent_GIT_REPO_DELETE::NAME:
                 $params['class'] = 'SystemEvent_GIT_REPO_DELETE';
+                $params['dependencies'] = array(
+                    $this->getRepositoryFactory(),
+                    $this->getManifestManager(),
+                );
                 break;
             case SystemEvent_GIT_REPO_ACCESS::NAME:
                 $params['class'] = 'SystemEvent_GIT_REPO_ACCESS';
@@ -691,10 +696,14 @@ class GitPlugin extends Plugin {
             $params['logger'],
             $this->getGitoliteAdminPath()
         );
-        $gitolite_driver = new Git_GitoliteDriver($this->getGitRepositoryUrlManager());
+        $gitolite_driver = new Git_GitoliteDriver(
+            $this->getGitSystemEventManager(),
+            $this->getGitRepositoryUrlManager()
+        );
+        $manifest_manager = $this->getManifestManager();
 
-        $gitolite_driver->checkAuthorizedKeys();
-        $gitgc->cleanUpGitoliteAdminWorkingCopy();
+        $system_check = new Git_SystemCheck($gitgc, $gitolite_driver, $manifest_manager);
+        $system_check->process();
     }
 
     /**
@@ -1228,8 +1237,7 @@ class GitPlugin extends Plugin {
                 new Git_Mirror_MirrorDao(),
                 UserManager::instance()
             ),
-            $logger,
-            $this->getConfigurationParameter('grokmanifest_path')
+            new Git_Mirror_ManifestFileGenerator($logger, Config::get('sys_data_dir').'/gitolite/grokmirror')
         );
     }
 

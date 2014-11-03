@@ -103,6 +103,20 @@ class Git_Mirror_MirrorDataMapper {
         return $mirrors;
     }
 
+    public function fetchRepositoriesForMirror(Git_Mirror_Mirror $mirror) {
+        $factory = new GitRepositoryFactory(
+            new GitDao(),
+            ProjectManager::instance()
+        );
+
+        $repositories = array();
+        foreach ($this->dao->fetchAllRepositoryMirroredByMirror($mirror->id) as $row) {
+            $repositories[] = $factory->instanciateFromRow($row);
+        }
+
+        return $repositories;
+    }
+
     public function fetchRepositoriesPerMirrorPresenters(Git_Mirror_Mirror $mirror) {
         $presenters = array();
 

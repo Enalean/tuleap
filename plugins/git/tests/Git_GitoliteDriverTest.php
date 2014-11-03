@@ -98,6 +98,7 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
 
     public function itAddsTheDescriptionToTheConfFile() {
         $driver = new Git_GitoliteDriver(
+            $this->git_system_event_manager,
             $this->url_manager,
             $this->_glAdmDir,
             $this->gitExec,
@@ -144,6 +145,7 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
     
     public function itReplacesNewlinesBySpaces() {
         $driver = new Git_GitoliteDriver(
+            $this->git_system_event_manager,
             $this->url_manager,
             $this->_glAdmDir,
             $this->gitExec,
@@ -195,6 +197,7 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
     // 5 has pimped perms
     public function testDumpProjectRepoPermissions() {
         $driver = new Git_GitoliteDriver(
+            $this->git_system_event_manager,
             $this->url_manager,
             $this->_glAdmDir,
             $this->gitExec,
@@ -256,6 +259,7 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
 
     public function testRewindAccessRightsToGerritUserWhenRepoIsMigratedToGerrit() {
         $driver = new Git_GitoliteDriver(
+            $this->git_system_event_manager,
             $this->url_manager,
             $this->_glAdmDir,
             $this->gitExec,
@@ -330,10 +334,18 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
         $this->assertPattern('`\ninclude "projects/newone.conf"\n`', $this->getGitoliteConf());
         $this->assertEmptyGitStatus();
     }
+
+    public function itQueuesGrokmirrorManifestEventAfterPush() {
+        expect($this->git_system_event_manager)
+            ->queueGrokMirrorManifest(new IsAExpectation('GitRepositoryGitoliteAdmin'))
+            ->once();
+
+        $this->driver->push();
+    }
 }
 
 class Git_GitoliteDriver_ForkTest extends Git_GitoliteTestCase {
-    
+
     protected function _getFileGroupName($filePath) {
         clearstatcache();
         $rootStats = stat($filePath);

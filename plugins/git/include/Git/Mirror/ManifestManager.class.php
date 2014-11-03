@@ -20,70 +20,71 @@
 
 class Git_Mirror_ManifestManager {
 
-    const FILE_PREFIX = 'manifest_mirror_';
-
     /**
-     * @var BackendLogger
+     * @var Git_Mirror_ManifestFileGenerator
      */
-    private $logger;
+    private $generator;
 
     /**
      * @var Git_Mirror_MirrorDataMapper
      */
     private $data_mapper;
-    private $grokmanifest_path;
-    private $manifest_directory;
 
-    public function __construct(Git_Mirror_MirrorDataMapper $data_mapper, Logger $logger, $grokmanifest_path) {
-        $this->data_mapper        = $data_mapper;
-        $this->logger             = $logger;
-        $this->grokmanifest_path  = $grokmanifest_path;
-        $this->manifest_directory =  Config::get('sys_data_dir').'/gitolite/grokmirror';
+    public function __construct(
+        Git_Mirror_MirrorDataMapper $data_mapper,
+        Git_Mirror_ManifestFileGenerator $generator
+    ) {
+        $this->data_mapper = $data_mapper;
+        $this->generator   = $generator;
     }
 
     public function triggerUpdateByRoot(GitRepository $repository) {
         $this->triggerUpdate($repository);
-        if (is_dir($this->manifest_directory)) {
-            foreach (glob($this->manifest_directory . '/' . self::FILE_PREFIX . '*') as $file) {
-                chown($file, 'gitolite');
-                chgrp($file, 'gitolite');
-            }
-        }
+        $this->forceFileOwnershipToAppUser();
     }
 
     public function triggerUpdate(GitRepository $repository) {
-        if (! is_executable($this->grokmanifest_path)) {
-            $this->logger->debug("[git post receive] no grokmirror-manifest executable found. Check git config");
-            return false;
-        }
-        $mirrors = $this->data_mapper->fetchAllRepositoryMirrors($repository);
-        if (count($mirrors) == 0) {
-            $this->logger->debug("[git post receive] no mirrors on which replicate");
-            return false;
+        $all_mirrors        = $this->data_mapper->fetchAll();
+        $repository_mirrors = $this->data_mapper->fetchAllRepositoryMirrors($repository);
+
+        foreach ($repository_mirrors as $mirror) {
+            $this->generator->addRepositoryToManifestFile($mirror, $repository);
         }
 
-        $repositories_base_path = realpath(Config::get('sys_data_dir').'/gitolite/repositories');
-        $current_directory      = realpath($repository->getFullPath());
-
-        foreach ($mirrors as $mirror) {
-            $this->logger->debug("[git post receive] update mirror {$mirror->url} (id: {$mirror->id}) manifest for ".$current_directory);
-            $manifest_path = escapeshellarg($this->getManifestPathForMirror($mirror));
-            $this->exec("{$this->grokmanifest_path} -m $manifest_path -t $repositories_base_path -n $current_directory");
+        $not_repository_mirrors = array_diff($all_mirrors, $repository_mirrors);
+        foreach ($not_repository_mirrors as $mirror) {
+            $this->generator->removeRepositoryFromManifestFile($mirror, $repository);
         }
     }
 
-    private function getManifestPathForMirror(Git_Mirror_Mirror $mirror) {
-        return $this->manifest_directory."/manifest_mirror_{$mirror->id}.js.gz";
+    public function checkManifestFiles() {
+        $gitolite_admin_repository = new GitRepositoryGitoliteAdmin();
+        $all_mirrors = $this->data_mapper->fetchAll();
+        foreach ($all_mirrors as $mirror) {
+            $repositories = $this->data_mapper->fetchRepositoriesForMirror($mirror);
+            array_splice($repositories, 0, 0, array($gitolite_admin_repository));
+            $this->generator->ensureManifestContainsLatestInfoOfRepositories(
+                $mirror,
+                $repositories
+            );
+        }
+        $this->forceFileOwnershipToAppUser();
     }
 
-    private function exec($cmd) {
-        $output       = array();
-        $return_value = 1;
-        exec("$cmd 2>&1", $output, $return_value);
-        if ($return_value == 0) {
-            return true;
-        } else {
-            $this->logger->error("[git post receive] an error was raised by grokmirror command: $cmd\n".implode("\n", $output));
+    public function triggerDelete(GitRepository $repository) {
+        $all_mirrors = $this->data_mapper->fetchAll();
+        foreach ($all_mirrors as $mirror) {
+            $this->generator->removeRepositoryFromManifestFile($mirror, $repository);
+        }
+    }
+
+    private function forceFileOwnershipToAppUser() {
+        $manifest_directory = $this->generator->getManifestDirectory();
+        if (is_dir($manifest_directory)) {
+            foreach (glob($manifest_directory . '/' . Git_Mirror_ManifestFileGenerator::FILE_PREFIX . '*') as $file) {
+                chown($file, Config::get('sys_http_user'));
+                chgrp($file, Config::get('sys_http_user'));
+            }
         }
     }
 }

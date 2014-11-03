@@ -41,7 +41,6 @@ class Git_SystemEventManager {
                 SystemEvent::PRIORITY_HIGH,
                 SystemEvent::OWNER_APP
             );
-            $this->queueGrokMirrorManifest($repository);
         }
     }
 

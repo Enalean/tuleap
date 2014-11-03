@@ -28,6 +28,7 @@ class GitRepositoryGitoliteAdmin extends GitRepository {
     public function __construct() {
         parent::__construct();
         $this->setId(self::ID);
+        $this->setPath(self::NAME);
     }
 
     public function getPathWithoutLazyLoading() {

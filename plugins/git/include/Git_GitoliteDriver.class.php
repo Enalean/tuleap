@@ -42,6 +42,11 @@ require_once 'common/project/UGroupLiteralizer.class.php';
 class Git_GitoliteDriver {
 
     /**
+     * @var Git_SystemEventManager
+     */
+    private $git_system_event_manager;
+
+    /**
      * @var Git_Exec
      */
     private $gitExec;
@@ -78,12 +83,14 @@ class Git_GitoliteDriver {
      *                          Default is $sys_data_dir . "/gitolite/admin"
      */
     public function __construct(
+        Git_SystemEventManager $git_system_event_manager,
         Git_GitRepositoryUrlManager $url_manager,
         $adminPath                               = null,
         Git_Exec $gitExec                        = null,
         GitRepositoryFactory $repository_factory = null,
         Git_Gitolite_ConfigPermissionsSerializer $permissions_serializer = null
     ) {
+        $this->git_system_event_manager = $git_system_event_manager;
         if (!$adminPath) {
             $adminPath = $GLOBALS['sys_data_dir'] . '/gitolite/admin';
         }
@@ -170,6 +177,9 @@ class Git_GitoliteDriver {
     public function push() {
         $res = $this->gitExec->push();
         chdir($this->oldCwd);
+
+        $this->git_system_event_manager->queueGrokMirrorManifest(new GitRepositoryGitoliteAdmin());
+
         return $res;
     }
 
