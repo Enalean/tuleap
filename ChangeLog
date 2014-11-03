@@ -1,3 +1,9 @@
+Version 7.6-3 (Monday, November 3rd 2014)
+	== Bug Fix ==
+	* request #7535 TV3 to TV5 : a float field with no value generate errors in XML import
+	* request #7573 sftp browser information: wrong size unit shown
+	* request #7541 TV3 to TV5 : bad path in attachments path migration
+
 Version 7.6-2 (Tuesday, October 28th 2014)
 	== Bug Fix ==
 	* request #7503: CI job bad parameters with svn
