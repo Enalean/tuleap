@@ -55,10 +55,33 @@ class Git_Mirror_ManifestFileGenerator {
         $list_of_repositories = $this->getListOfRepositoriesFromManifest($filename);
         $key = $this->getRepositoryKey($repository);
         if (isset($list_of_repositories[$key])) {
-            $this->logger->debug("removing {$key} from manifest of mirror {$mirror->url} (id: {$mirror->id})");
-            unset($list_of_repositories[$key]);
+            $this->removeRepository($mirror, $list_of_repositories, $key);
             $this->writeManifest($filename, $list_of_repositories);
         }
+    }
+
+    public function ensureManifestContainsLatestInfoOfRepositories(
+        Git_Mirror_Mirror $mirror,
+        array $expected_repositories
+    ) {
+        $filename = $this->getManifestFilenameForMirror($mirror);
+
+        $list_of_repositories = $this->getListOfRepositoriesFromManifest($filename);
+        foreach ($expected_repositories as $repository) {
+            $key = $this->getRepositoryKey($repository);
+            if (! isset($list_of_repositories[$key])) {
+                $this->addRepository($mirror, $list_of_repositories, $repository);
+            }
+        }
+
+        $expected_keys = array_flip(array_map(array($this, 'getRepositoryKey'), $expected_repositories));
+        foreach ($list_of_repositories as $key => $nop) {
+            if (! isset($expected_keys[$key])) {
+                $this->removeRepository($mirror, $list_of_repositories, $key);
+            }
+        }
+
+        $this->writeManifest($filename, $list_of_repositories);
     }
 
     private function getManifestFilenameForMirror(Git_Mirror_Mirror $mirror) {
@@ -74,13 +97,31 @@ class Git_Mirror_ManifestFileGenerator {
     ) {
         $key = $this->getRepositoryKey($repository);
         if (isset($list_of_repositories[$key])) {
-            $this->logger->debug("updating {$key} to manifest of mirror {$mirror->url} (id: {$mirror->id})");
+            $this->logger->debug("updating {$key} in manifest of mirror {$mirror->url} (id: {$mirror->id})");
+            $list_of_repositories[$key]['modified'] = $_SERVER['REQUEST_TIME'];
         } else {
-            $this->logger->debug("adding {$key} to manifest of mirror {$mirror->url} (id: {$mirror->id})");
-            $this->makeSureThatGitoliteAdminRepositoryIsInTheManifest($list_of_repositories);
-            $list_of_repositories[$key] = $this->getRepositoryInformation($repository);
+            $this->addRepository($mirror, $list_of_repositories, $repository);
         }
-        $list_of_repositories[$key]['modified'] = $_SERVER['REQUEST_TIME'];
+    }
+
+    private function addRepository(
+        Git_Mirror_Mirror $mirror,
+        array &$list_of_repositories,
+        GitRepository $repository
+    ) {
+        $key = $this->getRepositoryKey($repository);
+        $this->logger->debug("adding {$key} to manifest of mirror {$mirror->url} (id: {$mirror->id})");
+        $this->makeSureThatGitoliteAdminRepositoryIsInTheManifest($list_of_repositories);
+        $list_of_repositories[$key] = $this->getRepositoryInformation($repository);
+    }
+
+    private function removeRepository(
+        Git_Mirror_Mirror $mirror,
+        array &$list_of_repositories,
+        $repository_key
+    ) {
+        $this->logger->debug("removing {$repository_key} from manifest of mirror {$mirror->url} (id: {$mirror->id})");
+        unset($list_of_repositories[$repository_key]);
     }
 
     private function makeSureThatGitoliteAdminRepositoryIsInTheManifest(array &$list_of_repositories) {
@@ -100,7 +141,8 @@ class Git_Mirror_ManifestFileGenerator {
         return array(
             "owner"       => null,
             "description" => $repository->getDescription(),
-            "reference"   => null
+            "reference"   => null,
+            'modified'    => $_SERVER['REQUEST_TIME']
         );
     }
 

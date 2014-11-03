@@ -700,9 +700,10 @@ class GitPlugin extends Plugin {
             $this->getGitSystemEventManager(),
             $this->getGitRepositoryUrlManager()
         );
+        $manifest_manager = $this->getManifestManager();
 
-        $gitolite_driver->checkAuthorizedKeys();
-        $gitgc->cleanUpGitoliteAdminWorkingCopy();
+        $system_check = new Git_SystemCheck($gitgc, $gitolite_driver, $manifest_manager);
+        $system_check->process();
     }
 
     /**

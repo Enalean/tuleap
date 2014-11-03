@@ -40,14 +40,7 @@ class Git_Mirror_ManifestManager {
 
     public function triggerUpdateByRoot(GitRepository $repository) {
         $this->triggerUpdate($repository);
-
-        $manifest_directory = $this->generator->getManifestDirectory();
-        if (is_dir($manifest_directory)) {
-            foreach (glob($manifest_directory . '/' . Git_Mirror_ManifestFileGenerator::FILE_PREFIX . '*') as $file) {
-                chown($file, Config::get('sys_http_user'));
-                chgrp($file, Config::get('sys_http_user'));
-            }
-        }
+        $this->forceFileOwnershipToAppUser();
     }
 
     public function triggerUpdate(GitRepository $repository) {
@@ -64,10 +57,34 @@ class Git_Mirror_ManifestManager {
         }
     }
 
+    public function checkManifestFiles() {
+        $gitolite_admin_repository = new GitRepositoryGitoliteAdmin();
+        $all_mirrors = $this->data_mapper->fetchAll();
+        foreach ($all_mirrors as $mirror) {
+            $repositories = $this->data_mapper->fetchRepositoriesForMirror($mirror);
+            array_splice($repositories, 0, 0, array($gitolite_admin_repository));
+            $this->generator->ensureManifestContainsLatestInfoOfRepositories(
+                $mirror,
+                $repositories
+            );
+        }
+        $this->forceFileOwnershipToAppUser();
+    }
+
     public function triggerDelete(GitRepository $repository) {
         $all_mirrors = $this->data_mapper->fetchAll();
         foreach ($all_mirrors as $mirror) {
             $this->generator->removeRepositoryFromManifestFile($mirror, $repository);
+        }
+    }
+
+    private function forceFileOwnershipToAppUser() {
+        $manifest_directory = $this->generator->getManifestDirectory();
+        if (is_dir($manifest_directory)) {
+            foreach (glob($manifest_directory . '/' . Git_Mirror_ManifestFileGenerator::FILE_PREFIX . '*') as $file) {
+                chown($file, Config::get('sys_http_user'));
+                chgrp($file, Config::get('sys_http_user'));
+            }
         }
     }
 }

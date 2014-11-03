@@ -204,7 +204,7 @@ class Git_Mirror_ManifestFileGenerator_addTest extends Git_Mirror_ManifestFileGe
     public function itLogsUpdate() {
         $this->forgeExistingManifestFile($this->manifest_file_for_singapour);
 
-        expect($this->logger)->debug('updating /linux/kernel.git to manifest of mirror singapour (id: 1)')->once();
+        expect($this->logger)->debug('updating /linux/kernel.git in manifest of mirror singapour (id: 1)')->once();
 
         $this->generator->addRepositoryToManifestFile($this->singapour_mirror, $this->kernel_repository);
     }
@@ -229,5 +229,42 @@ class Git_Mirror_ManifestFileGenerator_addTest extends Git_Mirror_ManifestFileGe
         // Expect no error
 
         $this->generator->addRepositoryToManifestFile($this->singapour_mirror, $this->kernel_repository);
+    }
+}
+
+class Git_Mirror_ManifestFileGenerator_ensureManifestContainsLatestInfoOfRepositoriesTest extends Git_Mirror_ManifestFileGenerator_BaseTest {
+
+    public function itAddsAMissingRepository() {
+        $this->forgeExistingManifestFile($this->manifest_file_for_singapour);
+
+        $this->generator->ensureManifestContainsLatestInfoOfRepositories(
+            $this->singapour_mirror,
+            array($this->firefox_repository)
+        );
+
+        $content = $this->getManifestContent($this->manifest_file_for_singapour);
+
+        $this->assertEqual($content["/mozilla/firefox.git"], array(
+            "owner"       => null,
+            "description" => "free and open-source web browser",
+            "reference"   => null,
+            "modified"    => $this->current_time
+        ));
+    }
+
+    public function itRemovesANotNeededRepository() {
+        $this->forgeExistingManifestFile($this->manifest_file_for_singapour);
+        $content_before = $this->getManifestContent($this->manifest_file_for_singapour);
+        $this->assertTrue(isset($content_before["/linux/kernel.git"]));
+
+        expect($this->logger)->debug('removing /linux/kernel.git from manifest of mirror singapour (id: 1)')->once();
+
+        $this->generator->ensureManifestContainsLatestInfoOfRepositories(
+            $this->singapour_mirror,
+            array()
+        );
+
+        $content_after = $this->getManifestContent($this->manifest_file_for_singapour);
+        $this->assertFalse(isset($content_after["/linux/kernel.git"]));
     }
 }

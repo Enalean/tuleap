@@ -33,6 +33,8 @@ class Git_Mirror_ManifestManagerTest extends TuleapTestCase {
     private $generator;
     /** @var GitRepository */
     private $repository;
+    /** @var GitRepository */
+    private $another_repository;
     /** @var Git_Mirror_Mirror */
     private $singapour_mirror;
     private $singapour_mirror_id = 1;
@@ -49,6 +51,11 @@ class Git_Mirror_ManifestManagerTest extends TuleapTestCase {
         $this->repository = aGitRepository()
             ->withPath('linux/kernel.git')
             ->withDescription('Linux4ever')
+            ->build();
+
+        $this->another_repository = aGitRepository()
+            ->withPath('mozilla/firefox.git')
+            ->withDescription('free and open-source web browser')
             ->build();
 
         $this->singapour_mirror = new Git_Mirror_Mirror(mock('PFUser'), $this->singapour_mirror_id, 'singapour');
@@ -91,5 +98,28 @@ class Git_Mirror_ManifestManagerTest extends TuleapTestCase {
         expect($this->generator)->removeRepositoryFromManifestFile($this->noida_mirror, $this->repository)->at(1);
 
         $this->manager->triggerDelete($this->repository);
+    }
+
+    public function itEnsuresThatManifestFilesOfMirrorsContainTheRepositories() {
+        stub($this->data_mapper)->fetchRepositoriesForMirror($this->singapour_mirror)->returns(
+            array($this->repository)
+        );
+        stub($this->data_mapper)->fetchRepositoriesForMirror($this->noida_mirror)->returns(
+            array($this->repository, $this->another_repository)
+        );
+
+        expect($this->generator)->ensureManifestContainsLatestInfoOfRepositories()->count(2);
+        expect($this->generator)
+            ->ensureManifestContainsLatestInfoOfRepositories(
+                $this->singapour_mirror,
+                array(new GitRepositoryGitoliteAdmin(), $this->repository)
+            )->at(0);
+        expect($this->generator)
+            ->ensureManifestContainsLatestInfoOfRepositories(
+                $this->noida_mirror,
+                array(new GitRepositoryGitoliteAdmin(), $this->repository, $this->another_repository)
+            )->at(1);
+
+        $this->manager->checkManifestFiles();
     }
 }
