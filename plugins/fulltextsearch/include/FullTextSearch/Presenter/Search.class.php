@@ -45,12 +45,16 @@ class FullTextSearch_Presenter_Search {
         return ($this->query_result->count() > 0);
     }
 
-    public function has_facets() {
-        return (count($this->facets()) > 0);
+    public function project_facets_label() {
+        return $GLOBALS['Language']->getText('plugin_fulltextsearch', 'project_facets_label');
     }
 
-    public function facets() {
-        return $this->query_result->getFacets();
+    public function projects_facet() {
+        return $this->query_result->getProjectsFacet();
+    }
+
+    public function my_projects_facet() {
+        return $this->query_result->getMyProjectsFacet();
     }
 
     public function result_count() {

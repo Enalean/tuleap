@@ -19,22 +19,39 @@
  */
 
 class ElasticSearch_SearchResultCollection implements FullTextSearch_SearchResultCollection {
+
+    private $result_factory;
+
+    private $result;
+
+    private $submitted_facets;
+
     private $nb_documents_found = 0;
-    private $query_time         = 0;
-    private $results            = array();
-    private $facets             = array();
+
+    private $query_time = 0;
+
+    private $search_results = array();
+
     
     public function __construct(
         array $result,
         array $submitted_facets,
         ElasticSearch_1_2_ResultFactory $result_factory
     ) {
-        $this->query_time = $result_factory->getQueryTime($result);
+        $this->result_factory     = $result_factory;
+        $this->result             = $result;
+        $this->submitted_facets   = $submitted_facets;
+        $this->query_time         = $this->result_factory->getQueryTime($this->result);
+        $this->search_results     = $this->result_factory->getSearchResults($this->result);
+        $this->nb_documents_found = count($this->search_results);
+    }
 
-        $this->results = $result_factory->getSearchResults($result);
-        $this->nb_documents_found = count($this->results);
+    public function getProjectsFacet() {
+        return $this->result_factory->getSearchResultProjectsFacet($this->result, $this->submitted_facets);
+    }
 
-        $this->facets[] = $result_factory->getSearchResultProjectsFacetCollection($result, $submitted_facets);
+    public function getMyProjectsFacet() {
+        return $this->result_factory->getSearchResultMyProjectsFacet($this->result, $this->submitted_facets);
     }
     
     public function count() {
@@ -46,10 +63,6 @@ class ElasticSearch_SearchResultCollection implements FullTextSearch_SearchResul
     }
     
     public function getResults() {
-        return $this->results;
-    }
-    
-    public function getFacets() {
-        return $this->facets;
+        return $this->search_results;
     }
 }

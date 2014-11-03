@@ -18,25 +18,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ElasticSearch_SearchResultProjectsFacetCollection implements IteratorAggregate, Countable {
+class ElasticSearch_SearchResultProjectsFacetCollection {
 
     private $identifier = 'group_id';
 
-    /**
-     * @var array
-     */
     private $values = array();
 
     public function __construct(array $results, ProjectManager $project_manager, array $submitted_facets) {
         if (isset($results['terms'])) {
             foreach ($results['terms'] as $result) {
                 $project = $project_manager->getProject($result['term']);
+
                 if ($project && !$project->isError()) {
                     $checked = isset($submitted_facets[$this->identifier]) && in_array($project->getGroupId(), $submitted_facets[$this->identifier]);
                     $this->values[] = new ElasticSearch_SearchResultProjectsFacet($project, $result['count'], $checked);
                 }
             }
         }
+    }
+
+    public function getValues() {
+        return $this->values;
     }
 
     public function label() {
@@ -54,19 +56,4 @@ class ElasticSearch_SearchResultProjectsFacetCollection implements IteratorAggre
     public function values() {
         return $this->values;
     }
-
-    /**
-     * @see IteratorAggregate
-     */
-    public function getIterator() {
-        return new ArrayIterator($this->values);
-    }
-
-    /**
-     * @see Countable
-     */
-    public function count() {
-        return count($this->values);
-    }
 }
-?>

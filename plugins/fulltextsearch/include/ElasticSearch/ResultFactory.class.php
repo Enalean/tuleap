@@ -32,12 +32,17 @@ class ElasticSearch_1_2_ResultFactory {
     /** @var URLVerification */
     private $url_verification;
 
+    /** @var UserManager */
+    private $user_manager;
+
     public function __construct(
         ProjectManager $project_manager,
-        URLVerification $url_verification
+        URLVerification $url_verification,
+        UserManager $user_manager
     ) {
         $this->project_manager  = $project_manager;
         $this->url_verification = $url_verification;
+        $this->user_manager     = $user_manager;
     }
 
     public function getChangesetIds(array $data) {
@@ -67,9 +72,9 @@ class ElasticSearch_1_2_ResultFactory {
         return 0;
     }
 
-    public function getSearchResultProjectsFacetCollection(
-            array $result,
-            array $submitted_facets
+    public function getSearchResultProjectsFacet(
+        array $result,
+        array $submitted_facets
     ) {
         if (isset($result['facets']['projects'])) {
             return new ElasticSearch_SearchResultProjectsFacetCollection(
@@ -80,6 +85,18 @@ class ElasticSearch_1_2_ResultFactory {
         }
     }
 
+    public function getSearchResultMyProjectsFacet(
+        array $result,
+        array $submitted_facets
+    ) {
+        if (isset($result['facets']['projects'])) {
+
+            $current_user = $this->user_manager->getCurrentUser();
+
+            return new ElasticSearch_SearchResultMyProjectsFacet($submitted_facets, implode(',', $current_user->getProjects()));
+        }
+    }
+
     public function getSearchResults(array $result) {
         $results = array();
 
@@ -87,8 +104,7 @@ class ElasticSearch_1_2_ResultFactory {
             return $results;
         }
 
-        $user_manager = UserManager::instance();
-        $user         = $user_manager->getCurrentUser();
+        $user = $this->user_manager->getCurrentUser();
 
         foreach ($result['hits']['hits'] as $hit) {
             $project = $this->project_manager->getProject($this->extractGroupIdFromHit($hit));

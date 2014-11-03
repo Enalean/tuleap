@@ -111,39 +111,6 @@ body.search-page {
                 font-size: 0.8em;
             }
 
-            > ul {
-                margin: 0;
-                padding: 0;
-            }
-
-            > .select2-container {
-                width: 100%;
-                max-width: 100%;
-                box-sizing: border-box;
-
-                > ul {
-                    margin: 0;
-                    padding: 0;
-                    border: 1px solid #DADADA;
-                    border-radius: 3px;
-
-                    > li {
-                        padding: 3px 5px 3px 18px;
-
-                        &.select2-search-field {
-                            padding: 0;
-                        }
-                    }
-                }
-
-                &.select2-container-active {
-                    ul {
-                        box-shadow: none;
-                        border: 1px solid #AAA;
-                    }
-                }
-            }
-
             ul {
                 margin: 0;
                 padding: 0;
@@ -171,6 +138,39 @@ body.search-page {
                         }
                     }
 
+                    p {
+                        margin: 0 0 3px;
+                    }
+
+                    .select2-container {
+                        display: inline-block;
+                        width: 100%;
+                        max-width: 100%;
+                        box-sizing: border-box;
+
+                        > ul {
+                            margin: 0;
+                            padding: 0;
+                            border: 1px solid #DADADA;
+                            border-radius: 3px;
+
+                            > li {
+                                padding: 3px 5px 3px 18px;
+
+                                &.select2-search-field {
+                                    padding: 0;
+                                }
+                            }
+                        }
+
+                        &.select2-container-active {
+                            ul {
+                                box-shadow: none;
+                                border: 1px solid #AAA;
+                            }
+                        }
+                    }
+
                     .sub-facets {
                         font-size: 0.85em;
                         color: #838383;
@@ -195,6 +195,12 @@ body.search-page {
                             }
                         }
                     }
+                }
+            }
+
+            &.full-text-search {
+                > ul > li {
+                    padding: 0 0 15px;
                 }
             }
         }
