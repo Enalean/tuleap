@@ -53,7 +53,8 @@ class Tracker_Artifact_Changeset_InitialChangesetCreatorTest extends TuleapTestC
             $fields_validator,
             $factory,
             $this->changeset_dao,
-            $this->artifact_factory
+            $this->artifact_factory,
+            mock('EventManager')
         );
 
         $this->submitted_on = $_SERVER['REQUEST_TIME'];

@@ -29,15 +29,17 @@ class Tracker_Artifact_Changeset_InitialChangesetAtGivenDateCreator extends Trac
 
     public function __construct(
         Tracker_Artifact_Changeset_AtGivenDateFieldsValidator $fields_validator,
-        Tracker_FormElementFactory $formelement_factory,
-        Tracker_Artifact_ChangesetDao $changeset_dao,
-        Tracker_ArtifactFactory $artifact_factory
+        Tracker_FormElementFactory                            $formelement_factory,
+        Tracker_Artifact_ChangesetDao                         $changeset_dao,
+        Tracker_ArtifactFactory                               $artifact_factory,
+        EventManager                                          $event_manager
     ) {
         parent::__construct(
             $fields_validator,
             $formelement_factory,
             $changeset_dao,
-            $artifact_factory
+            $artifact_factory,
+            $event_manager
         );
     }
 

@@ -152,7 +152,8 @@ class Tracker_Migration_MigrationManager {
                 $fields_validator,
                 $this->form_element_factory,
                 $changeset_dao,
-                $this->artifact_factory
+                $this->artifact_factory,
+                EventManager::instance()
             )
         );
     }
