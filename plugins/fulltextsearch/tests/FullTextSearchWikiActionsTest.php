@@ -32,8 +32,14 @@ class FullTextSearchWikiActionsTests extends TuleapTestCase {
     /** @var Wiki_PermissionsManager*/
     protected $permissions_manager;
 
+    /** @var UserManager*/
+    protected $user_manager;
+
     /** @var WikiPage */
     protected $wiki_page;
+
+    /** @var PFUser */
+    protected $user;
 
     public function setUp() {
         parent::setUp();
@@ -51,8 +57,12 @@ class FullTextSearchWikiActionsTests extends TuleapTestCase {
         $this->permissions_manager = stub('Wiki_PermissionsManager')->getFromattedUgroupsThatCanReadWikiPage($this->wiki_page)
             ->returns(array('@site_active'));
 
+        $this->user         = aUser()->withId(123)->build();
+        $this->user_manager = stub('UserManager')->getUserByUserName('*')->returns($this->user);
+
         $this->request_data_factory = new ElasticSearch_1_2_RequestWikiDataFactory(
-            $this->permissions_manager
+            $this->permissions_manager,
+            $this->user_manager
         );
 
         $this->actions = partial_mock(
@@ -71,7 +81,8 @@ class FullTextSearchWikiActionsTests extends TuleapTestCase {
     public function itCallIndexOnClientWithRightParametersForEmptyWikiPage() {
         stub($this->client)->getMapping()->returns(array());
         stub($this->wiki_page)->getMetadata()->returns(array(
-           'mtime' => 1405671338
+           'mtime'     => 1405671338,
+           'author_id' => null
         ));
 
         $expected = array(
@@ -82,7 +93,7 @@ class FullTextSearchWikiActionsTests extends TuleapTestCase {
                 'group_id'           => 200,
                 'page_name'          => 'page',
                 'last_modified_date' => '2014-07-18',
-                'last_author'        => '',
+                'last_author'        => null,
                 'last_summary'       => '',
                 'content'            => '',
                 'permissions'        => array('@site_active'),
@@ -96,10 +107,11 @@ class FullTextSearchWikiActionsTests extends TuleapTestCase {
     public function itCallIndexOnClientWithRightParametersForWikiPage() {
         stub($this->client)->getMapping()->returns(array());
         stub($this->wiki_page)->getMetadata()->returns(array(
-           'mtime'   => 1405671338,
-           'content' => 'wiki page content',
-           'author'  => 'author',
-           'summary' => 'wiki page summary'
+           'mtime'     => 1405671338,
+           'content'   => 'wiki page content',
+           'author'    => 'author',
+           'author_id' => 123,
+           'summary'   => 'wiki page summary'
         ));
 
         $expected = array(
@@ -110,7 +122,7 @@ class FullTextSearchWikiActionsTests extends TuleapTestCase {
                 'group_id'           => 200,
                 'page_name'          => 'page',
                 'last_modified_date' => '2014-07-18',
-                'last_author'        => 'author',
+                'last_author'        => 123,
                 'last_summary'       => 'wiki page summary',
                 'content'            => 'wiki page content',
                 'permissions'        => array('@site_active'),
@@ -177,7 +189,7 @@ class FullTextSearchWikiActionsTests extends TuleapTestCase {
                         'type' => 'date'
                     ),
                     'last_author' => array(
-                        'type' => 'string'
+                        'type' => 'long'
                     ),
                     'last_summary' => array(
                         'type' => 'string'

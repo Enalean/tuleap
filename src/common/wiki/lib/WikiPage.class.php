@@ -91,9 +91,10 @@ class WikiPage {
             return array('mtime' => time());
         }
 
-
         $current_revision_metadata = $this->wrapper->getRequest()->getPage($this->pagename)
             ->getCurrentRevision()->getMetaData();
+
+        $this->convertAuthorIdToUserId($current_revision_metadata);
 
         $content = array(
             'content' => $this->getLastVersionContent()
@@ -103,6 +104,21 @@ class WikiPage {
         );
 
         return $current_revision_metadata + $content + $summary;
+    }
+
+    private function convertAuthorIdToUserId(array &$current_revision_metadata) {
+        $last_author_id = null;
+
+        if (isset($current_revision_metadata['author'])) {
+            $user_manager = UserManager::instance();
+            $author = $user_manager->getUserByUserName($current_revision_metadata['author']);
+
+            if ($author) {
+                $last_author_id = (int)$author->getId();
+            }
+        }
+
+        $current_revision_metadata['author_id'] = $last_author_id;
     }
 
     public function getContent() {

@@ -183,7 +183,8 @@ class ElasticSearch_1_2_RequestDocmanDataFactory {
             'create_date'             => date('Y-m-d', $item->getCreateDate()),
             'update_date'             => date('Y-m-d', $item->getUpdateDate()),
             'permissions'             => $this->permissions_manager->exportPermissions($item),
-            'approval_table_comments' => $this->getDocumentApprovalTableComments($item)
+            'approval_table_comments' => $this->getDocumentApprovalTableComments($item),
+            'owner'                   => $item->getOwnerId()
         );
 
         if ($item->getObsolescenceDate()) {

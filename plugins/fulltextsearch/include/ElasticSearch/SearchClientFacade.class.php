@@ -78,7 +78,7 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
         $query  = $this->getSearchDocumentsQuery($terms, $facets, $offset, $user, $size);
         // For debugging purpose, uncomment the statement below to see the
         // content of the request (can be directly injected in a curl request)
-//         echo "<pre>".json_encode($query)."</pre>";
+        // echo "<pre>".json_encode($query)."</pre>";
 
         $search = $this->client->search($query);
         return new ElasticSearch_SearchResultCollection(
@@ -135,9 +135,15 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
                     'terms' => array(
                         'field' => 'group_id'
                     )
+                ),
+                'owner' => array(
+                    'terms' => array(
+                        'fields' => array('last_author', 'owner')
+                    )
                 )
             ),
         );
+
         $this->filterWithGivenFacets($query, $facets);
         $this->filterQueryWithPermissions($query, $user);
         return $query;
@@ -175,29 +181,60 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
     }
 
     private function filterWithGivenFacets(array &$query, array $facets) {
-        if (isset($facets['group_id'])) {
-            $query['filter'] = $this->filterOnProjectIds($facets['group_id']);
-        }
+        $filter = array();
 
-        if (isset($facets[ElasticSearch_SearchResultMyProjectsFacet::IDENTIFIER])) {
-            $query['filter'] = $this->filterOnProjectIds(explode(',', $facets[ElasticSearch_SearchResultMyProjectsFacet::IDENTIFIER]));
+        $this->applyProjectFacets($filter, $facets);
+        $this->applyOwnerFacet($filter, $facets);
+
+        if (! empty($filter['bool']['must'])) {
+            $query['filter'] = $filter;
         }
     }
 
-    private function filterOnProjectIds($group_ids) {
-        $filter_on_project = array('or' => array());
+    private function applyProjectFacets(array &$filter, array $facets) {
+        if (isset($facets[ElasticSearch_SearchResultProjectsFacetCollection::IDENTIFIER]) || isset($facets[ElasticSearch_SearchResultMyProjectsFacet::IDENTIFIER])) {
+            $this->createFacetsInQuery($filter);
 
+            $project_filter = array('bool' => array('should' => array()));
+
+            if (isset($facets[ElasticSearch_SearchResultProjectsFacetCollection::IDENTIFIER])) {
+                $this->filterOnProjectIds($project_filter['bool']['should'], $facets[ElasticSearch_SearchResultProjectsFacetCollection::IDENTIFIER]);
+            }
+            if (isset($facets[ElasticSearch_SearchResultMyProjectsFacet::IDENTIFIER])) {
+                $this->filterOnProjectIds($project_filter['bool']['should'], explode(',', $facets[ElasticSearch_SearchResultMyProjectsFacet::IDENTIFIER]));
+            }
+
+            if (! empty($project_filter['bool']['should'])) {
+                $filter['bool']['must'][] = $project_filter;
+            }
+        }
+    }
+
+    private function applyOwnerFacet(array &$filter, array $facets) {
+        if (isset($facets[ElasticSearch_SearchResultOwnerFacet::IDENTIFIER])) {
+            $this->createFacetsInQuery($filter);
+
+            $owner_filter                     = array('bool' => array('should' => array()));
+            $owner_filter['bool']['should'][] = array('term' => array('owner'       => (int)$facets[ElasticSearch_SearchResultOwnerFacet::IDENTIFIER]));
+            $owner_filter['bool']['should'][] = array('term' => array('last_author' => (int)$facets[ElasticSearch_SearchResultOwnerFacet::IDENTIFIER]));
+
+            $filter['bool']['must'][] = $owner_filter;
+        }
+    }
+
+    private function createFacetsInQuery(array &$filter) {
+        if (! isset($filter['bool'])) {
+            $filter['bool'] = array('must' => array());
+        }
+    }
+
+    private function filterOnProjectIds(array &$project_filter, array $group_ids) {
         foreach ($group_ids as $group_id) {
-            $filter_on_project['or'][] = array(
-                'range' => array(
-                    'group_id' => array(
-                        'from' => $group_id,
-                        'to'   => $group_id
-                    )
+            $project_filter[] = array(
+                'term' => array(
+                    'group_id' => (int)$group_id
                 )
             );
         }
-
-        return $filter_on_project;
     }
 }

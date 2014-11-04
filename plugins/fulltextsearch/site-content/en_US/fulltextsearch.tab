@@ -13,9 +13,11 @@ plugin_fulltextsearch	global_search_tooltip	Search on all tracker fields
 plugin_fulltextsearch	followup_full_text_warning_search	<strong>Only text fields are indexed for this tracker.</strong><br>Fulltext search is still in beta.
 
 plugin_fulltextsearch	project_facets_label	Projects
+plugin_fulltextsearch	docman_wiki_facets_label	Documents / Wiki
 plugin_fulltextsearch	facet_project_label	Projects:
 plugin_fulltextsearch	facet_project_placeholder	Select projects...
 plugin_fulltextsearch	facet_my_project_label	Projects I'm member of
+plugin_fulltextsearch	facet_owner_label	Documents I'm owner of
 
 plugin_fulltextsearch	error_category	Full Text Search
 plugin_fulltextsearch	error_intro	Cannot complete full text search

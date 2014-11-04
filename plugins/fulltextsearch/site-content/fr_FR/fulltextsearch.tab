@@ -13,9 +13,11 @@ plugin_fulltextsearch	global_search_tooltip	Rechercher dans tous les champs du t
 plugin_fulltextsearch	followup_full_text_warning_search	<strong>Uniquement les champs de type "texte" ont étés indexées pour cet outil de suivi.</strong><br>La recherche est encore en beta.
 
 plugin_fulltextsearch	project_facets_label	Projets
+plugin_fulltextsearch	docman_wiki_facets_label	Documents / Wiki
 plugin_fulltextsearch	facet_project_label	Projets :
 plugin_fulltextsearch	facet_project_placeholder	Sélectionner des projets...
 plugin_fulltextsearch	facet_my_project_label	Projets dont je suis membre
+plugin_fulltextsearch	facet_owner_label	Documents dont je suis le propriétaire
 
 plugin_fulltextsearch	error_category	Recherche intégral
 plugin_fulltextsearch	error_intro	Impossible d'effectuer la recherche

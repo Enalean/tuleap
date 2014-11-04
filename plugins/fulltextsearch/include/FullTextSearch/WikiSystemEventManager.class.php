@@ -63,11 +63,14 @@ class FullTextSearch_WikiSystemEventManager {
     private function getWikiActions() {
         return new FullTextSearchWikiActions(
             $this->index_client,
-            new ElasticSearch_1_2_RequestWikiDataFactory(new Wiki_PermissionsManager(
-                PermissionsManager::instance(),
-                ProjectManager::instance(),
-                new UGroupLiteralizer()
-            )),
+            new ElasticSearch_1_2_RequestWikiDataFactory(
+                new Wiki_PermissionsManager(
+                    PermissionsManager::instance(),
+                    ProjectManager::instance(),
+                    new UGroupLiteralizer()
+                ),
+                UserManager::instance()
+            ),
             new BackendLogger()
         );
     }

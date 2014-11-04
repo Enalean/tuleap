@@ -328,13 +328,23 @@ class RequestWikiDataFactoryTest extends TuleapTestCase {
     /* @var WikiPage */
     protected $wiki_page;
 
+    /* @var UserManager */
+    protected $user_manager;
+
+    /** @var PFUser */
+    protected $user;
+
     public function setUp() {
         parent::setUp();
 
         $this->permissions_manager = mock('Wiki_PermissionsManager');
 
+        $this->user         = aUser()->withId(123)->build();
+        $this->user_manager = stub('UserManager')->getUserByUserName('*')->returns($this->user);
+
         $this->request_data_factory = new ElasticSearch_1_2_RequestWikiDataFactory(
-            $this->permissions_manager
+            $this->permissions_manager,
+            $this->user_manager
         );
 
         $this->wiki_page = stub('WikiPage')->getPagename()->returns('wiki_page');
@@ -345,6 +355,7 @@ class RequestWikiDataFactoryTest extends TuleapTestCase {
     public function itBuildsDataForFirstIndexationOfWikiPage() {
         stub($this->wiki_page)->getMetadata()->returns(array(
             'mtime' => 1405061249,
+            'author_id' => null,
         ));
 
         stub($this->permissions_manager)->getFromattedUgroupsThatCanReadWikiPage()->returns(array(
@@ -356,7 +367,7 @@ class RequestWikiDataFactoryTest extends TuleapTestCase {
             'group_id'           => 200,
             'page_name'          => 'wiki_page',
             'last_modified_date' => '2014-07-11',
-            'last_author'        => '',
+            'last_author'        => null,
             'last_summary'       => '',
             'content'            => '',
             'permissions'        => array('@site_active')
@@ -370,10 +381,11 @@ class RequestWikiDataFactoryTest extends TuleapTestCase {
 
     public function itBuildsDataForFirstIndexationOfWikiPageOnUpdate() {
         stub($this->wiki_page)->getMetadata()->returns(array(
-            'mtime'   => 1405061249,
-            'author'  => 'user',
-            'content' => 'cont',
-            'summary' => 'sum'
+            'mtime'     => 1405061249,
+            'author'    => 'user',
+            'author_id' => 123,
+            'content'   => 'cont',
+            'summary'   => 'sum'
         ));
 
         stub($this->permissions_manager)->getFromattedUgroupsThatCanReadWikiPage()->returns(array(
@@ -385,7 +397,7 @@ class RequestWikiDataFactoryTest extends TuleapTestCase {
             'group_id'           => 200,
             'page_name'          => 'wiki_page',
             'last_modified_date' => '2014-07-11',
-            'last_author'        => 'user',
+            'last_author'        => 123,
             'last_summary'       => 'sum',
             'content'            => 'cont',
             'permissions'        => array('@site_active')
@@ -410,7 +422,7 @@ class RequestWikiDataFactoryTest extends TuleapTestCase {
                         'type' => 'date'
                     ),
                     'last_author' => array(
-                        'type' => 'string'
+                        'type' => 'long'
                     ),
                     'last_summary' => array(
                         'type' => 'string'
