@@ -47,7 +47,7 @@
                 <ul class="backlog-items">
                     <li ng-repeat="backlog_item in milestone.content track by $index"
                         class="backlog-item {{ backlog_item.status | lowercase }} {{ backlog_item.color }}"
-                        ng-include="'/plugins/agiledashboard/js/angular/src/app/backlog-item/backlog-item.tpl.html'"
+                        ng-include="'backlog-item/backlog-item.tpl.html'"
                     >
                     </li>
                 </ul>
