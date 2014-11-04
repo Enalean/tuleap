@@ -1,3 +1,6 @@
+Version 3.130 - Tuleap 7.7
+    * story #7326 see list of repositories mirrored (Do not display deleted repositories)
+
 Version 3.129 - Tuleap 7.7
     * story #7522: Tuleap generates grokmirror manifest files
 
