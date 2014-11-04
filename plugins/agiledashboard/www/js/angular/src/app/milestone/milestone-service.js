@@ -116,7 +116,10 @@
 
                 function fetchMilestoneContent(milestone, limit, offset) {
                     getContent(milestone.id, limit, offset).then(function(data) {
-                        milestone.content = milestone.content.concat(_.forEach(data.results, updateInitialEffort));
+                        milestone.content = milestone.content.concat(data.results);
+
+                        _.forEach(data.results, updateInitialEffort);
+                        _.forEach(data.results, augmentBacklogItem);
 
                         if (milestone.content.length < data.total) {
                             fetchMilestoneContent(milestone, limit, offset + limit);
@@ -128,6 +131,12 @@
 
                 function updateInitialEffort(backlogItem) {
                     milestone.initialEffort += backlogItem.initial_effort;
+                }
+
+                function augmentBacklogItem(backlogItem) {
+                    backlogItem.isOpen = function() {
+                        return this.status === 'Open';
+                    };
                 }
             }
         }

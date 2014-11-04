@@ -16,6 +16,10 @@ msgid "Content"
 msgstr ""
 
 #: src/app/planning.tpl.html
+msgid "Hide \"Closed\" Items"
+msgstr ""
+
+#: src/app/planning.tpl.html
 msgid "Initial effort:"
 msgstr ""
 

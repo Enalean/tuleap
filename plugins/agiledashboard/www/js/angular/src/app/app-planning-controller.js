@@ -6,18 +6,21 @@
     PlanningCtrl.$inject = ['$scope', 'SharedPropertiesService', 'BacklogItemService', 'MilestoneService'];
 
     function PlanningCtrl($scope, SharedPropertiesService, BacklogItemService, MilestoneService) {
-        var project_id        = SharedPropertiesService.getProjectId(),
-            milestone_id      = SharedPropertiesService.getMilestoneId(),
-            pagination_limit  = 50,
-            pagination_offset = 0;
+        var project_id                  = SharedPropertiesService.getProjectId(),
+            milestone_id                = SharedPropertiesService.getMilestoneId(),
+            pagination_limit            = 50,
+            pagination_offset           = 0,
+            show_closed_milestone_items = true;
 
         _.extend($scope, {
-            backlog_items         : [],
-            milestones            : [],
-            loading_backlog_items : true,
-            loading_milestones    : true,
-            toggle                : toggle,
-            showChildren          : showChildren
+            backlog_items              : [],
+            milestones                 : [],
+            loading_backlog_items      : true,
+            loading_milestones         : true,
+            toggle                     : toggle,
+            showChildren               : showChildren,
+            toggleClosedMilestoneItems : toggleClosedMilestoneItems,
+            canShowBacklogItem         : canShowBacklogItem
         });
 
         displayBacklogItems();
@@ -119,6 +122,14 @@
                     backlog_item.loading = false;
                 }
             });
+        }
+
+        function toggleClosedMilestoneItems() {
+            show_closed_milestone_items = (show_closed_milestone_items === true) ? false : true;
+        }
+
+        function canShowBacklogItem(backlog_item) {
+            return backlog_item.isOpen() || show_closed_milestone_items;
         }
     }
 })();
