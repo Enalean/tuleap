@@ -15,7 +15,7 @@ Version 7.7 (Not released yet)
 
 	== Plugins ==
 	* tracker: 5.509
-	* git: 3.131
+	* git: 3.132
 	* statistics: 0.39
 	* agiledashboard: 1.83
 	* proftpd: 0.18
@@ -24,6 +24,9 @@ Version 7.7 (Not released yet)
 
 	 == Themes ==
 	* FlamingParrot: 1.53
+
+	== Enhancement ==
+	* request #7592: Be more verbose in git logging
 
 	== Development ==
 	* Update build system to generate intermediate srpms
