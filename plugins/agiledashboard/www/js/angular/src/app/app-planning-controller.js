@@ -35,7 +35,7 @@
                 $scope.backlog_items = $scope.backlog_items.concat(data.results);
 
                 if ($scope.backlog_items.length < data.total) {
-                    fetchProjectBacklogItems(milestone_id, limit, offset + limit);
+                    fetchProjectBacklogItems(project_id, limit, offset + limit);
                 } else {
                     $scope.loading_backlog_items = false;
                 }
