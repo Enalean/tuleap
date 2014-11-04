@@ -48,7 +48,7 @@ class SystemEvent_FULLTEXTSEARCH_TRACKER_ARTIFACT_UPDATE extends SystemEvent {
             $artifact_id = (int)$this->getRequiredParameter(0);
 
             if ($this->action($artifact_id)) {
-                $this->done();
+                $this->done("Artifact #$artifact_id re-indexed");
                 return true;
             } else {
                 $this->error('Error while performing action');
