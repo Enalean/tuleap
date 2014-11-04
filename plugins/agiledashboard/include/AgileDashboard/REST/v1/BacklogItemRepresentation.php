@@ -81,6 +81,11 @@ class BacklogItemRepresentation {
      */
     public $project;
 
+    /**
+     * @var Boolean
+     */
+    public $has_children;
+
     public function build(\AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item) {
         $this->id             = JsonCast::toInt($backlog_item->id());
         $this->label          = $backlog_item->title();
@@ -101,5 +106,7 @@ class BacklogItemRepresentation {
             $this->parent = new BacklogItemParentReference();
             $this->parent->build($backlog_item->getParent());
         }
+
+        $this->has_children = $backlog_item->hasChildren();
     }
 }

@@ -1,113 +1,158 @@
 ul.backlog-items {
-    margin: 0;
+    margin-bottom: 12px;
 
-    > li.backlog-item {
-        position: relative;
+    > li {
         list-style-type: none;
-        margin: 0 0 10px;
-        padding: 5px 5px 5px 12px;
-        background: #FFFFFF;
-        border: 1px solid #E8E8E8;
-        border-radius: 3px;
-        box-shadow: 0px 1px 0px 0px rgba(242, 242, 242, 0.5);
 
-        > div.type-border {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 5px;
-            border-top-left-radius: 2px;
-            border-bottom-left-radius: 2px;
-        }
+        > .show-children {
+                margin: 0 auto;
+                width: 90%;
+                background: #FFFFFF;
+                border-bottom-right-radius: 3px;
+                border-bottom-left-radius: 3px;
+                box-shadow: inset 1px 0 0 #E3E3E3,
+                    inset -1px 0 0 #E3E3E3,
+                    inset 0 1px 0 rgba(242,242,242,0.50),
+                    inset 0 -1px 0 #E3E3E3,
+                    0 1px 0 0 rgba(242,242,242,0.50);
 
-        &.inca_silver {
-            > div.type-border     { background-color: @inca_silver; }
-            > span.initial-effort { background-color: @inca_silver; }
-        }
-        &.chrome_silver {
-            > div.type-border     { background-color: @chrome_silver; }
-            > span.initial-effort { background-color: @chrome_silver; }
-        }
-        &.fiesta_red {
-            > div.type-border     { background-color: @fiesta_red; }
-            > span.initial-effort { background-color: @fiesta_red; }
-        }
-        &.teddy_brown {
-            > div.type-border     { background-color: @teddy_brown; }
-            > span.initial-effort { background-color: @teddy_brown; }
-        }
-        &.clockwork_orange {
-            > div.type-border     { background-color: @clockwork_orange; }
-            > span.initial-effort { background-color: @clockwork_orange; }
-        }
-        &.red_wine {
-            > div.type-border     { background-color: @red_wine; }
-            > span.initial-effort { background-color: @red_wine; }
-        }
-        &.acid_green {
-            > div.type-border     { background-color: @acid_green; }
-            > span.initial-effort { background-color: @acid_green; }
-        }
-        &.army_green {
-            > div.type-border     { background-color: @army_green; }
-            > span.initial-effort { background-color: @army_green; }
-        }
-        &.sherwood_green {
-            > div.type-border     { background-color: @sherwood_green; }
-            > span.initial-effort { background-color: @sherwood_green; }
-        }
-        &.ocean_turquoise {
-            > div.type-border     { background-color: @ocean_turquoise; }
-            > span.initial-effort { background-color: @ocean_turquoise; }
-        }
-        &.daphne_blue {
-            > div.type-border     { background-color: @daphne_blue; }
-            > span.initial-effort { background-color: @daphne_blue; }
-        }
-        &.lake_placid_blue {
-            > div.type-border     { background-color: @lake_placid_blue; }
-            > span.initial-effort { background-color: @lake_placid_blue; }
-        }
-        &.deep_blue {
-            > div.type-border     { background-color: @deep_blue; }
-            > span.initial-effort { background-color: @deep_blue; }
-        }
-        &.plum_crazy {
-            > div.type-border     { background-color: @plum_crazy; }
-            > span.initial-effort { background-color: @plum_crazy; }
-        }
-        &.peggy_pink {
-            > div.type-border     { background-color: @peggy_pink; }
-            > span.initial-effort { background-color: @peggy_pink; }
-        }
-        &.flamingo_pink {
-            > div.type-border     { background-color: @flamingo_pink; }
-            > span.initial-effort { background-color: @flamingo_pink; }
+            > .children {
+                padding: 10px 10px 0 0;
+            }
+
+            > .show-children-handle {
+                border: 1px solid #E3E3E3;
+                border-top: none;
+                height: 8px;
+                cursor: pointer;
+                border-bottom-right-radius: 2px;
+                border-bottom-left-radius: 2px;
+                transition: background-color 0.1s linear;
+                background: #EAEAEA url("grip-open.png") center center no-repeat;
+
+                &.show-children-close {
+                    background-image: url("grip-close.png");
+                }
+
+                &:hover {
+                    background-color: lighten(#EAEAEA, 3%);
+                    transition: background-color 0.1s linear;
+                }
+
+            }
         }
 
-        > span.id {
-            margin: 0 5px 0 0;
-            color: #999;
-            font-size: 0.9em;
-            letter-spacing: -0.03em;
+        &:first-child > .backlog-item {
+            margin: 0;
         }
 
-        > span.summary {
-            font-size: 0.9em;
-        }
+        > .backlog-item {
+            position: relative;
+            margin: 10px 0 0;
+            padding: 5px 5px 5px 12px;
+            background: #FFFFFF;
+            border: 1px solid #E8E8E8;
+            border-radius: 3px;
+            box-shadow: 0px 1px 0px 0px rgba(242, 242, 242, 0.5);
 
-        > span.initial-effort {
-            float: right;
-            margin: 0 0 0 5px;
-        }
+            > div.type-border {
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: 5px;
+                border-top-left-radius: 2px;
+                border-bottom-left-radius: 2px;
+            }
 
-        > span.parent {
-            display: block;
-            color: #999;
-            font-style: italic;
-            font-size: 0.8em;
-            letter-spacing: -0.03em;
+            &.inca_silver {
+                > div.type-border     { background-color: @inca_silver; }
+                > span.initial-effort { background-color: @inca_silver; }
+            }
+            &.chrome_silver {
+                > div.type-border     { background-color: @chrome_silver; }
+                > span.initial-effort { background-color: @chrome_silver; }
+            }
+            &.fiesta_red {
+                > div.type-border     { background-color: @fiesta_red; }
+                > span.initial-effort { background-color: @fiesta_red; }
+            }
+            &.teddy_brown {
+                > div.type-border     { background-color: @teddy_brown; }
+                > span.initial-effort { background-color: @teddy_brown; }
+            }
+            &.clockwork_orange {
+                > div.type-border     { background-color: @clockwork_orange; }
+                > span.initial-effort { background-color: @clockwork_orange; }
+            }
+            &.red_wine {
+                > div.type-border     { background-color: @red_wine; }
+                > span.initial-effort { background-color: @red_wine; }
+            }
+            &.acid_green {
+                > div.type-border     { background-color: @acid_green; }
+                > span.initial-effort { background-color: @acid_green; }
+            }
+            &.army_green {
+                > div.type-border     { background-color: @army_green; }
+                > span.initial-effort { background-color: @army_green; }
+            }
+            &.sherwood_green {
+                > div.type-border     { background-color: @sherwood_green; }
+                > span.initial-effort { background-color: @sherwood_green; }
+            }
+            &.ocean_turquoise {
+                > div.type-border     { background-color: @ocean_turquoise; }
+                > span.initial-effort { background-color: @ocean_turquoise; }
+            }
+            &.daphne_blue {
+                > div.type-border     { background-color: @daphne_blue; }
+                > span.initial-effort { background-color: @daphne_blue; }
+            }
+            &.lake_placid_blue {
+                > div.type-border     { background-color: @lake_placid_blue; }
+                > span.initial-effort { background-color: @lake_placid_blue; }
+            }
+            &.deep_blue {
+                > div.type-border     { background-color: @deep_blue; }
+                > span.initial-effort { background-color: @deep_blue; }
+            }
+            &.plum_crazy {
+                > div.type-border     { background-color: @plum_crazy; }
+                > span.initial-effort { background-color: @plum_crazy; }
+            }
+            &.peggy_pink {
+                > div.type-border     { background-color: @peggy_pink; }
+                > span.initial-effort { background-color: @peggy_pink; }
+            }
+            &.flamingo_pink {
+                > div.type-border     { background-color: @flamingo_pink; }
+                > span.initial-effort { background-color: @flamingo_pink; }
+            }
+
+            > span.id {
+                margin: 0 5px 0 0;
+                color: #999;
+                font-size: 0.9em;
+                letter-spacing: -0.03em;
+            }
+
+            > span.summary {
+                font-size: 0.9em;
+            }
+
+            > span.initial-effort {
+                float: right;
+                margin: 0 0 0 5px;
+            }
+
+            > span.parent {
+                display: block;
+                color: #999;
+                font-style: italic;
+                font-size: 0.8em;
+                letter-spacing: -0.03em;
+            }
         }
     }
 }

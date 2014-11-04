@@ -148,4 +148,8 @@ class AgileDashboard_BacklogItemPresenter implements
     public function color() {
         return $this->color;
     }
+
+    public function hasChildren() {
+        return $this->artifact->hasChildren();
+    }
 }
