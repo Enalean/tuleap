@@ -44,7 +44,8 @@ class SystemEvent_GIT_REPO_UPDATETest extends TuleapTestCase {
         $this->event->injectDependencies(
             $this->repository_factory,
             $this->system_event_dao,
-            $this->manifest_manager
+            $this->manifest_manager,
+            mock('Logger')
         );
     }
 

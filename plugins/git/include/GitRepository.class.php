@@ -220,9 +220,7 @@ class GitRepository implements DVCSRepository {
             $url_manager = new Git_GitRepositoryUrlManager($git_plugin);
             switch ($this->getBackendType()) {
                 case GitDao::BACKEND_GITOLITE:
-                    $this->backend = new Git_Backend_Gitolite(
-                        new Git_GitoliteDriver($git_plugin->getGitSystemEventManager(), $url_manager)
-                    );
+                    $this->backend = $git_plugin->getBackendGitolite();
                     break;
                 default:
                     $this->backend = Backend::instance('Git','GitBackend', array($url_manager));

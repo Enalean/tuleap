@@ -49,6 +49,9 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
     /** @var Git_SystemEventManager */
     protected $git_system_event_manager;
 
+    /** @var Logger */
+    protected $logger;
+
     public function setUp() {
         parent::setUp();
         $this->cwd           = getcwd();
@@ -90,8 +93,10 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
         );
 
         $this->git_system_event_manager = mock('Git_SystemEventManager');
+        $this->logger                   = mock('Logger');
 
         $this->driver = new Git_GitoliteDriver(
+            $this->logger,
             $this->git_system_event_manager,
             $this->url_manager,
             $this->_glAdmDir,

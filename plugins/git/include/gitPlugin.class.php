@@ -188,6 +188,7 @@ class GitPlugin extends Plugin {
                     $this->getRepositoryFactory(),
                     $this->getSystemEventDao(),
                     $this->getManifestManager(),
+                    $this->getLogger(),
                 );
                 break;
             case SystemEvent_GIT_REPO_DELETE::NAME:
@@ -195,6 +196,7 @@ class GitPlugin extends Plugin {
                 $params['dependencies'] = array(
                     $this->getRepositoryFactory(),
                     $this->getManifestManager(),
+                    $this->getLogger(),
                 );
                 break;
             case SystemEvent_GIT_REPO_ACCESS::NAME:
@@ -317,8 +319,23 @@ class GitPlugin extends Plugin {
     }
 
     public function file_exists_in_data_dir($params) {
-        $url_manager = $this->getGitRepositoryUrlManager();
-        $params['result'] = GitActions::isNameAvailable($params['new_name'], $params['error'], $url_manager);
+        $params['result'] = $this->isNameAvailable($params['new_name'], $params['error']);
+    }
+
+    private function isNameAvailable($newName, &$error) {
+        $backend_gitolite = new Git_Backend_Gitolite($this->getGitoliteDriver());
+        $backend_gitshell = Backend::instance('Git','GitBackend', array($this->getGitRepositoryUrlManager()));
+
+        if (! $backend_gitolite->isNameAvailable($newName) && ! $backend_gitshell->isNameAvailable($newName)) {
+            $error = $GLOBALS['Language']->getText('plugin_git', 'actions_name_not_available');
+            return false;
+        }
+
+        return true;
+    }
+
+    public function getBackendGitolite() {
+        return new Git_Backend_Gitolite($this->getGitoliteDriver(), $this->getLogger());
     }
 
     public function process() {
@@ -696,14 +713,19 @@ class GitPlugin extends Plugin {
             $params['logger'],
             $this->getGitoliteAdminPath()
         );
-        $gitolite_driver = new Git_GitoliteDriver(
-            $this->getGitSystemEventManager(),
-            $this->getGitRepositoryUrlManager()
-        );
+        $gitolite_driver  = $this->getGitoliteDriver();
         $manifest_manager = $this->getManifestManager();
 
         $system_check = new Git_SystemCheck($gitgc, $gitolite_driver, $manifest_manager);
         $system_check->process();
+    }
+
+    private function getGitoliteDriver() {
+        return new Git_GitoliteDriver(
+            $this->getLogger(),
+            $this->getGitSystemEventManager(),
+            $this->getGitRepositoryUrlManager()
+        );
     }
 
     /**
@@ -1046,7 +1068,9 @@ class GitPlugin extends Plugin {
             $this->getProjectCreator(),
             new Git_Driver_Gerrit_Template_TemplateFactory(new Git_Driver_Gerrit_Template_TemplateDao()),
             new GitPermissionsManager(),
-            $this->getGitRepositoryUrlManager()
+            $this->getGitRepositoryUrlManager(),
+            $this->getLogger(),
+            $this->getBackendGitolite()
         );
     }
 
@@ -1090,9 +1114,12 @@ class GitPlugin extends Plugin {
      *
      * @return BackendLogger
      */
-    private function getLogger() {
+    public function getLogger() {
         if (!$this->logger) {
-            $this->logger = new BackendLogger();
+            $this->logger = new TruncateLevelLogger(
+                new BackendLogger(),
+                Config::get('sys_logger_level')
+            );
         }
         return $this->logger;
     }
@@ -1228,16 +1255,15 @@ class GitPlugin extends Plugin {
     }
 
     public function getManifestManager() {
-        $logger = new TruncateLevelLogger(
-            $this->getLogger(),
-            Config::get('sys_logger_level')
-        );
         return new Git_Mirror_ManifestManager(
             new Git_Mirror_MirrorDataMapper(
                 new Git_Mirror_MirrorDao(),
                 UserManager::instance()
             ),
-            new Git_Mirror_ManifestFileGenerator($logger, Config::get('sys_data_dir').'/gitolite/grokmirror')
+            new Git_Mirror_ManifestFileGenerator(
+                $this->getLogger(),
+                Config::get('sys_data_dir').'/gitolite/grokmirror'
+            )
         );
     }
 

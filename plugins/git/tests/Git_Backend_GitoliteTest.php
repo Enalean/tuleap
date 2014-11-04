@@ -52,7 +52,7 @@ abstract class Git_Backend_GitoliteCommonTest extends TuleapTestCase {
         $dao                = mock('GitDao');
         $permissionsManager = mock('PermissionsManager');
         $gitPlugin          = mock('GitPlugin');
-        $backend = new Git_Backend_Gitolite($driver);
+        $backend = new Git_Backend_Gitolite($driver, mock('Logger'));
         $backend->setDao($dao);
         $backend->setPermissionsManager($permissionsManager);
         $backend->setGitPlugin($gitPlugin);
@@ -139,7 +139,7 @@ class Git_Backend_GitoliteTest extends Git_Backend_GitoliteCommonTest {
         $old_repo = $this->_GivenAGitRepoWithNameAndNamespace($name, $old_namespace);
         $old_repo->setProject($project);
 
-        $backend = partial_mock('Git_Backend_Gitolite', array('clonePermissions'), array($driver));
+        $backend = partial_mock('Git_Backend_Gitolite', array('clonePermissions'), array($driver, mock('Logger')));
         $dao = mock('GitDao');
         $backend->setDao($dao);
 
@@ -170,7 +170,7 @@ class Git_Backend_GitoliteTest extends Git_Backend_GitoliteCommonTest {
         $old_repo->setProject($project);
         
         $backend = TestHelper::getPartialMock('Git_Backend_Gitolite', array('clonePermissions'));
-        $backend->__construct($driver);
+        $backend->__construct($driver, mock('Logger'));
         
         $driver->expectOnce('fork', array($name, 'gpig/'. $old_namespace, 'gpig/'. $new_namespace));
         $driver->expectOnce('dumpProjectRepoConf', array($project));
@@ -202,7 +202,7 @@ class Git_Backend_GitoliteTest extends Git_Backend_GitoliteCommonTest {
         $old_repo->setProject($old_project);
         
         $backend = TestHelper::getPartialMock('Git_Backend_Gitolite', array('clonePermissions'));
-        $backend->__construct($driver);
+        $backend->__construct($driver, mock('Logger'));
         
         $driver->expectOnce('fork', array($repo_name, $old_project_name.'/'. $namespace, $new_project_name.'/'. $namespace));
         $driver->expectOnce('dumpProjectRepoConf', array($new_project));
@@ -227,7 +227,7 @@ class Git_Backend_GitoliteTest extends Git_Backend_GitoliteCommonTest {
         $old_repo = $this->_GivenAGitRepoWithNameAndNamespace($name, $old_namespace);
         
         $backend = TestHelper::getPartialMock('Git_Backend_Gitolite', array('clonePermissions'));
-        $backend->__construct($driver);
+        $backend->__construct($driver, mock('Logger'));
         $backend->setDao($dao);
         
         $this->expectException('GitRepositoryAlreadyExistsException');
@@ -311,17 +311,18 @@ class Git_Backend_Gitolite_disconnectFromGerrit extends TuleapTestCase {
 
 class Git_Backend_Gitolite_UrlTests extends Git_Backend_GitoliteCommonTest {
 
-    private $unset_servername = false;
+    private $previous_servername = null;
     private $backend;
     private $git_plugin;
     private $project;
     private $repository;
 
     public function setUp() {
-        if (!isset($_SERVER['SERVER_NAME'])) {
-            $this->unset_servername = true;
-            $_SERVER['SERVER_NAME'] = '_dummy_';
+        parent::setUp();
+        if (isset($_SERVER['SERVER_NAME'])) {
+            $this->previous_servername = $_SERVER['SERVER_NAME'];
         }
+        $_SERVER['SERVER_NAME'] = '_dummy_';
 
         $this->project = new MockProject();
         $this->project->setReturnValue('getUnixName', 'gpig');
@@ -333,16 +334,19 @@ class Git_Backend_Gitolite_UrlTests extends Git_Backend_GitoliteCommonTest {
         $dao                = mock('GitDao');
         $permissionsManager = mock('PermissionsManager');
         $this->git_plugin   = mock('GitPlugin');
-        $this->backend = new Git_Backend_Gitolite($driver);
+        $this->backend = new Git_Backend_Gitolite($driver, mock('Logger'));
         $this->backend->setDao($dao);
         $this->backend->setPermissionsManager($permissionsManager);
         $this->backend->setGitPlugin($this->git_plugin);
     }
 
     public function tearDown() {
-        if ($this->unset_servername) {
+        if ($this->previous_servername === null) {
             unset($_SERVER['SERVER_NAME']);
+        } else {
+            $_SERVER['SERVER_NAME'] = $this->previous_servername;
         }
+        parent::tearDown();
     }
 
     public function testGetAccessTypeShouldUseGitoliteSshUser() {

@@ -161,7 +161,9 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
                 $this->project_creator,
                 $template_factory,
                 $this->git_permissions_manager,
-                $url_manager
+                $url_manager,
+                mock('Logger'),
+                mock('Git_Backend_Gitolite')
             )
         );
         $git->setRequest($request);

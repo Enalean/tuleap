@@ -58,7 +58,7 @@ abstract class GitRepositoryImplTest extends TuleapTestCase {
 
 class Git_Backend_Gitolite_isNameValidTest extends GitRepositoryImplTest {
     public function newCreator() {
-        return new Git_Backend_Gitolite(mock('Git_GitoliteDriver'));
+        return new Git_Backend_Gitolite(mock('Git_GitoliteDriver'), mock('Logger'));
     }
 }
 ?>
