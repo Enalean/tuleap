@@ -1,3 +1,11 @@
+Version 1.83 - Tuleap 7.7
+    * Do not load templates in src/app directory
+
+
++ add .htaccess so that we do not dicover issue while in prod
+
+This is part of story #7508: See backlog items in a new read only view
+
 Version 1.82 - Tuleap 7.7
     * story #7509 - Add a REST route GET /backlog_items/:id/children
 
