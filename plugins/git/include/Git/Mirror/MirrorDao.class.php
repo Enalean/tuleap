@@ -74,6 +74,7 @@ class Git_Mirror_MirrorDao extends DataAccessObject{
                     INNER JOIN groups
                         ON plugin_git.project_id = groups.group_id
                 WHERE plugin_git_repository_mirrors.mirror_id = $mirror_id
+                    AND plugin_git.repository_deletion_date IS NULL
                 ORDER BY groups.group_name, plugin_git.repository_name";
 
         return $this->retrieve($sql);
