@@ -1,3 +1,6 @@
+Version 5.508 - Tuleap 7.7
+    * story #7509 - Add a REST route GET /backlog_items/:id/children
+
 Version 5.507 - Tuleap 7.7
     * story #7393: index artifacts when they are created
 

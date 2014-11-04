@@ -1,3 +1,6 @@
+Version 0.93 - Tuleap 7.7
+    * story #7509 - Add a REST route GET /backlog_items/:id/children
+
 Version 0.92 - Tuleap 7.7
     * story #7465: split legacy search and FTS search in two panes
 

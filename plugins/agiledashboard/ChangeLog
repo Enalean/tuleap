@@ -1,3 +1,6 @@
+Version 1.82 - Tuleap 7.7
+    * story #7509 - Add a REST route GET /backlog_items/:id/children
+
 Version 1.81 - Tuleap 7.7
     * story #7508: Fetch all planned items of a milestone & glossification
 
