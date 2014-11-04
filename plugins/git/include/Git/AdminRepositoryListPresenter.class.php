@@ -23,7 +23,7 @@ class Git_AdminMRepositoryListPresenter {
 
     private $mirror;
 
-    /** @var Git_AdminMRepositoryListForProjectPresenter[] */
+    /** @var Git_AdminRepositoryListForProjectPresenter[] */
     public $repository_list_for_projects;
 
     /** @var Codendi_HTMLPurifier */
@@ -66,7 +66,7 @@ class Git_AdminMRepositoryListPresenter {
         return $GLOBALS['Language']->getText('plugin_git', 'mirror_no_repository');
     }
 
-    public function mirror_repo_name() {
-        return $GLOBALS['Language']->getText('plugin_git', 'mirror_repo_name');
+    public function mirror_repo() {
+        return $GLOBALS['Language']->getText('plugin_git', 'mirror_repo');
     }
 }

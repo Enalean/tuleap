@@ -129,7 +129,7 @@ class Git_Mirror_MirrorDataMapper {
 
             $project_presenter->repositories[] = array(
                 'repository_id'   => $row['repository_id'],
-                'repository_name' => $row['repository_name'],
+                'repository_path' => $row['repository_path'],
             );
 
             $previous_group_id = $row['group_id'];

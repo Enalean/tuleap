@@ -13,7 +13,7 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>{{ mirror_repo_name }}</th>
+                    <th>{{ mirror_repo }}</th>
                 </tr>
             </thead>
 
@@ -22,7 +22,7 @@
 
                 <tr>
                     <td>{{ repository_id }}</td>
-                    <td><a href="{{ base_url }}/?group_id={{ project_id }}&repo_id={{ repository_id }}&action=repo_management&pane=mirroring">{{ repository_name }}</a></td>
+                    <td><a href="{{ base_url }}/?group_id={{ project_id }}&repo_id={{ repository_id }}&action=repo_management&pane=mirroring">{{ repository_path }}</a></td>
                 </tr>
 
             {{/ repositories }}
