@@ -41,7 +41,7 @@ class SystemEvent_FULLTEXTSEARCH_DOCMAN_REINDEXTest extends TuleapTestCase {
             $end_date,
             $log
         );
-        $event->setFullTextSearchActions($this->actions);
+        $event->injectDependencies($this->actions);
         return $event;
     }
 

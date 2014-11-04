@@ -28,13 +28,7 @@ class SystemEvent_FULLTEXTSEARCH_DOCMAN_REINDEX_PROJECT extends SystemEvent {
     protected $actions;
 
     public function injectDependencies(FullTextSearchDocmanActions $actions) {
-        parent::injectDependencies();
-        $this->setFullTextSearchActions($actions);
-    }
-
-    public function setFullTextSearchActions(FullTextSearchDocmanActions $actions) {
         $this->actions = $actions;
-        return $this;
     }
 
     /**

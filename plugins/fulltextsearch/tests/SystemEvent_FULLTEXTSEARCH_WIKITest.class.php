@@ -39,7 +39,7 @@ abstract class SystemEvent_FULLTEXTSEARCH_WIKITest extends TuleapTestCase {
             array('getWikiPage'),
             array($id, $type, $owner, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log)
         );
-        $event->setFullTextSearchActions($this->actions);
+        $event->injectDependencies($this->actions);
 
         return $event;
     }

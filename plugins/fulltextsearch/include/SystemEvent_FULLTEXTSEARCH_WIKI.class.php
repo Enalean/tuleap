@@ -26,13 +26,7 @@ abstract class SystemEvent_FULLTEXTSEARCH_WIKI extends SystemEvent {
     protected $actions;
 
     public function injectDependencies(FullTextSearchWikiActions $actions) {
-        parent::injectDependencies();
-        $this->setFullTextSearchActions($actions);
-    }
-
-    public function setFullTextSearchActions(FullTextSearchWikiActions $actions) {
         $this->actions = $actions;
-        return $this;
     }
 
     /**

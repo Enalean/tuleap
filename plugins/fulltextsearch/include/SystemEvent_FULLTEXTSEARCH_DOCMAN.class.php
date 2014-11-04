@@ -36,26 +36,9 @@ abstract class SystemEvent_FULLTEXTSEARCH_DOCMAN extends SystemEvent {
     protected $version_factory;
 
     public function injectDependencies(FullTextSearchDocmanActions $actions, Docman_ItemFactory $item_factory, Docman_VersionFactory $version_factory) {
-        parent::injectDependencies();
-        $this->setFullTextSearchActions($actions)
-             ->setItemFactory($item_factory)
-             ->setVersionFactory($version_factory);
-    }
-
-    public function setFullTextSearchActions(FullTextSearchDocmanActions $actions) {
-        $this->actions = $actions;
-        return $this;
-    }
-
-    public function setItemFactory(Docman_ItemFactory $item_factory) {
-        $this->item_factory = $item_factory;
-        return $this;
-    }
-
-    public function setVersionFactory(Docman_VersionFactory $version_factory) {
+        $this->actions         = $actions;
+        $this->item_factory    = $item_factory;
         $this->version_factory = $version_factory;
-        return $this;
-
     }
 
     /**
@@ -65,7 +48,6 @@ abstract class SystemEvent_FULLTEXTSEARCH_DOCMAN extends SystemEvent {
      */
     public function process() {
         try {
-            $group_id = (int)$this->getRequiredParameter(0);
             $item_id  = (int)$this->getRequiredParameter(1);
 
             $item = $this->getItem($item_id);
