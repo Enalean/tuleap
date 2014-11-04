@@ -320,6 +320,6 @@ plugin_git	admin_delete_button	Supprimer
 plugin_git	change_pwd	cliquer ici pour modifier
 plugin_git	or	ou
 plugin_git	mirror_no_repository	Aucun dépôt sur ce mirroir
-plugin_git	mirror_repo_name	Nom
+plugin_git	mirror_repo	Dépôt
 plugin_git	mirror_title	Liste des dépôts sur $1
 plugin_git	mirror_back	Retourner à la liste des mirroirs
