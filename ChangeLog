@@ -14,12 +14,12 @@ Version 7.7 (Not released yet)
 	* request #7535 TV3 to TV5 : a float field with no value generate errors in XML import
 
 	== Plugins ==
-	* tracker: 5.508
+	* tracker: 5.509
 	* git: 3.131
 	* statistics: 0.39
 	* agiledashboard: 1.83
 	* proftpd: 0.18
-	* fulltextsearch: 0.94
+	* fulltextsearch: 0.95
 	* ldap: 3.57
 
 	 == Themes ==

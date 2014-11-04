@@ -1,3 +1,6 @@
+Version 5.509 - Tuleap 7.7
+    * Part of story #7393 FTS tracker: Reindex on tracker events
+
 Version 5.508 - Tuleap 7.7
     * story #7509 - Add a REST route GET /backlog_items/:id/children
 
