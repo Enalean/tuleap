@@ -47,6 +47,7 @@ class fulltextsearchPlugin extends Plugin {
         SystemEvent_FULLTEXTSEARCH_TRACKER_REINDEX_PROJECT::NAME,
         SystemEvent_FULLTEXTSEARCH_TRACKER_ARTIFACT_DELETE::NAME,
         SystemEvent_FULLTEXTSEARCH_TRACKER_TRACKER_DELETE::NAME,
+        SystemEvent_FULLTEXTSEARCH_TRACKER_PERMISSION_CHANGE::NAME,
         SystemEvent_FULLTEXTSEARCH_WIKI_INDEX::NAME,
         SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE::NAME,
         SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE_PERMISSIONS::NAME,
@@ -85,6 +86,7 @@ class fulltextsearchPlugin extends Plugin {
             $this->_addHook(TRACKER_EVENT_ARTIFACT_POST_UPDATE);
             $this->_addHook(TRACKER_EVENT_ARTIFACT_DELETE);
             $this->_addHook(TRACKER_EVENT_TRACKER_DELETE);
+            $this->_addHook(TRACKER_EVENT_TRACKER_PERMISSIONS_CHANGE);
             $this->_addHook('tracker_followup_event_update', 'tracker_event_artifact_post_update', false);
             $this->_addHook('tracker_report_followup_warning', 'tracker_report_followup_warning', false);
         }
@@ -685,6 +687,13 @@ class fulltextsearchPlugin extends Plugin {
         $project_id = $params['group_id'];
 
         $this->reindexAll($project_id);
+    }
+
+    public function tracker_event_tracker_permisssions_change($params) {
+        $tracker    = $params['tracker'];
+        $controller = $this->getAdminController();
+
+        $controller->reindexTracker($tracker);
     }
 
     private function reindexAll($project_id) {

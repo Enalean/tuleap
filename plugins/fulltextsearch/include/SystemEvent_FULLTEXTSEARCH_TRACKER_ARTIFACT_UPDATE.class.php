@@ -34,21 +34,8 @@ class SystemEvent_FULLTEXTSEARCH_TRACKER_ARTIFACT_UPDATE extends SystemEvent {
     private $artifact_factory;
 
     public function injectDependencies(FullTextSearchTrackerActions $actions, Tracker_ArtifactFactory $artifact_factory) {
-        parent::injectDependencies();
-        $this->setFullTextSearchTrackerActions($actions);
+        $this->actions          = $actions;
         $this->artifact_factory = $artifact_factory;
-    }
-
-    /**
-     * Set dependency
-     *
-     * @param FullTextSearchTrackerActions $actions Dependency
-     *
-     * @return SystemEvent_FULLTEXTSEARCH_TRACKER_ARTIFACT_UPDATE
-     */
-    public function setFullTextSearchTrackerActions(FullTextSearchTrackerActions $actions) {
-        $this->actions = $actions;
-        return $this;
     }
 
     /**

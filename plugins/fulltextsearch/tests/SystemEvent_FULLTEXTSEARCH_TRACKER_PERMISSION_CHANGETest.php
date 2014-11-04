@@ -19,17 +19,19 @@
  */
 
 require_once dirname(__FILE__) .'/../include/autoload.php';
+require_once TRACKER_BASE_DIR .'/../include/autoload.php';
 
-class SystemEvent_FULLTEXTSEARCH_TRACKER_ARTIFACT_DELETETest extends TuleapTestCase {
+class SystemEvent_FULLTEXTSEARCH_TRACKER_PERMISSION_CHANGETest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->actions = mock('FullTextSearchTrackerActions');
+        $this->actions         = mock('FullTextSearchTrackerActions');
+        $this->tracker_factory = mock('TrackerFactory');
     }
 
     public function aSystemEventWithParameter($parameters) {
         $id = $type = $owner = $priority = $status = $create_date = $process_date = $end_date = $log = null;
-        $event = new SystemEvent_FULLTEXTSEARCH_TRACKER_ARTIFACT_DELETE(
+        $event = new SystemEvent_FULLTEXTSEARCH_TRACKER_PERMISSION_CHANGE(
             $id,
             $type,
             $owner,
@@ -44,19 +46,17 @@ class SystemEvent_FULLTEXTSEARCH_TRACKER_ARTIFACT_DELETETest extends TuleapTestC
         return $event;
     }
 
-    public function itDeletesArtifactIndex() {
-        $artifact_id = 99;
+    public function itDeletesTrackerIndex() {
         $tracker_id  = 145;
 
         $parameters = implode(SystemEvent::PARAMETER_SEPARATOR, array(
-            $artifact_id,
             $tracker_id
         ));
 
         $event = $this->aSystemEventWithParameter($parameters);
-        $event->injectDependencies($this->actions);
+        $event->injectDependencies($this->actions, $this->tracker_factory);
 
-        stub($this->actions)->deleteArtifactIndex()->once()->returns(true);
+        stub($this->actions)->reIndexTracker()->once()->returns(true);
 
         $this->assertTrue($event->process());
     }

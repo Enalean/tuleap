@@ -52,7 +52,7 @@ class SystemEvent_FULLTEXTSEARCH_TRACKER_TRACKER_DELETETest extends TuleapTestCa
         ));
 
         $event = $this->aSystemEventWithParameter($parameters);
-        $event->setFullTextSearchTrackerActions($this->actions);
+        $event->injectDependencies($this->actions);
 
         stub($this->actions)->deleteTrackerIndex()->once()->returns(true);
 

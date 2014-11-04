@@ -18,17 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SystemEvent_FULLTEXTSEARCH_TRACKER_TRACKER_DELETE extends SystemEvent {
+class SystemEvent_FULLTEXTSEARCH_TRACKER_PERMISSION_CHANGE extends SystemEvent {
 
-    const NAME = 'FULLTEXTSEARCH_TRACKER_TRACKER_DELETE';
+    const NAME = 'FULLTEXTSEARCH_TRACKER_PERMISSION_CHANGE';
 
     /**
      * @var FullTextSearchTrackerActions
      */
     private $actions;
 
-    public function injectDependencies(FullTextSearchTrackerActions $actions) {
-        $this->actions = $actions;
+    /**
+     * @var TrackerFactory
+     */
+    private $tracker_factory;
+
+    public function injectDependencies(FullTextSearchTrackerActions $actions, TrackerFactory $tracker_factory) {
+        $this->actions         = $actions;
+        $this->tracker_factory = $tracker_factory;
     }
 
     /**
@@ -39,57 +45,43 @@ class SystemEvent_FULLTEXTSEARCH_TRACKER_TRACKER_DELETE extends SystemEvent {
     public function process() {
         try {
             $tracker_id = (int) $this->getRequiredParameter(0);
+            $tracker    = $this->tracker_factory->getTrackerById($tracker_id);
 
-            if ($this->action($tracker_id)) {
-                $this->done();
-                return true;
-            } else {
-                $this->error('Error while deleteing tracker '.$tracker_id);
-            }
+            $this->actions->reIndexTracker($tracker);
+
+            $this->done('All Tracker artifacts re-indexed correctly');
+            return true;
         } catch (Exception $e) {
             $this->error($e->getMessage());
         }
+
         return false;
     }
 
-    private function action($tracker_id) {
-        $this->actions->deleteTrackerIndex($tracker_id);
-        return true;
-    }
 
     /**
-     * Verbalize parameters
-     *
-     * @param Boolean $withLink Create link for the params
-     *
-     * @return String
+     * @return string a human readable representation of parameters
      */
     public function verbalizeParameters($withLink) {
         $txt = '';
-        try {
-            $tracker_id = (int)$this->getRequiredParameter(0);
 
-            $txt = 'Tracker: '.$this->verbalizeTrackerId($tracker_id, $withLink);
+        try {
+            $tracker_id = (int) $this->getRequiredParameter(0);
+            $txt        = 'Tracker: '. $this->verbalizeTrackerId($tracker_id, $withLink);
+
         } catch (Exception $e) {
             return $e->getMessage();
         }
+
         return $txt;
     }
 
-    /**
-     * Verbalize artifact & changeset
-     *
-     * @param Integer $tracker_id  Id of the tracker
-     * @param Boolean $withLink    Create link for the params
-     *
-     * @return String
-     */
-    private function verbalizeTrackerId($tracker_id, $withLink) {
-        $txt = '#'.$tracker_id;
-        if ($withLink) {
+    private function verbalizeTrackerId($tracker_id, $with_link) {
+        $txt = '#'. $tracker_id;
+        if ($with_link) {
             $txt = '<a href="/plugins/tracker/?tracker='. $tracker_id .'">'. $txt .'</a>';
         }
+
         return $txt;
     }
-
 }
