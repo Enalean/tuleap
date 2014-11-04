@@ -25,31 +25,40 @@ tuleap.search = tuleap.search || {};
     tuleap.search.fulltext = {
         full_text_search : 'fulltext',
 
-        handleFulltextFacets : function (type_of_search) {
+        handleFulltextFacets : function (type_of_search, append_to_results) {
             if (type_of_search !== tuleap.search.fulltext.full_text_search) {
                 return;
             }
 
-            replaceSearchPanesByFacets();
+            replaceSearchPanesByFacets(append_to_results);
+            initFacets();
             updateResults();
 
-            function replaceSearchPanesByFacets() {
-                var facets_pane = $('#search-results > .search-pane:first-child');
+            function replaceSearchPanesByFacets(append_to_results) {
+                if (append_to_results) {
+                    return;
+                }
 
-                if (facets_pane.length == 0) {
+                var facets_pane          = $('#search-results > .search-pane'),
+                    has_facets_in_result = (facets_pane.length > 0),
+                    already_has_facets   = ($('.search-panes .search-pane-body.full-text-search').length > 0);
+
+                if (! has_facets_in_result && ! already_has_facets) {
                     $('.search-panes').remove();
                     $('#search-results').addClass('no-search-panes');
 
-                } else {
-                    $('.search-panes').html('');
-                    $('#search-results').removeClass('no-search-panes');
-                    facets_pane.appendTo($('.search-panes'));
+                } else if (has_facets_in_result) {
+                    $('.search-pane').remove();
+                    $('.search-panes').append(facets_pane);
                 }
+            }
 
+            function initFacets() {
+                $('select.facet').select2();
             }
 
             function updateResults() {
-                var facets = $('.facets');
+                var facets = $('.search-pane .facet');
 
                 facets.on('change', function() {
                     var keywords = $('#words').val();
@@ -74,6 +83,7 @@ tuleap.search = tuleap.search || {};
 
                         }).always(function() {
                             $('#search-results').removeClass('loading');
+                            tuleap.search.enableSearchMoreResults();
                         });
                 });
             }

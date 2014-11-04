@@ -28,9 +28,11 @@ class ElasticSearch_SearchClientFacadeTest extends TuleapTestCase {
         $this->user                = mock('PFUser');
         $project_manager           = mock('ProjectManager');
         $this->elasticsearchclient = mock('ElasticSearchClient');
+        $user_manager              = stub('UserManager')->getCurrentUser()->returns($this->user);
         $result_factory            = new ElasticSearch_1_2_ResultFactory(
             $project_manager,
-            new URLVerification()
+            new URLVerification(),
+            $user_manager
         );
 
         $this->client = new ElasticSearch_SearchClientFacade(
@@ -103,6 +105,82 @@ class ElasticSearch_SearchClientFacadeTest extends TuleapTestCase {
         )));
     }
 
+    public function itAsksToElasticsearchToUseProjectsFacets() {
+        $this->assertExpectedFacetedQuery(
+            array(
+                'group_id' => array('101', '102', '103')
+            ),
+            new QueryExpectation(array(
+                'filter' => array(
+                    'or' => array(
+                        array(
+                            'range' => array(
+                                'group_id' => array(
+                                    'from' => 101,
+                                    'to'   => 101
+                                )
+                            )
+                        ),
+                        array(
+                            'range' => array(
+                                'group_id' => array(
+                                    'from' => 102,
+                                    'to'   => 102
+                                )
+                            )
+                        ),
+                        array(
+                            'range' => array(
+                                'group_id' => array(
+                                    'from' => 103,
+                                    'to'   => 103
+                                )
+                            )
+                        )
+                    )
+                )
+            ))
+        );
+    }
+
+    public function itAsksToElasticsearchToUseMyProjectsFacets() {
+        $this->assertExpectedFacetedQuery(
+            array(
+                ElasticSearch_SearchResultMyProjectsFacet::IDENTIFIER => '101,102,103'
+            ),
+            new QueryExpectation(array(
+                'filter' => array(
+                    'or' => array(
+                        array(
+                            'range' => array(
+                                'group_id' => array(
+                                    'from' => 101,
+                                    'to'   => 101
+                                )
+                            )
+                        ),
+                        array(
+                            'range' => array(
+                                'group_id' => array(
+                                    'from' => 102,
+                                    'to'   => 102
+                                )
+                            )
+                        ),
+                        array(
+                            'range' => array(
+                                'group_id' => array(
+                                    'from' => 103,
+                                    'to'   => 103
+                                )
+                            )
+                        )
+                    )
+                )
+            ))
+        );
+    }
+
     public function itAsksToElasticsearchToGiveResultsFromTheOffset() {
         $this->assertExpectedQuery(new QueryExpectation(array(
             'from' => 666
@@ -118,6 +196,16 @@ class ElasticSearch_SearchClientFacadeTest extends TuleapTestCase {
         $no_facet_submitted_by_user = array();
         $search_type = null;
         $this->client->searchDocuments('some terms', $no_facet_submitted_by_user, $offset, $this->user, $size, $search_type);
+    }
+
+    private function assertExpectedFacetedQuery(array $facets, QueryExpectation $query_excpectation) {
+        $some_results = array();
+        stub($this->elasticsearchclient)->search($query_excpectation)->once()->returns($some_results);
+        $size = 10;
+
+        $offset      = 666;
+        $search_type = null;
+        $this->client->searchDocuments('some terms', $facets, $offset, $this->user, $size, $search_type);
     }
 
     private function assertExpectedAdminQuery(QueryExpectation $query_excpectation) {

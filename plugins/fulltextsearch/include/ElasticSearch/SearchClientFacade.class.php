@@ -176,18 +176,28 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
 
     private function filterWithGivenFacets(array &$query, array $facets) {
         if (isset($facets['group_id'])) {
-            $filter_on_project = array('or' => array());
-            foreach ($facets['group_id'] as $group_id) {
-                $filter_on_project['or'][] = array(
-                    'range' => array(
-                        'group_id' => array(
-                            'from' => $group_id,
-                            'to'   => $group_id
-                        )
-                    )
-                );
-            }
-            $query['filter'] = $filter_on_project;
+            $query['filter'] = $this->filterOnProjectIds($facets['group_id']);
         }
+
+        if (isset($facets[ElasticSearch_SearchResultMyProjectsFacet::IDENTIFIER])) {
+            $query['filter'] = $this->filterOnProjectIds(explode(',', $facets[ElasticSearch_SearchResultMyProjectsFacet::IDENTIFIER]));
+        }
+    }
+
+    private function filterOnProjectIds($group_ids) {
+        $filter_on_project = array('or' => array());
+
+        foreach ($group_ids as $group_id) {
+            $filter_on_project['or'][] = array(
+                'range' => array(
+                    'group_id' => array(
+                        'from' => $group_id,
+                        'to'   => $group_id
+                    )
+                )
+            );
+        }
+
+        return $filter_on_project;
     }
 }

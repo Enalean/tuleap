@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,33 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ElasticSearch_SearchResultProjectsFacet {
+class ElasticSearch_SearchResultMyProjectsFacet {
 
-    /**
-     * @var string
-     */
-    public $label;
+    const IDENTIFIER = 'my_group_ids';
 
-    /**
-     * @var int
-     */
-    public $count;
-
-    /**
-     * @var int
-     */
     public $value;
 
-    /**
-     * @var string
-     */
-    public $selected = '';
+    public $checked = false;
 
-    public function __construct(Project $project, $count, $selected) {
-        $this->label    = $project->getUnixName();
-        $this->count    = $count;
-        $this->value    = $project->getGroupId();
-        $this->selected = $selected;
+    public function __construct(array $submitted_facets, $concatened_user_projects) {
+        $this->value   = $concatened_user_projects;
+        $this->checked = isset($submitted_facets[self::IDENTIFIER]);
+
     }
+
+    public function identifier() {
+        return self::IDENTIFIER;
+    }
+
+    public function label() {
+        return $GLOBALS['Language']->getText('plugin_fulltextsearch', 'facet_my_project_label');
+    }
+
 }
-?>

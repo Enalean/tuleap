@@ -45,7 +45,8 @@ class ResultFactoryTest extends TuleapTestCase {
 
         $this->result_factory = new ElasticSearch_1_2_ResultFactory(
             $this->project_manager,
-            $this->url_verification
+            $this->url_verification,
+            $user_manager
         );
 
         $this->serach_data = array(
