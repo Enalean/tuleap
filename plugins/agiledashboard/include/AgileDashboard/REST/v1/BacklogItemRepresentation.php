@@ -29,6 +29,8 @@ class BacklogItemRepresentation {
 
     const CONTENT_ROUTE = 'content';
 
+    const ROUTE         = 'backlog_items';
+
     /**
      * @var Int
      */

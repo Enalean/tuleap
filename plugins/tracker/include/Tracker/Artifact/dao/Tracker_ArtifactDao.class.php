@@ -440,20 +440,41 @@ class Tracker_ArtifactDao extends DataAccessObject {
         return $this->getChildrenForArtifacts(array($artifact_id));
     }
 
+    /**
+     * It does not check permissions
+     */
+    public function getPaginatedChildren($artifact_id, $limit, $offset) {
+        return $this->getPaginatedChildrenForArtifacts(array($artifact_id), $limit, $offset);
+    }
+
     public function getChildrenForArtifacts(array $artifact_ids) {
         $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
 
-        $sql = "SELECT child_art.*, parent_art.id as parent_id
-                FROM tracker_artifact parent_art
-                    INNER JOIN tracker_field                        f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
-                    INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
-                    INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
-                    INNER JOIN tracker_artifact                     child_art  ON (child_art.id = artlink.artifact_id)
-                    INNER JOIN tracker_hierarchy                    hierarchy  ON (hierarchy.child_id = child_art.tracker_id AND hierarchy.parent_id = parent_art.tracker_id)
-                    INNER JOIN tracker_artifact_priority                       ON (tracker_artifact_priority.curr_id = child_art.id)
-                WHERE parent_art.id IN ($artifact_ids)
-                ORDER BY tracker_artifact_priority.rank ASC";
+        $sql = "SELECT child_art.*, parent_art.id as parent_id" . $this->getFromStatementForChildrenOfArtifacts($artifact_ids);
         return $this->retrieve($sql);
+    }
+
+    private function getPaginatedChildrenForArtifacts(array $artifact_ids, $limit, $offset) {
+        $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
+        $limit        = $this->da->escapeInt($limit);
+        $offset       = $this->da->escapeInt($offset);
+
+        $sql  = "SELECT SQL_CALC_FOUND_ROWS child_art.*, parent_art.id as parent_id" . $this->getFromStatementForChildrenOfArtifacts($artifact_ids);
+        $sql .= "LIMIT $limit
+                 OFFSET $offset";
+        return $this->retrieve($sql);
+    }
+
+    private function getFromStatementForChildrenOfArtifacts($artifact_ids) {
+        return " FROM tracker_artifact parent_art
+                     INNER JOIN tracker_field                        f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
+                     INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
+                     INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
+                     INNER JOIN tracker_artifact                     child_art  ON (child_art.id = artlink.artifact_id)
+                     INNER JOIN tracker_hierarchy                    hierarchy  ON (hierarchy.child_id = child_art.tracker_id AND hierarchy.parent_id = parent_art.tracker_id)
+                     INNER JOIN tracker_artifact_priority                       ON (tracker_artifact_priority.curr_id = child_art.id)
+                 WHERE parent_art.id IN ($artifact_ids)
+                 ORDER BY tracker_artifact_priority.rank ASC ";
     }
 
     public function getParents(array $artifact_ids) {
