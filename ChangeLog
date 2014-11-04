@@ -5,6 +5,7 @@ Version 7.7 (Not released yet)
 	* story #7326: see list of repositories mirrored
 	* story #7395: Index all text fields
 	* story #7393: FTS tracker: Reindex on tracker events
+	* Part of story #7465: index date fields
 
 	== Bug Fix ==
 	* request #7526: Missing attrs in ldap queries
@@ -18,11 +19,11 @@ Version 7.7 (Not released yet)
 	* statistics: 0.39
 	* agiledashboard: 1.82
 	* proftpd: 0.18
-	* fulltextsearch: 0.93
+	* fulltextsearch: 0.94
 	* ldap: 3.57
 
 	 == Themes ==
-	* FlamingParrot: 1.51
+	* FlamingParrot: 1.53
 
 	== Development ==
 	* Update build system to generate intermediate srpms

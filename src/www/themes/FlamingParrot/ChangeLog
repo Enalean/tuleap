@@ -1,3 +1,9 @@
+Version 1.53 - Tuleap 7.7
+    * Part of story #7465 index date fields
+
+Version 1.52 - Tuleap 7.7
+    * Part of story #7465 index date fields
+
 Version 1.51 - Tuleap 7.7
     * story #7465: split legacy search and FTS search in two panes
 
