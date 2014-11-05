@@ -323,7 +323,7 @@ class GitPlugin extends Plugin {
     }
 
     private function isNameAvailable($newName, &$error) {
-        $backend_gitolite = new Git_Backend_Gitolite($this->getGitoliteDriver());
+        $backend_gitolite = $this->getBackendGitolite();
         $backend_gitshell = Backend::instance('Git','GitBackend', array($this->getGitRepositoryUrlManager()));
 
         if (! $backend_gitolite->isNameAvailable($newName) && ! $backend_gitshell->isNameAvailable($newName)) {
