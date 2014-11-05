@@ -6,7 +6,7 @@
                 {{# projects_facet }}
                 <li>
                     <p>{{ label }}</p>
-                    <select class="facet" multiple name="facets[{{ identifier }}][]" data-placeholder="{{ placeholder }}">
+                    <select class="facet select2" multiple name="facets[{{ identifier }}][]" data-placeholder="{{ placeholder }}">
                     {{# values }}
                         <option value="{{ value }}" {{# selected }}selected{{/ selected }}>{{ label }} ({{ count }})</option>
                     {{/ values }}
@@ -36,6 +36,17 @@
                     </label>
                 </li>
                 {{/ owner_facet }}
+
+                {{# update_date_facet }}
+                <li>
+                    <select class="facet" name="facets[{{ identifier }}]">
+                    <optgroup label="{{ label }}">
+                    {{# values }}
+                        <option value="{{ value }}" {{# selected }}selected{{/ selected }}>{{ label }}</option>
+                    {{/ values }}
+                    </select>
+                </li>
+                {{/ update_date_facet }}
             </ul>
         </div>
     </div>

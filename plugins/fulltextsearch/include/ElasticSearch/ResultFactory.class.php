@@ -107,6 +107,17 @@ class ElasticSearch_1_2_ResultFactory {
         }
     }
 
+    public function getSearchResultUpdateDateFacet(
+        array $result,
+        array $submitted_facets
+    ) {
+        if (isset($result['facets']['update_date'])) {
+            $current_user = $this->user_manager->getCurrentUser();
+
+            return new ElasticSearch_SearchResultUpdateDateFacetCollection($submitted_facets);
+        }
+    }
+
     public function getSearchResults(array $result) {
         $results = array();
 

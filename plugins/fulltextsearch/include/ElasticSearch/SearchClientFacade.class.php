@@ -140,7 +140,12 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
                     'terms' => array(
                         'fields' => array('last_author', 'owner')
                     )
-                )
+                ),
+                'update_date' => array(
+                    'terms' => array(
+                        'fields' => array('last_modified_date', 'update_date')
+                    )
+                ),
             ),
         );
 
@@ -185,6 +190,7 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
 
         $this->applyProjectFacets($filter, $facets);
         $this->applyOwnerFacet($filter, $facets);
+        $this->applyUpdateDateFacet($filter, $facets);
 
         if (! empty($filter['bool']['must'])) {
             $query['filter'] = $filter;
@@ -219,6 +225,22 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
             $owner_filter['bool']['should'][] = array('term' => array('last_author' => (int)$facets[ElasticSearch_SearchResultOwnerFacet::IDENTIFIER]));
 
             $filter['bool']['must'][] = $owner_filter;
+        }
+    }
+
+    private function applyUpdateDateFacet(array &$filter, array $facets) {
+        if (isset($facets[ElasticSearch_SearchResultUpdateDateFacetCollection::IDENTIFIER]) && ! empty($facets[ElasticSearch_SearchResultUpdateDateFacetCollection::IDENTIFIER])) {
+            $this->createFacetsInQuery($filter);
+
+            $updated_date_filter = array(
+                'range' => array(
+                    'update_date' => array(
+                        'gt' => $facets[ElasticSearch_SearchResultUpdateDateFacetCollection::IDENTIFIER]
+                    )
+                )
+            );
+
+            $filter['bool']['must'][] = $updated_date_filter;
         }
     }
 

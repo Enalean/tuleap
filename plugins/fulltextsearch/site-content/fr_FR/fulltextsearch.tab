@@ -18,6 +18,12 @@ plugin_fulltextsearch	facet_project_label	Projets :
 plugin_fulltextsearch	facet_project_placeholder	Sélectionner des projets...
 plugin_fulltextsearch	facet_my_project_label	Projets dont je suis membre
 plugin_fulltextsearch	facet_owner_label	Documents dont je suis le propriétaire
+plugin_fulltextsearch	facet_update_date_label	Date de mise à jour
+plugin_fulltextsearch	facet_update_date_any_time	Date indifférente
+plugin_fulltextsearch	facet_update_date_past_24	Moins de 24 heures
+plugin_fulltextsearch	facet_update_date_past_week	Moins d'une semaine
+plugin_fulltextsearch	facet_update_date_past_month	Moins d'un mois
+plugin_fulltextsearch	facet_update_date_past_year	Moins d'un an
 
 plugin_fulltextsearch	error_category	Recherche intégral
 plugin_fulltextsearch	error_intro	Impossible d'effectuer la recherche

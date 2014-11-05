@@ -65,6 +65,10 @@ class FullTextSearch_Presenter_Search {
         return $this->query_result->getOwnerFacet();
     }
 
+    public function update_date_facet() {
+        return $this->query_result->getUpdateDateFacet();
+    }
+
     public function result_count() {
         return $GLOBALS['Language']->getText('plugin_fulltextsearch', 'result_count', array($this->query_result->count(), number_format($this->query_result->getQueryTime(), 2, '.', '')));
     }

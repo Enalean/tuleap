@@ -57,6 +57,10 @@ class ElasticSearch_SearchResultCollection implements FullTextSearch_SearchResul
     public function getOwnerFacet() {
         return $this->result_factory->getSearchResultOwnerFacet($this->result, $this->submitted_facets);
     }
+
+    public function getUpdateDateFacet() {
+        return $this->result_factory->getSearchResultUpdateDateFacet($this->result, $this->submitted_facets);
+    }
     
     public function count() {
         return $this->nb_documents_found;

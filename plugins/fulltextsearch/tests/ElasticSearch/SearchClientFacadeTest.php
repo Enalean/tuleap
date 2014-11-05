@@ -105,6 +105,11 @@ class ElasticSearch_SearchClientFacadeTest extends TuleapTestCase {
                     'terms' => array(
                         'fields' => array('last_author', 'owner')
                     )
+                ),
+                'update_date' => array(
+                    'terms' => array(
+                        'fields' => array('last_modified_date', 'update_date')
+                    )
                 )
             )
         )));
@@ -206,6 +211,29 @@ class ElasticSearch_SearchClientFacadeTest extends TuleapTestCase {
                                                 'last_author' => 102
                                             )
                                         )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            ))
+        );
+    }
+
+    public function itAsksToElasticsearchToUseUpdateDateFacets() {
+        $this->assertExpectedFacetedQuery(
+            array(
+                ElasticSearch_SearchResultUpdateDateFacetCollection::IDENTIFIER => ElasticSearch_SearchResultUpdateDateFacetCollection::PAST_WEEK
+            ),
+            new QueryExpectation(array(
+                'filter' => array(
+                    'bool' => array(
+                        'must' => array(
+                            array(
+                                'range' => array(
+                                    'update_date' => array(
+                                        'gt' => ElasticSearch_SearchResultUpdateDateFacetCollection::PAST_WEEK
                                     )
                                 )
                             )
