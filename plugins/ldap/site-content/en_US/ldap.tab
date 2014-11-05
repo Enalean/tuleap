@@ -95,6 +95,7 @@ plugin_ldap	group_members_import_not_impacted	$1 user(s) <strong>NOT IMPACTED</s
 #
 plugin_ldap	user_manager_no_login	Cannot add user $1 (id: $2) into group. No uid associated to user in $3
 plugin_ldap	user_manager_user_not_found	User not found: $1
+plugin_ldap	not_created_user	Cannot create User in database
 #
 # LDAP_UserGroupManager
 #
