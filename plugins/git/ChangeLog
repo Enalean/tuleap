@@ -1,3 +1,6 @@
+Version 3.133 - Tuleap 7.7
+    * Fix request #7600: Project creation failure
+
 Version 3.132 - Tuleap 7.7
     * request #7592 Be more verbose in git logging
 
