@@ -33,6 +33,14 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     const DURATION_FIELD_NAME         = 'duration';
     const START_DATE_FIELD_NAME       = 'start_date';
     const CAPACITY_FIELD_NAME         = 'capacity';
+
+    public $default_properties = array(
+        'use_cache' => array(
+            'value' => 0,
+            'type'  => 'checkbox',
+        ),
+    );
+
     /**
      * @var Tracker_HierarchyFactory
      */
@@ -153,6 +161,23 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
                 $GLOBALS['Language']->getText('plugin_tracker', 'burndown_permission_denied')
             );
         }
+    }
+
+    private function use_cache() {
+        return ($this->getProperty('use_cache') == 1);
+    }
+
+    /**
+     * Export form element properties into a SimpleXMLElement
+     *
+     * @param SimpleXMLElement &$root The root element of the form element
+     *
+     * @return void
+     */
+    public function exportPropertiesToXML(&$root) {
+        $child = $root->addChild('properties');
+
+        $child->addAttribute('use_cache', $this->use_cache() ? '1' : '0');
     }
 
     public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
@@ -671,5 +696,14 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
     public function accept(Tracker_FormElement_FieldVisitor $visitor) {
         return $visitor->visitBurndown($this);
+    }
+
+    /**
+     * Return the Field_Date_Dao
+     *
+     * @return Tracker_FormElement_Field_DateDao The dao
+     */
+    protected function getDao() {
+        return new Tracker_FormElement_Field_BurndownDao();
     }
 }

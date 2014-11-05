@@ -350,6 +350,14 @@
             </choice>
           </attribute>
         </optional>
+        <optional>
+          <attribute name="use_cache">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </attribute>
+        </optional>
       </element>
     </optional>
     <choice>

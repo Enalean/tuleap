@@ -240,6 +240,11 @@ CREATE TABLE tracker_field_list_bind_static_value(
     INDEX field_id_idx(field_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=101;
 
+CREATE TABLE IF NOT EXISTS tracker_field_burndown (
+    field_id INT(11) NOT NULL PRIMARY KEY,
+    use_cache TINYINT DEFAULT 0
+) ENGINE=InnoDB;
+
 DROP TABLE IF EXISTS tracker_changeset;
 CREATE TABLE tracker_changeset(
     id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
