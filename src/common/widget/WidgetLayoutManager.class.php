@@ -240,17 +240,21 @@ class WidgetLayoutManager {
             $used_widgets[] = $data['name'];
         }
         echo '<ul class="widget_toolbar">';
+        $parameters = array(
+            'owner' => $owner_type.$owner_id
+        );
         if ($update_layout = HTTPRequest::instance()->get('update') == 'layout') {
             echo '<li><a href="'. str_replace('&update=layout', '', $_SERVER['REQUEST_URI']) .'">'. $GLOBALS['Language']->getText('widget_add', 'title') .'</a></li>';
             echo '<li class="current"><a href="'. $_SERVER['REQUEST_URI'] .'">'. $GLOBALS['Language']->getText('widget_layout', 'title') .'</a></li>';
-            $action = 'layout';
+            $parameters['action'] = 'layout';
         } else {
             echo '<li class="current"><a href="'. $_SERVER['REQUEST_URI'] .'">'. $GLOBALS['Language']->getText('widget_add', 'title') .'</a></li>';
             echo '<li><a href="'. $_SERVER['REQUEST_URI'] .'&amp;update=layout">'. $GLOBALS['Language']->getText('widget_layout', 'title') .'</a></li>';
-            $action = 'widget';
+            $parameters['action']    = 'widget';
+            $parameters['layout_id'] = $layout_id;
         }
         echo '</ul>';
-        echo '<form action="/widgets/updatelayout.php?owner='. $owner_type.$owner_id .'&amp;action='. $action .'&amp;layout_id='. $layout_id .'" method="POST">';
+        echo '<form action="/widgets/updatelayout.php?'. http_build_query($parameters) .'" method="POST">';
         if ($update_layout) {
             $sql = "SELECT * FROM layouts WHERE scope='S' ORDER BY id ";
             $req_layouts = db_query($sql);
