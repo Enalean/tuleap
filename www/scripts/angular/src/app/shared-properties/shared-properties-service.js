@@ -18,7 +18,8 @@ function SharedPropertiesService(Restangular, $window) {
         getProjectId:   getProjectId,
         setProjectId:   setProjectId,
         getCurrentUser: getCurrentUser,
-        setCurrentUser: setCurrentUser
+        setCurrentUser: setCurrentUser,
+        removeCurrentUser: removeCurrentUser
     };
 
     function getNodeServerAddress() {
@@ -44,6 +45,10 @@ function SharedPropertiesService(Restangular, $window) {
 
     function getCurrentUser() {
         return JSON.parse($window.localStorage.getItem('tuleap_user'));
+    }
+
+    function removeCurrentUser() {
+        $window.localStorage.removeItem('tuleap_user');
     }
 
     function setCurrentUser(current_user) {

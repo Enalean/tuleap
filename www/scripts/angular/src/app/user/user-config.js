@@ -14,5 +14,10 @@ function UserConfig($stateProvider) {
             data: {
                 ncyBreadcrumbLabel: '{{ login_breadcrumb_label }}'
             }
+        })
+        .state('logout', {
+            authenticate: true,
+            url:         '/logout',
+            controller:  'UserLogoutCtrl'
         });
 }

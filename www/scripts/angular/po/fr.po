@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Test\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2014-10-01 09:36+0100\n"
-"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
+"PO-Revision-Date: 2014-11-05 15:22+0100\n"
+"Last-Translator: Yannis ROSSETTO <yannis.rossetto@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
 "Language: fr\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.6.9\n"
+"X-Generator: Poedit 1.5.4\n"
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid ""
@@ -130,6 +130,10 @@ msgstr "Dernière exécution dans cette campagne"
 #: src/app/user/user-login.tpl.html src/app/user/user-login-controller.js
 msgid "Login"
 msgstr "Connexion"
+
+#: src/app/campaign/campaign-list.tpl.html
+msgid "Logout"
+msgstr "Déconnexion"
 
 #: src/app/campaign/campaign-list.tpl.html
 msgid "New campaign"

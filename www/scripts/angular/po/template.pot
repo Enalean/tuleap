@@ -105,6 +105,10 @@ msgid "Login"
 msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html
+msgid "Logout"
+msgstr ""
+
+#: src/app/campaign/campaign-list.tpl.html
 msgid "New campaign"
 msgstr ""
 
