@@ -262,7 +262,12 @@ class LDAP_UserManager {
      * @return PFUser
      */
     function createAccountFromLdap(LDAPResult $lr) {
-    	return $this->createAccount($lr->getEdUid(), $lr->getLogin(), $lr->getCommonName(), $lr->getEmail());
+
+        $user = $this->createAccount($lr->getEdUid(), $lr->getLogin(), $lr->getCommonName(), $lr->getEmail());
+        if (!$user) {
+            throw new LDAP_UserNotCreatedException();
+        }
+        return $user;
     }
 
     /**
@@ -319,11 +324,12 @@ class LDAP_UserManager {
 
         $ldap_user = $this->getUserFromServer($username);
         $user      = $this->getUserManager()->getUserByLdapId($ldap_user->getEdUid());
-        if ($user === null) {
-            return $this->createAccountFromLdap($ldap_user);
-        }
-        $this->synchronizeUser($user, $ldap_user, $password);
 
+        if ($user === null) {
+            $user = $this->createAccountFromLdap($ldap_user);
+        }
+
+        $this->synchronizeUser($user, $ldap_user, $password);
         return $user;
     }
 
