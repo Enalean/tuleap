@@ -33,3 +33,8 @@ $git_use_friendly_urls = 1;
 
 // Tell if online commits are allowed
 $enable_online_edit = 0;
+
+// If you are mirroring repositories, then you should name the master
+// so that end users know where they are cloning from, instead of "Default"
+// If empty, "Default" will be displayed to end users
+$master_location_name = '';

@@ -312,7 +312,7 @@ plugin_git	admin_mirror_cannot_delete	Impossible de supprimer le mirroir
 plugin_git	admin_mirror_deleted	Miroir supprimé!
 plugin_git	add_mirror	Ajouter un nouveau mirroir
 plugin_git	mirror_section_title	Administration des mirroirs
-plugin_git	url_label	Url
+plugin_git	url_label	Hôte SSH
 plugin_git	owner_label	Propriétaire
 plugin_git	ssh_key_label	Clé SSH du propriétaire
 plugin_git	pwd_label	Mot de passe du propriétaire
@@ -339,3 +339,13 @@ project_admin_utils	git_disconnect_gerrit_delete	Déconnexion de Gerrit et suppr
 project_admin_utils	git_disconnect_gerrit_read_only	Déconnexion de Gerrit et lecture seule du dépôt
 project_admin_utils	git_admin_groups	Groupes administrateurs Git
 project_admin_utils	git_fork_repositories	Fork de dépôts Git
+
+plugin_git	identifier	Identifiant
+plugin_git	identifier_placeholder	e.g. location, ...
+plugin_git	url_placeholder	e.g. tuleap.net
+
+plugin_git	how_to_use_text	Comment utiliser un dépôt Git:
+plugin_git	clone_text	Clonez le dépôt pour obtenir votre copie de travail locale:
+plugin_git	add_remote_text	Ou ajoutez simplement ce dépôt distant à votre copie locale:
+plugin_git	default_location	Défaut
+plugin_git	ssh_mirrors_text	Mirroirs SSH

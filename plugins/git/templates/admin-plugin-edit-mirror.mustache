@@ -5,6 +5,12 @@
     <div class="">
         <br>
         <div class="control-group">
+            <label class="control-label" for="mirror_url">{{ identifier }}</label>
+            <div class="controls">
+                <input name="mirror_name" type="text" value="{{ name }}" required/>
+            </div>
+        </div>
+        <div class="control-group">
             <label class="control-label" for="mirror_url">{{ url_label }}</label>
             <div class="controls">
                 <input name="mirror_url" type="text" value="{{ url }}" required/>

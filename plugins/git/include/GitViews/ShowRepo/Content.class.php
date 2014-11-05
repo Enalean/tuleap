@@ -62,6 +62,9 @@ class GitViews_ShowRepo_Content {
     /** @var Git_GitRepositoryUrlManager */
     private $url_manager;
 
+    /** @var Git_Mirror_MirrorDataMapper */
+    private $mirror_data_mapper;
+
     public function __construct(
         GitRepository $repository,
         GitViews_GitPhpViewer $gitphp_viewer,
@@ -70,8 +73,10 @@ class GitViews_ShowRepo_Content {
         Git_GitRepositoryUrlManager $url_manager,
         Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
         Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
+        Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         array $gerrit_servers,
         $theme_path
+
     ) {
         $this->repository         = $repository;
         $this->gitphp_viewer      = $gitphp_viewer;
@@ -80,6 +85,7 @@ class GitViews_ShowRepo_Content {
         $this->driver_factory     = $driver_factory;
         $this->gerrit_usermanager = $gerrit_usermanager;
         $this->gerrit_servers     = $gerrit_servers;
+        $this->mirror_data_mapper = $mirror_data_mapper;
         $this->theme_path         = $theme_path;
         $this->url_manager        = $url_manager;
     }
@@ -164,46 +170,27 @@ class GitViews_ShowRepo_Content {
     }
 
     private function getCloneUrl() {
-        $html  = '';
-        $html .= '<div id="plugin_git_clone_url">';
-        $html .= '<span id="plugin_git_clone_url_group" class="input-prepend input-append">';
-        $html .= '<span class="gitclone_urls_protocols" data-toggle="buttons-radio">';
-        $hp = Codendi_HTMLPurifier::instance();
-        $urls = $this->getAccessURLs();
+        $mirrors   = $this->mirror_data_mapper->fetchAllRepositoryMirrors($this->repository);
+        $presenter = new RepositoryClonePresenter(
+            $this->repository,
+            $this->getAccessURLs(),
+            $mirrors,
+            $this->controller->isAPermittedAction('repo_management'),
+            $this->getMasterLocationName()
+        );
 
-        list(,$first_url) = each($urls);
-        $selected = 'active';
-        foreach ($urls as $transport => $url) {
-            $html .= '<button type="button" class="btn '.$selected.' plugin_git_transport" name="plugin_git_transport" data-url="'. $hp->purify($url) .'" >';
-            $html .= $transport;
-            $html .= '</button>';
-            $selected = '';
+        $renderer = TemplateRendererFactory::build()->getRenderer(GIT_TEMPLATE_DIR);
+
+        return $renderer->renderToString($presenter->getTemplateName(), $presenter);
+    }
+
+    private function getMasterLocationName() {
+        $name = $this->controller->getPlugin()->getConfigurationParameter('master_location_name');
+        if (! $name) {
+            $name = $GLOBALS['Language']->getText('plugin_git', 'default_location');
         }
 
-        $html .= '</span>';
-        $html .= '<input id="plugin_git_clone_field" type="text" value="'.$first_url.'" class="span6" />';
-        $html .= '<button class="btn" type="button" id="plugin_git_example-handle" data-toggle="button">?</button>';
-        $html .= '</span>';
-
-        if ($this->controller->isAPermittedAction('repo_management')) {
-            $html .= ' ';
-            $html .= '<a href="/plugins/git/?action=repo_management&group_id='.$this->repository->getProjectId().'&repo_id='.$this->repository->getId().'" class="btn plugin_git_admin_button">';
-            $html .= '<i class="icon-cog"></i> ';
-            $html .= $GLOBALS['Language']->getText('global', 'Settings');
-            $html .= '</a>';
-        }
-
-        $html .= '<div>';
-        $html .= '<div id="plugin_git_example" style="display:none">';
-        ob_start();
-        $url  = $first_url;
-        $name = $this->repository->getName();
-        include($GLOBALS['Language']->getContent('git_url_example', null, 'git', '.php'));
-        $html .= ob_get_clean();
-        $html .= '</div>';
-        $html .= '</div>';
-        $html .= '</div>';
-        return $html;
+        return $name;
     }
 
     private function getAccessURLs() {
@@ -240,7 +227,7 @@ class GitViews_ShowRepo_Content {
         return $html;
     }
 
-    private function getWaitingForRepositoryCreationInfo() {;
+    private function getWaitingForRepositoryCreationInfo() {
         $html = '<div class="alert alert-info wait_creation">';
         $html .= $GLOBALS['Language']->getText('plugin_git', 'waiting_for_repo_creation');
         $html .= '</div>';

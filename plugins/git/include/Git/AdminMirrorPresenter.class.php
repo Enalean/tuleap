@@ -53,4 +53,16 @@ abstract class Git_AdminMirrorPresenter extends Git_AdminPresenter {
     public function pwd_label() {
         return $GLOBALS['Language']->getText('plugin_git','pwd_label');
     }
+
+    public function identifier() {
+        return $GLOBALS['Language']->getText('plugin_git', 'identifier');
+    }
+
+    public function identifier_placeholder() {
+        return $GLOBALS['Language']->getText('plugin_git', 'identifier_placeholder');
+    }
+
+    public function url_placeholder() {
+        return $GLOBALS['Language']->getText('plugin_git', 'url_placeholder');
+    }
 }

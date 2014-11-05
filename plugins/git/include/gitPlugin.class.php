@@ -167,8 +167,9 @@ class GitPlugin extends Plugin {
     public function jsFile() {
         // Only show the javascript if we're actually in the Git pages.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/git.js"></script>';
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/online_edit.js"></script>';
+            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/git.js"></script>';
+            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/online_edit.js"></script>';
+            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/clone_url.js"></script>';
         }
     }
     
