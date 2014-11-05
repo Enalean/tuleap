@@ -1,3 +1,6 @@
+Version 5.510 - Tuleap 7.7
+    * request #7588: Have a dedicated log file for different event queues
+
 Version 5.509 - Tuleap 7.7
     * Part of story #7393 FTS tracker: Reindex on tracker events
 
