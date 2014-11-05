@@ -24,16 +24,19 @@ require_once 'pre.php';
 
 $request_queue = (isset($argv[1])) ? $argv[1] : SystemEvent::DEFAULT_QUEUE;
 
-$logger = new BackendLogger();
-$owner  = SystemEvent::OWNER_APP;
-$queues = array();
+$logger        = new BackendLogger();
+$owner         = SystemEvent::OWNER_APP;
+$custom_queues = array();
 EventManager::instance()->processEvent(
     Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES,
     array(
-        'queues' => &$queues,
+        'queues' => &$custom_queues,
     )
 );
-if (isset($queues[$request_queue])) {
+if (isset($custom_queues[$request_queue])) {
+    // Override the logger in order to have a dedicated log file for the custom queue
+    $logger  = new BackendLogger(Config::get('codendi_log') .'/'. $request_queue .'_syslog');
+
     $logger->debug('Processing '. $request_queue .' queue.');
     $process = new SystemEventProcessCustomQueue($request_queue);
 } else {
