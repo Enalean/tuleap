@@ -1,3 +1,10 @@
+Version 5.511 - Tuleap 7.7
+    * request #7385: Burndown with a big remaining effort tree issues step 1
+
+
+Allowing tracker admins to choose to store past burndown data in cache.
+Note: this only saves their preference
+
 Version 5.510 - Tuleap 7.7
     * request #7588: Have a dedicated log file for different event queues
 
