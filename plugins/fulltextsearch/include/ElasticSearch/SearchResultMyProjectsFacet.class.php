@@ -20,24 +20,30 @@
 
 class ElasticSearch_SearchResultMyProjectsFacet {
 
-    const IDENTIFIER = 'my_group_ids';
+    /**
+     * @var string
+     */
+    public $label;
 
+    /**
+     * @var int
+     */
+    public $count;
+
+    /**
+     * @var int
+     */
     public $value;
 
-    public $checked = false;
+    /**
+     * @var boolean
+     */
+    public $selected;
 
-    public function __construct(array $submitted_facets, $concatened_user_projects) {
-        $this->value   = $concatened_user_projects;
-        $this->checked = isset($submitted_facets[self::IDENTIFIER]);
-
+    public function __construct($label, $count, $selected) {
+        $this->label    = $label;
+        $this->count    = $count;
+        $this->selected = $selected;
+        $this->value    = ElasticSearch_SearchResultProjectsFacetCollection::USER_PROJECTS_IDS_KEY;
     }
-
-    public function identifier() {
-        return self::IDENTIFIER;
-    }
-
-    public function label() {
-        return $GLOBALS['Language']->getText('plugin_fulltextsearch', 'facet_my_project_label');
-    }
-
 }

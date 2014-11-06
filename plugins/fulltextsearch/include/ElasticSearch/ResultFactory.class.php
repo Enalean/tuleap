@@ -77,22 +77,14 @@ class ElasticSearch_1_2_ResultFactory {
         array $submitted_facets
     ) {
         if (isset($result['facets']['projects'])) {
+            $current_user = $this->user_manager->getCurrentUser();
+
             return new ElasticSearch_SearchResultProjectsFacetCollection(
                 $result['facets']['projects'],
                 $this->project_manager,
-                $submitted_facets
+                $submitted_facets,
+                $current_user->getProjects()
             );
-        }
-    }
-
-    public function getSearchResultMyProjectsFacet(
-        array $result,
-        array $submitted_facets
-    ) {
-        if (isset($result['facets']['projects'])) {
-            $current_user = $this->user_manager->getCurrentUser();
-
-            return new ElasticSearch_SearchResultMyProjectsFacet($submitted_facets, implode(',', $current_user->getProjects()));
         }
     }
 

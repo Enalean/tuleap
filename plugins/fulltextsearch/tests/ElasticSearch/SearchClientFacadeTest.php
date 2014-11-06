@@ -25,7 +25,7 @@ class ElasticSearch_SearchClientFacadeTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->user                = mock('PFUser');
+        $this->user                = stub('PFUser')->getProjects()->returns(array('101', '102', '105'));
         $project_manager           = mock('ProjectManager');
         $this->elasticsearchclient = mock('ElasticSearchClient');
         $user_manager              = stub('UserManager')->getCurrentUser()->returns($this->user);
@@ -39,6 +39,7 @@ class ElasticSearch_SearchClientFacadeTest extends TuleapTestCase {
             $this->elasticsearchclient,
             'whatever',
             $project_manager,
+            $user_manager,
             $result_factory
         );
 
@@ -46,6 +47,7 @@ class ElasticSearch_SearchClientFacadeTest extends TuleapTestCase {
             $this->elasticsearchclient,
             'whatever',
             $project_manager,
+            $user_manager,
             $result_factory
         );
     }
@@ -118,7 +120,7 @@ class ElasticSearch_SearchClientFacadeTest extends TuleapTestCase {
     public function itAsksToElasticsearchToUseProjectsFacets() {
         $this->assertExpectedFacetedQuery(
             array(
-                'group_id' => array('101', '102', '103')
+                ElasticSearch_SearchResultProjectsFacetCollection::IDENTIFIER => array('101', '102', '103')
             ),
             new QueryExpectation(array(
                 'filter' => array(
@@ -155,7 +157,7 @@ class ElasticSearch_SearchClientFacadeTest extends TuleapTestCase {
     public function itAsksToElasticsearchToUseMyProjectsFacets() {
         $this->assertExpectedFacetedQuery(
             array(
-                ElasticSearch_SearchResultMyProjectsFacet::IDENTIFIER => '101,102,103'
+                ElasticSearch_SearchResultProjectsFacetCollection::IDENTIFIER => array(ElasticSearch_SearchResultProjectsFacetCollection::USER_PROJECTS_IDS_KEY)
             ),
             new QueryExpectation(array(
                 'filter' => array(
@@ -176,7 +178,54 @@ class ElasticSearch_SearchClientFacadeTest extends TuleapTestCase {
                                         ),
                                         array(
                                             'term' => array(
-                                                'group_id' => 103
+                                                'group_id' => 105
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            ))
+        );
+    }
+
+    public function itAsksToElasticsearchToUseProjectsAndMyProjectsFacets() {
+        $this->assertExpectedFacetedQuery(
+            array(
+                ElasticSearch_SearchResultProjectsFacetCollection::IDENTIFIER => array('101', '108', ElasticSearch_SearchResultProjectsFacetCollection::USER_PROJECTS_IDS_KEY)
+            ),
+            new QueryExpectation(array(
+                'filter' => array(
+                    'bool' => array(
+                        'must' => array(
+                            array(
+                                'bool' => array(
+                                    'should' => array(
+                                        array(
+                                            'term' => array(
+                                                'group_id' => 101
+                                            )
+                                        ),
+                                        array(
+                                            'term' => array(
+                                                'group_id' => 108
+                                            )
+                                        ),
+                                        array(
+                                            'term' => array(
+                                                'group_id' => 101
+                                            )
+                                        ),
+                                        array(
+                                            'term' => array(
+                                                'group_id' => 102
+                                            )
+                                        ),
+                                        array(
+                                            'term' => array(
+                                                'group_id' => 105
                                             )
                                         )
                                     )

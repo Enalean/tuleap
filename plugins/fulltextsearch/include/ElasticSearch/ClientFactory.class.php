@@ -59,6 +59,7 @@ class ElasticSearch_ClientFactory {
             $client,
             $index,
             $project_manager,
+            UserManager::instance(),
             new ElasticSearch_1_2_ResultFactory(
                 $project_manager,
                 new URLVerification(),
@@ -87,6 +88,7 @@ class ElasticSearch_ClientFactory {
             $client,
             $index,
             $project_manager,
+            UserManager::instance(),
             new ElasticSearch_1_2_ResultFactory(
                 $project_manager,
                 new URLVerification(),

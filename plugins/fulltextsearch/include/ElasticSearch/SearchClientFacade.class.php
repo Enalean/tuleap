@@ -36,6 +36,11 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
      */
     protected $project_manager;
 
+    /**
+     * @var UserManager
+     */
+    protected $user_manager;
+
     /** @var ElasticSearch_1_2_ResultFactory */
     protected $result_factory;
 
@@ -43,11 +48,13 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
         ElasticSearchClient $client,
         $index,
         ProjectManager $project_manager,
+        UserManager $user_manager,
         ElasticSearch_1_2_ResultFactory $result_factory
     ) {
         parent::__construct($client);
         $this->index           = $index;
         $this->project_manager = $project_manager;
+        $this->user_manager    = $user_manager;
         $this->result_factory  = $result_factory;
     }
 
@@ -198,16 +205,13 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
     }
 
     private function applyProjectFacets(array &$filter, array $facets) {
-        if (isset($facets[ElasticSearch_SearchResultProjectsFacetCollection::IDENTIFIER]) || isset($facets[ElasticSearch_SearchResultMyProjectsFacet::IDENTIFIER])) {
+        if (isset($facets[ElasticSearch_SearchResultProjectsFacetCollection::IDENTIFIER])) {
             $this->createFacetsInQuery($filter);
 
             $project_filter = array('bool' => array('should' => array()));
 
             if (isset($facets[ElasticSearch_SearchResultProjectsFacetCollection::IDENTIFIER])) {
                 $this->filterOnProjectIds($project_filter['bool']['should'], $facets[ElasticSearch_SearchResultProjectsFacetCollection::IDENTIFIER]);
-            }
-            if (isset($facets[ElasticSearch_SearchResultMyProjectsFacet::IDENTIFIER])) {
-                $this->filterOnProjectIds($project_filter['bool']['should'], explode(',', $facets[ElasticSearch_SearchResultMyProjectsFacet::IDENTIFIER]));
             }
 
             if (! empty($project_filter['bool']['should'])) {
@@ -252,6 +256,12 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
 
     private function filterOnProjectIds(array &$project_filter, array $group_ids) {
         foreach ($group_ids as $group_id) {
+            if ($group_id === ElasticSearch_SearchResultProjectsFacetCollection::USER_PROJECTS_IDS_KEY) {
+                $this->filterOnProjectIds($project_filter, $this->user_manager->getCurrentUser()->getProjects());
+
+                return;
+            }
+
             $project_filter[] = array(
                 'term' => array(
                     'group_id' => (int)$group_id

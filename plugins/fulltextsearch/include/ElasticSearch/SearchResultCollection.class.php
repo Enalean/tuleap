@@ -50,10 +50,6 @@ class ElasticSearch_SearchResultCollection implements FullTextSearch_SearchResul
         return $this->result_factory->getSearchResultProjectsFacet($this->result, $this->submitted_facets);
     }
 
-    public function getMyProjectsFacet() {
-        return $this->result_factory->getSearchResultMyProjectsFacet($this->result, $this->submitted_facets);
-    }
-
     public function getOwnerFacet() {
         return $this->result_factory->getSearchResultOwnerFacet($this->result, $this->submitted_facets);
     }

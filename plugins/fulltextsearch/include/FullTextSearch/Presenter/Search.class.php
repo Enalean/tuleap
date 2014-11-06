@@ -57,10 +57,6 @@ class FullTextSearch_Presenter_Search {
         return $this->query_result->getProjectsFacet();
     }
 
-    public function my_projects_facet() {
-        return $this->query_result->getMyProjectsFacet();
-    }
-
     public function owner_facet() {
         return $this->query_result->getOwnerFacet();
     }

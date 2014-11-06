@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ElasticSearch_SearchResultProjectsFacet {
+class ElasticSearch_SearchResultProjectsGroupFacet {
 
     /**
      * @var string
@@ -26,24 +26,12 @@ class ElasticSearch_SearchResultProjectsFacet {
     public $label;
 
     /**
-     * @var int
+     * @var array
      */
-    public $count;
+    public $values;
 
-    /**
-     * @var int
-     */
-    public $value;
-
-    /**
-     * @var boolean
-     */
-    public $selected;
-
-    public function __construct(Project $project, $count, $selected) {
-        $this->label    = util_unconvert_htmlspecialchars($project->getPublicName());
-        $this->count    = $count;
-        $this->value    = $project->getGroupId();
-        $this->selected = $selected;
+    public function __construct($label, array $values) {
+        $this->label  = $label;
+        $this->values = $values;
     }
 }
