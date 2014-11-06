@@ -1,3 +1,6 @@
+Version 1.85 - Tuleap 7.7
+    * request #7593: Prevent from deleting a tracker if used in AD
+
 Version 1.84 - Tuleap 7.7
     * story #7508: Fix paginated calls for topbacklog backlog items
 

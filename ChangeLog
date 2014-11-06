@@ -15,10 +15,10 @@ Version 7.7 (Not released yet)
 	* request #7535 TV3 to TV5 : a float field with no value generate errors in XML import
 
 	== Plugins ==
-	* tracker: 5.511
+	* tracker: 5.512
 	* git: 3.134
 	* statistics: 0.39
-	* agiledashboard: 1.84
+	* agiledashboard: 1.85
 	* proftpd: 0.18
 	* fulltextsearch: 0.98
 	* ldap: 3.57
@@ -29,6 +29,7 @@ Version 7.7 (Not released yet)
 	== Enhancement ==
 	* request #7592: Be more verbose in git logging
 	* request #7588: Have a dedicated log file for different event queues
+	* request #7593: Prevent from deleting a tracker if used in AD
 
 	== Development ==
 	* Update build system to generate intermediate srpms
