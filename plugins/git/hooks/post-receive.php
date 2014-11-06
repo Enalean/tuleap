@@ -25,17 +25,15 @@
 
 require_once 'pre.php';
 
-$logger = new TruncateLevelLogger(
-    new BackendLogger(),
-    Config::get('sys_logger_level')
-);
 $git_dao                = new GitDao();
 $user_manager           = UserManager::instance();
 $git_repository_factory = new GitRepositoryFactory(
     $git_dao,
     ProjectManager::instance()
 );
+
 $git_plugin = PluginManager::instance()->getPluginByName('git');
+$logger     = $git_plugin->getLogger();
 
 if ($argv[1] == "--init") {
     $repository_path = $argv[2];

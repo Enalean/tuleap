@@ -25,11 +25,14 @@ require_once dirname(__FILE__).'/../include/autoload.php';
 $gitolite_var_path       = $GLOBALS['sys_data_dir'] . '/gitolite';
 $remote_admin_repository = 'gitolite@gl-adm:gitolite-admin';
 
+$git_plugin = PluginManager::instance()->getPluginByName('git');
+$logger     = $git_plugin->getLogger();
+
 $runner = new Git_GitoliteHousekeeping_GitoliteHousekeepingRunner(
     new SystemEventProcessManager(),
     new SystemEventProcessRootDefaultQueue(),
     new Git_GitoliteHousekeeping_GitoliteHousekeepingDao(),
-    new Git_GitoliteHousekeeping_GitoliteHousekeepingResponse(),
+    new Git_GitoliteHousekeeping_GitoliteHousekeepingResponse($logger),
     new BackendService(),
     $gitolite_var_path,
     $remote_admin_repository

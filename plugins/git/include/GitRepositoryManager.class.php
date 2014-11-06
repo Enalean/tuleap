@@ -232,10 +232,10 @@ class GitRepositoryManager {
      *
      * Purge archived Gitolite repositories
      *
-     * @param BackendLogger $logger
+     * @param Logger $logger
      *
      */
-    public function purgeArchivedRepositories(BackendLogger $logger) {
+    public function purgeArchivedRepositories(Logger $logger) {
         if(!isset($GLOBALS['sys_file_deletion_delay'])) {
             $logger->warn("Purge of archived Gitolite repositories is disabled: sys_file_deletion_delay is missing in local.inc file");
             return;
@@ -254,10 +254,10 @@ class GitRepositoryManager {
      *
      * @param GitRepository $repository
      *
-     * @param BackendLogger $logger
+     * @param Logger $logger
      *
      */
-    private function deleteArchivedRepository(GitRepository $repository, BackendLogger $logger){
+    private function deleteArchivedRepository(GitRepository $repository, Logger $logger){
         $archive = $this->backup_directory.$repository->getName().".tar.gz";
         if (is_file($archive)) {
             if(!unlink($archive)) {

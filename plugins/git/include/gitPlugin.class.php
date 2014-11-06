@@ -30,7 +30,7 @@ class GitPlugin extends Plugin {
 
     /**
      *
-     * @var BackendLogger
+     * @var Logger
      */
     private $logger;
 
@@ -1112,7 +1112,7 @@ class GitPlugin extends Plugin {
 
     /**
      *
-     * @return BackendLogger
+     * @return Logger
      */
     public function getLogger() {
         if (!$this->logger) {
@@ -1126,9 +1126,9 @@ class GitPlugin extends Plugin {
 
     /**
      *
-     * @param BackendLogger $logger
+     * @param Logger $logger
      */
-    public function setLogger(BackendLogger $logger) {
+    public function setLogger(Logger $logger) {
         $this->logger = $logger;
     }
 

@@ -30,8 +30,8 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingResponse {
     /** @var Logger */
     private $logger;
 
-    public function __construct() {
-        $this->logger = new BackendLogger();
+    public function __construct(Logger $logger) {
+        $this->logger = $logger;
     }
 
     public function abort() {
