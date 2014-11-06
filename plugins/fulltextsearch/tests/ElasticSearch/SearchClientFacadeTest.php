@@ -100,6 +100,16 @@ class ElasticSearch_SearchClientFacadeTest extends TuleapTestCase {
                     'terms' => array(
                         'field' => 'group_id'
                     )
+                ),
+                'owner' => array(
+                    'terms' => array(
+                        'fields' => array('last_author', 'owner')
+                    )
+                ),
+                'update_date' => array(
+                    'terms' => array(
+                        'fields' => array('last_modified_date', 'update_date')
+                    )
                 )
             )
         )));
@@ -112,28 +122,27 @@ class ElasticSearch_SearchClientFacadeTest extends TuleapTestCase {
             ),
             new QueryExpectation(array(
                 'filter' => array(
-                    'or' => array(
-                        array(
-                            'range' => array(
-                                'group_id' => array(
-                                    'from' => 101,
-                                    'to'   => 101
-                                )
-                            )
-                        ),
-                        array(
-                            'range' => array(
-                                'group_id' => array(
-                                    'from' => 102,
-                                    'to'   => 102
-                                )
-                            )
-                        ),
-                        array(
-                            'range' => array(
-                                'group_id' => array(
-                                    'from' => 103,
-                                    'to'   => 103
+                    'bool' => array(
+                        'must' => array(
+                            array(
+                                'bool' => array(
+                                    'should' => array(
+                                        array(
+                                            'term' => array(
+                                                'group_id' => 101
+                                            )
+                                        ),
+                                        array(
+                                            'term' => array(
+                                                'group_id' => 102
+                                            )
+                                        ),
+                                        array(
+                                            'term' => array(
+                                                'group_id' => 103
+                                            )
+                                        )
+                                    )
                                 )
                             )
                         )
@@ -150,28 +159,82 @@ class ElasticSearch_SearchClientFacadeTest extends TuleapTestCase {
             ),
             new QueryExpectation(array(
                 'filter' => array(
-                    'or' => array(
-                        array(
-                            'range' => array(
-                                'group_id' => array(
-                                    'from' => 101,
-                                    'to'   => 101
+                    'bool' => array(
+                        'must' => array(
+                            array(
+                                'bool' => array(
+                                    'should' => array(
+                                        array(
+                                            'term' => array(
+                                                'group_id' => 101
+                                            )
+                                        ),
+                                        array(
+                                            'term' => array(
+                                                'group_id' => 102
+                                            )
+                                        ),
+                                        array(
+                                            'term' => array(
+                                                'group_id' => 103
+                                            )
+                                        )
+                                    )
                                 )
                             )
-                        ),
-                        array(
-                            'range' => array(
-                                'group_id' => array(
-                                    'from' => 102,
-                                    'to'   => 102
+                        )
+                    )
+                )
+            ))
+        );
+    }
+
+    public function itAsksToElasticsearchToUseOwnerFacets() {
+        $this->assertExpectedFacetedQuery(
+            array(
+                ElasticSearch_SearchResultOwnerFacet::IDENTIFIER => '102'
+            ),
+            new QueryExpectation(array(
+                'filter' => array(
+                    'bool' => array(
+                        'must' => array(
+                            array(
+                                'bool' => array(
+                                    'should' => array(
+                                        array(
+                                            'term' => array(
+                                                'owner' => 102
+                                            )
+                                        ),
+                                        array(
+                                            'term' => array(
+                                                'last_author' => 102
+                                            )
+                                        )
+                                    )
                                 )
                             )
-                        ),
-                        array(
-                            'range' => array(
-                                'group_id' => array(
-                                    'from' => 103,
-                                    'to'   => 103
+                        )
+                    )
+                )
+            ))
+        );
+    }
+
+    public function itAsksToElasticsearchToUseUpdateDateFacets() {
+        $this->assertExpectedFacetedQuery(
+            array(
+                ElasticSearch_SearchResultUpdateDateFacetCollection::IDENTIFIER => ElasticSearch_SearchResultUpdateDateFacetCollection::PAST_WEEK
+            ),
+            new QueryExpectation(array(
+                'filter' => array(
+                    'bool' => array(
+                        'must' => array(
+                            array(
+                                'range' => array(
+                                    'update_date' => array(
+                                        'gt' => ElasticSearch_SearchResultUpdateDateFacetCollection::PAST_WEEK
+                                    )
                                 )
                             )
                         )

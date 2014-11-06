@@ -81,6 +81,7 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
         $this->item = aDocman_File()
             ->withId(101)
             ->withTitle('Coin')
+            ->withOwnerId(123)
             ->withDescription('Duck typing')
             ->withGroupId(200)
             ->build();
@@ -151,10 +152,11 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
                 'update_date'             => '2014-06-19',
                 'permissions'             => array(3, 102),
                 'approval_table_comments' => array(),
+                'owner'                   => 123,
                 'obsolescence_date'       => '2014-06-19',
                 'property_1'              => 'val01',
                 'property_2'              => 'val02',
-                'file'                    => 'aW5kZXggbWUK',
+                'file'                    => 'aW5kZXggbWUK'
                ),
         );
         $this->client->expectOnce('index', $expected);
@@ -184,6 +186,7 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
                 'update_date'             => '2014-06-19',
                 'permissions'             => array(3, 102),
                 'approval_table_comments' => array(),
+                'owner'                   => 123,
                 'property_1'              => 'val01',
                 'property_2'              => 'val02',
                 'file'                    => 'aW5kZXggbWUK',

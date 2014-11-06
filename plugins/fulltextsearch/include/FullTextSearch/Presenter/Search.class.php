@@ -49,12 +49,24 @@ class FullTextSearch_Presenter_Search {
         return $GLOBALS['Language']->getText('plugin_fulltextsearch', 'project_facets_label');
     }
 
+    public function docman_wiki_facets_label() {
+        return $GLOBALS['Language']->getText('plugin_fulltextsearch', 'docman_wiki_facets_label');
+    }
+
     public function projects_facet() {
         return $this->query_result->getProjectsFacet();
     }
 
     public function my_projects_facet() {
         return $this->query_result->getMyProjectsFacet();
+    }
+
+    public function owner_facet() {
+        return $this->query_result->getOwnerFacet();
+    }
+
+    public function update_date_facet() {
+        return $this->query_result->getUpdateDateFacet();
     }
 
     public function result_count() {

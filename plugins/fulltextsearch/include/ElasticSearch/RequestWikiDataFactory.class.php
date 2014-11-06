@@ -30,7 +30,7 @@ class ElasticSearch_1_2_RequestWikiDataFactory {
     const MAPPING_WIKI_ROOT_KEY       = 'wiki';
 
     const PHPWIKI_METADATA_LAST_MODIFIED_DATE = 'mtime';
-    const PHPWIKI_METADATA_AUTHOR             = 'author';
+    const PHPWIKI_METADATA_AUTHOR_ID          = 'author_id';
     const PHPWIKI_METADATA_SUMMARY            = 'summary';
     const PHPWIKI_METADATA_CONTENT            = 'content';
 
@@ -41,8 +41,12 @@ class ElasticSearch_1_2_RequestWikiDataFactory {
     /** @var Wiki_PermissionsManager */
     private $permissions_manager;
 
-    public function __construct(Wiki_PermissionsManager $permissions_manager) {
+    /** @var UserManager */
+    private $user_manager;
+
+    public function __construct(Wiki_PermissionsManager $permissions_manager, UserManager $user_manager) {
         $this->permissions_manager = $permissions_manager;
+        $this->user_manager        = $user_manager;
     }
 
     /**
@@ -69,8 +73,7 @@ class ElasticSearch_1_2_RequestWikiDataFactory {
             'group_id'           => $wiki_page->getGid(),
             'page_name'          => $wiki_page->getPagename(),
             'last_modified_date' => date('Y-m-d', $wiki_page_metadata[self::PHPWIKI_METADATA_LAST_MODIFIED_DATE]),
-            'last_author'        => isset($wiki_page_metadata[self::PHPWIKI_METADATA_AUTHOR]) ?
-                $wiki_page_metadata[self::PHPWIKI_METADATA_AUTHOR] : '',
+            'last_author'        => $wiki_page_metadata[self::PHPWIKI_METADATA_AUTHOR_ID],
             'last_summary'       => isset($wiki_page_metadata[self::PHPWIKI_METADATA_SUMMARY]) ?
                 $wiki_page_metadata[self::PHPWIKI_METADATA_SUMMARY] : '',
             'content'            => isset($wiki_page_metadata[self::PHPWIKI_METADATA_CONTENT]) ?
@@ -104,7 +107,7 @@ class ElasticSearch_1_2_RequestWikiDataFactory {
                 'type' => 'date'
             ),
             'last_author' => array(
-                'type' => 'string'
+                'type' => 'long'
             ),
             'last_summary' => array(
                 'type' => 'string'

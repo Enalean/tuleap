@@ -32,6 +32,7 @@ class Docman_File_Builder {
     public $group_id    = 'group_id';
     public $title       = 'title';
     public $description = 'description';
+    public $owner_id    = 'owner_id';
     public $permissions = array();
     
     public function build() {
@@ -40,7 +41,7 @@ class Docman_File_Builder {
         stub($docman_file)->getGroupId()->returns($this->group_id);
         stub($docman_file)->getTitle()->returns($this->title);
         stub($docman_file)->getDescription()->returns($this->description);
-        stub($docman_file)->getDescription()->returns($this->description);
+        stub($docman_file)->getOwnerId()->returns($this->owner_id);
         return $docman_file;
     }
     
@@ -54,6 +55,11 @@ class Docman_File_Builder {
         return $this;
     }
     
+    public function withOwnerId($owner_id) {
+        $this->owner_id = $owner_id;
+        return $this;
+    }
+
     public function withTitle($title) {
         $this->title = $title;
         return $this;

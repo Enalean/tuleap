@@ -20,7 +20,7 @@
 
 class ElasticSearch_SearchResultProjectsFacetCollection {
 
-    private $identifier = 'group_id';
+    const IDENTIFIER = 'group_id';
 
     private $values = array();
 
@@ -30,11 +30,15 @@ class ElasticSearch_SearchResultProjectsFacetCollection {
                 $project = $project_manager->getProject($result['term']);
 
                 if ($project && !$project->isError()) {
-                    $checked = isset($submitted_facets[$this->identifier]) && in_array($project->getGroupId(), $submitted_facets[$this->identifier]);
+                    $checked = isset($submitted_facets[self::IDENTIFIER]) && in_array($project->getGroupId(), $submitted_facets[self::IDENTIFIER]);
                     $this->values[] = new ElasticSearch_SearchResultProjectsFacet($project, $result['count'], $checked);
                 }
             }
         }
+    }
+
+    public function identifier() {
+        return self::IDENTIFIER;
     }
 
     public function getValues() {
@@ -47,10 +51,6 @@ class ElasticSearch_SearchResultProjectsFacetCollection {
 
     public function placeholder() {
         return $GLOBALS['Language']->getText('plugin_fulltextsearch', 'facet_project_placeholder');
-    }
-
-    public function identifier() {
-        return $this->identifier;
     }
 
     public function values() {

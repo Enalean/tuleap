@@ -90,10 +90,31 @@ class ElasticSearch_1_2_ResultFactory {
         array $submitted_facets
     ) {
         if (isset($result['facets']['projects'])) {
-
             $current_user = $this->user_manager->getCurrentUser();
 
             return new ElasticSearch_SearchResultMyProjectsFacet($submitted_facets, implode(',', $current_user->getProjects()));
+        }
+    }
+
+    public function getSearchResultOwnerFacet(
+        array $result,
+        array $submitted_facets
+    ) {
+        if (isset($result['facets']['owner'])) {
+            $current_user = $this->user_manager->getCurrentUser();
+
+            return new ElasticSearch_SearchResultOwnerFacet($submitted_facets, $current_user);
+        }
+    }
+
+    public function getSearchResultUpdateDateFacet(
+        array $result,
+        array $submitted_facets
+    ) {
+        if (isset($result['facets']['update_date'])) {
+            $current_user = $this->user_manager->getCurrentUser();
+
+            return new ElasticSearch_SearchResultUpdateDateFacetCollection($submitted_facets);
         }
     }
 

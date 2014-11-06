@@ -3,25 +3,51 @@
         <div class="search-pane-header">{{ project_facets_label }}</div>
         <div class="search-pane-body full-text-search">
             <ul>
-            {{# projects_facet }}
+                {{# projects_facet }}
                 <li>
                     <p>{{ label }}</p>
-                    <select class="facet" multiple name="facets[{{ identifier }}][]" data-placeholder="{{ placeholder }}">
+                    <select class="facet select2" multiple name="facets[{{ identifier }}][]" data-placeholder="{{ placeholder }}">
                     {{# values }}
                         <option value="{{ value }}" {{# selected }}selected{{/ selected }}>{{ label }} ({{ count }})</option>
                     {{/ values }}
                     </select>
                 </li>
-            {{/ projects_facet }}
+                {{/ projects_facet }}
 
-            {{# my_projects_facet }}
+                {{# my_projects_facet }}
                 <li>
                     <label class="checkbox">
                       <input type="checkbox" class="facet" name="facets[{{ identifier }}]" value="{{ value }}" {{# checked }}checked{{/ checked }}> {{ label }}
                     </label>
                 </li>
-            {{/ my_projects_facet }}
+                {{/ my_projects_facet }}
+            </ul>
+        </div>
+    </div>
+
+    <div class="search-pane">
+        <div class="search-pane-header">{{ docman_wiki_facets_label }}</div>
+        <div class="search-pane-body full-text-search">
             <ul>
+                {{# owner_facet }}
+                <li>
+                    <label class="checkbox">
+                      <input type="checkbox" class="facet" name="facets[{{ identifier }}]" value="{{ value }}" {{# checked }}checked{{/ checked }}> {{ label }}
+                    </label>
+                </li>
+                {{/ owner_facet }}
+
+                {{# update_date_facet }}
+                <li>
+                    <select class="facet" name="facets[{{ identifier }}]">
+                    <optgroup label="{{ label }}">
+                    {{# values }}
+                        <option value="{{ value }}" {{# selected }}selected{{/ selected }}>{{ label }}</option>
+                    {{/ values }}
+                    </select>
+                </li>
+                {{/ update_date_facet }}
+            </ul>
         </div>
     </div>
 {{/ has_results }}

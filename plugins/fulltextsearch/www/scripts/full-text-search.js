@@ -54,7 +54,7 @@ tuleap.search = tuleap.search || {};
             }
 
             function initFacets() {
-                $('select.facet').select2();
+                $('select.select2').select2();
             }
 
             function updateResults() {
