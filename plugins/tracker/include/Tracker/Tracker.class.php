@@ -2124,7 +2124,22 @@ EOS;
         }
         return $user->isSuperUser() || $user->isMember($this->getGroupId(), 'A');
     }
-    
+
+    public function getInformationsFromOtherServicesAboutUsage() {
+        $result = array();
+        $result['can_be_deleted'] = true;
+
+        EventManager::instance()->processEvent(
+            TRACKER_USAGE,
+            array(
+                'tracker'   => $this,
+                'result'    => &$result
+            )
+        );
+
+        return $result;
+    }
+
     /**
      * Check if user has full access to a tracker or not
      *

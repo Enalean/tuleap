@@ -64,6 +64,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(TRACKER_EVENT_REPORT_SAVE_ADDITIONAL_CRITERIA);
             $this->addHook(TRACKER_EVENT_REPORT_LOAD_ADDITIONAL_CRITERIA);
             $this->addHook(TRACKER_EVENT_FIELD_AUGMENT_DATA_FOR_REPORT);
+            $this->addHook(TRACKER_USAGE);
             $this->addHook(Event::SERVICE_ICON);
 
             $this->_addHook(Event::SYSTRAY);
@@ -215,6 +216,25 @@ class AgileDashboardPlugin extends Plugin {
         if ($requested_planning) {
             $this->redirectOrAppend($params['request'], $params['artifact'], $params['redirect'], $requested_planning, $last_milestone_artifact);
         }
+    }
+
+    public function tracker_usage($params) {
+
+        $result['can_be_deleted'] = false;
+        $result['message']        = 'Agile Dashboard';
+
+        $tracker    = $params['tracker'];
+        $tracker_id = $tracker->getId();
+
+        $is_used_in_planning = PlanningFactory::build()->isTrackerIdUsedInAPlanning($tracker_id);
+        $is_used_in_backlog  = PlanningFactory::build()->isTrackerUsedInBacklog($tracker_id);
+
+        if (! $is_used_in_planning && ! $is_used_in_backlog) {
+            $result['can_be_deleted']= true;
+            $result['message'] = '';
+        }
+
+        $params['result'] = $result;
     }
 
     private function redirectOrAppend(Codendi_Request $request, Tracker_Artifact $artifact, Tracker_Artifact_Redirect $redirect, $requested_planning, Tracker_Artifact $last_milestone_artifact = null) {

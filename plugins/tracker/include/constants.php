@@ -217,3 +217,12 @@ define('TRACKER_EVENT_TRACKER_DELETE', 'tracker_event_tracker_delete');
  *   'tracker'    Tracker
  */
 define('TRACKER_EVENT_TRACKER_PERMISSIONS_CHANGE', 'tracker_event_tracker_permisssions_change');
+
+/**
+ * Event emitted to check if a tracker can be deleted
+ *
+ * Parameters:
+ *   'tracker'                Tracker (IN)
+ *   'result'                 Array (OUT)
+ */
+define('TRACKER_USAGE', 'tracker_usage');
