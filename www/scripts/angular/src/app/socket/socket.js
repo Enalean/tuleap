@@ -1,5 +1,4 @@
 angular.module('socket', [
     'sharedProperties',
-    'btford.socket-io',
-    'ngAudio'
+    'btford.socket-io'
 ]);

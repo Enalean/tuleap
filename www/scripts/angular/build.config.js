@@ -85,8 +85,7 @@ module.exports = {
       'vendor/angular-sanitize/angular-sanitize.min.js',
       'vendor/angular-gettext/dist/angular-gettext.min.js',
       'vendor/angular-socket-io/socket.min.js',
-      'vendor/angular-ui-utils/unique.min.js',
-      'vendor/angular-audio/app/angular.audio.js'
+      'vendor/angular-ui-utils/unique.min.js'
     ],
     css: [
     ]
