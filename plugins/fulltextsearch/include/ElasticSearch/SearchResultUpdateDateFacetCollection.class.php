@@ -59,8 +59,4 @@ class ElasticSearch_SearchResultUpdateDateFacetCollection {
         return $GLOBALS['Language']->getText('plugin_fulltextsearch', 'facet_update_date_label');
     }
 
-    public function placeholder() {
-        return $GLOBALS['Language']->getText('plugin_fulltextsearch', 'facet_update_date_placeholder');
-    }
-
 }
