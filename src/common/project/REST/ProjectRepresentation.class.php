@@ -45,6 +45,11 @@ class ProjectRepresentation {
     public $label;
 
     /**
+     * @var string
+     */
+     public $shortname;
+
+    /**
      * @var Array {@type Tuleap\Project\REST\ProjectResourceReference}
      */
     public $resources;
@@ -53,6 +58,7 @@ class ProjectRepresentation {
         $this->id        = JsonCast::toInt($project->getId());
         $this->uri       = self::ROUTE . '/' . $this->id;
         $this->label     = $project->getPublicName();
+        $this->shortname = $project->getUnixName();
         $this->resources = $resources;
     }
 }
