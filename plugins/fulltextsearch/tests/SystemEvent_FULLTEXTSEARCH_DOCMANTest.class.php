@@ -41,9 +41,7 @@ abstract class SystemEvent_FULLTEXTSEARCH_DOCMANTest extends TuleapTestCase {
     public function aSystemEventWithParameter($parameters) {
         $id = $type = $owner = $priority = $status = $create_date = $process_date = $end_date = $log = null;
         $event = new $this->klass($id, $type, $owner, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log);
-        $event->setFullTextSearchActions($this->actions)
-            ->setItemFactory($this->item_factory)
-            ->setVersionFactory($this->version_factory);
+        $event->injectDependencies($this->actions, $this->item_factory, $this->version_factory);
         return $event;
     }
 

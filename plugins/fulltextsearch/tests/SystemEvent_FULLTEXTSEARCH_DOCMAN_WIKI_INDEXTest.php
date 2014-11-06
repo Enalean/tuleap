@@ -36,9 +36,7 @@ class SystemEvent_FULLTEXTSEARCH_DOCMAN_WIKI_INDEXTest extends SystemEvent_FULLT
         $this->wiki_page = stub('WikiPage')->getMetadata()->returns(array());
         stub($event)->getWikiPage()->returns($this->wiki_page);
 
-        $event->setFullTextSearchActions($this->actions)
-            ->setItemFactory($this->item_factory)
-            ->setVersionFactory($this->version_factory);
+        $event->injectDependencies($this->actions, $this->item_factory, $this->version_factory);
         return $event;
     }
 

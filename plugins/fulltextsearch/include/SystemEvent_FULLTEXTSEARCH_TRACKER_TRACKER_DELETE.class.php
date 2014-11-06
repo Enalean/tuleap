@@ -41,7 +41,7 @@ class SystemEvent_FULLTEXTSEARCH_TRACKER_TRACKER_DELETE extends SystemEvent {
             $tracker_id = (int) $this->getRequiredParameter(0);
 
             if ($this->action($tracker_id)) {
-                $this->done();
+                $this->done("All artifacts in tracker #$tracker_id removed from index");
                 return true;
             } else {
                 $this->error('Error while deleteing tracker '.$tracker_id);

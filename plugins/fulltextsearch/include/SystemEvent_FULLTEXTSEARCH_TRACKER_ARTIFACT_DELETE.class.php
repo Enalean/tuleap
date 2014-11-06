@@ -42,10 +42,10 @@ class SystemEvent_FULLTEXTSEARCH_TRACKER_ARTIFACT_DELETE extends SystemEvent {
             $tracker_id  = (int) $this->getRequiredParameter(1);
 
             if ($this->action($artifact_id, $tracker_id)) {
-                $this->done();
+                $this->done("Artifact #$artifact_id removed from index");
                 return true;
             } else {
-                $this->error('Error while deleteing artifact '.$artifact_id);
+                $this->error('Error while deleting artifact '.$artifact_id);
             }
         } catch (Exception $e) {
             $this->error($e->getMessage());
