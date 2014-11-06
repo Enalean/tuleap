@@ -20,7 +20,7 @@ Version 7.7 (Not released yet)
 	* statistics: 0.39
 	* agiledashboard: 1.84
 	* proftpd: 0.18
-	* fulltextsearch: 0.96
+	* fulltextsearch: 0.97
 	* ldap: 3.57
 
 	 == Themes ==
@@ -36,6 +36,7 @@ Version 7.7 (Not released yet)
 	* set src-dir as parameter in docker_generate_package script
 	* adding a Makefile target and removing -t option for CI purpose
 	* Adding shortname of project in GET /project/:id route
+	* Fix master build with unused text
 
 Version 7.6 (Monday, October 20th 2014)
 	== Plugins ==
