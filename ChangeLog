@@ -5,7 +5,7 @@ Version 7.7 (Not released yet)
 	* story #7326: see list of repositories mirrored
 	* story #7395: Index all text fields
 	* story #7393: FTS tracker: Reindex on tracker events
-	* Part of story #7465: index date fields
+	* story #7465: index date fields
 	* story #7508: See backlog items in a new read only view
 
 	== Bug Fix ==
@@ -20,11 +20,11 @@ Version 7.7 (Not released yet)
 	* statistics: 0.39
 	* agiledashboard: 1.84
 	* proftpd: 0.18
-	* fulltextsearch: 0.95
+	* fulltextsearch: 0.96
 	* ldap: 3.57
 
 	 == Themes ==
-	* FlamingParrot: 1.53
+	* FlamingParrot: 1.54
 
 	== Enhancement ==
 	* request #7592: Be more verbose in git logging
