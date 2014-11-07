@@ -246,10 +246,14 @@ class LdapPlugin extends Plugin {
                     $params['auth_success']     = true;
                 }
             } catch (LDAP_UserNotFoundException $exception) {
-                $GLOBALS['Response']->addFeedback($exception->getMessage());
+                $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
             } catch (LDAP_AuthenticationFailedException $exception) {
                 $logger = new BackendLogger();
                 $logger->info("[LDAP] User ".$params['loginname']." failed to authenticate");
+            } catch (LDAP_UserNotCreatedException $exception) {
+                $logger = new BackendLogger();
+                $logger->error("[LDAP] User ".$params['loginname']." could not be created in db");
+                $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
             }
         }
     }
