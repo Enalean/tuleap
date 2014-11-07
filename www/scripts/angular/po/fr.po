@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Test\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2014-11-05 15:22+0100\n"
+"PO-Revision-Date: 2014-11-07 17:44+0100\n"
 "Last-Translator: Yannis ROSSETTO <yannis.rossetto@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.6.9\n"
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid ""
@@ -53,19 +53,11 @@ msgstr "Tous les environnements"
 msgid "Anybody"
 msgstr "N'importe qui"
 
-#: src/app/execution/execution-detail.tpl.html
-msgid "Assigned to"
-msgstr "Assigné à"
-
 #: src/app/campaign/campaign-list.tpl.html
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Blocked"
 msgstr "Bloqué"
-
-#: src/app/execution/execution-detail.tpl.html
-msgid "By:"
-msgstr "Par :"
 
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Campaign"
@@ -95,10 +87,6 @@ msgstr "Catégorie"
 msgid "Comment..."
 msgstr "Commentaire..."
 
-#: src/app/execution/execution-detail.tpl.html
-msgid "Comment:"
-msgstr "Commentaire :"
-
 #: src/app/campaign/campaign-new.tpl.html
 msgid "Create a campaign"
 msgstr "Créer une campagne"
@@ -106,10 +94,6 @@ msgstr "Créer une campagne"
 #: src/app/campaign/campaign-new.tpl.html
 msgid "Create campaign"
 msgstr "Créer la campagne"
-
-#: src/app/execution/execution-detail.tpl.html
-msgid "Date:"
-msgstr "Date :"
 
 #: src/app/campaign/campaign-list.tpl.html
 #: src/app/execution/execution-detail.tpl.html
@@ -122,10 +106,6 @@ msgstr "Échoué"
 #: src/app/execution/execution-list.tpl.html
 msgid "Filter..."
 msgstr "Filtrer..."
-
-#: src/app/execution/execution-detail.tpl.html
-msgid "Last execution in this campaign"
-msgstr "Dernière exécution dans cette campagne"
 
 #: src/app/user/user-login.tpl.html src/app/user/user-login-controller.js
 msgid "Login"
@@ -195,10 +175,6 @@ msgstr ""
 msgid "Status"
 msgstr "Status"
 
-#: src/app/execution/execution-detail.tpl.html
-msgid "Test definition"
-msgstr "Définition du test"
-
 #: src/app/campaign/campaign-new.tpl.html
 msgid "Test name"
 msgstr "Nom du test"
@@ -228,6 +204,28 @@ msgstr "Utilisateur"
 #: src/app/campaign/campaign-new.tpl.html
 msgid "You have not any environment defined."
 msgstr "Vous n'avez pas d'environnement défini."
+
+#: src/app/execution/execution-detail.tpl.html
+msgid "by"
+msgstr "par"
+
+#~ msgid "Assigned to"
+#~ msgstr "Assigné à"
+
+#~ msgid "By:"
+#~ msgstr "Par :"
+
+#~ msgid "Comment:"
+#~ msgstr "Commentaire :"
+
+#~ msgid "Date:"
+#~ msgstr "Date :"
+
+#~ msgid "Last execution in this campaign"
+#~ msgstr "Dernière exécution dans cette campagne"
+
+#~ msgid "Test definition"
+#~ msgstr "Définition du test"
 
 #~ msgid "An error has occured. Please contact an administrator."
 #~ msgstr "Une erreur s'est produite. Veuillez contacter un administrateur."

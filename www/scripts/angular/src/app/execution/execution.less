@@ -1,6 +1,9 @@
-@passed: #468847;  /* badge-success */
-@failed: #B94A48;  /* badge-important */
-@blocked: #3A87AD; /* badge-info */
+@passed: #58B359;  /* badge-success */
+@passed-rgb: '88,179,89';  /* badge-success */
+@failed: #DA5353;  /* badge-important */
+@failed-rgb: '218,83,83';  /* badge-important */
+@blocked: #58B4CE; /* badge-info */
+@blocked-rgb: '88,180,206'; /* badge-info */
 @notrun: #AAAAAA;
 
 #executions {
@@ -8,12 +11,15 @@
     width: 100%;
     background: #FCFCFC;
 
+    > div.ng-scope {
+        height: 100%;
+    }
+
     #executions-pane {
         float: left;
         height: 100%;
         width: 40%;
         background: #FFFFFF;
-        box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.16);
 
         #execution-list {
             height: 100%;
@@ -107,9 +113,6 @@
                 text-decoration: none;
                 cursor: pointer;
                 padding: 0;
-                -webkit-transition: all 0.1s;
-                -moz-transition: all 0.1s;
-                -ms-transition: all 0.1s;
                 transition: all 0.1s;
 
                 & > .execution-item-content {
@@ -216,9 +219,9 @@
 
     #no-current-execution, #current-execution {
         float: left;
-        margin: 2%;
-        min-height: 80%;
-        width: 60% - 4%;
+        height: 100%;
+        min-height: 100%;
+        width: 60%;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
     }
@@ -236,13 +239,11 @@
     .alert-error {
         float: left;
         position: relative;
-        margin: 2% 2% 0;
+        margin: 2% 2%;
         z-index: 1;
         width: 56%;
+        -moz-box-sizing: border-box;
         box-sizing: border-box;
-        -webkit-transition: all;
-        -moz-transition: all;
-        -ms-transition: all;
         transition: all;
 
         &.ng-enter {
@@ -260,137 +261,145 @@
     }
 
     #current-execution {
-        @result-form-height: 160px;
-
         position: relative;
-        z-index: 1;
         background: #FFFFFF;
-        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
-        border-radius: 3px;
-        padding: 1px 1px @result-form-height;
 
-        > h2 {
-            margin: 0;
-            padding: 10px 45px 10px 10px;
+        #current-execution-title {
             color: #FFFFFF;
-            font-weight: 300;
-            letter-spacing: 0.01em;
-            -webkit-border-top-left-radius: 3px;
-            -webkit-border-top-right-radius: 3px;
-            -moz-border-radius-topleft: 3px;
-            -moz-border-radius-topright: 3px;
-            border-top-left-radius: 3px;
-            border-top-right-radius: 3px;
-            background: @notrun no-repeat right 10px center;
 
-            &.passed {
-                background: @passed url('status-passed-white-big.png') no-repeat right 10px center;
-                transition: all 0.08s linear;
+            > h2 {
+                margin: 0;
+                padding: 10px 45px 10px 10px;
+                font-weight: 300;
+                font-size: 1.8em;
+                letter-spacing: 0.05em;
+                background: @notrun no-repeat right 10px center;
+
+                &.passed {
+                    background: @passed;
+                    transition: all 0.08s linear;
+                }
+
+                &.failed {
+                    background: @failed;
+                    transition: all 0.08s linear;
+                }
+
+                &.blocked {
+                    background: @blocked;
+                    transition: all 0.08s linear;
+                }
             }
-
-            &.failed {
-                background: @failed url('status-failed-white-big.png') no-repeat right 10px center;
-                transition: all 0.08s linear;
-            }
-
-            &.blocked {
-                background: @blocked url('status-blocked-white-big.png') no-repeat right 10px center;
-                transition: all 0.08s linear;
-            }
-        }
-
-        .current-execution-title {
-            font-size: 1.1em;
-            font-weight: 600;
-            margin: 0 0 7px;
         }
 
         #current-execution-last-execution {
-            padding: 10px;
+            &.passed {
+                background: lighten(@passed, 15%);
+                transition: all 0.08s linear;
 
-            .last-execution-details {
-                font-size: 0.9em;
-                margin: 0;
-
-                span {
-                    color: #888;
-                }
-
-                &#last-execution-comment {
-                    max-height: 60px;
-                    position: relative;
-                    overflow-y: hidden;
-                    -webkit-transition: max-height 0.3s;
-                    -moz-transition: max-height 0.3s;
-                    -ms-transition: max-height 0.3s;
-                    transition: max-height 0.3s;
-
-                    .read-more {
-                        display: block;
-                        position: absolute;
-                        bottom: 0;
-                        height: 25px;
-                        width: 100%;
-                        background: -moz-linear-gradient(top,  rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
-                        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,0)), color-stop(100%,rgba(255,255,255,1)));
-                        background: -webkit-linear-gradient(top,  rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%);
-                        background: -o-linear-gradient(top,  rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%);
-                        background: -ms-linear-gradient(top,  rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%);
-                        background: linear-gradient(to bottom,  rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%);
-                        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=0 );
-                        -webkit-transition: all 0.3s;
-                        -moz-transition: all 0.3s;
-                        -ms-transition: all 0.3s;
-                        transition: all 0.3s;
-                    }
-
-                    &:hover {
-                        max-height: 1000px;
-
-                        .read-more {
-                            bottom: -25px;
-                        }
-                    }
+                .read-more {
+                    background: -moz-linear-gradient(top,  rgba(88,179,89,0) 0%, rgba(88,179,89,1) 100%);
+                    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(88,179,89,0)), color-stop(100%,rgba(88,179,89,1)));
+                    background: -webkit-linear-gradient(top,  rgba(88,179,89,0) 0%,rgba(88,179,89,1) 100%);
+                    background: -o-linear-gradient(top,  rgba(88,179,89,0) 0%,rgba(88,179,89,1) 100%);
+                    background: -ms-linear-gradient(top,  rgba(88,179,89,0) 0%,rgba(88,179,89,1) 100%);
+                    background: linear-gradient(to bottom,  rgba(88,179,89,0) 0%,rgba(88,179,89,1) 100%);
                 }
             }
-        }
 
-        #current-execution-assigned-to {
-            padding: 10px;
+            &.failed {
+                background: lighten(@failed, 15%);
+                transition: all 0.08s linear;
+
+                .read-more {
+                    background: -moz-linear-gradient(top,  lighten(rgba(218,83,83,0), 15%) 0%, lighten(rgba(218,83,83,1), 15%) 100%);
+                    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,lighten(rgba(218,83,83,0), 15%)), color-stop(100%,lighten(rgba(218,83,83,1), 15%)));
+                    background: -webkit-linear-gradient(top,  lighten(rgba(218,83,83,0), 15%) 0%,lighten(rgba(218,83,83,1), 15%) 100%);
+                    background: -o-linear-gradient(top,  lighten(rgba(218,83,83,0), 15%) 0%,lighten(rgba(218,83,83,1), 15%) 100%);
+                    background: -ms-linear-gradient(top,  lighten(rgba(218,83,83,0), 15%) 0%,lighten(rgba(218,83,83,1), 15%) 100%);
+                    background: linear-gradient(to bottom,  lighten(rgba(218,83,83,0), 15%) 0%,lighten(rgba(218,83,83,1), 15%) 100%);
+                }
+            }
+
+            &.blocked {
+                background: lighten(@blocked, 15%);
+                transition: all 0.08s linear;
+
+                .read-more {
+                    background: -moz-linear-gradient(top,  rgba(88,180,206,0) 0%, rgba(88,180,206,1) 100%);
+                    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(88,180,206,0)), color-stop(100%,rgba(88,180,206,1)));
+                    background: -webkit-linear-gradient(top,  rgba(88,180,206,0) 0%,rgba(88,180,206,1) 100%);
+                    background: -o-linear-gradient(top,  rgba(88,180,206,0) 0%,rgba(88,180,206,1) 100%);
+                    background: -ms-linear-gradient(top,  rgba(88,180,206,0) 0%,rgba(88,180,206,1) 100%);
+                    background: linear-gradient(to bottom,  rgba(88,180,206,0) 0%,rgba(88,180,206,1) 100%);
+                    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=0 );
+                }
+            }
+
+            padding: 20px 10px;
+            font-size: 1.4em;
+            font-weight: 300;
+            color: #FFF;
+            text-align: center;
 
             img {
-                border-radius: 50%;
-                margin: 0 5px 0 0;
+                position: relative;
+                top: -1px;
+                margin: 0 10px;
+            }
+
+            #last-execution-comment {
+                margin: 20px 0 0;
+                font-size: 0.7em;
+                max-height: 60px;
+                position: relative;
+                overflow-y: hidden;
+                transition: max-height 0.3s;
+
+                .read-more {
+                    display: block;
+                    position: absolute;
+                    bottom: 0;
+                    height: 25px;
+                    width: 100%;
+                    transition: all 0.3s;
+                }
+
+                &:hover {
+                    max-height: 1000px;
+
+                    .read-more {
+                        bottom: -25px;
+                    }
+                }
             }
         }
 
         #current-execution-description {
             padding: 10px;
-            margin: 10px 0;
-
-            > div {
-                border-left: 4px solid #F0F0F0;
-                padding-left: 10px;
-                font-size: 0.9em;
-            }
+            font-size: 0.9em;
+            color: #444;
+            overflow-y: auto;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
         }
 
         #current-execution-result {
-            position: absolute;
-            bottom: 0;
-            padding: 10px;
-            width: 100%;
-            height: @result-form-height;
-            -moz-box-sizing: border-box;
-            box-sizing: border-box;
-            border-top: 1px solid #E5E5E5;
+            height: 160px;
+            background: rgba(255,255,255,0.9);
 
             form {
+                padding: 10px;
+                margin: 0;
                 height: 100%;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+                border-top: 1px solid #E5E5E5;
 
                 textarea {
                     width: 78%;
                     height: 100%;
+                    margin: 0;
                     -moz-box-sizing: border-box;
                     box-sizing: border-box;
                 }

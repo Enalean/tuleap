@@ -25,18 +25,10 @@ msgstr ""
 msgid "Anybody"
 msgstr ""
 
-#: src/app/execution/execution-detail.tpl.html
-msgid "Assigned to"
-msgstr ""
-
 #: src/app/campaign/campaign-list.tpl.html
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Blocked"
-msgstr ""
-
-#: src/app/execution/execution-detail.tpl.html
-msgid "By:"
 msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html
@@ -67,20 +59,12 @@ msgstr ""
 msgid "Comment..."
 msgstr ""
 
-#: src/app/execution/execution-detail.tpl.html
-msgid "Comment:"
-msgstr ""
-
 #: src/app/campaign/campaign-new.tpl.html
 msgid "Create a campaign"
 msgstr ""
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid "Create campaign"
-msgstr ""
-
-#: src/app/execution/execution-detail.tpl.html
-msgid "Date:"
 msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html
@@ -93,10 +77,6 @@ msgstr ""
 #: src/app/campaign/campaign-new.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Filter..."
-msgstr ""
-
-#: src/app/execution/execution-detail.tpl.html
-msgid "Last execution in this campaign"
 msgstr ""
 
 #: src/app/user/user-login.tpl.html
@@ -161,10 +141,6 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: src/app/execution/execution-detail.tpl.html
-msgid "Test definition"
-msgstr ""
-
 #: src/app/campaign/campaign-new.tpl.html
 msgid "Test name"
 msgstr ""
@@ -191,4 +167,8 @@ msgstr ""
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid "You have not any environment defined."
+msgstr ""
+
+#: src/app/execution/execution-detail.tpl.html
+msgid "by"
 msgstr ""

@@ -25,5 +25,6 @@
     }
 
     $(document).ready(resizeContent);
+    $(window).resize(resizeContent);
 
 })(jQuery);
