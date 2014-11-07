@@ -1,0 +1,5 @@
+/var/log/%PROJECT_NAME%/tv3_tv5_migration_syslog {
+    missingok
+    weekly
+    rotate 4
+}

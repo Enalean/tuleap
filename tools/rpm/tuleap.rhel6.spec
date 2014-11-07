@@ -494,6 +494,11 @@ done
 %{__install} -d $RPM_BUILD_ROOT/etc/cron.d
 %{__install} src/utils/cron.d/codendi-stop $RPM_BUILD_ROOT/etc/cron.d/%{APP_NAME}
 
+# Install logrotate.d script
+%{__install} -d $RPM_BUILD_ROOT/etc/logrotate.d
+%{__install} src/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_syslog
+%{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_syslog
+
 # Cache dir
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}
 
@@ -534,6 +539,8 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 
 # Plugin tracker
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/tracker
+%{__install} plugins/tracker/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_tracker
+%{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_tracker
 
 # Plugin mediawiki
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki
@@ -549,6 +556,10 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 
 # Plugin proftpd
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/secure_ftp
+
+# Plugin fulltextsearch
+%{__install} plugins/fulltextsearch/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_fulltextsearch
+%{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_fulltextsearch
 
 # Symlink for compatibility with older version
 %{__ln_s} %{APP_DIR} $RPM_BUILD_ROOT/%{OLD_APP_DIR}
@@ -841,6 +852,7 @@ fi
 %attr(04755,root,root) %{APP_LIBBIN_DIR}/fileforge
 %attr(00755,root,root) /etc/rc.d/init.d/%{APP_NAME}
 %attr(00644,root,root) /etc/cron.d/%{APP_NAME}
+%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_syslog
 %dir %{APP_CACHE_DIR}
 %dir /etc/httpd/conf.d/tuleap-plugins
 %attr(04755,root,root) /etc/httpd/conf.d/tuleap-plugins/ckeditor.conf
@@ -936,6 +948,7 @@ fi
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/tracker
 %dir %{APP_DATA_DIR}/tracker
+%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_tracker
 
 %files plugin-graphontrackers
 %defattr(-,%{APP_USER},%{APP_USER},-)
@@ -952,6 +965,7 @@ fi
 %files plugin-fulltextsearch
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/fulltextsearch
+%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_fulltextsearch
 
 %files plugin-archivedeleteditems
 %defattr(-,%{APP_USER},%{APP_USER},-)
