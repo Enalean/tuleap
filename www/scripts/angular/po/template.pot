@@ -21,10 +21,6 @@ msgstr ""
 msgid "All environments"
 msgstr ""
 
-#: src/app/execution/execution-list.tpl.html
-msgid "Anybody"
-msgstr ""
-
 #: src/app/campaign/campaign-list.tpl.html
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html

@@ -5,12 +5,12 @@ angular
 ExecutionListFilter.$inject = ['$filter'];
 
 function ExecutionListFilter($filter) {
-    return function(list, keywords, status, assignee, environment) {
+    return function(list, keywords, status, environment) {
         var keyword_list  = _.compact(keywords.split(' ')),
             status_list   = _.compact(_.map(status, function(value, key) { return (value) ? key : false; })),
             all_results   = [];
 
-        if (! hasAtLeastOneFilter(keyword_list, status_list, assignee, environment)) {
+        if (! hasAtLeastOneFilter(keyword_list, status_list, environment)) {
             return list;
         }
 
@@ -20,10 +20,6 @@ function ExecutionListFilter($filter) {
 
         if (hasStatus(status_list)) {
             all_results.push(statusMatcher(status_list, list));
-        }
-
-        if (hasAssignee(assignee)) {
-            all_results.push(assigneeMatcher(assignee, list));
         }
 
         if (hasEnvironment(environment)) {
@@ -43,8 +39,8 @@ function ExecutionListFilter($filter) {
         return execution.definition.id;
     }
 
-    function hasAtLeastOneFilter(keyword_list, status_list, assignee, environment) {
-        return hasKeywords(keyword_list) || hasStatus(status_list) || hasAssignee(assignee) || hasEnvironment(environment);
+    function hasAtLeastOneFilter(keyword_list, status_list, environment) {
+        return hasKeywords(keyword_list) || hasStatus(status_list) || hasEnvironment(environment);
     }
 
     function hasKeywords(keyword_list) {
@@ -53,10 +49,6 @@ function ExecutionListFilter($filter) {
 
     function hasStatus(status_list) {
         return status_list.length > 0;
-    }
-
-    function hasAssignee(assignee) {
-        return assignee !== null;
     }
 
     function hasEnvironment(environment) {
@@ -89,10 +81,6 @@ function ExecutionListFilter($filter) {
         });
 
         return result;
-    }
-
-    function assigneeMatcher(assignee, list) {
-        return $filter('filter')(list, {assigned_to: {id: assignee.id}});
     }
 
     function environmentMatcher(environment, list) {

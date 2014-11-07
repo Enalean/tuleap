@@ -13,7 +13,6 @@ function CampaignService(Restangular, $q) {
     return {
         getCampaign    : getCampaign,
         getCampaigns   : getCampaigns,
-        getAssignees   : getAssignees,
         getEnvironments: getEnvironments,
         createCampaign : createCampaign
     };
@@ -27,27 +26,6 @@ function CampaignService(Restangular, $q) {
 
         rest.one('projects', project_id)
             .all('testing_campaigns')
-            .getList({
-                limit: limit,
-                offset: offset
-            })
-            .then(function(response) {
-                result = {
-                    results: response.data,
-                    total: response.headers('X-PAGINATION-SIZE')
-                };
-
-                data.resolve(result);
-            });
-
-        return data.promise;
-    }
-
-    function getAssignees(campaign_id, limit, offset) {
-        var data = $q.defer();
-
-        rest.one('testing_campaigns', campaign_id)
-            .all('testing_assignees')
             .getList({
                 limit: limit,
                 offset: offset

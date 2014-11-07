@@ -75,67 +75,45 @@ describe('ExecutionListFilter', function() {
     }));
 
     it('it filters on category', inject(function($filter) {
-        var results = $filter('ExecutionListFilter')(list, 'soap', {}, null, null);
+        var results = $filter('ExecutionListFilter')(list, 'soap', {}, null);
         expect(results.length).toEqual(1);
         expect(results[0]).toEqual(jasmine.objectContaining({ id: 24606 }));
     }));
 
     it('it filters on summary', inject(function($filter) {
-        var results = $filter('ExecutionListFilter')(list, 'workflow', {}, null, null);
+        var results = $filter('ExecutionListFilter')(list, 'workflow', {}, null);
         expect(results.length).toEqual(1);
         expect(results[0]).toEqual(jasmine.objectContaining({ id: 24605 }));
     }));
 
     it('it filters on test def id', inject(function($filter) {
-        var results = $filter('ExecutionListFilter')(list, '24601', {}, null, null);
+        var results = $filter('ExecutionListFilter')(list, '24601', {}, null);
         expect(results.length).toEqual(1);
         expect(results[0]).toEqual(jasmine.objectContaining({ id: 24606 }));
     }));
 
     it('it filters on execution status', inject(function($filter) {
-        var results = $filter('ExecutionListFilter')(list, '', {passed: true}, null, null);
+        var results = $filter('ExecutionListFilter')(list, '', {passed: true}, null);
         expect(results.length).toEqual(2);
         expect(results[0]).toEqual(jasmine.objectContaining({ id: 24605 }));
     }));
 
     it('it filters on execution multiple status', inject(function($filter) {
-        var results = $filter('ExecutionListFilter')(list, '', {passed: true, failed: true}, null, null);
+        var results = $filter('ExecutionListFilter')(list, '', {passed: true, failed: true}, null);
         expect(results.length).toEqual(3);
         expect(results[0]).toEqual(jasmine.objectContaining({ id: 24605 }));
         expect(results[1]).toEqual(jasmine.objectContaining({ id: 24606 }));
         expect(results[2]).toEqual(jasmine.objectContaining({ id: 24607 }));
     }));
 
-    it('it filters on assignee', inject(function($filter) {
-        var results = $filter('ExecutionListFilter')(list, '', {}, {
-            "id": 101,
-            "uri": "users/101",
-            "email": "renelataupe@example.com",
-            "real_name": "rtaupe",
-            "username": "rtaupe",
-            "ldap_id": "",
-            "avatar_url": "https://paelut/users/rtaupe/avatar.png"
-        }, null);
-        expect(results.length).toEqual(1);
-        expect(results[0]).toEqual(jasmine.objectContaining({ id: 24606 }));
-    }));
-
     it('it filters on environment', inject(function($filter) {
-        var results = $filter('ExecutionListFilter')(list, '', {}, null, 'CentOS 6 - PHP 5.3');
+        var results = $filter('ExecutionListFilter')(list, '', {}, 'CentOS 6 - PHP 5.3');
         expect(results.length).toEqual(1);
         expect(results[0]).toEqual(jasmine.objectContaining({ id: 24607 }));
     }));
 
     it('it filters on summary and execution status', inject(function($filter) {
-        var results = $filter('ExecutionListFilter')(list, 'tracker', {passed: true}, {
-            "id": 101,
-            "uri": "users/101",
-            "email": "renelataupe@example.com",
-            "real_name": "rtaupe",
-            "username": "rtaupe",
-            "ldap_id": "",
-            "avatar_url": "https://paelut/users/rtaupe/avatar.png"
-        }, null);
-        expect(results.length).toEqual(0);
+        var results = $filter('ExecutionListFilter')(list, 'tracker', {passed: true}, null);
+        expect(results.length).toEqual(1);
     }));
 });
