@@ -25,6 +25,20 @@
                     <div class="row-fluid">
                         <input type="text" class="filter span12" placeholder="{{ 'Filter...' | translate }}" ng-model="search">
                     </div>
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <table border="0" cellpadding="0" cellspacing="0" class="sens-of-progress">
+                                <tbody>
+                                    <tr>
+                                        <td class="sens-of-progress-passed" ng-if="campaign.nb_of_passed" style="width: {{ campaign.nb_of_passed * 100 / campaign.total }}%">{{ campaign.nb_of_passed }}</td>
+                                        <td class="sens-of-progress-failed" ng-if="campaign.nb_of_failed" style="width: {{ campaign.nb_of_failed * 100 / campaign.total }}%">{{ campaign.nb_of_failed }}</td>
+                                        <td class="sens-of-progress-blocked" ng-if="campaign.nb_of_blocked" style="width: {{ campaign.nb_of_blocked * 100 / campaign.total }}%">{{ campaign.nb_of_blocked }}</td>
+                                        <td class="sens-of-progress-notrun" ng-if="campaign.nb_of_not_run" style="width: {{ campaign.nb_of_not_run * 100 / campaign.total }}%">{{ campaign.nb_of_not_run }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </form>
             </div>
             <div ng-repeat="category in categories" ng-if="canCategoryBeDisplayed(category)">

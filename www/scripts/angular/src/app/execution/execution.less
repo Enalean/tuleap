@@ -23,6 +23,31 @@
                 padding: 5px 12px 10px;
             }
 
+            .sens-of-progress {
+                width: 100%;
+
+                > tbody > tr > td {
+                    text-align: center;
+                    color: white;
+
+                    &.sens-of-progress-failed {
+                        background-color: @failed;
+                    }
+
+                    &.sens-of-progress-blocked {
+                        background-color: @blocked;
+                    }
+
+                    &.sens-of-progress-passed {
+                        background-color: @passed;
+                    }
+
+                    &.sens-of-progress-notrun {
+                        background-color: @notrun;
+                    }
+                }
+            }
+
             #execution-filter {
                 padding: 0 12px;
                 margin: 0 0 10px;

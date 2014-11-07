@@ -40,7 +40,7 @@
             SocketFactory.emit('test_execution:update', prepareData(execution));
         }
 
-        function listenToExecutionUpdated() {
+        function listenToExecutionUpdated(campaign) {
             SocketFactory.on('test_execution:update', function(response) {
                 if (response.status !== 200) {
                     ExecutionService.executions[response.data.id].saving = false;
@@ -60,6 +60,36 @@
                     execution.submitted_by                 = null;
                     execution.results                      = '';
                     execution.error                        = '';
+
+                    switch (execution.status) {
+                        case 'passed':
+                            campaign.nb_of_passed++;
+                            break;
+                        case 'failed':
+                            campaign.nb_of_failed++;
+                            break;
+                        case 'blocked':
+                            campaign.nb_of_blocked++;
+                            break;
+                        case 'passed':
+                            campaign.nb_of_not_run++;
+                            break;
+                    }
+
+                    switch (previous_status) {
+                        case 'passed':
+                            campaign.nb_of_passed--;
+                            break;
+                        case 'failed':
+                            campaign.nb_of_failed--;
+                            break;
+                        case 'blocked':
+                            campaign.nb_of_blocked--;
+                            break;
+                        case 'passed':
+                            campaign.nb_of_not_run--;
+                            break;
+                    }
                 }
             });
         }

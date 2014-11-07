@@ -28,7 +28,7 @@ function ExecutionListCtrl($scope, $state, $filter, ExecutionService, CampaignSe
     getAssignees(campaign_id, 50, 0);
     getEnvironments(campaign_id, 50, 0);
 
-    SocketService.listenToExecutionUpdated();
+    SocketService.listenToExecutionUpdated($scope.campaign);
     SocketService.listenToExecutionViewed();
 
     function getEnvironments(campaign_id, limit, offset) {
