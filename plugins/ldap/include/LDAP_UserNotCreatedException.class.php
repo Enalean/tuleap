@@ -20,6 +20,6 @@
 
 class LDAP_UserNotCreatedException extends Exception {
     public function __construct() {
-        parent::__construct($GLOBALS['Language']->getText('ldap_plugin','not_created_user'));
+        parent::__construct($GLOBALS['Language']->getText('plugin_ldap','not_created_user'));
     }
 }
