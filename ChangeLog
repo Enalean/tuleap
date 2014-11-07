@@ -7,6 +7,7 @@ Version 7.7 (Not released yet)
 	* story #7393: FTS tracker: Reindex on tracker events
 	* story #7465: index date fields
 	* story #7508: See backlog items in a new read only view
+	* story #7509: add expand/collapse bar containing backlog item's children
 
 	== Bug Fix ==
 	* request #7526: Missing attrs in ldap queries
@@ -18,7 +19,7 @@ Version 7.7 (Not released yet)
 	* tracker: 5.512
 	* git: 3.134
 	* statistics: 0.39
-	* agiledashboard: 1.85
+	* agiledashboard: 1.86
 	* proftpd: 0.18
 	* fulltextsearch: 0.98
 	* ldap: 3.57

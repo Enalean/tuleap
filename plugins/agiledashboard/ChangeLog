@@ -1,3 +1,6 @@
+Version 1.86 - Tuleap 7.7
+    * Story #7509 - add expand/collapse bar containing backlog item's children
+
 Version 1.85 - Tuleap 7.7
     * request #7593: Prevent from deleting a tracker if used in AD
 
