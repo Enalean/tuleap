@@ -16,7 +16,8 @@
             milestones            : [],
             loading_backlog_items : true,
             loading_milestones    : true,
-            toggle                : toggle
+            toggle                : toggle,
+            showChildren          : showChildren
         });
 
         displayBacklogItems();
@@ -96,6 +97,28 @@
             }
 
             return milestone.collapsed = true;
+        }
+
+        function showChildren(backlog_item) {
+            backlog_item.are_children_shown = ! backlog_item.are_children_shown;
+
+            if (typeof backlog_item.children === 'undefined') {
+                backlog_item.loading  = true;
+                backlog_item.children = [];
+                fetchBacklogItemChildren(backlog_item, pagination_limit, pagination_offset);
+            }
+        }
+
+        function fetchBacklogItemChildren(backlog_item, limit, offset) {
+            return BacklogItemService.getBacklogItemChildren(backlog_item.id, limit, offset).then(function(data) {
+                backlog_item.children = backlog_item.children.concat(data.results);
+
+                if (backlog_item.children.length < data.total) {
+                    fetchBacklogItemChildren(backlog_item, limit, offset + limit);
+                } else {
+                    backlog_item.loading = false;
+                }
+            });
         }
     }
 })();

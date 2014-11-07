@@ -12,8 +12,9 @@
         });
 
         return {
-            getProjectBacklogItems: getProjectBacklogItems,
-            getMilestoneBacklogItems: getMilestoneBacklogItems
+            getProjectBacklogItems   : getProjectBacklogItems,
+            getMilestoneBacklogItems : getMilestoneBacklogItems,
+            getBacklogItemChildren   : getBacklogItemChildren
         };
 
         function getProjectBacklogItems(project_id, limit, offset) {
@@ -42,6 +43,27 @@
 
             rest.one('milestones', milestone_id)
                 .all('backlog')
+                .getList({
+                    limit: limit,
+                    offset: offset
+                })
+                .then(function(response) {
+                    result = {
+                        results: response.data,
+                        total: response.headers('X-PAGINATION-SIZE')
+                    };
+
+                    data.resolve(result);
+                });
+
+            return data.promise;
+        }
+
+        function getBacklogItemChildren(backlog_item_id, limit, offset) {
+            var data = $q.defer();
+
+            rest.one('backlog_items', backlog_item_id)
+                .all('children')
                 .getList({
                     limit: limit,
                     offset: offset

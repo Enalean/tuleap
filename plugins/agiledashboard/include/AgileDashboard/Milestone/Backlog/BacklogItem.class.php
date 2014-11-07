@@ -121,6 +121,9 @@ class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Mil
         return $this->color;
     }
 
+    public function hasChildren() {
+        return $this->artifact->hasChildren();
+    }
     /**
      * @return Tracker_Artifact
      */

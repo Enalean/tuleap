@@ -2,11 +2,7 @@
     <h2 translate>To be planned</h2>
 
     <ul class="backlog-items">
-        <li ng-repeat="backlog_item in backlog_items track by $index"
-            class="backlog-item {{ backlog_item.status | lowercase }} {{ backlog_item.color }}"
-            ng-include src="'backlog-item/backlog-item.tpl.html'"
-        >
-        </li>
+        <li ng-repeat="backlog_item in backlog_items track by $index" ng-include src="'backlog-item/backlog-item.tpl.html'"></li>
     </ul>
     <div class="loading" ng-if="loading_backlog_items"></div>
 </div>
@@ -45,11 +41,7 @@
 
                 <p class="empty-milestone" ng-if="! milestone.loadingContent && milestone.content.length === 0" translate>There is no backlog item yet.</p>
                 <ul class="backlog-items">
-                    <li ng-repeat="backlog_item in milestone.content track by $index"
-                        class="backlog-item {{ backlog_item.status | lowercase }} {{ backlog_item.color }}"
-                        ng-include="'backlog-item/backlog-item.tpl.html'"
-                    >
-                    </li>
+                    <li ng-repeat="backlog_item in milestone.content track by $index" ng-include src="'backlog-item/backlog-item.tpl.html'"></li>
                 </ul>
                 <div class="loading" ng-if="milestone.loadingContent"></div>
             </div>

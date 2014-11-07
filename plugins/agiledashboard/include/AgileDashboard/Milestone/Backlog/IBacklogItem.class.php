@@ -29,4 +29,6 @@ interface AgileDashboard_Milestone_Backlog_IBacklogItem {
     function setStatus($status);
 
     function id();
+
+    function hasChildren();
 }
