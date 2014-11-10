@@ -21,11 +21,11 @@ Version 7.7 (Not released yet)
 	* statistics: 0.39
 	* agiledashboard: 1.86
 	* proftpd: 0.18
-	* fulltextsearch: 0.99
+	* fulltextsearch: 0.100
 	* ldap: 3.59
 
 	 == Themes ==
-	* FlamingParrot: 1.54
+	* FlamingParrot: 1.55
 
 	== Enhancement ==
 	* request #7592: Be more verbose in git logging
