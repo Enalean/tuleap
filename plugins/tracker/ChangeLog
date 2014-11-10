@@ -1,3 +1,9 @@
+Version 5.514 - Tuleap 7.7
+    * Add a name for the email adress (forgename)
+
+
+This task is part of story #7542 define a mail domain
+
 Version 5.513 - Tuleap 7.7
     * request #7589: Logrotate system event logs
 
