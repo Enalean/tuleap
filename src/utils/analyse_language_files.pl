@@ -21,16 +21,14 @@
 #
 
 use strict;
-use vars qw($sys_urlroot $sys_pluginsroot $sys_incdir);
 
-require("include.pl");  # Include all the predefined functions and variables
-
-# Location of Codendi sources to analyse
-my $source_dir="$sys_urlroot/..";
-my $plugin_src_dir="$sys_pluginsroot";
+# Location of sources to analyse
+my $base_dir=$ARGV[0];
+my $source_dir="$base_dir/src";
+my $plugin_src_dir="$base_dir/plugins";
 # Language specific dir
-my $tab_dir="$sys_incdir";
-my $plugin_tab_dir="$sys_pluginsroot/*/site-content/";
+my $tab_dir="$base_dir/site-content/";
+my $plugin_tab_dir="$plugin_src_dir/*/site-content/";
 
 # end of configuration
 
