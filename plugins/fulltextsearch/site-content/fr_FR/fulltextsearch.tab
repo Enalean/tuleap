@@ -14,8 +14,9 @@ plugin_fulltextsearch	followup_full_text_warning_search	<strong>Uniquement les c
 
 plugin_fulltextsearch	project_facets_label	Projets
 plugin_fulltextsearch	docman_wiki_facets_label	Documents / Wiki
-plugin_fulltextsearch	facet_project_label	Projets :
 plugin_fulltextsearch	facet_project_placeholder	Sélectionner des projets...
+plugin_fulltextsearch	facet_project_specific_projects_option_group	Accès rapide
+plugin_fulltextsearch	facet_project_projects_option_group	Projets
 plugin_fulltextsearch	facet_my_project_label	Projets dont je suis membre
 plugin_fulltextsearch	facet_owner_label	Documents dont je suis le propriétaire
 plugin_fulltextsearch	facet_update_date_label	Date de mise à jour

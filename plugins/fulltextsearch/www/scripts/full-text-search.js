@@ -23,19 +23,21 @@ tuleap.search = tuleap.search || {};
 !(function ($) {
 
     tuleap.search.fulltext = {
-        full_text_search : 'fulltext',
+        full_text_search  : 'fulltext',
+        offset            : 0,
+        append_to_results : false,
 
-        handleFulltextFacets : function (type_of_search, append_to_results) {
+        handleFulltextFacets : function (type_of_search) {
             if (type_of_search !== tuleap.search.fulltext.full_text_search) {
                 return;
             }
 
-            replaceSearchPanesByFacets(append_to_results);
+            replaceSearchPanesByFacets();
             initFacets();
-            updateResults();
+            enableFacets();
 
-            function replaceSearchPanesByFacets(append_to_results) {
-                if (append_to_results) {
+            function replaceSearchPanesByFacets() {
+                if (tuleap.search.fulltext.append_to_results) {
                     return;
                 }
 
@@ -57,37 +59,61 @@ tuleap.search = tuleap.search || {};
                 $('select.select2').select2();
             }
 
-            function updateResults() {
-                var facets = $('.search-pane .facet');
-
-                facets.on('change', function() {
-                    var keywords = $('#words').val();
-
-                    (function beforeSend() {
-                        $('#search-results').html('').addClass('loading')
-                    })();
-
-                    var url = '/search/?type_of_search=' + tuleap.search.fulltext.full_text_search + '&' +
-                        'words=' + keywords + '&' +
-                        facets.serialize() + '&' +
-                        'group_id=' + $('.search-bar input[name="group_id"]').val();
-
-                    $.getJSON(url)
-                        .done(function(json) {
-                            $('#search-results').html(json.html);
-                            tuleap.search.fulltext.handleFulltextFacets(type_of_search);
-
-                        }).fail(function(error) {
-                            codendi.feedback.clear();
-                            codendi.feedback.log('error', codendi.locales.search.error + ' : ' + error.responseText);
-
-                        }).always(function() {
-                            $('#search-results').removeClass('loading');
-                            tuleap.search.enableSearchMoreResults();
-                        });
+            function enableFacets() {
+                $('.search-pane .facet').on('change', function() {
+                    tuleap.search.fulltext.offset            = 0;
+                    tuleap.search.fulltext.append_to_results = false;
+                    tuleap.search.fulltext.updateResults();
                 });
             }
-        }
+        },
 
+        updateResults : function() {
+            var keywords = $('#words').val();
+
+            (function beforeSend() {
+                if (! tuleap.search.fulltext.append_to_results) {
+                    $('#search-results').html('');
+                }
+
+                $('#search-results').addClass('loading');
+            })();
+
+            var url = '/search/?type_of_search=' + tuleap.search.fulltext.full_text_search + '&' +
+                'words=' + keywords + '&' +
+                'offset=' + tuleap.search.fulltext.offset + '&' +
+                $('.search-pane .facet').serialize() + '&' +
+                'group_id=' + $('.search-bar input[name="group_id"]').val();
+
+            $.getJSON(url)
+                .done(function(json) {
+                    if (tuleap.search.fulltext.append_to_results) {
+                        $('#search_results_list').append(json.html);
+
+                    } else {
+                        $('#search-results').html(json.html);
+                    }
+
+                    tuleap.search.fulltext.handleFulltextFacets(tuleap.search.fulltext.full_text_search);
+
+                }).fail(function(error) {
+                    codendi.feedback.clear();
+                    codendi.feedback.log('error', codendi.locales.search.error + ' : ' + error.responseText);
+
+                }).always(function() {
+                    $('#search-results').removeClass('loading');
+                    tuleap.search.fulltext.enableSearchMoreResults();
+                });
+        },
+
+        enableSearchMoreResults : function () {
+            $('#search-more-button').unbind("click");
+            $('#search-more-button').click(function() {
+                tuleap.search.fulltext.offset           += parseInt($('input[name=number_of_page_results]').val());
+                tuleap.search.fulltext.append_to_results = true;
+                tuleap.search.fulltext.updateResults();
+            });
+        }
     };
+
 })(window.jQuery);

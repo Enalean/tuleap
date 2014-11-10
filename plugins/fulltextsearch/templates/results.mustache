@@ -5,22 +5,17 @@
             <ul>
                 {{# projects_facet }}
                 <li>
-                    <p>{{ label }}</p>
                     <select class="facet select2" multiple name="facets[{{ identifier }}][]" data-placeholder="{{ placeholder }}">
-                    {{# values }}
-                        <option value="{{ value }}" {{# selected }}selected{{/ selected }}>{{ label }} ({{ count }})</option>
-                    {{/ values }}
+                        {{# option_groups }}
+                        <optgroup label="{{ label }}">
+                            {{# values }}
+                            <option value="{{ value }}" {{# selected }}selected{{/ selected }}>{{ label }} ({{ count }})</option>
+                            {{/ values }}
+                        </optgroup>
+                        {{/ option_groups }}
                     </select>
                 </li>
                 {{/ projects_facet }}
-
-                {{# my_projects_facet }}
-                <li>
-                    <label class="checkbox">
-                      <input type="checkbox" class="facet" name="facets[{{ identifier }}]" value="{{ value }}" {{# checked }}checked{{/ checked }}> {{ label }}
-                    </label>
-                </li>
-                {{/ my_projects_facet }}
             </ul>
         </div>
     </div>
@@ -41,9 +36,10 @@
                 <li>
                     <select class="facet" name="facets[{{ identifier }}]">
                     <optgroup label="{{ label }}">
-                    {{# values }}
+                        {{# values }}
                         <option value="{{ value }}" {{# selected }}selected{{/ selected }}>{{ label }}</option>
-                    {{/ values }}
+                        {{/ values }}
+                    </optgroup>
                     </select>
                 </li>
                 {{/ update_date_facet }}
