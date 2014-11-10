@@ -7,22 +7,15 @@
 
 class LanguageFilesTest extends UnitTestCase {
 
-    function LanguageFilesTest($name = 'Language Files test') {
-        $this->UnitTestCase($name);
-    }
-
     function testLanguagesFiles() {
-        $local_inc = getenv('CODENDI_LOCAL_INC')?getenv('CODENDI_LOCAL_INC'):'/etc/codendi/conf/local.inc';
-        $cmd       = 'cd '.$GLOBALS['codendi_utils_prefix'].' ; CODENDI_LOCAL_INC='.$local_inc.' '.$GLOBALS['codendi_utils_prefix'].'/analyse_language_files.pl 2>&1';
-        $output    = `$cmd`;
-        if (preg_match('/[1-9]\s*(missing|incorrect|duplicate) keys/', $output)) {
-            echo "<pre>\n$output\n</pre>";
+        $cmd          = $GLOBALS['basedir'].'/src/utils/analyse_language_files.pl '.$GLOBALS['basedir'].' 2>&1';
+        $return_value = 1;
+        $output       = array();
+        exec($cmd, $output, $return_value);
+        $full_output = implode("\n", $output);
+        if ($return_value != 0 || preg_match('/[1-9]\s*(missing|incorrect|duplicate) keys/', $full_output)) {
+            echo "<pre>\n$full_output\n</pre>";
             $this->fail();
-        } else {
-            $this->pass();
         }
     }
-
 }
-
-?>
