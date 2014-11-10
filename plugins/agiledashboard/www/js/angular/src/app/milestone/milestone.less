@@ -1,5 +1,20 @@
 div.milestones {
 
+    > .milestones-list-header {
+
+        margin: 0 0 20px;
+
+        > h2 {
+            display: inline;
+        }
+
+        > .items-toggle-button {
+            float: right;
+            position: relative;
+            top: 7px;
+        }
+    }
+
     > fieldset.milestone {
         padding: 0 0 1px;
         margin-bottom: 20px;
@@ -118,6 +133,16 @@ div.milestones {
 
             > ul.backlog-items {
                 margin: 12px 10px;
+
+                > li.closed {
+                    background: #F6F6F6;
+                    color: #999;
+
+                    > div {
+                        background: #F6F6F6;
+                        color: #999;
+                    }
+                }
             }
         }
 

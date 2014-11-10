@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AgileDashboard Planning\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2014-10-28 14:58+0100\n"
+"PO-Revision-Date: 2014-11-05 11:15+0100\n"
 "Last-Translator: Benjamin Dauton <benjamin.dauton@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.6.9\n"
+"X-Generator: Poedit 1.5.4\n"
 
 #: src/app/planning.tpl.html
 msgid "Burndown"
@@ -27,6 +27,10 @@ msgstr "Capacité:"
 #: src/app/planning.tpl.html
 msgid "Content"
 msgstr "Contenu"
+
+#: src/app/planning.tpl.html
+msgid "Hide \"Closed\" Items"
+msgstr "Cacher les Éléments \"Fermés\""
 
 #: src/app/planning.tpl.html
 msgid "Initial effort:"

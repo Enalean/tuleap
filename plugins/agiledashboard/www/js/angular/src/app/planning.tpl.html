@@ -10,22 +10,30 @@
 <div id="divider"></div>
 
 <div id="planned">
-    <h2 translate>Milestones</h2>
-
     <div class="milestones">
+        <div class="milestones-list-header">
+            <h2 translate>Milestones</h2>
+            <button class="btn items-toggle-button btn-small" data-toggle="button" ng-click="toggleClosedMilestoneItems()">
+                <i class=" icon-eye-close"></i> <span translate>Hide "Closed" Items</span>
+            </button>
+        </div>
         <fieldset ng-repeat="milestone in milestones track by $index" class="milestone" ng-class="{ collapsed: milestone.collapsed }">
             <legend ng-click="toggle(milestone)">
                 {{ milestone.label }}
 
                 <span class="label status {{ milestone.semantic_status }}">{{ milestone.status_value }}</span>
-                <span class="date" ng-if="milestone.start_date || milestone.end_date">{{ milestone.start_date | amDateFormat:'ll' }} <i class="icon-long-arrow-right"></i> {{ milestone.end_date | amDateFormat:'ll' }}</span>
+                <span class="date" ng-if="milestone.start_date || milestone.end_date">
+                    {{ milestone.start_date | amDateFormat:'ll' }} <i class="icon-long-arrow-right"></i>
+                    {{ milestone.end_date | amDateFormat:'ll' }}
+                </span>
                 <div style="clear: both"></div>
             </legend>
 
             <div class="content">
                 <div class="info">
                     <span class="capacity" translate>Capacity:</span>
-                    <span class="capacity-value" ng-if="milestone.capacity">{{ milestone.capacity }}</span><span class="capacity-value" ng-if="! milestone.capacity" translate>N/A</span>
+                    <span class="capacity-value" ng-if="milestone.capacity">{{ milestone.capacity }}</span>
+                    <span class="capacity-value" ng-if="! milestone.capacity" translate>N/A</span>
 
                     <span class="initial-effort" translate>Initial effort:</span>
                     <span class="initial-effort-value" ng-if="milestone.initialEffort" ng-class="{ higher: milestone.initialEffort > milestone.capacity }">{{ milestone.initialEffort }}</span><span class="initial-effort-value non-applicable" ng-if="! milestone.initialEffort" translate>N/A</span>
@@ -41,7 +49,12 @@
 
                 <p class="empty-milestone" ng-if="! milestone.loadingContent && milestone.content.length === 0" translate>There is no backlog item yet.</p>
                 <ul class="backlog-items">
-                    <li ng-repeat="backlog_item in milestone.content track by $index" ng-include src="'backlog-item/backlog-item.tpl.html'"></li>
+                    <li ng-repeat="backlog_item in milestone.content track by $index"
+                        class="backlog-item {{ backlog_item.status | lowercase }} {{ backlog_item.color }}"
+                        ng-include="'backlog-item/backlog-item.tpl.html'"
+                        ng-if="canShowBacklogItem(backlog_item)"
+                    >
+                    </li>
                 </ul>
                 <div class="loading" ng-if="milestone.loadingContent"></div>
             </div>
