@@ -188,7 +188,8 @@ CREATE TABLE tracker_field_openlist(
 DROP TABLE IF EXISTS tracker_field_computed;
 CREATE TABLE tracker_field_computed (
     field_id INT(11) NOT NULL PRIMARY KEY,
-    target_field_name VARCHAR(255) NULL
+    target_field_name VARCHAR(255) NULL,
+    fast_compute TINYINT DEFAULT 0
 ) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS tracker_field_openlist_value;

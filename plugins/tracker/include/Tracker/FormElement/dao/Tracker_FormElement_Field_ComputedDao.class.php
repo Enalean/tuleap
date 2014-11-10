@@ -36,8 +36,13 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
             $target_field_name = $this->da->quoteSmart($row['target_field_name']);
         }
 
-        $sql = "REPLACE INTO $this->table_name (field_id, target_field_name)
-                VALUES ($field_id, $target_field_name)";
+        $fast_compute = 0;
+        if (isset($row['fast_compute'])) {
+            $fast_compute = $this->da->escapeInt($row['fast_compute']);
+        }
+
+        $sql = "REPLACE INTO $this->table_name (field_id, target_field_name, fast_compute)
+                VALUES ($field_id, $target_field_name, $fast_compute)";
         return $this->retrieve($sql);
     }
     
@@ -53,8 +58,8 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
         $from_field_id  = $this->da->escapeInt($from_field_id);
         $to_field_id  = $this->da->escapeInt($to_field_id);
         
-        $sql = "REPLACE INTO $this->table_name (field_id, target_field_name)
-                SELECT $to_field_id, target_field_name FROM $this->table_name WHERE field_id = $from_field_id";
+        $sql = "REPLACE INTO $this->table_name (field_id, target_field_name, fast_compute)
+                SELECT $to_field_id, target_field_name, fast_compute FROM $this->table_name WHERE field_id = $from_field_id";
         return $this->update($sql);
     }
 
@@ -63,12 +68,12 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
      * $target_name field values (values can be either float, int or computed)
      * If it's computed, the caller must continue its journey and call getComputedValue
      *
-     * @param Integer $source_id
+     * @param Integer[] $source_ids
      * @param String $target_name
      * @return DataAccessResult
      */
-    public function getFieldValues($source_id, $target_name) {
-        $source_id   = $this->da->escapeInt($source_id);
+    public function getFieldValues(array $source_ids, $target_name) {
+        $source_ids   = $this->da->escapeIntImplode($source_ids);
         $target_name = $this->da->quoteSmart($target_name);
 
         $sql = "SELECT linked_art.*, f_compute.formElement_type as type, cv_compute_i.value as int_value, cv_compute_f.`value` as float_value
@@ -86,7 +91,8 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
                         tracker_changeset_value cs_compute_f
                         INNER JOIN tracker_changeset_value_float cv_compute_f ON (cv_compute_f.changeset_value_id = cs_compute_f.id)
                     ) ON (cs_compute_f.changeset_id = linked_art.last_changeset_id AND cs_compute_f.field_id = f_compute.id)
-                WHERE parent_art.id = $source_id";
+                WHERE parent_art.id IN ($source_ids)";
+
         return $this->retrieve($sql);
     }
 
@@ -110,14 +116,14 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
      * start to introduce changes in the past (the new changeset will have a newer id
      * but it's date might be before). 99% of the time it should be transparent.
      *
-     * @param Integer $source_id
+     * @param Integer $source_ids
      * @param String  $target_name
      * @param Integer $timestamp
      *
      * @return DataAccessResult
      */
-    public function getFieldValuesAtTimestamp($source_id, $target_name, $timestamp) {
-        $source_id   = $this->da->escapeInt($source_id);
+    public function getFieldValuesAtTimestamp(array $source_ids, $target_name, $timestamp) {
+        $source_ids  = $this->da->escapeIntImplode($source_ids);
         $timestamp   = $this->da->escapeInt($timestamp);
         $target_name = $this->da->quoteSmart($target_name);
 
@@ -140,7 +146,7 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
                         tracker_changeset_value cs_compute_f
                         INNER JOIN tracker_changeset_value_float cv_compute_f ON (cv_compute_f.changeset_value_id = cs_compute_f.id)
                     ) ON (cs_compute_f.changeset_id = cs_linked_art1.id AND cs_compute_f.field_id = f_compute.id)
-                WHERE parent_art.id = $source_id
+                WHERE parent_art.id IN ($source_ids)
                 AND cs_parent_art2.id IS NULL
                 AND cs_linked_art2.id IS NULL";
 

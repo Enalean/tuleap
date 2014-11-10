@@ -31,7 +31,8 @@ class Tracker_FormElement_Field_ComputedTest extends TuleapTestCase {
         $this->user  = mock('PFUser');
         $this->dao   = mock('Tracker_FormElement_Field_ComputedDao');
         $this->field = TestHelper::getPartialMock('Tracker_FormElement_Field_Computed', array('getProperty', 'getDao'));
-        stub($this->field)->getProperty()->returns('effort');
+        stub($this->field)->getProperty('target_field_name')->returns('effort');
+        stub($this->field)->getProperty('fast_compute')->returns(0);
         stub($this->field)->getDao()->returns($this->dao);
 
         $this->artifact_factory = mock('Tracker_ArtifactFactory');
@@ -47,7 +48,7 @@ class Tracker_FormElement_Field_ComputedTest extends TuleapTestCase {
     }
 
     public function itComputesDirectValues() {
-        stub($this->dao)->getFieldValues(233, 'effort')->returnsDar(
+        stub($this->dao)->getFieldValues(array(233), 'effort')->returnsDar(
             array('type' => 'int', 'int_value' => 5),
             array('type' => 'int', 'int_value' => 15)
         );
@@ -60,13 +61,89 @@ class Tracker_FormElement_Field_ComputedTest extends TuleapTestCase {
     }
 
     public function itReturnsNullWhenThereAreNoDataBecauseNoDataMeansNoPlotOnChart() {
-        stub($this->dao)->getFieldValues(233, 'effort')->returnsEmptyDar();
+        stub($this->dao)->getFieldValues(array(233), 'effort')->returnsEmptyDar();
 
         $child_art = stub('Tracker_Artifact')->userCanView()->returns(true);
         stub($this->artifact_factory)->getInstanceFromRow()->returns($child_art);
 
         $artifact = stub('Tracker_Artifact')->getId()->returns(233);
         $this->assertIdentical(null, $this->field->getComputedValue($this->user, $artifact));
+    }
+}
+
+class Tracker_FormElement_Field_Compute_FastComputeTest extends TuleapTestCase {
+    private $user;
+    private $field;
+    private $formelement_factory;
+    private $dao;
+    private $artifact_factory;
+
+    public function setUp() {
+        parent::setUp();
+        $this->user  = mock('PFUser');
+        $this->dao   = mock('Tracker_FormElement_Field_ComputedDao');
+        $this->field = TestHelper::getPartialMock('Tracker_FormElement_Field_Computed', array('getProperty', 'getDao'));
+        stub($this->field)->getProperty('target_field_name')->returns('effort');
+        stub($this->field)->getProperty('fast_compute')->returns(1);
+        stub($this->field)->getDao()->returns($this->dao);
+
+        $this->artifact_factory = mock('Tracker_ArtifactFactory');
+        Tracker_ArtifactFactory::setInstance($this->artifact_factory);
+
+        $this->formelement_factory = mock('Tracker_FormElementFactory');
+        Tracker_FormElementFactory::setInstance($this->formelement_factory);
+    }
+
+    public function tearDown() {
+        parent::tearDown();
+        Tracker_FormElementFactory::clearInstance();
+    }
+
+    public function itComputesDirectValues() {
+        expect($this->dao)->getFieldValues()->once();
+        stub($this->dao)->getFieldValues(array(233), 'effort')->returnsDar(
+            array('type' => 'int', 'int_value' => 5),
+            array('type' => 'int', 'int_value' => 15)
+        );
+
+        $artifact = stub('Tracker_Artifact')->getId()->returns(233);
+        $this->assertEqual(20, $this->field->getComputedValue($this->user, $artifact));
+    }
+
+    public function itMakesOneDbCallPerGraphDepth() {
+        expect($this->dao)->getFieldValues()->count(2);
+        stub($this->dao)->getFieldValues(array(233), 'effort')->returnsDar(
+            array('type' => 'int', 'int_value' => 5),
+            array('type' => 'int', 'int_value' => 15),
+            array('type' => 'computed', 'id' => 766),
+            array('type' => 'computed', 'id' => 777)
+        );
+        stub($this->dao)->getFieldValues(array(766, 777), 'effort')->returnsDar(
+            array('type' => 'int', 'int_value' => 10),
+            array('type' => 'int', 'int_value' => 10)
+        );
+
+        $artifact = stub('Tracker_Artifact')->getId()->returns(233);
+        $this->assertEqual(40, $this->field->getComputedValue($this->user, $artifact));
+    }
+
+    public function itDoesntMakeLoopInGraph() {
+        expect($this->dao)->getFieldValues()->count(2);
+        stub($this->dao)->getFieldValues(array(233), 'effort')->returnsDar(
+            array('type' => 'int', 'int_value' => 5),
+            array('type' => 'int', 'int_value' => 15),
+            array('type' => 'computed', 'id' => 766),
+            array('type' => 'computed', 'id' => 777)
+        );
+        stub($this->dao)->getFieldValues(array(766, 777), 'effort')->returnsDar(
+            array('type' => 'int', 'int_value' => 10),
+            array('type' => 'int', 'int_value' => 10),
+            array('type' => 'computed', 'id' => 766),
+            array('type' => 'computed', 'id' => 233)
+        );
+
+        $artifact = stub('Tracker_Artifact')->getId()->returns(233);
+        $this->assertEqual(40, $this->field->getComputedValue($this->user, $artifact));
     }
 }
 

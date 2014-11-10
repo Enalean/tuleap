@@ -327,6 +327,14 @@
           </attribute>
         </optional>
         <optional>
+          <attribute name="fast_compute">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </attribute>
+        </optional>
+        <optional>
           <attribute name="use_capacity">
             <choice>
               <value>0</value>
