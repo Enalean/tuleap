@@ -1,4 +1,22 @@
 <?php
+/**
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 ini_set('max_execution_time', 0);
 ini_set('memory_limit', -1);
@@ -6,138 +24,12 @@ ini_set('memory_limit', -1);
 require_once('pre.php');
 session_require(array('isloggedin'=>1));
 
-require_once('common/include/HTTPRequest.class.php');
-require_once('common/include/CSRFSynchronizerToken.class.php');
-
-require_once('common/project/RegisterProjectStep_Intro.class.php');
-require_once('common/project/RegisterProjectStep_Settings.class.php');
-require_once('common/project/RegisterProjectStep_Template.class.php');
-require_once('common/project/RegisterProjectStep_BasicInfo.class.php');
-require_once('common/project/RegisterProjectStep_Name.class.php');
-require_once('common/project/RegisterProjectStep_License.class.php');
-require_once('common/project/RegisterProjectStep_Category.class.php');
-require_once('common/project/RegisterProjectStep_Confirmation.class.php');
-require_once('common/project/RegisterProjectStep_Services.class.php');
-require_once('common/project/OneStepCreation/OneStepCreationRouter.class.php');
-require_once('common/project/CustomDescription/CustomDescriptionFactory.class.php');
-require_once('common/project/CustomDescription/CustomDescriptionDao.class.php');
 require_once 'vars.php'; //load licenses
-require_once 'common/templating/TemplateRendererFactory.class.php';
 
 $request = HTTPRequest::instance();
 
-if (Config::get('sys_create_project_in_one_step')) {
-    $router = new Project_OneStepCreation_OneStepCreationRouter(
-        ProjectManager::instance(),
-        new Project_CustomDescription_CustomDescriptionFactory(new Project_CustomDescription_CustomDescriptionDao())
-    );
-    $router->route($request);
-    exit;
-}
-
-$current_step = $request->exist('current_step') ? $request->get('current_step') : 0;
-$data         = $request->exist('data') ? unserialize($request->get('data')) : array();
-
-//Register steps
-if ($GLOBALS['sys_use_trove'] != 0) {
-    $steps = array(
-    new RegisterProjectStep_Intro($data),
-    new RegisterProjectStep_Name($data),
-    new RegisterProjectStep_Settings($data),
-    new RegisterProjectStep_Template($data),
-    new RegisterProjectStep_BasicInfo($data),
-    new RegisterProjectStep_Services($data),
-    new RegisterProjectStep_Category($data),
-    new RegisterProjectStep_License($data),
-    new RegisterProjectStep_Confirmation($data),
-    );
-} else {
-    $steps = array(
-    new RegisterProjectStep_Intro($data),
-    new RegisterProjectStep_Name($data),
-    new RegisterProjectStep_Settings($data),
-    new RegisterProjectStep_Template($data),
-    new RegisterProjectStep_BasicInfo($data),
-    new RegisterProjectStep_Services($data),
-    new RegisterProjectStep_License($data),
-    new RegisterProjectStep_Confirmation($data),
-    );
-}
-
-$csrf = new CSRFSynchronizerToken('/project/register.php');
-
-//Process request
-if ($request->exist('cancel')) {
-    $HTML->addFeedback('info', $GLOBALS['Language']->getText('register_form', 'cancelled'));
-    $HTML->redirect('/');
-}
-if ($request->exist('next') && $steps[$current_step]->onLeave($request, $data) && (!isset($steps[$current_step + 1]) || $steps[$current_step + 1]->onEnter($request, $data))) {
-    $current_step++;
-    if ($current_step == count($steps)) {
-        //We finish wizard, do a final validation
-        $is_valid = true;
-        reset($steps);
-        while($is_valid && list($key,) = each($steps)) {
-            $is_valid = $steps[$key]->validate($data);
-        }
-        if (!$is_valid) {
-            $current_step--;
-        } else {
-            $csrf->check();
-            
-            require_once('create_project.php');
-            create_project($data);
-        }
-    }
-}
-if ($request->exist('previous')) {
-    $current_step--;
-}
-
-//Display current step
-$HTML->header(array('title'=>$Language->getText('register_index','project_registration') .' - '. $steps[$current_step]->name));
-echo '<style>
-.current_step {
-    font-weight:bold;
-}
-.next_step {
-    color:#999;
-}
-</style>';
-echo '<form action="" method="POST">';
-echo $csrf->fetchHTMLInput();
-echo '<div class="container-fluid register_project">
-        <div class="row-fluid">
-            <div class="span9">';
-echo '<h2>'. $steps[$current_step]->name .' ';
-echo help_button($steps[$current_step]->help);
-echo '</h2>';
-$steps[$current_step]->display($data);
-echo '<div style="text-align:center">';
-echo '<input type="submit" name="cancel" class="btn" value="'. $GLOBALS['Language']->getText('register_form', 'cancel') .'" /> ';
-echo '<input type="hidden" name="current_step" value="'. $current_step .'" />';
-echo '<input type="hidden" name="data" value="'. htmlentities(serialize($data), ENT_QUOTES, 'UTF-8') .'" />';
-echo '<input type="submit" name="next" class="btn btn-primary" id="project_register_next" value="'. ($current_step < count($steps) - 1 ? $GLOBALS['Language']->getText('register_form', 'next') : $GLOBALS['Language']->getText('register_title', 'intro')) .'" />';
-echo '</div>';
-echo '      </div>';
-
-echo '      <div class="span3">
-                <div class="well">
-                    <ol>';
-foreach($steps as $key => $step) {
-    $classname = $key == $current_step ? 'current_step' : ($key < $current_step ? 'previous_step' : 'next_step');
-    echo '<li class="'. $classname .'">'. $step->name .'</li>';
-}
-echo '              </ol>
-                </div>
-            </div>';
-echo '  </div>
-     </div>
-     </form>';
-
-//{{{ Debug
-//echo '<tr><td colspan="2"><pre>';var_dump($_REQUEST);echo '</pre></td></tr>';
-//echo '<tr><td colspan="2"><pre>';var_dump($data);echo '</pre></td></tr>';
-//}}}
-$HTML->footer(array());
-?>
+$router = new Project_OneStepCreation_OneStepCreationRouter(
+    ProjectManager::instance(),
+    new Project_CustomDescription_CustomDescriptionFactory(new Project_CustomDescription_CustomDescriptionDao())
+);
+$router->route($request);

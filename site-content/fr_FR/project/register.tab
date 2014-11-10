@@ -30,7 +30,8 @@ register_confirmation	registration_deleted	Enregistrement détruit
 register_confirmation	project_deleted	Enregistrement du projet détruit.
 register_confirmation	try_again	Merci de réessayer plus tard.
 register_confirmation	ins_desc_fail	ERREUR - INSERTION DE DESCRIPTION A ECHOUE. Veuillez en informer admin@$1 $2
-register_confirmation	cant_copy_msg_to_requester	ERROR - Impossible de copier le message destiné aux utilisateurs qui demandent l'accès à votre projet. 
+register_confirmation	cant_copy_msg_to_requester	ERROR - Impossible de copier le message destiné aux utilisateurs qui demandent l'accès à votre projet.
+register_confirmation	registration_approved	Votre project a été approuvé automatiquement. Vous pouvez l'utiliser dès maintenant.
 #
 #-----------------------------------------------
 # Script: src/common/project//form.php
@@ -146,3 +147,9 @@ register_project_one_step	choose_template_description_part_two	Le modèle de pro
 register_project_one_step	choose_default_templates	Modèles par défaut
 register_project_one_step	choose_admin_projects	Projets dont vous êtes administrateur
 register_project_one_step	services_used	Services utilisés :
+register_project_one_step	complete_title	Enregistrement terminé
+register_project_one_step	complete_wait	Votre projet a été soumis aux administrateurs. Vous recevrez une notification de leur décision et des instructions complémentaires dans les 24 heures.
+register_project_one_step	complete_thanks	Merci d'utiliser $1
+register_project_one_step	complete_mail_subject	Nouveau projet enregistré : $1
+register_project_one_step	complete_mail_body_auto	Un nouveau projet vient juste d'être enregistré sur $1\n\nNom du projet : $2\n\nConformément à la configuration site, le projet a été automatiquement approuvé. Vous pouvez néanmoins accéder au panneau d'administration du site-admin :\n$3\n
+register_project_one_step	complete_mail_body_approve	Un nouveau projet vient juste d'être enregistré sur $1\n\nNom du projet : $2\n\nVeuillez cliquer sur le lien ci-dessous pour approuver l'enregistrement de ce projet :\n$3\n

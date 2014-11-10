@@ -385,17 +385,6 @@ function create_project($data, $do_not_exit = false) {
             $project_manager->activate($group);
         }
 
-        if (!$do_not_exit) {
-            $content = '';
-            $GLOBALS['HTML']->header(array('title'=> $GLOBALS['Language']->getText('register_confirmation','registration_complete')));
-            include($GLOBALS['Language']->getContent('project/complete'));
-            echo $content;
-            $GLOBALS['HTML']->footer(array());
-            exit(0);
-        } else {
-            return $group_id;
-        }
+        return $group_id;
     }
 }
-
-?>
