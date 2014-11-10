@@ -18,7 +18,7 @@ Version 7.7 (Not released yet)
 	* request #7601: Security issue with legacy project creation page and IM plugin
 
 	== Plugins ==
-	* tracker: 5.514
+	* tracker: 5.515
 	* git: 3.134
 	* statistics: 0.39
 	* agiledashboard: 1.87
