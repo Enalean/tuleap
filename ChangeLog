@@ -10,6 +10,7 @@ Version 7.7 (Not released yet)
 	* story #7509: add expand/collapse bar containing backlog item's children
 
 	== Bug Fix ==
+	* Fix language test to remove dependencies
 	* request #7526: Missing attrs in ldap queries
 	* request #7503: CI job bad parameters with svn
 	* request #7541: TV3 to TV5 : bad path in attachments path migration
