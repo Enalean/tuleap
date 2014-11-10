@@ -1,3 +1,7 @@
+Version 7.6-4 (Monday, November 10th 2014)
+	== Bug Fix ==
+	* request ##7605: Synchronization with LDAP, not systematically done
+
 Version 7.6-3 (Monday, November 3rd 2014)
 	== Bug Fix ==
 	* request #7535 TV3 to TV5 : a float field with no value generate errors in XML import
