@@ -187,6 +187,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @deprecated
      */
     public function permission_db_authorized_ugroups( $permission_type ) {
+        include_once 'www/project/admin/permissions.php';
         $result = array();
         $res    = permission_db_authorized_ugroups($permission_type, $this->getId());
         if ( db_numrows($res) > 0 ) {
