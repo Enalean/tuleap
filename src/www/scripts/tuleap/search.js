@@ -131,7 +131,7 @@ var tuleap = tuleap || {};
             }
 
             if (typeof(tuleap.search.fulltext) !== 'undefined') {
-                tuleap.search.fulltext.handleFulltextFacets(type_of_search, append_to_results);
+                tuleap.search.fulltext.handleFulltextFacets(type_of_search);
             }
 
             tuleap.search.enableSearchMoreResults();
