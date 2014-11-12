@@ -1,3 +1,11 @@
+Version 0.2 - Tuleap 7.7
+	* Remove assignee filters as it is not used as of today
+	* automatically launch bower install after npm install
+	* Shinyfication of the current test execution
+	* Display a progress bar
+	* Add logout button
+	* remove sounds
+
 Version 0.1.1 - Tuleap 7.6
 	* request #13227: Remove unneeded Scrollbar
 	* story #13236: Remove notifications of the test execution tracker (edit XML)
