@@ -23,12 +23,13 @@
  */
 class ElasticSearch_TransportHTTPBasicAuth extends ElasticSearchTransportHTTP {
 
-    public function __construct($host, $port, $user, $password) {
+    public function __construct($host, $port, $user, $password, $timeout) {
         parent::__construct($host, $port);
         if ($user && $password) {
             curl_setopt($this->ch, CURLOPT_USERPWD, $user .':'. $password);
         }
         curl_setopt($this->ch, CURLOPT_FAILONERROR, true);
+        curl_setopt($this->ch, CURLOPT_TIMEOUT, $timeout);
     }
 
     /**
@@ -39,7 +40,6 @@ class ElasticSearch_TransportHTTPBasicAuth extends ElasticSearchTransportHTTP {
         $protocol = "http";
         $requestURL = $protocol . "://" . $this->host . $url;
         curl_setopt($conn, CURLOPT_URL, $requestURL);
-        curl_setopt($conn, CURLOPT_TIMEOUT, self::TIMEOUT);
         curl_setopt($conn, CURLOPT_PORT, $this->port);
         curl_setopt($conn, CURLOPT_RETURNTRANSFER, 1) ;
         curl_setopt($conn, CURLOPT_CUSTOMREQUEST, strtoupper($method));
@@ -114,4 +114,3 @@ class ElasticSearch_TransportHTTPBasicAuth extends ElasticSearchTransportHTTP {
         return $data;
     }
 }
-?>
