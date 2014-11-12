@@ -145,6 +145,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
 
     function setFrom($email) {
         list($email, $name) = $this->_cleanupMailFormat($email);
+
         $this->mail->setFrom($email, $name);
     }
 
