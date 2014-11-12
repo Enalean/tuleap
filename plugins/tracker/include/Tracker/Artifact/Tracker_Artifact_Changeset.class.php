@@ -652,7 +652,7 @@ class Tracker_Artifact_Changeset {
                 $message_id = $this->getMessageId($user);
 
                 $messages[$message_id]               = $this->getMessageContent($user, $is_update, $check_perms);
-                $messages[$message_id]['from']       = $this->getForgeArtifactEmail();
+                $messages[$message_id]['from']       = Config::get('sys_name') . '<' .$this->getForgeArtifactEmail() . '>';
                 $messages[$message_id]['message-id'] = $message_id;
                 $messages[$message_id]['headers']    = $headers;
                 $messages[$message_id]['recipients'] = array($user->getEmail());
@@ -773,7 +773,6 @@ class Tracker_Artifact_Changeset {
         $artifactId        = $this->getArtifact()->getID();
         $project_unix_name = $project->getUnixName(true);
         $tracker_name      = $tracker->getItemName();
-        $full_from_address = Config::get('sys_name') .'<'. $from .'>';
 
         $breadcrumbs[] = '<a href="'. get_server_url() .'/projects/'. $project_unix_name .'" />'. $project->getPublicName() .'</a>';
         $breadcrumbs[] = '<a href="'. get_server_url() .'/plugins/tracker/?tracker='. (int)$tracker->getId() .'" />'. $hp->purify(SimpleSanitizer::unsanitize($this->getTracker()->getName())) .'</a>';
@@ -782,7 +781,7 @@ class Tracker_Artifact_Changeset {
         $mail->getLookAndFeelTemplate()->set('breadcrumbs', $breadcrumbs);
         $mail->getLookAndFeelTemplate()->set('unsubscribe_link', $this->getUnsubscribeLink());
         $mail->getLookAndFeelTemplate()->set('title', $hp->purify($subject));
-        $mail->setFrom($full_from_address);
+        $mail->setFrom($from);
         $mail->addAdditionalHeader("X-Codendi-Project",     $project->getUnixName());
         $mail->addAdditionalHeader("X-Codendi-Tracker",     $tracker_name);
         $mail->addAdditionalHeader("X-Codendi-Artifact-ID", $this->getId());
