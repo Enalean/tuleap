@@ -43,6 +43,7 @@ class GitDao extends DataAccessObject {
     const REPOSITORY_BACKEND_TYPE     = 'repository_backend_type';
     const REPOSITORY_SCOPE            = 'repository_scope';
     const REPOSITORY_NAMESPACE        = 'repository_namespace';
+    const REPOSITORY_BACKUP_PATH      = 'repository_backup_path';
     const ENABLE_ONLINE_EDIT          = "enable_online_edit";
 
     const REPO_NAME_MAX_LENGTH = 255;
@@ -93,7 +94,7 @@ class GitDao extends DataAccessObject {
         return true;
     }
 
-    public function save($repository) {
+    public function save(GitRepository $repository) {
         $id          = (int)$repository->getId();
 
         $name        = $repository->getName(); 
@@ -127,6 +128,7 @@ class GitDao extends DataAccessObject {
         $mailPrefix     = $this->da->quoteSmart($mailPrefix);
         $scope          = $this->da->quoteSmart($scope);
         $namespace      = $this->da->quoteSmart($namespace);
+        $backup_path    = $this->da->quoteSmart($repository->getBackupPath());
         
         $insert         = false;
         if ( $this->exists($id) ) {            
@@ -134,7 +136,8 @@ class GitDao extends DataAccessObject {
                      ' SET '.self::REPOSITORY_DESCRIPTION.'='.$description.','.
                             self::REPOSITORY_IS_INITIALIZED.'='.$isInitialized.','.
                             self::REPOSITORY_ACCESS.'='.$access.','.
-                            self::REPOSITORY_MAIL_PREFIX.'='.$mailPrefix.
+                            self::REPOSITORY_MAIL_PREFIX.'='.$mailPrefix.','.
+                            self::REPOSITORY_BACKUP_PATH.'='.$backup_path.
                      'WHERE '.self::REPOSITORY_ID.'='.$id;
         } else {
             if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
@@ -181,7 +184,7 @@ class GitDao extends DataAccessObject {
         return true;
     }
 
-    public function delete($repository) {
+    public function delete(GitRepository $repository) {
         $id        = $repository->getId();
         $projectId = $repository->getProjectId();
         $id        = $this->da->escapeInt($id);
@@ -191,12 +194,12 @@ class GitDao extends DataAccessObject {
         }
         $deletionDate = $repository->getDeletionDate();        
         $projectName  = $repository->getProject()->getUnixName();
-        $name         = $repository->getName();
-        $name         .= '_'.strtotime($deletionDate);
-        $name         = $projectName.'_'.$name;
-        $name         = $this->da->quoteSmart($name);
+        $backup_path  = str_replace('/', '_', $repository->getFullName());
+        $backup_path  .= '_'.strtotime($deletionDate);
+        $backup_path  = $projectName.'_'.$backup_path;
+        $backup_path  = $this->da->quoteSmart($backup_path);
         $deletionDate = $this->da->quoteSmart($deletionDate);
-        $query        = ' UPDATE '.$this->getTable().' SET '.self::REPOSITORY_DELETION_DATE.'='.$deletionDate.', '.self::REPOSITORY_NAME.'='.$name.
+        $query        = ' UPDATE '.$this->getTable().' SET '.self::REPOSITORY_DELETION_DATE.'='.$deletionDate.', '.self::REPOSITORY_BACKUP_PATH.'='.$backup_path.
                         ' WHERE '.self::REPOSITORY_ID.'='.$id.' AND '.self::FK_PROJECT_ID.'='.$projectId;
         $r  = $this->update($query);
         $ar = $this->da->affectedRows();
@@ -483,6 +486,7 @@ class GitDao extends DataAccessObject {
         $repository->setMailPrefix($result[self::REPOSITORY_MAIL_PREFIX]);
         $repository->setBackendType($result[self::REPOSITORY_BACKEND_TYPE]);
         $repository->setNamespace($result[self::REPOSITORY_NAMESPACE]);
+        $repository->setBackupPath($result[self::REPOSITORY_BACKUP_PATH]);
         $repository->setScope($result[self::REPOSITORY_SCOPE]);
         $repository->setRemoteServerId($result[self::REMOTE_SERVER_ID]);
         $repository->setRemoteServerDisconnectDate($result[self::REMOTE_SERVER_DISCONNECT_DATE]);

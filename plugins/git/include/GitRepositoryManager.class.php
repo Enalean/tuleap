@@ -243,40 +243,14 @@ class GitRepositoryManager {
         $retention_period      = intval($GLOBALS['sys_file_deletion_delay']);
         $archived_repositories = $this->repository_factory->getArchivedRepositoriesToPurge($retention_period);
         foreach ($archived_repositories as $repository) {
-            $repository->getBackend()->deletePermissions($repository);
-            $this->deleteArchivedRepository($repository, $logger);
-        }
-    }
-
-    /**
-     *
-     * Delete archived repository
-     *
-     * @param GitRepository $repository
-     *
-     * @param Logger $logger
-     *
-     */
-    private function deleteArchivedRepository(GitRepository $repository, Logger $logger){
-        $archive = $this->backup_directory.$repository->getName().".tar.gz";
-        if (is_file($archive)) {
-            if(!unlink($archive)) {
-                $logger->error("Unable to purge archived Gitolite repository: ".$archive);
-            } else {
-                $logger->info("Purge of archived Gitolite repository: ".$archive);
+            try {
+                $backend = $repository->getBackend();
+                $backend->deletePermissions($repository);
+                $backend->deleteArchivedRepository($repository);
+                $logger->info('Purge of archived Gitolite repository: '.$repository->getName());
+            } catch (GitDriverErrorException $exception) {
+                $logger->error($exception->getMessage());
             }
         }
     }
-
-    /**
-     * Get git Plugin
-     *
-     * @return GitPlugin
-     */
-    public function getGitPlugin() {
-        $plugin_manager = PluginManager::instance();
-        return $plugin_manager->getPluginByName('git');
-    }
-
 }
-?>

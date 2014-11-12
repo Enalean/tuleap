@@ -130,5 +130,10 @@ interface Git_Backend_Interface {
      */
     public function delete(GitRepository $repository);
 
+    /**
+     * Purge archived repository
+     *
+     * @param GitRepository $repository
+     */
+    public function deleteArchivedRepository(GitRepository $repository);
 }
-?>

@@ -408,24 +408,46 @@ class Git_GitoliteDriver {
      * Backup gitolite repository
      *
      * @param String $path               The repository path
-     * @param String $gitBackupDirectory The repository backup directory path
+     * @param String $backup_directory The repository backup directory path
      * @param String $repositoryName
      *
      */
-    public function backup($path, $gitBackupDirectory, $repositoryName) {
-        if (empty($path) || !is_readable($path)) {
-            throw new GitDriverErrorException('Gitolite backup: Empty path or permission denied '.$path);
+    public function backup(GitRepository $repository, $backup_directory) {
+        if (! is_readable($repository->getFullPath())) {
+            throw new GitDriverErrorException('Gitolite backup: Empty path or permission denied '.$repository->getFullPath());
         }
-        else if (empty($gitBackupDirectory) || !is_writable($gitBackupDirectory)) {
-            throw new GitDriverErrorException('Gitolite backup: Empty backup path or permission denied '.$gitBackupDirectory);
+        if (! is_writable($backup_directory)) {
+            throw new GitDriverErrorException('Gitolite backup: Empty backup path or permission denied '.$backup_directory);
         }
-        $returnCode = 0;
-        $backupPath = $gitBackupDirectory.$repositoryName.'.tar.gz';
-        $command = 'tar cvzf '.escapeshellarg($backupPath).' '.escapeshellarg($path);
-        system($command, $returnCode);
-        if ($returnCode != 0) {
-            throw new GitDriverErrorException('Unable to backup '.$path.' into '. $backupPath);
+
+        $backup_path      = $this->getBackupPath($repository, $backup_directory);
+        $target_directory = dirname($backup_path);
+
+        if (! is_dir($target_directory)) {
+            if (! mkdir($target_directory, 0700, true)) {
+                throw new GitDriverErrorException('Unable to create git backup directory: '.$target_directory);
+            }
+        }
+
+        try {
+            $command = 'tar cvzf '.escapeshellarg($backup_path).' '.escapeshellarg($repository->getFullPath());
+            $exec = new System_Command();
+            $exec->exec($command);
+        } catch (System_Command_CommandException $exception) {
+            throw new GitDriverErrorException($exception->getMessage());
         }
     }
+
+    public function deleteBackup(GitRepository $repository, $backup_directory) {
+        $archive = $this->getBackupPath($repository, $backup_directory);
+        if (is_file($archive)) {
+            if (! unlink($archive)) {
+                throw new GitDriverErrorException("Unable to purge archived Gitolite repository: ".$archive);
+            }
+        }
+    }
+
+    private function getBackupPath(GitRepository $repository, $backup_directory) {
+        return $backup_directory .'/'. $repository->getBackupPath() .'.tar.gz';
+    }
 }
-?>
