@@ -1,3 +1,6 @@
+Version 5.516 - Tuleap 7.7
+    * request #7610 Planningv2 top backlog fail to load when not project member
+
 Version 5.515 - Tuleap 7.7
     * request #7604 - Iterative approach for computed values
 
