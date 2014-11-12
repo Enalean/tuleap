@@ -1,3 +1,6 @@
+Version 3.135 - Tuleap 7.7
+    * request #7572 Backup of gitolite repositories doesn't manage 'in path' directory
+
 Version 3.134 - Tuleap 7.7
     * request #7592 Be more verbose in git logging
 
