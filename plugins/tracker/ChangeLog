@@ -1,3 +1,6 @@
+Version 5.517 - Tuleap 7.7
+    * request #7612 Tracker emails are sent with 2 from
+
 Version 5.516 - Tuleap 7.7
     * request #7610 Planningv2 top backlog fail to load when not project member
 
