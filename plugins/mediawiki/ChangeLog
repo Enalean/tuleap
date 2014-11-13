@@ -1,3 +1,6 @@
+Version 0.57 - Tuleap 7.7
+    * Fix request #7619 Global mediawiki administrator can see content of all private projects
+
 Version 0.56 - Tuleap 7.6
     * Fix request #7504: No ability to make search in mediawiki compatibility mode
 
