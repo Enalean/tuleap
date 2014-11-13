@@ -85,12 +85,12 @@ if ($request->exist('submit')) {
             );
             $sql = "UPDATE user_group SET admin_flags='". db_es($request->get($admin_flags)) ."'";
             foreach ($flags as $flag) {
-                if ($request->get($$flag)) {
+                if ($request->exist($$flag)) {
                     $sql .= ", $flag = '". db_es($request->get($$flag)) ."'";
                 }
             }
             $sql .= " WHERE user_id='$row_dev[user_id]' AND group_id='$group_id'";
-           
+
             $res = db_query($sql);
             $tracker_error = false;
             if ( $project->usesTracker()&&$at_arr ) {
