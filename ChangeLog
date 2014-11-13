@@ -16,6 +16,7 @@ Version 7.7 (Not released yet)
 	* request #7541: TV3 to TV5 : bad path in attachments path migration
 	* request #7535 TV3 to TV5 : a float field with no value generate errors in XML import
 	* request #7601: Security issue with legacy project creation page and IM plugin
+	* request #7618 Cannot revoke legacy permissions
 
 	== Plugins ==
 	* tracker: 5.517
@@ -23,8 +24,8 @@ Version 7.7 (Not released yet)
 	* statistics: 0.39
 	* agiledashboard: 1.87
 	* proftpd: 0.18
-	* fulltextsearch: 0.100
-	* ldap: 3.59
+	* fulltextsearch: 0.101
+	* ldap: 3.60
 
 	 == Themes ==
 	* FlamingParrot: 1.55

@@ -1,3 +1,6 @@
+Version 0.101 - Tuleap 7.7
+    * request #7617 fatal error on system event fts queue
+
 Version 0.100 - Tuleap 7.7
     * story #7465: Merge projects and my projects facets
 
