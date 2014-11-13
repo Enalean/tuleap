@@ -28,7 +28,6 @@ class SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE_SERVICE_PERMISSIONS extends SystemE
     protected $actions;
 
     public function injectDependencies(FullTextSearchWikiActions $actions) {
-        $this->setFullTextSearchActions($actions);
         $this->actions = $actions;
     }
 
