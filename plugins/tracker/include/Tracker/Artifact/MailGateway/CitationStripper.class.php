@@ -60,6 +60,7 @@ class Tracker_Artifact_MailGateway_CitationStripper {
                 'fr'
             );
         }
+        return $mail_content;
     }
 
     public function stripHTML($mail_content) {
