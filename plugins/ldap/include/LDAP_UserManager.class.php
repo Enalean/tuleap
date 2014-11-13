@@ -264,9 +264,6 @@ class LDAP_UserManager {
     function createAccountFromLdap(LDAPResult $lr) {
 
         $user = $this->createAccount($lr->getEdUid(), $lr->getLogin(), $lr->getCommonName(), $lr->getEmail());
-        if (!$user) {
-            throw new LDAP_UserNotCreatedException();
-        }
         return $user;
     }
 
@@ -329,8 +326,12 @@ class LDAP_UserManager {
             $user = $this->createAccountFromLdap($ldap_user);
         }
 
-        $this->synchronizeUser($user, $ldap_user, $password);
-        return $user;
+        if ($user) {
+            $this->synchronizeUser($user, $ldap_user, $password);
+            return $user;
+        }
+
+        return false;
     }
 
     private function mergeDefaultAttributesAndSiteAttributes() {
