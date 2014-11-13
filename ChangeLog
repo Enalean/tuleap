@@ -19,9 +19,10 @@ Version 7.7 (Not released yet)
 	* request #7618 Cannot revoke legacy permissions
 	* request #7619 Global mediawiki administrator can see content of all private projects
 	* request #7620 Cannot add non LDAP user to project
+	* request #7624 Can no longer reply to an artifact by email
 
 	== Plugins ==
-	* tracker: 5.517
+	* tracker: 5.518
 	* git: 3.135
 	* statistics: 0.39
 	* agiledashboard: 1.87

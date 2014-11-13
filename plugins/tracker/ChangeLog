@@ -1,3 +1,6 @@
+Version 5.518 - Tuleap 7.7
+    * Fix request #7624 Can no longer reply to an artifact by email
+
 Version 5.517 - Tuleap 7.7
     * request #7612 Tracker emails are sent with 2 from
 
