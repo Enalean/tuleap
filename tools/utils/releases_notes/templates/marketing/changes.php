@@ -1,12 +1,12 @@
-<? if ($section->changes): ?>
+<?php if ($section->changes): ?>
 <tr>
     <td>
         <ul>
-            <? foreach ($section->changes as $change): ?>
+            <?php foreach ($section->changes as $change): ?>
             <li><?= nl2br($change) ?></li>
-            <? endforeach; ?>
+            <?php endforeach; ?>
         </ul>
     </td>
 </tr>
-<? endif; ?>
+<?php endif; ?>
 

@@ -1,6 +1,6 @@
-<? if ($section->changes): ?>
-<? foreach ($section->changes as $change): ?>
+<?php if ($section->changes): ?>
+<?php foreach ($section->changes as $change): ?>
     * <?= $change ?>
 
-<? endforeach; ?>
-<? endif; ?>
+<?php endforeach; ?>
+<?php endif; ?>
