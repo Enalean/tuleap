@@ -236,13 +236,9 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
         if (isset($facets[ElasticSearch_SearchResultUpdateDateFacetCollection::IDENTIFIER]) && ! empty($facets[ElasticSearch_SearchResultUpdateDateFacetCollection::IDENTIFIER])) {
             $this->createFacetsInQuery($filter);
 
-            $updated_date_filter = array(
-                'range' => array(
-                    'update_date' => array(
-                        'gt' => $facets[ElasticSearch_SearchResultUpdateDateFacetCollection::IDENTIFIER]
-                    )
-                )
-            );
+            $updated_date_filter                     = array('bool' => array('should' => array()));
+            $updated_date_filter['bool']['should'][] = array('range' => array('last_modified_date' => array('gte' => $facets[ElasticSearch_SearchResultUpdateDateFacetCollection::IDENTIFIER])));
+            $updated_date_filter['bool']['should'][] = array('range' => array('update_date'        => array('gte' => $facets[ElasticSearch_SearchResultUpdateDateFacetCollection::IDENTIFIER])));
 
             $filter['bool']['must'][] = $updated_date_filter;
         }

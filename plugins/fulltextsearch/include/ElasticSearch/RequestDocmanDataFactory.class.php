@@ -68,9 +68,17 @@ class ElasticSearch_1_2_RequestDocmanDataFactory {
         $hardcoded_metadata_for_mapping = array();
 
         foreach ($this->getHardcodedMetadata($project_id) as $metadata) {
-            $hardcoded_metadata_for_mapping[$metadata->getLabel()] = array(
-                'type' => $this->getElasticSearchMappingType($metadata->getType())
-            );
+            if ($this->getElasticSearchMappingType($metadata->getType()) === self::ELASTICSEARCH_DATE_TYPE) {
+                $hardcoded_metadata_for_mapping[$metadata->getLabel()] = array(
+                    'type'   => self::ELASTICSEARCH_DATE_TYPE,
+                    'format' => 'date_time_no_millis'
+                );
+
+            } else {
+                $hardcoded_metadata_for_mapping[$metadata->getLabel()] = array(
+                    'type' => $this->getElasticSearchMappingType($metadata->getType())
+                );
+            }
         }
 
         $this->removeUnparsableMetadata($hardcoded_metadata_for_mapping);
@@ -91,7 +99,8 @@ class ElasticSearch_1_2_RequestDocmanDataFactory {
                     'type' => 'integer',
                 ),
                 'date_added' => array(
-                    'type' => 'date',
+                    'type'   => 'date',
+                    'format' => 'date_time_no_millis',
                 ),
                 'comment' => array(
                     'type' => 'string',
@@ -114,7 +123,7 @@ class ElasticSearch_1_2_RequestDocmanDataFactory {
 
         foreach ($this->getCustomDateMetadata($item) as $item_metadata) {
             $custom_metadata[$this->getCustomPropertyName($item_metadata)] = date(
-                'Y-m-d',
+                'c',
                 (int) $this->metadata_factory->getMetadataValue($item, $item_metadata)
             );
         }
@@ -139,7 +148,8 @@ class ElasticSearch_1_2_RequestDocmanDataFactory {
         foreach ($this->getCustomDateMetadata($item) as $item_metadata) {
             if (! $this->dateMetadataIsInMapping($mapping, $item, $item_metadata)) {
                 $custom_metadata_to_define[$this->getCustomPropertyName($item_metadata)] = array(
-                    'type' => 'date'
+                    'type' => 'date',
+                    'format' => 'date_time_no_millis'
                 );
             }
         }
@@ -180,15 +190,15 @@ class ElasticSearch_1_2_RequestDocmanDataFactory {
             'group_id'                => $item->getGroupId(),
             'title'                   => $item->getTitle(),
             'description'             => $item->getDescription(),
-            'create_date'             => date('Y-m-d', $item->getCreateDate()),
-            'update_date'             => date('Y-m-d', $item->getUpdateDate()),
+            'create_date'             => date('c', $item->getCreateDate()),
+            'update_date'             => date('c', $item->getUpdateDate()),
             'permissions'             => $this->permissions_manager->exportPermissions($item),
             'approval_table_comments' => $this->getDocumentApprovalTableComments($item),
             'owner'                   => $item->getOwnerId()
         );
 
         if ($item->getObsolescenceDate()) {
-            $hardcoded_metadata['obsolescence_date'] = date('Y-m-d', $item->getObsolescenceDate());
+            $hardcoded_metadata['obsolescence_date'] = date('c', $item->getObsolescenceDate());
         }
 
         return $hardcoded_metadata;
