@@ -581,25 +581,24 @@ class MediaWikiPlugin extends Plugin {
     }
 
     public function has_user_been_delegated_access($params) {
-        if (! isset($_SERVER['REQUEST_URI']) || ! strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            return;
-        }
+        if (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
 
-        $forge_user_manager = new User_ForgeUserGroupPermissionsManager(
-            new User_ForgeUserGroupPermissionsDao()
-        );
+            $forge_user_manager = new User_ForgeUserGroupPermissionsManager(
+                new User_ForgeUserGroupPermissionsDao()
+            );
 
-        $can_access = $forge_user_manager->doesUserHavePermission(
-            $params['user'],
-            new User_ForgeUserGroupPermission_MediawikiAdminAllProjects()
-        );
+            $can_access = $forge_user_manager->doesUserHavePermission(
+                $params['user'],
+                new User_ForgeUserGroupPermission_MediawikiAdminAllProjects()
+            );
 
-        /**
-         * Only change the access rights to the affirmative.
-         * Otherwise, we could overwrite a "true" value set by another plugin.
-         */
-        if ($can_access) {
-            $params['can_access'] = true;
+            /**
+             * Only change the access rights to the affirmative.
+             * Otherwise, we could overwrite a "true" value set by another plugin.
+             */
+            if ($can_access) {
+                $params['can_access'] = true;
+            }
         }
     }
 
