@@ -92,7 +92,7 @@ class FullTextSearchWikiActionsTests extends TuleapTestCase {
                 'id'                 => 101,
                 'group_id'           => 200,
                 'page_name'          => 'page',
-                'last_modified_date' => '2014-07-18',
+                'last_modified_date' => '2014-07-18T10:15:38+02:00',
                 'last_author'        => null,
                 'last_summary'       => '',
                 'content'            => '',
@@ -121,7 +121,7 @@ class FullTextSearchWikiActionsTests extends TuleapTestCase {
                 'id'                 => 101,
                 'group_id'           => 200,
                 'page_name'          => 'page',
-                'last_modified_date' => '2014-07-18',
+                'last_modified_date' => '2014-07-18T10:15:38+02:00',
                 'last_author'        => 123,
                 'last_summary'       => 'wiki page summary',
                 'content'            => 'wiki page content',
@@ -186,7 +186,8 @@ class FullTextSearchWikiActionsTests extends TuleapTestCase {
                         'type' => 'string'
                     ),
                     'last_modified_date' => array(
-                        'type' => 'date'
+                        'type' => 'date',
+                        'format' => 'date_time_no_millis'
                     ),
                     'last_author' => array(
                         'type' => 'long'

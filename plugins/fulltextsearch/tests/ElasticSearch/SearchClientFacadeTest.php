@@ -280,9 +280,22 @@ class ElasticSearch_SearchClientFacadeTest extends TuleapTestCase {
                     'bool' => array(
                         'must' => array(
                             array(
-                                'range' => array(
-                                    'update_date' => array(
-                                        'gt' => ElasticSearch_SearchResultUpdateDateFacetCollection::PAST_WEEK
+                                'bool' => array(
+                                    'should' => array(
+                                        array(
+                                            'range' => array(
+                                                'last_modified_date' => array(
+                                                    'gte' => ElasticSearch_SearchResultUpdateDateFacetCollection::PAST_WEEK
+                                                )
+                                            )
+                                        ),
+                                        array(
+                                            'range' => array(
+                                                'update_date' => array(
+                                                    'gte' => ElasticSearch_SearchResultUpdateDateFacetCollection::PAST_WEEK
+                                                )
+                                            )
+                                        )
                                     )
                                 )
                             )

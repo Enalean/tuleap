@@ -139,10 +139,12 @@ class RequestDocmanDataFactoryTest extends TuleapTestCase {
             '200' => array(
                 'properties' => array(
                     'property_15' => array(
-                        'type' => 'date'
+                        'type' => 'date',
+                        'format' => 'date_time_no_millis'
                     ),
                     'property_17' => array(
-                        'type' => 'date'
+                        'type' => 'date',
+                        'format' => 'date_time_no_millis'
                     )
                 )
             )
@@ -173,8 +175,8 @@ class RequestDocmanDataFactoryTest extends TuleapTestCase {
 
     public function itBuildsCustomDateDataForItem() {
         $expected_data = array(
-            'property_15' => '2014-06-19',
-            'property_17' => '2014-06-19',
+            'property_15' => '2014-06-19T08:55:45+02:00',
+            'property_17' => '2014-06-19T08:55:49+02:00',
         );
 
         $this->assertEqual(
@@ -201,13 +203,16 @@ class RequestDocmanDataFactoryTest extends TuleapTestCase {
                         'type' => 'string'
                     ),
                     'create_date' => array(
-                        'type' => 'date'
+                        'type' => 'date',
+                        'format' => 'date_time_no_millis'
                     ),
                     'update_date' => array(
-                        'type' => 'date'
+                        'type' => 'date',
+                        'format' => 'date_time_no_millis'
                     ),
                     'obsolescence_date' => array(
-                        'type' => 'date'
+                        'type' => 'date',
+                        'format' => 'date_time_no_millis'
                     ),
                     'file' => array(
                         'type'   => 'attachment',
@@ -235,6 +240,7 @@ class RequestDocmanDataFactoryTest extends TuleapTestCase {
                             ),
                             'date_added' => array(
                                 'type' => 'date',
+                                'format' => 'date_time_no_millis'
                             ),
                             'comment' => array(
                                 'type' => 'string',
@@ -366,7 +372,7 @@ class RequestWikiDataFactoryTest extends TuleapTestCase {
             'id'                 => 1940,
             'group_id'           => 200,
             'page_name'          => 'wiki_page',
-            'last_modified_date' => '2014-07-11',
+            'last_modified_date' => '2014-07-11T08:47:29+02:00',
             'last_author'        => null,
             'last_summary'       => '',
             'content'            => '',
@@ -396,7 +402,7 @@ class RequestWikiDataFactoryTest extends TuleapTestCase {
             'id'                 => 1940,
             'group_id'           => 200,
             'page_name'          => 'wiki_page',
-            'last_modified_date' => '2014-07-11',
+            'last_modified_date' => '2014-07-11T08:47:29+02:00',
             'last_author'        => 123,
             'last_summary'       => 'sum',
             'content'            => 'cont',
@@ -419,7 +425,8 @@ class RequestWikiDataFactoryTest extends TuleapTestCase {
                         'type' => 'string'
                     ),
                     'last_modified_date' => array(
-                        'type' => 'date'
+                        'type' => 'date',
+                        'format' => 'date_time_no_millis'
                     ),
                     'last_author' => array(
                         'type' => 'long'

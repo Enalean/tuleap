@@ -148,12 +148,12 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
                 'group_id'                => 200,
                 'title'                   => 'Coin',
                 'description'             => 'Duck typing',
-                'create_date'             => '2014-06-19',
-                'update_date'             => '2014-06-19',
+                'create_date'             => '2014-06-19T08:55:45+02:00',
+                'update_date'             => '2014-06-19T08:55:49+02:00',
                 'permissions'             => array(3, 102),
                 'approval_table_comments' => array(),
                 'owner'                   => 123,
-                'obsolescence_date'       => '2014-06-19',
+                'obsolescence_date'       => '2014-06-19T08:55:59+02:00',
                 'property_1'              => 'val01',
                 'property_2'              => 'val02',
                 'file'                    => 'aW5kZXggbWUK'
@@ -182,8 +182,8 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
                 'group_id'                => 200,
                 'title'                   => 'Coin',
                 'description'             => 'Duck typing',
-                'create_date'             => '2014-06-19',
-                'update_date'             => '2014-06-19',
+                'create_date'             => '2014-06-19T08:55:45+02:00',
+                'update_date'             => '2014-06-19T08:55:49+02:00',
                 'permissions'             => array(3, 102),
                 'approval_table_comments' => array(),
                 'owner'                   => 123,
@@ -216,7 +216,7 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
             'file'        => 'aW5kZXggbWUK',
             'property_1'  => 'val01',
             'property_2'  => 'val02',
-            'property_6'  => '2014-06-19'
+            'property_6'  => '2014-06-19T08:55:59+02:00'
         );
 
         $expected = array(200, 101, $update_data);
@@ -285,13 +285,16 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
                         'type' => 'string'
                     ),
                     'create_date' => array(
-                        'type' => 'date'
+                        'type' => 'date',
+                        'format' => 'date_time_no_millis'
                     ),
                     'update_date' => array(
-                        'type' => 'date'
+                        'type' => 'date',
+                        'format' => 'date_time_no_millis'
                     ),
                     'obsolescence_date' => array(
-                        'type' => 'date'
+                        'type' => 'date',
+                        'format' => 'date_time_no_millis'
                     ),
                     'file' => array(
                         'type'   => 'attachment',
@@ -319,6 +322,7 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
                             ),
                             'date_added' => array(
                                 'type' => 'date',
+                                'format' => 'date_time_no_millis'
                             ),
                             'comment' => array(
                                 'type' => 'string',
@@ -346,7 +350,8 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
             '200' => array(
                 'properties' => array(
                     'property_6' => array(
-                        'type' => 'date'
+                        'type' => 'date',
+                        'format' => 'date_time_no_millis'
                     )
                 )
             )
