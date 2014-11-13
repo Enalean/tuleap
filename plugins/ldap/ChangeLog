@@ -1,3 +1,6 @@
+Version 3.61 - Tuleap 7.7
+    * request #7620 - Cannot add non LDAP user to project
+
 Version 3.60 - Tuleap 7.7
     * Fix request #7616: Fatal error while adding a user to the project
 
