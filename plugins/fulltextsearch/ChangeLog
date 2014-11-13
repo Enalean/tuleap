@@ -1,3 +1,6 @@
+Version 0.102 - Tuleap 7.7
+    * request #7621: Updated date facet (past 24h) doesn't seem to work
+
 Version 0.101 - Tuleap 7.7
     * request #7617 fatal error on system event fts queue
 
