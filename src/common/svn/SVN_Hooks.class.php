@@ -45,7 +45,7 @@ class SVN_Hooks {
      * @throws Exception
      */
     public function getUserByName($user_name) {
-        $user = $this->user_manager->getUserByUserName($user_name);
+        $user = $this->user_manager->getUserByIdentifier($user_name);
         if ($user && $user->isAlive()) {
             return $user;
         }
