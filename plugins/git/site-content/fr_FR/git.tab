@@ -323,3 +323,15 @@ plugin_git	mirror_no_repository	Aucun dépôt sur ce mirroir
 plugin_git	mirror_repo	Dépôt
 plugin_git	mirror_title	Liste des dépôts sur $1
 plugin_git	mirror_back	Retourner à la liste des mirroirs
+
+project_admin_utils	git_repo_create	Création d'un dépôt Git
+project_admin_utils	git_repo_delete	Suppression d'un dépôt Git
+project_admin_utils	git_repo_update	Mise à jour d'un dépôt Git
+project_admin_utils	git_repo_mirroring_update	Mise à jour des mirroirs d'un dépôt Git
+project_admin_utils	git_repo_to_gerrit	Migration d'un dépôt Git vers Gerrit
+project_admin_utils	git_create_template	Création d'un template Gerrit
+project_admin_utils	git_delete_template	Suppression d'un template Gerrit
+project_admin_utils	git_disconnect_gerrit_delete	Déconnexion de Gerrit et suppression du dépôt
+project_admin_utils	git_disconnect_gerrit_read_only	Déconnexion de Gerrit et lecture seule du dépôt
+project_admin_utils	git_admin_groups	Groupes administrateurs Git
+project_admin_utils	git_fork_repositories	Fork de dépôts Git

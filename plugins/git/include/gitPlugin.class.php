@@ -116,6 +116,8 @@ class GitPlugin extends Plugin {
 
         $this->_addHook('register_project_creation');
         $this->_addHook(Event::GET_PROJECTID_FROM_URL);
+
+        $this->_addHook('fill_project_history_sub_events');
     }
 
     public function getServiceShortname() {
@@ -1272,5 +1274,22 @@ class GitPlugin extends Plugin {
      */
     function codendiDaily() {
         $this->getRepositoryManager()->purgeArchivedRepositories($this->getLogger());
+    }
+
+    public function fill_project_history_sub_events($params) {
+        array_push(
+            $params['subEvents']['event_others'],
+            'git_repo_create',
+            'git_repo_delete',
+            'git_repo_update',
+            'git_repo_mirroring_update',
+            'git_repo_to_gerrit',
+            'git_create_template',
+            'git_delete_template',
+            'git_disconnect_gerrit_delete',
+            'git_disconnect_gerrit_read_only',
+            'git_admin_groups',
+            'git_fork_repositories'
+        );
     }
 }
