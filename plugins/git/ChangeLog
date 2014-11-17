@@ -1,3 +1,6 @@
+Version 3.137 - Tuleap 7.8
+    * story #7525: Move current git admin categories into dedicated tabs
+
 Version 3.136 - Tuleap 7.8
     * story #7598 Add git actions in project history
 
