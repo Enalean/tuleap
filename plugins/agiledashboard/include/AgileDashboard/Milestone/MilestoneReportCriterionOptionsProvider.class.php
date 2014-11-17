@@ -23,6 +23,9 @@
  */
 class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider extends DataAccessObject {
 
+    const TOP_BACKLOG_IDENTIFIER   = "TOP_BACKLOG";
+    const TOP_BACKLOG_OPTION_ENTRY = "Top Backlog";
+
     /** @var AgileDashboard_Planning_NearestPlanningTrackerProvider */
     private $nearest_planning_tracker_provider;
 
@@ -68,6 +71,9 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider extends D
         $hp = Codendi_HTMLPurifier::instance();
         $options = array();
         $current_milestone = array();
+
+        $options[] = $this->addTopBacklogPlanningEntry($selected_milestone_id);
+
         foreach ($planning_trackers_ids as $id) {
             $current_milestone[$id] = null;
         }
@@ -76,26 +82,40 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider extends D
             foreach ($planning_trackers_ids as $index => $id) {
                 $milestone_id    = $row['m'. $id .'_id'];
                 $milestone_title = $row['m'. $id .'_title'];
+
                 if (! $milestone_id) {
                     continue;
                 }
+
                 if ($current_milestone[$id] === $milestone_id) {
                     continue;
                 }
 
-                $selected = '';
-                if ($milestone_id == $selected_milestone_id) {
-                    $selected = 'selected="selected"';
-                }
-                $option  = '<option value="'. $milestone_id .'" '. $selected .'>';
-                $option .= str_pad('', $index, '-') .' '. $hp->purify($milestone_title);
-                $option .= '</option>';
-                $options[] = $option;
+                $content                = str_pad('', $index, '-') .' '. $hp->purify($milestone_title);
+                $options[]              = $this->getOptionForSelectBox($selected_milestone_id, $milestone_id, $content);
                 $current_milestone[$id] = $milestone_id;
             }
         }
 
         return $options;
+    }
+
+    private function getOptionForSelectBox($selected_milestone_id, $milestone_id, $content) {
+        $selected = '';
+
+        if ($selected_milestone_id == $milestone_id) {
+            $selected = 'selected="selected"';
+        }
+
+        $option  = '<option value="'.$milestone_id.'" '. $selected .'>';
+        $option .= $content;
+        $option .= '</option>';
+
+        return $option;
+    }
+
+    private function addTopBacklogPlanningEntry($selected_milestone_id) {
+        return $this->getOptionForSelectBox($selected_milestone_id, self::TOP_BACKLOG_IDENTIFIER, self::TOP_BACKLOG_OPTION_ENTRY);
     }
 
     /** @return Tracker[] */

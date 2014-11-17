@@ -26,13 +26,16 @@ class AgileDashboard_FieldPriorityAugmenter {
     /** @var Planning_MilestoneFactory */
     private $milestone_factory;
 
-    public function __construct(AgileDashboard_SequenceIdManager $sequence_id_manager, Planning_MilestoneFactory $milestone_factory) {
+    public function __construct(
+        AgileDashboard_SequenceIdManager $sequence_id_manager,
+        Planning_MilestoneFactory $milestone_factory
+    ) {
         $this->sequence_id_manager = $sequence_id_manager;
         $this->milestone_factory   = $milestone_factory;
     }
 
-    public function getAugmentedDataForFieldPriority(PFUser $user, $additional_criteria, $artifact_id) {
-        $sequence_id = $this->getSequenceIdForFieldPriority($user, $additional_criteria, $artifact_id);
+    public function getAugmentedDataForFieldPriority(PFUser $user, Project $project, $additional_criteria, $artifact_id) {
+        $sequence_id = $this->getSequenceIdForFieldPriority($user, $project, $additional_criteria, $artifact_id);
 
         if (! $sequence_id) {
             return;
@@ -41,22 +44,16 @@ class AgileDashboard_FieldPriorityAugmenter {
         return $sequence_id;
     }
 
-    private function getSequenceIdForFieldPriority(PFUser $user, $additional_criteria, $artifact_id) {
-        $milestone = $this->getMilestoneFromCriteria($user, $additional_criteria);
+    private function getSequenceIdForFieldPriority(PFUser $user, Project $project, $additional_criteria, $artifact_id) {
+        $milestone = $this->getMilestoneFromCriteria($user, $project, $additional_criteria);
 
         if ($milestone) {
             return $this->sequence_id_manager->getSequenceId($user, $milestone, $artifact_id);
         }
     }
 
-    private function getMilestoneFromCriteria(PFUser $user, $additional_criteria) {
-        $milestone_id_provider = new AgileDashboard_Milestone_SelectedMilestoneIdProvider($additional_criteria);
-        $milestone_id          = $milestone_id_provider->getMilestoneId();
-        $milestone             = $this->milestone_factory->getBareMilestoneByArtifactId(
-            $user,
-            $milestone_id
-        );
-
-        return $milestone;
+    private function getMilestoneFromCriteria(PFUser $user, Project $project, $additional_criteria) {
+        $milestone_provider = new AgileDashboard_Milestone_SelectedMilestoneProvider($additional_criteria, $this->milestone_factory, $user, $project);
+        return $milestone_provider->getMilestone();
     }
 }

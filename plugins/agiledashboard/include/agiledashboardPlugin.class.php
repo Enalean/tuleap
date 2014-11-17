@@ -548,7 +548,7 @@ class AgileDashboardPlugin extends Plugin {
 
     /**
      * Augment $params['semantics'] with names of AgileDashboard semantics
-     * 
+     *
      * @see TRACKER_EVENT_SOAP_SEMANTICS
      */
     public function tracker_event_soap_semantics(&$params) {
@@ -752,6 +752,7 @@ class AgileDashboardPlugin extends Plugin {
 
         $params['result'] = $this->getFieldPriorityAugmenter()->getAugmentedDataForFieldPriority(
             UserManager::instance()->getCurrentUser(),
+            $params['field']->getTracker()->getProject(),
             $params['additional_criteria'],
             $params['artifact_id']
         );
@@ -771,11 +772,23 @@ class AgileDashboardPlugin extends Plugin {
     private function getSequenceIdManager() {
         if (! $this->sequence_id_manager) {
             $this->sequence_id_manager = new AgileDashboard_SequenceIdManager(
-                    $this->getBacklogStrategyFactory()
+                    $this->getBacklogStrategyFactory(),
+                    $this->getBacklogItemCollectionFactory()
             );
         }
 
         return $this->sequence_id_manager;
+    }
+
+    private function getBacklogItemCollectionFactory() {
+        return new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
+            new AgileDashboard_BacklogItemDao(),
+            $this->getArtifactFactory(),
+            Tracker_FormElementFactory::instance(),
+            $this->getMilestoneFactory(),
+            $this->getPlanningFactory(),
+            new AgileDashboard_Milestone_Backlog_BacklogItemBuilder()
+        );
     }
 }
 
