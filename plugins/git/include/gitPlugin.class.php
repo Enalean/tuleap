@@ -69,9 +69,11 @@ class GitPlugin extends Plugin {
         $this->_addHook('plugin_statistics_color',                         'plugin_statistics_color',                      false);
 
         $this->_addHook(Event::LIST_SSH_KEYS,                              'getRemoteServersForUser',                      false);
-        $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
         $this->_addHook(Event::DUMP_SSH_KEYS);
         $this->_addHook(Event::PROCCESS_SYSTEM_CHECK);
+        $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
+        $this->_addHook(Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES);
+        $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE);
 
         $this->_addHook('permission_get_name',                             'permission_get_name',                          false);
         $this->_addHook('permission_get_object_type',                      'permission_get_object_type',                   false);
@@ -174,8 +176,25 @@ class GitPlugin extends Plugin {
         include $GLOBALS['Language']->getContent('script_locale', null, 'git');
     }
 
-    public function system_event_get_types_for_default_queue($params) {
-        $params['types'] = array_merge($params['types'], $this->getGitSystemEventManager()->getTypes());
+    public function system_event_get_types_for_default_queue(array &$params) {
+        $params['types'] = array_merge($params['types'], $this->getGitSystemEventManager()->getTypesForDefaultQueue());
+    }
+
+    /** @see Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES */
+    public function system_event_get_custom_queues(array &$params) {
+        $params['queues'][Git_SystemEventQueue::NAME] = new Git_SystemEventQueue();
+    }
+
+    /** @see Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE */
+    public function system_event_get_types_for_custom_queue(array &$params) {
+        if ($params['queue'] !== Git_SystemEventQueue::NAME) {
+            return;
+        }
+
+        $params['types'] = array_merge(
+            $params['types'],
+            $this->getGitSystemEventManager()->getTypes()
+        );
     }
 
     /**
@@ -201,8 +220,16 @@ class GitPlugin extends Plugin {
                     $this->getLogger(),
                 );
                 break;
-            case SystemEvent_GIT_REPO_ACCESS::NAME:
-                $params['class'] = 'SystemEvent_GIT_REPO_ACCESS';
+            case SystemEvent_GIT_LEGACY_REPO_DELETE::NAME:
+                $params['class'] = 'SystemEvent_GIT_LEGACY_REPO_DELETE';
+                $params['dependencies'] = array(
+                    $this->getRepositoryFactory(),
+                    $this->getManifestManager(),
+                    $this->getLogger(),
+                );
+                break;
+            case SystemEvent_GIT_LEGACY_REPO_ACCESS::NAME:
+                $params['class'] = 'SystemEvent_GIT_LEGACY_REPO_ACCESS';
                 break;
             case SystemEvent_GIT_GERRIT_MIGRATION::NAME:
                 $params['class'] = 'SystemEvent_GIT_GERRIT_MIGRATION';
@@ -1077,7 +1104,7 @@ class GitPlugin extends Plugin {
     }
 
     public function getGitSystemEventManager() {
-        return new Git_SystemEventManager(SystemEventManager::instance());
+        return new Git_SystemEventManager(SystemEventManager::instance(), $this->getRepositoryFactory());
     }
 
     private function getRepositoryManager() {
