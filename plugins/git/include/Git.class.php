@@ -319,6 +319,7 @@ class Git extends PluginController {
                                             'admin',
                                             'admin-git-admins',
                                             'admin-gerrit-templates',
+                                            'admin-mass-update',
                                             'fetch_git_config',
                                             'fetch_git_template',
                                             'fork_repositories_permissions',
@@ -549,6 +550,10 @@ class Git extends PluginController {
                     return false;
                 }
 
+                break;
+            case 'admin-mass-update':
+                $this->addAction('getProjectRepositoryList', array($this->groupId));
+                $this->addView('adminMassUpdateView');
                 break;
             case 'fetch_git_config':
                 $project = $this->projectManager->getProject($this->groupId);

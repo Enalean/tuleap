@@ -396,6 +396,21 @@ class GitViews extends PluginViews {
         echo $renderer->renderToString('admin', $presenter);
     }
 
+    protected function adminMassUpdateView() {
+        $params = $this->getData();
+        $this->_getBreadCrumb();
+
+        $repository_list = $this->getGitRepositoryFactory()->getAllRepositories($this->project);
+        $presenter       = new GitPresenters_AdminMassUpdatePresenter(
+            $this->groupId,
+            $repository_list
+        );
+
+        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
+
+        echo $renderer->renderToString('admin', $presenter);
+    }
+
     /**
      * Creates form to set permissions when fork repositories is performed
      *
@@ -411,15 +426,16 @@ class GitViews extends PluginViews {
             $groupId = (int)$this->groupId;
         }
         $repositories = explode(',', $params['repos']);
-        $pm           = ProjectManager::instance();
-        $dao          = new GitDao();
-        $repoFactory  = new GitRepositoryFactory($dao, $pm);
-        $repository   = $repoFactory->getRepositoryById($repositories[0]);
+        $repository   = $this->getGitRepositoryFactory()->getRepositoryById($repositories[0]);
         if (!empty($repository)) {
             $forkPermissionsManager = new GitForkPermissionsManager($repository);
             $userName               = $this->user->getName();
             echo $forkPermissionsManager->displayRepositoriesPermissionsForm($params, $groupId, $userName);
         }
+    }
+
+    private function getGitRepositoryFactory() {
+        return new GitRepositoryFactory(new GitDao(), ProjectManager::instance());
     }
 
     private function fetchCopyToAnotherProject() {

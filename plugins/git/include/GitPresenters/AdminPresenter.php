@@ -26,6 +26,8 @@ class GitPresenters_AdminPresenter {
 
     public $manage_git_admins = false;
 
+    public $manage_mass_update = false;
+
 
     public function __construct($project_id) {
         $this->project_id = $project_id;
@@ -41,5 +43,9 @@ class GitPresenters_AdminPresenter {
 
     public function tab_git_admins() {
         return $GLOBALS['Language']->getText('plugin_git', 'view_admin_tab_git_admins');
+    }
+
+    public function tab_mass_update() {
+        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_tab_mass_update');
     }
 }

@@ -258,6 +258,7 @@ plugin_git	gerrit_readonly_ongoing	La mise en lecture-seule du projet sous Gerri
 plugin_git	view_admin_title	Administration de Git
 plugin_git	view_admin_tab_gerrit_templates	Modèles Gerrit
 plugin_git	view_admin_tab_git_admins	Administrateurs Git
+plugin_git	view_admin_tab_mass_update	Mise à jour massive des dépôts
 plugin_git	view_admin_repos_list	Configurations
 plugin_git	view_admin_templates_list	Modèles
 plugin_git	view_admin_edit_configuration_label	Vous pouvez éditer le modèle. La variable <b>%projectname%</b> est mise à votre disposition; elle sera remplaçée par le nom du projet au moment de la migration:
@@ -278,6 +279,9 @@ plugin_git	view_admin_template_invalid_template_id	Modèle ID Invalide
 plugin_git	view_admin_template_cannot_update	Impossible de modifier le modèle
 plugin_git	view_admin_template_cannot_create	Impossible de créer le modèle
 plugin_git	view_admin_no_gerrit_server	Il n'y a pas de <em><a href="$1">serveur gerrit</a></em> configuré sur cette plateforme! Veuillez contacter l'administrateur du site.
+plugin_git	view_admin_mass_update_title	Mise à jour massive des dépôts
+plugin_git	view_admin_mass_update_select_repositories	Sélectionnez les dépôts que vous souhaitez mettre à jour :
+plugin_git	view_admin_mass_update_repository_list_name	Nom du dépôt
 
 plugin_git	view_admin_git_admins	Administrateurs Git
 plugin_git	view_admin_git_admins_description	Cette section permet de sélectionner les administrateurs du service Git, en plus des administrateurs du projet.
