@@ -259,6 +259,8 @@ plugin_git	gerrit_deletion_ongoing	The deletion of the project under Gerrit is o
 plugin_git	gerrit_readonly_ongoing	The setting of the project under Gerrit to read-only is on going, please wait for a few minutes.
 
 plugin_git	view_admin_title	Git Administration
+plugin_git	view_admin_tab_gerrit_templates	Gerrit Templates
+plugin_git	view_admin_tab_git_admins	Git administrators
 plugin_git	view_admin_repos_list	Configurations
 plugin_git	view_admin_templates_list	Templates
 plugin_git	view_admin_edit_configuration_label	You can edit the template. The <b>%projectname%</b> variable is available; it will be replaced by the project's name during the migration process:

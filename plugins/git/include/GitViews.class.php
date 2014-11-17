@@ -360,7 +360,22 @@ class GitViews extends PluginViews {
         echo '<br />';
     }
 
-    protected function adminView() {
+    protected function adminGitAdminsView() {
+        $params = $this->getData();
+        $this->_getBreadCrumb();
+
+        $presenter = new GitPresenters_AdminGitAdminsPresenter(
+            $this->groupId,
+            $this->ugroup_manager->getStaticUGroups($this->project),
+            $this->git_permissions_manager->getCurrentGitAdminUgroups($this->project->getId())
+        );
+
+        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
+
+        echo $renderer->renderToString('admin', $presenter);
+    }
+
+    protected function adminGerritTemplatesView() {
         $params = $this->getData();
         $this->_getBreadCrumb();
 
@@ -368,17 +383,15 @@ class GitViews extends PluginViews {
         $templates_list  = (isset($params['templates_list'])) ? $params['templates_list'] : array();
         $parent_templates_list  = (isset($params['parent_templates_list'])) ? $params['parent_templates_list'] : array();
 
-        $presenter = new GitPresenters_AdminPresenter(
+        $presenter = new GitPresenters_AdminGerritTemplatesPresenter(
             $repository_list,
             $templates_list,
             $parent_templates_list,
             $this->groupId,
-            $params['has_gerrit_servers_set_up'],
-            $this->ugroup_manager->getStaticUGroups($this->project),
-            $this->git_permissions_manager->getCurrentGitAdminUgroups($this->project->getId())
+            $params['has_gerrit_servers_set_up']
         );
 
-        $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
+        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
 
         echo $renderer->renderToString('admin', $presenter);
     }

@@ -256,6 +256,8 @@ plugin_git	gerrit_deletion_ongoing	La supression du projet sous Gerrit est en co
 plugin_git	gerrit_readonly_ongoing	La mise en lecture-seule du projet sous Gerrit est en cours, veuillez patienter quelques minutes.
 
 plugin_git	view_admin_title	Administration de Git
+plugin_git	view_admin_tab_gerrit_templates	Modèles Gerrit
+plugin_git	view_admin_tab_git_admins	Administrateurs Git
 plugin_git	view_admin_repos_list	Configurations
 plugin_git	view_admin_templates_list	Modèles
 plugin_git	view_admin_edit_configuration_label	Vous pouvez éditer le modèle. La variable <b>%projectname%</b> est mise à votre disposition; elle sera remplaçée par le nom du projet au moment de la migration:
