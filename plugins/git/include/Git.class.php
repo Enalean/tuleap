@@ -317,7 +317,8 @@ class Git extends PluginController {
                                             'confirm_private',
                                             'fork_repositories',
                                             'admin',
-                                            'admin-permissions',
+                                            'admin-git-admins',
+                                            'admin-gerrit-templates',
                                             'fetch_git_config',
                                             'fetch_git_template',
                                             'fork_repositories_permissions',
@@ -497,27 +498,28 @@ class Git extends PluginController {
                 $this->addAction('getProjectRepositoryList', array($this->groupId));
                 $this->addView('forkRepositories');
                 break;
-            case 'admin-permissions':
-                $valid = new Valid_Numeric(GitPresenters_AdminPresenter::GIT_ADMIN_SELECTBOX_NAME);
-                $project = $this->projectManager->getProject($this->groupId);
+            case 'admin-git-admins':
+                if ($this->request->get('submit')) {
+                    $valid = new Valid_Numeric(GitPresenters_AdminGitAdminsPresenter::GIT_ADMIN_SELECTBOX_NAME);
+                    $project = $this->projectManager->getProject($this->groupId);
 
-                if ($this->request->validArray($valid)) {
-                    $select_project_ids = $this->request->get(GitPresenters_AdminPresenter::GIT_ADMIN_SELECTBOX_NAME);
+                    if ($this->request->validArray($valid)) {
+                        $select_project_ids = $this->request->get(GitPresenters_AdminGitAdminsPresenter::GIT_ADMIN_SELECTBOX_NAME);
 
-                    if ($select_project_ids) {
-
+                        if ($select_project_ids) {
                             $this->addAction('updateGitAdminGroups', array($project, $user, $select_project_ids));
+                        } else {
+                            $this->addError($this->getText('no_data_retrieved'));
+                        }
                     } else {
-                        $this->addError($this->getText('no_data_retrieved'));
+                        $this->addError($this->getText('not_valid_request'));
                     }
-                } else {
-                    $this->addError($this->getText('not_valid_request'));
                 }
 
-                $this->addAction('generateGerritRepositoryAndTemplateList', array($project, $user));
-                $this->addView('adminView');
+                $this->addView('adminGitAdminsView');
                 break;
             case 'admin':
+            case 'admin-gerrit-templates':
                 $project = $this->projectManager->getProject($this->groupId);
 
                 if ($this->request->get('save')) {
@@ -540,12 +542,13 @@ class Git extends PluginController {
 
                 if ($this->permissions_manager->userIsGitAdmin($user, $project)) {
                     $this->addAction('generateGerritRepositoryAndTemplateList', array($project, $user));
-                    $this->addView('adminView');
+                    $this->addView('adminGerritTemplatesView');
                 } else {
                     $this->addError($this->getText('controller_access_denied'));
                     $this->redirect('/plugins/git/?action=index&group_id='. $this->groupId);
                     return false;
                 }
+
                 break;
             case 'fetch_git_config':
                 $project = $this->projectManager->getProject($this->groupId);
