@@ -1,3 +1,6 @@
+Version 3.136 - Tuleap 7.8
+    * story #7598 Add git actions in project history
+
 Version 3.135 - Tuleap 7.7
     * request #7572 Backup of gitolite repositories doesn't manage 'in path' directory
 
