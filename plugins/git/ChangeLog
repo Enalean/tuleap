@@ -1,3 +1,6 @@
+Version 3.138 - Tuleap 7.8
+    * story #7599 have a dedicate queue for git events
+
 Version 3.137 - Tuleap 7.8
     * story #7525: Move current git admin categories into dedicated tabs
 
