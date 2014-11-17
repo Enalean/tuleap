@@ -22,11 +22,11 @@ require_once('common/backend/Backend.class.php');
 require_once('common/user/UserManager.class.php');
 
 
-class SystemEvent_GIT_REPO_ACCESS  extends SystemEvent {
-    const NAME = 'GIT_REPO_ACCESS';
+class SystemEvent_GIT_LEGACY_REPO_ACCESS  extends SystemEvent {
+    const NAME = 'GIT_LEGACY_REPO_ACCESS';
 
     public function process() {
-        $parameters  = $this->getParametersAsArray();                
+        $parameters  = $this->getParametersAsArray();
         //repo id
         $repositoryId = '';
         if ( !empty($parameters[0]) ) {

@@ -307,7 +307,16 @@ class GitDao extends DataAccessObject {
                   AND ". self::REPOSITORY_BACKEND_TYPE ." = $type_gitolite";
         return $this->retrieve($sql);
     }
-    
+
+    public function hasGitShellRepositories() {
+        $backend_type = $this->da->quoteSmart(self::BACKEND_GITSHELL);
+        $sql = "SELECT NULL FROM $this->tableName
+                WHERE ".self::REPOSITORY_BACKEND_TYPE." = $backend_type
+                AND ". self::REPOSITORY_DELETION_DATE ." = '0000-00-00 00:00:00'
+                LIMIT 1";
+        return $this->retrieve($sql)->count() != 0;
+    }
+
     /**
      * This function initialize a GitRepository object with its database value
      * @param GitRepository $repository

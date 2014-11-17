@@ -620,6 +620,8 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__install} plugins/git/bin/gl-membership.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} plugins/git/bin/git-post-receive.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} plugins/git/bin/gitolite-suexec-wrapper.sh $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+%{__install} plugins/git/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_git
+%{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_git
 
 # Plugin archivedeleteditems
 %{__install} plugins/archivedeleteditems/bin/archive-deleted-items.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
@@ -1030,6 +1032,7 @@ fi
 %attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gl-membership.pl
 %attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/git-post-receive.pl
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gitolite-suexec-wrapper.sh
+%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_git
 
 %files plugin-docmanwatermark
 %defattr(-,%{APP_USER},%{APP_USER},-)

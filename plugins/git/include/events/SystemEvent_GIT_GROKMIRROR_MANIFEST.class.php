@@ -48,7 +48,7 @@ class SystemEvent_GIT_GROKMIRROR_MANIFEST extends SystemEvent {
             return false;
         }
 
-        $this->manifest_manager->triggerUpdateByRoot($repository);
+        $this->manifest_manager->triggerUpdate($repository);
 
         $this->done();
     }

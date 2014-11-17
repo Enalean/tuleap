@@ -37,7 +37,7 @@ class Git_SystemEventManagerTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->system_event_manager = mock('SystemEventManager');
-        $this->git_system_event_manager = new Git_SystemEventManager($this->system_event_manager);
+        $this->git_system_event_manager = new Git_SystemEventManager($this->system_event_manager, mock('GitRepositoryFactory'));
 
         $this->gitolite_repository = mock('GitRepository');
         stub($this->gitolite_repository)->getId()->returns(54);
@@ -88,7 +88,7 @@ class Git_SystemEventManagerTest extends TuleapTestCase {
         stub($repository)->getProjectId()->returns(116);
         stub($repository)->getBackend()->returns(mock('GitBackend'));
         expect($this->system_event_manager)->createEvent(
-            SystemEvent_GIT_REPO_DELETE::NAME,
+            SystemEvent_GIT_LEGACY_REPO_DELETE::NAME,
             "116".SystemEvent::PARAMETER_SEPARATOR."54",
             '*',
             SystemEvent::OWNER_ROOT
@@ -115,9 +115,10 @@ class Git_SystemEventManagerTest extends TuleapTestCase {
         $repository = stub('GitRepository')->getId()->returns(54);
 
         expect($this->system_event_manager)->createEvent(
-            SystemEvent_GIT_REPO_ACCESS::NAME,
+            SystemEvent_GIT_LEGACY_REPO_ACCESS::NAME,
             "54" . SystemEvent::PARAMETER_SEPARATOR . "private",
-            SystemEvent::PRIORITY_HIGH
+            SystemEvent::PRIORITY_HIGH,
+            SystemEvent::OWNER_ROOT
         )->once();
 
         $this->git_system_event_manager->queueGitShellAccess($repository, 'private');

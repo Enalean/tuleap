@@ -250,6 +250,8 @@ class GitRepositoryFactory {
         }
         return $archived_repositories;
     }
-}
 
-?>
+    public function hasGitShellRepositories() {
+        return $this->dao->hasGitShellRepositories();
+    }
+}
