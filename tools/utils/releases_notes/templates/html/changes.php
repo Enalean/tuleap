@@ -1,8 +1,8 @@
-<? if ($section->changes): ?>
+<?php if ($section->changes): ?>
     <ul>
-        <? foreach ($section->changes as $change): ?>
+        <?php foreach ($section->changes as $change): ?>
         <li><?= nl2br($change) ?></li>
-        <? endforeach; ?>
+        <?php endforeach; ?>
     </ul>
-<? endif; ?>
+<?php endif; ?>
 

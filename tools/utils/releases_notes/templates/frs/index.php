@@ -1,18 +1,18 @@
 Tuleap <?= $release->version ?> (<?= $release->date ?>)
 ========================================
 
-<? foreach ($release->sections as $section): ?>
+<?php foreach ($release->sections as $section): ?>
 <?= $section->label ?>
 
 -----------------------
 
-<? include 'changes.php'; ?>
+<?php include 'changes.php'; ?>
 
-<? foreach ($section->sections as $section): ?>
+<?php foreach ($section->sections as $section): ?>
 ### <?= $section->label ?> <?= $section->version ?>
 
 
-<? include 'changes.php'; ?>
+<?php include 'changes.php'; ?>
 
-<? endforeach; ?>
-<? endforeach; ?>
+<?php endforeach; ?>
+<?php endforeach; ?>

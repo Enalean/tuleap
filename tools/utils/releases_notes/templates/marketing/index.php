@@ -52,7 +52,7 @@ foreach ($release->sections as $section) {
                                     <tr>
                                         <td align="left" style="color:black; font-size:12px; font-family:Arial;">Thanks to the contributors...</td>
                                     </tr>
-                                    <? foreach ($sections as $section): ?>
+                                    <?php foreach ($sections as $section): ?>
                                         <tr>
                                             <td>
                                                 <br>
@@ -69,8 +69,8 @@ foreach ($release->sections as $section) {
                                                 </table>
                                             </td>
                                         </tr>
-                                        <? include 'changes.php'; ?>
-                                        <? foreach ($section->sections as $section): ?>
+                                        <?php include 'changes.php'; ?>
+                                        <?php foreach ($section->sections as $section): ?>
                                             <tr>
                                                 <td>
                                                     <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -79,12 +79,12 @@ foreach ($release->sections as $section) {
                                                                 <div style="font-family: Arial; font-size:14px; line-height:14px; color:grey; font-weight:bold; text-transform:uppercase; text-align:left; "><?= $section->label ?></div><br />
                                                             </td>
                                                         </tr>
-                                                        <? include 'changes.php'; ?>
+                                                        <?php include 'changes.php'; ?>
                                                     </table>
                                                 </td>
                                             </tr>
-                                        <? endforeach; ?>
-                                    <? endforeach; ?>
+                                        <?php endforeach; ?>
+                                    <?php endforeach; ?>
                                 </table>
                             </td>
                         </tr>
