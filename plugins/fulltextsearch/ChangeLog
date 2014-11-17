@@ -1,3 +1,6 @@
+Version 0.103 - Tuleap 7.8
+    * request #7613: FTS: timeout issue while re-indexing projects
+
 Version 0.102 - Tuleap 7.7
     * request #7621: Updated date facet (past 24h) doesn't seem to work
 
