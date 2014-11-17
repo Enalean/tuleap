@@ -68,7 +68,8 @@ class GitActionsTest extends TuleapTestCase {
                 mock('GitPermissionsManager'),
                 $url_manager,
                 mock('Logger'),
-                mock('Git_Backend_Gitolite')
+                mock('Git_Backend_Gitolite'),
+                mock('ProjectHistoryDao')
             )
         );
     }
@@ -475,7 +476,8 @@ class GitActions_Delete_Tests extends TuleapTestCase {
             mock('GitPermissionsManager'),
             $url_manager,
             mock('Logger'),
-            mock('Git_Backend_Gitolite')
+            mock('Git_Backend_Gitolite'),
+            mock('ProjectHistoryDao')
         );
     }
 
@@ -530,7 +532,8 @@ class GitActions_ForkTests extends TuleapTestCase {
             mock('GitPermissionsManager'),
             $url_manager,
             mock('Logger'),
-            mock('Git_Backend_Gitolite')
+            mock('Git_Backend_Gitolite'),
+            mock('ProjectHistoryDao')
         );
     }
 
@@ -660,7 +663,8 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
             mock('GitPermissionsManager'),
             $url_manager,
             mock('Logger'),
-            mock('Git_Backend_Gitolite')
+            mock('Git_Backend_Gitolite'),
+            mock('ProjectHistoryDao')
         );
     }
 
@@ -724,7 +728,8 @@ class GitActions_disconnectFromGerritTest extends TuleapTestCase {
             mock('GitPermissionsManager'),
             $url_manager,
             mock('Logger'),
-            mock('Git_Backend_Gitolite')
+            mock('Git_Backend_Gitolite'),
+            mock('ProjectHistoryDao')
         );
     }
 
@@ -807,7 +812,8 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
             $this->git_permissions_manager,
             $url_manager,
             mock('Logger'),
-            mock('Git_Backend_Gitolite')
+            mock('Git_Backend_Gitolite'),
+            mock('ProjectHistoryDao')
         );
 
     }
