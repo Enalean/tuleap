@@ -574,15 +574,10 @@ class fulltextsearchPlugin extends Plugin {
      * @return ElasticSearch_IndexClientFacade
      */
     private function getIndexClient($index) {
-        $factory         = $this->getClientFactory();
-        $client_path     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_path');
-        $server_host     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_host');
-        $server_port     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_port');
-        $server_user     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_user');
-        $server_password = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_password');
-        $type            = '';
+        $factory = $this->getClientFactory();
+        $type    = '';
 
-        return $factory->buildIndexClient($client_path, $server_host, $server_port, $server_user, $server_password, $index, $type);
+        return $factory->buildIndexClient($index, $type);
     }
 
     /**
@@ -593,29 +588,38 @@ class fulltextsearchPlugin extends Plugin {
      * @return ElasticSearch_SearchClientFacade
      */
     private function getSearchClient($index, $type = '') {
-        $factory         = $this->getClientFactory();
-        $client_path     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_path');
-        $server_host     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_host');
-        $server_port     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_port');
-        $server_user     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_user');
-        $server_password = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_password');
-        return $factory->buildSearchClient($client_path, $server_host, $server_port, $server_user, $server_password, $this->getProjectManager(), $index, $type);
+        $factory = $this->getClientFactory();
+
+        return $factory->buildSearchClient($index, $type);
     }
 
     private function getSearchAdminClient() {
-        $factory         = $this->getClientFactory();
-        $client_path     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_path');
-        $server_host     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_host');
-        $server_port     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_port');
-        $server_user     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_user');
-        $server_password = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_password');
-        return $factory->buildSearchAdminClient($client_path, $server_host, $server_port, $server_user, $server_password, $this->getProjectManager());
+        $factory = $this->getClientFactory();
+
+        return $factory->buildSearchAdminClient();
     }
 
     private function getClientFactory() {
-        return new ElasticSearch_ClientFactory();
+        return new ElasticSearch_ClientFactory(
+            $this->getElasticSearchConfig(),
+            $this->getProjectManager()
+        );
     }
 
+    private function getElasticSearchConfig() {
+        return new ElasticSearch_ClientConfig(
+            $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_path'),
+            $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_host'),
+            $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_port'),
+            $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_user'),
+            $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_password'),
+            $this->getPluginInfo()->getPropertyValueForName('max_seconds_for_request')
+        );
+    }
+
+    /**
+     * @return FulltextsearchPluginInfo
+     */
     public function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'FulltextsearchPluginInfo')) {
             $this->pluginInfo = new FulltextsearchPluginInfo($this);

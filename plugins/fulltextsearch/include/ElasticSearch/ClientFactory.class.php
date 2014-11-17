@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 -2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,44 +24,50 @@
 class ElasticSearch_ClientFactory {
 
     /**
+     * @var ElasticSearch_ClientConfig
+     */
+    private $client_config;
+
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
+
+    public function __construct(ElasticSearch_ClientConfig $client_config, ProjectManager $project_manager) {
+        $this->client_config  = $client_config;
+        $this->project_manager = $project_manager;
+    }
+
+    /**
      * Build instance of ClientFacade
      *
-     * @param String $path_to_elasticsearch_client /usr/share/elasticsearch
-     * @param String $server_host                  The host of the search server
-     * @param String $server_port                  The port of the search server
-     * @param String $server_user                  The user of the search server (Basic Auth)
-     * @param String $server_password              The pass of the search server (Basic Auth)
-     * @param String $index                        Type of the items to search
+     * @param String $index     Type of the items to search
+     * @param String $type      @see elasticsearch- an identifier of a set of items
      *
      * @return ElasticSearch_ClientFacade
      */
-    public function buildIndexClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, $index, $type) {
-        $client = $this->getClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, $index, $type);
+    public function buildIndexClient($index, $type) {
+        $client = $this->getClient($index, $type);
         return new ElasticSearch_IndexClientFacade($client);
     }
 
     /**
      * Build instance of SearchClientFacade
      *
-     * @param string         $path_to_elasticsearch_client /usr/share/elasticsearch
-     * @param string         $server_host                  the host of the search server
-     * @param string         $server_port                  the port of the search server
-     * @param string         $server_user                  the user of the search server (Basic Auth)
-     * @param string         $server_password              the pass of the search server (Basic Auth)
-     * @param ProjectManager $project_manager              The project manager
-     * @param string         $index                        Type of the items to search
+     * @param String $index     Type of the items to search
+     * @param String $type      @see elasticsearch- an identifier of a set of items
      *
      * @return ElasticSearch_ClientFacade
      */
-    public function buildSearchClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, ProjectManager $project_manager, $index, $type) {
-        $client = $this->getClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, $index, $type);
+    public function buildSearchClient($index, $type) {
+        $client = $this->getClient($index, $type);
         return new ElasticSearch_SearchClientFacade(
             $client,
             $index,
-            $project_manager,
+            $this->project_manager,
             UserManager::instance(),
             new ElasticSearch_1_2_ResultFactory(
-                $project_manager,
+                $this->project_manager,
                 new URLVerification(),
                 UserManager::instance()
             )
@@ -71,41 +77,41 @@ class ElasticSearch_ClientFactory {
     /**
      * Build instance of SearchAdminClientFacade
      *
-     * @param string         $path_to_elasticsearch_client /usr/share/elasticsearch
-     * @param string         $server_host                  the host of the search server
-     * @param string         $server_port                  the port of the search server
-     * @param string         $server_user                  the user of the search server (Basic Auth)
-     * @param string         $server_password              the pass of the search server (Basic Auth)
-     * @param ProjectManager $project_manager              The project manager
-     *
      * @return ElasticSearch_ClientFacade
      */
-    public function buildSearchAdminClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, ProjectManager $project_manager) {
+    public function buildSearchAdminClient() {
         $index  = fulltextsearchPlugin::SEARCH_DEFAULT;
         $type   = '';
-        $client = $this->getClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, $index, $type);
+        $client = $this->getClient($index, $type);
         return new ElasticSearch_SearchAdminClientFacade(
             $client,
             $index,
-            $project_manager,
+            $this->project_manager,
             UserManager::instance(),
             new ElasticSearch_1_2_ResultFactory(
-                $project_manager,
+                $this->project_manager,
                 new URLVerification(),
                 UserManager::instance()
             )
         );
     }
 
-    private function getClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, $index, $type) {
+    private function getClient($index, $type) {
         //todo use installation dir defined by elasticsearch rpm
-        $client_path = $path_to_elasticsearch_client .'/ElasticSearchClient.php';
+        $client_path = $this->client_config->getClientPath() .'/ElasticSearchClient.php';
         if (! file_exists($client_path)) {
             throw new ElasticSearch_ClientNotFoundException();
         }
+        // magic <3 : use an external library and overload one of the files
         require_once $client_path;
 
-        $transport  = new ElasticSearch_TransportHTTPBasicAuth($server_host, $server_port, $server_user, $server_password);
+        $transport = new ElasticSearch_TransportHTTPBasicAuth(
+            $this->client_config->getServerHost(),
+            $this->client_config->getServerPort(),
+            $this->client_config->getServerUser(),
+            $this->client_config->getServerPassword(),
+            $this->client_config->getRequestTimeout()
+        );
 
         return new ElasticSearchClient($transport, $index, $type);
     }
