@@ -90,11 +90,25 @@ class ProjectHistoryPresenter {
     }
 
     public function start_field_date() {
-        return html_field_date('start', $this->start_date, false, 10, 10, 'project_history_form', false);
+        return $GLOBALS['HTML']->getBootstrapDatePicker(
+            'history-search-start',
+            'start',
+            $this->start_date,
+            array(),
+            array(),
+            false
+        );
     }
 
     public function end_field_date() {
-        return html_field_date('end', $this->end_date, false, 10, 10, 'project_history_form', false);
+        return $GLOBALS['HTML']->getBootstrapDatePicker(
+            'history-search-end',
+            'end',
+            $this->end_date,
+            array(),
+            array(),
+            false
+        );
     }
 
     public function title() {
