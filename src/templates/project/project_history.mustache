@@ -1,0 +1,87 @@
+<h2> {{ title }} </h2>
+<form MEthOD="POST" ACTION="?group_id={{ group_id }}" id="project_history_form" name="project_history_form">
+    <div>
+        <span title="{{ toggle_search }}" id="history_search_title" class="{{ toggler_class_name }}">
+            <b>{{ history_search_title }}</b>
+        </span>
+        <table id="project_history_search">
+                <th colspan="2" style="text-align:left">{{ table_head_event }}</th>
+                <th style="text-align:left">{{ table_head_val }}</th>
+                <th style="text-align:left">{{ table_head_from }}</th>
+                <th style="text-align:left">{{ table_head_to }}</th>
+                <th style="text-align:left">{{ table_head_by }}</th>
+                <tr valign="TOP">
+                    <td> {{{ select_button }}} </td>
+                    <td>
+                        <select id="sub_events_box" name="sub_events_box[]" multiple>
+                            <option value="choose_event" disabled="disabled">
+                                {{ choose_event_label }}
+                            </option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" name="value" value="{{ value }}">
+                    </td>
+                    <td>{{{ start_field_date }}}</td>
+                    <td>{{{ end_field_date }}}</td>
+                    <td><input type="text" name="by" id="by" value="{{ by }}"></td>
+                </tr>
+                <tr>
+                    <td id="events_array"></td>
+                </tr>
+                <tr>
+                    <td><input type="submit" name="filter"></td>
+                </tr>
+        </table>
+    </div>
+    <p>
+
+    {{# has_history_rows }}
+
+        {{{ list_table_top }}}
+        {{{ history_results }}}
+
+        </table>
+        <div style="text-align:center" class="{{ row_color }}">
+
+        {{# has_offset }}
+
+            <a href="?group_id={{ group_id }}&offset={{ offset_minus_limit }}{{ forward_sub_events }}&value={{ value }}&start={{ start_date }}&end={{ end_date }}&by={{ by }}">
+                [ {{ previous }} ]
+            </a>
+            &nbsp;
+
+        {{/ has_offset }}
+
+        {{# max_rows_not_reached }}
+
+            &nbsp;
+            <a href="?group_id={{ group_id }}&offset={{ offset_plus_limit }}{{ forward_sub_events }}&value={{ value }}&start={{ start_date }}&end={{ end_date }}&by={{ by }}">
+                [ {{ next }} ]
+            </a>
+
+        {{/ max_rows_not_reached }}
+
+        </div>
+        <div style="text-align:center" class="{{ row_color }}">
+            {{ current_on_total }}
+        </div>
+        <br>
+        <table align="left">
+            <tr>
+                <td>
+                    <input type="submit" name="export" value="{{ export_history }}">
+                </td>
+            </tr>
+        </table>
+</form>
+<br>
+<p>
+
+    {{/ has_history_rows }}
+
+    {{^ has_history_rows }}
+
+        <h3> {{ no_change }} </h3>
+
+    {{/ has_history_rows }}

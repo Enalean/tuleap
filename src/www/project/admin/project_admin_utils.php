@@ -272,10 +272,11 @@ function convert_project_history_events($array, $subevents) {
  * @param Boolean $export   Switch CSV export mode or HTML display
  * @param unknown_type $i   Line number indicator
  *
- * @return void
+ * @return string html
  */
 function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1) {
     global $Language;
+    $html = '';
 
     $hp = Codendi_HTMLPurifier::instance();
 
@@ -302,7 +303,7 @@ function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
         }
 
         if (!$export) {
-            echo '<TR class="'. html_get_alt_row_color($i++) .'"><TD>'. $hp->purify($msg, CODENDI_PURIFIER_BASIC, $group_id).'</TD><TD>';
+            $html .= '<TR class="'. html_get_alt_row_color($i++) .'"><TD>'. $hp->purify($msg, CODENDI_PURIFIER_BASIC, $group_id).'</TD><TD>';
         }
         $val = $row['old_value'];
         //Translate dynamic ugroup name for permission entries
@@ -325,14 +326,16 @@ function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
                                      'val'   => $hp->purify($val),
                                      'date'  => format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date']),
                                      'by'    => UserHelper::instance()->getDisplayNameFromUserName($row['user_name']));
-            echo build_csv_record(array('event', 'val', 'date', 'by'), $documents_body)."\n";
+            $html .= build_csv_record(array('event', 'val', 'date', 'by'), $documents_body)."\n";
         } else {
-            echo $hp->purify($val);
+            $html .= $hp->purify($val);
             $user = UserManager::instance()->getUserByUserName($row['user_name']);
-            echo '</TD><TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date']).
+            $html .= '</TD><TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date']).
             '</TD><TD>'.UserHelper::instance()->getLinkOnUser($user).'</TD></TR>';
         }
     }
+
+    return $html;
 }
 
 /**
@@ -357,9 +360,9 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
      */
     global $Language;
 
-    $dao = new ProjectHistoryDao(CodendiDataAccess::instance());
+    $dao            = new ProjectHistoryDao(CodendiDataAccess::instance());
     $history_filter = build_grouphistory_filter($event, $subEventsBox, $value, $startDate, $endDate, $by);
-    $res = $dao->groupGetHistory($offset, $limit, $group_id, $history_filter);
+    $history_rows   = $dao->groupGetHistory($offset, $limit, $group_id, $history_filter);
 
     if (isset($subEventsBox)) {
         $subEventsString = implode(",", array_keys($subEventsBox));
@@ -368,84 +371,45 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
         $forwardSubEvents = '&event='.$event;
     }
 
-    echo '
-        <H2>'.$Language->getText('project_admin_utils','g_change_history').'</H2>';
-    echo '<FORM METHOD="POST" ACTION="?group_id='.$group_id.'" id="project_history_form" name="project_history_form">';
-    echo '<div>';
-    echo'<SPAN title="'.$Language->getText('project_admin_utils','toggle_search').'" id="history_search_title" class="'. Toggler::getClassname('history_search_title') .'"><B>'.$Language->getText('project_admin_utils','history_search_title').'</B></SPAN>';
-    echo '<TABLE ID="project_history_search">';
-    echo '<TH colspan="2" style="text-align:left">'.$Language->getText('project_admin_utils','event').'</TH>
-              <TH style="text-align:left">'.$Language->getText('project_admin_utils','val').'</TH>
-              <TH style="text-align:left">'.$Language->getText('project_admin_utils', 'from').'</TH>
-              <TH style="text-align:left">'.$Language->getText('project_admin_utils', 'to').'</TH>
-              <TH style="text-align:left">'.$Language->getText('global','by').'</TH>
-              <TR VALIGN="TOP"><TD>';
+    $renderer = TemplateRendererFactory::build()->getRenderer(Config::get('codendi_dir') .'/src/templates/project/');
 
     //Event select Box
-    $events = array('any'         => $GLOBALS["Language"]->getText('global','any'),
-                    'event_permission' => $GLOBALS["Language"]->getText("project_admin_utils", "event_permission"), 
-                    'event_project'     => $GLOBALS["Language"]->getText("project_admin_utils", "event_project"), 
-                    'event_user'       => $GLOBALS["Language"]->getText("project_admin_utils", "event_user"),
-                    'event_ug'  => $GLOBALS["Language"]->getText("project_admin_utils", "event_ug"),
-                    'event_others'      => $GLOBALS["Language"]->getText("project_admin_utils", "event_others"));
+    $events = array(
+        'any'              => $GLOBALS["Language"]->getText('global','any'),
+        'event_permission' => $GLOBALS["Language"]->getText("project_admin_utils", "event_permission"),
+        'event_project'    => $GLOBALS["Language"]->getText("project_admin_utils", "event_project"),
+        'event_user'       => $GLOBALS["Language"]->getText("project_admin_utils", "event_user"),
+        'event_ug'         => $GLOBALS["Language"]->getText("project_admin_utils", "event_ug"),
+        'event_others'     => $GLOBALS["Language"]->getText("project_admin_utils", "event_others")
+    );
+
     $select = new HTML_Element_Selectbox('', 'events_box', '');
     $select->setId('events_box');
     $select->addMultipleOptions($events, $event);
-    echo $select->renderValue();
 
-    //SubEvent select Box
-    echo '</TD><TD><select id="sub_events_box" name="sub_events_box[]" multiple>
-         <Option value="choose_event" disabled="disabled">'.$GLOBALS['Language']->getText('project_admin_utils', 'choose_event').'</Option>
-         </select>';
+    $title_arr   = array();
+    $title_arr[] = $Language->getText('project_admin_utils','event');
+    $title_arr[] = $Language->getText('project_admin_utils','val');
+    $title_arr[] = $Language->getText('project_admin_utils','date');
+    $title_arr[] = $Language->getText('global','by');
 
-    echo '</TD><TD><input type="text" name="value" value="'.$value.'"></TD>
-              <TD>';
-    echo html_field_date('start', $startDate, false, 10, 10, 'project_history_form', false);
-    echo '</TD>
-              <TD>';
-    echo html_field_date('end', $endDate, false, 10, 10, 'project_history_form', false);
-    echo '</TD>
-              <TD><input type="text" name="by" id="by" value="'.$by.'"></TD>
-              </TR>';
-    echo '<TR><TD id="events_array"></TD></TR>';
-    echo '<TR><TD><input type="submit" name="filter"></TD></TR>
-              </TABLE>';
-    echo '</div>';
-    echo'<P>';
-    if ($res['numrows'] > 0) {
-        $title_arr=array();
-        $title_arr[]=$Language->getText('project_admin_utils','event');
-        $title_arr[]=$Language->getText('project_admin_utils','val');
-        $title_arr[]=$Language->getText('project_admin_utils','date');
-        $title_arr[]=$Language->getText('global','by');
+    $index = 1;
 
-        echo html_build_list_table_top ($title_arr);
-        $i=1;
-
-        displayProjectHistoryResults($group_id, $res, false, $i);
-
-        echo '</TABLE>';
-
-        echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
-
-        if ($offset > 0) {
-            echo  '<a href="?group_id='.$group_id.'&offset='.($offset-$limit).$forwardSubEvents.'&value='.$value.'&start='.$startDate.'&end='.$endDate.'&by='.$by.'">[ '.$Language->getText('project_admin_utils', 'previous').' ]</a>';
-            echo '&nbsp;';
-        }
-        if (($offset + $limit) < $res['numrows']) {
-            echo '&nbsp;';
-            echo '<a href="?group_id='.$group_id.'&offset='.($offset+$limit).$forwardSubEvents.'&value='.$value.'&start='.$startDate.'&end='.$endDate.'&by='.$by.'">[ '.$Language->getText('project_admin_utils', 'next').' ]</a>';
-        }
-        echo '</div>';
-        echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
-        echo ($offset+$i-3).'/'.$res['numrows'];
-        echo '</div>';
-        echo '<BR><TABLE align="left"><TR><TD>
-                 <input type="submit" name="export" value="'.$GLOBALS['Language']->getText('project_admin_utils', 'export_history').'">
-                 </TD></TR></TABLE></FORM><BR><P>';
-    } else {
-        echo '<H3>'.$Language->getText('project_admin_utils','no_g_change').'</H3>';
-    }
+    $presenter = new ProjectHistoryPresenter(
+        $group_id,
+        $select->renderValue(),
+        $value,
+        $startDate,
+        $endDate,
+        $by,
+        $history_rows,
+        $title_arr,
+        $index,
+        $offset,
+        $limit,
+        $forwardSubEvents
+    );
+    echo $renderer->renderToString('project_history', $presenter);
 
     $translatedEvents = convert_project_history_events(get_history_entries(), false);
 
@@ -455,12 +419,14 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
             $subEventsBox[] = $element;
         }
     }
+
     $translatedSelectedEvents = convert_project_history_events($subEventsBox, true);
 
     $js = "options = new Array();
            options['defaultValueActsAsHint'] = false;
            new UserAutoCompleter('by', '".util_get_dir_image_theme()."', true, options);
            new ProjectHistory(".$translatedEvents.", ".$translatedSelectedEvents.");";
+
     $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/codendi/ProjectHistory.js');
     $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
 }
@@ -498,7 +464,7 @@ function export_grouphistory ($group_id, $event = null, $subEventsBox = null, $v
     $res = $dao->groupGetHistory(0, 0, $group_id, $history_filter);
 
     if ($res['numrows'] > 0) {
-        displayProjectHistoryResults($group_id, $res, true);
+        echo displayProjectHistoryResults($group_id, $res, true);
     }
     echo build_csv_header($col_list, array()).$eol;
 }
