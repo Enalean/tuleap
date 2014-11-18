@@ -178,7 +178,7 @@ class DocmanV1_XMLExportData {
     }
 
     private function appendGroups(DOMElement $parent_node, Project $project, PFUser $admin_user) {
-        foreach ($this->dao->searchAllGroups($project->getID()) as $row) {
+        foreach ($this->dao->searchAllNonEmptyGroups($project->getID()) as $row) {
             $folder = $this->createFolder($row['groupname'], '');
             $this->appendPermissions($folder, $row['doc_group'], self::FOLDER_PERMISSION_TYPE);
             $this->appendDocuments($folder, $admin_user, $row['doc_group']);
