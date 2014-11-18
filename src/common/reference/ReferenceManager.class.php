@@ -722,6 +722,9 @@ class ReferenceManager {
      * @return mixed False if no match, the group id otherwise
      */
     protected function getGroupIdFromArtifactId($artifact_id) {
+        if (! TrackerV3::instance()->available()) {
+            return false;
+        }
         $dao    = $this->getArtifactDao();
         $result = $dao->searchArtifactId($artifact_id);
         if ($result && count($result)) {

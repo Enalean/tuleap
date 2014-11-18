@@ -72,17 +72,23 @@ class TrackerDao extends DataAccessObject {
     public function isShortNameExists($item_name, $group_id) {
         $item_name = $this->da->quoteSmart($item_name);
         $group_id  = $this->da->escapeInt($group_id);
+
+        $search_tv3 = '';
+        if (TrackerV3::instance()->available()) {
+            $search_tv3 = 'UNION
+                  SELECT item_name
+                  FROM artifact_group_list
+                  WHERE item_name = $item_name
+                    AND group_id = $group_id
+                    AND deletion_date IS NULL';
+        }
+
         $sql = "SELECT item_name
                 FROM $this->table_name
                 WHERE item_name = $item_name
                   AND group_id = $group_id
                   AND deletion_date IS NULL
-                UNION
-                  SELECT item_name
-                  FROM artifact_group_list
-                  WHERE item_name = $item_name
-                    AND group_id = $group_id
-                    AND deletion_date IS NULL";
+                ".$search_tv3;
         return count($this->retrieve($sql));
     }
 
