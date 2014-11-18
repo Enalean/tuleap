@@ -19,8 +19,14 @@
 
 class DocmanV1_XMLExportDao extends DataAccessObject {
 
-    public function searchAllGroups($group_id) {
-        return $this->retrieve("SELECT * FROM doc_groups WHERE group_id = ".$this->da->escapeInt($group_id).' ORDER BY group_rank');
+    public function searchAllNonEmptyGroups($group_id) {
+        return $this->retrieve(
+            "SELECT doc_groups.* FROM doc_groups
+                JOIN doc_data ON doc_groups.doc_group = doc_data.doc_group
+            WHERE group_id = ".$this->da->escapeInt($group_id)."
+            GROUP BY doc_group
+            ORDER BY group_rank"
+        );
     }
 
     public function searchAllDocs($doc_group_id) {
