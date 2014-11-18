@@ -1,38 +1,47 @@
 <h2> {{ title }} </h2>
-<form MEthOD="POST" ACTION="?group_id={{ group_id }}" id="project_history_form" name="project_history_form">
+<form method="POST" action="?group_id={{ group_id }}" id="project_history_form" name="project_history_form">
     <div>
         <span title="{{ toggle_search }}" id="history_search_title" class="{{ toggler_class_name }}">
-            <b>{{ history_search_title }}</b>
+            {{ history_search_title }}
         </span>
-        <table id="project_history_search">
-                <th colspan="2" style="text-align:left">{{ table_head_event }}</th>
-                <th style="text-align:left">{{ table_head_val }}</th>
-                <th style="text-align:left">{{ table_head_from }}</th>
-                <th style="text-align:left">{{ table_head_to }}</th>
-                <th style="text-align:left">{{ table_head_by }}</th>
-                <tr valign="TOP">
-                    <td> {{{ select_button }}} </td>
-                    <td>
-                        <select id="sub_events_box" name="sub_events_box[]" multiple>
-                            <option value="choose_event" disabled="disabled">
-                                {{ choose_event_label }}
-                            </option>
-                        </select>
-                    </td>
-                    <td>
-                        <input type="text" name="value" value="{{ value }}">
-                    </td>
-                    <td>{{{ start_field_date }}}</td>
-                    <td>{{{ end_field_date }}}</td>
-                    <td><input type="text" name="by" id="by" value="{{ by }}"></td>
-                </tr>
-                <tr>
-                    <td id="events_array"></td>
-                </tr>
-                <tr>
-                    <td><input type="submit" name="filter"></td>
-                </tr>
-        </table>
+
+        <div id="history_search_fields">
+
+            <div class="search-fields-row">
+                <span>
+                    <label>{{ table_head_event }}</label>
+                    {{{ select_button }}}
+                    <select id="sub_events_box" name="sub_events_box[]" multiple>
+                        <option value="choose_event" disabled="disabled">
+                            {{ choose_event_label }}
+                        </option>
+                    </select>
+                </span>
+
+                <span>
+                    <label>{{ table_head_val }}</label>
+                    <input type="text" name="value" value="{{ value }}">
+                </span>
+
+                <span>
+                    <label>{{ table_head_from }}</label>
+                    {{{ start_field_date }}}
+                </span>
+
+                <span>
+                    <label>{{ table_head_to }}</label>
+                    {{{ end_field_date }}}
+                </span>
+
+                <span>
+                    <label>{{ table_head_by }}</label>
+                    <input type="text" name="by" id="by" value="{{ by }}">
+                </span>
+            </div>
+
+            <input type="submit" class="btn btn-primary" name="filter">
+        </div>
+
     </div>
     <p>
 

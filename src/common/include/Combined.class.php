@@ -44,6 +44,7 @@ class Combined {
             '/scripts/jquery/jquery-ui.min.js',
             '/scripts/jquery/jquery-noconflict.js',
             '/scripts/tuleap/browser-compatibility.js',
+            '/scripts/tuleap/project-history.js',
             '/scripts/bootstrap/bootstrap-dropdown.js',
             '/scripts/bootstrap/bootstrap-button.js',
             '/scripts/bootstrap/bootstrap-modal.js',
