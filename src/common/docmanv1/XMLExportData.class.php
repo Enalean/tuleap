@@ -115,6 +115,9 @@ class DocmanV1_XMLExportData {
         $item = $this->doc->createElement('item');
         $item->setAttribute('type', $type);
 
+        $this->cleanDocumentField($title);
+        $this->cleanDocumentField($description);
+
         $properties = $this->doc->createElement('properties');
         $item->appendChild($properties);
 
@@ -125,6 +128,14 @@ class DocmanV1_XMLExportData {
         $this->appendChild($properties, 'owner', $owner_name);
 
         return $item;
+    }
+
+    private function cleanDocumentField(&$field) {
+        $purifer = Codendi_HTMLPurifier::instance();
+
+        $field = util_unconvert_htmlspecialchars($field);
+        $field = $purifer->purify($field, CODENDI_PURIFIER_STRIP_HTML);
+        $field = html_entity_decode($field);
     }
 
     private function appendPermissions(DOMElement $node, $object_id, $permission_type) {
