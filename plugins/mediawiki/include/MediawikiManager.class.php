@@ -61,4 +61,8 @@ class MediawikiManager {
 
         return ($plugin_has_view_enabled && $project_options['enable_compatibility_view']);
     }
+
+    public function instanceUsesProjectID(Project $project) {
+        return is_dir(forge_get_config('projects_path', 'mediawiki') . "/". $project->getID());
+    }
 }

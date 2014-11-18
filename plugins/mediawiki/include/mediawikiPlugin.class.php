@@ -74,6 +74,11 @@ class MediaWikiPlugin extends Plugin {
 
             $this->addHook(Event::SERVICE_CLASSNAMES);
             $this->addHook(Event::GET_PROJECTID_FROM_URL);
+
+            // Stats plugin
+            $this->addHook('plugin_statistics_disk_usage_collect_project');
+            $this->addHook('plugin_statistics_disk_usage_service_label');
+            $this->addHook('plugin_statistics_color');
     }
 
     public function getServiceShortname() {
@@ -717,6 +722,12 @@ class MediaWikiPlugin extends Plugin {
         return new MediawikiDao();
     }
 
+    private function getMediawikiManager() {
+        include_once 'MediawikiManager.class.php';
+
+        return new MediawikiManager($this->getDao());
+    }
+
     public function service_classnames(array $params) {
         include_once 'ServiceMediawiki.class.php';
         $params['classnames']['plugin_mediawiki'] = 'ServiceMediawiki';
@@ -784,6 +795,34 @@ class MediaWikiPlugin extends Plugin {
 
             $project_data         = $dao_results->getRow();
             $params['project_id'] = $project_data['group_id'];
+        }
+    }
+
+    public function plugin_statistics_disk_usage_collect_project($params) {
+        $row     = $params['project_row'];
+        $project = ProjectManager::instance()->getProject($row['group_id']);
+
+        $project_for_parth = $this->getMediawikiManager()->instanceUsesProjectID($project) ?
+            $row['group_id'] : $row['unix_group_name'];
+
+        $path = $GLOBALS['sys_data_dir']. '/mediawiki/projects/'. $project_for_parth;
+        $size = $params['DiskUsageManager']->getDirSize($path);
+
+        $params['DiskUsageManager']->_getDao()->addGroup(
+            $row['group_id'],
+            self::SERVICE_SHORTNAME,
+            $size,
+            $_SERVER['REQUEST_TIME']
+        );
+    }
+
+    public function plugin_statistics_disk_usage_service_label($params) {
+        $params['services'][self::SERVICE_SHORTNAME] = 'Mediawiki';
+    }
+
+    public function plugin_statistics_color($params) {
+        if ($params['service'] == self::SERVICE_SHORTNAME) {
+            $params['color'] = 'lightsalmon';
         }
     }
 }
