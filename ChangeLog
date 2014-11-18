@@ -6,6 +6,7 @@ Version 7.8 (Not released yet)
 	== Development ==
 	* Fix generate release note templates to match all php versions
 	* Mustachify/glossify project history
+	* Introduce a "sample project feeder": Some tools to activate plugins and create a sample project call guinea pig with agile template a couple of fake data.
 
         == Plugins ==
 	* git: 3.140
