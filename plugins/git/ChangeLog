@@ -1,3 +1,10 @@
+Version 3.139 - Tuleap 7.8
+    * story #7325: see the correct mirror information for a git repository
+
+
+- user can switch between mirrors and have the repository url changed accordingly
+- new identity property for each mirror
+
 Version 3.138 - Tuleap 7.8
     * story #7599 have a dedicate queue for git events
 
