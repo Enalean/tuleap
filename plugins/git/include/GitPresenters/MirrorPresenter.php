@@ -28,7 +28,7 @@ class GitPresenters_MirrorPresenter {
     /**
      * @var string
      */
-    public $url;
+    public $name;
 
     /**
      * @var boolean
@@ -38,7 +38,7 @@ class GitPresenters_MirrorPresenter {
 
     public function __construct(Git_Mirror_Mirror $mirror, $is_used) {
         $this->id      = $mirror->id;
-        $this->url     = $mirror->url;
+        $this->name    = $mirror->name;
         $this->is_used = $is_used;
     }
 

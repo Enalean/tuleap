@@ -58,8 +58,8 @@ class Git_Mirror_ManifestManagerTest extends TuleapTestCase {
             ->withDescription('free and open-source web browser')
             ->build();
 
-        $this->singapour_mirror = new Git_Mirror_Mirror(mock('PFUser'), $this->singapour_mirror_id, 'singapour');
-        $this->noida_mirror = new Git_Mirror_Mirror(mock('PFUser'), $this->noida_mirror_id, 'noida');
+        $this->singapour_mirror = new Git_Mirror_Mirror(mock('PFUser'), $this->singapour_mirror_id, 'singapour.io', 'PLP');
+        $this->noida_mirror = new Git_Mirror_Mirror(mock('PFUser'), $this->noida_mirror_id, 'noida.org', 'test');
 
         $this->generator   = mock('Git_Mirror_ManifestFileGenerator');
         $this->data_mapper = mock('Git_Mirror_MirrorDataMapper');

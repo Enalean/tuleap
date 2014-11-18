@@ -58,7 +58,7 @@ class Git_Mirror_ManifestFileGenerator_BaseTest extends TuleapTestCase {
             ->withDescription('free and open-source web browser')
             ->build();
 
-        $this->singapour_mirror = new Git_Mirror_Mirror(mock('PFUser'), $this->singapour_mirror_id, 'singapour');
+        $this->singapour_mirror = new Git_Mirror_Mirror(mock('PFUser'), $this->singapour_mirror_id, 'singapour.com', 'SNP');
         $this->manifest_file_for_singapour = $this->manifest_directory
             . "/manifest_mirror_{$this->singapour_mirror_id}.js.gz";
 
@@ -108,7 +108,7 @@ class Git_Mirror_ManifestFileGenerator_removeTest extends Git_Mirror_ManifestFil
     public function itLogsDeletion() {
         $this->forgeExistingManifestFile($this->manifest_file_for_singapour);
 
-        expect($this->logger)->debug('removing /linux/kernel.git from manifest of mirror singapour (id: 1)')->once();
+        expect($this->logger)->debug('removing /linux/kernel.git from manifest of mirror singapour.com (id: 1)')->once();
 
         $this->generator->removeRepositoryFromManifestFile($this->singapour_mirror, $this->kernel_repository);
     }
@@ -138,7 +138,7 @@ class Git_Mirror_ManifestFileGenerator_addTest extends Git_Mirror_ManifestFileGe
     }
 
     public function itLogsAddition() {
-        expect($this->logger)->debug('adding /linux/kernel.git to manifest of mirror singapour (id: 1)')->once();
+        expect($this->logger)->debug('adding /linux/kernel.git to manifest of mirror singapour.com (id: 1)')->once();
 
         $this->generator->addRepositoryToManifestFile($this->singapour_mirror, $this->kernel_repository);
     }
@@ -204,7 +204,7 @@ class Git_Mirror_ManifestFileGenerator_addTest extends Git_Mirror_ManifestFileGe
     public function itLogsUpdate() {
         $this->forgeExistingManifestFile($this->manifest_file_for_singapour);
 
-        expect($this->logger)->debug('updating /linux/kernel.git in manifest of mirror singapour (id: 1)')->once();
+        expect($this->logger)->debug('updating /linux/kernel.git in manifest of mirror singapour.com (id: 1)')->once();
 
         $this->generator->addRepositoryToManifestFile($this->singapour_mirror, $this->kernel_repository);
     }
@@ -257,7 +257,7 @@ class Git_Mirror_ManifestFileGenerator_ensureManifestContainsLatestInfoOfReposit
         $content_before = $this->getManifestContent($this->manifest_file_for_singapour);
         $this->assertTrue(isset($content_before["/linux/kernel.git"]));
 
-        expect($this->logger)->debug('removing /linux/kernel.git from manifest of mirror singapour (id: 1)')->once();
+        expect($this->logger)->debug('removing /linux/kernel.git from manifest of mirror singapour.com (id: 1)')->once();
 
         $this->generator->ensureManifestContainsLatestInfoOfRepositories(
             $this->singapour_mirror,

@@ -518,6 +518,10 @@ class GitRepository implements DVCSRepository {
         }
         return $this->path;
     }
+
+    public function getSSHForMirror(Git_Mirror_Mirror $mirror) {
+        return 'ssh://gitolite@'.$mirror->url.'/'.$this->getPath();
+    }
     
     /**
      * Gives the full relative path (from git root directory) to the repository.

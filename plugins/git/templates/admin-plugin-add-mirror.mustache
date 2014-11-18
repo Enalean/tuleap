@@ -4,9 +4,15 @@
     <h3>{{ add_mirror }}</h3>
     <dl>
         <div class="control-group">
+            <label class="control-label" for="new_mirror_url">{{ identifier }}</label>
+            <div class="controls">
+                <input name="new_mirror_name" type="text" placeholder="{{ identifier_placeholder }}" required/>
+            </div>
+        </div>
+        <div class="control-group">
             <label class="control-label" for="new_mirror_url">{{ url_label }}</label>
             <div class="controls">
-                <input name="new_mirror_url" type="text" required/>
+                <input name="new_mirror_url" type="text" placeholder="{{ url_placeholder }}" required/>
             </div>
         </div>
         <div class="control-group">

@@ -38,12 +38,12 @@ class Git_Mirror_MirrorDataMapper {
      * @throws Git_Mirror_MissingDataException
      * @throws Git_Mirror_CreateException
      */
-    public function save($url, $ssh_key, $password) {
-        if (! $url || ! $ssh_key) {
+    public function save($url, $ssh_key, $password, $name) {
+        if (! $url || ! $ssh_key || ! $name) {
             throw new Git_Mirror_MissingDataException();
         }
 
-        $mirror_id = $this->dao->save($url);
+        $mirror_id = $this->dao->save($url, $name);
         if (! $mirror_id) {
             throw new Git_Mirror_CreateException();
         }
@@ -51,8 +51,9 @@ class Git_Mirror_MirrorDataMapper {
         $user = $this->createUserForMirror($mirror_id, $password, $ssh_key);
 
         return $this->getInstanceFromRow($user, array(
-            'id'      => $mirror_id,
-            'url'     => $url
+            'id'   => $mirror_id,
+            'url'  => $url,
+            'name' => $name
         ));
     }
 
@@ -162,10 +163,10 @@ class Git_Mirror_MirrorDataMapper {
      * @throws Git_Mirror_MirrorNotFoundException
      * @throws Git_Mirror_MissingDataException
      */
-    public function update($id, $url, $ssh_key) {
+    public function update($id, $url, $ssh_key, $name) {
         $mirror = $this->fetch($id);
 
-        if ($url == $mirror->url && $ssh_key == $mirror->ssh_key) {
+        if ($url == $mirror->url && $ssh_key == $mirror->ssh_key && $name == $mirror->name) {
             throw new Git_Mirror_MirrorNoChangesException();
         }
 
@@ -177,7 +178,7 @@ class Git_Mirror_MirrorDataMapper {
             $this->user_manager->updateUserSSHKeys($mirror->owner, array($ssh_key));
         }
 
-        return $this->dao->updateMirror($id, $url);
+        return $this->dao->updateMirror($id, $url, $name);
     }
 
     /**
@@ -219,7 +220,8 @@ class Git_Mirror_MirrorDataMapper {
         return new Git_Mirror_Mirror(
             $owner,
             $row['id'],
-            $row['url']
+            $row['url'],
+            $row['name']
         );
     }
 

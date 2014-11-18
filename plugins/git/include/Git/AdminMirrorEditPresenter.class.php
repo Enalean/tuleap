@@ -26,6 +26,8 @@ class Git_AdminMirrorEditPresenter extends Git_AdminMirrorPresenter{
 
     public $url;
 
+    public $name;
+
     public $owner_name;
 
     public $owner_id;
@@ -39,6 +41,7 @@ class Git_AdminMirrorEditPresenter extends Git_AdminMirrorPresenter{
 
         $this->id         = $mirror->id;
         $this->url        = $mirror->url;
+        $this->name       = $mirror->name;
 
         $this->owner      = $mirror->owner;
         $this->owner_name = $mirror->owner_name;

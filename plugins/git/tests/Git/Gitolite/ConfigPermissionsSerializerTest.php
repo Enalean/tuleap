@@ -149,9 +149,9 @@ class Git_Gitolite_ConfigPermissionsSerializer_MirrorsTest extends TuleapTestCas
         $this->repository    = aGitRepository()->withId(115)->withProject($this->project)->build();
 
         $user_mirror1        = aUser()->withUserName('git_mirror_1')->build();
-        $this->mirror_1      = new Git_Mirror_Mirror($user_mirror1, 1, 'url');
+        $this->mirror_1      = new Git_Mirror_Mirror($user_mirror1, 1, 'url', 'EUR');
         $user_mirror2        = aUser()->withUserName('git_mirror_2')->build();
-        $this->mirror_2      = new Git_Mirror_Mirror($user_mirror2, 2, 'url');
+        $this->mirror_2      = new Git_Mirror_Mirror($user_mirror2, 2, 'url', 'IND');
 
         $this->permissions_manager = mock('PermissionsManager');
         PermissionsManager::setInstance($this->permissions_manager);
@@ -209,9 +209,9 @@ class Git_Gitolite_ConfigPermissionsSerializer_GitoliteConfTest extends TuleapTe
         $this->mirror_mapper = mock('Git_Mirror_MirrorDataMapper');
 
         $user_mirror1        = aUser()->withUserName('forge__gitmirror_1')->build();
-        $this->mirror_1      = new Git_Mirror_Mirror($user_mirror1, 1, 'url');
+        $this->mirror_1      = new Git_Mirror_Mirror($user_mirror1, 1, 'url', 'CHN');
         $user_mirror2        = aUser()->withUserName('forge__gitmirror_2')->build();
-        $this->mirror_2      = new Git_Mirror_Mirror($user_mirror2, 2, 'url');
+        $this->mirror_2      = new Git_Mirror_Mirror($user_mirror2, 2, 'url', 'JPN');
     }
 
     public function itDumpsTheConf() {

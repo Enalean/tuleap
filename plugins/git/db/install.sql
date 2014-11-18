@@ -129,6 +129,7 @@ CREATE TABLE IF NOT EXISTS plugin_git_gerrit_config_template (
 CREATE TABLE IF NOT EXISTS plugin_git_mirrors (
     id INT(11) unsigned NOT NULL auto_increment,
     url VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL,
     PRIMARY KEY (id)
 );
 

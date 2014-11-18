@@ -89,12 +89,18 @@ class GitViews_ShowRepo {
                 $this->url_manager,
                 $this->driver_factory,
                 $this->gerrit_usermanager,
+                $this->getMirrorDataMapper(),
                 $this->gerrit_servers,
                 $this->controller->getPlugin()->getThemePath()
             );
         }
         $view->display();
     }
-}
 
-?>
+    private function getMirrorDataMapper() {
+        return new Git_Mirror_MirrorDataMapper(
+            new Git_Mirror_MirrorDao(),
+            UserManager::instance()
+        );
+    }
+}

@@ -56,7 +56,7 @@ class GitPresenters_MirroringPresenter {
     }
 
     public function mirroring_mirror_url() {
-        return $GLOBALS['Language']->getText('plugin_git', 'mirroring_mirror_url');
+        return $GLOBALS['Language']->getText('plugin_git', 'identifier');
     }
 
     public function mirroring_mirror_used() {
