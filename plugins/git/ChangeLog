@@ -1,3 +1,6 @@
+Version 3.140 - Tuleap 7.8
+    * story #7525: Add a Mass admin tab listing all repos, they are selectable
+
 Version 3.139 - Tuleap 7.8
     * story #7325: see the correct mirror information for a git repository
 
