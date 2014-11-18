@@ -23,13 +23,21 @@ require_once dirname(__FILE__).'/../../../bootstrap.php';
 
 class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends TuleapTestCase {
 
+    private $strategy_factory;
+    private $backlog_item_collection_factory;
+    private $user;
+
     public function setUp() {
         parent::setUp();
         $this->milestone       = aMilestone()->withArtifact(anArtifact()->withId(3)->build())->build();
         $this->backlog_tracker = aTracker()->withId(35)->build();
         $this->dao             = mock('Tracker_ArtifactDao');
 
-        $this->provider = new AgileDashboard_BacklogItem_SubBacklogItemProvider($this->dao);
+        $this->user                            = aUser()->build();
+        $this->strategy_factory                = mock('AgileDashboard_Milestone_Backlog_BacklogStrategyFactory');
+        $this->backlog_item_collection_factory = mock('AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory');
+
+        $this->provider = new AgileDashboard_BacklogItem_SubBacklogItemProvider($this->dao, $this->strategy_factory, $this->backlog_item_collection_factory);
     }
 
     public function itReturnsTheMatchingIds() {
@@ -40,14 +48,14 @@ class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends TuleapTestCa
         );
         stub($this->dao)->getLinkedArtifactsByIds(array(7, 8, 11), array(3, 7, 8, 11))->returnsEmptyDar();
 
-        $result = $this->provider->getMatchingIds($this->milestone, $this->backlog_tracker);
+        $result = $this->provider->getMatchingIds($this->milestone, $this->backlog_tracker, $this->user);
         $this->assertEqual(array_keys($result), array(7, 8, 11));
     }
 
     public function itReturnsAnEmptyResultIfThereIsNoMatchingId() {
         stub($this->dao)->getLinkedArtifactsByIds()->returnsEmptyDar();
 
-        $result = $this->provider->getMatchingIds($this->milestone, $this->backlog_tracker);
+        $result = $this->provider->getMatchingIds($this->milestone, $this->backlog_tracker, $this->user);
         $this->assertEqual($result, array());
     }
 }

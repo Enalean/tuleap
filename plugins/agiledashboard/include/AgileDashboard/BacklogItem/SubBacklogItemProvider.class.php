@@ -39,8 +39,19 @@ class AgileDashboard_BacklogItem_SubBacklogItemProvider {
     /** @var Integer[] */
     private $inspected_ids = array();
 
-    public function __construct(Tracker_ArtifactDao $dao) {
-        $this->dao = $dao;
+    /** @var AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory */
+    private $backlog_item_collection_factory;
+
+    /** @var AgileDashboard_Milestone_Backlog_BacklogStrategyFactory */
+    private $strategy_factory;
+
+    public function __construct(Tracker_ArtifactDao $dao,
+        AgileDashboard_Milestone_Backlog_BacklogStrategyFactory $strategy_factory,
+        AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $backlog_item_collection_factory
+    ) {
+        $this->backlog_item_collection_factory = $backlog_item_collection_factory;
+        $this->strategy_factory                = $strategy_factory;
+        $this->dao                             = $dao;
     }
 
     /**
@@ -48,13 +59,35 @@ class AgileDashboard_BacklogItem_SubBacklogItemProvider {
      *
      * @param Planning_Milestone $milestone
      * @param Tracker $backlog_tracker
+     * @param PFUser $user
      * @return array
      */
-    public function getMatchingIds(Planning_Milestone $milestone, Tracker $backlog_tracker) {
+    public function getMatchingIds(Planning_Milestone $milestone, Tracker $backlog_tracker, PFUser $user) {
+        if (! $milestone->getArtifactId()) {
+            return $this->getMatchingIdsForTopBacklog($milestone, $backlog_tracker, $user);
+        }
+
+        return $this->getMatchingIdsForMilestone($milestone, $backlog_tracker);
+    }
+
+    private function getMatchingIdsForMilestone(Planning_Milestone $milestone, Tracker $backlog_tracker) {
         $milestone_id_seed = array($milestone->getArtifactId());
 
         $this->inspected_ids = $milestone_id_seed;
         $this->filterBacklogIds($backlog_tracker->getId(), $milestone_id_seed);
+
+        return $this->backlog_ids;
+    }
+
+    private function getMatchingIdsForTopBacklog(Planning_VirtualTopMilestone $milestone, Tracker $backlog_tracker, PFUser $user) {
+        $strategy_unassigned = $this->strategy_factory->getSelfBacklogStrategy($milestone);
+        $backlog_items       = $this->backlog_item_collection_factory->getUnassignedOpenCollection($user, $milestone, $strategy_unassigned, false);
+
+        foreach ($backlog_items as $backlog_item) {
+            if ($backlog_item->getArtifact()->getTrackerId() == $backlog_tracker->getId()) {
+                $this->backlog_ids[$backlog_item->getArtifact()->getId()] = true;
+            }
+        }
 
         return $this->backlog_ids;
     }
