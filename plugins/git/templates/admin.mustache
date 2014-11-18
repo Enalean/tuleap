@@ -8,6 +8,9 @@
         <li {{# manage_git_admins }}class="active"{{/ manage_git_admins }}>
             <a href="/plugins/git/?action=admin-git-admins&group_id={{ project_id }}">{{ tab_git_admins }}</a>
         </li>
+        <li {{# manage_mass_update }}class="active"{{/ manage_mass_update }}>
+            <a href="/plugins/git/?action=admin-mass-update&group_id={{ project_id }}">{{ tab_mass_update }}</a>
+        </li>
     </ul>
 
     <div class="tab-content git-admin-tab-content">
@@ -18,5 +21,9 @@
         {{# manage_git_admins }}
             {{> admin-git-admins }}
         {{/ manage_git_admins }}
+
+        {{# manage_mass_update }}
+            {{> admin-mass-update }}
+        {{/ manage_mass_update }}
     </div>
 </div>

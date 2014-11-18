@@ -441,6 +441,7 @@ fieldset.gerrit_disconnect {
     & > thead > tr > th:first-child, & > tbody > tr > td:first-child {
         min-width: 20px;
         max-width: 20px;
+        text-align: center;
     }
 
     & > thead > tr > th.url, & > tbody > tr > td.name {
@@ -463,6 +464,29 @@ fieldset.gerrit_disconnect {
 
     h3 {
         margin: 0 0 10px;
+    }
+}
+
+.git-admin-mass-update-table {
+    max-width: 800px;
+
+    & > thead > tr {
+        background: #E4E4E4;
+
+        & > th {
+            vertical-align: top;
+            border-left-color: #D2D2D2;
+            border-bottom: 2px solid #B2B2B2;
+        }
+    }
+
+    & > tbody > tr:first-child > td {
+        border-top: none;
+    }
+
+    & > thead > tr > th:first-child, & > tbody > tr > td:first-child {
+        width: 20px;
+        text-align: center;
     }
 }
 
