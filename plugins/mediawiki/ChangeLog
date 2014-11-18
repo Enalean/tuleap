@@ -1,3 +1,6 @@
+Version 0.58 - Tuleap 7.8
+    * story #7629 Mediawiki is taken in account in project disk usage
+
 Version 0.57 - Tuleap 7.7
     * Fix request #7619 Global mediawiki administrator can see content of all private projects
 
