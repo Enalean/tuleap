@@ -1,3 +1,6 @@
+Version 5.519 - Tuleap 7.8
+    * request #7314: Remove legacy DB tables creation (No longer load tv3 datastructure)
+
 Version 5.518 - Tuleap 7.7
     * Fix request #7624 Can no longer reply to an artifact by email
 

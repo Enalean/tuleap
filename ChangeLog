@@ -7,11 +7,13 @@ Version 7.8 (Not released yet)
 	* Fix generate release note templates to match all php versions
 	* Mustachify/glossify project history
 	* Introduce a "sample project feeder": Some tools to activate plugins and create a sample project call guinea pig with agile template a couple of fake data.
+	* request #7314: Remove legacy DB tables creation (No longer load tv3 datastructure)
 
         == Plugins ==
 	* git: 3.140
 	* fulltextsearch: 0.103
 	* mediawiki: 0.58
+	* tracker: 5.519
 
 Version 7.7 (Thursday, November 13th 2014)
 
