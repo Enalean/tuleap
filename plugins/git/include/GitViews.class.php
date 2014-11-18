@@ -396,12 +396,12 @@ class GitViews extends PluginViews {
         echo $renderer->renderToString('admin', $presenter);
     }
 
-    protected function adminMassUpdateView() {
-        $params = $this->getData();
+    protected function adminMassUpdateSelectRepositoriesView() {
         $this->_getBreadCrumb();
 
         $repository_list = $this->getGitRepositoryFactory()->getAllRepositories($this->project);
-        $presenter       = new GitPresenters_AdminMassUpdatePresenter(
+        $presenter       = new GitPresenters_AdminMassUpdateSelectRepositoriesPresenter(
+            $this->generateMassUpdateCSRF(),
             $this->groupId,
             $repository_list
         );
@@ -409,6 +409,43 @@ class GitViews extends PluginViews {
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
 
         echo $renderer->renderToString('admin', $presenter);
+    }
+
+    protected function adminMassUpdateView() {
+        $params = $this->getData();
+        $this->_getBreadCrumb();
+
+        $repositories = $params['repositories'];
+        $presenter    = new GitPresenters_AdminMassUpdatePresenter(
+            $this->generateMassUpdateCSRF(),
+            $this->groupId,
+            $repositories,
+            new GitPresenters_AdminMassUdpdateMirroringPresenter($this->getAdminMassUpdateMirrorPresenters())
+        );
+
+        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
+
+        echo $renderer->renderToString('admin', $presenter);
+    }
+
+    private function generateMassUpdateCSRF() {
+        return new CSRFSynchronizerToken('/plugins/git/?group_id='. (int)$this->groupId .'&action=admin-mass-update');
+    }
+
+    private function getAdminMassUpdateMirrorPresenters() {
+        $mirror_data_mapper = new Git_Mirror_MirrorDataMapper(
+            new Git_Mirror_MirrorDao(),
+            UserManager::instance()
+        );
+
+        $mirrors           = $mirror_data_mapper->fetchAll();
+        $mirror_presenters = array();
+
+        foreach($mirrors as $mirror) {
+            $mirror_presenters[] = new GitPresenters_MirrorPresenter($mirror, false);
+        }
+
+        return $mirror_presenters;
     }
 
     /**

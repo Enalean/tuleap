@@ -59,6 +59,9 @@ plugin_git	mirroring_mirror_url	URL
 plugin_git	mirroring_mirror_used	Utilisé par ce dépôt ?
 plugin_git	mirroring_update_mirroring	Mettre à jour les réplications de ce dépôt
 plugin_git	mirroring_mirroring_successful	Le dépôt va être rapidement répliqué sur les mirroirs sélectionnés.
+plugin_git	mirroring_mirroring_successful_plural	Les dépôts vont être rapidement répliqués sur les mirroirs sélectionnés.
+plugin_git	mirroring_unmirroring_successful	Le dépôt ne sera plus repliqué dans quelques instants.
+plugin_git	mirroring_unmirroring_successful_plural	Les dépôts ne seront plus répliqués dans quelques instants.
 plugin_git	mirroring_mirroring_error	Erreur lors de la mise à jour des mirroirs sur lesquels le dépôt est répliqué.
 
 plugin_git	controller_access_denied	Vous n'êtes pas autorisé à accéder à cette page
@@ -279,9 +282,15 @@ plugin_git	view_admin_template_invalid_template_id	Modèle ID Invalide
 plugin_git	view_admin_template_cannot_update	Impossible de modifier le modèle
 plugin_git	view_admin_template_cannot_create	Impossible de créer le modèle
 plugin_git	view_admin_no_gerrit_server	Il n'y a pas de <em><a href="$1">serveur gerrit</a></em> configuré sur cette plateforme! Veuillez contacter l'administrateur du site.
+
 plugin_git	view_admin_mass_update_title	Mise à jour massive des dépôts
-plugin_git	view_admin_mass_update_select_repositories	Sélectionnez les dépôts que vous souhaitez mettre à jour :
+plugin_git	view_admin_mass_update_select_repositories	Sélectionnez les dépôts que vous souhaitez mettre à jour. Vous serez ensuite redirigé vers une page vous permettant d'appliquer des modifications en masse.
 plugin_git	view_admin_mass_update_repository_list_name	Nom du dépôt
+plugin_git	view_admin_mass_update_go_to_mass_change	Mettre à jour les dépôts sélectionnés
+plugin_git	view_admin_mass_update_selected_repository	Vous êtes sur le point de mettre à jour les informations du dépôt <b>$1</b>. Seules les informations de réplication peuvent-être modifiées.
+plugin_git	view_admin_mass_update_selected_repositories	Vous êtes sur le point de mettre à jour les informations de <span>$1 dépôts</span>. Seules les informations de réplication peuvent-être modifiées.
+plugin_git	view_admin_mass_update_submit_mass_change	Mettre à jour les dépôts
+plugin_git	view_admin_mass_update_mirroring	Veuillez noter que les options actuelles de réplication des dépôts sélectionnés seront perdues : les dépôts sélectionnés seront répliqués <i>seulement</i> sur les miroirs sélectionnés.
 
 plugin_git	view_admin_git_admins	Administrateurs Git
 plugin_git	view_admin_git_admins_description	Cette section permet de sélectionner les administrateurs du service Git, en plus des administrateurs du projet.

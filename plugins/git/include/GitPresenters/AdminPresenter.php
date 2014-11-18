@@ -26,6 +26,8 @@ class GitPresenters_AdminPresenter {
 
     public $manage_git_admins = false;
 
+    public $manage_mass_update_select_repositories = false;
+
     public $manage_mass_update = false;
 
 
@@ -47,5 +49,9 @@ class GitPresenters_AdminPresenter {
 
     public function tab_mass_update() {
         return $GLOBALS['Language']->getText('plugin_git', 'view_admin_tab_mass_update');
+    }
+
+    public function manage_mass_update_active() {
+        return $this->manage_mass_update_select_repositories || $this->manage_mass_update;
     }
 }

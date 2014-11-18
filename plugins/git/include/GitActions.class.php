@@ -973,7 +973,31 @@ class GitActions extends PluginActions {
         return true;
     }
 
-    public function updateMirroring(GitRepository $repository, $selected_mirror_ids) {
+    public function updateMirroring(array $repositories, $selected_mirror_ids) {
+        foreach($repositories as $repository) {
+            if (! $this->updateRepositoryMirrors($repository, $selected_mirror_ids)) {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'mirroring_mirroring_error'));
+                return;
+            }
+        }
+
+        $more_than_one_repository = count($repositories) > 1;
+
+        if ($more_than_one_repository && ! $selected_mirror_ids) {
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git', 'mirroring_unmirroring_successful_plural'));
+
+        } elseif ($more_than_one_repository && $selected_mirror_ids) {
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git', 'mirroring_mirroring_successful_plural'));
+
+        } elseif (! $more_than_one_repository && ! $selected_mirror_ids) {
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git', 'mirroring_unmirroring_successful'));
+
+        } else {
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git', 'mirroring_mirroring_successful'));
+        }
+    }
+
+    private function updateRepositoryMirrors(GitRepository $repository, $selected_mirror_ids) {
         $mirror_data_mapper = new Git_Mirror_MirrorDataMapper(
             new Git_Mirror_MirrorDao(),
             UserManager::instance()
@@ -982,18 +1006,21 @@ class GitActions extends PluginActions {
         if ($mirror_data_mapper->doesAllSelectedMirrorIdsExist($selected_mirror_ids)
             && $mirror_data_mapper->unmirrorRepository($repository->getId())
             && $mirror_data_mapper->mirrorRepositoryTo($repository->getId(), $selected_mirror_ids)) {
-            $this->git_system_event_manager->queueRepositoryUpdate($repository);
 
+            $this->git_system_event_manager->queueRepositoryUpdate($repository);
             $this->history_dao->groupAddHistory(
                 "git_repo_mirroring_update",
                 $repository->getName(),
                 $repository->getProjectId()
             );
 
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git', 'mirroring_mirroring_successful'));
-
-        } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'mirroring_mirroring_error'));
+            return true;
         }
+
+        return false;
+    }
+
+    public function setSelectedRepositories($repositories) {
+        $this->addData(array('repositories' => $repositories));
     }
 }
