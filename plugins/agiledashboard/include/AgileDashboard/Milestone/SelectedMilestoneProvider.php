@@ -76,4 +76,16 @@ class AgileDashboard_Milestone_SelectedMilestoneProvider {
 
         $this->milestone_has_been_loaded = true;
     }
+
+    public function getMilestoneId() {
+        if (! $this->milestone) {
+            return;
+        }
+
+        if (! $this->milestone->getArtifactId()) {
+            return self::TOP_BACKLOG_IDENTIFIER;
+        }
+
+        return $this->milestone->getArtifactId();
+    }
 }

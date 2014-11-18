@@ -23,7 +23,7 @@
  */
 class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider extends DataAccessObject {
 
-    const TOP_BACKLOG_IDENTIFIER   = "TOP_BACKLOG";
+    const TOP_BACKLOG_IDENTIFIER   = "0";
     const TOP_BACKLOG_OPTION_ENTRY = "Top Backlog";
 
     /** @var AgileDashboard_Planning_NearestPlanningTrackerProvider */

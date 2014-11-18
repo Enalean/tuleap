@@ -157,12 +157,14 @@ class AgileDashboardPlugin extends Plugin {
      * @see TRACKER_EVENT_REPORT_SAVE_ADDITIONAL_CRITERIA
      */
     public function tracker_event_report_save_additional_criteria($params) {
-        $dao                   = new MilestoneReportCriterionDao();
-        $milestone_id_provider = new AgileDashboard_Milestone_SelectedMilestoneIdProvider($params['additional_criteria']);
+        $dao     = new MilestoneReportCriterionDao();
+        $project = $params['report']->getTracker()->getProject();
+        $user    = UserManager::instance()->getCurrentUser();
 
-        $milestone_id = $milestone_id_provider->getMilestoneId();
-        if ($milestone_id) {
-            $dao->save($params['report']->getId(), $milestone_id);
+        $milestone_provider = new AgileDashboard_Milestone_SelectedMilestoneProvider($params['additional_criteria'], $this->getMilestoneFactory(), $user, $project);
+
+        if ($milestone_provider->getMilestone()) {
+            $dao->save($params['report']->getId(), $milestone_provider->getMilestoneId());
         } else {
             $dao->delete($params['report']->getId());
         }
