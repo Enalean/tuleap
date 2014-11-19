@@ -330,7 +330,7 @@ plugin_git	mirror_repo	Dépôt
 plugin_git	mirror_title	Liste des dépôts sur $1
 plugin_git	mirror_back	Retourner à la liste des mirroirs
 
-plugin_git	system_event_queue	Queue Git
+plugin_git	system_event_queue	File d'attente Git
 
 project_admin_utils	git_repo_create	Création d'un dépôt Git
 project_admin_utils	git_repo_delete	Suppression d'un dépôt Git
