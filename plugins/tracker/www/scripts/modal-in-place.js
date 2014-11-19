@@ -103,7 +103,7 @@ tuleap.tracker = tuleap.tracker || { };
 
         },
 
-        loadEditArtifactModal : function(artifact_id, update_callback, load_callback) {
+        loadEditArtifactModal : function(artifact_id, update_callback, load_callback, data) {
             var self = this;
 
             if (typeof update_callback === 'undefined') {
@@ -111,9 +111,10 @@ tuleap.tracker = tuleap.tracker || { };
             }
 
             $.ajax({
-                url: codendi.tracker.base_url + '?aid='+artifact_id+'&func=get-edit-in-place',
-                beforeSend: tuleap.modal.showLoad
-
+                url       : codendi.tracker.base_url + '?aid='+artifact_id+'&func=get-edit-in-place',
+                beforeSend: tuleap.modal.showLoad,
+                data      : data,
+                method    : 'POST'
             }).done(function(data) {
                 tuleap.modal.hideLoad();
                 self.showArtifactEditForm(data, artifact_id, update_callback);
