@@ -143,7 +143,7 @@ document.observe('dom:loaded', function () {
                             resetCard();
                         }
 
-                        tuleap.tracker.artifactModalInPlace.loadEditArtifactModal(artifact_id, update_callback, load_modal_callback);
+                        tuleap.tracker.artifactModalInPlace.loadEditArtifactModal(artifact_id, update_callback, load_modal_callback, parameters);
                     }
                 });
             }

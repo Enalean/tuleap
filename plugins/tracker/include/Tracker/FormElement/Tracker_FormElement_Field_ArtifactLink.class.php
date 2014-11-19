@@ -756,7 +756,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             $artifact_links = $value->getValue();
         }
 
-        if (! empty($submitted_values) && isset($submitted_values[0]) && is_array($submitted_values[0])) {
+        if (! empty($submitted_values) && isset($submitted_values[0]) && is_array($submitted_values[0]) && isset($submitted_values[0][$this->getId()])) {
             $submitted_value = $submitted_values[0][$this->getId()];
         }
 

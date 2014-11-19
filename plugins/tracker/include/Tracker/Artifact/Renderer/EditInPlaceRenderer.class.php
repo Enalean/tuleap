@@ -35,15 +35,27 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer{
         $this->artifact = $artifact;
     }
 
-    public function display(PFUser $current_user) {
+    public function display(PFUser $current_user, Codendi_Request $request) {
+        $submitted_values = $this->getSubmittedValues($request);
+
         $presenter = new Tracker_Artifact_Presenter_EditArtifactInPlacePresenter(
             $this->fetchFollowUps(),
             $this->fetchArtifactLinks($current_user),
-            $this->artifact->getTracker()->fetchFormElementsNoColumns($this->artifact, array(0 => null)),
+            $this->artifact->getTracker()->fetchFormElementsNoColumns($this->artifact, $submitted_values),
             $this->artifact,
             $current_user
         );
         $this->renderer->renderToPage('artifact-modal', $presenter);
+    }
+
+    public function getSubmittedValues($request) {
+        $submitted_values = array(0 => null);
+
+        if (is_array($request->get('artifact'))) {
+            $submitted_values[0] = $request->get('artifact');
+        }
+
+        return $submitted_values;
     }
 
     /**
