@@ -1,3 +1,6 @@
+Version 3.141 - Tuleap 7.8
+    * request #7633 Event GIT_USER_RENAME is not in Git Queue
+
 Version 3.140 - Tuleap 7.8
     * story #7525: Add a Mass admin tab listing all repos, they are selectable
 
