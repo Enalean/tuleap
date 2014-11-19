@@ -151,7 +151,7 @@ class Git_Backend_GitoliteTest extends Git_Backend_GitoliteCommonTest {
         $this->assertEqual(667, $backend->fork($old_repo, $new_repo, $this->forkPermissions));
     }
 
-    public function testFork_clonesRepositoryAndPushesConf() {
+    public function testFork_clonesRepository() {
         $name  = 'tuleap';
         $old_namespace = '';
         $new_namespace = 'u/johanm/ericsson';
@@ -174,12 +174,12 @@ class Git_Backend_GitoliteTest extends Git_Backend_GitoliteCommonTest {
         
         $driver->expectOnce('fork', array($name, 'gpig/'. $old_namespace, 'gpig/'. $new_namespace));
         $driver->expectOnce('dumpProjectRepoConf', array($project));
-        $driver->expectOnce('push');
+        $driver->expectNever('push');
 
         $backend->forkOnFilesystem($old_repo, $new_repo);
     }
 
-    public function testFork_clonesRepositoryFromOneProjectToAnotherSucceedAndPushesConf() {
+    public function testFork_clonesRepositoryFromOneProjectToAnotherSucceed() {
         $repo_name        = 'tuleap';
         $old_project_name = 'garden';
         $new_project_name = 'gpig';
@@ -206,7 +206,7 @@ class Git_Backend_GitoliteTest extends Git_Backend_GitoliteCommonTest {
         
         $driver->expectOnce('fork', array($repo_name, $old_project_name.'/'. $namespace, $new_project_name.'/'. $namespace));
         $driver->expectOnce('dumpProjectRepoConf', array($new_project));
-        $driver->expectOnce('push');
+        $driver->expectNever('push');
 
         $backend->forkOnFilesystem($old_repo, $new_repo, $this->forkPermissions);
     }

@@ -68,6 +68,11 @@ class SystemEvent_GIT_REPO_UPDATE extends SystemEvent {
     public function process() {
         $repository = $this->getRepositoryFromParameters();
         if (! $repository) {
+            if ($this->repository_factory->getDeletedRepository($this->getRepositoryIdFromParameters())) {
+                $this->done('Unable to update a repository marked as deleted');
+                return;
+            }
+
             $this->warning('Unable to find repository, perhaps it was deleted in the mean time?');
             return;
         }

@@ -822,4 +822,10 @@ class Event {
      *      'list_of_icon_unicodes' => array
      */
     const SERVICE_ICON = 'service_icon';
+
+    /**
+     *  Parameters:
+     *      'executed_events_ids' => array
+     */
+    const POST_SYSTEM_EVENTS_ACTIONS = 'post_system_events_actions';
 }

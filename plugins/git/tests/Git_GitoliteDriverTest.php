@@ -137,7 +137,7 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
         $driver->dumpProjectRepoConf($prj);
 
         // Check every thing was commited
-        $this->assertEmptyGitStatus();
+        $this->assertNotEmptyGitStatus();
 
         // Ensure file is correct
         $result     = file_get_contents($this->_glAdmDir.'/conf/projects/project1.conf');
@@ -185,7 +185,7 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
         $driver->dumpProjectRepoConf($prj);
 
         // Check every thing was commited
-        $this->assertEmptyGitStatus();
+        $this->assertNotEmptyGitStatus();
 
         // Ensure file is correct
         $result     = file_get_contents($this->_glAdmDir.'/conf/projects/project1.conf');
@@ -247,7 +247,7 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
         $driver->dumpProjectRepoConf($prj);
 
         // Check every thing was commited
-        $this->assertEmptyGitStatus();
+        $this->assertNotEmptyGitStatus();
 
         // Ensure file is correct
         $result     = file_get_contents($this->_glAdmDir.'/conf/projects/project1.conf');
@@ -337,14 +337,6 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
         $this->assertNoPattern('`\ninclude "projects/legacy.conf"\n`', $this->getGitoliteConf());
         $this->assertPattern('`\ninclude "projects/newone.conf"\n`', $this->getGitoliteConf());
         $this->assertEmptyGitStatus();
-    }
-
-    public function itQueuesGrokmirrorManifestEventAfterPush() {
-        expect($this->git_system_event_manager)
-            ->queueGrokMirrorManifest(new IsAExpectation('GitRepositoryGitoliteAdmin'))
-            ->once();
-
-        $this->driver->push();
     }
 
     public function itLogsEverytimeItPushes() {
@@ -437,5 +429,3 @@ class Git_GitoliteDriver_ForkTest extends Git_GitoliteTestCase {
         $this->assertFalse($this->driver->isInitialized($this->_fixDir));
     }
 }
-
-?>

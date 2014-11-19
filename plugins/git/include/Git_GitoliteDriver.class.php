@@ -187,8 +187,6 @@ class Git_GitoliteDriver {
         $this->logger->debug('Pushing in gitolite admin repository: done');
         chdir($this->oldCwd);
 
-        $this->git_system_event_manager->queueGrokMirrorManifest(new GitRepositoryGitoliteAdmin());
-
         return $res;
     }
 
@@ -225,7 +223,7 @@ class Git_GitoliteDriver {
         
         $config_file = $this->getProjectPermissionConfFile($project);
         if ($this->writeGitConfig($config_file, $project_config)) {
-            return $this->commitConfigFor($project);
+            return $this->updateMainConfIncludes($project);
         }
     }
 
@@ -280,10 +278,8 @@ class Git_GitoliteDriver {
         return $this->gitExec->add($config_file);
     }
     
-    protected function commitConfigFor($project) {
-        if ($this->updateMainConfIncludes($project)) {
-            return $this->gitExec->commit('Update: '.$project->getUnixName());
-        }
+    public function commit($message) {
+        return $this->gitExec->commit($message);
     }
 
     /**
