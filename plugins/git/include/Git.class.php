@@ -552,8 +552,32 @@ class Git extends PluginController {
 
                 break;
             case 'admin-mass-update':
-                $this->addAction('getProjectRepositoryList', array($this->groupId));
-                $this->addView('adminMassUpdateView');
+                if ($this->request->get('save-mass-change') || $this->request->get('go-to-mass-change')) {
+                    $this->checkSynchronizerToken('/plugins/git/?group_id='. (int)$this->groupId .'&action=admin-mass-update');
+
+                    $repositories = $this->getRepositoriesFromIds($this->request->get('repository_ids'));
+
+                    if (! $repositories) {
+                        $this->addError($this->getText('actions_repo_not_found'));
+                        $this->redirect('/plugins/git/?action=index&group_id='. $this->groupId);
+                    }
+                }
+
+                if ($this->request->get('go-to-mass-change')) {
+                    $this->addAction('setSelectedRepositories', array($repositories));
+                    $this->addView('adminMassUpdateView');
+                    return;
+                }
+
+                if ($this->request->get('save-mass-change')) {
+                    $this->addAction('updateMirroring', array(
+                        $repositories,
+                        $this->request->get('selected_mirror_ids')
+                    ));
+                }
+
+                $this->addView('adminMassUpdateSelectRepositoriesView');
+
                 break;
             case 'fetch_git_config':
                 $project = $this->projectManager->getProject($this->groupId);
@@ -691,14 +715,15 @@ class Git extends PluginController {
 
             case 'update_mirroring':
                 $repository = $this->factory->getRepositoryById($repoId);
-                if (! $this->factory->getRepositoryById($repoId)) {
+                if (! $repository) {
                     $this->addError($this->getText('actions_repo_not_found'));
                 }
 
                 $this->addAction('updateMirroring', array(
-                    $repository,
+                    array($repository),
                     $this->request->get('selected_mirror_ids')
                 ));
+
                 $this->addAction('redirectToRepoManagement', array($this->groupId, $repository->getId(), $pane));
                 break;
 
@@ -931,12 +956,20 @@ class Git extends PluginController {
         return array();
     }
 
-    private function getRepositoriesFromIds(array $repoIds) {
-        $repos = array();
-        foreach ($repoIds as $id) {
-            $repos[] = $this->factory->getRepositoryById($id);
+    private function getRepositoriesFromIds($repository_ids) {
+        $repositories = array();
+
+        foreach($repository_ids as $repository_id) {
+            $repository = $this->factory->getRepositoryById($repository_id);
+
+            if (! $repository) {
+                return false;
+            }
+
+            $repositories[] = $repository;
         }
-        return $repos;
+
+        return $repositories;
     }
     
     /**

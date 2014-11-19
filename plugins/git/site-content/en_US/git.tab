@@ -59,6 +59,9 @@ plugin_git	mirroring_mirror_url	URL
 plugin_git	mirroring_mirror_used	Used by this repository?
 plugin_git	mirroring_update_mirroring	Update mirroring of this repository
 plugin_git	mirroring_mirroring_successful	The repository will be replicated on the selected mirrors shortly.
+plugin_git	mirroring_mirroring_successful_plural	The repositories will be replicated on the selected mirrors shortly.
+plugin_git	mirroring_unmirroring_successful	The repository will be completely removed from mirrors shortly.
+plugin_git	mirroring_unmirroring_successful_plural	The repositories will be completely removed from mirrors shortly.
 plugin_git	mirroring_mirroring_error	Error when defining on which mirrors the repository is replicated.
 
 plugin_git	admin_settings	General settings
@@ -269,9 +272,15 @@ plugin_git	view_admin_file_name_label	Template file name
 plugin_git	view_admin_submit_button	Save
 plugin_git	view_admin_template_section_title	Gerrit permission configuration templates
 plugin_git	view_admin_template_section_description	This section allows you to choose a Gerrit project configuration and create a reusable template from it
+
 plugin_git	view_admin_mass_update_title	Mass update of repositories
-plugin_git	view_admin_mass_update_select_repositories	Select the repositories you want to update:
+plugin_git	view_admin_mass_update_select_repositories	Select the repositories you want to update. You will be able to apply mass changes on the next page.
 plugin_git	view_admin_mass_update_repository_list_name	Repository name
+plugin_git	view_admin_mass_update_go_to_mass_change	Update selected repositories
+plugin_git	view_admin_mass_update_selected_repository	You are about to update the repository <b>$1</b>. For now, only mirroring settings can be updated.
+plugin_git	view_admin_mass_update_selected_repositories	You are about to update <span data-title="$1 repositories">$1 repositories</span>. For now, only mirroring settings can be updated.
+plugin_git	view_admin_mass_update_submit_mass_change	Update repositories
+plugin_git	view_admin_mass_update_mirroring	Note that current repositories mirroring settings will be discarded: repositories will <i>only</i> be mirrored on selected mirrors.
 
 plugin_git	view_admin_template_table_action	Action
 plugin_git	view_admin_template_table_name	Template name

@@ -21,27 +21,63 @@
 class GitPresenters_AdminMassUpdatePresenter extends GitPresenters_AdminPresenter {
 
     /**
+     * @var string
+     */
+    public $csrf_input;
+
+    /**
      * @var array
      */
     public $repositories;
 
+    /**
+     * @var GitPresenters_MirroringPresenter
+     */
+    public $mirroring_presenter;
 
-    public function __construct($project_id, array $repositories) {
+
+    public function __construct(CSRFSynchronizerToken $csrf, $project_id, array $repositories, GitPresenters_AdminMassUdpdateMirroringPresenter $mirroring_presenter) {
         parent::__construct($project_id);
 
-        $this->manage_mass_update = true;
-        $this->repositories       = $repositories;
+        $this->csrf_input          = $csrf->fetchHTMLInput();
+        $this->manage_mass_update  = true;
+        $this->repositories        = $repositories;
+        $this->mirroring_presenter = $mirroring_presenter;
     }
 
     public function title() {
         return $GLOBALS['Language']->getText('plugin_git', 'view_admin_mass_update_title');
     }
 
-    public function select_repositories() {
-        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_mass_update_select_repositories');
+    public function info_mass_update() {
+        $nb_selected_repositories = count($this->repositories);
+        if ($nb_selected_repositories > 1) {
+            $concatened_repository_names = $this->getConcatenedRepositoryNames();
+
+            return $GLOBALS['Language']->getText('plugin_git', 'view_admin_mass_update_selected_repositories', array($nb_selected_repositories, $concatened_repository_names));
+        }
+
+        $repository = $this->repositories[0];
+
+        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_mass_update_selected_repository', array($this->getRepositoryFullName($repository)));
     }
 
-    public function repository_list_name() {
-        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_mass_update_repository_list_name');
+    public function submit_mass_change() {
+        return $GLOBALS['Language']->getText('plugin_git', 'view_admin_mass_update_submit_mass_change');
+    }
+
+    public function form_action() {
+        return '/plugins/git/?group_id='. $this->project_id .'&action=admin-mass-update';
+    }
+
+    private function getConcatenedRepositoryNames() {
+        return implode(', ', array_map(
+            array($this, 'getRepositoryFullName'),
+            $this->repositories
+        ));
+    }
+
+    private function getRepositoryFullName(GitRepository $repository) {
+        return $repository->getFullName();
     }
 }
