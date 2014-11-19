@@ -89,6 +89,11 @@ class trackerPlugin extends Plugin {
             $this->addHook(AGILEDASHBOARD_EVENT_REST_GET_BURNDOWN);
             $this->addHook(AGILEDASHBOARD_EVENT_REST_OPTIONS_BURNDOWN);
         }
+        if (defined('STATISTICS_BASE_DIR')) {
+            $this->addHook(Statistics_Event::FREQUENCE_STAT_ENTRIES);
+            $this->addHook(Statistics_Event::FREQUENCE_STAT_SAMPLE);
+        }
+
         return parent::getHooksAndCallbacks();
     }
 
@@ -98,6 +103,22 @@ class trackerPlugin extends Plugin {
             $this->pluginInfo = new trackerPluginInfo($this);
         }
         return $this->pluginInfo;
+    }
+
+    /**
+     * @see Statistics_Event::FREQUENCE_STAT_ENTRIES
+     */
+    public function plugin_statistics_frequence_stat_entries($params) {
+        $params['entries'][$this->getServiceShortname()] = 'Opened artifacts';
+    }
+
+    /**
+     * @see Statistics_Event::FREQUENCE_STAT_SAMPLE
+     */
+    public function plugin_statistics_frequence_stat_sample($params) {
+        if ($params['character'] === $this->getServiceShortname()) {
+            $params['sample'] = new Tracker_Sample();
+        }
     }
 
     public function cssFile($params) {

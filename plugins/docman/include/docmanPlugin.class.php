@@ -94,12 +94,37 @@ class DocmanPlugin extends Plugin {
         $this->_addHook(Event::COMBINED_SCRIPTS,           'combinedScripts',             false);
     }
 
+    public function getHooksAndCallbacks() {
+        if (defined('STATISTICS_BASE_DIR')) {
+            $this->addHook(Statistics_Event::FREQUENCE_STAT_ENTRIES);
+            $this->addHook(Statistics_Event::FREQUENCE_STAT_SAMPLE);
+        }
+
+        return parent::getHooksAndCallbacks();
+    }
+
     public function getServiceShortname() {
         return 'docman';
     }
 
     public function service_icon($params) {
         $params['list_of_icon_unicodes'][$this->getServiceShortname()] = '\e80c';
+    }
+
+    /**
+     * @see Statistics_Event::FREQUENCE_STAT_ENTRIES
+     */
+    public function plugin_statistics_frequence_stat_entries($params) {
+        $params['entries'][$this->getServiceShortname()] = 'Documents viewed';
+    }
+
+    /**
+     * @see Statistics_Event::FREQUENCE_STAT_SAMPLE
+     */
+    public function plugin_statistics_frequence_stat_sample($params) {
+        if ($params['character'] === $this->getServiceShortname()) {
+            $params['sample'] = new Docman_Sample();
+        }
     }
 
     function permission_get_name($params) {

@@ -65,10 +65,14 @@ $allData = array('session' => 'Sessions',
                  'filedl' => 'Files downloaded',
                  'file' => 'Files released',
                  'groups' => 'Project created',
-                 'docdl' => 'Document viewed',
+                 'docdl' => 'Legacy document viewed',
                  'wikidl' => 'Wiki pages viewed',
-                 'oartifact'=> 'Opened Artifacts',
-                 'cartifact' => 'Closed (or wished end date) Artifacts');
+                 'oartifact'=> 'Opened Artifacts (V3)',
+                 'cartifact' => 'Closed (or wished end date) Artifacts (V3)');
+EventManager::instance()->processEvent(
+    Statistics_Event::FREQUENCE_STAT_ENTRIES,
+    array('entries' => &$allData)
+);
 
 //value min and max of the year list
 $min = 2003;
