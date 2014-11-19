@@ -17,6 +17,10 @@ textarea.text {
     width:400px;
 }
 
+#plugin_git_clone_url {
+  margin: 20px 0 0;
+}
+
 #plugin_git_clone_url_group {
     display: inline;
 }
@@ -83,8 +87,7 @@ textarea.text {
 #plugin_git_repo_parent {
     color: #666;
     font-size: 12px;
-    margin-top: -1.5em;
-    margin-bottom: 1.5em;
+    margin: -5px 0 0;
 }
 
 .plugin_git_repo_privacy {
@@ -152,16 +155,27 @@ td.plugin_git_first_col {
     background: #FCFCFC;
 }
 #git_repositories_list {
-    border-collapse:collapse;
-    border-bottom: 1px solid #f5f5f5; 
+    min-width: 960px;
+    width: auto;
+
+    & > thead > tr {
+        background: #E4E4E4;
+
+        & > th {
+            vertical-align: top;
+            border-left-color: #D2D2D2;
+            border-bottom: 2px solid #B2B2B2;
+        }
+    }
+
+    & > tbody > tr:first-child > td {
+        border-top: none;
+    }
 }
 
-#git_repositories_list td { 
-    border-left: 1px solid #f5f5f5; 
-    border-right: 1px solid #f5f5f5; 
-    padding-left:1em; 
-    padding-right:1em; 
-} 
+tr.boxitemalt > td {
+    font-weight: bold;
+}
 
 #fork_repositories {
     border-collapse: collapse;
@@ -562,5 +576,21 @@ fieldset.gerrit_disconnect {
 #gitclone_urls_protocol_ssh {
     + .dropdown-toggle + .dropdown-menu > li:not(.is_selected) > a > .icon-ok {
         visibility: hidden;
+    }
+}
+
+.form-tree {
+    margin: 30px 0 0;
+}
+
+h1, h2, h3 {
+    .icon-question-sign {
+        color: #AAA;
+        font-size: 0.8em;
+
+        &:hover {
+            text-decoration: none;
+            color: #888;
+        }
     }
 }

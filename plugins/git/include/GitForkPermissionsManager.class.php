@@ -111,7 +111,7 @@ class GitForkPermissionsManager {
         $form .= '<input type="hidden" id="fork_repositories_path" name="path" value="'.$this->getPurifier()->purify($params['namespace']).'" />';
         $form .= '<input type="hidden" id="fork_repositories_prefix" value="u/'. $userName .'" />';
         $form .= $this->displayAccessControl($groupId);
-        $form .= '<input type="submit" value="'.$GLOBALS['Language']->getText('plugin_git', 'fork_repositories').'" />';
+        $form .= '<input type="submit" class="btn btn-primary" value="'.$GLOBALS['Language']->getText('plugin_git', 'fork_repositories').'" />';
         $form .= '</form>';
         return $form;
     }
