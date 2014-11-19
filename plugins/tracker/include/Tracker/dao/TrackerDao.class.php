@@ -75,12 +75,12 @@ class TrackerDao extends DataAccessObject {
 
         $search_tv3 = '';
         if (TrackerV3::instance()->available()) {
-            $search_tv3 = 'UNION
+            $search_tv3 = "UNION
                   SELECT item_name
                   FROM artifact_group_list
                   WHERE item_name = $item_name
                     AND group_id = $group_id
-                    AND deletion_date IS NULL';
+                    AND deletion_date IS NULL";
         }
 
         $sql = "SELECT item_name
