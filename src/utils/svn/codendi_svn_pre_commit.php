@@ -38,6 +38,7 @@ try {
         new SVN_CommitMessageValidator(ReferenceManager::instance())
     );
     $hook->assertCommitMessageIsValid($repository, $commit_message);
+    $hook->assertCommitToTagIsAllowed($repository, $txn);
     exit(0);
 } catch (Exception $exeption) {
     fwrite (STDERR, $exeption->getMessage());

@@ -32,6 +32,7 @@ class SVN_Hook_PreCommitTest extends TuleapTestCase {
 
         $this->repo           = 'SVN_repo';
         $this->commit_message = '';
+        $this->transaction    = '1';
 
         $svn_hook                       = stub('SVN_Hooks')->getProjectFromRepositoryPath($this->repo)->returns('');
         $this->commit_message_validator = mock('SVN_CommitMessageValidator');
@@ -57,5 +58,25 @@ class SVN_Hook_PreCommitTest extends TuleapTestCase {
         expect($this->commit_message_validator)->assertCommitMessageIsValid()->once();
 
         $this->pre_commit->assertCommitMessageIsValid($this->repo, $this->commit_message);
+    }
+
+    public function itDoesRejectCommitToTagIfCommitToTagNotAllowed() {
+        $project = mock('Project');
+        stub($project)->isCommitToTagDenied()->returns(true);
+        $hook = partial_mock('SVN_Hook_PreCommit', array('getProjectFromRepositoryPath', 'assertItIsAllowedOperationToTag'));
+        stub($hook)->getProjectFromRepositoryPath()->returns($project);
+        stub($hook)->assertItIsAllowedOperationToTag()->returns(true);
+        $this->expectException('Exception');
+        $hook->assertCommitToTagIsAllowed($this->repo, $this->transaction);
+    }
+
+    public function itAssertsUpdatedTargetIsTag() {
+        $path = array('U   project1/tags/release_1/');
+        $this->assertTrue($this->pre_commit->isItUpdateOrDeleteToTag($path[0]));
+    }
+
+    public function itAssertsAddedTargetIsTag() {
+        $path = array('A   project1/tags/release_1/');
+        $this->assertFalse($this->pre_commit->isItUpdateOrDeleteToTag($path[0]));
     }
 }
