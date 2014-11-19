@@ -160,7 +160,8 @@ class Git_SystemEventManager {
             SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP::NAME,
             SystemEvent_GIT_GERRIT_PROJECT_DELETE::NAME,
             SystemEvent_GIT_GERRIT_PROJECT_READONLY::NAME,
-            SystemEvent_GIT_GROKMIRROR_MANIFEST::NAME
+            SystemEvent_GIT_GROKMIRROR_MANIFEST::NAME,
+            SystemEvent_GIT_USER_RENAME::NAME
         );
     }
 
