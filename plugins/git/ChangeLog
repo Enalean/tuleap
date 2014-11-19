@@ -1,3 +1,6 @@
+Version 3.142 - Tuleap 7.8
+    * story #7525: Add a mass update button leading to an update page
+
 Version 3.141 - Tuleap 7.8
     * request #7633 Event GIT_USER_RENAME is not in Git Queue
 
