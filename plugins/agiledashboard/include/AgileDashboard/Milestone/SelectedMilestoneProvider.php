@@ -24,6 +24,7 @@
 class AgileDashboard_Milestone_SelectedMilestoneProvider {
 
     const FIELD_NAME             = AgileDashboard_Milestone_MilestoneReportCriterionProvider::FIELD_NAME;
+    const ANY                    = AgileDashboard_Milestone_MilestoneReportCriterionProvider::ANY;
     const TOP_BACKLOG_IDENTIFIER = AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider::TOP_BACKLOG_IDENTIFIER;
 
     /** @var Planning_MilestoneFactory */
@@ -78,8 +79,12 @@ class AgileDashboard_Milestone_SelectedMilestoneProvider {
     }
 
     public function getMilestoneId() {
+        if (! $this->milestone_has_been_loaded) {
+            $this->loadMilestone();
+        }
+
         if (! $this->milestone) {
-            return;
+            return self::ANY;
         }
 
         if (! $this->milestone->getArtifactId()) {

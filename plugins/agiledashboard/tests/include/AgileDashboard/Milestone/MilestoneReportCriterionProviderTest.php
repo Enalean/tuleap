@@ -25,7 +25,9 @@ class AgileDashboard_Milestone_MilestoneReportCriterionProviderTest extends Tule
         parent::setUp();
         $this->task_tracker          = aTracker()->withId('task')->build();
         $this->options_provider      = mock('AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider');
-        $this->milestone_id_provider = mock('AgileDashboard_Milestone_SelectedMilestoneIdProvider');
+        $this->milestone_id_provider = mock('AgileDashboard_Milestone_SelectedMilestoneProvider');
+
+        $this->user = aUser()->build();
 
         $this->provider = new AgileDashboard_Milestone_MilestoneReportCriterionProvider(
             $this->milestone_id_provider,
@@ -34,20 +36,20 @@ class AgileDashboard_Milestone_MilestoneReportCriterionProviderTest extends Tule
     }
 
     public function itReturnsNullWhenNoOptions() {
-        stub($this->options_provider)->getSelectboxOptions($this->task_tracker, '*')->returns(array());
-        $this->assertEqual($this->provider->getCriterion($this->task_tracker), null);
+        stub($this->options_provider)->getSelectboxOptions($this->task_tracker, '*', $this->user)->returns(array());
+        $this->assertEqual($this->provider->getCriterion($this->task_tracker, $this->user), null);
     }
 
     public function itReturnsASelectBox() {
-        stub($this->options_provider)->getSelectboxOptions($this->task_tracker, '*')->returns(array('<option>1','<option>2'));
-        $this->assertPattern('/<select name="additional_criteria\[agiledashboard_milestone\]"/', $this->provider->getCriterion($this->task_tracker));
+        stub($this->options_provider)->getSelectboxOptions($this->task_tracker, '*', $this->user)->returns(array('<option>1','<option>2'));
+        $this->assertPattern('/<select name="additional_criteria\[agiledashboard_milestone\]"/', $this->provider->getCriterion($this->task_tracker, $this->user));
     }
 
     public function itSelectsTheGivenMilestone() {
         stub($this->milestone_id_provider)->getMilestoneId()->returns('whatever');
 
-        expect($this->options_provider)->getSelectboxOptions($this->task_tracker, 'whatever')->once();
+        expect($this->options_provider)->getSelectboxOptions($this->task_tracker, 'whatever', $this->user)->once();
 
-        $this->provider->getCriterion($this->task_tracker);
+        $this->provider->getCriterion($this->task_tracker, $this->user);
     }
 }

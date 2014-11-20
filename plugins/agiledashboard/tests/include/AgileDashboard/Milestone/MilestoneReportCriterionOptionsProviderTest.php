@@ -29,23 +29,33 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProviderTest exten
             Sprint ---'      Task
         */
 
-        $this->release_tracker_id = 101;
-        $this->sprint_tracker_id  = 1001;
+
+        $this->user                    = aUser()->build();
+        $this->release_tracker_id      = 101;
+        $this->sprint_tracker_id       = 1001;
+        $this->task_tracker_project_id = 200;
 
         $this->epic_tracker    = aTracker()->withId('epic')->withParent(null)->build();
         $this->story_tracker   = aTracker()->withId('story')->withParent($this->epic_tracker)->build();
-        $this->task_tracker    = aTracker()->withId('task')->withParent($this->story_tracker)->build();
+        $this->task_tracker    = aTracker()->withId('task')->withProjectId($this->task_tracker_project_id)->withParent($this->story_tracker)->build();
         $this->product_tracker = aTracker()->withId('product')->withParent(null)->build();
         $this->release_tracker = aTracker()->withId($this->release_tracker_id)->withParent($this->product_tracker)->build();
         $this->sprint_tracker  = aTracker()->withId($this->sprint_tracker_id)->withParent($this->epic_tracker)->build();
 
         $release_planning = stub('Planning')->getPlanningTracker()->returns($this->release_tracker);
         $sprint_planning  = stub('Planning')->getPlanningTracker()->returns($this->sprint_tracker);
+        $top_planning     = stub('Planning')->getBacklogTrackersIds()->returns(
+            array(
+                $this->release_tracker_id,
+                $this->sprint_tracker_id
+            )
+        );
 
         $this->planning_factory = mock('PlanningFactory');
         stub($this->planning_factory)->getPlanningByPlanningTracker($this->product_tracker)->returns(null);
         stub($this->planning_factory)->getPlanningByPlanningTracker($this->release_tracker)->returns($release_planning);
         stub($this->planning_factory)->getPlanningByPlanningTracker($this->sprint_tracker)->returns($sprint_planning);
+        stub($this->planning_factory)->getVirtualTopPlanning($this->user, $this->task_tracker_project_id)->returns($top_planning);
 
         $this->hierarchy_factory = mock('Tracker_HierarchyFactory');
         stub($this->hierarchy_factory)->getAllParents($this->sprint_tracker)->returns(array($this->release_tracker, $this->product_tracker));
@@ -83,7 +93,7 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProviderTest exten
     public function itReturnsEmptyArrayWhenNoNearestPlanningTracker() {
         stub($this->nearest_planning_tracker_provider)->getNearestPlanningTracker($this->task_tracker, $this->hierarchy_factory)->returns(null);
 
-        $this->assertEqual($this->provider->getSelectboxOptions($this->task_tracker, '*'), array());
+        $this->assertEqual($this->provider->getSelectboxOptions($this->task_tracker, '*', $this->user), array());
     }
 
     public function itDoesNotSearchOnProductTrackerSinceThereIsNoPlanning() {
@@ -91,7 +101,7 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProviderTest exten
 
         expect($this->dao)->getAllMilestoneByTrackers(array($this->release_tracker_id, $this->sprint_tracker_id))->once();
 
-        $this->provider->getSelectboxOptions($this->task_tracker, '*');
+        $this->provider->getSelectboxOptions($this->task_tracker, '*', $this->user);
     }
 
     public function _itReturnsTheListOfOptions() {

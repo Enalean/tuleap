@@ -55,7 +55,7 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider extends D
      *
      * @return string[]
      */
-    public function getSelectboxOptions(Tracker $backlog_tracker, $selected_milestone_id) {
+    public function getSelectboxOptions(Tracker $backlog_tracker, $selected_milestone_id, PFUser $user) {
         $nearest_planning_tracker = $this->nearest_planning_tracker_provider->getNearestPlanningTracker($backlog_tracker, $this->hierarchy_factory);
         if (! $nearest_planning_tracker) {
             return array();
@@ -63,16 +63,16 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider extends D
 
         $planning_trackers_ids = $this->getPlanningTrackersIds($nearest_planning_tracker);
 
-        return $this->formatAllMilestonesAsSelectboxOptions($planning_trackers_ids, $selected_milestone_id);
+        return $this->formatAllMilestonesAsSelectboxOptions($planning_trackers_ids, $selected_milestone_id, $backlog_tracker, $user);
     }
 
     /** @return string[] */
-    private function formatAllMilestonesAsSelectboxOptions(array $planning_trackers_ids, $selected_milestone_id) {
+    private function formatAllMilestonesAsSelectboxOptions(array $planning_trackers_ids, $selected_milestone_id, Tracker $backlog_tracker, PFUser $user) {
         $hp = Codendi_HTMLPurifier::instance();
         $options = array();
         $current_milestone = array();
 
-        $options[] = $this->addTopBacklogPlanningEntry($selected_milestone_id);
+        $options[] = $this->addTopBacklogPlanningEntry($selected_milestone_id, $backlog_tracker, $user);
 
         foreach ($planning_trackers_ids as $id) {
             $current_milestone[$id] = null;
@@ -114,8 +114,15 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider extends D
         return $option;
     }
 
-    private function addTopBacklogPlanningEntry($selected_milestone_id) {
-        return $this->getOptionForSelectBox($selected_milestone_id, self::TOP_BACKLOG_IDENTIFIER, self::TOP_BACKLOG_OPTION_ENTRY);
+    private function addTopBacklogPlanningEntry($selected_milestone_id, Tracker $backlog_tracker, PFUser $user) {
+        $top_planning         = $this->planning_factory->getVirtualTopPlanning($user, $backlog_tracker->getGroupId());
+        $backlog_trackers_ids = $top_planning->getBacklogTrackersIds();
+
+        if ( in_array($backlog_tracker->getId(), $backlog_trackers_ids)) {
+            return $this->getOptionForSelectBox($selected_milestone_id, self::TOP_BACKLOG_IDENTIFIER, self::TOP_BACKLOG_OPTION_ENTRY);
+        }
+
+        return;
     }
 
     /** @return Tracker[] */

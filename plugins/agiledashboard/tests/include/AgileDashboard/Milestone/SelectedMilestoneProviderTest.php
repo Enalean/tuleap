@@ -19,17 +19,30 @@
  */
 require_once dirname(__FILE__).'/../../../bootstrap.php';
 
-class AgileDashboard_Milestone_SelectedMilestoneIdProviderTest extends TuleapTestCase {
+class AgileDashboard_Milestone_SelectedMilestoneProviderTest extends TuleapTestCase {
 
     const FIELD_NAME = AgileDashboard_Milestone_MilestoneReportCriterionProvider::FIELD_NAME;
     const ANY        = AgileDashboard_Milestone_MilestoneReportCriterionProvider::ANY;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->artifact_id = 123;
+        $this->artifact    = anArtifact()->withId($this->artifact_id)->build();
+        $this->milestone   = aMilestone()->withArtifact($this->artifact)->build();
+
+        $this->user    = aUser()->build();
+        $this->project = mock('Project');
+
+        $this->milestone_factory = stub('Planning_MilestoneFactory')->getBareMilestoneByArtifactId($this->user, $this->artifact_id)->returns($this->milestone);
+    }
 
     public function itReturnsTheIdOfTheMilestone() {
         $additional_criteria = array(
             self::FIELD_NAME => new Tracker_Report_AdditionalCriterion(self::FIELD_NAME, 123)
         );
 
-        $provider = new AgileDashboard_Milestone_SelectedMilestoneIdProvider($additional_criteria);
+        $provider = new AgileDashboard_Milestone_SelectedMilestoneProvider($additional_criteria, $this->milestone_factory, $this->user, $this->project);
 
         $this->assertEqual($provider->getMilestoneId(), 123);
     }
@@ -37,7 +50,7 @@ class AgileDashboard_Milestone_SelectedMilestoneIdProviderTest extends TuleapTes
     public function itReturnsAnyWhenNoCriterion() {
         $additional_criteria = array();
 
-        $provider = new AgileDashboard_Milestone_SelectedMilestoneIdProvider($additional_criteria);
+        $provider = new AgileDashboard_Milestone_SelectedMilestoneProvider($additional_criteria, $this->milestone_factory, $this->user, $this->project);
 
         $this->assertEqual($provider->getMilestoneId(), AgileDashboard_Milestone_MilestoneReportCriterionProvider::ANY);
     }
