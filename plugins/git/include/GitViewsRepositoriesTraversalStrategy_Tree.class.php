@@ -111,7 +111,7 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
         }
         $tree = $this->getTree($repositories, $user);
         if (!empty($tree)) {
-            $html .= '<table cellspacing="0" id="git_repositories_list">';
+            $html .= '<table id="git_repositories_list" class="table table-striped table-bordered">';
 
             // header
             $html .= '<thead>';

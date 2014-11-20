@@ -53,7 +53,10 @@ class GitViews extends PluginViews {
 
     public function header() {
         $title = $GLOBALS['Language']->getText('plugin_git','title');
-        $GLOBALS['HTML']->header(array('title'=>$title,'group'=>$this->groupId, 'toptab'=>'plugin_git'));
+
+        $this->getToolbar();
+
+        $GLOBALS['HTML']->header(array('title'=>$title, 'group'=>$this->groupId, 'toptab'=>'plugin_git'));
     }
 
     public function footer() {
@@ -62,6 +65,16 @@ class GitViews extends PluginViews {
 
     public function getText($key, $params=array() ) {
         return $GLOBALS['Language']->getText('plugin_git', $key, $params);
+    }
+
+    protected function getToolbar() {
+        $GLOBALS['HTML']->addToolbarItem($this->linkTo($this->getText('bread_crumb_home'), '/plugins/git/?group_id='.$this->groupId));
+        $GLOBALS['HTML']->addToolbarItem($this->linkTo($this->getText('fork_repositories'), '/plugins/git/?group_id='.$this->groupId .'&action=fork_repositories'));
+        $GLOBALS['HTML']->addToolbarItem($this->linkTo($this->getText('bread_crumb_help'), 'javascript:help_window(\'/doc/'.$this->user->getShortLocale().'/user-guide/git.html\')'));
+
+        if ($this->git_permissions_manager->userIsGitAdmin($this->user, $this->project)) {
+            $GLOBALS['HTML']->addToolbarItem($this->linkTo($this->getText('bread_crumb_admin'), '/plugins/git/?group_id='.$this->groupId .'&action=admin'));
+        }
     }
 
     /**
@@ -78,7 +91,7 @@ class GitViews extends PluginViews {
         switch( $topic ) {
                 case 'init':
              ?>
-<div id="help_init" class="help" style="display:<?php echo $display?>">
+<div id="help_init" class="alert alert-info" style="display:<?php echo $display?>">
     <h3><?php echo $this->getText('help_reference_title'); ?></h3>
     <p>
                        <?php
@@ -90,7 +103,7 @@ class GitViews extends PluginViews {
                     break;
                     case 'create':
                         ?>                        
-                        <div id="help_create" class="help" style="display:<?php echo $display?>">
+                        <div id="help_create" class="alert alert-info" style="display:<?php echo $display?>">
                             <h3><?php echo $this->getText('help_create_reference_title'); ?></h3>
                         <?php
                         echo '<ul>'.$this->getText('help_create_reference').'</ul>';
@@ -100,7 +113,7 @@ class GitViews extends PluginViews {
                         break;
                     case 'tree':
                         ?>
-                        <div id="help_tree" class="help" style="display:<?php echo $display?>">                            
+                        <div id="help_tree" class="alert alert-info" style="display:<?php echo $display?>">
                         <?php
                         echo '<ul>'.$this->getText('help_tree').'</ul>';
                         ?>
@@ -109,7 +122,7 @@ class GitViews extends PluginViews {
                         break;
                     case 'fork':
                         ?>
-                        <div id="help_fork" class="help" style="display:<?php echo $display?>">
+                        <div id="help_fork" class="alert alert-info" style="display:<?php echo $display?>">
                         <?php
                         echo '<ul>'.$this->getText('help_fork').'</ul>';
                         ?>
@@ -129,11 +142,6 @@ class GitViews extends PluginViews {
         $repository = $params['repository'];
         $request    = $this->controller->getRequest();
 
-        if (! $request->get('noheader')) {
-            echo '<br />';
-            $this->_getBreadCrumb();
-        }
-
         $index_view = new GitViews_ShowRepo(
             $repository,
             $this->controller,
@@ -152,8 +160,8 @@ class GitViews extends PluginViews {
     public function repoManagement() {
         $params = $this->getData();
         $repository   = $params['repository'];
-        $this->_getBreadCrumb();
-        echo '<h2>'. $repository->getHTMLLink($this->url_manager) .' - '. $GLOBALS['Language']->getText('global', 'Settings') .'</h2>';
+
+        echo '<h1>'. $repository->getHTMLLink($this->url_manager) .' - '. $GLOBALS['Language']->getText('global', 'Settings') .'</h1>';
         $repo_management_view = new GitViews_RepoManagement(
             $repository,
             $this->controller->getRequest(),
@@ -172,8 +180,7 @@ class GitViews extends PluginViews {
         $repository   = $params['repository'];
         $repoId       = $repository->getId();
         $initialized  = $repository->isInitialized();
-        echo "<br/>";
-        $this->_getBreadCrumb();
+
         echo "<h1>". $repository->getHTMLLink($this->url_manager) ."</h1>";
         ?>
         <form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id=<?php echo $this->groupId?>">
@@ -186,7 +193,7 @@ class GitViews extends PluginViews {
                 <input type="hidden" id="parent_id" name="parent_id" value="<?php echo $repoId?>">
                 <label for="repo_name"><?php echo $this->getText('admin_fork_creation_input_name');
         ?>:     </label>
-                <input type="text" id="repo_name" name="repo_name" value="" /><input type="submit" name="clone" value="<?php echo $this->getText('admin_fork_creation_submit');?>" />
+                <input type="text" id="repo_name" name="repo_name" value="" /><input type="submit" class="btn btn-default" name="clone" value="<?php echo $this->getText('admin_fork_creation_submit');?>" />
                 <a href="#" onclick="$('help_fork').toggle();"> [?]</a>
             </p>
         </form>
@@ -235,7 +242,7 @@ class GitViews extends PluginViews {
      */
     public function index() {
         $params = $this->getData();
-        $this->_getBreadCrumb();
+
         $this->_tree($params);
         if ( $this->getController()->isAPermittedAction('add') ) {
             $this->_createForm();
@@ -248,38 +255,19 @@ class GitViews extends PluginViews {
     protected function _createForm() {
         $user = UserManager::instance()->getCurrentUser();
         ?>
-<h3><?php echo $this->getText('admin_reference_creation_title');
-        ?><a href="#" onclick="$('help_create').toggle();$('help_init').toggle()"> [?]</a></h3>
-<p>
+<h2><?php echo $this->getText('admin_reference_creation_title');
+        ?> <a href="#" onclick="$('help_create').toggle();$('help_init').toggle()"><i class="icon-question-sign"></i></a></h2>
 <form id="addRepository" action="/plugins/git/?group_id=<?php echo $this->groupId ?>" method="POST" class="form-inline">
     <input type="hidden" id="action" name="action" value="add" />
     
     <label for="repo_name"><?= $this->getText('admin_reference_creation_input_name'); ?></label>
     <input id="repo_name" name="repo_name" class="" type="text" value=""/>
 
-    <input type="submit" id="repo_add" name="repo_add" value="<?php echo $this->getText('admin_reference_creation_submit')?>" class="btn">
+    <input type="submit" id="repo_add" name="repo_add" value="<?php echo $this->getText('admin_reference_creation_submit')?>" class="btn btn-primary">
 </form>
-</p>
         <?php
         $this->help('create', array('display'=>'none')) ;
         $this->help('init', array('display'=>'none')) ;
-    }
-
-    /**
-     * @todo make a breadcrumb out of the repository hierarchie ?
-     */
-    protected function _getBreadCrumb() {
-        echo $this->linkTo( '<b>'.$this->getText('bread_crumb_home').'</b>', '/plugins/git/?group_id='.$this->groupId, 'class=""');
-        echo ' | ';
-
-        echo $this->linkTo( '<b>'.$this->getText('fork_repositories').'</b>', '/plugins/git/?group_id='.$this->groupId .'&action=fork_repositories', 'class=""');
-        echo ' | ';
-
-        echo $this->linkTo( '<b>'.$this->getText('bread_crumb_help').'</b>', 'javascript:help_window(\'/doc/'.$this->user->getShortLocale().'/user-guide/git.html\')');
-        if ($this->git_permissions_manager->userIsGitAdmin($this->user, $this->project)) {
-            echo ' | ';
-            echo $this->linkTo( '<b>'.$this->getText('bread_crumb_admin').'</b>', '/plugins/git/?group_id='.$this->groupId .'&action=admin', 'class=""');
-        }
     }
 
     /**
@@ -294,8 +282,8 @@ class GitViews extends PluginViews {
 
     protected function forkRepositories() {
         $params = $this->getData();
-        $this->_getBreadCrumb();
-        echo '<h2>'. $this->getText('fork_repositories') .'</h2>';
+
+        echo '<h1>'. $this->getText('fork_repositories') .'</h1>';
         if ($this->user->isMember($this->groupId)) {
             echo $this->getText('fork_personal_repositories_desc');
         }
@@ -350,7 +338,7 @@ class GitViews extends PluginViews {
             echo '</td>';
 
             echo '<td class="last">';
-            echo '<input type="submit" class="btn" value="'. $this->getText('fork_repositories') .'" />';
+            echo '<input type="submit" class="btn btn-primary" value="'. $this->getText('fork_repositories') .'" />';
             echo '</td>';
 
             echo '</tr></tbody></table>';
@@ -362,7 +350,6 @@ class GitViews extends PluginViews {
 
     protected function adminGitAdminsView() {
         $params = $this->getData();
-        $this->_getBreadCrumb();
 
         $presenter = new GitPresenters_AdminGitAdminsPresenter(
             $this->groupId,
@@ -377,7 +364,7 @@ class GitViews extends PluginViews {
 
     protected function adminGerritTemplatesView() {
         $params = $this->getData();
-        $this->_getBreadCrumb();
+
 
         $repository_list = (isset($params['repository_list'])) ? $params['repository_list'] : array();
         $templates_list  = (isset($params['templates_list'])) ? $params['templates_list'] : array();
@@ -397,7 +384,7 @@ class GitViews extends PluginViews {
     }
 
     protected function adminMassUpdateSelectRepositoriesView() {
-        $this->_getBreadCrumb();
+        $params = $this->getData();
 
         $repository_list = $this->getGitRepositoryFactory()->getAllRepositories($this->project);
         $presenter       = new GitPresenters_AdminMassUpdateSelectRepositoriesPresenter(
@@ -413,7 +400,6 @@ class GitViews extends PluginViews {
 
     protected function adminMassUpdateView() {
         $params = $this->getData();
-        $this->_getBreadCrumb();
 
         $repositories = $params['repositories'];
         $presenter    = new GitPresenters_AdminMassUpdatePresenter(
@@ -455,7 +441,7 @@ class GitViews extends PluginViews {
      */
     protected function forkRepositoriesPermissions() {
         $params = $this->getData();
-        $this->_getBreadCrumb();
+
 
         if ($params['scope'] == 'project') {
             $groupId = $params['group_id'];
@@ -521,7 +507,7 @@ class GitViews extends PluginViews {
             $params = $this->getData();
         }
         if (!empty($params['repository_list']) || (isset($params['repositories_owners']) && $params['repositories_owners']->rowCount() > 0)) {
-            //echo '<h3>'.$this->getText('tree_title_available_repo').' <a href="#" onclick="$(\'help_tree\').toggle();"> [?]</a></h3>';
+            echo '<h1>'.$this->getText('tree_title_available_repo').' <a href="#" onclick="$(\'help_tree\').toggle();"><i class="icon-question-sign"></i></a></h1>';
             if (isset($params['repositories_owners']) && $params['repositories_owners']->rowCount() > 0) {
                 $current_id = null;
                 if (!empty($params['user'])) {
@@ -535,13 +521,11 @@ class GitViews extends PluginViews {
                     $select .= '<option value="'. (int)$owner['repository_creation_user_id'] .'" '. ($owner['repository_creation_user_id'] == $current_id ? $selected : '') .'>'. $uh->getDisplayName($owner['user_name'], $owner['realname']) .'</option>';
                 }
                 $select .= '</select>';
-                echo '<form action="" method="GET">';
-                echo '<p>';
+                echo '<form action="" class="form-tree" method="GET">';
                 echo '<input type="hidden" name="action" value="index" />';
                 echo '<input type="hidden" name="group_id" value="'. (int)$this->groupId .'" />';
                 echo $select;
                 echo '<noscript><input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /></noscript>';
-                echo '</p>';
                 echo '</form>';
             }
             $this->help('tree', array('display' => 'none'));
