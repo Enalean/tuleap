@@ -63,7 +63,7 @@ if (! -d $dst_dir) {
 $dst_file  = $dst_dir.$dst_file;
 # print "Rename $src_file $dst_file\n";
 
-if (!rename($src_file, $dst_file)) {
+if (!move($src_file, $dst_file)) {
     die("FAILURE: cannot move file ($!)\n");
 }
 
