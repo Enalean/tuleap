@@ -59,7 +59,7 @@ class BacklogItemsTest extends RestBase {
 
     public function testOPTIONSChildren() {
         $response = $this->getResponse($this->client->options('backlog_items/'.$this->stories_ids[0].'/children'));
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(array('OPTIONS', 'GET', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGETChildren() {
@@ -75,6 +75,55 @@ class BacklogItemsTest extends RestBase {
         $this->assertEquals($first_task['label'], "Implement the feature");
 
         $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    public function testPATCHChildren() {
+        $uri = 'backlog_items/'.$this->stories_ids[1].'/children';
+        $response      = $this->getResponse($this->client->get($uri));
+        $backlog_items = $response->json();
+
+        $first_task = $backlog_items[0];
+        $this->assertEquals($first_task['label'], "Implement the feature");
+
+        $first_id  = $backlog_items[0]['id'];
+        $second_id = $backlog_items[1]['id'];
+
+        // invert order of the two tasks
+        $response = $this->getResponse($this->client->patch($uri, null, json_encode(array(
+            'order' => array(
+                'ids'         => array($second_id),
+                'direction'   => 'before',
+                'compared_to' => $first_id
+            )
+        ))));
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        // assert that the two tasks are in the order
+        $response      = $this->getResponse($this->client->get($uri));
+        $backlog_items = $response->json();
+
+        $first_task = $backlog_items[0];
+        $this->assertEquals($first_task['label'], "Write tests");
+
+        $first_id  = $backlog_items[0]['id'];
+        $second_id = $backlog_items[1]['id'];
+
+        // re-invert order of the two tasks
+        $response = $this->getResponse($this->client->patch($uri, null, json_encode(array(
+            'order' => array(
+                'ids'         => array($first_id),
+                'direction'   => 'after',
+                'compared_to' => $second_id
+            )
+        ))));
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        // assert that the two tasks are in the order
+        $response      = $this->getResponse($this->client->get($uri));
+        $backlog_items = $response->json();
+
+        $first_task = $backlog_items[0];
+        $this->assertEquals($first_task['label'], "Implement the feature");
     }
 
     /**

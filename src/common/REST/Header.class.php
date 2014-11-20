@@ -82,6 +82,10 @@ class Header {
         self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::POST));
     }
 
+    public static function allowOptionsGetPatch() {
+        self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::PATCH));
+    }
+
     private static function sendAllowHeaders($methods) {
         $methods = implode(', ', $methods);
         self::sendHeader(self::ALLOW, $methods);
