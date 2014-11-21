@@ -77,7 +77,8 @@ module.exports = {
       'vendor/moment/min/moment.min.js',
       'vendor/moment/locale/en-gb.js',
       'vendor/moment/locale/fr.js',
-      'vendor/angular-moment/angular-moment.min.js'
+      'vendor/angular-moment/angular-moment.min.js',
+      'vendor/angular-ui-tree-bdauton/dist/angular-ui-tree-bdauton.min.js'
     ],
     css: [
     ]

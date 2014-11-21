@@ -1,8 +1,32 @@
-ul.backlog-items {
-    margin-bottom: 12px;
+.angular-ui-tree-empty {
+    background: transparent url('milestone-empty') no-repeat center center;
+    margin: 0 0 10px;
+    border: none;
+}
+.angular-ui-tree-nodes .angular-ui-tree-nodes {
+    padding: 0;
+}
+.angular-ui-tree-placeholder {
+    background: #4DB3D0;
+    max-height: 3px;
+    min-height: 3px;
+    margin: 10px;
+}
+.angular-ui-tree-drag {
+    opacity: 1;
+}
 
-    > li {
+ul.backlog-items, ul.backlog-item-children {
+    margin: 0;
+
+    > li.backlog-item {
         list-style-type: none;
+        position: relative;
+
+        &.closed > div.closed {
+            background: #F6F6F6;
+            color: #999;
+        }
 
         > .show-children {
                 margin: 0 auto;
@@ -17,7 +41,7 @@ ul.backlog-items {
                     0 1px 0 0 rgba(242,242,242,0.50);
 
             > .children {
-                padding: 10px 10px 0 0;
+                padding: 10px;
             }
 
             > .show-children-handle {
@@ -42,11 +66,12 @@ ul.backlog-items {
             }
         }
 
-        &:first-child > .backlog-item {
+        &:first-child > .backlog-item-details {
             margin: 0;
         }
 
-        > .backlog-item {
+        > .backlog-item-details {
+            cursor: move;
             position: relative;
             margin: 10px 0 0;
             padding: 5px 5px 5px 12px;
@@ -154,5 +179,12 @@ ul.backlog-items {
                 letter-spacing: -0.03em;
             }
         }
+    }
+}
+
+div.milestones > fieldset.milestone > div.content {
+    ul.backlog-items, ul.backlog-item-children {
+        margin: 0;
+        padding: 0;
     }
 }

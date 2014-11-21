@@ -27,6 +27,10 @@
                     offset: offset
                 })
                 .then(function(response) {
+                    _.forEach(response.data, function(backlog_item) {
+                        augmentBacklogItem(backlog_item);
+                    });
+
                     result = {
                         results: response.data,
                         total: response.headers('X-PAGINATION-SIZE')
@@ -48,6 +52,10 @@
                     offset: offset
                 })
                 .then(function(response) {
+                    _.forEach(response.data, function(backlog_item) {
+                        augmentBacklogItem(backlog_item);
+                    });
+
                     result = {
                         results: response.data,
                         total: response.headers('X-PAGINATION-SIZE')
@@ -78,6 +86,11 @@
                 });
 
             return data.promise;
+        }
+
+        function augmentBacklogItem(backlog_item) {
+            backlog_item.children        = [];
+            backlog_item.children_loaded = false;
         }
     }
 })();

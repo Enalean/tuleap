@@ -36,10 +36,6 @@ msgid "Planning"
 msgstr ""
 
 #: src/app/planning.tpl.html
-msgid "There is no backlog item yet."
-msgstr ""
-
-#: src/app/planning.tpl.html
 msgid "To be planned"
 msgstr ""
 

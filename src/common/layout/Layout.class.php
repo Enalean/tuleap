@@ -1236,7 +1236,7 @@ class Layout extends Response {
     }
 
     protected function includeSubsetOfCombined() {
-        echo '<script type="text/javascript" src="/scripts/jquery/jquery-1.9.1.min.js"></script>';
+        echo '<script type="text/javascript" src="/scripts/jquery/jquery-2.1.1.min.js"></script>';
         echo '<script type="text/javascript" src="/scripts/bootstrap/bootstrap-tooltip.js"></script>';
         echo '<script type="text/javascript" src="/scripts/bootstrap/bootstrap-popover.js"></script>';
         echo '<script type="text/javascript" src="/scripts/tuleap/project-privacy-tooltip.js"></script>';
