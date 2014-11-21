@@ -44,7 +44,7 @@ class Tracker_FormElement_DateFormatter {
     ) {
         $formatted_value = '';
 
-        if (isset($submitted_values[0]) && is_array($submitted_values[0])) {
+        if (isset($submitted_values[0]) && is_array($submitted_values[0]) && isset($submitted_values[0][$this->field->getId()])) {
             $formatted_value = $submitted_values[0][$this->field->getId()];
         } else {
             if ($value != null) {

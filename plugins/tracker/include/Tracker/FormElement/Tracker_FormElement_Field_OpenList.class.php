@@ -143,7 +143,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
      */
     protected function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         $selected_values = $value ? $value->getListValues() : array();
-        if (! empty($submitted_values) && is_array($submitted_values[0])) {
+        if (! empty($submitted_values) && is_array($submitted_values[0]) && isset($submitted_values[0][$this->id])) {
             return $this->fetchOpenList($this->toObj($submitted_values[0][$this->id]));
         }
         return $this->fetchOpenList($selected_values);

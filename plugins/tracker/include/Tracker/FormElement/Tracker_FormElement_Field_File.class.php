@@ -372,7 +372,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         $html = '';
         $html .= '<label class="pc_checkbox tracker_artifact_attachment_delete">';
         $checked = '';
-        if (!empty($submitted_values[0][$this->id]['delete']) && in_array($fileinfo->getId(), $submitted_values[0][$this->id]['delete'])) {
+        if (isset($submitted_values[0][$this->id]) && ! empty($submitted_values[0][$this->id]['delete']) && in_array($fileinfo->getId(), $submitted_values[0][$this->id]['delete'])) {
             $checked = 'checked="checked"';
         }
         $html .= '<input type="checkbox" name="artifact['. $this->id .'][delete][]" value="'. $fileinfo->getId() .'" title="delete" '. $checked .' />&nbsp;';
