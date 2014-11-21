@@ -1,3 +1,6 @@
+Version 5.522 - Tuleap 7.8
+    * request #7634 Tracker cardwall drag'n'drop looses the drop value if transition invalid
+
 Version 5.521 - Tuleap 7.8
     * request #7635 Cannot migrate a TV3 into a TV5
 
