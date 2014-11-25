@@ -1,3 +1,6 @@
+Version 1.40 - Tuleap 7.8
+    * story #7511: Permanently remove the systray
+
 Version 1.39 - Tuleap 7.8
     * request #7634 Tracker cardwall drag'n'drop looses the drop value if transition invalid
 

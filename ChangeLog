@@ -8,6 +8,7 @@ Version 7.8 (Not released yet)
 	* request #7631: legacy docman import script doesn't strip-out html entities
 
 	== Development ==
+	* story #7511: Permanently remove the systray
 	* Fix generate release note templates to match all php versions
 	* Mustachify/glossify project history
 	* Introduce a "sample project feeder": Some tools to activate plugins and create a sample project call guinea pig with agile template a couple of fake data.
@@ -18,7 +19,12 @@ Version 7.8 (Not released yet)
 	* fulltextsearch: 0.103
 	* mediawiki: 0.58
 	* tracker: 5.522
-	* cardwall: 1.39
+	* cardwall: 1.40
+	* agiledashboard: 1.88
+	* tests: 5.24
+
+    == Themes ==
+	* FlamingParrot: 1.56
 
 Version 7.7 (Thursday, November 13th 2014)
 
