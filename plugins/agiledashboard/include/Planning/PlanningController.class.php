@@ -505,28 +505,6 @@ class Planning_Controller extends MVC2_PluginController {
         return new BreadCrumb_AgileDashboard();
     }
 
-    public function generateSystrayData() {
-        $user  = $this->request->get('user');
-        $links = $this->request->get('links');
-        
-        foreach ($user->getGroups() as $project) {
-            if (! $project->usesService('plugin_agiledashboard')) {
-                continue;
-            }
-
-            try {
-                $plannings = $this->getPlanningsShortAccess($project->getID());
-
-                /* @var $links Systray_LinksCollection */
-                $links->append(
-                    new Systray_AgileDashboardLink($project, $plannings)
-                );
-            } catch (Planning_InvalidConfigurationException $e) {
-                //do nothing if the project configuration is invalid
-            }
-        }
-    }
-
     public function getMoreMilestones() {
         $offset = $this->request->get('offset', 'uint', 0);
         $planning = $this->planning_factory->getPlanning($this->request->get('planning_id'));
