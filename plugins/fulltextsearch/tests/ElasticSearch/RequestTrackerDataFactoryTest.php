@@ -33,13 +33,23 @@ class RequestTrackerDataFactory_TrackerMappingTest extends TuleapTestCase {
         stub($text_field)->getName()->returns('title');
         stub($text_field)->getId()->returns(1001);
 
+        $date_field = mock('Tracker_FormElement_Field_Date');
+        stub($date_field)->getName()->returns('my date');
+
+        $lud_field = mock('Tracker_FormElement_Field_LastUpdateDate');
+        stub($lud_field)->getName()->returns('last updated');
+
+        $sub_on_field = mock('Tracker_FormElement_Field_SubmittedOn');
+        stub($sub_on_field)->getName()->returns('sub on');
+
         $form_element_factory = mock('Tracker_FormElementFactory');
         stub($form_element_factory)->getUsedTextFields()->returns(array($text_field));
+        stub($form_element_factory)->getUsedCustomDateFields()->returns(array($date_field));
+        stub($form_element_factory)->getCoreDateFields()->returns(array($lud_field, $sub_on_field));
 
         $this->tracker      = aTracker()->withId(455)->build();
         $this->data_factory = new ElasticSearch_1_2_RequestTrackerDataFactory(
-            mock('Tracker_Permission_PermissionsSerializer'),
-            $form_element_factory
+            new ElasticSearch_1_2_ArtifactPropertiesExtractor($form_element_factory, mock('Tracker_Permission_PermissionsSerializer'))
         );
     }
 
@@ -78,6 +88,7 @@ class RequestTrackerDataFactory_TrackerMappingTest extends TuleapTestCase {
                     ),
                     'date_added' => array(
                         'type' => 'date',
+                        'format' => 'date_time_no_millis',
                     ),
                     'comment' => array(
                         'type' => 'string',
@@ -117,6 +128,27 @@ class RequestTrackerDataFactory_TrackerMappingTest extends TuleapTestCase {
                 'type'  => 'string',
             )
         );
+        $this->assertEqual(
+            $mapping['455']['properties']['my date'],
+            array(
+                'type'  => 'date',
+                'format' => 'date_time_no_millis',
+            )
+        );
+        $this->assertEqual(
+            $mapping['455']['properties']['last updated'],
+            array(
+                'type'  => 'date',
+                'format' => 'date_time_no_millis',
+            )
+        );
+        $this->assertEqual(
+            $mapping['455']['properties']['sub on'],
+            array(
+                'type'  => 'date',
+                'format' => 'date_time_no_millis',
+            )
+        );
     }
 
 }
@@ -128,11 +160,38 @@ abstract class RequestTrackerDataFactory_ArtifactBaseFormatting extends TuleapTe
 
     public function setUp() {
         parent::setUp();
+
+        $text_field = mock('Tracker_FormElement_Field_Text');
+        stub($text_field)->getName()->returns('title');
+        stub($text_field)->getId()->returns(1001);
+
+        $date_field = mock('Tracker_FormElement_Field_Date');
+        stub($date_field)->getName()->returns('my date');
+
+        $lud_field = mock('Tracker_FormElement_Field_LastUpdateDate');
+        stub($lud_field)->getName()->returns('last updated');
+
+        $sub_on_field = mock('Tracker_FormElement_Field_SubmittedOn');
+        stub($sub_on_field)->getName()->returns('sub on');
+
+        $last_changeset = mock('Tracker_Artifact_Changeset');
+        stub($last_changeset)->getId()->returns(12561);
+        stub($last_changeset)->getSubmittedOn()->returns(4523558);
+
+        stub($last_changeset)->getValue($text_field)->returns(
+            stub('Tracker_Artifact_ChangesetValue_Text')->getValue()->returns('abc')
+        );
+
+        stub($last_changeset)->getValue($date_field)->returns(
+            stub('Tracker_Artifact_ChangesetValue_Date')->getTimestamp()->returns(1024586545)
+        );
+
         $this->tracker  = aTracker()->withId(455)->withProjectId(112)->build();
         $this->artifact = anArtifact()
             ->withId(44)
             ->withTracker($this->tracker)
-            ->withChangesets(array(aChangeset()->withId(12561)->build()))
+            ->withChangesets(array($last_changeset))
+            ->withSubmittedOn(1256684)
             ->build();
 
         $permissions_serializer = mock('Tracker_Permission_PermissionsSerializer');
@@ -141,11 +200,14 @@ abstract class RequestTrackerDataFactory_ArtifactBaseFormatting extends TuleapTe
         stub($permissions_serializer)->getLiteralizedUserGroupsThatCanViewArtifact($this->artifact)->returns('@ug_114, @project_members');
 
         $form_element_factory = mock('Tracker_FormElementFactory');
-        stub($form_element_factory)->getUsedTextFields()->returns(array());
+        stub($form_element_factory)->getUsedTextFields()->returns(array($text_field));
+        stub($form_element_factory)->getUsedCustomDateFields()->returns(array($date_field));
+        stub($form_element_factory)->getCoreDateFields()->returns(array($lud_field, $sub_on_field));
+
+        $artifact_properties_extractor = new ElasticSearch_1_2_ArtifactPropertiesExtractor($form_element_factory, $permissions_serializer);
 
         $this->data_factory = new ElasticSearch_1_2_RequestTrackerDataFactory(
-            $permissions_serializer,
-            $form_element_factory
+            $artifact_properties_extractor
         );
     }
 }
@@ -199,6 +261,38 @@ class RequestTrackerDataFactory_ArtifactBaseFormattingTest extends RequestTracke
             '@ug_114, @project_members'
         );
     }
+
+    public function itPushesTextFields() {
+        $document = $this->data_factory->getFormattedArtifact($this->artifact);
+        $this->assertEqual(
+            $document['title'],
+            'abc'
+        );
+    }
+
+    public function itPushesDateFields() {
+        $document = $this->data_factory->getFormattedArtifact($this->artifact);
+        $this->assertEqual(
+            $document['my date'],
+            '2002-06-20T17:22:25+02:00'
+        );
+    }
+
+    public function itPushesSubmittedOnField() {
+        $document = $this->data_factory->getFormattedArtifact($this->artifact);
+        $this->assertEqual(
+            $document['sub on'],
+            '1970-01-15T14:04:44+01:00'
+        );
+    }
+
+    public function itPushesLastUpdatedField() {
+        $document = $this->data_factory->getFormattedArtifact($this->artifact);
+        $this->assertEqual(
+            $document['last updated'],
+            '1970-02-22T09:32:38+01:00'
+        );
+    }
 }
 
 class RequestTrackerDataFactory_ArtifactFollowupCommentsFormattingTest extends RequestTrackerDataFactory_ArtifactBaseFormatting {
@@ -211,14 +305,15 @@ class RequestTrackerDataFactory_ArtifactFollowupCommentsFormattingTest extends R
     }
 
     public function itPushNoComment() {
+        $last_changeset = mock('Tracker_Artifact_Changeset');
+        stub($last_changeset)->getId()->returns(12561);
+        stub($last_changeset)->getSubmittedOn()->returns(1410265950);
+        stub($last_changeset)->getSubmittedBy()->returns(667);
+        stub($last_changeset)->getComment()->returns(false);
+
         $artifact = $this->artifact_builder->withChangesets(
             array(
-                aChangeset()
-                    ->withId(12561)
-                    ->withSubmittedBy(667)
-                    ->withSubmittedOn(1410265950)
-                    ->withComment(false)
-                    ->build()
+                $last_changeset
             )
         )->build();
 
@@ -230,14 +325,15 @@ class RequestTrackerDataFactory_ArtifactFollowupCommentsFormattingTest extends R
     }
 
     public function itPushedOneComment() {
+        $last_changeset = mock('Tracker_Artifact_Changeset');
+        stub($last_changeset)->getId()->returns(12561);
+        stub($last_changeset)->getSubmittedOn()->returns(1410265950);
+        stub($last_changeset)->getSubmittedBy()->returns(667);
+        stub($last_changeset)->getComment()->returns(aChangesetComment()->withText('Bla bla bla')->build());
+
         $artifact = $this->artifact_builder->withChangesets(
             array(
-                aChangeset()
-                    ->withId(12561)
-                    ->withSubmittedBy(667)
-                    ->withSubmittedOn(1410265950)
-                    ->withComment(aChangesetComment()->withText('Bla bla bla')->build())
-                    ->build()
+               $last_changeset
             )
         )->build();
 

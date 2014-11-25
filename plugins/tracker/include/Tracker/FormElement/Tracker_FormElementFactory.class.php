@@ -504,6 +504,22 @@ class Tracker_FormElementFactory {
         return $this->getUsedFormElementsByType($tracker, array('date', 'lud', 'subon'));
     }
 
+    /**
+     * @param Tracker $tracker
+     * @return Tracker_FormElement_Field[] All custom date formElements used by the tracker
+     */
+    public function getUsedCustomDateFields(Tracker $tracker) {
+        return $this->getUsedFormElementsByType($tracker, array('date'));
+    }
+
+    /**
+     * @param Tracker $tracker
+     * @return Tracker_FormElement_Field[] All core date formElements of the tracker
+     */
+    public function getCoreDateFields(Tracker $tracker) {
+        return $this->getFormElementsByType($tracker, array('lud', 'subon'));
+    }
+
     public function getUsedDateFieldById(Tracker $tracker, $field_id) {
         return $this->getUsedFieldByIdAndType($tracker, $field_id, array('date','subon','lud'));
     }
