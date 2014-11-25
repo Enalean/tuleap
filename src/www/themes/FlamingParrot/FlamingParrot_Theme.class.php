@@ -91,11 +91,20 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
             $this->imgroot
         ));
 
-        $this->displayJavascriptElements();
+        $this->displayJavascriptElements($params);
         $this->displayStylesheetElements($params);
         $this->displaySyndicationElements();
 
         $this->body($params);
+    }
+
+    protected function includeSubsetOfCombined() {
+        parent::includeSubsetOfCombined();
+        echo '<script type="text/javascript" src="/scripts/bootstrap/bootstrap-dropdown.js"></script>';
+        echo '<script type="text/javascript" src="/scripts/bootstrap/bootstrap-modal.js"></script>';
+        echo '<script type="text/javascript" src="/scripts/jscrollpane/jquery.mousewheel.js"></script>';
+        echo '<script type="text/javascript" src="/scripts/jscrollpane/jquery.jscrollpane.min.js"></script>';
+        echo '<script type="text/javascript" src="/scripts/tuleap/listFilter.js"></script>';
     }
 
     protected function displayCommonStylesheetElements($params) {

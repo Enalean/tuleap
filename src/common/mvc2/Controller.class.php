@@ -113,5 +113,8 @@ abstract class MVC2_Controller {
     protected function getCurrentUser() {
         return $this->request->getCurrentUser();
     }
+
+    public function getHeaderOptions() {
+        return array();
+    }
 }
-?>

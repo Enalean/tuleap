@@ -76,6 +76,17 @@ class Planning_MilestoneController extends MVC2_PluginController {
         );
     }
 
+    public function getHeaderOptions() {
+        $this->generateBareMilestone();
+        $pane_info_identifier = new AgileDashboard_PaneInfoIdentifier();
+
+        return array(
+            Layout::INCLUDE_FAT_COMBINED => ! $pane_info_identifier->isPaneAPlanningV2(
+                $this->pane_factory->getActivePane($this->milestone)->getIdentifier()
+            )
+        );
+    }
+
     private function getMilestonePresenter() {
         $redirect_parameter = new Planning_MilestoneRedirectParameter();
         

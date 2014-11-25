@@ -72,6 +72,21 @@ class Planning_VirtualTopMilestoneController extends MVC2_PluginController {
         );
     }
 
+    public function getHeaderOptions() {
+        try {
+            $this->generateVirtualTopMilestone();
+            $pane_info_identifier = new AgileDashboard_PaneInfoIdentifier();
+
+            return array(
+                Layout::INCLUDE_FAT_COMBINED => ! $pane_info_identifier->isPaneAPlanningV2(
+                    $this->top_milestone_pane_factory->getActivePane($this->milestone)->getIdentifier()
+                )
+            );
+        } catch (Planning_NoPlanningsException $e) {
+            return array();
+        }
+    }
+
     private function getTopMilestonePresenter() {
         $redirect_parameter = new Planning_MilestoneRedirectParameter();
 
