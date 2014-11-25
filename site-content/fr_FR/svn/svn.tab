@@ -34,6 +34,8 @@ svn_admin_general_settings	mandatory_ref_comment	Lorsque l'option Référence ob
 svn_admin_general_settings	preamble	<h3>Préambule Subversion</h3><P>Message d'introduction sur l'utilisation de CVS en remplacement du message par défaut figurant sur la <a href="$1">page d'accueil de Subversion</a>. (balises HTML autorisées)
 svn_admin_general_settings	svn_can_change_log	Modification des messages de commit
 svn_admin_general_settings	svn_can_change_log_comment	Lorsque l'option Modification des messages de commit est activée, le message de commit peut être modifié (svn propset --revprop -r X svn:log)
+svn_admin_general_settings	svn_allow_tag_immutable	Interdiction de la modification des tags
+svn_admin_general_settings	svn_allow_tag_immutable_comment	Lorsque l'option "Interdiction de la modification des tags" est activée, les tags ne sont plus modifiables, une fois crées.nce.<br> Le repos subvesion  doit avoir ce format:<dl><dt>produit_1/</dt><dd>tags/</dd><dd>trunk/</dd><dd>branch/</dd><dt>produit_n/</dt><dd>tags/</dd><dd>trunk/</dd><dd>branch/</dd></dl>
 #
 #-----------------------------------------------
 # Script: SF/www/svn/admin/index.php

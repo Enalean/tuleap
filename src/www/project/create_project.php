@@ -250,13 +250,14 @@ function create_project($data, $do_not_exit = false) {
             exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','cant_copy_svn_infos'));
         }
 
-        $sql = "SELECT svn_tracker, svn_preamble, svn_mandatory_ref FROM groups WHERE group_id=$template_id ";
+        $sql = "SELECT svn_tracker, svn_preamble, svn_mandatory_ref, svn_commit_to_tag_denied FROM groups WHERE group_id=$template_id ";
         $result = db_query($sql);
         $arr = db_fetch_array($result);
         $query = "UPDATE groups, svn_accessfile_history
                   SET svn_tracker='".$arr['svn_tracker']."',
                       svn_mandatory_ref='".$arr['svn_mandatory_ref']."',
                       svn_preamble='".db_escape_string($arr['svn_preamble'])."',
+                      svn_commit_to_tag_denied='".$arr['svn_commit_to_tag_denied']."',
                       svn_accessfile_version_id = svn_accessfile_history.id
                   WHERE groups.group_id = $group_id
                       AND groups.group_id = svn_accessfile_history.group_id";
