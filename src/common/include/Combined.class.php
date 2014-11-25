@@ -94,6 +94,7 @@ class Combined {
             '/scripts/tuleap/account-maintenance.js',
             '/scripts/tuleap/search.js',
             '/scripts/tuleap/tuleap-mention.js',
+            '/scripts/tuleap/project-privacy-tooltip.js',
             '/scripts/admin/system_events.js'
         );
         EventManager::instance()->processEvent(Event::COMBINED_SCRIPTS, array('scripts' => &$arr));

@@ -122,19 +122,6 @@ class Widget_MyProjects extends Widget {
             }
 
             $html .= '</table>';
-
-            if ($display_privacy) {
-                // Javascript for project privacy tooltip
-                $js = "
-                    document.observe('dom:loaded', function() {
-                        $$('span[class=project_privacy_private], span[class=project_privacy_public]').each(function (span) {
-                            var type = span.className.substring('project_privacy_'.length, span.className.length);
-                            codendi.Tooltips.push(new codendi.Tooltip(span, '/project/privacy.php?project_type='+type));
-                        });
-                    });
-                ";
-                $GLOBALS['HTML']->includeFooterJavascriptSnippet($js);
-            }
         }
         return $html;
     }

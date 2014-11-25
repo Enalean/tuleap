@@ -2095,20 +2095,10 @@ class Layout extends Response {
                     } else {
                         $privacy = 'private';
                     }
-                    $label .= '<span class="project_privacy_'.$privacy.'">[';
+                    $privacy_text = $GLOBALS['Language']->getText('project_privacy', 'tooltip_' . $this->getProjectPrivacy($project));
+                    $label .= '<span class="project-title-container project_privacy_'.$privacy.'" data-content="'. $privacy_text .'" data-placement="bottom">[';
                     $label .= $GLOBALS['Language']->getText('project_privacy', $privacy);
                     $label .= ']</span>';
-
-                    // Javascript for project privacy tooltip
-                    $js = "
-                    document.observe('dom:loaded', function() {
-                        $$('span[class=project_privacy_private], span[class=project_privacy_public]').each(function (span) {
-                            var type = span.className.substring('project_privacy_'.length, span.className.length);
-                            codendi.Tooltips.push(new codendi.Tooltip(span, '/project/privacy.php?project_type='+type));
-                        });
-                    });
-                    ";
-                    $this->includeFooterJavascriptSnippet($js);
 
                     $label .= '&nbsp;';
                 }
@@ -2134,6 +2124,23 @@ class Layout extends Response {
                     );
         }
         return $tabs;
+    }
+
+    protected function getProjectPrivacy(Project $project) {
+        if ($project->isPublic()) {
+            $privacy = 'public';
+
+            if ($GLOBALS['sys_allow_anon']) {
+                $privacy .= '_w_anon';
+            } else {
+                $privacy .= '_wo_anon';
+            }
+
+        } else {
+            $privacy = 'private';
+        }
+
+        return $privacy;
     }
 
     private function getServiceIcon($service_name) {
