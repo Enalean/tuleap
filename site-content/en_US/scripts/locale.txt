@@ -24,3 +24,7 @@ codendi.locales['search'] = {
 codendi.locales['account'] = {
     theme_variant_preview : 'This is a preview. You have to save your preferences to apply this modification.'
 };
+
+codendi.locales['register'] = {
+    did_you_mean: 'Did you mean <a class="suggested-email">#{full}</a>?'
+};

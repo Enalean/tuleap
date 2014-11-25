@@ -273,6 +273,8 @@ if($page == 'admin_creation'){
 // not valid registration, or first time to page
 //
 $HTML->includeJavascriptFile('/scripts/check_pw.js.php');
+$HTML->includeFooterJavascriptFile('/scripts/mailcheck/mailcheck.min.js');
+$HTML->includeFooterJavascriptFile('/scripts/tuleap/mailchecker.js');
 $HTML->header(array('title'=>$Language->getText('account_register', 'title'), 'body_class' => $body_class));
 ?>
 
