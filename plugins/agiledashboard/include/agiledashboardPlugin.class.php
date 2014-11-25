@@ -67,7 +67,6 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(TRACKER_USAGE);
             $this->addHook(Event::SERVICE_ICON);
 
-            $this->_addHook(Event::SYSTRAY);
             $this->_addHook(Event::IMPORT_XML_PROJECT_CARDWALL_DONE);
             $this->_addHook(Event::EXPORT_XML_PROJECT);
             $this->addHook(Event::REST_RESOURCES);
@@ -497,16 +496,6 @@ class AgileDashboardPlugin extends Plugin {
                 'is_over_capacity' => $capacity !== null && $remaining_effort !== null && $capacity < $remaining_effort,
             ));
         }
-    }
-
-    /**
-     * @see Event::SYSTRAY
-     */
-    public function systray($params) {
-        $params['action'] = 'generate_systray_data';
-        $request = new Codendi_Request($params);
-
-        $this->process($request);
     }
 
     /**

@@ -1,1 +1,0 @@
-../../../../../src/www/scripts/prototype/prototype.js

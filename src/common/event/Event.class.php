@@ -454,18 +454,6 @@ class Event {
     const GET_LDAP_LOGIN_NAME_FOR_USER = 'get_ldap_login_name_for_user';
 
     /**
-     * Get the content of the sprint
-     *
-     * Parameters:
-     *    'user'  => The User who made the request
-     *    'links' => The Systray_LinksCollection
-     *
-     * Expected results:
-     *    The links are added in the collection
-     */
-    const SYSTRAY = 'systray';
-
-    /**
      * Event launched during the system check event
      *
      * Parameters:
