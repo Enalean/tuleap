@@ -55,7 +55,8 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
             mock('ProjectManager'),
             mock('ProjectXMLExporter'),
             '/path/to/theme',
-            '/path/to/plugin'
+            '/path/to/plugin',
+            mock('AgileDashboard_KanbanManager')
         );
 
         $this->controller = new AgileDashboard_Controller(
@@ -152,11 +153,11 @@ class Planning_ControllerNewTest extends TuleapTestCase {
         parent::setUp();
         Config::store();
         Config::set('codendi_dir', TRACKER_BASE_DIR .'/../../..');
-        $this->group_id         = 123;
-        $this->request          = aRequest()->with('group_id', "$this->group_id")->build();
-        $this->planning_factory = mock('PlanningFactory');
-        $this->tracker_factory  = mock('TrackerFactory');
-        $this->planning_controller       = new Planning_Controller(
+        $this->group_id            = 123;
+        $this->request             = aRequest()->with('group_id', "$this->group_id")->build();
+        $this->planning_factory    = mock('PlanningFactory');
+        $this->tracker_factory     = mock('TrackerFactory');
+        $this->planning_controller = new Planning_Controller(
             $this->request,
             $this->planning_factory,
             mock('Planning_ShortAccessFactory'),
@@ -164,7 +165,8 @@ class Planning_ControllerNewTest extends TuleapTestCase {
             mock('ProjectManager'),
             mock('ProjectXMLExporter'),
             '/path/to/theme',
-            '/path/to/plugin'
+            '/path/to/plugin',
+            mock('AgileDashboard_KanbanManager')
         );
         $GLOBALS['Language']    = new MockBaseLanguage_Planning_ControllerNewTest();
 
@@ -295,7 +297,8 @@ class Planning_Controller_EditTest extends Planning_Controller_BaseTest {
                 mock('ProjectManager'),
                 mock('ProjectXMLExporter'),
                 '/path/to/theme',
-                '/path/to/plugin'
+                '/path/to/plugin',
+                mock('AgileDashboard_KanbanManager')
             )
         );
 

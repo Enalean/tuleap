@@ -268,7 +268,8 @@ class AgileDashboardRouter {
             $this->project_manager,
             $this->xml_exporter,
             $this->plugin->getThemePath(),
-            $this->plugin->getPluginPath()
+            $this->plugin->getPluginPath(),
+            new AgileDashboard_KanbanManager(new AgileDashboard_KanbanDao())
         );
     }
 

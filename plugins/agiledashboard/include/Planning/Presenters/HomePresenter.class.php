@@ -35,18 +35,28 @@ class Planning_Presenter_HomePresenter {
     /** @var string */
     private $project_name;
 
+    /** @var bool */
+    private $kanban_activated;
+
+    /** @var bool */
+    private $uses_lab_feature;
+
     public function __construct(
         $milestone_access_presenters,
         $group_id,
         $last_level_milestone_presenters,
         $period,
-        $project_name
+        $project_name,
+        $kanban_activated,
+        $uses_lab_feature
     ) {
         $this->milestone_presenters            = $milestone_access_presenters;
         $this->group_id                        = $group_id;
         $this->last_level_milestone_presenters = $last_level_milestone_presenters;
         $this->period                          = $period;
         $this->project_name                    = $project_name;
+        $this->kanban_activated                = $kanban_activated;
+        $this->uses_lab_feature                = $uses_lab_feature;
     }
 
     public function past() {
@@ -99,5 +109,13 @@ class Planning_Presenter_HomePresenter {
         }
 
         return $GLOBALS['Language']->getText('plugin_agiledashboard','home_user_helper_others');
+    }
+
+    public function add_kanban() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard','add_kanban');
+    }
+
+    public function user_can_see_kanban() {
+        return $this->kanban_activated && $this->uses_lab_feature;
     }
 }

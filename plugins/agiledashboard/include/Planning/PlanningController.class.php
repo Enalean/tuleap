@@ -54,6 +54,9 @@ class Planning_Controller extends MVC2_PluginController {
     /** @var string */
     private $plugin_path;
 
+    /** @var AgileDashboard_KanbanManager */
+    private $kanban_manager;
+
     public function __construct(
         Codendi_Request $request,
         PlanningFactory $planning_factory,
@@ -62,7 +65,8 @@ class Planning_Controller extends MVC2_PluginController {
         ProjectManager $project_manager,
         ProjectXMLExporter $xml_exporter,
         $plugin_theme_path,
-        $plugin_path
+        $plugin_path,
+        AgileDashboard_KanbanManager $kanban_manager
     ) {
         parent::__construct('agiledashboard', $request);
         
@@ -74,6 +78,7 @@ class Planning_Controller extends MVC2_PluginController {
         $this->xml_exporter                 = $xml_exporter;
         $this->plugin_theme_path            = $plugin_theme_path;
         $this->plugin_path                  = $plugin_path;
+        $this->kanban_manager               = $kanban_manager;
     }
 
     public function index() {
@@ -117,12 +122,16 @@ class Planning_Controller extends MVC2_PluginController {
             return $this->showEmptyHome();
         }
 
+        $project = ProjectManager::instance()->getProject($this->group_id);
+
         $presenter = new Planning_Presenter_HomePresenter(
             $this->getMilestoneAccessPresenters($plannings),
             $this->group_id,
             $this->getLastLevelMilestonesPresenters($last_plannings, $user),
             $this->request->get('period'),
-            $this->getProjectFromRequest()->getPublicName()
+            $this->getProjectFromRequest()->getPublicName(),
+            $this->kanban_manager->kanbanIsActivatedForProject($project),
+            $user->useLabFeatures()
         );
         return $this->renderToString('home', $presenter);
     }

@@ -123,3 +123,4 @@ plugin_agiledashboard	kanban_input_label	Activer Kanban
 plugin_agiledashboard	kanban_submit_label	Soumettre
 plugin_agiledashboard	kanban_activated	Kanban activé avec succès.
 plugin_agiledashboard	kanban_deactivated	Kanban désactivé avec succès.
+plugin_agiledashboard	add_kanban	Ajouter un kanban
