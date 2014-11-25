@@ -1,56 +1,68 @@
-<h2>{{adminTitle}}</h2>
+<h2>{{ admin_title }}</h2>
 
-<h3>{{ importExportSection }}</h3>
+<h3>{{ import_export_section }}</h3>
 <ul class="unstyled">
     <li>
         <a href="/plugins/agiledashboard/?group_id={{ group_id }}&amp;action=import-form" id="template_import">
             <i class="icon-upload-alt"></i>
-            {{ importTemplate }}
+            {{ import_template }}
         </a>
     </li>
     <li>
         <a href="/plugins/agiledashboard/?group_id={{ group_id }}&amp;action=export-to-file" id="template_export">
             <i class="icon-download-alt"></i>
-            {{ exportTemplate }}
+            {{ export_template }}
         </a>
     </li>
 </ul>
-<h3 class="agiledashboard-admin-section">{{ planningSection }}</h3>
+<h3 class="agiledashboard-admin-section">{{ planning_section }}</h3>
 <ul class="unstyled">
-    {{#can_create_planning}}
+    {{# can_create_planning }}
         <li>
             <a href="/plugins/agiledashboard/?group_id={{ group_id }}&amp;action=new" id="planning_create">
                 <img border="0" alt="add" src="/themes/Tuleap/images/ic/add.png" style="vertical-align:middle">
-                {{createPlanning}}
+                {{ create_planning }}
             </a>
         </li>
-    {{/can_create_planning}}
-    {{^can_create_planning}}
+    {{/ can_create_planning }}
+    {{^ can_create_planning }}
         <div class="alert alert-info">
-           {{cannot_create_planning}}
+           {{ cannot_create_planning }}
            <ul>
-               <li>{{cannot_create_planning_no_trackers}}</li>
-               <li>{{cannot_create_planning_hierarchy}}</li>
+               <li>{{ cannot_create_planning_no_trackers }}</li>
+               <li>{{ cannot_create_planning_hierarchy }}</li>
            </ul>
-           {{{cannot_create_planning_config}}}
+           {{{ cannot_create_planning_config }}}
         </div>
-    {{/can_create_planning}}
+    {{/ can_create_planning }}
 </ul>
-{{#has_plannings}}
+
+{{# has_plannings }}
 <ul>
-    {{#plannings}}
-    <li class="{{li_class}}">
-        <a href="{{edit_url}}">
-            {{name}}
+    {{# plannings }}
+    <li class="{{ li_class }}">
+        <a href="{{ edit_url }}">
+            {{ name }}
         </a>
-        <a href="{{edit_url}}">
-            <img src="{{edit_icon_path}}" alt="{{edit_action_label}}" />
+        <a href="{{ edit_url }}">
+            <img src="{{ edit_icon_path }}" alt="{{ edit_action_label }}" />
         </a>
-        <a href="{{delete_url}}">
-            <img src="{{delete_icon_path}}" alt="delete" />
+        <a href="{{ delete_url }}">
+            <img src="{{ delete_icon_path }}" alt="delete" />
         </a>
-        {{extra_message}}
+        {{ extra_message }}
     </li>
-    {{/plannings}}
+    {{/ plannings }}
 </ul>
-{{/has_plannings}}
+{{/ has_plannings }}
+
+{{# uses_lab_features }}
+
+<form action="?group_id={{ group_id }}&action=updateKanbanUsage" method="POST" class="agiledashboard-admin-kanban">
+    <h3 class="agiledashboard-admin-section"><i class="icon-beaker"></i> {{ kanban_title }}</h3>
+    <label class="checkbox">
+        <input type="checkbox" name="activate-kanban" {{# kanban_activated }} checked="checked" {{/ kanban_activated }}> {{ kanban_input_label }}
+    </label>
+    <button type="submit" class="btn btn-primary">{{ kanban_submit_label }}</button>
+</form>
+{{/ uses_lab_features }}

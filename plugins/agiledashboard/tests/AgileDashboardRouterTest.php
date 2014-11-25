@@ -36,6 +36,7 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
                                              array('renderAction',
                                                    'executeAction',
                                                    'buildController',
+                                                   'buildPlanningController',
                                                    'getArtifactFactory',));
 
 
@@ -49,7 +50,7 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
             mock('ProjectXMLExporter')
         );
         
-        stub($this->router)->buildController()->returns($this->planning_controller);
+        stub($this->router)->buildPlanningController()->returns($this->planning_controller);
         stub($milestone_controller_factory)->getMilestoneController()->returns(mock('Planning_MilestoneController'));
     }
 

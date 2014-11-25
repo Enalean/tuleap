@@ -18,59 +18,73 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Planning_AdminPresenter {
+class AdminPresenter {
 
+    /** @var bool */
+    public $uses_lab_features;
+
+    /** @var int */
     public $group_id;
+
+    /** @var array */
+    public $plannings = array();
+
+    /** @var bool */
+    public $kanban_activated;
 
     private $root_planning_tracker_url;
     private $root_planning_name;
     private $planning_hierarchy = array();
-    private $plannings = array();
     private $can_create_planning;
 
-    public function __construct(array $plannings, $group_id, $can_create_planning, $root_planning_tracker_url, $root_planning_name, array $hierarchy) {
-        $this->plannings = $plannings;
-        $this->group_id  = $group_id;
-        $this->can_create_planning = $can_create_planning;
+    public function __construct(
+        array $plannings,
+        $group_id,
+        $can_create_planning,
+        $root_planning_tracker_url,
+        $root_planning_name,
+        array $hierarchy,
+        $uses_lab_features,
+        $kanban_activated
+    ) {
+        $this->plannings                 = $plannings;
+        $this->group_id                  = $group_id;
+        $this->can_create_planning       = $can_create_planning;
         $this->root_planning_tracker_url = $root_planning_tracker_url;
-        $this->root_planning_name = $root_planning_name;
+        $this->root_planning_name        = $root_planning_name;
+        $this->uses_lab_features         = $uses_lab_features;
+        $this->kanban_activated          = $kanban_activated;
+
         foreach ($hierarchy as $tracker) {
             $this->planning_hierarchy[] = $tracker->getName();
         }
     }
 
-    public function plannings() {
-        return $this->plannings;
-    }
-
     public function has_plannings() {
-        if (empty($this->plannings)) {
-            return false;
-        }
-        return true;
+       return count($this->plannings) > 0;
     }
 
-    public function createPlanning() {
+    public function create_planning() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_create');
     }
 
-    public function importTemplate() {
+    public function import_template() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'import_template');
     }
 
-    public function exportTemplate() {
+    public function export_template() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'export_template');
     }
 
-    public function adminTitle() {
+    public function admin_title() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'Admin');
     }
 
-    public function importExportSection() {
+    public function import_export_section() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'import_export_section');
     }
 
-    public function planningSection() {
+    public function planning_section() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_section');
     }
 
@@ -106,6 +120,16 @@ class Planning_AdminPresenter {
             $this->root_planning_tracker_url.'&func=admin-hierarchy',
         ));
     }
-}
 
-?>
+    public function kanban_title() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_title');
+    }
+
+    public function kanban_input_label() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_input_label');
+    }
+
+    public function kanban_submit_label() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_submit_label');
+    }
+}

@@ -117,3 +117,9 @@ plugin_agiledashboard_admin_semantic	initial_effort_impossible	You cannot define
 plugin_agiledashboard_admin_semantic	initial_effort_now	The initial effort is now: $1
 plugin_agiledashboard_admin_semantic	bad_field_initial_effort	The field you submitted is not a numeric field
 plugin_agiledashboard_admin_semantic	unable_save_initial_effort	Unable to save the <em>initial effort</em>
+
+plugin_agiledashboard	kanban_title	Kanban
+plugin_agiledashboard	kanban_input_label	Activate Kanban
+plugin_agiledashboard	kanban_submit_label	Submit
+plugin_agiledashboard	kanban_activated	Kanban successfully activated.
+plugin_agiledashboard	kanban_deactivated	Kanban successfully deactivated.

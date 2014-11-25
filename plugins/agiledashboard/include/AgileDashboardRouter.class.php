@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -99,7 +99,7 @@ class AgileDashboardRouter {
      * @param Codendi_Request $request
      */
     public function route(Codendi_Request $request) {
-        $controller                     = $this->buildController($request);
+        $planning_controller            = $this->buildPlanningController($request);
         $agile_dashboard_xml_controller = new AgileDashboard_XMLController($request, $this->planning_factory, $this->milestone_factory, $this->plugin->getThemePath());
 
         switch($request->get('action')) {
@@ -107,34 +107,34 @@ class AgileDashboardRouter {
                 $this->routeShowPlanning($request);
                 break;
             case 'show-top':
-                $this->routeShowTopPlanning($request, $controller);
+                $this->routeShowTopPlanning($request, $planning_controller);
                 break;
             case 'new':
-                $this->renderAction($controller, 'new_', $request);
+                $this->renderAction($planning_controller, 'new_', $request);
                 break;
             case 'import-form':
-                $this->renderAction($controller, 'importForm', $request);
+                $this->renderAction($planning_controller, 'importForm', $request);
                 break;
             case 'export-to-file':
-                $this->executeAction($controller, 'exportToFile');
+                $this->executeAction($planning_controller, 'exportToFile');
                 break;
             case 'create':
-                $this->executeAction($controller, 'create');
+                $this->executeAction($planning_controller, 'create');
                 break;
             case 'edit':
-                $this->renderAction($controller, 'edit', $request);
+                $this->renderAction($planning_controller, 'edit', $request);
                 break;
             case 'update':
-                $this->executeAction($controller, 'update');
+                $this->executeAction($planning_controller, 'update');
                 break;
             case 'delete':
-                $this->executeAction($controller, 'delete');
+                $this->executeAction($planning_controller, 'delete');
                 break;
             case 'admin':
                 if ($this->userIsAdmin($request)) {
-                    $this->renderAction($controller, 'admin', $request);
+                    $this->renderAction($this->buildController($request), 'admin', $request);
                 } else {
-                    $this->renderAction($controller, 'index', $request);
+                    $this->renderAction($planning_controller, 'index', $request);
                 }
                 break;
             case 'export':
@@ -148,15 +148,18 @@ class AgileDashboardRouter {
                 $this->executeAction($milestone_controller, 'submilestonedata');
                 break;
             case 'get-more-milestones':
-                $this->executeAction($controller, 'getMoreMilestones');
+                $this->executeAction($planning_controller, 'getMoreMilestones');
                 break;
             case 'solve-inconsistencies':
                 $milestone_controller = $this->milestone_controller_factory->getMilestoneController($request);
                 $this->executeAction($milestone_controller, 'solveInconsistencies');
                 break;
+            case 'updateKanbanUsage':
+                $this->executeAction($this->buildController($request), 'updateKanbanUsage');
+                break;
             case 'index':
             default:
-                $this->renderAction($controller, 'index', $request);
+                $this->renderAction($planning_controller, 'index', $request);
         }
     }
 
@@ -256,7 +259,7 @@ class AgileDashboardRouter {
      *
      * @return Planning_Controller
      */
-    protected function buildController(Codendi_Request $request) {
+    protected function buildPlanningController(Codendi_Request $request) {
         return new Planning_Controller(
             $request,
             $this->planning_factory,
@@ -266,6 +269,14 @@ class AgileDashboardRouter {
             $this->xml_exporter,
             $this->plugin->getThemePath(),
             $this->plugin->getPluginPath()
+        );
+    }
+
+    protected function buildController(Codendi_Request $request) {
+        return new AgileDashboard_Controller(
+            $request,
+            new AgileDashboard_KanbanDao(),
+            $this->planning_factory
         );
     }
 
@@ -366,5 +377,3 @@ class AgileDashboardRouter {
         $this->displayFooter($request);
     }
 }
-
-?>
