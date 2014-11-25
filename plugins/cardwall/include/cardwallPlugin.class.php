@@ -184,7 +184,7 @@ class cardwallPlugin extends Plugin {
                 'ajaxInPlaceEditorExtensions.js',
                 'cardwall.js',
                 'script.js',
-                'admin.js',
+                'custom-mapping.js',
                 'CardsEditInPlace.js',
                 'fullscreen.js',
             ));
