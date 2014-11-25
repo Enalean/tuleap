@@ -390,3 +390,9 @@ plugin_git	clone_text	Clone the repository in order to get your working copy:
 plugin_git	add_remote_text	Or just add this repository as a remote to an existing local repository:
 plugin_git	default_location	Default
 plugin_git	ssh_mirrors_text	SSH Mirrors
+
+plugin_git	restore_invalid_id	Unable to restore Git repository : Invalid repository id
+plugin_git	restore_invalid_name	Unable to restore Git repository : repository with the same name already exist
+plugin_git	restore_event_created	System event created to restore repository
+plugin_git	restore_no_repo_found	No restorable git repositories found
+plugin_git	restore_confirmation	Confirm restore of this Git repository

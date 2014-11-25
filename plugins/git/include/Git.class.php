@@ -371,7 +371,8 @@ class Git extends PluginController {
                 'migrate_to_gerrit',
                 'disconnect_gerrit',
                 'delete_gerrit_project',
-                'update_mirroring'
+                'update_mirroring',
+                'restore'
             );
             if ($this->isAdminMassChangeAllowed()) {
                 $this->permittedActions[] = 'admin-mass-update';
@@ -771,6 +772,9 @@ class Git extends PluginController {
                 ));
 
                 $this->addAction('redirectToRepoManagement', array($this->groupId, $repository->getId(), $pane));
+                break;
+            case 'restore':
+                $this->addAction('restoreRepository', array($repoId, $this->groupId));
                 break;
 
             #LIST

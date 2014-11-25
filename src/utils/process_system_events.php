@@ -33,6 +33,12 @@ EventManager::instance()->processEvent(
         'queues' => &$custom_queues,
     )
 );
+
+if($request_queue == "git_root") {
+    $owner = SystemEvent::OWNER_ROOT;
+    $request_queue = "git";
+}
+
 if (isset($custom_queues[$request_queue])) {
     $logger = $custom_queues[$request_queue]->getLogger();
     $logger->debug('Processing '. $request_queue .' queue.');

@@ -253,4 +253,25 @@ class GitRepositoryManager {
             }
         }
     }
+
+    /**
+     *
+     * Get archived Gitolite repositories for restore
+     *
+     * @param Int $project_id
+     *
+     * @return GitRepository[]
+     */
+    public function getRepositoriesForRestoreByProjectId($project_id) {
+        $archived_repositories = array();
+        $retention_period      = intval($GLOBALS['sys_file_deletion_delay']);
+        $deleted_repositories  = $this->repository_factory->getDeletedRepositoriesByProjectId($project_id, $retention_period);
+        foreach ($deleted_repositories as $repository) {
+            $archive = realpath($this->backup_directory.'/'.$repository->getBackupPath().".tar.gz");
+            if (file_exists($archive)) {
+                array_push($archived_repositories, $repository);
+            }
+        }
+        return $archived_repositories;
+    }
 }
