@@ -1,3 +1,11 @@
+Version 7.7-2 (Tuesday, November 25th 2014)
+	== Bug Fix ==
+	* request #7613: FTS: timeout issue while re-indexing projects
+	* request #7630: Legacy docman import script copies empty folders
+	* request #7537: Follow-up edition doesn't send any notification
+	* request #7631: Legacy docman import script doesn't strip-out html entities
+	* request #7634: Tracker cardwall drag'n'drop looses the drop value if transition invalid
+
 Version 7.7 (Thursday, November 13th 2014)
 
 	== Features ==
