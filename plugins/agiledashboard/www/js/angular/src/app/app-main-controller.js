@@ -3,9 +3,9 @@
         .module('planning')
         .controller('MainCtrl', MainCtrl);
 
-    MainCtrl.$inject = ['$scope', 'SharedPropertiesService', 'gettextCatalog', 'BacklogItemService'];
+    MainCtrl.$inject = ['$scope', '$window', 'SharedPropertiesService', 'gettextCatalog', 'BacklogItemService'];
 
-    function MainCtrl($scope, SharedPropertiesService, gettextCatalog, BacklogItemService) {
+    function MainCtrl($scope, $window, SharedPropertiesService, gettextCatalog, BacklogItemService) {
         _.extend($scope, {
             init: init
         });
@@ -14,6 +14,7 @@
             SharedPropertiesService.setProjectId(project_id);
             SharedPropertiesService.setMilestoneId(milestone_id);
             gettextCatalog.setCurrentLanguage(lang);
+            $window.moment.locale(lang);
         }
     }
 })();
