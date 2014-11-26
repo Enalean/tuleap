@@ -23,16 +23,6 @@
     var api;
     var throttleTimeout;
 
-    function handleProjectTooltip() {
-        $('.project-title-container').popover({
-            html: true,
-            placement: 'right',
-            container: 'body',
-            trigger: 'hover',
-            delay: {show: 1000, hide: 300}
-        });
-    }
-
     function getSidebarUserPreference() {
         if ($('body').hasClass('sidebar-collapsed')) {
             return width_collapsed;
@@ -155,7 +145,6 @@
         var current_size = getSidebarUserPreference();
 
         if ($('.sidebar-nav').length > 0) {
-            handleProjectTooltip();
             initCustomScrollbar();
 
             $('.sidebar-nav li a').tooltip({

@@ -285,23 +285,6 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
         $this->keyboardModal();
     }
 
-    private function getProjectPrivacy(Project $project) {
-        if ($project->isPublic()) {
-            $privacy = 'public';
-
-            if ($GLOBALS['sys_allow_anon']) {
-                $privacy .= '_w_anon';
-            } else {
-                $privacy .= '_wo_anon';
-            }
-
-        } else {
-            $privacy = 'private';
-        }
-
-        return $privacy;
-    }
-
     private function getForgeVersion() {
         return trim(file_get_contents($GLOBALS['codendi_dir'].'/VERSION'));
     }
