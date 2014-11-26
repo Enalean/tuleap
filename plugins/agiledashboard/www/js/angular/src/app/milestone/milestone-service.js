@@ -3,9 +3,9 @@
         .module('milestone')
         .service('MilestoneService', MilestoneService);
 
-    MilestoneService.$inject = ['Restangular', '$q'];
+    MilestoneService.$inject = ['Restangular', '$q', 'BacklogItemFactory'];
 
-    function MilestoneService(Restangular, $q) {
+    function MilestoneService(Restangular, $q, BacklogItemFactory) {
         var rest = Restangular.withConfig(function(RestangularConfigurer) {
             RestangularConfigurer.setFullResponse(true);
             RestangularConfigurer.setBaseUrl('/api/v1');
@@ -14,8 +14,27 @@
         return {
             getSubMilestones: getSubMilestones,
             getMilestones   : getMilestones,
+            getMilestone    : getMilestone,
             getContent      : getContent
         };
+
+        function getMilestone(milestone_id) {
+            var data = $q.defer();
+
+            rest.one('milestones', milestone_id)
+                .get()
+                .then(function(response) {
+                    defineAllowedBacklogItemTypes(response.data);
+
+                    result = {
+                        results: response.data
+                    };
+
+                    data.resolve(result);
+                });
+
+            return data.promise;
+        }
 
         function getMilestones(project_id, limit, offset) {
             var data = $q.defer();
@@ -93,6 +112,7 @@
         function augmentMilestone(milestone, limit, offset) {
             addContentDataToMilestone(milestone);
             defineCurrentToggleState(milestone);
+            defineAllowedContentItemTypes(milestone);
 
             function defineCurrentToggleState(milestone) {
                 if (milestone.semantic_status === 'closed') {
@@ -133,15 +153,32 @@
                     milestone.initialEffort += backlog_item.initial_effort;
                 }
 
-                function augmentBacklogItem(backlog_item) {
-                    backlog_item.children        = [];
-                    backlog_item.children_loaded = false;
-
-                    backlog_item.isOpen = function() {
-                        return this.status === 'Open';
-                    };
+                function augmentBacklogItem(data) {
+                    BacklogItemFactory.augment(data);
                 }
             }
+        }
+
+        function defineAllowedBacklogItemTypes(milestone) {
+            var allowed_trackers = milestone.resources.backlog.accept.trackers;
+            var accept           = [];
+
+            _.forEach(allowed_trackers, function(allowed_tracker) {
+                accept.push('trackerId' + allowed_tracker.id);
+            });
+
+            milestone.accepted_types = accept.join('|');
+        }
+
+        function defineAllowedContentItemTypes(milestone) {
+            var allowed_trackers = milestone.resources.content.accept.trackers;
+            var accept           = [];
+
+            _.forEach(allowed_trackers, function(allowed_tracker) {
+                accept.push('trackerId' + allowed_tracker.id);
+            });
+
+            milestone.accepted_types = accept.join('|');
         }
     }
 })();

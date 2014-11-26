@@ -3,9 +3,9 @@
         .module('backlog-item')
         .service('BacklogItemService', BacklogItemService);
 
-    BacklogItemService.$inject = ['Restangular', '$q'];
+    BacklogItemService.$inject = ['Restangular', '$q', 'BacklogItemFactory'];
 
-    function BacklogItemService(Restangular, $q) {
+    function BacklogItemService(Restangular, $q, BacklogItemFactory) {
         var rest = Restangular.withConfig(function(RestangularConfigurer) {
             RestangularConfigurer.setFullResponse(true);
             RestangularConfigurer.setBaseUrl('/api/v1');
@@ -27,9 +27,7 @@
                     offset: offset
                 })
                 .then(function(response) {
-                    _.forEach(response.data, function(backlog_item) {
-                        augmentBacklogItem(backlog_item);
-                    });
+                    _.forEach(response.data, augmentBacklogItem);
 
                     result = {
                         results: response.data,
@@ -52,9 +50,7 @@
                     offset: offset
                 })
                 .then(function(response) {
-                    _.forEach(response.data, function(backlog_item) {
-                        augmentBacklogItem(backlog_item);
-                    });
+                    _.forEach(response.data, augmentBacklogItem);
 
                     result = {
                         results: response.data,
@@ -77,6 +73,8 @@
                     offset: offset
                 })
                 .then(function(response) {
+                    _.forEach(response.data, augmentBacklogItem);
+
                     result = {
                         results: response.data,
                         total: response.headers('X-PAGINATION-SIZE')
@@ -88,9 +86,8 @@
             return data.promise;
         }
 
-        function augmentBacklogItem(backlog_item) {
-            backlog_item.children        = [];
-            backlog_item.children_loaded = false;
+        function augmentBacklogItem(data) {
+            BacklogItemFactory.augment(data);
         }
     }
 })();

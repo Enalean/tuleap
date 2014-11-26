@@ -15,6 +15,7 @@
         _.extend($scope, {
             backlog_items              : [],
             milestones                 : [],
+            backlog                    : {},
             loading_backlog_items      : true,
             loading_milestones         : true,
             toggle                     : toggle,
@@ -25,14 +26,30 @@
         });
 
         $scope.treeOptions = {
-            accept: isItemDroppable
+            accept : isItemDroppable,
+            dropped: dropped
         };
 
+        loadBacklog();
         displayBacklogItems();
         displayMilestones();
 
+        function loadBacklog() {
+            if (! angular.isDefined(milestone_id)) {
+                $scope.backlog = {
+                    "accepted_types" : "*"
+                };
+            } else {
+                MilestoneService.getMilestone(milestone_id).then(function(milestone) {
+                    $scope.backlog = {
+                        "accepted_types" : milestone.results.accepted_types
+                    };
+                });
+            }
+        }
+
         function displayBacklogItems() {
-            if (typeof milestone_id === 'undefined') {
+            if (! angular.isDefined(milestone_id)) {
                 fetchProjectBacklogItems(project_id, pagination_limit, pagination_offset);
             } else {
                 fetchMilestoneBacklogItems(milestone_id, pagination_limit, pagination_offset);
@@ -64,7 +81,7 @@
         }
 
         function displayMilestones() {
-            if (typeof milestone_id === 'undefined') {
+            if (! angular.isDefined(milestone_id)) {
                 fetchMilestones(project_id, pagination_limit, pagination_offset);
             } else {
                 fetchSubMilestones(milestone_id, pagination_limit, pagination_offset);
@@ -143,14 +160,25 @@
         }
 
         function isItemDroppable(sourceNodeScope, destNodesScope, destIndex) {
-            var is_a_parent   = sourceNodeScope.$element.hasClass('parent');
-            var into_children = destNodesScope.$element.hasClass('backlog-item-children');
-
-            if (is_a_parent !== into_children) {
-                return true;
+            if (typeof destNodesScope.$element.attr === 'undefined') {
+                return;
             }
 
-            return false;
+            var accepted     = destNodesScope.$element.attr('data-accept').split('|');
+            var type         = sourceNodeScope.$element.attr('data-type');
+            var is_droppable = false;
+
+            for (var i = 0; i < accepted.length; i++) {
+                if (accepted[i] === type || accepted[i] === '*') {
+                    is_droppable = true;
+                    continue;
+                }
+            }
+
+            return is_droppable;
+        }
+
+        function dropped(event) {
         }
     }
 })();

@@ -10,9 +10,11 @@
             ng-model="backlog_item.children"
             class="backlog-item-children"
             ng-if="backlog_item.are_children_shown"
+            data-accept="{{ backlog_item.accepted_types }}"
         >
             <li ui-tree-node
                 ng-repeat="backlog_item in backlog_item.children"
+                data-type="{{ backlog_item.trackerId }}"
                 class="backlog-item child"
             >
                 <div class="backlog-item-details {{ backlog_item.status | lowercase }} {{ backlog_item.color }}"
