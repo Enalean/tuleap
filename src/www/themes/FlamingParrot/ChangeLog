@@ -1,3 +1,6 @@
+Version 1.58 - Tuleap 7.8
+    * story #7511: rewriting prototype code in jQuery
+
 Version 1.57 - Tuleap 7.8
     * request #6964: Prevent users to enter misspelled emails during registration
 
