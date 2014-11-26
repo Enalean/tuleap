@@ -25,14 +25,24 @@ class AgileDashboard_Controller extends MVC2_PluginController {
     /** @var PlanningFactory */
     private $planning_factory;
 
-    /** @var AgileDashboard_KanbanDao */
-    private $dao;
+    /** @var AgileDashboard_KanbanManager */
+    private $kanban_manager;
 
-    public function __construct(Codendi_Request $request, AgileDashboard_KanbanDao $dao, PlanningFactory $planning_factory) {
+    /** @var TrackerFactory */
+    private $tracker_factory;
+
+    public function __construct(
+        Codendi_Request $request,
+        PlanningFactory $planning_factory,
+        AgileDashboard_KanbanManager $kanban_manager,
+        TrackerFactory $tracker_factory
+    ) {
         parent::__construct('agiledashboard', $request);
-        $this->dao              = $dao;
-        $this->group_id         = (int) $this->request->get('group_id');
-        $this->planning_factory = $planning_factory;
+
+        $this->group_id          = (int) $this->request->get('group_id');
+        $this->planning_factory  = $planning_factory;
+        $this->kanban_manager    = $kanban_manager;
+        $this->tracker_factory   = $tracker_factory;
     }
 
     /**
@@ -58,7 +68,7 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         $root_planning_name          = '';
         $potential_planning_trackers = array();
         $root_planning               = $this->planning_factory->getRootPlanning($user, $group_id);
-        $kanban_activated            = $this->dao->isActivated($group_id);
+        $kanban_activated            = $this->kanban_manager->kanbanIsActivatedForProject($group_id);
 
         if ($root_planning) {
             $can_create_planning         = count($this->planning_factory->getAvailablePlanningTrackers($user, $group_id)) > 0;
@@ -99,29 +109,71 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         $activate_kanban = $this->request->exist('activate-kanban');
 
         if ($activate_kanban) {
-            $this->dao->activate($this->group_id);
+            $this->kanban_manager->activateKanban($this->group_id);
 
             $GLOBALS['Response']->addFeedback(
                 'info',
                 $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_activated')
             );
 
-            $this->redirect(array(
-                'group_id' => $this->group_id,
-                'action'   => 'admin'
-            ));
+            $this->redirectToAdmin();
         }
 
-        $this->dao->deactivate($this->group_id);
+        $this->kanban_manager->deactivateKanban($this->group_id);
 
         $GLOBALS['Response']->addFeedback(
             'info',
             $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_deactivated')
         );
 
+       $this->redirectToAdmin();
+    }
+
+    public function createKanban() {
+        $kanban_name = $this->request->get('kanban-name');
+        $tracker_id  = $this->request->get('tracker-kanban');
+        $tracker     = $this->tracker_factory->getTrackerById($tracker_id);
+
+        $user = $this->request->getCurrentUser();
+
+        if (! $user->isAdmin($this->group_id)) {
+            return;
+        }
+
+        if ($this->kanban_manager->doesKanbanExistForTracker($tracker)) {
+            $GLOBALS['Response']->addFeedback(
+                'error',
+                $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_tracker_used')
+            );
+
+            $this->redirectToHome();
+        }
+
+        if ($this->kanban_manager->createKanban($this->group_id, $kanban_name, $tracker_id)) {
+            $GLOBALS['Response']->addFeedback(
+                'info',
+                $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_created', array($kanban_name))
+            );
+        } else {
+            $GLOBALS['Response']->addFeedback(
+                'error',
+                $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_creation_error', array($kanban_name))
+            );
+        }
+
+        $this->redirectToHome();
+    }
+
+    private function redirectToHome() {
         $this->redirect(array(
-            'group_id' => $this->group_id,
-            'action'   => 'admin'
+            'group_id' => $this->group_id
+        ));
+    }
+
+    private function redirectToAdmin() {
+        $this->redirect(array(
+           'group_id' => $this->group_id,
+           'action'   => 'admin'
         ));
     }
 }

@@ -47,7 +47,8 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
             mock('Planning_ShortAccessFactory'),
             $milestone_controller_factory,
             mock('ProjectManager'),
-            mock('ProjectXMLExporter')
+            mock('ProjectXMLExporter'),
+            mock('AgileDashboard_KanbanManager')
         );
         
         stub($this->router)->buildPlanningController()->returns($this->planning_controller);

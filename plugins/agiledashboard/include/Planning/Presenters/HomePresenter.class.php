@@ -20,6 +20,8 @@
 
 class Planning_Presenter_HomePresenter {
 
+    public $trackers;
+
     /** @var Planning_Presenter_MilestoneAccessPresenter[] */
     public $milestone_presenters;
 
@@ -38,8 +40,8 @@ class Planning_Presenter_HomePresenter {
     /** @var bool */
     private $kanban_activated;
 
-    /** @var bool */
-    private $uses_lab_feature;
+    /** @var PFUser */
+    private $user;
 
     public function __construct(
         $milestone_access_presenters,
@@ -48,7 +50,8 @@ class Planning_Presenter_HomePresenter {
         $period,
         $project_name,
         $kanban_activated,
-        $uses_lab_feature
+        PFUser $user,
+        $trackers
     ) {
         $this->milestone_presenters            = $milestone_access_presenters;
         $this->group_id                        = $group_id;
@@ -56,7 +59,16 @@ class Planning_Presenter_HomePresenter {
         $this->period                          = $period;
         $this->project_name                    = $project_name;
         $this->kanban_activated                = $kanban_activated;
-        $this->uses_lab_feature                = $uses_lab_feature;
+        $this->user                            = $user;
+        $this->trackers                        = $trackers;
+    }
+
+    public function uses_lab_feature() {
+        return $this->user->useLabFeatures();
+    }
+
+    public function user_is_admin() {
+        return $this->user->isAdmin($this->group_id);
     }
 
     public function past() {
@@ -116,6 +128,26 @@ class Planning_Presenter_HomePresenter {
     }
 
     public function user_can_see_kanban() {
-        return $this->kanban_activated && $this->uses_lab_feature;
+        return $this->kanban_activated && $this->uses_lab_feature();
+    }
+
+    public function add_kanban_modal_title() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard','add_kanban_modal_title');
+    }
+
+    public function btn_close_label() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard','btn_close_label');
+    }
+
+    public function btn_add_modal_label() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard','btn_add_modal_label');
+    }
+
+    public function kanban_name_label() {
+       return $GLOBALS['Language']->getText('plugin_agiledashboard','kanban_name_label');
+    }
+
+    public function tracker_kanban_label() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard','tracker_kanban_label');
     }
 }

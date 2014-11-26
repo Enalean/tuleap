@@ -124,3 +124,11 @@ plugin_agiledashboard	kanban_submit_label	Soumettre
 plugin_agiledashboard	kanban_activated	Kanban activé avec succès.
 plugin_agiledashboard	kanban_deactivated	Kanban désactivé avec succès.
 plugin_agiledashboard	add_kanban	Ajouter un kanban
+plugin_agiledashboard	btn_close_label	Fermer
+plugin_agiledashboard	btn_add_modal_label	Créer
+plugin_agiledashboard	kanban_name_label	Nom du Kanban :
+plugin_agiledashboard	tracker_kanban_label	Sélectionnez le tracker source:
+plugin_agiledashboard	add_kanban_modal_title	Créer un kanban
+plugin_agiledashboard	kanban_created	Kanban $1 créé avec succès.
+plugin_agiledashboard	kanban_creation_error	Erreur pendant la création du Kanban $1.
+plugin_agiledashboard	kanban_tracker_used	Le tracker est déjà utilisé par un autre Kanban.
