@@ -29,4 +29,11 @@ class SystemEventQueue {
     public function getLabel() {
         return $GLOBALS['Language']->getText('admin_system_events', 'default_queue');
     }
+
+    public function getLogger() {
+        return new TruncateLevelLogger(
+            new BackendLogger(Config::get('codendi_log') .'/'. $this->getName() .'_syslog'),
+            Config::get('sys_logger_level')
+        );
+    }
 }
