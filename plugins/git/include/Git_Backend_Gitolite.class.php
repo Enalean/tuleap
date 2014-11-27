@@ -71,18 +71,6 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     }
 
     /**
-     * @param GitRepository[] $project
-     * @return boolean
-     */
-    public function updateAllRepoConf(array $repositories) {
-        foreach($repositories as $repository) {
-            $this->driver->dumpProjectRepoConf($repository->getProject());
-        }
-
-        return true;
-    }
-
-    /**
      * Verify if the repository as already some content within
      *
      * @see    plugins/git/include/Git_Backend_Interface::isInitialized()
