@@ -179,7 +179,7 @@ class cardwallPlugin extends Plugin {
     public function javascript_file($params) {
         // Only show the js if we're actually in the Cardwall pages.
         // This stops styles inadvertently clashing with the main site.
-        if ($this->isAgileDashboardOrTrackerUrl()) {
+        if ($this->isAgileDashboardOrTrackerUrl() && ! $this->isPlanningV2URL()) {
             echo $this->getJavascriptIncludesForScripts(array(
                 'ajaxInPlaceEditorExtensions.js',
                 'cardwall.js',
@@ -238,8 +238,16 @@ class cardwallPlugin extends Plugin {
                 strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL.'/') === 0);
     }
 
+    private function isPlanningV2URL() {
+        $request = HTTPRequest::instance();
+        $pane_info_identifier = new AgileDashboard_PaneInfoIdentifier();
+
+        return $pane_info_identifier->isPaneAPlanningV2($request->get('pane'));
+    }
+
     public function javascript($params) {
         include $GLOBALS['Language']->getContent('script_locale', null, 'cardwall', '.js');
+        echo "var tuleap = tuleap || { };".PHP_EOL;
         echo "tuleap.cardwall = tuleap.cardwall || { };".PHP_EOL;
         echo "tuleap.cardwall.base_url = '". CARDWALL_BASE_URL ."/';".PHP_EOL;
         echo PHP_EOL;

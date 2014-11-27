@@ -74,7 +74,7 @@ class Planning_MilestonePaneFactory {
     }
 
     /** @return AgileDashboard_Pane */
-    private function getActivePane(Planning_Milestone $milestone) {
+    public function getActivePane(Planning_Milestone $milestone) {
         if (! isset($this->list_of_pane_info[$milestone->getArtifactId()])) {
             $this->buildActivePane($milestone);
         }

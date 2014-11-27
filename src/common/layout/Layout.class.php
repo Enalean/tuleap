@@ -65,6 +65,7 @@ class Layout extends Response {
         );
 
     const DEFAULT_SERVICE_ICON = 'tuleap-services-angle-double-right';
+    const INCLUDE_FAT_COMBINED = 'include_fat_combined';
 
     /**
      * Background for priorities
@@ -1091,7 +1092,7 @@ class Layout extends Response {
                     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
                     <title>'. ($params['title'] ? $params['title'] . ' - ' : '') . $GLOBALS['sys_name'] .'</title>
                     <link rel="SHORTCUT ICON" href="'. $this->imgroot . 'favicon.ico' .'">';
-        echo $this->displayJavascriptElements();
+        echo $this->displayJavascriptElements($params);
         echo $this->displayStylesheetElements($params);
         echo $this->displaySyndicationElements();
         echo '</head>';
@@ -1161,6 +1162,10 @@ class Layout extends Response {
         return 'codendi.colorpicker_theme = '. $this->colorpicker_palettes['visibone-dark'] .';';
     }
 
+    private function shouldIncludeFatCombined(array $params) {
+        return ! isset($params[self::INCLUDE_FAT_COMBINED]) || $params[self::INCLUDE_FAT_COMBINED] == true;
+    }
+
     /**
      * Display the Javascript code to be included in <head>
      *
@@ -1170,25 +1175,29 @@ class Layout extends Response {
      * @see includeJavascriptFile
      * @see includeJavascriptSnippet
      */
-    public function displayJavascriptElements() {
+    public function displayJavascriptElements($params) {
         $combined_dir = Config::get('sys_combined_dir');
         if (! is_dir($combined_dir)) {
             $combined_dir = $GLOBALS['codendi_dir'] . '/src/www/scripts/combined';
         }
         $c = new Combined($combined_dir);
-        echo $c->getScripts(array('/scripts/codendi/common.js'));
+        if ($this->shouldIncludeFatCombined($params)) {
+            echo $c->getScripts(array('/scripts/codendi/common.js'));
 
-        $ckeditor_path         = '/scripts/ckeditor-4.3.2/';
-        $ckeditor_path_for_ie7 = '/scripts/ckeditor-for-ie7/';
-        echo '<!--[if IE 7]>
-            <script type="text/javascript">window.CKEDITOR_BASEPATH = "'. $ckeditor_path_for_ie7 .'";</script>
-            <script type="text/javascript" src="'. $ckeditor_path_for_ie7 .'/ckeditor.js"></script>
-            <![endif]-->
-            <!--[if ! IE 7]><!-->
-            <script type="text/javascript">window.CKEDITOR_BASEPATH = "'. $ckeditor_path .'";</script>
-            <script type="text/javascript" src="'. $ckeditor_path .'/ckeditor.js"></script>
-            <!--<![endif]-->
-        ';
+            $ckeditor_path         = '/scripts/ckeditor-4.3.2/';
+            $ckeditor_path_for_ie7 = '/scripts/ckeditor-for-ie7/';
+            echo '<!--[if IE 7]>
+                <script type="text/javascript">window.CKEDITOR_BASEPATH = "'. $ckeditor_path_for_ie7 .'";</script>
+                <script type="text/javascript" src="'. $ckeditor_path_for_ie7 .'/ckeditor.js"></script>
+                <![endif]-->
+                <!--[if ! IE 7]><!-->
+                <script type="text/javascript">window.CKEDITOR_BASEPATH = "'. $ckeditor_path .'";</script>
+                <script type="text/javascript" src="'. $ckeditor_path .'/ckeditor.js"></script>
+                <!--<![endif]-->
+            ';
+        } else {
+            $this->includeSubsetOfCombined();
+        }
 
         //Javascript i18n
         echo '<script type="text/javascript">'."\n";
@@ -1224,6 +1233,13 @@ class Layout extends Response {
         $em->processEvent(Event::JAVASCRIPT, null);
         echo '
         </script>';
+    }
+
+    protected function includeSubsetOfCombined() {
+        echo '<script type="text/javascript" src="/scripts/jquery/jquery-1.9.1.min.js"></script>';
+        echo '<script type="text/javascript" src="/scripts/bootstrap/bootstrap-tooltip.js"></script>';
+        echo '<script type="text/javascript" src="/scripts/bootstrap/bootstrap-popover.js"></script>';
+        echo '<script type="text/javascript" src="/scripts/tuleap/project-privacy-tooltip.js"></script>';
     }
 
     /**
@@ -1785,7 +1801,7 @@ class Layout extends Response {
               <html>
               <head>
                  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
-        echo $this->displayJavascriptElements();
+        echo $this->displayJavascriptElements($params);
         echo $this->displayStylesheetElements(array());
         echo $this->displaySyndicationElements();
         echo '    </head>

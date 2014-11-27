@@ -303,6 +303,7 @@ class AgileDashboardRouter {
                                     array           $args = array(),
                                     array           $header_options = array()) {
         $content = $this->executeAction($controller, $action_name, $args);
+        $header_options = array_merge($header_options, $controller->getHeaderOptions());
 
         $this->displayHeader($controller, $request, $this->getHeaderTitle($action_name), $header_options);
         echo $content;
@@ -379,8 +380,13 @@ class AgileDashboardRouter {
         }
 
         $no_breadcrumbs = new BreadCrumb_NoCrumb();
-        $service->displayHeader($this->getHeaderTitle('showTop'), $no_breadcrumbs, $toolbar, array('body_class' => array('agiledashboard_planning')));
-        $controller = $this->milestone_controller_factory->getVirtualTopMilestoneController($request);
+        $controller     = $this->milestone_controller_factory->getVirtualTopMilestoneController($request);
+        $header_options = array_merge(
+            array('body_class' => array('agiledashboard_planning')),
+            $controller->getHeaderOptions()
+        );
+
+        $service->displayHeader($this->getHeaderTitle('showTop'), $no_breadcrumbs, $toolbar, $header_options);
 
         $this->executeAction($controller, 'showTop', array());
         $this->displayFooter($request);

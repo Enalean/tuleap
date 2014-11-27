@@ -78,7 +78,7 @@ class Planning_VirtualTopMilestonePaneFactory {
     }
 
     /** @return AgileDashboard_Pane */
-    private function getActivePane(Planning_Milestone $milestone) {
+    public function getActivePane(Planning_Milestone $milestone) {
         $milestone_artifact_id = $this->getMilestoneArtifactId();
 
         if (! isset($this->list_of_pane_info[$milestone_artifact_id])) {
