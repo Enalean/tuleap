@@ -2,6 +2,7 @@ Version 7.8 (Not released yet)
 	== Features ==
 	* request #6964: Prevent users to enter misspelled emails during registration
 	* request #7590: Allow SVN immutable tags (contrib STMicroelectronics)
+	* Improve tuleap referral and SEO
 
 	== Bug fix ==
 	* request #7615: retreive the username from ldap while editing SVN commit log messages (contrib STMicroelectronics)
