@@ -5,14 +5,9 @@ body.agiledashboard_planning {
 #home {
     @border-color: #DDD;
 
-    .go-to-backlog {
-        float: left;
+    .go-to-backlog,
+    .add-kanban {
         padding: 8px;
-    }
-    @media screen and (max-width: 1100px) {
-        .go-to-backlog {
-            float: none;
-        }
     }
 
     .date-bar {
@@ -52,6 +47,20 @@ body.agiledashboard_planning {
                 color: #FFFFFF;
                 border-color: #0088CF;
             }
+        }
+    }
+
+    .kanban-block {
+        border-left: dashed 1px #CCC;
+        padding: 0 12px;
+    }
+
+    .ad-homepage-title {
+        > h2 {
+            display: inline;
+            vertical-align: middle;
+            margin: 0;
+            padding-right: 12px;
         }
     }
 
@@ -494,7 +503,7 @@ body.agiledashboard_planning {
 #topblcontent table th,
 #topplanning table th,
 #planning table th,
-#blcontent table th, {
+#blcontent table th {
     white-space: nowrap;
 }
 
@@ -611,5 +620,12 @@ body.agiledashboard_planning {
         th:nth-child(5), td:nth-child(5) {
             display: none;
         }
+    }
+}
+
+.agiledashboard-admin-kanban {
+
+    > button {
+        margin: 10px 0;
     }
 }

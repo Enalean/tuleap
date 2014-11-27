@@ -54,6 +54,9 @@ class Planning_Controller extends MVC2_PluginController {
     /** @var string */
     private $plugin_path;
 
+    /** @var AgileDashboard_KanbanManager */
+    private $kanban_manager;
+
     public function __construct(
         Codendi_Request $request,
         PlanningFactory $planning_factory,
@@ -62,7 +65,8 @@ class Planning_Controller extends MVC2_PluginController {
         ProjectManager $project_manager,
         ProjectXMLExporter $xml_exporter,
         $plugin_theme_path,
-        $plugin_path
+        $plugin_path,
+        AgileDashboard_KanbanManager $kanban_manager
     ) {
         parent::__construct('agiledashboard', $request);
         
@@ -74,55 +78,7 @@ class Planning_Controller extends MVC2_PluginController {
         $this->xml_exporter                 = $xml_exporter;
         $this->plugin_theme_path            = $plugin_theme_path;
         $this->plugin_path                  = $plugin_path;
-    }
-    
-    public function admin() {
-        return $this->renderToString(
-            'admin',
-            $this->getAdminPresenter(
-                $this->getCurrentUser(),
-                $this->group_id
-            )
-        );
-    }
-
-    private function getAdminPresenter(PFUser $user, $group_id) {
-        $can_create_planning         = true;
-        $tracker_uri                 = '';
-        $root_planning_name          = '';
-        $potential_planning_trackers = array();
-        $root_planning               = $this->planning_factory->getRootPlanning($user, $group_id);
-        if ($root_planning) {
-            $can_create_planning         = count($this->planning_factory->getAvailablePlanningTrackers($user, $group_id)) > 0;
-            $tracker_uri                 = $root_planning->getPlanningTracker()->getUri();
-            $root_planning_name          = $root_planning->getName();
-            $potential_planning_trackers = $this->planning_factory->getPotentialPlanningTrackers($user, $group_id);
-        }
-
-        return new Planning_AdminPresenter(
-            $this->getPlanningAdminPresenterList($user, $group_id, $root_planning_name),
-            $group_id,
-            $can_create_planning,
-            $tracker_uri,
-            $root_planning_name,
-            $potential_planning_trackers
-        );
-    }
-
-    private function getPlanningAdminPresenterList(PFUser $user, $group_id, $root_planning_name) {
-        $plannings                 = array();
-        $planning_out_of_hierarchy = array();
-        foreach ($this->planning_factory->getPlanningsOutOfRootPlanningHierarchy($user, $group_id) as $planning) {
-            $planning_out_of_hierarchy[$planning->getId()] = true;
-        }
-        foreach ($this->planning_factory->getPlannings($user, $group_id) as $planning) {
-            if (isset($planning_out_of_hierarchy[$planning->getId()])) {
-                $plannings[] = new Planning_PlanningOutOfHierarchyAdminPresenter($planning, $root_planning_name);
-            } else {
-                $plannings[] = new Planning_PlanningAdminPresenter($planning);
-            }
-        }
-        return $plannings;
+        $this->kanban_manager               = $kanban_manager;
     }
 
     public function index() {
@@ -166,12 +122,16 @@ class Planning_Controller extends MVC2_PluginController {
             return $this->showEmptyHome();
         }
 
+        $project = ProjectManager::instance()->getProject($this->group_id);
+
         $presenter = new Planning_Presenter_HomePresenter(
             $this->getMilestoneAccessPresenters($plannings),
             $this->group_id,
             $this->getLastLevelMilestonesPresenters($last_plannings, $user),
             $this->request->get('period'),
-            $this->getProjectFromRequest()->getPublicName()
+            $this->getProjectFromRequest()->getPublicName(),
+            $this->kanban_manager->kanbanIsActivatedForProject($project),
+            $user->useLabFeatures()
         );
         return $this->renderToString('home', $presenter);
     }

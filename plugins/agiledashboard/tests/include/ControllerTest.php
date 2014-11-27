@@ -41,13 +41,13 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
         parent::setUp();
         Config::store();
         Config::set('codendi_dir', AGILEDASHBOARD_BASE_DIR .'/../../..');
-        $this->group_id         = 123;
-        $this->project          = stub('Project')->getID()->returns($this->group_id);
-        $this->project_manager  = stub('ProjectManager')->getProject($this->group_id)->returns($this->project);
-        $this->current_user     = stub('PFUser')->getId()->returns(666);
-        $this->request          = aRequest()->withProjectManager($this->project_manager)->with('group_id', "$this->group_id")->withUser($this->current_user)->build();
-        $this->planning_factory = new MockPlanningFactory();
-        $this->controller       = new Planning_Controller(
+        $this->group_id            = 123;
+        $this->project             = stub('Project')->getID()->returns($this->group_id);
+        $this->project_manager     = stub('ProjectManager')->getProject($this->group_id)->returns($this->project);
+        $this->current_user        = stub('PFUser')->getId()->returns(666);
+        $this->request             = aRequest()->withProjectManager($this->project_manager)->with('group_id', "$this->group_id")->withUser($this->current_user)->build();
+        $this->planning_factory    = new MockPlanningFactory();
+        $this->planning_controller = new Planning_Controller(
             $this->request,
             $this->planning_factory,
             mock('Planning_ShortAccessFactory'),
@@ -55,12 +55,20 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
             mock('ProjectManager'),
             mock('ProjectXMLExporter'),
             '/path/to/theme',
-            '/path/to/plugin'
+            '/path/to/plugin',
+            mock('AgileDashboard_KanbanManager')
+        );
+
+        $this->controller = new AgileDashboard_Controller(
+            $this->request,
+            mock('AgileDashboard_KanbanDao'),
+            $this->planning_factory
         );
 
         stub($this->planning_factory)->getPotentialPlanningTrackers()->returns(array());
         stub($this->planning_factory)->getAvailablePlanningTrackers()->returns(array(1));
         stub($this->planning_factory)->getPlanningsOutOfRootPlanningHierarchy()->returns(array());
+        stub($this->current_user)->useLabFeatures()->returns(false);
 
         if (!defined('IS_SCRIPT')) {
             define('IS_SCRIPT', false);
@@ -145,11 +153,11 @@ class Planning_ControllerNewTest extends TuleapTestCase {
         parent::setUp();
         Config::store();
         Config::set('codendi_dir', TRACKER_BASE_DIR .'/../../..');
-        $this->group_id         = 123;
-        $this->request          = aRequest()->with('group_id', "$this->group_id")->build();
-        $this->planning_factory = mock('PlanningFactory');
-        $this->tracker_factory  = mock('TrackerFactory');
-        $this->controller       = new Planning_Controller(
+        $this->group_id            = 123;
+        $this->request             = aRequest()->with('group_id', "$this->group_id")->build();
+        $this->planning_factory    = mock('PlanningFactory');
+        $this->tracker_factory     = mock('TrackerFactory');
+        $this->planning_controller = new Planning_Controller(
             $this->request,
             $this->planning_factory,
             mock('Planning_ShortAccessFactory'),
@@ -157,7 +165,8 @@ class Planning_ControllerNewTest extends TuleapTestCase {
             mock('ProjectManager'),
             mock('ProjectXMLExporter'),
             '/path/to/theme',
-            '/path/to/plugin'
+            '/path/to/plugin',
+            mock('AgileDashboard_KanbanManager')
         );
         $GLOBALS['Language']    = new MockBaseLanguage_Planning_ControllerNewTest();
 
@@ -186,7 +195,7 @@ class Planning_ControllerNewTest extends TuleapTestCase {
         stub($this->planning_factory)->getAvailablePlanningTrackers()->returns($this->available_planning_trackers);
         stub($this->planning_factory)->getAvailableBacklogTrackers()->returns($this->available_backlog_trackers);
 
-        $this->output = $this->controller->new_();
+        $this->output = $this->planning_controller->new_();
     }
 
     public function itHasATextFieldForTheName() {
@@ -230,7 +239,7 @@ class Planning_ControllerCreateWithInvalidParamsTest extends Planning_Controller
         $this->userIsAdmin();
         $this->expectFeedback('error', '*');
         $this->expectRedirectTo('/plugins/agiledashboard/?group_id='.$this->group_id.'&action=new');
-        $this->controller->create();
+        $this->planning_controller->create();
     }
 }
 
@@ -254,12 +263,12 @@ class Planning_ControllerCreateWithValidParamsTest extends Planning_ControllerCr
         $this->userIsAdmin();
         $this->planning_factory->expectOnce('createPlanning', array($this->group_id, PlanningParameters::fromArray($this->planning_parameters)));
         $this->expectRedirectTo('/plugins/agiledashboard/?group_id='.$this->group_id.'&action=admin');
-        $this->controller->create();
+        $this->planning_controller->create();
     }
 
     public function itDoesntCreateAnythingIfTheUserIsNotAdmin() {
         $this->assertThatPlanningFactoryActionIsNotCalledWhenUserIsNotAdmin('createPlanning');
-        $this->controller->create();
+        $this->planning_controller->create();
     }
 }
 
@@ -288,7 +297,8 @@ class Planning_Controller_EditTest extends Planning_Controller_BaseTest {
                 mock('ProjectManager'),
                 mock('ProjectXMLExporter'),
                 '/path/to/theme',
-                '/path/to/plugin'
+                '/path/to/plugin',
+                mock('AgileDashboard_KanbanManager')
             )
         );
 
@@ -325,12 +335,12 @@ class Planning_Controller_ValidUpdateTest extends Planning_Controller_Update_Bas
         $this->userIsAdmin();
         $this->planning_factory->expectOnce('updatePlanning', array($this->planning_id, PlanningParameters::fromArray($this->planning_parameters)));
         $this->expectRedirectTo("/plugins/agiledashboard/?group_id={$this->group_id}&planning_id={$this->planning_id}&action=edit");
-        $this->controller->update();
+        $this->planning_controller->update();
     }
 
     public function itDoesntUpdateAnythingIfTheUserIsNotAdmin() {
         $this->assertThatPlanningFactoryActionIsNotCalledWhenUserIsNotAdmin('updatePlanning');
-        $this->controller->update();
+        $this->planning_controller->update();
     }
 }
 
@@ -345,17 +355,17 @@ class Planning_Controller_InvalidUpdateTest extends Planning_Controller_Update_B
 
     public function itDoesNotUpdateThePlanning() {
         $this->planning_factory->expectNever('updatePlanning');
-        $this->controller->update();
+        $this->planning_controller->update();
     }
 
     public function itReRendersTheEditForm() {
         $this->expectRedirectTo("/plugins/agiledashboard/?group_id=$this->group_id&planning_id=$this->planning_id&action=edit");
-        $this->controller->update();
+        $this->planning_controller->update();
     }
 
     public function itDisplaysTheRelevantErrorMessages() {
         $this->expectFeedback('error', '*');
-        $this->controller->update();
+        $this->planning_controller->update();
     }
 }
 
@@ -369,12 +379,12 @@ class Planning_ControllerDeleteTest extends Planning_Controller_BaseTest {
 
         stub($this->planning_factory)->deletePlanning($this->planning_id)->once();
         $this->expectRedirectTo('/plugins/agiledashboard/?group_id='.$this->group_id.'&action=admin');
-        $this->controller->delete();
+        $this->planning_controller->delete();
     }
 
     public function itDoesntDeleteAnythingIfTheUserIsNotAdmin() {
         $this->assertThatPlanningFactoryActionIsNotCalledWhenUserIsNotAdmin('deletePlanning');
-        $this->controller->delete();
+        $this->planning_controller->delete();
     }
 }
 
