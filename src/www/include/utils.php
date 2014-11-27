@@ -8,19 +8,6 @@
 
 require_once('session.php');
 
-// Part about CSV format export
-// The separator for CSV export can differ regarding the Excel version.
-// So we let the user define his prefered separator
-define("DEFAULT_CSV_SEPARATOR", ",");
-// array of allowed separators for CSV export
-$csv_separators = array("comma", "semicolon", "tab");
-// The date format for CSV export can differ regarding the Excel version.
-// So we let the user define his prefered date format
-define("DEFAULT_CSV_DATEFORMAT", "month_day_year");
-
-// array of allowed date formats for CSV export
-$csv_dateformats = array("month_day_year", "day_month_year");
-
 function util_get_theme_list() {
     $excludes          = array('.', '..', 'CVS', 'custom', '.svn');
     $deprecated_themes = array('CodeX', 'CodeXTab');
@@ -167,7 +154,7 @@ function util_xlsdatefmt_explode($date) {
   
   if ($u_pref = user_get_preference("user_csv_dateformat")) {
   } else {
-      $u_pref = DEFAULT_CSV_DATEFORMAT;
+      $u_pref = PFUser::DEFAULT_CSV_DATEFORMAT;
   }
   
   $res = preg_match("/\s*(\d+)\/(\d+)\/(\d+) (\d+):(\d+)/",$date,$match);

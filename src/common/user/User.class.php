@@ -85,7 +85,22 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      * Default avatar url
      */
     const DEFAULT_AVATAR_URL = '/themes/common/images/avatar_default.png';
-    
+
+    const DEFAULT_CSV_SEPARATOR = ',';
+
+    const DEFAULT_CSV_DATEFORMAT = 'month_day_year';
+
+    /**
+     * @var array of allowed separators for CSV export
+     */
+    public static $csv_separators = array("comma", "semicolon", "tab");
+
+
+    /**
+     * @var array of allowed date formats for CSV export
+     */
+    public static $csv_dateformats = array("month_day_year", "day_month_year");
+
     /**
      * the id of the user
      * = 0 if anonymous

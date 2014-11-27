@@ -85,22 +85,18 @@ if($request->existAndNonEmpty('language_id') && $GLOBALS['Language']->isLanguage
     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_preferences', 'error_language_id'));
 }
 
-// we check if the given value is authorized
-// $csv_separators is defined in src/www/include/utils.php
-$user_csv_separator = DEFAULT_CSV_SEPARATOR;
+$user_csv_separator = PFUser::DEFAULT_CSV_SEPARATOR;
 if($request->existAndNonEmpty('user_csv_separator')) {
-   if($request->valid(new Valid_WhiteList('user_csv_separator', $csv_separators))) {
+   if($request->valid(new Valid_WhiteList('user_csv_separator', PFUser::$csv_separators))) {
         $user_csv_separator = $request->get('user_csv_separator');
    } else {
         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_preferences', 'error_user_csv_separator'));
     }
 }
 
-// we check if the given value is authorized
-// $csv_dateformats is defined in src/www/include/utils.php
-$user_csv_dateformat = DEFAULT_CSV_DATEFORMAT;
+$user_csv_dateformat = PFUser::DEFAULT_CSV_DATEFORMAT;
 if($request->existAndNonEmpty('user_csv_dateformat')) {
-   if($request->valid(new Valid_WhiteList('user_csv_dateformat', $csv_dateformats))) {
+   if($request->valid(new Valid_WhiteList('user_csv_dateformat', PFUser::$csv_dateformats))) {
         $user_csv_dateformat = $request->get('user_csv_dateformat');
    } else {
         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_preferences', 'error_user_csv_dateformat'));

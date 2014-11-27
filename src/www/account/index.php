@@ -142,7 +142,7 @@ $em->processEvent(
 
 $all_csv_separator = array();
 
-foreach ($csv_separators as $separator) {
+foreach (PFUser::$csv_separators as $separator) {
     $all_csv_separator[] = array(
         'separator_name'  => $separator,
         'separator_label' => $Language->getText('account_options', $separator),
@@ -152,7 +152,7 @@ foreach ($csv_separators as $separator) {
 
 $all_csv_dateformat = array();
 
-foreach ($csv_dateformats as $dateformat) {
+foreach (PFUser::$csv_dateformats as $dateformat) {
     $all_csv_dateformat[] = array(
         'dateformat_name'  => $dateformat,
         'dateformat_label' => $Language->getText('account_preferences', $dateformat),
