@@ -120,6 +120,7 @@ class GitPlugin extends Plugin {
         $this->_addHook(Event::GET_PROJECTID_FROM_URL);
 
         $this->_addHook('fill_project_history_sub_events');
+        $this->_addHook(Event::POST_SYSTEM_EVENTS_ACTIONS);
     }
 
     public function getServiceShortname() {
@@ -751,7 +752,7 @@ class GitPlugin extends Plugin {
         $system_check->process();
     }
 
-    private function getGitoliteDriver() {
+    public function getGitoliteDriver() {
         return new Git_GitoliteDriver(
             $this->getLogger(),
             $this->getGitSystemEventManager(),
@@ -1285,6 +1286,9 @@ class GitPlugin extends Plugin {
         return new Git_GitRepositoryUrlManager($this);
     }
 
+    /**
+     * @return Git_Mirror_ManifestManager
+     */
     public function getManifestManager() {
         return new Git_Mirror_ManifestManager(
             new Git_Mirror_MirrorDataMapper(
@@ -1320,5 +1324,18 @@ class GitPlugin extends Plugin {
             'git_admin_groups',
             'git_fork_repositories'
         );
+    }
+
+    /**
+     * @see Event::POST_EVENTS_ACTIONS
+     */
+    public function post_system_events_actions($params) {
+        $this->getLogger()->info('Processing git post system events actions');
+
+        $executed_events_ids = $params['executed_events_ids'];
+
+        $this->getGitoliteDriver()->commit('Modifications from events ' . implode(',', $executed_events_ids));
+        $this->getGitoliteDriver()->push();
+        $this->getManifestManager()->triggerUpdate(new GitRepositoryGitoliteAdmin());
     }
 }

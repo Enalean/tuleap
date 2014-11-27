@@ -60,9 +60,9 @@ abstract class SystemEventProcessor implements IRunInAMutex {
     }
 
     public function execute($queue) {
-        $this->loopOverEventsForOwner($this->getOwner(), $queue);
+        $executed_events_ids = $this->loopOverEventsForOwner($this->getOwner(), $queue);
         try {
-            $this->postEventsActions();
+            $this->postEventsActions($executed_events_ids);
         } catch(Exception $exception) {
             $this->logger->error("[SystemEventProcessor] An error happened during execution of post actions: ".$exception->getMessage());
         }
@@ -71,14 +71,19 @@ abstract class SystemEventProcessor implements IRunInAMutex {
     protected function loopOverEventsForOwner($owner, $queue) {
         $types = $this->system_event_manager->getTypesForQueue($queue);
         if (! $types) {
-            return;
+            return array();
         }
+
+        $executed_events_ids = array();
         while (($dar=$this->dao->checkOutNextEvent($owner, $types)) != null) {
             $sysevent = $this->getSystemEventFromDar($dar);
             if ($sysevent) {
                 $this->executeSystemEvent($sysevent);
+                $executed_events_ids[] = $sysevent->getId();
             }
         }
+
+        return $executed_events_ids;
     }
 
     private function getSystemEventFromDar($dar) {
@@ -103,6 +108,6 @@ abstract class SystemEventProcessor implements IRunInAMutex {
 
     abstract protected function getOwner();
 
-    abstract protected function postEventsActions();
+    abstract protected function postEventsActions(array $executed_events_ids);
 
 }

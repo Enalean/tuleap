@@ -67,8 +67,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     }
 
     public function updateRepoConf($repository) {
-        $this->driver->dumpProjectRepoConf($repository->getProject());
-        return $this->driver->push();
+        return $this->driver->dumpProjectRepoConf($repository->getProject());
     }
 
     /**
@@ -80,7 +79,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
             $this->driver->dumpProjectRepoConf($repository->getProject());
         }
 
-        return $this->driver->push();
+        return true;
     }
 
     /**

@@ -225,4 +225,40 @@ class GitPlugin_GetRemoteServersForUserTest extends TuleapTestCase {
     }
 }
 
-?>
+class GitPlugin_Post_System_Events extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+
+        $id = 456;
+        $mocked_methods = array(
+            'getManifestManager',
+            'getGitoliteDriver',
+            'getLogger',
+        );
+        $this->plugin           = partial_mock('GitPlugin', $mocked_methods, array($id));
+        $this->manifest_manager = mock('Git_Mirror_ManifestManager');
+        $this->gitolite_driver  = mock('Git_GitoliteDriver');
+
+        stub($this->plugin)->getManifestManager()->returns($this->manifest_manager);
+        stub($this->plugin)->getGitoliteDriver()->returns($this->gitolite_driver);
+        stub($this->plugin)->getLogger()->returns(mock('TruncateLevelLogger'));
+    }
+
+    public function itProcessGrokmirrorManifestUpdateInPostSystemEventsActions() {
+        expect($this->gitolite_driver)
+            ->commit()
+            ->once();
+
+        expect($this->gitolite_driver)
+            ->push()
+            ->once();
+
+        expect($this->manifest_manager)
+            ->triggerUpdate()
+            ->once();
+
+        $params = array('executed_events_ids' => array());
+        $this->plugin->post_system_events_actions($params);
+    }
+}
