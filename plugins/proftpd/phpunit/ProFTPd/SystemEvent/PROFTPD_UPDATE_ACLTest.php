@@ -53,9 +53,9 @@ class SystemEvent_PROFTPD_UPDATE_ACLTest extends PHPUnit_Framework_TestCase {
         $this->group_unix_name            = $group_unix_name;
         $this->mixed_case_group_unix_name = $mixed_case_group_unix_name;
 
-        $this->ftp_directory = dirname(__FILE__).'/../_fixtures';
-        $this->path            = realpath($this->ftp_directory . "/" . $this->group_unix_name);
-        $this->mixed_case_path = realpath($this->ftp_directory . "/" . $this->mixed_case_group_unix_name);
+        $this->ftp_directory       = dirname(__FILE__).'/../_fixtures';
+        $this->path                = realpath($this->ftp_directory . "/" . $this->group_unix_name);
+        $this->not_mixed_case_path = realpath($this->ftp_directory . "/" . strtolower($this->mixed_case_group_unix_name));
 
         $GLOBALS['sys_http_user'] = 'httpuser';
 
@@ -90,7 +90,7 @@ class SystemEvent_PROFTPD_UPDATE_ACLTest extends PHPUnit_Framework_TestCase {
                  switch ($unix_name) {
                     case $group_unix_name:
                         return $project;
-                    case $mixed_case_group_unix_name:
+                    case strtolower($mixed_case_group_unix_name):
                         return $mixed_case_project;
                  }
              }));
@@ -117,8 +117,8 @@ class SystemEvent_PROFTPD_UPDATE_ACLTest extends PHPUnit_Framework_TestCase {
         $this->event->process();
     }
 
-    public function testItUsesTheUnixNameInMixedCase() {
-        $this->event->setParameters($this->mixed_case_group_unix_name);
+    public function testItUsesTheUnixNameInLowerCase() {
+        $this->event->setParameters(strtolower($this->mixed_case_group_unix_name));
         $this->permissions_manager
              ->expects($this->any())
              ->method('getUGroupSystemNameFor')
@@ -134,7 +134,7 @@ class SystemEvent_PROFTPD_UPDATE_ACLTest extends PHPUnit_Framework_TestCase {
         $this->acl_updater
             ->expects($this->once())
             ->method('recursivelyApplyACL')
-            ->with($this->mixed_case_path, 'httpuser', 'gpig-ftp_writers', 'gpig-ftp_readers');
+            ->with($this->not_mixed_case_path, 'httpuser', 'gpig-ftp_writers', 'gpig-ftp_readers');
 
         $this->event->process();
     }
