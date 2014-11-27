@@ -19,7 +19,7 @@ Version 7.8 (Not released yet)
 	* request #7314: Remove legacy DB tables creation (No longer load tv3 datastructure)
 
         == Plugins ==
-	* git: 3.143
+	* git: 3.144
 	* fulltextsearch: 0.103
 	* mediawiki: 0.58
 	* tracker: 5.522
