@@ -22,11 +22,13 @@ Version 7.8 (Not released yet)
 	* git: 3.144
 	* fulltextsearch: 0.103
 	* mediawiki: 0.58
-	* tracker: 5.522
+	* tracker: 5.523
 	* cardwall: 1.42
 	* agiledashboard: 1.94
 	* tests: 5.24
 	* proftpd: 0.19
+	* docman: 2.26.54
+	* statistics: 0.40
 
     == Themes ==
 	* FlamingParrot: 1.59
