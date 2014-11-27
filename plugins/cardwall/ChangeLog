@@ -1,3 +1,18 @@
+Version 1.42 - Tuleap 7.8
+    * Do not load fat combined in planning v2
+
+
+In order to improve performances for new view planning v2, only load a
+subset of javascript files so that:
+- the sidebar is collapsable
+- navigation can be used with keyboard shortcuts
+- dropdowns in top navbar works
+- motd does not overlap main content
+- the scrollbars in navigation are sexy
+- tooltip on private/public icon
+
+Part of story #7511: Drag'nDrop backlog items on Planning v2
+
 Version 1.41 - Tuleap 7.8
     * story #7511: rewriting prototype code in jQuery
 
