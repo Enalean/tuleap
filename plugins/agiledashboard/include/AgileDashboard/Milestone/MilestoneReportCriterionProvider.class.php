@@ -29,24 +29,25 @@ class AgileDashboard_Milestone_MilestoneReportCriterionProvider {
     /** @var AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider */
     private $options_provider;
 
-    /** @var AgileDashboard_Milestone_SelectedMilestoneIdProvider */
-    private $milestone_id_provider;
+    /** @var AgileDashboard_Milestone_SelectedMilestoneProvider */
+    private $milestone_provider;
 
     public function __construct(
-        AgileDashboard_Milestone_SelectedMilestoneIdProvider $milestone_id_provider,
+        AgileDashboard_Milestone_SelectedMilestoneProvider $milestone_provider,
         AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider $options_provider
     ) {
-        $this->milestone_id_provider = $milestone_id_provider;
-        $this->options_provider      = $options_provider;
+        $this->milestone_provider = $milestone_provider;
+        $this->options_provider   = $options_provider;
     }
 
     /**
      * @return string
      */
-    public function getCriterion(Tracker $backlog_tracker) {
+    public function getCriterion(Tracker $backlog_tracker, PFUser $user) {
         $options = $this->options_provider->getSelectboxOptions(
             $backlog_tracker,
-            $this->milestone_id_provider->getMilestoneId()
+            $this->milestone_provider->getMilestoneId(),
+            $user
         );
         if (! $options) {
             return null;

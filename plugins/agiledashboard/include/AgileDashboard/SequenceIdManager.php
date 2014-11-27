@@ -26,45 +26,67 @@ class AgileDashboard_SequenceIdManager {
     /** @var Array */
     private $backlog_item_ids;
 
-    public function __construct(AgileDashboard_Milestone_Backlog_BacklogStrategyFactory $strategy_factory) {
-        $this->strategy_factory = $strategy_factory;
-        $this->backlog_item_ids = array();
+    public function __construct(
+        AgileDashboard_Milestone_Backlog_BacklogStrategyFactory $strategy_factory,
+        AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $backlog_item_collection_factory
+    ) {
+        $this->backlog_item_collection_factory = $backlog_item_collection_factory;
+        $this->strategy_factory                = $strategy_factory;
+        $this->backlog_item_ids                = array();
     }
 
     public function getSequenceId(PFUser $user, Planning_Milestone $milestone, $artifact_id) {
         $this->loadBacklogForMilestoneIfNeeded($user, $milestone);
 
-        $position = $this->getArtifactPositionInMilestone($milestone, $artifact_id);
-
-        if (! $position) {
-            return;
-        }
-
-        return $position;
+        return $this->getArtifactPosition((int) $milestone->getArtifactId(), $artifact_id);
     }
 
-    private function getArtifactPositionInMilestone(Planning_Milestone $milestone, $artifact_id) {
-        if (! isset($this->backlog_item_ids[$milestone->getArtifactId()][$artifact_id])) {
+    private function getArtifactPosition($milestone_id, $artifact_id) {
+        if (! isset($this->backlog_item_ids[$milestone_id][$artifact_id])) {
             return;
         }
 
-        return $this->backlog_item_ids[$milestone->getArtifactId()][$artifact_id];
+        return $this->backlog_item_ids[$milestone_id][$artifact_id];
     }
 
     private function loadBacklogForMilestoneIfNeeded(PFUser $user, Planning_Milestone $milestone) {
+        if (! $milestone->getArtifactId()) {
+                $this->loadTopBacklog($user, $milestone);
+                return;
+        }
+
         if (! isset($this->backlog_item_ids[$milestone->getArtifactId()])) {
             $this->backlog_item_ids[$milestone->getArtifactId()] = array();
             $strategy          = $this->strategy_factory->getBacklogStrategy($milestone);
             $backlog_artifacts = $strategy->getArtifacts($user);
 
-            $this->storeBacklogArtifacts($milestone, $backlog_artifacts);
+            $this->storeBacklogArtifacts($milestone->getArtifactId(), $backlog_artifacts);
         }
     }
 
-    private function storeBacklogArtifacts(Planning_Milestone $milestone, array $backlog_artifacts) {
+    private function loadTopBacklog(PFUser $user, Planning_Milestone $milestone) {
+        if (! isset($this->backlog_item_ids[(int) $milestone->getArtifactId()])) {
+            $this->backlog_item_ids[(int) $milestone->getArtifactId()] = array();
+
+            $strategy_unassigned = $this->strategy_factory->getSelfBacklogStrategy($milestone);
+            $backlog_artifacts   = $this->backlog_item_collection_factory->getUnassignedOpenCollection($user, $milestone, $strategy_unassigned, false);
+
+            $this->storeTopBacklogArtifacts((int) $milestone->getArtifactId(), $backlog_artifacts);
+        }
+    }
+
+    private function storeTopBacklogArtifacts($milestone_id, AgileDashboard_Milestone_Backlog_BacklogItemCollection $backlog_items) {
+        $artifact_position = 1;
+        foreach ($backlog_items as $backlog_item) {
+            $this->backlog_item_ids[$milestone_id][$backlog_item->getArtifact()->getId()] = $artifact_position;
+            $artifact_position = $artifact_position + 1;
+        }
+    }
+
+    private function storeBacklogArtifacts($milestone_id, array $backlog_artifacts) {
         $artifact_position = 1;
         foreach ($backlog_artifacts as $backlog_artifact) {
-            $this->backlog_item_ids[$milestone->getArtifactId()][$backlog_artifact->getId()] = $artifact_position;
+            $this->backlog_item_ids[$milestone_id][$backlog_artifact->getId()] = $artifact_position;
             $artifact_position = $artifact_position + 1;
         }
     }

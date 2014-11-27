@@ -51,6 +51,14 @@ class AgileDashboard_SequenceIdManagerTest extends TuleapTestCase {
 
     private $user;
 
+    private $backlog_item_collection_factory;
+
+    private $backlog_item_1;
+    private $backlog_item_2;
+    private $backlog_item_3;
+
+    private $items_collection;
+
     public function setUp() {
         parent::setUp();
 
@@ -60,13 +68,17 @@ class AgileDashboard_SequenceIdManagerTest extends TuleapTestCase {
         $this->milestone_2_id = 853;
         $this->milestone_2    = stub('Planning_ArtifactMilestone')->getArtifactId()->returns($this->milestone_2_id);
 
+        $this->virtual_top_milestone = stub('Planning_VirtualTopMilestone')->getArtifactId()->returns(null);
+
         $this->strategy_1       = mock('AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy');
         $this->strategy_2       = mock('AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy');
         $this->strategy_factory = mock('AgileDashboard_Milestone_Backlog_BacklogStrategyFactory');
         stub($this->strategy_factory)->getBacklogStrategy($this->milestone_1)->returns($this->strategy_1);
         stub($this->strategy_factory)->getBacklogStrategy($this->milestone_2)->returns($this->strategy_2);
 
-        $this->sequence_id_manager = new AgileDashboard_SequenceIdManager($this->strategy_factory);
+        $this->backlog_item_collection_factory = mock('AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory');
+
+        $this->sequence_id_manager = new AgileDashboard_SequenceIdManager($this->strategy_factory, $this->backlog_item_collection_factory);
         $this->user                = aUser()->build();
 
         $this->artifact_id_1  = 123;
@@ -84,6 +96,12 @@ class AgileDashboard_SequenceIdManagerTest extends TuleapTestCase {
         $this->artifact_4 = anArtifact()->withId($this->artifact_id_4)->build();
         $this->artifact_5 = anArtifact()->withId($this->artifact_id_5)->build();
         $this->artifact_6 = anArtifact()->withId($this->artifact_id_6)->build();
+
+        $this->backlog_item_1 = stub('AgileDashboard_Milestone_Backlog_BacklogItem')->getArtifact()->returns($this->artifact_1);
+        $this->backlog_item_2 = stub('AgileDashboard_Milestone_Backlog_BacklogItem')->getArtifact()->returns($this->artifact_2);
+        $this->backlog_item_3 = stub('AgileDashboard_Milestone_Backlog_BacklogItem')->getArtifact()->returns($this->artifact_3);
+
+        $this->items_collection = new AgileDashboard_Milestone_Backlog_BacklogItemCollection();
     }
 
     public function itReturnsNothingIfThereAreNoArtifactsInMilestonesBacklog() {
@@ -183,5 +201,21 @@ class AgileDashboard_SequenceIdManagerTest extends TuleapTestCase {
         $this->assertEqual($this->sequence_id_manager->getSequenceId($this->user, $this->milestone_1, $this->artifact_id_1), 2);
         $this->assertEqual($this->sequence_id_manager->getSequenceId($this->user, $this->milestone_2, $this->artifact_id_6), 3);
         $this->assertEqual($this->sequence_id_manager->getSequenceId($this->user, $this->milestone_1, $this->artifact_id_2), 1);
+    }
+
+    public function itCanDealWithTopBacklog() {
+
+        $this->items_collection->push($this->backlog_item_1);
+        $this->items_collection->push($this->backlog_item_2);
+        $this->items_collection->push($this->backlog_item_3);
+
+        stub($this->backlog_item_collection_factory)->getUnassignedOpenCollection()->returns($this->items_collection);
+
+        expect($this->strategy_factory)->getSelfBacklogStrategy()->once();
+        expect($this->backlog_item_collection_factory)->getUnassignedOpenCollection()->once();
+
+        $this->assertEqual($this->sequence_id_manager->getSequenceId($this->user, $this->virtual_top_milestone, $this->artifact_id_1), 1);
+        $this->assertEqual($this->sequence_id_manager->getSequenceId($this->user, $this->virtual_top_milestone, $this->artifact_id_3), 3);
+        $this->assertEqual($this->sequence_id_manager->getSequenceId($this->user, $this->virtual_top_milestone, $this->artifact_id_2), 2);
     }
 }

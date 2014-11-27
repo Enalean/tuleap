@@ -115,8 +115,14 @@ class AgileDashboardPlugin extends Plugin {
         }
 
         $planning_factory = $this->getPlanningFactory();
-        $provider = new AgileDashboard_Milestone_MilestoneReportCriterionProvider(
-            new AgileDashboard_Milestone_SelectedMilestoneIdProvider($params['additional_criteria']),
+        $user             = UserManager::instance()->getCurrentUser();
+        $provider         = new AgileDashboard_Milestone_MilestoneReportCriterionProvider(
+            new AgileDashboard_Milestone_SelectedMilestoneProvider(
+                $params['additional_criteria'],
+                $this->getMilestoneFactory(),
+                $user,
+                $backlog_tracker->getProject()
+            ),
             new AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider(
                 new AgileDashboard_Planning_NearestPlanningTrackerProvider($planning_factory),
                 new AgileDashboard_Milestone_MilestoneDao(),
@@ -124,7 +130,7 @@ class AgileDashboardPlugin extends Plugin {
                 $planning_factory
             )
         );
-        $additional_criterion = $provider->getCriterion($backlog_tracker);
+        $additional_criterion = $provider->getCriterion($backlog_tracker, $user);
 
         if (! $additional_criterion) {
             return;
@@ -139,16 +145,15 @@ class AgileDashboardPlugin extends Plugin {
     public function tracker_event_report_process_additional_query($params) {
         $backlog_tracker = $params['tracker'];
 
-        $milestone_id_provider = new AgileDashboard_Milestone_SelectedMilestoneIdProvider($params['additional_criteria']);
-        $milestone_id          = $milestone_id_provider->getMilestoneId();
-        $milestone             = $this->getMilestoneFactory()->getBareMilestoneByArtifactId(
-            UserManager::instance()->getCurrentUser(),
-            $milestone_id
-        );
+        $user    = $params['user'];
+        $project = $backlog_tracker->getProject();
+
+        $milestone_provider = new AgileDashboard_Milestone_SelectedMilestoneProvider($params['additional_criteria'], $this->getMilestoneFactory(), $user, $project);
+        $milestone          = $milestone_provider->getMilestone();
 
         if ($milestone) {
-            $provider = new AgileDashboard_BacklogItem_SubBacklogItemProvider(new Tracker_ArtifactDao());
-            $params['result'][]         = $provider->getMatchingIds($milestone, $backlog_tracker);
+            $provider = new AgileDashboard_BacklogItem_SubBacklogItemProvider(new Tracker_ArtifactDao(), $this->getBacklogStrategyFactory(), $this->getBacklogItemCollectionFactory());
+            $params['result'][]         = $provider->getMatchingIds($milestone, $backlog_tracker, $user);
             $params['search_performed'] = true;
         }
     }
@@ -157,12 +162,14 @@ class AgileDashboardPlugin extends Plugin {
      * @see TRACKER_EVENT_REPORT_SAVE_ADDITIONAL_CRITERIA
      */
     public function tracker_event_report_save_additional_criteria($params) {
-        $dao                   = new MilestoneReportCriterionDao();
-        $milestone_id_provider = new AgileDashboard_Milestone_SelectedMilestoneIdProvider($params['additional_criteria']);
+        $dao     = new MilestoneReportCriterionDao();
+        $project = $params['report']->getTracker()->getProject();
+        $user    = UserManager::instance()->getCurrentUser();
 
-        $milestone_id = $milestone_id_provider->getMilestoneId();
-        if ($milestone_id) {
-            $dao->save($params['report']->getId(), $milestone_id);
+        $milestone_provider = new AgileDashboard_Milestone_SelectedMilestoneProvider($params['additional_criteria'], $this->getMilestoneFactory(), $user, $project);
+
+        if ($milestone_provider->getMilestone()) {
+            $dao->save($params['report']->getId(), $milestone_provider->getMilestoneId());
         } else {
             $dao->delete($params['report']->getId());
         }
@@ -538,7 +545,7 @@ class AgileDashboardPlugin extends Plugin {
 
     /**
      * Augment $params['semantics'] with names of AgileDashboard semantics
-     * 
+     *
      * @see TRACKER_EVENT_SOAP_SEMANTICS
      */
     public function tracker_event_soap_semantics(&$params) {
@@ -742,6 +749,7 @@ class AgileDashboardPlugin extends Plugin {
 
         $params['result'] = $this->getFieldPriorityAugmenter()->getAugmentedDataForFieldPriority(
             UserManager::instance()->getCurrentUser(),
+            $params['field']->getTracker()->getProject(),
             $params['additional_criteria'],
             $params['artifact_id']
         );
@@ -761,11 +769,23 @@ class AgileDashboardPlugin extends Plugin {
     private function getSequenceIdManager() {
         if (! $this->sequence_id_manager) {
             $this->sequence_id_manager = new AgileDashboard_SequenceIdManager(
-                    $this->getBacklogStrategyFactory()
+                    $this->getBacklogStrategyFactory(),
+                    $this->getBacklogItemCollectionFactory()
             );
         }
 
         return $this->sequence_id_manager;
+    }
+
+    private function getBacklogItemCollectionFactory() {
+        return new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
+            new AgileDashboard_BacklogItemDao(),
+            $this->getArtifactFactory(),
+            Tracker_FormElementFactory::instance(),
+            $this->getMilestoneFactory(),
+            $this->getPlanningFactory(),
+            new AgileDashboard_Milestone_Backlog_BacklogItemBuilder()
+        );
     }
 }
 
