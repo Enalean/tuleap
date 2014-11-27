@@ -525,19 +525,19 @@ class ProjectSample extends Sample
 }
 
 /**
- * Document viewed processing
+ * Legacy document viewed processing
  *
  * @package   Sample
  * @author    Arnaud Salvucci <arnaud.salvucci@st.com>
  * @copyright 2007 STMicroelectronics
  * @license   http://opensource.org/licenses/gpl-license.php GPL
  */
-class DocumentSample  extends Sample
+class LegacyDocumentSample  extends Sample
 {
     /**
      * Constructor
      */
-    function DocumentSample()
+    function LegacyDocumentSample()
     {
         $this->field = 'time';
         $this->table = 'doc_log';
@@ -1087,7 +1087,7 @@ class SampleFactory
             break;
 
         case 'docdl':
-            $this->sample = new DocumentSample();
+            $this->sample = new LegacyDocumentSample();
             break;
 
         case 'wikidl':
@@ -1103,7 +1103,15 @@ class SampleFactory
             break;
 
         default:
-            $this->sample =  new SessionSample();
+            $sample = new SessionSample();
+            EventManager::instance()->processEvent(
+                Statistics_Event::FREQUENCE_STAT_SAMPLE,
+                array(
+                    'character' => $character,
+                    'sample'    => &$sample
+                )
+            );
+            $this->sample = $sample;
             break;
         }
     }
