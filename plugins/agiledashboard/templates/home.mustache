@@ -104,11 +104,58 @@
         <div class="span4 kanban-block">
             <span class="ad-homepage-title">
                 <h2><i class="icon-beaker"></i> Kanban</h2>
-                <a href="#" class="btn add-kanban">
+                {{# user_is_admin }}
+                <a href="#add-kanban-modal" data-toggle="modal" class="btn add-kanban">
                     <i class="icon-plus"></i> {{ add_kanban }}
                 </a>
+                {{/ user_is_admin }}
             </span>
         </div>
+
+        <div id="add-kanban-modal"
+                class="modal hide fade"
+                tabindex="-1"
+                role="dialog"
+                aria-labelledby="myModalLabel"
+                aria-hidden="true"
+        >
+            <div class="modal-header">
+                <h3> {{ add_kanban_modal_title }}</h3>
+            </div>
+
+            <form action="?group_id={{ group_id }}&action=createKanban" method="post" class="form-horizontal">
+                <div class="modal-body">
+                    <ol>
+                        <li class="kanban-modal-element">
+                             <div class="control-group">
+                                <label class="control-label" for="kanban-name">{{ kanban_name_label }}</label>
+                                <div class="controls">
+                                    <input type="text" id="kanban-name" name="kanban-name" placeholder="Name" required>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="kanban-modal-element">
+                            <div class="control-group">
+                                <label class="control-label" for="tracker-kanban">{{ tracker_kanban_label }}</label>
+                                <div class="controls">
+                                    <select id="tracker-kanban" name="tracker-kanban">
+                                        {{# trackers }}
+                                        <option value="{{ id }}" {{# used }} disabled {{/ used }}> {{ name }} </option>
+                                        {{/ trackers }}
+                                    </select>
+                                </div>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true"> {{ btn_close_label }} </button>
+                    <input type="submit" class="btn btn-primary" name="add-keys" value="{{ btn_add_modal_label }}">
+                </div>
+            </form>
+        </div>
+
     </div>
     {{/ user_can_see_kanban }}
 </div>

@@ -122,16 +122,15 @@ class Planning_Controller extends MVC2_PluginController {
             return $this->showEmptyHome();
         }
 
-        $project = ProjectManager::instance()->getProject($this->group_id);
-
         $presenter = new Planning_Presenter_HomePresenter(
             $this->getMilestoneAccessPresenters($plannings),
             $this->group_id,
             $this->getLastLevelMilestonesPresenters($last_plannings, $user),
             $this->request->get('period'),
             $this->getProjectFromRequest()->getPublicName(),
-            $this->kanban_manager->kanbanIsActivatedForProject($project),
-            $user->useLabFeatures()
+            $this->kanban_manager->kanbanIsActivatedForProject($this->group_id),
+            $user,
+            $this->kanban_manager->getTrackersWithKanbanUsage($this->group_id)
         );
         return $this->renderToString('home', $presenter);
     }

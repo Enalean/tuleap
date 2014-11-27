@@ -386,7 +386,8 @@ class AgileDashboardPlugin extends Plugin {
             new Planning_ShortAccessFactory($planning_factory, $pane_info_factory),
             $milestone_controller_factory,
             ProjectManager::instance(),
-            new ProjectXMLExporter(EventManager::instance())
+            new ProjectXMLExporter(EventManager::instance()),
+            new AgileDashboard_KanbanManager(new AgileDashboard_KanbanDao())
         );
 
         $router->route($request);
