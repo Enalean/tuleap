@@ -68,7 +68,7 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         $root_planning_name          = '';
         $potential_planning_trackers = array();
         $root_planning               = $this->planning_factory->getRootPlanning($user, $group_id);
-        $kanban_activated            = $this->kanban_manager->kanbanIsActivatedForProject($group_id);
+        $kanban_activated            = $this->kanban_manager->isKanbanActivatedForProject($group_id);
 
         if ($root_planning) {
             $can_create_planning         = count($this->planning_factory->getAvailablePlanningTrackers($user, $group_id)) > 0;

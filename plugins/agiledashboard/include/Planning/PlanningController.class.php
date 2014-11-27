@@ -128,7 +128,7 @@ class Planning_Controller extends MVC2_PluginController {
             $this->getLastLevelMilestonesPresenters($last_plannings, $user),
             $this->request->get('period'),
             $this->getProjectFromRequest()->getPublicName(),
-            $this->kanban_manager->kanbanIsActivatedForProject($this->group_id),
+            $this->kanban_manager->isKanbanActivatedForProject($this->group_id),
             $user,
             $this->kanban_manager->getTrackersWithKanbanUsage($this->group_id)
         );

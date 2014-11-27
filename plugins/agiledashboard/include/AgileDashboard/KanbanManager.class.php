@@ -29,8 +29,8 @@ class AgileDashboard_KanbanManager {
         $this->dao = $dao;
     }
 
-    public function kanbanIsActivatedForProject($project_id) {
-        return $this->dao->isActivated($project_id);
+    public function isKanbanActivatedForProject($project_id) {
+        return $this->dao->isActivated($project_id)->count();
     }
 
     public function doesKanbanExistForTracker(Tracker $tracker) {
