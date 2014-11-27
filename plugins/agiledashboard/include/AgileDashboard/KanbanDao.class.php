@@ -85,4 +85,13 @@ class AgileDashboard_KanbanDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function getKanbanPerProject($project_id) {
+        $sql = "SELECT *
+                FROM plugin_agiledashboard_kanban_configuration
+                WHERE project_id = $project_id
+                ORDER BY name ASC";
+
+        return $this->retrieve($sql);
+    }
+
 }

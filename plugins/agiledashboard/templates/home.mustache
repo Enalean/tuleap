@@ -110,6 +110,23 @@
                 </a>
                 {{/ user_is_admin }}
             </span>
+
+            <div class="kanban-home-ad">
+                {{# kanban_summary_presenters }}
+                <div class="milestone">
+                    <div class="header">
+                        <p class="title">{{ name }} </p>
+                    </div>
+                    <div class="content">
+                        <div class="open"><span class="number">{{ count_open_kanban_items }}</span>{{ open }}</div>
+                        <div class="closed"><span class="number">{{ count_closed_kanban_items }}</span>{{ closed }}</div>
+                    </div>
+                    <div class="footer">
+                        <a href="#l"><i class="icon-th-large"></i> {{ cardwall }}</a>
+                    </div>
+                </div>
+                {{/ kanban_summary_presenters }}
+            </div>
         </div>
 
         <div id="add-kanban-modal"

@@ -57,6 +57,9 @@ class Planning_Controller extends MVC2_PluginController {
     /** @var AgileDashboard_KanbanManager */
     private $kanban_manager;
 
+    /** @var AgileDashboard_KanbanFactory */
+    private $kanban_factory;
+
     public function __construct(
         Codendi_Request $request,
         PlanningFactory $planning_factory,
@@ -66,7 +69,8 @@ class Planning_Controller extends MVC2_PluginController {
         ProjectXMLExporter $xml_exporter,
         $plugin_theme_path,
         $plugin_path,
-        AgileDashboard_KanbanManager $kanban_manager
+        AgileDashboard_KanbanManager $kanban_manager,
+        AgileDashboard_KanbanFactory $kanban_factory
     ) {
         parent::__construct('agiledashboard', $request);
         
@@ -79,6 +83,7 @@ class Planning_Controller extends MVC2_PluginController {
         $this->plugin_theme_path            = $plugin_theme_path;
         $this->plugin_path                  = $plugin_path;
         $this->kanban_manager               = $kanban_manager;
+        $this->kanban_factory               = $kanban_factory;
     }
 
     public function index() {
@@ -130,9 +135,20 @@ class Planning_Controller extends MVC2_PluginController {
             $this->getProjectFromRequest()->getPublicName(),
             $this->kanban_manager->kanbanIsActivatedForProject($this->group_id),
             $user,
-            $this->kanban_manager->getTrackersWithKanbanUsage($this->group_id)
+            $this->kanban_manager->getTrackersWithKanbanUsage($this->group_id),
+            $this->getKanbanSummaryPresenters()
         );
         return $this->renderToString('home', $presenter);
+    }
+
+    private function getKanbanSummaryPresenters() {
+        $kanban_presenters = array();
+
+        foreach ($this->kanban_factory->getKanbanPerProject($this->group_id) as $kanban_for_project) {
+            $kanban_presenters[] = new AgileDashboard_Presenter_KanbanSummaryPresenter($kanban_for_project);
+        }
+
+        return $kanban_presenters;
     }
 
     /**
