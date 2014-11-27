@@ -7,6 +7,7 @@ Version 7.8 (Not released yet)
 	* request #7615: retreive the username from ldap while editing SVN commit log messages (contrib STMicroelectronics)
 	* request #7630: fix- legacy docman import script copies empty folders
 	* request #7631: legacy docman import script doesn't strip-out html entities
+	* request #7646: Ftp files can't be moved in FRS
 
 	== Development ==
 	* story #7511: rewriting prototype code in jQuery
