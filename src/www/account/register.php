@@ -229,27 +229,12 @@ if ($request->isPost() && $request->exist('Register')) {
             }
 
         } else {
-            // Registration requires approval - send a mail to site admin and
+            // Registration requires approval
             // inform the user that approval is required
             $href_approval = get_server_url().'/admin/approve_pending_users.php?page=pending';
 
             $content .= '<p><b>'.$Language->getText('account_register', 'title_approval').'</b>';
             $content .= '<p>'.$Language->getText('account_register', 'msg_approval', array($GLOBALS['sys_name'],$user_name,$href_approval));
-            // Send a notification message to the Site administrator
-            $from = $GLOBALS['sys_noreply'];
-            $to = $GLOBALS['sys_email_admin'];
-            $subject = $Language->getText('account_register', 'mail_approval_subject', array($user_name));
-            $body = stripcslashes($Language->getText('account_register', 'mail_approval_body', array($GLOBALS['sys_name'], $user_name, $href_approval)));
-
-            $mail = new Mail();
-            $mail->setSubject($subject);
-            $mail->setFrom($from);
-            $mail->setTo($to,true); // Don't invalidate address
-            $mail->setBody($body);
-            if (!$mail->send()) {
-                $GLOBALS['feedback'] .= "<p>".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
-            }
-
         }
         site_header(array('title'=>$Language->getText('account_register', 'title_confirm')));
         echo $content;
