@@ -49,6 +49,7 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
             mock('ProjectManager'),
             mock('ProjectXMLExporter'),
             mock('AgileDashboard_KanbanManager'),
+            mock('AgileDashboard_ConfigurationManager'),
             mock('AgileDashboard_KanbanFactory')
         );
         
@@ -94,5 +95,3 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
         $this->router->routeShowPlanning($request);
     }
 }
-
-?>

@@ -28,6 +28,9 @@ class AgileDashboard_Controller extends MVC2_PluginController {
     /** @var AgileDashboard_KanbanManager */
     private $kanban_manager;
 
+    /** @var AgileDashboard_ConfigurationManager */
+    private $config_manager;
+
     /** @var TrackerFactory */
     private $tracker_factory;
 
@@ -35,6 +38,7 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         Codendi_Request $request,
         PlanningFactory $planning_factory,
         AgileDashboard_KanbanManager $kanban_manager,
+        AgileDashboard_ConfigurationManager $config_manager,
         TrackerFactory $tracker_factory
     ) {
         parent::__construct('agiledashboard', $request);
@@ -42,6 +46,7 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         $this->group_id          = (int) $this->request->get('group_id');
         $this->planning_factory  = $planning_factory;
         $this->kanban_manager    = $kanban_manager;
+        $this->config_manager    = $config_manager;
         $this->tracker_factory   = $tracker_factory;
     }
 
@@ -68,7 +73,8 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         $root_planning_name          = '';
         $potential_planning_trackers = array();
         $root_planning               = $this->planning_factory->getRootPlanning($user, $group_id);
-        $kanban_activated            = $this->kanban_manager->isKanbanActivatedForProject($group_id);
+        $kanban_activated            = $this->config_manager->kanbanIsActivatedForProject($group_id);
+        $scrum_activated             = $this->config_manager->scrumIsActivatedForProject($group_id);
 
         if ($root_planning) {
             $can_create_planning         = count($this->planning_factory->getAvailablePlanningTrackers($user, $group_id)) > 0;
@@ -85,7 +91,8 @@ class AgileDashboard_Controller extends MVC2_PluginController {
             $root_planning_name,
             $potential_planning_trackers,
             $user->useLabFeatures(),
-            $kanban_activated
+            $kanban_activated,
+            $scrum_activated
         );
     }
 
@@ -105,11 +112,11 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         return $plannings;
     }
 
-    public function updateKanbanUsage() {
+    public function updateConfiguration() {
         $activate_kanban = $this->request->exist('activate-kanban');
 
         if ($activate_kanban) {
-            $this->kanban_manager->activateKanban($this->group_id);
+            $this->config_manager->activateKanban($this->group_id);
 
             $GLOBALS['Response']->addFeedback(
                 'info',
@@ -119,7 +126,7 @@ class AgileDashboard_Controller extends MVC2_PluginController {
             $this->redirectToAdmin();
         }
 
-        $this->kanban_manager->deactivateKanban($this->group_id);
+        $this->config_manager->deactivateKanban($this->group_id);
 
         $GLOBALS['Response']->addFeedback(
             'info',

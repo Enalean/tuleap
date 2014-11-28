@@ -57,6 +57,7 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
             '/path/to/theme',
             '/path/to/plugin',
             mock('AgileDashboard_KanbanManager'),
+            mock('AgileDashboard_ConfigurationManager'),
             mock('AgileDashboard_KanbanFactory')
         );
 
@@ -64,6 +65,7 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
             $this->request,
             $this->planning_factory,
             mock('AgileDashboard_KanbanManager'),
+            mock('AgileDashboard_ConfigurationManager'),
             mock('TrackerFactory')
         );
 
@@ -169,6 +171,7 @@ class Planning_ControllerNewTest extends TuleapTestCase {
             '/path/to/theme',
             '/path/to/plugin',
             mock('AgileDashboard_KanbanManager'),
+            mock('AgileDashboard_ConfigurationManager'),
             mock('AgileDashboard_KanbanFactory')
         );
         $GLOBALS['Language']    = new MockBaseLanguage_Planning_ControllerNewTest();
@@ -302,6 +305,7 @@ class Planning_Controller_EditTest extends Planning_Controller_BaseTest {
                 '/path/to/theme',
                 '/path/to/plugin',
                 mock('AgileDashboard_KanbanManager'),
+                mock('AgileDashboard_ConfigurationManager'),
                 mock('AgileDashboard_KanbanFactory')
             )
         );

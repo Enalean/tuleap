@@ -118,9 +118,10 @@ plugin_agiledashboard_admin_semantic	initial_effort_now	L'effort estimé est mai
 plugin_agiledashboard_admin_semantic	bad_field_initial_effort	Le champ soumis n'est pas un champ numérique
 plugin_agiledashboard_admin_semantic	unable_save_initial_effort	Impossible de sauvegarder la sémantique <em>effort estimé</em>
 
-plugin_agiledashboard	kanban_title	Kanban
+plugin_agiledashboard	config_title	Configuration
+
 plugin_agiledashboard	kanban_input_label	Activer Kanban
-plugin_agiledashboard	kanban_submit_label	Soumettre
+plugin_agiledashboard	scrum_input_label	Activer Scrum
 plugin_agiledashboard	kanban_activated	Kanban activé avec succès.
 plugin_agiledashboard	kanban_deactivated	Kanban désactivé avec succès.
 plugin_agiledashboard	add_kanban	Ajouter un kanban

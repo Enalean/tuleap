@@ -58,11 +58,14 @@
 
 {{# uses_lab_features }}
 
-<form action="?group_id={{ group_id }}&action=updateKanbanUsage" method="POST" class="agiledashboard-admin-kanban">
-    <h3 class="agiledashboard-admin-section"><i class="icon-beaker"></i> {{ kanban_title }}</h3>
+<form action="?group_id={{ group_id }}&action=updateConfiguration" method="POST" class="agiledashboard-admin-kanban">
+    <h3 class="agiledashboard-admin-section"><i class="icon-beaker"></i> {{ config_title }}</h3>
     <label class="checkbox">
         <input type="checkbox" name="activate-kanban" {{# kanban_activated }} checked="checked" {{/ kanban_activated }}> {{ kanban_input_label }}
     </label>
-    <button type="submit" class="btn btn-primary">{{ kanban_submit_label }}</button>
+    <label class="checkbox">
+        <input type="checkbox" name="activate-scrum" {{# scrum_activated }} checked="checked" {{/ scrum_activated }} disabled> {{ scrum_input_label }}
+    </label>
+    <button type="submit" class="btn btn-primary">{{ config_submit_label }}</button>
 </form>
 {{/ uses_lab_features }}

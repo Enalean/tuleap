@@ -18,27 +18,38 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-class AgileDashboard_KanbanManager {
+
+class AgileDashboard_ConfigurationManager {
 
     /**
      * @var AgileDashboard_ConfigurationDao
      */
     private $dao;
 
-    public function __construct(AgileDashboard_KanbanDao $dao) {
+    public function __construct(AgileDashboard_ConfigurationDao $dao) {
         $this->dao = $dao;
     }
 
-    public function doesKanbanExistForTracker(Tracker $tracker) {
-        return $this->dao->getKanbanByTrackerId($tracker->getProject()->getID(), $tracker->getId())->count() > 0;
+    public function kanbanIsActivatedForProject($project_id) {
+        $row = $this->dao->isKanbanActivated($project_id)->getRow();
+
+        if (! $row) {
+            return false;
+        }
+
+        return $row['kanban'];
     }
 
-    public function createKanban($project_id, $kanban_name, $tracker_id) {
-        return $this->dao->create($project_id, $kanban_name, $tracker_id);
+    public function scrumIsActivatedForProject($project_id) {
+       return true;
     }
 
-    public function getTrackersWithKanbanUsage($project_id) {
-        return $this->dao->getTrackersWithKanbanUsage($project_id);
+    public function activateKanban($project_id) {
+        return $this->dao->activateKanban($project_id);
+    }
+
+    public function deactivateKanban($project_id) {
+        return $this->dao->deactivateKanban($project_id);
     }
 
 }
