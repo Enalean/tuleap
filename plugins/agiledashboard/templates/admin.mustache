@@ -60,12 +60,23 @@
 
 <form action="?group_id={{ group_id }}&action=updateConfiguration" method="POST" class="agiledashboard-admin-kanban">
     <h3 class="agiledashboard-admin-section"><i class="icon-beaker"></i> {{ config_title }}</h3>
-    <label class="checkbox">
-        <input type="checkbox" name="activate-kanban" {{# kanban_activated }} checked="checked" {{/ kanban_activated }}> {{ kanban_input_label }}
-    </label>
-    <label class="checkbox">
-        <input type="checkbox" name="activate-scrum" {{# scrum_activated }} checked="checked" {{/ scrum_activated }} disabled> {{ scrum_input_label }}
-    </label>
-    <button type="submit" class="btn btn-primary">{{ config_submit_label }}</button>
+
+    <p>{{ activate_service_legend }}</p>
+
+    <select name="activate-ad-service">
+        <option value="activate-scrum" {{# scrum_activated }} selected {{/ scrum_activated }}>
+            {{ scrum_label }}
+        </option>
+
+        <option value="activate-kanban" {{# kanban_activated }} selected {{/ kanban_activated }}>
+            {{ kanban_label }}
+        </option>
+
+        <option value="activate-all" {{# all_activated }} selected {{/ all_activated }}>
+           {{ all_label }}
+        </option>
+    </select>
+
+    <button type="submit" class="btn btn-primary" id="ad-service-submit">{{ config_submit_label }}</button>
 </form>
 {{/ uses_lab_features }}

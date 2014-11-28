@@ -20,23 +20,15 @@
 
 class AgileDashboard_ConfigurationDao extends DataAccessObject {
 
-    public function activateKanban($project_id) {
-        $project_id = $this->da->escapeInt($project_id);
+    public function updateConfiguration($project_id, $scrum_is_activated, $kanban_is_activated) {
+        $project_id          = $this->da->escapeInt($project_id);
+        $scrum_is_activated  = $this->da->escapeInt($scrum_is_activated);
+        $kanban_is_activated = $this->da->escapeInt($kanban_is_activated);
 
-        $sql = "REPLACE INTO plugin_agiledashboard_configuration (project_id, kanban)
-                VALUES ($project_id, 1)";
-
-        return $this->update($sql);
-    }
-
-    public function deactivateKanban($project_id) {
-        $project_id = $this->da->escapeInt($project_id);
-
-        $sql = "REPLACE INTO plugin_agiledashboard_configuration (project_id, kanban)
-                VALUES ($project_id, 0)";
+        $sql = "REPLACE INTO plugin_agiledashboard_configuration (project_id, scrum, kanban)
+                VALUES ($project_id, $scrum_is_activated, $kanban_is_activated)";
 
         return $this->update($sql);
-
     }
 
     public function isKanbanActivated($project_id) {
@@ -49,4 +41,13 @@ class AgileDashboard_ConfigurationDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function isScrumActivated($project_id) {
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql = "SELECT scrum
+                FROM plugin_agiledashboard_configuration
+                WHERE project_id = $project_id";
+
+        return $this->retrieve($sql);
+    }
 }

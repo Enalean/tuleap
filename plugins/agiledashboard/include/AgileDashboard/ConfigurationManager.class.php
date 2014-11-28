@@ -41,15 +41,21 @@ class AgileDashboard_ConfigurationManager {
     }
 
     public function scrumIsActivatedForProject($project_id) {
-       return true;
+       $row = $this->dao->isScrumActivated($project_id)->getRow();
+
+        if (! $row) {
+            return false;
+        }
+
+        return $row['scrum'];
     }
 
-    public function activateKanban($project_id) {
-        return $this->dao->activateKanban($project_id);
-    }
-
-    public function deactivateKanban($project_id) {
-        return $this->dao->deactivateKanban($project_id);
+    public function updateConfiguration($project_id, $scrum_is_activated, $kanban_is_activated) {
+        $this->dao->updateConfiguration(
+            $project_id,
+            $scrum_is_activated,
+            $kanban_is_activated
+        );
     }
 
 }

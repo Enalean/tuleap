@@ -1,4 +1,6 @@
 <div id="home">
+    {{# scrum_activated }}
+
     {{# user_can_see_kanban }}
     <div class="row-fluid">
         <div class="span8 scrum-block">
@@ -100,8 +102,10 @@
                 </div>
             </div>
         </div>
+    {{/ scrum_activated }}
+
     {{# user_can_see_kanban }}
-        <div class="span4 kanban-block">
+        <div class="{{# scrum_activated }}span4{{/ scrum_activated }} kanban-block">
             <span class="ad-homepage-title">
                 <h2><i class="icon-beaker"></i> Kanban</h2>
                 {{# user_is_admin }}

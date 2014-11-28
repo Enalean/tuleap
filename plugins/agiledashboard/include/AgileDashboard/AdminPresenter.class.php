@@ -35,6 +35,9 @@ class AdminPresenter {
     /** @var bool */
     public $scrum_activated;
 
+    /** @var bool */
+    public $all_activated;
+
     private $root_planning_tracker_url;
     private $root_planning_name;
     private $planning_hierarchy = array();
@@ -49,7 +52,8 @@ class AdminPresenter {
         array $hierarchy,
         $uses_lab_features,
         $kanban_activated,
-        $scrum_activated
+        $scrum_activated,
+        $all_activated
     ) {
         $this->plannings                 = $plannings;
         $this->group_id                  = $group_id;
@@ -59,6 +63,7 @@ class AdminPresenter {
         $this->uses_lab_features         = $uses_lab_features;
         $this->kanban_activated          = $kanban_activated;
         $this->scrum_activated           = $scrum_activated;
+        $this->all_activated             = $all_activated;
 
         foreach ($hierarchy as $tracker) {
             $this->planning_hierarchy[] = $tracker->getName();
@@ -134,11 +139,19 @@ class AdminPresenter {
         return $GLOBALS['Language']->getText('global', 'btn_submit');
     }
 
-    public function kanban_input_label() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_input_label');
+    public function kanban_label() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_label');
     }
 
-    public function scrum_input_label() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'scrum_input_label');
+    public function scrum_label() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'scrum_label');
+    }
+
+    public function all_label() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'all_label');
+    }
+
+    public function activate_service_legend() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'activate_service_legend');
     }
 }

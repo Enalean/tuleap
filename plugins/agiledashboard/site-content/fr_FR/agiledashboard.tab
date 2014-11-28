@@ -119,11 +119,15 @@ plugin_agiledashboard_admin_semantic	bad_field_initial_effort	Le champ soumis n'
 plugin_agiledashboard_admin_semantic	unable_save_initial_effort	Impossible de sauvegarder la sémantique <em>effort estimé</em>
 
 plugin_agiledashboard	config_title	Configuration
+plugin_agiledashboard	no_service_selected	Un service doit obligatoirement être selectionné.
+plugin_agiledashboard	activate_service_legend	Quel(s) service(s) voulez-vous activer sur la page d'accueil du dashboard agile ?
 
-plugin_agiledashboard	kanban_input_label	Activer Kanban
-plugin_agiledashboard	scrum_input_label	Activer Scrum
+plugin_agiledashboard	kanban_label	Kanban
+plugin_agiledashboard	scrum_label	Scrum
+plugin_agiledashboard	all_label	Scrum et Kanban
 plugin_agiledashboard	kanban_activated	Kanban activé avec succès.
-plugin_agiledashboard	kanban_deactivated	Kanban désactivé avec succès.
+plugin_agiledashboard	scrum_activated	Scrum activé avec succès.
+plugin_agiledashboard	all_activated	Scrum et Kanban activés avec succès.
 plugin_agiledashboard	add_kanban	Ajouter un kanban
 plugin_agiledashboard	btn_close_label	Fermer
 plugin_agiledashboard	btn_add_modal_label	Créer
