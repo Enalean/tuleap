@@ -73,6 +73,10 @@ class Planning_Presenter_HomePresenter {
         $this->scrum_activated                 = $scrum_activated;
     }
 
+    public function user_cant_see_anything() {
+        return ! $this->user->useLabFeatures() && ! $this->scrum_activated;
+    }
+
     public function uses_lab_feature() {
         return $this->user->useLabFeatures();
     }
@@ -159,5 +163,9 @@ class Planning_Presenter_HomePresenter {
 
     public function tracker_kanban_label() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard','tracker_kanban_label');
+    }
+
+    public function user_cant_see_anything_content() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard','user_cant_see_anything_content');
     }
 }

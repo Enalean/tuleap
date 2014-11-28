@@ -121,6 +121,7 @@ plugin_agiledashboard_admin_semantic	unable_save_initial_effort	Impossible de sa
 plugin_agiledashboard	config_title	Configuration
 plugin_agiledashboard	no_service_selected	Un service doit obligatoirement être selectionné.
 plugin_agiledashboard	activate_service_legend	Quel(s) service(s) voulez-vous activer sur la page d'accueil du dashboard agile ?
+plugin_agiledashboard	user_cant_see_anything_content	Vous n'avez aucune donnée d'afficher car vous n'avez pas activé le mode Lab.
 
 plugin_agiledashboard	kanban_label	Kanban
 plugin_agiledashboard	scrum_label	Scrum

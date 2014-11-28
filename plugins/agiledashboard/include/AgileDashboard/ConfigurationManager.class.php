@@ -41,7 +41,7 @@ class AgileDashboard_ConfigurationManager {
     }
 
     public function scrumIsActivatedForProject($project_id) {
-       $row = $this->dao->isScrumActivated($project_id)->getRow();
+        $row = $this->dao->isScrumActivated($project_id)->getRow();
 
         if (! $row) {
             return false;
