@@ -386,6 +386,8 @@ class AgileDashboardPlugin extends Plugin {
             $top_milestone_pane_factory
         );
 
+        $kanban_dao = new AgileDashboard_KanbanDao();
+
         $router = new AgileDashboardRouter(
             $this,
             $milestone_factory,
@@ -394,7 +396,8 @@ class AgileDashboardPlugin extends Plugin {
             $milestone_controller_factory,
             ProjectManager::instance(),
             new ProjectXMLExporter(EventManager::instance()),
-            new AgileDashboard_KanbanManager(new AgileDashboard_KanbanDao())
+            new AgileDashboard_KanbanManager($kanban_dao),
+            new AgileDashboard_KanbanFactory($kanban_dao)
         );
 
         $router->route($request);

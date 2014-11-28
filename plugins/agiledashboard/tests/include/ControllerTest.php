@@ -56,7 +56,8 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
             mock('ProjectXMLExporter'),
             '/path/to/theme',
             '/path/to/plugin',
-            mock('AgileDashboard_KanbanManager')
+            mock('AgileDashboard_KanbanManager'),
+            mock('AgileDashboard_KanbanFactory')
         );
 
         $this->controller = new AgileDashboard_Controller(
@@ -167,7 +168,8 @@ class Planning_ControllerNewTest extends TuleapTestCase {
             mock('ProjectXMLExporter'),
             '/path/to/theme',
             '/path/to/plugin',
-            mock('AgileDashboard_KanbanManager')
+            mock('AgileDashboard_KanbanManager'),
+            mock('AgileDashboard_KanbanFactory')
         );
         $GLOBALS['Language']    = new MockBaseLanguage_Planning_ControllerNewTest();
 
@@ -299,7 +301,8 @@ class Planning_Controller_EditTest extends Planning_Controller_BaseTest {
                 mock('ProjectXMLExporter'),
                 '/path/to/theme',
                 '/path/to/plugin',
-                mock('AgileDashboard_KanbanManager')
+                mock('AgileDashboard_KanbanManager'),
+                mock('AgileDashboard_KanbanFactory')
             )
         );
 
@@ -388,5 +391,3 @@ class Planning_ControllerDeleteTest extends Planning_Controller_BaseTest {
         $this->planning_controller->delete();
     }
 }
-
-?>

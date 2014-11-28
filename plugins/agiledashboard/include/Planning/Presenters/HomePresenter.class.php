@@ -20,6 +20,9 @@
 
 class Planning_Presenter_HomePresenter {
 
+    /** @var array */
+    public $kanban_summary_presenters;
+
     public $trackers;
 
     /** @var Planning_Presenter_MilestoneAccessPresenter[] */
@@ -51,7 +54,8 @@ class Planning_Presenter_HomePresenter {
         $project_name,
         $kanban_activated,
         PFUser $user,
-        $trackers
+        $trackers,
+        array $kanban_summary_presenters
     ) {
         $this->milestone_presenters            = $milestone_access_presenters;
         $this->group_id                        = $group_id;
@@ -61,6 +65,7 @@ class Planning_Presenter_HomePresenter {
         $this->kanban_activated                = $kanban_activated;
         $this->user                            = $user;
         $this->trackers                        = $trackers;
+        $this->kanban_summary_presenters       = $kanban_summary_presenters;
     }
 
     public function uses_lab_feature() {

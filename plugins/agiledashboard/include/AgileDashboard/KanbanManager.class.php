@@ -52,4 +52,5 @@ class AgileDashboard_KanbanManager {
     public function getTrackersWithKanbanUsage($project_id) {
         return $this->dao->getTrackersWithKanbanUsage($project_id);
     }
+
 }
