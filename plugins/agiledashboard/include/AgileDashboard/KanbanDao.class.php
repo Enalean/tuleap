@@ -23,8 +23,8 @@ class AgileDashboard_KanbanDao extends DataAccessObject {
     public function activate($project_id) {
         $project_id = $this->da->escapeInt($project_id);
 
-        $sql = "REPLACE INTO plugin_agiledashboard_kanban
-                SET project_id = $project_id";
+        $sql = "REPLACE INTO plugin_agiledashboard_configuration (project_id, kanban)
+                VALUES ($project_id, 1)";
 
         return $this->update($sql);
     }
@@ -32,8 +32,8 @@ class AgileDashboard_KanbanDao extends DataAccessObject {
     public function deactivate($project_id) {
         $project_id = $this->da->escapeInt($project_id);
 
-        $sql = "DELETE FROM plugin_agiledashboard_kanban
-                WHERE project_id = $project_id";
+        $sql = "REPLACE INTO plugin_agiledashboard_configuration (project_id, kanban)
+                VALUES ($project_id, 0)";
 
         return $this->update($sql);
 
@@ -42,8 +42,8 @@ class AgileDashboard_KanbanDao extends DataAccessObject {
     public function isActivated($project_id) {
         $project_id = $this->da->escapeInt($project_id);
 
-        $sql = "SELECT project_id
-                FROM plugin_agiledashboard_kanban
+        $sql = "SELECT kanban
+                FROM plugin_agiledashboard_configuration
                 WHERE project_id = $project_id";
 
         return $this->retrieve($sql);
