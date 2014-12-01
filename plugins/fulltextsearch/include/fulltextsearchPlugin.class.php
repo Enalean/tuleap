@@ -199,15 +199,22 @@ class fulltextsearchPlugin extends Plugin {
     }
 
     private function getTrackerSystemEventManager() {
+        $form_element_factory   = Tracker_FormElementFactory::instance();
+        $permissions_serializer = new Tracker_Permission_PermissionsSerializer(
+            new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
+        );
+
+        $artifact_properties_extractor = new ElasticSearch_1_2_ArtifactPropertiesExtractor(
+            $form_element_factory,
+            $permissions_serializer
+        );
+
         return new FullTextSearch_TrackerSystemEventManager(
             SystemEventManager::instance(),
             new FullTextSearchTrackerActions(
                 $this->getIndexClient(self::SEARCH_TRACKER_TYPE),
                 new ElasticSearch_1_2_RequestTrackerDataFactory(
-                    new Tracker_Permission_PermissionsSerializer(
-                        new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
-                    ),
-                    Tracker_FormElementFactory::instance()
+                    $artifact_properties_extractor
                 ),
                 new BackendLogger()
             ),

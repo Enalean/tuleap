@@ -26,37 +26,23 @@ class ElasticSearch_1_2_RequestTrackerDataFactory {
 
     const COMMENT_FIELD_NAME = 'comment';
 
-    /** @var Tracker_Permission_PermissionsSerializer */
-    private $permissions_serializer;
+    /** @var ElasticSearch_1_2_ArtifactPropertiesExtractor */
+    private $artifact_properties_extractor;
 
-    /** @var Tracker_FormElementFactory */
-    private $form_element_factory;
-
-    public function __construct(
-        Tracker_Permission_PermissionsSerializer $permissions_serializer,
-        Tracker_FormElementFactory $form_element_factory
-    ) {
-        $this->permissions_serializer = $permissions_serializer;
-        $this->form_element_factory   = $form_element_factory;
+    public function __construct(ElasticSearch_1_2_ArtifactPropertiesExtractor $artifact_properties_extractor) {
+        $this->artifact_properties_extractor = $artifact_properties_extractor;
     }
 
     public function getFormattedArtifact(Tracker_Artifact $artifact) {
-        $es_document = $this->getBaseArtifact($artifact);
-        foreach ($artifact->getChangesets() as $changeset) {
-            $comment = $changeset->getComment();
-            if ($comment) {
-                $es_document['followup_comments'][] = array(
-                    'user_id'    => $changeset->getSubmittedBy(),
-                    'date_added' => date('c', $changeset->getSubmittedOn()),
-                    'comment'    => $changeset->getComment()->body,
-                );
-            }
-        }
+        $es_document = array();
+        $this->getBaseArtifact($artifact, $es_document);
+        $this->getArtifactComments($artifact, $es_document);
+
         return $es_document;
     }
 
-    private function getBaseArtifact(Tracker_Artifact $artifact) {
-        $last_changeset = $artifact->getLastChangeset();
+    private function getBaseArtifact(Tracker_Artifact $artifact, array &$properties) {
+        $last_changeset    = $artifact->getLastChangeset();
         $last_changeset_id = ($last_changeset) ? $last_changeset->getId() : -1;
 
         $properties = array(
@@ -64,31 +50,19 @@ class ElasticSearch_1_2_RequestTrackerDataFactory {
             'group_id'          => $artifact->getTracker()->getGroupId(),
             'tracker_id'        => $artifact->getTrackerId(),
             'last_changeset_id' => $last_changeset_id,
-            'tracker_ugroups'   => $this->permissions_serializer->getLiteralizedUserGroupsThatCanViewTracker($artifact),
-            'artifact_ugroups'  => $this->permissions_serializer->getLiteralizedUserGroupsThatCanViewArtifact($artifact),
-            'followup_comments' => array(),
         );
 
-        if ($last_changeset) {
-            $properties = array_merge($properties, $this->getTextFieldsValuesForProperties($artifact->getTracker(), $last_changeset));
-        }
+        $this->artifact_properties_extractor->extractTrackerUserGroups($artifact, $properties);
+        $this->artifact_properties_extractor->extractArtifactUserGroups($artifact, $properties);
 
-        return $properties;
+        if ($last_changeset) {
+            $this->artifact_properties_extractor->extractArtifactTextFields($artifact, $last_changeset, $properties);
+            $this->artifact_properties_extractor->extractArtifactDateFields($artifact, $last_changeset, $properties);
+        }
     }
 
-    private function getTextFieldsValuesForProperties(Tracker $tracker, Tracker_Artifact_Changeset $last_changeset) {
-        $properties  = array();
-        $text_fields = $this->form_element_factory->getUsedTextFields($tracker);
-
-        foreach ($text_fields as $text_field) {
-            $last_changeset_value = $last_changeset->getValue($text_field);
-
-            if ($last_changeset->getValue($text_field) && $last_changeset_value) {
-                $properties[$text_field->getName()] = $last_changeset_value->getValue();
-            }
-        }
-
-        return $properties;
+    private function getArtifactComments(Tracker_Artifact $artifact, array &$properties) {
+        $this->artifact_properties_extractor->extractArtifactComments($artifact, $properties);
     }
 
     public function getTrackerMapping(Tracker $tracker) {
@@ -116,6 +90,7 @@ class ElasticSearch_1_2_RequestTrackerDataFactory {
                             ),
                             'date_added' => array(
                                 'type' => 'date',
+                                'format' => 'date_time_no_millis',
                             ),
                             'comment' => array(
                                 'type' => 'string',
@@ -129,7 +104,7 @@ class ElasticSearch_1_2_RequestTrackerDataFactory {
         $this->addStandardTrackerPermissionsMetadata($mapping_data[$tracker_id]['properties']);
         $this->addStandardArtifactPermissionsMetadata($mapping_data[$tracker_id]['properties']);
 
-        $this->addTrackerFieldsToMapping($mapping_data, $tracker);
+        $this->artifact_properties_extractor->extractTrackerFields($tracker, $mapping_data);
 
         return $mapping_data;
     }
@@ -146,14 +121,5 @@ class ElasticSearch_1_2_RequestTrackerDataFactory {
             'type'  => 'string',
             'index' => 'not_analyzed'
         );
-    }
-
-    private function addTrackerFieldsToMapping(array &$mapping_data, Tracker $tracker) {
-        $text_fields = $this->form_element_factory->getUsedTextFields($tracker);
-
-        $string_map = array('type' => 'string');
-        foreach ($text_fields as $field) {
-            $mapping_data[$tracker->getId()]['properties'][$field->getName()] = $string_map;
-        }
     }
 }
