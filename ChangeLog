@@ -3,6 +3,7 @@ Version 7.8 (Not released yet)
 	* request #6964: Prevent users to enter misspelled emails during registration
 	* request #7590: Allow SVN immutable tags (contrib STMicroelectronics)
 	* Improve tuleap referral and SEO
+	* story #7540: have all Git events consumed all at once
 
 	== Bug fix ==
 	* request #7615: retreive the username from ldap while editing SVN commit log messages (contrib STMicroelectronics)
@@ -20,7 +21,7 @@ Version 7.8 (Not released yet)
 	* story #7599: have a dedicate queue for git events
 
 	== Plugins ==
-	* git: 3.145
+	* git: 3.146
 	* fulltextsearch: 0.103
 	* mediawiki: 0.58
 	* tracker: 5.523
