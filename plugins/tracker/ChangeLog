@@ -1,3 +1,18 @@
+Version 5.524 - Tuleap 7.8
+    * Add REST route to reorder children
+
+
+PATCH /backlog_items/:id/children
+{
+  order: {
+    ids: [123, 456],
+    compared_to: 789,
+    direction: after
+  }
+}
+
+Part of story #7511: Drag'nDrop backlog items
+
 Version 5.523 - Tuleap 7.8
     * request #7636: Include Docman and Tracker plugins in frequencies graph
 
