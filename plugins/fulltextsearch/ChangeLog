@@ -1,3 +1,10 @@
+Version 0.104 - Tuleap 7.8
+    * story #7603: index tracker date fields
+
+
+The fields cannot be searched upon yet but should be present within the elasticsearch database.
+[You will probably need to reindex the whole tracker mapping]
+
 Version 0.103 - Tuleap 7.8
     * request #7613: FTS: timeout issue while re-indexing projects
 

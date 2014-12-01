@@ -1,3 +1,10 @@
+Version 5.525 - Tuleap 7.8
+    * story #7603: index tracker date fields
+
+
+The fields cannot be searched upon yet but should be present within the elasticsearch database.
+[You will probably need to reindex the whole tracker mapping]
+
 Version 5.524 - Tuleap 7.8
     * Add REST route to reorder children
 
