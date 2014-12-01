@@ -1,3 +1,6 @@
+Version 3.62 - Tuleap 7.8
+    * request #7449: Adding logging to debug ldap connexion issues
+
 Version 3.61 - Tuleap 7.7
     * request #7620 - Cannot add non LDAP user to project
 
