@@ -26,6 +26,7 @@
         </script>
         <script type="text/javascript" src="/scripts/prototype/prototype.js"></script>
         <script type="text/javascript" src="/plugins/tests/scripts/testsUnitView.js"></script>
+        <script type="text/javascript" src="/plugins/tests/scripts/search.js"></script>
     </head>
     <body class="main_body_row">
         <form id="run-test" action="" method="post">
@@ -92,6 +93,14 @@
                                         <i class="icon-circle-arrow-down" title="Scroll to the first selected test"></i>
                                     </a>
                                 </legend>
+
+                                <div class="input-append">
+                                    <input id="search-field" type="text" size="60">
+                                    <button class="btn" type="button" disabled>
+                                        <i class="icon-search"></i>
+                                    </button>
+                                </div>
+
                                 <div class="well">
                                 {{#navigator}}
                                     <ul id="menu" class="menu">
