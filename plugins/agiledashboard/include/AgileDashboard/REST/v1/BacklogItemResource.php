@@ -19,14 +19,15 @@
  */
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use \Tuleap\REST\Header;
-use \Tuleap\REST\ProjectAuthorization;
-use \Luracast\Restler\RestException;
-use \UserManager;
-use \Tracker_ArtifactFactory;
-use \AgileDashboard_Milestone_Backlog_BacklogItem;
-use \Tracker_ArtifactDao;
-use \Tracker_SlicedArtifactsBuilder;
+use Tuleap\REST\Header;
+use Luracast\Restler\RestException;
+use UserManager;
+use Tracker_ArtifactFactory;
+use AgileDashboard_Milestone_Backlog_BacklogItem;
+use Tracker_ArtifactDao;
+use Tracker_SlicedArtifactsBuilder;
+use Tracker_Artifact_PriorityDao;
+use Tracker_Artifact_Exception_CannotRankWithMyself;
 
 /**
  * Wrapper for Backlog_Items related REST methods
@@ -65,12 +66,8 @@ class BacklogItemResource {
     protected function getChildren($id, $limit = 10, $offset = 0) {
         $this->checkContentLimit($limit);
 
-        $artifact                      = $this->tracker_artifact_factory->getArtifactById($id);
+        $artifact                      = $this->getArtifact($id);
         $backlog_items_representations = array();
-
-        if (! $artifact) {
-            throw new RestException(404, 'Backlog Item not found');
-        }
 
         $sliced_children = $this->getSlicedArtifactsBuilder()->getSlicedChildrenArtifactsForUser($artifact, $this->getCurrentUser(), $limit, $offset);
 
@@ -85,6 +82,58 @@ class BacklogItemResource {
         $this->sendPaginationHeaders($limit, $offset, $sliced_children->getTotalSize());
 
         return $backlog_items_representations;
+    }
+
+    /**
+     * Change children order
+     *
+     * Define the priorities of some children of a given Backlog Item
+     *
+     * <br>
+     * Example:
+     * <pre>
+     * "order": {
+     *   "ids" : [123, 789, 1001],
+     *   "direction": "before",
+     *   "compared_to": 456
+     * }
+     * </pre>
+     *
+     * <br>
+     * Resulting order will be: <pre>[…, 123, 789, 1001, 456, …]</pre>
+     *
+     * @url PATCH {id}/children
+     *
+     * @param int                                                $id    Id of the Backlog Item
+     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation $order Order of the children {@from body}
+     *
+     * @throws 400
+     * @throws 404
+     */
+    protected function patch($id, OrderRepresentation $order) {
+        $order->checkFormat($order);
+        $this->getArtifact($id);
+
+        $dao = new Tracker_Artifact_PriorityDao();
+        try {
+            if ($order->direction === OrderRepresentation::BEFORE) {
+                $dao->moveListOfArtifactsBefore($order->ids, $order->compared_to);
+            } else {
+                $dao->moveListOfArtifactsAfter($order->ids, $order->compared_to);
+            }
+        } catch (Tracker_Artifact_Exception_CannotRankWithMyself $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
+    }
+
+    private function getArtifact($id) {
+        $artifact = $this->tracker_artifact_factory->getArtifactById($id);
+
+        if (! $artifact) {
+            throw new RestException(404, 'Backlog Item not found');
+        }
+
+        return $artifact;
     }
 
     /**
@@ -104,7 +153,7 @@ class BacklogItemResource {
 
     private function checkContentLimit($limit) {
         if (! $this->limitValueIsAcceptable($limit)) {
-             throw new RestException(406, 'Maximum value for limit exceeded');
+            throw new RestException(406, 'Maximum value for limit exceeded');
         }
     }
 
@@ -113,7 +162,7 @@ class BacklogItemResource {
     }
 
     private function sendAllowHeaderForChildren() {
-        Header::allowOptionsGet();
+        Header::allowOptionsGetPatch();
     }
 
     private function sendPaginationHeaders($limit, $offset, $size) {

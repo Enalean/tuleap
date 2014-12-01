@@ -35,8 +35,6 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject {
      * moveArtifactBefore(A, D) =>
      * B -> C -> A -> D
      *
-     * @see PriorityDao.phpt for the test cases
-     *
      * @return bool true if success
      */
     public function moveArtifactBefore($artifact_id, $successor_id) {
@@ -44,13 +42,51 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject {
             throw new Tracker_Artifact_Exception_CannotRankWithMyself($artifact_id);
         }
         $this->da->startTransaction();
-        $predecessor_id = $this->searchPredecessor($successor_id);
-        if ($predecessor_id !== false && $predecessor_id != $artifact_id && $this->removeAndInsert($predecessor_id, $artifact_id)) {
-            $this->da->commit();
-            return true;
+        try {
+            $predecessor_id = $this->searchPredecessor($successor_id);
+            if ($predecessor_id != $artifact_id && $this->removeAndInsert($predecessor_id, $artifact_id)) {
+                $this->da->commit();
+                return true;
+            }
+        } catch (Tracker_Artifact_Dao_NoPredecessorException $exception) {
         }
+
         $this->da->rollback();
         return false;
+    }
+
+    /**
+     * Move a set of artifacts before another one
+     *
+     * A -> B -> C -> D
+     *
+     * moveListOfArtifactsBefore([A, C], D) =>
+     * B -> A -> C -> D
+     *
+     * @return bool true if success
+     */
+    public function moveListOfArtifactsBefore(array $list_of_artifact_ids, $successor_id) {
+        $list_of_artifact_ids = array_unique(array_filter($list_of_artifact_ids));
+        if (in_array($successor_id, $list_of_artifact_ids)) {
+            throw new Tracker_Artifact_Exception_CannotRankWithMyself($successor_id);
+        }
+        $this->da->startTransaction();
+        try {
+            $predecessor_id = $this->searchPredecessor($successor_id);
+            list($lower_boundary, $upper_boundary) = $this->getBoundariesForGivenArtifacts(
+                array_merge($list_of_artifact_ids, array($predecessor_id))
+            );
+            $this->removeArtifactsWithoutUpdatingRank($list_of_artifact_ids);
+            $new_predecessor_id = $this->searchPredecessor($successor_id);
+            $this->insertArtifactsAfterWithoutUpdatingRank($list_of_artifact_ids, $new_predecessor_id);
+            $this->updateRankingBetweenBoundaries($lower_boundary, $upper_boundary, $new_predecessor_id);
+
+            $this->da->commit();
+            return true;
+        } catch (Tracker_Artifact_Dao_NoPredecessorException $exception) {
+            $this->da->rollback();
+            return false;
+        }
     }
 
     /**
@@ -60,8 +96,6 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject {
      *
      * moveArtifactAfter(A, D) =>
      * B -> C -> D -> A
-     *
-     * @see PriorityDao.phpt for the test cases
      *
      * @return bool true if success
      */
@@ -79,6 +113,209 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject {
     }
 
     /**
+     * Move a set of artifacts before another one
+     *
+     * A -> B -> C -> D
+     *
+     * moveListOfArtifactsAfter([A, C], D) =>
+     * B -> D -> A -> C
+     *
+     * @return bool true if success
+     */
+    public function moveListOfArtifactsAfter(array $list_of_artifact_ids, $predecessor_id) {
+        $list_of_artifact_ids = array_unique(array_filter($list_of_artifact_ids));
+        if (! $list_of_artifact_ids) {
+            return true;
+        }
+        if (in_array($predecessor_id, $list_of_artifact_ids)) {
+            throw new Tracker_Artifact_Exception_CannotRankWithMyself($predecessor_id);
+        }
+        $this->da->startTransaction();
+        list($lower_boundary, $upper_boundary) = $this->getBoundariesForGivenArtifacts(
+            array_merge($list_of_artifact_ids, array($predecessor_id))
+        );
+        $this->removeArtifactsWithoutUpdatingRank($list_of_artifact_ids);
+        $this->insertArtifactsAfterWithoutUpdatingRank($list_of_artifact_ids, $predecessor_id);
+        $this->updateRankingBetweenBoundaries($lower_boundary, $upper_boundary, $predecessor_id);
+        $this->da->commit();
+
+        return true;
+    }
+
+    private function insertArtifactsAfterWithoutUpdatingRank(
+        array $list_of_artifact_ids,
+        $predecessor_id
+    ) {
+        $id = $this->da->escapeInt($predecessor_id);
+        list($new_entries, $new_successor_id) = $this->prepareNewEntriesAndSuccessorId($list_of_artifact_ids, $predecessor_id);
+        $this->insertItemsAtTheRightPosition($new_entries);
+        $this->updateSuccessor($id, $new_successor_id);
+    }
+
+    private function prepareNewEntriesAndSuccessorId(
+        array $list_of_artifact_ids,
+        $predecessor_id
+    ) {
+        list($current_successor_id, $current_rank) = $this->getCurrentRankAndSuccessor($predecessor_id);
+
+        $new_entries      = array();
+        $new_successor_id = null;
+        foreach ($list_of_artifact_ids as $artifact_id) {
+            if ($new_successor_id === null) {
+                $new_successor_id = $artifact_id;
+            } else {
+                $new_entries[] = "($predecessor_id, $artifact_id, $current_rank)";
+            }
+            $predecessor_id = $artifact_id;
+        }
+        $new_entries[] = "($predecessor_id, $current_successor_id, $current_rank)";
+
+        return array($new_entries, $new_successor_id);
+    }
+
+    private function insertItemsAtTheRightPosition($new_entries) {
+        $new_entries_imploded = implode(', ', $new_entries);
+        $sql = "INSERT INTO tracker_artifact_priority (curr_id, succ_id, rank) VALUES $new_entries_imploded";
+        $this->update($sql);
+    }
+
+    private function updateSuccessor($curr_id, $new_successor_id) {
+        $equals_id = "IS NULL";
+        if ($curr_id) {
+            $equals_id = "= $curr_id";
+        }
+        $new_successor_id = $this->da->escapeInt($new_successor_id);
+        $sql = "UPDATE tracker_artifact_priority
+                SET succ_id = $new_successor_id
+                WHERE curr_id $equals_id
+                  AND IFNULL(succ_id, 0) <> $new_successor_id";
+        $this->update($sql);
+    }
+
+    private function getCurrentRankAndSuccessor($id) {
+        $equals_id = "IS NULL";
+        $id = $this->da->escapeInt($id);
+        if ($id) {
+            $equals_id = "= $id";
+        }
+        $sql = "SELECT succ_id, rank FROM tracker_artifact_priority WHERE curr_id $equals_id";
+        $result = $this->retrieve($sql);
+        $row = $result->getRow();
+        $current_successor_id = $row['succ_id'] === null ? 'NULL' : $row['succ_id'];
+        $current_rank = $row['rank'];
+
+        return array($current_successor_id, $current_rank);
+    }
+
+    private function removeArtifactsWithoutUpdatingRank(array $list_of_artifact_ids) {
+        $this->updateSuccessorPointerOfCurrentParents($list_of_artifact_ids);
+
+        // Remove all items
+        $artifact_ids_imploded = $this->da->escapeIntImplode($list_of_artifact_ids);
+        $sql = "DELETE FROM tracker_artifact_priority WHERE curr_id IN ($artifact_ids_imploded)";
+        $this->update($sql);
+    }
+
+    private function updateSuccessorPointerOfCurrentParents(array $list_of_artifact_ids) {
+        $replacements = $this->extractNewSuccessors($list_of_artifact_ids);
+        if (! $replacements) {
+            return;
+        }
+
+        $whens = '';
+        foreach ($replacements as $old_value => $new_value) {
+            if (! $new_value) {
+                $new_value = 'NULL';
+            }
+            if (! $old_value) {
+                $old_value = 'NULL';
+            }
+            $whens .= " WHEN succ_id = $old_value THEN $new_value ";
+        }
+
+        $sql = "UPDATE tracker_artifact_priority
+                SET succ_id = CASE $whens ELSE succ_id END";
+        $this->update($sql);
+    }
+
+    private function extractNewSuccessors($list_of_artifact_ids) {
+        $artifact_ids_imploded = $this->da->escapeIntImplode($list_of_artifact_ids);
+        $sql = "SELECT *
+                FROM tracker_artifact_priority
+                WHERE curr_id IN ($artifact_ids_imploded)
+                ORDER BY rank";
+        $result = $this->retrieve($sql);
+        $replacements = array();
+        foreach ($result as $row) {
+            $key = array_search($row['curr_id'], $replacements);
+            if ($key === false) {
+                $key = $row['curr_id'];
+            }
+            $replacements[$key] = $row['succ_id'];
+        }
+
+        return $replacements;
+    }
+
+    private function getBoundariesForGivenArtifacts($artifact_ids) {
+        $or_curr_id_is_null = '';
+        if (in_array(0, $artifact_ids)) {
+            $or_curr_id_is_null = "OR curr_id IS NULL";
+            $artifact_ids = array_filter($artifact_ids);
+        }
+        $all_artifact_ids_involved = $this->da->escapeIntImplode($artifact_ids);
+        $sql = "SELECT MIN(rank) AS lower_boundary, MAX(rank) AS upper_boundary
+                FROM tracker_artifact_priority
+                WHERE curr_id IN ($all_artifact_ids_involved)
+                        $or_curr_id_is_null
+                ORDER BY rank";
+        $result = $this->retrieve($sql);
+        $row = $result->getRow();
+
+        return array($row['lower_boundary'], $row['upper_boundary']);
+    }
+
+    /**
+     * Reset rank where lower_boundary < rank < upper_boundary
+     */
+    private function updateRankingBetweenBoundaries($lower_boundary, $upper_boundary, $predecessor_id) {
+        list(, $current_rank) = $this->getCurrentRankAndSuccessor($predecessor_id);
+        if ($lower_boundary > $current_rank) {
+            $lower_boundary = $current_rank;
+        }
+        if ($current_rank > $upper_boundary) {
+            $upper_boundary = $current_rank;
+        }
+
+        $sql = "SET @pos = $lower_boundary - 1";
+        $this->update($sql);
+
+        $sql = "UPDATE tracker_artifact_priority
+                    INNER JOIN (
+                        SELECT curr_id, @pos := @pos + 1 AS new_rank
+                        FROM `tracker_artifact_priority`
+                        WHERE $lower_boundary <= rank AND rank <= $upper_boundary
+                        ORDER BY rank
+                    ) AS R1
+                    USING (curr_id)
+                SET rank = new_rank";
+        $this->update($sql);
+    }
+
+    /**
+     * For debugging purpose only
+     */
+    public function debug() {
+        $res = $this->retrieve("SELECT * FROM tracker_artifact_priority ORDER BY rank");
+        printf("%10s|%10s|%10s|\n", 'curr_id', 'succ_id', 'rank');
+        printf("----------+----------+----------+\n");
+        foreach ($res as $row) {
+            printf("%10s|%10s|%10s|\n", $row['curr_id'], $row['succ_id'], $row['rank']);
+        }
+        echo "\n\n";
+    }
+
+    /**
      * Put an artifact at the end
      *
      * A -> B -> C -> D
@@ -86,18 +323,19 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject {
      * putArtifactAtTheEnd(E) =>
      * A -> B -> C -> D -> E
      *
-     * @see PriorityDao.phpt for the test cases
-     *
      * @todo: check that the artifact doesn't already exist in the list
      *
      * @return bool true if success
      */
     public function putArtifactAtTheEnd($artifact_id) {
         $this->da->startTransaction();
-        $predecessor_id = $this->searchPredecessor(null);
-        if ($predecessor_id !== false && $this->insert($predecessor_id, $artifact_id)) {
-            $this->da->commit();
-            return true;
+        try {
+            $predecessor_id = $this->searchPredecessor(null);
+            if ($this->insert($predecessor_id, $artifact_id)) {
+                $this->da->commit();
+                return true;
+            }
+        } catch (Tracker_Artifact_Dao_NoPredecessorException $exception) {
         }
         $this->da->rollback();
         return false;
@@ -113,11 +351,12 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject {
                 FROM tracker_artifact_priority
                 WHERE succ_id $equals_id";
         $result = $this->retrieve($sql);
-        if ($result) {
-            $row = $result->getRow();
-            return $row['curr_id'];
+        if (! $result && ! $result->count()) {
+            throw new Tracker_Artifact_Dao_NoPredecessorException();
         }
-        return false;
+
+        $row = $result->getRow();
+        return $row['curr_id'];
     }
 
     /**
@@ -205,4 +444,3 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject {
         return $row['rank'];
     }
 }
-?>
