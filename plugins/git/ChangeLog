@@ -1,3 +1,6 @@
+Version 3.145 - Tuleap 7.8
+    * Use git_syslog for every git events
+
 Version 3.144 - Tuleap 7.8
     * story #7540 have all Git events consumed all at once
 
