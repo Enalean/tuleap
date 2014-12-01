@@ -57,7 +57,7 @@ class SystemEvent_GIT_REPO_UPDATETest extends TuleapTestCase {
 
     public function itDelegatesToBackendRepositoryCreation() {
         stub($this->repository_factory)->getRepositoryById()->returns($this->repository);
-        expect($this->backend)->updateAllRepoConf()->once();
+        expect($this->backend)->updateRepoConf()->once();
         $this->event->process();
     }
 
@@ -73,30 +73,11 @@ class SystemEvent_GIT_REPO_UPDATETest extends TuleapTestCase {
         $this->event->process();
     }
 
-    public function itSkipsAllEvents() {
-        $project_id = 456;
-        stub($this->repository)->getProjectId()->returns($project_id);
-        stub($this->event)->getId()->returns(001);
+    public function itMarksTheEventAsDoneWhenTheRepoIsFlaggedAsDeleted() {
+        stub($this->repository_factory)->getRepositoryById()->returns(null);
+        stub($this->repository_factory)->getDeletedRepository()->returns($this->repository);
 
-        $all_events = array(
-            array( 'id' => 111, 'parameters' => '33'),
-            array( 'id' => 222, 'parameters' => '5555'),
-            array( 'id' => 333, 'parameters' => '66::somestuff'),
-            array( 'id' => 444, 'parameters' => '7')
-        );
-
-        $all_event_ids = array(111, 222, 333, 444, 001);
-
-        stub($this->repository_factory)->getRepositoryById()->returns($this->repository);
-        stub($this->system_event_dao)->searchNewGitRepoUpdateEvents()->returns($all_events);
-
-        expect($this->repository_factory)->getRepositoryById()->count(3);
-
-        $same_project_repositories = array(1, 5555, 458, 66, 7);
-        stub($this->backend)->searchOtherRepositoriesInSameProjectFromRepositoryList()->returns($same_project_repositories);
-
-        expect($this->system_event_dao)->markAsRunning($all_event_ids)->once();
-        expect($this->system_event_dao)->markAsDone($all_event_ids)->once();
+        expect($this->event)->done('Unable to update a repository marked as deleted')->once();
 
         $this->event->process();
     }
