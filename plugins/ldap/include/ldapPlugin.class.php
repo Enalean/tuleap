@@ -133,9 +133,19 @@ class LdapPlugin extends Plugin {
                 $nk = str_replace('sys_ldap_', '', $k);
                 $ldapParams[$nk] = $this->getPluginInfo()->getPropertyValueForName($k);
             }
-            $this->ldapInstance = new LDAP($ldapParams);
+            $this->ldapInstance = new LDAP(
+                $ldapParams,
+                $this->getLogger()
+            );
         }
         return $this->ldapInstance;
+    }
+
+    /**
+     * @return TruncateLevelLogger
+     */
+    public function getLogger() {
+        return new TruncateLevelLogger(new BackendLogger(), Config::get('sys_logger_level'));
     }
 
     /**

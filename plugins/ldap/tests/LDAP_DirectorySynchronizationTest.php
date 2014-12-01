@@ -57,14 +57,21 @@ class MyUmMock4Suspended extends MockUserManager {
     }
 }
 
-class LDAP_DirectorySynchronizationTest extends UnitTestCase {
+class LDAP_DirectorySynchronizationTest extends TuleapTestCase {
+
+    private $previous_log_dir;
 
     function setUp() {
         $GLOBALS['Language'] = new MockBaseLanguage($this);
         $GLOBALS['Language']->setReturnValue('getContent', dirname(__FILE__).'/empty.txt');
+        $this->previous_log_dir = Config::get('codendi_log');
+        Config::set('codendi_log', '/tmp');
+        Config::set('sys_logger_level', 'debug');
     }
 
     function tearDown() {
+        Config::restore();
+        Config::set('codendi_log', $this->previous_log_dir);
         unset($GLOBALS['Language']);
     }
 
@@ -76,7 +83,7 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
         $ldap->setReturnValue('search', false);
         $ldap->expectCallCount('search', 3);
         $ldap->setReturnValue('getLDAPParam', 'ou=People,dc=st,dc=com ; ou=Intranet,dc=st,dc=com ; ou=Extranet,dc=st,dc=com');
-        $sync->__construct($ldap);
+        $sync->__construct($ldap, mock('TruncateLevelLogger'));
 
         $um = new MockUserManager($this);
         $um->expectNever('updateDb');
@@ -93,7 +100,7 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
         $lus->expectNever('sync');
         $sync->setReturnValue('getLdapUserSync', $lus);
 
-        $sync->ldapSync(array('ldap_id' => 'ed1234'));
+        $sync->ldapSync(array('ldap_id' => 'ed1234'), 1);
     }
 
     function testNoDBUpdateIfLdapSearchErrno() {
@@ -107,7 +114,7 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
         $ldap->setReturnReference('search', $lri);
         $ldap->expectCallCount('search', 3);
         $ldap->setReturnValue('getLDAPParam', 'ou=People,dc=st,dc=com ; ou=Intranet,dc=st,dc=com ; ou=Extranet,dc=st,dc=com');
-        $sync->__construct($ldap);
+        $sync->__construct($ldap, mock('TruncateLevelLogger'));
 
         $um = new MockUserManager($this);
         $um->expectNever('updateDb');
@@ -124,11 +131,12 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
         $lus->expectNever('sync');
         $sync->setReturnValue('getLdapUserSync', $lus);
 
-        $sync->ldapSync(array('ldap_id' => 'ed1234'));
+        $sync->ldapSync(array('ldap_id' => 'ed1234'), 1);
     }
 
     function testUserSuspendedIfNotInLDAP() {
         $sync = new LDAP_DirectorySynchronizationTestVersion($this);
+        Config::set('codendi_log', '/tmp');
 
         $lri = new MockLDAPResultIterator($this);
         $lri->setReturnValue('valid', false);
@@ -138,7 +146,7 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
         $ldap->setReturnReference('search', $lri);
         $ldap->expectCallCount('search', 3);
         $ldap->setReturnValue('getLDAPParam', 'ou=People,dc=st,dc=com ; ou=Intranet,dc=st,dc=com ; ou=Extranet,dc=st,dc=com');
-        $sync->__construct($ldap);
+        $sync->__construct($ldap, mock('TruncateLevelLogger'));
 
         $um = new MyUmMock4Suspended($this);
         $um->expectOnce('updateDb');
@@ -162,7 +170,7 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
         $lus->expectNever('sync');
         $sync->setReturnValue('getLdapUserSync', $lus);
 
-        $sync->ldapSync(array('ldap_id' => 'ed1234'));
+        $sync->ldapSync(array('ldap_id' => 'ed1234'), 1);
     }
 
     function testUserLdapUidUpdateIfLdapDoesntMatch() {
@@ -186,7 +194,7 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
         $ldap->setReturnReference('search', $lri);
         $ldap->expectCallCount('search', 1);
         $ldap->setReturnValue('getLDAPParam', 'ou=People,dc=st,dc=com ; ou=Intranet,dc=st,dc=com ; ou=Extranet,dc=st,dc=com');
-        $sync->__construct($ldap);
+        $sync->__construct($ldap, mock('TruncateLevelLogger'));
 
         $um = new MockUserManager($this);
         $um->expectNever('updateDb');
@@ -207,7 +215,7 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
         $lus->expectOnce('sync');
         $sync->setReturnValue('getLdapUserSync', $lus);
 
-        $sync->ldapSync($row);
+        $sync->ldapSync($row, 1);
     }
 
     function testUserUpdateIfUserTellsSo() {
@@ -227,7 +235,7 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
         $ldap->setReturnReference('search', $lri);
         $ldap->expectCallCount('search', 1);
         $ldap->setReturnValue('getLDAPParam', 'ou=People,dc=st,dc=com ; ou=Intranet,dc=st,dc=com ; ou=Extranet,dc=st,dc=com');
-        $sync->__construct($ldap);
+        $sync->__construct($ldap, mock('TruncateLevelLogger'));
 
         $um = new MockUserManager($this);
         $um->expectOnce('updateDb');
@@ -252,7 +260,7 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
                      'ldap_id'  => 'ed1234',
                      'ldap_uid' => 'mis_1234'
                      );
-        $sync->ldapSync($row);
+        $sync->ldapSync($row, 1);
     }
 
     function testUserNoUpdateIfNothingChangedInLdap() {
@@ -272,7 +280,7 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
         $ldap->setReturnReference('search', $lri);
         $ldap->expectCallCount('search', 1);
         $ldap->setReturnValue('getLDAPParam', 'ou=People,dc=st,dc=com ; ou=Intranet,dc=st,dc=com ; ou=Extranet,dc=st,dc=com');
-        $sync->__construct($ldap);
+        $sync->__construct($ldap, mock('TruncateLevelLogger'));
 
         $um = new MockUserManager($this);
         $um->expectNever('updateDb');
@@ -294,7 +302,7 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
                      'ldap_id'  => 'ed1234',
                      'ldap_uid' => 'mis_1234'
                      );
-        $sync->ldapSync($row);
+        $sync->ldapSync($row, 1);
     }
 
     function testUserInSecondBranch() {
@@ -318,7 +326,7 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
         $ldap->setReturnValueAt(2, 'search', false);
         $ldap->expectCallCount('search', 2);
         $ldap->setReturnValue('getLDAPParam', 'ou=People,dc=st,dc=com ; ou=Intranet,dc=st,dc=com ; ou=Extranet,dc=st,dc=com');
-        $sync->__construct($ldap);
+        $sync->__construct($ldap, mock('TruncateLevelLogger'));
 
         $um = new MockUserManager($this);
         $um->expectNever('updateDb');
@@ -340,7 +348,7 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
                      'ldap_id'  => 'ed1234',
                      'ldap_uid' => 'mis_1234'
                      );
-        $sync->ldapSync($row);
+        $sync->ldapSync($row, 1);
     }
 
 }

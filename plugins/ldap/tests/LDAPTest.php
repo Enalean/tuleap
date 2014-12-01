@@ -40,7 +40,15 @@ class LDAP_RetrieveAllArguementsTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->ldap = partial_mock('LDAP', array('search'), array($this->ldap_params));
+        Config::set('sys_logger_level', 'debug');
+        $this->ldap = partial_mock(
+            'LDAP',
+            array('search'),
+            array($this->ldap_params, mock('TruncateLevelLogger')));
+    }
+
+    function tearDown() {
+        Config::restore();
     }
 
     public function itSearchesLoginWithAllAttributesExplicitly() {

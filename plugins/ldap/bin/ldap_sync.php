@@ -34,7 +34,7 @@ $pluginManager = PluginManager::instance();
 $ldapPlugin    = $pluginManager->getPluginByName('ldap');
 if ($pluginManager->isPluginAvailable($ldapPlugin)) {
 
-    $ldapQuery = new LDAP_DirectorySynchronization($ldapPlugin->getLdap());
+    $ldapQuery = new LDAP_DirectorySynchronization($ldapPlugin->getLdap(), $ldapPlugin->getLogger());
     $ldapQuery->syncAll();
 
     $retentionPeriod = $ldapPlugin->getLdap()->getLDAPParam('daily_sync_retention_period');
