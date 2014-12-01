@@ -34,9 +34,7 @@ EventManager::instance()->processEvent(
     )
 );
 if (isset($custom_queues[$request_queue])) {
-    // Override the logger in order to have a dedicated log file for the custom queue
-    $logger  = new BackendLogger(Config::get('codendi_log') .'/'. $request_queue .'_syslog');
-
+    $logger = $custom_queues[$request_queue]->getLogger();
     $logger->debug('Processing '. $request_queue .' queue.');
     $process = new SystemEventProcessCustomQueue($request_queue);
 } else {

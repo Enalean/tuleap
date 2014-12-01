@@ -185,7 +185,7 @@ class GitPlugin extends Plugin {
 
     /** @see Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES */
     public function system_event_get_custom_queues(array &$params) {
-        $params['queues'][Git_SystemEventQueue::NAME] = new Git_SystemEventQueue();
+        $params['queues'][Git_SystemEventQueue::NAME] = new Git_SystemEventQueue($this->getLogger());
     }
 
     /** @see Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE */
@@ -1148,11 +1148,9 @@ class GitPlugin extends Plugin {
      */
     public function getLogger() {
         if (!$this->logger) {
-            $this->logger = new TruncateLevelLogger(
-                new BackendLogger(),
-                Config::get('sys_logger_level')
-            );
+            $this->logger = new GitBackendLogger();
         }
+
         return $this->logger;
     }
 

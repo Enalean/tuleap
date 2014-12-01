@@ -343,7 +343,7 @@ plugin_git	mirror_repo	Repository
 plugin_git	mirror_title	List of repositories on mirror $1
 plugin_git	mirror_back	Back to mirror list
 
-plugin_git	system_event_queue	Git queue
+plugin_git	system_event_queue	Git Queue
 
 project_admin_utils	git_repo_create	Git repository creation
 project_admin_utils	git_repo_delete	Git repository deletion

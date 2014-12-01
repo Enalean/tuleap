@@ -18,28 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_SystemEventQueue extends SystemEventQueue {
+class GitBackendLogger extends TruncateLevelLogger {
 
-    /**
-     * @var Logger
-     */
-    private $logger;
-
-    const NAME = 'git';
-
-    public function __construct(Logger $logger) {
-        $this->logger = $logger;
-    }
-
-    public function getName() {
-        return self::NAME;
-    }
-
-    public function getLabel() {
-        return $GLOBALS['Language']->getText('plugin_git', 'system_event_queue');
-    }
-
-    public function getLogger() {
-        return $this->logger;
+    public function __construct() {
+        parent::__construct(
+            new BackendLogger(Config::get('codendi_log') .'/git_syslog'),
+            Config::get('sys_logger_level')
+        );
     }
 }
