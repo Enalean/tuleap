@@ -1,3 +1,9 @@
+Version 7.7-3 (Monday, December 1st 2014)
+	== Bug Fix ==
+	* request #7615: Edit SVN commit log messages
+	* request #7645: Proftpd project folders are created in mixed case
+	* request #7646: Ftp files can't be moved in FRS
+
 Version 7.7-2 (Tuesday, November 25th 2014)
 	== Bug Fix ==
 	* request #7613: FTS: timeout issue while re-indexing projects
