@@ -67,24 +67,25 @@ class DocmanV1_XMLExportData {
         $this->data_path           = $data_path;
         $this->ugroup_manager      = $ugroup_manager;
         $this->minimal_permissions = array(
-            ProjectUGroup::$normalized_names[ProjectUGroup::ANONYMOUS]       => array(),
-            ProjectUGroup::$normalized_names[ProjectUGroup::REGISTERED]      => array(),
-            ProjectUGroup::$normalized_names[ProjectUGroup::PROJECT_MEMBERS] => array(),
-            ProjectUGroup::$normalized_names[ProjectUGroup::PROJECT_ADMIN]   => array(self::V2_SOAP_PERM_MANAGE),
+            ProjectUGroup::ANONYMOUS       => array(),
+            ProjectUGroup::REGISTERED      => array(),
+            ProjectUGroup::PROJECT_MEMBERS => array(),
+            ProjectUGroup::PROJECT_ADMIN   => array(self::V2_SOAP_PERM_MANAGE),
         );
     }
 
     public function appendUGroups(DOMElement $ugroups, Project $project) {
         foreach ($this->ugroups as $id => $name) {
             $ugroup      = $this->ugroup_manager->getUGroupWithMembers($project, $id);
-            $ugroup_node = $this->createUGroupNode($ugroups, $name);
+            $ugroup_node = $this->createUGroupNode($ugroups, $id, $name);
             $this->appendMembersForStaticGroups($ugroup_node, $ugroup);
         }
     }
 
-    private function createUGroupNode(DOMElement $ugroups, $name) {
+    private function createUGroupNode(DOMElement $ugroups, $id, $name) {
         $ugroup_node = $this->doc->createElement('ugroup');
         $ugroup_node->setAttribute('name', $name);
+        $ugroup_node->setAttribute('id', $id);
         $ugroups->appendChild($ugroup_node);
         return $ugroup_node;
     }
@@ -152,32 +153,33 @@ class DocmanV1_XMLExportData {
         foreach($results as $row) {
             if ($row['id'] < ProjectUGroup::PROJECT_ADMIN || $row['id'] > ProjectUGroup::NONE) {
                 $ugroup_name = util_translate_name_ugroup($row['name']);
-                $this->ugroups[$row['id']] = $ugroup_name;
-                $perms[$ugroup_name][] = self::V2_SOAP_PERM_READ;
+                $ugroup_id   = $row['id'];
+                $this->ugroups[$ugroup_id] = $ugroup_name;
+                $perms[$ugroup_id][] = self::V2_SOAP_PERM_READ;
             }
         }
         return $perms;
     }
 
     private function appendPermissionsFor(DOMElement $permissions, array $perms) {
-        foreach ($perms as $ugroup_name => $permission_types) {
+        foreach ($perms as $ugroup_id => $permission_types) {
             if (count($permission_types) > 0) {
-                $this->appendPermissionsTypesFor($permissions, $permission_types, $ugroup_name);
+                $this->appendPermissionsTypesFor($permissions, $permission_types, $ugroup_id);
             } else {
-                $permissions->appendChild($this->createPermissionFor(self::V2_SOAP_PERM_NONE, $ugroup_name));
+                $permissions->appendChild($this->createPermissionFor(self::V2_SOAP_PERM_NONE, $ugroup_id));
             }
         }
     }
 
-    private function appendPermissionsTypesFor(DOMElement $permissions, array $permission_types, $ugroup_name) {
+    private function appendPermissionsTypesFor(DOMElement $permissions, array $permission_types, $ugroup_id) {
         foreach ($permission_types as $type) {
-            $permissions->appendChild($this->createPermissionFor($type, $ugroup_name));
+            $permissions->appendChild($this->createPermissionFor($type, $ugroup_id));
         }
     }
 
-    private function createPermissionFor($type, $ugroup_name) {
+    private function createPermissionFor($type, $ugroup_id) {
         $permission = $this->doc->createElement('permission');
-        $permission->setAttribute('ugroup', $ugroup_name);
+        $permission->setAttribute('ugroup', $ugroup_id);
         $permission->appendChild($this->doc->createTextNode($type));
         return $permission;
     }

@@ -12,7 +12,10 @@
 
 <!ELEMENT ugroups (ugroup*) >
 <!ELEMENT ugroup (member*) >
-<!ATTLIST ugroup name CDATA #REQUIRED >
+<!ATTLIST ugroup
+        name CDATA #REQUIRED
+        id CDATA #REQUIRED
+>
 <!ELEMENT member (#PCDATA) >
 
 <!ELEMENT item (properties?, permissions?, versions?, pagename?, url?, item*) >
