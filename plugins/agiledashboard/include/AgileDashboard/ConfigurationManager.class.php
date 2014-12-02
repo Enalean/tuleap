@@ -31,23 +31,30 @@ class AgileDashboard_ConfigurationManager {
     }
 
     public function kanbanIsActivatedForProject($project_id) {
-        $row = $this->dao->isKanbanActivated($project_id)->getRow();
-
-        if (! $row) {
+        if (! $this->doesAConfigurationExistForProject($project_id)) {
             return false;
         }
+
+        $row = $this->dao->isKanbanActivated($project_id)->getRow();
 
         return $row['kanban'];
     }
 
     public function scrumIsActivatedForProject($project_id) {
-        $row = $this->dao->isScrumActivated($project_id)->getRow();
-
-        if (! $row) {
-            return false;
+        if (! $this->doesAConfigurationExistForProject($project_id)) {
+            return true;
         }
 
+        $row = $this->dao->isScrumActivated($project_id)->getRow();
+
         return $row['scrum'];
+    }
+
+    /**
+     * @return boolean
+     */
+    private function doesAConfigurationExistForProject($project_id) {
+        return $this->dao->doesAConfigurationExistForProject($project_id);
     }
 
     public function updateConfiguration($project_id, $scrum_is_activated, $kanban_is_activated) {

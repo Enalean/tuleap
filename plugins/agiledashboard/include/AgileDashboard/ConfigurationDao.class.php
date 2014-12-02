@@ -50,4 +50,14 @@ class AgileDashboard_ConfigurationDao extends DataAccessObject {
 
         return $this->retrieve($sql);
     }
+
+    public function doesAConfigurationExistForProject($project_id) {
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql = "SELECT project_id
+                FROM plugin_agiledashboard_configuration
+                WHERE project_id = $project_id";
+
+        return $this->retrieve($sql)->count() > 0;
+    }
 }
