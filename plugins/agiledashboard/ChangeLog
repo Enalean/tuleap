@@ -1,3 +1,6 @@
+Version 1.97 - Tuleap 7.8
+    * story #7575: create a "new kanban" on AD homepage
+
 Version 1.96 - Tuleap 7.8
     * Add REST route to reorder children
 
