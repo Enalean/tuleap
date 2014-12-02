@@ -4,6 +4,7 @@ Version 7.8 (Not released yet)
 	* request #7590: Allow SVN immutable tags (contrib STMicroelectronics)
 	* Improve tuleap referral and SEO
 	* story #7540: have all Git events consumed all at once
+	* request #7649: Admin can activate an account when user comes from ldap
 
 	== Bug fix ==
 	* request #7615: retreive the username from ldap while editing SVN commit log messages (contrib STMicroelectronics)
