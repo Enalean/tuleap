@@ -99,3 +99,7 @@ pre {
 .tree-collapsable {
     cursor: pointer;
 }
+
+#search-field {
+    width: 350px;
+}
