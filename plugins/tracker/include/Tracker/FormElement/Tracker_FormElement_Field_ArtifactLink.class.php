@@ -1533,7 +1533,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      * @param Tracker_Artifact_Changeset $changeset The changeset you want to retrieve artifact from
      * @param PFUser                       $user      The user who will see the artifacts
      * 
-     * @return array of Tracker_Artifact
+     * @return Tracker_Artifact[]
      */
     public function getLinkedArtifacts(Tracker_Artifact_Changeset $changeset, PFUser $user) {
         $artifacts = array();
