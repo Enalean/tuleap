@@ -19,6 +19,8 @@
  */
 namespace Tuleap\AgileDashboard\REST\v1;
 
+use Luracast\Restler\RestException;
+
 class OrderRepresentation {
 
     const AFTER  = 'after';

@@ -744,6 +744,17 @@ class Event {
     const REST_PUT_PROJECT_BACKLOG = 'rest_put_project_backlog';
 
     /**
+     * Event raised to order top backlog items from a project with REST
+     *
+     * Parameters:
+     *     'version' => String
+     *     'project' => Project
+     *     'order'   => OrderRepresentation
+     *     'result'  => array
+     */
+    const REST_PATCH_PROJECT_BACKLOG = 'rest_patch_project_backlog';
+
+    /**
      * Fetch interface html to manage 3rd party apps
      *
      * Parameters:

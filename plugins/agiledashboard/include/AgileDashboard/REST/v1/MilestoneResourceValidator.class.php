@@ -173,6 +173,10 @@ class MilestoneResourceValidator {
         return ($done->containsId($artifact->getId()) || $todo->containsId($artifact->getId()));
     }
 
+    /**
+     * @throws IdsFromBodyAreNotUniqueException
+     * @throws ArtifactIsNotInOpenAndUnplannedBacklogItemsException
+     */
     public function validateArtifactIdsAreInOpenAndUnplannedMilestone(array $ids, Planning_Milestone $milestone, PFUser $user) {
         if (! $this->idsAreUnique($ids)) {
             throw new IdsFromBodyAreNotUniqueException();
@@ -189,6 +193,10 @@ class MilestoneResourceValidator {
         return true;
     }
 
+    /**
+     * @throws IdsFromBodyAreNotUniqueException
+     * @throws ArtifactIsNotInOpenAndUnassignedTopBacklogItemsException
+     */
     public function validateArtifactIdsAreInOpenAndUnassignedTopBacklog(array $ids, PFUser $user, Project $project) {
         if (! $this->idsAreUnique($ids)) {
             throw new IdsFromBodyAreNotUniqueException();

@@ -34,6 +34,7 @@ use \Luracast\Restler\RestException;
 use \Tuleap\REST\ProjectAuthorization;
 use \Tuleap\REST\ResourcesInjector;
 use \URLVerification;
+use Tuleap\AgileDashboard\REST\v1\OrderRepresentation;
 
 /**
  * Wrapper for project related REST methods
@@ -390,9 +391,9 @@ class ProjectResource {
     }
 
     /**
-     * Order backlog items
+     * Set order of all backlog items
      *
-     * Order backlog items in top backlog
+     * Order all backlog items in top backlog
      *
      * @url PUT {id}/backlog
      *
@@ -411,6 +412,50 @@ class ProjectResource {
                 'version' => 'v1',
                 'project' => $project,
                 'ids'     => $ids,
+                'result'  => &$result,
+            )
+        );
+
+        $this->sendAllowHeadersForBacklog();
+    }
+
+    /**
+     * Re-order backlog items relative to others
+     *
+     * Re-order backlog items in top backlog relative to each other
+     * <br>
+     * Example:
+     * <pre>
+     * "order": {
+     *   "ids" : [123, 789, 1001],
+     *   "direction": "before",
+     *   "compared_to": 456
+     * }
+     * </pre>
+     *
+     * <br>
+     * Resulting order will be: <pre>[…, 123, 789, 1001, 456, …]</pre>
+     *
+     * @url PATCH {id}/backlog
+     *
+     * @param int                                                $id    Id of the Backlog Item
+     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation $order Order of the children {@from body}
+     *
+     * @throws 500
+     * @throws 409
+     * @throws 400
+     */
+    protected function patchBacklog($id, OrderRepresentation $order) {
+        $order->checkFormat($order);
+        $project = $this->getProjectForUser($id);
+        $result  = array();
+
+        EventManager::instance()->processEvent(
+            Event::REST_PATCH_PROJECT_BACKLOG,
+            array(
+                'version' => 'v1',
+                'project' => $project,
+                'order'   => $order,
                 'result'  => &$result,
             )
         );
@@ -495,7 +540,7 @@ class ProjectResource {
     }
 
     private function sendAllowHeadersForBacklog() {
-        Header::allowOptionsGetPut();
+        Header::allowOptionsGetPutPatch();
     }
 
     private function sendPaginationHeaders($limit, $offset, $size) {
