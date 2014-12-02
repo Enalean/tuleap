@@ -1,21 +1,3 @@
-.angular-ui-tree-empty {
-    background: transparent url('milestone-empty') no-repeat center center;
-    margin: 0 0 10px;
-    border: none;
-}
-.angular-ui-tree-nodes .angular-ui-tree-nodes {
-    padding: 0;
-}
-.angular-ui-tree-placeholder {
-    background: #4DB3D0;
-    max-height: 3px;
-    min-height: 3px;
-    margin: 10px;
-}
-.angular-ui-tree-drag {
-    opacity: 1;
-}
-
 ul.backlog-items, ul.backlog-item-children {
     margin: 0;
 
@@ -187,4 +169,38 @@ div.milestones > fieldset.milestone > div.content {
         margin: 0;
         padding: 0;
     }
+}
+
+.angular-ui-tree-empty {
+    background: transparent url('milestone-empty.png') no-repeat center center;
+    margin: 0 0 10px;
+    border: none;
+}
+.angular-ui-tree-nodes .angular-ui-tree-nodes {
+    padding: 0;
+}
+.angular-ui-tree-placeholder {
+    background: #58B359;
+    max-height: 3px;
+    min-height: 3px;
+    margin: 10px;
+}
+
+ul.backlog-items, ul.backlog-item-children {
+    > li.backlog-item.angular-ui-tree-appending-child {
+        opacity: 1;
+
+        > div.backlog-item-details {
+            border: 1px solid #58B359;
+            box-shadow: inset 0 0 0 1px #58B359;
+            background: rgba(88, 179, 89, 0.12);
+
+            > div.type-border {
+                background-color: #58B359;
+            }
+        }
+    }
+}
+.angular-ui-tree-drag {
+    opacity: 1;
 }

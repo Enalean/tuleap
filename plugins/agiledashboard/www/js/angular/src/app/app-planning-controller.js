@@ -124,10 +124,10 @@
             return milestone.collapsed = true;
         }
 
-        function showChildren(backlog_item) {
-            backlog_item.are_children_shown = ! backlog_item.are_children_shown;
+        function showChildren(scope, backlog_item) {
+            scope.toggle();
 
-            if (backlog_item.children.length === 0 && ! backlog_item.children_loaded) {
+            if (backlog_item.has_children && ! backlog_item.children.loaded) {
                 backlog_item.loading = true;
                 fetchBacklogItemChildren(backlog_item, pagination_limit, pagination_offset);
             }
@@ -135,14 +135,14 @@
 
         function fetchBacklogItemChildren(backlog_item, limit, offset) {
             return BacklogItemService.getBacklogItemChildren(backlog_item.id, limit, offset).then(function(data) {
-                backlog_item.children = backlog_item.children.concat(data.results);
+                backlog_item.children.data = backlog_item.children.data.concat(data.results);
 
-                if (backlog_item.children.length < data.total) {
+                if (backlog_item.children.data.length < data.total) {
                     fetchBacklogItemChildren(backlog_item, limit, offset + limit);
 
                 } else {
                     backlog_item.loading         = false;
-                    backlog_item.children_loaded = true;
+                    backlog_item.children.loaded = true;
                 }
             });
         }
@@ -179,6 +179,9 @@
         }
 
         function dropped(event) {
+            if (event.sourceParent && ! event.sourceParent.hasChild()) {
+                event.sourceParent.collapse();
+            }
         }
     }
 })();

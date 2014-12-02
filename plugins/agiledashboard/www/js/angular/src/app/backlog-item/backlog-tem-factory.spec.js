@@ -30,8 +30,12 @@ describe('BacklogItemFactory', function() {
         });
 
         it('adds children properties', function() {
-            expect(item.children).toEqual([]);
-            expect(item.children_loaded).toEqual(false);
+            var expected = {
+                 "data"   : [],
+                 "loaded" : false
+            };
+
+            expect(item.children).toEqual(expected);
         });
 
         it('has method isOpen', function() {

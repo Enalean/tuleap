@@ -11,8 +11,9 @@
         };
 
         function augment(backlogItem) {
-            backlogItem.children        = [];
-            backlogItem.children_loaded = false;
+            backlogItem.children        = {};
+            backlogItem.children.data   = [];
+            backlogItem.children.loaded = false;
 
             backlogItem.isOpen = function() {
                 return backlogItem.status === 'Open';
