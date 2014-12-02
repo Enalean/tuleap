@@ -12,6 +12,7 @@ Version 7.8 (Not released yet)
 	* request #7646: Ftp files can't be moved in FRS
 
 	== Development ==
+	* story #7511: Add drag'n'drop (doesn't call REST routes) and update Angular & jQuery
 	* story #7511: rewriting prototype code in jQuery
 	* story #7511: Permanently remove the systray
 	* Fix generate release note templates to match all php versions
@@ -26,7 +27,7 @@ Version 7.8 (Not released yet)
 	* mediawiki: 0.58
 	* tracker: 5.525
 	* cardwall: 1.42
-	* agiledashboard: 1.97
+	* agiledashboard: 1.98
 	* tests: 5.25
 	* proftpd: 0.19
 	* docman: 2.26.55

@@ -1,3 +1,6 @@
+Version 1.98 - Tuleap 7.8
+    * story #7511: Add drag'n'drop (doesn't call REST routes) and update Angular & jQuery
+
 Version 1.97 - Tuleap 7.8
     * story #7575: create a "new kanban" on AD homepage
 
