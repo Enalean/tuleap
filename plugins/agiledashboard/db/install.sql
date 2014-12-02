@@ -36,9 +36,11 @@ CREATE TABLE IF NOT EXISTS plugin_agiledashboard_criteria (
     milestone_id INT(11) NOT NULL
 );
 
-DROP TABLE IF EXISTS plugin_agiledashboard_kanban;
-CREATE TABLE IF NOT EXISTS plugin_agiledashboard_kanban (
-    project_id INT(11) PRIMARY KEY
+DROP TABLE IF EXISTS plugin_agiledashboard_configuration;
+CREATE TABLE IF NOT EXISTS plugin_agiledashboard_configuration (
+    project_id INT(11) PRIMARY KEY,
+    scrum TINYINT NOT NULL DEFAULT 1,
+    kanban TINYINT NOT NULL
 );
 
 DROP TABLE IF EXISTS plugin_agiledashboard_kanban_configuration;

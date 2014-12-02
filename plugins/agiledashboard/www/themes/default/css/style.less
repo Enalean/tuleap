@@ -51,8 +51,11 @@ body.agiledashboard_planning {
     }
 
     .kanban-block {
-        border-left: dashed 1px #CCC;
         padding: 0 12px;
+
+        &.span4 {
+            border-left: dashed 1px #CCC;
+        }
 
         > .kanban-home-ad {
             margin: 30px auto 0px;
@@ -248,6 +251,11 @@ body.agiledashboard_planning {
                 }
             }
         }
+    }
+
+    > .ad-non-content {
+        margin: auto;
+        text-align: center;
     }
 }
 
@@ -631,6 +639,7 @@ body.agiledashboard_planning {
 .agiledashboard-admin-kanban {
 
     > button {
+        display: block;
         margin: 10px 0;
     }
 }

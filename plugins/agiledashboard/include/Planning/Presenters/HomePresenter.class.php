@@ -46,6 +46,9 @@ class Planning_Presenter_HomePresenter {
     /** @var PFUser */
     private $user;
 
+    /** @var bool */
+    public $scrum_activated;
+
     public function __construct(
         $milestone_access_presenters,
         $group_id,
@@ -55,7 +58,8 @@ class Planning_Presenter_HomePresenter {
         $kanban_activated,
         PFUser $user,
         $trackers,
-        array $kanban_summary_presenters
+        array $kanban_summary_presenters,
+        $scrum_activated
     ) {
         $this->milestone_presenters            = $milestone_access_presenters;
         $this->group_id                        = $group_id;
@@ -66,6 +70,11 @@ class Planning_Presenter_HomePresenter {
         $this->user                            = $user;
         $this->trackers                        = $trackers;
         $this->kanban_summary_presenters       = $kanban_summary_presenters;
+        $this->scrum_activated                 = $scrum_activated;
+    }
+
+    public function user_cant_see_anything() {
+        return ! $this->user->useLabFeatures() && ! $this->scrum_activated;
     }
 
     public function uses_lab_feature() {
@@ -154,5 +163,9 @@ class Planning_Presenter_HomePresenter {
 
     public function tracker_kanban_label() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard','tracker_kanban_label');
+    }
+
+    public function user_cant_see_anything_content() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard','user_cant_see_anything_content');
     }
 }

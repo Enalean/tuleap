@@ -118,11 +118,17 @@ plugin_agiledashboard_admin_semantic	initial_effort_now	The initial effort is no
 plugin_agiledashboard_admin_semantic	bad_field_initial_effort	The field you submitted is not a numeric field
 plugin_agiledashboard_admin_semantic	unable_save_initial_effort	Unable to save the <em>initial effort</em>
 
-plugin_agiledashboard	kanban_title	Kanban
-plugin_agiledashboard	kanban_input_label	Activate Kanban
-plugin_agiledashboard	kanban_submit_label	Submit
+plugin_agiledashboard	config_title	Configuration
+plugin_agiledashboard	no_service_selected	At least one service must be selected.
+plugin_agiledashboard	activate_service_legend	What do you want to display in the Agile Dashboard homepage ?
+plugin_agiledashboard	user_cant_see_anything_content	You can't see anything because you don't have activated lab features.
+
+plugin_agiledashboard	kanban_label	Kanban
+plugin_agiledashboard	scrum_label	Scrum
+plugin_agiledashboard	all_label	Scrum and Kanban
 plugin_agiledashboard	kanban_activated	Kanban successfully activated.
-plugin_agiledashboard	kanban_deactivated	Kanban successfully deactivated.
+plugin_agiledashboard	scrum_activated	Scrum successfully activated.
+plugin_agiledashboard	all_activated	Scrum and Kanban successfully activated.
 plugin_agiledashboard	add_kanban	Add a kanban
 plugin_agiledashboard	btn_close_label	Close
 plugin_agiledashboard	btn_add_modal_label	Create

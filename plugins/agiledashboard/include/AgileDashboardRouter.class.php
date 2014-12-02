@@ -73,6 +73,9 @@ class AgileDashboardRouter {
     /** @var AgileDashboard_KanbanManager */
     private $kanban_manager;
 
+    /** @var AgileDashboard_ConfigurationManager */
+    private $config_manager;
+
     /** @var AgileDashboard_KanbanFactory */
     private $kanban_factory;
 
@@ -85,6 +88,7 @@ class AgileDashboardRouter {
         ProjectManager $project_manager,
         ProjectXMLExporter $xml_exporter,
         AgileDashboard_KanbanManager $kanban_manager,
+        AgileDashboard_ConfigurationManager $config_manager,
         AgileDashboard_KanbanFactory $kanban_factory
     ) {
         $this->plugin                        = $plugin;
@@ -95,6 +99,7 @@ class AgileDashboardRouter {
         $this->project_manager               = $project_manager;
         $this->xml_exporter                  = $xml_exporter;
         $this->kanban_manager                = $kanban_manager;
+        $this->config_manager                = $config_manager;
         $this->kanban_factory                = $kanban_factory;
     }
 
@@ -163,8 +168,8 @@ class AgileDashboardRouter {
                 $milestone_controller = $this->milestone_controller_factory->getMilestoneController($request);
                 $this->executeAction($milestone_controller, 'solveInconsistencies');
                 break;
-            case 'updateKanbanUsage':
-                $this->executeAction($this->buildController($request), 'updateKanbanUsage');
+            case 'updateConfiguration':
+                $this->executeAction($this->buildController($request), 'updateConfiguration');
                 break;
             case 'createKanban':
                 $this->executeAction($this->buildController($request), 'createKanban');
@@ -282,6 +287,7 @@ class AgileDashboardRouter {
             $this->plugin->getThemePath(),
             $this->plugin->getPluginPath(),
             $this->kanban_manager,
+            $this->config_manager,
             $this->kanban_factory
         );
     }
@@ -291,6 +297,7 @@ class AgileDashboardRouter {
             $request,
             $this->planning_factory,
             $this->kanban_manager,
+            $this->config_manager,
             TrackerFactory::instance()
         );
     }

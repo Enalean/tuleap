@@ -57,6 +57,9 @@ class Planning_Controller extends MVC2_PluginController {
     /** @var AgileDashboard_KanbanManager */
     private $kanban_manager;
 
+    /** @var AgileDashboard_ConfigurationManager */
+    private $config_manager;
+
     /** @var AgileDashboard_KanbanFactory */
     private $kanban_factory;
 
@@ -70,6 +73,7 @@ class Planning_Controller extends MVC2_PluginController {
         $plugin_theme_path,
         $plugin_path,
         AgileDashboard_KanbanManager $kanban_manager,
+        AgileDashboard_ConfigurationManager $config_manager,
         AgileDashboard_KanbanFactory $kanban_factory
     ) {
         parent::__construct('agiledashboard', $request);
@@ -83,6 +87,7 @@ class Planning_Controller extends MVC2_PluginController {
         $this->plugin_theme_path            = $plugin_theme_path;
         $this->plugin_path                  = $plugin_path;
         $this->kanban_manager               = $kanban_manager;
+        $this->config_manager               = $config_manager;
         $this->kanban_factory               = $kanban_factory;
     }
 
@@ -133,10 +138,11 @@ class Planning_Controller extends MVC2_PluginController {
             $this->getLastLevelMilestonesPresenters($last_plannings, $user),
             $this->request->get('period'),
             $this->getProjectFromRequest()->getPublicName(),
-            $this->kanban_manager->isKanbanActivatedForProject($this->group_id),
+            $this->config_manager->kanbanIsActivatedForProject($this->group_id),
             $user,
             $this->kanban_manager->getTrackersWithKanbanUsage($this->group_id),
-            $this->getKanbanSummaryPresenters()
+            $this->getKanbanSummaryPresenters(),
+            $this->config_manager->scrumIsActivatedForProject($this->group_id)
         );
         return $this->renderToString('home', $presenter);
     }
