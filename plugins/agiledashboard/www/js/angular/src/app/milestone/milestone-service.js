@@ -129,12 +129,15 @@
                     });
                 }
 
-                function updateInitialEffort(backlogItem) {
-                    milestone.initialEffort += backlogItem.initial_effort;
+                function updateInitialEffort(backlog_item) {
+                    milestone.initialEffort += backlog_item.initial_effort;
                 }
 
-                function augmentBacklogItem(backlogItem) {
-                    backlogItem.isOpen = function() {
+                function augmentBacklogItem(backlog_item) {
+                    backlog_item.children        = [];
+                    backlog_item.children_loaded = false;
+
+                    backlog_item.isOpen = function() {
                         return this.status === 'Open';
                     };
                 }

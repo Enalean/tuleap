@@ -21,7 +21,12 @@
             showChildren               : showChildren,
             toggleClosedMilestoneItems : toggleClosedMilestoneItems,
             canShowBacklogItem         : canShowBacklogItem
+
         });
+
+        $scope.treeOptions = {
+            accept: isItemDroppable
+        };
 
         displayBacklogItems();
         displayMilestones();
@@ -105,9 +110,8 @@
         function showChildren(backlog_item) {
             backlog_item.are_children_shown = ! backlog_item.are_children_shown;
 
-            if (typeof backlog_item.children === 'undefined') {
-                backlog_item.loading  = true;
-                backlog_item.children = [];
+            if (backlog_item.children.length === 0 && ! backlog_item.children_loaded) {
+                backlog_item.loading = true;
                 fetchBacklogItemChildren(backlog_item, pagination_limit, pagination_offset);
             }
         }
@@ -118,8 +122,10 @@
 
                 if (backlog_item.children.length < data.total) {
                     fetchBacklogItemChildren(backlog_item, limit, offset + limit);
+
                 } else {
-                    backlog_item.loading = false;
+                    backlog_item.loading         = false;
+                    backlog_item.children_loaded = true;
                 }
             });
         }
@@ -129,7 +135,22 @@
         }
 
         function canShowBacklogItem(backlog_item) {
-            return backlog_item.isOpen() || show_closed_milestone_items;
+            if (typeof backlog_item.isOpen === 'function') {
+                return backlog_item.isOpen() || show_closed_milestone_items;
+            }
+
+            return true;
+        }
+
+        function isItemDroppable(sourceNodeScope, destNodesScope, destIndex) {
+            var is_a_parent   = sourceNodeScope.$element.hasClass('parent');
+            var into_children = destNodesScope.$element.hasClass('backlog-item-children');
+
+            if (is_a_parent !== into_children) {
+                return true;
+            }
+
+            return false;
         }
     }
 })();

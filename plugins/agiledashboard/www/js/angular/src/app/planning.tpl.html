@@ -1,9 +1,16 @@
-<div id="backlog">
+<div id="backlog" ng-class="{ loading_content: loading_backlog_items }">
     <h2 translate>To be planned</h2>
 
-    <ul class="backlog-items">
-        <li ng-repeat="backlog_item in backlog_items track by $index" ng-include src="'backlog-item/backlog-item.tpl.html'"></li>
-    </ul>
+    <div ui-tree="treeOptions">
+        <ul ui-tree-nodes ng-model="backlog_items" class="backlog-items">
+            <li ui-tree-node
+                ng-repeat="backlog_item in backlog_items"
+                ng-include src="'backlog-item/backlog-item.tpl.html'"
+                class="backlog-item parent"
+            >
+            </li>
+        </ul>
+    </div>
     <div class="loading" ng-if="loading_backlog_items"></div>
 </div>
 
@@ -29,7 +36,7 @@
                 <div style="clear: both"></div>
             </legend>
 
-            <div class="content">
+            <div class="content" ng-if="! milestone.collapsed" ng-class="{ loading_content: milestone.loadingContent }">
                 <div class="info">
                     <span class="capacity" translate>Capacity:</span>
                     <span class="capacity-value" ng-if="milestone.capacity">{{ milestone.capacity }}</span>
@@ -47,15 +54,17 @@
                     <div style="clear: both"></div>
                 </div>
 
-                <p class="empty-milestone" ng-if="! milestone.loadingContent && milestone.content.length === 0" translate>There is no backlog item yet.</p>
-                <ul class="backlog-items">
-                    <li ng-repeat="backlog_item in milestone.content track by $index"
-                        class="backlog-item {{ backlog_item.status | lowercase }} {{ backlog_item.color }}"
-                        ng-include="'backlog-item/backlog-item.tpl.html'"
-                        ng-if="canShowBacklogItem(backlog_item)"
-                    >
-                    </li>
-                </ul>
+                <div ui-tree="treeOptions">
+                    <ul ui-tree-nodes ng-model="milestone.content" class="backlog-items">
+                        <li ui-tree-node
+                            ng-repeat="backlog_item in milestone.content"
+                            class="backlog-item parent {{ backlog_item.status | lowercase }} {{ backlog_item.color }}"
+                            ng-include="'backlog-item/backlog-item.tpl.html'"
+                            ng-if="canShowBacklogItem(backlog_item)"
+                        >
+                        </li>
+                    </ul>
+                </div>
                 <div class="loading" ng-if="milestone.loadingContent"></div>
             </div>
         </fieldset>

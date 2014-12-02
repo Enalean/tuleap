@@ -1,4 +1,5 @@
 @import "animate.min.css";
+@import "../../vendor/angular-ui-tree-bdauton/dist/angular-ui-tree-bdauton.min.css";
 @import "../../../../../src/www/themes/common/css/utils/colors.less";
 
 @import "../app/backlog-item/backlog-item.less";
@@ -8,8 +9,11 @@
     .loading {
         background: url('loader.gif') no-repeat center center;
         min-height: 26px;
-        margin: 0 0 12px;
+        margin: 20px 0 10px;
+    }
 
+    .loading_content .angular-ui-tree-empty {
+        display: none;
     }
 
     > .ng-scope {

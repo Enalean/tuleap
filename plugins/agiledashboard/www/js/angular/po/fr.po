@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AgileDashboard Planning\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2014-11-05 11:15+0100\n"
+"PO-Revision-Date: 2014-12-02 11:17+0100\n"
 "Last-Translator: Benjamin Dauton <benjamin.dauton@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.6.9\n"
 
 #: src/app/planning.tpl.html
 msgid "Burndown"
@@ -49,24 +49,11 @@ msgid "Planning"
 msgstr "Planification"
 
 #: src/app/planning.tpl.html
-msgid "There is no backlog item yet."
-msgstr "Aucun élément"
-
-#: src/app/planning.tpl.html
 msgid "To be planned"
 msgstr "A planifier"
 
-#: src/app/backlog-item/backlog-item.tpl.html
+#: src/app/backlog-item/backlog-item-details.tpl.html
 msgid "{{ backlog_item.initial_effort }} pt"
 msgid_plural "{{ backlog_item.initial_effort }} pts"
 msgstr[0] "{{ backlog_item.initial_effort }} pt"
 msgstr[1] "{{ backlog_item.initial_effort }} pts"
-
-#~ msgid "<i class=\"icon-bar-chart\"></i> Burndown"
-#~ msgstr "<i class=\"icon-bar-chart\"></i> Burndown"
-
-#~ msgid "<i class=\"icon-list-ul\"></i> Content"
-#~ msgstr "<i class=\"icon-list-ul\"></i> Contenu"
-
-#~ msgid "<i class=\"icon-signin\"></i> Planning"
-#~ msgstr "<i class=\"icon-signin\"></i> Planification"
