@@ -972,3 +972,87 @@ class UserManager_ManageSSHKeys extends TuleapTestCase {
         $this->user_manager->deleteSSHKeys($this->user, $ssh_keys_to_delete_index);
     }
 }
+
+class UserManager_createAccountTest extends TuleapTestCase {
+
+    /** @var UserManager */
+    private $manager;
+
+    /** @var UserDao */
+    private $dao;
+
+    /** @var PFUser */
+    private $user;
+
+    /** @var User_PendingUserNotifier */
+    private $pending_user_notifier;
+
+    /** @var WidgetLayoutManager */
+    private $layout_manager;
+
+    public function setUp() {
+        parent::setUp();
+        Config::store();
+        $this->user                  = aUser()->build();
+        $this->dao                   = mock('UserDao');
+        $this->pending_user_notifier = mock('User_PendingUserNotifier');
+        $this->layout_manager        = mock('WidgetLayoutManager');
+
+        $this->manager = partial_mock(
+            'UserManager',
+            array('_getWidgetLayoutManager'),
+            array($this->pending_user_notifier)
+        );
+        $this->manager->setDao($this->dao);
+
+        stub($this->manager)->_getWidgetLayoutManager()->returns($this->layout_manager);
+    }
+
+    public function tearDown() {
+        Config::restore();
+        parent::tearDown();
+    }
+
+    public function itAsksToDaoToCreateTheAccount() {
+        expect($this->dao)->create()->once();
+
+        $this->manager->createAccount($this->user);
+    }
+
+    public function itCreateDefaultLayout() {
+        stub($this->dao)->create()->returns(101);
+
+        expect($this->layout_manager)->createDefaultLayoutForUser(101)->once();
+
+        $this->manager->createAccount($this->user);
+    }
+
+    public function itSendsAnEmailToAdministratorIfUserIsPendingAndUserNeedsApproval() {
+        stub($this->dao)->create()->returns(101);
+        $this->user->setStatus(PFUser::STATUS_PENDING);
+        Config::set('sys_user_approval', 1);
+
+        expect($this->pending_user_notifier)->notifyAdministrator($this->user)->once();
+
+        $this->manager->createAccount($this->user);
+    }
+
+    public function itDoesNotSendAnEmailToAdministratorIfNoUserApproval() {
+        stub($this->dao)->create()->returns(101);
+        $this->user->setStatus(PFUser::STATUS_PENDING);
+        Config::set('sys_user_approval', 0);
+
+        expect($this->pending_user_notifier)->notifyAdministrator()->never();
+
+        $this->manager->createAccount($this->user);
+    }
+
+    public function itDoesNotSendAnEmailToAdministratorIfUserIsActive() {
+        stub($this->dao)->create()->returns(101);
+        $this->user->setStatus(PFUser::STATUS_ACTIVE);
+
+        expect($this->pending_user_notifier)->notifyAdministrator()->never();
+
+        $this->manager->createAccount($this->user);
+    }
+}

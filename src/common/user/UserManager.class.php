@@ -20,6 +20,7 @@
  */
 
 class UserManager {
+
     /**
      * User with id lower than 100 are considered specials (siteadmin, null,
      * etc).
@@ -32,10 +33,16 @@ class UserManager {
     
     var $_userdao         = null;
     var $_currentuser     = null;
-    
-    protected function __construct() {
+
+    /**
+     * @var User_PendingUserNotifier
+     */
+    private $pending_user_notifier;
+
+    public function __construct(User_PendingUserNotifier $pending_user_notifier) {
+        $this->pending_user_notifier = $pending_user_notifier;
     }
-    
+
     protected static $_instance;
     /**
      * @return UserManager
@@ -43,8 +50,11 @@ class UserManager {
     public static function instance() {
         if (!isset(self::$_instance)) {
             $userManager = __CLASS__;
-            self::$_instance = new $userManager();
+            self::$_instance = new $userManager(
+                new User_PendingUserNotifier()
+            );
         }
+
         return self::$_instance;
     }
     
@@ -60,12 +70,16 @@ class UserManager {
      * @return UserDao
      */
     protected function getDao() {
-        if (!$this->_userdao) {
-          $this->_userdao = new UserDao(CodendiDataAccess::instance());
+        if (! $this->_userdao) {
+            $this->_userdao = new UserDao();
         }
+
         return $this->_userdao;
     }
 
+    public function setDao(UserDao $dao) {
+        $this->_userdao = $dao;
+    }
 
     public function getUserAnonymous() {
         return $this->getUserbyId(0);
@@ -778,15 +792,24 @@ class UserManager {
         } else {
             $user->setId($user_id);
             $this->assignNextUnixUid($user);
-            
+
             // Create the first layout for the user and add some initial widgets
             $lm = $this->_getWidgetLayoutManager();
             $lm->createDefaultLayoutForUser($user_id);
-            
-            if ($user->getStatus()=='A' or $user->getStatus()=='R') {
-                $em =$this->_getEventManager();
-                $em->processEvent('project_admin_activate_user', array('user_id' => $user_id));
+
+            switch ($user->getStatus()) {
+                case PFUser::STATUS_PENDING:
+                    if (Config::get('sys_user_approval')) {
+                        $this->pending_user_notifier->notifyAdministrator($user);
+                    }
+                    break;
+                case PFUser::STATUS_ACTIVE:
+                case PFUser::STATUS_RESTRICTED:
+                    $em =$this->_getEventManager();
+                    $em->processEvent('project_admin_activate_user', array('user_id' => $user_id));
+                    break;
             }
+
             return $user;
         }
     }
