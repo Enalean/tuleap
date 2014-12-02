@@ -8,6 +8,7 @@ documentation/user_guide/html/*
 *.box
 nbproject
 plugins/maillog
+*.mo
 *.css
 !plugins/boomerang/*.css
 !plugins/git/gitphp-0.1.0/gitphp.css
