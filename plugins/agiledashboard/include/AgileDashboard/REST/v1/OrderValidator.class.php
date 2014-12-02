@@ -28,7 +28,16 @@ class OrderValidator {
         $this->index = $index;
     }
 
+    /**
+     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation $order
+     * @throws IdsFromBodyAreNotUniqueException
+     * @throws OrderIdOutOfBoundException
+     */
     public function validate(OrderRepresentation $order) {
+        if (! $this->areIdsUnique($order->ids)) {
+            throw new IdsFromBodyAreNotUniqueException();
+        }
+
         $this->assertIdPartOfIndex($order->compared_to);
         foreach ($order->ids as $id) {
             $this->assertIdPartOfIndex($id);
@@ -39,5 +48,10 @@ class OrderValidator {
         if (! isset($this->index[$id])) {
             throw new OrderIdOutOfBoundException($id);
         }
+    }
+
+    private function areIdsUnique(array $ids) {
+        $ids_unique = array_unique($ids);
+        return count($ids) == count($ids_unique);
     }
 }

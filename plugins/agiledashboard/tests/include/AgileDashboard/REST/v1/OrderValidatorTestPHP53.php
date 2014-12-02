@@ -72,4 +72,13 @@ class OrderValidatorTest extends TuleapTestCase {
         $this->expectException('Tuleap\AgileDashboard\REST\v1\OrderIdOutOfBoundException');
         $this->order_validator->validate($order_representation);
     }
+
+    public function itDoesntAllowDuplicatedIds() {
+        $order_representation = new OrderRepresentation();
+        $order_representation->ids = array(115, 116, 115, 117);
+        $order_representation->compared_to = 118;
+
+        $this->expectException('Tuleap\AgileDashboard\REST\v1\IdsFromBodyAreNotUniqueException');
+        $this->order_validator->validate($order_representation);
+    }
 }

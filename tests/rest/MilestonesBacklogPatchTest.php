@@ -122,7 +122,7 @@ class MilestonesBacklogPatchTest extends RestBase {
             ))));
         } catch (Guzzle\Http\Exception\ClientErrorResponseException $exception) {
             $exception_thrown = true;
-            $this->assertEquals(400, $exception->getResponse()->getStatusCode());
+            $this->assertEquals(409, $exception->getResponse()->getStatusCode());
         }
         $this->assertTrue($exception_thrown, "An exception should have been thrown");
     }

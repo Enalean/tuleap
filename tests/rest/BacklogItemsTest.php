@@ -127,6 +127,52 @@ class BacklogItemsTest extends RestBase {
     }
 
     /**
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testPATCHChildrenDuplicateIds() {
+        $uri = 'backlog_items/'.$this->stories_ids[1].'/children';
+        $response      = $this->getResponse($this->client->get($uri));
+        $backlog_items = $response->json();
+
+        $first_task = $backlog_items[0];
+        $this->assertEquals($first_task['label'], "Implement the feature");
+
+        $first_id  = $backlog_items[0]['id'];
+        $second_id = $backlog_items[1]['id'];
+
+        $this->getResponse($this->client->patch($uri, null, json_encode(array(
+            'order' => array(
+                'ids'         => array($second_id, $second_id),
+                'direction'   => 'before',
+                'compared_to' => $first_id
+            )
+        ))));
+    }
+
+    /**
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testPATCHSomeoneElseChildren() {
+        $uri = 'backlog_items/'.$this->stories_ids[1].'/children';
+        $response      = $this->getResponse($this->client->get($uri));
+        $backlog_items = $response->json();
+
+        foreach ($backlog_items as $backlog_item) {
+            $this->assertNotEquals($backlog_item['id'], 9999);
+        }
+
+        $first_id  = $backlog_items[0]['id'];
+
+        $this->getResponse($this->client->patch($uri, null, json_encode(array(
+            'order' => array(
+                'ids'         => array(9999),
+                'direction'   => 'before',
+                'compared_to' => $first_id
+            )
+        ))));
+    }
+
+    /**
     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
     */
     public function testGETChildrenWithWrongId() {

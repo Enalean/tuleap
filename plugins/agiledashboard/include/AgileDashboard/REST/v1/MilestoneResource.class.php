@@ -531,9 +531,13 @@ class MilestoneResource {
             } else {
                 $dao->moveListOfArtifactsAfter($order->ids, $order->compared_to);
             }
+        } catch (IdsFromBodyAreNotUniqueException $exception) {
+            throw new RestException(409, $exception->getMessage());
+        } catch (ArtifactIsNotInOpenAndUnplannedBacklogItemsException $exception) {
+            throw new RestException(409, $exception->getMessage());
         } catch (Tracker_Artifact_Exception_CannotRankWithMyself $exception) {
             throw new RestException(400, $exception->getMessage());
-        } catch (ArtifactIsNotInOpenAndUnplannedBacklogItemsException $exception) {
+        } catch (\Exception $exception) {
             throw new RestException(400, $exception->getMessage());
         }
     }
