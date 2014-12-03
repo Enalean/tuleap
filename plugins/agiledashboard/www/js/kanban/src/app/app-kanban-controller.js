@@ -3,8 +3,9 @@
         .module('kanban')
         .controller('KanbanCtrl', KanbanCtrl);
 
-    KanbanCtrl.$inject = [];
+    KanbanCtrl.$inject = ['SharedPropertiesService'];
 
-    function KanbanCtrl() {
+    function KanbanCtrl(SharedPropertiesService) {
+        this.name = SharedPropertiesService.getName();
     }
 })();

@@ -65,6 +65,7 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
             $this->request,
             $this->planning_factory,
             mock('AgileDashboard_KanbanManager'),
+            mock('AgileDashboard_KanbanFactory'),
             mock('AgileDashboard_ConfigurationManager'),
             mock('TrackerFactory')
         );

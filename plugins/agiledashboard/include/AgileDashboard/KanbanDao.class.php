@@ -35,7 +35,7 @@ class AgileDashboard_KanbanDao extends DataAccessObject {
         $project_id     = $this->da->escapeInt($project_id);
         $tracker_kanban = $this->da->escapeInt($tracker_kanban);
 
-        $sql = "SELECT tracker_id
+        $sql = "SELECT *
                 FROM plugin_agiledashboard_kanban_configuration
                 WHERE project_id = $project_id
                     AND tracker_id = $tracker_kanban";
@@ -56,7 +56,7 @@ class AgileDashboard_KanbanDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function getKanbanPerProject($project_id) {
+    public function getKanbansForProject($project_id) {
         $sql = "SELECT *
                 FROM plugin_agiledashboard_kanban_configuration
                 WHERE project_id = $project_id
