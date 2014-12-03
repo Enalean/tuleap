@@ -128,7 +128,10 @@ class Planning_Controller extends MVC2_PluginController {
         );
         $last_plannings = $this->planning_factory->getLastLevelPlannings($user, $this->group_id);
 
-        if (empty($plannings) && empty($last_plannings)) {
+        $kanban_is_activated = $this->config_manager->kanbanIsActivatedForProject($this->group_id);
+        $scrum_is_configured = ! empty($plannings) || ! empty($last_plannings);
+
+        if (! $scrum_is_configured && ! $kanban_is_activated) {
             return $this->showEmptyHome();
         }
 
@@ -138,11 +141,12 @@ class Planning_Controller extends MVC2_PluginController {
             $this->getLastLevelMilestonesPresenters($last_plannings, $user),
             $this->request->get('period'),
             $this->getProjectFromRequest()->getPublicName(),
-            $this->config_manager->kanbanIsActivatedForProject($this->group_id),
+            $kanban_is_activated,
             $user,
             $this->kanban_manager->getTrackersWithKanbanUsage($this->group_id),
             $this->getKanbanSummaryPresenters(),
-            $this->config_manager->scrumIsActivatedForProject($this->group_id)
+            $this->config_manager->scrumIsActivatedForProject($this->group_id),
+            $scrum_is_configured
         );
         return $this->renderToString('home', $presenter);
     }
