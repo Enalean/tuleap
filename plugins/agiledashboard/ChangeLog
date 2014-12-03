@@ -1,3 +1,6 @@
+Version 1.100 - Tuleap 7.8
+    * story #7511: adding route PATCH /projects/:id/backlog
+
 Version 1.99 - Tuleap 7.8
     * story #7577 display a Kanban cardwall (Create the angular application for Kanban)
 
