@@ -11,6 +11,7 @@ Version 7.8 (Not released yet)
 	* request #7630: fix- legacy docman import script copies empty folders
 	* request #7631: legacy docman import script doesn't strip-out html entities
 	* request #7646: Ftp files can't be moved in FRS
+	* request #7653: Import of new agile dashboard doesn't activate "Scrum" mode
 
 	== Development ==
 	* story #7511: Add drag'n'drop (doesn't call REST routes) and update Angular & jQuery
@@ -28,7 +29,7 @@ Version 7.8 (Not released yet)
 	* mediawiki: 0.58
 	* tracker: 5.525
 	* cardwall: 1.42
-	* agiledashboard: 1.100
+	* agiledashboard: 1.101
 	* tests: 5.25
 	* proftpd: 0.19
 	* docman: 2.26.55
