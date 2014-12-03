@@ -229,4 +229,13 @@ class AgileDashboard_Controller extends MVC2_PluginController {
            'action'   => 'admin'
         ));
     }
+
+    public function showKanban() {
+        return $this->renderToString(
+            'kanban',
+            new KanbanPresenter(
+                $this->request->getCurrentUser()->getShortLocale()
+            )
+        );
+    }
 }

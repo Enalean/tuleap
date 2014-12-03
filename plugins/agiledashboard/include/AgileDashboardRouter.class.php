@@ -174,6 +174,9 @@ class AgileDashboardRouter {
             case 'createKanban':
                 $this->executeAction($this->buildController($request), 'createKanban');
                 break;
+            case 'showKanban':
+                 $this->renderAction($this->buildController($request), 'showKanban', $request);
+                break;
             case 'index':
             default:
                 $this->renderAction($planning_controller, 'index', $request);
@@ -192,14 +195,15 @@ class AgileDashboardRouter {
      */
     private function getHeaderTitle($action_name) {
         $header_title = array(
-            'index'     => $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key'),
+            'index'        => $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key'),
             'exportToFile' => $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key'),
-            'admin'     => $GLOBALS['Language']->getText('plugin_agiledashboard', 'Admin'),
-            'new_'      => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_new'),
-            'importForm'=> $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_new'),
-            'edit'      => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_edit'),
-            'show'      => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_show'),
-            'showTop'   => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_show')
+            'admin'        => $GLOBALS['Language']->getText('plugin_agiledashboard', 'Admin'),
+            'new_'         => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_new'),
+            'importForm'   => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_new'),
+            'edit'         => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_edit'),
+            'show'         => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_show'),
+            'showTop'      => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_show'),
+            'showKanban'   => $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_show')
         );
 
         return $header_title[$action_name];
