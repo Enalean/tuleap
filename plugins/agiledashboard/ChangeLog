@@ -1,3 +1,6 @@
+Version 1.99 - Tuleap 7.8
+    * story #7577 display a Kanban cardwall (Create the angular application for Kanban)
+
 Version 1.98 - Tuleap 7.8
     * story #7511: Add drag'n'drop (doesn't call REST routes) and update Angular & jQuery
 
