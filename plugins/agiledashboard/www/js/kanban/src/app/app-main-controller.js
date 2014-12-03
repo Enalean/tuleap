@@ -10,8 +10,8 @@
             init: init
         });
 
-        function init(name, lang) {
-            SharedPropertiesService.setName(name);
+        function init(kanban, lang) {
+            SharedPropertiesService.setKanban(kanban);
             gettextCatalog.setCurrentLanguage(lang);
         }
     }

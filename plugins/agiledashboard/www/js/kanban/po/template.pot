@@ -5,5 +5,13 @@ msgstr ""
 "Project-Id-Version: \n"
 
 #: src/app/kanban.tpl.html
-msgid "Not implemented yet."
+msgid "Toggle the archive"
+msgstr ""
+
+#: src/app/kanban.tpl.html
+msgid "Toggle the backlog"
+msgstr ""
+
+#: src/app/kanban.tpl.html
+msgid "Toggle this column"
 msgstr ""

@@ -61,7 +61,7 @@ compile_less()
 less()
 {
     less_path=$(echo "$1/plugins" "$1/src")
-    find $less_path -type f -name "*.less" -not -wholename "*/node_modules/*" -not -wholename "*/vendor/*" -not -wholename "*/angular/*"| while read -r file; do
+    find $less_path -type f -name "*.less" -not -wholename "*/node_modules/*" -not -wholename "*/vendor/*" -not -wholename "*/angular/*" -not -wholename "*/js/kanban/*"| while read -r file; do
         compile_less $file
     done
 

@@ -5,20 +5,20 @@
 
     function SharedPropertiesService() {
         var property = {
-            name: name
+            kanban: undefined
         };
 
         return {
-            getName: getName,
-            setName: setName
+            getKanban: getKanban,
+            setKanban: setKanban
         };
 
-        function getName() {
-            return property.name;
+        function getKanban() {
+            return property.kanban;
         }
 
-        function setName(name) {
-            property.name = name;
+        function setKanban(kanban) {
+            property.kanban = kanban;
         }
     }
 })();

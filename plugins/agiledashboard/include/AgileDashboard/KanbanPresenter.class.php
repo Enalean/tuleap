@@ -26,8 +26,20 @@ class KanbanPresenter {
     /** @var string */
     public $kanban_name;
 
+    /** @var int */
+    public $kanban_open;
+
+    /** @var int */
+    public $kanban_closed;
+
+    /** @var int */
+    public $tracker_id;
+
     public function __construct(AgileDashboard_Kanban $kanban, $language) {
-        $this->language    = $language;
-        $this->kanban_name = $kanban->getName();
+        $this->language      = $language;
+        $this->kanban_name   = $kanban->getName();
+        $this->kanban_open   = 0;
+        $this->kanban_closed = 0;
+        $this->tracker_id    = $kanban->getTrackerId();
     }
 }
