@@ -77,6 +77,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(Event::REST_OPTIONS_PROJECT_MILESTONES);
             $this->addHook(Event::REST_GET_PROJECT_BACKLOG);
             $this->addHook(Event::REST_PUT_PROJECT_BACKLOG);
+            $this->addHook(Event::REST_PATCH_PROJECT_BACKLOG);
             $this->addHook(Event::REST_OPTIONS_PROJECT_BACKLOG);
             $this->addHook(Event::GET_PROJECTID_FROM_URL);
         }
@@ -721,6 +722,20 @@ class AgileDashboardPlugin extends Plugin {
             $user,
             $params['project'],
             $params['ids']
+        );
+    }
+
+    /**
+     * @see REST_PATCH_PROJECT_BACKLOG
+     */
+    public function rest_patch_project_backlog($params) {
+        $user                     = UserManager::instance()->getCurrentUser();
+        $project_backlog_resource = $this->buildRightVersionOfProjectBacklogResource($params['version']);
+
+        $params['result'] = $project_backlog_resource->patch(
+            $user,
+            $params['project'],
+            $params['order']
         );
     }
 

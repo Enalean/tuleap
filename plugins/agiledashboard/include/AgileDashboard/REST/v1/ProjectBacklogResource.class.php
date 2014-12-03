@@ -36,6 +36,7 @@ use \ArtifactIsNotInOpenAndUnassignedBacklogItemsException;
 use \IdsFromBodyAreNotUniqueException;
 use \Luracast\Restler\RestException;
 use \Tuleap\REST\Header;
+use \Tracker_Artifact_PriorityDao;
 
 /**
  * Wrapper for backlog related REST methods
@@ -54,6 +55,9 @@ class ProjectBacklogResource {
 
     /** @var ArtifactLinkUpdater */
     private $artifactlink_updater;
+
+    /** @var MilestoneResourceValidator */
+    private $milestone_validator;
 
     public function __construct() {
         $planning_factory             = PlanningFactory::build();
@@ -133,13 +137,7 @@ class ProjectBacklogResource {
     }
 
     public function put(PFUser $user, Project $project, array $ids) {
-        try {
-            $this->milestone_validator->validateArtifactIdsAreInOpenAndUnassignedTopBacklog($ids, $user, $project);
-        } catch (ArtifactIsNotInOpenAndUnassignedBacklogItemsException $exception) {
-            throw new RestException(409, $exception->getMessage());
-        } catch (IdsFromBodyAreNotUniqueException $exception) {
-            throw new RestException(409, $exception->getMessage());
-        }
+        $this->validateArtifactIdsAreInOpenAndUnassignedTopBacklog($ids, $user, $project);
 
         try {
             $this->artifactlink_updater->setOrder($ids);
@@ -148,6 +146,35 @@ class ProjectBacklogResource {
         }
 
         $this->sendAllowHeaders();
+    }
+
+    public function patch(PFUser $user, Project $project, OrderRepresentation $order) {
+        $dao = new Tracker_Artifact_PriorityDao();
+
+        $all_ids = array_merge(array($order->compared_to), $order->ids);
+        $this->validateArtifactIdsAreInOpenAndUnassignedTopBacklog($all_ids, $user, $project);
+
+        try {
+            if ($order->direction === OrderRepresentation::BEFORE) {
+                $dao->moveListOfArtifactsBefore($order->ids, $order->compared_to);
+            } else {
+                $dao->moveListOfArtifactsAfter($order->ids, $order->compared_to);
+            }
+        } catch (Tracker_Artifact_Exception_CannotRankWithMyself $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
+    }
+
+    private function validateArtifactIdsAreInOpenAndUnassignedTopBacklog($ids, $user, $project) {
+        try {
+            $this->milestone_validator->validateArtifactIdsAreInOpenAndUnassignedTopBacklog($ids, $user, $project);
+        } catch (ArtifactIsNotInOpenAndUnassignedTopBacklogItemsException $exception) {
+            throw new RestException(409, $exception->getMessage());
+        } catch (IdsFromBodyAreNotUniqueException $exception) {
+            throw new RestException(409, $exception->getMessage());
+        } catch (\Exception $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
     }
 
     private function getBacklogItems(PFUser $user, Project $project) {

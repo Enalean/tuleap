@@ -313,7 +313,7 @@ class ProjectTest extends RestBase {
     public function testOPTIONSbacklog() {
         $response = $this->getResponseByName(TestDataBuilder::ADMIN_USER_NAME, $this->client->options('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/backlog'));
 
-        $this->assertEquals(array('OPTIONS', 'GET', 'PUT'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(array('OPTIONS', 'GET', 'PUT', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGETbacklog() {
@@ -457,4 +457,63 @@ class ProjectTest extends RestBase {
 
         $this->assertEquals($expected_result, $response->json());
    }
+
+   public function testPATCHbacklog() {
+        $uri = 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/backlog';
+        $backlog_items = $this->getResponse($this->client->get($uri))->json();
+
+        $first_item  = $backlog_items[0];
+        $second_item = $backlog_items[1];
+        $third_item  = $backlog_items[2];
+        $this->assertEquals($first_item['label'], "Epic pic");
+        $this->assertEquals($second_item['label'], "Epic c'est tout");
+        $this->assertEquals($third_item['label'], "Epic epoc");
+
+        $request_body = json_encode(array(
+            'order' => array(
+                'ids'         => array($second_item['id']),
+                'direction'   => 'before',
+                'compared_to' => $first_item['id']
+            )
+        ));
+        $response_patch = $this->getResponse($this->client->patch(
+            'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/backlog',
+            null,
+            $request_body
+        ));
+
+        $this->assertEquals($response_patch->getStatusCode(), 200);
+
+
+        // assert that the two items are in a different order
+        $modified_backlog_items = $this->getResponse($this->client->get($uri))->json();
+
+        $first_modified  = $modified_backlog_items[0];
+        $second_modified = $modified_backlog_items[1];
+        $third_modified  = $modified_backlog_items[2];
+        $this->assertEquals($first_modified['label'], "Epic c'est tout");
+        $this->assertEquals($second_modified['label'], "Epic pic");
+        $this->assertEquals($third_modified['label'], "Epic epoc");
+
+        // re-invert order of the two tasks
+        $reinvert_patch = $this->getResponse($this->client->patch($uri, null, json_encode(array(
+            'order' => array(
+                'ids'         => array($first_modified['id']),
+                'direction'   => 'after',
+                'compared_to' => $second_modified['id']
+            )
+        ))));
+        $this->assertEquals($reinvert_patch->getStatusCode(), 200);
+
+        // assert that the two tasks are in the order
+        $reverted_backlog_items = $this->getResponse($this->client->get($uri))->json();
+
+        $first_item  = $reverted_backlog_items[0];
+        $second_item = $reverted_backlog_items[1];
+        $third_item  = $backlog_items[2];
+        $this->assertEquals($first_item['label'], "Epic pic");
+        $this->assertEquals($second_item['label'], "Epic c'est tout");
+        $this->assertEquals($third_item['label'], "Epic epoc");
+    }
+
 }
