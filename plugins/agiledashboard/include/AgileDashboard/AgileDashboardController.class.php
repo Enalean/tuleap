@@ -207,7 +207,7 @@ class AgileDashboard_Controller extends MVC2_PluginController {
             $this->redirectToHome();
         }
 
-        if ($this->kanban_manager->createKanban($this->group_id, $kanban_name, $tracker_id)) {
+        if ($this->kanban_manager->createKanban($kanban_name, $tracker_id)) {
             $GLOBALS['Response']->addFeedback(
                 'info',
                 $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_created', array($kanban_name))
@@ -237,7 +237,7 @@ class AgileDashboard_Controller extends MVC2_PluginController {
 
     public function showKanban() {
         $tracker_id  = $this->request->get('tracker');
-        $kanban = $this->kanban_factory->getKanban($this->group_id, $tracker_id);
+        $kanban = $this->kanban_factory->getKanban($tracker_id);
 
         return $this->renderToString(
             'kanban',
