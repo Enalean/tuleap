@@ -317,18 +317,30 @@ class AgileDashboardPlugin extends Plugin {
     }
 
     public function cssfile($params) {
-        // Only show the stylesheet if we're actually in the AgileDashboard pages.
-        // This stops styles inadvertently clashing with the main site.
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+        if ($this->isAnAgiledashboardRequest()) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
-            echo '<link rel="stylesheet" type="text/css" href="'.$this->getPluginPath().'/js/angular/bin/assets/planning-v2.css" />';
+
+            if ($this->isPlanningV2URL()) {
+                echo '<link rel="stylesheet" type="text/css" href="'.$this->getPluginPath().'/js/angular/bin/assets/planning-v2.css" />';
+            }
         }
     }
 
     public function javascript_file() {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+        if ($this->isAnAgiledashboardRequest() && $this->isPlanningV2URL()) {
             echo '<script type="text/javascript" src="' . $this->getPluginPath() . '/js/angular/bin/assets/planning-v2.js"></script>';
         }
+    }
+
+    private function isAnAgiledashboardRequest() {
+        return strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0;
+    }
+
+    private function isPlanningV2URL() {
+        $request = HTTPRequest::instance();
+        $pane_info_identifier = new AgileDashboard_PaneInfoIdentifier();
+
+        return $pane_info_identifier->isPaneAPlanningV2($request->get('pane'));
     }
 
     public function combined_scripts($params) {
