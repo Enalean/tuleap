@@ -454,6 +454,57 @@ class MilestoneResource {
     }
 
     /**
+     * Partial re-order of milestone content relative to one element
+     *
+     * <br>
+     * Example:
+     * <pre>
+     * "order": {
+     *   "ids" : [123, 789, 1001],
+     *   "direction": "before",
+     *   "compared_to": 456
+     * }
+     * </pre>
+     *
+     * <br>
+     * Resulting order will be: <pre>[…, 123, 789, 1001, 456, …]</pre>
+     *
+     * @url PATCH {id}/content
+     *
+     * @param int                                                $id    Id of the milestone
+     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation $order Order of the children {@from body}
+     *
+     * @throw 400
+     * @throw 404
+     * @throw 409
+     */
+    protected function patchContent($id, OrderRepresentation $order) {
+        $order->checkFormat($order);
+        $user      = $this->getCurrentUser();
+        $milestone = $this->getMilestoneById($user, $id);
+
+        try {
+            $this->milestone_validator->canOrderBacklog($user, $milestone, $order);
+
+            $dao = new Tracker_Artifact_PriorityDao();
+            if ($order->direction === OrderRepresentation::BEFORE) {
+                $dao->moveListOfArtifactsBefore($order->ids, $order->compared_to);
+            } else {
+                $dao->moveListOfArtifactsAfter($order->ids, $order->compared_to);
+            }
+        } catch (IdsFromBodyAreNotUniqueException $exception) {
+            throw new RestException(409, $exception->getMessage());
+        } catch (OrderIdOutOfBoundException $exception) {
+            throw new RestException(409, $exception->getMessage());
+        } catch (Tracker_Artifact_Exception_CannotRankWithMyself $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (\Exception $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
+        $this->sendAllowHeaderForContent();
+    }
+
+    /**
      * Defined backlog items
      *
      * The array of ids given as argument will:
@@ -493,7 +544,7 @@ class MilestoneResource {
     }
 
     /**
-     * Re-order some backlog priorities relative to one element
+     * Partial re-order of milestone backlog relative to one element
      *
      * <br>
      * Example:
@@ -510,11 +561,12 @@ class MilestoneResource {
      *
      * @url PATCH {id}/backlog
      *
-     * @param int                                                $id    Id of the Backlog Item
+     * @param int                                                $id    Id of the milestone Item
      * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation $order Order of the children {@from body}
      *
      * @throw 400
      * @throw 404
+     * @throw 409
      */
     protected function patchBacklog($id, OrderRepresentation $order) {
         $order->checkFormat($order);
@@ -730,7 +782,7 @@ class MilestoneResource {
     }
 
     private function sendAllowHeaderForContent() {
-        Header::allowOptionsGetPut();
+        Header::allowOptionsGetPutPatch();
     }
 
     private function sendPaginationHeaders($limit, $offset, $size) {
@@ -738,7 +790,7 @@ class MilestoneResource {
     }
 
     private function sendAllowHeaderForBacklog() {
-        Header::allowOptionsGetPutPost();
+        Header::allowOptionsGetPutPostPatch();
     }
 
     private function sendAllowHeaderForSubmilestones() {
