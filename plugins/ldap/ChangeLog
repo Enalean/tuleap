@@ -1,3 +1,6 @@
+Version 3.64 - Tuleap 7.8
+    * request #7524: Threshold for ldap daily synchro
+
 Version 3.63 - Tuleap 7.8
     * request #7654: Fix ldap error in codendi_daily (Contrib STMicroelectronics)
 
