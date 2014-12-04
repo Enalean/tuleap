@@ -12,6 +12,7 @@
             data-accept="{{ backlog_item.accepted_types }}"
             ng-show="! collapsed"
             ng-class="{ hidden: collapsed }"
+            data-backlog-item-id="{{ backlog_item.id }}"
         >
             <li ui-tree-node
                 data-type="{{ backlog_item.trackerId }}"

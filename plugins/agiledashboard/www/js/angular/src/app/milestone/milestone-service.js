@@ -12,10 +12,17 @@
         });
 
         return {
-            getSubMilestones: getSubMilestones,
-            getMilestones   : getMilestones,
-            getMilestone    : getMilestone,
-            getContent      : getContent
+            getSubMilestones      : getSubMilestones,
+            getMilestones         : getMilestones,
+            getMilestone          : getMilestone,
+            getContent            : getContent,
+            reorderBacklog        : reorderBacklog,
+            addAndReorderToBacklog: addAndReorderToBacklog,
+            addToBacklog          : addToBacklog,
+            reorderContent        : reorderContent,
+            addAndReorderToContent: addAndReorderToContent,
+            addToContent          : addToContent,
+            removeFromContent     : removeFromContent
         };
 
         function getMilestone(milestone_id) {
@@ -179,6 +186,80 @@
             });
 
             milestone.accepted_types = accept.join('|');
+        }
+
+        function reorderBacklog(milestone_id, dropped_item_id, compared_to) {
+            return rest.one('milestones', milestone_id)
+                .all('backlog')
+                .patch({
+                    order: {
+                        ids         : [dropped_item_id],
+                        direction   : compared_to.direction,
+                        compared_to : compared_to.item_id
+                    }
+                });
+        }
+
+        function addAndReorderToBacklog(milestone_id, dropped_item_id, compared_to) {
+            return rest.one('milestones', milestone_id)
+                .all('backlog')
+                .patch({
+                    order: {
+                        ids         : [dropped_item_id],
+                        direction   : compared_to.direction,
+                        compared_to : compared_to.item_id
+                    },
+                    add: [dropped_item_id]
+                });
+        }
+
+        function addToBacklog(milestone_id, dropped_item_id) {
+            return rest.one('milestones', milestone_id)
+                .all('backlog')
+                .patch({
+                    add: [dropped_item_id]
+                });
+        }
+
+        function reorderContent(milestone_id, dropped_item_id, compared_to) {
+            return rest.one('milestones', milestone_id)
+                .all('content')
+                .patch({
+                    order: {
+                        ids         : [dropped_item_id],
+                        direction   : compared_to.direction,
+                        compared_to : compared_to.item_id
+                    }
+                });
+        }
+
+        function addAndReorderToContent(milestone_id, dropped_item_id, compared_to) {
+            return rest.one('milestones', milestone_id)
+                .all('content')
+                .patch({
+                    order: {
+                        ids         : [dropped_item_id],
+                        direction   : compared_to.direction,
+                        compared_to : compared_to.item_id
+                    },
+                    add: [dropped_item_id]
+                });
+        }
+
+        function addToContent(milestone_id, dropped_item_id) {
+            return rest.one('milestones', milestone_id)
+                .all('content')
+                .patch({
+                    add: [dropped_item_id]
+                });
+        }
+
+        function removeFromContent(milestone_id, dropped_item_id) {
+            return rest.one('milestones', milestone_id)
+                .all('content')
+                .patch({
+                    remove: [dropped_item_id]
+                });
         }
     }
 })();
