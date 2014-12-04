@@ -782,7 +782,7 @@ class LdapPlugin extends Plugin {
      */
     function codendi_daily_start($params) {
         if ($GLOBALS['sys_auth_type'] == 'ldap' && $this->isDailySyncEnabled()) {
-            $ldapQuery = new LDAP_DirectorySynchronization($this->getLdap());
+            $ldapQuery = new LDAP_DirectorySynchronization($this->getLdap(), $this->getLogger());
             $ldapQuery->syncAll();
 
             $retentionPeriod = $this->getLdap()->getLDAPParam('daily_sync_retention_period');
