@@ -33,20 +33,46 @@ $time_start = microtime(true);
 $pluginManager = PluginManager::instance();
 $ldapPlugin    = $pluginManager->getPluginByName('ldap');
 if ($pluginManager->isPluginAvailable($ldapPlugin)) {
-
     $ldapQuery = new LDAP_DirectorySynchronization($ldapPlugin->getLdap(), $ldapPlugin->getLogger());
-    $ldapQuery->syncAll();
+    //If script is executed with --dry-run option
+    if (isset($argv[1]) && $argv[1] == "--dry-run") {
+        $users_to_suspend     = $ldapQuery->getLdapUserManager()->getUsersToBeSuspended();
+        $nbr_users_to_suspend = count($users_to_suspend);
+        $nbr_active_users     = $ldapQuery->getLdapUserManager()->getNbrActiveUsers();
+        if($nbr_users_to_suspend == 0) {
+            echo "No user will be suspended \n";
+            return;
+        }
+        $percentage_users_to_suspend = ($nbr_users_to_suspend / $nbr_active_users) *100;
+        echo "Number of users that will be suspended     : ".$nbr_users_to_suspend."\n";
+        echo "Number of active users                     : ".$nbr_active_users."\n";
+        if (!$threshold_users_suspension = $ldapPlugin->getLdap()->getLDAPParam('threshold_users_suspension')) {
+            echo "Threshold                                  : Is Not defined \n";
+        } else {
+            echo "Threshold                                  : ".$threshold_users_suspension." % \n";
+        }
+        echo "Percentage of users that will be suspended : ".$percentage_users_to_suspend." % \n";
+        echo "--------------------------------------------------- List of users that will be suspended :  \n";
+        foreach ($users_to_suspend as $user) {
+            echo "id     : ".$user->getId()."\n";
+            echo "login  : ".$user->getUserName()."\n";
+            echo "name   : ".$user->getRealName()."\n";
+            echo "e-mail : ".$user->getEmail()."\n";
+            echo "--------------------------------------------------- \n";
+        }
+    } else{
+        $ldapQuery->syncAll();
+        $retentionPeriod = $ldapPlugin->getLdap()->getLDAPParam('daily_sync_retention_period');
+        if($retentionPeriod != NULL && $retentionPeriod!= "") {
+            $ldapCleanUpManager = new LDAP_CleanUpManager($retentionPeriod);
+            $ldapCleanUpManager->cleanAll();
+        }
 
-    $retentionPeriod = $ldapPlugin->getLdap()->getLDAPParam('daily_sync_retention_period');
-    if($retentionPeriod != NULL && $retentionPeriod!= "") {
-        $ldapCleanUpManager = new LDAP_CleanUpManager($retentionPeriod);
-        $ldapCleanUpManager->cleanAll();
+        $time_end = microtime(true);
+        $time = $time_end - $time_start;
+
+        echo "Time elapsed: ".$time."\n";
+        echo "LDAP time: ".$ldapQuery->getElapsedLdapTime()."\n";
     }
-
-    $time_end = microtime(true);
-    $time = $time_end - $time_start;
-
-    echo "Time elapsed: ".$time."\n";
-    echo "LDAP time: ".$ldapQuery->getElapsedLdapTime()."\n";
 }
 ?>
