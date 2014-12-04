@@ -1336,7 +1336,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @param PFUser $user The user who should see the artifacts
      *
-     * @return Array of Tracker_Artifact
+     * @return Tracker_Artifact[]
      */
     public function getLinkedArtifacts(PFUser $user) {
         $artifact_links      = array();

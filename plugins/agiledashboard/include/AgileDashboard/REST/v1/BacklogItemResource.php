@@ -22,12 +22,14 @@ namespace Tuleap\AgileDashboard\REST\v1;
 use Tuleap\REST\Header;
 use Luracast\Restler\RestException;
 use UserManager;
+use PFUser;
 use Tracker_ArtifactFactory;
 use AgileDashboard_Milestone_Backlog_BacklogItem;
 use Tracker_ArtifactDao;
 use Tracker_SlicedArtifactsBuilder;
 use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_Exception_CannotRankWithMyself;
+use Tracker_Artifact;
 
 /**
  * Wrapper for Backlog_Items related REST methods
@@ -109,19 +111,31 @@ class BacklogItemResource {
      *
      * @throws 400
      * @throws 404
+     * @throws 409
      */
     protected function patch($id, OrderRepresentation $order) {
         $order->checkFormat($order);
-        $this->getArtifact($id);
 
-        $dao = new Tracker_Artifact_PriorityDao();
+        $artifact = $this->getArtifact($id);
+        $user     = $this->getCurrentUser();
+
         try {
+            $order_validator = new OrderValidator($this->getChildrenArtifactIds($user, $artifact));
+            $order_validator->validate($order);
+
+            $dao = new Tracker_Artifact_PriorityDao();
             if ($order->direction === OrderRepresentation::BEFORE) {
                 $dao->moveListOfArtifactsBefore($order->ids, $order->compared_to);
             } else {
                 $dao->moveListOfArtifactsAfter($order->ids, $order->compared_to);
             }
+        } catch (IdsFromBodyAreNotUniqueException $exception) {
+            throw new RestException(409, $exception->getMessage());
+        } catch (OrderIdOutOfBoundException $exception) {
+            throw new RestException(409, $exception->getMessage());
         } catch (Tracker_Artifact_Exception_CannotRankWithMyself $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (\Exception $exception) {
             throw new RestException(400, $exception->getMessage());
         }
     }
@@ -134,6 +148,14 @@ class BacklogItemResource {
         }
 
         return $artifact;
+    }
+
+    private function getChildrenArtifactIds(PFUser $user, Tracker_Artifact $artifact) {
+        $linked_artifacts_index = array();
+        foreach ($artifact->getChildrenForUser($user) as $artifact) {
+            $linked_artifacts_index[$artifact->getId()] = true;
+        }
+        return $linked_artifacts_index;
     }
 
     /**

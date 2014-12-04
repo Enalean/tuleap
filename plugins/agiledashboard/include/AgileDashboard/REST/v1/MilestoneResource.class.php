@@ -41,6 +41,7 @@ use \AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use \Tracker_NoChangeException;
 use \EventManager;
 use \URLVerification;
+use \Tracker_Artifact_PriorityDao;
 
 /**
  * Wrapper for milestone related REST methods
@@ -453,14 +454,19 @@ class MilestoneResource {
     }
 
     /**
-     * Order backlog items
+     * Defined backlog items
      *
-     * Order backlog items in milestone
+     * The array of ids given as argument will:
+     * <ul>
+     *  <li>define the list of artifacts that are part of the backlog</li>
+     *  <li>update the priorities according to order in given array</li>
+     *  <li>remove the items that are part of backlog but not part of given ids</li>
+     * </ul>
      *
      * @url PUT {id}/backlog
      *
-     * @param int $id    Id of the milestone
-     * @param array $ids Ids of backlog items {@from body}
+     * @param int   $id  Id of the milestone
+     * @param array $ids Ids of backlog items {@from body}{@type int}
      *
      * @throw 400
      * @throw 404
@@ -484,6 +490,56 @@ class MilestoneResource {
         }
 
         $this->sendAllowHeaderForBacklog();
+    }
+
+    /**
+     * Re-order some backlog priorities relative to one element
+     *
+     * <br>
+     * Example:
+     * <pre>
+     * "order": {
+     *   "ids" : [123, 789, 1001],
+     *   "direction": "before",
+     *   "compared_to": 456
+     * }
+     * </pre>
+     *
+     * <br>
+     * Resulting order will be: <pre>[…, 123, 789, 1001, 456, …]</pre>
+     *
+     * @url PATCH {id}/backlog
+     *
+     * @param int                                                $id    Id of the Backlog Item
+     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation $order Order of the children {@from body}
+     *
+     * @throw 400
+     * @throw 404
+     */
+    protected function patchBacklog($id, OrderRepresentation $order) {
+        $order->checkFormat($order);
+        $user      = $this->getCurrentUser();
+        $milestone = $this->getMilestoneById($user, $id);
+
+        try {
+            $ids = array_merge($order->ids, array($order->compared_to));
+            $this->milestone_validator->validateArtifactIdsAreInOpenAndUnplannedMilestone($ids, $milestone, $user);
+
+            $dao = new Tracker_Artifact_PriorityDao();
+            if ($order->direction === OrderRepresentation::BEFORE) {
+                $dao->moveListOfArtifactsBefore($order->ids, $order->compared_to);
+            } else {
+                $dao->moveListOfArtifactsAfter($order->ids, $order->compared_to);
+            }
+        } catch (IdsFromBodyAreNotUniqueException $exception) {
+            throw new RestException(409, $exception->getMessage());
+        } catch (ArtifactIsNotInOpenAndUnplannedBacklogItemsException $exception) {
+            throw new RestException(409, $exception->getMessage());
+        } catch (Tracker_Artifact_Exception_CannotRankWithMyself $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (\Exception $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
     }
 
     /**

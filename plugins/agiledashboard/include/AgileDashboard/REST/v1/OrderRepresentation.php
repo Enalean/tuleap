@@ -49,6 +49,10 @@ class OrderRepresentation {
             throw new RestException(400, "invalid value specified for `direction`. Expected: before | after");
         }
 
+        if (! is_array($this->ids) || count($this->ids) == 0) {
+            throw new RestException(400, "invalid value specified for `ids`. Expected: array of integers");
+        }
+
         foreach ($this->ids as $id) {
             if (! is_int($id)) {
                 throw new RestException(400, "invalid value specified for `ids`. Expected: array of integers");

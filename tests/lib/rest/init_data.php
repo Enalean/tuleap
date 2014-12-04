@@ -27,7 +27,6 @@ $data_builder
     ->generateUsers()
     ->generateProject()
     ->delegatePermissionsToRetrieveMembership()
-    ->importAgileTemplate()
     ->generateMilestones()
     ->generateContentItems()
     ->generateBacklogItems()

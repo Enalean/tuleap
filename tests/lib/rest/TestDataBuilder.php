@@ -54,6 +54,7 @@ class TestDataBuilder {
     const PROJECT_PUBLIC_SHORTNAME         = 'public';
     const PROJECT_PUBLIC_MEMBER_SHORTNAME  = 'public-member';
     const PROJECT_PBI_SHORTNAME            = 'pbi-6348';
+    const PROJECT_BACKLOG_DND              = 'dragndrop';
 
     const STATIC_UGROUP_1_ID    = 101;
     const STATIC_UGROUP_1_LABEL = 'static_ugroup_1';
@@ -241,6 +242,7 @@ class TestDataBuilder {
             array(),
             array()
         );
+        $this->importTemplateInProject(self::PROJECT_PRIVATE_MEMBER_ID, 'tuleap_agiledashboard_template.xml');
 
         $project_3 = $this->createProject(
             self::PROJECT_PUBLIC_SHORTNAME,
@@ -258,13 +260,23 @@ class TestDataBuilder {
             array()
         );
 
-        $this->createProject(
+        $pbi = $this->createProject(
             self::PROJECT_PBI_SHORTNAME,
             'PBI',
             true,
             array($user_test_rest_1),
             array()
         );
+        $this->importTemplateInProject($pbi->getId(), 'tuleap_agiledashboard_template_pbi_6348.xml');
+
+        $backlog = $this->createProject(
+            self::PROJECT_BACKLOG_DND,
+            'Backlog drag and drop',
+            true,
+            array($user_test_rest_1),
+            array()
+        );
+        $this->importTemplateInProject($backlog->getId(), 'tuleap_agiledashboard_template.xml');
 
         unset($GLOBALS['svn_prefix']);
         unset($GLOBALS['cvs_prefix']);
@@ -321,7 +333,9 @@ class TestDataBuilder {
     }
 
     private function addMembersToProject(Project $project, PFUser $user) {
+        $GLOBALS['sys_email_admin'] = 'noreply@localhost';
         account_add_user_to_group($project->getId(), $user->getUnixName());
+        unset($GLOBALS['sys_email_admin']);
         UserManager::clearInstance();
         $this->user_manager = UserManager::instance();
     }
@@ -337,15 +351,6 @@ class TestDataBuilder {
 
     private function addUserToUserGroup($user, $project, $ugroup_id) {
         ugroup_add_user_to_ugroup($project->getId(), $ugroup_id, $user->getId());
-    }
-
-    public function importAgileTemplate() {
-        echo "Create import XML\n";
-
-        $this->importTemplateInProject(self::PROJECT_PRIVATE_MEMBER_ID, 'tuleap_agiledashboard_template.xml');
-        $this->importTemplateInProject(self::PROJECT_PBI_ID, 'tuleap_agiledashboard_template_pbi_6348.xml');
-
-        return $this;
     }
 
     private function importTemplateInProject($project_id, $template) {

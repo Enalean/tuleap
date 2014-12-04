@@ -38,6 +38,7 @@ use \Planning_MilestoneFactory;
 use \Planning_Milestone;
 use \PFUser;
 use \Project;
+use \Tuleap\AgileDashboard\REST\v1\OrderRepresentation;
 
 class MilestoneResourceValidator {
 
@@ -245,5 +246,18 @@ class MilestoneResourceValidator {
         }
 
         return false;
+    }
+
+    public function canOrderBacklog(PFUser $user, Planning_Milestone $milestone, OrderRepresentation $order) {
+        $order_validator = new OrderValidator($this->getIndexedLinkedArtifactIds($user, $milestone));
+        $order_validator->validate($order);
+    }
+
+    private function getIndexedLinkedArtifactIds(PFUser $user, Planning_Milestone $milestone) {
+        $linked_artifacts_index = array();
+        foreach ($milestone->getArtifact()->getLinkedArtifacts($user) as $artifact) {
+            $linked_artifacts_index[$artifact->getId()] = true;
+        }
+        return $linked_artifacts_index;
     }
 }
