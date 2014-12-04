@@ -80,6 +80,7 @@ class TestDataBuilder {
     const TASKS_TRACKER_ID        = 4;
     const USER_STORIES_TRACKER_ID = 5;
     const DELETED_TRACKER_ID      = 6;
+    const KANBAN_TRACKER_ID       = 7;
 
     const RELEASE_ARTIFACT_ID     = 1;
     const SPRINT_ARTIFACT_ID      = 2;
@@ -243,6 +244,7 @@ class TestDataBuilder {
             array()
         );
         $this->importTemplateInProject(self::PROJECT_PRIVATE_MEMBER_ID, 'tuleap_agiledashboard_template.xml');
+        $this->importTemplateInProject(self::PROJECT_PRIVATE_MEMBER_ID, 'tuleap_agiledashboard_kanban_template.xml');
 
         $project_3 = $this->createProject(
             self::PROJECT_PUBLIC_SHORTNAME,
@@ -444,6 +446,14 @@ class TestDataBuilder {
         $this->createEpic($user, 'Epic pic', '101');
         $this->createEpic($user, "Epic c'est tout", '101');
         $this->createEpic($user, 'Epic epoc', '101');
+
+        return $this;
+    }
+
+    public function generateKanban() {
+        echo "Create 'My first kanban'\n";
+        $kanban_manager = new AgileDashboard_KanbanManager(new AgileDashboard_KanbanDao());
+        $kanban_manager->createKanban('My first kanban', self::KANBAN_TRACKER_ID);
 
         return $this;
     }
