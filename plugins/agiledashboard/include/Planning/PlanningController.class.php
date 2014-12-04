@@ -150,7 +150,7 @@ class Planning_Controller extends MVC2_PluginController {
     private function getKanbanSummaryPresenters() {
         $kanban_presenters = array();
 
-        foreach ($this->kanban_factory->getKanbanPerProject($this->group_id) as $kanban_for_project) {
+        foreach ($this->kanban_factory->getListOfKanbansForProject($this->group_id) as $kanban_for_project) {
             $kanban_presenters[] = new AgileDashboard_Presenter_KanbanSummaryPresenter($kanban_for_project);
         }
 

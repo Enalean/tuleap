@@ -21,6 +21,9 @@
 
 class AgileDashboard_KanbanFactory {
 
+    /** @var AgileDashboard_KanbanDao */
+    private $dao;
+
     public function __construct(AgileDashboard_KanbanDao $dao) {
         $this->dao = $dao;
     }
@@ -28,19 +31,28 @@ class AgileDashboard_KanbanFactory {
     /**
      * @return AgileDashboard_Kanban[]
      */
-    public function getKanbanPerProject($project_id) {
-        $rows    = $this->dao->getKanbanPerProject($project_id);
+    public function getListOfKanbansForProject($project_id) {
+        $rows    = $this->dao->getKanbansForProject($project_id);
         $kanbans = array();
 
         foreach ($rows as $kanban_data) {
-            $kanbans[] = new AgileDashboard_Kanban(
-                $kanban_data['name'],
-                $kanban_data['tracker_id'],
-                $kanban_data['project_id']
-            );
+            $kanbans[] = $this->instantiateFromRow($kanban_data);
         }
 
         return $kanbans;
     }
 
+    public function getKanban($tracker_id) {
+        $row = $this->dao->getKanbanByTrackerId($tracker_id)->getRow();
+
+        return $this->instantiateFromRow($row);
+    }
+
+    private function instantiateFromRow($kanban_data) {
+        return new AgileDashboard_Kanban(
+            $kanban_data['name'],
+            $kanban_data['tracker_id'],
+            $kanban_data['group_id']
+        );
+    }
 }

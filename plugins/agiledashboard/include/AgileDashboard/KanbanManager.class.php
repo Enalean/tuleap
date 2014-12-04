@@ -33,8 +33,8 @@ class AgileDashboard_KanbanManager {
         return $this->dao->getKanbanByTrackerId($tracker->getProject()->getID(), $tracker->getId())->count() > 0;
     }
 
-    public function createKanban($project_id, $kanban_name, $tracker_id) {
-        return $this->dao->create($project_id, $kanban_name, $tracker_id);
+    public function createKanban($kanban_name, $tracker_id) {
+        return $this->dao->create($kanban_name, $tracker_id);
     }
 
     public function getTrackersWithKanbanUsage($project_id) {

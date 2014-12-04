@@ -46,7 +46,6 @@ CREATE TABLE IF NOT EXISTS plugin_agiledashboard_configuration (
 DROP TABLE IF EXISTS plugin_agiledashboard_kanban_configuration;
 CREATE TABLE IF NOT EXISTS plugin_agiledashboard_kanban_configuration (
     tracker_id INT(11) PRIMARY KEY,
-    project_id INT(11) NOT NULL,
     name VARCHAR(255) NOT NULL
 );
 

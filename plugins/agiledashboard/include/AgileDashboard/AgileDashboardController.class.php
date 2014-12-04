@@ -22,6 +22,9 @@ require_once 'common/mvc2/PluginController.class.php';
 
 class AgileDashboard_Controller extends MVC2_PluginController {
 
+    /** @var AgileDashboard_KanbanFactory */
+    private $kanban_factory;
+
     /** @var PlanningFactory */
     private $planning_factory;
 
@@ -38,6 +41,7 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         Codendi_Request $request,
         PlanningFactory $planning_factory,
         AgileDashboard_KanbanManager $kanban_manager,
+        AgileDashboard_KanbanFactory $kanban_factory,
         AgileDashboard_ConfigurationManager $config_manager,
         TrackerFactory $tracker_factory
     ) {
@@ -46,6 +50,7 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         $this->group_id          = (int) $this->request->get('group_id');
         $this->planning_factory  = $planning_factory;
         $this->kanban_manager    = $kanban_manager;
+        $this->kanban_factory    = $kanban_factory;
         $this->config_manager    = $config_manager;
         $this->tracker_factory   = $tracker_factory;
     }
@@ -202,7 +207,7 @@ class AgileDashboard_Controller extends MVC2_PluginController {
             $this->redirectToHome();
         }
 
-        if ($this->kanban_manager->createKanban($this->group_id, $kanban_name, $tracker_id)) {
+        if ($this->kanban_manager->createKanban($kanban_name, $tracker_id)) {
             $GLOBALS['Response']->addFeedback(
                 'info',
                 $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_created', array($kanban_name))
@@ -231,9 +236,13 @@ class AgileDashboard_Controller extends MVC2_PluginController {
     }
 
     public function showKanban() {
+        $tracker_id  = $this->request->get('tracker');
+        $kanban = $this->kanban_factory->getKanban($tracker_id);
+
         return $this->renderToString(
             'kanban',
             new KanbanPresenter(
+                $kanban,
                 $this->request->getCurrentUser()->getShortLocale()
             )
         );

@@ -31,6 +31,10 @@ class AgileDashboard_Presenter_KanbanSummaryPresenter {
         return $this->kanban->getName();
     }
 
+    public function tracker_id() {
+        return $this->kanban->getTrackerId();
+    }
+
     public function count_open_kanban_items() {
         return 0;
     }

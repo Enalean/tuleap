@@ -23,8 +23,11 @@ class KanbanPresenter {
     /** @var string */
     public $language;
 
-    public function __construct($language) {
-        $this->language = $language;
-    }
+    /** @var string */
+    public $kanban_name;
 
+    public function __construct(AgileDashboard_Kanban $kanban, $language) {
+        $this->language    = $language;
+        $this->kanban_name = $kanban->getName();
+    }
 }

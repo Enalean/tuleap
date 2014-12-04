@@ -40,6 +40,7 @@ class AgileDashboardControllerTest extends TuleapTestCase {
         $kanban_manager   = mock('AgileDashboard_KanbanManager');
         $config_manager   = mock('AgileDashboard_ConfigurationManager');
         $tracker_factory  = mock('TrackerFactory');
+        $kanban_factory   = mock('AgileDashboard_KanbanFactory');
 
         stub($request)->exist('activate-ad-service')->returns(true);
         stub($request)->get('activate-ad-service')->returns('');
@@ -49,6 +50,7 @@ class AgileDashboardControllerTest extends TuleapTestCase {
             $request,
             $planning_factory,
             $kanban_manager,
+            $kanban_factory,
             $config_manager,
             $tracker_factory
         );
