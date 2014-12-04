@@ -186,6 +186,62 @@
 
             > .column-content {
                 text-transform: none;
+
+                > .kanban-info {
+                    font-style: italic;
+                }
+            }
+
+            &.column-displayed {
+                vertical-align: top;
+
+                > .column-content {
+                    margin: 10px;
+
+                    > ul {
+                        text-align: center;
+                        list-style-type: none;
+                        margin: 0;
+
+                        > li {
+                            margin: 0 auto 10px;
+                            width: 300px;
+
+                            > .kanban-item {
+                                position: relative;
+                                height: 150px;
+                                border: 1px solid #e0e0e0;
+                                border-radius: 5px;
+                                background: white;
+                                box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
+                                padding: 10px;
+                                font-size: 0;
+                                color: #666;
+
+                                &:before {
+                                    content: '';
+                                    display: inline-block;
+                                    height: 100%;
+                                    vertical-align: middle;
+                                }
+
+                                > .kanban-item-label {
+                                    display: inline-block;
+                                    vertical-align: middle;
+                                    font-size: 14px;
+                                }
+
+                                > .kanban-item-link {
+                                    position: absolute;
+                                    top: 5px;
+                                    left: 5px;
+                                    color: #999;
+                                    font-size: 12px;
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             &.column-hidden {

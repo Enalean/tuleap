@@ -44,7 +44,13 @@
                 ng-click="kanban.backlog.is_open = true"
                 ng-attr-title="{{ column.is_open ? '' : 'Toggle the backlog' | translate }}"
             >
-                <div class="column-content"><em>Cards will appear here</em></div>
+                <div class="column-content">
+                    <span class="kanban-info" ng-show="kanban.backlog.content.length === 0" translate>Backlog is currently empty</span>
+                    <ul ng-show="kanban.backlog.content.length !== 0">
+                        <li ng-repeat="item in kanban.backlog.content" ng-include="'kanban-item.tpl.html'"></li>
+                    </ul>
+                    <div class="loading" ng-if="kanban.loading_backlog"></div>
+                </div>
                 <div class="column-label">{{ kanban.backlog.label }} <span class="count">{{ kanban.backlog.content.length }}</span></div>
             </td>
             <td ng-repeat="column in kanban.board.columns"
@@ -52,7 +58,12 @@
                 ng-click="column.is_open = true"
                 ng-attr-title="{{ column.is_open ? '' : 'Toggle this column' | translate }}"
             >
-                <div class="column-content"><em>Cards will appear here</em></div>
+                <div class="column-content">
+                    <span class="kanban-info" ng-show="! column.content || column.content.length === 0" translate>This column is currently empty</span>
+                    <ul ng-show="column.content.length !== 0">
+                        <li ng-repeat="item in column.content" ng-include="'kanban-item.tpl.html'"></li>
+                    </ul>
+                </div>
                 <div class="column-label">{{ column.label }} <span class="count">{{ column.content.length }}</span></div>
             </td>
             <td class="archive"
@@ -60,7 +71,12 @@
                 ng-click="kanban.archive.is_open = true"
                 ng-attr-title="{{ column.is_open ? '' : 'Toggle the archive' | translate }}"
             >
-                <div class="column-content"><em>Cards will appear here</em></div>
+                <div class="column-content">
+                    <span class="kanban-info" ng-show="kanban.archive.content.length === 0" translate>Archive is currently empty</span>
+                    <ul ng-show="kanban.archive.content.length !== 0">
+                        <li ng-repeat="item in kanban.archive.content" ng-include="'kanban-item.tpl.html'"></li>
+                    </ul>
+                </div>
                 <div class="column-label">{{ kanban.archive.label }} <span class="count">{{ kanban.archive.content.length }}</span></div>
             </td>
         </tr>
