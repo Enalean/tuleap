@@ -122,13 +122,22 @@ class AgileDashboard_Controller extends MVC2_PluginController {
     public function updateConfiguration() {
         $this->checkIfRequestIsValid();
 
+        if (! $this->request->getCurrentUser()->isAdmin($this->group_id)) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('global', 'perm_denied')
+            );
+
+            return;
+        }
+
         $scrum_is_activated  = 0;
         $kanban_is_activated = 0;
 
         switch ($this->request->get('activate-ad-service')) {
             case 'activate-scrum':
                  $GLOBALS['Response']->addFeedback(
-                    'info',
+                    Feedback::INFO,
                     $GLOBALS['Language']->getText('plugin_agiledashboard', 'scrum_activated')
                 );
 
@@ -137,7 +146,7 @@ class AgileDashboard_Controller extends MVC2_PluginController {
                 break;
             case 'activate-kanban':
                  $GLOBALS['Response']->addFeedback(
-                    'info',
+                    Feedback::INFO,
                     $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_activated')
                 );
 
@@ -146,7 +155,7 @@ class AgileDashboard_Controller extends MVC2_PluginController {
 
             case 'activate-all':
                 $GLOBALS['Response']->addFeedback(
-                    'info',
+                    Feedback::INFO,
                     $GLOBALS['Language']->getText('plugin_agiledashboard', 'all_activated')
                 );
 
@@ -170,8 +179,8 @@ class AgileDashboard_Controller extends MVC2_PluginController {
 
     private function notifyErrorAndRedirectToAdmin() {
          $GLOBALS['Response']->addFeedback(
-            'error',
-            'INVALID REQUEST'
+            Feedback::ERROR,
+            $GLOBALS['Language']->getText('plugin_agiledashboard', 'invalid_request')
         );
 
         $this->redirectToAdmin();
@@ -191,30 +200,47 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         $kanban_name = $this->request->get('kanban-name');
         $tracker_id  = $this->request->get('tracker-kanban');
         $tracker     = $this->tracker_factory->getTrackerById($tracker_id);
-
-        $user = $this->request->getCurrentUser();
+        $user        = $this->request->getCurrentUser();
 
         if (! $user->isAdmin($this->group_id)) {
+             $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('global', 'perm_denied')
+            );
+
             return;
         }
 
         if ($this->kanban_manager->doesKanbanExistForTracker($tracker)) {
             $GLOBALS['Response']->addFeedback(
-                'error',
+                Feedback::ERROR,
                 $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_tracker_used')
             );
 
             $this->redirectToHome();
+            return;
+        }
+
+        if (count($this->planning_factory->getPlanningsByBacklogTracker($tracker)) > 0 ||
+            count($this->planning_factory->getPlanningByPlanningTracker($tracker)) > 0
+        ) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('plugin_agiledashboard', 'tracker_used_in_scrum')
+            );
+
+            $this->redirectToHome();
+            return;
         }
 
         if ($this->kanban_manager->createKanban($kanban_name, $tracker_id)) {
             $GLOBALS['Response']->addFeedback(
-                'info',
+                Feedback::INFO,
                 $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_created', array($kanban_name))
             );
         } else {
             $GLOBALS['Response']->addFeedback(
-                'error',
+                Feedback::ERROR,
                 $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_creation_error', array($kanban_name))
             );
         }

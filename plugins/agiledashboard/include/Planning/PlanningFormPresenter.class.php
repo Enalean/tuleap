@@ -34,12 +34,12 @@ class Planning_FormPresenter extends PlanningPresenter {
     public $planning;
     
     /**
-     * @var Array of Tracker
+     * @var Planning_TrackerPresenter[]
      */
     public $available_backlog_trackers;
     
     /**
-     * @var Array of Tracker
+     * @var Planning_TrackerPresenter[]
      */
     public $available_planning_trackers;
 
@@ -48,23 +48,20 @@ class Planning_FormPresenter extends PlanningPresenter {
      */
     public $cardwall_admin;
 
-    public function __construct(Planning $planning, array $available_backlog_trackers, array $available_planning_trackers, $cardwall_admin) {
+    public function __construct(
+        Planning $planning,
+        array $available_backlog_trackers,
+        array $available_planning_trackers,
+        $cardwall_admin
+    ) {
         parent::__construct($planning);
         
         $this->group_id                    = $planning->getGroupId();
-        $this->available_backlog_trackers  = $this->getPlanningTrackerPresenters($available_backlog_trackers);
-        $this->available_planning_trackers = $this->getPlanningTrackerPresenters($available_planning_trackers);
+        $this->available_backlog_trackers  = $available_backlog_trackers;
+        $this->available_planning_trackers = $available_planning_trackers;
         $this->cardwall_admin              = $cardwall_admin;
     }
 
-    public function getPlanningTrackerPresenters(array $trackers) {
-        return array_map(array($this, 'getPlanningTrackerPresenter'), $trackers);
-    }
-    
-    public function getPlanningTrackerPresenter(Tracker $tracker) {
-        return new Planning_TrackerPresenter($this->planning, $tracker);
-    }
-    
     public function adminTitle() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'Admin');
     }
@@ -99,5 +96,3 @@ class Planning_FormPresenter extends PlanningPresenter {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', $secondary_key, $args);
     }
 }
-
-?>

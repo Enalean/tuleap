@@ -21,7 +21,7 @@
 class AgileDashboard_KanbanManager {
 
     /**
-     * @var AgileDashboard_ConfigurationDao
+     * @var AgileDashboard_KanbanDao
      */
     private $dao;
 
@@ -30,7 +30,7 @@ class AgileDashboard_KanbanManager {
     }
 
     public function doesKanbanExistForTracker(Tracker $tracker) {
-        return $this->dao->getKanbanByTrackerId($tracker->getProject()->getID(), $tracker->getId())->count() > 0;
+        return $this->dao->getKanbanByTrackerId($tracker->getId())->count() > 0;
     }
 
     public function createKanban($kanban_name, $tracker_id) {

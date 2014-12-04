@@ -41,11 +41,11 @@ class Planning_TrackerPresenter_TestCase extends TuleapTestCase {
     }
     
     protected function assertSelected($selected) {
-        $this->assertEqual('selected', $selected);
+        $this->assertTrue($selected);
     }
     
     protected function assertNotSelected($selected) {
-        $this->assertNull($selected);
+        $this->assertFalse($selected);
     }
 }
 
@@ -95,4 +95,3 @@ class Planning_TrackerPresenter_NonBacklogNorPlanningTrackerTest extends Plannin
         $this->assertNotSelected($this->presenter->selectedIfPlanningTracker());
     }
 }
-?>

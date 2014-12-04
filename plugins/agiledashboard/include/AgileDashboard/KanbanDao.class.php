@@ -45,10 +45,16 @@ class AgileDashboard_KanbanDao extends DataAccessObject {
     public function getTrackersWithKanbanUsage($project_id) {
         $project_id = $this->da->escapeInt($project_id);
 
-        $sql = "SELECT tracker.id, tracker.name, kanban_config.name AS used
+        $sql = "SELECT tracker.id,
+                    tracker.name,
+                    COALESCE(kanban_config.name, planning.planning_tracker_id, backlog.tracker_id) AS used
                 FROM tracker
                     LEFT JOIN plugin_agiledashboard_kanban_configuration AS kanban_config
                     ON (tracker.id = kanban_config.tracker_id)
+                    LEFT JOIN plugin_agiledashboard_planning AS planning
+                    ON (tracker.id = planning.planning_tracker_id)
+                    LEFT JOIN plugin_agiledashboard_planning_backlog_tracker AS backlog
+                    ON (tracker.id = backlog.tracker_id)
                 WHERE tracker.group_id = $project_id
                 ORDER BY tracker.name ASC";
 

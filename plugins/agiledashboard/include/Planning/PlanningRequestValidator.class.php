@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,14 +30,18 @@ class Planning_RequestValidator {
      * @var PlanningFactory
      */
     private $factory;
+
+    /** @var AgileDashboard_KanbanFactory */
+    private $kanban_factory;
     
     /**
      * Creates a new validator instance.
      * 
      * @param PlanningFactory $factory Used to retrieve existing planning trackers for validation purpose.
      */
-    public function __construct(PlanningFactory $factory) {
-        $this->factory = $factory;
+    public function __construct(PlanningFactory $factory, AgileDashboard_KanbanFactory $kanban_factory) {
+        $this->factory        = $factory;
+        $this->kanban_factory = $kanban_factory;
     }
     
     /**
@@ -60,11 +64,33 @@ class Planning_RequestValidator {
         }
 
         $planning_parameters = PlanningParameters::fromArray($planning_parameters);
-        
+
         return $this->nameIsPresent($planning_parameters)
             && $this->backlogTrackerIdsArePresentAndArePositiveIntegers($planning_parameters)
             && $this->planningTrackerIdIsPresentAndIsAPositiveInteger($planning_parameters)
-            && $this->planningTrackerIsNotThePlanningTrackerOfAnotherPlanningInTheSameProject($group_id, $planning_id, $planning_parameters);
+            && $this->planningTrackerIsNotThePlanningTrackerOfAnotherPlanningInTheSameProject($group_id, $planning_id, $planning_parameters)
+            && $this->noKanbanTrackersAreSelected($planning_parameters, $group_id);
+    }
+
+    private function noKanbanTrackersAreSelected(PlanningParameters $planning_parameters, $project_id) {
+        $kanban_tracker_ids = $this->kanban_factory->getKanbanTrackerIds($project_id);
+
+        if (count($kanban_tracker_ids) === 0) {
+            return true;
+        }
+
+        $selected_tracker_ids = array_merge(
+            array($planning_parameters->planning_tracker_id),
+            $planning_parameters->backlog_tracker_ids
+        );
+
+        foreach ($selected_tracker_ids as $tracker_id) {
+            if (in_array($tracker_id, $kanban_tracker_ids)) {
+                return false;
+            }
+        }
+
+        return true;
     }
     
     /**
@@ -171,4 +197,3 @@ class Planning_RequestValidator {
         return ! in_array($planning_tracker_id, $project_planning_tracker_ids);
     }
 }
-?>

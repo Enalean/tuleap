@@ -48,6 +48,20 @@ class AgileDashboard_KanbanFactory {
         return $this->instantiateFromRow($row);
     }
 
+    /**
+     * @return int[]
+     */
+    public function getKanbanTrackerIds($project_id) {
+        $rows               = $this->dao->getKanbansForProject($project_id);
+        $kanban_tracker_ids = array();
+
+        foreach ($rows as $kanban_data) {
+            $kanban_tracker_ids[] = $kanban_data['tracker_id'];
+        }
+
+        return $kanban_tracker_ids;
+    }
+
     private function instantiateFromRow($kanban_data) {
         return new AgileDashboard_Kanban(
             $kanban_data['name'],

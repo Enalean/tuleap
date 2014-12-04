@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -47,15 +46,10 @@ class Planning_TrackerPresenter {
     }
     
     public function selectedIfBacklogTracker() {
-        if (in_array($this->tracker->getId(), $this->planning->getBacklogTrackersIds())) {
-            return 'selected';
-        }
+        return (in_array($this->tracker->getId(), $this->planning->getBacklogTrackersIds()));
     }
     
     public function selectedIfPlanningTracker() {
-        if ($this->tracker->getId() == $this->planning->getPlanningTrackerId()) {
-            return 'selected';
-        }
+        return ($this->tracker->getId() == $this->planning->getPlanningTrackerId());
     }
 }
-?>

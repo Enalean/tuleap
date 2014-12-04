@@ -162,6 +162,9 @@ class Planning_ControllerNewTest extends TuleapTestCase {
         $this->request             = aRequest()->with('group_id', "$this->group_id")->build();
         $this->planning_factory    = mock('PlanningFactory');
         $this->tracker_factory     = mock('TrackerFactory');
+
+        $kanban_factory = stub('AgileDashboard_KanbanFactory')->getKanbanTrackerIds()->returns(array());
+
         $this->planning_controller = new Planning_Controller(
             $this->request,
             $this->planning_factory,
@@ -173,7 +176,7 @@ class Planning_ControllerNewTest extends TuleapTestCase {
             '/path/to/plugin',
             mock('AgileDashboard_KanbanManager'),
             mock('AgileDashboard_ConfigurationManager'),
-            mock('AgileDashboard_KanbanFactory')
+            $kanban_factory
         );
         $GLOBALS['Language']    = new MockBaseLanguage_Planning_ControllerNewTest();
 
@@ -293,6 +296,8 @@ class Planning_Controller_EditTest extends Planning_Controller_BaseTest {
         stub($planning_factory)->getAvailableBacklogTrackers('*', $group_id)->returns(array());
         stub($planning_factory)->getAvailablePlanningTrackers('*', $group_id)->returns(array());
 
+        $kanban_factory = stub('AgileDashboard_KanbanFactory')->getKanbanTrackerIds()->returns(array());
+
         $controller = partial_mock(
             'Planning_Controller',
             array('renderToString'),
@@ -307,7 +312,7 @@ class Planning_Controller_EditTest extends Planning_Controller_BaseTest {
                 '/path/to/plugin',
                 mock('AgileDashboard_KanbanManager'),
                 mock('AgileDashboard_ConfigurationManager'),
-                mock('AgileDashboard_KanbanFactory')
+                $kanban_factory
             )
         );
 

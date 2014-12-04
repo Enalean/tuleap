@@ -25,8 +25,12 @@ class RequestValidatorTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         
-        $this->factory   = mock('PlanningFactory');
-        $this->validator = new Planning_RequestValidator($this->factory);
+        $this->factory        = mock('PlanningFactory');
+        $this->kanban_factory = mock('AgileDashboard_KanbanFactory');
+        $this->validator      = new Planning_RequestValidator(
+            $this->factory,
+            $this->kanban_factory
+        );
     }
 }
 
