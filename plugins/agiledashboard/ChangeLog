@@ -1,3 +1,6 @@
+Version 1.103 - Tuleap 7.8
+    * story #7511: Drag'nDrop backlog items (PATCH /backlog_items/{id}/children should check items belong to {id}, PATCH /milestones/:id/backlog)
+
 Version 1.102 - Tuleap 7.8
     * story #7577 display a Kanban cardwall (Display the name of the current kanban)
 
