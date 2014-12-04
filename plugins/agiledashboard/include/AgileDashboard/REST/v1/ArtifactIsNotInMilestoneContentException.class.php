@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,9 +21,9 @@ namespace Tuleap\AgileDashboard\REST\v1;
 
 use \Exception;
 
-class ArtifactDoesNotExistException extends Exception {
+class ArtifactIsNotInMilestoneContentException extends Exception {
 
-    public function __construct($potential_backlog_item_id) {
-        parent::__construct('Artifact '. $potential_backlog_item_id .' does not exist');
+    public function __construct($milestone_id, $item_id) {
+        parent::__construct('Artifact '. $item_id .' is not linked to milestone '.$milestone_id.', hence cannot remove it from content');
     }
 }
