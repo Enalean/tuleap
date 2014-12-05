@@ -40,7 +40,7 @@ class AgileDashboard_KanbanFactory {
         $kanbans = array();
 
         foreach ($rows as $kanban_data) {
-            if ($this->isUserAllowedToAccessTracker($user, $kanban_data['tracker_id'])) {
+            if ($this->isUserAllowedToAccessKanban($user, $kanban_data['tracker_id'])) {
                 $kanbans[] = $this->instantiateFromRow($kanban_data);
             }
         }
@@ -55,7 +55,7 @@ class AgileDashboard_KanbanFactory {
      * @return AgileDashboard_Kanban
      */
     public function getKanban(PFuser $user, $tracker_id) {
-        if (! $this->isUserAllowedToAccessTracker($user, $tracker_id)) {
+        if (! $this->isUserAllowedToAccessKanban($user, $tracker_id)) {
             throw new AgileDashboard_KanbanCannotAccessException();
         }
 
@@ -90,7 +90,11 @@ class AgileDashboard_KanbanFactory {
         );
     }
 
-    private function isUserAllowedToAccessTracker(PFuser $user, $tracker_id) {
+    private function isUserAllowedToAccessKanban(PFuser $user, $tracker_id) {
+        if (! $user->useLabFeatures()) {
+            return false;
+        }
+
         $tracker = $this->tracker_factory->getTrackerById($tracker_id);
         if (! $tracker) {
             throw new AgileDashboard_KanbanNotFoundException();
