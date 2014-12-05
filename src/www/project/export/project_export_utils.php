@@ -42,7 +42,7 @@ function tocsv($string) {
 function get_csv_separator() {
     if ($u_separator = user_get_preference("user_csv_separator")) {
     } else {
-        $u_separator = DEFAULT_CSV_SEPARATOR;
+        $u_separator = PFUser::DEFAULT_CSV_SEPARATOR;
     }
     $separator = '';
     switch ($u_separator) {
@@ -56,7 +56,7 @@ function get_csv_separator() {
             $separator = "\t";
             break;
         default:
-            $separator = DEFAULT_CSV_SEPARATOR;
+            $separator = PFUser::DEFAULT_CSV_SEPARATOR;
             break;
     }
     return $separator;
