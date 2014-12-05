@@ -40,6 +40,7 @@ class MilestonesBacklogPatchTest extends RestBase {
     private $epic_log;
     private $epic_exp;
     private $epic_fin;
+    private $epic_sta;
 
     protected function getResponse($request) {
         return $this->getResponseByToken(
@@ -147,9 +148,6 @@ class MilestonesBacklogPatchTest extends RestBase {
         );
     }
 
-    /**
-     * @depends testPatchContentBefore
-     */
     public function testPatchContentAfter() {
         $uri = 'milestones/'.$this->release['id'].'/content';
 
@@ -168,6 +166,55 @@ class MilestonesBacklogPatchTest extends RestBase {
                 $this->epic_log['id'],
                 $this->epic_exp['id'],
                 $this->epic_adv['id'],
+                $this->epic_fin['id'],
+            ),
+            $this->getIdsOrderedByPriority($uri)
+        );
+    }
+
+    public function testPatchContentRemove() {
+        $uri = 'milestones/'.$this->release['id'].'/content';
+
+        $response = $this->getResponse($this->client->patch($uri, null, json_encode(array(
+            'remove' => array(
+                $this->epic_log['id'],
+                $this->epic_adv['id'],
+            ),
+        ))));
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $this->assertEquals(
+            array(
+                $this->epic_basic['id'],
+                $this->epic_exp['id'],
+                $this->epic_fin['id'],
+            ),
+            $this->getIdsOrderedByPriority($uri)
+        );
+    }
+
+    public function testPatchAddAndOrder() {
+        $uri = 'milestones/'.$this->release['id'].'/content';
+
+        $response = $this->getResponse($this->client->patch($uri, null, json_encode(array(
+            'order'  => array(
+                'ids'         => array($this->epic_adv['id'], $this->epic_sta['id']),
+                'direction'   => 'after',
+                'compared_to' => $this->epic_basic['id']
+            ),
+            'add' => array(
+                $this->epic_sta['id'],
+            ),
+        ))));
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $this->assertEquals(
+            array(
+                $this->epic_basic['id'],
+                $this->epic_adv['id'],
+                $this->epic_sta['id'],
+                $this->epic_log['id'],
+                $this->epic_exp['id'],
                 $this->epic_fin['id'],
             ),
             $this->getIdsOrderedByPriority($uri)
@@ -228,6 +275,7 @@ class MilestonesBacklogPatchTest extends RestBase {
         $this->epic_log = $this->createEpic('Logarithm calculator', array());
         $this->epic_exp = $this->createEpic('Expo calculator', array());
         $this->epic_fin = $this->createEpic('Finance calculator', array());
+        $this->epic_sta = $this->createEpic('Stats calculator', array());
 
         return array(
             $this->epic_basic['id'],

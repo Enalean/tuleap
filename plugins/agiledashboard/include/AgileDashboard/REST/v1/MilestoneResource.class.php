@@ -471,26 +471,41 @@ class MilestoneResource {
      *
      * @url PATCH {id}/content
      *
-     * @param int                                                $id    Id of the milestone
-     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation $order Order of the children {@from body}
+     * @param int                                                $id     Id of the milestone
+     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation $order  Order of the children {@from body}
+     * @param array                                              $add    Ids to add to milestone content {@from body}{@type int}
+     * @param array                                              $remove Ids to remove from milestone content {@from body}{@type int}
      *
      * @throw 400
      * @throw 404
      * @throw 409
      */
-    protected function patchContent($id, OrderRepresentation $order) {
-        $order->checkFormat($order);
+    protected function patchContent($id, OrderRepresentation $order = null, array $add = null, array $remove = null) {
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
 
         try {
-            $this->milestone_validator->canOrderBacklog($user, $milestone, $order);
+            if ($remove || $add) {
+                $linked_artifact_ids = $this->milestone_validator->getValidatedArtifactsIdsToRemoveFromContent($user, $milestone, $remove, $add);
+                $this->milestone_content_updater->updateMilestoneContent($linked_artifact_ids, $user, $milestone);
+            }
+        } catch (ArtifactDoesNotExistException $exception) {
+            throw new RestException(404, $exception->getMessage());
+        } catch (ArtifactIsNotInBacklogTrackerException $exception) {
+            throw new RestException(404, $exception->getMessage());
+        } catch (ArtifactIsClosedOrAlreadyPlannedInAnotherMilestone $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (IdsFromBodyAreNotUniqueException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (Tracker_NoChangeException $exception) {
+            //Do nothing
+        }
 
-            $dao = new Tracker_Artifact_PriorityDao();
-            if ($order->direction === OrderRepresentation::BEFORE) {
-                $dao->moveListOfArtifactsBefore($order->ids, $order->compared_to);
-            } else {
-                $dao->moveListOfArtifactsAfter($order->ids, $order->compared_to);
+        try {
+            if ($order) {
+                $order->checkFormat($order);
+                $this->milestone_validator->canOrderContent($user, $milestone, $order);
+                $this->updateArtifactPriorities($order);
             }
         } catch (IdsFromBodyAreNotUniqueException $exception) {
             throw new RestException(409, $exception->getMessage());
@@ -502,6 +517,15 @@ class MilestoneResource {
             throw new RestException(400, $exception->getMessage());
         }
         $this->sendAllowHeaderForContent();
+    }
+
+    private function updateArtifactPriorities(OrderRepresentation $order) {
+        $dao = new Tracker_Artifact_PriorityDao();
+        if ($order->direction === OrderRepresentation::BEFORE) {
+            $dao->moveListOfArtifactsBefore($order->ids, $order->compared_to);
+        } else {
+            $dao->moveListOfArtifactsAfter($order->ids, $order->compared_to);
+        }
     }
 
     /**

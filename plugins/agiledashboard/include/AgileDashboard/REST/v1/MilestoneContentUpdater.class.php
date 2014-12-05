@@ -160,5 +160,4 @@ class MilestoneContentUpdater {
 
         return false;
     }
-
 }

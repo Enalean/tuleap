@@ -49,18 +49,24 @@ class OrderRepresentation {
             throw new RestException(400, "invalid value specified for `direction`. Expected: before | after");
         }
 
-        if (! is_array($this->ids) || count($this->ids) == 0) {
+        $this->isArrayOfInt('ids');
+        if (count($this->ids) == 0) {
             throw new RestException(400, "invalid value specified for `ids`. Expected: array of integers");
-        }
-
-        foreach ($this->ids as $id) {
-            if (! is_int($id)) {
-                throw new RestException(400, "invalid value specified for `ids`. Expected: array of integers");
-            }
         }
 
         if (! is_int($this->compared_to)) {
             throw new RestException(400, "invalid value specified for `compared_to`. Expected: integer");
+        }
+    }
+
+    private function isArrayOfInt($name) {
+        if (! is_array($this->$name)) {
+            throw new RestException(400, "invalid value specified for `$name`. Expected: array of integers");
+        }
+        foreach ($this->$name as $id) {
+            if (! is_int($id)) {
+                throw new RestException(400, "invalid value specified for `$name`. Expected: array of integers");
+            }
         }
     }
 }

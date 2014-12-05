@@ -134,3 +134,97 @@ class MilestoneResourceValidatorTest extends TuleapTestCase {
         $this->milestone_resource_validator->validateArtifactsFromBodyContent($this->ids, $this->milestone, $this->user);
     }
 }
+
+class MilestoneResourceValidator_PatchAddRemoveTest extends TuleapTestCase {
+
+    /** @var MilestoneResourceValidator */
+    private $milestone_resource_validator;
+    private $user;
+    private $artifact;
+    private $milestone;
+
+    public function skip() {
+        $this->skipIfNotPhp53();
+    }
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->user                         = mock('PFUser');
+        $this->artifact = aMockArtifact()->withLinkedArtifacts(
+            array(
+                anArtifact()->withId(112)->build(),
+                anArtifact()->withId(113)->build(),
+                anArtifact()->withId(114)->build(),
+                anArtifact()->withId(115)->build(),
+            )
+        )->build();
+        $this->milestone = aMilestone()->withArtifact($this->artifact)->build();
+        $this->milestone_resource_validator = partial_mock('Tuleap\AgileDashboard\REST\v1\MilestoneResourceValidator', array('validateArtifactsFromBodyContent'));
+    }
+
+    public function itAllowsToRemoveFromContentWhenRemovedIdsArePartOfLinkedArtifacts() {
+        $this->milestone_resource_validator->getValidatedArtifactsIdsToRemoveFromContent($this->user, $this->milestone, array(112, 113), null);
+    }
+
+    public function itForbidsToRemoveFromContentWhenRemovedIdsArePartOfLinkedArtifacts() {
+        $this->expectException('Tuleap\AgileDashboard\REST\v1\ArtifactIsNotInMilestoneContentException');
+        $this->milestone_resource_validator->getValidatedArtifactsIdsToRemoveFromContent($this->user, $this->milestone, array(566, 113), null);
+    }
+
+    public function itReturnsTheValidIds() {
+        $this->assertEqual(
+            $this->milestone_resource_validator->getValidatedArtifactsIdsToRemoveFromContent($this->user, $this->milestone, array(112, 113), null),
+            array(114, 115)
+        );
+    }
+
+    public function itAllowsToAddArtifactsThatAreValidForContent() {
+        expect($this->milestone_resource_validator)->validateArtifactsFromBodyContent(array(210), $this->milestone, $this->user)->once();
+
+        $this->milestone_resource_validator->getValidatedArtifactsIdsToRemoveFromContent($this->user, $this->milestone, null, array(210));
+    }
+
+    public function itDoesntAddWhenArrayIsEmpty() {
+        expect($this->milestone_resource_validator)->validateArtifactsFromBodyContent()->never();
+
+        $this->milestone_resource_validator->getValidatedArtifactsIdsToRemoveFromContent($this->user, $this->milestone, null, null);
+    }
+
+    public function itForbidsToAddArtifactsThatAreNotValidForContent() {
+        expect($this->milestone_resource_validator)->validateArtifactsFromBodyContent(array(210), $this->milestone, $this->user)->once();
+        stub($this->milestone_resource_validator)->validateArtifactsFromBodyContent()->throws(new \Exception());
+
+        $this->expectException();
+
+        $this->milestone_resource_validator->getValidatedArtifactsIdsToRemoveFromContent($this->user, $this->milestone, null, array(210));
+    }
+
+    public function itReturnsTheAddedIdsPlusTheExistingOne() {
+        $this->assertEqual(
+            $this->milestone_resource_validator->getValidatedArtifactsIdsToRemoveFromContent($this->user, $this->milestone, null, array(210)),
+            array(112, 113, 114, 115, 210)
+        );
+    }
+
+    public function itAllowsToAddAndRemoveInSameTime() {
+        $this->assertEqual(
+            $this->milestone_resource_validator->getValidatedArtifactsIdsToRemoveFromContent($this->user, $this->milestone, array(113, 115), array(210)),
+            array(112, 114, 210)
+        );
+    }
+
+    public function itSkipsWhenAnElementIsAddedAndRemovedAtSameTime() {
+        $this->assertEqual(
+            $this->milestone_resource_validator->getValidatedArtifactsIdsToRemoveFromContent($this->user, $this->milestone, array(114, 113), array(113, 210)),
+            array(112, 113, 115, 210)
+        );
+    }
+
+    public function itDoesntAddAnElementAlreadyInContent() {
+        $this->assertEqual(
+            $this->milestone_resource_validator->getValidatedArtifactsIdsToRemoveFromContent($this->user, $this->milestone, null, array(113)),
+            array(112, 113, 114, 115)
+        );
+    }
+}

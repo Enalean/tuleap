@@ -1341,12 +1341,17 @@ class MockGenerator {
      *    @access private
      */
     function _extendClassCode($methods) {
-        $code  = "class " . $this->_mock_class . " extends " . $this->_class . " {\n";
+        $mock_class  = $this->_mock_class;
+        $class       = $this->_class;
+        $constructor = $this->_mock_class;
+
+        $code  = $this->getNamespace($mock_class, $class, $constructor);
+        $code .= "class " . $mock_class . " extends " . $class . " {\n";
         $code .= "    var \$_mock;\n";
         $code .= $this->_addMethodList($methods);
         $code .= "\n";
-        $code .= "    function " . $this->_mock_class . "() {\n";
-        $code .= "        \$this->_mock = &new " . $this->_mock_base . "();\n";
+        $code .= "    function " . $constructor . "() {\n";
+        $code .= "        \$this->_mock = new " . $this->_mock_base . "();\n";
         $code .= "        \$this->_mock->disableExpectationNameChecks();\n";
         $code .= "    }\n";
         $code .= $this->_chainMockReturns();
@@ -1354,6 +1359,21 @@ class MockGenerator {
         $code .= $this->_chainThrowMethods();
         $code .= $this->_overrideMethods($methods);
         $code .= "}\n";
+        return $code;
+    }
+
+    private function getNamespace(&$mock_class, &$class, &$constructor) {
+        $code = '';
+        $last_backslash = strrpos($this->_class, '\\');
+        if ($last_backslash !== false) {
+            $namespace   = substr($this->_class, 0, $last_backslash);
+            $class       = substr($this->_class, $last_backslash+1);
+            $mock_class  = substr($mock_class, $last_backslash+1);
+            $constructor = '__construct';
+
+            $code .= "namespace ".$namespace.";\n";
+            $code .= "use SimpleMock;\n";
+        }
         return $code;
     }
 
