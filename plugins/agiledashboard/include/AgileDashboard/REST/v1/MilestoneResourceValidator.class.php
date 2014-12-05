@@ -76,6 +76,12 @@ class MilestoneResourceValidator {
         $this->backlog_item_collection_factory = $backlog_row_collection_factory;
     }
 
+    /**
+     * @throws IdsFromBodyAreNotUniqueException
+     * @throws ArtifactDoesNotExistException
+     * @throws ArtifactIsNotInBacklogTrackerException
+     * @throws ArtifactIsClosedOrAlreadyPlannedInAnotherMilestone
+     */
     public function validateArtifactsFromBodyContent(array $ids, Planning_Milestone $milestone, PFUser $user) {
         $open_unplanned = null;
 
@@ -126,6 +132,11 @@ class MilestoneResourceValidator {
         return count($ids) == count($ids_unique);
     }
 
+    /**
+     * @throws ArtifactDoesNotExistException
+     * @throws ArtifactIsNotInBacklogTrackerException
+     * @throws ArtifactIsClosedOrAlreadyPlannedInAnotherMilestone
+     */
     private function getArtifactsFromBodyContent(
         array $ids,
         array $backlog_tracker_ids,
@@ -262,30 +273,14 @@ class MilestoneResourceValidator {
     }
 
     public function getValidatedArtifactsIdsToRemoveFromContent(PFUser $user, Planning_Milestone $milestone, $remove, $add) {
-        $indexed_linked_artifacts = $this->getIndexedLinkedArtifactIds($user, $milestone);
-        $remove                   = $remove != null ? $remove : array();
-        $add                      = $add    != null ? $add    : array();
-
-        $to_remove = $this->getIdsToRemoveThatAreNotInAddArray($remove, $add);
-        $to_add    = $this->getIdsToAddThatAreNotInRemoveArray($remove, $add);
-        foreach ($to_remove as $id) {
-            if (! isset($indexed_linked_artifacts[$id])) {
-                throw new ArtifactIsNotInMilestoneContentException($milestone->getArtifactId(), $id);
-            }
-            unset($indexed_linked_artifacts[$id]);
-        }
-        if (count($to_add)) {
-            $this->validateArtifactsFromBodyContent($to_add, $milestone, $user);
-        }
-
-        return array_unique(array_merge(array_keys($indexed_linked_artifacts), $to_add));
-    }
-
-    private function getIdsToRemoveThatAreNotInAddArray($remove, $add) {
-        return array_diff($remove, $add);
-    }
-
-    private function getIdsToAddThatAreNotInRemoveArray($remove, $add) {
-        return array_diff($add, $remove);
+        $validator = new PatchAddRemoveValidator(
+            $this->getIndexedLinkedArtifactIds($user, $milestone),
+            new PatchAddContentValidator(
+                $this,
+                $milestone,
+                $user
+            )
+        );
+        return $validator->validate($milestone->getArtifactId(), $remove, $add);
     }
 }

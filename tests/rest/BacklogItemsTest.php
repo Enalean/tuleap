@@ -180,6 +180,45 @@ class BacklogItemsTest extends RestBase {
         $this->assertEquals($response->getStatusCode(), 404);
     }
 
+    public function testPatchChildrenAdd() {
+        $uri = 'backlog_items/'.$this->stories_ids[1].'/children';
+        $backlog_items = $this->getResponse($this->client->get($uri))->json();
+
+        $first_id  = $backlog_items[0]['id'];
+        $second_id = $backlog_items[1]['id'];
+        $third_id  = $this->createTask("Bla bla bla", "On going");
+
+        $response = $this->getResponse($this->client->patch($uri, null, json_encode(array(
+            'order' => array(
+                'ids'         => array($third_id),
+                'direction'   => 'after',
+                'compared_to' => $first_id
+            ),
+            'add' => array(
+                $third_id
+            )
+        ))));
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $this->assertEquals(
+            array(
+                $first_id,
+                $third_id,
+                $second_id,
+            ),
+            $this->getIdsOrderedByPriority($uri)
+        );
+    }
+
+    private function getIdsOrderedByPriority($uri) {
+        $response = $this->getResponse($this->client->get($uri));
+        $actual_order = array();
+        foreach($response->json() as $backlog_element) {
+            $actual_order[] = $backlog_element['id'];
+        }
+        return $actual_order;
+    }
+
     private function createStoriesAndTasks() {
         foreach ($this->backlog_items_datas as $backlog_item_data) {
 
@@ -200,17 +239,20 @@ class BacklogItemsTest extends RestBase {
     private function createTasksForStory($story) {
         $created_tasks = array();
         foreach ($story['Content'] as $task) {
-            $tracker      = $this->tracker_test_helper->getTrackerRest('task');
-            $created_task = $tracker->createArtifact(
-                array(
-                    $tracker->getSubmitTextValue('Summary', $task['Summary']),
-                    $tracker->getSubmitListValue('Status', $task['Status'])
-                )
-            );
-
-            $created_tasks[] = $created_task['id'];
+            $created_tasks[] = $this->createTask($task['Summary'], $task['Status']);
         }
 
         return $created_tasks;
+    }
+
+    private function createTask($name, $status) {
+        $tracker = $this->tracker_test_helper->getTrackerRest('task');
+        $task = $tracker->createArtifact(
+            array(
+                $tracker->getSubmitTextValue('Summary', $name),
+                $tracker->getSubmitListValue('Status', $status)
+            )
+        );
+        return $task['id'];
     }
 }

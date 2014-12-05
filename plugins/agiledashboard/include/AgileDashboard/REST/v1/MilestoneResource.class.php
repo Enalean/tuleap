@@ -119,7 +119,7 @@ class MilestoneResource {
             $this->backlog_item_collection_factory
         );
 
-        $this->artifactlink_updater            = new ArtifactLinkUpdater();
+        $this->artifactlink_updater            = new ArtifactLinkUpdater($tracker_form_element_factory);
         $this->milestone_content_updater       = new MilestoneContentUpdater($tracker_form_element_factory, $this->artifactlink_updater);
         $this->milestone_submilestones_updater = new MilestoneSubMilestonesUpdater($tracker_form_element_factory, $this->milestone_factory, $this->artifactlink_updater);
 
