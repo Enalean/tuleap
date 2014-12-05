@@ -1,3 +1,6 @@
+Version 1.107 - Tuleap 7.8
+    * part of story #7577 display a Kanban cardwall (Can use kanban without having to configure scrum)
+
 Version 1.106 - Tuleap 7.8
     * story #7511: PATCH /backlog_items/{id}/children- remove and add properties
 
