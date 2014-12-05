@@ -54,45 +54,6 @@ Git plugins depends on gitolite 1.5.9 or 2.3.1 (that depends of git >= 1.7)
 More gitolite info can be found on gitolite web site:
 Reference: http://sitaramc.github.com/gitolite/doc/1-INSTALL.html#_package_method
 
-=== Access with HTTP/S ===
-
-How to enable git for http/https
---------------------------------
-
-Requirement: you will need a dedicated name and IP address to deliver git over *http(s).
-If your server is 'example.com', git will be delivered on
-'http://git.example.com'
-
-Sudo configuration
-------------------
-Copy the snippet in etc/sudoers.d/gitolite-http in central sudo configuration
-(use visudo).
-
-Apache configuration
---------------------
-
-Copy and adapt (dbauthuser) appropriate apache config (depending on your OS version)
-from plugins/git/etc/httpd/git.conf.rhelX.dist to /etc/httpd/conf.d/tuleap-plugins/git-http.conf
-
--> note that, by default this will grant access to git repositories in both
-   HTTP and HTTPS. If you only want HTTPS, you shall copy the content of the snippet
-   into /etc/httpd/conf/ssl.conf virtual host
-
--> you will need to adapt the authentication. By default it's mysql based but
-   you might want to use ldap or perl depending of your setup.
-
--> restart apache (service httpd restart)
-
-Tuleap configuration
---------------------
-
-Update 'git_http_url' in /etc/tuleap/plugins/git/config.inc
-
-Test
-----
-After restart, you should be able to clone/push:
-git clone https://example.com/git/projectname/reponame.git
-
 === Git ===
 
 Minimum version required for online editing >= 1.7.4
