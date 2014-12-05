@@ -30,6 +30,8 @@ use Tracker_SlicedArtifactsBuilder;
 use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_Exception_CannotRankWithMyself;
 use Tracker_Artifact;
+use TrackerFactory;
+use Tracker_FormElementFactory;
 
 /**
  * Wrapper for Backlog_Items related REST methods
@@ -39,14 +41,24 @@ class BacklogItemResource {
     const MAX_LIMIT = 100;
 
     /** @var Tracker_ArtifactFactory */
-    private $tracker_artifact_factory;
+    private $artifact_factory;
 
     /** @var UserManager */
     private $user_manager;
 
+    /* @var TrackerFactory */
+    private $tracker_factory;
+
+    /** @var BacklogItemsUpdater */
+    private $artifactlink_updater;
+
     public function __construct() {
-        $this->tracker_artifact_factory = Tracker_ArtifactFactory::instance();
-        $this->user_manager             = UserManager::instance();
+        $this->artifact_factory     = Tracker_ArtifactFactory::instance();
+        $this->user_manager         = UserManager::instance();
+        $this->tracker_factory      = TrackerFactory::instance();
+        $this->artifactlink_updater = new ArtifactLinkUpdater(
+            Tracker_FormElementFactory::instance()
+        );
     }
 
     /**
@@ -108,30 +120,53 @@ class BacklogItemResource {
      *
      * @param int                                                $id    Id of the Backlog Item
      * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation $order Order of the children {@from body}
+     * @param array                                              $add    Ids to add to milestone content {@from body}{@type int}
+     * @param array                                              $remove Ids to remove from milestone content {@from body}{@type int}
      *
      * @throws 400
      * @throws 404
      * @throws 409
      */
-    protected function patch($id, OrderRepresentation $order) {
-        $order->checkFormat($order);
+    protected function patch($id, OrderRepresentation $order = null, array $add = null, array $remove = null) {
 
         $artifact = $this->getArtifact($id);
         $user     = $this->getCurrentUser();
 
         try {
-            $order_validator = new OrderValidator($this->getChildrenArtifactIds($user, $artifact));
-            $order_validator->validate($order);
+            $indexed_children_ids = $this->getChildrenArtifactIds($user, $artifact);
 
-            $dao = new Tracker_Artifact_PriorityDao();
-            if ($order->direction === OrderRepresentation::BEFORE) {
-                $dao->moveListOfArtifactsBefore($order->ids, $order->compared_to);
-            } else {
-                $dao->moveListOfArtifactsAfter($order->ids, $order->compared_to);
+            if ($add || $remove) {
+                $validator = new PatchAddRemoveValidator(
+                    $indexed_children_ids,
+                    new PatchAddBacklogItemsValidator(
+                        $this->artifact_factory,
+                        $this->tracker_factory->getPossibleChildren($artifact->getTracker()),
+                        $id
+                    )
+                );
+                $backlog_items_ids = $validator->validate($id, $remove, $add);
+
+                $this->artifactlink_updater->update($backlog_items_ids, $artifact, $user, new FilterValidBacklogItems());
+                $indexed_children_ids = array_flip($backlog_items_ids);
+            }
+
+            if ($order) {
+                $order->checkFormat($order);
+                $order_validator = new OrderValidator($indexed_children_ids);
+                $order_validator->validate($order);
+
+                $dao = new Tracker_Artifact_PriorityDao();
+                if ($order->direction === OrderRepresentation::BEFORE) {
+                    $dao->moveListOfArtifactsBefore($order->ids, $order->compared_to);
+                } else {
+                    $dao->moveListOfArtifactsAfter($order->ids, $order->compared_to);
+                }
             }
         } catch (IdsFromBodyAreNotUniqueException $exception) {
             throw new RestException(409, $exception->getMessage());
         } catch (OrderIdOutOfBoundException $exception) {
+            throw new RestException(409, $exception->getMessage());
+        } catch (ArtifactCannotBeChildrenOfException $exception) {
             throw new RestException(409, $exception->getMessage());
         } catch (Tracker_Artifact_Exception_CannotRankWithMyself $exception) {
             throw new RestException(400, $exception->getMessage());
@@ -141,7 +176,7 @@ class BacklogItemResource {
     }
 
     private function getArtifact($id) {
-        $artifact = $this->tracker_artifact_factory->getArtifactById($id);
+        $artifact = $this->artifact_factory->getArtifactById($id);
 
         if (! $artifact) {
             throw new RestException(404, 'Backlog Item not found');
