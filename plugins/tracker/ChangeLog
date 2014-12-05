@@ -1,3 +1,6 @@
+Version 5.527 - Tuleap 7.8
+    * request #7669 AD: only one milestone is displayed in past section
+
 Version 5.526 - Tuleap 7.8
     * story #7511: Drag'nDrop backlog items (PATCH /backlog_items/{id}/children should check items belong to {id}, PATCH /milestones/:id/backlog)
 
