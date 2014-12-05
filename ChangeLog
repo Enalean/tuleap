@@ -12,6 +12,7 @@ Version 7.8 (Not released yet)
 	* request #7631: legacy docman import script doesn't strip-out html entities
 	* request #7646: Ftp files can't be moved in FRS
 	* request #7653: Import of new agile dashboard doesn't activate "Scrum" mode
+	* request #7647: Notices on preferences page and csv defaults broken
 
 	== Development ==
 	* story #7511: Add drag'n'drop (doesn't call REST routes) and update Angular & jQuery
