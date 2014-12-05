@@ -76,7 +76,7 @@
               <name>c2</name>
               <label>c2</label>
               <formElements>
-                <formElement type="sb" ID="F96" rank="0" required="1">
+                <formElement type="sb" ID="F96" rank="0">
                   <name>status</name>
                   <label>Status</label>
                   <bind type="static" is_rank_alpha="0">

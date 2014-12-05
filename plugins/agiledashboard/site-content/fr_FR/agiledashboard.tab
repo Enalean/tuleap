@@ -142,3 +142,4 @@ plugin_agiledashboard	kanban_created	Kanban $1 créé avec succès.
 plugin_agiledashboard	kanban_creation_error	Erreur pendant la création du Kanban $1.
 plugin_agiledashboard	kanban_tracker_used	Le tracker est déjà utilisé par un autre Kanban.
 plugin_agiledashboard	lab_mode_message	<h4>Attention, aperçu pour développeurs !</h4> Veuillez notez que la fonctionnalité Kanban est en cours de développement. Les utilisateurs doivent activer le mode lab dans leurs préférences.
+plugin_agiledashboard	kanban_not_found	Le Kanban requis n'a pas pu être trouvé.

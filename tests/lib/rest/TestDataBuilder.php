@@ -173,6 +173,7 @@ class TestDataBuilder {
         $user_1->setEmail(self::TEST_USER_1_EMAIL);
         $user_1->setLanguage($GLOBALS['Language']);
         $this->user_manager->createAccount($user_1);
+        $user_1->setLabFeatures(true);
 
         $user_2 = new PFUser();
         $user_2->setUserName(self::TEST_USER_2_NAME);
@@ -454,6 +455,19 @@ class TestDataBuilder {
         echo "Create 'My first kanban'\n";
         $kanban_manager = new AgileDashboard_KanbanManager(new AgileDashboard_KanbanDao());
         $kanban_manager->createKanban('My first kanban', self::KANBAN_TRACKER_ID);
+
+        echo "Populate kanban\n";
+        $fields_data = array(
+            $this->tracker_formelement_factory->getFormElementByName(self::KANBAN_TRACKER_ID, 'summary_1')->getId() => 'Do something',
+        );
+
+        $this->tracker_artifact_factory->createArtifact(
+            $this->tracker_factory->getTrackerById(self::KANBAN_TRACKER_ID),
+            $fields_data,
+            $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME),
+            '',
+            false
+        );
 
         return $this;
     }
