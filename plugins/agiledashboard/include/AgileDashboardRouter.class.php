@@ -114,7 +114,13 @@ class AgileDashboardRouter {
      */
     public function route(Codendi_Request $request) {
         $planning_controller            = $this->buildPlanningController($request);
-        $agile_dashboard_xml_controller = new AgileDashboard_XMLController($request, $this->planning_factory, $this->milestone_factory, $this->plugin->getThemePath());
+        $agile_dashboard_xml_controller = new AgileDashboard_XMLController(
+            $request,
+            $this->planning_factory,
+            $this->milestone_factory,
+            $this->plugin->getThemePath(),
+            $this->kanban_factory
+        );
 
         switch($request->get('action')) {
             case 'show':

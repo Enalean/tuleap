@@ -28,6 +28,11 @@ require_once 'common/XmlValidator/XmlValidator.class.php';
 class AgileDashboard_XMLController extends MVC2_PluginController {
 
     /**
+     * @var AgileDashboard_KanbanFactory
+     */
+    private $kanban_factory;
+
+    /**
      *
      * @var Planning_MilestoneFactory
      */
@@ -45,13 +50,20 @@ class AgileDashboard_XMLController extends MVC2_PluginController {
      */
     private $planning_factory;
 
-    public function __construct(Codendi_Request $request, PlanningFactory $planning_factory, Planning_MilestoneFactory $milestone_factory, $plugin_theme_path) {
+    public function __construct(
+        Codendi_Request $request,
+        PlanningFactory $planning_factory,
+        Planning_MilestoneFactory $milestone_factory,
+        $plugin_theme_path,
+        AgileDashboard_KanbanFactory $kanban_factory
+    ) {
         parent::__construct('agiledashboard', $request);
 
         $this->group_id          = $request->getValidated('project_id', 'uint');
         $this->planning_factory  = $planning_factory;
         $this->milestone_factory = $milestone_factory;
         $this->plugin_theme_path = $plugin_theme_path;
+        $this->kanban_factory    = $kanban_factory;
     }
 
     public function export() {
@@ -80,7 +92,10 @@ class AgileDashboard_XMLController extends MVC2_PluginController {
         $xml_importer = new AgileDashboard_XMLImporter();
         $data = $xml_importer->toArray($xml, $this->request->get('mapping'));
 
-        $validator = new Planning_RequestValidator($this->planning_factory);
+        $validator = new Planning_RequestValidator(
+            $this->planning_factory,
+            $this->kanban_factory
+        );
 
         foreach ($data['plannings'] as $planning) {
             $request_params = array(

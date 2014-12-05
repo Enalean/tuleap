@@ -143,7 +143,7 @@ class Planning_Controller extends MVC2_PluginController {
             $this->getProjectFromRequest()->getPublicName(),
             $kanban_is_activated,
             $user,
-            $this->kanban_manager->getTrackersWithKanbanUsage($this->group_id),
+            $this->kanban_manager->getTrackersWithKanbanUsageAndHirarchy($this->group_id),
             $this->getKanbanSummaryPresenters(),
             $this->config_manager->scrumIsActivatedForProject($this->group_id),
             $scrum_is_configured
@@ -385,7 +385,7 @@ class Planning_Controller extends MVC2_PluginController {
 
     public function create() {
         $this->checkUserIsAdmin();
-        $validator = new Planning_RequestValidator($this->planning_factory);
+        $validator = new Planning_RequestValidator($this->planning_factory, $this->kanban_factory);
         
         if ($validator->isValid($this->request)) {
             $this->planning_factory->createPlanning($this->group_id,
@@ -409,12 +409,56 @@ class Planning_Controller extends MVC2_PluginController {
     private function getFormPresenter(PFUser $user, Planning $planning) {
         $group_id = $planning->getGroupId();
 
-        $available_trackers          = $this->planning_factory->getAvailableBacklogTrackers($user, $group_id);
-        $available_planning_trackers = $this->planning_factory->getAvailablePlanningTrackers($user, $group_id);
-        $cardwall_admin              = $this->getCardwallConfiguration($planning);
+        $available_trackers            = $this->planning_factory->getAvailableBacklogTrackers($user, $group_id);
+        $available_planning_trackers   = $this->planning_factory->getAvailablePlanningTrackers($user, $group_id);
+        $cardwall_admin                = $this->getCardwallConfiguration($planning);
         $available_planning_trackers[] = $planning->getPlanningTracker();
+        $kanban_tracker_ids            = $this->kanban_factory->getKanbanTrackerIds($group_id);
 
-        return new Planning_FormPresenter($planning, $available_trackers, $available_planning_trackers, $cardwall_admin);
+        $planning_trackers_filtered = $this->getTrackersFiltered(
+            $available_planning_trackers,
+            $kanban_tracker_ids,
+            $planning
+        );
+
+        $backlog_trackers_filtered = $this->getTrackersFiltered(
+            $available_trackers,
+            $kanban_tracker_ids,
+            $planning
+        );
+
+        return new Planning_FormPresenter(
+            $planning,
+            $backlog_trackers_filtered,
+            $planning_trackers_filtered,
+            $cardwall_admin,
+            $this->kanban_factory
+        );
+    }
+
+    private function getTrackersFiltered(array $trackers, array $kanban_tracker_ids, Planning $planning) {
+        $trackers_filtered = array();
+
+        foreach ($this->getPlanningTrackerPresenters($trackers, $planning) as $tracker) {
+            $trackers_filtered[] = array(
+                'name'     => $tracker->getName(),
+                'id'       => $tracker->getId(),
+                'selected' => $tracker->selectedIfBacklogTracker(),
+                'disabled' => in_array($tracker->getId(), $kanban_tracker_ids)
+            );
+        }
+
+        return $trackers_filtered;
+    }
+
+    private function getPlanningTrackerPresenters(array $trackers, Planning $planning) {
+        $tracker_presenters = array();
+
+        foreach ($trackers as $tracker) {
+            $tracker_presenters[] = new Planning_TrackerPresenter($planning, $tracker);
+        }
+
+        return $tracker_presenters;
     }
 
     private function hasCardwall(Planning $planning) {
@@ -449,7 +493,7 @@ class Planning_Controller extends MVC2_PluginController {
 
     public function update() {
         $this->checkUserIsAdmin();
-        $validator = new Planning_RequestValidator($this->planning_factory);
+        $validator = new Planning_RequestValidator($this->planning_factory, $this->kanban_factory);
         
         if ($validator->isValid($this->request)) {
             $this->planning_factory->updatePlanning($this->request->get('planning_id'),
