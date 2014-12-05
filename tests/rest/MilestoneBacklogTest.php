@@ -34,7 +34,7 @@ class MilestonesBacklogTest extends RestBase {
 
     public function testOPTIONSBacklog() {
         $response = $this->getResponse($this->client->options('milestones/'.TestDataBuilder::RELEASE_ARTIFACT_ID.'/backlog'));
-        $this->assertEquals(array('OPTIONS', 'GET', 'PUT', 'POST'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(array('OPTIONS', 'GET', 'PUT', 'POST', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGETBacklog() {

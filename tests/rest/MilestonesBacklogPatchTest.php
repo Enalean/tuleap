@@ -35,6 +35,11 @@ class MilestonesBacklogPatchTest extends RestBase {
     private $story_mul;
     private $story_div;
     private $uri;
+    private $epic_basic;
+    private $epic_adv;
+    private $epic_log;
+    private $epic_exp;
+    private $epic_fin;
 
     protected function getResponse($request) {
         return $this->getResponseByToken(
@@ -58,16 +63,7 @@ class MilestonesBacklogPatchTest extends RestBase {
         $this->createReleaseAndBacklog();
     }
 
-    private function getProject($shortname) {
-        foreach ($this->getResponse($this->client->get('projects'))->json() as $project) {
-            if ($project['shortname'] == $shortname) {
-                return $project;
-            }
-        }
-        throw new Exception("Project $shortname not found");
-    }
-
-    public function testPatchAfter() {
+    public function testPatchBacklogAfter() {
         $response = $this->getResponse($this->client->patch($this->uri, null, json_encode(array(
             'order' => array(
                 'ids'         => array($this->story_mul['id'], $this->story_div['id']),
@@ -84,11 +80,11 @@ class MilestonesBacklogPatchTest extends RestBase {
                 $this->story_div['id'],
                 $this->story_sub['id'],
             ),
-            $this->getBacklogOrder()
+            $this->getIdsOrderedByPriority($this->uri)
         );
     }
 
-    public function testPatchBefore() {
+    public function testPatchBacklogBefore() {
         $response = $this->getResponse($this->client->patch($this->uri, null, json_encode(array(
             'order' => array(
                 'ids'         => array($this->story_mul['id'], $this->story_sub['id']),
@@ -105,11 +101,11 @@ class MilestonesBacklogPatchTest extends RestBase {
                 $this->story_add['id'],
                 $this->story_div['id'],
             ),
-            $this->getBacklogOrder()
+            $this->getIdsOrderedByPriority($this->uri)
         );
     }
 
-    public function testPatchWithItemNotInBacklogRaiseErrors() {
+    public function testPatchBacklogWithItemNotInBacklogRaiseErrors() {
         $exception_thrown = false;
 
         try {
@@ -127,13 +123,73 @@ class MilestonesBacklogPatchTest extends RestBase {
         $this->assertTrue($exception_thrown, "An exception should have been thrown");
     }
 
-    private function getBacklogOrder() {
-        $response = $this->getResponse($this->client->get($this->uri));
+    public function testPatchContentBefore() {
+        $uri = 'milestones/'.$this->release['id'].'/content';
+
+        $response = $this->getResponse($this->client->patch($uri, null, json_encode(array(
+            'order' => array(
+                'ids'         => array($this->epic_basic['id'], $this->epic_log['id']),
+                'direction'   => 'before',
+                'compared_to' => $this->epic_fin['id']
+            )
+        ))));
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $this->assertEquals(
+            array(
+                $this->epic_adv['id'],
+                $this->epic_exp['id'],
+                $this->epic_basic['id'],
+                $this->epic_log['id'],
+                $this->epic_fin['id'],
+            ),
+            $this->getIdsOrderedByPriority($uri)
+        );
+    }
+
+    /**
+     * @depends testPatchContentBefore
+     */
+    public function testPatchContentAfter() {
+        $uri = 'milestones/'.$this->release['id'].'/content';
+
+        $response = $this->getResponse($this->client->patch($uri, null, json_encode(array(
+            'order' => array(
+                'ids'         => array($this->epic_exp['id'], $this->epic_adv['id']),
+                'direction'   => 'after',
+                'compared_to' => $this->epic_log['id']
+            )
+        ))));
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $this->assertEquals(
+            array(
+                $this->epic_basic['id'],
+                $this->epic_log['id'],
+                $this->epic_exp['id'],
+                $this->epic_adv['id'],
+                $this->epic_fin['id'],
+            ),
+            $this->getIdsOrderedByPriority($uri)
+        );
+    }
+
+    private function getIdsOrderedByPriority($uri) {
+        $response = $this->getResponse($this->client->get($uri));
         $actual_order = array();
         foreach($response->json() as $backlog_element) {
             $actual_order[] = $backlog_element['id'];
         }
         return $actual_order;
+    }
+
+    private function getProject($shortname) {
+        foreach ($this->getResponse($this->client->get('projects'))->json() as $project) {
+            if ($project['shortname'] == $shortname) {
+                return $project;
+            }
+        }
+        throw new Exception("Project $shortname not found");
     }
 
     private function createReleaseAndBacklog() {
@@ -147,7 +203,7 @@ class MilestonesBacklogPatchTest extends RestBase {
             array(
                 $tracker->getSubmitTextValue('Name', 'Release 2014 12 02'),
                 $tracker->getSubmitListValue('Status', 'Current'),
-                $tracker->getSubmitArtifactLinkValue($this->createReleaseBacklog())
+                $tracker->getSubmitArtifactLinkValue(array_merge($this->createReleaseBacklog(), $this->createSprint()))
             )
         );
     }
@@ -158,7 +214,28 @@ class MilestonesBacklogPatchTest extends RestBase {
         $this->story_mul = $this->createStory("mul two integers");
         $this->story_div = $this->createStory("div two integers");
 
-        return array($this->story_add['id'], $this->story_sub['id'], $this->story_mul['id'], $this->story_div['id']);
+        $this->epic_basic = $this->createEpic(
+            'Basic calculator',
+            array(
+                $this->story_add['id'],
+                $this->story_sub['id'],
+                $this->story_mul['id'],
+                $this->story_div['id']
+            )
+        );
+
+        $this->epic_adv = $this->createEpic('Advanced calculator', array());
+        $this->epic_log = $this->createEpic('Logarithm calculator', array());
+        $this->epic_exp = $this->createEpic('Expo calculator', array());
+        $this->epic_fin = $this->createEpic('Finance calculator', array());
+
+        return array(
+            $this->epic_basic['id'],
+            $this->epic_adv['id'],
+            $this->epic_log['id'],
+            $this->epic_exp['id'],
+            $this->epic_fin['id'],
+        );
     }
 
     private function createStory($i_want_to) {
@@ -169,5 +246,27 @@ class MilestonesBacklogPatchTest extends RestBase {
                 $tracker->getSubmitListValue('Status', 'To be done')
             )
         );
+    }
+
+    private function createEpic($name, array $stories) {
+        $tracker = $this->tracker_test_helper->getTrackerRest('epic');
+        return $tracker->createArtifact(
+            array(
+                $tracker->getSubmitTextValue('Summary', $name),
+                $tracker->getSubmitListValue('Status', 'Open'),
+                $tracker->getSubmitArtifactLinkValue($stories)
+            )
+        );
+    }
+
+    private function createSprint() {
+        $tracker = $this->tracker_test_helper->getTrackerRest('sprint');
+        $sprint = $tracker->createArtifact(
+            array(
+                $tracker->getSubmitTextValue('Name', 'Sprint 10'),
+                $tracker->getSubmitListValue('Status', 'Current')
+            )
+        );
+        return array($sprint['id']);
     }
 }

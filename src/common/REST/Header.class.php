@@ -66,6 +66,10 @@ class Header {
         self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::PUT, self::POST));
     }
 
+    public static function allowOptionsGetPutPostPatch() {
+        self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::PUT, self::POST, self::PATCH));
+    }
+
     public static function allowOptionsGetPutPatch() {
         self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::PUT, self::PATCH));
     }
