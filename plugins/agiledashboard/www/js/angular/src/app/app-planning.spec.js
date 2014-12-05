@@ -5,15 +5,17 @@ describe('PlanningCtrl', function() {
         project_id = 123,
         milestone_id = 1;
 
+    beforeEach(module('project'));
     beforeEach(module('planning'));
     beforeEach(module('backlog-item'));
     beforeEach(module('shared-properties'));
 
     describe('in top backlog', function() {
-        beforeEach(inject(function($controller, $rootScope, BacklogItemService, MilestoneService, SharedPropertiesService) {
+        beforeEach(inject(function($controller, $rootScope, BacklogItemService, MilestoneService, ProjectService, SharedPropertiesService) {
             $scope           = $rootScope.$new();
             itemService      = BacklogItemService;
             milestoneService = MilestoneService;
+            projectService   = ProjectService;
 
             spyOn(itemService, 'getProjectBacklogItems').andCallThrough();
             spyOn(milestoneService, 'getMilestones').andCallThrough();

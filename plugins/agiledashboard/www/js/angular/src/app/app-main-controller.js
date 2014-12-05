@@ -3,9 +3,9 @@
         .module('planning')
         .controller('MainCtrl', MainCtrl);
 
-    MainCtrl.$inject = ['$scope', '$window', 'SharedPropertiesService', 'gettextCatalog', 'BacklogItemService'];
+    MainCtrl.$inject = ['$scope', '$window', 'SharedPropertiesService', 'gettextCatalog'];
 
-    function MainCtrl($scope, $window, SharedPropertiesService, gettextCatalog, BacklogItemService) {
+    function MainCtrl($scope, $window, SharedPropertiesService, gettextCatalog) {
         _.extend($scope, {
             init: init
         });

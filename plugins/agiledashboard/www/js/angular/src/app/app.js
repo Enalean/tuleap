@@ -6,6 +6,7 @@
         'gettext',
         'angularMoment',
         'shared-properties',
+        'project',
         'backlog-item',
         'milestone',
         'project'

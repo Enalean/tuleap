@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012, 2013, 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -70,6 +70,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->_addHook(Event::IMPORT_XML_PROJECT_CARDWALL_DONE);
             $this->_addHook(Event::EXPORT_XML_PROJECT);
             $this->addHook(Event::REST_RESOURCES);
+            $this->addHook(Event::REST_RESOURCES_V2);
             $this->addHook(Event::REST_GET_PROJECT_PLANNINGS);
             $this->addHook(Event::REST_OPTIONS_PROJECT_PLANNINGS);
             $this->addHook(Event::REST_PROJECT_RESOURCES);
@@ -611,6 +612,14 @@ class AgileDashboardPlugin extends Plugin {
      */
     public function rest_resources($params) {
         $injector = new AgileDashboard_REST_ResourcesInjector();
+        $injector->populate($params['restler']);
+    }
+
+    /**
+     * @see REST_RESOURCES_V2
+     */
+    public function rest_resources_v2($params) {
+        $injector = new AgileDashboard_REST_v2_ResourcesInjector();
         $injector->populate($params['restler']);
     }
 

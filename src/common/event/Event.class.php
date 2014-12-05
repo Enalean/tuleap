@@ -604,6 +604,14 @@ class Event {
     const REST_RESOURCES = 'rest_resources';
 
     /**
+     * Register REST resources for v2
+     *
+     * Parameters:
+     *  'restler' => \Luracast\Restler\Restler
+     */
+    const REST_RESOURCES_V2 = 'rest_resources_v2';
+
+    /**
      * Allow plugin to deal with authentication
      *
      * Parameters:
