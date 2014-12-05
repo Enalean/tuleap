@@ -1,3 +1,6 @@
+Version 1.106 - Tuleap 7.8
+    * story #7511: PATCH /backlog_items/{id}/children- remove and add properties
+
 Version 1.105 - Tuleap 7.8
     * story #7511: PATCH /milestones/:id/content with 'add' and 'remove'
 
