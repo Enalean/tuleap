@@ -201,6 +201,7 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         $tracker_id  = $this->request->get('tracker-kanban');
         $tracker     = $this->tracker_factory->getTrackerById($tracker_id);
         $user        = $this->request->getCurrentUser();
+        $hierarchy   = new Tracker_Hierarchy();
 
         if (! $user->isAdmin($this->group_id)) {
              $GLOBALS['Response']->addFeedback(
@@ -221,8 +222,16 @@ class AgileDashboard_Controller extends MVC2_PluginController {
             return;
         }
 
-        if (count($this->planning_factory->getPlanningsByBacklogTracker($tracker)) > 0 ||
-            count($this->planning_factory->getPlanningByPlanningTracker($tracker)) > 0
+        try {
+            $hierarchy->getLevel($tracker_id);
+            $is_in_hierarchy = true;
+        } catch (Tracker_Hierarchy_NotInHierarchyException $exeption) {
+            $is_in_hierarchy = false;
+        }
+
+        if ((count($this->planning_factory->getPlanningsByBacklogTracker($tracker)) > 0 ||
+            count($this->planning_factory->getPlanningByPlanningTracker($tracker)) > 0) &&
+            ! $is_in_hierarchy
         ) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,

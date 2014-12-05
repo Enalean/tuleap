@@ -42,12 +42,12 @@ class AgileDashboard_KanbanDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function getTrackersWithKanbanUsage($project_id) {
+    public function getTrackersWithKanbanUsageAndHirarchy($project_id) {
         $project_id = $this->da->escapeInt($project_id);
 
         $sql = "SELECT tracker.id,
                     tracker.name,
-                    COALESCE(kanban_config.name, planning.planning_tracker_id, backlog.tracker_id) AS used
+                    COALESCE(kanban_config.name, planning.planning_tracker_id, backlog.tracker_id, TH1.parent_id, TH2.child_id) AS used
                 FROM tracker
                     LEFT JOIN plugin_agiledashboard_kanban_configuration AS kanban_config
                     ON (tracker.id = kanban_config.tracker_id)
@@ -55,6 +55,10 @@ class AgileDashboard_KanbanDao extends DataAccessObject {
                     ON (tracker.id = planning.planning_tracker_id)
                     LEFT JOIN plugin_agiledashboard_planning_backlog_tracker AS backlog
                     ON (tracker.id = backlog.tracker_id)
+                    LEFT JOIN tracker_hierarchy AS TH1
+                    ON (tracker.id = TH1.parent_id)
+                    LEFT JOIN tracker_hierarchy AS TH2
+                    ON (tracker.id = TH2.child_id)
                 WHERE tracker.group_id = $project_id
                 ORDER BY tracker.name ASC";
 
