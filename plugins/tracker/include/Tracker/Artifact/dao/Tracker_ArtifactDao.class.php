@@ -121,7 +121,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
                     LEFT JOIN tracker_semantic_status AS open_values ON (cvl.bindvalue_id = open_values.open_value_id AND open_values.tracker_id = t.id)
                 WHERE open_values.open_value_id IS NULL
                     AND t.id = $tracker_id
-                GROUP BY group_id";
+                GROUP BY id";
 
         return $this->retrieve($sql);
     }
