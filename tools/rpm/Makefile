@@ -104,6 +104,10 @@ node:
 	cd $(BASE_DIR)/plugins/agiledashboard/www/js/angular &&\
 		npm install &&\
 		bower install --allow-root --config.interactive=false &&\
+		grunt &&\
+	cd $(BASE_DIR)/plugins/agiledashboard/www/js/kanban &&\
+		npm install &&\
+		bower install --allow-root --config.interactive=false &&\
 		grunt
 
 $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep less
@@ -119,10 +123,12 @@ $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep less
 			 	-path "*/.DS_Store" -o\
 			 	-path $(PKG_NAME)-$(version)/plugins/tests -o\
 			 	-path $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/angular -o\
+				-path $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/kanban -o\
 			 	-path $(PKG_NAME)-$(version)/plugins/maillog \)\
 				-prune -o -print \
 			&& \
 		  	find $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/angular/bin; \
+			find $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/kanban/bin; \
 		} | \
 		cpio -o -H ustar --quiet |\
 		gzip > $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz
