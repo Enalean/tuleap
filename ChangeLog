@@ -24,7 +24,7 @@ Version 7.8 (Not released yet)
 	* story #7599: have a dedicate queue for git events
 
 	== Plugins ==
-	* git: 3.146
+	* git: 3.147
 	* fulltextsearch: 0.104
 	* mediawiki: 0.58
 	* tracker: 5.527

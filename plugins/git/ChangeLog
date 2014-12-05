@@ -1,3 +1,6 @@
+Version 3.147 - Tuleap 7.8
+    * request #7670 - Move git over http/s documentation to doc-en.tuleap.net
+
 Version 3.146 - Tuleap 7.8
     * process each GIT_REPO_UPDATE events independently
 
