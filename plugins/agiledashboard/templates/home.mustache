@@ -13,6 +13,11 @@
         <div class="span8 scrum-block">
     {{/ user_can_see_kanban }}
 
+            {{^ scrum_is_configured }}
+                {{> empty-home }}
+            {{/ scrum_is_configured }}
+
+            {{# scrum_is_configured }}
             <div class="ad-homepage-title">
                 {{# user_can_see_kanban }}<h2>Scrum</h2>{{/ user_can_see_kanban }}
                 <a href="?action=show-top&group_id={{ group_id }}&pane=topblcontent" class="btn go-to-backlog">
@@ -108,6 +113,7 @@
                     {{/ last_level_milestone_presenters }}
                 </div>
             </div>
+        {{/ scrum_is_configured }}
         </div>
     {{/ scrum_activated }}
 

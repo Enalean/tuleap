@@ -49,6 +49,9 @@ class Planning_Presenter_HomePresenter {
     /** @var bool */
     public $scrum_activated;
 
+    /** @var bool */
+    public $scrum_is_configured;
+
     public function __construct(
         $milestone_access_presenters,
         $group_id,
@@ -59,7 +62,8 @@ class Planning_Presenter_HomePresenter {
         PFUser $user,
         $trackers,
         array $kanban_summary_presenters,
-        $scrum_activated
+        $scrum_activated,
+        $scrum_is_configured
     ) {
         $this->milestone_presenters            = $milestone_access_presenters;
         $this->group_id                        = $group_id;
@@ -71,6 +75,15 @@ class Planning_Presenter_HomePresenter {
         $this->trackers                        = $trackers;
         $this->kanban_summary_presenters       = $kanban_summary_presenters;
         $this->scrum_activated                 = $scrum_activated;
+        $this->scrum_is_configured             = $scrum_is_configured;
+    }
+
+    public function nothing_set_up() {
+        if (! $this->user_is_admin()) {
+            return $GLOBALS['Language']->getText('plugin_agiledashboard', 'nothing_set_up_generic');
+        }
+
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'nothing_set_up_admin', array('/plugins/agiledashboard/?group_id='.$this->group_id.'&action=admin'));
     }
 
     public function user_cant_see_anything() {
