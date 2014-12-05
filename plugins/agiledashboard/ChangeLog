@@ -1,3 +1,6 @@
+Version 1.108 - Tuleap 7.8
+    * story #7577 display a Kanban cardwall (Kanban can uses only trackers not used in Scrum, Tracker with a hierarchy are not selectable for new Kanban, Deleted trackers don't appear in Kanban creation)
+
 Version 1.107 - Tuleap 7.8
     * part of story #7577 display a Kanban cardwall (Can use kanban without having to configure scrum)
 
