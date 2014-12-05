@@ -60,6 +60,7 @@ class AgileDashboard_KanbanDao extends DataAccessObject {
                     LEFT JOIN tracker_hierarchy AS TH2
                     ON (tracker.id = TH2.child_id)
                 WHERE tracker.group_id = $project_id
+                    AND tracker.deletion_date IS NULL
                 ORDER BY tracker.name ASC";
 
         return $this->retrieve($sql);
