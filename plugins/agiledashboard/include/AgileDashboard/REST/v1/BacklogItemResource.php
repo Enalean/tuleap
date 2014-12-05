@@ -56,9 +56,7 @@ class BacklogItemResource {
         $this->artifact_factory     = Tracker_ArtifactFactory::instance();
         $this->user_manager         = UserManager::instance();
         $this->tracker_factory      = TrackerFactory::instance();
-        $this->artifactlink_updater = new ArtifactLinkUpdater(
-            Tracker_FormElementFactory::instance()
-        );
+        $this->artifactlink_updater = new ArtifactLinkUpdater();
     }
 
     /**
