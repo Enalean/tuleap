@@ -19,29 +19,30 @@
  */
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use \BacklogItemReference;
-use \Tuleap\REST\TokenAuthentication;
-use \Tuleap\REST\ProjectAuthorization;
-use \Tuleap\REST\Header;
-use \Luracast\Restler\RestException;
-use \PlanningFactory;
-use \Tracker_ArtifactFactory;
-use \Tracker_FormElementFactory;
-use \TrackerFactory;
-use \Planning_MilestoneFactory;
-use \AgileDashboard_BacklogItemDao;
-use \AgileDashboard_Milestone_Backlog_BacklogStrategyFactory;
-use \AgileDashboard_Milestone_Backlog_BacklogItemBuilder;
-use \AgileDashboard_Milestone_MilestoneStatusCounter;
-use \Tracker_ArtifactDao;
-use \UserManager;
-use \Planning_Milestone;
-use \PFUser;
-use \AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
-use \Tracker_NoChangeException;
-use \EventManager;
-use \URLVerification;
-use \Tracker_Artifact_PriorityDao;
+use BacklogItemReference;
+use Tuleap\REST\TokenAuthentication;
+use Tuleap\REST\ProjectAuthorization;
+use Tuleap\REST\Header;
+use Luracast\Restler\RestException;
+use PlanningFactory;
+use Tracker_ArtifactFactory;
+use Tracker_FormElementFactory;
+use TrackerFactory;
+use Planning_MilestoneFactory;
+use AgileDashboard_BacklogItemDao;
+use AgileDashboard_Milestone_Backlog_BacklogStrategyFactory;
+use AgileDashboard_Milestone_Backlog_BacklogItemBuilder;
+use AgileDashboard_Milestone_MilestoneStatusCounter;
+use Tracker_ArtifactDao;
+use UserManager;
+use Planning_Milestone;
+use PFUser;
+use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
+use Tracker_NoChangeException;
+use EventManager;
+use URLVerification;
+use Tracker_Artifact_PriorityDao;
+use AgileDashboard_Milestone_Backlog_IBacklogItem;
 
 /**
  * Wrapper for milestone related REST methods
@@ -367,55 +368,6 @@ class MilestoneResource {
     }
 
     /**
-     * Get backlog
-     *
-     * Get the backlog items of a given milestone that can be planned in a sub-milestone
-     *
-     * @url GET {id}/backlog
-     *
-     * @param int $id     Id of the milestone
-     * @param int $limit  Number of elements displayed per page
-     * @param int $offset Position of the first element to display
-     *
-     * @return array {@type Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentation}
-     *
-     * @throws 403
-     * @throws 404
-     */
-    protected function getBacklog($id, $limit = 10, $offset = 0) {
-        $this->checkContentLimit($limit);
-
-        $user          = $this->getCurrentUser();
-        $milestone     = $this->getMilestoneById($user, $id);
-        $backlog_items = $this->getMilestoneBacklogItems($user, $milestone);
-
-        $backlog_items_representation = array();
-
-        foreach ($backlog_items as $backlog_item) {
-            $backlog_item_representation = new BacklogItemRepresentation();
-            $backlog_item_representation->build($backlog_item);
-            $backlog_items_representation[] = $backlog_item_representation;
-        }
-
-        $this->sendAllowHeaderForBacklog();
-        $this->sendPaginationHeaders($limit, $offset, count($backlog_items_representation));
-
-        return array_slice($backlog_items_representation, $offset, $limit);
-    }
-
-    /**
-     * @url OPTIONS {id}/backlog
-     *
-     * @param int $id Id of the milestone
-     *
-     * @throws 403
-     * @throws 404
-     */
-    public function optionsBacklog($id) {
-        $this->sendAllowHeaderForBacklog();
-    }
-
-    /**
      * Put content in a given milestone
      *
      * Put the new content of a given milestone.
@@ -532,14 +484,66 @@ class MilestoneResource {
     }
 
     /**
-     * Defined backlog items
+     * @url OPTIONS {id}/backlog
+     *
+     * @param int $id Id of the milestone
+     *
+     * @throws 403
+     * @throws 404
+     */
+    public function optionsBacklog($id) {
+        $this->sendAllowHeaderForBacklog();
+    }
+
+    /**
+     * Get backlog
+     *
+     * Get the backlog items of a given milestone that can be planned in a sub-milestone
+     *
+     * @url GET {id}/backlog
+     *
+     * @param int $id     Id of the milestone
+     * @param int $limit  Number of elements displayed per page
+     * @param int $offset Position of the first element to display
+     *
+     * @return array {@type Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentation}
+     *
+     * @throws 403
+     * @throws 404
+     */
+    protected function getBacklog($id, $limit = 10, $offset = 0) {
+        $this->checkContentLimit($limit);
+
+        $user          = $this->getCurrentUser();
+        $milestone     = $this->getMilestoneById($user, $id);
+        $backlog_items = $this->getMilestoneBacklogItems($user, $milestone);
+
+        $backlog_items_representation = array();
+
+        foreach ($backlog_items as $backlog_item) {
+            $backlog_item_representation = new BacklogItemRepresentation();
+            $backlog_item_representation->build($backlog_item);
+            $backlog_items_representation[] = $backlog_item_representation;
+        }
+
+        $this->sendAllowHeaderForBacklog();
+        $this->sendPaginationHeaders($limit, $offset, count($backlog_items_representation));
+
+        return array_slice($backlog_items_representation, $offset, $limit);
+    }
+
+    /**
+     * Update backlog items priorities
      *
      * The array of ids given as argument will:
      * <ul>
-     *  <li>define the list of artifacts that are part of the backlog</li>
      *  <li>update the priorities according to order in given array</li>
-     *  <li>remove the items that are part of backlog but not part of given ids</li>
      * </ul>
+     * <br />
+     * <strong>WARNING:</strong> PUT will NOT add/remove element in backlog.
+     * Remove from backlog doesn't make sense but add might be useful to deal
+     * with inconsistent items. You can have a look at PATCH {id}/backlog for
+     * add.
      *
      * @url PUT {id}/backlog
      *
@@ -571,7 +575,7 @@ class MilestoneResource {
     }
 
     /**
-     * Partial re-order of milestone backlog relative to one element
+     * Partial re-order of milestone backlog relative to one element.
      *
      * <br>
      * Example:
@@ -580,6 +584,9 @@ class MilestoneResource {
      *   "ids" : [123, 789, 1001],
      *   "direction": "before",
      *   "compared_to": 456
+     * },
+     * "add": {
+     *   [123]
      * }
      * </pre>
      *
@@ -590,25 +597,38 @@ class MilestoneResource {
      *
      * @param int                                                $id    Id of the milestone Item
      * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation $order Order of the children {@from body}
+     * @param array                                              $add    Ids to add to backlog content {@from body}{@type int}
      *
      * @throw 400
      * @throw 404
      * @throw 409
      */
-    protected function patchBacklog($id, OrderRepresentation $order) {
-        $order->checkFormat($order);
+    protected function patchBacklog($id, OrderRepresentation $order = null, array $add = null) {
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
 
+        $to_add = array();
         try {
-            $ids = array_merge($order->ids, array($order->compared_to));
-            $this->milestone_validator->validateArtifactIdsAreInOpenAndUnplannedMilestone($ids, $milestone, $user);
+            if ($add) {
+                $to_add = $this->milestone_validator->validateArtifactIdsCanBeAddedToBacklog($add, $milestone, $user);
+                $this->addMissingElementsToBacklog($milestone, $user, $to_add);
+            }
+        } catch (Tracker_NoChangeException $exception) {
+            // nothing to do
+        } catch (\Exception $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
 
-            $dao = new Tracker_Artifact_PriorityDao();
-            if ($order->direction === OrderRepresentation::BEFORE) {
-                $dao->moveListOfArtifactsBefore($order->ids, $order->compared_to);
-            } else {
-                $dao->moveListOfArtifactsAfter($order->ids, $order->compared_to);
+        try {
+            if ($order) {
+                $order->checkFormat($order);
+                $this->milestone_validator->validateArtifactIdsAreInOpenAndUnplannedMilestone(
+                    $this->filterOutAddedElements($order, $add),
+                    $milestone,
+                    $user
+                );
+
+                $this->updateArtifactPriorities($order);
             }
         } catch (IdsFromBodyAreNotUniqueException $exception) {
             throw new RestException(409, $exception->getMessage());
@@ -618,6 +638,22 @@ class MilestoneResource {
             throw new RestException(400, $exception->getMessage());
         } catch (\Exception $exception) {
             throw new RestException(400, $exception->getMessage());
+        }
+    }
+
+    private function addMissingElementsToBacklog(Planning_Milestone $milestone, PFUser $user, array $to_add) {
+        if (count($to_add) > 0) {
+            $fields_data = $this->artifactlink_updater->formatFieldDatas($milestone->getArtifact()->getAnArtifactLinkField($user), $to_add, array());
+            $this->artifactlink_updater->unlinkAndLinkElements($milestone->getArtifact(), $fields_data, $user, $to_add);
+        }
+    }
+
+    private function filterOutAddedElements(OrderRepresentation $order, array $to_add = null) {
+        $ids_to_validate = array_merge($order->ids, array($order->compared_to));
+        if (is_array($to_add)) {
+            return array_diff($ids_to_validate, $to_add);
+        } else {
+            return $ids_to_validate;
         }
     }
 

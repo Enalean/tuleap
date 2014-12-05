@@ -207,6 +207,68 @@ class MilestoneResourceValidator {
 
     /**
      * @throws IdsFromBodyAreNotUniqueException
+     * @throws ArtifactCannotBeInBacklogOfException
+     */
+    public function validateArtifactIdsCanBeAddedToBacklog(array $to_add, Planning_Milestone $milestone, PFUser $user) {
+        if (! $this->idsAreUnique($to_add)) {
+            throw new IdsFromBodyAreNotUniqueException();
+        }
+
+        $ids_to_add = $this->filterArtifactIdsAlreadyInBacklog($to_add, $milestone, $user);
+        $indexed_children_backlog_trackers = $this->getIndexedChildrenBacklogTrackers($milestone);
+
+        foreach($ids_to_add as $id) {
+            $artifact = $this->tracker_artifact_factory->getArtifactById($id);
+            if (! isset($indexed_children_backlog_trackers[$artifact->getTrackerId()])) {
+                throw new ArtifactCannotBeInBacklogOfException($milestone->getArtifactId(), $artifact->getId(), $artifact->getTracker()->getItemName(), array_keys($indexed_children_backlog_trackers));
+            }
+        }
+
+        return $ids_to_add;
+    }
+
+    private function filterArtifactIdsAlreadyInBacklog(array $ids, Planning_Milestone $milestone, PFUser $user) {
+        $indexed_backlog_items = $this->getIndexedBacklogItems($user, $milestone);
+        $to_add = array();
+        foreach ($ids as $id) {
+            if (! isset($indexed_backlog_items[$id])) {
+                $to_add[] = $id;
+            }
+        }
+        return $to_add;
+    }
+
+    private function getIndexedChildrenBacklogTrackers(Planning_Milestone $milestone) {
+        $children_backlog_trackers = array();
+        $children_planning = $this->planning_factory->getChildrenPlanning($milestone->getPlanning());
+        if ($children_planning) {
+            foreach ($children_planning->getBacklogTrackersIds() as $id) {
+                $children_backlog_trackers[$id] = true;
+            }
+        }
+        return $children_backlog_trackers;
+    }
+
+    private function getIndexedBacklogItems(PFUser $user, Planning_Milestone $milestone) {
+        $index = array();
+        $backlog_items = $this->getMilestoneBacklogItems($user, $milestone);
+        foreach ($backlog_items as $item) {
+            $index[$item->id()] = true;
+        }
+        return $index;
+    }
+
+    private function getMilestoneBacklogItems(PFUser $user, $milestone) {
+        return $this->backlog_item_collection_factory->getUnplannedOpenCollection(
+            $user,
+            $milestone,
+            $this->backlog_strategy_factory->getBacklogStrategy($milestone),
+            false
+        );
+    }
+
+    /**
+     * @throws IdsFromBodyAreNotUniqueException
      * @throws ArtifactIsNotInOpenAndUnassignedTopBacklogItemsException
      */
     public function validateArtifactIdsAreInOpenAndUnassignedTopBacklog(array $ids, PFUser $user, Project $project) {

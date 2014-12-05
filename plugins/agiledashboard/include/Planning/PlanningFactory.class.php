@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/../../../tracker/include/Tracker/TrackerFactory.class.php';
-
 class PlanningFactory {
 
     /**
@@ -672,6 +670,13 @@ class PlanningFactory {
         return $trackers;
     }
 
+    public function getChildrenPlanning(Planning $planning) {
+        $children = $this->tracker_factory->getHierarchyFactory()->getChildren($planning->getPlanningTrackerId());
+        if (count($children) == 0) {
+            return null;
+        } else {
+            $planning_tracker = array_shift($children);
+            return $this->getPlanningByPlanningTracker($planning_tracker);
+        }
+    }
 }
-
-?>
