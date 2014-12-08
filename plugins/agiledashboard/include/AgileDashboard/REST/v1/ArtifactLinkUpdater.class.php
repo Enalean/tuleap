@@ -26,27 +26,17 @@ use Tracker_Artifact_Exception_CannotRankWithMyself;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_Artifact;
 use PFUser;
-use Tracker_FormElementFactory;
 
 class ArtifactLinkUpdater {
 
-    /** @var Tracker_FormElementFactory */
-    private $form_element_factory;
-
-    public function __construct(Tracker_FormElementFactory $form_element_factory) {
-        $this->form_element_factory = $form_element_factory;
-    }
-
-
     public function update(array $new_backlogitems_ids, Tracker_Artifact $artifact, PFUser $current_user, IFilterValidElementsToUnkink $filter) {
-        $artlink_fields        = $this->form_element_factory->getUsedArtifactLinkFields($artifact->getTracker());
-
-        if (! count($artlink_fields)) {
+        $artlink_field = $artifact->getAnArtifactLinkField($current_user);
+        if (! $artlink_field) {
             return;
         }
 
         $fields_data = $this->getFieldsDataForNewChangeset(
-            $artlink_fields[0],
+            $artlink_field,
             $artifact,
             $current_user,
             $filter,
@@ -63,24 +53,24 @@ class ArtifactLinkUpdater {
         IFilterValidElementsToUnkink $filter,
         array $new_submilestones_ids
     ) {
-        $elements_already_linked = $this->getElementsAlreadyLinkedToMilestone($artifact, $current_user);
+        $artifact_ids_already_linked = $this->getElementsAlreadyLinkedToArtifact($artifact, $current_user);
 
-        $backlogitems_to_be_unlinked = $this->getAllSubmilestonesToBeRemoved(
+        $artifact_ids_to_be_unlinked = $this->getAllArtifactsToBeRemoved(
             $current_user,
             $filter,
-            $elements_already_linked,
+            $artifact_ids_already_linked,
             $new_submilestones_ids
         );
 
-        $submilestones_to_be_linked = $this->getElementsToLink(
-            $elements_already_linked,
+        $artifact_ids_to_be_linked = $this->getElementsToLink(
+            $artifact_ids_already_linked,
             $new_submilestones_ids
         );
 
-        return $this->formatFieldDatas($artlink_field, $submilestones_to_be_linked, $backlogitems_to_be_unlinked);
+        return $this->formatFieldDatas($artlink_field, $artifact_ids_to_be_linked, $artifact_ids_to_be_unlinked);
     }
 
-    private function getAllSubmilestonesToBeRemoved(PFUser $user, IFilterValidElementsToUnkink $filter, array $elements_already_linked, array $new_ids) {
+    private function getAllArtifactsToBeRemoved(PFUser $user, IFilterValidElementsToUnkink $filter, array $elements_already_linked, array $new_ids) {
         $artifacts_to_be_removed = $this->getAllLinkedArtifactsThatShouldBeRemoved($elements_already_linked, $new_ids);
 
         return $filter->filter($user, $artifacts_to_be_removed);
@@ -106,7 +96,7 @@ class ArtifactLinkUpdater {
         $this->setOrder($linked_artifact_ids);
     }
 
-    public function getElementsAlreadyLinkedToMilestone(Tracker_Artifact $artifact, PFUser $user) {
+    public function getElementsAlreadyLinkedToArtifact(Tracker_Artifact $artifact, PFUser $user) {
         return array_map(
             function (Tracker_Artifact $artifact) {
                 return $artifact->getId();

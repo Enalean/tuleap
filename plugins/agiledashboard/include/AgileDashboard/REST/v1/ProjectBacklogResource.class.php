@@ -101,7 +101,7 @@ class ProjectBacklogResource {
             $this->backlog_item_collection_factory
         );
 
-        $this->artifactlink_updater      = new ArtifactLinkUpdater($tracker_form_element_factory);
+        $this->artifactlink_updater      = new ArtifactLinkUpdater();
         $this->milestone_content_updater = new MilestoneContentUpdater($tracker_form_element_factory, $this->artifactlink_updater);
     }
 

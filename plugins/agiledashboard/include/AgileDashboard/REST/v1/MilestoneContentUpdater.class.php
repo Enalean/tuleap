@@ -22,9 +22,7 @@
 namespace Tuleap\AgileDashboard\REST\v1;
 
 use \Tracker_FormElementFactory;
-use \Tracker_FormElement_Field_ArtifactLink;
 use \Tracker_ArtifactFactory;
-use \Tracker_Artifact;
 use \Planning_Milestone;
 use \PFUser;
 
@@ -54,25 +52,19 @@ class MilestoneContentUpdater {
      *
      */
     public function updateMilestoneContent(array $linked_artifact_ids, PFUser $current_user, Planning_Milestone $milestone) {
-        $artifact       = $milestone->getArtifact();
-        $artlink_fields = $this->form_element_factory->getUsedArtifactLinkFields($artifact->getTracker());
-
-        if (! count($artlink_fields)) {
-            return;
-        }
-
-        $fields_data = $this->getFieldsDataForNewChangeset(
-            $artlink_fields[0],
-            $milestone,
+        $this->artifactlink_updater->update(
+            $linked_artifact_ids,
+            $milestone->getArtifact(),
             $current_user,
-            $linked_artifact_ids
+            new FilterValidContent(
+                $this->artifact_factory,
+                $milestone
+            )
         );
-
-        $this->artifactlink_updater->unlinkAndLinkElements($artifact, $fields_data, $current_user, $linked_artifact_ids);
     }
 
     public function appendElementToMilestoneBacklog($linked_artifact_id, PFUser $current_user, Planning_Milestone $milestone) {
-        $linked_artifact_ids = $this->artifactlink_updater->getElementsAlreadyLinkedToMilestone(
+        $linked_artifact_ids = $this->artifactlink_updater->getElementsAlreadyLinkedToArtifact(
             $milestone->getArtifact(),
             $current_user
         );
@@ -80,84 +72,5 @@ class MilestoneContentUpdater {
         array_push($linked_artifact_ids, $linked_artifact_id);
 
         $this->updateMilestoneContent(array_unique($linked_artifact_ids), $current_user, $milestone);
-    }
-
-    private function getFieldsDataForNewChangeset(
-        Tracker_FormElement_Field_ArtifactLink $artlink_field,
-        Planning_Milestone $milestone,
-        PFUser $current_user,
-        array $linked_artifact_ids
-    ) {
-        $artifact                = $milestone->getArtifact();
-        $elements_already_linked = $this->artifactlink_updater->getElementsAlreadyLinkedToMilestone($artifact, $current_user);
-
-        $unlinked_elements = $this->getMilestoneContentItemsToUnlink(
-            $milestone,
-            $elements_already_linked,
-            $linked_artifact_ids
-        );
-
-        $linked_elements = $this->artifactlink_updater->getElementsToLink($elements_already_linked, $linked_artifact_ids);
-
-        return $this->artifactlink_updater->formatFieldDatas($artlink_field, $linked_elements, $unlinked_elements);
-    }
-
-    /**
-     * Returns the list of content items which will be unlinked to the milestone
-     *
-     * @param Planning_Milestone $milestone               The milestone
-     * @param array              $elements_already_linked The ids of the artifacts already linked to the milestone
-     * @param array              $linked_artifact_ids     The ids of the artifacts which will be linked
-     *
-     * @return bool true if success false otherwise
-     */
-    private function getMilestoneContentItemsToUnlink(
-        Planning_Milestone $milestone,
-        array $elements_already_linked,
-        array $linked_artifact_ids
-    ) {
-        $artifact       = $milestone->getArtifact();
-        $artlink_fields = $this->form_element_factory->getUsedArtifactLinkFields($artifact->getTracker());
-        $removed_values = array();
-
-        $content_trackers_ids = $milestone->getPlanning()->getBacklogTrackersIds();
-
-        if (count($artlink_fields)) {
-            foreach($elements_already_linked as $artifact_already_linked_id) {
-                $unlinked_artifact = $this->artifact_factory->getArtifactById($artifact_already_linked_id);
-
-                if ($this->artifactAlreadyLinkedIsNotInTheNewListSentByRESTAndIsInBacklogTracker(
-                        $linked_artifact_ids,
-                        $artifact_already_linked_id,
-                        $unlinked_artifact,
-                        $content_trackers_ids
-                    )
-                ) {
-                    $removed_values[] = $artifact_already_linked_id;
-                }
-            }
-        }
-
-        return $removed_values;
-    }
-
-    private function artifactAlreadyLinkedIsNotInTheNewListSentByRESTAndIsInBacklogTracker(
-        array $linked_artifact_ids,
-        $artifact_already_linked_id,
-        $unlinked_artifact,
-        array $content_trackers_ids
-    ) {
-        return ! in_array($artifact_already_linked_id, $linked_artifact_ids)
-               && $this->artifactIsInBacklogTracker($unlinked_artifact, $content_trackers_ids);
-    }
-
-    private function artifactIsInBacklogTracker(Tracker_Artifact $artifact, $backlog_tracker_ids) {
-        foreach ($backlog_tracker_ids as $backlog_tracker_id) {
-            if ($artifact->getTrackerId() == $backlog_tracker_id) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

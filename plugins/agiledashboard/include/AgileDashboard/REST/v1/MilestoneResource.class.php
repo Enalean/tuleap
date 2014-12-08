@@ -65,9 +65,6 @@ class MilestoneResource {
     /** @var EventManager */
     private $event_manager;
 
-    /** @var MilestoneSubMilestonesUpdater */
-    private $milestone_submilestones_updater;
-
     /** @var ArtifactLinkUpdater */
     private $artifactlink_updater;
 
@@ -119,9 +116,8 @@ class MilestoneResource {
             $this->backlog_item_collection_factory
         );
 
-        $this->artifactlink_updater            = new ArtifactLinkUpdater($tracker_form_element_factory);
+        $this->artifactlink_updater            = new ArtifactLinkUpdater();
         $this->milestone_content_updater       = new MilestoneContentUpdater($tracker_form_element_factory, $this->artifactlink_updater);
-        $this->milestone_submilestones_updater = new MilestoneSubMilestonesUpdater($tracker_form_element_factory, $this->milestone_factory, $this->artifactlink_updater);
 
         $this->event_manager = EventManager::instance();
     }
@@ -168,7 +164,14 @@ class MilestoneResource {
         }
 
         try {
-            $this->milestone_submilestones_updater->updateMilestoneSubMilestones($ids, $milestone, $user);
+            $this->artifactlink_updater->update(
+                $ids,
+                $milestone->getArtifact(),
+                $user,
+                new FilterValidSubmilestones(
+                    $this->milestone_factory,
+                    $milestone
+            ));
         } catch (ItemListedTwiceException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_NoChangeException $exception) {
