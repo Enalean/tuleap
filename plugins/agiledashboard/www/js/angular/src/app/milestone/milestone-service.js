@@ -22,7 +22,8 @@
             reorderContent        : reorderContent,
             addAndReorderToContent: addAndReorderToContent,
             addToContent          : addToContent,
-            removeFromContent     : removeFromContent
+            removeFromContent     : removeFromContent,
+            updateInitialEffort   : updateInitialEffort
         };
 
         function getMilestone(milestone_id) {
@@ -145,7 +146,7 @@
                     getContent(milestone.id, limit, offset).then(function(data) {
                         milestone.content = milestone.content.concat(data.results);
 
-                        _.forEach(data.results, updateInitialEffort);
+                        updateInitialEffort(milestone);
                         _.forEach(data.results, augmentBacklogItem);
 
                         if (milestone.content.length < data.total) {
@@ -156,14 +157,20 @@
                     });
                 }
 
-                function updateInitialEffort(backlog_item) {
-                    milestone.initialEffort += backlog_item.initial_effort;
-                }
-
                 function augmentBacklogItem(data) {
                     BacklogItemFactory.augment(data);
                 }
             }
+        }
+
+        function updateInitialEffort(milestone) {
+            var initial_effort = 0;
+
+            _.forEach(milestone.content, function(backlog_item) {
+                initial_effort += backlog_item.initial_effort;
+            });
+
+            milestone.initialEffort = initial_effort;
         }
 
         function defineAllowedBacklogItemTypes(milestone) {

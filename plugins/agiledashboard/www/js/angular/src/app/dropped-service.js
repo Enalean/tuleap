@@ -55,7 +55,11 @@
         }
 
         function moveFromBacklogToSubmilestone(dropped_item_id, compared_to, submilestone_id) {
-            return MilestoneService.addAndReorderToContent(submilestone_id, dropped_item_id, compared_to);
+            if (compared_to) {
+                return MilestoneService.addAndReorderToContent(submilestone_id, dropped_item_id, compared_to);
+            } else {
+                return MilestoneService.addToContent(submilestone_id, dropped_item_id);
+            }
         }
 
         function moveFromChildrenToChildren(dropped_item_id, compared_to, source_backlog_item_id, dest_backlog_item_id) {

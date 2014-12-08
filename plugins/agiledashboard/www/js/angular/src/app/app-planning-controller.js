@@ -185,12 +185,11 @@
         function dropped(event) {
             var source_list_element = event.source.nodesScope.$element,
                 dest_list_element   = event.dest.nodesScope.$element,
-                source_list_id      = event.source.nodesScope.$modelValue.id,
-                dest_list_id        = event.dest.nodesScope.$modelValue.id,
                 dropped_item_id     = event.source.nodeScope.$modelValue.id,
                 compared_to         = DroppedService.defineComparedTo(event.dest.nodesScope.$modelValue, event.dest.index);
 
             saveChange();
+            updateSubmilestonesInitialEffort();
             collapseSourceParentIfNeeded();
             removeFromDestinationIfNeeded();
 
@@ -282,6 +281,20 @@
 
                 function movedFromOneSubmilestoneToAnother() {
                     return source_list_element.hasClass('submilestone') && dest_list_element.hasClass('submilestone');
+                }
+            }
+
+            function updateSubmilestonesInitialEffort() {
+                if (source_list_element.hasClass('submilestone')) {
+                    MilestoneService.updateInitialEffort(_.find($scope.milestones, function(milestone) {
+                        return milestone.id == source_list_element.attr('data-submilestone-id');
+                    }));
+                }
+
+                if (dest_list_element.hasClass('submilestone')) {
+                    MilestoneService.updateInitialEffort(_.find($scope.milestones, function(milestone) {
+                        return milestone.id == dest_list_element.attr('data-submilestone-id');
+                    }));
                 }
             }
 
