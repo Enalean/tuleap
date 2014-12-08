@@ -152,4 +152,35 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
 
         return $this->retrieve($sql);
     }
+
+    public function getCachedFieldValueAtTimestamp($artifact_id, $field_id, $timestamp) {
+        $artifact_id = $this->da->escapeInt($artifact_id);
+        $field_id    = $this->da->escapeInt($field_id);
+        $timestamp   = $this->da->escapeInt($timestamp);
+
+        $sql = "SELECT value FROM tracker_field_computed_cache
+                WHERE  artifact_id= $artifact_id
+                    AND timestamp = $timestamp
+                    AND field_id  = $field_id";
+
+        return $this->retrieveFirstRow($sql);
+    }
+
+    public function saveCachedFieldValueAtTimestamp($artifact_id, $field_id, $timestamp, $value) {
+        $artifact_id = $this->da->escapeInt($artifact_id);
+        $field_id    = $this->da->escapeInt($field_id);
+        $timestamp   = $this->da->escapeInt($timestamp);
+
+        if ($value === null) {
+            $sql = "REPLACE INTO tracker_field_computed_cache (artifact_id, field_id, timestamp)
+                        VALUES ($artifact_id, $field_id, $timestamp)";
+        } else {
+            $value = $this->da->quoteSmart($value);
+            $sql   = "REPLACE INTO tracker_field_computed_cache (artifact_id, field_id, timestamp, value)
+                    VALUES ($artifact_id, $field_id, $timestamp, $value)";
+        }
+
+        return $this->update($sql);
+    }
+
 }

@@ -385,5 +385,8 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
         }
         return true;
     }
+
+    public function getCachedValue(PFUser $user, Tracker_Artifact $artifact, $timestamp = null) {
+        return $this->getComputedValue($user, $artifact, $timestamp);
+    }
 }
-?>

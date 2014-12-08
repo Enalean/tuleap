@@ -246,6 +246,14 @@ CREATE TABLE IF NOT EXISTS tracker_field_burndown (
     use_cache TINYINT DEFAULT 0
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS tracker_field_computed_cache (
+    artifact_id INT(11) NOT NULL,
+    field_id    INT(11) NOT NULL,
+    timestamp   INT(11) NOT NULL,
+    value       FLOAT(10,4) NULL,
+    UNIQUE KEY time_at_field (artifact_id, field_id, timestamp)
+) ENGINE=InnoDB;
+
 DROP TABLE IF EXISTS tracker_changeset;
 CREATE TABLE tracker_changeset(
     id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,

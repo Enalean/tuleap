@@ -49,4 +49,20 @@ class Tracker_FormElement_Field_ComputedDaoCache {
         }
         return $this->field_values_at_timestamp[$index];
     }
+
+    /**
+     * @return false | int
+     */
+    public function getCachedFieldValueAtTimestamp($artifact_id, $field_id, $timestamp) {
+        $row = $this->dao->getCachedFieldValueAtTimestamp($artifact_id, $field_id, $timestamp);
+
+        return ($row) ? $row['value'] : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function saveCachedFieldValueAtTimestamp($artifact_id, $field_id, $timestamp, $value) {
+        return $this->dao->saveCachedFieldValueAtTimestamp($artifact_id, $field_id, $timestamp, $value);
+    }
 }

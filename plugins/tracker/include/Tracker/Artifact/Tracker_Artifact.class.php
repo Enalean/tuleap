@@ -160,6 +160,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         if (! $user) {
             $user = $um->getCurrentUser();
         }
+        if ($user instanceof Tracker_UserWithReadAllPermission) {
+            return true;
+        }
 
         if (! isset($this->can_view_cache[$user->getId()])) {
             if ($this->getTracker()->userIsAdmin() || $user->isSuperUser()) {
