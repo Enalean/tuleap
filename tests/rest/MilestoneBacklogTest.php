@@ -46,18 +46,30 @@ class MilestonesBacklogTest extends RestBase {
 
         $first_backlog_item = $backlog_items[0];
         $this->assertArrayHasKey('id', $first_backlog_item);
+        $this->assertArrayHasKey('accept', $first_backlog_item);
+        $this->assertArrayHasKey('trackers', $first_backlog_item['accept']);
+        $this->assertEquals($first_backlog_item['accept']['trackers'][0]['id'], 4);
+        $this->assertEquals($first_backlog_item['accept']['trackers'][0]['uri'], 'trackers/4');
         $this->assertEquals($first_backlog_item['label'], "Hughhhhhhh");
         $this->assertEquals($first_backlog_item['status'], "Open");
         $this->assertEquals($first_backlog_item['artifact'], array('id' => TestDataBuilder::STORY_3_ARTIFACT_ID, 'uri' => 'artifacts/'.TestDataBuilder::STORY_3_ARTIFACT_ID, 'tracker' => array('id' => TestDataBuilder::USER_STORIES_TRACKER_ID, 'uri' => 'trackers/'.TestDataBuilder::USER_STORIES_TRACKER_ID)));
 
         $second_backlog_item = $backlog_items[1];
         $this->assertArrayHasKey('id', $second_backlog_item);
+        $this->assertArrayHasKey('accept', $second_backlog_item);
+        $this->assertArrayHasKey('trackers', $second_backlog_item['accept']);
+        $this->assertEquals($second_backlog_item['accept']['trackers'][0]['id'], 4);
+        $this->assertEquals($second_backlog_item['accept']['trackers'][0]['uri'], 'trackers/4');
         $this->assertEquals($second_backlog_item['label'], "Kill you");
         $this->assertEquals($second_backlog_item['status'], "Open");
         $this->assertEquals($second_backlog_item['artifact'], array('id' => TestDataBuilder::STORY_4_ARTIFACT_ID, 'uri' => 'artifacts/'.TestDataBuilder::STORY_4_ARTIFACT_ID, 'tracker' => array('id' => TestDataBuilder::USER_STORIES_TRACKER_ID, 'uri' => 'trackers/'.TestDataBuilder::USER_STORIES_TRACKER_ID)));
 
         $third_backlog_item = $backlog_items[2];
         $this->assertArrayHasKey('id', $third_backlog_item);
+        $this->assertArrayHasKey('accept', $third_backlog_item);
+        $this->assertArrayHasKey('trackers', $third_backlog_item['accept']);
+        $this->assertEquals($third_backlog_item['accept']['trackers'][0]['id'], 4);
+        $this->assertEquals($third_backlog_item['accept']['trackers'][0]['uri'], 'trackers/4');
         $this->assertEquals($third_backlog_item['label'], "Back");
         $this->assertEquals($third_backlog_item['status'], "Open");
         $this->assertEquals($third_backlog_item['artifact'], array('id' => TestDataBuilder::STORY_5_ARTIFACT_ID, 'uri' => 'artifacts/'.TestDataBuilder::STORY_5_ARTIFACT_ID, 'tracker' => array('id' => TestDataBuilder::USER_STORIES_TRACKER_ID, 'uri' => 'trackers/'.TestDataBuilder::USER_STORIES_TRACKER_ID)));

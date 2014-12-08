@@ -22,6 +22,8 @@ namespace Tuleap\AgileDashboard\REST\v1;
 use \Tuleap\REST\JsonCast;
 use \Tuleap\Project\REST\ProjectReference;
 use \Tuleap\Tracker\REST\Artifact\ArtifactReference;
+use \Tuleap\Tracker\REST\TrackerReference;
+use \Tuleap\Tracker\REST\TrackerRepresentation;
 
 class BacklogItemRepresentation {
 
@@ -72,12 +74,12 @@ class BacklogItemRepresentation {
     public $artifact;
 
     /**
-     * @var Tuleap\AgileDashboard\REST\v1\BacklogItemParentReference
+     * @var \Tuleap\AgileDashboard\REST\v1\BacklogItemParentReference
      */
     public $parent;
 
     /**
-     * @var Tuleap\Project\REST\ProjectReference
+     * @var \Tuleap\Project\REST\ProjectReference
      */
     public $project;
 
@@ -85,6 +87,11 @@ class BacklogItemRepresentation {
      * @var Boolean
      */
     public $has_children;
+
+    /**
+     * @var array
+     */
+    public $accept;
 
     public function build(\AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item) {
         $this->id             = JsonCast::toInt($backlog_item->id());
@@ -108,5 +115,19 @@ class BacklogItemRepresentation {
         }
 
         $this->has_children = $backlog_item->hasChildren();
+
+        $this->addAllowedSubItemTypes($backlog_item);
+    }
+
+    private function addAllowedSubItemTypes(\AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item) {
+        $child_trackers = $backlog_item->getArtifact()->getTracker()->getChildren();
+
+        $this->accept = array('trackers' => array());
+        foreach ($child_trackers as $child_tracker) {
+            $reference = new TrackerReference();
+            $reference->build($child_tracker);
+
+            $this->accept['trackers'][] = $reference;
+        }
     }
 }

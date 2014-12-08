@@ -4,15 +4,19 @@
 >
 </div>
 
-<div class="show-children" ng-class="{ hidden: (backlog_item.children.length === 0 && (! backlog_item.has_children || backlog_item.children_loaded)) || ! backlog_item.has_children }">
-    <div ng-if="backlog_item.are_children_shown" class="children">
+<div class="show-children" ng-class="{ hidden: (backlog_item.children.data.length === 0 && (! backlog_item.has_children || backlog_item.children.loaded)) }">
+    <div ng-show="! collapsed" class="children">
         <ul ui-tree-nodes
-            ng-model="backlog_item.children"
+            ng-model="backlog_item.children.data"
             class="backlog-item-children"
-            ng-if="backlog_item.are_children_shown"
+            data-accept="{{ backlog_item.accepted_types }}"
+            ng-show="! collapsed"
+            ng-class="{ hidden: collapsed }"
+            data-backlog-item-id="{{ backlog_item.id }}"
         >
             <li ui-tree-node
-                ng-repeat="backlog_item in backlog_item.children"
+                data-type="{{ backlog_item.trackerId }}"
+                ng-repeat="backlog_item in backlog_item.children.data"
                 class="backlog-item child"
             >
                 <div class="backlog-item-details {{ backlog_item.status | lowercase }} {{ backlog_item.color }}"
@@ -24,5 +28,5 @@
         <div class="loading" ng-if="backlog_item.loading"></div>
     </div>
 
-    <div ng-class="{'show-children-close': backlog_item.are_children_shown}" class="show-children-handle" ng-click="showChildren(backlog_item)"></div>
+    <div ng-class="{'show-children-close': ! collapsed}" class="show-children-handle" ng-click="showChildren(this, backlog_item)"></div>
 </div>

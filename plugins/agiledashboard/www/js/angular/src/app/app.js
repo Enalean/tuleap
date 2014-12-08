@@ -7,6 +7,7 @@
         'angularMoment',
         'shared-properties',
         'backlog-item',
-        'milestone'
+        'milestone',
+        'project'
     ]);
 })();

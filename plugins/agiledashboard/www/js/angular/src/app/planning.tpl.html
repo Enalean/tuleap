@@ -1,75 +1,95 @@
-<div id="backlog" ng-class="{ loading_content: loading_backlog_items }">
-    <h2 translate>To be planned</h2>
+<div class="alert alert-error" ng-if="rest_error_occured" translate>A server error has occured. <b>You should refresh this page</b>.</div>
 
-    <div ui-tree="treeOptions">
-        <ul ui-tree-nodes ng-model="backlog_items" class="backlog-items">
-            <li ui-tree-node
-                ng-repeat="backlog_item in backlog_items"
-                ng-include src="'backlog-item/backlog-item.tpl.html'"
-                class="backlog-item parent"
+<div id="planning-view">
+    <div id="backlog" ng-class="{ loading_content: loading_backlog_items }">
+        <h2 translate>To be planned</h2>
+
+        <div ui-tree="treeOptions">
+            <ul ui-tree-nodes
+                ng-model="backlog_items"
+                class="backlog-items backlog"
+                data-accept="{{ backlog.accepted_types }}"
             >
-            </li>
-        </ul>
-    </div>
-    <div class="loading" ng-if="loading_backlog_items"></div>
-</div>
-
-<div id="divider"></div>
-
-<div id="planned">
-    <div class="milestones">
-        <div class="milestones-list-header">
-            <h2 translate>Milestones</h2>
-            <button class="btn items-toggle-button btn-small" data-toggle="button" ng-click="toggleClosedMilestoneItems()">
-                <i class=" icon-eye-close"></i> <span translate>Hide "Closed" Items</span>
-            </button>
+                <li ui-tree-node
+                    ng-repeat="backlog_item in backlog_items"
+                    ng-include src="'backlog-item/backlog-item.tpl.html'"
+                    data-type="{{ backlog_item.trackerId }}"
+                    data-accept="{{ backlog_item.accepted_types }}"
+                    class="backlog-item parent"
+                    collapsed="true"
+                >
+                </li>
+            </ul>
         </div>
-        <fieldset ng-repeat="milestone in milestones track by $index" class="milestone" ng-class="{ collapsed: milestone.collapsed }">
-            <legend ng-click="toggle(milestone)">
-                {{ milestone.label }}
-
-                <span class="label status {{ milestone.semantic_status }}">{{ milestone.status_value }}</span>
-                <span class="date" ng-if="milestone.start_date || milestone.end_date">
-                    {{ milestone.start_date | amDateFormat:'ll' }} <i class="icon-long-arrow-right"></i>
-                    {{ milestone.end_date | amDateFormat:'ll' }}
-                </span>
-                <div style="clear: both"></div>
-            </legend>
-
-            <div class="content" ng-if="! milestone.collapsed" ng-class="{ loading_content: milestone.loadingContent }">
-                <div class="info">
-                    <span class="capacity" translate>Capacity:</span>
-                    <span class="capacity-value" ng-if="milestone.capacity">{{ milestone.capacity }}</span>
-                    <span class="capacity-value" ng-if="! milestone.capacity" translate>N/A</span>
-
-                    <span class="initial-effort" translate>Initial effort:</span>
-                    <span class="initial-effort-value" ng-if="milestone.initialEffort" ng-class="{ higher: milestone.initialEffort > milestone.capacity }">{{ milestone.initialEffort }}</span><span class="initial-effort-value non-applicable" ng-if="! milestone.initialEffort" translate>N/A</span>
-
-                    <ul>
-                        <li><a href="#"><i class="icon-list-ul"></i> <span translate>Content</span></a></li>
-                        <li><a href="#"><i class="icon-bar-chart"></i> <span translate>Burndown</span></a></li>
-                        <li><a href="#"><i class="icon-signin"></i> <span translate>Planning</span></a></li>
-                    </ul>
-
-                    <div style="clear: both"></div>
-                </div>
-
-                <div ui-tree="treeOptions">
-                    <ul ui-tree-nodes ng-model="milestone.content" class="backlog-items">
-                        <li ui-tree-node
-                            ng-repeat="backlog_item in milestone.content"
-                            class="backlog-item parent {{ backlog_item.status | lowercase }} {{ backlog_item.color }}"
-                            ng-include="'backlog-item/backlog-item.tpl.html'"
-                            ng-if="canShowBacklogItem(backlog_item)"
-                        >
-                        </li>
-                    </ul>
-                </div>
-                <div class="loading" ng-if="milestone.loadingContent"></div>
-            </div>
-        </fieldset>
+        <div class="loading" ng-if="loading_backlog_items"></div>
     </div>
-    <div class="loading" ng-if="loading_milestones"></div>
-</div>
 
-<div class="clearfix"></div>
+    <div id="divider"></div>
+
+    <div id="planned">
+        <div class="milestones">
+            <div class="milestones-list-header">
+                <h2 translate>Milestones</h2>
+                <button class="btn items-toggle-button btn-small" data-toggle="button" ng-click="toggleClosedMilestoneItems()">
+                    <i class=" icon-eye-close"></i> <span translate>Hide "Closed" Items</span>
+                </button>
+            </div>
+            <fieldset ng-repeat="milestone in milestones track by $index" class="milestone" ng-class="{ collapsed: milestone.collapsed }">
+                <legend ng-click="toggle(milestone)">
+                    {{ milestone.label }}
+
+                    <span class="label status {{ milestone.semantic_status }}">{{ milestone.status_value }}</span>
+                    <span class="date" ng-if="milestone.start_date || milestone.end_date">
+                        {{ milestone.start_date | amDateFormat:'ll' }} <i class="icon-long-arrow-right"></i>
+                        {{ milestone.end_date | amDateFormat:'ll' }}
+                    </span>
+                    <div style="clear: both"></div>
+                </legend>
+
+                <div class="content" ng-if="! milestone.collapsed" ng-class="{ loading_content: milestone.loadingContent }">
+                    <div class="info">
+                        <span class="capacity" translate>Capacity:</span>
+                        <span class="capacity-value" ng-if="milestone.capacity">{{ milestone.capacity }}</span>
+                        <span class="capacity-value" ng-if="! milestone.capacity" translate>N/A</span>
+
+                        <span class="initial-effort" translate>Initial effort:</span>
+                        <span class="initial-effort-value" ng-if="milestone.initialEffort" ng-class="{ higher: milestone.initialEffort > milestone.capacity }">{{ milestone.initialEffort }}</span><span class="initial-effort-value non-applicable" ng-if="! milestone.initialEffort" translate>N/A</span>
+
+                        <ul>
+                            <li><a href="{{ generateMilestoneLinkUrl(milestone, 'blcontent') }}"><i class="icon-list-ul"></i> <span translate>Content</span></a></li>
+                            <li ng-if="milestone.resources.milestones.accept.trackers.length > 0"><a href="{{ generateMilestoneLinkUrl(milestone, 'planning-v2') }}"><i class="icon-signin"></i> <span translate>Planning</span></a></li>
+                            <li ng-if="milestone.resources.burndown"><a href="{{ generateMilestoneLinkUrl(milestone, 'burndown') }}"><i class="icon-bar-chart"></i> <span translate>Burndown</span></a></li>
+                            <li ng-if="milestone.resources.cardwall"><a href="{{ generateMilestoneLinkUrl(milestone, 'cardwall') }}"><i class="icon-table"></i> <span translate>Cardwall</span></a></li>
+                        </ul>
+
+                        <div style="clear: both"></div>
+                    </div>
+
+                    <div ui-tree="treeOptions">
+                        <ul ui-tree-nodes
+                            ng-model="milestone.content"
+                            class="backlog-items submilestone"
+                            data-accept="{{ milestone.accepted_types }}"
+                            data-submilestone-id="{{ milestone.id }}"
+                        >
+                            <li ui-tree-node
+                                ng-repeat="backlog_item in milestone.content"
+                                class="backlog-item parent {{ backlog_item.status | lowercase }} {{ backlog_item.color }}"
+                                data-accept="{{ backlog_item.accepted_types }}"
+                                data-type="{{ backlog_item.trackerId }}"
+                                ng-include="'backlog-item/backlog-item.tpl.html'"
+                                ng-if="canShowBacklogItem(backlog_item)"
+                                collapsed="true"
+                            >
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="loading" ng-if="milestone.loadingContent"></div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="loading" ng-if="loading_milestones"></div>
+    </div>
+
+    <div class="clearfix"></div>
+</div>
