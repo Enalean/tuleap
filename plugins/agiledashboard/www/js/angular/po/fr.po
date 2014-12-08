@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AgileDashboard Planning\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2014-12-05 15:45+0100\n"
+"PO-Revision-Date: 2014-12-08 14:18+0100\n"
 "Last-Translator: Benjamin Dauton <benjamin.dauton@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -28,6 +28,10 @@ msgstr "Burndown"
 #: src/app/planning.tpl.html
 msgid "Capacity:"
 msgstr "Capacité:"
+
+#: src/app/planning.tpl.html
+msgid "Cardwall"
+msgstr "Cardwall"
 
 #: src/app/planning.tpl.html
 msgid "Content"

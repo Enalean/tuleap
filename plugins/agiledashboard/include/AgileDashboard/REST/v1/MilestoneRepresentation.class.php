@@ -60,6 +60,11 @@ class MilestoneRepresentation {
     public $submitted_on;
 
     /**
+     * @var PlanningReference
+     */
+    public $planning;
+
+    /**
      * @var Tuleap\REST\ResourceReference
      */
     public $project;
@@ -170,6 +175,9 @@ class MilestoneRepresentation {
         $this->submitted_on     = JsonCast::toDate($milestone->getArtifact()->getFirstChangeset()->getSubmittedOn());
         $this->capacity         = JsonCast::toFloat($milestone->getCapacity());
         $this->remaining_effort = JsonCast::toFloat($milestone->getRemainingEffort());
+
+        $this->planning = new PlanningReference();
+        $this->planning->build($milestone->getPlanning());
 
         $this->project = new ProjectReference();
         $this->project->build($milestone->getProject());

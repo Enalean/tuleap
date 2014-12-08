@@ -16,6 +16,10 @@ msgid "Capacity:"
 msgstr ""
 
 #: src/app/planning.tpl.html
+msgid "Cardwall"
+msgstr ""
+
+#: src/app/planning.tpl.html
 msgid "Content"
 msgstr ""
 

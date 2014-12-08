@@ -22,7 +22,8 @@
             toggle                     : toggle,
             showChildren               : showChildren,
             toggleClosedMilestoneItems : toggleClosedMilestoneItems,
-            canShowBacklogItem         : canShowBacklogItem
+            canShowBacklogItem         : canShowBacklogItem,
+            generateMilestoneLinkUrl   : generateMilestoneLinkUrl
         });
 
         $scope.treeOptions = {
@@ -114,6 +115,10 @@
                     $scope.loading_milestones = false;
                 }
             });
+        }
+
+        function generateMilestoneLinkUrl(milestone, pane) {
+            return '?group_id=' + project_id + '&planning_id=' + milestone.planning.id + '&action=show&aid=' + milestone.id + '&pane=' + pane;
         }
 
         function toggle(milestone) {
