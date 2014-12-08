@@ -1,3 +1,6 @@
+Version 5.529 - Tuleap 7.8
+    * request #7385: Burndown with a big remaining effort tree issues (cache)
+
 Version 5.528 - Tuleap 7.8
     * Request ##7648: Default values from lists not set when submitting a new artifact with SOAP
 
