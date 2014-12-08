@@ -132,7 +132,7 @@ class Planning_MilestoneFactory {
      * @param Tracker_Artifact $artifact
      * @return Planning_Milestone|null
      */
-    private function getBareMilestoneByArtifact(PFUser $user, Tracker_Artifact $artifact) {
+    public function getBareMilestoneByArtifact(PFUser $user, Tracker_Artifact $artifact) {
         $tracker  = $artifact->getTracker();
         $planning = $this->planning_factory->getPlanningByPlanningTracker($tracker);
         if ($planning) {
