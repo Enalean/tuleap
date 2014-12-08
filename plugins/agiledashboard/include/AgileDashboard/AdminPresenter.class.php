@@ -154,4 +154,8 @@ class AdminPresenter {
     public function activate_service_legend() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'activate_service_legend');
     }
+
+    public function lab_mode_message() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'lab_mode_message');
+    }
 }
