@@ -1,3 +1,6 @@
+Version 5.528 - Tuleap 7.8
+    * Request ##7648: Default values from lists not set when submitting a new artifact with SOAP
+
 Version 5.527 - Tuleap 7.8
     * request #7669 AD: only one milestone is displayed in past section
 
