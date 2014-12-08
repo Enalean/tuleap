@@ -40,7 +40,7 @@ class PriorityDaoTest extends TuleapDbTestCase {
 
     public function itStartsWithEmptyTable() {
         $this->assertEqual($this->getPriorities(), array(
-            array(null, null, 0)
+            array(null)
         ));
     }
 
@@ -129,7 +129,13 @@ class PriorityDaoTest extends TuleapDbTestCase {
         $this->assertOrder(1, 101, 42, 66, 123);
     }
 
-    public function itMovesManyArtifactsAtOnceAtTheBeforeLastPosition() {
+    public function itMovesManyArtifactsAtOnceAtTheVeryEnd() {
+        $this->setInitialOrder(1, 101, 42, 66, 123);
+        $this->dao->moveListOfArtifactsAfter(array(1, 42, 66), 123);
+        $this->assertOrder(101, 123, 1, 42, 66);
+    }
+
+      public function itMovesManyArtifactsAtOnceAtTheBeforeLastPosition() {
         $this->setInitialOrder(1, 101, 42, 66, 123);
         $this->dao->moveListOfArtifactsBefore(array(1, 42, 66), 123);
         $this->assertOrder(101, 1, 42, 66, 123);
@@ -149,6 +155,13 @@ class PriorityDaoTest extends TuleapDbTestCase {
         $this->dao->moveListOfArtifactsBefore(array(1, 101), 1);
     }
 
+    public function itDoesntRelyOnMysqlInsertOrder() {
+        $this->setInitialOrder(16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 28);
+
+        $this->dao->moveListOfArtifactsAfter(array(28, 19, 17), 18);
+        $this->assertOrder(16, 18, 28, 19, 17, 20, 21, 22, 23, 24, 25);
+    }
+
     private function assertOrder() {
         $list_of_ids = func_get_args();
         $this->assertEqual(
@@ -162,11 +175,10 @@ class PriorityDaoTest extends TuleapDbTestCase {
         $previous = null;
         $rank     = 0;
         foreach ($list_of_ids as $id) {
-            $order[] = array($previous, $id, $rank++);
+            $order[] = array($previous);
             $previous = $id;
         }
-        $order[] = array($id, null, $rank);
-
+        $order[] = array($id);
         return $order;
     }
 
@@ -178,7 +190,7 @@ class PriorityDaoTest extends TuleapDbTestCase {
 
     private function getPriorities() {
         $msg = array();
-        $dar = $this->dao->retrieve("SELECT * FROM tracker_artifact_priority ORDER BY rank");
+        $dar = $this->dao->retrieve("SELECT curr_id FROM tracker_artifact_priority ORDER BY rank");
         foreach ($dar as $row) {
             $r = array();
             foreach ($row as $cell) {
