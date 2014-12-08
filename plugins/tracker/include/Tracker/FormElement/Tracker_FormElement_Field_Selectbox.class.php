@@ -304,4 +304,16 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
     public function accept(Tracker_FormElement_FieldVisitor $visitor) {
         return $visitor->visitSelectbox($this);
     }
+
+    public function getDefaultValue() {
+        $default_array = $this->getBind()->getDefaultValues();
+
+        if ($default_array && is_array($default_array) && count($default_array) === 1) {
+            $keys = array_keys($default_array);
+            return array_shift($keys);
+        }
+
+        return Tracker_FormElement_Field_List_Bind::NONE_VALUE;
+    }
+
 }

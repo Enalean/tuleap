@@ -457,7 +457,7 @@ class Tracker_FormElementFactory {
     }
 
     private function augmentFieldsDataWithDefaultValue($field, $fields_data) {
-        if (!array_key_exists($field->getId(), $fields_data) && $field->hasDefaultValue()) {
+        if (! array_key_exists($field->getId(), $fields_data)) {
             $fields_data[$field->getId()] = $field->getDefaultValue();
         }
         return $fields_data;
