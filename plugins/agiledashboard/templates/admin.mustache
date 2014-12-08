@@ -61,6 +61,8 @@
 <form action="?group_id={{ group_id }}&action=updateConfiguration" method="POST" class="agiledashboard-admin-kanban">
     <h3 class="agiledashboard-admin-section"><i class="icon-beaker"></i> {{ config_title }}</h3>
 
+    <div class="alert">{{{ lab_mode_message }}}</div>
+
     <p>{{ activate_service_legend }}</p>
 
     <select name="activate-ad-service">
