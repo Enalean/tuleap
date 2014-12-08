@@ -1,3 +1,9 @@
+Version 1.111 - Tuleap 7.8
+    * Warns the user that it is a lab mode feature
+
+
+Part of story #7577 display a Kanban cardwall
+
 Version 1.110 - Tuleap 7.8
     * story #7511: Refactoring: use common code for artifact link/unlink
 
