@@ -438,7 +438,10 @@ class Git_GitoliteDriver {
         $archive = $this->getBackupPath($repository, $backup_directory);
         if (is_file($archive)) {
             if (! unlink($archive)) {
+                $this->logger->error("Unable to delete archived Gitolite repository: ".$archive);
                 throw new GitDriverErrorException("Unable to purge archived Gitolite repository: ".$archive);
+            } else {
+                $this->logger->info('Purge of Gitolite repository: '.$repository->getName().' terminated');
             }
         }
     }
