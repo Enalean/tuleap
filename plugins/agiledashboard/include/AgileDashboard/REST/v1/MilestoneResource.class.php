@@ -441,7 +441,7 @@ class MilestoneResource {
 
         try {
             if ($remove || $add) {
-                $linked_artifact_ids = $this->milestone_validator->getValidatedArtifactsIdsToRemoveFromContent($user, $milestone, $remove, $add);
+                $linked_artifact_ids = $this->milestone_validator->getValidatedArtifactsIdsToAddOrRemoveFromContent($user, $milestone, $remove, $add);
                 $this->milestone_content_updater->updateMilestoneContent($linked_artifact_ids, $user, $milestone);
             }
         } catch (ArtifactDoesNotExistException $exception) {

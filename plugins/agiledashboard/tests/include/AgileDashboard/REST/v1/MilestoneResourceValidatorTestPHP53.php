@@ -160,70 +160,70 @@ class MilestoneResourceValidator_PatchAddRemoveTest extends TuleapTestCase {
             )
         )->build();
         $this->milestone = aMilestone()->withArtifact($this->artifact)->build();
-        $this->milestone_resource_validator = partial_mock('Tuleap\AgileDashboard\REST\v1\MilestoneResourceValidator', array('validateArtifactsFromBodyContent'));
+        $this->milestone_resource_validator = partial_mock('Tuleap\AgileDashboard\REST\v1\MilestoneResourceValidator', array('validateArtifactsFromBodyContentWithClosedItems'));
     }
 
     public function itAllowsToRemoveFromContentWhenRemovedIdsArePartOfLinkedArtifacts() {
-        $this->milestone_resource_validator->getValidatedArtifactsIdsToRemoveFromContent($this->user, $this->milestone, array(112, 113), null);
+        $this->milestone_resource_validator->getValidatedArtifactsIdsToAddOrRemoveFromContent($this->user, $this->milestone, array(112, 113), null);
     }
 
     public function itForbidsToRemoveFromContentWhenRemovedIdsArePartOfLinkedArtifacts() {
         $this->expectException('Tuleap\AgileDashboard\REST\v1\ArtifactIsNotInMilestoneContentException');
-        $this->milestone_resource_validator->getValidatedArtifactsIdsToRemoveFromContent($this->user, $this->milestone, array(566, 113), null);
+        $this->milestone_resource_validator->getValidatedArtifactsIdsToAddOrRemoveFromContent($this->user, $this->milestone, array(566, 113), null);
     }
 
     public function itReturnsTheValidIds() {
         $this->assertEqual(
-            $this->milestone_resource_validator->getValidatedArtifactsIdsToRemoveFromContent($this->user, $this->milestone, array(112, 113), null),
+            $this->milestone_resource_validator->getValidatedArtifactsIdsToAddOrRemoveFromContent($this->user, $this->milestone, array(112, 113), null),
             array(114, 115)
         );
     }
 
     public function itAllowsToAddArtifactsThatAreValidForContent() {
-        expect($this->milestone_resource_validator)->validateArtifactsFromBodyContent(array(210), $this->milestone, $this->user)->once();
+        expect($this->milestone_resource_validator)->validateArtifactsFromBodyContentWithClosedItems(array(210), $this->milestone, $this->user)->once();
 
-        $this->milestone_resource_validator->getValidatedArtifactsIdsToRemoveFromContent($this->user, $this->milestone, null, array(210));
+        $this->milestone_resource_validator->getValidatedArtifactsIdsToAddOrRemoveFromContent($this->user, $this->milestone, null, array(210));
     }
 
     public function itDoesntAddWhenArrayIsEmpty() {
-        expect($this->milestone_resource_validator)->validateArtifactsFromBodyContent()->never();
+        expect($this->milestone_resource_validator)->validateArtifactsFromBodyContentWithClosedItems()->never();
 
-        $this->milestone_resource_validator->getValidatedArtifactsIdsToRemoveFromContent($this->user, $this->milestone, null, null);
+        $this->milestone_resource_validator->getValidatedArtifactsIdsToAddOrRemoveFromContent($this->user, $this->milestone, null, null);
     }
 
     public function itForbidsToAddArtifactsThatAreNotValidForContent() {
-        expect($this->milestone_resource_validator)->validateArtifactsFromBodyContent(array(210), $this->milestone, $this->user)->once();
-        stub($this->milestone_resource_validator)->validateArtifactsFromBodyContent()->throws(new \Exception());
+        expect($this->milestone_resource_validator)->validateArtifactsFromBodyContentWithClosedItems(array(210), $this->milestone, $this->user)->once();
+        stub($this->milestone_resource_validator)->validateArtifactsFromBodyContentWithClosedItems()->throws(new \Exception());
 
         $this->expectException();
 
-        $this->milestone_resource_validator->getValidatedArtifactsIdsToRemoveFromContent($this->user, $this->milestone, null, array(210));
+        $this->milestone_resource_validator->getValidatedArtifactsIdsToAddOrRemoveFromContent($this->user, $this->milestone, null, array(210));
     }
 
     public function itReturnsTheAddedIdsPlusTheExistingOne() {
         $this->assertEqual(
-            $this->milestone_resource_validator->getValidatedArtifactsIdsToRemoveFromContent($this->user, $this->milestone, null, array(210)),
+            $this->milestone_resource_validator->getValidatedArtifactsIdsToAddOrRemoveFromContent($this->user, $this->milestone, null, array(210)),
             array(112, 113, 114, 115, 210)
         );
     }
 
     public function itAllowsToAddAndRemoveInSameTime() {
         $this->assertEqual(
-            $this->milestone_resource_validator->getValidatedArtifactsIdsToRemoveFromContent($this->user, $this->milestone, array(113, 115), array(210)),
+            $this->milestone_resource_validator->getValidatedArtifactsIdsToAddOrRemoveFromContent($this->user, $this->milestone, array(113, 115), array(210)),
             array(112, 114, 210)
         );
     }
 
     public function itSkipsWhenAnElementIsAddedAndRemovedAtSameTime() {
         $this->assertEqual(
-            $this->milestone_resource_validator->getValidatedArtifactsIdsToRemoveFromContent($this->user, $this->milestone, array(114, 113), array(113, 210)),
+            $this->milestone_resource_validator->getValidatedArtifactsIdsToAddOrRemoveFromContent($this->user, $this->milestone, array(114, 113), array(113, 210)),
             array(112, 113, 115, 210)
         );
     }
 
     public function itDoesntAddAnElementAlreadyInContent() {
         $this->assertEqual(
-            $this->milestone_resource_validator->getValidatedArtifactsIdsToRemoveFromContent($this->user, $this->milestone, null, array(113)),
+            $this->milestone_resource_validator->getValidatedArtifactsIdsToAddOrRemoveFromContent($this->user, $this->milestone, null, array(113)),
             array(112, 113, 114, 115)
         );
     }
