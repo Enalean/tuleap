@@ -52,11 +52,19 @@ class BacklogItemResource {
     /** @var BacklogItemsUpdater */
     private $artifactlink_updater;
 
+    /** @var ResourcesPatcher */
+    private $resources_patcher;
+
     public function __construct() {
         $this->artifact_factory     = Tracker_ArtifactFactory::instance();
         $this->user_manager         = UserManager::instance();
         $this->tracker_factory      = TrackerFactory::instance();
         $this->artifactlink_updater = new ArtifactLinkUpdater();
+        $this->resources_patcher    = new ResourcesPatcher(
+            $this->artifactlink_updater,
+            $this->artifact_factory,
+            new Tracker_Artifact_PriorityDao()
+        );
     }
 
     /**
@@ -148,7 +156,7 @@ class BacklogItemResource {
             $indexed_children_ids = $this->getChildrenArtifactIds($user, $artifact);
 
             if ($add) {
-                $to_add = $this->removeArtifactFromSource($user, $add);
+                $to_add = $this->resources_patcher->removeArtifactFromSource($user, $add);
                 if (count($to_add)) {
                     $validator = new PatchAddRemoveValidator(
                        $indexed_children_ids,
@@ -170,12 +178,7 @@ class BacklogItemResource {
                 $order_validator = new OrderValidator($indexed_children_ids);
                 $order_validator->validate($order);
 
-                $dao = new Tracker_Artifact_PriorityDao();
-                if ($order->direction === OrderRepresentation::BEFORE) {
-                    $dao->moveListOfArtifactsBefore($order->ids, $order->compared_to);
-                } else {
-                    $dao->moveListOfArtifactsAfter($order->ids, $order->compared_to);
-                }
+                $this->resources_patcher->updateArtifactPriorities($order);
             }
         } catch (IdsFromBodyAreNotUniqueException $exception) {
             throw new RestException(409, $exception->getMessage());
@@ -188,24 +191,6 @@ class BacklogItemResource {
         } catch (\Exception $exception) {
             throw new RestException(400, $exception->getMessage());
         }
-    }
-
-    private function removeArtifactFromSource(PFUser $user, array $add) {
-        $to_add = array();
-        foreach ($add as $move) {
-            if (! isset($move['id']) || ! is_int($move['id'])) {
-                throw new RestException(400, "invalid value specified for `id`. Expected: integer");
-            }
-            if (isset($move['remove_from']) && ! is_int($move['remove_from'])) {
-                throw new RestException(400, "invalid value specified for `remove_from`. Expected: integer");
-            }
-            $to_add[] = $move['id'];
-            if ($move['remove_from']) {
-                $from_artifact = $this->getArtifact($move['remove_from']);
-                $this->artifactlink_updater->updateArtifactLinks($user, $from_artifact, array(), array($move['id']));
-            }
-        }
-        return $to_add;
     }
 
     private function getArtifact($id) {

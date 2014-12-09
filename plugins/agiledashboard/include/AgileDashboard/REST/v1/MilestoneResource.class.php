@@ -42,7 +42,6 @@ use Tracker_NoChangeException;
 use EventManager;
 use URLVerification;
 use Tracker_Artifact_PriorityDao;
-use AgileDashboard_Milestone_Backlog_IBacklogItem;
 
 /**
  * Wrapper for milestone related REST methods
@@ -74,6 +73,9 @@ class MilestoneResource {
 
     /** @var Tracker_ArtifactFactory */
     private $tracker_artifact_factory;
+
+    /** @var ResourcesPatcher */
+    private $resources_patcher;
 
     public function __construct() {
         $planning_factory               = PlanningFactory::build();
@@ -119,6 +121,12 @@ class MilestoneResource {
 
         $this->artifactlink_updater            = new ArtifactLinkUpdater();
         $this->milestone_content_updater       = new MilestoneContentUpdater($tracker_form_element_factory, $this->artifactlink_updater);
+
+        $this->resources_patcher    = new ResourcesPatcher(
+            $this->artifactlink_updater,
+            $this->tracker_artifact_factory,
+            new Tracker_Artifact_PriorityDao()
+        );
 
         $this->event_manager = EventManager::instance();
     }
@@ -424,25 +432,42 @@ class MilestoneResource {
      * <br>
      * Resulting order will be: <pre>[…, 123, 789, 1001, 456, …]</pre>
      *
+     * <br>
+     * Add example:
+     * <pre>
+     * "add": [
+     *   {
+     *     "id": 34
+     *     "remove_from": 56
+     *   },
+     *   ...
+     * ]
+     * </pre>
+     *
+     * <br>
+     * Will remove element id 34 from milestone 56 content and add it to current milestone content
+     *
      * @url PATCH {id}/content
      *
      * @param int                                                $id     Id of the milestone
      * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation $order  Order of the children {@from body}
-     * @param array                                              $add    Ids to add to milestone content {@from body}{@type int}
-     * @param array                                              $remove Ids to remove from milestone content {@from body}{@type int}
+     * @param array                                              $add    Ids to add/move to milestone content  {@from body}
      *
      * @throw 400
      * @throw 404
      * @throw 409
      */
-    protected function patchContent($id, OrderRepresentation $order = null, array $add = null, array $remove = null) {
+    protected function patchContent($id, OrderRepresentation $order = null, array $add = null) {
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
 
         try {
-            if ($remove || $add) {
-                $linked_artifact_ids = $this->milestone_validator->getValidatedArtifactsIdsToAddOrRemoveFromContent($user, $milestone, $remove, $add);
-                $this->milestone_content_updater->updateMilestoneContent($linked_artifact_ids, $user, $milestone);
+            if ($add) {
+                $to_add = $this->resources_patcher->removeArtifactFromSource($user, $add);
+                if (count($to_add)) {
+                    $linked_artifact_ids = $this->milestone_validator->getValidatedArtifactsIdsToAddOrRemoveFromContent($user, $milestone, array(), $to_add);
+                    $this->milestone_content_updater->updateMilestoneContent($linked_artifact_ids, $user, $milestone);
+                }
             }
         } catch (ArtifactDoesNotExistException $exception) {
             throw new RestException(404, $exception->getMessage());
@@ -460,7 +485,7 @@ class MilestoneResource {
             if ($order) {
                 $order->checkFormat($order);
                 $this->milestone_validator->canOrderContent($user, $milestone, $order);
-                $this->updateArtifactPriorities($order);
+                $this->resources_patcher->updateArtifactPriorities($order);
             }
         } catch (IdsFromBodyAreNotUniqueException $exception) {
             throw new RestException(409, $exception->getMessage());

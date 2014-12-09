@@ -172,13 +172,22 @@ class MilestonesBacklogPatchTest extends RestBase {
         );
     }
 
-    public function testPatchContentRemove() {
+    public function testPatchContentReMove() {
         $uri = 'milestones/'.$this->release['id'].'/content';
 
-        $response = $this->getResponse($this->client->patch($uri, null, json_encode(array(
-            'remove' => array(
-                $this->epic_log['id'],
-                $this->epic_adv['id'],
+        $another_release = $this->createRelease("Another release", "Current", array());
+        $another_release_uri = 'milestones/'.$another_release['id'].'/content';
+
+        $response = $this->getResponse($this->client->patch($another_release_uri, null, json_encode(array(
+            'add' => array(
+                array(
+                    'id'          => $this->epic_log['id'],
+                    'remove_from' => $this->release['id'],
+                ),
+                array(
+                    'id'          => $this->epic_adv['id'],
+                    'remove_from' => $this->release['id'],
+                )
             ),
         ))));
         $this->assertEquals($response->getStatusCode(), 200);
@@ -190,6 +199,14 @@ class MilestonesBacklogPatchTest extends RestBase {
                 $this->epic_fin['id'],
             ),
             $this->getIdsOrderedByPriority($uri)
+        );
+
+        $this->assertEquals(
+            array(
+                $this->epic_log['id'],
+                $this->epic_adv['id'],
+            ),
+            $this->getIdsOrderedByPriority($another_release_uri)
         );
     }
 
@@ -203,7 +220,9 @@ class MilestonesBacklogPatchTest extends RestBase {
                 'compared_to' => $this->epic_basic['id']
             ),
             'add' => array(
-                $this->epic_sta['id'],
+                array(
+                    'id' => $this->epic_sta['id'],
+                )
             ),
         ))));
         $this->assertEquals($response->getStatusCode(), 200);
@@ -268,17 +287,21 @@ class MilestonesBacklogPatchTest extends RestBase {
     }
 
     private function createReleaseAndBacklog() {
-        $this->release = $this->createRelease();
+        $this->release = $this->createRelease(
+            "Release 2014 12 02",
+            "Current",
+            array_merge($this->createReleaseBacklog(), array($this->createSprint("Sprint 10")))
+        );
         $this->uri     = 'milestones/'.$this->release['id'].'/backlog';
     }
 
-    private function createRelease() {
+    private function createRelease($name, $status, array $links) {
         $tracker = $this->tracker_test_helper->getTrackerRest('rel');
         return $tracker->createArtifact(
             array(
-                $tracker->getSubmitTextValue('Name', 'Release 2014 12 02'),
-                $tracker->getSubmitListValue('Status', 'Current'),
-                $tracker->getSubmitArtifactLinkValue(array_merge($this->createReleaseBacklog(), array($this->createSprint("Sprint 10"))))
+                $tracker->getSubmitTextValue('Name', $name),
+                $tracker->getSubmitListValue('Status', $status),
+                $tracker->getSubmitArtifactLinkValue($links)
             )
         );
     }
