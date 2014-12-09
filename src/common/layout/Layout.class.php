@@ -1801,7 +1801,7 @@ class Layout extends Response {
               <html>
               <head>
                  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
-        echo $this->displayJavascriptElements($params);
+        echo $this->displayJavascriptElements(array());
         echo $this->displayStylesheetElements(array());
         echo $this->displaySyndicationElements();
         echo '    </head>
