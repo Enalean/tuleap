@@ -7,14 +7,14 @@
 
     function DroppedService($q, ProjectService, MilestoneService, BacklogItemService) {
         return {
-            defineComparedTo                   : defineComparedTo,
-            reorderBacklog                     : reorderBacklog,
-            reorderSubmilestone                : reorderSubmilestone,
-            reorderBacklogItemChildren         : reorderBacklogItemChildren,
-            moveFromBacklogToSubmilestone      : moveFromBacklogToSubmilestone,
-            moveFromChildrenToChildren         : moveFromChildrenToChildren,
-            moveFromSubmilestoneToBacklog      : moveFromSubmilestoneToBacklog,
-            moveFromSubmilestoneToSubmilestone : moveFromSubmilestoneToSubmilestone
+            defineComparedTo                  : defineComparedTo,
+            reorderBacklog                    : reorderBacklog,
+            reorderSubmilestone               : reorderSubmilestone,
+            reorderBacklogItemChildren        : reorderBacklogItemChildren,
+            moveFromBacklogToSubmilestone     : moveFromBacklogToSubmilestone,
+            moveFromChildrenToChildren        : moveFromChildrenToChildren,
+            moveFromSubmilestoneToBacklog     : moveFromSubmilestoneToBacklog,
+            moveFromSubmilestoneToSubmilestone: moveFromSubmilestoneToSubmilestone
         };
 
         function defineComparedTo(item_list, index) {
@@ -56,96 +56,40 @@
 
         function moveFromBacklogToSubmilestone(dropped_item_id, compared_to, submilestone_id) {
             if (compared_to) {
-                return MilestoneService.addAndReorderToContent(submilestone_id, dropped_item_id, compared_to);
+                return MilestoneService.addReorderToContent(submilestone_id, dropped_item_id, compared_to);
             } else {
                 return MilestoneService.addToContent(submilestone_id, dropped_item_id);
             }
         }
 
         function moveFromChildrenToChildren(dropped_item_id, compared_to, source_backlog_item_id, dest_backlog_item_id) {
-            var data = $q.defer();
-
-            BacklogItemService.removeBacklogItemChildren(source_backlog_item_id, dropped_item_id).then(
-                function() {
-                    if (compared_to) {
-                        BacklogItemService.addAndReorderBacklogItemChildren(dest_backlog_item_id, dropped_item_id, compared_to).then(wentFine, errorOccured);
-                    } else {
-                        BacklogItemService.addBacklogItemChildren(dest_backlog_item_id, dropped_item_id).then(wentFine, errorOccured);
-                    }
-                }, errorOccured
-            );
-
-            return data.promise;
-
-            function wentFine() {
-                var error_occured = false;
-                data.resolve(error_occured);
-            }
-
-            function errorOccured() {
-                var error_occured = true;
-                data.resolve(error_occured);
+            if (compared_to) {
+                return BacklogItemService.removeAddReorderBacklogItemChildren(source_backlog_item_id, dest_backlog_item_id, dropped_item_id, compared_to);
+            } else {
+                return BacklogItemService.removeAddBacklogItemChildren(source_backlog_item_id, dest_backlog_item_id, dropped_item_id);
             }
         }
 
         function moveFromSubmilestoneToBacklog(dropped_item_id, compared_to, submilestone_id, backlog) {
-            var data = $q.defer();
+            if (backlog.rest_base_route === 'projects') {
+                if (compared_to) {
+                    return ProjectService.removeAddReorderBacklog(submilestone_id, backlog.rest_route_id, dropped_item_id, compared_to);
+                }
 
-            MilestoneService.removeFromContent(submilestone_id, dropped_item_id).then(
-                function() {
-                    if (backlog.rest_base_route === 'projects') {
-                        if (compared_to) {
-                            ProjectService.reorderBacklog(backlog.rest_route_id, dropped_item_id, compared_to).then(wentFine, errorOccured);
-                        }
-                        // no add to project's backlog, it's normal
-
-                    } else if (backlog.rest_base_route === 'milestones') {
-                        if (compared_to) {
-                            MilestoneService.addAndReorderToBacklog(backlog.rest_route_id, dropped_item_id, compared_to).then(wentFine, errorOccured);
-                        } else {
-                            MilestoneService.addToBacklog(backlog.rest_route_id, dropped_item_id).then(wentFine, errorOccured);
-                        }
-                    }
-
-                }, errorOccured
-            );
-
-            return data.promise;
-
-            function wentFine() {
-                var error_occured = false;
-                data.resolve(error_occured);
-            }
-
-            function errorOccured() {
-                var error_occured = true;
-                data.resolve(error_occured);
+            } else if (backlog.rest_base_route === 'milestones') {
+                if (compared_to) {
+                    return MilestoneService.removeAddReorderToBacklog(submilestone_id, backlog.rest_route_id, dropped_item_id, compared_to);
+                } else {
+                    return MilestoneService.removeAddToBacklog(submilestone_id, backlog.rest_route_id, dropped_item_id);
+                }
             }
         }
 
         function moveFromSubmilestoneToSubmilestone(dropped_item_id, compared_to, source_submilestone_id, dest_submilestone_id) {
-            var data = $q.defer();
-
-            MilestoneService.removeFromContent(source_submilestone_id, dropped_item_id).then(
-                function() {
-                    if (compared_to) {
-                        MilestoneService.addAndReorderToContent(dest_submilestone_id, dropped_item_id, compared_to).then(wentFine, errorOccured);
-                    } else {
-                        MilestoneService.addToContent(dest_submilestone_id, dropped_item_id).then(wentFine, errorOccured);
-                    }
-                }, errorOccured
-            );
-
-            return data.promise;
-
-            function wentFine() {
-                var error_occured = false;
-                data.resolve(error_occured);
-            }
-
-            function errorOccured() {
-                var error_occured = true;
-                data.resolve(error_occured);
+            if (compared_to) {
+                return MilestoneService.removeAddReorderToContent(source_submilestone_id, dest_submilestone_id, dropped_item_id, compared_to);
+            } else {
+                return MilestoneService.removeAddToContent(source_submilestone_id, dest_submilestone_id, dropped_item_id);
             }
         }
     }

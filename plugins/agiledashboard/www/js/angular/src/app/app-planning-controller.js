@@ -22,6 +22,7 @@
 
         _.extend($scope, {
             rest_error_occured         : false,
+            rest_error                 : "",
             backlog_items              : [],
             milestones                 : [],
             backlog                    : {},
@@ -223,19 +224,19 @@
 
                         } else if (source_list_element.hasClass('submilestone')) {
                             DroppedService
-                                .reorderSubmilestone(dropped_item_id, compared_to, dest_list_element.attr('data-submilestone-id'))
+                                .reorderSubmilestone(dropped_item_id, compared_to, parseInt(dest_list_element.attr('data-submilestone-id'), 10))
                                 .then(function() {}, catchError);
 
                         } else if (source_list_element.hasClass('backlog-item-children')) {
                             DroppedService
-                                .reorderBacklogItemChildren(dropped_item_id, compared_to, dest_list_element.attr('data-backlog-item-id'))
+                                .reorderBacklogItemChildren(dropped_item_id, compared_to, parseInt(dest_list_element.attr('data-backlog-item-id'), 10))
                                 .then(function() {}, catchError);
                         }
                         break;
 
                     case movedFromBacklogToSubmilestone():
                         DroppedService
-                            .moveFromBacklogToSubmilestone(dropped_item_id, compared_to, dest_list_element.attr('data-submilestone-id'))
+                            .moveFromBacklogToSubmilestone(dropped_item_id, compared_to, parseInt(dest_list_element.attr('data-submilestone-id'), 10))
                             .then(function() {}, catchError);
                         break;
 
@@ -244,10 +245,10 @@
                             .moveFromChildrenToChildren(
                                 dropped_item_id,
                                 compared_to,
-                                source_list_element.attr('data-backlog-item-id'),
-                                dest_list_element.attr('data-backlog-item-id')
+                                parseInt(source_list_element.attr('data-backlog-item-id'), 10),
+                                parseInt(dest_list_element.attr('data-backlog-item-id'), 10)
                             )
-                            .then(catchPromiseError);
+                            .then(function() {}, catchError);
                         break;
 
                     case movedFromSubmilestoneToBacklog():
@@ -255,10 +256,10 @@
                             .moveFromSubmilestoneToBacklog(
                                 dropped_item_id,
                                 compared_to,
-                                source_list_element.attr('data-submilestone-id'),
+                                parseInt(source_list_element.attr('data-submilestone-id'), 10),
                                 $scope.backlog
                             )
-                            .then(catchPromiseError);
+                            .then(function() {}, catchError);
                         break;
 
                     case movedFromOneSubmilestoneToAnother():
@@ -266,21 +267,16 @@
                             .moveFromSubmilestoneToSubmilestone(
                                 dropped_item_id,
                                 compared_to,
-                                source_list_element.attr('data-submilestone-id'),
-                                dest_list_element.attr('data-submilestone-id')
+                                parseInt(source_list_element.attr('data-submilestone-id'), 10),
+                                parseInt(dest_list_element.attr('data-submilestone-id'), 10)
                             )
-                            .then(catchPromiseError);
+                            .then(function() {}, catchError);
                         break;
                 }
 
-                function catchError() {
+                function catchError(data) {
                     $scope.rest_error_occured = true;
-                }
-
-                function catchPromiseError(error_occured) {
-                    if (error_occured === true) {
-                        $scope.rest_error_occured = true;
-                    }
+                    $scope.rest_error         = data.data.error.code + ' ' + data.data.error.message;
                 }
 
                 function movedInTheSameList() {
