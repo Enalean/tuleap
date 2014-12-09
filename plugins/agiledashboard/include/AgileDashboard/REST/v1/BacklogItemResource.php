@@ -97,7 +97,7 @@ class BacklogItemResource {
     }
 
     /**
-     * Change children order
+     * Partial re-order of backlog items plus update of children
      *
      * Define the priorities of some children of a given Backlog Item
      *
@@ -114,18 +114,32 @@ class BacklogItemResource {
      * <br>
      * Resulting order will be: <pre>[…, 123, 789, 1001, 456, …]</pre>
      *
+     * <br>
+     * Add example:
+     * <pre>
+     * "add": [
+     *   {
+     *     "id": 34
+     *     "remove_from": 56
+     *   },
+     *   ...
+     * ]
+     * </pre>
+     *
+     * <br>
+     * Will remove element id 34 from 56 children and add it to current backlog_items children
+     *
      * @url PATCH {id}/children
      *
-     * @param int                                                $id    Id of the Backlog Item
-     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation $order Order of the children {@from body}
-     * @param array                                              $add    Ids to add to milestone content {@from body}{@type int}
-     * @param array                                              $remove Ids to remove from milestone content {@from body}{@type int}
+     * @param int                                                   $id    Id of the Backlog Item
+     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation    $order Order of the children {@from body}
+     * @param array                                                 $add   Ids to add to backlog_items content  {@from body}
      *
      * @throws 400
      * @throws 404
      * @throws 409
      */
-    protected function patch($id, OrderRepresentation $order = null, array $add = null, array $remove = null) {
+    protected function patch($id, OrderRepresentation $order = null, array $add = null) {
 
         $artifact = $this->getArtifact($id);
         $user     = $this->getCurrentUser();
@@ -133,19 +147,22 @@ class BacklogItemResource {
         try {
             $indexed_children_ids = $this->getChildrenArtifactIds($user, $artifact);
 
-            if ($add || $remove) {
-                $validator = new PatchAddRemoveValidator(
-                    $indexed_children_ids,
-                    new PatchAddBacklogItemsValidator(
-                        $this->artifact_factory,
-                        $this->tracker_factory->getPossibleChildren($artifact->getTracker()),
-                        $id
-                    )
-                );
-                $backlog_items_ids = $validator->validate($id, $remove, $add);
+            if ($add) {
+                $to_add = $this->removeArtifactFromSource($user, $add);
+                if (count($to_add)) {
+                    $validator = new PatchAddRemoveValidator(
+                       $indexed_children_ids,
+                       new PatchAddBacklogItemsValidator(
+                           $this->artifact_factory,
+                           $this->tracker_factory->getPossibleChildren($artifact->getTracker()),
+                           $id
+                       )
+                   );
+                   $backlog_items_ids = $validator->validate($id, array(), $to_add);
 
-                $this->artifactlink_updater->update($backlog_items_ids, $artifact, $user, new FilterValidBacklogItems());
-                $indexed_children_ids = array_flip($backlog_items_ids);
+                   $this->artifactlink_updater->update($backlog_items_ids, $artifact, $user, new FilterValidBacklogItems());
+                   $indexed_children_ids = array_flip($backlog_items_ids);
+                }
             }
 
             if ($order) {
@@ -171,6 +188,24 @@ class BacklogItemResource {
         } catch (\Exception $exception) {
             throw new RestException(400, $exception->getMessage());
         }
+    }
+
+    private function removeArtifactFromSource(PFUser $user, array $add) {
+        $to_add = array();
+        foreach ($add as $move) {
+            if (! isset($move['id']) || ! is_int($move['id'])) {
+                throw new RestException(400, "invalid value specified for `id`. Expected: integer");
+            }
+            if (isset($move['remove_from']) && ! is_int($move['remove_from'])) {
+                throw new RestException(400, "invalid value specified for `remove_from`. Expected: integer");
+            }
+            $to_add[] = $move['id'];
+            if ($move['remove_from']) {
+                $from_artifact = $this->getArtifact($move['remove_from']);
+                $this->artifactlink_updater->updateArtifactLinks($user, $from_artifact, array(), array($move['id']));
+            }
+        }
+        return $to_add;
     }
 
     private function getArtifact($id) {
