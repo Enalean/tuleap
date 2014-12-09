@@ -1,5 +1,6 @@
 <?php
 require_once('common/dao/include/DataAccessResult.class.php');
+require_once('common/dao/include/DataAccessResultEmpty.class.php');
 Mock::generatePartial('DataAccessResult', 'DataAccessResultTestVersion', array('current', 'valid', 'next', 'rewind', 'key'));
 
 
@@ -68,5 +69,20 @@ class DataAccessResult_InstanciatorTest extends UnitTestCase {
     }
 }
 
+class DataAccessResultEmptyTest extends TuleapTestCase {
+
+    /** @var DataAccessResultEmptyDar */
+    private $empty_dar;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->empty_dar = new DataAccessResultEmpty();
+    }
+
+    public function itReturnsNullOnInstanciateWith() {
+        $this->assertIsA($this->empty_dar->instanciateWith('test'), 'DataAccessResultEmpty');
+    }
+}
 
 ?>

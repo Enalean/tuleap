@@ -97,6 +97,10 @@ class DataAccessResultEmpty implements IProvideDataAccessResult {
     public function count() {
         return 0;
     }
+
+    public function instanciateWith() {
+        return $this;
+    }
 }
 
 ?>
