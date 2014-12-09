@@ -1,3 +1,6 @@
+Version 1.113 - Tuleap 7.8
+    * request #7676: Fatal Error on drag'n'drop on old planning view
+
 Version 1.112 - Tuleap 7.8
     * story #7577: fixing dependencies for CI
 
