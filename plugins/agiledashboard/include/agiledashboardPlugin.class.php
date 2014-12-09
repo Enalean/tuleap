@@ -756,7 +756,8 @@ class AgileDashboardPlugin extends Plugin {
         $params['result'] = $project_backlog_resource->patch(
             $user,
             $params['project'],
-            $params['order']
+            $params['order'],
+            $params['add']
         );
     }
 
