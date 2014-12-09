@@ -66,7 +66,7 @@ class ResourcesPatcher {
                 throw new RestException(400, "invalid value specified for `remove_from`. Expected: integer");
             }
             $to_add[] = $move['id'];
-            if ($move['remove_from']) {
+            if (isset($move['remove_from'])) {
                 $from_artifact = $this->getArtifact($move['remove_from']);
                 $this->artifactlink_updater->updateArtifactLinks($user, $from_artifact, array(), array($move['id']));
             }
