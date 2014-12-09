@@ -1,3 +1,14 @@
+Version 1.114 - Tuleap 7.8
+    * PATCH /milestones/{id}/backlog with add properties
+
+
+-> Subtleties:
+* There is no remove here as there is no way to remove something from backlog.
+* Add will only check if the given artifact is from one of the possible tracker
+  for submilestones (ie. user story if sprints).
+  This could lead to inconsistencies if wrongly used (but nothing worst than
+  modifying tracker artifact links by hand)
+
 Version 1.113 - Tuleap 7.8
     * request #7676: Fatal Error on drag'n'drop on old planning view
 
