@@ -13,6 +13,7 @@ Version 7.8 (Not released yet)
 	* request #7646: Ftp files can't be moved in FRS
 	* request #7653: Import of new agile dashboard doesn't activate "Scrum" mode
 	* request #7647: Notices on preferences page and csv defaults broken
+	* request #7678 fatal error on artifacts links -> create new button
 
 	== Development ==
 	* story #7511: fetch the list of allowed tracker types for the top backlog
