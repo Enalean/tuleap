@@ -83,28 +83,45 @@ class MilestoneResourceValidator {
      * @throws ArtifactIsClosedOrAlreadyPlannedInAnotherMilestone
      */
     public function validateArtifactsFromBodyContent(array $ids, Planning_Milestone $milestone, PFUser $user) {
+        return $this->validateArtifactsForMilestoneContent($ids, $milestone, $user, false);
+    }
+
+    /**
+     * @throws IdsFromBodyAreNotUniqueException
+     * @throws ArtifactDoesNotExistException
+     * @throws ArtifactIsNotInBacklogTrackerException
+     * @throws ArtifactIsClosedOrAlreadyPlannedInAnotherMilestone
+     */
+    public function validateArtifactsFromBodyContentWithClosedItems(array $ids, Planning_Milestone $milestone, PFUser $user) {
+        return $this->validateArtifactsForMilestoneContent($ids, $milestone, $user, true);
+    }
+
+    private function validateArtifactsForMilestoneContent(array $ids, Planning_Milestone $milestone, PFUser $user, $accept_closed) {
         $open_unplanned = null;
+        $todo           = null;
+        $done           = null;
 
         if (! $this->idsAreUnique($ids)) {
             throw new IdsFromBodyAreNotUniqueException();
         }
 
-        //We only want to use this strategy when editing the list of items in a milestone. (a descendant
-        //strategy would fetch all the children of the backlog items).
-        $strategy = $this->backlog_strategy_factory->getSelfBacklogStrategy($milestone);
+        if (! $accept_closed) {
+            //We only want to use this strategy when editing the list of items in a milestone. (a descendant
+            //strategy would fetch all the children of the backlog items).
+            $strategy = $this->backlog_strategy_factory->getSelfBacklogStrategy($milestone);
 
-        if ($milestone->getParent()) {
-            $open_unplanned = $this->backlog_item_collection_factory->getUnplannedOpenCollection($user, $milestone->getParent(), $this->backlog_strategy_factory->getBacklogStrategy($milestone->getParent()), false);
+            if ($milestone->getParent()) {
+                $open_unplanned = $this->backlog_item_collection_factory->getUnplannedOpenCollection($user, $milestone->getParent(), $this->backlog_strategy_factory->getBacklogStrategy($milestone->getParent()), false);
+            } else {
+                $top_milestone       = $this->milestone_factory->getVirtualTopMilestone($user, $milestone->getProject());
+                $strategy_unassigned = $this->backlog_strategy_factory->getSelfBacklogStrategy($top_milestone);
 
-        } else {
-            $top_milestone       = $this->milestone_factory->getVirtualTopMilestone($user, $milestone->getProject());
-            $strategy_unassigned = $this->backlog_strategy_factory->getSelfBacklogStrategy($top_milestone);
+                $open_unplanned = $this->backlog_item_collection_factory->getUnassignedOpenCollection($user, $top_milestone, $strategy_unassigned, false);
+            }
 
-            $open_unplanned = $this->backlog_item_collection_factory->getUnassignedOpenCollection($user, $top_milestone, $strategy_unassigned, false);
+            $done = $this->getMilestoneDoneBacklogItems($user, $milestone, $strategy);
+            $todo = $this->getMilestoneTodoBacklogItems($user, $milestone, $strategy);
         }
-
-        $done = $this->getMilestoneDoneBacklogItems($user, $milestone, $strategy);
-        $todo = $this->getMilestoneTodoBacklogItems($user, $milestone, $strategy);
 
         $backlog_tracker_ids = $this->planning_factory->getBacklogTrackersIds($milestone->getPlanning()->getId());
 
@@ -140,9 +157,9 @@ class MilestoneResourceValidator {
     private function getArtifactsFromBodyContent(
         array $ids,
         array $backlog_tracker_ids,
-        AgileDashboard_Milestone_Backlog_IBacklogItemCollection $todo,
-        AgileDashboard_Milestone_Backlog_IBacklogItemCollection $done,
-        AgileDashboard_Milestone_Backlog_IBacklogItemCollection $open_unplanned
+        AgileDashboard_Milestone_Backlog_IBacklogItemCollection $todo = null,
+        AgileDashboard_Milestone_Backlog_IBacklogItemCollection $done = null,
+        AgileDashboard_Milestone_Backlog_IBacklogItemCollection $open_unplanned = null
     ) {
         $artifacts = array();
 
@@ -157,7 +174,8 @@ class MilestoneResourceValidator {
                 throw new ArtifactIsNotInBacklogTrackerException($potential_backlog_item_id);
             }
 
-            if (! $this->isArtifactInUnplannedParentMilestoneBacklogItems($artifact, $open_unplanned)
+            if ($todo !== null
+                && ! $this->isArtifactInUnplannedParentMilestoneBacklogItems($artifact, $open_unplanned)
                 && ! $this->isArtifactInPlannedMilestoneBacklogItems($artifact, $done, $todo)
             ) {
                 throw new ArtifactIsClosedOrAlreadyPlannedInAnotherMilestone($potential_backlog_item_id);
@@ -334,7 +352,7 @@ class MilestoneResourceValidator {
         return $linked_artifacts_index;
     }
 
-    public function getValidatedArtifactsIdsToRemoveFromContent(PFUser $user, Planning_Milestone $milestone, $remove, $add) {
+    public function getValidatedArtifactsIdsToAddOrRemoveFromContent(PFUser $user, Planning_Milestone $milestone, $remove, $add) {
         $validator = new PatchAddRemoveValidator(
             $this->getIndexedLinkedArtifactIds($user, $milestone),
             new PatchAddContentValidator(

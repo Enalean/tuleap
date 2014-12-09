@@ -54,6 +54,6 @@ class PatchAddContentValidator implements IValidateElementsToAdd {
      * @throws ArtifactIsClosedOrAlreadyPlannedInAnotherMilestone
      */
     public function validate(array $to_add) {
-        $this->milestone_validator->validateArtifactsFromBodyContent($to_add, $this->milestone, $this->user);
+        $this->milestone_validator->validateArtifactsFromBodyContentWithClosedItems($to_add, $this->milestone, $this->user);
     }
 }
