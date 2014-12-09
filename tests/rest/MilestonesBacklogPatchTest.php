@@ -243,15 +243,20 @@ class MilestonesBacklogPatchTest extends RestBase {
     public function testPatchBacklogAddAndOrder() {
         $uri = 'milestones/'.$this->release['id'].'/backlog';
 
-        $story_in_the_wild = $this->createStory("Created in sprint");
+        $inconsistent_story = $this->createStory("Created in sprint");
+        $sprint_id = $this->createSprint("Sprint 9001", array($inconsistent_story['id']));
+
         $response = $this->getResponse($this->client->patch($uri, null, json_encode(array(
             'order'  => array(
-                'ids'         => array($story_in_the_wild['id'], $this->story_div['id'], $this->story_sub['id']),
+                'ids'         => array($inconsistent_story['id'], $this->story_div['id'], $this->story_sub['id']),
                 'direction'   => 'after',
                 'compared_to' => $this->story_mul['id']
             ),
             'add' => array(
-                $story_in_the_wild['id'],
+                array(
+                    'id'          => $inconsistent_story['id'],
+                    'remove_from' => $sprint_id,
+                )
             ),
         ))));
         $this->assertEquals($response->getStatusCode(), 200);
@@ -260,12 +265,14 @@ class MilestonesBacklogPatchTest extends RestBase {
             array(
                 $this->story_add['id'],
                 $this->story_mul['id'],
-                $story_in_the_wild['id'],
+                $inconsistent_story['id'],
                 $this->story_div['id'],
                 $this->story_sub['id'],
             ),
             $this->getIdsOrderedByPriority($uri)
         );
+
+        $this->assertCount(0, $this->getResponse($this->client->get('milestones/'.$sprint_id.'/backlog'))->json());
     }
 
     private function getIdsOrderedByPriority($uri) {

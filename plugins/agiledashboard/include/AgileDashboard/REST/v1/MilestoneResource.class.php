@@ -618,11 +618,26 @@ class MilestoneResource {
      * <br>
      * Resulting order will be: <pre>[…, 123, 789, 1001, 456, …]</pre>
      *
+     * <br>
+     * Add example:
+     * <pre>
+     * "add": [
+     *   {
+     *     "id": 34
+     *     "remove_from": 56
+     *   },
+     *   ...
+     * ]
+     * </pre>
+     *
+     * <br>
+     * Will remove element id 34 from milestone 56 backlog and add it to current backlog
+     *
      * @url PATCH {id}/backlog
      *
      * @param int                                                $id    Id of the milestone Item
      * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation $order Order of the children {@from body}
-     * @param array                                              $add    Ids to add to backlog content {@from body}{@type int}
+     * @param array                                              $add    Ids to add/move to milestone backlog {@from body}
      *
      * @throw 400
      * @throw 404
@@ -635,8 +650,11 @@ class MilestoneResource {
         $to_add = array();
         try {
             if ($add) {
-                $to_add = $this->milestone_validator->validateArtifactIdsCanBeAddedToBacklog($add, $milestone, $user);
-                $this->addMissingElementsToBacklog($milestone, $user, $to_add);
+                $to_add = $this->resources_patcher->removeArtifactFromSource($user, $add);
+                if (count($to_add)) {
+                    $valid_to_add = $this->milestone_validator->validateArtifactIdsCanBeAddedToBacklog($to_add, $milestone, $user);
+                    $this->addMissingElementsToBacklog($milestone, $user, $valid_to_add);
+                }
             }
         } catch (Tracker_NoChangeException $exception) {
             // nothing to do
@@ -648,12 +666,12 @@ class MilestoneResource {
             if ($order) {
                 $order->checkFormat($order);
                 $this->milestone_validator->validateArtifactIdsAreInOpenAndUnplannedMilestone(
-                    $this->filterOutAddedElements($order, $add),
+                    $this->filterOutAddedElements($order, $to_add),
                     $milestone,
                     $user
                 );
 
-                $this->updateArtifactPriorities($order);
+                $this->resources_patcher->updateArtifactPriorities($order);
             }
         } catch (IdsFromBodyAreNotUniqueException $exception) {
             throw new RestException(409, $exception->getMessage());
