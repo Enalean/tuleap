@@ -16,6 +16,7 @@ Version 7.8 (Not released yet)
 	* request #7678 fatal error on artifacts links -> create new button
 
 	== Development ==
+	* story #7511: planning v2 enhancements
 	* story #7511: fetch the list of allowed tracker types for the top backlog
 	* story #7511: Add drag'n'drop (doesn't call REST routes) and update Angular & jQuery
 	* story #7511: rewriting prototype code in jQuery
@@ -32,7 +33,7 @@ Version 7.8 (Not released yet)
 	* mediawiki: 0.58
 	* tracker: 5.530
 	* cardwall: 1.42
-	* agiledashboard: 1.117
+	* agiledashboard: 1.118
 	* tests: 5.26
 	* proftpd: 0.19
 	* docman: 2.26.55
