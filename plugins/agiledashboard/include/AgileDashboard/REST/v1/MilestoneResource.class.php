@@ -463,11 +463,13 @@ class MilestoneResource {
 
         try {
             if ($add) {
+                $this->resources_patcher->startTransaction();
                 $to_add = $this->resources_patcher->removeArtifactFromSource($user, $add);
                 if (count($to_add)) {
                     $linked_artifact_ids = $this->milestone_validator->getValidatedArtifactsIdsToAddOrRemoveFromContent($user, $milestone, array(), $to_add);
-                    $this->milestone_content_updater->updateMilestoneContent($linked_artifact_ids, $user, $milestone);
+                    $this->artifactlink_updater->updateArtifactLinks($user, $milestone->getArtifact(), $to_add, array());
                 }
+                $this->resources_patcher->commit();
             }
         } catch (ArtifactDoesNotExistException $exception) {
             throw new RestException(404, $exception->getMessage());
@@ -479,6 +481,9 @@ class MilestoneResource {
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_NoChangeException $exception) {
             //Do nothing
+        } catch (\Exception $exception) {
+            throw new RestException(400, $exception->getMessage());
+            return;
         }
 
         try {
@@ -650,11 +655,13 @@ class MilestoneResource {
         $to_add = array();
         try {
             if ($add) {
+                $this->resources_patcher->startTransaction();
                 $to_add = $this->resources_patcher->removeArtifactFromSource($user, $add);
                 if (count($to_add)) {
                     $valid_to_add = $this->milestone_validator->validateArtifactIdsCanBeAddedToBacklog($to_add, $milestone, $user);
                     $this->addMissingElementsToBacklog($milestone, $user, $valid_to_add);
                 }
+                $this->resources_patcher->commit();
             }
         } catch (Tracker_NoChangeException $exception) {
             // nothing to do
@@ -686,8 +693,7 @@ class MilestoneResource {
 
     private function addMissingElementsToBacklog(Planning_Milestone $milestone, PFUser $user, array $to_add) {
         if (count($to_add) > 0) {
-            $fields_data = $this->artifactlink_updater->formatFieldDatas($milestone->getArtifact()->getAnArtifactLinkField($user), $to_add, array());
-            $this->artifactlink_updater->unlinkAndLinkElements($milestone->getArtifact(), $fields_data, $user, $to_add);
+            $this->artifactlink_updater->updateArtifactLinks($user, $milestone->getArtifact(), $to_add, array());
         }
     }
 

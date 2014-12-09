@@ -65,8 +65,11 @@ class DataAccessObject {
 
     public function commit() {
         $this->da->commit();
+        if ($this->da->isError() && $this->throw_exception_on_errors) {
+            throw new DataAccessException($this->da->isError());
+        }
     }
-    
+
     public function rollBack() {
         $this->da->rollback();
     }

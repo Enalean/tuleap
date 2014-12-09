@@ -12,13 +12,12 @@
         });
 
         return {
-            getProjectBacklogItems          : getProjectBacklogItems,
-            getMilestoneBacklogItems        : getMilestoneBacklogItems,
-            getBacklogItemChildren          : getBacklogItemChildren,
-            reorderBacklogItemChildren      : reorderBacklogItemChildren,
-            addAndReorderBacklogItemChildren: addAndReorderBacklogItemChildren,
-            addBacklogItemChildren          : addBacklogItemChildren,
-            removeBacklogItemChildren       : removeBacklogItemChildren
+            getProjectBacklogItems             : getProjectBacklogItems,
+            getMilestoneBacklogItems           : getMilestoneBacklogItems,
+            getBacklogItemChildren             : getBacklogItemChildren,
+            reorderBacklogItemChildren         : reorderBacklogItemChildren,
+            removeAddReorderBacklogItemChildren: removeAddReorderBacklogItemChildren,
+            removeAddBacklogItemChildren       : removeAddBacklogItemChildren
         };
 
         function getProjectBacklogItems(project_id, limit, offset) {
@@ -106,32 +105,30 @@
                 });
         }
 
-        function addAndReorderBacklogItemChildren(backlog_item_id, dropped_item_id, compared_to) {
-            return rest.one('backlog_items', backlog_item_id)
+        function removeAddReorderBacklogItemChildren(source_backlog_item_id, dest_backlog_item_id, dropped_item_id, compared_to) {
+            return rest.one('backlog_items', dest_backlog_item_id)
                 .all('children')
                 .patch({
                     order: {
-                        ids         : [dropped_item_id],
-                        direction   : compared_to.direction,
-                        compared_to : compared_to.item_id
+                        ids        : [dropped_item_id],
+                        direction  : compared_to.direction,
+                        compared_to: compared_to.item_id
                     },
-                    add: [dropped_item_id]
+                    add: [{
+                        id         : dropped_item_id,
+                        remove_from: source_backlog_item_id
+                    }]
                 });
         }
 
-        function addBacklogItemChildren(backlog_item_id, dropped_item_id) {
-            return rest.one('backlog_items', backlog_item_id)
+        function removeAddBacklogItemChildren(source_backlog_item_id, dest_backlog_item_id, dropped_item_id) {
+            return rest.one('backlog_items', dest_backlog_item_id)
                 .all('children')
                 .patch({
-                    add: [dropped_item_id]
-                });
-        }
-
-        function removeBacklogItemChildren(backlog_item_id, dropped_item_id) {
-            return rest.one('backlog_items', backlog_item_id)
-                .all('children')
-                .patch({
-                    remove: [dropped_item_id]
+                    add: [{
+                        id         : dropped_item_id,
+                        remove_from: source_backlog_item_id
+                    }]
                 });
         }
     }

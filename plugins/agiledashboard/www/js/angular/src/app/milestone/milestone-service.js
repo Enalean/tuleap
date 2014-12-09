@@ -12,18 +12,19 @@
         });
 
         return {
-            getSubMilestones      : getSubMilestones,
-            getMilestones         : getMilestones,
-            getMilestone          : getMilestone,
-            getContent            : getContent,
-            reorderBacklog        : reorderBacklog,
-            addAndReorderToBacklog: addAndReorderToBacklog,
-            addToBacklog          : addToBacklog,
-            reorderContent        : reorderContent,
-            addAndReorderToContent: addAndReorderToContent,
-            addToContent          : addToContent,
-            removeFromContent     : removeFromContent,
-            updateInitialEffort   : updateInitialEffort
+            getSubMilestones         : getSubMilestones,
+            getMilestones            : getMilestones,
+            getMilestone             : getMilestone,
+            getContent               : getContent,
+            reorderBacklog           : reorderBacklog,
+            removeAddReorderToBacklog: removeAddReorderToBacklog,
+            removeAddToBacklog       : removeAddToBacklog,
+            reorderContent           : reorderContent,
+            addReorderToContent      : addReorderToContent,
+            addToContent             : addToContent,
+            removeAddReorderToContent: removeAddReorderToContent,
+            removeAddToContent       : removeAddToContent,
+            updateInitialEffort      : updateInitialEffort
         };
 
         function getMilestone(milestone_id) {
@@ -207,8 +208,8 @@
                 });
         }
 
-        function addAndReorderToBacklog(milestone_id, dropped_item_id, compared_to) {
-            return rest.one('milestones', milestone_id)
+        function removeAddReorderToBacklog(source_milestone_id, dest_milestone_id, dropped_item_id, compared_to) {
+            return rest.one('milestones', dest_milestone_id)
                 .all('backlog')
                 .patch({
                     order: {
@@ -216,15 +217,21 @@
                         direction   : compared_to.direction,
                         compared_to : compared_to.item_id
                     },
-                    add: [dropped_item_id]
+                    add: [{
+                        id         : dropped_item_id,
+                        remove_from: source_milestone_id
+                    }]
                 });
         }
 
-        function addToBacklog(milestone_id, dropped_item_id) {
-            return rest.one('milestones', milestone_id)
+        function removeAddToBacklog(source_milestone_id, dest_milestone_id, dropped_item_id) {
+            return rest.one('milestones', dest_milestone_id)
                 .all('backlog')
                 .patch({
-                    add: [dropped_item_id]
+                    add: [{
+                        id         : dropped_item_id,
+                        remove_from: source_milestone_id
+                    }]
                 });
         }
 
@@ -240,7 +247,7 @@
                 });
         }
 
-        function addAndReorderToContent(milestone_id, dropped_item_id, compared_to) {
+        function addReorderToContent(milestone_id, dropped_item_id, compared_to) {
             return rest.one('milestones', milestone_id)
                 .all('content')
                 .patch({
@@ -249,7 +256,9 @@
                         direction   : compared_to.direction,
                         compared_to : compared_to.item_id
                     },
-                    add: [dropped_item_id]
+                    add: [{
+                        id: dropped_item_id
+                    }]
                 });
         }
 
@@ -257,15 +266,36 @@
             return rest.one('milestones', milestone_id)
                 .all('content')
                 .patch({
-                    add: [dropped_item_id]
+                    add: [{
+                        id: dropped_item_id
+                    }]
                 });
         }
 
-        function removeFromContent(milestone_id, dropped_item_id) {
-            return rest.one('milestones', milestone_id)
+        function removeAddReorderToContent(source_milestone_id, dest_milestone_id, dropped_item_id, compared_to) {
+            return rest.one('milestones', dest_milestone_id)
                 .all('content')
                 .patch({
-                    remove: [dropped_item_id]
+                    order: {
+                        ids         : [dropped_item_id],
+                        direction   : compared_to.direction,
+                        compared_to : compared_to.item_id
+                    },
+                    add: [{
+                        id         : dropped_item_id,
+                        remove_from: source_milestone_id
+                    }]
+                });
+        }
+
+        function removeAddToContent(source_milestone_id, dest_milestone_id, dropped_item_id) {
+            return rest.one('milestones', dest_milestone_id)
+                .all('content')
+                .patch({
+                    add: [{
+                        id         : dropped_item_id,
+                        remove_from: source_milestone_id
+                    }]
                 });
         }
     }
