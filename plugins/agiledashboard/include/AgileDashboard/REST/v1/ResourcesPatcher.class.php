@@ -46,6 +46,15 @@ class ResourcesPatcher {
         $this->artifactlink_updater = $artifactlink_updater;
         $this->artifact_factory     = $artifact_factory;
         $this->priority_dao         = $priority_dao;
+        $this->priority_dao->enableExceptionsOnError();
+    }
+
+    public function startTransaction() {
+        $this->priority_dao->startTransaction();
+    }
+
+    public function commit() {
+        $this->priority_dao->commit();
     }
 
     public function updateArtifactPriorities(OrderRepresentation $order) {

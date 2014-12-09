@@ -156,6 +156,7 @@ class BacklogItemResource {
             $indexed_children_ids = $this->getChildrenArtifactIds($user, $artifact);
 
             if ($add) {
+                $this->resources_patcher->startTransaction();
                 $to_add = $this->resources_patcher->removeArtifactFromSource($user, $add);
                 if (count($to_add)) {
                     $validator = new PatchAddRemoveValidator(
@@ -168,9 +169,10 @@ class BacklogItemResource {
                    );
                    $backlog_items_ids = $validator->validate($id, array(), $to_add);
 
-                   $this->artifactlink_updater->update($backlog_items_ids, $artifact, $user, new FilterValidBacklogItems());
+                   $this->artifactlink_updater->updateArtifactLinks($user, $artifact, $backlog_items_ids, array());
                    $indexed_children_ids = array_flip($backlog_items_ids);
                 }
+                $this->resources_patcher->commit();
             }
 
             if ($order) {

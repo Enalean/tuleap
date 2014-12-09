@@ -201,13 +201,10 @@ class MilestonesBacklogPatchTest extends RestBase {
             $this->getIdsOrderedByPriority($uri)
         );
 
-        $this->assertEquals(
-            array(
-                $this->epic_log['id'],
-                $this->epic_adv['id'],
-            ),
-            $this->getIdsOrderedByPriority($another_release_uri)
-        );
+        $another_release_content = $this->getIdsOrderedByPriority($another_release_uri);
+        $this->assertCount(2, $another_release_content);
+        $this->assertContains($this->epic_log['id'], $another_release_content);
+        $this->assertContains($this->epic_adv['id'], $another_release_content);
     }
 
     public function testPatchAddAndOrder() {
