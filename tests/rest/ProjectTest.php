@@ -516,4 +516,79 @@ class ProjectTest extends RestBase {
         $this->assertEquals($third_item['label'], "Epic epoc");
     }
 
+    public function testPATCHbacklogMoveBackAndForthInTopBacklog() {
+        $uri = 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/backlog';
+        $backlog_items = $this->getResponse($this->client->get($uri))->json();
+
+        $first_item  = $backlog_items[0];
+        $second_item = $backlog_items[1];
+        $third_item  = $backlog_items[2];
+
+        $releases = $this->getResponse($this->client->get('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/milestones'))->json();
+        $first_release = $releases[0];
+
+        $release_content = $this->getResponse($this->client->get('milestones/'.$first_release['id'].'/content'))->json();
+        $first_epic  = $release_content[0];
+        $second_epic = $release_content[1];
+
+        // remove from release, back to top backlog
+        $response = $this->getResponse($this->client->patch('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/backlog', null, json_encode(array(
+            'order' => array(
+                'ids'         => array($first_epic['id']),
+                'direction'   => 'after',
+                'compared_to' => $first_item['id']
+            ),
+            'add' => array(
+                array(
+                    'id'          => $first_epic['id'],
+                    'remove_from' => $first_release['id'],
+                )
+            )
+        ))));
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $this->assertEquals(
+            array(
+                $first_item['id'],
+                $first_epic['id'],
+                $second_item['id'],
+                $third_item['id'],
+            ),
+            $this->getIdsOrderedByPriority($uri)
+        );
+
+        // Move back to release
+        $response = $this->getResponse($this->client->patch('milestones/'.$first_release['id'].'/content', null, json_encode(array(
+            'order' => array(
+                'ids'         => array($first_epic['id']),
+                'direction'   => 'before',
+                'compared_to' => $second_epic['id']
+            ),
+            'add' => array(
+                array(
+                    'id'          => $first_epic['id'],
+                )
+            )
+        ))));
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        // Assert Everything is equal to the beginning of the test
+        $this->assertEquals(
+            array(
+                $first_item['id'],
+                $second_item['id'],
+                $third_item['id'],
+            ),
+            $this->getIdsOrderedByPriority($uri)
+        );
+
+        $this->assertEquals(
+            $this->getIds($release_content),
+            $this->getIdsOrderedByPriority('milestones/'.$first_release['id'].'/content')
+        );
+    }
+
+    private function getIdsOrderedByPriority($uri) {
+        return $this->getIds($this->getResponse($this->client->get($uri))->json());
+    }
 }

@@ -59,6 +59,9 @@ class ProjectBacklogResource {
     /** @var MilestoneResourceValidator */
     private $milestone_validator;
 
+    /** @var ResourcesPatcher */
+    private $resources_patcher;
+
     public function __construct() {
         $planning_factory             = PlanningFactory::build();
         $tracker_artifact_factory     = Tracker_ArtifactFactory::instance();
@@ -103,6 +106,12 @@ class ProjectBacklogResource {
 
         $this->artifactlink_updater      = new ArtifactLinkUpdater();
         $this->milestone_content_updater = new MilestoneContentUpdater($tracker_form_element_factory, $this->artifactlink_updater);
+
+        $this->resources_patcher = new ResourcesPatcher(
+            $this->artifactlink_updater,
+            $tracker_artifact_factory,
+            new Tracker_Artifact_PriorityDao()
+        );
     }
 
     /**
@@ -148,18 +157,20 @@ class ProjectBacklogResource {
         $this->sendAllowHeaders();
     }
 
-    public function patch(PFUser $user, Project $project, OrderRepresentation $order) {
-        $dao = new Tracker_Artifact_PriorityDao();
+    public function patch(PFUser $user, Project $project, OrderRepresentation $order, array $add = null) {
+        if ($add) {
+            try {
+                $this->resources_patcher->removeArtifactFromSource($user, $add);
+            } catch (\Exception $exception) {
+                throw new RestException(400, $exception->getMessage());
+            }
+        }
 
         $all_ids = array_merge(array($order->compared_to), $order->ids);
         $this->validateArtifactIdsAreInOpenAndUnassignedTopBacklog($all_ids, $user, $project);
 
         try {
-            if ($order->direction === OrderRepresentation::BEFORE) {
-                $dao->moveListOfArtifactsBefore($order->ids, $order->compared_to);
-            } else {
-                $dao->moveListOfArtifactsAfter($order->ids, $order->compared_to);
-            }
+            $this->resources_patcher->updateArtifactPriorities($order);
         } catch (Tracker_Artifact_Exception_CannotRankWithMyself $exception) {
             throw new RestException(400, $exception->getMessage());
         }

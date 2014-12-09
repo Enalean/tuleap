@@ -424,7 +424,7 @@ class ProjectResource {
      *
      * Re-order backlog items in top backlog relative to each other
      * <br>
-     * Example:
+     * Order example:
      * <pre>
      * "order": {
      *   "ids" : [123, 789, 1001],
@@ -436,16 +436,32 @@ class ProjectResource {
      * <br>
      * Resulting order will be: <pre>[…, 123, 789, 1001, 456, …]</pre>
      *
+     * <br>
+     * Add example:
+     * <pre>
+     * "add": [
+     *   {
+     *     "id": 34
+     *     "remove_from": 56
+     *   },
+     *   ...
+     * ]
+     * </pre>
+     *
+     * <br>
+     * Will remove element id 34 from milestone 56 backlog
+     *
      * @url PATCH {id}/backlog
      *
      * @param int                                                $id    Id of the Backlog Item
      * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation $order Order of the children {@from body}
+     * @param array                                              $add   Add (move) item to the backlog {@from body}
      *
      * @throws 500
      * @throws 409
      * @throws 400
      */
-    protected function patchBacklog($id, OrderRepresentation $order) {
+    protected function patchBacklog($id, OrderRepresentation $order, array $add = null) {
         $order->checkFormat($order);
         $project = $this->getProjectForUser($id);
         $result  = array();
@@ -456,6 +472,7 @@ class ProjectResource {
                 'version' => 'v1',
                 'project' => $project,
                 'order'   => $order,
+                'add'     => $add,
                 'result'  => &$result,
             )
         );

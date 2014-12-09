@@ -173,8 +173,8 @@ class BacklogItemsTest extends RestBase {
     }
 
     /**
-    * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-    */
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
     public function testGETChildrenWithWrongId() {
         $response      = $this->getResponse($this->client->get('backlog_items/700/children'));
         $this->assertEquals($response->getStatusCode(), 404);
@@ -195,7 +195,9 @@ class BacklogItemsTest extends RestBase {
                 'compared_to' => $first_id
             ),
             'add' => array(
-                $third_id
+                array(
+                    'id' => $third_id,
+                )
             )
         ))));
         $this->assertEquals($response->getStatusCode(), 200);
@@ -210,6 +212,46 @@ class BacklogItemsTest extends RestBase {
         );
     }
 
+    public function testPatchChildrenMove() {
+        $uri = 'backlog_items/'.$this->stories_ids[1].'/children';
+        $backlog_items = $this->getResponse($this->client->get($uri))->json();
+
+        $first_id  = $backlog_items[0]['id'];
+        $second_id = $backlog_items[1]['id'];
+
+        $task_in_another_story_id = $this->createTask("Bla bla bla", "On going");
+        $another_story_id = $this->createStory("Another story", "To be done", array($task_in_another_story_id));
+
+        try {
+        $response = $this->getResponse($this->client->patch($uri, null, json_encode(array(
+            'order' => array(
+                'ids'         => array($task_in_another_story_id),
+                'direction'   => 'after',
+                'compared_to' => $first_id
+            ),
+            'add' => array(
+                array(
+                    'id'          => $task_in_another_story_id,
+                    'remove_from' => $another_story_id,
+                )
+            )
+        ))));
+        $this->assertEquals($response->getStatusCode(), 200);
+        } catch(Exception $e) {
+            $res = $e->getResponse();
+            var_dump($res->getStatusCode(), $res->getBody(true));
+        }
+        $this->assertEquals(
+            array(
+                $first_id,
+                $task_in_another_story_id,
+                $second_id,
+            ),
+            $this->getIdsOrderedByPriority($uri)
+        );
+
+        $this->assertCount(0, $this->getResponse($this->client->get('backlog_items/'.$another_story_id.'/children'))->json());
+    }
     private function getIdsOrderedByPriority($uri) {
         $response = $this->getResponse($this->client->get($uri));
         $actual_order = array();
@@ -221,18 +263,11 @@ class BacklogItemsTest extends RestBase {
 
     private function createStoriesAndTasks() {
         foreach ($this->backlog_items_datas as $backlog_item_data) {
-
-            $tasks         = $this->createTasksForStory($backlog_item_data);
-            $tracker       = $this->tracker_test_helper->getTrackerRest('story');
-            $created_story = $tracker->createArtifact(
-                array(
-                    $tracker->getSubmitTextValue('I want to', $backlog_item_data['I want to']),
-                    $tracker->getSubmitListValue('Status', $backlog_item_data['Status']),
-                    $tracker->getSubmitArtifactLinkValue($tasks)
-                )
+            $this->stories_ids[] = $this->createStory(
+                $backlog_item_data['I want to'],
+                $backlog_item_data['Status'],
+                $this->createTasksForStory($backlog_item_data)
             );
-
-            $this->stories_ids[] = $created_story['id'];
         }
     }
 
@@ -254,5 +289,17 @@ class BacklogItemsTest extends RestBase {
             )
         );
         return $task['id'];
+    }
+
+    private function createStory($iWantTo, $status, $tasks) {
+        $tracker = $this->tracker_test_helper->getTrackerRest('story');
+        $story   = $tracker->createArtifact(
+            array(
+                $tracker->getSubmitTextValue('I want to', $iWantTo),
+                $tracker->getSubmitListValue('Status', $status),
+                $tracker->getSubmitArtifactLinkValue($tasks)
+            )
+        );
+        return $story['id'];
     }
 }

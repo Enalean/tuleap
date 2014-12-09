@@ -84,6 +84,14 @@ class ArtifactLinkUpdater {
         return array_diff($new_submilestones_ids, $elements_already_linked);
     }
 
+    public function updateArtifactLinks(PFUser $user, Tracker_Artifact $artifact, array $to_add, array $to_remove) {
+        try {
+            $fields_data = $this->formatFieldDatas($artifact->getAnArtifactLinkField($user), $to_add, $to_remove);
+            $artifact->createNewChangeset($fields_data, '', $user, '');
+        } catch (Tracker_NoChangeException $exception) {
+        }
+    }
+
     public function unlinkAndLinkElements(Tracker_Artifact $artifact, array $fields_data, PFUser $current_user, array $linked_artifact_ids) {
         try {
             $artifact->createNewChangeset($fields_data, '', $current_user, '');

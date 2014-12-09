@@ -52,11 +52,19 @@ class BacklogItemResource {
     /** @var BacklogItemsUpdater */
     private $artifactlink_updater;
 
+    /** @var ResourcesPatcher */
+    private $resources_patcher;
+
     public function __construct() {
         $this->artifact_factory     = Tracker_ArtifactFactory::instance();
         $this->user_manager         = UserManager::instance();
         $this->tracker_factory      = TrackerFactory::instance();
         $this->artifactlink_updater = new ArtifactLinkUpdater();
+        $this->resources_patcher    = new ResourcesPatcher(
+            $this->artifactlink_updater,
+            $this->artifact_factory,
+            new Tracker_Artifact_PriorityDao()
+        );
     }
 
     /**
@@ -97,7 +105,7 @@ class BacklogItemResource {
     }
 
     /**
-     * Change children order
+     * Partial re-order of backlog items plus update of children
      *
      * Define the priorities of some children of a given Backlog Item
      *
@@ -114,18 +122,32 @@ class BacklogItemResource {
      * <br>
      * Resulting order will be: <pre>[…, 123, 789, 1001, 456, …]</pre>
      *
+     * <br>
+     * Add example:
+     * <pre>
+     * "add": [
+     *   {
+     *     "id": 34
+     *     "remove_from": 56
+     *   },
+     *   ...
+     * ]
+     * </pre>
+     *
+     * <br>
+     * Will remove element id 34 from 56 children and add it to current backlog_items children
+     *
      * @url PATCH {id}/children
      *
-     * @param int                                                $id    Id of the Backlog Item
-     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation $order Order of the children {@from body}
-     * @param array                                              $add    Ids to add to milestone content {@from body}{@type int}
-     * @param array                                              $remove Ids to remove from milestone content {@from body}{@type int}
+     * @param int                                                   $id    Id of the Backlog Item
+     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation    $order Order of the children {@from body}
+     * @param array                                                 $add   Ids to add to backlog_items content  {@from body}
      *
      * @throws 400
      * @throws 404
      * @throws 409
      */
-    protected function patch($id, OrderRepresentation $order = null, array $add = null, array $remove = null) {
+    protected function patch($id, OrderRepresentation $order = null, array $add = null) {
 
         $artifact = $this->getArtifact($id);
         $user     = $this->getCurrentUser();
@@ -133,19 +155,22 @@ class BacklogItemResource {
         try {
             $indexed_children_ids = $this->getChildrenArtifactIds($user, $artifact);
 
-            if ($add || $remove) {
-                $validator = new PatchAddRemoveValidator(
-                    $indexed_children_ids,
-                    new PatchAddBacklogItemsValidator(
-                        $this->artifact_factory,
-                        $this->tracker_factory->getPossibleChildren($artifact->getTracker()),
-                        $id
-                    )
-                );
-                $backlog_items_ids = $validator->validate($id, $remove, $add);
+            if ($add) {
+                $to_add = $this->resources_patcher->removeArtifactFromSource($user, $add);
+                if (count($to_add)) {
+                    $validator = new PatchAddRemoveValidator(
+                       $indexed_children_ids,
+                       new PatchAddBacklogItemsValidator(
+                           $this->artifact_factory,
+                           $this->tracker_factory->getPossibleChildren($artifact->getTracker()),
+                           $id
+                       )
+                   );
+                   $backlog_items_ids = $validator->validate($id, array(), $to_add);
 
-                $this->artifactlink_updater->update($backlog_items_ids, $artifact, $user, new FilterValidBacklogItems());
-                $indexed_children_ids = array_flip($backlog_items_ids);
+                   $this->artifactlink_updater->update($backlog_items_ids, $artifact, $user, new FilterValidBacklogItems());
+                   $indexed_children_ids = array_flip($backlog_items_ids);
+                }
             }
 
             if ($order) {
@@ -153,12 +178,7 @@ class BacklogItemResource {
                 $order_validator = new OrderValidator($indexed_children_ids);
                 $order_validator->validate($order);
 
-                $dao = new Tracker_Artifact_PriorityDao();
-                if ($order->direction === OrderRepresentation::BEFORE) {
-                    $dao->moveListOfArtifactsBefore($order->ids, $order->compared_to);
-                } else {
-                    $dao->moveListOfArtifactsAfter($order->ids, $order->compared_to);
-                }
+                $this->resources_patcher->updateArtifactPriorities($order);
             }
         } catch (IdsFromBodyAreNotUniqueException $exception) {
             throw new RestException(409, $exception->getMessage());
