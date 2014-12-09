@@ -15,6 +15,7 @@ Version 7.8 (Not released yet)
 	* request #7647: Notices on preferences page and csv defaults broken
 
 	== Development ==
+	* story #7511: fetch the list of allowed tracker types for the top backlog
 	* story #7511: Add drag'n'drop (doesn't call REST routes) and update Angular & jQuery
 	* story #7511: rewriting prototype code in jQuery
 	* story #7511: Permanently remove the systray
@@ -30,7 +31,7 @@ Version 7.8 (Not released yet)
 	* mediawiki: 0.58
 	* tracker: 5.530
 	* cardwall: 1.42
-	* agiledashboard: 1.115
+	* agiledashboard: 1.116
 	* tests: 5.26
 	* proftpd: 0.19
 	* docman: 2.26.55
