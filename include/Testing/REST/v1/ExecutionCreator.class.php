@@ -106,7 +106,7 @@ class ExecutionCreator {
         $status_field = $this->getStatusField($tracker_reference, $user);
         $values[] = array(
             'field_id'       => (int)$status_field->getId(),
-            'bind_value_ids' => $status_field->getDefaultValue()
+            'bind_value_ids' => array($status_field->getDefaultValue())
         );
 
         $link_field = $this->getArtifactLinksField($tracker_reference, $user);

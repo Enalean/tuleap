@@ -171,7 +171,7 @@ class CampaignCreator {
         $status_field = $this->getField($tracker_reference, $user, CampaignRepresentation::FIELD_STATUS);
         $values[]    = array(
             'field_id'       => (int)$status_field->getId(),
-            'bind_value_ids' => $status_field->getDefaultValue()
+            'bind_value_ids' => array($status_field->getDefaultValue())
         );
 
         $link_field = $this->getField($tracker_reference, $user, CampaignRepresentation::FIELD_ARTIFACT_LINKS);
