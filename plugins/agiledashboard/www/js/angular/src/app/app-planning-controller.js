@@ -3,9 +3,17 @@
         .module('planning')
         .controller('PlanningCtrl', PlanningCtrl);
 
-    PlanningCtrl.$inject = ['$scope', 'SharedPropertiesService', 'BacklogItemService', 'MilestoneService', 'DroppedService'];
+    PlanningCtrl.$inject = [
+        '$scope',
+        'SharedPropertiesService',
+        'BacklogItemService',
+        'MilestoneService',
+        'ProjectService',
+        'DroppedService'
+    ];
 
-    function PlanningCtrl($scope, SharedPropertiesService, BacklogItemService, MilestoneService, DroppedService) {
+    function PlanningCtrl($scope, SharedPropertiesService, BacklogItemService, MilestoneService, ProjectService, DroppedService) {
+
         var project_id                  = SharedPropertiesService.getProjectId(),
             milestone_id                = SharedPropertiesService.getMilestoneId(),
             pagination_limit            = 50,
@@ -40,8 +48,9 @@
                 $scope.backlog = {
                     rest_base_route : 'projects',
                     rest_route_id   : project_id,
-                    accepted_types  : '*'
+                    accepted_types  : ''
                 };
+                fetchProjectBacklogAcceptedTypes(project_id);
             } else {
                 MilestoneService.getMilestone(milestone_id).then(function(milestone) {
                     $scope.backlog = {
@@ -51,6 +60,12 @@
                     };
                 });
             }
+        }
+
+        function fetchProjectBacklogAcceptedTypes(project_id) {
+            return  ProjectService.getProjectBacklogAcceptedTypes(project_id).then(function(data) {
+                $scope.backlog.accepted_types = data.results;
+            });
         }
 
         function displayBacklogItems() {
@@ -178,7 +193,7 @@
             var is_droppable = false;
 
             for (var i = 0; i < accepted.length; i++) {
-                if (accepted[i] === type || accepted[i] === '*') {
+                if (accepted[i] === type) {
                     is_droppable = true;
                     continue;
                 }

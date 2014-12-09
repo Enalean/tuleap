@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2014. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,6 +38,12 @@ try {
     die();
 }
 
+preg_match('/^\/api\/v(\d+)\//', $_SERVER['REQUEST_URI'], $matches);
+$version = floor(file_get_contents(__DIR__ .'/VERSION'));
+if ($matches && isset($matches[1]) && $matches[1] == 2) {
+    $version = 2;
+}
+
 // Do not put .json at the end of the resource
 Resources::$useFormatAsExtension = false;
 
@@ -52,12 +58,21 @@ if (Config::get('DEBUG_MODE')) {
     $restler = new Restler();
 }
 
-$restler->setAPIVersion(floor(file_get_contents(__DIR__ .'/VERSION')));
+$restler->setAPIVersion($version);
 
 $core_resources_injector = new Tuleap\REST\ResourcesInjector();
 $core_resources_injector->populate($restler);
 
-EventManager::instance()->processEvent(Event::REST_RESOURCES, array('restler' => $restler));
+switch ($version) {
+    case 2:
+        $event = Event::REST_RESOURCES_V2;
+        break;
+    default:
+        $event = Event::REST_RESOURCES;
+        break;
+}
+
+EventManager::instance()->processEvent($event, array('restler' => $restler));
 $restler->addAPIClass('Resources');
 
 $restler->addAuthenticationClass('\\Tuleap\\REST\\TokenAuthentication');
