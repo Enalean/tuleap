@@ -1,3 +1,9 @@
+Version 1.115 - Tuleap 7.8
+    * Can move from one milestone to another a closed item
+
+
+Part of story #7511 PlanningV2 - Drag'nDrop backlog items
+
 Version 1.114 - Tuleap 7.8
     * PATCH /milestones/{id}/backlog with add properties
 
