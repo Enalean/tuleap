@@ -221,6 +221,34 @@ class MilestonesBacklogPatchTest extends RestBase {
         );
     }
 
+    public function testPatchBacklogAddAndOrder() {
+        $uri = 'milestones/'.$this->release['id'].'/backlog';
+
+        $story_in_the_wild = $this->createStory("Created in sprint");
+        $response = $this->getResponse($this->client->patch($uri, null, json_encode(array(
+            'order'  => array(
+                'ids'         => array($story_in_the_wild['id'], $this->story_div['id'], $this->story_sub['id']),
+                'direction'   => 'after',
+                'compared_to' => $this->story_mul['id']
+            ),
+            'add' => array(
+                $story_in_the_wild['id'],
+            ),
+        ))));
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $this->assertEquals(
+            array(
+                $this->story_add['id'],
+                $this->story_mul['id'],
+                $story_in_the_wild['id'],
+                $this->story_div['id'],
+                $this->story_sub['id'],
+            ),
+            $this->getIdsOrderedByPriority($uri)
+        );
+    }
+
     private function getIdsOrderedByPriority($uri) {
         $response = $this->getResponse($this->client->get($uri));
         $actual_order = array();
@@ -250,7 +278,7 @@ class MilestonesBacklogPatchTest extends RestBase {
             array(
                 $tracker->getSubmitTextValue('Name', 'Release 2014 12 02'),
                 $tracker->getSubmitListValue('Status', 'Current'),
-                $tracker->getSubmitArtifactLinkValue(array_merge($this->createReleaseBacklog(), $this->createSprint()))
+                $tracker->getSubmitArtifactLinkValue(array_merge($this->createReleaseBacklog(), array($this->createSprint("Sprint 10"))))
             )
         );
     }
@@ -307,14 +335,15 @@ class MilestonesBacklogPatchTest extends RestBase {
         );
     }
 
-    private function createSprint() {
+    private function createSprint($name, array $links = array()) {
         $tracker = $this->tracker_test_helper->getTrackerRest('sprint');
-        $sprint = $tracker->createArtifact(
+        $sprint  = $tracker->createArtifact(
             array(
-                $tracker->getSubmitTextValue('Name', 'Sprint 10'),
-                $tracker->getSubmitListValue('Status', 'Current')
+                $tracker->getSubmitTextValue('Name', $name),
+                $tracker->getSubmitListValue('Status', 'Current'),
+                $tracker->getSubmitArtifactLinkValue($links)
             )
         );
-        return array($sprint['id']);
+        return $sprint['id'];
     }
 }
