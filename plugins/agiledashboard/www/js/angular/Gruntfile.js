@@ -135,12 +135,28 @@ module.exports = function ( grunt ) {
           }
         ]
       },
+      build_vendorcss: {
+        files: [
+          {
+            src: [ '<%= vendor_files.css %>' ],
+            dest: '<%= build_dir %>/',
+            cwd: '.',
+            expand: true
+          }
+        ]
+      },
       compile_assets: {
         files: [
           {
             src: [ '**' ],
             dest: '<%= compile_dir %>/assets',
             cwd: '<%= build_dir %>/assets',
+            expand: true
+          },
+          {
+            src: [ '<%= vendor_files.css %>' ],
+            dest: '<%= compile_dir %>/',
+            cwd: '.',
             expand: true
           }
         ]
@@ -461,6 +477,7 @@ module.exports = function ( grunt ) {
     'copy:build_appmodules',
     'copy:build_appjs',
     'copy:build_vendorjs',
+    'copy:build_vendorcss',
     'karmaconfig',
     'karma:continuous'
   ]);
