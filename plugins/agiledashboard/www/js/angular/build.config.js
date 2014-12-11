@@ -81,6 +81,7 @@ module.exports = {
       'vendor/angular-ui-tree-bdauton/dist/angular-ui-tree-bdauton.min.js'
     ],
     css: [
+      'vendor/angular-ui-tree-bdauton/dist/angular-ui-tree-bdauton.min.css'
     ]
   }
 };
