@@ -31,4 +31,13 @@ define('CARDWALL_BASE_URL', '/plugins/cardwall');
  *  'html'            => Pane content of the cardwall with injected scripts.
  */
 define('CARDWALL_EVENT_DISPLAYED','cardwall_event_displayed');
+
+/**
+ * Can we use standard javascript
+ *
+ * Parameters:
+ *   'use_standard' => boolean
+ *
+ */
+define('CARDWALL_EVENT_USE_STANDARD_JAVASCRIPT','cardwall_event_use_standard_javascript');
 ?>

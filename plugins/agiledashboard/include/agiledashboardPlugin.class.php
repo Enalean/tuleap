@@ -82,6 +82,11 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(Event::REST_OPTIONS_PROJECT_BACKLOG);
             $this->addHook(Event::GET_PROJECTID_FROM_URL);
         }
+
+        if (defined('CARDWALL_BASE_URL')) {
+            $this->addHook(CARDWALL_EVENT_USE_STANDARD_JAVASCRIPT,'cardwall_event_use_standard_javascript');
+        }
+
         return parent::getHooksAndCallbacks();
     }
 
@@ -828,6 +833,14 @@ class AgileDashboardPlugin extends Plugin {
             $this->getPlanningFactory(),
             new AgileDashboard_Milestone_Backlog_BacklogItemBuilder()
         );
+    }
+
+    public function cardwall_event_use_standard_javascript($params) {
+        $request = HTTPRequest::instance();
+        $pane_info_identifier = new AgileDashboard_PaneInfoIdentifier();
+        if ($pane_info_identifier->isPaneAPlanningV2($request->get('pane'))) {
+            $params['use_standard'] = false;
+        }
     }
 }
 
