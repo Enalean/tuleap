@@ -179,7 +179,7 @@ class cardwallPlugin extends Plugin {
     public function javascript_file($params) {
         // Only show the js if we're actually in the Cardwall pages.
         // This stops styles inadvertently clashing with the main site.
-        if ($this->isAgileDashboardOrTrackerUrl() && ! $this->isPlanningV2URL()) {
+        if ($this->isAgileDashboardOrTrackerUrl() && $this->canUseStandardJavsacript()) {
             echo $this->getJavascriptIncludesForScripts(array(
                 'ajaxInPlaceEditorExtensions.js',
                 'cardwall.js',
@@ -238,11 +238,18 @@ class cardwallPlugin extends Plugin {
                 strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL.'/') === 0);
     }
 
-    private function isPlanningV2URL() {
-        $request = HTTPRequest::instance();
-        $pane_info_identifier = new AgileDashboard_PaneInfoIdentifier();
+    private function canUseStandardJavsacript() {
+        $use_standard = true;
 
-        return $pane_info_identifier->isPaneAPlanningV2($request->get('pane'));
+        $em = EventManager::instance();
+        $em->processEvent(
+            CARDWALL_EVENT_USE_STANDARD_JAVASCRIPT,
+            array(
+                'use_standard' => &$use_standard
+            )
+        );
+
+        return $use_standard;
     }
 
     public function javascript($params) {
