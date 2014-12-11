@@ -1,3 +1,6 @@
+Version 1.119 - Tuleap 7.8
+    * request #7682: unable to access tracker when agile dashboard is disactivated
+
 Version 1.118 - Tuleap 7.8
     * planning v2 enhancements
 

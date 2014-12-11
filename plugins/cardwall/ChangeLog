@@ -1,3 +1,6 @@
+Version 1.43 - Tuleap 7.8
+    * request #7682: unable to access tracker when agile dashboard is disactivated
+
 Version 1.42 - Tuleap 7.8
     * Do not load fat combined in planning v2
 
