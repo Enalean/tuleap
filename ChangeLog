@@ -7,6 +7,7 @@ Version 7.8 (Not released yet)
 	* request #7649: Admin can activate an account when user comes from ldap
 
 	== Bug fix ==
+	* request #7679: Fatal error: Call to undefined method DataAccessResultEmpty::instanciateWith()
 	* request #7615: retreive the username from ldap while editing SVN commit log messages (contrib STMicroelectronics)
 	* request #7630: fix- legacy docman import script copies empty folders
 	* request #7631: legacy docman import script doesn't strip-out html entities
