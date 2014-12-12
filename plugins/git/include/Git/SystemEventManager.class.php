@@ -139,6 +139,24 @@ class Git_SystemEventManager {
         );
     }
 
+    public function queueEditSSHKey($user_id, $original_keys) {
+        $this->system_event_manager->createEvent(
+            SystemEvent_GIT_EDIT_SSH_KEYS::NAME,
+            $user_id . SystemEvent::PARAMETER_SEPARATOR . $original_keys,
+            SystemEvent::PRIORITY_HIGH,
+            SystemEvent::OWNER_APP
+        );
+    }
+
+    public function queueDumpAllSSHKeys() {
+        $this->system_event_manager->createEvent(
+            SystemEvent_GIT_DUMP_ALL_SSH_KEYS::NAME,
+            '',
+            SystemEvent::PRIORITY_LOW,
+            SystemEvent::OWNER_APP
+        );
+    }
+
     public function isRepositoryMigrationToGerritOnGoing(GitRepository $repository) {
         return $this->system_event_manager->isThereAnEventAlreadyOnGoingMatchingFirstParameter(SystemEvent_GIT_GERRIT_MIGRATION::NAME, $repository->getId());
     }
@@ -161,7 +179,9 @@ class Git_SystemEventManager {
             SystemEvent_GIT_GERRIT_PROJECT_DELETE::NAME,
             SystemEvent_GIT_GERRIT_PROJECT_READONLY::NAME,
             SystemEvent_GIT_GROKMIRROR_MANIFEST::NAME,
-            SystemEvent_GIT_USER_RENAME::NAME
+            SystemEvent_GIT_USER_RENAME::NAME,
+            SystemEvent_GIT_EDIT_SSH_KEYS::NAME,
+            SystemEvent_GIT_DUMP_ALL_SSH_KEYS::NAME,
         );
     }
 

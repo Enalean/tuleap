@@ -72,7 +72,8 @@ class User_SSHKeyDumperTest extends TuleapTestCase {
     public function itDoesntWriteTheKeyWhenUserAsNotAValidUnixAccount() {
         stub($this->backend)->log()->never();
         $this->user->setUnixStatus('S');
-        $this->assertFalse($this->sshkey_dumper->writeSSHKeys($this->user));
+        $this->sshkey_dumper->writeSSHKeys($this->user);
+        $this->assertFalse(is_file($this->toto_home.'/.ssh/authorized_keys'));
     }
 
     public function itWriteTheKeyInTheAutorizedKeyFile() {

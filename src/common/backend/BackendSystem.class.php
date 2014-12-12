@@ -472,14 +472,7 @@ class BackendSystem extends Backend {
      */
     public function dumpSSHKeysForUser(PFUser $user, $original_keys) {
         $sshkey_dumper = new User_SSHKeyDumper($this);
-        $write_status = $sshkey_dumper->writeSSHKeys($user);
-        $event_parameters = array(
-            'user'          => $user,
-            'original_keys' => $original_keys,
-        );
-
-        EventManager::instance()->processEvent(Event::DUMP_SSH_KEYS, $event_parameters);
-        return $write_status;
+        return $sshkey_dumper->writeSSHKeys($user);
     }
 
     /**
