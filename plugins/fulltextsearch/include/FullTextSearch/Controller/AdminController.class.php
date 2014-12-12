@@ -51,11 +51,8 @@ class FullTextSearch_Controller_Admin extends FullTextSearch_Controller_Search {
     }
 
     public function index() {
-        $project_manager    = ProjectManager::instance();
-        $project_presenters = $this->getProjectPresenters($project_manager->getProjectsByStatus(Project::STATUS_ACTIVE));
-
         $GLOBALS['HTML']->header(array('title' => $GLOBALS['Language']->getText('plugin_fulltextsearch', 'admin_title')));
-        $this->renderer->renderToPage('admin', new FullTextSearch_Presenter_AdminPresenter($project_presenters));
+        $this->renderer->renderToPage('admin', new FullTextSearch_Presenter_AdminPresenter());
         $GLOBALS['HTML']->footer(array());
     }
 
@@ -73,14 +70,5 @@ class FullTextSearch_Controller_Admin extends FullTextSearch_Controller_Search {
 
     public function reindexTracker(Tracker $tracker) {
         $this->tracker_system_event_manager->queueTrackerReindexation($tracker);
-    }
-
-    private function getProjectPresenters($projects) {
-        $presenters = array();
-        foreach ($projects as $project) {
-            $presenters[] = new FullTextSearch_Presenter_ProjectPresenter($project);
-        }
-
-        return $presenters;
     }
 }
