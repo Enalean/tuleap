@@ -102,7 +102,7 @@ class Planning_MilestonePaneFactory {
         $this->list_of_pane_info[$milestone->getArtifactId()][] = $this->getContentPaneInfo($milestone);
         $this->list_of_pane_info[$milestone->getArtifactId()][] = $this->getPlanningPaneInfo($milestone);
 
-        if ($this->request->getCurrentUser()->useLabFeatures()) {
+        if ($this->request->getCurrentUser()->useLabFeatures() && defined('CARDWALL_BASE_URL')) {
             $this->list_of_pane_info[$milestone->getArtifactId()][] = $this->getPlanningV2PaneInfo($milestone);
         }
 
