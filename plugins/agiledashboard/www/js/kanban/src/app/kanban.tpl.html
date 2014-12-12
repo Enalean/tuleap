@@ -1,2 +1,68 @@
-<h1>{{ kanban.name }}</h1>
-<div translate> Not implemented yet. </div>
+<div id="kanban-header">
+    <div class="kanban-info">
+        <div class="open"><span class="number">{{ kanban.nb_open }}</span>open</div>
+        <div class="closed"><span class="number">{{ kanban.nb_closed }}</span>closed</div>
+    </div>
+    <div class="kanban-title">
+        <h1>{{ kanban.name }}</h1>
+    </div>
+    <div class="clearfix"></div>
+</div>
+
+<table id="kanban-board" cellpadding="0" cellspacing="0">
+    <thead>
+        <tr>
+            <th class="backlog" ng-class="kanban.backlog.is_open ? 'column-displayed' : 'column-hidden'">
+                <span class="wip-count">{{ kanban.backlog.content.length }}</span>
+                <span class="toggle-column" title="{{ 'Toggle the backlog' | translate }}" ng-click="kanban.backlog.is_open = ! kanban.backlog.is_open">
+                    <i class="icon-inbox"></i>
+                </span>
+                <span class="column-label">{{ kanban.backlog.label }}</span>
+            </th>
+            <th ng-repeat="column in kanban.board.columns" ng-class="column.is_open ? 'column-displayed' : 'column-hidden'">
+                <span class="wip-limit infinity" ng-show="! column.limit">∞</span -->
+                <span class="wip-limit" ng-show="column.limit"><i class="icon-chevron-left"></i>{{ column.limit }}</span>
+                <span class="wip-count">{{ column.content.length }}</span>
+                <span class="toggle-column" title="{{ 'Toggle this column' | translate }}" ng-click="column.is_open = ! column.is_open">
+                    <i ng-class="column.is_open ? 'icon-minus-sign-alt' : 'icon-plus-sign-alt'"></i>
+                </span>
+                <span class="column-label">{{ column.label }}</span>
+            </th>
+            <th class="archive" ng-class="kanban.archive.is_open ? 'column-displayed' : 'column-hidden'">
+                <span class="wip-count">{{ kanban.archive.content.length }}</span>
+                <span class="toggle-column" title="{{ 'Toggle the archive' | translate }}" ng-click="kanban.archive.is_open = ! kanban.archive.is_open">
+                    <i class="icon-archive"></i>
+                </span>
+                <span class="column-label">{{ kanban.archive.label }}</span>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="backlog"
+                ng-class="kanban.backlog.is_open ? 'column-displayed' : 'column-hidden'"
+                ng-click="kanban.backlog.is_open = true"
+                ng-attr-title="{{ column.is_open ? '' : 'Toggle the backlog' | translate }}"
+            >
+                <div class="column-content"><em>Cards will appear here</em></div>
+                <div class="column-label">{{ kanban.backlog.label }} <span class="count">{{ kanban.backlog.content.length }}</span></div>
+            </td>
+            <td ng-repeat="column in kanban.board.columns"
+                ng-class="column.is_open ? 'column-displayed' : 'column-hidden'"
+                ng-click="column.is_open = true"
+                ng-attr-title="{{ column.is_open ? '' : 'Toggle this column' | translate }}"
+            >
+                <div class="column-content"><em>Cards will appear here</em></div>
+                <div class="column-label">{{ column.label }} <span class="count">{{ column.content.length }}</span></div>
+            </td>
+            <td class="archive"
+                ng-class="kanban.archive.is_open ? 'column-displayed' : 'column-hidden'"
+                ng-click="kanban.archive.is_open = true"
+                ng-attr-title="{{ column.is_open ? '' : 'Toggle the archive' | translate }}"
+            >
+                <div class="column-content"><em>Cards will appear here</em></div>
+                <div class="column-label">{{ kanban.archive.label }} <span class="count">{{ kanban.archive.content.length }}</span></div>
+            </td>
+        </tr>
+    </tbody>
+</table>

@@ -1,0 +1,292 @@
+#kanban-header {
+    > .kanban-title {
+        padding: 20px 0 0;
+
+        > h1 {
+            padding: 0 0 0 20px;
+            margin-top: 0;
+        }
+    }
+
+    > .kanban-info {
+        background-color: #F5F5F5;
+        float: right;
+        width: 180px;
+        display: table;
+
+        > .open,
+        > .closed {
+            color: #666;
+            display: table-cell;
+            width: 50%;
+            text-align:center;
+            padding: 10px 0 10px;
+
+            > .number {
+                display: block;
+                font-size: 3em;
+                font-weight: bold;
+                line-height: 1em;
+                height: 40px;
+            }
+        }
+    }
+}
+
+#kanban-board {
+    @fontsizeheader: 1em;
+    @lineheightheader: 2.3em;
+    @lightenratio: 45%;
+    @lightenratiomiddle: 15%;
+
+    width: 100%;
+    border-collapse: collapse;
+
+    > thead > tr {
+
+        > th {
+            padding: 4px 0 0;
+            border: 1px solid #e0e0e0;
+            border-top: none;
+            border-right: none;
+            font-size: @fontsizeheader;
+            font-weight: 400;
+            font-family: 'SourceSansPro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #CCC;
+            height: 40px;
+            vertical-align: middle;
+
+            > .wip-limit {
+                float: right;
+                color: white;
+                margin: 0 7px 0 0;
+                line-height: 20px;
+                border-radius: 16px;
+                padding: 0px 7px;
+                font-weight: bold;
+                font-size: 0.9em;
+
+                > i {
+                    font-size: 0.85em;
+                    margin: 0 3px 0 0;
+                }
+
+                &.infinity {
+                    font-size: 1.1em;
+                }
+            }
+
+            > .wip-count {
+                float: right;
+                position: relative;
+                top: -2px;
+                margin: 0 4px;
+                font-size: 3em;
+                font-weight: bold;
+                opacity: 0.2;
+            }
+
+            > .toggle-column {
+                float: left;
+                padding: 0 15px;
+                cursor: pointer;
+                font-size: 1.1em;
+                transition: opacity 0.1s linear;
+
+                &:hover {
+                    opacity: 0.7;
+                    transition: opacity 0.1s linear;
+                }
+            }
+
+            &.column-hidden {
+                > .column-label,
+                > .wip-limit,
+                > .wip-count {
+                    display: none;
+                }
+
+                > .toggle-column {
+                    float: none;
+                    margin-right: auto;
+                    margin-left: auto;
+                    cursor: pointer;
+                    display: block;
+                    font-size: 1.1em;
+                }
+
+                &.backlog {
+                    font-size: 1.4em;
+                }
+            }
+        }
+
+        > th + th {
+            box-shadow: inset 0 4px 0 deepskyblue;
+            color: deepskyblue;
+
+            > .wip-limit {
+                background: deepskyblue;
+            }
+        }
+
+        > th + th + th {
+            box-shadow: inset 0 4px 0 yellowgreen;
+            color: yellowgreen;
+
+            > .wip-limit {
+                background: yellowgreen;
+            }
+        }
+
+        > th + th + th + th {
+            box-shadow: inset 0 4px 0 darkorchid;
+            color: darkorchid;
+
+            > .wip-limit {
+                background: darkorchid;
+            }
+        }
+
+        > th + th + th + th + th {
+            box-shadow: inset 0 4px 0 deeppink;
+            color: deeppink;
+
+            > .wip-limit {
+                background: deeppink;
+            }
+        }
+
+        > .backlog {
+            box-shadow: inset 0 4px 0 #666;
+            color: #666;
+            border-left: none;
+        }
+
+        > .archive {
+            box-shadow: inset 0 4px 0 #666;
+            color: #666;
+        }
+    }
+
+    > tbody > tr {
+
+        > td {
+            height: 600px;
+            border-right: 1px solid #e0e0e0;
+            border-top-width: 4px;
+            background: #f9f9f9;
+            color: #CCC;
+            font-size: @fontsizeheader;
+            text-transform: uppercase;
+            line-height: @lineheightheader;
+            text-align: center;
+
+            > .column-content {
+                text-transform: none;
+            }
+
+            &.column-hidden {
+                max-width: 75px;
+                width: 75px;
+                min-width: 75px;
+                white-space: nowrap;
+                cursor: pointer;
+
+                > .column-content {
+                    display: none;
+                }
+
+                > .column-label {
+                    position: relative;
+                    left: -8px;
+                    font-family: 'SourceSansPro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                    letter-spacing: 0.05em;
+                    font-size: 1.2em;
+                    -ms-transform: rotate(270deg);
+                        transform: rotate(270deg);
+
+                    > .count {
+                        position: relative;
+                        top: 16px;
+                        left: 6px;
+                        font-size: 4em;
+                        font-weight: bold;
+                    }
+                }
+
+                &:hover {
+                    opacity: 0.7;
+                }
+            }
+
+            &.backlog,
+            &.archive {
+                color: #666;
+                background: #EEE;
+
+                > .column-label > .count {
+                    color: #CCC;
+                }
+            }
+
+            + td.column-hidden {
+                color: deepskyblue;
+                background: lighten(deepskyblue, @lightenratio);
+
+                > .column-label > .count {
+                    color: lighten(deepskyblue, @lightenratiomiddle);
+                }
+            }
+
+            + td + td.column-hidden {
+                color: yellowgreen;
+                background: lighten(yellowgreen, @lightenratio);
+
+                > .column-label > .count {
+                    color: lighten(yellowgreen, @lightenratiomiddle);
+                }
+            }
+
+            + td + td + td.column-hidden {
+                color: darkorchid;
+                background: lighten(darkorchid, @lightenratio);
+
+                > .column-label > .count {
+                    color: lighten(darkorchid, @lightenratiomiddle);
+                }
+            }
+
+            + td + td + td + td.column-hidden {
+                color: deeppink;
+                background: lighten(deeppink, @lightenratio);
+
+                > .column-label > .count {
+                    color: lighten(deeppink, @lightenratiomiddle);
+                }
+            }
+
+            &.column-hidden.archive {
+                color: #666;
+                background: #EEE;
+
+                > .column-label > .count {
+                    color: #CCC;
+                }
+            }
+
+
+            &.column-displayed {
+                > .column-label {
+                    display: none;
+                }
+            }
+        }
+
+        > .archive {
+            border-right: none;
+        }
+    }
+}

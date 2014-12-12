@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kanban\n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Yannis ROSSETTO <yannis.rossetto@enalean.com>\n"
+"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
 "Language-Team: Enalean <crew@enalean.com>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -12,5 +12,16 @@ msgstr ""
 "X-Generator: Poedit 1.5.4\n"
 
 #: src/app/kanban.tpl.html
-msgid "Not implemented yet."
-msgstr "Pas encore implémenté."
+msgid "Toggle the archive"
+msgstr "Basculer l'affichage de l'archive"
+
+#: src/app/kanban.tpl.html
+msgid "Toggle the backlog"
+msgstr "Basculer l'affichage du backlog"
+
+#: src/app/kanban.tpl.html
+msgid "Toggle this column"
+msgstr "Basculer l'affichage de cette colonne"
+
+#~ msgid "Not implemented yet."
+#~ msgstr "Pas encore implémenté."

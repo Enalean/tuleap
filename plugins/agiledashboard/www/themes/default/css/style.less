@@ -661,3 +661,22 @@ body.agiledashboard_planning {
         padding-right: 10px;
     }
 }
+
+body.agiledashboard_kanban {
+    box-sizing: border-box;
+
+    > .wrapper {
+        min-height: auto;
+
+        .main {
+            .breadcrumb, .toolbar {
+                position: relative;
+                z-index: 2;
+            }
+
+            .content {
+                padding: 0;
+            }
+        }
+    }
+}
