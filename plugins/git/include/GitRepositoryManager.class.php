@@ -246,8 +246,8 @@ class GitRepositoryManager {
             try {
                 $backend = $repository->getBackend();
                 $backend->deletePermissions($repository);
-                $backend->deleteArchivedRepository($repository);
                 $logger->info('Purge of archived Gitolite repository: '.$repository->getName());
+                $backend->deleteArchivedRepository($repository);
             } catch (GitDriverErrorException $exception) {
                 $logger->error($exception->getMessage());
             }
