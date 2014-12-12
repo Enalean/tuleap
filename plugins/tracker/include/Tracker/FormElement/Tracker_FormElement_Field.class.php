@@ -1155,6 +1155,22 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return null;
     }
 
+    /**
+     * Return full REST value of a field for a given changeset
+     *
+     * @param PFUser                     $user
+     * @param Tracker_Artifact_Changeset $changeset
+     *
+     * @return mixed | null if no values
+     */
+    public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
+        $value = $changeset->getValue($this);
+        if ($value) {
+            return $value->getFullRESTValue($user);
+        }
+        return null;
+    }
+
     public function getJsonValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
         if ($this->userCanRead($user)) {
             $value = $changeset->getValue($this);

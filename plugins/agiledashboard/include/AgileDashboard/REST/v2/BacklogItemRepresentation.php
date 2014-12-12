@@ -86,7 +86,7 @@ class BacklogItemRepresentation {
      */
     public $accept;
 
-    public function build(\AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item) {
+    public function build(\AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item, array $card_fields) {
         $this->id             = JsonCast::toInt($backlog_item->id());
         $this->label          = $backlog_item->title();
         $this->status         = $backlog_item->status();
@@ -110,6 +110,10 @@ class BacklogItemRepresentation {
         $this->has_children = $backlog_item->hasChildren();
 
         $this->addAllowedSubItemTypes($backlog_item);
+
+        if ($card_fields) {
+            $this->card_fields = $card_fields;
+        }
     }
 
     private function addAllowedSubItemTypes(\AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item) {

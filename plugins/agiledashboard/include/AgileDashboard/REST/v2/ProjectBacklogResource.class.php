@@ -98,12 +98,11 @@ class ProjectBacklogResource {
             $backlog_items = $this->getBacklogItems($user, $project);
         }
 
-        $backlog_item_representations = array();
+        $backlog_item_representations        = array();
+        $backlog_item_representation_factory = new BacklogItemRepresentationFactory();
 
         foreach($backlog_items as $backlog_item) {
-            $backlog_item_representation = new BacklogItemRepresentation();
-            $backlog_item_representation->build($backlog_item);
-            $backlog_item_representations[] = $backlog_item_representation;
+            $backlog_item_representations[] = $backlog_item_representation_factory->createBacklogItemRepresentation($backlog_item);
         }
 
         $this->sendAllowHeaders();
@@ -115,6 +114,31 @@ class ProjectBacklogResource {
         $accepted_trackers = $this->getAcceptedTrackers($user, $project);
 
         return $backlog->build($contents, $accepted_trackers);
+    }
+
+    private function getBacklogItemCardFields($backlog_item) {
+        $card_fields_semantic = $this->getCardFieldsSemantic($backlog_item);
+        $card_fields          = array();
+
+        foreach($card_fields_semantic->getFields() as $field) {
+            $card_fields[] = $field->getFullRESTValue(UserManager::instance()->getCurrentUser(), $backlog_item->getArtifact()->getLastChangeset());
+        }
+
+        return $card_fields;
+    }
+
+    private function getCardFieldsSemantic($backlog_item) {
+        $card_fields_semantic = null;
+
+        EventManager::instance()->processEvent(
+            AGILEDASHBOARD_EVENT_GET_CARD_FIELDS,
+            array(
+                'tracker'              => $backlog_item->getArtifact()->getTracker(),
+                'card_fields_semantic' => &$card_fields_semantic
+            )
+        );
+
+        return $card_fields_semantic;
     }
 
     private function limitValueIsAcceptable($limit) {

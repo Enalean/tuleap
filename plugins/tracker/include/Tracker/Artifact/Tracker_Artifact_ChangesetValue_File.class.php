@@ -198,6 +198,22 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
         return $field_value_file_representation;
     }
 
+    public function getFullRESTValue(PFUser $user) {
+        $values = array();
+        foreach ($this->getFiles() as $file_info) {
+            $values[] = $file_info->getRESTValue();
+        }
+        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFileFullRepresentation';
+        $field_value_file_representation = new $classname_with_namespace;
+        $field_value_file_representation->build(
+            $this->field->getId(),
+            Tracker_FormElementFactory::instance()->getType($this->field),
+            $this->field->getLabel(),
+            $values
+        );
+        return $field_value_file_representation;
+    }
+
     /**
      * Returns the value of this changeset value
      *

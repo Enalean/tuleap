@@ -275,6 +275,17 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
         return $artifact_field_value_representation;
     }
 
+    public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
+        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation';
+        $artifact_field_value_full_representation = new $classname_with_namespace;
+        $artifact_field_value_full_representation->build(
+            $this->getId(),
+            Tracker_FormElementFactory::instance()->getType($this),
+            $this->getLabel(),
+            (int)$this->getArtifactRank($changeset->getArtifact()->getID())
+        );
+        return $artifact_field_value_full_representation;
+    }
 
     private function getPriorityDao() {
         return new Tracker_Artifact_PriorityDao();

@@ -86,16 +86,15 @@ class BacklogItemResource {
     protected function getChildren($id, $limit = 10, $offset = 0) {
         $this->checkContentLimit($limit);
 
-        $artifact                      = $this->getArtifact($id);
-        $backlog_items_representations = array();
+        $artifact                            = $this->getArtifact($id);
+        $backlog_items_representations       = array();
+        $backlog_item_representation_factory = new BacklogItemRepresentationFactory();
 
         $sliced_children = $this->getSlicedArtifactsBuilder()->getSlicedChildrenArtifactsForUser($artifact, $this->getCurrentUser(), $limit, $offset);
 
         foreach ($sliced_children->getArtifacts() as $child) {
-            $backlog_item                = new AgileDashboard_Milestone_Backlog_BacklogItem($child);
-            $backlog_item_representation = new BacklogItemRepresentation();
-            $backlog_item_representation->build($backlog_item);
-            $backlog_items_representations[] = $backlog_item_representation;
+            $backlog_item                    = new AgileDashboard_Milestone_Backlog_BacklogItem($child);
+            $backlog_items_representations[] = $backlog_item_representation_factory->createBacklogItemRepresentation($backlog_item);
         }
 
         $this->sendAllowHeaderForChildren();

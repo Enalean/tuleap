@@ -235,6 +235,37 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
         return intval($value->getId());
     }
 
+    public function getFullRESTValue(PFUser $user) {
+        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueListFullRepresentation';
+        $artifact_field_value_list_representation = new $classname_with_namespace;
+        $artifact_field_value_list_representation->build(
+            $this->field->getId(),
+            Tracker_FormElementFactory::instance()->getType($this->field),
+            $this->field->getLabel(),
+            array_values(array_map(array($this, 'getFullRESTBindValue'), $this->getListValues()))
+        );
+        return $artifact_field_value_list_representation;
+    }
+
+    protected function getFullRESTBindValue(Tracker_FormElement_Field_List_Value $value) {
+        $color      = null;
+        $decorators = $this->field->getDecorators();
+
+        if (! empty($decorators)) {
+            $decorator = $decorators[$value->getId()];
+            $color     = array(
+                'r' => (int)$decorator->r,
+                'g' => (int)$decorator->g,
+                'b' => (int)$decorator->b
+            );
+        }
+
+        return array(
+            'label' => $value->getLabel(),
+            'color' => $color
+        );
+    }
+
     /**
      * Get the diff between this changeset value and the one passed in param
      *

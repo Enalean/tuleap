@@ -47,6 +47,18 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
     public function getQueryGroupby() {
         return "a.id";
     }
+
+    public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
+        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation';
+        $artifact_field_value_full_representation = new $classname_with_namespace;
+        $artifact_field_value_full_representation->build(
+            $this->getId(),
+            Tracker_FormElementFactory::instance()->getType($this),
+            $this->getLabel(),
+            (int)$changeset->getArtifact()->getId()
+        );
+        return $artifact_field_value_full_representation;
+    }
     
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null) {
         if ($from_aid != null) {

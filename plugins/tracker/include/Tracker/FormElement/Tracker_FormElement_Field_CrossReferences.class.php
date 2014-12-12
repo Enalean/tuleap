@@ -23,8 +23,12 @@ require_once('common/reference/CrossReferenceFactory.class.php');
 
 class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly {
     
-    const REST_REF_INDEX = 'ref';
-    const REST_REF_URL   = 'url';
+    const REST_REF_INDEX          = 'ref';
+    const REST_REF_URL            = 'url';
+    const REST_REF_DIRECTION      = 'direction';
+    const REST_REF_DIRECTION_IN   = 'in';
+    const REST_REF_DIRECTION_OUT  = 'out';
+    const REST_REF_DIRECTION_BOTH = 'both';
 
     public $default_properties = array();
     
@@ -52,6 +56,29 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
     }
 
     public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
+        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation';
+        $artifact_field_value_full_representation = new $classname_with_namespace;
+        $artifact_field_value_full_representation->build(
+            $this->getId(),
+            $this->getLabel(),
+            $this->getCrossReferenceListForREST($changeset)
+        );
+        return $artifact_field_value_full_representation;
+    }
+
+    public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
+        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation';
+        $artifact_field_value_full_representation = new $classname_with_namespace;
+        $artifact_field_value_full_representation->build(
+            $this->getId(),
+            Tracker_FormElementFactory::instance()->getType($this),
+            $this->getLabel(),
+            $this->getCrossReferenceListForREST($changeset)
+        );
+        return $artifact_field_value_full_representation;
+    }
+
+    private function getCrossReferenceListForREST(Tracker_Artifact_Changeset $changeset) {
         $crf  = new CrossReferenceFactory(
             $changeset->getArtifact()->getId(), Tracker_Artifact::REFERENCE_NATURE,
             $this->getTracker()->getGroupId()
@@ -63,33 +90,32 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         if (! empty($refs['target']) ) {
             foreach ($refs['target'] as $refTgt) {
                 $list[] = array(
-                    self::REST_REF_INDEX => $refTgt['ref'],
-                    self::REST_REF_URL   => $refTgt['url'],
+                    self::REST_REF_INDEX     => $refTgt['ref'],
+                    self::REST_REF_URL       => $refTgt['url'],
+                    self::REST_REF_DIRECTION => self::REST_REF_DIRECTION_OUT,
                 );
             }
         }
         if (! empty($refs['source']) ) {
             foreach ($refs['source'] as $refSrc) {
                 $list[] = array(
-                    self::REST_REF_INDEX => $refSrc['ref'],
-                    self::REST_REF_URL   => $refSrc['url'],
+                    self::REST_REF_INDEX     => $refSrc['ref'],
+                    self::REST_REF_URL       => $refSrc['url'],
+                    self::REST_REF_DIRECTION => self::REST_REF_DIRECTION_IN,
                 );
             }
         }
         if (! empty($refs['both']) ) {
             foreach ($refs['both'] as $refBoth) {
                 $list[] = array(
-                    self::REST_REF_INDEX => $refBoth['ref'],
-                    self::REST_REF_URL   => $refBoth['url'],
+                    self::REST_REF_INDEX     => $refBoth['ref'],
+                    self::REST_REF_URL       => $refBoth['url'],
+                    self::REST_REF_DIRECTION => self::REST_REF_DIRECTION_BOTH,
                 );
             }
         }
 
-        return array(
-            'field_id' => $this->getId(),
-            'label'    => $this->getLabel(),
-            'value'    => $list
-        );
+        return $list;
     }
 
     public function getCriteriaWhere($criteria) {

@@ -347,14 +347,13 @@ class MilestoneResource {
     protected function getContent($id, $limit = 10, $offset = 0) {
         $this->checkContentLimit($limit);
 
-        $milestone                     = $this->getMilestoneById($this->getCurrentUser(), $id);
-        $backlog_items                 = $this->getMilestoneContentItems($milestone);
-        $backlog_items_representations = array();
+        $milestone                           = $this->getMilestoneById($this->getCurrentUser(), $id);
+        $backlog_items                       = $this->getMilestoneContentItems($milestone);
+        $backlog_items_representations       = array();
+        $backlog_item_representation_factory = new BacklogItemRepresentationFactory();
 
         foreach ($backlog_items as $backlog_item) {
-            $backlog_item_representation = new BacklogItemRepresentation();
-            $backlog_item_representation->build($backlog_item);
-            $backlog_items_representations[] = $backlog_item_representation;
+            $backlog_items_representations[] = $backlog_item_representation_factory->createBacklogItemRepresentation($backlog_item);
         }
 
         $this->sendAllowHeaderForContent();
@@ -548,12 +547,11 @@ class MilestoneResource {
         $milestone     = $this->getMilestoneById($user, $id);
         $backlog_items = $this->getMilestoneBacklogItems($user, $milestone);
 
-        $backlog_items_representation = array();
+        $backlog_item_representation_factory = new BacklogItemRepresentationFactory();
+        $backlog_items_representation        = array();
 
         foreach ($backlog_items as $backlog_item) {
-            $backlog_item_representation = new BacklogItemRepresentation();
-            $backlog_item_representation->build($backlog_item);
-            $backlog_items_representation[] = $backlog_item_representation;
+            $backlog_items_representation[] = $backlog_item_representation_factory->createBacklogItemRepresentation($backlog_item);
         }
 
         $this->sendAllowHeaderForBacklog();

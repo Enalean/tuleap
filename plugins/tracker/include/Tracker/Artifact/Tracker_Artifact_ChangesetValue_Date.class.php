@@ -99,6 +99,15 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
         return $this->getSimpleRESTRepresentation($date);
     }
 
+
+    public function getFullRESTValue(PFUser $user) {
+        $date = null;
+        if ($this->getTimestamp()) {
+            $date = date('c', $this->getTimestamp());
+        }
+        return $this->getFullRESTRepresentation($date);
+    }
+
     /**
      * Returns the value of this changeset value (human readable)
      *

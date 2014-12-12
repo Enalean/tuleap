@@ -89,6 +89,18 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
         return null;
     }
 
+    public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
+        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation';
+        $artifact_field_value_full_representation = new $classname_with_namespace;
+        $artifact_field_value_full_representation->build(
+            $this->getId(),
+            Tracker_FormElementFactory::instance()->getType($this),
+            $this->getLabel(),
+            $this->fetchArtifactValueReadOnly($changeset->getArtifact())
+        );
+        return $artifact_field_value_full_representation;
+    }
+
     /**
      * @return the label of the field (mainly used in admin part)
      */
