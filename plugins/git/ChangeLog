@@ -1,3 +1,6 @@
+Version 3.148 - Tuleap 7.9
+    * request #7657: Optimize repositories loading and logging in purge archived repositories
+
 Version 3.147 - Tuleap 7.8
     * request #7670 - Move git over http/s documentation to doc-en.tuleap.net
 
