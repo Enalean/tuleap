@@ -94,7 +94,7 @@ class AgileDashboardPlugin extends Plugin {
      * @see Plugin::getDependencies()
      */
     public function getDependencies() {
-        return array('tracker');
+        return array('tracker', 'cardwall');
     }
 
     public function getServiceShortname() {

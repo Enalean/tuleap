@@ -112,7 +112,7 @@ class Planning_VirtualTopMilestonePaneFactory {
         $this->list_of_pane_info[$milestone_artifact_id][] = $this->getTopContentPaneInfo($milestone);
         $this->list_of_pane_info[$milestone_artifact_id][] = $this->getTopPlanningPaneInfo($milestone);
 
-        if ($this->request->getCurrentUser()->useLabFeatures()) {
+        if ($this->request->getCurrentUser()->useLabFeatures() && defined('CARDWALL_BASE_URL')) {
             $this->list_of_pane_info[$milestone_artifact_id][] = $this->getTopPlanningV2PaneInfo($milestone);
         }
     }
