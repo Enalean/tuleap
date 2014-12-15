@@ -1,3 +1,6 @@
+Version 0.105 - Tuleap 7.9
+    * request #7690: Fatal error in full text search admin
+
 Version 0.104 - Tuleap 7.8
     * story #7603: index tracker date fields
 
