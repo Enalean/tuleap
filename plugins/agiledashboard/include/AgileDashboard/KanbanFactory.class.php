@@ -44,6 +44,9 @@ class AgileDashboard_KanbanFactory {
 
     public function getKanban($tracker_id) {
         $row = $this->dao->getKanbanByTrackerId($tracker_id)->getRow();
+        if (! $row) {
+            throw new AgileDashboard_KanbanNotFoundException();
+        }
 
         return $this->instantiateFromRow($row);
     }

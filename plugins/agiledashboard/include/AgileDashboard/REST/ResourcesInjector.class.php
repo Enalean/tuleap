@@ -21,6 +21,7 @@
 use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentation;
 use Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation;
 use Tuleap\AgileDashboard\REST\v1\PlanningRepresentation;
+use Tuleap\AgileDashboard\REST\v1\KanbanRepresentation;
 use Tuleap\Project\REST\ProjectResourceReference;
 
 /**
@@ -32,6 +33,7 @@ class AgileDashboard_REST_ResourcesInjector {
         $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\v1\\MilestoneResource', MilestoneRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\v1\\PlanningResource',  PlanningRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\v1\\BacklogItemResource',  BacklogItemRepresentation::ROUTE);
+        $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\v1\\KanbanResource', KanbanRepresentation::ROUTE);
     }
 
     public function declareProjectPlanningResource(array &$resources, Project $project) {

@@ -31,6 +31,7 @@ $data_builder
     ->generateContentItems()
     ->generateBacklogItems()
     ->generateTopBacklogItems()
+    ->generateKanban()
     ->deleteTracker()
     ->activateDebug()
     ->initPlugins();

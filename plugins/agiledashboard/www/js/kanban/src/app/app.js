@@ -3,6 +3,7 @@
         'ui.router',
         'templates-app',
         'shared-properties',
+        'restangular',
         'gettext'
     ]);
 })();

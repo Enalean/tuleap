@@ -280,29 +280,34 @@ class ProjectTest extends RestBase {
 
         $trackers = $response->json();
 
-        $this->assertCount(5, $trackers);
+        $this->assertCount(6, $trackers);
 
         $epics_tracker = $trackers[0];
         $this->assertArrayHasKey('id', $epics_tracker);
         $this->assertEquals($epics_tracker['label'], "Epics");
         $this->assertEquals($epics_tracker['project'], array('id' => TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID, 'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID));
 
-        $releases_tracker = $trackers[1];
+        $kanban_tracker = $trackers[1];
+        $this->assertArrayHasKey('id', $kanban_tracker);
+        $this->assertEquals($kanban_tracker['label'], "Kanban Tasks");
+        $this->assertEquals($kanban_tracker['project'], array('id' => TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID, 'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID));
+
+        $releases_tracker = $trackers[2];
         $this->assertArrayHasKey('id', $releases_tracker);
         $this->assertEquals($releases_tracker['label'], "Releases");
         $this->assertEquals($releases_tracker['project'], array('id' => TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID, 'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID));
 
-        $sprints_tracker = $trackers[2];
+        $sprints_tracker = $trackers[3];
         $this->assertArrayHasKey('id', $sprints_tracker);
         $this->assertEquals($sprints_tracker['label'], "Sprints");
         $this->assertEquals($sprints_tracker['project'], array('id' => TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID, 'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID));
 
-        $tasks_tracker = $trackers[3];
+        $tasks_tracker = $trackers[4];
         $this->assertArrayHasKey('id', $tasks_tracker);
         $this->assertEquals($tasks_tracker['label'], "Tasks");
         $this->assertEquals($tasks_tracker['project'], array('id' => TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID, 'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID));
 
-        $userstories_tracker = $trackers[4];
+        $userstories_tracker = $trackers[5];
         $this->assertArrayHasKey('id', $userstories_tracker);
         $this->assertEquals($userstories_tracker['label'], "User Stories");
         $this->assertEquals($userstories_tracker['project'], array('id' => TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID, 'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID));

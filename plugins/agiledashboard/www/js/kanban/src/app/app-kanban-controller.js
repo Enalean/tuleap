@@ -3,55 +3,35 @@
         .module('kanban')
         .controller('KanbanCtrl', KanbanCtrl);
 
-    KanbanCtrl.$inject = ['SharedPropertiesService'];
+    KanbanCtrl.$inject = ['SharedPropertiesService', 'KanbanService'];
 
-    function KanbanCtrl(SharedPropertiesService) {
-        var kanban = SharedPropertiesService.getKanban();
+    function KanbanCtrl(SharedPropertiesService, KanbanService) {
+        var self = this,
+            kanban = SharedPropertiesService.getKanban();
 
-        this.name      = kanban.name;
-        this.nb_open   = kanban.nb_open;
-        this.nb_closed = kanban.nb_closed;
-        this.board = {
-            columns: [
-                {
-                    id: 123,
-                    content: [],
-                    label: 'To be plannified',
-                    is_open: true,
-                    limit: null
-                },
-                {
-                    id: 234,
-                    content: [],
-                    label: 'On going',
-                    is_open: true,
-                    limit: 3
-                },
-                {
-                    id: 345,
-                    content: [],
-                    label: 'To test',
-                    is_open: true,
-                    limit: 3
-                },
-                {
-                    id: 456,
-                    content: [],
-                    label: 'Blocked',
-                    is_open: true,
-                    limit: 9
-                }
-            ]
+        self.name      = kanban.name;
+        self.nb_open   = kanban.nb_open;
+        self.nb_closed = kanban.nb_closed;
+        self.board = {
+            columns: []
         };
-        this.backlog = {
+        self.backlog = {
             content: [],
             label: 'Backlog',
             is_open: false
         };
-        this.archive = {
+        self.archive = {
             content: [],
             label: 'Closed',
             is_open: false
         };
+
+        loadColumns();
+
+        function loadColumns() {
+            KanbanService.getKanban(kanban.tracker_id).then(function (kanban) {
+                self.board.columns = kanban.columns;
+            });
+        }
     }
 })();
