@@ -20,15 +20,6 @@
 
 class FullTextSearch_Presenter_AdminPresenter {
 
-    /**
-     * @var FullTextSearch_Presenter_ProjectPresenter
-     */
-    public $projects = array();
-
-    public function __construct(array $projects) {
-        $this->projects = $projects;
-    }
-
     public function title() {
         return $GLOBALS['Language']->getText('plugin_fulltextsearch', 'admin_title');
     }

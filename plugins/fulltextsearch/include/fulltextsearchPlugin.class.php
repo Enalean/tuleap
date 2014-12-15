@@ -105,6 +105,7 @@ class fulltextsearchPlugin extends Plugin {
         // assets
         $this->_addHook('cssfile', 'cssfile', false);
         $this->_addHook(Event::COMBINED_SCRIPTS, 'combined_scripts', false);
+        $this->_addHook('javascript_file');
 
         // system events
         $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS, 'get_system_event_class', false);
@@ -568,6 +569,16 @@ class fulltextsearchPlugin extends Plugin {
         );
     }
 
+    public function javascript_file() {
+        if ($this->isAdminPage()) {
+            echo '<script type="text/javascript" src="' . $this->getPluginPath() . '//scripts/admin-load-project-autocompleter.js"></script>';
+        }
+    }
+
+    private function isAdminPage() {
+        return strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0;
+    }
+
     private function canIncludeAssets() {
         return strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/search/') === 0;
@@ -670,12 +681,12 @@ class fulltextsearchPlugin extends Plugin {
             header('Location: ' . get_server_url());
         }
 
-        $project_id = $request->get('group_id');
+        $project_name_from_autocomplete = $request->get('fts_project');
+        $project_manager = $this->getProjectManager();
+        $project = $project_manager->getProjectFromAutocompleter($project_name_from_autocomplete);
 
-        if ($project_id) {
-            $project = $request->getProject();
-
-            $this->reindexAll($project_id);
+        if ($project) {
+            $this->reindexAll($project->getId());
 
             $GLOBALS['Response']->addFeedback(
                 'info',

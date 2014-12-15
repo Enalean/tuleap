@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright (c) Enalean, 2014. All Rights Reserved.
  *
@@ -18,20 +17,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class FullTextSearch_Presenter_ProjectPresenter {
-
-    /**
-     * @var int
-     */
-    public $group_id;
-
-    /**
-     * @var string
-     */
-    public $name;
-
-    public function __construct(Project $project) {
-        $this->group_id  = $project->getID();
-        $this->name      = util_unconvert_htmlspecialchars($project->getPublicName());
-    }
-}
+new ProjectAutoCompleter('fts_project', '', false);
