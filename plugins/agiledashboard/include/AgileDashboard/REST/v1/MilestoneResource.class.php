@@ -39,6 +39,7 @@ use Planning_Milestone;
 use PFUser;
 use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use Tracker_NoChangeException;
+use Tracker_NoArtifactLinkFieldException;
 use EventManager;
 use URLVerification;
 use Tracker_Artifact_PriorityDao;
@@ -481,6 +482,8 @@ class MilestoneResource {
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_NoChangeException $exception) {
             //Do nothing
+        } catch (Tracker_NoArtifactLinkFieldException $exception) {
+            throw new RestException(400, $exception->getMessage());
         } catch (\Exception $exception) {
             throw new RestException(400, $exception->getMessage());
             return;

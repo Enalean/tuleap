@@ -25,6 +25,7 @@ use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_Exception_CannotRankWithMyself;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_Artifact;
+use Tracker_NoArtifactLinkFieldException;
 use PFUser;
 
 class ArtifactLinkUpdater {
@@ -85,6 +86,10 @@ class ArtifactLinkUpdater {
     }
 
     public function updateArtifactLinks(PFUser $user, Tracker_Artifact $artifact, array $to_add, array $to_remove) {
+        if (! $artifact->getAnArtifactLinkField($user)) {
+            throw new Tracker_NoArtifactLinkFieldException('Missing artifact link field for milestone');
+        }
+
         try {
             $fields_data = $this->formatFieldDatas($artifact->getAnArtifactLinkField($user), $to_add, $to_remove);
             $artifact->createNewChangeset($fields_data, '', $user, '');
