@@ -1,3 +1,14 @@
+Version 1.124 - Tuleap 7.9
+    * Do not hard code columns definition
+
+
+This is a first step to bring dynamics into kanban columns. It
+introduces a new GET /kanban/:id that furnish columns definition.
+
+Please note that the color definition is missing.
+
+Part of story #7577 display a Kanban cardwall.
+
 Version 1.123 - Tuleap 7.9
     * story #7174: AD plugin (and planning-v2) is now dependent on Cardwall plugin
 
