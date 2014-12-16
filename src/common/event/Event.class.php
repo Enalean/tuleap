@@ -833,6 +833,7 @@ class Event {
     /**
      *  Parameters:
      *      'executed_events_ids' => array
+     *      'queue_name'          => string
      */
     const POST_SYSTEM_EVENTS_ACTIONS = 'post_system_events_actions';
 }
