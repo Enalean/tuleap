@@ -114,8 +114,12 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
     private function verbalizeRemoteServerId($remote_server_id, $with_link) {
         $txt = '#'. $remote_server_id;
         if ($with_link) {
-            $server = $this->server_factory->getServerById($remote_server_id);
-            $txt = $server->getHost();
+            try {
+                $server = $this->server_factory->getServerById($remote_server_id);
+                $txt    = $server->getHost();
+            } catch (Git_RemoteServer_NotFoundException $exception) {
+                $txt .= " GERRIT SERVER DELETED";
+            }
         }
         return $txt;
     }
