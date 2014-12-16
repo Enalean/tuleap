@@ -1,3 +1,6 @@
+Version 1.125 - Tuleap 7.9
+    * request #7693: fatal error on PATCH route when milestone does not have artifact link field
+
 Version 1.124 - Tuleap 7.9
     * Do not hard code columns definition
 
