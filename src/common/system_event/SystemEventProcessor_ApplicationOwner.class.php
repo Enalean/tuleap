@@ -29,9 +29,10 @@ class SystemEventProcessor_ApplicationOwner extends SystemEventProcessor {
         return SystemEvent::OWNER_APP;
     }
 
-    protected function postEventsActions(array $executed_events_ids) {
+    protected function postEventsActions(array $executed_events_ids, $queue_name) {
         $params = array(
-            'executed_events_ids'  => $executed_events_ids
+            'executed_events_ids'  => $executed_events_ids,
+            'queue_name'           => $queue_name
         );
 
         EventManager::instance()->processEvent(

@@ -1328,6 +1328,10 @@ class GitPlugin extends Plugin {
      * @see Event::POST_EVENTS_ACTIONS
      */
     public function post_system_events_actions($params) {
+        if (! $this->pluginIsConcerned($params)) {
+            return;
+        }
+
         $this->getLogger()->info('Processing git post system events actions');
 
         $executed_events_ids = $params['executed_events_ids'];
@@ -1335,5 +1339,9 @@ class GitPlugin extends Plugin {
         $this->getGitoliteDriver()->commit('Modifications from events ' . implode(',', $executed_events_ids));
         $this->getGitoliteDriver()->push();
         $this->getManifestManager()->triggerUpdate(new GitRepositoryGitoliteAdmin());
+    }
+
+    private function pluginIsConcerned($params) {
+        return $params['queue_name'] == "git";
     }
 }

@@ -64,7 +64,7 @@ class SystemEventProcessor_Root extends SystemEventProcessor {
         return SystemEvent::OWNER_ROOT;
     }
 
-    protected function postEventsActions(array $executed_events_ids) {
+    protected function postEventsActions(array $executed_events_ids, $queue_name) {
          // Since generating aliases may be costly, do it only once everything else is processed
         if ($this->backend_aliases->aliasesNeedUpdate()) {
             $this->backend_aliases->update();
