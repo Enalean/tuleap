@@ -57,6 +57,45 @@ class PermissionsManager {
         return '';
     }
 
+    public function duplicatePermissions(Project $project_template, Project $new_project, array $ugroup_mapping) {
+        $this->duplicateReaders($project_template, $new_project, $ugroup_mapping);
+        $this->duplicateWriters($project_template, $new_project, $ugroup_mapping);
+
+        return true;
+    }
+
+    private function duplicateReaders(Project $project_template, Project $new_project, array $ugroup_mapping) {
+        $ugroup_read      = $this->getSelectUGroupFor($project_template, self::PERM_READ);
+
+        if ($ugroup_read ===  ProjectUGroup::NONE) {
+            return;
+        }
+
+        $new_ugroup_read  = $ugroup_mapping[$ugroup_read];
+
+        $this->savePermission(
+            $new_project,
+            self::PERM_READ,
+            array($new_ugroup_read)
+        );
+    }
+
+    private function duplicateWriters(Project $project_template, Project $new_project, array $ugroup_mapping) {
+        $ugroup_write     = $this->getSelectUGroupFor($project_template, self::PERM_WRITE);
+
+        if ($ugroup_write ===  ProjectUGroup::NONE) {
+            return;
+        }
+
+        $new_ugroup_write = $ugroup_mapping[$ugroup_write];
+
+        $this->savePermission(
+            $new_project,
+            self::PERM_WRITE,
+            array($new_ugroup_write)
+        );
+    }
+
     public function savePermission(Project $project, $permission, array $ugroups) {
         include_once 'www/project/admin/permissions.php';
 

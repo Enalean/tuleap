@@ -32,6 +32,7 @@ class proftpdPlugin extends Plugin {
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
         $this->addHook(Event::GET_FTP_INCOMING_DIR);
         $this->addHook(Event::SERVICE_ICON);
+        $this->addHook('register_project_creation');
     }
 
     public function getPluginInfo() {
@@ -78,6 +79,18 @@ class proftpdPlugin extends Plugin {
 
     public function getServiceShortname() {
         return self::SERVICE_SHORTNAME;
+    }
+
+    public function register_project_creation($params) {
+        $project_template = ProjectManager::instance()->getProject($params['template_id']);
+        $project          = ProjectManager::instance()->getProject($params['group_id']);
+
+        $this->getPermissionsManager()->duplicatePermissions(
+            $project_template,
+            $project,
+            $params['ugroupsMapping']
+        );
+
     }
 
     public function service_icon($params) {
@@ -133,6 +146,7 @@ class proftpdPlugin extends Plugin {
 
     private function createDirectory(Project $project) {
         $this->getProftpdSystemEventManager()->queueDirectoryCreate($project->getUnixName());
+        $this->getProftpdSystemEventManager()->queueACLUpdate($project->getUnixName());
     }
 
     public function system_event_get_types_for_default_queue($params) {
