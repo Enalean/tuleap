@@ -28,7 +28,7 @@
                 </span>
                 <span class="column-label">{{ column.label }}</span>
             </th>
-            <th class="archive" ng-class="kanban.archive.is_open ? 'column-displayed' : 'column-hidden'">
+            <th ng-class="kanban.archive.is_open ? 'column-displayed' : 'column-hidden'">
                 <span class="wip-count">{{ kanban.archive.content.length }}</span>
                 <span class="toggle-column" title="{{ 'Toggle the archive' | translate }}" ng-click="kanban.archive.is_open = ! kanban.archive.is_open">
                     <i class="icon-archive"></i>

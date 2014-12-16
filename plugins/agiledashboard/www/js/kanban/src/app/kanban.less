@@ -57,6 +57,8 @@
             color: #CCC;
             height: 40px;
             vertical-align: middle;
+            box-shadow: inset 0 4px 0 #666;
+            color: #666;
 
             > .wip-limit {
                 float: right;
@@ -67,6 +69,7 @@
                 padding: 0px 7px;
                 font-weight: bold;
                 font-size: 0.9em;
+                background: #666;
 
                 > i {
                     font-size: 0.85em;
@@ -123,51 +126,8 @@
             }
         }
 
-        > th + th {
-            box-shadow: inset 0 4px 0 deepskyblue;
-            color: deepskyblue;
-
-            > .wip-limit {
-                background: deepskyblue;
-            }
-        }
-
-        > th + th + th {
-            box-shadow: inset 0 4px 0 yellowgreen;
-            color: yellowgreen;
-
-            > .wip-limit {
-                background: yellowgreen;
-            }
-        }
-
-        > th + th + th + th {
-            box-shadow: inset 0 4px 0 darkorchid;
-            color: darkorchid;
-
-            > .wip-limit {
-                background: darkorchid;
-            }
-        }
-
-        > th + th + th + th + th {
-            box-shadow: inset 0 4px 0 deeppink;
-            color: deeppink;
-
-            > .wip-limit {
-                background: deeppink;
-            }
-        }
-
         > .backlog {
-            box-shadow: inset 0 4px 0 #666;
-            color: #666;
             border-left: none;
-        }
-
-        > .archive {
-            box-shadow: inset 0 4px 0 #666;
-            color: #666;
         }
     }
 
@@ -250,6 +210,8 @@
                 min-width: 75px;
                 white-space: nowrap;
                 cursor: pointer;
+                color: #666;
+                background: #EEE;
 
                 > .column-content {
                     display: none;
@@ -270,57 +232,12 @@
                         left: 6px;
                         font-size: 4em;
                         font-weight: bold;
+                        color: #CCC;
                     }
                 }
 
                 &:hover {
                     opacity: 0.7;
-                }
-            }
-
-            &.backlog,
-            &.archive {
-                color: #666;
-                background: #EEE;
-
-                > .column-label > .count {
-                    color: #CCC;
-                }
-            }
-
-            + td.column-hidden {
-                color: deepskyblue;
-                background: lighten(deepskyblue, @lightenratio);
-
-                > .column-label > .count {
-                    color: lighten(deepskyblue, @lightenratiomiddle);
-                }
-            }
-
-            + td + td.column-hidden {
-                color: yellowgreen;
-                background: lighten(yellowgreen, @lightenratio);
-
-                > .column-label > .count {
-                    color: lighten(yellowgreen, @lightenratiomiddle);
-                }
-            }
-
-            + td + td + td.column-hidden {
-                color: darkorchid;
-                background: lighten(darkorchid, @lightenratio);
-
-                > .column-label > .count {
-                    color: lighten(darkorchid, @lightenratiomiddle);
-                }
-            }
-
-            + td + td + td + td.column-hidden {
-                color: deeppink;
-                background: lighten(deeppink, @lightenratio);
-
-                > .column-label > .count {
-                    color: lighten(deeppink, @lightenratiomiddle);
                 }
             }
 
