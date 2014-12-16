@@ -373,4 +373,8 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
     public function accept(Tracker_FormElement_FieldVisitor $visitor) {
         return $visitor->visitSubmittedBy($this);
     }
+
+    public function getDefaultValue() {
+        return Tracker_FormElement_Field_List_Bind::NONE_VALUE;
+    }
 }
