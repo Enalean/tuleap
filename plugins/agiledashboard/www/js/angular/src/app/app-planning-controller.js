@@ -9,10 +9,11 @@
         'BacklogItemService',
         'MilestoneService',
         'ProjectService',
-        'DroppedService'
+        'DroppedService',
+        'CardFieldsService'
     ];
 
-    function PlanningCtrl($scope, SharedPropertiesService, BacklogItemService, MilestoneService, ProjectService, DroppedService) {
+    function PlanningCtrl($scope, SharedPropertiesService, BacklogItemService, MilestoneService, ProjectService, DroppedService, CardFieldsService) {
 
         var project_id                  = SharedPropertiesService.getProjectId(),
             milestone_id                = SharedPropertiesService.getMilestoneId(),
@@ -21,18 +22,30 @@
             show_closed_milestone_items = true;
 
         _.extend($scope, {
-            rest_error_occured         : false,
-            rest_error                 : "",
-            backlog_items              : [],
-            milestones                 : [],
-            backlog                    : {},
-            loading_backlog_items      : true,
-            loading_milestones         : true,
-            toggle                     : toggle,
-            showChildren               : showChildren,
-            toggleClosedMilestoneItems : toggleClosedMilestoneItems,
-            canShowBacklogItem         : canShowBacklogItem,
-            generateMilestoneLinkUrl   : generateMilestoneLinkUrl
+            rest_error_occured          : false,
+            rest_error                  : "",
+            backlog_items               : [],
+            milestones                  : [],
+            backlog                     : {},
+            loading_backlog_items       : true,
+            loading_milestones          : true,
+            toggle                      : toggle,
+            showChildren                : showChildren,
+            toggleClosedMilestoneItems  : toggleClosedMilestoneItems,
+            canShowBacklogItem          : canShowBacklogItem,
+            generateMilestoneLinkUrl    : generateMilestoneLinkUrl,
+            cardFieldIsSimpleValue      : CardFieldsService.cardFieldIsSimpleValue,
+            cardFieldIsList             : CardFieldsService.cardFieldIsList,
+            cardFieldIsText             : CardFieldsService.cardFieldIsText,
+            cardFieldIsDate             : CardFieldsService.cardFieldIsDate,
+            cardFieldIsFile             : CardFieldsService.cardFieldIsFile,
+            cardFieldIsCross            : CardFieldsService.cardFieldIsCross,
+            cardFieldIsPermissions      : CardFieldsService.cardFieldIsPermissions,
+            getCardFieldListValues      : CardFieldsService.getCardFieldListValues,
+            getCardFieldTextValue       : CardFieldsService.getCardFieldTextValue,
+            getCardFieldFileValue       : CardFieldsService.getCardFieldFileValue,
+            getCardFieldCrossValue      : CardFieldsService.getCardFieldCrossValue,
+            getCardFieldPermissionsValue: CardFieldsService.getCardFieldPermissionsValue
         });
 
         $scope.treeOptions = {
