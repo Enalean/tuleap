@@ -54,6 +54,6 @@ class DatabaseInitialization {
 
     private function forceCreateDatabase() {
         $this->mysqli->query("DROP DATABASE IF EXISTS ".$GLOBALS['sys_dbname']);
-        $this->mysqli->query("CREATE DATABASE ".$GLOBALS['sys_dbname']);
+        $this->mysqli->query("CREATE DATABASE ".$GLOBALS['sys_dbname']." CHARACTER SET utf8");
     }
 }
