@@ -1,3 +1,6 @@
+Version 3.150 - Tuleap 7.9
+    * request #7699 - Fatal Error in SE Monitor if Gerrit Server has been deleted
+
 Version 3.149 - Tuleap 7.9
     * request #7692 - Git plugin tries to commit / push as post system event at each run
 
