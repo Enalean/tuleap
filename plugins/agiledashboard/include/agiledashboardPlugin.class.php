@@ -418,7 +418,7 @@ class AgileDashboardPlugin extends Plugin {
             new ProjectXMLExporter(EventManager::instance()),
             new AgileDashboard_KanbanManager($kanban_dao),
             new AgileDashboard_ConfigurationManager($config_dao),
-            new AgileDashboard_KanbanFactory($kanban_dao)
+            new AgileDashboard_KanbanFactory(TrackerFactory::instance(), $kanban_dao)
         );
 
         $router->route($request);

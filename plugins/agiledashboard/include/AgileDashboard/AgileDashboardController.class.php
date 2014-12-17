@@ -272,14 +272,22 @@ class AgileDashboard_Controller extends MVC2_PluginController {
 
     public function showKanban() {
         $tracker_id  = $this->request->get('tracker');
-        $kanban = $this->kanban_factory->getKanban($tracker_id);
+        $user        = $this->request->getCurrentUser();
 
-        return $this->renderToString(
-            'kanban',
-            new KanbanPresenter(
-                $kanban,
-                $this->request->getCurrentUser()->getShortLocale()
-            )
-        );
+        try {
+            $kanban = $this->kanban_factory->getKanban($user, $tracker_id);
+
+            return $this->renderToString(
+                'kanban',
+                new KanbanPresenter(
+                    $kanban,
+                    $this->request->getCurrentUser()->getShortLocale()
+                )
+            );
+        } catch (AgileDashboard_KanbanNotFoundException $exception) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_not_found'));
+        } catch (AgileDashboard_KanbanCannotAccessException $exception) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('global', 'error_perm_denied'));
+        }
     }
 }

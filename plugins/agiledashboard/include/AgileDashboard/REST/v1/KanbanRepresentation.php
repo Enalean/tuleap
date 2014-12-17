@@ -26,7 +26,8 @@ use Tracker_Semantic_Status;
 
 class KanbanRepresentation {
 
-    const ROUTE = 'kanban';
+    const ROUTE         = 'kanban';
+    const BACKLOG_ROUTE = 'backlog';
 
     /**
      * @var Int
@@ -34,14 +35,19 @@ class KanbanRepresentation {
     public $id;
 
     /**
-     * @var array
+     * @var Int
      */
-    public $columns;
+    public $uri;
 
     /**
      * @var String
      */
     public $label;
+
+    /**
+     * @var array
+     */
+    public $columns;
 
     /**
      * @var Int
@@ -53,30 +59,40 @@ class KanbanRepresentation {
      */
     public $nb_closed;
 
+    /*
+     * @var array
+     */
+    public $resources;
+
     public function build(AgileDashboard_Kanban $kanban) {
         $this->id        = JsonCast::toInt($kanban->getTrackerId());
+        $this->uri       = self::ROUTE.'/'.$this->id;
         $this->label     = $kanban->getName();
         $this->columns   = array();
         $this->nb_open   = 0;
         $this->nb_closed = 0;
 
-        $tracker = TrackerFactory::instance()->getTrackerById($kanban->getTrackerId());
-        if (! $tracker) {
+        $this->setColumns($kanban);
+
+        $this->resources = array(
+            'backlog' => array(
+                'uri' => $this->uri . '/'. self::BACKLOG_ROUTE
+            )
+        );
+    }
+
+    private function setColumns(AgileDashboard_Kanban $kanban) {
+        $semantic     = $this->getSemanticStatus($kanban);
+        if (! $semantic) {
             return;
         }
 
-        $semantic     = Tracker_Semantic_Status::load($tracker);
-        $status_field = $semantic->getField();
-        if (! $status_field) {
-            return;
-        }
-
-        $field_values = $status_field->getAllValues();
-        $open_values  = $semantic->getOpenValues();
+        $field_values = $this->getFieldValues($semantic);
+        $open_values  = $this->getOpenValues($semantic);
         foreach ($open_values as $id) {
             if (isset($field_values[$id])) {
                 $this->columns[] = array(
-                    'id'        => $id,
+                    'id'        => JsonCast::toInt($id),
                     'label'     => $field_values[$id]->getLabel(),
                     'is_open'   => true,
                     'limit'     => null,
@@ -84,5 +100,27 @@ class KanbanRepresentation {
                 );
             }
         }
+    }
+
+    private function getOpenValues(Tracker_Semantic_Status $semantic) {
+        return $semantic->getOpenValues();
+    }
+
+    private function getFieldValues(Tracker_Semantic_Status $semantic) {
+        return $semantic->getField()->getAllValues();
+    }
+
+    private function getSemanticStatus(AgileDashboard_Kanban $kanban) {
+        $tracker = TrackerFactory::instance()->getTrackerById($kanban->getTrackerId());
+        if (! $tracker) {
+            return;
+        }
+
+        $semantic = Tracker_Semantic_Status::load($tracker);
+        if (! $semantic->getFieldId()) {
+            return;
+        }
+
+        return $semantic;
     }
 }

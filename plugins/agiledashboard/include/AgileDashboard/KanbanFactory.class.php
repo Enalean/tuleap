@@ -21,28 +21,44 @@
 
 class AgileDashboard_KanbanFactory {
 
+    /** @var TrackerFactory */
+    private $tracker_factory;
+
     /** @var AgileDashboard_KanbanDao */
     private $dao;
 
-    public function __construct(AgileDashboard_KanbanDao $dao) {
-        $this->dao = $dao;
+    public function __construct(TrackerFactory $tracker_factory, AgileDashboard_KanbanDao $dao) {
+        $this->dao             = $dao;
+        $this->tracker_factory = $tracker_factory;
     }
 
     /**
      * @return AgileDashboard_Kanban[]
      */
-    public function getListOfKanbansForProject($project_id) {
+    public function getListOfKanbansForProject(PFuser $user, $project_id) {
         $rows    = $this->dao->getKanbansForProject($project_id);
         $kanbans = array();
 
         foreach ($rows as $kanban_data) {
-            $kanbans[] = $this->instantiateFromRow($kanban_data);
+            if ($this->isUserAllowedToAccessTracker($user, $kanban_data['tracker_id'])) {
+                $kanbans[] = $this->instantiateFromRow($kanban_data);
+            }
         }
 
         return $kanbans;
     }
 
-    public function getKanban($tracker_id) {
+    /**
+     * @throws AgileDashboard_KanbanCannotAccessException
+     * @throws AgileDashboard_KanbanNotFoundException
+     *
+     * @return AgileDashboard_Kanban
+     */
+    public function getKanban(PFuser $user, $tracker_id) {
+        if (! $this->isUserAllowedToAccessTracker($user, $tracker_id)) {
+            throw new AgileDashboard_KanbanCannotAccessException();
+        }
+
         $row = $this->dao->getKanbanByTrackerId($tracker_id)->getRow();
         if (! $row) {
             throw new AgileDashboard_KanbanNotFoundException();
@@ -65,11 +81,21 @@ class AgileDashboard_KanbanFactory {
         return $kanban_tracker_ids;
     }
 
+    /** @return AgileDashboard_Kanban */
     private function instantiateFromRow($kanban_data) {
         return new AgileDashboard_Kanban(
             $kanban_data['name'],
             $kanban_data['tracker_id'],
             $kanban_data['group_id']
         );
+    }
+
+    private function isUserAllowedToAccessTracker(PFuser $user, $tracker_id) {
+        $tracker = $this->tracker_factory->getTrackerById($tracker_id);
+        if (! $tracker) {
+            throw new AgileDashboard_KanbanNotFoundException();
+        }
+
+        return $tracker->userCanView($user);
     }
 }
