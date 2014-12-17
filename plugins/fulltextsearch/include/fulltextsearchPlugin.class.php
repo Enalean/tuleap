@@ -43,6 +43,7 @@ class fulltextsearchPlugin extends Plugin {
         SystemEvent_FULLTEXTSEARCH_DOCMAN_APPROVAL_TABLE_COMMENT::NAME,
         SystemEvent_FULLTEXTSEARCH_DOCMAN_WIKI_INDEX::NAME,
         SystemEvent_FULLTEXTSEARCH_DOCMAN_WIKI_UPDATE::NAME,
+        SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATELINK::NAME,
         SystemEvent_FULLTEXTSEARCH_TRACKER_ARTIFACT_UPDATE::NAME,
         SystemEvent_FULLTEXTSEARCH_TRACKER_REINDEX_PROJECT::NAME,
         SystemEvent_FULLTEXTSEARCH_TRACKER_ARTIFACT_DELETE::NAME,
@@ -53,7 +54,7 @@ class fulltextsearchPlugin extends Plugin {
         SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE_PERMISSIONS::NAME,
         SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE_SERVICE_PERMISSIONS::NAME,
         SystemEvent_FULLTEXTSEARCH_WIKI_DELETE::NAME,
-        SystemEvent_FULLTEXTSEARCH_WIKI_REINDEX_PROJECT::NAME
+        SystemEvent_FULLTEXTSEARCH_WIKI_REINDEX_PROJECT::NAME,
     );
 
     public function __construct($id) {
@@ -78,6 +79,7 @@ class fulltextsearchPlugin extends Plugin {
             $this->addHook(PLUGIN_DOCMAN_EVENT_NEW_EMPTY);
             $this->addHook(PLUGIN_DOCMAN_EVENT_NEW_LINK);
             $this->addHook(PLUGIN_DOCMAN_EVENT_NEW_FOLDER);
+            $this->addHook(PLUGIN_DOCMAN_EVENT_NEW_LINKVERSION);
         }
         // tracker
         if (defined('TRACKER_BASE_URL')) {
@@ -387,6 +389,13 @@ class fulltextsearchPlugin extends Plugin {
      */
     public function plugin_docman_event_new_version($params) {
         $this->getDocmanSystemEventManager()->queueNewDocumentVersion($params['item'], $params['version']);
+    }
+
+    /**
+     * Event triggered when the permissions on a document version update
+     */
+    public function plugin_docman_event_new_linkVersion($params) {
+        $this->getDocmanSystemEventManager()->queueNewDocumentLinkVersion($params['item'], $params['version']);
     }
 
     /**

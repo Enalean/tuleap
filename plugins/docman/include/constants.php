@@ -64,3 +64,12 @@ define('PLUGIN_DOCMAN_EVENT_NEW_FOLDER', 'plugin_docman_event_new_folder');
  *      'item' => Docman_Item
  */
 define('PLUGIN_DOCMAN_EVENT_COPY', 'plugin_docman_event_copy');
+
+/**
+ * Event raised when a docman link item ihas new version
+ *
+ * Parameters:
+ *      'item'    => Docman_Link
+ *      'version' => Docman_LinkVersion
+ */
+define('PLUGIN_DOCMAN_EVENT_NEW_LINKVERSION', 'plugin_docman_event_new_linkVersion');

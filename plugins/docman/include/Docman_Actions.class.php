@@ -737,6 +737,13 @@ class Docman_Actions extends Actions {
                 $this->manageLockNewVersion($user, $item, $request);
 
                 $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_create_newversion'));
+
+                $link_version_factory = new Docman_LinkVersionFactory();
+                $event_data           = array(
+                    'item'     => $item,
+                    'version'  => $link_version_factory->getLatestVersion($item),
+                );
+                $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_LINKVERSION, $event_data);
             }
         }
         $this->event_manager->processEvent('send_notifications', array());

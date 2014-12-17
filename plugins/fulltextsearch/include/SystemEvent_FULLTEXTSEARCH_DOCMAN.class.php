@@ -35,10 +35,21 @@ abstract class SystemEvent_FULLTEXTSEARCH_DOCMAN extends SystemEvent {
      */
     protected $version_factory;
 
-    public function injectDependencies(FullTextSearchDocmanActions $actions, Docman_ItemFactory $item_factory, Docman_VersionFactory $version_factory) {
-        $this->actions         = $actions;
-        $this->item_factory    = $item_factory;
-        $this->version_factory = $version_factory;
+    /**
+     * @var Docman_LinkVersionFactory
+     */
+    protected $link_version_factory;
+
+    public function injectDependencies(
+            FullTextSearchDocmanActions $actions,
+            Docman_ItemFactory $item_factory,
+            Docman_VersionFactory $version_factory,
+            Docman_LinkVersionFactory $link_version_factory
+    ) {
+        $this->actions              = $actions;
+        $this->item_factory         = $item_factory;
+        $this->version_factory      = $version_factory;
+        $this->link_version_factory = $link_version_factory;
     }
 
     /**

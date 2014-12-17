@@ -52,6 +52,7 @@ class FullTextSearch_DocmanSystemEventManager {
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_LINK_INDEX::NAME:
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_FOLDER_INDEX::NAME:
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE::NAME:
+            case SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATELINK::NAME:
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS::NAME:
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA::NAME:
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_DELETE::NAME:
@@ -64,7 +65,8 @@ class FullTextSearch_DocmanSystemEventManager {
                 $dependencies = array(
                     $this->getDocmanActions(),
                     new Docman_ItemFactory(),
-                    new Docman_VersionFactory()
+                    new Docman_VersionFactory(),
+                    new Docman_LinkVersionFactory()
                 );
                 break;
         }
@@ -182,6 +184,17 @@ class FullTextSearch_DocmanSystemEventManager {
             // receive both event for a new document
             $this->system_event_manager->createEvent(
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE::NAME,
+                $this->getDocmanSerializedParameters($item, array($version->getNumber())),
+                SystemEvent::PRIORITY_MEDIUM,
+                SystemEvent::OWNER_APP
+            );
+        }
+    }
+
+    public function queueNewDocumentLinkVersion(Docman_Link $item, Docman_LinkVersion $version) {
+        if ($this->plugin->isAllowed($item->getGroupId()) && $version->getNumber() > 1) {
+            $this->system_event_manager->createEvent(
+                SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATELINK::NAME,
                 $this->getDocmanSerializedParameters($item, array($version->getNumber())),
                 SystemEvent::PRIORITY_MEDIUM,
                 SystemEvent::OWNER_APP

@@ -206,6 +206,24 @@ class FullTextSearchDocmanActions {
     }
 
     /**
+     * Index a new document with permissions
+     *
+     * @param Docman_Item    $item    The docman item
+     * @param Docman_Version $version The version to index
+     */
+    public function indexNewLinkVersion(Docman_Item $item, Docman_LinkVersion $version) {
+        try {
+            $this->client->getIndexedElement($item->getGroupId(), $item->getId());
+            $this->logger->debug('[Docman] ElasticSearch: index new link version #' . $version->getId() . ' for document #' . $item->getId());
+            $indexed_data = $this->getIndexedData($item) + $this->getLinkContent($item);
+            $this->client->update($item->getGroupId(), $item->getId(), $indexed_data);
+        } catch (ElasticSearch_ElementNotIndexed $exception) {
+            $this->indexNewLinkDocument($item);
+            return;
+        }
+    }
+
+    /**
      * Index a new wiki document with permissions
      *
      * @param Docman_Item    $item               The docman item

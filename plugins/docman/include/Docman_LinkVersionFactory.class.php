@@ -50,7 +50,7 @@ class Docman_LinkVersionFactory {
     /**
      * @return Docman_LinkVersion|null
      */
-    function getSpecificVersion($item, $number) {
+    public function getSpecificVersion(Docman_Link $item, $number) {
         $row = $this->dao->searchByNumber($item->getId(), $number)->getRow();
         if (! $row) {
             return null;
@@ -61,5 +61,14 @@ class Docman_LinkVersionFactory {
 
     public function create(Docman_Link $link, $label, $changelog, $date) {
         return $this->dao->createNewLinkVersion($link, $label, $changelog, $date);
+    }
+
+    /**
+     * @return Docman_LinkVersion
+     */
+    public function getLatestVersion(Docman_Link $link) {
+        $row = $this->dao->searchByItemId($link->getId())->getRow();
+
+        return new Docman_LinkVersion($row);
     }
 }
