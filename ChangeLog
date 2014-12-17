@@ -1,7 +1,7 @@
 Version 7.9 (Not Released Yet)
 
 	== Plugins ==
-	* agiledashboard: 1.125
+	* agiledashboard: 1.126
 	* git: 3.149
 	* fulltextsearch: 0.105
 	* proftpd: 0.20
@@ -9,6 +9,9 @@ Version 7.9 (Not Released Yet)
 
 	== Bug Fix ==
 	* request #7692 - Git plugin tries to commit / push as post system event at each run
+
+	== Features ==
+	* parts of story #7577 display a Kanban cardwall
 
 Version 7.8 (Thursday, December 11th 2014)
 	== Features ==
