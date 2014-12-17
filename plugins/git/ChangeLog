@@ -1,3 +1,6 @@
+Version 3.149 - Tuleap 7.9
+    * request #7692 - Git plugin tries to commit / push as post system event at each run
+
 Version 3.148 - Tuleap 7.9
     * request #7657: Optimize repositories loading and logging in purge archived repositories
 
