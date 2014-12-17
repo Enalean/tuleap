@@ -1726,7 +1726,8 @@ EOS;
             'masschange',
             new Tracker_Masschange_Presenter(
                 $masschange_aids,
-                $this->fetchFormElementsMasschange()
+                $this->fetchFormElementsMasschange(),
+                $this->displayRulesAsJavascript()
             )
         );
 
