@@ -133,6 +133,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
     function visitDocument(&$item, $params = array()) {
         $content = '';
         $content .= '<dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_update') .'</dt><dd>';
+
         if (!$this->_controller->userCanWrite($this->item->getid())) {
             $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_actions_update_cannot');
         } else {
@@ -141,21 +142,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
                 Docman_View_View::buildUrl($this->url, array('action' => 'action_update', 'id' => $this->item->getId()))
             );
         }
-        /*$content .= '<form action="'. $this->url .'&amp;id='. $this->item->getId() .'" method="post">';
-        
-        require_once('Docman_View_GetSpecificFieldsVisitor.class.php');
-        $fields = $item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('request' => &$this->controller->request));
-        $content .= '<table>';
-        foreach($fields as $field) {
-            $content .= '<tr style="vertical-align:top;"><td><label>'. $field['label'] .'</label></td><td>'. $field['field'] .'</td></tr>';
-        }
-        $content .= '</table>';
-        $content .= '<input type="hidden" name="item[id]" value="'. $item->getId() .'" />';
-        $content .= '<input type="hidden" name="action" value="update_wl" />';
-        $content .= '<input type="submit" value="'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_update') .'" />';
-        
-        $content .= '</form>';
-        */
+
         $content .= '</dd>';
         return $content;
     }
@@ -163,22 +150,27 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         return $this->visitDocument($item, $params);
     }
     function visitLink(&$item, $params = array()) {
-        return $this->visitDocument($item, $params);
+        return $this->getSectionForNewVersion();
     }
     function visitFile(&$item, $params = array()) {
-        $content = '';
-        $content .= '<dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newversion') .'</dt><dd>';
+        return $this->getSectionForNewVersion();
+    }
+
+    private function getSectionForNewVersion() {
+        $content = '<dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newversion') .'</dt><dd>';
         if (!$this->_controller->userCanWrite($this->item->getid())) {
             $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newversion_cannotcreate');
         } else {
-            $content .= $GLOBALS['Language']->getText('plugin_docman', 
-                'details_actions_newversion_cancreate', 
+            $content .= $GLOBALS['Language']->getText('plugin_docman',
+                'details_actions_newversion_cancreate',
                 Docman_View_View::buildUrl($this->url, array('action' => 'action_new_version', 'id' => $this->item->getId()))
             );
         }
         $content .= '</dd>';
+
         return $content;
     }
+
     function visitEmbeddedFile(&$item, $params = array()) {
         $content = '<textarea name="content" rows="15" cols="50">';
         $version = $item->getCurrentVersion();
@@ -193,4 +185,3 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         return $this->visitDocument($item, $params);
     }
 }
-?>

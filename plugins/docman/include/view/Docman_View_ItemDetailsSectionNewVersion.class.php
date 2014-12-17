@@ -75,7 +75,59 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
         return $this->visitDocument($item, $params);
     }
     function visitLink(&$item, $params = array()) {
-        return $this->visitDocument($item, $params);
+        $label = '';
+        if (isset($this->_controller->_viewParams['label'])) {
+            $label = $this->_controller->_viewParams['label'];
+        }
+        $changelog = '';
+        if (isset($this->_controller->_viewParams['changelog'])) {
+            $changelog = $this->_controller->_viewParams['changelog'];
+        }
+
+        $content = '';
+        $content .= '<form action="'. $this->url .'&amp;id='. $this->item->getId() .'" method="post" enctype="multipart/form-data" id= "plugin_docman_new_version_form">';
+
+        $content .= '<dl>';
+        $content .= '<dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_update') .'</dt><dd>';
+        $content .= '<table>';
+        $content .= '<tr style="vertical-align:top"><td>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newversion_label') .'</td><td><input type="text" name="version[label]" value="'.$label.'" /></td></tr>';
+        $content .= '<tr style="vertical-align:top"><td>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newversion_changelog') .'</td><td><textarea name="version[changelog]" rows="7" cols="80">'.$changelog.'</textarea></td></tr>';
+        $fields = $item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('force_item' => $this->force, 'request' => &$this->controller->request));
+        foreach($fields as $field) {
+            $content .= '<tr style="vertical-align:top;">';
+            $content .= '<td><label>'. $field->getLabel().'</label></td>';
+            $content .= '<td>'. $field->getField() .'</td></tr>';
+        }
+
+        $content .= $this->_getReleaseLock();
+
+        $content .= '</table>';
+        $content .= '</dd>';
+
+        $content .= '<p>';
+        if ($this->token) {
+            $content .= '<input type="hidden" name="token" value="'. $this->token .'" />';
+        }
+        $content .= '<input type="hidden" name="action" value="new_version" />';
+        $content .= '<input type="submit" name="confirm" value="'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_newversion_button').'" />';
+        $content .= '<input type="submit" name="cancel"  value="'. $GLOBALS['Language']->getText('global', 'btn_cancel').'" />';
+        $content .= '</p>';
+
+        $content .= '</dl>';
+        $content .= '</form>';
+
+        $snippet = '
+        document.observe("dom:loaded", function () {
+            $("plugin_docman_new_version_form").observe("submit", function (e) {
+                if (!docman.approvalTableCheck($("plugin_docman_new_version_form"))) {
+                    e.stop();
+                }
+            });
+        });
+        ';
+        $GLOBALS['Response']->includeFooterJavascriptSnippet($snippet);
+        return $content;
+
     }
     function visitFile(&$item, $params = array()) {
         $label = '';

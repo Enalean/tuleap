@@ -94,9 +94,10 @@ class Docman_View_GetMenuItemsVisitor /* implements Visitor*/ {
     }
     
     function visitLink(&$item, $params = array()) {
-        if($this->dPm->userCanWrite($this->user, $item->getId())) {
-            $this->actions['canUpdate'] = true;
+        if ($this->dPm->userCanWrite($this->user, $item->getId())) {
+            $this->actions['canNewVersion'] = true;
         }
+
         return $this->visitDocument($item, $params);
     }
     

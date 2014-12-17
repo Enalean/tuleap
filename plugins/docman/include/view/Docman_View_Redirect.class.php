@@ -22,7 +22,7 @@ class Docman_View_Redirect extends Docman_View_View /* implements Visitor */ {
                 'item'     => &$params['item'],
                 'user'     => &$params['user']
             ));
-            $url = $params['item']->accept($this);
+            $url = $params['item']->accept($this, $params);
         } else {
             $url = '/';
         }
@@ -35,9 +35,20 @@ class Docman_View_Redirect extends Docman_View_View /* implements Visitor */ {
     function visitWiki(&$item, $params = array()) {
         return '/wiki/?group_id='. $item->getGroupId() .'&pagename='. urlencode($item->getPagename());
     }
+
     function visitLink(&$item, $params = array()) {
+        if (isset($params['version_number'])) {
+            $version_factory = new Docman_LinkVersionFactory();
+
+            $version = $version_factory->getSpecificVersion($item, $params['version_number']);
+            if ($version) {
+                return $version->getLink();
+            }
+        }
+
         return $item->getUrl();
     }
+
     function visitFile(&$item, $params = array()) {
         trigger_error('Redirect view cannot be applied to Files');
     }

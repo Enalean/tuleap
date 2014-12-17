@@ -695,43 +695,58 @@ class Docman_Actions extends Actions {
     function new_version() {
         $request =& $this->_controler->request;
         if ($request->exist('id')) {
-            $user = $this->_controler->getUser();
-            $item_factory =& $this->_getItemFactory();
-            $item =& $item_factory->getItemFromDb($request->get('id'));
-            $item_type = $item_factory->getItemTypeForItem($item);
+            $user         = $this->_controler->getUser();
+            $item_factory = $this->_getItemFactory();
+            $item         = $item_factory->getItemFromDb($request->get('id'));
+            $item_type    = $item_factory->getItemTypeForItem($item);
             if ($item_type == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $item_type == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
                 $new_version =& $this->_storeFile($item);
 
                 // We update the update_date of the document only if no version date was given
-                if (!$request->existAndNonEmpty('date')) {
+                if (! $request->existAndNonEmpty('date')) {
                     $item_factory->update(array('id' => $item->getId()));
                 }
 
-                // Manage lock
-                $dPm = $this->_getDocmanPermissionsManagerInstance($item->getGroupId());
-                if ($request->existAndNonEmpty('lock_document')) {
-                    if (!$dPm->getLockFactory()->itemIsLocked($item)) {
-                        $dPm->getLockFactory()->lock($item);
-                        $this->_raiseLockEvent($item, $user);
-                    }
-                } else {
-                    if ($dPm->getLockFactory()->itemIsLocked($item)) {
-                        $dPm->getLockFactory()->unlock($item);
-                        $this->_raiseUnlockEvent($item, $user);
-                    }
-                }
+                $this->manageLockNewVersion($user, $item, $request);
 
                 // Warn users about watermarking
-                $this->event_manager->processEvent('plugin_docman_after_new_version', array(
-                                                    'item'     => $item,
-                                                    'user'     => $user,
-                                                    'version'  => $new_version,
-                                                    'docmanControler' => $this->_controler)
+                $this->event_manager->processEvent(
+                    'plugin_docman_after_new_version',
+                    array(
+                        'item'     => $item,
+                        'user'     => $user,
+                        'version'  => $new_version,
+                        'docmanControler' => $this->_controler
+                    )
                 );
+            } elseif ($item_type == PLUGIN_DOCMAN_ITEM_TYPE_LINK) {
+                $data = $request->get('item');
+                $item->setUrl($data['link_url']);
+                $item_factory->updateLink($item, $request->get('version'));
+
+                $this->manageLockNewVersion($user, $item, $request);
+
+                $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_create_newversion'));
             }
         }
         $this->event_manager->processEvent('send_notifications', array());
     }
+
+    private function manageLockNewVersion(PFUser $user, Docman_Item $item, Codendi_Request $request) {
+        $permission_manager = $this->_getDocmanPermissionsManagerInstance($item->getGroupId());
+        if ($request->existAndNonEmpty('lock_document')) {
+            if (! $permission_manager->getLockFactory()->itemIsLocked($item)) {
+                $permission_manager->getLockFactory()->lock($item);
+                $this->_raiseLockEvent($item, $user);
+            }
+        } else {
+            if ($permission_manager->getLockFactory()->itemIsLocked($item)) {
+                $permission_manager->getLockFactory()->unlock($item);
+                $this->_raiseUnlockEvent($item, $user);
+            }
+        }
+    }
+
     protected $filestorage;
     function &_getFileStorage() {
         if (!$this->filestorage) {
