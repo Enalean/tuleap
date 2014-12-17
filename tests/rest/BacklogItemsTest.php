@@ -57,6 +57,20 @@ class BacklogItemsTest extends RestBase {
         );
     }
 
+    public function testOPTIONS() {
+        $response = $this->getResponse($this->client->options('backlog_items/'.$this->stories_ids[0]));
+        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    public function testGET() {
+        $response      = $this->getResponse($this->client->get('backlog_items/'.$this->stories_ids[0]));
+        $backlog_item  = $response->json();
+
+        $this->assertEquals($backlog_item['label'], "build a new interface");
+
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
     public function testOPTIONSChildren() {
         $response = $this->getResponse($this->client->options('backlog_items/'.$this->stories_ids[0].'/children'));
         $this->assertEquals(array('OPTIONS', 'GET', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());

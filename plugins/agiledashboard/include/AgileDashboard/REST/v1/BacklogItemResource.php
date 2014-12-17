@@ -31,7 +31,12 @@ use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_Exception_CannotRankWithMyself;
 use Tracker_Artifact;
 use TrackerFactory;
+use Tracker_SemanticManager;
+use Tracker_SemanticCollection;
 use Tracker_FormElementFactory;
+use Tracker_Semantic_Title;
+use Tracker_Semantic_Status;
+use AgileDashBoard_Semantic_InitialEffort;
 
 /**
  * Wrapper for Backlog_Items related REST methods
@@ -68,6 +73,90 @@ class BacklogItemResource {
     }
 
     /**
+     * @url OPTIONS {id}
+     *
+     * @param int $id Id of the BacklogItem
+     */
+    public function options($id) {
+        $this->sendAllowHeader();
+    }
+
+    /**
+     * Get backlog item
+     *
+     * Get a backlog item representation
+     *
+     * @url GET {id}
+     *
+     * @param int $id Id of the Backlog Item
+     *
+     * @return array {@type Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentation}
+     *
+     * @throws 403
+     * @throws 404
+     */
+    protected function get($id) {
+        $current_user = $this->getCurrentUser();
+        $artifact     = $this->getArtifact($id);
+        $backlog_item = $this->getBacklogItem($current_user, $artifact);
+
+        $backlog_item_representation_factory = new BacklogItemRepresentationFactory();
+        $backlog_item_representation         = $backlog_item_representation_factory->createBacklogItemRepresentation($backlog_item);
+
+        $this->sendAllowHeader();
+
+        return $backlog_item_representation;
+    }
+
+    private function getBacklogItem(PFUser $current_user, Tracker_Artifact $artifact) {
+        $semantic_manager = new Tracker_SemanticManager($artifact->getTracker());
+        $semantics        = $semantic_manager->getSemantics();
+
+        $artifact     = $this->updateArtifactTitleSemantic($current_user, $artifact, $semantics);
+        $backlog_item = new AgileDashboard_Milestone_Backlog_BacklogItem($artifact);
+        $backlog_item = $this->updateBacklogItemStatusSemantic($current_user, $artifact, $backlog_item, $semantics);
+        $backlog_item = $this->updateBacklogItemInitialEffortSemantic($current_user, $artifact, $backlog_item, $semantics);
+
+        return $backlog_item;
+    }
+
+    private function updateArtifactTitleSemantic(PFUser $current_user, Tracker_Artifact $artifact, Tracker_SemanticCollection $semantics) {
+        $semantic_title = $semantics[Tracker_Semantic_Title::NAME];
+        $title_field    = $semantic_title->getField();
+
+        if ($title_field && $title_field->userCanRead($current_user)) {
+            $artifact->setTitle($title_field->getRESTValue($current_user, $artifact->getLastChangeset())->value);
+        }
+
+        return $artifact;
+    }
+
+    private function updateBacklogItemStatusSemantic(PFUser $current_user, Tracker_Artifact $artifact, AgileDashboard_Milestone_Backlog_BacklogItem $backlog_item, Tracker_SemanticCollection $semantics) {
+        $semantic_status = $semantics[Tracker_Semantic_Status::NAME];
+
+        if ($semantic_status && $semantic_status->getField()->userCanRead($current_user)) {
+            $label = $semantic_status->getNormalizedStatusLabel($artifact);
+
+            if ($label) {
+                $backlog_item->setStatus($label);
+            }
+        }
+
+        return $backlog_item;
+    }
+
+    private function updateBacklogItemInitialEffortSemantic(PFUser $current_user, Tracker_Artifact $artifact, AgileDashboard_Milestone_Backlog_BacklogItem $backlog_item, Tracker_SemanticCollection $semantics) {
+        $semantic_initial_effort = $semantics[AgileDashBoard_Semantic_InitialEffort::NAME];
+        $initial_effort_field    = $semantic_initial_effort->getField();
+
+        if ($initial_effort_field && $initial_effort_field->userCanRead($current_user)) {
+            $backlog_item->setInitialEffort($initial_effort_field->getFullRESTValue($current_user, $artifact->getLastChangeset())->value);
+        }
+
+        return $backlog_item;
+    }
+
+    /**
      * Get children
      *
      * Get the children of a given Backlog Item
@@ -80,12 +169,14 @@ class BacklogItemResource {
      *
      * @return array {@type Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentation}
      *
+     * @throws 403
      * @throws 404
      * @throws 406
      */
     protected function getChildren($id, $limit = 10, $offset = 0) {
         $this->checkContentLimit($limit);
 
+        $current_user                        = $this->getCurrentUser();
         $artifact                            = $this->getArtifact($id);
         $backlog_items_representations       = array();
         $backlog_item_representation_factory = new BacklogItemRepresentationFactory();
@@ -93,7 +184,7 @@ class BacklogItemResource {
         $sliced_children = $this->getSlicedArtifactsBuilder()->getSlicedChildrenArtifactsForUser($artifact, $this->getCurrentUser(), $limit, $offset);
 
         foreach ($sliced_children->getArtifacts() as $child) {
-            $backlog_item                    = new AgileDashboard_Milestone_Backlog_BacklogItem($child);
+            $backlog_item                    = $this->getBacklogItem($current_user, $child);
             $backlog_items_representations[] = $backlog_item_representation_factory->createBacklogItemRepresentation($backlog_item);
         }
 
@@ -195,10 +286,13 @@ class BacklogItemResource {
     }
 
     private function getArtifact($id) {
-        $artifact = $this->artifact_factory->getArtifactById($id);
+        $artifact     = $this->artifact_factory->getArtifactById($id);
+        $current_user = $this->getCurrentUser();
 
         if (! $artifact) {
             throw new RestException(404, 'Backlog Item not found');
+        } else if (! $artifact->userCanView($current_user)) {
+            throw new RestException(403, 'You cannot access to this backlog item');
         }
 
         return $artifact;
@@ -235,6 +329,10 @@ class BacklogItemResource {
 
     private function limitValueIsAcceptable($limit) {
         return $limit <= self::MAX_LIMIT;
+    }
+
+    private function sendAllowHeader() {
+        Header::allowOptionsGet();
     }
 
     private function sendAllowHeaderForChildren() {
