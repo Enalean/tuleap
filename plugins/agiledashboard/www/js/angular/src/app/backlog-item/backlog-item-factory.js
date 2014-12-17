@@ -11,6 +11,7 @@
         };
 
         function augment(backlogItem) {
+            backlogItem.updating        = false;
             backlogItem.children        = {};
             backlogItem.children.data   = [];
             backlogItem.children.loaded = false;

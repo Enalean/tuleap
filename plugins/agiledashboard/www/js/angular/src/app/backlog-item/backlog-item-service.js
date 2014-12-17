@@ -12,6 +12,7 @@
         });
 
         return {
+            getBacklogItem                     : getBacklogItem,
             getProjectBacklogItems             : getProjectBacklogItems,
             getMilestoneBacklogItems           : getMilestoneBacklogItems,
             getBacklogItemChildren             : getBacklogItemChildren,
@@ -19,6 +20,22 @@
             removeAddReorderBacklogItemChildren: removeAddReorderBacklogItemChildren,
             removeAddBacklogItemChildren       : removeAddBacklogItemChildren
         };
+
+        function getBacklogItem(backlog_item_id) {
+            var data = $q.defer();
+
+            rest.one('backlog_items', backlog_item_id)
+                .get()
+                .then(function(response) {
+                    result = {
+                        backlog_item: response.data
+                    };
+
+                    data.resolve(result);
+                });
+
+            return data.promise;
+        }
 
         function getProjectBacklogItems(project_id, limit, offset) {
             var data = $q.defer();

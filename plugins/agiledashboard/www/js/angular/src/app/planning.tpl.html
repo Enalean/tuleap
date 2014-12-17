@@ -17,6 +17,7 @@
                     data-type="{{ backlog_item.trackerId }}"
                     data-accept="{{ backlog_item.accepted_types }}"
                     class="backlog-item parent"
+                    ng-class="{ updating: backlog_item.updating }"
                     collapsed="true"
                 >
                 </li>
@@ -80,6 +81,7 @@
                                 data-type="{{ backlog_item.trackerId }}"
                                 ng-include="'backlog-item/backlog-item.tpl.html'"
                                 ng-if="canShowBacklogItem(backlog_item)"
+                                ng-class="{ updating: backlog_item.updating }"
                                 collapsed="true"
                             >
                             </li>

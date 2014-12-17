@@ -14,7 +14,6 @@
     ];
 
     function PlanningCtrl($scope, SharedPropertiesService, BacklogItemService, MilestoneService, ProjectService, DroppedService, CardFieldsService) {
-
         var project_id                  = SharedPropertiesService.getProjectId(),
             milestone_id                = SharedPropertiesService.getMilestoneId(),
             pagination_limit            = 50,
@@ -22,6 +21,7 @@
             show_closed_milestone_items = true;
 
         _.extend($scope, {
+            items                       : {},
             rest_error_occured          : false,
             rest_error                  : "",
             backlog_items               : [],
@@ -92,7 +92,10 @@
 
         function fetchProjectBacklogItems(project_id, limit, offset) {
             return BacklogItemService.getProjectBacklogItems(project_id, limit, offset).then(function(data) {
-                $scope.backlog_items = $scope.backlog_items.concat(data.results);
+                angular.forEach(data.results, function(backlog_item, key) {
+                    $scope.items[backlog_item.id] = backlog_item;
+                    $scope.backlog_items.push($scope.items[backlog_item.id]);
+                });
 
                 if ($scope.backlog_items.length < data.total) {
                     fetchProjectBacklogItems(project_id, limit, offset + limit);
@@ -104,7 +107,10 @@
 
         function fetchMilestoneBacklogItems(milestone_id, limit, offset) {
             return BacklogItemService.getMilestoneBacklogItems(milestone_id, limit, offset).then(function(data) {
-                $scope.backlog_items = $scope.backlog_items.concat(data.results);
+                angular.forEach(data.results, function(backlog_item, key) {
+                    $scope.items[backlog_item.id] = backlog_item;
+                    $scope.backlog_items.push($scope.items[backlog_item.id]);
+                });
 
                 if ($scope.backlog_items.length < data.total) {
                     fetchMilestoneBacklogItems(milestone_id, limit, offset + limit);
@@ -123,7 +129,7 @@
         }
 
         function fetchMilestones(project_id, limit, offset) {
-            return MilestoneService.getMilestones(project_id, limit, offset).then(function(data) {
+            return MilestoneService.getMilestones(project_id, limit, offset, $scope.items).then(function(data) {
                 $scope.milestones = $scope.milestones.concat(data.results);
 
                 if ($scope.milestones.length < data.total) {
@@ -135,7 +141,7 @@
         }
 
         function fetchSubMilestones(milestone_id, limit, offset) {
-            return MilestoneService.getSubMilestones(milestone_id, limit, offset).then(function(data) {
+            return MilestoneService.getSubMilestones(milestone_id, limit, offset, $scope.items).then(function(data) {
                 $scope.milestones = $scope.milestones.concat(data.results);
 
                 if ($scope.milestones.length < data.total) {
@@ -254,14 +260,24 @@
                         break;
 
                     case movedFromChildrenToChildren():
+                        var backlog_item_id_source = parseInt(source_list_element.attr('data-backlog-item-id'), 10),
+                            backlog_item_id_dest   = parseInt(dest_list_element.attr('data-backlog-item-id'), 10);
+
+                        $scope.items[backlog_item_id_source].updating = true;
+                        $scope.items[backlog_item_id_dest].updating   = true;
+
                         DroppedService
                             .moveFromChildrenToChildren(
                                 dropped_item_id,
                                 compared_to,
-                                parseInt(source_list_element.attr('data-backlog-item-id'), 10),
-                                parseInt(dest_list_element.attr('data-backlog-item-id'), 10)
+                                backlog_item_id_source,
+                                backlog_item_id_dest
                             )
-                            .then(function() {}, catchError);
+                            .then(function() {
+                                updateBacklogItem(backlog_item_id_source);
+                                updateBacklogItem(backlog_item_id_dest);
+
+                            }, catchError);
                         break;
 
                     case movedFromSubmilestoneToBacklog():
@@ -310,6 +326,16 @@
 
                 function movedFromOneSubmilestoneToAnother() {
                     return source_list_element.hasClass('submilestone') && dest_list_element.hasClass('submilestone');
+                }
+
+                function updateBacklogItem(backlog_item_id) {
+                    BacklogItemService.getBacklogItem(backlog_item_id).then(function(data) {
+                        $scope.items[backlog_item_id].label          = data.backlog_item.label;
+                        $scope.items[backlog_item_id].initial_effort = data.backlog_item.initial_effort;
+                        $scope.items[backlog_item_id].card_fields    = data.backlog_item.card_fields;
+
+                        $scope.items[backlog_item_id].updating       = false;
+                    });
                 }
             }
 
