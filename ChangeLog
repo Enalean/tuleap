@@ -5,7 +5,7 @@ Version 7.9 (Not Released Yet)
 	* git: 3.150
 	* fulltextsearch: 0.105
 	* proftpd: 0.20
-	* tracker: 5.531
+	* tracker: 5.532
 
 	== Bug Fix ==
 	* request #7692 - Git plugin tries to commit / push as post system event at each run

@@ -1,3 +1,6 @@
+Version 5.532 - Tuleap 7.9
+    * request #7706: Masschange does not take in account field dependency
+
 Version 5.531 - Tuleap 7.9
     * request #7693: fatal error on PATCH route when milestone does not have artifact link field
 
