@@ -258,7 +258,32 @@ class GitPlugin_Post_System_Events extends TuleapTestCase {
             ->triggerUpdate()
             ->once();
 
-        $params = array('executed_events_ids' => array());
+        $params = array(
+            'executed_events_ids' => array(),
+            'queue_name' => 'git'
+        );
+
+        $this->plugin->post_system_events_actions($params);
+    }
+
+    public function itDoesNotProcessPostSystemEventsActionsIfNotGitRelated() {
+        expect($this->gitolite_driver)
+        ->commit()
+        ->never();
+
+        expect($this->gitolite_driver)
+        ->push()
+        ->never();
+
+        expect($this->manifest_manager)
+        ->triggerUpdate()
+        ->never();
+
+        $params = array(
+            'executed_events_ids' => array(),
+            'queue_name' => 'owner'
+        );
+
         $this->plugin->post_system_events_actions($params);
     }
 }
