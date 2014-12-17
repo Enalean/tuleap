@@ -816,12 +816,13 @@ class Docman_ItemFactory {
         $dao->massUpdate($srcItemId, $mdLabel, $itemIdArray);
     }
 
-    function create($row, $ordering) {
+    public function create($row, $ordering) {
         $dao =& $this->_getItemDao();
         $id = $dao->createFromRow($row);
         if ($id) {
             $this->setNewParent($id, $row['parent_id'], $ordering);
         }
+
         return $id;
     }
 

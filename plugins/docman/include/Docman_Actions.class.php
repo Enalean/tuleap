@@ -385,8 +385,8 @@ class Docman_Actions extends Actions {
                 if ($id) {
                     $this->_controler->_viewParams['action_result'] = $id;
                     $this->_controler->_viewParams['redirect_anchor'] = "#item_$id";
-                    $new_item =& $item_factory->getItemFromDb($id);
-                    $parent   =& $item_factory->getItemFromDb($item['parent_id']);
+                    $new_item = $item_factory->getItemFromDb($id);
+                    $parent   = $item_factory->getItemFromDb($item['parent_id']);
                     if ($request->exist('permissions') && $this->_controler->userCanManage($parent->getId())) {
                         $force = true;
                         $this->setPermissionsOnItem($new_item, $force, $user);
@@ -421,6 +421,16 @@ class Docman_Actions extends Actions {
                     if($item['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_FILE ||
                        $item['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
                         $new_version = $this->_storeFile($new_item);
+                    }
+
+                    if ($item['item_type'] ==  PLUGIN_DOCMAN_ITEM_TYPE_LINK) {
+                        $link_version_factory = new Docman_LinkVersionFactory();
+                        $link_version_factory->create(
+                            $new_item,
+                            $GLOBALS['Language']->getText('plugin_docman', 'initversion'),
+                            $GLOBALS['Language']->getText('plugin_docman', 'initversion'),
+                            $_SERVER['REQUEST_TIME']
+                        );
                     }
 
                     // Create metatata
