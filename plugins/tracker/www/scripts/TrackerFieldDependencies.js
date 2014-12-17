@@ -210,8 +210,10 @@ codendi.tracker.Field = Class.create({
         var len = el.options.length; 
         
         for (var i = 0; i < len; ++i) {
-            
-            this.options[el.options[i].value].selected = el.options[i].selected;
+            if (typeof this.options[el.options[i].value] !== "undefined") {
+                this.options[el.options[i].value].selected = el.options[i].selected;
+            }
+
         }
         //Process rules
         codendi.tracker.rule_forest.getNode(this.id).process();

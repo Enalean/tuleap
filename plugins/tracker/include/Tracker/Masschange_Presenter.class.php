@@ -27,9 +27,13 @@ class Tracker_Masschange_Presenter {
     /** @var string */
     public $form_elements;
 
-    public function __construct(array $masschange_aids, $form_elements) {
-        $this->masschange_aids = $masschange_aids;
-        $this->form_elements   = $form_elements;
+    /** @var string */
+    public $javascript_rules;
+
+    public function __construct(array $masschange_aids, $form_elements, $javascript_rules) {
+        $this->masschange_aids  = $masschange_aids;
+        $this->form_elements    = $form_elements;
+        $this->javascript_rules = $javascript_rules;
     }
 
     public function changing_items() {
