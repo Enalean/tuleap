@@ -1,3 +1,6 @@
+Version 5.533 - Tuleap 7.9
+    * story #7174: configurable cards in the planning view (Update BacklogItemRepresentation with cards semantic)
+
 Version 5.532 - Tuleap 7.9
     * request #7706: Masschange does not take in account field dependency
 

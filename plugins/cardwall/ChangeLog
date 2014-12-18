@@ -1,3 +1,6 @@
+Version 1.44 - Tuleap 7.9
+    * story #7174: configurable cards in the planning view (Update BacklogItemRepresentation with cards semantic)
+
 Version 1.43 - Tuleap 7.8
     * request #7682: unable to access tracker when agile dashboard is disactivated
 

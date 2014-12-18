@@ -1,3 +1,6 @@
+Version 1.128 - Tuleap 7.9
+    * story #7174: configurable cards in the planning view (Update BacklogItemRepresentation with cards semantic)
+
 Version 1.127 - Tuleap 7.9
     * Render kanban items as cards & Only lab mode activated can access directly to kanban
 

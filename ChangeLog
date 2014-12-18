@@ -1,12 +1,13 @@
 Version 7.9 (Not Released Yet)
 
 	== Plugins ==
-	* agiledashboard: 1.127
+	* agiledashboard: 1.128
 	* git: 3.151
 	* fulltextsearch: 0.105
 	* proftpd: 0.20
-	* tracker: 5.532
+	* tracker: 5.533
 	* hudson: 1.18
+	* cardwall: 1.44
 
 	== Bug Fix ==
 	* request #7692 - Git plugin tries to commit / push as post system event at each run
