@@ -73,7 +73,18 @@
         }
 
         function getCardFieldListValues(values) {
-            return _.map(values, function (value) { return value.label; }).join(', ');
+            function getValueRenderedWithColor(value) {
+                var color = '';
+
+                if (value.color) {
+                    var rgb = 'rgb(' + value.color.r + ', ' + value.color.g + ', ' + value.color.b + ')';
+                    color = '<span class="color" style="background: ' + rgb + '"></span>';
+                }
+
+                return color + value.label;
+            }
+
+            return $sce.trustAsHtml(_.map(values, getValueRenderedWithColor).join(', '));
         }
 
         function getCardFieldTextValue(value) {
@@ -86,10 +97,10 @@
             }
 
             function getFileLink(file) {
-                return $sce.trustAsHtml('<a href="' + getFileUrl(file) + '"><i class="icon-file-text-alt"></i> ' + file.name + '</a>');
+                return '<a href="' + getFileUrl(file) + '"><i class="icon-file-text-alt"></i> ' + file.name + '</a>';
             }
 
-            return _.map(file_descriptions, getFileLink).join(', ');
+            return $sce.trustAsHtml(_.map(file_descriptions, getFileLink).join(', '));
         }
 
         function getCardFieldCrossValue(links) {
@@ -97,7 +108,7 @@
                 return $sce.trustAsHtml('<a href="' + link.url + '">' + link.ref + '</a>');
             }
 
-            return _.map(links, getCrossLink).join(', ');
+            return $sce.trustAsHtml(_.map(links, getCrossLink).join(', '));
         }
 
         function getCardFieldPermissionsValue(values) {
