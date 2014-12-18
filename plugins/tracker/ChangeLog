@@ -1,3 +1,6 @@
+Version 5.534 - Tuleap 7.9
+    * request #7698: fixing warnings on default values and taking into account artifact open values
+
 Version 5.533 - Tuleap 7.9
     * story #7174: configurable cards in the planning view (Update BacklogItemRepresentation with cards semantic)
 
