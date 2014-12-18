@@ -87,6 +87,23 @@ class Tracker_FileInfo {
     }
 
     /**
+     * @return Tuleap\Tracker\REST\Artifact\FileInfoFullRepresentation
+     */
+    public function getFullRESTValue() {
+        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\FileInfoFullRepresentation';
+        $file_info_representation = new $classname_with_namespace;
+        $file_info_representation->build(
+            $this->id,
+            $this->submitted_by,
+            $this->description,
+            $this->filename,
+            $this->filesize,
+            $this->filetype
+        );
+        return $file_info_representation;
+    }
+
+    /**
      * Returns encoded content chunk of file
      *
      * @param Integer $offset Where to start reading

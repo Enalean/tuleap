@@ -136,6 +136,15 @@ abstract class Tracker_Artifact_ChangesetValue {
     public abstract function getRESTValue(PFUser $user);
 
     /**
+     * Return the full REST value of this changeset value
+     *
+     * @param PFUser $user
+     *
+     * @return Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation
+     */
+    public abstract function getFullRESTValue(PFUser $user);
+
+    /**
      * @return mixed
      */
     public abstract function accept(Tracker_Artifact_ChangesetValueVisitor $visitor);
@@ -174,6 +183,20 @@ abstract class Tracker_Artifact_ChangesetValue {
         );
 
         return $artifact_field_value_representation;
+    }
+
+    protected function getFullRESTRepresentation($value) {
+        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation';
+
+        $artifact_field_value_full_representation = new $classname_with_namespace;
+        $artifact_field_value_full_representation->build(
+            $this->field->getId(),
+            Tracker_FormElementFactory::instance()->getType($this->field),
+            $this->field->getLabel(),
+            $value
+        );
+
+        return $artifact_field_value_full_representation;
     }
 }
 ?>

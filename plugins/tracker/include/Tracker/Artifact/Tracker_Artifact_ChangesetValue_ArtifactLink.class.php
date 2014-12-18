@@ -177,6 +177,28 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
         return $artifact_links_representation;
     }
 
+    public function getFullRESTValue(PFUser $user) {
+        $values = array();
+        $tracker_artifact_factory = Tracker_ArtifactFactory::instance();
+
+        foreach ($this->getArtifactIdsUserCanSee($user) as $id) {
+            $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactReference';
+            $artifact_reference = new $classname_with_namespace;
+            $artifact_reference->build($tracker_artifact_factory->getArtifactById($id));
+            $values[] = $artifact_reference;
+        }
+
+        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueArtifactLinksFullRepresentation';
+        $artifact_links_representation = new $classname_with_namespace;
+        $artifact_links_representation->build(
+            $this->field->getId(),
+            Tracker_FormElementFactory::instance()->getType($this->field),
+            $this->field->getLabel(),
+            $values
+        );
+        return $artifact_links_representation;
+    }
+
     /**
      * Returns the value of this changeset value
      *

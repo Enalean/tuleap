@@ -122,13 +122,12 @@ class ProjectBacklogResource {
              throw new RestException(406, 'Maximum value for limit exceeded');
         }
 
-        $backlog_items                = $this->getBacklogItems($user, $project);
-        $backlog_item_representations = array();
+        $backlog_items                       = $this->getBacklogItems($user, $project);
+        $backlog_item_representations        = array();
+        $backlog_item_representation_factory = new BacklogItemRepresentationFactory();
 
         foreach($backlog_items as $backlog_item) {
-            $backlog_item_representation = new BacklogItemRepresentation();
-            $backlog_item_representation->build($backlog_item);
-            $backlog_item_representations[] = $backlog_item_representation;
+            $backlog_item_representations[] = $backlog_item_representation_factory->createBacklogItemRepresentation($backlog_item);
         }
 
         $this->sendAllowHeaders();

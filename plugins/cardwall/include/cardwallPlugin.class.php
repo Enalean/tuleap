@@ -71,6 +71,7 @@ class cardwallPlugin extends Plugin {
                 $this->addHook(AGILEDASHBOARD_EVENT_REST_GET_CARDWALL);
                 $this->addHook(AGILEDASHBOARD_EVENT_REST_GET_MILESTONE);
                 $this->addHook(AGILEDASHBOARD_EVENT_IS_CARDWALL_ENABLED);
+                $this->addHook(AGILEDASHBOARD_EVENT_GET_CARD_FIELDS);
             }
         }
         return parent::getHooksAndCallbacks();
@@ -199,6 +200,7 @@ class cardwallPlugin extends Plugin {
         /* @var $semantics Tracker_SemanticCollection */
         $semantics = $parameters['semantics'];
 
+
         $card_fields_semantic = Cardwall_Semantic_CardFields::load($tracker);
         $semantics->add($card_fields_semantic->getShortName(), $card_fields_semantic);
     }
@@ -263,6 +265,13 @@ class cardwallPlugin extends Plugin {
     private function denyAccess($tracker_id) {
         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
         $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker_id);
+    }
+
+    /**
+     * @see Event::AGILEDASHBOARD_EVENT_GET_CARD_FIELDS
+     */
+    public function agiledashboard_event_get_card_fields($parameters) {
+        $parameters['card_fields_semantic'] = Cardwall_Semantic_CardFields::load($parameters['tracker']);
     }
 
     public function agiledashboard_event_additional_panes_on_milestone($params) {

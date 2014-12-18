@@ -91,6 +91,21 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
         return $representation;
     }
 
+    public function getFullRESTValue(PFUser $user) {
+        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValuePermissionsOnArtifactFullRepresentation';
+        $representation = new $classname_with_namespace;
+        $representation->build(
+            $this->field->getId(),
+            Tracker_FormElementFactory::instance()->getType($this->field),
+            $this->field->getLabel(),
+            array_map(
+                array($this, 'getUgroupLabel'),
+                $this->getPerms()
+            )
+        );
+        return $representation;
+    }
+
     /**
      * Returns the value of this changeset value (human readable)
      *

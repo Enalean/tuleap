@@ -140,4 +140,12 @@ define('AGILEDASHBOARD_EVENT_REST_GET_MILESTONE', 'agiledashboard_event_rest_get
  * 'enabled' => boolean
  */
 define('AGILEDASHBOARD_EVENT_IS_CARDWALL_ENABLED', 'agiledashboard_event_is_cardwall_enabled');
-?>
+
+/**
+ * Get backlog item tracker card fields semantic
+ *
+ * Parameters:
+ * 'tracker'              => The Tracker of the backlog item
+ * 'card_fields_semantic' => Tracker card fields semantic
+ */
+define('AGILEDASHBOARD_EVENT_GET_CARD_FIELDS', 'agiledashboard_event_get_card_fields');

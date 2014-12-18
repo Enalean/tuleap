@@ -103,6 +103,10 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         return $this->getSimpleRESTRepresentation($this->getText());
     }
 
+    public function getFullRESTValue(PFUser $user) {
+        return $this->getFullRESTRepresentation($this->getText());
+    }
+
     /**
      * Get the value (string)
      *
