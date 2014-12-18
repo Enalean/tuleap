@@ -1,3 +1,6 @@
+Version 1.18 - Tuleap 7.9
+    * request #7707 Job last artifacts names are not displayed in hudson widget
+
 Version 1.17 - Tuleap 7.6
     * Update to latest autoload/phpab version
 
