@@ -1,3 +1,6 @@
+Version 3.151 - Tuleap 7.9
+    * story #7687 REST endpoint to list project'ss git repositories (Create a repo in test REST data builder)
+
 Version 3.150 - Tuleap 7.9
     * request #7699 - Fatal Error in SE Monitor if Gerrit Server has been deleted
 
