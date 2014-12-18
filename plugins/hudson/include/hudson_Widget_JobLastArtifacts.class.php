@@ -75,7 +75,7 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget {
         if ($res && db_numrows($res)) {
             $data = db_fetch_array($res);
             $this->job_id    = $data['job_id'];
-            
+
             $jobs = $this->getAvailableJobs();
             
             if (array_key_exists($this->job_id, $jobs)) {
@@ -107,7 +107,7 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget {
             $html .= '<ul>';
             $dom = $build->getDom();
             foreach ($dom->artifact as $artifact) {
-                $html .= ' <li><a href="'.$build->getUrl().'/artifact/'.$artifact->relativePath.'">'.$artifact->displayPath.'</a></li>';
+                $html .= ' <li><a href="'.$build->getUrl().'/artifact/'.$artifact->relativePath.'">'.$artifact->fileName.'</a></li>';
             }
             $html .= '</ul>';
         } else {
