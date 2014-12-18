@@ -796,7 +796,7 @@ class Docman_ItemFactory {
     }
 
     public function updateLink(Docman_Link $link, array $version_data) {
-        $this->update(
+        $update = $this->update(
             array(
                 'id'        => $link->getId(),
                 'group_id'  => $link->getGroupId(),
@@ -808,7 +808,10 @@ class Docman_ItemFactory {
         );
 
         $link_version_factory = new Docman_LinkVersionFactory();
-        $link_version_factory->create($link, $version_data['label'], $version_data['changelog'], $_SERVER['REQUEST_TIME']);
+
+        $create = $link_version_factory->create($link, $version_data['label'], $version_data['changelog'], $_SERVER['REQUEST_TIME']);
+
+        return ($update && $create);
     }
 
     function massUpdate($srcItemId, $mdLabel, $itemIdArray) {

@@ -609,7 +609,12 @@ class Docman_Actions extends Actions {
                 $data['item_type'] =  $itemType;
             }
 
-            $updated = $item_factory->update($data);
+            if ($itemType == PLUGIN_DOCMAN_ITEM_TYPE_LINK) {
+                $updated = $this->updateLink($request, $item, $user);
+            } else {
+                $updated = $item_factory->update($data);
+            }
+
             if ($updated) {
                 $this->event_manager->processEvent('plugin_docman_event_update', array(
                     'group_id' => $request->get('group_id'),
@@ -730,23 +735,29 @@ class Docman_Actions extends Actions {
                     )
                 );
             } elseif ($item_type == PLUGIN_DOCMAN_ITEM_TYPE_LINK) {
-                $data = $request->get('item');
-                $item->setUrl($data['link_url']);
-                $item_factory->updateLink($item, $request->get('version'));
-
-                $this->manageLockNewVersion($user, $item, $request);
-
-                $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_create_newversion'));
-
-                $link_version_factory = new Docman_LinkVersionFactory();
-                $event_data           = array(
-                    'item'     => $item,
-                    'version'  => $link_version_factory->getLatestVersion($item),
-                );
-                $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_LINKVERSION, $event_data);
+                $this->updateLink($request, $item, $user);
             }
         }
         $this->event_manager->processEvent('send_notifications', array());
+    }
+
+    private function updateLink(Codendi_Request $request, Docman_Item $item, PFUser $user) {
+        $data = $request->get('item');
+        $item->setUrl($data['link_url']);
+        $updated = $this->_getItemFactory()->updateLink($item, $request->get('version'));
+
+        $this->manageLockNewVersion($user, $item, $request);
+
+        $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_create_newversion'));
+
+        $link_version_factory = new Docman_LinkVersionFactory();
+        $event_data           = array(
+            'item'     => $item,
+            'version'  => $link_version_factory->getLatestVersion($item),
+        );
+        $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_LINKVERSION, $event_data);
+
+        return $updated;
     }
 
     private function manageLockNewVersion(PFUser $user, Docman_Item $item, Codendi_Request $request) {
