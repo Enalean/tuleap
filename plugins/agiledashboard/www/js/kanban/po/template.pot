@@ -5,6 +5,18 @@ msgstr ""
 "Project-Id-Version: \n"
 
 #: src/app/kanban.tpl.html
+msgid "Archive is currently empty"
+msgstr ""
+
+#: src/app/kanban.tpl.html
+msgid "Backlog is currently empty"
+msgstr ""
+
+#: src/app/kanban.tpl.html
+msgid "This column is currently empty"
+msgstr ""
+
+#: src/app/kanban.tpl.html
 msgid "Toggle the archive"
 msgstr ""
 
