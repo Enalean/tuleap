@@ -20,7 +20,11 @@
 
 
 class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List {
-    
+
+    const BIND_PREFIX = 'b';
+    const OPEN_PREFIX = 'o';
+    const NEW_VALUE_PREFIX = '!';
+
     public $default_properties = array(
         'hint' => array(
             'value' => 'Type in a search term',
@@ -371,13 +375,13 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
             $bindvalue_id = null;
             $openvalue_id = null;
             switch ($v{0}) {
-            case 'b': // bind value
+            case self::BIND_PREFIX: // bind value
                 $bindvalue_id = (int)substr($v, 1);
                 break;
-            case 'o': // open value
+            case self::OPEN_PREFIX: // open value
                 $openvalue_id = (int)substr($v, 1);
                 break;
-            case '!': // new open value
+            case self::NEW_VALUE_PREFIX: // new open value
                 $openvalue_id = $openvalue_dao->create($this->getId(), substr($v, 1));
                 break;
             default:
@@ -407,17 +411,17 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
             $v = trim($v);
             if ($v) {
                 switch ($v{0}) {
-                case 'b': // bind value
+                case self::BIND_PREFIX: // bind value
                     if ($bindvalue_id = (int)substr($v, 1)) {
                         $sanitized[] = $v;
                     }
                     break;
-                case 'o': // open value
+                case self::OPEN_PREFIX: // open value
                     if ($openvalue_id = (int)substr($v, 1)) {
                         $sanitized[] = $v;
                     }
                     break;
-                case '!': // new open value
+                case self::NEW_VALUE_PREFIX: // new open value
                     
                     $sanitized[] = $v;
                     break;
@@ -437,18 +441,18 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
             $v = trim($v);
             if ($v) {
                 switch ($v{0}) {
-                case 'b': // bind value
+                case self::BIND_PREFIX: // bind value
                     if ($bindvalue_id = (int)substr($v, 1)) {
                         $sanitized[] = new Tracker_FormElement_Field_List_Bind_UsersValue($bindvalue_id);
                     }
                     break;
-                case 'o': // open value
+                case self::OPEN_PREFIX: // open value
                     if ($openvalue_id = (int)substr($v, 1)) {
                         $v = $this->getOpenValueById($openvalue_id);
                         $sanitized[] = $v;
                     }
                     break;
-                case '!': // new open value 
+                case self::NEW_VALUE_PREFIX: // new open value
                     $sanitized[] = new Tracker_FormElement_Field_List_UnsavedValue(substr($v, 1));
                     break;
                 default:
@@ -695,16 +699,16 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
             $val = trim($val);
             if (!$val) {
                 unset($criteria_value[$key]);
-            } else if ($val{0} === 'o') {
+            } else if ($val{0} === self::OPEN_PREFIX) {
                 if ($v = $this->getOpenValueById(substr($val, 1))) {
                     $criteria_value[$key] = $v;
                 } else {
                     unset($criteria_value[$key]);
                 }
-            } else if ($val{0} === 'b') {
+            } else if ($val{0} === self::BIND_PREFIX) {
                 $bindvalue_ids[] = substr($val, 1);
                 $criteria_value[$key] = $val; //store the trimmed val
-            } else if ($val{0} === '!') {
+            } else if ($val{0} === self::NEW_VALUE_PREFIX) {
                 $criteria_value[$key] = new Tracker_FormElement_Field_List_UnsavedValue(substr($val, 1));
             } else {
                 unset($criteria_value[$key]);
@@ -796,15 +800,15 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         $sv = $this->getBind()->getFieldData($value, false);   // false because we are walking all values one by one
         if ($sv) {
             // existing bind value
-            return 'b'.$sv;
+            return self::BIND_PREFIX.$sv;
         } else {
             $row = $this->getOpenValueDao()->searchByExactLabel($this->getId(), $value)->getRow();
             if ($row) {
                 // existing open value
-                return 'o'.$row['id'];
+                return self::OPEN_PREFIX.$row['id'];
             } else {
                 // new open value
-                return '!'.$value;
+                return self::NEW_VALUE_PREFIX.$value;
             }
         }
     }
@@ -841,5 +845,16 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
 
     public function accept(Tracker_FormElement_FieldVisitor $visitor) {
         return $visitor->visitOpenList($this);
+    }
+
+    public function getDefaultValue() {
+        $default_values = parent::getDefaultValue();
+
+        if (! $default_values) {
+            return '';
+        }
+
+        //all default values must be binded
+        return self::BIND_PREFIX . implode(','.self::BIND_PREFIX, $default_values);
     }
 }

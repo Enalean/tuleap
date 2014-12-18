@@ -149,7 +149,7 @@ class Tracker_FormElement_Field_ListTypes_GetDefaultValueTest extends TuleapTest
         $field = partial_mock('Tracker_FormElement_Field_OpenList', array('getBind'));
         stub($field)->getBind()->returns($this->bind);
 
-        $this->assertEqual($field->getDefaultValue(), array(300));
+        $this->assertEqual($field->getDefaultValue(), 'b300');
     }
 
     public function testOpenListWithMultipleValues() {
@@ -158,7 +158,7 @@ class Tracker_FormElement_Field_ListTypes_GetDefaultValueTest extends TuleapTest
         $field = partial_mock('Tracker_FormElement_Field_OpenList', array('getBind'));
         stub($field)->getBind()->returns($this->bind);
 
-        $this->assertEqual($field->getDefaultValue(), array(300, 200));
+        $this->assertEqual($field->getDefaultValue(), 'b300,b200');
     }
 
     public function testOpenListWithNoValue() {
@@ -167,7 +167,7 @@ class Tracker_FormElement_Field_ListTypes_GetDefaultValueTest extends TuleapTest
         $field = partial_mock('Tracker_FormElement_Field_OpenList', array('getBind'));
         stub($field)->getBind()->returns($this->bind);
 
-        $this->assertEqual($field->getDefaultValue(), array(Tracker_FormElement_Field_List_Bind::NONE_VALUE));
+        $this->assertEqual($field->getDefaultValue(), 'b'.Tracker_FormElement_Field_List_Bind::NONE_VALUE);
     }
 
     public function testSubmittedByWithOneValue() {
@@ -176,7 +176,7 @@ class Tracker_FormElement_Field_ListTypes_GetDefaultValueTest extends TuleapTest
         $field = partial_mock('Tracker_FormElement_Field_SubmittedBy', array('getBind'));
         stub($field)->getBind()->returns($this->bind);
 
-        $this->assertEqual($field->getDefaultValue(), array(300));
+        $this->assertEqual($field->getDefaultValue(), Tracker_FormElement_Field_List_Bind::NONE_VALUE);
     }
 
     public function testSubmittedByWithMultipleValues() {
@@ -185,15 +185,15 @@ class Tracker_FormElement_Field_ListTypes_GetDefaultValueTest extends TuleapTest
         $field = partial_mock('Tracker_FormElement_Field_SubmittedBy', array('getBind'));
         stub($field)->getBind()->returns($this->bind);
 
-        $this->assertEqual($field->getDefaultValue(), array(300, 200));
+        $this->assertEqual($field->getDefaultValue(), Tracker_FormElement_Field_List_Bind::NONE_VALUE);
     }
 
     public function testSubmittedByWithNoValue() {
         stub($this->bind)->getDefaultValues()->returns(array());
 
-        $field = partial_mock('Tracker_FormElement_Field_OpenList', array('getBind'));
+        $field = partial_mock('Tracker_FormElement_Field_SubmittedBy', array('getBind'));
         stub($field)->getBind()->returns($this->bind);
 
-        $this->assertEqual($field->getDefaultValue(), array(Tracker_FormElement_Field_List_Bind::NONE_VALUE));
+        $this->assertEqual($field->getDefaultValue(), Tracker_FormElement_Field_List_Bind::NONE_VALUE);
     }
 }
