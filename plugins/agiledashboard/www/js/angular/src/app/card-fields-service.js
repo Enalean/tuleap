@@ -86,7 +86,7 @@
             }
 
             function getFileLink(file) {
-                return $sce.trustAsHtml('<a href="' + getFileUrl(file) + '">' + file.name + '</a>');
+                return $sce.trustAsHtml('<a href="' + getFileUrl(file) + '"><i class="icon-file-text-alt"></i> ' + file.name + '</a>');
             }
 
             return _.map(file_descriptions, getFileLink).join(', ');
