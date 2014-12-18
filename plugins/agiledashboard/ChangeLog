@@ -1,3 +1,6 @@
+Version 1.127 - Tuleap 7.9
+    * Render kanban items as cards & Only lab mode activated can access directly to kanban
+
 Version 1.126 - Tuleap 7.9
     * GET /kanban/:id/backlog
 
