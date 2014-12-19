@@ -325,14 +325,14 @@ class AgileDashboardPlugin extends Plugin {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
 
             if ($this->isPlanningV2URL()) {
-                echo '<link rel="stylesheet" type="text/css" href="'.$this->getPluginPath().'/js/angular/bin/assets/planning-v2.css" />';
+                echo '<link rel="stylesheet" type="text/css" href="'.$this->getPluginPath().'/js/planning-v2/bin/assets/planning-v2.css" />';
             }
         }
     }
 
     public function javascript_file() {
         if ($this->isAnAgiledashboardRequest() && $this->isPlanningV2URL()) {
-            echo '<script type="text/javascript" src="' . $this->getPluginPath() . '/js/angular/bin/assets/planning-v2.js"></script>';
+            echo '<script type="text/javascript" src="' . $this->getPluginPath() . '/js/planning-v2/bin/assets/planning-v2.js"></script>';
         }
     }
 
