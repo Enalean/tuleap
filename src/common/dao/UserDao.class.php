@@ -665,6 +665,10 @@ class UserDao extends DataAccessObject {
     function listAllUsers ($pattern = "", $offset, $limit, $sort_header, $sort_order) {
         $offset = $this->da->escapeInt($offset);
         $limit  = $this->da->escapeInt($limit);
+        $stmLimit = "";
+        if ($limit != 0) {
+            $stmLimit .= ' LIMIT '.$offset.', '.$limit;
+        }
         $where = "";
         if ($pattern) {
             $pattern = $this->da->quoteSmart('%'.$pattern.'%');
@@ -692,8 +696,7 @@ class UserDao extends DataAccessObject {
                     GROUP BY user_id
                 ) as member_of USING (user_id)
             $where
-            ORDER BY ".$sort_header." ".$sort_order."
-            LIMIT $offset, $limit";
+            ORDER BY ".$sort_header." ".$sort_order.$stmLimit;
 
         return array(
             'users'   => $this->retrieve($sql),

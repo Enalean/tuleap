@@ -362,6 +362,7 @@ admin_userlist	nb_projects	Nb of projects
 admin_userlist	not_member_of	Not member of any project
 admin_userlist	member_of	Member of $1 project(s)
 admin_userlist	admin_of	Admin of $1 project(s)
+admin_userlist	id_user	Id user
 
 #
 #-----------------------------------------------

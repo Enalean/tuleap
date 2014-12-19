@@ -353,6 +353,7 @@ admin_userlist	nb_projects	Nb de projets
 admin_userlist	not_member_of	Membre d'aucun projet
 admin_userlist	member_of	Membre de $1 projet(s)
 admin_userlist	admin_of	Admin de $1 projet(s)
+admin_userlist	id_user	Id utilisateur
 #
 #-----------------------------------------------
 # Script: SF/www/admin/trove/trove_cat_add.php
