@@ -1,3 +1,6 @@
+Version 1.130 - Tuleap 7.9
+    * story #7174: configurable cards in the planning view (On dropped event, update BacklogItem fields (auto-computed fields...), GET OPTIONS /backlog_items/:id, Display card semantic fields)
+
 Version 1.129 - Tuleap 7.9
     * story #7577 display a Kanban cardwall (Remove hardcoded colors, Should not allow deletion of a tracker used in kanban)
 
