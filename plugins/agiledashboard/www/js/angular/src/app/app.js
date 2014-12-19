@@ -5,8 +5,8 @@
         'templates-app',
         'gettext',
         'angularMoment',
+        'ngSanitize',
         'shared-properties',
-        'project',
         'backlog-item',
         'milestone',
         'project'

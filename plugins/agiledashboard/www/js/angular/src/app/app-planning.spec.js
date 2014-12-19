@@ -36,7 +36,7 @@ describe('PlanningCtrl', function() {
 
         describe('milestones', function() {
             it('asks top milestones of current project', inject(function() {
-                expect(milestoneService.getMilestones).toHaveBeenCalledWith(project_id, jasmine.any(Number), jasmine.any(Number));
+                expect(milestoneService.getMilestones).toHaveBeenCalledWith(project_id, jasmine.any(Number), jasmine.any(Number), jasmine.any(Object));
             }));
         });
     });
@@ -66,7 +66,7 @@ describe('PlanningCtrl', function() {
 
         describe('milestones', function() {
             it('asks top milestones of current project', inject(function() {
-                expect(milestoneService.getSubMilestones).toHaveBeenCalledWith(milestone_id, jasmine.any(Number), jasmine.any(Number));
+                expect(milestoneService.getSubMilestones).toHaveBeenCalledWith(milestone_id, jasmine.any(Number), jasmine.any(Number), jasmine.any(Object));
             }));
         });
     });

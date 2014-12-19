@@ -9,3 +9,35 @@
 <span class="id">{{ backlog_item.short_type | lowercase }} #{{ backlog_item.id }}</span>
 <span class="summary">{{ backlog_item.label }}</span>
 <span class="parent">{{ backlog_item.parent.label }}</span>
+
+<ul ng-repeat="card_field in backlog_item.card_fields track by $index">
+    <li ng-if="cardFieldIsSimpleValue(card_field.type)">
+        <span>{{ card_field.label }}</span> {{ card_field.value }}
+    </li>
+
+    <li ng-if="cardFieldIsList(card_field.type)">
+        <span>{{ card_field.label }}</span> {{ getCardFieldListValues(card_field.values) }}
+    </li>
+
+    <li ng-if="cardFieldIsDate(card_field.type)">
+        <span>{{ card_field.label }}</span> <span am-time-ago="card_field.value"></span>
+    </li>
+
+    <li ng-if="cardFieldIsText(card_field.type)">
+        <span>{{ card_field.label }}</span> <span ng-bind-html="getCardFieldTextValue(card_field.value)"></span>
+    </li>
+
+    <li ng-if="cardFieldIsFile(card_field.type)">
+        <span>{{ card_field.label }}</span> <span ng-bind-html="getCardFieldFileValue(backlog_item.id, card_field.field_id, card_field.file_descriptions)"></span>
+    </li>
+
+    <li ng-if="cardFieldIsCross(card_field.type)">
+        <span>{{ card_field.label }}</span> <span ng-bind-html="getCardFieldCrossValue(card_field.value)"></span>
+    </li>
+
+    <li ng-if="cardFieldIsPermissions(card_field.type)">
+        <span>{{ card_field.label }}</span> <span ng-bind-html="getCardFieldPermissionsValue(card_field.granted_groups)"></span>
+    </li>
+
+    <!-- Artifact links & Burndown fields are not managed yet -->
+</ul>
