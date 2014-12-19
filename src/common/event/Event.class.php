@@ -836,4 +836,24 @@ class Event {
      *      'queue_name'          => string
      */
     const POST_SYSTEM_EVENTS_ACTIONS = 'post_system_events_actions';
+
+    /**
+     * Event raised to get project's Git repositories information with REST
+     *
+     * Parameters:
+     *     'version' => String
+     *     'project' => Project
+     *     'result'  => array
+     *     'limit'   => int
+     *     'offset'  => int
+     */
+    const REST_PROJECT_GET_GIT = 'rest_project_get_git';
+
+    /**
+     * Event raised to know if Git plugin is activated for REST
+     *
+     * Parameters:
+     *     'activated' => boolean
+     */
+    const REST_PROJECT_OPTIONS_GIT = 'rest_project_options_git';
 }

@@ -121,6 +121,10 @@ class GitPlugin extends Plugin {
 
         $this->_addHook('fill_project_history_sub_events');
         $this->_addHook(Event::POST_SYSTEM_EVENTS_ACTIONS);
+
+        $this->addHook(EVENT::REST_PROJECT_RESOURCES);
+        $this->addHook(EVENT::REST_PROJECT_GET_GIT);
+        $this->addHook(EVENT::REST_PROJECT_OPTIONS_GIT);
     }
 
     public function getServiceShortname() {
@@ -714,7 +718,7 @@ class GitPlugin extends Plugin {
     var $_cached_permission_user_allowed_to_change;
     function permission_user_allowed_to_change($params) {
         if (!$params['allowed']) {
-            $user = UserManager::instance()->getCurrentUser();
+            $user = $this->getCurrentUser();
             $project = $this->getProjectManager()->getProject($params['group_id']);
 
             if ($this->getGitPermissionsManager()->userIsGitAdmin($user, $project)) {
@@ -1110,6 +1114,9 @@ class GitPlugin extends Plugin {
         return new Git_SystemEventManager(SystemEventManager::instance(), $this->getRepositoryFactory());
     }
 
+    /**
+     * @return GitRepositoryManager
+     */
     private function getRepositoryManager() {
         return new GitRepositoryManager(
             $this->getRepositoryFactory(),
@@ -1343,5 +1350,39 @@ class GitPlugin extends Plugin {
 
     private function pluginIsConcerned($params) {
         return $params['queue_name'] == "git";
+    }
+
+    public function rest_project_get_git($params) {
+        $class            = "Tuleap\\Git\\REST\\".$params['version']."\\ProjectResource";
+        $project_resource = new $class($this->getRepositoryFactory());
+        $project          = $params['project'];
+
+        $params['result'] = $project_resource->getGit(
+            $project,
+            $this->getCurrentUser(),
+            $params['limit'],
+            $params['offset']
+        );
+
+        $params['total_git_repo'] = count($this->getRepositoryFactory()->getAllRepositories($project));
+    }
+
+    public function rest_project_options_git($params) {
+        $params['activated'] = true;
+    }
+
+    /**
+     * @see Event::REST_PROJECT_RESOURCES
+     */
+    public function rest_project_resources(array $params) {
+        $injector = new Git_REST_ResourcesInjector();
+        $injector->declareProjectPlanningResource($params['resources'], $params['project']);
+    }
+
+    /**
+     * @return PFUser
+     */
+    private function getCurrentUser() {
+        return UserManager::instance()->getCurrentUser();
     }
 }

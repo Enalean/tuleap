@@ -68,6 +68,23 @@ class GitRepositoryFactory {
         return $repositories;
     }
 
+    public function getAllRepositoriesUserCanSee(Project $project, PFUser $user) {
+        $repositories = $this->getAllRepositories($project);
+        foreach ($repositories as $key => $repository) {
+            if (! $repository->userCanRead($user)) {
+                unset($repositories[$key]);
+            }
+        }
+
+        return $repositories;
+    }
+
+    public function getPagninatedRepositoriesUserCanSee(Project $project, PFUser $user, $limit, $offset) {
+        $all_repositories = $this->getAllRepositoriesUserCanSee($project, $user);
+
+        return array_slice($all_repositories, $offset, $limit);
+    }
+
     /**
      * Get a deleted repository by its id
      *

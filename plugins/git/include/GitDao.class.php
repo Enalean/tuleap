@@ -257,7 +257,7 @@ class GitDao extends DataAccessObject {
                   AND ". self::REPOSITORY_DELETION_DATE ." = '0000-00-00 00:00:00'
                   $condition
                 ORDER BY CONCAT(". self::REPOSITORY_NAMESPACE .', '. self::REPOSITORY_NAME .')';
-                  
+
         $rs = $this->retrieve($sql);
         $list = array();
         if ($rs && $rs->rowCount() > 0 ) {

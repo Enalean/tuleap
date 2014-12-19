@@ -23,6 +23,7 @@ require_once 'common/autoload.php';
 class GitDataBuilder extends TestDataBuilder {
 
     const PROJECT_TEST_GIT_SHORTNAME = 'test-git';
+    const PROJECT_TEST_GIT_ID        = 107;
 
     /** @var SystemEventManager */
     private $system_event_manager;
@@ -34,12 +35,6 @@ class GitDataBuilder extends TestDataBuilder {
     }
 
     public function setUp() {
-        $gitolite_admin_path = $GLOBALS['sys_data_dir'] . '/gitolite/admin';
-
-        if (! is_dir($gitolite_admin_path)) {
-            mkdir($gitolite_admin_path, 0777, true);
-        }
-
         $this->installPlugin();
         $this->activatePlugin('git');
         $this->generateProject();
@@ -80,7 +75,7 @@ class GitDataBuilder extends TestDataBuilder {
     }
 
     public function generateGitRepository() {
-        echo "Create git repo\n";
+        echo "Create Git repo\n";
 
         $repository_factory       = new GitRepositoryFactory(new GitDao(), $this->project_manager);
         $git_system_event_manager = new Git_SystemEventManager($this->system_event_manager, $repository_factory);
