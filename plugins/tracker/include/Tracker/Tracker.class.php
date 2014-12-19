@@ -2127,7 +2127,7 @@ EOS;
     }
 
     public function getInformationsFromOtherServicesAboutUsage() {
-        $result = array();
+        $result                   = array();
         $result['can_be_deleted'] = true;
 
         EventManager::instance()->processEvent(

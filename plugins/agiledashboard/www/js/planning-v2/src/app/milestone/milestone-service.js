@@ -45,7 +45,7 @@
             return data.promise;
         }
 
-        function getMilestones(project_id, limit, offset) {
+        function getMilestones(project_id, limit, offset, scope_items) {
             var data = $q.defer();
 
             rest.one('projects', project_id)
@@ -57,7 +57,7 @@
                 })
                 .then(function(response) {
                     _.forEach(response.data, function(milestone) {
-                        augmentMilestone(milestone, limit, offset);
+                        augmentMilestone(milestone, limit, offset, scope_items);
                     });
 
                     result = {
@@ -71,7 +71,7 @@
             return data.promise;
         }
 
-        function getSubMilestones(milestone_id, limit, offset) {
+        function getSubMilestones(milestone_id, limit, offset, scope_items) {
             var data = $q.defer();
 
             rest.one('milestones', milestone_id)
@@ -83,7 +83,7 @@
                 })
                 .then(function(response) {
                     _.forEach(response.data, function(milestone) {
-                        augmentMilestone(milestone, limit, offset);
+                        augmentMilestone(milestone, limit, offset, scope_items);
                     });
 
                     result = {
@@ -118,7 +118,7 @@
             return data.promise;
         }
 
-        function augmentMilestone(milestone, limit, offset) {
+        function augmentMilestone(milestone, limit, offset, scope_items) {
             addContentDataToMilestone(milestone);
             defineCurrentToggleState(milestone);
             defineAllowedContentItemTypes(milestone);
@@ -145,10 +145,13 @@
 
                 function fetchMilestoneContent(milestone, limit, offset) {
                     getContent(milestone.id, limit, offset).then(function(data) {
-                        milestone.content = milestone.content.concat(data.results);
+                        angular.forEach(data.results, function(backlog_item, key) {
+                            scope_items[backlog_item.id] = backlog_item;
+                            milestone.content.push(scope_items[backlog_item.id]);
+                        });
 
                         updateInitialEffort(milestone);
-                        _.forEach(data.results, augmentBacklogItem);
+                        _.forEach(milestone.content, augmentBacklogItem);
 
                         if (milestone.content.length < data.total) {
                             fetchMilestoneContent(milestone, limit, offset + limit);

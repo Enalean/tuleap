@@ -122,7 +122,7 @@ class AgileDashboardPlugin extends Plugin {
         }
 
         $planning_factory = $this->getPlanningFactory();
-        $user             = UserManager::instance()->getCurrentUser();
+        $user             = $this->getCurrentUser();
         $provider         = new AgileDashboard_Milestone_MilestoneReportCriterionProvider(
             new AgileDashboard_Milestone_SelectedMilestoneProvider(
                 $params['additional_criteria'],
@@ -171,7 +171,7 @@ class AgileDashboardPlugin extends Plugin {
     public function tracker_event_report_save_additional_criteria($params) {
         $dao     = new MilestoneReportCriterionDao();
         $project = $params['report']->getTracker()->getProject();
-        $user    = UserManager::instance()->getCurrentUser();
+        $user    = $this->getCurrentUser();
 
         $milestone_provider = new AgileDashboard_Milestone_SelectedMilestoneProvider($params['additional_criteria'], $this->getMilestoneFactory(), $user, $project);
 
@@ -232,22 +232,19 @@ class AgileDashboardPlugin extends Plugin {
     }
 
     public function tracker_usage($params) {
-
-        $result['can_be_deleted'] = false;
-        $result['message']        = 'Agile Dashboard';
-
         $tracker    = $params['tracker'];
         $tracker_id = $tracker->getId();
 
         $is_used_in_planning = PlanningFactory::build()->isTrackerIdUsedInAPlanning($tracker_id);
         $is_used_in_backlog  = PlanningFactory::build()->isTrackerUsedInBacklog($tracker_id);
+        $is_used_in_kanban   = $this->getKanbanManager()->doesKanbanExistForTracker($tracker);
 
-        if (! $is_used_in_planning && ! $is_used_in_backlog) {
-            $result['can_be_deleted']= true;
-            $result['message'] = '';
+        if ($is_used_in_planning || $is_used_in_backlog || $is_used_in_kanban) {
+            $result['can_be_deleted'] = false;
+            $result['message']        = 'Agile Dashboard';
+            $params['result']         = $result;
         }
 
-        $params['result'] = $result;
     }
 
     private function redirectOrAppend(Codendi_Request $request, Tracker_Artifact $artifact, Tracker_Artifact_Redirect $redirect, $requested_planning, Tracker_Artifact $last_milestone_artifact = null) {
@@ -328,14 +325,14 @@ class AgileDashboardPlugin extends Plugin {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
 
             if ($this->isPlanningV2URL()) {
-                echo '<link rel="stylesheet" type="text/css" href="'.$this->getPluginPath().'/js/angular/bin/assets/planning-v2.css" />';
+                echo '<link rel="stylesheet" type="text/css" href="'.$this->getPluginPath().'/js/planning-v2/bin/assets/planning-v2.css" />';
             }
         }
     }
 
     public function javascript_file() {
         if ($this->isAnAgiledashboardRequest() && $this->isPlanningV2URL()) {
-            echo '<script type="text/javascript" src="' . $this->getPluginPath() . '/js/angular/bin/assets/planning-v2.js"></script>';
+            echo '<script type="text/javascript" src="' . $this->getPluginPath() . '/js/planning-v2/bin/assets/planning-v2.js"></script>';
         }
     }
 
@@ -418,7 +415,7 @@ class AgileDashboardPlugin extends Plugin {
             new ProjectXMLExporter(EventManager::instance()),
             new AgileDashboard_KanbanManager($kanban_dao),
             new AgileDashboard_ConfigurationManager($config_dao),
-            new AgileDashboard_KanbanFactory(TrackerFactory::instance(), $kanban_dao)
+            $this->getKanbanFactory()
         );
 
         $router->route($request);
@@ -632,7 +629,7 @@ class AgileDashboardPlugin extends Plugin {
      * @see REST_GET_PROJECT_PLANNINGS
      */
     public function rest_get_project_plannings($params) {
-        $user              = UserManager::instance()->getCurrentUser();
+        $user              = $this->getCurrentUser();
         $planning_resource = $this->buildRightVersionOfProjectPlanningsResource($params['version']);
 
         $params['result'] = $planning_resource->get(
@@ -647,7 +644,7 @@ class AgileDashboardPlugin extends Plugin {
      * @see REST_OPTIONS_PROJECT_PLANNINGS
      */
     public function rest_options_project_plannings($params) {
-        $user              = UserManager::instance()->getCurrentUser();
+        $user              = $this->getCurrentUser();
         $planning_resource = $this->buildRightVersionOfProjectPlanningsResource($params['version']);
 
         $params['result'] = $planning_resource->options(
@@ -675,7 +672,7 @@ class AgileDashboardPlugin extends Plugin {
      * @see REST_GET_PROJECT_MILESTONES
      */
     public function rest_get_project_milestones($params) {
-        $user               = UserManager::instance()->getCurrentUser();
+        $user               = $this->getCurrentUser();
         $milestone_resource = $this->buildRightVersionOfProjectMilestonesResource($params['version']);
 
         $params['result'] = $milestone_resource->get(
@@ -691,7 +688,7 @@ class AgileDashboardPlugin extends Plugin {
      * @see REST_OPTIONS_PROJECT_MILESTONES
      */
     public function rest_options_project_milestones($params) {
-        $user               = UserManager::instance()->getCurrentUser();
+        $user               = $this->getCurrentUser();
         $milestone_resource = $this->buildRightVersionOfProjectMilestonesResource($params['version']);
 
         $params['result'] = $milestone_resource->options(
@@ -711,7 +708,7 @@ class AgileDashboardPlugin extends Plugin {
      * @see REST_GET_PROJECT_BACKLOG
      */
     public function rest_get_project_backlog($params) {
-        $user                     = UserManager::instance()->getCurrentUser();
+        $user                     = $this->getCurrentUser();
         $project_backlog_resource = $this->buildRightVersionOfProjectBacklogResource($params['version']);
 
         $params['result'] = $project_backlog_resource->get(
@@ -726,7 +723,7 @@ class AgileDashboardPlugin extends Plugin {
      * @see REST_OPTIONS_PROJECT_BACKLOG
      */
     public function rest_options_project_backlog($params) {
-        $user                     = UserManager::instance()->getCurrentUser();
+        $user                     = $this->getCurrentUser();
         $project_backlog_resource = $this->buildRightVersionOfProjectBacklogResource($params['version']);
 
         $params['result'] = $project_backlog_resource->options(
@@ -741,7 +738,7 @@ class AgileDashboardPlugin extends Plugin {
      * @see REST_PUT_PROJECT_BACKLOG
      */
     public function rest_put_project_backlog($params) {
-        $user                     = UserManager::instance()->getCurrentUser();
+        $user                     = $this->getCurrentUser();
         $project_backlog_resource = $this->buildRightVersionOfProjectBacklogResource($params['version']);
 
         $params['result'] = $project_backlog_resource->put(
@@ -795,7 +792,7 @@ class AgileDashboardPlugin extends Plugin {
         }
 
         $params['result'] = $this->getFieldPriorityAugmenter()->getAugmentedDataForFieldPriority(
-            UserManager::instance()->getCurrentUser(),
+            $this->getCurrentUser(),
             $params['field']->getTracker()->getProject(),
             $params['additional_criteria'],
             $params['artifact_id']
@@ -842,6 +839,27 @@ class AgileDashboardPlugin extends Plugin {
             $params['use_standard'] = false;
         }
     }
-}
 
-?>
+    /**
+     * @return AgileDashboard_KanbanFactory
+     */
+    private function getKanbanFactory() {
+        return new AgileDashboard_KanbanFactory(
+            TrackerFactory::instance(),
+            new AgileDashboard_KanbanDao()
+        );
+    }
+
+    /**
+     * @return AgileDashboard_KanbanManager
+     */
+    private function getKanbanManager() {
+        return new AgileDashboard_KanbanManager(
+            new AgileDashboard_KanbanDao()
+        );
+    }
+
+    private function getCurrentUser() {
+        return UserManager::instance()->getCurrentUser();
+    }
+}
