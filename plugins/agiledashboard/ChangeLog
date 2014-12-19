@@ -1,3 +1,6 @@
+Version 1.131 - Tuleap 7.9
+    * story #7174: configurable cards in the planning view (Click on attachment (or artifact link) should not drag the card, Display field list decorator (colors), Glossification)
+
 Version 1.130 - Tuleap 7.9
     * story #7174: configurable cards in the planning view (On dropped event, update BacklogItem fields (auto-computed fields...), GET OPTIONS /backlog_items/:id, Display card semantic fields)
 
