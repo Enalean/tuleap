@@ -231,6 +231,39 @@ class Docman_ApprovalTableFileDao extends Docman_ApprovalTableDao {
 
 }
 
+class Docman_ApprovalTableLinkDao extends Docman_ApprovalTableDao {
+
+    public function getTableById($versionId, $fields='*') {
+        $sql = 'SELECT '.$fields.
+            ' FROM plugin_docman_approval'.
+            ' WHERE version_id = '.$this->da->escapeInt($versionId);
+        return $this->retrieve($sql);
+    }
+
+    public function getTableByItemId($itemId, $fields='*') {
+        return $this->getLatestTableByItemId($itemId, $fields);
+    }
+
+    public function getLatestTableByItemId($itemId, $fields='app.*') {
+        return $this->getApprovalTableItemId($itemId, $fields, ' LIMIT 1');
+    }
+
+    public function getApprovalTableItemId($itemId, $fields='app.*', $limit='', $tableStatus=false) {
+        $fields .= ', ver.number as version_number';
+        $where = ' ver.item_id = '.$this->da->escapeInt($itemId).
+            ' AND app.wiki_version_id IS NULL';
+        $join = ' JOIN plugin_docman_link_version ver ON (ver.id = app.version_id)';
+        $orderBy = ' ORDER BY ver.number DESC ';
+
+        return $this->getTableWithStatus($tableStatus, $fields, $where, $join, $orderBy, $limit);
+    }
+
+    public function createTable($versionId, $userId, $description, $date, $status, $notification) {
+        return parent::createTable('version_id', $versionId, $userId, $description, $date, $status, $notification);
+    }
+}
+
+
 /**
  *
  */

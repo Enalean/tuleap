@@ -281,6 +281,34 @@ extends Docman_ApprovalTableVersionned {
     }
 }
 
+class Docman_ApprovalTableLink
+extends Docman_ApprovalTableVersionned {
+    private $versionId;
+
+    function __construct() {
+        parent::Docman_ApprovalTableVersionned();
+        $this->versionId = null;
+    }
+
+    function setVersionId($v) {
+        $this->versionId = $v;
+    }
+
+    function getVersionId() {
+        return $this->versionId;
+    }
+
+    function initFromRow($row) {
+        parent::initFromRow($row);
+        if(isset($row['version_id'])) {
+            $this->versionId = $row['version_id'];
+        }
+        if(isset($row['version_number'])) {
+            $this->versionNumber = $row['version_number'];
+        }
+    }
+}
+
 /**
  *
  */

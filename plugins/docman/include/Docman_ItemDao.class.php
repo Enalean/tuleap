@@ -1,5 +1,6 @@
 <?php
 /*
+ * Copyright (c) Enalean SAS, 2014. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
@@ -19,10 +20,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('DocmanConstants.class.php');
-require_once('common/dao/include/DataAccessObject.class.php');
-require_once('Docman_SqlFilter.class.php');
-require_once('Docman_SqlReportColumn.class.php');
 
 class Docman_ItemDao extends DataAccessObject {
 
@@ -210,13 +207,26 @@ class Docman_ItemDao extends DataAccessObject {
     }
         
     function _getItemSearchSelectStmt() {
-        $sql = 'SELECT i.*, '.
-            ' v.id as version_id, v.number as version_number,'.
-            ' v.user_id as version_user_id, v.label as version_label,'.
-            ' v.changelog as version_changelog, v.date as version_date,'.
-            ' v.filename as version_filename, v.filesize as version_filesize,'.
-            ' v.filetype as version_filetype, v.path as version_path, '.
-            ' 1 as folder_nb_of_children ';
+        $sql = 'SELECT i.*, '.implode(', ', array(
+                'v.id as version_id',
+                'v.number as version_number',
+                'v.user_id as version_user_id',
+                'v.label as version_label',
+                'v.changelog as version_changelog',
+                'v.date as version_date',
+                'v.filename as version_filename',
+                'v.filesize as version_filesize',
+                'v.filetype as version_filetype',
+                'v.path as version_path',
+                'lv.id        as link_version_id',
+                'lv.number    as link_version_number',
+                'lv.user_id   as link_version_user_id',
+                'lv.label     as link_version_label',
+                'lv.changelog as link_version_changelog',
+                'lv.date      as link_version_date',
+                'lv.link_url  as link_version_link_url',
+            )).
+            ', 1 as folder_nb_of_children ';
         return $sql;
     }
 
@@ -227,10 +237,16 @@ class Docman_ItemDao extends DataAccessObject {
      */
     function _getItemSearchFromStmt() {
         $sql = 'FROM plugin_docman_item AS i'.
+
             ' LEFT JOIN plugin_docman_version AS v'.
             '  ON (i.item_id = v.item_id)'.
             ' LEFT JOIN plugin_docman_version AS v2'.
-            '  ON (v2.item_id = v.item_id AND v.number < v2.number) ';
+            '  ON (v2.item_id = v.item_id AND v.number < v2.number) '.
+
+            ' LEFT JOIN plugin_docman_link_version AS lv'.
+            '  ON (i.item_id = lv.item_id)'.
+            ' LEFT JOIN plugin_docman_link_version AS lv2'.
+            '  ON (lv2.item_id = lv.item_id AND lv.number < lv2.number) ';
         return $sql;
     }
 
@@ -254,7 +270,7 @@ class Docman_ItemDao extends DataAccessObject {
             $sql .= ' i.item_type <> '.PLUGIN_DOCMAN_ITEM_TYPE_FOLDER.' AND ';
         }
         // Related to the 2 LEFT JOIN on docman_version in _getItemSearchFromStmt()
-        $sql .= ' v2.id IS NULL AND ';
+        $sql .= ' v2.id IS NULL AND lv2.id IS NULL AND ';
 
         $limit = '';
         if (isset($params['offset']) && isset($params['limit'])) {
@@ -928,5 +944,3 @@ class Docman_ItemDao extends DataAccessObject {
         return true;
     }
 }
-
-?>

@@ -290,19 +290,13 @@ class Docman_Actions extends Actions {
 
             // Approval table
             if($number > 0) {
-                $vImport = new Valid_WhiteList('app_table_import', array('copy', 'reset', 'empty'));
-                $vImport->required();
-                $import = $request->getValidated('app_table_import', $vImport, false);
-                if($import) {
-                    // Approval table creation needs the item currentVersion to be set.
-                    $vArray['id'] = $vId;
-                    $vArray['date'] = time();
-                    $newVersion =& new Docman_Version($vArray);
-                    $item->setCurrentVersion($newVersion);
+                // Approval table creation needs the item currentVersion to be set.
+                $vArray['id']   = $vId;
+                $vArray['date'] = $_SERVER['REQUEST_TIME'];
+                $newVersion     = new Docman_Version($vArray);
+                $item->setCurrentVersion($newVersion);
 
-                    $atf =& Docman_ApprovalTableFactoriesFactory::getFromItem($item);
-                    $atf->createTable($user->getId(), $request->get('app_table_import'));
-                }
+                $this->newVersionApprovalTable($request, $item, $user);
             }
         }
         else {
@@ -311,6 +305,16 @@ class Docman_Actions extends Actions {
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_'.$_action_type));
         }
         return $newVersion;
+    }
+
+    private function newVersionApprovalTable(Codendi_Request $request, Docman_Item $item, PFUser $user) {
+        $vImport = new Valid_WhiteList('app_table_import', array('copy', 'reset', 'empty'));
+        $vImport->required();
+        $import = $request->getValidated('app_table_import', $vImport, false);
+        if ($import) {
+            $atf = Docman_ApprovalTableFactoriesFactory::getFromItem($item);
+            $atf->createTable($user->getId(), $request->get('app_table_import'));
+        }
     }
 
     function createFolder() {
@@ -741,19 +745,27 @@ class Docman_Actions extends Actions {
         $this->event_manager->processEvent('send_notifications', array());
     }
 
-    private function updateLink(Codendi_Request $request, Docman_Item $item, PFUser $user) {
+    private function updateLink(Codendi_Request $request, Docman_Link $item, PFUser $user) {
         $data = $request->get('item');
         $item->setUrl($data['link_url']);
         $updated = $this->_getItemFactory()->updateLink($item, $request->get('version'));
 
         $this->manageLockNewVersion($user, $item, $request);
 
+        // Approval table
+        $link_version_factory = new Docman_LinkVersionFactory();
+        $last_version = $link_version_factory->getLatestVersion($item);
+        if($last_version) {
+            // Approval table creation needs the item currentVersion to be set.
+            $item->setCurrentVersion($last_version);
+            $this->newVersionApprovalTable($request, $item, $user);
+        }
+
         $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_create_newversion'));
 
-        $link_version_factory = new Docman_LinkVersionFactory();
-        $event_data           = array(
+        $event_data = array(
             'item'     => $item,
-            'version'  => $link_version_factory->getLatestVersion($item),
+            'version'  => $last_version,
         );
         $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_LINKVERSION, $event_data);
 
@@ -1825,8 +1837,8 @@ class Docman_Actions extends Actions {
     /**
      * @access private
      */
-    function _approval_update_settings(&$atf, $sStatus, $notification, $notificationOccurence, $description, $owner) {
-        $table =& $atf->getTable();
+    function _approval_update_settings(Docman_ApprovalTableFactory $atf, $sStatus, $notification, $notificationOccurence, $description, $owner) {
+        $table = $atf->getTable();
         $newOwner = false;
         if(!$table->isCustomizable()) {
             // Cannot set status of an old table to something else than 'close'

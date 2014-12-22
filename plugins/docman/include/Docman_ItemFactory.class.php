@@ -120,6 +120,22 @@ class Docman_ItemFactory {
             break;
         case PLUGIN_DOCMAN_ITEM_TYPE_LINK:
             $item = new Docman_Link($row);
+            if (isset($row['link_version_id'])) {
+                $item->setCurrentVersion(
+                    new Docman_LinkVersion(
+                        array(
+                            'id'        => $row['link_version_id'],
+                            'user_id'   => $row['link_version_user_id'],
+                            'item_id'   => $item->getId(),
+                            'number'    => $row['link_version_number'],
+                            'label'     => $row['link_version_label'],
+                            'changelog' => $row['link_version_changelog'],
+                            'date'      => $row['link_version_date'],
+                            'link_url'      => $row['link_version_link_url']
+                        )
+                    )
+                );
+            }
             break;
         case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
             $item = new Docman_EmbeddedFile($row);
