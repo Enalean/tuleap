@@ -322,4 +322,30 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
 
         return $is_valid;
     }
+
+    /**
+     * Fetch the html code to display the field value in card
+     *
+     * @param Tracker_Artifact $artifact
+     *
+     * @return string
+     */
+    public function fetchCardValue(Tracker_Artifact $artifact, Tracker_CardDisplayPreferences $display_preferences = null) {
+        //return $this->fetchTooltipValue($artifact, $artifact->getLastChangeset()->getValue($this));
+
+        $artifact_id  = $artifact->getId();
+        $changeset_id = $artifact->getLastChangeset()->getId();
+        $value        = $artifact->getLastChangeset()->getValue($this);
+        $report       = Tracker_ReportFactory::instance()->getDefaultReportsByTrackerId($artifact->getTracker()->getId());
+        $request      = HTTPRequest::instance();
+
+        if ($request->exist('report')) {
+            $report = Tracker_ReportFactory::instance()->getReportById(
+                $request->get('report'),
+                UserManager::instance()->getCurrentUser()->getId()
+            );
+        }
+
+        return $this->fetchChangesetValue($artifact_id, $changeset_id, $value, $report);
+    }
 }
