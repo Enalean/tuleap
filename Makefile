@@ -92,7 +92,7 @@ api_test_bootstrap:
 
 api_test: composer_update api_test_bootstrap
 	$(PHPUNIT) $(REST_TESTS_OPTIONS) tests/rest
-	@if [ -e plugins/*/tests/rest ]; then \
+	@if [ `\ls plugins/*/tests/rest | \wc -l` -gt 0 ]; then \
 		$(PHPUNIT) $(REST_TESTS_OPTIONS) plugins/*/tests/rest; \
 	fi
 
