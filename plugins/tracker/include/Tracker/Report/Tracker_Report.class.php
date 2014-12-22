@@ -896,8 +896,20 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         if ($this->isObsolete()) {
             header('X-Codendi-Tracker-Report-IsObsolete: '. $this->getLastUpdaterUserName());
         }
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp      = Codendi_HTMLPurifier::instance();
         $tracker = $this->getTracker();
+
+        if ($request->exist('tracker') && $request->get('tracker') != $tracker->getId()) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('plugin_tracker_admin', 'invalid_request')
+            );
+
+            $GLOBALS['Response']->redirect('?'. http_build_query(array(
+                'tracker'   => $tracker->getId()
+            )));
+        }
+
         switch ($request->get('func')) {
             case 'display-masschange-form':
                 if ($tracker->userIsAdmin($current_user)) {
