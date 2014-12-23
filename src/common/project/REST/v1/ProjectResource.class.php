@@ -552,6 +552,72 @@ class ProjectResource {
         return true;
     }
 
+    /**
+     * @url OPTIONS {id}/git
+     *
+     * @param int $id Id of the project
+     *
+     * @throws 404
+     */
+    public function optionsGit($id) {
+        $activated = false;
+
+        EventManager::instance()->processEvent(
+            Event::REST_PROJECT_OPTIONS_GIT,
+            array(
+                'activated' => &$activated
+            )
+        );
+
+        if ($activated) {
+            $this->sendAllowHeadersForProject();
+        } else {
+            throw new RestException(404, 'Git plugin not activated');
+        }
+    }
+
+    /**
+     * Get git
+     *
+     * Get info about project Git repositories
+     *
+     * @url GET {id}/git
+     *
+     * @param int $id Id of the project
+     * @param int $limit  Number of elements displayed per page {@from path}
+     * @param int $offset Position of the first element to display {@from path}
+     *
+     * @return array {@type Tuleap\REST\v1\GitRepositoryRepresentationBase}
+     *
+     * @throws 404
+     */
+    protected function getGit($id, $limit = 10, $offset = 0) {
+        $project                = $this->getProjectForUser($id);
+        $result                 = array();
+        $total_git_repositories = 0;
+
+        EventManager::instance()->processEvent(
+            Event::REST_PROJECT_GET_GIT,
+            array(
+                'version'        => 'v1',
+                'project'        => $project,
+                'result'         => &$result,
+                'limit'          => $limit,
+                'offset'         => $offset,
+                'total_git_repo' => &$total_git_repositories
+            )
+        );
+
+        if (count($result) > 0) {
+            $this->sendAllowHeadersForProject();
+            $this->sendPaginationHeaders($limit, $offset, $total_git_repositories);
+            return $result;
+        } else {
+            throw new RestException(404, 'Git plugin not activated');
+        }
+
+    }
+
     private function sendAllowHeadersForProject() {
         Header::allowOptionsGet();
     }
