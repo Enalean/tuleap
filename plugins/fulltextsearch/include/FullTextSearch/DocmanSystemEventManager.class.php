@@ -213,11 +213,11 @@ class FullTextSearch_DocmanSystemEventManager {
         }
     }
 
-    public function queueNewApprovalTableComment(Docman_Item $item, $version_nb, Docman_ApprovalTable $table, Docman_ApprovalReviewer $review) {
+    public function queueNewApprovalTableComment(Docman_Item $item) {
         if ($this->plugin->isAllowed($item->getGroupId())) {
             $this->system_event_manager->createEvent(
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_APPROVAL_TABLE_COMMENT::NAME,
-                $this->getDocmanSerializedParameters($item, array($version_nb, $table->getId(), $review->getId())),
+                $this->getDocmanSerializedParameters($item),
                 SystemEvent::PRIORITY_MEDIUM,
                 SystemEvent::OWNER_APP
             );

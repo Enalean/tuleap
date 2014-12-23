@@ -173,14 +173,14 @@ class FullTextSearchDocmanActions {
      * @param Docman_Item $item
      * @param Docman_Version $version
      */
-    public function indexDocumentApprovalComment(Docman_Item $item, Docman_Version $version) {
+    public function indexDocumentApprovalComment(Docman_Item $item) {
         $this->logger->debug('[Docman] ElasticSearch: index new document approval comment #' . $item->getId());
 
         $update_data = array(
-            'approval_table_comments' => $this->request_data_factory->getDocumentApprovalTableComments($item, $version)
+            'approval_table_comments' => $this->request_data_factory->getDocumentApprovalTableComments($item)
         );
 
-        $this->indexOrUpdate($item->getGroupId(), $item->getId(), $update_data);
+        $this->client->update($item->getGroupId(), $item->getId(), $update_data);
     }
 
     /**

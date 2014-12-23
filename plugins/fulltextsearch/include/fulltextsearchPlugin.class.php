@@ -422,7 +422,7 @@ class fulltextsearchPlugin extends Plugin {
      * @param array $params
      */
     public function plugin_docman_approval_table_comment(array $params) {
-        $this->getDocmanSystemEventManager()->queueNewApprovalTableComment($params['item'], $params['version_nb'], $params['table'], $params['review']);
+        $this->getDocmanSystemEventManager()->queueNewApprovalTableComment($params['item']);
     }
 
     /**
