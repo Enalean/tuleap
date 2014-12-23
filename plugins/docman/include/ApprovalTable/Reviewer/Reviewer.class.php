@@ -3,7 +3,7 @@
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2008
- * 
+ *
  * This file is a part of Codendi.
  *
  * Codendi is free software; you can redistribute it and/or modify
@@ -28,7 +28,7 @@ class Docman_ApprovalReviewer {
     var $comment;
     var $version;
 
-    function Docman_ApprovalReviewer() {
+    function __construct() {
         $this->reviewerId = null;
         $this->rank = null;
         $this->reviewDate = null;
@@ -88,5 +88,3 @@ class Docman_ApprovalReviewer {
         if(isset($row['version'])) $this->version = $row['version'];
     }
 }
-
-?>

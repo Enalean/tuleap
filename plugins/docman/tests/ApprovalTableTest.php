@@ -22,8 +22,7 @@
  *
  */
 
-require_once(dirname(__FILE__).'/../include/Docman_ApprovalTable.class.php');
-
+require_once 'bootstrap.php';
 
 class ApprovalTableTest extends UnitTestCase {
 
@@ -183,5 +182,3 @@ class ApprovalTableTest extends UnitTestCase {
         $this->assertIdentical($t8->getApprovalState(), null);
     }
 }
-
-?>

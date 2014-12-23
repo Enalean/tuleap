@@ -21,8 +21,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once(dirname(__FILE__).'/../include/Docman_Metadata.class.php');
-require_once(dirname(__FILE__).'/../include/Docman_MetadataListOfValuesElementFactory.class.php');
+require_once 'bootstrap.php';
 
 Mock::generate('Docman_MetadataListOfValuesElementFactory');
 Mock::generate('Docman_MetadataListOfValuesElement');
@@ -35,14 +34,14 @@ class MetadataListOfValuesElementFactoryTest extends UnitTestCase {
     {
         // Factory to test
         $srcLoveF = new MetadataListOfValuesElementFactoryMocked($this);
-        
+
         // Parameters
         $srcMd = new Docman_ListMetadata();
         $srcMd->setId(123);
         $srcMd->setLabel('field_123');
         $dstMd = new Docman_ListMetadata();
         $dstMd->setId(321);
-        
+
         // List of src elements
         $loveArray[0] = new MockDocman_MetadataListOfValuesElement($this);
         $loveArray[0]->setReturnValue('getId', 100);
@@ -52,7 +51,7 @@ class MetadataListOfValuesElementFactoryTest extends UnitTestCase {
         $loveArray[2]->setReturnValue('getId', 102);
         $srcLoveF->setReturnValue('getListByFieldId', $loveArray);
         $srcLoveF->expectOnce('getListByFieldId', array(123, 'field_123', false));
-        
+
         // Actions in the dst factory
         $dstLoveF = new MockDocman_MetadataListOfValuesElementFactory($this);
         $dstLoveF->expectCallCount('create', 2);
@@ -60,13 +59,13 @@ class MetadataListOfValuesElementFactoryTest extends UnitTestCase {
         $dstLoveF->setReturnValueAt(1, 'create', 202);
         $srcLoveF->setReturnReference('getMetadataListOfValuesElementFactory', $dstLoveF);
         $srcLoveF->expectOnce('getMetadataListOfValuesElementFactory', array(321));
-        
+
         // Run the test
         $valuesMapping = $srcLoveF->cloneValues($srcMd, $dstMd);
         $this->assertEqual($valuesMapping[101], 201);
         $this->assertEqual($valuesMapping[102], 202);
     }
-    
+
     /**
      * 2 values + None in the source, no values in the destination.
      * 2 values must be created in the dest
@@ -83,7 +82,7 @@ class MetadataListOfValuesElementFactoryTest extends UnitTestCase {
         $srcMd->setLabel('field_123');
         $dstMd = new Docman_ListMetadata();
         $dstMd->setId(321);
-        
+
         // Src elements
         $loveArray[0] = new MockDocman_MetadataListOfValuesElement($this);
         $loveArray[0]->setReturnValue('getId', 100);
@@ -93,14 +92,14 @@ class MetadataListOfValuesElementFactoryTest extends UnitTestCase {
         $loveArray[2]->setReturnValue('getId', 102);
         $srcLoveF->setReturnValue('getListByFieldId', $loveArray);
         $srcLoveF->expectOnce('getListByFieldId');
-        
+
         $dstLoveF = new MockDocman_MetadataListOfValuesElementFactory($this);
         $dstLoveF->expectCallCount('create', 2);
         $srcLoveF->setReturnReference('getMetadataListOfValuesElementFactory', $dstLoveF);
-        
+
         $srcLoveF->exportValues($srcMd, $dstMd, $valuesMapping);
     }
-    
+
     /**
      * 2 values + None in the source, one already exists in destination.
      * 1 value must be create and 1 updated
@@ -117,7 +116,7 @@ class MetadataListOfValuesElementFactoryTest extends UnitTestCase {
         $srcMd->setLabel('field_123');
         $dstMd = new Docman_ListMetadata();
         $dstMd->setId(321);
-        
+
         // Src elements
         $loveArray[0] = new MockDocman_MetadataListOfValuesElement($this);
         $loveArray[0]->setReturnValue('getId', 100);
@@ -127,14 +126,12 @@ class MetadataListOfValuesElementFactoryTest extends UnitTestCase {
         $loveArray[2]->setReturnValue('getId', 102);
         $srcLoveF->setReturnValue('getListByFieldId', $loveArray);
         $srcLoveF->expectOnce('getListByFieldId');
-        
+
         $dstLoveF = new MockDocman_MetadataListOfValuesElementFactory($this);
         $dstLoveF->expectCallCount('create', 1);
         $dstLoveF->expectCallCount('update', 1);
         $srcLoveF->setReturnReference('getMetadataListOfValuesElementFactory', $dstLoveF);
-        
+
         $srcLoveF->exportValues($srcMd, $dstMd, $valuesMapping);
     }
 }
-
-?>

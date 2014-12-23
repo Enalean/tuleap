@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,21 +18,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'bootstrap.php';
-
-class Docman_MIMETypeDetectorTest extends TuleapTestCase {
-
-    public function itReturnsTheRightOfficeMimeType() {
-        $filename = 'test.docm';
-        $detector = new Docman_MIMETypeDetector();
-
-        $this->assertEqual($detector->getRightOfficeType($filename), 'application/vnd.ms-word.document.macroEnabled.12');
-    }
-
-    public function itReturnsNullIfTheFileIsNotAnOfficeOne() {
-        $filename = 'image.jpg';
-        $detector = new Docman_MIMETypeDetector();
-
-        $this->assertEqual($detector->getRightOfficeType($filename), null);
-    }
-}
+require_once dirname(__FILE__).'/../include/constants.php';
+require_once dirname(__FILE__).'/../include/autoload.php';

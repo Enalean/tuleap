@@ -22,9 +22,6 @@
  *
  * 
  */
-require_once('Docman_View_ItemDetailsSection.class.php');
-require_once(dirname(__FILE__).'/../Docman_VersionFactory.class.php');
-require_once(dirname(__FILE__).'/../Docman_ApprovalTableFactory.class.php');
 
 class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSection {
 

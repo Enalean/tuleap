@@ -18,12 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/widget/Widget.class.php');
-require_once('common/user/UserManager.class.php');
-require_once('Docman_ApprovalTableFactory.class.php');
-require_once('Docman_PermissionsManager.class.php');
-require_once('Docman_ItemFactory.class.php');
-
 /**
 * Docman_Widget_MyDocmanSearch
 */

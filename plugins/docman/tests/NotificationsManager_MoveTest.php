@@ -1,72 +1,62 @@
 <?php
 /**
  * Copyright (c) Xerox, 2006. All Rights Reserved.
- * 
+ *
  * Originally written by Nicolas Terray, 2006.
- * 
+ *
  * This file is a part of Codendi.
- * 
+ *
  * Codendi is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Codendi is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Codendi; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
- * 
+ *
+ *
  */
 
-require_once(dirname(__FILE__).'/../include/Docman_NotificationsManager_Move.class.php');
-Mock::generatePartial('Docman_NotificationsManager_Move', 'Docman_NotificationsManager_MoveTestVersion', 
+require_once 'bootstrap.php';
+
+Mock::generatePartial('Docman_NotificationsManager_Move', 'Docman_NotificationsManager_MoveTestVersion',
     array(
-        '_groupGetObject', 
-        '_getItemFactory', 
-        '_getUserManager', 
-        '_getPermissionsManager', 
-        '_getDocmanPath', 
+        '_groupGetObject',
+        '_getItemFactory',
+        '_getUserManager',
+        '_getPermissionsManager',
+        '_getDocmanPath',
         '_getDao',
         '_buildMessage',
     )
 );
 
-require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 
-require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
-require_once('common/project/Group.class.php');
 Mock::generate('Group');
 
-require_once('common/include/Feedback.class.php');
 Mock::generate('Feedback');
 
-require_once('common/user/User.class.php');
 Mock::generate('PFUser');
 
-require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
 
-require_once(dirname(__FILE__).'/../include/Docman_ItemFactory.class.php');
 Mock::generate('Docman_ItemFactory');
 
-require_once(dirname(__FILE__).'/../include/Docman_Item.class.php');
 Mock::generate('Docman_Item');
 
-require_once(dirname(__FILE__).'/../include/Docman_PermissionsManager.class.php');
 Mock::generate('Docman_PermissionsManager');
 
-require_once(dirname(__FILE__).'/../include/Docman_Path.class.php');
 Mock::generate('Docman_Path');
 
-require_once('common/dao/NotificationsDao.class.php');
 Mock::generate('NotificationsDao');
 
 class NotificationsManager_MoveTest extends UnitTestCase {
@@ -118,7 +108,7 @@ class NotificationsManager_MoveTest extends UnitTestCase {
                         }
                         //}}}
                     //}}}
-                    
+
                     //{{{ If we listen item, we receive a notification about item ("has been moved to c")
                     $ld = 1;
                     for ($lb = 0 ; $lb <= 1 ; ++$lb) {
@@ -180,7 +170,7 @@ class NotificationsManager_MoveTest extends UnitTestCase {
     *        | +-------+ \
     *        `-- C        |
     *             <-------²
-    *        
+    *
     *        D is moved from B to C
     *
     * @param dr   d is readable 0|1
@@ -194,7 +184,7 @@ class NotificationsManager_MoveTest extends UnitTestCase {
     */
     function _runTest($dr, $br, $cr, $lb, $lc, $ld, $res, $msg = "%s") {
         $msg = "[$dr, $br, $cr, $lb, $lc, $ld, $res] ". $msg;
-        
+
         $a =& new MockDocman_Item();
         $a->setReturnValue('getId', 'a');
         $a->setReturnValue('getParentId', 0);
@@ -209,26 +199,26 @@ class NotificationsManager_MoveTest extends UnitTestCase {
         $d->setReturnValue('getParentId', 'b');
 
         $group_id = 'group_id';
-        
+
         $user = mock('PFUser');
         $user->setReturnValue('getId', 'user');
         $listener = mock('PFUser');
         $listener->setReturnValue('getId', 'listener');
-        
+
         $project =& new MockGroup();
-        
+
         $feedback =& new Feedback();
-        
+
         $item_factory =& new MockDocman_ItemFactory();
         $item_factory->setReturnReference('getItemFromDb', $a, array($a->getId()));
         $item_factory->setReturnReference('getItemFromDb', $b, array($b->getId()));
         $item_factory->setReturnReference('getItemFromDb', $c, array($c->getId()));
         $item_factory->setReturnReference('getItemFromDb', $d, array($d->getId()));
-        
+
         $user_manager =& new MockUserManager();
         $user_manager->setReturnReference('getUserById', $user, array($user->getId()));
         $user_manager->setReturnReference('getUserById', $listener, array($listener->getId()));
-        
+
         $permissions_manager =& new MockDocman_PermissionsManager();
         $permissions_manager->setReturnValue('userCanRead',   true, array(&$listener, $a->getId()));
         $permissions_manager->setReturnValue('userCanAccess', true, array(&$listener, $a->getId()));
@@ -238,7 +228,7 @@ class NotificationsManager_MoveTest extends UnitTestCase {
         $permissions_manager->setReturnValue('userCanAccess', $br, array(&$listener, $b->getId()));
         $permissions_manager->setReturnValue('userCanRead',   $dr, array(&$listener, $d->getId()));
         $permissions_manager->setReturnValue('userCanAccess', $dr && $br, array(&$listener, $d->getId()));
-        
+
         $dar_d =& new MockDataAccessResult();
         if ($ld) {
             $dar_d->setReturnValueAt(0, 'valid', true);
@@ -247,7 +237,7 @@ class NotificationsManager_MoveTest extends UnitTestCase {
         } else {
             $dar_d->setReturnValue('valid', false);
         }
-        
+
         $dar_c =& new MockDataAccessResult();
         if ($lc) {
             $dar_c->setReturnValueAt(0, 'valid', true);
@@ -256,7 +246,7 @@ class NotificationsManager_MoveTest extends UnitTestCase {
         } else {
             $dar_c->setReturnValue('valid', false);
         }
-        
+
         $dar_b =& new MockDataAccessResult();
         if ($lb) {
             $dar_b->setReturnValueAt(0, 'valid', true);
@@ -265,14 +255,14 @@ class NotificationsManager_MoveTest extends UnitTestCase {
         } else {
             $dar_b->setReturnValue('valid', false);
         }
-        
+
         $docman_path =& new MockDocman_Path();
 
         $dao =& new MockNotificationsDao();
         $dao->setReturnValue('searchUserIdByObjectIdAndType', $dar_d, array($d->getId(), 'plugin_docman'));
         $dao->setReturnValue('searchUserIdByObjectIdAndType', $dar_c, array($c->getId(), 'plugin_docman'));
         $dao->setReturnValue('searchUserIdByObjectIdAndType', $dar_b, array($b->getId(), 'plugin_docman'));
-        
+
         $dnmm =& new Docman_NotificationsManager_MoveTestVersion();
         $dnmm->setReturnReference('_groupGetObject', $project);
         $dnmm->setReturnReference('_getItemFactory', $item_factory);
@@ -280,22 +270,21 @@ class NotificationsManager_MoveTest extends UnitTestCase {
         $dnmm->setReturnReference('_getPermissionsManager', $permissions_manager);
         $dnmm->setReturnReference('_getDocmanPath', $docman_path);
         $dnmm->setReturnReference('_getDao', $dao);
-        
+
         if ($res != 'none') {
             $dnmm->expectOnce('_buildMessage', false, $msg);
         } else {
             $dnmm->expectNever('_buildMessage', $msg);
         }
-        
+
         //C'est parti
         $dnmm->__construct($group_id, 'my_url', $feedback);
         $dnmm->somethingHappen('plugin_docman_event_move', array(
             'group_id' => $group_id,
-            'item'    => &$d, 
+            'item'    => &$d,
             'parent'  => &$c,
             'user'    => &$user)
         );
-        
+
     }
 }
-?>

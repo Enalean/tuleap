@@ -18,14 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/date/DateHelper.class.php');
-require_once('Docman_ApprovalTableDao.class.php');
-require_once('Docman_ApprovalTableReviewerDao.class.php');
-require_once('Docman_ApprovalTable.class.php');
-require_once('Docman_ApprovalTableReviewer.class.php');
-require_once('common/mail/MailManager.class.php');
-require_once('Docman_ItemFactory.class.php');
-
 /**
  * Remind users that didn't review documents yet
  */
@@ -136,7 +128,7 @@ class Docman_ApprovalTableReminder {
         $um       = UserManager::instance();
         $reviewer = $um->getUserById($reviewerId);
 
-        
+
         if ($table instanceof Docman_ApprovalTableFile) {
             $versionFactory = new Docman_VersionFactory();
             $version        = $versionFactory->getSpecificVersionById($table->getVersionId(), 'plugin_docman_version');
@@ -288,7 +280,7 @@ class Docman_ApprovalTableReminder {
         $group = $this->getItemProject($docmanItem);
         $owner = $this->getApprovalTableOwner($table);
 
-        $body = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_body', array($docmanItem->getTitle(), 
+        $body = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_body', array($docmanItem->getTitle(),
                                                               $group->getPublicName(),
                                                               $owner->getRealName(),
                                                               $this->getItemUrl($docmanItem),
@@ -344,5 +336,3 @@ class Docman_ApprovalTableReminder {
     }
 
 }
-
-?>

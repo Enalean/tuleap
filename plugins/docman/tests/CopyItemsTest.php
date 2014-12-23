@@ -1,36 +1,37 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
- * 
+ *
  * Originally written by Manuel VACELET, 2006.
- * 
+ *
  * This file is a part of Codendi.
- * 
+ *
  * Codendi is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Codendi is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Codendi; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
- * 
+ *
+ *
  */
 
-require_once(dirname(__FILE__).'/../include/Docman_CloneItemsVisitor.class.php');
-Mock::generatePartial('Docman_CloneItemsVisitor', 
-                      'Docman_CloneItemsVisitorTest', 
-                      array('_getItemFactory', 
-                            '_getPermissionsManager', 
-                            '_getFileStorage', 
-                            '_getVersionFactory', 
-                            '_getMetadataValueFactory', 
+require_once 'bootstrap.php';
+
+Mock::generatePartial('Docman_CloneItemsVisitor',
+                      'Docman_CloneItemsVisitorTest',
+                      array('_getItemFactory',
+                            '_getPermissionsManager',
+                            '_getFileStorage',
+                            '_getVersionFactory',
+                            '_getMetadataValueFactory',
                             '_getMetadataFactory',
                             '_getSettingsBo',
                      ));
@@ -44,12 +45,11 @@ Mock::generate('Docman_Link');
 Mock::generate('Docman_Folder');
 Mock::generate('Iterator');
 
-require_once('common/user/User.class.php');
 Mock::generate('PFUser');
 
 /**
  * Test how items are copied.
- * 
+ *
  * Cases:
  * - In the same project, everything is cloned (datas, permissions, metadata).
  * - Across projects
@@ -66,17 +66,17 @@ class CopyItemsTest extends UnitTestCase {
 
     function testDocumentCopyWithinTheSameProject() {
         $srcGroupId = $dstGroupId = 1789;
-        
+
         $item_to_clone =& new MockDocman_Link();
         $item_to_clone->setReturnValue('getId', 25);
         $item_to_clone->setReturnValue('getGroupId', $srcGroupId);
         $item_to_clone->setReturnReference('getMetadataIterator', new MockIterator());
-        
+
         $new_id = 52;
-        
+
         $dest_folder =& new MockDocman_Folder();
         $dest_folder->setReturnValue('getId', 33);
-        
+
         $cloneItemsVisitor = new Docman_CloneItemsVisitorTest($this);
 
         // expectations
@@ -98,16 +98,16 @@ class CopyItemsTest extends UnitTestCase {
 
         $oldMdFactory =& new MockDocman_MetadataFactory($this);
         $oldMdFactory->expectOnce('appendItemMetadataList');
-        $cloneItemsVisitor->setReturnReference('_getMetadataFactory', $oldMdFactory); 
+        $cloneItemsVisitor->setReturnReference('_getMetadataFactory', $oldMdFactory);
 
         $srcSettingsBo =& new MockDocman_SettingsBo($this);
         $srcSettingsBo->setReturnValue('getMetadataUsage', true);
         $cloneItemsVisitor->setReturnReference('_getSettingsBo', $srcSettingsBo, array($srcGroupId));
-        
+
         $dstSettingsBo =& new MockDocman_SettingsBo($this);
         $dstSettingsBo->setReturnValue('getMetadataUsage', true);
         $cloneItemsVisitor->setReturnReference('_getSettingsBo', $dstSettingsBo, array($dstGroupId));
-        
+
         $cloneItemsVisitor->Docman_CloneItemsVisitor($dstGroupId);
         $cloneItemsVisitor->visitLink($item_to_clone, array(
             'parentId'        => $dest_folder->getId(),
@@ -119,5 +119,3 @@ class CopyItemsTest extends UnitTestCase {
         );
     }
 }
-
-?>

@@ -50,4 +50,3 @@ class Docman_ApprovalTableFactoriesFactory {
         return new Docman_ApprovalTableReviewerFactory($table, $item);
     }
 }
-?>

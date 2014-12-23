@@ -1,30 +1,29 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
- * 
+ *
  * Originally written by Sabri LABBENE, 2007.
- * 
+ *
  * This file is a part of Codendi.
- * 
+ *
  * Codendi is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Codendi is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Codendi; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once('common/event/EventManager.class.php');
-Mock::generate('EventManager');
+require_once 'bootstrap.php';
 
-require_once(dirname(__FILE__).'/../include/Docman_ItemFactory.class.php');
+Mock::generate('EventManager');
 
 Mock::generate('DataAccessResult');
 Mock::generate('Docman_ItemDao');
@@ -497,20 +496,20 @@ class Docman_ItemFactoryTest extends UnitTestCase {
 
     function testRestoreDeletedItemFile() {
         $itemFactory = new Docman_ItemFactoryTestRestore($this);
-        
+
         $item = new MockDocman_File($this);
         $item->setReturnValue('getId', 112);
         $item->setReturnValue('getGroupId', 114);
         $itemFactory->setReturnValue('getItemTypeForItem', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
-        
+
         $dao = new MockDocman_ItemDao($this);
         $dao->expectOnce('restore', array(112));
         $dao->setReturnValue('restore', true);
         $itemFactory->setReturnValue('_getItemDao', $dao);
-        
+
         $v1 = new MockDocman_Version($this);
         $v2 = new MockDocman_Version($this);
-        
+
         $versionFactory = new MockDocman_VersionFactory($this);
         $versionFactory->expectOnce('listVersionsToPurgeForItem', array($item));
         $versionFactory->setReturnValue('listVersionsToPurgeForItem', array($v1, $v2));
@@ -533,16 +532,16 @@ class Docman_ItemFactoryTest extends UnitTestCase {
 
     function testRestoreDeletedItemFileWithoutRestorableVersions() {
         $itemFactory = new Docman_ItemFactoryTestRestore($this);
-        
+
         $item = new MockDocman_File($this);
         $item->setReturnValue('getId', 112);
         $item->setReturnValue('getGroupId', 114);
         $itemFactory->setReturnValue('getItemTypeForItem', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
-        
+
         $dao = new MockDocman_ItemDao($this);
         $dao->expectNever('restore');
         $itemFactory->setReturnValue('_getItemDao', $dao);
-        
+
         $versionFactory = new MockDocman_VersionFactory($this);
         $versionFactory->expectOnce('listVersionsToPurgeForItem', array($item));
         $versionFactory->setReturnValue('listVersionsToPurgeForItem', false);
@@ -588,7 +587,7 @@ class Docman_ItemFactoryTest extends UnitTestCase {
         $em = new MockEventManager($this);
         $em->expectOnce('processEvent', array('plugin_docman_event_restore', array('group_id' => 114, 'item' => $item, 'user' => $user)));
         $itemFactory->setReturnValue('_getEventManager', $em);
-        
+
         $this->assertTrue($itemFactory->restore($item));
     }
 
@@ -622,4 +621,3 @@ class Docman_ItemFactoryTest extends UnitTestCase {
         $this->assertFalse($itemFactory->restore($item));
     }
 }
-?>

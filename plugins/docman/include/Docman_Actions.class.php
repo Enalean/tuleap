@@ -20,24 +20,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('service.php');
-
-require_once('common/mvc/Actions.class.php');
-require_once('common/include/HTTPRequest.class.php');
-
-require_once('Docman_ActionsDeleteVisitor.class.php');
-require_once('Docman_FolderFactory.class.php');
-require_once('Docman_VersionFactory.class.php');
-require_once('Docman_FileStorage.class.php');
-require_once('Docman_MetadataValueFactory.class.php');
-require_once('Docman_ExpandAllHierarchyVisitor.class.php');
-require_once('Docman_ApprovalTableFactory.class.php');
-require_once('Docman_LockFactory.class.php');
-require_once('Docman_MIMETypeDetector.class.php');
-require_once('view/Docman_View_Browse.class.php');
-
-require_once('common/permission/PermissionsManager.class.php');
-require_once('common/reference/ReferenceManager.class.php');
-
 require_once('www/project/admin/permissions.php');
 require_once('www/news/news_utils.php');
 
