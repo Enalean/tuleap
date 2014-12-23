@@ -1,3 +1,9 @@
+Version 4.0 - Tuleap 7.9
+    * Modify array_slice by SQL query
+
+
+This task is part of story #7687 REST endpoint to list project's git repositories
+
 Version 3.152 - Tuleap 7.9
     * Create route OPTION and GET /v1/projects/:id/git
 
