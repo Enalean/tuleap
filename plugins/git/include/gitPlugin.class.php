@@ -1361,7 +1361,8 @@ class GitPlugin extends Plugin {
             $project,
             $this->getCurrentUser(),
             $params['limit'],
-            $params['offset']
+            $params['offset'],
+            $params['fields']
         );
 
         $params['total_git_repo'] = count($this->getRepositoryFactory()->getAllRepositories($project));

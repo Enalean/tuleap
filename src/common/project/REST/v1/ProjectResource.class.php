@@ -19,21 +19,22 @@
 
 namespace Tuleap\Project\REST\v1;
 
-use \ProjectManager;
-use \UserManager;
-use \PFUser;
-use \Project;
-use \EventManager;
-use \Event;
-use \ProjectUGroup;
-use \UGroupManager;
-use \Tuleap\Project\REST\ProjectRepresentation;
-use \Tuleap\Project\REST\UserGroupRepresentation;
-use \Tuleap\REST\Header;
-use \Luracast\Restler\RestException;
-use \Tuleap\REST\ProjectAuthorization;
-use \Tuleap\REST\ResourcesInjector;
-use \URLVerification;
+use ProjectManager;
+use UserManager;
+use PFUser;
+use Project;
+use EventManager;
+use Event;
+use ProjectUGroup;
+use UGroupManager;
+use Tuleap\Project\REST\ProjectRepresentation;
+use Tuleap\Project\REST\UserGroupRepresentation;
+use Tuleap\REST\v1\GitRepositoryRepresentationBase;
+use Tuleap\REST\Header;
+use Luracast\Restler\RestException;
+use Tuleap\REST\ProjectAuthorization;
+use Tuleap\REST\ResourcesInjector;
+use URLVerification;
 use Tuleap\AgileDashboard\REST\v1\OrderRepresentation;
 
 /**
@@ -580,18 +581,83 @@ class ProjectResource {
      * Get git
      *
      * Get info about project Git repositories
+     * <br>
+     * <br>
+     * With fields = 'basic', permissions is always set as <strong>NULL</strong>
+     * <br>
+     * <br>
+     * Basic example:
+     * <br>
+     * <br>
+     * <pre>
+     * "repositories": [{<br>
+     *   &nbsp;"id" : 90,<br>
+     *   &nbsp;"uri": "git/90",<br>
+     *   &nbsp;"name": "repo",<br>
+     *   &nbsp;"path": "project/repo.git",<br>
+     *   &nbsp;"description": "-- Default description --",<br>
+     *   &nbsp;"permissions": null<br>
+     *  }<br>
+     * ...<br>
+     * ]
+     * </pre>
+     * <br>
+     *
+     * <br>
+     * All example:
+     * <br>
+     * <br>
+     * <pre>
+     * "repositories": [{<br>
+     *   &nbsp;"id" : 90,<br>
+     *   &nbsp;"uri": "git/90",<br>
+     *   &nbsp;"name": "repo",<br>
+     *   &nbsp;"path": "project/repo.git",<br>
+     *   &nbsp;"description": "-- Default description --",<br>
+     *   &nbsp;"permissions": {<br>
+     *   &nbsp;   "read": [<br>
+     *   &nbsp;     &nbsp;{<br>
+     *   &nbsp;     &nbsp;  "id": "116_2",<br>
+     *   &nbsp;     &nbsp;  "uri": "user_groups/116_2",<br>
+     *   &nbsp;     &nbsp;  "label": "registered_users",<br>
+     *   &nbsp;     &nbsp;  "users_uri": "user_groups/116_2/users"<br>
+     *   &nbsp;     &nbsp;}<br>
+     *   &nbsp;   ],<br>
+     *   &nbsp;   "write": [<br>
+     *   &nbsp;     &nbsp;{<br>
+     *   &nbsp;     &nbsp;  "id": "116_3",<br>
+     *   &nbsp;     &nbsp;  "uri": "user_groups/116_3",<br>
+     *   &nbsp;     &nbsp;  "label": "project_members",<br>
+     *   &nbsp;     &nbsp;  "users_uri": "user_groups/116_3/users"<br>
+     *   &nbsp;     &nbsp;}<br>
+     *   &nbsp;   ]<br>
+     *   &nbsp;   "rewind": [<br>
+     *   &nbsp;     &nbsp;{<br>
+     *   &nbsp;     &nbsp;  "id": "116_122",<br>
+     *   &nbsp;     &nbsp;  "uri": "user_groups/116_122",<br>
+     *   &nbsp;     &nbsp;  "label": "admins",<br>
+     *   &nbsp;     &nbsp;  "users_uri": "user_groups/116_122/users"<br>
+     *   &nbsp;     &nbsp;}<br>
+     *   &nbsp;   ],<br>
+     *   &nbsp;}<br>
+     *  }<br>
+     * ...<br>
+     * ]
+     * </pre>
+     * <br>
      *
      * @url GET {id}/git
      *
-     * @param int $id Id of the project
-     * @param int $limit  Number of elements displayed per page {@from path}
-     * @param int $offset Position of the first element to display {@from path}
+     * @param int $id        Id of the project
+     * @param int $limit     Number of elements displayed per page {@from path}
+     * @param int $offset    Position of the first element to display {@from path}
+     * @param string $fields Whether you want to fetch permissions or just repository info {@from path}{@choice basic,all}
      *
      * @return array {@type Tuleap\REST\v1\GitRepositoryRepresentationBase}
      *
      * @throws 404
      */
-    protected function getGit($id, $limit = 10, $offset = 0) {
+    protected function getGit($id, $limit = 10, $offset = 0, $fields = GitRepositoryRepresentationBase::FIELDS_BASIC) {
         $project                = $this->getProjectForUser($id);
         $result                 = array();
         $total_git_repositories = 0;
@@ -604,6 +670,7 @@ class ProjectResource {
                 'result'         => &$result,
                 'limit'          => $limit,
                 'offset'         => $offset,
+                'fields'         => $fields,
                 'total_git_repo' => &$total_git_repositories
             )
         );

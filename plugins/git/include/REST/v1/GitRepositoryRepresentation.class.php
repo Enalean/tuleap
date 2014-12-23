@@ -24,14 +24,34 @@ namespace Tuleap\Git\REST\v1;
 use Tuleap\REST\v1\GitRepositoryRepresentationBase;
 use Tuleap\REST\JsonCast;
 use GitRepository;
+use GitPermissionsManager;
+use PFUser;
 
-class GitRepositoryRepresentation extends GitRepositoryRepresentationBase{
+class GitRepositoryRepresentation extends GitRepositoryRepresentationBase {
 
-    public function build(GitRepository $repository) {
+    public function build(GitRepository $repository, PFUser $user, $fields) {
         $this->id          = JsonCast::toInt($repository->getId());
         $this->uri         = self::ROUTE . '/' . $this->id;
         $this->name        = $repository->getName();
         $this->path        = $repository->getPath();
         $this->description = $repository->getDescription();
+
+        $this->buildPermissions($repository, $user, $fields);
+    }
+
+    private function buildPermissions(GitRepository $repository, PFUser $user, $fields) {
+        if ($fields !== self::FIELDS_ALL) {
+            return;
+        }
+
+        $git_permissions_manager = new GitPermissionsManager();
+        $user_is_git_admin       = $git_permissions_manager->userIsGitAdmin($user, $repository->getProject());
+
+        if ($user_is_git_admin) {
+            $permission_representation = new GitRepositoryPermissionRepresentation();
+            $permission_representation->build($repository);
+
+            $this->permissions = $permission_representation;
+        }
     }
 }
