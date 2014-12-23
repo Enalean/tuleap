@@ -1,3 +1,9 @@
+Version 3.152 - Tuleap 7.9
+    * Create route OPTION and GET /v1/projects/:id/git
+
+
+This task is part of story #7687 REST endpoint to list project's git repositories
+
 Version 3.151 - Tuleap 7.9
     * story #7687 REST endpoint to list project'ss git repositories (Create a repo in test REST data builder)
 
