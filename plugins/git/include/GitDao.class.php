@@ -682,4 +682,19 @@ class GitDao extends DataAccessObject {
                  ' AND TO_DAYS(NOW()) - TO_DAYS('.self::REPOSITORY_DELETION_DATE.') ='.$retention_period;
         return $this->retrieve($query);
     }
+
+    public function getPaginatedOpenRepositories($project_id, $limit, $offset) {
+        $project_id = $this->da->escapeInt($project_id);
+        $limit      = $this->da->escapeInt($limit);
+        $offset     = $this->da->escapeInt($offset);
+
+        $sql = "SELECT *
+                FROM plugin_git
+                WHERE repository_deletion_date IS NULL
+                AND project_id = $project_id
+                LIMIT $limit
+                OFFSET $offset";
+
+        return $this->retrieve($sql);
+    }
 }

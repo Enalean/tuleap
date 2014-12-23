@@ -79,10 +79,17 @@ class GitRepositoryFactory {
         return $repositories;
     }
 
-    public function getPagninatedRepositoriesUserCanSee(Project $project, PFUser $user, $limit, $offset) {
-        $all_repositories = $this->getAllRepositoriesUserCanSee($project, $user);
-
-        return array_slice($all_repositories, $offset, $limit);
+    public function getPagninatedRepositoriesUserCanSee(Project $project, PFuser $user, $limit, $offset) {
+        $repositories = array();
+        $repository_list = $this->dao->getPaginatedOpenRepositories($project->getID(), $limit, $offset);
+        foreach ($repository_list as $row) {
+            $repository = new GitRepository();
+            $this->dao->hydrateRepositoryObject($repository, $row);
+            if ($repository->userCanRead($user)) {
+                $repositories[] = $repository;
+            }
+        }
+        return $repositories;
     }
 
     /**
