@@ -1,3 +1,6 @@
+Version 5.537 - Tuleap 7.9
+    * request #7712 Report actions must check tracker id
+
 Version 5.536 - Tuleap 7.9
     * request #7713 Cardwall renderer must take in account milestone selected in tracker report
 
