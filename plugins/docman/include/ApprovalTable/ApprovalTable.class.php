@@ -3,7 +3,7 @@
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2007
- * 
+ *
  * This file is a part of Codendi.
  *
  * Codendi is free software; you can redistribute it and/or modify
@@ -20,22 +20,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED', 0);
-define('PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED',  1);
-define('PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED',   2);
-define('PLUGIN_DOCMAN_APPROVAL_TABLE_DELETED',  3);
-
-define('PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET',   0);
-define('PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED', 1);
-define('PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED', 2);
-define('PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED', 3);
-define('PLUGIN_DOCMAN_APPROVAL_STATE_DECLINED', 4);
-
-define('PLUGIN_DOCMAN_APPROVAL_NOTIF_DISABLED',   0);
-define('PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE',  1);
-define('PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL', 2);
-
-/* abstract */ class Docman_ApprovalTable {
+abstract class Docman_ApprovalTable {
     var $id;
     var $date;
     var $owner;
@@ -48,7 +33,7 @@ define('PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL', 2);
     var $customizable;
     var $reviewers;
 
-    function Docman_ApprovalTable() {
+    function __construct() {
         $this->id                 = null;
         $this->date               = null;
         $this->owner              = null;
@@ -187,11 +172,11 @@ define('PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL', 2);
 
     // Reviewers management
     // Should be managed with SplObjectStorage in Php 5
-    function addReviewer(&$reviewer) {
-        $this->reviewers[$reviewer->getId()] =& $reviewer;
+    function addReviewer($reviewer) {
+        $this->reviewers[$reviewer->getId()] = $reviewer;
     }
 
-    function &getReviewer($id) {
+    function getReviewer($id) {
         return $this->reviewers[$id];
     }
 
@@ -204,122 +189,6 @@ define('PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL', 2);
     }
 
     function getReviewerIterator() {
-        $i = new ArrayIterator($this->reviewers);
-        return $i;
-    }
-
-}
-
-/**
- *
- */
-class Docman_ApprovalTableItem
-extends Docman_ApprovalTable {
-    var $itemId;
-
-    function Docman_ApprovalTableItem() {
-        parent::Docman_ApprovalTable();
-        $this->itemId = null;
-    }
-
-    function initFromRow($row) {
-        parent::initFromRow($row);
-        if(isset($row['item_id'])) $this->itemId = $row['item_id'];
-    }
-
-    function setItemId($v) {
-        $this->itemId = $v;
-    }
-
-    function getItemId() {
-        return $this->itemId;
+        return new ArrayIterator($this->reviewers);
     }
 }
-
-/*abstract*/ class Docman_ApprovalTableVersionned
-extends Docman_ApprovalTable {
-    var $versionNumber;
-
-    function Docman_ApprovalTableVersionned() {
-        parent::Docman_ApprovalTable();
-        $this->versionNumber = null;
-    }
-
-    function setVersionNumber($v) {
-        $this->versionNumber = $v;
-    }
-
-    function getVersionNumber() {
-        return $this->versionNumber;
-    }
-}
-
-/**
- *
- */
-class Docman_ApprovalTableFile
-extends Docman_ApprovalTableVersionned {
-    var $versionId;
-
-    function Docman_ApprovalTableFile() {
-        parent::Docman_ApprovalTableVersionned();
-        $this->versionId = null;
-    }
-
-    function setVersionId($v) {
-        $this->versionId = $v;
-    }
-
-    function getVersionId() {
-        return $this->versionId;
-    }
-
-    function initFromRow($row) {
-        parent::initFromRow($row);
-        if(isset($row['version_id'])) $this->versionId = $row['version_id'];
-        if(isset($row['version_number'])) $this->versionNumber = $row['version_number'];
-    }
-}
-
-/**
- *
- */
-class Docman_ApprovalTableWiki
-extends Docman_ApprovalTableVersionned {
-    var $itemId;
-    var $wikiVersionId;
-
-    function Docman_ApprovalTableWiki() {
-        parent::Docman_ApprovalTableVersionned();
-        $this->itemId = null;
-        $this->wikiVersionId = null;
-    }
-
-    function setItemId($v) {
-        $this->itemId = $v;
-    }
-
-    function getItemId() {
-        return $this->itemId;
-    }
-
-    function setWikiVersionId($v) {
-        $this->wikiVersionId = $v;
-        $this->versionNumber = $v;
-    }
-
-    function getWikiVersionId() {
-        return $this->wikiVersionId;
-    }
-
-    function initFromRow($row) {
-        parent::initFromRow($row);
-        if(isset($row['item_id'])) $this->itemId = $row['item_id'];
-        if(isset($row['wiki_version_id'])) {
-            $this->wikiVersionId = $row['wiki_version_id'];
-            $this->versionNumber = $row['wiki_version_id'];
-        }
-    }
-}
-
-?>

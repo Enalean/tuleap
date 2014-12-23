@@ -52,6 +52,7 @@ class FullTextSearch_DocmanSystemEventManager {
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_LINK_INDEX::NAME:
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_FOLDER_INDEX::NAME:
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE::NAME:
+            case SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATELINK::NAME:
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS::NAME:
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA::NAME:
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_DELETE::NAME:
@@ -64,7 +65,8 @@ class FullTextSearch_DocmanSystemEventManager {
                 $dependencies = array(
                     $this->getDocmanActions(),
                     new Docman_ItemFactory(),
-                    new Docman_VersionFactory()
+                    new Docman_VersionFactory(),
+                    new Docman_LinkVersionFactory()
                 );
                 break;
         }
@@ -189,6 +191,17 @@ class FullTextSearch_DocmanSystemEventManager {
         }
     }
 
+    public function queueNewDocumentLinkVersion(Docman_Link $item, Docman_LinkVersion $version) {
+        if ($this->plugin->isAllowed($item->getGroupId()) && $version->getNumber() > 1) {
+            $this->system_event_manager->createEvent(
+                SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATELINK::NAME,
+                $this->getDocmanSerializedParameters($item, array($version->getNumber())),
+                SystemEvent::PRIORITY_MEDIUM,
+                SystemEvent::OWNER_APP
+            );
+        }
+    }
+
     public function queueNewWikiDocumentVersion(Docman_Item $item) {
         if ($this->plugin->isAllowed($item->getGroupId())) {
             $this->system_event_manager->createEvent(
@@ -200,11 +213,11 @@ class FullTextSearch_DocmanSystemEventManager {
         }
     }
 
-    public function queueNewApprovalTableComment(Docman_Item $item, $version_nb, Docman_ApprovalTable $table, Docman_ApprovalReviewer $review) {
+    public function queueNewApprovalTableComment(Docman_Item $item) {
         if ($this->plugin->isAllowed($item->getGroupId())) {
             $this->system_event_manager->createEvent(
                 SystemEvent_FULLTEXTSEARCH_DOCMAN_APPROVAL_TABLE_COMMENT::NAME,
-                $this->getDocmanSerializedParameters($item, array($version_nb, $table->getId(), $review->getId())),
+                $this->getDocmanSerializedParameters($item),
                 SystemEvent::PRIORITY_MEDIUM,
                 SystemEvent::OWNER_APP
             );

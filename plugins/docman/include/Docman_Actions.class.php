@@ -20,24 +20,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('service.php');
-
-require_once('common/mvc/Actions.class.php');
-require_once('common/include/HTTPRequest.class.php');
-
-require_once('Docman_ActionsDeleteVisitor.class.php');
-require_once('Docman_FolderFactory.class.php');
-require_once('Docman_VersionFactory.class.php');
-require_once('Docman_FileStorage.class.php');
-require_once('Docman_MetadataValueFactory.class.php');
-require_once('Docman_ExpandAllHierarchyVisitor.class.php');
-require_once('Docman_ApprovalTableFactory.class.php');
-require_once('Docman_LockFactory.class.php');
-require_once('Docman_MIMETypeDetector.class.php');
-require_once('view/Docman_View_Browse.class.php');
-
-require_once('common/permission/PermissionsManager.class.php');
-require_once('common/reference/ReferenceManager.class.php');
-
 require_once('www/project/admin/permissions.php');
 require_once('www/news/news_utils.php');
 
@@ -290,19 +272,13 @@ class Docman_Actions extends Actions {
 
             // Approval table
             if($number > 0) {
-                $vImport = new Valid_WhiteList('app_table_import', array('copy', 'reset', 'empty'));
-                $vImport->required();
-                $import = $request->getValidated('app_table_import', $vImport, false);
-                if($import) {
-                    // Approval table creation needs the item currentVersion to be set.
-                    $vArray['id'] = $vId;
-                    $vArray['date'] = time();
-                    $newVersion =& new Docman_Version($vArray);
-                    $item->setCurrentVersion($newVersion);
+                // Approval table creation needs the item currentVersion to be set.
+                $vArray['id']   = $vId;
+                $vArray['date'] = $_SERVER['REQUEST_TIME'];
+                $newVersion     = new Docman_Version($vArray);
+                $item->setCurrentVersion($newVersion);
 
-                    $atf =& Docman_ApprovalTableFactoriesFactory::getFromItem($item);
-                    $atf->createTable($user->getId(), $request->get('app_table_import'));
-                }
+                $this->newVersionApprovalTable($request, $item, $user);
             }
         }
         else {
@@ -311,6 +287,16 @@ class Docman_Actions extends Actions {
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_'.$_action_type));
         }
         return $newVersion;
+    }
+
+    private function newVersionApprovalTable(Codendi_Request $request, Docman_Item $item, PFUser $user) {
+        $vImport = new Valid_WhiteList('app_table_import', array('copy', 'reset', 'empty'));
+        $vImport->required();
+        $import = $request->getValidated('app_table_import', $vImport, false);
+        if ($import) {
+            $atf = Docman_ApprovalTableFactoriesFactory::getFromItem($item);
+            $atf->createTable($user->getId(), $request->get('app_table_import'));
+        }
     }
 
     function createFolder() {
@@ -385,8 +371,8 @@ class Docman_Actions extends Actions {
                 if ($id) {
                     $this->_controler->_viewParams['action_result'] = $id;
                     $this->_controler->_viewParams['redirect_anchor'] = "#item_$id";
-                    $new_item =& $item_factory->getItemFromDb($id);
-                    $parent   =& $item_factory->getItemFromDb($item['parent_id']);
+                    $new_item = $item_factory->getItemFromDb($id);
+                    $parent   = $item_factory->getItemFromDb($item['parent_id']);
                     if ($request->exist('permissions') && $this->_controler->userCanManage($parent->getId())) {
                         $force = true;
                         $this->setPermissionsOnItem($new_item, $force, $user);
@@ -421,6 +407,16 @@ class Docman_Actions extends Actions {
                     if($item['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_FILE ||
                        $item['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
                         $new_version = $this->_storeFile($new_item);
+                    }
+
+                    if ($item['item_type'] ==  PLUGIN_DOCMAN_ITEM_TYPE_LINK) {
+                        $link_version_factory = new Docman_LinkVersionFactory();
+                        $link_version_factory->create(
+                            $new_item,
+                            $GLOBALS['Language']->getText('plugin_docman', 'initversion'),
+                            $GLOBALS['Language']->getText('plugin_docman', 'initversion'),
+                            $_SERVER['REQUEST_TIME']
+                        );
                     }
 
                     // Create metatata
@@ -599,7 +595,12 @@ class Docman_Actions extends Actions {
                 $data['item_type'] =  $itemType;
             }
 
-            $updated = $item_factory->update($data);
+            if ($itemType == PLUGIN_DOCMAN_ITEM_TYPE_LINK) {
+                $updated = $this->updateLink($request, $item, $user);
+            } else {
+                $updated = $item_factory->update($data);
+            }
+
             if ($updated) {
                 $this->event_manager->processEvent('plugin_docman_event_update', array(
                     'group_id' => $request->get('group_id'),
@@ -695,43 +696,79 @@ class Docman_Actions extends Actions {
     function new_version() {
         $request =& $this->_controler->request;
         if ($request->exist('id')) {
-            $user = $this->_controler->getUser();
-            $item_factory =& $this->_getItemFactory();
-            $item =& $item_factory->getItemFromDb($request->get('id'));
-            $item_type = $item_factory->getItemTypeForItem($item);
+            $user         = $this->_controler->getUser();
+            $item_factory = $this->_getItemFactory();
+            $item         = $item_factory->getItemFromDb($request->get('id'));
+            $item_type    = $item_factory->getItemTypeForItem($item);
             if ($item_type == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $item_type == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
                 $new_version =& $this->_storeFile($item);
 
                 // We update the update_date of the document only if no version date was given
-                if (!$request->existAndNonEmpty('date')) {
+                if (! $request->existAndNonEmpty('date')) {
                     $item_factory->update(array('id' => $item->getId()));
                 }
 
-                // Manage lock
-                $dPm = $this->_getDocmanPermissionsManagerInstance($item->getGroupId());
-                if ($request->existAndNonEmpty('lock_document')) {
-                    if (!$dPm->getLockFactory()->itemIsLocked($item)) {
-                        $dPm->getLockFactory()->lock($item);
-                        $this->_raiseLockEvent($item, $user);
-                    }
-                } else {
-                    if ($dPm->getLockFactory()->itemIsLocked($item)) {
-                        $dPm->getLockFactory()->unlock($item);
-                        $this->_raiseUnlockEvent($item, $user);
-                    }
-                }
+                $this->manageLockNewVersion($user, $item, $request);
 
                 // Warn users about watermarking
-                $this->event_manager->processEvent('plugin_docman_after_new_version', array(
-                                                    'item'     => $item,
-                                                    'user'     => $user,
-                                                    'version'  => $new_version,
-                                                    'docmanControler' => $this->_controler)
+                $this->event_manager->processEvent(
+                    'plugin_docman_after_new_version',
+                    array(
+                        'item'     => $item,
+                        'user'     => $user,
+                        'version'  => $new_version,
+                        'docmanControler' => $this->_controler
+                    )
                 );
+            } elseif ($item_type == PLUGIN_DOCMAN_ITEM_TYPE_LINK) {
+                $this->updateLink($request, $item, $user);
             }
         }
         $this->event_manager->processEvent('send_notifications', array());
     }
+
+    private function updateLink(Codendi_Request $request, Docman_Link $item, PFUser $user) {
+        $data = $request->get('item');
+        $item->setUrl($data['link_url']);
+        $updated = $this->_getItemFactory()->updateLink($item, $request->get('version'));
+
+        $this->manageLockNewVersion($user, $item, $request);
+
+        // Approval table
+        $link_version_factory = new Docman_LinkVersionFactory();
+        $last_version = $link_version_factory->getLatestVersion($item);
+        if($last_version) {
+            // Approval table creation needs the item currentVersion to be set.
+            $item->setCurrentVersion($last_version);
+            $this->newVersionApprovalTable($request, $item, $user);
+        }
+
+        $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_create_newversion'));
+
+        $event_data = array(
+            'item'     => $item,
+            'version'  => $last_version,
+        );
+        $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_LINKVERSION, $event_data);
+
+        return $updated;
+    }
+
+    private function manageLockNewVersion(PFUser $user, Docman_Item $item, Codendi_Request $request) {
+        $permission_manager = $this->_getDocmanPermissionsManagerInstance($item->getGroupId());
+        if ($request->existAndNonEmpty('lock_document')) {
+            if (! $permission_manager->getLockFactory()->itemIsLocked($item)) {
+                $permission_manager->getLockFactory()->lock($item);
+                $this->_raiseLockEvent($item, $user);
+            }
+        } else {
+            if ($permission_manager->getLockFactory()->itemIsLocked($item)) {
+                $permission_manager->getLockFactory()->unlock($item);
+                $this->_raiseUnlockEvent($item, $user);
+            }
+        }
+    }
+
     protected $filestorage;
     function &_getFileStorage() {
         if (!$this->filestorage) {
@@ -1782,8 +1819,8 @@ class Docman_Actions extends Actions {
     /**
      * @access private
      */
-    function _approval_update_settings(&$atf, $sStatus, $notification, $notificationOccurence, $description, $owner) {
-        $table =& $atf->getTable();
+    function _approval_update_settings(Docman_ApprovalTableFactory $atf, $sStatus, $notification, $notificationOccurence, $description, $owner) {
+        $table = $atf->getTable();
         $newOwner = false;
         if(!$table->isCustomizable()) {
             // Cannot set status of an old table to something else than 'close'

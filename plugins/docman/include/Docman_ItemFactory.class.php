@@ -120,6 +120,22 @@ class Docman_ItemFactory {
             break;
         case PLUGIN_DOCMAN_ITEM_TYPE_LINK:
             $item = new Docman_Link($row);
+            if (isset($row['link_version_id'])) {
+                $item->setCurrentVersion(
+                    new Docman_LinkVersion(
+                        array(
+                            'id'        => $row['link_version_id'],
+                            'user_id'   => $row['link_version_user_id'],
+                            'item_id'   => $item->getId(),
+                            'number'    => $row['link_version_number'],
+                            'label'     => $row['link_version_label'],
+                            'changelog' => $row['link_version_changelog'],
+                            'date'      => $row['link_version_date'],
+                            'link_url'      => $row['link_version_link_url']
+                        )
+                    )
+                );
+            }
             break;
         case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
             $item = new Docman_EmbeddedFile($row);
@@ -795,17 +811,37 @@ class Docman_ItemFactory {
         return $dao->updateFromRow($row);
     }
 
+    public function updateLink(Docman_Link $link, array $version_data) {
+        $update = $this->update(
+            array(
+                'id'        => $link->getId(),
+                'group_id'  => $link->getGroupId(),
+                'title'     => $link->getTitle(),
+                'user_id'   => $link->getOwnerId(),
+                'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_LINK,
+                'link_url'  => $link->getUrl(),
+            )
+        );
+
+        $link_version_factory = new Docman_LinkVersionFactory();
+
+        $create = $link_version_factory->create($link, $version_data['label'], $version_data['changelog'], $_SERVER['REQUEST_TIME']);
+
+        return ($update && $create);
+    }
+
     function massUpdate($srcItemId, $mdLabel, $itemIdArray) {
         $dao =& $this->_getItemDao();
         $dao->massUpdate($srcItemId, $mdLabel, $itemIdArray);
     }
 
-    function create($row, $ordering) {
+    public function create($row, $ordering) {
         $dao =& $this->_getItemDao();
         $id = $dao->createFromRow($row);
         if ($id) {
             $this->setNewParent($id, $row['parent_id'], $ordering);
         }
+
         return $id;
     }
 

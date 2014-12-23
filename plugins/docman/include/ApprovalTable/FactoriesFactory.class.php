@@ -30,6 +30,9 @@ class Docman_ApprovalTableFactoriesFactory {
         elseif($item instanceof Docman_Wiki) {
             $appTableFactory = new Docman_ApprovalTableWikiFactory($item, $version);
         }
+        elseif($item instanceof Docman_Link) {
+            $appTableFactory = new Docman_ApprovalTableLinkFactory($item, $version);
+        }
         elseif($item instanceof Docman_Empty) {
             // there is no approval table for empty documents.
         }
@@ -47,4 +50,3 @@ class Docman_ApprovalTableFactoriesFactory {
         return new Docman_ApprovalTableReviewerFactory($table, $item);
     }
 }
-?>

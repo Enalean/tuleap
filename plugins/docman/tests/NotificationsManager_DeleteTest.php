@@ -16,8 +16,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../include/Docman_NotificationsManager_Delete.class.php');
-Mock::generatePartial('Docman_NotificationsManager_Delete', 'Docman_NotificationsManager_DeleteTestVersion', 
+require_once 'bootstrap.php';
+
+Mock::generatePartial('Docman_NotificationsManager_Delete', 'Docman_NotificationsManager_DeleteTestVersion',
     array(
         '_getPermissionsManager',
         '_getListeningUsers',
@@ -25,16 +26,12 @@ Mock::generatePartial('Docman_NotificationsManager_Delete', 'Docman_Notification
     )
 );
 
-require_once(dirname(__FILE__).'/../include/Docman_Item.class.php');
 Mock::generate('Docman_Item');
 
-require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
 
-require_once('common/user/User.class.php');
 Mock::generate('PFUser');
 
-require_once(dirname(__FILE__).'/../include/Docman_PermissionsManager.class.php');
 Mock::generate('Docman_PermissionsManager');
 
 class NotificationsManager_DeleteTest extends UnitTestCase {
@@ -84,5 +81,3 @@ class NotificationsManager_DeleteTest extends UnitTestCase {
     }
 
 }
-
-?>

@@ -19,9 +19,9 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../include/Docman_ItemFactory.class.php');
+require_once 'bootstrap.php';
 
-require_once('common/event/EventManager.class.php');
+
 Mock::generate('EventManager');
 
 Mock::generate('UserManager');
@@ -151,12 +151,12 @@ function testPurgeDeletedVersion() {
         $if->expectOnce('getItemFromDb', array(1664, array('ignore_deleted' => true)));
         $if->setReturnValue('getItemFromDb', $file);
         $versionFactory->setReturnValue('_getItemFactory', $if);
-        
+
         $user = mock('PFUser');
         $um   = new MockUserManager($this);
         $um->setReturnValue('getCurrentUser', $user);
         $versionFactory->setReturnValue('_getUserManager', $um);
-        
+
         $em = new MockEventManager($this);
         $em->expectOnce('processEvent', array('plugin_docman_event_restore_version', array('group_id' => 114, 'item' => $file, 'old_value' => '2 (Ho hisse la saucisse)', 'user' => $user)));
         $versionFactory->setReturnValue('_getEventManager', $em);
@@ -213,7 +213,7 @@ function testPurgeDeletedVersion() {
         $em = new MockEventManager($this);
         $em->expectNever('processEvent', array('plugin_docman_event_restore_version'));
         $versionFactory->setReturnValue('_getEventManager', $em);
-        
+
         $dao->expectNever('restore');
 
         $version = new MockDocman_Version($this);
@@ -224,5 +224,3 @@ function testPurgeDeletedVersion() {
     }
 
 }
-
-?>

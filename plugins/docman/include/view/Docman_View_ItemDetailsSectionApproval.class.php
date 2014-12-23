@@ -23,11 +23,6 @@
  * 
  */
 
-require_once('Docman_View_ItemDetailsSection.class.php');
-
-require_once(dirname(__FILE__).'/../Docman_ApprovalTableFactory.class.php');
-require_once(dirname(__FILE__).'/../Docman_Log.class.php');
-
 class Docman_View_ItemDetailsSectionApproval
 extends Docman_View_ItemDetailsSection {
     var $table;

@@ -18,13 +18,13 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Docman_Document.class.php');
-
 /**
  * URL is a transport object (aka container) used to share data between
  * Model/Controler and View layer of the application
  */
 class Docman_Link extends Docman_Document {
+
+    private $current_version;
     
     function Docman_Link($data = null) {
         parent::Docman_Document($data);
@@ -52,6 +52,12 @@ class Docman_Link extends Docman_Document {
     function accept(&$visitor, $params = array()) {
         return $visitor->visitLink($this, $params);
     }
-}
 
-?>
+    public function setCurrentVersion(Docman_LinkVersion $current_version) {
+        $this->current_version = $current_version;
+    }
+
+    public function getCurrentVersion() {
+        return $this->current_version;
+    }
+}

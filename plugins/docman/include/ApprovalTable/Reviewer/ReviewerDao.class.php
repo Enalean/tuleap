@@ -3,7 +3,7 @@
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2008
- * 
+ *
  * This file is a part of Codendi.
  *
  * Codendi is free software; you can redistribute it and/or modify
@@ -19,8 +19,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once('common/dao/include/DataAccessObject.class.php');
 
 class Docman_ApprovalTableReviewerDao extends DataAccessObject {
 
@@ -238,5 +236,3 @@ class Docman_ApprovalTableReviewerDao extends DataAccessObject {
     }
 
 }
-
-?>

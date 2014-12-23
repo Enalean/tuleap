@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'bootstrap.php';
+
 class Docman_MIMETypeDetectorTest extends TuleapTestCase {
 
     public function itReturnsTheRightOfficeMimeType() {
@@ -34,5 +36,3 @@ class Docman_MIMETypeDetectorTest extends TuleapTestCase {
         $this->assertEqual($detector->getRightOfficeType($filename), null);
     }
 }
-
-?>

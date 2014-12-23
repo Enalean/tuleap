@@ -20,7 +20,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Docman_MetadataSqlQueryChunk.class.php');
+require_once 'database.php';
 
 class Docman_SqlFilterFactory {
     function Docman_SqlFilterFactory() {

@@ -36,7 +36,7 @@ class SystemEvent_FULLTEXTSEARCH_DOCMAN_WIKI_UPDATETest extends SystemEvent_FULL
         $this->wiki_page = stub('WikiPage')->getMetadata()->returns(array());
         stub($event)->getWikiPage()->returns($this->wiki_page);
 
-        $event->injectDependencies($this->actions, $this->item_factory, $this->version_factory);
+        $event->injectDependencies($this->actions, $this->item_factory, $this->version_factory, $this->link_version_factory);
         return $event;
     }
 

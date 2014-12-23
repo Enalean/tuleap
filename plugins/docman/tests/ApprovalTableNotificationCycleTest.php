@@ -22,8 +22,7 @@
  *
  */
 
-require_once(dirname(__FILE__).'/../include/Docman_ApprovalTableFactory.class.php');
-require_once('common/language/BaseLanguage.class.php');
+require_once 'bootstrap.php';
 
 // Generic
 Mock::generatePartial('Docman_ApprovalTableNotificationCycle', 'Docman_ApprovalTableNotificationCycleTest', array('_getReviewerDao', '_getMail', '_getUserManager', '_getUserById', 'getReviewUrl'));
@@ -164,5 +163,3 @@ class ApprovalTableNotificationCycleTest extends UnitTestCase {
     }
 
 }
-
-?>

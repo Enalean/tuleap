@@ -18,11 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-require_once dirname(__FILE__).'/../include/Docman_Item.class.php';
-require_once dirname(__FILE__).'/../include/Docman_PermissionsItemManager.class.php';
-require_once 'common/permission/PermissionsManager.class.php';
-require_once 'common/project/ProjectManager.class.php';
+require_once 'bootstrap.php';
 
 class Docman_PermissionsItemManager_Test extends TuleapTestCase {
     protected $permissions_manager;
@@ -237,4 +233,3 @@ class Docman_PermissionsItemManager_Test extends TuleapTestCase {
         $this->assertEqual($expected, $permissions);
     }
 }
-?>

@@ -2,7 +2,7 @@
 /*
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
  *
- * 
+ *
  * This file is a part of Codendi.
  *
  * Codendi is free software; you can redistribute it and/or modify
@@ -18,17 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
+require_once 'bootstrap.php';
 
-/*require_once(dirname(__FILE__).'/../include/Docman_VersionFactory.class.php');
-Mock::generatePartial('Docman_VersionFactory','Docman_VersionFactoryTest', array('_getVersionDao',));
 
-require_once(dirname(__FILE__).'/../include/Docman_VersionDao.class.php');
-Mock::generate('Docman_VersionDao');
-
-require_once('common/project/Project.class.php');
-Mock::generate('Project');*/
-
-require_once(dirname(__FILE__).'/../include/Docman_Actions.class.php');
 Mock::generatePartial('Docman_Actions','Docman_ActionsTest', array('_getItemFactory',
                                                                    '_getFileStorage',
                                                                    '_getActionsDeleteVisitor',
@@ -37,12 +29,12 @@ Mock::generatePartial('Docman_Actions','Docman_ActionsTest', array('_getItemFact
                                                                    '_getDocmanPermissionsManagerInstance',
                                                                    '_getUserManagerInstance'));
 
-require_once(dirname(__FILE__).'/../include/Docman_Controller.class.php');
+
 Mock::generate('Docman_Controller');
-require_once(dirname(__FILE__).'/../include/Docman_PermissionsManager.class.php');
+
 Mock::generate('Docman_PermissionsManager');
 
-require_once('common/valid/ValidFactory.class.php');
+
 
 Mock::generate('HTTPRequest');
 Mock::generate('Docman_ItemFactory');
@@ -54,7 +46,7 @@ Mock::generate('Docman_Version');
 Mock::generate('Docman_Item');
 Mock::generate('Docman_NotificationsManager');
 
-require_once('common/language/BaseLanguage.class.php');
+
 Mock::generate('BaseLanguage');
 
 Mock::generate('EventManager');
@@ -70,7 +62,7 @@ class DocmanActionsTest extends UnitTestCase {
     function setUp() {
         $GLOBALS['Language'] = new MockBaseLanguage($this);
     }
-    
+
     function tearDown() {
         unset($GLOBALS['Language']);
     }
@@ -108,7 +100,7 @@ class DocmanActionsTest extends UnitTestCase {
         // Run test
         $actions->deleteVersion();
     }
-    
+
     function testCanDeleteVersionOfFile() {
         // Definition acceptance criteria:
         // test is complete if there is an info flash message that tells version is deleted
@@ -192,7 +184,7 @@ class DocmanActionsTest extends UnitTestCase {
         // Run test
         $actions->deleteVersion();
     }
-    
+
     function testCannotDeleteNonExistantVersion() {
         // Definition acceptance criteria:
         // test is complete if there is an info flash message that tells version is deleted
@@ -463,4 +455,3 @@ class DocmanActionsTest extends UnitTestCase {
         $notificationsManager->expectCallCount('add', 1);
     }
 }
-?>

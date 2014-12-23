@@ -3,7 +3,7 @@
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2007
- * 
+ *
  * This file is a part of Codendi.
  *
  * Codendi is free software; you can redistribute it and/or modify
@@ -20,17 +20,14 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/mail/Mail.class.php');
-require_once('Docman_ApprovalTableDao.class.php');
-
 class Docman_ApprovalTableNotificationCycle {
     var $table;
     var $owner;
     var $item;
 
     private $notificationManager = null;
-    
-    function Docman_ApprovalTableNotificationCycle() {
+
+    function __construct() {
         $this->table = null;
         $this->owner = null;
         $this->item = null;
@@ -43,7 +40,7 @@ class Docman_ApprovalTableNotificationCycle {
             $withComments = true;
         }
 
-        $reviewer =& $this->_getUserById($review->getId());
+        $reviewer = $this->_getUserById($review->getId());
 
         // States
         if($review->getState() == PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED) {
@@ -167,7 +164,7 @@ class Docman_ApprovalTableNotificationCycle {
      * any emails.
      */
     function notifyNextReviewer() {
-        $dao =& $this->_getReviewerDao();
+        $dao = $this->_getReviewerDao();
 
         $dar = $dao->getFirstReviewerByStatus($this->table->getId(), PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED);
         if($dar && !$dar->isError() && $dar->rowCount() > 0) {
@@ -189,14 +186,14 @@ class Docman_ApprovalTableNotificationCycle {
     function notifyIndividual($reviewerId) {
         // enable item monitoring
         $this->enableMonitorForReviewer($reviewerId);
-        
-        $um =& $this->_getUserManager();
-        $reviewer =& $um->getUserById($reviewerId);
+
+        $um = $this->_getUserManager();
+        $reviewer = $um->getUserById($reviewerId);
 
         $mail = $this->getNotifReviewer($reviewer);
         return $mail->send();
     }
-    
+
     /**
      * Enable the monitoring of an item for a given reviewer
      */
@@ -204,7 +201,7 @@ class Docman_ApprovalTableNotificationCycle {
         if (($this->notificationManager !== null) && !$this->notificationManager->exist($reviewerId, $this->item->getId())) {
             $this->notificationManager->add($reviewerId, $this->item->getId());
         }
-    } 
+    }
 
     //
     //
@@ -215,29 +212,7 @@ class Docman_ApprovalTableNotificationCycle {
      * Not in use today.
      */
     function changeItemStatus($reviewer, $status) {
-        // Update status
-        // This should probably be wrapped somewhere in Docman_MetadataFactory
-        /*
-        $sBo =& $this->_getSettingsBo($this->item->getGroupId());
-        if($sBo->getMetadataUsage('status')
-           && $this->item->getStatus() != $status) {
-            $oldStatus = $this->item->getStatus();
-            $this->item->setStatus($status);
-            $fItem = $this->_getItemFactory();
-            $fItem->update($this->item->toRow());
-
-            // raise event
-            $user =& $this->_getUserById($reviewer->getId());
-            $logEventParam = array('group_id' => $this->item->getGroupId(),
-                                   'item'     => &$this->item,
-                                   'user'     => &$user,
-                                   'old_value' => $oldStatus,
-                                   'new_value' => $status,
-                                   'field'     => 'status');
-            $event_manager =& $this->_getEventManager();
-            $event_manager->processEvent('plugin_docman_event_metadata_update',
-                                         $logEventParam);
-                                         }*/
+       // TBD
     }
 
     function getReviewUrl() {
@@ -246,8 +221,8 @@ class Docman_ApprovalTableNotificationCycle {
         return $reviewUrl;
     }
 
-    function &_getEmailToOwner() {
-        $mail =& $this->_getMail();
+    function _getEmailToOwner() {
+        $mail = $this->_getMail();
         $mail->setFrom($GLOBALS['sys_noreply']);
         $mail->setTo($this->owner->getEmail());
         return $mail;
@@ -259,7 +234,7 @@ class Docman_ApprovalTableNotificationCycle {
     function getNotifRejected($reviewer) {
         $reviewUrl = $this->getReviewUrl();
 
-        $mail =& $this->_getEmailToOwner();
+        $mail = $this->_getEmailToOwner();
         $mail->setSubject($GLOBALS['Language']->getText('plugin_docman', 'approval_notif_reject_mail_subject', array($GLOBALS['sys_name'],
                                                                                   $this->item->getTitle())));
         $mail->setBody($GLOBALS['Language']->getText('plugin_docman', 'approval_notif_reject_mail_body', array($this->item->getTitle(),
@@ -280,7 +255,7 @@ class Docman_ApprovalTableNotificationCycle {
             $comment = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_approve_user_mail_com');
         }
 
-        $mail =& $this->_getEmailToOwner();
+        $mail = $this->_getEmailToOwner();
         $mail->setSubject($GLOBALS['Language']->getText('plugin_docman', 'approval_notif_approve_user_mail_subject', array($GLOBALS['sys_name'],
                                                                                         $this->item->getTitle(),
                                                                                         $comment)));
@@ -304,7 +279,7 @@ class Docman_ApprovalTableNotificationCycle {
             $comment = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_approve_user_mail_com');
         }
 
-        $mail =& $this->_getEmailToOwner();
+        $mail = $this->_getEmailToOwner();
         $mail->setSubject($GLOBALS['Language']->getText('plugin_docman', 'approval_notif_approve_mail_subject', array($GLOBALS['sys_name'],
                                                                                    $this->item->getTitle(),
                                                                                    $comment)));
@@ -322,7 +297,7 @@ class Docman_ApprovalTableNotificationCycle {
     function getNotifReviewDeclined($reviewer) {
         $reviewUrl = $this->getReviewUrl();
 
-        $mail =& $this->_getEmailToOwner();
+        $mail = $this->_getEmailToOwner();
         $mail->setSubject($GLOBALS['Language']->getText('plugin_docman', 'approval_notif_declined_mail_subject', array($GLOBALS['sys_name'],
                                                                                     $this->item->getTitle())));
         $mail->setBody($GLOBALS['Language']->getText('plugin_docman', 'approval_notif_declined_mail_body', array($this->item->getTitle(),
@@ -344,7 +319,7 @@ class Docman_ApprovalTableNotificationCycle {
             $commentSeq .= "\n";
         }
 
-        $mail =& $this->_getEmailToOwner();
+        $mail = $this->_getEmailToOwner();
         $mail->setSubject($GLOBALS['Language']->getText('plugin_docman', 'approval_notif_comment_mail_subject', array($GLOBALS['sys_name'],
                                                                                    $this->item->getTitle())));
         $mail->setBody($GLOBALS['Language']->getText('plugin_docman', 'approval_notif_comment_mail_body', array($this->item->getTitle(),
@@ -385,7 +360,7 @@ class Docman_ApprovalTableNotificationCycle {
         }
 
         $subj = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_subject', array($GLOBALS['sys_name'], $this->item->getTitle()));
-        $body = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_body', array($this->item->getTitle(), 
+        $body = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_body', array($this->item->getTitle(),
                                                               $group->getPublicName(),
                                                               $this->owner->getRealName(),
                                                               $itemUrl,
@@ -394,7 +369,7 @@ class Docman_ApprovalTableNotificationCycle {
                                                               $reviewUrl,
                                                               $this->owner->getEmail()));
 
-        $mail =& $this->_getMail();
+        $mail = $this->_getMail();
         $mail->setFrom($GLOBALS['sys_noreply']);
         $mail->setTo($reviewer->getEmail());
         $mail->setSubject($subj);
@@ -444,63 +419,54 @@ class Docman_ApprovalTableNotificationCycle {
     //
 
     function setTable(&$table) {
-        $this->table =& $table;
+        $this->table = $table;
     }
 
-    function &getTable() {
+    function getTable() {
         return $this->table;
     }
 
     function setOwner(&$owner) {
-        $this->owner =& $owner;
+        $this->owner = $owner;
     }
 
     function setItem($item){
-        $this->item =& $item;
+        $this->item = $item;
     }
 
     //
     // Class accessor
     //
 
-    function &_getReviewerDao() {
-        $dao = new Docman_ApprovalTableReviewerDao(CodendiDataAccess::instance());
-        return $dao;
+    function _getReviewerDao() {
+        return new Docman_ApprovalTableReviewerDao(CodendiDataAccess::instance());
     }
 
-    function &_getMail() {
-        $mail = new Mail();
-        return $mail;
+    function _getMail() {
+        return new Mail();
     }
 
-    function &_getUserManager() {
-        $um =& UserManager::instance();
-        return $um;
+    function _getUserManager() {
+        return UserManager::instance();
     }
 
-    function &_getUserById($id) {
-        $um =& UserManager::instance();
-        $user =& $um->getUserById($id);
-        return $user;
+    function _getUserById($id) {
+        return UserManager::instance()->getUserById($id);
     }
 
-    function &_getItemFactory() {
-        $itemFactory =& new Docman_ItemFactory($this->item->getGroupId());
-        return $itemFactory;
+    function _getItemFactory() {
+        return new Docman_ItemFactory($this->item->getGroupId());
     }
 
-    function &_getEventManager() {
-        $em =& EventManager::instance();
-        return $em;
+    function _getEventManager() {
+        return EventManager::instance();
     }
 
-    function &_getSettingsBo($groupId) {
-        $sBo =& Docman_SettingsBo::instance($groupId);
-        return $sBo;
+    function _getSettingsBo($groupId) {
+        return Docman_SettingsBo::instance($groupId);
     }
-    
+
     function setNotificationManager($notificationManager) {
         $this->notificationManager = $notificationManager;
     }
 }
-?>

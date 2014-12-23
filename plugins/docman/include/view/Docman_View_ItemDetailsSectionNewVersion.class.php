@@ -74,10 +74,16 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
     function visitWiki(&$item, $params = array()) {
         return $this->visitDocument($item, $params);
     }
+
     function visitLink(&$item, $params = array()) {
-        return $this->visitDocument($item, $params);
+        return $this->visitVersionnedItem($item, $params);
     }
+
     function visitFile(&$item, $params = array()) {
+        return $this->visitVersionnedItem($item, $params);
+    }
+
+    private function visitVersionnedItem($item, $params = array()) {
         $label = '';
         if (isset($this->_controller->_viewParams['label'])) {
             $label = $this->_controller->_viewParams['label'];
@@ -132,6 +138,7 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
         $GLOBALS['Response']->includeFooterJavascriptSnippet($snippet);
         return $content;
     }
+
     function visitEmbeddedFile(&$item, $params = array()) {
         return $this->visitFile($item, $params);
     }

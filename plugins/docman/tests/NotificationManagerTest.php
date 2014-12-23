@@ -18,7 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../include/Docman_NotificationsManager.class.php';
+require_once 'bootstrap.php';
+
 Mock::generatePartial('Docman_NotificationsManager',
                       'Docman_NotificationsManager_TestVersion',
                       array('_getMail',
@@ -28,29 +29,20 @@ Mock::generatePartial('Docman_NotificationsManager',
                             'getListeningUsers',
                             '_getLanguageForUser'));
 
-require_once dirname(__FILE__).'/../include/Docman_ItemFactory.class.php';
 Mock::generate('Docman_ItemFactory');
-require_once dirname(__FILE__).'/../include/Docman_Item.class.php';
 Mock::generate('Docman_Item');
-require_once dirname(__FILE__).'/../include/Docman_Path.class.php';
 Mock::generate('Docman_Path');
 
-require_once 'common/user/User.class.php';
 Mock::generate('PFUser');
 
-require_once 'common/mail/Mail.class.php';
 Mock::generate('Mail');
 
-require_once 'common/project/Project.class.php';
 Mock::generate('Project');
 
-require_once 'common/include/Feedback.class.php';
 Mock::generate('Feedback');
 
-require_once 'common/dao/NotificationsDao.class.php';
 Mock::generate('NotificationsDao');
 
-require_once 'common/language/BaseLanguage.class.php';
 Mock::generate('BaseLanguage');
 
 class Docman_NotificationsManagerTest extends UnitTestCase {
@@ -92,12 +84,12 @@ class Docman_NotificationsManagerTest extends UnitTestCase {
         // First message fail
         $mail1     = new MockMail($this);
         $mail1->setReturnValue('send', false);
-        
+
         // Second succeed
         $mail2     = new MockMail($this);
         $mail2->setReturnValue('send', true);
 
-        // Raises an error 
+        // Raises an error
         $feedback->expectOnce('log', array('warning', '*'));
 
         $project  = new MockProject($this);
@@ -188,5 +180,3 @@ class Docman_NotificationsManagerTest extends UnitTestCase {
     }
 
 }
-
-?>

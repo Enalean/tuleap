@@ -22,7 +22,7 @@
  *
  */
 
-require_once(dirname(__FILE__).'/../include/Docman_Error_PermissionDenied.class.php');
+require_once 'bootstrap.php';
 
 class Docman_ErrorPermissionDeniedTest extends UnitTestCase {
 
@@ -103,5 +103,3 @@ class Docman_ErrorPermissionDeniedTest extends UnitTestCase {
     }
 
 }
-
-?>

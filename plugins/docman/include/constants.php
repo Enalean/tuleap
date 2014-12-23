@@ -64,3 +64,27 @@ define('PLUGIN_DOCMAN_EVENT_NEW_FOLDER', 'plugin_docman_event_new_folder');
  *      'item' => Docman_Item
  */
 define('PLUGIN_DOCMAN_EVENT_COPY', 'plugin_docman_event_copy');
+
+/**
+ * Event raised when a docman link item ihas new version
+ *
+ * Parameters:
+ *      'item'    => Docman_Link
+ *      'version' => Docman_LinkVersion
+ */
+define('PLUGIN_DOCMAN_EVENT_NEW_LINKVERSION', 'plugin_docman_event_new_linkVersion');
+
+define('PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED', 0);
+define('PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED',  1);
+define('PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED',   2);
+define('PLUGIN_DOCMAN_APPROVAL_TABLE_DELETED',  3);
+
+define('PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET',   0);
+define('PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED', 1);
+define('PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED', 2);
+define('PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED', 3);
+define('PLUGIN_DOCMAN_APPROVAL_STATE_DECLINED', 4);
+
+define('PLUGIN_DOCMAN_APPROVAL_NOTIF_DISABLED',   0);
+define('PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE',  1);
+define('PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL', 2);

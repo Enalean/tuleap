@@ -28,14 +28,7 @@ class SystemEvent_FULLTEXTSEARCH_DOCMAN_APPROVAL_TABLE_COMMENT extends SystemEve
      */
     public function processItem(Docman_Item $item) {
         try {
-            $version_nb  = (int)$this->getRequiredParameter(2);
-            $version = $this->getVersion($item, $version_nb);
-            if (! $version) {
-                 $this->error('Docman Item Version not found: '. $item->getId() . ':'.$version_nb);
-                return false;
-            }
-
-            $this->actions->indexDocumentApprovalComment($item, $version);
+            $this->actions->indexDocumentApprovalComment($item);
             return true;
         } catch (Exception $e) {
             $this->error($e->getMessage());

@@ -36,12 +36,14 @@ abstract class SystemEvent_FULLTEXTSEARCH_DOCMANTest extends TuleapTestCase {
 
         $this->version_factory = mock('Docman_VersionFactory');
         stub($this->version_factory)->getSpecificVersion($this->item, 2)->returns($this->version);
+
+        $this->link_version_factory = mock('Docman_LinkVersionFactory');
     }
 
     public function aSystemEventWithParameter($parameters) {
         $id = $type = $owner = $priority = $status = $create_date = $process_date = $end_date = $log = null;
         $event = new $this->klass($id, $type, $owner, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log);
-        $event->injectDependencies($this->actions, $this->item_factory, $this->version_factory);
+        $event->injectDependencies($this->actions, $this->item_factory, $this->version_factory, $this->link_version_factory);
         return $event;
     }
 

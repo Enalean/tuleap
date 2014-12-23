@@ -22,8 +22,8 @@
  *
  *
  */
-require_once(dirname(__FILE__).'/../include/Docman_PermissionsManager.class.php');
-require_once('common/user/User.class.php');
+
+require_once 'bootstrap.php';
 
 Mock::generatePartial('Docman_PermissionsManager', 'Docman_PermissionsManagerTestVersion', array('_getPermissionManagerInstance', '_isUserDocmanAdmin', 'getDao', '_itemIsLockedForUser'));
 Mock::generate('PFUser');
@@ -777,5 +777,3 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
 
        //function testGetProjectAdminUsersSuccess() {
 }
-
-?>
