@@ -1,3 +1,6 @@
+Version 2.26.56 - Tuleap 7.9
+    * story #7688 keep versions of links documents
+
 Version 2.26.55 - Tuleap 7.8
     * request #7651 - Migration from Docman v1 does not work if French only platform
 
