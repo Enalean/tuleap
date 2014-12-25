@@ -39,7 +39,7 @@ class Admin_UserListExporter {
      * @param String $sort_order
      *
      */
-    public function exportUserList($user_name_search, $current_sort_header, $sort_order) {
+    public function exportUserList($user_name_search, $current_sort_header, $sort_order, $status_values) {
         global $Language;
         header ('Content-Type: text/csv');
         header ('Content-Disposition:attachment; filename=users_list.csv');
@@ -52,7 +52,7 @@ class Admin_UserListExporter {
                                   'status'     => $Language->getText('admin_userlist', 'status'));
         echo build_csv_header($this->col_list, $documents_title).$eol;
         $dao = new UserDao(CodendiDataAccess::instance());
-        $result = $dao->listAllUsers($user_name_search, 0, 0, $current_sort_header, $sort_order);
+        $result = $dao->listAllUsers($user_name_search, 0, 0, $current_sort_header, $sort_order, $status_values);
         $users  = $result['users'];
         echo $this->buildCsvBody($users);
     }
