@@ -59,7 +59,6 @@ class cardwallPlugin extends Plugin {
             $this->addHook(TRACKER_EVENT_MANAGE_SEMANTICS);
             $this->addHook(TRACKER_EVENT_SEMANTIC_FROM_XML);
             $this->addHook(TRACKER_EVENT_GET_SEMANTIC_FACTORIES);
-            $this->addHook(Event::REST_RESOURCES);
 
             if (defined('AGILEDASHBOARD_BASE_DIR')) {
                 $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
@@ -72,6 +71,7 @@ class cardwallPlugin extends Plugin {
                 $this->addHook(AGILEDASHBOARD_EVENT_REST_GET_MILESTONE);
                 $this->addHook(AGILEDASHBOARD_EVENT_IS_CARDWALL_ENABLED);
                 $this->addHook(AGILEDASHBOARD_EVENT_GET_CARD_FIELDS);
+                $this->addHook(AGILEDASHBOARD_EVENT_REST_RESOURCES);
             }
         }
         return parent::getHooksAndCallbacks();
@@ -561,12 +561,8 @@ class cardwallPlugin extends Plugin {
         }
     }
 
-     /**
-     * @see REST_RESOURCES
-     */
-    public function rest_resources($params) {
+    public function agiledashboard_event_rest_resources($params) {
         $injector = new Cardwall_REST_ResourcesInjector();
         $injector->populate($params['restler']);
     }
 }
-?>

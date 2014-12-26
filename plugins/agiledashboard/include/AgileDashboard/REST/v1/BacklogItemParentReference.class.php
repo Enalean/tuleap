@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2014. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,32 +19,13 @@
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use \Tuleap\Tracker\REST\TrackerReference;
-use \Tuleap\REST\ResourceReference;
-use \Tracker_Artifact;
-use \Tuleap\REST\JsonCast;
+use Tuleap\Tracker\REST\TrackerReference;
+use Tuleap\REST\ResourceReference;
+use Tuleap\REST\JsonCast;
+use Tuleap\REST\v1\BacklogItemParentReferenceBase;
+use Tracker_Artifact;
 
-class BacklogItemParentReference {
-
-    /**
-     * @var int ID of the backlog item
-     */
-    public $id;
-
-    /**
-     * @var String
-     */
-    public $label;
-
-    /**
-     * @var string URI of backlog item
-     */
-    public $uri;
-
-    /**
-     * @var \Tuleap\Tracker\REST\TrackerReference
-     */
-    public $tracker;
+class BacklogItemParentReference extends BacklogItemParentReferenceBase {
 
     public function build(Tracker_Artifact $backlog_item) {
         $this->id    = JsonCast::toInt($backlog_item->getId());

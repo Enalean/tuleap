@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2014. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,53 +18,17 @@
  */
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use \Planning;
-use \Tuleap\REST\JsonCast;
-use \Tuleap\REST\ResourceReference;
-use \Tuleap\Project\REST\ProjectReference;
-use \Tuleap\Tracker\REST\TrackerRepresentation;
+use Planning;
+use Tuleap\REST\JsonCast;
+use Tuleap\REST\ResourceReference;
+use Tuleap\REST\v1\PlanningRepresentationBase;
+use Tuleap\Project\REST\ProjectReference;
+use Tuleap\Tracker\REST\TrackerRepresentation;
 
 /**
  * Basic representation of a planning
  */
-class PlanningRepresentation {
-
-    const ROUTE = 'plannings';
-
-    /**
-     * @var int
-     */
-    public $id;
-
-    /**
-     * @var string
-     */
-    public $uri;
-
-    /**
-     * @var String
-     */
-    public $label;
-
-    /**
-     * @var Tuleap\REST\ResourceReference
-     */
-    public $project;
-
-    /**
-     * @var Tuleap\REST\ResourceReference
-     */
-    public $milestone_tracker;
-
-    /**
-     * @var Array {@type Tuleap\REST\ResourceReference}
-     */
-    public $backlog_trackers;
-
-    /**
-     * @var string
-     */
-    public $milestones_uri;
+class PlanningRepresentation extends PlanningRepresentationBase {
 
     public function build(Planning $planning) {
         $this->id                = JsonCast::toInt($planning->getId());

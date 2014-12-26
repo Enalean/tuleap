@@ -19,24 +19,24 @@
  */
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use \PFUser;
-use \Project;
-use \PlanningFactory;
-use \Tracker_ArtifactFactory;
-use \Tracker_FormElementFactory;
-use \TrackerFactory;
-use \Planning_MilestoneFactory;
-use \AgileDashboard_Milestone_Backlog_BacklogStrategyFactory;
-use \AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
-use \AgileDashboard_Milestone_Backlog_BacklogItemBuilder;
-use \AgileDashboard_BacklogItemDao;
-use \AgileDashboard_Milestone_MilestoneStatusCounter;
-use \Tracker_ArtifactDao;
-use \ArtifactIsNotInOpenAndUnassignedBacklogItemsException;
-use \IdsFromBodyAreNotUniqueException;
-use \Luracast\Restler\RestException;
-use \Tuleap\REST\Header;
-use \Tracker_Artifact_PriorityDao;
+use PFUser;
+use Project;
+use PlanningFactory;
+use Tracker_ArtifactFactory;
+use Tracker_FormElementFactory;
+use TrackerFactory;
+use Planning_MilestoneFactory;
+use AgileDashboard_Milestone_Backlog_BacklogStrategyFactory;
+use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
+use AgileDashboard_Milestone_Backlog_BacklogItemBuilder;
+use AgileDashboard_BacklogItemDao;
+use AgileDashboard_Milestone_MilestoneStatusCounter;
+use Tracker_ArtifactDao;
+use IdsFromBodyAreNotUniqueException;
+use Luracast\Restler\RestException;
+use Tuleap\REST\Header;
+use Tracker_Artifact_PriorityDao;
+use Tuleap\REST\v1\OrderRepresentationBase;
 
 /**
  * Wrapper for backlog related REST methods
@@ -156,7 +156,7 @@ class ProjectBacklogResource {
         $this->sendAllowHeaders();
     }
 
-    public function patch(PFUser $user, Project $project, OrderRepresentation $order, array $add = null) {
+    public function patch(PFUser $user, Project $project, OrderRepresentationBase $order, array $add = null) {
         if ($add) {
             try {
                 $this->resources_patcher->removeArtifactFromSource($user, $add);
@@ -202,4 +202,3 @@ class ProjectBacklogResource {
         Header::allowOptionsGetPut();
     }
 }
-?>

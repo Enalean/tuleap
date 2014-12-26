@@ -858,4 +858,12 @@ class Event {
      *     'activated' => boolean
      */
     const REST_PROJECT_OPTIONS_GIT = 'rest_project_options_git';
+
+    /**
+     * Event raised to know if agiledashboard plugin is activated for REST
+     *
+     * Parameters:
+     *     'available' => boolean
+     */
+    const REST_PROJECT_AGILE_ENDPOINTS = 'rest_project_agile_endpoints';
 }

@@ -149,3 +149,8 @@ define('AGILEDASHBOARD_EVENT_IS_CARDWALL_ENABLED', 'agiledashboard_event_is_card
  * 'card_fields_semantic' => Tracker card fields semantic
  */
 define('AGILEDASHBOARD_EVENT_GET_CARD_FIELDS', 'agiledashboard_event_get_card_fields');
+
+/**
+ * Get Cardwall REST resources only if agiledashboard is activated
+ */
+define('AGILEDASHBOARD_EVENT_REST_RESOURCES', 'agiledashboard_event_rest_resources');

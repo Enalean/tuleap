@@ -2,8 +2,6 @@
 /**
  * Copyright (c) Enalean, 2014. All Rights Reserved.
  *
- * This file is a part of Tuleap.
- *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -15,10 +13,23 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-namespace Tuleap\AgileDashboard\REST\v1;
+namespace Tuleap\REST\v1;
 
-use Tuleap\REST\v1\OrderRepresentationBase;
+/**
+ * Basic reference of a planning
+ */
+class PlanningReferenceBase {
 
-class OrderRepresentation extends OrderRepresentationBase {}
+    /**
+     * @var int
+     */
+    public $id;
+
+    /**
+     * @var string
+     */
+    public $uri;
+}

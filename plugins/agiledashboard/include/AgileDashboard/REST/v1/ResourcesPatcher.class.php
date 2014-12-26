@@ -20,6 +20,7 @@
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
+use Tuleap\REST\v1\OrderRepresentationBase;
 use Luracast\Restler\RestException;
 use Tracker_ArtifactFactory;
 use Tracker_Artifact_PriorityDao;
@@ -57,8 +58,8 @@ class ResourcesPatcher {
         $this->priority_dao->commit();
     }
 
-    public function updateArtifactPriorities(OrderRepresentation $order) {
-        if ($order->direction === OrderRepresentation::BEFORE) {
+    public function updateArtifactPriorities(OrderRepresentationBase $order) {
+        if ($order->direction === OrderRepresentationBase::BEFORE) {
             $this->priority_dao->moveListOfArtifactsBefore($order->ids, $order->compared_to);
         } else {
             $this->priority_dao->moveListOfArtifactsAfter($order->ids, $order->compared_to);

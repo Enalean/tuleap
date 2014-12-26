@@ -71,6 +71,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->_addHook(Event::EXPORT_XML_PROJECT);
             $this->addHook(Event::REST_RESOURCES);
             $this->addHook(Event::REST_RESOURCES_V2);
+            $this->addHook(Event::REST_PROJECT_AGILE_ENDPOINTS);
             $this->addHook(Event::REST_GET_PROJECT_PLANNINGS);
             $this->addHook(Event::REST_OPTIONS_PROJECT_PLANNINGS);
             $this->addHook(Event::REST_PROJECT_RESOURCES);
@@ -615,6 +616,11 @@ class AgileDashboardPlugin extends Plugin {
     public function rest_resources($params) {
         $injector = new AgileDashboard_REST_ResourcesInjector();
         $injector->populate($params['restler']);
+
+        EventManager::instance()->processEvent(
+            AGILEDASHBOARD_EVENT_REST_RESOURCES,
+            $params
+        );
     }
 
     /**
@@ -838,6 +844,10 @@ class AgileDashboardPlugin extends Plugin {
         if ($pane_info_identifier->isPaneAPlanningV2($request->get('pane'))) {
             $params['use_standard'] = false;
         }
+    }
+
+    public function rest_project_agile_endpoints($params) {
+        $params['available'] = true;
     }
 
     /**

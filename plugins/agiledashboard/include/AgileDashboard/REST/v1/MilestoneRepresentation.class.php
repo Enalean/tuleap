@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2014. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,152 +18,20 @@
  */
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use \Tuleap\Project\REST\ProjectReference;
-use \Planning_Milestone;
-use \Tuleap\Tracker\REST\TrackerReference;
-use \Tuleap\Tracker\REST\Artifact\ArtifactReference;
-use \Tuleap\Tracker\REST\Artifact\BurndownRepresentation;
-use \Tuleap\REST\JsonCast;
+use Tuleap\Project\REST\ProjectReference;
+use Tuleap\REST\v1\MilestoneRepresentationBase;
+use Planning_Milestone;
+use Tuleap\Tracker\REST\TrackerReference;
+use Tuleap\Tracker\REST\Artifact\ArtifactReference;
+use Tuleap\Tracker\REST\Artifact\BurndownRepresentation;
+use Tuleap\REST\JsonCast;
 
-use \AgileDashboard_MilestonesCardwallRepresentation;
+use AgileDashboard_MilestonesCardwallRepresentation;
 
 /**
  * Representation of a milestone
  */
-class MilestoneRepresentation {
-
-    const ROUTE = 'milestones';
-
-    /**
-     * @var int
-     */
-    public $id;
-
-    /**
-     * @var String
-     */
-    public $uri;
-
-    /**
-     * @var String
-     */
-    public $label;
-
-    /**
-     * @var int
-     */
-    public $submitted_by;
-
-    /**
-     * @var String
-     */
-    public $submitted_on;
-
-    /**
-     * @var PlanningReference
-     */
-    public $planning;
-
-    /**
-     * @var Tuleap\REST\ResourceReference
-     */
-    public $project;
-
-    /**
-     * @var String
-     */
-    public $start_date;
-
-    /**
-     * @var String
-     */
-    public $end_date;
-
-    /**
-     * @var int
-     */
-    public $number_days_since_start;
-
-    /**
-     * @var int
-     */
-    public $number_days_until_end;
-
-    /**
-     * @var float
-     */
-    public $capacity;
-
-    /**
-     * @var float
-     */
-    public $remaining_effort;
-
-    /**
-     * @var string
-     */
-    public $status_value;
-
-    /**
-     * @var string
-     */
-    public $semantic_status;
-
-    /**
-     * @var \Tuleap\AgileDashboard\REST\v1\MilestoneParentReference | null
-     */
-    public $parent;
-
-    /**
-     * @var \Tuleap\Tracker\REST\Artifact\ArtifactReference
-     */
-    public $artifact;
-
-    /**
-     * @var string
-     */
-    public $sub_milestones_uri;
-
-    /**
-     * @var string
-     */
-    public $backlog_uri;
-
-    /**
-     * @var string
-     */
-    public $content_uri;
-
-    /**
-     * @var string
-     */
-    public $cardwall_uri = null;
-
-    /**
-     * @var string
-     */
-    public $burndown_uri = null;
-
-    /**
-     * @var string Date, when the last modification occurs
-     */
-    public $last_modified_date;
-
-    /**
-     * @var array
-     */
-    public $status_count;
-
-    /**
-     * @var array
-     */
-    public $resources = array(
-        'milestones' => null,
-        'backlog'    => null,
-        'content'    => null,
-        'cardwall'   => null,
-        'burndown'   => null,
-    );
+class MilestoneRepresentation extends MilestoneRepresentationBase {
 
     public function build(Planning_Milestone $milestone, array $status_count, array $backlog_trackers) {
         $this->id               = JsonCast::toInt($milestone->getArtifactId());
