@@ -571,7 +571,7 @@ class UserDao extends DataAccessObject {
                             return;
                         } else {
                             $condition = 'user.user_id = '.$this->da->escapeInt($row['user_id']);
-                            return $this->suspendAccount($condition);	
+                            return $this->suspendAccount($condition);
                         }
                     }
                     
@@ -655,22 +655,40 @@ class UserDao extends DataAccessObject {
      * @param String $pattern
      * @param Integer $offset
      * @param Integer $limit
-     * 
+     *
      * @return Array
      */
     function listAllUsers ($pattern = "", $offset, $limit) {
         $stm = "";
         if ($pattern != "") {
             $pattern = $this->da->quoteSmart('%'.$pattern.'%');
-            $stm = ' WHERE (user_name LIKE '.$pattern;
-            $stm .= '  OR user_id LIKE '.$pattern;
-            $stm .= '  OR realname LIKE '.$pattern;
-            $stm .= '  OR email LIKE '.$pattern.')';
+            $stm = ' WHERE (user.user_name LIKE '.$pattern;
+            $stm .= '  OR user.user_id LIKE '.$pattern;
+            $stm .= '  OR user.realname LIKE '.$pattern;
+            $stm .= '  OR user.email LIKE '.$pattern.')';
         }
-    
-        $sql='SELECT SQL_CALC_FOUND_ROWS * FROM user ' 
-             .$stm.' ORDER BY user_name 
-               ASC LIMIT '.$this->da->escapeInt($offset).', '.$this->da->escapeInt($limit);
+        $stm_count_admin = " LEFT JOIN (
+                                        SELECT count(admin_flags) as admin_of, user_id
+                                         FROM user_group
+                                         INNER JOIN groups USING(group_id)
+                                         WHERE groups.status = 'A' AND admin_flags='A'
+                                         GROUP BY user_id
+                                        ) as A
+                               ON (A.user_id = user.user_id)";
+
+        $stm_count_member = " LEFT JOIN (
+                                        SELECT count(group_id) as member_of, user_id
+                                         FROM user_group
+                                         INNER JOIN groups USING(group_id)
+                                         WHERE groups.status = 'A'
+                                         GROUP BY user_id
+                                        ) as R
+                               ON (R.user_id = user.user_id)";
+
+        $sql='SELECT SQL_CALC_FOUND_ROWS * FROM user';
+        $sql.=$stm_count_admin.$stm_count_member.$stm;
+        $sql.=' ORDER BY user_name ASC';
+        $sql.=' LIMIT '.$this->da->escapeInt($offset).', '.$this->da->escapeInt($limit);
         
         $res = $this->retrieve($sql);
         
