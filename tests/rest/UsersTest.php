@@ -95,6 +95,31 @@ class UsersTest extends RestBase {
         $this->assertContains('ug_102', $json);
     }
 
+    public function testUserCanUpdateAnotherUserIfSheHasDelegatedPermissions() {
+        $value = json_encode(array(
+            'values' => array(
+                    'status' => "R",
+            )
+        ));
+        $response = $this->getResponseByName(TestDataBuilder::ADMIN_USER_NAME, $this->client->patch('users/'.TestDataBuilder::TEST_USER_2_ID, null, $value));
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $response = $this->getResponseByName(TestDataBuilder::ADMIN_USER_NAME, $this->client->get('users/'.TestDataBuilder::TEST_USER_2_ID));
+        $this->assertEquals($response->getStatusCode(), 200);
+        $json = $response->json();
+        $this->assertEquals(TestDataBuilder::TEST_USER_2_ID, $json['id']);
+        $this->assertEquals('users/'.TestDataBuilder::TEST_USER_2_ID, $json['uri']);
+        $this->assertEquals("R", $json['status']);
+
+        $value = json_encode(array(
+            'values' => array(
+                    'status' => "A",
+            )
+        ));
+        $response = $this->getResponseByName(TestDataBuilder::ADMIN_USER_NAME, $this->client->patch('users/'.TestDataBuilder::TEST_USER_2_ID, null, $value));
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
     public function testSiteAdminCanSeeGroupOfAnyUser() {
         $response = $this->getResponseByName(TestDataBuilder::ADMIN_USER_NAME, $this->client->get('users/'.TestDataBuilder::TEST_USER_2_ID.'/membership'));
         $this->assertEquals($response->getStatusCode(), 200);

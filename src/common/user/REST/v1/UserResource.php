@@ -29,6 +29,7 @@ use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\UserManager as RestUserManager;
 use Luracast\Restler\RestException;
 use User_ForgeUserGroupPermission_RetrieveUserMembershipInformation;
+use User_ForgeUserGroupPermission_UserManagement;
 use User_ForgeUserGroupPermissionsManager;
 use User_ForgeUserGroupPermissionsDao;
 
@@ -232,8 +233,84 @@ class UserResource {
             return true;
         }
 
-        return $this->forge_ugroup_permissions_manager->doesUserHavePermission(
+        return ($this->forge_ugroup_permissions_manager->doesUserHavePermission(
             $watcher, new User_ForgeUserGroupPermission_RetrieveUserMembershipInformation()
+        ) || $this->forge_ugroup_permissions_manager->doesUserHavePermission(
+            $watcher, new User_ForgeUserGroupPermission_UserManagement()
+        ));
+    }
+
+
+    /**
+     * Partial update of user details
+     *
+     * Things to take into account:
+     * <ol>
+     *  <li>You don't need to set all 'values' of the user, you can restrict to the modified ones</li>
+     *  <li>Possible fields are:"email", "real_name", "username" and "status"
+     *  <li>Examples: To update a user status and username, the values must be an array:
+     * <pre>
+     * {
+     * "status" : "S"
+     * ,
+     *
+     * "username": "johnd"
+     * }
+     * </pre>
+     * </li>
+     * </ol>
+     *
+     * @url PATCH {id}
+     * @param string                          $id        Id of the user
+     * @param Array                           $values    User fields values
+     *
+     */
+        protected function patchUserDetails($id, array $values) {
+            $watchee = $this->getUserById($id);
+            $watcher = $this->rest_user_manager->getCurrentUser();
+            if ($this->checkUserCanUpdateOtherUser($watcher, $watchee)) {
+                foreach ($values as $key => $value){
+                    switch ($key) {
+                        case "status":
+                            $watchee->setStatus($value);
+                        break;
+
+                        case "email":
+                            $watchee->setEmail($value);
+                        break;
+
+                        case "real_name":
+                            $watchee->setRealName($value);
+                        break;
+
+                        case "username":
+                            $watchee->setUserName($value);
+                        break;
+
+                        default:
+                            break;
+                    }
+                }
+                return $this->user_manager->updateDb($watchee);
+            }
+            throw new RestException(403, "Cannot update other's details");
+        }
+
+    /**
+     * Check if user has permission to update user details
+     * @param PFUser $watcher
+     * @param PFUSER $watchee
+     *
+     * @return Boolean
+     *
+     */
+     private function checkUserCanUpdateOtherUser(PFUser $watcher, PFuser $watchee) {
+        if ($watcher->isSuperUser()) {
+            return true;
+        }
+
+        return $this->forge_ugroup_permissions_manager->doesUserHavePermission(
+            $watcher, new User_ForgeUserGroupPermission_UserManagement()
         );
     }
 
@@ -248,6 +325,6 @@ class UserResource {
     }
 
     private function sendAllowHeaders() {
-        Header::allowOptionsGet();
+        Header::allowOptionsGetPatch();
     }
 }

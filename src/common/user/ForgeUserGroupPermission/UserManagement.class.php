@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All rights reserved
+ * Copyright (c) STMicroelectronics, 2014. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,21 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once 'pre.php';
-require_once dirname(__FILE__).'/../autoload.php';
+class User_ForgeUserGroupPermission_UserManagement implements User_ForgeUserGroupPermission {
 
-$data_builder = new TestDataBuilder();
-$data_builder
-    ->activatePlugins()
-    ->generateUsers()
-    ->generateProject()
-    ->delegatePermissionsToRetrieveMembership()
-    ->delegatePermissionsToManageUser()
-    ->generateMilestones()
-    ->generateContentItems()
-    ->generateBacklogItems()
-    ->generateTopBacklogItems()
-    ->generateKanban()
-    ->deleteTracker()
-    ->activateDebug()
-    ->initPlugins();
+    const ID = 5;
+
+    public function getId() {
+        if (self::ID) {
+            return self::ID;
+        }
+    }
+
+    public function getName() {
+        return $GLOBALS['Language']->getText('usergroup_forge_permission', 'user_management_name');
+    }
+
+    public function getDescription() {
+        return $GLOBALS['Language']->getText('usergroup_forge_permission', 'user_management_description');
+    }
+}
