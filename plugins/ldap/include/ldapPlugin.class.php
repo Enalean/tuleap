@@ -135,7 +135,8 @@ class LdapPlugin extends Plugin {
             }
             $this->ldapInstance = new LDAP(
                 $ldapParams,
-                $this->getLogger()
+                $this->getLogger(),
+                $this->getQueryEscaper()
             );
         }
         return $this->ldapInstance;
@@ -158,6 +159,10 @@ class LdapPlugin extends Plugin {
             $this->_ldapUmInstance = new LDAP_UserManager($this->getLdap(), LDAP_UserSync::instance());
         }
         return $this->_ldapUmInstance;
+    }
+
+    public function getQueryEscaper() {
+        return new LdapQueryEscaper();
     }
 
     /**

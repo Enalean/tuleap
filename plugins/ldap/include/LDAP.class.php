@@ -3,8 +3,6 @@
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 // http://www.codendi.com
 
-require_once 'LDAPResult.class.php';
-
 /**
  * LDAP class definition
  * Provides LDAP facilities to Codendi:
@@ -43,6 +41,7 @@ class LDAP {
     private $bound;
     private $errorsTrapped;
     private $ldapParams;
+    private $query_escaper;
 
     /** @var Logger */
     private $logger;
@@ -50,11 +49,12 @@ class LDAP {
     /**
      * LDAP object constructor. Use gloabals for initialization.
      */
-    function __construct(array $ldapParams, Logger $logger) {
+    function __construct(array $ldapParams, Logger $logger, LdapQueryEscaper $query_escaper) {
         $this->ldapParams    =  $ldapParams;
         $this->bound         = false;
         $this->errorsTrapped = true;
         $this->logger        = $logger;
+        $this->query_escaper = $query_escaper;
     }
     
     /**
@@ -87,7 +87,7 @@ class LDAP {
      */ 
     function connect() {
         if (!$this->ds) {
-            foreach (split('[,;]', $this->ldapParams['server']) as $ldap_server) {  	    
+            foreach (explode('[,;]', $this->ldapParams['server']) as $ldap_server) {
                 $this->ds = ldap_connect($ldap_server);
                 if($this->ds) {
                     // Force protocol to LDAPv3 (for AD & recent version of OpenLDAP)
@@ -192,28 +192,6 @@ class LDAP {
             return false;
         }
         return true;
-    }
-    
-    /**
-     * Escape String before passing them to LDAP server.
-     *
-     * From: http://www.php.net/manual/en/function.ldap-search.php#83774
-     * Escape string
-     * see: RFC2254
-     * 
-     * @param String $str String to escape
-     *  
-     * @todo see escaping defined in pear package (http://pear.php.net/package/Net_LDAP2/)
-     * 
-     * @return String
-     */
-    function escapeString($str){
-        $metaChars = array('\\', '(', ')', '#', '*');
-        $quotedMetaChars = array();
-        // Convert the meta chars in their hexadecimal value.
-        foreach ($metaChars as $key => $value) $quotedMetaChars[$key] = '\\'.dechex(ord($value));
-        $str=str_replace($metaChars,$quotedMetaChars,$str); //replace them
-        return ($str);
     }
 
     /**
@@ -345,6 +323,7 @@ class LDAP {
      * @return LDAPResultIterator
      */    
     public function searchLogin($name, $attributes = array()) {
+        $name = $this->query_escaper->escapeFilter($name);
         if (! $attributes) {
             $attributes = $this->getDefaultAttributes();
         }
@@ -362,6 +341,7 @@ class LDAP {
      * @return LDAPResultIterator
      */  
     function searchEdUid($name) {
+        $name = $this->query_escaper->escapeFilter($name);
         $filter = $this->ldapParams['eduid'].'='.$name;
         return $this->search($this->ldapParams['dn'], $filter, self::SCOPE_SUBTREE, $this->getDefaultAttributes());
     }
@@ -374,6 +354,7 @@ class LDAP {
      * @return LDAPResultIterator
      */
     function searchUser($words) {
+        $words = $this->query_escaper->escapeFilter($words);
         $filter = str_replace("%words%", $words, $this->ldapParams['search_user']);
         return $this->search($this->ldapParams['dn'], $filter, self::SCOPE_SUBTREE, $this->getDefaultAttributes());
     }
@@ -386,6 +367,7 @@ class LDAP {
      * @return LDAPResultIterator
      */
     function searchCommonName($name) {
+        $name = $this->query_escaper->escapeFilter($name);
         $filter = $this->ldapParams['cn'].'='.$name;
         return $this->search($this->ldapParams['dn'], $filter, self::SCOPE_SUBTREE, $this->getDefaultAttributes());
     }
@@ -398,6 +380,7 @@ class LDAP {
      * @return LDAPResultIterator
      */
     function searchGroup($name) {
+        $name = $this->query_escaper->escapeFilter($name);
         $filter = $this->ldapParams['grp_cn'].'='.$name;
         return $this->search($this->ldapParams['dn'], $filter, self::SCOPE_SUBTREE);
     }
@@ -426,6 +409,7 @@ class LDAP {
     function searchUserAsYouType($name, $sizeLimit, $validEmail=false) {
         $apIt  = new AppendIterator();
         if($name && $this->_connectAndBind()) {
+            $name = $this->query_escaper->escapeFilter($name);
             if (isset($this->ldapParams['tooltip_search_user'])) {
                 $filter = str_replace("%words%", $name, $this->ldapParams['tooltip_search_user']);
             } else {
@@ -433,7 +417,8 @@ class LDAP {
             }
             if($validEmail) {
                 // Only search people with a non empty mail field
-                $filter = '(&'.$filter.'('.$this->ldapParams['mail'].'=*))';
+                $mail = $this->query_escaper->escapeFilter($this->ldapParams['mail']);
+                $filter = '(&'.$filter.'('.$mail.'=*))';
             }
             // We only care about Common name and Login (lower the amount of data
             // to fetch speed up the request.
@@ -449,7 +434,7 @@ class LDAP {
             $this->trapErrors();
             // Use SCOPE_ONELEVEL to only search in "sys_ldap_people_dn" branch 
             // of the directory to speed up the search.
-            $peopleDn = split(';', $this->ldapParams['people_dn']);
+            $peopleDn = explode(';', $this->ldapParams['people_dn']);
             foreach ($peopleDn as $count) {
                 $ds[] = $this->ds;
             }
@@ -490,6 +475,7 @@ class LDAP {
     function searchGroupAsYouType($name, $sizeLimit) {
         $lri = false;
         if($this->_connectAndBind()) {
+            $name = $this->query_escaper->escapeFilter($name);
             $filter = '('.$this->ldapParams['grp_cn'].'=*'.$name.'*)';
             // We only care about Common name
             $attrs  = array($this->ldapParams['grp_cn']);
@@ -548,5 +534,3 @@ class LDAP {
         $this->errorsTrapped = false;
     }
 }
-
-?>
