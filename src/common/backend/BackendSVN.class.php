@@ -516,7 +516,7 @@ class BackendSVN extends Backend {
         $mydir      = $project->getSVNRootPath();
         $repopath   = dirname($mydir);
         $reponame   = basename($mydir);
-        $backupfile = $GLOBALS['tmp_dir']."/$reponame-svn.tgz";
+        $backupfile = Config::get('sys_project_backup_path')."/$reponame-svn.tgz";
 
         if (is_dir($mydir)) {
             system("cd $repopath; tar cfz $backupfile $reponame");

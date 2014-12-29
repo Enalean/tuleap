@@ -412,7 +412,7 @@ class BackendCVS extends Backend {
             return false;
         }
         $mydir=$GLOBALS['cvs_prefix']."/".$project->getUnixName(false);
-        $backupfile=$GLOBALS['tmp_dir']."/".$project->getUnixName(false)."-cvs.tgz";
+        $backupfile=Config::get('sys_project_backup_path')."/".$project->getUnixName(false)."-cvs.tgz";
 
         if (is_dir($mydir)) {
             $this->system("cd ".$GLOBALS['cvs_prefix']."; tar cfz $backupfile ".$project->getUnixName(false));
