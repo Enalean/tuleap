@@ -61,7 +61,10 @@ class BoomerangPlugin extends Plugin {
                 break;
             default:
                 require_once 'common/templating/TemplateRendererFactory.class.php';
-                site_header(null);
+                $header_params = array(
+                    'title' => 'Boomerang'
+                );
+                site_header($header_params);
                 $renderer = TemplateRendererFactory::build()->getRenderer(BOOMERANG_BASE_DIR.'/../templates');
                 $presenter = new PerfDataPresenter();
                 $renderer->renderToPage('perf-data', $presenter);
