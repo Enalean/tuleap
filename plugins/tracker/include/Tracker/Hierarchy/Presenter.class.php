@@ -44,16 +44,45 @@ class Tracker_Hierarchy_Presenter {
      * @var string
      */
     public $tracker_name;
-    
-    public function __construct(Tracker_Hierarchy_HierarchicalTracker $tracker, array $possible_children, TreeNode $hierarchy ) {
+
+    /**
+     * @var array
+     */
+    public $trackers_not_in_hierarchy;
+
+    /**
+     * @var bool
+     */
+    public $has_trackers_not_in_hierarchy;
+
+    /**
+     * @var bool
+     */
+    public $cannot_be_used_in_hierarchy;
+
+    public function __construct(
+        Tracker_Hierarchy_HierarchicalTracker $tracker,
+        array $possible_children,
+        TreeNode $hierarchy,
+        array $trackers_not_in_hierarchy
+    ) {
         $this->tracker           = $tracker;
         $this->tracker_name      = $tracker->getUnhierarchizedTracker()->getName();
         $this->possible_children = array_values($possible_children);
         $this->hierarchy         = $hierarchy;
-        $visitor                 = new TreeNode_InjectPaddingInTreeNodeVisitor();
+
+        $this->trackers_not_in_hierarchy     = $trackers_not_in_hierarchy;
+        $this->has_trackers_not_in_hierarchy = count($trackers_not_in_hierarchy) > 0;
+        $this->cannot_be_used_in_hierarchy   = in_array(
+            $tracker->getUnhierarchizedTracker(),
+            $this->trackers_not_in_hierarchy
+        );
+
+        $visitor = new TreeNode_InjectPaddingInTreeNodeVisitor();
         $this->hierarchy->accept($visitor);
+        usort($this->trackers_not_in_hierarchy, array($this, 'sortTrackerAlphabetically'));
     }
-    
+
     public function getTrackerUrl() {
         return TRACKER_BASE_URL;
     }
@@ -95,7 +124,8 @@ class Tracker_Hierarchy_Presenter {
         $secondary_key = array_shift($args);
         return $GLOBALS['Language']->getText('plugin_tracker_admin_hierarchy', $secondary_key, $args);
     }
-    
-}
 
-?>
+    private function sortTrackerAlphabetically(Tracker $a, Tracker $b) {
+        return strnatcasecmp($a->getName(), $b->getName());
+    }
+}

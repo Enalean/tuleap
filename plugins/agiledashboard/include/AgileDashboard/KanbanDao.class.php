@@ -42,7 +42,7 @@ class AgileDashboard_KanbanDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function getTrackersWithKanbanUsageAndHirarchy($project_id) {
+    public function getTrackersWithKanbanUsageAndHierarchy($project_id) {
         $project_id = $this->da->escapeInt($project_id);
 
         $sql = "SELECT tracker.id,

@@ -52,12 +52,17 @@ class Tracker_Hierarchy_Controller {
     }
     
     public function edit() {
-        $possible_children = $this->factory->getPossibleChildren($this->tracker);
-        $hierarchy         = $this->factory->getHierarchy($this->tracker->getUnhierarchizedTracker());
-        $presenter         = new Tracker_Hierarchy_Presenter($this->tracker, $possible_children, $hierarchy);
+        $trackers_not_in_hierarchy = $this->getTrackersNotInHierachy();
+
+        $presenter = new Tracker_Hierarchy_Presenter(
+            $this->tracker,
+            $this->getPossibleChildren($trackers_not_in_hierarchy),
+            $this->getHierarchy($trackers_not_in_hierarchy),
+            $trackers_not_in_hierarchy
+        );
         $this->render('admin-hierarchy', $presenter);
     }
-    
+
     public function update() {
         $vChildren = new Valid_UInt('children');
         $vChildren->required();
@@ -92,5 +97,45 @@ class Tracker_Hierarchy_Controller {
     public function updateFromXmlProjectImportProcess(array $mapping) {
         $this->dao->updateChildren($this->tracker->getId(), $mapping);
     }
+
+    private function removeTrackersThatCannotBeUsedInHierarchy(
+        array &$possible_children,
+        array $trackers_not_in_hierarchy
+    ) {
+        $possible_children = array_diff($possible_children, $trackers_not_in_hierarchy);
+    }
+
+    private function getPossibleChildren(array $trackers_not_in_hierarchy) {
+        $possible_children = $this->factory->getPossibleChildren($this->tracker);
+        $this->removeTrackersThatCannotBeUsedInHierarchy($possible_children, $trackers_not_in_hierarchy);
+
+        return $possible_children;
+    }
+
+    private function getHierarchy(array $trackers_not_in_hierarchy) {
+        $hierarchy = $this->factory->getHierarchy($this->tracker->getUnhierarchizedTracker());
+        $root_elements = $hierarchy->getChildren();
+        foreach ($root_elements as $key => $child) {
+            foreach ($trackers_not_in_hierarchy as $tracker) {
+                if ($child->getId() == $tracker->getId()) {
+                    $hierarchy->removeChild(0, $child);
+                }
+            }
+        }
+
+        return $hierarchy;
+    }
+
+    private function getTrackersNotInHierachy() {
+        $trackers_not_in_hierarchy = array();
+        EventManager::instance()->processEvent(
+            TRACKER_EVENT_TRACKERS_CANNOT_USE_IN_HIERARCHY,
+            array(
+                'project' => $this->tracker->getProject(),
+                'result'  => &$trackers_not_in_hierarchy
+            )
+        );
+
+        return $trackers_not_in_hierarchy;
+    }
 }
-?>

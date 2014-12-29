@@ -65,6 +65,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(TRACKER_EVENT_REPORT_LOAD_ADDITIONAL_CRITERIA);
             $this->addHook(TRACKER_EVENT_FIELD_AUGMENT_DATA_FOR_REPORT);
             $this->addHook(TRACKER_USAGE);
+            $this->addHook(TRACKER_EVENT_TRACKERS_CANNOT_USE_IN_HIERARCHY);
             $this->addHook(Event::SERVICE_ICON);
 
             $this->_addHook(Event::IMPORT_XML_PROJECT_CARDWALL_DONE);
@@ -403,7 +404,6 @@ class AgileDashboardPlugin extends Plugin {
         );
 
         $config_dao = new AgileDashboard_ConfigurationDao();
-        $kanban_dao = new AgileDashboard_KanbanDao();
 
         $router = new AgileDashboardRouter(
             $this,
@@ -413,7 +413,7 @@ class AgileDashboardPlugin extends Plugin {
             $milestone_controller_factory,
             ProjectManager::instance(),
             new ProjectXMLExporter(EventManager::instance()),
-            new AgileDashboard_KanbanManager($kanban_dao),
+            $this->getKanbanManager(),
             new AgileDashboard_ConfigurationManager($config_dao),
             $this->getKanbanFactory()
         );
@@ -840,6 +840,13 @@ class AgileDashboardPlugin extends Plugin {
         }
     }
 
+    public function tracker_event_trackers_cannot_use_in_hierarchy($params) {
+        $params['result'] = array_merge(
+            $params['result'],
+            $this->getKanbanManager()->getTrackersUsedAsKanban($params['project'])
+        );
+    }
+
     /**
      * @return AgileDashboard_KanbanFactory
      */
@@ -855,7 +862,8 @@ class AgileDashboardPlugin extends Plugin {
      */
     private function getKanbanManager() {
         return new AgileDashboard_KanbanManager(
-            new AgileDashboard_KanbanDao()
+            new AgileDashboard_KanbanDao(),
+            TrackerFactory::instance()
         );
     }
 

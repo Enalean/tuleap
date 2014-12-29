@@ -453,7 +453,7 @@ class TestDataBuilder {
 
     public function generateKanban() {
         echo "Create 'My first kanban'\n";
-        $kanban_manager = new AgileDashboard_KanbanManager(new AgileDashboard_KanbanDao());
+        $kanban_manager = new AgileDashboard_KanbanManager(new AgileDashboard_KanbanDao(), $this->tracker_factory);
         $kanban_manager->createKanban('My first kanban', self::KANBAN_TRACKER_ID);
 
         echo "Populate kanban\n";
