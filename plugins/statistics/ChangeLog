@@ -1,3 +1,6 @@
+Version 0.41 - Tuleap 7.9
+    * request #7719 Non active user infos are not exported in service usage
+
 Version 0.40 - Tuleap 7.8
     * request #7636: Include Docman and Tracker plugins in frequencies graph
 
