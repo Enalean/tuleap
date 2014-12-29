@@ -1,3 +1,14 @@
+Version 7.8-2 (Monday, December 29th 2014)
+	== Bug Fix ==
+	* request #7712: Report actions must check tracker id
+	* request #7713: Cardwall renderer must take in account milestone selected in tracker report
+	* request #7698: default values on artifact open values are not taken into account
+	* request #7707: Job last artifacts names are not displayed in hudson widget
+	* request #7706: Masschange does not take in account field dependency
+	* request #7699: Fatal Error in SE Monitor if Gerrit Server has been deleted
+	* request #7692: Git plugin tries to commit / push as post system event at each run
+	* request #7690: Fatal error in full text search admin
+
 Version 7.8 (Thursday, December 11th 2014)
 	== Features ==
 	* request #6964: Prevent users to enter misspelled emails during registration
