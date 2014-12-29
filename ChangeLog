@@ -9,6 +9,7 @@ Version 7.9 (Not Released Yet)
 	* hudson: 1.18
 	* cardwall: 1.44
 	* docman: 2.26.56
+	* boomerang: 0.4
 
 	== Bug Fix ==
 	* request #7692 - Git plugin tries to commit / push as post system event at each run
