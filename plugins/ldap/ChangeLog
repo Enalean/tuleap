@@ -1,3 +1,6 @@
+Version 3.65 - Tuleap 7.9
+    * request #7718 Fix LDAP injections
+
 Version 3.64 - Tuleap 7.8
     * request #7524: Threshold for ldap daily synchro
 
