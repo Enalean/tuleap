@@ -114,7 +114,6 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
         $sql = "SELECT g.group_id, u.user_name AS result
                 FROM user_group g, user u
                 WHERE g.user_id=u.user_id
-                    AND u.status='A'
                 GROUP BY group_id";
 
         return $this->retrieve($sql);
@@ -124,7 +123,6 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
         $sql = "SELECT g.group_id, u.realname AS result
                 FROM user_group g, user u
                 WHERE g.user_id=u.user_id
-                    AND u.status='A'
                 GROUP BY group_id";
 
         return $this->retrieve($sql);
@@ -134,7 +132,6 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
         $sql = "SELECT g.group_id, u.email AS result
                 FROM user_group g, user u
                 WHERE g.user_id=u.user_id
-                    AND u.status='A'
                 GROUP BY group_id";
 
         return $this->retrieve($sql);
