@@ -24,6 +24,9 @@ use AgileDashboard_KanbanItemDao;
 use Tracker_ArtifactFactory;
 use PFUser;
 use Tuleap\REST\JsonCast;
+use Tracker_Artifact;
+use UserManager;
+use EventManager;
 
 class KanbanBacklogRepresentation {
 
@@ -44,10 +47,39 @@ class KanbanBacklogRepresentation {
             $artifact = $factory->getInstanceFromRow($row);
             if ($artifact->userCanView($user)) {
                 $this->collection[] = array(
-                    'id'    => JsonCast::toInt($artifact->getId()),
-                    'label' => $artifact->getTitle()
+                    'id'          => JsonCast::toInt($artifact->getId()),
+                    'label'       => $artifact->getTitle(),
+                    'card_fields' => $this->getArtifactCardFields($artifact)
                 );
             }
         }
+    }
+
+    private function getArtifactCardFields(Tracker_Artifact $artifact) {
+        $current_user         = UserManager::instance()->getCurrentUser();
+        $card_fields_semantic = $this->getCardFieldsSemantic($artifact);
+        $card_fields          = array();
+
+        foreach($card_fields_semantic->getFields() as $field) {
+            if ($field->userCanRead($current_user)) {
+                $card_fields[] = $field->getFullRESTValue($current_user, $artifact->getLastChangeset());
+            }
+        }
+
+        return $card_fields;
+    }
+
+    private function getCardFieldsSemantic(Tracker_Artifact $artifact) {
+        $card_fields_semantic = null;
+
+        EventManager::instance()->processEvent(
+            AGILEDASHBOARD_EVENT_GET_CARD_FIELDS,
+            array(
+                'tracker'              => $artifact->getTracker(),
+                'card_fields_semantic' => &$card_fields_semantic
+            )
+        );
+
+        return $card_fields_semantic;
     }
 }

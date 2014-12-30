@@ -4,6 +4,8 @@
         'templates-app',
         'shared-properties',
         'restangular',
+        'angularMoment',
+        'ngSanitize',
         'gettext'
     ]);
 })();
