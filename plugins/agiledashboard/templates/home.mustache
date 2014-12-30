@@ -75,10 +75,10 @@
                                         {{# breadcrumbs }}
                                             {{# . }}
                                             {{# title }}
-                                                <a href="{{ url }}">{{ title }}</a> <i class="icon-angle-right"></i>
+                                                <a href="{{ url }}">{{{ title }}}</a> <i class="icon-angle-right"></i>
                                             {{/ title }}
                                             {{^ title }}
-                                                <a href="{{ url }}">{{ default_name }}</a> <i class="icon-angle-right"></i>
+                                                <a href="{{ url }}">{{{ default_name }}}</a> <i class="icon-angle-right"></i>
                                             {{/ title }}
                                             {{/ . }}
                                         {{/ breadcrumbs }}
