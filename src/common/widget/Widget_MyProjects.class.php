@@ -92,8 +92,7 @@ class Widget_MyProjects extends Widget {
 
                 // Mailing tool
                 $html .= '<td class="'.$tdClass.'">';
-                $html .= '<a href="#massmail_'.$row['group_id'].'" title="'.$GLOBALS['Language']->getText('my_index','send_mail',$row['group_name']).'" data-toggle="modal"><span class="icon-envelope-alt"></span></a>';
-                $html .= $this->fetchMassMailForm($row['group_id'], $token);
+                $html .= '<a class="massmail-project-member-link" href="#massmail-project-members" data-project-id="'.$row['group_id'].'" title="'.$GLOBALS['Language']->getText('my_index','send_mail',$row['group_name']).'" data-toggle="modal"><span class="icon-envelope-alt"></span></a>';
                 $html .= '</td>';
 
                 // Remove from project
@@ -122,6 +121,8 @@ class Widget_MyProjects extends Widget {
             }
 
             $html .= '</table>';
+            $html .= $this->fetchMassMailForm($token);
+
         }
         return $html;
     }
@@ -179,9 +180,8 @@ class Widget_MyProjects extends Widget {
         return $GLOBALS['Language']->getText('widget_description_my_projects','description');
     }
 
-    private function fetchMassMailForm($group_id, CSRFSynchronizerToken $token) {
+    private function fetchMassMailForm(CSRFSynchronizerToken $token) {
         $presenter = new MassmailFormPresenter(
-            $group_id,
             $token,
             $GLOBALS['Language']->getText('my_index','massmail_form_title'),
             'massmail_to_project_members.php'
@@ -193,4 +193,3 @@ class Widget_MyProjects extends Widget {
         return $renderer->renderToString('massmail',$presenter);
     }
 }
-?>
