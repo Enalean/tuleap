@@ -20,6 +20,9 @@ Version 7.9 (Not Released Yet)
 	== Features ==
 	* parts of story #7577 display a Kanban cardwall
 
+    == Themes ==
+	* FlamingParrot: 1.60
+
 Version 7.8 (Thursday, December 11th 2014)
 	== Features ==
 	* request #6964: Prevent users to enter misspelled emails during registration
