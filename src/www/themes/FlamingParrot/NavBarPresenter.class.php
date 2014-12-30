@@ -92,6 +92,10 @@ class FlamingParrot_NavBarPresenter {
         return $this->user->isSuperUser();
     }
 
+    public function user_can_search() {
+        return $this->user->isActive();
+    }
+
     public function user_real_name() {
         return $this->user->getRealName();
     }
