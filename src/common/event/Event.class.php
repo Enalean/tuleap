@@ -841,11 +841,13 @@ class Event {
      * Event raised to get project's Git repositories information with REST
      *
      * Parameters:
-     *     'version' => String
-     *     'project' => Project
-     *     'result'  => array
-     *     'limit'   => int
-     *     'offset'  => int
+     *     'version'         => String
+     *     'project'         => Project
+     *     'result'          => array
+     *     'limit'           => int
+     *     'offset'          => int
+     *     'fields'          => String
+     *     'total_git_repo'  => int
      */
     const REST_PROJECT_GET_GIT = 'rest_project_get_git';
 

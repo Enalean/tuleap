@@ -697,4 +697,34 @@ class GitDao extends DataAccessObject {
 
         return $this->retrieve($sql);
     }
+
+    /**
+     * @return DataAccessResult
+     */
+    public function getUGroupsByRepositoryPermissions($repository_id, $permission_type) {
+        $repository_id   = $this->da->quoteSmart($repository_id);
+        $permission_type = $this->da->quoteSmart($permission_type);
+
+        $sql = "SELECT ugroup_id
+                FROM permissions
+                WHERE permission_type = $permission_type
+                AND object_id = $repository_id";
+
+        $rows = $this->retrieve($sql);
+
+        if ($rows !== false && $rows->count() > 0) {
+            return $rows;
+        }
+
+       return $this->getDefaultPermissions($permission_type);
+    }
+
+    private function getDefaultPermissions($permission_type) {
+        $default_sql = "SELECT ugroup_id
+                        FROM permissions_values
+                        WHERE permission_type = $permission_type
+                            AND is_default = 1";
+
+        return $this->retrieve($default_sql);
+    }
 }

@@ -21,40 +21,20 @@
 
 namespace Tuleap\REST\v1;
 
-class GitRepositoryRepresentationBase {
-
-    const ROUTE = 'git';
-
-    const FIELDS_BASIC = 'basic';
-    const FIELDS_ALL   = 'all';
+class GitRepositoryPermissionRepresentationBase {
 
     /**
-     * @var int
+     * @var Tuleap\Project\REST\UserGroupRepresentation
      */
-    public $id;
+    public $read;
 
     /**
-     * @var string
+     * @var Tuleap\Project\REST\UserGroupRepresentation
      */
-    public $uri;
+    public $write;
 
     /**
-     * @var string
+     * @var Tuleap\Project\REST\UserGroupRepresentation
      */
-    public $name;
-
-    /**
-     * @var string
-     */
-    public $path;
-
-    /**
-     * @var string
-     */
-    public $description;
-
-    /**
-     * @var Tuleap\REST\v1\GitRepositoryPermissionRepresentationBase | null
-     */
-    public $permissions = null;
+    public $rewind;
 }

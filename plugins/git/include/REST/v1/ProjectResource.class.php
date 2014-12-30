@@ -26,6 +26,8 @@ use PFUser;
 use GitRepositoryFactory;
 use Tuleap\Git\REST\v1\GitRepositoryRepresentation;
 
+include_once('www/project/admin/permissions.php');
+
 class ProjectResource {
 
     /** @var GitRepositoryFactory */
@@ -35,7 +37,7 @@ class ProjectResource {
         $this->repository_factory = $repository_factory;
     }
 
-    public function getGit(Project $project, PFUser $user, $limit, $offset) {
+    public function getGit(Project $project, PFUser $user, $limit, $offset, $fields) {
         $results          = array();
         $git_repositories = $this->repository_factory->getPagninatedRepositoriesUserCanSee(
             $project,
@@ -46,7 +48,7 @@ class ProjectResource {
 
         foreach($git_repositories as $repository) {
             $repo_representation = new GitRepositoryRepresentation();
-            $repo_representation->build($repository);
+            $repo_representation->build($repository, $user, $fields);
 
             $results[] = $repo_representation;
         }
