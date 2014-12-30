@@ -1,3 +1,6 @@
+Version 1.133 - Tuleap 7.9
+    * request #7717 Remove dependencies between REST api and plugins
+
 Version 1.132 - Tuleap 7.9
     * story #7174: Rename angular directory to planning-v2
 
