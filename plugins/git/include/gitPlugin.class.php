@@ -122,6 +122,7 @@ class GitPlugin extends Plugin {
         $this->_addHook('fill_project_history_sub_events');
         $this->_addHook(Event::POST_SYSTEM_EVENTS_ACTIONS);
 
+        $this->addHook(EVENT::REST_RESOURCES);
         $this->addHook(EVENT::REST_PROJECT_RESOURCES);
         $this->addHook(EVENT::REST_PROJECT_GET_GIT);
         $this->addHook(EVENT::REST_PROJECT_OPTIONS_GIT);
@@ -1378,6 +1379,14 @@ class GitPlugin extends Plugin {
     public function rest_project_resources(array $params) {
         $injector = new Git_REST_ResourcesInjector();
         $injector->declareProjectPlanningResource($params['resources'], $params['project']);
+    }
+
+    /**
+     * @see REST_RESOURCES
+     */
+    public function rest_resources($params) {
+        $injector = new Git_REST_ResourcesInjector();
+        $injector->populate($params['restler']);
     }
 
     /**

@@ -24,6 +24,7 @@ class GitDataBuilder extends TestDataBuilder {
 
     const PROJECT_TEST_GIT_SHORTNAME = 'test-git';
     const PROJECT_TEST_GIT_ID        = 107;
+    const REPOSITORY_GIT_ID          = 1;
 
     /** @var SystemEventManager */
     private $system_event_manager;
@@ -60,7 +61,7 @@ class GitDataBuilder extends TestDataBuilder {
         $project = $this->createProject(
             self::PROJECT_TEST_GIT_SHORTNAME,
             'Git repo',
-            true,
+            false,
             array($user_test_rest_1),
             array($user_test_rest_1)
         );

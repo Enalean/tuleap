@@ -18,4 +18,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class GitRepoNotFoundException  extends Exception {}
+class GitRepoNotReadableException  extends Exception {}
