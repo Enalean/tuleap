@@ -151,6 +151,18 @@ if (!$group_id) {
     $pm = ProjectManager::instance();
     echo "<strong>".$Language->getText('admin_userlist', 'group', array($pm->getProject($group_id)->getPublicName()))."</strong>";
 }
+
+/*
+ * Add search field
+ */
+$hp = Codendi_HTMLPurifier::instance();
+$user_name_search_purify = $hp->purify($user_name_search);
+$search_purify = $hp->purify($Language->getText('admin_main', 'search'));
+echo $Language->getText('admin_main', 'search_user');
+echo "<form name='usersrch' action='userlist.php' method='get' class='form-inline'>
+        <input type='text' name='user_name_search' class='user_name_search' placeholder='".$search_purify."' value='".$user_name_search_purify."' />
+        <input type='submit' class='btn' value='".$search_purify."' />
+      </form>";
 echo "</p>";
 
 show_users_list ($result, $offset, $limit, $user_name_search);
