@@ -16,25 +16,47 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+namespace Tuleap\REST\v1;
 
-namespace Tuleap\AgileDashboard\REST\v2;
+/**
+ * Basic representation of a planning
+ */
+class PlanningRepresentationBase {
 
-use Tuleap\Tracker\REST\TrackerReference;
-use Tuleap\REST\v2\BacklogRepresentationBase;
+    const ROUTE = 'plannings';
 
-class BacklogRepresentation extends BacklogRepresentationBase {
+    /**
+     * @var int
+     */
+    public $id;
 
-    public function build(array $backlog_items, array $accepted_trackers) {
-        $this->content = $backlog_items;
+    /**
+     * @var string
+     */
+    public $uri;
 
-        $this->accept = array('trackers' => array());
-        foreach ($accepted_trackers as $accepted_tracker) {
-            $reference = new TrackerReference();
-            $reference->build($accepted_tracker);
+    /**
+     * @var String
+     */
+    public $label;
 
-            $this->accept['trackers'][] = $reference;
-        }
+    /**
+     * @var \Tuleap\REST\ResourceReference
+     */
+    public $project;
 
-        return $this;
-    }
+    /**
+     * @var \Tuleap\REST\ResourceReference
+     */
+    public $milestone_tracker;
+
+    /**
+     * @var Array {@type \Tuleap\REST\ResourceReference}
+     */
+    public $backlog_trackers;
+
+    /**
+     * @var string
+     */
+    public $milestones_uri;
 }

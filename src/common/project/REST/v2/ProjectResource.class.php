@@ -72,11 +72,13 @@ class ProjectResource {
      * @param int $limit  Number of elements displayed per page {@from path}
      * @param int $offset Position of the first element to display {@from path}
      *
-     * @return array {@type Tuleap\AgileDashboard\REST\v2\BacklogRepresentation}
+     * @return array {@type Tuleap\REST\v2\BacklogRepresentationBase}
      *
      * @throws 406
      */
     protected function getBacklog($id, $limit = 10, $offset = 0) {
+        $this->checkAgileEndpointsAvailable();
+
         $backlog_items = $this->backlogItems($id, $limit, $offset, Event::REST_GET_PROJECT_BACKLOG);
         $this->sendAllowHeadersForBacklog();
 
@@ -89,6 +91,7 @@ class ProjectResource {
      * @param int $id Id of the project
      */
     public function optionsBacklog($id) {
+        $this->checkAgileEndpointsAvailable();
         $this->sendAllowHeadersForBacklog();
     }
 
@@ -117,5 +120,20 @@ class ProjectResource {
 
     private function sendPaginationHeaders($limit, $offset, $size) {
         Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
+    }
+
+    private function checkAgileEndpointsAvailable() {
+        $available = false;
+
+        EventManager::instance()->processEvent(
+            Event::REST_PROJECT_AGILE_ENDPOINTS,
+            array(
+                'available' => &$available
+            )
+        );
+
+        if ($available === false) {
+            throw new RestException(404, 'AgileDashboard plugin not activated');
+        }
     }
 }

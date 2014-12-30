@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2014. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,79 +19,13 @@
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use \Tuleap\REST\JsonCast;
-use \Tuleap\Project\REST\ProjectReference;
-use \Tuleap\Tracker\REST\Artifact\ArtifactReference;
-use \Tuleap\Tracker\REST\TrackerReference;
-use \Tuleap\Tracker\REST\TrackerRepresentation;
+use Tuleap\REST\JsonCast;
+use Tuleap\REST\v1\BacklogItemRepresentationBase;
+use Tuleap\Project\REST\ProjectReference;
+use Tuleap\Tracker\REST\Artifact\ArtifactReference;
+use Tuleap\Tracker\REST\TrackerReference;
 
-class BacklogItemRepresentation {
-
-    const BACKLOG_ROUTE = 'backlog';
-
-    const CONTENT_ROUTE = 'content';
-
-    const ROUTE         = 'backlog_items';
-
-    /**
-     * @var Int
-     */
-    public $id;
-
-    /**
-     * @var String
-     */
-    public $label;
-
-    /**
-     * @var String
-     */
-    public $type;
-
-    /**
-     * @var String
-     */
-    public $short_type;
-
-    /**
-     * @var String
-     */
-    public $status;
-
-    /**
-     * @var String
-     */
-    public $color;
-
-    /**
-     * @var Float
-     */
-    public $initial_effort;
-
-    /**
-     * @var \Tuleap\Tracker\REST\Artifact\ArtifactReference
-     */
-    public $artifact;
-
-    /**
-     * @var \Tuleap\AgileDashboard\REST\v1\BacklogItemParentReference
-     */
-    public $parent;
-
-    /**
-     * @var \Tuleap\Project\REST\ProjectReference
-     */
-    public $project;
-
-    /**
-     * @var Boolean
-     */
-    public $has_children;
-
-    /**
-     * @var array
-     */
-    public $accept;
+class BacklogItemRepresentation extends BacklogItemRepresentationBase{
 
     public function build(\AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item, array $card_fields) {
         $this->id             = JsonCast::toInt($backlog_item->id());

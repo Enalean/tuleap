@@ -19,6 +19,13 @@
 
 namespace Tuleap\Project\REST\v1;
 
+use Tuleap\Project\REST\ProjectRepresentation;
+use Tuleap\Project\REST\UserGroupRepresentation;
+use Tuleap\REST\v1\GitRepositoryRepresentationBase;
+use Tuleap\REST\v1\OrderRepresentationBase;
+use Tuleap\REST\ProjectAuthorization;
+use Tuleap\REST\Header;
+use Tuleap\REST\ResourcesInjector;
 use ProjectManager;
 use UserManager;
 use PFUser;
@@ -27,15 +34,8 @@ use EventManager;
 use Event;
 use ProjectUGroup;
 use UGroupManager;
-use Tuleap\Project\REST\ProjectRepresentation;
-use Tuleap\Project\REST\UserGroupRepresentation;
-use Tuleap\REST\v1\GitRepositoryRepresentationBase;
-use Tuleap\REST\Header;
-use Luracast\Restler\RestException;
-use Tuleap\REST\ProjectAuthorization;
-use Tuleap\REST\ResourcesInjector;
 use URLVerification;
-use Tuleap\AgileDashboard\REST\v1\OrderRepresentation;
+use Luracast\Restler\RestException;
 
 /**
  * Wrapper for project related REST methods
@@ -228,9 +228,11 @@ class ProjectResource {
      * @param int $limit  Number of elements displayed per page {@from path}
      * @param int $offset Position of the first element to display {@from path}
      *
-     * @return array {@type Tuleap\AgileDashboard\REST\v1\PlanningRepresentation}
+     * @return array {@type Tuleap\REST\v1\PlanningRepresentationBase}
      */
     protected function getPlannings($id, $limit = 10, $offset = 0) {
+        $this->checkAgileEndpointsAvailable();
+
         $plannings = $this->plannings($id, $limit, $offset, Event::REST_GET_PROJECT_PLANNINGS);
         $this->sendAllowHeadersForProject();
 
@@ -243,6 +245,7 @@ class ProjectResource {
      * @param int $id Id of the project
      */
     public function optionsPlannings($id) {
+        $this->checkAgileEndpointsAvailable();
         $this->sendAllowHeadersForProject();
     }
 
@@ -276,9 +279,11 @@ class ProjectResource {
      * @param int    $offset Position of the first element to display {@from path}
      * @param string $order  In which order milestones are fetched. Default is asc {@from path}{@choice asc,desc}
      *
-     * @return array {@type Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation}
+     * @return array {@type Tuleap\REST\v1\MilestoneRepresentationBase}
      */
     protected function getMilestones($id, $limit = 10, $offset = 0, $order = 'asc') {
+        $this->checkAgileEndpointsAvailable();
+
         $milestones = $this->milestones($id, $limit, $offset, $order, Event::REST_GET_PROJECT_MILESTONES);
         $this->sendAllowHeadersForProject();
 
@@ -291,6 +296,7 @@ class ProjectResource {
      * @param int $id The id of the project
      */
     public function optionsMilestones($id) {
+        $this->checkAgileEndpointsAvailable();
         $this->sendAllowHeadersForProject();
     }
 
@@ -371,11 +377,13 @@ class ProjectResource {
      * @param int $limit  Number of elements displayed per page {@from path}
      * @param int $offset Position of the first element to display {@from path}
      *
-     * @return array {@type Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentation}
+     * @return array {@type Tuleap\REST\v1\BacklogItemRepresentationBase}
      *
      * @throws 406
      */
     protected function getBacklog($id, $limit = 10, $offset = 0) {
+        $this->checkAgileEndpointsAvailable();
+
         $backlog_items = $this->backlogItems($id, $limit, $offset, Event::REST_GET_PROJECT_BACKLOG);
         $this->sendAllowHeadersForBacklog();
 
@@ -388,6 +396,7 @@ class ProjectResource {
      * @param int $id Id of the project
      */
     public function optionsBacklog($id) {
+        $this->checkAgileEndpointsAvailable();
         $this->sendAllowHeadersForBacklog();
     }
 
@@ -404,6 +413,8 @@ class ProjectResource {
      * @throws 500
      */
     protected function putBacklog($id, array $ids) {
+        $this->checkAgileEndpointsAvailable();
+
         $project = $this->getProjectForUser($id);
         $result  = array();
 
@@ -454,15 +465,17 @@ class ProjectResource {
      *
      * @url PATCH {id}/backlog
      *
-     * @param int                                                $id    Id of the Backlog Item
-     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation $order Order of the children {@from body}
-     * @param array                                              $add   Add (move) item to the backlog {@from body}
+     * @param int                                     $id    Id of the Backlog Item
+     * @param \Tuleap\REST\v1\OrderRepresentationBase $order Order of the children {@from body}
+     * @param array                                   $add   Add (move) item to the backlog {@from body}
      *
      * @throws 500
      * @throws 409
      * @throws 400
      */
-    protected function patchBacklog($id, OrderRepresentation $order, array $add = null) {
+    protected function patchBacklog($id, OrderRepresentationBase $order, array $add = null) {
+        $this->checkAgileEndpointsAvailable();
+
         $order->checkFormat($order);
         $project = $this->getProjectForUser($id);
         $result  = array();
@@ -683,6 +696,21 @@ class ProjectResource {
             throw new RestException(404, 'Git plugin not activated');
         }
 
+    }
+
+    private function checkAgileEndpointsAvailable() {
+        $available = false;
+
+        EventManager::instance()->processEvent(
+            Event::REST_PROJECT_AGILE_ENDPOINTS,
+            array(
+                'available' => &$available
+            )
+        );
+
+        if ($available === false) {
+            throw new RestException(404, 'AgileDashboard plugin not activated');
+        }
     }
 
     private function sendAllowHeadersForProject() {

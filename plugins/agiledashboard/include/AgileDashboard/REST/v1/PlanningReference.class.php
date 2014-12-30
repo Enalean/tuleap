@@ -20,21 +20,12 @@ namespace Tuleap\AgileDashboard\REST\v1;
 
 use \Planning;
 use \Tuleap\REST\JsonCast;
+use \Tuleap\REST\v1\PlanningReferenceBase;
 
 /**
  * Basic reference of a planning
  */
-class PlanningReference {
-
-    /**
-     * @var int
-     */
-    public $id;
-
-    /**
-     * @var string
-     */
-    public $uri;
+class PlanningReference extends PlanningReferenceBase {
 
     public function build(Planning $planning) {
         $this->id  = JsonCast::toInt($planning->getId());

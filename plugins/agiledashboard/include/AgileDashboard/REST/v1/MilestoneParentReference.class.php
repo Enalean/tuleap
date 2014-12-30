@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2014. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,26 +19,12 @@
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use \Tuleap\Tracker\REST\TrackerReference;
-use \Planning_Milestone;
-use \Tuleap\REST\JsonCast;
+use Tuleap\Tracker\REST\TrackerReference;
+use Planning_Milestone;
+use Tuleap\REST\v1\MilestoneParentReferenceBase;
+use Tuleap\REST\JsonCast;
 
-class MilestoneParentReference {
-
-    /**
-     * @var int ID of the milestone
-     */
-    public $id;
-
-    /**
-     * @var string URI of the milestone
-     */
-    public $uri;
-
-    /**
-     * @var \Tuleap\Tracker\REST\TrackerReference
-     */
-    public $tracker;
+class MilestoneParentReference extends MilestoneParentReferenceBase {
 
     public function build(Planning_Milestone $milestone) {
         $this->id  = JsonCast::toInt($milestone->getArtifactId());
