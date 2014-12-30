@@ -31,8 +31,7 @@ class MassmailFormPresenter {
     public $title;
     public $action;
 
-    public function __construct($project_id, CSRFSynchronizerToken $token, $title, $action) {
-        $this->project_id       = $project_id;
+    public function __construct(CSRFSynchronizerToken $token, $title, $action) {
         $this->submit_button    = $GLOBALS['Language']->getText('global','btn_submit');
         $this->close_button     = $GLOBALS['Language']->getText('global','btn_cancel');
         $this->subject_label    = $GLOBALS['Language']->getText('my_index','subject_label');
@@ -47,7 +46,4 @@ class MassmailFormPresenter {
         return Config::get('codendi_dir') .'/src/templates/project';
     }
 
-
 }
-
-?>
