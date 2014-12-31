@@ -450,11 +450,23 @@ class ReferenceManager {
     }
 
     private function insertLinksForMentions(&$html) {
-        $html = preg_replace(
-            '/(^|\W)@(\w+)/',
-            '$1<a href="/users/$2">@$2</a>',
+        $html = preg_replace_callback(
+            '/(^|\W)@([a-zA-Z]\w+)/',
+            array($this,"insertMentionCallback"),
             $html
         );
+    }
+
+    private function insertMentionCallback($match) {
+        $original_string = $match['0'];
+        $char_before     = $match['1'];
+        $username        = $match['2'];
+
+        if (UserManager::instance()->getUserByUserName($username)) {
+            return $char_before. '<a href="/users/'. $username .'">@'. $username .'</a>';
+        }
+
+        return $original_string;
     }
 
     /**

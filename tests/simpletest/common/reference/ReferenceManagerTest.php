@@ -21,11 +21,14 @@ Mock::generate('DataAccessResult');
  */
 class ReferenceManagerTest extends TuleapTestCase {
     private $rm;
+    private $user_manager;
 
     public function setUp() {
         parent::setUp();
         EventManager::setInstance(mock('EventManager'));
         ProjectManager::setInstance(mock('ProjectManager'));
+        $this->user_manager = mock('UserManager');
+        UserManager::setInstance($this->user_manager);
         $this->rm = partial_mock('ReferenceManager', array(
             '_getReferenceDao',
             '_getCrossReferenceDao',
@@ -37,9 +40,10 @@ class ReferenceManagerTest extends TuleapTestCase {
     }
     
     public function tearDown() {
-        parent::tearDown();
         EventManager::clearInstance();
         ProjectManager::clearInstance();
+        UserManager::clearInstance();
+        parent::tearDown();
     }
     
     function testSingleton() {
@@ -199,12 +203,24 @@ class ReferenceManagerTest extends TuleapTestCase {
     }
 
     public function itInsertsLinkForMentionAtTheBeginningOfTheString() {
+        stub($this->user_manager)->getUserByUserName('username')->returns(mock('PFUser'));
+
         $html = '@username';
         $this->rm->insertReferences($html, 0);
         $this->assertEqual($html, '<a href="/users/username">@username</a>');
     }
 
+    public function itDoesNotInsertsLinkForUserThatDoNotExist() {
+        stub($this->user_manager)->getUserByUserName('username')->returns(null);
+
+        $html = '@username';
+        $this->rm->insertReferences($html, 0);
+        $this->assertEqual($html, '@username');
+    }
+
     public function itInsertsLinkForMentionAtTheMiddleOfTheString() {
+        stub($this->user_manager)->getUserByUserName('username')->returns(mock('PFUser'));
+
         $html = '/cc @username';
         $this->rm->insertReferences($html, 0);
         $this->assertEqual($html, '/cc <a href="/users/username">@username</a>');
