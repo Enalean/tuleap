@@ -306,6 +306,30 @@ class CrossReferenceFactory {
         return $html;
     }
 
+    public function getHTMLCrossRefsForCSVExport() {
+        $html              = '';
+        $cross_refs        = $this->getCrossReferences();
+
+        foreach ($cross_refs as $nature => $references_by_destination) {
+            $html .= '';
+            $refs = array();
+            foreach ($references_by_destination as $key => $references) {
+                foreach ($references as $reference) {
+                    if ($key === 'source') {
+                        $ref = $reference->getRefSourceKey() ." #". $reference->getRefSourceId();
+                    } else {
+                        $ref = $reference->getRefTargetKey() ." #". $reference->getRefTargetId();
+                    }
+                    $refs[] =  $ref;
+                }
+            }
+            $html .= implode(', ', $refs);
+
+        }
+
+        return $html;
+    }
+
     /**
      * This function retrieves all cross references for given entity id, a group id, and a type
      * @return array cross references data

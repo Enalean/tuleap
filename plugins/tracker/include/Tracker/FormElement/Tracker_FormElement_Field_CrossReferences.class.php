@@ -143,22 +143,33 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
                 (CAST(a.id AS CHAR) = $R2.target_id AND $R2.target_type = '"
                     .Tracker_Artifact::REFERENCE_NATURE."')";
     }
-    
+
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null) {
-        $html = '';
-        $crossref_fact= new CrossReferenceFactory($artifact_id, Tracker_Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupId());
-        $crossref_fact->fetchDatas();
+        $crossref_fact = $this->getCrossReferencesFactory($artifact_id);
+
         if ($crossref_fact->getNbReferences()) {
-            $html .= $crossref_fact->getHTMLDisplayCrossRefs($with_links = true, $condensed = true);
+            $html = $crossref_fact->getHTMLDisplayCrossRefs($with_links = true, $condensed = true);
         } else {
-            $html .= '';
+            $html = '';
         }
         return $html;
     }
-    
-    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report) {
-        // TODO: implement it if required
+
+    private function getCrossReferencesFactory($artifact_id) {
+        $crossref_factory = new CrossReferenceFactory($artifact_id, Tracker_Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupId());
+        $crossref_factory ->fetchDatas();
+
+        return $crossref_factory;
+    }
+
+    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value) {
         $html = '';
+        $crossref_fact = $this->getCrossReferencesFactory($artifact_id);
+
+        if ($crossref_fact->getNbReferences()) {
+            $html = $crossref_fact->getHTMLCrossRefsForCSVExport();
+        }
+
         return $html;
     }
     
