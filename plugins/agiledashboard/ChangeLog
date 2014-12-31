@@ -1,3 +1,6 @@
+Version 1.134 - Tuleap 7.9
+    * request #7722 HTML entities are displayed on A.D. homepage
+
 Version 1.133 - Tuleap 7.9
     * request #7717 Remove dependencies between REST api and plugins
 
