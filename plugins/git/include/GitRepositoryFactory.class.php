@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2014. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -48,6 +48,38 @@ class GitRepositoryFactory {
         }
         $dar = $this->dao->searchProjectRepositoryById($id);
         return $this->getRepositoryFromDar($dar);
+    }
+
+    /**
+     * Get a project repository by its id
+     *
+     * @return GitRepository the repository or null if not found
+     */
+    public function getRepositoryByIdUserCanSee(PFUser $user, $id) {
+        if ($id == GitRepositoryGitoliteAdmin::ID) {
+            return new GitRepositoryGitoliteAdmin();
+        }
+
+        $dar        = $this->dao->searchProjectRepositoryById($id);
+        $repository = $this->getRepositoryFromDar($dar);
+
+        if ($repository === null) {
+            throw new GitRepoNotFoundException();
+        }
+
+        $project = $repository->getProject();
+        $url_verification = new URLVerification();
+        try {
+            $url_verification->userCanAccessProject($user, $project);
+        } catch (Exception $exception) {
+            throw $exception;
+        }
+
+        if (! $repository->userCanRead($user)) {
+            throw new GitRepoNotReadableException();
+        }
+
+        return $repository;
     }
 
     /**
