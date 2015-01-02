@@ -44,7 +44,6 @@ class Widget_Contacts extends Widget {
 
         $token     = new CSRFSynchronizerToken('');
         $presenter = new MassmailFormPresenter(
-            $group_id,
             $token,
             $GLOBALS['Language']->getText('contact_admins','title', array($project->getPublicName())),
             '/include/massmail_to_project_admins.php'
@@ -52,7 +51,12 @@ class Widget_Contacts extends Widget {
         $template_factory = TemplateRendererFactory::build();
         $renderer         = $template_factory->getRenderer($presenter->getTemplateDir());
 
-        echo '<a href="#massmail_'.$group_id.'" class="project_home_contact_admins" data-toggle="modal"><i class="icon-envelope-alt"></i> '. $GLOBALS['Language']->getText('include_project_home', 'contact_admins') .'</a>';
+        echo '<a
+            href="#massmail-project-members"
+            data-project-id="'. $group_id .'"
+            class="massmail-project-member-link project_home_contact_admins"
+            data-toggle="modal">
+                <i class="icon-envelope-alt"></i> '. $GLOBALS['Language']->getText('include_project_home', 'contact_admins') .'</a>';
         echo $renderer->renderToString('massmail', $presenter);
 
     }
