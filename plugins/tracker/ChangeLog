@@ -1,3 +1,6 @@
+Version 5.539 - Tuleap 7.9
+    * Part of story #7577 display a Kanban cardwall: A tracker used in Kanban cannot be used in hierarchy
+
 Version 5.538 - Tuleap 7.9
     * request #7725: Cross-references field values not exported in csv
 

@@ -1,3 +1,6 @@
+Version 1.135 - Tuleap 7.9
+    * Part of story #7577 display a Kanban cardwall: A tracker used in Kanban cannot be used in hierarchy
+
 Version 1.134 - Tuleap 7.9
     * request #7722 HTML entities are displayed on A.D. homepage
 
