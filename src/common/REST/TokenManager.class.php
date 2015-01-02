@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2015. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,19 +22,6 @@
  * I Deal with Rest_Token
  */
 class Rest_TokenManager {
-
-    /**
-     * Produce enough entropy to avoid bruteforce attacks
-     * see http://www.php.net/manual/en/function.openssl-random-pseudo-bytes.php#101947
-     */
-    const RANDOM_BYTES_LENGTH = 64;
-
-    /**
-     * Empirically found value: We found that 2 seconds seems acceptable
-     * for a strong enough token generation
-     */
-    const CPU_COST_ALGORITHM  = 15;
-
     /**
      * Expiration time for tokens in seconds (24 hours)
      */
@@ -91,31 +78,13 @@ class Rest_TokenManager {
     }
 
     public function generateTokenForUser(PFUser $user) {
-        $generated_hash = $this->generateNewToken();
-        $this->token_dao->addTokenForUserId($user->getId(), $generated_hash, $_SERVER['REQUEST_TIME']);
+        $token_generator = new UserTokenGenerator();
+        $token = $token_generator->getToken();
+        $this->token_dao->addTokenForUserId($user->getId(), $token, $_SERVER['REQUEST_TIME']);
 
         return new Rest_Token(
             $user->getId(),
-            $generated_hash
+            $token
         );
     }
-
-    private function generateNewToken() {
-        if (!function_exists('password_hash')) {
-            include_once '/usr/share/php-password-compat/lib/password.php';
-        }
-
-        $random_bytes = openssl_random_pseudo_bytes(self::RANDOM_BYTES_LENGTH);
-        $token_value  = password_hash(
-            $random_bytes,
-            PASSWORD_BCRYPT,
-            array(
-                "cost" => self::CPU_COST_ALGORITHM
-            )
-        );
-
-        return base64_encode($token_value);
-    }
-
 }
-?>
