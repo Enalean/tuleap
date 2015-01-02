@@ -30,7 +30,8 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         parent::setUp();
 
         $this->tracker_id           = 3;
-        $this->tracker              = aTracker()->withId($this->tracker_id)->withName('Stories')->withProjectId(101)->build();
+        $project                    = stub('Project')->getId()->returns(101);
+        $this->tracker              = aTracker()->withId($this->tracker_id)->withName('Stories')->withProject($project)->build();
         $this->hierarchical_tracker = new Tracker_Hierarchy_HierarchicalTracker($this->tracker, array());
         $this->request              = new Codendi_Request(array());
         $this->tracker_factory      = new MockTrackerFactory();

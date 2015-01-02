@@ -143,7 +143,7 @@ class Planning_Controller extends MVC2_PluginController {
             $this->getProjectFromRequest()->getPublicName(),
             $kanban_is_activated,
             $user,
-            $this->kanban_manager->getTrackersWithKanbanUsageAndHirarchy($this->group_id),
+            $this->kanban_manager->getTrackersWithKanbanUsageAndHierarchy($this->group_id),
             $this->getKanbanSummaryPresenters(),
             $this->config_manager->scrumIsActivatedForProject($this->group_id),
             $scrum_is_configured
