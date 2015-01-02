@@ -1,23 +1,19 @@
 <?php
 //
+// Copyright 2015 (c) Enalean
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+//
 
-require_once('pre.php');    
-require_once('common/mail/Mail.class.php');
+require_once('pre.php');
 
-
-require_once('common/event/EventManager.class.php');
 $em =& EventManager::instance();
 $em->processEvent('before_lostpw-confirm', array());
 
-if (!isset($GLOBALS['session_hash'])) {
-    $GLOBALS['session_hash'] = '';
-}
-$confirm_hash = md5($GLOBALS['session_hash'] . strval(time()) . strval(rand()));
+$token_generator = new UserTokenGenerator();
+$confirm_hash = $token_generator->getToken();
 
 $request =& HTTPRequest::instance();
 

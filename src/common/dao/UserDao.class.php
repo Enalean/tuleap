@@ -354,17 +354,18 @@ class UserDao extends DataAccessObject {
      */
     function createSession($user_id, $time) {
         
-        // concatinate current time, and random seed for MD5 hash
-        // continue until unique hash is generated (SHOULD only be once)
+        // generate a token from a PRNG
+        // continue until unique token is generated (SHOULD only be once)
+        $token_generator = new UserTokenGenerator();
         do {
-            $hash = md5( $time . rand() . $_SERVER['REMOTE_ADDR'] . microtime() );
+            $token = $token_generator->getToken();
             $sql = "SELECT 1
                     FROM session
-                    WHERE session_hash = ". $this->da->quoteSmart($hash);
+                    WHERE session_hash = ". $this->da->quoteSmart($token);
             $dar = $this->retrieve($sql);
         } while ($dar && $dar->rowCount() == 1);
         $sql = sprintf("INSERT INTO session (session_hash, ip_addr, time,user_id) VALUES (%s, %s, %d, %d)",
-            $this->da->quoteSmart($hash),
+            $this->da->quoteSmart($token),
             $this->da->quoteSmart($_SERVER['REMOTE_ADDR']),
             $time,
             $user_id
@@ -372,9 +373,9 @@ class UserDao extends DataAccessObject {
         if ($this->update($sql)) {
             $this->storeLoginSuccess($user_id, $time);
         } else {
-            $hash = false;
+            $token = false;
         }
-        return $hash;
+        return $token;
     }
 
     /**
