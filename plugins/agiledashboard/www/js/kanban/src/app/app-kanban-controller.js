@@ -3,9 +3,13 @@
         .module('kanban')
         .controller('KanbanCtrl', KanbanCtrl);
 
-    KanbanCtrl.$inject = ['SharedPropertiesService', 'KanbanService'];
+    KanbanCtrl.$inject = [
+        'SharedPropertiesService',
+        'KanbanService',
+        'CardFieldsService'
+    ];
 
-    function KanbanCtrl(SharedPropertiesService, KanbanService) {
+    function KanbanCtrl(SharedPropertiesService, KanbanService, CardFieldsService) {
         var self   = this,
             limit  = 10,
             offset = 0,
@@ -28,6 +32,18 @@
             is_open: false
         };
         self.loading_backlog = true;
+        self.cardFieldIsSimpleValue       = CardFieldsService.cardFieldIsSimpleValue;
+        self.cardFieldIsList              = CardFieldsService.cardFieldIsList;
+        self.cardFieldIsText              = CardFieldsService.cardFieldIsText;
+        self.cardFieldIsDate              = CardFieldsService.cardFieldIsDate;
+        self.cardFieldIsFile              = CardFieldsService.cardFieldIsFile;
+        self.cardFieldIsCross             = CardFieldsService.cardFieldIsCross;
+        self.cardFieldIsPermissions       = CardFieldsService.cardFieldIsPermissions;
+        self.getCardFieldListValues       = CardFieldsService.getCardFieldListValues;
+        self.getCardFieldTextValue        = CardFieldsService.getCardFieldTextValue;
+        self.getCardFieldFileValue        = CardFieldsService.getCardFieldFileValue;
+        self.getCardFieldCrossValue       = CardFieldsService.getCardFieldCrossValue;
+        self.getCardFieldPermissionsValue = CardFieldsService.getCardFieldPermissionsValue;
 
         loadColumns();
         loadBacklog(limit, offset);

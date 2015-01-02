@@ -169,27 +169,13 @@
 
                             > .kanban-item {
                                 position: relative;
-                                height: 150px;
                                 border: 1px solid #e0e0e0;
                                 border-radius: 5px;
                                 background: white;
                                 box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
                                 padding: 10px;
-                                font-size: 0;
                                 color: #666;
-
-                                &:before {
-                                    content: '';
-                                    display: inline-block;
-                                    height: 100%;
-                                    vertical-align: middle;
-                                }
-
-                                > .kanban-item-label {
-                                    display: inline-block;
-                                    vertical-align: middle;
-                                    font-size: 14px;
-                                }
+                                overflow: hidden;
 
                                 > .kanban-item-link {
                                     position: absolute;
@@ -197,6 +183,45 @@
                                     left: 5px;
                                     color: #999;
                                     font-size: 12px;
+                                }
+
+                                > .kanban-item-label {
+                                    padding: 20px 0 5px;
+                                }
+
+                                > ul.extra_card_fields {
+                                    margin: 5px 0 0;
+                                    text-align: left;
+
+                                    > li {
+                                        display: inline-block;
+                                        list-style-type: none;
+                                        font-size: 0.8em;
+
+                                        &.large {
+                                            width: 100%;
+                                        }
+
+                                        > div {
+                                            margin: 0 20px 0 0;
+
+                                            span.extra_card_field_title {
+                                                color: #999;
+                                            }
+
+                                            span.color {
+                                                display: inline-block;
+                                                width: 9px;
+                                                height: 9px;
+                                                border-radius: 50%;
+                                                margin: 0 3px 0 0;
+                                            }
+
+                                            a:hover {
+                                                text-decoration: none;
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }

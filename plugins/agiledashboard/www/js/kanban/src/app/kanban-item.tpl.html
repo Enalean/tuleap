@@ -1,4 +1,38 @@
 <div class="kanban-item">
     <a href="/plugins/tracker/?aid={{ item.id }}" class="kanban-item-link">item #{{ item.id }}</a>
     <div class="kanban-item-label">{{ item.label }}</div>
+
+    <ul class="extra_card_fields" ng-if="item.card_fields.length > 0">
+        <li ng-repeat="card_field in item.card_fields track by $index" ng-class="{ large: kanban.cardFieldIsText(card_field.type) && card_field.value }">
+            <div ng-if="kanban.cardFieldIsSimpleValue(card_field.type) && card_field.value">
+                <span class="extra_card_field_title">{{ card_field.label }}: </span>
+                {{ card_field.value }}
+            </div>
+            <div ng-if="kanban.cardFieldIsList(card_field.type) && card_field.values.length > 0">
+                <span class="extra_card_field_title">{{ card_field.label }}: </span>
+                <span ng-bind-html="kanban.getCardFieldListValues(card_field.values)"></span>
+            </div>
+            <div ng-if="kanban.cardFieldIsDate(card_field.type) && card_field.value">
+                <span class="extra_card_field_title">{{ card_field.label }}: </span>
+                <span am-time-ago="card_field.value"></span>
+            </div>
+            <div ng-if="kanban.cardFieldIsText(card_field.type) && card_field.value">
+                <span class="extra_card_field_title">{{ card_field.label }}: </span>
+                <span ng-bind-html="kanban.getCardFieldTextValue(card_field.value)"></span>
+            </div>
+            <div ng-if="kanban.cardFieldIsFile(card_field.type) && card_field.file_descriptions.length > 0">
+                <span class="extra_card_field_title">{{ card_field.label }}: </span>
+                <span ng-bind-html="kanban.getCardFieldFileValue(item.id, card_field.field_id, card_field.file_descriptions)"></span>
+            </div>
+            <div ng-if="kanban.cardFieldIsCross(card_field.type) && card_field.value">
+                <span class="extra_card_field_title">{{ card_field.label }}: </span>
+                <span ng-bind-html="kanban.getCardFieldCrossValue(card_field.value)"></span>
+            </div>
+            <div ng-if="kanban.cardFieldIsPermissions(card_field.type) && card_field.granted_groups.length > 0">
+                <span class="extra_card_field_title">{{ card_field.label }}: </span>
+                <span ng-bind-html="kanban.getCardFieldPermissionsValue(card_field.granted_groups)"></span>
+            </div>
+            <!-- Artifact links & Burndown fields are not managed yet -->
+        </li>
+    </ul>
 </div>
