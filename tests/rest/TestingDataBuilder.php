@@ -25,12 +25,12 @@ use Tuleap\Testing\Dao;
 
 class TestingDataBuilder extends TestDataBuilder {
 
-    const PROJECT_TEST_MGMT_ID        = 106;
+    const PROJECT_TEST_MGMT_ID        = 108;
     const PROJECT_TEST_MGMT_SHORTNAME = 'test-mgmt';
 
-    const CAMPAIGN_TRACKER_ID         = 18;
-    const TEST_DEF_TRACKER_ID         = 19;
-    const TEST_EXEC_TRACKER_ID        = 20;
+    const CAMPAIGN_TRACKER_ID         = 25;
+    const TEST_DEF_TRACKER_ID         = 26;
+    const TEST_EXEC_TRACKER_ID        = 27;
 
     public function setUp() {
 
