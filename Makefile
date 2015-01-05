@@ -92,9 +92,9 @@ api_test_bootstrap:
 
 api_test: composer_update api_test_bootstrap
 	$(PHPUNIT) $(REST_TESTS_OPTIONS) tests/rest
-	@if [ `\ls plugins/*/tests/rest | \wc -l` -gt 0 ]; then \
-		$(PHPUNIT) $(REST_TESTS_OPTIONS) plugins/*/tests/rest; \
-	fi
+	@for restpath in `\ls -d plugins/*/tests/rest`; do \
+		$(PHPUNIT) $(REST_TESTS_OPTIONS) "$$restpath"; \
+	done;
 
 ci_api_test_setup: composer_update
 	mkdir -p $(WORKSPACE)/etc
