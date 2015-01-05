@@ -14,6 +14,7 @@ Version 7.9 (Not Released Yet)
 	* ldap: 3.65
 
 	== Bug Fix ==
+	* env: Fixing multiple REST plugins tests
 	* request #7692 - Git plugin tries to commit / push as post system event at each run
 	* request #7699 - Fatal Error in SE Monitor if Gerrit Server has been deleted
 	* request #7729: Fatal Error in Contacts widget
