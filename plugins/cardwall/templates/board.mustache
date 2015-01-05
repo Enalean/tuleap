@@ -60,7 +60,7 @@
                             </td>
                         {{/has_swimline_header}}
                         {{#cells}}
-                            <td class="cardwall-cell" data-column-id="{{column_id}}">
+                            <td class="cardwall-cell {{# column_stacked }}cardwall-cell-stacked{{/ column_stacked }}" data-column-id="{{column_id}}">
                                 <div class="cardwall-cell-container">
                                     <ul>
                                         {{#cardincell_presenters}}

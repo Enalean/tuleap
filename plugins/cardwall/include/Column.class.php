@@ -69,6 +69,10 @@ class Cardwall_Column {
         return $this;
     }
 
+    public function isAutostacked() {
+        return $this->autostack;
+    }
+
     public function autostack() {
         if ($this->autostack) {
             return ' checked="checked"';
