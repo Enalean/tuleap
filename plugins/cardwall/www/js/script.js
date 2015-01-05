@@ -265,10 +265,6 @@ document.observe('dom:loaded', function () {
                         }
                     });
                 });
-
-                if (toggle_input.checked) {
-                    $$(cells_in_column).invoke('addClassName', stacked_classname);
-                }
             });
 
             $$('.cardwall-cell-controls-stack').each(function (icon_resize) {
