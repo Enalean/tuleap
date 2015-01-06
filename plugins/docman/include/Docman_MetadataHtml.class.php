@@ -1,26 +1,24 @@
 <?php
 /*
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
- * 
- * This file is a part of Codendi.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-require_once('Docman_Metadata.class.php');
 
 class Docman_MetadataHtmlFactory {
     
@@ -90,27 +88,40 @@ class Docman_ValidateMetadataIsNotEmpty extends Docman_Validator {
 }
 
 class Docman_ValidateMetadataListIsNotEmpty extends Docman_Validator {
-    function Docman_ValidateMetadataListIsNotEmpty(&$md) {
-        $msg = $GLOBALS['Language']->getText('plugin_docman', 'md_error_empty_gen', array($md->getName()));
-        if($md !== null) {
-            $selectedElements = array();
-            $vIter = $md->getValue();
+    function Docman_ValidateMetadataListIsNotEmpty(&$metadata) {
+        $msg = $GLOBALS['Language']->getText('plugin_docman', 'md_error_empty_gen', array($metadata->getName()));
 
+        if ($metadata !== null) {
+            $selected_elements = array();
+
+            $vIter = $metadata->getValue();
             $vIter->rewind();
-            while($vIter->valid()) {
-                $e = $vIter->current();
 
-                $selectedElements[] = $e->getId();
+            while($vIter->valid()) {
+                $current_value       = $vIter->current();
+                $selected_elements[] = $current_value->getId();
 
                 $vIter->next();
             }
 
-            if(count($selectedElements) <= 1 && isset($selectedElements[0]) && $selectedElements[0] == 100) {
+            if (! $this->metadataIsRequieredAndAtLeastOneValueIsSelected($metadata, $selected_elements)) {
                 $this->addError($msg);
             }
         }
         else {
             $this->addError($msg);
+        }
+    }
+
+    private function metadataIsRequieredAndAtLeastOneValueIsSelected(Docman_ListMetadata $metadata, array $selectedElements) {
+        if ($metadata->isEmptyAllowed()) {
+            return true;
+        } elseif (count($selectedElements) > 1) {
+            return true;
+        } elseif (count($selectedElements) === 1 && isset($selectedElements[0]) && $selectedElements[0] != 100) {
+            return true;
+        } else {
+            return false;
         }
     }
 }
@@ -509,7 +520,4 @@ class Docman_MetadataHtmlOwner extends Docman_MetadataHtmlString {
         $field = '<input type="text" class="text_field" name="'.$this->_getFieldName().'" value="'.$v.'" />';
         return $field;
     }
-
 }
-
-?>
