@@ -42,6 +42,18 @@ class AgileDashboard_KanbanDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function getKanbanById($kanban_id) {
+        $kanban_id = $this->da->escapeInt($kanban_id);
+
+        $sql = "SELECT kanban_config.*, tracker.group_id
+                FROM plugin_agiledashboard_kanban_configuration AS kanban_config
+                    INNER JOIN tracker
+                    ON (tracker.id = kanban_config.tracker_id)
+                WHERE kanban_config.id = $kanban_id";
+
+        return $this->retrieve($sql);
+    }
+
     public function getTrackersWithKanbanUsageAndHierarchy($project_id) {
         $project_id = $this->da->escapeInt($project_id);
 

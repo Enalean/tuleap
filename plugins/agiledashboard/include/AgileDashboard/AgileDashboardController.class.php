@@ -271,11 +271,11 @@ class AgileDashboard_Controller extends MVC2_PluginController {
     }
 
     public function showKanban() {
-        $tracker_id  = $this->request->get('tracker');
-        $user        = $this->request->getCurrentUser();
+        $kanban_id = $this->request->get('id');
+        $user      = $this->request->getCurrentUser();
 
         try {
-            $kanban = $this->kanban_factory->getKanban($user, $tracker_id);
+            $kanban = $this->kanban_factory->getKanban($user, $kanban_id);
 
             return $this->renderToString(
                 'kanban',

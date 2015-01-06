@@ -37,6 +37,11 @@ class KanbanRepresentation {
     /**
      * @var Int
      */
+    public $tracker_id;
+
+    /**
+     * @var Int
+     */
     public $uri;
 
     /**
@@ -65,12 +70,13 @@ class KanbanRepresentation {
     public $resources;
 
     public function build(AgileDashboard_Kanban $kanban) {
-        $this->id        = JsonCast::toInt($kanban->getTrackerId());
-        $this->uri       = self::ROUTE.'/'.$this->id;
-        $this->label     = $kanban->getName();
-        $this->columns   = array();
-        $this->nb_open   = 0;
-        $this->nb_closed = 0;
+        $this->id         = JsonCast::toInt($kanban->getId());
+        $this->tracker_id = JsonCast::toInt($kanban->getTrackerId());
+        $this->uri        = self::ROUTE.'/'.$this->id;
+        $this->label      = $kanban->getName();
+        $this->columns    = array();
+        $this->nb_open    = 0;
+        $this->nb_closed  = 0;
 
         $this->setColumns($kanban);
 

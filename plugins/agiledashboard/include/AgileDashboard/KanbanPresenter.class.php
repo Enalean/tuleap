@@ -40,6 +40,6 @@ class KanbanPresenter {
         $this->kanban_name   = $kanban->getName();
         $this->kanban_open   = 0;
         $this->kanban_closed = 0;
-        $this->tracker_id    = $kanban->getTrackerId();
+        $this->kanban_id     = $kanban->getId();
     }
 }

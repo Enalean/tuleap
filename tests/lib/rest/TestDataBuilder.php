@@ -82,6 +82,8 @@ class TestDataBuilder {
     const DELETED_TRACKER_ID      = 6;
     const KANBAN_TRACKER_ID       = 7;
 
+    const KANBAN_ID = 1;
+
     const RELEASE_ARTIFACT_ID     = 1;
     const SPRINT_ARTIFACT_ID      = 2;
     const EPIC_1_ARTIFACT_ID      = 3;
