@@ -94,7 +94,6 @@ if ($user->isLoggedIn()) {
 //
 // Display login page
 //
-$purifier =& Codendi_HTMLPurifier::instance();
 
 // Display mode
 $pvMode = false;
@@ -120,7 +119,6 @@ if ($_useHttps && $GLOBALS['sys_force_ssl'] == 0 ) {
 }
 
 $presenter = new User_LoginPresenter(
-    $purifier,
     $_rVar['return_to'],
     $_cVar['pv'],
     $_rVar['form_loginname'],
@@ -151,7 +149,3 @@ if ($pvMode) {
 } else {
     $GLOBALS['HTML']->footer(array());
 }
-
-?>
-
-

@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,8 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
 class URLRedirect_MakeUrlTest extends TuleapTestCase {
+
     private $request;
     private $url_redirect;
 
@@ -63,7 +64,6 @@ class URLRedirect_MakeUrlTest extends TuleapTestCase {
         $this->assertEqual('http://example.com/my/index.php', $this->url_redirect->makeReturnToUrl($this->request, '/my/index.php'));
     }
 
-
     public function itStayInSSLWhenForceSSLIsOffAndNoStayInSSL() {
         stub($this->request)->isSSL()->returns(true);
         $GLOBALS['sys_force_ssl'] = 0;
@@ -81,4 +81,19 @@ class URLRedirect_MakeUrlTest extends TuleapTestCase {
 
         $this->assertEqual('/my/index.php', $this->url_redirect->makeReturnToUrl($this->request, '/my/index.php'));
     }
+
+    public function itNotRedirectToUntrustedWebsite() {
+        stub($this->request)->existAndNonEmpty('return_to')->returns(true);
+        stub($this->request)->get('return_to')->returns('http://evil.tld/');
+        $this->assertEqual('/my/redirect.php?return_to=/', $this->url_redirect->makeReturnToUrl($this->request, '/my/redirect.php'));
+    }
+
+    public function itNotRedirectToUntrustedCode() {
+        stub($this->request)->existAndNonEmpty('return_to')->returns(true);
+        stub($this->request)->get('return_to')->returns('javascript:alert(1)');
+        $this->assertEqual('/my/redirect.php?return_to=/', $this->url_redirect->makeReturnToUrl($this->request, '/my/redirect.php'));
+        stub($this->request)->get('return_to')->returns('vbscript:msgbox(1)');
+        $this->assertEqual('/my/redirect.php?return_to=/', $this->url_redirect->makeReturnToUrl($this->request, '/my/redirect.php'));
+    }
+
 }

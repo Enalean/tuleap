@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
  * This file is a part of Codendi.
  *
@@ -847,6 +848,18 @@ class URLVerification_PrivateRestrictedTest extends TuleapTestCase {
             $this->url_verification->userCanAccessProject($this->user, $this->project)
         );
     }
-}
 
-?>
+    public function itChecksUriInternal() {
+        $this->assertFalse($this->url_verification->isInternal('http://evil.tld/'));
+        $this->assertFalse($this->url_verification->isInternal('https://evil.tld/'));
+        $this->assertFalse($this->url_verification->isInternal('javascript:alert(1)'));
+        $this->assertTrue($this->url_verification->isInternal('/path/to/feature'));
+        $this->assertTrue(
+                $this->url_verification->isInternal('http://' . $GLOBALS['sys_default_domain'] . '/smthing')
+            );
+        $this->assertTrue(
+                $this->url_verification->isInternal('https://' . $GLOBALS['sys_https_host'] . '/smthing')
+            );
+
+    }
+}

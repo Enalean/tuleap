@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,7 +24,6 @@ class OpenId_LoginPresenter extends User_LoginPresenter {
 
     public function __construct(User_LoginPresenter $login_presenter) {
         parent::__construct(
-            $login_presenter->getPurifier(),
             $login_presenter->getReturnTo(),
             $login_presenter->getPv(),
             $login_presenter->getFormLoginName(),

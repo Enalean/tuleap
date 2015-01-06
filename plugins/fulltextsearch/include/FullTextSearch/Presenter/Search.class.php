@@ -32,6 +32,8 @@ class FullTextSearch_Presenter_Search {
 
     public $keywords;
 
+    private $purifier;
+
 
     public function __construct(FullTextSearch_SearchResultCollection $query_result, $maybe_more_results, $keywords) {
         $this->query_result       = $query_result;
@@ -39,6 +41,7 @@ class FullTextSearch_Presenter_Search {
         $this->more_results       = $GLOBALS['Language']->getText('search_index', 'more_results');
         $this->maybe_more_results = $maybe_more_results;
         $this->keywords           = $keywords;
+        $this->purifier           = Codendi_HTMLPurifier::instance();
     }
 
     public function has_results() {
@@ -82,6 +85,6 @@ class FullTextSearch_Presenter_Search {
     }
 
     public function no_match_found_string() {
-        return $GLOBALS['Language']->getText('search_index', 'no_match_found', $this->keywords);
+        return $GLOBALS['Language']->getText('search_index', 'no_match_found', $this->purifier->purify($this->keywords));
     }
 }
