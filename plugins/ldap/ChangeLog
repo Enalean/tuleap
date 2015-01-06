@@ -1,3 +1,6 @@
+Version 3.66 - Tuleap 7.9
+    * request #7739: LDAP autocompletion seems broken
+
 Version 3.65 - Tuleap 7.9
     * request #7718 Fix LDAP injections
 

@@ -11,7 +11,7 @@ Version 7.9 (Not Released Yet)
 	* docman: 2.26.56
 	* boomerang: 0.4
 	* statistics: 0.41
-	* ldap: 3.65
+	* ldap: 3.66
 
 	== Bug Fix ==
 	* env: Fixing multiple REST plugins tests
