@@ -440,10 +440,10 @@ class LDAP {
             }
             if (isset($this->ldapParams['tooltip_search_user'])) {
                 $asr = ldap_search($ds, $peopleDn, $filter, $attrs, $attrsOnly, $sizeLimit, 0, LDAP_DEREF_NEVER);
-                $this->logger->debug('LDAP in-depth search as you type '.$filter. ' ***PEOPLEDN: '.$peopleDn . ' ***errors:'.  ldap_error($link_identifier));
+                $this->logger->debug('LDAP in-depth search as you type '.$filter. ' ***PEOPLEDN: '.$peopleDn . ' ***errors:'.  ldap_error($this->ds));
             } else {
                 $asr = ldap_list($ds, $peopleDn, $filter, $attrs, $attrsOnly, $sizeLimit, 0, LDAP_DEREF_NEVER);
-                $this->logger->debug('LDAP high-level search as you type '.$filter. ' ***PEOPLEDN: '.$peopleDn . ' ***errors:'.  ldap_error($link_identifier));
+                $this->logger->debug('LDAP high-level search as you type '.$filter. ' ***PEOPLEDN: '.$peopleDn . ' ***errors:'.  ldap_error($this->ds));
             }
             if ($asr !== false) {
                 foreach ($asr as $sr) {
