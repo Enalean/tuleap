@@ -90,6 +90,20 @@ class GraphOnTrackersV5_Engine_CumulativeFlow extends GraphOnTrackersV5_Engine {
                 $line->SetLegend($this->keys[$i]);
                 $this->graph->Add($line);
             }
+
+            try {
+                $legend_line_height  = 20;
+                $graph_margin_bottom = 70;
+                $margin_size         = $this->nbOpt * $legend_line_height + $graph_margin_bottom;
+
+                $this->graph->img->SetMargin(70, 30, 30, $margin_size);
+
+            } catch(Exception $e) {
+                // do nothing, JPGraph displays the error by itself
+            }
+
+            $this->graph->legend->SetAbsPos(0, $this->height, 'left', 'bottom');
+
         } else {
             $this->graph = $this->error;
         }

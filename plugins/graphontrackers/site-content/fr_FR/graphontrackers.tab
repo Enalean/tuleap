@@ -25,7 +25,7 @@
 #-----------------------------------------------
 # Script:src/common/charts/Chart.class.php
 #
-plugin_graphontrackers_error	jp_graph	Erreur JpGraph pour le graphique $1
+plugin_graphontrackers_error	jp_graph	Erreur JpGraph pour le graphique "$1" : $2
 #-----------------------------------------------
 # Script:include/graphic-library/*_engine.class
 #
