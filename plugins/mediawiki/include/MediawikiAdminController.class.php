@@ -109,12 +109,21 @@ class MediawikiAdminController {
             $new_mapping_list = $this->getSelectedMappingsFromRequest($request, $project);
             $this->mapper->saveMapping($new_mapping_list, $project);
 
-            $options = array();
-            foreach (array_keys($this->manager->getDefaultOptions()) as $key) {
-                $options[$key] = $request->get($key);
+            $options = $this->manager->getDefaultOptions();
+
+            if (! $this->requestIsRestore($request)) {
+                foreach (array_keys($this->manager->getDefaultOptions()) as $key) {
+                    $options[$key] = $request->get($key);
+                }
             }
 
             $this->manager->saveOptions($project, $options);
+
+            if ($this->requestIsRestore($request)) {
+                $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_mediawiki', 'options_restored'));
+            } else {
+                $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_mediawiki', 'options_saved'));
+            }
         }
 
         $GLOBALS['Response']->redirect(MEDIAWIKI_BASE_URL .'/forge_admin?'. http_build_query(
