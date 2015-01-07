@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ElasticSearch_SearchResult {
+abstract class ElasticSearch_SearchResult {
     public $display_permissions;
     public $permissions;
     public $project_name;
@@ -32,5 +32,6 @@ class ElasticSearch_SearchResult {
             $this->permissions = implode(', ', $hit['fields']['permissions']);
         }
     }
+
+    abstract public function type();
 }
-?>

@@ -27,5 +27,8 @@ class ElasticSearch_SearchResultTracker extends ElasticSearch_SearchResult {
         $this->url            = '/plugins/tracker/?group_id='.$hit['fields']['group_id'].'&id='.$hit['fields']['id'].'&action=details';
         parent::__construct($hit, $project);
     }
+
+    public function type() {
+        return '';
+    }
 }
-?>

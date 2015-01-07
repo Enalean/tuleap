@@ -34,5 +34,8 @@ class ElasticSearch_SearchResultWiki extends ElasticSearch_SearchResult {
 
         parent::__construct($hit, $project);
     }
+
+    public function type() {
+        return 'wiki';
+    }
 }
-?>
