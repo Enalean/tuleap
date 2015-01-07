@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014, 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -69,6 +69,15 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
     /** @var Tracker_XMLUpdater_TemporaryFileXMLUpdater */
     private $file_updater;
 
+    /** @var Tracker_XMLExporter_ChildrenXMLExporter */
+    private $children_xml_exporter;
+
+    /** @var Tracker_XMLImporter_ChildrenXMLImporter */
+    private $children_xml_importer;
+
+    /** @var Tracker_XMLImporter_ArtifactImportedMapping */
+    private $artifacts_imported_mapping;
+
     public function setUp() {
         parent::setUp();
 
@@ -88,6 +97,9 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
         $this->from_artifact->setChangesets(array($this->changeset_id => $this->from_changeset));
         stub($this->from_artifact)->getChangesetFactory()->returns($changeset_factory);
         stub($this->from_changeset)->getArtifact()->returns($this->from_artifact);
+        $this->children_xml_exporter       = mock('Tracker_XMLExporter_ChildrenXMLExporter');
+        $this->children_xml_importer       = mock('Tracker_XMLImporter_ChildrenXMLImporter');
+        $this->artifacts_imported_mapping  = mock('Tracker_XMLImporter_ArtifactImportedMapping');
 
         $this->submitted_values = array();
 
@@ -108,7 +120,10 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
             $this->xml_exporter,
             $this->xml_importer,
             $this->xml_updater,
-            $this->file_updater
+            $this->file_updater,
+            $this->children_xml_exporter,
+            $this->children_xml_importer,
+            $this->artifacts_imported_mapping
         );
     }
 
@@ -167,6 +182,32 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
             $this->user,
             $_SERVER['REQUEST_TIME']
         )->once();
+
+        $this->action->process($this->layout, $this->request, $this->user);
+    }
+
+    public function itRecursivelyExportsChildrenOfTheCurrentArtifact() {
+        stub($this->tracker)->userCanSubmitArtifact($this->user)->returns(true);
+
+        expect($this->children_xml_exporter)->exportChildren()->once();
+
+        $this->action->process($this->layout, $this->request, $this->user);
+    }
+
+    public function itImportsChildren() {
+        stub($this->tracker)->userCanSubmitArtifact($this->user)->returns(true);
+        stub($this->xml_importer)->importOneArtifactFromXML()->returns($this->new_artifact);
+
+        expect($this->children_xml_importer)->importChildren('*', '*', '*', $this->new_artifact, $this->user)->once();
+
+        $this->action->process($this->layout, $this->request, $this->user);
+    }
+
+    public function itStacksTheMappingBetweenOldAndNewArtifact() {
+        stub($this->tracker)->userCanSubmitArtifact($this->user)->returns(true);
+        stub($this->xml_importer)->importOneArtifactFromXML()->returns($this->new_artifact);
+
+        expect($this->artifacts_imported_mapping)->add($this->artifact_id, $this->new_artifact_id)->once();
 
         $this->action->process($this->layout, $this->request, $this->user);
     }

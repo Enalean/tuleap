@@ -21,6 +21,11 @@
 class Tracker_XMLExporter_ChangesetValueXMLExporterVisitor implements Tracker_Artifact_ChangesetValueVisitor {
 
     /**
+     * @var Tracker_XMLExporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter
+     */
+    private $artlink_exporter;
+
+    /**
      * @var Tracker_XMLExporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter
      */
     private $perms_exporter;
@@ -80,6 +85,7 @@ class Tracker_XMLExporter_ChangesetValueXMLExporterVisitor implements Tracker_Ar
             Tracker_XMLExporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter $perms_exporter,
             Tracker_XMLExporter_ChangesetValue_ChangesetValueListXMLExporter $list_exporter,
             Tracker_XMLExporter_ChangesetValue_ChangesetValueOpenListXMLExporter $open_list_exporter,
+            Tracker_XMLExporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter $artlink_exporter,
             Tracker_XMLExporter_ChangesetValue_ChangesetValueUnknownXMLExporter $unknown_exporter
     ) {
         $this->file_exporter      = $file_exporter;
@@ -92,20 +98,22 @@ class Tracker_XMLExporter_ChangesetValueXMLExporterVisitor implements Tracker_Ar
         $this->list_exporter      = $list_exporter;
         $this->open_list_exporter = $open_list_exporter;
         $this->unknown_exporter   = $unknown_exporter;
+        $this->artlink_exporter   = $artlink_exporter;
     }
 
     public function export(
         SimpleXMLElement $artifact_xml,
         SimpleXMLElement $changeset_xml,
+        Tracker_Artifact $artifact,
         Tracker_Artifact_ChangesetValue $changeset_value
     ) {
         /* @var $exporter Tracker_XMLExporter_ChangesetValue_ChangesetValueXMLExporter */
         $exporter = $changeset_value->accept($this);
-        $exporter->export($artifact_xml, $changeset_xml, $changeset_value);
+        $exporter->export($artifact_xml, $changeset_xml, $artifact, $changeset_value);
     }
 
     public function visitArtifactLink(Tracker_Artifact_ChangesetValue_ArtifactLink $changeset_value) {
-        return $this->unknown_exporter;
+        return $this->artlink_exporter;
     }
 
     public function visitDate(Tracker_Artifact_ChangesetValue_Date $changeset_value) {
