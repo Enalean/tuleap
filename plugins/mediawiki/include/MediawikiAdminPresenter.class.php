@@ -86,15 +86,7 @@ class MediawikiAdminPresenter {
     }
 
     public function submit_label() {
-        return $GLOBALS['Language']->getText('global', 'btn_update');
-    }
-
-    public function reset_label() {
-        return $GLOBALS['Language']->getText('global', 'btn_cancel');
-    }
-
-    public function should_display_restore() {
-        return ! $this->is_default_mapping;
+        return $GLOBALS['Language']->getText('plugin_mediawiki', 'save_changes');
     }
 
     public function or_string() {
@@ -103,5 +95,9 @@ class MediawikiAdminPresenter {
 
     public function restore_label() {
         return $GLOBALS['Language']->getText('plugin_mediawiki', 'restore_defaults');
-   }
+    }
+
+    public function options_title() {
+        return $GLOBALS['Language']->getText('plugin_mediawiki', 'options_title');
+    }
 }
