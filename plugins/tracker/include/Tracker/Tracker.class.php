@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2011, 2012, 2013, 2014, 2015. All Rights Reserved.
  *
  * This file is a part of Codendi.
  *
@@ -669,13 +670,21 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 $action->process($layout, $request, $current_user);
                 break;
             case 'submit-copy-artifact':
-                $action = new Tracker_Action_CopyArtifact(
+                $xml_importer       = $this->getArtifactXMLImporter();
+                $children_collector = new Tracker_XMLExporter_ChildrenCollector();
+                $action             = new Tracker_Action_CopyArtifact(
                     $this,
                     $this->getTrackerArtifactFactory(),
-                    $this->getArtifactXMLExporter(),
-                    $this->getArtifactXMLImporter(),
+                    $this->getArtifactXMLExporter($children_collector),
+                    $xml_importer,
                     $this->getChangesetXMLUpdater(),
-                    $this->getFileXMLUpdater()
+                    $this->getFileXMLUpdater(),
+                    $children_collector,
+                    new Tracker_XMLExporter_ChildrenXMLExporter(),
+                    new Tracker_XMLImporter_ChildrenXMLImporter(
+                        $xml_importer,
+                        $this->getTrackerFactory()
+                    )
                 );
                 $action->process($layout, $request, $current_user);
                 break;
@@ -3202,7 +3211,7 @@ EOS;
         );
     }
 
-    private function getArtifactXMLExporter() {
+    private function getArtifactXMLExporter(Tracker_XMLExporter_ChildrenCollector $children_collector) {
         $visitor = new Tracker_XMLExporter_ChangesetValueXMLExporterVisitor(
             new Tracker_XMLExporter_ChangesetValue_ChangesetValueDateXMLExporter(),
             new Tracker_XMLExporter_ChangesetValue_ChangesetValueFileXMLExporter(
@@ -3215,6 +3224,7 @@ EOS;
             new Tracker_XMLExporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter(),
             new Tracker_XMLExporter_ChangesetValue_ChangesetValueListXMLExporter(),
             new Tracker_XMLExporter_ChangesetValue_ChangesetValueOpenListXMLExporter(),
+            new Tracker_XMLExporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter($children_collector),
             new Tracker_XMLExporter_ChangesetValue_ChangesetValueUnknownXMLExporter()
         );
         $values_exporter    = new Tracker_XMLExporter_ChangesetValuesXMLExporter($visitor);

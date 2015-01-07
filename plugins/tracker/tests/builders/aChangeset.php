@@ -64,6 +64,11 @@ class Test_Tracker_Changeset_Builder {
         return $this;
     }
 
+    public function withArtifact(Tracker_Artifact $artifact) {
+        $this->artifact = $artifact;
+        return $this;
+    }
+
     /**
      * @return Tracker_Artifact_Changeset
      */

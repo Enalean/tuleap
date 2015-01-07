@@ -27,6 +27,7 @@ class Tracker_XMLExporter_ChangesetValue_ChangesetValueIntegerXMLExporter extend
     public function export(
         SimpleXMLElement $artifact_xml,
         SimpleXMLElement $changeset_xml,
+        Tracker_Artifact $artifact,
         Tracker_Artifact_ChangesetValue $changeset_value
     ) {
         $field_change = $this->createFieldChangeNodeInChangesetNode(
