@@ -4,12 +4,14 @@ Version 7.10 ()
 	* request #7731: Columns defined as collapsed by default are not collapsed in cardwall report on dashboards
 	* request #5550 Date reminder form messed with bootstrap
 	* request #7750: Graph cumulative flow legend overlaps on graph
+	* request #7751: Enhance Mediawiki administration UI
 
 	== Plugins ==
 	* tracker_date_reminder: 1.2.9
 	* graphontrackers: 1.12
 	* graphontrackersv5: 5.16
 	* tracker: 5.540
+	* mediawiki: 0.59
 
 	== Themes ==
 	* FlamingParrot: 1.61
