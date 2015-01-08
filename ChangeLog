@@ -18,6 +18,7 @@ Version 7.10 ()
 	* mediawiki: 0.59
 	* fulltextsearch: 0.108
 	* git: 4.3
+	* docman: 2.26.57
 
 	== Themes ==
 	* FlamingParrot: 1.63

@@ -1,3 +1,6 @@
+Version 2.26.57 - Tuleap 7.10
+    * request #7738 mandatory property for docman can be bypassed for multi-select properties
+
 Version 2.26.56 - Tuleap 7.9
     * story #7688 keep versions of links documents
 
