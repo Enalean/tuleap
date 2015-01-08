@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2005. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2005
@@ -45,21 +45,23 @@ if($request->valid($vReturnTo)) {
     // Re-serialize feedback to display it on the 'return_to' page.
     $HTML->_serializeFeedback();
 
-    $return_url = trim($request->get('return_to'));
-    
+    $url_verifier = new URLVerification();
+    $return_url = '/';
+    if ($url_verifier->isInternal($request->get('return_to'))) {
+        $return_url = $request->get('return_to');
+    }
+
     $redirect = $Language->getText('my_redirect', 'return_to', array($hp->purify($return_url, CODENDI_PURIFIER_CONVERT_HTML)));
-    
+
     print '
-<script language="JavaScript"> 
-<!--
+<script type="text/javascript">
 function return_to_url() {
   window.location="'.$hp->purify($return_url, CODENDI_PURIFIER_JS_QUOTE).'";
 }
 
 setTimeout("return_to_url()",1000);
-//--> 
 </script>
-';	 
+';
 }
 else {
     $redirect = $Language->getText('my_redirect', 'default_txt');
