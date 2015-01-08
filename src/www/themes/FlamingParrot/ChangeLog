@@ -1,3 +1,6 @@
+Version 1.61 - Tuleap 7.10
+    * request #5550 Date reminder form messed with bootstrap
+
 Version 1.60 - Tuleap 7.9
     * request #7115 Restricted users should not see the search bar
 

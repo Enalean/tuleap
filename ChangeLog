@@ -2,6 +2,13 @@ Version 7.10 ()
 
 	== Bug Fix ==
 	* request #7731: Columns defined as collapsed by default are not collapsed in cardwall report on dashboards
+	* request #5550 Date reminder form messed with bootstrap
+
+	== Plugins ==
+	* tracker_date_reminder: 1.2.9
+
+	== Themes ==
+	* FlamingParrot: 1.61
 
 Version 7.9 (Wednesday, January 7th 2015)
 
