@@ -54,7 +54,7 @@ class User_SSHKeyDumper {
     public function writeSSHKeys(PFUser $user) {
         try {
             if ($user->getUnixStatus() != 'A') {
-                return false;
+                return true;
             }
             $ssh_dir  = $user->getUnixHomeDir().'/.ssh';
 

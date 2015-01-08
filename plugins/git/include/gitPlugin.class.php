@@ -70,6 +70,7 @@ class GitPlugin extends Plugin {
 
         $this->_addHook(Event::LIST_SSH_KEYS,                              'getRemoteServersForUser',                      false);
         $this->_addHook(Event::DUMP_SSH_KEYS);
+        $this->_addHook(Event::EDIT_SSH_KEYS);
         $this->_addHook(Event::PROCCESS_SYSTEM_CHECK);
         $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
         $this->_addHook(Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES);
@@ -293,6 +294,22 @@ class GitPlugin extends Plugin {
                     $this->getManifestManager(),
                 );
                 break;
+            case SystemEvent_GIT_EDIT_SSH_KEYS::NAME:
+                $params['class'] = 'SystemEvent_GIT_EDIT_SSH_KEYS';
+                $params['dependencies'] = array(
+                    UserManager::instance(),
+                    $this->getSSHKeyDumper(),
+                    $this->getUserAccountManager(),
+                    $this->getLogger()
+                );
+                break;
+            case SystemEvent_GIT_DUMP_ALL_SSH_KEYS::NAME:
+                $params['class'] = 'SystemEvent_GIT_DUMP_ALL_SSH_KEYS';
+                $params['dependencies'] = array(
+                    $this->getSSHKeyMassDumper(),
+                    $this->getLogger()
+                );
+                break;
             default:
                 break;
         }
@@ -458,6 +475,15 @@ class GitPlugin extends Plugin {
     }
 
     /**
+     *
+     * @see Event::EDIT_SSH_KEYS
+     * @param array $params
+     */
+    public function edit_ssh_keys(array $params) {
+        $this->getGitSystemEventManager()->queueEditSSHKey($params['user_id'], $params['original_keys']);
+    }
+
+    /**
      * Hook. Call by backend when SSH keys are modified
      *
      * @param array $params Should contain two entries:
@@ -465,81 +491,7 @@ class GitPlugin extends Plugin {
      *     'original_keys' => string of concatenated ssh keys
      */
     public function dump_ssh_keys(array $params) {
-        $this->dump_ssh_keys_gitolite($params);
-        $this->dump_ssh_keys_gerrit($params);
-    }
-
-    private function isEventRootDaily(array $params) {
-        return count($params) == 0;
-    }
-
-    /**
-     * Called by backend to ensure that all ssh keys are in gitolite conf
-     * 
-     * As we are root we use a dedicated script to be run as codendiadm.
-     * @see Git_Backend_Gitolite::glRenameProject
-     *
-     * @param array $params
-     */
-    protected function dump_ssh_keys_gitolite(array $params) {
-        $retVal = 0;
-        $output = array();
-        $mvCmd  = $GLOBALS['codendi_dir'].'/src/utils/php-launcher.sh '.$GLOBALS['codendi_dir'].'/plugins/git/bin/gl-dump-sshkeys.php';
-        if (! $this->isEventRootDaily($params) && isset($params['user'])) {
-            $mvCmd .= ' '.$params['user']->getId();
-        }
-        $cmd    = 'su -l codendiadm -c "'.$mvCmd.' 2>&1"';
-        exec($cmd, $output, $retVal);
-        if ($retVal == 0) {
-            return true;
-        } else {
-            throw new Exception('Unable to dump ssh keys (error code: '.$retVal.'): '.implode("\n", $output));
-            return false;
-        }
-    }
-
-    /**
-     * Method called as a hook.
-     *
-     * @param array $params Should contain two entries:
-     *     'user' => PFUser,
-     *     'original_keys' => string of concatenated ssh keys
-     * 
-     * @return void
-     */
-    protected function dump_ssh_keys_gerrit(array $params) {
-        if ($this->isEventRootDaily($params)) {
-            return true;
-        }
-        if (! $user = $this->getUserFromParameters($params)) {
-            return;
-        }
-
-        $user                     = $params['user'];
-        $git_user_account_manager = $this->getUserAccountManager();
-        $new_keys                 = $user->getAuthorizedKeysArray();
-        $original_keys            = array();
-
-        if (isset($params['original_keys']) && is_string($params['original_keys'])) {
-            $original_keys = $this->getKeysFromString($params['original_keys']);
-        }
-
-        try {
-            $git_user_account_manager->synchroniseSSHKeys(
-                $original_keys,
-                $new_keys,
-                $user
-            );
-        } catch (Git_UserSynchronisationException $e) {
-            $this->getLogger()->error('Unable to propagate ssh keys for user: ' . $user->getUnixName());
-        }
-    }
-
-    private function getKeysFromString($keys_as_string) {
-        $user = new PFUser();
-        $user->setAuthorizedKeys($keys_as_string);
-
-        return array_filter($user->getAuthorizedKeysArray());
+        $this->getGitSystemEventManager()->queueDumpAllSSHKeys();
     }
 
     /**
@@ -1305,6 +1257,19 @@ class GitPlugin extends Plugin {
                 $this->getLogger(),
                 Config::get('sys_data_dir').'/gitolite/grokmirror'
             )
+        );
+    }
+
+    private function getSSHKeyDumper() {
+        $admin_path = $GLOBALS['sys_data_dir'] . '/gitolite/admin';
+        $git_exec   = new Git_Exec($admin_path);
+        return new Git_Gitolite_SSHKeyDumper($admin_path, $git_exec);
+    }
+
+    private function getSSHKeyMassDumper() {
+        return new Git_Gitolite_SSHKeyMassDumper(
+            $this->getSSHKeyDumper(),
+            UserManager::instance()
         );
     }
 
