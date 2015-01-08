@@ -8,6 +8,7 @@ Version 7.10 ()
 	* request #5550 Date reminder form messed with bootstrap
 	* request #7750: Graph cumulative flow legend overlaps on graph
 	* request #7751: Enhance Mediawiki administration UI
+	* request #7673 Git errors when creating repo and dumping ssh keys
 
 	== Plugins ==
 	* tracker_date_reminder: 1.2.9
@@ -16,6 +17,7 @@ Version 7.10 ()
 	* tracker: 5.540
 	* mediawiki: 0.59
 	* fulltextsearch: 0.108
+	* git: 4.3
 
 	== Themes ==
 	* FlamingParrot: 1.63
