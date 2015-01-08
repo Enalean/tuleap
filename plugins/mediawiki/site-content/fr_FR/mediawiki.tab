@@ -1,6 +1,7 @@
 plugin_mediawiki	service_lbl_key	Mediawiki
 plugin_mediawiki	service_desc_key	Mediawiki
 plugin_mediawiki	admin_title	Administration Mediawiki
+plugin_mediawiki	options_title	Options
 plugin_mediawiki	compatibility_view_text	Activer cette option si vous souhaitez utiliser Mediawiki en plein écran. Ce mode vous permet d'utiliser l'extension WikiEditor, non disponible avec le rendu standard.
 plugin_mediawiki	title	Mediawiki Plugin
 plugin_mediawiki	descriptor_description	Plugin qui implémente le support de Mediawiki
@@ -9,16 +10,20 @@ plugin_mediawiki	descriptor_name	Plugin Mediawiki
 plugin_mediawiki	group_mapping_title	Gestion des groupes Mediawiki
 plugin_mediawiki	group_mapping_help_intro	Cette section permet de définir les associations entre les groupes $1 et MediaWiki
 plugin_mediawiki	group_mapping_help_link	Vous pouvez trouver plus de détail sur ce que les groupes MediaWiki peuvent faire ici: <a href="$1">Special:User groups rights</a>
-plugin_mediawiki	group_mapping_help_project_public	Les deux groupes MediaWiki "Anonymous" and "User" sont assiciés en dur à, respectivement, "Tous les utilisateurs" et "Utilisateurs enregistrés". Dans ce project, public, cela signifie que tous les utilisateurs anonymes (non autentifiés) pourront lire le contenu du wiki et que tous les utilisateurs autentifiés pourront modifier ou créér des pages (pour plus de détails quant aux droits, se réferer à la page User Rights page).
-plugin_mediawiki	group_mapping_help_project_private	Les deux groupes MediaWiki "Anonymous" and "User" sont assiciés en dur à, respectivement, "Personne" et "Utilisateurs enregistrés". Dans ce project, privé, cela signifie que seuls les membres de projet auront accès au wiki et qu'ils pourront modifier son contenu (pour plus de détails quant aux droits, se réferer à la page User Rights page).
+plugin_mediawiki	group_mapping_help_project_public	Les deux groupes MediaWiki "Anonymous" and "User" sont associés en dur à, respectivement, "Tous les utilisateurs" et "Utilisateurs enregistrés". Dans ce project, public, cela signifie que tous les utilisateurs anonymes (non autentifiés) pourront lire le contenu du wiki et que tous les utilisateurs autentifiés pourront modifier ou créér des pages (pour plus de détails quant aux droits, se réferer à la page User Rights page).
+plugin_mediawiki	group_mapping_help_project_private	Les deux groupes MediaWiki "Anonymous" and "User" sont associés en dur à, respectivement, "Personne" et "Utilisateurs enregistrés". Dans ce project, privé, cela signifie que seuls les membres de projet auront accès au wiki et qu'ils pourront modifier son contenu (pour plus de détails quant aux droits, se réferer à la page User Rights page).
 plugin_mediawiki	group_name_anonymous	Anonymous
 plugin_mediawiki	group_name_user	User
 plugin_mediawiki	group_name_bot	Bot
 plugin_mediawiki	group_name_sysop	Administrateur / sysop
 plugin_mediawiki	group_name_bureaucrat	Bureaucrat
 plugin_mediawiki	group_tuleap	Groupes $1
+
+plugin_mediawiki	save_changes	Sauvegarder tous les changements
 plugin_mediawiki	or_string	ou
 plugin_mediawiki	restore_defaults	Restaurer choix par défaut
+plugin_mediawiki	options_saved	Les changements ont été sauvegardés.
+plugin_mediawiki	options_restored	Les options et la gestion de groupes ont bien été restaurés.
 
 plugin_mediawiki	back_to_forge	Retour à $1
 

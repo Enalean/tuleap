@@ -1,6 +1,7 @@
 plugin_mediawiki	service_lbl_key	Mediawiki
 plugin_mediawiki	service_desc_key	Mediawiki
 plugin_mediawiki	admin_title	Mediawiki Administration
+plugin_mediawiki	options_title	Options
 plugin_mediawiki	compatibility_view_text	Tick this box if you want to activate Mediawiki in full screen. This compatibility mode will let you use WikiEditor extension, not available in standard embedded view.
 plugin_mediawiki	title	Mediawiki Plugin
 plugin_mediawiki	descriptor_description	Mediawiki integration in the forge
@@ -18,7 +19,10 @@ plugin_mediawiki	group_name_sysop	Administrator / sysop
 plugin_mediawiki	group_name_bureaucrat	Bureaucrat
 plugin_mediawiki	group_tuleap	$1 groups
 
+plugin_mediawiki	save_changes	Save all changes
 plugin_mediawiki	or_string	or
 plugin_mediawiki	restore_defaults	Restore defaults
+plugin_mediawiki	options_saved	Changes have been saved.
+plugin_mediawiki	options_restored	Options and groups mapping have been restored.
 
 plugin_mediawiki	back_to_forge	Go back to $1
