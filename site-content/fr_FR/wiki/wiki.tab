@@ -150,3 +150,5 @@ wiki_views_wkserviews	doc_delete	Détruire ?
 # Script: SF/www/wiki/upload
 #
 wiki_attachment_upload	err_not_exist	Ce fichier joint n'existe pas. Veuillez vérifier l'adresse.
+
+wiki_service	search_wiki_type	Wiki pages

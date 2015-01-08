@@ -93,6 +93,9 @@ class trackerPlugin extends Plugin {
             $this->addHook(Statistics_Event::FREQUENCE_STAT_ENTRIES);
             $this->addHook(Statistics_Event::FREQUENCE_STAT_SAMPLE);
         }
+        if (defined('FULLTEXTSEARCH_BASE_URL')) {
+            $this->_addHook(FULLTEXTSEARCH_EVENT_FETCH_ALL_DOCUMENT_SEARCH_TYPES);
+        }
 
         return parent::getHooksAndCallbacks();
     }
@@ -856,5 +859,14 @@ class trackerPlugin extends Plugin {
         if ($params['queue'] === Tracker_SystemEvent_Tv3Tv5Queue::NAME) {
             $params['types'][] = SystemEvent_TRACKER_V3_MIGRATION::NAME;
         }
+    }
+
+    public function fulltextsearch_event_fetch_all_document_search_types($params) {
+        $params['all_document_search_types'][] = array(
+            'key'       => 'tracker',
+            'name'      => $GLOBALS['Language']->getText('plugin_tracker', 'tracker_artifacts'),
+            'info'      => $GLOBALS['Language']->getText('plugin_tracker', 'tracker_fulltextsearch_info'),
+            'available' => false,
+        );
     }
 }

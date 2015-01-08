@@ -19,6 +19,9 @@
  */
 
 class ElasticSearch_SearchResultWiki extends ElasticSearch_SearchResult {
+
+    const TYPE_IDENTIFIER = 'wiki';
+
     public $item_title;
     public $url;
 
@@ -36,6 +39,6 @@ class ElasticSearch_SearchResultWiki extends ElasticSearch_SearchResult {
     }
 
     public function type() {
-        return 'wiki';
+        return self::TYPE_IDENTIFIER;
     }
 }

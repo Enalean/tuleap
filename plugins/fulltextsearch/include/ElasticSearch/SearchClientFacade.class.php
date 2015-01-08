@@ -78,6 +78,7 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
 
     /**
      * @see ISearchDocuments::searchDocuments
+     * @see https://github.com/nervetattoo/elasticsearch
      *
      * @return ElasticSearch_SearchResultCollection
      */
@@ -86,6 +87,8 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
         // For debugging purpose, uncomment the statement below to see the
         // content of the request (can be directly injected in a curl request)
         // echo "<pre>".json_encode($query)."</pre>";
+
+        $this->setTypesForRequest($facets);
 
         $search = $this->client->search($query);
         return new ElasticSearch_SearchResultCollection(
@@ -263,6 +266,22 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
                     'group_id' => (int)$group_id
                 )
             );
+        }
+    }
+
+    public function setTypesForRequest(array $facets) {
+        $types = array();
+
+        if (isset($facets[ElasticSearch_SearchResultDocman::TYPE_IDENTIFIER])) {
+            $types[] = ElasticSearch_SearchResultDocman::TYPE_IDENTIFIER;
+        }
+
+        if (isset($facets[ElasticSearch_SearchResultWiki::TYPE_IDENTIFIER])) {
+            $types[] = ElasticSearch_SearchResultWiki::TYPE_IDENTIFIER;
+        }
+
+        if ($types) {
+            $this->client->setType($types);
         }
     }
 }
