@@ -1,3 +1,6 @@
+Version 1.46 - Tuleap 7.10
+    * request #7731: Columns defined as collapsed by default are not collapsed in cardwall report on dashboards
+
 Version 1.45 - Tuleap 7.9
     * request #7717 Remove dependencies between REST api and plugins
 
