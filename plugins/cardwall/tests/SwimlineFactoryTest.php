@@ -46,12 +46,13 @@ class Cardwall_SwimLineFactoryTest extends TuleapTestCase {
     public function itReturnsANestedArrayOfPresenterPresentersIfThereAreColumnsButNoPresenters() {
         $mocked_column = mock('Cardwall_Column');
         stub($mocked_column)->getId()->returns(44);
+        stub($mocked_column)->isAutostacked()->returns(true);
 
         $columns    = new Cardwall_OnTop_Config_ColumnFreestyleCollection(array($mocked_column));
         $presenters = array();
         $swimlines  = $this->factory->getCells($columns, $presenters);
         $expected   = array(
-                          array('column_id' => 44, 'cardincell_presenters' => array()));
+                          array('column_id' => 44, 'column_stacked' => true, 'cardincell_presenters' => array()));
         $this->assertIdentical($expected, $swimlines);
     }
     
@@ -70,8 +71,8 @@ class Cardwall_SwimLineFactoryTest extends TuleapTestCase {
         
         $swimlines = $this->factory->getCells($columns, array($cardincell_presenter1, $cardincell_presenter2));
         $expected  = array(
-                        array('column_id' => 55, 'cardincell_presenters' => array($cardincell_presenter1)),
-                        array('column_id' => 100, 'cardincell_presenters' => array($cardincell_presenter2)));
+                        array('column_id' => 55, 'column_stacked' => true, 'cardincell_presenters' => array($cardincell_presenter1)),
+                        array('column_id' => 100, 'column_stacked' => true, 'cardincell_presenters' => array($cardincell_presenter2)));
         $this->assertIdentical($expected, $swimlines);
     }
     
@@ -86,7 +87,7 @@ class Cardwall_SwimLineFactoryTest extends TuleapTestCase {
 
         $swimlines = $this->factory->getCells($columns, array($cardincell_presenter));
         $expected  = array(
-                        array('column_id' => 55, 'cardincell_presenters' => array()));
+                        array('column_id' => 55, 'column_stacked' => true, 'cardincell_presenters' => array()));
         $this->assertIdentical($expected, $swimlines);
     }
 }
