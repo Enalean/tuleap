@@ -267,13 +267,22 @@ body > .select2-drop {
 
         li.result {
             margin: 0 0 20px 0;
-            padding: 0 0 0 15px;
+            padding: 0 0 0 20px;
             position: relative;
             max-width: 750px;
 
+            &.wiki:before {
+                content: @services-wiki;
+                font-family: 'tuleap-services', 'FontAwesome';
+                left: 0;
+                top: 6px;
+                right: 2px;
+                position: absolute;
+            }
+
             &:before {
                 content: '\F105';
-                font-family: 'FontAwesome';
+                font-family: 'tuleap-services', 'FontAwesome';
                 left: 0;
                 top: 6px;
                 position: absolute;
