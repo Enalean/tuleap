@@ -56,22 +56,27 @@ class Chart {
         $classname = $this->getGraphClass();
         $this->jpgraph_instance = new $classname($aWidth,$aHeight,$aCachedName,$aTimeOut,$aInline);
         $this->jpgraph_instance->SetMarginColor($GLOBALS['HTML']->getChartBackgroundColor());
-        $this->jpgraph_instance->SetFrame(true, $this->getMainColor(), 1);
+        $this->jpgraph_instance->SetFrame(true, $this->getMainColor(), 0);
         if ($aWidth && $aHeight) {
             $this->jpgraph_instance->img->SetAntiAliasing();
         }
         Chart_TTFFactory::setUserFont($this->jpgraph_instance);
 
         //Fix margin
-        $this->jpgraph_instance->img->SetMargin(70, 160, 30, 70);
-        
+        try {
+            $this->jpgraph_instance->img->SetMargin(70, 160, 30, 70);
+        } catch(Exception $e) {
+            // do nothing, JPGraph displays the error by itself
+        }
+
         $this->jpgraph_instance->legend->SetShadow(false);
         $this->jpgraph_instance->legend->SetColor($this->getMainColor());
+        $this->jpgraph_instance->legend->SetFrameWeight(0);
         $this->jpgraph_instance->legend->SetFillColor($GLOBALS['HTML']->getChartBackgroundColor());
         $this->jpgraph_instance->legend->SetFont($this->getFont(), FS_NORMAL, 8);
         $this->jpgraph_instance->legend->SetVColMargin(5);
         $this->jpgraph_instance->legend->SetPos(0.05, 0.5, 'right', 'center');
-        $this->jpgraph_instance->legend->SetLineSpacing(10); 
+        $this->jpgraph_instance->legend->SetLineSpacing(10);
         
         $this->jpgraph_instance->title->SetFont($this->getFont(), FS_BOLD, 12);
         $this->jpgraph_instance->title->SetColor($this->getMainColor());
@@ -156,7 +161,7 @@ class Chart {
         }
         catch (Exception $exc) {
             echo '<p class="feedback_error">';
-            echo $GLOBALS['Language']->getText('plugin_graphontrackers_error', 'jp_graph', array($this->title->t));
+            echo $GLOBALS['Language']->getText('plugin_graphontrackers_error', 'jp_graph', array($this->title->t, $exc->getMessage())) ;
             echo '</p>';
             return false;
         }
