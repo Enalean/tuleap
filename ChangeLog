@@ -10,6 +10,7 @@ Version 7.10 ()
 	* request #7751: Enhance Mediawiki administration UI
 	* request #7673 Git errors when creating repo and dumping ssh keys
 	* request #7730: Add entropy into the session ID and the password reset token
+	* request #7754: Prevent denial of service via the login form
 
 	== Plugins ==
 	* tracker_date_reminder: 1.2.9
