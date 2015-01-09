@@ -80,6 +80,7 @@ class ElasticSearch_1_2_ResultFactory {
             $current_user = $this->user_manager->getCurrentUser();
 
             return new ElasticSearch_SearchResultProjectsFacetCollection(
+                $current_user,
                 $result['facets']['projects'],
                 $this->project_manager,
                 $submitted_facets,

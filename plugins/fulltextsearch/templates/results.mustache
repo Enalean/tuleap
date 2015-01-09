@@ -1,76 +1,75 @@
-{{# has_results }}
-    <div class="search-pane">
-        <div class="search-pane-header">{{ project_facets_label }}</div>
-        <div class="search-pane-body full-text-search">
-            <ul>
-                {{# projects_facet }}
-                <li>
-                    <select class="facet select2" multiple name="facets[{{ identifier }}][]" data-placeholder="{{ placeholder }}">
-                        {{# option_groups }}
-                        <optgroup label="{{ label }}">
-                            {{# values }}
-                            <option value="{{ value }}" {{# selected }}selected{{/ selected }}>{{ label }} ({{ count }})</option>
-                            {{/ values }}
-                        </optgroup>
-                        {{/ option_groups }}
-                    </select>
-                </li>
-                {{/ projects_facet }}
-            </ul>
-        </div>
-    </div>
-
-    <div class="search-pane">
-        <div class="search-pane-header">{{ categories }}</div>
-        <div class="search-pane-body full-text-search">
-            <ul>
-                {{# document_types }}
-                    <li>
-                        <input
-                            type="checkbox"
-                            class="facet"
-                            name="facets[{{ key }}]"
-                            value="1"
-                            {{^ available }} disabled {{/ available }}
-                            {{# checked }}checked{{/ checked }}
-                        />
-                        {{ name }}
-                        {{# info }}
-                            <i class="icon-question-sign" title="{{ info }}"> </i>
-                        {{/ info }}
-                    </li>
-                {{/ document_types }}
-            </ul>
-        </div>
-    </div>
-
-    <div class="search-pane">
-        <div class="search-pane-header">{{ docman_wiki_facets_label }}</div>
-        <div class="search-pane-body full-text-search">
-            <ul>
-                {{# owner_facet }}
-                <li>
-                    <label class="checkbox">
-                      <input type="checkbox" class="facet" name="facets[{{ identifier }}]" value="{{ value }}" {{# checked }}checked{{/ checked }}> {{ label }}
-                    </label>
-                </li>
-                {{/ owner_facet }}
-
-                {{# update_date_facet }}
-                <li>
-                    <select class="facet" name="facets[{{ identifier }}]">
+<div class="search-pane">
+    <div class="search-pane-header">{{ project_facets_label }}</div>
+    <div class="search-pane-body full-text-search">
+        <ul>
+            {{# projects_facet }}
+            <li>
+                <select class="facet select2" multiple name="facets[{{ identifier }}][]" data-placeholder="{{ placeholder }}">
+                    {{# option_groups }}
                     <optgroup label="{{ label }}">
                         {{# values }}
-                        <option value="{{ value }}" {{# selected }}selected{{/ selected }}>{{ label }}</option>
+                        <option value="{{ value }}" {{# selected }}selected{{/ selected }}>{{ label }} ({{ count }})</option>
                         {{/ values }}
                     </optgroup>
-                    </select>
-                </li>
-                {{/ update_date_facet }}
-            </ul>
-        </div>
+                    {{/ option_groups }}
+                </select>
+            </li>
+            {{/ projects_facet }}
+        </ul>
     </div>
-{{/ has_results }}
+</div>
+
+<div class="search-pane">
+    <div class="search-pane-header">{{ categories }}</div>
+    <div class="search-pane-body full-text-search">
+        <ul>
+            {{# document_types }}
+                <li>
+                    <input
+                        type="checkbox"
+                        class="facet"
+                        name="facets[{{ key }}]"
+                        value="1"
+                        {{^ available }} disabled {{/ available }}
+                        {{# checked }}checked{{/ checked }}
+                    />
+                    {{ name }}
+                    {{# info }}
+                        <i class="icon-question-sign" title="{{ info }}"> </i>
+                    {{/ info }}
+                </li>
+            {{/ document_types }}
+        </ul>
+    </div>
+</div>
+
+<div class="search-pane">
+    <div class="search-pane-header">{{ filter_label }}</div>
+    <div class="search-pane-body full-text-search">
+        <ul>
+            {{# owner_facet }}
+            <li>
+                <label class="checkbox">
+                  <input type="checkbox" class="facet" name="facets[{{ identifier }}]" value="{{ value }}" {{# checked }}checked{{/ checked }}> {{ label }}
+                </label>
+            </li>
+            {{/ owner_facet }}
+
+            {{# update_date_facet }}
+            <li>
+                <select class="facet" name="facets[{{ identifier }}]">
+                <optgroup label="{{ label }}">
+                    {{# values }}
+                    <option value="{{ value }}" {{# selected }}selected{{/ selected }}>{{ label }}</option>
+                    {{/ values }}
+                </optgroup>
+                </select>
+            </li>
+            {{/ update_date_facet }}
+        </ul>
+    </div>
+</div>
+
 
 {{> search-results-main }}
 

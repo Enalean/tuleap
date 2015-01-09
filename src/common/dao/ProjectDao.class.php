@@ -246,6 +246,21 @@ class ProjectDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function getAllMyAndPublicProjects(PFUser $user) {
+        $user_id = $this->da->escapeInt($user->getId());
+
+        $sql = "SELECT DISTINCT groups.*
+                FROM groups
+                  JOIN user_group USING (group_id)
+                WHERE status = 'A'
+                  AND group_id > 100
+                  AND (is_public = 1
+                    OR user_group.user_id = $user_id)
+                ORDER BY group_id ASC";
+
+        return $this->retrieve($sql);
+    }
+
     public function countMyAndPublicProjectsForREST(PFUser $user) {
         $user_id = $this->da->escapeInt($user->getId());
 

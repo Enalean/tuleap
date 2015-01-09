@@ -585,6 +585,22 @@ class ProjectManager {
     }
 
     /**
+     * @return Project[]
+     */
+    public function getAllMyAndPublicProjects(PFUser $user) {
+        $rows = $this->_getDao()
+            ->getAllMyAndPublicProjects($user);
+
+        $projects = array();
+        foreach ($rows as $row) {
+            $project = $this->getProjectFromDbRow($row);
+            $projects[$project->getID()] = $project;
+        }
+
+        return $projects;
+    }
+
+    /**
      * @param PFUser $user
      * @return int
      */
