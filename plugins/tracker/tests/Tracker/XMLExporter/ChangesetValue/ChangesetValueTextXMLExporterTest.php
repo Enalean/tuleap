@@ -55,7 +55,6 @@ class Tracker_XMLExporter_ChangesetValue_ChangesetValueTextXMLExporterTest exten
         $this->exporter->export(
             $this->artifact_xml,
             $this->changeset_xml,
-            mock('Tracker_Artifact'),
             $this->changeset_value
         );
 

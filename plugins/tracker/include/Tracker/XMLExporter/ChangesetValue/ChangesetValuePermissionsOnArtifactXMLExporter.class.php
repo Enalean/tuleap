@@ -24,12 +24,7 @@ class Tracker_XMLExporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLE
         return 'permissions_on_artifact';
     }
 
-    public function export(
-        SimpleXMLElement $artifact_xml,
-        SimpleXMLElement $changeset_xml,
-        Tracker_Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $changeset_value
-    ) {
+    public function export(SimpleXMLElement $artifact_xml, SimpleXMLElement $changeset_xml, Tracker_Artifact_ChangesetValue $changeset_value) {
         $field_change = $this->createFieldChangeNodeInChangesetNode(
             $changeset_value,
             $changeset_xml

@@ -41,6 +41,6 @@ class Tracker_XMLExporter_ChangesetXMLExporter {
         $submitted_on = $changeset_xml->addChild('submitted_on', date('c', $changeset->getSubmittedOn()));
         $submitted_on->addAttribute('format', 'ISO8601');
 
-        $this->values_exporter->export($artifact_xml, $changeset_xml, $changeset->getArtifact(), $changeset->getValues());
+        $this->values_exporter->export($artifact_xml, $changeset_xml, $changeset->getValues());
     }
 }

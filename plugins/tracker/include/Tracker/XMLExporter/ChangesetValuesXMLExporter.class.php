@@ -22,7 +22,6 @@ class Tracker_XMLExporter_ChangesetValuesXMLExporter {
 
     const ARTIFACT_XML_KEY  = 'artifact_xml';
     const CHANGESET_XML_KEY = 'changeset_xml';
-    const ARTIFACT_KEY      = 'artifact';
 
     /**
      * @var Tracker_XMLExporter_ChangesetValueXMLExporterVisitor
@@ -43,11 +42,9 @@ class Tracker_XMLExporter_ChangesetValuesXMLExporter {
     public function export(
         SimpleXMLElement $artifact_xml,
         SimpleXMLElement $changeset_xml,
-        Tracker_Artifact $artifact,
         array $changeset_values
     ) {
         $params = array(
-            self::ARTIFACT_KEY      => $artifact,
             self::ARTIFACT_XML_KEY  => $artifact_xml,
             self::CHANGESET_XML_KEY => $changeset_xml
         );
@@ -63,7 +60,6 @@ class Tracker_XMLExporter_ChangesetValuesXMLExporter {
         $this->visitor->export(
             $params[self::ARTIFACT_XML_KEY],
             $params[self::CHANGESET_XML_KEY],
-            $params[self::ARTIFACT_KEY],
             $changeset_value
         );
     }
