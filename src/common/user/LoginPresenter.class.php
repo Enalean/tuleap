@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,10 +19,6 @@
  */
 
 class User_LoginPresenter {
-
-    /** @var Codendi_HTMLPurifier */
-    private $purifier;
-
     private $return_to;
     private $pv;
     private $form_loginname;
@@ -30,14 +26,12 @@ class User_LoginPresenter {
     private $allow_password_recovery;
 
     public function __construct(
-        Codendi_HTMLPurifier $purifier,
             $return_to,
             $pv,
             $form_loginname,
             $toggle_ssl,
             $allow_password_recovery = true
         ) {
-        $this->purifier = $purifier;
         $this->return_to = $return_to;
         $this->pv = $pv;
         $this->form_loginname = $form_loginname;
@@ -58,7 +52,7 @@ class User_LoginPresenter {
     }
 
     public function form_loginname() {
-        return $this->purifier->purify($this->form_loginname);
+        return $this->getFormLoginName();
     }
 
     public function pv() {
@@ -66,7 +60,7 @@ class User_LoginPresenter {
     }
 
     public function return_to() {
-        return $this->purifier->purify($this->return_to);
+        return $this->getReturnTo();
     }
 
     public function allow_password_recovery() {
@@ -109,10 +103,6 @@ class User_LoginPresenter {
         return $GLOBALS['Language']->getText('account_login', 'login_with_tuleap', array(Config::get('sys_name')));
     }
 
-    public function getPurifier() {
-        return $this->purifier;
-    }
-
     public function getReturnTo() {
         return $this->return_to;
     }
@@ -133,5 +123,3 @@ class User_LoginPresenter {
         return file_get_contents($GLOBALS['Language']->getContent('account/login_intro', null, null, '.html'));
     }
 }
-
-?>

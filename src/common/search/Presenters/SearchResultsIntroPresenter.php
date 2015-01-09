@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,10 +24,12 @@ class Search_SearchResultsIntroPresenter {
 
     /** @var  string */
     private $words;
+    private $purifier;
 
     public function __construct($results, $words) {
-        $this->results = $results;
-        $this->words   = $words;
+        $this->results  = $results;
+        $this->words    = $words;
+        $this->purifier = Codendi_HTMLPurifier::instance();
     }
 
     public function has_results() {
@@ -35,7 +37,7 @@ class Search_SearchResultsIntroPresenter {
     }
 
     public function no_match_found_string() {
-        return $GLOBALS['Language']->getText('search_index', 'no_match_found', $this->words);
+        return $GLOBALS['Language']->getText('search_index', 'no_match_found', $this->purifier->purify($this->words));
     }
 
     public function search_result_title() {

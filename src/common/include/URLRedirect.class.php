@@ -76,13 +76,23 @@ class URLRedirect {
         }
 
         if($request->existAndNonEmpty('return_to')) {
-            $rt = 'return_to='.urlencode($request->get('return_to'));
+            $return_to_parameter = 'return_to=';
+            /*
+             * We do not want redirect to an external website
+             * @see https://cwe.mitre.org/data/definitions/601.html
+             */
+            $url_verifier = new URLVerification();
+            if ($url_verifier->isInternal($request->get('return_to'))) {
+                $return_to_parameter .= $request->get('return_to');
+            } else {
+                $return_to_parameter .= '/';
+            }
 
             if(array_key_exists('query', $urlToken) && $urlToken['query']) {
-                $finaleUrl .= '?'.$urlToken['query'].'&amp;'.$rt;
+                $finaleUrl .= '?'.$urlToken['query'].'&amp;'.$return_to_parameter;
             }
             else {
-                $finaleUrl .= '?'.$rt;
+                $finaleUrl .= '?'.$return_to_parameter;
             }
             if (strstr($request->get('return_to'),'pv=2')) {
                 $finaleUrl .= '&pv=2';
@@ -113,5 +123,3 @@ class URLRedirect {
         return ! $request->get('stay_in_ssl');
     }
 }
-
-?>

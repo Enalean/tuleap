@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -164,6 +164,21 @@ class URLVerification {
     function isValidServerName($server, $host) {
 
         return ($server['HTTP_HOST'] == $host);
+    }
+
+    /**
+     * Check if an URI is internal to the application or not. We reject all URLs
+     * except http://<tuleap_domain>/smthing, https://<tuleap_domain>/smthing and
+     * /path/to/feature
+     *
+     * @return boolean
+     */
+    public function isInternal($uri) {
+        $url_decoded = urldecode($uri);
+        $pattern_only_internal = '/^(http:\/\/'.$GLOBALS['sys_default_domain'].'|'
+                                  . 'https:\/\/'.$GLOBALS['sys_https_host'].'|'
+                                  . '\/)/';
+        return preg_match($pattern_only_internal, $url_decoded) === 1;
     }
 
     /**
