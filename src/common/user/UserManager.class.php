@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -448,9 +448,6 @@ class UserManager {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
             $accessInfo = $this->getUserAccessInfo($exception->getUser());
             $this->getDao()->storeLoginFailure($name, $_SERVER['REQUEST_TIME']);
-            //Add a delay when use login fail.
-            //The delay is 2 sec/nb of bad attempt.
-            sleep(2 * $accessInfo['nb_auth_failure']);
 
         } catch (User_InvalidPasswordException $exception) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
