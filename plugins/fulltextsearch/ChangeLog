@@ -1,3 +1,6 @@
+Version 0.109 - Tuleap 7.10
+    * request #7744: Fix non persistent XSS and a open redirection in search modules and login form
+
 Version 0.108 - Tuleap 7.10
     * More visible 'moar' button
 

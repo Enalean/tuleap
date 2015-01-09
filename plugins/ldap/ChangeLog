@@ -1,3 +1,6 @@
+Version 3.67 - Tuleap 7.10
+    * request #7744: Fix non persistent XSS and a open redirection in search modules and login form
+
 Version 3.66 - Tuleap 7.9
     * request #7739: LDAP autocompletion seems broken
 

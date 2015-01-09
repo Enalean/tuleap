@@ -1,3 +1,6 @@
+Version 0.6 - Tuleap 7.10
+    * request #7744: Fix non persistent XSS and a open redirection in search modules and login form
+
 Version 0.5 - Tuleap 7.6
     * Update to latest autoload/phpab version
 

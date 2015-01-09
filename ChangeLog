@@ -11,6 +11,7 @@ Version 7.10 ()
 	* request #7673 Git errors when creating repo and dumping ssh keys
 	* request #7730: Add entropy into the session ID and the password reset token
 	* request #7754: Prevent denial of service via the login form
+	* request #7744: Fix non persistent XSS and a open redirection in search modules and login form
 
 	== Plugins ==
 	* tracker_date_reminder: 1.2.9
@@ -18,9 +19,11 @@ Version 7.10 ()
 	* graphontrackersv5: 5.16
 	* tracker: 5.540
 	* mediawiki: 0.59
-	* fulltextsearch: 0.108
+	* fulltextsearch: 0.109
 	* git: 4.3
 	* docman: 2.26.57
+	* ldap: 3.67
+	* openid: 0.6
 
 	== Themes ==
 	* FlamingParrot: 1.65
