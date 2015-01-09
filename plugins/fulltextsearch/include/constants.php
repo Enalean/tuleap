@@ -35,6 +35,7 @@ define('FULLTEXTSEARCH_TEMPLATE_DIR', dirname(__FILE__).'/../templates');
  *          'name'      => DISPLAY_NAME,
  *          'info'      => string | false, #special info to display
  *          'available' => boolean,        #is currently available
+ *          'special'   => boolean,        #does the type need special handling
  *      )
  * )
  */

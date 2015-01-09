@@ -19,6 +19,9 @@
  */
 
 class ElasticSearch_SearchResultTracker extends ElasticSearch_SearchResult {
+
+    const TYPE_IDENTIFIER = 'tracker';
+
     public $artifact_title;
     public $url;
         

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -103,6 +103,7 @@ tuleap.search = tuleap.search || {};
                 }).always(function() {
                     $('#search-results').removeClass('loading');
                     tuleap.search.fulltext.enableSearchMoreResults();
+                    tuleap.search.fulltext.enableOneProjectSearchOptions();
                 });
         },
 
@@ -113,6 +114,23 @@ tuleap.search = tuleap.search || {};
                 tuleap.search.fulltext.append_to_results = true;
                 tuleap.search.fulltext.updateResults();
             });
+        },
+
+        enableOneProjectSearchOptions : function () {
+            if (! $('#projects-selection').val()) {
+                $('.one-project-only').attr('checked', false);
+                $('.one-project-only').attr('disabled', true);
+            } else if (isOnlyOneProjectSelected()) {
+                $('.one-project-only').attr('disabled', false);
+            } else {
+                $('.one-project-only').attr('checked', false);
+                $('.one-project-only').attr('disabled', true);
+            }
+
+            function isOnlyOneProjectSelected() {
+                return $('#projects-selection').val().length === 1
+                    && $('#projects-selection').val()[0] !== 'user_projects_ids';
+            }
         }
     };
 

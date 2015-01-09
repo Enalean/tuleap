@@ -862,10 +862,11 @@ class DocmanPlugin extends Plugin {
 
     public function fulltextsearch_event_fetch_all_document_search_types($params) {
         $params['all_document_search_types'][] = array(
-            'key'       => 'docman',
-            'name'      => $GLOBALS['Language']->getText('plugin_docman', 'search_type'),
-            'info'      => false,
-            'available' => true,
+            'key'     => 'docman',
+            'name'    => $GLOBALS['Language']->getText('plugin_docman', 'search_type'),
+            'info'    => false,
+            'can_use' => true,
+            'special' => false,
         );
     }
 }
