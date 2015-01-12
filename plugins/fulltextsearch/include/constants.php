@@ -40,3 +40,14 @@ define('FULLTEXTSEARCH_TEMPLATE_DIR', dirname(__FILE__).'/../templates');
  * )
  */
 define('FULLTEXTSEARCH_EVENT_FETCH_ALL_DOCUMENT_SEARCH_TYPES', 'fulltextsearch_event_fetch_all_document_search_types');
+
+/**
+ * Get all tracker field names a user can read for a project
+ *
+ * Parameters:
+ *   'fields'     => array
+ *   'user'       => PFUser
+ *   'project_id' => Project ID
+ *
+ */
+define('FULLTEXTSEARCH_EVENT_FETCH_PROJECT_TRACKER_FIELDS', 'fulltextsearch_event_fetch_project_tracker_fields');

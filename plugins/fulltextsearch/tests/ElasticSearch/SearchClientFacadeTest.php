@@ -21,6 +21,14 @@
 require_once dirname(__FILE__) .'/../../include/autoload.php';
 require_once 'common/project/ProjectManager.class.php';
 
+// For testing purpose
+class ElasticSearchClient {
+    public function search() {
+    }
+    public function setType() {
+    }
+}
+
 class ElasticSearch_SearchClientFacadeTest extends TuleapTestCase {
 
     public function setUp() {
@@ -55,18 +63,17 @@ class ElasticSearch_SearchClientFacadeTest extends TuleapTestCase {
     public function itAsksToElasticsearchToReturnOnlyResultsWithMatchingPermissions() {
         $this->assertExpectedQuery(new QueryExpectation(array(
             'query' => array (
-                'filtered' => array (
-                    'query' => array (
-                        'query_string' => array (
-                            'query' => 'some terms',
-                        ),
-                    ),
-                    'filter' => array (
+                'bool' => array (
+                    'must' => array (
                         'terms' => array (
-                            'permissions' => array (
+                            'permissions' => array(),
+                        ),
+                        'query' => array (
+                            'query_string' => array(
+                                'query' => 'some terms'
                             ),
                         ),
-                    ),
+                    )
                 ),
             )
         )));
@@ -75,10 +82,11 @@ class ElasticSearch_SearchClientFacadeTest extends TuleapTestCase {
     public function itAsksToElasticsearchToReturnOnlyRelevantFields() {
         $this->assertExpectedQuery(new QueryExpectation(array(
             'fields' => array(
-                'title',
-                'page_name',
                 'id',
                 'group_id',
+                'title',
+                'page_name',
+                'last_changeset_id',
             )
         )));
     }
@@ -86,11 +94,12 @@ class ElasticSearch_SearchClientFacadeTest extends TuleapTestCase {
     public function itAsksToElasticsearchToReturnAlsoPermissionsForSiteAdminQuery() {
         $this->assertExpectedAdminQuery(new QueryExpectation(array(
             'fields' => array(
-                'title',
-                'page_name',
                 'id',
                 'group_id',
-                'permissions'
+                'title',
+                'page_name',
+                'last_changeset_id',
+                'permissions',
             )
         )));
     }
@@ -342,12 +351,6 @@ class ElasticSearch_SearchClientFacadeTest extends TuleapTestCase {
         $no_facet_submitted_by_user = array();
         $search_type = null;
         $this->admin_client->searchDocuments('some terms', $no_facet_submitted_by_user, $offset, $this->user, $size, $search_type);
-    }
-}
-
-// For testing purpose
-class ElasticSearchClient {
-    public function search() {
     }
 }
 

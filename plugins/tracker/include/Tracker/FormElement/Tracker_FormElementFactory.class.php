@@ -1572,5 +1572,25 @@ class Tracker_FormElementFactory {
         }
         return $art_link_field_ids;
     }
+
+    /**
+     * @param PFUser $user
+     * @param Tracker[] $trackers
+     *
+     * @return array
+     * e.g. array(
+     *      'TRACKER_ID_1' => array(FIELD1, FIELD2),
+     *      'TRACKER_ID_2' => array(FIELD3, FIELD4)
+     *      ...
+     * )
+     */
+    public function getUsedSearchableTrackerFieldsUserCanView(PFUser $user, array $trackers) {
+        $fields = array();
+
+        foreach ($trackers as $tracker) {
+            $fields[$tracker->getId()] = $this->getUsedTextFieldsUserCanRead($tracker, $user);
+        }
+
+        return $fields;
+    }
 }
-?>

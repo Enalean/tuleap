@@ -77,6 +77,27 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
     }
 
     /**
+     * @return array to be used for querying ES
+     */
+    protected function getSearchInFieldsQuery($terms, $fields, $offset) {
+        $query = array(
+            'from' => (int)$offset,
+            'query' => array(
+                'multi_match' => array(
+                    'query'  => $terms,
+                    'fields' => $fields
+                )
+            ),
+            'fields' => array(
+                'id',
+                'group_id',
+                'last_changeset_id'
+            )
+        );
+        return $query;
+    }
+
+    /**
      * @see ISearchDocuments::searchDocuments
      * @see https://github.com/nervetattoo/elasticsearch
      *
@@ -101,42 +122,18 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
     /**
      * @return array to be used for querying ES
      */
-    protected function getSearchInFieldsQuery($terms, $fields, $offset) {
-        $query = array(
-            'from' => (int)$offset,
-            'query' => array(
-                'multi_match' => array(
-                    'query'  => $terms,
-                    'fields' => $fields
-                )
-            ),
-            'fields' => array(
-                'id',
-                'group_id',
-                'last_changeset_id'
-            )
-        );
-        return $query;
-    }
-
-    /**
-     * @return array to be used for querying ES
-     */
     protected function getSearchDocumentsQuery($terms, array $facets, $offset, PFUser $user, $size) {
-        $returned_fields = array_merge($this->getReturnedFieldsForDocman(), $this->getReturnedFieldsForWiki());
-        $returned_fields = array_merge($returned_fields, array('id', 'group_id'));
+        $returned_fields = array('id', 'group_id');
+        $this->addFieldsForDocman($returned_fields);
+        $this->addFieldsForWiki($returned_fields);
+        $this->addFieldsForTracker($returned_fields);
 
         $query = array(
-            'from'  => (int)$offset,
-            'size'  => $size,
-            'query' => array(
-                'query_string' => array(
-                    'query' => $terms
-                )
-            ),
+            'from'      => (int)$offset,
+            'size'      => $size,
             'fields'    => $returned_fields,
             'highlight' => array(
-                'pre_tags' => array('<em class="fts_word">'),
+                'pre_tags'  => array('<em class="fts_word">'),
                 'post_tags' => array('</em>'),
                 'fields' => $this->getHighlightFieldsForDocman() + $this->getHighlightFieldsForWiki()
             ),
@@ -160,16 +157,20 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
         );
 
         $this->filterWithGivenFacets($query, $facets);
-        $this->filterQueryWithPermissions($query, $user);
+        $this->filterQueryWithPermissions($query, $user, $terms, $facets);
         return $query;
     }
 
-    private function getReturnedFieldsForDocman() {
-        return array('title');
+    private function addFieldsForDocman(&$returned_fields) {
+        $returned_fields[] = 'title';
     }
 
-    private function getReturnedFieldsForWiki() {
-        return array('page_name');
+    private function addFieldsForWiki(&$returned_fields) {
+        $returned_fields[] = 'page_name';
+    }
+
+    private function addFieldsForTracker(&$returned_fields) {
+        $returned_fields[] = 'last_changeset_id';
     }
 
     private function getHighlightFieldsForDocman() {
@@ -180,19 +181,106 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
         return array('content' => new stdClass());
     }
 
-    protected function filterQueryWithPermissions(array &$query, PFUser $user) {
+    protected function filterQueryWithPermissions(array &$query, PFUser $user, $terms, $facets) {
         $ugroup_literalizer = new UGroupLiteralizer();
-        $filtered_query = array(
-            'filtered' => array(
-                'query'  => $query['query'],
-                'filter' => array(
-                    'terms' => array(
-                        'permissions' => $ugroup_literalizer->getUserGroupsForUserWithArobase($user)
+        $ugroups = $ugroup_literalizer->getUserGroupsForUserWithArobase($user);
+
+        $types          = $this->getTypesForFacets($facets);
+        $document_types = array(ElasticSearch_SearchResultWiki::TYPE_IDENTIFIER, ElasticSearch_SearchResultDocman::TYPE_IDENTIFIER);
+        $tracker_types  = array(ElasticSearch_SearchResultTracker::TYPE_IDENTIFIER);
+
+        if (array_intersect($types, $tracker_types) && array_intersect($types, $document_types)) {
+            $query_part = array(
+                'bool' => array(
+                    'should' => array(
+                        $this->getDocumentQueryPart($terms, $ugroups),
+                        $this->getTrackerQueryPart($user, $terms, $ugroups, $facets)
+                    ),
+                )
+            );
+        } elseif (array_intersect($types, $document_types)) {
+            $query_part = $this->getDocumentQueryPart($terms, $ugroups);
+        } elseif (array_intersect($types, $tracker_types)) {
+            $query_part = $this->getTrackerQueryPart($user, $terms, $ugroups, $facets);
+        }
+
+        $query['query'] = $query_part;
+    }
+
+    private function getDocumentQueryPart($terms, array $ugroups) {
+        return array(
+            'bool' => array(
+                'must' => array(
+                   'terms' => array(
+                        'permissions' => $ugroups
+                    ),
+                   'query'  => array(
+                        'query_string' => array(
+                            'query' => $terms,
+                        )
                     )
                 )
             )
         );
-        $query['query'] = $filtered_query;
+    }
+
+    private function getTrackerQueryPart(PFUser $user, $terms, array $ugroups, array $facets) {
+        $tracker_fields = array();
+
+        $em = EventManager::instance();
+        $em->processEvent(
+            FULLTEXTSEARCH_EVENT_FETCH_PROJECT_TRACKER_FIELDS,
+            array(
+                'fields'     => &$tracker_fields,
+                'user'       => $user,
+                'project_id' => array_shift($facets[ElasticSearch_SearchResultProjectsFacetCollection::IDENTIFIER])
+            )
+        );
+
+        $should = array();
+        foreach ($tracker_fields as $tracker_id => $fields) {
+            $field_names = array();
+
+            foreach ($fields as $field) {
+                $field_names[] = $field->getName();
+            }
+            $field_names[] = ElasticSearch_1_2_RequestTrackerDataFactory::COMMENT_FIELD_NAME;
+
+            $should[] = array(
+                'bool' => array(
+                    'must' => array(
+                        array(
+                            'multi_match' => array(
+                                'fields' => $field_names,
+                                'query'  => $terms,
+                            )
+                        ),
+                        array(
+                            'term' => array(
+                                'tracker_id' => $tracker_id
+                            )
+                        )
+                    )
+                )
+            );
+        }
+
+        return array(
+            'bool' => array(
+                'must' => array(
+                    array(
+                        'bool' => array(
+                            'should' => $should
+                        )
+                    ),
+                    array(
+                        'terms' => array(
+                            'tracker_ugroups' => $ugroups
+                        ),
+                    )
+                ),
+            )
+        );
     }
 
     private function filterWithGivenFacets(array &$query, array $facets) {
@@ -270,6 +358,14 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
     }
 
     public function setTypesForRequest(array $facets) {
+        $types = $this->getTypesForFacets($facets);
+
+        if ($types) {
+            $this->client->setType($types);
+        }
+    }
+
+    private function getTypesForFacets(array $facets) {
         $types = array();
 
         if (isset($facets[ElasticSearch_SearchResultDocman::TYPE_IDENTIFIER])) {
@@ -280,12 +376,15 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
             $types[] = ElasticSearch_SearchResultWiki::TYPE_IDENTIFIER;
         }
 
-        if (isset($facets[ElasticSearch_SearchResultTracker::TYPE_IDENTIFIER])) {
+        if (isset($facets[ElasticSearch_SearchResultTracker::TYPE_IDENTIFIER]) && count($facets['group_id']) == 1) {
             $types[] = ElasticSearch_SearchResultTracker::TYPE_IDENTIFIER;
         }
 
-        if ($types) {
-            $this->client->setType($types);
+        if (count($types) == 0) {
+            $types[] = ElasticSearch_SearchResultDocman::TYPE_IDENTIFIER;
+            $types[] = ElasticSearch_SearchResultWiki::TYPE_IDENTIFIER;
         }
+
+        return $types;
     }
 }
