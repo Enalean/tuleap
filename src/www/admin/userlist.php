@@ -16,6 +16,27 @@ require_once('common/include/CSRFSynchronizerToken.class.php');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
+function tooltip_values($nb_member_of, $nb_admin_of, $Language) {
+    if ($nb_member_of) {
+        $tooltip_values = array(
+            'tooltip' => $Language->getText('admin_userlist', 'member_of', $nb_member_of),
+            'content' => $nb_member_of,
+        );
+
+        if ($nb_admin_of) {
+            $tooltip_values['tooltip'] .= '<br>'. $Language->getText('admin_userlist', 'admin_of', $nb_admin_of);
+            $tooltip_values['content'] .= ' ('.$nb_admin_of.')';
+        }
+    } else {
+        $tooltip_values = array(
+            'tooltip' => $Language->getText('admin_userlist','not_member_of'),
+            'content' => '-',
+        );
+    }
+
+    return $tooltip_values;
+}
+
 function show_users_list ($res, $offset, $limit, $user_name_search="") {
     $result = $res['users'];
     $hp = Codendi_HTMLPurifier::instance();
@@ -33,12 +54,14 @@ function show_users_list ($res, $offset, $limit, $user_name_search="") {
     echo "<tr><th>".$Language->getText('include_user_home','login_name')."</th>";
     echo "<th>".$Language->getText('include_user_home','real_name')."</th>";
     echo "<th>Profile</th>\n";
+    echo "<th>".$Language->getText('admin_userlist','nb_projects')."</th>";
     echo "<th>".$Language->getText('admin_userlist','status')."</th>";
     echo '</thead>';
     
     echo '<tbody>';
     if ($res['numrows'] > 0) {
         foreach ($result as $usr) {
+            $tooltip_values = tooltip_values($usr['member_of'], $usr['admin_of'], $Language);
             switch ($usr['status']) {
                 case PFUser::STATUS_ACTIVE:
                     $status = $Language->getText('admin_userlist','active');
@@ -73,6 +96,7 @@ function show_users_list ($res, $offset, $limit, $user_name_search="") {
             echo "\n<TD><a href=\"usergroup.php?user_id=".$usr['user_id']."\">".$name."</a></TD>";
             echo "\n<TD>". $hp->purify($usr['realname'], CODENDI_PURIFIER_CONVERT_HTML) ."</TD>";
             echo "\n<TD><A HREF=\"/users/".$usr['user_name']."/\">[DevProfile]</A></TD>";
+            echo "<TD class='tooltip_selector' data-toggle='tooltip' data-placement='top' data-original-title='".$hp->purify($tooltip_values['tooltip'])."'>".$hp->purify($tooltip_values['content'])."</TD>";
             echo "\n<TD><span class=\"site_admin_user_status_".$usr['status']."\">&nbsp;</span>".$status."</TD>";
             echo "\n</TR>";
         }
@@ -166,6 +190,7 @@ echo "<form name='usersrch' action='userlist.php' method='get' class='form-inlin
 echo "</p>";
 
 show_users_list ($result, $offset, $limit, $user_name_search);
+echo '<script type="text/javascript" src="/scripts/tuleap/userlist.js"></script>';
 $HTML->footer(array());
 
 ?>
