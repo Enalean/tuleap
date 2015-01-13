@@ -1,3 +1,11 @@
+Version 7.9-2 (Tuesday, January 13th 2015)
+	== Bug Fix ==
+	* request #7738: mandatory property for docman can be bypassed for multi-select properties
+	* request #7673: Git errors when creating repo and dumping ssh keys
+	* request #7751: Enhance Mediawiki administration UI
+	* request #7750: Graph cumulative flow legend overlaps on graph
+	* request #5550: Date reminder form messed with bootstrap
+	* request #7731: Columns defined as collapsed by default are not collapsed in cardwall report on dashboards
 Version 7.9 (Wednesday, January 7th 2015)
 
 	== Plugins ==
