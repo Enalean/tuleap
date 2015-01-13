@@ -42,7 +42,7 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer {
         $html .= $this->fetchLastChangesetId();
         $html .= $this->fetchFromArtifactId();
         $html .= parent::fetchFormContent($request, $current_user);
-        $html .= $this->fetchSubmitButton();
+        $html .= $this->fetchSubmitButton($current_user);
 
         return $html;
     }
@@ -65,11 +65,35 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer {
     /**
      * @see Tracker_Artifact_ArtifactRenderer::fetchSubmitButton()
      */
-    public function fetchSubmitButton() {
+    public function fetchSubmitButton(PFUser $current_user) {
+        $purifier            = Codendi_HTMLPurifier::instance();
+        $copy_label          = $GLOBALS['Language']->getText('plugin_tracker_artifact', 'copy_submit_button');
+        $copy_children_label = $GLOBALS['Language']->getText('plugin_tracker_artifact', 'copy_submit_button_children');
+        $copy_children_title = $GLOBALS['Language']->getText('plugin_tracker_artifact', 'copy_submit_button_children_title');
+
+        $button = '<button class="btn btn-large btn-primary" type="submit">'. $copy_label .'</button>';
+
+        if (count($this->artifact->getChildrenForUser($current_user)) > 0) {
+            $button = '<div class="btn-group dropup">
+                <button class="btn btn-large btn-primary" type="submit">'. $copy_label .'</button>
+                <button class="btn btn-large btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                <ul class="dropdown-menu pull-right">
+                    <li>
+                        <input type="hidden" name="copy_children" id="copy_children" value="0" />
+                        <a
+                            href="#"
+                            title="'. $purifier->purify($copy_children_title) .'"
+                            id="copy_children_button">
+                            '. $copy_children_label .'
+                        </a>
+                    </li>
+                </ul>
+            </div>';
+        }
         return '<div class="artifact-copy-button">
                     <input type="hidden" id="submit-type" />
-                    <button class="btn btn-large btn-primary" type="submit">' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'copy_submit_button') . '</button>
-                    '.$this->getConcurrentEditMessage().'
+                    '. $button
+                    . $this->getConcurrentEditMessage() .'
                 </div>';
     }
 

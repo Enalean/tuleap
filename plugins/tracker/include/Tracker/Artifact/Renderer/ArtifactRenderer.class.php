@@ -103,7 +103,7 @@ abstract class Tracker_Artifact_ArtifactRenderer {
      *
      * @return string The HTML code for submit buttons
      */
-    public function fetchSubmitButton() {
+    public function fetchSubmitButton(PFUser $current_user) {
         return '<div class="hidden-artifact-submit-button">
                     <input type="hidden" id="submit-type" />
                     <div class="btn-group dropup">

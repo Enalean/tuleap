@@ -158,7 +158,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
 
     private function fetchSubmitButton() {
         if ($this->artifact->userCanUpdate($this->user)) {
-            return $this->renderer->fetchSubmitButton();
+            return $this->renderer->fetchSubmitButton($this->user);
         }
     }
 }

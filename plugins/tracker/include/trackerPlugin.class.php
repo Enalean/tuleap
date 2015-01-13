@@ -195,6 +195,7 @@ class trackerPlugin extends Plugin {
                 '/plugins/tracker/scripts/TrackerSettings.js',
                 '/plugins/tracker/scripts/TrackerCollapseFieldset.js',
                 '/plugins/tracker/scripts/TrackerArtifactReferences.js',
+                '/plugins/tracker/scripts/CopyArtifact.js',
             )
         );
     }
