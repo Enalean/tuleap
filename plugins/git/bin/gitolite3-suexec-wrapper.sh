@@ -4,6 +4,6 @@
 #
 
 export GIT_PROJECT_ROOT="/var/lib/codendi/gitolite/repositories"
-export GITOLITE_HTTP_HOME="/usr/com/gitolite"
+export GITOLITE_HTTP_HOME="/var/lib/gitolite"
 
 exec sudo -E -u gitolite /usr/share/gitolite3/gitolite-shell

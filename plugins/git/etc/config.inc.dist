@@ -20,7 +20,7 @@ $weeks_number   = 12;
 
 // Tell to Tuleap that an HTTPS server for git is available at the given
 // address
-// $git_http_url = "https://%server_name%/git";
+$git_http_url = "https://%server_name%/plugins/git";
 
 // Define a custom ssh URL to get access to the sources
 // You can disable display of this url by activating this variable and setting

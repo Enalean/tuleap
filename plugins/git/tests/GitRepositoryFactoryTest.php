@@ -306,4 +306,3 @@ class GitRepositoryFactory_getAllGerritRepositoriesFromProjectTest extends Tulea
         );
     }
 }
-?>

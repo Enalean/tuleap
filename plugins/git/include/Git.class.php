@@ -156,6 +156,7 @@ class Git extends PluginController {
             $this->factory,
             $_SERVER['REQUEST_URI']
         );
+        $this->routeGitSmartHTTP($url);
         $this->routeUsingFriendlyURLs($url);
         $this->routeUsingStandardURLs($url);
 
@@ -189,6 +190,36 @@ class Git extends PluginController {
 
     protected function instantiateView() {
         return new GitViews($this, new Git_GitRepositoryUrlManager($this->getPlugin()));
+    }
+
+    private function routeGitSmartHTTP(Git_URL $url) {
+        if (! $url->isSmartHTTP()) {
+            return;
+        }
+
+        $repository = $url->getRepository();
+        if (! $repository) {
+            return;
+        }
+
+        $logger = new WrapperLogger($this->logger, 'http');
+
+        $logger->debug('REQUEST_URI '.$_SERVER['REQUEST_URI']);
+
+        $command_factory = new Git_HTTP_CommandFactory(
+            $this->factory,
+            new User_LoginManager(
+                EventManager::instance(),
+                UserManager::instance(),
+                new User_PasswordExpirationChecker()
+            ),
+            PermissionsManager::instance(),
+            $logger
+        );
+
+        $http_wrapper = new Git_HTTP_Wrapper($logger);
+        $http_wrapper->stream($command_factory->getCommandForRepository($repository, $url));
+        exit;
     }
 
     private function routeUsingFriendlyURLs(Git_URL $url) {
