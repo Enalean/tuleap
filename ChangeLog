@@ -24,6 +24,7 @@ Version 7.10 ()
 	* docman: 2.26.57
 	* ldap: 3.69
 	* openid: 0.6
+	* agiledashboard: 1.137
 
 	== Themes ==
 	* FlamingParrot: 1.65

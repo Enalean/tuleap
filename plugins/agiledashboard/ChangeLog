@@ -1,3 +1,6 @@
+Version 1.137 - Tuleap 7.10
+    * request #7759: Can't create new columns on the Agile Dashboard
+
 Version 1.136 - Tuleap 7.9
     * This is part of story #7578: have a a Backlog column and more informations on my cards: Use card semantic on kanban
 
