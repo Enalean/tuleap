@@ -110,7 +110,12 @@ class Tracker_Action_CopyArtifact {
             return;
         }
 
-        $this->processCopy($from_changeset, $current_user, $submitted_values);
+        try {
+            $this->processCopy($from_changeset, $current_user, $submitted_values);
+        } catch (Tracker_XMLExporter_TooManyChildrenException $exception) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'copy_too_many_children', array(Tracker_XMLExporter_ChildrenCollector::MAX)));
+            $this->redirectToArtifact($from_artifact);
+        }
     }
 
     private function processCopy(
