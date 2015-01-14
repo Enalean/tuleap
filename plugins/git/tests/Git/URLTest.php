@@ -293,6 +293,29 @@ class Git_URL_GitSmartHTTPTest extends Git_URLTest {
         $this->assertTrue($url->isGitPush());
     }
 
+    public function itIsSmartHTTPForInfoRefsWithExplicityDotGit() {
+        $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish.git/info/refs?service=git-upload-pack');
+        $this->assertFalse($url->isFriendly());
+        $this->assertFalse($url->isStandard());
+        $this->assertTrue($url->isSmartHTTP());
+    }
+
+    public function itRetrievesTheRepositoryWithExplicityDotGit() {
+        $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish.git/git-receive-pack');
+
+        $this->assertEqual($url->getRepository(), $this->goldfish_repository);
+    }
+
+    public function itGeneratesPathInfoForObjectsWithExplicityDotGit() {
+        $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish.git/objects/f5/30d381822b12f76923bfba729fead27b378bec');
+        $this->assertEqual($url->getPathInfo(), '/gpig/device/generic/goldfish.git/objects/f5/30d381822b12f76923bfba729fead27b378bec');
+    }
+
+    public function itGeneratesQueryStringWithExplicityDotGit() {
+        $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish.git/info/refs?service=git-upload-pack');
+        $this->assertEqual($url->getQueryString(), 'service=git-upload-pack');
+    }
+
     /** @return Git_URL */
     private function getUrl($url) {
         return new Git_URL(

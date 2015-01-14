@@ -41,7 +41,7 @@ class Git_URL {
     /** @var string */
     private $smart_http_url_pattern = '%^/plugins/git
         /(?P<project_name>[^/]*)
-        /(?P<path>[^?]*)
+        /(?P<path>[^?.]*(\.git){0,1})
         /(?P<smart_http>
             HEAD |
             info/refs |
@@ -190,15 +190,21 @@ class Git_URL {
             return;
         }
 
+        $repository_path = $this->matches['path'];
+        if (strpos($this->matches['path'], '.git') === false) {
+            $repository_path .= '.git';
+        }
+
         $this->repository = $this->repository_factory->getByProjectNameAndPath(
             $this->matches['project_name'],
-            $this->matches['path'].'.git'
+            $repository_path
         );
+
         if (! $this->repository) {
             return;
         }
 
-        $this->path_info    = '/'.$this->matches['project_name'].'/'.$this->matches['path'].'.git'.'/'.$this->matches['smart_http'];
+        $this->path_info    = '/'.$this->matches['project_name'].'/'.$repository_path.'/'.$this->matches['smart_http'];
         if ($params_position !== false) {
             $this->query_string = substr($this->uri, $params_position+1);
         }
