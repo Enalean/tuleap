@@ -25,14 +25,22 @@ abstract class Git_HTTP_Command {
         $this->env = array(
             'GIT_PROJECT_ROOT'    => Config::get('sys_data_dir')."/gitolite/repositories",
             'GIT_HTTP_EXPORT_ALL' => "1",
-            'PATH_INFO'           => $_SERVER['PATH_INFO'],
             'QUERY_STRING'        => $_SERVER['QUERY_STRING'],
             'REQUEST_METHOD'      => $_SERVER['REQUEST_METHOD'],
         );
 
+        $this->appendToEnv('PATH_INFO');
         $this->appendToEnv('CONTENT_TYPE');
         $this->appendToEnv('HTTP_ACCEPT_ENCODING');
 
+    }
+
+    public function setPathInfo($path_info) {
+        $this->env['PATH_INFO'] = $path_info;
+    }
+
+    public function setQueryString($query_string) {
+        $this->env['QUERY_STRING'] = $query_string;
     }
 
     abstract public function getCommand();

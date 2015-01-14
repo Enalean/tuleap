@@ -39,6 +39,21 @@ class Git_URL {
         %x';
 
     /** @var string */
+    private $smart_http_url_pattern = '%^/plugins/git
+        /(?P<project_name>[^/]*)
+        /(?P<path>[^?]*)
+        /(?P<smart_http>
+            HEAD |
+            info/refs |
+            git-(upload|receive)-pack |
+            objects/(info/[^/]+ |
+                     [0-9a-f]{2}/[0-9a-f]{38} |
+                     pack/pack-[0-9a-f]{40}\.(pack|idx)
+                    )
+          )
+          $%x';
+
+    /** @var string */
     private $standard_index_pattern = '%^/plugins/git/\?group_id=(?P<project_id>\d+)$%x';
 
     /** @var string */
@@ -49,6 +64,9 @@ class Git_URL {
 
     /** @var bool **/
     private $is_standard = false;
+
+    /** @var bool **/
+    private $is_smart_http = false;
 
     /** @var ProjectManager **/
     private $project_manager;
@@ -62,6 +80,12 @@ class Git_URL {
     /** @var GitRepository */
     private $repository;
 
+    /** @var string */
+    private $path_info = '';
+
+    /** @var string */
+    private $query_string = '';
+
     public function __construct(
         ProjectManager $project_manager,
         GitRepositoryFactory $repository_factory,
@@ -74,6 +98,9 @@ class Git_URL {
         $this->setIsFriendly();
         if (! $this->is_friendly) {
             $this->setIsStandard();
+        }
+        if (! $this->is_friendly && ! $this->is_standard) {
+            $this->setIsSmartHTTP();
         }
     }
 
@@ -89,6 +116,10 @@ class Git_URL {
      */
     public function isStandard() {
         return $this->is_standard;
+    }
+
+    public function isSmartHTTP() {
+        return $this->is_smart_http;
     }
 
     /**
@@ -147,6 +178,44 @@ class Git_URL {
         }
 
         $this->is_standard = true;
+    }
+
+    private function setIsSmartHTTP() {
+        $uri = $this->uri;
+        $params_position = strpos($uri, '?');
+        if ($params_position !== false) {
+            $uri = substr($uri, 0, $params_position);
+        }
+        if (! preg_match($this->smart_http_url_pattern, $uri, $this->matches)) {
+            return;
+        }
+
+        $this->repository = $this->repository_factory->getByProjectNameAndPath(
+            $this->matches['project_name'],
+            $this->matches['path'].'.git'
+        );
+        if (! $this->repository) {
+            return;
+        }
+
+        $this->path_info    = '/'.$this->matches['project_name'].'/'.$this->matches['path'].'.git'.'/'.$this->matches['smart_http'];
+        if ($params_position !== false) {
+            $this->query_string = substr($this->uri, $params_position+1);
+        }
+
+        $this->is_smart_http = true;
+    }
+
+    public function getPathInfo() {
+        return $this->path_info;
+    }
+
+    public function getQueryString() {
+        return $this->query_string;
+    }
+
+    public function isGitPush() {
+        return preg_match('%.*(/|\?service=)git-receive-pack$%', $this->uri);
     }
 
     /**

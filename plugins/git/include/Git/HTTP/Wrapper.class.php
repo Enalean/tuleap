@@ -19,7 +19,17 @@
  */
 
 class Git_HTTP_Wrapper {
+
+    /**
+     * @var Logger
+     */
+    private $logger;
+
     const CHUNK_LENGTH = 8192;
+
+    public function __construct(Logger $logger) {
+        $this->logger = $logger;
+    }
 
     public function stream(Git_HTTP_Command $command) {
         $cwd = '/tmp';
@@ -33,6 +43,8 @@ class Git_HTTP_Wrapper {
         }
 
         $pipes = array();
+        $this->logger->debug('Command: '.$command->getCommand());
+        $this->logger->debug('Environment: '.print_r($command->getEnvironment(), true));
         $process = proc_open($command->getCommand(), $descriptorspec, $pipes, $cwd, $command->getEnvironment());
         if (is_resource($process)) {
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {

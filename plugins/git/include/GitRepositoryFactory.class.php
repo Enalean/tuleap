@@ -310,27 +310,4 @@ class GitRepositoryFactory {
     public function hasGitShellRepositories() {
         return $this->dao->hasGitShellRepositories();
     }
-
-    public function getByHttpPathInfo($path_info) {
-        $matches = array();
-
-        // regexp from man git-http-backend
-        // http://git-scm.com/docs/git-http-backend
-        $regexp = "%^(.*)/(
-            HEAD |
-            info/refs |
-            git-(upload|receive)-pack |
-            objects/(info/[^/]+ |
-            [0-9a-f]{2}/[0-9a-f]{38} |
-            pack/pack-[0-9a-f]{40}\.(pack|idx))
-        )$%x";
-
-        if (preg_match($regexp, $path_info, $matches)) {
-            $repository = $this->getByRepositoryRootMatch('', $matches[1]);
-            if ($repository != null) {
-                return $repository;
-            }
-        }
-        throw new GitRepoNotFoundException();
-    }
 }

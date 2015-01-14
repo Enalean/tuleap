@@ -198,3 +198,107 @@ class Git_URL_InvalidURITest extends Git_URLTest {
         );
     }
 }
+
+class Git_URL_GitSmartHTTPTest extends Git_URLTest {
+
+    public function itIsSmartHTTPForInfoRefs() {
+        $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/info/refs?service=git-upload-pack');
+        $this->assertFalse($url->isFriendly());
+        $this->assertFalse($url->isStandard());
+        $this->assertTrue($url->isSmartHTTP());
+    }
+
+    public function itIsSmartHTTPForGitUploadPack() {
+        $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/git-upload-pack');
+        $this->assertFalse($url->isFriendly());
+        $this->assertFalse($url->isStandard());
+        $this->assertTrue($url->isSmartHTTP());
+    }
+
+    public function itIsSmartHTTPForGitReceivePack() {
+        $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/git-receive-pack');
+        $this->assertFalse($url->isFriendly());
+        $this->assertFalse($url->isStandard());
+        $this->assertTrue($url->isSmartHTTP());
+    }
+
+    public function itIsSmartHTTPForHEAD() {
+        $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/HEAD');
+        $this->assertFalse($url->isFriendly());
+        $this->assertFalse($url->isStandard());
+        $this->assertTrue($url->isSmartHTTP());
+    }
+
+    public function itIsSmartHTTPForObjects() {
+        $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/objects/f5/30d381822b12f76923bfba729fead27b378bec');
+        $this->assertFalse($url->isFriendly());
+        $this->assertFalse($url->isStandard());
+        $this->assertTrue($url->isSmartHTTP());
+    }
+
+    public function itRetrievesTheRepository() {
+        $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/info/refs?service=git-upload-pack');
+
+        $this->assertEqual($url->getRepository(), $this->goldfish_repository);
+    }
+
+    public function itRetrievesTheProject() {
+        $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/info/refs?service=git-upload-pack');
+
+        $this->assertEqual($url->getProject(), $this->gpig_project);
+    }
+
+    public function itGeneratesPathInfoForInfoRefs() {
+        $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/info/refs?service=git-upload-pack');
+        $this->assertEqual($url->getPathInfo(), '/gpig/device/generic/goldfish.git/info/refs');
+    }
+
+    public function itGeneratesPathInfoForGitUploadPack() {
+        $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/git-upload-pack');
+        $this->assertEqual($url->getPathInfo(), '/gpig/device/generic/goldfish.git/git-upload-pack');
+    }
+
+    public function itGeneratesPathInfoForGitReceivePack() {
+        $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/git-receive-pack');
+        $this->assertEqual($url->getPathInfo(), '/gpig/device/generic/goldfish.git/git-receive-pack');
+    }
+
+    public function itGeneratesPathInfoForHEAD() {
+        $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/HEAD');
+        $this->assertEqual($url->getPathInfo(), '/gpig/device/generic/goldfish.git/HEAD');
+    }
+
+    public function itGeneratesPathInfoForObjects() {
+        $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/objects/f5/30d381822b12f76923bfba729fead27b378bec');
+        $this->assertEqual($url->getPathInfo(), '/gpig/device/generic/goldfish.git/objects/f5/30d381822b12f76923bfba729fead27b378bec');
+    }
+
+    public function itGeneratesQueryString() {
+        $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/info/refs?service=git-upload-pack');
+        $this->assertEqual($url->getQueryString(), 'service=git-upload-pack');
+    }
+
+    public function itGeneratesAnEmptyQueryStringForGitUploadPack() {
+        $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/git-upload-pack');
+        $this->assertEqual($url->getQueryString(), '');
+    }
+
+    public function itDetectsGitPushWhenServiceIsGitReceivePack() {
+        $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/info/refs?service=git-receive-pack');
+        $this->assertTrue($url->isGitPush());
+    }
+
+    public function itDetectsGitPushWhenURIIsGitReceivePack() {
+        $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/git-receive-pack');
+        $this->assertTrue($url->isGitPush());
+    }
+
+    /** @return Git_URL */
+    private function getUrl($url) {
+        return new Git_URL(
+            $this->project_manager,
+            $this->repository_factory,
+            $url
+        );
+    }
+}

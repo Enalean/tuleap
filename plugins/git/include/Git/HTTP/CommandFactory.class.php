@@ -47,15 +47,17 @@ class Git_HTTP_CommandFactory {
         $this->logger              = $logger;
     }
 
-    public function getCommand() {
-        $repository = $this->repository_factory->getByHttpPathInfo($_SERVER['PATH_INFO']);
-        $command    = $this->getGitHttpBackendCommand();
-        if ($this->needAuthentication($repository)) {
+    public function getCommandForRepository(GitRepository $repository, Git_URL $url) {
+        $command = $this->getGitHttpBackendCommand();
+        if ($this->needAuthentication($repository, $url)) {
             $this->logger->debug('Repository '.$repository->getFullName().' need authentication');
-            return $this->authenticate($command);
+            $command = $this->authenticate($command);
         }
+        $command->setPathInfo($url->getPathInfo());
+        $command->setQueryString($url->getQueryString());
         return $command;
     }
+
 
     private function getGitHttpBackendCommand() {
         $command = new Git_HTTP_CommandCentos5GitHttpBackend();
@@ -65,15 +67,22 @@ class Git_HTTP_CommandFactory {
         return $command;
     }
 
-    private function needAuthentication(GitRepository $repository) {
+    private function needAuthentication(GitRepository $repository, Git_URL $url) {
+        return $this->isGitPush($url) || ! $this->canBeReadByAnonymous($repository);
+    }
+
+    private function isGitPush(Git_URL $url) {
+        return $url->isGitPush();
+    }
+
+    private function canBeReadByAnonymous(GitRepository $repository) {
         $ugroup_ids = $this->permissions_manager->getAuthorizedUgroupIds($repository->getId(), Git::PERM_READ);
-        $need_authentication = true;
         foreach ($ugroup_ids as $ugroup_id) {
             if ($ugroup_id == ProjectUGroup::ANONYMOUS) {
-                return false;
+                return true;
             }
         }
-        return $need_authentication;
+        return false;
     }
 
     private function basicAuthenticationChallenge() {
