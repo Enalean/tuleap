@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,23 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_XMLExporter_ChangesetValue_ChangesetValueIntegerXMLExporter extends Tracker_XMLExporter_ChangesetValue_ChangesetValueXMLExporter {
+class Tracker_XMLImporter_ArtifactImportedMapping {
 
-    protected function getFieldChangeType() {
-        return 'int';
+    private $mapping = array();
+
+    public function add($source_id, $target_id) {
+        $this->mapping[$source_id] = $target_id;
     }
 
-    public function export(
-        SimpleXMLElement $artifact_xml,
-        SimpleXMLElement $changeset_xml,
-        Tracker_Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $changeset_value
-    ) {
-        $field_change = $this->createFieldChangeNodeInChangesetNode(
-            $changeset_value,
-            $changeset_xml
-        );
+    public function get($source_id) {
+        return $this->mapping[$source_id];
+    }
 
-        $field_change->addChild('value', $changeset_value->getValue());
+    public function getOriginal($target_id) {
+        return array_search($target_id, $this->mapping);
     }
 }

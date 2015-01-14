@@ -22,6 +22,7 @@
 class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
 
     const CREATE_NEW_PARENT_VALUE = -1;
+    const NEW_VALUES_KEY          = 'new_values';
 
     /**
      * @var Tracker_ArtifactFactory

@@ -115,6 +115,8 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
             }
         } catch(Tracker_Artifact_XMLImport_Exception_NoAttachementsException $exception) {
             $this->logger->warn("Skipped invalid value for field ".$field->getName().': '.$exception->getMessage());
+        } catch(Tracker_Artifact_XMLImport_Exception_ArtifactLinksAreIgnoredException $exception) {
+            return;
         }
     }
 
@@ -133,6 +135,9 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
     private function getFieldData(Tracker_FormElement_Field $field, SimpleXMLElement $field_change) {
         $type = (string)$field_change['type'];
 
+        if (! isset($this->strategies[$type])) {
+            throw new Tracker_Artifact_XMLImport_Exception_ArtifactLinksAreIgnoredException();
+        }
         return $this->strategies[$type]->getFieldData($field, $field_change);
     }
 }

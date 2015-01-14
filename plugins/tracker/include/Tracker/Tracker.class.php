@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2011, 2012, 2013, 2014, 2015. All Rights Reserved.
  *
  * This file is a part of Codendi.
  *
@@ -106,7 +107,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
 
         $this->color = $color;
     }
-    
+
     public function __toString() {
         return "Tracker #".$this->id;
     }
@@ -117,7 +118,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
     public function getSubmitUrl() {
         return TRACKER_BASE_URL .'/?tracker='. $this->getId() .'&func=new-artifact';
     }
-    
+
     /**
      * @return string ~ 'Add new bug'
      */
@@ -150,7 +151,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $this->project  = $project;
         $this->group_id = $project->getID();
     }
-    
+
     /**
      * getId - get this Tracker Id.
      *
@@ -215,7 +216,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
     function mustBeInstantiatedForNewProjects() {
         return $this->instantiate_for_new_projects == 1;
     }
-    
+
     /**
      * Returns true is notifications are stopped for this tracker
      *
@@ -241,7 +242,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
     public function hasFormElementWithNameAndType($name, $type) {
         $form_element_factory = Tracker_FormElementFactory::instance();
         $element              = $form_element_factory->getUsedFieldByName($this->getId(), $name);
-        
+
         return $element !== null && in_array($form_element_factory->getType($element), (array)$type);
     }
 
@@ -372,15 +373,15 @@ class Tracker implements Tracker_Dispatchable_Interface {
 
     /**
      * Return self
-     * 
+     *
      * @see plugins/tracker/include/Tracker/Tracker_Dispatchable_Interface::getTracker()
-     * 
+     *
      * @return Tracker
      */
     public function getTracker() {
         return $this;
     }
-    
+
     public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
         //TODO: log the admin actions (add a formElement, ...) ?
         $hp = Codendi_HTMLPurifier::instance();
@@ -622,11 +623,11 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 if ($this->userIsAdmin($current_user)) {
                     if ($request->exist('action') && $request->get('action') == 'import_preview' && array_key_exists('csv_filename', $_FILES)) {
                         // display preview before importing artifacts
-                        $this->displayImportPreview($layout, $request, $current_user, $session);                        
+                        $this->displayImportPreview($layout, $request, $current_user, $session);
                     } elseif ($request->exist('action') && $request->get('action') == 'import') {
                         $csv_header = $session->get('csv_header');
                         $csv_body   = $session->get('csv_body');
-                        
+
                         if ($this->importFromCSV($layout, $request, $current_user, $csv_header, $csv_body)) {
                             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'import_succeed'));
                             $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
@@ -669,13 +670,31 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 $action->process($layout, $request, $current_user);
                 break;
             case 'submit-copy-artifact':
-                $action = new Tracker_Action_CopyArtifact(
+                $xml_importer              = $this->getArtifactXMLImporter();
+                $artifact_factory          = $this->getTrackerArtifactFactory();
+                $file_xml_updater          = $this->getFileXMLUpdater();
+                $export_children_collector = new Tracker_XMLExporter_ChildrenCollector();
+                $artifact_xml_exporter     = $this->getArtifactXMLExporter($export_children_collector, $current_user);
+                $action                    = new Tracker_Action_CopyArtifact(
                     $this,
-                    $this->getTrackerArtifactFactory(),
-                    $this->getArtifactXMLExporter(),
-                    $this->getArtifactXMLImporter(),
+                    $artifact_factory,
+                    $artifact_xml_exporter,
+                    $xml_importer,
                     $this->getChangesetXMLUpdater(),
-                    $this->getFileXMLUpdater()
+                    $file_xml_updater,
+                    new Tracker_XMLExporter_ChildrenXMLExporter(
+                        $artifact_xml_exporter,
+                        $file_xml_updater,
+                        $artifact_factory,
+                        $export_children_collector
+                    ),
+                    new Tracker_XMLImporter_ChildrenXMLImporter(
+                        $xml_importer,
+                        $this->getTrackerFactory(),
+                        $this->getTrackerArtifactFactory(),
+                        new Tracker_XMLExporter_ChildrenCollector()
+                    ),
+                    new Tracker_XMLImporter_ArtifactImportedMapping()
                 );
                 $action->process($layout, $request, $current_user);
                 break;
@@ -685,7 +704,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 break;
             case 'admin-hierarchy':
                 if ($this->userIsAdmin($current_user)) {
-                    
+
                     $this->displayAdminItemHeader($layout, 'hierarchy');
                     $this->getHierarchyController($request)->edit();
                     $this->displayFooter($layout);
@@ -696,7 +715,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 break;
             case 'admin-hierarchy-update':
                 if ($this->userIsAdmin($current_user)) {
-                    
+
                     $this->getHierarchyController($request)->update();
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
@@ -771,7 +790,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         return $controller;
     }
 
-    
+
     public function createFormElement($type, $formElement_data, $user) {
         if ($type == 'shared') {
             $this->sharedFormElementFactory->createFormElement($this, $formElement_data, $user);
@@ -779,14 +798,14 @@ class Tracker implements Tracker_Dispatchable_Interface {
             $this->formElementFactory->createFormElement($this, $type, $formElement_data);
         }
     }
-    
+
     /**
      * Display a report. Choose the report among
      *  - the requested 'select_report'
      *  - the last viewed report (stored in preferences)
      *  - the default report of this tracker
      *
-     * If the user request a 'link-artifact-id' then display also manual and recent 
+     * If the user request a 'link-artifact-id' then display also manual and recent
      * panels to ease the selection of artifacts to link
      *
      * @param Tracker_IDisplayTrackerLayout  $layout          Displays the page header and footer
@@ -817,12 +836,12 @@ class Tracker implements Tracker_Dispatchable_Interface {
         if (!$report) {
             $report = $this->getReportFactory()->getDefaultReportsByTrackerId($this->id);
         }
-        
+
         $link_artifact_id = (int)$request->get('link-artifact-id');
         if ($link_artifact_id && !$request->get('report-only')) {
-            
+
             $linked_artifact = Tracker_ArtifactFactory::instance()->getArtifactById($link_artifact_id);
-            
+
             if (!$linked_artifact) {
                 $err = "Linked artifact not found or doesn't exist";
                 if (!$request->isAjax()) {
@@ -840,14 +859,14 @@ class Tracker implements Tracker_Dispatchable_Interface {
             echo $linked_artifact->fetchTitleWithoutUnsubscribeButton(
                 $GLOBALS['Language']->getText('plugin_tracker_artifactlink', 'title_prefix')
             );
-            
+
             echo '<input type="hidden" id="link-artifact-id" value="'. (int)$link_artifact_id .'" />';
-            
+
             echo '<table id="tracker-link-artifact-different-ways" cellpadding="0" cellspacing="0" border="0"><tbody><tr>';
-            
+
             //the fast ways
             echo '<td id="tracker-link-artifact-fast-ways">';
-            
+
             //Manual
             echo '<div id="tracker-link-artifact-manual-way">';
             echo '<div class="boxtitle">';
@@ -863,7 +882,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
             echo '</p>';
             echo '</div>';
             echo '</div>';
-            
+
             //History
             echo '<div id="tracker-link-artifact-recentitems-way">';
             echo '<div class="boxtitle">';
@@ -877,8 +896,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 foreach ($recent_items as $item) {
                     if ($item['id'] != $link_artifact_id) {
                         echo '<li>';
-                        echo '<input type="checkbox" 
-                                     name="link-artifact[recent][]" 
+                        echo '<input type="checkbox"
+                                     name="link-artifact[recent][]"
                                      value="'. (int)$item['id'] .'" /> ';
                         echo $item['link'];
                         echo '</li>';
@@ -888,10 +907,10 @@ class Tracker implements Tracker_Dispatchable_Interface {
             }
             echo '</div>';
             echo '</div>';
-            
+
             //end of fast ways
             echo '</td>';
-            
+
             //And the slow way (aka need to search)
             if ($report) {
                 echo '<td><div id="tracker-link-artifact-slow-way">';
@@ -902,7 +921,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 echo '<div id="tracker-link-artifact-slow-way-content">';
             }
         }
-        
+
         if ($report) {
             $report->process($layout, $request, $current_user);
         } elseif (!$link_artifact_id) {
@@ -910,13 +929,13 @@ class Tracker implements Tracker_Dispatchable_Interface {
             echo $GLOBALS['Language']->getText('plugin_tracker', 'no_reports_available');
             $this->displayFooter($layout);
         }
-        
+
         if ($link_artifact_id && !$request->get('report-only')) {
             if ($report) {
                 echo '</div></div></td>'; //end of slow
             }
             echo '</tr></tbody></table>'; //end of ways
-            
+
             echo '<div class="tracker-link-artifact-controls">';
             echo '<a href="#cancel" onclick="myLightWindow.deactivate(); return false;">&laquo;&nbsp;'. $GLOBALS['Language']->getText('global', 'btn_cancel') .'</a>';
             echo ' ';
@@ -943,14 +962,14 @@ class Tracker implements Tracker_Dispatchable_Interface {
      */
     public function displaySearch(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
         $hp = Codendi_HTMLPurifier::instance();
-        
+
         $pm = ProjectManager::instance();
         $group_id = $request->get('group_id');
         $group = $pm->getProject($group_id);
         if (!$group || !is_object($group) || $group->isError()) {
             exit_no_group();
         }
-        
+
         $breadcrumbs = array(
                 array(
                         'title' => $GLOBALS['Language']->getText('plugin_tracker_browse', 'search_result'),
@@ -959,9 +978,9 @@ class Tracker implements Tracker_Dispatchable_Interface {
         );
         $this->displayHeader($layout, $this->name, $breadcrumbs);
         $html = '';
-        
+
         $words    = $request->get('words');
-        
+
         $criteria = 'OR';
         if ($request->exist('exact') && $request->get('exact') == '1') {
             $criteria = 'AND';
@@ -971,25 +990,25 @@ class Tracker implements Tracker_Dispatchable_Interface {
             $offset = $request->get('offset');
         }
         $limit = 25;
-        
+
         $tracker_artifact_dao = new Tracker_ArtifactDao();
         $dar = $tracker_artifact_dao->searchByKeywords($this->getId(), $words, $criteria, $offset, $limit);
         $rows_returned = $tracker_artifact_dao->foundRows();
-        
+
         $no_rows = false;
-        
+
         if ( $dar->rowCount() < 1 || $rows_returned < 1) {
             $no_rows = true;
             $html .= '<h2>'.$GLOBALS['Language']->getText('search_index','no_match_found', $hp->purify($words, CODENDI_PURIFIER_CONVERT_HTML)) .'</h2>';
         } else {
             $html .= '<h3>'.$GLOBALS['Language']->getText('search_index','search_res', array($hp->purify($words, CODENDI_PURIFIER_CONVERT_HTML), $rows_returned)).'</h3>';
-            
+
             $title_arr = array();
-            
+
             $art_field_fact = Tracker_FormElementFactory::instance();
             $artifact_factory = Tracker_ArtifactFactory::instance();
             $user_helper = UserHelper::instance();
-            
+
             $summary_field = $this->getTitleField();
             if ($summary_field && $summary_field->userCanRead()) {
                 $title_arr[] = $GLOBALS['Language']->getText('plugin_tracker_search_index','artifact_title');
@@ -1006,7 +1025,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
             if ($status_field && $status_field->userCanRead()) {
                 $title_arr[] = $GLOBALS['Language']->getText('global','status');
             }
-    
+
             $html .= html_build_list_table_top ($title_arr);
             $nb_artifacts = 0;
             while ($row = $dar->getRow()) {
@@ -1033,8 +1052,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
             }
             $html .= '</table>';
         }
-        
-        
+
+
         // Search result pagination
         if ( !$no_rows && ( ($rows_returned > $nb_artifacts) || ($offset != 0) ) ) {
             $html .= '<br />';
@@ -1068,7 +1087,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
             $html .= '</td></tr>';
             $html .= '</table>';
         }
-        
+
         echo $html;
         $this->displayFooter($layout);
     }
@@ -1376,7 +1395,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 Tracker_FormElementFactory::instance()->getUsedFields($this),
                 false
         );
-        
+
         $submit_permission = 'PLUGIN_TRACKER_FIELD_SUBMIT';
         $read_permission   = 'PLUGIN_TRACKER_FIELD_READ';
         $update_permission = 'PLUGIN_TRACKER_FIELD_UPDATE';
@@ -1486,7 +1505,7 @@ EOS;
             $html .= '<tr class="'. util_get_alt_row_color($i++) .'">';
             $html .= '<td rowspan="'. (count($ugroups_permissions[$key]['related_parts'])+1) .'" style="vertical-align:top;">';
             $html .= '<select onchange="changeFirstPartId(this.options[this.selectedIndex].value);">';
-            
+
             foreach($ugroups_permissions as $part_permissions) {
                 if ($selected_id === false) {
                     $selected_id = $part_permissions['values']['id'];
@@ -1536,7 +1555,7 @@ EOS;
                 $html .= $name;
 
                 $html .= '</td>';
-  
+
                 //The permissions
                 {
                     //Submit permission
@@ -1547,7 +1566,7 @@ EOS;
                         $name_of_variable = "permissions[".(int)$first_part['id']."][".(int)$second_part['id']."]";
                     }
                     $html .= '<input type="hidden" name="'. $name_of_variable .'[submit]" value="off"/>';
-                    
+
                     $can_submit = ($group_first && $second_part['field']->isSubmitable())
                             || (!$group_first && $first_part['field']->isSubmitable());
 
@@ -1615,7 +1634,7 @@ EOS;
 
         echo '<h2>'. $title .'</h2>';
         echo '<form name="form1" method="POST" action="'.TRACKER_BASE_URL.'/?tracker='. (int)$this->id .'&amp;func=admin-formElements">';
-        
+
         echo '  <div class="container-fluid">
                   <div class="row-fluid">
                     <div class="span3">';
@@ -1656,7 +1675,7 @@ EOS;
                 ), $breadcrumbs);
         $this->displayAdminHeader($layout, $title, $breadcrumbs);
     }
-    
+
     public function displayAdminCSVImport(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
         $hp = Codendi_HTMLPurifier::instance();
         $items = $this->getAdminItems();
@@ -1705,7 +1724,7 @@ EOS;
         echo '</div>';
         echo '<div class="tracker_confirm_delete_buttons">';
         echo '<input type="submit" tabindex="2" name="confirm" value="'. $GLOBALS['Language']->getText('plugin_tracker_admin', 'clean_confirm') .'" />';
-        echo '<input type="submit" tabindex="1" name="cancel" value="'. $GLOBALS['Language']->getText('plugin_tracker_admin', 'clean_cancel') .'" />';        
+        echo '<input type="submit" tabindex="1" name="cancel" value="'. $GLOBALS['Language']->getText('plugin_tracker_admin', 'clean_cancel') .'" />';
         echo '</div>';
         echo '<input type="hidden" name="id" value="'.$artifact->getId().'" />';
         echo '</form>';
@@ -1774,7 +1793,7 @@ EOS;
             return true;
         }
     }
-    
+
     protected function editOptions($request) {
         $project = ProjectManager::instance()->getProject($this->group_id);
         $old_item_name = $this->getItemName();
@@ -1854,20 +1873,20 @@ EOS;
 
     /**
      * Test if tracker is deleted
-     * 
+     *
      * @return Boolean
      */
     public function isDeleted() {
         return ($this->deletion_date != '');
     }
-    
+
     /**
      * @return Tracker_SemanticManager
      */
     public function getTrackerSemanticManager() {
         return new Tracker_SemanticManager($this);
     }
-    
+
     /**
      * @return Tracker_Tooltip
      */
@@ -1902,7 +1921,7 @@ EOS;
     public function getCannedResponseFactory() {
         return Tracker_CannedResponseFactory::instance();
     }
-    
+
     /**
      * @return WorkflowManager
      */
@@ -2033,7 +2052,7 @@ EOS;
         }
         return $this->cached_permission_authorized_ugroups;
     }
-    
+
     /**
      * See if the user's perms are >= 2 or project admin.
      *
@@ -2236,11 +2255,11 @@ EOS;
         $tsm = $this->getTrackerSemanticManager();
         $child = $xmlElem->addChild('semantics');
         $tsm->exportToXML($child, $xmlMapping);
-        
+
         // rules
         $child = $xmlElem->addChild('rules');
         $this->getGlobalRulesManager()->exportToXML($child, $xmlMapping);
-        
+
         // only the reports with project scope are exported
         $reports = $this->getReportFactory()->getReportsByTrackerId($this->id, null);
         if ($reports) {
@@ -2337,12 +2356,12 @@ EOS;
         }
         return $fields;
     }
-    
+
     private function _getCSVSeparator($current_user) {
         if ( ! $current_user || ! ($current_user instanceof PFUser)) {
             $current_user = UserManager::instance()->getCurrentUser();
         }
-        
+
         $separator = ",";   // by default, comma.
         $separator_csv_export_pref = $current_user->getPreference('user_csv_separator');
         switch ($separator_csv_export_pref) {
@@ -2358,7 +2377,7 @@ EOS;
         }
         return $separator;
     }
-    
+
     private function _getCSVDateformat($current_user) {
         if ( ! $current_user || ! ($current_user instanceof PFUser)) {
             $current_user = UserManager::instance()->getCurrentUser();
@@ -2369,16 +2388,16 @@ EOS;
         }
         return $dateformat_csv_export_pref;
     }
-    
+
     protected function displayImportPreview(Tracker_IDisplayTrackerLayout $layout, $request, $current_user, $session) {
         $hp = Codendi_HTMLPurifier::instance();
-        
+
         if ($_FILES['csv_filename']) {
             $f = fopen($_FILES['csv_filename']['tmp_name'], 'r');
             if ($f) {
                 // get the csv separator (defined in user preferences)
                 $separator = $this->_getCSVSeparator($current_user);
-                
+
                 $is_valid = true;
                 $i = 0;
                 $lines = array();
@@ -2392,7 +2411,7 @@ EOS;
                     $i++;
                 }
                 fclose($f);
-                
+
                 if ($is_valid) {
                     if (count($lines) >= 2) {
                         $is_valid = $this->isValidCSV($lines, $separator);
@@ -2401,9 +2420,9 @@ EOS;
                         $items = $this->getAdminItems();
                         $title = $items['csvimport']['title'];
                         $this->displayAdminCSVImportHeader($layout, $title, array());
-                        
+
                         echo '<h2>'. $title .'</h2>';
-                        
+
                         //body
                         if (count($lines) > 1) {
                             $html_table = '';
@@ -2413,7 +2432,7 @@ EOS;
                             $html_table .=  '<tr class="boxtable">';
                             $html_table .=  '<th class="boxtitle"></th>';
                             $fields = $this->_getCSVFields($header);
-                            
+
                             foreach ($header as $field_name) {
                                 $html_table .=  '<th class="boxtitle tracker_report_table_column">';
                                 $html_table .=  $field_name;
@@ -2457,12 +2476,12 @@ EOS;
                             }
                             $html_table .=  '</tbody>';
                             $html_table .=  '</table>';
-                            
+
                             echo '<p>';
                             echo $GLOBALS['Language']->getText('plugin_tracker_import', 'check_data') . '<br />';
                             echo $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'date_format_help', array($GLOBALS['Language']->getText('account_preferences', $this->_getCSVDateformat($current_user))));
                             echo '</p>';
-                            
+
                             if ($is_valid) {
                                 echo '<form name="form1" method="POST" enctype="multipart/form-data" action="'.TRACKER_BASE_URL.'/?tracker='. (int)$this->id .'&amp;func=admin-csvimport">';
                                 echo '<p>' . $GLOBALS['Language']->getText('plugin_tracker_import','ready', array($nb_lines, $nb_artifact_creation, $nb_artifact_update)) . '</p>';
@@ -2475,13 +2494,13 @@ EOS;
                             echo $html_table;
                             if ($is_valid) {
                                 echo '</form>';
-                                
+
                                 $session->set('csv_header', $header);
                                 $session->set('csv_body', $lines);
-                                
+
                             }
                         }
-                        
+
                         //footer
                         $this->displayFooter($layout);
                         exit();
@@ -2497,7 +2516,7 @@ EOS;
             $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. (int)$this->getId() .'&func=admin-csvimport');
         }
     }
-    
+
     /**
      * Validation of CSV file datas in this tracker
      *
@@ -2506,18 +2525,18 @@ EOS;
     public function isValidCSV($lines, $separator) {
         $is_valid = true;
         $header_line = array_shift($lines);
-        
+
         if (count($header_line) == 1) {
             // not sure it is an error, so don't set is_valid to false.
             $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'separator_not_found', array($separator)), CODENDI_PURIFIER_FULL);
         }
-        
+
         if ($this->hasError($header_line, $lines)) {
             $is_valid = false;
         }
         return $is_valid;
     }
-    
+
     /**
      * Check if CSV file contains unknown aid
      *
@@ -2542,7 +2561,7 @@ EOS;
         }
         return $has_unknown;
     }
-    
+
     /**
      * Check if CSV file contains unknown fields
      *
@@ -2557,7 +2576,7 @@ EOS;
         $af = $this->getTrackerArtifactFactory();
         $artifact = null;
         $hp       = Codendi_HTMLPurifier::instance();
-        
+
         foreach ($lines as $cpt_line => $line) {
             $data = array();
             foreach ($header_line as $idx => $field_name) {
@@ -2575,20 +2594,20 @@ EOS;
                         } else {
                             $artifact_id = 0;
                         }
-                        
+
                         $artifact = $af->getInstanceFromRow(
                                         array(
                                             'id'                       => $artifact_id,
-                                            'tracker_id'               => $this->id, 
+                                            'tracker_id'               => $this->id,
                                             'submitted_by'             => $this->getUserManager()->getCurrentuser()->getId(),
-                                            'submitted_on'             => $_SERVER['REQUEST_TIME'], 
+                                            'submitted_on'             => $_SERVER['REQUEST_TIME'],
                                             'use_artifact_permissions' => 0,
                                         )
                                   );
                         if ($line[$idx]!=''){
 
                             $data[$field->getId()] = $field->getFieldDataFromCSVValue($line[$idx]);
-                            
+
                             if ($data[$field->getId()] === null) {
                                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unknown_value', array($line[$idx], $field_name)));
                                 $has_error = true;
@@ -2617,7 +2636,7 @@ EOS;
         return $has_error;
     }
 
-    
+
     /**
      * Check if CSV contains all the required fields and values associated
      *
@@ -2650,7 +2669,7 @@ EOS;
         }
         return $is_missing;
     }
-    
+
     /**
      * Check if aid exists in update mode in CSV import
      *
@@ -2671,7 +2690,7 @@ EOS;
         return false;
     }
 
-    
+
     /**
      * Import artifacts from CSV file ($_FILES['csv_filename']['tmp_name'])  in this tracker
      *
@@ -2751,7 +2770,7 @@ EOS;
         }
         return  ! $is_error;
     }
-    
+
      /**
      * Get UserManager instance
      *
@@ -2760,7 +2779,7 @@ EOS;
     protected function getUserManager() {
         return UserManager::instance();
     }
-    
+
     /**
      * Get Tracker_ArtifactFactory instance
      *
@@ -2769,7 +2788,7 @@ EOS;
     protected function getTrackerArtifactFactory() {
         return Tracker_ArtifactFactory::instance();
     }
-    
+
     /**
      * Get FormElementFactory instance
      *
@@ -2912,7 +2931,7 @@ EOS;
             return null;
         }
     }
-    
+
     /**
      * Say if the tracker as "status" defined
      *
@@ -2949,7 +2968,7 @@ EOS;
             return null;
         }
     }
-    
+
     /**
      *	existUser - check if a user is already in the project permissions
      *
@@ -2990,7 +3009,7 @@ EOS;
         $perm_dao = new Tracker_PermDao();
 
         $row = $perm_dao->searchByUserIdAndTrackerId($id, $this->getId())->getRow();
-        
+
         if ($row) {
 		    if ($perm_dao->updateUser($id, $perm_level, $this->getId())) {
                 return true;
@@ -3000,7 +3019,7 @@ EOS;
         } else if ($perm_dao->createUser($id, $perm_level, $this->getId())) {
 
             return true;
-                
+
         } else {
             return false;
         }
@@ -3055,13 +3074,13 @@ EOS;
             return true;
         } else {
             return false;
-        }      
+        }
     }
-    
+
     public function setFormElementFactory(Tracker_FormElementFactory $factory) {
         $this->formElementFactory = $factory;
     }
-    
+
     public function setSharedFormElementFactory(Tracker_SharedFormElementFactory $factory) {
         $this->sharedFormElementFactory = $factory;
     }
@@ -3105,7 +3124,7 @@ EOS;
 
     /**
      * Set parent
-     * 
+     *
      * @param Tracker $tracker
      */
     public function setParent(Tracker $tracker = null) {
@@ -3202,7 +3221,10 @@ EOS;
         );
     }
 
-    private function getArtifactXMLExporter() {
+    private function getArtifactXMLExporter(
+        Tracker_XMLExporter_ChildrenCollector $children_collector,
+        PFUser $current_user
+    ) {
         $visitor = new Tracker_XMLExporter_ChangesetValueXMLExporterVisitor(
             new Tracker_XMLExporter_ChangesetValue_ChangesetValueDateXMLExporter(),
             new Tracker_XMLExporter_ChangesetValue_ChangesetValueFileXMLExporter(
@@ -3215,6 +3237,10 @@ EOS;
             new Tracker_XMLExporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter(),
             new Tracker_XMLExporter_ChangesetValue_ChangesetValueListXMLExporter(),
             new Tracker_XMLExporter_ChangesetValue_ChangesetValueOpenListXMLExporter(),
+            new Tracker_XMLExporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter(
+                $children_collector,
+                $current_user
+            ),
             new Tracker_XMLExporter_ChangesetValue_ChangesetValueUnknownXMLExporter()
         );
         $values_exporter    = new Tracker_XMLExporter_ChangesetValuesXMLExporter($visitor);

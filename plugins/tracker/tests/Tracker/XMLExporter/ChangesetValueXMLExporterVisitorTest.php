@@ -36,13 +36,21 @@ class Tracker_XMLExporter_ChangesetValueXMLExporterVisitorTest extends TuleapTes
     /** @var Tracker_XMLExporter_ChangesetValue_ChangesetValueXMLExporter */
     private $float_exporter;
 
+    /** @var Tracker_XMLExporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter */
+    private $artlink_exporter;
+
+    /** @var Tracker_Artifact_ChangesetValue_ArtifactLink */
+    private $artlink_changeset_value;
+
+
     public function setUp() {
         parent::setUp();
-        $this->int_exporter   = mock('Tracker_XMLExporter_ChangesetValue_ChangesetValueIntegerXMLExporter');
-        $this->float_exporter = mock('Tracker_XMLExporter_ChangesetValue_ChangesetValueFloatXMLExporter');
-        $this->artifact_xml   = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
-        $this->changeset_xml  = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');
-        $this->visitor        = new Tracker_XMLExporter_ChangesetValueXMLExporterVisitor(
+        $this->int_exporter     = mock('Tracker_XMLExporter_ChangesetValue_ChangesetValueIntegerXMLExporter');
+        $this->float_exporter   = mock('Tracker_XMLExporter_ChangesetValue_ChangesetValueFloatXMLExporter');
+        $this->artlink_exporter = mock('Tracker_XMLExporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter');
+        $this->artifact_xml     = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
+        $this->changeset_xml    = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');
+        $this->visitor          = new Tracker_XMLExporter_ChangesetValueXMLExporterVisitor(
             mock('Tracker_XMLExporter_ChangesetValue_ChangesetValueDateXMLExporter'),
             mock('Tracker_XMLExporter_ChangesetValue_ChangesetValueFileXMLExporter'),
             $this->float_exporter,
@@ -52,20 +60,24 @@ class Tracker_XMLExporter_ChangesetValueXMLExporterVisitorTest extends TuleapTes
             mock('Tracker_XMLExporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter'),
             mock('Tracker_XMLExporter_ChangesetValue_ChangesetValueListXMLExporter'),
             mock('Tracker_XMLExporter_ChangesetValue_ChangesetValueOpenListXMLExporter'),
+            $this->artlink_exporter,
             mock('Tracker_XMLExporter_ChangesetValue_ChangesetValueUnknownXMLExporter')
         );
 
-        $this->int_changeset_value   = new Tracker_Artifact_ChangesetValue_Integer('*', '*', '*', '*');
-        $this->float_changeset_value = new Tracker_Artifact_ChangesetValue_Float('*', '*', '*', '*');
+        $this->int_changeset_value     = new Tracker_Artifact_ChangesetValue_Integer('*', '*', '*', '*');
+        $this->float_changeset_value   = new Tracker_Artifact_ChangesetValue_Float('*', '*', '*', '*');
+        $this->artlink_changeset_value = new Tracker_Artifact_ChangesetValue_ArtifactLink('*', '*', '*', '*');
     }
 
     public function itCallsTheIntegerExporterAccordinglyToTheTypeOfTheChangesetValue() {
         expect($this->int_exporter)->export()->once();
         expect($this->float_exporter)->export()->never();
+        expect($this->artlink_exporter)->export()->never();
 
         $this->visitor->export(
             $this->artifact_xml,
             $this->changeset_xml,
+            mock('Tracker_Artifact'),
             $this->int_changeset_value
         );
     }
@@ -73,11 +85,26 @@ class Tracker_XMLExporter_ChangesetValueXMLExporterVisitorTest extends TuleapTes
     public function itCallsTheFloatExporterAccordinglyToTheTypeOfTheChangesetValue() {
         expect($this->int_exporter)->export()->never();
         expect($this->float_exporter)->export()->Once();
+        expect($this->artlink_exporter)->export()->never();
 
         $this->visitor->export(
             $this->artifact_xml,
             $this->changeset_xml,
+            mock('Tracker_Artifact'),
             $this->float_changeset_value
+        );
+    }
+
+    public function itCallsTheArtifactLinkExporterAccordinglyToTheTypeOfTheChangesetValue() {
+        expect($this->int_exporter)->export()->never();
+        expect($this->float_exporter)->export()->never();
+        expect($this->artlink_exporter)->export()->once();
+
+        $this->visitor->export(
+            $this->artifact_xml,
+            $this->changeset_xml,
+            mock('Tracker_Artifact'),
+            $this->artlink_changeset_value
         );
     }
 }

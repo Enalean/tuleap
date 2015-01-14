@@ -33,6 +33,9 @@ class Tracker_XMLExporter_ChangesetXMLExporterTest extends TuleapTestCase {
     /** @var Tracker_Artifact_ChangesetValue */
     private $values;
 
+    /** @var Tracker_Artifact */
+    private $artifact;
+
     public function setUp() {
         parent::setUp();
         $this->artifact_xml    = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
@@ -46,8 +49,10 @@ class Tracker_XMLExporter_ChangesetXMLExporterTest extends TuleapTestCase {
             $this->float_changeset_value
         );
 
+        $this->artifact  = mock('Tracker_Artifact');
         $this->changeset = mock('Tracker_Artifact_Changeset');
         stub($this->changeset)->getValues()->returns($this->values);
+        stub($this->changeset)->getArtifact()->returns($this->artifact);
     }
 
     public function itAppendsChangesetNodeToArtifactNode() {
@@ -59,7 +64,7 @@ class Tracker_XMLExporter_ChangesetXMLExporterTest extends TuleapTestCase {
     }
 
     public function itDelegatesTheExportOfValues() {
-        expect($this->values_exporter)->export($this->artifact_xml, '*', $this->values)->once();
+        expect($this->values_exporter)->export($this->artifact_xml, '*', $this->artifact, $this->values)->once();
 
         $this->exporter->exportWithoutComments($this->artifact_xml, $this->changeset);
     }

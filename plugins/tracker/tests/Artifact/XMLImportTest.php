@@ -1469,3 +1469,44 @@ class Tracker_Artifact_XMLImport_InitialChangesetCreationFailureTest extends Tra
         $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
     }
 }
+
+class Tracker_Artifact_XMLImport_ArtifactLinkTest extends Tracker_Artifact_XMLImportBaseTest {
+
+    private $xml_element;
+
+    private $field_id = 369;
+    private $field;
+
+    public function setUp() {
+        parent::setUp();
+
+        stub($this->artifact_creator)->create()->returns(mock('Tracker_Artifact'));
+
+        $this->field = mock('Tracker_FormElement_Field_ArtifactLink');
+        stub($this->field)->getId()->returns($this->field_id);
+        stub($this->field)->validateField()->returns(true);
+
+        stub($this->formelement_factory)->getUsedFieldByName($this->tracker_id, 'al')->returns(
+            $this->field
+        );
+
+        $this->xml_element = new SimpleXMLElement('<?xml version="1.0"?>
+            <artifacts>
+              <artifact id="4918">
+                <changeset>
+                  <submitted_by format="username">john_doe</submitted_by>
+                  <submitted_on format="ISO8601">2014-01-15T10:38:06+01:00</submitted_on>
+                  <field_change type="art_link" field_name="al">
+                    <value>113</value>
+                    <value>123</value>
+                  </field_change>
+                </changeset>
+              </artifact>
+            </artifacts>');
+    }
+
+    public function itIgnoresArtifactLinkChanges() {
+        // expect no errors
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path);
+    }
+}

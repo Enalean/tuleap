@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014, 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,16 @@
  */
 
 class Tracker_Action_CopyArtifact {
+
+    /**
+     * @var Tracker_XMLImporter_ArtifactImportedMapping
+     */
+    private $artifacts_imported_mapping;
+
+    /**
+     * @var Tracker_XMLImporter_ChildrenXMLImporter
+     */
+    private $children_xml_importer;
 
     /**
      * @var Tracker_XMLUpdater_TemporaryFileXMLUpdater
@@ -56,14 +66,20 @@ class Tracker_Action_CopyArtifact {
         Tracker_XMLExporter_ArtifactXMLExporter $xml_exporter,
         Tracker_Artifact_XMLImport $xml_importer,
         Tracker_XMLUpdater_ChangesetXMLUpdater $xml_updater,
-        Tracker_XMLUpdater_TemporaryFileXMLUpdater $file_updater
+        Tracker_XMLUpdater_TemporaryFileXMLUpdater $file_updater,
+        Tracker_XMLExporter_ChildrenXMLExporter $children_xml_exporter,
+        Tracker_XMLImporter_ChildrenXMLImporter $children_xml_importer,
+        Tracker_XMLImporter_ArtifactImportedMapping $artifacts_imported_mapping
     ) {
-        $this->tracker          = $tracker;
-        $this->artifact_factory = $artifact_factory;
-        $this->xml_exporter     = $xml_exporter;
-        $this->xml_importer     = $xml_importer;
-        $this->xml_updater      = $xml_updater;
-        $this->file_updater     = $file_updater;
+        $this->tracker                    = $tracker;
+        $this->artifact_factory           = $artifact_factory;
+        $this->xml_exporter               = $xml_exporter;
+        $this->xml_importer               = $xml_importer;
+        $this->xml_updater                = $xml_updater;
+        $this->file_updater               = $file_updater;
+        $this->children_xml_exporter      = $children_xml_exporter;
+        $this->children_xml_importer      = $children_xml_importer;
+        $this->artifacts_imported_mapping = $artifacts_imported_mapping;
     }
 
     public function process(
@@ -118,13 +134,24 @@ class Tracker_Action_CopyArtifact {
             $_SERVER['REQUEST_TIME']
         );
 
+        $this->children_xml_exporter->exportChildren($xml_artifacts);
+
         $extraction_path = '';
         $artifact = $this->xml_importer->importOneArtifactFromXML(
             $this->tracker,
-            $xml_artifacts->artifact,
+            $xml_artifacts->artifact[0],
             $extraction_path
         );
+
         if ($artifact) {
+            $this->artifacts_imported_mapping->add($from_changeset->getArtifact()->getId(), $artifact->getId());
+            $this->children_xml_importer->importChildren(
+                $this->artifacts_imported_mapping,
+                $xml_artifacts,
+                $extraction_path,
+                $artifact,
+                $current_user
+            );
             $this->redirectToArtifact($artifact);
         } else {
             $this->logsErrorAndRedirectToTracker(

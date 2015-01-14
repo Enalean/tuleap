@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,18 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_XMLExporter_ChangesetValue_ChangesetValueUnknownXMLExporter extends Tracker_XMLExporter_ChangesetValue_ChangesetValueXMLExporter {
+class Tracker_Artifact_XMLImport_Exception_ArtifactLinksAreIgnoredException extends Exception {
 
-    protected function getFieldChangeType() {
-        return null;
-    }
-
-    public function export(
-        SimpleXMLElement $artifact_xml,
-        SimpleXMLElement $changeset_xml,
-        Tracker_Artifact $artifact,
-        Tracker_Artifact_ChangesetValue $changeset_value
-    ) {
-        return null;
-    }
 }
