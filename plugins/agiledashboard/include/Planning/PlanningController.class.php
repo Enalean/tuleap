@@ -419,13 +419,13 @@ class Planning_Controller extends MVC2_PluginController {
         $available_planning_trackers[] = $planning->getPlanningTracker();
         $kanban_tracker_ids            = $this->kanban_factory->getKanbanTrackerIds($group_id);
 
-        $planning_trackers_filtered = $this->getTrackersFiltered(
+        $planning_trackers_filtered = $this->getPlanningTrackersFiltered(
             $available_planning_trackers,
             $kanban_tracker_ids,
             $planning
         );
 
-        $backlog_trackers_filtered = $this->getTrackersFiltered(
+        $backlog_trackers_filtered = $this->getBacklogTrackersFiltered(
             $available_trackers,
             $kanban_tracker_ids,
             $planning
@@ -440,7 +440,22 @@ class Planning_Controller extends MVC2_PluginController {
         );
     }
 
-    private function getTrackersFiltered(array $trackers, array $kanban_tracker_ids, Planning $planning) {
+    private function getPlanningTrackersFiltered(array $trackers, array $kanban_tracker_ids, Planning $planning) {
+        $trackers_filtered = array();
+
+        foreach ($this->getPlanningTrackerPresenters($trackers, $planning) as $tracker) {
+            $trackers_filtered[] = array(
+                'name'     => $tracker->getName(),
+                'id'       => $tracker->getId(),
+                'selected' => $tracker->selectedIfPlanningTracker(),
+                'disabled' => in_array($tracker->getId(), $kanban_tracker_ids)
+            );
+        }
+
+        return $trackers_filtered;
+    }
+
+    private function getBacklogTrackersFiltered(array $trackers, array $kanban_tracker_ids, Planning $planning) {
         $trackers_filtered = array();
 
         foreach ($this->getPlanningTrackerPresenters($trackers, $planning) as $tracker) {
