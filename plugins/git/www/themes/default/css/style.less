@@ -594,3 +594,29 @@ h1, h2, h3 {
         }
     }
 }
+
+#gitphp.plugin_git_gitphp {
+    table.diffTable {
+        font-family: monospace;
+
+        tr.diff-added {
+            background-color: #C1FFC1;
+        }
+
+        tr.diff-modified {
+            background-color: #DDEEFF;
+        }
+
+        tr.diff-deleted {
+            background-color: #FFDDDD;
+        }
+
+        td {
+            font-size: 0.85em;
+
+            &.diff-left {
+                border-right: 1px solid #d9d8d1;
+            }
+        }
+    }
+}
