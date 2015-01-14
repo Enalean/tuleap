@@ -1,3 +1,6 @@
+Version 4.4 - Tuleap 7.10
+    * request #7760: Side by side diff in Git is not working
+
 Version 4.3 - Tuleap 7.10
     * request #7673 Git errors when creating repo and dumping ssh keys
 
