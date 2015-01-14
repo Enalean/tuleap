@@ -17,12 +17,12 @@ Version 7.10 ()
 	* tracker_date_reminder: 1.2.9
 	* graphontrackers: 1.12
 	* graphontrackersv5: 5.16
-	* tracker: 5.540
+	* tracker: 5.541
 	* mediawiki: 0.59
 	* fulltextsearch: 0.109
 	* git: 4.4
 	* docman: 2.26.57
-	* ldap: 3.68
+	* ldap: 3.69
 	* openid: 0.6
 
 	== Themes ==

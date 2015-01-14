@@ -1,3 +1,6 @@
+Version 5.541 - Tuleap 7.10
+    * Fix request #7761: Fatal error when accessing default trackers templates
+
 Version 5.540 - Tuleap 7.10
     * request #7750: Graph cumulative flow legend overlaps on graph
 

@@ -1,3 +1,6 @@
+Version 3.69 - Tuleap 7.10
+    * Fix request #7761: Fatal error when accessing default trackers templates
+
 Version 3.68 - Tuleap 7.10
     * request #7757: LDAP daily sync now search in subtrees
 
