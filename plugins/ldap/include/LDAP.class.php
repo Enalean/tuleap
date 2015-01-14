@@ -15,7 +15,8 @@ class LDAP {
     /**
      * This is equivalent to searching the entire directory. 
      */
-    const SCOPE_SUBTREE  = 1;
+    const SCOPE_SUBTREE      = 1;
+    const SCOPE_SUBTREE_TEXT = 'subtree';
     
     /**
      * LDAP_SCOPE_ONELEVEL means that the search should only return information 
@@ -23,7 +24,8 @@ class LDAP {
      * (Equivalent to typing "ls" and getting a list of files and folders in 
      * the current working directory.)
      */
-    const SCOPE_ONELEVEL = 2;
+    const SCOPE_ONELEVEL      = 2;
+    const SCOPE_ONELEVEL_TEXT = 'onelevel';
     
     /**
      * It is equivalent to reading an entry from the directory. 

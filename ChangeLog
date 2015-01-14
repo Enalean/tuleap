@@ -22,7 +22,7 @@ Version 7.10 ()
 	* fulltextsearch: 0.109
 	* git: 4.4
 	* docman: 2.26.57
-	* ldap: 3.67
+	* ldap: 3.68
 	* openid: 0.6
 
 	== Themes ==

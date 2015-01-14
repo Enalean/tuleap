@@ -1,3 +1,6 @@
+Version 3.68 - Tuleap 7.10
+    * request #7757: LDAP daily sync now search in subtrees
+
 Version 3.67 - Tuleap 7.10
     * request #7744: Fix non persistent XSS and a open redirection in search modules and login form
 
