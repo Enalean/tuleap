@@ -1,3 +1,11 @@
+Version 5.542 - Tuleap 7.10
+    * story #6855 - artifact copy: Recursive copy
+
+
+XML export of an artifact has now a new field exported: artifact link.
+This field expose only children of the artifact, other relations are
+ignored.
+
 Version 5.541 - Tuleap 7.10
     * Fix request #7761: Fatal error when accessing default trackers templates
 
