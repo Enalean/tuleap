@@ -171,7 +171,7 @@ class Tracker_Artifact_XMLImport {
         SimpleXMLElement $xml_changeset,
         Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder $fields_data_builder
     ) {
-        $fields_data = $fields_data_builder->getFieldsData($xml_changeset->field_change);
+        $fields_data = $fields_data_builder->getFieldsData($xml_changeset);
         if (count($fields_data) > 0) {
             $artifact = $this->artifact_creator->create(
                 $tracker,
@@ -219,7 +219,7 @@ class Tracker_Artifact_XMLImport {
                 }
                 $changeset = $this->new_changeset_creator->create(
                     $artifact,
-                    $fields_data_builder->getFieldsData($xml_changeset->field_change),
+                    $fields_data_builder->getFieldsData($xml_changeset),
                     $initial_comment_body,
                     $this->getSubmittedBy($xml_changeset),
                     $this->getSubmittedOn($xml_changeset),

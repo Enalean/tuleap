@@ -90,7 +90,11 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
     public function getFieldsData(SimpleXMLElement $xml_field_change) {
         $data = array();
 
-        foreach ($xml_field_change as $field_change) {
+        if (! $xml_field_change->field_change) {
+            return $data;
+        }
+
+        foreach ($xml_field_change->field_change as $field_change) {
             $field = $this->formelement_factory->getUsedFieldByName(
                 $this->tracker->getId(),
                 (string) $field_change['field_name']
