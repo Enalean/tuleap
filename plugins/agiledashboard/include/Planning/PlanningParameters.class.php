@@ -32,16 +32,17 @@ class PlanningParameters {
     public $name;
     public $backlog_title;
     public $plan_title;
-    public $backlog_tracker_ids;
+    public $backlog_tracker_ids = array();
     public $planning_tracker_id;
 
     public static function fromArray(array $array) {
-        $parameters = new PlanningParameters();
+        $parameters  = new PlanningParameters();
+        $backlog_ids = PlanningParameters::get($array, self::BACKLOG_TRACKER_IDS);
 
         $parameters->name                = PlanningParameters::get($array, self::NAME);
         $parameters->backlog_title       = PlanningParameters::get($array, self::BACKLOG_TITLE);
         $parameters->plan_title          = PlanningParameters::get($array, self::PLANNING_TITLE);
-        $parameters->backlog_tracker_ids = PlanningParameters::get($array, self::BACKLOG_TRACKER_IDS);
+        $parameters->backlog_tracker_ids = ($backlog_ids) ? $backlog_ids : array();
         $parameters->planning_tracker_id = PlanningParameters::get($array, self::PLANNING_TRACKER_ID);
 
         return $parameters;
@@ -51,4 +52,3 @@ class PlanningParameters {
         return array_key_exists($key, $array) ? $array[$key] : '';
     }
 }
-?>
