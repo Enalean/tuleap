@@ -24,14 +24,23 @@ class ElasticSearch_SearchResultTracker extends ElasticSearch_SearchResult {
 
     public $item_title;
     public $url;
-        
+
     public function __construct(array $hit, Project $project, Tracker_Artifact $artifact) {
-        $this->item_title = $artifact->getTitle();
+        $this->setItemTitle($artifact);
         $this->url        = '/plugins/tracker/?aid='.$artifact->getId();
         parent::__construct($hit, $project);
     }
 
     public function type() {
-        return '';
+        return self::TYPE_IDENTIFIER;
     }
+
+    private function setItemTitle(Tracker_Artifact $artifact) {
+        $title = $artifact->getTitle();
+        $xref  = $artifact->getXRef();
+        $class = $artifact->getTracker()->getColor();
+
+        $this->item_title = "$title <span class='$class xref-in-title'>$xref<span> -</span></span>";
+    }
+
 }
