@@ -18,23 +18,16 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once (dirname(__FILE__).'/../../../src/common/language/BaseLanguage.class.php');
+require_once 'bootstrap.php';
+
 Mock::generate('BaseLanguage');
-require_once ('requirements.php');
-require_once (dirname(__FILE__).'/../../../src/common/user/User.class.php');
 Mock::generate('PFUser');
-require_once (dirname(__FILE__).'/../../../src/common/frs/FRSPackage.class.php');
 Mock::generate('FRSPackage');
-require_once (dirname(__FILE__).'/../../../src/common/frs/FRSPackageFactory.class.php');
 Mock::generate('FRSPackageFactory');
 Mock::generate('PermissionsManager');
-require_once (dirname(__FILE__).'/../include/WebDAVUtils.class.php');
 Mock::generate('WebDAVUtils');
-require_once (dirname(__FILE__).'/../include/FS/WebDAVFRSPackage.class.php');
 Mock::generate('WebDAVFRSPackage');
-require_once (dirname(__FILE__).'/../../../src/common/project/Project.class.php');
 Mock::generate('Project');
-require_once (dirname(__FILE__).'/../include/FS/WebDAVFRS.class.php');
 Mock::generatePartial(
     'WebDAVFRS',
     'WebDAVFRSTestVersion',
