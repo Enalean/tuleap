@@ -19,6 +19,9 @@
  */
 
 class ElasticSearch_SearchResultDocman extends ElasticSearch_SearchResult {
+
+    const TYPE_IDENTIFIER = 'docman';
+
     public $item_title;
     public $url;
           
@@ -31,6 +34,6 @@ class ElasticSearch_SearchResultDocman extends ElasticSearch_SearchResult {
     }
 
     public function type() {
-        return 'docman';
+        return self::TYPE_IDENTIFIER;
     }
 }

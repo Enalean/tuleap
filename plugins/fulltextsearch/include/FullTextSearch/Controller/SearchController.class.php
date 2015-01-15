@@ -74,7 +74,12 @@ class FullTextSearch_Controller_Search extends MVC2_PluginController {
             if ($offset > 0) {
                 $results_presenter = new FullTextSearch_Presenter_SearchMore($search_result);
             } else {
-                $results_presenter = new FullTextSearch_Presenter_Search($search_result, $maybe_more_results, $terms);
+                $results_presenter = new FullTextSearch_Presenter_Search(
+                    $search_result,
+                    $maybe_more_results,
+                    $terms,
+                    $this->getDocumentSearchTypes($facets)
+                );
             }
 
             $params['results']->setHasMore($maybe_more_results)->setCountResults($results_count);
@@ -93,4 +98,39 @@ class FullTextSearch_Controller_Search extends MVC2_PluginController {
         }
         return $facets;
     }
+
+    private function getDocumentSearchTypes(array $facets) {
+        $types = array();
+        $types[] = array(
+            'key'       => 'wiki',
+            'name'      => $GLOBALS['Language']->getText('wiki_service', 'search_wiki_type'),
+            'info'      => false,
+            'available' => true,
+        );
+
+        $em = EventManager::instance();
+        $em->processEvent(
+            FULLTEXTSEARCH_EVENT_FETCH_ALL_DOCUMENT_SEARCH_TYPES,
+            array(
+                'all_document_search_types' => &$types
+            )
+        );
+
+        $this->setSelectedSearchTypes($types, $facets);
+
+        return $types;
+    }
+
+    private function setSelectedSearchTypes(array &$types, $facets) {
+        foreach ($types as $i => $type) {
+            if ($type['key'] == 'tracker') {
+                $types[$i]['checked'] = false;
+            } elseif (! $facets || isset($facets[$type['key']])) {
+                $types[$i]['checked'] = true;
+            } else {
+                $types[$i]['checked'] = false;
+            }
+        }
+    }
+
 }

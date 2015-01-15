@@ -99,6 +99,9 @@ class DocmanPlugin extends Plugin {
             $this->addHook(Statistics_Event::FREQUENCE_STAT_ENTRIES);
             $this->addHook(Statistics_Event::FREQUENCE_STAT_SAMPLE);
         }
+        if (defined('FULLTEXTSEARCH_BASE_URL')) {
+            $this->_addHook(FULLTEXTSEARCH_EVENT_FETCH_ALL_DOCUMENT_SEARCH_TYPES);
+        }
 
         return parent::getHooksAndCallbacks();
     }
@@ -857,6 +860,12 @@ class DocmanPlugin extends Plugin {
         $params['scripts'] = array_merge($params['scripts'], array($this->getPluginPath().'/scripts/ApprovalTableReminder.js'));
     }
 
+    public function fulltextsearch_event_fetch_all_document_search_types($params) {
+        $params['all_document_search_types'][] = array(
+            'key'       => 'docman',
+            'name'      => $GLOBALS['Language']->getText('plugin_docman', 'search_type'),
+            'info'      => false,
+            'available' => true,
+        );
+    }
 }
-
-?>

@@ -155,3 +155,5 @@ wiki_views_wkserviews	doc_delete	Delete ?
 # Script: SF/www/wiki/uploads
 #
 wiki_attachment_upload	err_not_exist	This attachment doesn't exist. Please Check the url.
+
+wiki_service	search_wiki_type	Wiki pages

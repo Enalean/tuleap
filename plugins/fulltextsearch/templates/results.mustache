@@ -21,6 +21,30 @@
     </div>
 
     <div class="search-pane">
+        <div class="search-pane-header">{{ categories }}</div>
+        <div class="search-pane-body full-text-search">
+            <ul>
+                {{# document_types }}
+                    <li>
+                        <input
+                            type="checkbox"
+                            class="facet"
+                            name="facets[{{ key }}]"
+                            value="1"
+                            {{^ available }} disabled {{/ available }}
+                            {{# checked }}checked{{/ checked }}
+                        />
+                        {{ name }}
+                        {{# info }}
+                            <i class="icon-question-sign" title="{{ info }}"> </i>
+                        {{/ info }}
+                    </li>
+                {{/ document_types }}
+            </ul>
+        </div>
+    </div>
+
+    <div class="search-pane">
         <div class="search-pane-header">{{ docman_wiki_facets_label }}</div>
         <div class="search-pane-body full-text-search">
             <ul>

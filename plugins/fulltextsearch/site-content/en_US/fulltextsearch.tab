@@ -36,3 +36,5 @@ plugin_fulltextsearch	reindex_project_label	Project
 plugin_fulltextsearch	reindex_help	You can reindex all the documents (docman), wiki pages (phpwiki) and artifacts (tracker) of a given project. This action launches a system event.
 plugin_fulltextsearch	submit_project_label	Reindex
 plugin_fulltextsearch	waiting_for_reindexation	Reindexing documents and wiki pages of $1
+
+plugin_fulltextsearch	categories	Categories
