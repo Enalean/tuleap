@@ -119,6 +119,7 @@ class GitPlugin extends Plugin {
 
         $this->_addHook('register_project_creation');
         $this->_addHook(Event::GET_PROJECTID_FROM_URL);
+        $this->_addHook('anonymous_access_to_script_allowed');
 
         $this->_addHook('fill_project_history_sub_events');
         $this->_addHook(Event::POST_SYSTEM_EVENTS_ACTIONS);
@@ -1219,13 +1220,26 @@ class GitPlugin extends Plugin {
                 $this->getRepositoryFactory(),
                 $_SERVER['REQUEST_URI']
             );
-            if (($url->isFriendly() && ! $this->areFriendlyUrlsActivated()) || $url->isSmartHTTP()) {
+            if ($url->isSmartHTTP()) {
                 return;
             }
 
             $project = $url->getProject();
             if ($project && ! $project->isError()) {
                 $params['project_id'] = $url->getProject()->getId();
+            }
+        }
+    }
+
+    public function anonymous_access_to_script_allowed($params) {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            $url = new Git_URL(
+                ProjectManager::instance(),
+                $this->getRepositoryFactory(),
+                $_SERVER['REQUEST_URI']
+            );
+            if ($url->isSmartHTTP()) {
+                $params['anonymous_allowed'] = true;
             }
         }
     }

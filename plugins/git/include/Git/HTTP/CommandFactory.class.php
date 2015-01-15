@@ -68,7 +68,8 @@ class Git_HTTP_CommandFactory {
     }
 
     private function needAuthentication(GitRepository $repository, Git_URL $url) {
-        return $this->isGitPush($url) ||
+        return Config::get('sys_allow_anon') == 0 ||
+            $this->isGitPush($url) ||
             ! $this->canBeReadByAnonymous($repository) ||
             $this->isInPrivateProject($repository);
     }
