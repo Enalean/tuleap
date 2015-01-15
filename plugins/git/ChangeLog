@@ -1,3 +1,6 @@
+Version 4.6 - Tuleap 7.10
+    * story #7740: git anonymous http clone (Deal with private projects)
+
 Version 4.5 - Tuleap 7.10
     * story #7740: git HTTP anonymous access
 
