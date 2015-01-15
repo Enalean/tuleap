@@ -1267,7 +1267,7 @@ class GitPlugin extends Plugin {
                 $this->getRepositoryFactory(),
                 $_SERVER['REQUEST_URI']
             );
-            if ($url->isFriendly() && ! $this->areFriendlyUrlsActivated()) {
+            if (($url->isFriendly() && ! $this->areFriendlyUrlsActivated()) || $url->isSmartHTTP()) {
                 return;
             }
 
