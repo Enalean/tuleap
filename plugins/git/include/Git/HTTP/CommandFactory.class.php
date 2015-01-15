@@ -68,11 +68,17 @@ class Git_HTTP_CommandFactory {
     }
 
     private function needAuthentication(GitRepository $repository, Git_URL $url) {
-        return $this->isGitPush($url) || ! $this->canBeReadByAnonymous($repository);
+        return $this->isGitPush($url) ||
+            ! $this->canBeReadByAnonymous($repository) ||
+            $this->isInPrivateProject($repository);
     }
 
     private function isGitPush(Git_URL $url) {
         return $url->isGitPush();
+    }
+
+    private function isInPrivateProject(GitRepository $repository) {
+        return $repository->getProject()->isPublic() == false;
     }
 
     private function canBeReadByAnonymous(GitRepository $repository) {
