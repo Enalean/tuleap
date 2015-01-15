@@ -71,5 +71,10 @@ class ConfigTest extends UnitTestCase {
         ob_end_clean();
         $this->assertEqual($dump, var_export(array('toto' => 66, 'tutu' => 123), 1));
     }
+
+    public function itDoesntEmitAnyNoticesOrWarningsWhenThereAreTwoRestoresAndOneLoad() {
+        Config::restore();
+        Config::restore();
+        Config::load(dirname(__FILE__).'/_fixtures/config/local.inc');
+    }
 }
-?>

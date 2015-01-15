@@ -16,25 +16,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once (dirname(__FILE__).'/../../../src/common/language/BaseLanguage.class.php');
+require_once 'bootstrap.php';
+
 Mock::generate('BaseLanguage');
-require_once ('requirements.php');
-require_once (dirname(__FILE__).'/../include/WebDAVUtils.class.php');
 Mock::generate('WebDAVUtils');
-require_once (dirname(__FILE__).'/../../docman/include/Docman_Item.class.php');
 Mock::generate('Docman_Item');
-require_once (dirname(__FILE__).'/../../docman/include/Docman_ItemFactory.class.php');
 Mock::generate('Docman_ItemFactory');
-require_once (dirname(__FILE__).'/../../docman/include/Docman_PermissionsManager.class.php');
 Mock::generate('Docman_PermissionsManager');
-require_once (dirname(__FILE__).'/../include/FS/WebDAVDocmanDocument.class.php');
 Mock::generatePartial(
     'WebDAVDocmanDocument',
     'WebDAVDocmanDocumentTestVersion',
 array('getItem', 'getUtils', 'getProject')
 );
 Mock::generate('EventManager');
-require_once 'common/project/Project.class.php';
 Mock::generate('Project');
 
 /**
