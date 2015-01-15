@@ -1,3 +1,6 @@
+Version 3.70 - Tuleap 7.10
+    * Fix unit tests for webdav & config & karma tests
+
 Version 3.69 - Tuleap 7.10
     * Fix request #7761: Fatal error when accessing default trackers templates
 

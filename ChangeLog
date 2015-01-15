@@ -4,6 +4,7 @@ Version 7.10 ()
 	* Parts of story #7607 have tracker search in global search
 
 	== Bug Fix ==
+	* Fix unit tests for webdav & config & karma tests
 	* request #7731: Columns defined as collapsed by default are not collapsed in cardwall report on dashboards
 	* request #5550 Date reminder form messed with bootstrap
 	* request #7750: Graph cumulative flow legend overlaps on graph
@@ -22,9 +23,10 @@ Version 7.10 ()
 	* fulltextsearch: 0.109
 	* git: 4.6
 	* docman: 2.26.57
-	* ldap: 3.69
+	* ldap: 3.70
 	* openid: 0.6
-	* agiledashboard: 1.137
+	* agiledashboard: 1.138
+	* webdav: 1.9.7
 
 	== Themes ==
 	* FlamingParrot: 1.65
