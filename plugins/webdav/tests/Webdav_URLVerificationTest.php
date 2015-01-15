@@ -18,7 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../include/Webdav_URLVerification.class.php');
+require_once 'bootstrap.php';
+
 Mock::generatePartial(
     'Webdav_URLVerification',
     'Webdav_URLVerificationTestVersion',

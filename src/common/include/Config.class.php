@@ -101,7 +101,9 @@ class Config {
      * @return void
      */
     public static function restore() {
-        array_shift(self::$conf_stack);
+        if (count(self::$conf_stack) > 1) {
+            array_shift(self::$conf_stack);
+        }
     }
     
     /**

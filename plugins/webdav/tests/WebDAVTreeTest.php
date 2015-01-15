@@ -18,30 +18,17 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once (dirname(__FILE__).'/../../../src/common/language/BaseLanguage.class.php');
+require_once 'bootstrap.php';
+
 Mock::generate('BaseLanguage');
-require_once (dirname(__FILE__).'/../../../src/common/project/Project.class.php');
 Mock::generate('Project');
-require_once(dirname(__FILE__).'/../../../src/common/include/Error.class.php');
-require_once ('requirements.php');
-require_once (dirname(__FILE__).'/../include/FS/WebDAVFRSFile.class.php');
 Mock::generate('WebDAVFRSFile');
-require_once (dirname(__FILE__).'/../include/FS/WebDAVFRSRelease.class.php');
 Mock::generate('WebDAVFRSRelease');
-require_once (dirname(__FILE__).'/../include/FS/WebDAVDocmanFolder.class.php');
 Mock::generate('WebDAVDocmanFolder');
-require_once (dirname(__FILE__).'/../include/FS/WebDAVDocmanDocument.class.php');
 Mock::generate('WebDAVDocmanDocument');
-require_once (dirname(__FILE__).'/../../docman/include/Docman_Item.class.php');
 Mock::generate('Docman_Item');
-require_once (dirname(__FILE__).'/../../docman/include/Docman_PermissionsManager.class.php');
 Mock::generate('Docman_PermissionsManager');
-require_once (dirname(__FILE__).'/../../docman/include/Docman_ItemFactory.class.php');
 Mock::generate('Docman_ItemFactory');
-require_once (dirname(__FILE__).'/../include/FS/WebDAVFRSRelease.class.php');
-require_once (dirname(__FILE__).'/../include/FS/WebDAVFRSPackage.class.php');
-require_once(dirname(__FILE__).'/../include/WebDAVTree.class.php');
-require_once(dirname(__FILE__).'/../include/WebDAVUtils.class.php');
 Mock::generate('WebDAVUtils');
 Mock::generate('PFUser');
 

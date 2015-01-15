@@ -40,6 +40,7 @@ class LDAP_RetrieveAllArguementsTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        Config::store();
         Config::set('sys_logger_level', 'debug');
         $this->ldap = partial_mock(
             'LDAP',
