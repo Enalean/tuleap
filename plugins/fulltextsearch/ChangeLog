@@ -1,3 +1,6 @@
+Version 0.110 - Tuleap 7.10
+    * story #7607: perform search according to category
+
 Version 0.109 - Tuleap 7.10
     * request #7744: Fix non persistent XSS and a open redirection in search modules and login form
 

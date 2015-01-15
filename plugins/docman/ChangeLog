@@ -1,3 +1,6 @@
+Version 2.26.58 - Tuleap 7.10
+    * story #7607: perform search according to category
+
 Version 2.26.57 - Tuleap 7.10
     * request #7738 mandatory property for docman can be bypassed for multi-select properties
 

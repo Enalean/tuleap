@@ -18,11 +18,11 @@ Version 7.10 ()
 	* tracker_date_reminder: 1.2.9
 	* graphontrackers: 1.12
 	* graphontrackersv5: 5.16
-	* tracker: 5.542
+	* tracker: 5.543
 	* mediawiki: 0.59
-	* fulltextsearch: 0.109
+	* fulltextsearch: 0.110
 	* git: 4.6
-	* docman: 2.26.57
+	* docman: 2.26.58
 	* ldap: 3.70
 	* openid: 0.6
 	* agiledashboard: 1.138
