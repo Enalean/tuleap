@@ -289,7 +289,7 @@ class RequestTrackerDataFactory_ArtifactBaseFormattingTest extends RequestTracke
     public function itPushesLastUpdatedField() {
         $document = $this->data_factory->getFormattedArtifact($this->artifact);
         $this->assertEqual(
-            $document['last updated'],
+            $document[ElasticSearch_1_2_ArtifactPropertiesExtractor::LAST_UPDATE_PROPERTY],
             '1970-02-22T09:32:38+01:00'
         );
     }
