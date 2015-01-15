@@ -20,7 +20,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_ApprovalTableDao extends DataAccessObject {
+class Docman_ApprovalTableItemDao extends DataAccessObject {
 
     function getTableByTableId($tableId, $fields='*') {
         $sql = 'SELECT '.$fields.
