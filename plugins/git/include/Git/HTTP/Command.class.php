@@ -32,7 +32,7 @@ abstract class Git_HTTP_Command {
         $this->appendToEnv('PATH_INFO');
         $this->appendToEnv('CONTENT_TYPE');
         $this->appendToEnv('HTTP_ACCEPT_ENCODING');
-
+        $this->appendToEnv('HTTP_CONTENT_ENCODING');
     }
 
     public function setPathInfo($path_info) {
