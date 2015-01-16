@@ -2,6 +2,7 @@ Version 7.10 ()
 
 	== Features ==
 	* Parts of story #7607 have tracker search in global search
+	* story #7740: git anonymous http clone
 
 	== Bug Fix ==
 	* Fix unit tests for webdav & config & karma tests
@@ -21,7 +22,7 @@ Version 7.10 ()
 	* tracker: 5.543
 	* mediawiki: 0.59
 	* fulltextsearch: 0.111
-	* git: 4.6
+	* git: 4.7
 	* docman: 2.26.58
 	* ldap: 3.70
 	* openid: 0.6
