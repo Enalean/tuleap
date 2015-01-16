@@ -24,6 +24,11 @@ class ElasticSearch_SearchResultProjectsFacetCollection {
     const USER_PROJECTS_IDS_KEY = 'user_projects_ids';
 
     /**
+     * @var ProjectManager
+     */
+    private $project_manager;
+
+    /**
      * @var array
      */
     private $option_groups = array();
@@ -43,36 +48,68 @@ class ElasticSearch_SearchResultProjectsFacetCollection {
      */
     private $count_my_projects = 0;
 
+    /**
+     * @var array
+     */
+    private $matching_project_ids = array();
 
-    public function __construct(array $results, ProjectManager $project_manager, array $submitted_facets, array $user_projects_ids) {
+
+    public function __construct(PFUser $user, array $results, ProjectManager $project_manager, array $submitted_facets, array $user_projects_ids) {
         $this->submitted_facets  = $submitted_facets;
         $this->user_projects_ids = $user_projects_ids;
+        $this->project_manager   = $project_manager;
 
-        $projects = $this->getProjectsValues($results, $project_manager);
+        $matching_projects = $this->getMatchingProjectsValues($results);
+        $other_projects    = $this->getOtherProjectsValues($user, $submitted_facets);
 
         $this->createSpecificProjectsOptionGroup();
-        $this->createProjectsOptionGroup($projects);
+        $this->createMatchingProjectsOptionGroup($matching_projects);
+        $this->createOtherProjectsOptionGroup($other_projects);
     }
 
-    private function getProjectsValues(array $results, ProjectManager $project_manager) {
+    private function getMatchingProjectsValues(array $results) {
         $projects = array();
-
         if (isset($results['terms'])) {
             foreach ($results['terms'] as $result) {
-                $project = $project_manager->getProject($result['term']);
+                $project = $this->project_manager->getProject($result['term']);
 
-                if ($project && !$project->isError()) {
+                if ($this->isProjectValid($project)) {
                     $checked = isset($this->submitted_facets[self::IDENTIFIER]) && in_array($project->getGroupId(), $this->submitted_facets[self::IDENTIFIER]);
                     $projects[] = new ElasticSearch_SearchResultProjectsFacet($project, $result['count'], $checked);
 
                     $this->incrementCountMyProjects($project, $result['count']);
                 }
+                $this->matching_project_ids[] = $project->getID();
             }
         }
 
         usort($projects, array($this, 'sortProjects'));
 
         return $projects;
+    }
+
+    private function getOtherProjectsValues(PFUser $user,  $submitted_facets) {
+        $other_projects        = array();
+        $all_projects_for_user = $this->project_manager->getAllMyAndPublicProjects($user);
+
+        foreach ($all_projects_for_user as $project_id => $project) {
+            if ($this->isProjectValid($project) && ! $this->isProjectInSearchResults($project_id)) {
+                $selected = isset($submitted_facets['group_id']) && in_array($project_id, $submitted_facets['group_id']);
+                $other_projects[] = new ElasticSearch_SearchResultProjectsFacet($project, 0, $selected);
+            }
+        }
+
+        usort($other_projects, array($this, 'sortProjects'));
+
+        return $other_projects;
+    }
+
+    private function isProjectInSearchResults($project_id) {
+        return in_array($project_id, $this->matching_project_ids);
+    }
+
+    private function isProjectValid($project) {
+        return $project && ! $project->isError();
     }
 
     private function sortProjects($a, $b) {
@@ -102,9 +139,18 @@ class ElasticSearch_SearchResultProjectsFacetCollection {
         $this->option_groups[] = $specific_projects_option_group;
     }
 
-    private function createProjectsOptionGroup($projects) {
+    private function createMatchingProjectsOptionGroup($projects) {
         $projects_option_group = new ElasticSearch_SearchResultProjectsGroupFacet(
-            $GLOBALS['Language']->getText('plugin_fulltextsearch', 'facet_project_projects_option_group'),
+            $GLOBALS['Language']->getText('plugin_fulltextsearch', 'facet_project_matching_projects_option_group'),
+            $projects
+        );
+
+        $this->option_groups[] = $projects_option_group;
+    }
+
+    private function createOtherProjectsOptionGroup($projects) {
+        $projects_option_group = new ElasticSearch_SearchResultProjectsGroupFacet(
+            $GLOBALS['Language']->getText('plugin_fulltextsearch', 'facet_project_other_projects_option_group'),
             $projects
         );
 
