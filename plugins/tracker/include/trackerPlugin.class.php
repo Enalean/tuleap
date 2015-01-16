@@ -863,10 +863,11 @@ class trackerPlugin extends Plugin {
 
     public function fulltextsearch_event_fetch_all_document_search_types($params) {
         $params['all_document_search_types'][] = array(
-            'key'       => 'tracker',
-            'name'      => $GLOBALS['Language']->getText('plugin_tracker', 'tracker_artifacts'),
-            'info'      => $GLOBALS['Language']->getText('plugin_tracker', 'tracker_fulltextsearch_info'),
-            'available' => false,
+            'key'     => 'tracker',
+            'name'    => $GLOBALS['Language']->getText('plugin_tracker', 'tracker_artifacts'),
+            'info'    => $GLOBALS['Language']->getText('plugin_tracker', 'tracker_fulltextsearch_info'),
+            'can_use' => false,
+            'special' => true,
         );
     }
 }

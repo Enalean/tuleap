@@ -101,11 +101,12 @@ class FullTextSearch_Controller_Search extends MVC2_PluginController {
 
     private function getDocumentSearchTypes(array $facets) {
         $types = array();
-        $types[] = array(
-            'key'       => 'wiki',
-            'name'      => $GLOBALS['Language']->getText('wiki_service', 'search_wiki_type'),
-            'info'      => false,
-            'available' => true,
+        $types[]= array(
+            'key'     => 'wiki',
+            'name'    => $GLOBALS['Language']->getText('wiki_service', 'search_wiki_type'),
+            'info'    => false,
+            'can_use' => true,
+            'special' => false,
         );
 
         $em = EventManager::instance();
@@ -121,16 +122,35 @@ class FullTextSearch_Controller_Search extends MVC2_PluginController {
         return $types;
     }
 
-    private function setSelectedSearchTypes(array &$types, $facets) {
+    private function setSelectedSearchTypes(array &$types, array $facets) {
+        $this->activateSearchTypesForOneProject($types, $facets);
+
         foreach ($types as $i => $type) {
-            if ($type['key'] == 'tracker') {
-                $types[$i]['checked'] = false;
-            } elseif (! $facets || isset($facets[$type['key']])) {
+            if (! $facets || isset($facets[$type['key']])) {
                 $types[$i]['checked'] = true;
             } else {
+                $types[$i]['checked'] = false;
+            }
+
+            if (! $this->isSearchTypeActive($types[$i])) {
                 $types[$i]['checked'] = false;
             }
         }
     }
 
+    private function activateSearchTypesForOneProject(array &$types, array $facets) {
+        foreach ($types as $i => $type) {
+            if ($this->isSearchForOnlyOneProject($facets)) {
+                $types[$i]['can_use'] = true;
+            }
+        }
+    }
+
+    private function isSearchForOnlyOneProject(array $facets) {
+        return isset($facets['group_id']) && count($facets['group_id']) === 1;
+    }
+
+    private function isSearchTypeActive($type) {
+        return $type['can_use'] == true;
+    }
 }
