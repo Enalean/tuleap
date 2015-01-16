@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -110,15 +110,15 @@ class GitPlugin_Post_System_Events extends TuleapTestCase {
 
         $id = 456;
         $mocked_methods = array(
-            'getManifestManager',
+            'getGitSystemEventManager',
             'getGitoliteDriver',
             'getLogger',
         );
-        $this->plugin           = partial_mock('GitPlugin', $mocked_methods, array($id));
-        $this->manifest_manager = mock('Git_Mirror_ManifestManager');
-        $this->gitolite_driver  = mock('Git_GitoliteDriver');
+        $this->plugin               = partial_mock('GitPlugin', $mocked_methods, array($id));
+        $this->system_event_manager = mock('Git_SystemEventManager');
+        $this->gitolite_driver      = mock('Git_GitoliteDriver');
 
-        stub($this->plugin)->getManifestManager()->returns($this->manifest_manager);
+        stub($this->plugin)->getGitSystemEventManager()->returns($this->system_event_manager);
         stub($this->plugin)->getGitoliteDriver()->returns($this->gitolite_driver);
         stub($this->plugin)->getLogger()->returns(mock('TruncateLevelLogger'));
     }
@@ -132,12 +132,8 @@ class GitPlugin_Post_System_Events extends TuleapTestCase {
             ->push()
             ->once();
 
-        expect($this->manifest_manager)
-            ->triggerUpdate()
-            ->once();
-
         $params = array(
-            'executed_events_ids' => array(),
+            'executed_events_ids' => array(125),
             'queue_name' => 'git'
         );
 
@@ -153,13 +149,9 @@ class GitPlugin_Post_System_Events extends TuleapTestCase {
         ->push()
         ->never();
 
-        expect($this->manifest_manager)
-        ->triggerUpdate()
-        ->never();
-
         $params = array(
-            'executed_events_ids' => array(),
-            'queue_name' => 'owner'
+            'executed_events_ids' => array(54156),
+            'queue_name'          => 'owner'
         );
 
         $this->plugin->post_system_events_actions($params);

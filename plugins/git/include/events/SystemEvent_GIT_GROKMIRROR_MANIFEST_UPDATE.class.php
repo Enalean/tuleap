@@ -18,8 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SystemEvent_GIT_GROKMIRROR_MANIFEST extends SystemEvent {
-    const NAME = 'GIT_GROKMIRROR_MANIFEST';
+class SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE extends SystemEvent {
+    const NAME = 'GIT_GROKMIRROR_MANIFEST_UPDATE';
 
     /** @var GitRepositoryFactory */
     private $repository_factory;

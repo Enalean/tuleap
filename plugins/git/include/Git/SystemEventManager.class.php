@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013, 2014. All rights reserved.
+ * Copyright Enalean (c) 2011-2015. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -132,8 +132,26 @@ class Git_SystemEventManager {
 
     public function queueGrokMirrorManifest(GitRepository $repository) {
         $this->system_event_manager->createEvent(
-            SystemEvent_GIT_GROKMIRROR_MANIFEST::NAME,
+            SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE::NAME,
             $repository->getId(),
+            SystemEvent::PRIORITY_LOW,
+            SystemEvent::OWNER_APP
+        );
+    }
+
+    public function queueGrokMirrorManifestRepoDelete($repository_path) {
+        $this->system_event_manager->createEvent(
+            SystemEvent_GIT_GROKMIRROR_MANIFEST_REPODELETE::NAME,
+            $repository_path,
+            SystemEvent::PRIORITY_HIGH,
+            SystemEvent::OWNER_APP
+        );
+    }
+
+    public function queueGrokMirrorManifestCheck() {
+        $this->system_event_manager->createEvent(
+            SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECK::NAME,
+            '',
             SystemEvent::PRIORITY_LOW,
             SystemEvent::OWNER_APP
         );
@@ -186,7 +204,9 @@ class Git_SystemEventManager {
 
     public function getGrokMirrorTypes() {
         return array(
-            SystemEvent_GIT_GROKMIRROR_MANIFEST::NAME,
+            SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE::NAME,
+            SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECK::NAME,
+            SystemEvent_GIT_GROKMIRROR_MANIFEST_REPODELETE::NAME,
         );
     }
 

@@ -26,9 +26,9 @@
 class Git_SystemCheck {
 
     /**
-     * @var Git_Mirror_ManifestManager
+     *  @var Git_SystemEventManager
      */
-    private $manifest_manager;
+    private $system_event_manager;
 
     /**
      * @var Git_GitoliteDriver
@@ -43,17 +43,17 @@ class Git_SystemCheck {
     public function __construct(
         Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc $gitgc,
         Git_GitoliteDriver $gitolite,
-        Git_Mirror_ManifestManager $manifest_manager
+        Git_SystemEventManager $system_event_manager
     ) {
-        $this->gitgc    = $gitgc;
-        $this->gitolite = $gitolite;
-        $this->manifest_manager = $manifest_manager;
+        $this->gitgc                = $gitgc;
+        $this->gitolite             = $gitolite;
+        $this->system_event_manager = $system_event_manager;
     }
 
     public function process() {
         $this->gitolite->checkAuthorizedKeys();
         $this->gitgc->cleanUpGitoliteAdminWorkingCopy();
-        $this->manifest_manager->checkManifestFiles();
+        $this->system_event_manager->queueGrokMirrorManifestCheck();
     }
 
 }
