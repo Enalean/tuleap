@@ -660,44 +660,44 @@ class UserDao extends DataAccessObject {
      * @return Array
      */
     function listAllUsers ($pattern = "", $offset, $limit) {
-        $stm = "";
-        if ($pattern != "") {
+        $offset = $this->da->escapeInt($offset);
+        $limit  = $this->da->escapeInt($limit);
+        $where = "";
+        if ($pattern) {
             $pattern = $this->da->quoteSmart('%'.$pattern.'%');
-            $stm = ' WHERE (user.user_name LIKE '.$pattern;
-            $stm .= '  OR user.user_id LIKE '.$pattern;
-            $stm .= '  OR user.realname LIKE '.$pattern;
-            $stm .= '  OR user.email LIKE '.$pattern.')';
+            $where = "WHERE (
+                    user.user_name LIKE $pattern
+                    OR user.user_id LIKE $pattern
+                    OR user.realname LIKE $pattern
+                    OR user.email LIKE $pattern)";
         }
-        $stm_count_admin = " LEFT JOIN (
-                                        SELECT count(admin_flags) as admin_of, user_id
-                                         FROM user_group
-                                         INNER JOIN groups USING(group_id)
-                                         WHERE groups.status = 'A' AND admin_flags='A'
-                                         GROUP BY user_id
-                                        ) as A
-                               ON (A.user_id = user.user_id)";
 
-        $stm_count_member = " LEFT JOIN (
-                                        SELECT count(group_id) as member_of, user_id
-                                         FROM user_group
-                                         INNER JOIN groups USING(group_id)
-                                         WHERE groups.status = 'A'
-                                         GROUP BY user_id
-                                        ) as R
-                               ON (R.user_id = user.user_id)";
+        $sql = "SELECT SQL_CALC_FOUND_ROWS user.*, admin_of.nb AS admin_of, member_of.nb AS member_of
+            FROM user
+                LEFT JOIN (
+                    SELECT count(admin_flags) as nb, user_id
+                    FROM user_group
+                    INNER JOIN groups USING(group_id)
+                    WHERE groups.status = 'A' AND admin_flags='A'
+                    GROUP BY user_id
+                ) as admin_of USING (user_id)
+                LEFT JOIN (
+                    SELECT count(group_id) as nb, user_id
+                    FROM user_group
+                    INNER JOIN groups USING(group_id)
+                    WHERE groups.status = 'A'
+                    GROUP BY user_id
+                ) as member_of USING (user_id)
+            $where
+            ORDER BY user_name ASC
+            LIMIT $offset, $limit";
 
-        $sql='SELECT SQL_CALC_FOUND_ROWS * FROM user';
-        $sql.=$stm_count_admin.$stm_count_member.$stm;
-        $sql.=' ORDER BY user_name ASC';
-        $sql.=' LIMIT '.$this->da->escapeInt($offset).', '.$this->da->escapeInt($limit);
-        
-        $res = $this->retrieve($sql);
-        
-        return array('users' => $res, 'numrows' => $this->foundRows());
+        return array(
+            'users'   => $this->retrieve($sql),
+            'numrows' => $this->foundRows()
+        );
     }
 
-
-    
    /**
     * return all users of a given group id
     * 
