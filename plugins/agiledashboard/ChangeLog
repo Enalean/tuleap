@@ -1,3 +1,7 @@
+Version 1.139 - Tuleap 7.10
+    * request #7762: notice on agiledashboard planning admin when adding a new column
+
+
 Version 1.138 - Tuleap 7.10
     * Fix unit tests for webdav & config & karma tests
 
