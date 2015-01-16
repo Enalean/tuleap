@@ -22,12 +22,12 @@ class ElasticSearch_SearchResultTracker extends ElasticSearch_SearchResult {
 
     const TYPE_IDENTIFIER = 'tracker';
 
-    public $artifact_title;
+    public $item_title;
     public $url;
         
-    public function __construct(array $hit, Project $project) {
-        $this->artifact_title = '';//$hit['fields']['title'];
-        $this->url            = '/plugins/tracker/?group_id='.$hit['fields']['group_id'].'&id='.$hit['fields']['id'].'&action=details';
+    public function __construct(array $hit, Project $project, Tracker_Artifact $artifact) {
+        $this->item_title = $artifact->getTitle();
+        $this->url        = '/plugins/tracker/?aid='.$artifact->getId();
         parent::__construct($hit, $project);
     }
 

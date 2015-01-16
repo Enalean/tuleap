@@ -112,7 +112,8 @@ class ElasticSearch_1_2_ResultFactory {
     }
 
     public function getSearchResults(array $result) {
-        $results = array();
+        $results   = array();
+        $validator = new ElasticSearch_1_2_ResultValidator();
 
         if (! isset($result['hits']['hits'])) {
             return $results;
@@ -136,13 +137,28 @@ class ElasticSearch_1_2_ResultFactory {
 
             switch ($index) {
                 case fulltextsearchPlugin::SEARCH_DOCMAN_TYPE:
+                    if (! $validator->isDocmanResultValid($hit)) {
+                        continue;
+                    }
                     $results[] = new ElasticSearch_SearchResultDocman($hit, $project);
                     break;
                 case fulltextsearchPlugin::SEARCH_WIKI_TYPE:
+                    if (! $validator->isWikiResultValid($hit)) {
+                        continue;
+                    }
                     $wiki = new Wiki($project->getID());
 
                     if ($wiki->isAutorized($user->getId())) {
                         $results[] = new ElasticSearch_SearchResultWiki($hit, $project);
+                    }
+                    break;
+                case fulltextsearchPlugin::SEARCH_TRACKER_TYPE:
+                    if (! $validator->isArtifactResultValid($hit)) {
+                        continue;
+                    }
+                    $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($hit['fields']['id'][0]);
+                    if ($artifact->userCanView($user)) {
+                        $results[] = new ElasticSearch_SearchResultTracker($hit, $project, $artifact);
                     }
                     break;
                 default :

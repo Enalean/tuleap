@@ -95,6 +95,7 @@ class trackerPlugin extends Plugin {
         }
         if (defined('FULLTEXTSEARCH_BASE_URL')) {
             $this->_addHook(FULLTEXTSEARCH_EVENT_FETCH_ALL_DOCUMENT_SEARCH_TYPES);
+            $this->_addHook(FULLTEXTSEARCH_EVENT_FETCH_PROJECT_TRACKER_FIELDS);
         }
 
         return parent::getHooksAndCallbacks();
@@ -869,5 +870,13 @@ class trackerPlugin extends Plugin {
             'can_use' => false,
             'special' => true,
         );
+    }
+
+    public function fulltextsearch_event_fetch_project_tracker_fields($params) {
+        $user     = $params['user'];
+        $trackers = $this->getTrackerFactory()->getTrackersByGroupIdUserCanView($params['project_id'], $user);
+        $fields   = $this->getTrackerFormElementFactory()->getUsedSearchableTrackerFieldsUserCanView($user, $trackers);
+
+        $params['fields'] = $fields;
     }
 }
