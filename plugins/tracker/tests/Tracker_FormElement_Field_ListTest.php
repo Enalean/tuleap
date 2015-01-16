@@ -509,8 +509,10 @@ class Tracker_FormElement_Field_ListsetCriteriaValueFromRESTTest extends TuleapT
     public function itThrowsAnExceptionIfValueIsNotUsable() {
         $this->expectException('Tracker_Report_InvalidRESTCriterionException');
 
-        $criteria            = mock('Tracker_Report_Criteria');
-        $rest_criteria_value = array(
+        $criteria             = mock('Tracker_Report_Criteria');
+        $criteria->report     = mock('Tracker_Report');
+        $criteria->report->id = 1;
+        $rest_criteria_value  = array(
             Tracker_Report_REST::VALUE_PROPERTY_NAME => array(array(1234)),
             Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_CONTAINS
         );
@@ -521,8 +523,10 @@ class Tracker_FormElement_Field_ListsetCriteriaValueFromRESTTest extends TuleapT
     public function itThrowsAnExceptionIfValueIsNotANumber() {
         $this->expectException('Tracker_Report_InvalidRESTCriterionException');
 
-        $criteria            = mock('Tracker_Report_Criteria');
-        $rest_criteria_value = array(
+        $criteria             = mock('Tracker_Report_Criteria');
+        $criteria->report     = mock('Tracker_Report');
+        $criteria->report->id = 1;
+        $rest_criteria_value  = array(
             Tracker_Report_REST::VALUE_PROPERTY_NAME    => 'I am a string',
             Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_CONTAINS
         );
@@ -531,8 +535,10 @@ class Tracker_FormElement_Field_ListsetCriteriaValueFromRESTTest extends TuleapT
     }
 
     public function itIgnoresInvalidFieldValues() {
-        $criteria            = mock('Tracker_Report_Criteria');
-        $rest_criteria_value = array(
+        $criteria             = mock('Tracker_Report_Criteria');
+        $criteria->report     = mock('Tracker_Report');
+        $criteria->report->id = 1;
+        $rest_criteria_value  = array(
             Tracker_Report_REST::VALUE_PROPERTY_NAME    => '106',
             Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_CONTAINS
         );
@@ -545,8 +551,10 @@ class Tracker_FormElement_Field_ListsetCriteriaValueFromRESTTest extends TuleapT
     }
 
     public function itAddsACriterion() {
-        $criteria            = mock('Tracker_Report_Criteria');
-        $rest_criteria_value = array(
+        $criteria             = mock('Tracker_Report_Criteria');
+        $criteria->report     = mock('Tracker_Report');
+        $criteria->report->id = 1;
+        $rest_criteria_value  = array(
             Tracker_Report_REST::VALUE_PROPERTY_NAME    => '101',
             Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_CONTAINS
         );
@@ -561,8 +569,10 @@ class Tracker_FormElement_Field_ListsetCriteriaValueFromRESTTest extends TuleapT
     }
 
     public function itAddsCriteria() {
-        $criteria            = mock('Tracker_Report_Criteria');
-        $rest_criteria_value = array(
+        $criteria             = mock('Tracker_Report_Criteria');
+        $criteria->report     = mock('Tracker_Report');
+        $criteria->report->id = 1;
+        $rest_criteria_value  = array(
             Tracker_Report_REST::VALUE_PROPERTY_NAME    => array('101', 103),
             Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_CONTAINS
         );

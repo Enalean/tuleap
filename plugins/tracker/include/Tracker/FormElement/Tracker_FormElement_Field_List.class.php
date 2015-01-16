@@ -258,17 +258,24 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @return mixed
      */
     public function getCriteriaValue($criteria) {
-        if ( empty($this->criteria_value) ) {
+        if (empty($this->criteria_value) || empty($this->criteria_value[$criteria->report->id])) {
             $this->criteria_value = array();
-            if ($criteria->id > 0) {
-                foreach($this->getCriteriaDao()->searchByCriteriaId($criteria->id) as $row) {
-                    $this->criteria_value[] = $row['value'];
+
+            if (empty($this->criteria_value[$criteria->report->id])) {
+                $this->criteria_value[$criteria->report->id] = array();
+
+                if ($criteria->id > 0) {
+                    foreach($this->getCriteriaDao()->searchByCriteriaId($criteria->id) as $row) {
+                        $this->criteria_value[$criteria->report->id][] = $row['value'];
+                    }
                 }
             }
-        } else if (in_array('', $this->criteria_value)) {
+
+        } else if (in_array('', $this->criteria_value[$criteria->report->id])) {
             return '';
         }
-        return $this->criteria_value;
+
+        return $this->criteria_value[$criteria->report->id];
     }
 
     public function setCriteriaValueFromSOAP(Tracker_Report_Criteria $criteria, StdClass $soap_criteria_value) {
@@ -292,7 +299,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
                 }
             }
         }
-        $this->setCriteriaValue($criterias);
+        $this->setCriteriaValue($criterias, $criteria->report->id);
     }
 
     /**
@@ -315,7 +322,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         }
 
         $available_field_values = $this->getAllValues();
-        $criteria               = array();
+        $criterias              = array();
 
         foreach ($values_to_match as $value_to_match) {
             if (! is_numeric($value_to_match)) {
@@ -330,12 +337,12 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
                 continue;
             }
 
-            $criteria[] = $value_to_match;
+            $criterias[] = $value_to_match;
         }
 
-        $this->setCriteriaValue($criteria);
+        $this->setCriteriaValue($criterias, $criteria->report->id);
 
-        return count($criteria) > 0;
+        return count($criterias) > 0;
     }
 
     /**

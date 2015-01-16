@@ -549,9 +549,11 @@ class Tracker_FormElement_Field_DateTest_setCriteriaValueFromREST extends Tuleap
     }
 
     public function itAddsAnEqualsCrterion() {
-        $date     = '2014-04-05';
-        $criteria = mock('Tracker_Report_Criteria');
-        $values   = array(
+        $date                 = '2014-04-05';
+        $criteria             = mock('Tracker_Report_Criteria');
+        $criteria->report     = mock('Tracker_Report');
+        $criteria->report->id = 1;
+        $values               = array(
             Tracker_Report_REST::VALUE_PROPERTY_NAME    => $date,
             Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_EQUALS
         );
@@ -566,9 +568,11 @@ class Tracker_FormElement_Field_DateTest_setCriteriaValueFromREST extends Tuleap
     }
 
     public function itAddsAGreaterThanCrterion() {
-        $date     = '2014-04-05T00:00:00-05:00';
-        $criteria = mock('Tracker_Report_Criteria');
-        $values   = array(
+        $date                 = '2014-04-05T00:00:00-05:00';
+        $criteria             = mock('Tracker_Report_Criteria');
+        $criteria->report     = mock('Tracker_Report');
+        $criteria->report->id = 1;
+        $values               = array(
             Tracker_Report_REST::VALUE_PROPERTY_NAME    => $date,
             Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_GREATER_THAN
         );
@@ -583,9 +587,11 @@ class Tracker_FormElement_Field_DateTest_setCriteriaValueFromREST extends Tuleap
     }
 
     public function itAddsALessThanCrterion() {
-        $date     = '2014-04-05';
-        $criteria = mock('Tracker_Report_Criteria');
-        $values   = array(
+        $date                 = '2014-04-05';
+        $criteria             = mock('Tracker_Report_Criteria');
+        $criteria->report     = mock('Tracker_Report');
+        $criteria->report->id = 1;
+        $values               = array(
             Tracker_Report_REST::VALUE_PROPERTY_NAME    => array($date),
             Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_LESS_THAN
         );
@@ -600,10 +606,12 @@ class Tracker_FormElement_Field_DateTest_setCriteriaValueFromREST extends Tuleap
     }
 
     public function itAddsABetweenCrterion() {
-        $from_date     = '2014-04-05';
-        $to_date       = '2014-05-12';
-        $criteria = mock('Tracker_Report_Criteria');
-        $values   = array(
+        $from_date            = '2014-04-05';
+        $to_date              = '2014-05-12';
+        $criteria             = mock('Tracker_Report_Criteria');
+        $criteria->report     = mock('Tracker_Report');
+        $criteria->report->id = 1;
+        $values               = array(
             Tracker_Report_REST::VALUE_PROPERTY_NAME    => array($from_date, $to_date),
             Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_BETWEEN
         );

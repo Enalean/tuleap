@@ -73,8 +73,8 @@ class Tracker_CrossSearch_CriteriaBuilder {
         
         foreach ($fields as $field) {
             $allowed_field_ids[$field->getId()] = true;
-            
-            $field->setCriteriaValue($this->getSelectedValues($field, $cross_search_query->getSharedFields()));
+
+            $field->setCriteriaValue($this->getSelectedValues($field, $cross_search_query->getSharedFields()), $report->id);
             
             $criteria[]  = $this->buildCriteria($report, $field);
         }
