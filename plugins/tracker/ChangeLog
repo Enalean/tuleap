@@ -1,3 +1,6 @@
+Version 5.545 - Tuleap 7.10
+    * story #7607: enabling tracker search on one project- UI logic only
+
 Version 5.544 - Tuleap 7.10
     * Remove simplexml infinite loop
 

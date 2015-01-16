@@ -1,3 +1,6 @@
+Version 0.112 - Tuleap 7.10
+    * story #7607: enabling tracker search on one project- UI logic only
+
 Version 0.111 - Tuleap 7.10
     * story #7607: current facets are always visible and you can choose projects that have no matching results
 
