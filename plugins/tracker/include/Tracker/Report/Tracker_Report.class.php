@@ -111,7 +111,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                     $is_advanced = isset($value['is_advanced']) ? $value['is_advanced'] : 0 ;
                     if ($formElement = $ff->getFormElementById($key)) {
                         if ($formElement->userCanRead()) {
-                            $formElement->setCriteriaValue( !empty($value['value']) ? $value['value']: '' ) ;
+                            $formElement->setCriteriaValue( (!empty($value['value']) ? $value['value']: ''), $this->id ) ;
                             $this->criteria[$key] = new Tracker_Report_Criteria(
                                     0,
                                     $this,

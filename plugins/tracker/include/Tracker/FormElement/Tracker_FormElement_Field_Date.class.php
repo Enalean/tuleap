@@ -62,7 +62,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
             'from_date' => !empty($criteria_date->from_date) ? $criteria_date->from_date : null,
             'to_date'   => $criteria_date->to_date,
         );
-        $this->setCriteriaValue($criteria_value);
+        $this->setCriteriaValue($criteria_value, $criteria->report->id);
     }
 
     /**
@@ -128,7 +128,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         );
         $formatted_criteria_value = $this->getFormattedCriteriaValue($criteria_value);
 
-        $this->setCriteriaValue($formatted_criteria_value);
+        $this->setCriteriaValue($formatted_criteria_value, $criteria->report->id);
         return true;
     }
 
@@ -277,7 +277,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
             }
         }
     }
-    
+
      /**
      * Search in the db the criteria value used to search against this field.
      * @param Tracker_ReportCriteria $criteria
@@ -286,13 +286,17 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
    public function getCriteriaValue($criteria) {
         if ( ! isset($this->criteria_value) ) {
             $this->criteria_value = array();
+        }
+
+        if ( ! isset($this->criteria_value[$criteria->report->id]) ) {
+            $this->criteria_value[$criteria->report->id] = array();
             if ($row = $this->getCriteriaDao()->searchByCriteriaId($criteria->id)->getRow()) {
-                $this->criteria_value['op'] = $row['op'];
-                $this->criteria_value['from_date'] = $row['from_date'];
-                $this->criteria_value['to_date'] = $row['to_date'];
+                $this->criteria_value[$criteria->report->id]['op'] = $row['op'];
+                $this->criteria_value[$criteria->report->id]['from_date'] = $row['from_date'];
+                $this->criteria_value[$criteria->report->id]['to_date'] = $row['to_date'];
             }
         }
-        return $this->criteria_value;
+        return $this->criteria_value[$criteria->report->id];
     }
     
     /**

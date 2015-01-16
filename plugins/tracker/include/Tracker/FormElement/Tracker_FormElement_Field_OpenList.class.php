@@ -649,13 +649,17 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
      * @return mixed
      */
     public function getCriteriaValue($criteria) {
-        if ( ! isset($this->criteria_value) ) {
-            $this->criteria_value = '';
+        if (! isset($this->criteria_value)) {
+            $this->criteria_value = array();
+        }
+
+        if ( ! isset($this->criteria_value[$criteria->report->id]) ) {
+            $this->criteria_value[$criteria->report->id] = '';
             if ($row = $this->getCriteriaDao()->searchByCriteriaId($criteria->id)->getRow()) {
-                $this->criteria_value = $row['value'];
+                $this->criteria_value[$criteria->report->id] = $row['value'];
             }
         }
-        return $this->criteria_value;
+        return $this->criteria_value[$criteria->report->id];
     }
     
     /**

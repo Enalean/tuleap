@@ -92,24 +92,28 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * @return mixed
      */
     public function getCriteriaValue($criteria) {
-        if (!isset($this->criteria_value)) {
-            $this->criteria_value = null;
+        if ( ! isset($this->criteria_value) ) {
+            $this->criteria_value = array();
+        }
+
+        if (!isset($this->criteria_value[$criteria->report->id])) {
+            $this->criteria_value[$criteria->report->id] = null;
             if ($v = $this->getCriteriaDao()
                           ->searchByCriteriaId($criteria->id)
                           ->getRow()
             ) {
-                $this->criteria_value = $v['value'];
+                $this->criteria_value[$criteria->report->id] = $v['value'];
             }
         }
-        return $this->criteria_value;
+        return $this->criteria_value[$criteria->report->id];
     }
 
-    public function setCriteriaValue($criteria_value) {
-        $this->criteria_value = $criteria_value;
+    public function setCriteriaValue($criteria_value, $report_id) {
+        $this->criteria_value[$report_id] = $criteria_value;
     }
 
     public function setCriteriaValueFromSOAP(Tracker_Report_Criteria $criteria, StdClass $soap_criteria_value) {
-        $this->setCriteriaValue(!empty($soap_criteria_value->value) ? $soap_criteria_value->value: '');
+        $this->setCriteriaValue(!empty($soap_criteria_value->value) ? $soap_criteria_value->value: '', $criteria->report->id);
     }
 
     /**
@@ -127,7 +131,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             throw new Tracker_Report_InvalidRESTCriterionException('Invalid value for field "'. $this->name .'"');
         }
 
-        $this->setCriteriaValue($value);
+        $this->setCriteriaValue($value, $criteria->report->id);
         return true;
     }
 
