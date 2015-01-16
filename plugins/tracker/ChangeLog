@@ -1,3 +1,6 @@
+Version 5.544 - Tuleap 7.10
+    * Remove simplexml infinite loop
+
 Version 5.543 - Tuleap 7.10
     * story #7607: perform search according to category
 

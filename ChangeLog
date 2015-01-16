@@ -3,6 +3,7 @@ Version 7.10 ()
 	== Features ==
 	* Parts of story #7607 have tracker search in global search
 	* story #7740: git anonymous http clone
+	* Parts of story #6855: artifact copy: Recursive copy
 
 	== Bug Fix ==
 	* Fix unit tests for webdav & config & karma tests
@@ -19,7 +20,7 @@ Version 7.10 ()
 	* tracker_date_reminder: 1.2.9
 	* graphontrackers: 1.12
 	* graphontrackersv5: 5.16
-	* tracker: 5.543
+	* tracker: 5.544
 	* mediawiki: 0.59
 	* fulltextsearch: 0.111
 	* git: 4.7
