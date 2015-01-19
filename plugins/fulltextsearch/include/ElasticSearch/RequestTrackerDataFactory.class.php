@@ -83,13 +83,17 @@ class ElasticSearch_1_2_RequestTrackerDataFactory {
                     'last_changeset_id' => array(
                         'type' => 'integer'
                     ),
+                    ElasticSearch_1_2_ArtifactPropertiesExtractor::LAST_UPDATE_PROPERTY => array(
+                        'type'   => 'date',
+                        'format' => 'date_time_no_millis',
+                    ),
                     'followup_comments' => array(
                         'properties' => array(
-                            'user_id' => array(
+                            'user_id'  => array(
                                 'type' => 'integer',
                             ),
                             'date_added' => array(
-                                'type' => 'date',
+                                'type'   => 'date',
                                 'format' => 'date_time_no_millis',
                             ),
                             'comment' => array(

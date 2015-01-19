@@ -517,7 +517,7 @@ class Tracker_FormElementFactory {
      * @return Tracker_FormElement_Field[] All core date formElements of the tracker
      */
     public function getCoreDateFields(Tracker $tracker) {
-        return $this->getFormElementsByType($tracker, array('lud', 'subon'));
+        return $this->getFormElementsByType($tracker, array('lud', 'subon'), false);
     }
 
     public function getUsedDateFieldById(Tracker $tracker, $field_id) {

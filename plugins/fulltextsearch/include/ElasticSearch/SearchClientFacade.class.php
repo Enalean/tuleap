@@ -330,6 +330,13 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
             $updated_date_filter                     = array('bool' => array('should' => array()));
             $updated_date_filter['bool']['should'][] = array('range' => array('last_modified_date' => array('gte' => $facets[ElasticSearch_SearchResultUpdateDateFacetCollection::IDENTIFIER])));
             $updated_date_filter['bool']['should'][] = array('range' => array('update_date'        => array('gte' => $facets[ElasticSearch_SearchResultUpdateDateFacetCollection::IDENTIFIER])));
+            $updated_date_filter['bool']['should'][] = array(
+                'range' => array(
+                    ElasticSearch_1_2_ArtifactPropertiesExtractor::LAST_UPDATE_PROPERTY => array(
+                        'gte' => $facets[ElasticSearch_SearchResultUpdateDateFacetCollection::IDENTIFIER]
+                    )
+                )
+            );
 
             $filter['bool']['must'][] = $updated_date_filter;
         }
