@@ -16,6 +16,7 @@ Version 7.10 ()
 	* request #7754: Prevent denial of service via the login form
 	* request #7744: Fix non persistent XSS and a open redirection in search modules and login form
         * request #7715: Fix bad links to some users in admin user list
+	* request #7764: docman fulltext search events broken
 
 	== Plugins ==
 	* tracker_date_reminder: 1.2.9
@@ -25,7 +26,7 @@ Version 7.10 ()
 	* mediawiki: 0.59
 	* fulltextsearch: 0.114
 	* git: 4.7
-	* docman: 2.26.59
+	* docman: 2.26.60
 	* ldap: 3.70
 	* openid: 0.6
 	* agiledashboard: 1.139
