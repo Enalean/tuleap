@@ -1589,4 +1589,4 @@ plugin_tracker	disable_notifications_alternate_text	Ne plus recevoir les notific
 plugin_tracker	enable_notifications_alternate_text	Recevoir les notifications de cet artefact
 
 plugin_tracker	tracker_artifacts	Artefacts de suivis
-plugin_tracker	tracker_fulltextsearch_info	Pas encore disponible
+plugin_tracker	tracker_fulltextsearch_info	Seulement disponible quand vous choisissez UN projet

@@ -1591,4 +1591,4 @@ plugin_tracker	disable_notifications_alternate_text	Stop receiving notifications
 plugin_tracker	enable_notifications_alternate_text	Receive notifications for this artifact
 
 plugin_tracker	tracker_artifacts	Tracker artifacts
-plugin_tracker	tracker_fulltextsearch_info	Not yet available
+plugin_tracker	tracker_fulltextsearch_info	Only available if you select ONE project
