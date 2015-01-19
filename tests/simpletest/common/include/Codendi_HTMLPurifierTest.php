@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2007.
@@ -146,13 +147,15 @@ class Codendi_HTMLPurifierTest extends TuleapTestCase {
 
     function testPurifyJsQuoteAndDQuote() {
         $p =& Codendi_HTMLPurifier::instance();
-        $this->assertEqual('</"+"script>', $p->purify('</script>', CODENDI_PURIFIER_JS_DQUOTE));
-        $this->assertEqual('a\"a', $p->purify('a"a', CODENDI_PURIFIER_JS_DQUOTE));
-        $this->assertEqual('\"a', $p->purify('"a', CODENDI_PURIFIER_JS_DQUOTE));
-        $this->assertEqual('a\"', $p->purify('a"', CODENDI_PURIFIER_JS_DQUOTE));
-        $this->assertEqual('\"', $p->purify('"', CODENDI_PURIFIER_JS_DQUOTE));
-        $this->assertEqual('</"+"script>'."\n".'bla bla'."\n".'</"+"script>'."\n".'bla bla'."\n".'</"+"script>', $p->purify('</script>\nbla bla\n</script>\nbla bla\n</script>', CODENDI_PURIFIER_JS_DQUOTE));
-        $this->assertEqual("</'+'script>", $p->purify('</script>', CODENDI_PURIFIER_JS_QUOTE));
+        $this->assertEqual('\u003C\/script\u003E', $p->purify('</script>', CODENDI_PURIFIER_JS_DQUOTE));
+        $this->assertEqual('a\u0022a', $p->purify('a"a', CODENDI_PURIFIER_JS_DQUOTE));
+        $this->assertEqual('\u0022a', $p->purify('"a', CODENDI_PURIFIER_JS_DQUOTE));
+        $this->assertEqual('a\u0022', $p->purify('a"', CODENDI_PURIFIER_JS_DQUOTE));
+        $this->assertEqual('\u0022', $p->purify('"', CODENDI_PURIFIER_JS_DQUOTE));
+        $this->assertEqual('\"', $p->purify('"', CODENDI_PURIFIER_JS_QUOTE));
+        $this->assertEqual('\u003C\/script\u003E\\\nbla bla\\\n\u003C\/script\u003E\\\nbla bla\\\n\u003C\/script\u003E',
+                $p->purify('</script>\nbla bla\n</script>\nbla bla\n</script>', CODENDI_PURIFIER_JS_DQUOTE));
+        $this->assertEqual('\u003C\/script\u003E', $p->purify('</script>', CODENDI_PURIFIER_JS_QUOTE));
     }
     
     function testBasicNobr() {

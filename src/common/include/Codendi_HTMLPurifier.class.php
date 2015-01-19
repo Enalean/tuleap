@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2015. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2007.
@@ -247,12 +247,12 @@ class Codendi_HTMLPurifier {
             break;
 
         case CODENDI_PURIFIER_JS_QUOTE:
-            $clean = preg_replace('/\<\/script\>/umsi', "</'+'script>", addslashes(preg_replace('/\\\n/ums', "
-", $html)));
+            $json_hex_apos = 4; //Equivalent to JSON_HEX_APOS
+            $clean = $this->js_string_purifier($html, $json_hex_apos);
             break;
         case CODENDI_PURIFIER_JS_DQUOTE:
-            $clean = preg_replace('/\<\/script\>/umsi', '</"+"script>', addslashes(preg_replace('/\\\n/ums', '
-', $html)));
+            $json_hex_quote = 8; //Equivalent to JSON_HEX_QUOTE
+            $clean = $this->js_string_purifier($html, $json_hex_quote);
             break;
         case CODENDI_PURIFIER_CONVERT_HTML:
         default:
@@ -260,6 +260,54 @@ class Codendi_HTMLPurifier {
             break;
         }
         return $clean;
+    }
+
+    /**
+     * @return string
+     */
+    private function js_string_purifier($str, $options) {
+        $clean = '';
+        $default_options = 1 | 2; // Equivalent to JSON_HEX_TAG|JSON_HEX_AMP
+        if (version_compare(PHP_VERSION, '5.3.0', '>=')) {
+            $clean_quoted = json_encode($str, $default_options|$options);
+            $clean = substr($clean_quoted, 1, -1);
+        } else {
+            $clean = $this->js_string_purifier_compat($str, $options);
+        }
+        return $clean;
+    }
+
+    /**
+     * Provide a replacement for
+     * json_encode($str, JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS),
+     * json_encode($str, JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_QUOTE) or
+     * json_encode($str, JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOTE)
+     * Some of these options are not available before PHP 5.3.0
+     *
+     * @see http://php.net/manual/en/json.constants.php#constant.json-hex-tag
+     *
+     * @return string
+     */
+    private function js_string_purifier_compat($str, $options) {
+        $chr_to_encode = array(
+            '<' => '\u003C',
+            '>' => '\u003E',
+            '&' => '\u0026'
+        );
+        //JSON_HEX_APOS
+        if ((4 & $options) != 0) {
+            $chr_to_encode['\\\''] = '\u0027';
+        }
+        //JSON_HEX_QUOTE
+        if ((8 & $options) != 0) {
+            $chr_to_encode['\\"'] = '\u0022';
+        }
+
+        $str_quoted = json_encode($str);
+        $str_special_chr = substr($str_quoted, 1, -1);
+        $str_clean = str_replace(array_keys($chr_to_encode), array_values($chr_to_encode), $str_special_chr);
+
+        return $str_clean;
     }
 
     /**
