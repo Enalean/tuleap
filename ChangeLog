@@ -18,6 +18,7 @@ Version 7.10 ()
 	* request #7715: Fix bad links to some users in admin user list
 	* request #7764: docman fulltext search events broken
 	* request #7770: Wrong data when there are two reports on project dashboard using the same field as filter
+	* request #7755: Fix non persistent XSS and open redirect in redirect page
 
 	== Plugins ==
 	* tracker_date_reminder: 1.2.9
