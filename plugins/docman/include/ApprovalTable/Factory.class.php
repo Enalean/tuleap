@@ -200,7 +200,7 @@ abstract class Docman_ApprovalTableFactory {
     //
 
     protected function _getDao() {
-        return new Docman_ApprovalTableDao(CodendiDataAccess::instance());
+        return new Docman_ApprovalTableItemDao(CodendiDataAccess::instance());
     }
 
     function _getReviewerFactory($table, $item) {
