@@ -29,7 +29,7 @@ class Docman_ApprovalTableReminder {
      * @return Void
      */
     public function remindApprovers() {
-        $dao = new Docman_ApprovalTableDao();
+        $dao = new Docman_ApprovalTableItemDao();
         $dar = $dao->getTablesForReminder();
         $tables = array();
         if ($dar && !$dar->isError()) {

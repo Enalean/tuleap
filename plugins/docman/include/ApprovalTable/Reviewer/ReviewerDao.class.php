@@ -20,7 +20,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_ApprovalTableReviewerDao extends DataAccessObject {
+class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao {
 
     function __construct($da) {
         parent::__construct($da);
@@ -202,22 +202,22 @@ class Docman_ApprovalTableReviewerDao extends DataAccessObject {
     function getAllApprovalTableForUser($userId) {
         // Item
         $sql_item = 'SELECT t.table_id, i.item_id, i.group_id, t.date, i.title, g.group_name, t.status'.
-            ','.Docman_ApprovalTableDao::getTableStatusFields().
+            ','.parent::getTableStatusFields().
             ' FROM plugin_docman_approval t'.
-            '  LEFT JOIN '.Docman_ApprovalTableDao::getTableStatusJoin('app_u', 't').
+            '  LEFT JOIN '.parent::getTableStatusJoin('app_u', 't').
             '  JOIN plugin_docman_item i ON (i.item_id = t.item_id)'.
             '  JOIN groups g ON (g.group_id = i.group_id)'.
             ' WHERE t.table_owner = '.$this->da->escapeInt($userId).
             ' AND t.status IN ('.PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED.', '.PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED.')'.
             ' AND '.Docman_ItemDao::getCommonExcludeStmt('i').
             ' AND g.status = \'A\''.
-            ' GROUP BY '.Docman_ApprovalTableDao::getTableStatusGroupBy('t');
+            ' GROUP BY '.parent::getTableStatusGroupBy('t');
 
         // Version
         $sql_ver = 'SELECT t.table_id, i.item_id, i.group_id, t.date, i.title, g.group_name, t.status'.
-            ','.Docman_ApprovalTableDao::getTableStatusFields().
+            ','.parent::getTableStatusFields().
             ' FROM plugin_docman_approval t'.
-            '  LEFT JOIN '.Docman_ApprovalTableDao::getTableStatusJoin('app_u', 't').
+            '  LEFT JOIN '.parent::getTableStatusJoin('app_u', 't').
             '   JOIN plugin_docman_version v'.
             '     ON (v.id = t.version_id)'.
             '   JOIN plugin_docman_item AS i'.
@@ -228,7 +228,7 @@ class Docman_ApprovalTableReviewerDao extends DataAccessObject {
             ' AND t.status IN ('.PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED.', '.PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED.')'.
             ' AND '.Docman_ItemDao::getCommonExcludeStmt('i').
             ' AND g.status = \'A\''.
-            ' GROUP BY '.Docman_ApprovalTableDao::getTableStatusGroupBy('t');
+            ' GROUP BY '.parent::getTableStatusGroupBy('t');
 
         $sql = '('.$sql_item.') UNION ALL ('.$sql_ver.') ORDER BY group_name ASC, date ASC';
         //echo $sql;
