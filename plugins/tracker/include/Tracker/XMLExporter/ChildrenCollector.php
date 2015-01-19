@@ -19,8 +19,12 @@
  */
 
 class Tracker_XMLExporter_ChildrenCollector {
-
-    const MAX = 50;
+    /*
+     * This value has been set on the basis of
+     * tests which shown that creating 30 children
+     * took about 1 minute.
+     */
+    const MAX = 30;
 
     /** @var int[] */
     private $children_stack = array();
