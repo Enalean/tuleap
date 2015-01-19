@@ -1,7 +1,7 @@
 Version 7.10 ()
 
 	== Features ==
-	* Parts of story #7607 have tracker search in global search
+	* story #7607: have tracker search in global search
 	* story #7740: git anonymous http clone
 	* Parts of story #6855: artifact copy: Recursive copy
 
@@ -22,9 +22,9 @@ Version 7.10 ()
 	* tracker_date_reminder: 1.2.9
 	* graphontrackers: 1.12
 	* graphontrackersv5: 5.16
-	* tracker: 5.547
+	* tracker: 5.548
 	* mediawiki: 0.59
-	* fulltextsearch: 0.114
+	* fulltextsearch: 0.115
 	* git: 4.7
 	* docman: 2.26.60
 	* ldap: 3.70

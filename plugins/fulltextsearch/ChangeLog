@@ -1,3 +1,6 @@
+Version 0.115 - Tuleap 7.10
+    * story #7607: make search filter correctly by date on trackers
+
 Version 0.114 - Tuleap 7.10
     * story #7607: artifact search results are enhanced with additional metadata
 
