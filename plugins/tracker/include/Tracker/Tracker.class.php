@@ -670,7 +670,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 $action->process($layout, $request, $current_user);
                 break;
             case 'submit-copy-artifact':
-                $xml_importer              = $this->getArtifactXMLImporter();
+                $logger                    = new Tracker_XMLImporter_CopyArtifactInformationsAggregator(new BackendLogger());
+                $xml_importer              = $this->getArtifactXMLImporterForArtifactCopy($logger);
                 $artifact_factory          = $this->getTrackerArtifactFactory();
                 $file_xml_updater          = $this->getFileXMLUpdater();
                 $export_children_collector = $this->getChildrenCollector($request);
@@ -694,7 +695,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
                         $this->getTrackerArtifactFactory(),
                         new Tracker_XMLExporter_ChildrenCollector()
                     ),
-                    new Tracker_XMLImporter_ArtifactImportedMapping()
+                    new Tracker_XMLImporter_ArtifactImportedMapping(),
+                    $logger
                 );
                 $action->process($layout, $request, $current_user);
                 break;
@@ -3177,14 +3179,13 @@ EOS;
         return TRACKER_BASE_URL . '/?tracker=' . $this->getId();
     }
 
-    private function getArtifactXMLImporter() {
+    private function getArtifactXMLImporterForArtifactCopy(Tracker_XMLImporter_CopyArtifactInformationsAggregator $logger) {
         $fields_validator      = new Tracker_Artifact_Changeset_AtGivenDateFieldsValidator(
             $this->getFormElementFactory()
         );
 
         $changeset_dao         = new Tracker_Artifact_ChangesetDao();
         $changeset_comment_dao = new Tracker_Artifact_Changeset_CommentDao();
-        $logger                = new BackendLogger();
         $send_notifications    = true;
 
         $artifact_creator = new Tracker_ArtifactCreator(

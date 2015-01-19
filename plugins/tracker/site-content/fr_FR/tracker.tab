@@ -1042,6 +1042,7 @@ plugin_tracker_artifact	copy_submit_button	Copier
 plugin_tracker_artifact	copy_submit_button_children	Copier avec les enfants
 plugin_tracker_artifact	copy_submit_button_children_title	La copie des enfants se fait « en tant que tel », il n'est pas possible d'éditer pendant le processus de copie.
 plugin_tracker_artifact	copy_too_many_children	L'artefact a trop d'enfants (la limite est de $1).
+plugin_tracker_artifact	copy_artifact_finished	La copie de $1 #$2 est terminée.
 
 plugin_tracker_artifact	user_already_unsubscribed	Vous êtes déjà désinscrit des notifications.
 plugin_tracker_artifact	user_subscribed	Vous avez réactivé les notifications pour cet artefact.

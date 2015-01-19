@@ -78,12 +78,19 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
     /** @var Tracker_XMLImporter_ArtifactImportedMapping */
     private $artifacts_imported_mapping;
 
+    /** @var Tracker_XMLImporter_CopyArtifactInformationsAggregator */
+    private $logger;
+
+    /** @var Tracker_Artifact */
+    private $a_mocked_artifact;
+
     public function setUp() {
         parent::setUp();
 
         $changeset_factory    = mock('Tracker_Artifact_ChangesetFactory');
         $this->tracker        = aMockTracker()->withId(1)->build();
-        $this->new_artifact   = anArtifact()->withId($this->new_artifact_id)->build();
+        $this->new_artifact   = partial_mock('Tracker_Artifact', array('createNewChangeset'));
+        $this->new_artifact->setId($this->new_artifact_id);
         $this->layout         = mock('Tracker_IDisplayTrackerLayout');
         $this->user           = mock('PFUser');
         $this->xml_exporter   = mock('Tracker_XMLExporter_ArtifactXMLExporter');
@@ -100,6 +107,9 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
         $this->children_xml_exporter       = mock('Tracker_XMLExporter_ChildrenXMLExporter');
         $this->children_xml_importer       = mock('Tracker_XMLImporter_ChildrenXMLImporter');
         $this->artifacts_imported_mapping  = mock('Tracker_XMLImporter_ArtifactImportedMapping');
+
+        $backend_logger = mock("BackendLogger");
+        $this->logger   = new Tracker_XMLImporter_CopyArtifactInformationsAggregator($backend_logger);
 
         $this->submitted_values = array();
 
@@ -123,8 +133,11 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
             $this->file_updater,
             $this->children_xml_exporter,
             $this->children_xml_importer,
-            $this->artifacts_imported_mapping
+            $this->artifacts_imported_mapping,
+            $this->logger
         );
+
+        $this->a_mocked_artifact = mock("Tracker_Artifact");
     }
 
     public function itExportsTheRequiredSnapshotArtifact() {
@@ -293,6 +306,15 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
         expect($this->xml_exporter)->exportSnapshotWithoutComments()->never();
         expect($this->xml_updater)->update()->never();
         expect($this->xml_importer)->importOneArtifactFromXML()->never();
+
+        $this->action->process($this->layout, $this->request, $this->user);
+    }
+
+    public function itCreatesACommentChangesetContainingAllTheErrorRaisedDuringTheMigrationProcess() {
+        stub($this->tracker)->userCanSubmitArtifact($this->user)->returns(true);
+        stub($this->xml_importer)->importOneArtifactFromXML()->returns($this->a_mocked_artifact);
+
+        expect($this->a_mocked_artifact)->createNewChangeset(array(), '*', $this->user, '*', Tracker_Artifact_Changeset_Comment::TEXT_COMMENT)->once();
 
         $this->action->process($this->layout, $this->request, $this->user);
     }

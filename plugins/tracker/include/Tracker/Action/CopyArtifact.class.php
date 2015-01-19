@@ -60,6 +60,10 @@ class Tracker_Action_CopyArtifact {
      */
     private $artifact_factory;
 
+    /**
+     * @var Tracker_XMLImporter_CopyArtifactInformationsAggregator */
+    private $logger;
+
     public function __construct(
         Tracker $tracker,
         Tracker_ArtifactFactory $artifact_factory,
@@ -69,7 +73,8 @@ class Tracker_Action_CopyArtifact {
         Tracker_XMLUpdater_TemporaryFileXMLUpdater $file_updater,
         Tracker_XMLExporter_ChildrenXMLExporter $children_xml_exporter,
         Tracker_XMLImporter_ChildrenXMLImporter $children_xml_importer,
-        Tracker_XMLImporter_ArtifactImportedMapping $artifacts_imported_mapping
+        Tracker_XMLImporter_ArtifactImportedMapping $artifacts_imported_mapping,
+        Tracker_XMLImporter_CopyArtifactInformationsAggregator $logger
     ) {
         $this->tracker                    = $tracker;
         $this->artifact_factory           = $artifact_factory;
@@ -80,6 +85,7 @@ class Tracker_Action_CopyArtifact {
         $this->children_xml_exporter      = $children_xml_exporter;
         $this->children_xml_importer      = $children_xml_importer;
         $this->artifacts_imported_mapping = $artifacts_imported_mapping;
+        $this->logger                     = $logger;
     }
 
     public function process(
@@ -157,6 +163,7 @@ class Tracker_Action_CopyArtifact {
                 $artifact,
                 $current_user
             );
+            $this->addSummaryCommentChangeset($artifact, $current_user, $from_changeset);
             $this->redirectToArtifact($artifact);
         } else {
             $this->logsErrorAndRedirectToTracker(
@@ -165,6 +172,31 @@ class Tracker_Action_CopyArtifact {
                 $from_changeset->getArtifact()->getId()
             );
         }
+    }
+
+    private function addSummaryCommentChangeset(
+        Tracker_Artifact $artifact,
+        PFUser $user,
+        Tracker_Artifact_Changeset $from_changeset
+    ) {
+        $original_artifact = $from_changeset->getArtifact();
+        $comment           = $this->logger->getAllLogs();
+        $comment[]         = $GLOBALS['Language']->getText(
+            'plugin_tracker_artifact',
+            'copy_artifact_finished',
+            array(
+                $original_artifact->getTracker()->getItemName(),
+                $original_artifact->getId()
+            )
+        );
+
+        $artifact->createNewChangeset(
+            array(),
+            implode("\n",$comment),
+            $user,
+            true,
+            Tracker_Artifact_Changeset_Comment::TEXT_COMMENT
+        );
     }
 
     private function redirectToTracker() {
