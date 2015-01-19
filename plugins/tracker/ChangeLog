@@ -1,3 +1,6 @@
+Version 5.549 - Tuleap 7.10
+    * request #7770: Wrong data when there are two reports on project dashboard using the same field as filter
+
 Version 5.548 - Tuleap 7.10
     * story #7607: make search filter correctly by date on trackers
 

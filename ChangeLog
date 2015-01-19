@@ -15,14 +15,15 @@ Version 7.10 ()
 	* request #7730: Add entropy into the session ID and the password reset token
 	* request #7754: Prevent denial of service via the login form
 	* request #7744: Fix non persistent XSS and a open redirection in search modules and login form
-        * request #7715: Fix bad links to some users in admin user list
+	* request #7715: Fix bad links to some users in admin user list
 	* request #7764: docman fulltext search events broken
+	* request #7770: Wrong data when there are two reports on project dashboard using the same field as filter
 
 	== Plugins ==
 	* tracker_date_reminder: 1.2.9
 	* graphontrackers: 1.12
 	* graphontrackersv5: 5.16
-	* tracker: 5.548
+	* tracker: 5.549
 	* mediawiki: 0.59
 	* fulltextsearch: 0.115
 	* git: 4.7
