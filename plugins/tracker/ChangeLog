@@ -1,3 +1,6 @@
+Version 5.551 - Tuleap 7.10
+    * Display error message if MAX is reached && Set a proper child limit
+
 Version 5.550 - Tuleap 7.10
     * Let the user choose if the children must be copied
 
