@@ -486,28 +486,33 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      * @return mixed
      */
     public function getCriteriaValue($criteria) {
-        
-        if ($this->criteria_value) {
-            $values = $this->criteria_value; 
+        if (! isset($this->criteria_value)) {
             $this->criteria_value = array();
+        }
+
+        if ($this->criteria_value[$criteria->report->id]) {
+            $values = $this->criteria_value[$criteria->report->id];
+            $this->criteria_value[$criteria->report->id] = array();
+
             foreach($values as $value) {
                 foreach ($value as $v) {
                     if ($v !='') {
-                        $this->criteria_value[$v] = $value;
+                        $this->criteria_value[$criteria->report->id][$v] = $value;
                     } else {
                         return '';
                     }
                 }
-            }            
-        } else if (!isset($this->criteria_value)) {
-            $this->criteria_value = array();
+            }
+
+        } else if (!isset($this->criteria_value[$criteria->report->id])) {
+            $this->criteria_value[$criteria->report->id] = array();
             foreach($this->getCriteriaDao()
                          ->searchByCriteriaId($criteria->id) as $row) {
-                $this->criteria_value[$row['value']] = $row;
+                $this->criteria_value[$criteria->report->id][$row['value']] = $row;
             }
         }
         
-        return $this->criteria_value;
+        return $this->criteria_value[$criteria->report->id];
     }
     
     public function getCriteriaWhere($criteria) {
