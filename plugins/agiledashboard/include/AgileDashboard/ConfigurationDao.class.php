@@ -31,6 +31,18 @@ class AgileDashboard_ConfigurationDao extends DataAccessObject {
         return $this->update($sql);
     }
 
+    public function duplicate($project_id, $template_id) {
+        $project_id  = $this->da->escapeInt($project_id);
+        $template_id = $this->da->escapeInt($template_id);
+
+        $sql = "INSERT INTO plugin_agiledashboard_configuration (project_id, scrum, kanban)
+                SELECT $project_id, scrum, kanban
+                FROM plugin_agiledashboard_configuration
+                WHERE project_id = $template_id";
+
+        return $this->update($sql);
+    }
+
     public function isKanbanActivated($project_id) {
         $project_id = $this->da->escapeInt($project_id);
 

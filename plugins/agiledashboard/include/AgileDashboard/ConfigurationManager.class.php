@@ -65,4 +65,8 @@ class AgileDashboard_ConfigurationManager {
         );
     }
 
+    public function duplicate($project_id, $template_id) {
+        $this->dao->duplicate($project_id, $template_id);
+    }
+
 }

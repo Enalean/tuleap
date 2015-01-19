@@ -67,6 +67,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(TRACKER_USAGE);
             $this->addHook(TRACKER_EVENT_TRACKERS_CANNOT_USE_IN_HIERARCHY);
             $this->addHook(Event::SERVICE_ICON);
+            $this->_addHook('register_project_creation');
 
             $this->_addHook(Event::IMPORT_XML_PROJECT_CARDWALL_DONE);
             $this->_addHook(Event::EXPORT_XML_PROJECT);
@@ -105,6 +106,22 @@ class AgileDashboardPlugin extends Plugin {
 
     public function service_icon($params) {
         $params['list_of_icon_unicodes'][$this->getServiceShortname()] = '\e80e';
+    }
+
+    public function register_project_creation($params) {
+        $this->getConfigurationManager()->duplicate(
+            $params['group_id'],
+            $params['template_id']
+        );
+    }
+
+    /**
+     * @return AgileDashboard_ConfigurationManager
+     */
+    private function getConfigurationManager() {
+        return new AgileDashboard_ConfigurationManager(
+            new AgileDashboard_ConfigurationDao()
+        );
     }
 
     public function cardwall_event_get_swimline_tracker($params) {
@@ -404,8 +421,6 @@ class AgileDashboardPlugin extends Plugin {
             $top_milestone_pane_factory
         );
 
-        $config_dao = new AgileDashboard_ConfigurationDao();
-
         $router = new AgileDashboardRouter(
             $this,
             $milestone_factory,
@@ -415,7 +430,7 @@ class AgileDashboardPlugin extends Plugin {
             ProjectManager::instance(),
             new ProjectXMLExporter(EventManager::instance()),
             $this->getKanbanManager(),
-            new AgileDashboard_ConfigurationManager($config_dao),
+            $this->getConfigurationManager(),
             $this->getKanbanFactory()
         );
 
