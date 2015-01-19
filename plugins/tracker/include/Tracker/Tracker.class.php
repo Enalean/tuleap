@@ -673,7 +673,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 $xml_importer              = $this->getArtifactXMLImporter();
                 $artifact_factory          = $this->getTrackerArtifactFactory();
                 $file_xml_updater          = $this->getFileXMLUpdater();
-                $export_children_collector = new Tracker_XMLExporter_ChildrenCollector();
+                $export_children_collector = $this->getChildrenCollector($request);
                 $artifact_xml_exporter     = $this->getArtifactXMLExporter($export_children_collector, $current_user);
                 $action                    = new Tracker_Action_CopyArtifact(
                     $this,
@@ -3219,6 +3219,14 @@ EOS;
             $logger,
             $send_notifications
         );
+    }
+
+    private function getChildrenCollector(Codendi_Request $request) {
+        if ($request->get('copy_children')) {
+            return new Tracker_XMLExporter_ChildrenCollector();
+        }
+
+        return new Tracker_XMLExporter_NullChildrenCollector();
     }
 
     private function getArtifactXMLExporter(

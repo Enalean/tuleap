@@ -1040,8 +1040,8 @@ plugin_tracker_artifact	submission_keeper_warning_msg	<p>Someone updated this ar
 
 plugin_tracker_artifact	copy_mode_info	You are currently copying the artifact $1.
 plugin_tracker_artifact	copy_submit_button	Copy
-
-plugin_tracker_artifact	formelement_artifact_link_copy	Artifact field links cannot be copied
+plugin_tracker_artifact	copy_submit_button_children	Copy with children
+plugin_tracker_artifact	copy_submit_button_children_title	The copy of the children will be done "as is", you won't be able to edit them during the copy process.
 
 plugin_tracker_artifact	user_already_unsubscribed	You are already unsubscribed from artifact notifications
 plugin_tracker_artifact	user_subscribed	You are now receiving notifications for this artifact
