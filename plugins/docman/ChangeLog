@@ -1,3 +1,6 @@
+Version 2.26.61 - Tuleap 7.10
+    * request #7774: fatal error on my personal page from docman
+
 Version 2.26.60 - Tuleap 7.10
     * request #7764: docman fulltext search events broken
 

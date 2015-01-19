@@ -19,6 +19,7 @@ Version 7.10 ()
 	* request #7764: docman fulltext search events broken
 	* request #7770: Wrong data when there are two reports on project dashboard using the same field as filter
 	* request #7755: Fix non persistent XSS and open redirect in redirect page
+	* request #7774: fatal error on my personal page from docman
 
 	== Plugins ==
 	* tracker_date_reminder: 1.2.9
@@ -28,7 +29,7 @@ Version 7.10 ()
 	* mediawiki: 0.59
 	* fulltextsearch: 0.115
 	* git: 4.7
-	* docman: 2.26.60
+	* docman: 2.26.61
 	* ldap: 3.70
 	* openid: 0.6
 	* agiledashboard: 1.139
