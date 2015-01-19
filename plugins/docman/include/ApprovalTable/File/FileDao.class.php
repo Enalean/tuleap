@@ -20,7 +20,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_ApprovalTableFileDao extends DataAccessObject {
+class Docman_ApprovalTableFileDao extends Docman_ApprovalTableItemDao {
 
     function getTableById($versionId, $fields='*') {
         $sql = 'SELECT '.$fields.
@@ -49,42 +49,5 @@ class Docman_ApprovalTableFileDao extends DataAccessObject {
 
     function createTable($versionId, $userId, $description, $date, $status, $notification) {
         return parent::createTable('version_id', $versionId, $userId, $description, $date, $status, $notification);
-    }
-
-    /*static*/ function getTableStatusFields($table='app_u') {
-        $fields = 'COUNT('.$table.'.reviewer_id) AS nb_reviewers, '.
-            'COUNT(IF('.$table.'.state = '.PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED.',1,NULL)) AS rejected, '.
-            'COUNT(IF('.$table.'.state = '.PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED.',1,NULL)) AS nb_approved, '.
-            'COUNT(IF('.$table.'.state = '.PLUGIN_DOCMAN_APPROVAL_STATE_DECLINED.',1,NULL)) AS nb_declined';
-        return $fields;
-    }
-
-    /*static*/ function getTableStatusJoin($tableUser='app_u', $tableApproval='app') {
-        $join = 'plugin_docman_approval_user '.$tableUser
-            .' ON ('.$tableUser.'.table_id = '.$tableApproval.'.table_id) ';
-        return $join;
-    }
-
-    /*static*/ function getTableStatusGroupBy($table='app_u') {
-        $groupBy  = $table.'.table_id ';
-        return $groupBy;
-    }
-
-    function getTableWithStatus($status, $fields, $where, $join='', $orderBy='', $limit='') {
-        $groupBy = '';
-        if($status) {
-            $fields  .= ','.$this->getTableStatusFields();
-            $join    .= ' LEFT JOIN '.$this->getTableStatusJoin();
-            $groupBy  = ' GROUP BY '.$this->getTableStatusGroupBy();
-        }
-
-        $sql = ' SELECT '.$fields.
-            ' FROM plugin_docman_approval app'.
-            $join.
-            ' WHERE '.$where.
-            $groupBy.
-            $orderBy.
-            $limit;
-        return $this->retrieve($sql);
     }
 }
