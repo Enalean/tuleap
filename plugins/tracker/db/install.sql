@@ -511,6 +511,15 @@ CREATE TABLE tracker_artifact_priority(
     UNIQUE idx(curr_id, succ_id)
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS tracker_artifact_priority_history;
+CREATE TABLE tracker_artifact_priority_history(
+  id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  artifact_id_higher INT(11) NULL,
+  artifact_id_lower INT(11) NULL,
+  prioritized_by INT(11) NOT NULL,
+  prioritized_on INT(11) NOT NULL
+) ENGINE=InnoDB;
+
 DROP TABLE IF EXISTS  tracker_tooltip;
 CREATE TABLE tracker_tooltip(
     tracker_id INT(11) NOT NULL ,

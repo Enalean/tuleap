@@ -681,12 +681,24 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 }
                 break;
             case 'higher-priority-than':
-                $dao = new Tracker_Artifact_PriorityDao();
-                $dao->moveArtifactBefore($this->getId(), (int)$request->get('target-id'));
+                $target_id = (int)$request->get('target-id');
+
+                $priority_dao = new Tracker_Artifact_PriorityDao();
+                $priority_dao->moveArtifactBefore($this->getId(), $target_id);
+
+                $priority_history_manager = $this->getPriorityHistoryManager();
+                $priority_history_manager->logPriorityChange($this->getId(), $target_id);
+
                 break;
             case 'lesser-priority-than':
-                $dao = new Tracker_Artifact_PriorityDao();
-                $dao->moveArtifactAfter($this->getId(), (int)$request->get('target-id'));
+                $target_id = (int)$request->get('target-id');
+
+                $priority_dao = new Tracker_Artifact_PriorityDao();
+                $priority_dao->moveArtifactAfter($this->getId(), $target_id);
+
+                $priority_history_manager = $this->getPriorityHistoryManager();
+                $priority_history_manager->logPriorityChange($target_id, $this->getId());
+
                 break;
             case 'show-in-overlay':
                 $renderer = new Tracker_Artifact_EditOverlayRenderer($this, $this->getEventManager());
@@ -735,6 +747,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 }
                 break;
         }
+    }
+
+    private function getPriorityHistoryManager() {
+        return new Tracker_Artifact_PriorityHistoryManager(
+            new Tracker_Artifact_PriorityHistoryDao(),
+            UserManager::instance()
+        );
     }
 
     /** @return Tracker_Artifact[] */
@@ -1635,6 +1654,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $this->getPermissionsManager()->clearPermission(self::PERMISSION_ACCESS, $this->getId());
         $this->getCrossReferenceManager()->deleteEntity($this->getId(), self::REFERENCE_NATURE, $this->getTracker()->getGroupId());
         $this->getDao()->deleteArtifactLinkReference($this->getId());
+        // We do not keep trace of the history change here because it doesn't have any sense
         $this->getDao()->deletePriority($this->getId());
         $this->getDao()->delete($this->getId());
         $this->getDao()->commit();
