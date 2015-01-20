@@ -39,4 +39,14 @@ class Tracker_Artifact_PriorityHistoryDao extends DataAccessObject {
         $this->update($sql);
     }
 
+    public function getArtifactPriorityHistory($artifact_id) {
+        $artifact_id  = $this->da->escapeInt($artifact_id);
+
+        $sql = "SELECT *
+                FROM tracker_artifact_priority_history
+                WHERE moved_artifact_id  = $artifact_id";
+
+        return $this->retrieve($sql);
+    }
+
 }

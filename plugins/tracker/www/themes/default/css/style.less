@@ -537,6 +537,26 @@ h5.artifack_link_subtitle {
 a:hover .xref-in-title {
     text-decoration: none;
 }
+.colored-xref {
+    padding: 2px 7px 3px;
+    border-radius: 3px;
+    color: #FFFFFF;
+    text-shadow: 0 0 3px rgba(0,0,0,0.2);
+    font-weight: normal;
+    font-size: 0.9em;
+
+    &:hover {
+        opacity: 0.9;
+    }
+
+    a {
+        color: #FFFFFF;
+
+        &:hover {
+            text-decoration: none;
+        }
+    }
+}
 
 .artifact-form {
     position: relative;
@@ -580,6 +600,7 @@ a:hover .xref-in-title {
 
     &:not(.tracker_artifact_followup_comments-display_changes) {
         .tracker_artifact_followup.tracker_artifact_followup-with_changes:not(.tracker_artifact_followup-with_comment),
+        .tracker_artifact_followup.tracker_artifact_followup-priority,
         .tracker_artifact_followup.tracker_artifact_followup-by_system_user,
         .tracker_artifact_followup_changes,
         .tracker_artifact_followup_content > hr {
@@ -607,8 +628,16 @@ a:hover .xref-in-title {
 .tracker_artifact_followup:not(.tracker_artifact_followup-with_comment) {
     border: 1px solid #E7E7E7;
 }
-.tracker_artifact_followup-with_changes:not(.tracker_artifact_followup-with_comment) {
+.tracker_artifact_followup-with_changes:not(.tracker_artifact_followup-with_comment),
+.tracker_artifact_followup-priority:not(.tracker_artifact_followup-with_comment) {
     background: transparent;
+}
+.tracker_artifact_followup-priority {
+    font-size: 0.9em;
+
+    .rank-progression {
+        font-weight: bold;
+    }
 }
 .tracker_artifact_followup-with_comment {
     border-left: 3px solid grey;
@@ -2471,7 +2500,7 @@ body.in_tracker_report .main .content {
         color: @inca_silver;
     }
 
-    &.xref-in-title {
+    &.xref-in-title, &.colored-xref {
         background-color: @inca_silver;
     }
 }
@@ -2482,7 +2511,7 @@ body.in_tracker_report .main .content {
         color: @chrome_silver;
     }
 
-    &.xref-in-title {
+    &.xref-in-title, &.colored-xref {
         background-color: @chrome_silver;
     }
 }
@@ -2493,7 +2522,7 @@ body.in_tracker_report .main .content {
         color: @fiesta_red;
     }
 
-    &.xref-in-title {
+    &.xref-in-title, &.colored-xref {
         background-color: @fiesta_red;
     }
 }
@@ -2504,7 +2533,7 @@ body.in_tracker_report .main .content {
         color: @teddy_brown;
     }
 
-    &.xref-in-title {
+    &.xref-in-title, &.colored-xref {
         background-color: @teddy_brown;
     }
 }
@@ -2515,7 +2544,7 @@ body.in_tracker_report .main .content {
         color: @clockwork_orange;
     }
 
-    &.xref-in-title {
+    &.xref-in-title, &.colored-xref {
         background-color: @clockwork_orange;
     }
 }
@@ -2526,7 +2555,7 @@ body.in_tracker_report .main .content {
         color: @red_wine;
     }
 
-    &.xref-in-title {
+    &.xref-in-title, &.colored-xref {
         background-color: @red_wine;
     }
 }
@@ -2537,7 +2566,7 @@ body.in_tracker_report .main .content {
         color: @acid_green;
     }
 
-    &.xref-in-title {
+    &.xref-in-title, &.colored-xref {
         background-color: @acid_green;
     }
 }
@@ -2548,7 +2577,7 @@ body.in_tracker_report .main .content {
         color: @army_green;
     }
 
-    &.xref-in-title {
+    &.xref-in-title, &.colored-xref {
         background-color: @army_green;
     }
 }
@@ -2559,7 +2588,7 @@ body.in_tracker_report .main .content {
         color: @sherwood_green;
     }
 
-    &.xref-in-title {
+    &.xref-in-title, &.colored-xref {
         background-color: @sherwood_green;
     }
 }
@@ -2570,7 +2599,7 @@ body.in_tracker_report .main .content {
         color: @ocean_turquoise;
     }
 
-    &.xref-in-title {
+    &.xref-in-title, &.colored-xref {
         background-color: @ocean_turquoise;
     }
 }
@@ -2581,7 +2610,7 @@ body.in_tracker_report .main .content {
         color: @daphne_blue;
     }
 
-    &.xref-in-title {
+    &.xref-in-title, &.colored-xref {
         background-color: @daphne_blue;
     }
 }
@@ -2592,7 +2621,7 @@ body.in_tracker_report .main .content {
         color: @lake_placid_blue;
     }
 
-    &.xref-in-title {
+    &.xref-in-title, &.colored-xref {
         background-color: @lake_placid_blue;
     }
 }
@@ -2603,7 +2632,7 @@ body.in_tracker_report .main .content {
         color: @deep_blue;
     }
 
-    &.xref-in-title {
+    &.xref-in-title, &.colored-xref {
         background-color: @deep_blue;
     }
 }
@@ -2614,7 +2643,7 @@ body.in_tracker_report .main .content {
         color: @plum_crazy;
     }
 
-    &.xref-in-title {
+    &.xref-in-title, &.colored-xref {
         background-color: @plum_crazy;
     }
 }
@@ -2625,7 +2654,7 @@ body.in_tracker_report .main .content {
         color: @peggy_pink;
     }
 
-    &.xref-in-title {
+    &.xref-in-title, &.colored-xref {
         background-color: @peggy_pink;
     }
 }
@@ -2636,7 +2665,7 @@ body.in_tracker_report .main .content {
         color: @flamingo_pink;
     }
 
-    &.xref-in-title {
+    &.xref-in-title, &.colored-xref {
         background-color: @flamingo_pink;
     }
 }

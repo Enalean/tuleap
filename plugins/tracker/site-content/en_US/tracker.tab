@@ -399,6 +399,13 @@ plugin_tracker_include_artifact	color	Color
 plugin_tracker_include_artifact	preview	Preview:
 plugin_tracker_include_artifact	unsubscribe	Unsubscribe from notifications
 plugin_tracker_include_artifact	artifact_fields_title	Artifacts fields
+plugin_tracker_include_artifact	priority_change_intro	The priority has been
+plugin_tracker_include_artifact	priority_change_raised	raised
+plugin_tracker_include_artifact	priority_change_decreased	decreased
+plugin_tracker_include_artifact	priority_change_before_than	and it's now placed before
+plugin_tracker_include_artifact	priority_change_after_than	and it's now placed after
+plugin_tracker_include_artifact	priority_change_in	in
+plugin_tracker_include_artifact	priority_change_backlog	the project's backlog
 
 #
 #-----------------------------------------------

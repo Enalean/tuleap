@@ -399,7 +399,8 @@ class Tracker_ArtifactDao extends DataAccessObject {
         return new Tracker_Artifact_PriorityManager(
             new Tracker_Artifact_PriorityDao(),
             new Tracker_Artifact_PriorityHistoryDao(),
-            UserManager::instance()
+            UserManager::instance(),
+            Tracker_ArtifactFactory::instance()
         );
     }
 

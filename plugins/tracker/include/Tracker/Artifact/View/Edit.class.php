@@ -111,17 +111,17 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
         $html .= '<div id="tracker_artifact_followup_comments-content">';
         $html .= '<h1 id="tracker_artifact_followups">'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','follow_ups').'</h1>';
         $html .= '<ul class="tracker_artifact_followups">';
-        $previous_changeset = null;
+        $previous_item = null;
         $i = 0;
-        foreach ($this->artifact->getChangesets() as $changeset) {
-            if ($previous_changeset) {
+        foreach ($this->artifact->getFollowupsContent() as $item) {
+            if ($previous_item) {
                 $classnames  = html_get_alt_row_color($i++) .' tracker_artifact_followup ';
-                $classnames .= $changeset->getFollowUpClassnames();
-                $html .= '<li id="followup_'. $changeset->id .'" class="'. $classnames .'">';
-                $html .= $changeset->fetchFollowUp();
+                $classnames .= $item->getFollowUpClassnames();
+                $html .= '<li id="followup_'. $item->getId() .'" class="'. $classnames .'">';
+                $html .= $item->fetchFollowUp();
                 $html .= '</li>';
             }
-            $previous_changeset = $changeset;
+            $previous_item = $item;
         }
 
         $html .= '<li>';

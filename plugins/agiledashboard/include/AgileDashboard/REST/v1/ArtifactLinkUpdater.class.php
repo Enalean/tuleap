@@ -29,6 +29,7 @@ use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_Artifact;
 use Tracker_NoArtifactLinkFieldException;
 use UserManager;
+use Tracker_ArtifactFactory;
 use PFUser;
 
 class ArtifactLinkUpdater {
