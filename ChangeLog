@@ -1,4 +1,4 @@
-Version 7.9-3 (Tuesday, January 20th 2015)
+Version 7.9-4 (Tuesday, January 20th 2015)
 	== Bug Fix ==
 	* request #7770: Wrong data when there are two reports on project dashboard using the same field as filter
 	* request #7764: docman fulltext search events broken
