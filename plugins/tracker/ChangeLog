@@ -1,3 +1,6 @@
+Version 5.553 - Tuleap 7.10
+    * story #7496: Store priority changes for the two impacted artifacts in database
+
 Version 5.552 - Tuleap 7.10
     * story #6855 - Aggregate error messages in a followup comment
 

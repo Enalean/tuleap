@@ -1,3 +1,6 @@
+Version 1.142 - Tuleap 7.10
+    * story #7496: Store priority changes for the two impacted artifacts in database
+
 Version 1.141 - Tuleap 7.10
     * story #7737: Deal with project creation
 
