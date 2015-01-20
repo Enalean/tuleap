@@ -49,13 +49,13 @@
         loadBacklog(limit, offset);
 
         function loadColumns() {
-            KanbanService.getKanban(kanban.tracker_id).then(function (kanban) {
+            KanbanService.getKanban(kanban.id).then(function (kanban) {
                 self.board.columns = kanban.columns;
             });
         }
 
         function loadBacklog(limit, offset) {
-            return KanbanService.getBacklog(kanban.tracker_id, limit, offset).then(function(data) {
+            return KanbanService.getBacklog(kanban.id, limit, offset).then(function(data) {
                 self.backlog.content = self.backlog.content.concat(data.results);
 
                 if (self.backlog.content.length < data.total) {

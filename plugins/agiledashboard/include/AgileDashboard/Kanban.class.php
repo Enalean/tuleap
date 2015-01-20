@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,7 +22,7 @@
 class AgileDashboard_Kanban {
 
     /** @var int */
-    private $project_id;
+    private $id;
 
     /** @var int */
     private $tracker_id;
@@ -30,22 +30,21 @@ class AgileDashboard_Kanban {
     /** @var string */
     private $name;
 
-    public function __construct($name, $tracker_id, $project_id) {
-        $this->project_id = $project_id;
-        $this->name       = $name;
+    public function __construct($id, $tracker_id, $name) {
+        $this->id         = $id;
         $this->tracker_id = $tracker_id;
+        $this->name       = $name;
     }
 
-    public function getName() {
-        return $this->name;
-    }
-
-    public function getProjectId() {
-        return $this->project_id;
+    public function getId() {
+        return $this->id;
     }
 
     public function getTrackerId() {
         return $this->tracker_id;
     }
 
+    public function getName() {
+        return $this->name;
+    }
 }

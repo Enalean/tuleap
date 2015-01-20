@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -54,15 +54,17 @@ class AgileDashboard_KanbanFactory {
      *
      * @return AgileDashboard_Kanban
      */
-    public function getKanban(PFuser $user, $tracker_id) {
-        if (! $this->isUserAllowedToAccessKanban($user, $tracker_id)) {
-            throw new AgileDashboard_KanbanCannotAccessException();
-        }
+    public function getKanban(PFuser $user, $kanban_id) {
+        $row = $this->dao->getKanbanById($kanban_id)->getRow();
 
-        $row = $this->dao->getKanbanByTrackerId($tracker_id)->getRow();
         if (! $row) {
             throw new AgileDashboard_KanbanNotFoundException();
         }
+
+        if (! $this->isUserAllowedToAccessKanban($user, $row['tracker_id'])) {
+            throw new AgileDashboard_KanbanCannotAccessException();
+        }
+
 
         return $this->instantiateFromRow($row);
     }
@@ -84,9 +86,9 @@ class AgileDashboard_KanbanFactory {
     /** @return AgileDashboard_Kanban */
     private function instantiateFromRow($kanban_data) {
         return new AgileDashboard_Kanban(
-            $kanban_data['name'],
+            $kanban_data['id'],
             $kanban_data['tracker_id'],
-            $kanban_data['group_id']
+            $kanban_data['name']
         );
     }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -31,8 +31,8 @@ class AgileDashboard_Presenter_KanbanSummaryPresenter {
         return $this->kanban->getName();
     }
 
-    public function tracker_id() {
-        return $this->kanban->getTrackerId();
+    public function id() {
+        return $this->kanban->getId();
     }
 
     public function count_open_kanban_items() {
