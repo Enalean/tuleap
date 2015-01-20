@@ -16,6 +16,51 @@ require_once('common/include/CSRFSynchronizerToken.class.php');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
+/**
+*   select the fields sort order and the header arrow direction
+*
+* @param String $previous_sort_header
+* @param String $current_sort_header
+* @param String $sort_order
+* @param Integer $offset
+*
+* @return Array
+*/
+function get_sort_values ($previous_sort_header, $current_sort_header, $sort_order, $offset){
+    $sort_order_hash = array(
+        'sort_header' => $current_sort_header,
+        'user_name_icon' => '',
+        'realname_icon' => '',
+        'status_icon' => '',
+        'order' => 'ASC',
+        );
+    $sort_order_hash[$current_sort_header."_icon"]="icon-caret-up";
+
+    if ($offset === 0) {
+        if ($previous_sort_header === $current_sort_header) {
+            if ($sort_order === "ASC") {
+                $sort_order_hash[$current_sort_header."_icon"] = "icon-caret-down";
+                $sort_order_hash["order"] = "DESC";
+            }
+            else {
+                $sort_order_hash[$current_sort_header."_icon"] = "icon-caret-up";
+                $sort_order_hash["order"] = "ASC";
+            }
+        }
+    }
+    else {
+        if ($sort_order === "ASC") {
+            $sort_order_hash[$current_sort_header."_icon"] = "icon-caret-up";
+            $sort_order_hash["order"] = "ASC";
+        }
+        else {
+            $sort_order_hash[$current_sort_header."_icon"]="icon-caret-down";
+            $sort_order_hash["order"] = "DESC";
+        }
+    }
+    return $sort_order_hash;
+}
+
 function tooltip_values($nb_member_of, $nb_admin_of, $Language) {
     if ($nb_member_of) {
         $tooltip_values = array(
@@ -37,7 +82,7 @@ function tooltip_values($nb_member_of, $nb_admin_of, $Language) {
     return $tooltip_values;
 }
 
-function show_users_list ($res, $offset, $limit, $user_name_search="") {
+function show_users_list ($res, $offset, $limit, $user_name_search="", $sort_params) {
     $result = $res['users'];
     $hp = Codendi_HTMLPurifier::instance();
     global $Language;
@@ -51,11 +96,11 @@ function show_users_list ($res, $offset, $limit, $user_name_search="") {
     }
 
     echo '<thead>';
-    echo "<tr><th>".$Language->getText('include_user_home','login_name')."</th>";
-    echo "<th>".$Language->getText('include_user_home','real_name')."</th>";
+    echo "<tr><th><a class='table_header_sort' href=\"userlist.php?previous_sort_header=".$sort_params["sort_header"]."&current_sort_header=user_name&user_name_search=".$hp->purify($user_name_search)."&sort_order=".$sort_params["order"]."\">".$Language->getText('include_user_home','login_name')." <span class=\"pull-right ".$sort_params["user_name_icon"]."\"></span></a></th>";
+    echo "<th><a class='table_header_sort' href=\"userlist.php?previous_sort_header=".$sort_params["sort_header"]."&current_sort_header=realname&user_name_search=".$hp->purify($user_name_search)."&sort_order=".$sort_params["order"]."\">".$Language->getText('include_user_home','real_name')." <span class=\"pull-right ".$sort_params["realname_icon"]."\"></span></a></th>";
     echo "<th>Profile</th>\n";
-    echo "<th>".$Language->getText('admin_userlist','nb_projects')."</th>";
-    echo "<th>".$Language->getText('admin_userlist','status')."</th>";
+    echo "<th>".$hp->purify($Language->getText('admin_userlist','nb_projects'))."</th>";
+    echo "<th><a class='table_header_sort' href=\"userlist.php?previous_sort_header=".$sort_params["sort_header"]."&current_sort_header=status&user_name_search=".$hp->purify($user_name_search)."&sort_order=".$sort_params["order"]."\">".$Language->getText('admin_userlist','status')." <span class=\"pull-right ".$sort_params["status_icon"]."\"></span></a></th>";
     echo '</thead>';
     
     echo '<tbody>';
@@ -105,13 +150,13 @@ function show_users_list ($res, $offset, $limit, $user_name_search="") {
     echo '<div style="text-align:center">';
 
     if ($offset > 0) {
-        echo  '<a href="?offset='.($offset-$limit).$user_name_param.'">[ '.$Language->getText('project_admin_utils', 'previous').'  ]</a>';
+        echo  '<a href="?offset='.($offset-$limit).$user_name_param.'&current_sort_header='.$sort_params["sort_header"].'&user_name_search='.$user_name_search.'&sort_order='.$sort_params["order"].'">[ '.$Language->getText('project_admin_utils', 'previous').'  ]</a>';
         echo '&nbsp;';
     }
     echo ($offset + count($result)).'/'.$res['numrows'];
     if (($offset + $limit) < $res['numrows']) {
         echo '&nbsp;';
-        echo '<a href="?offset='.($offset+$limit).$user_name_param.'">[ '.$Language->getText('project_admin_utils', 'next').' ]</a>';
+        echo '<a href="?offset='.($offset+$limit).$user_name_param.'&current_sort_header='.$sort_params["sort_header"].'&user_name_search='.$user_name_search.'&sort_order='.$sort_params["order"].'">[ '.$Language->getText('project_admin_utils', 'next').' ]</a>';
     }
     echo '</div>';
 }
@@ -131,6 +176,28 @@ if($request->valid($vUserNameSearch)) {
     }
 }
 
+$header_whitelist = array('user_name', 'realname', 'status');
+if (in_array($request->get('previous_sort_header'), $header_whitelist)) {
+    $previous_sort_header=$request->get('previous_sort_header');
+}
+else {
+    $previous_sort_header = '';
+}
+if (in_array($request->get('current_sort_header'), $header_whitelist)) {
+    $current_sort_header=$request->get('current_sort_header');
+}
+else {
+    $current_sort_header = 'user_name';
+}
+
+$sort_order_whitelist = array('ASC','DESC');
+if (in_array($request->get('sort_order'), $sort_order_whitelist)) {
+    $sort_order=$request->get('sort_order');
+}
+else {
+    $sort_order = 'ASC';
+}
+
 // Check if group_id is valid
 $vGroupId = new Valid_GroupId();
 $group_id = false;
@@ -140,16 +207,18 @@ if($request->valid($vGroupId)) {
     }
 }
 
+$sort_params = get_sort_values($previous_sort_header, $current_sort_header, $sort_order, $offset);
+
 if (!$group_id) {
     if (isset($user_name_search) && $user_name_search) {
-        $result = $dao->listAllUsers($user_name_search, $offset, $limit);
+        $result = $dao->listAllUsers($user_name_search, $offset, $limit, $sort_params['sort_header'], $sort_params['order']);
         if ($result['numrows'] == 1) {
             $row = $result['users']->getRow();
             $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$row['user_id']);
         }
     } else {
         $user_name_search="";
-        $result = $dao->listAllUsers(0, $offset, $limit);
+        $result = $dao->listAllUsers(0, $offset, $limit, $sort_params['sort_header'], $sort_params['order']);
     }
 } else {
     $result = $dao->listAllUsersForGroup($group_id, $offset, $limit);
@@ -189,7 +258,7 @@ echo "<form name='usersrch' action='userlist.php' method='get' class='form-inlin
       </form>";
 echo "</p>";
 
-show_users_list ($result, $offset, $limit, $user_name_search);
+show_users_list ($result, $offset, $limit, $user_name_search, $sort_params);
 echo '<script type="text/javascript" src="/scripts/tuleap/userlist.js"></script>';
 $HTML->footer(array());
 

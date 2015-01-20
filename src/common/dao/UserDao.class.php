@@ -651,15 +651,18 @@ class UserDao extends DataAccessObject {
     }
 
     /**
-     * return array of all users or users matching the pattern if $pattern is not empty
+     * return array of all users or users matching the pattern if $pattern is not empty and order
+     * the result according to the clicked header and the order of sort
      * 
      * @param String $pattern
      * @param Integer $offset
      * @param Integer $limit
+     * @param String $sort_header
+     * @param String $sort_order
      *
      * @return Array
      */
-    function listAllUsers ($pattern = "", $offset, $limit) {
+    function listAllUsers ($pattern = "", $offset, $limit, $sort_header, $sort_order) {
         $offset = $this->da->escapeInt($offset);
         $limit  = $this->da->escapeInt($limit);
         $where = "";
@@ -689,7 +692,7 @@ class UserDao extends DataAccessObject {
                     GROUP BY user_id
                 ) as member_of USING (user_id)
             $where
-            ORDER BY user_name ASC
+            ORDER BY ".$sort_header." ".$sort_order."
             LIMIT $offset, $limit";
 
         return array(
