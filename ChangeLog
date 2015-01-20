@@ -4,6 +4,7 @@ Version 7.10 ()
 	* story #7607: have tracker search in global search
 	* story #7740: git anonymous http clone
 	* Parts of story #6855: artifact copy: Recursive copy
+	* Parts of story #7697: dedicated queue for grokmirror manifest updates
 
 	== Bug Fix ==
 	* Fix unit tests for webdav & config & karma tests
@@ -28,7 +29,7 @@ Version 7.10 ()
 	* tracker: 5.552
 	* mediawiki: 0.59
 	* fulltextsearch: 0.115
-	* git: 4.7
+	* git: 4.8
 	* docman: 2.26.61
 	* ldap: 3.70
 	* openid: 0.6

@@ -1,3 +1,6 @@
+Version 4.8 - Tuleap 7.10
+    * story #7697: adding a grokmirror queue
+
 Version 4.7 - Tuleap 7.10
     * Do not let anonymous clone things when platform forbid anonymous
 
