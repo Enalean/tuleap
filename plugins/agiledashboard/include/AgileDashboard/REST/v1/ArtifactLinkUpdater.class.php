@@ -26,6 +26,9 @@ use Tracker_Artifact_Exception_CannotRankWithMyself;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_Artifact;
 use Tracker_NoArtifactLinkFieldException;
+use Tracker_Artifact_PriorityHistoryManager;
+use Tracker_Artifact_PriorityHistoryDao;
+use UserManager;
 use PFUser;
 
 class ArtifactLinkUpdater {
@@ -119,13 +122,19 @@ class ArtifactLinkUpdater {
     }
 
     public function setOrder(array $linked_artifact_ids) {
-        $dao         = new Tracker_Artifact_PriorityDao();
-        $predecessor = null;
+        $predecessor              = null;
+        $dao                      = new Tracker_Artifact_PriorityDao();
+        $priority_history_manager = new Tracker_Artifact_PriorityHistoryManager(
+            new Tracker_Artifact_PriorityHistoryDao(),
+            UserManager::instance()
+        );
 
         foreach ($linked_artifact_ids as $linked_artifact_id) {
             if (isset($predecessor)) {
                 try {
                     $dao->moveArtifactAfter($linked_artifact_id, $predecessor);
+                    $priority_history_manager->logPriorityChange($predecessor, $linked_artifact_id);
+
                 } catch (Tracker_Artifact_Exception_CannotRankWithMyself $exception) {
                     throw new ItemListedTwiceException($linked_artifact_id);
                 }
