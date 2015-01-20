@@ -74,8 +74,16 @@ class Tracker_GeneralSettings_Presenter {
         return $GLOBALS['Language']->getText('plugin_tracker_include_type','instantiate');
     }
 
+    public function tracker_show_priority_changes() {
+        return $GLOBALS['Language']->getText('plugin_tracker_include_type','priority_changes');
+    }
+
     public function is_instatiate_for_new_projects() {
         return $this->tracker->instantiate_for_new_projects;
+    }
+
+    public function is_show_priority_changes() {
+        return $this->tracker->show_priority_changes;
     }
 
     public function tracker_color_label() {

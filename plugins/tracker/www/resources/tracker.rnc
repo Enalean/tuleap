@@ -11,6 +11,7 @@ grammar {
         # these attributes should be optional and have default values
         attribute allow_copy { "0" | "1" }?, # default is false
         attribute instantiate_for_new_projects { "0" | "1" }?, # default is false
+        attribute show_priority_changes { "0" | "1" }?, # default is false
         attribute stop_notification { "0" | "1" }?, # default is false
 
         # these elements are not used, they are provided by the user during the import

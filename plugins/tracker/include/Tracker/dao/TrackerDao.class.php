@@ -123,6 +123,7 @@ class TrackerDao extends DataAccessObject {
                         description,
                         item_name,
                         instantiate_for_new_projects,
+                        show_priority_changes,
                         allow_copy,
                         submit_instructions,
                         browse_instructions,
@@ -136,6 +137,7 @@ class TrackerDao extends DataAccessObject {
                         $description,
                         $item_name,
                         1,
+                        show_priority_changes,
                         allow_copy,
                         submit_instructions,
                         browse_instructions,
@@ -162,6 +164,7 @@ class TrackerDao extends DataAccessObject {
         $status,
         $deletion_date,
         $instantiate_for_new_projects,
+        $show_priority_changes,
         $stop_notification,
         $color
     ) {
@@ -175,6 +178,7 @@ class TrackerDao extends DataAccessObject {
         $status                       = $this->da->quoteSmart($status);
         $deletion_date                = $deletion_date ? $this->da->escapeInt($deletion_date) : 'NULL';
         $instantiate_for_new_projects = $this->da->quoteSmart($instantiate_for_new_projects);
+        $show_priority_changes        = $this->da->quoteSmart($show_priority_changes);
         $stop_notification            = $this->da->escapeInt($stop_notification);
         $color                        = $this->da->quoteSmart($color);
 
@@ -193,6 +197,7 @@ class TrackerDao extends DataAccessObject {
                         status,
                         deletion_date,
                         instantiate_for_new_projects,
+                        show_priority_changes,
                         stop_notification,
                         color)
                     VALUES ($id,
@@ -206,6 +211,7 @@ class TrackerDao extends DataAccessObject {
                         $status,
                         $deletion_date,
                         $instantiate_for_new_projects,
+                        $show_priority_changes,
                         $stop_notification,
                         $color)";
             if ($this->update($sql)) {
@@ -228,6 +234,7 @@ class TrackerDao extends DataAccessObject {
         $status                       = $this->da->quoteSmart($tracker->status);
         $deletion_date                = $tracker->deletion_date ? $this->da->escapeInt($tracker->deletion_date) : 'NULL';
         $instantiate_for_new_projects = $this->da->quoteSmart($tracker->instantiate_for_new_projects);
+        $show_priority_changes        = $this->da->quoteSmart($tracker->show_priority_changes);
         $stop_notification            = $this->da->escapeInt($tracker->stop_notification);
         $sql = "UPDATE $this->table_name SET
                    group_id                     = $group_id,
@@ -241,6 +248,7 @@ class TrackerDao extends DataAccessObject {
                    status                       = $status,
                    deletion_date                = $deletion_date,
                    instantiate_for_new_projects = $instantiate_for_new_projects,
+                   show_priority_changes        = $show_priority_changes,
                    stop_notification            = $stop_notification
                 WHERE id = $id ";
         return $this->update($sql);
