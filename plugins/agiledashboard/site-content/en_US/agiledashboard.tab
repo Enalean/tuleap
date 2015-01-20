@@ -125,6 +125,8 @@ plugin_agiledashboard	no_service_selected	At least one service must be selected.
 plugin_agiledashboard	tracker_used_in_scrum	The selected tracker is already used in a planning.
 plugin_agiledashboard	activate_service_legend	What do you want to display in the Agile Dashboard homepage ?
 plugin_agiledashboard	user_cant_see_anything_content	You can't see anything because you don't have activated lab features.
+plugin_agiledashboard	config_submit_label	Save the whole configuration
+plugin_agiledashboard	title	Title
 
 plugin_agiledashboard	kanban_label	Kanban
 plugin_agiledashboard	scrum_label	Scrum
@@ -132,6 +134,10 @@ plugin_agiledashboard	all_label	Scrum and Kanban
 plugin_agiledashboard	kanban_activated	Kanban successfully activated.
 plugin_agiledashboard	scrum_activated	Scrum successfully activated.
 plugin_agiledashboard	all_activated	Scrum and Kanban successfully activated.
+plugin_agiledashboard	scrum_title_changed	Scrum title successfully modified.
+plugin_agiledashboard	scrum_title_empty	Scrum title is empty.
+plugin_agiledashboard	kanban_title_changed	Kanban title successfully modified.
+plugin_agiledashboard	kanban_title_empty	Kanban title is empty.
 plugin_agiledashboard	add_kanban	Add a kanban
 plugin_agiledashboard	btn_close_label	Close
 plugin_agiledashboard	btn_add_modal_label	Create

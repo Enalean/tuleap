@@ -21,6 +21,9 @@
 
 class AgileDashboard_ConfigurationManager {
 
+    const DEFAULT_SCRUM_TITLE  = 'Scrum';
+    const DEFAULT_KANBAN_TITLE = 'Kanban';
+
     /**
      * @var AgileDashboard_ConfigurationDao
      */
@@ -50,6 +53,26 @@ class AgileDashboard_ConfigurationManager {
         return $row['scrum'];
     }
 
+    public function getScrumTitle($project_id) {
+        $row = $this->dao->getScrumTitle($project_id);
+
+        if ($row) {
+            return $row['scrum_title'];
+        }
+
+        return self::DEFAULT_SCRUM_TITLE;
+    }
+
+    public function getKanbanTitle($project_id) {
+        $row = $this->dao->getKanbanTitle($project_id);
+
+        if ($row) {
+            return $row['kanban_title'];
+        }
+
+        return self::DEFAULT_KANBAN_TITLE;
+    }
+
     /**
      * @return boolean
      */
@@ -57,16 +80,23 @@ class AgileDashboard_ConfigurationManager {
         return $this->dao->doesAConfigurationExistForProject($project_id);
     }
 
-    public function updateConfiguration($project_id, $scrum_is_activated, $kanban_is_activated) {
+    public function updateConfiguration(
+        $project_id,
+        $scrum_is_activated,
+        $kanban_is_activated,
+        $scrum_title,
+        $kanban_title
+    ) {
         $this->dao->updateConfiguration(
             $project_id,
             $scrum_is_activated,
-            $kanban_is_activated
+            $kanban_is_activated,
+            $scrum_title,
+            $kanban_title
         );
     }
 
     public function duplicate($project_id, $template_id) {
         $this->dao->duplicate($project_id, $template_id);
     }
-
 }
