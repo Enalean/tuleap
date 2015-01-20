@@ -178,10 +178,15 @@ class Git_SystemEventManager {
             SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP::NAME,
             SystemEvent_GIT_GERRIT_PROJECT_DELETE::NAME,
             SystemEvent_GIT_GERRIT_PROJECT_READONLY::NAME,
-            SystemEvent_GIT_GROKMIRROR_MANIFEST::NAME,
             SystemEvent_GIT_USER_RENAME::NAME,
             SystemEvent_GIT_EDIT_SSH_KEYS::NAME,
             SystemEvent_GIT_DUMP_ALL_SSH_KEYS::NAME,
+        );
+    }
+
+    public function getGrokMirrorTypes() {
+        return array(
+            SystemEvent_GIT_GROKMIRROR_MANIFEST::NAME,
         );
     }
 

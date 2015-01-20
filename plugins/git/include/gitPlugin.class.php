@@ -193,18 +193,24 @@ class GitPlugin extends Plugin {
     /** @see Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES */
     public function system_event_get_custom_queues(array &$params) {
         $params['queues'][Git_SystemEventQueue::NAME] = new Git_SystemEventQueue($this->getLogger());
+        $params['queues'][Git_Mirror_MirrorSystemEventQueue::NAME] = new Git_Mirror_MirrorSystemEventQueue($this->getLogger());
     }
 
     /** @see Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE */
     public function system_event_get_types_for_custom_queue(array &$params) {
-        if ($params['queue'] !== Git_SystemEventQueue::NAME) {
-            return;
+        if ($params['queue'] == Git_SystemEventQueue::NAME) {
+            $params['types'] = array_merge(
+                $params['types'],
+                $this->getGitSystemEventManager()->getTypes()
+            );
         }
 
-        $params['types'] = array_merge(
-            $params['types'],
-            $this->getGitSystemEventManager()->getTypes()
-        );
+        if ($params['queue'] == Git_Mirror_MirrorSystemEventQueue::NAME) {
+            $params['types'] = array_merge(
+                $params['types'],
+                $this->getGitSystemEventManager()->getGrokMirrorTypes()
+            );
+        }
     }
 
     /**
