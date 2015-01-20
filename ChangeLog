@@ -1,3 +1,16 @@
+Version 7.9-3 (Tuesday, January 20th 2015)
+	== Bug Fix ==
+	* request #7770: Wrong data when there are two reports on project dashboard using the same field as filter
+	* request #7764: docman fulltext search events broken
+	* request #7759: Can't create new columns on the Agile Dashboard
+	* request #7760: Side by side diff in Git is not working
+	* request #7761: Fatal error when accessing default trackers templates
+	* request #7757: LDAP daily sync now search in subtrees
+	* request #7730: Insufficient entropy for session ID and password reset token
+	* request #7754: Denial of service through login form
+	* request #7744: Non persistent XSS in search and login form
+	* request #7774: fatal error on my personal page from docman
+
 Version 7.9-2 (Tuesday, January 13th 2015)
 	== Bug Fix ==
 	* request #7738: mandatory property for docman can be bypassed for multi-select properties
