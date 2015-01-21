@@ -45,6 +45,14 @@ var tuleap = tuleap || {};
                 tuleap.search.offset += parseInt($('input[name=number_of_page_results]').val());
                 searchFromSidebar(tuleap.search.type_of_search, true);
             });
+        },
+
+        didUserClickOnDefaultSearch : function(link) {
+            return link.parent().attr('data-search-type') == 'default';
+        },
+
+        isPaneFullText : function () {
+            return $('#type_of_search').val() == 'fulltext';
         }
     };
 
@@ -96,7 +104,10 @@ var tuleap = tuleap || {};
     function handleAdditionalSearchTabs() {
         $('.additional-search-tabs > li > a').click(function(event) {
             event.preventDefault();
-            window.location.href = $(this).attr("href") + '&words=' + $('#words').val();
+
+            if (tuleap.search.didUserClickOnDefaultSearch($(this)) || ! tuleap.search.isPaneFullText()) {
+                window.location.href = $(this).attr("href") + '&words=' + $('#words').val();
+            }
         });
     }
 
