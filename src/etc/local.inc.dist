@@ -500,3 +500,6 @@ $sys_logger_level = 'warn';
 // Define the email domain for email gateway feature
 // By default, email domain = default Tuleap domain (see $sys_default_domain)
 $sys_default_mail_domain = "";
+
+//Backup path for deleted projects
+$sys_project_backup_path = $tmp_dir;

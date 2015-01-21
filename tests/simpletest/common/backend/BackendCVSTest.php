@@ -61,6 +61,8 @@ class BackendCVSTest extends UnitTestCase {
         $GLOBALS['tmp_dir']                   = dirname(__FILE__) . '/_fixtures/var/tmp';
         $GLOBALS['cvs_cmd']                   = "/usr/bin/cvs";
         $GLOBALS['cvs_root_allow_file']       = dirname(__FILE__) . '/_fixtures/etc/cvs_root_allow';
+        Config::store();
+        Config::set('sys_project_backup_path', dirname(__FILE__) . '/_fixtures/var/tmp');
         mkdir($GLOBALS['cvs_prefix'] . '/' . 'toto');
     }
     
@@ -76,6 +78,7 @@ class BackendCVSTest extends UnitTestCase {
         unset($GLOBALS['tmp_dir']);
         unset($GLOBALS['cvs_cmd']);
         unset($GLOBALS['cvs_root_allow_file']);
+        Config::restore();
     }
     
     function testConstructor() {
@@ -104,13 +107,13 @@ class BackendCVSTest extends UnitTestCase {
 
         $this->assertEqual($backend->archiveProjectCVS(142),True);
         $this->assertFalse(is_dir($projdir),"Project CVS repository should be deleted");
-        $this->assertTrue(is_file($GLOBALS['tmp_dir']."/TestProj-cvs.tgz"),"CVS Archive should be created");
+        $this->assertTrue(is_file(Config::get('sys_project_backup_path')."/TestProj-cvs.tgz"),"CVS Archive should be created");
 
         // Check that a wrong project id does not raise an error
         $this->assertEqual($backend->archiveProjectCVS(99999),False);
 
         // Cleanup
-        unlink($GLOBALS['tmp_dir']."/TestProj-cvs.tgz");
+        unlink(Config::get('sys_project_backup_path')."/TestProj-cvs.tgz");
     }
 
     function testCreateProjectCVS() {

@@ -66,6 +66,8 @@ class BackendSVNTest extends TuleapTestCase {
         $GLOBALS['sys_name']                  = 'MyForge';
         $GLOBALS['sys_dbauth_user']           = 'dbauth_user';
         $GLOBALS['sys_dbauth_passwd']         = 'dbauth_passwd';
+        Config::store();
+        Config::set('sys_project_backup_path', dirname(__FILE__) . '/_fixtures/var/tmp');
         mkdir($GLOBALS['svn_prefix'] . '/toto/hooks', 0777, true);
     }
 
@@ -83,6 +85,7 @@ class BackendSVNTest extends TuleapTestCase {
         unset($GLOBALS['sys_name']);
         unset($GLOBALS['sys_dbauth_user']);
         unset($GLOBALS['sys_dbauth_passwd']);
+        Config::restore();
     }
     
     function testConstructor() {
@@ -109,13 +112,13 @@ class BackendSVNTest extends TuleapTestCase {
         
         $this->assertEqual($backend->archiveProjectSVN(142),True);
         $this->assertFalse(is_dir($projdir),"Project SVN repository should be deleted");
-        $this->assertTrue(is_file($GLOBALS['tmp_dir']."/TestProj-svn.tgz"),"SVN Archive should be created");
+        $this->assertTrue(is_file(Config::get('sys_project_backup_path')."/TestProj-svn.tgz"),"SVN Archive should be created");
 
         // Check that a wrong project id does not raise an error
         $this->assertEqual($backend->archiveProjectSVN(99999),False);
 
         // Cleanup
-        unlink($GLOBALS['tmp_dir']."/TestProj-svn.tgz");
+        unlink(Config::get('sys_project_backup_path') ."/TestProj-svn.tgz");
     }
 
 
