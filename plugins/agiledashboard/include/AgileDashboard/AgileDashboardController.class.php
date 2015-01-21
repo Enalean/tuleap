@@ -209,6 +209,10 @@ class AgileDashboard_Controller extends MVC2_PluginController {
     }
 
     private function getKanbanTitle() {
+        if (! $this->request->getCurrentUser()->useLabFeatures()) {
+            return $this->config_manager->getKanbanTitle($this->group_id);
+        }
+
         $kanban_title     = trim($this->request->get('kanban-title-admin'));
         $old_kanban_title = $this->request->get('old-kanban-title-admin');
 
