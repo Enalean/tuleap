@@ -1,6 +1,7 @@
 Version 7.10 ()
 
 	== Features ==
+	* request #7723: Make project backup path customizable
 	* story #7607: have tracker search in global search
 	* story #7740: git anonymous http clone
 	* Parts of story #6855: artifact copy: Recursive copy
