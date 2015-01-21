@@ -302,12 +302,23 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                         }
 
                         function updateOrder(func, source_id, target_id) {
+                            var milestone_id = to_submilestone_id;
+
+                            if (typeof to_submilestone_id === 'undefined') {
+                                milestone_id = $('#milestone_id').val();
+                            }
+
+                            if (typeof milestone_id === 'undefined') {
+                                milestone_id = 0;
+                            }
+
                             $.ajax({
                                 url  : codendi.tracker.base_url,
                                 data : {
-                                    "func"             : func,
-                                    "aid"              : source_id,
-                                    "target-id"        : target_id
+                                    "func"        : func,
+                                    "aid"         : source_id,
+                                    "target-id"   : target_id,
+                                    "milestone-id": milestone_id
                                 },
                                 method : "get"
                             });

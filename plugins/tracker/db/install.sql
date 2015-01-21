@@ -1,4 +1,4 @@
---  
+--
 --  Table structure for workflow_tracker
 --  
 DROP TABLE IF EXISTS tracker_workflow;
@@ -515,8 +515,12 @@ CREATE TABLE tracker_artifact_priority(
 DROP TABLE IF EXISTS tracker_artifact_priority_history;
 CREATE TABLE tracker_artifact_priority_history(
   id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  moved_artifact_id INT(11) NOT NULL,
   artifact_id_higher INT(11) NULL,
   artifact_id_lower INT(11) NULL,
+  context INT(11) NULL,
+  project_id INT(11) NULL,
+  has_been_raised TINYINT(1) NULL,
   prioritized_by INT(11) NOT NULL,
   prioritized_on INT(11) NOT NULL
 ) ENGINE=InnoDB;

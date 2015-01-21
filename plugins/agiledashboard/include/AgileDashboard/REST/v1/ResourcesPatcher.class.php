@@ -23,15 +23,15 @@ namespace Tuleap\AgileDashboard\REST\v1;
 use Tuleap\REST\v1\OrderRepresentationBase;
 use Luracast\Restler\RestException;
 use Tracker_ArtifactFactory;
-use Tracker_Artifact_PriorityDao;
+use Tracker_Artifact_PriorityManager;
 use PFUser;
 
 class ResourcesPatcher {
 
     /**
-     * @var Tracker_Artifact_PriorityDao
+     * @var Tracker_Artifact_PriorityManager
      */
-    private $priority_dao;
+    private $priority_manager;
 
     /**
      * @var Tracker_ArtifactFactory
@@ -43,26 +43,26 @@ class ResourcesPatcher {
      */
     private $artifactlink_updater;
 
-    public function __construct(ArtifactLinkUpdater $artifactlink_updater, Tracker_ArtifactFactory $artifact_factory, Tracker_Artifact_PriorityDao $priority_dao) {
+    public function __construct(ArtifactLinkUpdater $artifactlink_updater, Tracker_ArtifactFactory $artifact_factory, Tracker_Artifact_PriorityManager $priority_manager) {
         $this->artifactlink_updater = $artifactlink_updater;
         $this->artifact_factory     = $artifact_factory;
-        $this->priority_dao         = $priority_dao;
-        $this->priority_dao->enableExceptionsOnError();
+        $this->priority_manager     = $priority_manager;
+        $this->priority_manager->enableExceptionsOnError();
     }
 
     public function startTransaction() {
-        $this->priority_dao->startTransaction();
+        $this->priority_manager->startTransaction();
     }
 
     public function commit() {
-        $this->priority_dao->commit();
+        $this->priority_manager->commit();
     }
 
     public function updateArtifactPriorities(OrderRepresentationBase $order) {
         if ($order->direction === OrderRepresentationBase::BEFORE) {
-            $this->priority_dao->moveListOfArtifactsBefore($order->ids, $order->compared_to);
+            $this->priority_manager->moveListOfArtifactsBefore($order->ids, $order->compared_to);
         } else {
-            $this->priority_dao->moveListOfArtifactsAfter($order->ids, $order->compared_to);
+            $this->priority_manager->moveListOfArtifactsAfter($order->ids, $order->compared_to);
         }
     }
 

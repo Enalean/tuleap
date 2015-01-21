@@ -43,7 +43,13 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
     }
 
     function requestSort(func, source_id, target_id) {
-        var query = '?func='+ func +'&aid=' + source_id + '&target-id=' + target_id;
+        var milestone_id = $('#milestone_id').val();
+
+        if (typeof milestone_id === 'undefined') {
+            milestone_id = 0;
+        }
+
+        var query = '?func='+ func +'&aid=' + source_id + '&target-id=' + target_id + '&milestone-id=' + milestone_id;
         $.ajax(codendi.tracker.base_url + query);
     }
 

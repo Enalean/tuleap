@@ -143,8 +143,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
     }
 
     private function getArtifactRank($artifact_id) {
-        $dao = $this->getPriorityDao();
-        return $dao->getGlobalRank($artifact_id);
+        return $this->getPriorityManager()->getGlobalRank($artifact_id);
     }
 
     /**
@@ -287,8 +286,12 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
         return $artifact_field_value_full_representation;
     }
 
-    private function getPriorityDao() {
-        return new Tracker_Artifact_PriorityDao();
+    private function getPriorityManager() {
+        return new Tracker_Artifact_PriorityManager(
+            new Tracker_Artifact_PriorityDao(),
+            new Tracker_Artifact_PriorityHistoryDao(),
+            UserManager::instance()
+        );
     }
 
     public function getSoapValue() {

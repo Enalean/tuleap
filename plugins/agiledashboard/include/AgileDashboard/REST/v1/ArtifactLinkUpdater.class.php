@@ -22,16 +22,25 @@
 namespace Tuleap\AgileDashboard\REST\v1;
 
 use Tracker_Artifact_PriorityDao;
+use Tracker_Artifact_PriorityManager;
+use Tracker_Artifact_PriorityHistoryDao;
 use Tracker_Artifact_Exception_CannotRankWithMyself;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_Artifact;
 use Tracker_NoArtifactLinkFieldException;
-use Tracker_Artifact_PriorityHistoryManager;
-use Tracker_Artifact_PriorityHistoryDao;
 use UserManager;
 use PFUser;
 
 class ArtifactLinkUpdater {
+
+    /**
+     * @var Tracker_Artifact_PriorityManager
+     */
+    private $priority_manager;
+
+    public function __construct(Tracker_Artifact_PriorityManager $priority_manager) {
+        $this->priority_manager = $priority_manager;
+    }
 
     public function update(array $new_backlogitems_ids, Tracker_Artifact $artifact, PFUser $current_user, IFilterValidElementsToUnkink $filter) {
         $artlink_field = $artifact->getAnArtifactLinkField($current_user);
@@ -109,7 +118,7 @@ class ArtifactLinkUpdater {
             return false;
         }
 
-        $this->setOrder($linked_artifact_ids);
+        $this->setOrderWithoutHistoryChangeLogging($linked_artifact_ids);
     }
 
     public function getElementsAlreadyLinkedToArtifact(Tracker_Artifact $artifact, PFUser $user) {
@@ -121,19 +130,29 @@ class ArtifactLinkUpdater {
         );
     }
 
-    public function setOrder(array $linked_artifact_ids) {
-        $predecessor              = null;
-        $dao                      = new Tracker_Artifact_PriorityDao();
-        $priority_history_manager = new Tracker_Artifact_PriorityHistoryManager(
-            new Tracker_Artifact_PriorityHistoryDao(),
-            UserManager::instance()
-        );
+    private function setOrderWithoutHistoryChangeLogging(array $linked_artifact_ids) {
+        $predecessor = null;
 
         foreach ($linked_artifact_ids as $linked_artifact_id) {
             if (isset($predecessor)) {
                 try {
-                    $dao->moveArtifactAfter($linked_artifact_id, $predecessor);
-                    $priority_history_manager->logPriorityChange($predecessor, $linked_artifact_id);
+                    $this->priority_manager->moveArtifactAfter($linked_artifact_id, $predecessor);
+
+                } catch (Tracker_Artifact_Exception_CannotRankWithMyself $exception) {
+                    throw new ItemListedTwiceException($linked_artifact_id);
+                }
+            }
+            $predecessor = $linked_artifact_id;
+        }
+    }
+
+    public function setOrderWithHistoryChangeLogging(array $linked_artifact_ids, $context_id, $project_id) {
+        $predecessor = null;
+
+        foreach ($linked_artifact_ids as $linked_artifact_id) {
+            if (isset($predecessor)) {
+                try {
+                    $this->priority_manager->moveArtifactAfterWithHistoryChangeLogging($linked_artifact_id, $predecessor, $context_id, $project_id);
 
                 } catch (Tracker_Artifact_Exception_CannotRankWithMyself $exception) {
                     throw new ItemListedTwiceException($linked_artifact_id);
