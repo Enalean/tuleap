@@ -40,7 +40,9 @@ DROP TABLE IF EXISTS plugin_agiledashboard_configuration;
 CREATE TABLE IF NOT EXISTS plugin_agiledashboard_configuration (
     project_id INT(11) PRIMARY KEY,
     scrum TINYINT NOT NULL DEFAULT 1,
-    kanban TINYINT NOT NULL
+    kanban TINYINT NOT NULL,
+    scrum_title VARCHAR(255) NOT NULL DEFAULT 'Scrum',
+    kanban_title VARCHAR(255) NOT NULL DEFAULT 'Kanban'
 );
 
 DROP TABLE IF EXISTS plugin_agiledashboard_kanban_configuration;

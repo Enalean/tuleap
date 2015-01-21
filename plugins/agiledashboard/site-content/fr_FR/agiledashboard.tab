@@ -125,6 +125,8 @@ plugin_agiledashboard	no_service_selected	Un service doit obligatoirement être 
 plugin_agiledashboard	tracker_used_in_scrum	L'outil de suivi sélectionné est déjà utilisé dans une configuration de planning.
 plugin_agiledashboard	activate_service_legend	Quel(s) service(s) voulez-vous activer sur la page d'accueil du dashboard agile ?
 plugin_agiledashboard	user_cant_see_anything_content	Vous n'avez aucune donnée d'afficher car vous n'avez pas activé le mode Lab.
+plugin_agiledashboard	config_submit_label	Sauvegarder la configuration
+plugin_agiledashboard	title	Titre
 
 plugin_agiledashboard	kanban_label	Kanban
 plugin_agiledashboard	scrum_label	Scrum
@@ -132,6 +134,10 @@ plugin_agiledashboard	all_label	Scrum et Kanban
 plugin_agiledashboard	kanban_activated	Kanban activé avec succès.
 plugin_agiledashboard	scrum_activated	Scrum activé avec succès.
 plugin_agiledashboard	all_activated	Scrum et Kanban activés avec succès.
+plugin_agiledashboard	scrum_title_changed	Le titre Scrum modifié avec succès.
+plugin_agiledashboard	scrum_title_empty	Le titre Scrum est vide.
+plugin_agiledashboard	kanban_title_changed	Le titre Kanban modifié avec succès.
+plugin_agiledashboard	kanban_title_empty	Le titre Kanban est vide.
 plugin_agiledashboard	add_kanban	Ajouter un kanban
 plugin_agiledashboard	btn_close_label	Fermer
 plugin_agiledashboard	btn_add_modal_label	Créer

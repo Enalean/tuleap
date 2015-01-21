@@ -52,6 +52,12 @@ class Planning_Presenter_HomePresenter {
     /** @var bool */
     public $scrum_is_configured;
 
+    /** @var string */
+    public $scrum_title;
+
+    /** @var string */
+    public $kanban_title;
+
     public function __construct(
         $milestone_access_presenters,
         $group_id,
@@ -63,7 +69,9 @@ class Planning_Presenter_HomePresenter {
         $trackers,
         array $kanban_summary_presenters,
         $scrum_activated,
-        $scrum_is_configured
+        $scrum_is_configured,
+        $scrum_title,
+        $kanban_title
     ) {
         $this->milestone_presenters            = $milestone_access_presenters;
         $this->group_id                        = $group_id;
@@ -76,6 +84,8 @@ class Planning_Presenter_HomePresenter {
         $this->kanban_summary_presenters       = $kanban_summary_presenters;
         $this->scrum_activated                 = $scrum_activated;
         $this->scrum_is_configured             = $scrum_is_configured;
+        $this->scrum_title                     = $scrum_title;
+        $this->kanban_title                    = $kanban_title;
     }
 
     public function nothing_set_up() {

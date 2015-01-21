@@ -38,6 +38,12 @@ class AdminPresenter {
     /** @var bool */
     public $all_activated;
 
+    /** @var string */
+    public $scrum_title;
+
+    /** @var string */
+    public $kanban_title;
+
     private $root_planning_tracker_url;
     private $root_planning_name;
     private $planning_hierarchy = array();
@@ -53,7 +59,9 @@ class AdminPresenter {
         $uses_lab_features,
         $kanban_activated,
         $scrum_activated,
-        $all_activated
+        $all_activated,
+        $scrum_title,
+        $kanban_title
     ) {
         $this->plannings                 = $plannings;
         $this->group_id                  = $group_id;
@@ -64,6 +72,8 @@ class AdminPresenter {
         $this->kanban_activated          = $kanban_activated;
         $this->scrum_activated           = $scrum_activated;
         $this->all_activated             = $all_activated;
+        $this->scrum_title               = $scrum_title;
+        $this->kanban_title              = $kanban_title;
 
         foreach ($hierarchy as $tracker) {
             $this->planning_hierarchy[] = $tracker->getName();
@@ -84,10 +94,6 @@ class AdminPresenter {
 
     public function export_template() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'export_template');
-    }
-
-    public function admin_title() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'Admin');
     }
 
     public function import_export_section() {
@@ -136,7 +142,7 @@ class AdminPresenter {
     }
 
     public function config_submit_label() {
-        return $GLOBALS['Language']->getText('global', 'btn_submit');
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'config_submit_label');
     }
 
     public function kanban_label() {
@@ -157,5 +163,9 @@ class AdminPresenter {
 
     public function lab_mode_message() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'lab_mode_message');
+    }
+
+    public function title_label() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'title');
     }
 }

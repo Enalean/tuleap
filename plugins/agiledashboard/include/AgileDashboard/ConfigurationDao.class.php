@@ -20,13 +20,21 @@
 
 class AgileDashboard_ConfigurationDao extends DataAccessObject {
 
-    public function updateConfiguration($project_id, $scrum_is_activated, $kanban_is_activated) {
+    public function updateConfiguration(
+        $project_id,
+        $scrum_is_activated,
+        $kanban_is_activated,
+        $scrum_title,
+        $kanban_title
+    ) {
         $project_id          = $this->da->escapeInt($project_id);
         $scrum_is_activated  = $this->da->escapeInt($scrum_is_activated);
         $kanban_is_activated = $this->da->escapeInt($kanban_is_activated);
+        $scrum_title         = $this->da->quoteSmart($scrum_title);
+        $kanban_title        = $this->da->quoteSmart($kanban_title);
 
-        $sql = "REPLACE INTO plugin_agiledashboard_configuration (project_id, scrum, kanban)
-                VALUES ($project_id, $scrum_is_activated, $kanban_is_activated)";
+        $sql = "REPLACE INTO plugin_agiledashboard_configuration (project_id, scrum, kanban, scrum_title, kanban_title)
+                VALUES ($project_id, $scrum_is_activated, $kanban_is_activated, $scrum_title, $kanban_title)";
 
         return $this->update($sql);
     }
@@ -71,5 +79,25 @@ class AgileDashboard_ConfigurationDao extends DataAccessObject {
                 WHERE project_id = $project_id";
 
         return $this->retrieve($sql)->count() > 0;
+    }
+
+    public function getScrumTitle($project_id) {
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql = "SELECT scrum_title
+                FROM plugin_agiledashboard_configuration
+                WHERE project_id = $project_id";
+
+        return $this->retrieveFirstRow($sql);
+    }
+
+    public function getKanbanTitle($project_id) {
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql = "SELECT kanban_title
+                FROM plugin_agiledashboard_configuration
+                WHERE project_id = $project_id";
+
+        return $this->retrieveFirstRow($sql);
     }
 }
