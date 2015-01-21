@@ -52,6 +52,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
     public $status;
     public $deletion_date;
     public $instantiate_for_new_projects;
+    public $show_priority_changes;
     public $stop_notification;
     private $formElementFactory;
     private $sharedFormElementFactory;
@@ -79,6 +80,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
             $status,
             $deletion_date,
             $instantiate_for_new_projects,
+            $show_priority_changes,
             $stop_notification,
             $color) {
         $this->id                           = $id;
@@ -92,6 +94,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $this->status                       = $status;
         $this->deletion_date                = $deletion_date;
         $this->instantiate_for_new_projects = $instantiate_for_new_projects;
+        $this->show_priority_changes        = $show_priority_changes;
         $this->stop_notification            = $stop_notification;
         $this->formElementFactory           = Tracker_FormElementFactory::instance();
         $this->sharedFormElementFactory     = new Tracker_SharedFormElementFactory($this->formElementFactory, new Tracker_FormElement_Field_List_BindFactory());
@@ -215,6 +218,10 @@ class Tracker implements Tracker_Dispatchable_Interface {
      */
     function mustBeInstantiatedForNewProjects() {
         return $this->instantiate_for_new_projects == 1;
+    }
+
+    public function isPriorityChangesShown() {
+        return $this->show_priority_changes == 1;
     }
 
     /**
@@ -1808,6 +1815,7 @@ EOS;
         $this->submit_instructions          = $request->getValidated('submit_instructions', 'text', '');
         $this->browse_instructions          = $request->getValidated('browse_instructions', 'text', '');
         $this->instantiate_for_new_projects = $request->getValidated('instantiate_for_new_projects') ? 1 : 0;
+        $this->show_priority_changes        = $request->getValidated('show_priority_changes') ? 1 : 0;
 
         if (!$this->name || !$this->description || !$this->color || !$this->item_name) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type','name_requ'));
@@ -2215,6 +2223,9 @@ EOS;
         }
         if ($this->instantiate_for_new_projects) {
             $xmlElem->addAttribute('instantiate_for_new_projects', $this->instantiate_for_new_projects);
+        }
+        if ($this->show_priority_changes) {
+            $xmlElem->addAttribute('show_priority_changes', $this->show_priority_changes);
         }
         if ($this->stop_notification) {
             $xmlElem->addAttribute('stop_notification', $this->stop_notification);

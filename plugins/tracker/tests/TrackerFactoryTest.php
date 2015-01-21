@@ -93,6 +93,7 @@ class TrackerFactoryTest extends UnitTestCase {
         //testing default values
         $this->assertEqual($tracker->allow_copy, 0);
         $this->assertEqual($tracker->instantiate_for_new_projects, 1);
+        $this->assertEqual($tracker->show_priority_changes, 0);
         $this->assertEqual($tracker->stop_notification, 0);
     }
     

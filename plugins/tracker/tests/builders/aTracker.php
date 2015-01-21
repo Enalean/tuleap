@@ -97,6 +97,7 @@ class Test_Tracker_Builder {
             null,
             null,
             null,
+            null,
             null
         );
 

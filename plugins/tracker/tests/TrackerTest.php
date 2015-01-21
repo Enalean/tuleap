@@ -1903,7 +1903,7 @@ class TrackerTest extends TuleapTestCase {
     }
 
     private function GivenATrackerAndItsFactories() {
-        $tracker = new Tracker(null, null, null, null, null, null, null, null, null, null, null, null, null);
+        $tracker = new Tracker(null, null, null, null, null, null, null, null, null, null, null, null, null, null);
         $factory = new MockTracker_FormElementFactory();
         $tracker->setFormElementFactory($factory);
         $sharedFactory = new MockTracker_SharedFormElementFactory();
