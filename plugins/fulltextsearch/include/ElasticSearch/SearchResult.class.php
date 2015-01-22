@@ -23,6 +23,10 @@ abstract class ElasticSearch_SearchResult {
     public $permissions;
     public $project_name;
     public $highlight;
+
+    public $item_title = '';
+    public $item_class = '';
+    public $item_xref  = '';
         
     public function __construct(array $hit, Project $project) {
         $this->project_name        = util_unconvert_htmlspecialchars($project->getPublicName());

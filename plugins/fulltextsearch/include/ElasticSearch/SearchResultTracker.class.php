@@ -40,7 +40,9 @@ class ElasticSearch_SearchResultTracker extends ElasticSearch_SearchResult {
         $xref  = $artifact->getXRef();
         $class = $artifact->getTracker()->getColor();
 
-        $this->item_title = "$title <span class='$class xref-in-title'>$xref<span> -</span></span>";
+        $this->item_title = $title;
+        $this->item_class = $class;
+        $this->item_xref  = $xref;
     }
 
 }

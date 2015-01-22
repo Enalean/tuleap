@@ -1,5 +1,7 @@
 <li class="result {{ type }}">
-    <a class="title" href="{{ url }}">{{{ item_title }}}</a>
+    <a class="title" href="{{ url }}">
+        {{ item_title }} {{# item_class }}<span class="{{ item_class }} xref-in-title">{{ item_xref }}</span>{{/ item_class }}
+    </a>
     <p class="subtitle">Project: {{ project_name }}<p>
 
     {{# display_permissions }}
