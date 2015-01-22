@@ -168,4 +168,9 @@ class AdminPresenter {
     public function title_label() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'title');
     }
+
+    public function token() {
+        $token = new CSRFSynchronizerToken('/plugins/agiledashboard/?action=admin');
+        return $token->fetchHTMLInput();
+    }
 }

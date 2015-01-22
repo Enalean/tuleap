@@ -254,6 +254,9 @@ class AgileDashboard_Controller extends MVC2_PluginController {
             return false;
         }
 
+        $token = new CSRFSynchronizerToken('/plugins/agiledashboard/?action=admin');
+        $token->check('/', $this->request);
+
         return true;
     }
 

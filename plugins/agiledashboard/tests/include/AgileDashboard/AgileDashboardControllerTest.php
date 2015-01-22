@@ -28,16 +28,20 @@ class AgileDashboardControllerTest extends TuleapTestCase {
         Config::store();
         Config::set('codendi_dir', AGILEDASHBOARD_BASE_DIR .'/../../..');
 
+        $this->user_manager     = mock('UserManager');
         $this->request          = mock('Codendi_Request');
         $this->planning_factory = mock('PlanningFactory');
         $this->kanban_manager   = mock('AgileDashboard_KanbanManager');
         $this->config_manager   = mock('AgileDashboard_ConfigurationManager');
         $this->tracker_factory  = mock('TrackerFactory');
         $this->kanban_factory   = mock('AgileDashboard_KanbanFactory');
+
+        UserManager::setInstance($this->user_manager);
     }
 
     public function tearDown() {
         Config::restore();
+        UserManager::clearInstance();
         parent::tearDown();
     }
 
@@ -49,6 +53,7 @@ class AgileDashboardControllerTest extends TuleapTestCase {
         stub($this->request)->get('activate-ad-component')->returns('');
         stub($this->request)->get('group_id')->returns(123);
         stub($this->request)->getCurrentUser()->returns($admin_user);
+        stub($this->user_manager)->getCurrentUser()->returns($admin_user);
 
         $controller = new AgileDashboard_Controller(
             $this->request,
@@ -73,6 +78,7 @@ class AgileDashboardControllerTest extends TuleapTestCase {
         stub($this->request)->exist('kanban-title-admin')->returns(false);
         stub($this->request)->get('group_id')->returns(123);
         stub($this->request)->getCurrentUser()->returns($admin_user);
+        stub($this->user_manager)->getCurrentUser()->returns($admin_user);
 
         $controller = new AgileDashboard_Controller(
             $this->request,
@@ -95,6 +101,7 @@ class AgileDashboardControllerTest extends TuleapTestCase {
         stub($this->request)->get('activate-ad-service')->returns('');
         stub($this->request)->get('group_id')->returns(123);
         stub($this->request)->getCurrentUser()->returns($user);
+        stub($this->user_manager)->getCurrentUser()->returns($user);
 
         $controller = new AgileDashboard_Controller(
             $this->request,
@@ -121,6 +128,7 @@ class AgileDashboardControllerTest extends TuleapTestCase {
         stub($this->tracker_factory)->getTrackerById(123)->returns($tracker);
         stub($this->kanban_manager)->doesKanbanExistForTracker($tracker)->returns(true);
         stub($this->planning_factory)->getPlanningsByBacklogTracker($tracker)->returns(array());
+        stub($this->user_manager)->getCurrentUser()->returns($admin_user);
 
         $controller = new AgileDashboard_Controller(
             $this->request,
@@ -147,6 +155,7 @@ class AgileDashboardControllerTest extends TuleapTestCase {
         stub($this->tracker_factory)->getTrackerById(123)->returns($tracker);
         stub($this->kanban_manager)->doesKanbanExistForTracker($tracker)->returns(true);
         stub($this->planning_factory)->getPlanningByPlanningTracker($tracker)->returns(array());
+        stub($this->user_manager)->getCurrentUser()->returns($admin_user);
 
         $controller = new AgileDashboard_Controller(
             $this->request,
