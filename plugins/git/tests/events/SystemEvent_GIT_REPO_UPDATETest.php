@@ -25,7 +25,7 @@ require_once dirname(__FILE__).'/../bootstrap.php';
 
 class SystemEvent_GIT_REPO_UPDATETest extends TuleapTestCase {
     private $repository_id = 115;
-    private $manifest_manager;
+    private $system_event_manager;
 
     public function setUp() {
         parent::setUp();
@@ -35,17 +35,17 @@ class SystemEvent_GIT_REPO_UPDATETest extends TuleapTestCase {
         $this->repository = mock('GitRepository');
         stub($this->repository)->getBackend()->returns($this->backend);
 
-        $this->repository_factory = mock('GitRepositoryFactory');
-        $this->system_event_dao   = mock('SystemEventDao');
-        $this->manifest_manager   = mock('Git_Mirror_ManifestManager');
+        $this->repository_factory   = mock('GitRepositoryFactory');
+        $this->system_event_dao     = mock('SystemEventDao');
+        $this->system_event_manager = mock('Git_SystemEventManager');
 
         $this->event = partial_mock('SystemEvent_GIT_REPO_UPDATE', array('done', 'warning', 'error', 'getId'));
         $this->event->setParameters("$this->repository_id");
         $this->event->injectDependencies(
             $this->repository_factory,
             $this->system_event_dao,
-            $this->manifest_manager,
-            mock('Logger')
+            mock('Logger'),
+            $this->system_event_manager
         );
     }
 
@@ -85,7 +85,7 @@ class SystemEvent_GIT_REPO_UPDATETest extends TuleapTestCase {
     public function itAskToUpdateGrokmirrorManifestFiles() {
         stub($this->repository_factory)->getRepositoryById()->returns($this->repository);
 
-        expect($this->manifest_manager)->triggerUpdate($this->repository)->once();
+        expect($this->system_event_manager)->queueGrokMirrorManifest($this->repository)->once();
 
         $this->event->process();
     }

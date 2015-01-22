@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014-2015. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -38,14 +38,9 @@ class Git_Mirror_ManifestManager {
         $this->generator   = $generator;
     }
 
-    public function triggerUpdateByRoot(GitRepository $repository) {
-        $this->triggerUpdate($repository);
-        $this->forceFileOwnershipToAppUser();
-    }
-
     public function triggerUpdate(GitRepository $repository) {
-        $all_mirrors        = $this->data_mapper->fetchAll();
         $repository_mirrors = $this->data_mapper->fetchAllRepositoryMirrors($repository);
+        $all_mirrors        = $this->data_mapper->fetchAll();
 
         foreach ($repository_mirrors as $mirror) {
             $this->generator->addRepositoryToManifestFile($mirror, $repository);
@@ -53,7 +48,7 @@ class Git_Mirror_ManifestManager {
 
         $not_repository_mirrors = array_diff($all_mirrors, $repository_mirrors);
         foreach ($not_repository_mirrors as $mirror) {
-            $this->generator->removeRepositoryFromManifestFile($mirror, $repository);
+            $this->generator->removeRepositoryFromManifestFile($mirror, $repository->getPath());
         }
     }
 
@@ -71,10 +66,10 @@ class Git_Mirror_ManifestManager {
         $this->forceFileOwnershipToAppUser();
     }
 
-    public function triggerDelete(GitRepository $repository) {
+    public function triggerDelete($repository_path) {
         $all_mirrors = $this->data_mapper->fetchAll();
         foreach ($all_mirrors as $mirror) {
-            $this->generator->removeRepositoryFromManifestFile($mirror, $repository);
+            $this->generator->removeRepositoryFromManifestFile($mirror, $repository_path);
         }
     }
 

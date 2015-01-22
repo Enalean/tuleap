@@ -87,17 +87,17 @@ class Git_Mirror_ManifestManagerTest extends TuleapTestCase {
         );
 
         expect($this->generator)->addRepositoryToManifestFile($this->noida_mirror, $this->repository)->once();
-        expect($this->generator)->removeRepositoryFromManifestFile($this->singapour_mirror, $this->repository)->once();
+        expect($this->generator)->removeRepositoryFromManifestFile($this->singapour_mirror, $this->repository->getPath())->once();
 
         $this->manager->triggerUpdate($this->repository);
     }
 
     public function itAsksToDeleteTheRepositoryFromAllManifests() {
-        expect($this->generator)->removeRepositoryFromManifestFile('*', $this->repository)->count(2);
-        expect($this->generator)->removeRepositoryFromManifestFile($this->singapour_mirror, $this->repository)->at(0);
-        expect($this->generator)->removeRepositoryFromManifestFile($this->noida_mirror, $this->repository)->at(1);
+        expect($this->generator)->removeRepositoryFromManifestFile('*', $this->repository->getPath())->count(2);
+        expect($this->generator)->removeRepositoryFromManifestFile($this->singapour_mirror, $this->repository->getPath())->at(0);
+        expect($this->generator)->removeRepositoryFromManifestFile($this->noida_mirror, $this->repository->getPath())->at(1);
 
-        $this->manager->triggerDelete($this->repository);
+        $this->manager->triggerDelete($this->repository->getPath());
     }
 
     public function itEnsuresThatManifestFilesOfMirrorsContainTheRepositories() {

@@ -91,7 +91,7 @@ class Git_Mirror_ManifestFileGenerator_removeTest extends Git_Mirror_ManifestFil
     public function itDoesNotCreateManifestFileIfItDoesNotExist() {
         $this->assertFalse(is_file($this->manifest_file_for_singapour));
 
-        $this->generator->removeRepositoryFromManifestFile($this->singapour_mirror, $this->kernel_repository);
+        $this->generator->removeRepositoryFromManifestFile($this->singapour_mirror, $this->kernel_repository->getPath());
 
         $this->assertFalse(is_file($this->manifest_file_for_singapour));
     }
@@ -99,7 +99,7 @@ class Git_Mirror_ManifestFileGenerator_removeTest extends Git_Mirror_ManifestFil
     public function itRemovesRepositoryIfItIsInTheManifest() {
         $this->forgeExistingManifestFile($this->manifest_file_for_singapour);
 
-        $this->generator->removeRepositoryFromManifestFile($this->singapour_mirror, $this->kernel_repository);
+        $this->generator->removeRepositoryFromManifestFile($this->singapour_mirror, $this->kernel_repository->getPath());
 
         $content = $this->getManifestContent($this->manifest_file_for_singapour);
         $this->assertFalse(isset($content["/linux/kernel.git"]));
@@ -110,7 +110,7 @@ class Git_Mirror_ManifestFileGenerator_removeTest extends Git_Mirror_ManifestFil
 
         expect($this->logger)->debug('removing /linux/kernel.git from manifest of mirror singapour.com (id: 1)')->once();
 
-        $this->generator->removeRepositoryFromManifestFile($this->singapour_mirror, $this->kernel_repository);
+        $this->generator->removeRepositoryFromManifestFile($this->singapour_mirror, $this->kernel_repository->getPath());
     }
 }
 

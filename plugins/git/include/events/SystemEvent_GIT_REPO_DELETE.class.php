@@ -29,20 +29,20 @@ class SystemEvent_GIT_REPO_DELETE extends SystemEvent {
     /** @var GitRepositoryFactory */
     private $repository_factory;
 
-    /** @var Git_Mirror_ManifestManager */
-    private $manifest_manager;
-
     /** @var Logger */
     private $logger;
 
+    /** @var Git_SystemEventManager */
+    private $system_event_manager;
+
     public function injectDependencies(
         GitRepositoryFactory $repository_factory,
-        Git_Mirror_ManifestManager $manifest_manager,
-        Logger $logger
+        Logger $logger,
+        Git_SystemEventManager $system_event_manager
     ) {
-        $this->repository_factory = $repository_factory;
-        $this->manifest_manager   = $manifest_manager;
-        $this->logger             = $logger;
+        $this->repository_factory   = $repository_factory;
+        $this->logger               = $logger;
+        $this->system_event_manager = $system_event_manager;
     }
 
     public function process() {
@@ -74,9 +74,11 @@ class SystemEvent_GIT_REPO_DELETE extends SystemEvent {
     }
 
     private function deleteRepo(GitRepository $repository) {
+        $path = $repository->getPath();
+
         try {
-            $this->logger->debug("Deleting repository ". $repository->getPath());
-            $this->manifest_manager->triggerDelete($repository);
+            $this->logger->debug("Deleting repository ". $path);
+            $this->system_event_manager->queueGrokMirrorManifestRepoDelete($path);
             $repository->delete();
         } catch (Exception $e) {
             $this->error($e->getMessage());

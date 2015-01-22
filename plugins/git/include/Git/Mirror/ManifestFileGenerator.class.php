@@ -49,11 +49,11 @@ class Git_Mirror_ManifestFileGenerator {
         $this->writeManifest($filename, $list_of_repositories);
     }
 
-    public function removeRepositoryFromManifestFile(Git_Mirror_Mirror $mirror, GitRepository $repository) {
+    public function removeRepositoryFromManifestFile(Git_Mirror_Mirror $mirror, $repository_path) {
         $filename = $this->getManifestFilenameForMirror($mirror);
 
         $list_of_repositories = $this->getListOfRepositoriesFromManifest($filename);
-        $key = $this->getRepositoryKey($repository);
+        $key = $this->getRepositoryKeyFromPathName($repository_path);
         if (isset($list_of_repositories[$key])) {
             $this->removeRepository($mirror, $list_of_repositories, $key);
             $this->writeManifest($filename, $list_of_repositories);
@@ -148,6 +148,10 @@ class Git_Mirror_ManifestFileGenerator {
 
     private function getRepositoryKey(GitRepository $repository) {
         return '/'. $repository->getPath();
+    }
+
+    private function getRepositoryKeyFromPathName($path_name) {
+        return '/'. $path_name;
     }
 
     private function getListOfRepositoriesFromManifest($filename) {

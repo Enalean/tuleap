@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011, 2012, 2013, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -224,16 +224,16 @@ class GitPlugin extends Plugin {
                 $params['dependencies'] = array(
                     $this->getRepositoryFactory(),
                     $this->getSystemEventDao(),
-                    $this->getManifestManager(),
                     $this->getLogger(),
+                    $this->getGitSystemEventManager()
                 );
                 break;
             case SystemEvent_GIT_REPO_DELETE::NAME:
                 $params['class'] = 'SystemEvent_GIT_REPO_DELETE';
                 $params['dependencies'] = array(
                     $this->getRepositoryFactory(),
-                    $this->getManifestManager(),
                     $this->getLogger(),
+                    $this->getGitSystemEventManager(),
                 );
                 break;
             case SystemEvent_GIT_LEGACY_REPO_DELETE::NAME:
@@ -294,10 +294,22 @@ class GitPlugin extends Plugin {
                     UserManager::instance()
                 );
                 break;
-            case SystemEvent_GIT_GROKMIRROR_MANIFEST::NAME:
-                $params['class'] = 'SystemEvent_GIT_GROKMIRROR_MANIFEST';
+            case SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE::NAME:
+                $params['class'] = 'SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE';
                 $params['dependencies'] = array(
                     $this->getRepositoryFactory(),
+                    $this->getManifestManager(),
+                );
+                break;
+            case SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECK::NAME:
+                $params['class'] = 'SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECK';
+                $params['dependencies'] = array(
+                    $this->getManifestManager(),
+                );
+                break;
+            case SystemEvent_GIT_GROKMIRROR_MANIFEST_REPODELETE::NAME:
+                $params['class'] = 'SystemEvent_GIT_GROKMIRROR_MANIFEST_REPODELETE';
+                $params['dependencies'] = array(
                     $this->getManifestManager(),
                 );
                 break;
@@ -710,9 +722,12 @@ class GitPlugin extends Plugin {
             $this->getGitoliteAdminPath()
         );
         $gitolite_driver  = $this->getGitoliteDriver();
-        $manifest_manager = $this->getManifestManager();
 
-        $system_check = new Git_SystemCheck($gitgc, $gitolite_driver, $manifest_manager);
+        $system_check = new Git_SystemCheck(
+            $gitgc,
+            $gitolite_driver,
+            $this->getGitSystemEventManager()
+        );
         $system_check->process();
     }
 
@@ -1331,11 +1346,12 @@ class GitPlugin extends Plugin {
 
         $this->getGitoliteDriver()->commit('Modifications from events ' . implode(',', $executed_events_ids));
         $this->getGitoliteDriver()->push();
-        $this->getManifestManager()->triggerUpdate(new GitRepositoryGitoliteAdmin());
     }
 
     private function pluginIsConcerned($params) {
-        return $params['queue_name'] == "git";
+        return $params['queue_name'] == "git"
+            && is_array($params['executed_events_ids'])
+            && count($params['executed_events_ids']) > 0;
     }
 
     public function rest_project_get_git($params) {

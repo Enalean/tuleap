@@ -24,18 +24,17 @@ class Git_SystemCheckTest extends TuleapTestCase {
 
     private $driver;
     private $gitgc;
-    private $manifest_manager;
 
     /** @var Git_SystemCheck */
     private $system_check;
 
     public function setUp() {
         parent::setUp();
-        $this->driver           = mock('Git_GitoliteDriver');
-        $this->gitgc            = mock('Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc');
-        $this->manifest_manager = mock('Git_Mirror_ManifestManager');
+        $this->driver               = mock('Git_GitoliteDriver');
+        $this->gitgc                = mock('Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc');
+        $this->system_event_manager = mock('Git_SystemEventManager');
 
-        $this->system_check = new Git_SystemCheck($this->gitgc, $this->driver, $this->manifest_manager);
+        $this->system_check = new Git_SystemCheck($this->gitgc, $this->driver, $this->system_event_manager);
     }
 
     public function itAsksToCheckAuthorizedKeys() {
@@ -51,7 +50,7 @@ class Git_SystemCheckTest extends TuleapTestCase {
     }
 
     public function itAsksToCheckManifestFiles() {
-        expect($this->manifest_manager)->checkManifestFiles()->once();
+        expect($this->system_event_manager)->queueGrokMirrorManifestCheck()->once();
 
         $this->system_check->process();
     }
