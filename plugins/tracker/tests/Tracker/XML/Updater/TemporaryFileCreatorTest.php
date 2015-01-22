@@ -1,0 +1,74 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2014. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
+
+class Tracker_XML_Updater_TemporaryFileCreatorTest extends TuleapTestCase {
+
+    /** @var Tracker_XML_Updater_TemporaryFileCreator */
+    private $creator;
+
+    public function setUp() {
+        parent::setUp();
+        Config::store();
+        Config::set('tmp_dir', $this->getTempDir());
+
+        $this->creator = new Tracker_XML_Updater_TemporaryFileCreator();
+        $this->initial = dirname(__FILE__).'/_fixtures/toto.txt';
+    }
+
+    private function getTempDir() {
+        if (! function_exists('sys_get_temp_dir')) {
+            return '/tmp';
+        }
+
+        return sys_get_temp_dir();
+    }
+
+    public function tearDown() {
+        Config::restore();
+        parent::tearDown();
+    }
+
+    public function itCreatesTemporaryFile() {
+        $copy = $this->creator->createTemporaryFile($this->initial);
+        $this->assertEqual(file_get_contents($this->initial), file_get_contents($copy));
+    }
+
+    public function itCreatesFileInPlateformDefinedTmpDir() {
+        $copy = $this->creator->createTemporaryFile($this->initial);
+        $this->assertTrue(strpos($copy, Config::get('tmp_dir')) === 0);
+    }
+
+    public function itCreatesFileInATemporaryDirectoryThatIsDifferentFromOtherCreators() {
+        $another_creator = new Tracker_XML_Updater_TemporaryFileCreator();
+        $this->assertNotEqual(
+            $this->creator->getTemporaryDirectory(),
+            $another_creator->getTemporaryDirectory()
+        );
+    }
+
+    public function itCleanUpEverythingAtTheVeryEnd() {
+        $temporary_directory = $this->creator->getTemporaryDirectory();
+
+        unset($this->creator);
+
+        $this->assertFalse(file_exists($temporary_directory));
+    }
+}

@@ -21,22 +21,22 @@
 class Tracker_Action_CopyArtifact {
 
     /**
-     * @var Tracker_XMLImporter_ArtifactImportedMapping
+     * @var Tracker_XML_Importer_ArtifactImportedMapping
      */
     private $artifacts_imported_mapping;
 
     /**
-     * @var Tracker_XMLImporter_ChildrenXMLImporter
+     * @var Tracker_XML_Importer_ChildrenXMLImporter
      */
     private $children_xml_importer;
 
     /**
-     * @var Tracker_XMLUpdater_TemporaryFileXMLUpdater
+     * @var Tracker_XML_Updater_TemporaryFileXMLUpdater
      */
     private $file_updater;
 
     /**
-     * @var Tracker_XMLUpdater_ChangesetXMLUpdater
+     * @var Tracker_XML_Updater_ChangesetXMLUpdater
      */
     private $xml_updater;
 
@@ -51,7 +51,7 @@ class Tracker_Action_CopyArtifact {
     private $xml_importer;
 
     /**
-     * @var Tracker_XMLExporter_ArtifactXMLExporter
+     * @var Tracker_XML_Exporter_ArtifactXMLExporter
      */
     private $xml_exporter;
 
@@ -61,20 +61,20 @@ class Tracker_Action_CopyArtifact {
     private $artifact_factory;
 
     /**
-     * @var Tracker_XMLImporter_CopyArtifactInformationsAggregator */
+     * @var Tracker_XML_Importer_CopyArtifactInformationsAggregator */
     private $logger;
 
     public function __construct(
         Tracker $tracker,
         Tracker_ArtifactFactory $artifact_factory,
-        Tracker_XMLExporter_ArtifactXMLExporter $xml_exporter,
+        Tracker_XML_Exporter_ArtifactXMLExporter $xml_exporter,
         Tracker_Artifact_XMLImport $xml_importer,
-        Tracker_XMLUpdater_ChangesetXMLUpdater $xml_updater,
-        Tracker_XMLUpdater_TemporaryFileXMLUpdater $file_updater,
-        Tracker_XMLExporter_ChildrenXMLExporter $children_xml_exporter,
-        Tracker_XMLImporter_ChildrenXMLImporter $children_xml_importer,
-        Tracker_XMLImporter_ArtifactImportedMapping $artifacts_imported_mapping,
-        Tracker_XMLImporter_CopyArtifactInformationsAggregator $logger
+        Tracker_XML_Updater_ChangesetXMLUpdater $xml_updater,
+        Tracker_XML_Updater_TemporaryFileXMLUpdater $file_updater,
+        Tracker_XML_Exporter_ChildrenXMLExporter $children_xml_exporter,
+        Tracker_XML_Importer_ChildrenXMLImporter $children_xml_importer,
+        Tracker_XML_Importer_ArtifactImportedMapping $artifacts_imported_mapping,
+        Tracker_XML_Importer_CopyArtifactInformationsAggregator $logger
     ) {
         $this->tracker                    = $tracker;
         $this->artifact_factory           = $artifact_factory;
@@ -118,8 +118,8 @@ class Tracker_Action_CopyArtifact {
 
         try {
             $this->processCopy($from_changeset, $current_user, $submitted_values);
-        } catch (Tracker_XMLExporter_TooManyChildrenException $exception) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'copy_too_many_children', array(Tracker_XMLExporter_ChildrenCollector::MAX)));
+        } catch (Tracker_XML_Exporter_TooManyChildrenException $exception) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'copy_too_many_children', array(Tracker_XML_ChildrenCollector::MAX)));
             $this->redirectToArtifact($from_artifact);
         }
     }
