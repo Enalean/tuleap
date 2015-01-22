@@ -38,7 +38,7 @@
       </optional>
       <optional>
         <!-- default is false -->
-        <attribute name="show_priority_changes">
+        <attribute name="log_priority_changes">
           <choice>
             <value>0</value>
             <value>1</value>

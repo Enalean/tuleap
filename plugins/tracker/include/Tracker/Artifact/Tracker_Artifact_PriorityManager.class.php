@@ -115,16 +115,24 @@ class Tracker_Artifact_PriorityManager {
     }
 
     private function logPriorityChange($moved_artifact_id, $artifact_higher_id, $artifact_lower_id, $context_id, $project_id, $old_global_rank) {
-        $this->priority_history_dao->logPriorityChange(
-            $moved_artifact_id,
-            $artifact_higher_id,
-            $artifact_lower_id,
-            $context_id,
-            $project_id,
-            $this->user_manager->getCurrentUser()->getId(),
-            time(),
-            $old_global_rank
-        );
+        $artifact = $this->tracker_artifact_factory->getArtifactById($moved_artifact_id);
+
+        if ($artifact) {
+            $tracker = $artifact->getTracker();
+
+            if ($tracker && $tracker->arePriorityChangesShown()) {
+                $this->priority_history_dao->logPriorityChange(
+                    $moved_artifact_id,
+                    $artifact_higher_id,
+                    $artifact_lower_id,
+                    $context_id,
+                    $project_id,
+                    $this->user_manager->getCurrentUser()->getId(),
+                    time(),
+                    $old_global_rank
+                );
+            }
+        }
     }
 
     /**

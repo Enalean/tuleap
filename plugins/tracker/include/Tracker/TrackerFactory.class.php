@@ -172,7 +172,7 @@ class TrackerFactory {
                     $row['status'],
                     $row['deletion_date'],
                     $row['instantiate_for_new_projects'],
-                    $row['show_priority_changes'],
+                    $row['log_priority_changes'],
                     $row['stop_notification'],
                     $row['color']
         );
@@ -209,8 +209,8 @@ class TrackerFactory {
                 (int) $att['allow_copy'] : 0;
         $row['instantiate_for_new_projects'] = isset($att['instantiate_for_new_projects']) ?
                 (int) $att['instantiate_for_new_projects'] : 0;
-        $row['show_priority_changes'] = isset($att['show_priority_changes']) ?
-                (int) $att['show_priority_changes'] : 0;
+        $row['log_priority_changes'] = isset($att['log_priority_changes']) ?
+                (int) $att['log_priority_changes'] : 0;
         $row['stop_notification'] = isset($att['stop_notification']) ?
                 (int) $att['stop_notification'] : 0;
 
@@ -903,7 +903,7 @@ class TrackerFactory {
                 '',
                 '',
                 $tracker->instantiate_for_new_projects,
-                $tracker->show_priority_changes,
+                $tracker->log_priority_changes,
                 $tracker->stop_notification,
                 $tracker->color
         );
