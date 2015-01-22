@@ -1,3 +1,6 @@
+Version 4.9 - Tuleap 7.10
+    * story #7697: put all grok events into system events
+
 Version 4.8 - Tuleap 7.10
     * story #7697: adding a grokmirror queue
 
