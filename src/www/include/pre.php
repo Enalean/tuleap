@@ -8,6 +8,10 @@
 //
 // 
 
+// Protection against clickjacking
+header('X-Frame-Options: SAMEORIGIN');
+header("Content-Security-Policy: frame-ancestors 'self';");
+
 //various server utilities.
 require_once('server.php');
 
