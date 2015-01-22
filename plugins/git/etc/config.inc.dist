@@ -8,7 +8,7 @@ $weeks_number   = 12;
 
 // Allow to define a custom gitphp path (instead of tuleap bundled one).
 // -> mainly used for tests
-// $gitphp_path = "/usr/share/gitphp-tuleap";
+$gitphp_path = "/usr/share/gitphp-tuleap";
 
 //
 // Urls
