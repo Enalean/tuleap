@@ -536,7 +536,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                 $http = Codendi_HTTPPurifier::instance();
                 header('Content-Type: '.$http->purify($fileinfo->getFiletype()));
                 header('Content-Length: '.$http->purify($fileinfo->getFilesize()));
-                header('Content-Disposition: filename="'.$http->purify($fileinfo->getFilename()).'"');
+                header('Content-Disposition: attachment; filename="'.$http->purify($fileinfo->getFilename()).'"');
                 header('Content-Description: '. $http->purify($fileinfo->getDescription()));
                 readfile($fileinfo->getPath());
             }
