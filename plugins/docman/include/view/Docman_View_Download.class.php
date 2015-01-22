@@ -33,7 +33,7 @@ class Docman_View_Download extends Docman_View_View {
                 header('Cache-control: private, must-revalidate'); // IE & HTTPS
                 header('Content-Type: '. $version->getFiletype());
                 header('Content-Length: '. $version->getFilesize());
-                header('Content-Disposition: filename="'. $version->getFilename() .'"');
+                header('Content-Disposition: attachment; filename="'. $version->getFilename() .'"');
                 readfile($version->getPath());
             } else {
                 $this->_controller->feedback->log('error', 'The file cannot be found.');
