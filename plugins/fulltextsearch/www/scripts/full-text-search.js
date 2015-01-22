@@ -134,4 +134,15 @@ tuleap.search = tuleap.search || {};
         }
     };
 
+    $(document).ready(function() {
+        $('.search-again').click(function() {
+            if (tuleap.search.isPaneFullText()
+                && ! tuleap.search.didUserClickOnDefaultSearch($(this))
+            ) {
+                tuleap.search.fulltext.updateResults();
+                return false;
+            }
+        })
+    });
+
 })(window.jQuery);

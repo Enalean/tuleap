@@ -2,13 +2,13 @@
     <form action="/search/" method="post">
         <div class="input-append">
             <input class="input-xlarge" type="text" id="words" name="words" value="{{ words }}">
-            <input type="hidden" name="type_of_search" value="{{ type_of_search }}">
+            <input type="hidden" name="type_of_search" id="type_of_search" value="{{ type_of_search }}">
             <input type="hidden" name="number_of_page_results" value="{{ number_of_page_results }}">
             <input type="hidden" name="exact" value="0">
             {{# group_id }}
                 <input type="hidden" name="group_id" value="{{ group_id }}">
             {{/ group_id }}
-            <button class="btn"><i class="icon-search"></i></button>
+            <button class="btn search-again"><i class="icon-search"></i></button>
         </div>
     </form>
 </div>

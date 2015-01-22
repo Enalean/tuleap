@@ -383,7 +383,7 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
             $types[] = ElasticSearch_SearchResultWiki::TYPE_IDENTIFIER;
         }
 
-        if (isset($facets[ElasticSearch_SearchResultTracker::TYPE_IDENTIFIER]) && count($facets['group_id']) == 1) {
+        if (isset($facets[ElasticSearch_SearchResultTracker::TYPE_IDENTIFIER]) && isset($facets['group_id']) && count($facets['group_id']) == 1) {
             $types[] = ElasticSearch_SearchResultTracker::TYPE_IDENTIFIER;
         }
 
