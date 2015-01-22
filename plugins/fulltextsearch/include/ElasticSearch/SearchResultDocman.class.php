@@ -22,7 +22,6 @@ class ElasticSearch_SearchResultDocman extends ElasticSearch_SearchResult {
 
     const TYPE_IDENTIFIER = 'docman';
 
-    public $item_title;
     public $url;
           
     public function __construct(array $hit, Project $project) {
