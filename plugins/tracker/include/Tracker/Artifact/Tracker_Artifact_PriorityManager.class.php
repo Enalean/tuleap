@@ -82,7 +82,11 @@ class Tracker_Artifact_PriorityManager {
     public function moveArtifactBeforeWithHistoryChangeLogging($artifact_id, $successor_id, $context_id, $project_id) {
         $old_global_rank = $this->getGlobalRank($artifact_id);
         $this->priority_dao->moveArtifactBefore($artifact_id, $successor_id);
-        $this->logPriorityChange($artifact_id, $artifact_id, $successor_id, $context_id, $project_id, $old_global_rank);
+        $new_global_rank = $this->getGlobalRank($artifact_id);
+
+        if ($old_global_rank !== $new_global_rank) {
+            $this->logPriorityChange($artifact_id, $artifact_id, $successor_id, $context_id, $project_id, $old_global_rank);
+        }
     }
 
     public function moveArtifactAfter($artifact_id, $predecessor_id) {
@@ -92,7 +96,11 @@ class Tracker_Artifact_PriorityManager {
     public function moveArtifactAfterWithHistoryChangeLogging($artifact_id, $predecessor_id, $context_id, $project_id) {
         $old_global_rank = $this->getGlobalRank($artifact_id);
         $this->priority_dao->moveArtifactAfter($artifact_id, $predecessor_id);
-        $this->logPriorityChange($artifact_id, $predecessor_id, $artifact_id, $context_id, $project_id, $old_global_rank);
+        $new_global_rank = $this->getGlobalRank($artifact_id);
+
+        if ($old_global_rank !== $new_global_rank) {
+            $this->logPriorityChange($artifact_id, $predecessor_id, $artifact_id, $context_id, $project_id, $old_global_rank);
+        }
     }
 
     public function moveListOfArtifactsBefore(array $list_of_artifact_ids, $successor_id, $context_id, $project_id) {
