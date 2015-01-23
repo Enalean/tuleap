@@ -677,7 +677,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 $action->process($layout, $request, $current_user);
                 break;
             case 'submit-copy-artifact':
-                $logger                    = new Tracker_XMLImporter_CopyArtifactInformationsAggregator(new BackendLogger());
+                $logger                    = new Tracker_XML_Importer_CopyArtifactInformationsAggregator(new BackendLogger());
                 $xml_importer              = $this->getArtifactXMLImporterForArtifactCopy($logger);
                 $artifact_factory          = $this->getTrackerArtifactFactory();
                 $file_xml_updater          = $this->getFileXMLUpdater();
@@ -690,19 +690,19 @@ class Tracker implements Tracker_Dispatchable_Interface {
                     $xml_importer,
                     $this->getChangesetXMLUpdater(),
                     $file_xml_updater,
-                    new Tracker_XMLExporter_ChildrenXMLExporter(
+                    new Tracker_XML_Exporter_ChildrenXMLExporter(
                         $artifact_xml_exporter,
                         $file_xml_updater,
                         $artifact_factory,
                         $export_children_collector
                     ),
-                    new Tracker_XMLImporter_ChildrenXMLImporter(
+                    new Tracker_XML_Importer_ChildrenXMLImporter(
                         $xml_importer,
                         $this->getTrackerFactory(),
                         $this->getTrackerArtifactFactory(),
-                        new Tracker_XMLExporter_ChildrenCollector()
+                        new Tracker_XML_ChildrenCollector()
                     ),
-                    new Tracker_XMLImporter_ArtifactImportedMapping(),
+                    new Tracker_XML_Importer_ArtifactImportedMapping(),
                     $logger
                 );
                 $action->process($layout, $request, $current_user);
@@ -3190,7 +3190,7 @@ EOS;
         return TRACKER_BASE_URL . '/?tracker=' . $this->getId();
     }
 
-    private function getArtifactXMLImporterForArtifactCopy(Tracker_XMLImporter_CopyArtifactInformationsAggregator $logger) {
+    private function getArtifactXMLImporterForArtifactCopy(Tracker_XML_Importer_CopyArtifactInformationsAggregator $logger) {
         $fields_validator      = new Tracker_Artifact_Changeset_AtGivenDateFieldsValidator(
             $this->getFormElementFactory()
         );
@@ -3235,54 +3235,54 @@ EOS;
 
     private function getChildrenCollector(Codendi_Request $request) {
         if ($request->get('copy_children')) {
-            return new Tracker_XMLExporter_ChildrenCollector();
+            return new Tracker_XML_ChildrenCollector();
         }
 
-        return new Tracker_XMLExporter_NullChildrenCollector();
+        return new Tracker_XML_Exporter_NullChildrenCollector();
     }
 
     private function getArtifactXMLExporter(
-        Tracker_XMLExporter_ChildrenCollector $children_collector,
+        Tracker_XML_ChildrenCollector $children_collector,
         PFUser $current_user
     ) {
-        $visitor = new Tracker_XMLExporter_ChangesetValueXMLExporterVisitor(
-            new Tracker_XMLExporter_ChangesetValue_ChangesetValueDateXMLExporter(),
-            new Tracker_XMLExporter_ChangesetValue_ChangesetValueFileXMLExporter(
-                new Tracker_XMLExporter_LocalAbsoluteFilePathXMLExporter()
+        $visitor = new Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor(
+            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueDateXMLExporter(),
+            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter(
+                new Tracker_XML_Exporter_LocalAbsoluteFilePathXMLExporter()
             ),
-            new Tracker_XMLExporter_ChangesetValue_ChangesetValueFloatXMLExporter(),
-            new Tracker_XMLExporter_ChangesetValue_ChangesetValueIntegerXMLExporter(),
-            new Tracker_XMLExporter_ChangesetValue_ChangesetValueStringXMLExporter(),
-            new Tracker_XMLExporter_ChangesetValue_ChangesetValueTextXMLExporter(),
-            new Tracker_XMLExporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter(),
-            new Tracker_XMLExporter_ChangesetValue_ChangesetValueListXMLExporter(),
-            new Tracker_XMLExporter_ChangesetValue_ChangesetValueOpenListXMLExporter(),
-            new Tracker_XMLExporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter(
+            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueFloatXMLExporter(),
+            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporter(),
+            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueStringXMLExporter(),
+            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporter(),
+            new Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter(),
+            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter(),
+            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter(),
+            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter(
                 $children_collector,
                 $current_user
             ),
-            new Tracker_XMLExporter_ChangesetValue_ChangesetValueUnknownXMLExporter()
+            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueUnknownXMLExporter()
         );
-        $values_exporter    = new Tracker_XMLExporter_ChangesetValuesXMLExporter($visitor);
-        $changeset_exporter = new Tracker_XMLExporter_ChangesetXMLExporter($values_exporter);
+        $values_exporter    = new Tracker_XML_Exporter_ChangesetValuesXMLExporter($visitor);
+        $changeset_exporter = new Tracker_XML_Exporter_ChangesetXMLExporter($values_exporter);
 
-        return new Tracker_XMLExporter_ArtifactXMLExporter($changeset_exporter);
+        return new Tracker_XML_Exporter_ArtifactXMLExporter($changeset_exporter);
     }
 
     private function getChangesetXMLUpdater() {
-        $visitor = new Tracker_XMLUpdater_FieldChangeXMLUpdaterVisitor(
-            new Tracker_XMLUpdater_FieldChange_FieldChangeDateXMLUpdater(),
-            new Tracker_XMLUpdater_FieldChange_FieldChangeFloatXMLUpdater(),
-            new Tracker_XMLUpdater_FieldChange_FieldChangeIntegerXMLUpdater(),
-            new Tracker_XMLUpdater_FieldChange_FieldChangeTextXMLUpdater(),
-            new Tracker_XMLUpdater_FieldChange_FieldChangeStringXMLUpdater(),
-            new Tracker_XMLUpdater_FieldChange_FieldChangePermissionsOnArtifactXMLUpdater(),
-            new Tracker_XMLUpdater_FieldChange_FieldChangeListXMLUpdater(),
-            new Tracker_XMLUpdater_FieldChange_FieldChangeOpenListXMLUpdater(),
-            new Tracker_XMLUpdater_FieldChange_FieldChangeUnknownXMLUpdater()
+        $visitor = new Tracker_XML_Updater_FieldChangeXMLUpdaterVisitor(
+            new Tracker_XML_Updater_FieldChange_FieldChangeDateXMLUpdater(),
+            new Tracker_XML_Updater_FieldChange_FieldChangeFloatXMLUpdater(),
+            new Tracker_XML_Updater_FieldChange_FieldChangeIntegerXMLUpdater(),
+            new Tracker_XML_Updater_FieldChange_FieldChangeTextXMLUpdater(),
+            new Tracker_XML_Updater_FieldChange_FieldChangeStringXMLUpdater(),
+            new Tracker_XML_Updater_FieldChange_FieldChangePermissionsOnArtifactXMLUpdater(),
+            new Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdater(),
+            new Tracker_XML_Updater_FieldChange_FieldChangeOpenListXMLUpdater(),
+            new Tracker_XML_Updater_FieldChange_FieldChangeUnknownXMLUpdater()
         );
 
-        return new Tracker_XMLUpdater_ChangesetXMLUpdater(
+        return new Tracker_XML_Updater_ChangesetXMLUpdater(
             $visitor,
             $this->getFormElementFactory()
         );
@@ -3290,8 +3290,8 @@ EOS;
     }
 
     private function getFileXMLUpdater() {
-        return new Tracker_XMLUpdater_TemporaryFileXMLUpdater(
-            new Tracker_XMLUpdater_TemporaryFileCreator()
+        return new Tracker_XML_Updater_TemporaryFileXMLUpdater(
+            new Tracker_XML_Updater_TemporaryFileCreator()
         );
     }
 }

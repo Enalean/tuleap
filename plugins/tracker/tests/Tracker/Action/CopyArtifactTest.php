@@ -30,7 +30,7 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
     /** @var Codendi_Request */
     private $request;
 
-    /** @var Tracker_XMLExporter_ArtifactXMLExporter */
+    /** @var Tracker_XML_Exporter_ArtifactXMLExporter */
     private $xml_exporter;
 
     /** @var int */
@@ -54,7 +54,7 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
     /** @var Tracker_Artifact_XMLImport */
     private $xml_importer;
 
-    /** @var Tracker_XMLUpdater_ChangesetXMLUpdater */
+    /** @var Tracker_XML_Updater_ChangesetXMLUpdater */
     private $xml_updater;
 
     /** @var array */
@@ -66,19 +66,19 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
 
-    /** @var Tracker_XMLUpdater_TemporaryFileXMLUpdater */
+    /** @var Tracker_XML_Updater_TemporaryFileXMLUpdater */
     private $file_updater;
 
-    /** @var Tracker_XMLExporter_ChildrenXMLExporter */
+    /** @var Tracker_XML_Exporter_ChildrenXMLExporter */
     private $children_xml_exporter;
 
-    /** @var Tracker_XMLImporter_ChildrenXMLImporter */
+    /** @var Tracker_XML_Importer_ChildrenXMLImporter */
     private $children_xml_importer;
 
-    /** @var Tracker_XMLImporter_ArtifactImportedMapping */
+    /** @var Tracker_XML_Importer_ArtifactImportedMapping */
     private $artifacts_imported_mapping;
 
-    /** @var Tracker_XMLImporter_CopyArtifactInformationsAggregator */
+    /** @var Tracker_XML_Importer_CopyArtifactInformationsAggregator */
     private $logger;
 
     /** @var Tracker_Artifact */
@@ -93,10 +93,10 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
         $this->new_artifact->setId($this->new_artifact_id);
         $this->layout         = mock('Tracker_IDisplayTrackerLayout');
         $this->user           = mock('PFUser');
-        $this->xml_exporter   = mock('Tracker_XMLExporter_ArtifactXMLExporter');
+        $this->xml_exporter   = mock('Tracker_XML_Exporter_ArtifactXMLExporter');
         $this->xml_importer   = mock('Tracker_Artifact_XMLImport');
-        $this->xml_updater    = mock('Tracker_XMLUpdater_ChangesetXMLUpdater');
-        $this->file_updater   = mock('Tracker_XMLUpdater_TemporaryFileXMLUpdater');
+        $this->xml_updater    = mock('Tracker_XML_Updater_ChangesetXMLUpdater');
+        $this->file_updater   = mock('Tracker_XML_Updater_TemporaryFileXMLUpdater');
         $this->from_changeset = stub('Tracker_Artifact_Changeset')->getId()->returns($this->changeset_id);
         $this->from_artifact  = partial_mock('Tracker_Artifact', array('getChangesetFactory'));
         $this->from_artifact->setId($this->artifact_id);
@@ -104,12 +104,12 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
         $this->from_artifact->setChangesets(array($this->changeset_id => $this->from_changeset));
         stub($this->from_artifact)->getChangesetFactory()->returns($changeset_factory);
         stub($this->from_changeset)->getArtifact()->returns($this->from_artifact);
-        $this->children_xml_exporter       = mock('Tracker_XMLExporter_ChildrenXMLExporter');
-        $this->children_xml_importer       = mock('Tracker_XMLImporter_ChildrenXMLImporter');
-        $this->artifacts_imported_mapping  = mock('Tracker_XMLImporter_ArtifactImportedMapping');
+        $this->children_xml_exporter       = mock('Tracker_XML_Exporter_ChildrenXMLExporter');
+        $this->children_xml_importer       = mock('Tracker_XML_Importer_ChildrenXMLImporter');
+        $this->artifacts_imported_mapping  = mock('Tracker_XML_Importer_ArtifactImportedMapping');
 
         $backend_logger = mock("BackendLogger");
-        $this->logger   = new Tracker_XMLImporter_CopyArtifactInformationsAggregator($backend_logger);
+        $this->logger   = new Tracker_XML_Importer_CopyArtifactInformationsAggregator($backend_logger);
 
         $this->submitted_values = array();
 
