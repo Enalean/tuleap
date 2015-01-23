@@ -38,7 +38,7 @@ admin_main	header_ref	Reference administration
 admin_main	configure_ref	Configuration of predefined references
 admin_main	header_tracker	Trackers administration
 admin_main	tracker_remove	Pending trackers removal
-admin_main	tracker_template	Configuration of predefined tracker templates
+admin_main	tracker_template	Configuration of predefined tracker v3 templates
 admin_main	header_stat	Statistics
 admin_main	stat_login	View most recent logins
 admin_main	stat_spu	Generate Site/Projects/Users statistics

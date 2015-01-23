@@ -30,7 +30,7 @@ admin_main	header_ref	Administration des références
 admin_main	configure_ref	Configuration des références systèmes
 admin_main	header_tracker	Administration des outils de suivi
 admin_main	tracker_remove	Nettoyage des outils de suivi en attente
-admin_main	tracker_template	Configuration des modèles d'outils de suivi
+admin_main	tracker_template	Configuration des modèles d'outils de suivi v3
 admin_main	header_stat	Statistiques
 admin_main	stat_login	Afficher les connections les plus récentes
 admin_main	stat_spu	Générer les statistiques site/projets/utilisateurs
