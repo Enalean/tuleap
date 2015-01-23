@@ -1,3 +1,6 @@
+Version 1.147 - Tuleap 7.10
+    * story #7496: Display priority changes likes an artifact change in follow-ups section
+
 Version 1.146 - Tuleap 7.10
     * story #7496: Store context of the move when available and if the priority has been raised or not
 
