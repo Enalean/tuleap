@@ -1,3 +1,6 @@
+Version 4.11 - Tuleap 7.10
+    * Fix request #7795 Lost browsing of git repository at upgrade
+
 Version 4.10 - Tuleap 7.10
     * request #7315 Delete old embedded gitphp
 
