@@ -166,36 +166,9 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         return $this->submitted_on;
     }
 
-    /**
-     * Fetch followup
-     *
-     * @return string html
-     */
-    public function fetchFollowUp() {
+    public function getFollowupContent() {
         $html = '';
 
-        $html .= $this->getAvatarIfEnabled($this->getHTMLAvatar());
-
-        $html .= '<div class="tracker_artifact_followup_header">';
-        $html .= $this->getPermalink();
-
-        if ($this->userCanEdit() ||$this->userCanDelete()) {
-            $html .= '<div class="tracker_artifact_followup_comment_controls">';
-            //edit
-            if ($this->userCanEdit()) {
-                $html .= '<a href="#" class="tracker_artifact_followup_comment_controls_edit">';
-                $html .= '<button class="btn btn-mini"><i class="icon-edit"></i> ' . $GLOBALS['Language']->getText('plugin_tracker_fieldeditor', 'edit') . '</button>';
-                $html .= '</a>';
-            }
-            $html .= '</div>';
-        }
-
-        $html .= $this->getUserLink($this->getSubmitterUrl());
-        $html .= $this->getTimeAgo($this->submitted_on);
-        $html .= '</div>';
-
-        // The content
-        $html .= '<div class="tracker_artifact_followup_content">';
         //The comment
         if ($comment = $this->getComment()) {
             $html .= '<div class="tracker_artifact_followup_comment">';
@@ -213,6 +186,41 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
             $html .= $changes;
             $html .= '</ul>';
         }
+
+        return $html;
+    }
+
+    /**
+     * Fetch followup
+     *
+     * @return string html
+     */
+    public function fetchFollowUp() {
+        $html = '';
+
+        $html .= $this->getAvatarIfEnabled();
+
+        $html .= '<div class="tracker_artifact_followup_header">';
+        $html .= $this->getPermalink();
+
+        if ($this->userCanEdit() ||$this->userCanDelete()) {
+            $html .= '<div class="tracker_artifact_followup_comment_controls">';
+            //edit
+            if ($this->userCanEdit()) {
+                $html .= '<a href="#" class="tracker_artifact_followup_comment_controls_edit">';
+                $html .= '<button class="btn btn-mini"><i class="icon-edit"></i> ' . $GLOBALS['Language']->getText('plugin_tracker_fieldeditor', 'edit') . '</button>';
+                $html .= '</a>';
+            }
+            $html .= '</div>';
+        }
+
+        $html .= $this->getUserLink();
+        $html .= $this->getTimeAgo();
+        $html .= '</div>';
+
+        // The content
+        $html .= '<div class="tracker_artifact_followup_content">';
+        $html .= $this->getFollowupContent();
         $html .= '</div>';
 
         $html .= '<div style="clear:both;"></div>';

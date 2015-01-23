@@ -22,19 +22,14 @@ class Tracker_Artifact_Presenter_FollowUpCommentsPresenter {
     /** @var PFUser */
     protected $user;
 
-    /** @var Tracker_Artifact_Changeset[] */
-    public $changesets;
+    /** @var Tracker_Artifact_Followup_Item[] */
+    public $followups;
 
-    public function __construct($changesets) {
-        $this->changesets = $changesets;
-    }
-
-    public function areAvatarsEnabled() {
-        return Config::get('sys_enable_avatars');
+    public function __construct($followups) {
+        $this->followups = $followups;
     }
 
     public function no_comment() {
         return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'no_comment');
     }
 }
-?>

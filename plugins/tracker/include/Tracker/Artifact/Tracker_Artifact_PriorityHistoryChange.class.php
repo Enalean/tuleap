@@ -144,18 +144,22 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
         return $this->prioritized_on;
     }
 
+    public function getHTMLAvatar() {
+        return $this->prioritized_by->fetchHtmlAvatar();
+    }
+
     public function fetchFollowUp() {
         $html  = '';
-        $html .= $this->getAvatarIfEnabled($this->prioritized_by->fetchHtmlAvatar());
+        $html .= $this->getAvatarIfEnabled();
 
         $html .= '<div class="tracker_artifact_followup_header">';
         $html .= $this->getPermalink();
-        $html .= $this->getUserLink($this->getSubmitterUrl());
-        $html .= $this->getTimeAgo($this->prioritized_on);
+        $html .= $this->getUserLink();
+        $html .= $this->getTimeAgo();
         $html .= '</div>';
 
         $html .= '<div class="tracker_artifact_followup_content">';
-        $html .= $this->getContent();
+        $html .= $this->getFollowupContent();
         $html .= '</div>';
 
         $html .= '<div style="clear:both;"></div>';
@@ -163,7 +167,7 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
         return $html;
     }
 
-    private function getContent() {
+    public function getFollowupContent() {
         return $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'priority_change_intro') .
             ' ' . $this->getRankProgression() .
             $this->getContextRepresentation() .

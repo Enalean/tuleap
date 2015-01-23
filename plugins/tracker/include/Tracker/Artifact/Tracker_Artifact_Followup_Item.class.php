@@ -26,9 +26,15 @@ abstract class Tracker_Artifact_Followup_Item {
 
     abstract public function fetchFollowUp();
 
-    public function getAvatarIfEnabled($avatar) {
+    abstract public function getHTMLAvatar();
+
+    abstract public function getSubmitterUrl();
+
+    abstract public function getFollowupContent();
+
+    public function getAvatarIfEnabled() {
         if (Config::get('sys_enable_avatars')) {
-            return '<div class="tracker_artifact_followup_avatar">' . $avatar . '</div>';
+            return '<div class="tracker_artifact_followup_avatar">' . $this->getHTMLAvatar() . '</div>';
         }
 
         return '';
@@ -42,12 +48,12 @@ abstract class Tracker_Artifact_Followup_Item {
         return $html;
     }
 
-    public function getUserLink($url) {
-        return '<span class="tracker_artifact_followup_title_user">'. $url .'</span>';
+    public function getUserLink() {
+        return '<span class="tracker_artifact_followup_title_user">'. $this->getSubmitterUrl() .'</span>';
     }
 
-    public function getTimeAgo($date) {
-        return DateHelper::timeAgoInWords($date, false, true);
+    public function getTimeAgo() {
+        return DateHelper::timeAgoInWords($this->getFollowUpDate(), false, true);
     }
 
 }
