@@ -1,12 +1,13 @@
 Version 7.10 ()
 
 	== Features ==
-	* request #7723: Make project backup path customizable
+	* request #7723: Make project backup path customizable (contrib STMicrolelectronics).
 	* story #7607: have tracker search in global search
 	* story #7740: git anonymous http clone
 	* Parts of story #6855: artifact copy: Recursive copy
 	* Parts of story #7697: dedicated queue for grokmirror manifest updates
 	* Parts of story #7496: see priority changes in artifact view
+	* request #7710: Sort content of the userlist table after a header click (contrib STMicroelectronics).
 
 	== Bug Fix ==
 	* request #7788: Prevent persistent XSS in attachment of an artifact
