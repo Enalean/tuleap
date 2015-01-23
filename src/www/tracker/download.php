@@ -48,7 +48,7 @@ if (db_numrows($result)>0) {
                     $http = Codendi_HTTPPurifier::instance();
                     header('Content-Type: '.$http->purify(db_result($result,0,'filetype')));
                     header('Content-Length: '.$http->purify(db_result($result,0,'filesize')));
-                    header('Content-Disposition: filename="'.$http->purify(db_result($result,0,'filename')).'"');
+                    header('Content-Disposition: attachment; filename="'.$http->purify(db_result($result,0,'filename')).'"');
                     header('Content-Description: '. $http->purify(db_result($result,0,'description')));
                 
                     $attachment_path = ArtifactFile::getPathOnFilesystem($a, $id);
