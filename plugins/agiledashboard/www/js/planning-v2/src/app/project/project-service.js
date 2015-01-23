@@ -65,13 +65,20 @@
 
         function getAllowedBacklogItemTypes(data) {
             var allowed_trackers = data.accept.trackers;
-            var accept           = [];
+            var accepted_types = {
+                content : allowed_trackers,
 
-            _.forEach(allowed_trackers, function(allowed_tracker) {
-                accept.push(getTrackerType(allowed_tracker.id));
-            });
+                toString : function() {
+                    var accept = [];
+                    _.forEach(this.content, function(allowed_tracker) {
+                        accept.push('trackerId' + allowed_tracker.id);
+                    });
 
-            return accept.join('|');
+                    return accept.join('|');
+                }
+            };
+
+            return accepted_types;
         }
 
         function getTrackerType(tracker_id) {

@@ -4,18 +4,37 @@
 <div id="planning-view">
     <div id="backlog" ng-class="{ loading_content: loading_backlog_items }">
         <h2 translate>To be planned</h2>
-
+        <div class="controls" style="padding-bottom: 20px;">
+            <div class="btn-group dropdown">
+                <span class="dropdown-toggle btn btn-primary" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="#">
+                    <span translate>Add a new item</span>
+                    <b class="caret"></b>
+                </span>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <li ng-repeat="accepted_type in backlog.accepted_types.content">
+                        <a
+                           style="cursor: pointer;"
+                           class="create-item-link"
+                           data-tracker-id="{{ accepted_type.id }}"
+                           data-link-id="milestone_id"
+                           href="submit_ur"
+                           ng-click="showCreateNewModal($event, accepted_type, backlog); "
+                       >{{ accepted_type.label }}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
         <div ui-tree="treeOptions">
             <ul ui-tree-nodes
                 ng-model="backlog_items"
                 class="backlog-items backlog"
-                data-accept="{{ backlog.accepted_types }}"
+                data-accept="{{ backlog.accepted_types.toString() }}"
             >
                 <li ui-tree-node
                     ng-repeat="backlog_item in backlog_items"
                     ng-include src="'backlog-item/backlog-item.tpl.html'"
                     data-type="{{ backlog_item.trackerId }}"
-                    data-accept="{{ backlog_item.accepted_types }}"
+                    data-accept="{{ backlog_item.accepted_types.toString() }}"
                     class="backlog-item parent"
                     ng-class="{ updating: backlog_item.updating }"
                     collapsed="true"
@@ -71,13 +90,13 @@
                         <ul ui-tree-nodes
                             ng-model="milestone.content"
                             class="backlog-items submilestone"
-                            data-accept="{{ milestone.accepted_types }}"
+                            data-accept="{{ milestone.accepted_types.toString() }}"
                             data-submilestone-id="{{ milestone.id }}"
                         >
                             <li ui-tree-node
                                 ng-repeat="backlog_item in milestone.content"
                                 class="backlog-item parent {{ backlog_item.status | lowercase }} {{ backlog_item.color }}"
-                                data-accept="{{ backlog_item.accepted_types }}"
+                                data-accept="{{ backlog_item.accepted_types.toString() }}"
                                 data-type="{{ backlog_item.trackerId }}"
                                 ng-include="'backlog-item/backlog-item.tpl.html'"
                                 ng-if="canShowBacklogItem(backlog_item)"

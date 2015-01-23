@@ -28,10 +28,14 @@ class Tracker_Artifact_Presenter_CreateArtifactInPlacePresenter {
     /** @var Tracker_FormElement[] */
     public $form_elements;
 
-    public function __construct(Tracker $tracker, $artifact_to_link, $form_elements) {
-        $this->tracker          = $tracker;
-        $this->artifact_to_link = $artifact_to_link;
-        $this->form_elements    = $form_elements;
+    /** @var bool */
+    private $render_with_javascript;
+
+    public function __construct(Tracker $tracker, $artifact_to_link, $form_elements, $render_with_javascript) {
+        $this->tracker                = $tracker;
+        $this->artifact_to_link       = $artifact_to_link;
+        $this->form_elements          = $form_elements;
+        $this->render_with_javascript = $render_with_javascript;
     }
 
     public function tracker_title() {
@@ -55,7 +59,11 @@ class Tracker_Artifact_Presenter_CreateArtifactInPlacePresenter {
     }
 
     public function javascript_rules() {
-        return $this->tracker->displayRulesAsJavascript();
+        if ($this->render_with_javascript) {
+            return $this->tracker->displayRulesAsJavascript();
+        } else {
+            return '';
+        }
     }
 
     public function submit() {

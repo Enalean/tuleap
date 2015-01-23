@@ -39,7 +39,7 @@ class Tracker_Artifact_Renderer_CreateInPlaceRenderer{
         $this->tracker_artifact_factory = Tracker_ArtifactFactory::instance();
     }
 
-    public function display($artifact_link_id) {
+    public function display($artifact_link_id, $render_with_javascript) {
         $artifact_to_link = null;
         $submitted_values = array();
 
@@ -55,9 +55,11 @@ class Tracker_Artifact_Renderer_CreateInPlaceRenderer{
             }
         }
 
+        $submitted_values['render_with_javascript'] = $render_with_javascript;
+
         $form_elements = $this->tracker->fetchSubmitNoColumns($artifact_to_link, $submitted_values);
 
-        $presenter = new Tracker_Artifact_Presenter_CreateArtifactInPlacePresenter($this->tracker, $artifact_to_link, $form_elements);
+        $presenter = new Tracker_Artifact_Presenter_CreateArtifactInPlacePresenter($this->tracker, $artifact_to_link, $form_elements, $render_with_javascript);
         $this->renderer->renderToPage('create-artifact-modal', $presenter);
     }
 

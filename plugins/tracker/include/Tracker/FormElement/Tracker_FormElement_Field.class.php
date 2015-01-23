@@ -250,7 +250,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * to enhance the user experience
      * @return string
      */
-    public function fetchSubmitAdditionnalInfo() {
+    public function fetchSubmitAdditionnalInfo($submitted_values) {
         return '';
     }
 
@@ -357,7 +357,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     }
 
     public function fetchSubmitForOverlay($submitted_values) {
-        return $this->fetchSubmit();
+        return $this->fetchSubmit($submitted_values);
     }
 
     /**
@@ -458,7 +458,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             $html .= '<label for="tracker_artifact_'. $this->id .'" title="'. $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) .'"  class="tracker_formelement_label">'.  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . $required .'</label>';
 
             $html .= $this->fetchSubmitValue($submitted_values);
-            $html .= $this->fetchSubmitAdditionnalInfo();
+            $html .= $this->fetchSubmitAdditionnalInfo($submitted_values);
             $html .= '</div>';
         }
         return $html;
@@ -478,7 +478,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             $html .= '<label for="tracker_artifact_'. $this->id .'" title="'. $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) .'"  class="tracker_formelement_label">'.  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . $required .'</label>';
 
             $html .= $this->fetchSubmitValueMasschange();
-            $html .= $this->fetchSubmitAdditionnalInfo();
+            $html .= $this->fetchSubmitAdditionnalInfo(array());
             $html .= '</div>';
         }
         return $html;

@@ -9,7 +9,7 @@
         <ul ui-tree-nodes
             ng-model="backlog_item.children.data"
             class="backlog-item-children"
-            data-accept="{{ backlog_item.accepted_types }}"
+            data-accept="{{ backlog_item.accepted_types.toString() }}"
             ng-show="! collapsed"
             ng-class="{ hidden: collapsed }"
             data-backlog-item-id="{{ backlog_item.id }}"

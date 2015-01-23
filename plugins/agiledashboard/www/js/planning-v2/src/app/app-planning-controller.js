@@ -10,10 +10,11 @@
         'MilestoneService',
         'ProjectService',
         'DroppedService',
-        'CardFieldsService'
+        'CardFieldsService',
+        'TuleapArtifactModalService'
     ];
 
-    function PlanningCtrl($scope, SharedPropertiesService, BacklogItemService, MilestoneService, ProjectService, DroppedService, CardFieldsService) {
+    function PlanningCtrl($scope, SharedPropertiesService, BacklogItemService, MilestoneService, ProjectService, DroppedService, CardFieldsService, TuleapArtifactModalService) {
         var project_id                  = SharedPropertiesService.getProjectId(),
             milestone_id                = SharedPropertiesService.getMilestoneId(),
             pagination_limit            = 50,
@@ -34,6 +35,7 @@
             toggleClosedMilestoneItems  : toggleClosedMilestoneItems,
             canShowBacklogItem          : canShowBacklogItem,
             generateMilestoneLinkUrl    : generateMilestoneLinkUrl,
+            showCreateNewModal          : showCreateNewModal,
             cardFieldIsSimpleValue      : CardFieldsService.cardFieldIsSimpleValue,
             cardFieldIsList             : CardFieldsService.cardFieldIsList,
             cardFieldIsText             : CardFieldsService.cardFieldIsText,
@@ -62,7 +64,9 @@
                 $scope.backlog = {
                     rest_base_route : 'projects',
                     rest_route_id   : project_id,
-                    accepted_types  : ''
+                    accepted_types  : {toString : function() {
+                            return '';
+                    }}
                 };
                 fetchProjectBacklogAcceptedTypes(project_id);
             } else {
@@ -154,6 +158,33 @@
 
         function generateMilestoneLinkUrl(milestone, pane) {
             return '?group_id=' + project_id + '&planning_id=' + milestone.planning.id + '&action=show&aid=' + milestone.id + '&pane=' + pane;
+        }
+
+        function showCreateNewModal($event, item_type, backlog) {
+            $event.preventDefault();
+
+            var callback = function(item_id) {
+                if (backlog.rest_base_route == 'projects') {
+                    appendItemToBacklog(item_id);
+                } else {
+                    BacklogItemService.addToMilestone(backlog.rest_route_id, item_id).then(
+                        function() {
+                            appendItemToBacklog(item_id);
+                        }
+                    );
+                }
+            };
+
+            TuleapArtifactModalService.showCreateItemForm(item_type.id, backlog.rest_route_id, callback);
+        }
+
+        function appendItemToBacklog(backlog_item_id) {
+           BacklogItemService.getBacklogItem(backlog_item_id).then(
+                function(data) {
+                    $scope.items[backlog_item_id] = data.backlog_item;
+                    $scope.backlog_items.push($scope.items[backlog_item_id]);
+                }
+            );
         }
 
         function toggle(milestone) {

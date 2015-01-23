@@ -18,7 +18,8 @@
             getBacklogItemChildren             : getBacklogItemChildren,
             reorderBacklogItemChildren         : reorderBacklogItemChildren,
             removeAddReorderBacklogItemChildren: removeAddReorderBacklogItemChildren,
-            removeAddBacklogItemChildren       : removeAddBacklogItemChildren
+            removeAddBacklogItemChildren       : removeAddBacklogItemChildren,
+            addToMilestone                     : addToMilestone
         };
 
         function getBacklogItem(backlog_item_id) {
@@ -27,6 +28,8 @@
             rest.one('backlog_items', backlog_item_id)
                 .get()
                 .then(function(response) {
+                    augmentBacklogItem(response.data);
+
                     result = {
                         backlog_item: response.data
                     };
@@ -146,6 +149,14 @@
                         id         : dropped_item_id,
                         remove_from: source_backlog_item_id
                     }]
+                });
+        }
+
+        function addToMilestone(milestone_id, backlog_item_id) {
+            return rest.one('milestones', milestone_id)
+                .all('backlog')
+                .patch({
+                    add: [{ id: backlog_item_id }]
                 });
         }
     }

@@ -79,6 +79,7 @@ module.exports = {
       'vendor/moment/locale/fr.js',
       'vendor/angular-moment/angular-moment.min.js',
       'vendor/angular-ui-tree-bdauton/dist/angular-ui-tree-bdauton.min.js',
+      'vendor/tuleap-artifact-modal/dist/tuleap-artifact-modal.min.js',
       'vendor/angular-sanitize/angular-sanitize.min.js'
     ],
     css: [

@@ -71,9 +71,10 @@ abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJ
      */
     public function fetchForOpenListJson() {
         return array(
-            'id'      => $this->getId(),
-            'value'   => $this->getJsonId(),
-            'caption' => $this->getLabel(),
+            'id'         => $this->getId(),
+            'value'      => $this->getJsonId(),
+            'caption'    => $this->getLabel(),
+            'rest_value' => $this->getAPIValue(),
         );
     }
 

@@ -73,8 +73,16 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
                 }
             }
         }
-        $html .= $this->displayArtifactJavascript($values);
+
+        if ($this->isJavascriptIncludedInValue($submitted_values)) {
+            $html .= $this->displayArtifactJavascript($values);
+        }
+
         return $html;
+    }
+
+    private function isJavascriptIncludedInValue(array $submitted_values) {
+        return ! isset($submitted_values['render_with_javascript']) || $submitted_values['render_with_javascript'] === true;
     }
 
      /**
@@ -83,9 +91,11 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
      * to enhance the user experience
      * @return string
      */
-    public function fetchSubmitAdditionnalInfo() {
-        $html = parent::fetchSubmitAdditionnalInfo();
-        $html .= $this->displaySubmitJavascript();
+    public function fetchSubmitAdditionnalInfo($submitted_values) {
+        $html = parent::fetchSubmitAdditionnalInfo($submitted_values);
+        if ($this->isJavascriptIncludedInValue($submitted_values)) {
+            $html .= $this->displaySubmitJavascript();
+        }
         return $html;
     }
 

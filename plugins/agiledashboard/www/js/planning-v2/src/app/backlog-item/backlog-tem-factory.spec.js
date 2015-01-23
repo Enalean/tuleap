@@ -25,7 +25,7 @@ describe('BacklogItemFactory', function() {
         }));
 
         it('adds allowed tracker types to backlog item', function() {
-            expect(item.accepted_types).toEqual('trackerId123|trackerId895');
+            expect(item.accepted_types.toString()).toEqual('trackerId123|trackerId895');
             expect(item.trackerId).toEqual('trackerId78');
         });
 

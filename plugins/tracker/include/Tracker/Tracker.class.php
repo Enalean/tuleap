@@ -405,14 +405,15 @@ class Tracker implements Tracker_Dispatchable_Interface {
 
             case 'get-create-in-place':
                 if ($this->userCanSubmitArtifact($current_user)) {
-                    $artifact_link_id            = $request->get('artifact-link-id');
+                    $artifact_link_id       = $request->get('artifact-link-id');
+                    $render_with_javascript = ($request->get('fetch-js') == 'false') ? false : true;
 
                     $renderer = new Tracker_Artifact_Renderer_CreateInPlaceRenderer(
                         $this,
                         TemplateRendererFactory::build()->getRenderer(dirname(TRACKER_BASE_DIR).'/templates')
                     );
 
-                    $renderer->display($artifact_link_id);
+                    $renderer->display($artifact_link_id, $render_with_javascript);
                 } else {
                     $GLOBALS['Response']->send400JSONErrors();
                 }

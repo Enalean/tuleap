@@ -9,6 +9,7 @@
         'shared-properties',
         'backlog-item',
         'milestone',
-        'project'
+        'project',
+        'tuleap-artifact-modal'
     ]);
 })();
