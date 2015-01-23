@@ -1,3 +1,6 @@
+Version 5.559 - Tuleap 7.10
+    * story #7496: Keep history only when the admin check the option in tracker admin
+
 Version 5.558 - Tuleap 7.10
     * story #7496: Display priority changes likes an artifact change in follow-ups section
 
