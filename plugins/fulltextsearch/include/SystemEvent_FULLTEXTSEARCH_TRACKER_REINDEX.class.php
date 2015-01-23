@@ -18,9 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SystemEvent_FULLTEXTSEARCH_TRACKER_PERMISSION_CHANGE extends SystemEvent {
+class SystemEvent_FULLTEXTSEARCH_TRACKER_REINDEX extends SystemEvent {
 
-    const NAME = 'FULLTEXTSEARCH_TRACKER_PERMISSION_CHANGE';
+    const NAME = 'FULLTEXTSEARCH_TRACKER_REINDEX';
 
     /**
      * @var FullTextSearchTrackerActions

@@ -165,6 +165,7 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic {
             if ($field = Tracker_FormElementFactory::instance()->getUsedUserSbFieldById($this->tracker, $request->get('list_field_id'))) {
                 $this->list_field = $field;
                 if ($this->save()) {
+                    $this->sendContributorChangeEvent();
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','contributor_now', array($field->getLabel())));
                     $GLOBALS['Response']->redirect($this->getUrl());
                 } else {
@@ -172,6 +173,7 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic {
                 }
             } elseif ($request->get('list_field_id') == self::NO_VALUE) {
                 if ($this->delete()) {
+                    $this->sendContributorChangeEvent();
                     $GLOBALS['Response']->redirect($this->getUrl());
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','unable_save_contributor'));
@@ -182,7 +184,16 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic {
         }
         $this->displayAdmin($sm, $tracker_manager, $request, $current_user);
     }
-    
+
+    private function sendContributorChangeEvent() {
+        EventManager::instance()->processEvent(
+            TRACKER_EVENT_SEMANTIC_CONTRIBUTOR_CHANGE,
+            array(
+                'tracker' => $this->tracker,
+            )
+        );
+    }
+
     /**
      * Save this semantic
      *

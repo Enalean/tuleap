@@ -77,7 +77,7 @@ class FullTextSearch_TrackerSystemEventManager {
                 $class        = 'SystemEvent_'. $type;
                 $dependencies = array($this->actions);
                 break;
-            case SystemEvent_FULLTEXTSEARCH_TRACKER_PERMISSION_CHANGE::NAME:
+            case SystemEvent_FULLTEXTSEARCH_TRACKER_REINDEX::NAME:
                 $class        = 'SystemEvent_'. $type;
                 $dependencies = array($this->actions, $this->tracker_factory);
                 break;
@@ -137,7 +137,7 @@ class FullTextSearch_TrackerSystemEventManager {
 
         if ($this->plugin->isAllowed($project_id)) {
             $this->system_event_manager->createEvent(
-                SystemEvent_FULLTEXTSEARCH_TRACKER_PERMISSION_CHANGE::NAME,
+                SystemEvent_FULLTEXTSEARCH_TRACKER_REINDEX::NAME,
                 $this->implodeParams(array($tracker->getId())),
                 SystemEvent::PRIORITY_LOW,
                 SystemEvent::OWNER_APP
