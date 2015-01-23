@@ -280,7 +280,7 @@ class BacklogItemResource {
                 $order_validator = new OrderValidator($indexed_children_ids);
                 $order_validator->validate($order);
 
-                $this->resources_patcher->updateArtifactPriorities($order);
+                $this->resources_patcher->updateArtifactPriorities($order, $id, null);
             }
         } catch (IdsFromBodyAreNotUniqueException $exception) {
             throw new RestException(409, $exception->getMessage());

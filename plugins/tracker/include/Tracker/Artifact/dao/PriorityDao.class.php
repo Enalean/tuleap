@@ -421,4 +421,11 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject {
         $row = $result->getRow();
         return $row['rank'];
     }
+
+    public function getGlobalRanks(array $list_of_artifact_ids) {
+        $list_of_artifact_ids = $this->da->escapeIntImplode($list_of_artifact_ids);
+        $sql = "SELECT * FROM tracker_artifact_priority
+                WHERE curr_id IN ($list_of_artifact_ids)";
+        return $this->retrieve($sql);
+    }
 }

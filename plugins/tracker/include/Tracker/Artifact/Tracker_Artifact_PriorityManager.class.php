@@ -95,12 +95,67 @@ class Tracker_Artifact_PriorityManager {
         $this->logPriorityChange($artifact_id, $predecessor_id, $artifact_id, $context_id, $project_id, $old_global_rank);
     }
 
-    public function moveListOfArtifactsBefore(array $list_of_artifact_ids, $successor_id) {
+    public function moveListOfArtifactsBefore(array $list_of_artifact_ids, $successor_id, $context_id, $project_id) {
+        $ranks_before_move = $this->getGlobalRanks($list_of_artifact_ids);
+
         $this->priority_dao->moveListOfArtifactsBefore($list_of_artifact_ids, $successor_id);
+
+        $this->logPriorityChangesWhenMovingListOfArtifactsBefore($list_of_artifact_ids, $ranks_before_move, $successor_id, $context_id, $project_id);
     }
 
-    public function moveListOfArtifactsAfter(array $list_of_artifact_ids, $predecessor_id) {
+    private function logPriorityChangesWhenMovingListOfArtifactsBefore(array $list_of_artifact_ids, array $ranks_before_move, $successor_id, $context_id, $project_id) {
+        for ($i = 0; $i < count($list_of_artifact_ids); $i++) {
+            $artifact_id       = $list_of_artifact_ids[$i];
+            $artifact_lower_id = $successor_id;
+
+            if (isset($list_of_artifact_ids[$i + 1])) {
+                $artifact_lower_id = $list_of_artifact_ids[$i + 1];
+            }
+
+            $rank_after_move = $this->getGlobalRank($artifact_id);
+
+            if ($this->didArtifactRankChange($ranks_before_move[$artifact_id], $rank_after_move)) {
+                $this->logPriorityChange($artifact_id, $artifact_id, $artifact_lower_id, $context_id, $project_id, $ranks_before_move[$artifact_id]);
+            }
+        }
+    }
+
+    public function moveListOfArtifactsAfter(array $list_of_artifact_ids, $predecessor_id, $context_id, $project_id) {
+        $ranks_before_move = $this->getGlobalRanks($list_of_artifact_ids);
+
         $this->priority_dao->moveListOfArtifactsAfter($list_of_artifact_ids, $predecessor_id);
+
+        $this->logPriorityChangesWhenMovingListOfArtifactsAfter($list_of_artifact_ids, $ranks_before_move, $predecessor_id, $context_id, $project_id);
+    }
+
+    private function logPriorityChangesWhenMovingListOfArtifactsAfter(array $list_of_artifact_ids, array $ranks_before_move, $predecessor_id, $context_id, $project_id) {
+        for ($i = 0; $i < count($list_of_artifact_ids); $i++) {
+            $artifact_id        = $list_of_artifact_ids[$i];
+            $artifact_higher_id = $predecessor_id;
+
+            if (isset($list_of_artifact_ids[$i - 1])) {
+                $artifact_higher_id = $list_of_artifact_ids[$i - 1];
+            }
+
+            $rank_after_move = $this->getGlobalRank($artifact_id);
+
+            if ($this->didArtifactRankChange($ranks_before_move[$artifact_id], $rank_after_move)) {
+                $this->logPriorityChange($artifact_id, $artifact_higher_id, $artifact_id, $context_id, $project_id, $ranks_before_move[$artifact_id]);
+            }
+        }
+    }
+
+    private function didArtifactRankChange($rank_before_move, $rank_after_move) {
+        return $rank_after_move !== $rank_before_move;
+    }
+
+    private function getGlobalRanks($list_of_artifact_ids) {
+        $rows  = $this->priority_dao->getGlobalRanks($list_of_artifact_ids);
+        $ranks = array();
+        foreach ($rows as $row) {
+            $ranks[$row['curr_id']] = $row['rank'];
+        }
+        return $ranks;
     }
 
     public function getArtifactPriorityHistory(Tracker_Artifact $artifact) {
