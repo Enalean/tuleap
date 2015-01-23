@@ -29,6 +29,7 @@ use Planning_MilestoneFactory;
 use AgileDashboard_Milestone_Backlog_BacklogStrategyFactory;
 use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use AgileDashboard_Milestone_Backlog_BacklogItemBuilder;
+use AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider;
 use AgileDashboard_BacklogItemDao;
 use AgileDashboard_Milestone_MilestoneStatusCounter;
 use Tracker_ArtifactDao;
@@ -36,6 +37,9 @@ use IdsFromBodyAreNotUniqueException;
 use Luracast\Restler\RestException;
 use Tuleap\REST\Header;
 use Tracker_Artifact_PriorityDao;
+use Tracker_Artifact_PriorityManager;
+use Tracker_Artifact_PriorityHistoryDao;
+use UserManager;
 use Tuleap\REST\v1\OrderRepresentationBase;
 
 /**
@@ -43,6 +47,7 @@ use Tuleap\REST\v1\OrderRepresentationBase;
  */
 class ProjectBacklogResource {
     const MAX_LIMIT = 50;
+    const TOP_BACKLOG_IDENTIFIER = AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider::TOP_BACKLOG_IDENTIFIER;
 
     /** @var Planning_MilestoneFactory */
     private $milestone_factory;
@@ -104,13 +109,19 @@ class ProjectBacklogResource {
             $this->backlog_item_collection_factory
         );
 
-        $this->artifactlink_updater      = new ArtifactLinkUpdater();
+        $priority_manager = new Tracker_Artifact_PriorityManager(
+            new Tracker_Artifact_PriorityDao(),
+            new Tracker_Artifact_PriorityHistoryDao(),
+            UserManager::instance()
+        );
+
+        $this->artifactlink_updater      = new ArtifactLinkUpdater($priority_manager);
         $this->milestone_content_updater = new MilestoneContentUpdater($tracker_form_element_factory, $this->artifactlink_updater);
 
         $this->resources_patcher = new ResourcesPatcher(
             $this->artifactlink_updater,
             $tracker_artifact_factory,
-            new Tracker_Artifact_PriorityDao()
+            $priority_manager
         );
     }
 
@@ -148,7 +159,7 @@ class ProjectBacklogResource {
         $this->validateArtifactIdsAreInOpenAndUnassignedTopBacklog($ids, $user, $project);
 
         try {
-            $this->artifactlink_updater->setOrder($ids);
+            $this->artifactlink_updater->setOrderWithHistoryChangeLogging($ids, self::TOP_BACKLOG_IDENTIFIER, $project->getId());
         } catch (ItemListedTwiceException $exception) {
             throw new RestException(400, $exception->getMessage());
         }

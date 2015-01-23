@@ -353,8 +353,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
         $per_tracker_id            = $row['per_tracker_artifact_id'];
         $id_sharing = new TrackerIdSharingDao();
         if ($id = $id_sharing->generateArtifactId()) {
-            $priority_dao = new Tracker_Artifact_PriorityDao();
-            if ($priority_dao->putArtifactAtTheEnd($id)) {
+            if ($this->getPriorityManager()->putArtifactAtTheEnd($id)) {
                 // We do not keep trace of the history change here because it doesn't have any sense to say
                 // the newly created artifact has less priority than the one at the bottom of the priority chain.
                 $sql = "INSERT INTO $this->table_name
@@ -393,8 +392,15 @@ class Tracker_ArtifactDao extends DataAccessObject {
     }
 
     public function deletePriority($id) {
-        $dao = new Tracker_Artifact_PriorityDao();
-        return $dao->remove($id);
+        return $this->getPriorityManager()->remove($id);
+    }
+
+    private function getPriorityManager() {
+        return new Tracker_Artifact_PriorityManager(
+            new Tracker_Artifact_PriorityDao(),
+            new Tracker_Artifact_PriorityHistoryDao(),
+            UserManager::instance()
+        );
     }
 
     /**

@@ -21,14 +21,20 @@
  */
 class Tracker_Artifact_PriorityHistoryDao extends DataAccessObject {
 
-    public function logPriorityChange($artifact_higher_id, $artifact_lower_id, $priority_updated_by, $priority_updated_on) {
+    public function logPriorityChange($moved_artifact_id, $artifact_higher_id, $artifact_lower_id, $context_id, $project_id, $priority_updated_by, $priority_updated_on, $old_global_rank) {
+        $moved_artifact_id   = $this->da->escapeInt($moved_artifact_id);
         $artifact_higher_id  = $this->da->escapeInt($artifact_higher_id);
         $artifact_lower_id   = $this->da->escapeInt($artifact_lower_id);
+        $context_id          = $this->da->escapeInt($context_id);
+        $project_id          = $this->da->escapeInt($project_id);
         $priority_updated_by = $this->da->escapeInt($priority_updated_by);
         $priority_updated_on = $this->da->escapeInt($priority_updated_on);
+        $old_global_rank     = $this->da->escapeInt($old_global_rank);
 
-        $sql = "INSERT INTO tracker_artifact_priority_history (artifact_id_higher, artifact_id_lower, prioritized_by, prioritized_on)
-                VALUES ($artifact_higher_id, $artifact_lower_id, $priority_updated_by, $priority_updated_on)";
+        $sql = "INSERT INTO tracker_artifact_priority_history (moved_artifact_id, artifact_id_higher, artifact_id_lower, context, project_id, prioritized_by, prioritized_on, has_been_raised)
+                SELECT $moved_artifact_id, $artifact_higher_id, $artifact_lower_id, $context_id, $project_id, $priority_updated_by, $priority_updated_on, ($old_global_rank > rank)
+                FROM tracker_artifact_priority
+                WHERE curr_id = $moved_artifact_id";
 
         $this->update($sql);
     }

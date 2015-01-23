@@ -681,24 +681,18 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 }
                 break;
             case 'higher-priority-than':
-                $target_id = (int)$request->get('target-id');
+                $target_id    = (int)$request->get('target-id');
+                $milestone_id = (int)$request->get('milestone-id');
+                $project_id   = $this->getProjectId();
 
-                $priority_dao = new Tracker_Artifact_PriorityDao();
-                $priority_dao->moveArtifactBefore($this->getId(), $target_id);
-
-                $priority_history_manager = $this->getPriorityHistoryManager();
-                $priority_history_manager->logPriorityChange($this->getId(), $target_id);
-
+                $this->getPriorityManager()->moveArtifactBeforeWithHistoryChangeLogging($this->getId(), $target_id, $milestone_id, $project_id);
                 break;
             case 'lesser-priority-than':
-                $target_id = (int)$request->get('target-id');
+                $target_id    = (int)$request->get('target-id');
+                $milestone_id = (int)$request->get('milestone-id');
+                $project_id   = $this->getProjectId();
 
-                $priority_dao = new Tracker_Artifact_PriorityDao();
-                $priority_dao->moveArtifactAfter($this->getId(), $target_id);
-
-                $priority_history_manager = $this->getPriorityHistoryManager();
-                $priority_history_manager->logPriorityChange($target_id, $this->getId());
-
+                $this->getPriorityManager()->moveArtifactAfterWithHistoryChangeLogging($this->getId(), $target_id, $milestone_id, $project_id);
                 break;
             case 'show-in-overlay':
                 $renderer = new Tracker_Artifact_EditOverlayRenderer($this, $this->getEventManager());
@@ -749,8 +743,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
     }
 
-    private function getPriorityHistoryManager() {
-        return new Tracker_Artifact_PriorityHistoryManager(
+    private function getProjectId() {
+        return $this->getTracker()->getGroupId();
+    }
+
+    private function getPriorityManager() {
+        return new Tracker_Artifact_PriorityManager(
+            new Tracker_Artifact_PriorityDao(),
             new Tracker_Artifact_PriorityHistoryDao(),
             UserManager::instance()
         );

@@ -28,6 +28,8 @@ use AgileDashboard_Milestone_Backlog_BacklogItem;
 use Tracker_ArtifactDao;
 use Tracker_SlicedArtifactsBuilder;
 use Tracker_Artifact_PriorityDao;
+use Tracker_Artifact_PriorityManager;
+use Tracker_Artifact_PriorityHistoryDao;
 use Tracker_Artifact_Exception_CannotRankWithMyself;
 use Tracker_Artifact;
 use TrackerFactory;
@@ -61,14 +63,21 @@ class BacklogItemResource {
     private $resources_patcher;
 
     public function __construct() {
+        $this->user_manager = UserManager::instance();
+
+        $priority_manager = new Tracker_Artifact_PriorityManager(
+            new Tracker_Artifact_PriorityDao(),
+            new Tracker_Artifact_PriorityHistoryDao(),
+            $this->user_manager
+        );
+
         $this->artifact_factory     = Tracker_ArtifactFactory::instance();
-        $this->user_manager         = UserManager::instance();
         $this->tracker_factory      = TrackerFactory::instance();
-        $this->artifactlink_updater = new ArtifactLinkUpdater();
+        $this->artifactlink_updater = new ArtifactLinkUpdater($priority_manager);
         $this->resources_patcher    = new ResourcesPatcher(
             $this->artifactlink_updater,
             $this->artifact_factory,
-            new Tracker_Artifact_PriorityDao()
+            $priority_manager
         );
     }
 
