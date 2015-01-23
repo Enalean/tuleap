@@ -1060,11 +1060,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     public function getFollowupsContent() {
         $followups_content = $this->getChangesets();
+        $followups_content = array_merge($followups_content, $this->getPriorityHistory());
 
-        if ($this->tracker->isPriorityChangesShown()) {
-            $followups_content = array_merge($followups_content, $this->getPriorityHistory());
-            usort($followups_content, array($this, "cmpFollowups"));
-        }
+        usort($followups_content, array($this, "cmpFollowups"));
 
         return $followups_content;
     }

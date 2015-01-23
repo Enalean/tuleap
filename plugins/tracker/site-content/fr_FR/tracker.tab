@@ -480,7 +480,7 @@ plugin_tracker_include_type	create_from_scratch	Créer un nouvel outil de suivi 
 plugin_tracker_include_type	manage	Gérer les outils de suivi
 plugin_tracker_include_type	admin_or_del	Administrer ou détruire un outil de suivi.	
 plugin_tracker_include_type	instantiate	Instancier dans les nouveaux projets
-plugin_tracker_include_type	priority_changes	Afficher les changements de rang dans les commentaires
+plugin_tracker_include_type	priority_changes	Enregistrer les changements de rang dans les commentaires
 plugin_tracker_include_type	administration	Administration
 plugin_tracker_include_type	mng_field_usage	Gérer l'utilisation des champs
 plugin_tracker_include_type	define_use	Définir les champs utilisés par cet outil de suivi.	

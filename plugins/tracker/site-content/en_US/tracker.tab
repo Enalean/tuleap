@@ -488,7 +488,7 @@ plugin_tracker_include_type	create_from_scratch	Create a new tracker from scratc
 plugin_tracker_include_type	manage	Manage Trackers
 plugin_tracker_include_type	admin_or_del	Administrate or delete a tracker.	
 plugin_tracker_include_type	instantiate	Instantiate for new projects
-plugin_tracker_include_type	priority_changes	Show priority changes in follow-up comments
+plugin_tracker_include_type	priority_changes	Log priority changes in follow-up comments
 plugin_tracker_include_type	administration	Administration
 plugin_tracker_include_type	mng_field_usage	Manage Field Usage
 plugin_tracker_include_type	define_use	Define what tracker fields you want to use in this tracker.
