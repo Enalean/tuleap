@@ -1,3 +1,6 @@
+Version 5.555 - Tuleap 7.10
+    * story #7496: Store context of the move when available and if the priority has been raised or not
+
 Version 5.554 - Tuleap 7.10
     * story #7496: Add an option in Tracker general
 
