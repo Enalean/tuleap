@@ -390,6 +390,14 @@ plugin_tracker_include_artifact	color	Couleur
 plugin_tracker_include_artifact	preview	Aperçu :
 plugin_tracker_include_artifact	unsubscribe	Se désinscrire des notifications
 plugin_tracker_include_artifact	artifact_fields_title	Liste des champs des artefacts
+plugin_tracker_include_artifact	priority_change_intro	La priorité de cet artéfact a été
+plugin_tracker_include_artifact	priority_change_raised	augmentée
+plugin_tracker_include_artifact	priority_change_decreased	baissée
+plugin_tracker_include_artifact	priority_change_before_than	et il est maintenant placé avant
+plugin_tracker_include_artifact	priority_change_after_than	et il est maintenant placé après
+plugin_tracker_include_artifact	priority_change_in	dans
+plugin_tracker_include_artifact	priority_change_backlog	le backlog du projet
+
 
 #
 #-----------------------------------------------

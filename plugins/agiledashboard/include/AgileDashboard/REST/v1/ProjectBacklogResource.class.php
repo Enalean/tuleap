@@ -112,13 +112,13 @@ class ProjectBacklogResource {
         $priority_manager = new Tracker_Artifact_PriorityManager(
             new Tracker_Artifact_PriorityDao(),
             new Tracker_Artifact_PriorityHistoryDao(),
-            UserManager::instance()
+            UserManager::instance(),
+            $tracker_artifact_factory
         );
 
         $this->artifactlink_updater      = new ArtifactLinkUpdater($priority_manager);
         $this->milestone_content_updater = new MilestoneContentUpdater($tracker_form_element_factory, $this->artifactlink_updater);
-
-        $this->resources_patcher = new ResourcesPatcher(
+        $this->resources_patcher         = new ResourcesPatcher(
             $this->artifactlink_updater,
             $tracker_artifact_factory,
             $priority_manager

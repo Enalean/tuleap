@@ -63,15 +63,16 @@ class BacklogItemResource {
     private $resources_patcher;
 
     public function __construct() {
-        $this->user_manager = UserManager::instance();
+        $this->artifact_factory = Tracker_ArtifactFactory::instance();
+        $this->user_manager     = UserManager::instance();
 
         $priority_manager = new Tracker_Artifact_PriorityManager(
             new Tracker_Artifact_PriorityDao(),
             new Tracker_Artifact_PriorityHistoryDao(),
-            $this->user_manager
+            $this->user_manager,
+            $this->artifact_factory
         );
 
-        $this->artifact_factory     = Tracker_ArtifactFactory::instance();
         $this->tracker_factory      = TrackerFactory::instance();
         $this->artifactlink_updater = new ArtifactLinkUpdater($priority_manager);
         $this->resources_patcher    = new ResourcesPatcher(

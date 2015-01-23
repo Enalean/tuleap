@@ -481,6 +481,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 '</span> '.
                 $hp->purify($this->getTitle());
     }
+
+    public function fetchColoredXRef() {
+        return '<span class="colored-xref '. $this->getTracker()->getColor() .'"><a class="cross-reference" href="' . $this->getUri() . '">'. $this->getXRef() .'</a></span>';
+    }
+
     /**
      * Get the artifact title, or null if no title defined in semantics
      *
@@ -751,7 +756,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return new Tracker_Artifact_PriorityManager(
             new Tracker_Artifact_PriorityDao(),
             new Tracker_Artifact_PriorityHistoryDao(),
-            UserManager::instance()
+            UserManager::instance(),
+            Tracker_ArtifactFactory::instance()
         );
     }
 
@@ -1042,6 +1048,25 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function isFirstChangeset(Tracker_Artifact_Changeset $changeset) {
         $c = $this->getFirstChangeset();
         return $c->getId() == $changeset->getId();
+    }
+
+    private function getPriorityHistory() {
+        return $this->getPriorityManager()->getArtifactPriorityHistory($this);
+    }
+
+    public function cmpFollowups($a, $b) {
+        return ($a->getFollowUpDate() < $b->getFollowUpDate()) ? -1 : 1;
+    }
+
+    public function getFollowupsContent() {
+        $followups_content = $this->getChangesets();
+
+        if ($this->tracker->isPriorityChangesShown()) {
+            $followups_content = array_merge($followups_content, $this->getPriorityHistory());
+            usort($followups_content, array($this, "cmpFollowups"));
+        }
+
+        return $followups_content;
     }
 
     /**

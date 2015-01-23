@@ -24,7 +24,7 @@ require_once('common/mail/MailManager.class.php');
 require_once('common/language/BaseLanguageFactory.class.php');
 require_once('utils.php');
 
-class Tracker_Artifact_Changeset {
+class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
     const FIELDS_ALL      = 'all';
     const FIELDS_COMMENTS = 'comments';
 
@@ -162,6 +162,9 @@ class Tracker_Artifact_Changeset {
         return Tracker_FormElementFactory::instance();
     }
 
+    public function getFollowUpDate() {
+        return $this->submitted_on;
+    }
 
     /**
      * Fetch followup
@@ -171,17 +174,10 @@ class Tracker_Artifact_Changeset {
     public function fetchFollowUp() {
         $html = '';
 
-        if (Config::get('sys_enable_avatars')) {
-            $html .= '<div class="tracker_artifact_followup_avatar">';
-            $html .= $this->getHTMLAvatar();
-            $html .= '</div>';
-        }
+        $html .= $this->getAvatarIfEnabled($this->getHTMLAvatar());
 
         $html .= '<div class="tracker_artifact_followup_header">';
-        //The permalink
-        $html .= '<a class="tracker_artifact_followup_permalink" href="#followup_'. $this->id .'">';
-        $html .= '<i class="icon-link" title="Link to this followup - #'. (int) $this->id.'"></i> ';
-        $html .= '</a> ';
+        $html .= $this->getPermalink();
 
         if ($this->userCanEdit() ||$this->userCanDelete()) {
             $html .= '<div class="tracker_artifact_followup_comment_controls">';
@@ -194,9 +190,8 @@ class Tracker_Artifact_Changeset {
             $html .= '</div>';
         }
 
-        $html .= '<span class="tracker_artifact_followup_title_user">'. $this->getSubmitterUrl() .'</span>';
-        $html .= DateHelper::timeAgoInWords($this->submitted_on, false, true);
-
+        $html .= $this->getUserLink($this->getSubmitterUrl());
+        $html .= $this->getTimeAgo($this->submitted_on);
         $html .= '</div>';
 
         // The content
