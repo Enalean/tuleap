@@ -27,11 +27,11 @@ class GitViews_GitPhpViewer {
     /**
      * @var string
      */
-    private $gitphp_path;
+    private $gitphp_path = '/usr/share/gitphp-tuleap';
 
     public function __construct(GitRepository $repository, $gitphp_path) {
         $this->repository  = $repository;
-        $this->gitphp_path = $gitphp_path;
+        $this->gitphp_path = file_exists($gitphp_path) ? $gitphp_path : $this->gitphp_path;
     }
 
     public function getContent() {
