@@ -1,16 +1,12 @@
 <?php
 //
-// Copyright 2011-2013 (c) Enalean
+// Copyright 2011-2015 (c) Enalean
 // Copyright 1999-2000 (c) The SourceForge Crew
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // http://sourceforge.net
 //
-// 
-
-// Protection against clickjacking
-header('X-Frame-Options: SAMEORIGIN');
-header("Content-Security-Policy: frame-ancestors 'self';");
+//
 
 //various server utilities.
 require_once('server.php');
@@ -72,6 +68,18 @@ if (!defined('IS_SCRIPT')) {
     } else {
         define('IS_SCRIPT', false);
     }
+}
+
+if (!IS_SCRIPT) {
+    // Protection against clickjacking
+    header('X-Frame-Options: SAMEORIGIN');
+    $csp_rules = "frame-ancestors 'self'; ";
+
+    // XSS prevention
+    header('X-XSS-Protection: 1; mode=block');
+    $csp_rules .= "script-src 'self' 'unsafe-inline' 'unsafe-eval'; reflected-xss 'block';";
+
+    header('Content-Security-Policy: ' . $csp_rules);
 }
 
 //{{{ Sanitize $_REQUEST : remove cookies
