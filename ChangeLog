@@ -1,3 +1,8 @@
+Version 7.9-5 (Monday, January 26th 2015)
+	== Bug Fix ==
+	* request #7788: Persistent XSS in attachment of artifact
+	* request #7785: Vulnerable to clickjacking attack
+
 Version 7.9-4 (Tuesday, January 20th 2015)
 	== Bug Fix ==
 	* request #7770: Wrong data when there are two reports on project dashboard using the same field as filter
