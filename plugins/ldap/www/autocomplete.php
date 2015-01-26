@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2008
@@ -50,10 +51,9 @@ if($request->valid($vGroupName)) {
     }
 }
 
-
+$purifier = Codendi_HTMLPurifier::instance();
 echo "<ul>\n";
 foreach($groupList as $group) {
-	echo "    <li>".$group."</li>\n";
+    echo '<li>' . $purifier->purify($group) . '</li>';
 }
 echo "</ul>\n";
-?>
