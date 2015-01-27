@@ -27,14 +27,15 @@ Version 7.10 ()
 	* request #7755: Fix non persistent XSS and open redirect in redirect page
 	* request #7774: fatal error on my personal page from docman
 	* request #7785: Protection against clickjacking
+	* request #7792: Contributor semantic change should trigger FTS reindex
 
 	== Plugins ==
 	* tracker_date_reminder: 1.2.9
 	* graphontrackers: 1.12
 	* graphontrackersv5: 5.16
-	* tracker: 5.561
+	* tracker: 5.562
 	* mediawiki: 0.60
-	* fulltextsearch: 0.117
+	* fulltextsearch: 0.118
 	* git: 4.11
 	* docman: 2.26.62
 	* ldap: 3.70

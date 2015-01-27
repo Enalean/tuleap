@@ -1,3 +1,6 @@
+Version 5.562 - Tuleap 7.10
+    * request #7792: Contributor semantic change should trigger FTS reindex
+
 Version 5.561 - Tuleap 7.10
     * Fix priority has been marked as raised even if it doesn't change
 
