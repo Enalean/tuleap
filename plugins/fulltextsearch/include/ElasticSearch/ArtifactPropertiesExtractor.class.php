@@ -88,26 +88,21 @@ class ElasticSearch_1_2_ArtifactPropertiesExtractor {
             }
         }
 
-        $core_date_fields      = $this->form_element_factory->getCoreDateFields($tracker);
-        $has_last_update_field = false;
+        $core_date_fields = $this->form_element_factory->getCoreDateFields($tracker);
         foreach ($core_date_fields as $date_field) {
             if ($date_field instanceof Tracker_FormElement_Field_SubmittedOn) {
                 $properties[$date_field->getName()] = date('c', $artifact->getSubmittedOn());
             } elseif ($date_field instanceof Tracker_FormElement_Field_LastUpdateDate) {
-                $has_last_update_field = true;
-                $properties[self::LAST_UPDATE_PROPERTY] = date('c', $artifact->getLastUpdateDate());
+
+                $properties[$date_field->getName()] = date('c', $artifact->getLastUpdateDate());
             }
         }
 
-        if (! $has_last_update_field) {
-            $last_modified = $artifact->getLastUpdateDate();
-
-            if ($last_modified === -1) {
-                $last_modified = $artifact->getSubmittedOn();
-            }
-
-            $properties[self::LAST_UPDATE_PROPERTY] = date('c', $last_modified);
+        $last_modified = $artifact->getLastUpdateDate();
+        if ($last_modified === -1) {
+            $last_modified = $artifact->getSubmittedOn();
         }
+        $properties[self::LAST_UPDATE_PROPERTY] = date('c', $last_modified);
     }
 
     public function extractTrackerFields(Tracker $tracker, array &$mapping_data) {
