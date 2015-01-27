@@ -7,7 +7,7 @@ Version 7.10 ()
 	* story #7740: git anonymous http clone
 	* Parts of story #6855: artifact copy: Recursive copy
 	* Parts of story #7697: dedicated queue for grokmirror manifest updates
-	* Parts of story #7496: see priority changes in artifact view
+	* story #7496: see priority changes in artifact view
 	* request #7710: Sort content of the userlist table after a header click (contrib STMicroelectronics).
 
 	== Bug Fix ==
@@ -32,7 +32,7 @@ Version 7.10 ()
 	* tracker_date_reminder: 1.2.9
 	* graphontrackers: 1.12
 	* graphontrackersv5: 5.16
-	* tracker: 5.560
+	* tracker: 5.561
 	* mediawiki: 0.60
 	* fulltextsearch: 0.117
 	* git: 4.11

@@ -1,3 +1,6 @@
+Version 5.561 - Tuleap 7.10
+    * Fix priority has been marked as raised even if it doesn't change
+
 Version 5.560 - Tuleap 7.10
     * Log priority change when several artifacts are moved && Display priority changes in artifact modal
 
