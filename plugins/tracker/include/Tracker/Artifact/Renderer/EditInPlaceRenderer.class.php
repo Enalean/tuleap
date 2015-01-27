@@ -82,21 +82,38 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer{
     }
 
     private function fetchFollowUps() {
-        $changesets = $this->getNonInitialChangesets($this->artifact);
+        $changesets = $this->getFollowupsContent($this->artifact);
         $presenter  = new Tracker_Artifact_Presenter_FollowUpCommentsPresenter($changesets);
 
         return $this->renderer->renderToString('follow-ups', $presenter);
     }
 
-    /**
-     * @param Tracker_Artifact $artifact
-     * @return Tracker_Artifact_Changeset[]
-     */
-    private function getNonInitialChangesets(Tracker_Artifact $artifact) {
-        $changesets = $artifact->getChangesets();
-        array_shift($changesets);
+    private function getFollowupsContent(Tracker_Artifact $artifact) {
+        $followups_content = $artifact->getChangesets();
+        array_shift($followups_content);
 
-        return array_reverse($changesets);
+        $followups_content = array_merge($followups_content, $this->getPriorityHistory($artifact));
+
+        usort($followups_content, array($this, "compareFollowupsByDate"));
+
+        return array_reverse($followups_content);
+    }
+
+    public function compareFollowupsByDate($first_followup, $second_followup) {
+        return ($first_followup->getFollowUpDate() < $second_followup->getFollowUpDate()) ? -1 : 1;
+    }
+
+    private function getPriorityHistory(Tracker_Artifact $artifact) {
+        return $this->getPriorityManager()->getArtifactPriorityHistory($artifact);
+    }
+
+    private function getPriorityManager() {
+        return new Tracker_Artifact_PriorityManager(
+            new Tracker_Artifact_PriorityDao(),
+            new Tracker_Artifact_PriorityHistoryDao(),
+            UserManager::instance(),
+            Tracker_ArtifactFactory::instance()
+        );
     }
 
     public function updateArtifact(Codendi_Request $request, PFUser $current_user) {

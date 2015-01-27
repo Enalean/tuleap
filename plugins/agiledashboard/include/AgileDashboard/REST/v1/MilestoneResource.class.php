@@ -500,7 +500,7 @@ class MilestoneResource {
             if ($order) {
                 $order->checkFormat($order);
                 $this->milestone_validator->canOrderContent($user, $milestone, $order);
-                $this->resources_patcher->updateArtifactPriorities($order);
+                $this->resources_patcher->updateArtifactPriorities($order, $id, $milestone->getProject()->getId());
             }
         } catch (IdsFromBodyAreNotUniqueException $exception) {
             throw new RestException(409, $exception->getMessage());
@@ -678,7 +678,7 @@ class MilestoneResource {
                     $user
                 );
 
-                $this->resources_patcher->updateArtifactPriorities($order);
+                $this->resources_patcher->updateArtifactPriorities($order, $id, $milestone->getProject()->getId());
             }
         } catch (IdsFromBodyAreNotUniqueException $exception) {
             throw new RestException(409, $exception->getMessage());

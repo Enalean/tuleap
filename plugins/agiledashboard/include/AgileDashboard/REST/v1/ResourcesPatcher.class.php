@@ -58,11 +58,11 @@ class ResourcesPatcher {
         $this->priority_manager->commit();
     }
 
-    public function updateArtifactPriorities(OrderRepresentationBase $order) {
+    public function updateArtifactPriorities(OrderRepresentationBase $order, $context, $project_id) {
         if ($order->direction === OrderRepresentationBase::BEFORE) {
-            $this->priority_manager->moveListOfArtifactsBefore($order->ids, $order->compared_to);
+            $this->priority_manager->moveListOfArtifactsBefore($order->ids, $order->compared_to, $context, $project_id);
         } else {
-            $this->priority_manager->moveListOfArtifactsAfter($order->ids, $order->compared_to);
+            $this->priority_manager->moveListOfArtifactsAfter($order->ids, $order->compared_to, $context, $project_id);
         }
     }
 

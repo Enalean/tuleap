@@ -180,7 +180,7 @@ class ProjectBacklogResource {
         $this->validateArtifactIdsAreInOpenAndUnassignedTopBacklog($all_ids, $user, $project);
 
         try {
-            $this->resources_patcher->updateArtifactPriorities($order);
+            $this->resources_patcher->updateArtifactPriorities($order, self::TOP_BACKLOG_IDENTIFIER, $project->getId());
         } catch (Tracker_Artifact_Exception_CannotRankWithMyself $exception) {
             throw new RestException(400, $exception->getMessage());
         }
