@@ -1,6 +1,7 @@
 Version 7.10 ()
 
 	== Features ==
+	* request #7716: Update user details thru REST api
 	* request #7723: Make project backup path customizable (contrib STMicrolelectronics).
 	* story #7607: have tracker search in global search
 	* story #7740: git anonymous http clone
