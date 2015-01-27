@@ -46,6 +46,7 @@ if (db_numrows($result)>0) {
                     // Download the patch with the correct filetype
                     require_once('common/include/Codendi_HTTPPurifier.class.php');
                     $http = Codendi_HTTPPurifier::instance();
+                    header('X-Content-Type-Options: nosniff');
                     header('Content-Type: '.$http->purify(db_result($result,0,'filetype')));
                     header('Content-Length: '.$http->purify(db_result($result,0,'filesize')));
                     header('Content-Disposition: attachment; filename="'.$http->purify(db_result($result,0,'filename')).'"');
