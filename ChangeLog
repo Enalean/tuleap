@@ -11,22 +11,16 @@ Version 7.10 ()
 	* request #7710: Sort content of the userlist table after a header click (contrib STMicroelectronics).
 
 	== Bug Fix ==
-	* request #7788: Prevent persistent XSS in attachment of an artifact
 	* Fix unit tests for webdav & config & karma tests
 	* request #7731: Columns defined as collapsed by default are not collapsed in cardwall report on dashboards
 	* request #5550 Date reminder form messed with bootstrap
 	* request #7750: Graph cumulative flow legend overlaps on graph
 	* request #7751: Enhance Mediawiki administration UI
 	* request #7673 Git errors when creating repo and dumping ssh keys
-	* request #7730: Add entropy into the session ID and the password reset token
-	* request #7754: Prevent denial of service via the login form
-	* request #7744: Fix non persistent XSS and a open redirection in search modules and login form
 	* request #7715: Fix bad links to some users in admin user list
 	* request #7764: docman fulltext search events broken
 	* request #7770: Wrong data when there are two reports on project dashboard using the same field as filter
-	* request #7755: Fix non persistent XSS and open redirect in redirect page
 	* request #7774: fatal error on my personal page from docman
-	* request #7785: Protection against clickjacking
 	* request #7792: Contributor semantic change should trigger FTS reindex
 
 	== Plugins ==
@@ -48,6 +42,15 @@ Version 7.10 ()
 
 	== Development ==
 	* Update less.sh uncompiled files
+
+	== Security ==
+	* request #7786: Enable browser built-in protection against XSS
+	* request #7788: Prevent persistent XSS in attachment of an artifact
+	* request #7755: Fix non persistent XSS and open redirect in redirect page
+	* request #7730: Add entropy into the session ID and the password reset token
+	* request #7754: Prevent denial of service via the login form
+	* request #7744: Fix non persistent XSS and a open redirection in search modules and login form
+	* request #7785: Protection against clickjacking
 
 Version 7.9 (Wednesday, January 7th 2015)
 
