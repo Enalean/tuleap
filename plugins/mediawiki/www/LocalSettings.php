@@ -385,3 +385,7 @@ if ($manager->isCompatibilityViewEnabled($group)) {
     # Displays the Publish and Cancel buttons on the top right side
     $wgDefaultUserOptions['wikieditor-publish'] = 1;
 }
+
+// TuleapArtLinks Extension inclusion
+require_once dirname(__FILE__) .'/../extensions/TuleapArtLinks/TuleapArtLinks.php';
+$wgTuleapArtLinksGroupId = $group->getGroupId();
