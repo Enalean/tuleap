@@ -21,6 +21,8 @@ Source0: %{PKG_NAME}-%{version}.tar.gz
 Source1: cli_ParametersLocal.dtd
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: zip
+# SELinux policy tools
+Requires(post): policycoreutils-python
 
 %description
 This package provides the documentation, CLI package and themes modifications
@@ -59,8 +61,10 @@ tools/rpm/build_release.sh
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/common/images
 
 %post
-/usr/bin/chcon -R root:object_r:httpd_sys_content_t %{APP_DIR}/documentation %{APP_DIR}/downloads || true
-
+/usr/sbin/semanage fcontext -a -t httpd_sys_content_t '%{APP_DIR}/documentation(/.*)?' || true
+/usr/sbin/semanage fcontext -a -t httpd_sys_content_t '%{APP_DIR}/downloads(/.*)?' || true
+/sbin/restorecon -R '%{APP_DIR}/documentation' || true
+/sbin/restorecon -R '%{APP_DIR}/downloads' || true
 
 %clean
 %{__rm} -rf $RPM_BUILD_ROOT
