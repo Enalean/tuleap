@@ -1,3 +1,6 @@
+Version 1.148 - Tuleap 7.10
+    * Log priority change when several artifacts are moved && Display priority changes in artifact modal
+
 Version 1.147 - Tuleap 7.10
     * story #7496: Display priority changes likes an artifact change in follow-ups section
 

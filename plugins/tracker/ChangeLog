@@ -1,3 +1,6 @@
+Version 5.560 - Tuleap 7.10
+    * Log priority change when several artifacts are moved && Display priority changes in artifact modal
+
 Version 5.559 - Tuleap 7.10
     * story #7496: Keep history only when the admin check the option in tracker admin
 
