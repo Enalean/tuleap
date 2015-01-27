@@ -44,6 +44,8 @@ class User_ForgeUserGroupPermissionsFactory {
                 return new User_ForgeUserGroupPermission_TrackerAdminAllProjects();
             case User_ForgeUserGroupPermission_MediawikiAdminAllProjects::ID :
                 return new User_ForgeUserGroupPermission_MediawikiAdminAllProjects();
+            case User_ForgeUserGroupPermission_UserManagement::ID :
+                return new User_ForgeUserGroupPermission_UserManagement();
             default :
                 throw new User_ForgeUserGroupPermission_NotFoundException();
         }
@@ -93,7 +95,8 @@ class User_ForgeUserGroupPermissionsFactory {
             new User_ForgeUserGroupPermission_ProjectApproval(),
             new User_ForgeUserGroupPermission_TrackerAdminAllProjects(),
             new User_ForgeUserGroupPermission_MediawikiAdminAllProjects(),
-            new User_ForgeUserGroupPermission_RetrieveUserMembershipInformation()
+            new User_ForgeUserGroupPermission_RetrieveUserMembershipInformation(),
+            new User_ForgeUserGroupPermission_UserManagement()
         );
     }
 

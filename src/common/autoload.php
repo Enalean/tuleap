@@ -593,6 +593,7 @@ function autoload8bd11b0b5a29070e16e6b6b28c653809($class) {
             'user_forgeusergrouppermission_projectapproval' => '/user/ForgeUserGroupPermission/ProjectApproval.class.php',
             'user_forgeusergrouppermission_retrieveusermembershipinformation' => '/user/ForgeUserGroupPermission/RetrieveUserMembershipInformation.class.php',
             'user_forgeusergrouppermission_trackeradminallprojects' => '/user/ForgeUserGroupPermission/TrackerAdminAllProjects.class.php',
+            'user_forgeusergrouppermission_usermanagement' => '/user/ForgeUserGroupPermission/UserManagement.class.php',
             'user_forgeusergrouppermissionsdao' => '/user/ForgeUserGroupPermissionsDao.class.php',
             'user_forgeusergrouppermissionsfactory' => '/user/ForgeUserGroupPermissionsFactory.class.php',
             'user_forgeusergrouppermissionsmanager' => '/user/ForgeUserGroupPermissionsManager.class.php',

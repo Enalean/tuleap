@@ -62,6 +62,12 @@ class UserRepresentation {
      */
     public $avatar_url;
 
+    /**
+     * @var String
+     */
+    public $status;
+
+
     public function build(PFUser $user) {
         $this->id         = JsonCast::toInt($user->getId());
         $this->uri        = UserRepresentation::ROUTE . '/' . $this->id;
@@ -70,6 +76,7 @@ class UserRepresentation {
         $this->username   = $user->getUserName();
         $this->ldap_id    = $user->getLdapId();
         $this->avatar_url = $user->getAvatarUrl();
+        $this->status     = $user->getStatus();
         return $this;
     }
 }

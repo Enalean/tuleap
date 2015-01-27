@@ -106,7 +106,8 @@ class UserGroupTest extends RestBase {
                     'real_name'  => TestDataBuilder::ADMIN_REAL_NAME,
                     'username'   => TestDataBuilder::ADMIN_USER_NAME,
                     'ldap_id'    => '',
-                    'avatar_url' => '/themes/common/images/avatar_default.png'
+                    'avatar_url' => '/themes/common/images/avatar_default.png',
+                    'status'     => 'A'
                 ),
                 array(
                     'id'         => TestDataBuilder::TEST_USER_1_ID,
@@ -115,7 +116,8 @@ class UserGroupTest extends RestBase {
                     'real_name'  => TestDataBuilder::TEST_USER_1_REALNAME,
                     'username'   => TestDataBuilder::TEST_USER_1_NAME,
                     'ldap_id'    => TestDataBuilder::TEST_USER_1_LDAPID,
-                    'avatar_url' => '/themes/common/images/avatar_default.png'
+                    'avatar_url' => '/themes/common/images/avatar_default.png',
+                    'status'     => 'A'
                 ),
                 array(
                     'id'         => TestDataBuilder::TEST_USER_2_ID,
@@ -124,7 +126,8 @@ class UserGroupTest extends RestBase {
                     'real_name'  => '',
                     'username'   => TestDataBuilder::TEST_USER_2_NAME,
                     'ldap_id'    => '',
-                    'avatar_url' => '/themes/common/images/avatar_default.png'
+                    'avatar_url' => '/themes/common/images/avatar_default.png',
+                    'status'     => 'A'
                 ),
                 array(
                     'id'         => TestDataBuilder::TEST_USER_3_ID,
@@ -133,7 +136,8 @@ class UserGroupTest extends RestBase {
                     'real_name'  => '',
                     'username'   => TestDataBuilder::TEST_USER_3_NAME,
                     'ldap_id'    => '',
-                    'avatar_url' => '/themes/common/images/avatar_default.png'
+                    'avatar_url' => '/themes/common/images/avatar_default.png',
+                    'status'     => 'A'
                 )
             )
         );
@@ -153,7 +157,8 @@ class UserGroupTest extends RestBase {
                     'real_name'  => TestDataBuilder::TEST_USER_1_REALNAME,
                     'username'   => TestDataBuilder::TEST_USER_1_NAME,
                     'ldap_id'    => TestDataBuilder::TEST_USER_1_LDAPID,
-                    'avatar_url' => '/themes/common/images/avatar_default.png'
+                    'avatar_url' => '/themes/common/images/avatar_default.png',
+                    'status'     => 'A'
                 )
             )
         );
@@ -173,7 +178,8 @@ class UserGroupTest extends RestBase {
                     'real_name'  => TestDataBuilder::TEST_USER_1_REALNAME,
                     'username'   => TestDataBuilder::TEST_USER_1_NAME,
                     'ldap_id'    => TestDataBuilder::TEST_USER_1_LDAPID,
-                    'avatar_url' => '/themes/common/images/avatar_default.png'
+                    'avatar_url' => '/themes/common/images/avatar_default.png',
+                    'status'     => 'A'
                 ),
                 array(
                     'id'         => TestDataBuilder::TEST_USER_2_ID,
@@ -182,7 +188,8 @@ class UserGroupTest extends RestBase {
                     'real_name'  => '',
                     'username'   => TestDataBuilder::TEST_USER_2_NAME,
                     'ldap_id'    => '',
-                    'avatar_url' => '/themes/common/images/avatar_default.png'
+                    'avatar_url' => '/themes/common/images/avatar_default.png',
+                    'status'     => 'A'
                 )
             )
         );

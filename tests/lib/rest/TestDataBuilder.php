@@ -29,18 +29,22 @@ class TestDataBuilder {
 
     const ADMIN_REAL_NAME      = 'Site Administrator';
     const ADMIN_EMAIL          = 'codendi-admin@_DOMAIN_NAME_';
+    const ADMIN_STATUS         = 'A';
     const TEST_USER_1_ID       = 102;
     const TEST_USER_1_NAME     = 'rest_api_tester_1';
     const TEST_USER_1_REALNAME = 'Test User 1';
     const TEST_USER_1_PASS     = 'welcome0';
     const TEST_USER_1_EMAIL    = 'test_user_1@myzupermail.com';
     const TEST_USER_1_LDAPID   = 'tester1';
+    const TEST_USER_1_STATUS   = 'A';
     const TEST_USER_2_ID       = 103;
     const TEST_USER_2_NAME     = 'rest_api_tester_2';
     const TEST_USER_2_PASS     = 'welcome0';
+    const TEST_USER_2_STATUS   = 'A';
     const TEST_USER_3_ID       = 104;
     const TEST_USER_3_NAME     = 'rest_api_tester_3';
     const TEST_USER_3_PASS     = 'welcome0';
+    const TEST_USER_3_STATUS   = 'A';
 
     const ADMIN_PROJECT_ID          = 100;
     const PROJECT_PRIVATE_MEMBER_ID = 101;
@@ -172,6 +176,7 @@ class TestDataBuilder {
         $user_1->setRealName(self::TEST_USER_1_REALNAME);
         $user_1->setLdapId(self::TEST_USER_1_LDAPID);
         $user_1->setPassword(self::TEST_USER_1_PASS);
+        $user_1->setStatus(self::TEST_USER_1_STATUS);
         $user_1->setEmail(self::TEST_USER_1_EMAIL);
         $user_1->setLanguage($GLOBALS['Language']);
         $this->user_manager->createAccount($user_1);
@@ -180,12 +185,14 @@ class TestDataBuilder {
         $user_2 = new PFUser();
         $user_2->setUserName(self::TEST_USER_2_NAME);
         $user_2->setPassword(self::TEST_USER_2_PASS);
+        $user_2->setStatus(self::TEST_USER_2_STATUS);
         $user_2->setLanguage($GLOBALS['Language']);
         $this->user_manager->createAccount($user_2);
 
         $user_3 = new PFUser();
         $user_3->setUserName(self::TEST_USER_3_NAME);
         $user_3->setPassword(self::TEST_USER_3_PASS);
+        $user_3->setStatus(self::TEST_USER_3_STATUS);
         $user_3->setLanguage($GLOBALS['Language']);
         $this->user_manager->createAccount($user_3);
 
@@ -202,6 +209,28 @@ class TestDataBuilder {
 
         // Grant Retrieve Membership permissions
         $permission                     = new User_ForgeUserGroupPermission_RetrieveUserMembershipInformation();
+        $permissions_dao                = new User_ForgeUserGroupPermissionsDao();
+        $user_group_permissions_manager = new User_ForgeUserGroupPermissionsManager($permissions_dao);
+        $user_group_permissions_manager->addPermission($user_group, $permission);
+
+        // Add user to group
+        $user_group_users_dao     = new User_ForgeUserGroupUsersDao();
+        $user_group_users_manager = new User_ForgeUserGroupUsersManager($user_group_users_dao);
+        $user_group_users_manager->addUserToForgeUserGroup($user, $user_group);
+
+        return $this;
+    }
+
+    public function delegatePermissionsToManageUser() {
+        $user = $this->user_manager->getUserById(self::TEST_USER_3_ID);
+
+        // Create group
+        $user_group_dao     = new UserGroupDao();
+        $user_group_factory = new User_ForgeUserGroupFactory($user_group_dao);
+        $user_group         = $user_group_factory->createForgeUGroup('site remote admins', '');
+
+        // Grant Retrieve Membership permissions
+        $permission                     = new User_ForgeUserGroupPermission_UserManagement();
         $permissions_dao                = new User_ForgeUserGroupPermissionsDao();
         $user_group_permissions_manager = new User_ForgeUserGroupPermissionsManager($permissions_dao);
         $user_group_permissions_manager->addPermission($user_group, $permission);

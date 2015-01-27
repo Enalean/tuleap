@@ -6,3 +6,5 @@ usergroup_forge_permission	mediawiki_admin_name	Global Mediawiki Administrator
 usergroup_forge_permission	mediawiki_admin_description	This permission grants mediawiki administration rights for each mediawiki of every project
 usergroup_forge_permission	user_membership_name	Retrieve User Membership Information
 usergroup_forge_permission	user_membership_description	This permission grants the right to know which group any user belongs to.
+usergroup_forge_permission	user_management_name	User Management
+usergroup_forge_permission	user_management_description	This permission grants the right to manage users: change the status, the username, etc,.. .
