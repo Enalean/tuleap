@@ -49,7 +49,7 @@ class fulltextsearchPlugin extends Plugin {
         SystemEvent_FULLTEXTSEARCH_TRACKER_REINDEX_PROJECT::NAME,
         SystemEvent_FULLTEXTSEARCH_TRACKER_ARTIFACT_DELETE::NAME,
         SystemEvent_FULLTEXTSEARCH_TRACKER_TRACKER_DELETE::NAME,
-        SystemEvent_FULLTEXTSEARCH_TRACKER_PERMISSION_CHANGE::NAME,
+        SystemEvent_FULLTEXTSEARCH_TRACKER_REINDEX::NAME,
         SystemEvent_FULLTEXTSEARCH_WIKI_INDEX::NAME,
         SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE::NAME,
         SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE_PERMISSIONS::NAME,
@@ -90,6 +90,7 @@ class fulltextsearchPlugin extends Plugin {
             $this->_addHook(TRACKER_EVENT_ARTIFACT_DELETE);
             $this->_addHook(TRACKER_EVENT_TRACKER_DELETE);
             $this->_addHook(TRACKER_EVENT_TRACKER_PERMISSIONS_CHANGE);
+            $this->_addHook(TRACKER_EVENT_SEMANTIC_CONTRIBUTOR_CHANGE);
             $this->_addHook('tracker_followup_event_update', 'tracker_event_artifact_post_update', false);
             $this->_addHook('tracker_report_followup_warning', 'tracker_report_followup_warning', false);
         }
@@ -721,7 +722,17 @@ class fulltextsearchPlugin extends Plugin {
         $this->reindexAll($project_id);
     }
 
+    /** @see TRACKER_EVENT_TRACKER_PERMISSIONS_CHANGE */
     public function tracker_event_tracker_permisssions_change($params) {
+        $this->reindexTracker($params);
+    }
+
+    /** @see TRACKER_EVENT_SEMANTIC_CONTRIBUTOR_CHANGE */
+    public function tracker_event_semantic_contributor_change($params) {
+        $this->reindexTracker($params);
+    }
+
+    private function reindexTracker($params) {
         $tracker    = $params['tracker'];
         $controller = $this->getAdminController();
 

@@ -21,7 +21,7 @@
 require_once dirname(__FILE__) .'/../include/autoload.php';
 require_once TRACKER_BASE_DIR .'/../include/autoload.php';
 
-class SystemEvent_FULLTEXTSEARCH_TRACKER_PERMISSION_CHANGETest extends TuleapTestCase {
+class SystemEvent_FULLTEXTSEARCH_TRACKER_REINDEXTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
@@ -31,7 +31,7 @@ class SystemEvent_FULLTEXTSEARCH_TRACKER_PERMISSION_CHANGETest extends TuleapTes
 
     public function aSystemEventWithParameter($parameters) {
         $id = $type = $owner = $priority = $status = $create_date = $process_date = $end_date = $log = null;
-        $event = new SystemEvent_FULLTEXTSEARCH_TRACKER_PERMISSION_CHANGE(
+        $event = new SystemEvent_FULLTEXTSEARCH_TRACKER_REINDEX(
             $id,
             $type,
             $owner,
