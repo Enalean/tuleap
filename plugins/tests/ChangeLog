@@ -1,3 +1,6 @@
+Version 5.27 - Tuleap 7.10
+    * request #7799: Token is stored in a dedicated cookie
+
 Version 5.26 - Tuleap 7.8
     * story #7511: PATCH /milestones/:id/content with 'add' and 'remove'
 

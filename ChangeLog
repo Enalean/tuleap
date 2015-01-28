@@ -1,6 +1,7 @@
 Version 7.10 ()
 
 	== Features ==
+	* request #7799: Token is stored in a dedicated cookie
 	* request #7716: Update user details thru REST api
 	* request #7723: Make project backup path customizable (contrib STMicrolelectronics).
 	* story #7607: have tracker search in global search
@@ -36,6 +37,7 @@ Version 7.10 ()
 	* openid: 0.6
 	* agiledashboard: 1.148
 	* webdav: 1.9.7
+	* tests: 5.27
 
 	== Themes ==
 	* FlamingParrot: 1.65
