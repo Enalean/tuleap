@@ -1,3 +1,6 @@
+Version 2.26.63 - Tuleap 7.10
+    * request #7788: Force IE (< 9) and old Chrome versions to follow the declared content-type and content-disposition headers
+
 Version 2.26.62 - Tuleap 7.10
     * request #7788: Prevent persistent XSS in attachment of an artifact
 

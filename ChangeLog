@@ -1,6 +1,7 @@
 Version 7.10 ()
 
 	== Features ==
+	* request #7788: Force IE (< 9) and old Chrome versions to follow the declared content-type and content-disposition headers
 	* request #7799: Token is stored in a dedicated cookie
 	* request #7716: Update user details thru REST api
 	* request #7723: Make project backup path customizable (contrib STMicrolelectronics).
@@ -28,11 +29,11 @@ Version 7.10 ()
 	* tracker_date_reminder: 1.2.9
 	* graphontrackers: 1.12
 	* graphontrackersv5: 5.16
-	* tracker: 5.562
+	* tracker: 5.563
 	* mediawiki: 0.60
 	* fulltextsearch: 0.118
 	* git: 4.11
-	* docman: 2.26.62
+	* docman: 2.26.63
 	* ldap: 3.70
 	* openid: 0.6
 	* agiledashboard: 1.148
