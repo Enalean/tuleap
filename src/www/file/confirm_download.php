@@ -2,6 +2,7 @@
 //
 // Codendi
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 // http://www.codendi.com
 //
 // 
