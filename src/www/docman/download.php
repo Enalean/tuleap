@@ -40,6 +40,7 @@ if ($result && db_numrows($result) > 0) {
     } else {
 	
 	// Download the patch with the correct filetype
+        header('X-Content-Type-Options: nosniff');
 	header('Content-Type: '.db_result($result,0,'filetype'));
 	header('Content-Length: '.db_result($result,0,'filesize'));
 	header('Content-Disposition: attachment; filename="'.db_result($result,0,'filename').'"');

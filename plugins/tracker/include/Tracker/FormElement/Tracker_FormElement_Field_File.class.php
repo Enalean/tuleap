@@ -534,6 +534,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         if ($fileinfo = Tracker_FileInfo::instance($this, $attachment_id)) {
             if ($fileinfo->fileExists()) {
                 $http = Codendi_HTTPPurifier::instance();
+                header('X-Content-Type-Options: nosniff');
                 header('Content-Type: '.$http->purify($fileinfo->getFiletype()));
                 header('Content-Length: '.$http->purify($fileinfo->getFilesize()));
                 header('Content-Disposition: attachment; filename="'.$http->purify($fileinfo->getFilename()).'"');
