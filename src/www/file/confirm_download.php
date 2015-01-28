@@ -2,6 +2,7 @@
 //
 // Codendi
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 // http://www.codendi.com
 //
 // 
@@ -97,7 +98,7 @@ if (isset($GLOBALS['sys_exchange_policy_url'])) {
 }
 
 $hp       = Codendi_HTMLPurifier::instance();
-$filename = $hp->purify($filename);
+$filename = $hp->purify($filename, CODENDI_PURIFIER_JS_QUOTE);
 echo $Language->getText('file_confirm_download', 'download_explain', array($GLOBALS['sys_org_name'], $GLOBALS['sys_email_contact'], $exchangePolicyUrl));
 ?><br>
 
