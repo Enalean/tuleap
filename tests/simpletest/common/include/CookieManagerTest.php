@@ -35,25 +35,31 @@ class CookieManagerTest extends TuleapTestCase {
 
     public function itSetsTheCookieDomainWhenADomainName() {
         $GLOBALS['sys_cookie_domain'] = 'example.com';
-        stub($this->cookie_manager)->phpsetcookie('*', '*', '*', '*', '.example.com', '*')->once();
-        $this->cookie_manager->setCookie('bla', 'bla', 'bla');
+        stub($this->cookie_manager)->phpsetcookie('*', '*', '*', '*', '.example.com', '*', '*')->once();
+        $this->cookie_manager->setHTTPOnlyCookie('bla', 'bla', 'bla');
     }
 
     public function itSetsTheCookieDomainWhenADomainNameWithoutTLD() {
         $GLOBALS['sys_cookie_domain'] = 'gg32';
-        stub($this->cookie_manager)->phpsetcookie('*', '*', '*', '*', '', '*')->once();
-        $this->cookie_manager->setCookie('bla', 'bla', 'bla');
+        stub($this->cookie_manager)->phpsetcookie('*', '*', '*', '*', '', '*', '*')->once();
+        $this->cookie_manager->setHTTPOnlyCookie('bla', 'bla', 'bla');
     }
 
     public function itSetTheCookieDomainWhenIPAdress() {
         $GLOBALS['sys_cookie_domain'] = '127.0.0.1';
-        stub($this->cookie_manager)->phpsetcookie('*', '*', '*', '*', '', '*')->once();
-        $this->cookie_manager->setCookie('bla', 'bla', 'bla');
+        stub($this->cookie_manager)->phpsetcookie('*', '*', '*', '*', '', '*', '*')->once();
+        $this->cookie_manager->setHTTPOnlyCookie('bla', 'bla', 'bla');
     }
 
     public function itSetsTheCookieDomainWhenADomainNameAndPort() {
         $GLOBALS['sys_cookie_domain'] = 'example.com:8080';
-        stub($this->cookie_manager)->phpsetcookie('*', '*', '*', '*', '.example.com', '*')->once();
-        $this->cookie_manager->setCookie('bla', 'bla', 'bla');
+        stub($this->cookie_manager)->phpsetcookie('*', '*', '*', '*', '.example.com', '*', '*')->once();
+        $this->cookie_manager->setHTTPOnlyCookie('bla', 'bla', 'bla');
+    }
+
+    public function itSetsCookieReadableByJavaScript() {
+        $GLOBALS['sys_cookie_domain'] = 'example.com';
+        stub($this->cookie_manager)->phpsetcookie('*', '*', '*', '*', '.example.com', '*', false)->once();
+        $this->cookie_manager->setGlobalCookie('bla', 'bla', 'bla');
     }
 }

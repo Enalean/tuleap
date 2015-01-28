@@ -123,7 +123,7 @@ class Response {
 
     function setCookie($name, $value, $expire = 0) {
         $cookie_manager = new CookieManager();
-        $cookie_manager->setCookie($name, $value, $expire);
+        $cookie_manager->setHTTPOnlyCookie($name, $value, $expire);
     }
 
     function removeCookie($name) {

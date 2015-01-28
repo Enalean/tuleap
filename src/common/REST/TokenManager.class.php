@@ -77,6 +77,9 @@ class Rest_TokenManager {
         return $this->token_dao->deleteAllTokensForUser($user->getId());
     }
 
+    /**
+     * @return Rest_Token
+     */
     public function generateTokenForUser(PFUser $user) {
         $token_generator = new UserTokenGenerator();
         $token = $token_generator->getToken();
