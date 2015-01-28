@@ -97,7 +97,7 @@ class TestOfBrowserCookies extends UnitTestCase {
         $request->expectOnce('readCookiesFromJar', array($jar, '*'));
         
         $agent = &$this->_createMockedRequestUserAgent($request);
-        $agent->setCookie('a', 'A');
+        $agent->setHTTPOnlyCookie('a', 'A');
         $agent->fetchResponse(
                 new SimpleUrl('http://this.com/this/path/page.html'),
                 new SimpleGetEncoding());
@@ -109,7 +109,7 @@ class TestOfBrowserCookies extends UnitTestCase {
         $request->expectNever('readCookiesFromJar');
         
         $agent = &$this->_createMockedRequestUserAgent($request);
-        $agent->setCookie('a', 'A');
+        $agent->setHTTPOnlyCookie('a', 'A');
         $agent->ignoreCookies();
         $agent->fetchResponse(
                 new SimpleUrl('http://this.com/this/path/page.html'),
@@ -138,7 +138,7 @@ class TestOfBrowserCookies extends UnitTestCase {
     function testOverwriteCookieThatAlreadyExists() {
         $request = &$this->_createCookieSite('Set-cookie: a=AAAA');
         $agent = &$this->_createMockedRequestUserAgent($request);
-        $agent->setCookie('a', 'A');
+        $agent->setHTTPOnlyCookie('a', 'A');
         $agent->fetchResponse(
                 new SimpleUrl('http://this.com/this/path/page.html'),
                 new SimpleGetEncoding());
@@ -149,7 +149,7 @@ class TestOfBrowserCookies extends UnitTestCase {
         $request = &$this->_createCookieSite('Set-cookie: a=b');
         $agent = &$this->_createMockedRequestUserAgent($request);
         
-        $agent->setCookie("a", "A", "this/path/", "Wed, 25-Dec-02 04:24:21 GMT");
+        $agent->setHTTPOnlyCookie("a", "A", "this/path/", "Wed, 25-Dec-02 04:24:21 GMT");
         $agent->fetchResponse(
                 new SimpleUrl('http://this.com/this/path/page.html'),
                 new SimpleGetEncoding());
@@ -188,7 +188,7 @@ class TestOfBrowserCookies extends UnitTestCase {
         $agent->fetchResponse(
                 new SimpleUrl('http://this.com/this/path/page.html'),
                 new SimpleGetEncoding());
-        $agent->setCookie("b", "BBB", "this.com", "this/path/");
+        $agent->setHTTPOnlyCookie("b", "BBB", "this.com", "this/path/");
         $this->assertEqual(
                 $agent->getBaseCookieValue("a", new SimpleUrl('http://this.com/this/path/page.html')),
                 "AAA");
