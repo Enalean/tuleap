@@ -17,7 +17,8 @@ require_once('common/user/UserManager.class.php');
 Mock::generatePartial('UserManager',
                       'UserManagerTestVersion',
                       array('getUserInstanceFromRow',
-                            '_getCookieManager',
+                            'getCookieManager',
+                            'getTokenManager',
                             '_getServerIp',
                             'generateSessionHash',
                             '_getPasswordLifetime',
@@ -196,7 +197,7 @@ class UserManagerTest extends UnitTestCase {
         $cm->setReturnValue('getCookie', '');
 
         $um->setReturnReference('getDao', $dao);
-        $um->setReturnReference('_getCookieManager', $cm);
+        $um->setReturnReference('getCookieManager', $cm);
         $um->setReturnReference('getUserInstanceFromRow', $userAnonymous, array(array('user_id' => 0)));
 
         //expect that the user is cached
@@ -230,7 +231,7 @@ class UserManagerTest extends UnitTestCase {
         $dao->expectOnce('storeLastAccessDate', array(123, '*'));
 
         $um->setReturnReference('getDao', $dao);
-        $um->setReturnReference('_getCookieManager', $cm);
+        $um->setReturnReference('getCookieManager', $cm);
 
         $user = $um->getCurrentUser();
         $this->assertFalse($user->isAnonymous(), 'An valid session hash gives a registered user');
@@ -252,7 +253,7 @@ class UserManagerTest extends UnitTestCase {
         $um->setReturnReference('getUserInstanceFromRow', $userAnonymous, array(array('user_id' => 0)));
 
         $um->setReturnReference('getDao', $dao);
-        $um->setReturnReference('_getCookieManager', $cm);
+        $um->setReturnReference('getCookieManager', $cm);
 
         $user = $um->getCurrentUser();
         $this->assertTrue($user->isAnonymous(), 'An invalid session hash gives an anonymous user');
@@ -275,7 +276,7 @@ class UserManagerTest extends UnitTestCase {
         $um->setReturnReference('getUserInstanceFromRow', $userAnonymous, array(array('user_id' => 0)));
 
         $um->setReturnReference('getDao', $dao);
-        $um->setReturnReference('_getCookieManager', $cm);
+        $um->setReturnReference('getCookieManager', $cm);
 
         $user = $um->getCurrentUser();
         $this->assertTrue($user->isAnonymous(), 'An invalid ip gives an anonymous user');
@@ -309,7 +310,7 @@ class UserManagerTest extends UnitTestCase {
         $um->setReturnReference('getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
 
         $um->setReturnReference('getDao', $dao);
-        $um->setReturnReference('_getCookieManager', $cm);
+        $um->setReturnReference('getCookieManager', $cm);
 
         $user1 = $um->getCurrentUser();
         $this->assertTrue($user1->isAnonymous(), 'An invalid ip gives an anonymous user');
@@ -340,7 +341,9 @@ class UserManagerTest extends UnitTestCase {
         $user123->expectAt(1, 'setSessionHash', array(false));
 
         $cm->setReturnValue('getCookie', 'valid_hash');
-        $cm->expectOnce('removeCookie', array('session_hash'));
+        $cm->expectCallCount('removeCookie', 2);
+        $cm->expectAt(0, 'removeCookie', array('user_token'));
+        $cm->expectAt(1, 'removeCookie', array('session_hash'));
         $um->setReturnValue('_getServerIp', '212.212.123.12');
         $dao->expectOnce('deleteSession', array('valid_hash'));
         $dao->setReturnReference('searchBySessionHashAndIp', $dar_valid_hash, array('valid_hash', '212.212.123.12'));
@@ -348,7 +351,7 @@ class UserManagerTest extends UnitTestCase {
         $um->setReturnReference('getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
 
         $um->setReturnReference('getDao', $dao);
-        $um->setReturnReference('_getCookieManager', $cm);
+        $um->setReturnReference('getCookieManager', $cm);
         $um->expectOnce('destroySession');
 
         $user = $um->getCurrentUser();
@@ -360,12 +363,16 @@ class UserManagerTest extends UnitTestCase {
         $dao              = new MockUserDao($this);
         $dar              = new MockDataAccessResult($this);
         $user123          = mock('PFUser');
-        $um               = new UserManagerTestVersion($this);
+        $user_manager     = new UserManagerTestVersion($this);
         $em               = new MockEventManager($this);
 
-        $um->setReturnReference('_getEventManager', $em);
-
+        $user_manager->setReturnReference('_getEventManager', $em);
         $hash = 'valid_hash';
+
+        $token_value   = 'token';
+        $token         = stub('Rest_Token')->getTokenValue()->returns($token_value);
+        $token_manager = stub('REST_TokenManager')->generateTokenForUser()->returns($token);
+
         $dao->setReturnValue('createSession', $hash);
 
         $user123->setReturnValue('getId', 123);
@@ -375,17 +382,24 @@ class UserManagerTest extends UnitTestCase {
         $user123->setReturnValue('isAnonymous', false);
         $user123->expectOnce('setSessionHash', array($hash));
 
-        $cm->expectOnce('setCookie', array('session_hash', $hash, 0));
-        $um->setReturnReference('_getCookieManager', $cm);
+        $cm->expectOnce('setHTTPOnlyCookie', array('session_hash', $hash, 0));
+        $cm->expectOnce('setGlobalCookie', array(
+            'user_token',
+            $token_value,
+            $_SERVER['REQUEST_TIME'] + Rest_TokenManager::TOKENS_EXPIRATION_TIME)
+        );
+
+        $user_manager->setReturnReference('getCookieManager', $cm);
+        stub($user_manager)->getTokenManager()->returns($token_manager);
 
         $dao->setReturnReference('searchByUserName', $dar, array('user_123'));
         $dar->setReturnValue('getRow', array('user_name' => 'user_123', 'user_id' => 123));
-        $um->setReturnReference('getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
+        $user_manager->setReturnReference('getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
 
         $dao->expectNever('storeLoginFailure');
 
-        $um->setReturnReference('getDao', $dao);
-        $this->assertReference($user123, $um->login('user_123', 'pwd', 0));
+        $user_manager->setReturnReference('getDao', $dao);
+        $this->assertReference($user123, $user_manager->login('user_123', 'pwd', 0));
     }
 
     function testBadLogin() {
@@ -408,8 +422,9 @@ class UserManagerTest extends UnitTestCase {
         $userAnonymous->setReturnValue('getId', 0);
         $userAnonymous->setReturnValue('isAnonymous', true);
 
-        $cm->expectNever('setCookie');
-        $um->setReturnReference('_getCookieManager', $cm);
+        $cm->expectNever('setHTTPOnlyCookie');
+        $cm->expectNever('setGlobalCookie');
+        $um->setReturnReference('getCookieManager', $cm);
 
         $dao->setReturnReference('searchByUserName', $dar, array('user_123'));
         $dar->setReturnValue('getRow', array('user_name' => 'user_123', 'user_id' => 123));
@@ -450,7 +465,7 @@ class UserManagerTest extends UnitTestCase {
         $dao->expectOnce('deleteAllUserSessions', array(123));
 
         $um->setReturnReference('getDao', $dao);
-        $um->setReturnReference('_getCookieManager', $cm);
+        $um->setReturnReference('getCookieManager', $cm);
 
         $user = $um->getCurrentUser();
         $this->assertTrue($user->isAnonymous(), 'A suspended user should not be able to use a valid session');
@@ -482,7 +497,7 @@ class UserManagerTest extends UnitTestCase {
         $dao->expectOnce('deleteAllUserSessions', array(123));
 
         $um->setReturnReference('getDao', $dao);
-        $um->setReturnReference('_getCookieManager', $cm);
+        $um->setReturnReference('getCookieManager', $cm);
 
         $user = $um->getCurrentUser();
         $this->assertTrue($user->isAnonymous(), 'A deleted user should not be able to use a valid session');

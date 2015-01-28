@@ -341,7 +341,7 @@ class UserManager {
         if (!isset($this->_currentuser) || $session_hash !== false) {
             $dar = null;
             if ($session_hash === false) {
-                $session_hash = $this->_getCookieManager()->getCookie('session_hash');
+                $session_hash = $this->getCookieManager()->getCookie('session_hash');
             }
             if ($dar = $this->getDao()->searchBySessionHashAndIp($session_hash, $this->_getServerIp())) {
                 if ($row = $dar->getRow()) {
@@ -390,7 +390,8 @@ class UserManager {
         if ($user->getSessionHash()) {
             $this->getDao()->deleteSession($user->getSessionHash());
             $user->setSessionHash(false);
-            $this->_getCookieManager()->removeCookie('session_hash');
+            $this->getCookieManager()->removeCookie('user_token');
+            $this->getCookieManager()->removeCookie('session_hash');
             $this->destroySession();
         }
     }
@@ -485,7 +486,31 @@ class UserManager {
         if ($user->getStickyLogin()) {
             $expire = $_SERVER['REQUEST_TIME'] + $this->_getSessionLifetime();
         }
-        $this->_getCookieManager()->setCookie('session_hash', $session_hash, $expire);
+        $this->getCookieManager()->setHTTPOnlyCookie('session_hash', $session_hash, $expire);
+        $this->setUserTokenCookie($user);
+    }
+
+    private function setUserTokenCookie(PFUser $user) {
+        $token = $this->getTokenManager()->generateTokenForUser($user);
+
+        $this->getCookieManager()->setGlobalCookie(
+            'user_token',
+            $token->getTokenValue(),
+            $_SERVER['REQUEST_TIME'] + Rest_TokenManager::TOKENS_EXPIRATION_TIME
+        );
+    }
+
+    /**
+     * @return Rest_TokenManager
+     */
+    protected function getTokenManager() {
+        $dao = new Rest_TokenDao();
+
+        return new Rest_TokenManager(
+            $dao,
+            new Rest_TokenFactory($dao),
+            $this
+        );
     }
 
     /**
@@ -629,7 +654,7 @@ class UserManager {
     /**
      * @return CookieManager
      */
-    function _getCookieManager() {
+    function getCookieManager() {
         return new CookieManager();
     }
     
