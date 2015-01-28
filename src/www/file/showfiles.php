@@ -96,8 +96,8 @@ if ($pv) {
 ?>
 <SCRIPT language="JavaScript">
 <!--
-function showConfirmDownload(group_id,file_id,filename) {
-    url = "/file/confirm_download.php?popup=1&group_id=" + group_id + "&file_id=" + file_id + "&filename=" + filename;
+function showConfirmDownload(group_id,file_id) {
+    url = "/file/confirm_download.php?popup=1&group_id=" + group_id + "&file_id=" + file_id;
     wConfirm = window.open(url,"confirm","width=520,height=450,resizable=1,scrollbars=1");
     wConfirm.focus();
 }
@@ -338,7 +338,7 @@ while (list ($package_id, $package) = each($packages)) {
                                 print '<A HREF="/file/download.php/' . $group_id . "/" . $file_release['file_id'] . "/" . $hp->purify($file_release['filename']) . '" title="' . $file_release['file_id'] . " - " . $hp->purify($fname) . '">' . $hp->purify($fname) . '</A>';
                             } else {
                                 // Display popup
-                                print '<A HREF="javascript:showConfirmDownload(' . $group_id . ',' . $file_release['file_id'] . ',\'' . $hp->purify($file_release['filename']) . '\')" title="' . $file_release['file_id'] . " - " . $hp->purify($fname) . '">' . $hp->purify($fname) . '</A>';
+                                print '<A HREF="javascript:showConfirmDownload(' . $group_id . ',' . $file_release['file_id'] . ')" title="' . $file_release['file_id'] . " - " . $hp->purify($fname) . '">' . $hp->purify($fname) . '</A>';
                             }
                             $size_precision = 0;
                             if ($file_release['file_size'] < 1024) {
