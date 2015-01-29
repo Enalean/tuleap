@@ -1,6 +1,7 @@
 Version 7.10 ()
 
 	== Features ==
+	* request #7805: Remove CKEditor for IE7
 	* request #7788: Force IE (< 9) and old Chrome versions to follow the declared content-type and content-disposition headers
 	* request #7799: Token is stored in a dedicated cookie
 	* request #7716: Update user details thru REST api
