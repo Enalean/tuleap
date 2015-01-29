@@ -27,6 +27,7 @@
 class CookieManager {
 
     const USER_TOKEN = 'user_token';
+    const USER_ID    = 'user_id';
 
     public function setHTTPOnlyCookie($name, $value, $expire = 0) {
         $secure    = (bool)Config::get('sys_force_ssl');
