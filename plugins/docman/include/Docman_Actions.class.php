@@ -595,12 +595,7 @@ class Docman_Actions extends Actions {
                 $data['item_type'] =  $itemType;
             }
 
-            if ($itemType == PLUGIN_DOCMAN_ITEM_TYPE_LINK) {
-                $updated = $this->updateLink($request, $item, $user);
-            } else {
-                $updated = $item_factory->update($data);
-            }
-
+            $updated = $item_factory->update($data);
             if ($updated) {
                 $this->event_manager->processEvent('plugin_docman_event_update', array(
                     'group_id' => $request->get('group_id'),
