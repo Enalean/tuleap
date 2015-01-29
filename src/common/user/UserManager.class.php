@@ -391,6 +391,7 @@ class UserManager {
             $this->getDao()->deleteSession($user->getSessionHash());
             $user->setSessionHash(false);
             $this->getCookieManager()->removeCookie(CookieManager::USER_TOKEN);
+            $this->getCookieManager()->removeCookie(CookieManager::USER_ID);
             $this->getCookieManager()->removeCookie('session_hash');
             $this->destroySession();
         }
@@ -481,13 +482,24 @@ class UserManager {
         $session_hash = $this->createSession($user);
         $user->setSessionHash($session_hash);
 
+        $this->getCookieManager()->setHTTPOnlyCookie(
+            'session_hash',
+            $session_hash,
+            $this->getExpireTimestamp($user)
+        );
+        $this->setUserTokenCookie($user);
+        $this->setUserIdCookie($user);
+    }
+
+    private function getExpireTimestamp(PFUser $user) {
         // If permanent login configured then cookie expires in one year from now
         $expire = 0;
+
         if ($user->getStickyLogin()) {
             $expire = $_SERVER['REQUEST_TIME'] + $this->_getSessionLifetime();
         }
-        $this->getCookieManager()->setHTTPOnlyCookie('session_hash', $session_hash, $expire);
-        $this->setUserTokenCookie($user);
+
+        return $expire;
     }
 
     public function setUserTokenCookie(PFUser $user) {
@@ -497,6 +509,14 @@ class UserManager {
             CookieManager::USER_TOKEN,
             $token->getTokenValue(),
             $_SERVER['REQUEST_TIME'] + Rest_TokenManager::TOKENS_EXPIRATION_TIME
+        );
+    }
+
+    public function setUserIdCookie(PFUser $user) {
+        $this->getCookieManager()->setGlobalCookie(
+            CookieManager::USER_ID,
+            $user->getId(),
+            $this->getExpireTimestamp($user)
         );
     }
 

@@ -217,6 +217,10 @@ if ($current_user->isLoggedIn()) {
     if (! $cookie_manager->isCookie(CookieManager::USER_TOKEN) ) {
         $user_manager->setUserTokenCookie($current_user);
     }
+
+    if (! $cookie_manager->isCookie(CookieManager::USER_ID) ) {
+        $user_manager->setUserIdCookie($current_user);
+    }
 }
 
 $theme_manager = new ThemeManager();
