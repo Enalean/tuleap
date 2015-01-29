@@ -56,7 +56,6 @@ Version 7.10 ()
 	* request #7754: Prevent denial of service via the login form
 	* request #7744: Fix non persistent XSS and a open redirection in search modules and login form
 	* request #7785: Protection against clickjacking
-	* request #7806: Avoid HTTP Response Splitting and uncontroled redirection in FRS
 
 Version 7.9 (Wednesday, January 7th 2015)
 

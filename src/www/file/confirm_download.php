@@ -2,7 +2,6 @@
 //
 // Codendi
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-// Copyright (c) Enalean, 2015. All Rights Reserved.
 // http://www.codendi.com
 //
 // 
@@ -29,6 +28,22 @@ if($request->valid($vGroupId) && $request->valid($vFileId)) {
     exit_missing_param();
   }
 
+    if (!$request->existAndNonEmpty('filename')) {
+        # Get it from DB
+        $res =& $frsff->getFRSFileFromDb($file_id);
+
+        if (count( $res ) > 0) {
+            $filename = $res->getFileName();
+        }
+    } else {
+        $vFileName = new Valid_String('filename');
+        if ($request->valid($vFileName)) {
+            $filename = $request->get('filename');
+        } else {
+            exit_missing_param();
+        }
+    }
+
     if (!$GLOBALS['sys_frs_license_mandatory']) {
         // Display license popup?
         // This is useful when using a 'file #123' reference, that points to this script
@@ -38,7 +53,7 @@ if($request->valid($vGroupId) && $request->valid($vFileId)) {
         if (count( $res ) > 0) {
             if ($res->getApproveLicense()==0) {
                 // Directly display file
-                $location = "Location: /file/download.php/$group_id/$file_id";
+                $location = "Location: /file/download.php/$group_id/$file_id/$filename";
                 header($location);
             }
         }
@@ -63,9 +78,10 @@ if($request->valid($vGroupId) && $request->valid($vFileId)) {
 <SCRIPT language="JavaScript">
 <!--
 
-function download_local(group_id,file_id) {
-    url = "/file/download.php/" + group_id + "/" + file_id;
+function download_local(group_id,file_id,filename) {
+    url = "/file/download.php/" + group_id + "/" + file_id +"/"+filename;
     self.location = url;
+    //history.back();
 }
 -->
 </SCRIPT>
@@ -80,6 +96,8 @@ if (isset($GLOBALS['sys_exchange_policy_url'])) {
     $exchangePolicyUrl = "/plugins/docman/?group_id=1";
 }
 
+$hp       = Codendi_HTMLPurifier::instance();
+$filename = $hp->purify($filename);
 echo $Language->getText('file_confirm_download', 'download_explain', array($GLOBALS['sys_org_name'], $GLOBALS['sys_email_contact'], $exchangePolicyUrl));
 ?><br>
 
@@ -87,7 +105,7 @@ echo $Language->getText('file_confirm_download', 'download_explain', array($GLOB
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="normal">
   <tr> 
     <td> 
-      <div align="center"><a href="javascript:<?php echo "$dlscript($group_id,$file_id"; ?>);"><b><?php echo $Language->getText('file_confirm_download','agree'); ?></b></a></div>
+      <div align="center"><a href="javascript:<?php echo "$dlscript($group_id,$file_id,'$filename'"; ?>);"><b><?php echo $Language->getText('file_confirm_download','agree'); ?></b></a></div>
     </td>
     <td> 
       <div align="center"><a href="javascript:<?php echo "$cancelscript"?>;"><b><?php echo $Language->getText('file_confirm_download','decline'); ?></b></a></div>
