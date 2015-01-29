@@ -77,6 +77,7 @@ class trackerPlugin extends Plugin {
 
         $this->addHook(Event::BACKEND_ALIAS_GET_ALIASES);
         $this->addHook(Event::GET_PROJECTID_FROM_URL);
+        $this->addHook(Event::SITE_ADMIN_CONFIGURATION_TRACKER);
     }
 
     public function getHooksAndCallbacks() {
@@ -879,5 +880,11 @@ class trackerPlugin extends Plugin {
         $fields   = $this->getTrackerFormElementFactory()->getUsedSearchableTrackerFieldsUserCanView($user, $trackers);
 
         $params['fields'] = $fields;
+    }
+
+    public function site_admin_configuration_tracker($params) {
+        $label = $GLOBALS['Language']->getText('plugin_tracker', 'admin_tracker_template');
+
+        $params['additional_entries'][] = '<li><a href="/plugins/tracker/?group_id=100">'. $label .'</a></li>';
     }
 }

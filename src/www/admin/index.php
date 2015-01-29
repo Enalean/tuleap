@@ -196,6 +196,27 @@ if ($GLOBALS['sys_use_trove'] != 0) {
 }
 
 $wConf = new Widget_Static("Configuration");
+
+$additional_tracker_entries = array();
+if (TrackerV3::instance()->available()) {
+    $additional_tracker_entries[] = '<li><a href="/tracker/admin/?group_id=100">'.$Language->getText('admin_main', 'tracker_template').'</a></li>';
+}
+$em->processEvent(
+    Event::SITE_ADMIN_CONFIGURATION_TRACKER,
+    array(
+        'additional_entries' => &$additional_tracker_entries
+    )
+);
+$tracker_links = '';
+if (count($additional_tracker_entries) > 0) {
+    $tracker_links = '<li>'.$Language->getText('admin_main', 'header_tracker').':
+        <ul>
+            <li><a href="/tracker/admin/restore.php">'.$Language->getText('admin_main', 'tracker_remove').'</a></li>
+            '. implode('', $additional_tracker_entries) .'
+        </ul>
+    </li>';
+}
+
 $wConf->setContent('
 <ul>
   <li>'.$Language->getText('admin_main', 'conf_project').': 
@@ -206,13 +227,8 @@ $wConf->setContent('
       <li><a href="/admin/generic_user.php">'.$Language->getText('admin_main', 'configure_generic_user').'</a></li>
     </ul>
   </li>
-  <li>'.$Language->getText('admin_main', 'header_tracker').':
-    <ul>
-      <li><a href="/tracker/admin/restore.php">'.$Language->getText('admin_main', 'tracker_remove').'</a></li>
-      <li><a href="/tracker/admin/?group_id=100">'.$Language->getText('admin_main', 'tracker_template').'</a></li>
-    </ul>
-  </li>
-  '.$trov_conf.'
+  '. $tracker_links .'
+  '. $trov_conf .'
 </ul>');
 
 // Site utils

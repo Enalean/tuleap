@@ -866,4 +866,12 @@ class Event {
      *     'available' => boolean
      */
     const REST_PROJECT_AGILE_ENDPOINTS = 'rest_project_agile_endpoints';
+
+    /**
+     * Event raised when we display the trackers link in admin > configuration panel
+     *
+     * Parameters:
+     *      'additional_entries' => array of <li> element
+     */
+    const SITE_ADMIN_CONFIGURATION_TRACKER = 'site_admin_configuration_tracker';
 }
