@@ -2,6 +2,7 @@
 
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
@@ -20,8 +21,6 @@ define("FRS_EXPANDED_ICON", util_get_image_theme("ic/toggle_minus.png"));
 define("FRS_COLLAPSED_ICON", util_get_image_theme("ic/toggle_plus.png"));
 
 $authorized_user = false;
-
-$hp = Codendi_HTMLPurifier::instance();
 
 $request =& HTTPRequest::instance();
 $vGroupId = new Valid_GroupId();
@@ -63,16 +62,18 @@ if ($request->valid(new Valid_Pv('pv'))) {
 } else {
     $pv = false;
 }
-    
-    $pm = ProjectManager::instance();
+
+$hp = Codendi_HTMLPurifier::instance();
+
+$pm = ProjectManager::instance();
 $params = array (
     'title' => $Language->getText('file_showfiles',
     'file_p_for',
-    $pm->getProject($group_id)->getPublicName()
+    $hp->purify($pm->getProject($group_id)->getPublicName())
 ), 'pv' => $pv);
 
 file_utils_header($params);
-$hp =& Codendi_HTMLPurifier::instance();
+
 if ($num_packages < 1) {
     echo '<h3>' . $Language->getText('file_showfiles', 'no_file_p') . '</h3><p>' . $Language->getText('file_showfiles', 'no_p_available');
     if ($frspf->userCanAdmin($user, $group_id)) {
@@ -96,8 +97,8 @@ if ($pv) {
 ?>
 <SCRIPT language="JavaScript">
 <!--
-function showConfirmDownload(group_id,file_id,filename) {
-    url = "/file/confirm_download.php?popup=1&group_id=" + group_id + "&file_id=" + file_id + "&filename=" + filename;
+function showConfirmDownload(group_id,file_id) {
+    url = "/file/confirm_download.php?popup=1&group_id=" + group_id + "&file_id=" + file_id;
     wConfirm = window.open(url,"confirm","width=520,height=450,resizable=1,scrollbars=1");
     wConfirm.focus();
 }
@@ -133,7 +134,7 @@ function toggle_image(image_id) {
 
 -->
 </SCRIPT>
-<?
+<?php
 }
 // get unix group name for path
 $pm = ProjectManager::instance();
@@ -166,7 +167,7 @@ while (list ($package_id, $package) = each($packages)) {
         if (!$pv) {
             print '<a href="#" onclick="javascript:toggle_package(\'p_'.$package_id.'\'); return false;" /><img src="'.FRS_EXPANDED_ICON.'" id="img_p_'.$package_id.'" /></a>&nbsp;';
         }
-        print " <$emphasis>". $package->getName() ."</$emphasis>";
+        print " <$emphasis>". $hp->purify($package->getName()) ."</$emphasis>";
         if (!$pv) {
             if ($frspf->userCanAdmin($user, $group_id)) {
                 print '     <a href="admin/package.php?func=edit&amp;group_id='. $group_id .'&amp;id=' . $package_id . '" title="'.  $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML)  .'">';
@@ -338,7 +339,7 @@ while (list ($package_id, $package) = each($packages)) {
                                 print '<A HREF="/file/download.php/' . $group_id . "/" . $file_release['file_id'] . "/" . $hp->purify($file_release['filename']) . '" title="' . $file_release['file_id'] . " - " . $hp->purify($fname) . '">' . $hp->purify($fname) . '</A>';
                             } else {
                                 // Display popup
-                                print '<A HREF="javascript:showConfirmDownload(' . $group_id . ',' . $file_release['file_id'] . ',\'' . $hp->purify($file_release['filename']) . '\')" title="' . $file_release['file_id'] . " - " . $hp->purify($fname) . '">' . $hp->purify($fname) . '</A>';
+                                print '<A HREF="javascript:showConfirmDownload(' . $group_id . ',' . $file_release['file_id'] . ')" title="' . $file_release['file_id'] . " - " . $hp->purify($fname) . '">' . $hp->purify($fname) . '</A>';
                             }
                             $size_precision = 0;
                             if ($file_release['file_size'] < 1024) {
@@ -347,9 +348,9 @@ while (list ($package_id, $package) = each($packages)) {
                             $owner = UserManager::instance()->getUserById($file_release['user_id']);
                             print '</B></TD>' . '<TD>' . FRSFile::convertBytesToKbytes($file_release['file_size'], $size_precision) . '</TD>' . '<TD>' . ($file_release['downloads'] ? $file_release['downloads'] : '0') . '</TD>';
                             print '<TD>' . (isset ($processor[$file_release['processor']]) ?  $hp->purify($processor[$file_release['processor']], CODENDI_PURIFIER_CONVERT_HTML) : "") . '</TD>';
-                            print '<TD>' . (isset ($file_type[$file_release['type']]) ? $file_type[$file_release['type']] : "") . '</TD>' . '<TD>' . format_date("Y-m-d", $file_release['release_time']) . '</TD>'. 
-                                  '<TD>' . (isset ($file_release['computed_md5'])? $file_release['computed_md5']: ""). '</TD>' .
-                                  '<TD>' . (isset ($file_release['user_id'])? $owner->getRealName(): ""). '</TD>'
+                            print '<TD>' . (isset ($file_type[$file_release['type']]) ? $hp->purify($file_type[$file_release['type']]) : "") . '</TD>' . '<TD>' . format_date("Y-m-d", $file_release['release_time']) . '</TD>'.
+                                  '<TD>' . (isset ($file_release['computed_md5'])? $hp->purify($file_release['computed_md5']): ""). '</TD>' .
+                                  '<TD>' . (isset ($file_release['user_id'])? $hp->purify($owner->getRealName()): ""). '</TD>'
                             .'</TR>
                              <TR>
                                 <TD class="frs_comment">
@@ -422,4 +423,3 @@ if (isset ($proj_stats['size'])) {
 }
 
 file_utils_footer($params);
-?>
