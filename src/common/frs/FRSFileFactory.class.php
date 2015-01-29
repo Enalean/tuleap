@@ -362,9 +362,9 @@ class FRSFileFactory extends Error {
         $upload_sub_dir = $this->getUploadSubDirectory($release);
         $fileName = $file->getFileName();
         $filePath = $this->getResolvedFileName($file->getFileName());
-        if (!file_exists($GLOBALS['ftp_frs_dir_prefix'].'/'.$unixName . '/' . $upload_sub_dir.'/'.$filePath)) {
-            $fileName= preg_replace('` `', '\\ ', $fileName);
-            $cmdFilePath = preg_replace('` `', '\\ ', $filePath);
+        if (!file_exists($GLOBALS['ftp_frs_dir_prefix'].'/'.$unixName . '/' . $upload_sub_dir.'/'.escapeshellarg($filePath))) {
+            $fileName = escapeshellarg($fileName);
+            $cmdFilePath = escapeshellarg($filePath);
             $ret_val   = null;
             $exec_res  = null;
             $src_dir   = $this->getSrcDir($project);
