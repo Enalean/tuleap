@@ -127,11 +127,11 @@ if (!isset($GLOBALS['feedback'])) {
     $GLOBALS['feedback'] = "";  //By default the feedbak is empty
 }
 
+$cookie_manager = new CookieManager();
 if (!IS_SCRIPT) {
     // Prevent "Pragma: no-cache" to be sent to user (break https & IE)
     session_cache_limiter(false);
     session_start();
-    $cookie_manager = new CookieManager();
     $GLOBALS['session_hash'] = $cookie_manager->isCookie('session_hash') ? $cookie_manager->getCookie('session_hash') : false;
 }
 //}}}
@@ -174,7 +174,8 @@ require_once('session.php');
 
 //user functions like get_name, logged_in, etc
 require_once('user.php');
-$current_user = UserManager::instance()->getCurrentUser();
+$user_manager = UserManager::instance();
+$current_user = $user_manager->getCurrentUser();
 
 //Pass username in order to be written in Apache access_log
 if(!IS_SCRIPT) {
@@ -211,6 +212,10 @@ if ($current_user->isLoggedIn()) {
         date_default_timezone_set($current_user->getTimezone());
     } else {
         putenv('TZ='.$current_user->getTimezone());
+    }
+
+    if (! $cookie_manager->isCookie(CookieManager::USER_TOKEN) ) {
+        $user_manager->setUserTokenCookie($current_user);
     }
 }
 
@@ -256,4 +261,3 @@ if ($request->exist('postExpected') && !$request->exist('postReceived')) {
 if (Config::get('DEBUG_MODE')) {
     $GLOBALS['DEBUG_TIME_IN_PRE'] = microtime(1) - $GLOBALS['debug_time_start'];
 }
-?>

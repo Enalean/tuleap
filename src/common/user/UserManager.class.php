@@ -390,7 +390,7 @@ class UserManager {
         if ($user->getSessionHash()) {
             $this->getDao()->deleteSession($user->getSessionHash());
             $user->setSessionHash(false);
-            $this->getCookieManager()->removeCookie('user_token');
+            $this->getCookieManager()->removeCookie(CookieManager::USER_TOKEN);
             $this->getCookieManager()->removeCookie('session_hash');
             $this->destroySession();
         }
@@ -490,11 +490,11 @@ class UserManager {
         $this->setUserTokenCookie($user);
     }
 
-    private function setUserTokenCookie(PFUser $user) {
+    public function setUserTokenCookie(PFUser $user) {
         $token = $this->getTokenManager()->generateTokenForUser($user);
 
         $this->getCookieManager()->setGlobalCookie(
-            'user_token',
+            CookieManager::USER_TOKEN,
             $token->getTokenValue(),
             $_SERVER['REQUEST_TIME'] + Rest_TokenManager::TOKENS_EXPIRATION_TIME
         );
