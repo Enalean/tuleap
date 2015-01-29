@@ -1,3 +1,6 @@
+Version 2.26.64 - Tuleap 7.10
+    * Fix request #7800: Fatal error while updating properties of a Link item
+
 Version 2.26.63 - Tuleap 7.10
     * request #7788: Force IE (< 9) and old Chrome versions to follow the declared content-type and content-disposition headers
 
