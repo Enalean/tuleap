@@ -13,6 +13,7 @@ Version 7.10 ()
 	* story #7496: see priority changes in artifact view
 	* request #7710: Sort content of the userlist table after a header click (contrib STMicroelectronics).
 	* request #7799: Regenerate token cookie if it's no more available
+	* request #7799: Generate user_id cookie
 
 	== Bug Fix ==
 	* Fix unit tests for webdav & config & karma tests
