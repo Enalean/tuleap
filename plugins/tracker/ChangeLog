@@ -1,3 +1,6 @@
+Version 5.564 - Tuleap 7.10
+    * request #7796: Unable to configure tracker v5 default templates
+
 Version 5.563 - Tuleap 7.10
     * request #7788: Force IE (< 9) and old Chrome versions to follow the declared content-type and content-disposition headers
 

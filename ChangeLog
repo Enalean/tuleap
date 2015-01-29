@@ -25,12 +25,13 @@ Version 7.10 ()
 	* request #7770: Wrong data when there are two reports on project dashboard using the same field as filter
 	* request #7774: fatal error on my personal page from docman
 	* request #7792: Contributor semantic change should trigger FTS reindex
+	* request #7796: Unable to configure tracker v5 default templates
 
 	== Plugins ==
 	* tracker_date_reminder: 1.2.9
 	* graphontrackers: 1.12
 	* graphontrackersv5: 5.16
-	* tracker: 5.563
+	* tracker: 5.564
 	* mediawiki: 0.60
 	* fulltextsearch: 0.119
 	* git: 4.11
