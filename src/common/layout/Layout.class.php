@@ -1184,17 +1184,9 @@ class Layout extends Response {
         if ($this->shouldIncludeFatCombined($params)) {
             echo $c->getScripts(array('/scripts/codendi/common.js'));
 
-            $ckeditor_path         = '/scripts/ckeditor-4.3.2/';
-            $ckeditor_path_for_ie7 = '/scripts/ckeditor-for-ie7/';
-            echo '<!--[if IE 7]>
-                <script type="text/javascript">window.CKEDITOR_BASEPATH = "'. $ckeditor_path_for_ie7 .'";</script>
-                <script type="text/javascript" src="'. $ckeditor_path_for_ie7 .'/ckeditor.js"></script>
-                <![endif]-->
-                <!--[if ! IE 7]><!-->
-                <script type="text/javascript">window.CKEDITOR_BASEPATH = "'. $ckeditor_path .'";</script>
-                <script type="text/javascript" src="'. $ckeditor_path .'/ckeditor.js"></script>
-                <!--<![endif]-->
-            ';
+            $ckeditor_path = '/scripts/ckeditor-4.3.2/';
+            echo '<script type="text/javascript">window.CKEDITOR_BASEPATH = "'. $ckeditor_path .'";</script>
+                  <script type="text/javascript" src="'. $ckeditor_path .'/ckeditor.js"></script>';
         } else {
             $this->includeSubsetOfCombined();
         }
