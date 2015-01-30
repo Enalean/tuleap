@@ -38,7 +38,7 @@ Version 7.10 ()
 	* fulltextsearch: 0.119
 	* git: 4.11
 	* docman: 2.26.64
-	* ldap: 3.70
+	* ldap: 3.71
 	* openid: 0.6
 	* agiledashboard: 1.148
 	* webdav: 1.9.7
