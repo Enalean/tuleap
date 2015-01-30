@@ -2,15 +2,15 @@ angular
     .module('user')
     .service('UserService', UserService);
 
-UserService.$inject = ['Restangular'];
+UserService.$inject = ['$cookies', '$state', 'Restangular', 'SharedPropertiesService'];
 
-function UserService(Restangular) {
+function UserService($cookies, $state, Restangular, SharedPropertiesService) {
     var baseurl = '/api/v1',
         rest = Restangular.withConfig(setRestangularConfig);
 
     return {
-        generateTokenForCurrentUser: generateTokenForCurrentUser,
-        getUser: getUser
+        getUser: getUser,
+        login: login
     };
 
     function setRestangularConfig(RestangularConfigurer) {
@@ -18,14 +18,21 @@ function UserService(Restangular) {
         RestangularConfigurer.setBaseUrl(baseurl);
     }
 
-    function generateTokenForCurrentUser(credentials) {
-        return rest.all('tokens').post({
-            username: credentials.username,
-            password: credentials.password
-        });
-    }
-
     function getUser(user_id) {
         return rest.one('users', user_id).get();
+    }
+
+    function login() {
+        var user_id = $cookies.TULEAP_user_id,
+            token   = $cookies.TULEAP_user_token;
+
+        getUser(user_id).then(function(response) {
+            var user = response.data.plain();
+            user.token = token;
+
+            SharedPropertiesService.setCurrentUser(user);
+
+            $state.go('campaigns.list');
+        });
     }
 }

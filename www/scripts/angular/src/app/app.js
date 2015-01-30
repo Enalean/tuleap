@@ -8,5 +8,6 @@ angular.module('testing', [
     'ncy-angular-breadcrumb',
     'ngAnimate',
     'ngSanitize',
+    'ngCookies',
     'gettext'
 ]);

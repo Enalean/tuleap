@@ -15,7 +15,8 @@
     "angular-gettext": "~1.1.0",
     "ngSocket": "~0.2.1",
     "angular-socket-io": "~0.6.0",
-    "angular-ui-utils": "bower-unique"
+    "angular-ui-utils": "bower-unique",
+    "angular-cookies": "~1.3.11"
   },
   "dependencies": {},
   "resolutions": {

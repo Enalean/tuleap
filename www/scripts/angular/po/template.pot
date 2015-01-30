@@ -2,6 +2,7 @@ msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Project-Id-Version: \n"
 
 #: src/app/campaign/campaign-new.tpl.html
 msgid "<span class=\"total-definitions\">{{ getFilteredDefinitions(environment.filter).length }}</span> test"
@@ -75,15 +76,6 @@ msgstr ""
 msgid "Filter..."
 msgstr ""
 
-#: src/app/user/user-login.tpl.html
-#: src/app/user/user-login-controller.js
-msgid "Login"
-msgstr ""
-
-#: src/app/campaign/campaign-list.tpl.html
-msgid "Logout"
-msgstr ""
-
 #: src/app/campaign/campaign-list.tpl.html
 msgid "New campaign"
 msgstr ""
@@ -105,10 +97,6 @@ msgstr ""
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html
 msgid "Passed"
-msgstr ""
-
-#: src/app/user/user-login.tpl.html
-msgid "Password"
 msgstr ""
 
 #: src/app/campaign/campaign-new.tpl.html
@@ -147,18 +135,6 @@ msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html
 msgid "Total"
-msgstr ""
-
-#: src/app/user/user-login-controller.js
-msgid "Unable to generate a token: wrong username and/or password."
-msgstr ""
-
-#: src/app/user/user-login-controller.js
-msgid "Unable to retrieve the user"
-msgstr ""
-
-#: src/app/user/user-login.tpl.html
-msgid "Username"
 msgstr ""
 
 #: src/app/campaign/campaign-new.tpl.html
