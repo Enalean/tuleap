@@ -1,3 +1,6 @@
+Version 0.120 - Tuleap 7.10
+    * request #7817 Docman fts actions are logged into the default queue instead of the fts one
+
 Version 0.119 - Tuleap 7.10
     * index all last modified fields AND a dedicated last modified one
 
