@@ -50,9 +50,17 @@ class SystemEvent_FULLTEXTSEARCH_DOCMAN_REINDEX_PROJECT extends SystemEvent {
             $item_factory = Docman_ItemFactory::instance($project_id);
             $items        = new Docman_ProjectItemsBatchIterator($item_factory, $project_id);
 
-            $this->actions->reIndexProjectDocuments($items, $project_id);
+            $notindexed_collector = new FullTextSearch_NotIndexedCollector();
+            $this->actions->reIndexProjectDocuments($items, $project_id, $notindexed_collector);
 
-            $this->done();
+            if (! $notindexed_collector->isAtLeastOneIndexed()) {
+                $this->error('Nothing has been indexed. See syslog for details.');
+                return false;
+            } else if ($notindexed_collector->isAtLeastOneNotIndexed()) {
+                $this->warning('Some items were not indexed: ['. implode(', ', $notindexed_collector->getIds()) .']. See syslog for details.');
+            } else {
+                $this->done();
+            }
             return true;
         } catch (Exception $e) {
             $this->error($e->getMessage());
