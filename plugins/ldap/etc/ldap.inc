@@ -92,7 +92,7 @@ $sys_ldap_grp_member    = 'uniquemember';
 // On beyond of this value expressed in percentage no users will be suspended
 $sys_ldap_threshold_users_suspension = '';
 // Search depth for daily sync
-// 'onelevel': search for users only into the level immediately below $sys_ldap_search_user
-// 'subtree' : search for users into all $sys_ldap_search_user subtrees (default)
+// 'onelevel': search for users only into the level immediately below $sys_ldap_people_dn
+// 'subtree' : search for users into all $sys_ldap_people_dn subtrees (default)
 $search_depth = 'subtree';
 ?>
