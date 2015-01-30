@@ -191,7 +191,8 @@ class fulltextsearchPlugin extends Plugin {
         return new FullTextSearch_DocmanSystemEventManager(
             SystemEventManager::instance(),
             $this->getIndexClient(self::SEARCH_DOCMAN_TYPE),
-            $this
+            $this,
+            $this->getFullTextSearchSystemEventQueue()->getLogger()
         );
     }
 
@@ -231,7 +232,11 @@ class fulltextsearchPlugin extends Plugin {
 
     /** @see Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES */
     public function system_event_get_custom_queues(array $params) {
-        $params['queues'][FullTextSearchSystemEventQueue::NAME] = new FullTextSearchSystemEventQueue();
+        $params['queues'][FullTextSearchSystemEventQueue::NAME] = $this->getFullTextSearchSystemEventQueue();
+    }
+
+    private function getFullTextSearchSystemEventQueue() {
+        return new FullTextSearchSystemEventQueue();
     }
 
     /** @see Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE */

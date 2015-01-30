@@ -21,6 +21,11 @@
 class FullTextSearch_DocmanSystemEventManager {
 
     /**
+     * @var Logger
+     */
+    private $logger;
+
+    /**
      * @var fulltextsearchPlugin
      */
     private $plugin;
@@ -36,13 +41,15 @@ class FullTextSearch_DocmanSystemEventManager {
     private $system_event_manager;
 
     public function __construct(
-            SystemEventManager $system_event_manager,
-            ElasticSearch_IndexClientFacade $index_client,
-            fulltextsearchPlugin $plugin
-            ) {
+        SystemEventManager $system_event_manager,
+        ElasticSearch_IndexClientFacade $index_client,
+        fulltextsearchPlugin $plugin,
+        Logger $logger
+    ) {
         $this->system_event_manager = $system_event_manager;
         $this->index_client         = $index_client;
         $this->plugin               = $plugin;
+        $this->logger               = $logger;
     }
 
     public function getSystemEventClass($type, &$class, &$dependencies) {
@@ -80,7 +87,7 @@ class FullTextSearch_DocmanSystemEventManager {
                 new Docman_PermissionsItemManager(),
                 new Docman_ApprovalTableFactoriesFactory()
             ),
-            new BackendLogger()
+            $this->logger
         );
     }
 
