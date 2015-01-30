@@ -31,13 +31,13 @@ class FullTextSearchDocmanActions {
     /** @var ElasticSearch_1_2_RequestDocmanDataFactory */
     private $request_data_factory;
 
-    /** @var BackendLogger */
+    /** @var Logger */
     private $logger;
 
     public function __construct(
         FullTextSearch_IIndexDocuments $client,
         ElasticSearch_1_2_RequestDocmanDataFactory $request_data_factory,
-        BackendLogger $logger
+        Logger $logger
     ) {
         $this->client               = $client;
         $this->request_data_factory = $request_data_factory;
