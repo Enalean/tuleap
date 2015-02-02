@@ -34,14 +34,14 @@ Version 7.10 ()
 	* tracker_date_reminder: 1.2.9
 	* graphontrackers: 1.12
 	* graphontrackersv5: 5.16
-	* tracker: 5.564
+	* tracker: 5.565
 	* mediawiki: 0.60
 	* fulltextsearch: 0.121
 	* git: 4.11
 	* docman: 2.26.64
 	* ldap: 3.71
 	* openid: 0.6
-	* agiledashboard: 1.148
+	* agiledashboard: 1.149
 	* webdav: 1.9.7
 	* tests: 5.27
 
