@@ -110,10 +110,13 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
             $this->approval_table_factories_factory
         );
 
+        $max_indexed_file_size = 9; //our valid test file is 8 bits in size
+
         $this->actions = new FullTextSearchDocmanActions(
             $this->client,
             $this->request_data_factory,
-            mock('BackendLogger')
+            mock('BackendLogger'),
+            $max_indexed_file_size
         );
 
         stub($this->permissions_manager)
@@ -123,6 +126,10 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
         $this->version = stub('Docman_Version')
             ->getPath()
             ->returns(dirname(__FILE__) .'/_fixtures/file.txt');
+
+        $this->big_version = stub('Docman_Version')
+            ->getPath()
+            ->returns(dirname(__FILE__) .'/_fixtures/big_file.txt');
 
         $this->params = aSetOfParameters()
             ->withItem($this->item)
@@ -195,6 +202,41 @@ class FullTextSearchDocmanActionsTests extends TuleapTestCase {
         $this->client->expectOnce('index', $expected);
 
         $this->actions->indexNewDocument($this->item, $this->version);
+    }
+
+    public function itDoesntIndexFileTooBig() {
+        $this->expectException('FullTextSearchDocmanIndexFileTooBigException');
+
+        stub($this->item)->getObsolescenceDate()->returns(0);
+
+        $second_search_type = array(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
+        stub($this->metadata_factory)->getRealMetadataList(false, $second_search_type)->returns(
+            array()
+        );
+
+        stub($this->client)->getMapping()->returns(array());
+
+        $expected = array(
+            200,
+            101,
+            array(
+                'id'                      => 101,
+                'group_id'                => 200,
+                'title'                   => 'Coin',
+                'description'             => 'Duck typing',
+                'create_date'             => '2014-06-19T08:55:45+02:00',
+                'update_date'             => '2014-06-19T08:55:49+02:00',
+                'permissions'             => array(3, 102),
+                'approval_table_comments' => array(),
+                'owner'                   => 123,
+                'property_1'              => 'val01',
+                'property_2'              => 'val02',
+                'file'                    => 'aW5kZXggbWUK',
+               ),
+        );
+        $this->client->expectNever('index', $expected);
+
+        $this->actions->indexNewDocument($this->item, $this->big_version);
     }
 
     public function itCallUpdateOnClientWithMetadataAndContent() {

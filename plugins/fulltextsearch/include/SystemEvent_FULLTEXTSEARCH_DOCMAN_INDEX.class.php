@@ -29,12 +29,18 @@ class SystemEvent_FULLTEXTSEARCH_DOCMAN_INDEX extends SystemEvent_FULLTEXTSEARCH
 
         if ($version) {
             $this->initializeMapping($project_id);
-            $this->actions->indexNewDocument($item, $version);
+            try {
+                $this->actions->indexNewDocument($item, $version);
+            } catch (FullTextSearchDocmanIndexFileTooBigException $exception) {
+                $this->error($exception->getMessage());
+                return false;
+            }
 
             return true;
         }
 
         $this->error('Version not found');
+        return false;
     }
 
     protected function initializeMapping($project_id) {
