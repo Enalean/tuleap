@@ -26,6 +26,10 @@ class ArtifactStringFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporter {
     const TV3_VALUE_INDEX  = 'valueText';
 
     public function appendNode(DOMElement $changeset_node, $tracker_id, $artifact_id, array $row) {
+        if (isset($row['new_value'])) {
+            $row['new_value'] = Encoding_SupportedXmlCharEncoding::getXMLCompatibleString($row['new_value']);
+        }
+
         $this->appendStringNode($changeset_node, self::TV5_TYPE, $row);
     }
 

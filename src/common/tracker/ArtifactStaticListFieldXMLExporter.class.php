@@ -64,7 +64,7 @@ class ArtifactStaticListFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporte
 
         foreach ($values_list as $row) {
             if ($row['value_id'] == $value) {
-                return $row['value'];
+                return Encoding_SupportedXmlCharEncoding::getXMLCompatibleString($row['value']);
             }
         }
 
