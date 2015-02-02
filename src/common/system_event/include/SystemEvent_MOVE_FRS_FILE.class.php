@@ -76,11 +76,19 @@ class SystemEvent_MOVE_FRS_FILE extends SystemEvent {
         $file_path = $file->getFilePath();
         $this->createNecessaryFolders($project_path, $file_path);
 
-        if (file_exists($project_path . $old_path) && ! file_exists($project_path . $file_path)) {
-            if (rename($project_path . $old_path, $project_path . $file_path)) {
-                $this->done();
-                return true;
-            }
+        if (! file_exists($project_path . $old_path)) {
+            $this->error('Cannot find file to move: ' . $file_id . ' from: ' . $project_path.$old_path);
+            return false;
+        }
+
+        if (file_exists($project_path . $file_path)) {
+            $this->error('File already exists at location: ' . $file_id . ' location: ' . $project_path . $file_path);
+            return false;
+        }
+
+        if (rename($project_path . $old_path, $project_path . $file_path)) {
+            $this->done();
+            return true;
         }
 
         $this->error('Unable to move file: ' . $file_id . ' from: ' . $project_path.$old_path . ' to ' . $project_path . $file_path);
