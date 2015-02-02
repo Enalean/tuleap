@@ -16,6 +16,7 @@ session_require(array('group'=>'1','admin_flags'=>'A'));
 
 function printnode($nodeid, $text, $depth = 0, $delete_ok = false) {
     global $Language;
+    $purifier = Codendi_HTMLPurifier::instance();
 
     // print current node, then all subnodes
     print ('<BR>');
@@ -23,7 +24,7 @@ function printnode($nodeid, $text, $depth = 0, $delete_ok = false) {
         print "&nbsp; &nbsp; ";
     }
     html_image('ic/cfolder15.png', array());
-    print ('&nbsp; ' . $text . " ");
+    print ('&nbsp; ' . $purifier->purify($text) . " ");
     if ($nodeid != 0) {
         print ('&nbsp; <A href="trove_cat_edit.php?trove_cat_id=' . $nodeid . '">[' . $Language->getText('admin_trove_cat_list', 'edit') . ']</A> ');
     }

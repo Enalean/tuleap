@@ -39,6 +39,7 @@ if (db_numrows($res_cat)<1) {
 }
 $row_cat = db_fetch_array($res_cat);
 
+$purifier = Codendi_HTMLPurifier::instance();
 $HTML->header(array('title'=>$Language->getText('admin_trove_cat_edit','title')));
 ?>
 
@@ -47,13 +48,13 @@ $HTML->header(array('title'=>$Language->getText('admin_trove_cat_edit','title'))
 <input type="hidden" name="form_trove_cat_id" value="<?php
   print $row_cat['trove_cat_id']; ?>">
 <p><?php echo $Language->getText('admin_trove_cat_add','short_name'); ?>
-<br><input type="text"  size="25" maxlen="80" name="form_shortname" value="<?php print $row_cat["shortname"]; ?>">
+<br><input type="text"  size="25" maxlen="80" name="form_shortname" value="<?php print $purifier->purify($row_cat["shortname"]); ?>">
 <?php echo $Language->getText('admin_trove_cat_add','short_name_note'); ?>
 <p><?php echo $Language->getText('admin_trove_cat_add','full_name'); ?>
-<br><input type="text"  size="45" maxlen="80" name="form_fullname" value="<?php print $row_cat["fullname"]; ?>">
+<br><input type="text"  size="45" maxlen="80" name="form_fullname" value="<?php print $purifier->purify($row_cat["fullname"]); ?>">
 <?php echo $Language->getText('admin_trove_cat_add','full_name_note'); ?>
 <p><?php echo $Language->getText('admin_trove_cat_add','description'); ?>
-<br><input type="text" name="form_description" size="80"  maxlen="255" value="<?php print $row_cat["description"]; ?>">
+<br><input type="text" name="form_description" size="80"  maxlen="255" value="<?php print $purifier->purify($row_cat["description"]); ?>">
 <?php echo $Language->getText('admin_trove_cat_add','description_note'); ?>
 <p><?php echo $Language->getText('admin_trove_cat_add','parent'); ?>:
 <?php echo trove_get_html_cat_select_parent($row_cat["parent"], $row_cat["fullpath"]); ?>
@@ -62,5 +63,3 @@ $HTML->header(array('title'=>$Language->getText('admin_trove_cat_edit','title'))
 
 <?php
 $HTML->footer(array());
-
-?>

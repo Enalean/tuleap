@@ -1,6 +1,7 @@
 <?php
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
@@ -40,6 +41,7 @@ echo'
 	<HR NoShade>
 ';
 
+$purifier = Codendi_HTMLPurifier::instance();
 
 // #####################################
 // this section limits search and requeries if there are discrim elements
@@ -104,7 +106,7 @@ if (isset($discrim)) {
 	
 	for ($i=0;$i<sizeof($expl_discrim);$i++) {
 		$discrim_desc .= '<BR> &nbsp; &nbsp; &nbsp; '
-			.trove_getfullpath($expl_discrim[$i])
+			.$purifier->purify(trove_getfullpath($expl_discrim[$i]))
 			.' <A href="/softwaremap/trove_list.php?form_cat='.$form_cat
 			.$discrim_url_b[$i].'">['.$Language->getText('softwaremap_trove_list','remove_view').']'
 			.'</A>';
@@ -138,7 +140,7 @@ for ($i=0;$i<$folders_len;$i++) {
 	} else {
 		print '<B>';
 	}
-	print $folders[$i];
+	print $purifier->purify($folders[$i]);
 	if ($folders_ids[$i] != $form_cat) {
 		print '</A>';
 	} else {
@@ -205,9 +207,9 @@ while ($row_sub = db_fetch_array($res_sub)) {
         if (!isset($discrim_url)) $discrim_url="";
 	print ('<a href="trove_list.php?form_cat='.$row_sub['trove_cat_id'].$discrim_url.'">');
 	html_image("ic/cfolder15.png",array());
-        $nb_proj_in_cat=($row_sub['subprojects']?$row_sub['subprojects']:'0');
+        $nb_proj_in_cat=($row_sub['subprojects']?$purifier->purify($row_sub['subprojects']):'0');
         $nb_listed_projects+=$nb_proj_in_cat;
-	print ('&nbsp; '.$row_sub['fullname'].'</a> <I>('
+	print ('&nbsp; '.$purifier->purify($row_sub['fullname']).'</a> <I>('
 		.$nb_proj_in_cat
 		.' '.$Language->getText('softwaremap_trove_list','projs').')</I><BR>');
 }
@@ -254,12 +256,12 @@ while ($row_rootcat = db_fetch_array($res_rootcat)) {
 	if (($row_rootcat['trove_cat_id'] == $row_trove_cat['root_parent'])
 		|| ($row_rootcat['trove_cat_id'] == $row_trove_cat['trove_cat_id'])) {
 		html_image('ic/ofolder15.png',array());
-		print ('&nbsp; <B>'.$row_rootcat['fullname']."</B>\n");
+		print ('&nbsp; <B>'.$purifier->purify($row_rootcat['fullname'])."</B>\n");
 	} else {
 		print ('<A href="/softwaremap/trove_list.php?form_cat='
 			.$row_rootcat['trove_cat_id'].$discrim_url.'">');
 		html_image('ic/cfolder15.png',array());
-		print ('&nbsp; '.$row_rootcat['fullname']."\n");
+		print ('&nbsp; '.$purifier->purify($row_rootcat['fullname'])."\n");
 		print ('</A>');
 	}
 }
@@ -367,7 +369,7 @@ if ($querytotalcount > $TROVE_BROWSELIMIT) {
 		if ($page != $i) {
 			$html_limit .= '<A href="/softwaremap/trove_list.php?form_cat='.$form_cat;
 			$html_limit .= $discrim_url.'&page='.$i;
-                        if (isset($special_cat)) $html_limit .= "&special_cat=".$special_cat;
+                        if (isset($special_cat)) $html_limit .= "&special_cat=".$purifier->purify($special_cat);
 			$html_limit .= '">';
 		} else $html_limit .= '<B>';
 		$html_limit .= '&lt;'.$i.'&gt;';
@@ -397,10 +399,10 @@ for ($i_proj=1;$i_proj<=$querytotalcount;$i_proj++) {
 
 	if ($row_grp && $viewthisrow) {
 		print '<TABLE border="0" cellpadding="0" width="100%"><TR valign="top"><TD colspan="2">';
-		print "$i_proj. <a href=\"/projects/". strtolower($row_grp['unix_group_name']) ."/\"><B>"
-			.$row_grp['group_name']."</B></a> ";
+		print "$i_proj. <a href=\"/projects/". $purifier->purify(strtolower($row_grp['unix_group_name'])) ."/\"><B>"
+			.$purifier->purify($row_grp['group_name'])."</B></a> ";
 		if ($row_grp['short_description']) {
-			print "- " . htmlentities($row_grp['short_description'], ENT_QUOTES, 'UTF-8');
+			print "- " . $purifier->purify($row_grp['short_description']);
 		}
 
 		print '<BR>&nbsp;';
@@ -427,5 +429,3 @@ if ($querytotalcount > $TROVE_BROWSELIMIT) {
 //	.$query_projlist.'</FONT>';
 
 $HTML->footer(array());
-
-?>
