@@ -21,4 +21,8 @@ $fulltextsearch_password = 'Adm1n';
 // Defaults to 5 if no value set
 // Set to 0 for no limit
 $max_seconds_for_request = 10;
+
+// The maximum file size (in bytes) that can be indexed- be careful
+// not to go above your server limits
+$fulltextsearch_max_indexed_file_size = 100000000;
 ?>
