@@ -56,14 +56,20 @@ function ExecutionListFilter($filter) {
     }
 
     function keywordsMatcher(keyword_list, list) {
-        var result = [],
-            lookup = '';
+        var result     = [],
+            lookup     = '';
+            properties = ['summary', 'id', 'category', '_uncategorized'];
 
         keyword_list.forEach(function(keyword) {
-            lookup = $filter('filter')(list, {definition: {summary: keyword, id: keyword, category: keyword, _uncategorized: keyword}});
-            if (lookup.length > 0) {
-                result = result.concat(lookup);
-            }
+            properties.forEach(function(property) {
+                var expression = {};
+                expression[property] = keyword;
+
+                lookup = $filter('filter')(list, { definition: expression });
+                if (lookup.length > 0) {
+                    result = result.concat(lookup);
+                }
+            });
         });
 
         return result;
@@ -74,7 +80,7 @@ function ExecutionListFilter($filter) {
             lookup = '';
 
         status_list.forEach(function(status) {
-            lookup = $filter('filter')(list, {status: status});
+            lookup = $filter('filter')(list, { status: status });
             if (lookup.length > 0) {
                 result = result.concat(lookup);
             }
@@ -84,6 +90,6 @@ function ExecutionListFilter($filter) {
     }
 
     function environmentMatcher(environment, list) {
-        return $filter('filter')(list, {environment: environment});
+        return $filter('filter')(list, { environment: environment });
     }
 }
