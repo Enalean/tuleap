@@ -1,3 +1,9 @@
+Version 7.9-6 (Monday, February 2nd 2015)
+	== Bug Fix ==
+	* request # 7799: Token is stored in a dedicated cookie
+	* request # 7786: Enable browser built-in protection against XSS
+	* request # 7817: Docman fts actions are logged into the default queue instead of the fts one
+
 Version 7.9-5 (Monday, January 26th 2015)
 	== Bug Fix ==
 	* request #7788: Persistent XSS in attachment of artifact
