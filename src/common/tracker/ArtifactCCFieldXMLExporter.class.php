@@ -29,6 +29,7 @@ class ArtifactCCFieldXMLExporter extends ArtifactFieldXMLExporter {
         $field_node->setAttribute('type', self::TV5_TYPE);
         $field_node->setAttribute('bind', 'users');
         foreach ($values as $value) {
+            $value = Encoding_SupportedXmlCharEncoding::getXMLCompatibleString($value);
             $cc_value_node = $this->node_helper->getNodeWithValue('value', $value);
             $field_node->appendChild($cc_value_node);
         }
