@@ -6,7 +6,13 @@
     SocketFactory.$inject = ['socketFactory', 'SharedPropertiesService'];
 
     function SocketFactory(socketFactory, SharedPropertiesService) {
-        var io_socket = io.connect('https://' + SharedPropertiesService.getNodeServerAddress(), { secure: true });
+        var io_socket = io.connect(
+            'https://' + SharedPropertiesService.getNodeServerAddress(),
+            {
+                secure: true,
+                path: "/trafficlights/socket.io"
+            }
+        );
 
         socket = socketFactory({
             ioSocket: io_socket
