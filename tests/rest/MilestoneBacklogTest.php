@@ -52,7 +52,7 @@ class MilestonesBacklogTest extends RestBase {
         $this->assertEquals($first_backlog_item['accept']['trackers'][0]['uri'], 'trackers/4');
         $this->assertEquals($first_backlog_item['label'], "Hughhhhhhh");
         $this->assertEquals($first_backlog_item['status'], "Open");
-        $this->assertEquals($first_backlog_item['artifact'], array('id' => TestDataBuilder::STORY_3_ARTIFACT_ID, 'uri' => 'artifacts/'.TestDataBuilder::STORY_3_ARTIFACT_ID, 'tracker' => array('id' => TestDataBuilder::USER_STORIES_TRACKER_ID, 'uri' => 'trackers/'.TestDataBuilder::USER_STORIES_TRACKER_ID)));
+        $this->assertEquals($first_backlog_item['artifact'], array('id' => TestDataBuilder::STORY_3_ARTIFACT_ID, 'uri' => 'artifacts/'.TestDataBuilder::STORY_3_ARTIFACT_ID, 'tracker' => array('id' => TestDataBuilder::USER_STORIES_TRACKER_ID, 'uri' => 'trackers/'.TestDataBuilder::USER_STORIES_TRACKER_ID, 'label' => 'User Stories')));
 
         $second_backlog_item = $backlog_items[1];
         $this->assertArrayHasKey('id', $second_backlog_item);
@@ -62,7 +62,7 @@ class MilestonesBacklogTest extends RestBase {
         $this->assertEquals($second_backlog_item['accept']['trackers'][0]['uri'], 'trackers/4');
         $this->assertEquals($second_backlog_item['label'], "Kill you");
         $this->assertEquals($second_backlog_item['status'], "Open");
-        $this->assertEquals($second_backlog_item['artifact'], array('id' => TestDataBuilder::STORY_4_ARTIFACT_ID, 'uri' => 'artifacts/'.TestDataBuilder::STORY_4_ARTIFACT_ID, 'tracker' => array('id' => TestDataBuilder::USER_STORIES_TRACKER_ID, 'uri' => 'trackers/'.TestDataBuilder::USER_STORIES_TRACKER_ID)));
+        $this->assertEquals($second_backlog_item['artifact'], array('id' => TestDataBuilder::STORY_4_ARTIFACT_ID, 'uri' => 'artifacts/'.TestDataBuilder::STORY_4_ARTIFACT_ID, 'tracker' => array('id' => TestDataBuilder::USER_STORIES_TRACKER_ID, 'uri' => 'trackers/'.TestDataBuilder::USER_STORIES_TRACKER_ID, 'label' => 'User Stories')));
 
         $third_backlog_item = $backlog_items[2];
         $this->assertArrayHasKey('id', $third_backlog_item);
@@ -72,7 +72,7 @@ class MilestonesBacklogTest extends RestBase {
         $this->assertEquals($third_backlog_item['accept']['trackers'][0]['uri'], 'trackers/4');
         $this->assertEquals($third_backlog_item['label'], "Back");
         $this->assertEquals($third_backlog_item['status'], "Open");
-        $this->assertEquals($third_backlog_item['artifact'], array('id' => TestDataBuilder::STORY_5_ARTIFACT_ID, 'uri' => 'artifacts/'.TestDataBuilder::STORY_5_ARTIFACT_ID, 'tracker' => array('id' => TestDataBuilder::USER_STORIES_TRACKER_ID, 'uri' => 'trackers/'.TestDataBuilder::USER_STORIES_TRACKER_ID)));
+        $this->assertEquals($third_backlog_item['artifact'], array('id' => TestDataBuilder::STORY_5_ARTIFACT_ID, 'uri' => 'artifacts/'.TestDataBuilder::STORY_5_ARTIFACT_ID, 'tracker' => array('id' => TestDataBuilder::USER_STORIES_TRACKER_ID, 'uri' => 'trackers/'.TestDataBuilder::USER_STORIES_TRACKER_ID, 'label' => 'User Stories')));
 
         $this->assertEquals($response->getStatusCode(), 200);
     }
@@ -84,9 +84,9 @@ class MilestonesBacklogTest extends RestBase {
         $response_get = $this->getResponse($this->client->get('milestones/'.TestDataBuilder::RELEASE_ARTIFACT_ID.'/backlog'));
         $backlog_items = $response_get->json();
         $this->assertCount(3, $backlog_items);
-        $this->assertEquals($backlog_items[0]['artifact'], array('id' => TestDataBuilder::STORY_5_ARTIFACT_ID, 'uri' => 'artifacts/'.TestDataBuilder::STORY_5_ARTIFACT_ID, 'tracker' => array('id' => TestDataBuilder::USER_STORIES_TRACKER_ID, 'uri' => 'trackers/'.TestDataBuilder::USER_STORIES_TRACKER_ID)));
-        $this->assertEquals($backlog_items[1]['artifact'], array('id' => TestDataBuilder::STORY_3_ARTIFACT_ID, 'uri' => 'artifacts/'.TestDataBuilder::STORY_3_ARTIFACT_ID, 'tracker' => array('id' => TestDataBuilder::USER_STORIES_TRACKER_ID, 'uri' => 'trackers/'.TestDataBuilder::USER_STORIES_TRACKER_ID)));
-        $this->assertEquals($backlog_items[2]['artifact'], array('id' => TestDataBuilder::STORY_4_ARTIFACT_ID, 'uri' => 'artifacts/'.TestDataBuilder::STORY_4_ARTIFACT_ID, 'tracker' => array('id' => TestDataBuilder::USER_STORIES_TRACKER_ID, 'uri' => 'trackers/'.TestDataBuilder::USER_STORIES_TRACKER_ID)));
+        $this->assertEquals($backlog_items[0]['artifact'], array('id' => TestDataBuilder::STORY_5_ARTIFACT_ID, 'uri' => 'artifacts/'.TestDataBuilder::STORY_5_ARTIFACT_ID, 'tracker' => array('id' => TestDataBuilder::USER_STORIES_TRACKER_ID, 'uri' => 'trackers/'.TestDataBuilder::USER_STORIES_TRACKER_ID, 'label' => 'User Stories')));
+        $this->assertEquals($backlog_items[1]['artifact'], array('id' => TestDataBuilder::STORY_3_ARTIFACT_ID, 'uri' => 'artifacts/'.TestDataBuilder::STORY_3_ARTIFACT_ID, 'tracker' => array('id' => TestDataBuilder::USER_STORIES_TRACKER_ID, 'uri' => 'trackers/'.TestDataBuilder::USER_STORIES_TRACKER_ID, 'label' => 'User Stories')));
+        $this->assertEquals($backlog_items[2]['artifact'], array('id' => TestDataBuilder::STORY_4_ARTIFACT_ID, 'uri' => 'artifacts/'.TestDataBuilder::STORY_4_ARTIFACT_ID, 'tracker' => array('id' => TestDataBuilder::USER_STORIES_TRACKER_ID, 'uri' => 'trackers/'.TestDataBuilder::USER_STORIES_TRACKER_ID, 'label' => 'User Stories')));
     }
 
     public function testPUTBacklogWithSomeIds() {
@@ -96,9 +96,9 @@ class MilestonesBacklogTest extends RestBase {
         $response_get = $this->getResponse($this->client->get('milestones/'.TestDataBuilder::RELEASE_ARTIFACT_ID.'/backlog'));
         $backlog_items = $response_get->json();
         $this->assertCount(3, $backlog_items);
-        $this->assertEquals($backlog_items[0]['artifact'], array('id' => TestDataBuilder::STORY_5_ARTIFACT_ID, 'uri' => 'artifacts/'.TestDataBuilder::STORY_5_ARTIFACT_ID, 'tracker' => array('id' => TestDataBuilder::USER_STORIES_TRACKER_ID, 'uri' => 'trackers/'.TestDataBuilder::USER_STORIES_TRACKER_ID)));
-        $this->assertEquals($backlog_items[1]['artifact'], array('id' => TestDataBuilder::STORY_4_ARTIFACT_ID, 'uri' => 'artifacts/'.TestDataBuilder::STORY_4_ARTIFACT_ID, 'tracker' => array('id' => TestDataBuilder::USER_STORIES_TRACKER_ID, 'uri' => 'trackers/'.TestDataBuilder::USER_STORIES_TRACKER_ID)));
-        $this->assertEquals($backlog_items[2]['artifact'], array('id' => TestDataBuilder::STORY_3_ARTIFACT_ID, 'uri' => 'artifacts/'.TestDataBuilder::STORY_3_ARTIFACT_ID, 'tracker' => array('id' => TestDataBuilder::USER_STORIES_TRACKER_ID, 'uri' => 'trackers/'.TestDataBuilder::USER_STORIES_TRACKER_ID)));
+        $this->assertEquals($backlog_items[0]['artifact'], array('id' => TestDataBuilder::STORY_5_ARTIFACT_ID, 'uri' => 'artifacts/'.TestDataBuilder::STORY_5_ARTIFACT_ID, 'tracker' => array('id' => TestDataBuilder::USER_STORIES_TRACKER_ID, 'uri' => 'trackers/'.TestDataBuilder::USER_STORIES_TRACKER_ID, 'label' => 'User Stories')));
+        $this->assertEquals($backlog_items[1]['artifact'], array('id' => TestDataBuilder::STORY_4_ARTIFACT_ID, 'uri' => 'artifacts/'.TestDataBuilder::STORY_4_ARTIFACT_ID, 'tracker' => array('id' => TestDataBuilder::USER_STORIES_TRACKER_ID, 'uri' => 'trackers/'.TestDataBuilder::USER_STORIES_TRACKER_ID, 'label' => 'User Stories')));
+        $this->assertEquals($backlog_items[2]['artifact'], array('id' => TestDataBuilder::STORY_3_ARTIFACT_ID, 'uri' => 'artifacts/'.TestDataBuilder::STORY_3_ARTIFACT_ID, 'tracker' => array('id' => TestDataBuilder::USER_STORIES_TRACKER_ID, 'uri' => 'trackers/'.TestDataBuilder::USER_STORIES_TRACKER_ID, 'label' => 'User Stories')));
     }
 
     public function testPOSTBacklogAppendsId() {
@@ -117,6 +117,6 @@ class MilestonesBacklogTest extends RestBase {
         $response_get = $this->getResponse($this->client->get('milestones/'.TestDataBuilder::RELEASE_ARTIFACT_ID.'/backlog'));
         $backlog_items = $response_get->json();
         $last_item = count($backlog_items) -1;
-        $this->assertEquals($backlog_items[$last_item]['artifact'], array('id' => TestDataBuilder::STORY_6_ARTIFACT_ID, 'uri' => 'artifacts/'.TestDataBuilder::STORY_6_ARTIFACT_ID, 'tracker' => array('id' => TestDataBuilder::USER_STORIES_TRACKER_ID, 'uri' => 'trackers/'.TestDataBuilder::USER_STORIES_TRACKER_ID)));
+        $this->assertEquals($backlog_items[$last_item]['artifact'], array('id' => TestDataBuilder::STORY_6_ARTIFACT_ID, 'uri' => 'artifacts/'.TestDataBuilder::STORY_6_ARTIFACT_ID, 'tracker' => array('id' => TestDataBuilder::USER_STORIES_TRACKER_ID, 'uri' => 'trackers/'.TestDataBuilder::USER_STORIES_TRACKER_ID, 'label' => 'User Stories')));
     }
 }

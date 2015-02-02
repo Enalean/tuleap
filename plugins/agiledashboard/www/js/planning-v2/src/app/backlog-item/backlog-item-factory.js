@@ -26,14 +26,21 @@
         function defineAllowedBacklogItemTypes(backlogItem) {
             var tracker_id       = backlogItem.artifact.tracker.id;
             var allowed_trackers = backlogItem.accept.trackers;
-            var accept           = [];
 
-            _.forEach(allowed_trackers, function(allowed_tracker) {
-                accept.push(getTrackerType(allowed_tracker.id));
-            });
+            backlogItem.accepted_types = {
+                content : allowed_trackers,
 
-            backlogItem.accepted_types = accept.join('|');
-            backlogItem.trackerId      = getTrackerType(tracker_id);
+                toString : function() {
+                    var accept = [];
+                    _.forEach(this.content, function(allowed_tracker) {
+                        accept.push('trackerId' + allowed_tracker.id);
+                    });
+
+                    return accept.join('|');
+                }
+            };
+
+            backlogItem.trackerId = getTrackerType(tracker_id);
         }
 
         function getTrackerType(tracker_id) {

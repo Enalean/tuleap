@@ -27,15 +27,21 @@ Mock::generatePartial(
     )
 );
 
-class Tracker_FormElement_Field_List_BindValueTest extends UnitTestCase {
+class Tracker_FormElement_Field_List_Bind_UgroupsValueTest extends TuleapTestCase {
     
-    public function testJSon() {
-        $id          = 123;
-        $label       = 'Reopen';
-        $value = new Tracker_FormElement_Field_List_BindValueTestVersion();
-        $value->setReturnValue('getLabel', $label);
+    public function testJSonReturnsBothNameAndShortName() {
+        $id         = 123;
+        $name       = 'The smurfs';
+        $short_name = 'blueThings';
+        $is_hidden  = false;
+
+        $ugroup = mock('ProjectUGroup');
+        stub($ugroup)->getTranslatedName()->returns($name);
+        stub($ugroup)->getName()->returns($short_name);
+
+        $value = new Tracker_FormElement_Field_List_Bind_UgroupsValue($id, $ugroup, $is_hidden);
         $value->setId($id);
-        $this->assertEqual(json_encode($value->fetchForOpenListJson()), '{"id":123,"value":"b123","caption":"Reopen","rest_value":"Reopen"}');
+        $this->assertEqual(json_encode($value->fetchForOpenListJson()), '{"id":123,"value":"b123","caption":"The smurfs","rest_value":"blueThings"}');
     }
     
 }

@@ -179,24 +179,29 @@
 
         function defineAllowedBacklogItemTypes(milestone) {
             var allowed_trackers = milestone.resources.backlog.accept.trackers;
-            var accept           = [];
 
-            _.forEach(allowed_trackers, function(allowed_tracker) {
-                accept.push('trackerId' + allowed_tracker.id);
-            });
-
-            milestone.accepted_types = accept.join('|');
+            addAcceptedTypes(milestone, allowed_trackers);
         }
 
         function defineAllowedContentItemTypes(milestone) {
             var allowed_trackers = milestone.resources.content.accept.trackers;
-            var accept           = [];
 
-            _.forEach(allowed_trackers, function(allowed_tracker) {
-                accept.push('trackerId' + allowed_tracker.id);
-            });
+            addAcceptedTypes(milestone, allowed_trackers);
+        }
 
-            milestone.accepted_types = accept.join('|');
+        function addAcceptedTypes(milestone, allowed_trackers) {
+            milestone.accepted_types = {
+                content : allowed_trackers,
+
+                toString : function() {
+                    var accept = [];
+                    _.forEach(this.content, function(allowed_tracker) {
+                        accept.push('trackerId' + allowed_tracker.id);
+                    });
+
+                    return accept.join('|');
+                }
+            };
         }
 
         function reorderBacklog(milestone_id, dropped_item_id, compared_to) {

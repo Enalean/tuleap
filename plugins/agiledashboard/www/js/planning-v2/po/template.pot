@@ -9,6 +9,10 @@ msgid "A server error has occured. <b>You should refresh this page</b>."
 msgstr ""
 
 #: src/app/planning.tpl.html
+msgid "Add a new item"
+msgstr ""
+
+#: src/app/planning.tpl.html
 msgid "Burndown"
 msgstr ""
 

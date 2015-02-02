@@ -56,6 +56,7 @@ class MilestonesTest extends RestBase {
                         array(
                             'id'  => TestDataBuilder::SPRINTS_TRACKER_ID,
                             'uri' => 'trackers/'.TestDataBuilder::SPRINTS_TRACKER_ID,
+                            'label' => 'Sprints'
                         )
                     )
                 ),
@@ -78,6 +79,7 @@ class MilestonesTest extends RestBase {
                         array(
                             'id'  => TestDataBuilder::USER_STORIES_TRACKER_ID,
                             'uri' => 'trackers/'.TestDataBuilder::USER_STORIES_TRACKER_ID,
+                            'label' => 'User Stories'
                         )
                     )
                 ),
@@ -99,6 +101,7 @@ class MilestonesTest extends RestBase {
                         array(
                             'id'  => TestDataBuilder::EPICS_TRACKER_ID,
                             'uri' => 'trackers/'.TestDataBuilder::EPICS_TRACKER_ID,
+                            'label' => 'Epics'
                         )
                     )
                 ),

@@ -433,7 +433,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * to enhance the user experience
      * @return string
      */
-    public function fetchSubmitAdditionnalInfo() {
+    public function fetchSubmitAdditionnalInfo($submitted_values) {
         return '';
     }
 

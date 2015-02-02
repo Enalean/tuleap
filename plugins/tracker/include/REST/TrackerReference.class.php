@@ -25,17 +25,23 @@ use \Tuleap\REST\JsonCast;
 class TrackerReference {
 
     /**
-     * @var int ID of the project
+     * @var int ID of the tracker
      */
     public $id;
 
     /**
-     * @var string URI of the project
+     * @var string URI of the tracker
      */
     public $uri;
 
+    /**
+     * @var string Display Name of the tracker
+     */
+    public $label;
+
     public function build(Tracker $tracker) {
-        $this->id  = JsonCast::toInt($tracker->getId());
-        $this->uri = TrackerRepresentation::ROUTE . '/' . $this->id;
+        $this->id    = JsonCast::toInt($tracker->getId());
+        $this->uri   = TrackerRepresentation::ROUTE . '/' . $this->id;
+        $this->label = $tracker->getName();
     }
 }
