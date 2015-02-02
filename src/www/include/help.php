@@ -17,18 +17,19 @@
 * @param        prompt what to display to point to the  help 
 */
 function help_button($type,$helpid=false,$prompt='[?]') {
-
+    $purifier = Codendi_HTMLPurifier::instance();
     // Generic processing derives the script name from the help type
     if ($helpid == false) {
 	// $type is a static HTML page from the Codendi User Guide
-	$script = '/help/show_help.php?section='.$type;
+	$script = '/help/show_help.php?section='.$purifier->purify($type, CODENDI_PURIFIER_JS_QUOTE);
     } else {
 	// $type is a php script - the invoker probably wants to customize 
 	// the help display somehow
-	$script = '/help/'.$type.'.php?helpid='.urlencode($helpid);
-    }	
-
-    return ('<A href="javascript:help_window(\''.$script.'\')"><B>'.$prompt.'</B></A>');
+        $script = '/help/'.$purifier->purify($type, CODENDI_PURIFIER_JS_QUOTE);
+        $script .= '.php?helpid='.$purifier->purify(urlencode($helpid), CODENDI_PURIFIER_JS_QUOTE);
+    }
+    $prompt_purified = $purifier->purify($prompt);
+    return ('<A href="javascript:help_window(\''.$script.'\')"><B>'.$prompt_purified.'</B></A>');
 }
 
 

@@ -141,10 +141,11 @@ function trove_get_html_cat_selectfull($node,$selected,$name) {
 	$html .= '  <OPTION value="0">'.$Language->getText('include_trove','none_selected')."\n".'</OPTION>';
 	$res_cat = db_query('SELECT trove_cat_id,fullpath FROM trove_cat WHERE '
 		.'root_parent='.db_ei($node).' ORDER BY fullpath');
+        $purifier = Codendi_HTMLPurifier::instance();
 	while ($row_cat = db_fetch_array($res_cat)) {
 		$html .= '  <OPTION value="'.$row_cat['trove_cat_id'].'"';
 		if ($selected == $row_cat['trove_cat_id']) $html .= (' selected');
-		$html .= '>'.$row_cat['fullpath']."\n".'</OPTION>';
+		$html .= '>'.$purifier->purify($row_cat['fullpath'])."\n".'</OPTION>';
 	}
 	$html .= "</SELECT>\n";
     return $html;
@@ -160,11 +161,12 @@ function trove_get_html_cat_select_parent($selected = 0, $ignore_fullpath = fals
         $sql .= " WHERE fullpath NOT LIKE '".db_escape_string($ignore_fullpath)." ::%' AND fullpath NOT LIKE '".db_escape_string($ignore_fullpath)."' ";
     }
     $sql .= " ORDER BY fullpath";
+    $purifier = Codendi_HTMLPurifier::instance();
 	$res_cat = db_query($sql);
 	while ($row_cat = db_fetch_array($res_cat)) {
 		$html .= '  <OPTION value="'.$row_cat['trove_cat_id'].'"';
 		if ($selected == $row_cat['trove_cat_id']) $html .= (' selected');
-		$html .= '>'.$row_cat['fullpath']."\n".'</OPTION>';
+		$html .= '>'.$purifier->purify($row_cat['fullpath'])."\n".'</OPTION>';
 	}
 	$html .= "</SELECT>\n";
     return $html;
@@ -179,19 +181,20 @@ function trove_get_html_cat_select_parent($selected = 0, $ignore_fullpath = fals
  */
 function trove_get_html_allcat_selectfull($group_id) {
     $html = "";
+    $purifier = Codendi_HTMLPurifier::instance();
     $CATROOTS = trove_getallroots();
     while (list($catroot,$fullname) = each($CATROOTS)) {
-        $html .= "\n<HR>\n<P><B>$fullname</B> ".help_button('trove_cat',$catroot)."\n";
+        $html .= "\n<HR>\n<P><B>".$purifier->purify($fullname)."</B> ".help_button('trove_cat',$catroot)."\n";
     
         $res_grpcat = db_query('SELECT trove_cat_id FROM trove_group_link WHERE '.
                                'group_id='.db_ei($group_id).' AND trove_cat_root='.db_ei($catroot).
                                ' ORDER BY trove_group_id');
         for ($i=1;$i<=$GLOBALS['TROVE_MAXPERROOT'];$i++) {
             // each drop down, consisting of all cats in each root
-            $name= "root$i"."[$catroot]";
+            $name= "root$i"."[".$purifier->purify($catroot)."]";
             // see if we have one for selection
             if ($row_grpcat = db_fetch_array($res_grpcat)) {
-                $selected = $row_grpcat["trove_cat_id"];	
+                $selected = $purifier->purify($row_grpcat["trove_cat_id"]);
             } else {
                 $selected = 0;
             }
@@ -229,6 +232,7 @@ function trove_getcatlisting($group_id,$a_filter,$a_cats) {
 	// first unset the vars were using here
 	$proj_discrim_used='';
 	$isfirstdiscrim = 1;
+        $purifier = Codendi_HTMLPurifier::instance();
 	echo '<UL>';
 	while ($row_trovecat = db_fetch_array($res_trovecat)) {
 		$folders = explode(" :: ",$row_trovecat['fullpath']);
@@ -237,7 +241,7 @@ function trove_getcatlisting($group_id,$a_filter,$a_cats) {
 		// if first in discrim print root category
 		if ((!isset($proj_discrim_used[$folders_ids[0]]))||(!$proj_discrim_used[$folders_ids[0]])) {
 			if (!$isfirstdiscrim) print '<BR>';
-				print ('<LI> '.$folders[0].': ');
+				print ('<LI> '.$purifier->purify($folders[0]).': ');
 		}
 
 		// filter links, to add discriminators
@@ -254,7 +258,7 @@ function trove_getcatlisting($group_id,$a_filter,$a_cats) {
 
 			if ($a_cats) print '<A href="/softwaremap/trove_list.php?form_cat='
 				.$folders_ids[$folders_len-1].$discrim_url.'">';
-			print ($folders[$folders_len-1]);
+			print ($purifier->purify($folders[$folders_len-1]));
 			if ($a_cats) print '</A>';
 
 			if ($a_filter) {
@@ -262,7 +266,7 @@ function trove_getcatlisting($group_id,$a_filter,$a_cats) {
 					print ' ('.$Language->getText('include_trove','now_filter').') ';
 				} else {
 					print ' <A href="/softwaremap/trove_list.php?form_cat='
-						.$form_cat;
+						.$purifier->purify(urlencode($form_cat));
 					if ($discrim_url) {
 						print $discrim_url.','.$folders_ids[$folders_len-1];
 					} else {
@@ -300,5 +304,3 @@ function trove_getfullpath($node) {
 	}
 	return $return;
 }
-
-?>
