@@ -1,3 +1,6 @@
+Version 0.121 - Tuleap 7.10
+    * request #7816: Do not stop batch indexation if one particular file cannot be indexed
+
 Version 0.120 - Tuleap 7.10
     * request #7817 Docman fts actions are logged into the default queue instead of the fts one
 
