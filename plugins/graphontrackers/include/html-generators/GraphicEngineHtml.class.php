@@ -1,5 +1,6 @@
 <?php
-/* 
+/*
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Mahmoud MAALEJ, 2006. STMicroelectronics.
@@ -37,7 +38,7 @@ class graphicEngineHtml extends Error {
     }
 
     function showAvailableReports() {
-        $hp =& Codendi_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         $g = $GLOBALS['ath']->getGroup();
         $group_id = $g->getID();
         $atid = $GLOBALS['ath']->getID();
@@ -77,9 +78,11 @@ class graphicEngineHtml extends Error {
                 if ( $r->getScope() == 'S' || (!$GLOBALS['ath']->userIsAdmin()&&($r->getScope() == 'P')) ) {
                     echo  '-';
                 } else {
+                    $delete_report_text    = $GLOBALS['Language']->getText('plugin_graphontrackers_include_report','delete_report',$r->getName());
+                    $delete_report_text_js = $hp->purify($delete_report_text, CODENDI_PURIFIER_JS_QUOTE);
                     echo  '<A HREF="/tracker/admin/?func=reportgraphic'.'&report_graphic_id='.$r->getId().'&group_id='.$group_id.
                           '&atid='.$atid.'&delete_report_graphic=1"'.
-                          '" onClick="return confirm(\''.$GLOBALS['Language']->getText('plugin_graphontrackers_include_report','delete_report',$r->getName()).'\')">'.
+                          '" onClick="return confirm(\''.$delete_report_text_js.'\')">'.
                           '<img src="'.util_get_image_theme("ic/trash.png").'" border="0"></A>';
                 }
 
@@ -100,13 +103,13 @@ class graphicEngineHtml extends Error {
      */
 
     function createReportForm() {
-        $hp =& Codendi_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         $g = $GLOBALS['ath']->getGroup();
         $group_id = $g->getID();
         $atid = $GLOBALS['ath']->getID();
         echo '<H2>'.$GLOBALS['Language']->getText('plugin_graphontrackers_include_report','tracker').
              ' \'<a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'">'.
-             $GLOBALS['ath']->getName().'</a>\'  - '.$GLOBALS['Language']->getText('plugin_graphontrackers_include_report','create_rep').
+             $hp->purify($GLOBALS['ath']->getName()).'</a>\'  - '.$GLOBALS['Language']->getText('plugin_graphontrackers_include_report','create_rep').
              ' </H2>';
 
         echo '<FORM NAME="create_rep_graphic" ACTION="/tracker/admin/" METHOD="POST">
@@ -211,7 +214,7 @@ class graphicEngineHtml extends Error {
     }
 
     function showChartForm($chart) {
-        $hp =& Codendi_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         $group_id = (int)$chart->getGraphicReport()->getGroupId();
         $atid = (int)$chart->getGraphicReport()->getAtid();
         echo '<H2>'.
@@ -224,7 +227,7 @@ class graphicEngineHtml extends Error {
         echo '<script type="text/javascript" src="/plugins/graphontrackers/dependencies.js"></script>';
         
         $url = '/tracker/admin/?func=reportgraphic&amp;group_id='. $group_id .'&amp;atid='. $atid .'&amp;report_graphic_id='. (int)$chart->getGraphicReport()->getId();
-        echo '<p><a href="'. $url .'">&laquo; '. $GLOBALS['Language']->getText('plugin_graphontrackers_include_report','return_report').' '. $chart->getgraphicReport()->getName() .'</a></p>';
+        echo '<p><a href="'. $url .'">&laquo; '. $GLOBALS['Language']->getText('plugin_graphontrackers_include_report','return_report').' '. $hp->purify($chart->getgraphicReport()->getName()) .'</a></p>';
         echo '<form action="'. $url .'&amp;edit_chart='. $chart->getId() .'" name="edit_chart_form" method="post">';
         echo '<table>';
         echo '<thead><tr class="boxtable"><th class="boxtitle">'.$GLOBALS['Language']->getText('plugin_graphontrackers_boxtable','chart_properties').'</th><th class="boxtitle">'.$GLOBALS['Language']->getText('plugin_graphontrackers_boxtable','preview').'</th></tr></thead>';
@@ -292,17 +295,17 @@ class graphicEngineHtml extends Error {
                 $str .= $this->_toInputElement($name . $suffix . '[' . $k, $v, ']');
             }
         } else {
-            $hp =& Codendi_HTMLPurifier::instance();
-            $str .= '<input type="hidden" name="'. $name . $suffix .'" value="'. $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) .'" />';
+            $hp = Codendi_HTMLPurifier::instance();
+            $str .= '<input type="hidden" name="'. $hp->purify($name) . $suffix .'" value="'. $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) .'" />';
         }
         return $str;
     }
     
     function genGraphRepSelBox($value) {
-        $hp =& Codendi_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         require_once(dirname(__FILE__)."/../data-access/GraphOnTrackers_Report.class.php");
         $reports  = $this->grf->getReports_ids();
-        $returns  = '<form name="plugin_graphontrackers_selectreport_form" action="'. $_SERVER['REQUEST_URI'] .'" method="GET">';
+        $returns  = '<form name="plugin_graphontrackers_selectreport_form" action="'. $hp->purify($_SERVER['REQUEST_URI']) .'" method="GET">';
         parse_str($_SERVER['QUERY_STRING'], $url_params);
         foreach($url_params as $key => $v) {
             if ($key != 'go_graphreport' && $key != 'report_graphic_id') {
@@ -325,6 +328,3 @@ class graphicEngineHtml extends Error {
         return $returns;
     }
 }
-
-
-?>
