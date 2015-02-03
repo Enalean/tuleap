@@ -23,11 +23,8 @@ class TuleapArtLinksHooks {
     public static function onOutputPageBeforeHTML(OutputPage &$out, &$text ) {
         global $wgTuleapArtLinksGroupId;
 
-        $text = Codendi_HTMLPurifier::instance()->purify(
-            $text,
-            CODENDI_PURIFIER_LIGHT,
-            $wgTuleapArtLinksGroupId
-        );
+        $reference_manager = ReferenceManager::instance();
+        $reference_manager->insertReferences($text, $wgTuleapArtLinksGroupId);
 
         return true;
     }
