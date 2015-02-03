@@ -1,3 +1,7 @@
+Version 0.2.2 - Tuleap 7.10
+	* Number of not run is now updated in live
+	* Deal with CODENDI_* cookies
+
 Version 0.2.1 - Tuleap 7.10
 	* Fix REST tests (ids were wrong)
 	* Fix campaign creation according to new Tuleap internal behavior
