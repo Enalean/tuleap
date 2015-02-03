@@ -37,30 +37,16 @@ function send_new_project_email(Project $project) {
 //
 function send_new_user_email($to,$confirm_hash, $username)
 {
-    global $Language;
+    //needed by new_user_email.txt
     $base_url = get_server_url();
 
-    // $message is defined in the content file
-    
-    include($Language->getContent('include/new_user_email'));
-    
-    list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
+    include($GLOBALS['Language']->getContent('include/new_user_email'));
+
     $mail = new Mail();
     $mail->setTo($to);
-    $mail->setSubject($Language->getText('include_proj_email','account_register',$GLOBALS['sys_name']));
+    $mail->setSubject($GLOBALS['Language']->getText('include_proj_email','account_register',$GLOBALS['sys_name']));
     $mail->setBody($message);
     $mail->setFrom($GLOBALS['sys_noreply']);
+
     return $mail->send();
 }
-
-// LJ To test the new e-mail message content and format
-// LJ uncomment the code below and above and invoke 
-// LJ http://codendi.example.com/include/proj_email.php
-// LJ from your favorite browser
-//LJ
-//echo "<PRE>";
-//send_new_project_email(4);
-//send_new_project_email(102);
-//send_new_user_email("nicolas.terray@xrce.xerox.com", "hash");
-//echo "</PRE>";
-?>
