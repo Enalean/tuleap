@@ -71,9 +71,6 @@
                         case 'blocked':
                             campaign.nb_of_blocked++;
                             break;
-                        case 'passed':
-                            campaign.nb_of_not_run++;
-                            break;
                     }
 
                     switch (previous_status) {
@@ -86,7 +83,7 @@
                         case 'blocked':
                             campaign.nb_of_blocked--;
                             break;
-                        case 'passed':
+                        default:
                             campaign.nb_of_not_run--;
                             break;
                     }
