@@ -81,8 +81,10 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
         return $html;
     }
 
-    private function isJavascriptIncludedInValue(array $submitted_values) {
-        return ! isset($submitted_values['render_with_javascript']) || $submitted_values['render_with_javascript'] === true;
+    private function isJavascriptIncludedInValue($submitted_values) {
+        return ! is_array($submitted_values)
+            || ! isset($submitted_values['render_with_javascript'])
+            || $submitted_values['render_with_javascript'] === true;
     }
 
      /**
