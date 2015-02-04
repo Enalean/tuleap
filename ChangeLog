@@ -38,7 +38,7 @@ Version 7.10 ()
 	* mediawiki: 0.61
 	* fulltextsearch: 0.121
 	* git: 4.11
-	* docman: 2.26.64
+	* docman: 2.26.65
 	* ldap: 3.71
 	* openid: 0.6
 	* agiledashboard: 1.149
