@@ -143,7 +143,7 @@ class Tracker_Artifact_XMLImport {
         SimpleXMLElement $xml_artifact,
         Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder $fields_data_builder
     ) {
-        $this->logger->push('tv3 #'.(string)$xml_artifact['id']);
+        $this->logger->push('art #'.(string)$xml_artifact['id']);
         if (count($xml_artifact->changeset) > 0) {
             $changesets      = $this->getSortedBySubmittedOn($xml_artifact->changeset);
             $first_changeset = array_shift($changesets);
@@ -206,7 +206,7 @@ class Tracker_Artifact_XMLImport {
         Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder $fields_data_builder
     ) {
         $count = 0;
-        $this->logger->push('tv5 #'.$artifact->getId());
+        $this->logger->push('art #'.$artifact->getId());
         foreach($xml_changesets as $xml_changeset) {
             try {
                 $count++;
