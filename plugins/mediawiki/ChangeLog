@@ -1,3 +1,6 @@
+Version 0.61 - Tuleap 7.10
+    * request #7834 - Tuleap mediawiki extension break CSS
+
 Version 0.60 - Tuleap 7.10
     * story #7689 - Create plugin for artifactLinks in Mediawiki
 
