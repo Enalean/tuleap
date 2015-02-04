@@ -103,6 +103,7 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
                             'group_id'   => $item->getGroupId(),
                             'wiki_page'  => $item->getPageName(),
                             'referenced' => false,
+                            'user'       => $params['user']
                         )
                     );
                 }
