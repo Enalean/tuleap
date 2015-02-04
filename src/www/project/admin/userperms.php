@@ -1,6 +1,7 @@
 <?php
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
@@ -40,17 +41,34 @@ if ($project->isError()) {
 // ########################### form submission, make updates
 if ($request->exist('submit')) {
     group_add_history ('changed_member_perm','',$group_id);
-    
+    $nb_errors = 0;
+
     $res_dev = db_query("SELECT * FROM user_group WHERE group_id=$group_id");
     while ($row_dev = db_fetch_array($res_dev)) {
         
         if($request ->exist("admin_user_$row_dev[user_id]")){
+            $forum_flags= "forums_user_$row_dev[user_id]";
+            $doc_flags  = "doc_user_$row_dev[user_id]";
+            $file_flags = "file_user_$row_dev[user_id]";
+            $wiki_flags = "wiki_user_$row_dev[user_id]";
+            $svn_flags  = "svn_user_$row_dev[user_id]";
+            $news_flags = "news_user_$row_dev[user_id]";
+
+            $flags = array(
+                'forum_flags',
+                'doc_flags',
+                'file_flags',
+                'wiki_flags',
+                'news_flags',
+                'svn_flags'
+            );
+            $admin_flags  = "admin_user_$row_dev[user_id]";
+            $$admin_flags = $request->get($admin_flags);
         //
         // cannot turn off their own admin flag if no other admin in project -- set it back to 'A'
         //
             if (user_getid() == $row_dev['user_id']) {
-                $admin_flags="admin_user_$row_dev[user_id]";
-                if ($request->get($admin_flags) != 'A') {
+                if ($$admin_flags != 'A') {
                     $other_admin_exists=false;
                     // Check that there is still at least one admin
                     $sql = "SELECT NULL FROM user_group WHERE user_id != ".db_ei($row_dev['user_id'])." AND admin_flags='A' AND group_id=".db_ei($group_id).' LIMIT 1';
@@ -61,29 +79,22 @@ if ($request->exist('submit')) {
                     }
                             
                     if (!$other_admin_exists) {
+                        $is_admin_only_modification = true;
+                        foreach ($flags as $flag) {
+                            if ($request->get($$flag) !== false && $request->get($$flag) != $row_dev[$flag]) {
+                                $is_admin_only_modification = false;
+                            }
+                        }
+                        if ($is_admin_only_modification) {
+                            $nb_errors++;
+                        }
                         $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_userperms','cannot_remove_admin_stat'));
                         $$admin_flags='A';
                     }
                 }
-            } else {
-                $admin_flags="admin_user_$row_dev[user_id]";
             }
-            $forum_flags="forums_user_$row_dev[user_id]";
-            $doc_flags="doc_user_$row_dev[user_id]";
-            $file_flags="file_user_$row_dev[user_id]";
-            $wiki_flags="wiki_user_$row_dev[user_id]";
-            $svn_flags="svn_user_$row_dev[user_id]";
-            $news_flags="news_user_$row_dev[user_id]";
-		
-            $flags = array(
-                'forum_flags',
-                'doc_flags', 
-                'file_flags', 
-                'wiki_flags', 
-                'news_flags',
-                'svn_flags'
-            );
-            $sql = "UPDATE user_group SET admin_flags='". db_es($request->get($admin_flags)) ."'";
+
+            $sql = "UPDATE user_group SET admin_flags='". db_es($$admin_flags) ."'";
             foreach ($flags as $flag) {
                 if ($request->exist($$flag)) {
                     $sql .= ", $flag = '". db_es($request->get($$flag)) ."'";
@@ -113,6 +124,7 @@ if ($request->exist('submit')) {
             }
 
             if (!$res || $tracker_error) {
+                $nb_errors++;
                 $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_userperms','perm_fail_for',$row_dev['user_id']).' '.db_error());
             }
         
@@ -133,8 +145,10 @@ if ($request->exist('submit')) {
             ));
         }
 	}
-    
-	$GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_userperms','perm_upd'));
+
+        if (count($row_dev) > $nb_errors) {
+            $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_userperms','perm_upd'));
+        }
 }
 
 $vPattern = new Valid_String('search');
