@@ -3,6 +3,7 @@ Version 7.11 (not yet released)
         == Security ==
         * request #7831: Fix SQL injection in trove cat listing
 	* request #7818: Fix SQL injection in trove cat
+	* request #7819: Fix persistent XSS in trove categories
 
         == Plugins ==
 	* graphontrackers: 1.13
