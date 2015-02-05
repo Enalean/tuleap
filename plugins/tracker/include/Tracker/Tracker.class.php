@@ -2404,7 +2404,7 @@ EOS;
     }
 
     protected function displayImportPreview(Tracker_IDisplayTrackerLayout $layout, $request, $current_user, $session) {
-        $hp = Codendi_HTMLPurifier::instance();
+        $purifier = Codendi_HTMLPurifier::instance();
 
         if ($_FILES['csv_filename']) {
             $f = fopen($_FILES['csv_filename']['tmp_name'], 'r');
@@ -2449,7 +2449,7 @@ EOS;
 
                             foreach ($header as $field_name) {
                                 $html_table .=  '<th class="boxtitle tracker_report_table_column">';
-                                $html_table .=  $field_name;
+                                $html_table .=  $purifier->purify($field_name);
                                 $html_table .=  '</th>';
                             }
                             $html_table .=  '</tr>';
@@ -2476,7 +2476,7 @@ EOS;
                                         if ($data_cell) {
                                             $mode = 'update';
                                         }
-                                        $displayed_data = $data_cell;
+                                        $displayed_data = $purifier->purify($data_cell);
                                     }
                                     $html_table .=  '<td class="tracker_report_table_column">' . $displayed_data .'</td>';
                                 }
