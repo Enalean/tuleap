@@ -1,3 +1,6 @@
+Version 1.13 - Tuleap 7.11
+    * request #7828: Fix XSS in graph on tracker v3 plugin
+
 Version 1.12 - Tuleap 7.10
     * request #7750: Graph cumulative flow legend overlaps on graph
 
