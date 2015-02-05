@@ -65,11 +65,15 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
             }
         }
 
-        if (count($files_infos) === 0) {
+        if ($this->itCannotImportAnyFiles($values, $files_infos)) {
             throw new Tracker_Artifact_XMLImport_Exception_NoAttachementsException();
         }
 
         return $files_infos;
+    }
+
+    private function itCannotImportAnyFiles($values, $files_infos) {
+        return count($values) > 0 && count($files_infos) === 0;
     }
 
     private function getFileInfoForAttachment(SimpleXMLElement $file_xml) {
