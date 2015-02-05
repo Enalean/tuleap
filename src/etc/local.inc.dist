@@ -508,3 +508,6 @@ $sys_project_backup_path = $tmp_dir;
 // This could be needed if JavaScript code needs to be executed from an external website
 // For example, this could be 'https://example.com http://tuleap.net' or 'https://example.com/script.js'
 $sys_csp_script_scr_whitelist = '';
+
+// Convert cvs commit log messages from cp1252 to utf8.
+$sys_cvs_convert_cp1252_to_utf8 = false;
