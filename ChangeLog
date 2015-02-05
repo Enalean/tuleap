@@ -29,6 +29,7 @@ Version 7.10 ()
 	* request #7792: Contributor semantic change should trigger FTS reindex
 	* request #7796: Unable to configure tracker v5 default templates
 	* request #7817 Docman fts actions are logged into the default queue instead of the fts one
+	* Fix request #7815: Proftpd: Path are not well escaped when setting ACL
 
 	== Plugins ==
 	* tracker_date_reminder: 1.2.9
