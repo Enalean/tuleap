@@ -1,3 +1,8 @@
+Version 7.11 (not yet released)
+
+        == Bug Fix ==
+        * request #7831: Fix SQL injection in trove cat listing
+
 Version 7.10 (Thursday, February 5th 2015)
 
 	== Features ==
