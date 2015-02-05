@@ -573,6 +573,7 @@ class Backend {
      * @param String $path
      */
     public function modifyacl($entries, $path) {
+        $path = escapeshellarg($path);
         $this->setfacl("-m $entries $path");
     }
 
@@ -582,6 +583,7 @@ class Backend {
      * @param String $path
      */
     public function resetacl($path) {
+        $path = escapeshellarg($path);
         $this->setfacl("--remove-all --remove-default $path");
     }
 
