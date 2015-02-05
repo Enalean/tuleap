@@ -1,3 +1,6 @@
+Version 5.568 - Tuleap 7.10
+    * request #7840: Fix XSS when importing artifacts in tracker
+
 Version 5.567 - Tuleap 7.10
     * request #7838 - TV3 warning while I am copying a TV5 artifact
 
