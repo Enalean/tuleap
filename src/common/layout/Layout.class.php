@@ -1544,6 +1544,8 @@ class Layout extends Response {
                 }
             }
 
+            $purifier = Codendi_HTMLPurifier::instance();
+
             echo '<span class="debug">'.$Language->getText('include_layout','query_count').": ";
             echo $GLOBALS['DEBUG_DAO_QUERY_COUNT'] ."</span>";
             $percent     = (int) ($GLOBALS['DEBUG_TIME_IN_PRE'] * 100 / $debug_compute_tile);
@@ -1586,7 +1588,7 @@ class Layout extends Response {
                     $t += $trace[2] - $trace[1];
                 }
                 $q = array(
-                    'sql' => $sql,
+                    'sql' => $purifier->purify($sql),
                     'total time' => number_format(1000 * $t, 0, '.', "'") .' ms',
                 );
                 $queries[] = $q;
@@ -1635,7 +1637,7 @@ class Layout extends Response {
                     self::_debug_backtrace_rec($paths, array_reverse($trace[0]),
                         '['. (1000*round($trace[1] - $GLOBALS['debug_time_start'], 3))
                         .'/'. $time_taken .'] '.
-                        ($time_taken >= $max ? ' <span style="background:yellow; padding-left:4px; padding-right:4px; color:red;">top!</span> ' : '') . $d['sql']);
+                        ($time_taken >= $max ? ' <span style="background:yellow; padding-left:4px; padding-right:4px; color:red;">top!</span> ' : '') . $purifier->purify($d['sql']));
                 }
             }
             echo '<table>';
@@ -1671,7 +1673,7 @@ class Layout extends Response {
                     echo "<fieldset>";
                     echo '<legend id="footer_debug_doublequery_'. $key .'" class="'. Toggler::getClassname('footer_debug_doublequery_'. $key) .'">';
                     echo '<b>Run '.$GLOBALS['DBSTORE'][$key]['nb']." times: </b>";
-                    echo $GLOBALS['DBSTORE'][$key]['sql']."\n";
+                    echo $purifier->purify($GLOBALS['DBSTORE'][$key]['sql'])."\n";
                     echo '</legend>';
                     self::_debug_backtraces($GLOBALS['DBSTORE'][$key]['trace']);
                     echo "</fieldset>";
@@ -1732,11 +1734,12 @@ class Layout extends Response {
             if ($red && count($paths) > 1) {
                 $color = "red";
             }
+            $purifier = Codendi_HTMLPurifier::instance();
             foreach($paths as $p => $next) {
                 if (is_numeric($p)) {
                     echo '<tr style="color:green">';
                     echo '<td></td>';
-                    echo '<td>'. $next .'</td>';
+                    echo '<td>'. $purifier->purify($next) .'</td>';
                     echo '</tr>';
                 } else {
                     echo '<tr style="color:'. $color .'">';
