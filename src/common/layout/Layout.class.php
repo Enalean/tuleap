@@ -5,6 +5,7 @@
  * http://sourceforge.net
  *
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
  * This file is a part of Codendi.
  *
@@ -2073,12 +2074,13 @@ class Layout extends Response {
 
             if (!$service_data['is_used']) continue;
             if (!$service_data['is_active']) continue;
+            $hp = Codendi_HTMLPurifier::instance();
             // Get URL, and eval variables
             //$project->services[$short_name]->getUrl(); <- to use when service will be fully served by satellite
             if ($service_data['is_in_iframe']) {
                 $link = '/service/?group_id='. $group_id .'&amp;id='. $service_data['service_id'];
             } else {
-                $link = $service_data['link'];
+                $link = $hp->purify($service_data['link']);
             }
             if ($group_id==100) {
                 if (strstr($link,'$projectname')) {
@@ -2095,7 +2097,6 @@ class Layout extends Response {
                 $link=str_replace('$group_id',$group_id,$link);
             }
             $enabled = (is_numeric($toptab) && $toptab == $service_data['service_id']) || ($short_name && ($toptab == $short_name));
-            $hp =& Codendi_HTMLPurifier::instance();
             if ($short_name == 'summary') {
 
                 $label = '<span>';
@@ -2131,7 +2132,7 @@ class Layout extends Response {
                             'label'       => $label,
                             'enabled'     => $enabled,
                             'description' => $hp->purify($service_data['description']),
-                            'id'          => 'sidebar-'.$short_name
+                            'id'          => $hp->purify('sidebar-'.$short_name)
                     );
         }
         return $tabs;

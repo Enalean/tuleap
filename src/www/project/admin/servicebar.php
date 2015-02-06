@@ -1,6 +1,7 @@
 <?php
 //
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 //
 // 
 //
@@ -15,7 +16,7 @@ require_once('common/reference/ReferenceManager.class.php');
 require_once('common/event/EventManager.class.php');
 
 $request = HTTPRequest::instance();
-    
+
 function display_service_row($group_id, $service_id, $label, $short_name, $description, $is_active, $is_used, $scope, $rank, &$row_num, $su, $is_template) {
     global $Language;
     $matches = array();
@@ -44,13 +45,12 @@ function display_service_row($group_id, $service_id, $label, $short_name, $descr
             $label = $Language->getText($matches[1], $matches[2]);
         }
     }
-    $hp =& Codendi_HTMLPurifier::instance();
+    $hp          = Codendi_HTMLPurifier::instance();
     $description = $hp->purify($description);
-    $label = $hp->purify($label);
 
     echo '<TR class="'. util_get_alt_row_color($row_num) .'">
             <TD>
-              <a href="/project/admin/editservice.php?group_id='.$group_id.'&service_id='.$service_id.'" title="'.$description.'">'.$label.'</TD>';
+              <a href="/project/admin/editservice.php?group_id='.$group_id.'&service_id='.$service_id.'" title="'.$description.'">'.$hp->purify($label).'</TD>';
     if ($is_template) {
         echo '<td align="center">';
         switch($short_name) {
@@ -88,7 +88,7 @@ function display_service_row($group_id, $service_id, $label, $short_name, $descr
         } else $short='';
         echo '<TD align="center"><A HREF="?group_id='.$group_id.'&service_id='.$service_id.'&func=delete'.$short.'" onClick="return confirm(\'';
         if ($group_id==100) {
-             echo $Language->getText('project_admin_servicebar','warning_del_s',$label);
+             echo $Language->getText('project_admin_servicebar','warning_del_s', $hp->purify($label, CODENDI_PURIFIER_JS_QUOTE));
        } else {
             echo $Language->getText('project_admin_servicebar','del_s');
         }
@@ -331,7 +331,8 @@ project_admin_header(array('title'=>$Language->getText('project_admin_servicebar
 if ($group_id==100) {
     print '<P><h2>'.$Language->getText('project_admin_servicebar','edit_system_s').'</B></h2>';
 } else {
-    print '<P><h2>'.$Language->getText('project_admin_servicebar','edit_s_for',$project->getPublicName()).'</h2>';
+    $purifier = Codendi_HTMLPurifier::instance();
+    print '<P><h2>'.$Language->getText('project_admin_servicebar','edit_s_for',$purifier->purify($project->getPublicName())).'</h2>';
 }
 print '
 <P>
@@ -396,8 +397,3 @@ echo '
 
 
 project_admin_footer(array());
-
-
- 
-
-?>
