@@ -10,6 +10,7 @@ Version 7.11 (not yet released)
 
 	== Bug Fix ==
 	* request #7841: Pagination headers cannot be read in CORS request
+	* request #7839: A project admin can't remove his rights if he is the only project admin
 
 Version 7.10 (Thursday, February 5th 2015)
 
