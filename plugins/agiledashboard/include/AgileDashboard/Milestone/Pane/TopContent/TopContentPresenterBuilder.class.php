@@ -52,7 +52,7 @@ class AgileDashboard_Milestone_Pane_TopContent_TopContentPresenterBuilder {
             $backlog_strategy->getBacklogItemName(),
             $this->getAddItemsToBacklogUrls($user, $item_trackers, $redirect_to_self),
             $item_trackers,
-            $this->canUserPrioritizeBacklog($user, $item_trackers),
+            $this->canUserPrioritizeBacklog($user, $milestone->getGroupId()),
             $this->getTrackersWithoutInitialEffortSemanticDefined($item_trackers)
         );
     }
@@ -69,8 +69,11 @@ class AgileDashboard_Milestone_Pane_TopContent_TopContentPresenterBuilder {
         return $trackers_without_initial_effort_defined;
     }
 
-    private function canUserPrioritizeBacklog(PFUser $user, array $item_trackers) {
-        return $user->isLoggedIn();
+    private function canUserPrioritizeBacklog(PFUser $user, $group_id) {
+        $planning_permissions_manager = new PlanningPermissionsManager();
+        $root_planning                = PlanningFactory::build()->getRootPlanning($user, $group_id);
+
+        return $planning_permissions_manager->userHasPermissionOnPlanning($root_planning->getId(), $root_planning->getGroupId(), $user, PlanningPermissionsManager::PERM_PRIORITY_CHANGE);
     }
 
     private function getAddItemsToBacklogUrls(PFUser $user, array $item_trackers, $redirect_to_self) {

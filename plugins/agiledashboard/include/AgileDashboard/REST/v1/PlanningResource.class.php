@@ -29,6 +29,7 @@ use \AgileDashboard_Milestone_MilestoneStatusCounter;
 use \AgileDashboard_BacklogItemDao;
 use \Tracker_ArtifactDao;
 use \URLVerification;
+use \PlanningPermissionsManager;
 
 class PlanningResource {
 
@@ -49,7 +50,8 @@ class PlanningResource {
             $artifact_factory,
             \Tracker_FormElementFactory::instance(),
             \TrackerFactory::instance(),
-            $status_counter
+            $status_counter,
+            new PlanningPermissionsManager()
         );
     }
 

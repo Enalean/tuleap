@@ -41,6 +41,7 @@ use Tracker_Artifact_PriorityManager;
 use Tracker_Artifact_PriorityHistoryDao;
 use UserManager;
 use Tuleap\REST\v1\OrderRepresentationBase;
+use PlanningPermissionsManager;
 
 /**
  * Wrapper for backlog related REST methods
@@ -82,7 +83,8 @@ class ProjectBacklogResource {
             Tracker_ArtifactFactory::instance(),
             Tracker_FormElementFactory::instance(),
             TrackerFactory::instance(),
-            $status_counter
+            $status_counter,
+            new PlanningPermissionsManager()
         );
 
         $this->backlog_strategy_factory = new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(

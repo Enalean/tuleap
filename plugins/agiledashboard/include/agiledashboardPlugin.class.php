@@ -483,7 +483,8 @@ class AgileDashboardPlugin extends Plugin {
             $this->getArtifactFactory(),
             Tracker_FormElementFactory::instance(),
             TrackerFactory::instance(),
-            $this->getStatusCounter()
+            $this->getStatusCounter(),
+            new PlanningPermissionsManager()
         );
     }
 
