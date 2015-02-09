@@ -168,7 +168,5 @@ class Planning {
     public function getBacklogTrackers() {
         return $this->backlog_trackers;
     }
+
 }
-
-
-?>

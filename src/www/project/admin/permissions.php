@@ -605,6 +605,15 @@ function permission_fetch_selected_ugroups($permission_type, $object_id, $group_
     return $ugroups;
 }
 
+function permission_fetch_selected_ugroups_ids($permission_type, $object_id, $group_id) {
+    $ugroups = array();
+    $res_ugroups = permission_db_authorized_ugroups($permission_type, $object_id);
+    while ( $row = db_fetch_array($res_ugroups) ) {
+       $ugroups[] = $row['ugroup_id'];
+    }
+    return $ugroups;
+}
+
 function permission_fetch_selection_field_without_project_admins_and_nobody(
     $permission_type,
     $object_id,

@@ -74,7 +74,7 @@ class AgileDashboard_XMLController extends MVC2_PluginController {
             $this->group_id
         );
 
-        $xml_exporter = new AgileDashboard_XMLExporter(new XmlValidator());
+        $xml_exporter = new AgileDashboard_XMLExporter(new XmlValidator(), new PlanningPermissionsManager());
         $xml_exporter->export($root_node, $plannings);
     }
 

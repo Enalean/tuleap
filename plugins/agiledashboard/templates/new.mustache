@@ -3,16 +3,20 @@
     <h3>{{createPlanning}}</h3>
     <form method="post" action="/plugins/agiledashboard/?group_id={{group_id}}&amp;action=create">
         <p>
-            <label for="planning_name">{{planningNameFieldLabel}}</label><br />
+            <label for="planning_name">{{planningNameFieldLabel}}</label>
             <input type="text" name="planning[name]" id="planning_name" value="Sprint Planning" />
         </p>
         <p>
-            <label for="planning_backlog_title">{{planningBacklogTitleFieldLabel}}</label><br />
+            <label for="planning_backlog_title">{{planningBacklogTitleFieldLabel}}</label>
             <input type="text" name="planning[backlog_title]" id="planning_backlog_title" value="Release Backlog" />
         </p>
         <p>
-            <label for="planning_plan_title">{{planningPlanTitleFieldLabel}}</label><br />
+            <label for="planning_plan_title">{{planningPlanTitleFieldLabel}}</label>
             <input type="text" name="planning[plan_title]" id="planning_plan_title" value="Sprint Plan" />
+        </p>
+        <p>
+            <label for="">{{ planningPriorityChangePermissionFieldLabel }}</label>
+            {{{ priority_change_permission }}}
         </p>
         <p>
             {{#__}}planning-allows-assignment|{{> select-backlog}}|{{> select-planning}}{{/__}}

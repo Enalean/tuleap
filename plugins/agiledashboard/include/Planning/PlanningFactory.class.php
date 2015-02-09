@@ -35,17 +35,28 @@ class PlanningFactory {
      */
     private $form_element_factory;
 
-    public function __construct(PlanningDao $dao, TrackerFactory $tracker_factory, Tracker_FormElementFactory $form_element_factory) {
-        $this->dao                  = $dao;
-        $this->tracker_factory      = $tracker_factory;
-        $this->form_element_factory = $form_element_factory;
+    /**
+     * @var PlanningPermissionsManager
+     */
+    private $planning_permissions_manager;
+
+    public function __construct(
+        PlanningDao $dao,
+        TrackerFactory $tracker_factory,
+        Tracker_FormElementFactory $form_element_factory,
+        PlanningPermissionsManager $planning_permissions_manager
+    ) {
+        $this->dao                          = $dao;
+        $this->tracker_factory              = $tracker_factory;
+        $this->form_element_factory         = $form_element_factory;
+        $this->planning_permissions_manager = $planning_permissions_manager;
     }
 
     /**
      * @return PlanningFactory
      */
     public static function build() {
-        return new PlanningFactory(new PlanningDao(), TrackerFactory::instance(), Tracker_FormElementFactory::instance());
+        return new PlanningFactory(new PlanningDao(), TrackerFactory::instance(), Tracker_FormElementFactory::instance(), new PlanningPermissionsManager());
     }
 
     /**
@@ -67,8 +78,23 @@ class PlanningFactory {
                     $row['backlog_tracker_ids'][] = $tracker_mapping[$backlog_row['tracker_id']];
                 }
 
-                $this->dao->createPlanning($group_id, PlanningParameters::fromArray($row));
+                $inserted_planning_id = $this->dao->createPlanning($group_id, PlanningParameters::fromArray($row));
+
+                $this->duplicatePriorityChangePermission($group_id, $row['id'], $inserted_planning_id);
             }
+        }
+    }
+
+    protected function duplicatePriorityChangePermission($group_id, $source_planning_id, $new_planning_id) {
+        $source_planning                       = $this->getPlanning($source_planning_id);
+        $priority_change_permission_ugroup_ids = $this->planning_permissions_manager->getGroupIdsWhoHasPermissionOnPlanning(
+            $source_planning->getId(),
+            $source_planning->getGroupId(),
+            PlanningPermissionsManager::PERM_PRIORITY_CHANGE
+        );
+
+        if (! empty($priority_change_permission_ugroup_ids)) {
+            $this->planning_permissions_manager->savePlanningPermissionForUgroups($new_planning_id, $group_id, PlanningPermissionsManager::PERM_PRIORITY_CHANGE, $priority_change_permission_ugroup_ids);
         }
     }
 
@@ -513,11 +539,13 @@ class PlanningFactory {
      *
      * @param int $group_id
      * @param PlanningParameters $planning_parameters
-     *
-     * @return array of Planning
      */
     public function createPlanning($group_id, PlanningParameters $planning_parameters) {
-        return $this->dao->createPlanning($group_id, $planning_parameters);
+        $inserted_planning_id = $this->dao->createPlanning($group_id, $planning_parameters);
+
+        if (isset($planning_parameters->priority_change_permission) && ! empty($planning_parameters->priority_change_permission)) {
+            $this->planning_permissions_manager->savePlanningPermissionForUgroups($inserted_planning_id, $group_id, PlanningPermissionsManager::PERM_PRIORITY_CHANGE, $planning_parameters->priority_change_permission);
+        }
     }
 
     /**
@@ -525,11 +553,11 @@ class PlanningFactory {
      *
      * @param int $planning_id
      * @param PlanningParameters $planning_parameters
-     *
-     * @return array of Planning
      */
-    public function updatePlanning($planning_id, PlanningParameters $planning_parameters) {
-        return $this->dao->updatePlanning($planning_id, $planning_parameters);
+    public function updatePlanning($planning_id, $group_id, PlanningParameters $planning_parameters) {
+        $this->dao->updatePlanning($planning_id, $planning_parameters);
+
+        $this->planning_permissions_manager->savePlanningPermissionForUgroups($planning_id, $group_id, PlanningPermissionsManager::PERM_PRIORITY_CHANGE, $planning_parameters->priority_change_permission);
     }
 
     /**

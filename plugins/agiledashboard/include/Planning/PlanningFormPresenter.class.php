@@ -22,6 +22,16 @@
 class Planning_FormPresenter extends PlanningPresenter {
     // Manage translation
     public $__ = array(__CLASS__, '__trans');
+
+    /**
+     * @var PlanningPermissionsManager
+     */
+    private $planning_permissions_manager;
+
+    /**
+     * @var int
+     */
+    public $planning_id;
     
     /**
      * @var int
@@ -49,6 +59,7 @@ class Planning_FormPresenter extends PlanningPresenter {
     public $cardwall_admin;
 
     public function __construct(
+        PlanningPermissionsManager $planning_permissions_manager,
         Planning $planning,
         array $available_backlog_trackers,
         array $available_planning_trackers,
@@ -56,10 +67,12 @@ class Planning_FormPresenter extends PlanningPresenter {
     ) {
         parent::__construct($planning);
         
-        $this->group_id                    = $planning->getGroupId();
-        $this->available_backlog_trackers  = $available_backlog_trackers;
-        $this->available_planning_trackers = $available_planning_trackers;
-        $this->cardwall_admin              = $cardwall_admin;
+        $this->planning_permissions_manager = $planning_permissions_manager;
+        $this->planning_id                  = $planning->getId();
+        $this->group_id                     = $planning->getGroupId();
+        $this->available_backlog_trackers   = $available_backlog_trackers;
+        $this->available_planning_trackers  = $available_planning_trackers;
+        $this->cardwall_admin               = $cardwall_admin;
     }
 
     public function adminTitle() {
@@ -86,6 +99,14 @@ class Planning_FormPresenter extends PlanningPresenter {
         return  $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_plan_title');
     }
     
+    public function planningPriorityChangePermissionFieldLabel() {
+        return  $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_priority_change_permission');
+    }
+
+    public function priority_change_permission() {
+        return $this->planning_permissions_manager->getPlanningPermissionForm($this->planning_id, $this->group_id, PlanningPermissionsManager::PERM_PRIORITY_CHANGE, 'planning['.PlanningPermissionsManager::PERM_PRIORITY_CHANGE.']');
+    }
+
     public function btnSubmit() {
         return $GLOBALS['Language']->getText('global', 'btn_submit');
     }

@@ -58,7 +58,8 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
             '/path/to/plugin',
             mock('AgileDashboard_KanbanManager'),
             mock('AgileDashboard_ConfigurationManager'),
-            mock('AgileDashboard_KanbanFactory')
+            mock('AgileDashboard_KanbanFactory'),
+            mock('PlanningPermissionsManager')
         );
 
         $configuration_manager = mock('AgileDashboard_ConfigurationManager');
@@ -186,9 +187,11 @@ class Planning_ControllerNewTest extends TuleapTestCase {
             '/path/to/plugin',
             mock('AgileDashboard_KanbanManager'),
             mock('AgileDashboard_ConfigurationManager'),
-            $kanban_factory
+            $kanban_factory,
+            mock('PlanningPermissionsManager')
         );
-        $GLOBALS['Language']    = new MockBaseLanguage_Planning_ControllerNewTest();
+
+        $GLOBALS['Language'] = new MockBaseLanguage_Planning_ControllerNewTest();
 
         $this->available_backlog_trackers = array(
             aTracker()->withId(101)->withName('Stories')->build(),
@@ -271,9 +274,13 @@ class Planning_ControllerCreateWithValidParamsTest extends Planning_ControllerCr
             PlanningParameters::NAME                => 'Release Planning',
             PlanningParameters::PLANNING_TRACKER_ID => '3',
             PlanningParameters::BACKLOG_TITLE       => 'Release Backlog',
-            PlanningParameters::PLANNING_TITLE          => 'Sprint Plan',
+            PlanningParameters::PLANNING_TITLE      => 'Sprint Plan',
             PlanningParameters::BACKLOG_TRACKER_IDS => array(
                 '2'
+            ),
+            PlanningPermissionsManager::PERM_PRIORITY_CHANGE => array(
+                '2',
+                '3'
             )
         );
         $this->request->set('planning', $this->planning_parameters);
@@ -322,7 +329,8 @@ class Planning_Controller_EditTest extends Planning_Controller_BaseTest {
                 '/path/to/plugin',
                 mock('AgileDashboard_KanbanManager'),
                 mock('AgileDashboard_ConfigurationManager'),
-                $kanban_factory
+                $kanban_factory,
+                mock('PlanningPermissionsManager')
             )
         );
 
@@ -335,11 +343,15 @@ class Planning_Controller_Update_BaseTest extends Planning_Controller_BaseTest {
 
     protected $planning_id         = 123;
     protected $planning_parameters = array(
-        'name'                => 'Foo',
-        'backlog_title'       => 'Bar',
-        'plan_title'          => 'Baz',
-        'planning_tracker_id' => 654823,
-        PlanningParameters::BACKLOG_TRACKER_IDS  => array(43875),
+        'name'                                           => 'Foo',
+        'backlog_title'                                  => 'Bar',
+        'plan_title'                                     => 'Baz',
+        'planning_tracker_id'                            => 654823,
+        PlanningParameters::BACKLOG_TRACKER_IDS          => array(43875),
+        PlanningPermissionsManager::PERM_PRIORITY_CHANGE => array(
+            '2',
+            '3'
+        )
     );
 
     public function setUp() {
@@ -357,7 +369,7 @@ class Planning_Controller_ValidUpdateTest extends Planning_Controller_Update_Bas
 
     public function itUpdatesThePlanningAndRedirectToTheIndex() {
         $this->userIsAdmin();
-        $this->planning_factory->expectOnce('updatePlanning', array($this->planning_id, PlanningParameters::fromArray($this->planning_parameters)));
+        $this->planning_factory->expectOnce('updatePlanning', array($this->planning_id, $this->group_id, PlanningParameters::fromArray($this->planning_parameters)));
         $this->expectRedirectTo("/plugins/agiledashboard/?group_id={$this->group_id}&planning_id={$this->planning_id}&action=edit");
         $this->planning_controller->update();
     }

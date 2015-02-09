@@ -23,27 +23,29 @@
  */
 class PlanningParameters {
 
-    const NAME                  = 'name';
-    const BACKLOG_TITLE         = 'backlog_title';
-    const PLANNING_TITLE        = 'plan_title';
-    const BACKLOG_TRACKER_IDS   = 'backlog_tracker_ids';
-    const PLANNING_TRACKER_ID   = 'planning_tracker_id';
+    const NAME                = 'name';
+    const BACKLOG_TITLE       = 'backlog_title';
+    const PLANNING_TITLE      = 'plan_title';
+    const BACKLOG_TRACKER_IDS = 'backlog_tracker_ids';
+    const PLANNING_TRACKER_ID = 'planning_tracker_id';
 
     public $name;
     public $backlog_title;
     public $plan_title;
     public $backlog_tracker_ids = array();
     public $planning_tracker_id;
+    public $priority_change_permission;
 
     public static function fromArray(array $array) {
         $parameters  = new PlanningParameters();
         $backlog_ids = PlanningParameters::get($array, self::BACKLOG_TRACKER_IDS);
 
-        $parameters->name                = PlanningParameters::get($array, self::NAME);
-        $parameters->backlog_title       = PlanningParameters::get($array, self::BACKLOG_TITLE);
-        $parameters->plan_title          = PlanningParameters::get($array, self::PLANNING_TITLE);
-        $parameters->backlog_tracker_ids = ($backlog_ids) ? $backlog_ids : array();
-        $parameters->planning_tracker_id = PlanningParameters::get($array, self::PLANNING_TRACKER_ID);
+        $parameters->name                       = PlanningParameters::get($array, self::NAME);
+        $parameters->backlog_title              = PlanningParameters::get($array, self::BACKLOG_TITLE);
+        $parameters->plan_title                 = PlanningParameters::get($array, self::PLANNING_TITLE);
+        $parameters->backlog_tracker_ids        = ($backlog_ids) ? $backlog_ids : array();
+        $parameters->planning_tracker_id        = PlanningParameters::get($array, self::PLANNING_TRACKER_ID);
+        $parameters->priority_change_permission = PlanningParameters::get($array, PlanningPermissionsManager::PERM_PRIORITY_CHANGE);
 
         return $parameters;
     }

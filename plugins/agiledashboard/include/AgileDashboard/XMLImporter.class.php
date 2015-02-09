@@ -57,13 +57,19 @@ class AgileDashboard_XMLImporter {
                 $tracker_mappings
             );
 
-            $plannings[$plannings_node_name][] = array(
+            $planning_parameters = array(
                 PlanningParameters::NAME                => (string) $attributes[PlanningParameters::NAME],
                 PlanningParameters::BACKLOG_TITLE       => (string) $attributes[PlanningParameters::BACKLOG_TITLE],
                 PlanningParameters::PLANNING_TITLE      => (string) $attributes[PlanningParameters::PLANNING_TITLE],
                 PlanningParameters::PLANNING_TRACKER_ID => (string) $planning_tracker_id,
-                PlanningParameters::BACKLOG_TRACKER_IDS => $this->toArrayBacklogIds($planning, $tracker_mappings),
+                PlanningParameters::BACKLOG_TRACKER_IDS => $this->toArrayBacklogIds($planning, $tracker_mappings)
             );
+
+            foreach($this->toArrayPermissions($planning) as $permission_name => $ugroups) {
+                $planning_parameters[$permission_name] = $ugroups;
+            }
+
+            $plannings[$plannings_node_name][] = $planning_parameters;
         }
 
         return $plannings;
@@ -72,12 +78,35 @@ class AgileDashboard_XMLImporter {
     private function toArrayBacklogIds(SimpleXMLElement $planning_node, array $tracker_mappings) {
         $backlog_tracker_ids = array();
         foreach ($planning_node->{AgileDashboard_XMLExporter::NODE_BACKLOGS}->children() as $backlog) {
-            $backlog_tracker_ids[]  = $this->getTrackerIdFromMappings(
+            $backlog_tracker_ids[] = $this->getTrackerIdFromMappings(
                 (string) $backlog,
                 $tracker_mappings
             );
         }
         return $backlog_tracker_ids;
+    }
+
+    private function toArrayPermissions(SimpleXMLElement $planning_node) {
+        $permissions = array();
+
+        if (! isset($planning_node->permissions)) {
+            return $permissions;
+        }
+
+        foreach($planning_node->permissions->children() as $permission) {
+            $ugroup = (string) $permission['ugroup'];
+            $type   = (string) $permission['type'];
+
+            if (! isset($permissions[$type])) {
+                $permissions[$type] = array();
+            }
+
+            if (isset($GLOBALS['UGROUPS'][$ugroup])) {
+                $permissions[$type][] = $GLOBALS['UGROUPS'][$ugroup];
+            }
+        }
+
+        return $permissions;
     }
 
     /**
