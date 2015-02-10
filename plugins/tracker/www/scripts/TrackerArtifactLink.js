@@ -295,16 +295,17 @@ codendi.tracker.artifact.artifactLink = {
         }
     }),
     tabs: { },
-    //TODO: replace '1' below by the tracker id of the current artifact
-    //      this is helpful(mandatory) when there is not any links yet.
+
     selector_url: {
-        tracker: location.href.toQueryParams().tracker ? location.href.toQueryParams().tracker : 0,
+        tracker: null,
         'link-artifact-id': location.href.toQueryParams().aid ? location.href.toQueryParams().aid : ''
     }
 };
 
 
 document.observe('dom:loaded', function () {
+
+    codendi.tracker.artifact.artifactLink.selector_url.tracker = $('tracker_id').value;
 
     //{{{ artifact links    
 
@@ -699,7 +700,7 @@ document.observe('dom:loaded', function () {
                     });
                 }
             };
-            
+
          overlay_window.activateWindow({
                 href: location.href.split('?')[0] + '?' + $H(codendi.tracker.artifact.artifactLink.selector_url).toQueryString(),
                 title: ''
