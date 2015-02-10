@@ -1,3 +1,6 @@
+Version 5.569 - Tuleap 7.11
+    * Fix request #7855: Issue with 'Select artifacts to link' on the artifact Edit page
+
 Version 5.568 - Tuleap 7.10
     * request #7840: Fix XSS when importing artifacts in tracker
 
