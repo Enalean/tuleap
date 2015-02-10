@@ -81,6 +81,36 @@ function tooltip_values($nb_member_of, $nb_admin_of, $Language) {
 
     return $tooltip_values;
 }
+if ($request->exist('export')) {
+    //Validate user_name_search
+    $vUserNameSearch  = new Valid_String('user_name_search');
+    $user_name_search = '';
+    if($request->valid($vUserNameSearch)) {
+        if ($request->exist('user_name_search')) {
+            $user_name_search = $request->get('user_name_search');
+        }
+    }
+    //Get current sort header
+    $header_whitelist = array('user_name', 'realname', 'status');
+    if (in_array($request->get('current_sort_header'), $header_whitelist)) {
+        $current_sort_header=$request->get('current_sort_header');
+    }
+    else {
+        $current_sort_header = 'user_name';
+    }
+    //Get current sort order
+    $sort_order_whitelist = array('ASC','DESC');
+    if (in_array($request->get('sort_order'), $sort_order_whitelist)) {
+        $sort_order=$request->get('sort_order');
+    }
+    else {
+        $sort_order = 'ASC';
+    }
+    //export user list in csv format
+    $user_list_exporter = new Admin_UserListExporter();
+    $user_list_exporter->exportUserList($user_name_search, $current_sort_header, $sort_order);
+    exit;
+}
 
 function show_users_list ($res, $offset, $limit, $user_name_search="", $sort_params) {
     $result = $res['users'];
@@ -88,6 +118,10 @@ function show_users_list ($res, $offset, $limit, $user_name_search="", $sort_par
     global $Language;
     echo '<P>'.$Language->getText('admin_userlist','legend').'</P>
           <TABLE class="table table-bordered table-striped table-hover">';
+    echo '<form action="/admin/userlist.php?user_name_search='.$hp->purify($user_name_search).'&export&current_sort_header='.$hp->purify($sort_params["sort_header"]).'&sort_order='.$hp->purify($sort_params["order"]).'" method="post">';
+        echo'<input type="submit" class="btn" name="exp-csv" value="Export CSV">';
+    echo '</form>';
+
     $odd_even = array('boxitem', 'boxitemalt');
     if ($user_name_search != "") {
         $user_name_param="&user_name_search=$user_name_search";
