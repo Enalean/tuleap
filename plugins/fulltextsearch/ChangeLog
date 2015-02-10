@@ -1,3 +1,6 @@
+Version 0.122 - Tuleap 7.11
+    * Fix request #7862: Old phppwiki search method no longer available
+
 Version 0.121 - Tuleap 7.10
     * request #7816: Do not stop batch indexation if one particular file cannot be indexed
 
