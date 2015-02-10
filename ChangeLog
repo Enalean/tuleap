@@ -1,5 +1,8 @@
 Version 7.11 (not yet released)
 
+	== Feature Request ==
+	* request #7711: Add csv export in site admin user list interface (Contrib STMicroelectronics)
+
         == Security ==
         * request #7831: Fix SQL injection in trove cat listing
 	* request #7818: Fix SQL injection in trove cat
