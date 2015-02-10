@@ -19,6 +19,9 @@
  */
 
 class ServiceTracker extends Service {
+
+    const NAME = 'tracker';
+
     /**
      * Display header for service tracker
      *
@@ -35,6 +38,8 @@ class ServiceTracker extends Service {
         $user_has_special_access = $tracker_manager->userCanAdminAllProjectTrackers();
 
         $params = $params + array('user_has_special_access' => $user_has_special_access);
+        $params['service_name'] = self::NAME;
+        $params['project_id']   = $this->getGroupId();
 
         parent::displayHeader($title, $breadcrumbs, $toolbar, $params);
     }
