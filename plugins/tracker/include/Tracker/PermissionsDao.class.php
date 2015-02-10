@@ -72,5 +72,47 @@ class Tracker_PermissionsDao extends DataAccessObject {
     public function extractUgroupID(array $row) {
         return $row['ugroup_id'];
     }
+
+    public function isThereAnExplicitPermission($ugroup_id) {
+        $ugroup_id  = $this->da->escapeInt($ugroup_id);
+
+        $sql =
+           "SELECT permissions.* FROM permissions
+            WHERE ugroup_id = $ugroup_id
+                AND permission_type LIKE 'PLUGIN_TRACKER%'
+            LIMIT 1
+            ";
+
+        return $this->retrieveFirstRow($sql);
+    }
+
+    public function doAllItemsHaveExplicitPermissions($project_id) {
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql =
+           "SELECT * FROM tracker_field
+                JOIN tracker ON tracker.id = tracker_field.tracker_id
+                LEFT JOIN permissions ON permissions.object_id = tracker_field.id
+            WHERE tracker.group_id = $project_id
+                AND permission_type IS NULL
+            LIMIT 1
+            ";
+
+        $results = (bool) $this->retrieveFirstRow($sql);
+
+        return ! $results;
+    }
+
+    public function isThereADefaultPermissionThatUsesUgroup($ugroup_id) {
+        $ugroup_id  = $this->da->escapeInt($ugroup_id);
+
+        $sql =
+           "SELECT permissions_values.* FROM permissions_values
+            WHERE ugroup_id = $ugroup_id
+                AND permission_type LIKE 'PLUGIN_TRACKER%'
+            LIMIT 1
+            ";
+
+        return (bool) $this->retrieveFirstRow($sql);
+    }
 }
-?>

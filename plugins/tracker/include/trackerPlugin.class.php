@@ -97,6 +97,7 @@ class trackerPlugin extends Plugin {
         if (defined('FULLTEXTSEARCH_BASE_URL')) {
             $this->_addHook(FULLTEXTSEARCH_EVENT_FETCH_ALL_DOCUMENT_SEARCH_TYPES);
             $this->_addHook(FULLTEXTSEARCH_EVENT_FETCH_PROJECT_TRACKER_FIELDS);
+            $this->_addHook(FULLTEXTSEARCH_EVENT_DOES_TRACKER_SERVICE_USE_UGROUP);
         }
 
         return parent::getHooksAndCallbacks();
@@ -886,5 +887,23 @@ class trackerPlugin extends Plugin {
         $label = $GLOBALS['Language']->getText('plugin_tracker', 'admin_tracker_template');
 
         $params['additional_entries'][] = '<li><a href="/plugins/tracker/?group_id=100">'. $label .'</a></li>';
+    }
+
+    public function fulltextsearch_event_does_tracker_service_use_ugroup($params) {
+        $dao        = new Tracker_PermissionsDao();
+        $ugroup_id  = $params['ugroup_id'];
+        $project_id = $params['project_id'];
+
+        if ($dao->isThereAnExplicitPermission($ugroup_id, $project_id)) {
+            $params['is_used'] = true;
+            return;
+        }
+
+        if ($dao->doAllItemsHaveExplicitPermissions($project_id)) {
+            $params['is_used'] = false;
+            return;
+        }
+
+        $params['is_used'] = $dao->isThereADefaultPermissionThatUsesUgroup($ugroup_id);
     }
 }

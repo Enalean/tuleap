@@ -264,7 +264,45 @@ class PermissionsDao extends DataAccessObject {
         return $this->update($sql);
     }
 
+    public function isThereAnExplicitWikiServicePermission($ugroup_id) {
+        $ugroup_id  = $this->da->escapeInt($ugroup_id);
+
+        $sql =
+           "SELECT * FROM permissions
+            WHERE ugroup_id = $ugroup_id
+                AND permission_type LIKE 'WIKI%'
+            LIMIT 1
+            ";
+
+        return $this->retrieveFirstRow($sql);
+    }
+
+    public function doAllWikiServiceItemsHaveExplicitPermissions($project_id) {
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql =
+          "SELECT * FROM wiki_page
+                LEFT JOIN permissions ON permissions.object_id = wiki_page.id
+            WHERE wiki_page.group_id = $project_id
+                AND permission_type IS NULL
+            LIMIT 1
+            ";
+
+        $results = (bool) $this->retrieveFirstRow($sql);
+
+        return ! $results;
+    }
+
+    public function isThereADefaultWikiServicePermissionThatUsesUgroup($ugroup_id) {
+        $ugroup_id  = $this->da->escapeInt($ugroup_id);
+
+        $sql =
+           "SELECT permissions_values.* FROM permissions_values
+            WHERE ugroup_id = $ugroup_id
+                AND permission_type LIKE 'WIKI%'
+            LIMIT 1
+            ";
+
+        return (bool) $this->retrieveFirstRow($sql);
+    }
 }
-
-
-?>
