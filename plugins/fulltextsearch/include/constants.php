@@ -51,3 +51,25 @@ define('FULLTEXTSEARCH_EVENT_FETCH_ALL_DOCUMENT_SEARCH_TYPES', 'fulltextsearch_e
  *
  */
 define('FULLTEXTSEARCH_EVENT_FETCH_PROJECT_TRACKER_FIELDS', 'fulltextsearch_event_fetch_project_tracker_fields');
+
+/**
+ * Check if the service uses a ugroup
+ * 
+ * Parameters:
+ *  'is_used'    => boolean
+ *  'ugroup_id'  => int
+ *  'project_id' => int
+ * 
+ */
+define('FULLTEXTSEARCH_EVENT_DOES_TRACKER_SERVICE_USE_UGROUP', 'fulltextsearch_event_does_tracker_service_use_ugroup');
+
+/**
+ * Check if the service uses a ugroup
+ *
+ * Parameters:
+ *  'is_used'    => boolean
+ *  'ugroup_id'  => int
+ *  'project_id' => int
+ *
+ */
+define('FULLTEXTSEARCH_EVENT_DOES_DOCMAN_SERVICE_USE_UGROUP', 'fulltextsearch_event_does_docman_service_use_ugroup');

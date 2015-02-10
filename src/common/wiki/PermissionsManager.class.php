@@ -149,4 +149,13 @@ class Wiki_PermissionsManager {
 
         return $comparable_ugroup_id;
     }
+
+    public function isUgroupUsed($ugroup_id, $project_id) {
+        $project = $this->project_manager->getProject($project_id);
+        if (! $project->usesWiki()) {
+            return false;
+        }
+
+        return $this->permission_manager->isUgroupUsedByWikiService($ugroup_id, $project_id);
+    }
 }
