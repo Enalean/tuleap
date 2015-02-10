@@ -874,4 +874,15 @@ class Event {
      *      'additional_entries' => array of <li> element
      */
     const SITE_ADMIN_CONFIGURATION_TRACKER = 'site_admin_configuration_tracker';
+
+    /**
+     * Throw an event to allow a plugin to refdefine the type of search
+     *
+     * Parameters:
+     *     'type'         => (string) current type,
+     *     'service_name' => string,
+     *     'project_id'   => int,
+     *     'user'         => PFUser,
+     */
+    const REDEFINE_SEARCH_TYPE = 'redefine_search_type';
 }

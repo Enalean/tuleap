@@ -121,6 +121,7 @@ class fulltextsearchPlugin extends Plugin {
         $this->addHook(Event::PLUGINS_POWERED_SEARCH);
         $this->addHook(Event::SEARCH_TYPE, 'search_type');
         $this->addHook(Event::FETCH_ADDITIONAL_SEARCH_TABS);
+        $this->addHook(Event::REDEFINE_SEARCH_TYPE);
 
         //Ugroups
         $this->_addHook('project_admin_ugroup_remove_user', 'project_admin_ugroup_delete_or_remove_user');
@@ -171,31 +172,21 @@ class fulltextsearchPlugin extends Plugin {
     }
 
     public function search_type($params) {
-        $search_types_managed = array(
-            self::SEARCH_DEFAULT,
-            self::SEARCH_DOCMAN_TYPE,
-            self::SEARCH_WIKI_TYPE,
-            self::SEARCH_TYPE
-        );
+        $type_of_search = $params['query']->getTypeOfSearch();
 
-        if ($this->getCurrentUser()->useLabFeatures()) {
-            $type_of_search = $params['query']->getTypeOfSearch();
-            $index          = ($type_of_search == self::SEARCH_TYPE ) ? self::SEARCH_DEFAULT : $type_of_search;
-            $type           = ($index === self::SEARCH_TRACKER_TYPE && ! $params['query']->getProject()->isError()) ?
-                $params['query']->getProject()->getID() : '';
-
-            if (in_array($index, $search_types_managed)) {
-                try {
-                    $search_controller = $this->getSearchController($index, $type);
-                } catch (ElasticSearch_ClientNotFoundException $exception) {
-                    $search_error_controller = $this->getSearchErrorController();
-                    $search_error_controller->clientNotFound($params);
-                    return;
-                }
-
-                $search_controller->siteSearch($params);
-            }
+        if ($type_of_search !== self::SEARCH_TYPE) {
+            return;
         }
+
+        try {
+            $search_controller = $this->getSearchController();
+        } catch (ElasticSearch_ClientNotFoundException $exception) {
+            $search_error_controller = $this->getSearchErrorController();
+            $search_error_controller->clientNotFound($params);
+            return;
+        }
+
+        $search_controller->siteSearch($params);
     }
 
     private function getDocmanSystemEventManager() {
@@ -865,5 +856,11 @@ class fulltextsearchPlugin extends Plugin {
         if ($wiki_perm_manager->isUgroupUsed($ugroup_id, $project_id)) {
             $this->getWikiSystemEventManager()->queueWikiProjectReindexation($project_id);
         }
+    }
+
+    public function redefine_search_type($params) {
+        $calculator = new FullTextSearch_TypeOfSearchCalculator(PluginManager::instance(), $this);
+
+        $params['type'] = $calculator->calculate($params['user'], $params['type'], $params['service_name'], $params['project_id']);
     }
 }
