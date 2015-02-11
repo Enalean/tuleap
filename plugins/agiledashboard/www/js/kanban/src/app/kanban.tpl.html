@@ -14,6 +14,7 @@
         <tr>
             <th class="backlog" ng-class="kanban.backlog.is_open ? 'column-displayed' : 'column-hidden'">
                 <span class="wip-count">{{ kanban.backlog.content.length }}</span>
+                <span class="loading" ng-if="kanban.backlog.loading_items"></span>
                 <span class="toggle-column" title="{{ 'Toggle the backlog' | translate }}" ng-click="kanban.backlog.is_open = ! kanban.backlog.is_open">
                     <i class="icon-inbox"></i>
                 </span>
@@ -23,6 +24,7 @@
                 <span class="wip-limit infinity" ng-show="! column.limit">∞</span>
                 <span class="wip-limit" ng-show="column.limit"><i class="icon-chevron-left"></i>{{ column.limit }}</span>
                 <span class="wip-count">{{ column.content.length }}</span>
+                <span class="loading" ng-if="column.loading_items"></span>
                 <span class="toggle-column" title="{{ 'Toggle this column' | translate }}" ng-click="column.is_open = ! column.is_open">
                     <i ng-class="column.is_open ? 'icon-minus-sign-alt' : 'icon-plus-sign-alt'"></i>
                 </span>
@@ -30,6 +32,7 @@
             </th>
             <th ng-class="kanban.archive.is_open ? 'column-displayed' : 'column-hidden'">
                 <span class="wip-count">{{ kanban.archive.content.length }}</span>
+                <span class="loading" ng-if="kanban.archive.loading_items"></span>
                 <span class="toggle-column" title="{{ 'Toggle the archive' | translate }}" ng-click="kanban.archive.is_open = ! kanban.archive.is_open">
                     <i class="icon-archive"></i>
                 </span>
@@ -51,9 +54,11 @@
                     >
                         <li ui-tree-node ng-repeat="item in kanban.backlog.content" ng-include="'kanban-item.tpl.html'"></li>
                     </ul>
-                    <div class="loading" ng-if="kanban.loading_backlog"></div>
                 </div>
-                <div class="column-label">{{ kanban.backlog.label }} <span class="count">{{ kanban.backlog.content.length }}</span></div>
+                <div class="column-label">{{ kanban.backlog.label }}
+                    <span class="count">{{ kanban.backlog.content.length }}</span>
+                    <span class="loading" ng-if="kanban.backlog.loading_items"></span>
+                </div>
             </td>
             <td ng-repeat="column in kanban.board.columns"
                 ng-class="column.is_open ? 'column-displayed' : 'column-hidden'"
@@ -68,7 +73,10 @@
                         <li ui-tree-node ng-repeat="item in column.content" ng-include="'kanban-item.tpl.html'"></li>
                     </ul>
                 </div>
-                <div class="column-label">{{ column.label }} <span class="count">{{ column.content.length }}</span></div>
+                <div class="column-label">{{ column.label }}
+                    <span class="count">{{ column.content.length }}</span>
+                    <span class="loading" ng-if="column.loading_items"></span>
+                </div>
             </td>
             <td class="archive"
                 ng-class="kanban.archive.is_open ? 'column-displayed' : 'column-hidden'"
@@ -83,7 +91,10 @@
                         <li ui-tree-node ng-repeat="item in kanban.archive.content" ng-include="'kanban-item.tpl.html'"></li>
                     </ul>
                 </div>
-                <div class="column-label">{{ kanban.archive.label }} <span class="count">{{ kanban.archive.content.length }}</span></div>
+                <div class="column-label">{{ kanban.archive.label }}
+                    <span class="count">{{ kanban.archive.content.length }}</span>
+                    <span class="loading" ng-if="kanban.archive.loading_items"></span>
+                </div>
             </td>
         </tr>
     </tbody>

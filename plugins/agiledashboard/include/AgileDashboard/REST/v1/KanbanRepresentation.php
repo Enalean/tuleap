@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ class KanbanRepresentation {
 
     const ROUTE         = 'kanban';
     const BACKLOG_ROUTE = 'backlog';
+    const ITEMS_ROUTE   = 'items';
 
     /**
      * @var Int
@@ -83,6 +84,9 @@ class KanbanRepresentation {
         $this->resources = array(
             'backlog' => array(
                 'uri' => $this->uri . '/'. self::BACKLOG_ROUTE
+            ),
+            'items' => array(
+                'uri' => $this->uri . '/'. self::ITEMS_ROUTE
             )
         );
     }

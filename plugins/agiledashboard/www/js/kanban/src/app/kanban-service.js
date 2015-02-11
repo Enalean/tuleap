@@ -13,7 +13,8 @@
 
         return {
             getKanban:  getKanban,
-            getBacklog: getBacklog
+            getBacklog: getBacklog,
+            getItems:   getItems
         };
 
         function getKanban(id) {
@@ -36,6 +37,29 @@
                 .one('kanban', id)
                 .one('backlog')
                 .get({
+                    limit: limit,
+                    offset: offset
+                })
+                .then(function (response) {
+                    var result = {
+                        results: response.data.collection,
+                        total: response.headers('X-PAGINATION-SIZE')
+                    };
+
+                    data.resolve(result);
+                });
+
+            return data.promise;
+        }
+
+        function getItems(id, column_id, limit, offset) {
+            var data = $q.defer();
+
+            rest
+                .one('kanban', id)
+                .one('items')
+                .get({
+                    column_id: column_id,
                     limit: limit,
                     offset: offset
                 })

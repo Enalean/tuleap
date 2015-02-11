@@ -251,7 +251,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
         $color      = null;
         $decorators = $this->field->getDecorators();
 
-        if (! empty($decorators)) {
+        if (! empty($decorators) && isset($decorators[$value->getId()])) {
             $decorator = $decorators[$value->getId()];
             $color     = array(
                 'r' => (int)$decorator->r,
