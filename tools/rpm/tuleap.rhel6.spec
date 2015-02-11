@@ -329,7 +329,7 @@ Group: Development/Tools
 Version: @@PLUGIN_MEDIAWIKI_VERSION@@
 Release: @@RELEASE@@%{?dist}
 Requires: tuleap-plugin-fusionforge_compat
-Requires: php-mediawiki-tuleap >= 1.20.3-4
+Requires: php-mediawiki-tuleap >= 1.20.3-6
 %description plugin-mediawiki
 This plugin provides Mediawiki integration in Tuleap.
 

@@ -368,6 +368,53 @@ require_once "$IP/extensions/SyntaxHighlight_GeSHi/SyntaxHighlight_GeSHi.php";
 require_once("$IP/extensions/PdfBook/PdfBook.php");
 $wgPdfBookTab = true;
 
+// Labeled Section Transclusion
+require_once("$IP/extensions/LabeledSectionTransclusion/lst.php");
+
+// CategoryTree
+$wgUseAjax = true;
+require_once("$IP/extensions/CategoryTree/CategoryTree.php");
+
+// Cite
+require_once "$IP/extensions/Cite/Cite.php";
+
+// ImageMap
+require_once "$IP/extensions/ImageMap/ImageMap.php";
+
+// InputBox
+require_once "$IP/extensions/InputBox/InputBox.php";
+
+// UNC_links
+$wgUrlProtocols = array(
+    'http://',
+    'https://',
+    'ftp://',
+    'ftps://', // If we allow ftp:// we should allow the secure version.
+    'ssh://',
+    'sftp://', // SFTP > FTP
+    'irc://',
+    'ircs://', // @bug 28503
+    'xmpp:', // Another open communication protocol
+    'sip:',
+    'sips:',
+    'gopher://',
+    'telnet://', // Well if we're going to support the above.. -ævar
+    'nntp://', // @bug 3808 RFC 1738
+    'worldwind://',
+    'mailto:',
+    'tel:', // If we can make emails linkable, why not phone numbers?
+    'sms:', // Likewise this is standardized too
+    'news:',
+    'svn://',
+    'git://',
+    'mms://',
+    'bitcoin:', // Even registerProtocolHandler whitelists this along with mailto:
+    'magnet:', // No reason to reject torrents over magnet: when they're allowed over http://
+    'urn:', // Allow URNs to be used in Microdata/RDFa <link ... href="urn:...">s
+    'geo:', // urls define geo locations, they're useful in Microdata/RDFa and for coordinates
+    '//', // for protocol-relative URLs
+);
+
 require_once MEDIAWIKI_BASE_DIR.'/MediawikiManager.class.php';
 $manager = new MediawikiManager(new MediawikiDao());
 
