@@ -12,6 +12,7 @@ Version 7.11 (not yet released)
 	* graphontrackers: 1.13
 	* tracker: 5.569
 	* fulltextsearch: 0.122
+	* mediawiki: 0.62
 
 	== Bug Fix ==
 	* request #7841: Pagination headers cannot be read in CORS request

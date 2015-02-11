@@ -1,3 +1,14 @@
+Version 0.62 - Tuleap 7.11
+    * story #7745: Mediawiki new plugins
+
+
+* http://www.mediawiki.org/wiki/Extension:Labeled_Section_Transclusion
+* http://www.mediawiki.org/wiki/Categorytree
+* http://www.mediawiki.org/wiki/Extension:Cite
+* http://www.mediawiki.org/wiki/Extension:ImageMap
+* http://www.mediawiki.org/wiki/Extension:InputBox
+* http://www.mediawiki.org/wiki/UNC_links
+
 Version 0.61 - Tuleap 7.10
     * request #7834 - Tuleap mediawiki extension break CSS
 
