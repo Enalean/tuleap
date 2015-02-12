@@ -715,4 +715,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     protected function getDao() {
         return new Tracker_FormElement_Field_BurndownDao();
     }
+
+    public function canBeUsedAsReportCriterion() {
+        return false;
+    }
 }

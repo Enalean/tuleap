@@ -25,13 +25,15 @@
  */
 class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
     
-    const ACTION_SAVE    = 'report-save';
-    const ACTION_SAVEAS  = 'report-saveas';
-    const ACTION_REPLACE = 'report-replace';
-    const ACTION_DELETE  = 'report-delete';
-    const ACTION_SCOPE   = 'report-scope';
-    const ACTION_DEFAULT = 'report-default';
+    const ACTION_SAVE         = 'report-save';
+    const ACTION_SAVEAS       = 'report-saveas';
+    const ACTION_REPLACE      = 'report-replace';
+    const ACTION_DELETE       = 'report-delete';
+    const ACTION_SCOPE        = 'report-scope';
+    const ACTION_DEFAULT      = 'report-default';
     const ACTION_CLEANSESSION = 'clean-session';
+    const TYPE_CRITERIA       = 'criteria';
+    const TYPE_TABLE          = 'table';
     
     public $id;
     public $name;
@@ -444,17 +446,22 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         $add_criteria_presenter = new Templating_Presenter_ButtonDropdownsMini(
             'tracker_report_add_criteria_dropdown',
             $GLOBALS['Language']->getText('plugin_tracker_report', 'toggle_criteria'),
-            $this->getFieldsAsDropdownOptions('tracker_report_add_criterion', $used)
+            $this->getFieldsAsDropdownOptions('tracker_report_add_criterion', $used, self::TYPE_CRITERIA)
         );
         $add_criteria_presenter->setIcon('icon-eye-close');
 
         return $this->getTemplateRenderer()->renderToString('button_dropdowns',  $add_criteria_presenter);
     }
 
-    public function getFieldsAsDropdownOptions($id_prefix, array $used) {
+    public function getFieldsAsDropdownOptions($id_prefix, array $used, $dropdown_type) {
         $fields_for_criteria = array();
-        $fields_for_sort = array();
+        $fields_for_sort     = array();
+
         foreach($this->getFormElementFactory()->getFields($this->getTracker()) as $field) {
+            if ($dropdown_type === self::TYPE_CRITERIA && ! $field->canBeUsedAsReportCriterion()) {
+                continue;
+            }
+
             if ($field->userCanRead() && $field->isUsed()) {
                 $fields_for_criteria[$field->getId()] = $field;
                 $fields_for_sort[$field->getId()] = strtolower($field->getLabel());
