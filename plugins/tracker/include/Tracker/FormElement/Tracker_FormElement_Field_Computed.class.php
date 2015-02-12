@@ -367,4 +367,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
 
         return $value;
     }
+
+    public function canBeUsedAsReportCriterion() {
+        return false;
+    }
 }
