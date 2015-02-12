@@ -15,7 +15,9 @@
             getKanban:  getKanban,
             getBacklog: getBacklog,
             getArchive: getArchive,
-            getItems:   getItems
+            getItems:   getItems,
+            reorderColumn:  reorderColumn,
+            reorderBacklog: reorderBacklog
         };
 
         function getKanban(id) {
@@ -96,6 +98,32 @@
                 });
 
             return data.promise;
+        }
+
+        function reorderColumn(kanban_id, column_id, dropped_item_id, compared_to) {
+            rest.one('kanban', kanban_id)
+                .all('items')
+                .patch({
+                    order: {
+                        ids         : [dropped_item_id],
+                        direction   : compared_to.direction,
+                        compared_to : compared_to.item_id
+                    }
+                },{
+                    column_id: column_id
+                });
+        }
+
+        function reorderBacklog(kanban_id, dropped_item_id, compared_to) {
+            rest.one('kanban', kanban_id)
+                .all('backlog')
+                .patch({
+                    order: {
+                        ids         : [dropped_item_id],
+                        direction   : compared_to.direction,
+                        compared_to : compared_to.item_id
+                    }
+                });
         }
     }
 })();

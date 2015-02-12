@@ -23,12 +23,19 @@ use Luracast\Restler\RestException;
 use Tuleap\REST\Header;
 use AgileDashboard_KanbanFactory;
 use AgileDashboard_KanbanDao;
+use AgileDashboard_KanbanItemDao;
 use AgileDashboard_KanbanNotFoundException;
 use AgileDashboard_KanbanCannotAccessException;
 use AgileDashboard_Kanban;
 use UserManager;
+use Exception;
 use TrackerFactory;
 use PFUser;
+use Tracker_Artifact_PriorityHistoryChange;
+use Tracker_Artifact_PriorityDao;
+use Tracker_Artifact_PriorityHistoryDao;
+use Tracker_ArtifactFactory;
+use Tracker_Artifact_PriorityManager;
 
 class KanbanResource {
 
@@ -37,15 +44,37 @@ class KanbanResource {
     /** @var AgileDashboard_KanbanFactory */
     private $kanban_factory;
 
+    /** @var ResourcesPatcher */
+    private $resources_patcher;
+
+    /** @var AgileDashboard_KanbanItemDao */
+    private $kanban_item_dao;
+
     /** @var TrackerFactory */
     private $tracker_factory;
 
     public function __construct() {
+        $this->kanban_item_dao = new AgileDashboard_KanbanItemDao();
         $this->tracker_factory = TrackerFactory::instance();
 
         $this->kanban_factory = new AgileDashboard_KanbanFactory(
             $this->tracker_factory,
             new AgileDashboard_KanbanDao()
+        );
+
+        $artifact_factory = Tracker_ArtifactFactory::instance();
+        $priority_manager = new Tracker_Artifact_PriorityManager(
+            new Tracker_Artifact_PriorityDao(),
+            new Tracker_Artifact_PriorityHistoryDao(),
+            UserManager::instance(),
+            $artifact_factory
+        );
+        $artifactlink_updater    = new ArtifactLinkUpdater($priority_manager);
+
+        $this->resources_patcher = new ResourcesPatcher(
+            $artifactlink_updater,
+            $artifact_factory,
+            $priority_manager
         );
     }
 
@@ -121,6 +150,49 @@ class KanbanResource {
         return $backlog_representation;
     }
 
+    /**
+     * Partial re-order of Kanban backlog items
+     *
+     * @url PATCH {id}/backlog
+     *
+     * @param int                                                   $id    Id of the Kanban
+     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation    $order Order of the children {@from body}
+     *
+     */
+    protected function patchBacklog($id, OrderRepresentation $order) {
+        $current_user = UserManager::instance()->getCurrentUser();
+        $kanban       = $this->kanban_factory->getKanban($current_user, $id);
+
+        $kanban_backlog_items = $this->getKanbanBacklogItemIds($kanban->getTrackerId());
+
+        $order->checkFormat();
+        $order_validator = new OrderValidator($kanban_backlog_items);
+
+        try {
+            $order_validator->validate($order);
+        } catch (IdsFromBodyAreNotUniqueException $exception) {
+            throw new RestException(409, $exception->getMessage());
+        } catch (OrderIdOutOfBoundException $exception) {
+            throw new RestException(409, $exception->getMessage());
+        } catch (Exception $exception) {
+            throw new RestException(500, $exception->getMessage());
+        }
+
+        $this->resources_patcher->updateArtifactPriorities(
+            $order,
+            Tracker_Artifact_PriorityHistoryChange::NO_CONTEXT,
+            $this->tracker_factory->getTrackerById($kanban->getTrackerId())->getGroupId()
+        );
+    }
+
+    private function getKanbanBacklogItemIds($tracker_id) {
+        $backlog_item_ids = array();
+        foreach ($this->kanban_item_dao->getKanbanBacklogItemIds($tracker_id) as $artifact) {
+            $backlog_item_ids[$artifact['id']] = true;
+        }
+
+        return $backlog_item_ids;
+    }
     /**
      * @url OPTIONS {id}/backlog
      *
@@ -215,6 +287,55 @@ class KanbanResource {
         }
 
         return array_key_exists($column_id, $status_field->getAllValues());
+    }
+
+    /**
+     * Partial re-order of Kanban items
+     *
+     * @url PATCH {id}/items
+     *
+     * @param int                                                   $id    Id of the Kanban
+     * @param int                                                   $column_id Id of the column the item belongs to {@from query}
+     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation    $order Order of the children {@from body}
+     *
+     */
+    protected function patchItems($id, $column_id, OrderRepresentation $order) {
+        $current_user = UserManager::instance()->getCurrentUser();
+        $kanban       = $this->kanban_factory->getKanban($current_user, $id);
+
+        if (! $this->columnIsInTracker($kanban, $current_user, $column_id)) {
+            throw new RestException(404);
+        }
+
+        $kanban_column_items = $this->getItemsInColumn($kanban->getTrackerId(), $column_id);
+
+        $order->checkFormat();
+        $order_validator = new OrderValidator($kanban_column_items);
+
+        try {
+            $order_validator->validate($order);
+        } catch (IdsFromBodyAreNotUniqueException $exception) {
+            throw new RestException(409, $exception->getMessage());
+        } catch (OrderIdOutOfBoundException $exception) {
+            throw new RestException(409, $exception->getMessage());
+        } catch (Exception $exception) {
+            throw new RestException(500, $exception->getMessage());
+        }
+
+        $this->resources_patcher->updateArtifactPriorities(
+            $order,
+            Tracker_Artifact_PriorityHistoryChange::NO_CONTEXT,
+            $this->tracker_factory->getTrackerById($kanban->getTrackerId())->getGroupId()
+        );
+    }
+
+    private function getItemsInColumn($tracker_id, $column_id) {
+        $column_item_ids = array();
+        foreach ($this->kanban_item_dao->getItemsInColumn($tracker_id, $column_id) as $artifact) {
+            $column_item_ids[$artifact['id']] = true;
+        }
+
+        return $column_item_ids;
     }
 
     /**

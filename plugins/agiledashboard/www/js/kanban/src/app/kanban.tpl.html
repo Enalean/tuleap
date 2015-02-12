@@ -47,7 +47,7 @@
                 ng-click="kanban.backlog.is_open = true"
                 ng-attr-title="{{ kanban.backlog.is_open ? '' : 'Toggle the backlog' | translate }}"
             >
-                <div class="column-content" ui-tree>
+                <div class="column-content" ui-tree="kanban.treeOptionsBacklog">
                     <ul ui-tree-nodes
                         ng-model="kanban.backlog.content"
                         class="kanban-items"
@@ -65,7 +65,7 @@
                 ng-click="column.is_open = true"
                 ng-attr-title="{{ column.is_open ? '' : 'Toggle this column' | translate }}"
             >
-                <div class="column-content" ui-tree>
+                <div class="column-content" ui-tree="kanban.treeOptions(column)">
                     <ul ui-tree-nodes
                         ng-model="column.content"
                         class="kanban-items"
@@ -83,7 +83,7 @@
                 ng-click="kanban.archive.is_open = true"
                 ng-attr-title="{{ kanban.archive.is_open ? '' : 'Toggle the archive' | translate }}"
             >
-                <div class="column-content" ui-tree>
+                <div class="column-content" ui-tree="kanban.treeOptionsArchive">
                     <ul ui-tree-nodes
                         ng-model="kanban.archive.content"
                         class="kanban-items"

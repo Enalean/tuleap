@@ -18,6 +18,8 @@
 
 class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_Item {
 
+    const NO_CONTEXT = '-1';
+
     /**
      * @var Tracker_ArtifactFactory
      */
@@ -189,9 +191,9 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
     }
 
     private function getContextRepresentation() {
-        $html = '';
+            $html = '';
 
-        if (! is_null($this->context)) {
+        if (! is_null($this->context) && $this->context !== self::NO_CONTEXT) {
             $html .= ' ' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'priority_change_in') . ' ';
 
             if ($this->context === '0' ) {
