@@ -105,6 +105,7 @@ class TestDataBuilder {
     const EPIC_7_ARTIFACT_ID      = 15;
 
     const KANBAN_ONGOING_COLUMN_ID = 231;
+    const KANBAN_DONE_VALUE_ID     = 233;
 
     /** @var ProjectManager */
     protected $project_manager;
@@ -501,9 +502,23 @@ class TestDataBuilder {
             '',
             false
         );
+
         $fields_data = array(
             $this->tracker_formelement_factory->getFormElementByName(self::KANBAN_TRACKER_ID, 'summary_1')->getId() => 'Doing something',
-            $this->tracker_formelement_factory->getFormElementByName(self::KANBAN_TRACKER_ID, 'status')->getId() => 231,
+            $this->tracker_formelement_factory->getFormElementByName(self::KANBAN_TRACKER_ID, 'status')->getId() => self::KANBAN_ONGOING_COLUMN_ID,
+        );
+
+        $this->tracker_artifact_factory->createArtifact(
+            $this->tracker_factory->getTrackerById(self::KANBAN_TRACKER_ID),
+            $fields_data,
+            $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME),
+            '',
+            false
+        );
+
+        $fields_data = array(
+            $this->tracker_formelement_factory->getFormElementByName(self::KANBAN_TRACKER_ID, 'summary_1')->getId() => 'Something archived',
+            $this->tracker_formelement_factory->getFormElementByName(self::KANBAN_TRACKER_ID, 'status')->getId() => self::KANBAN_DONE_VALUE_ID,
         );
 
         $this->tracker_artifact_factory->createArtifact(

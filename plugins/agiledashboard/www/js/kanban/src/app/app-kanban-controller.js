@@ -11,7 +11,7 @@
 
     function KanbanCtrl(SharedPropertiesService, KanbanService, CardFieldsService) {
         var self   = this,
-            limit  = 10,
+            limit  = 50,
             offset = 0,
             kanban = SharedPropertiesService.getKanban();
 
@@ -30,7 +30,8 @@
         self.archive = {
             content: [],
             label: 'Closed',
-            is_open: false
+            is_open: false,
+            loading_items: true
         };
         self.cardFieldIsSimpleValue       = CardFieldsService.cardFieldIsSimpleValue;
         self.cardFieldIsList              = CardFieldsService.cardFieldIsList;
@@ -47,6 +48,7 @@
 
         loadColumns();
         loadBacklog(limit, offset);
+        loadArchive(limit, offset);
 
         function loadColumns() {
             KanbanService.getKanban(kanban.id).then(function (kanban) {
@@ -75,10 +77,22 @@
             return KanbanService.getBacklog(kanban.id, limit, offset).then(function(data) {
                 self.backlog.content = self.backlog.content.concat(data.results);
 
-                if (self.backlog.content.length < data.total) {
+                if (offset + limit < data.total) {
                     loadBacklog(limit, offset + limit);
                 } else {
                     self.backlog.loading_items = false;
+                }
+            });
+        }
+
+        function loadArchive(limit, offset) {
+            return KanbanService.getArchive(kanban.id, limit, offset).then(function(data) {
+                self.archive.content = self.archive.content.concat(data.results);
+
+                if (offset + limit < data.total) {
+                    loadArchive(limit, offset + limit);
+                } else {
+                    self.archive.loading_items = false;
                 }
             });
         }
