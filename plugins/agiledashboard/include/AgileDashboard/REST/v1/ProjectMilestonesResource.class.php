@@ -101,7 +101,8 @@ class ProjectMilestonesResource {
             $milestone_representation->build(
                 $milestone,
                 $this->milestone_factory->getMilestoneStatusCount($user, $milestone),
-                $this->getBacklogTrackers($milestone)
+                $this->getBacklogTrackers($milestone),
+                $this->milestone_factory->userCanChangePrioritiesInMilestone($milestone, $user)
             );
             $milestone_representations[] = $milestone_representation;
         }

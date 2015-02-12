@@ -27,7 +27,9 @@
             rest_error                  : "",
             backlog_items               : [],
             milestones                  : [],
-            backlog                     : {},
+            backlog                     : {
+                user_can_move_cards: false
+            },
             loading_backlog_items       : true,
             loading_milestones          : true,
             toggle                      : toggle,
@@ -64,25 +66,31 @@
                 $scope.backlog = {
                     rest_base_route : 'projects',
                     rest_route_id   : project_id,
-                    accepted_types  : {toString : function() {
+                    accepted_types  : {
+                        toString: function() {
                             return '';
-                    }}
+                        }
+                    }
                 };
+
                 fetchProjectBacklogAcceptedTypes(project_id);
+
             } else {
                 MilestoneService.getMilestone(milestone_id).then(function(milestone) {
                     $scope.backlog = {
-                        rest_base_route : 'milestones',
-                        rest_route_id   : milestone_id,
-                        accepted_types  : milestone.results.accepted_types
+                        rest_base_route     : 'milestones',
+                        rest_route_id       : milestone_id,
+                        accepted_types      : milestone.results.accepted_types,
+                        user_can_move_cards : milestone.results.has_user_priority_change_permission
                     };
                 });
             }
         }
 
         function fetchProjectBacklogAcceptedTypes(project_id) {
-            return  ProjectService.getProjectBacklogAcceptedTypes(project_id).then(function(data) {
-                $scope.backlog.accepted_types = data.results;
+            return ProjectService.getProjectBacklog(project_id).then(function(data) {
+                $scope.backlog.accepted_types      = data.allowed_backlog_item_types;
+                $scope.backlog.user_can_move_cards = data.has_user_priority_change_permission;
             });
         }
 
@@ -235,7 +243,7 @@
         }
 
         function isItemDroppable(sourceNodeScope, destNodesScope, destIndex) {
-            if (typeof destNodesScope.$element.attr === 'undefined') {
+            if (typeof destNodesScope.$element.attr === 'undefined' || destNodesScope.$element.attr('data-nodrag') === 'true') {
                 return;
             }
 

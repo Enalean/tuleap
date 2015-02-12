@@ -107,6 +107,11 @@ class Planning_MilestoneFactory_getMilestoneTest extends Planning_MilestoneFacto
         
         stub($release_1_0)->getHierarchyLinkedArtifacts($this->user)
                           ->returns(array($sprint_1, $sprint_2, $hackfest_2012));
+
+        stub($release_1_0)->getAllAncestors()->returns(array());
+        stub($sprint_1)->getAllAncestors()->returns(array());
+        stub($sprint_2)->getAllAncestors()->returns(array());
+        stub($hackfest_2012)->getAllAncestors()->returns(array());
         
         stub($this->planning_factory)->getPlanningByPlanningTracker($sprints_tracker)->returns($sprint_planning);
         stub($this->planning_factory)->getPlanningByPlanningTracker($hackfests_tracker)->returns($hackfest_planning);
@@ -622,10 +627,12 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
         $artifact_1 = stub('Tracker_Artifact')->getLastChangeset()->returns(mock('Tracker_Artifact_Changeset'));
         stub($artifact_1)->userCanView()->returns(true);
         stub($artifact_1)->getTracker()->returns($this->tracker);
+        stub($artifact_1)->getAllAncestors()->returns(array());
 
         $artifact_2 = stub('Tracker_Artifact')->getLastChangeset()->returns(mock('Tracker_Artifact_Changeset'));
         stub($artifact_2)->userCanView()->returns(true);
         stub($artifact_2)->getTracker()->returns($this->tracker);
+        stub($artifact_2)->getAllAncestors()->returns(array());
 
         $my_artifacts = array(
             $artifact_1,
@@ -656,6 +663,7 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
         $artifact_2 = stub('Tracker_Artifact')->getLastChangeset()->returns(mock('Tracker_Artifact_Changeset'));
         stub($artifact_2)->userCanView()->returns(true);
         stub($artifact_2)->getTracker()->returns($this->tracker);
+        stub($artifact_2)->getAllAncestors()->returns(array());
 
         $my_artifacts = array(
             $artifact_1,

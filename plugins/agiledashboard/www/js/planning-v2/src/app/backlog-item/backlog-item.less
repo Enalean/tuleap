@@ -191,6 +191,10 @@ ul.backlog-items, ul.backlog-item-children {
             }
         }
 
+        &.undraggable > .backlog-item-details {
+            cursor: default;
+        }
+
         &.updating > .backlog-item-details {
             background-image: url('loader-mini.gif');
             background-repeat: no-repeat;
@@ -229,7 +233,6 @@ div.milestones > fieldset.milestone > div.content {
         margin: 0;
     }
 }
-
 
 ul.backlog-items, ul.backlog-item-children {
     > li.backlog-item.angular-ui-tree-appending-child {

@@ -13,11 +13,14 @@
             ng-show="! collapsed"
             ng-class="{ hidden: collapsed }"
             data-backlog-item-id="{{ backlog_item.id }}"
+            data-nodrag="{{ ! milestone.has_user_priority_change_permission }}"
         >
             <li ui-tree-node
                 data-type="{{ backlog_item.trackerId }}"
                 ng-repeat="backlog_item in backlog_item.children.data"
                 class="backlog-item child"
+                ng-class="{ undraggable: ! milestone.has_user_priority_change_permission }"
+                data-nodrag="{{ ! milestone.has_user_priority_change_permission }}"
             >
                 <div class="backlog-item-details {{ backlog_item.status | lowercase }} {{ backlog_item.color }}"
                     ng-include src="'backlog-item/backlog-item-details.tpl.html'">

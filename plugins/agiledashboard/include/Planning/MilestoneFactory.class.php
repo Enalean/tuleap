@@ -346,6 +346,7 @@ class Planning_MilestoneFactory {
                         $planning,
                         $sub_milestone_artifact
                     );
+                    $this->addMilestoneAncestors($user, $sub_milestone);
                     $this->updateMilestoneContextualInfo($user, $sub_milestone);
                     $sub_milestones[] = $sub_milestone;
                 }
@@ -381,6 +382,7 @@ class Planning_MilestoneFactory {
                         $root_planning,
                         $artifact
                     );
+                    $this->addMilestoneAncestors($user, $milestone);
                     $this->updateMilestoneContextualInfo($user, $milestone);
                     $milestones[] = $milestone;
                 }
