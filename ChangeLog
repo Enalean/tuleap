@@ -19,6 +19,7 @@ Version 7.11 (not yet released)
 	* request #7839: A project admin can't remove his rights if he is the only project admin
 	* request #7855: Issue with 'Select artifacts to link' on the artifact Edit page
 	* request #7862: Old phppwiki search method no longer available
+	* request #7826: Improve error detection of FRS file moving
 
 Version 7.10 (Thursday, February 5th 2015)
 
