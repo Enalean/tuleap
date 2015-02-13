@@ -21,6 +21,8 @@ Version 7.11 (not yet released)
 	* request #7862: Old phppwiki search method no longer available
 	* request #7826: Improve error detection of FRS file moving
 	* request #7860: Redirection link when you are not authenticated only redirects to service
+	* request #7297: allowing a restricted user to see their own avatar
+
 Version 7.10 (Thursday, February 5th 2015)
 
 	== Features ==
