@@ -11,7 +11,7 @@ Version 7.11 (not yet released)
         == Plugins ==
 	* graphontrackers: 1.13
 	* tracker: 5.569
-	* fulltextsearch: 0.122
+	* fulltextsearch: 0.123
 	* mediawiki: 0.62
 
 	== Bug Fix ==
