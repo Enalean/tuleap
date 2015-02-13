@@ -26,10 +26,16 @@ class SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE extends SystemEvent_FULLTEXTSEARC
         $version_number = (int)$this->getRequiredParameter(2);
         $version = $this->getVersion($item, $version_number);
         if ($version) {
-            $this->actions->indexNewVersion($item, $version);
+            try {
+                $this->actions->indexNewVersion($item, $version);
+            } catch (FullTextSearchDocmanIndexFileTooBigException $exception) {
+                $this->error($exception->getMessage());
+                return false;
+            }
             return true;
         }
         $this->error('Version not found');
+        return false;
     }
 }
 ?>

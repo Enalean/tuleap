@@ -34,14 +34,19 @@ class FullTextSearchDocmanActions {
     /** @var Logger */
     private $logger;
 
+    /** @var int File size in bytes */
+    private $max_indexed_file_size;
+
     public function __construct(
         FullTextSearch_IIndexDocuments $client,
         ElasticSearch_1_2_RequestDocmanDataFactory $request_data_factory,
-        Logger $logger
+        Logger $logger,
+        $max_indexed_file_size
     ) {
-        $this->client               = $client;
-        $this->request_data_factory = $request_data_factory;
-        $this->logger               = new WrapperLogger($logger, 'Docman');
+        $this->client                = $client;
+        $this->request_data_factory  = $request_data_factory;
+        $this->logger                = new WrapperLogger($logger, 'Docman');
+        $this->max_indexed_file_size = $max_indexed_file_size;
     }
 
     public function checkProjectMappingExists($project_id) {
@@ -64,9 +69,15 @@ class FullTextSearchDocmanActions {
      *
      * @param Docman_Item    $item    The docman item
      * @param Docman_Version $version The version to index
+     *
+     * @throws FullTextSearchDocmanIndexFileTooBigException
      */
     public function indexNewDocument(Docman_Item $item, Docman_Version $version) {
         $this->logger->debug('index new document #' . $item->getId());
+
+        if (filesize($version->getPath()) > $this->max_indexed_file_size) {
+            throw new FullTextSearchDocmanIndexFileTooBigException($item->getId());
+        }
 
         $indexed_data = $this->getIndexedData($item) + $this->getItemContent($version);
 
@@ -188,6 +199,8 @@ class FullTextSearchDocmanActions {
      *
      * @param Docman_Item    $item    The docman item
      * @param Docman_Version $version The version to index
+     *
+     * @throws FullTextSearchDocmanIndexFileTooBigException
      */
     public function indexNewVersion(Docman_Item $item, Docman_Version $version) {
         try {
@@ -196,6 +209,11 @@ class FullTextSearchDocmanActions {
             $this->logger->debug('index new version #' . $version->getId() . ' for document #' . $item->getId());
 
             $update_data = array();
+
+            if (filesize($version->getPath()) > $this->max_indexed_file_size) {
+                throw new FullTextSearchDocmanIndexFileTooBigException($item->getId());
+            }
+
             $this->request_data_factory->updateFile($update_data, $version->getPath());
             $this->client->update($item->getGroupId(), $item->getId(), $update_data);
 
@@ -250,6 +268,7 @@ class FullTextSearchDocmanActions {
      * Update title, description and custom textual metadata of a document
      *
      * @param Docman_Item $item The item
+     * @throws FullTextSearchDocmanIndexFileTooBigException
      */
     public function updateDocument(Docman_Item $item) {
         try {
@@ -274,6 +293,10 @@ class FullTextSearchDocmanActions {
         }
     }
 
+    /**
+     * @param Docman_Item $item
+     * @throws FullTextSearchDocmanIndexFileTooBigException
+     */
     private function indexNonexistantDocument(Docman_Item $item) {
         $item_factory = $this->getDocmanItemFactory($item);
         $item_type    = $item_factory->getItemTypeForItem($item);
@@ -339,6 +362,7 @@ class FullTextSearchDocmanActions {
      * Index the new permissions of a document
      *
      * @param Docman_Item the document
+     * @throws FullTextSearchDocmanIndexFileTooBigException
      */
     public function updatePermissions(Docman_Item $item) {
         $this->logger->debug('update permissions of document #' . $item->getId(). ' and its children');
@@ -431,6 +455,9 @@ class FullTextSearchDocmanActions {
                 $notindexed_collector->setAtLeastOneIndexed();
             } catch (ElasticSearchTransportHTTPException $exception) {
                 $this->logger->error('#'. $item->getId() .' cannot be indexed. '. $exception->getMessage());
+                $notindexed_collector->add($item);
+            } catch(FullTextSearchDocmanIndexFileTooBigException $exception) {
+                $this->logger->error($exception->getMessage());
                 $notindexed_collector->add($item);
             }
         }

@@ -80,6 +80,8 @@ class FullTextSearch_DocmanSystemEventManager {
     }
 
     private function getDocmanActions() {
+        $max_file_size = $this->plugin->getPluginInfo()->getPropertyValueForName('fulltextsearch_max_indexed_file_size');
+
         return new FullTextSearchDocmanActions(
             $this->index_client,
             new ElasticSearch_1_2_RequestDocmanDataFactory(
@@ -87,7 +89,8 @@ class FullTextSearch_DocmanSystemEventManager {
                 new Docman_PermissionsItemManager(),
                 new Docman_ApprovalTableFactoriesFactory()
             ),
-            $this->logger
+            $this->logger,
+            $max_file_size
         );
     }
 
