@@ -258,14 +258,39 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                                 sort();
                             } else if (typeof(to_submilestone_id) === "undefined") {
                                 var to_milestone_id = self.getMilestoneId();
-                                updateArtifactlink("unassociate-artifact-to", from_submilestone_id, sort)
-                                updateArtifactlink("associate-artifact-to", to_milestone_id)
+                                checkActionIsGrantedForUser(from_submilestone_id, to_milestone_id, function (from_milestone, to_milestone) {
+                                    updateArtifactlink("unassociate-artifact-to", from_milestone, sort)
+                                    updateArtifactlink("associate-artifact-to", to_milestone)
+                                });
                             } else if (typeof(from_submilestone_id) === "undefined") {
-                                updateArtifactlink("associate-artifact-to", to_submilestone_id, sort)
+                                checkActionIsGrantedForUser(from_submilestone_id, to_submilestone_id, function (from_milestone, to_milestone) {
+                                    updateArtifactlink("associate-artifact-to", to_milestone, sort)
+                                });
                             } else {
-                                updateArtifactlink("unassociate-artifact-to", from_submilestone_id, sort)
-                                updateArtifactlink("associate-artifact-to", to_submilestone_id)
+                                checkActionIsGrantedForUser(from_submilestone_id, to_submilestone_id, function (from_milestone, to_milestone) {
+                                    updateArtifactlink("unassociate-artifact-to", from_milestone, sort)
+                                    updateArtifactlink("associate-artifact-to", to_milestone)
+                                });
                             }
+                        }
+
+                        function checkActionIsGrantedForUser(from_milestone, to_milestone, callback) {
+                            $.ajax({
+                                url  : codendi.tracker.base_url,
+                                data : {
+                                    "func"          : "check-user-can-link-and-unlink",
+                                    "aid"           : item_id,
+                                    "from-artifact" : from_milestone,
+                                    "to-artifact"   : to_milestone
+                                },
+                                method : "get",
+                                success : function() {
+                                    if (typeof(callback) === "function") {
+                                        callback(from_milestone, to_milestone)
+                                    }
+                                },
+                                error : errorOccured
+                            });
                         }
 
                         function sort() {
@@ -282,14 +307,15 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                                 data : {
                                     "func"              : func,
                                     "aid"               : submilestone_id,
-                                    "linked-artifact-id": item_id
+                                    "linked-artifact-id": item_id,
                                 },
                                 method : "get",
                                 success : function() {
                                     if (typeof(callback) === "function") {
                                         callback();
                                     }
-                                }
+                                },
+                                error : errorOccured
                             });
                         }
 
@@ -321,7 +347,17 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
                                     "milestone-id": milestone_id
                                 },
                                 method : "get"
-                            });
+                            }).fail(errorOccured);
+                        }
+
+                        function errorOccured(response) {
+                            if (response.status === 403) {
+                                addErrorFeedBack(response.responseText);
+                            }
+                        }
+
+                        function addErrorFeedBack(error_content) {
+                            codendi.feedback.log('error',error_content);
                         }
                 }
             }).disableSelection();

@@ -84,6 +84,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(Event::REST_PATCH_PROJECT_BACKLOG);
             $this->addHook(Event::REST_OPTIONS_PROJECT_BACKLOG);
             $this->addHook(Event::GET_PROJECTID_FROM_URL);
+            $this->addHook(ITEM_PRIORITY_CHANGE);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -786,6 +787,37 @@ class AgileDashboardPlugin extends Plugin {
         );
     }
 
+    /**
+    * @see ITEM_PRIORITY_CHANGE
+    */
+    public function item_priority_change($params) {
+        $planning_id = $this->getPlanningIdFromParameters($params);
+
+        $params['user_is_authorized'] = $this->getPlanningPermissionsManager()->userHasPermissionOnPlanning(
+            $planning_id,
+            $params['group_id'],
+            $params['user'],
+            PlanningPermissionsManager::PERM_PRIORITY_CHANGE
+        );
+    }
+
+    private function getPlanningIdFromParameters($params) {
+        if ($params['milestone_id'] == 0) {
+            $planning = $this->getPlanningFactory()->getRootPlanning(
+                $params['user'],
+                $params['group_id']
+            );
+
+            return $planning->getId();
+        }
+
+        $artifact    = $this->getArtifactFactory()->getArtifactById($params['milestone_id']);
+        $milestone   = $this->getMilestoneFactory()->getMilestoneFromArtifact($artifact);
+
+        return $milestone->getPlanningId();
+
+    }
+
     private function buildRightVersionOfProjectBacklogResource($version) {
         $class_with_right_namespace = '\\Tuleap\\AgileDashboard\\REST\\'.$version.'\\ProjectBacklogResource';
         return new $class_with_right_namespace;
@@ -897,5 +929,9 @@ class AgileDashboardPlugin extends Plugin {
 
     private function getCurrentUser() {
         return UserManager::instance()->getCurrentUser();
+    }
+
+    private function getPlanningPermissionsManager() {
+        return new PlanningPermissionsManager();
     }
 }

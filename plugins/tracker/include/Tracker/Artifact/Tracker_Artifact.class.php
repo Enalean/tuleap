@@ -666,9 +666,23 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 );
                 $action->process($layout, $request, $current_user);
                 break;
+            case 'check-user-can-link-and-unlink':
+                $source_artifact      = (int)$request->get('from-artifact');
+                $destination_artifact = (int)$request->get('to-artifact');
+
+                if (! ($this->userHasRankingPermissions($source_artifact) && $this->userHasRankingPermissions($destination_artifact))) {
+                    $this->sendUserDoesNotHavePermissionsErrorCode();
+                }
+                break;
             case 'unassociate-artifact-to':
                 $artlink_fields     = $this->getFormElementFactory()->getUsedArtifactLinkFields($this->getTracker());
                 $linked_artifact_id = $request->get('linked-artifact-id');
+
+                if (! $this->userHasRankingPermissions($this->getId())) {
+                    $this->sendUserDoesNotHavePermissionsErrorCode();
+                    break;
+                }
+
                 if (count($artlink_fields)) {
                     $this->unlinkArtifact($artlink_fields, $linked_artifact_id, $current_user);
                     $this->summonArtifactAssociators($request, $current_user, $linked_artifact_id);
@@ -679,6 +693,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 break;
             case 'associate-artifact-to':
                 $linked_artifact_id = $request->get('linked-artifact-id');
+
+                if (! $this->userHasRankingPermissions($this->getId())) {
+                    $this->sendUserDoesNotHavePermissionsErrorCode();
+                    break;
+                }
+
                 if (!$this->linkArtifact($linked_artifact_id, $current_user)) {
                     $GLOBALS['Response']->sendStatusCode(400);
                 } else {
@@ -690,12 +710,24 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $milestone_id = (int)$request->get('milestone-id');
                 $project_id   = $this->getProjectId();
 
+                $user_is_authorized = $this->userHasRankingPermissions($milestone_id);
+
+                if (! $this->userHasRankingPermissions($milestone_id)) {
+                    $this->sendUserDoesNotHavePermissionsErrorCode();
+                    break;
+                }
+
                 $this->getPriorityManager()->moveArtifactBeforeWithHistoryChangeLogging($this->getId(), $target_id, $milestone_id, $project_id);
                 break;
             case 'lesser-priority-than':
                 $target_id    = (int)$request->get('target-id');
                 $milestone_id = (int)$request->get('milestone-id');
                 $project_id   = $this->getProjectId();
+
+                if (! $this->userHasRankingPermissions($milestone_id)) {
+                    $this->sendUserDoesNotHavePermissionsErrorCode();
+                    break;
+                }
 
                 $this->getPriorityManager()->moveArtifactAfterWithHistoryChangeLogging($this->getId(), $target_id, $milestone_id, $project_id);
                 break;
@@ -746,6 +778,27 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 }
                 break;
         }
+    }
+
+    private function sendUserDoesNotHavePermissionsErrorCode() {
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker', 'unsufficient_permissions_for_ranking'));
+        $GLOBALS['Response']->sendStatusCode(403);
+    }
+
+    private function userHasRankingPermissions($milestone_id) {
+        $user_is_authorized = true;
+
+        $this->getEventManager()->processEvent(
+            ITEM_PRIORITY_CHANGE,
+            array(
+                'user_is_authorized' => &$user_is_authorized,
+                'group_id'           => $this->getProjectId(),
+                'milestone_id'       => $milestone_id,
+                'user'               => $this->getUserManager()->getCurrentUser()
+            )
+        );
+
+        return $user_is_authorized;
     }
 
     private function getProjectId() {
