@@ -63,6 +63,9 @@ class Planning_Controller extends MVC2_PluginController {
     /** @var AgileDashboard_KanbanFactory */
     private $kanban_factory;
 
+    /** @var PlanningPermissionsManager */
+    private $planning_permissions_manager;
+
     public function __construct(
         Codendi_Request $request,
         PlanningFactory $planning_factory,
@@ -74,7 +77,8 @@ class Planning_Controller extends MVC2_PluginController {
         $plugin_path,
         AgileDashboard_KanbanManager $kanban_manager,
         AgileDashboard_ConfigurationManager $config_manager,
-        AgileDashboard_KanbanFactory $kanban_factory
+        AgileDashboard_KanbanFactory $kanban_factory,
+        PlanningPermissionsManager $planning_permissions_manager
     ) {
         parent::__construct('agiledashboard', $request);
         
@@ -89,6 +93,7 @@ class Planning_Controller extends MVC2_PluginController {
         $this->kanban_manager               = $kanban_manager;
         $this->config_manager               = $config_manager;
         $this->kanban_factory               = $kanban_factory;
+        $this->planning_permissions_manager = $planning_permissions_manager;
     }
 
     public function index() {
@@ -394,8 +399,12 @@ class Planning_Controller extends MVC2_PluginController {
         $validator = new Planning_RequestValidator($this->planning_factory, $this->kanban_factory);
         
         if ($validator->isValid($this->request)) {
-            $this->planning_factory->createPlanning($this->group_id,
-                                                    PlanningParameters::fromArray($this->request->get('planning')));
+            $this->planning_factory->createPlanning(
+                $this->group_id,
+                PlanningParameters::fromArray(
+                    $this->request->get('planning')
+                )
+            );
             
             $this->redirect(array('group_id' => $this->group_id, 'action' => 'admin'));
         } else {
@@ -434,11 +443,11 @@ class Planning_Controller extends MVC2_PluginController {
         );
 
         return new Planning_FormPresenter(
+            $this->planning_permissions_manager,
             $planning,
             $backlog_trackers_filtered,
             $planning_trackers_filtered,
-            $cardwall_admin,
-            $this->kanban_factory
+            $cardwall_admin
         );
     }
 
@@ -517,8 +526,13 @@ class Planning_Controller extends MVC2_PluginController {
         $validator = new Planning_RequestValidator($this->planning_factory, $this->kanban_factory);
         
         if ($validator->isValid($this->request)) {
-            $this->planning_factory->updatePlanning($this->request->get('planning_id'),
-                                                    PlanningParameters::fromArray($this->request->get('planning')));
+            $this->planning_factory->updatePlanning(
+                $this->request->get('planning_id'),
+                $this->group_id,
+                PlanningParameters::fromArray(
+                    $this->request->get('planning')
+                )
+            );
         } else {
             $this->addFeedback('error', $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_all_fields_mandatory'));
         }

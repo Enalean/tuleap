@@ -26,19 +26,25 @@ class AgileDashboard_XMLExporter {
     /**  @var XmlValidator */
     private $xml_validator;
 
+    /**  @var PlanningPermissionsManager */
+    private $planning_permissions_manager;
+
     const NODE_AGILEDASHBOARD = 'agiledashboard';
     const NODE_PLANNINGS      = 'plannings';
     const NODE_PLANNING       = 'planning';
     const NODE_BACKLOGS       = 'backlogs';
     const NODE_BACKLOG        = 'backlog';
+    const NODE_PERMISSIONS    = 'permissions';
+    const NODE_PERMISSION     = 'permission';
 
     /**
      * @todo move me to tracker class
      */
     const TRACKER_ID_PREFIX = 'T';
 
-    public function __construct(XmlValidator $xml_validator) {
-        $this->xml_validator   = $xml_validator;
+    public function __construct(XmlValidator $xml_validator, PlanningPermissionsManager $planning_permissions_manager) {
+        $this->xml_validator                = $xml_validator;
+        $this->planning_permissions_manager = $planning_permissions_manager;
     }
 
     /**
@@ -73,6 +79,7 @@ class AgileDashboard_XMLExporter {
             $planning_node->addAttribute(PlanningParameters::BACKLOG_TITLE, $planning_backlog_title);
 
             $this->exportBacklogTrackers($planning_node, $planning);
+            $this->exportPermissions($planning_node, $planning);
         }
 
         $rng_path = realpath(AGILEDASHBOARD_BASE_DIR.'/../www/resources/xml_project_agiledashboard.rng');
@@ -87,6 +94,30 @@ class AgileDashboard_XMLExporter {
             $planning_backlog_tracker_id    = $this->getFormattedTrackerId($backlog_tracker->getId());
             $this->checkId($planning_backlog_tracker_id, self::NODE_BACKLOG);
             $backlog_nodes->addChild(self::NODE_BACKLOG, $this->getFormattedTrackerId($backlog_tracker->getId()));
+        }
+    }
+
+    private function exportPermissions(SimpleXMLElement $planning_node, Planning $planning) {
+        $ugroups = $this->planning_permissions_manager->getGroupIdsWhoHasPermissionOnPlanning(
+            $planning->getId(),
+            $planning->getGroupId(),
+            PlanningPermissionsManager::PERM_PRIORITY_CHANGE
+        );
+
+        if (! empty($ugroups)) {
+            foreach ($ugroups as $ugroup_id) {
+                if (($ugroup = array_search($ugroup_id, $GLOBALS['UGROUPS'])) !== false && $ugroup_id < 100) {
+                    if (! isset($planning_node->permissions)) {
+                        $permission_nodes = $planning_node->addChild(self::NODE_PERMISSIONS);
+                    }
+
+                    $permission_node = $permission_nodes->addChild(self::NODE_PERMISSION);
+                    $permission_node->addAttribute('ugroup', $ugroup);
+                    $permission_node->addAttribute('type', PlanningPermissionsManager::PERM_PRIORITY_CHANGE);
+
+                    unset($permission_node);
+                }
+            }
         }
     }
 

@@ -14,6 +14,10 @@ CREATE TABLE IF NOT EXISTS plugin_agiledashboard_planning_backlog_tracker(
     KEY idx(planning_id, tracker_id)
 );
 
+INSERT INTO permissions_values (permission_type, ugroup_id, is_default)
+VALUES ('PLUGIN_AGILEDASHBOARD_PLANNING_PRIORITY_CHANGE', 2, 0),
+       ('PLUGIN_AGILEDASHBOARD_PLANNING_PRIORITY_CHANGE', 3, 1),
+       ('PLUGIN_AGILEDASHBOARD_PLANNING_PRIORITY_CHANGE', 4, 0);
 
 DROP TABLE IF EXISTS plugin_agiledashboard_semantic_initial_effort;
 CREATE TABLE plugin_agiledashboard_semantic_initial_effort (

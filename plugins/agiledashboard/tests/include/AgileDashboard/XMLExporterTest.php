@@ -69,11 +69,12 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
 
         $this->xml_tree = new SimpleXMLElement($data);
 
-        $this->xml_validator = stub('XmlValidator')->nodeIsValid()->returns(true);
+        $this->xml_validator                = stub('XmlValidator')->nodeIsValid()->returns(true);
+        $this->planning_permissions_manager = mock('PlanningPermissionsManager');
     }
 
     public function itUpdatesASimpleXMlElement() {
-        $exporter = new AgileDashboard_XMLExporter($this->xml_validator);
+        $exporter = new AgileDashboard_XMLExporter($this->xml_validator, $this->planning_permissions_manager);
 
         $xml = $this->xml_tree;
         $exporter->export($this->xml_tree, $this->plannings);
@@ -82,7 +83,7 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
     }
 
     public function itCreatesAnXMLEntryForEachPlanningShortAccess() {
-        $exporter = new AgileDashboard_XMLExporter($this->xml_validator);
+        $exporter = new AgileDashboard_XMLExporter($this->xml_validator, $this->planning_permissions_manager);
         $exporter->export($this->xml_tree, $this->plannings);
 
         $this->assertEqual(1, count($this->xml_tree->children()));
@@ -102,7 +103,7 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
     }
 
     public function itAddsAttributesForEachPlanningShortAccess() {
-        $exporter = new AgileDashboard_XMLExporter($this->xml_validator);
+        $exporter = new AgileDashboard_XMLExporter($this->xml_validator, $this->planning_permissions_manager);
         $exporter->export($this->xml_tree, $this->plannings);
 
         $agiledashborad = AgileDashboard_XMLExporter::NODE_AGILEDASHBOARD;
@@ -143,7 +144,7 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
 
         $this->expectException('AgileDashboard_XMLExporterUnableToGetValueException');
 
-        $exporter = new AgileDashboard_XMLExporter($this->xml_validator);
+        $exporter = new AgileDashboard_XMLExporter($this->xml_validator, $this->planning_permissions_manager);
         $exporter->export($this->xml_tree, $plannings);
     }
 
@@ -165,7 +166,7 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
 
         $this->expectException('AgileDashboard_XMLExporterUnableToGetValueException');
 
-        $exporter = new AgileDashboard_XMLExporter($this->xml_validator);
+        $exporter = new AgileDashboard_XMLExporter($this->xml_validator, $this->planning_permissions_manager);
         $exporter->export($this->xml_tree, $plannings);
     }
 
@@ -187,7 +188,7 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
 
         $this->expectException('AgileDashboard_XMLExporterUnableToGetValueException');
 
-        $exporter = new AgileDashboard_XMLExporter($this->xml_validator);
+        $exporter = new AgileDashboard_XMLExporter($this->xml_validator, $this->planning_permissions_manager);
         $exporter->export($this->xml_tree, $plannings);
     }
 
@@ -209,7 +210,7 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
 
         $this->expectException('AgileDashboard_XMLExporterUnableToGetValueException');
 
-        $exporter = new AgileDashboard_XMLExporter($this->xml_validator);
+        $exporter = new AgileDashboard_XMLExporter($this->xml_validator, $this->planning_permissions_manager);
         $exporter->export($this->xml_tree, $plannings);
     }
 
@@ -231,13 +232,13 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
 
         $this->expectException('AgileDashboard_XMLExporterUnableToGetValueException');
 
-        $exporter = new AgileDashboard_XMLExporter($this->xml_validator);
+        $exporter = new AgileDashboard_XMLExporter($this->xml_validator, $this->planning_permissions_manager);
         $exporter->export($this->xml_tree, $plannings);
     }
 
     public function itThrowsAnExceptionIfXmlGeneratedIsNotValid() {
         $xml_validator = stub('XmlValidator')->nodeIsValid()->returns(false);
-        $exporter = new AgileDashboard_XMLExporter($xml_validator);
+        $exporter = new AgileDashboard_XMLExporter($xml_validator, $this->planning_permissions_manager);
         $this->expectException('AgileDashboard_XMLExporterNodeNotValidException');
         $exporter->export($this->xml_tree, $this->plannings);
     }

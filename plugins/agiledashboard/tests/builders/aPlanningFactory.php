@@ -41,11 +41,13 @@ class TestPlanningFactoryBuilder {
     public $dao;
     public $tracker_factory;
     public $form_element_factory;
+    public $planning_permissions_manager;
     
     public function __construct() {
-        $this->dao                  = new MockPlanningDao();
-        $this->tracker_factory      = new MockTrackerFactory();
-        $this->form_element_factory = mock('Tracker_FormElementFactory');
+        $this->dao                          = new MockPlanningDao();
+        $this->tracker_factory              = new MockTrackerFactory();
+        $this->form_element_factory         = mock('Tracker_FormElementFactory');
+        $this->planning_permissions_manager = mock('PlanningPermissionsManager');
     }
     
     public function withDao(DataAccessObject $dao) {
@@ -63,8 +65,13 @@ class TestPlanningFactoryBuilder {
         return $this;
     }
 
+    public function withPlanningPermissionsManager(PlanningPermissionsManager $planning_permissions_manager) {
+        $this->planning_permissions_manager = $planning_permissions_manager;
+        return $this;
+    }
+
     public function build() {
-        return new PlanningFactory($this->dao, $this->tracker_factory, $this->form_element_factory);
+        return new PlanningFactory($this->dao, $this->tracker_factory, $this->form_element_factory, $this->planning_permissions_manager);
     }
 }
 

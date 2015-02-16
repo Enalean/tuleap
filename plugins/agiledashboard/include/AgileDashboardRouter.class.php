@@ -79,6 +79,9 @@ class AgileDashboardRouter {
     /** @var AgileDashboard_KanbanFactory */
     private $kanban_factory;
 
+    /** @var PlanningPermissionsManager */
+    private $planning_permissions_manager;
+
     public function __construct(
         Plugin $plugin,
         Planning_MilestoneFactory $milestone_factory,
@@ -89,7 +92,8 @@ class AgileDashboardRouter {
         ProjectXMLExporter $xml_exporter,
         AgileDashboard_KanbanManager $kanban_manager,
         AgileDashboard_ConfigurationManager $config_manager,
-        AgileDashboard_KanbanFactory $kanban_factory
+        AgileDashboard_KanbanFactory $kanban_factory,
+        PlanningPermissionsManager $planning_permissions_manager
     ) {
         $this->plugin                        = $plugin;
         $this->milestone_factory             = $milestone_factory;
@@ -101,6 +105,7 @@ class AgileDashboardRouter {
         $this->kanban_manager                = $kanban_manager;
         $this->config_manager                = $config_manager;
         $this->kanban_factory                = $kanban_factory;
+        $this->planning_permissions_manager  = $planning_permissions_manager;
     }
 
     /**
@@ -299,7 +304,8 @@ class AgileDashboardRouter {
             $this->plugin->getPluginPath(),
             $this->kanban_manager,
             $this->config_manager,
-            $this->kanban_factory
+            $this->kanban_factory,
+            $this->planning_permissions_manager
         );
     }
 

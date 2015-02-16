@@ -42,6 +42,8 @@ class PlanningDao extends DataAccessObject {
         $planning_id = $this->updateAndGetLastId($sql);
         
         $this->createBacklogTrackers($planning_id, $planning_parameters);
+
+        return $planning_id;
     }
     
     function createBacklogTracker($planning_id, $backlog_tracker_id) {
