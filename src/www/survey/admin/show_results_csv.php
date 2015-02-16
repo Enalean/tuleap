@@ -2,6 +2,7 @@
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 // http://sourceforge.net
 //
 // 
@@ -28,7 +29,8 @@ function strip_commas($string) {
 
 $sql="select * from surveys where survey_id='" . db_ei($survey_id) . "'";
 
-$result=db_query($sql);
+$result   = db_query($sql);
+$purifier = Codendi_HTMLPurifier::instance();
 
 /*
 	Select the questions for this survey and show as top row
@@ -56,7 +58,7 @@ echo "cust_id,first_name,field_1,email,field2,phone,field3,field4,field5,year,mo
 for ($i=0; $i<$count; $i++) {
 	$result=db_query("select question from questions where question_id='" . db_ei($quest_array[$i]) . "' AND question_type <> '4'");
 	if ($result && db_numrows($result) > 0) {
-		echo strip_commas(db_result($result, 0, 0)).",";
+		echo $purifier->purify(strip_commas(db_result($result, 0, 0))).",";
 	}
 }
 
@@ -89,7 +91,7 @@ for ($i=0; $i<$rows; $i++) {
 		$cols=db_numfields($result2);
 
 		for ($i2=0; $i2<$cols; $i2++) {
-			echo strip_commas(db_result($result2, 0, $i2)).",";
+			echo $purifier->purify(strip_commas(db_result($result2, 0, $i2))).",";
 		}
 
 		/*
@@ -102,7 +104,7 @@ for ($i=0; $i<$rows; $i++) {
 		$rows3=db_numrows($result3);
 
 		for ($i3=0; $i3<$rows3; $i3++) {
-			echo strip_commas(db_result($result3, $i3, "response")).",";
+			echo $purifier->purify(strip_commas(db_result($result3, $i3, "response"))).",";
 		}
 
 		/*
@@ -113,5 +115,3 @@ for ($i=0; $i<$rows; $i++) {
 	}
 
 }
-
-?>

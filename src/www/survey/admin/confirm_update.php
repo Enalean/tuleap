@@ -2,6 +2,7 @@
 
 /* 
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
  * Originally written by Mohamed CHAARI, 2006. STMicroelectronics.
  *
@@ -38,7 +39,7 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 if (array_key_exists('confirm', $_POST) && isset($_POST['confirm'])) {
     
     // Update the question	 
-    survey_data_question_update($group_id, $question_id, htmlspecialchars($question), $question_type);
+    survey_data_question_update($group_id, $question_id, $question, $question_type);
     
     // delete all associated radio buttons
     $sql = "SELECT * FROM survey_radio_choices WHERE question_id='" . db_ei($question_id) . "'";
@@ -60,6 +61,8 @@ if (array_key_exists('cancel', $_POST) && isset($_POST['cancel'])) {
     session_redirect("/survey/admin/edit_question.php?func=update_question&group_id=$group_id&question_id=$question_id"); 
 }
 
+$purifier = Codendi_HTMLPurifier::instance();
+
 survey_header(array('title'=>$Language->getText('survey_admin_update_radio','update_r'),
 		    'help'=>'survey.html#creating-or-editing-questions'));
 
@@ -67,7 +70,7 @@ survey_header(array('title'=>$Language->getText('survey_admin_update_radio','upd
 $qry="SELECT * FROM survey_questions WHERE question_id='" . db_ei($question_id) . "'";
 $res=db_query($qry);
 if (db_numrows($res) == 0) {
-    $feedback .= " Error finding question #".$question_id;
+    $feedback .= " Error finding question #".$purifier->purify($question_id);
     survey_footer(array());
     exit;
 } else {
@@ -77,10 +80,10 @@ if (db_numrows($res) == 0) {
 
 <P>
 <TABLE><FORM ACTION="?" METHOD="POST">
-<TD><INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id ; ?>"></TD>
-<TD><INPUT TYPE="HIDDEN" NAME="question_id" VALUE="<?php echo $question_id ; ?>"></TD>
-<TD><INPUT TYPE="HIDDEN" NAME="question" VALUE="<?php echo $question ; ?>"></TD>
-<TD><INPUT TYPE="HIDDEN" NAME="question_type" VALUE="<?php echo $question_type ; ?>"></TD>
+<TD><INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $purifier->purify($group_id) ; ?>"></TD>
+<TD><INPUT TYPE="HIDDEN" NAME="question_id" VALUE="<?php echo $purifier->purify($question_id) ; ?>"></TD>
+<TD><INPUT TYPE="HIDDEN" NAME="question" VALUE="<?php echo $purifier->purify($question) ; ?>"></TD>
+<TD><INPUT TYPE="HIDDEN" NAME="question_type" VALUE="<?php echo $purifier->purify($question_type) ; ?>"></TD>
 <TD COLSPAN="5"></TD>
 <TR><TD><INPUT TYPE="SUBMIT" NAME="confirm" VALUE="Continue"></TD>
 <TD COLSPAN="5"></TD>
@@ -91,5 +94,3 @@ if (db_numrows($res) == 0) {
 <?php
 
 survey_footer(array());
-
-?>

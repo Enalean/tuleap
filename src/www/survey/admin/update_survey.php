@@ -5,6 +5,7 @@
 // http://sourceforge.net
 //
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 //
 // 
 
@@ -24,12 +25,13 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 	Get this survey out of the DB
 */
 if ($survey_id) {
-	$sql="SELECT * FROM surveys WHERE survey_id='" . db_ei($survey_id) . "' AND group_id='" . db_ei($group_id) . "'";
-	$result=db_query($sql);
-	$survey_title=db_result($result, 0, "survey_title");
-	$survey_questions=db_result($result, 0, "survey_questions");
-	$is_active=db_result($result, 0, "is_active");
-	$is_anonymous=db_result($result, 0, "is_anonymous");
+    $purifier         = Codendi_HTMLPurifier::instance();
+    $sql              = "SELECT * FROM surveys WHERE survey_id='" . db_ei($survey_id) . "' AND group_id='" . db_ei($group_id) . "'";
+    $result           = db_query($sql);
+    $survey_title     = $purifier->purify(db_result($result, 0, "survey_title"));
+    $survey_questions = $purifier->purify(db_result($result, 0, "survey_questions"));
+    $is_active        = $purifier->purify(db_result($result, 0, "is_active"));
+    $is_anonymous     = $purifier->purify(db_result($result, 0, "is_anonymous"));
 }
 ?>
 <SCRIPT LANGUAGE="JavaScript">
@@ -99,4 +101,3 @@ survey_utils_show_surveys($result);
 survey_footer(array());
 
 }
-?>

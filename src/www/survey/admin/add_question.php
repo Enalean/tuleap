@@ -2,6 +2,7 @@
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 // http://sourceforge.net
 //
 // 
@@ -23,7 +24,7 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 }
 
 if (isset($post_changes) && $post_changes) {
-   $question_id = survey_data_question_create($group_id,htmlspecialchars($question),$question_type);  
+   $question_id = survey_data_question_create($group_id, $question, $question_type);
 
    // if radio-type question is created, redirect to Edit A Question page
    if (isset($question_id) && ($question_type=="6" || $question_type=="7")) {
@@ -75,5 +76,3 @@ echo $survey->showTypeBox();
 <?php
 
 survey_footer(array());
-
-?>
