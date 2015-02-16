@@ -52,6 +52,12 @@ class Planning_MilestoneFactory {
     private $status_counter;
 
     /**
+     *
+     * @var PlanningPermissionsManager
+     */
+    private $planning_permissions_manager;
+
+    /**
      * Instanciates a new milestone factory.
      *
      * @param PlanningFactory            $planning_factory    The factory to delegate planning retrieval.
@@ -63,14 +69,16 @@ class Planning_MilestoneFactory {
         Tracker_ArtifactFactory $artifact_factory,
         Tracker_FormElementFactory $formelement_factory,
         TrackerFactory $tracker_factory,
-        AgileDashboard_Milestone_MilestoneStatusCounter $status_counter
+        AgileDashboard_Milestone_MilestoneStatusCounter $status_counter,
+        PlanningPermissionsManager $planning_permissions_manager
     ) {
 
-        $this->planning_factory    = $planning_factory;
-        $this->artifact_factory    = $artifact_factory;
-        $this->formelement_factory = $formelement_factory;
-        $this->tracker_factory     = $tracker_factory;
-        $this->status_counter      = $status_counter;
+        $this->planning_factory             = $planning_factory;
+        $this->artifact_factory             = $artifact_factory;
+        $this->formelement_factory          = $formelement_factory;
+        $this->tracker_factory              = $tracker_factory;
+        $this->status_counter               = $status_counter;
+        $this->planning_permissions_manager = $planning_permissions_manager;
     }
 
     /**
@@ -745,5 +753,15 @@ class Planning_MilestoneFactory {
         return $this->getReverseKeySortedMilestonesFromArtifacts($artifacts);
     }
 
+    public function userCanChangePrioritiesInMilestone(Planning_ArtifactMilestone $milestone, PFUser $user) {
+        $planning                   = $milestone->getPlanning();
+        $user_can_change_priorities = $this->planning_permissions_manager->userHasPermissionOnPlanning($planning->getId(), $planning->getGroupId(), $user, PlanningPermissionsManager::PERM_PRIORITY_CHANGE);
+
+        if (! $user_can_change_priorities && $milestone->hasAncestors()) {
+            return $this->userCanChangePrioritiesInMilestone($milestone->getParent(), $user);
+        }
+
+        return $user_can_change_priorities;
+    }
 }
 ?>

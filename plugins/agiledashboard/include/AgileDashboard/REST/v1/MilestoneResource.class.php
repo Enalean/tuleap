@@ -45,6 +45,7 @@ use URLVerification;
 use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_PriorityManager;
 use Tracker_Artifact_PriorityHistoryDao;
+use PlanningPermissionsManager;
 
 /**
  * Wrapper for milestone related REST methods
@@ -95,7 +96,8 @@ class MilestoneResource {
             $this->tracker_artifact_factory,
             $tracker_form_element_factory,
             TrackerFactory::instance(),
-            $status_counter
+            $status_counter,
+            new PlanningPermissionsManager()
         );
 
         $this->backlog_strategy_factory = new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(

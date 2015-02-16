@@ -30,6 +30,10 @@ class PlanningPermissionsManager {
         return permission_fetch_selected_ugroups_ids($permission, $planning_id, $group_id);
     }
 
+    public function userHasPermissionOnPlanning($planning_id, $group_id, PFUser $user, $permission) {
+        return $user->isMember($group_id) && $user->hasPermission($permission, $planning_id, $group_id);
+    }
+
     public function savePlanningPermissionForUgroups($planning_id, $group_id, $permission, $ugroup_ids) {
         if (empty($ugroup_ids)) {
             $ugroup_ids = array();

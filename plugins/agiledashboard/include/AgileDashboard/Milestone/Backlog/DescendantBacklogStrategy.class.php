@@ -97,8 +97,22 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
         return $submit_urls;
     }
 
-    private function canUserPrioritizeBacklog(PFUser $user) {
-        return $user->isLoggedIn();
+    private function canUserPrioritizeBacklog(Planning_ArtifactMilestone $milestone, PFUser $user) {
+        $artifact_factory  = Tracker_ArtifactFactory::instance();
+        $milestone_factory = new Planning_MilestoneFactory(
+            PlanningFactory::build(),
+            $artifact_factory,
+            Tracker_FormElementFactory::instance(),
+            TrackerFactory::instance(),
+            new AgileDashboard_Milestone_MilestoneStatusCounter(
+                $this->dao,
+                new Tracker_ArtifactDao(),
+                $artifact_factory
+            ),
+            new PlanningPermissionsManager()
+        );
+
+        return $milestone_factory->userCanChangePrioritiesInMilestone($milestone, $user);
     }
 
     public function getTrackersWithoutInitialEffort() {
@@ -127,7 +141,7 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
             $this->getBacklogItemName(),
             $this->getAddItemsToBacklogUrls($user, $milestone, $redirect_to_self),
             $this->descendant_trackers,
-            $this->canUserPrioritizeBacklog($user),
+            $this->canUserPrioritizeBacklog($milestone, $user),
             $this->getTrackersWithoutInitialEffort(),
             $this->getSolveInconsistenciesUrl($milestone, $redirect_to_self),
             $milestone->getArtifactId()
