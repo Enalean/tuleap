@@ -2,14 +2,13 @@
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 // http://sourceforge.net
 //
 // 
 
 require_once('pre.php');
 require('../survey/survey_utils.php');
-require_once('common/include/SimpleSanitizer.class.php');
-
 
 survey_header(array('title'=>$Language->getText('survey_s_resp','s_compl')));
 
@@ -63,9 +62,6 @@ $quest_array=explode(',', db_result($result_survey, 0, "survey_questions"));
 $count=count($quest_array);
 $now=time();
 
-
-$sanitizer = new SimpleSanitizer();
-
 for ($i=0; $i<$count; $i++) {
 
 	/*
@@ -74,11 +70,9 @@ for ($i=0; $i<$count; $i++) {
 
 	$val="_$quest_array[$i]";
 
-        $value_sanitized = $sanitizer->sanitize($$val);
-
 	$sql="INSERT INTO survey_responses (user_id,group_id,survey_id,question_id,response,date) ".
 		"VALUES ('" . db_ei(user_getid()) . "','" . db_ei($group_id) . "','" . db_ei($survey_id) . "',"
-                . "'" . db_ei($quest_array[$i]) . "','" . db_es($value_sanitized) . "','" . db_ei($now) ."')";
+                . "'" . db_ei($quest_array[$i]) . "','" . db_es($$val) . "','" . db_ei($now) ."')";
 	$result=db_query($sql);
 	if (!$result) {
 		echo "<h1>".$Language->getText('global','error')."</h1>";
@@ -86,5 +80,3 @@ for ($i=0; $i<$count; $i++) {
 }
 
 survey_footer(array());
-
-?>
