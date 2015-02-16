@@ -13,7 +13,7 @@ Version 7.11 (not yet released)
 	* tracker: 5.569
 	* fulltextsearch: 0.123
 	* mediawiki: 0.62
-	* agiledashboard: 1.150
+	* agiledashboard: 1.151
 
 	== Bug Fix ==
 	* request #7841: Pagination headers cannot be read in CORS request
