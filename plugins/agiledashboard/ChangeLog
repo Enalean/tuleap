@@ -1,3 +1,6 @@
+Version 1.150 - Tuleap 7.11
+    * story #7495 - Define a priority change permission on a planning (perms not taken into account)
+
 Version 1.149 - Tuleap 7.10
     * story #7169: create a new item in milestone backlog of planning-v2
 

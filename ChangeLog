@@ -13,6 +13,7 @@ Version 7.11 (not yet released)
 	* tracker: 5.569
 	* fulltextsearch: 0.123
 	* mediawiki: 0.62
+	* agiledashboard: 1.150
 
 	== Bug Fix ==
 	* request #7841: Pagination headers cannot be read in CORS request
@@ -22,6 +23,9 @@ Version 7.11 (not yet released)
 	* request #7826: Improve error detection of FRS file moving
 	* request #7860: Redirection link when you are not authenticated only redirects to service
 	* request #7297: allowing a restricted user to see their own avatar
+
+	== Development ==
+	* story #7495: be able to get ugroups of a project for a given permission
 
 Version 7.10 (Thursday, February 5th 2015)
 
