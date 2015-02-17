@@ -38,7 +38,7 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 
 $sql="SELECT survey_questions.question_id,survey_questions.question,survey_question_types.id AS question_type_id ".
 	"FROM survey_questions,survey_question_types ".
-	"WHERE survey_question_types.id=survey_questions.question_type AND survey_questions.group_id='$group_id' ".
+	"WHERE survey_question_types.id=survey_questions.question_type AND survey_questions.group_id='" . db_ei($group_id) . "' ".
 "ORDER BY survey_questions.question_id DESC";
 
 $result=db_query($sql);

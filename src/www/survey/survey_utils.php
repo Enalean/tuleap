@@ -80,7 +80,7 @@ function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
       Select this survey from the database
     */
 
-    $sql="SELECT * FROM surveys WHERE group_id = '$group_id' AND survey_id='$survey_id'";
+    $sql="SELECT * FROM surveys WHERE group_id = '" . db_ei($group_id) . "' AND survey_id='" . db_ei($survey_id) . "'";
 
     $result=db_query($sql);
 
@@ -103,14 +103,15 @@ function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
 	      Build the questions on the HTML form
 	    */
 
-	    $sql="SELECT * FROM survey_questions WHERE question_id='".$quest_array[$i]."'";
+	    $sql="SELECT * FROM survey_questions WHERE question_id='" . db_ei($quest_array[$i]) . "'";
 	    $result=db_query($sql);
 	    $question_type=db_result($result, 0, 'question_type');
 
             $existing_response="";
             $response_exists=false;
             if (user_isloggedin()) {
-                $sql2="SELECT * FROM survey_responses WHERE question_id='".$quest_array[$i]."' AND survey_id='".$survey_id."' AND user_id='".user_getid()."'";
+                $sql2="SELECT * FROM survey_responses WHERE question_id='" . db_ei($quest_array[$i]) . "' "
+                        . "AND survey_id='" . db_ei($survey_id) . "' AND user_id='" . db_ei(user_getid()) . "'";
                 $result2=db_query($sql2);
                 if (db_numrows($result) > 0) {
                     $existing_response=db_result($result2, 0, 'response');
@@ -183,7 +184,7 @@ function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
 		  This is a radio-button question.
 		*/
 		
-		$qry="SELECT * FROM survey_radio_choices WHERE question_id='$quest_array[$i]' ORDER BY choice_rank";
+		$qry="SELECT * FROM survey_radio_choices WHERE question_id='" . db_ei($quest_array[$i]) . "' ORDER BY choice_rank";
 		$res=db_query($qry);
 		$j=1;
 		while ($row=db_fetch_array($res)) {
@@ -197,7 +198,7 @@ function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
 		  This is a select-box question.
 		*/
 
-		$qry="SELECT * FROM survey_radio_choices WHERE question_id='$quest_array[$i]' ORDER BY choice_rank";
+		$qry="SELECT * FROM survey_radio_choices WHERE question_id='" . db_ei($quest_array[$i]) . "' ORDER BY choice_rank";
 		$res=db_query($qry);
 		$return .= '<SELECT name="_'.$quest_array[$i].'">';
 		while ($row=db_fetch_array($res)) {
@@ -410,7 +411,7 @@ function survey_utils_show_radio_form($question_id, $choice_id, $question_type) 
     
     if ($choice_id != "") {
         // we are in case of update
-	$sql = "SELECT * FROM survey_radio_choices WHERE question_id='$question_id' AND choice_id='$choice_id'";
+	$sql = "SELECT * FROM survey_radio_choices WHERE question_id='" . db_ei($question_id) . "' AND choice_id='" . db_ei($choice_id) . "'";
         $res = db_query($sql);
         $answer_value = db_result($res,0,'radio_choice');
         $rank_value = db_result($res,0,'choice_rank');        
@@ -495,7 +496,7 @@ function  survey_utils_cleanup_questions($question_list) {
 
 // Check that the question exists
 function survey_utils_question_exist($question_id) {
-    $sql="SELECT * FROM survey_questions WHERE question_id='$question_id'";
+    $sql="SELECT * FROM survey_questions WHERE question_id='" . db_ei($question_id) . "'";
     $result=db_query($sql);
     if (db_numrows($result) > 0) return true;
     else return false;

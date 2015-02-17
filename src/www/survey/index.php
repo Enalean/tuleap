@@ -46,7 +46,7 @@ function  ShowResultsGroupSurveys($result) {
 	echo "</table>"; //</TD></TR></TABLE>");
 }
 
-$sql="SELECT survey_id,survey_title FROM surveys WHERE group_id='$group_id' AND is_active='1'";
+$sql="SELECT survey_id,survey_title FROM surveys WHERE group_id='" . db_ei($group_id) . "' AND is_active='1'";
 
 $result=db_query($sql);
 

@@ -14,7 +14,7 @@ require_once('common/include/SimpleSanitizer.class.php');
 survey_header(array('title'=>$Language->getText('survey_s_resp','s_compl')));
 
 // select this survey from the database
-$sql="select * from surveys where survey_id='$survey_id'";
+$sql="select * from surveys where survey_id='" . db_ei($survey_id) . "'";
 $result_survey=db_query($sql);
 
 if (!$survey_id || !$group_id) {
@@ -49,7 +49,8 @@ if (!user_isloggedin() && !db_result($result_survey, 0, "is_anonymous")) {
 	want to delete them.
 */
 if (user_isloggedin()) {
-    $result=db_query("DELETE FROM survey_responses WHERE survey_id='$survey_id' AND group_id='$group_id' AND user_id='".user_getid()."'");
+    $result=db_query("DELETE FROM survey_responses WHERE survey_id='" . db_ei($survey_id) . "' "
+            . "AND group_id='" . db_ei($group_id) . "' AND user_id='" . db_ei(user_getid()) . "'");
 }
 
 
@@ -76,7 +77,8 @@ for ($i=0; $i<$count; $i++) {
         $value_sanitized = $sanitizer->sanitize($$val);
 
 	$sql="INSERT INTO survey_responses (user_id,group_id,survey_id,question_id,response,date) ".
-		"VALUES ('".user_getid()."','$group_id','$survey_id','$quest_array[$i]','". $value_sanitized . "','$now')";
+		"VALUES ('" . db_ei(user_getid()) . "','" . db_ei($group_id) . "','" . db_ei($survey_id) . "',"
+                . "'" . db_ei($quest_array[$i]) . "','" . db_es($value_sanitized) . "','" . db_ei($now) ."')";
 	$result=db_query($sql);
 	if (!$result) {
 		echo "<h1>".$Language->getText('global','error')."</h1>";

@@ -17,7 +17,7 @@ survey_header(array('title'=>$Language->getText('survey_admin_browse_survey','ed
 	Select all surveys from the database
 */
 
-$sql="SELECT * FROM surveys WHERE group_id='$group_id'";
+$sql="SELECT * FROM surveys WHERE group_id='" . db_ei($group_id) . "'";
 
 $result=db_query($sql);
 

@@ -33,13 +33,13 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 }
 
 // fetch question and associated radio button from DB, and check for integrity IDs
-$sql1="SELECT * FROM survey_questions WHERE question_id='$question_id'";
+$sql1="SELECT * FROM survey_questions WHERE question_id='" . db_ei($question_id) . "'";
 $res1=db_query($sql1);
 if (db_numrows($res1) == 0) {
     $feedback .= " Error finding question #".$question_id;
 } else {
     $q_type=db_result($res1,0,'question_type');
-    $sql2="SELECT * FROM survey_radio_choices WHERE question_id='$question_id' AND choice_id='$choice_id'"; 
+    $sql2="SELECT * FROM survey_radio_choices WHERE question_id='" . db_ei($question_id) . "' AND choice_id='" . db_ei($choice_id) . "'";
     $res2=db_query($sql2);
     if (db_numrows($res2) == 0) {
         $feedback .= " Error finding radio button #".$choice_id;

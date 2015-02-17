@@ -44,7 +44,7 @@ class Widget_MySurveys extends Widget {
         }
         
         $survey       =& SurveySingleton::instance();
-        $sql          = "SELECT * from surveys WHERE survey_id=". $developer_survey_id;
+        $sql          = "SELECT * from surveys WHERE survey_id=". db_ei($developer_survey_id);
         $result       = db_query($sql);
         $group_id     = db_result($result, 0, 'group_id');
         $survey_title = $survey->getSurveyTitle(db_result($result, 0, 'survey_title'));
@@ -55,7 +55,7 @@ class Widget_MySurveys extends Widget {
         if ($devsurvey_is_active==1) {
         
             $sql="SELECT * FROM survey_responses ".
-            "WHERE survey_id='".$developer_survey_id."' AND user_id='". user_getid() ."'";
+            "WHERE survey_id='".db_ei($developer_survey_id)."' AND user_id='". db_ei(user_getid()) ."'";
             $result = db_query($sql);
             
             if (db_numrows($result) < 1) {
