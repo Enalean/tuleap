@@ -23,6 +23,7 @@ Version 7.11 (not yet released)
 	* request #7826: Improve error detection of FRS file moving
 	* request #7860: Redirection link when you are not authenticated only redirects to service
 	* request #7297: allowing a restricted user to see their own avatar
+	* request #7809: force into utf8 tv3 export of artifact history
 
 	== Development ==
 	* story #7495: be able to get ugroups of a project for a given permission
