@@ -24,13 +24,19 @@
             content: [],
             label: 'Backlog',
             is_open: false,
-            loading_items: true
+            loading_items: true,
+            resize_left: '',
+            resize_top: '',
+            resize_width: ''
         };
         self.archive = {
             content: [],
             label: 'Closed',
             is_open: false,
-            loading_items: true
+            loading_items: true,
+            resize_left: '',
+            resize_top: '',
+            resize_width: ''
         };
         self.cardFieldIsSimpleValue       = CardFieldsService.cardFieldIsSimpleValue;
         self.cardFieldIsList              = CardFieldsService.cardFieldIsList;
@@ -143,6 +149,9 @@
                 kanban.columns.forEach(function (column) {
                     column.content       = [];
                     column.loading_items = true;
+                    column.resize_left   = '';
+                    column.resize_top    = '';
+                    column.resize_width  = '';
                     loadColumnContent(column, limit, offset);
                 });
                 self.board.columns = kanban.columns;

@@ -1,4 +1,6 @@
-<div class="kanban-item" ui-tree-handle>
+<div class="kanban-item {{ item.color }}" ui-tree-handle>
+    <div class="type-border"></div>
+
     <a href="/plugins/tracker/?aid={{ item.id }}" class="kanban-item-link">item #{{ item.id }}</a>
     <div class="kanban-item-label">{{ item.label }}</div>
 

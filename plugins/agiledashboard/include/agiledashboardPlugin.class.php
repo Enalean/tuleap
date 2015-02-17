@@ -352,13 +352,23 @@ class AgileDashboardPlugin extends Plugin {
     }
 
     public function javascript_file() {
-        if ($this->isAnAgiledashboardRequest() && $this->isPlanningV2URL()) {
-            echo '<script type="text/javascript" src="' . $this->getPluginPath() . '/js/planning-v2/bin/assets/planning-v2.js"></script>';
+        if ($this->isAnAgiledashboardRequest()) {
+            if ($this->isPlanningV2URL()) {
+                echo '<script type="text/javascript" src="' . $this->getPluginPath() . '/js/planning-v2/bin/assets/planning-v2.js"></script>';
+            } elseif ($this->isKanbanURL()) {
+                echo '<script type="text/javascript" src="js/resize-content.js"></script>'."\n";
+            }
         }
     }
 
     private function isAnAgiledashboardRequest() {
         return strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0;
+    }
+
+    private function isKanbanURL() {
+        $request = HTTPRequest::instance();
+
+        return $request->get('action') === 'showKanban';
     }
 
     private function isPlanningV2URL() {
@@ -891,7 +901,7 @@ class AgileDashboardPlugin extends Plugin {
     public function cardwall_event_use_standard_javascript($params) {
         $request = HTTPRequest::instance();
         $pane_info_identifier = new AgileDashboard_PaneInfoIdentifier();
-        if ($pane_info_identifier->isPaneAPlanningV2($request->get('pane'))) {
+        if ($pane_info_identifier->isPaneAPlanningV2($request->get('pane')) || $this->isKanbanURL()) {
             $params['use_standard'] = false;
         }
     }

@@ -57,6 +57,11 @@
         if ($('.content').css('position') === 'absolute') {
             $('.content').css('padding-left', new_width);
         }
+
+        function emitSidebarSizeUpdated() {
+            $('.sidebar-nav').trigger('sidebarSizeUpdated', [new_width]);
+        }
+        window.setTimeout(emitSidebarSizeUpdated, 0);
     }
 
     function updateNavbar(new_width) {
