@@ -131,7 +131,7 @@ class ArtifactMultiListCurrentValueExporter {
         if (empty($this->labels[$field_name])) {
             $values_label_rows = $this->dao->searchFieldValuesList($tracker_id, $field_name);
             foreach ($values_label_rows as $values_label_row) {
-                $this->labels[$field_name][$values_label_row['value_id']] = $values_label_row['value'];
+                $this->labels[$field_name][$values_label_row['value_id']] = Encoding_SupportedXmlCharEncoding::getXMLCompatibleString($values_label_row['value']);
             }
         }
     }
