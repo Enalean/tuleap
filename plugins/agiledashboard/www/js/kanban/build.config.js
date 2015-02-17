@@ -78,9 +78,11 @@ module.exports = {
       'vendor/moment/locale/fr.js',
       'vendor/angular-moment/angular-moment.min.js',
       'vendor/angular-sanitize/angular-sanitize.min.js',
-      'vendor/restangular/dist/restangular.js'
+      'vendor/restangular/dist/restangular.js',
+      'vendor/angular-ui-tree/dist/angular-ui-tree.min.js'
     ],
     css: [
+      'vendor/angular-ui-tree/dist/angular-ui-tree.min.css'
     ]
   }
 };

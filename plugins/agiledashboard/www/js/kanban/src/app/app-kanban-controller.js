@@ -50,6 +50,9 @@
 
         function loadColumns() {
             KanbanService.getKanban(kanban.id).then(function (kanban) {
+                kanban.columns.forEach(function (column) {
+                    column.content = [];
+                });
                 self.board.columns = kanban.columns;
             });
         }

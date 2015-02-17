@@ -1,4 +1,5 @@
 @import "animate.min.css";
+@import "../vendor/angular-ui-tree/dist/angular-ui-tree.min.css";
 @import "../../../../../../../src/www/themes/common/css/utils/colors.less";
 
 @import "../app/kanban.less";
@@ -7,4 +8,31 @@
     background: url('loader.gif') no-repeat center center;
     min-height: 26px;
     margin: 20px 0 10px;
+}
+
+.angular-ui-tree-empty {
+    background: transparent url('column-empty.png') no-repeat center 20px;
+    margin: 0 0 10px;
+    border: none;
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    left: 0;
+}
+
+.angular-ui-tree-placeholder {
+    background: #58B359;
+    max-height: 3px;
+    min-height: 3px;
+    margin: 10px;
+
+    &:only-child {
+        background: rgba(167, 236, 103, 0.12) url('column-empty.png') no-repeat center 20px;
+        max-height: 100px;
+        min-height: 100%;
+        width: 100%;
+        border-radius: 2px;
+        margin: 0;
+    }
 }
