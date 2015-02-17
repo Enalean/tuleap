@@ -71,7 +71,7 @@ class FullTextSearchWikiActionsTests extends TuleapTestCase {
             array(
                 $this->client,
                 $this->request_data_factory,
-                mock('BackendLogger')
+                mock('TruncateLevelLogger')
             )
         );
 

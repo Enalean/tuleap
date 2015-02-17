@@ -41,7 +41,7 @@ class SystemEvent_FULLTEXTSEARCH_TRACKER_REINDEX_PROJECTTest extends TuleapTestC
             $end_date,
             $log
         );
-        $event->injectDependencies($this->actions, mock('TrackerFactory'));
+        $event->injectDependencies($this->actions, mock('TrackerFactory'), mock('FullTextSearch_TrackerSystemEventManager'), mock('TruncateLevelLogger'));
         return $event;
     }
 
