@@ -32,9 +32,26 @@ class SystemEvent_FULLTEXTSEARCH_TRACKER_REINDEX_PROJECT extends SystemEvent {
      */
     private $tracker_factory;
 
-    public function injectDependencies(FullTextSearchTrackerActions $actions, TrackerFactory $tracker_factory) {
-        $this->actions         = $actions;
-        $this->tracker_factory = $tracker_factory;
+    /**
+     * @var FullTextSearch_TrackerSystemEventManager
+     */
+    protected $system_event_manager;
+
+    /**
+     * @var TruncateLevelLogger
+     */
+    protected $logger;
+
+    public function injectDependencies(
+        FullTextSearchTrackerActions $actions,
+        TrackerFactory $tracker_factory,
+        FullTextSearch_TrackerSystemEventManager $system_event_manager,
+        TruncateLevelLogger $logger
+    ) {
+        $this->actions              = $actions;
+        $this->tracker_factory      = $tracker_factory;
+        $this->system_event_manager = $system_event_manager;
+        $this->logger               = $logger;
     }
 
     /**
@@ -44,8 +61,15 @@ class SystemEvent_FULLTEXTSEARCH_TRACKER_REINDEX_PROJECT extends SystemEvent {
      */
     public function process() {
         try {
-            $project_id = (int)$this->getRequiredParameter(0);
-            $trackers   = $this->tracker_factory->getTrackersByGroupId($project_id);
+            $project_id = (int) $this->getRequiredParameter(0);
+
+            if ($this->system_event_manager->isProjectReindexationAlreadyQueued($project_id)) {
+                $this->done('Skipped duplicate event');
+                $this->logger->debug("Skipped duplicate event for project $project_id : ".self::NAME);
+                return true;
+            }
+
+            $trackers = $this->tracker_factory->getTrackersByGroupId($project_id);
 
             $this->actions->reIndexProjectArtifacts($trackers);
 

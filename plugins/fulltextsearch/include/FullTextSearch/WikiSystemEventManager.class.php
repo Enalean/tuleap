@@ -34,14 +34,21 @@ class FullTextSearch_WikiSystemEventManager {
      */
     private $system_event_manager;
 
+    /**
+     * @var TruncateLevelLogger
+     */
+    private $logger;
+
     public function __construct(
         SystemEventManager $system_event_manager,
         ElasticSearch_IndexClientFacade $index_client,
-        fulltextsearchPlugin $plugin
+        fulltextsearchPlugin $plugin,
+        TruncateLevelLogger $logger
     ) {
         $this->system_event_manager = $system_event_manager;
         $this->index_client         = $index_client;
         $this->plugin               = $plugin;
+        $this->logger               = $logger;
     }
 
     public function getSystemEventClass($type, &$class, &$dependencies) {
@@ -51,10 +58,17 @@ class FullTextSearch_WikiSystemEventManager {
             case SystemEvent_FULLTEXTSEARCH_WIKI_DELETE::NAME:
             case SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE_PERMISSIONS::NAME:
             case SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE_SERVICE_PERMISSIONS::NAME:
-            case SystemEvent_FULLTEXTSEARCH_WIKI_REINDEX_PROJECT::NAME:
                 $class = 'SystemEvent_'. $type;
                 $dependencies = array(
                     $this->getWikiActions()
+                );
+                break;
+            case SystemEvent_FULLTEXTSEARCH_WIKI_REINDEX_PROJECT::NAME:
+                $class = 'SystemEvent_'. $type;
+                $dependencies = array(
+                    $this->getWikiActions(),
+                    $this,
+                    $this->logger
                 );
                 break;
         }
@@ -71,7 +85,7 @@ class FullTextSearch_WikiSystemEventManager {
                 ),
                 UserManager::instance()
             ),
-            new BackendLogger()
+            $this->logger
         );
     }
 
@@ -149,5 +163,9 @@ class FullTextSearch_WikiSystemEventManager {
                 SystemEvent::OWNER_APP
             );
         }
+    }
+
+    public function isProjectReindexationAlreadyQueued($project_id) {
+        return $this->system_event_manager->areThereMultipleEventsQueuedMatchingFirstParameter(SystemEvent_FULLTEXTSEARCH_WIKI_REINDEX_PROJECT::NAME, $project_id);
     }
 }

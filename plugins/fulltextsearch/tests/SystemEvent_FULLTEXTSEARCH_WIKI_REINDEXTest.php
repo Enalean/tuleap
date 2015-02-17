@@ -41,7 +41,7 @@ class SystemEvent_FULLTEXTSEARCH_WIKI_REINDEXTest extends TuleapTestCase {
             $end_date,
             $log
         );
-        $event->injectDependencies($this->actions);
+        $event->injectDependencies($this->actions, mock('FullTextSearch_WikiSystemEventManager'), mock('TruncateLevelLogger'));
         return $event;
     }
 

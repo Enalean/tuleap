@@ -21,7 +21,7 @@
 class FullTextSearch_DocmanSystemEventManager {
 
     /**
-     * @var Logger
+     * @var TruncateLevelLogger
      */
     private $logger;
 
@@ -64,7 +64,6 @@ class FullTextSearch_DocmanSystemEventManager {
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA::NAME:
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_DELETE::NAME:
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_APPROVAL_TABLE_COMMENT::NAME:
-            case SystemEvent_FULLTEXTSEARCH_DOCMAN_REINDEX_PROJECT::NAME:
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_COPY::NAME:
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_WIKI_INDEX::NAME:
             case SystemEvent_FULLTEXTSEARCH_DOCMAN_WIKI_UPDATE::NAME:
@@ -74,6 +73,14 @@ class FullTextSearch_DocmanSystemEventManager {
                     new Docman_ItemFactory(),
                     new Docman_VersionFactory(),
                     new Docman_LinkVersionFactory()
+                );
+                break;
+            case SystemEvent_FULLTEXTSEARCH_DOCMAN_REINDEX_PROJECT::NAME:
+                $class = 'SystemEvent_'. $type;
+                $dependencies = array(
+                    $this->getDocmanActions(),
+                    $this,
+                    $this->logger
                 );
                 break;
         }
@@ -264,5 +271,9 @@ class FullTextSearch_DocmanSystemEventManager {
                 $additional_params
             )
         );
+    }
+
+    public function isProjectReindexationAlreadyQueued($project_id) {
+        return $this->system_event_manager->areThereMultipleEventsQueuedMatchingFirstParameter(SystemEvent_FULLTEXTSEARCH_DOCMAN_REINDEX_PROJECT::NAME, $project_id);
     }
 }

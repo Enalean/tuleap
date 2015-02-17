@@ -591,6 +591,21 @@ class SystemEventManager {
         return false;
     }
 
+    public function areThereMultipleEventsQueuedMatchingFirstParameter($event_type, $parameter) {
+        $dar = $this->_getDao()->searchWithParam(
+            'all',
+             $parameter,
+             array($event_type),
+             array(SystemEvent::STATUS_NEW)
+        );
+
+        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      *
      * @param type $event_type

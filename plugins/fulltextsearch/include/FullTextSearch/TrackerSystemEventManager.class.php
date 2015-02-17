@@ -45,18 +45,25 @@ class FullTextSearch_TrackerSystemEventManager {
      */
     private $system_event_manager;
 
+    /**
+     * @var TruncateLevelLogger
+     */
+    private $logger;
+
     public function __construct(
             SystemEventManager $system_event_manager,
             FullTextSearchTrackerActions $actions,
             Tracker_ArtifactFactory $artifact_factory,
             TrackerFactory $tracker_factory,
-            fulltextsearchPlugin $plugin
-            ) {
+            fulltextsearchPlugin $plugin,
+            TruncateLevelLogger $logger
+        ) {
         $this->system_event_manager = $system_event_manager;
         $this->actions              = $actions;
         $this->artifact_factory     = $artifact_factory;
         $this->tracker_factory      = $tracker_factory;
         $this->plugin               = $plugin;
+        $this->logger               = $logger;
     }
 
     public function getSystemEventClass($type, &$class, &$dependencies) {
@@ -67,7 +74,7 @@ class FullTextSearch_TrackerSystemEventManager {
                 break;
             case SystemEvent_FULLTEXTSEARCH_TRACKER_REINDEX_PROJECT::NAME:
                 $class        = 'SystemEvent_'. $type;
-                $dependencies = array($this->actions, $this->tracker_factory);
+                $dependencies = array($this->actions, $this->tracker_factory, $this, $this->logger);
                 break;
             case SystemEvent_FULLTEXTSEARCH_TRACKER_ARTIFACT_DELETE::NAME:
                 $class        = 'SystemEvent_'. $type;
@@ -143,5 +150,9 @@ class FullTextSearch_TrackerSystemEventManager {
                 SystemEvent::OWNER_APP
             );
         }
+    }
+
+    public function isProjectReindexationAlreadyQueued($project_id) {
+        return $this->system_event_manager->areThereMultipleEventsQueuedMatchingFirstParameter(SystemEvent_FULLTEXTSEARCH_TRACKER_REINDEX_PROJECT::NAME, $project_id);
     }
 }
