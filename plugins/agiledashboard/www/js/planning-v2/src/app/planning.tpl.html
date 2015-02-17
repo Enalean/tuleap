@@ -4,7 +4,7 @@
 <div id="planning-view">
     <div id="backlog" ng-class="{ loading_content: loading_backlog_items }">
         <h2 translate>To be planned</h2>
-        <div class="controls" style="padding-bottom: 20px;">
+        <div class="controls" ng-if="backlog.user_can_move_cards">
             <div class="btn-group dropdown">
                 <span class="dropdown-toggle btn btn-primary" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="#">
                     <span translate>Add a new item</span>
@@ -13,7 +13,6 @@
                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                     <li ng-repeat="accepted_type in backlog.accepted_types.content">
                         <a
-                           style="cursor: pointer;"
                            class="create-item-link"
                            data-tracker-id="{{ accepted_type.id }}"
                            data-link-id="milestone_id"
