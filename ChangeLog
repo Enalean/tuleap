@@ -10,10 +10,10 @@ Version 7.11 (not yet released)
 
         == Plugins ==
 	* graphontrackers: 1.13
-	* tracker: 5.570
+	* tracker: 5.571
 	* fulltextsearch: 0.123
 	* mediawiki: 0.62
-	* agiledashboard: 1.152
+	* agiledashboard: 1.153
 
 	== Bug Fix ==
 	* request #7758: php error when registering new user

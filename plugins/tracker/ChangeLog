@@ -1,3 +1,6 @@
+Version 5.571 - Tuleap 7.11
+    * story #7579: On load, display cards not in backlog
+
 Version 5.570 - Tuleap 7.11
     * request #7865: PHP fatal error when modifying a report
 
