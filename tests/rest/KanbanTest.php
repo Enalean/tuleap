@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All rights reserved
+ * Copyright (c) Enalean, 2014-2015. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -45,5 +45,14 @@ class KanbanTest extends RestBase {
         $this->assertEquals(0, $kanban['nb_closed']);
         $this->assertEquals('My first kanban', $kanban['label']);
         $this->assertEquals(TestDataBuilder::KANBAN_TRACKER_ID, $kanban['tracker_id']);
+    }
+
+    public function testGETItems() {
+        $url = 'kanban/'. TestDataBuilder::KANBAN_ID .'/items?column_id='. TestDataBuilder::KANBAN_ONGOING_COLUMN_ID;
+
+        $response = $this->getResponse($this->client->get($url))->json();
+
+        $this->assertEquals(1, $response['total_size']);
+        $this->assertEquals('Doing something', $response['collection'][0]['label']);
     }
 }

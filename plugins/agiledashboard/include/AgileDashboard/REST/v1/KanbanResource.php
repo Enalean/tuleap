@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@ use AgileDashboard_KanbanFactory;
 use AgileDashboard_KanbanDao;
 use AgileDashboard_KanbanNotFoundException;
 use AgileDashboard_KanbanCannotAccessException;
+use AgileDashboard_Kanban;
 use UserManager;
 use TrackerFactory;
 use PFUser;
@@ -36,9 +37,14 @@ class KanbanResource {
     /** @var AgileDashboard_KanbanFactory */
     private $kanban_factory;
 
+    /** @var TrackerFactory */
+    private $tracker_factory;
+
     public function __construct() {
+        $this->tracker_factory = TrackerFactory::instance();
+
         $this->kanban_factory = new AgileDashboard_KanbanFactory(
-            TrackerFactory::instance(),
+            $this->tracker_factory,
             new AgileDashboard_KanbanDao()
         );
     }
@@ -116,13 +122,69 @@ class KanbanResource {
     }
 
     /**
-     * Return info about milestone if exists
-     *
      * @url OPTIONS {id}/backlog
      *
      * @param string $id Id of the milestone
      */
     public function optionsBacklog($id) {
+        Header::allowOptionsGet();
+    }
+
+    /**
+     * Get items
+     *
+     * Get the items of a given kanban in a given column
+     *
+     * @url GET {id}/items
+     *
+     * @param int $id Id of the kanban
+     * @param int $column_id Id of the column the item belongs to
+     * @param int $limit  Number of elements displayed per page
+     * @param int $offset Position of the first element to display
+     *
+     * @return Tuleap\AgileDashboard\REST\v1\KanbanItemCollectionRepresentation
+     *
+     * @throws 403
+     * @throws 404
+     */
+    protected function getItems($id, $column_id, $limit = 10, $offset = 0) {
+        $user   = $this->getCurrentUser();
+        $kanban = $this->getKanban($user, $id);
+
+        if (! $this->columnIsInTracker($kanban, $user, $column_id)) {
+            throw new RestException(404);
+        }
+
+        $items_representation = new KanbanItemCollectionRepresentation();
+        $items_representation->build($user, $kanban, $column_id, $limit, $offset);
+
+        Header::allowOptionsGet();
+        Header::sendPaginationHeaders($limit, $offset, $items_representation->total_size, self::MAX_LIMIT);
+
+        return $items_representation;
+    }
+
+    private function columnIsInTracker(AgileDashboard_Kanban $kanban, PFUser $user, $column_id) {
+        $tracker      = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
+        $status_field = $tracker->getStatusField();
+
+        if (! $status_field) {
+            return false;
+        }
+
+        if (! $status_field->userCanRead($user)) {
+            throw new RestException(403);
+        }
+
+        return array_key_exists($column_id, $status_field->getAllValues());
+    }
+
+    /**
+     * @url OPTIONS {id}/items
+     *
+     * @param string $id Id of the milestone
+     */
+    public function optionsItems($id) {
         Header::allowOptionsGet();
     }
 

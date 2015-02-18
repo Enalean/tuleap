@@ -24,7 +24,7 @@ use AgileDashboard_KanbanItemDao;
 use Tracker_ArtifactFactory;
 use PFUser;
 
-class KanbanBacklogRepresentation {
+class KanbanItemCollectionRepresentation {
 
     /** @var array */
     public $collection;
@@ -32,10 +32,10 @@ class KanbanBacklogRepresentation {
     /** @var int */
     public $total_size;
 
-    public function build(PFUser $user, AgileDashboard_Kanban $kanban, $limit, $offset) {
+    public function build(PFUser $user, AgileDashboard_Kanban $kanban, $column_id, $limit, $offset) {
         $dao     = new AgileDashboard_KanbanItemDao();
         $factory = Tracker_ArtifactFactory::instance();
-        $data    = $dao->searchPaginatedBacklogItemsByTrackerId($kanban->getTrackerId(), $limit, $offset);
+        $data    = $dao->searchPaginatedItemsInColumn($kanban->getTrackerId(), $column_id, $limit, $offset);
 
         $this->total_size = (int) $dao->foundRows();
         $this->collection = array();

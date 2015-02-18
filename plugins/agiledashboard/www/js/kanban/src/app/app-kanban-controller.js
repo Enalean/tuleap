@@ -24,14 +24,14 @@
         self.backlog = {
             content: [],
             label: 'Backlog',
-            is_open: false
+            is_open: false,
+            loading_items: true
         };
         self.archive = {
             content: [],
             label: 'Closed',
             is_open: false
         };
-        self.loading_backlog = true;
         self.cardFieldIsSimpleValue       = CardFieldsService.cardFieldIsSimpleValue;
         self.cardFieldIsList              = CardFieldsService.cardFieldIsList;
         self.cardFieldIsText              = CardFieldsService.cardFieldIsText;
@@ -51,9 +51,23 @@
         function loadColumns() {
             KanbanService.getKanban(kanban.id).then(function (kanban) {
                 kanban.columns.forEach(function (column) {
-                    column.content = [];
+                    column.content       = [];
+                    column.loading_items = true;
+                    loadColumnContent(column, limit, offset);
                 });
                 self.board.columns = kanban.columns;
+            });
+        }
+
+        function loadColumnContent(column, limit, offset) {
+            return KanbanService.getItems(kanban.id, column.id, limit, offset).then(function(data) {
+                column.content = column.content.concat(data.results);
+
+                if (offset + limit < data.total) {
+                    loadColumnContent(column, limit, offset + limit);
+                } else {
+                    column.loading_items = false;
+                }
             });
         }
 
@@ -64,7 +78,7 @@
                 if (self.backlog.content.length < data.total) {
                     loadBacklog(limit, offset + limit);
                 } else {
-                    self.loading_backlog = false;
+                    self.backlog.loading_items = false;
                 }
             });
         }

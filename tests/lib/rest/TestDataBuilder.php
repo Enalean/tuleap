@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2014. All rights reserved
+ * Copyright (c) Enalean, 2013 - 2015. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -103,6 +103,8 @@ class TestDataBuilder {
     const EPIC_5_ARTIFACT_ID      = 13;
     const EPIC_6_ARTIFACT_ID      = 14;
     const EPIC_7_ARTIFACT_ID      = 15;
+
+    const KANBAN_ONGOING_COLUMN_ID = 231;
 
     /** @var ProjectManager */
     protected $project_manager;
@@ -490,6 +492,18 @@ class TestDataBuilder {
         echo "Populate kanban\n";
         $fields_data = array(
             $this->tracker_formelement_factory->getFormElementByName(self::KANBAN_TRACKER_ID, 'summary_1')->getId() => 'Do something',
+        );
+
+        $this->tracker_artifact_factory->createArtifact(
+            $this->tracker_factory->getTrackerById(self::KANBAN_TRACKER_ID),
+            $fields_data,
+            $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME),
+            '',
+            false
+        );
+        $fields_data = array(
+            $this->tracker_formelement_factory->getFormElementByName(self::KANBAN_TRACKER_ID, 'summary_1')->getId() => 'Doing something',
+            $this->tracker_formelement_factory->getFormElementByName(self::KANBAN_TRACKER_ID, 'status')->getId() => 231,
         );
 
         $this->tracker_artifact_factory->createArtifact(
