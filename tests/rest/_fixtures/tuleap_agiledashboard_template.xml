@@ -1618,6 +1618,9 @@
         <backlogs>
           <backlog>T215</backlog>
         </backlogs>
+        <permissions>
+          <permission ugroup="UGROUP_PROJECT_ADMIN" type="PLUGIN_AGILEDASHBOARD_PLANNING_PRIORITY_CHANGE"/>
+        </permissions>
       </planning>
       <planning name="Sprint Planning" plan_title="Sprint Plan" planning_tracker_id="T217" backlog_title="Release Backlog">
         <backlogs>
