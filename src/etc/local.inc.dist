@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) Enalean, 2011-2013. All rights reserved
+// Copyright (c) Enalean, 2011-2015. All rights reserved
 // Copyright (c) STMicroelectronics, 2009-2011. All rights reserved
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 //
@@ -503,3 +503,8 @@ $sys_default_mail_domain = "";
 
 //Backup path for deleted projects
 $sys_project_backup_path = $tmp_dir;
+
+// Whitelist URLs for the Content-Security-Policy directive script-src
+// This could be needed if JavaScript code needs to be executed from an external website
+// For example, this could be 'https://example.com http://tuleap.net' or 'https://example.com/script.js'
+$sys_csp_script_scr_whitelist = '';
