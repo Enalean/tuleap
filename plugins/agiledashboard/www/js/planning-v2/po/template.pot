@@ -52,6 +52,10 @@ msgstr ""
 msgid "To be planned"
 msgstr ""
 
+#: src/app/planning.tpl.html
+msgid "You are not allowed to rank on this planning"
+msgstr ""
+
 #: src/app/backlog-item/backlog-item-details.tpl.html
 msgid "{{ backlog_item.initial_effort }} pt"
 msgid_plural "{{ backlog_item.initial_effort }} pts"

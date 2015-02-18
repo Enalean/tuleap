@@ -1,5 +1,14 @@
 {{#has_something}}
     {{#has_something_todo}}
+        {{^ can_prioritize }}
+            <div class="row-fluid">
+                <div class="span10">
+                    <ul class="feedback_warning">
+                        <li> {{ user_cannot_prioritize }} </li>
+                    </ul>
+                </div>
+            </div>
+        {{/ can_prioritize }}
         <h3>{{open_items_title}}</h3>
         <p>{{open_items_intro}}</p>
         <div class="row-fluid">

@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AgileDashboard Planning\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2015-01-21 14:26+0100\n"
-"Last-Translator: Benjamin Dauton <benjamin.dauton@enalean.com>\n"
+"PO-Revision-Date: 2015-02-19 16:42+0100\n"
+"Last-Translator: Martin GOYOT <martin.goyot@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
 "Language: fr\n"
@@ -17,7 +17,6 @@ msgstr ""
 "X-Generator: Poedit 1.5.4\n"
 
 #: src/app/planning.tpl.html
-#, fuzzy
 msgid "A server error has occured. <b>You should refresh this page</b>."
 msgstr "Une erreur est survenue. <b>Veuillez rafraîchir cette page</b>."
 
@@ -64,6 +63,10 @@ msgstr "Planification"
 #: src/app/planning.tpl.html
 msgid "To be planned"
 msgstr "A planifier"
+
+#: src/app/planning.tpl.html
+msgid "You are not allowed to rank on this planning"
+msgstr "Vous n'êtes pas autorisé à prioriser sur ce planning"
 
 #: src/app/backlog-item/backlog-item-details.tpl.html
 msgid "{{ backlog_item.initial_effort }} pt"

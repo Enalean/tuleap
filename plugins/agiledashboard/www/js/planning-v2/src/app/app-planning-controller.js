@@ -30,26 +30,28 @@
             backlog                     : {
                 user_can_move_cards: false
             },
-            loading_backlog_items       : true,
-            loading_milestones          : true,
-            toggle                      : toggle,
-            showChildren                : showChildren,
-            toggleClosedMilestoneItems  : toggleClosedMilestoneItems,
-            canShowBacklogItem          : canShowBacklogItem,
-            generateMilestoneLinkUrl    : generateMilestoneLinkUrl,
-            showCreateNewModal          : showCreateNewModal,
-            cardFieldIsSimpleValue      : CardFieldsService.cardFieldIsSimpleValue,
-            cardFieldIsList             : CardFieldsService.cardFieldIsList,
-            cardFieldIsText             : CardFieldsService.cardFieldIsText,
-            cardFieldIsDate             : CardFieldsService.cardFieldIsDate,
-            cardFieldIsFile             : CardFieldsService.cardFieldIsFile,
-            cardFieldIsCross            : CardFieldsService.cardFieldIsCross,
-            cardFieldIsPermissions      : CardFieldsService.cardFieldIsPermissions,
-            getCardFieldListValues      : CardFieldsService.getCardFieldListValues,
-            getCardFieldTextValue       : CardFieldsService.getCardFieldTextValue,
-            getCardFieldFileValue       : CardFieldsService.getCardFieldFileValue,
-            getCardFieldCrossValue      : CardFieldsService.getCardFieldCrossValue,
-            getCardFieldPermissionsValue: CardFieldsService.getCardFieldPermissionsValue
+            loading_backlog_items                 : true,
+            loading_milestones                    : true,
+            toggle                                : toggle,
+            showChildren                          : showChildren,
+            toggleClosedMilestoneItems            : toggleClosedMilestoneItems,
+            canShowBacklogItem                    : canShowBacklogItem,
+            generateMilestoneLinkUrl              : generateMilestoneLinkUrl,
+            showCreateNewModal                    : showCreateNewModal,
+            cardFieldIsSimpleValue                : CardFieldsService.cardFieldIsSimpleValue,
+            cardFieldIsList                       : CardFieldsService.cardFieldIsList,
+            cardFieldIsText                       : CardFieldsService.cardFieldIsText,
+            cardFieldIsDate                       : CardFieldsService.cardFieldIsDate,
+            cardFieldIsFile                       : CardFieldsService.cardFieldIsFile,
+            cardFieldIsCross                      : CardFieldsService.cardFieldIsCross,
+            cardFieldIsPermissions                : CardFieldsService.cardFieldIsPermissions,
+            getCardFieldListValues                : CardFieldsService.getCardFieldListValues,
+            getCardFieldTextValue                 : CardFieldsService.getCardFieldTextValue,
+            getCardFieldFileValue                 : CardFieldsService.getCardFieldFileValue,
+            getCardFieldCrossValue                : CardFieldsService.getCardFieldCrossValue,
+            getCardFieldPermissionsValue          : CardFieldsService.getCardFieldPermissionsValue,
+            displayUserCantPrioritizeForBacklog   : displayUserCantPrioritizeForBacklog,
+            displayUserCantPrioritizeForMilestones: displayUserCantPrioritizeForMilestones
         });
 
         $scope.treeOptions = {
@@ -259,6 +261,26 @@
             }
 
             return is_droppable;
+        }
+
+        function hideUserCantPrioritizeForBacklog() {
+            return $scope.backlog.user_can_move_cards || $scope.backlog_items.length === 0;
+        }
+
+        function displayUserCantPrioritizeForBacklog() {
+            return ! hideUserCantPrioritizeForBacklog();
+        }
+
+        function hideUserCantPrioritizeForMilestones() {
+            if ($scope.milestones.length === 0) {
+                return true;
+            }
+
+            return $scope.milestones[0].has_user_priority_change_permission;
+        }
+
+        function displayUserCantPrioritizeForMilestones() {
+            return ! hideUserCantPrioritizeForMilestones();
         }
 
         function dropped(event) {
