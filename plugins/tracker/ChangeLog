@@ -1,3 +1,6 @@
+Version 5.572 - Tuleap 7.11
+    * request #7876 - Javascript error when not on tracker page
+
 Version 5.571 - Tuleap 7.11
     * story #7579: On load, display cards not in backlog
 
