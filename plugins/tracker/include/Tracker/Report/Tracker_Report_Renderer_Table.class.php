@@ -524,7 +524,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $add_columns_presenter = new Templating_Presenter_ButtonDropdownsMini(
             'tracker_report_add_columns_dropdown',
             $GLOBALS['Language']->getText('plugin_tracker_report', 'toggle_columns'),
-            $this->report->getFieldsAsDropdownOptions('tracker_report_add_column', $this->getColumns())
+            $this->report->getFieldsAsDropdownOptions('tracker_report_add_column', $this->getColumns(), Tracker_Report::TYPE_TABLE)
         );
         $add_columns_presenter->setIcon('icon-eye-close');
 

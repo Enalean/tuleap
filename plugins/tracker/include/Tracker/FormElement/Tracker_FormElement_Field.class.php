@@ -1350,4 +1350,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         Tracker_Artifact_Changeset $previous_changeset = null
     ) {
     }
+
+    public function canBeUsedAsReportCriterion() {
+        return true;
+    }
 }
