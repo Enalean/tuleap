@@ -18,7 +18,7 @@ Version 7.11 (not yet released)
 	* tracker: 5.571
 	* fulltextsearch: 0.123
 	* mediawiki: 0.62
-	* agiledashboard: 1.155
+	* agiledashboard: 1.156
 
 	== Bug Fix ==
 	* request #7758: php error when registering new user
