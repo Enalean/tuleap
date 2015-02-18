@@ -311,7 +311,7 @@ class TestDataBuilder {
             'Backlog drag and drop',
             true,
             array($user_test_rest_1),
-            array()
+            array($user_test_rest_1)
         );
         $this->importTemplateInProject($backlog->getId(), 'tuleap_agiledashboard_template.xml');
 

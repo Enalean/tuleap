@@ -388,6 +388,15 @@ class MilestoneResource {
     }
 
     /**
+     * @throws 403
+     */
+    private function checkIfUserCanChangePrioritiesInMilestone(Planning_Milestone $milestone, PFUser $user) {
+        if (! $this->milestone_factory->userCanChangePrioritiesInMilestone($milestone, $user)) {
+            throw new RestException(403, "User is not allowed to update this milestone because he can't change items' priorities");
+        }
+    }
+
+    /**
      * Put content in a given milestone
      *
      * Put the new content of a given milestone.
@@ -398,11 +407,14 @@ class MilestoneResource {
      * @param array $ids Ids of backlog items {@from body}
      *
      * @throws 400
+     * @throws 403
      * @throws 404
      */
     protected function putContent($id, array $ids) {
         $current_user = $this->getCurrentUser();
         $milestone    = $this->getMilestoneById($current_user, $id);
+
+        $this->checkIfUserCanChangePrioritiesInMilestone($milestone, $current_user);
 
         try {
             $this->milestone_validator->validateArtifactsFromBodyContent($ids, $milestone, $current_user);
@@ -466,12 +478,15 @@ class MilestoneResource {
      * @param array                                              $add    Ids to add/move to milestone content  {@from body}
      *
      * @throw 400
+     * @throw 403
      * @throw 404
      * @throw 409
      */
     protected function patchContent($id, OrderRepresentation $order = null, array $add = null) {
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
+
+        $this->checkIfUserCanChangePrioritiesInMilestone($milestone, $user);
 
         try {
             if ($add) {
@@ -585,11 +600,14 @@ class MilestoneResource {
      * @param array $ids Ids of backlog items {@from body}{@type int}
      *
      * @throw 400
+     * @throw 403
      * @throw 404
      */
     protected function putBacklog($id, array $ids) {
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
+
+        $this->checkIfUserCanChangePrioritiesInMilestone($milestone, $user);
 
         try {
             $this->milestone_validator->validateArtifactIdsAreInOpenAndUnplannedMilestone($ids, $milestone, $user);
@@ -649,12 +667,15 @@ class MilestoneResource {
      * @param array                                              $add    Ids to add/move to milestone backlog {@from body}
      *
      * @throw 400
+     * @throw 403
      * @throw 404
      * @throw 409
      */
     protected function patchBacklog($id, OrderRepresentation $order = null, array $add = null) {
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
+
+        $this->checkIfUserCanChangePrioritiesInMilestone($milestone, $user);
 
         $to_add = array();
         try {
@@ -735,6 +756,8 @@ class MilestoneResource {
     protected function postBacklog($id, BacklogItemReference $item) {
         $user        = $this->getCurrentUser();
         $milestone   = $this->getMilestoneById($user, $id);
+
+        $this->checkIfUserCanChangePrioritiesInMilestone($milestone, $user);
 
         $item_id  = $item->getArtifactId();
         $artifact = $this->getBacklogItemAsArtifact($user, $item_id);

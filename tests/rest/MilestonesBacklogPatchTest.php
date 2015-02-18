@@ -85,6 +85,30 @@ class MilestonesBacklogPatchTest extends RestBase {
         );
     }
 
+    /**
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testPatchBacklogWithoutPermission() {
+        $response = $this->getResponseByName(TestDataBuilder::TEST_USER_2_NAME, $this->client->patch($this->uri, null, json_encode(array(
+            'order' => array(
+                'ids'         => array($this->story_div['id'], $this->story_mul['id']),
+                'direction'   => 'after',
+                'compared_to' => $this->story_add['id']
+            )
+        ))));
+        $this->assertEquals($response->getStatusCode(), 403);
+
+        $this->assertEquals(
+            array(
+                $this->story_add['id'],
+                $this->story_sub['id'],
+                $this->story_mul['id'],
+                $this->story_div['id'],
+            ),
+            $this->getIdsOrderedByPriority($this->uri)
+        );
+    }
+
     public function testPatchBacklogBefore() {
         $response = $this->getResponse($this->client->patch($this->uri, null, json_encode(array(
             'order' => array(
@@ -159,6 +183,33 @@ class MilestonesBacklogPatchTest extends RestBase {
             )
         ))));
         $this->assertEquals($response->getStatusCode(), 200);
+
+        $this->assertEquals(
+            array(
+                $this->epic_basic['id'],
+                $this->epic_log['id'],
+                $this->epic_exp['id'],
+                $this->epic_adv['id'],
+                $this->epic_fin['id'],
+            ),
+            $this->getIdsOrderedByPriority($uri)
+        );
+    }
+
+    /**
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testPatchContentWithoutPermission() {
+        $uri = 'milestones/'.$this->release['id'].'/content';
+
+        $response = $this->getResponseByName(TestDataBuilder::TEST_USER_2_NAME, $this->client->patch($uri, null, json_encode(array(
+            'order' => array(
+                'ids'         => array($this->epic_adv['id'], $this->epic_exp['id']),
+                'direction'   => 'after',
+                'compared_to' => $this->epic_log['id']
+            )
+        ))));
+        $this->assertEquals($response->getStatusCode(), 403);
 
         $this->assertEquals(
             array(

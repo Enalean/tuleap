@@ -5641,6 +5641,9 @@
         <backlogs>
           <backlog>T769</backlog>
         </backlogs>
+        <permissions>
+          <permission ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_AGILEDASHBOARD_PLANNING_PRIORITY_CHANGE"/>
+        </permissions>
       </planning>
       <planning name="Releases" plan_title="Release Plan" planning_tracker_id="T771" backlog_title="Product Backlog">
         <backlogs>

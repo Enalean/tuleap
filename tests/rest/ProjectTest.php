@@ -347,6 +347,15 @@ class ProjectTest extends RestBase {
         $this->assertEquals($third_backlog_item['artifact'], array('id' => TestDataBuilder::EPIC_7_ARTIFACT_ID, 'uri' => 'artifacts/'.TestDataBuilder::EPIC_7_ARTIFACT_ID, 'tracker' => array('id' => TestDataBuilder::EPICS_TRACKER_ID, 'uri' => 'trackers/'.TestDataBuilder::EPICS_TRACKER_ID, 'label' => 'Epics')));
     }
 
+    /**
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testPUTbacklogWithoutPermission() {
+        $response_put = $this->getResponseByName(TestDataBuilder::TEST_USER_2_NAME, $this->client->put('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/backlog', null, '['.TestDataBuilder::EPIC_7_ARTIFACT_ID.','.TestDataBuilder::EPIC_5_ARTIFACT_ID.','.TestDataBuilder::EPIC_6_ARTIFACT_ID.']'));
+
+        $this->assertEquals($response_put->getStatusCode(), 403);
+    }
+
     public function testPUTbacklog() {
         $response_put = $this->getResponse($this->client->put('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/backlog', null, '['.TestDataBuilder::EPIC_7_ARTIFACT_ID.','.TestDataBuilder::EPIC_5_ARTIFACT_ID.','.TestDataBuilder::EPIC_6_ARTIFACT_ID.']'));
 
@@ -462,6 +471,20 @@ class ProjectTest extends RestBase {
 
         $this->assertEquals($expected_result, $response->json());
    }
+
+    /**
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testPATCHbacklogWithoutPermission() {
+        $response_patch = $this->getResponseByName(
+            TestDataBuilder::TEST_USER_2_NAME,
+            $this->client->put('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/backlog',
+            null,
+            '['.TestDataBuilder::EPIC_7_ARTIFACT_ID.','.TestDataBuilder::EPIC_5_ARTIFACT_ID.','.TestDataBuilder::EPIC_6_ARTIFACT_ID.']')
+        );
+
+        $this->assertEquals($response_patch->getStatusCode(), 403);
+    }
 
    public function testPATCHbacklog() {
         $uri = 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/backlog';

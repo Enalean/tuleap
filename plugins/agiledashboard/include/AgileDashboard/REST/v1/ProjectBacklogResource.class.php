@@ -68,11 +68,18 @@ class ProjectBacklogResource {
     /** @var ResourcesPatcher */
     private $resources_patcher;
 
+    /** @var PlanningFactory */
+    private $planning_factory;
+
+    /** @var PlanningPermissionsManager */
+    private $planning_permissions_manager;
+
     public function __construct() {
-        $planning_factory             = PlanningFactory::build();
-        $tracker_artifact_factory     = Tracker_ArtifactFactory::instance();
-        $tracker_form_element_factory = Tracker_FormElementFactory::instance();
-        $status_counter               = new AgileDashboard_Milestone_MilestoneStatusCounter(
+        $this->planning_factory             = PlanningFactory::build();
+        $tracker_artifact_factory           = Tracker_ArtifactFactory::instance();
+        $tracker_form_element_factory       = Tracker_FormElementFactory::instance();
+        $this->planning_permissions_manager = new PlanningPermissionsManager();
+        $status_counter                     = new AgileDashboard_Milestone_MilestoneStatusCounter(
             new AgileDashboard_BacklogItemDao(),
             new Tracker_ArtifactDao(),
             $tracker_artifact_factory
@@ -84,13 +91,13 @@ class ProjectBacklogResource {
             Tracker_FormElementFactory::instance(),
             TrackerFactory::instance(),
             $status_counter,
-            new PlanningPermissionsManager()
+            $this->planning_permissions_manager
         );
 
         $this->backlog_strategy_factory = new AgileDashboard_Milestone_Backlog_BacklogStrategyFactory(
             new AgileDashboard_BacklogItemDao(),
             $tracker_artifact_factory,
-            $planning_factory
+            $this->planning_factory
         );
 
         $this->backlog_item_collection_factory = new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
@@ -98,12 +105,12 @@ class ProjectBacklogResource {
             $tracker_artifact_factory,
             $tracker_form_element_factory,
             $this->milestone_factory,
-            $planning_factory,
+            $this->planning_factory,
             new AgileDashboard_Milestone_Backlog_BacklogItemBuilder()
         );
 
         $this->milestone_validator = new MilestoneResourceValidator(
-            $planning_factory,
+            $this->planning_factory,
             $tracker_artifact_factory,
             $tracker_form_element_factory,
             $this->backlog_strategy_factory,
@@ -158,6 +165,8 @@ class ProjectBacklogResource {
     }
 
     public function put(PFUser $user, Project $project, array $ids) {
+        $this->checkIfUserCanChangePrioritiesInMilestone($user, $project);
+
         $this->validateArtifactIdsAreInOpenAndUnassignedTopBacklog($ids, $user, $project);
 
         try {
@@ -170,6 +179,8 @@ class ProjectBacklogResource {
     }
 
     public function patch(PFUser $user, Project $project, OrderRepresentationBase $order, array $add = null) {
+        $this->checkIfUserCanChangePrioritiesInMilestone($user, $project);
+
         if ($add) {
             try {
                 $this->resources_patcher->removeArtifactFromSource($user, $add);
@@ -185,6 +196,28 @@ class ProjectBacklogResource {
             $this->resources_patcher->updateArtifactPriorities($order, self::TOP_BACKLOG_IDENTIFIER, $project->getId());
         } catch (Tracker_Artifact_Exception_CannotRankWithMyself $exception) {
             throw new RestException(400, $exception->getMessage());
+        }
+    }
+
+    /**
+     * @throws 403
+     */
+    private function checkIfUserCanChangePrioritiesInMilestone(PFUser $user, Project $project) {
+        $root_planning = $this->planning_factory->getRootPlanning($user, $project->getId());
+
+        if (! $root_planning) {
+            throw new RestException(403, "User does not have the permission to change items' priorities in this planning");
+        }
+
+        $user_has_permission = $this->planning_permissions_manager->userHasPermissionOnPlanning(
+            $root_planning->getId(),
+            $root_planning->getGroupId(),
+            $user,
+            PlanningPermissionsManager::PERM_PRIORITY_CHANGE
+        );
+
+        if (! $user_has_permission) {
+            throw new RestException(403, "User does not have the permission to change items' priorities in this planning");
         }
     }
 

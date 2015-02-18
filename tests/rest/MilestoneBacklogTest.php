@@ -89,6 +89,45 @@ class MilestonesBacklogTest extends RestBase {
         $this->assertEquals($backlog_items[2]['artifact'], array('id' => TestDataBuilder::STORY_4_ARTIFACT_ID, 'uri' => 'artifacts/'.TestDataBuilder::STORY_4_ARTIFACT_ID, 'tracker' => array('id' => TestDataBuilder::USER_STORIES_TRACKER_ID, 'uri' => 'trackers/'.TestDataBuilder::USER_STORIES_TRACKER_ID, 'label' => 'User Stories')));
     }
 
+    /**
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testPUTBacklogWithoutPermission() {
+        $response_put = $this->getResponseByName(TestDataBuilder::TEST_USER_2_NAME, $this->client->put('milestones/'.TestDataBuilder::RELEASE_ARTIFACT_ID.'/backlog', null, '['.TestDataBuilder::STORY_4_ARTIFACT_ID.','.TestDataBuilder::STORY_5_ARTIFACT_ID.','.TestDataBuilder::STORY_3_ARTIFACT_ID.']'));
+        $this->assertEquals($response_put->getStatusCode(), 403);
+
+        $response_get = $this->getResponse($this->client->get('milestones/'.TestDataBuilder::RELEASE_ARTIFACT_ID.'/backlog'));
+        $backlog_items = $response_get->json();
+        $this->assertCount(3, $backlog_items);
+        $this->assertEquals($backlog_items[0]['artifact'], array(
+            'id' => TestDataBuilder::STORY_5_ARTIFACT_ID,
+            'uri' => 'artifacts/'.TestDataBuilder::STORY_5_ARTIFACT_ID,
+            'tracker' => array(
+                'id' => TestDataBuilder::USER_STORIES_TRACKER_ID,
+                'uri' => 'trackers/'.TestDataBuilder::USER_STORIES_TRACKER_ID,
+                'label' => 'User Stories'
+            )
+        ));
+        $this->assertEquals($backlog_items[1]['artifact'], array(
+            'id' => TestDataBuilder::STORY_3_ARTIFACT_ID,
+            'uri' => 'artifacts/'.TestDataBuilder::STORY_3_ARTIFACT_ID,
+            'tracker' => array(
+                'id' => TestDataBuilder::USER_STORIES_TRACKER_ID,
+                'uri' => 'trackers/'.TestDataBuilder::USER_STORIES_TRACKER_ID,
+                'label' => 'User Stories'
+            )
+        ));
+        $this->assertEquals($backlog_items[2]['artifact'], array(
+            'id' => TestDataBuilder::STORY_4_ARTIFACT_ID,
+            'uri' => 'artifacts/'.TestDataBuilder::STORY_4_ARTIFACT_ID,
+            'tracker' => array(
+                'id' => TestDataBuilder::USER_STORIES_TRACKER_ID,
+                'uri' => 'trackers/'.TestDataBuilder::USER_STORIES_TRACKER_ID,
+                'label' => 'User Stories'
+            )
+        ));
+    }
+
     public function testPUTBacklogWithSomeIds() {
         $response_put = $this->getResponse($this->client->put('milestones/'.TestDataBuilder::RELEASE_ARTIFACT_ID.'/backlog', null, '['.TestDataBuilder::STORY_4_ARTIFACT_ID.','.TestDataBuilder::STORY_3_ARTIFACT_ID.']'));
         $this->assertEquals($response_put->getStatusCode(), 200);
@@ -118,5 +157,23 @@ class MilestonesBacklogTest extends RestBase {
         $backlog_items = $response_get->json();
         $last_item = count($backlog_items) -1;
         $this->assertEquals($backlog_items[$last_item]['artifact'], array('id' => TestDataBuilder::STORY_6_ARTIFACT_ID, 'uri' => 'artifacts/'.TestDataBuilder::STORY_6_ARTIFACT_ID, 'tracker' => array('id' => TestDataBuilder::USER_STORIES_TRACKER_ID, 'uri' => 'trackers/'.TestDataBuilder::USER_STORIES_TRACKER_ID, 'label' => 'User Stories')));
+    }
+
+    /**
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testPOSTBacklogWithoutPermissions() {
+        $post = array(
+            'artifact' => array('id' => TestDataBuilder::STORY_6_ARTIFACT_ID)
+        );
+        $response_post = $this->getResponseByName(
+            TestDataBuilder::TEST_USER_2_NAME,
+            $this->client->post(
+                'milestones/'.TestDataBuilder::RELEASE_ARTIFACT_ID.'/backlog',
+                null,
+                json_encode($post)
+            )
+        );
+        $this->assertEquals($response_post->getStatusCode(), 403);
     }
 }

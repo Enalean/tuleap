@@ -101,6 +101,16 @@ class MilestonesContentTest extends RestBase {
         $this->assertEquals($response_put->json(), array());
     }
 
+    /**
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testPUTContentWithoutPermission() {
+        $response_put = $this->getResponseByName(TestDataBuilder::TEST_USER_2_NAME, $this->client->put('milestones/'.TestDataBuilder::RELEASE_ARTIFACT_ID.'/content', null, '['.TestDataBuilder::EPIC_4_ARTIFACT_ID.','.TestDataBuilder::EPIC_1_ARTIFACT_ID.']'));
+
+        $this->assertEquals($response_put->getStatusCode(), 403);
+        $this->assertEquals($response_put->json(), array());
+    }
+
     public function testPUTContentOnlyOneElement() {
         $response_put = $this->getResponse($this->client->put('milestones/'.TestDataBuilder::RELEASE_ARTIFACT_ID.'/content', null, '['.TestDataBuilder::EPIC_4_ARTIFACT_ID.']'));
 
