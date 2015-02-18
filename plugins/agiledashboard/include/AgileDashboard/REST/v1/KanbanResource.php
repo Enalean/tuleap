@@ -131,6 +131,44 @@ class KanbanResource {
     }
 
     /**
+     * Get archive
+     *
+     * Get the archived items of a given kanban
+     *
+     * @url GET {id}/archive
+     *
+     * @param int $id Id of the kanban
+     * @param int $limit  Number of elements displayed per page
+     * @param int $offset Position of the first element to display
+     *
+     * @return Tuleap\AgileDashboard\REST\v1\KanbanArchiveRepresentation
+     *
+     * @throws 403
+     * @throws 404
+     */
+    protected function getArchive($id, $limit = 10, $offset = 0) {
+        $user   = $this->getCurrentUser();
+        $kanban = $this->getKanban($user, $id);
+
+        $items_representation = new KanbanArchiveRepresentation();
+        $items_representation->build($user, $kanban, $limit, $offset);
+
+        Header::allowOptionsGet();
+        Header::sendPaginationHeaders($limit, $offset, $items_representation->total_size, self::MAX_LIMIT);
+
+        return $items_representation;
+    }
+
+    /**
+     * @url OPTIONS {id}/archive
+     *
+     * @param string $id Id of the milestone
+     */
+    public function optionsArchive($id) {
+        Header::allowOptionsGet();
+    }
+
+    /**
      * Get items
      *
      * Get the items of a given kanban in a given column

@@ -14,6 +14,7 @@
         return {
             getKanban:  getKanban,
             getBacklog: getBacklog,
+            getArchive: getArchive,
             getItems:   getItems
         };
 
@@ -36,6 +37,28 @@
             rest
                 .one('kanban', id)
                 .one('backlog')
+                .get({
+                    limit: limit,
+                    offset: offset
+                })
+                .then(function (response) {
+                    var result = {
+                        results: response.data.collection,
+                        total: response.headers('X-PAGINATION-SIZE')
+                    };
+
+                    data.resolve(result);
+                });
+
+            return data.promise;
+        }
+
+        function getArchive(id, limit, offset) {
+            var data = $q.defer();
+
+            rest
+                .one('kanban', id)
+                .one('archive')
                 .get({
                     limit: limit,
                     offset: offset

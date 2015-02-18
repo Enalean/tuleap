@@ -55,4 +55,13 @@ class KanbanTest extends RestBase {
         $this->assertEquals(1, $response['total_size']);
         $this->assertEquals('Doing something', $response['collection'][0]['label']);
     }
+
+    public function testGETArchive() {
+        $url = 'kanban/'. TestDataBuilder::KANBAN_ID .'/archive';
+
+        $response = $this->getResponse($this->client->get($url))->json();
+
+        $this->assertEquals(1, $response['total_size']);
+        $this->assertEquals('Something archived', $response['collection'][0]['label']);
+    }
 }
