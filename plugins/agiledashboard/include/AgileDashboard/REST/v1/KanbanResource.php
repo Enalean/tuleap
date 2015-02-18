@@ -53,6 +53,9 @@ class KanbanResource {
     /** @var TrackerFactory */
     private $tracker_factory;
 
+    /** @var Tracker_ArtifactFactory */
+    private $artifact_factory;
+
     public function __construct() {
         $this->kanban_item_dao = new AgileDashboard_KanbanItemDao();
         $this->tracker_factory = TrackerFactory::instance();
@@ -62,18 +65,18 @@ class KanbanResource {
             new AgileDashboard_KanbanDao()
         );
 
-        $artifact_factory = Tracker_ArtifactFactory::instance();
-        $priority_manager = new Tracker_Artifact_PriorityManager(
+        $this->artifact_factory = Tracker_ArtifactFactory::instance();
+        $priority_manager       = new Tracker_Artifact_PriorityManager(
             new Tracker_Artifact_PriorityDao(),
             new Tracker_Artifact_PriorityHistoryDao(),
             UserManager::instance(),
-            $artifact_factory
+            $this->artifact_factory
         );
         $artifactlink_updater    = new ArtifactLinkUpdater($priority_manager);
 
         $this->resources_patcher = new ResourcesPatcher(
             $artifactlink_updater,
-            $artifact_factory,
+            $this->artifact_factory,
             $priority_manager
         );
     }
@@ -155,21 +158,44 @@ class KanbanResource {
      *
      * @url PATCH {id}/backlog
      *
-     * @param int                                                   $id    Id of the Kanban
-     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation    $order Order of the children {@from body}
+     * @param int                                                    $id    Id of the Kanban
+     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation     $order Order of the children {@from body}
+     * @param \Tuleap\AgileDashboard\REST\v1\KanbanAddRepresentation $add   Ids to add to Kanban backlog {@from body}
      *
      */
-    protected function patchBacklog($id, OrderRepresentation $order) {
+    protected function patchBacklog($id, OrderRepresentation $order = null, KanbanAddRepresentation $add = null) {
         $current_user = UserManager::instance()->getCurrentUser();
         $kanban       = $this->kanban_factory->getKanban($current_user, $id);
 
         $kanban_backlog_items = $this->getKanbanBacklogItemIds($kanban->getTrackerId());
 
-        $order->checkFormat();
-        $order_validator = new OrderValidator($kanban_backlog_items);
+        try {
+            if ($add) {
+                $add->checkFormat();
+                $this->validateIdsInAddAreInKanbanTracker($kanban, $add);
+                $this->resources_patcher->startTransaction();
+                $this->moveArtifactsInBacklog($kanban, $current_user, $add);
+                $this->resources_patcher->commit();
+            }
+        } catch (Tracker_NoChangeException $exception) {
+            $this->resources_patcher->rollback();
+        } catch (Exception $exception) {
+            $this->resources_patcher->rollback();
+            throw new RestException(400, $exception->getMessage());
+        }
 
         try {
-            $order_validator->validate($order);
+            if ($order) {
+                $order->checkFormat();
+                $order_validator = new OrderValidator($kanban_backlog_items);
+                $order_validator->validate($order);
+
+                $this->resources_patcher->updateArtifactPriorities(
+                    $order,
+                    Tracker_Artifact_PriorityHistoryChange::NO_CONTEXT,
+                    $this->tracker_factory->getTrackerById($kanban->getTrackerId())->getGroupId()
+                );
+            }
         } catch (IdsFromBodyAreNotUniqueException $exception) {
             throw new RestException(409, $exception->getMessage());
         } catch (OrderIdOutOfBoundException $exception) {
@@ -177,12 +203,43 @@ class KanbanResource {
         } catch (Exception $exception) {
             throw new RestException(500, $exception->getMessage());
         }
+    }
 
-        $this->resources_patcher->updateArtifactPriorities(
-            $order,
-            Tracker_Artifact_PriorityHistoryChange::NO_CONTEXT,
-            $this->tracker_factory->getTrackerById($kanban->getTrackerId())->getGroupId()
-        );
+    private function getStatusField(AgileDashboard_Kanban $kanban, PFUser $user) {
+        $tracker      = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
+        $status_field = $tracker->getStatusField();
+
+        if (! $status_field) {
+            throw new RestException(403);
+        }
+
+        if (! $status_field->userCanRead($user)) {
+            throw new RestException(403);
+        }
+
+        return $status_field;
+    }
+
+    private function moveArtifactsInBacklog(AgileDashboard_Kanban $kanban, PFUser $user, KanbanAddRepresentation $add) {
+        foreach ($add->ids as $artifact_id) {
+            $artifact        = $this->artifact_factory->getArtifactById($artifact_id);
+            $status_field    = $this->getStatusField($kanban, $user);
+
+            $fields_data = array(
+                $status_field->getId() => 100
+            );
+
+            $artifact->createNewChangeset($fields_data, '', $user);
+        }
+    }
+
+    private function validateIdsInAddAreInKanbanTracker(AgileDashboard_Kanban $kanban, KanbanAddRepresentation $add) {
+        $all_kanban_item_ids = array();
+        foreach ($this->kanban_item_dao->getAllKanbanItemIds($kanban->getTrackerId()) as $item_id) {
+            $all_kanban_item_ids[] = $item_id;
+        }
+
+        return count(array_diff($add->ids, $all_kanban_item_ids)) === 0;
     }
 
     private function getKanbanBacklogItemIds($tracker_id) {
@@ -319,16 +376,7 @@ class KanbanResource {
     }
 
     private function columnIsInTracker(AgileDashboard_Kanban $kanban, PFUser $user, $column_id) {
-        $tracker      = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
-        $status_field = $tracker->getStatusField();
-
-        if (! $status_field) {
-            return false;
-        }
-
-        if (! $status_field->userCanRead($user)) {
-            throw new RestException(403);
-        }
+        $status_field = $this->getStatusField($kanban, $user);
 
         return array_key_exists($column_id, $status_field->getAllValues());
     }
