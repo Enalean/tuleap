@@ -1,19 +1,24 @@
 Version 7.11 (not yet released)
 
+	== Feature ==
+	* Parts of story #7495: set permissions on artifact priority change
+	* story #7854 Add new extensions into Mediawiki
+	* Parts of story #7579 move cards in my cardwall
+
 	== Feature Request ==
 	* request #7711: Add csv export in site admin user list interface (Contrib STMicroelectronics)
 
-        == Security ==
-        * request #7831: Fix SQL injection in trove cat listing
+	== Security ==
+	* request #7831: Fix SQL injection in trove cat listing
 	* request #7818: Fix SQL injection in trove cat
 	* request #7819: Fix persistent XSS in trove categories
 
-        == Plugins ==
+	== Plugins ==
 	* graphontrackers: 1.13
 	* tracker: 5.571
 	* fulltextsearch: 0.123
 	* mediawiki: 0.62
-	* agiledashboard: 1.154
+	* agiledashboard: 1.155
 
 	== Bug Fix ==
 	* request #7758: php error when registering new user
