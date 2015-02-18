@@ -17,7 +17,8 @@
             getArchive: getArchive,
             getItems:   getItems,
             reorderColumn:  reorderColumn,
-            reorderBacklog: reorderBacklog
+            reorderBacklog: reorderBacklog,
+            reorderArchive: reorderArchive
         };
 
         function getKanban(id) {
@@ -117,6 +118,18 @@
         function reorderBacklog(kanban_id, dropped_item_id, compared_to) {
             rest.one('kanban', kanban_id)
                 .all('backlog')
+                .patch({
+                    order: {
+                        ids         : [dropped_item_id],
+                        direction   : compared_to.direction,
+                        compared_to : compared_to.item_id
+                    }
+                });
+        }
+
+        function reorderArchive(kanban_id, dropped_item_id, compared_to) {
+            rest.one('kanban', kanban_id)
+                .all('archive')
                 .patch({
                     order: {
                         ids         : [dropped_item_id],

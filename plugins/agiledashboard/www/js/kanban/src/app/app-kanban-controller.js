@@ -77,8 +77,15 @@
             }
         }
 
-        function droppedInArchive() {
-            // Archive does not let us to reorder things
+        function droppedInArchive(event) {
+            if (isDroppedInSameColumn(event)) {
+                var dropped_item_id = event.source.nodeScope.$modelValue.id,
+                    compared_to     = defineComparedTo(event.dest.nodesScope.$modelValue, event.dest.index);
+
+                if (compared_to) {
+                    KanbanService.reorderArchive(kanban.id, dropped_item_id, compared_to);
+                }
+            }
         }
 
         function droppedInColumn(column, event) {
