@@ -35,17 +35,24 @@ class Tracker_Artifact_ProcessAssociateArtifact_Test extends TuleapTestCase {
             'func'               => 'unassociate-artifact-to',
             'linked-artifact-id' => 987));
 
-        $artifact = partial_mock('Tracker_Artifact', 
+        $artifact = partial_mock('Tracker_Artifact',
                 array(
-                    'getFormElementFactory', 
+                    'getFormElementFactory',
                     'getTracker',
                     'createNewChangeset',
+                    'getUserManager'
                     )
                 );
-        
+
+        $user_manager = stub('UserManager')->getCurrentUser()->returns(aUser()->withId(120)->build());
+        stub($artifact)->getUserManager()->returns($user_manager);
+
         $factory  = mock('Tracker_FormElementFactory');
         stub($artifact)->getFormElementFactory()->returns($factory);
-        
+
+        $tracker = aTracker()->withProjectId(200)->build();
+        stub($artifact)->getTracker()->returns($tracker);
+
         $field = anArtifactLinkField()->withId(1002)->build();
         stub($factory)->getUsedArtifactLinkFields()->returns(array($field));
 
@@ -57,24 +64,31 @@ class Tracker_Artifact_ProcessAssociateArtifact_Test extends TuleapTestCase {
             );
         $no_comment = '';
 
-        stub($artifact)->createNewChangeset($expected_field_data, $no_comment, $this->user)->once();      
- 
+        stub($artifact)->createNewChangeset($expected_field_data, $no_comment, $this->user)->once();
+
         $artifact->process(new MockTrackerManager(), $this->request, $this->user);
     }
 
     public function itCreatesANewChangesetWithANewAssociation() {
-        $artifact = partial_mock('Tracker_Artifact', 
+        $artifact = partial_mock('Tracker_Artifact',
                 array(
-                    'getFormElementFactory', 
+                    'getFormElementFactory',
                     'getTracker',
                     'createNewChangeset',
+                    'getUserManager'
                     )
                 );
 
-        
+
         $factory  = mock('Tracker_FormElementFactory');
         stub($artifact)->getFormElementFactory()->returns($factory);
-        
+
+        $user_manager = stub('UserManager')->getCurrentUser()->returns(aUser()->withId(120)->build());
+        stub($artifact)->getUserManager()->returns($user_manager);
+
+        $tracker = aTracker()->withProjectId(200)->build();
+        stub($artifact)->getTracker()->returns($tracker);
+
         $field = anArtifactLinkField()->withId(1002)->build();
         stub($factory)->getUsedArtifactLinkFields()->returns(array($field));
 
@@ -87,7 +101,7 @@ class Tracker_Artifact_ProcessAssociateArtifact_Test extends TuleapTestCase {
     }
 
     public function itReturnsAnErrorCodeWhenItHasNoArtifactLinkField() {
-        $tracker  = aTracker()->withId(456)->build();
+        $tracker  = aTracker()->withId(456)->withProjectId(120)->build();
 
         $artifact = $this->GivenAnArtifact($tracker);
 
@@ -103,7 +117,11 @@ class Tracker_Artifact_ProcessAssociateArtifact_Test extends TuleapTestCase {
     }
 
     private function GivenAnArtifact($tracker) {
-        $artifact = TestHelper::getPartialMock('Tracker_Artifact', array('createNewChangeset'));
+        $artifact = TestHelper::getPartialMock('Tracker_Artifact', array('createNewChangeset','getUserManager'));
+
+        $user_manager = stub('UserManager')->getCurrentUser()->returns(aUser()->withId(120)->build());
+        stub($artifact)->getUserManager()->returns($user_manager);
+
         $artifact->setTracker($tracker);
         return $artifact;
     }

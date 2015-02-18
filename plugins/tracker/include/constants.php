@@ -243,3 +243,14 @@ define('TRACKER_USAGE', 'tracker_usage');
  *  'result'    Array of Tracker that cannot be used in hierarchy (out)
  */
 define('TRACKER_EVENT_TRACKERS_CANNOT_USE_IN_HIERARCHY', 'tracker_event_trackers_cannot_use_in_hierarchy');
+
+/**
+ * Event emitted to check if a user can change the priority of an artifact
+ *
+ * Parameters:
+ *  'user_is_authorized'    BOOl    (OUT)
+ *  'group_id'              INT     (IN)
+ *  'milestone_id'          IN      (IN)
+ *  'user'                  PFUser  (IN)
+ */
+define('ITEM_PRIORITY_CHANGE', 'item_priority_change');
