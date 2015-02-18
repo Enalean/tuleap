@@ -77,7 +77,7 @@ if (!IS_SCRIPT) {
 
     // XSS prevention
     header('X-XSS-Protection: 1; mode=block');
-    $csp_rules .= "script-src 'self' 'unsafe-inline' 'unsafe-eval'; reflected-xss 'block';";
+    $csp_rules .= "script-src 'self' 'unsafe-inline' 'unsafe-eval'; reflected-xss block;";
 
     header('Content-Security-Policy: ' . $csp_rules);
 }
