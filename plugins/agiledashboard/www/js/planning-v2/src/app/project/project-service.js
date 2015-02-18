@@ -7,9 +7,9 @@
 
     function ProjectService(Restangular, $q) {
         return {
-            reorderBacklog                : reorderBacklog,
-            getProjectBacklogAcceptedTypes: getProjectBacklogAcceptedTypes,
-            removeAddReorderBacklog       : removeAddReorderBacklog
+            reorderBacklog         : reorderBacklog,
+            getProjectBacklog      : getProjectBacklog,
+            removeAddReorderBacklog: removeAddReorderBacklog
         };
 
         function reorderBacklog(project_id, dropped_item_id, compared_to) {
@@ -40,7 +40,7 @@
                 });
         }
 
-        function getProjectBacklogAcceptedTypes(project_id) {
+        function getProjectBacklog(project_id) {
             var data = $q.defer(),
                 /*
                  * Use a string for the limit so that the server doesn't recognise a false value
@@ -50,12 +50,13 @@
 
             getRest('v2').one('projects', project_id)
                 .one('backlog').get({
-                    limit: limit,
+                    limit : limit,
                     offset: 0
                 })
                 .then(function(response) {
                     result = {
-                        results: getAllowedBacklogItemTypes(response.data)
+                        allowed_backlog_item_types         : getAllowedBacklogItemTypes(response.data),
+                        has_user_priority_change_permission: response.data.has_user_priority_change_permission
                     };
                     data.resolve(result);
                 });
@@ -67,8 +68,7 @@
             var allowed_trackers = data.accept.trackers;
             var accepted_types = {
                 content : allowed_trackers,
-
-                toString : function() {
+                toString: function() {
                     var accept = [];
                     _.forEach(this.content, function(allowed_tracker) {
                         accept.push('trackerId' + allowed_tracker.id);

@@ -33,7 +33,7 @@ use AgileDashboard_MilestonesCardwallRepresentation;
  */
 class MilestoneRepresentation extends MilestoneRepresentationBase {
 
-    public function build(Planning_Milestone $milestone, array $status_count, array $backlog_trackers) {
+    public function build(Planning_Milestone $milestone, array $status_count, array $backlog_trackers, $has_user_priority_change_permission) {
         $this->id               = JsonCast::toInt($milestone->getArtifactId());
         $this->uri              = self::ROUTE . '/' . $this->id;
         $this->label            = $milestone->getArtifactTitle();
@@ -71,6 +71,8 @@ class MilestoneRepresentation extends MilestoneRepresentationBase {
             $this->parent = new MilestoneParentReference();
             $this->parent->build($parent);
         }
+
+        $this->has_user_priority_change_permission = $has_user_priority_change_permission;
 
         $this->sub_milestones_uri = $this->uri . '/'. self::ROUTE;
         $this->backlog_uri        = $this->uri . '/'. BacklogItemRepresentation::BACKLOG_ROUTE;

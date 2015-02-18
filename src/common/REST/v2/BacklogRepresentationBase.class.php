@@ -35,4 +35,10 @@ class BacklogRepresentationBase {
      * @var array
      */
     public $accept;
+
+    /**
+     * @var boolean
+     */
+    public $has_user_priority_change_permission;
+
 }

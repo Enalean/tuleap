@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2015. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ use Tuleap\REST\v2\BacklogRepresentationBase;
 
 class BacklogRepresentation extends BacklogRepresentationBase {
 
-    public function build(array $backlog_items, array $accepted_trackers) {
+    public function build(array $backlog_items, array $accepted_trackers, $has_user_priority_change_permission) {
         $this->content = $backlog_items;
 
         $this->accept = array('trackers' => array());
@@ -34,6 +34,8 @@ class BacklogRepresentation extends BacklogRepresentationBase {
 
             $this->accept['trackers'][] = $reference;
         }
+
+        $this->has_user_priority_change_permission = $has_user_priority_change_permission;
 
         return $this;
     }

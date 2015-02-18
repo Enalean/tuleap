@@ -73,7 +73,11 @@ class AgileDashboard_Milestone_Pane_TopContent_TopContentPresenterBuilder {
         $planning_permissions_manager = new PlanningPermissionsManager();
         $root_planning                = PlanningFactory::build()->getRootPlanning($user, $group_id);
 
-        return $planning_permissions_manager->userHasPermissionOnPlanning($root_planning->getId(), $root_planning->getGroupId(), $user, PlanningPermissionsManager::PERM_PRIORITY_CHANGE);
+        if ($root_planning) {
+            return $planning_permissions_manager->userHasPermissionOnPlanning($root_planning->getId(), $root_planning->getGroupId(), $user, PlanningPermissionsManager::PERM_PRIORITY_CHANGE);
+        }
+
+        return false;
     }
 
     private function getAddItemsToBacklogUrls(PFUser $user, array $item_trackers, $redirect_to_self) {

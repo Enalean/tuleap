@@ -146,6 +146,11 @@ class MilestoneRepresentationBase {
     public $status_count;
 
     /**
+     * @var boolean
+     */
+    public $has_user_priority_change_permission;
+
+    /**
      * @var array
      */
     public $resources = array(

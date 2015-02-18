@@ -237,7 +237,8 @@ class MilestoneResource {
                 $user,
                 $milestone
             ),
-            $this->getBacklogTrackers($milestone)
+            $this->getBacklogTrackers($milestone),
+            $this->milestone_factory->userCanChangePrioritiesInMilestone($milestone, $user)
         );
 
         $this->event_manager->processEvent(
@@ -313,7 +314,8 @@ class MilestoneResource {
                         $user,
                         $milestone
                     ),
-                    $strategy_factory->getBacklogStrategy($milestone)->getDescendantTrackers()
+                    $strategy_factory->getBacklogStrategy($milestone)->getDescendantTrackers(),
+                    $milestone_factory->userCanChangePrioritiesInMilestone($milestone, $user)
                 );
 
                 $event_manager->processEvent(

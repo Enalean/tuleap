@@ -19,7 +19,7 @@
                            data-link-id="milestone_id"
                            href="submit_ur"
                            ng-click="showCreateNewModal($event, accepted_type, backlog); "
-                       >{{ accepted_type.label }}</a>
+                        >{{ accepted_type.label }}</a>
                     </li>
                 </ul>
             </div>
@@ -29,15 +29,17 @@
                 ng-model="backlog_items"
                 class="backlog-items backlog"
                 data-accept="{{ backlog.accepted_types.toString() }}"
+                data-nodrag="{{ ! backlog.user_can_move_cards }}"
             >
                 <li ui-tree-node
                     ng-repeat="backlog_item in backlog_items"
-                    ng-include src="'backlog-item/backlog-item.tpl.html'"
+                    ng-include src="'backlog-item/backlog-item-in-backlog.tpl.html'"
                     data-type="{{ backlog_item.trackerId }}"
                     data-accept="{{ backlog_item.accepted_types.toString() }}"
                     class="backlog-item parent"
-                    ng-class="{ updating: backlog_item.updating }"
+                    ng-class="{ updating: backlog_item.updating, undraggable: ! backlog.user_can_move_cards }"
                     collapsed="true"
+                    data-nodrag="{{ ! backlog.user_can_move_cards }}"
                 >
                 </li>
             </ul>
@@ -92,16 +94,18 @@
                             class="backlog-items submilestone"
                             data-accept="{{ milestone.accepted_types.toString() }}"
                             data-submilestone-id="{{ milestone.id }}"
+                            data-nodrag="{{ ! milestone.has_user_priority_change_permission }}"
                         >
                             <li ui-tree-node
                                 ng-repeat="backlog_item in milestone.content"
                                 class="backlog-item parent {{ backlog_item.status | lowercase }} {{ backlog_item.color }}"
                                 data-accept="{{ backlog_item.accepted_types.toString() }}"
                                 data-type="{{ backlog_item.trackerId }}"
-                                ng-include="'backlog-item/backlog-item.tpl.html'"
+                                ng-include="'backlog-item/backlog-item-in-submilestone.tpl.html'"
                                 ng-if="canShowBacklogItem(backlog_item)"
-                                ng-class="{ updating: backlog_item.updating }"
+                                ng-class="{ updating: backlog_item.updating, undraggable: ! milestone.has_user_priority_change_permission }"
                                 collapsed="true"
+                                data-nodrag="{{ ! milestone.has_user_priority_change_permission }}"
                             >
                             </li>
                         </ul>

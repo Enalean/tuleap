@@ -29,8 +29,7 @@
 
             backlogItem.accepted_types = {
                 content : allowed_trackers,
-
-                toString : function() {
+                toString: function() {
                     var accept = [];
                     _.forEach(this.content, function(allowed_tracker) {
                         accept.push('trackerId' + allowed_tracker.id);

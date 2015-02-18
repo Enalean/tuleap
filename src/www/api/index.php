@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 define('IS_SCRIPT', true);
 
 require_once 'pre.php';
+require_once 'www/project/admin/permissions.php';
 require_once '/usr/share/restler/vendor/restler.php';
 
 use Tuleap\REST\GateKeeper;
