@@ -305,7 +305,9 @@ codendi.tracker.artifact.artifactLink = {
 
 document.observe('dom:loaded', function () {
 
-    codendi.tracker.artifact.artifactLink.selector_url.tracker = $('tracker_id').value;
+    if ($('tracker_id')) {
+        codendi.tracker.artifact.artifactLink.selector_url.tracker = $('tracker_id').value;
+    }
 
     //{{{ artifact links    
 
