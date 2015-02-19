@@ -21,6 +21,7 @@ Version 7.11 (not yet released)
 	* agiledashboard: 1.158
 
 	== Bug Fix ==
+	* request #7879: Add a whitelist for the Content-Security-Policy directive script-src
 	* request #7758: php error when registering new user
 	* request #7841: Pagination headers cannot be read in CORS request
 	* request #7839: A project admin can't remove his rights if he is the only project admin
