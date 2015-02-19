@@ -77,7 +77,9 @@ if (!IS_SCRIPT) {
 
     // XSS prevention
     header('X-XSS-Protection: 1; mode=block');
-    $csp_rules .= "script-src 'self' 'unsafe-inline' 'unsafe-eval'; reflected-xss block;";
+    $csp_whitelist_script_scr = Config::get('sys_csp_script_scr_whitelist');
+    $csp_rules               .= "script-src 'self' 'unsafe-inline' 'unsafe-eval' $csp_whitelist_script_scr; "
+                              . "reflected-xss block;";
 
     header('Content-Security-Policy: ' . $csp_rules);
 }
