@@ -218,11 +218,17 @@ class Git_GitoliteDriver {
 
         $project_config = '';
         foreach ($this->repository_factory->getAllRepositoriesOfProject($project) as $repository) {
+
+            $this->logger->debug("Fetching Repo Configuration: ". $repository->getName()."...");
             $project_config .= $this->fetchReposConfig($project, $repository);
+            $this->logger->debug("Fetching Repo Configuration: ". $repository->getName().": done");
         }
-        
+        $this->logger->debug("Get Project Permission Conf File: ". $project->getUnixName()."...");
         $config_file = $this->getProjectPermissionConfFile($project);
+        $this->logger->debug("Get Project Permission Conf File: ". $project->getUnixName().": done");
+        $this->logger->debug("Write Git config: ". $project->getUnixName()."...");
         if ($this->writeGitConfig($config_file, $project_config)) {
+            $this->logger->debug("Write Git config: ". $project->getUnixName().": done");
             return $this->updateMainConfIncludes($project);
         }
     }
