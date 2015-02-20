@@ -15,10 +15,10 @@ Version 7.11 (not yet released)
 
 	== Plugins ==
 	* graphontrackers: 1.13
-	* tracker: 5.573
+	* tracker: 5.574
 	* fulltextsearch: 0.123
 	* mediawiki: 0.62
-	* agiledashboard: 1.159
+	* agiledashboard: 1.160
 	* git: 4.12
 
 	== Bug Fix ==
