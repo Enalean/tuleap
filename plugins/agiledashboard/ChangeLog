@@ -1,3 +1,6 @@
+Version 1.159 - Tuleap 7.11
+    * story #7495 - Tell the user why he can't drag'n'drop items
+
 Version 1.158 - Tuleap 7.11
     * story #7495: Manage the perm in REST routes
 
