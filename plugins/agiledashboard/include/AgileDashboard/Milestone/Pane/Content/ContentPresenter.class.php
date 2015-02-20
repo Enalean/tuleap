@@ -135,6 +135,10 @@ abstract class AgileDashboard_Milestone_Pane_Content_ContentPresenter {
         return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'open_items_intro', $this->backlog_item_type);
     }
 
+    public function user_cannot_prioritize() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard_contentpane', 'unsufficient_rights_for_ranking');
+    }
+
     public function initial_effort_not_defined() {
         return count($this->trackers_without_initial_effort_field) > 0;
     }

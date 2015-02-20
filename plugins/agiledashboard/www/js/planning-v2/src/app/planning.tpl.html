@@ -4,6 +4,9 @@
 <div id="planning-view">
     <div id="backlog" ng-class="{ loading_content: loading_backlog_items }">
         <h2 translate>To be planned</h2>
+        <div class="alert alert-warning" ng-if="displayUserCantPrioritizeForBacklog()" translate>
+            You are not allowed to rank on this planning
+        </div>
         <div class="controls" ng-if="backlog.user_can_move_cards">
             <div class="btn-group dropdown">
                 <span class="dropdown-toggle btn btn-primary" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="#">
@@ -56,10 +59,12 @@
                     <i class=" icon-eye-close"></i> <span translate>Hide "Closed" Items</span>
                 </button>
             </div>
+            <div translate class="alert alert-warning" ng-if="displayUserCantPrioritizeForMilestones()">
+                You are not allowed to rank on this planning
+            </div>
             <fieldset ng-repeat="milestone in milestones track by $index" class="milestone" ng-class="{ collapsed: milestone.collapsed }">
                 <legend ng-click="toggle(milestone)">
                     {{ milestone.label }}
-
                     <span class="label status {{ milestone.semantic_status }}">{{ milestone.status_value }}</span>
                     <span class="date" ng-if="milestone.start_date || milestone.end_date">
                         {{ milestone.start_date | amDateFormat:'ll' }} <i class="icon-long-arrow-right"></i>

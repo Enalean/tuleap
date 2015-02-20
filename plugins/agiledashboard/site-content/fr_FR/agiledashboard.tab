@@ -97,6 +97,8 @@ plugin_agiledashboard_contentpane	initial_effort_warning	La sémantique <em>Effo
 plugin_agiledashboard_contentpane	inconsistent_items_title	$1 inconsistent(e)s
 plugin_agiledashboard_contentpane	inconsistent_items_intro	Voici les éléments qui ont été créés directement à partir des sous-milestones. Vous ne pouvez pas changer leur priorité.
 plugin_agiledashboard_contentpane	solve_inconsistencies	Importer dans le backlog
+plugin_agiledashboard_contentpane	unsufficient_rights_for_ranking	Vous n'êtes pas autorisé à prioriser sur ce planning.
+
 
 plugin_agiledashboard_milestone_planning	help_intro	Cette section vous permet de faire votre planning de $1:
 plugin_agiledashboard_milestone_planning	help_left	Sur la gauche, le backlog de $2, avec tous les éléments ouverts, non encore planifiés dans un(e) $1
