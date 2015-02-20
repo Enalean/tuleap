@@ -88,10 +88,35 @@ class AgileDashboard_KanbanItemDao extends DataAccessObject {
                         INNER JOIN tracker_changeset_value_list AS CVL ON (CV2.id = CVL.changeset_value_id)
                     ) ON (A.last_changeset_id = CV2.changeset_id)
                     LEFT JOIN tracker_semantic_status SS2 ON (SS2.field_id = CV2.field_id AND SS2.open_value_id = CVL.bindvalue_id)
+                    INNER JOIN tracker_artifact_priority AS P ON (P.curr_id = A.id)
                 WHERE SS2.open_value_id IS NULL
                   AND CVL.bindvalue_id IS NOT NULL
                   AND CVL.bindvalue_id <> 100
+                ORDER BY P.rank
                 LIMIT $limit OFFSET $offset";
+
+        return $this->retrieve($sql);
+    }
+
+    public function getKanbanArchiveItemIds($tracker_id) {
+        $tracker_id = $this->da->escapeInt($tracker_id);
+
+        $sql = "SELECT A.id
+                FROM tracker_artifact AS A
+                    INNER JOIN tracker AS T ON (A.tracker_id = T.id AND T.id = $tracker_id)
+                    INNER JOIN (
+                        tracker_changeset_value AS CV2
+                        INNER JOIN (
+                            SELECT distinct(field_id) FROM tracker_semantic_status WHERE tracker_id = $tracker_id
+                        ) AS SS ON (CV2.field_id = SS.field_id)
+                        INNER JOIN tracker_changeset_value_list AS CVL ON (CV2.id = CVL.changeset_value_id)
+                    ) ON (A.last_changeset_id = CV2.changeset_id)
+                    LEFT JOIN tracker_semantic_status SS2 ON (SS2.field_id = CV2.field_id AND SS2.open_value_id = CVL.bindvalue_id)
+                    INNER JOIN tracker_artifact_priority AS P ON (P.curr_id = A.id)
+                WHERE SS2.open_value_id IS NULL
+                  AND CVL.bindvalue_id IS NOT NULL
+                  AND CVL.bindvalue_id <> 100
+                ORDER BY P.rank";
 
         return $this->retrieve($sql);
     }

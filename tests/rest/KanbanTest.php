@@ -140,7 +140,36 @@ class KanbanTest extends RestBase {
 
         $response = $this->getResponse($this->client->get($url))->json();
 
-        $this->assertEquals(1, $response['total_size']);
+        $this->assertEquals(2, $response['total_size']);
         $this->assertEquals('Something archived', $response['collection'][0]['label']);
+        $this->assertEquals('Something archived v2', $response['collection'][1]['label']);
+    }
+
+    /**
+     * @depends testGETArchive
+     */
+    public function testPATCHArchive() {
+        $url = 'kanban/'. TestDataBuilder::KANBAN_ID.'/archive';
+
+        $response = $this->getResponse($this->client->patch(
+            $url,
+            null,
+            json_encode(array(
+                'order' => array(
+                    'ids'         => array(20),
+                    'direction'   => 'after',
+                    'compared_to' => 21
+                )
+            ))
+        ));
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $this->assertEquals(
+            array(
+                21,
+                20,
+            ),
+            $this->getIdsOrderedByPriority($url)
+        );
     }
 }

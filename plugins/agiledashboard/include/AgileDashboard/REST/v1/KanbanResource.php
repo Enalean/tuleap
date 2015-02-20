@@ -232,6 +232,50 @@ class KanbanResource {
     }
 
     /**
+     * Partial re-order of Kanban archive items
+     *
+     * @url PATCH {id}/archive
+     *
+     * @param int                                                   $id    Id of the Kanban
+     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation    $order Order of the children {@from body}
+     *
+     */
+    protected function patchArchive($id, OrderRepresentation $order) {
+        $current_user = UserManager::instance()->getCurrentUser();
+        $kanban       = $this->kanban_factory->getKanban($current_user, $id);
+
+        $kanban_archive_items = $this->getKanbanArchiveItemIds($kanban->getTrackerId());
+
+        $order->checkFormat();
+        $order_validator = new OrderValidator($kanban_archive_items);
+
+        try {
+            $order_validator->validate($order);
+        } catch (IdsFromBodyAreNotUniqueException $exception) {
+            throw new RestException(409, $exception->getMessage());
+        } catch (OrderIdOutOfBoundException $exception) {
+            throw new RestException(409, $exception->getMessage());
+        } catch (Exception $exception) {
+            throw new RestException(500, $exception->getMessage());
+        }
+
+        $this->resources_patcher->updateArtifactPriorities(
+            $order,
+            Tracker_Artifact_PriorityHistoryChange::NO_CONTEXT,
+            $this->tracker_factory->getTrackerById($kanban->getTrackerId())->getGroupId()
+        );
+    }
+
+    private function getKanbanArchiveItemIds($tracker_id) {
+        $archive_item_ids = array();
+        foreach ($this->kanban_item_dao->getKanbanArchiveItemIds($tracker_id) as $artifact) {
+            $archive_item_ids[$artifact['id']] = true;
+        }
+
+        return $archive_item_ids;
+    }
+
+    /**
      * @url OPTIONS {id}/archive
      *
      * @param string $id Id of the milestone

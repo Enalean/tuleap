@@ -556,6 +556,19 @@ class TestDataBuilder {
             false
         );
 
+        $fields_data = array(
+            $this->tracker_formelement_factory->getFormElementByName(self::KANBAN_TRACKER_ID, 'summary_1')->getId() => 'Something archived v2',
+            $this->tracker_formelement_factory->getFormElementByName(self::KANBAN_TRACKER_ID, 'status')->getId() => self::KANBAN_DONE_VALUE_ID,
+        );
+
+        $this->tracker_artifact_factory->createArtifact(
+            $this->tracker_factory->getTrackerById(self::KANBAN_TRACKER_ID),
+            $fields_data,
+            $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME),
+            '',
+            false
+        );
+
         return $this;
     }
 
