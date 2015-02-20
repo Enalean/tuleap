@@ -652,7 +652,8 @@ class TrackerFactory {
         EventManager::instance()->processEvent(TRACKER_EVENT_TRACKERS_DUPLICATED, array(
             'tracker_mapping' => $tracker_mapping,
             'field_mapping'   => $field_mapping,
-            'group_id'        => $to_project_id
+            'group_id'        => $to_project_id,
+            'ugroups_mapping' => $ugroup_mapping
         ));
     }
 

@@ -64,8 +64,9 @@ class PlanningFactory {
      *
      * @param int    $group_id         The id of the project where plannings should be created.
      * @param array  $tracker_mapping  An array mapping source tracker ids to destination tracker ids.
+     * @param array  $ugroups_mapping  An array mapping source ugroups and destinations ones.
      */
-    public function duplicatePlannings($group_id, $tracker_mapping) {
+    public function duplicatePlannings($group_id, $tracker_mapping, array $ugroups_mapping) {
         if (! $tracker_mapping) {return;}
 
         $planning_rows = $this->dao->searchByPlanningTrackerIds(array_keys($tracker_mapping));
@@ -80,12 +81,12 @@ class PlanningFactory {
 
                 $inserted_planning_id = $this->dao->createPlanning($group_id, PlanningParameters::fromArray($row));
 
-                $this->duplicatePriorityChangePermission($group_id, $row['id'], $inserted_planning_id);
+                $this->duplicatePriorityChangePermission($group_id, $row['id'], $inserted_planning_id, $ugroups_mapping);
             }
         }
     }
 
-    protected function duplicatePriorityChangePermission($group_id, $source_planning_id, $new_planning_id) {
+    protected function duplicatePriorityChangePermission($group_id, $source_planning_id, $new_planning_id, array $ugroups_mapping) {
         $source_planning                       = $this->getPlanning($source_planning_id);
         $priority_change_permission_ugroup_ids = $this->planning_permissions_manager->getGroupIdsWhoHasPermissionOnPlanning(
             $source_planning->getId(),
@@ -93,9 +94,31 @@ class PlanningFactory {
             PlanningPermissionsManager::PERM_PRIORITY_CHANGE
         );
 
+        if ($priority_change_permission_ugroup_ids) {
+            $priority_change_permission_ugroup_ids = $this->replaceOldStaticUgroupsWithTheNewOnes($priority_change_permission_ugroup_ids, $ugroups_mapping);
+        }
+
         if (! empty($priority_change_permission_ugroup_ids)) {
             $this->planning_permissions_manager->savePlanningPermissionForUgroups($new_planning_id, $group_id, PlanningPermissionsManager::PERM_PRIORITY_CHANGE, $priority_change_permission_ugroup_ids);
         }
+    }
+
+    private function replaceOldStaticUgroupsWithTheNewOnes(array $priority_change_permission_ugroup_ids, array $ugroups_mapping) {
+        $new_ugroups = array();
+
+        foreach ($priority_change_permission_ugroup_ids as $ugroup) {
+            $new_ugroups[] = $this->getUGroupIdToSaveRegardingMappings($ugroup, $ugroups_mapping);
+        }
+
+        return $new_ugroups;
+    }
+
+    private function getUGroupIdToSaveRegardingMappings($ugroup, $ugroups_mapping) {
+        if (array_key_exists($ugroup, $ugroups_mapping)) {
+            return $ugroups_mapping[$ugroup];
+        }
+
+        return $ugroup;
     }
 
     /**

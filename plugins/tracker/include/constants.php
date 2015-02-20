@@ -28,7 +28,9 @@ define('TRACKER_EVENT_INCLUDE_CSS_FILE', 'tracker_event_include_css_file');
  *
  * Parameters:
  * 'tracker_mapping' => The mapping between source and target project trackers
+ * 'field_mapping'   => The mapping between source and target fields
  * 'group_id'        => The id of the target project
+ * 'ugroups_mapping' => The mapping between source and target ugroups
  *
  * No expected results
  */
