@@ -47,13 +47,92 @@ class KanbanTest extends RestBase {
         $this->assertEquals(TestDataBuilder::KANBAN_TRACKER_ID, $kanban['tracker_id']);
     }
 
+    public function testGETBacklog() {
+        $url = 'kanban/'. TestDataBuilder::KANBAN_ID .'/backlog';
+
+        $response = $this->getResponse($this->client->get($url))->json();
+
+        $this->assertEquals(2, $response['total_size']);
+        $this->assertEquals('Do something', $response['collection'][0]['label']);
+        $this->assertEquals('Do something v2', $response['collection'][1]['label']);
+    }
+
+    /**
+     * @depends testGETBacklog
+     */
+    public function testPATCHBacklog() {
+        $url = 'kanban/'. TestDataBuilder::KANBAN_ID.'/backlog';
+
+        $response = $this->getResponse($this->client->patch(
+            $url,
+            null,
+            json_encode(array(
+                'order' => array(
+                    'ids'         => array(16),
+                    'direction'   => 'after',
+                    'compared_to' => 17
+                )
+            ))
+        ));
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $this->assertEquals(
+            array(
+                17,
+                16,
+            ),
+            $this->getIdsOrderedByPriority($url)
+        );
+    }
+
     public function testGETItems() {
         $url = 'kanban/'. TestDataBuilder::KANBAN_ID .'/items?column_id='. TestDataBuilder::KANBAN_ONGOING_COLUMN_ID;
 
         $response = $this->getResponse($this->client->get($url))->json();
 
-        $this->assertEquals(1, $response['total_size']);
+        $this->assertEquals(2, $response['total_size']);
         $this->assertEquals('Doing something', $response['collection'][0]['label']);
+        $this->assertEquals('Doing something v2', $response['collection'][1]['label']);
+    }
+
+    /**
+     * @depends testGETItems
+     */
+    public function testPATCHItems() {
+        $url = 'kanban/'. TestDataBuilder::KANBAN_ID.'/items?column_id='. TestDataBuilder::KANBAN_ONGOING_COLUMN_ID;
+
+        $response = $this->getResponse($this->client->patch(
+            $url,
+            null,
+            json_encode(array(
+                'order' => array(
+                    'ids'         => array(18),
+                    'direction'   => 'after',
+                    'compared_to' => 19
+                )
+            ))
+        ));
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $this->assertEquals(
+            array(
+                19,
+                18,
+            ),
+            $this->getIdsOrderedByPriority($url)
+        );
+    }
+
+    private function getIdsOrderedByPriority($uri) {
+        $response     = $this->getResponse($this->client->get($uri))->json();
+        $actual_order = array();
+        $collection   = $response['collection'];
+
+        foreach($collection as $kanban_backlog_item) {
+            $actual_order[] = $kanban_backlog_item['id'];
+        }
+
+        return $actual_order;
     }
 
     public function testGETArchive() {

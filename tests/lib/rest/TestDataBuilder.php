@@ -493,6 +493,20 @@ class TestDataBuilder {
         echo "Populate kanban\n";
         $fields_data = array(
             $this->tracker_formelement_factory->getFormElementByName(self::KANBAN_TRACKER_ID, 'summary_1')->getId() => 'Do something',
+            $this->tracker_formelement_factory->getFormElementByName(self::KANBAN_TRACKER_ID, 'status')->getId() => 100,
+        );
+
+        $this->tracker_artifact_factory->createArtifact(
+            $this->tracker_factory->getTrackerById(self::KANBAN_TRACKER_ID),
+            $fields_data,
+            $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME),
+            '',
+            false
+        );
+
+        $fields_data = array(
+            $this->tracker_formelement_factory->getFormElementByName(self::KANBAN_TRACKER_ID, 'summary_1')->getId() => 'Do something v2',
+            $this->tracker_formelement_factory->getFormElementByName(self::KANBAN_TRACKER_ID, 'status')->getId() => 100,
         );
 
         $this->tracker_artifact_factory->createArtifact(
@@ -505,6 +519,19 @@ class TestDataBuilder {
 
         $fields_data = array(
             $this->tracker_formelement_factory->getFormElementByName(self::KANBAN_TRACKER_ID, 'summary_1')->getId() => 'Doing something',
+            $this->tracker_formelement_factory->getFormElementByName(self::KANBAN_TRACKER_ID, 'status')->getId() => self::KANBAN_ONGOING_COLUMN_ID,
+        );
+
+        $this->tracker_artifact_factory->createArtifact(
+            $this->tracker_factory->getTrackerById(self::KANBAN_TRACKER_ID),
+            $fields_data,
+            $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME),
+            '',
+            false
+        );
+
+        $fields_data = array(
+            $this->tracker_formelement_factory->getFormElementByName(self::KANBAN_TRACKER_ID, 'summary_1')->getId() => 'Doing something v2',
             $this->tracker_formelement_factory->getFormElementByName(self::KANBAN_TRACKER_ID, 'status')->getId() => self::KANBAN_ONGOING_COLUMN_ID,
         );
 
