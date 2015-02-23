@@ -1395,10 +1395,12 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
     private function fetchAddRendererForm($current_renderer) {
         $hp = Codendi_HTMLPurifier::instance();
 
+        $current_renderer_id = ($current_renderer) ? (int)$current_renderer->id : '';
+
         $add_renderer  = '';
         $add_renderer .= '<form action="" method="POST">';
         $add_renderer .= '<input type="hidden" name="report" value="'. $this->id .'" />';
-        $add_renderer .= '<input type="hidden" name="renderer" value="'. (int)$current_renderer->id .'" />';
+        $add_renderer .= '<input type="hidden" name="renderer" value="'. $current_renderer_id .'" />';
         $add_renderer .= '<input type="hidden" name="func" value="add-renderer" />';
         $rrf = Tracker_Report_RendererFactory::instance();
         $types = $rrf->getTypes();

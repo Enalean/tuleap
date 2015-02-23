@@ -64,6 +64,7 @@ class Tracker_Report_Session extends Codendi_Session {
         $report_copy = $report;
         //now we need to reindex renderers
         $i = 0;
+        $report_copy['renderers'] = ($report_copy['renderers']) ? $report_copy['renderers'] : array();
         foreach ($report_copy['renderers'] as $renderer_id => $renderer) {
             $i = $i - 1;
             //set new id for previously existing renderers (before adding new renderers in session)           
