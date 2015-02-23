@@ -1005,6 +1005,10 @@ plugin_tracker_common_fieldset_factory	ins_err	Error during inserting artifact_f
 plugin_tracker	trackers	Trackers
 plugin_tracker	delete_tracker	Delete tracker $1
 plugin_tracker	no_reports_available	No reports available
+plugin_tracker	create_new_report	Create a new one
+plugin_tracker	create_new_report_name	name
+plugin_tracker	create_new_report_submit	Create Report
+plugin_tracker	create_new_report_invalid	Invalid name for a report
 plugin_tracker	submit_new_artifact	Submit new artifact
 plugin_tracker	notifications	Notifications
 plugin_tracker	administration	Administration

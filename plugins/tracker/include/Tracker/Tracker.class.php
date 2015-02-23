@@ -781,6 +781,30 @@ class Tracker implements Tracker_Dispatchable_Interface {
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
                 }
                 break;
+            case 'create_new_public_report':
+                if (! $this->userIsAdmin($current_user)) {
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
+                }
+
+                $name      = $request->get('new_report_name');
+                $validator = new Valid_String('new_report_name');
+                $validator->required();
+
+                if (! $request->valid($validator)) {
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker', 'create_new_report_invalid'));
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
+                }
+
+                $hp = Codendi_HTMLPurifier::instance();
+                $hp->purify($name);
+
+                $report = new Tracker_Report(0, $name, 'Public rapport', 0, 0, null, 0, $this->getId(), 1, null, 0);
+                $report->criterias = array();
+
+                $this->getReportFactory()->saveObject($this->id, $report);
+                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
+                break;
 
             default:
                 if ($this->userCanView($current_user)) {
@@ -836,15 +860,21 @@ class Tracker implements Tracker_Dispatchable_Interface {
         }
 
         //If no valid report found. Search the last viewed report for the user
-        if (!$report) {
+        if (! $report) {
             if ($report_id = $current_user->getPreference('tracker_'. $this->id .'_last_report')) {
                 $report = $this->getReportFactory()->getReportById($report_id, $current_user->getid());
             }
         }
 
         //If no valid report found. Take the default one
-        if (!$report) {
+        if (! $report) {
             $report = $this->getReportFactory()->getDefaultReportsByTrackerId($this->id);
+        }
+
+        //If no default one, take the first private one
+        if (! $report) {
+            $report_for_user = $this->getReportFactory()->getReportsByTrackerId($this->id, $current_user->getid());
+            $report = array_shift($report_for_user);
         }
 
         $link_artifact_id = (int)$request->get('link-artifact-id');
@@ -937,6 +967,18 @@ class Tracker implements Tracker_Dispatchable_Interface {
         } elseif (!$link_artifact_id) {
             $this->displayHeader($layout, $this->name, array());
             echo $GLOBALS['Language']->getText('plugin_tracker', 'no_reports_available');
+
+            if ($this->userIsAdmin($current_user)) {
+                $action = '?tracker='. (int)$this->getID() .'&func=create_new_public_report';
+
+                echo '<form class="form-inline" action="'.$action.'" method="POST">'
+                    . '<fieldset>'
+                        . '<legend>'.$GLOBALS['Language']->getText('plugin_tracker', 'create_new_report').'</legend>'
+                        . '<input required type="text" name="new_report_name" placeholder="'.$GLOBALS['Language']->getText('plugin_tracker', 'create_new_report_name').'" />'
+                        . '<button type="submit" class="btn">'.$GLOBALS['Language']->getText('plugin_tracker', 'create_new_report_submit').'</button>'
+                    . '</fieldset></form>';
+            }
+
             $this->displayFooter($layout);
         }
 
