@@ -1,3 +1,11 @@
+Version 7.10-3 (Monday, February 23rd 2015)
+	== Bug Fix ==
+	* request #7826: improve error detection of FRS
+	* request #7860: Redirection link when you are not authenticated only
+	* request #7816: not trying to index files above a certain size in el
+	* request #7297: allowing a restricted user to see their own avatar (
+	* request #7809: force into utf8 tv3 export of artifact history
+
 Version 7.10-2 (Monday, February 16th 2015)
 	== Bug Fix ==
 	* request #7862: Old phppwiki search method no longer available
