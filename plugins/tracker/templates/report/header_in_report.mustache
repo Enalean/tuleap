@@ -1,6 +1,16 @@
 {{# has_browse_instructions }}
     <p class="browse_instructions">{{{ browse_instructions }}}</p>
 {{/ has_browse_instructions }}
+{{# has_warnings }}
+    <div id="feedback">
+        <ul class="feedback_warning">
+            {{# warnings }}
+                <li>{{ . }}</li>
+            {{/ warnings }}
+        </ul>
+    </div>
+    <p class="browse_instructions"></p>
+{{/ has_warnings }}
 
 <div id="tracker_report_config_options" class="row-fluid">
     <div id="tracker_report_selection" class="pull-left">
