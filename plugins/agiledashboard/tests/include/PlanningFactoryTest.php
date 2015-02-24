@@ -152,7 +152,7 @@ class PlanningFactory_duplicationTest extends PlanningFactoryTest {
         $dao->expectOnce('createPlanning', array($group_id,
                                                  $expected_paramters));
 
-        $factory->duplicatePlannings($group_id, $tracker_mapping);
+        $factory->duplicatePlannings($group_id, $tracker_mapping, array());
     }
 
     public function itDoesNothingIfThereAreNoTrackerMappings() {
@@ -163,7 +163,84 @@ class PlanningFactory_duplicationTest extends PlanningFactoryTest {
 
         $dao->expectNever('createPlanning');
 
-        $factory->duplicatePlannings($group_id, $empty_tracker_mapping);
+        $factory->duplicatePlannings($group_id, $empty_tracker_mapping, array());
+    }
+
+    public function itTranslatesUgroupsIdsFromUgroupsMapping() {
+        $dao                          = new MockPlanningDao();
+        $planning_permissions_manager = stub('PlanningPermissionsManager')->getGroupIdsWhoHasPermissionOnPlanning()->returns(array(4,103,104));
+        $factory                      = partial_mock('PlanningFactory', array('getPlanning'), array(
+            $dao,
+            mock('TrackerFactory'),
+            mock('Tracker_FormElementFactory'),
+            $planning_permissions_manager
+        ));
+
+        $group_id = 123;
+
+        $sprint_tracker_id      = 1;
+        $story_tracker_id       = 2;
+        $bug_tracker_id         = 3;
+        $faq_tracker_id         = 4;
+        $sprint_tracker_copy_id = 5;
+        $story_tracker_copy_id  = 6;
+        $bug_tracker_copy_id    = 7;
+        $faq_tracker_copy_id    = 8;
+
+        stub($factory)->getPlanning(1)->returns(aPlanning()->withId(1)->withGroupId($group_id)->build());
+
+        $tracker_mapping = array($sprint_tracker_id => $sprint_tracker_copy_id,
+                                 $story_tracker_id  => $story_tracker_copy_id,
+                                 $bug_tracker_id    => $bug_tracker_copy_id,
+                                 $faq_tracker_id    => $faq_tracker_copy_id);
+
+        $sprint_planning_name = 'Sprint Planning';
+
+        $rows = TestHelper::arrayToDar(
+            array('id'                  => 1,
+                  'name'                => $sprint_planning_name,
+                  'group_id'            => 101,
+                  'backlog_title'       => 'Backlog',
+                  'plan_title'          => 'Plan',
+                  'planning_tracker_id' => $sprint_tracker_id)
+        );
+
+        stub($dao)->searchByPlanningTrackerIds(array_keys($tracker_mapping))->returns($rows);
+
+        stub($dao)->searchBacklogTrackersById(1)->returnsDar(array(
+            'planning_id' => 1,
+            'tracker_id'  => $story_tracker_id
+        ));
+
+        stub($dao)->searchById(1)->returnsDar(array(
+            'id'                  => 1,
+            'name'                => $sprint_planning_name,
+            'group_id'            => 101,
+            'backlog_title'       => 'Backlog',
+            'plan_title'          => 'Plan',
+            'planning_tracker_id' => $sprint_tracker_copy_id,
+            'backlog_tracker_ids' => array($story_tracker_copy_id)
+        ));
+
+        $expected_paramters = PlanningParameters::fromArray(array(
+            'id'                  => 1,
+            'name'                => $sprint_planning_name,
+            'group_id'            => 101,
+            'backlog_title'       => 'Backlog',
+            'plan_title'          => 'Plan',
+            'planning_tracker_id' => $sprint_tracker_copy_id,
+            'backlog_tracker_ids' => array($story_tracker_copy_id)
+        ));
+
+        $expected_ugroups = array(4, 113, 114);
+        expect($planning_permissions_manager)->savePlanningPermissionForUgroups('*','*', PlanningPermissionsManager::PERM_PRIORITY_CHANGE, $expected_ugroups)->once();
+
+        $ugroups_mapping = array(
+            103 => 113,
+            104 => 114
+        );
+
+        $factory->duplicatePlannings($group_id, $tracker_mapping, $ugroups_mapping);
     }
 
 }

@@ -236,7 +236,8 @@ class AgileDashboardPlugin extends Plugin {
 
         PlanningFactory::build()->duplicatePlannings(
             $params['group_id'],
-            $params['tracker_mapping']
+            $params['tracker_mapping'],
+            $params['ugroups_mapping']
         );
     }
 
