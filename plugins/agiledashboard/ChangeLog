@@ -1,3 +1,6 @@
+Version 1.162 - Tuleap 7.11
+    * story #7495 - permissions on static groups are not kept during duplication
+
 Version 1.161 - Tuleap 7.11
     * story #7579 - Deal with global rank in archive
 
