@@ -1,3 +1,6 @@
+Version 5.576 - Tuleap 7.11
+    * story #7776: see diff for string without having to click on 'Show diff button'
+
 Version 5.575 - Tuleap 7.11
     * story #7495 - permissions on static groups are not kept during duplication
 
