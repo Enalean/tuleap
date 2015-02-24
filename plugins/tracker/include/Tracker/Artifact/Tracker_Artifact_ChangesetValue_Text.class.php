@@ -148,9 +148,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
             case 'html':
                 $formated_diff = $this->getFormatedDiff($previous, $next);
                 if ($formated_diff) {
-                    $protocol = $this->getServerProtocol();
-                    $url      = $protocol.'://'.$GLOBALS['sys_default_domain'].TRACKER_BASE_URL.'/?aid='.$artifact_id.'#followup_'.$changeset_id;
-                    $string   = '<a href="'.$url.'">' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'goto_diff') . '</a>';
+                    $string = $this->fetchHtmlMailDiff($formated_diff, $artifact_id, $changeset_id);
                 }
                 break;
             case 'text':
@@ -163,6 +161,16 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         }
 
         return $string;
+    }
+
+    /**
+     * @return string text to be displayed in mail notifications when the text has been changed
+     */
+    protected function fetchHtmlMailDiff($formated_diff, $artifact_id, $changeset_id) {
+        $protocol = $this->getServerProtocol();
+        $url      = $protocol.'://'.$GLOBALS['sys_default_domain'].TRACKER_BASE_URL.'/?aid='.$artifact_id.'#followup_'.$changeset_id;
+
+        return '<a href="'.$url.'">' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'goto_diff') . '</a>';
     }
 
     private function getServerProtocol() {
@@ -203,8 +211,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
             case 'html':
                 $formated_diff = $this->getFormatedDiff($previous, $next);
                 if ($formated_diff) {
-                    $string .= '<button class="btn btn-mini toggle-diff">' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'toggle_diff') . '</button>';
-                    $string .= '<div class="diff" style="display: none">'. $formated_diff .'</div>';
+                    $string = $this->fetchDiffInFollowUp($formated_diff);
                 }
                 break;
             case 'modal':
@@ -216,6 +223,17 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
                 break;
         }
         return $string;
+    }
+
+    /**
+     * @return string text to be displayed in web ui when the text has been changed
+     */
+    protected function fetchDiffInFollowUp($formated_diff) {
+        $html  = '';
+        $html .= '<button class="btn btn-mini toggle-diff">' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'toggle_diff') . '</button>';
+        $html .= '<div class="diff" style="display: none">'. $formated_diff .'</div>';
+
+        return $html;
     }
 
     private function getFormatedDiff($previous, $next) {
