@@ -49,6 +49,7 @@ use Encode;
 
 # DB connection
 use DBI;
+use Text::Iconv;
 
 $utils_path = $ENV{'CODENDI_UTILS_PREFIX'} || "/usr/share/codendi/src/utils";
 require $utils_path."/include.pl";
@@ -303,6 +304,12 @@ sub db_checkins_add {
 
 
   }
+
+  if ($sys_cvs_convert_cp1252_to_utf8) {
+    $converter = Text::Iconv->new("CP1252", "UTF-8");
+    @descs = ($converter->convert("@descs"));
+  }
+
   my ($dir, $i, $who, $repo);
   local $when = localtime(time);
   
@@ -581,7 +588,10 @@ sub generate_checkins {
 # in the log message
 sub extract_xrefs {
     my (@log) = @_;
-
+    if ($sys_cvs_convert_cp1252_to_utf8) {
+      $converter = Text::Iconv->new("CP1252", "UTF-8");
+      @log = ($converter->convert("@log"));
+    }
     # Use Codendi HTTP API
     my $ua = LWP::UserAgent->new;
     $ua->agent('Codendi Perl Agent');
