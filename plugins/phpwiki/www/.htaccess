@@ -2,3 +2,5 @@
 <Files uploads>
 ForceType application/x-httpd-php
 </Files>
+
+php_flag register_globals off
