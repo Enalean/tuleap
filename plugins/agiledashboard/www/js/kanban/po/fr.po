@@ -11,9 +11,22 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.5.4\n"
 
-#: src/app/kanban.tpl.html
-msgid "Archive is currently empty"
-msgstr "L'archive est actuellement vide"
+#: src/app/error.tpl.html
+msgid ""
+"An error occured while saving one of your last action. We're afraid that you "
+"will have to reload the page in order to bring you back to a consistent "
+"state."
+msgstr ""
+"Une erreur est survenue lors de la sauvegarde de votre dernière action. Vous "
+"allez devoir rafraichir la page afin de retrouver un état cohérent."
+
+#: src/app/error.tpl.html
+msgid "OK, reload the page"
+msgstr "OK, rafraichir la page"
+
+#: src/app/error.tpl.html
+msgid "Oh snap!"
+msgstr "Oups !"
 
 #: src/app/kanban.tpl.html
 msgid "Toggle the archive"
@@ -26,6 +39,9 @@ msgstr "Basculer l'affichage du backlog"
 #: src/app/kanban.tpl.html
 msgid "Toggle this column"
 msgstr "Basculer l'affichage de cette colonne"
+
+#~ msgid "Archive is currently empty"
+#~ msgstr "L'archive est actuellement vide"
 
 #~ msgid "Backlog is currently empty"
 #~ msgstr "Le backlog est actuellement vide"

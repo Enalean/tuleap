@@ -4,12 +4,13 @@
         .controller('KanbanCtrl', KanbanCtrl);
 
     KanbanCtrl.$inject = [
+        '$modal',
         'SharedPropertiesService',
         'KanbanService',
         'CardFieldsService'
     ];
 
-    function KanbanCtrl(SharedPropertiesService, KanbanService, CardFieldsService) {
+    function KanbanCtrl($modal, SharedPropertiesService, KanbanService, CardFieldsService) {
         var self   = this,
             limit  = 50,
             offset = 0,
@@ -70,17 +71,23 @@
             function droppedInBacklog(event, dropped_item_id, compared_to) {
                 if (isDroppedInSameColumn(event)) {
                     if (compared_to) {
-                        KanbanService.reorderBacklog(kanban.id, dropped_item_id, compared_to);
+                        KanbanService
+                            .reorderBacklog(kanban.id, dropped_item_id, compared_to)
+                            .then(null, reload);
                     }
                 } else {
-                    KanbanService.moveInBacklog(kanban.id, dropped_item_id);
+                    KanbanService
+                        .moveInBacklog(kanban.id, dropped_item_id)
+                        .then(null, reload);
                 }
             }
 
             function droppedInArchive(event, dropped_item_id, compared_to) {
                 if (isDroppedInSameColumn(event)) {
                     if (compared_to) {
-                        KanbanService.reorderArchive(kanban.id, dropped_item_id, compared_to);
+                        KanbanService
+                            .reorderArchive(kanban.id, dropped_item_id, compared_to)
+                            .then(null, reload);
                     }
                 }
             }
@@ -88,7 +95,9 @@
             function droppedInColumn(event, column_id, dropped_item_id, compared_to) {
                 if (isDroppedInSameColumn(event)) {
                     if (compared_to) {
-                        KanbanService.reorderColumn(kanban.id, column_id, dropped_item_id, compared_to);
+                        KanbanService
+                            .reorderColumn(kanban.id, column_id, dropped_item_id, compared_to)
+                            .then(null, reload);
                     }
                 }
             }
@@ -116,6 +125,15 @@
 
                 return compared_to;
             }
+        }
+
+        function reload() {
+            $modal.open({
+                keyboard: false,
+                backdrop: 'static',
+                templateUrl: 'error.tpl.html',
+                controller: ErrorCtrl
+            });
         }
 
         function loadColumns() {

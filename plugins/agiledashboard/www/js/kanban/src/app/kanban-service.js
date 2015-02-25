@@ -103,7 +103,7 @@
         }
 
         function reorderColumn(kanban_id, column_id, dropped_item_id, compared_to) {
-            rest.one('kanban', kanban_id)
+            return rest.one('kanban', kanban_id)
                 .all('items')
                 .patch({
                     order: {
@@ -117,7 +117,7 @@
         }
 
         function reorderBacklog(kanban_id, dropped_item_id, compared_to) {
-            rest.one('kanban', kanban_id)
+            return rest.one('kanban', kanban_id)
                 .all('backlog')
                 .patch({
                     order: {
@@ -129,7 +129,7 @@
         }
 
         function reorderArchive(kanban_id, dropped_item_id, compared_to) {
-            rest.one('kanban', kanban_id)
+            return rest.one('kanban', kanban_id)
                 .all('archive')
                 .patch({
                     order: {
@@ -141,7 +141,7 @@
         }
 
         function moveInBacklog(kanban_id, dropped_item_id) {
-            rest.one('kanban', kanban_id)
+            return rest.one('kanban', kanban_id)
                 .all('backlog')
                 .patch({
                     add: {

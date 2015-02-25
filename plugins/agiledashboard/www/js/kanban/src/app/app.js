@@ -2,6 +2,7 @@
     angular.module('kanban', [
         'ui.router',
         'ui.tree',
+        'ui.bootstrap',
         'templates-app',
         'shared-properties',
         'restangular',
