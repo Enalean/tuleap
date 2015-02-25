@@ -16,8 +16,6 @@
             kanban = SharedPropertiesService.getKanban();
 
         self.name      = kanban.name;
-        self.nb_open   = kanban.nb_open;
-        self.nb_closed = kanban.nb_closed;
         self.board = {
             columns: []
         };
