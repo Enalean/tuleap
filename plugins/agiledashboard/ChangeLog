@@ -1,3 +1,6 @@
+Version 1.165 - Tuleap 7.11
+    * story #7579: Display error message when rest fails
+
 Version 1.164 - Tuleap 7.11
     * story #7579: Remove open/closed meaningless numbers in header
 
