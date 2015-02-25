@@ -36,6 +36,7 @@ use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_PriorityHistoryDao;
 use Tracker_ArtifactFactory;
 use Tracker_Artifact_PriorityManager;
+use Tracker_NoChangeException;
 
 class KanbanResource {
 
@@ -176,6 +177,7 @@ class KanbanResource {
                 $this->resources_patcher->startTransaction();
                 $this->moveArtifactsInBacklog($kanban, $current_user, $add);
                 $this->resources_patcher->commit();
+                $kanban_backlog_items = $this->getKanbanBacklogItemIds($kanban->getTrackerId());
             }
         } catch (Tracker_NoChangeException $exception) {
             $this->resources_patcher->rollback();
