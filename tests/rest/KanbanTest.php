@@ -197,4 +197,67 @@ class KanbanTest extends RestBase {
             $this->getIdsOrderedByPriority($url)
         );
     }
+
+    /**
+     * @depends testPATCHBacklogWithAdd
+     */
+    public function testPATCHColumnWithAddAndOrder() {
+        $url = 'kanban/'. TestDataBuilder::KANBAN_ID.'/items?column_id='. TestDataBuilder::KANBAN_ONGOING_COLUMN_ID;
+
+        $response = $this->getResponse($this->client->patch(
+            $url,
+            null,
+            json_encode(array(
+                'add' => array(
+                    'ids' => array(21)
+                ),
+                'order' => array(
+                    'ids'         => array(21),
+                    'direction'   => 'after',
+                    'compared_to' => 19
+                )
+            ))
+        ));
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $this->assertEquals(
+            array(
+                19,
+                21,
+                18
+            ),
+            $this->getIdsOrderedByPriority($url)
+        );
+    }
+
+    /**
+     * @depends testPATCHColumnWithAddAndOrder
+     */
+    public function testPATCHArchiveWithAddAndOrder() {
+        $url = 'kanban/'. TestDataBuilder::KANBAN_ID.'/archive';
+
+        $response = $this->getResponse($this->client->patch(
+            $url,
+            null,
+            json_encode(array(
+                'add' => array(
+                    'ids' => array(21)
+                ),
+                'order' => array(
+                    'ids'         => array(21),
+                    'direction'   => 'after',
+                    'compared_to' => 20
+                )
+            ))
+        ));
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $this->assertEquals(
+            array(
+                20,
+                21
+            ),
+            $this->getIdsOrderedByPriority($url)
+        );
+    }
 }

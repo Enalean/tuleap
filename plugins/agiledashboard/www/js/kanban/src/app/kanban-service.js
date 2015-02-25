@@ -19,7 +19,9 @@
             reorderColumn:  reorderColumn,
             reorderBacklog: reorderBacklog,
             reorderArchive: reorderArchive,
-            moveInBacklog: moveInBacklog
+            moveInBacklog: moveInBacklog,
+            moveInArchive: moveInArchive,
+            moveInColumn: moveInColumn
         };
 
         function getKanban(id) {
@@ -107,7 +109,7 @@
                 .all('items')
                 .patch({
                     order: getOrderArgumentsFromComparedTo(dropped_item_id, compared_to)
-                },{
+                }, {
                     column_id: column_id
                 });
         }
@@ -141,6 +143,41 @@
             return rest.one('kanban', kanban_id)
                 .all('backlog')
                 .patch(patch_arguments);
+        }
+
+        function moveInArchive(kanban_id, dropped_item_id, compared_to) {
+            var patch_arguments = {
+                add: {
+                    ids : [dropped_item_id]
+                }
+            };
+            if (compared_to) {
+                patch_arguments['order'] = getOrderArgumentsFromComparedTo(dropped_item_id, compared_to);
+            }
+
+            return rest.one('kanban', kanban_id)
+                .all('archive')
+                .patch(patch_arguments);
+        }
+
+        function moveInColumn(kanban_id, column_id, dropped_item_id, compared_to) {
+            var patch_arguments = {
+                add: {
+                    ids : [dropped_item_id]
+                }
+            };
+            if (compared_to) {
+                patch_arguments['order'] = getOrderArgumentsFromComparedTo(dropped_item_id, compared_to);
+            }
+
+            return rest.one('kanban', kanban_id)
+                .all('items')
+                .patch(
+                    patch_arguments,
+                    {
+                        column_id: column_id
+                    }
+                );
         }
 
         function getOrderArgumentsFromComparedTo(dropped_item_id, compared_to) {

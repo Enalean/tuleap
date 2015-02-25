@@ -69,12 +69,10 @@
             }
 
             function droppedInBacklog(event, dropped_item_id, compared_to) {
-                if (isDroppedInSameColumn(event)) {
-                    if (compared_to) {
-                        KanbanService
-                            .reorderBacklog(kanban.id, dropped_item_id, compared_to)
-                            .then(null, reload);
-                    }
+                if (isDroppedInSameColumn(event) && compared_to) {
+                    KanbanService
+                        .reorderBacklog(kanban.id, dropped_item_id, compared_to)
+                        .then(null, reload);
                 } else {
                     KanbanService
                         .moveInBacklog(kanban.id, dropped_item_id, compared_to)
@@ -83,22 +81,26 @@
             }
 
             function droppedInArchive(event, dropped_item_id, compared_to) {
-                if (isDroppedInSameColumn(event)) {
-                    if (compared_to) {
-                        KanbanService
-                            .reorderArchive(kanban.id, dropped_item_id, compared_to)
-                            .then(null, reload);
-                    }
+                if (isDroppedInSameColumn(event) && compared_to) {
+                    KanbanService
+                        .reorderArchive(kanban.id, dropped_item_id, compared_to)
+                        .then(null, reload);
+                } else {
+                    KanbanService
+                        .moveInArchive(kanban.id, dropped_item_id, compared_to)
+                        .then(null, reload);
                 }
             }
 
             function droppedInColumn(event, column_id, dropped_item_id, compared_to) {
-                if (isDroppedInSameColumn(event)) {
-                    if (compared_to) {
-                        KanbanService
-                            .reorderColumn(kanban.id, column_id, dropped_item_id, compared_to)
-                            .then(null, reload);
-                    }
+                if (isDroppedInSameColumn(event) && compared_to) {
+                    KanbanService
+                        .reorderColumn(kanban.id, column_id, dropped_item_id, compared_to)
+                        .then(null, reload);
+                } else {
+                    KanbanService
+                        .moveInColumn(kanban.id, column_id, dropped_item_id, compared_to)
+                        .then(null, reload);
                 }
             }
 
