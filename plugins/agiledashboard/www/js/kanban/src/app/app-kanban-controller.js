@@ -77,7 +77,7 @@
                     }
                 } else {
                     KanbanService
-                        .moveInBacklog(kanban.id, dropped_item_id)
+                        .moveInBacklog(kanban.id, dropped_item_id, compared_to)
                         .then(null, reload);
                 }
             }

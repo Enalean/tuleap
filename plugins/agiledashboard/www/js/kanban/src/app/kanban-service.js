@@ -106,11 +106,7 @@
             return rest.one('kanban', kanban_id)
                 .all('items')
                 .patch({
-                    order: {
-                        ids         : [dropped_item_id],
-                        direction   : compared_to.direction,
-                        compared_to : compared_to.item_id
-                    }
+                    order: getOrderArgumentsFromComparedTo(dropped_item_id, compared_to)
                 },{
                     column_id: column_id
                 });
@@ -120,11 +116,7 @@
             return rest.one('kanban', kanban_id)
                 .all('backlog')
                 .patch({
-                    order: {
-                        ids         : [dropped_item_id],
-                        direction   : compared_to.direction,
-                        compared_to : compared_to.item_id
-                    }
+                    order: getOrderArgumentsFromComparedTo(dropped_item_id, compared_to)
                 });
         }
 
@@ -132,22 +124,31 @@
             return rest.one('kanban', kanban_id)
                 .all('archive')
                 .patch({
-                    order: {
-                        ids         : [dropped_item_id],
-                        direction   : compared_to.direction,
-                        compared_to : compared_to.item_id
-                    }
+                    order: getOrderArgumentsFromComparedTo(dropped_item_id, compared_to)
                 });
         }
 
-        function moveInBacklog(kanban_id, dropped_item_id) {
+        function moveInBacklog(kanban_id, dropped_item_id, compared_to) {
+            var patch_arguments = {
+                add: {
+                    ids : [dropped_item_id]
+                }
+            };
+            if (compared_to) {
+                patch_arguments['order'] = getOrderArgumentsFromComparedTo(dropped_item_id, compared_to);
+            }
+
             return rest.one('kanban', kanban_id)
                 .all('backlog')
-                .patch({
-                    add: {
-                        ids : [dropped_item_id]
-                    }
-                });
+                .patch(patch_arguments);
+        }
+
+        function getOrderArgumentsFromComparedTo(dropped_item_id, compared_to) {
+            return {
+                ids         : [dropped_item_id],
+                direction   : compared_to.direction,
+                compared_to : compared_to.item_id
+            };
         }
     }
 })();
