@@ -55,16 +55,6 @@ class KanbanRepresentation {
      */
     public $columns;
 
-    /**
-     * @var Int
-     */
-    public $nb_open;
-
-    /**
-     * @var Int
-     */
-    public $nb_closed;
-
     /*
      * @var array
      */
@@ -76,8 +66,6 @@ class KanbanRepresentation {
         $this->uri        = self::ROUTE.'/'.$this->id;
         $this->label      = $kanban->getName();
         $this->columns    = array();
-        $this->nb_open    = 0;
-        $this->nb_closed  = 0;
 
         $this->setColumns($kanban);
 
