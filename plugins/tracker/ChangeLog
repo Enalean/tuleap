@@ -1,3 +1,6 @@
+Version 5.577 - Tuleap 7.11
+    * request #7640: on-screen notification for tracker admins when all the reports are set to Private
+
 Version 5.576 - Tuleap 7.11
     * story #7776: see diff for string without having to click on 'Show diff button'
 
