@@ -71,6 +71,10 @@ class Tracker_Report_HeaderRenderer {
             'select_report' => $report->id,
         );
 
+        $warnings = array();
+        $is_admin = $report->getTracker()->userIsAdmin($current_user);
+        $this->getMissingPublicReportWarning($reports, $is_admin, &$warnings);
+
         $this->renderer->renderToPage(
             'header_in_report',
             new Tracker_Report_HeaderInReportPresenter(
@@ -83,10 +87,10 @@ class Tracker_Report_HeaderRenderer {
                 $this->getSaveOrRevert($current_user, $report, $options_params, $report_can_be_modified),
                 $report->getLastUpdaterUserName(),
                 $this->getClassNameHasChanged($report),
-                $report->getName()
+                $report->getName(),
+                $warnings
             )
         );
-
     }
 
     private function getSaveOrRevert(PFUser $current_user, Tracker_Report $report, array $options_params, $report_can_be_modified) {
@@ -257,5 +261,23 @@ class Tracker_Report_HeaderRenderer {
             $options = $this->purifier->purify($report->name, CODENDI_PURIFIER_CONVERT_HTML);
         }
         return $options;
+    }
+
+    private function getMissingPublicReportWarning(array $reports, $is_admin, array $warnings) {
+        if (! $is_admin) {
+            return;
+        }
+
+        $public_reports_exist = false;
+        foreach($reports as $report) {
+            /*@var $report Tracker_Report */
+            if ($report->isPublic()) {
+                 $public_reports_exist = true;
+            }
+        }
+
+        if (! $public_reports_exist) {
+            $warnings[] = $GLOBALS['Language']->getText('plugin_tracker_report', 'no_public_reports');
+        }
     }
 }

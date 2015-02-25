@@ -31,8 +31,9 @@ class Tracker_Report_HeaderInReportPresenter {
     private $updated_by_username;
     private $has_changed_classname;
     private $report_name;
+    private $warnings;
 
-    public function __construct($browse_instructions, $title, $select_report_url, $reports_selector, Templating_Presenter_ButtonDropdowns $options_dropdown, $options_params, $save_button, $updated_by_username, $has_changed_classname, $report_name) {
+    public function __construct($browse_instructions, $title, $select_report_url, $reports_selector, Templating_Presenter_ButtonDropdowns $options_dropdown, $options_params, $save_button, $updated_by_username, $has_changed_classname, $report_name, $warnings) {
         $this->browse_instructions   = $browse_instructions;
         $this->title                 = $title;
         $this->select_report_url     = $select_report_url;
@@ -43,6 +44,7 @@ class Tracker_Report_HeaderInReportPresenter {
         $this->updated_by_username   = $updated_by_username;
         $this->has_changed_classname = $has_changed_classname;
         $this->report_name           = $report_name;
+        $this->warnings              = $warnings;
     }
 
     public function has_browse_instructions() {
@@ -127,5 +129,13 @@ class Tracker_Report_HeaderInReportPresenter {
 
     public function revert() {
         return $GLOBALS['Language']->getText('plugin_tracker_report', 'revert');
+    }
+
+    public function has_warnings() {
+        return count($this->warnings) > 0;
+    }
+
+    public function warnings() {
+        return $this->warnings;
     }
 }
