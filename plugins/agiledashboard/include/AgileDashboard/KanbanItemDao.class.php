@@ -21,6 +21,17 @@
 
 class AgileDashboard_KanbanItemDao extends DataAccessObject {
 
+    public function getAllKanbanItemIds($tracker_id) {
+        $tracker_id = $this->da->escapeInt($tracker_id);
+
+        $sql = "SELECT id
+                FROM tracker_artifact
+                WHERE tracker_id = $tracker_id
+                    AND last_changeset_id IS NOT NULL";
+
+        return $this->retrieve($sql);
+    }
+
     /**
      * Backlog items for a kanban are artifacts that have no value for the semantic status field
      */

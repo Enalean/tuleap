@@ -63,6 +63,10 @@ class Tracker_Artifact_PriorityManager {
         $this->priority_dao->commit();
     }
 
+    public function rollback() {
+        $this->priority_dao->rollBack();
+    }
+
     public function remove($artifact_id) {
         return $this->priority_dao->remove($artifact_id);
     }

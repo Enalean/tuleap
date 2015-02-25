@@ -172,4 +172,31 @@ class KanbanTest extends RestBase {
             $this->getIdsOrderedByPriority($url)
         );
     }
+
+    /**
+     * @depends testPATCHArchive
+     */
+    public function testPATCHBacklogWithAdd() {
+        $url = 'kanban/'. TestDataBuilder::KANBAN_ID.'/backlog';
+
+        $response = $this->getResponse($this->client->patch(
+            $url,
+            null,
+            json_encode(array(
+                'add' => array(
+                    'ids' => array(21)
+                )
+            ))
+        ));
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $this->assertEquals(
+            array(
+                17,
+                16,
+                21
+            ),
+            $this->getIdsOrderedByPriority($url)
+        );
+    }
 }
