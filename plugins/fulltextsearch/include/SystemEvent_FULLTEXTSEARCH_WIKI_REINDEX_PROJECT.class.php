@@ -27,8 +27,24 @@ class SystemEvent_FULLTEXTSEARCH_WIKI_REINDEX_PROJECT extends SystemEvent {
      */
     protected $actions;
 
-    public function injectDependencies(FullTextSearchWikiActions $actions) {
-        $this->actions = $actions;
+    /**
+     * @var FullTextSearch_WikiSystemEventManager
+     */
+    protected $system_event_manager;
+
+    /**
+     * @var TruncateLevelLogger
+     */
+    protected $logger;
+
+    public function injectDependencies(
+        FullTextSearchWikiActions $actions,
+        FullTextSearch_WikiSystemEventManager $system_event_manager,
+        TruncateLevelLogger $logger
+    ) {
+        $this->actions              = $actions;
+        $this->system_event_manager = $system_event_manager;
+        $this->logger               = $logger;
     }
 
     /**
@@ -47,6 +63,12 @@ class SystemEvent_FULLTEXTSEARCH_WIKI_REINDEX_PROJECT extends SystemEvent {
     public function process() {
         try {
             $project_id = (int) $this->getRequiredParameter(0);
+
+            if ($this->system_event_manager->isProjectReindexationAlreadyQueued($project_id)) {
+                $this->done('Skipped duplicate event');
+                $this->logger->debug("Skipped duplicate event for project $project_id : ".self::NAME);
+                return true;
+            }
 
             $this->actions->reIndexProjectWikiPages($project_id);
 

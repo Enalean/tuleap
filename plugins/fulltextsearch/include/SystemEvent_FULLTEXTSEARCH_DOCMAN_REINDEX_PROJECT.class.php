@@ -27,8 +27,24 @@ class SystemEvent_FULLTEXTSEARCH_DOCMAN_REINDEX_PROJECT extends SystemEvent {
      */
     protected $actions;
 
-    public function injectDependencies(FullTextSearchDocmanActions $actions) {
+    /**
+     * @var FullTextSearch_DocmanSystemEventManager
+     */
+    protected $system_event_manager;
+
+    /**
+     * @var TruncateLevelLogger
+     */
+    protected $logger;
+
+    public function injectDependencies(
+            FullTextSearchDocmanActions $actions,
+            FullTextSearch_DocmanSystemEventManager $system_event_manager,
+            TruncateLevelLogger $logger
+        ) {
         $this->actions = $actions;
+        $this->system_event_manager = $system_event_manager;
+        $this->logger               = $logger;
     }
 
     /**
@@ -46,7 +62,14 @@ class SystemEvent_FULLTEXTSEARCH_DOCMAN_REINDEX_PROJECT extends SystemEvent {
      */
     public function process() {
         try {
-            $project_id   = (int) $this->getRequiredParameter(0);
+            $project_id = (int) $this->getRequiredParameter(0);
+
+            if ($this->system_event_manager->isProjectReindexationAlreadyQueued($project_id)) {
+                $this->done('Skipped duplicate event');
+                $this->logger->debug("Skipped duplicate event for project $project_id : ".self::NAME);
+                return true;
+            }
+
             $item_factory = Docman_ItemFactory::instance($project_id);
             $items        = new Docman_ProjectItemsBatchIterator($item_factory, $project_id);
 

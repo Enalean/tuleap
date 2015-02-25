@@ -211,7 +211,8 @@ class fulltextsearchPlugin extends Plugin {
         return new FullTextSearch_WikiSystemEventManager(
             SystemEventManager::instance(),
             $this->getIndexClient(self::SEARCH_WIKI_TYPE),
-            $this
+            $this,
+            $this->getFullTextSearchSystemEventQueue()->getLogger()
         );
     }
 
@@ -233,11 +234,12 @@ class fulltextsearchPlugin extends Plugin {
                 new ElasticSearch_1_2_RequestTrackerDataFactory(
                     $artifact_properties_extractor
                 ),
-                new BackendLogger()
+                $this->getFullTextSearchSystemEventQueue()->getLogger()
             ),
             Tracker_ArtifactFactory::instance(),
             TrackerFactory::instance(),
-            $this
+            $this,
+            $this->getFullTextSearchSystemEventQueue()->getLogger()
         );
     }
 

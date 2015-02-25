@@ -134,8 +134,10 @@ class SystemEventDao extends DataAccessObject {
     public function searchWithParam($position, $val, $type, $status, $separator = SystemEvent::PARAMETER_SEPARATOR) {
         if ($position == 'head') {
             $stm    = $this->da->quoteSmart($val.$separator).'"%"';
-        } else if ($position == 'tail') {
+        } elseif ($position == 'tail') {
             $stm = '"%"'.$this->da->quoteSmart($separator.$val);
+        } elseif ($position == 'all') {
+             $stm = $this->da->quoteSmart($val);
         } else {
             $stm    = '"%"'.$this->da->quoteSmart($separator.$val.$separator).'"%"';
         }
@@ -143,10 +145,10 @@ class SystemEventDao extends DataAccessObject {
         $type   = $this->da->quoteSmartImplode(", ", $type);
         $status = $this->da->quoteSmartImplode(", ", $status);
         
-        $sql = 'SELECT  * FROM system_event 
-                 WHERE type   IN ('.$type.') 
-                 AND status IN ('.$status.')
-                 AND parameters LIKE '.$stm;
+        $sql = 'SELECT  * FROM system_event
+                WHERE type   IN ('.$type.')
+                AND status IN ('.$status.')
+                AND parameters LIKE '.$stm;
 
         return $this->retrieve($sql);
     }

@@ -31,13 +31,13 @@ class FullTextSearchWikiActions {
     /** @var ElasticSearch_1_2_RequestWikiDataFactory */
     private $request_data_factory;
 
-    /** @var BackendLogger */
+    /** @var TruncateLevelLogger */
     private $logger;
 
     public function __construct(
         FullTextSearch_IIndexDocuments $client,
         ElasticSearch_1_2_RequestWikiDataFactory $request_data_factory,
-        BackendLogger $logger
+        TruncateLevelLogger $logger
     ) {
         $this->client               = $client;
         $this->request_data_factory = $request_data_factory;
