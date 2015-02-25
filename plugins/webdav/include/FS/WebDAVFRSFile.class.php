@@ -63,7 +63,6 @@ class WebDAVFRSFile extends Sabre_DAV_File {
      * @return File
      */
     function get() {
-
         // Log the download in the Log system
         $this->logDownload($this->getUser());
 
@@ -72,6 +71,18 @@ class WebDAVFRSFile extends Sabre_DAV_File {
         $fp= fopen($fileLocation, 'r');
         return $fp;
 
+    }
+
+    public function put($data) {
+        if (! file_put_contents($this->getFileLocation(), $data)) {
+            throw new Sabre_DAV_Exception_Forbidden('Permission denied to change data');
+        }
+
+        $frs_file_factory = new FRSFileFactory();
+        $frs_file_factory->update(array(
+            'file_id'   => $this->file->getFileId(),
+            'file_size' => filesize($this->getFileLocation())
+        ));
     }
 
     /**
@@ -128,7 +139,7 @@ class WebDAVFRSFile extends Sabre_DAV_File {
      * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_File#getContentType()
      */
     function getContentType() {
-        if (file_exists($this->getFileLocation())) {
+        if (file_exists($this->getFileLocation()) && filesize($this->getFileLocation())) {
             $mime = MIME::instance();
             return $mime->type($this->getFileLocation());
         }
