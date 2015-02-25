@@ -637,6 +637,16 @@ class Docman_PermissionsManager {
         }
         return $userArray;
     }
-}
 
-?>
+    public function isUgroupUsed($ugroup_id) {
+        if ($this->getDao()->isThereAnExplicitPermission($ugroup_id, $this->groupId)) {
+            return true;
+        }
+
+        if ($this->getDao()->doAllItemsHaveExplicitPermissions($this->groupId)) {
+            return false;
+        }
+
+        return $this->getDao()->isThereADefaultPermissionThatUsesUgroup($ugroup_id);
+    }
+}

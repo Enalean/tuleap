@@ -101,6 +101,7 @@ class DocmanPlugin extends Plugin {
         }
         if (defined('FULLTEXTSEARCH_BASE_URL')) {
             $this->_addHook(FULLTEXTSEARCH_EVENT_FETCH_ALL_DOCUMENT_SEARCH_TYPES);
+            $this->_addHook(FULLTEXTSEARCH_EVENT_DOES_DOCMAN_SERVICE_USE_UGROUP);
         }
 
         return parent::getHooksAndCallbacks();
@@ -868,5 +869,12 @@ class DocmanPlugin extends Plugin {
             'can_use' => true,
             'special' => false,
         );
+    }
+
+    public function fulltextsearch_event_does_docman_service_use_ugroup($params) {
+        $manager   = Docman_PermissionsManager::instance($params['project_id']);
+        $ugroup_id = $params['ugroup_id'];
+
+        $params['is_used'] = $manager->isUgroupUsed($ugroup_id);
     }
 }

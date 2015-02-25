@@ -357,5 +357,18 @@ class PermissionsManager {
     public function searchByUgroupId($ugroupId) {
         return $this->_permission_dao->searchByUgroupId($ugroupId);
     }
+
+    public function isUgroupUsedByWikiService($ugroup_id, $project_id) {
+        if ($this->_permission_dao->isThereAnExplicitWikiServicePermission($ugroup_id)) {
+            return true;
+        }
+
+        if ($this->_permission_dao->doAllWikiServiceItemsHaveExplicitPermissions($project_id)) {
+            return false;
+        }
+
+        return $this->_permission_dao->isThereADefaultWikiServicePermissionThatUsesUgroup($ugroup_id);
+    }
+
 }
 ?>

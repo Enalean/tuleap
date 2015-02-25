@@ -107,6 +107,48 @@ class Docman_PermissionsManagerDao extends DataAccessObject {
         }
     }
 
-}
+    public function isThereAnExplicitPermission($ugroup_id, $project_id) {
+        $ugroup_id  = $this->da->escapeInt($ugroup_id);
+        $project_id = $this->da->escapeInt($project_id);
 
-?>
+        $sql =
+            "SELECT * FROM permissions
+                JOIN plugin_docman_item ON permissions.object_id = plugin_docman_item.item_id
+            WHERE ugroup_id = $ugroup_id
+                AND permission_type LIKE 'PLUGIN_DOCMAN%'
+                AND group_id = $project_id
+            LIMIT 1
+            ";
+
+        return $this->retrieveFirstRow($sql);
+    }
+
+    public function doAllItemsHaveExplicitPermissions($project_id) {
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql =
+           "SELECT * FROM plugin_docman_item
+                LEFT JOIN permissions ON permissions.object_id = plugin_docman_item.item_id
+            WHERE plugin_docman_item.group_id = $project_id
+                AND permission_type IS NULL
+            LIMIT 1
+            ";
+
+        $results = (bool) $this->retrieveFirstRow($sql);
+
+        return ! $results;
+    }
+
+    public function isThereADefaultPermissionThatUsesUgroup($ugroup_id) {
+        $ugroup_id  = $this->da->escapeInt($ugroup_id);
+
+        $sql =
+           "SELECT permissions_values.* FROM permissions_values
+            WHERE ugroup_id = $ugroup_id
+                AND permission_type LIKE 'PLUGIN_DOCMAN%'
+            LIMIT 1
+            ";
+
+        return (bool) $this->retrieveFirstRow($sql);
+    }
+}

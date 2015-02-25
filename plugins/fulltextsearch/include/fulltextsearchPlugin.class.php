@@ -122,6 +122,17 @@ class fulltextsearchPlugin extends Plugin {
         $this->addHook(Event::SEARCH_TYPE, 'search_type');
         $this->addHook(Event::FETCH_ADDITIONAL_SEARCH_TABS);
 
+        //Ugroups
+        $this->_addHook('project_admin_ugroup_remove_user', 'project_admin_ugroup_delete_or_remove_user');
+        $this->_addHook('project_admin_ugroup_deletion', 'project_admin_ugroup_delete_or_remove_user');
+        $this->_addHook(Event::UGROUP_MANAGER_UPDATE_UGROUP_BINDING_ADD, 'ugroup_manager_update_ugroup_binding_change');
+        $this->_addHook(Event::UGROUP_MANAGER_UPDATE_UGROUP_BINDING_REMOVE, 'ugroup_manager_update_ugroup_binding_change');
+        $this->_addHook('project_admin_remove_user_from_project_ugroups', 'eventChangeProjectUgroupsMembers');
+        $this->_addHook('project_admin_ugroup_add_user', 'eventChangeProjectUgroupsMembers');
+
+        $this->_addHook('project_admin_remove_user', 'project_admin_remove_user');
+        $this->_addHook('project_admin_change_user_permissions', 'project_admin_change_user_permissions');
+
         return parent::getHooksAndCallbacks();
     }
 
@@ -750,5 +761,107 @@ class fulltextsearchPlugin extends Plugin {
         $controller->reindexDocman($project_id);
         $controller->reindexWiki($project_id);
         $controller->reindexTrackers($project_id);
+    }
+
+    public function project_admin_ugroup_delete_or_remove_user($params) {
+        $ugroup_id  = $params['ugroup_id'];
+        $project_id = $params['group_id'];
+
+        $this->reindexForServicesUsingUgroup($ugroup_id, $project_id);
+    }
+
+    public function ugroup_manager_update_ugroup_binding_change($params) {
+        /*@var $ugroup ProjectUGroup  */
+        $ugroup     = $params['ugroup'];
+        $project_id = $ugroup->getProjectId();
+
+        $this->reindexForServicesUsingUgroup($ugroup->getId(), $project_id);
+    }
+
+    public function project_admin_change_user_permissions($params) {
+        $project_id = $params['group_id'];
+
+        if ($this->hasAMemberOfProjectMembersBeenRemoved($params)) {
+            $ugroup_id = ProjectUGroup::PROJECT_ADMIN;
+            $this->reindexForServicesUsingUgroup($ugroup_id, $project_id);
+        }
+        if ($this->hasAMemberOfWikiAdminsBeenRemoved($params)) {
+            $ugroup_id = ProjectUGroup::WIKI_ADMIN;
+            $this->reindexForWikiServiceUsingUgroup($ugroup_id, $project_id);
+        }
+    }
+
+    private function hasAMemberOfProjectMembersBeenRemoved(array $params) {
+        return $params['user_permissions']['admin_flags'] === '' && $params['previous_permissions']['admin_flags'] === 'A';
+    }
+
+    private function hasAMemberOfWikiAdminsBeenRemoved(array $params) {
+        if (! isset($params['user_permissions']['wiki_flags'])) {
+            return false;
+        }
+
+        return $params['user_permissions']['wiki_flags'] === '0' && $params['previous_permissions']['wiki_flags'] === '2';
+    }
+
+    public function project_admin_remove_user($params) {
+        $ugroup_id  = ProjectUGroup::PROJECT_MEMBERS;
+        $project_id = $params['group_id'];
+
+        $this->reindexForServicesUsingUgroup($ugroup_id, $project_id);
+    }
+
+    /**
+     * Reindex everything if user is removed from project (too many edge cases to check)
+     */
+    public function eventChangeProjectUgroupsMembers($params) {
+        $project_id = $params['group_id'];
+
+        $this->getTrackerSystemEventManager()->queueTrackersProjectReindexation($project_id);
+        $this->getDocmanSystemEventManager()->queueDocmanProjectReindexation($project_id);
+        $this->getWikiSystemEventManager()->queueWikiProjectReindexation($project_id);
+    }
+
+    private function reindexForServicesUsingUgroup($ugroup_id, $project_id) {
+        $this->reindexForTrackerServiceUsingUgroup($ugroup_id, $project_id);
+        $this->reindexForDocmanServiceUsingUgroup($ugroup_id, $project_id);
+        $this->reindexForWikiServiceUsingUgroup($ugroup_id, $project_id);
+    }
+
+    private function reindexForTrackerServiceUsingUgroup($ugroup_id, $project_id) {
+        $tracker_uses = false;
+
+        EventManager::instance()->processEvent(
+            FULLTEXTSEARCH_EVENT_DOES_TRACKER_SERVICE_USE_UGROUP,
+            array('is_used' => &$tracker_uses, 'ugroup_id' => $ugroup_id, 'project_id' => $project_id)
+        );
+
+        if ($tracker_uses) {
+            $this->getTrackerSystemEventManager()->queueTrackersProjectReindexation($project_id);
+        }
+    }
+
+    private function reindexForDocmanServiceUsingUgroup($ugroup_id, $project_id) {
+        $docman_uses  = false;
+
+        EventManager::instance()->processEvent(
+            FULLTEXTSEARCH_EVENT_DOES_DOCMAN_SERVICE_USE_UGROUP,
+            array('is_used' => &$docman_uses, 'ugroup_id' => $ugroup_id, 'project_id' => $project_id)
+        );
+
+        if ($docman_uses) {
+            $this->getDocmanSystemEventManager()->queueDocmanProjectReindexation($project_id);
+        }
+    }
+
+    private function reindexForWikiServiceUsingUgroup($ugroup_id, $project_id) {
+        $wiki_perm_manager = new Wiki_PermissionsManager(
+            PermissionsManager::instance(),
+            ProjectManager::instance(),
+            new UGroupLiteralizer()
+        );
+
+        if ($wiki_perm_manager->isUgroupUsed($ugroup_id, $project_id)) {
+            $this->getWikiSystemEventManager()->queueWikiProjectReindexation($project_id);
+        }
     }
 }
