@@ -37,6 +37,8 @@ use Tracker_Artifact_PriorityHistoryDao;
 use Tracker_ArtifactFactory;
 use Tracker_Artifact_PriorityManager;
 use Tracker_NoChangeException;
+use Tracker_FormElement_Field_List_Bind;
+use Tracker_Semantic_Status;
 
 class KanbanResource {
 
@@ -168,42 +170,42 @@ class KanbanResource {
         $current_user = UserManager::instance()->getCurrentUser();
         $kanban       = $this->kanban_factory->getKanban($current_user, $id);
 
-        $kanban_backlog_items = $this->getKanbanBacklogItemIds($kanban->getTrackerId());
+        if ($add) {
+            $add->checkFormat();
+            $this->validateIdsInAddAreInKanbanTracker($kanban, $add);
+            $this->resources_patcher->startTransaction();
 
-        try {
-            if ($add) {
-                $add->checkFormat();
-                $this->validateIdsInAddAreInKanbanTracker($kanban, $add);
-                $this->resources_patcher->startTransaction();
+            try {
                 $this->moveArtifactsInBacklog($kanban, $current_user, $add);
                 $this->resources_patcher->commit();
-                $kanban_backlog_items = $this->getKanbanBacklogItemIds($kanban->getTrackerId());
+            } catch (Tracker_NoChangeException $exception) {
+                $this->resources_patcher->rollback();
+            } catch (Exception $exception) {
+                $this->resources_patcher->rollback();
+                throw new RestException(500, $exception->getMessage());
             }
-        } catch (Tracker_NoChangeException $exception) {
-            $this->resources_patcher->rollback();
-        } catch (Exception $exception) {
-            $this->resources_patcher->rollback();
-            throw new RestException(400, $exception->getMessage());
         }
 
-        try {
-            if ($order) {
-                $order->checkFormat();
-                $order_validator = new OrderValidator($kanban_backlog_items);
-                $order_validator->validate($order);
+        if ($order) {
+            $order->checkFormat();
+            $kanban_backlog_items = $this->getKanbanBacklogItemIds($kanban->getTrackerId());
+            $order_validator      = new OrderValidator($kanban_backlog_items);
 
-                $this->resources_patcher->updateArtifactPriorities(
-                    $order,
-                    Tracker_Artifact_PriorityHistoryChange::NO_CONTEXT,
-                    $this->tracker_factory->getTrackerById($kanban->getTrackerId())->getGroupId()
-                );
+            try {
+                $order_validator->validate($order);
+            } catch (IdsFromBodyAreNotUniqueException $exception) {
+                throw new RestException(409, $exception->getMessage());
+            } catch (OrderIdOutOfBoundException $exception) {
+                throw new RestException(409, $exception->getMessage());
+            } catch (Exception $exception) {
+                throw new RestException(500, $exception->getMessage());
             }
-        } catch (IdsFromBodyAreNotUniqueException $exception) {
-            throw new RestException(409, $exception->getMessage());
-        } catch (OrderIdOutOfBoundException $exception) {
-            throw new RestException(409, $exception->getMessage());
-        } catch (Exception $exception) {
-            throw new RestException(500, $exception->getMessage());
+
+            $this->resources_patcher->updateArtifactPriorities(
+                $order,
+                Tracker_Artifact_PriorityHistoryChange::NO_CONTEXT,
+                $this->tracker_factory->getTrackerById($kanban->getTrackerId())->getGroupId()
+            );
         }
     }
 
@@ -223,12 +225,38 @@ class KanbanResource {
     }
 
     private function moveArtifactsInBacklog(AgileDashboard_Kanban $kanban, PFUser $user, KanbanAddRepresentation $add) {
+        $this->moveArtifactsInColumn($kanban, $user, $add, Tracker_FormElement_Field_List_Bind::NONE_VALUE);
+    }
+
+    private function moveArtifactsInArchive(AgileDashboard_Kanban $kanban, PFUser $user, KanbanAddRepresentation $add) {
+        $a_closed_value_id = null;
+        $status_field      = $this->getStatusField($kanban, $user);
+        $open_values       = $this->getSemanticStatus($kanban)->getOpenValues();
+        foreach ($status_field->getAllValues() as $value_id => $value) {
+            if (! $value->isHidden() && ! in_array($value_id, $open_values)) {
+                $a_closed_value_id = $value_id;
+                break;
+            }
+        }
+
+        if (! $a_closed_value_id) {
+            throw new RestException(500, 'Cannot found any suitable value corresponding to the [archive] column.');
+        }
+        $this->moveArtifactsInColumn($kanban, $user, $add, $a_closed_value_id);
+    }
+
+    private function moveArtifactsInColumn(
+        AgileDashboard_Kanban $kanban,
+        PFUser $user,
+        KanbanAddRepresentation $add,
+        $column_id
+    ) {
         foreach ($add->ids as $artifact_id) {
             $artifact        = $this->artifact_factory->getArtifactById($artifact_id);
             $status_field    = $this->getStatusField($kanban, $user);
 
             $fields_data = array(
-                $status_field->getId() => 100
+                $status_field->getId() => $column_id
             );
 
             $artifact->createNewChangeset($fields_data, '', $user);
@@ -258,7 +286,7 @@ class KanbanResource {
      * @param string $id Id of the milestone
      */
     public function optionsBacklog($id) {
-        Header::allowOptionsGet();
+        Header::allowOptionsGetPatch();
     }
 
     /**
@@ -295,34 +323,52 @@ class KanbanResource {
      *
      * @url PATCH {id}/archive
      *
-     * @param int                                                   $id    Id of the Kanban
-     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation    $order Order of the children {@from body}
-     *
+     * @param int                                                    $id    Id of the Kanban
+     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation     $order Order of the children {@from body}
+     * @param \Tuleap\AgileDashboard\REST\v1\KanbanAddRepresentation $add   Ids to add to Kanban backlog {@from body}
      */
-    protected function patchArchive($id, OrderRepresentation $order) {
+    protected function patchArchive($id, OrderRepresentation $order = null, KanbanAddRepresentation $add = null) {
         $current_user = UserManager::instance()->getCurrentUser();
         $kanban       = $this->kanban_factory->getKanban($current_user, $id);
 
-        $kanban_archive_items = $this->getKanbanArchiveItemIds($kanban->getTrackerId());
+        if ($add) {
+            $add->checkFormat();
+            $this->validateIdsInAddAreInKanbanTracker($kanban, $add);
+            $this->resources_patcher->startTransaction();
 
-        $order->checkFormat();
-        $order_validator = new OrderValidator($kanban_archive_items);
-
-        try {
-            $order_validator->validate($order);
-        } catch (IdsFromBodyAreNotUniqueException $exception) {
-            throw new RestException(409, $exception->getMessage());
-        } catch (OrderIdOutOfBoundException $exception) {
-            throw new RestException(409, $exception->getMessage());
-        } catch (Exception $exception) {
-            throw new RestException(500, $exception->getMessage());
+            try {
+                $this->moveArtifactsInArchive($kanban, $current_user, $add);
+                $this->resources_patcher->commit();
+            } catch (Tracker_NoChangeException $exception) {
+                $this->resources_patcher->rollback();
+            } catch (Exception $exception) {
+                $this->resources_patcher->rollback();
+                throw new RestException(500, $exception->getMessage());
+            }
         }
 
-        $this->resources_patcher->updateArtifactPriorities(
-            $order,
-            Tracker_Artifact_PriorityHistoryChange::NO_CONTEXT,
-            $this->tracker_factory->getTrackerById($kanban->getTrackerId())->getGroupId()
-        );
+
+        if ($order) {
+            $order->checkFormat();
+            $kanban_archive_items = $this->getKanbanArchiveItemIds($kanban->getTrackerId());
+            $order_validator      = new OrderValidator($kanban_archive_items);
+
+            try {
+                $order_validator->validate($order);
+            } catch (IdsFromBodyAreNotUniqueException $exception) {
+                throw new RestException(409, $exception->getMessage());
+            } catch (OrderIdOutOfBoundException $exception) {
+                throw new RestException(409, $exception->getMessage());
+            } catch (Exception $exception) {
+                throw new RestException(500, $exception->getMessage());
+            }
+
+            $this->resources_patcher->updateArtifactPriorities(
+                $order,
+                Tracker_Artifact_PriorityHistoryChange::NO_CONTEXT,
+                $this->tracker_factory->getTrackerById($kanban->getTrackerId())->getGroupId()
+            );
+        }
     }
 
     private function getKanbanArchiveItemIds($tracker_id) {
@@ -340,7 +386,7 @@ class KanbanResource {
      * @param string $id Id of the milestone
      */
     public function optionsArchive($id) {
-        Header::allowOptionsGet();
+        Header::allowOptionsGetPatch();
     }
 
     /**
@@ -388,12 +434,17 @@ class KanbanResource {
      *
      * @url PATCH {id}/items
      *
-     * @param int                                                   $id    Id of the Kanban
-     * @param int                                                   $column_id Id of the column the item belongs to {@from query}
-     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation    $order Order of the children {@from body}
-     *
+     * @param int                                                    $id    Id of the Kanban
+     * @param int                                                    $column_id Id of the column the item belongs to {@from query}
+     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation     $order Order of the items {@from body}
+     * @param \Tuleap\AgileDashboard\REST\v1\KanbanAddRepresentation $add   Ids to add to the column {@from body}
      */
-    protected function patchItems($id, $column_id, OrderRepresentation $order) {
+    protected function patchItems(
+        $id,
+        $column_id,
+        OrderRepresentation $order = null,
+        KanbanAddRepresentation $add = null
+    ) {
         $current_user = UserManager::instance()->getCurrentUser();
         $kanban       = $this->kanban_factory->getKanban($current_user, $id);
 
@@ -401,26 +452,45 @@ class KanbanResource {
             throw new RestException(404);
         }
 
-        $kanban_column_items = $this->getItemsInColumn($kanban->getTrackerId(), $column_id);
+        if ($add) {
+            $add->checkFormat();
+            $this->validateIdsInAddAreInKanbanTracker($kanban, $add);
+            $this->resources_patcher->startTransaction();
 
-        $order->checkFormat();
-        $order_validator = new OrderValidator($kanban_column_items);
-
-        try {
-            $order_validator->validate($order);
-        } catch (IdsFromBodyAreNotUniqueException $exception) {
-            throw new RestException(409, $exception->getMessage());
-        } catch (OrderIdOutOfBoundException $exception) {
-            throw new RestException(409, $exception->getMessage());
-        } catch (Exception $exception) {
-            throw new RestException(500, $exception->getMessage());
+            try {
+                $this->moveArtifactsInColumn($kanban, $current_user, $add, $column_id);
+                $this->resources_patcher->commit();
+            } catch (Tracker_NoChangeException $exception) {
+                $this->resources_patcher->rollback();
+            } catch (Exception $exception) {
+                $this->resources_patcher->rollback();
+                throw new RestException(500, $exception->getMessage());
+            }
         }
 
-        $this->resources_patcher->updateArtifactPriorities(
-            $order,
-            Tracker_Artifact_PriorityHistoryChange::NO_CONTEXT,
-            $this->tracker_factory->getTrackerById($kanban->getTrackerId())->getGroupId()
-        );
+
+        if ($order) {
+            $order->checkFormat();
+            $kanban_column_items = $this->getItemsInColumn($kanban->getTrackerId(), $column_id);
+            $order_validator     = new OrderValidator($kanban_column_items);
+
+            try {
+                $order_validator->validate($order);
+            } catch (IdsFromBodyAreNotUniqueException $exception) {
+                throw new RestException(409, $exception->getMessage());
+            } catch (OrderIdOutOfBoundException $exception) {
+                throw new RestException(409, $exception->getMessage());
+            } catch (Exception $exception) {
+                throw new RestException(500, $exception->getMessage());
+            }
+
+            $this->resources_patcher->updateArtifactPriorities(
+                $order,
+                Tracker_Artifact_PriorityHistoryChange::NO_CONTEXT,
+                $this->tracker_factory->getTrackerById($kanban->getTrackerId())->getGroupId()
+            );
+        }
+
     }
 
     private function getItemsInColumn($tracker_id, $column_id) {
@@ -438,7 +508,7 @@ class KanbanResource {
      * @param string $id Id of the milestone
      */
     public function optionsItems($id) {
-        Header::allowOptionsGet();
+        Header::allowOptionsGetPatch();
     }
 
     /** @return AgileDashboard_Kanban */
@@ -461,5 +531,19 @@ class KanbanResource {
         }
 
         return $user;
+    }
+
+    private function getSemanticStatus(AgileDashboard_Kanban $kanban) {
+        $tracker = TrackerFactory::instance()->getTrackerById($kanban->getTrackerId());
+        if (! $tracker) {
+            return;
+        }
+
+        $semantic = Tracker_Semantic_Status::load($tracker);
+        if (! $semantic->getFieldId()) {
+            return;
+        }
+
+        return $semantic;
     }
 }
