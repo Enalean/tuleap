@@ -39,23 +39,36 @@ class GitViews_RepoManagement_Pane_GeneralSettings extends GitViews_RepoManageme
      * @see GitViews_RepoManagement_Pane::getContent()
      */
     public function getContent() {
-        $html  = '';
-        $html .= '<h3>'. $this->getTitle() .'</h3>';
-        $html .= '<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id='. $this->repository->getProjectId() .'">';
-        $html .= '<input type="hidden" id="action" name="action" value="edit" />';
-        $html .= '<input type="hidden" name="pane" value="'. $this->getIdentifier() .'" />';
-        $html .= '<input type="hidden" id="repo_id" name="repo_id" value="'. $this->repository->getId() .'" />';
+        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates/settings');
 
-        $html .= '<p>';
-        $html .= '<label for="repo_desc">'. $GLOBALS['Language']->getText('plugin_git', 'view_repo_description') .':</label>';
-        $html .= '<textarea class="text" id="repo_desc" name="repo_desc">';
-        $html .= $this->hp->purify($this->repository->getDescription(), CODENDI_PURIFIER_CONVERT_HTML);
-        $html .= '</textarea>';
-        $html .= '</p>';
+        return $renderer->renderToString('general-settings', $this);
+    }
 
-        $html .= '<p><input type="submit" name="save" class="btn" value="'. $GLOBALS['Language']->getText('plugin_git', 'admin_save_submit') .'" /></p>';
-        $html .= '</form>';
-        return $html;
+    public function title() {
+        return $this->getTitle();
+    }
+
+    public function project_id() {
+        return $this->repository->getProjectId();
+    }
+
+    public function pane_identifier() {
+        return $this->getIdentifier();
+    }
+
+    public function repository_id() {
+        return $this->repository->getId();
+    }
+
+    public function repository_description_label() {
+        return $GLOBALS['Language']->getText('plugin_git', 'view_repo_description');
+    }
+
+    public function description() {
+        return $this->repository->getDescription();
+    }
+
+    public function save_label() {
+        return $GLOBALS['Language']->getText('plugin_git', 'admin_save_submit');
     }
 }
-?>
