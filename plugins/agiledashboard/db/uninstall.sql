@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS plugin_agiledashboard_semantic_initial_effort;
 DROP TABLE IF EXISTS plugin_agiledashboard_criteria;
 DROP TABLE IF EXISTS plugin_agiledashboard_configuration;
 DROP TABLE IF EXISTS plugin_agiledashboard_kanban_configuration;
+DROP TABLE IF EXISTS plugin_agiledashboard_kanban_configuration_column;
 
 DELETE FROM permissions_values WHERE permission_type IN ('PLUGIN_AGILEDASHBOARD_PLANNING_PRIORITY_CHANGE');
 

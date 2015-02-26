@@ -27,6 +27,8 @@ use AgileDashboard_KanbanItemDao;
 use AgileDashboard_KanbanNotFoundException;
 use AgileDashboard_KanbanCannotAccessException;
 use AgileDashboard_Kanban;
+use AgileDashboard_KanbanColumnFactory;
+use AgileDashboard_KanbanColumnDao;
 use UserManager;
 use Exception;
 use TrackerFactory;
@@ -59,6 +61,9 @@ class KanbanResource {
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
 
+    /** @var AgileDashboard_KankanColumnFactory */
+    private $kanban_column_factory;
+
     public function __construct() {
         $this->kanban_item_dao = new AgileDashboard_KanbanItemDao();
         $this->tracker_factory = TrackerFactory::instance();
@@ -67,6 +72,8 @@ class KanbanResource {
             $this->tracker_factory,
             new AgileDashboard_KanbanDao()
         );
+
+        $this->kanban_column_factory = new AgileDashboard_KanbanColumnFactory(new AgileDashboard_KanbanColumnDao());
 
         $this->artifact_factory = Tracker_ArtifactFactory::instance();
         $priority_manager       = new Tracker_Artifact_PriorityManager(
@@ -110,7 +117,7 @@ class KanbanResource {
         $kanban = $this->getKanban($user, $id);
 
         $kanban_representation = new KanbanRepresentation();
-        $kanban_representation->build($kanban);
+        $kanban_representation->build($kanban, $this->kanban_column_factory);
 
         Header::allowOptionsGet();
         return $kanban_representation;

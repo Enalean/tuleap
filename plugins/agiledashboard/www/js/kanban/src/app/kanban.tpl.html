@@ -40,7 +40,7 @@
     </div>
 
     <div ng-repeat="column in kanban.board.columns"
-        ng-class="column.is_open ? 'column-displayed' : 'column-hidden'"
+        ng-class="{'column-displayed': column.is_open, 'column-hidden': ! column.is_open, 'wip-reached': kanban.isColumnWipReached(column) }"
         ng-click="column.is_open = true"
         ng-attr-title="{{ column.is_open ? '' : 'Toggle this column' | translate }}"
         ng-style="{width: column.resize_width}"
@@ -56,6 +56,15 @@
                 ng-click="column.is_open = ! column.is_open; $event.stopPropagation();"
             >
                 <i ng-class="column.is_open ? 'icon-minus-sign-alt' : 'icon-plus-sign-alt'"></i>
+            </span>
+            <span class="warning-wip"
+                ng-if="kanban.isColumnWipReached(column)"
+                tooltip="{{ 'You have reached the work in progress limit for this column!' | translate }}"
+                tooltip-trigger
+                tooltip-animation="true"
+                tooltip-placement="bottom"
+            >
+                <i class="icon-warning-sign"></i>
             </span>
             <span class="column-label">{{ column.label }}</span>
         </div>

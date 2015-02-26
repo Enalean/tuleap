@@ -81,7 +81,8 @@ module.exports = {
       'vendor/restangular/dist/restangular.js',
       'vendor/angular-ui-tree/dist/angular-ui-tree.min.js',
       'vendor/angular-ui-bootstrap/ui-bootstrap-0.8.0.js',
-      'vendor/angular-ui-bootstrap/ui-bootstrap-tpls-0.8.0.js'
+      'vendor/angular-ui-bootstrap/ui-bootstrap-tpls-0.8.0.js',
+      'vendor/angular-animate/angular-animate.min.js'
     ],
     css: [
       'vendor/angular-ui-tree/dist/angular-ui-tree.min.css'
