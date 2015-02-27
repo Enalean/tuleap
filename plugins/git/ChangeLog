@@ -1,3 +1,6 @@
+Version 4.13 - Tuleap 7.11
+    * Refactor general settings to ease modifications
+
 Version 4.12 - Tuleap 7.11
     * Have more git logs in debug mode
 
