@@ -40,6 +40,7 @@ Version 7.11 (not yet released)
 	== Development ==
 	* story #7495: be able to get ugroups of a project for a given permission
 	* Have more git logs in debug mode
+	* Bump copyright
 
 Version 7.10 (Thursday, February 5th 2015)
 
