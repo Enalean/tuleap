@@ -32,52 +32,52 @@ class ArtifactRepresentation {
     const ROUTE = 'artifacts';
 
     /**
-     * @var int ID of the artifact
+     * @var int ID of the artifact {@type int} {@required true}
      */
     public $id;
 
     /**
-     * @var string URI of the artifact
+     * @var string URI of the artifact {@type string} {@required true}
      */
     public $uri;
 
     /**
-     * @var Tuleap\REST\ResourceReference Reference to tracker the artifact belongs to
+     * @var Tuleap\REST\ResourceReference Reference to tracker the artifact belongs to {@type Tuleap\REST\ResourceReference} {@required true}
      */
     public $tracker;
 
     /**
-     * @var \Tuleap\Project\REST\ProjectReference ID of the project the artifact belongs to
+     * @var \Tuleap\Project\REST\ProjectReference ID of the project the artifact belongs to {@type Tuleap\Project\REST\ProjectReference} {@required true}
      */
     public $project;
 
     /**
-     * @var int ID of the user who created the first version of the artifact
+     * @var int ID of the user who created the first version of the artifact {@type int} {@required true}
      */
     public $submitted_by;
     
     /**
-     * @var string Date, when the first version of the artifact was created
+     * @var string Date, when the first version of the artifact was created {@type string} {@required true}
      */
     public $submitted_on;
 
     /**
-     * @var string URL to access the artifact with the Web UI
+     * @var string URL to access the artifact with the Web UI {@type string} {@required true}
      */
     public $html_url;
 
     /**
-     * @var string URI to access the artifact history
+     * @var string URI to access the artifact history {@type string} {@required true}
      */
     public $changesets_uri;
 
     /**
-     * @var array Field values
+     * @var array Field values {@type array} {@required true}
      */
     public $values = array();
 
     /**
-     * @var string Date, when the last modification occurs
+     * @var string Date, when the last modification occurs {@type string} {@required true}
      */
     public $last_modified_date;
 
