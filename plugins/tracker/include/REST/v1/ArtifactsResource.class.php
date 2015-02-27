@@ -224,7 +224,7 @@ class ArtifactsResource {
      *
      * @url POST
      * @param TrackerReference $tracker   Id of the artifact {@from body}
-     * @param array  $values    Artifact fields values {@from body}
+     * @param array  $values    Artifact fields values {@from body} {@type Tuleap\Tracker\REST\v1\ArtifactPOSTValues}
      * @return ArtifactReference
      */
     protected function post(TrackerReference $tracker, array $values) {

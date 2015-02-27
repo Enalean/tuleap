@@ -31,8 +31,10 @@ class Tracker_REST_Artifact_ArtifactValidator {
         $new_values     = array();
         $indexed_fields = $this->getIndexedFields($tracker);
         foreach ($values as $value) {
-            $field = $this->getField($indexed_fields, $value);
-            $new_values[$field->getId()] = $field->getFieldDataFromRESTValue($value);
+            $array_representation = $value->toArray();
+
+            $field = $this->getField($indexed_fields, $array_representation);
+            $new_values[$field->getId()] = $field->getFieldDataFromRESTValue($array_representation);
         }
         return $new_values;
     }

@@ -60,6 +60,7 @@ if (Config::get('DEBUG_MODE')) {
 }
 
 $restler->setAPIVersion($version);
+$restler->setSupportedFormats('JsonFormat', 'XmlFormat');
 
 $core_resources_injector = new Tuleap\REST\ResourcesInjector();
 $core_resources_injector->populate($restler);
