@@ -2,6 +2,7 @@
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 // http://sourceforge.net
 //
 // 
@@ -61,7 +62,7 @@ function snippet_show_package_snippets($version) {
 		"WHERE snippet.snippet_id=snippet_version.snippet_id ".
 		"AND user.user_id=snippet_version.submitted_by ".
 		"AND snippet_version.snippet_version_id=snippet_package_item.snippet_version_id ".
-		"AND snippet_package_item.snippet_package_version_id='$version'";
+		"AND snippet_package_item.snippet_package_version_id='". db_ei($version) ."'";
 
 	$result=db_query($sql);
 	$rows=db_numrows($result);
@@ -120,7 +121,7 @@ function snippet_show_package_details($id) {
 
         $id = (int)$id;
 
-	$sql="SELECT * FROM snippet_package WHERE snippet_package_id='$id'";
+	$sql="SELECT * FROM snippet_package WHERE snippet_package_id='". db_ei($id) ."'";
 	$result=db_query($sql);
 
 	echo '
@@ -154,7 +155,7 @@ function snippet_show_snippet_details($id) {
 
         $id = (int)$id;
 
-	$sql="SELECT * FROM snippet WHERE snippet_id='$id'";
+	$sql="SELECT * FROM snippet WHERE snippet_id='". db_ei($id) ."'";
 	$result=db_query($sql);
 
 	echo '
@@ -191,7 +192,7 @@ function snippet_edit_package_details($id) {
         $id = (int)$id;
 
 
-	$sql="SELECT * FROM snippet_package WHERE snippet_package_id='$id'";
+	$sql="SELECT * FROM snippet_package WHERE snippet_package_id='". db_ei($id) ."'";
 	$result=db_query($sql);
 
 	echo '
@@ -238,7 +239,7 @@ function snippet_edit_snippet_details($id) {
         $id = (int)$id;
 
 
-	$sql="SELECT * FROM snippet WHERE snippet_id='$id'";
+	$sql="SELECT * FROM snippet WHERE snippet_id='". db_ei($id) ."'";
 	$result=db_query($sql);
 
 	echo '
@@ -280,5 +281,3 @@ function snippet_edit_snippet_details($id) {
         <HR>
 ';
 }
-
-?>

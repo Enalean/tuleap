@@ -2,6 +2,7 @@
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 // http://sourceforge.net
 //
 // 
@@ -10,7 +11,7 @@ require_once('pre.php');
 
 $id = (int)$request->get('id');
 
-$sql="SELECT * FROM snippet_version WHERE snippet_version_id='$id'";
+$sql="SELECT * FROM snippet_version WHERE snippet_version_id='". db_ei($id) ."'";
 $result=db_query($sql);
 
 if ($result && db_numrows($result) > 0) {
@@ -45,5 +46,3 @@ if ($result && db_numrows($result) > 0) {
 } else {
 	echo $Language->getText('global','error');
 }
-
-?>

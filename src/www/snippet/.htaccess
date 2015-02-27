@@ -1,0 +1,1 @@
+php_flag magic_quotes_gpc Off

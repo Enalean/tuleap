@@ -2,6 +2,7 @@
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 // http://sourceforge.net
 //
 // 
@@ -50,11 +51,11 @@ if (user_isloggedin()) {
 			  create the snippet version
 	*/
 	$sql="INSERT INTO snippet_version (snippet_id,changes,version,submitted_by,date,code,filename,filesize,filetype) ".
-	  "VALUES ('$snippet_id','".htmlspecialchars($changes)."','".
-	  htmlspecialchars($version)."','".user_getid()."','".
+	  "VALUES ('" . db_ei($snippet_id) . "','". db_es(htmlspecialchars($changes)) ."','".
+	  db_es(htmlspecialchars($version)) ."','". db_ei(user_getid()) ."','".
 	  time()."','".
-	  ($uploaded_data ? $code : htmlspecialchars($code))."',".
-	  "'$uploaded_data_name','$uploaded_data_size','$uploaded_data_type')";
+	  ($uploaded_data ? db_es($code) : db_es(htmlspecialchars($code))) ."',".
+	  "'". db_es($uploaded_data_name) ."','" . db_es($uploaded_data_size) ."','". db_es($uploaded_data_type) ."')";
 	
 	$result=db_query($sql);
 	
@@ -119,7 +120,7 @@ if (user_isloggedin()) {
     /*
 			See if the package exists first
     */
-    $result=db_query("SELECT * FROM snippet_package WHERE snippet_package_id='$id'");
+    $result=db_query("SELECT * FROM snippet_package WHERE snippet_package_id='". db_ei($id) ."'");
     if (!$result || db_numrows($result) < 1) {
       exit_error($Language->getText('global','error'),$Language->getText('snippet_addversion','s_p_not_exist'));
     }
@@ -135,8 +136,8 @@ if (user_isloggedin()) {
 	*/
 	$sql="INSERT INTO snippet_package_version ".
 	  "(snippet_package_id,changes,version,submitted_by,date) ".
-	  "VALUES ('$snippet_package_id','".htmlspecialchars($changes)."','".
-	  htmlspecialchars($version)."','".user_getid()."','".time()."')";
+	  "VALUES ('". db_ei($snippet_package_id) ."','". db_es(htmlspecialchars($changes)) ."','".
+	  db_es(htmlspecialchars($version)) ."','". db_ei(user_getid()) ."','".time()."')";
 	$result=db_query($sql);
 	if (!$result) {
 	  //error in database
