@@ -930,36 +930,16 @@ class WebDAVFRSReleaseTest extends UnitTestCase {
         $webDAVFRSRelease->createFileIntoIncoming('toto.txt', 'text');
     }
 
-    function testcreateFileIntoIncomingCopyStreamFail() {
-        $GLOBALS['ftp_incoming_dir'] = dirname(__FILE__).'/_fixtures';
-
-        $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion2($this);
-        $webDAVFRSRelease->setReturnValue('unlinkFile', true);
-        $webDAVFRSRelease->setReturnValue('openFile', true);
-        $webDAVFRSRelease->setReturnValue('streamCopyToStream', false);
-
-        $webDAVFRSRelease->expectNever('unlinkFile');
-        $webDAVFRSRelease->expectOnce('openFile');
-        $webDAVFRSRelease->expectOnce('streamCopyToStream');
-        $webDAVFRSRelease->expectNever('closeFile');
-        $this->expectException('Sabre_DAV_Exception');
-        $this->expectException('Sabre_DAV_Exception');
-
-        $webDAVFRSRelease->createFileIntoIncoming('toto.txt', 'text');
-    }
-
     function testcreateFileIntoIncomingCloseFail() {
         $GLOBALS['ftp_incoming_dir'] = dirname(__FILE__).'/_fixtures';
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion2($this);
         $webDAVFRSRelease->setReturnValue('unlinkFile', true);
         $webDAVFRSRelease->setReturnValue('openFile', true);
-        $webDAVFRSRelease->setReturnValue('streamCopyToStream', true);
         $webDAVFRSRelease->setReturnValue('closeFile', false);
 
         $webDAVFRSRelease->expectNever('unlinkFile');
         $webDAVFRSRelease->expectOnce('openFile');
-        $webDAVFRSRelease->expectOnce('streamCopyToStream');
         $webDAVFRSRelease->expectOnce('closeFile');
         $this->expectException('Sabre_DAV_Exception');
         $this->expectException('Sabre_DAV_Exception');
@@ -972,12 +952,10 @@ class WebDAVFRSReleaseTest extends UnitTestCase {
 
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion2($this);
         $webDAVFRSRelease->setReturnValue('openFile', true);
-        $webDAVFRSRelease->setReturnValue('streamCopyToStream', true);
         $webDAVFRSRelease->setReturnValue('closeFile', true);
 
         $webDAVFRSRelease->expectNever('unlinkFile');
         $webDAVFRSRelease->expectOnce('openFile');
-        $webDAVFRSRelease->expectOnce('streamCopyToStream');
         $webDAVFRSRelease->expectOnce('closeFile');
 
         $webDAVFRSRelease->createFileIntoIncoming('toto.txt', 'text');
@@ -989,12 +967,10 @@ class WebDAVFRSReleaseTest extends UnitTestCase {
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion2($this);
         $webDAVFRSRelease->setReturnValue('unlinkFile', true);
         $webDAVFRSRelease->setReturnValue('openFile', true);
-        $webDAVFRSRelease->setReturnValue('streamCopyToStream', true);
         $webDAVFRSRelease->setReturnValue('closeFile', true);
 
         $webDAVFRSRelease->expectOnce('unlinkFile');
         $webDAVFRSRelease->expectOnce('openFile');
-        $webDAVFRSRelease->expectOnce('streamCopyToStream');
         $webDAVFRSRelease->expectOnce('closeFile');
 
         $webDAVFRSRelease->createFileIntoIncoming('test.txt', 'text');

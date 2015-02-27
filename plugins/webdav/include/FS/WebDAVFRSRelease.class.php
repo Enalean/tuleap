@@ -527,9 +527,6 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
         if (!$file = $this->openFile($path)) {
             throw new Sabre_DAV_Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'create_file_fail'));
         } else {
-            if ($this->streamCopyToStream($data, $file) == 0) {
-                throw new Sabre_DAV_Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'write_file_fail'));
-            }
             if (!$this->closeFile($file)) {
                 throw new Sabre_DAV_Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'close_file_fail'));
             }
