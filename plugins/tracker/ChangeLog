@@ -1,3 +1,6 @@
+Version 5.580 - Tuleap 7.11
+    * story #7702 use XML for REST api (Add Restler type in ArtifactReprensetation)
+
 Version 5.579 - Tuleap 7.11
     * story #7579: Move card from other colmuns in backlog
 
