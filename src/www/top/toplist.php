@@ -1,5 +1,6 @@
 <?php
 //
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
@@ -8,18 +9,18 @@
 
 require_once('pre.php');  
 
-
-if ($GLOBALS['type'] == 'downloads_week') {
+$type = $request->get('type');
+if ($type == 'downloads_week') {
 	$rankfield = 'downloads_week';
 	$title = $Language->getText('top_toplist','downl_week');
 	$column1 = $Language->getText('top_toplist','downl');
 }
-else if ($GLOBALS['type'] == 'pageviews_proj') {
+else if ($type == 'pageviews_proj') {
 	$rankfield = 'pageviews_proj';
 	$title = $Language->getText('top_toplist','top_pageviews',array($GLOBALS['sys_default_domain'],$GLOBALS['sys_name']));
 	$column1 = $Language->getText('top_toplist','pageviews');
 }
-else if ($GLOBALS['type'] == 'forumposts_week') {
+else if ($type == 'forumposts_week') {
 	$rankfield = 'forumposts_week';
 	$title = $Language->getText('top_toplist','forum_counts');
 	$column1 = $Language->getText('top_toplist','posts');
@@ -95,4 +96,3 @@ while ($row_top = db_fetch_array($res_top)) {
 print '</TABLE>';
 
 $HTML->footer(array());
-?>
