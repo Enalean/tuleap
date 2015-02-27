@@ -2,6 +2,7 @@
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 // http://sourceforge.net
 //
 // 
@@ -36,7 +37,7 @@ if (user_isloggedin()) {
                 $language = (int)$language;
                 $license  = (int)$license;
                 $sql="INSERT INTO snippet (category,created_by,name,description,type,language,license) ".
-                    "VALUES ('$category','". user_getid() ."','". htmlspecialchars($name)."','".
+                    "VALUES ('". db_ei($category) ."','". db_ei(user_getid()) ."','". db_es(htmlspecialchars($name)) ."','".
                     htmlspecialchars($description)."','$type','$language','$license')";
                 $result=db_query($sql);
                 if (!$result) {
@@ -49,11 +50,11 @@ if (user_isloggedin()) {
 		     create the snippet version
                     */
                     $sql="INSERT INTO snippet_version (snippet_id,changes,version,submitted_by,date,code,filename,filesize,filetype) ".
-		    "VALUES ('$snippet_id','".htmlspecialchars($changes)."','".
-                        htmlspecialchars($version)."','".user_getid()."','".
+		    "VALUES ('". db_ei($snippet_id) ."','". db_es(htmlspecialchars($changes)) ."','".
+                        db_es(htmlspecialchars($version)) ."','". db_ei(user_getid()) ."','".
                         time()."','".
-                        ($uploaded_data ? $code : htmlspecialchars($code))."',".
-                        "'$uploaded_data_name','$uploaded_data_size','$uploaded_data_type')";
+                        ($uploaded_data ? db_es($code) : db_es(htmlspecialchars($code)))."',".
+                        "'". db_es($uploaded_data_name) ."','". db_es($uploaded_data_size) ."','". db_es($uploaded_data_type) ."')";
                     $result=db_query($sql);
                     if (!$result) {
                         $feedback .= ' '.$Language->getText('snippet_add_snippet_to_package','error_insert').' ';
@@ -151,5 +152,3 @@ if (user_isloggedin()) {
 	exit_not_logged_in();
 
 }
-
-?>

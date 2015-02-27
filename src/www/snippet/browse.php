@@ -2,6 +2,7 @@
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 // http://sourceforge.net
 //
 // 
@@ -21,11 +22,11 @@ if ($by=='lang') {
 
 	$sql="SELECT user.user_name,snippet.description,snippet.snippet_id,snippet.name ".
 		"FROM snippet,user ".
-		"WHERE user.user_id=snippet.created_by AND snippet.language='$lang'";
+		"WHERE user.user_id=snippet.created_by AND snippet.language='". db_ei($lang) ."'";
 
 	$sql2="SELECT user.user_name,snippet_package.description,snippet_package.snippet_package_id,snippet_package.name ".
 		"FROM snippet_package,user ".
-		"WHERE user.user_id=snippet_package.created_by AND snippet_package.language='$lang'";
+		"WHERE user.user_id=snippet_package.created_by AND snippet_package.language='". db_ei($lang) ."'";
 
 	echo '<H2>'.$Language->getText('snippet_browse','s_by_lang',snippet_data_get_language_from_id($lang)).'</H2>';
 
@@ -35,11 +36,11 @@ if ($by=='lang') {
 
 	$sql="SELECT user.user_name,snippet.description,snippet.snippet_id,snippet.name ".
 		"FROM snippet,user ".
-		"WHERE user.user_id=snippet.created_by AND snippet.category='$cat'";
+		"WHERE user.user_id=snippet.created_by AND snippet.category='". db_ei($cat) ."'";
 
 	$sql2="SELECT user.user_name,snippet_package.description,snippet_package.snippet_package_id,snippet_package.name ".
 		"FROM snippet_package,user ".
-		"WHERE user.user_id=snippet_package.created_by AND snippet_package.category='$cat'";
+		"WHERE user.user_id=snippet_package.created_by AND snippet_package.category='". db_ei($cat) ."'";
 
 	echo '<H3>'.$Language->getText('snippet_browse','s_category',snippet_data_get_category_from_id($cat)).'</H3>';
 
@@ -110,5 +111,3 @@ if ((!$result || $rows < 1) && (!$result2 || $rows2 < 1)) {
 }
 
 snippet_footer(array());
-
-?>

@@ -2,6 +2,7 @@
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 // http://sourceforge.net
 //
 // 
@@ -39,9 +40,9 @@ if ($type=='snippet') {
             } else if ($snippet_language==100) {
 		$feedback .= ' '.$Language->getText('snippet_details','select_lang').' ';
             } else {
-                $sql="UPDATE snippet SET category=$snippet_category, type=$snippet_type, license=$snippet_license, language=$snippet_language, name='".
-                    htmlspecialchars($snippet_name)."', description='".
-                    htmlspecialchars($snippet_description)."' WHERE snippet_id=$id";
+                $sql="UPDATE snippet SET category=". db_ei($snippet_category) .", type=". db_ei($snippet_type) .", license=". db_ei($snippet_license) .", language=". db_ei($snippet_language) .", name='".
+                    db_es(htmlspecialchars($snippet_name)) ."', description='".
+                    db_es(htmlspecialchars($snippet_description)) ."' WHERE snippet_id=". db_ei($id);
                 $result=db_query($sql);
                 if (!$result) {
                     $feedback .= ' '.$Language->getText('snippet_details','upd_fail').' ';
@@ -75,7 +76,7 @@ if ($type=='snippet') {
 	*/
 	$sql="SELECT user.user_name,snippet_version.snippet_version_id,snippet_version.version,snippet_version.date,snippet_version.changes, snippet_version.filesize ".
 		"FROM snippet_version,user ".
-		"WHERE user.user_id=snippet_version.submitted_by AND snippet_id='$id' ".
+		"WHERE user.user_id=snippet_version.submitted_by AND snippet_id='". db_ei($id) ."' ".
 		"ORDER BY snippet_version.snippet_version_id DESC";
 
 	$result=db_query($sql);
@@ -137,7 +138,7 @@ if ($type=='snippet') {
 	/*
 		show the latest version of this snippet's code
 	*/
-	$result=db_query("SELECT code,version,filename,filesize FROM snippet_version WHERE snippet_version_id='$newest_version'");	
+	$result=db_query("SELECT code,version,filename,filesize FROM snippet_version WHERE snippet_version_id='". db_ei($newest_version) ."'");
 
 	echo '
 		<P>
@@ -173,9 +174,9 @@ if ($type=='snippet') {
             } else if ($snippet_language==100) {
 		$feedback .= ' '.$Language->getText('snippet_details','select_lang').' ';
             } else {
-                $sql="UPDATE snippet_package SET category=$snippet_category, language=$snippet_language, name='".
-                    htmlspecialchars($snippet_name)."', description='".
-                    htmlspecialchars($snippet_description)."' WHERE snippet_package_id=$id";
+                $sql="UPDATE snippet_package SET category=". db_ei($snippet_category) .", language=". db_ei($snippet_language) .", name='".
+                    db_es(htmlspecialchars($snippet_name)) ."', description='".
+                    db_es(htmlspecialchars($snippet_description)) ."' WHERE snippet_package_id=". db_ei($id);
                 $result=db_query($sql);
                 if (!$result) {
                     $feedback .= ' '.$Language->getText('snippet_details','p_upd_fail').' ';
@@ -213,7 +214,7 @@ if ($type=='snippet') {
 	$sql="SELECT user.user_name,snippet_package_version.snippet_package_version_id,".
 		"snippet_package_version.version,snippet_package_version.date ".
 		"FROM snippet_package_version,user ".
-		"WHERE user.user_id=snippet_package_version.submitted_by AND snippet_package_id='$id' ".
+		"WHERE user.user_id=snippet_package_version.submitted_by AND snippet_package_id='". db_ei($id) ."' ".
 		"ORDER BY snippet_package_version.snippet_package_version_id DESC";
 
 	$result=db_query($sql);
@@ -310,5 +311,3 @@ if ($type=='snippet') {
 	exit_error($Language->getText('global','error'),$Language->getText('snippet_delete','url_mangled'));
 
 }
-
-?>
