@@ -21,6 +21,7 @@ Version 7.11 (not yet released)
 	* agiledashboard: 1.167
 	* git: 4.12
 	* docman: 2.26.66
+	* webdav: 1.9.8
 
 	== Bug Fix ==
 	* request #7846: allowing a system to always handle CVS commits as coming from windows or utf8

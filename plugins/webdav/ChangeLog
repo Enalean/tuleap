@@ -1,3 +1,12 @@
+Version 1.9.8 - Tuleap 7.11
+    * story #7821: Windows 7 webdav FRS file creation
+
+
+* Empty files can be created
+* Files can be updated
+* Files can be drag'n'droped from filesystem to webdav
+* You can't create files with name containing special chars (parenthesis are not allowed)
+
 Version 1.9.7 - Tuleap 7.10
     * Fix unit tests for webdav & config & karma tests
 
