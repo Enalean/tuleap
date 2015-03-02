@@ -1164,10 +1164,13 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 if ( !empty($session_criterion['is_removed'])) {
                     continue;
                 }
-                $c  = $this->criteria[$key];
-                $id = $this->addCriteria($c);
-                $c->setId($id);
-                $c->updateValue($session_criterion['value']);
+
+                if (isset($this->criteria[$key])) {
+                    $c  = $this->criteria[$key];
+                    $id = $this->addCriteria($c);
+                    $c->setId($id);
+                    $c->updateValue($session_criterion['value']);
+                }
             }
         }
     }
