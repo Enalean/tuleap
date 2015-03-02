@@ -18,7 +18,7 @@ Version 7.11 (not yet released)
 	* tracker: 5.581
 	* fulltextsearch: 0.125
 	* mediawiki: 0.62
-	* agiledashboard: 1.167
+	* agiledashboard: 1.168
 	* git: 4.13
 	* docman: 2.26.66
 	* webdav: 1.9.8
@@ -41,6 +41,9 @@ Version 7.11 (not yet released)
 	* story #7495: be able to get ugroups of a project for a given permission
 	* Have more git logs in debug mode
 	* Bump copyright
+
+    == Themes ==
+	* FlamingParrot: 1.66
 
 Version 7.10 (Thursday, February 5th 2015)
 

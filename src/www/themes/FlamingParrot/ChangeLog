@@ -1,3 +1,18 @@
+Version 1.66 - Tuleap 7.11
+    * Kanban Glossification
+
+
+- Transform table layout to div layout
+- Width of columns is evenly distributed (even if user resize the
+  browser or collapse/expand columns)
+- Height/Width of the board are 100%
+- When user scroll cards, they go under the column header
+- spinners are replaced by animation on big numbers
+- Fat combined is no more included in kanban view
+- Cards color
+
+This is part of story #7579 move cards in my cardwall
+
 Version 1.65 - Tuleap 7.10
     * Identify doc type with icon on all themes
 
