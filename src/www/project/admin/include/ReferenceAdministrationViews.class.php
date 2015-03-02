@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2015. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -46,13 +46,14 @@ class ReferenceAdministrationViews extends Views {
     
     // {{{ Views
     function browse() {
-        $request =& HTTPRequest::instance();
-        $pm = ProjectManager::instance();
-        $project=$pm->getProject($request->get('group_id'));
+        $request  = HTTPRequest::instance();
+        $pm       = ProjectManager::instance();
+        $purifier = Codendi_HTMLPurifier::instance();
+        $project  = $pm->getProject($request->get('group_id'));
         if ($request->get('group_id')==100) {
             print '<P><h2>'.$GLOBALS['Language']->getText('project_reference','edit_system_s').'</B></h2>';
         } else {
-            print '<P><h2>'.$GLOBALS['Language']->getText('project_reference','edit_s_for',$project->getPublicName()).'</h2>';
+            print '<P><h2>'.$GLOBALS['Language']->getText('project_reference','edit_s_for', $purifier->purify($project->getPublicName())) .'</h2>';
         }
         print '
 <P>
@@ -145,15 +146,16 @@ class ReferenceAdministrationViews extends Views {
 
     function _display_reference_row($ref, &$row_num) {
         global $Language;
-        
+        $purifier = Codendi_HTMLPurifier::instance();
+
         if ($ref->getId()==100) return; // 'None' reference
 
-        $description = $this->getReferenceDescription($ref);
+        $description = $purifier->purify($this->getReferenceDescription($ref));
 
         if (array_key_exists($ref->getNature(), $this->natures)) {
-            $nature_desc = $this->natures[$ref->getNature()]['label'];
+            $nature_desc = $purifier->purify($this->natures[$ref->getNature()]['label']);
         } else {
-            $nature_desc = $ref->getNature();
+            $nature_desc = $purifier->purify($ref->getNature());
         }
         
         
@@ -161,20 +163,20 @@ class ReferenceAdministrationViews extends Views {
         if ($ref->getGroupId()==100) {
             echo '<TD><a href="/project/admin/reference.php?view=edit&group_id='.$ref->getGroupId().'&reference_id='.$ref->getId().'" title="'.$description.'">'.$ref->getId().'</TD>';
         }
-        echo '<TD><a href="/project/admin/reference.php?view=edit&group_id='.$ref->getGroupId().'&reference_id='.$ref->getId().'" title="'.$description.'">'.$ref->getKeyword().'</TD>';
+        echo '<TD><a href="/project/admin/reference.php?view=edit&group_id='.$ref->getGroupId().'&reference_id='.$ref->getId().'" title="'.$description.'">'. $purifier->purify($ref->getKeyword()) .'</TD>';
         echo '<TD>'.$description.'</TD>';
         echo '<TD>'.$nature_desc.'</TD>';
         
         echo '<TD align="center">'.( $ref->isActive() ? $Language->getText('project_reference','enabled') : $Language->getText('project_reference','disabled') ).'</TD>';
         if ($ref->getGroupId()==100) {
-            echo'<TD align="center">'.$Language->getText('project_reference','ref_scope_'.$ref->getScope()).'</TD>';
-            echo'<TD align="center">'.$ref->getServiceShortName().'</TD>';
+            echo'<TD align="center">'. $purifier->purify($Language->getText('project_reference','ref_scope_'.$ref->getScope())) .'</TD>';
+            echo'<TD align="center">'. $purifier->purify($ref->getServiceShortName()) .'</TD>';
         }
         
         if (($ref->getScope()!="S")||($ref->getGroupId()==100)) {
             echo '<TD align="center"><a href="/project/admin/reference.php?group_id='.$ref->getGroupId().'&reference_id='.$ref->getId().'&action=do_delete" onClick="return confirm(\'';
             if ($ref->getScope()=="S") {
-                echo $Language->getText('project_reference','warning_del_r',$ref->getKeyword());
+                echo $purifier->purify($Language->getText('project_reference','warning_del_r',$ref->getKeyword()), CODENDI_PURIFIER_JS_QUOTE);
             } else {
                 echo $Language->getText('project_reference','del_r');
             }
@@ -269,13 +271,15 @@ class ReferenceAdministrationViews extends Views {
 
     function edit() {
         global $sys_default_domain,$Language;
-        
+
         $request =& HTTPRequest::instance();
         $group_id=$request->get('group_id');
-                
+
+        $purifier = Codendi_HTMLPurifier::instance();
+
         $pm = ProjectManager::instance();
         $project=$pm->getProject($group_id);
- 
+
         $refid=$request->get('reference_id');
 
         if (! $refid) {
@@ -309,9 +313,9 @@ class ReferenceAdministrationViews extends Views {
 <tr><td width="10%"><a href="#" title="'.$Language->getText('project_reference','r_keyword_desc').'">'.$Language->getText('project_reference','r_keyword').':</a>'.$star.'</td>
 <td>';
         if ($ro) {
-            echo $ref->getKeyWord();
+            echo $purifier->purify($ref->getKeyWord());
         } else {
-            echo '<input type="text" name="keyword" size="25" maxlength="25" value="'.$ref->getKeyWord().'">';
+            echo '<input type="text" name="keyword" size="25" maxlength="25" value="'.$purifier->purify($ref->getKeyWord()).'">';
         }
         echo '</td></tr>';
         echo '
@@ -319,19 +323,19 @@ class ReferenceAdministrationViews extends Views {
 <td>';
         if ($ro) {
             if ($ref->getDescription() == "reference_".$ref->getKeyWord()."_desc_key") {
-                echo $Language->getText('project_reference',$ref->getDescription());
+                echo $purifier->purify($Language->getText('project_reference',$ref->getDescription()));
             } else {
-                echo $ref->getDescription();
+                echo $purifier->purify($ref->getDescription());
             }
         } else {
-            echo '<input type="text" name="description" size="70" maxlength="255" value="'.$ref->getDescription().'">';
+            echo '<input type="text" name="description" size="70" maxlength="255" value="'.$purifier->purify($ref->getDescription()).'">';
         }
         echo '</td></tr>';
         echo '
 <tr><td><a href="#" title="'.$Language->getText('project_reference','r_nature_desc').'">'.$Language->getText('project_reference','r_nature').'</a>:&nbsp;</td>
 <td>';
         if ($ro) {
-            echo $ref->getNature();
+            echo $purifier->purify($ref->getNature());
         } else {
             echo '<select name="nature" >';
             foreach ($this->natures as $nature_key => $nature_desc) {
@@ -340,7 +344,7 @@ class ReferenceAdministrationViews extends Views {
                 } else {
                     $selected = '';
                 }
-                echo '<option value="'.$nature_key.'" '.$selected.'>'.$nature_desc['label'].'</option>';
+                echo '<option value="'. $purifier->purify($nature_key) .'" '.$selected.'>'. $purifier->purify($nature_desc['label']) .'</option>';
             }
             echo '</select>';
         }
@@ -349,9 +353,9 @@ class ReferenceAdministrationViews extends Views {
 <tr><td><a href="#" title="'.$Language->getText('project_reference','url').'">'.$Language->getText('project_reference','r_link').'</a>:'.$star.'</td>
 <td>';
         if ($ro) {
-            echo $ref->getLink();
+            echo $purifier->purify($ref->getLink());
         } else {
-            echo '<input type="text" name="link" size="70" maxlength="255" value="'.$ref->getLink().'"> ';
+            echo '<input type="text" name="link" size="70" maxlength="255" value="'. $purifier->purify($ref->getLink()) .'"> ';
             echo  help_button('project-admin.html#creating-or-updating-a-reference-pattern');
         }
         echo '</td></tr>';
@@ -392,8 +396,4 @@ class ReferenceAdministrationViews extends Views {
             echo '<p>'.$star.': '.$Language->getText('project_reference','fields_required').'</p>';
         }
     }
- 
 }
-
-
-?>

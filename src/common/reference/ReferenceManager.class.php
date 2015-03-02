@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Codendi.
@@ -704,7 +705,8 @@ class ReferenceManager {
 
     // callback function
     function _insertRefCallback($match) {
-        $desc='';
+        $purifier     = Codendi_HTMLPurifier::instance();
+        $desc         = '';
         $ref_instance = $this->_getReferenceInstanceFromMatch($match);
         if (! $ref_instance) {
             return $match['key']." #".$match['project_name'].$match['value'];
@@ -722,7 +724,8 @@ class ReferenceManager {
                 $desc=$ref->getDescription();
             }
 
-            return '<a href="'.$ref_instance->getFullGotoLink().'" title="'.$desc.'" class="cross-reference">'.$ref_instance->getMatch()."</a>";
+            return '<a href="'.$ref_instance->getFullGotoLink().'" title="'. $purifier->purify($desc) .'" class="cross-reference">'
+                    . $purifier->purify($ref_instance->getMatch()) ."</a>";
         }
     }    
 
@@ -975,4 +978,3 @@ class ReferenceManager {
         return new ArtifactDao();
     }
 }
-?>

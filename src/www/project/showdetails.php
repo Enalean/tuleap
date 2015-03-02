@@ -1,6 +1,7 @@
 <?php
 //
 // Codendi
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 // http://www.codendi.com
 //
@@ -15,10 +16,11 @@ function getReferenceRow($ref, $row_num) {
     $html = '';
     
     if ($ref->isActive() && $ref->getId() != 100) {
+        $purifier = Codendi_HTMLPurifier::instance();
         $html .= '<TR class="'. util_get_alt_row_color($row_num) .'">';
-        $html .= '<TD>'.$ref->getKeyword().'</TD>';
-        $html .= '<TD>'.ReferenceAdministrationViews::getReferenceDescription($ref).'</TD>';
-        $html .= '<TD>'.$ref->getLink().'</TD>';
+        $html .= '<TD>'. $purifier->purify($ref->getKeyword()) .'</TD>';
+        $html .= '<TD>'. $purifier->purify(ReferenceAdministrationViews::getReferenceDescription($ref)) .'</TD>';
+        $html .= '<TD>'. $purifier->purify($ref->getLink()) .'</TD>';
         $html .= '</TR>';
     }
     
@@ -87,5 +89,3 @@ echo getReferencesTable($group_id);
 print '<P><a href="/project/?group_id='.$group_id .'"> '.$Language->getText('project_showdetails','back_main').' </a>';
 
 site_project_footer(array());
-
-?>
