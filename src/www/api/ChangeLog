@@ -1,3 +1,11 @@
+Version 1.6 - Tuleap 7.11
+    * Deal with XML for POST Artifacts
+
+
+For now, it only works (in XML) when we add in the XML structure 2 or moar fields
+
+This task is part of story #7702 use XML for REST api
+
 1.5 - Tuleap 7.11
     story #7495: set permissions on artifact priority change
 

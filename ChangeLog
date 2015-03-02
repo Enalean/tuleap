@@ -15,7 +15,7 @@ Version 7.11 (not yet released)
 
 	== Plugins ==
 	* graphontrackers: 1.13
-	* tracker: 5.581
+	* tracker: 5.582
 	* fulltextsearch: 0.125
 	* mediawiki: 0.62
 	* agiledashboard: 1.168
@@ -44,6 +44,9 @@ Version 7.11 (not yet released)
 
     == Themes ==
 	* FlamingParrot: 1.66
+
+    == Api ==
+	* REST API: 1.6
 
 Version 7.10 (Thursday, February 5th 2015)
 

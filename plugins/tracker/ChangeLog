@@ -1,3 +1,11 @@
+Version 5.582 - Tuleap 7.11
+    * Deal with XML for POST Artifacts
+
+
+For now, it only works (in XML) when we add in the XML structure 2 or moar fields
+
+This task is part of story #7702 use XML for REST api
+
 Version 5.581 - Tuleap 7.11
     * request #7894: Fixing potential blank page on report save
 
