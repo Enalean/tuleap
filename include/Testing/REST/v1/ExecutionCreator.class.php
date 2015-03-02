@@ -28,6 +28,7 @@ use Tuleap\Testing\Config;
 use TrackerFactory;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
+use Tuleap\Tracker\REST\v1\ArtifactPOSTValues;
 use Tracker_REST_Artifact_ArtifactCreator;
 
 class ExecutionCreator {
@@ -95,27 +96,23 @@ class ExecutionCreator {
         $environment_id,
         $definition_id
     ) {
-        $values = array();
-
         $environment_field = $this->getEnvironmentField($tracker_reference, $user);
-        $values[] = array(
-            'field_id'       => (int)$environment_field->getId(),
-            'bind_value_ids' => array($environment_id)
-        );
+        $status_field      = $this->getStatusField($tracker_reference, $user);
+        $link_field        = $this->getArtifactLinksField($tracker_reference, $user);
 
-        $status_field = $this->getStatusField($tracker_reference, $user);
-        $values[] = array(
-            'field_id'       => (int)$status_field->getId(),
-            'bind_value_ids' => array($status_field->getDefaultValue())
-        );
+        $environment_value                 = new ArtifactPOSTValues();
+        $environment_value->field_id       = (int)$environment_field->getId();
+        $environment_value->bind_value_ids = array($environment_id);
 
-        $link_field = $this->getArtifactLinksField($tracker_reference, $user);
-        $values[]   = array(
-            'field_id' => (int)$link_field->getId(),
-            'links'    => array(array('id' => $definition_id))
-        );
+        $status_value                 = new ArtifactPOSTValues();
+        $status_value->field_id       = (int)$status_field->getId();
+        $status_value->bind_value_ids = array($status_field->getDefaultValue());
 
-        return $values;
+        $link_value           = new ArtifactPOSTValues();
+        $link_value->field_id = (int)$link_field->getId();
+        $link_value->links    = array(array('id' => $definition_id));
+
+        return array($environment_value, $status_value, $link_value);
     }
 
     /** @return Tracker_FormElement_Field_List */

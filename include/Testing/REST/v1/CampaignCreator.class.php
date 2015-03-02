@@ -28,6 +28,7 @@ use Tuleap\Testing\Config;
 use TrackerFactory;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
+use Tuleap\Tracker\REST\v1\ArtifactPOSTValues;
 use Tracker_REST_Artifact_ArtifactCreator;
 
 class CampaignCreator {
@@ -160,27 +161,23 @@ class CampaignCreator {
         $label,
         $execution_ids
     ) {
-        $values = array();
-
-        $label_field = $this->getField($tracker_reference, $user, CampaignRepresentation::FIELD_NAME);
-        $values[]    = array(
-            'field_id' => (int)$label_field->getId(),
-            'value'    => $label
-        );
-
+        $label_field  = $this->getField($tracker_reference, $user, CampaignRepresentation::FIELD_NAME);
         $status_field = $this->getField($tracker_reference, $user, CampaignRepresentation::FIELD_STATUS);
-        $values[]    = array(
-            'field_id'       => (int)$status_field->getId(),
-            'bind_value_ids' => array($status_field->getDefaultValue())
-        );
+        $link_field   = $this->getField($tracker_reference, $user, CampaignRepresentation::FIELD_ARTIFACT_LINKS);
 
-        $link_field = $this->getField($tracker_reference, $user, CampaignRepresentation::FIELD_ARTIFACT_LINKS);
-        $values[]   = array(
-            'field_id' => (int)$link_field->getId(),
-            'links'    => $execution_ids
-        );
+        $label_value           = new ArtifactPOSTValues();
+        $label_value->field_id = (int)$label_field->getId();
+        $label_value->value    = $label;
 
-        return $values;
+        $status_value                 = new ArtifactPOSTValues();
+        $status_value->field_id       = (int)$status_field->getId();
+        $status_value->bind_value_ids = array((int)$status_field->getDefaultValue());
+
+        $link_value           = new ArtifactPOSTValues();
+        $link_value->field_id = (int)$link_field->getId();
+        $link_value->links    = $execution_ids;
+
+        return array($label_value, $status_value, $link_value);
     }
 
     private function getField(
