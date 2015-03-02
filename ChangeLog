@@ -41,6 +41,7 @@ Version 7.11 (not yet released)
 	* story #7495: be able to get ugroups of a project for a given permission
 	* Have more git logs in debug mode
 	* Bump copyright
+	* Integrate REST api in version checker
 
     == Themes ==
 	* FlamingParrot: 1.66
