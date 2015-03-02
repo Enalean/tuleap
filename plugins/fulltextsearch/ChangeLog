@@ -1,3 +1,6 @@
+Version 0.126 - Tuleap 7.11
+    * Revert fix request #7862: Old phppwiki search method no longer available
+
 Version 0.125 - Tuleap 7.11
     * request #7864: only reindex project services once
 
