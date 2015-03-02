@@ -33,7 +33,7 @@ switch ($func) {
  case 'update_question':     
      if(array_key_exists('post_changes', $_POST) && isset($_POST['post_changes'])) {
 	 // recuperate the old question type before update
-	 $qry = "SELECT * FROM survey_questions WHERE group_id='$group_id' AND question_id='$question_id'";
+	 $qry = "SELECT * FROM survey_questions WHERE group_id='" . db_ei($group_id) . "' AND question_id='" . db_ei($question_id) . "'";
 	 $res = db_query($qry);
 	 $old_quest_type = db_result($res,0,'question_type');
 	 	 
@@ -42,7 +42,7 @@ switch ($func) {
 	 $cond2 = ($old_quest_type=="7") && ($question_type != "7") && ($question_type != 100);
 	 if ($cond1 || $cond2) {
 	   // check first if really something to delete
-	   $sql = "SELECT * FROM survey_radio_choices WHERE question_id='$question_id'";
+	   $sql = "SELECT * FROM survey_radio_choices WHERE question_id='" . db_ei($question_id) . "'";
 	   $result = db_query($sql);
 	   $rows = db_numrows($result);
 	   if ($rows > 0) {

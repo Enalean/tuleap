@@ -24,7 +24,7 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 	Get this survey out of the DB
 */
 if ($survey_id) {
-	$sql="SELECT * FROM surveys WHERE survey_id='$survey_id' AND group_id='$group_id'";
+	$sql="SELECT * FROM surveys WHERE survey_id='" . db_ei($survey_id) . "' AND group_id='" . db_ei($group_id) . "'";
 	$result=db_query($sql);
 	$survey_title=db_result($result, 0, "survey_title");
 	$survey_questions=db_result($result, 0, "survey_questions");
@@ -84,7 +84,7 @@ if ($survey_id) {
 	Select all surveys from the database
 */
 
-$sql="SELECT * FROM surveys WHERE group_id='$group_id'";
+$sql="SELECT * FROM surveys WHERE group_id='" . db_ei($group_id) . "'";
 
 $result=db_query($sql);
 

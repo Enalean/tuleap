@@ -41,7 +41,7 @@ if (array_key_exists('confirm', $_POST) && isset($_POST['confirm'])) {
     survey_data_question_update($group_id, $question_id, htmlspecialchars($question), $question_type);
     
     // delete all associated radio buttons
-    $sql = "SELECT * FROM survey_radio_choices WHERE question_id='$question_id'";
+    $sql = "SELECT * FROM survey_radio_choices WHERE question_id='" . db_ei($question_id) . "'";
     $result = db_query($sql);
     $rows = db_numrows($result);
     if ($rows > 0) {
@@ -64,7 +64,7 @@ survey_header(array('title'=>$Language->getText('survey_admin_update_radio','upd
 		    'help'=>'survey.html#creating-or-editing-questions'));
 
 // fetch question and associated radio button from DB, and check for integrity IDs
-$qry="SELECT * FROM survey_questions WHERE question_id='$question_id'";
+$qry="SELECT * FROM survey_questions WHERE question_id='" . db_ei($question_id) . "'";
 $res=db_query($qry);
 if (db_numrows($res) == 0) {
     $feedback .= " Error finding question #".$question_id;

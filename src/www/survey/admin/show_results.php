@@ -30,7 +30,7 @@ if (!isset($survey_id) || !$survey_id) {
 		Select a list of surveys, so they can click in and view a particular set of responses
 	*/
 
-	$sql="SELECT * FROM surveys WHERE group_id='$group_id'";
+	$sql="SELECT * FROM surveys WHERE group_id='" . db_ei($group_id) . "'";
 
 	$result=db_query($sql);
 

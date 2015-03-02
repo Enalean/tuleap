@@ -19,7 +19,7 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 }
 
 // Fetch the question from the DB
-$sql="SELECT * FROM survey_questions WHERE question_id='$question_id' AND group_id='$group_id'";
+$sql="SELECT * FROM survey_questions WHERE question_id='" . db_ei($question_id) . "' AND group_id='" . db_ei($group_id) . "'";
 $result=db_query($sql);
 
 if ($result) {
@@ -48,7 +48,7 @@ function show_questions() {
 <?php
 
 // check if question is associated to an existing survey. If it is the case, display a warning.
-$sql="SELECT * FROM surveys WHERE group_id=".$group_id;
+$sql="SELECT * FROM surveys WHERE group_id=" . db_ei($group_id);
 $res=db_query($sql);
 $warn=false;
 $i=0;
@@ -90,7 +90,7 @@ echo $survey->showTypeBox('question_type',$question_type);
 
 
 // see if the question is a radio-button type
-$qry1="SELECT * FROM survey_questions WHERE group_id='$group_id' AND question_id='$question_id'";
+$qry1="SELECT * FROM survey_questions WHERE group_id='" . db_ei($group_id) . "' AND question_id='" . db_ei($question_id) . "'";
 $res1=db_query($qry1);
 $question_type=db_result($res1,0,'question_type');
 
@@ -112,7 +112,7 @@ if ($question_type=="6" || $question_type=="7") {
     
     $sql="SELECT * ".
     "FROM survey_radio_choices ".
-    "WHERE question_id='$question_id'".
+    "WHERE question_id='" . db_ei($question_id) . "'".
     "ORDER BY choice_rank";
     $result=db_query($sql);
     

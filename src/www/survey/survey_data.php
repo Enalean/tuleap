@@ -41,9 +41,9 @@ function survey_data_survey_delete($group_id,$survey_id) {
     global $Language;
 
     // Delete first the data associated with the survey if any
-    $res = db_query("DELETE FROM survey_responses WHERE group_id=$group_id AND survey_id=$survey_id");
+    $res = db_query("DELETE FROM survey_responses WHERE group_id=" . db_ei($group_id) . " AND survey_id=" . db_ei($survey_id));
     // Then delete the survey itself
-    $res = db_query("DELETE FROM surveys WHERE survey_id=$survey_id");
+    $res = db_query("DELETE FROM surveys WHERE survey_id=" . db_ei($survey_id));
     if (db_affected_rows($res) <= 0) {
 	    $GLOBALS['Response']->addFeedback('error', $Language->getText('survey_s_data','del_err',array($survey_id,db_error($res))));
     } else {
@@ -69,7 +69,8 @@ function survey_data_survey_update($group_id,$survey_id,$survey_title,$survey_qu
         return;
     }
 
-    $sql="UPDATE surveys SET survey_title='$survey_title', survey_questions='$survey_questions', is_active='$is_active', is_anonymous='$is_anonymous' ".
+    $sql="UPDATE surveys SET survey_title='" . db_es($survey_title) . "', survey_questions='" . db_es($survey_questions) . "', "
+            . "is_active='" . db_ei($is_active) . "', is_anonymous='" . db_ei($is_anonymous) . "' ".
 		"WHERE survey_id='$survey_id' AND group_id='$group_id'";
     $result=db_query($sql);
     if (db_affected_rows($result) < 1) {
@@ -84,7 +85,7 @@ function survey_data_question_create($group_id,$question,$question_type)
     global $Language;
 
     $sql='INSERT INTO survey_questions (group_id,question,question_type) '.
-	"VALUES ('$group_id','$question','$question_type')";
+	"VALUES ('" . db_ei($group_id) . "','" . db_es($question) . "','" . db_ei($question_type) . "')";
     $result=db_query($sql);
     if ($result) {
         $question_id = db_insertid($result);
@@ -115,11 +116,11 @@ function survey_data_question_delete($group_id,$question_id) {
     }
     if(!$is_quest_in_survey){
         // Delete first the responses associated with to the question  if any
-        $res = db_query("DELETE FROM survey_responses WHERE group_id=$group_id AND survey_id=$question_id");
+        $res = db_query("DELETE FROM survey_responses WHERE group_id=" . db_ei($group_id) . " AND survey_id=" . db_ei($question_id));
         // Delete the radio choices if it is a radio button question
-        $res = db_query("DELETE FROM survey_radio_choices WHERE question_id=$question_id");
+        $res = db_query("DELETE FROM survey_radio_choices WHERE question_id=" . db_ei($question_id));
         // Then delete the question itself
-        $res = db_query("DELETE FROM survey_questions WHERE group_id=$group_id AND question_id=$question_id");
+        $res = db_query("DELETE FROM survey_questions WHERE group_id=" . db_ei($group_id) . " AND question_id=" . db_ei($question_id));
         if (db_affected_rows($res) <= 0) {
             $GLOBALS['Response']->addFeedback('error', $Language->getText('survey_s_data','q_del_fail',db_error($res)));
         } else {
@@ -135,8 +136,8 @@ function survey_data_question_update($group_id,$question_id,$question,$question_
     
     global $Language;
     
-	$sql="UPDATE survey_questions SET question='$question', question_type='$question_type' ".
-		"WHERE question_id='$question_id' AND group_id='$group_id'";
+	$sql="UPDATE survey_questions SET question='" . db_es($question) . "', question_type='" . db_ei($question_type) . "'".
+		"WHERE question_id='" . db_ei($question_id) . "' AND group_id='" . db_ei($group_id) . "'";
 	$result=db_query($sql);
 	if (db_affected_rows($result) < 1) {
 		$GLOBALS['Response']->addFeedback('error', $Language->getText('survey_s_data','upd_fail',db_error()));
@@ -155,7 +156,7 @@ function survey_data_radio_update($question_id, $choice_id, $radio, $rank) {
     $_rank = (int) $rank;
     $_radio = htmlentities($radio, ENT_QUOTES, 'UTF-8');
     
-    $qry1="SELECT * FROM survey_radio_choices WHERE question_id='$_question_id' AND choice_id='$_choice_id'";
+    $qry1="SELECT * FROM survey_radio_choices WHERE question_id='" . db_ei($_question_id) . "' AND choice_id='" . db_ei($_choice_id) . "'";
     $res1=db_query($qry1);
     $old_text=db_result($res1,0,'radio_choice');
     $old_rank=db_result($res1,0,'choice_rank');
@@ -175,8 +176,8 @@ function survey_data_radio_update($question_id, $choice_id, $radio, $rank) {
     }
     
     if ($update) {
-        $sql="UPDATE survey_radio_choices SET radio_choice='$_radio',choice_rank='$_rank'".
-            " WHERE question_id='$_question_id' AND choice_id='$_choice_id'";
+        $sql="UPDATE survey_radio_choices SET radio_choice='" . db_es($_radio) . "',choice_rank='" . db_ei($_rank) . "'".
+            " WHERE question_id='" . db_ei($_question_id) . "' AND choice_id='" . db_ei($_choice_id) . "'";
         $result=db_query($sql);
         if (db_affected_rows($result) < 1) {
 	        $GLOBALS['Response']->addFeedback('error', $Language->getText('survey_s_data','upd_fail',db_error()));
@@ -198,7 +199,7 @@ function survey_data_radio_create($question_id, $radio, $rank) {
     
     if (check_for_duplicata($_question_id,$_radio)) {	
 	$sql='INSERT INTO survey_radio_choices (question_id,radio_choice,choice_rank) '.
-            "VALUES ('$_question_id','$_radio','$_rank')";
+            "VALUES ('" . db_ei($_question_id) . "','" . db_es($_radio) . "','" . db_ei($_rank) . "')";
         $result=db_query($sql);
         if ($result) {
             $GLOBALS['Response']->addFeedback('info', $Language->getText('survey_s_data','r_create_succ',db_insertid($result)));
@@ -218,7 +219,7 @@ function survey_data_radio_delete($question_id, $choice_id) {
     $_question_id = (int) $question_id;
     $_choice_id = (int) $choice_id;
     
-    $sql="DELETE FROM survey_radio_choices WHERE question_id='$_question_id' AND choice_id='$_choice_id'";
+    $sql="DELETE FROM survey_radio_choices WHERE question_id='" . db_ei($_question_id) . "' AND choice_id='" . db_ei($_choice_id) . "'";
     $result=db_query($sql);
     if (db_affected_rows($result) <= 0) {
 	    $GLOBALS['Response']->addFeedback('error', $Language->getText('survey_s_data','r_del_fail',db_error($result)));
@@ -234,7 +235,7 @@ function check_for_duplicata($question_id, $radio) {
         
     //check if the radio button text is already existing. If so, creation or update fails
     $update=false;
-    $qry2="SELECT * FROM survey_radio_choices WHERE question_id='$question_id' AND radio_choice='$radio'";
+    $qry2="SELECT * FROM survey_radio_choices WHERE question_id='" . db_ei($question_id) . "' AND radio_choice='" . db_ei($radio) . "'";
     $res2=db_query($qry2);
     
     if (db_numrows($res2)>0) {

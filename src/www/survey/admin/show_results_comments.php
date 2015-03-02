@@ -21,7 +21,7 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 	exit;
 }
 
-$sql="SELECT question FROM survey_questions WHERE question_id='$question_id'";
+$sql="SELECT question FROM survey_questions WHERE question_id='" . db_ei($question_id) . "'";
 $result=db_query($sql);
 
 echo '<h2>'.$Language->getText('survey_admin_show_r_comments','s_res').'</h2>';
@@ -29,8 +29,8 @@ echo '<h2>'.$Language->getText('survey_admin_show_r_comments','s_res').'</h2>';
 echo '<h3>'.$Language->getText('survey_admin_show_r_comments','q_no',array($question_num,util_unconvert_htmlspecialchars(db_result($result,0,"question")))).'</H3>';
 echo "<P>";
 
-$sql="SELECT response, count(*) AS count FROM survey_responses WHERE survey_id='$survey_id' ".
-"AND question_id='$question_id' AND group_id='$group_id' ".
+$sql="SELECT response, count(*) AS count FROM survey_responses WHERE survey_id='" . db_ei($survey_id) . "' ".
+"AND question_id='" . db_ei($question_id) . "' AND group_id='" . db_ei($group_id) . "' ".
 "GROUP BY response";
 $result=db_query($sql);
 survey_utils_show_comments($result);

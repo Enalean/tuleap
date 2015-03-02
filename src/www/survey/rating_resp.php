@@ -21,11 +21,11 @@ if (!user_isloggedin()) {
 			2=release
 		*/
 
-		$sql="DELETE FROM survey_rating_response WHERE user_id='".user_getid()."' AND type='$flag' AND id='$vote_on_id'";
+		$sql="DELETE FROM survey_rating_response WHERE user_id='".db_ei(user_getid())."' AND type='".db_ei($flag)."' AND id='".db_ei($vote_on_id)."'";
 		$toss=db_query($sql);
 
 		$sql="INSERT INTO survey_rating_response (user_id,type,id,response,date) ".
-			"VALUES ('".user_getid()."','$flag','$vote_on_id','$response','".time()."')";
+			"VALUES ('".db_ei(user_getid())."','".db_ei($flag)."','".db_ei($vote_on_id)."','".db_ei($response)."','".db_ei(time())."')";
 		$result=db_query($sql);
 		if (!$result) {
 			$feedback .= " ".$Language->getText('global','error')." ";

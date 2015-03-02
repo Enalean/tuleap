@@ -29,7 +29,7 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 	Select this survey from the database
 */
 
-$sql="SELECT * FROM surveys WHERE survey_id='$survey_id' AND group_id='$group_id'";
+$sql="SELECT * FROM surveys WHERE survey_id='" . db_ei($survey_id) . "' AND group_id='" . db_ei($group_id) . "'";
 $result=db_query($sql);
 
 echo "<H2>".$survey->getSurveyTitle(db_result($result, 0, "survey_title"))."</H2><P>";
@@ -56,7 +56,7 @@ for ($i=0; $i<$quest_count; $i++) {
 		Build the questions on the HTML form
 	*/
 
-	$sql="SELECT question_type,question,question_id FROM survey_questions WHERE question_id=$quest_array[$i]";
+	$sql="SELECT question_type,question,question_id FROM survey_questions WHERE question_id=" . db_ei($quest_array[$i]);
 
 	$result=db_query($sql);
 
@@ -97,13 +97,13 @@ for ($i=0; $i<$quest_count; $i++) {
 		/*
 			Select the number of responses to this question
 		*/
-		$sql="SELECT count(*) AS count FROM survey_responses WHERE survey_id='$survey_id' ".
-		    "AND question_id='$quest_array[$i]' AND response <> '' AND group_id='$group_id'";
+		$sql="SELECT count(*) AS count FROM survey_responses WHERE survey_id='" . db_ei($survey_id) . "' ".
+		    "AND question_id='" . db_ei($quest_array[$i]) . "' AND response <> '' AND group_id='" . db_ei($group_id) . "'";
 
 		$result2=db_query($sql);
 
-		$sql="SELECT count(*) AS count FROM survey_responses WHERE survey_id='$survey_id' ".
-		    "AND question_id='$quest_array[$i]' AND response='' AND group_id='$group_id'";
+		$sql="SELECT count(*) AS count FROM survey_responses WHERE survey_id='" . db_ei($survey_id) . "' ".
+		    "AND question_id='" . db_ei($quest_array[$i]) . "' AND response='' AND group_id='" . db_ei($group_id) . "'";
 		$result3=db_query($sql);
 
 		if (!$result2 || db_numrows($result2) < 1) {
@@ -123,8 +123,8 @@ for ($i=0; $i<$quest_count; $i++) {
 		if ($question_type == "1") {
 		    if ($answers_cnt > 0) {
 		        $sql='SELECT avg(response) AS avg FROM survey_responses '.
-			    "WHERE survey_id='$survey_id' AND question_id='$quest_array[$i]' ".
-			    "AND response <> '' AND group_id='$group_id'";			
+			    "WHERE survey_id='" . db_ei($survey_id) . "' AND question_id='" . db_ei($quest_array[$i]) . "' ".
+			    "AND response <> '' AND group_id='" . db_ei($group_id) . "'";
 
 		        $result2=db_query($sql);
 		        if (!$result2 || db_numrows($result2) < 1) {
@@ -152,7 +152,8 @@ for ($i=0; $i<$quest_count; $i++) {
 			    $Language->getText('survey_admin_show_r_aggregate','type').$type;
 		}
 		
-                $sql="SELECT response,count(*) AS count FROM survey_responses WHERE survey_id='$survey_id' AND question_id='$quest_array[$i]' AND response <> '' AND group_id='$group_id' GROUP BY response"; 
+                $sql="SELECT response,count(*) AS count FROM survey_responses WHERE survey_id='" . db_ei($survey_id) . "' "
+                        . "AND question_id='". db_ei($quest_array[$i]) . "' AND response <> '' AND group_id='" . db_ei($group_id) . "' GROUP BY response";
 		 
 		$result2=db_query($sql);
 		// Graph it even if there is zero row because GraphResult
@@ -168,13 +169,13 @@ for ($i=0; $i<$quest_count; $i++) {
 		/*
 			This is a text-area question.
 		*/
-		$sql="SELECT count(*) AS count FROM survey_responses WHERE survey_id='$survey_id' ".
-		    "AND question_id='$quest_array[$i]' AND group_id='$group_id' AND response<>'' ";
+		$sql="SELECT count(*) AS count FROM survey_responses WHERE survey_id='" . db_ei($survey_id) . "' ".
+		    "AND question_id='" . db_ei($quest_array[$i]) . "' AND group_id='" . db_ei($group_id) . "' AND response<>'' ";
 
 		$result2=db_query($sql);
 
-		$sql="SELECT count(*) AS count FROM survey_responses WHERE survey_id='$survey_id' ".
-		    "AND question_id='$quest_array[$i]' AND group_id='$group_id' AND response='' ";
+		$sql="SELECT count(*) AS count FROM survey_responses WHERE survey_id='" . db_ei($survey_id) . "' ".
+		    "AND question_id='" . db_ei($quest_array[$i]) . "' AND group_id='" . db_ei($group_id) . "' AND response='' ";
 		$result3=db_query($sql);
 
 		$answers_cnt=db_result($result2, 0, 'count');
@@ -197,13 +198,13 @@ for ($i=0; $i<$quest_count; $i++) {
 		/*
 			Select the count and average of responses to this question
 		*/
-		$sql="SELECT count(*) AS count FROM survey_responses WHERE survey_id='$survey_id' ".
-		    "AND question_id='$quest_array[$i]' AND group_id='$group_id' AND response IN (1,5)";
+		$sql="SELECT count(*) AS count FROM survey_responses WHERE survey_id='" . db_ei($survey_id) . "' ".
+		    "AND question_id='" . db_ei($quest_array[$i]). "' AND group_id='" . db_ei($group_id) . "' AND response IN (1,5)";
 
 		$result2=db_query($sql);
 
-		$sql="SELECT count(*) AS count FROM survey_responses WHERE survey_id='$survey_id' ".
-		    "AND question_id='$quest_array[$i]' AND group_id='$group_id' AND response='' ";
+		$sql="SELECT count(*) AS count FROM survey_responses WHERE survey_id='" . db_ei($survey_id) . "' ".
+		    "AND question_id='" . db_ei($quest_array[$i]) . "' AND group_id='" . db_ei($group_id) . "' AND response='' ";
 		$result3=db_query($sql);
 
 		if (!$result2 || db_numrows($result2) < 1) {
@@ -222,8 +223,8 @@ for ($i=0; $i<$quest_count; $i++) {
 		if ($answers_cnt > 0) {
 
 		    $sql='SELECT avg(response) AS avg FROM survey_responses '.
-			"WHERE survey_id='$survey_id' AND question_id='$quest_array[$i]' ".
-			"AND response IN (1,5) AND group_id='$group_id'";
+			"WHERE survey_id='" . db_ei($survey_id) . "' AND question_id='" . db_ei($quest_array[$i]) . "' ".
+			"AND response IN (1,5) AND group_id='" . db_ei($group_id) . "'";
 
 		    $result2=db_query($sql);
 		    if (!$result2 || db_numrows($result2) < 1) {
@@ -246,7 +247,7 @@ for ($i=0; $i<$quest_count; $i++) {
 		/*
 			Get the YES responses
 		*/
-		$sql="SELECT count(*) AS count FROM survey_responses WHERE survey_id='$survey_id' AND question_id='$quest_array[$i]' AND group_id='$group_id' AND response='1'";
+		$sql="SELECT count(*) AS count FROM survey_responses WHERE survey_id='" . db_ei($survey_id) . "' AND question_id='" . db_ei($quest_array[$i]) . "' AND group_id='" . db_ei($group_id) . "' AND response='1'";
 
 		$result2=db_query($sql);
 
@@ -261,7 +262,7 @@ for ($i=0; $i<$quest_count; $i++) {
 		/*
 			Get the NO responses
 		*/
-		$sql="SELECT count(*) AS count FROM survey_responses WHERE survey_id='$survey_id' AND question_id='$quest_array[$i]' AND group_id='$group_id' AND response='5'";
+		$sql="SELECT count(*) AS count FROM survey_responses WHERE survey_id='" . db_ei($survey_id). "' AND question_id='" . db_ei($quest_array[$i]) . "' AND group_id='" . db_ei($group_id) . "' AND response='5'";
 
 		$result2=db_query($sql);
 
@@ -289,13 +290,13 @@ for ($i=0; $i<$quest_count; $i++) {
 		/*
 			This is a text-field question.
 		*/
-		$sql="SELECT count(*) AS count FROM survey_responses WHERE survey_id='$survey_id' ".
-		    "AND question_id='$quest_array[$i]' AND group_id='$group_id' AND response<>'' ";
+		$sql="SELECT count(*) AS count FROM survey_responses WHERE survey_id='" . db_ei($survey_id) . "' ".
+		    "AND question_id='" . db_ei($quest_array[$i]) . "' AND group_id='" . db_ei($group_id) . "' AND response<>'' ";
 
 		$result2=db_query($sql);
 
-		$sql="SELECT count(*) AS count FROM survey_responses WHERE survey_id='$survey_id' ".
-		    "AND question_id='$quest_array[$i]' AND group_id='$group_id' AND response='' ";
+		$sql="SELECT count(*) AS count FROM survey_responses WHERE survey_id='" . db_ei($survey_id) . "' ".
+		    "AND question_id='" . db_ei($quest_array[$i]) . "' AND group_id='" . db_ei($group_id) . "' AND response='' ";
 		$result3=db_query($sql);
 
 		$answers_cnt=db_result($result2, 0, 'count');

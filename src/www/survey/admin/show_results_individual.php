@@ -29,7 +29,7 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 	Select this survey from the database
 */
 
-$sql="SELECT * FROM surveys WHERE survey_id='$survey_id' AND group_id='$group_id'";
+$sql="SELECT * FROM surveys WHERE survey_id='" . db_ei($survey_id) . "' AND group_id='" . db_ei($group_id) . "'";
 $result=db_query($sql);
 
 echo "\n<H2>".db_result($result, 0, "survey_title")."</H2><P>";
@@ -71,8 +71,8 @@ for ($i=0; $i<$count; $i++) {
 	*/
 
 	$sql="select questions.question_type,questions.question,questions.question_id,responses.response ".
-		"from questions,responses where questions.question_id='".$quest_array[$i]."' and ".
-		"questions.question_id=responses.question_id and responses.customer_id=$customer_id AND responses.survey_id=$survey_id";
+		"from questions,responses where questions.question_id='" . db_ei($quest_array[$i]) . "' and ".
+		"questions.question_id=responses.question_id and responses.customer_id=". db_ei($customer_id) . " AND responses.survey_id=" . db_ei($survey_id);
 
 	$result=db_query($sql);
 
@@ -88,7 +88,7 @@ for ($i=0; $i<$count; $i++) {
 	
 		#if (!$result || db_numrows($result) < 1) {
 		#	echo "\n\n<!-- falling back 2 -->";
-			$result=db_query("select * from survey_questions where question_id='".$quest_array[$i]."'");
+			$result=db_query("select * from survey_questions where question_id='" . db_ei($quest_array[$i]) . "'");
 			$not_found=1;
 		#} else {
                 #	$not_found=0;
