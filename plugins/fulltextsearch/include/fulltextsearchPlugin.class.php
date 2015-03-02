@@ -178,7 +178,7 @@ class fulltextsearchPlugin extends Plugin {
             self::SEARCH_TYPE
         );
 
-        if ($this->getCurrentUser()->useLabFeatures() && $this->isAllowed($params['query']->getProject()->getID())) {
+        if ($this->getCurrentUser()->useLabFeatures()) {
             $type_of_search = $params['query']->getTypeOfSearch();
             $index          = ($type_of_search == self::SEARCH_TYPE ) ? self::SEARCH_DEFAULT : $type_of_search;
             $type           = ($index === self::SEARCH_TRACKER_TYPE && ! $params['query']->getProject()->isError()) ?

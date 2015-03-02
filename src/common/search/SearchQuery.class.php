@@ -44,15 +44,11 @@ class Search_SearchQuery {
     private function setTypeOfSearch(Codendi_Request $request) {
         $plugin_manager  = PluginManager::instance();
         $fulltext_plugin = $plugin_manager->getPluginByName('fulltextsearch');
-        $user = UserManager::instance()->getCurrentUser();
 
         if (
             $request->get('type_of_search') === Search_SearchWiki::NAME &&
             $fulltext_plugin &&
-            $plugin_manager->isPluginAvailable($fulltext_plugin) &&
-            $plugin_manager->isPluginAllowedForProject($fulltext_plugin, $this->project->getID()) &&
-            $user->useLabFeatures()
-
+            $plugin_manager->isPluginAvailable($fulltext_plugin)
         ) {
             return fulltextsearchPlugin::SEARCH_TYPE;
         }
