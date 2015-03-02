@@ -25,17 +25,17 @@ use \Tuleap\REST\JsonCast;
 class TrackerReference {
 
     /**
-     * @var int ID of the tracker
+     * @var int ID of the tracker {@type int} {@required true}
      */
     public $id;
 
     /**
-     * @var string URI of the tracker
+     * @var string URI of the tracker {@type string}
      */
     public $uri;
 
     /**
-     * @var string Display Name of the tracker
+     * @var string Display Name of the tracker {@type string}
      */
     public $label;
 
