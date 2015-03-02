@@ -1,3 +1,6 @@
+Version 5.581 - Tuleap 7.11
+    * request #7894: Fixing potential blank page on report save
+
 Version 5.580 - Tuleap 7.11
     * story #7702 use XML for REST api (Add Restler type in ArtifactReprensetation)
 
