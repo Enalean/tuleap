@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2008. All rights reserved
  * 
  * 
@@ -131,10 +132,10 @@ class CrossReference extends Error {
     
     function deleteCrossReference(){
         $sql = "DELETE FROM cross_references 
-		        WHERE ((target_gid=" . $this->refTargetGid . " AND target_id='" . $this->refTargetId . "' AND target_type='" . $this->refTargetType. "' ) 
-				     AND (source_gid=" .$this->refSourceGid." AND source_id='" .$this->refSourceId . "' AND source_type='" . $this->refSourceType. "' )) 
-                     OR ((target_gid=" . $this->refSourceGid . " AND target_id='" . $this->refSourceId . "' AND target_type='" . $this->refSourceType. "' ) 
-				     AND (source_gid=" . $this->refTargetGid." AND source_id='" .$this->refTargetId  . "' AND source_type='" . $this->refTargetType. "' ))";
+		        WHERE ((target_gid=" . db_ei($this->refTargetGid) . " AND target_id='" . db_ei($this->refTargetId) . "' AND target_type='" . db_es($this->refTargetType) . "' )
+				     AND (source_gid=" . db_ei($this->refSourceGid) . " AND source_id='" . db_ei($this->refSourceId) . "' AND source_type='" . db_es($this->refSourceType) . "' ))
+                     OR ((target_gid=" . db_ei($this->refSourceGid) . " AND target_id='" . db_ei($this->refSourceId) . "' AND target_type='" . db_es($this->refSourceType) . "' )
+				     AND (source_gid=" . db_ei($this->refTargetGid) . " AND source_id='" . db_ei($this->refTargetId)  . "' AND source_type='" . db_es($this->refTargetType) . "' ))";
         $res = db_query($sql);
         if ($res) {
             return true;
@@ -142,8 +143,4 @@ class CrossReference extends Error {
             return false;
       	}
     }
-    
-
 }
-
-?>
