@@ -30,4 +30,3 @@ $HTML->header(array('title'=>$Language->getText('top_index','top_list')));
 
 <?php
 $HTML->footer(array());
-?>

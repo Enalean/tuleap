@@ -1,5 +1,6 @@
 <?php
 //
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
@@ -8,12 +9,12 @@
 
 require_once('pre.php');    
 
-
-
-if (!isset($offset) || $offset < 0) {
+$offset = $request->get('offset');
+if ($offset === false || $offset < 0) {
 	$offset=0;
 }
-if (!isset($type) || $type != 'week') {
+$type = $request->get('type');
+if ($type === false || $type != 'week') {
     $type = '';
 }
 
@@ -22,14 +23,14 @@ if ($type == 'week') {
 		"FROM groups,project_weekly_metric ".
 		"WHERE groups.group_id=project_weekly_metric.group_id AND ".
 		"groups.is_public=1 AND groups.type=1 ".
-		"ORDER BY ranking ASC LIMIT $offset,50";
+		"ORDER BY ranking ASC LIMIT " . db_ei($offset) . ",50";
 	$title = $Language->getText('top_index','act_week');
 } else {
 	$sql="SELECT groups.group_name,groups.unix_group_name,groups.group_id,project_metric.ranking,project_metric.percentile ".
 		"FROM groups,project_metric ".
 		"WHERE groups.group_id=project_metric.group_id AND ".
 		"groups.is_public=1 AND groups.type=1 ".
-		"ORDER BY ranking ASC LIMIT $offset,50";
+		"ORDER BY ranking ASC LIMIT " . db_ei($offset) . ",50";
 	$title = $Language->getText('top_index','act_all_time');
 }
 
@@ -69,4 +70,3 @@ print '<TR><TD>'.(($offset>0)?'<A HREF="mostactive.php?type='.$type.'&offset='.(
 print '</TABLE>';
 
 $HTML->footer(array());
-?>
