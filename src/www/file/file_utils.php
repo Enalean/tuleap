@@ -1149,7 +1149,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                     if (trim($_FILES['file']['name'][0]) != '') {
                         $http_files_processor_type_list[] = array (
                             'error'         => $_FILES['file']['error'][0],
-                            'name'          => $_FILES['file']['name'][0],
+                            'name'          => stripslashes($_FILES['file']['name'][0]),
                             'tmp_name'      => $_FILES['file']['tmp_name'][0],
                             'processor'     => $file_processor,
                             'type'          => $file_type,
@@ -1164,7 +1164,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                     if (trim($_FILES['file']['name'][$i]) != '') {
                         $http_files_processor_type_list[] = array (
                             'error'         => $_FILES['file']['error'][$i],
-                            'name'          => $_FILES['file']['name'][$i],
+                            'name'          => stripslashes($_FILES['file']['name'][$i]),
                             'tmp_name'      => $_FILES['file']['tmp_name'][$i],
                             'processor'     => $file_processor[$i],
                             'type'          => $file_type[$i],

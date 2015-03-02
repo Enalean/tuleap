@@ -518,7 +518,7 @@ class FRSFile extends Error {
 
         // Check the 2 GB limit (2^31 -1)
         if ($file_size > 2147483647) {
-            if ($fp=popen("/bin/cat $file_location","rb")) {
+            if ($fp=popen('/bin/cat "' . escapeshellarg($file_location) . '"',"rb")) {
                 $blocksize = (2 << 20); //2M chunks
                 while(!feof($fp)) {
                     print(fread($fp, $blocksize));
