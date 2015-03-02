@@ -36,6 +36,11 @@ class KanbanItemRepresentation {
      */
     public $label;
 
+    /**
+     * @var String
+     */
+    public $color;
+
     /*
      * @var array
      */
@@ -44,6 +49,7 @@ class KanbanItemRepresentation {
     public function build(Tracker_Artifact $artifact) {
         $this->id          = JsonCast::toInt($artifact->getId());
         $this->label       = $artifact->getTitle();
+        $this->color       = $artifact->getTracker()->getColor();
         $this->card_fields = $this->getArtifactCardFields($artifact);
     }
 

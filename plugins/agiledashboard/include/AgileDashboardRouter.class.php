@@ -186,7 +186,10 @@ class AgileDashboardRouter {
                 $this->executeAction($this->buildController($request), 'createKanban');
                 break;
             case 'showKanban':
-                $header_options = array('body_class' => array('agiledashboard_kanban'));
+                $header_options = array(
+                    'body_class'                 => array('agiledashboard_kanban'),
+                    Layout::INCLUDE_FAT_COMBINED => false,
+                );
                 $this->renderAction($this->buildController($request), 'showKanban', $request, array(), $header_options);
                 break;
             case 'index':

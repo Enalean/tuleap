@@ -1,3 +1,34 @@
+@-webkit-keyframes loading-header {
+    0%, 50%, 100% { opacity: 0.2;  }
+    25%, 75%      { opacity: 0.03; }
+}
+@keyframes loading-header {
+    0%, 50%, 100% { opacity: 0.2;  }
+    25%, 75%      { opacity: 0.03; }
+}
+
+@-webkit-keyframes loading-column {
+    0%, 50%, 100% { opacity: 1;   }
+    25%, 75%      { opacity: 0.5; }
+}
+@keyframes loading-column {
+    0%, 50%, 100% { opacity: 1;   }
+    25%, 75%      { opacity: 0.5; }
+}
+
+.loading {
+    -webkit-animation-duration: 1s;
+            animation-duration: 1s;
+    -webkit-animation-name: loading-column;
+            animation-name: loading-column;
+    -webkit-animation-iteration-count: infinite;
+            animation-iteration-count: infinite;
+}
+
+#kanban-app {
+    height: 100%;
+}
+
 #kanban-header {
     > .kanban-title {
         padding: 20px 0 10px;
@@ -10,46 +41,59 @@
 }
 
 #kanban-board {
-    @fontsizeheader: 1em;
+    @fontsizeheader: 14px;
     @lineheightheader: 2.3em;
     @lightenratio: 45%;
     @lightenratiomiddle: 15%;
 
     width: 100%;
-    border-collapse: collapse;
+    position: relative;
+    white-space: nowrap;
+    font-size: 0;
+    overflow-y: auto;
+    overflow-x: auto;
 
-    > thead > tr {
+    > div {
+        display: inline-block;
+        border-right: 1px solid #e0e0e0;
+        border-top-width: 4px;
+        background: #FBFBFB;
+        color: #CCC;
+        font-size: @fontsizeheader;
+        text-transform: uppercase;
+        line-height: @lineheightheader;
+        text-align: center;
+        white-space: normal;
+        min-height: 100%;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        margin: 0 0 -10px;
 
-        > th {
+        > .column-header {
             padding: 8px 0 0;
-            border: 1px solid #e0e0e0;
-            border-top: none;
-            border-right: none;
+            border-bottom: 1px solid #e0e0e0;
+            border-right: 1px solid #e0e0e0;
             font-size: @fontsizeheader;
             font-weight: 400;
             font-family: 'SourceSansPro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             color: #CCC;
-            height: 40px;
+            background: white;
+            min-height: 48px;
             vertical-align: middle;
             box-shadow: inset 0 4px 0 #666;
             color: #666;
-
-            > .loading {
-                float: right;
-                width: 16px;
-                height: 16px;
-                margin: 0;
-                position: relative;
-                top: -2px;
-                background-image: url('loader-mini.gif');
-            }
+            position: absolute;
+            z-index: 5;
+            opacity: 0.95;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
 
             > .wip-limit {
                 float: right;
                 color: white;
-                margin: 0 7px 0 0;
+                margin: 6px 7px 0 0;
                 line-height: 20px;
                 border-radius: 16px;
                 padding: 0px 7px;
@@ -70,11 +114,21 @@
             > .wip-count {
                 float: right;
                 position: relative;
-                top: -2px;
                 margin: 0 4px;
                 font-size: 3em;
                 font-weight: bold;
                 opacity: 0.2;
+                // For IE11: if not specified, the animation will not stop even if
+                // .loading class is not present anymore
+                -webkit-animation-duration: 0s;
+                        animation-duration: 0s;
+
+                &.loading {
+                    -webkit-animation-name: loading-header;
+                            animation-name: loading-header;
+                    -webkit-animation-duration: 1s;
+                            animation-duration: 1s;
+                }
             }
 
             > .toggle-column {
@@ -89,12 +143,46 @@
                     transition: opacity 0.1s linear;
                 }
             }
+        }
 
-            &.column-hidden {
+        > .column-content {
+            -moz-box-sizing: border-box;
+                 box-sizing: border-box;
+            padding: 50px 0 10px;
+            text-transform: none;
+
+            > .kanban-info {
+                font-style: italic;
+            }
+        }
+
+        &.column-displayed {
+            vertical-align: top;
+            min-width: 180px;
+
+            > .column-content {
+                height: 100%;
+                position: relative;
+            }
+
+            > .column-label {
+                display: none;
+            }
+        }
+
+        &.column-hidden {
+            width: 75px;
+            min-width: 75px;
+            white-space: nowrap;
+            cursor: pointer;
+            color: #666;
+            background: #EEE;
+
+            > .column-header {
+
                 > .column-label,
                 > .wip-limit,
-                > .wip-count,
-                > .loading {
+                > .wip-count {
                     display: none;
                 }
 
@@ -111,67 +199,31 @@
                     font-size: 1.4em;
                 }
             }
-        }
-
-        > .backlog {
-            border-left: none;
-        }
-    }
-
-    > tbody > tr {
-
-        > td {
-            height: 600px;
-            border-right: 1px solid #e0e0e0;
-            border-top-width: 4px;
-            background: #f9f9f9;
-            color: #CCC;
-            font-size: @fontsizeheader;
-            text-transform: uppercase;
-            line-height: @lineheightheader;
-            text-align: center;
 
             > .column-content {
-                text-transform: none;
-
-                > .kanban-info {
-                    font-style: italic;
-                }
+                display: none;
             }
 
-            &.column-displayed {
-                vertical-align: top;
-
-                > .column-content {
-                    height: 100%;
-                    position: relative;
-                }
-            }
-
-            &.column-hidden {
-                max-width: 75px;
+            > .column-label {
                 width: 75px;
-                min-width: 75px;
-                white-space: nowrap;
-                cursor: pointer;
-                color: #666;
-                background: #EEE;
+                z-index: 1;
+                position: relative;
 
-                > .column-content {
-                    display: none;
-                }
-
-                > .column-label {
+                > div {
                     position: relative;
+                    margin-top: 85px;
                     left: -10px;
+                    top: 0;
+                    text-align: right;
+                    direction: rtl;
                     font-family: 'SourceSansPro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
                     letter-spacing: 0.05em;
                     font-size: 1.2em;
                     -webkit-transform: rotate(270deg);
-                    -moz-transform: rotate(270deg);
-                    -ms-transform: rotate(270deg);
-                    -o-transform: rotate(270deg);
-                    transform: rotate(270deg);
+                       -moz-transform: rotate(270deg);
+                        -ms-transform: rotate(270deg);
+                         -o-transform: rotate(270deg);
+                            transform: rotate(270deg);
 
                     > .count {
                         position: relative;
@@ -181,29 +233,14 @@
                         font-weight: bold;
                         color: #CCC;
                     }
-
-                    > .loading {
-                        width: 26px;
-                        height: 26px;
-                        margin: 0;
-                        position: relative;
-                        top: 8px;
-                        left: 3px;
-                        display: inline-block;
-                        -webkit-transform: scale(0.7);
-                        -moz-transform: scale(0.7);
-                        -ms-transform: scale(0.7);
-                        -o-transform: scale(0.7);
-                        transform: scale(0.7);
-                    }
-                }
-
-                &:hover {
-                    opacity: 0.7;
                 }
             }
 
-            &.column-hidden.archive {
+            &:hover {
+                opacity: 0.7;
+            }
+
+            &.archive {
                 color: #666;
                 background: #EEE;
 
@@ -211,30 +248,25 @@
                     color: #CCC;
                 }
             }
-
-
-            &.column-displayed {
-                > .column-label {
-                    display: none;
-                }
-            }
         }
+    }
 
-        > .archive {
-            border-right: none;
-        }
+    > .backlog {
+        border-left: none;
+    }
+
+    > .archive {
+        border-right: none;
     }
 }
 
 ul.kanban-items {
-    text-align: center;
-    list-style-type: none;
     margin: 0 auto;
     height: inherit;
+    list-style-type: none;
 
     > li {
-        margin: 0 auto 10px;
-        width: 300px;
+        margin: 0 10px 10px;
 
         &:first-child {
             margin-top: 10px;
@@ -250,29 +282,111 @@ ul.kanban-items {
 
         > .kanban-item {
             position: relative;
-            border: 1px solid #e0e0e0;
-            border-radius: 5px;
-            background: white;
-            box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
-            padding: 10px;
-            color: #666;
             overflow: hidden;
+            padding: 5px 5px 5px 12px;
+            cursor: move;
+            color: #333;
             font-weight: normal;
+            background: #FFFFFF;
+            border: 1px solid #E8E8E8;
+            border-radius: 3px;
+            box-shadow: 0px 1px 0px 0px rgba(242, 242, 242, 0.7);
+
+            > div.type-border {
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: 5px;
+                border-top-left-radius: 2px;
+                border-bottom-left-radius: 2px;
+            }
+
+            &.inca_silver {
+                > div.type-border     { background-color: @inca_silver; }
+                > span.initial-effort { background-color: @inca_silver; }
+            }
+            &.chrome_silver {
+                > div.type-border     { background-color: @chrome_silver; }
+                > span.initial-effort { background-color: @chrome_silver; }
+            }
+            &.fiesta_red {
+                > div.type-border     { background-color: @fiesta_red; }
+                > span.initial-effort { background-color: @fiesta_red; }
+            }
+            &.teddy_brown {
+                > div.type-border     { background-color: @teddy_brown; }
+                > span.initial-effort { background-color: @teddy_brown; }
+            }
+            &.clockwork_orange {
+                > div.type-border     { background-color: @clockwork_orange; }
+                > span.initial-effort { background-color: @clockwork_orange; }
+            }
+            &.red_wine {
+                > div.type-border     { background-color: @red_wine; }
+                > span.initial-effort { background-color: @red_wine; }
+            }
+            &.acid_green {
+                > div.type-border     { background-color: @acid_green; }
+                > span.initial-effort { background-color: @acid_green; }
+            }
+            &.army_green {
+                > div.type-border     { background-color: @army_green; }
+                > span.initial-effort { background-color: @army_green; }
+            }
+            &.sherwood_green {
+                > div.type-border     { background-color: @sherwood_green; }
+                > span.initial-effort { background-color: @sherwood_green; }
+            }
+            &.ocean_turquoise {
+                > div.type-border     { background-color: @ocean_turquoise; }
+                > span.initial-effort { background-color: @ocean_turquoise; }
+            }
+            &.daphne_blue {
+                > div.type-border     { background-color: @daphne_blue; }
+                > span.initial-effort { background-color: @daphne_blue; }
+            }
+            &.lake_placid_blue {
+                > div.type-border     { background-color: @lake_placid_blue; }
+                > span.initial-effort { background-color: @lake_placid_blue; }
+            }
+            &.deep_blue {
+                > div.type-border     { background-color: @deep_blue; }
+                > span.initial-effort { background-color: @deep_blue; }
+            }
+            &.plum_crazy {
+                > div.type-border     { background-color: @plum_crazy; }
+                > span.initial-effort { background-color: @plum_crazy; }
+            }
+            &.peggy_pink {
+                > div.type-border     { background-color: @peggy_pink; }
+                > span.initial-effort { background-color: @peggy_pink; }
+            }
+            &.flamingo_pink {
+                > div.type-border     { background-color: @flamingo_pink; }
+                > span.initial-effort { background-color: @flamingo_pink; }
+            }
 
             > .kanban-item-link {
                 position: absolute;
-                top: 5px;
-                left: 5px;
+                top: 3px;
+                left: 12px;
                 color: #999;
-                font-size: 12px;
+                font-size: 0.8em;
+
+                &:hover {
+                    text-decoration: none;
+                    opacity: 0.7;
+                }
             }
 
             > .kanban-item-label {
-                padding: 20px 0 5px;
+                padding: 20px 0;
+                text-align: center;
             }
 
             > ul.extra_card_fields {
-                margin: 5px 0 0;
+                margin: 0;
                 text-align: left;
 
                 > li {
@@ -314,5 +428,25 @@ ul.kanban-items {
         border-radius: 4px 4px 0 0;
         background: #DA5353;
         color: white;
+    }
+}
+
+#kanban-board > .archive ul.kanban-items > li {
+    margin: 0 23px 10px 10px;
+
+    &:first-child {
+        margin-top: 10px;
+    }
+}
+
+ul.kanban-items.angular-ui-tree-drag {
+    opacity: 1;
+
+    > li {
+        box-shadow: 0 7px 30px rgba(0,0,0,0.2);
+
+        > .kanban-item {
+            border: none;
+        }
     }
 }
