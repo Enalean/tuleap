@@ -1,3 +1,20 @@
+Version 7.10-4 (Monday, March 2nd 2015)
+	== Bug Fix ==
+	* request #7849: Fix XSS in development mode
+	* request #7847: Fix persistent XSS in project sidebar
+	* request #7806: Avoid HTTP Response Splitting and uncontroled redirection in FRS
+	* request #7831: Fix SQL injection in trove cat listing register_globals is now set to off for trove cat
+	* request #7828: Fix XSS in graph on tracker plugin
+	* request #7818: Fix SQL injection in trove cat
+	* request #7819: Fix persistent XSS in trove categories
+	* request #7894: Fixing potential blank page on report save
+	* request #7865: PHP fatal error when modifying a report
+	* request #7864: reindexing project services on ugroup changes
+	* request #7864: only reindex project services once.
+	* request #7640: on-screen notification for tracker admins when all the reports are set to Private
+	* request #7877: Use a valid value for the Content Security Policy directive reflected-xss
+	* request #7758: php error when registering new user
+	
 Version 7.10-3 (Monday, February 23rd 2015)
 	== Bug Fix ==
 	* request #7826: improve error detection of FRS
