@@ -61,6 +61,9 @@ class Git_HTTP_CommandFactory {
 
     private function getGitHttpBackendCommand() {
         $command = new Git_HTTP_CommandCentos5GitHttpBackend();
+        if (is_file('/opt/rh/git19/root/usr/libexec/git-core/git-http-backend')) {
+            $command = new Git_HTTP_CommandSCL19GitHttpBackend();
+        }
         if (is_file('/usr/libexec/git-core/git-http-backend')) {
             $command = new Git_HTTP_CommandCentos6GitHttpBackend();
         }
