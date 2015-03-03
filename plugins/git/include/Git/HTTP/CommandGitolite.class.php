@@ -25,9 +25,8 @@ class Git_HTTP_CommandGitolite extends Git_HTTP_Command {
     public function __construct(PFUser $user, Git_HTTP_Command $command) {
         parent::__construct();
 
-        if (is_file("/var/lib/gitolite/projects.list")) {
-            $this->gitolite_home = "/var/lib/gitolite";
-        }
+        $gitolite_user_info = posix_getpwnam('gitolite');
+        $this->gitolite_home = $gitolite_user_info['dir'];
 
         $this->env['SHELL']            = '/bin/sh';
         $this->env['REMOTE_USER']      = $user->getUnixName();

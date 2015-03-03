@@ -161,9 +161,24 @@ Release: @@RELEASE@@%{?dist}
 Requires: %{name} >= %{version}, git > 1.7.4, %{php_base}-Smarty, gitolite = 2.3.1, gitphp-tuleap
 Requires: geshi, php-guzzle
 Provides: tuleap-plugin-git = %{version}
+Conflicts: tuleap-plugin-git-gitolite3
 %description plugin-git
 Integration of git distributed software configuration management tool together
 with Tuleap
+This package is integrated with gitolite v2 (legacy)
+
+%package plugin-git-gitolite3
+Summary: Git plugin for Tuleap
+Group: Development/Tools
+Version: @@PLUGIN_GIT_VERSION@@
+Release: @@RELEASE@@%{?dist}
+Requires: %{name} >= %{version}, git19-git, %{php_base}-Smarty, gitolite3, gitphp-tuleap
+Requires: geshi, php-guzzle, sudo
+Conflicts: tuleap-plugin-git
+%description plugin-git-gitolite3
+Integration of git distributed software configuration management tool together
+with Tuleap.
+This package is integrated with gitolite v3 (new version)
 
 %package plugin-docmanwatermark
 Summary: Tuleap plugin for PDF watermarking
@@ -520,7 +535,7 @@ done
 # plugin forumml
 %{__install} -d $RPM_BUILD_ROOT/%{_localstatedir}/run/forumml
 
-# plugin git
+# plugin-git
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitroot
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/repositories
@@ -535,6 +550,10 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__install} plugins/git/bin/gitolite-suexec-wrapper.sh $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} plugins/git/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_git
 %{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_git
+
+# plugin-git-gitolite3
+%{__install} -d $RPM_BUILD_ROOT/etc/sudoers.d
+%{__install} plugins/git/etc/sudoers.d/gitolite3-http $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite_http
 
 # Plugin archivedeleteditems
 %{__install} plugins/archivedeleteditems/bin/archive-deleted-items.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
@@ -638,6 +657,25 @@ else
     true
 fi
 
+%pre plugin-git-gitolite3
+if [ "$1" -eq "1" ]; then
+    # Install
+    if ! grep -q "^gitolite:" /etc/group 2> /dev/null ; then
+        /usr/sbin/groupadd -r gitolite 2> /dev/null || :
+    fi
+
+    if id gitolite >/dev/null 2>&1; then
+        /usr/sbin/usermod -c 'Git'    -d '/var/lib/gitolite' -g gitolite gitolite
+    else
+        /usr/sbin/useradd -c 'Git' -m -d '/var/lib/gitolite' -g gitolite gitolite
+    fi
+
+    echo 'source /opt/rh/git19/enable' > /var/lib/gitolite/.bashrc
+    chown gitolite:gitolite /var/lib/gitolite/.bashrc
+else
+    true
+fi
+
 #
 #
 #
@@ -713,6 +751,51 @@ if [ ! -d "%{APP_DATA_DIR}/gitolite/admin" ]; then
     # Cannot be done before Tuleap setup. Otherwise previous clone command fails because gl-membership
     # doesn't have DB access .
     perl -pi -e 's/^# \$GL_GET_MEMBERSHIPS_PGM/\$GL_GET_MEMBERSHIPS_PGM/' $GITOLITE_BASE_DIR/.gitolite.rc
+
+    # add codendiadm to gitolite group
+    if ! groups codendiadm | grep -q gitolite 2> /dev/null ; then
+	usermod -a -G gitolite codendiadm
+    fi
+fi
+
+%post plugin-git-gitolite3
+if [ ! -d "%{APP_DATA_DIR}/gitolite/admin" ]; then
+    # Setup repositories in Tuleap area
+    %{__ln_s} %{APP_DATA_DIR}/gitolite/repositories /var/lib/gitolite/repositories
+
+    # deploy gitolite.rc
+    %{__install} -g gitolite -o gitolite -m 00644 %{APP_DIR}/plugins/git/etc/gitolite3.rc.dist /var/lib/gitolite/.gitolite.rc
+
+    # generate codendiadm ssh key for gitolite
+    %{__install} -d "%{APP_HOME_DIR}/.ssh/" -g %{APP_USER} -o %{APP_USER} -m 00700
+    ssh-keygen -q -t rsa -N "" -C "Tuleap / gitolite admin key" -f "%{APP_HOME_DIR}/.ssh/id_rsa_gl-adm"
+    %{__chown}  %{APP_USER}:%{APP_USER}  "%{APP_HOME_DIR}/.ssh/id_rsa_gl-adm"
+    %{__chown}  %{APP_USER}:%{APP_USER}  "%{APP_HOME_DIR}/.ssh/id_rsa_gl-adm.pub"
+
+    # deploy codendiadm ssh key for gitolite
+    %{__cp} "%{APP_HOME_DIR}/.ssh/id_rsa_gl-adm.pub" /tmp/
+    su -c 'git config --global user.name "gitolite"' - gitolite
+    su -c 'git config --global user.email gitolite@localhost' - gitolite
+    su -c 'gitolite setup -pk /tmp/id_rsa_gl-adm.pub' - gitolite
+    %{__install} -g gitolite -o gitolite -m 00755 %{APP_DIR}/plugins/git/hooks/post-receive-gitolite /var/lib/gitolite/.gitolite/hooks/common/post-receive
+
+    # checkout
+    %{__cat} "%{APP_DIR}/plugins/git/etc/ssh.config.dist" >> "%{APP_HOME_DIR}/.ssh/config"
+    %{__chown}  %{APP_USER}:%{APP_USER}  "%{APP_HOME_DIR}/.ssh/config"
+    su -c 'git config --global user.name "%{APP_USER}"' - %{APP_USER}
+    su -c 'git config --global user.email %{APP_USER}@localhost' - %{APP_USER}
+    su -c 'cd %{APP_DATA_DIR}/gitolite; git clone gitolite@gl-adm:gitolite-admin admin' - %{APP_USER}
+    %{__chmod} 750 %{APP_DATA_DIR}/gitolite/admin
+
+    # remove testing
+    %{__install} -g codendiadm -o codendiadm -m 00644 %{APP_DIR}/plugins/git/etc/gitolite.conf.dist  %{APP_DATA_DIR}/gitolite/admin/conf/gitolite.conf
+    su -c 'cd %{APP_DATA_DIR}/gitolite/admin && git add conf/gitolite.conf && git commit -m "Remove testing" && git push origin master' - %{APP_USER}
+    %{__rm} -rf %{APP_DATA_DIR}/gitolite/repositories/testing.git
+
+    # uncomment gl-membership
+    # Cannot be done before Tuleap setup. Otherwise previous clone command fails because gl-membership
+    # doesn't have DB access .
+    perl -pi -e 's/# GROUPLIST_PGM/GROUPLIST_PGM/' /var/lib/gitolite/.gitolite.rc
 
     # add codendiadm to gitolite group
     if ! groups codendiadm | grep -q gitolite 2> /dev/null ; then
@@ -921,6 +1004,22 @@ fi
 %attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/git-post-receive.pl
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gitolite-suexec-wrapper.sh
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_git
+
+%files plugin-git-gitolite3
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/git
+%dir %{APP_DATA_DIR}/gitroot
+%dir %{APP_DATA_DIR}/gitolite
+%attr(00770,gitolite,gitolite)  %{APP_DATA_DIR}/gitolite/repositories
+%attr(00770,gitolite,gitolite)  %{APP_DATA_DIR}/gitolite/grokmirror
+%attr(00660,gitolite,gitolite)  %{APP_DATA_DIR}/gitolite/projects.list
+%attr(-,root,root) /gitroot
+%attr(00755,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}/smarty
+%attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gl-membership.pl
+%attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/git-post-receive.pl
+%attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gitolite-suexec-wrapper.sh
+%attr(00644,root,root) %{_sysconfdir}/logrotate.d/%{APP_NAME}_git
+%attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite_http
 
 %files plugin-docmanwatermark
 %defattr(-,%{APP_USER},%{APP_USER},-)

@@ -18,7 +18,7 @@
 
     # Tuleap: control who can access
     # Uncomment after install/upgrade
-    # GROUPLIST_PGM                  => '/usr/lib/codendi/bin/gl-membership.pl',
+    # GROUPLIST_PGM                  => '/usr/lib/tuleap/bin/gl-membership.pl',
 
     # default umask gives you perms of '0700'; see the rc file docs for
     # how/why you might change this
