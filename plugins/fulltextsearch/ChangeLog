@@ -1,3 +1,6 @@
+Version 0.127 - Tuleap 7.12
+    * request #7896: refactoring search redirection
+
 Version 0.126 - Tuleap 7.11
     * Revert fix request #7862: Old phppwiki search method no longer available
 

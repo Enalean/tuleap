@@ -1,3 +1,6 @@
+Version 5.583 - Tuleap 7.12
+    * request #7896: refactoring search redirection
+
 Version 5.582 - Tuleap 7.11
     * Deal with XML for POST Artifacts
 
