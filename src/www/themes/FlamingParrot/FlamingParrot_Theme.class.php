@@ -190,6 +190,18 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
     private function navbar($params, PFUser $current_user, $selected_top_tab) {
         list($search_options, $selected_entry, $hidden_fields) = $this->getSearchEntries();
 
+        $search_type = $selected_entry['value'];
+        EventManager::instance()->processEvent(
+            Event::REDEFINE_SEARCH_TYPE,
+            array(
+                'type'         => &$search_type,
+                'service_name' => (isset($params['service_name'])) ? $params['service_name'] : '',
+                'project_id'   => $this->getProjectIdFromParams($params),
+                'user'         => $current_user
+            )
+        );
+        $selected_entry['value'] = $search_type;
+
         $search_form_presenter = new FlamingParrot_SearchFormPresenter($selected_entry, $hidden_fields);
         $project_manager       = ProjectManager::instance();
         $projects              = $project_manager->getActiveProjectsForUser($current_user);
@@ -211,6 +223,13 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
         );
 
         $this->container($params, $project_manager, $current_user);
+    }
+
+    private function getProjectIdFromParams(array $params) {
+        $project_id  = (isset($params['project_id'])) ? $params['project_id'] : null;
+        $project_id  = (! $project_id && isset($params['group_id'])) ? $params['group_id'] : $project_id;
+
+        return $project_id;
     }
 
     private function getPresentersForProjects($list_of_projects) {

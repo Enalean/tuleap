@@ -24,7 +24,8 @@ require_once('Docman_View_View.class.php');
             $htmlParams['title'] = $this->_getTitle($params);
         }
         
-        $htmlParams = array_merge($htmlParams, $this->_getAdditionalHtmlParams($params));
+        $htmlParams                 = array_merge($htmlParams, $this->_getAdditionalHtmlParams($params));
+        $htmlParams['service_name'] = $params['docman']->plugin->getServiceShortname();
 
         if(isset($params['pv']) && $params['pv'] > 0) {
             $htmlParams['pv'] = $params['pv'];
