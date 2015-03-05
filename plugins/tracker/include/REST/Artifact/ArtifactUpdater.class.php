@@ -48,5 +48,20 @@ class Tracker_REST_Artifact_ArtifactUpdater {
         if (! $artifact->userCanUpdate($user)) {
             throw new \Luracast\Restler\RestException(403, 'You have not the permission to update this card');
         }
+
+        if ($this->clientWantsToUpdateLatestVersion() && ! $this->isUpdatingLatestVersion($artifact) ) {
+            throw new \Luracast\Restler\RestException(412, 'Artifact has been modified since you last requested it. Please edit the latest version');
+        }
+    }
+
+    private function clientWantsToUpdateLatestVersion() {
+        return isset($_SERVER['HTTP_IF_UNMODIFIED_SINCE']);
+    }
+
+    private function isUpdatingLatestVersion(Tracker_Artifact $artifact) {
+        $client_version = strtotime($_SERVER['HTTP_IF_UNMODIFIED_SINCE']);
+        $last_updated   = $artifact->getLastUpdateDate();
+
+        return $last_updated == $client_version;
     }
 }

@@ -58,9 +58,10 @@ class ArtifactsTest extends RestBase {
 
         $response = $this->getResponse($this->client->post('artifacts', null, $post_resource));
         $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertNotNull($response->getHeader('Last-Modified'));
         $artifact_reference = $response->json();
         $this->assertGreaterThan(0, $artifact_reference['id']);
-
+        
         $fetched_value = $this->getFieldValueForFieldLabel($artifact_reference['id'], $summary_field_label);
         $this->assertEquals($summary_field_value, $fetched_value);
         return $artifact_reference['id'];
@@ -86,9 +87,71 @@ class ArtifactsTest extends RestBase {
 
         $response    = $this->getResponse($this->client->put('artifacts/'.$artifact_id, null, $put_resource));
         $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertNotNull($response->getHeader('Last-Modified'));
 
         $this->assertEquals("Amazing test stuff", $this->getFieldValueForFieldLabel($artifact_id, $field_label));
         return $artifact_id;
+    }
+
+    /**
+     * @depends testPostArtifact
+     */
+    public function testPutArtifactIdWithValidConcurrentEdition() {
+        $test_post_return = func_get_args();
+        $artifact_id = $test_post_return[0];
+
+        $field_label =  'Summary';
+        $field_id = $this->getFieldIdForFieldLabel($artifact_id, $field_label);
+        $put_resource = json_encode(array(
+            'values' => array(
+                array(
+                    'field_id' => $field_id,
+                    'value'    => "This should return 200",
+                ),
+            ),
+        ));
+
+        $request = $this->client->put('artifacts/'.$artifact_id, null, $put_resource);
+
+        $artifact      = $this->getResponse($this->client->get('artifacts/'.$artifact_id));
+        $last_modified = $artifact->getHeader('Last-Modified')->normalize()->__toString();
+        $request->setHeader('If-Unmodified-Since', $last_modified);
+
+        $response = $this->getResponse($request);
+        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertNotNull($response->getHeader('Last-Modified'));
+
+        $this->assertEquals("This should return 200", $this->getFieldValueForFieldLabel($artifact_id, $field_label));
+        return $artifact_id;
+    }
+
+    /**
+     * @depends testPostArtifact
+     */
+    public function testPutArtifactIdWithInvalidConcurrentEditionDate() {
+        $test_post_return = func_get_args();
+        $artifact_id = $test_post_return[0];
+
+        $field_label =  'Summary';
+        $field_id = $this->getFieldIdForFieldLabel($artifact_id, $field_label);
+        $put_resource = json_encode(array(
+            'values' => array(
+                array(
+                    'field_id' => $field_id,
+                    'value'    => "This should return 412",
+                ),
+            ),
+        ));
+
+        $last_modified = "2001-03-05T15:14:55+01:00";
+        $request       = $this->client->put('artifacts/'.$artifact_id, null, $put_resource);
+        $request->setHeader('If-Unmodified-Since', $last_modified);
+
+        try {
+            $this->getResponse($request);
+        } catch (Exception $e) {
+            $this->assertEquals($e->getResponse()->getStatusCode(), 412);
+        }
     }
 
     /**
@@ -108,11 +171,12 @@ class ArtifactsTest extends RestBase {
 
         $response    = $this->getResponse($this->client->put('artifacts/'.$artifact_id, null, $put_resource));
         $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertNotNull($response->getHeader('Last-Modified'));
 
         $response   = $this->getResponse($this->client->get("artifacts/$artifact_id/changesets"));
         $changesets = $response->json();
-        $this->assertEquals(3, count($changesets));
-        $this->assertEquals('Please see my comment', $changesets[2]['last_comment']['body']);
+        $this->assertEquals(4, count($changesets));
+        $this->assertEquals('Please see my comment', $changesets[3]['last_comment']['body']);
     }
 
     private function getFieldIdForFieldLabel($artifact_id, $field_label) {
@@ -136,6 +200,7 @@ class ArtifactsTest extends RestBase {
 
     private function getArtifact($artifact_id) {
         $response = $this->getResponse($this->client->get('artifacts/'.$artifact_id));
+        $this->assertNotNull($response->getHeader('Last-Modified'));
         return $response->json();
     }
 

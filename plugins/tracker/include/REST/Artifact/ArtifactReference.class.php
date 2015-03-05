@@ -41,11 +41,22 @@ class ArtifactReference {
      */
     public $tracker;
 
+    /**
+     * @var Tracker_Artifact
+     */
+    private $artifact;
+
     public function build(Tracker_Artifact $artifact) {
         $this->id  = JsonCast::toInt($artifact->getId());
         $this->uri = ArtifactRepresentation::ROUTE . '/' . $this->id;
 
         $this->tracker = new TrackerReference();
         $this->tracker->build($artifact->getTracker());
+
+        $this->artifact = $artifact;
+    }
+
+    public function getArtifact() {
+        return $this->artifact;
     }
 }

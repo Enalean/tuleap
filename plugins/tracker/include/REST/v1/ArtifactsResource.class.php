@@ -85,7 +85,8 @@ class ArtifactsResource {
     protected function getId($id) {
         $user     = UserManager::instance()->getCurrentUser();
         $artifact = $this->getArtifactById($user, $id);
-        $this->sendAllowHeadersForArtifact($artifact);
+        $this->sendAllowHeadersForArtifact();
+        $this->sendLastModifiedHeader($artifact);
 
         return $this->builder->getArtifactRepresentationWithFieldValues($user, $artifact);
     }
@@ -182,6 +183,7 @@ class ArtifactsResource {
             throw new RestException(404, $exception->getMessage());
         }
         $this->sendAllowHeadersForArtifact($artifact);
+        $this->sendLastModifiedHeader($artifact);
     }
 
     /**
@@ -228,6 +230,8 @@ class ArtifactsResource {
      * @return ArtifactReference
      */
     protected function post(TrackerReference $tracker, array $values) {
+        $this->options();
+
         try {
             $user    = UserManager::instance()->getCurrentUser();
             $updater = new Tracker_REST_Artifact_ArtifactCreator(
@@ -237,7 +241,10 @@ class ArtifactsResource {
                 $this->artifact_factory,
                 $this->tracker_factory
             );
-            return $updater->create($user, $tracker, $values);
+
+            $artifact_reference = $updater->create($user, $tracker, $values);
+            $this->sendLastModifiedHeader($artifact_reference->getArtifact());
+            return $artifact_reference;
         } catch (Tracker_FormElement_InvalidFieldException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Tracker_FormElement_InvalidFieldValueException $exception) {
@@ -249,7 +256,6 @@ class ArtifactsResource {
         } catch (Tracker_Artifact_Attachment_FileNotFoundException $exception) {
             throw new RestException(404, $exception->getMessage());
         }
-        $this->options();
     }
 
     /**
@@ -272,5 +278,9 @@ class ArtifactsResource {
 
     private function sendAllowHeadersForArtifact() {
         Header::allowOptionsGetPut();
+    }
+
+    private function sendLastModifiedHeader(Tracker_Artifact $artifact) {
+        Header::lastModified($artifact->getLastUpdateDate());
     }
 }
