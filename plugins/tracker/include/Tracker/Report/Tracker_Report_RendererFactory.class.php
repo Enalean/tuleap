@@ -257,7 +257,9 @@ class Tracker_Report_RendererFactory {
                     'renderer_type' => $type,
                 )
             );
-            $this->report_session->setHasChanged();
+            if ($this->report_session) {
+                $this->report_session->setHasChanged();
+            }
             switch ($type) {
                 case Tracker_Report_Renderer::TABLE:
                     $session->set("$renderer_id.chunksz", 15);
