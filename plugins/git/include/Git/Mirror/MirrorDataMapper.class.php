@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014-2015. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -76,13 +76,16 @@ class Git_Mirror_MirrorDataMapper {
     public function fetchAll() {
         $rows = $this->dao->fetchAll();
 
-        $mirrors = array();
-        foreach ($rows as $row) {
-            $owner     = $this->getMirrorOwner($row['id']);
-            $mirrors[] = $this->getInstanceFromRow($owner, $row);
-        }
+        return $this->mapDataAccessResultToArrayOfMirrors($rows);
+    }
 
-        return $mirrors;
+    /**
+     * @return Git_Mirror_Mirror[]
+     */
+    public function fetchAllForProject(Project $project) {
+        $rows = $this->dao->fetchAllForProject($project->getID());
+
+        return $this->mapDataAccessResultToArrayOfMirrors($rows);
     }
 
     /**
@@ -91,6 +94,13 @@ class Git_Mirror_MirrorDataMapper {
     public function fetchAllRepositoryMirrors(GitRepository $repository) {
         $rows = $this->dao->fetchAllRepositoryMirrors($repository->getId());
 
+        return $this->mapDataAccessResultToArrayOfMirrors($rows);
+    }
+
+    /**
+     * @return Git_Mirror_Mirror[]
+     */
+    private function mapDataAccessResultToArrayOfMirrors(DataAccessResult $rows) {
         $mirrors = array();
         foreach ($rows as $row) {
             $owner     = $this->getMirrorOwner($row['id']);

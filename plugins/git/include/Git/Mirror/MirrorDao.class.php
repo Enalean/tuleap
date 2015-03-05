@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014-2015. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -57,9 +57,35 @@ class Git_Mirror_MirrorDao extends DataAccessObject{
     public function fetchAllRepositoryMirrors($repository_id) {
         $repository_id = $this->da->escapeInt($repository_id);
 
-        $sql = "SELECT plugin_git_mirrors.* FROM plugin_git_mirrors
-                INNER JOIN plugin_git_repository_mirrors ON plugin_git_mirrors.id = plugin_git_repository_mirrors.mirror_id
-                WHERE repository_id = " . $repository_id . "
+        $sql = "SELECT plugin_git_mirrors.*
+                FROM plugin_git_mirrors
+                  INNER JOIN plugin_git_repository_mirrors ON plugin_git_mirrors.id = plugin_git_repository_mirrors.mirror_id
+                  INNER JOIN plugin_git USING (repository_id)
+                  LEFT JOIN plugin_git_restricted_mirrors ON plugin_git_restricted_mirrors.mirror_id = plugin_git_mirrors.id
+                  LEFT JOIN plugin_git_restricted_mirrors_allowed_projects ON (
+                     plugin_git_restricted_mirrors_allowed_projects.mirror_id = plugin_git_restricted_mirrors.mirror_id
+                     AND plugin_git.project_id = plugin_git_restricted_mirrors_allowed_projects.project_id
+                  )
+                WHERE plugin_git_repository_mirrors.repository_id = $repository_id
+                  AND (plugin_git_restricted_mirrors.mirror_id IS NULL
+                   OR plugin_git_restricted_mirrors_allowed_projects.project_id IS NOT NULL)
+                ORDER BY id";
+
+        return $this->retrieve($sql);
+    }
+
+    public function fetchAllForProject($project_id) {
+        $project_id = $this->da->escapeInt($project_id);
+
+        $sql = "SELECT plugin_git_mirrors.*
+                FROM plugin_git_mirrors
+                    LEFT JOIN plugin_git_restricted_mirrors ON plugin_git_restricted_mirrors.mirror_id = plugin_git_mirrors.id
+                    LEFT JOIN plugin_git_restricted_mirrors_allowed_projects ON (
+                        plugin_git_restricted_mirrors_allowed_projects.mirror_id = plugin_git_restricted_mirrors.mirror_id
+                        AND project_id = $project_id
+                    )
+                WHERE plugin_git_restricted_mirrors.mirror_id IS NULL
+                   OR plugin_git_restricted_mirrors_allowed_projects.project_id IS NOT NULL
                 ORDER BY id";
 
         return $this->retrieve($sql);
@@ -74,8 +100,15 @@ class Git_Mirror_MirrorDao extends DataAccessObject{
                         ON plugin_git_repository_mirrors.repository_id = plugin_git.repository_id
                     INNER JOIN groups
                         ON plugin_git.project_id = groups.group_id
+                    LEFT JOIN plugin_git_restricted_mirrors ON plugin_git_restricted_mirrors.mirror_id = plugin_git_repository_mirrors.mirror_id
+                    LEFT JOIN plugin_git_restricted_mirrors_allowed_projects ON (
+                        plugin_git_restricted_mirrors_allowed_projects.mirror_id = plugin_git_restricted_mirrors.mirror_id
+                        AND plugin_git_restricted_mirrors_allowed_projects.project_id = plugin_git.project_id
+                    )
                 WHERE plugin_git_repository_mirrors.mirror_id = $mirror_id
                     AND plugin_git.repository_deletion_date IS NULL
+                    AND (plugin_git_restricted_mirrors.mirror_id IS NULL
+                         OR plugin_git_restricted_mirrors_allowed_projects.project_id IS NOT NULL)
                 ORDER BY groups.group_name, plugin_git.repository_name";
 
         return $this->retrieve($sql);
@@ -140,5 +173,4 @@ class Git_Mirror_MirrorDao extends DataAccessObject{
 
         return $this->update($sql);
     }
-
 }
