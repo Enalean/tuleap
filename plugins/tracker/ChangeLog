@@ -1,3 +1,6 @@
+Version 5.584 - Tuleap 7.12
+    * request #7640: Tracker admins can create new reports when there are no-longer any reports available
+
 Version 5.583 - Tuleap 7.12
     * request #7896: refactoring search redirection
 
