@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -163,7 +163,8 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
                 $this->git_permissions_manager,
                 $url_manager,
                 mock('Logger'),
-                mock('Git_Backend_Gitolite')
+                mock('Git_Backend_Gitolite'),
+                mock('Git_Mirror_MirrorDataMapper')
             )
         );
         $git->setRequest($request);

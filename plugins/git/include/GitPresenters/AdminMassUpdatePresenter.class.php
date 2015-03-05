@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2015. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -36,8 +36,14 @@ class GitPresenters_AdminMassUpdatePresenter extends GitPresenters_AdminPresente
     public $mirroring_presenter;
 
 
-    public function __construct(CSRFSynchronizerToken $csrf, $project_id, array $repositories, GitPresenters_AdminMassUdpdateMirroringPresenter $mirroring_presenter) {
-        parent::__construct($project_id);
+    public function __construct(
+        CSRFSynchronizerToken $csrf,
+        $project_id,
+        array $repositories,
+        GitPresenters_AdminMassUdpdateMirroringPresenter $mirroring_presenter
+    ) {
+        $allow_mass_update = true;
+        parent::__construct($project_id, $allow_mass_update);
 
         $this->csrf_input          = $csrf->fetchHTMLInput();
         $this->manage_mass_update  = true;

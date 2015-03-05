@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All rights reserved
+ * Copyright (c) Enalean, 2013 - 2015. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,9 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class GitPresenters_AdminPresenter {
+abstract class GitPresenters_AdminPresenter {
 
     public $project_id;
+
+    /** @var bool */
+    public $allow_mass_update;
 
     public $manage_gerrit_templates = false;
 
@@ -31,8 +34,9 @@ class GitPresenters_AdminPresenter {
     public $manage_mass_update = false;
 
 
-    public function __construct($project_id) {
-        $this->project_id = $project_id;
+    public function __construct($project_id, $allow_mass_update) {
+        $this->project_id        = $project_id;
+        $this->allow_mass_update = $allow_mass_update;
     }
 
     public function git_admin() {

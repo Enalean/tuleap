@@ -40,7 +40,14 @@ class GitViews extends PluginViews {
     /** @var Git_GitRepositoryUrlManager */
     private $url_manager;
 
-    public function __construct($controller, Git_GitRepositoryUrlManager $url_manager) {
+    /** @var Git_Mirror_MirrorDataMapper */
+    private $mirror_data_mapper;
+
+    public function __construct(
+        $controller,
+        Git_GitRepositoryUrlManager $url_manager,
+        Git_Mirror_MirrorDataMapper $mirror_data_mapper
+    ) {
         parent::__construct($controller);
         $this->groupId                 = (int)$this->request->get('group_id');
         $this->project                 = ProjectManager::instance()->getProject($this->groupId);
@@ -49,6 +56,7 @@ class GitViews extends PluginViews {
         $this->git_permissions_manager = new GitPermissionsManager();
         $this->ugroup_manager          = new UGroupManager();
         $this->url_manager             = $url_manager;
+        $this->mirror_data_mapper      = $mirror_data_mapper;
     }
 
     public function header() {
@@ -348,11 +356,12 @@ class GitViews extends PluginViews {
         echo '<br />';
     }
 
-    protected function adminGitAdminsView() {
+    protected function adminGitAdminsView($is_admin_mass_change_allowed) {
         $params = $this->getData();
 
         $presenter = new GitPresenters_AdminGitAdminsPresenter(
             $this->groupId,
+            $is_admin_mass_change_allowed,
             $this->ugroup_manager->getStaticUGroups($this->project),
             $this->git_permissions_manager->getCurrentGitAdminUgroups($this->project->getId())
         );
@@ -362,7 +371,7 @@ class GitViews extends PluginViews {
         echo $renderer->renderToString('admin', $presenter);
     }
 
-    protected function adminGerritTemplatesView() {
+    protected function adminGerritTemplatesView($is_admin_mass_change_allowed) {
         $params = $this->getData();
 
 
@@ -375,6 +384,7 @@ class GitViews extends PluginViews {
             $templates_list,
             $parent_templates_list,
             $this->groupId,
+            $is_admin_mass_change_allowed,
             $params['has_gerrit_servers_set_up']
         );
 
@@ -419,12 +429,7 @@ class GitViews extends PluginViews {
     }
 
     private function getAdminMassUpdateMirrorPresenters() {
-        $mirror_data_mapper = new Git_Mirror_MirrorDataMapper(
-            new Git_Mirror_MirrorDao(),
-            UserManager::instance()
-        );
-
-        $mirrors           = $mirror_data_mapper->fetchAllForProject($this->project);
+        $mirrors           = $this->mirror_data_mapper->fetchAllForProject($this->project);
         $mirror_presenters = array();
 
         foreach($mirrors as $mirror) {

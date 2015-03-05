@@ -2,21 +2,22 @@
 
 /**
   * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+  * Copyright (c) Enalean, 2011-2015. All Rights Reserved.
   *
-  * This file is a part of Codendi.
+  * This file is a part of Tuleap.
   *
-  * Codendi is free software; you can redistribute it and/or modify
+  * Tuleap is free software; you can redistribute it and/or modify
   * it under the terms of the GNU General Public License as published by
   * the Free Software Foundation; either version 2 of the License, or
   * (at your option) any later version.
   *
-  * Codendi is distributed in the hope that it will be useful,
+  * Tuleap is distributed in the hope that it will be useful,
   * but WITHOUT ANY WARRANTY; without even the implied warranty of
   * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
   * GNU General Public License for more details.
   *
   * You should have received a copy of the GNU General Public License
-  * along with Codendi. If not, see <http://www.gnu.org/licenses/
+  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
 require_once('common/valid/ValidFactory.class.php');
@@ -53,6 +54,11 @@ class Git extends PluginController {
      * @var Git_Backend_Gitolite
      */
     private $backend_gitolite;
+
+    /**
+     * @var Git_Mirror_MirrorDataMapper
+     */
+    private $mirror_data_mapper;
 
     /**
      * @var Logger
@@ -113,6 +119,9 @@ class Git extends PluginController {
     /** @var Git_GitRepositoryUrlManager */
     private $url_manager;
 
+    /** @var Project */
+    private $project;
+
     public function __construct(
         GitPlugin $plugin,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
@@ -130,7 +139,8 @@ class Git extends PluginController {
         GitPermissionsManager $permissions_manager,
         Git_GitRepositoryUrlManager $url_manager,
         Logger $logger,
-        Git_Backend_Gitolite $backend_gitolite
+        Git_Backend_Gitolite $backend_gitolite,
+        Git_Mirror_MirrorDataMapper $mirror_data_mapper
     ) {
         parent::__construct($user_manager, $request);
 
@@ -150,6 +160,7 @@ class Git extends PluginController {
         $this->url_manager              = $url_manager;
         $this->logger                   = $logger;
         $this->backend_gitolite         = $backend_gitolite;
+        $this->mirror_data_mapper       = $mirror_data_mapper;
 
         $url = new Git_URL(
             $this->projectManager,
@@ -179,7 +190,8 @@ class Git extends PluginController {
             $this->redirect('/');
         }
 
-        $this->projectName      = $this->projectManager->getProject($this->groupId)->getUnixName();
+        $this->project     = $this->projectManager->getProject($this->groupId);
+        $this->projectName = $this->project->getUnixName();
         if ( !$this->plugin_manager->isPluginAllowedForProject($this->plugin, $this->groupId) ) {
             $this->addError( $this->getText('project_service_not_available') );
             $this->redirect('/projects/'.$this->projectName.'/');
@@ -189,7 +201,7 @@ class Git extends PluginController {
     }
 
     protected function instantiateView() {
-        return new GitViews($this, new Git_GitRepositoryUrlManager($this->getPlugin()));
+        return new GitViews($this, new Git_GitRepositoryUrlManager($this->getPlugin()), $this->mirror_data_mapper);
     }
 
     private function routeGitSmartHTTP(Git_URL $url) {
@@ -332,35 +344,38 @@ class Git extends PluginController {
 
     protected function definePermittedActions($repoId, $user) {
         if ($this->permissions_manager->userIsGitAdmin($user, $this->projectManager->getProject($this->groupId))) {
-            $this->permittedActions = array('index',
-                                            'view' ,
-                                            'edit',
-                                            'clone',
-                                            'add',
-                                            'del',
-                                            'create',
-                                            'confirm_deletion',
-                                            'save',
-                                            'repo_management',
-                                            'mail',
-                                            'fork',
-                                            'set_private',
-                                            'confirm_private',
-                                            'fork_repositories',
-                                            'admin',
-                                            'admin-git-admins',
-                                            'admin-gerrit-templates',
-                                            'admin-mass-update',
-                                            'fetch_git_config',
-                                            'fetch_git_template',
-                                            'fork_repositories_permissions',
-                                            'do_fork_repositories',
-                                            'view_last_git_pushes',
-                                            'migrate_to_gerrit',
-                                            'disconnect_gerrit',
-                                            'delete_gerrit_project',
-                                            'update_mirroring'
+            $this->permittedActions = array(
+                'index',
+                'view' ,
+                'edit',
+                'clone',
+                'add',
+                'del',
+                'create',
+                'confirm_deletion',
+                'save',
+                'repo_management',
+                'mail',
+                'fork',
+                'set_private',
+                'confirm_private',
+                'fork_repositories',
+                'admin',
+                'admin-git-admins',
+                'admin-gerrit-templates',
+                'fetch_git_config',
+                'fetch_git_template',
+                'fork_repositories_permissions',
+                'do_fork_repositories',
+                'view_last_git_pushes',
+                'migrate_to_gerrit',
+                'disconnect_gerrit',
+                'delete_gerrit_project',
+                'update_mirroring'
             );
+            if ($this->isAdminMassChangeAllowed()) {
+                $this->permittedActions[] = 'admin-mass-update';
+            }
         } else {
             $this->addPermittedAction('index');
             $this->addPermittedAction('view_last_git_pushes');
@@ -548,7 +563,7 @@ class Git extends PluginController {
                     }
                 }
 
-                $this->addView('adminGitAdminsView');
+                $this->addView('adminGitAdminsView', array($this->isAdminMassChangeAllowed()));
                 break;
             case 'admin':
             case 'admin-gerrit-templates':
@@ -574,7 +589,7 @@ class Git extends PluginController {
 
                 if ($this->permissions_manager->userIsGitAdmin($user, $project)) {
                     $this->addAction('generateGerritRepositoryAndTemplateList', array($project, $user));
-                    $this->addView('adminGerritTemplatesView');
+                    $this->addView('adminGerritTemplatesView', array($this->isAdminMassChangeAllowed()));
                 } else {
                     $this->addError($this->getText('controller_access_denied'));
                     $this->redirect('/plugins/git/?action=index&group_id='. $this->groupId);
@@ -1015,4 +1030,7 @@ class Git extends PluginController {
         $logger->logsDaily($params);
     }
 
+    private function isAdminMassChangeAllowed() {
+        return count($this->mirror_data_mapper->fetchAllForProject($this->project)) > 0;
+    }
 }
