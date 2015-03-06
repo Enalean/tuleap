@@ -46,7 +46,6 @@ class RequestWrapper {
 
     public function getResponseByToken(Rest_Token $token, $request) {
         $request->setHeader('X-Auth-Token', $token->getTokenValue())
-                ->setHeader('Content-Type', 'application/json')
                 ->setHeader('X-Auth-UserId', $token->getUserId());
         return $request->send();
     }

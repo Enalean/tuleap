@@ -19,15 +19,14 @@
 
 namespace Tuleap\Tracker\REST;
 
-use Tuleap\REST\JsonCast;
 use \Tracker_Artifact_Changeset_Comment;
 
 class ChangesetCommentRepresentation {
 
     /**
-     * @var string Content of the comment
+     * @var string Content of the comment {@required false}
      */
-    public $body;
+    public $body = '';
 
     /**
      * @var string Type of the comment (text|html)
