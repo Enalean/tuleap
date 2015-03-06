@@ -1,3 +1,6 @@
+Version 4.17 - Tuleap 7.12
+    * story #7709: No admin mass change view if no available mirror
+
 Version 4.16 - Tuleap 7.12
     * request #7902: Install Tuleap with gitolite3 and git19 on centos6
 
