@@ -1,4 +1,6 @@
 Version 7.12 (Not Released Yet)
+	== Bug fix ==
+	* request #7911: Logrotate might be configured to use "dateext" instead of .X
 
     == Plugins ==
 	* docman: 2.26.67
