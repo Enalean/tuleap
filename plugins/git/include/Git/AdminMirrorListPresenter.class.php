@@ -61,6 +61,10 @@ class Git_AdminMirrorListPresenter extends Git_AdminMirrorPresenter {
         return $GLOBALS['Language']->getText('plugin_git','mirrored_repo_label');
     }
 
+    public function manage_allowed_projects_label() {
+        return $GLOBALS['Language']->getText('plugin_git','manage_allowed_projects_label');
+    }
+
     public function list_of_mirrors_not_empty() {
         return count($this->list_of_mirrors) > 0;
     }

@@ -74,6 +74,19 @@ class Git_Mirror_MirrorDao extends DataAccessObject{
         return $this->retrieve($sql);
     }
 
+    public function fetchAllProjectRepositoriesForMirror($mirror_id, $project_ids) {
+        $mirror_id   = $this->da->escapeInt($mirror_id);
+        $project_ids = $this->da->escapeIntImplode($project_ids);
+
+        $sql = "SELECT DISTINCT g.*
+                FROM plugin_git_repository_mirrors rm
+                    INNER JOIN plugin_git g ON g.repository_id = rm.repository_id
+                WHERE rm.mirror_id = $mirror_id
+                AND g.project_id IN ($project_ids)";
+
+        return $this->retrieve($sql);
+    }
+
     public function fetchAllForProject($project_id) {
         $project_id = $this->da->escapeInt($project_id);
 

@@ -112,7 +112,11 @@ class Git_GitoliteDriver {
         $this->permissions_serializer = $permissions_serializer ? $permissions_serializer : new Git_Gitolite_ConfigPermissionsSerializer(
             new Git_Mirror_MirrorDataMapper(
                 new Git_Mirror_MirrorDao,
-                UserManager::instance()
+                UserManager::instance(),
+                new GitRepositoryFactory(
+                    new GitDao(),
+                    ProjectManager::instance()
+                )
             ),
             PluginManager::instance()->getPluginByName('git')->getEtcTemplatesPath()
         );

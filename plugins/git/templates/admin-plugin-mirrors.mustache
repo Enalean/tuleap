@@ -21,6 +21,7 @@
                     <th>{{ owner_label }}</th>
                     <th>{{ ssh_key_label }}</th>
                     <th></th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -54,6 +55,11 @@
                     <td>
                         <a href="?pane=mirrors_admin&action=list-repositories&mirror_id={{ id }}">
                             {{ mirrored_repo_label }}
+                        <a>
+                    </td>
+                    <td>
+                        <a href="?pane=mirrors_admin&action=manage-allowed-projects&mirror_id={{ id }}">
+                            {{ manage_allowed_projects_label }}
                         <a>
                     </td>
                 </tr>

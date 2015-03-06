@@ -79,6 +79,9 @@ class GitActions extends PluginActions {
     /** @var Git_GitRepositoryUrlManager */
     private $url_manager;
 
+    /** @var Git_Mirror_MirrorDataMapper */
+    private $mirror_data_mapper;
+
     /** @var ProjectHistoryDao*/
     private $history_dao;
 
@@ -112,6 +115,7 @@ class GitActions extends PluginActions {
         Git_GitRepositoryUrlManager $url_manager,
         Logger $logger,
         Git_Backend_Gitolite $backend_gitolite,
+        Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         ProjectHistoryDao $history_dao
     ) {
         parent::__construct($controller);
@@ -128,6 +132,7 @@ class GitActions extends PluginActions {
         $this->url_manager              = $url_manager;
         $this->logger                   = $logger;
         $this->backend_gitolite         = $backend_gitolite;
+        $this->mirror_data_mapper       = $mirror_data_mapper;
         $this->history_dao              = $history_dao;
     }
 
@@ -998,14 +1003,9 @@ class GitActions extends PluginActions {
     }
 
     private function updateRepositoryMirrors(GitRepository $repository, $selected_mirror_ids) {
-        $mirror_data_mapper = new Git_Mirror_MirrorDataMapper(
-            new Git_Mirror_MirrorDao(),
-            UserManager::instance()
-        );
-
-        if ($mirror_data_mapper->doesAllSelectedMirrorIdsExist($selected_mirror_ids)
-            && $mirror_data_mapper->unmirrorRepository($repository->getId())
-            && $mirror_data_mapper->mirrorRepositoryTo($repository->getId(), $selected_mirror_ids)) {
+        if ($this->mirror_data_mapper->doesAllSelectedMirrorIdsExist($selected_mirror_ids)
+            && $this->mirror_data_mapper->unmirrorRepository($repository->getId())
+            && $this->mirror_data_mapper->mirrorRepositoryTo($repository->getId(), $selected_mirror_ids)) {
 
             $this->git_system_event_manager->queueRepositoryUpdate($repository);
             $this->history_dao->groupAddHistory(

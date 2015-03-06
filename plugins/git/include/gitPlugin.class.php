@@ -179,6 +179,7 @@ class GitPlugin extends Plugin {
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/online_edit.js"></script>';
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/clone_url.js"></script>';
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/mass-update.js"></script>';
+            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/admin-manage-allowed-projects.js"></script>';
         }
     }
     
@@ -423,13 +424,29 @@ class GitPlugin extends Plugin {
         $admin = new Git_AdminRouter(
             $this->getGerritServerFactory(),
             new CSRFSynchronizerToken('/plugin/git/admin/'),
-            new Git_Mirror_MirrorDataMapper(
-                new Git_Mirror_MirrorDao(),
-                UserManager::instance()
-            )
+            $this->getMirrorDataMapper(),
+            new Git_MirrorResourceRestrictor(
+                new Git_RestrictedMirrorDao(),
+                $this->getMirrorDataMapper(),
+                $this->getGitSystemEventManager(),
+                new ProjectHistoryDao()
+            ),
+            ProjectManager::instance(),
+            $this->getManifestManager()
         );
         $admin->process($request);
         $admin->display($request);
+    }
+
+    private function getMirrorDataMapper() {
+        return new Git_Mirror_MirrorDataMapper(
+            new Git_Mirror_MirrorDao(),
+            UserManager::instance(),
+            new GitRepositoryFactory(
+                new GitDao(),
+                ProjectManager::instance()
+            )
+        );
     }
 
     /**
@@ -1082,10 +1099,7 @@ class GitPlugin extends Plugin {
             $this->getGitRepositoryUrlManager(),
             $this->getLogger(),
             $this->getBackendGitolite(),
-            new Git_Mirror_MirrorDataMapper(
-                new Git_Mirror_MirrorDao(),
-                UserManager::instance()
-            )
+            $this->getMirrorDataMapper()
         );
     }
 
@@ -1288,10 +1302,7 @@ class GitPlugin extends Plugin {
      */
     public function getManifestManager() {
         return new Git_Mirror_ManifestManager(
-            new Git_Mirror_MirrorDataMapper(
-                new Git_Mirror_MirrorDao(),
-                UserManager::instance()
-            ),
+            $this->getMirrorDataMapper(),
             new Git_Mirror_ManifestFileGenerator(
                 $this->getLogger(),
                 Config::get('sys_data_dir').'/gitolite/grokmirror'
