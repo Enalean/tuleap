@@ -88,6 +88,14 @@ admin_main	conf_project	Project configuration
 admin_main	tool_internal	Internal
 admin_main	tool_external	3rd party
 admin_main	configure_generic_user	Generic user
+admin_main	configure_homepage	Configure homepage
+admin_main	placeholder_headline	Enter meaningful headline...
+admin_main	headline	Headline
+admin_main	headline_help	Writing a compelling headline is a necessary step in order to encourage your users to sign in. Choose a catchy headline to summarize what Tuleap in your context is about. Don't be verbose though, keep the headline short.
+admin_main	use_standard_homepage_label	Use the standard Tuleap homepage.
+admin_main	use_standard_homepage_help	<b>Note:</b> the standard Tuleap homepage is only available to users with FlamingParrot theme. Others will always see the legacy homepage which can be customized via <code>/etc/tuleap/site-content/…/homepage/*</code> files.
+admin_main	successfully_updated	Successfully updated.
+
 #
 #-----------------------------------------------
 # Script: SF/www/admin/admin_utils.php

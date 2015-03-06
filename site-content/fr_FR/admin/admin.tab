@@ -80,6 +80,14 @@ admin_main	conf_project	Configuration projet
 admin_main	tool_internal	Interne
 admin_main	tool_external	Outil tierces
 admin_main	configure_generic_user	Utilisateur générique
+admin_main	configure_homepage	Configurer la page d'accueil
+admin_main	placeholder_headline	Entrez une accroche percutante...
+admin_main	headline	Accroche
+admin_main	headline_help	Écrire une accroche percutante est nécessaire pour inciter les visiteurs à s'inscrire. Choisissez une accroche attirante qui décrit ce qu'est Tuleap dans votre environnement. Ne soyez pas trop verbeux cependant ;)
+admin_main	use_standard_homepage_label	Utiliser la page d'accueil standard de Tuleap.
+admin_main	use_standard_homepage_help	<b>Note :</b> la page d'accueil standard de Tuleap n'est disponible que pour les utilisateurs du thème FlamingParrot. Les autres auront l'ancienne page qui est customisable via les fichiers <code>/etc/tuleap/site-content/…/homepage/*</code>.
+admin_main	successfully_updated	Mise à jour effectuée.
+
 #
 #-----------------------------------------------
 # Script: SF/www/admin/admin_utils.php

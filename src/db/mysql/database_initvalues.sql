@@ -1000,6 +1000,14 @@ WHERE short_name = 'cvs' AND is_active = 1 AND is_used = 1;
 
 INSERT INTO system_events_followers (emails, types) VALUES ('admin', 'WARNING,ERROR');
 
+INSERT INTO homepage (use_standard_homepage) VALUES (1);
+
+INSERT INTO homepage_headline (language_id, headline) VALUES
+('en_US', 'Tuleap helps teams to deliver awesome applications, better, faster, and easier.
+Here you plan, track, code, and collaborate on software projects.'),
+('fr_FR', 'Avec Tuleap, les équipes livrent les applications plus rapidement, plus efficacement et de meilleure qualité.
+Venez planifier, suivre, développer & collaborer sur vos projets logiciels.');
+
 --
 -- Email gateway salt
 --
