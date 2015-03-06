@@ -1,3 +1,6 @@
+Version 4.16 - Tuleap 7.12
+    * request #7902: Install Tuleap with gitolite3 and git19 on centos6
+
 Version 4.15 - Tuleap 7.12
     * story #7709: Restrict to project the access to a mirror
 

@@ -6,10 +6,13 @@ Version 7.12 (Not Released Yet)
 	* docman: 2.26.67
 	* fulltextsearch: 0.127
 	* tracker: 5.585
-	* git: 4.15
+	* git: 4.16
 
     == Themes ==
 	* FlamingParrot: 1.67
+
+	== Development ==
+	* add tuleap-plugin-git-gitolite3 to RHEL6 specfile
 
 Version 7.11 (Wednesday, March 4th 2015)
 
