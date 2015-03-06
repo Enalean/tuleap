@@ -8,6 +8,8 @@ DROP TABLE IF EXISTS plugin_git_housekeeping;
 DROP TABLE IF EXISTS plugin_git_gerrit_config_template;
 DROP TABLE IF EXISTS plugin_git_mirrors;
 DROP TABLE IF EXISTS plugin_git_repository_mirrors;
+DROP TABLE IF EXISTS plugin_git_restricted_mirrors;
+DROP TABLE IF EXISTS plugin_git_restricted_mirrors_allowed_projects;
 
 DELETE FROM service WHERE short_name='plugin_git';
 DELETE FROM reference_group WHERE reference_id=30;

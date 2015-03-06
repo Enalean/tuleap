@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -76,7 +76,7 @@ class GitViews_RepoManagement {
 
         $panes[] = new GitViews_RepoManagement_Pane_AccessControl($repository, $this->request);
 
-        $mirrors = $this->getMirrorDataMapper()->fetchAll();
+        $mirrors = $this->getMirrorDataMapper()->fetchAllForProject($repository->getProject());
         if (count($mirrors) > 0) {
             $repository_mirrors = $this->getMirrorDataMapper()->fetchAllRepositoryMirrors($repository);
             $panes[]            = new GitViews_RepoManagement_Pane_Mirroring($repository, $this->request, $mirrors, $repository_mirrors);

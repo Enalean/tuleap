@@ -2,7 +2,7 @@
 
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -424,7 +424,7 @@ class GitViews extends PluginViews {
             UserManager::instance()
         );
 
-        $mirrors           = $mirror_data_mapper->fetchAll();
+        $mirrors           = $mirror_data_mapper->fetchAllForProject($this->project);
         $mirror_presenters = array();
 
         foreach($mirrors as $mirror) {
