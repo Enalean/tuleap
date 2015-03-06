@@ -1081,7 +1081,11 @@ class GitPlugin extends Plugin {
             new GitPermissionsManager(),
             $this->getGitRepositoryUrlManager(),
             $this->getLogger(),
-            $this->getBackendGitolite()
+            $this->getBackendGitolite(),
+            new Git_Mirror_MirrorDataMapper(
+                new Git_Mirror_MirrorDao(),
+                UserManager::instance()
+            )
         );
     }
 

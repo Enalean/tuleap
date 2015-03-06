@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2015. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -31,10 +31,11 @@ class GitPresenters_AdminGitAdminsPresenter extends GitPresenters_AdminPresenter
 
     public function __construct(
         $project_id,
+        $allow_mass_update,
         $static_ugroups,
         $selected_ugroups
     ) {
-        parent::__construct($project_id);
+        parent::__construct($project_id, $allow_mass_update);
 
         $this->manage_git_admins = true;
         $this->static_ugroups    = $static_ugroups;

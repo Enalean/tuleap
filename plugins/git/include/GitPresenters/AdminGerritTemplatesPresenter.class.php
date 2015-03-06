@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2015. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -54,9 +54,10 @@ class GitPresenters_AdminGerritTemplatesPresenter extends GitPresenters_AdminPre
         $templates_list,
         $parent_templates_list,
         $project_id,
+        $allow_mass_update,
         $has_gerrit_servers_set_up
     ) {
-        parent::__construct($project_id);
+        parent::__construct($project_id, $allow_mass_update);
 
         $this->manage_gerrit_templates   = true;
         $this->repository_list           = $repository_list;
