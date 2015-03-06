@@ -22,9 +22,16 @@ namespace Tuleap\REST;
 use \Luracast\Restler\iAuthenticate;
 
 class TokenAuthentication implements iAuthenticate {
-    
+
     public function __isAllowed() {
         $tokenIsAllowed = new TokenIsAllowed();
         return $tokenIsAllowed->isAllowed();
+    }
+
+    /**
+     * Needed due to iAuthenticate interface since Restler v3.0.0-RC6
+     */
+    public function __getWWWAuthenticateString() {
+        return 'Query name="api_key"';
     }
 }

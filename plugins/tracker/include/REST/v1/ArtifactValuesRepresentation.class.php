@@ -21,7 +21,7 @@
 
 namespace Tuleap\Tracker\REST\v1;
 
-class ArtifactPOSTValues {
+class ArtifactValuesRepresentation {
 
     /**
      * @var int {@type int} {@required true}
@@ -29,17 +29,17 @@ class ArtifactPOSTValues {
     public $field_id;
 
     /**
-     * @var mixed
+     * @var mixed {@required false}
      */
     public $value;
 
     /**
-     * @var array
+     * @var array {@required false}
      */
     public $bind_value_ids;
 
     /**
-     * @var array
+     * @var array {@required false}
      */
     public $links;
 

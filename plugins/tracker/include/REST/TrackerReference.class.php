@@ -30,12 +30,12 @@ class TrackerReference {
     public $id;
 
     /**
-     * @var string URI of the tracker {@type string}
+     * @var string URI of the tracker {@type string} {@required false}
      */
     public $uri;
 
     /**
-     * @var string Display Name of the tracker {@type string}
+     * @var string Display Name of the tracker {@type string} {@required false}
      */
     public $label;
 

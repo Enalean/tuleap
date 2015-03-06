@@ -27,6 +27,10 @@ class Tracker_REST_Artifact_ArtifactValidator {
         $this->formelement_factory = $formelement_factory;
     }
 
+    /**
+     * @param ArtifactValuesRepresentation[] $values
+     * @param Tracker   $tracker
+     */
     public function getFieldsDataOnCreate(array $values, Tracker $tracker) {
         $new_values     = array();
         $indexed_fields = $this->getIndexedFields($tracker);
