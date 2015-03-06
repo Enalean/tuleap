@@ -5,7 +5,7 @@ Version 7.12 (Not Released Yet)
     == Plugins ==
 	* docman: 2.26.67
 	* fulltextsearch: 0.127
-	* tracker: 5.585
+	* tracker: 5.586
 	* git: 4.17
 
     == Themes ==
@@ -13,6 +13,7 @@ Version 7.12 (Not Released Yet)
 
 	== Development ==
 	* add tuleap-plugin-git-gitolite3 to RHEL6 specfile
+	* Be compatible we the new iAuthenticate interface of Restler v3.0.0-RC6
 
 Version 7.11 (Wednesday, March 4th 2015)
 
