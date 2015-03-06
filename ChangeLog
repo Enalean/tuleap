@@ -1,3 +1,7 @@
+Version 7.10-5 (Friday, March 6th 2015)
+	== Bug Fix ==
+	* request #7902:  Install Tuleap with gitolite3 and git19 on centos6
+	* request #7911: Logrotate might be configured to use "dateext" instead of .X
 Version 7.10-4 (Monday, March 2nd 2015)
 	== Bug Fix ==
 	* request #7849: Fix XSS in development mode
