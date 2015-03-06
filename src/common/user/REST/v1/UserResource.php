@@ -125,9 +125,9 @@ class UserResource {
      *   <li>a json object to search on username with exact match: {"username": "john_doe"}</li>
      * </ul>
      *
-     * @param string|json $query  Search string (3 chars min in length) {@from query} {@min 3}
-     * @param int         $limit  Number of elements displayed per page
-     * @param int         $offset Position of the first element to display
+     * @param string $query  Search string (3 chars min in length) {@from query} {@min 3}
+     * @param int    $limit  Number of elements displayed per page
+     * @param int    $offset Position of the first element to display
      *
      * @return array {@type \Tuleap\User\REST\UserRepresentation}
      */

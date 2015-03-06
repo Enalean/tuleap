@@ -25,13 +25,19 @@ use Tuleap\REST\JsonCast;
 class BurndownRepresentation {
     const ROUTE = 'burndown';
 
-    /** @var int Time needed to complete the milestone (in days) */
+    /**
+     * @var int Time needed to complete the milestone (in days)
+     */
     public $duration;
 
-    /** @var float Capacity of the team for the milestone*/
+    /**
+     * @var float Capacity of the team for the milestone
+     */
     public $capacity;
 
-    /** @var array Values for each days {@type float} */
+    /**
+     * @var array Values for each days {@type float}
+     */
     public $points = array();
 
     public function build($duration, $capacity, array $points) {
