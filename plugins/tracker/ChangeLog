@@ -1,3 +1,6 @@
+Version 5.587 - Tuleap 7.12
+    * story #7704: manage concurrent artifact edition via REST
+
 Version 5.586 - Tuleap 7.12
     * story #7702 - Be compatible with restler v3.0.0-RC6
 
