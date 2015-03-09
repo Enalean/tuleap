@@ -29,7 +29,7 @@ class Tracker_REST_Artifact_ArtifactValidator {
 
     /**
      * @param ArtifactValuesRepresentation[] $values
-     * @param Tracker   $tracker
+     * @param Tracker                        $tracker
      */
     public function getFieldsDataOnCreate(array $values, Tracker $tracker) {
         $new_values     = array();
@@ -43,12 +43,18 @@ class Tracker_REST_Artifact_ArtifactValidator {
         return $new_values;
     }
 
+    /**
+     * @param ArtifactValuesRepresentation[] $values
+     * @param Tracker_Artifact               $artifact
+     */
     public function getFieldsDataOnUpdate(array $values, Tracker_Artifact $artifact) {
         $new_values     = array();
         $indexed_fields = $this->getIndexedFields($artifact->getTracker());
         foreach ($values as $value) {
-            $field = $this->getField($indexed_fields, $value);
-            $new_values[$field->getId()] = $field->getFieldDataFromRESTValue($value, $artifact);
+            $array_representation = $value->toArray();
+
+            $field = $this->getField($indexed_fields, $array_representation);
+            $new_values[$field->getId()] = $field->getFieldDataFromRESTValue($array_representation, $artifact);
         }
         return $new_values;
     }

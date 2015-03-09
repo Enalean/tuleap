@@ -154,7 +154,7 @@ class ArtifactsResource {
      *
      * @url PUT {id}
      * @param string                          $id        Id of the artifact
-     * @param array                           $values    Artifact fields values {@from body}
+     * @param array                           $values    Artifact fields values {@from body} {@type \Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation}
      * @param ChangesetCommentRepresentation  $comment   Comment about update {body, format} {@from body}
      *
      */

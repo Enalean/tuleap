@@ -33,6 +33,11 @@ class RestBase extends PHPUnit_Framework_TestCase {
     protected $client;
 
     /**
+     * @var Client
+     */
+    protected $xml_client;
+
+    /**
      * @var RequestWrapper
      */
     protected $rest_request;
@@ -45,6 +50,13 @@ class RestBase extends PHPUnit_Framework_TestCase {
     public function setUp() {
         parent::setUp();
         $this->client = new Client($this->base_url);
+        $this->xml_client = new Client($this->base_url);
+
+        $this->client->setDefaultOption('headers/Accept', 'application/json');
+        $this->client->setDefaultOption('headers/Content-Type', 'application/json');
+
+        $this->xml_client->setDefaultOption('headers/Accept', 'application/xml');
+        $this->xml_client->setDefaultOption('headers/Content-Type', 'application/xml; charset=UTF8');
     }
 
     protected function getResponseByName($name, $request) {
