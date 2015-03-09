@@ -78,4 +78,5 @@ EventManager::instance()->processEvent($event, array('restler' => $restler));
 $restler->addAPIClass('Resources');
 
 $restler->addAuthenticationClass('\\Tuleap\\REST\\TokenAuthentication');
+$restler->addAuthenticationClass('\\Tuleap\\REST\\BasicAuthentication');
 $restler->handle();

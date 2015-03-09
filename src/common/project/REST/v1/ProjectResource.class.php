@@ -103,8 +103,6 @@ class ProjectResource {
 
     /**
      * @url OPTIONS
-     *
-     * @access protected
      */
     public function options() {
         $this->sendAllowHeadersForProject();
@@ -157,8 +155,6 @@ class ProjectResource {
      * @url OPTIONS {id}
      *
      * @param int $id Id of the project
-     *
-     * @access protected
      *
      * @throws 403
      * @throws 404

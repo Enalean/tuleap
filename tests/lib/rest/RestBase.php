@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All rights reserved
+ * Copyright (c) Enalean, 2013 - 2015. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -58,5 +58,8 @@ class RestBase extends PHPUnit_Framework_TestCase {
     protected function getTokenForUserName($user_name) {
         return $this->rest_request->getTokenForUserName($user_name);
     }
+
+    protected function getResponseByBasicAuth($username, $password, $request) {
+        return $this->rest_request->getResponseByBasicAuth($username, $password, $request);
+    }
 }
-?>

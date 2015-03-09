@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,4 +39,12 @@ class BasicAuthentication implements iAuthenticate {
         header('WWW-Authenticate: Basic realm="' . self::REALM . '"');
         throw new RestException(401, 'Basic Authentication Required');
     }
+
+    /**
+     * Needed due to iAuthenticate interface since Restler v3.0.0-RC6
+     */
+    public function __getWWWAuthenticateString() {
+        return 'Basic';
+    }
+
 }
