@@ -30,6 +30,7 @@ class Header {
     const CORS_ALLOW_METHODS = 'Access-Control-Allow-Methods';
     const ALLOW              = 'Allow';
     const LAST_MODIFIED      = 'Last-Modified';
+    const ETAG               = 'Etag';
 
     const X_PAGINATION_LIMIT     = 'X-PAGINATION-LIMIT';
     const X_PAGINATION_OFFSET    = 'X-PAGINATION-OFFSET';
@@ -40,6 +41,10 @@ class Header {
 
     public static function lastModified($timestamp) {
         self::sendHeader(self::LAST_MODIFIED, date('c', $timestamp));
+    }
+
+    public static function ETag($hash) {
+        self::sendHeader(self::ETAG, $hash);
     }
 
     public static function allowOptions() {

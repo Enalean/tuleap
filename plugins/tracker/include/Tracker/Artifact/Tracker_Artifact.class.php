@@ -1068,6 +1068,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     /**
+     * @return Integer
+     */
+    public function getVersionIdentifier() {
+        return $this->getLastUpdateDate();
+    }
+
+    /**
      * Returns the latest changeset of this artifact
      *
      * @return Tracker_Artifact_Changeset The latest changeset of this artifact, or null if no latest changeset

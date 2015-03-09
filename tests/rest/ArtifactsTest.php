@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All rights reserved
+ * Copyright (c) Enalean, 2013-2015. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -59,6 +59,7 @@ class ArtifactsTest extends RestBase {
         $response = $this->getResponse($this->client->post('artifacts', null, $post_resource));
         $this->assertEquals($response->getStatusCode(), 200);
         $this->assertNotNull($response->getHeader('Last-Modified'));
+        $this->assertNotNull($response->getHeader('Etag'));
         $artifact_reference = $response->json();
         $this->assertGreaterThan(0, $artifact_reference['id']);
         
@@ -80,7 +81,7 @@ class ArtifactsTest extends RestBase {
             'values' => array(
                 array(
                     'field_id' => $field_id,
-                    'value'    => "Amazing test stuff",
+                    'value'    => "wunderbar",
                 ),
             ),
         ));
@@ -88,15 +89,49 @@ class ArtifactsTest extends RestBase {
         $response    = $this->getResponse($this->client->put('artifacts/'.$artifact_id, null, $put_resource));
         $this->assertEquals($response->getStatusCode(), 200);
         $this->assertNotNull($response->getHeader('Last-Modified'));
+        $this->assertNotNull($response->getHeader('Etag'));
 
-        $this->assertEquals("Amazing test stuff", $this->getFieldValueForFieldLabel($artifact_id, $field_label));
+        $this->assertEquals("wunderbar", $this->getFieldValueForFieldLabel($artifact_id, $field_label));
         return $artifact_id;
     }
 
     /**
-     * @depends testPostArtifact
+     * @depends testPutArtifactId
      */
-    public function testPutArtifactIdWithValidConcurrentEdition() {
+    public function testPutIsIdempotent() {
+        $test_post_return = func_get_args();
+        $artifact_id = $test_post_return[0];
+
+        $artifact      = $this->getResponse($this->client->get('artifacts/'.$artifact_id));
+        $last_modified = $artifact->getHeader('Last-Modified')->normalize()->__toString();
+        $etag          = $artifact->getHeader('Etag')->normalize()->__toString();
+
+        $field_label =  'Summary';
+        $field_id = $this->getFieldIdForFieldLabel($artifact_id, $field_label);
+        $put_resource = json_encode(array(
+            'values' => array(
+                array(
+                    'field_id' => $field_id,
+                    'value'    => "wunderbar",
+                ),
+            ),
+        ));
+
+        $response    = $this->getResponse($this->client->put('artifacts/'.$artifact_id, null, $put_resource));
+        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertNotNull($response->getHeader('Last-Modified'));
+        $this->assertNotNull($response->getHeader('Etag'));
+
+        $this->assertEquals($response->getHeader('Last-Modified')->normalize()->__toString(), $last_modified);
+        $this->assertEquals($response->getHeader('Etag')->normalize()->__toString(), $etag);
+        $this->assertEquals("wunderbar", $this->getFieldValueForFieldLabel($artifact_id, $field_label));
+        return $artifact_id;
+    }
+
+    /**
+     * @depends testPutIsIdempotent
+     */
+    public function testPutArtifactIdWithValidIfUnmodifiedSinceHeader() {
         $test_post_return = func_get_args();
         $artifact_id = $test_post_return[0];
 
@@ -120,15 +155,49 @@ class ArtifactsTest extends RestBase {
         $response = $this->getResponse($request);
         $this->assertEquals($response->getStatusCode(), 200);
         $this->assertNotNull($response->getHeader('Last-Modified'));
+        $this->assertNotNull($response->getHeader('Etag'));
 
         $this->assertEquals("This should return 200", $this->getFieldValueForFieldLabel($artifact_id, $field_label));
         return $artifact_id;
     }
 
     /**
-     * @depends testPostArtifact
+     * @depends testPutArtifactIdWithValidIfUnmodifiedSinceHeader
      */
-    public function testPutArtifactIdWithInvalidConcurrentEditionDate() {
+    public function testPutArtifactIdWithValidIfMatchHeader() {
+        $test_post_return = func_get_args();
+        $artifact_id = $test_post_return[0];
+
+        $field_label =  'Summary';
+        $field_id = $this->getFieldIdForFieldLabel($artifact_id, $field_label);
+        $put_resource = json_encode(array(
+            'values' => array(
+                array(
+                    'field_id' => $field_id,
+                    'value'    => "varm choklade",
+                ),
+            ),
+        ));
+
+        $request = $this->client->put('artifacts/'.$artifact_id, null, $put_resource);
+
+        $artifact      = $this->getResponse($this->client->get('artifacts/'.$artifact_id));
+        $Etag = $artifact->getHeader('Etag')->normalize()->__toString();
+        $request->setHeader('If-Match', $Etag);
+
+        $response = $this->getResponse($request);
+        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertNotNull($response->getHeader('Last-Modified'));
+        $this->assertNotNull($response->getHeader('Etag'));
+
+        $this->assertEquals("varm choklade", $this->getFieldValueForFieldLabel($artifact_id, $field_label));
+        return $artifact_id;
+    }
+
+    /**
+     * @depends testPutArtifactIdWithValidIfMatchHeader
+     */
+    public function testPutArtifactIdWithInvalidIfUnmodifiedSinceHeader() {
         $test_post_return = func_get_args();
         $artifact_id = $test_post_return[0];
 
@@ -155,6 +224,35 @@ class ArtifactsTest extends RestBase {
     }
 
     /**
+     * @depends testPutArtifactIdWithValidIfMatchHeader
+     */
+    public function testPutArtifactIdWithInvalidIfMatchHeader() {
+        $test_post_return = func_get_args();
+        $artifact_id = $test_post_return[0];
+
+        $field_label =  'Summary';
+        $field_id = $this->getFieldIdForFieldLabel($artifact_id, $field_label);
+        $put_resource = json_encode(array(
+            'values' => array(
+                array(
+                    'field_id' => $field_id,
+                    'value'    => "This should return 4122415",
+                ),
+            ),
+        ));
+
+        $Etag    = "one empty bottle";
+        $request = $this->client->put('artifacts/'.$artifact_id, null, $put_resource);
+        $request->setHeader('If-Match', $Etag);
+
+        try {
+            $this->getResponse($request);
+        } catch (Exception $e) {
+            $this->assertEquals($e->getResponse()->getStatusCode(), 412);
+        }
+    }
+
+    /**
      * @depends testPutArtifactId
      */
     public function testPutArtifactComment() {
@@ -172,11 +270,12 @@ class ArtifactsTest extends RestBase {
         $response    = $this->getResponse($this->client->put('artifacts/'.$artifact_id, null, $put_resource));
         $this->assertEquals($response->getStatusCode(), 200);
         $this->assertNotNull($response->getHeader('Last-Modified'));
+        $this->assertNotNull($response->getHeader('Etag'));
 
         $response   = $this->getResponse($this->client->get("artifacts/$artifact_id/changesets"));
         $changesets = $response->json();
-        $this->assertEquals(4, count($changesets));
-        $this->assertEquals('Please see my comment', $changesets[3]['last_comment']['body']);
+        $this->assertEquals(5, count($changesets));
+        $this->assertEquals('Please see my comment', $changesets[4]['last_comment']['body']);
     }
 
     private function getFieldIdForFieldLabel($artifact_id, $field_label) {
@@ -201,6 +300,8 @@ class ArtifactsTest extends RestBase {
     private function getArtifact($artifact_id) {
         $response = $this->getResponse($this->client->get('artifacts/'.$artifact_id));
         $this->assertNotNull($response->getHeader('Last-Modified'));
+        $this->assertNotNull($response->getHeader('Etag'));
+
         return $response->json();
     }
 
