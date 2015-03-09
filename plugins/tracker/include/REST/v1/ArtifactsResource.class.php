@@ -87,6 +87,7 @@ class ArtifactsResource {
         $artifact = $this->getArtifactById($user, $id);
         $this->sendAllowHeadersForArtifact();
         $this->sendLastModifiedHeader($artifact);
+        $this->sendETagHeader($artifact);
 
         return $this->builder->getArtifactRepresentationWithFieldValues($user, $artifact);
     }
@@ -158,10 +159,11 @@ class ArtifactsResource {
      *
      */
     protected function putId($id, array $values, ChangesetCommentRepresentation $comment = null) {
-        try {
-            $user     = UserManager::instance()->getCurrentUser();
-            $artifact = $this->getArtifactById($user, $id);
+        $user     = UserManager::instance()->getCurrentUser();
+        $artifact = $this->getArtifactById($user, $id);
 
+        $this->sendAllowHeadersForArtifact($artifact);
+        try {
             $updater = new Tracker_REST_Artifact_ArtifactUpdater(
                 new Tracker_REST_Artifact_ArtifactValidator(
                     $this->formelement_factory
@@ -182,8 +184,9 @@ class ArtifactsResource {
         } catch (Tracker_Artifact_Attachment_FileNotFoundException $exception) {
             throw new RestException(404, $exception->getMessage());
         }
-        $this->sendAllowHeadersForArtifact($artifact);
+
         $this->sendLastModifiedHeader($artifact);
+        $this->sendETagHeader($artifact);
     }
 
     /**
@@ -244,6 +247,7 @@ class ArtifactsResource {
 
             $artifact_reference = $updater->create($user, $tracker, $values);
             $this->sendLastModifiedHeader($artifact_reference->getArtifact());
+            $this->sendETagHeader($artifact_reference->getArtifact());
             return $artifact_reference;
         } catch (Tracker_FormElement_InvalidFieldException $exception) {
             throw new RestException(400, $exception->getMessage());
@@ -262,6 +266,9 @@ class ArtifactsResource {
      * @param int $id
      *
      * @return Tracker_Artifact
+     * @throws Project_AccessProjectNotFoundException 404
+     * @throws Project_AccessException 403
+     * @throws RestException 404
      */
     private function getArtifactById(PFUser $user, $id) {
         $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $id);
@@ -282,5 +289,9 @@ class ArtifactsResource {
 
     private function sendLastModifiedHeader(Tracker_Artifact $artifact) {
         Header::lastModified($artifact->getLastUpdateDate());
+    }
+
+    private function sendETagHeader(Tracker_Artifact $artifact) {
+        Header::eTag($artifact->getVersionIdentifier());
     }
 }

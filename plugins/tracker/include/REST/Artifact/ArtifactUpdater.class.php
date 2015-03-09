@@ -55,13 +55,27 @@ class Tracker_REST_Artifact_ArtifactUpdater {
     }
 
     private function clientWantsToUpdateLatestVersion() {
-        return isset($_SERVER['HTTP_IF_UNMODIFIED_SINCE']);
+        return (isset($_SERVER['HTTP_IF_UNMODIFIED_SINCE']) || isset($_SERVER['HTTP_IF_MATCH']));
     }
 
     private function isUpdatingLatestVersion(Tracker_Artifact $artifact) {
-        $client_version = strtotime($_SERVER['HTTP_IF_UNMODIFIED_SINCE']);
-        $last_updated   = $artifact->getLastUpdateDate();
+        $valid_unmodified = true;
+        $valid_match      = true;
 
-        return $last_updated == $client_version;
+        if (isset($_SERVER['HTTP_IF_UNMODIFIED_SINCE'])) {
+            $client_version = strtotime($_SERVER['HTTP_IF_UNMODIFIED_SINCE']);
+            $last_version   = $artifact->getLastUpdateDate();
+
+            $valid_unmodified = ($last_version == $client_version);
+        }
+
+        if (isset($_SERVER['HTTP_IF_MATCH'])) {
+            $client_version = $_SERVER['HTTP_IF_MATCH'];
+            $last_version   = $artifact->getVersionIdentifier();
+
+            $valid_match = ($last_version == $client_version);
+        }
+
+        return ($valid_unmodified && $valid_match);
     }
 }
