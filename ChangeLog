@@ -1,3 +1,9 @@
+Version 7.11-2 (Monday, March 9th 2015)
+	* request #7902: Install Tuleap with gitolite3 and git19 on centos6
+	* request #7911 Logrotate might be configured to use "dateext" instead of .X
+	* request #7640: Tracker admins can create new reports when there are no-longer any reports available
+	* request #7896: refactoring search redirection
+
 Version 7.11 (Wednesday, March 4th 2015)
 
 	== Feature ==
