@@ -33,6 +33,10 @@ class TokenIsAllowed {
         $this->user_manager = UserManager::build();
     }
 
+    /**
+     * @return boolean
+     * @throws RestException
+     */
     public function isAllowed() {
         try {
             if ($this->requestIsOption() || $this->currentUserIsNotAnonymous()) {

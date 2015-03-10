@@ -26,13 +26,14 @@ use \EventManager;
 use \Event;
 use \Tuleap\REST\Header;
 use \Tuleap\REST\ProjectAuthorization;
+use \Tuleap\REST\AuthenticatedResource;
 use \URLVerification;
 
 /**
  * Wrapper for project related REST methods
  */
 
-class ProjectResource {
+class ProjectResource extends AuthenticatedResource {
 
     const MAX_LIMIT = 50;
 
@@ -45,6 +46,8 @@ class ProjectResource {
     public function __construct() {
         $this->user_manager    = UserManager::instance();
         $this->project_manager = ProjectManager::instance();
+
+        parent::__construct();
     }
 
     /**
@@ -67,6 +70,7 @@ class ProjectResource {
      * Get the backlog items that can be planned in a top-milestone
      *
      * @url GET {id}/backlog
+     * @access hybrid
      *
      * @param int $id     Id of the project
      * @param int $limit  Number of elements displayed per page {@from path}
@@ -76,7 +80,9 @@ class ProjectResource {
      *
      * @throws 406
      */
-    protected function getBacklog($id, $limit = 10, $offset = 0) {
+    public function getBacklog($id, $limit = 10, $offset = 0) {
+        $this->checkAcess();
+
         $this->checkAgileEndpointsAvailable();
 
         $backlog_items = $this->backlogItems($id, $limit, $offset, Event::REST_GET_PROJECT_BACKLOG);

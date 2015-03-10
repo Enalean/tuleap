@@ -40,14 +40,6 @@ class ProjectTest extends RestBase {
         );
     }
 
-    private function getUnauthorizedBasicAuthResponse($request) {
-        return $this->getResponseByBasicAuth(
-            TestDataBuilder::TEST_USER_1_NAME,
-            'wrong_password',
-            $request
-        );
-    }
-
     public function testGET() {
         $response      = $this->getResponse($this->client->get('projects'));
         $json_projects = $response->json();
@@ -651,14 +643,5 @@ class ProjectTest extends RestBase {
                 $this->getIds($json_projects)
             )
         );
-    }
-
-    /**
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
-     */
-    public function testGETWithBasicAuthAndWrongCredentials() {
-        $response = $this->getUnauthorizedBasicAuthResponse($this->client->get('projects'));
-
-        $this->assertEquals($response->getStatusCode(), 401);
     }
 }
