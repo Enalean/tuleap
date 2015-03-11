@@ -1615,119 +1615,6 @@ class TrackerTest extends TuleapTestCase {
         $this->assertTrue($t_access_registered->userCanView($this->super_admin));
     }
 
-    //
-    // Tracker permission export
-    //
-    public function testPermissionsExport() {
-        $f1 = new Tracker_FormElement_InterfaceTestVersion();
-        $f1->setReturnValue('getId', 10);
-        $f1->setReturnValue(
-            'getPermissionsByUgroupId',
-            array(
-                2 => array('FIELDPERM_1'),
-                4 => array('FIELDPERM_2'),
-            )
-        );
-        $f1->setReturnValue('isUsed', true);
-
-        $f2 = new Tracker_FormElement_InterfaceTestVersion();
-        $f2->setReturnValue('getId', 20);
-        $f2->setReturnValue(
-            'getPermissionsByUgroupId',
-            array(
-                2 => array('FIELDPERM_2'),
-                4 => array('FIELDPERM_1'),
-            )
-        );
-        $f2->setReturnValue('isUsed', true);
-
-        $this->tracker->setReturnValue('getAllFormElements', array($f1, $f2));
-        $this->formelement_factory->setReturnValue('getAllFormElementsForTracker', array($f1, $f2));
-
-        stub($this->workflow_factory)->getGlobalRulesManager()->returns(mock('Tracker_RulesManager'));
-
-        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
-        $xml = $this->tracker->exportToXML($xml);
-
-        $this->assertTrue(isset($xml->permissions));
-        $this->assertEqual((string)$xml->permissions->permission[0]['scope'], 'tracker');
-        $this->assertEqual((string)$xml->permissions->permission[0]['ugroup'], 'UGROUP_1');
-        $this->assertEqual((string)$xml->permissions->permission[0]['type'], 'PERM_1');
-
-        $this->assertEqual((string)$xml->permissions->permission[1]['scope'], 'tracker');
-        $this->assertEqual((string)$xml->permissions->permission[1]['ugroup'], 'UGROUP_3');
-        $this->assertEqual((string)$xml->permissions->permission[1]['type'], 'PERM_2');
-
-        $this->assertEqual((string)$xml->permissions->permission[2]['scope'], 'tracker');
-        $this->assertEqual((string)$xml->permissions->permission[2]['ugroup'], 'UGROUP_5');
-        $this->assertEqual((string)$xml->permissions->permission[2]['type'], 'PERM_3');
-
-        $this->assertEqual((string)$xml->permissions->permission[3]['scope'], 'field');
-        $this->assertEqual((string)$xml->permissions->permission[3]['ugroup'], 'UGROUP_2');
-        $this->assertEqual((string)$xml->permissions->permission[3]['type'], 'FIELDPERM_1');
-        $this->assertEqual((string)$xml->permissions->permission[3]['REF'], 'F1');
-
-        $this->assertEqual((string)$xml->permissions->permission[4]['scope'], 'field');
-        $this->assertEqual((string)$xml->permissions->permission[4]['ugroup'], 'UGROUP_4');
-        $this->assertEqual((string)$xml->permissions->permission[4]['type'], 'FIELDPERM_2');
-        $this->assertEqual((string)$xml->permissions->permission[4]['REF'], 'F1');
-
-        $this->assertEqual((string)$xml->permissions->permission[5]['scope'], 'field');
-        $this->assertEqual((string)$xml->permissions->permission[5]['ugroup'], 'UGROUP_2');
-        $this->assertEqual((string)$xml->permissions->permission[5]['type'], 'FIELDPERM_2');
-        $this->assertEqual((string)$xml->permissions->permission[5]['REF'], 'F2');
-
-        $this->assertEqual((string)$xml->permissions->permission[6]['scope'], 'field');
-        $this->assertEqual((string)$xml->permissions->permission[6]['ugroup'], 'UGROUP_4');
-        $this->assertEqual((string)$xml->permissions->permission[6]['type'], 'FIELDPERM_1');
-        $this->assertEqual((string)$xml->permissions->permission[6]['REF'], 'F2');
-    }
-
-    public function itExportsTheTrackerID() {
-        $this->tracker->setReturnValue('getAllFormElements', array());
-        stub($this->workflow_factory)->getGlobalRulesManager()->returns(mock('Tracker_RulesManager'));
-
-        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
-        $xml = $this->tracker->exportToXML($xml);
-
-        $attributes = $xml->attributes();
-        $this->assertEqual((string)$attributes['id'], 'T110');
-    }
-
-    public function itExportsNoParentIfNotInAHierarchy() {
-        $this->tracker->setReturnValue('getAllFormElements', array());
-        stub($this->workflow_factory)->getGlobalRulesManager()->returns(mock('Tracker_RulesManager'));
-
-        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
-        $xml = $this->tracker->exportToXML($xml);
-
-        $attributes = $xml->attributes();
-        $this->assertEqual((string)$attributes['parent_id'], "0");
-    }
-
-    public function itExportsTheParentId() {
-        $this->tracker->setReturnValue('getAllFormElements', array());
-        stub($this->workflow_factory)->getGlobalRulesManager()->returns(mock('Tracker_RulesManager'));
-        $this->hierarchy->addRelationship(9001, 110);
-
-        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
-        $xml = $this->tracker->exportToXML($xml);
-
-        $attributes = $xml->attributes();
-        $this->assertEqual((string)$attributes['parent_id'], "T9001");
-    }
-
-    public function itExportsTheTrackerColor() {
-        $this->tracker->setReturnValue('getAllFormElements', array());
-        stub($this->workflow_factory)->getGlobalRulesManager()->returns(mock('Tracker_RulesManager'));
-
-        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
-        $xml = $this->tracker->exportToXML($xml);
-
-        $color = $xml->color;
-        $this->assertEqual((string)$color, 'inca_gray');
-    }
-
     public function testHasErrorNoError() {
         $header = array('summary', 'details');
         $lines = array(
@@ -1913,6 +1800,178 @@ class TrackerTest extends TuleapTestCase {
     }
 }
 
+class Tracker_ExportToXmlTest extends TuleapTestCase {
+
+    private $tracker;
+    private $formelement_factory;
+    private $workflow_factory;
+    private $hierarchy;
+
+    public function setUp() {
+        parent::setUp();
+        $this->tracker = new TrackerTestVersion();
+        stub($this->tracker)->getID()->returns(110);
+        stub($this->tracker)->getColor()->returns('inca_gray');
+
+        $this->formelement_factory = mock('Tracker_FormElementFactory');
+        stub($this->tracker)->getFormElementFactory()->returns($this->formelement_factory);
+
+        $this->workflow_factory = mock('WorkflowFactory');
+        stub($this->workflow_factory)->getGlobalRulesManager()->returns(mock('Tracker_RulesManager'));
+        stub($this->tracker)->getWorkflowFactory()->returns($this->workflow_factory);
+
+        $this->hierarchy = new Tracker_Hierarchy();
+        $hierarchy_factory = mock('Tracker_HierarchyFactory');
+        stub($hierarchy_factory)->getHierarchy()->returns($this->hierarchy);
+        stub($this->tracker)->getHierarchyFactory()->returns($hierarchy_factory);
+
+        $tcrm = mock('Tracker_CannedResponseManager');
+        stub($this->tracker)->getCannedResponseManager()->returns($tcrm);
+
+        $canned_response_factory = mock('Tracker_CannedResponseFactory');
+        stub($this->tracker)->getCannedResponseFactory()->returns($canned_response_factory);
+
+        $tsm = mock('Tracker_SemanticManager');
+        stub($this->tracker)->getTrackerSemanticManager()->returns($tsm);
+
+
+        $report_factory = mock('Tracker_ReportFactory');
+        stub($this->tracker)->getReportFactory()->returns($report_factory);
+
+        $GLOBALS['UGROUPS'] = array(
+            'UGROUP_1' => 1,
+            'UGROUP_2' => 2,
+            'UGROUP_3' => 3,
+            'UGROUP_4' => 4,
+            'UGROUP_5' => 5,
+        );
+    }
+
+    public function tearDown() {
+        parent::tearDown();
+        unset($GLOBALS['UGROUPS']);
+    }
+
+    public function testPermissionsExport() {
+
+        stub($this->tracker)->getPermissionsByUgroupId()->returns(array(
+            1 => array('PERM_1'),
+            3 => array('PERM_2'),
+            5 => array('PERM_3'),
+            115 => array('PERM_3'),
+        ));
+
+        $f1 = new Tracker_FormElement_InterfaceTestVersion();
+        $f1->setReturnValue('getId', 10);
+        $f1->setReturnValue(
+            'getPermissionsByUgroupId',
+            array(
+                2 => array('FIELDPERM_1'),
+                4 => array('FIELDPERM_2'),
+            )
+        );
+        $f1->setReturnValue('isUsed', true);
+
+        $f2 = new Tracker_FormElement_InterfaceTestVersion();
+        $f2->setReturnValue('getId', 20);
+        $f2->setReturnValue(
+            'getPermissionsByUgroupId',
+            array(
+                2 => array('FIELDPERM_2'),
+                4 => array('FIELDPERM_1'),
+            )
+        );
+        $f2->setReturnValue('isUsed', true);
+
+        $this->tracker->setReturnValue('getAllFormElements', array($f1, $f2));
+        $this->formelement_factory->setReturnValue('getAllFormElementsForTracker', array($f1, $f2));
+
+        stub($this->workflow_factory)->getGlobalRulesManager()->returns(mock('Tracker_RulesManager'));
+
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
+        $xml = $this->tracker->exportToXML($xml);
+
+        $this->assertTrue(isset($xml->permissions));
+        $this->assertEqual((string)$xml->permissions->permission[0]['scope'], 'tracker');
+        $this->assertEqual((string)$xml->permissions->permission[0]['ugroup'], 'UGROUP_1');
+        $this->assertEqual((string)$xml->permissions->permission[0]['type'], 'PERM_1');
+
+        $this->assertEqual((string)$xml->permissions->permission[1]['scope'], 'tracker');
+        $this->assertEqual((string)$xml->permissions->permission[1]['ugroup'], 'UGROUP_3');
+        $this->assertEqual((string)$xml->permissions->permission[1]['type'], 'PERM_2');
+
+        $this->assertEqual((string)$xml->permissions->permission[2]['scope'], 'tracker');
+        $this->assertEqual((string)$xml->permissions->permission[2]['ugroup'], 'UGROUP_5');
+        $this->assertEqual((string)$xml->permissions->permission[2]['type'], 'PERM_3');
+
+        $this->assertEqual((string)$xml->permissions->permission[3]['scope'], 'field');
+        $this->assertEqual((string)$xml->permissions->permission[3]['ugroup'], 'UGROUP_2');
+        $this->assertEqual((string)$xml->permissions->permission[3]['type'], 'FIELDPERM_1');
+        $this->assertEqual((string)$xml->permissions->permission[3]['REF'], 'F1');
+
+        $this->assertEqual((string)$xml->permissions->permission[4]['scope'], 'field');
+        $this->assertEqual((string)$xml->permissions->permission[4]['ugroup'], 'UGROUP_4');
+        $this->assertEqual((string)$xml->permissions->permission[4]['type'], 'FIELDPERM_2');
+        $this->assertEqual((string)$xml->permissions->permission[4]['REF'], 'F1');
+
+        $this->assertEqual((string)$xml->permissions->permission[5]['scope'], 'field');
+        $this->assertEqual((string)$xml->permissions->permission[5]['ugroup'], 'UGROUP_2');
+        $this->assertEqual((string)$xml->permissions->permission[5]['type'], 'FIELDPERM_2');
+        $this->assertEqual((string)$xml->permissions->permission[5]['REF'], 'F2');
+
+        $this->assertEqual((string)$xml->permissions->permission[6]['scope'], 'field');
+        $this->assertEqual((string)$xml->permissions->permission[6]['ugroup'], 'UGROUP_4');
+        $this->assertEqual((string)$xml->permissions->permission[6]['type'], 'FIELDPERM_1');
+        $this->assertEqual((string)$xml->permissions->permission[6]['REF'], 'F2');
+    }
+
+    public function itExportsTheTrackerID() {
+        $this->tracker->setReturnValue('getAllFormElements', array());
+        stub($this->workflow_factory)->getGlobalRulesManager()->returns(mock('Tracker_RulesManager'));
+
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
+        $xml = $this->tracker->exportToXML($xml);
+
+        $attributes = $xml->attributes();
+        $this->assertEqual((string)$attributes['id'], 'T110');
+    }
+
+    public function itExportsNoParentIfNotInAHierarchy() {
+        $this->tracker->setReturnValue('getAllFormElements', array());
+        stub($this->workflow_factory)->getGlobalRulesManager()->returns(mock('Tracker_RulesManager'));
+
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
+        $xml = $this->tracker->exportToXML($xml);
+
+        $attributes = $xml->attributes();
+        $this->assertEqual((string)$attributes['parent_id'], "0");
+    }
+
+    public function itExportsTheParentId() {
+        $this->tracker->setReturnValue('getAllFormElements', array());
+        stub($this->workflow_factory)->getGlobalRulesManager()->returns(mock('Tracker_RulesManager'));
+        $this->hierarchy->addRelationship(9001, 110);
+
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
+        $xml = $this->tracker->exportToXML($xml);
+
+        $attributes = $xml->attributes();
+        $this->assertEqual((string)$attributes['parent_id'], "T9001");
+    }
+
+    public function itExportsTheTrackerColor() {
+        $this->tracker->setReturnValue('getAllFormElements', array());
+        stub($this->workflow_factory)->getGlobalRulesManager()->returns(mock('Tracker_RulesManager'));
+
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
+        $xml = $this->tracker->exportToXML($xml);
+
+        $color = $xml->color;
+        $this->assertEqual((string)$color, 'inca_gray');
+    }
+
+}
+
 class Tracker_WorkflowTest extends TuleapTestCase {
 
     public function setUp() {
@@ -2011,5 +2070,3 @@ class Tracker_getParentTest extends TuleapTestCase {
         $this->tracker->getParent();
     }
 }
-
-?>
