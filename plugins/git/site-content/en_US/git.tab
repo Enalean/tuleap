@@ -60,7 +60,7 @@ plugin_git	mirroring_mirror_used	Used by this repository?
 plugin_git	mirroring_update_mirroring	Update mirroring of this repository
 plugin_git	mirroring_mirroring_successful	The repository will be replicated on the selected mirrors shortly.
 plugin_git	mirroring_mirroring_successful_plural	The repositories will be replicated on the selected mirrors shortly.
-plugin_git	mirroring_unmirroring_successful	The repository will be completely removed from mirrors shortly.
+plugin_git	mirroring_unmirroring_successful	The repository will be completely revoked from mirrors shortly.
 plugin_git	mirroring_unmirroring_successful_plural	The repositories will be completely removed from mirrors shortly.
 plugin_git	mirroring_mirroring_error	Error when defining on which mirrors the repository is replicated.
 
@@ -334,6 +334,7 @@ plugin_git	owner_label	Owner
 plugin_git	ssh_key_label	Owner's SSH Key
 plugin_git	pwd_label	Owner's Password
 plugin_git	mirrored_repo_label	Repositories on this mirror
+plugin_git	manage_allowed_projects_label	Manage allowed projects
 plugin_git	admin_update_button	Update
 plugin_git	admin_delete_button	Delete
 plugin_git	change_pwd	click here to change
@@ -342,6 +343,27 @@ plugin_git	mirror_no_repository	No repositories on this mirror
 plugin_git	mirror_repo	Repository
 plugin_git	mirror_title	List of repositories on mirror $1
 plugin_git	mirror_back	Back to mirror list
+plugin_git	mirror_allowed_project_title	Manage projects allowed to use $1
+plugin_git	mirror_allowed_project_allow_all	Allow <b>all the projects</b> to use this mirror.
+plugin_git	mirror_allowed_project_allow_all_submit	Save
+plugin_git	mirror_allowed_project_list	List of allowed projects
+plugin_git	mirror_allowed_project_list_allow_placeholder	Project id or name
+plugin_git	mirror_allowed_project_list_allow_project	Allow access
+plugin_git	mirror_allowed_project_list_revoke_projects	Revoke access to selected
+plugin_git	mirror_allowed_project_list_filter_placeholder	Filter on project id or name
+plugin_git	mirror_allowed_project_list_id	Id
+plugin_git	mirror_allowed_project_list_name	Name
+plugin_git	mirror_allowed_project_list_empty	Currently, there's no project allowed to use this mirror.
+plugin_git	mirror_allowed_project_unset_restricted	All projects can now use this mirror.
+plugin_git	mirror_allowed_project_set_restricted	Now, only the allowed projects are able to use this mirror. Projects with at least one repository using this mirror have been automatically added to the list of allowed projects.
+plugin_git	mirror_allowed_project_restricted_error	Something went wrong during the update of the mirror restriction status.
+plugin_git	mirror_allowed_project_allow_project	Submitted project can now use this mirror.
+plugin_git	mirror_allowed_project_revoke_projects	Submitted projects will not be able to use this mirror.
+plugin_git	mirror_allowed_project_update_project_list_error	Something went wrong during the update of the allowed project list.
+plugin_git	mirror_allowed_project_revoke_title	Warning
+plugin_git	mirror_allowed_project_revoke_description	You are about to revoke the access to this mirror to one or several projects. This implies the unmirroring of all repositories of the selected projects. Are you sure you want to do this?
+plugin_git	mirror_allowed_project_revoke_yes	Yes, revoke access
+plugin_git	mirror_allowed_project_revoke_no	No
 
 plugin_git	system_event_queue	Git Queue
 plugin_git	mirror_system_event_queue	Grok Mirror Queue

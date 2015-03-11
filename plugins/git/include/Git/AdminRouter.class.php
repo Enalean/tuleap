@@ -32,14 +32,30 @@ class Git_AdminRouter {
     /** @var CSRFSynchronizerToken */
     private $csrf;
 
+    /** @var Git_MirrorResourceRestrictor */
+    private $git_mirror_resource_restrictor;
+
+    /** @var ProjectManager */
+    private $project_manager;
+
+    /** @var Git_Mirror_ManifestManager */
+    private $git_mirror_manifest_manager;
+
+
     public function __construct(
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
         CSRFSynchronizerToken                $csrf,
-        Git_Mirror_MirrorDataMapper          $git_mirror_factory
+        Git_Mirror_MirrorDataMapper          $git_mirror_factory,
+        Git_MirrorResourceRestrictor         $git_mirror_resource_restrictor,
+        ProjectManager                       $project_manager,
+        Git_Mirror_ManifestManager           $git_mirror_manifest_manager
     ) {
-        $this->gerrit_server_factory = $gerrit_server_factory;
-        $this->csrf                  = $csrf;
-        $this->git_mirror_mapper     = $git_mirror_factory;
+        $this->gerrit_server_factory          = $gerrit_server_factory;
+        $this->csrf                           = $csrf;
+        $this->git_mirror_mapper              = $git_mirror_factory;
+        $this->git_mirror_resource_restrictor = $git_mirror_resource_restrictor;
+        $this->project_manager                = $project_manager;
+        $this->git_mirror_manifest_manager    = $git_mirror_manifest_manager;
     }
 
     public function process(Codendi_Request $request) {
@@ -58,7 +74,13 @@ class Git_AdminRouter {
         if ($request->get('pane') == 'gerrit_servers_admin') {
             return new Git_AdminGerritController($this->csrf, $this->gerrit_server_factory);
         } else {
-            return new Git_AdminMirrorController($this->csrf, $this->git_mirror_mapper);
+            return new Git_AdminMirrorController(
+                $this->csrf,
+                $this->git_mirror_mapper,
+                $this->git_mirror_resource_restrictor,
+                $this->project_manager,
+                $this->git_mirror_manifest_manager
+            );
         }
     }
 }

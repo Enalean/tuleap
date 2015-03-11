@@ -97,7 +97,11 @@ class GitViews_RepoManagement {
     private function getMirrorDataMapper() {
         return new Git_Mirror_MirrorDataMapper(
             new Git_Mirror_MirrorDao(),
-            UserManager::instance()
+            UserManager::instance(),
+            new GitRepositoryFactory(
+                new GitDao(),
+                ProjectManager::instance()
+            )
         );
     }
 

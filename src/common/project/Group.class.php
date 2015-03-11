@@ -161,6 +161,10 @@ class Group extends Error {
 	  return $this->data_array['group_name'];
 	}
 
+    public function getUnconvertedPublicName() {
+        return util_unconvert_htmlspecialchars($this->data_array['group_name']);
+    }
+
 	//short description as entered on the group admin page
 	function getDescription() {
 	  return $this->data_array['short_description'];

@@ -923,6 +923,7 @@ class Git extends PluginController {
             $this->url_manager,
             $this->logger,
             $this->backend_gitolite,
+            $this->mirror_data_mapper,
             new ProjectHistoryDao()
         );
     }

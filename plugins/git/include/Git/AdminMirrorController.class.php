@@ -26,9 +26,28 @@ class Git_AdminMirrorController {
     /** @var CSRFSynchronizerToken */
     private $csrf;
 
-    public function __construct(CSRFSynchronizerToken $csrf, Git_Mirror_MirrorDataMapper $git_mirror_mapper) {
-        $this->csrf              = $csrf;
-        $this->git_mirror_mapper = $git_mirror_mapper;
+    /** @var Git_MirrorResourceRestrictor */
+    private $git_mirror_resource_restrictor;
+
+    /** @var ProjectManager */
+    private $project_manager;
+
+    /** @var Git_Mirror_ManifestManager */
+    private $git_mirror_manifest_manager;
+
+
+    public function __construct(
+        CSRFSynchronizerToken $csrf,
+        Git_Mirror_MirrorDataMapper $git_mirror_mapper,
+        Git_MirrorResourceRestrictor $git_mirror_resource_restrictor,
+        ProjectManager $project_manager,
+        Git_Mirror_ManifestManager $git_mirror_manifest_manager
+    ) {
+        $this->csrf                           = $csrf;
+        $this->git_mirror_mapper              = $git_mirror_mapper;
+        $this->git_mirror_resource_restrictor = $git_mirror_resource_restrictor;
+        $this->project_manager                = $project_manager;
+        $this->git_mirror_manifest_manager    = $git_mirror_manifest_manager;
     }
 
     public function process(Codendi_Request $request) {
@@ -42,6 +61,10 @@ class Git_AdminMirrorController {
             $this->modifyMirror($request);
         } elseif ($request->get('action') == 'modify-mirror' && $request->get('delete_mirror')) {
             $this->deleteMirror($request);
+        } elseif ($request->get('action') == 'set-mirror-restriction') {
+            $this->setMirrorRestriction($request);
+        } elseif ($request->get('action') == 'update-allowed-project-list') {
+            $this->updateAllowedProjectList($request);
         }
     }
 
@@ -52,6 +75,11 @@ class Git_AdminMirrorController {
         switch ($request->get('action')) {
             case 'list-repositories':
                 $presenter = $this->getListRepositoriesPresenter($request);
+                break;
+            case 'manage-allowed-projects':
+            case 'set-mirror-restriction':
+            case 'update-allowed-project-list':
+                $presenter = $this->getManageAllowedProjectsPresenter($request);
                 break;
             default:
                 $presenter = $this->getAllMirrorsPresenter($title);
@@ -93,13 +121,103 @@ class Git_AdminMirrorController {
 
     private function getListRepositoriesPresenter(Codendi_Request $request) {
         $mirror_id = $request->get('mirror_id');
-
-        $mirror = $this->git_mirror_mapper->fetch($mirror_id);
+        $mirror    = $this->git_mirror_mapper->fetch($mirror_id);
 
         return new Git_AdminMRepositoryListPresenter(
             $mirror->url,
             $this->git_mirror_mapper->fetchRepositoriesPerMirrorPresenters($mirror)
         );
+    }
+
+    private function getManageAllowedProjectsPresenter(Codendi_Request $request) {
+        $mirror_id = $request->get('mirror_id');
+        $mirror    = $this->git_mirror_mapper->fetch($mirror_id);
+
+        return new Git_AdminMAllowedProjectsPresenter(
+            $mirror,
+            $this->git_mirror_resource_restrictor->searchAllowedProjectsOfMirror($mirror),
+            $this->git_mirror_resource_restrictor->isMirrorRestricted($mirror),
+            $this->generateManageAllowedProjectsCSRFToken($mirror)
+        );
+    }
+
+    private function generateManageAllowedProjectsCSRFToken(Git_Mirror_Mirror $mirror) {
+        return new CSRFSynchronizerToken('plugins/git/admin/?pane=mirrors_admin&action=manage-allowed-projects&mirror_id=' . $mirror->id);
+    }
+
+    private function setMirrorRestriction($request) {
+        $mirror_id   = $request->get('mirror_id');
+        $mirror      = $this->git_mirror_mapper->fetch($mirror_id);
+        $all_allowed = $request->get('all-allowed');
+
+        $this->checkSynchronizerToken('plugins/git/admin/?pane=mirrors_admin&action=manage-allowed-projects&mirror_id=' . $mirror_id);
+
+        if ($all_allowed) {
+            if ($this->git_mirror_resource_restrictor->unsetMirrorRestricted($mirror)) {
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git', 'mirror_allowed_project_unset_restricted'));
+                return true;
+            }
+
+        } else {
+            if ($this->git_mirror_resource_restrictor->setMirrorRestricted($mirror)) {
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git', 'mirror_allowed_project_set_restricted'));
+                return true;
+            }
+        }
+
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'mirror_allowed_project_restricted_error'));
+        return false;
+    }
+
+    private function updateAllowedProjectList($request) {
+        $mirror_id             = $request->get('mirror_id');
+        $mirror                = $this->git_mirror_mapper->fetch($mirror_id);
+        $project_to_add        = $request->get('project-to-allow');
+        $project_ids_to_remove = $request->get('project-ids-to-revoke');
+
+        $this->checkSynchronizerToken('plugins/git/admin/?pane=mirrors_admin&action=manage-allowed-projects&mirror_id=' . $mirror_id);
+
+        if ($request->get('allow-project') && ! empty($project_to_add)) {
+            return $this->allowProjectOnMirror($mirror, $project_to_add);
+
+        } elseif ($request->get('revoke-project') && ! empty($project_ids_to_remove)) {
+            return $this->revokeProjectsFromMirror($mirror, $project_ids_to_remove);
+        }
+    }
+
+    private function regenerateManifestForMirrorRepositories(Git_Mirror_Mirror $mirror) {
+        $repositories = $this->git_mirror_mapper->fetchRepositoriesForMirror($mirror);
+
+        foreach($repositories as $repository) {
+            $this->git_mirror_manifest_manager->triggerUpdate($repository);
+        }
+    }
+
+    private function allowProjectOnMirror(Git_Mirror_Mirror $mirror, $project_to_add) {
+        $project = $this->project_manager->getProjectFromAutocompleter($project_to_add);
+
+        if ($project && $this->git_mirror_resource_restrictor->allowProjectOnMirror($mirror, $project)) {
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git', 'mirror_allowed_project_allow_project'));
+            return true;
+        }
+
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'mirror_allowed_project_update_project_list_error'));
+        return false;
+    }
+
+    private function revokeProjectsFromMirror(Git_Mirror_Mirror $mirror, $project_ids) {
+        if (count($project_ids) > 0 && $this->git_mirror_resource_restrictor->revokeProjectsFromMirror($mirror, $project_ids)) {
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git', 'mirror_allowed_project_revoke_projects'));
+            return true;
+        }
+
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'mirror_allowed_project_update_project_list_error'));
+        return false;
+    }
+
+    private function checkSynchronizerToken($url) {
+        $token = new CSRFSynchronizerToken($url);
+        $token->check();
     }
 
     private function createMirror(Codendi_Request $request) {

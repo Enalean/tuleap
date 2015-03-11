@@ -69,6 +69,7 @@ class GitActionsTest extends TuleapTestCase {
                 $url_manager,
                 mock('Logger'),
                 mock('Git_Backend_Gitolite'),
+                mock('Git_Mirror_MirrorDataMapper'),
                 mock('ProjectHistoryDao')
             )
         );
@@ -477,6 +478,7 @@ class GitActions_Delete_Tests extends TuleapTestCase {
             $url_manager,
             mock('Logger'),
             mock('Git_Backend_Gitolite'),
+            mock('Git_Mirror_MirrorDataMapper'),
             mock('ProjectHistoryDao')
         );
     }
@@ -533,6 +535,7 @@ class GitActions_ForkTests extends TuleapTestCase {
             $url_manager,
             mock('Logger'),
             mock('Git_Backend_Gitolite'),
+            mock('Git_Mirror_MirrorDataMapper'),
             mock('ProjectHistoryDao')
         );
     }
@@ -664,6 +667,7 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
             $url_manager,
             mock('Logger'),
             mock('Git_Backend_Gitolite'),
+            mock('Git_Mirror_MirrorDataMapper'),
             mock('ProjectHistoryDao')
         );
     }
@@ -729,6 +733,7 @@ class GitActions_disconnectFromGerritTest extends TuleapTestCase {
             $url_manager,
             mock('Logger'),
             mock('Git_Backend_Gitolite'),
+            mock('Git_Mirror_MirrorDataMapper'),
             mock('ProjectHistoryDao')
         );
     }
@@ -813,6 +818,7 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
             $url_manager,
             mock('Logger'),
             mock('Git_Backend_Gitolite'),
+            mock('Git_Mirror_MirrorDataMapper'),
             mock('ProjectHistoryDao')
         );
 

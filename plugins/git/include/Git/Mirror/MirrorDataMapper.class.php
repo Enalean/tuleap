@@ -28,9 +28,16 @@ class Git_Mirror_MirrorDataMapper {
     /** UserManager */
     private $user_manager;
 
-    public function __construct(Git_Mirror_MirrorDao $dao, UserManager $user_manager) {
-        $this->dao          = $dao;
-        $this->user_manager = $user_manager;
+    /**
+     * @var GitRepositoryFactory
+     */
+    private $repository_factory;
+
+
+    public function __construct(Git_Mirror_MirrorDao $dao, UserManager $user_manager, GitRepositoryFactory $repository_factory) {
+        $this->dao                = $dao;
+        $this->user_manager       = $user_manager;
+        $this->repository_factory = $repository_factory;
     }
 
     /**
@@ -111,14 +118,20 @@ class Git_Mirror_MirrorDataMapper {
     }
 
     public function fetchRepositoriesForMirror(Git_Mirror_Mirror $mirror) {
-        $factory = new GitRepositoryFactory(
-            new GitDao(),
-            ProjectManager::instance()
-        );
-
         $repositories = array();
         foreach ($this->dao->fetchAllRepositoryMirroredByMirror($mirror->id) as $row) {
-            $repositories[] = $factory->instanciateFromRow($row);
+            $repositories[] = $this->repository_factory->instanciateFromRow($row);
+        }
+
+        return $repositories;
+    }
+
+    public function fetchAllProjectRepositoriesForMirror(Git_Mirror_Mirror $mirror, array $project_ids) {
+        $rows         = $this->dao->fetchAllProjectRepositoriesForMirror($mirror->id, $project_ids);
+        $repositories = array();
+
+        foreach ($rows as $row) {
+            $repositories[] = $this->repository_factory->instanciateFromRow($row);
         }
 
         return $repositories;
