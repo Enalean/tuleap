@@ -48,6 +48,12 @@ class AuthenticatedResource  implements iUseAuthentication {
         }
     }
 
+    /**
+     * Not an API resource but an inheritable method.
+     * We use the @access tag to exclude it from the explorer
+     *
+     * @access private
+     */
     protected function checkAcess() {
         if ($this->access_level === self::ACCESS_LEVEL_FORBID_ANON && ! $this->is_authenticated) {
             throw new RestException(401);
