@@ -44,6 +44,18 @@ class Admin_Homepage_Presenter {
     /** @var string */
     public $use_standard_homepage_label;
 
+    /** @var string */
+    public $logo_help;
+
+    /** @var string */
+    public $logo;
+
+    /** @var string */
+    public $path_logo;
+
+    /** @var bool */
+    public $use_custom_logo;
+
     public function __construct(
         CSRFSynchronizerToken $csrf,
         $title,
@@ -55,8 +67,14 @@ class Admin_Homepage_Presenter {
         $this->csrf_token            = $csrf->fetchHTMLInput();
         $this->use_standard_homepage = $use_standard_homepage;
 
+        $this->path_logo       = Admin_Homepage_LogoFinder::getCurrentUrl();
+        $this->use_custom_logo = Admin_Homepage_LogoFinder::isCustomLogoUsed();
+
+        $this->save                        = $GLOBALS['Language']->getText('admin_main', 'save_conf');
+        $this->logo                        = $GLOBALS['Language']->getText('admin_main', 'homepage_logo');
+        $this->upload                      = $GLOBALS['Language']->getText('admin_main', 'homepage_upload_logo');
         $this->headline                    = $GLOBALS['Language']->getText('admin_main', 'headline');
-        $this->btn_submit                  = $GLOBALS['Language']->getText('global', 'btn_submit');
+        $this->logo_help                   = $GLOBALS['Language']->getText('admin_main', 'homepage_logo_help');
         $this->headline_help               = $GLOBALS['Language']->getText('admin_main', 'headline_help');
         $this->placeholder_headline        = $GLOBALS['Language']->getText('admin_main', 'placeholder_headline');
         $this->use_standard_homepage_help  = $GLOBALS['Language']->getText('admin_main', 'use_standard_homepage_help');

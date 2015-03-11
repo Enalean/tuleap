@@ -699,6 +699,7 @@ setup_apache_debian() {
     install_dist_conf /etc/apache2/tuleap/php.conf
     install_dist_conf /etc/apache2/tuleap/auth_mysql.conf
     install_dist_conf /etc/apache2/conf.d/tuleap-plugins/ckeditor.conf
+    install_dist_conf /etc/apache2/conf.d/tuleap-plugins/tuleap-uploaded-images.conf
 
     # Subversion / apache specific
     touch /etc/apache2/tuleap/svnroot.conf

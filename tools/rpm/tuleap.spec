@@ -552,6 +552,7 @@ done
 # Data dir
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}
 %{__install} -m 700 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/user
+%{__install} -m 700 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/images
 
 # Install script
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap-install
@@ -600,6 +601,7 @@ done
 # Apache conf dir
 %{__install} -d $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/
 %{__install} src/etc/ckeditor.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/ckeditor.conf
+%{__install} src/etc/tuleap-uploaded-images.conf.rhel5.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/tuleap-uploaded-images.conf
 
 # plugin webdav
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/plugins/webdav/locks
@@ -953,6 +955,7 @@ fi
 # Data dir
 %dir %{APP_DATA_DIR}
 %dir %{APP_DATA_DIR}/user
+%dir %{APP_DATA_DIR}/images
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIB_DIR}
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIBBIN_DIR}
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gotohell

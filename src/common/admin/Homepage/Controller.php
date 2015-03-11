@@ -90,7 +90,17 @@ class Admin_Homepage_Controller {
             $this->dao->save($headlines);
         }
 
-        $this->response->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('admin_main', 'successfully_updated'));
+        if ($this->request->get('remove_custom_logo')) {
+            $this->removeCustomLogo();
+        }
+        $this->moveUploadedLogo();
+
+        if (! $this->response->feedbackHasWarningsOrErrors()) {
+            $this->response->addFeedback(
+                Feedback::INFO,
+                $GLOBALS['Language']->getText('admin_main', 'successfully_updated')
+            );
+        }
         $this->redirectToIndex();
     }
 
@@ -116,5 +126,62 @@ class Admin_Homepage_Controller {
 
     private function redirectToIndex() {
         $this->response->redirect($_SERVER['SCRIPT_URL']);
+    }
+
+    private function removeCustomLogo() {
+        $filename = Admin_Homepage_LogoFinder::getCustomPath();
+        if (is_file($filename)) {
+            unlink($filename);
+        }
+    }
+
+    private function moveUploadedLogo() {
+        if (! isset($_FILES['logo'])) {
+            return;
+        }
+        $uploaded_logo = $_FILES['logo'];
+
+        switch ($uploaded_logo['error']) {
+            case UPLOAD_ERR_OK:
+                continue;
+                break;
+            case UPLOAD_ERR_NO_FILE:
+                return;
+                break;
+            case UPLOAD_ERR_INI_SIZE:
+            case UPLOAD_ERR_FORM_SIZE:
+                $this->response->addFeedback(
+                    Feedback::ERROR,
+                    $GLOBALS['Language']->getText('admin_main', 'logo_too_big')
+                );
+                return;
+                break;
+            default:
+                $this->response->addFeedback(
+                    Feedback::ERROR,
+                    $GLOBALS['Language']->getText('admin_main', 'upload_error', $uploaded_logo['error'])
+                );
+                return;
+        }
+
+        $imageinfo = getimagesize($uploaded_logo['tmp_name']);
+        if (! $imageinfo || $imageinfo['mime'] !== 'image/png') {
+            $this->response->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('admin_main', 'no_png')
+            );
+            return;
+        }
+
+        $height_index = 1;
+        if ($imageinfo[$height_index] > 100) {
+            $this->response->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('admin_main', '100px')
+            );
+            return;
+        }
+
+        return move_uploaded_file($uploaded_logo['tmp_name'], Admin_Homepage_LogoFinder::getCustomPath());
     }
 }

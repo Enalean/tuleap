@@ -18,15 +18,28 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-class FlamingParrot_HomepagePresenter {
+class Admin_Homepage_LogoFinder {
 
-    public $headline;
-    public $logo;
+    const PATH       = '/images/homepage-logo.png';
+    const THEME_PATH = '/themes/common';
 
-    public function __construct(
-        $headline
-    ) {
-        $this->headline  = $headline;
-        $this->path_logo = Admin_Homepage_LogoFinder::getCurrentUrl();
+    /** @return string */
+    public static function getCurrentUrl() {
+        if (self::isCustomLogoUsed()) {
+            return self::PATH;
+        }
+
+        return self::THEME_PATH . self::PATH;
     }
+
+    /** @return string */
+    public static function getCustomPath() {
+        return Config::get('sys_data_dir') . self::PATH;
+    }
+
+    /** @return boolean */
+    public static function isCustomLogoUsed() {
+        return is_file(self::getCustomPath());
+    }
+
 }

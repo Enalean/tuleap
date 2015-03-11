@@ -1,0 +1,7 @@
+Alias /images "/var/lib/tuleap/images"
+<Directory "/var/lib/tuleap/images">
+    Options None
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+</Directory>
