@@ -50,6 +50,7 @@
         self.getCardFieldFileValue        = CardFieldsService.getCardFieldFileValue;
         self.getCardFieldCrossValue       = CardFieldsService.getCardFieldCrossValue;
         self.getCardFieldPermissionsValue = CardFieldsService.getCardFieldPermissionsValue;
+        self.isColumnWipReached           = isColumnWipReached;
 
         loadColumns();
         loadBacklog(limit, offset);
@@ -192,6 +193,10 @@
                     self.archive.loading_items = false;
                 }
             });
+        }
+
+        function isColumnWipReached(column) {
+            return (column.limit && column.limit <= column.content.length);
         }
     }
 })();

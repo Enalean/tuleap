@@ -8,6 +8,7 @@
         'restangular',
         'angularMoment',
         'ngSanitize',
-        'gettext'
+        'gettext',
+        'ngAnimate'
     ]);
 })();

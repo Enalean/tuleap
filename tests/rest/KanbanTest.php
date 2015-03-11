@@ -39,10 +39,12 @@ class KanbanTest extends RestBase {
 
     public function testGETKanban() {
         $response = $this->getResponse($this->client->get('kanban/'. TestDataBuilder::KANBAN_ID));
-        $kanban = $response->json();
+        $kanban   = $response->json();
 
         $this->assertEquals('My first kanban', $kanban['label']);
         $this->assertEquals(TestDataBuilder::KANBAN_TRACKER_ID, $kanban['tracker_id']);
+
+        $this->assertNull($kanban['columns'][0]['limit']);
     }
 
     public function testGETBacklog() {

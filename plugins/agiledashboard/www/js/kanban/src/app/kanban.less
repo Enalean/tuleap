@@ -45,6 +45,9 @@
     @lineheightheader: 2.3em;
     @lightenratio: 45%;
     @lightenratiomiddle: 15%;
+    @wip-reached-color: #F39333;
+    @wip-reached-bg-color: #FFECD9;
+    @border-color: #E0E0E0;
 
     width: 100%;
     position: relative;
@@ -55,12 +58,11 @@
 
     > div {
         display: inline-block;
-        border-right: 1px solid #e0e0e0;
+        border-right: 1px solid @border-color;
         border-top-width: 4px;
         background: #FBFBFB;
         color: #CCC;
         font-size: @fontsizeheader;
-        text-transform: uppercase;
         line-height: @lineheightheader;
         text-align: center;
         white-space: normal;
@@ -71,18 +73,16 @@
 
         > .column-header {
             padding: 8px 0 0;
-            border-bottom: 1px solid #e0e0e0;
-            border-right: 1px solid #e0e0e0;
+            border-right: 1px solid @border-color;
             font-size: @fontsizeheader;
             font-weight: 400;
             font-family: 'SourceSansPro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            text-transform: uppercase;
             letter-spacing: 0.05em;
             color: #CCC;
             background: white;
             min-height: 48px;
             vertical-align: middle;
-            box-shadow: inset 0 4px 0 #666;
+            box-shadow: inset 0 3px 0 #666, inset 0 -1px 0 @border-color;
             color: #666;
             position: absolute;
             z-index: 5;
@@ -128,6 +128,30 @@
                             animation-name: loading-header;
                     -webkit-animation-duration: 1s;
                             animation-duration: 1s;
+                }
+            }
+
+            > .column-label {
+                font-size: 1.1em;
+                text-transform: uppercase;
+            }
+
+            > .warning-wip {
+                float: left;
+                font-size: 1.4em;
+
+                &.ng-enter {
+                    -webkit-animation: bounceIn 0.3s;
+                    -moz-animation: bounceIn 0.3s;
+                    -ms-animation: bounceIn 0.3s;
+                    animation: bounceIn 0.3s;
+                }
+
+                &.ng-leave {
+                    -webkit-animation: fadeOut 0.15s;
+                    -moz-animation: fadeOut 0.15s;
+                    -ms-animation: fadeOut 0.15s;
+                    animation: fadeOut 0.15s;
                 }
             }
 
@@ -182,6 +206,7 @@
 
                 > .column-label,
                 > .wip-limit,
+                > .warning-wip,
                 > .wip-count {
                     display: none;
                 }
@@ -208,6 +233,7 @@
                 width: 75px;
                 z-index: 1;
                 position: relative;
+                text-transform: uppercase;
 
                 > div {
                     position: relative;
@@ -236,6 +262,16 @@
                 }
             }
 
+            &.wip-reached {
+                background: @wip-reached-bg-color;
+                color: @wip-reached-color;
+
+                > .column-label > div > .count {
+                    color: @wip-reached-color;
+                    opacity: 0.3;
+                }
+            }
+
             &:hover {
                 opacity: 0.7;
             }
@@ -246,6 +282,19 @@
 
                 > .column-label > .count {
                     color: #CCC;
+                }
+            }
+        }
+
+        &.wip-reached {
+            background: @wip-reached-bg-color;
+
+            > .column-header {
+                box-shadow: inset 0 3px 0 @wip-reached-color, inset 0 -3px 0 @wip-reached-color;
+                color: @wip-reached-color;
+
+                > .wip-limit {
+                    background: @wip-reached-color;
                 }
             }
         }
@@ -421,6 +470,10 @@ ul.kanban-items {
             }
         }
     }
+}
+
+#kanban-board > div.wip-reached ul.kanban-items > li > .kanban-item {
+    border: 1px solid #F5D5AB;
 }
 
 .modal-error {

@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.6.9\n"
 
 #: src/app/error.tpl.html
 msgid ""
@@ -39,6 +39,10 @@ msgstr "Basculer l'affichage du backlog"
 #: src/app/kanban.tpl.html
 msgid "Toggle this column"
 msgstr "Basculer l'affichage de cette colonne"
+
+#: src/app/kanban.tpl.html
+msgid "You have reached the work in progress limit for this column!"
+msgstr "Vous avez atteint la limite du nombre de carte de cette colonne !"
 
 #~ msgid "Archive is currently empty"
 #~ msgstr "L'archive est actuellement vide"
