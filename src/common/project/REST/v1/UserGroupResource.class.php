@@ -83,8 +83,6 @@ class UserGroupResource {
      *
      * @param string $id Id of the ugroup (format: projectId_ugroupId)
      *
-     * @access protected
-     *
      * @throws 400
      * @throws 403
      * @throws 404

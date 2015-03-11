@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@ use \Luracast\Restler\RestException;
 
 use Rest_Exception_InvalidTokenException;
 use User_LoginException;
-use Exception;
 
 class TokenIsAllowed {
     
@@ -44,7 +43,8 @@ class TokenIsAllowed {
         } catch (Rest_Exception_InvalidTokenException $exception) {
             throw new RestException(401, $exception->getMessage());
         }
-        throw new RestException(401, 'Authentication required (headers: ' .  UserManager::HTTP_TOKEN_HEADER . ', ' .  UserManager::HTTP_USER_HEADER . ')');
+
+        return false;
     }
 
     private function requestIsOption() {

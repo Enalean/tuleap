@@ -852,8 +852,15 @@ class MilestoneResource {
      * @return \Tuleap\Tracker\REST\Artifact\BurndownRepresentation
      */
     public function getBurndown($id) {
-        $auth = new TokenAuthentication();
-        $auth->__isAllowed();
+        $token_authentication = new TokenAuthentication();
+        $is_allowed           = $token_authentication->__isAllowed();
+
+        if (! $is_allowed) {
+            throw new RestException(
+                401,
+                'Authentication required (headers: ' .  UserManager::HTTP_TOKEN_HEADER . ', ' .  UserManager::HTTP_USER_HEADER . ')'
+            );
+        }
 
         $burndown = null;
         $this->event_manager->processEvent(

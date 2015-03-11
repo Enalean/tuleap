@@ -44,6 +44,11 @@ class RequestWrapper {
         );
     }
 
+    public function getResponseByBasicAuth($username, $password, $request) {
+        $request->setAuth($username, $password);
+        return $request->send();
+    }
+
     public function getResponseByToken(Rest_Token $token, $request) {
         $request->setHeader('X-Auth-Token', $token->getTokenValue())
                 ->setHeader('X-Auth-UserId', $token->getUserId());
