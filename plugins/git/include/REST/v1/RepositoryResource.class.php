@@ -26,6 +26,7 @@ use Tuleap\Git\REST\v1\GitRepositoryRepresentation;
 use Luracast\Restler\RestException;
 use Tuleap\REST\Header;
 use Tuleap\REST\v1\GitRepositoryRepresentationBase;
+use Tuleap\REST\AuthenticatedResource;
 use GitRepoNotReadableException;
 use GitRepoNotFoundException;
 use Exception;
@@ -33,7 +34,7 @@ use UserManager;
 
 include_once('www/project/admin/permissions.php');
 
-class RepositoryResource {
+class RepositoryResource extends AuthenticatedResource {
 
     /** @var GitRepositoryFactory */
     private $repository_factory;
@@ -46,13 +47,16 @@ class RepositoryResource {
     }
 
     /**
+     * @access hybrid
+     *
      * @param int $id Id of the repository
      * @return GitRepositoryRepresentation | null
      *
      * @throws 403
      * @throws 404
      */
-    protected function get($id) {
+    public function get($id) {
+        $this->checkAcess();
         $user = $this->getCurrentUser();
 
         try {
