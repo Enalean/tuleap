@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once dirname(__FILE__).'/../lib/autoload.php';
+require_once dirname(__FILE__).'/bootstrap.php';
 
 /**
  * @group KanbanTests

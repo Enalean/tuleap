@@ -23,6 +23,8 @@ use AgileDashboard_KanbanColumn;
 
 class KanbanColumnRepresentation {
 
+    const ROUTE = "kanban_columns";
+
     /**
      * @var int {@type int}
      */
