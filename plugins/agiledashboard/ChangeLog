@@ -1,3 +1,6 @@
+Version 1.170 - Tuleap 7.12
+    * story #7701: Add BasicAuth method if no token/cookie provided
+
 Version 1.169 - Tuleap 7.12
     * story #7580: Kanban column has a WIP limit
 
