@@ -2247,7 +2247,7 @@ EOS;
      *
      * @return void
      */
-    public function exportToXML(SimpleXMLElement $xmlElem, &$xmlFieldId = 0) {
+    public function exportToXML(SimpleXMLElement $xmlElem) {
         $xmlElem->addAttribute('id', "T". $this->getId());
 
         $cdata_section_factory = new XML_SimpleXMLCDATAFactory();
@@ -2299,12 +2299,9 @@ EOS;
         $child = $xmlElem->addChild('formElements');
         // association between ids in database and ids in xml
         $xmlMapping = array();
-        if ($formelements = $this->getAllFormElements()) {
-            foreach ($formelements as $formElement) {
-                $grandchild = $child->addChild('formElement');
-                $xmlFieldId++;
-                $formElement->exportToXML($grandchild, $xmlMapping, $xmlFieldId);
-            }
+        foreach ($this->getFormElementFactory()->getUsedFormElementForTracker($this) as $formElement) {
+            $grandchild = $child->addChild('formElement');
+            $formElement->exportToXML($grandchild, $xmlMapping);
         }
 
         // semantic
@@ -2349,7 +2346,7 @@ EOS;
             }
         }
         // fields permission
-        if ($formelements = $this->getFormElementFactory()->getAllFormElementsForTracker($this)) {
+        if ($formelements = $this->getFormElementFactory()->getUsedFormElementForTracker($this)) {
             foreach ($formelements as $formelement) {
                 if ($permissions = $formelement->getPermissionsByUgroupId()) {
                     foreach ($permissions as $ugroup_id => $permission_types) {

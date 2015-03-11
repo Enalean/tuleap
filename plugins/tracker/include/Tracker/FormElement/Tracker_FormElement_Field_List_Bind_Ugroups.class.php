@@ -28,12 +28,12 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     private $ugroup_manager;
 
     /**
-     * @var array of Tracker_FormElement_Field_List_Bind_UgroupsValue
+     * @var Tracker_FormElement_Field_List_Bind_UgroupsValue[]
      */
     private $values;
 
     /**
-     * @var array of Tracker_FormElement_Field_List_Bind_UgroupsValue
+     * @var Tracker_FormElement_Field_List_Bind_UgroupsValue[]
      */
     private $values_indexed_by_ugroup_id;
 
@@ -527,14 +527,12 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
      *
      * @param SimpleXMLElement $root        the node to which the Bind is attached (passed by reference)
      * @param array            &$xmlMapping the array of mapping XML ID => real IDs
-     * @param string           $fieldID     XML ID of the binded field
      */
-    public function exportToXml(SimpleXMLElement $root, &$xmlMapping, $fieldID) {
+    public function exportToXml(SimpleXMLElement $root, &$xmlMapping) {
         $items = $root->addChild('items');
-        $i = 0;
         foreach ($this->values as $value) {
             $item = $items->addChild('item');
-            $id = $fieldID . '-V' . $i++;
+            $id = $value->getXMLId();
             $item->addAttribute('ID', $id);
             $xmlMapping['values'][$id] = $value->getId();
             $item->addAttribute('label', $value->getUGroupName());

@@ -37,10 +37,9 @@ interface Tracker_FormElement_Interface extends Tracker_Dispatchable_Interface, 
      * 
      * @param SimpleXMLElement $root        the node to which the FormElement is attached (passed by reference)
      * @param array            &$xmlMapping correspondance between real ids and xml IDs
-     * @param int              $index       of the last field in the array
      *
      * @return void
      */
-    public function exportToXml(SimpleXMLElement $root, &$xmlMapping, &$index);
+    public function exportToXml(SimpleXMLElement $root, &$xmlMapping);
 }
 ?>

@@ -729,9 +729,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @param SimpleXMLElement $root        the node to which the Bind is attached (passed by reference)
      * @param array            &$xmlMapping the array of mapping XML ID => real IDs
-     * @param string           $fieldID     XML ID of the binded field
      */
-    public function exportToXml(SimpleXMLElement $root, &$xmlMapping, $fieldID) {
+    public function exportToXml(SimpleXMLElement $root, &$xmlMapping) {
         if ($this->value_function) {
             $child = $root->addChild('items');
             foreach ($this->value_function as $vf) {

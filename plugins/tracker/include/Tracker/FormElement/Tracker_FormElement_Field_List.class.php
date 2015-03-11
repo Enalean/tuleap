@@ -1006,15 +1006,14 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @param SimpleXMLElement $root        The node to which the FormElement is attached (passed by reference)
      * @param array            &$xmlMapping The correpondance between real ids and xml IDs
-     * @param int              &$index      The index of this form element in the export file
      */
-    public function exportToXml(SimpleXMLElement $root, &$xmlMapping, &$index) {
-        parent::exportToXML($root, $xmlMapping, $index);
+    public function exportToXml(SimpleXMLElement $root, &$xmlMapping) {
+        parent::exportToXML($root, $xmlMapping);
         if ($this->getBind() && $this->shouldBeBindXML()) {
             $child = $root->addChild('bind');
             $bf = new Tracker_FormElement_Field_List_BindFactory();
             $child->addAttribute('type', $bf->getType($this->getBind()));
-            $this->getBind()->exportToXML($child, $xmlMapping, 'F' . $index);
+            $this->getBind()->exportToXML($child, $xmlMapping);
         }
     }
 
