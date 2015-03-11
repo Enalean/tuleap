@@ -1,0 +1,17 @@
+triggers = element trigger_rule {
+        element triggers {
+            element trigger {
+                fieldValueContent
+            }*
+        },
+        element condition { xsd:string },
+        element target { fieldValueContent }
+    }*
+
+fieldValueContent =
+    element field_id {
+        attribute REF { xsd:IDREF }
+    },
+    element field_value_id {
+        attribute REF { xsd:IDREF }
+    }

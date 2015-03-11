@@ -20,6 +20,8 @@
 
 class TrackerXmlImport {
 
+    const XML_PARENT_ID_EMPTY = "0";
+
     /** @var TrackerFactory */
     private $tracker_factory;
 
@@ -28,9 +30,6 @@ class TrackerXmlImport {
 
     /** @var Tracker_Hierarchy_Dao */
     private $hierarchy_dao;
-
-    /**  @var XmlValidator */
-    private $xml_validator;
 
     /** @var Tracker_CannedResponseFactory */
     private $canned_response_factory;
@@ -50,41 +49,48 @@ class TrackerXmlImport {
     /** @var WorkflowFactory */
     private $workflow_factory;
 
-    const XML_PARENT_ID_EMPTY = "0";
+    /** @var XML_RNGValidator */
+    private $rng_validator;
 
+    /** @var Tracker_Workflow_Trigger_RulesManager */
+    private $trigger_rulesmanager;
+
+    private $xmlFieldsMapping = array();
 
     public function __construct(
             TrackerFactory $tracker_factory,
             EventManager $event_manager,
             Tracker_Hierarchy_Dao $hierarchy_dao,
-            XmlValidator $xml_validator,
             Tracker_CannedResponseFactory $canned_response_factory,
             Tracker_FormElementFactory $formelement_factory,
             Tracker_SemanticFactory $semantic_factory,
             Tracker_RuleFactory $rule_factory,
             Tracker_ReportFactory $report_factory,
-            WorkflowFactory $workflow_factory) {
+            WorkflowFactory $workflow_factory,
+            XML_RNGValidator $rng_validator,
+            Tracker_Workflow_Trigger_RulesManager $trigger_rulesmanager) {
         $this->tracker_factory         = $tracker_factory;
         $this->event_manager           = $event_manager;
         $this->hierarchy_dao           = $hierarchy_dao;
-        $this->xml_validator           = $xml_validator;
         $this->canned_response_factory = $canned_response_factory;
         $this->formelement_factory     = $formelement_factory;
         $this->semantic_factory        = $semantic_factory;
         $this->rule_factory            = $rule_factory;
         $this->report_factory          = $report_factory;
         $this->workflow_factory        = $workflow_factory;
+        $this->rng_validator           = $rng_validator;
+        $this->trigger_rulesmanager    = $trigger_rulesmanager;
     }
 
     /**
      * @return TrackerXmlImport
      */
     public static function build() {
+        $tracker_factory = TrackerFactory::instance();
         return new TrackerXmlImport(
-            TrackerFactory::instance(),
+            $tracker_factory,
             EventManager::instance(),
             new Tracker_Hierarchy_Dao(),
-            new XmlValidator(),
             Tracker_CannedResponseFactory::instance(),
             Tracker_FormElementFactory::instance(),
             Tracker_SemanticFactory::instance(),
@@ -92,7 +98,9 @@ class TrackerXmlImport {
                 new Tracker_RuleDao()
             ),
             Tracker_ReportFactory::instance(),
-            WorkflowFactory::instance()
+            WorkflowFactory::instance(),
+            new XML_RNGValidator(),
+            $tracker_factory->getTriggerRulesManager()
         );
     }
 
@@ -102,7 +110,7 @@ class TrackerXmlImport {
      */
     protected function getAllXmlTrackers(SimpleXMLElement $xml_input) {
         $tracker_list = array();
-        foreach ($xml_input->trackers->children() as $xml_tracker) {
+        foreach ($xml_input->trackers->tracker as $xml_tracker) {
             $tracker_list[$this->getXmlTrackerAttribute($xml_tracker, 'id')] = $xml_tracker;
         }
         return $tracker_list;
@@ -122,25 +130,29 @@ class TrackerXmlImport {
         return (String) $tracker_attributes[$attribute_name];
     }
 
+    /**
+     * @param int $group_id
+     * @param SimpleXMLElement $xml_input
+     *
+     * @throws XML_ParseException
+     * @return Tracker[]
+     */
     public function import($group_id, SimpleXMLElement $xml_input) {
-        $created_trackers_list = array();
+        $this->xmlFieldsMapping = array();
+        $created_trackers_list  = array();
+
+        $this->rng_validator->validate($xml_input->trackers, dirname(TRACKER_BASE_DIR).'/www/resources/trackers.rng');
 
         foreach ($this->getAllXmlTrackers($xml_input) as $xml_tracker_id => $xml_tracker) {
-
-            if (! $this->xml_validator->nodeIsValid($xml_tracker, $this->getRngPath())) {
-                throw new TrackerFromXmlInputNotWellFormedException(
-                    $this->xml_validator->getValidationErrors(
-                        $xml_tracker,
-                        $this->getRngPath()
-                    )
-                );
-            }
-
-            $created_tracker       = $this->instanciateTrackerFromXml($group_id, $xml_tracker_id, $xml_tracker);
+            $created_tracker = $this->instanciateTrackerFromXml($group_id, $xml_tracker_id, $xml_tracker);
             $created_trackers_list = array_merge($created_trackers_list, $created_tracker);
         }
 
         $this->importHierarchy($xml_input, $created_trackers_list);
+
+        if (isset($xml_input->trackers->triggers)) {
+            $this->trigger_rulesmanager->createFromXML($xml_input->trackers->triggers, $this->xmlFieldsMapping);
+        }
 
         $this->event_manager->processEvent(
             Event::IMPORT_XML_PROJECT_TRACKER_DONE,
@@ -148,10 +160,6 @@ class TrackerXmlImport {
         );
 
         return $created_trackers_list;
-    }
-
-    private function getRngPath() {
-        return realpath(TRACKER_BASE_DIR.'/../www/resources/tracker.rng');
     }
 
     private function importHierarchy(SimpleXMLElement $xml_input, array $created_trackers_list) {
@@ -242,8 +250,7 @@ class TrackerXmlImport {
     public function createFromXML(SimpleXMLElement $xml_element, $groupId, $name, $description, $itemname) {
         $tracker = null;
         if ($this->tracker_factory->validMandatoryInfoOnCreate($name, $description, $itemname, $groupId)) {
-            $rng_validator = new XML_RNGValidator();
-            $rng_validator->validate($xml_element, realpath(dirname(TRACKER_BASE_DIR).'/www/resources/tracker.rng'));
+            $this->rng_validator->validate($xml_element, realpath(dirname(TRACKER_BASE_DIR).'/www/resources/tracker.rng'));
 
             $tracker = $this->getInstanceFromXML($xml_element, $groupId, $name, $description, $itemname);
             //Testing consistency of the imported tracker before updating database
@@ -298,21 +305,23 @@ class TrackerXmlImport {
                 (int) $att['stop_notification'] : 0;
 
         $tracker = $this->tracker_factory->getInstanceFromRow($row);
+
         // set canned responses
-        foreach ($xml->cannedResponses->cannedResponse as $index => $response) {
-            $tracker->cannedResponses[] = $this->canned_response_factory->getInstanceFromXML($response);
+        if (isset($xml->cannedResponses)) {
+            foreach ($xml->cannedResponses->cannedResponse as $index => $response) {
+                $tracker->cannedResponses[] = $this->canned_response_factory->getInstanceFromXML($response);
+            }
         }
+
         // set formElements
-        // association between ids in XML and php objects
-        $xmlMapping = array();
         foreach ($xml->formElements->formElement as $index => $elem) {
-            $tracker->formElements[] = $this->formelement_factory->getInstanceFromXML($tracker, $elem, $xmlMapping);
+            $tracker->formElements[] = $this->formelement_factory->getInstanceFromXML($tracker, $elem, $this->xmlFieldsMapping);
         }
 
         // set semantics
         if (isset($xml->semantics)) {
             foreach ($xml->semantics->semantic as $xml_semantic) {
-                $semantic = $this->semantic_factory->getInstanceFromXML($xml_semantic, $xmlMapping, $tracker);
+                $semantic = $this->semantic_factory->getInstanceFromXML($xml_semantic, $this->xmlFieldsMapping, $tracker);
                 if ($semantic) {
                     $tracker->semantics[] = $semantic;
                 }
@@ -355,19 +364,19 @@ class TrackerXmlImport {
 
         //set field rules
         if (isset($xml->rules)) {
-            $tracker->rules = $this->rule_factory->getInstanceFromXML($xml->rules, $xmlMapping, $tracker);
+            $tracker->rules = $this->rule_factory->getInstanceFromXML($xml->rules, $this->xmlFieldsMapping, $tracker);
         }
 
         // set report
         if (isset($xml->reports)) {
             foreach ($xml->reports->report as $report) {
-                $tracker->reports[] = $this->report_factory->getInstanceFromXML($report, $xmlMapping, $groupId);
+                $tracker->reports[] = $this->report_factory->getInstanceFromXML($report, $this->xmlFieldsMapping, $groupId);
             }
         }
 
         //set workflow
         if (isset($xml->workflow->field_id)) {
-            $tracker->workflow= $this->workflow_factory->getInstanceFromXML($xml->workflow, $xmlMapping, $tracker);
+            $tracker->workflow= $this->workflow_factory->getInstanceFromXML($xml->workflow, $this->xmlFieldsMapping, $tracker);
         }
 
         //set permissions
@@ -389,8 +398,8 @@ class TrackerXmlImport {
                         $ugroup = (string) $permission['ugroup'];
                         $REF    = (string) $permission['REF'];
                         $type   = (string) $permission['type'];
-                        if (isset($xmlMapping[$REF]) && isset($GLOBALS['UGROUPS'][$ugroup]) && in_array($type, $allowed_field_perms)) {
-                            $xmlMapping[$REF]->setCachePermission($GLOBALS['UGROUPS'][$ugroup], $type);
+                        if (isset($this->xmlFieldsMapping[$REF]) && isset($GLOBALS['UGROUPS'][$ugroup]) && in_array($type, $allowed_field_perms)) {
+                            $this->xmlFieldsMapping[$REF]->setCachePermission($GLOBALS['UGROUPS'][$ugroup], $type);
                         }
                         break;
                     default:

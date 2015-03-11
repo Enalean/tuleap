@@ -24,6 +24,8 @@ abstract class Tracker_Workflow_Trigger_RulesManagerTest extends TuleapTestCase 
     protected $manager;
     protected $dao;
     protected $target_value_id;
+    protected $formelement_factory;
+    protected $rules_processor;
 
     public function setUp() {
         parent::setUp();
@@ -398,4 +400,186 @@ class Tracker_Workflow_Trigger_RulesManager_processTriggersTest extends Tracker_
         $manager->processTriggers($changeset);
     }
 }
-?>
+
+
+class TriggerRuleComparatorExpectaction extends SimpleExpectation {
+
+    /** @var Tracker_Workflow_Trigger_TriggerRule */
+    private $trigger_rule;
+
+    public function __construct(Tracker_Workflow_Trigger_TriggerRule $trigger_rule) {
+        parent::SimpleExpectation();
+        $this->trigger_rule = $trigger_rule;
+    }
+
+    public function test(Tracker_Workflow_Trigger_TriggerRule $candidate) {
+        try {
+            $this->isConditionEqual($candidate->getCondition());
+            $this->isTargetEqual($candidate->getTarget());
+            $this->areTriggersEqual($candidate->getTriggers());
+            return true;
+        } catch (Exception $ex) {
+            return false;
+        }
+    }
+
+    private function isConditionEqual($candidate) {
+        if ($candidate == $this->trigger_rule->getCondition()) {
+            return true;
+        }
+        throw new Exception("Condition `".$this->trigger_rule->getCondition()."` expected, `$candidate` given");
+    }
+
+    private function isTargetEqual(Tracker_Workflow_Trigger_FieldValue $candidate) {
+        if ($this->isFieldValueEqual($this->trigger_rule->getTarget(), $candidate)) {
+            return true;
+        }
+        throw new Exception("Target `".$this->formatFieldValue($this->trigger_rule->getTarget())."` expected, `".$this->formatFieldValue($candidate)."` given");
+    }
+
+    private function formatFieldValue(Tracker_Workflow_Trigger_FieldValue $field_value) {
+        return '(field_id :'.$field_value->getField()->getId().', field_value_id: '.$field_value->getValue()->getId().')';
+    }
+
+    private function areTriggersEqual(array $triggers) {
+        $reference_triggers = $this->trigger_rule->getTriggers();
+        if (count($triggers) !== count($reference_triggers)) {
+            throw new Exception('Triggers: '.count($reference_triggers).' tiggers expected, '.count($triggers).' given');
+        }
+        foreach ($triggers as $index => $trigger) {
+            if (! $this->isFieldValueEqual($reference_triggers[$index], $trigger)) {
+                throw new Exception("Trigger['".$index."'] `".$this->formatFieldValue($this->trigger_rule->getTarget())."` expected, `".$this->formatFieldValue($candidate)."` given");
+            }
+        }
+        return true;
+    }
+
+    private function isFieldValueEqual(Tracker_Workflow_Trigger_FieldValue $reference, Tracker_Workflow_Trigger_FieldValue $candidate) {
+        return $reference->getField()->getId() == $candidate->getField()->getId() &&
+               $reference->getValue()->getId() == $candidate->getValue()->getId();
+    }
+
+    public function testMessage(Tracker_Workflow_Trigger_TriggerRule $candidate) {
+        try {
+            $this->isConditionEqual($candidate->getCondition());
+            $this->isTargetEqual($candidate->getTarget());
+            $this->areTriggersEqual($candidate->getTriggers());
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+}
+
+class Tracker_Workflow_Trigger_RulesManager_XMLImportTest extends Tracker_Workflow_Trigger_RulesManagerTest {
+
+    private $xml;
+    private $xmlFieldMapping;
+    private $field_1685;
+    private $field_1741;
+    private $value_2060;
+    private $value_2061;
+    private $value_2117;
+    private $value_2118;
+
+    public function setUp() {
+        parent::setUp();
+        $this->xml = new SimpleXMLElement('
+            <triggers>
+                <trigger_rule>
+                  <triggers>
+                    <trigger>
+                      <field_id REF="F1685"/>
+                      <field_value_id REF="V2060"/>
+                    </trigger>
+                  </triggers>
+                  <condition>at_least_one</condition>
+                  <target>
+                    <field_id REF="F1741"/>
+                    <field_value_id REF="V2117"/>
+                  </target>
+                </trigger_rule>
+                <trigger_rule>
+                  <triggers>
+                    <trigger>
+                      <field_id REF="F1685"/>
+                      <field_value_id REF="V2061"/>
+                    </trigger>
+                  </triggers>
+                  <condition>all_of</condition>
+                  <target>
+                    <field_id REF="F1741"/>
+                    <field_value_id REF="V2118"/>
+                  </target>
+                </trigger_rule>
+            </triggers>'
+        );
+
+        $this->field_1685 = stub('Tracker_FormElement_Field_Selectbox')->getId()->returns(1685);
+        $this->field_1741 = stub('Tracker_FormElement_Field_Selectbox')->getId()->returns(1741);
+        $this->value_2060 = stub('Tracker_FormElement_Field_List_Bind_StaticValue')->getId()->returns(2060);
+        $this->value_2061 = stub('Tracker_FormElement_Field_List_Bind_StaticValue')->getId()->returns(2061);
+        $this->value_2117 = stub('Tracker_FormElement_Field_List_Bind_StaticValue')->getId()->returns(2117);
+        $this->value_2118 = stub('Tracker_FormElement_Field_List_Bind_StaticValue')->getId()->returns(2118);
+
+        $this->xmlFieldMapping = array(
+            'F1685' => $this->field_1685,
+            'F1741' => $this->field_1741,
+            'V2060' => $this->value_2060,
+            'V2061' => $this->value_2061,
+            'V2117' => $this->value_2117,
+            'V2118' => $this->value_2118,
+        );
+
+        $this->manager = partial_mock(
+            'Tracker_Workflow_Trigger_RulesManager',
+            array(
+                'add'
+            ),
+            array(
+                $this->dao,
+                $this->formelement_factory,
+                $this->rules_processor,
+                mock('WorkflowBackendLogger'),
+            )
+        );
+    }
+
+    public function itImportRules() {
+
+        $trigger_rule_1 = new Tracker_Workflow_Trigger_TriggerRule(
+            0,
+            new Tracker_Workflow_Trigger_FieldValue(
+                $this->field_1741,
+                $this->value_2117
+            ),
+            Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_AT_LEAST_ONE,
+            array(
+                new Tracker_Workflow_Trigger_FieldValue(
+                    $this->field_1685,
+                    $this->value_2060
+                )
+            )
+        );
+
+        $trigger_rule_2 = new Tracker_Workflow_Trigger_TriggerRule(
+            0,
+            new Tracker_Workflow_Trigger_FieldValue(
+                $this->field_1741,
+                $this->value_2118
+            ),
+            Tracker_Workflow_Trigger_RulesBuilderData::CONDITION_ALL_OFF,
+            array(
+                new Tracker_Workflow_Trigger_FieldValue(
+                    $this->field_1685,
+                    $this->value_2061
+                )
+            )
+        );
+
+        expect($this->manager)->add()->count(2);
+        expect($this->manager)->add(new TriggerRuleComparatorExpectaction($trigger_rule_1))->at(0);
+        expect($this->manager)->add(new TriggerRuleComparatorExpectaction($trigger_rule_2))->at(1);
+
+        $this->manager->createFromXML($this->xml, $this->xmlFieldMapping);
+    }
+}

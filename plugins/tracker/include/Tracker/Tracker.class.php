@@ -2245,9 +2245,9 @@ EOS;
     /**
      * Exports the tracker to an XML file.
      *
-     * @return void
+     * @return SimpleXMLElement
      */
-    public function exportToXML(SimpleXMLElement $xmlElem) {
+    public function exportToXML(SimpleXMLElement $xmlElem, array &$xmlMapping = array()) {
         $xmlElem->addAttribute('id', "T". $this->getId());
 
         $cdata_section_factory = new XML_SimpleXMLCDATAFactory();
@@ -2298,7 +2298,6 @@ EOS;
 
         $child = $xmlElem->addChild('formElements');
         // association between ids in database and ids in xml
-        $xmlMapping = array();
         foreach ($this->getFormElementFactory()->getUsedFormElementForTracker($this) as $formElement) {
             $grandchild = $child->addChild('formElement');
             $formElement->exportToXML($grandchild, $xmlMapping);

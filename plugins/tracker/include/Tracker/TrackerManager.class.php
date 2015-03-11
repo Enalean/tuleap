@@ -1047,16 +1047,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         $logger->debug("[TDR] End processing date reminders");
     }
 
-    public function exportToXml($group_id, SimpleXMLElement $xml_content) {
-        foreach ($this->getTrackerFactory()->getTrackersByGroupId($group_id) as $tracker) {
-            if ($tracker->isActive()) {
-                $child = $xml_content->addChild('tracker');
-                $tracker->exportToXML($child);
-            }
-        }
-        return $xml_content;
-    }
-
     private function displayMigrateFromTV3Option($requested_create_mode, Project $project, $requested_template_id) {
         $html        = '';
         $trackers_v3 = $this->getTrackersV3ForProject($project);
@@ -1085,5 +1075,3 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         return Tracker_FormElementFactory::instance();
     }
 }
-
-?>
