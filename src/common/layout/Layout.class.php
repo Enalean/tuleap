@@ -2490,5 +2490,9 @@ class Layout extends Response {
             $js_variable_name.' = '.json_encode($object).';'
         );
     }
+
+    public function canDisplayStandardHomepage() {
+        return false;
+    }
 }
 ?>

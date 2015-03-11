@@ -2116,6 +2116,16 @@ CREATE TABLE tour_usage_statistics (
     the_end TINYINT(1) NOT NULL
 );
 
+DROP TABLE IF EXISTS homepage;
+CREATE TABLE homepage (
+    use_standard_homepage TINYINT(1) NOT NULL PRIMARY KEY
+);
+
+DROP TABLE IF EXISTS homepage_headline;
+CREATE TABLE homepage_headline (
+    language_id VARCHAR(17) NOT NULL PRIMARY KEY,
+    headline TEXT NOT NULL
+);
 #
 # EOF
 #

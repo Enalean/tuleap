@@ -1,0 +1,29 @@
+<h2>{{ title }}</h2>
+
+<form action="" method="POST" id="admin-homepage">
+    {{{ csrf_token }}}
+    <label class="checkbox">
+        <input type="checkbox" name="use_standard_homepage" value="1" {{# use_standard_homepage }}checked="checked"{{/ use_standard_homepage }} />
+        {{ use_standard_homepage_label }}
+    </label>
+    <p class="help">{{{ use_standard_homepage_help }}}</p>
+    {{# use_standard_homepage }}
+        <h3>{{ headline }}</h3>
+        <p class="help">{{ headline_help }}</p>
+        <select class="pull-right" id="admin-headline-select-language">
+            {{# headlines }}
+                <option>{{ language_id }}</option>
+            {{/ headlines }}
+        </select>
+        {{# headlines }}
+            <textarea
+                id="admin-headline-{{ language_id }}"
+                class="admin-headline"
+                name="headlines[{{ language_id }}]"
+                placeholder="{{ placeholder_headline }}"
+                rows="3"
+            >{{ headline }}</textarea>
+        {{/ headlines }}
+    {{/ use_standard_homepage }}
+    <button type="submit" class="btn btn-primary" name="update" value="1">{{ btn_submit }}</button>
+</form>

@@ -24,6 +24,7 @@ require_once 'common/layout/DivBasedTabbedLayout.class.php';
 require_once 'HeaderPresenter.class.php';
 require_once 'BodyPresenter.class.php';
 require_once 'ContainerPresenter.class.php';
+require_once 'HomepagePresenter.php';
 require_once 'FooterPresenter.class.php';
 require_once 'NavBarProjectPresenter.class.php';
 require_once 'NavBarPresenter.class.php';
@@ -345,6 +346,24 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
         }
 
         $this->endOfPage();
+    }
+
+    public function canDisplayStandardHomepage() {
+        $dao = new Admin_Homepage_Dao();
+
+        return $dao->isStandardHomepageUsed();
+    }
+
+    public function displayStandardHomepage() {
+        $dao          = new Admin_Homepage_Dao();
+        $current_user = UserManager::instance()->getCurrentUser();
+
+        $headline = $dao->getHeadlineByLanguage($current_user->getLocale());
+
+        $templates_dir = Config::get('codendi_dir') .'/src/templates/homepage/';
+        $renderer      = TemplateRendererFactory::build()->getRenderer($templates_dir);
+        $presenter     = new FlamingParrot_HomepagePresenter($headline);
+        $renderer->renderToPage('homepage', $presenter);
     }
 
     /**
