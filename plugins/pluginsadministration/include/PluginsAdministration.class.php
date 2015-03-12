@@ -22,6 +22,7 @@ class PluginsAdministration extends Controler {
         if ($request->exist('view')) {
             switch ($request->get('view')) {
                 case 'properties':
+                case 'restrict':
                 case 'ajax_projects':
                     $this->view = $request->get('view');
                     break;
@@ -68,6 +69,14 @@ class PluginsAdministration extends Controler {
                         $this->action = 'changePluginProperties';
                         $this->view   = 'properties';
                     }
+                    break;
+                case 'set-plugin-restriction':
+                    $this->action = 'setPluginRestriction';
+                    $this->view   = 'restrict';
+                    break;
+                case 'update-allowed-project-list':
+                    $this->action = 'updateAllowedProjectList';
+                    $this->view   = 'restrict';
                     break;
                 default:
                     break;

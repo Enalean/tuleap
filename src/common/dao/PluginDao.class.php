@@ -1,21 +1,21 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
- * This file is a part of Codendi.
- *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 /**
@@ -86,37 +86,6 @@ class PluginDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    function searchProjectsForPlugin($pluginId) {
-        $sql = sprintf('SELECT project_id'.
-                       ' FROM project_plugin'.
-                       ' WHERE plugin_id = %d'.
-                       ' ORDER BY project_id ASC',
-                       $pluginId);
-        return $this->retrieve($sql);
-    }
-
-    function bindPluginToProject($pluginId, $projectId) {
-        $sql = sprintf('INSERT INTO project_plugin(plugin_id, project_id)'.
-                       ' VALUES (%d, %d)',
-                       $pluginId, $projectId);
-        return $this->update($sql);
-    }
-
-    function unbindPluginToProject($pluginId, $projectId) {
-        $sql = sprintf('DELETE FROM project_plugin'.
-                       ' WHERE plugin_id = %d'.
-                       ' AND project_id = %d',
-                       $pluginId, $projectId);
-        return $this->update($sql);
-    }
-
-    function truncateProjectPlugin($pluginId) {
-        $sql = sprintf('DELETE FROM project_plugin'.
-                       ' WHERE plugin_id = %d',
-                       $pluginId);
-        return $this->update($sql);
-    }
-
     function restrictProjectPluginUse($pluginId, $restrict) {
         $_usage = ($restrict === true ? 1 : 0);
         $sql = sprintf('UPDATE plugin'.
@@ -134,21 +103,6 @@ class PluginDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
-    function isPluginAllowedForProject($pluginId, $projectId) {
-        $sql = sprintf('SELECT project_id'.
-                       ' FROM project_plugin'.
-                       ' WHERE plugin_id = %d'.
-                       ' AND project_id = %d',
-                       $pluginId, $projectId);
-        $dar = $this->retrieve($sql);
-        if($dar && !$dar->isError()) {
-            if($dar->rowCount() > 0) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
     function searchAvailableAndPriorities() {
         $sql = "SELECT p.*, h.hook AS hook, h.priority AS priority
                 FROM priority_plugin_hook h RIGHT JOIN plugin p ON (h.plugin_id = p.id) 
@@ -157,5 +111,3 @@ class PluginDao extends DataAccessObject {
     }
 
 }
-
-?>

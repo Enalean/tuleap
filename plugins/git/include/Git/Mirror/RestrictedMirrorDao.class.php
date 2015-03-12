@@ -18,9 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_RestrictedMirrorDao extends DataAccessObject {
+class Git_RestrictedMirrorDao extends RestrictedResourceDao {
 
-    public function isMirrorRestricted($mirror_id) {
+    public function getResourceAllowedProjectsTableName() {
+        return 'plugin_git_restricted_mirrors_allowed_projects';
+    }
+
+    public function getResourceFieldName() {
+        return 'mirror_id';
+    }
+
+    public function isResourceRestricted($mirror_id) {
         $mirror_id = $this->da->escapeInt($mirror_id);
 
         $sql = "SELECT * FROM plugin_git_restricted_mirrors WHERE mirror_id = $mirror_id";
@@ -32,7 +40,7 @@ class Git_RestrictedMirrorDao extends DataAccessObject {
         return false;
     }
 
-    public function setMirrorRestricted($mirror_id) {
+    public function setResourceRestricted($mirror_id) {
         $mirror_id = $this->da->escapeInt($mirror_id);
 
         $sql = "REPLACE INTO plugin_git_restricted_mirrors VALUES ($mirror_id)";
@@ -50,41 +58,19 @@ class Git_RestrictedMirrorDao extends DataAccessObject {
         return false;
     }
 
-    public function unsetMirrorRestricted($mirror_id) {
+    public function unsetResourceRestricted($mirror_id) {
         $mirror_id = $this->da->escapeInt($mirror_id);
 
         $sql = "DELETE FROM plugin_git_restricted_mirrors WHERE mirror_id = $mirror_id";
 
         if ($this->update($sql)) {
-            $sql = "DELETE FROM plugin_git_restricted_mirrors_allowed_projects WHERE mirror_id = $mirror_id";
-
-            return $this->update($sql);
+            return $this->revokeAllProjectsFromResource($mirror_id);
         }
 
         return false;
     }
 
-    public function addProjectOnMirror($mirror_id, $project_id) {
-        $mirror_id  = $this->da->escapeInt($mirror_id);
-        $project_id = $this->da->escapeInt($project_id);
-
-        $sql = "REPLACE INTO plugin_git_restricted_mirrors_allowed_projects VALUES ($mirror_id, $project_id)";
-
-        return $this->update($sql);
-    }
-
-    public function revokeProjectsFromMirror($mirror_id, $project_ids) {
-        $mirror_id   = $this->da->escapeInt($mirror_id);
-        $project_ids = $this->da->escapeIntImplode($project_ids);
-
-        $sql = "DELETE FROM plugin_git_restricted_mirrors_allowed_projects
-                WHERE mirror_id = $mirror_id
-                AND project_id IN ($project_ids)";
-
-        return $this->update($sql);
-    }
-
-    public function searchAllowedProjectsOfMirror($mirror_id) {
+    public function searchAllowedProjectsOnResource($mirror_id) {
         $mirror_id = $this->da->escapeInt($mirror_id);
 
         $sql = "SELECT *

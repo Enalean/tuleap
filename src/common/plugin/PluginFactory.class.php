@@ -1,50 +1,68 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
- * This file is a part of Codendi.
- *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 /**
  * PluginFactory
  */
 class PluginFactory {
+
+    /** @var PluginDao */
+    private $plugin_dao;
+
+    /** @var array */
+    private $retrieved_plugins;
+
+    /** @var array */
+    private $custom_plugins;
+
+    /** @var array */
+    private $name_by_id;
+
+    /** @var PluginResourceRestrictor */
+    private $plugin_restrictor;
     
-    var $plugin_dao;
-    var $retrieved_plugins;
-    var $custom_plugins;
-    var $name_by_id;
-    
-    function PluginFactory($plugin_dao) {
-        $this->plugin_dao = $plugin_dao;
-        $this->retrieved_plugins    = array(
+    public function __construct(
+        PluginDao $plugin_dao,
+        PluginResourceRestrictor $plugin_restrictor
+    ) {
+        $this->plugin_dao        = $plugin_dao;
+        $this->plugin_restrictor = $plugin_restrictor;
+
+        $this->retrieved_plugins = array(
             'by_name'     => array(),
             'by_id'       => array(),
             'available'   => array(),
             'unavailable' => array(),
         );
-        $this->name_by_id           = array();
-        $this->custom_plugins       = array();
+        $this->name_by_id     = array();
+        $this->custom_plugins = array();
     }
     
-    function instance() {
+    public static function instance() {
         static $_pluginfactory_instance;
         if (!$_pluginfactory_instance) {
-            $dao = new PluginDao(CodendiDataAccess::instance());
-            $_pluginfactory_instance = new PluginFactory($dao);
+            $plugin_dao              = new PluginDao(CodendiDataAccess::instance());
+            $restricted_plugin_dao   = new RestrictedPluginDao();
+            $restrictor              = new PluginResourceRestrictor($restricted_plugin_dao);
+
+            $_pluginfactory_instance = new PluginFactory($plugin_dao, $restrictor);
         }
         return $_pluginfactory_instance;
     }
@@ -286,31 +304,39 @@ class PluginFactory {
         return isset($this->custom_plugins[$plugin->getId()]);
     }
 
-    function getProjectsByPluginId($plugin) {
-        $projectIds = array();
-        $dar = $this->plugin_dao->searchProjectsForPlugin($plugin->getId());
-        if($dar && !$dar->isError()) {
+    public function getProjectsByPluginId($plugin) {
+        $project_ids = array();
+        $dar         = $this->plugin_restrictor->searchAllowedProjectsOnPlugin($plugin);
+
+        if ($dar && !$dar->isError()) {
             while($row = $dar->getRow()) {
-                $projectIds[] = $row['project_id'];
+                $project_ids[] = $row['project_id'];
             }
         }
-        return $projectIds;
+
+        return $project_ids;
     }
 
-    function addProjectForPlugin($plugin, $projectId) {
-        return $this->plugin_dao->bindPluginToProject($plugin->getId(), $projectId);
+    public function addProjectForPlugin($plugin, $project_id) {
+        return $this->plugin_restrictor->allowProjectOnPlugin(
+            $plugin,
+            $this->getProject($project_id)
+        );
     }
 
-    function delProjectForPlugin($plugin, $projectId) {
-        return $this->plugin_dao->unbindPluginToProject($plugin->getId(), $projectId);
+    public function delProjectForPlugin($plugin, $project_id) {
+        return $this->plugin_restrictor->revokeProjectsFromPlugin(
+            $plugin,
+            $this->getProject($project_id)
+        );
     }
 
     function restrictProjectPluginUse($plugin, $usage) {
         return $this->plugin_dao->restrictProjectPluginUse($plugin->getId(), $usage);
     }
 
-    function truncateProjectPlugin($plugin) {
-        return $this->plugin_dao->truncateProjectPlugin($plugin->getId());
+    public function truncateProjectPlugin($plugin) {
+        return $this->plugin_restrictor->revokeAllProjectsFromPlugin($plugin);
     }
 
     function isProjectPluginRestricted($plugin) {
@@ -323,8 +349,15 @@ class PluginFactory {
         return $restricted;
     }
 
-    function isPluginAllowedForProject($plugin, $projectId) {
-        return $this->plugin_dao->isPluginAllowedForProject($plugin->getId(), $projectId);
+    public function isPluginAllowedForProject($plugin, $project_id) {
+        return $this->plugin_restrictor->isPluginAllowedForProject(
+            $plugin,
+            $this->getProject($project_id)
+        );
+    }
+
+    /** @return Project */
+    private function getProject($project_id) {
+        return ProjectManager::instance()->getProject($project_id);
     }
 }
-?>

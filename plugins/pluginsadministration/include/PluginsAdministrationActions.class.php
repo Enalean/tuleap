@@ -1,9 +1,25 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * 
- * 
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
  * PluginsAdministrationActions
  */
 require_once('common/mvc/Actions.class.php');
@@ -19,7 +35,7 @@ class PluginsAdministrationActions extends Actions {
     /** @var PluginDependencySolver */
     private $dependency_solver;
 
-    function PluginsAdministrationActions(&$controler, $view=null) {
+    public function __construct(&$controler, $view = null) {
         $this->Actions($controler);
         $this->plugin_manager = PluginManager::instance();
         $this->dependency_solver = new PluginDependencySolver($this->plugin_manager);
@@ -205,7 +221,134 @@ class PluginsAdministrationActions extends Actions {
         }
         return $return;
     }
+
+    public function setPluginRestriction() {
+        $request                    = HTTPRequest::instance();
+        $plugin_id                  = $request->get('plugin_id');
+        $plugin_data                = $this->_getPluginFromRequest();
+        $all_allowed                = $request->get('all-allowed');
+
+        if ($plugin_data) {
+            $plugin = $plugin_data['plugin'];
+
+            $this->checkSynchronizerToken(
+                '/plugins/pluginsadministration/?action=set-plugin-restriction&plugin_id=' . $plugin_id
+            );
+
+            if ($all_allowed) {
+                $this->unsetPluginRestricted($plugin);
+
+            } else {
+                $this->$this->setPluginRestricted($plugin);
+            }
+
+            $this->redirectToPluginAdministration($plugin_id);
+        }
+    }
+
+    private function setPluginRestricted(Plugin $plugin) {
+        if ($this->getPluginResourceRestrictor()->setPluginRestricted($plugin)) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_set_restricted')
+            );
+        } else {
+            $this->sendProjectRestrictedError();
+        }
+    }
+
+    private function unsetPluginRestricted(Plugin $plugin) {
+        if ($this->getPluginResourceRestrictor()->unsetPluginRestricted($plugin)) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_unset_restricted')
+            );
+        } else {
+            $this->sendProjectRestrictedError();
+        }
+    }
+
+    private function sendProjectRestrictedError() {
+        $GLOBALS['Response']->addFeedback(
+            Feedback::ERROR,
+            $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_restricted_error')
+        );
+    }
+
+    public function updateAllowedProjectList() {
+        $request                    = HTTPRequest::instance();
+        $plugin_id                  = $request->get('plugin_id');
+        $plugin_data                = $this->_getPluginFromRequest();
+        $project_to_add             = $request->get('project-to-allow');
+        $project_ids_to_remove      = $request->get('project-ids-to-revoke');
+
+        if ($plugin_data) {
+            $plugin = $plugin_data['plugin'];
+
+            $this->checkSynchronizerToken('/plugins/pluginsadministration/?action=update-allowed-project-list&plugin_id=' . $plugin_id);
+
+            if ($request->get('allow-project') && ! empty($project_to_add)) {
+                $this->allowProjectOnPlugin($plugin, $project_to_add);
+
+            } elseif ($request->get('revoke-project') && ! empty($project_ids_to_remove)) {
+                $this->revokeProjectsFromPlugin($plugin, $project_ids_to_remove);
+            }
+        }
+
+        $this->redirectToPluginAdministration($plugin->getId());
+    }
+
+    private function redirectToPluginAdministration($plugin_id) {
+        $GLOBALS['Response']->redirect(
+            '/plugins/pluginsadministration/?view=restrict&plugin_id=' . $plugin_id
+        );
+    }
+
+    private function allowProjectOnPlugin(Plugin $plugin, $project_to_add) {
+        $project_manager            = ProjectManager::instance();
+        $plugin_resource_restrictor = $this->getPluginResourceRestrictor();
+        $project                    = $project_manager->getProjectFromAutocompleter($project_to_add);
+
+        if ($project && $plugin_resource_restrictor->allowProjectOnPlugin($plugin, $project)) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_allow_project')
+            );
+        } else {
+            $this->sendUpdateProjectListError();
+        }
+
+    }
+
+    private function revokeProjectsFromPlugin(Plugin $plugin, $project_ids) {
+        $plugin_resource_restrictor = $this->getPluginResourceRestrictor();
+
+        if (count($project_ids) > 0 && $plugin_resource_restrictor->revokeProjectsFromPlugin($plugin, $project_ids)) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::INFO,
+                $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_revoke_projects')
+            );
+        } else {
+            $this->sendUpdateProjectListError();
+        }
+
+    }
+
+    private function sendUpdateProjectListError() {
+        $GLOBALS['Response']->addFeedback(
+            Feedback::ERROR,
+            $GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_allowed_project_update_project_list_error')
+        );
+    }
+
+    private function checkSynchronizerToken($url) {
+        $token = new CSRFSynchronizerToken($url);
+        $token->check();
+    }
+
+    private function getPluginResourceRestrictor() {
+        return new PluginResourceRestrictor(
+            new RestrictedPluginDao()
+        );
+    }
 }
-
-
-?>
