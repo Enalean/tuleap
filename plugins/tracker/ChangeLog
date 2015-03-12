@@ -1,3 +1,6 @@
+Version 5.589 - Tuleap 7.12
+    * Refactor TrackerTest suite
+
 Version 5.588 - Tuleap 7.12
     * story #7702 - Deal with XML in PUT artifacts/:id
 
