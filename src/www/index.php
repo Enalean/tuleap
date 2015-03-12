@@ -41,7 +41,7 @@ if ($HTML->canDisplayStandardHomepage()) {
     $header_params['body_class'] = array('homepage');
 
     $HTML->header($header_params);
-    $HTML->displayStandardHomepage();
+    $HTML->displayStandardHomepage($display_homepage_news);
 } else {
     $HTML->header($header_params);
 

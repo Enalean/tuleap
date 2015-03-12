@@ -789,4 +789,12 @@ class UserDao extends DataAccessObject {
 
         return $this->retrieve($sql);
     }
+
+    public function countActiveAndRestrictedUsers() {
+        $sql = "SELECT count(*) AS nb FROM user WHERE status IN ('A', 'R')";
+
+        $row = $this->retrieve($sql)->getRow();
+
+        return $row['nb'];
+    }
 }

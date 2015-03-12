@@ -101,39 +101,8 @@ if($_cVar['pv'] == 2) {
     $pvMode = true;
 }
 
-// Form target
-$_useHttps = false;
-if (isset($GLOBALS['sys_https_host']) && $GLOBALS['sys_https_host']) {
-    $_useHttps = true;
-}
-
-//
-// Start output
-//
-
-// Only show the stay in SSL mode if the server is SSL enabled
-// and it is not forced to operate in SSL mode
-$toggle_ssl = false;
-if ($_useHttps && $GLOBALS['sys_force_ssl'] == 0 ) {
-    $toggle_ssl = true;
-}
-
-$presenter = new User_LoginPresenter(
-    $_rVar['return_to'],
-    $_cVar['pv'],
-    $_rVar['form_loginname'],
-    $toggle_ssl
-);
-
-$authoritative = false;
-
-$em->processEvent(
-    'login_presenter',
-    array(
-        'presenter'     => &$presenter,
-        'authoritative' => &$authoritative,
-    )
-);
+$presenter_builder = new User_LoginPresenterBuilder();
+$presenter = $presenter_builder->build($_rVar['return_to'], $_cVar['pv'], $_rVar['form_loginname']);
 
 if($pvMode) {
     $GLOBALS['HTML']->pv_header(array('title'=>$presenter->account_login_page_title()));

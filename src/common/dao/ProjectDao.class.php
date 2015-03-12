@@ -435,4 +435,15 @@ class ProjectDao extends DataAccessObject {
 
         return $this->retrieve($sql);
     }
+
+    public function countActiveProjects() {
+        $sql = "SELECT count(*) AS nb
+                FROM groups
+                WHERE status = 'A'
+                  AND group_id > 100";
+
+        $row = $this->retrieve($sql)->getRow();
+
+        return $row['nb'];
+    }
 }
