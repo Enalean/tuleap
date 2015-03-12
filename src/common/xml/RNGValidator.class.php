@@ -20,10 +20,8 @@
 
 class XML_RNGValidator {
 
-    public function validate(SimpleXMLElement $xml_element) {
-        $dom      = $this->simpleXmlElementToDomDocument($xml_element);
-        $rng_path = realpath(dirname(TRACKER_BASE_DIR) . '/www/resources/artifacts.rng');
-
+    public function validate(SimpleXMLElement $xml_element, $rng_path) {
+        $dom          = $this->simpleXmlElementToDomDocument($xml_element);
         $xml_security = new XML_Security();
         $xml_security->enableExternalLoadOfEntities();
         $is_valid = @$dom->relaxNGValidate($rng_path);

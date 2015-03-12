@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,9 +19,5 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class TrackerFromXmlInputNotWellFormedException extends TrackerFromXmlException {
-    public function __construct($errors = array()) {
-        $message = 'The Tracker XML input is not well formed: '.PHP_EOL.implode(PHP_EOL, $errors);
-        parent::__construct($message);
-    }
+class TrackerFromXmlException extends Tracker_Exception {
 }

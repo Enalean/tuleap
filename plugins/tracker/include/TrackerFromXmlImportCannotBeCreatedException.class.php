@@ -19,10 +19,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class TrackerFromXmlImportCannotBeCreatedException extends Exception {
+class TrackerFromXmlImportCannotBeCreatedException extends TrackerFromXmlException {
     public function __construct($tracker_name) {
         $message = $GLOBALS['Language']->getText('plugin_tracker_import', 'cannot_create', array($tracker_name));
         parent::__construct($message);
     }
 }
-?>

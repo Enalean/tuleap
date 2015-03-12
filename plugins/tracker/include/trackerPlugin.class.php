@@ -679,16 +679,7 @@ class trackerPlugin extends Plugin {
      * @see Event::IMPORT_XML_PROJECT
      */
     public function import_xml_project($params) {
-        include_once 'common/XmlValidator/XmlValidator.class.php';
-        $tracker_xml_import = new TrackerXmlImport(
-            $params['project']->getId(),
-            TrackerFactory::instance(),
-            EventManager::instance(),
-            new Tracker_Hierarchy_Dao(),
-            new XmlValidator()
-        );
-
-        $tracker_xml_import->import($params['xml_content']);
+        TrackerXmlImport::build()->import($params['project']->getId(), $params['xml_content']);
     }
 
     public function user_manager_get_user_instance(array $params) {
