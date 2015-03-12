@@ -1,3 +1,6 @@
+Version 5.590 - Tuleap 7.12
+    * Refactor Tracker XML export: replace adhoc Field and Values + filter export
+
 Version 5.589 - Tuleap 7.12
     * Refactor TrackerTest suite
 
