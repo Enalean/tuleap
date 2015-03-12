@@ -153,16 +153,14 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
      * 
      * @param SimpleXMLElement $root        the node to which the FormElement is attached (passed by reference)
      * @param array            &$xmlMapping correspondance between real ids and xml IDs
-     * @param int              $index       of the last field in the array
      */
-    public function exportToXml(SimpleXMLElement $root, &$xmlMapping, &$index) {
-        parent::exportToXML($root, $xmlMapping, $index);
+    public function exportToXml(SimpleXMLElement $root, &$xmlMapping) {
+        parent::exportToXML($root, $xmlMapping);
         $subfields = $this->getAllFormElements();
         $child = $root->addChild('formElements');
         foreach($subfields as $subfield) {
             $grandchild = $child->addChild('formElement');
-            $index++;
-            $subfield->exportToXML($grandchild, $xmlMapping, $index);
+            $subfield->exportToXML($grandchild, $xmlMapping);
         }
     }
     

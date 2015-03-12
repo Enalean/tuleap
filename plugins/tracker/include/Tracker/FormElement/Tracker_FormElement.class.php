@@ -34,6 +34,8 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     const SOAP_PERMISSION_UPDATE = 'update';
     const SOAP_PERMISSION_SUBMIT = 'submit';
 
+    const XML_ID_PREFIX = 'F';
+
     /**
      * The field id
      */
@@ -706,16 +708,15 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @param SimpleXMLElement $root        the node to which the FormElement is attached (passed by reference)
      * @param array            &$xmlMapping correspondance between real ids and xml IDs
-     * @param int              $index       of the last field in the array
      *
      * @return void
      */
-    public function exportToXml(SimpleXMLElement $root, &$xmlMapping, &$index) {
+    public function exportToXml(SimpleXMLElement $root, &$xmlMapping) {
         $cdata_section_factory = new XML_SimpleXMLCDATAFactory();
 
         $root->addAttribute('type', Tracker_FormElementFactory::instance()->getType($this));
         // this id is internal to XML
-        $ID = 'F' . $index;
+        $ID = $this->getXMLId();
         $xmlMapping[$ID] = $this->id;
         $root->addAttribute('ID', $ID);
         $root->addAttribute('rank', $this->rank);
@@ -749,6 +750,10 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         if ($this->getProperties()) {
             $this->exportPropertiesToXML($root);
         }
+    }
+
+    public function getXMLId() {
+        return self::XML_ID_PREFIX.$this->getId();
     }
 
     /**

@@ -18,14 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('bootstrap.php');
-Mock::generatePartial(
-    'Tracker_FormElement_Field_List_BindValue', 
-    'Tracker_FormElement_Field_List_BindValueTestVersion', 
-    array(
-        'getLabel',
-        '__toString',
-    )
-);
 
 class Tracker_FormElement_Field_List_Bind_UgroupsValueTest extends TuleapTestCase {
     
@@ -45,4 +37,3 @@ class Tracker_FormElement_Field_List_Bind_UgroupsValueTest extends TuleapTestCas
     }
     
 }
-?>

@@ -19,6 +19,8 @@
  */
 
 abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJsonFormatOfMyself {
+    const XML_ID_PREFIX = 'V';
+
     /**
      *
      * @var int 
@@ -107,6 +109,8 @@ abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJ
     public function getJsonValue() {
         return $this->getId();
     }
-}
 
-?>
+    public function getXMLId() {
+        return self::XML_ID_PREFIX.$this->getId();
+    }
+}

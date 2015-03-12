@@ -18,25 +18,16 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('bootstrap.php');
-Mock::generatePartial(
-    'Tracker_FormElement_Field_List_BindValue', 
-    'Tracker_FormElement_Field_List_BindValueTestVersion', 
-    array(
-        'getLabel',
-        '__toString',
-    )
-);
 
 class Tracker_FormElement_Field_List_BindValueTest extends UnitTestCase {
     
     public function testJSon() {
         $id          = 123;
         $label       = 'Reopen';
-        $value = new Tracker_FormElement_Field_List_BindValueTestVersion();
+        $value = partial_mock('Tracker_FormElement_Field_List_BindValue', array('getLabel', '__toString'));
         $value->setReturnValue('getLabel', $label);
         $value->setId($id);
         $this->assertEqual(json_encode($value->fetchForOpenListJson()), '{"id":123,"value":"b123","caption":"Reopen","rest_value":"Reopen"}');
     }
     
 }
-?>

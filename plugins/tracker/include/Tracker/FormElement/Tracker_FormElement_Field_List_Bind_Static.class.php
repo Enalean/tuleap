@@ -712,17 +712,15 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
      * 
      * @param SimpleXMLElement $root        the node to which the Bind is attached (passed by reference)
      * @param array            &$xmlMapping the array of mapping XML ID => real IDs
-     * @param string           $fieldID     XML ID of the binded field
      */
-    public function exportToXml(SimpleXMLElement $root, &$xmlMapping, $fieldID) {
+    public function exportToXml(SimpleXMLElement $root, &$xmlMapping) {
         $cdata_section_factory = new XML_SimpleXMLCDATAFactory();
         $root->addAttribute('is_rank_alpha', $this->is_rank_alpha);
         if ($this->getAllValues()) {
             $child = $root->addChild('items');
-            $i = 0;
             foreach ($this->getAllValues() as $val) {
                 $grandchild = $child->addChild('item');
-                $ID = $fieldID . '-V' . $i;
+                $ID = $val->getXMLId();
                 $grandchild->addAttribute('ID', $ID);
                 $xmlMapping['values'][$ID] = $val->getId();
                 $grandchild->addAttribute('label', $val->getLabel());
@@ -731,7 +729,6 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                 if ($val->getDescription() != '') {
                     $cdata_section_factory->insert($grandchild, 'description', $val->getDescription());
                 }
-                $i++;
             }
             if ($this->decorators) {
                 $child = $root->addChild('decorators');
