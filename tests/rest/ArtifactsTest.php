@@ -278,6 +278,14 @@ class ArtifactsTest extends RestBase {
         $this->assertEquals('Please see my comment', $changesets[4]['last_comment']['body']);
     }
 
+    public function testAnonymousGETArtifact() {
+        try {
+            $this->client->get('artifacts/'.TestDataBuilder::STORY_1_ARTIFACT_ID)->send();
+        } catch (Exception $e) {
+            $this->assertEquals($e->getResponse()->getStatusCode(), 403);
+        }
+    }
+
     private function getFieldIdForFieldLabel($artifact_id, $field_label) {
         $value = $this->getFieldByFieldLabel($artifact_id, $field_label);
         return $value['field_id'];

@@ -21,6 +21,7 @@
 namespace Tuleap\Tracker\REST\v1;
 
 use \Tuleap\REST\ProjectAuthorization;
+use Tuleap\REST\AuthenticatedResource;
 use \Tuleap\REST\Exceptions\LimitOutOfBoundsException;
 use \Luracast\Restler\RestException;
 use \Tuleap\Tracker\REST\ReportRepresentation;
@@ -36,7 +37,7 @@ use \Tracker_URLVerification;
 /**
  * Wrapper for Tracker Report related REST methods
  */
-class ReportsResource {
+class ReportsResource extends AuthenticatedResource {
 
     const MAX_LIMIT      = 50;
     const DEFAULT_LIMIT  = 10;
@@ -72,12 +73,14 @@ class ReportsResource {
      * Get the definition of the given report
      *
      * @url GET {id}
+     * @access hybrid
      *
      * @param int $id Id of the report
      *
      * @return Tuleap\Tracker\REST\ReportRepresentation
      */
-    protected function getId($id) {
+    public function getId($id) {
+        $this->checkAcess();
         $user   = UserManager::instance()->getCurrentUser();
         $report = $this->getReportById($user, $id);
 
@@ -119,6 +122,7 @@ class ReportsResource {
      * </p>
      *
      * @url GET {id}/artifacts
+     * @access hybrid
      *
      * @param int    $id      Id of the report
      * @param string $values  Which fields to include in the response. Default is no field values {@from path}{@choice ,all}
@@ -127,12 +131,13 @@ class ReportsResource {
      *
      * @return array {@type Tuleap\Tracker\REST\Artifact\ArtifactRepresentation}
      */
-    protected function getArtifacts(
+    public function getArtifacts(
         $id,
         $values = self::DEFAULT_VALUES,
         $limit  = self::DEFAULT_LIMIT,
         $offset = self::DEFAULT_OFFSET
     ) {
+        $this->checkAcess();
         $this->checkLimitValue($limit);
 
         $user   = UserManager::instance()->getCurrentUser();
