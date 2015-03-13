@@ -1,0 +1,126 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
+namespace Tuleap\AgileDashboard\REST\v1;
+
+use Luracast\Restler\RestException;
+use Tuleap\REST\Header;
+use AgileDashboard_PermissionsManager;
+use AgileDashboard_KanbanDao;
+use AgileDashboard_KanbanFactory;
+use AgileDashboard_KanbanItemDao;
+use AgileDashboard_KanbanNotFoundException;
+use AgileDashboard_KanbanCannotAccessException;
+use AgileDashboard_Kanban;
+use AgileDashboard_KanbanColumnFactory;
+use AgileDashboard_KanbanColumnDao;
+use AgileDashboard_KanbanColumnManager;
+use AgileDashboard_KanbanColumnNotFoundException;
+use AgileDashboard_UserNotAdminException;
+use TrackerFactory;
+use UserManager;
+use PFUser;
+
+class KanbanColumnsResource {
+
+    const MAX_LIMIT = 100;
+
+    /** @var AgileDashboard_KanbanFactory */
+    private $kanban_factory;
+
+    /** @var AgileDashboard_KankanColumnFactory */
+    private $kanban_column_factory;
+
+    /** @var AgileDashboard_KanbanColumnManager */
+    private $kanban_column_manager;
+
+    public function __construct() {
+        $tracker_factory = TrackerFactory::instance();
+
+        $this->kanban_factory = new AgileDashboard_KanbanFactory(
+            $tracker_factory,
+            new AgileDashboard_KanbanDao()
+        );
+
+        $kanban_column_dao           = new AgileDashboard_KanbanColumnDao();
+        $permissions_manager         = new AgileDashboard_PermissionsManager();
+        $this->kanban_column_factory = new AgileDashboard_KanbanColumnFactory($kanban_column_dao);
+        $this->kanban_column_manager = new AgileDashboard_KanbanColumnManager(
+            $kanban_column_dao,
+            $permissions_manager,
+            $tracker_factory
+        );
+    }
+
+    /**
+     * @url OPTIONS
+     */
+    public function options() {
+        Header::allowOptionsPatch();
+    }
+
+    /**
+     * Change a column properties (wip_limit for now)
+     *
+     * @url PATCH {id}
+     *
+     * @param int $id           Id of the column
+     * @param int $kanban_id    Id of the Kanban {@from query}
+     * @param int $wip_limit    The new wip limit {@from body} {@type int}
+     */
+    protected function patch($id, $kanban_id, $wip_limit) {
+        $current_user = $this->getCurrentUser();
+        $kanban       = $this->getKanban($current_user, $kanban_id);
+
+        try{
+            $column = $this->kanban_column_factory->getColumnForAKanban($kanban, $id);
+            if (! $this->kanban_column_manager->setColumnWipLimit($current_user, $kanban, $column, $wip_limit)) {
+                throw new RestException(500);
+            }
+        } catch (AgileDashboard_KanbanColumnNotFoundException $exception) {
+            throw new RestException(404, $exception->getMessage());
+        } catch (AgileDashboard_UserNotAdminException $exception) {
+            throw new RestException(401, $exception->getMessage());
+        } catch (AgileDashboard_SemanticStatusNotFoundException $exception) {
+            throw new RestException(404, $exception->getMessage());
+        }
+    }
+
+    /** @return AgileDashboard_Kanban */
+    private function getKanban(PFUser $user, $id) {
+        try {
+            $kanban = $this->kanban_factory->getKanban($user, $id);
+        } catch (AgileDashboard_KanbanNotFoundException $exception) {
+            throw new RestException(404);
+        } catch (AgileDashboard_KanbanCannotAccessException $exception) {
+            throw new RestException(403);
+        }
+
+        return $kanban;
+    }
+
+    private function getCurrentUser() {
+        $user = UserManager::instance()->getCurrentUser();
+        if (! $user->useLabFeatures()) {
+            throw new RestException(403, 'You must activate lab features');
+        }
+
+        return $user;
+    }
+}

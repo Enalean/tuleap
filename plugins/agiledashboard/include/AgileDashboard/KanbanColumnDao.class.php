@@ -33,4 +33,15 @@ class AgileDashboard_KanbanColumnDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function setColumnWipLimit($kanban_id, $column_id, $wip_limit) {
+        $kanban_id = $this->da->escapeInt($kanban_id);
+        $column_id = $this->da->escapeInt($column_id);
+        $wip_limit = $this->da->escapeInt($wip_limit);
+
+        $sql = "REPLACE INTO plugin_agiledashboard_kanban_configuration_column (kanban_id, value_id, wip_limit)
+                VALUES ($kanban_id, $column_id, $wip_limit)";
+
+        return $this->update($sql);
+    }
+
 }

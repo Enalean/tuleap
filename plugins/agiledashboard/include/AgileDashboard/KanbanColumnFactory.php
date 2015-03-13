@@ -31,16 +31,15 @@ class AgileDashboard_KanbanColumnFactory {
     }
 
     /**
-     * @param int $kanban_id
-     * @param int $column_id
+     * @param AgileDashboard_Kanban $kanban
      *
-     * @return AgileDashboard_KanbanColumn
+     * @return AgileDashboard_KanbanColumn[]
      */
     public function getAllKanbanColumnsForAKanban(AgileDashboard_Kanban $kanban) {
         $columns  = array();
         $semantic = $this->getSemanticStatus($kanban);
         if (! $semantic) {
-            return;
+            return $columns;
         }
 
         $field_values = $this->getFieldValues($semantic);
@@ -61,6 +60,38 @@ class AgileDashboard_KanbanColumnFactory {
         }
 
         return $columns;
+    }
+
+    /**
+     * @param AgileDashboard_Kanban $kanban
+     * @param int                   $column_id
+     *
+     * @return AgileDashboard_KanbanColumn
+     */
+    public function getColumnForAKanban(AgileDashboard_Kanban $kanban, $column_id) {
+        $semantic = $this->getSemanticStatus($kanban);
+        if (! $semantic) {
+            throw new AgileDashboard_SemanticStatusNotFoundException();
+        }
+
+        $open_values  = $this->getOpenValues($semantic);
+
+        foreach ($open_values as $id) {
+            if ($id == $column_id) {
+                $field_values = $this->getFieldValues($semantic);
+
+                return new AgileDashboard_KanbanColumn(
+                    $id,
+                    $kanban->getId(),
+                    $field_values[$id]->getLabel(),
+                    true,
+                    $this->getColorForColumn($id),
+                    $this->getWIPLimitForColumn($kanban, $id)
+                );
+            }
+        }
+
+        throw new AgileDashboard_KanbanColumnNotFoundException($kanban, $column_id);
     }
 
     private function getColorForColumn($column_id) {
