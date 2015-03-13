@@ -20,7 +20,6 @@
  */
 
 require_once dirname(__FILE__) .'/bootstrap.php';
-require_once 'common/XmlValidator/XmlValidator.class.php';
 
 class CardwallConfigXmlImportTest extends TuleapTestCase {
 
@@ -66,7 +65,7 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
         $this->column_dao                 = mock('Cardwall_OnTop_ColumnDao');
         $this->group_id                   = 145;
         $this->event_manager              = mock('EventManager');
-        $this->xml_validator              = stub('XmlValidator')->nodeIsValid()->returns(true);
+        $this->xml_validator              = mock('XML_RNGValidator');
         $this->cardwall_config_xml_import = new CardwallConfigXmlImport(
             $this->group_id,
             $this->mapping,
@@ -125,13 +124,10 @@ class CardwallConfigXmlImportTest extends TuleapTestCase {
     }
 
     public function itThrowsAnExceptionIfXmlDoesNotMatchRNG() {
-         $xml_validator              = stub('XmlValidator')->nodeIsValid()->returns(false);
-         stub($xml_validator)->getValidationErrors()->returns(array());
+         $xml_validator  = stub('XML_RNGValidator')->validate()->throws(new XML_ParseException(array(), array()));
          $cardwall_config_xml_import = new CardwallConfigXmlImport($this->group_id, $this->mapping, $this->cardwall_ontop_dao, $this->column_dao, $this->event_manager, $xml_validator);
 
-         $this->expectException('CardwallFromXmlInputNotWellFormedException');
+         $this->expectException('XML_ParseException');
          $cardwall_config_xml_import->import($this->xml_input);
     }
 }
-
-?>

@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once dirname(__FILE__).'/../../bootstrap.php';
-require_once 'common/XmlValidator/XmlValidator.class.php';
 
 class AgileDashboard_XMLExporterTest extends TuleapTestCase {
 
@@ -69,7 +68,7 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
 
         $this->xml_tree = new SimpleXMLElement($data);
 
-        $this->xml_validator                = stub('XmlValidator')->nodeIsValid()->returns(true);
+        $this->xml_validator                = mock('XML_RNGValidator');
         $this->planning_permissions_manager = mock('PlanningPermissionsManager');
     }
 
@@ -237,10 +236,9 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase {
     }
 
     public function itThrowsAnExceptionIfXmlGeneratedIsNotValid() {
-        $xml_validator = stub('XmlValidator')->nodeIsValid()->returns(false);
+        $xml_validator = stub('XML_RNGValidator')->validate()->throws(new XML_ParseException(array(), array()));
         $exporter = new AgileDashboard_XMLExporter($xml_validator, $this->planning_permissions_manager);
-        $this->expectException('AgileDashboard_XMLExporterNodeNotValidException');
+        $this->expectException('XML_ParseException');
         $exporter->export($this->xml_tree, $this->plannings);
     }
 }
-?>

@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/XmlValidator/XmlValidator.class.php';
-
 class CardwallConfigXmlExport {
 
     /** @var Project */
@@ -31,10 +29,10 @@ class CardwallConfigXmlExport {
     /**  @var Cardwall_OnTop_ConfigFactory */
     private $config_factory;
 
-    /**  @var XmlValidator */
+    /**  @var XML_RNGValidator */
     private $xml_validator;
 
-    public function __construct(Project $project, TrackerFactory $tracker_factory, Cardwall_OnTop_ConfigFactory $config_factory, XmlValidator $xml_validator) {
+    public function __construct(Project $project, TrackerFactory $tracker_factory, Cardwall_OnTop_ConfigFactory $config_factory, XML_RNGValidator $xml_validator) {
         $this->project         = $project;
         $this->tracker_factory = $tracker_factory;
         $this->config_factory  = $config_factory;
@@ -55,9 +53,7 @@ class CardwallConfigXmlExport {
         }
 
         $rng_path = realpath(CARDWALL_BASE_DIR.'/../www/resources/xml_project_cardwall.rng');
-        if (! $this->xml_validator->nodeIsValid($cardwall_node, $rng_path)) {
-            throw new CardwallConfigXmlExportNodeNotValidException();
-        }
+        $this->xml_validator->validate($cardwall_node, $rng_path);
     }
 
     private function addTrackerChild(Tracker $tracker, SimpleXMLElement $trackers_node) {

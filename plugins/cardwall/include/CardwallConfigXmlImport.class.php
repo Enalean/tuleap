@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/XmlValidator/XmlValidator.class.php';
-
 class CardwallConfigXmlImport {
 
     /** @var array */
@@ -34,13 +32,13 @@ class CardwallConfigXmlImport {
     /** @var EventManager */
     private $event_manager;
 
-    /** @var XmlValidator */
+    /** @var XML_RNGValidator */
     private $xml_validator;
 
     /** @var Cardwall_OnTop_ColumnDao */
     private $column_dao;
 
-    public function __construct($group_id, array $mapping, Cardwall_OnTop_Dao $cardwall_ontop_dao, Cardwall_OnTop_ColumnDao $column_dao, EventManager $event_manager, XmlValidator $xml_validator) {
+    public function __construct($group_id, array $mapping, Cardwall_OnTop_Dao $cardwall_ontop_dao, Cardwall_OnTop_ColumnDao $column_dao, EventManager $event_manager, XML_RNGValidator $xml_validator) {
         $this->mapping            = $mapping;
         $this->cardwall_ontop_dao = $cardwall_ontop_dao;
         $this->column_dao         = $column_dao;
@@ -53,16 +51,11 @@ class CardwallConfigXmlImport {
      * Import cardwall ontop from XML input
      *
      * @param SimpleXMLElement $xml_input
-     * @throws CardwallFromXmlInputNotWellFormedException
      * @throws CardwallFromXmlImportCannotBeEnabledException
      */
     public function import(SimpleXMLElement $xml_input) {
         $rng_path = realpath(CARDWALL_BASE_DIR.'/../www/resources/xml_project_cardwall.rng');
-        if (! $this->xml_validator->nodeIsValid($xml_input->{CardwallConfigXml::NODE_CARDWALL}, $rng_path)) {
-            throw new CardwallFromXmlInputNotWellFormedException(
-                $this->xml_validator->getValidationErrors($xml_input->{CardwallConfigXml::NODE_CARDWALL}, $rng_path)
-            );
-        }
+        $this->xml_validator->validate($xml_input->{CardwallConfigXml::NODE_CARDWALL}, $rng_path);
 
         $this->importCardwalls($xml_input->{CardwallConfigXml::NODE_CARDWALL});
 
