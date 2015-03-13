@@ -19,7 +19,7 @@ class customPlugin extends Plugin {
  *
  * Tests the class PluginFactory
  */
-class PluginFactoryTest extends UnitTestCase {
+class PluginFactoryTest extends TuleapTestCase {
 
     function testGetPluginById() {
         $plugin_dao    = new MockPluginDao($this);
@@ -27,9 +27,9 @@ class PluginFactoryTest extends UnitTestCase {
         $plugin_dao->setReturnReference('searchById', $access_result);
         $access_result->setReturnValueAt(0, 'getRow', array('name' => 'plugin 123', 'available' => 1));
         $access_result->setReturnValueAt(1, 'getRow', false);
-        $pf = new PluginFactoryTestVersion($this);
+        $restrictor = mock('PluginResourceRestrictor');
+        $pf = partial_mock('PluginFactory', array('_getClassNameForPluginName'), array($plugin_dao, $restrictor));
         $pf->setReturnValue('_getClassNameForPluginName', array('class' => 'Plugin', 'custom' => false));
-        $pf->PluginFactory($plugin_dao); //Only for test. You should use singleton instead
         $plugin = $pf->getPluginById(123);
         $this->assertIsA($plugin, 'Plugin');
         
@@ -50,9 +50,9 @@ class PluginFactoryTest extends UnitTestCase {
         $plugin_dao->setReturnReference('searchById', $by_id);
         $by_id->setReturnValue('getRow', array('id' => '123', 'name' => 'plugin 123', 'available' => 1));
 
-        $pf = new PluginFactoryTestVersion($this);
+        $restrictor = mock('PluginResourceRestrictor');
+        $pf = partial_mock('PluginFactory', array('_getClassNameForPluginName'), array($plugin_dao, $restrictor));
         $pf->setReturnValue('_getClassNameForPluginName', array('class' => 'Plugin', 'custom' => false));
-        $pf->PluginFactory($plugin_dao); //Only for test. You should use singleton instead
         $plugin_1 = $pf->getPluginByName('plugin 123');
         $this->assertIsA($plugin_1, 'Plugin');
         
@@ -72,9 +72,9 @@ class PluginFactoryTest extends UnitTestCase {
         $access_result->setReturnValueAt(1, 'getRow', false); //new plugin
         $plugin_dao->setReturnValueAt(0, 'create', 125); //its id
         $plugin_dao->setReturnValueAt(0, 'create', false); //error
-        $pf = new PluginFactoryTestVersion($this);
+        $restrictor = mock('PluginResourceRestrictor');
+        $pf = partial_mock('PluginFactory', array('_getClassNameForPluginName'), array($plugin_dao, $restrictor));
         $pf->setReturnValue('_getClassNameForPluginName', array('class' => 'Plugin', 'custom' => false));
-        $pf->PluginFactory($plugin_dao); //Only for test. You should use singleton instead
         $this->assertFalse($pf->createPlugin('existing plugin'));
         $plugin = $pf->createPlugin('new plugin');
         $this->assertEqual($plugin->getId(), 125);
@@ -88,9 +88,9 @@ class PluginFactoryTest extends UnitTestCase {
         $access_result->setReturnValueAt(0, 'getRow', array('id' => '123', 'name' => 'plugin 123', 'available' => '1'));
         $access_result->setReturnValueAt(1, 'getRow', array('id' => '124', 'name' => 'plugin 124', 'available' => '1'));
         $access_result->setReturnValueAt(2, 'getRow', false);
-        $pf = new PluginFactoryTestVersion($this);
+        $restrictor = mock('PluginResourceRestrictor');
+        $pf = partial_mock('PluginFactory', array('_getClassNameForPluginName'), array($plugin_dao, $restrictor));
         $pf->setReturnValue('_getClassNameForPluginName', array('class' => 'Plugin', 'custom' => false));
-        $pf->PluginFactory($plugin_dao); //Only for test. You should use singleton instead
         $col = $pf->getAvailablePlugins();
         $this->assertEqual(count($col), 2);
     }
@@ -102,9 +102,9 @@ class PluginFactoryTest extends UnitTestCase {
         $access_result->setReturnValueAt(0, 'getRow', array('id' => '123', 'name' => 'plugin 123', 'available' => '0'));
         $access_result->setReturnValueAt(1, 'getRow', array('id' => '124', 'name' => 'plugin 124', 'available' => '0'));
         $access_result->setReturnValueAt(2, 'getRow', false);
-        $pf = new PluginFactoryTestVersion($this);
+        $restrictor = mock('PluginResourceRestrictor');
+        $pf = partial_mock('PluginFactory', array('_getClassNameForPluginName'), array($plugin_dao, $restrictor));
         $pf->setReturnValue('_getClassNameForPluginName', array('class' => 'Plugin', 'custom' => false));
-        $pf->PluginFactory($plugin_dao); //Only for test. You should use singleton instead
         $col = $pf->getUnavailablePlugins();
         $this->assertEqual(count($col), 2);
     }
@@ -116,9 +116,9 @@ class PluginFactoryTest extends UnitTestCase {
         $access_result->setReturnValueAt(0, 'getRow', array('id' => '123', 'name' => 'plugin 123', 'available' => '1'));
         $access_result->setReturnValueAt(1, 'getRow', array('id' => '124', 'name' => 'plugin 124', 'available' => '0'));
         $access_result->setReturnValueAt(2, 'getRow', false);
-        $pf = new PluginFactoryTestVersion($this);
+        $restrictor = mock('PluginResourceRestrictor');
+        $pf = partial_mock('PluginFactory', array('_getClassNameForPluginName'), array($plugin_dao, $restrictor));
         $pf->setReturnValue('_getClassNameForPluginName', array('class' => 'Plugin', 'custom' => false));
-        $pf->PluginFactory($plugin_dao); //Only for test. You should use singleton instead
         $col = $pf->getAllPlugins();
         $this->assertEqual(count($col), 2);
     }
@@ -129,9 +129,9 @@ class PluginFactoryTest extends UnitTestCase {
         $plugin_dao->setReturnReference('searchById', $access_result);
         $access_result->setReturnValueAt(0, 'getRow', array('id' => '123', 'name' => 'plugin 123', 'available' => '1')); 
         $access_result->setReturnValueAt(1, 'getRow', array('id' => '124', 'name' => 'plugin 124', 'available' => '0'));
-        $pf = new PluginFactoryTestVersion($this);
+        $restrictor = mock('PluginResourceRestrictor');
+        $pf = partial_mock('PluginFactory', array('_getClassNameForPluginName'), array($plugin_dao, $restrictor));
         $pf->setReturnValue('_getClassNameForPluginName', array('class' => 'Plugin', 'custom' => false));
-        $pf->PluginFactory($plugin_dao); //Only for test. You should use singleton instead
         
         $p_1 = $pf->getPluginById(123);
         $this->assertTrue($pf->isPluginAvailable($p_1));
@@ -147,9 +147,9 @@ class PluginFactoryTest extends UnitTestCase {
         $access_result->setReturnValueAt(0, 'getRow', array('id' => '123', 'name' => 'plugin 123', 'available' => '0')); 
         $access_result->setReturnValueAt(1, 'getRow', false);
         $plugin_dao->expectOnce('updateAvailableByPluginId', array('1', 123));
-        $pf = new PluginFactoryTestVersion($this);
+        $restrictor = mock('PluginResourceRestrictor');
+        $pf = partial_mock('PluginFactory', array('_getClassNameForPluginName'), array($plugin_dao, $restrictor));
         $pf->setReturnValue('_getClassNameForPluginName', array('class' => 'Plugin', 'custom' => false));
-        $pf->PluginFactory($plugin_dao); //Only for test. You should use singleton instead
         
         $p = $pf->getPluginById(123);
         $pf->availablePlugin($p);
@@ -162,9 +162,9 @@ class PluginFactoryTest extends UnitTestCase {
         $access_result->setReturnValueAt(0, 'getRow', array('id' => '123', 'name' => 'plugin 123', 'available' => '1')); //enabled = 1
         $access_result->setReturnValueAt(1, 'getRow', false);
         $plugin_dao->expectOnce('updateAvailableByPluginId', array('0', 123));
-        $pf = new PluginFactoryTestVersion($this);
+        $restrictor = mock('PluginResourceRestrictor');
+        $pf = partial_mock('PluginFactory', array('_getClassNameForPluginName'), array($plugin_dao, $restrictor));
         $pf->setReturnValue('_getClassNameForPluginName', array('class' => 'Plugin', 'custom' => false));
-        $pf->PluginFactory($plugin_dao); //Only for test. You should use singleton instead
         
         $p = $pf->getPluginById(123);
         $pf->unavailablePlugin($p);
@@ -183,10 +183,10 @@ class PluginFactoryTest extends UnitTestCase {
         $access_result_official->setReturnValueAt(0, 'getRow', array('id' => '124', 'name' => 'official', 'available' => 1));
         $plugin_dao->setReturnReferenceAt(1, 'searchByName', $access_result_official);
 
-        $pf = new PluginFactoryTestVersion($this);
+        $restrictor = mock('PluginResourceRestrictor');
+        $pf = partial_mock('PluginFactory', array('_getClassNameForPluginName'), array($plugin_dao, $restrictor));
         $pf->setReturnValueAt(0, '_getClassNameForPluginName', array('class' => 'customPlugin', 'custom' => true));
         $pf->setReturnValueAt(1, '_getClassNameForPluginName', array('class' => 'officialPlugin', 'custom' => false));
-        $pf->PluginFactory($plugin_dao); //Only for test. You should use singleton instead
         
         $plugin_custom = $pf->getPluginByName('custom');
         $this->assertIsA($plugin_custom, 'Plugin');
@@ -197,4 +197,3 @@ class PluginFactoryTest extends UnitTestCase {
         $this->assertFalse($pf->pluginIsCustom($plugin_official));
     }
 }
-?>

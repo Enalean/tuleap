@@ -54,23 +54,23 @@ class Git_MirrorResourceRestrictor {
     }
 
     public function isMirrorRestricted(Git_Mirror_Mirror $mirror) {
-        return $this->restricted_mirror_dao->isMirrorRestricted($mirror->id);
+        return $this->restricted_mirror_dao->isResourceRestricted($mirror->id);
     }
 
     public function setMirrorRestricted(Git_Mirror_Mirror $mirror) {
-        return $this->restricted_mirror_dao->setMirrorRestricted($mirror->id);
+        return $this->restricted_mirror_dao->setResourceRestricted($mirror->id);
     }
 
     public function unsetMirrorRestricted(Git_Mirror_Mirror $mirror) {
-        return $this->restricted_mirror_dao->unsetMirrorRestricted($mirror->id);
+        return $this->restricted_mirror_dao->unsetResourceRestricted($mirror->id);
     }
 
     public function allowProjectOnMirror(Git_Mirror_Mirror $mirror, Project $project) {
-        return $this->restricted_mirror_dao->addProjectOnMirror($mirror->id, $project->getId());
+        return $this->restricted_mirror_dao->allowProjectOnResource($mirror->id, $project->getId());
     }
 
     public function revokeProjectsFromMirror(Git_Mirror_Mirror $mirror, array $project_ids) {
-        $this->restricted_mirror_dao->revokeProjectsFromMirror($mirror->id, $project_ids);
+        $this->restricted_mirror_dao->revokeProjectsFromResource($mirror->id, $project_ids);
 
         $repositories = $this->mirror_data_mapper->fetchAllProjectRepositoriesForMirror($mirror, $project_ids);
 
@@ -87,8 +87,8 @@ class Git_MirrorResourceRestrictor {
         return true;
     }
 
-    public function searchAllowedProjectsOfMirror(Git_Mirror_Mirror $mirror) {
-        $rows     = $this->restricted_mirror_dao->searchAllowedProjectsOfMirror($mirror->id);
+    public function searchAllowedProjectsOnMirror(Git_Mirror_Mirror $mirror) {
+        $rows     = $this->restricted_mirror_dao->searchAllowedProjectsOnResource($mirror->id);
         $projects = array();
 
         foreach($rows as $row) {

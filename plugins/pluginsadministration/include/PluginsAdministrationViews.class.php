@@ -27,12 +27,11 @@ class PluginsAdministrationViews extends Views {
         $this->dependency_solver = new PluginDependencySolver($this->plugin_manager);
     }
     
-    function header() {
+    public function header() {
         $title = $GLOBALS['Language']->getText('plugin_pluginsadministration','title');
-        //$GLOBALS['HTML']->includeJavascriptFile('/scripts/scriptaculous/scriptaculous.js');
         $GLOBALS['HTML']->header(array('title'=>$title, 'selected_top_tab' => 'admin'));
-        echo '<h2>'.$title.'&nbsp;'.$this->_getHelp().'</h2>';
     }
+
     function footer() {
         $GLOBALS['HTML']->footer(array());
     }
@@ -271,79 +270,6 @@ class PluginsAdministrationViews extends Views {
                 $output .=     '<td class="pluginsadministration_label">'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_hooks:').' </td>';
                 $output .=     '<td>'.$link_to_hooks.'</td>';
                 $output .=   '</tr>';
-                if($plugin->getScope() == Plugin::SCOPE_PROJECT) {
-                    $output .=   '<tr>';
-                    $output .=     '<td class="pluginsadministration_label">'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_projects:').' </td>';
-                    $output .=     '<td>';
-                    $_isProjectPluginRestricted = $plugin_manager->isProjectPluginRestricted($plugin);
-                    if($_isProjectPluginRestricted) {
-                        $projectIds = $plugin_manager->getAllowedProjects($plugin);
-                        if(count($projectIds) > 0) {
-                            $projects = '';
-                            foreach($projectIds as $project_id) {
-                                if ($p = $pm->getProject($project_id)) {
-                                    $projects .= ' '.$project_id .' ('. $p->getUnixName() .'),';
-                                }
-                            }
-                            $output .= substr($projects, 0, -1);
-                        }
-                        else {
-                            $output .= $GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_no_prj_for_plugin');
-                        }
-                    }
-                    else {
-                        $output .= $GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_av_for_prj');
-                    }
-
-                    $output .=       '<br>';
-                    $output .=       $GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_addproject').' <span><input name="gen_prop[allowed_project]" id="gen_prop_allowed_project" type="text" value="" /></span>';
-                    $output .=       '&nbsp;';
-                    $output .=       $GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_delproject').' <input name="gen_prop[disallowed_project]" type="text" value="" />';
-
-                    $output .= <<<EOS
-                    <style type="text/css">
-                    #gen_prop_allowed_project_choices {
-                        background:white;
-                    }
-                    #gen_prop_allowed_project_choices ul {
-                        margin:0;
-                        padding:0;
-                        list-style:none;
-                    }
-                    #gen_prop_allowed_project_choices ul li.selected {
-                        background:#eef;
-                    }
-                    </style>
-                    <script type="text/javascript">
-                    Event.observe(window, 'load', function () {
-                            var ori = $('gen_prop_allowed_project');
-                            if (ori) {
-                                var update = Builder.node('div', {id:'gen_prop_allowed_project_choices', style:'background:white'});
-                                Element.hide(update);
-                                ori.parentNode.appendChild(update);
-                                new Ajax.Autocompleter('gen_prop_allowed_project', update, '?view=ajax_projects', {
-                                        tokens: ','
-                                });
-                            }
-                    });
-                    </script>
-EOS;
-                    $yesChecked = 'checked="checked" ';
-                    $noChecked  = '';
-                    if($_isProjectPluginRestricted) {
-                        $yesChecked = '';
-                        $noChecked  = 'checked="checked" ';
-                    }
-
-                    $output .=       '<br>';
-                    $output .=       $GLOBALS['Language']->getText('plugin_pluginsadministration_properties', 'properties_is_av_for_prj').'&nbsp;';
-                    $output .=       $GLOBALS['Language']->getText('plugin_pluginsadministration_properties', 'properties_yes').' <input type="radio" name="gen_prop[prj_restricted]" value="0" '.$yesChecked.' />';
-                    $output .=       $GLOBALS['Language']->getText('plugin_pluginsadministration_properties', 'properties_no').' <input type="radio" name="gen_prop[prj_restricted]" value="1" '.$noChecked.' />';
-
-                    $output .=     '</td>';
-                    $output .=   '</tr>';
-                    
-                }
                 if ($props !== '') {
                     $output .=   $props;
                 }
@@ -367,6 +293,28 @@ EOS;
         }
     }
     // }}}
+
+    public function restrict() {
+        $request                    = HTTPRequest::instance();
+        $plugin_factory             = PluginFactory::instance();
+        $plugin_resource_restrictor = $this->getPluginResourceRestrictor();
+        $plugin                     = $plugin_factory->getPluginById($request->get('plugin_id'));
+
+        $presenter = new PluginsAdministration_ManageAllowedProjectsPresenter(
+            $plugin,
+            $plugin_resource_restrictor->searchAllowedProjectsOnPlugin($plugin),
+            $plugin_resource_restrictor->isPluginRestricted($plugin)
+        );
+
+        $renderer = TemplateRendererFactory::build()->getRenderer(Config::get('codendi_dir') . '/src/templates/resource_restrictor');
+        $renderer->renderToPage($presenter::TEMPLATE, $presenter);
+    }
+
+    private function getPluginResourceRestrictor() {
+        return new PluginResourceRestrictor(
+            new RestrictedPluginDao()
+        );
+    }
     
     var $_plugins;
     var $_priorities;
@@ -409,15 +357,18 @@ EOS;
                 if (strlen(trim($name)) === 0) {
                     $name = get_class($plugin);
                 }
-                $dont_touch = (strcasecmp(get_class($plugin), 'PluginsAdministrationPlugin') === 0);
+                $dont_touch    = (strcasecmp(get_class($plugin), 'PluginsAdministrationPlugin') === 0);
+                $dont_restrict = (strcasecmp(get_class($plugin), 'PluginsAdministrationPlugin') === 0);
+
                 $this->_plugins[] = array(
-                    'plugin_id'   => $plugin->getId(), 
-                    'name'        => $name, 
-                    'description' => $descriptor->getDescription(), 
-                    'version'     => $descriptor->getVersion(), 
-                    'available'   => $available,
-                    'scope'       => $plugin->getScope(),
-                    'dont_touch'  => $dont_touch);
+                    'plugin_id'     => $plugin->getId(),
+                    'name'          => $name,
+                    'description'   => $descriptor->getDescription(),
+                    'version'       => $descriptor->getVersion(),
+                    'available'     => $available,
+                    'scope'         => $plugin->getScope(),
+                    'dont_touch'    => $dont_touch,
+                    'dont_restrict' => $dont_restrict);
 
                 if (isset($noFUConfig) && !$forgeUpgradeConfig->existsInPath($plugin->getFilesystemPath())) {
                     $noFUConfig[] = array('name' => $name, 'plugin' => $plugin);
@@ -482,14 +433,20 @@ EOS;
             //Actions
             $output .= '<td>';
             //Properties
-            $output .=   '<a class="pluginsadministration_action" href="?view=properties&plugin_id='.$this->_plugins[$i]['plugin_id'].'" title="'.$Language->getText('plugin_pluginsadministration','properties').'">';
-            $output .=     '<img src="'.util_get_image_theme("ic/taskman16b.png").'" border="0" alt="'.$Language->getText('plugin_pluginsadministration','properties').'">';
-            $output .=   '</a>';
+            $output .= '<a class="pluginsadministration_action" href="?view=properties&plugin_id='.$this->_plugins[$i]['plugin_id'].'" title="'.$Language->getText('plugin_pluginsadministration','properties').'">';
+            $output .=   '<i class="icon-edit"></i> '.$Language->getText('plugin_pluginsadministration', 'properties_icon_label');
+            $output .= '</a>';
             //Uninstall
             if(!$this->_plugins[$i]['dont_touch']) {
-                $output .=   '<a class="pluginsadministration_action" href="?action=uninstall&plugin_id='.$this->_plugins[$i]['plugin_id'].'" title="'.$Language->getText('plugin_pluginsadministration','uninstall_plugin').'">';
-                $output .=     '<img src="'.util_get_image_theme("ic/trash.png").'" border="0" alt="'.$Language->getText('plugin_pluginsadministration','uninstall_plugin').'">';
-                $output .=   '</a>';
+                $output .= '<a class="pluginsadministration_action" href="?action=uninstall&plugin_id='.$this->_plugins[$i]['plugin_id'].'" title="'.$Language->getText('plugin_pluginsadministration','uninstall_plugin').'">';
+                $output .=   '<i class="icon-trash"></i> '.$Language->getText('plugin_pluginsadministration', 'uninstall_plugin_icon_label');
+                $output .= '</a>';
+            }
+            //Restriction
+            if(!$this->_plugins[$i]['dont_restrict']) {
+                $output .= '<a class="pluginsadministration_action" href="?view=restrict&plugin_id='.$this->_plugins[$i]['plugin_id'].'" title="'.$Language->getText('plugin_pluginsadministration','manage_restriction_by_project').'">';
+                $output .=   '<i class="icon-lock"></i> '.$Language->getText('plugin_pluginsadministration', 'manage_restriction_by_project_icon_label');
+                $output .= '</a>';
             }
             $output .= '</td>';
             $output .= '</tr>';
