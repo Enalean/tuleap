@@ -1,3 +1,6 @@
+Version 1.171 - Tuleap 7.12
+    * story #7580 - add PATCH /kanban_columns/:id route
+
 Version 1.170 - Tuleap 7.12
     * story #7701: Add BasicAuth method if no token/cookie provided
 
