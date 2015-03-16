@@ -1,7 +1,7 @@
 Version 7.12 (Not Released Yet)
 	== Bug fix ==
 	* request #7911: Logrotate might be configured to use "dateext" instead of .X
-
+	* request #7919: fix tracker artifact update
 	== Plugins ==
 	* docman: 2.26.67
 	* fulltextsearch: 0.127
