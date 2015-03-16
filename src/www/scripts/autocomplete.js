@@ -28,6 +28,11 @@ var AutoCompleter = Class.create({
      */
     registerOnLoad: function () {
         this.element = $(this.elementId);
+
+        if (this.element === null) {
+            return;
+        }
+
         if (this.options['defaultValueActsAsHint']) {
             this.element.defaultValueActsAsHint();
         }
