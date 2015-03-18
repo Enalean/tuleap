@@ -239,7 +239,7 @@ class PluginsAdministrationActions extends Actions {
                 $this->unsetPluginRestricted($plugin);
 
             } else {
-                $this->$this->setPluginRestricted($plugin);
+                $this->setPluginRestricted($plugin);
             }
 
             $this->redirectToPluginAdministration($plugin_id);

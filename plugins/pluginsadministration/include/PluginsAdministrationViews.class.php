@@ -1,9 +1,25 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * 
- * 
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
  * PluginsAdministrationViews
  */
 require_once('common/mvc/Views.class.php');
@@ -12,6 +28,7 @@ require_once('common/include/ForgeUpgradeConfig.class.php');
 require_once('common/plugin/PluginManager.class.php');
 require_once('common/plugin/PluginHookPriorityManager.class.php');
 require_once('common/plugin/PluginDependencySolver.class.php');
+require_once('bootstrap.php');
 
 class PluginsAdministrationViews extends Views {
 
@@ -21,10 +38,16 @@ class PluginsAdministrationViews extends Views {
     /** @var PluginDependencySolver */
     private $dependency_solver;
 
+    /** @var TemplateRendererFactory */
+    private $renderer;
+
     function PluginsAdministrationViews(&$controler, $view=null) {
         $this->View($controler, $view);
-        $this->plugin_manager = PluginManager::instance();
+        $this->plugin_manager    = PluginManager::instance();
         $this->dependency_solver = new PluginDependencySolver($this->plugin_manager);
+        $this->renderer          = TemplateRendererFactory::build()->getRenderer(
+            PLUGINSADMINISTRATION_TEMPLATE_DIR
+        );
     }
     
     public function header() {
@@ -402,59 +425,39 @@ class PluginsAdministrationViews extends Views {
     }
     
     function _installedPlugins() {
-        $Language =& $GLOBALS['Language'];
-        $output = '';
-        $output .= '<fieldset class="pluginsadministration"><legend>'.$Language->getText('plugin_pluginsadministration','plugins').'&nbsp;'.$this->_getHelp('manage').'</legend><form>';
-        $output .= '<table class="table table-striped table-bordered table- table-hover">';
-        $output .= '<thead>';
-        $output .= '<tr>';
-        $output .= '<th>'. $GLOBALS['Language']->getText('plugin_pluginsadministration','Plugin') .'</th>';
-        $output .= '<th>'. $GLOBALS['Language']->getText('plugin_pluginsadministration','Available?') .'</th>';
-        $output .= '<th>'. $GLOBALS['Language']->getText('plugin_pluginsadministration','Scope') .'</th>';
-        $output .= '<th>'. $GLOBALS['Language']->getText('plugin_pluginsadministration','Actions') .'</th>';
-        $output .= '</tr>';
-        $output .= '</thead>';
-        $output .= '<tbody>';
         usort($this->_plugins, create_function('$a, $b', 'return strcasecmp($a["name"] , $b["name"]);'));
-        for($i = 0; $i < count($this->_plugins) ; $i++) {
-            $output .= '<tr class="'.util_get_alt_row_color($i).'">';
-            
-            $output .= '<td class="pluginsadministration_plugin_descriptor '.($this->_plugins[$i]['available']?'':' pluginsadministration_unavailable ').'"><span class="pluginsadministration_name_of_plugin">'.$this->_plugins[$i]['name'].'</span><span class="pluginsadministration_version_of_plugin">'.$this->_plugins[$i]['version'].'</span>';
-            $output .= '<br/><span class="pluginsadministration_description_of_plugin">'.$this->_plugins[$i]['description'].'</span></td>';
-            $output .= '<td>';
-            $output .= $this->getPluginAvailableFlags($this->_plugins[$i]);
-            $output .= '</td>';
 
-            //Scope
-            $output .= '<td>';
-            $output .= $Language->getText('plugin_pluginsadministration','scope_'.$this->_plugins[$i]['scope']);
-            $output .= '</td>';
-            
-            //Actions
-            $output .= '<td>';
-            //Properties
-            $output .= '<a class="pluginsadministration_action" href="?view=properties&plugin_id='.$this->_plugins[$i]['plugin_id'].'" title="'.$Language->getText('plugin_pluginsadministration','properties').'">';
-            $output .=   '<i class="icon-edit"></i> '.$Language->getText('plugin_pluginsadministration', 'properties_icon_label');
-            $output .= '</a>';
-            //Uninstall
-            if(!$this->_plugins[$i]['dont_touch']) {
-                $output .= '<a class="pluginsadministration_action" href="?action=uninstall&plugin_id='.$this->_plugins[$i]['plugin_id'].'" title="'.$Language->getText('plugin_pluginsadministration','uninstall_plugin').'">';
-                $output .=   '<i class="icon-trash"></i> '.$Language->getText('plugin_pluginsadministration', 'uninstall_plugin_icon_label');
-                $output .= '</a>';
-            }
-            //Restriction
-            if(!$this->_plugins[$i]['dont_restrict']) {
-                $output .= '<a class="pluginsadministration_action" href="?view=restrict&plugin_id='.$this->_plugins[$i]['plugin_id'].'" title="'.$Language->getText('plugin_pluginsadministration','manage_restriction_by_project').'">';
-                $output .=   '<i class="icon-lock"></i> '.$Language->getText('plugin_pluginsadministration', 'manage_restriction_by_project_icon_label');
-                $output .= '</a>';
-            }
-            $output .= '</td>';
-            $output .= '</tr>';
+        $i       = 0;
+        $plugins = array();
+        foreach ($this->_plugins as $plugin) {
+            $plugins[] = array(
+                'color'         => util_get_alt_row_color($i),
+                'available'     => $plugin['available']? '': 'pluginsadministration_unavailable',
+                'name'          => $plugin['name'],
+                'version'       => $plugin['version'],
+                'description'   => $plugin['description'],
+                'flags'         => $this->getPluginAvailableFlags($plugin),
+                'scope'         => $GLOBALS['Language']->getText(
+                    'plugin_pluginsadministration',
+                    'scope_'.$plugin['scope']
+                ),
+                'plugin_id'     => $plugin['plugin_id'],
+                'dont_touch'    => $plugin['dont_touch'],
+                'dont_restrict' => $plugin['dont_restrict'],
+            );
+
+            $i++;
         }
-        $output .= '</tbody>';
-        $output .= '</table>';
-        $output .= '</form></fieldset>';
-        return $output;
+
+        $presenter = new PluginsAdministration_Presenter_InstalledPluginsPresenter(
+            $this->_getHelp('manage'),
+            $plugins
+        );
+
+        return $this->renderer->renderToString(
+            'installed-plugins',
+            $presenter
+        );
     }
 
     private function getPluginAvailableFlags(array $plugin_data) {

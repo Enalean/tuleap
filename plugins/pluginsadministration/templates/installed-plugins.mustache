@@ -1,0 +1,55 @@
+<fieldset class="pluginsadministration">
+    <legend>{{ plugins_legend }}&nbsp;{{{ help }}}</legend>
+    <form>
+        <table class="table table-striped table-bordered table- table-hover">
+            <thead>
+            <tr>
+                <th>{{ plugin_table_head }}</th>
+                <th>{{ available_table_head }}</th>
+                <th>{{ scope_table_head }}</th>
+                <th>{{ action_table_head }}</th>
+            </tr>
+            </thead>
+            <tbody>
+                {{# plugins }}
+                <tr class="{{ color }}">
+                    <td class="pluginsadministration_plugin_descriptor {{ available }}">
+                        <span class="pluginsadministration_name_of_plugin">{{ name }}</span>
+                        <span class="pluginsadministration_version_of_plugin">{{ version }}</span>
+                        <br/>
+                        <span class="pluginsadministration_description_of_plugin">{{ description }}</span>
+                    </td>
+                    <td>
+                        {{{ flags }}}
+                    </td>
+                    <td>
+                        {{ scope }}
+                    </td>
+                    <td>
+                        <a class="pluginsadministration_action"
+                           href="?view=properties&plugin_id={{ plugin_id }}"
+                           title="{{ property_title }}"
+                        >
+                            <i class="icon-edit"></i> {{ icon_label }}
+                        </a>
+
+                        {{^ dont_touch }}
+                        <a class="pluginsadministration_action" href="?action=uninstall&plugin_id={{ plugin_id }}"
+                           title="{{ uninstall_title }}">
+                            <i class="icon-trash"></i> {{ uninstall_icon_label }}
+                        </a>
+                        {{/ dont_touch }}
+
+                        {{^ dont_restrict }}
+                        <a class="pluginsadministration_action" href="?view=restrict&plugin_id={{ plugin_id }}"
+                           title="{{ restrict_title }}">
+                            <i class="icon-lock"></i> {{ restrict_icon_label }}
+                        </a>
+                        {{/ dont_restrict }}
+                    </td>
+                </tr>
+                {{/ plugins }}
+            </tbody>
+        </table>
+    </form>
+</fieldset>
