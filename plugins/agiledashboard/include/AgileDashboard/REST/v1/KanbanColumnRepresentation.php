@@ -20,6 +20,7 @@
 namespace Tuleap\AgileDashboard\REST\v1;
 
 use AgileDashboard_KanbanColumn;
+use Tuleap\REST\JsonCast;
 
 class KanbanColumnRepresentation {
 
@@ -52,10 +53,10 @@ class KanbanColumnRepresentation {
 
 
     public function build(AgileDashboard_KanbanColumn $column) {
-        $this->id      = $column->getId();
+        $this->id      = JsonCast::toInt($column->getId());
         $this->label   = $column->getLabel();
         $this->is_open = $column->isOpen();
         $this->color   = $column->getColor();
-        $this->limit   = $column->getLimit();
+        $this->limit   = JsonCast::toInt($column->getLimit());
     }
 }

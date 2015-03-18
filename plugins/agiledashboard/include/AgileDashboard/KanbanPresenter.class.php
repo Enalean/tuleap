@@ -35,11 +35,15 @@ class KanbanPresenter {
     /** @var int */
     public $tracker_id;
 
-    public function __construct(AgileDashboard_Kanban $kanban, $language) {
-        $this->language      = $language;
-        $this->kanban_name   = $kanban->getName();
-        $this->kanban_open   = 0;
-        $this->kanban_closed = 0;
-        $this->kanban_id     = $kanban->getId();
+    /** @var boolean */
+    public $user_is_kanban_admin;
+
+    public function __construct(AgileDashboard_Kanban $kanban, $user_is_kanban_admin, $language) {
+        $this->language             = $language;
+        $this->kanban_name          = $kanban->getName();
+        $this->kanban_open          = 0;
+        $this->kanban_closed        = 0;
+        $this->kanban_id            = $kanban->getId();
+        $this->user_is_kanban_admin = (int) $user_is_kanban_admin;
     }
 }

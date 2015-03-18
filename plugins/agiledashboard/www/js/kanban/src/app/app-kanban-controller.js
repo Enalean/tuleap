@@ -38,6 +38,7 @@
             resize_top: '',
             resize_width: ''
         };
+
         self.cardFieldIsSimpleValue       = CardFieldsService.cardFieldIsSimpleValue;
         self.cardFieldIsList              = CardFieldsService.cardFieldIsList;
         self.cardFieldIsText              = CardFieldsService.cardFieldIsText;
@@ -51,6 +52,8 @@
         self.getCardFieldCrossValue       = CardFieldsService.getCardFieldCrossValue;
         self.getCardFieldPermissionsValue = CardFieldsService.getCardFieldPermissionsValue;
         self.isColumnWipReached           = isColumnWipReached;
+        self.setWipLimitForColumn         = setWipLimitForColumn;
+        self.userIsAdmin                  = userIsAdmin;
 
         loadColumns();
         loadBacklog(limit, offset);
@@ -153,6 +156,8 @@
                     column.resize_left   = '';
                     column.resize_top    = '';
                     column.resize_width  = '';
+                    column.wip_in_edit   = false;
+                    column.saving_wip    = false;
                     loadColumnContent(column, limit, offset);
                 });
                 self.board.columns = kanban.columns;
@@ -197,6 +202,20 @@
 
         function isColumnWipReached(column) {
             return (column.limit && column.limit <= column.content.length);
+        }
+
+        function setWipLimitForColumn(column) {
+            column.saving_wip = true;
+            return KanbanService.setWipLimitForColumn(column.id, kanban.id, column.limit).then(function(data) {
+                column.wip_in_edit = false;
+                column.saving_wip  = false;
+            },
+                reload
+            );
+        }
+
+        function userIsAdmin() {
+            return SharedPropertiesService.getUserIsAdmin();
         }
     }
 })();

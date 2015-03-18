@@ -5,12 +5,15 @@
 
     function SharedPropertiesService() {
         var property = {
-            kanban: undefined
+            kanban: undefined,
+            user_is_admin: false
         };
 
         return {
             getKanban: getKanban,
-            setKanban: setKanban
+            setKanban: setKanban,
+            getUserIsAdmin: getUserIsAdmin,
+            setUserIsAdmin: setUserIsAdmin
         };
 
         function getKanban() {
@@ -19,6 +22,14 @@
 
         function setKanban(kanban) {
             property.kanban = kanban;
+        }
+
+        function getUserIsAdmin() {
+            return property.user_is_admin;
+        }
+
+        function setUserIsAdmin(user_is_admin) {
+            property.user_is_admin = user_is_admin;
         }
     }
 })();

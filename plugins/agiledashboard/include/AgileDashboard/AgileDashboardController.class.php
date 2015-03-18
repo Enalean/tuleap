@@ -37,22 +37,27 @@ class AgileDashboard_Controller extends MVC2_PluginController {
     /** @var TrackerFactory */
     private $tracker_factory;
 
+    /** @var AgileDashboard_PermissionsManager */
+    private $permissions_manager;
+
     public function __construct(
         Codendi_Request $request,
         PlanningFactory $planning_factory,
         AgileDashboard_KanbanManager $kanban_manager,
         AgileDashboard_KanbanFactory $kanban_factory,
         AgileDashboard_ConfigurationManager $config_manager,
-        TrackerFactory $tracker_factory
+        TrackerFactory $tracker_factory,
+        AgileDashboard_PermissionsManager $permissions_manager
     ) {
         parent::__construct('agiledashboard', $request);
 
-        $this->group_id          = (int) $this->request->get('group_id');
-        $this->planning_factory  = $planning_factory;
-        $this->kanban_manager    = $kanban_manager;
-        $this->kanban_factory    = $kanban_factory;
-        $this->config_manager    = $config_manager;
-        $this->tracker_factory   = $tracker_factory;
+        $this->group_id            = (int) $this->request->get('group_id');
+        $this->planning_factory    = $planning_factory;
+        $this->kanban_manager      = $kanban_manager;
+        $this->kanban_factory      = $kanban_factory;
+        $this->config_manager      = $config_manager;
+        $this->tracker_factory     = $tracker_factory;
+        $this->permissions_manager = $permissions_manager;
     }
 
     /**
@@ -339,13 +344,20 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         $user      = $this->request->getCurrentUser();
 
         try {
-            $kanban = $this->kanban_factory->getKanban($user, $kanban_id);
+            $kanban  = $this->kanban_factory->getKanban($user, $kanban_id);
+            $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
+
+            $user_is_kanban_admin = $this->permissions_manager->userCanAdministrate(
+                $user,
+                $tracker->getGroupId()
+            );
 
             return $this->renderToString(
                 'kanban',
                 new KanbanPresenter(
                     $kanban,
-                    $this->request->getCurrentUser()->getShortLocale()
+                    $user_is_kanban_admin,
+                    $user->getShortLocale()
                 )
             );
         } catch (AgileDashboard_KanbanNotFoundException $exception) {

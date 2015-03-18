@@ -8,6 +8,10 @@ msgstr ""
 msgid "An error occured while saving one of your last action. We're afraid that you will have to reload the page in order to bring you back to a consistent state."
 msgstr ""
 
+#: src/app/kanban.tpl.html
+msgid "Define max:"
+msgstr ""
+
 #: src/app/error.tpl.html
 msgid "OK, reload the page"
 msgstr ""

@@ -21,7 +21,8 @@
             reorderArchive: reorderArchive,
             moveInBacklog: moveInBacklog,
             moveInArchive: moveInArchive,
-            moveInColumn: moveInColumn
+            moveInColumn: moveInColumn,
+            setWipLimitForColumn: setWipLimitForColumn
         };
 
         function getKanban(id) {
@@ -186,6 +187,19 @@
                 direction   : compared_to.direction,
                 compared_to : compared_to.item_id
             };
+        }
+
+        function setWipLimitForColumn(column_id, kanban_id, wip_limit) {
+            wip_limit = wip_limit || 0;
+            return rest.one('kanban_columns', column_id)
+                .patch(
+                    {
+                        wip_limit: wip_limit
+                    },
+                    {
+                        kanban_id: kanban_id
+                    }
+                 );
         }
     }
 })();

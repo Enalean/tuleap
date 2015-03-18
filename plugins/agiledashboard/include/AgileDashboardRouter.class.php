@@ -319,7 +319,8 @@ class AgileDashboardRouter {
             $this->kanban_manager,
             $this->kanban_factory,
             $this->config_manager,
-            TrackerFactory::instance()
+            TrackerFactory::instance(),
+            new AgileDashboard_PermissionsManager()
         );
     }
 

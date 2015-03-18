@@ -90,6 +90,35 @@
             -moz-box-sizing: border-box;
             box-sizing: border-box;
 
+            > .wip-limit-form {
+                left: auto;
+                right: 4px;
+                top: 34px;
+
+                &.in {
+                    display: block;
+                }
+
+                > .arrow {
+                    right: 5px;
+                    left: auto;
+                }
+
+                > .popover-content {
+                    text-align: center;
+                    color: #333333;
+
+                    > .input-append {
+                        display: inline-block;
+                        margin-bottom: 0px;
+
+                        > input {
+                            width: 40px;
+                        }
+                    }
+                }
+            }
+
             > .wip-limit {
                 float: right;
                 color: white;
@@ -101,7 +130,11 @@
                 font-size: 0.9em;
                 background: #666;
 
-                > i {
+                &.editable {
+                    cursor: pointer;
+                }
+
+                > span > i {
                     font-size: 0.85em;
                     margin: 0 3px 0 0;
                 }
@@ -207,6 +240,7 @@
                 > .column-label,
                 > .wip-limit,
                 > .warning-wip,
+                > .wip-limit-form,
                 > .wip-count {
                     display: none;
                 }
