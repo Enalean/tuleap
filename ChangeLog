@@ -14,6 +14,7 @@ Version 7.12 (Not Released Yet)
 	* FlamingParrot: 1.70
 
 	== Development ==
+	* story #7702: Add dependency with Restler 3.0.0-RC6
 	* story #7701: Add BasicAuth method if no token/cookie provided
 	* story #7890: new tuleap home page- Editable headline
 	* story #7709: Site admin can restrict access to a mirror
