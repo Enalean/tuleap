@@ -1,3 +1,6 @@
+Version 1.172 - Tuleap 7.12
+    * Fix Bower dependencies in Kanban
+
 Version 1.171 - Tuleap 7.12
     * story #7580 - add PATCH /kanban_columns/:id route
 
