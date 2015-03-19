@@ -411,24 +411,25 @@ class IMViews extends Views {
 			$array_grp_only = $array_grp;
 		}
 		
-        $pm = ProjectManager::instance();
+        $pm       = ProjectManager::instance();
+        $purifier = Codendi_HTMLPurifier::instance();
         echo'<fieldset>';
 		echo'<legend class="im_synchronize">'.$GLOBALS["Language"]->getText('plugin_im_admin','projects_to_sync').'</legend>';
 		if ( $nb_grp != 0 || $nb_muc ) {
 			//************form
 			if (sizeof($array_muc_and_grp)) {
 				foreach ($array_muc_and_grp as $key => $val) {
-					$project = $pm->getProject($val);
-			        $unix_group_name = strtolower($project->getUnixName());
-			        $group_name=$project->getPublicName();
-			        $group_description = $project->getDescription();
-			        $grp = $pm->getProject($val); // $val = group_id;
-			        $group_id = $grp->getID();
+					$project     = $pm->getProject($val);
+			        $unix_group_name     = $purifier->purify(strtolower($project->getUnixName()));
+			        $group_name          = $purifier->purify($project->getPublicName());
+			        $group_description   = $purifier->purify($project->getDescription());
+			        $grp                 = $pm->getProject($val); // $val = group_id;
+			        $group_id            = $grp->getID();
 			        $project_members_ids = $grp->getMembersId();
 			        foreach ($project_members_ids as $key => $id) {
 			        	$group_Owner_object = UserManager::instance()->getUserById($id);
 			        	if ($group_Owner_object->isMember($val,'A')) {
-			        		$group_Owner_name =trim($group_Owner_object->getName());
+                                            $group_Owner_name = $purifier->purify(trim($group_Owner_object->getName()));
 			        	}
 			        }
 			        
@@ -462,17 +463,17 @@ class IMViews extends Views {
 			if (sizeof($array_grp_only)) {
 				$pm = ProjectManager::instance();
                 foreach ($array_grp_only as $key => $val) {
-					$project = $pm->getProject($val);
-			        $unix_group_name = strtolower($project->getUnixName());
-			        $group_name = $project->getPublicName();
-			        $group_description = $project->getDescription();
-			        $grp = $pm->getProject($val); // $val = group_id;
-			        $group_id = $grp->getID();
+					$project     = $pm->getProject($val);
+			        $unix_group_name     = $purifier->purify(strtolower($project->getUnixName()));
+			        $group_name          = $purifier->purify($project->getPublicName());
+			        $group_description   = $purifier->purify($project->getDescription());
+			        $grp                 = $pm->getProject($val); // $val = group_id;
+			        $group_id            = $grp->getID();
 			        $project_members_ids = $grp->getMembersId();
 			        foreach ($project_members_ids as $key => $id) {
 			        	$group_Owner_object = UserManager::instance()->getUserById($id);
 			        	if ($group_Owner_object->isMember($val,'A')) {
-			        		$group_Owner_name =$group_Owner_object->getName();
+                                            $group_Owner_name = $purifier->purify($group_Owner_object->getName());
 			        	}
 			        }
 			        
@@ -506,17 +507,17 @@ class IMViews extends Views {
 			if (sizeof($array_muc_only)) {
 				$pm = ProjectManager::instance();
                 foreach ($array_muc_only as $key => $val) {
-					$project = $pm->getProject($val);
-			        $unix_group_name = strtolower($project->getUnixName());
-			        $group_name = $project->getPublicName();
-			        $group_description = $project->getDescription();
-			        $grp = $pm->getProject($val); // $val = group_id;
-			        $group_id = $grp->getID();
+					$project     = $pm->getProject($val);
+			        $unix_group_name     = $purifier->purify(strtolower($project->getUnixName()));
+			        $group_name          = $purifier->purify($project->getPublicName());
+			        $group_description   = $purifier->purify($project->getDescription());
+			        $grp                 = $pm->getProject($val); // $val = group_id;
+			        $group_id            = $grp->getID();
 			        $project_members_ids = $grp->getMembersId();
 			        foreach ($project_members_ids as $key => $id){
 			        	$group_Owner_object = UserManager::instance()->getUserById($id);
 			        	if ($group_Owner_object->isMember($val,'A')) {
-			        		$group_Owner_name = $group_Owner_object->getName();
+                                            $group_Owner_name = $purifier->purify($group_Owner_object->getName());
 			        	}
 			        }
 			        //field label
@@ -558,5 +559,3 @@ class IMViews extends Views {
 	}
 
 }
-
-?>
