@@ -34,7 +34,7 @@ class IMDao extends DataAccessObject {
      * search groups no synchronized with muc room
      * @DataAccesResult
      */
-    function & search_group_without_muc() {
+    function search_group_without_muc() {
 		
 		$sql_muc="SELECT cg.group_id,LOWER(cg.unix_group_name) AS unix_group_name, cg.group_name,cg.short_description
 							FROM ". $this->codendi_db_name .".groups AS cg
@@ -86,7 +86,7 @@ class IMDao extends DataAccessObject {
      * search groups no synchronized with muc room
      * @@return DataAccesResult query result
      */
-	function & search_group_without_shared_group() {
+	function search_group_without_shared_group() {
 		
 		$sql='SELECT cg.group_id
 				FROM '. $this->codendi_db_name .'.groups AS cg 
@@ -96,7 +96,7 @@ class IMDao extends DataAccessObject {
 				WHERE og.groupName IS NULL
 	  				AND cg.status = \'A\'
 	  			ORDER BY group_name ASC';
-				
+
 		return $this->retrieve($sql);
 	}
 	

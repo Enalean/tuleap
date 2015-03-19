@@ -18,7 +18,7 @@ class PluginIMMucLeftTheRoomLogDao extends DataAccessObject {
     * Searches 'left the room' event logs by muc room name 
     * @return DataAccessResult
     */
-    function & searchByMucName($muc_name) {
+    function searchByMucName($muc_name) {
         $sql = sprintf("SELECT p.leftDate, p.nickname  
                         FROM ofConParticipant p, ofConversation c
                         WHERE SUBSTRING_INDEX(c.room, '@', 1) = %s AND
@@ -32,7 +32,7 @@ class PluginIMMucLeftTheRoomLogDao extends DataAccessObject {
     * Searches 'left the room' event logs by muc room name before a date 
     * @return DataAccessResult
     */
-    function & searchByMucNameBeforeDate($muc_name, $end_date) {
+    function searchByMucNameBeforeDate($muc_name, $end_date) {
         $sql = sprintf("SELECT p.leftDate, p.nickname  
                         FROM ofConParticipant p, ofConversation c
                         WHERE SUBSTRING_INDEX(c.room, '@', 1) = %s AND
@@ -49,7 +49,7 @@ class PluginIMMucLeftTheRoomLogDao extends DataAccessObject {
     * Searches 'left the room' event logs by muc room name after a date 
     * @return DataAccessResult
     */
-    function & searchByMucNameAfterDate($muc_name, $start_date) {
+    function searchByMucNameAfterDate($muc_name, $start_date) {
         $sql = sprintf("SELECT p.leftDate, p.nickname  
                         FROM ofConParticipant p, ofConversation c
                         WHERE SUBSTRING_INDEX(c.room, '@', 1) = %s AND
@@ -66,7 +66,7 @@ class PluginIMMucLeftTheRoomLogDao extends DataAccessObject {
     * Searches 'left the room' event logs by muc room name between two dates 
     * @return DataAccessResult
     */
-    function & searchByMucNameBetweenDates($muc_name, $start_date, $end_date) {
+    function searchByMucNameBetweenDates($muc_name, $start_date, $end_date) {
         $sql = sprintf("SELECT p.leftDate, p.nickname  
                         FROM ofConParticipant p, ofConversation c
                         WHERE SUBSTRING_INDEX(c.room, '@', 1) = %s AND
