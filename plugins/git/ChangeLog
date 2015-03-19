@@ -1,3 +1,6 @@
+Version 4.20 - Tuleap 7.12
+    * story #7701: make all git api resources public
+
 Version 4.19 - Tuleap 7.12
     * story #7709: refactor plugin restriction by project
 
