@@ -35,9 +35,10 @@ class BasicAuthentication implements iAuthenticate {
             if ($current_user->isLoggedIn()) {
                 return true;
             }
+
+            header('WWW-Authenticate: Basic realm="' . self::REALM . '"');
+            throw new RestException(401, 'Basic Authentication Required');
         }
-        header('WWW-Authenticate: Basic realm="' . self::REALM . '"');
-        throw new RestException(401, 'Basic Authentication Required');
     }
 
     /**

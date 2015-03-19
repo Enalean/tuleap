@@ -26,6 +26,7 @@ use Tuleap\REST\v1\OrderRepresentationBase;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\Header;
 use Tuleap\REST\ResourcesInjector;
+use Tuleap\REST\AuthenticatedResource;
 use ProjectManager;
 use UserManager;
 use PFUser;
@@ -41,7 +42,7 @@ use Luracast\Restler\RestException;
  * Wrapper for project related REST methods
  */
 
-class ProjectResource {
+class ProjectResource extends AuthenticatedResource {
 
     const MAX_LIMIT = 50;
 
@@ -58,6 +59,8 @@ class ProjectResource {
         $this->user_manager    = UserManager::instance();
         $this->project_manager = ProjectManager::instance();
         $this->ugroup_manager  = new UGroupManager();
+
+        parent::__construct();
     }
 
     /**
@@ -66,11 +69,10 @@ class ProjectResource {
      * Get the projects list
      *
      * @url GET
+     * @access hybrid
      *
      * @param int $limit  Number of elements displayed per page
      * @param int $offset Position of the first element to display
-     *
-     * @access protected
      *
      * @throws 403
      * @throws 404
@@ -79,15 +81,13 @@ class ProjectResource {
      * @return array {@type Tuleap\Project\REST\ProjectRepresentation}
      */
     public function get($limit = 10, $offset = 0) {
-        $user = $this->user_manager->getCurrentUser();
+        $this->checkAcess();
 
-        if (! $user) {
-             throw new RestException(403, 'You don\'t have the permissions');
-        }
         if (! $this->limitValueIsAcceptable($limit)) {
              throw new RestException(406, 'Maximum value for limit exceeded');
         }
 
+        $user                    = $this->user_manager->getCurrentUser();
         $project_representations = array();
         $projects                = $this->getMyAndPublicProjects($user, $offset, $limit);
 
@@ -136,10 +136,10 @@ class ProjectResource {
      * Get the definition of a given project
      *
      * @url GET {id}
+     * @access hybrid
      *
      * @param int $id Id of the project
      *
-     * @access protected
      *
      * @throws 403
      * @throws 404
@@ -147,6 +147,8 @@ class ProjectResource {
      * @return Tuleap\Project\REST\ProjectRepresentation
      */
     public function getId($id) {
+        $this->checkAcess();
+
         $this->sendAllowHeadersForProject();
         return $this->getProjectRepresentation($this->getProjectForUser($id));
     }
@@ -219,6 +221,7 @@ class ProjectResource {
      * Get the plannings of a given project
      *
      * @url GET {id}/plannings
+     * @access hybrid
      *
      * @param int $id     Id of the project
      * @param int $limit  Number of elements displayed per page {@from path}
@@ -226,7 +229,9 @@ class ProjectResource {
      *
      * @return array {@type Tuleap\REST\v1\PlanningRepresentationBase}
      */
-    protected function getPlannings($id, $limit = 10, $offset = 0) {
+    public function getPlannings($id, $limit = 10, $offset = 0) {
+        $this->checkAcess();
+
         $this->checkAgileEndpointsAvailable();
 
         $plannings = $this->plannings($id, $limit, $offset, Event::REST_GET_PROJECT_PLANNINGS);
@@ -269,6 +274,7 @@ class ProjectResource {
      * Get the top milestones of a given project
      *
      * @url GET {id}/milestones
+     * @access hybrid
      *
      * @param int    $id     Id of the project
      * @param int    $limit  Number of elements displayed per page {@from path}
@@ -277,10 +283,17 @@ class ProjectResource {
      *
      * @return array {@type Tuleap\REST\v1\MilestoneRepresentationBase}
      */
-    protected function getMilestones($id, $limit = 10, $offset = 0, $order = 'asc') {
+    public function getMilestones($id, $limit = 10, $offset = 0, $order = 'asc') {
+        $this->checkAcess();
+
         $this->checkAgileEndpointsAvailable();
 
+        try {
         $milestones = $this->milestones($id, $limit, $offset, $order, Event::REST_GET_PROJECT_MILESTONES);
+        } catch (\Planning_NoPlanningsException $e) {
+            $milestones = array();
+        }
+
         $this->sendAllowHeadersForProject();
 
         return $milestones;
@@ -321,6 +334,7 @@ class ProjectResource {
      * Get the trackers of a given project
      *
      * @url GET {id}/trackers
+     * @access hybrid
      *
      * @param int $id     Id of the project
      * @param int $limit  Number of elements displayed per page {@from path}
@@ -328,7 +342,9 @@ class ProjectResource {
      *
      * @return array {@type Tuleap\Tracker\REST\TrackerRepresentation}
      */
-    protected function getTrackers($id, $limit = 10, $offset = 0) {
+    public function getTrackers($id, $limit = 10, $offset = 0) {
+        $this->checkAcess();
+
         $trackers = $this->getRepresentationsForTrackers($id, $limit, $offset, Event::REST_GET_PROJECT_TRACKERS);
         $this->sendAllowHeadersForProject();
 
@@ -368,6 +384,7 @@ class ProjectResource {
      * Get the backlog items that can be planned in a top-milestone
      *
      * @url GET {id}/backlog
+     * @access hybrid
      *
      * @param int $id     Id of the project
      * @param int $limit  Number of elements displayed per page {@from path}
@@ -377,12 +394,18 @@ class ProjectResource {
      *
      * @throws 406
      */
-    protected function getBacklog($id, $limit = 10, $offset = 0) {
+    public function getBacklog($id, $limit = 10, $offset = 0) {
+        $this->checkAcess();
+
         $this->checkAgileEndpointsAvailable();
 
+        try {
         $backlog_items = $this->backlogItems($id, $limit, $offset, Event::REST_GET_PROJECT_BACKLOG);
-        $this->sendAllowHeadersForBacklog();
+        } catch (\Planning_NoPlanningsException $e) {
+            $backlog_items = array();
+        }
 
+        $this->sendAllowHeadersForBacklog();
         return $backlog_items;
     }
 
@@ -401,6 +424,7 @@ class ProjectResource {
      *
      * Order all backlog items in top backlog
      *
+     * @access hybrid
      * @url PUT {id}/backlog
      *
      * @param int $id    Id of the project
@@ -408,7 +432,9 @@ class ProjectResource {
      *
      * @throws 500
      */
-    protected function putBacklog($id, array $ids) {
+    public function putBacklog($id, array $ids) {
+        $this->checkAcess();
+
         $this->checkAgileEndpointsAvailable();
 
         $project = $this->getProjectForUser($id);
@@ -460,6 +486,7 @@ class ProjectResource {
      * Will remove element id 34 from milestone 56 backlog
      *
      * @url PATCH {id}/backlog
+     * @access hybrid
      *
      * @param int                                     $id    Id of the Backlog Item
      * @param \Tuleap\REST\v1\OrderRepresentationBase $order Order of the children {@from body}
@@ -469,7 +496,9 @@ class ProjectResource {
      * @throws 409
      * @throws 400
      */
-    protected function patchBacklog($id, OrderRepresentationBase $order, array $add = null) {
+    public function patchBacklog($id, OrderRepresentationBase $order, array $add = null) {
+        $this->checkAcess();
+
         $this->checkAgileEndpointsAvailable();
 
         $order->checkFormat($order);
@@ -656,6 +685,7 @@ class ProjectResource {
      * <br>
      *
      * @url GET {id}/git
+     * @access hybrid
      *
      * @param int $id        Id of the project
      * @param int $limit     Number of elements displayed per page {@from path}
@@ -666,7 +696,9 @@ class ProjectResource {
      *
      * @throws 404
      */
-    protected function getGit($id, $limit = 10, $offset = 0, $fields = GitRepositoryRepresentationBase::FIELDS_BASIC) {
+    public function getGit($id, $limit = 10, $offset = 0, $fields = GitRepositoryRepresentationBase::FIELDS_BASIC) {
+        $this->checkAcess();
+
         $project                = $this->getProjectForUser($id);
         $result                 = array();
         $total_git_repositories = 0;

@@ -26,10 +26,10 @@ require_once dirname(__FILE__).'/../lib/autoload.php';
  */
 class AuthenticationTest extends RestBase {
 
-    public function testGETIsNotReadableByAnonymous() {
+    public function testRestrictedGETResourceIsNotReadableByAnonymous() {
         $exception_thrown = false;
         try {
-            $this->client->get('projects')->send();
+            $this->client->get('projects/'.TestDataBuilder::PROJECT_PUBLIC_ID.'/user_groups')->send();
         } catch(Guzzle\Http\Exception\ClientErrorResponseException $e) {
             $this->assertEquals(401, $e->getResponse()->getStatusCode());
             $exception_thrown = true;
@@ -41,5 +41,43 @@ class AuthenticationTest extends RestBase {
         $response = $this->client->options('projects')->send();
 
         $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    public function testPublicGETResourceIsReadableByAnonymous() {
+        $response = $this->client->get('projects')->send();
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    public function testGETWithBasicAuthAndWrongCredentialsIsTreatedLikeAnonomousUser() {
+        $response = $this->getUnauthorizedBasicAuthResponse($this->client->get('projects'));
+
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    public function testGETWithTokenAndWrongCredentialsIsTreatedLikeAnonomousUser() {
+        $response = $this->getUnauthorizedTokenResponse($this->client->get('projects'));
+
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    private function getUnauthorizedBasicAuthResponse($request) {
+        return $this->getResponseByBasicAuth(
+            TestDataBuilder::TEST_USER_1_NAME,
+            'wrong_password',
+            $request
+        );
+    }
+
+    private function getUnauthorizedTokenResponse($request) {
+        $token = new Rest_Token(
+            TestDataBuilder::TEST_USER_1_ID,
+            'wrong_token'
+        );
+
+        return $this->getResponseByToken(
+            $token,
+            $request
+        );
     }
 }
