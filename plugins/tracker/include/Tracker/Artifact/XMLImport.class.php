@@ -95,7 +95,7 @@ class Tracker_Artifact_XMLImport {
     }
 
     public function importFromXML(Tracker $tracker, SimpleXMLElement $xml_element, $extraction_path) {
-        $this->rng_validator->validate($xml_element);
+        $this->rng_validator->validate($xml_element, realpath(dirname(TRACKER_BASE_DIR) . '/www/resources/artifacts.rng'));
         foreach ($xml_element->artifact as $artifact) {
             $this->importOneArtifactFromXML($tracker, $artifact, $extraction_path);
         }

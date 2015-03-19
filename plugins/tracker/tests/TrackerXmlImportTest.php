@@ -19,9 +19,13 @@
  */
 
 require_once 'bootstrap.php';
-require_once 'common/XmlValidator/XmlValidator.class.php';
 
 class TrackerXmlImportTestInstance extends TrackerXmlImport {
+
+    public function getInstanceFromXML($xml, $groupId, $name, $description, $itemname) {
+        return parent::getInstanceFromXML($xml, $groupId, $name, $description, $itemname);
+    }
+
     public function getAllXmlTrackers($xml) {
         return parent::getAllXmlTrackers($xml);
     }
@@ -38,27 +42,31 @@ class TrackerXmlImportTest extends TuleapTestCase {
      */
     private $tracker_factory;
 
+    private $group_id = 145;
+
+    private $tracker_xml_importer;
+
     public function setUp() {
         parent::setUp();
 
-    $this->xml_input =  new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+        $this->xml_input =  new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
             <project>
               <empty_section />
               <trackers>
                   <tracker id="T101" parent_id="0" instantiate_for_new_projects="1">
-                    <name>t10</name>
-                    <item_name>t11</item_name>
-                    <description>t12</description>
+                    <name>name10</name>
+                    <item_name>item11</item_name>
+                    <description>desc12</description>
                   </tracker>
                   <tracker id="T102" parent_id="T101" instantiate_for_new_projects="1">
-                    <name>t20</name>
-                    <item_name>t21</item_name>
-                    <description>t22</description>
+                    <name>name20</name>
+                    <item_name>item21</item_name>
+                    <description>desc22</description>
                   </tracker>
                   <tracker id="T103" parent_id="T102" instantiate_for_new_projects="1">
-                    <name>t30</name>
-                    <item_name>t31</item_name>
-                    <description>t32</description>
+                    <name>name30</name>
+                    <item_name>item31</item_name>
+                    <description>desc32</description>
                   </tracker>
               </trackers>
               <cardwall/>
@@ -69,25 +77,25 @@ class TrackerXmlImportTest extends TuleapTestCase {
 
         $this->xml_tracker1 = new SimpleXMLElement(
                  '<tracker id="T101" parent_id="0" instantiate_for_new_projects="1">
-                    <name>t10</name>
-                    <item_name>t11</item_name>
-                    <description>t12</description>
+                    <name>name10</name>
+                    <item_name>item11</item_name>
+                    <description>desc12</description>
                   </tracker>'
         );
 
         $this->xml_tracker2 = new SimpleXMLElement(
                  '<tracker id="T102" parent_id="T101" instantiate_for_new_projects="1">
-                    <name>t20</name>
-                    <item_name>t21</item_name>
-                    <description>t22</description>
+                    <name>name20</name>
+                    <item_name>item21</item_name>
+                    <description>desc22</description>
                   </tracker>'
         );
 
         $this->xml_tracker3 = new SimpleXMLElement(
                  '<tracker id="T103" parent_id="T102" instantiate_for_new_projects="1">
-                    <name>t30</name>
-                    <item_name>t31</item_name>
-                    <description>t32</description>
+                    <name>name30</name>
+                    <item_name>item31</item_name>
+                    <description>desc32</description>
                   </tracker>'
         );
 
@@ -103,9 +111,6 @@ class TrackerXmlImportTest extends TuleapTestCase {
         $this->tracker3 = aTracker()->withId(666)->build();
 
         $this->tracker_factory = mock('TrackerFactory');
-        stub($this->tracker_factory)->createFromXml($this->xml_tracker1, $this->group_id, 't10', 't11', 't12')->returns($this->tracker1);
-        stub($this->tracker_factory)->createFromXml($this->xml_tracker2, $this->group_id, 't20', 't21', 't22')->returns($this->tracker2);
-        stub($this->tracker_factory)->createFromXml($this->xml_tracker3, $this->group_id, 't30', 't31', 't32')->returns($this->tracker3);
 
         $this->event_manager = mock('EventManager');
 
@@ -113,21 +118,31 @@ class TrackerXmlImportTest extends TuleapTestCase {
 
         $this->xml_validator = stub('XmlValidator')->nodeIsValid()->returns(true);
 
-        $this->tracker_xml_importer = new TrackerXmlImportTestInstance($this->group_id, $this->tracker_factory, $this->event_manager, $this->hierarchy_dao, $this->xml_validator);
+        $this->tracker_xml_importer = partial_mock(
+            'TrackerXmlImportTestInstance',
+            array(
+                'createFromXML'
+            ),
+            array(
+                $this->tracker_factory,
+                $this->event_manager,
+                $this->hierarchy_dao,
+                $this->xml_validator,
+                mock('Tracker_CannedResponseFactory'),
+                mock('Tracker_FormElementFactory'),
+                mock('Tracker_SemanticFactory'),
+                mock('Tracker_RuleFactory'),
+                mock('Tracker_ReportFactory'),
+                mock('WorkflowFactory'),
+            )
+        );
 
         $GLOBALS['Response'] = new MockResponse();
+    }
 
-        $created_tracker1 = mock('Tracker');
-        $created_tracker2 = mock('Tracker');
-        $created_tracker3 = mock('Tracker');
-
-        stub($created_tracker1)->getId()->returns(444);
-        stub($created_tracker2)->getId()->returns(555);
-        stub($created_tracker3)->getId()->returns(666);
-
-        $this->tracker_factory->setReturnValueAt(0, 'createFromXML', $created_tracker1);
-        $this->tracker_factory->setReturnValueAt(1, 'createFromXML', $created_tracker2);
-        $this->tracker_factory->setReturnValueAt(2, 'createFromXML', $created_tracker3);
+    public function tearDown() {
+        parent::tearDown();
+        unset($GLOBALS['Response']);
     }
 
     public function itReturnsEachSimpleXmlTrackerFromTheXmlInput() {
@@ -139,34 +154,51 @@ class TrackerXmlImportTest extends TuleapTestCase {
     }
 
     public function itCreatesAllTrackersAndStoresTrackersHierarchy() {
-        $this->tracker_factory->expectCallCount('createFromXML', 3);
-        $this->hierarchy_dao->expectCallCount('updateChildren',2);
+        stub($this->tracker_xml_importer)->createFromXML($this->xml_tracker1, $this->group_id, 'name10', 'desc12', 'item11')->returns($this->tracker1);
+        stub($this->tracker_xml_importer)->createFromXML($this->xml_tracker2, $this->group_id, 'name20', 'desc22', 'item21')->returns($this->tracker2);
+        stub($this->tracker_xml_importer)->createFromXML($this->xml_tracker3, $this->group_id, 'name30', 'desc32', 'item31')->returns($this->tracker3);
 
-        $result = $this->tracker_xml_importer->import($this->xml_input);
+        expect($this->tracker_xml_importer)->createFromXML()->count(3);
+        expect($this->hierarchy_dao)->updateChildren(2);
+
+        $result = $this->tracker_xml_importer->import($this->group_id, $this->xml_input);
 
         $this->assertEqual($result, $this->mapping);
     }
 
     public function itRaisesAnExceptionIfATrackerCannotBeCreatedAndDoesNotContinue() {
-        $tracker_factory = mock('TrackerFactory');
-        stub($tracker_factory)->createFromXml()->returns(null);
-        $tracker_xml_importer = new TrackerXmlImportTestInstance($this->group_id, $tracker_factory, $this->event_manager, $this->hierarchy_dao, $this->xml_validator);
+        stub($this->tracker_xml_importer)->createFromXML()->returns(null);
 
         $this->expectException();
-        $tracker_factory->expectCallCount('createFromXML', 1);
-        $tracker_xml_importer->import($this->xml_input);
+        expect($this->tracker_xml_importer)->createFromXML()->count(1);
+        $this->tracker_xml_importer->import($this->group_id, $this->xml_input);
     }
 
     public function itRaisesAnExceptionTheXmlDoesNotMatchTheRNG() {
         $xml_validator = stub('XmlValidator')->nodeIsValid()->returns(false);
         stub($xml_validator)->getValidationErrors()->returns(array());
-        $tracker_xml_importer = new TrackerXmlImportTestInstance($this->group_id, $this->tracker_factory, $this->event_manager, $this->hierarchy_dao, $xml_validator);
+        $tracker_xml_importer = new TrackerXmlImport(
+            $this->tracker_factory,
+            $this->event_manager,
+            $this->hierarchy_dao,
+            $xml_validator,
+            mock('Tracker_CannedResponseFactory'),
+            mock('Tracker_FormElementFactory'),
+            mock('Tracker_SemanticFactory'),
+            mock('Tracker_RuleFactory'),
+            mock('Tracker_ReportFactory'),
+            mock('WorkflowFactory')
+        );
 
         $this->expectException('trackerFromXmlInputNotWellFormedException');
-        $tracker_xml_importer->import($this->xml_input);
+        $tracker_xml_importer->import($this->group_id, $this->xml_input);
     }
 
     public function itThrowsAnEventIfAllTrackersAreCreated() {
+        stub($this->tracker_xml_importer)->createFromXML($this->xml_tracker1, $this->group_id, 'name10', 'desc12', 'item11')->returns($this->tracker1);
+        stub($this->tracker_xml_importer)->createFromXML($this->xml_tracker2, $this->group_id, 'name20', 'desc22', 'item21')->returns($this->tracker2);
+        stub($this->tracker_xml_importer)->createFromXML($this->xml_tracker3, $this->group_id, 'name30', 'desc32', 'item31')->returns($this->tracker3);
+
         expect($this->event_manager)->processEvent(
             Event::IMPORT_XML_PROJECT_TRACKER_DONE,
             array(
@@ -176,8 +208,8 @@ class TrackerXmlImportTest extends TuleapTestCase {
             )
         )->once();
 
-        $this->tracker_factory->expectCallCount('createFromXML', 3);
-        $this->tracker_xml_importer->import($this->xml_input);
+        expect($this->tracker_xml_importer)->createFromXML()->count(3);
+        $this->tracker_xml_importer->import($this->group_id, $this->xml_input);
     }
 
     public function itBuildsTrackersHierarchy() {
@@ -210,4 +242,103 @@ class TrackerXmlImportTest extends TuleapTestCase {
         $this->assertIdentical($expected_hierarchy, $hierarchy);
     }
 }
-?>
+
+class TrackerXmlImport_InstanceTest extends TuleapTestCase {
+
+    private $tracker_xml_importer;
+
+    public function setUp() {
+        parent::setUp();
+
+        $tracker_factory = partial_mock('TrackerFactory', array());
+
+        $this->tracker_xml_importer = new TrackerXmlImportTestInstance(
+            $tracker_factory,
+            mock('EventManager'),
+            mock('Tracker_Hierarchy_Dao'),
+            mock('XmlValidator'),
+            mock('Tracker_CannedResponseFactory'),
+            mock('Tracker_FormElementFactory'),
+            mock('Tracker_SemanticFactory'),
+            mock('Tracker_RuleFactory'),
+            mock('Tracker_ReportFactory'),
+            mock('WorkflowFactory')
+        );
+    }
+
+    public function testImport() {
+        $xml = simplexml_load_file(dirname(__FILE__) . '/_fixtures/TestTracker-1.xml');
+        $tracker = $this->tracker_xml_importer->getInstanceFromXML($xml, 0, '', '', '');
+
+        //testing general properties
+        $this->assertEqual($tracker->submit_instructions, 'some submit instructions');
+        $this->assertEqual($tracker->browse_instructions, 'and some for browsing');
+
+        $this->assertEqual($tracker->getColor(), 'inca_gray');
+
+        //testing default values
+        $this->assertEqual($tracker->allow_copy, 0);
+        $this->assertEqual($tracker->instantiate_for_new_projects, 1);
+        $this->assertEqual($tracker->log_priority_changes, 0);
+        $this->assertEqual($tracker->stop_notification, 0);
+    }
+}
+
+class TrackerFactoryInstanceFromXMLTest extends TuleapTestCase {
+
+    public function testGetInstanceFromXmlGeneratesRulesFromDependencies() {
+
+        $data = <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<tracker />
+XML;
+        $xml = new SimpleXMLElement($data);
+        $xml->addChild('cannedResponses');
+        $xml->addChild('formElements');
+
+        $groupId     = 15;
+        $name        = 'the tracker';
+        $description = 'tracks stuff';
+        $itemname    = 'the item';
+
+        $rule_factory = mock('Tracker_RuleFactory');
+        $tracker      = mock('Tracker');
+
+        $tracker_xml_importer = new TrackerXmlImportTestInstance(
+            stub('TrackerFactory')->getInstanceFromRow()->returns($tracker),
+            mock('EventManager'),
+            mock('Tracker_Hierarchy_Dao'),
+            mock('XmlValidator'),
+            mock('Tracker_CannedResponseFactory'),
+            mock('Tracker_FormElementFactory'),
+            mock('Tracker_SemanticFactory'),
+            $rule_factory,
+            mock('Tracker_ReportFactory'),
+            mock('WorkflowFactory')
+        );
+
+        //create data passed
+        $dependencies = $xml->addChild('dependencies');
+        $rule = $dependencies->addChild('rule');
+        $rule->addChild('source_field')->addAttribute('REF', 'F1');
+        $rule->addChild('target_field')->addAttribute('REF', 'F2');
+        $rule->addChild('source_value')->addAttribute('REF', 'F3');
+        $rule->addChild('target_value')->addAttribute('REF', 'F4');
+
+        //create data expected
+        $expected_xml = new SimpleXMLElement($data);
+        $expected_rules = $expected_xml->addChild('rules');
+        $list_rules = $expected_rules->addChild('list_rules');
+        $expected_rule = $list_rules->addChild('rule');
+        $expected_rule->addChild('source_field')->addAttribute('REF', 'F1');
+        $expected_rule->addChild('target_field')->addAttribute('REF', 'F2');
+        $expected_rule->addChild('source_value')->addAttribute('REF', 'F3');
+        $expected_rule->addChild('target_value')->addAttribute('REF', 'F4');
+
+        //this is where we check the data has been correctly transformed
+        stub($rule_factory)->getInstanceFromXML($expected_rules, array(), $tracker)->once();
+
+        $tracker_xml_importer->getInstanceFromXML($xml,$groupId, $name, $description, $itemname);
+    }
+
+}

@@ -69,34 +69,6 @@ class TrackerFactoryTest extends UnitTestCase {
         unset($GLOBALS['Language']);
     }
     
-    //testing tracker import
-    public function testImport() {
-        $tracker_factory = new TrackerFactoryTestVersion();
-        $cf = new MockTracker_CannedResponseFactory();
-        $tracker_factory->setReturnReference('getCannedResponseFactory', $cf);
-        $ff = new MockTracker_FormElementFactory();
-        $tracker_factory->setReturnReference('getFormElementFactory', $ff);
-        $tf = new MockTracker_TooltipFactory();
-        $tracker_factory->setReturnReference('getTooltipFactory', $tf);
-        $rf = new MockTracker_ReportFactory();
-        $tracker_factory->setReturnReference('getReportFactory', $rf);
-        
-        $xml = simplexml_load_file(dirname(__FILE__) . '/_fixtures/TestTracker-1.xml');
-        $tracker = $tracker_factory->getInstanceFromXML($xml, 0, '', '', '');
-        
-        //testing general properties
-        $this->assertEqual($tracker->submit_instructions, 'some submit instructions');
-        $this->assertEqual($tracker->browse_instructions, 'and some for browsing');
-
-        $this->assertEqual($tracker->getColor(), 'inca_gray');
-
-        //testing default values
-        $this->assertEqual($tracker->allow_copy, 0);
-        $this->assertEqual($tracker->instantiate_for_new_projects, 1);
-        $this->assertEqual($tracker->log_priority_changes, 0);
-        $this->assertEqual($tracker->stop_notification, 0);
-    }
-    
     public function testImpossibleToCreateTrackerWhenProjectHasAReferenceEqualsShortname() {
         $tracker_factory = new TrackerFactoryTestVersion2();
         $dao = new MockTrackerDao();
@@ -316,59 +288,4 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase {
         $this->tracker_factory->duplicate(100, 999, null);
     }
 
-}
-
-
-class TrackerFactoryInstanceFromXMLTest extends UnitTestCase {
-
-    public function testGetInstanceFromXmlGeneratesRulesFromDependencies() {
-        
-        $data = <<<XML
-<?xml version="1.0" encoding="UTF-8"?>
-<tracker />
-XML;
-        $xml = new SimpleXMLElement($data);
-        $xml->addChild('cannedResponses');
-        $xml->addChild('formElements');
-        
-        $groupId     = 15; 
-        $name        = 'the tracker';
-        $description = 'tracks stuff'; 
-        $itemname    = 'the item';
-        
-        $mocked_tracker_factory_methods = array(
-            'getInstanceFromRow',
-            'getRuleFactory'
-        );        
-        $tracker_factory = partial_mock('TrackerFactory', $mocked_tracker_factory_methods);     
-        $rule_factory = mock('Tracker_RuleFactory');
-        $tracker      = mock('Tracker');
-        
-        stub($tracker_factory)->getInstanceFromRow()->returns($tracker);
-        stub($tracker_factory)->getRuleFactory()->returns($rule_factory);
-        
-        //create data passed
-        $dependencies = $xml->addChild('dependencies');
-        $rule = $dependencies->addChild('rule');
-        $rule->addChild('source_field')->addAttribute('REF', 'F1');
-        $rule->addChild('target_field')->addAttribute('REF', 'F2');
-        $rule->addChild('source_value')->addAttribute('REF', 'F3');
-        $rule->addChild('target_value')->addAttribute('REF', 'F4');
-        
-        //create data expected
-        $expected_xml = new SimpleXMLElement($data);
-        $expected_rules = $expected_xml->addChild('rules');
-        $list_rules = $expected_rules->addChild('list_rules');
-        $expected_rule = $list_rules->addChild('rule');
-        $expected_rule->addChild('source_field')->addAttribute('REF', 'F1');
-        $expected_rule->addChild('target_field')->addAttribute('REF', 'F2');
-        $expected_rule->addChild('source_value')->addAttribute('REF', 'F3');
-        $expected_rule->addChild('target_value')->addAttribute('REF', 'F4');
-       
-        //this is where we check the data has been correctly transformed
-        stub($rule_factory)->getInstanceFromXML($expected_rules, array(), $tracker)->once();
-        
-        $tracker_factory->getInstanceFromXML($xml,$groupId, $name, $description, $itemname);
-    }
-    
 }

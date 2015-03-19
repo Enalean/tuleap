@@ -247,7 +247,19 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
             $vFile = new Valid_File('tracker_new_xml_file');
             $vFile->required();
             if ($request->validFile($vFile)) {
-                $new_tracker = $this->importTracker($project, $name, $description, $itemname, $_FILES["tracker_new_xml_file"]["tmp_name"]);
+                try {
+                    $new_tracker = TrackerXmlImport::build()->createFromXMLFileWithInfo(
+                        $project->getID(),
+                        $_FILES["tracker_new_xml_file"]["tmp_name"],
+                        $name,
+                        $description,
+                        $itemname
+                    );
+                } catch (XML_ParseException $exception) {
+                    $this->displayCreateTrackerFromXMLErrors($project, $exception->getErrors(), $exception->getFileLines());
+                } catch(TrackerFromXmlException $exception) {
+                    $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
+                }
             }
         } else if ($request->existAndNonEmpty('create_mode') && $request->get('create_mode') == 'tv3') {
             $atid = $request->get('tracker_new_tv3');
@@ -453,6 +465,69 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
 
               </div>';
     }
+
+    /**
+     *
+     * @param Project          $project
+     * @param XML_ParseError[] $parse_errors
+     * @param array            $xml_file
+     */
+    private function displayCreateTrackerFromXMLErrors(Project $project, array $parse_errors, $xml_file) {
+        $breadcrumbs = array(
+            array(
+                'title' => 'Create a new tracker',
+                'url'   => TRACKER_BASE_URL.'/?group_id='. $project->group_id .'&amp;func=create'
+            )
+        );
+        $toolbar = array();
+        $params  = array();
+
+        $this->displayHeader($project, 'Trackers', $breadcrumbs, $toolbar, $params);
+        echo '<h2>XML file doesnt have correct format</h2>';
+
+        $errors = array();
+        foreach ($parse_errors as $error) {
+            /* @var $error XML_ParseError */
+            $errors[$error->getLine()][$error->getColumn()][] = $error;
+        }
+
+        $clear = $GLOBALS['HTML']->getimage('clear.png', array('width' => 24, 'height' => 1));
+        $icons = array(
+                'error' => $GLOBALS['HTML']->getimage('ic/error.png', array('style' => 'vertical-align:middle')),
+        );
+        $styles = array(
+                'error' => 'color:red; font-weight:bold;',
+        );
+
+        $hp = Codendi_HTMLPurifier::instance();
+
+        echo '<pre>';
+        foreach($xml_file as $number => $line) {
+            echo '<div id="line_'. ($number + 1) .'">';
+            echo  '<span style="color:gray;">'. sprintf('%4d', $number+1). '</span>'. $clear . $hp->purify($line, CODENDI_PURIFIER_CONVERT_HTML) ;
+            if (isset($errors[$number + 1])) {
+                foreach($errors[$number + 1] as $column => $errors) {
+                    echo '<div>'. sprintf('%3s', ''). $clear . sprintf('%'. ($column-1) .'s', '') .'<span style="color:blue; font-weight:bold;">^</span></div>';
+                    foreach($errors as $parse_error) {
+                        $style = isset($styles['error']) ? $styles['error'] : '';
+                        echo '<div style="'. $style .'">';
+                        if (isset($icons[$error->getType()])) {
+                            echo $icons[$error->getType()];
+                        } else {
+                            echo $clear;
+                        }
+                        echo sprintf('%3s', '').sprintf('%'. ($column-1) .'s', '') .$error->getMessage();
+                        echo '</div>';
+                    }
+                }
+            }
+            echo '</div>';
+        }
+        echo '</pre>';
+        $this->displayFooter($project);
+        exit;
+    }
+
 
     private function getTrackersV3ForProject(Project $project) {
         if ($project->usesService('tracker')) {
@@ -735,26 +810,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         }
         $html .= '</select>';
         return $html;
-    }
-    
-    /**
-     * Importing Tracker from a submitted XML file
-     *  
-     * @param Object $project     into which the tracker is imported
-     * @param string $name        the name of the tracker given by the user
-     * @param string $description the description of the tracker given by the user
-     * @param string $itemnate    the short name of the tracker given by the user
-     * @param string $filename    The xml tracker structure
-     *
-     * @return Tracker null if error
-     */
-    protected function importTracker($project, $name, $description, $itemname, $filename) {
-        //TODO: add restrictions for the file
-        $xml_security = new XML_Security();
-        $xml_element  = $xml_security->loadFile($filename);
-        if ($xml_element) {
-            return $this->getTrackerFactory()->createFromXML($xml_element, $project->group_id, $name, $description, $itemname, $this);
-        }
     }
     
     /**

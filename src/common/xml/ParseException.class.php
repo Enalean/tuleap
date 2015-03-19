@@ -41,4 +41,8 @@ class XML_ParseException extends Exception {
         }
         return implode(PHP_EOL, $output);
     }
+
+    public function getFileLines() {
+        return $this->indented_xml;
+    }
 }
