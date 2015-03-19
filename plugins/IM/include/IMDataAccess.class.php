@@ -23,7 +23,7 @@ class IMDataAccess extends DataAccess {
         $this->DataAccess($credentials);
     }
     
-    function &instance($controler) {
+    function instance($controler) {
         static $_imdataaccess_instance;
         if (!$_imdataaccess_instance) {
             $_imdataaccess_instance = new IMDataAccess($controler);
