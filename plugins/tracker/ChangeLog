@@ -1,3 +1,6 @@
+Version 5.591 - Tuleap 7.12
+    * Refactor XML import: use dedicated class
+
 Version 5.590 - Tuleap 7.12
     * Refactor Tracker XML export: replace adhoc Field and Values + filter export
 
