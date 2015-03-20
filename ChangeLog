@@ -1,5 +1,6 @@
 Version 7.12 (Not Released Yet)
     == Enhancement ==
+	* request #7890: New tuleap home page 
 	* request #7714: Add status search criteria in siteadmin userlist interface (Contrib STMicroelectronics)
 
 	== Bug fix ==
