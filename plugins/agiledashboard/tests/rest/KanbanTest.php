@@ -93,6 +93,8 @@ class KanbanTest extends RestBase {
         $this->assertEquals(2, $response['total_size']);
         $this->assertEquals('Doing something', $response['collection'][0]['label']);
         $this->assertEquals('Doing something v2', $response['collection'][1]['label']);
+        $this->assertArrayHasKey('timeinfo', $response['collection'][0]);
+        $this->assertArrayHasKey('timeinfo', $response['collection'][1]);
     }
 
     /**

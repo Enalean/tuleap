@@ -3,9 +3,9 @@
         .module('kanban')
         .controller('MainCtrl', MainCtrl);
 
-    MainCtrl.$inject = ['$scope', 'gettextCatalog', 'SharedPropertiesService'];
+    MainCtrl.$inject = ['$scope', 'gettextCatalog', 'SharedPropertiesService', 'amMoment'];
 
-    function MainCtrl($scope, gettextCatalog, SharedPropertiesService) {
+    function MainCtrl($scope, gettextCatalog, SharedPropertiesService, amMoment) {
         _.extend($scope, {
             init: init
         });
@@ -14,6 +14,7 @@
             SharedPropertiesService.setKanban(kanban);
             SharedPropertiesService.setUserIsAdmin(user_is_admin);
             gettextCatalog.setCurrentLanguage(lang);
+            amMoment.changeLocale(lang);
         }
     }
 })();

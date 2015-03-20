@@ -70,13 +70,23 @@ class KanbanColumnsResource {
 
     /**
      * @url OPTIONS
+     *
+     * <pre>
+     * /!\ Kanban REST routes are under construction and subject to changes /!\
+     * </pre>
      */
     public function options() {
         Header::allowOptionsPatch();
     }
 
     /**
+     * Update column
+     *
      * Change a column properties (wip_limit for now)
+     *
+     * <pre>
+     * /!\ Kanban REST routes are under construction and subject to changes /!\
+     * </pre>
      *
      * @url PATCH {id}
      *

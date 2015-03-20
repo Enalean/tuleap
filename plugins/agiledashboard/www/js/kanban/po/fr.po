@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kanban\n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Yannis ROSSETTO <yannis.rossetto@enalean.com>\n"
+"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
 "Language-Team: Enalean <crew@enalean.com>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.5.4\n"
 
-#: src/app/error.tpl.html
+#: src/app/error/error.tpl.html
 msgid ""
 "An error occured while saving one of your last action. We're afraid that you "
 "will have to reload the page in order to bring you back to a consistent "
@@ -20,15 +20,23 @@ msgstr ""
 "Une erreur est survenue lors de la sauvegarde de votre dernière action. Vous "
 "allez devoir rafraichir la page afin de retrouver un état cohérent."
 
-#: src/app/kanban.tpl.html
+#: src/app/app-kanban-controller.js
+msgid "Column:"
+msgstr "Colonne :"
+
+#: src/app/wip-popover/wip-popover.tpl.html
 msgid "Define max:"
 msgstr "Maximum :"
 
-#: src/app/error.tpl.html
+#: src/app/app-kanban-controller.js
+msgid "Kanban:"
+msgstr "Kanban :"
+
+#: src/app/error/error.tpl.html
 msgid "OK, reload the page"
 msgstr "OK, rafraichir la page"
 
-#: src/app/error.tpl.html
+#: src/app/error/error.tpl.html
 msgid "Oh snap!"
 msgstr "Oups !"
 

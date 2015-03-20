@@ -103,6 +103,10 @@ class KanbanResource {
      *
      * Get the definition of a given kanban
      *
+     * <pre>
+     * /!\ Kanban REST routes are under construction and subject to changes /!\
+     * </pre>
+     *
      * @url GET {id}
      *
      * @param int $id Id of the kanban
@@ -126,6 +130,10 @@ class KanbanResource {
     /**
      * Return info about milestone if exists
      *
+     * <pre>
+     * /!\ Kanban REST routes are under construction and subject to changes /!\
+     * </pre>
+     *
      * @url OPTIONS {id}
      *
      * @param string $id Id of the milestone
@@ -138,6 +146,10 @@ class KanbanResource {
      * Get backlog
      *
      * Get the backlog of a given kanban
+     *
+     * <pre>
+     * /!\ Kanban REST routes are under construction and subject to changes /!\
+     * </pre>
      *
      * @url GET {id}/backlog
      *
@@ -165,6 +177,12 @@ class KanbanResource {
 
     /**
      * Partial re-order of Kanban backlog items
+     *
+     * Partial re-order of Kanban backlog items
+     *
+     * <pre>
+     * /!\ Kanban REST routes are under construction and subject to changes /!\
+     * </pre>
      *
      * @url PATCH {id}/backlog
      *
@@ -290,6 +308,10 @@ class KanbanResource {
     /**
      * @url OPTIONS {id}/backlog
      *
+     * <pre>
+     * /!\ Kanban REST routes are under construction and subject to changes /!\
+     * </pre>
+     *
      * @param string $id Id of the milestone
      */
     public function optionsBacklog($id) {
@@ -300,6 +322,10 @@ class KanbanResource {
      * Get archive
      *
      * Get the archived items of a given kanban
+     *
+     * <pre>
+     * /!\ Kanban REST routes are under construction and subject to changes /!\
+     * </pre>
      *
      * @url GET {id}/archive
      *
@@ -327,6 +353,12 @@ class KanbanResource {
 
     /**
      * Partial re-order of Kanban archive items
+     *
+     * Partial re-order of Kanban archive items
+     *
+     * <pre>
+     * /!\ Kanban REST routes are under construction and subject to changes /!\
+     * </pre>
      *
      * @url PATCH {id}/archive
      *
@@ -390,6 +422,10 @@ class KanbanResource {
     /**
      * @url OPTIONS {id}/archive
      *
+     * <pre>
+     * /!\ Kanban REST routes are under construction and subject to changes /!\
+     * </pre>
+     *
      * @param string $id Id of the milestone
      */
     public function optionsArchive($id) {
@@ -400,6 +436,10 @@ class KanbanResource {
      * Get items
      *
      * Get the items of a given kanban in a given column
+     *
+     * <pre>
+     * /!\ Kanban REST routes are under construction and subject to changes /!\
+     * </pre>
      *
      * @url GET {id}/items
      *
@@ -438,6 +478,12 @@ class KanbanResource {
 
     /**
      * Partial re-order of Kanban items
+     *
+     * Partial re-order of Kanban items
+     *
+     * <pre>
+     * /!\ Kanban REST routes are under construction and subject to changes /!\
+     * </pre>
      *
      * @url PATCH {id}/items
      *
@@ -511,6 +557,10 @@ class KanbanResource {
 
     /**
      * @url OPTIONS {id}/items
+     *
+     * <pre>
+     * /!\ Kanban REST routes are under construction and subject to changes /!\
+     * </pre>
      *
      * @param string $id Id of the milestone
      */

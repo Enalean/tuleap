@@ -366,7 +366,6 @@ ul.kanban-items {
 
         > .kanban-item {
             position: relative;
-            overflow: hidden;
             padding: 5px 5px 5px 12px;
             cursor: move;
             color: #333;
@@ -375,6 +374,43 @@ ul.kanban-items {
             border: 1px solid #E8E8E8;
             border-radius: 3px;
             box-shadow: 0px 1px 0px 0px rgba(242, 242, 242, 0.7);
+
+            > .icon-time {
+                position: absolute;
+                right: 5px;
+                top: 5px;
+                cursor: default;
+                opacity: 0.2;
+                transition: opacity 0.1s linear;
+
+                &:hover {
+                    opacity: 1;
+                    transition: opacity 0.1s linear;
+                }
+            }
+
+            > .tooltip > .tooltip-inner {
+                width: auto;
+                white-space: nowrap;
+                text-align: left;
+
+                > p {
+                    margin: 0 0 5px;
+
+                    &:last-child {
+                        margin: 0;
+                    }
+
+                    > span {
+                        opacity: 0.8;
+                    }
+
+                    > strong {
+                        white-space: nowrap;
+                        font-weight: normal;
+                    }
+                }
+            }
 
             > div.type-border {
                 position: absolute;

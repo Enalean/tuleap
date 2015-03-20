@@ -8,8 +8,16 @@ msgstr ""
 msgid "An error occured while saving one of your last action. We're afraid that you will have to reload the page in order to bring you back to a consistent state."
 msgstr ""
 
+#: src/app/app-kanban-controller.js
+msgid "Column:"
+msgstr ""
+
 #: src/app/wip-popover/wip-popover.tpl.html
 msgid "Define max:"
+msgstr ""
+
+#: src/app/app-kanban-controller.js
+msgid "Kanban:"
 msgstr ""
 
 #: src/app/error/error.tpl.html

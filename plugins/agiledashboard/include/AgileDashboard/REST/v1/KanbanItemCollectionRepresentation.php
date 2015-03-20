@@ -19,6 +19,7 @@
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
+use Tuleap\REST\JsonCast;
 use AgileDashboard_Kanban;
 use AgileDashboard_KanbanItemDao;
 use Tracker_ArtifactFactory;
@@ -42,8 +43,14 @@ class KanbanItemCollectionRepresentation {
         foreach ($data as $row) {
             $artifact = $factory->getInstanceFromRow($row);
             if ($artifact->userCanView($user)) {
+                $timeinfo = array();
+                foreach ($dao->searchTimeInfoForItem($kanban->getTrackerId(), $artifact->getId()) as $row) {
+                    $timeinfo[$row['column_id']] = JsonCast::toDate($row['submitted_on']);
+                }
+                $timeinfo['kanban'] = min($timeinfo);
+
                 $item_representation = new KanbanItemRepresentation();
-                $item_representation->build($artifact);
+                $item_representation->build($artifact, $timeinfo);
 
                 $this->collection[] = $item_representation;
             }
