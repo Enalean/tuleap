@@ -128,6 +128,9 @@ class TestDataBuilder {
     /** @var TrackerFactory */
     private $tracker_factory;
 
+    /** @var string */
+    protected $template_path;
+
     public function __construct() {
         $this->project_manager             = ProjectManager::instance();
         $this->user_manager                = UserManager::instance();
@@ -138,6 +141,8 @@ class TestDataBuilder {
             new Rule_ProjectName(),
             new Rule_ProjectFullName()
         );
+
+        $this->template_path = dirname(__FILE__).'/../../rest/_fixtures/';
 
         $GLOBALS['Language'] = new BaseLanguage('en_US', 'en_US');
         $GLOBALS['sys_lf'] = '\n';
@@ -246,12 +251,24 @@ class TestDataBuilder {
         return $this;
     }
 
-    public function generateProject() {
+    protected function setGlobalsForProjectCreation() {
         $GLOBALS['svn_prefix'] = '/tmp';
         $GLOBALS['cvs_prefix'] = '/tmp';
         $GLOBALS['grpdir_prefix'] = '/tmp';
         $GLOBALS['ftp_frs_dir_prefix'] = '/tmp';
         $GLOBALS['ftp_anon_dir_prefix'] = '/tmp';
+    }
+
+    protected function unsetGlobalsForProjectCreation() {
+        unset($GLOBALS['svn_prefix']);
+        unset($GLOBALS['cvs_prefix']);
+        unset($GLOBALS['grpdir_prefix']);
+        unset($GLOBALS['ftp_frs_dir_prefix']);
+        unset($GLOBALS['ftp_anon_dir_prefix']);
+    }
+
+    public function generateProject() {
+        $this->setGlobalsForProjectCreation();
 
         $user_test_rest_1 = $this->user_manager->getUserByUserName(self::TEST_USER_1_NAME);
         $user_test_rest_2 = $this->user_manager->getUserByUserName(self::TEST_USER_2_NAME);
@@ -315,11 +332,7 @@ class TestDataBuilder {
         );
         $this->importTemplateInProject($backlog->getId(), 'tuleap_agiledashboard_template.xml');
 
-        unset($GLOBALS['svn_prefix']);
-        unset($GLOBALS['cvs_prefix']);
-        unset($GLOBALS['grpdir_prefix']);
-        unset($GLOBALS['ftp_frs_dir_prefix']);
-        unset($GLOBALS['ftp_anon_dir_prefix']);
+        $this->unsetGlobalsForProjectCreation();
 
         return $this;
     }
@@ -390,13 +403,13 @@ class TestDataBuilder {
         ugroup_add_user_to_ugroup($project->getId(), $ugroup_id, $user->getId());
     }
 
-    private function importTemplateInProject($project_id, $template) {
+    protected function importTemplateInProject($project_id, $template) {
         $xml_importer = new ProjectXMLImporter(
             EventManager::instance(),
             $this->project_manager
         );
         $this->user_manager->forceLogin(self::ADMIN_USER_NAME);
-        $xml_importer->import($project_id, dirname(__FILE__).'/../../rest/_fixtures/'.$template);
+        $xml_importer->import($project_id, $this->template_path.$template);
     }
 
     public function deleteTracker() {

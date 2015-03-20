@@ -21,6 +21,7 @@
 namespace Tracker;
 
 use TestDataBuilder;
+use TrackerDataBuilder;
 use RestBase;
 
 require_once dirname(__FILE__).'/../bootstrap.php';
@@ -74,6 +75,33 @@ class ArtifactTest extends RestBase {
         $artifact_xml = $this->getResponse($this->xml_client->get('artifacts/'. $artifact_id))->xml();
 
         $this->assertEquals($new_value, (string)$artifact_xml->values->item[0]->value);
+    }
+
+    public function testPOSTArtifactInXMLTracker() {
+        $xml = "<request><tracker><id>".TrackerDataBuilder::XML_PROJECT_TRACKER_ID."</id></tracker><values><item><field_id>819</field_id><value>slogan</value></item><item><field_id>839</field_id><value>desc</value></item><item><field_id>820</field_id><bind_value_ids><item>810</item></bind_value_ids></item></values></request>";
+
+        $response = $this->getResponse($this->xml_client->post('artifacts', null, $xml));
+
+        $this->assertEquals($response->getStatusCode(), 200);
+        $artifact_xml = $response->xml();
+
+        $artifact_id = (int) $artifact_xml->id;
+        $this->assertGreaterThan(0, $artifact_id);
+
+        return $artifact_id;
+    }
+
+    /**
+     * @depends testPOSTArtifactInXMLTracker
+     */
+    public function testGetArtifactInXMLTracker($artifact_id) {
+        $response = $this->getResponse($this->xml_client->get('artifacts/'.$artifact_id));
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $artifact_xml = $response->xml();
+
+        $this->assertEquals((int) $artifact_xml->id, $artifact_id);
+        $this->assertEquals((int) $artifact_xml->project->id, TrackerDataBuilder::XML_PROJECT_ID);
     }
 
 }
