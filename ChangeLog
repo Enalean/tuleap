@@ -10,6 +10,7 @@ Version 7.12 (Not Released Yet)
 	* request #7920: Properly filter private news
 	* request #7871: Fix persistent XSS in survey service
 	* request #7804: Fix persistent XSS in FRS
+	* request #7898: Fix SQL injections in snippet service
 
 	== Plugins ==
 	* docman: 2.26.67
