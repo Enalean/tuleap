@@ -2,6 +2,7 @@
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 // http://sourceforge.net
 //
 // 
@@ -29,10 +30,12 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 	Select this survey from the database
 */
 
-$sql="SELECT * FROM surveys WHERE survey_id='" . db_ei($survey_id) . "' AND group_id='" . db_ei($group_id) . "'";
-$result=db_query($sql);
+$sql    = "SELECT * FROM surveys WHERE survey_id='" . db_ei($survey_id) . "' AND group_id='" . db_ei($group_id) . "'";
+$result = db_query($sql);
 
-echo "<H2>".$survey->getSurveyTitle(db_result($result, 0, "survey_title"))."</H2><P>";
+$purifier = Codendi_HTMLPurifier::instance();
+
+echo "<H2>".$purifier->purify($survey->getSurveyTitle(db_result($result, 0, "survey_title")))."</H2><P>";
 
 /*
 echo "<H3><A HREF=\"show_results_csv.php?survey_id=$survey_id&group_id=$group_id\">.CSV File</A></H3><P>";
@@ -181,7 +184,7 @@ for ($i=0; $i<$quest_count; $i++) {
 		$answers_cnt=db_result($result2, 0, 'count');
 		$blank_cnt=db_result($result3, 0, 'count');
 
-		echo util_unconvert_htmlspecialchars(db_result($result, 0, "question"))."<BR>\n";
+		echo $purifier->purify(db_result($result, 0, "question"))."<BR>\n";
 
 		echo "<A HREF=\"show_results_comments.php?survey_id=$survey_id&question_id=$quest_array[$i]&question_num=$q_num&group_id=$group_id\">".$Language->getText('survey_admin_show_r_aggregate','view_cmmts')."</A>".
 		    '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
@@ -274,7 +277,7 @@ for ($i=0; $i<$quest_count; $i++) {
 			$value_array[1]=db_result($result2, 0, "count");
 		}
 
-		GraphIt($name_array,$value_array,util_unconvert_htmlspecialchars(db_result($result, 0, "question")));
+		GraphIt($name_array,$value_array, $purifier->purify(db_result($result, 0, "question")));
 
 	} else if ($question_type == "4") {
 
@@ -282,7 +285,7 @@ for ($i=0; $i<$quest_count; $i++) {
 			This is a comment only.
 		*/
 
-		echo "&nbsp;<P><B>".util_unconvert_htmlspecialchars(db_result($result, 0, "question"))."</B>\n";
+		echo "&nbsp;<P><B>".$purifier->purify(db_result($result, 0, "question"))."</B>\n";
 		echo "<INPUT TYPE=\"HIDDEN\" NAME=\"_".$quest_array[$i]."\" VALUE=\"-666\">";
 
 	} else if ($question_type == "5") {
@@ -302,7 +305,7 @@ for ($i=0; $i<$quest_count; $i++) {
 		$answers_cnt=db_result($result2, 0, 'count');
 		$blank_cnt=db_result($result3, 0, 'count');
 
-		echo util_unconvert_htmlspecialchars(db_result($result, 0, "question"))."<BR>\n";
+		echo $purifier->purify(db_result($result, 0, "question"))."<BR>\n";
 
 		echo "<A HREF=\"show_results_comments.php?survey_id=$survey_id&question_id=$quest_array[$i]&question_num=$q_num&group_id=$group_id\">".$Language->getText('survey_admin_show_r_aggregate','view_cmmts')."</A>".
 		    '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
@@ -329,5 +332,3 @@ if ($q_num == 1) {
 
 
 survey_footer(array());
-
-?>

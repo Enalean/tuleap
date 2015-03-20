@@ -2,6 +2,7 @@
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 // http://sourceforge.net
 //
 // 
@@ -70,7 +71,8 @@ function survey_footer($params) {
 function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
   global $Language;
 
-  $survey =& SurveySingleton::instance();
+  $survey   = SurveySingleton::instance();
+  $purifier = Codendi_HTMLPurifier::instance();
  
   $return = '<FORM ACTION="/survey/survey_resp.php" METHOD="POST">
  <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
@@ -86,7 +88,7 @@ function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
 
     if (db_numrows($result) > 0) {
 	$return .= '
-		<H3>'.$survey->getSurveyTitle(db_result($result, 0, 'survey_title')).'</H3>';
+		<H3>'.$purifier->purify($survey->getSurveyTitle(db_result($result, 0, 'survey_title'))).'</H3>';
 	/*
 	  Select the questions for this survey
 	*/
@@ -114,7 +116,7 @@ function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
                         . "AND survey_id='" . db_ei($survey_id) . "' AND user_id='" . db_ei(user_getid()) . "'";
                 $result2=db_query($sql2);
                 if (db_numrows($result) > 0) {
-                    $existing_response=db_result($result2, 0, 'response');
+                    $existing_response=$purifier->purify(db_result($result2, 0, 'response'));
                     $response_exists=true;
                 }
             }
@@ -127,14 +129,14 @@ function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
 		$return .= '
 				<TR><TD VALIGN=TOP>&nbsp;</TD><TD>';
 
-		$return .= '<b>'.util_unconvert_htmlspecialchars(stripslashes(db_result($result, 0, 'question'))).'</b><br>';
+		$return .= '<b>'.$purifier->purify(db_result($result, 0, 'question')).'</b><br>';
 
 	    } else if ($question_type && $question_type != $survey->NONE){
 		$return .= '
 				<TR><TD VALIGN=TOP><B>';
 		$return .= $q_num.'&nbsp;&nbsp;-&nbsp;&nbsp;</B></TD><TD>';
 		$q_num++;
-		$return .= util_unconvert_htmlspecialchars(stripslashes(db_result($result, 0, 'question'))).'<br>';
+		$return .= $purifier->purify(db_result($result, 0, 'question')).'<br>';
 	    }
 
 	    if ($question_type == $survey->RADIO_BUTTON_1_5) {
@@ -188,7 +190,7 @@ function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
 		$res=db_query($qry);
 		$j=1;
 		while ($row=db_fetch_array($res)) {
-		    $value=$row['radio_choice'];
+		    $value = $purifier->purify($row['radio_choice']);
 		    $return .= '
 					<INPUT TYPE="RADIO" NAME="_'.$quest_array[$i].'" VALUE="'.$value.'"'.($existing_response==$value?" CHECKED ":"").'> '.$value.' <BR>';
 		    $j++;
@@ -202,7 +204,7 @@ function survey_utils_show_survey ($group_id,$survey_id,$echoout=1) {
 		$res=db_query($qry);
 		$return .= '<SELECT name="_'.$quest_array[$i].'">';
 		while ($row=db_fetch_array($res)) {
-		    $value=$row['radio_choice'];
+		    $value = $purifier->purify($row['radio_choice']);
 		    $return .= '<OPTION VALUE="'.$value.'"'.($existing_response==$value?" CHECKED ":"").'> '.$value.' </OPTION>';		    
 		}
 		$return .= '</SELECT>';
@@ -248,7 +250,8 @@ function  survey_utils_show_surveys($result, $show_delete=true) {
     global $group_id,$Language;
     $rows  =  db_numrows($result);
     
-    $survey =& SurveySingleton::instance();
+    $survey  = SurveySingleton::instance();
+    $purifier = Codendi_HTMLPurifier::instance();
 
     $title_arr=array();
     $title_arr[]=$Language->getText('survey_index','s_id');
@@ -262,12 +265,12 @@ function  survey_utils_show_surveys($result, $show_delete=true) {
     
     for ($j=0; $j<$rows; $j++)  {
 	
-	$survey_id = db_result($result,$j,'survey_id');
+	$survey_id = $purifier->purify(db_result($result,$j,'survey_id'));
 	echo '<tr class="'.html_get_alt_row_color($j).'">';
 	
 	echo "<TD><A HREF=\"/survey/admin/edit_survey.php?func=update_survey&group_id=$group_id&survey_id=$survey_id\">$survey_id</A></TD>".
-	  '<TD>'.$survey->getSurveyTitle(db_result($result,$j,'survey_title'))."</TD>\n".
-	    '<TD>'.str_replace(',',', ',db_result($result,$j,'survey_questions'))."</TD>\n";     
+	  '<TD>'.$purifier->purify($survey->getSurveyTitle(db_result($result,$j,'survey_title')))."</TD>\n".
+	    '<TD>'.$purifier->purify(str_replace(',',', ',db_result($result,$j,'survey_questions')))."</TD>\n";
 
 	html_display_boolean(db_result($result,$j,'is_active'),"<TD align=center>".$Language->getText('global','yes')."</TD>","<TD align=center>".$Language->getText('global','no')."</TD>");
 	html_display_boolean(db_result($result,$j,'is_anonymous'),"<TD align=center>".$Language->getText('global','yes')."</TD>","<TD align=center>".$Language->getText('global','no')."</TD>");
@@ -286,8 +289,9 @@ function  survey_utils_show_surveys($result, $show_delete=true) {
 
 function  survey_utils_show_surveys_for_results($result) {
     global $group_id,$Language;
-    $rows  =  db_numrows($result);
-    $survey =& SurveySingleton::instance();
+    $rows     =  db_numrows($result);
+    $survey   = SurveySingleton::instance();
+    $purifier = Codendi_HTMLPurifier::instance();
     
     $title_arr=array();
     $title_arr[]=$Language->getText('survey_index','s_id');
@@ -297,11 +301,11 @@ function  survey_utils_show_surveys_for_results($result) {
     
     for ($j=0; $j<$rows; $j++)  {
 	
-	$survey_id = db_result($result,$j,'survey_id');
+	$survey_id = $purifier->purify(db_result($result,$j,'survey_id'));
 	echo '<tr class="'.html_get_alt_row_color($j).'">';
 	
 	echo "<TD><A HREF=\"/survey/admin/show_results_aggregate.php?group_id=$group_id&survey_id=$survey_id\">$survey_id</A></TD>".
-	  '<TD width="90%">'.$survey->getSurveyTitle(db_result($result,$j,'survey_title'))."</TD>\n<tr>";
+	  '<TD width="90%">'.$purifier->purify($survey->getSurveyTitle(db_result($result,$j,'survey_title')))."</TD>\n<tr>";
     }
     echo "</table>";
 }
@@ -310,8 +314,9 @@ function  survey_utils_show_surveys_for_results($result) {
 function  survey_utils_show_questions($result, $hlink_id=true, $show_delete=true) {
     global $group_id,$Language;
 
-    $survey =& SurveySingleton::instance();
-    $rows  =  db_numrows($result);
+    $survey   = SurveySingleton::instance();
+    $rows     = db_numrows($result);
+    $purifier = Codendi_HTMLPurifier::instance();
 
     echo "<h3>".$Language->getText('survey_s_utils','found',$rows)."</h3>";
 
@@ -325,7 +330,7 @@ function  survey_utils_show_questions($result, $hlink_id=true, $show_delete=true
 
     for($j=0; $j<$rows; $j++)  {
 
-	$question_id = db_result($result,$j,'question_id');
+	$question_id      = $purifier->purify(db_result($result,$j,'question_id'));
 	$question_type_id = db_result($result,$j,'question_type_id');
 	
 	if ($question_type_id == 6 || $question_type_id == 7) {
@@ -342,8 +347,8 @@ function  survey_utils_show_questions($result, $hlink_id=true, $show_delete=true
 	    echo "<TD>$question_id</TD>\n";
 	}
 	
-	echo '<TD>'.db_result($result,$j,'question')."</TD>\n".
-	  '<TD>'.$survey->getLabel($question_type_id)."</TD>\n";     
+	echo '<TD>'.$purifier->purify(db_result($result,$j,'question'))."</TD>\n".
+	  '<TD>'.$purifier->purify($survey->getLabel($question_type_id))."</TD>\n";
 		
 	if  ($show_delete) {
 	    echo '<TD align=center>'.
@@ -454,7 +459,8 @@ function survey_utils_show_radio_form($question_id, $choice_id, $question_type) 
 function  survey_utils_show_comments($result) {
   global $Language;
 
-    $rows  =  db_numrows($result);
+    $rows     =  db_numrows($result);
+    $purifier = Codendi_HTMLPurifier::instance();
 
     $title_arr=array();
     $title_arr[]=$Language->getText('survey_s_utils','resp');
@@ -465,7 +471,7 @@ function  survey_utils_show_comments($result) {
     for($j=0; $j<$rows; $j++)  {
 
 	$count = db_result($result,$j,'count');
-	$resp = db_result($result,$j,'response');
+	$resp  = $purifier->purify(db_result($result,$j,'response'));
 
 	if ($resp == '') { $resp = $Language->getText('survey_s_utils','blank'); }
 	
@@ -523,5 +529,3 @@ function survey_utils_unique_questions($survey_questions) {
     }
     return true;
 }
-
-?>

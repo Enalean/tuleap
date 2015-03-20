@@ -2,6 +2,7 @@
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 // http://sourceforge.net
 //
 // 
@@ -21,7 +22,8 @@ if (!$group_id) {
 function  ShowResultsGroupSurveys($result) {
 	global $group_id,$Language;
 
-	$survey =& SurveySingleton::instance();
+	$survey   = SurveySingleton::instance();
+        $purifier = Codendi_HTMLPurifier::instance();
 
 	$rows  =  db_numrows($result);
 	$cols  =  db_numfields($result);
@@ -39,7 +41,7 @@ function  ShowResultsGroupSurveys($result) {
 		echo "<TD><A HREF=\"survey.php?group_id=$group_id&survey_id=".db_result($result,$j,"survey_id")."\">".
 			db_result($result,$j,"survey_id")."</TD>";
 
-		printf("<TD>%s</TD>\n",$survey->getSurveyTitle(db_result($result,$j,'survey_title')));
+		printf("<TD>%s</TD>\n", $purifier->purify($survey->getSurveyTitle(db_result($result,$j,'survey_title'))));
 
 		echo "</tr>";
 	}
@@ -54,11 +56,10 @@ if (!$result || db_numrows($result) < 1) {
 	echo "<H2>".$Language->getText('survey_index','no_act_s')."</H2>";
 	echo db_error();
 } else {
-	$pm = ProjectManager::instance();
-    echo "<H2>".$Language->getText('survey_index','s_for',$pm->getProject($group_id)->getPublicName())."</H2>";
+	$pm       = ProjectManager::instance();
+        $purifier = Codendi_HTMLPurifier::instance();
+    echo "<H2>".$Language->getText('survey_index','s_for', $purifier->purify($pm->getProject($group_id)->getPublicName()))."</H2>";
 	ShowResultsGroupSurveys($result);
 }
 
 survey_footer(array());
-
-?>

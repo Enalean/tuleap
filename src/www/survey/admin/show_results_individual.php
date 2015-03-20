@@ -2,6 +2,7 @@
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 // http://sourceforge.net
 //
 // 
@@ -29,10 +30,11 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 	Select this survey from the database
 */
 
-$sql="SELECT * FROM surveys WHERE survey_id='" . db_ei($survey_id) . "' AND group_id='" . db_ei($group_id) . "'";
-$result=db_query($sql);
+$sql      = "SELECT * FROM surveys WHERE survey_id='" . db_ei($survey_id) . "' AND group_id='" . db_ei($group_id) . "'";
+$result   = db_query($sql);
+$purifier = Codendi_HTMLPurifier::instance();
 
-echo "\n<H2>".db_result($result, 0, "survey_title")."</H2><P>";
+echo "\n<H2>".$purifier->purify(db_result($result, 0, "survey_title"))."</H2><P>";
 
 /*
 	Select the questions for this survey
@@ -143,7 +145,7 @@ for ($i=0; $i<$count; $i++) {
 		}
 
 		for ($j=1; $j<=5; $j++) {
-			echo "\n<INPUT TYPE=\"RADIO\" NAME=\"_".$quest_array[$i]."\" VALUE=\"$j\"";
+			echo "\n<INPUT TYPE=\"RADIO\" NAME=\"_".$purifier->purify($quest_array[$i])."\" VALUE=\"$j\"";
 			/*
 				add the checked statement if this was the response
 			*/
@@ -151,7 +153,7 @@ for ($i=0; $i<$count; $i++) {
 			echo ">\n";
 		}
 
-		echo "&nbsp; ".db_result($result, 0, "question")."\n";
+		echo "&nbsp; ".$purifier->purify(db_result($result, 0, "question"))."\n";
 
 	} else if ($question_type == "2") {
 
@@ -160,14 +162,14 @@ for ($i=0; $i<$count; $i++) {
 		*/
 
 		echo db_result($result, 0, "question")."<BR>\n";
-		echo "\n<textarea name=\"_".$quest_array[$i]."\" rows=5 cols=60 wrap=\"soft\">";
+		echo "\n<textarea name=\"_".$purifier->purify($quest_array[$i])."\" rows=5 cols=60 wrap=\"soft\">";
 
 		/*
 			Show the person's response if there was one
 		*/
 
 		if ($not_found==0) {
-			echo db_result($result, 0, "response");
+			echo $purifier->purify(db_result($result, 0, "response"));
 		}
 		echo "</textarea>\n";	
 
@@ -185,7 +187,7 @@ for ($i=0; $i<$count; $i++) {
 	                echo '<B>'.$Language->getText('global','yes')." / ".$Language->getText('global','no')."</B><BR>\n";
 		}
 
-		echo "\n<INPUT TYPE=\"RADIO\" NAME=\"_".$quest_array[$i]."\" VALUE=\"1\"";
+		echo "\n<INPUT TYPE=\"RADIO\" NAME=\"_".$purifier->purify($quest_array[$i])."\" VALUE=\"1\"";
 
                 /*
                 	add the checked statement if this was the response
@@ -193,7 +195,7 @@ for ($i=0; $i<$count; $i++) {
 
 		if (($not_found==0) && db_result($result, 0, "response")=="1") { echo " checked"; }
 		echo ">";
-                echo "\n<INPUT TYPE=\"RADIO\" NAME=\"_".$quest_array[$i]."\" VALUE=\"5\"";
+                echo "\n<INPUT TYPE=\"RADIO\" NAME=\"_".$purifier->purify($quest_array[$i])."\" VALUE=\"5\"";
 
                 /*
                         add the checked statement if this was the response
@@ -202,7 +204,7 @@ for ($i=0; $i<$count; $i++) {
 
                 echo ">";
  
-		echo "&nbsp; ".db_result($result, 0, "question")."\n";
+		echo "&nbsp; ".$purifier->purify(db_result($result, 0, "question"))."\n";
 
         } else if ($question_type == "4") {
 
@@ -210,7 +212,7 @@ for ($i=0; $i<$count; $i++) {
 			This is a comment only.
 		*/
 
-		echo "\n&nbsp;<P><B>".db_result($result, 0, "question")."</B>\n";
+		echo "\n&nbsp;<P><B>".$purifier->purify(db_result($result, 0, "question"))."</B>\n";
 		echo "\n<INPUT TYPE=\"HIDDEN\" NAME=\"_".$quest_array[$i]."\" VALUE=\"-666\">";
 
         } else if ($question_type == "5") {
@@ -220,13 +222,13 @@ for ($i=0; $i<$count; $i++) {
                 */
 
 		echo db_result($result, 0, "question")."<BR>\n";
-                echo "\n<INPUT TYPE=\"TEXT\" name=\"_".$quest_array[$i]."\" SIZE=20 MAXLENGTH=70i VALUE=\"";
+                echo "\n<INPUT TYPE=\"TEXT\" name=\"_".$purifier->purify($quest_array[$i])."\" SIZE=20 MAXLENGTH=70i VALUE=\"";
 
 		/*
 			Show the person's response if there was one
 		*/
 		if ($not_found==0) {
-		 	echo db_result($result, 0, "response");
+                    echo $purifier->purify(db_result($result, 0, "response"));
 		}
 		echo "\">";
 
@@ -246,5 +248,3 @@ echo "\n\n</TABLE>";
 <?php
 
 survey_footer(array());
-
-?>

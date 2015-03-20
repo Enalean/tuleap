@@ -41,4 +41,3 @@ if (!user_isloggedin()) {
 	}
 }
 $HTML->footer(array());
-?>

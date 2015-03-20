@@ -2,6 +2,7 @@
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 // http://sourceforge.net
 //
 // 
@@ -21,12 +22,13 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 	exit;
 }
 
-$sql="SELECT question FROM survey_questions WHERE question_id='" . db_ei($question_id) . "'";
-$result=db_query($sql);
+$sql      = "SELECT question FROM survey_questions WHERE question_id='" . db_ei($question_id) . "'";
+$result   = db_query($sql);
+$purifier = Codendi_HTMLPurifier::instance();
 
 echo '<h2>'.$Language->getText('survey_admin_show_r_comments','s_res').'</h2>';
 
-echo '<h3>'.$Language->getText('survey_admin_show_r_comments','q_no',array($question_num,util_unconvert_htmlspecialchars(db_result($result,0,"question")))).'</H3>';
+echo '<h3>'.$Language->getText('survey_admin_show_r_comments','q_no',array($question_num, $purifier->purify(db_result($result,0,"question")))).'</H3>';
 echo "<P>";
 
 $sql="SELECT response, count(*) AS count FROM survey_responses WHERE survey_id='" . db_ei($survey_id) . "' ".
@@ -36,5 +38,3 @@ $result=db_query($sql);
 survey_utils_show_comments($result);
 
 survey_footer(array());
-
-?>

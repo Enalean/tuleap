@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
  * This file is a part of Codendi.
  *
@@ -43,11 +44,12 @@ class Widget_MySurveys extends Widget {
             $developer_survey_id = "1";
         }
         
-        $survey       =& SurveySingleton::instance();
+        $survey       = SurveySingleton::instance();
         $sql          = "SELECT * from surveys WHERE survey_id=". db_ei($developer_survey_id);
         $result       = db_query($sql);
         $group_id     = db_result($result, 0, 'group_id');
-        $survey_title = $survey->getSurveyTitle(db_result($result, 0, 'survey_title'));
+        $purifier     = Codendi_HTMLPurifier::instance();
+        $survey_title = $purifier->purify($survey->getSurveyTitle(db_result($result, 0, 'survey_title')));
         
         // Check that the survey is active
         $devsurvey_is_active = db_result($result, 0, 'is_active');
@@ -77,5 +79,3 @@ class Widget_MySurveys extends Widget {
         return $GLOBALS['Language']->getText('widget_description_my_surveys','description');
     }
 }
-
-?>

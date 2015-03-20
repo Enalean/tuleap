@@ -2,6 +2,7 @@
 //
 // Codendi
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 // http://www.codendi.com
 //
 // 
@@ -19,8 +20,9 @@ if (!user_isloggedin() || !user_ismember($group_id,'A')) {
 }
 
 // Fetch the question from the DB
-$sql="SELECT * FROM survey_questions WHERE question_id='" . db_ei($question_id) . "' AND group_id='" . db_ei($group_id) . "'";
-$result=db_query($sql);
+$sql      = "SELECT * FROM survey_questions WHERE question_id='" . db_ei($question_id) . "' AND group_id='" . db_ei($group_id) . "'";
+$result   = db_query($sql);
+$purifier = Codendi_HTMLPurifier::instance();
 
 if ($result) {
 	$question=db_result($result, 0, "question");
@@ -36,7 +38,7 @@ var timerID2 = null;
 
 function show_questions() {
 	newWindow = open("","occursDialog","height=600,width=700,scrollbars=yes,resizable=yes");
-	newWindow.location=('show_questions.php?group_id=<?php echo $group_id; ?>&pv=1');
+	newWindow.location=('show_questions.php?group_id=<?php echo $purifier->purify($group_id); ?>&pv=1');
 }
 
 // -->
@@ -72,13 +74,13 @@ if ($warn) {
 <FORM ACTION="?" METHOD="POST">
 <INPUT TYPE="HIDDEN" NAME="func" VALUE="update_question">
 <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="Y">
-<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $group_id; ?>">
-<INPUT TYPE="HIDDEN" NAME="question_id" VALUE="<?php echo $question_id; ?>">
+<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="<?php echo $purifier->purify($group_id); ?>">
+<INPUT TYPE="HIDDEN" NAME="question_id" VALUE="<?php echo $purifier->purify($question_id); ?>">
 <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
 
 <?php echo $Language->getText('survey_admin_update_question','q'); ?>
 <BR>
-<TEXTAREA NAME="question" COLS="80" ROWS="8" WRAP="SOFT"><?php echo $question; ?></TEXTAREA>
+<TEXTAREA NAME="question" COLS="80" ROWS="8" WRAP="SOFT"><?php echo $purifier->purify($question); ?></TEXTAREA>
 
 <P>
 <?php echo $Language->getText('survey_admin_add_question','q_type'); ?>
@@ -121,5 +123,3 @@ if ($question_type=="6" || $question_type=="7") {
 }
 
 survey_footer(array());
-
-?>
