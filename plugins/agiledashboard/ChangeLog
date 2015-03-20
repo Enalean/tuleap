@@ -1,3 +1,6 @@
+Version 1.173 - Tuleap 7.12
+    * story #7580: limit the number of cards par column
+
 Version 1.172 - Tuleap 7.12
     * Fix Bower dependencies in Kanban
 
