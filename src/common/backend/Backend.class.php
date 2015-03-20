@@ -163,6 +163,10 @@ class Backend {
      * @return boolean true on success or false on failure
      */
     public function chown($path, $uid) {
+        if (is_link($path)) {
+            return lchown($path, $uid);
+        }
+
         return chown($path, $uid);
     }
 
@@ -196,6 +200,10 @@ class Backend {
      * @return boolean true on success or false on failure
      */
     public function chgrp($path, $uid) {
+        if (is_link($path)) {
+            return lchgrp($path, $uid);
+        }
+
         return chgrp($path, $uid);
     }
 

@@ -181,7 +181,7 @@ class Git_SystemEventManager {
                 SystemEvent_GIT_REPO_RESTORE::NAME,
                 $repository->getId(),
                 SystemEvent::PRIORITY_MEDIUM,
-                SystemEvent::OWNER_ROOT
+                SystemEvent::OWNER_APP
             );
         }
     }
