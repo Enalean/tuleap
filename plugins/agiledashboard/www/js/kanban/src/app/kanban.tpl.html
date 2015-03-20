@@ -28,7 +28,7 @@
                 ng-model="kanban.backlog.content"
                 class="kanban-items backlog"
             >
-                <li ui-tree-node ng-repeat="item in kanban.backlog.content" ng-include="'kanban-item.tpl.html'"></li>
+                <li ui-tree-node ng-repeat="item in kanban.backlog.content" ng-include="'kanban-item/kanban-item.tpl.html'"></li>
             </ul>
         </div>
         <div class="column-label">
@@ -40,33 +40,23 @@
     </div>
 
     <div ng-repeat="column in kanban.board.columns"
+        class="column"
         ng-class="{'column-displayed': column.is_open, 'column-hidden': ! column.is_open, 'wip-reached': kanban.isColumnWipReached(column) }"
         ng-click="column.is_open = true"
         ng-attr-title="{{ column.is_open ? '' : 'Toggle this column' | translate }}"
         ng-style="{width: column.resize_width}"
+        data-column-id="{{ column.id }}"
     >
         <div class="column-header"
             ng-style="{width: column.resize_width}"
         >
             <span class="wip-limit"
                 ng-class="{'infinity': !column.limit, 'editable': kanban.userIsAdmin()}"
-                ng-click="column.wip_in_edit = ! column.wip_in_edit"
             >
                 <span ng-show="! column.limit">∞</span>
                 <span ng-show="column.limit"><i class="icon-chevron-left"></i>{{ column.limit }}</span>
             </span>
-            <div class="popover bottom wip-limit-form" ng-class="{'in': column.wip_in_edit}" ng-if="kanban.userIsAdmin()">
-                <div class="arrow"></div>
-                <div class="popover-content">
-                    <span translate>Define max:</span>
-                    <div class="input-append">
-                        <input ng-model="column.limit" type="number" min="0" ng-value="column.limit" autofocus>
-                        <button class="btn btn-primary" type="button" ng-click="kanban.setWipLimitForColumn(column)">
-                            <i ng-class="{'icon-ok': ! column.saving_wip, 'icon-spinner icon-spin': column.saving_wip}"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
+            <wip-popover column="column" user-is-admin="kanban.userIsAdmin()" set-wip-limit="kanban.setWipLimitForColumn(column)"></wip-popover>
             <span class="wip-count" ng-class="{ loading: column.loading_items }">{{ column.content.length }}</span>
             <span class="toggle-column"
                 title="{{ 'Toggle this column' | translate }}"
@@ -91,7 +81,7 @@
                 class="kanban-items column"
                 data-column-id="{{ column.id }}"
             >
-                <li ui-tree-node ng-repeat="item in column.content" ng-include="'kanban-item.tpl.html'"></li>
+                <li ui-tree-node ng-repeat="item in column.content" ng-include="'kanban-item/kanban-item.tpl.html'"></li>
             </ul>
         </div>
         <div class="column-label">
@@ -125,7 +115,7 @@
                 ng-model="kanban.archive.content"
                 class="kanban-items archive"
             >
-                <li ui-tree-node ng-repeat="item in kanban.archive.content" ng-include="'kanban-item.tpl.html'"></li>
+                <li ui-tree-node ng-repeat="item in kanban.archive.content" ng-include="'kanban-item/kanban-item.tpl.html'"></li>
             </ul>
         </div>
         <div class="column-label">

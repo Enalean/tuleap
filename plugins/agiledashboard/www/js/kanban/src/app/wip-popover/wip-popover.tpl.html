@@ -1,0 +1,12 @@
+<div data-column-id="{{ column.id }}" class="popover bottom wip-limit-form" ng-class="{'in': column.wip_in_edit}" ng-if="userIsAdmin()">
+    <div class="arrow"></div>
+    <form novalidate ng-submit="setWipLimit(column)" class="popover-content">
+        <span translate>Define max:</span>
+        <div class="input-append">
+            <input id="wip-limit-input-{{ column.id }}" ng-model="column.limit_input" type="number" min="0" ng-value="column.limit" placeholder="∞">
+            <button class="btn btn-primary" type="submit">
+                <i ng-class="{'icon-ok': ! column.saving_wip, 'icon-spinner icon-spin': column.saving_wip}"></i>
+            </button>
+        </div>
+    </form>
+</div>
