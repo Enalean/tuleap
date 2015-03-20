@@ -1,7 +1,8 @@
 Version 7.12 (Not Released Yet)
-    == Enhancement ==
+	== Enhancement ==
 	* request #7890: New tuleap home page 
 	* request #7714: Add status search criteria in siteadmin userlist interface (Contrib STMicroelectronics)
+	* story #7890: new tuleap home page
 
 	== Bug fix ==
 	* request #7911: Logrotate might be configured to use "dateext" instead of .X
@@ -19,7 +20,7 @@ Version 7.12 (Not Released Yet)
 	* IM: 1.5.21
 
 	== Themes ==
-	* FlamingParrot: 1.70
+	* FlamingParrot: 1.72
 
 	== Development ==
 	* story #7702: Add dependency with Restler 3.0.0-RC6
