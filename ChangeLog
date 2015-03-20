@@ -31,6 +31,7 @@ Version 7.12 (Not Released Yet)
 	* story #7709: Site admin can restrict access to a mirror
 	* add tuleap-plugin-git-gitolite3 to RHEL6 specfile
 	* Be compatible we the new iAuthenticate interface of Restler v3.0.0-RC6
+	* Fix packaging
 
 	== Api ==
 	* REST API: 1.7
