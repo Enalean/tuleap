@@ -6,6 +6,7 @@ Version 7.12 (Not Released Yet)
 	== Bug fix ==
 	* request #7911: Logrotate might be configured to use "dateext" instead of .X
 	* request #7919: fix tracker artifact update
+	* request #7920: Properly filter private news
 
 	== Plugins ==
 	* docman: 2.26.67
