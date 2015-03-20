@@ -2,6 +2,7 @@
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 // http://sourceforge.net
 //
 // 
@@ -29,7 +30,7 @@ if (user_isloggedin()) {
 				Create the new package
                 */
                 $sql="INSERT INTO snippet_package (category,created_by,name,description,language) ".
-                    "VALUES ('$category','".user_getid()."','".htmlspecialchars($name)."','".htmlspecialchars($description)."','$language')";
+                    "VALUES ('". db_ei($category) ."','". db_ei(user_getid()) ."','". db_es(htmlspecialchars($name)) ."','". db_es(htmlspecialchars($description)) ."','" . db_ei($language) ."')";
                 $result=db_query($sql);
                 if (!$result) {
                     //error in database
@@ -46,8 +47,8 @@ if (user_isloggedin()) {
                     */
                     $sql="INSERT INTO snippet_package_version ".
                         "(snippet_package_id,changes,version,submitted_by,date) ".
-                        "VALUES ('$snippet_package_id','".htmlspecialchars($changes)."','".
-                        htmlspecialchars($version)."','".user_getid()."','".time()."')";
+                        "VALUES ('". db_ei($snippet_package_id) ."','". db_es(htmlspecialchars($changes)) ."','".
+                        db_es(htmlspecialchars($version)) ."','". db_ei(user_getid()) ."','".time()."')";
                     $result=db_query($sql);
                     if (!$result) {
                         //error in database
@@ -153,5 +154,3 @@ function show_add_snippet_box() {
 	exit_not_logged_in();
 
 }
-
-?>

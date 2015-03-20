@@ -2,6 +2,7 @@
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 // http://sourceforge.net
 //
 // 
@@ -29,8 +30,8 @@ if (user_isloggedin()) {
 
 		//Check to see if they are the creator of this package_version
 		$result=db_query("SELECT * FROM snippet_package_version ".
-			"WHERE submitted_by='".user_getid()."' AND ".
-			"snippet_package_version_id='$snippet_package_version_id'");
+			"WHERE submitted_by='". db_ei(user_getid()) ."' AND ".
+			"snippet_package_version_id='". db_ei($snippet_package_version_id) ."'");
 		if (!$result || db_numrows($result) < 1) {
 			echo '<H1>'.$Language->getText('snippet_delete','only_creator_deletes').'</H1>';
 			snippet_footer(array());
@@ -39,8 +40,8 @@ if (user_isloggedin()) {
 
 			//Remove the item from the package
 			$result=db_query("DELETE FROM snippet_package_item ".
-				"WHERE snippet_version_id='$snippet_version_id' ".
-				"AND snippet_package_version_id='$snippet_package_version_id'");
+				"WHERE snippet_version_id='". db_ei($snippet_version_id) ."' ".
+				"AND snippet_package_version_id='". db_ei($snippet_package_version_id) ."'");
 			if (!$result || db_affected_rows($result) < 1) {
 				echo '<H1>'.$Language->getText('snippet_delete','s_not_exist_in_p').'</H1>';
 				snippet_footer(array());
@@ -59,7 +60,7 @@ if (user_isloggedin()) {
 
 		//find this snippet id and make sure the current user created it
 		$result=db_query("SELECT * FROM snippet_version ".
-			"WHERE snippet_version_id='$snippet_version_id' AND submitted_by='".user_getid()."'");
+			"WHERE snippet_version_id='". db_ei($snippet_version_id) ."' AND submitted_by='". db_ei(user_getid()) ."'");
 		if (!$result || db_numrows($result) < 1) {
 			echo '<H1>'.$Language->getText('snippet_add_snippet_to_package','error_s_not_exist').'</H1>';
 			snippet_footer(array());
@@ -69,14 +70,14 @@ if (user_isloggedin()) {
 
 			//do the delete
 			$result=db_query("DELETE FROM snippet_version ".
-				"WHERE snippet_version_id='$snippet_version_id' AND submitted_by='".user_getid()."'");
+				"WHERE snippet_version_id='". db_ei($snippet_version_id) ."' AND submitted_by='". db_ei(user_getid()) ."'");
 
 			//see if any versions of this snippet are left
-			$result=db_query("SELECT * FROM snippet_version WHERE snippet_id='$snippet_id'");
+			$result=db_query("SELECT * FROM snippet_version WHERE snippet_id='". db_ei($snippet_id) ."'");
 			if (!$result || db_numrows($result) < 1) {
 				//since no version of this snippet exist, delete the main snippet entry,
 				//even if this person is not the creator of the original snippet
-				$result=db_query("DELETE FROM snippet WHERE snippet_id='$snippet_id'");
+				$result=db_query("DELETE FROM snippet WHERE snippet_id='". db_ei($snippet_id) ."'");
 			}
 
 			echo '<H1>'.$Language->getText('snippet_delete','s_removed').'</H1>';
@@ -92,8 +93,8 @@ if (user_isloggedin()) {
 
 		//make sure they own this version of the package
 		$result=db_query("SELECT * FROM snippet_package_version ".
-			"WHERE submitted_by='".user_getid()."' AND ".
-			"snippet_package_version_id='$snippet_package_version_id'");
+			"WHERE submitted_by='". db_ei(user_getid()) ."' AND ".
+			"snippet_package_version_id='". db_ei($snippet_package_version_id) ."'");
 		if (!$result || db_numrows($result) < 1) {
 			//they don't own it or it's not found
 			echo '<H1>'.$Language->getText('snippet_delete','only_creator_delete_p').'</H1>';
@@ -104,20 +105,20 @@ if (user_isloggedin()) {
 
 			//do the version delete
 			$result=db_query("DELETE FROM snippet_package_version ".
-		       		"WHERE submitted_by='".user_getid()."' AND ".
-				"snippet_package_version_id='$snippet_package_version_id'");
+                                "WHERE submitted_by='".db_ei(user_getid())."' AND ".
+                                "snippet_package_version_id='". db_ei($snippet_package_version_id) ."'");
 
 			//delete snippet_package_items
 			$result=db_query("DELETE FROM snippet_package_item ".
-				"WHERE snippet_package_version_id='$snippet_package_version_id'");
+				"WHERE snippet_package_version_id='". db_ei($snippet_package_version_id) ."'");
 
 			//see if any versions of this package remain
 			$result=db_query("SELECT * FROM snippet_package_version ".
-				"WHERE snippet_package_id='$snippet_package_id'");
+				"WHERE snippet_package_id='". db_ei($snippet_package_id) ."'");
 			if (!$result || db_numrows($result) < 1) {
 				//since no versions of this package remain,
 				//delete the main package even if the user didn't create it
-				$result=db_query("DELETE FROM snippet_package WHERE snippet_package_id='$snippet_package_id'");
+				$result=db_query("DELETE FROM snippet_package WHERE snippet_package_id='" .db_ei($snippet_package_id) ."'");
 			}
 			echo '<H1>'.$Language->getText('snippet_delete','p_removed').'</H1>';
 			snippet_footer(array());
@@ -132,5 +133,3 @@ if (user_isloggedin()) {
 	exit_not_logged_in();
 
 }
-
-?>

@@ -2,6 +2,7 @@
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 // http://sourceforge.net
 //
 // 
@@ -40,9 +41,9 @@ echo '
 $sql="SELECT * FROM snippet_language WHERE language_id!=100 ORDER BY language_name";// We don't want 'None' to appear
 $result = db_query ($sql);
 while ($language_array = db_fetch_array($result)) {
-    $sql2="SELECT count(*) FROM snippet WHERE language=".$language_array["language_id"];
+    $sql2="SELECT count(*) FROM snippet WHERE language=". db_ei($language_array["language_id"]);
     $result2 = db_query ($sql2);
-    $sql3="SELECT count(*) FROM snippet_package WHERE language=".$language_array["language_id"];
+    $sql3="SELECT count(*) FROM snippet_package WHERE language=". db_ei($language_array["language_id"]);
     $result3 = db_query ($sql3);
     $total=(db_result($result2,0,0)+db_result($result3,0,0));
     echo '
@@ -61,9 +62,9 @@ echo '</ul>
 $sql="SELECT * FROM snippet_category WHERE category_id!=100 ORDER BY category_name";// We don't want 'None' to appear
 $result = db_query ($sql);
 while ($category_array = db_fetch_array($result)) {
-    $sql2="SELECT count(*) FROM snippet WHERE category=".$category_array["category_id"];
+    $sql2="SELECT count(*) FROM snippet WHERE category=". db_ei($category_array["category_id"]);
     $result2 = db_query ($sql2);
-    $sql3="SELECT count(*) FROM snippet_package WHERE category=".$category_array["category_id"];
+    $sql3="SELECT count(*) FROM snippet_package WHERE category=". db_ei($category_array["category_id"]);
     $result3 = db_query ($sql3);
     $total=(db_result($result2,0,0)+db_result($result3,0,0));
     echo '
@@ -76,5 +77,3 @@ echo '
 	</TABLE>';
 
 snippet_footer(array());
-
-?>

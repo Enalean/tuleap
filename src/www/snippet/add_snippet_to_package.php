@@ -2,6 +2,7 @@
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 // http://sourceforge.net
 //
 // 
@@ -49,8 +50,8 @@ if (user_isloggedin()) {
 				check to see if they are the creator of this version
 			*/
 			$result=db_query("SELECT * FROM snippet_package_version ".
-				"WHERE submitted_by='".user_getid()."' AND ".
-				"snippet_package_version_id='$snippet_package_version_id'");
+				"WHERE submitted_by='". db_ei(user_getid()) ."' AND ".
+				"snippet_package_version_id='" . db_ei($snippet_package_version_id) . "'");
 			if (!$result || db_numrows($result) < 1) {
 				echo '<H1>'.$Language->getText('snippet_add_snippet_to_package','error_only_creator').'</H1>';
 				handle_add_exit();
@@ -59,7 +60,7 @@ if (user_isloggedin()) {
 			/*
 				make sure the snippet_version_id exists
 			*/
-			$result=db_query("SELECT * FROM snippet_version WHERE snippet_version_id='$snippet_version_id'");
+			$result=db_query("SELECT * FROM snippet_version WHERE snippet_version_id='" . db_ei($snippet_version_id) . "'");
 			if (!$result || db_numrows($result) < 1) {
 				echo '<H1>'.$Language->getText('snippet_add_snippet_to_package','error_s_not_exist').'</H1>';
 				echo '<A HREF="/snippet/add_snippet_to_package.php?snippet_package_version_id='.$snippet_package_version_id.'">'.$Language->getText('snippet_add_snippet_to_package','back').'</A>';
@@ -70,8 +71,8 @@ if (user_isloggedin()) {
 				make sure the snippet_version_id isn't already in this package
 			*/
 			$result=db_query("SELECT * FROM snippet_package_item ".
-				"WHERE snippet_package_version_id='$snippet_package_version_id' ".
-				"AND snippet_version_id='$snippet_version_id'");
+				"WHERE snippet_package_version_id='" . db_ei($snippet_package_version_id) . "' ".
+				"AND snippet_version_id='" . db_ei($snippet_version_id) . "'");
 			if ($result && db_numrows($result) > 0) {
 				echo '<H1>'.$Language->getText('snippet_add_snippet_to_package','already_added').'</H1>';
 				echo '<A HREF="/snippet/add_snippet_to_package.php?snippet_package_version_id='.$snippet_package_version_id.'">'.$Language->getText('snippet_add_snippet_to_package','back').'</A>';
@@ -82,7 +83,7 @@ if (user_isloggedin()) {
 				create the snippet version
 			*/
 			$sql="INSERT INTO snippet_package_item (snippet_package_version_id,snippet_version_id) ".
-				"VALUES ('$snippet_package_version_id','$snippet_version_id')";
+				"VALUES ('" . db_ei($snippet_package_version_id) . "','" . db_ei($snippet_version_id) . "')";
 			$result=db_query($sql);
 
 			if (!$result) {
@@ -102,7 +103,7 @@ if (user_isloggedin()) {
 	$result=db_query("SELECT snippet_package.name,snippet_package_version.version ".
 			"FROM snippet_package,snippet_package_version ".
 			"WHERE snippet_package.snippet_package_id=snippet_package_version.snippet_package_id ".
-			"AND snippet_package_version.snippet_package_version_id='$snippet_package_version_id'");
+			"AND snippet_package_version.snippet_package_version_id='" . db_ei($snippet_package_version_id) . "'");
 
 	echo '
 	<H1>'.$Language->getText('snippet_add_snippet_to_package','add_s').'</H2>
@@ -138,7 +139,7 @@ if (user_isloggedin()) {
 		"FROM snippet,snippet_version,snippet_package_item ".
 		"WHERE snippet.snippet_id=snippet_version.snippet_id ".
 		"AND snippet_version.snippet_version_id=snippet_package_item.snippet_version_id ".
-		"AND snippet_package_item.snippet_package_version_id='$snippet_package_version_id'");
+		"AND snippet_package_item.snippet_package_version_id='". db_ei($snippet_package_version_id) ."'");
 	$rows=db_numrows($result);
 	if (!$result || $rows < 1) {
 		echo db_error();
