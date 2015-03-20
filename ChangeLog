@@ -9,6 +9,7 @@ Version 7.12 (Not Released Yet)
 	* request #7919: fix tracker artifact update
 	* request #7920: Properly filter private news
 	* request #7871: Fix persistent XSS in survey service
+	* request #7804: Fix persistent XSS in FRS
 
 	== Plugins ==
 	* docman: 2.26.67
