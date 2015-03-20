@@ -136,6 +136,25 @@ class Planning_MilestoneFactory {
     }
 
     /**
+     * Create a milestone corresponding to an artifact
+     *
+     * @param  PFUser $user
+     * @param  Integer $artifact_id
+     *
+     * @return Planning_Milestone|null
+     */
+    public function getValidatedBareMilestoneByArtifactId(PFUser $user, $artifact_id) {
+        $artifact = $this->artifact_factory->getArtifactById($artifact_id);
+        if (! $artifact) {
+            return null;
+        }
+        if (! $artifact->userCanView($user)) {
+            throw new MilestonePermissionDeniedException();
+        }
+        return $this->getBareMilestoneByArtifact($user, $artifact);;
+    }
+
+    /**
      * @param PFUser $user
      * @param Tracker_Artifact $artifact
      * @return Planning_Milestone|null
