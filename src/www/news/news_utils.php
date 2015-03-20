@@ -286,12 +286,12 @@ function news_check_permission($forum_id,$group_id) {
 	
     if ($group_id == $GLOBALS['sys_news_group']) {
         //search for the real group_id of the news
-        $sql = "SELECT g.is_public AS continue FROM news_bytes AS n INNER JOIN groups AS g USING(group_id) WHERE n.forum_id = ". db_ei($forum_id);
+        $sql = "SELECT g.is_public AS is_public FROM news_bytes AS n INNER JOIN groups AS g USING(group_id) WHERE n.forum_id = ". db_ei($forum_id);
         $res = db_query($sql);
         if ($res && db_numrows($res)) {
             $row = db_fetch_array($res);
             //see if it is public to continue permissions check
-            if (!$row['continue']) {
+            if (!$row['is_public']) {
                 return false;
             }
         }
