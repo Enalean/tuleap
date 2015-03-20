@@ -61,7 +61,8 @@ class AgileDashboardControllerTest extends TuleapTestCase {
             $this->kanban_manager,
             $this->kanban_factory,
             $this->config_manager,
-            $this->tracker_factory
+            $this->tracker_factory,
+            mock('AgileDashboard_PermissionsManager')
         );
 
         expect($this->config_manager)->updateConfiguration()->never();
@@ -86,7 +87,8 @@ class AgileDashboardControllerTest extends TuleapTestCase {
             $this->kanban_manager,
             $this->kanban_factory,
             $this->config_manager,
-            $this->tracker_factory
+            $this->tracker_factory,
+            mock('AgileDashboard_PermissionsManager')
         );
 
         expect($this->config_manager)->updateConfiguration()->never();
@@ -109,7 +111,8 @@ class AgileDashboardControllerTest extends TuleapTestCase {
             $this->kanban_manager,
             $this->kanban_factory,
             $this->config_manager,
-            $this->tracker_factory
+            $this->tracker_factory,
+            mock('AgileDashboard_PermissionsManager')
         );
 
         expect($this->config_manager)->updateConfiguration()->never();
@@ -136,7 +139,8 @@ class AgileDashboardControllerTest extends TuleapTestCase {
             $this->kanban_manager,
             $this->kanban_factory,
             $this->config_manager,
-            $this->tracker_factory
+            $this->tracker_factory,
+            mock('AgileDashboard_PermissionsManager')
         );
 
         expect($this->kanban_manager)->createKanban()->never();
@@ -163,7 +167,8 @@ class AgileDashboardControllerTest extends TuleapTestCase {
             $this->kanban_manager,
             $this->kanban_factory,
             $this->config_manager,
-            $this->tracker_factory
+            $this->tracker_factory,
+            mock('AgileDashboard_PermissionsManager')
         );
 
         expect($this->kanban_manager)->createKanban()->never();

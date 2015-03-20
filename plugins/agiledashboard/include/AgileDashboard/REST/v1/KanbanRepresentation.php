@@ -50,7 +50,7 @@ class KanbanRepresentation {
     public $label;
 
     /**
-     * @var array
+     * @var array {@type Tuleap\AgileDashboard\REST\v1\KanbanColumnRepresentation}
      */
     public $columns;
 

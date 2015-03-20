@@ -48,8 +48,25 @@
         <div class="column-header"
             ng-style="{width: column.resize_width}"
         >
-            <span class="wip-limit infinity" ng-show="! column.limit">∞</span>
-            <span class="wip-limit" ng-show="column.limit"><i class="icon-chevron-left"></i>{{ column.limit }}</span>
+            <span class="wip-limit"
+                ng-class="{'infinity': !column.limit, 'editable': kanban.userIsAdmin()}"
+                ng-click="column.wip_in_edit = ! column.wip_in_edit"
+            >
+                <span ng-show="! column.limit">∞</span>
+                <span ng-show="column.limit"><i class="icon-chevron-left"></i>{{ column.limit }}</span>
+            </span>
+            <div class="popover bottom wip-limit-form" ng-class="{'in': column.wip_in_edit}" ng-if="kanban.userIsAdmin()">
+                <div class="arrow"></div>
+                <div class="popover-content">
+                    <span translate>Define max:</span>
+                    <div class="input-append">
+                        <input ng-model="column.limit" type="number" min="0" ng-value="column.limit" autofocus>
+                        <button class="btn btn-primary" type="button" ng-click="kanban.setWipLimitForColumn(column)">
+                            <i ng-class="{'icon-ok': ! column.saving_wip, 'icon-spinner icon-spin': column.saving_wip}"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
             <span class="wip-count" ng-class="{ loading: column.loading_items }">{{ column.content.length }}</span>
             <span class="toggle-column"
                 title="{{ 'Toggle this column' | translate }}"
