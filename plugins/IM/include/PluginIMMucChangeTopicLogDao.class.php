@@ -18,7 +18,7 @@ class PluginIMMucChangeTopicLogDao extends DataAccessObject {
     * Gets all 'change topic' event logs in the db
     * @return DataAccessResult
     */
-    function & searchAll() {
+    function searchAll() {
         $sql = "SELECT * FROM ofMucConversationLog WHERE body IS NULL AND subject IS NOT NULL";
         return $this->retrieve($sql);
     }
@@ -27,7 +27,7 @@ class PluginIMMucChangeTopicLogDao extends DataAccessObject {
     * Searches 'change topic' event logs by muc room name 
     * @return DataAccessResult
     */
-    function & searchByMucName($muc_name) {
+    function searchByMucName($muc_name) {
         $sql = sprintf("SELECT cl.*, SUBSTRING_INDEX(cl.sender, '@', 1) AS username  
                         FROM ofMucConversationLog cl, ofMucRoom r
                         WHERE cl.roomID = r.roomID AND
@@ -42,7 +42,7 @@ class PluginIMMucChangeTopicLogDao extends DataAccessObject {
     * Searches 'change topic' event logs by muc room name before a date 
     * @return DataAccessResult
     */
-    function & searchByMucNameBeforeDate($muc_name, $end_date) {
+    function searchByMucNameBeforeDate($muc_name, $end_date) {
         $sql = sprintf("SELECT cl.*, SUBSTRING_INDEX(cl.sender, '@', 1) AS username
                         FROM ofMucConversationLog cl, ofMucRoom r
                         WHERE cl.roomID = r.roomID AND
@@ -60,7 +60,7 @@ class PluginIMMucChangeTopicLogDao extends DataAccessObject {
     * Searches 'change topic' event logs by muc room name after a date 
     * @return DataAccessResult
     */
-    function & searchByMucNameAfterDate($muc_name, $start_date) {
+    function searchByMucNameAfterDate($muc_name, $start_date) {
         $sql = sprintf("SELECT cl.*, SUBSTRING_INDEX(cl.sender, '@', 1) AS username  
                         FROM ofMucConversationLog cl, ofMucRoom r
                         WHERE cl.roomID = r.roomID AND
@@ -78,7 +78,7 @@ class PluginIMMucChangeTopicLogDao extends DataAccessObject {
     * Searches 'change topic' event logs by muc room name between two dates 
     * @return DataAccessResult
     */
-    function & searchByMucNameBetweenDates($muc_name, $start_date, $end_date) {
+    function searchByMucNameBetweenDates($muc_name, $start_date, $end_date) {
         $sql = sprintf("SELECT cl.*, SUBSTRING_INDEX(cl.sender, '@', 1) AS username  
                         FROM ofMucConversationLog cl, ofMucRoom r
                         WHERE cl.roomID = r.roomID AND

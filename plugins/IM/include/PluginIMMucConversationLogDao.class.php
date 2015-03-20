@@ -18,7 +18,7 @@ class PluginIMMucConversationLogDao extends DataAccessObject {
     * Gets all conversation logs in the db
     * @return DataAccessResult
     */
-    function & searchAll() {
+    function searchAll() {
         $sql = "SELECT * FROM ofConversation";
         return $this->retrieve($sql);
     }
@@ -27,7 +27,7 @@ class PluginIMMucConversationLogDao extends DataAccessObject {
     * Searches conversation logs by muc room name 
     * @return DataAccessResult
     */
-    function & searchByMucName($muc_name) {
+    function searchByMucName($muc_name) {
         $sql = sprintf("SELECT *, SUBSTRING_INDEX(fromJID, '@', 1) as nickname
                         FROM ofMessageArchive ma
                         WHERE SUBSTRING_INDEX(toJID, '@', 1) = %s
@@ -40,7 +40,7 @@ class PluginIMMucConversationLogDao extends DataAccessObject {
     * Searches conversation logs by muc room name before a date 
     * @return DataAccessResult
     */
-    function & searchByMucNameBeforeDate($muc_name, $end_date) {
+    function searchByMucNameBeforeDate($muc_name, $end_date) {
         $sql = sprintf("SELECT *, SUBSTRING_INDEX(fromJID, '@', 1) as nickname
                         FROM ofMessageArchive ma
                         WHERE SUBSTRING_INDEX(toJID, '@', 1) = %s AND
@@ -56,7 +56,7 @@ class PluginIMMucConversationLogDao extends DataAccessObject {
     * Searches conversation logs by muc room name after a date 
     * @return DataAccessResult
     */
-    function & searchByMucNameAfterDate($muc_name, $start_date) {
+    function searchByMucNameAfterDate($muc_name, $start_date) {
         $sql = sprintf("SELECT *, SUBSTRING_INDEX(fromJID, '@', 1) as nickname
                         FROM ofMessageArchive ma
                         WHERE SUBSTRING_INDEX(toJID, '@', 1) = %s AND
@@ -72,7 +72,7 @@ class PluginIMMucConversationLogDao extends DataAccessObject {
     * Searches conversation logs by muc room name between two dates 
     * @return DataAccessResult
     */
-    function & searchByMucNameBetweenDates($muc_name, $start_date, $end_date) {
+    function searchByMucNameBetweenDates($muc_name, $start_date, $end_date) {
         $sql = sprintf("SELECT *, SUBSTRING_INDEX(fromJID, '@', 1) as nickname
                         FROM ofMessageArchive ma
                         WHERE SUBSTRING_INDEX(toJID, '@', 1) = %s AND
