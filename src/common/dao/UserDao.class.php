@@ -659,17 +659,22 @@ class UserDao extends DataAccessObject {
      * @param Integer $limit
      * @param String $sort_header
      * @param String $sort_order
+     * @param array $status_values
      *
      * @return Array
      */
-    function listAllUsers ($pattern = "", $offset, $limit, $sort_header, $sort_order) {
+    function listAllUsers ($pattern = "", $offset, $limit, $sort_header, $sort_order, $status_values) {
         $offset = $this->da->escapeInt($offset);
         $limit  = $this->da->escapeInt($limit);
         $stmLimit = "";
         if ($limit != 0) {
             $stmLimit .= ' LIMIT '.$offset.', '.$limit;
         }
-        $where = "";
+        $where  = "";
+        $status = "";
+        if (!empty($status_values)) {
+            $status =$this->da->quoteSmartImplode(',', $status_values);
+        }
         if ($pattern) {
             $pattern = $this->da->quoteSmart('%'.$pattern.'%');
             $where = "WHERE (
@@ -677,6 +682,11 @@ class UserDao extends DataAccessObject {
                     OR user.user_id LIKE $pattern
                     OR user.realname LIKE $pattern
                     OR user.email LIKE $pattern)";
+            if ($status != "") {
+                $where .= ' AND (status IN ('.$status.'))';
+            }
+        } else if ($status != "") {
+            $where .= ' WHERE status IN ('.$status.')';
         }
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS user.*, admin_of.nb AS admin_of, member_of.nb AS member_of
