@@ -1,6 +1,7 @@
 <h2>{{ title }}</h2>
 
-<form action="" method="POST" id="admin-homepage">
+<form action="" method="POST" id="admin-homepage" enctype="multipart/form-data">
+    <input type="hidden" name="MAX_FILE_SIZE" value="500000" />
     {{{ csrf_token }}}
     <label class="checkbox">
         <input type="checkbox" name="use_standard_homepage" value="1" {{# use_standard_homepage }}checked="checked"{{/ use_standard_homepage }} />
@@ -8,22 +9,41 @@
     </label>
     <p class="help">{{{ use_standard_homepage_help }}}</p>
     {{# use_standard_homepage }}
-        <h3>{{ headline }}</h3>
-        <p class="help">{{ headline_help }}</p>
-        <select class="pull-right" id="admin-headline-select-language">
+        <section>
+            <h3>{{ logo }}</h3>
+            <p class="help">{{ logo_help }}</p>
+            <p class="logo-container">
+                {{# use_custom_logo }}
+                    <label class="pc_checkbox tracker_artifact_attachment_delete">
+                        <input type="checkbox" name="remove_custom_logo" value="1" title="Remove custom logo">
+                    </label>
+                {{/ use_custom_logo }}
+                <img src="{{ path_logo }}" alt="Logo" />
+            </p>
+            <p>
+                <label>{{ upload }}</label>
+                <input type="file" name="logo" />
+            </p>
+        </section>
+
+        <section>
+            <h3>{{ headline }}</h3>
+            <p class="help">{{ headline_help }}</p>
+            <select class="pull-right" id="admin-headline-select-language">
+                {{# headlines }}
+                    <option>{{ language_id }}</option>
+                {{/ headlines }}
+            </select>
             {{# headlines }}
-                <option>{{ language_id }}</option>
+                <textarea
+                    id="admin-headline-{{ language_id }}"
+                    class="admin-headline"
+                    name="headlines[{{ language_id }}]"
+                    placeholder="{{ placeholder_headline }}"
+                    rows="3"
+                >{{ headline }}</textarea>
             {{/ headlines }}
-        </select>
-        {{# headlines }}
-            <textarea
-                id="admin-headline-{{ language_id }}"
-                class="admin-headline"
-                name="headlines[{{ language_id }}]"
-                placeholder="{{ placeholder_headline }}"
-                rows="3"
-            >{{ headline }}</textarea>
-        {{/ headlines }}
+        </section>
     {{/ use_standard_homepage }}
-    <button type="submit" class="btn btn-primary" name="update" value="1">{{ btn_submit }}</button>
+    <button type="submit" class="btn btn-primary" name="update" value="1">{{ save }}</button>
 </form>

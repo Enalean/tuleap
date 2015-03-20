@@ -33,14 +33,19 @@ $login_form_url .= '/account/login.php';
 $display_homepage_boxes = !isset($GLOBALS['sys_display_homepage_boxes']) || (isset($GLOBALS['sys_display_homepage_boxes']) && $GLOBALS['sys_display_homepage_boxes'] == 1);
 $display_homepage_news  = !isset($GLOBALS['sys_display_homepage_news'])  || (isset($GLOBALS['sys_display_homepage_news'])  && $GLOBALS['sys_display_homepage_news']  == 1);
 
+$header_params = array(
+    'title' => $Language->getText('homepage', 'title'),
+);
 
-$HTML->header(array('title'=>$Language->getText('homepage', 'title')));
+if ($HTML->canDisplayStandardHomepage()) {
+    $header_params['body_class'] = array('homepage');
 
-echo '<div id="homepage" class="container">';
-
-if ($GLOBALS['HTML']->canDisplayStandardHomepage()) {
-    $GLOBALS['HTML']->displayStandardHomepage();
+    $HTML->header($header_params);
+    $HTML->displayStandardHomepage();
 } else {
+    $HTML->header($header_params);
+
+    echo '<div id="homepage" class="container">';
     // go fetch le content that may have its own logic to decide if the boxes should be displayed or not
     ob_start();
     include ($Language->getContent('homepage/homepage', null, null, '.php'));
@@ -67,10 +72,7 @@ if ($GLOBALS['HTML']->canDisplayStandardHomepage()) {
         $w->display();
     }
     echo '</div>';
+    echo '</div>';
 }
 
-echo '</div>';
-
 $HTML->footer(array());
-
-?>
