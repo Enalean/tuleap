@@ -1,10 +1,46 @@
-<section class="homepage-headline">
-    <div class="container">
-        <div class="row">
-            <div class="span12">
-                <img src="{{ path_logo }}" alt="Logo" />
-                <p>{{ headline }}</p>
+<section class="homepage-head-cta {{# display_homepage_news }}with-news{{/ display_homepage_news }}">
+    <div class="head">
+        <div class="container">
+            <div class="row-fluid">
+                <div class="span12">
+                    <img src="{{ path_logo }}" alt="Logo" />
+                    <p>{{ headline }}</p>
+                </div>
             </div>
         </div>
     </div>
+
+    <div class="container cta">
+        <div class="row-fluid">
+            {{# display_homepage_news }}
+                <div class="homepage-news span5">
+                    {{> homepage-news }}
+                </div>
+
+                <div class="statistics span4">
+                    {{> homepage-stats }}
+                </div>
+            {{/ display_homepage_news }}
+            {{^ display_homepage_news }}
+                <div class="homepage-discover span9">
+                </div>
+            {{/ display_homepage_news }}
+
+            {{> homepage-signin }}
+        </div>
+    </div>
 </section>
+
+{{# display_homepage_news }}
+    <section class="homepage-discover">
+        <div class="container">
+            <div class="row-fluid">
+                <div class="span12">
+                    <h2>{{{ discover_tuleap_awesomeness }}}</h2>
+                </div>
+            </div>
+        </div>
+    </section>
+{{/ display_homepage_news }}
+
+{{{ awesomeness }}}

@@ -111,6 +111,7 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
     protected function displayCommonStylesheetElements($params) {
         $this->displayFontAwesomeStylesheetElements();
 
+        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/animate.min.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/scripts/bootstrap/bootstrap-select/bootstrap-select.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/scripts/bootstrap/bootstrap-tour/bootstrap-tour.min.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/scripts/select2/select2.css" />';
@@ -354,15 +355,46 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
         return $dao->isStandardHomepageUsed();
     }
 
-    public function displayStandardHomepage() {
+    public function displayStandardHomepage($display_homepage_news) {
         $dao          = new Admin_Homepage_Dao();
         $current_user = UserManager::instance()->getCurrentUser();
 
+        $project_dao = new UserDao();
+        $nb_users    = $project_dao->countActiveAndRestrictedUsers();
+
+        $project_dao = new ProjectDao();
+        $nb_projects = $project_dao->countActiveProjects();
+
+        $most_secure_url = 'http://'. Config::get('sys_default_domain');
+        if (Config::get('sys_https_host')) {
+            $most_secure_url = 'https://'. Config::get('sys_https_host');
+        }
+
+        $login_presenter_builder = new User_LoginPresenterBuilder();
+        $login_presenter         = $login_presenter_builder->buildForHomepage();
+
         $headline = $dao->getHeadlineByLanguage($current_user->getLocale());
+
+        $news = '';
+        if ($display_homepage_news) {
+            $news = news_show_latest($GLOBALS['sys_news_group'], 2, true, false, true, 0);
+        }
+
+        $awesomeness = file_get_contents($GLOBALS['Language']->getContent('homepage/awesomeness', null, null, '.html'));
 
         $templates_dir = Config::get('codendi_dir') .'/src/templates/homepage/';
         $renderer      = TemplateRendererFactory::build()->getRenderer($templates_dir);
-        $presenter     = new FlamingParrot_HomepagePresenter($headline);
+        $presenter     = new FlamingParrot_HomepagePresenter(
+            $headline,
+            $nb_projects,
+            $nb_users,
+            $most_secure_url,
+            $login_presenter,
+            $display_homepage_news,
+            $news,
+            $current_user,
+            $awesomeness
+        );
         $renderer->renderToPage('homepage', $presenter);
     }
 

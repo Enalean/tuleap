@@ -200,7 +200,7 @@ function news_fetch_a_news_summary_block($data, $group_id, $limit, $show_project
         $html .= '<span class="news_summary"><a href="/forum/forum.php?forum_id='. $data['forum_id'] .'"><h4>'. $data['summary'] . '</h4></a></span>';
         
         $html .= '<blockquote>';
-        $html .= $details;
+        $html .= '<div>' . $details . '</div>';
         $html .= '<small>
                     <span class="news_author">'. $uh->getLinkOnUserFromUserId($data['submitted_by']) .'</span>
                     <span class="news_date">'. html_time_ago($data['date']) .'</span>'.
