@@ -1,6 +1,6 @@
 Version 7.12 (Not Released Yet)
     == Enhancement ==
-	* request #7714: Add status search criteria in siteadmin userlist interface
+	* request #7714: Add status search criteria in siteadmin userlist interface (Contrib STMicroelectronics)
 
 	== Bug fix ==
 	* request #7911: Logrotate might be configured to use "dateext" instead of .X
