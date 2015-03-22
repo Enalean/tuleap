@@ -23,8 +23,15 @@ class AgileDashboard_Presenter_KanbanSummaryPresenter {
     /** @var AgileDashboard_Kanban */
     private $kanban;
 
-    public function __construct(AgileDashboard_Kanban $kanban) {
-        $this->kanban = $kanban;
+    /** @var AgileDashboard_KanbanItemDao */
+    private $kanban_item_dao;
+
+    public function __construct(
+        AgileDashboard_Kanban $kanban,
+        AgileDashboard_KanbanItemDao $kanban_item_dao
+    ) {
+        $this->kanban          = $kanban;
+        $this->kanban_item_dao = $kanban_item_dao;
     }
 
     public function name() {
@@ -36,11 +43,15 @@ class AgileDashboard_Presenter_KanbanSummaryPresenter {
     }
 
     public function count_open_kanban_items() {
-        return 0;
+        return $this->kanban_item_dao->getOpenItemIds(
+            $this->kanban->getTrackerId()
+        )->count();
     }
 
     public function count_closed_kanban_items() {
-        return 0;
+        return $this->kanban_item_dao->getKanbanArchiveItemIds(
+            $this->kanban->getTrackerId()
+        )->count();
     }
 
     public function open() {
