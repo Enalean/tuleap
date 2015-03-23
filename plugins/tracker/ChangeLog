@@ -1,3 +1,6 @@
+Version 5.592 - Tuleap 7.12
+    * story #7702 Add specific tracker in XML REST test
+
 Version 5.591 - Tuleap 7.12
     * Refactor XML import: use dedicated class
 
