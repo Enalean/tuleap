@@ -13,7 +13,7 @@ Version 7.12 (Not Released Yet)
 	* request #7898: Fix SQL injections in snippet service
 
 	== Plugins ==
-	* docman: 2.26.67
+	* docman: 2.26.68
 	* fulltextsearch: 0.127
 	* tracker: 5.592
 	* git: 4.20
