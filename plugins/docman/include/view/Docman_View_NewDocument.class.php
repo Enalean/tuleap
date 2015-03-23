@@ -2,8 +2,8 @@
 
 /**
 * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-* 
-* 
+*
+*
 *
 * Docman_View_NewFolder
 */
@@ -13,7 +13,7 @@ require_once('Docman_View_GetFieldsVisitor.class.php');
 require_once(dirname(__FILE__).'/../Docman_Document.class.php');
 
 class Docman_View_NewDocument extends Docman_View_New {
-    
+
     function _getTitle($params) {
         return $GLOBALS['Language']->getText('plugin_docman', 'new_document');
     }
@@ -26,7 +26,7 @@ class Docman_View_NewDocument extends Docman_View_New {
     function _getActionText() {
         return $GLOBALS['Language']->getText('plugin_docman', 'new_document_action');
     }
-    
+
     function _getSpecificProperties($params) {
         $html = '';
         $currentItemType = null;
@@ -78,10 +78,11 @@ class Docman_View_NewDocument extends Docman_View_New {
             );
         }
         $get_specific_fields = new Docman_View_GetSpecificFieldsVisitor();
-        
+
         foreach ($specifics as $specific) {
-            $html .= '<div><input type="radio" name="item[item_type]" value="'. $specific['type'] .'" id="item_item_type_'. $specific['type'] .'" '. ($specific['checked']?'checked="checked"':'') .'/>';
-            $html .= '<b><label class="docman-create-doctype" for="item_item_type_'. $specific['type'] .'">'. $specific['label'] .'</label></b></div>';
+            $html .= '<div><label class="docman-create-doctype radio" for="item_item_type_'. $specific['type'] .'">';
+            $html .= '<input type="radio" name="item[item_type]" value="'. $specific['type'] .'" id="item_item_type_'. $specific['type'] .'" '. ($specific['checked']?'checked="checked"':'') .'/>';
+            $html .= '<b>'. $specific['label'] .'</b></label></div>';
             $html .= '<div style="padding-left:20px" id="item_item_type_'. $specific['type'] .'_specific_properties">';
             $fields = $specific['obj']->accept($get_specific_fields, array('request' => &$this->controller->request));
             $html .= '<table>';
