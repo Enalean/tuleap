@@ -1,3 +1,11 @@
+Version 7.11-3 (Monday, March 23rd 2015)
+	* request #7804: Fix persistent XSS in FRS
+	* request #7898: Fix SQL injections in snippet service
+	* request #7922: Notices in log viewer and administration of the IM plugin with recent PHP
+	* request #7924: XSS in instant messaging plugin administration
+	* request #7871: Fix persistent XSS in survey service
+	* request #7920: Properly filter private news
+
 Version 7.11-2 (Monday, March 9th 2015)
 	* request #7902: Install Tuleap with gitolite3 and git19 on centos6
 	* request #7911 Logrotate might be configured to use "dateext" instead of .X
