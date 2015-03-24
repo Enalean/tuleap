@@ -377,9 +377,9 @@ class IMViews extends Views {
         $im_dao = new IMDao(IMDataAccess::instance($this->getControler()));
         
 		$res_grp = $im_dao->search_group_without_shared_group();
-		$res_grp = $res_grp->query;
+		$res_grp = $res_grp->getResult();
 		$res_muc = $im_dao->search_group_without_muc();
-		$res_muc = $res_muc->query;
+		$res_muc = $res_muc->getResult();
 		
 		// number of shared group to synchronize
 		$nb_grp = db_numrows($res_grp);
