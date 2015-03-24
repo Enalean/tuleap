@@ -1,3 +1,6 @@
+Version 1.47 - Tuleap 7.12
+    * Replace XmlValidator by XML_RNGValidator
+
 Version 1.46 - Tuleap 7.10
     * request #7731: Columns defined as collapsed by default are not collapsed in cardwall report on dashboards
 

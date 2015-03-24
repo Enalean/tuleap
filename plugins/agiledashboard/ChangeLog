@@ -1,3 +1,6 @@
+Version 1.175 - Tuleap 7.12
+    * Replace XmlValidator by XML_RNGValidator
+
 Version 1.174 - Tuleap 7.12
     * request #7931 Number of open/closed items is always set at 0 in AD homepage
 

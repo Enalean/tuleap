@@ -15,11 +15,13 @@ Version 7.12 (Not Released Yet)
 	== Plugins ==
 	* docman: 2.26.68
 	* fulltextsearch: 0.127
-	* tracker: 5.592
+	* tracker: 5.593
 	* git: 4.20
-	* agiledashboard: 1.174
+	* agiledashboard: 1.175
 	* pluginsadministration: 1.7
 	* IM: 1.5.22
+	* cardwall: 1.47
+	* tests: 5.28
 
 	== Themes ==
 	* FlamingParrot: 1.72

@@ -1,3 +1,6 @@
+Version 5.593 - Tuleap 7.12
+    * Replace XmlValidator by XML_RNGValidator
+
 Version 5.592 - Tuleap 7.12
     * story #7702 Add specific tracker in XML REST test
 
