@@ -1,3 +1,6 @@
+Version 1.177 - Tuleap 7.12
+    * story #7581: Display time metrics on each cards
+
 Version 1.176 - Tuleap 7.12
     * story #7580: Refactor WIP popover into a fully-functional directive
 
