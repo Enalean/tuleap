@@ -170,7 +170,7 @@ class IMDao extends DataAccessObject {
 	function synchronize_grp_for_im_muc_room() {
         $pm = ProjectManager::instance();
 			          $dar=&$this->search_group_without_muc();
-			         $result=$dar->query;//$this->retrieve($sql)->query;
+			         $result=$dar->getResult();//$this->retrieve($sql)->query;
 			         if(isset($result)&&$result){
 			         		//var_dump($result);
 			         		///about jabber server
