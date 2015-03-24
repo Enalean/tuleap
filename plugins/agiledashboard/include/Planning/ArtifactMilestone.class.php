@@ -137,7 +137,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
         return $this->project;
     }
 
-        /**
+    /**
      * @return Tracker_Artifact
      */
     public function getArtifact() {
@@ -326,7 +326,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
      * @return Integer
      */
     public function getLastModifiedDate() {
-        return $this->getArtifact()->getLastChangeset()->getSubmittedOn();
+        return $this->getArtifact()->getLastUpdateDate();
     }
 
     /**

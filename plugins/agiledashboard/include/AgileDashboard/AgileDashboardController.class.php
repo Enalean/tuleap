@@ -344,6 +344,10 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         $user      = $this->request->getCurrentUser();
 
         try {
+            if (! $user->useLabFeatures()) {
+                throw new AgileDashboard_KanbanCannotAccessException();
+            }
+
             $kanban  = $this->kanban_factory->getKanban($user, $kanban_id);
             $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
 

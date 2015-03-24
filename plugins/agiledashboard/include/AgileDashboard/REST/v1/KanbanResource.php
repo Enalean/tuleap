@@ -21,6 +21,7 @@ namespace Tuleap\AgileDashboard\REST\v1;
 
 use Luracast\Restler\RestException;
 use Tuleap\REST\Header;
+use Tuleap\REST\AuthenticatedResource;
 use AgileDashboard_KanbanFactory;
 use AgileDashboard_KanbanDao;
 use AgileDashboard_KanbanItemDao;
@@ -42,7 +43,7 @@ use Tracker_NoChangeException;
 use Tracker_FormElement_Field_List_Bind;
 use Tracker_Semantic_Status;
 
-class KanbanResource {
+class KanbanResource extends AuthenticatedResource {
 
     const MAX_LIMIT = 100;
 
@@ -108,6 +109,7 @@ class KanbanResource {
      * </pre>
      *
      * @url GET {id}
+     * @access hybrid
      *
      * @param int $id Id of the kanban
      *
@@ -116,7 +118,8 @@ class KanbanResource {
      * @throws 403
      * @throws 404
      */
-    protected function getId($id) {
+    public function getId($id) {
+        $this->checkAcess();
         $user   = $this->getCurrentUser();
         $kanban = $this->getKanban($user, $id);
 
@@ -152,6 +155,7 @@ class KanbanResource {
      * </pre>
      *
      * @url GET {id}/backlog
+     * @access hybrid
      *
      * @param int $id Id of the kanban
      * @param int $limit  Number of elements displayed per page
@@ -162,7 +166,8 @@ class KanbanResource {
      * @throws 403
      * @throws 404
      */
-    protected function getBacklog($id, $limit = 10, $offset = 0) {
+    public function getBacklog($id, $limit = 10, $offset = 0) {
+        $this->checkAcess();
         $user   = $this->getCurrentUser();
         $kanban = $this->getKanban($user, $id);
 
@@ -328,6 +333,7 @@ class KanbanResource {
      * </pre>
      *
      * @url GET {id}/archive
+     * @access hybrid
      *
      * @param int $id Id of the kanban
      * @param int $limit  Number of elements displayed per page
@@ -338,7 +344,8 @@ class KanbanResource {
      * @throws 403
      * @throws 404
      */
-    protected function getArchive($id, $limit = 10, $offset = 0) {
+    public function getArchive($id, $limit = 10, $offset = 0) {
+        $this->checkAcess();
         $user   = $this->getCurrentUser();
         $kanban = $this->getKanban($user, $id);
 
@@ -442,6 +449,7 @@ class KanbanResource {
      * </pre>
      *
      * @url GET {id}/items
+     * @access hybrid
      *
      * @param int $id Id of the kanban
      * @param int $column_id Id of the column the item belongs to
@@ -453,7 +461,8 @@ class KanbanResource {
      * @throws 403
      * @throws 404
      */
-    protected function getItems($id, $column_id, $limit = 10, $offset = 0) {
+    public function getItems($id, $column_id, $limit = 10, $offset = 0) {
+        $this->checkAcess();
         $user   = $this->getCurrentUser();
         $kanban = $this->getKanban($user, $id);
 
@@ -583,9 +592,6 @@ class KanbanResource {
 
     private function getCurrentUser() {
         $user = UserManager::instance()->getCurrentUser();
-        if (! $user->useLabFeatures()) {
-            throw new RestException(403, 'You must activate lab features');
-        }
 
         return $user;
     }

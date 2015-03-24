@@ -93,10 +93,6 @@ class AgileDashboard_KanbanFactory {
     }
 
     private function isUserAllowedToAccessKanban(PFuser $user, $tracker_id) {
-        if (! $user->useLabFeatures()) {
-            return false;
-        }
-
         $tracker = $this->tracker_factory->getTrackerById($tracker_id);
         if (! $tracker) {
             throw new AgileDashboard_KanbanNotFoundException();
