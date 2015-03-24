@@ -282,7 +282,7 @@ class PermissionsDao extends DataAccessObject {
 
         $sql =
           "SELECT * FROM wiki_page
-                LEFT JOIN permissions ON permissions.object_id = wiki_page.id
+                LEFT JOIN permissions ON permissions.object_id = CAST(wiki_page.id as CHAR)
             WHERE wiki_page.group_id = $project_id
                 AND permission_type IS NULL
             LIMIT 1

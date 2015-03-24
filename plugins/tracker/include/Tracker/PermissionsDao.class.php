@@ -92,7 +92,7 @@ class Tracker_PermissionsDao extends DataAccessObject {
         $sql =
            "SELECT * FROM tracker_field
                 JOIN tracker ON tracker.id = tracker_field.tracker_id
-                LEFT JOIN permissions ON permissions.object_id = tracker_field.id
+                LEFT JOIN permissions ON permissions.object_id = CAST(tracker_field.id as CHAR)
             WHERE tracker.group_id = $project_id
                 AND permission_type IS NULL
             LIMIT 1
