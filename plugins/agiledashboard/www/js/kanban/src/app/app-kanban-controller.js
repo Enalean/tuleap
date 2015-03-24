@@ -60,8 +60,15 @@
         loadArchive(limit, offset);
 
         self.treeOptions = {
-            dropped: dropped
+            dragStart: dragStart,
+            dropped  : dropped
         };
+
+        function dragStart(event) {
+            self.board.columns.forEach(function(column) {
+                column.wip_in_edit = false;
+            });
+        }
 
         function dropped(event) {
             var dropped_item_id     = event.source.nodeScope.$modelValue.id,
@@ -143,7 +150,7 @@
             $modal.open({
                 keyboard: false,
                 backdrop: 'static',
-                templateUrl: 'error.tpl.html',
+                templateUrl: 'error/error.tpl.html',
                 controller: ErrorCtrl
             });
         }
@@ -157,6 +164,7 @@
                     column.resize_top    = '';
                     column.resize_width  = '';
                     column.wip_in_edit   = false;
+                    column.limit_input   = column.limit;
                     column.saving_wip    = false;
                     loadColumnContent(column, limit, offset);
                 });
@@ -201,12 +209,13 @@
         }
 
         function isColumnWipReached(column) {
-            return (column.limit && column.limit <= column.content.length);
+            return (column.limit && column.limit < column.content.length);
         }
 
         function setWipLimitForColumn(column) {
             column.saving_wip = true;
-            return KanbanService.setWipLimitForColumn(column.id, kanban.id, column.limit).then(function(data) {
+            return KanbanService.setWipLimitForColumn(column.id, kanban.id, column.limit_input).then(function(data) {
+                column.limit       = column.limit_input;
                 column.wip_in_edit = false;
                 column.saving_wip  = false;
             },
