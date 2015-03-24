@@ -166,7 +166,10 @@ class Planning_Controller extends MVC2_PluginController {
 
         $kanban_presenters = array();
         foreach ($list_of_kanban as $kanban_for_project) {
-            $kanban_presenters[] = new AgileDashboard_Presenter_KanbanSummaryPresenter($kanban_for_project);
+            $kanban_presenters[] = new AgileDashboard_Presenter_KanbanSummaryPresenter(
+                $kanban_for_project,
+                new AgileDashboard_KanbanItemDao()
+            );
         }
 
         return $kanban_presenters;
