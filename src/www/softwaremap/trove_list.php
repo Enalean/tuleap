@@ -16,15 +16,14 @@ if ($GLOBALS['sys_use_trove'] == 0) {
     exit_permission_denied();
 }
 
-
-
 // assign default. 18 is 'topic'
-if (!isset($form_cat)) {
-    if (isset($GLOBALS['sys_default_trove_cat'])) $form_cat = $GLOBALS['sys_default_trove_cat'];
-    else $form_cat = 18;
- }
-
-$form_cat = intval($form_cat);
+$form_cat = 18;
+$request  = HTTPRequest::instance();
+if ($request->exist('form_cat')) {
+    $form_cat = intval($request->get('form_cat'));
+} elseif (isset($GLOBALS['sys_default_trove_cat'])) {
+    $form_cat = $GLOBALS['sys_default_trove_cat'];
+}
 
 // get info about current folder
 $res_trove_cat = db_query('SELECT * FROM trove_cat WHERE trove_cat_id='.$form_cat);
