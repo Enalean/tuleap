@@ -196,4 +196,27 @@ class AgileDashboard_KanbanItemDao extends DataAccessObject {
 
         return $this->retrieve($sql);
     }
+
+    public function searchTimeInfoForItem($tracker_id, $item_id) {
+        $tracker_id = $this->da->escapeInt($tracker_id);
+        $item_id    = $this->da->escapeInt($item_id);
+
+        $sql = "SELECT CVL.bindvalue_id AS column_id, MAX(C.submitted_on) AS submitted_on
+                FROM tracker_artifact AS A
+                    INNER JOIN tracker_changeset AS C ON (C.artifact_id = A.id)
+                    INNER JOIN tracker AS T ON (A.tracker_id = T.id AND T.id = $tracker_id)
+                    INNER JOIN (
+                        tracker_changeset_value AS CV
+                        INNER JOIN (
+                            SELECT distinct(field_id) FROM tracker_semantic_status WHERE tracker_id = $tracker_id
+                        ) AS SS ON (CV.field_id = SS.field_id)
+                        INNER JOIN tracker_changeset_value_list AS CVL ON (CV.id = CVL.changeset_value_id)
+                    ) ON (C.id = CV.changeset_id)
+                WHERE A.id = $item_id
+                    AND CV.has_changed = 1
+                    AND CVL.bindvalue_id <> 100
+                    GROUP BY CVL.bindvalue_id";
+
+        return $this->retrieve($sql);
+    }
 }

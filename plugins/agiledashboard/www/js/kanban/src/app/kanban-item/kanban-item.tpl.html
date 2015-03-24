@@ -1,6 +1,12 @@
 <div class="kanban-item {{ item.color }}" ui-tree-handle>
     <div class="type-border"></div>
 
+    <i ng-if="column" class="icon-time"
+        tooltip-html-unsafe="{{ kanban.getTimeInfo(column, item) }}"
+        tooltip-trigger
+        tooltip-animation="true"
+        tooltip-placement="top"></i>
+
     <a href="/plugins/tracker/?aid={{ item.id }}" class="kanban-item-link">item #{{ item.id }}</a>
     <div class="kanban-item-label">{{ item.label }}</div>
 

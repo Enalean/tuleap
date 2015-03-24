@@ -43,7 +43,7 @@ class KanbanBacklogRepresentation {
             $artifact = $factory->getInstanceFromRow($row);
             if ($artifact->userCanView($user)) {
                 $item_representation = new KanbanItemRepresentation();
-                $item_representation->build($artifact);
+                $item_representation->build($artifact, array());
 
                 $this->collection[] = $item_representation;
             }

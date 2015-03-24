@@ -5,12 +5,23 @@
 
     KanbanCtrl.$inject = [
         '$modal',
+        '$sce',
+        'gettextCatalog',
+        'amCalendarFilter',
         'SharedPropertiesService',
         'KanbanService',
         'CardFieldsService'
     ];
 
-    function KanbanCtrl($modal, SharedPropertiesService, KanbanService, CardFieldsService) {
+    function KanbanCtrl(
+        $modal,
+        $sce,
+        gettextCatalog,
+        amCalendarFilter,
+        SharedPropertiesService,
+        KanbanService,
+        CardFieldsService
+    ) {
         var self   = this,
             limit  = 50,
             offset = 0,
@@ -54,6 +65,7 @@
         self.isColumnWipReached           = isColumnWipReached;
         self.setWipLimitForColumn         = setWipLimitForColumn;
         self.userIsAdmin                  = userIsAdmin;
+        self.getTimeInfo                  = getTimeInfo;
 
         loadColumns();
         loadBacklog(limit, offset);
@@ -71,54 +83,63 @@
         }
 
         function dropped(event) {
-            var dropped_item_id     = event.source.nodeScope.$modelValue.id,
+            var dropped_item        = event.source.nodeScope.$modelValue,
                 compared_to         = defineComparedTo(event.dest.nodesScope.$modelValue, event.dest.index),
                 source_list_element = event.source.nodesScope.$element,
                 dest_list_element   = event.dest.nodesScope.$element;
 
             if (dest_list_element.hasClass('backlog')) {
-                return droppedInBacklog(event, dropped_item_id, compared_to);
+                return droppedInBacklog(event, dropped_item, compared_to);
             } else if(dest_list_element.hasClass('archive')) {
-                return droppedInArchive(event, dropped_item_id, compared_to);
+                return droppedInArchive(event, dropped_item, compared_to);
             } else if (dest_list_element.hasClass('column')) {
                 var column_id = dest_list_element.attr('data-column-id');
-                return droppedInColumn(event, column_id, dropped_item_id, compared_to);
+                return droppedInColumn(event, column_id, dropped_item, compared_to);
             }
 
-            function droppedInBacklog(event, dropped_item_id, compared_to) {
+            function droppedInBacklog(event, dropped_item, compared_to) {
                 if (isDroppedInSameColumn(event) && compared_to) {
                     KanbanService
-                        .reorderBacklog(kanban.id, dropped_item_id, compared_to)
+                        .reorderBacklog(kanban.id, dropped_item.id, compared_to)
                         .then(null, reload);
                 } else {
                     KanbanService
-                        .moveInBacklog(kanban.id, dropped_item_id, compared_to)
+                        .moveInBacklog(kanban.id, dropped_item.id, compared_to)
                         .then(null, reload);
                 }
             }
 
-            function droppedInArchive(event, dropped_item_id, compared_to) {
+            function droppedInArchive(event, dropped_item, compared_to) {
                 if (isDroppedInSameColumn(event) && compared_to) {
                     KanbanService
-                        .reorderArchive(kanban.id, dropped_item_id, compared_to)
+                        .reorderArchive(kanban.id, dropped_item.id, compared_to)
                         .then(null, reload);
                 } else {
                     KanbanService
-                        .moveInArchive(kanban.id, dropped_item_id, compared_to)
+                        .moveInArchive(kanban.id, dropped_item.id, compared_to)
                         .then(null, reload);
                 }
             }
 
-            function droppedInColumn(event, column_id, dropped_item_id, compared_to) {
+            function droppedInColumn(event, column_id, dropped_item, compared_to) {
                 if (isDroppedInSameColumn(event) && compared_to) {
                     KanbanService
-                        .reorderColumn(kanban.id, column_id, dropped_item_id, compared_to)
+                        .reorderColumn(kanban.id, column_id, dropped_item.id, compared_to)
                         .then(null, reload);
                 } else {
                     KanbanService
-                        .moveInColumn(kanban.id, column_id, dropped_item_id, compared_to)
-                        .then(null, reload);
+                        .moveInColumn(kanban.id, column_id, dropped_item.id, compared_to)
+                        .then(
+                            function () {
+                                updateTimeInfo(column_id, dropped_item);
+                            },
+                            reload
+                        );
                 }
+            }
+
+            function updateTimeInfo(column_id, dropped_item) {
+                dropped_item.timeinfo[column_id] = new Date();
             }
 
             function isDroppedInSameColumn(event) {
@@ -225,6 +246,28 @@
 
         function userIsAdmin() {
             return SharedPropertiesService.getUserIsAdmin();
+        }
+
+        function getTimeInfo(column, item) {
+            var timeinfo;
+
+            if (! column || ! item.timeinfo) {
+                return;
+            }
+
+            if (item.timeinfo.kanban) {
+                timeinfo = '<p><span><i class="icon-signin"></i> ';
+                timeinfo += gettextCatalog.getString('Kanban:') + '</span>';
+                timeinfo += ' <strong>' + amCalendarFilter(item.timeinfo.kanban) + '</strong></p>';
+            }
+
+            if (item.timeinfo[column.id]) {
+                timeinfo += '<p><span><i class="icon-signin"></i> ';
+                timeinfo += gettextCatalog.getString('Column:') + '</span>';
+                timeinfo += ' <strong>' + amCalendarFilter(item.timeinfo[column.id]) + '</strong></p>';
+            }
+
+            return $sce.trustAsHtml(timeinfo);
         }
     }
 })();
