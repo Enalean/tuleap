@@ -409,7 +409,7 @@ class cardwallPlugin extends Plugin {
             $params['project'],
             $tracker_factory,
             $this->getConfigFactory(),
-            new XmlValidator()
+            new XML_RNGValidator()
         );
 
         $cardwall_xml_export->export($params['into_xml']);
@@ -421,14 +421,13 @@ class cardwallPlugin extends Plugin {
      * @see Event::IMPORT_XML_PROJECT_TRACKER_DONE
      */
     public function import_xml_project_tracker_done($params) {
-        include_once 'common/XmlValidator/XmlValidator.class.php';
         $cardwall_ontop_import = new CardwallConfigXmlImport(
             $params['project_id'],
             $params['mapping'],
             new Cardwall_OnTop_Dao,
             new Cardwall_OnTop_ColumnDao,
             EventManager::instance(),
-            new XmlValidator()
+            new XML_RNGValidator()
         );
         $cardwall_ontop_import->import($params['xml_content']);
     }

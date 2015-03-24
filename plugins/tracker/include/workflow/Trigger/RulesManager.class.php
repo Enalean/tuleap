@@ -44,6 +44,65 @@ class Tracker_Workflow_Trigger_RulesManager {
     }
 
     /**
+     * Export triggers to XML
+     *
+     * @param SimpleXMLElement &$root     the node to which the workflow is attached (passed by reference)
+     * @param array            $xmlMapping correspondance between real ids and xml IDs
+     *
+     * @return void
+     */
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping, Tracker $tracker) {
+        $trigger_rule_collection = $this->getForTargetTracker($tracker);
+
+        foreach ($trigger_rule_collection as $trigger_rule) {
+            /* @var $trigger_rule Tracker_Workflow_Trigger_TriggerRule */
+
+            $trigger_rule_xml = $root->addChild('trigger_rule');
+
+            $triggers_xml = $trigger_rule_xml->addChild('triggers');
+
+            $triggers = $trigger_rule->getTriggers();
+            foreach ($triggers as $trigger) {
+                $trigger_xml = $triggers_xml->addChild('trigger');
+                $trigger_xml->addChild('field_id')->addAttribute('REF', $trigger->getField()->getXMLId());
+                $trigger_xml->addChild('field_value_id')->addAttribute('REF', $trigger->getValue()->getXMLId());
+            }
+
+
+            $trigger_rule_xml->addChild('condition', $trigger_rule->getCondition());
+
+            $target = $trigger_rule->getTarget();
+            $target_xml = $trigger_rule_xml->addChild('target');
+            $target_xml->addChild('field_id')->addAttribute('REF', array_search($target->getField()->getId(), $xmlMapping));
+            $target_xml->addChild('field_value_id')->addAttribute('REF', array_search($target->getValue()->getId(), $xmlMapping['values']));
+        }
+    }
+
+    public function createFromXML(SimpleXMLElement $xml_element, array $xmlMapping) {
+        foreach($xml_element->trigger_rule as $trigger_rule_xml) {
+            $triggers = array();
+            foreach ($trigger_rule_xml->triggers->trigger as $trigger_xml) {
+                $triggers[] = new Tracker_Workflow_Trigger_FieldValue(
+                    $xmlMapping[(string) $trigger_xml->field_id['REF']],
+                    $xmlMapping[(string) $trigger_xml->field_value_id['REF']]
+                );
+            }
+
+            $new_trigger_rule = new Tracker_Workflow_Trigger_TriggerRule(
+                    0,
+                    new Tracker_Workflow_Trigger_FieldValue(
+                        $xmlMapping[(string) $trigger_rule_xml->target->field_id['REF']],
+                        $xmlMapping[(string) $trigger_rule_xml->target->field_value_id['REF']]
+                    ),
+                    (string) $trigger_rule_xml->condition,
+                    $triggers
+            );
+
+            $this->add($new_trigger_rule);
+        }
+    }
+
+    /**
      * Add a new rule in the DB
      *
      * @param Tracker_Workflow_Trigger_TriggerRule $rule

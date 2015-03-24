@@ -1,6 +1,5 @@
+#!/usr/share/codendi/src/utils/php-launcher.sh
 <?php
-// #!/usr/share/codendi/src/utils/php-launcher.sh
-
 /**
  * Copyright (c) Enalean, 2013. All Rights Reserved.
  *
@@ -21,7 +20,6 @@
  */
 
 require_once 'pre.php';
-require_once 'common/project/ProjectXMLImporter.class.php';
 
 if ($argc < 4) {
     echo <<< EOT
@@ -45,9 +43,12 @@ try {
     }
 
     $xml_importer->import($argv[1], $argv[3]);
+} catch (XML_ParseException $exception) {
+    foreach ($exception->getErrors() as $parse_error) {
+        fwrite(STDERR, "*** ERROR: ".$parse_error.PHP_EOL);
+    }
+    exit(1);
 } catch (Exception $exception) {
-    echo "*** ERROR: ".$exception->getMessage().PHP_EOL;
+    fwrite(STDERR, "*** ERROR: ".$exception->getMessage().PHP_EOL);
     exit(1);
 }
-
-?>

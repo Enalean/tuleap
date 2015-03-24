@@ -56,7 +56,6 @@ Mock::generate('ReferenceManager');
 class TrackerManagerTest extends TuleapTestCase {
 
     private $tracker;
-    private $tracker2;
 
     public function setUp() {
         parent::setUp();
@@ -78,8 +77,8 @@ class TrackerManagerTest extends TuleapTestCase {
         $this->tracker = new MockTracker($this);
         $this->tracker->setReturnValue('isActive', true);
         $this->tracker->setReturnValue('getTracker', $this->tracker);
-        $this->tracker2 = stub('Tracker')->exportToXML()->returns('<tracker>');
-        $trackers       = array($this->tracker, $this->tracker2);
+
+        $trackers       = array($this->tracker);
 
         $tf = new MockTrackerFactory($this);
         $tf->setReturnReference('getTrackerById', $this->tracker, array(3));
@@ -305,30 +304,4 @@ class TrackerManagerTest extends TuleapTestCase {
         $controller->expectOnce('search');
         $this->tm->process($request, $user);
     }
-
-    public function testExportToXml() {
-        $xml_content = new SimpleXMLElement('<project/>');
-        $group_id    = 123;
-
-        stub($this->tracker2)->isActive()->returns(true);
-
-        expect($this->tracker)->exportToXML()->once();
-        expect($this->tracker2)->exportToXML()->once();
-
-        $this->tm->exportToXMl($group_id, $xml_content);
-    }
-
-    public function testExportToXmlDoNotIncludeDeletedTrackers() {
-        $xml_content = new SimpleXMLElement('<project/>');
-        $group_id    = 123;
-
-        stub($this->tracker2)->isActive()->returns(false);
-
-        expect($this->tracker)->exportToXML()->once();
-        expect($this->tracker2)->exportToXML()->never();
-
-        $this->tm->exportToXMl($group_id, $xml_content);
-    }
 }
-
-?>

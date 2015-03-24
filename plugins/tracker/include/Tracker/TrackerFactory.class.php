@@ -520,7 +520,7 @@ class TrackerFactory {
     /**
      * @return Tracker_Workflow_Trigger_RulesManager
      */
-    protected function getTriggerRulesManager() {
+    public function getTriggerRulesManager() {
         $trigger_rule_dao        = new Tracker_Workflow_Trigger_RulesDao();
         $workflow_backend_logger = new WorkflowBackendLogger(new BackendLogger());
         $rules_processor         = new Tracker_Workflow_Trigger_RulesProcessor(

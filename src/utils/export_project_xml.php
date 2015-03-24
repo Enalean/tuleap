@@ -20,7 +20,6 @@
  */
 
 require_once 'pre.php';
-require_once 'common/project/ProjectXMLExporter.class.php';
 
 if ($argc < 1) {
     echo <<< EOT
@@ -33,15 +32,24 @@ EOT;
 
 $project = ProjectManager::instance()->getProject($argv[1]);
 if ($project && !$project->isError() && !$project->isDeleted()) {
-    $xml_exporter = new ProjectXMLExporter(EventManager::instance());
-    $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
-                                         <project />');
-    $xml_exporter->export($project, $xml_element);
-    $dom = dom_import_simplexml($xml_element)->ownerDocument;
-    $dom->formatOutput = true;
-    echo $dom->saveXML();
+    try {
+        $xml_exporter = new ProjectXMLExporter(EventManager::instance());
+        $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+                                             <project />');
+        $xml_exporter->export($project, $xml_element);
+        $dom = dom_import_simplexml($xml_element)->ownerDocument;
+        $dom->formatOutput = true;
+        echo $dom->saveXML();
+    } catch (XML_ParseException $exception) {
+        foreach ($exception->getErrors() as $parse_error) {
+            fwrite(STDERR, "*** ERROR: ".$parse_error.PHP_EOL);
+        }
+        exit(1);
+    } catch (Exception $exception) {
+        fwrite(STDERR, "*** ERROR: ".$exception->getMessage().PHP_EOL);
+        exit(1);
+    }
 } else {
     echo "*** ERROR: Invalid project_id\n";
     exit(1);
 }
-?>

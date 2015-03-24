@@ -18,9 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/mvc2/PluginController.class.php';
-require_once 'common/XmlValidator/XmlValidator.class.php';
-
 /**
  * Handles the HTTP actions related to  the agile dashborad as a whole.
  *
@@ -74,7 +71,7 @@ class AgileDashboard_XMLController extends MVC2_PluginController {
             $this->group_id
         );
 
-        $xml_exporter = new AgileDashboard_XMLExporter(new XmlValidator(), new PlanningPermissionsManager());
+        $xml_exporter = new AgileDashboard_XMLExporter(new XML_RNGValidator(), new PlanningPermissionsManager());
         $xml_exporter->export($root_node, $plannings);
     }
 
@@ -82,12 +79,10 @@ class AgileDashboard_XMLController extends MVC2_PluginController {
         $this->checkUserIsAdmin();
 
         $xml = $this->request->get('xml_content')->agiledashboard;
-        $xml_validator = new XmlValidator();
+        $xml_validator = new XML_RNGValidator();
         $rng_path      = realpath(AGILEDASHBOARD_BASE_DIR.'/../www/resources/xml_project_agiledashboard.rng');
 
-        if (! $xml_validator->nodeIsValid($xml, $rng_path)) {
-            throw new XMLImporterInputNotWellFormedException();
-        }
+        $xml_validator->validate($xml, $rng_path);
 
         $xml_importer = new AgileDashboard_XMLImporter();
         $data = $xml_importer->toArray($xml, $this->request->get('mapping'));
@@ -117,5 +112,3 @@ class AgileDashboard_XMLController extends MVC2_PluginController {
         }
     }
 }
-
-?>

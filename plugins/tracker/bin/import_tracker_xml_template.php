@@ -22,28 +22,23 @@ if ( !is_readable($xmlFile) ) {
 }
 
 // FILE PROCESSING
-$output = '';
-ob_start();
-TrackerXmlImport::build()->createFromXMLFile($group_id, $xmlFile);
-$output  = ob_get_contents();
-ob_end_flush();
+try {
+    TrackerXmlImport::build()->createFromXMLFile($group_id, $xmlFile);
+    if ( $GLOBALS['Response']->feedbackHasErrors() ) {
+        echo $GLOBALS['Response']->getRawFeedback();
+        exit(1);
+    }
 
-// WARN AND ERRORS PARSING
-$matches = array();
-if ( preg_match_all('/.*\s+error\:\s+.*/', $output, $matches) ) {
-    echo 'Invalid XML format'.PHP_EOL;    
+    if ( $GLOBALS['Response']->feedbackHasWarningsOrErrors() ) {
+        echo $GLOBALS['Response']->getRawFeedback();
+        exit(2);
+    }
+    echo 'Import succeeded'.PHP_EOL;
+    exit(0);
+} catch (XML_ParseException $exception) {
+    foreach ($exception->getErrors() as $parse_error) {
+        fwrite(STDERR, $parse_error.PHP_EOL);
+    }
+    echo 'Invalid XML format'.PHP_EOL;
     exit(1);
 }
-
-if ( $GLOBALS['Response']->feedbackHasErrors() ) {
-    echo $GLOBALS['Response']->getRawFeedback();    
-    exit(1);
-}
-
-if ( $GLOBALS['Response']->feedbackHasWarningsOrErrors() ) {
-    echo $GLOBALS['Response']->getRawFeedback();    
-    exit(2);
-}
-
-echo 'Import succeeded'.PHP_EOL;
-exit(0);

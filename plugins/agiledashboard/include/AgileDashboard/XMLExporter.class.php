@@ -19,11 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once 'common/XmlValidator/XmlValidator.class.php';
-
 class AgileDashboard_XMLExporter {
 
-    /**  @var XmlValidator */
+    /**  @var XML_RNGValidator */
     private $xml_validator;
 
     /**  @var PlanningPermissionsManager */
@@ -42,7 +40,7 @@ class AgileDashboard_XMLExporter {
      */
     const TRACKER_ID_PREFIX = 'T';
 
-    public function __construct(XmlValidator $xml_validator, PlanningPermissionsManager $planning_permissions_manager) {
+    public function __construct(XML_RNGValidator $xml_validator, PlanningPermissionsManager $planning_permissions_manager) {
         $this->xml_validator                = $xml_validator;
         $this->planning_permissions_manager = $planning_permissions_manager;
     }
@@ -83,9 +81,7 @@ class AgileDashboard_XMLExporter {
         }
 
         $rng_path = realpath(AGILEDASHBOARD_BASE_DIR.'/../www/resources/xml_project_agiledashboard.rng');
-        if (! $this->xml_validator->nodeIsValid($agiledashboard_node, $rng_path)) {
-            throw new AgileDashboard_XMLExporterNodeNotValidException();
-        }
+        $this->xml_validator->validate($agiledashboard_node, $rng_path);
     }
 
     private function exportBacklogTrackers(SimpleXMLElement $planning_node, Planning $planning) {

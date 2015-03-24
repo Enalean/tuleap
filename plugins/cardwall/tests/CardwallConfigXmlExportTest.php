@@ -19,7 +19,6 @@
  */
 
 require_once dirname(__FILE__) .'/bootstrap.php';
-require_once 'common/XmlValidator/XmlValidator.class.php';
 
 class CardwallConfigXmlExportTest extends TuleapTestCase {
 
@@ -50,7 +49,7 @@ class CardwallConfigXmlExportTest extends TuleapTestCase {
         stub($this->config_factory)->getOnTopConfig($this->tracker1)->returns($this->cardwall_config);
         stub($this->config_factory)->getOnTopConfig($this->tracker2)->returns($this->cardwall_config2);
 
-        $this->xml_validator = stub('XmlValidator')->nodeIsValid()->returns(true);
+        $this->xml_validator = mock('XML_RNGValidator');
 
         $this->xml_exporter = new CardwallConfigXmlExport($this->project, $this->tracker_factory, $this->config_factory, $this->xml_validator);
     }
@@ -91,7 +90,7 @@ class CardwallConfigXmlExportTest extends TuleapTestCase {
     public function itThrowsAnExceptionIfXmlGeneratedIsNotValid() {
         $this->expectException();
 
-        $xml_validator = stub('XmlValidator')->nodeIsValid()->returns(false);
+        $xml_validator = stub('XML_RNGValidator')->validate()->throws(new XML_ParseException(array(), array()));
         $xml_exporter  = new CardwallConfigXmlExport($this->project, $this->tracker_factory, $this->config_factory, $xml_validator);
         $xml_exporter->export(new SimpleXMLElement('<empty/>'));
     }
@@ -123,7 +122,7 @@ class CardwallConfigXmlExport_ColumnsTest extends TuleapTestCase {
         $this->config_factory = mock('Cardwall_OnTop_ConfigFactory');
         stub($this->config_factory)->getOnTopConfig($this->tracker1)->returns($this->cardwall_config);
 
-        $this->xml_validator = stub('XmlValidator')->nodeIsValid()->returns(true);
+        $this->xml_validator = mock('XML_RNGValidator');
 
         $this->xml_exporter = new CardwallConfigXmlExport($this->project, $this->tracker_factory, $this->config_factory, $this->xml_validator);
     }

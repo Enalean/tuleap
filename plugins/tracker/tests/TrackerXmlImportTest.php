@@ -33,13 +33,14 @@ class TrackerXmlImportTestInstance extends TrackerXmlImport {
     public function buildTrackersHierarchy(array $hierarchy, SimpleXMLElement $xml_tracker, array $mapper) {
         return parent::buildTrackersHierarchy($hierarchy, $xml_tracker, $mapper);
     }
+
+    public function setMappingInjector($injector) {
+        $this->injector = $injector;
+    }
 }
 
 class TrackerXmlImportTest extends TuleapTestCase {
 
-    /**
-     * @var TrackerFactory
-     */
     private $tracker_factory;
 
     private $group_id = 145;
@@ -116,8 +117,6 @@ class TrackerXmlImportTest extends TuleapTestCase {
 
         $this->hierarchy_dao = stub('Tracker_Hierarchy_Dao')->updateChildren()->returns(true);
 
-        $this->xml_validator = stub('XmlValidator')->nodeIsValid()->returns(true);
-
         $this->tracker_xml_importer = partial_mock(
             'TrackerXmlImportTestInstance',
             array(
@@ -127,13 +126,14 @@ class TrackerXmlImportTest extends TuleapTestCase {
                 $this->tracker_factory,
                 $this->event_manager,
                 $this->hierarchy_dao,
-                $this->xml_validator,
                 mock('Tracker_CannedResponseFactory'),
                 mock('Tracker_FormElementFactory'),
                 mock('Tracker_SemanticFactory'),
                 mock('Tracker_RuleFactory'),
                 mock('Tracker_ReportFactory'),
                 mock('WorkflowFactory'),
+                mock('XML_RNGValidator'),
+                mock('Tracker_Workflow_Trigger_RulesManager'),
             )
         );
 
@@ -172,26 +172,6 @@ class TrackerXmlImportTest extends TuleapTestCase {
         $this->expectException();
         expect($this->tracker_xml_importer)->createFromXML()->count(1);
         $this->tracker_xml_importer->import($this->group_id, $this->xml_input);
-    }
-
-    public function itRaisesAnExceptionTheXmlDoesNotMatchTheRNG() {
-        $xml_validator = stub('XmlValidator')->nodeIsValid()->returns(false);
-        stub($xml_validator)->getValidationErrors()->returns(array());
-        $tracker_xml_importer = new TrackerXmlImport(
-            $this->tracker_factory,
-            $this->event_manager,
-            $this->hierarchy_dao,
-            $xml_validator,
-            mock('Tracker_CannedResponseFactory'),
-            mock('Tracker_FormElementFactory'),
-            mock('Tracker_SemanticFactory'),
-            mock('Tracker_RuleFactory'),
-            mock('Tracker_ReportFactory'),
-            mock('WorkflowFactory')
-        );
-
-        $this->expectException('trackerFromXmlInputNotWellFormedException');
-        $tracker_xml_importer->import($this->group_id, $this->xml_input);
     }
 
     public function itThrowsAnEventIfAllTrackersAreCreated() {
@@ -256,13 +236,14 @@ class TrackerXmlImport_InstanceTest extends TuleapTestCase {
             $tracker_factory,
             mock('EventManager'),
             mock('Tracker_Hierarchy_Dao'),
-            mock('XmlValidator'),
             mock('Tracker_CannedResponseFactory'),
             mock('Tracker_FormElementFactory'),
             mock('Tracker_SemanticFactory'),
             mock('Tracker_RuleFactory'),
             mock('Tracker_ReportFactory'),
-            mock('WorkflowFactory')
+            mock('WorkflowFactory'),
+            mock('XML_RNGValidator'),
+            mock('Tracker_Workflow_Trigger_RulesManager')
         );
     }
 
@@ -308,13 +289,14 @@ XML;
             stub('TrackerFactory')->getInstanceFromRow()->returns($tracker),
             mock('EventManager'),
             mock('Tracker_Hierarchy_Dao'),
-            mock('XmlValidator'),
             mock('Tracker_CannedResponseFactory'),
             mock('Tracker_FormElementFactory'),
             mock('Tracker_SemanticFactory'),
             $rule_factory,
             mock('Tracker_ReportFactory'),
-            mock('WorkflowFactory')
+            mock('WorkflowFactory'),
+            mock('XML_RNGValidator'),
+            mock('Tracker_Workflow_Trigger_RulesManager')
         );
 
         //create data passed
@@ -341,4 +323,194 @@ XML;
         $tracker_xml_importer->getInstanceFromXML($xml,$groupId, $name, $description, $itemname);
     }
 
+}
+
+class Tracker_FormElementFactoryForXMLTests extends Tracker_FormElementFactory {
+    private $mapping = array();
+    public function __construct($mapping) {
+        $this->mapping = $mapping;
+    }
+
+    public function getInstanceFromXML($tracker, $elem, &$xmlMapping) {
+        $xmlMapping = $this->mapping;
+    }
+}
+
+class TrackerXmlImport_TriggersTest extends TuleapTestCase {
+
+    private $xml_input;
+    private $group_id = 145;
+    private $tracker_factory;
+    private $event_manager;
+    private $hierarchy_dao;
+    private $tracker_xml_importer;
+    private $trigger_rulesmanager;
+    private $xmlFieldMapping;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->xml_input = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+            <project>
+                <empty_section />
+                <trackers>
+                    <tracker id="T101" parent_id="0" instantiate_for_new_projects="1">
+                        <name>t10</name>
+                        <item_name>t11</item_name>
+                        <description>t12</description>
+                        <formElements>
+                            <formElement type="sb" ID="F1685" rank="4" required="1">
+                                <name>status</name>
+                                <label><![CDATA[Status]]></label>
+                                <bind type="static" is_rank_alpha="0">
+                                    <items>
+                                        <item ID="V2059" label="To be done" is_hidden="0"/>
+                                        <item ID="V2060" label="On going" is_hidden="0"/>
+                                        <item ID="V2061" label="Done" is_hidden="0"/>
+                                        <item ID="V2062" label="Canceled" is_hidden="0"/>
+                                        <item ID="V2063" label="Functional review" is_hidden="0"/>
+                                        <item ID="V2064" label="Code review" is_hidden="0"/>
+                                    </items>
+                                    <default_values>
+                                        <value REF="V2059"/>
+                                    </default_values>
+                                </bind>
+                            </formElement>
+                        </formElements>
+                    </tracker>
+                    <tracker id="T102" parent_id="T101" instantiate_for_new_projects="1">
+                        <name>t20</name>
+                        <item_name>t21</item_name>
+                        <description>t22</description>
+                        <formElements>
+                            <formElement type="sb" ID="F1741" rank="0" required="1">
+                              <name>status</name>
+                              <label><![CDATA[Status]]></label>
+                              <bind type="static" is_rank_alpha="0">
+                                <items>
+                                  <item ID="V2116" label="To be done" is_hidden="0"/>
+                                  <item ID="V2117" label="On going" is_hidden="0"/>
+                                  <item ID="V2118" label="Done" is_hidden="0"/>
+                                  <item ID="V2119" label="Canceled" is_hidden="0"/>
+                                </items>
+                                <decorators>
+                                  <decorator REF="V2117" r="102" g="102" b="0"/>
+                                </decorators>
+                                <default_values>
+                                  <value REF="V2116"/>
+                                </default_values>
+                              </bind>
+                            </formElement>
+                        </formElements>
+                    </tracker>
+                    <triggers>
+                        <trigger_rule>
+                          <triggers>
+                            <trigger>
+                              <field_id REF="F1685"/>
+                              <field_value_id REF="V2060"/>
+                            </trigger>
+                          </triggers>
+                          <condition>at_least_one</condition>
+                          <target>
+                            <field_id REF="F1741"/>
+                            <field_value_id REF="V2117"/>
+                          </target>
+                        </trigger_rule>
+                        <trigger_rule>
+                          <triggers>
+                            <trigger>
+                              <field_id REF="F1685"/>
+                              <field_value_id REF="V2061"/>
+                            </trigger>
+                          </triggers>
+                          <condition>all_of</condition>
+                          <target>
+                            <field_id REF="F1741"/>
+                            <field_value_id REF="V2118"/>
+                          </target>
+                        </trigger_rule>
+                    </triggers>
+                </trackers>
+                <cardwall/>
+                <agiledashboard/>
+            </project>'
+        );
+
+        $this->triggers = new SimpleXMLElement('<triggers>
+                            <trigger_rule>
+                              <triggers>
+                                <trigger>
+                                  <field_id REF="F1685"/>
+                                  <field_value_id REF="V2060"/>
+                                </trigger>
+                              </triggers>
+                              <condition>at_least_one</condition>
+                              <target>
+                                <field_id REF="F1741"/>
+                                <field_value_id REF="V2117"/>
+                              </target>
+                            </trigger_rule>
+                            <trigger_rule>
+                              <triggers>
+                                <trigger>
+                                  <field_id REF="F1685"/>
+                                  <field_value_id REF="V2061"/>
+                                </trigger>
+                              </triggers>
+                              <condition>all_of</condition>
+                              <target>
+                                <field_id REF="F1741"/>
+                                <field_value_id REF="V2118"/>
+                              </target>
+                            </trigger_rule>
+                        </triggers>');
+
+        $this->tracker1 = aMockTracker()->withId(444)->build();
+        stub($this->tracker1)->testImport()->returns(true);
+
+        $this->tracker2 = aMockTracker()->withId(555)->build();
+        stub($this->tracker2)->testImport()->returns(true);
+
+        $this->tracker_factory = mock('TrackerFactory');
+        stub($this->tracker_factory)->validMandatoryInfoOnCreate()->returns(true);
+        stub($this->tracker_factory)->getInstanceFromRow()->returnsAt(0, $this->tracker1);
+        stub($this->tracker_factory)->getInstanceFromRow()->returnsAt(1, $this->tracker2);
+        stub($this->tracker_factory)->saveObject()->returnsAt(0, 444);
+        stub($this->tracker_factory)->saveObject()->returnsAt(1, 555);
+
+        $this->event_manager = mock('EventManager');
+
+        $this->hierarchy_dao = stub('Tracker_Hierarchy_Dao')->updateChildren()->returns(true);
+
+        $this->xmlFieldMapping = array(
+            'F1685' => '',
+            'F1741' => '',
+            'V2060' => '',
+            'V2061' => '',
+            'V2117' => '',
+            'V2118' => '',
+        );
+
+        $this->trigger_rulesmanager = mock('Tracker_Workflow_Trigger_RulesManager');
+
+        $this->tracker_xml_importer = new TrackerXmlImport(
+            $this->tracker_factory,
+            $this->event_manager,
+            $this->hierarchy_dao,
+            mock('Tracker_CannedResponseFactory'),
+            new Tracker_FormElementFactoryForXMLTests($this->xmlFieldMapping),
+            mock('Tracker_SemanticFactory'),
+            mock('Tracker_RuleFactory'),
+            mock('Tracker_ReportFactory'),
+            mock('WorkflowFactory'),
+            mock('XML_RNGValidator'),
+            $this->trigger_rulesmanager
+        );
+     }
+
+     public function itDelegatesToRulesManager() {
+         expect($this->trigger_rulesmanager)->createFromXML($this->triggers, $this->xmlFieldMapping)->once();
+         $this->tracker_xml_importer->import($this->group_id, $this->xml_input);
+     }
 }
