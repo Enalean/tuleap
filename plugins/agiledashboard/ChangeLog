@@ -1,3 +1,6 @@
+Version 1.176 - Tuleap 7.12
+    * story #7580: Refactor WIP popover into a fully-functional directive
+
 Version 1.175 - Tuleap 7.12
     * Replace XmlValidator by XML_RNGValidator
 
