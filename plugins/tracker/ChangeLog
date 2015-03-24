@@ -1,3 +1,6 @@
+Version 5.594 - Tuleap 7.12
+    * story #7701: make all relevant tracker REST resources public
+
 Version 5.593 - Tuleap 7.12
     * Replace XmlValidator by XML_RNGValidator
 
