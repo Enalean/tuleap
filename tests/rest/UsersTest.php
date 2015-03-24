@@ -26,15 +26,19 @@ require_once dirname(__FILE__).'/../lib/autoload.php';
  */
 class UsersTest extends RestBase {
 
-    public function testGetIdAsAnonymousIsForbidden() {
-        $exception_thrown = false;
-        try {
-            $this->client->get('users/'.TestDataBuilder::TEST_USER_1_ID)->send();
-        } catch(Guzzle\Http\Exception\ClientErrorResponseException $e) {
-            $this->assertEquals(401, $e->getResponse()->getStatusCode());
-            $exception_thrown = true;
-        }
-        $this->assertTrue($exception_thrown);
+    public function testGetIdAsAnonymousHasMinimalInformation() {
+        $response = $this->client->get('users/'.TestDataBuilder::TEST_USER_1_ID)->send();
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $json = $response->json();
+        $this->assertEquals(TestDataBuilder::TEST_USER_1_ID, $json['id']);
+        $this->assertEquals('users/'.TestDataBuilder::TEST_USER_1_ID, $json['uri']);
+        $this->assertEquals(TestDataBuilder::TEST_USER_1_REALNAME, $json['real_name']);
+        $this->assertEquals(TestDataBuilder::TEST_USER_1_NAME, $json['username']);
+        $this->assertEquals(TestDataBuilder::TEST_USER_1_LDAPID, $json['ldap_id']);
+        $this->assertEquals('/themes/common/images/avatar_default.png', $json['avatar_url']);
+        $this->assertFalse(isset($json['email']));
+        $this->assertFalse(isset($json['status']));
     }
 
     public function testGETIdAsRegularUser() {

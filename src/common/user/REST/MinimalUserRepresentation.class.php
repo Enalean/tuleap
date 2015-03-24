@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,26 +20,50 @@
 namespace Tuleap\User\REST;
 
 use \PFUser;
-use \Tuleap\User\REST\MinimalUserRepresentation;
+use \Tuleap\REST\JsonCast;
 
-class UserRepresentation extends MinimalUserRepresentation {
+class MinimalUserRepresentation {
+
+    const ROUTE = 'users';
+
+    /**
+     * @var int {@type int}
+     */
+    public $id;
+
+    /**
+     * @var string {@type string}
+     */
+    public $uri;
 
     /**
      * @var String {@type string}
      */
-    public $email;
+    public $real_name;
 
     /**
      * @var String {@type string}
      */
-    public $status;
+    public $username;
 
+    /**
+     * @var String {@type string}
+     */
+    public $ldap_id;
+
+    /**
+     * @var string {@type string}
+     */
+    public $avatar_url;
 
     public function build(PFUser $user) {
-        parent::build($user);
+        $this->id         = JsonCast::toInt($user->getId());
+        $this->uri        = UserRepresentation::ROUTE . '/' . $this->id;
+        $this->real_name  = $user->getRealName();
+        $this->username   = $user->getUserName();
+        $this->ldap_id    = $user->getLdapId();
+        $this->avatar_url = $user->getAvatarUrl();
 
-        $this->email  = $user->getEmail();
-        $this->status = $user->getStatus();
         return $this;
     }
 }

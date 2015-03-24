@@ -24,6 +24,7 @@ use UserManager;
 use UGroupLiteralizer;
 use PaginatedUserCollection;
 use Tuleap\User\REST\UserRepresentation;
+use Tuleap\User\REST\MinimalUserRepresentation;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\UserManager as RestUserManager;
@@ -32,11 +33,12 @@ use User_ForgeUserGroupPermission_RetrieveUserMembershipInformation;
 use User_ForgeUserGroupPermission_UserManagement;
 use User_ForgeUserGroupPermissionsManager;
 use User_ForgeUserGroupPermissionsDao;
+use Tuleap\REST\AuthenticatedResource;
 
 /**
  * Wrapper for users related REST methods
  */
-class UserResource {
+class UserResource extends AuthenticatedResource {
 
     const MAX_LIMIT      = 50;
     const DEFAULT_LIMIT  = 10;
@@ -71,13 +73,15 @@ class UserResource {
     /**
      * Get a user
      *
-     * Get the definition of a given user
+     * Get the definition of a given user.
+     * <pre> Note that when accessing this route without authentication certain properties<br>
+     * will not be returned in the response.
+     * </pre>
      *
      * @url GET {id}
+     * @access hybrid
      *
      * @param int $id Id of the desired user
-     *
-     * @access public
      *
      * @throws 400
      * @throws 403
@@ -85,9 +89,11 @@ class UserResource {
      *
      * @return \Tuleap\User\REST\UserRepresentation
      */
-    protected function getId($id) {
+    public function getId($id) {
+        $this->checkAcess();
+
         $user                = $this->getUserById($id);
-        $user_representation = new UserRepresentation();
+        $user_representation = ($this->is_authenticated) ? new UserRepresentation() : new MinimalUserRepresentation();
         return $user_representation->build($user);
     }
 
@@ -117,7 +123,10 @@ class UserResource {
     /**
      * Get users
      *
-     * Get all users matching the query
+     * Get all users matching the query.
+     * <pre> Note that when accessing this route without authentication certain properties<br>
+     * will not be returned in the response.
+     * </pre>
      *
      * $query can be either:
      * <ul>
@@ -125,17 +134,20 @@ class UserResource {
      *   <li>a json object to search on username with exact match: {"username": "john_doe"}</li>
      * </ul>
      *
+     * @access hybrid
+     *
      * @param string $query  Search string (3 chars min in length) {@from query} {@min 3}
      * @param int    $limit  Number of elements displayed per page
      * @param int    $offset Position of the first element to display
      *
      * @return array {@type \Tuleap\User\REST\UserRepresentation}
      */
-    protected function get(
+    public function get(
         $query,
         $limit = self::DEFAULT_LIMIT,
         $offset = self::DEFAULT_OFFSET
     ) {
+        $this->checkAcess();
 
         if ($this->json_decoder->looksLikeJson($query)) {
             $user_collection = $this->getUserFromExactSearch($query);
@@ -183,7 +195,7 @@ class UserResource {
 
         $list_of_user_representation = array();
         foreach ($user_collection->getUsers() as $user) {
-            $user_representation = new UserRepresentation();
+            $user_representation = ($this->is_authenticated) ? new UserRepresentation() : new MinimalUserRepresentation();
             $list_of_user_representation[] = $user_representation->build($user);
         }
 
@@ -205,10 +217,9 @@ class UserResource {
      * </pre>
      *
      * @url GET {id}/membership
+     * @access hybrid
      *
      * @param int $id Id of the desired user
-     *
-     * @access public
      *
      * @throws 400
      * @throws 403
@@ -216,7 +227,9 @@ class UserResource {
      *
      * @return array {@type string}
      */
-    protected function getMembership($id) {
+    public function getMembership($id) {
+        $this->checkAcess();
+
         $watchee = $this->getUserById($id);
         $watcher = $this->rest_user_manager->getCurrentUser();
         if ($this->checkUserCanSeeOtherUser($watcher, $watchee)) {
@@ -261,40 +274,40 @@ class UserResource {
      * </ol>
      *
      * @url PATCH {id}
-     * @param string                          $id        Id of the user
-     * @param Array                           $values    User fields values
+     * @param string  $id        Id of the user
+     * @param Array   $values    User fields values
      *
      */
-        protected function patchUserDetails($id, array $values) {
-            $watchee = $this->getUserById($id);
-            $watcher = $this->rest_user_manager->getCurrentUser();
-            if ($this->checkUserCanUpdateOtherUser($watcher, $watchee)) {
-                foreach ($values as $key => $value){
-                    switch ($key) {
-                        case "status":
-                            $watchee->setStatus($value);
-                        break;
+    protected function patchUserDetails($id, array $values) {
+        $watchee = $this->getUserById($id);
+        $watcher = $this->rest_user_manager->getCurrentUser();
+        if ($this->checkUserCanUpdateOtherUser($watcher, $watchee)) {
+            foreach ($values as $key => $value){
+                switch ($key) {
+                    case "status":
+                        $watchee->setStatus($value);
+                    break;
 
-                        case "email":
-                            $watchee->setEmail($value);
-                        break;
+                    case "email":
+                        $watchee->setEmail($value);
+                    break;
 
-                        case "real_name":
-                            $watchee->setRealName($value);
-                        break;
+                    case "real_name":
+                        $watchee->setRealName($value);
+                    break;
 
-                        case "username":
-                            $watchee->setUserName($value);
-                        break;
+                    case "username":
+                        $watchee->setUserName($value);
+                    break;
 
-                        default:
-                            break;
-                    }
+                    default:
+                        break;
                 }
-                return $this->user_manager->updateDb($watchee);
             }
-            throw new RestException(403, "Cannot update other's details");
+            return $this->user_manager->updateDb($watchee);
         }
+        throw new RestException(403, "Cannot update other's details");
+    }
 
     /**
      * Check if user has permission to update user details

@@ -50,10 +50,9 @@ class UserGroupResource {
      * Get the definition of a given user_group
      *
      * @url GET {id}
+     * @access protected
      *
      * @param string $id Id of the ugroup (format: projectId_ugroupId)
-     *
-     * @access protected
      *
      * @throws 400
      * @throws 403
@@ -97,12 +96,11 @@ class UserGroupResource {
      * Get the users of a given user_group
      *
      * @url GET {id}/users
+     * @access protected
      *
      * @param string $id Id of the ugroup (format: projectId_ugroupId)
      * @param int $limit  Number of elements displayed per page
      * @param int $offset Position of the first element to display
-     *
-     * @access protected
      *
      * @throws 400
      * @throws 403
@@ -111,7 +109,7 @@ class UserGroupResource {
      *
      * @return Array {@type \Tuleap\User\REST\UserRepresentation}
      */
-    public function getUsers($id, $limit = 10, $offset = 0) {
+    protected function getUsers($id, $limit = 10, $offset = 0) {
         $this->checkLimitValueIsAcceptable($limit);
         $this->checkIdIsWellFormed($id);
 
