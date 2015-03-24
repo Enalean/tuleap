@@ -21,6 +21,7 @@
 namespace Tuleap\Tracker\REST\v1;
 
 use \Tuleap\REST\ProjectAuthorization;
+use Tuleap\REST\AuthenticatedResource;
 use \Tuleap\REST\Exceptions\LimitOutOfBoundsException;
 use \Luracast\Restler\RestException;
 use \Tracker_REST_TrackerRestBuilder;
@@ -45,7 +46,7 @@ use \Tracker_Report_InvalidRESTCriterionException as InvalidCriteriaException;
 /**
  * Wrapper for Tracker related REST methods
  */
-class TrackersResource {
+class TrackersResource extends AuthenticatedResource {
 
     const MAX_LIMIT        = 50;
     const DEFAULT_LIMIT    = 10;
@@ -76,12 +77,14 @@ class TrackersResource {
      * Get the definition of the given tracker
      *
      * @url GET {id}
+     * @access hybrid
      *
      * @param int $id Id of the tracker
      *
      * @return Tuleap\Tracker\REST\TrackerRepresentation
      */
-    protected function getId($id) {
+    public function getId($id) {
+        $this->checkAcess();
         $builder = new Tracker_REST_TrackerRestBuilder(Tracker_FormElementFactory::instance());
         $user    = UserManager::instance()->getCurrentUser();
         $tracker = $this->getTrackerById($user, $id);
@@ -105,6 +108,7 @@ class TrackersResource {
      * All reports the user can see
      *
      * @url GET {id}/tracker_reports
+     * @access hybrid
      *
      * @param int $id Id of the tracker
      * @param int $limit  Number of elements displayed per page {@from path}{@min 1}
@@ -112,7 +116,8 @@ class TrackersResource {
      *
      * @return array {@type Tuleap\Tracker\REST\ReportRepresentation}
      */
-    protected function getReports($id, $limit = 10, $offset = self::DEFAULT_OFFSET) {
+    public function getReports($id, $limit = 10, $offset = self::DEFAULT_OFFSET) {
+        $this->checkAcess();
         $this->checkLimitValue($limit);
 
         $user    = UserManager::instance()->getCurrentUser();
@@ -164,6 +169,7 @@ class TrackersResource {
      * </ol>
      * 
      * @url GET {id}/artifacts
+     * @access hybrid
      *
      * @param int    $id     Id of the tracker
      * @param string $values Which fields to include in the response. Default is no field values {@from path}{@choice ,all}
@@ -174,13 +180,14 @@ class TrackersResource {
      * @return array {@type Tuleap\Tracker\REST\Artifact\ArtifactRepresentation}
      * @throws RestException 400
      */
-    protected function getArtifacts(
+    public function getArtifacts(
         $id,
         $values = self::DEFAULT_VALUES,
         $limit  = self::DEFAULT_LIMIT,
         $offset = self::DEFAULT_OFFSET,
         $query  = self::DEFAULT_CRITERIA
     ) {
+        $this->checkAcess();
         $this->checkLimitValue($limit);
 
         $user          = UserManager::instance()->getCurrentUser();

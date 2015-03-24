@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\REST\v1;
 
 use \Tuleap\REST\ProjectAuthorization;
 use \Tuleap\REST\Header;
+use Tuleap\REST\AuthenticatedResource;
 use \Luracast\Restler\RestException;
 use \Tracker_ArtifactFactory;
 use \Tracker_Artifact;
@@ -44,7 +45,7 @@ use \Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use \Tracker_URLVerification;
 use \Tracker_Artifact_Changeset as Changeset;
 
-class ArtifactsResource {
+class ArtifactsResource extends AuthenticatedResource {
     const MAX_LIMIT      = 50;
     const DEFAULT_LIMIT  = 10;
     const DEFAULT_OFFSET = 0;
@@ -77,12 +78,14 @@ class ArtifactsResource {
      * it sets Last-Modified header with the last update date of the element
      *
      * @url GET {id}
+     * @access hybrid
      *
      * @param int $id Id of the artifact
      *
      * @return Tuleap\Tracker\REST\Artifact\ArtifactRepresentation
      */
-    protected function getId($id) {
+    public function getId($id) {
+        $this->checkAcess();
         $user     = UserManager::instance()->getCurrentUser();
         $artifact = $this->getArtifactById($user, $id);
         $this->sendAllowHeadersForArtifact();
@@ -107,6 +110,7 @@ class ArtifactsResource {
      * Get the changesets of a given artifact
      *
      * @url GET {id}/changesets
+     * @access hybrid
      *
      * @param int    $id     Id of the artifact
      * @param string $fields Whether you want to fetch all fields or just comments {@from path}{@choice all,comments}
@@ -115,7 +119,8 @@ class ArtifactsResource {
      *
      * @return array {@type Tuleap\Tracker\REST\ChangesetRepresentation}
      */
-    protected function getArtifactChangesets($id, $fields = Changeset::FIELDS_ALL, $limit = 10, $offset = self::DEFAULT_OFFSET) {
+    public function getArtifactChangesets($id, $fields = Changeset::FIELDS_ALL, $limit = 10, $offset = self::DEFAULT_OFFSET) {
+        $this->checkAcess();
         $user       = UserManager::instance()->getCurrentUser();
         $artifact   = $this->getArtifactById($user, $id);
         $changesets = $this->builder->getArtifactChangesetsRepresentation($user, $artifact, $fields, $offset, $limit);
@@ -271,8 +276,12 @@ class ArtifactsResource {
      * @throws RestException 404
      */
     private function getArtifactById(PFUser $user, $id) {
-        $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $id);
+        $artifact = $this->artifact_factory->getArtifactById($id);
         if ($artifact) {
+            if (! $artifact->userCanView($user)) {
+                throw new RestException(403);
+            }
+
             ProjectAuthorization::userCanAccessProject($user, $artifact->getTracker()->getProject(), new Tracker_URLVerification());
             return $artifact;
         }
