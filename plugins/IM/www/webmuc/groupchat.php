@@ -97,7 +97,7 @@ function submitClicked() {
 
     var jid = roster.getFullJIDByNick(nick2);
     if (jid == null) {
-      putMsgHTML("No such nick"+": " + nick2, new Date().toLocaleTimeString(), group);
+      putMsgHTML("No such nick"+": " + htmlFullEnc(nick2), new Date().toLocaleTimeString(), group);
     } else {
       changeAffiliation(jid,'outcast',false,reason);
     }
@@ -110,7 +110,7 @@ function submitClicked() {
 
     var jid = roster.getFullJIDByNick(nick2);
     if (jid == null) {
-      putMsgHTML("No such nick"+": " + nick2, new Date().toLocaleTimeString(),group);
+      putMsgHTML("No such nick"+": " + htmlFullEnc(nick2), new Date().toLocaleTimeString(),group);
     } else {
       changeRole(jid,'none',false,reason);
     }
@@ -130,7 +130,7 @@ function submitClicked() {
 
     var jid = roster.getFullJIDByNick(to);
     if (jid == null)
-      putMsgHTML("No such nick"+": " + to, new Date().toLocaleTimeString(), group);
+      putMsgHTML("No such nick"+": " + htmlFullEnc(to), new Date().toLocaleTimeString(), group);
     else {
       aMessage.setType('chat');
       aMessage.setTo(jid);
@@ -188,20 +188,20 @@ function putMsgHTML(msg,mtime,user,usercolor,err,type) {
   if (msg.match(/^\/me /)) {
     msg = msgFormat(msg);
 
-    msg = msg.replace(/^\/me /,"<span class='meMsg'>*&nbsp;<span class='chatUser' username=\""+htmlFullEnc(user)+"\" title='@ "+mtime+"'>"+htmlEnc(user)+"</span></span>&nbsp;");
+    msg = msg.replace(/^\/me /,"<span class='meMsg'>*&nbsp;<span class='chatUser' username=\""+htmlFullEnc(user)+"\" title='@ "+htmlFullEnc(mtime)+"'>"+htmlEnc(user)+"</span></span>&nbsp;");
   } else if (user && user != group) {
     msg = msgFormat(msg);
 
     if (type == 'chat' || type == 'to') { // a private message
       msgHTML += "<span class='privMsg'>[";
-      msgHTML += "<span class='chatUser' username=\""+htmlFullEnc(user)+"\" title=\"@ "+mtime+"\">" + htmlEnc(user) + "</span>";
+      msgHTML += "<span class='chatUser' username=\""+htmlFullEnc(user)+"\" title=\"@ "+htmlFullEnc(mtime)+"\">" + htmlEnc(user) + "</span>";
       if (type == 'to')
         msgHTML += "&laquo;";
       else
         msgHTML += "&raquo;";
       msgHTML += "]</span>&nbsp;";
     } else
-      msgHTML += "<span style=\"color:"+usercolor+";\" class='chatUser' username=\""+htmlFullEnc(user)+"\" title='@ "+mtime+"'>&lt;" + htmlEnc(user) + "&gt;</span>&nbsp;";
+      msgHTML += "<span style=\"color:"+htmlFullEnc(usercolor)+";\" class='chatUser' username=\""+htmlFullEnc(user)+"\" title='@ "+htmlFullEnc(mtime)+"'>&lt;" + htmlEnc(user) + "&gt;</span>&nbsp;";
   }
 
   if (user == group) {/* channel status messages */
@@ -396,7 +396,7 @@ function init() {
     nick = passedArgs['nick'];
   if(typeof(nick) == 'undefined' || nick == '')
     nick = srcW.roster.nick; // guess a nick
-
+  nick = htmlFullEnc(nick);
   meRegExp = new RegExp("\\b("+nick+")\\b","i");
   notHREFMeRegExp = new RegExp("href=\"\\S*\\b"+nick+"\\b\\S*\"","i");
 
