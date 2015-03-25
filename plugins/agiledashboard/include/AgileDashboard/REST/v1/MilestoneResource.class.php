@@ -23,6 +23,7 @@ use BacklogItemReference;
 use Tuleap\REST\TokenAuthentication;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\Header;
+use Tuleap\REST\AuthenticatedResource;
 use Luracast\Restler\RestException;
 use PlanningFactory;
 use Tracker_ArtifactFactory;
@@ -50,7 +51,7 @@ use PlanningPermissionsManager;
 /**
  * Wrapper for milestone related REST methods
  */
-class MilestoneResource {
+class MilestoneResource extends AuthenticatedResource {
 
     const MAX_LIMIT = 100;
 
@@ -217,6 +218,7 @@ class MilestoneResource {
      * </ul>
      *
      * @url GET {id}
+     * @access hybrid
      *
      * @param int $id Id of the milestone
      *
@@ -225,7 +227,8 @@ class MilestoneResource {
      * @throws 403
      * @throws 404
      */
-    protected function getId($id) {
+    public function getId($id) {
+        $this->checkAcess();
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
         $this->sendAllowHeadersForMilestone($milestone);
@@ -287,6 +290,7 @@ class MilestoneResource {
      * A sub-milestone is a decomposition of a milestone (for instance a Release has Sprints as submilestones)
      *
      * @url GET {id}/milestones
+     * @access hybrid
      *
      * @param int    $id Id of the milestone
      * @param string $order  In which order milestones are fetched. Default is asc {@from path}{@choice asc,desc}
@@ -296,7 +300,8 @@ class MilestoneResource {
      * @throws 403
      * @throws 404
      */
-    protected function getMilestones($id, $order = 'asc') {
+    public function getMilestones($id, $order = 'asc') {
+        $this->checkAcess();
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
         $this->sendAllowHeaderForSubmilestones();
@@ -347,6 +352,7 @@ class MilestoneResource {
      * Get the backlog items of a given milestone
      *
      * @url GET {id}/content
+     * @access hybrid
      *
      * @param int $id     Id of the milestone
      * @param int $limit  Number of elements displayed per page
@@ -357,7 +363,8 @@ class MilestoneResource {
      * @throws 403
      * @throws 404
      */
-    protected function getContent($id, $limit = 10, $offset = 0) {
+    public function getContent($id, $limit = 10, $offset = 0) {
+        $this->checkAcess();
         $this->checkContentLimit($limit);
 
         $milestone                           = $this->getMilestoneById($this->getCurrentUser(), $id);
@@ -551,6 +558,7 @@ class MilestoneResource {
      * Get the backlog items of a given milestone that can be planned in a sub-milestone
      *
      * @url GET {id}/backlog
+     * @access hybrid
      *
      * @param int $id     Id of the milestone
      * @param int $limit  Number of elements displayed per page
@@ -561,7 +569,8 @@ class MilestoneResource {
      * @throws 403
      * @throws 404
      */
-    protected function getBacklog($id, $limit = 10, $offset = 0) {
+    public function getBacklog($id, $limit = 10, $offset = 0) {
+        $this->checkAcess();
         $this->checkContentLimit($limit);
 
         $user          = $this->getCurrentUser();
@@ -807,6 +816,7 @@ class MilestoneResource {
      * Get a Cardwall
      *
      * @url GET {id}/cardwall
+     * @access hybrid
      *
      * @param int $id Id of the milestone
      *
@@ -815,7 +825,8 @@ class MilestoneResource {
      * @throws 403
      * @throws 404
      */
-    protected function getCardwall($id) {
+    public function getCardwall($id) {
+        $this->checkAcess();
         $cardwall = null;
         $this->event_manager->processEvent(
             AGILEDASHBOARD_EVENT_REST_GET_CARDWALL,
@@ -846,22 +857,14 @@ class MilestoneResource {
      * Get Burdown data
      *
      * @url GET {id}/burndown
+     * @access hybrid
      *
      * @param int $id Id of the milestone
      *
      * @return \Tuleap\Tracker\REST\Artifact\BurndownRepresentation
      */
     public function getBurndown($id) {
-        $token_authentication = new TokenAuthentication();
-        $is_allowed           = $token_authentication->__isAllowed();
-
-        if (! $is_allowed) {
-            throw new RestException(
-                401,
-                'Authentication required (headers: ' .  UserManager::HTTP_TOKEN_HEADER . ', ' .  UserManager::HTTP_USER_HEADER . ')'
-            );
-        }
-
+        $this->checkAcess();
         $burndown = null;
         $this->event_manager->processEvent(
             AGILEDASHBOARD_EVENT_REST_GET_BURNDOWN,
@@ -876,17 +879,20 @@ class MilestoneResource {
     }
 
     private function getMilestoneById(PFUser $user, $id) {
-        $milestone = $this->milestone_factory->getBareMilestoneByArtifactId($user, $id);
+        try {
+            $milestone = $this->milestone_factory->getValidatedBareMilestoneByArtifactId($user, $id);
+        } catch (\MilestonePermissionDeniedException $e) {
+            if ($this->is_authenticated) {
+                throw new RestException(403);
+            }
+            throw new RestException(401);
+        }
 
         if (! $milestone) {
             throw new RestException(404);
         }
 
         ProjectAuthorization::userCanAccessProject($user, $milestone->getProject(), new URLVerification());
-
-        if (! $milestone->getArtifact()->userCanView()) {
-            throw new RestException(403);
-        }
 
         return $milestone;
     }
