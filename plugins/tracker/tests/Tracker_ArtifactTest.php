@@ -1117,7 +1117,7 @@ class Tracker_Artifact_DeleteArtifactTest extends TuleapTestCase {
 
         $this->artifact = partial_mock(
             'Tracker_Artifact',
-            array('getChangesets', 'getDao', 'getPermissionsManager', 'getCrossReferenceManager'),
+            array('getChangesets', 'getDao', 'getPermissionsManager', 'getCrossReferenceManager', 'getPriorityManager'),
             array($this->artifact_id, null, null, null, null)
         );
         $this->artifact->setTracker($tracker);
@@ -1138,8 +1138,11 @@ class Tracker_Artifact_DeleteArtifactTest extends TuleapTestCase {
         $dao = mock('Tracker_ArtifactDao');
         $dao->expectOnce('delete', array($this->artifact_id));
         $dao->expectOnce('deleteArtifactLinkReference', array($this->artifact_id));
-        $dao->expectOnce('deletePriority', array($this->artifact_id));
         stub($this->artifact)->getDao()->returns($dao);
+
+        $priority_manager = mock('Tracker_Artifact_PriorityManager');
+        $priority_manager->expectOnce('deletePriority');
+        stub($this->artifact)->getPriorityManager()->returns($priority_manager);
 
         $permissions_manager = mock('PermissionsManager');
         $permissions_manager->expectOnce('clearPermission', array('PLUGIN_TRACKER_ARTIFACT_ACCESS', $this->artifact_id));
