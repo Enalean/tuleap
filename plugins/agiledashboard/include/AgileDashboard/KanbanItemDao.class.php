@@ -215,8 +215,56 @@ class AgileDashboard_KanbanItemDao extends DataAccessObject {
                 WHERE A.id = $item_id
                     AND CV.has_changed = 1
                     AND CVL.bindvalue_id <> 100
-                    GROUP BY CVL.bindvalue_id";
+                    AND CVL.bindvalue_id IS NOT NULL
+                GROUP BY CVL.bindvalue_id";
 
         return $this->retrieve($sql);
+    }
+
+    /**
+     * This returns the last time an item has been closed
+     *
+     * Example:
+     *
+     *  open   open    open    closed     open    closed
+     * ---0------1-------2--------3---------4---------5------> t
+     *  Todo   Doing    Done  Archived    Done   Archived
+     *
+     * In this example, the item is dropped in archived column at t3,
+     * then goes back to Done column at t4, and finally come back at t5.
+     * The returned value is expected to be t5.
+     *
+     * @param type $item_id The archived item id
+     *
+     * @return int|null
+     */
+    public function getTimeInfoForArchivedItem($item_id) {
+        $item_id = $this->da->escapeInt($item_id);
+
+        $sql = "SELECT C.submitted_on
+                FROM tracker_changeset AS C
+                     INNER JOIN tracker_changeset_value CV ON (
+                         C.id = CV.changeset_id AND CV.has_changed = 1
+                     )
+                     INNER JOIN (
+                        SELECT C1.id AS id, CV1.field_id AS field_id
+                        FROM tracker_changeset AS C1
+                             INNER JOIN tracker_changeset_value CV1 ON (
+                                 C1.id = CV1.changeset_id AND CV1.has_changed = 1
+                             )
+                             INNER JOIN tracker_field AS F ON (CV1.field_id = F.id)
+                             INNER JOIN tracker_semantic_status SS1 ON (SS1.field_id = CV1.field_id)
+                             INNER JOIN tracker_changeset_value_list AS CVL1 ON (CV1.id = CVL1.changeset_value_id AND CVL1.bindvalue_id = SS1.open_value_id)
+                        WHERE artifact_id = $item_id
+                        ORDER BY C1.submitted_on DESC
+                        LIMIT 1
+                     ) AS last_open_changeset ON (last_open_changeset.id < C.id AND CV.field_id = last_open_changeset.field_id)
+                WHERE artifact_id = $item_id
+                ORDER BY C.id ASC
+                LIMIT 1";
+
+        $row = $this->retrieve($sql)->getRow();
+
+        return is_array($row) ? (int)$row['submitted_on'] : null;
     }
 }

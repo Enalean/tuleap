@@ -21,6 +21,10 @@ msgstr ""
 "allez devoir rafraichir la page afin de retrouver un état cohérent."
 
 #: src/app/app-kanban-controller.js
+msgid "Archive:"
+msgstr "Archive :"
+
+#: src/app/app-kanban-controller.js
 msgid "Column:"
 msgstr "Colonne :"
 

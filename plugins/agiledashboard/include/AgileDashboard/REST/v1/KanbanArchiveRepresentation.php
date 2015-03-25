@@ -33,8 +33,10 @@ class KanbanArchiveRepresentation {
     public $total_size;
 
     public function build(PFUser $user, AgileDashboard_Kanban $kanban, $limit, $offset) {
-        $dao     = new AgileDashboard_KanbanItemDao();
-        $factory = Tracker_ArtifactFactory::instance();
+        $dao             = new AgileDashboard_KanbanItemDao();
+        $factory         = Tracker_ArtifactFactory::instance();
+        $timeinfofactory = new TimeInfoFactory($dao);
+
         $data    = $dao->searchPaginatedArchivedItemsByTrackerId($kanban->getTrackerId(), $limit, $offset);
 
         $this->total_size = (int) $dao->foundRows();
@@ -43,7 +45,7 @@ class KanbanArchiveRepresentation {
             $artifact = $factory->getInstanceFromRow($row);
             if ($artifact->userCanView($user)) {
                 $item_representation = new KanbanItemRepresentation();
-                $item_representation->build($artifact, array());
+                $item_representation->build($artifact, $timeinfofactory->getTimeInfo($artifact));
 
                 $this->collection[] = $item_representation;
             }

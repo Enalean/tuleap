@@ -9,6 +9,10 @@ msgid "An error occured while saving one of your last action. We're afraid that 
 msgstr ""
 
 #: src/app/app-kanban-controller.js
+msgid "Archive:"
+msgstr ""
+
+#: src/app/app-kanban-controller.js
 msgid "Column:"
 msgstr ""
 

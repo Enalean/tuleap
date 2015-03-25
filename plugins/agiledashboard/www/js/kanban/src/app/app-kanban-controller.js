@@ -66,6 +66,7 @@
         self.setWipLimitForColumn         = setWipLimitForColumn;
         self.userIsAdmin                  = userIsAdmin;
         self.getTimeInfo                  = getTimeInfo;
+        self.getTimeInfoInArchive         = getTimeInfoInArchive;
 
         loadColumns();
         loadBacklog(limit, offset);
@@ -117,7 +118,12 @@
                 } else {
                     KanbanService
                         .moveInArchive(kanban.id, dropped_item.id, compared_to)
-                        .then(null, reload);
+                        .then(
+                            function () {
+                                updateTimeInfo('archive', dropped_item);
+                            },
+                            reload
+                        );
                 }
             }
 
@@ -249,25 +255,40 @@
         }
 
         function getTimeInfo(column, item) {
-            var timeinfo;
+            var timeinfo = '';
 
             if (! column || ! item.timeinfo) {
                 return;
             }
 
-            if (item.timeinfo.kanban) {
-                timeinfo = '<p><span><i class="icon-signin"></i> ';
-                timeinfo += gettextCatalog.getString('Kanban:') + '</span>';
-                timeinfo += ' <strong>' + amCalendarFilter(item.timeinfo.kanban) + '</strong></p>';
-            }
-
-            if (item.timeinfo[column.id]) {
-                timeinfo += '<p><span><i class="icon-signin"></i> ';
-                timeinfo += gettextCatalog.getString('Column:') + '</span>';
-                timeinfo += ' <strong>' + amCalendarFilter(item.timeinfo[column.id]) + '</strong></p>';
-            }
+            timeinfo += getTimeInfoEntry(item.timeinfo.kanban, gettextCatalog.getString('Kanban:'));
+            timeinfo += getTimeInfoEntry(item.timeinfo[column.id], gettextCatalog.getString('Column:'));
 
             return $sce.trustAsHtml(timeinfo);
+        }
+
+        function getTimeInfoInArchive(item) {
+            var timeinfo = '';
+
+            if (! item.timeinfo) {
+                return;
+            }
+
+            timeinfo += getTimeInfoEntry(item.timeinfo.kanban, gettextCatalog.getString('Kanban:'));
+            timeinfo += getTimeInfoEntry(item.timeinfo.archive, gettextCatalog.getString('Archive:'));
+
+            return $sce.trustAsHtml(timeinfo);
+        }
+
+        function getTimeInfoEntry(entry_date, label) {
+            var timeinfo = '';
+
+            if (entry_date) {
+                timeinfo += '<p><span><i class="icon-signin"></i> ' + label + '</span>';
+                timeinfo += ' <strong>' + amCalendarFilter(entry_date) + '</strong></p>';
+            }
+
+            return timeinfo;
         }
     }
 })();
