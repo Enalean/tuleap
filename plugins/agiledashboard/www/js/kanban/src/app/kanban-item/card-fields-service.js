@@ -97,7 +97,7 @@
             }
 
             function getFileLink(file) {
-                return '<a data-nodrag href="' + getFileUrl(file) + '"><i class="icon-file-text-alt"></i> ' + file.name + '</a>';
+                return '<a data-nodrag="true" href="' + getFileUrl(file) + '"><i class="icon-file-text-alt"></i> ' + file.name + '</a>';
             }
 
             return $sce.trustAsHtml(_.map(file_descriptions, getFileLink).join(', '));
@@ -105,7 +105,7 @@
 
         function getCardFieldCrossValue(links) {
             function getCrossLink(link) {
-                return $sce.trustAsHtml('<a data-nodrag href="' + link.url + '">' + link.ref + '</a>');
+                return $sce.trustAsHtml('<a data-nodrag="true" href="' + link.url + '">' + link.ref + '</a>');
             }
 
             return $sce.trustAsHtml(_.map(links, getCrossLink).join(', '));
