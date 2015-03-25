@@ -73,7 +73,7 @@ Requires: shared-mime-info
 # Documentation
 Requires: tuleap-documentation
 # Rest API
-Requires: %{php_base}-restler >= 3.0-0.6.rc6, %{php_base}-password-compat, restler-api-explorer
+Requires: %{php_base}-restler >= 3.0-0.7, %{php_base}-password-compat, restler-api-explorer
 
 %description
 Tuleap is a web based application that address all the aspects of product development.

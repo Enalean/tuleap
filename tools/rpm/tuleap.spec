@@ -176,7 +176,7 @@ Summary: REST component for Tuleap
 Group: Development/Tools
 Version: @@CORE_REST_VERSION@@
 Release: @@RELEASE@@%{?dist}
-Requires: %{PKG_NAME}, php53-restler >= 3.0-0.6.rc6, php53-password-compat, restler-api-explorer
+Requires: %{PKG_NAME}, php53-restler >= 3.0-0.7, php53-password-compat, restler-api-explorer
 %description core-rest
 Provides REST api to Tuleap
 %endif
