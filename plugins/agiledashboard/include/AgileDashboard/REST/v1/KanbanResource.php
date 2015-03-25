@@ -119,7 +119,7 @@ class KanbanResource extends AuthenticatedResource {
      * @throws 404
      */
     public function getId($id) {
-        $this->checkAcess();
+        $this->checkAccess();
         $user   = $this->getCurrentUser();
         $kanban = $this->getKanban($user, $id);
 
@@ -167,7 +167,7 @@ class KanbanResource extends AuthenticatedResource {
      * @throws 404
      */
     public function getBacklog($id, $limit = 10, $offset = 0) {
-        $this->checkAcess();
+        $this->checkAccess();
         $user   = $this->getCurrentUser();
         $kanban = $this->getKanban($user, $id);
 
@@ -345,7 +345,7 @@ class KanbanResource extends AuthenticatedResource {
      * @throws 404
      */
     public function getArchive($id, $limit = 10, $offset = 0) {
-        $this->checkAcess();
+        $this->checkAccess();
         $user   = $this->getCurrentUser();
         $kanban = $this->getKanban($user, $id);
 
@@ -462,7 +462,7 @@ class KanbanResource extends AuthenticatedResource {
      * @throws 404
      */
     public function getItems($id, $column_id, $limit = 10, $offset = 0) {
-        $this->checkAcess();
+        $this->checkAccess();
         $user   = $this->getCurrentUser();
         $kanban = $this->getKanban($user, $id);
 

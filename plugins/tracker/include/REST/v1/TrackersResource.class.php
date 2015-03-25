@@ -84,7 +84,7 @@ class TrackersResource extends AuthenticatedResource {
      * @return Tuleap\Tracker\REST\TrackerRepresentation
      */
     public function getId($id) {
-        $this->checkAcess();
+        $this->checkAccess();
         $builder = new Tracker_REST_TrackerRestBuilder(Tracker_FormElementFactory::instance());
         $user    = UserManager::instance()->getCurrentUser();
         $tracker = $this->getTrackerById($user, $id);
@@ -117,7 +117,7 @@ class TrackersResource extends AuthenticatedResource {
      * @return array {@type Tuleap\Tracker\REST\ReportRepresentation}
      */
     public function getReports($id, $limit = 10, $offset = self::DEFAULT_OFFSET) {
-        $this->checkAcess();
+        $this->checkAccess();
         $this->checkLimitValue($limit);
 
         $user    = UserManager::instance()->getCurrentUser();
@@ -187,7 +187,7 @@ class TrackersResource extends AuthenticatedResource {
         $offset = self::DEFAULT_OFFSET,
         $query  = self::DEFAULT_CRITERIA
     ) {
-        $this->checkAcess();
+        $this->checkAccess();
         $this->checkLimitValue($limit);
 
         $user          = UserManager::instance()->getCurrentUser();

@@ -108,7 +108,7 @@ class BacklogItemResource extends AuthenticatedResource {
      * @throws 404
      */
     public function get($id) {
-        $this->checkAcess();
+        $this->checkAccess();
         $current_user = $this->getCurrentUser();
         $artifact     = $this->getArtifact($id);
         $backlog_item = $this->getBacklogItem($current_user, $artifact);
@@ -188,7 +188,7 @@ class BacklogItemResource extends AuthenticatedResource {
      * @throws 406
      */
     public function getChildren($id, $limit = 10, $offset = 0) {
-        $this->checkAcess();
+        $this->checkAccess();
         $this->checkContentLimit($limit);
 
         $current_user                        = $this->getCurrentUser();

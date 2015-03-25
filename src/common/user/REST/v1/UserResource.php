@@ -90,7 +90,7 @@ class UserResource extends AuthenticatedResource {
      * @return \Tuleap\User\REST\UserRepresentation
      */
     public function getId($id) {
-        $this->checkAcess();
+        $this->checkAccess();
 
         $user                = $this->getUserById($id);
         $user_representation = ($this->is_authenticated) ? new UserRepresentation() : new MinimalUserRepresentation();
@@ -147,7 +147,7 @@ class UserResource extends AuthenticatedResource {
         $limit = self::DEFAULT_LIMIT,
         $offset = self::DEFAULT_OFFSET
     ) {
-        $this->checkAcess();
+        $this->checkAccess();
 
         if ($this->json_decoder->looksLikeJson($query)) {
             $user_collection = $this->getUserFromExactSearch($query);
@@ -228,7 +228,7 @@ class UserResource extends AuthenticatedResource {
      * @return array {@type string}
      */
     public function getMembership($id) {
-        $this->checkAcess();
+        $this->checkAccess();
 
         $watchee = $this->getUserById($id);
         $watcher = $this->rest_user_manager->getCurrentUser();

@@ -228,7 +228,7 @@ class MilestoneResource extends AuthenticatedResource {
      * @throws 404
      */
     public function getId($id) {
-        $this->checkAcess();
+        $this->checkAccess();
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
         $this->sendAllowHeadersForMilestone($milestone);
@@ -301,7 +301,7 @@ class MilestoneResource extends AuthenticatedResource {
      * @throws 404
      */
     public function getMilestones($id, $order = 'asc') {
-        $this->checkAcess();
+        $this->checkAccess();
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
         $this->sendAllowHeaderForSubmilestones();
@@ -364,7 +364,7 @@ class MilestoneResource extends AuthenticatedResource {
      * @throws 404
      */
     public function getContent($id, $limit = 10, $offset = 0) {
-        $this->checkAcess();
+        $this->checkAccess();
         $this->checkContentLimit($limit);
 
         $milestone                           = $this->getMilestoneById($this->getCurrentUser(), $id);
@@ -570,7 +570,7 @@ class MilestoneResource extends AuthenticatedResource {
      * @throws 404
      */
     public function getBacklog($id, $limit = 10, $offset = 0) {
-        $this->checkAcess();
+        $this->checkAccess();
         $this->checkContentLimit($limit);
 
         $user          = $this->getCurrentUser();
@@ -826,7 +826,7 @@ class MilestoneResource extends AuthenticatedResource {
      * @throws 404
      */
     public function getCardwall($id) {
-        $this->checkAcess();
+        $this->checkAccess();
         $cardwall = null;
         $this->event_manager->processEvent(
             AGILEDASHBOARD_EVENT_REST_GET_CARDWALL,
@@ -864,7 +864,7 @@ class MilestoneResource extends AuthenticatedResource {
      * @return \Tuleap\Tracker\REST\Artifact\BurndownRepresentation
      */
     public function getBurndown($id) {
-        $this->checkAcess();
+        $this->checkAccess();
         $burndown = null;
         $this->event_manager->processEvent(
             AGILEDASHBOARD_EVENT_REST_GET_BURNDOWN,

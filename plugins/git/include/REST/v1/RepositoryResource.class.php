@@ -56,7 +56,7 @@ class RepositoryResource extends AuthenticatedResource {
      * @throws 404
      */
     public function get($id) {
-        $this->checkAcess();
+        $this->checkAccess();
         $user = $this->getCurrentUser();
 
         try {

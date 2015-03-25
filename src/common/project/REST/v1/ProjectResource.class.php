@@ -81,7 +81,7 @@ class ProjectResource extends AuthenticatedResource {
      * @return array {@type Tuleap\Project\REST\ProjectRepresentation}
      */
     public function get($limit = 10, $offset = 0) {
-        $this->checkAcess();
+        $this->checkAccess();
 
         if (! $this->limitValueIsAcceptable($limit)) {
              throw new RestException(406, 'Maximum value for limit exceeded');
@@ -147,7 +147,7 @@ class ProjectResource extends AuthenticatedResource {
      * @return Tuleap\Project\REST\ProjectRepresentation
      */
     public function getId($id) {
-        $this->checkAcess();
+        $this->checkAccess();
 
         $this->sendAllowHeadersForProject();
         return $this->getProjectRepresentation($this->getProjectForUser($id));
@@ -230,7 +230,7 @@ class ProjectResource extends AuthenticatedResource {
      * @return array {@type Tuleap\REST\v1\PlanningRepresentationBase}
      */
     public function getPlannings($id, $limit = 10, $offset = 0) {
-        $this->checkAcess();
+        $this->checkAccess();
 
         $this->checkAgileEndpointsAvailable();
 
@@ -284,7 +284,7 @@ class ProjectResource extends AuthenticatedResource {
      * @return array {@type Tuleap\REST\v1\MilestoneRepresentationBase}
      */
     public function getMilestones($id, $limit = 10, $offset = 0, $order = 'asc') {
-        $this->checkAcess();
+        $this->checkAccess();
 
         $this->checkAgileEndpointsAvailable();
 
@@ -343,7 +343,7 @@ class ProjectResource extends AuthenticatedResource {
      * @return array {@type Tuleap\Tracker\REST\TrackerRepresentation}
      */
     public function getTrackers($id, $limit = 10, $offset = 0) {
-        $this->checkAcess();
+        $this->checkAccess();
 
         $trackers = $this->getRepresentationsForTrackers($id, $limit, $offset, Event::REST_GET_PROJECT_TRACKERS);
         $this->sendAllowHeadersForProject();
@@ -395,7 +395,7 @@ class ProjectResource extends AuthenticatedResource {
      * @throws 406
      */
     public function getBacklog($id, $limit = 10, $offset = 0) {
-        $this->checkAcess();
+        $this->checkAccess();
 
         $this->checkAgileEndpointsAvailable();
 
@@ -433,7 +433,7 @@ class ProjectResource extends AuthenticatedResource {
      * @throws 500
      */
     public function putBacklog($id, array $ids) {
-        $this->checkAcess();
+        $this->checkAccess();
 
         $this->checkAgileEndpointsAvailable();
 
@@ -497,7 +497,7 @@ class ProjectResource extends AuthenticatedResource {
      * @throws 400
      */
     public function patchBacklog($id, OrderRepresentationBase $order, array $add = null) {
-        $this->checkAcess();
+        $this->checkAccess();
 
         $this->checkAgileEndpointsAvailable();
 
@@ -697,7 +697,7 @@ class ProjectResource extends AuthenticatedResource {
      * @throws 404
      */
     public function getGit($id, $limit = 10, $offset = 0, $fields = GitRepositoryRepresentationBase::FIELDS_BASIC) {
-        $this->checkAcess();
+        $this->checkAccess();
 
         $project                = $this->getProjectForUser($id);
         $result                 = array();

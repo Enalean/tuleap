@@ -81,7 +81,7 @@ class ProjectResource extends AuthenticatedResource {
      * @throws 406
      */
     public function getBacklog($id, $limit = 10, $offset = 0) {
-        $this->checkAcess();
+        $this->checkAccess();
 
         $this->checkAgileEndpointsAvailable();
 
