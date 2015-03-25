@@ -74,15 +74,17 @@ function htmlEnc(str) {
 
 /* for use within tag attributes */
 function htmlFullEnc(str) {
-	if (!str)
-		return '';
+    if (!str)
+        return '';
 
-  str = str.replace(/&/g,"&amp;");
-  str = str.replace(/</g,"&lt;");
-  str = str.replace(/>/g,"&gt;");
-	//	str = str.replace(/\'/g,"\\\'");
-	str = str.replace(/\"/g,"&quot;");
-	return str;
+    str = str.replace(/&/g,"&amp;");
+    str = str.replace(/</g,"&lt;");
+    str = str.replace(/>/g,"&gt;");
+    str = str.replace(/`/g, "&#x60;");
+    str = str.replace(/'/g, "&#039;");
+    str = str.replace(/"/g,"&quot;");
+
+    return str;
 }
 
 function msgFormat(msg) { // replaces emoticons and urls in a message
