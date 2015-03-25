@@ -20,6 +20,7 @@
 namespace Tuleap\AgileDashboard\REST\v1;
 
 use Tuleap\REST\Header;
+use Tuleap\REST\AuthenticatedResource;
 use Luracast\Restler\RestException;
 use UserManager;
 use PFUser;
@@ -43,7 +44,7 @@ use AgileDashBoard_Semantic_InitialEffort;
 /**
  * Wrapper for Backlog_Items related REST methods
  */
-class BacklogItemResource {
+class BacklogItemResource extends AuthenticatedResource {
 
     const MAX_LIMIT = 100;
 
@@ -97,6 +98,7 @@ class BacklogItemResource {
      * Get a backlog item representation
      *
      * @url GET {id}
+     * @access hybrid
      *
      * @param int $id Id of the Backlog Item
      *
@@ -105,7 +107,8 @@ class BacklogItemResource {
      * @throws 403
      * @throws 404
      */
-    protected function get($id) {
+    public function get($id) {
+        $this->checkAcess();
         $current_user = $this->getCurrentUser();
         $artifact     = $this->getArtifact($id);
         $backlog_item = $this->getBacklogItem($current_user, $artifact);
@@ -172,6 +175,7 @@ class BacklogItemResource {
      * Get the children of a given Backlog Item
      *
      * @url GET {id}/children
+     * @access hybrid
      *
      * @param int $id     Id of the Backlog Item
      * @param int $limit  Number of elements displayed per page
@@ -183,7 +187,8 @@ class BacklogItemResource {
      * @throws 404
      * @throws 406
      */
-    protected function getChildren($id, $limit = 10, $offset = 0) {
+    public function getChildren($id, $limit = 10, $offset = 0) {
+        $this->checkAcess();
         $this->checkContentLimit($limit);
 
         $current_user                        = $this->getCurrentUser();

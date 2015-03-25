@@ -24,6 +24,7 @@ use \Luracast\Restler\RestException;
 use \Planning;
 use \Tuleap\REST\Header;
 use \Tuleap\REST\ProjectAuthorization;
+use \Tuleap\REST\AuthenticatedResource;
 use \UserManager;
 use \AgileDashboard_Milestone_MilestoneStatusCounter;
 use \AgileDashboard_BacklogItemDao;
@@ -31,7 +32,7 @@ use \Tracker_ArtifactDao;
 use \URLVerification;
 use \PlanningPermissionsManager;
 
-class PlanningResource {
+class PlanningResource extends AuthenticatedResource {
 
     const MAX_LIMIT = 100;
 
@@ -61,6 +62,7 @@ class PlanningResource {
      * Get the milestones of a given planning
      *
      * @url GET {id}/milestones
+     * @access hybrid
      *
      * @param int $id Id of the planning
      * @param int $limit Number of elements displayed per page
@@ -71,7 +73,8 @@ class PlanningResource {
      * @throws 403
      * @throws 404
      */
-    protected function getMilestones($id, $limit = 10, $offset = 0) {
+    public function getMilestones($id, $limit = 10, $offset = 0) {
+        $this->checkAcess();
         if (! $this->limitValueIsAcceptable($limit)) {
              throw new RestException(406, 'Maximum value for limit exceeded');
         }
