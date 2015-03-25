@@ -1,3 +1,6 @@
+Version 1.180 - Tuleap 7.12
+    * request #7940: Artifact link and card fields links are not clickable on Kanban & Planning v2 cards
+
 Version 1.179 - Tuleap 7.12
     * story #7701: make all remaining appropriate agiledashboard routes public
 
