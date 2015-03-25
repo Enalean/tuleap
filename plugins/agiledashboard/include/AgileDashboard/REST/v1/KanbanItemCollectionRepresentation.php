@@ -34,8 +34,10 @@ class KanbanItemCollectionRepresentation {
     public $total_size;
 
     public function build(PFUser $user, AgileDashboard_Kanban $kanban, $column_id, $limit, $offset) {
-        $dao     = new AgileDashboard_KanbanItemDao();
-        $factory = Tracker_ArtifactFactory::instance();
+        $dao             = new AgileDashboard_KanbanItemDao();
+        $factory         = Tracker_ArtifactFactory::instance();
+        $timeinfofactory = new TimeInfoFactory($dao);
+
         $data    = $dao->searchPaginatedItemsInColumn($kanban->getTrackerId(), $column_id, $limit, $offset);
 
         $this->total_size = (int) $dao->foundRows();
@@ -43,14 +45,8 @@ class KanbanItemCollectionRepresentation {
         foreach ($data as $row) {
             $artifact = $factory->getInstanceFromRow($row);
             if ($artifact->userCanView($user)) {
-                $timeinfo = array();
-                foreach ($dao->searchTimeInfoForItem($kanban->getTrackerId(), $artifact->getId()) as $row) {
-                    $timeinfo[$row['column_id']] = JsonCast::toDate($row['submitted_on']);
-                }
-                $timeinfo['kanban'] = min($timeinfo);
-
                 $item_representation = new KanbanItemRepresentation();
-                $item_representation->build($artifact, $timeinfo);
+                $item_representation->build($artifact, $timeinfofactory->getTimeInfo($artifact));
 
                 $this->collection[] = $item_representation;
             }
