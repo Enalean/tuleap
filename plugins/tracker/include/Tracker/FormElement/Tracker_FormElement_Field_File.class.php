@@ -395,20 +395,21 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
     protected function fetchAllAttachmentTitleAndDescription($values) {
         $html = '';
         if($values) {
-            $html .= '<div class="tracker-artifact-attachement-title-list tracker_artifact_field">';
-            $html .= '<div class="disabled_field">' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_attachment_copy') . '</div>';
-            $html .= '<ul>';
+            $purifier = Codendi_HTMLPurifier::instance();
+            $html    .= '<div class="tracker-artifact-attachement-title-list tracker_artifact_field">';
+            $html    .= '<div class="disabled_field">' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_attachment_copy') . '</div>';
+            $html    .= '<ul>';
             foreach($values as $value) {
                 $description = $value->getDescription();
 
                 $html .= '<li>';
                 $html .= '<span class="file-title">';
-                $html .= $value->getFileName();
+                $html .= $purifier->purify($value->getFileName());
                 $html .= '</span>';
 
                 if($description) {
                     $html .= '<span class="file-description">';
-                    $html .= ' - ' . $description;
+                    $html .= ' - ' . $purifier->purify($description);
                     $html .= '</span>';
                 }
                 $html .= '</li>';

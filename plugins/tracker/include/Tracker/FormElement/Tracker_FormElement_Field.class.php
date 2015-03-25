@@ -736,12 +736,13 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * @return string
      */
     public function fetchAddCriteria($used, $prefix = '') {
-        $html = '';
-        $class = 'tracker_report_add_criteria_unused';
+        $purifier = Codendi_HTMLPurifier::instance();
+        $html     = '';
+        $class    = 'tracker_report_add_criteria_unused';
         if (isset($used[$this->id])) {
             $class = 'tracker_report_add_criteria_used';
         }
-        $html .= '<option value="'. $this->id .'" class="'. $class .'">'. $this->getLabel() .'</option>';
+        $html .= '<option value="'. $this->id .'" class="'. $class .'">'. $purifier->purify($this->getLabel()) .'</option>';
         return $html;
     }
 
@@ -754,12 +755,13 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * @return string
      */
     public function fetchAddColumn($used, $prefix = '') {
-        $html  = '';
-        $class = 'tracker_report_table_add_column_unused';
+        $purifier = Codendi_HTMLPurifier::instance();
+        $html     = '';
+        $class    = 'tracker_report_table_add_column_unused';
         if (isset($used[$this->id])) {
             $class = 'tracker_report_table_add_column_used';
         }
-        $html .= '<option value="'. $this->id .'" class="'. $class .'">'. $this->getLabel() .'</option>';
+        $html .= '<option value="'. $this->id .'" class="'. $class .'">'. $purifier->purify($this->getLabel()) .'</option>';
         return $html;
     }
 
@@ -772,9 +774,10 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * @return string
      */
     public function fetchAddTooltip($used, $prefix = '') {
-        $html = '';
+        $purifier = Codendi_HTMLPurifier::instance();
+        $html     = '';
         if (!isset($used[$this->id])) {
-            $html .= '<option value="'. $this->id .'">'. $this->getLabel() .'</option>';
+            $html .= '<option value="'. $this->id .'">'. $purifier->purify($this->getLabel()) .'</option>';
         }
         return $html;
     }
