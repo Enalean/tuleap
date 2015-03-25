@@ -1419,6 +1419,20 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
     }
 
+    /**
+     * User want to link an artifact to the current one
+     *
+     * @param array  $linked_artifact_ids The ids of the artifacts to link
+     * @param PFUser $current_user       The user who made the link
+     *
+     * @return bool true if success false otherwise
+     */
+    public function linkArtifacts($linked_artifact_ids, PFUser $current_user) {
+        $linked_artifact_ids = implode(',', $linked_artifact_ids);
+
+        return $this->linkArtifact($linked_artifact_ids, $current_user);
+    }
+
     private function unlinkArtifact($artlink_fields, $linked_artifact_id, PFUser $current_user) {
         $comment       = '';
         $artlink_field = $artlink_fields[0];
