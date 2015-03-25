@@ -45,8 +45,9 @@ class AgileDashboard_KanbanColumnFactory {
         $field_values = $this->getFieldValues($semantic);
         $open_values  = $this->getOpenValues($semantic);
 
-        foreach ($open_values as $id) {
-            if (isset($field_values[$id])) {
+        foreach ($field_values as $field_value) {
+            $id = $field_value->getId();
+            if (in_array($id, $open_values)) {
                 $column = new AgileDashboard_KanbanColumn(
                     $id,
                     $kanban->getId(),
