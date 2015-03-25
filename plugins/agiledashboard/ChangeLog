@@ -1,3 +1,6 @@
+Version 1.183 - Tuleap 7.12
+    * request #7948: Kanban: Display tracker short name instead of item on cards
+
 Version 1.182 - Tuleap 7.12
     * Display time metrics in archive column
 
