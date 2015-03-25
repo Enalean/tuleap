@@ -85,7 +85,7 @@ class ArtifactsResource extends AuthenticatedResource {
      * @return Tuleap\Tracker\REST\Artifact\ArtifactRepresentation
      */
     public function getId($id) {
-        $this->checkAcess();
+        $this->checkAccess();
         $user     = UserManager::instance()->getCurrentUser();
         $artifact = $this->getArtifactById($user, $id);
         $this->sendAllowHeadersForArtifact();
@@ -120,7 +120,7 @@ class ArtifactsResource extends AuthenticatedResource {
      * @return array {@type Tuleap\Tracker\REST\ChangesetRepresentation}
      */
     public function getArtifactChangesets($id, $fields = Changeset::FIELDS_ALL, $limit = 10, $offset = self::DEFAULT_OFFSET) {
-        $this->checkAcess();
+        $this->checkAccess();
         $user       = UserManager::instance()->getCurrentUser();
         $artifact   = $this->getArtifactById($user, $id);
         $changesets = $this->builder->getArtifactChangesetsRepresentation($user, $artifact, $fields, $offset, $limit);

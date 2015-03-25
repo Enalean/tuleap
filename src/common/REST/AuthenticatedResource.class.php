@@ -54,7 +54,7 @@ class AuthenticatedResource  implements iUseAuthentication {
      *
      * @access private
      */
-    protected function checkAcess() {
+    protected function checkAccess() {
         if ($this->access_level === self::ACCESS_LEVEL_FORBID_ANON && ! $this->is_authenticated) {
             throw new RestException(401);
         }

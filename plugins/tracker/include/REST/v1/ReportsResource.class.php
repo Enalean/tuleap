@@ -80,7 +80,7 @@ class ReportsResource extends AuthenticatedResource {
      * @return Tuleap\Tracker\REST\ReportRepresentation
      */
     public function getId($id) {
-        $this->checkAcess();
+        $this->checkAccess();
         $user   = UserManager::instance()->getCurrentUser();
         $report = $this->getReportById($user, $id);
 
@@ -137,7 +137,7 @@ class ReportsResource extends AuthenticatedResource {
         $limit  = self::DEFAULT_LIMIT,
         $offset = self::DEFAULT_OFFSET
     ) {
-        $this->checkAcess();
+        $this->checkAccess();
         $this->checkLimitValue($limit);
 
         $user   = UserManager::instance()->getCurrentUser();

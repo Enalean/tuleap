@@ -74,7 +74,7 @@ class PlanningResource extends AuthenticatedResource {
      * @throws 404
      */
     public function getMilestones($id, $limit = 10, $offset = 0) {
-        $this->checkAcess();
+        $this->checkAccess();
         if (! $this->limitValueIsAcceptable($limit)) {
              throw new RestException(406, 'Maximum value for limit exceeded');
         }
