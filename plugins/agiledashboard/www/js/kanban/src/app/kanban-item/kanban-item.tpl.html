@@ -7,7 +7,7 @@
         tooltip-animation="true"
         tooltip-placement="top"></i>
 
-    <a href="/plugins/tracker/?aid={{ item.id }}" class="kanban-item-link">item #{{ item.id }}</a>
+    <a data-nodrag="true" href="/plugins/tracker/?aid={{ item.id }}" class="kanban-item-link">item #{{ item.id }}</a>
     <div class="kanban-item-label">{{ item.label }}</div>
 
     <ul class="extra_card_fields" ng-if="item.card_fields.length > 0">

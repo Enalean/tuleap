@@ -7,7 +7,7 @@
     translate-plural="{{ backlog_item.initial_effort }} pts"
 >{{ backlog_item.initial_effort }} pt</span>
 
-<span class="id">{{ backlog_item.short_type | lowercase }} #{{ backlog_item.id }}</span>
+<a data-nodrag="true" href="/plugins/tracker/?aid={{ backlog_item.id }}" class="id">{{ backlog_item.short_type | lowercase }} #{{ backlog_item.id }}</a>
 <span class="summary">{{ backlog_item.label }}</span>
 <span class="parent">{{ backlog_item.parent.label }}</span>
 

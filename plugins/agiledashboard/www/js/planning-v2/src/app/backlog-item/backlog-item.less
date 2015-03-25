@@ -132,11 +132,16 @@ ul.backlog-items, ul.backlog-item-children {
                 > span.initial-effort { background-color: @flamingo_pink; }
             }
 
-            > span.id {
+            > a.id {
                 margin: 0 5px 0 0;
                 color: #999;
-                font-size: 0.9em;
+                font-size: 0.8em;
                 letter-spacing: -0.03em;
+
+                &:hover {
+                    text-decoration: none;
+                    opacity: 0.8;
+                }
             }
 
             > span.summary {
@@ -157,7 +162,7 @@ ul.backlog-items, ul.backlog-item-children {
             }
 
             > ul.extra_card_fields {
-                margin: 10px 0 0;
+                margin: 15px 0 0;
 
                 > li {
                     display: inline-block;
