@@ -12,6 +12,7 @@ Version 7.12 (Not Released Yet)
 	* request #7804: Fix persistent XSS in FRS
 	* request #7898: Fix SQL injections in snippet service
 	* request #7932: Cannot display projects in a trove category
+	* request #7933: Proper styling of labels of radio button
 
 	== Plugins ==
 	* docman: 2.26.68
@@ -25,7 +26,7 @@ Version 7.12 (Not Released Yet)
 	* tests: 5.28
 
 	== Themes ==
-	* FlamingParrot: 1.72
+	* FlamingParrot: 1.73
 
 	== Development ==
 	* story #7702: Add dependency with Restler 3.0.0-RC6
