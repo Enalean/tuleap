@@ -391,10 +391,6 @@ class Tracker_ArtifactDao extends DataAccessObject {
         return $dao->deleteReference($id);
     }
 
-    public function deletePriority($id) {
-        return $this->getPriorityManager()->remove($id);
-    }
-
     private function getPriorityManager() {
         return new Tracker_Artifact_PriorityManager(
             new Tracker_Artifact_PriorityDao(),
