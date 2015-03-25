@@ -49,16 +49,26 @@ class AuthenticationTest extends RestBase {
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function testGETWithBasicAuthAndWrongCredentialsIsTreatedLikeAnonomousUser() {
-        $response = $this->getUnauthorizedBasicAuthResponse($this->client->get('projects'));
-
-        $this->assertEquals($response->getStatusCode(), 200);
+    public function testGETWithBasicAuthAndWrongCredentialsThrowsAnException() {
+        $exception_thrown = false;
+        try {
+            $this->getUnauthorizedBasicAuthResponse($this->client->get('projects'));
+        } catch(Guzzle\Http\Exception\ClientErrorResponseException $e) {
+            $this->assertEquals(401, $e->getResponse()->getStatusCode());
+            $exception_thrown = true;
+        }
+        $this->assertTrue($exception_thrown);
     }
 
-    public function testGETWithTokenAndWrongCredentialsIsTreatedLikeAnonomousUser() {
-        $response = $this->getUnauthorizedTokenResponse($this->client->get('projects'));
-
-        $this->assertEquals($response->getStatusCode(), 200);
+    public function testGETWithTokenAndWrongCredentialsThrowsAnException() {
+        $exception_thrown = false;
+        try {
+            $this->getUnauthorizedTokenResponse($this->client->get('projects'));
+        } catch(Guzzle\Http\Exception\ClientErrorResponseException $e) {
+            $this->assertEquals(401, $e->getResponse()->getStatusCode());
+            $exception_thrown = true;
+        }
+        $this->assertTrue($exception_thrown);
     }
 
     private function getUnauthorizedBasicAuthResponse($request) {
