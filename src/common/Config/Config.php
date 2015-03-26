@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) Enalean, 2011 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2015. All Rights Reserved.
  * Copyright (c) Xerox, 2009. All Rights Reserved.
  *
  * Originally written by Nicolas Terray, 2009. Xerox Codendi Team.
@@ -27,36 +27,26 @@
 class Config {
 
     const AUTH_TYPE_LDAP = 'ldap';
-    
+
     /**
      * Hold the configuration variables
      */
     protected static $conf_stack = array(0 => array());
-    
+
     /**
      * Load the configuration variables into the current stack
      *
-     * @param $file string /path/to/config.file.php
-     *
-     * @return boolean true if success false otherwise
+     * @param ConfigValueProvider $value_provider
      */
-    public static function load($file) {
-        if (is_file($file)) {
-            // include the file in the local scope
-            include($file);
-            
-            // Store in the stack the local scope...
-            self::$conf_stack[0] = array_merge(self::$conf_stack[0], get_defined_vars());
-            
-            // ...but filter out the local parameter '$file'
-            if (self::$conf_stack[0]['file'] === $file) {
-                unset(self::$conf_stack[0]['file']);
-            }
-            return true;
-        }
-        return false;
+    private static function load(ConfigValueProvider $value_provider) {
+        // Store in the stack the local scope...
+        self::$conf_stack[0] = array_merge(self::$conf_stack[0], $value_provider->getVariables());
     }
-    
+
+    public static function loadFromFile($file) {
+        self::load(new ConfigValueFileProvider($file));
+    }
+
     /**
      * Get the $name configuration variable
      *
@@ -71,7 +61,7 @@ class Config {
         }
         return $default;
     }
-    
+
     /**
      * Dump the content of the config for debugging purpose
      *
@@ -80,11 +70,11 @@ class Config {
     public static function dump() {
         var_export(self::$conf_stack[0]);
     }
-    
+
     /**
      * Store and clear the current stack. Only useful for testing purpose. DON'T USE IT IN PRODUCTION
      * @see ConfigTest::setUp() for details
-     * 
+     *
      * @return void
      */
     public static function store() {
@@ -93,11 +83,11 @@ class Config {
             trigger_error('Config registry lost');
         }
     }
-    
+
     /**
      * Restore the previous stack. Only useful for testing purpose. DON'T USE IT IN PRODUCTION
      * @see ConfigTest::tearDown() for details
-     * 
+     *
      * @return void
      */
     public static function restore() {
@@ -105,7 +95,7 @@ class Config {
             array_shift(self::$conf_stack);
         }
     }
-    
+
     /**
      * Set a configuration value. Only useful for testing purpose. DON'T USE IT IN PRODUCTION
      *
@@ -115,5 +105,5 @@ class Config {
     public static function set($name, $value) {
         self::$conf_stack[0][$name] = $value;
     }
+
 }
-?>

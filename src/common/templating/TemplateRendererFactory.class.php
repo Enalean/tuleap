@@ -20,7 +20,6 @@
 
 require_once 'mustache/MustacheRenderer.class.php';
 require_once 'mustache/MustacheDebugRenderer.class.php';
-require_once 'common/include/Config.class.php';
 
 /**
  * Handles TemplateRenderer's instanciation. 

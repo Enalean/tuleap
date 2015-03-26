@@ -19,7 +19,7 @@
  */
 
 require_once 'common/backend/BackendLogger.class.php';
-require_once 'common/include/Config.class.php';
+
 class BackendLoggerTest extends TuleapTestCase {
 
     private $log_file;

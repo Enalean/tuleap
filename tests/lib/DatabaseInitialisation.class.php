@@ -30,8 +30,8 @@ class DatabaseInitialization {
 
     private function loadConfiguration() {
         $config_file = 'tests.inc';
-        Config::load(dirname(__FILE__)."/../../src/etc/$config_file.dist");
-        Config::load(dirname($this->getLocalIncPath())."/$config_file");
+        Config::loadFromFile(dirname(__FILE__)."/../../src/etc/$config_file.dist");
+        Config::loadFromFile(dirname($this->getLocalIncPath())."/$config_file");
         $GLOBALS['sys_dbhost']   = Config::get('sys_dbhost');
         $GLOBALS['sys_dbuser']   = Config::get('sys_dbuser');
         $GLOBALS['sys_dbpasswd'] = Config::get('sys_dbpasswd');

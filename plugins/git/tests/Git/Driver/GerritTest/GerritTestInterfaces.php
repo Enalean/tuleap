@@ -19,7 +19,6 @@
  */
 
 require_once dirname(__FILE__).'/../../../bootstrap.php';
-require_once 'common/include/Config.class.php';
 require_once dirname(__FILE__).'/../../../../../ldap/include/LDAP_User.class.php';
 
 interface Git_Driver_Gerrit_addIncludedGroupTest {

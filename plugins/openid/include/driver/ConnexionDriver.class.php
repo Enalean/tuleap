@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/include/Config.class.php';
-
 /**
  * This object is responsible for the communication during the
  * authentication process through OpenID protocol.

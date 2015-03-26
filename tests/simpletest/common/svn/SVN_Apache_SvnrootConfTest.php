@@ -1,6 +1,5 @@
 <?php
 
-require_once 'common/include/Config.class.php';
 require_once 'common/svn/SVN_Apache_SvnrootConf.class.php';
 
 mock::generate('EventManager');

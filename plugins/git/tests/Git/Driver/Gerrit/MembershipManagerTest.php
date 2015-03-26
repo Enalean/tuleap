@@ -19,7 +19,6 @@
  */
 
 require_once dirname(__FILE__).'/../../../bootstrap.php';
-require_once 'common/include/Config.class.php';
 
 abstract class Git_Driver_Gerrit_MembershipManagerCommonTest extends TuleapTestCase {
     protected $user_ldap_id;

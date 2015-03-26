@@ -19,7 +19,6 @@
  */
 
 require_once('common/date/DateHelper.class.php');
-require_once('common/include/Config.class.php');
 require_once('common/mail/MailManager.class.php');
 require_once('common/language/BaseLanguageFactory.class.php');
 require_once('utils.php');
