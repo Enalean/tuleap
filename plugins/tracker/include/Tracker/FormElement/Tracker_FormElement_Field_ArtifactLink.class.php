@@ -1144,8 +1144,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      */
     public function isValidRegardingRequiredProperty(Tracker_Artifact $artifact, $value) {
         if ( (! is_array($value) || empty($value['new_values'])) && $this->isRequired()) {
-            $ids = $this->getLastChangesetArtifactIds($artifact);
-            if ( ! $this->isEmpty($value, $ids)) {
+            if ( ! $this->isEmpty($value, $artifact)) {
                 // Field is required but there are values, so field is valid
                 $this->has_errors = false;
             } else {
@@ -1175,15 +1174,23 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      * if not empty last changeset values and empty submitted values : not empty
      * if empty new values and not empty last changeset values and not empty removed values have the same size: empty
      * 
-     * @param array $submitted_value
-     * @param array $last_changeset_values   
+     * @param array            $submitted_value
+     * @param Tracker_Artifact $artifact
      *
      * @return bool true if the submitted value is empty
      */
-    public function isEmpty($submitted_value, $last_changeset_values) {
-        $hasNoNewValues = empty($submitted_value['new_values']);
-        $hasNoLastChangesetValues = empty($last_changeset_values);
-        $hasLastChangesetValues = !$hasNoLastChangesetValues;
+    public function isEmpty($submitted_value, Tracker_Artifact $artifact) {
+        $hasNoNewValues           = empty($submitted_value['new_values']);
+        $hasNoLastChangesetValues = true;
+        $last_changeset_values    = array();
+        $last_changeset           = $this->getLastChangesetValue($artifact);
+
+        if ($last_changeset) {
+            $last_changeset_values    = $last_changeset->getArtifactIds();
+            $hasNoLastChangesetValues = empty($last_changeset_values);
+        }
+
+        $hasLastChangesetValues   = !$hasNoLastChangesetValues;
 
         if (($hasNoLastChangesetValues && $hasNoNewValues) ||
              ($hasLastChangesetValues && $hasNoNewValues 
