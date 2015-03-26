@@ -23,7 +23,7 @@ function groups_to_soap($groups) {
  * @return boolean true if the current session user has access to this project, false otherwise
  */
 function checkRestrictedAccess($group) {
-    if (array_key_exists('sys_allow_restricted_users', $GLOBALS) && $GLOBALS['sys_allow_restricted_users'] == 1) {
+    if (Config::areRestrictedUsersAllowed()) {
         if ($group) {
             $user = UserManager::instance()->getCurrentUser();
             if ($user) {

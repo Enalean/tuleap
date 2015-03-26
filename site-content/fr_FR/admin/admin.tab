@@ -96,6 +96,16 @@ admin_main	upload_error	Erreur lors de l'upload du fichier (erreur $1)
 admin_main	no_png	Merci d'uploader une image au format png
 admin_main	100px	L'image excède les 100px de hauteur
 
+admin_main	configure_anonymous	Configurer l'accès anonyme et restreint
+admin_main	localinc_obsolete_message	<h4><i class="icon-warning-sign"></i> Votre fichier local.inc n'est pas à jour !</h4><p>Il semble que votre fichier local.inc contient des définitions de variables qui ne sont plus utilisées et pourrait entraîner des confusions.</p><p>Merci d'éditer <code>$1</code> et de supprimer les variables suivantes : <code>$sys_allow_anon</code> et <code>$sys_allow_restricted_users</code>.</p>
+admin_main	access_anonymous_label	Accès anonyme autorisé
+admin_main	access_anonymous_desc	Les utilisateurs anonymes peuvent accéder aux parties publiques de la plateforme.
+admin_main	access_regular_label	Authentification requise
+admin_main	access_regular_desc	Tous les utilisateurs doivent s'authentifier avant de pouvoir accéder au contenu.
+admin_main	access_restrited_label	Authentification requise et utilisateurs restreints
+admin_main	access_restrited_desc	Tous les utilisateurs doivent s'authentifier avant de pouvoir accéder au contenu. Certains utilisateurs peuvent être restreints (les utilisateurs restreints ont accès uniquement aux projets et aux services auxquels les autorisations leur sont spécifiquement accordées).
+admin_main	current_restricted_users_message	<h4>Attention !</h4><p>Il y a actuellement <a href="/admin/userlist.php?status_values[]=R">$1 utilisateur(s)</a> qui ont le status restreint. Changer le mode d'accès ne modifiera pas leur status, ils devront être gérés manuellement.</p>
+
 #
 #-----------------------------------------------
 # Script: SF/www/admin/admin_utils.php

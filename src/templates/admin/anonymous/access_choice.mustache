@@ -1,0 +1,61 @@
+<h2>{{ title }}</h2>
+
+<form action=""
+    method="POST"
+    id="admin-anonymous"
+    data-current-access-mode="{{ current_access_mode }}"
+    data-nb-restricted-users="{{ nb_restricted_users }}"
+>
+    {{{ csrf_token }}}
+
+    {{# is_localinc_obsolete }}
+    <div class="alert alert-error">
+        {{{ localinc_obsolete_message }}}
+    </div>
+    {{/ is_localinc_obsolete }}
+
+    <label class="radio">
+        <input type="radio"
+            name="access_mode"
+            value="anonymous"
+            {{# access_anonymous }}checked{{/ access_anonymous }}
+        />
+        {{ access_anonymous_label }}
+    </label>
+    <p class="help">
+        {{ access_anonymous_desc }}
+    </p>
+    <label class="radio">
+        <input type="radio"
+            name="access_mode"
+            value="regular"
+            {{# access_regular }}checked{{/ access_regular }}
+        />
+        {{ access_regular_label }}
+    </label>
+    <p class="help">
+        {{ access_regular_desc }}
+    </p>
+    <label class="radio">
+        <input type="radio"
+            name="access_mode"
+            value="restricted"
+            {{# access_restricted }}checked{{/ access_restricted }}
+        />
+        {{ access_restricted_label }}
+    </label>
+    <p class="help">
+        {{ access_restricted_desc }}
+    </p>
+
+    <div id="submit-panel">
+        {{# access_restricted }}
+            {{# nb_restricted_users }}
+                <div id="submit-panel-message">
+                    {{{ current_restricted_users_message }}}
+                </div>
+            {{/ nb_restricted_users }}
+        {{/ access_restricted }}
+            <button type="submit" class="btn btn-primary" name="update" value="1" disabled>{{ btn_submit }}</button>
+    </div>
+</form>

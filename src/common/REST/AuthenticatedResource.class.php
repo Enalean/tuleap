@@ -43,7 +43,7 @@ class AuthenticatedResource  implements iUseAuthentication {
     private function setAccessLevel() {
         $this->access_level = self::ACCESS_LEVEL_NORMAL;
 
-        if (Config::get('sys_allow_anon') == 0) {
+        if (! Config::areAnonymousAllowed()) {
             $this->access_level = self::ACCESS_LEVEL_FORBID_ANON;
         }
     }

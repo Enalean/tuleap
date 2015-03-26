@@ -1008,6 +1008,8 @@ Here you plan, track, code, and collaborate on software projects.'),
 ('fr_FR', 'Avec Tuleap, les équipes livrent les applications plus rapidement, plus efficacement et de meilleure qualité.
 Venez planifier, suivre, développer & collaborer sur vos projets logiciels.');
 
+INSERT INTO forgeconfig (name, value) VALUES ('access_mode', 'anonymous');
+
 --
 -- Email gateway salt
 --

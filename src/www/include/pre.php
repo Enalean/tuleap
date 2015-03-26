@@ -25,14 +25,9 @@ require_once('common/autoload_zend.php');
 require_once('common/autoload.php');
 
 // Defines all of the settings first (hosts, databases, etc.)
-$local_inc = getenv('TULEAP_LOCAL_INC') ? getenv('TULEAP_LOCAL_INC') : getenv('CODENDI_LOCAL_INC');
-if ( ! $local_inc ) {
-    if (is_file('/etc/tuleap/conf/local.inc')) {
-        $local_inc = '/etc/tuleap/conf/local.inc';
-    } else {
-        $local_inc = '/etc/codendi/conf/local.inc';
-    }
-}
+$locar_inc_finder = new Config_LocalIncFinder();
+$local_inc = $locar_inc_finder->getLocalIncPath();
+
 require($local_inc);
 require($GLOBALS['db_config_file']);
 Config::loadFromFile($GLOBALS['codendi_dir'] .'/src/etc/local.inc.dist'); //load the default settings
@@ -42,6 +37,7 @@ if (isset($GLOBALS['DEBUG_MODE'])) {
     Config::loadFromFile($GLOBALS['codendi_dir'] .'/src/etc/development.inc.dist');
     Config::loadFromFile(dirname($local_inc).'/development.inc');
 }
+Config::loadFromDatabase();
 
 // Fix path if needed
 if (isset($GLOBALS['htmlpurifier_dir'])) {
@@ -241,13 +237,6 @@ if (license_already_declined()) {
 // Bypass the test for:
 // a) all scripts where you are not logged in by definition
 // b) if it is a local access from localhost 
-
-/*
-print "<p>DBG: SERVER_NAME = ".$_SERVER['SERVER_NAME'];
-print "<p>DBG: sys_allow_anon= ".$GLOBALS['sys_allow_anon'];
-print "<p>DBG: user_isloggedin= ".user_isloggedin();
-print "<p>DBG: SCRIPT_NAME = ".$_SERVER['SCRIPT_NAME'];
-*/
 
 // Check URL for valid hostname and valid protocol
 

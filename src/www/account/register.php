@@ -131,7 +131,7 @@ function display_account_form($register_error)	{
     $form_email      = $request->exist('form_email')?$purifier->purify($request->get('form_email')):'';
     $form_expiry     = $request->exist('form_expiry')?$purifier->purify($request->get('form_expiry')):'';
     $form_mail_site  = ! $request->exist('form_mail_site') || $request->get('form_mail_site') == 1;
-    $form_restricted = $GLOBALS['sys_allow_restricted_users'] == 1 && (! $request->exist('form_restricted') || $request->get('form_restricted') == 1);
+    $form_restricted = Config::areRestrictedUsersAllowed() && (! $request->exist('form_restricted') || $request->get('form_restricted') == 1);
     $form_send_email = $request->get('form_send_email') == 1;
     if($request->exist('timezone') && is_valid_timezone($request->get('timezone'))) {
         $timezone = $request->get('timezone');

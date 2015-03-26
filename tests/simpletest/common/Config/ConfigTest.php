@@ -18,6 +18,13 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+class ConfigTestWhiteBoxVersion extends Config {
+
+    public static function load(ConfigValueProvider $value_provider) {
+        return parent::load($value_provider);
+    }
+}
+
 class ConfigTest extends TuleapTestCase {
 
     public function setUp() {
@@ -73,5 +80,13 @@ class ConfigTest extends TuleapTestCase {
         Config::restore();
         Config::restore();
         Config::loadFromFile(dirname(__FILE__).'/_fixtures/config/local.inc');
+    }
+
+    public function itLoadsFromDatabase() {
+        $dao = mock('ConfigDao');
+        stub($dao)->searchAll()->returnsDar(array('name' => 'a_var', 'value' => 'its_value'));
+        ConfigTestWhiteBoxVersion::load(new ConfigValueDatabaseProvider($dao));
+
+        $this->assertEqual('its_value', Config::get('a_var'));
     }
 }

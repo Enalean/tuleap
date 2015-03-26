@@ -2126,6 +2126,13 @@ CREATE TABLE homepage_headline (
     language_id VARCHAR(17) NOT NULL PRIMARY KEY,
     headline TEXT NOT NULL
 );
+
+DROP TABLE IF EXISTS forgeconfig;
+CREATE TABLE forgeconfig (
+    name VARCHAR(255) NOT NULL,
+    value VARCHAR(255) NOT NULL DEFAULT '',
+    PRIMARY KEY idx(name(10))
+);
 #
 # EOF
 #
