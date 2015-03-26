@@ -210,6 +210,7 @@ admin_groupedit	rename_project_msg	Le changement du nom du projet sur le systèm
 admin_groupedit	rename_project_warn	La mise à jour du nom du projet ne sera effective qu'après le traitement de l'événement système correspondant.
 admin_groupedit	rename_project_already_queued	Il y a déjà une opération de renommage prévue pour ce projet. Merci de consulter les <a href="/admin/system_events/">Événements Système</a>.
 admin_groupedit	invalid_short_name	Nom court du projet invalide
+admin_groupedit	manage_access	Gérer l'accès
 
 #
 #-----------------------------------------------

@@ -231,7 +231,7 @@ class WebDAVRoot extends Sabre_DAV_Directory {
     function getPublicProjectList() {
 
         $dao = new ProjectDao(CodendiDataAccess::instance());
-        $res = $dao->searchByPublicStatus(Project::IS_PUBLIC);
+        $res = $dao->searchByPublicStatus(true);
         $projects = array();
         if ($res && !$res->isError() && $res->rowCount() > 0) {
             foreach ($res as $row) {

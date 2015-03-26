@@ -22,14 +22,14 @@ if ($type == 'week') {
 	$sql="SELECT groups.group_name,groups.unix_group_name,groups.group_id,project_weekly_metric.ranking,project_weekly_metric.percentile ".
 		"FROM groups,project_weekly_metric ".
 		"WHERE groups.group_id=project_weekly_metric.group_id AND ".
-		"groups.is_public=1 AND groups.type=1 ".
+		"groups.access != '".db_es(Project::ACCESS_PRIVATE)."' AND groups.type=1 ".
 		"ORDER BY ranking ASC LIMIT " . db_ei($offset) . ",50";
 	$title = $Language->getText('top_index','act_week');
 } else {
 	$sql="SELECT groups.group_name,groups.unix_group_name,groups.group_id,project_metric.ranking,project_metric.percentile ".
 		"FROM groups,project_metric ".
 		"WHERE groups.group_id=project_metric.group_id AND ".
-		"groups.is_public=1 AND groups.type=1 ".
+		"groups.access != '".db_es(Project::ACCESS_PRIVATE)."' AND groups.type=1 ".
 		"ORDER BY ranking ASC LIMIT " . db_ei($offset) . ",50";
 	$title = $Language->getText('top_index','act_all_time');
 }

@@ -143,13 +143,13 @@ sub is_public_project {
 
     my $dbh = connect_database($r);
     my $sth = $dbh->prepare(
-        "SELECT is_public FROM groups WHERE groups.status='A' AND groups.group_id = ?;"
+        "SELECT access FROM groups WHERE groups.status='A' AND groups.group_id = ?;"
     );
 
     $sth->execute($project_id);
     my $ret = 0;
     if (my @row = $sth->fetchrow_array) {
-    	if ($row[0] eq "1") {
+    	if ($row[0] ne "private") {
     		$ret = 1;
     	}
     }

@@ -157,7 +157,7 @@ $res_cat = db_query("SELECT groups.group_name, "
 	. "user_group.admin_flags, "
 	. "user_group.bug_flags FROM "
 	. "groups,user_group WHERE user_group.user_id='".$user->getId()."' AND "
-	. "groups.group_id=user_group.group_id AND groups.is_public='1' AND groups.status='A' AND groups.type='1'");
+	. "groups.group_id=user_group.group_id AND groups.access != '".db_es(Project::ACCESS_PRIVATE)."' AND groups.status='A' AND groups.type='1'");
 
 // see if there were any groups
 if (db_numrows($res_cat) < 1) {

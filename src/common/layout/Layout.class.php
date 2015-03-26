@@ -2055,6 +2055,11 @@ class Layout extends Response {
         $tabs = array();
         $group_id = $project->getGroupId();
 
+        $user = UserManager::instance()->getCurrentUser();
+        if ($user->isRestricted() && ! $user->isMember($group_id)) {
+            return array();
+        }
+
         reset($project->service_data_array);
          while (list($short_name,$service_data) = each($project->service_data_array)) {
                if ((string)$short_name == "admin") {

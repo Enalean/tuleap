@@ -29,6 +29,13 @@ project_admin_editgroupinfo	autocompleter_placeholder	Nom du projet (auto comple
 project_admin_editgroupinfo	remove_parent_project	Supprimer le projet parent
 project_admin_editgroupinfo	self_exception	Un projet ne peut être son propre parent.
 project_admin_editgroupinfo	ancestor_exception	Un lien de parenté existe déjà entre ces projets.
+project_admin_editgroupinfo	visibility_section	Accès
+project_admin_editgroupinfo	private_label	privé
+project_admin_editgroupinfo	public_label	publique
+project_admin_editgroupinfo	choose_visbility	Choissez la visibilité du projet
+project_admin_editgroupinfo	unrestricted_label	publique incluant les utilsateurs restreints
+project_admin_editgroupinfo	restricted_warning	Seuls ses membres peuvent accèder à un projet <b>privé</b> <br>Un projet <b>publique</b> est accessible à tous, <b>sauf les utilsateurs restreints</b> <br>Il est <b>déconseillé d'autoriser l'accès</b> à un projet publique à des <b>utilsateurs restreints</b> sans bonne raison
+project_admin_editgroupinfo	general_warning	Seuls ses membres peuvent accèder à un projet <b>privé</b> <br>Un projet <b>publique</b> est accessible à tous.
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/editservice.php
@@ -383,6 +390,7 @@ project_admin_utils	g_change_history	Historique du projet
 project_admin_utils	event	Evènement
 project_admin_utils	val	Valeur
 project_admin_utils	date	Date
+project_admin_utils	access	Changement d'Accès
 project_admin_utils	no_g_change	Aucun changement correspondant au filtre, n'a été effectué sur ce projet
 project_admin_utils	previous	Précédent
 project_admin_utils	next	Suivant

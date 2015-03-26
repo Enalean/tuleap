@@ -60,7 +60,7 @@ sub svnGroup_mailto {
 }
 
 sub isGroupPublic {
-  return $$GROUP_INFO{'is_public'};
+  return ($$GROUP_INFO{'access'} != 'private');
 }
 
 

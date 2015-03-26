@@ -32,7 +32,7 @@ class Widget_ProjectPublicAreas extends Widget {
     }
     function getContent() {
         $request =& HTTPRequest::instance();
-        $group_id = $request->get('group_id');
+        $group_id = db_ei($request->get('group_id'));
         $pm = ProjectManager::instance();
         $project = $pm->getProject($group_id);
         if ($project->usesHomePage()) {

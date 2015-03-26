@@ -570,7 +570,7 @@ class URLVerification {
             throw new Project_AccessDeletedException($project);
         } elseif ($user->isMember($project->getID())) {
             return true;
-        } elseif ($user->isRestricted()) {
+        } elseif ($user->isRestricted() && ! $this->canRestrictedUserAccess($project)) {
             throw new Project_AccessRestrictedException();
         } elseif ($project->isPublic()) {
             return true;
@@ -578,6 +578,14 @@ class URLVerification {
             return true;
         }
         throw new Project_AccessPrivateException();
+    }
+
+    private function canRestrictedUserAccess(Project $project) {
+        return $project->allowsRestricted() && $this->isScriptAllowedForRestricted();
+    }
+
+    private function isScriptAllowedForRestricted() {
+        return $_SERVER['SCRIPT_NAME'] === '/projects';
     }
 
     private function userHasBeenDelegatedAccess(PFUser $user) {

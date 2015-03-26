@@ -329,6 +329,42 @@ class ProjectManager {
         return (isset($this->_cached_projects[$group_id]));
     }
 
+    public function clearProjectFromCache($project_id) {
+        unset($this->_cached_projects[$project_id]);
+    }
+
+    public function setAccess(Project $project, $access_level) {
+        $project_id = $project->getID();
+
+        switch ($access_level) {
+            case Project::ACCESS_PRIVATE:
+                $this->_getDao()->setIsPrivate($project_id);
+                $is_private = true;
+                break;
+            case Project::ACCESS_PUBLIC:
+                $this->_getDao()->setIsPublic($project_id);
+                $is_private = false;
+                break;
+            case Project::ACCESS_PUBLIC_UNRESTRICTED:
+                $this->_getDao()->setUnrestricted($project_id);
+                $is_private = false;
+                break;
+            default:
+                $GLOBALS['Response']->addFeedback('error', 'bad value '.$access_level);
+                return;
+        }
+
+        group_add_history('access', $access_level, $project_id);
+        $this->getEventManager()->processEvent('project_is_private', array(
+            'group_id'           => $project_id,
+            'project_is_private' => $is_private
+        ));
+    }
+
+    public function disableAllowRestrictedForAll() {
+        $this->_getDao()->disableAllowRestrictedForAll();
+    }
+
     /**
      * Filled the ugroups to be notified when admin action is needed
      *
