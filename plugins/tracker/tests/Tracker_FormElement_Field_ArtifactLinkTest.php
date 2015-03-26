@@ -33,7 +33,8 @@ Mock::generatePartial(
         'getProperty', 
         'getProperties',
         'getDao',
-        'getRuleArtifactId'
+        'getRuleArtifactId',
+        'getLastChangesetValue'
     )
 );
 
@@ -129,6 +130,8 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
         $c->setReturnReference('getValue', $cv);
         $a = new MockTracker_Artifact();
         $a->setReturnReference('getLastChangeset', $c);
+
+        $f->setReturnReference('getLastChangesetValue', $cv);
         
         $this->assertTrue($f->isValid($a, array('new_values' => '123')));
         $this->assertFalse($f->isValid($a, array('new_values' => '666')));
