@@ -179,10 +179,10 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                             case 'csvimportoverview':
                                 $this->displayCSVImportOverview($project, $group_id, $user);
                                 break;
-                            case 'cross-search':
-                                $controller = $this->getCrossSearchController($request);
-                                $controller->search($user);
-                                break;
+//                            case 'cross-search':
+//                                $controller = $this->getCrossSearchController($request);
+//                                $controller->search($user);
+//                                break;
                             default:
                                 $this->displayAllTrackers($project, $user);
                                 break;
@@ -627,7 +627,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
             }
 
             $this->displayHeader($project, $GLOBALS['Language']->getText('plugin_tracker', 'trackers'), $breadcrumbs, $toolbar, $params);
-            $this->displayTrackerHomeNav($project);
+            /* $this->displayTrackerHomeNav($project); */ // DEPRECATED: Waiting for user feedback before removing
+                                                          // the Cross Tracker Search feature completely
             $html .= '<p>';
             if (count($trackers)) {
                 $html .= $GLOBALS['Language']->getText('plugin_tracker_index','choose_tracker');
