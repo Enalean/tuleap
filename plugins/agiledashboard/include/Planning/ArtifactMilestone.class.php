@@ -313,11 +313,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
         $success  = true;
         $artifact = $this->getArtifact();
 
-        foreach ($artifacts_ids as $artifact_id){
-            $success = $success && $artifact->linkArtifact($artifact_id, $user);
-        }
-
-        return $success;
+        return $artifact->linkArtifacts($artifacts_ids, $user);
     }
 
     /**
