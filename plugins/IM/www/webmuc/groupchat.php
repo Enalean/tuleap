@@ -152,7 +152,7 @@ function submitClicked() {
 
     /* *** help *** */
 
-    open("http://www.jabber.org/jeps/jep-0045.html#impl-client-irc");
+    open("https://xmpp.org/extensions/xep-0045.html#impl-client-irc");
   } else {
     aMessage.setBody(body);
     srcW.con.send(aMessage);
