@@ -1,3 +1,6 @@
+Version 5.598 - Tuleap 7.12
+    * request #7949 Field must not be empty on transition does not work for Linked Artifact field
+
 Version 5.597 - Tuleap 7.12
     * request #7904: Artifact deletion clean priority history table
 
