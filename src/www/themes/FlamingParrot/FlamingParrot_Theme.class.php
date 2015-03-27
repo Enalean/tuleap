@@ -375,8 +375,10 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
 
         $headline = $dao->getHeadlineByLanguage($current_user->getLocale());
 
-        $news = '';
-        if ($display_homepage_news) {
+        $news_bytes_dao = new NewsBytesDao();
+        $news           = false;
+
+        if ($display_homepage_news && $news_bytes_dao->isThereNewsToDisplayInHomepage()) {
             $news = news_show_latest($GLOBALS['sys_news_group'], 2, true, false, true, 0);
         }
 
