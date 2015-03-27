@@ -1,3 +1,6 @@
+Version 1.184 - Tuleap 7.12
+    * request #7942: when too many inconsistencies to solve at once in AD, a time out occured
+
 Version 1.183 - Tuleap 7.12
     * request #7948: Kanban: Display tracker short name instead of item on cards
 

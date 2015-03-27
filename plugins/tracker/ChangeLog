@@ -1,3 +1,6 @@
+Version 5.596 - Tuleap 7.12
+    * request #7942: when too many inconsistencies to solve at once in AD, a time out occured
+
 Version 5.595 - Tuleap 7.12
     * story #7701: fixing typo in method name
 
