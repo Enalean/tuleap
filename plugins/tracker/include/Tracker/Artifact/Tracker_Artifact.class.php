@@ -805,7 +805,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return $this->getTracker()->getGroupId();
     }
 
-    private function getPriorityManager() {
+    /** @return Tracker_Artifact_PriorityManager */
+    protected function getPriorityManager() {
         return new Tracker_Artifact_PriorityManager(
             new Tracker_Artifact_PriorityDao(),
             new Tracker_Artifact_PriorityHistoryDao(),
@@ -1751,7 +1752,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $this->getCrossReferenceManager()->deleteEntity($this->getId(), self::REFERENCE_NATURE, $this->getTracker()->getGroupId());
         $this->getDao()->deleteArtifactLinkReference($this->getId());
         // We do not keep trace of the history change here because it doesn't have any sense
-        $this->getDao()->deletePriority($this->getId());
+        $this->getPriorityManager()->deletePriority($this);
         $this->getDao()->delete($this->getId());
         $this->getDao()->commit();
 

@@ -220,4 +220,9 @@ class Tracker_Artifact_PriorityManager {
         );
     }
 
+    public function deletePriority(Tracker_Artifact $artifact) {
+        return $this->priority_dao->remove($artifact->getId()) &&
+        $this->priority_history_dao->deletePriorityChangesHistory($artifact->getId());
+    }
+
 }
