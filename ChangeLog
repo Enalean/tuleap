@@ -5,6 +5,7 @@ Version 7.12 (Not Released Yet)
 	* story #7890: new tuleap home page
 
 	== Bug fix ==
+	* request #7926: SVN BrowseTree error
 	* request #7911: Logrotate might be configured to use "dateext" instead of .X
 	* request #7919: fix tracker artifact update
 	* request #7920: Properly filter private news
