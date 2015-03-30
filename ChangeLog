@@ -1,3 +1,13 @@
+Version 7.11-4 (Monday, March 30th 2015)
+	* request #7935: FTS: Performance issues on sql queries
+	* request #7943: The web chat room help is outdated
+	* request #7949: Field must not be empty on transition does not work for Linked Artifact field
+	* request #7904: Artifact deletion should also clean tracker_artifact_priority_history table
+	* request #7942: Agile Dashboard: when too many inconsistencies to solve at once, a time out occured
+	* request #7933: Proper styling of labels of radio/checkboxes button
+	* request #7932: Cannot display projects in a trove category
+	* request #7931: Number of open/closed items is always set at 0 in AD homepage
+
 Version 7.11-3 (Monday, March 23rd 2015)
 	* request #7804: Fix persistent XSS in FRS
 	* request #7898: Fix SQL injections in snippet service
