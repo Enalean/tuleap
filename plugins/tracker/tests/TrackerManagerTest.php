@@ -301,7 +301,7 @@ class TrackerManagerTest extends TuleapTestCase {
         $this->tm->setReturnValue('checkServiceEnabled', true);
         $this->tm->setReturnValue('getCrossSearchController', $controller);
         
-        $controller->expectOnce('search');
+        $controller->expectNever('search');
         $this->tm->process($request, $user);
     }
 }
