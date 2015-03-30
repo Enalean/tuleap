@@ -32,8 +32,12 @@ class TestingDataBuilder extends TestDataBuilder {
     const TEST_DEF_TRACKER_ID         = 26;
     const TEST_EXEC_TRACKER_ID        = 27;
 
-    public function setUp() {
+    public function __construct() {
+        parent::__construct();
+        $this->template_path = dirname(__FILE__).'/_fixtures/';
+    }
 
+    public function setUp() {
         $this->installPlugin();
         $this->activatePlugin('testing');
         $project = $this->generateProject();
@@ -59,21 +63,8 @@ class TestingDataBuilder extends TestDataBuilder {
         return $this;
     }
 
-    private function importTemplateInProject($project_id, $template) {
-        $xml_importer = new ProjectXMLImporter(
-            EventManager::instance(),
-            $this->project_manager
-        );
-        $this->user_manager->forceLogin(self::ADMIN_USER_NAME);
-        $xml_importer->import($project_id, dirname(__FILE__).'/_fixtures/'.$template);
-    }
-
     public function generateProject() {
-        $GLOBALS['svn_prefix'] = '/tmp';
-        $GLOBALS['cvs_prefix'] = '/tmp';
-        $GLOBALS['grpdir_prefix'] = '/tmp';
-        $GLOBALS['ftp_frs_dir_prefix'] = '/tmp';
-        $GLOBALS['ftp_anon_dir_prefix'] = '/tmp';
+        $this->setGlobalsForProjectCreation();
 
         $user_test_rest_1 = $this->user_manager->getUserByUserName(self::TEST_USER_1_NAME);
 
@@ -87,11 +78,7 @@ class TestingDataBuilder extends TestDataBuilder {
             array($user_test_rest_1)
         );
 
-        unset($GLOBALS['svn_prefix']);
-        unset($GLOBALS['cvs_prefix']);
-        unset($GLOBALS['grpdir_prefix']);
-        unset($GLOBALS['ftp_frs_dir_prefix']);
-        unset($GLOBALS['ftp_anon_dir_prefix']);
+        $this->unsetGlobalsForProjectCreation();
 
         return $project;
     }

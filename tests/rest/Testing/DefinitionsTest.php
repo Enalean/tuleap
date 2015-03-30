@@ -26,7 +26,7 @@ use BackendLogger;
 require_once dirname(__FILE__).'/../bootstrap.php';
 
 /**
- * @group ArtifactsTest
+ * @group TestingTest
  */
 class DefinitionsTest extends BaseTest {
 

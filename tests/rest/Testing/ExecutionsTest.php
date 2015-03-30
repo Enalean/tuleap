@@ -22,7 +22,7 @@ namespace Testing;
 require_once dirname(__FILE__).'/../bootstrap.php';
 
 /**
- * @group ArtifactsTest
+ * @group TestingTest
  */
 class ExecutionsTest extends BaseTest {
 

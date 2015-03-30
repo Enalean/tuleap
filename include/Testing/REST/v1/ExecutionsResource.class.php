@@ -35,6 +35,7 @@ use Tracker_Exception;
 use Tracker_NoChangeException;
 use TrackerFactory;
 use Tracker_URLVerification;
+use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tracker_Artifact_ChangesetValue_Text;
 
 class ExecutionsResource {
@@ -156,12 +157,11 @@ class ExecutionsResource {
             throw new RestException(400, 'Invalid status value');
         }
 
-        return array(
-            "field_id"      => (int) $field->getId(),
-            "bind_value_ids" => array(
-                (int) $bind->getId()
-            )
-        );
+        $value_representation                 = new ArtifactValuesRepresentation();
+        $value_representation->field_id       = (int) $field->getId();
+        $value_representation->bind_value_ids = array((int) $bind->getId());
+
+        return $value_representation;
     }
 
     private function getFormattedChangesetValueForFieldText(
@@ -175,13 +175,14 @@ class ExecutionsResource {
             return null;
         }
 
-        return array(
-            "field_id" => (int) $field->getId(),
-            "value"    => array(
-                'format'  => Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
-                'content' => $value
-            )
+        $value_representation                 = new ArtifactValuesRepresentation();
+        $value_representation->field_id       = (int) $field->getId();
+        $value_representation->value = array(
+            'format'  => Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
+            'content' => $value
         );
+
+        return $value_representation;
     }
 
     private function getFieldByName($field_name, $artifact, $user) {

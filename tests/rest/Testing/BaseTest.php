@@ -22,12 +22,12 @@ namespace Testing;
 use TestingCampaignBuilder;
 use TestingDataBuilder;
 use TestDataBuilder;
-use RestBase;
+use \RestBase;
 
 require_once dirname(__FILE__).'/../bootstrap.php';
 
 /**
- * @group ArtifactsTest
+ * @group TestingTest
  */
 abstract class BaseTest extends RestBase {
 
