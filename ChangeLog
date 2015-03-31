@@ -14,6 +14,7 @@ Version 7.12 (Not Released Yet)
 	* request #7898: Fix SQL injections in snippet service
 	* request #7932: Cannot display projects in a trove category
 	* request #7933: Proper styling of labels of radio button
+	* Revert "Improve web site ranking (mkt)"
 
 	== Plugins ==
 	* docman: 2.26.68
