@@ -1,3 +1,6 @@
+Version 4.22 - Tuleap 7.12
+    * request #7961 git19 is not used by all component
+
 Version 4.21 - Tuleap 7.12
     * story #7701: fixing typo in method name
 
