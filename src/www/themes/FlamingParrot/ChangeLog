@@ -1,3 +1,6 @@
+Version 1.75 - Tuleap 7.12
+    * request #7963: Truncated project name in navbar
+
 Version 1.74 - Tuleap 7.12
     * story #7890: If there's no news, do not display Latest news block + fix typo
 
