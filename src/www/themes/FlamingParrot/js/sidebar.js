@@ -69,6 +69,10 @@
             $('.navbar .nav:first-child li.current-project').remove();
         } else {
             $('.navbar .nav:first-child').prepend('<li class="current-project">' + $('.project-title-container').html() + '</li>');
+
+            if ($('.current-project').outerWidth() >= 180) {
+                $('.current-project').addClass('cutted');
+            }
         }
     }
 
