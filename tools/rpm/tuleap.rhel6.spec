@@ -672,8 +672,8 @@ if [ "$1" -eq "1" ]; then
         /usr/sbin/useradd -c 'Git' -m -d '/var/lib/gitolite' -g gitolite gitolite
     fi
 
-    echo 'source /opt/rh/git19/enable' > /var/lib/gitolite/.bashrc
-    chown gitolite:gitolite /var/lib/gitolite/.bashrc
+    echo 'source /opt/rh/git19/enable' > /var/lib/gitolite/.profile
+    chown gitolite:gitolite /var/lib/gitolite/.profile
 else
     true
 fi
