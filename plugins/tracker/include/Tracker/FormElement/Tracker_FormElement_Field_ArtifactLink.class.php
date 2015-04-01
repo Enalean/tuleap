@@ -1,23 +1,23 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
- */
-
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+*/
 
 class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
 
@@ -1410,32 +1410,11 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             // We add new links to existing ones
             foreach ($new_artifact_ids as $new_artifact_id) {
                 if ( ! in_array($new_artifact_id, $artifact_ids)) {
-                    $artifact_ids[] = $new_artifact_id;
+                    $artifact_ids[] = (int)$new_artifact_id;
                 }
             }
         }
 
-        return $this->getArtifactFactory()->getArtifactsByArtifactIdList($artifact_ids);
-    }
-
-    /**
-     *
-     * @param array $value
-     * @param Tracker_Artifact_ChangesetValue_ArtifactLink $previous_changesetvalue
-     * @return Artifact[]
-     */
-    private function getRemovedArtifactsFromChangesetValue($value, $previous_changesetvalue = null) {
-        $removed_values = isset($value['removed_values']) ? $value['removed_values'] : array();
-
-        $artifact_ids = array();
-        if ($previous_changesetvalue != null) {
-            $artifact_ids = $previous_changesetvalue->getArtifactIds();
-            // We remove artifact links that user wants to remove
-            if (is_array($removed_values) && ! empty($removed_values)) {
-                $artifact_ids = array_intersect($artifact_ids, array_keys($removed_values));
-            }
-        }
-        
         return $this->getArtifactFactory()->getArtifactsByArtifactIdList($artifact_ids);
     }
     
@@ -1447,35 +1426,47 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      * @param mixed                           $value                   The value submitted by the user
      * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue The data previously stored in the db
      *
-     * @return int or array of int
      */
     protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
-        $success = true;
-
-        $artifacts_to_link   = $this->getArtifactsFromChangesetValue($value, $previous_changesetvalue);
-        $artifacts_to_unlink = $this->getRemovedArtifactsFromChangesetValue($value, $previous_changesetvalue);
-
         $dao = $this->getValueDao();
-        // we create the new changeset
-        foreach ($artifacts_to_link as $artifact_to_link) {
+
+        foreach ($this->getArtifactIdsToLink($artifact, $value, $previous_changesetvalue) as $artifact_to_be_linked_by_tracker) {
+            $tracker = $artifact_to_be_linked_by_tracker['tracker'];
+            $dao->create(
+                $changeset_value_id,
+                $artifact_to_be_linked_by_tracker['ids'],
+                $tracker->getItemName(),
+                $tracker->getGroupId()
+            );
+        }
+
+        $this->updateCrossReferences($artifact, $value);
+    }
+
+    /** @return array */
+    private function getArtifactIdsToLink(Tracker_Artifact $artifact, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
+        $all_artifacts_to_link = $this->getArtifactsFromChangesetValue(
+            $value,
+            $previous_changesetvalue
+        );
+
+        $all_artifact_to_be_linked = array();
+        foreach ($all_artifacts_to_link as $artifact_to_link) {
             if ($this->canLinkArtifacts($artifact, $artifact_to_link)) {
                 $tracker = $artifact_to_link->getTracker();
-                if ($dao->create($changeset_value_id, $artifact_to_link->getId(), $tracker->getItemName(), $tracker->getGroupId())) {
-                    $this->updateCrossReferences($artifact, $value);
-                } else {
-                    $success = false;
+
+                if (! isset($all_artifact_to_be_linked[$tracker->getId()])) {
+                    $all_artifact_to_be_linked[$tracker->getId()] = array(
+                        'tracker' => $tracker,
+                        'ids'     => array()
+                    );
                 }
+
+                $all_artifact_to_be_linked[$tracker->getId()]['ids'][] = $artifact_to_link->getId();
             }
         }
 
-        foreach ($artifacts_to_unlink as $artifact_to_unlink) {
-            if ($this->canLinkArtifacts($artifact, $artifact_to_unlink)) {
-                $tracker = $artifact_to_unlink->getTracker();
-                $this->updateCrossReferences($artifact, $value);
-            }
-        }
-
-        return $success;
+        return $all_artifact_to_be_linked;
     }
 
     private function canLinkArtifacts(Tracker_Artifact $src_artifact, Tracker_Artifact $artifact_to_link) {
