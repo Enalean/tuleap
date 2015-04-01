@@ -130,8 +130,10 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      */
     public function saveSort($sort) {
         $dao = $this->getSortDao();
-        foreach ($sort as $key => $s) {
-            $dao->create($this->id, $s['field']->id);
+        if (is_array($sort)) {
+            foreach ($sort as $key => $s) {
+                $dao->create($this->id, $s['field']->id);
+            }
         }
     }
     
