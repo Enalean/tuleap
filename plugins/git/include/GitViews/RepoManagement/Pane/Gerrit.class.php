@@ -82,9 +82,19 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
             return $this->getContentAlreadyMigrated();
         }
 
+        $html     = '';
+        $disabled = '';
+
+        if (! $this->repository->isCreated()) {
+            $html .= '<div class="alert alert-info wait_creation">';
+            $html .= $GLOBALS['Language']->getText('plugin_git', 'waiting_for_repo_creation');
+            $html .= '</div>';
+
+            $disabled = 'disabled=true';
+        }
+
         $name_builder = new Git_RemoteServer_Gerrit_ProjectNameBuilder();
 
-        $html  = '';
         $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_title') .'</h3>';
         $html .= '<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id='. $this->repository->getProjectId() .'">';
         $html .= '<input type="hidden" id="action" name="action" value="migrate_to_gerrit" />';
@@ -99,20 +109,20 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
         $html .= '</div>';
         $html .= '<p>';
         $html .= '<label for="gerrit_url">'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_url') .'</label>';
-        $html .= '<select name="remote_server_id" id="gerrit_url">';
+        $html .= '<select name="remote_server_id" id="gerrit_url" '.$disabled.'>';
         $html .= '<option value="" selected="selected">'. $GLOBALS['Language']->getText('global', 'please_choose_dashed') .'</option>';
         $html .= $this->getServers();
         $html .= '</select>';
         $html .= '</p>';
         $html .= '<p>';
         $html .= '<label for="gerrit_template">'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_template') .'</label>';
-        $html .= '<select name="gerrit_template_id" id="gerrit_template">';
+        $html .= '<select name="gerrit_template_id" id="gerrit_template" '.$disabled.'>';
         $html .= '<option value="" selected="selected">'. $GLOBALS['Language']->getText('global', 'please_choose_dashed') .'</option>';
         $html .= $this->getTemplates();
         $html .= '</select>';
         $html .= '</p>';
 
-        $html .= '<p id="migrate_access_right"><input type="submit" name="save" value="'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_migrate_to') .'" /></p>';
+        $html .= '<p id="migrate_access_right"><input type="submit" name="save" value="'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_migrate_to') .'" '.$disabled.' /></p>';
         $html .= '<div id="gerrit_past_project_delete" class="alert alert-info">
                     <p>'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_past_project_warn') .'
                     </p>
