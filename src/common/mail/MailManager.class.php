@@ -24,7 +24,6 @@ require_once 'common/mail/Codendi_Mail.class.php';
 require_once 'common/include/Tuleap_Template.class.php';
 
 require_once 'common/user/UserManager.class.php';
-require_once 'common/include/Config.class.php';
 
 /**
  * Mail manager is the key interface to send emails in the platform

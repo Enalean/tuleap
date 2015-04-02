@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http:__www.gnu.org_licenses_>.
  */
 
-require_once 'common/include/Config.class.php';
-
 class Git_Driver_Gerrit_RemoteSSHCommand {
 
     const SUCCESS = 0;

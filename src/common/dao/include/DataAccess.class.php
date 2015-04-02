@@ -18,7 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/include/Config.class.php');
 require_once('DataAccessResult.class.php');
 require_once('DataAccessException.class.php');
 require_once('DataAccessCredentials.class.php');

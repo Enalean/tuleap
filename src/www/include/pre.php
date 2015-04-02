@@ -21,6 +21,9 @@ if (server_is_php_version_equal_or_greater_than_53() == true) {
     }
 }
 
+require_once('common/autoload_zend.php');
+require_once('common/autoload.php');
+
 // Defines all of the settings first (hosts, databases, etc.)
 $local_inc = getenv('TULEAP_LOCAL_INC') ? getenv('TULEAP_LOCAL_INC') : getenv('CODENDI_LOCAL_INC');
 if ( ! $local_inc ) {
@@ -32,13 +35,12 @@ if ( ! $local_inc ) {
 }
 require($local_inc);
 require($GLOBALS['db_config_file']);
-require_once('common/include/Config.class.php');
-Config::load($GLOBALS['codendi_dir'] .'/src/etc/local.inc.dist'); //load the default settings
-Config::load($local_inc);
-Config::load($GLOBALS['db_config_file']);
+Config::loadFromFile($GLOBALS['codendi_dir'] .'/src/etc/local.inc.dist'); //load the default settings
+Config::loadFromFile($local_inc);
+Config::loadFromFile($GLOBALS['db_config_file']);
 if (isset($GLOBALS['DEBUG_MODE'])) {
-    Config::load($GLOBALS['codendi_dir'] .'/src/etc/development.inc.dist');
-    Config::load(dirname($local_inc).'/development.inc');
+    Config::loadFromFile($GLOBALS['codendi_dir'] .'/src/etc/development.inc.dist');
+    Config::loadFromFile(dirname($local_inc).'/development.inc');
 }
 
 // Fix path if needed
@@ -50,9 +52,6 @@ if (isset($GLOBALS['jpgraph_dir'])) {
 }
 
 define('TTF_DIR',isset($GLOBALS['ttf_font_dir']) ? $GLOBALS['ttf_font_dir'] : '/usr/share/fonts/');
-
-require_once('common/autoload_zend.php');
-require_once('common/autoload.php');
 
 $xml_security = new XML_Security();
 $xml_security->disableExternalLoadOfEntities();

@@ -23,7 +23,7 @@ require_once 'common/language/BaseLanguageFactory.class.php';
 class BaseLanguageFactoryTest extends UnitTestCase {
     function setUp() {
         Config::store();
-        Config::load(dirname(__FILE__).'/_fixtures/local.inc');
+        Config::loadFromFile(dirname(__FILE__).'/_fixtures/local.inc');
         $this->supportedLanguages = Config::get('sys_supported_languages');
         $this->oldLocale = setlocale(LC_ALL, "0");
         setlocale(LC_ALL, 'fr_FR');

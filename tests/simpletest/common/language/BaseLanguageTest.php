@@ -23,7 +23,6 @@
  * 
  */
 
-require_once('common/include/Config.class.php');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generatePartial('BaseLanguage', 'BaseLanguageTestVersion', array('loadAllTabFiles'));
 
