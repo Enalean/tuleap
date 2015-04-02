@@ -1,3 +1,6 @@
+Version 4.23 - Tuleap 8.1
+    * request #7960: Disabled "Migrate to gerrit" if repo not fully created
+
 Version 4.22 - Tuleap 8.0
     * request #7961 git19 is not used by all component
 
