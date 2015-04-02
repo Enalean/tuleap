@@ -1,3 +1,6 @@
+Version 5.602 - Tuleap 8.1
+    * story #7813: Refactoring- Introduce ConfigValueFileProvider
+
 Version 5.601 - Tuleap 8.0
     * request #7965: notification when importing AD template
 

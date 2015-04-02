@@ -1,3 +1,6 @@
+Version 0.7 - Tuleap 8.1
+    * story #7813: Refactoring- Introduce ConfigValueFileProvider
+
 Version 0.6 - Tuleap 7.10
     * request #7744: Fix non persistent XSS and a open redirection in search modules and login form
 
