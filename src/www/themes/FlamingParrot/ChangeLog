@@ -1,3 +1,9 @@
+Version 1.77 - Tuleap 7.12
+    * Fix request #7964: Stylesheets cannot have more than 4K rules in IE9
+
+Version 1.76 - Tuleap 7.12
+    * Fix request #7964: Stylesheets cannot have more than 4K rules in IE9
+
 Version 1.75 - Tuleap 7.12
     * request #7963: Truncated project name in navbar
 

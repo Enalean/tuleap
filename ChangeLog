@@ -28,7 +28,7 @@ Version 7.12 (Not Released Yet)
 	* tests: 5.28
 
 	== Themes ==
-	* FlamingParrot: 1.75
+	* FlamingParrot: 1.77
 
 	== Development ==
 	* story #7702: Add dependency with Restler 3.0.0-RC6
@@ -39,6 +39,7 @@ Version 7.12 (Not Released Yet)
 	* Be compatible we the new iAuthenticate interface of Restler v3.0.0-RC6
 	* Fix packaging
 	* story #7701: make all relevant user related api resources public
+	* request #7964: Stylesheets cannot have more than 4K rules in IE9
 
 	== Api ==
 	* REST API: 1.7
