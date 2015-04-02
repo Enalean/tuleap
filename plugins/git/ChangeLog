@@ -1,28 +1,28 @@
-Version 4.22 - Tuleap 7.12
+Version 4.22 - Tuleap 8.0
     * request #7961 git19 is not used by all component
 
-Version 4.21 - Tuleap 7.12
+Version 4.21 - Tuleap 8.0
     * story #7701: fixing typo in method name
 
-Version 4.20 - Tuleap 7.12
+Version 4.20 - Tuleap 8.0
     * story #7701: make all git api resources public
 
-Version 4.19 - Tuleap 7.12
+Version 4.19 - Tuleap 8.0
     * story #7709: refactor plugin restriction by project
 
-Version 4.18 - Tuleap 7.12
+Version 4.18 - Tuleap 8.0
     * story #7709: Site admin can restrict access to a mirror
 
-Version 4.17 - Tuleap 7.12
+Version 4.17 - Tuleap 8.0
     * story #7709: No admin mass change view if no available mirror
 
-Version 4.16 - Tuleap 7.12
+Version 4.16 - Tuleap 8.0
     * request #7902: Install Tuleap with gitolite3 and git19 on centos6
 
-Version 4.15 - Tuleap 7.12
+Version 4.15 - Tuleap 8.0
     * story #7709: Restrict to project the access to a mirror
 
-Version 4.14 - Tuleap 7.12
+Version 4.14 - Tuleap 8.0
     * Replace hidden documentation by read the doc
 
 Version 4.13 - Tuleap 7.11

@@ -1,51 +1,51 @@
-Version 1.184 - Tuleap 7.12
+Version 1.184 - Tuleap 8.0
     * request #7942: when too many inconsistencies to solve at once in AD, a time out occured
 
-Version 1.183 - Tuleap 7.12
+Version 1.183 - Tuleap 8.0
     * request #7948: Kanban: Display tracker short name instead of item on cards
 
-Version 1.182 - Tuleap 7.12
+Version 1.182 - Tuleap 8.0
     * Display time metrics in archive column
 
-Version 1.181 - Tuleap 7.12
+Version 1.181 - Tuleap 8.0
     * story #7701: fixing typo in method name
 
-Version 1.180 - Tuleap 7.12
+Version 1.180 - Tuleap 8.0
     * request #7940: Artifact link and card fields links are not clickable on Kanban & Planning v2 cards
 
-Version 1.179 - Tuleap 7.12
+Version 1.179 - Tuleap 8.0
     * story #7701: make all remaining appropriate agiledashboard routes public
 
 
-Version 1.178 - Tuleap 7.12
+Version 1.178 - Tuleap 8.0
     * story #7701: make all relevant milestone routes public
 
 
-Version 1.177 - Tuleap 7.12
+Version 1.177 - Tuleap 8.0
     * story #7581: Display time metrics on each cards
 
-Version 1.176 - Tuleap 7.12
+Version 1.176 - Tuleap 8.0
     * story #7580: Refactor WIP popover into a fully-functional directive
 
-Version 1.175 - Tuleap 7.12
+Version 1.175 - Tuleap 8.0
     * Replace XmlValidator by XML_RNGValidator
 
-Version 1.174 - Tuleap 7.12
+Version 1.174 - Tuleap 8.0
     * request #7931 Number of open/closed items is always set at 0 in AD homepage
 
-Version 1.173 - Tuleap 7.12
+Version 1.173 - Tuleap 8.0
     * story #7580: limit the number of cards par column
 
-Version 1.172 - Tuleap 7.12
+Version 1.172 - Tuleap 8.0
     * Fix Bower dependencies in Kanban
 
-Version 1.171 - Tuleap 7.12
+Version 1.171 - Tuleap 8.0
     * story #7580 - add PATCH /kanban_columns/:id route
 
-Version 1.170 - Tuleap 7.12
+Version 1.170 - Tuleap 8.0
     * story #7701: Add BasicAuth method if no token/cookie provided
 
-Version 1.169 - Tuleap 7.12
+Version 1.169 - Tuleap 8.0
     * story #7580: Kanban column has a WIP limit
 
 Version 1.168 - Tuleap 7.11

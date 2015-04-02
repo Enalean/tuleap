@@ -1,4 +1,4 @@
-Version 1.7 - Tuleap 7.12
+Version 1.7 - Tuleap 8.0
     * story #7701: Add BasicAuth method if no token/cookie provided
 
 Version 1.6 - Tuleap 7.11

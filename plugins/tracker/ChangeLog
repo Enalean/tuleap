@@ -1,58 +1,58 @@
-Version 5.601 - Tuleap 7.12
+Version 5.601 - Tuleap 8.0
     * request #7965: notification when importing AD template
 
-Version 5.600 - Tuleap 7.12
+Version 5.600 - Tuleap 8.0
     * request #7946: Remove cross tracker search
 
-Version 5.599 - Tuleap 7.12
+Version 5.599 - Tuleap 8.0
     * request #7935 FTS: Performance issues on sql queries
 
-Version 5.598 - Tuleap 7.12
+Version 5.598 - Tuleap 8.0
     * request #7949 Field must not be empty on transition does not work for Linked Artifact field
 
-Version 5.597 - Tuleap 7.12
+Version 5.597 - Tuleap 8.0
     * request #7904: Artifact deletion clean priority history table
 
-Version 5.596 - Tuleap 7.12
+Version 5.596 - Tuleap 8.0
     * request #7942: when too many inconsistencies to solve at once in AD, a time out occured
 
-Version 5.595 - Tuleap 7.12
+Version 5.595 - Tuleap 8.0
     * story #7701: fixing typo in method name
 
-Version 5.594 - Tuleap 7.12
+Version 5.594 - Tuleap 8.0
     * story #7701: make all relevant tracker REST resources public
 
-Version 5.593 - Tuleap 7.12
+Version 5.593 - Tuleap 8.0
     * Replace XmlValidator by XML_RNGValidator
 
-Version 5.592 - Tuleap 7.12
+Version 5.592 - Tuleap 8.0
     * story #7702 Add specific tracker in XML REST test
 
-Version 5.591 - Tuleap 7.12
+Version 5.591 - Tuleap 8.0
     * Refactor XML import: use dedicated class
 
-Version 5.590 - Tuleap 7.12
+Version 5.590 - Tuleap 8.0
     * Refactor Tracker XML export: replace adhoc Field and Values + filter export
 
-Version 5.589 - Tuleap 7.12
+Version 5.589 - Tuleap 8.0
     * Refactor TrackerTest suite
 
-Version 5.588 - Tuleap 7.12
+Version 5.588 - Tuleap 8.0
     * story #7702 - Deal with XML in PUT artifacts/:id
 
-Version 5.587 - Tuleap 7.12
+Version 5.587 - Tuleap 8.0
     * story #7704: manage concurrent artifact edition via REST
 
-Version 5.586 - Tuleap 7.12
+Version 5.586 - Tuleap 8.0
     * story #7702 - Be compatible with restler v3.0.0-RC6
 
-Version 5.585 - Tuleap 7.12
+Version 5.585 - Tuleap 8.0
     * story #7704: manage concurrent artifact edition via REST
 
-Version 5.584 - Tuleap 7.12
+Version 5.584 - Tuleap 8.0
     * request #7640: Tracker admins can create new reports when there are no-longer any reports available
 
-Version 5.583 - Tuleap 7.12
+Version 5.583 - Tuleap 8.0
     * request #7896: refactoring search redirection
 
 Version 5.582 - Tuleap 7.11

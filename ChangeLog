@@ -1,8 +1,9 @@
-Version 7.12 (Not Released Yet)
+Version 8.0 (Thursday, April 2nd 2015)
+
 	== Enhancement ==
-	* request #7890: New tuleap home page 
+	* request #7890: New tuleap home page
 	* request #7714: Add status search criteria in siteadmin userlist interface (Contrib STMicroelectronics)
-	* story #7890: new tuleap home page
+	* story #7709: Site admin can restrict access to a mirror
 
 	== Bug fix ==
 	* request #7926: SVN BrowseTree error
@@ -30,19 +31,14 @@ Version 7.12 (Not Released Yet)
 	== Themes ==
 	* FlamingParrot: 1.77
 
-	== Development ==
-	* story #7702: Add dependency with Restler 3.0.0-RC6
-	* story #7701: Add BasicAuth method if no token/cookie provided
-	* story #7890: new tuleap home page- Editable headline
-	* story #7709: Site admin can restrict access to a mirror
-	* add tuleap-plugin-git-gitolite3 to RHEL6 specfile
-	* Be compatible we the new iAuthenticate interface of Restler v3.0.0-RC6
-	* Fix packaging
-	* story #7701: make all relevant user related api resources public
-	* request #7964: Stylesheets cannot have more than 4K rules in IE9
-
 	== Api ==
 	* REST API: 1.7
+	* story #7701: make all relevant user related api resources public
+	* story #7701: Add BasicAuth method if no token/cookie provided
+
+	== Development ==
+	* story #7702: Add dependency with Restler 3.0.0-RC6
+	* request #7964: Stylesheets cannot have more than 4K rules in IE9
 
 Version 7.11 (Wednesday, March 4th 2015)
 

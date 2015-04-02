@@ -1,34 +1,34 @@
-Version 1.77 - Tuleap 7.12
+Version 1.77 - Tuleap 8.0
     * Fix request #7964: Stylesheets cannot have more than 4K rules in IE9
 
-Version 1.76 - Tuleap 7.12
+Version 1.76 - Tuleap 8.0
     * Fix request #7964: Stylesheets cannot have more than 4K rules in IE9
 
-Version 1.75 - Tuleap 7.12
+Version 1.75 - Tuleap 8.0
     * request #7963: Truncated project name in navbar
 
-Version 1.74 - Tuleap 7.12
+Version 1.74 - Tuleap 8.0
     * story #7890: If there's no news, do not display Latest news block + fix typo
 
-Version 1.73 - Tuleap 7.12
+Version 1.73 - Tuleap 8.0
     * Proper styling of labels of checkboxes in wiki
 
-Version 1.72 - Tuleap 7.12
+Version 1.72 - Tuleap 8.0
     * story #7890: new tuleap home page
 
-Version 1.71 - Tuleap 7.12
+Version 1.71 - Tuleap 8.0
     * story #7890: new tuleap home page
 
-Version 1.70 - Tuleap 7.12
+Version 1.70 - Tuleap 8.0
     * story #7709: refactor plugin restriction by project
 
-Version 1.69 - Tuleap 7.12
+Version 1.69 - Tuleap 8.0
     * story #7890: new tuleap home page- Editable headline
 
-Version 1.68 - Tuleap 7.12
+Version 1.68 - Tuleap 8.0
     * story #7890: new tuleap home page- Editable headline
 
-Version 1.67 - Tuleap 7.12
+Version 1.67 - Tuleap 8.0
     * request #7896: refactoring search redirection
 
 Version 1.66 - Tuleap 7.11
