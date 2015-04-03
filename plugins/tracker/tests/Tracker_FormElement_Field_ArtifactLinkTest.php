@@ -923,6 +923,9 @@ class Tracker_FormElement_Field_ArtifactLink_SaveValue extends TuleapTestCase {
     /** @var Tracker_Artifact */
     private $some_artifact;
 
+    /** @var Tracker_Artifact */
+    private $other_artifact;
+
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
 
@@ -946,9 +949,15 @@ class Tracker_FormElement_Field_ArtifactLink_SaveValue extends TuleapTestCase {
         $this->tracker_referencer_manager = mock('Tracker_ReferenceManager');
         stub($this->artifact_link)->getTrackerReferenceManager()->returns($this->tracker_referencer_manager);
 
+        $tracker = stub('Tracker')->getId()->returns(101);
+
         $this->some_artifact = mock('Tracker_Artifact');
         stub($this->some_artifact)->getId()->returns(456);
-        stub($this->some_artifact)->gettracker()->returns(mock('Tracker'));
+        stub($this->some_artifact)->gettracker()->returns($tracker);
+
+        $this->other_artifact = mock('Tracker_Artifact');
+        stub($this->other_artifact)->getId()->returns(457);
+        stub($this->other_artifact)->gettracker()->returns($tracker);
 
         $this->artifact_factory = mock('Tracker_ArtifactFactory');
         stub($this->artifact_link)->getArtifactFactory()->returns($this->artifact_factory);
@@ -969,7 +978,8 @@ class Tracker_FormElement_Field_ArtifactLink_SaveValue extends TuleapTestCase {
 
     public function itRemovesACrossReference() {;
         $artifact_to_unlink = $this->some_artifact;
-        $artifact = mock('Tracker_Artifact');
+        $artifact           = mock('Tracker_Artifact');
+        $dao                = mock('Tracker_FormElement_Field_Value_ArtifactLinkDao');
         $changeset_value_id = 56;
         $value = array(
             'new_values' => '',
@@ -983,9 +993,9 @@ class Tracker_FormElement_Field_ArtifactLink_SaveValue extends TuleapTestCase {
         stub($this->artifact_factory)->getArtifactsByArtifactIdList(array(36))->at(1)->returns(array($artifact_to_unlink));
         
         expect($this->tracker_referencer_manager)->removeBetweenTwoArtifacts()->once();
+        expect($dao)->create()->never();
 
-        $saved = $this->artifact_link->saveValue($artifact, $changeset_value_id, $value, $this->previous_changesetvalue);
-        $this->assertTrue($saved);
+        $this->artifact_link->saveValue($artifact, $changeset_value_id, $value, $this->previous_changesetvalue);
     }
 
     public function itAddsACrossReference() {
@@ -1003,11 +1013,28 @@ class Tracker_FormElement_Field_ArtifactLink_SaveValue extends TuleapTestCase {
         stub($this->artifact_factory)->getArtifactsByArtifactIdList(array(36))->at(0)->returns(array($artifact_to_link));
         stub($this->artifact_factory)->getArtifactsByArtifactIdList(array(36))->at(1)->returns(array());
 
-        expect($this->tracker_referencer_manager)->insertBetweenTwoArtifacts()->count(2);
+        expect($this->tracker_referencer_manager)->insertBetweenTwoArtifacts()->once();
+        expect($dao)->create()->once();
 
-        $saved = $this->artifact_link->saveValue($artifact, $changeset_value_id, $value, $this->previous_changesetvalue);
-        $this->assertTrue($saved);
+        $this->artifact_link->saveValue($artifact, $changeset_value_id, $value, $this->previous_changesetvalue);
+    }
+
+    public function itCallsOnlyOneTimeCreateInDBIfAllArtifactsAreInTheSameTracker() {
+        $artifact_to_link   = array($this->some_artifact, $this->other_artifact);
+        $artifact           = mock('Tracker_Artifact');
+        $dao                = mock('Tracker_FormElement_Field_Value_ArtifactLinkDao');
+        $changeset_value_id = 56;
+         $value = array(
+            'new_values' => '36,37',
+            'removed_values' => array()
+        );
+
+        stub($this->artifact_link)->getValueDao()->returns($dao);
+        stub($this->artifact_factory)->getArtifactsByArtifactIdList(array(36,37))->at(0)->returns($artifact_to_link);
+        stub($this->artifact_factory)->getArtifactsByArtifactIdList(array(36,37))->at(1)->returns(array());
+
+        expect($dao)->create()->once();
+
+        $this->artifact_link->saveValue($artifact, $changeset_value_id, $value, $this->previous_changesetvalue);
     }
 }
-
-?>
