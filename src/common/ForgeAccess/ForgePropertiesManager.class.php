@@ -30,9 +30,15 @@ class ForgeAccess_ForgePropertiesManager {
      */
     private $project_manager;
 
-    public function __construct(ConfigDao $config_dao, ProjectManager $project_manager) {
-        $this->config_dao      = $config_dao;
-        $this->project_manager = $project_manager;
+    /**
+     * @var PermissionsManager
+     */
+    private $permission_manager;
+
+    public function __construct(ConfigDao $config_dao, ProjectManager $project_manager, PermissionsManager $permission_manager) {
+        $this->config_dao         = $config_dao;
+        $this->project_manager    = $project_manager;
+        $this->permission_manager = $permission_manager;
     }
 
     public function updateAccess($new_value, $old_value) {
@@ -45,6 +51,7 @@ class ForgeAccess_ForgePropertiesManager {
 
         if ($old_value === ForgeAccess::RESTRICTED || $new_value === ForgeAccess::RESTRICTED) {
             $this->project_manager->disableAllowRestrictedForAll();
+            $this->permission_manager->disableRestrictedAccess();
         }
     }
 }

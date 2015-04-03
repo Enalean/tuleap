@@ -820,6 +820,34 @@ class Event {
     const HAS_USER_BEEN_DELEGATED_ACCESS = 'has_user_been_delegated_access';
 
     /**
+     * Sends-out an event to see if the service handles access for
+     * restricted users to its resources independently.
+     * resources
+     * E.g. a git repo can be configured to specifically allow access
+     * to all users including restricted users
+     *
+     * Parameters:
+     *    'allow_restricted' => boolean
+     *    'user'             => PFUser
+     *    'uri'              => string
+     *
+     * Expected result:
+     *    'allow_restricted' => boolean
+     */
+    const IS_SCRIPT_ALLOWED_FOR_RESTRICTED = 'is_script_allowed_for_restricted';
+
+    /**
+     * Sends-out an event to get all services that handle independently restricted users
+     *
+     * Parameters:
+     *    'allowed_services' => array
+     *
+     * Expected result:
+     *    'allowed_services' => array
+     */
+    const GET_SERVICES_ALLOWED_FOR_RESTRICTED = 'get_services_allowed_for_restricted';
+
+    /**
      * We are writing aliases, so if you have any it is time to give them.
      *
      * Expected result:
@@ -896,4 +924,14 @@ class Event {
      *     'user'         => PFUser,
      */
     const REDEFINE_SEARCH_TYPE = 'redefine_search_type';
+
+    /**
+     * When access level of project changes
+     *
+     * Parameters:
+     *      'project_id' => int,
+     *      'access'     => string
+     *
+     */
+    const PROJECT_ACCESS_CHANGE = 'project_access_change';
 }

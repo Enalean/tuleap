@@ -370,5 +370,11 @@ class PermissionsManager {
         return $this->_permission_dao->isThereADefaultWikiServicePermissionThatUsesUgroup($ugroup_id);
     }
 
+    public function disableRestrictedAccess() {
+        $this->_permission_dao->disableRestrictedAccess();
+    }
+
+    public function disableRestrictedAccessForObjectId(array $permission_type, $object_id) {
+        $this->_permission_dao->disableRestrictedAccessForObjectId($permission_type, $object_id);
+    }
 }
-?>

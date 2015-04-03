@@ -24,7 +24,8 @@ $controller = new ForgeAccess_AdminController(
     new CSRFSynchronizerToken($_SERVER['SCRIPT_URL']),
     new ForgeAccess_ForgePropertiesManager(
         new ConfigDao(),
-         ProjectManager::instance()
+        ProjectManager::instance(),
+        PermissionsManager::instance()
     ),
     new Config_LocalIncFinder(),
     new UserDao(),

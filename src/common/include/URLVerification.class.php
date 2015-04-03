@@ -570,7 +570,7 @@ class URLVerification {
             throw new Project_AccessDeletedException($project);
         } elseif ($user->isMember($project->getID())) {
             return true;
-        } elseif ($user->isRestricted() && ! $this->canRestrictedUserAccess($project)) {
+        } elseif ($user->isRestricted() && ! $this->canRestrictedUserAccess($user, $project)) {
             throw new Project_AccessRestrictedException();
         } elseif ($project->isPublic()) {
             return true;
@@ -580,12 +580,27 @@ class URLVerification {
         throw new Project_AccessPrivateException();
     }
 
-    private function canRestrictedUserAccess(Project $project) {
-        return $project->allowsRestricted() && $this->isScriptAllowedForRestricted();
+    private function canRestrictedUserAccess(PFUser $user, Project $project) {
+        return $project->allowsRestricted() && $this->isScriptAllowedForRestricted($user);
     }
 
-    private function isScriptAllowedForRestricted() {
-        return $_SERVER['SCRIPT_NAME'] === '/projects';
+    private function isScriptAllowedForRestricted(PFUser $user) {
+        if ($_SERVER['SCRIPT_NAME'] === '/projects') {
+            return true;
+        }
+        $allow_restricted = false;
+        $event_manager    = EventManager::instance();
+
+        $event_manager->processEvent(
+            Event::IS_SCRIPT_ALLOWED_FOR_RESTRICTED,
+            array(
+                'allow_restricted' => &$allow_restricted,
+                'user'             => $user,
+                'uri'              => $_SERVER['SCRIPT_NAME']
+            )
+        );
+
+        return $allow_restricted;
     }
 
     private function userHasBeenDelegatedAccess(PFUser $user) {

@@ -33,6 +33,7 @@ class UGroupLiteralizer {
     private static $ugroups_templates = array(
         ProjectUGroup::ANONYMOUS       => '@site_active @%s_project_members',
         ProjectUGroup::REGISTERED      => '@site_active @%s_project_members',
+        ProjectUGroup::AUTHENTICATED   => '@site_active @%s_project_members @site_restricted',
         ProjectUGroup::PROJECT_MEMBERS => '@%s_project_members',
         ProjectUGroup::PROJECT_ADMIN   => '@%s_project_admin',
         ProjectUGroup::WIKI_ADMIN      => '@%s_wiki_admin'

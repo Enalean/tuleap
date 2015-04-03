@@ -18,6 +18,7 @@ require_once 'utils.php';
 $GLOBALS['UGROUP_NONE']               = ProjectUGroup::NONE;
 $GLOBALS['UGROUP_ANONYMOUS']          = ProjectUGroup::ANONYMOUS;
 $GLOBALS['UGROUP_REGISTERED']         = ProjectUGroup::REGISTERED;
+$GLOBALS['UGROUP_AUTHENTICATED']      = ProjectUGroup::AUTHENTICATED;
 $GLOBALS['UGROUP_PROJECT_MEMBERS']    = ProjectUGroup::PROJECT_MEMBERS;
 $GLOBALS['UGROUP_PROJECT_ADMIN']      = ProjectUGroup::PROJECT_ADMIN;
 $GLOBALS['UGROUP_FILE_MANAGER_ADMIN'] = ProjectUGroup::FILE_MANAGER_ADMIN;
@@ -29,6 +30,7 @@ $GLOBALS['UGROUPS'] = array(
     'UGROUP_NONE'               => $GLOBALS['UGROUP_NONE'],
     'UGROUP_ANONYMOUS'          => $GLOBALS['UGROUP_ANONYMOUS'],
     'UGROUP_REGISTERED'         => $GLOBALS['UGROUP_REGISTERED'],
+    'UGROUP_AUTHENTICATED'      => $GLOBALS['UGROUP_AUTHENTICATED'],
     'UGROUP_PROJECT_MEMBERS'    => $GLOBALS['UGROUP_PROJECT_MEMBERS'],
     'UGROUP_PROJECT_ADMIN'      => $GLOBALS['UGROUP_PROJECT_ADMIN'],
     'UGROUP_FILE_MANAGER_ADMIN' => $GLOBALS['UGROUP_FILE_MANAGER_ADMIN'],
@@ -208,9 +210,16 @@ function ugroup_user_is_member($user_id, $ugroup_id, $group_id, $atid=0) {
     } else if ($ugroup_id==$GLOBALS['UGROUP_ANONYMOUS']) { 
         // Anonymous user
         return true;
-    } else if ($ugroup_id==$GLOBALS['UGROUP_REGISTERED']) {
+    } else if ($ugroup_id==$GLOBALS['UGROUP_REGISTERED'] && ! ForgeConfig::areRestrictedUsersAllowed()) {
         // Registered user
         return $user_id != 0;
+    } else if ($ugroup_id==$GLOBALS['UGROUP_AUTHENTICATED']) {
+        // Registered user
+        return $user_id != 0;
+    } else if ($ugroup_id==$GLOBALS['UGROUP_REGISTERED'] && ForgeConfig::areRestrictedUsersAllowed()) {
+        // Non-restricted user
+        $user = UserManager::instance()->getUserById($user_id);
+        return ! $user->isRestricted();
     } else if ($ugroup_id==$GLOBALS['UGROUP_PROJECT_MEMBERS']) {
         // Project members
         if ($user->isMember($group_id)) { return true; }

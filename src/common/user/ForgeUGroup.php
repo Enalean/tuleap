@@ -20,6 +20,13 @@
 
 class User_ForgeUGroup implements User_UGroup {
 
+    const NOBODY          = 'ugroup_nobody_name_key';
+    const ANON            = 'ugroup_anonymous_users_name_key';
+    const AUTHENTICATED   = 'ugroup_authenticated_users_name_key';
+    const REGISTERED      = 'ugroup_registered_users_name_key';
+    const PROJECT_MEMBERS = 'ugroup_project_members_name_key';
+    const PROJECT_ADMINS  = 'ugroup_project_admins_name_key';
+
     private $id;
 
     private $name;
@@ -28,7 +35,7 @@ class User_ForgeUGroup implements User_UGroup {
 
     public function __construct($id, $name, $description) {
         $this->id          = $id;
-        $this->name        = $name;
+        $this->name        = $this->getUserGroupName($name);
         $this->description = $description;
     }
 
@@ -43,5 +50,26 @@ class User_ForgeUGroup implements User_UGroup {
     public function getName() {
         return $this->name;
     }
+
+    private function getUserGroupName($name) {
+        switch ($name) {
+            case self::NOBODY:
+                return $GLOBALS['Language']->getText('project_ugroup', 'ugroup_nobody');
+            case self::ANON:
+                return $GLOBALS['Language']->getText('project_ugroup', 'ugroup_anonymous_users');
+            case self::AUTHENTICATED:
+                return ForgeConfig::areRestrictedUsersAllowed() ?
+                    $GLOBALS['Language']->getText('project_ugroup', 'ugroup_unrestricted_users') :
+                    $GLOBALS['Language']->getText('project_ugroup', 'ugroup_authenticated_users');
+            case self::REGISTERED:
+                return $GLOBALS['Language']->getText('project_ugroup', 'ugroup_authenticated_users');
+            case self::PROJECT_MEMBERS:
+                return $GLOBALS['Language']->getText('project_ugroup', 'ugroup_project_members');
+            case self::PROJECT_ADMINS:
+                return $GLOBALS['Language']->getText('project_ugroup', 'ugroup_project_admins');
+            default :
+                return $name;
+        }
+    }
+
 }
-?>

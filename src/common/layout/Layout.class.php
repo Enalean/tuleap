@@ -2057,12 +2057,20 @@ class Layout extends Response {
         $group_id = $project->getGroupId();
 
         $user = UserManager::instance()->getCurrentUser();
-        if ($user->isRestricted() && ! $user->isMember($group_id)) {
-            return array();
-        }
 
         reset($project->service_data_array);
-         while (list($short_name,$service_data) = each($project->service_data_array)) {
+
+        if ($this->restrictedMemberIsNotProjectMember($user, $group_id)) {
+            $allowed_services = array('summary');
+            $this->getEventManager()->processEvent(
+                Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED,
+                array(
+                    'allowed_services' => &$allowed_services,
+                )
+            );
+        }
+
+        while (list($short_name,$service_data) = each($project->service_data_array)) {
                if ((string)$short_name == "admin") {
                 // for the admin service, we will check if the user is allowed to use the service
                 // it means : 1) to be a super user, or
@@ -2075,6 +2083,12 @@ class Layout extends Response {
                             continue;   // we don't include the service in the $tabs
                         }
                     }
+                }
+            }
+
+            if ($this->restrictedMemberIsNotProjectMember($user, $group_id)) {
+                if (! in_array($short_name, $allowed_services)) {
+                    continue;
                 }
             }
 
@@ -2142,6 +2156,10 @@ class Layout extends Response {
                     );
         }
         return $tabs;
+    }
+
+    private function restrictedMemberIsNotProjectMember(PFUser $user, $project_id) {
+        return $user->isRestricted() && ! $user->isMember($project_id);
     }
 
     protected function getProjectPrivacy(Project $project) {
