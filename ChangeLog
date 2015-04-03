@@ -2,6 +2,7 @@ Version 8.1 (not yet released)
 
 	== Enhancement ==
 	* story #7813: Refactoring- Introduce ConfigValueFileProvider
+	* request #7938: Allow proper reverse proxy of Tuleap (Allow to query REST API in HTTP without SSL)
 
 
     == Plugins ==
