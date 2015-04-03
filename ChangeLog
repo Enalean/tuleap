@@ -4,6 +4,9 @@ Version 8.1 (not yet released)
 	* story #7813: Refactoring- Introduce ConfigValueFileProvider
 
 
+    == Plugins ==
+	* tracker: 5.603
+
 Version 8.0 (Thursday, April 2nd 2015)
 
 	== Enhancement ==
