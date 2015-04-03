@@ -511,3 +511,7 @@ $sys_csp_script_scr_whitelist = '';
 
 // Convert cvs commit log messages from cp1252 to utf8.
 $sys_cvs_convert_cp1252_to_utf8 = 0;
+
+// Can query REST API without using HTTPS
+// /!\ This is unsafe unless you have something else (reverse-proxy) providing the SSL Layer between you and the server /!\
+$sys_rest_api_over_http = 0;
