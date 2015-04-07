@@ -2347,20 +2347,7 @@ EOS;
         // fields permission
         if ($formelements = $this->getFormElementFactory()->getUsedFormElementForTracker($this)) {
             foreach ($formelements as $formelement) {
-                if ($permissions = $formelement->getPermissionsByUgroupId()) {
-                    foreach ($permissions as $ugroup_id => $permission_types) {
-                        if (($ugroup = array_search($ugroup_id, $GLOBALS['UGROUPS'])) !== false && $ugroup_id < 100 && $formelement->isUsed()) {
-                            foreach ($permission_types as $permission_type) {
-                                $node_perm = $node_perms->addChild('permission');
-                                $node_perm->addAttribute('scope', 'field');
-                                $node_perm->addAttribute('REF', array_search($formelement->getId(), $xmlMapping));
-                                $node_perm->addAttribute('ugroup', $ugroup);
-                                $node_perm->addAttribute('type', $permission_type);
-                                unset($node_perm);
-                            }
-                        }
-                    }
-                }
+                $formelement->exportPermissionsToXML($node_perms, $xmlMapping);
             }
         }
 

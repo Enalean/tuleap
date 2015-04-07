@@ -205,4 +205,57 @@ class Tracker_FormElement_UserPermissionsTest extends TuleapTestCase {
     }
 }
 
-?>
+class Tracker_FormElement__ExportPermissionsToXmlTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+
+        $GLOBALS['UGROUPS'] = array(
+            'UGROUP_1' => 1,
+            'UGROUP_2' => 2,
+            'UGROUP_3' => 3,
+            'UGROUP_4' => 4,
+            'UGROUP_5' => 5,
+        );
+    }
+
+    public function tearDown() {
+        parent::tearDown();
+        unset($GLOBALS['UGROUPS']);
+    }
+
+    public function testPermissionsExport() {
+        $field_01 = partial_mock(
+            'Tracker_FormElement_Field_String',
+            array(
+                'getId',
+                'getPermissionsByUgroupId',
+                'isUsed',
+            )
+        );
+
+        stub($field_01)->getId()->returns(10);
+        stub($field_01)->getPermissionsByUgroupId()->returns(array(
+            2 => array('FIELDPERM_1'),
+            4 => array('FIELDPERM_2'),
+        ));
+        stub($field_01)->isUsed()->returns(true);
+
+        $xmlMapping['F'. $field_01->getId()] = $field_01->getId();
+        $xml     = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><permissions/>');
+        $field_01->exportPermissionsToXML($xml, $xmlMapping);
+
+        $this->assertTrue(isset($xml->permission[0]));
+        $this->assertTrue(isset($xml->permission[1]));
+
+        $this->assertEqual((string)$xml->permission[0]['scope'], 'field');
+        $this->assertEqual((string)$xml->permission[0]['ugroup'], 'UGROUP_2');
+        $this->assertEqual((string)$xml->permission[0]['type'], 'FIELDPERM_1');
+        $this->assertEqual((string)$xml->permission[0]['REF'], 'F10');
+
+        $this->assertEqual((string)$xml->permission[1]['scope'], 'field');
+        $this->assertEqual((string)$xml->permission[1]['ugroup'], 'UGROUP_4');
+        $this->assertEqual((string)$xml->permission[1]['type'], 'FIELDPERM_2');
+        $this->assertEqual((string)$xml->permission[1]['REF'], 'F10');
+    }
+}

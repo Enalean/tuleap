@@ -163,6 +163,14 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
             $subfield->exportToXML($grandchild, $xmlMapping);
         }
     }
+
+    public function exportPermissionsToXML(SimpleXMLElement $node_perms, &$xmlMapping) {
+        parent::exportPermissionsToXML($node_perms, $xmlMapping);
+        $subfields = $this->getAllFormElements();
+        foreach($subfields as $subfield) {
+            $subfield->exportPermissionsToXML($node_perms, $xmlMapping);
+        }
+    }
     
     /**
      * Verifies the consistency of the imported Tracker
