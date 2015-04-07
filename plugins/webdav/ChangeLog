@@ -1,3 +1,6 @@
+Version 1.9.9 - Tuleap 8.1
+    * Move sys_allow_anon in the database (story #7813: grant restricted users access to git repositories)
+
 Version 1.9.8 - Tuleap 7.11
     * story #7821: Windows 7 webdav FRS file creation
 

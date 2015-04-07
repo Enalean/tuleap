@@ -1,3 +1,6 @@
+Version 1.78 - Tuleap 8.1
+    * Move sys_allow_anon in the database (story #7813: grant restricted users access to git repositories)
+
 Version 1.77 - Tuleap 8.0
     * Fix request #7964: Stylesheets cannot have more than 4K rules in IE9
 

@@ -7,6 +7,12 @@ Version 8.1 (not yet released)
 
     == Plugins ==
 	* tracker: 5.604
+	* git: 4.25
+	* ldap: 3.72
+	* webdav: 1.9.9
+
+    == Themes ==
+	* FlamingParrot: 1.78
 
 Version 8.0 (Thursday, April 2nd 2015)
 

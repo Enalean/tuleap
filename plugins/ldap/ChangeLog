@@ -1,3 +1,6 @@
+Version 3.72 - Tuleap 8.1
+    * Move sys_allow_anon in the database (story #7813: grant restricted users access to git repositories)
+
 Version 3.71 - Tuleap 7.10
     * Fix mistake in ldap.inc comment
 
