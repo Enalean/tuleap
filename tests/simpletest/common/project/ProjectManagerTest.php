@@ -40,7 +40,8 @@ class ProjectManagerTest extends TuleapTestCase {
     private $project_manager_test_version;
 
     function setUp() {
-        $GLOBALS['Language'] = new MockBaseLanguage();
+        parent::setUp();
+        Config::store();
 
         $this->user_manager = mock('UserManager');
 
@@ -49,8 +50,8 @@ class ProjectManagerTest extends TuleapTestCase {
     }
 
     function tearDown() {
-        unset($GLOBALS['sys_allow_restricted_users']);
-        unset($GLOBALS['Language']);
+        Config::restore();
+        parent::tearDown();
     }
 
     function testGetProject() {
@@ -183,19 +184,19 @@ class ProjectManagerTest extends TuleapTestCase {
     }
 
     function testCheckRestrictedAccessRestrictedNotAllowed () {
-        $GLOBALS['sys_allow_restricted_users'] = 0;
+        Config::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
 
         $this->assertTrue($this->project_manager_test_version->checkRestrictedAccess(null));
     }
 
     function testCheckRestrictedAccessNoGroup () {
-        $GLOBALS['sys_allow_restricted_users'] = 1;
+        Config::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
 
         $this->assertFalse($this->project_manager_test_version->checkRestrictedAccess(null));
     }
 
     function testCheckRestrictedAccessNoUser () {
-        $GLOBALS['sys_allow_restricted_users'] = 1;
+        Config::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
         $this->user_manager->setReturnValue('getCurrentUser', null);
         $project = new MockProject();
         $this->project_manager_test_version->expectOnce('_getUserManager');
@@ -204,7 +205,7 @@ class ProjectManagerTest extends TuleapTestCase {
     }
 
     function testCheckRestrictedAccessUserNotRestricted () {
-        $GLOBALS['sys_allow_restricted_users'] = 1;
+        Config::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
         $user = mock('PFUser');
         $user->setReturnValue('isRestricted', false);
         $this->user_manager->setReturnValue('getCurrentUser', $user);
@@ -215,7 +216,7 @@ class ProjectManagerTest extends TuleapTestCase {
     }
 
     function testCheckRestrictedAccessUserNotMember () {
-        $GLOBALS['sys_allow_restricted_users'] = 1;
+        Config::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
         $user = mock('PFUser');
         $user->setReturnValue('isRestricted', true);
         $this->user_manager->setReturnValue('getCurrentUser', $user);
@@ -227,7 +228,7 @@ class ProjectManagerTest extends TuleapTestCase {
     }
 
     function testCheckRestrictedAccessUserIsMember () {
-        $GLOBALS['sys_allow_restricted_users'] = 1;
+        Config::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
         $user = mock('PFUser');
         $user->setReturnValue('isRestricted', true);
         $this->user_manager->setReturnValue('getCurrentUser', $user);

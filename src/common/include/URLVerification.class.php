@@ -257,7 +257,7 @@ class URLVerification {
      */
     public function verifyRequest($server) {
         $user = $this->getCurrentUser();
-        if (!$GLOBALS['sys_allow_anon'] && $user->isAnonymous() && !$this->isScriptAllowedForAnonymous($server)) {
+        if (! Config::areAnonymousAllowed() && $user->isAnonymous() && !$this->isScriptAllowedForAnonymous($server)) {
             $redirect = new URLRedirect();
             $this->urlChunks['script']   = $redirect->buildReturnToLogin($server);
         }

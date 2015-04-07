@@ -130,7 +130,7 @@ class LDAP_BackendSVN extends BackendSVN {
         $ldapPrjMgr = $this->getLDAPProjectManager();
         if ($ldapPrjMgr->hasSVNLDAPAuth($project->getID())) {
             $conf = "[/]\n";
-            if (!$project->isPublic() || $project->isSVNPrivate() || $GLOBALS['sys_allow_restricted_users'] == 1) {
+            if (!$project->isPublic() || $project->isSVNPrivate() || Config::areRestrictedUsersAllowed()) {
                 $conf .= "* = \n";
             } else {
                 $conf .= "* = r\n";

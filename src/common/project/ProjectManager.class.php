@@ -479,7 +479,7 @@ class ProjectManager {
      * @return boolean true if the current session user has access to this project, false otherwise
      */
     private function getRestrictedAccessForUserInGroup($group, $user) {
-        if (array_key_exists('sys_allow_restricted_users', $GLOBALS) && $GLOBALS['sys_allow_restricted_users'] == 1) {
+        if (Config::areRestrictedUsersAllowed()) {
             if ($group) {
                 if ($user) {
                     if ($user->isRestricted()) {

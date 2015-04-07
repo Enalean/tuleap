@@ -2142,7 +2142,7 @@ class Layout extends Response {
         if ($project->isPublic()) {
             $privacy = 'public';
 
-            if ($GLOBALS['sys_allow_anon']) {
+            if (Config::areAnonymousAllowed()) {
                 $privacy .= '_w_anon';
             } else {
                 $privacy .= '_wo_anon';

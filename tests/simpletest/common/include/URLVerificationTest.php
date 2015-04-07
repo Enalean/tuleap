@@ -88,9 +88,10 @@ class URLVerificationTest extends TuleapTestCase {
 
     function setUp() {
         parent::setUp();
+        Config::store();
+        Config::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 
         $GLOBALS['Response']           = mock('Layout');
-        $GLOBALS['sys_allow_anon']     = 1;
         $GLOBALS['sys_default_domain'] = 'default';
         $GLOBALS['sys_https_host']     = 'default';
         $GLOBALS['sys_force_ssl']      = 0;
@@ -110,12 +111,12 @@ class URLVerificationTest extends TuleapTestCase {
         UserManager::clearInstance();
         unset($GLOBALS['Language']);
         unset($GLOBALS['Response']);
-        unset($GLOBALS['sys_allow_anon']);
         unset($GLOBALS['sys_default_domain']);
         unset($GLOBALS['sys_force_ssl']);
         unset($GLOBALS['sys_https_host']);
         unset($GLOBALS['group_id']);
         unset($_REQUEST['type_of_search']);
+        Config::restore();
         parent::tearDown();
     }
 
@@ -294,7 +295,6 @@ class URLVerificationTest extends TuleapTestCase {
                         'SCRIPT_NAME' => '');
 
         $GLOBALS['sys_force_ssl']      = 0;
-        $GLOBALS['sys_allow_anon']     = 1;
         $GLOBALS['sys_default_domain'] = 'example.com';
         $GLOBALS['sys_https_host'] = 'secure.example.com';
 
@@ -353,8 +353,6 @@ class URLVerificationTest extends TuleapTestCase {
         $server = array('SERVER_NAME' => 'example.com',
                         'SCRIPT_NAME' => '');
 
-        $GLOBALS['sys_allow_anon'] = 1;
-
         $user = mock('PFUser');
         $user->setReturnValue('isAnonymous', true);
 
@@ -371,8 +369,6 @@ class URLVerificationTest extends TuleapTestCase {
     function testVerifyRequestAuthenticatedWhenAnonymousAllowed() {
         $server = array('SERVER_NAME' => 'example.com',
                         'SCRIPT_NAME' => '');
-
-        $GLOBALS['sys_allow_anon'] = 1;
 
         $user = mock('PFUser');
         $user->setReturnValue('isAnonymous', false);
@@ -392,7 +388,7 @@ class URLVerificationTest extends TuleapTestCase {
                         'SCRIPT_NAME' => '',
                         'REQUEST_URI' => '/');
 
-        $GLOBALS['sys_allow_anon'] = 0;
+        Config::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
         $GLOBALS['sys_https_host'] = 'secure.example.com';
 
         $user = mock('PFUser');
@@ -415,7 +411,7 @@ class URLVerificationTest extends TuleapTestCase {
                         'SCRIPT_NAME' => '',
                         'REQUEST_URI' => '/script/');
 
-        $GLOBALS['sys_allow_anon'] = 0;
+        Config::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
         $GLOBALS['sys_https_host'] = 'secure.example.com';
 
         $user = mock('PFUser');
@@ -438,7 +434,7 @@ class URLVerificationTest extends TuleapTestCase {
                         'SCRIPT_NAME' => '',
                         'REQUEST_URI' => '/script?pv=2');
 
-        $GLOBALS['sys_allow_anon'] = 0;
+        Config::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
         $GLOBALS['sys_https_host'] = 'secure.example.com';
 
         $user = mock('PFUser');
@@ -460,7 +456,7 @@ class URLVerificationTest extends TuleapTestCase {
         $server = array('SERVER_NAME' => 'example.com',
                         'SCRIPT_NAME' => '');
 
-        $GLOBALS['sys_allow_anon'] = 0;
+        Config::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
 
         $user = mock('PFUser');
         $user->setReturnValue('isAnonymous', false);

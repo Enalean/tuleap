@@ -34,16 +34,12 @@ array('issetUsername', 'setHeader', 'getUsername', 'getPassword', 'getUser', 'er
 class WebDAVAuthenticationTest extends UnitTestCase {
 
 
-    function setUp() {
-
-        $GLOBALS['Language'] = new MockBaseLanguage($this);
-
+    public function setUp() {
+        Config::store();
     }
 
-    function tearDown() {
-
-        unset($GLOBALS['Language']);
-
+    public function tearDown() {
+        Config::restore();
     }
 
     /**
@@ -98,8 +94,8 @@ class WebDAVAuthenticationTest extends UnitTestCase {
      * Testing when the user is authenticated as anonymous
      */
     function testAuthenticateSuccessWithAnonymousUserNotAllowed() {
+        Config::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
 
-        $GLOBALS['sys_allow_anon'] = 0;
         $webDAVAuthentication = new WebDAVAuthenticationTestVersion($this);
         $webDAVAuthentication->setReturnValue('issetUsername', true);
         $webDAVAuthentication->setReturnValue('getUsername', null);
@@ -115,8 +111,8 @@ class WebDAVAuthenticationTest extends UnitTestCase {
      * Testing when the user is authenticated as anonymous
      */
     function testAuthenticateSuccessWithAnonymousUserAllowed() {
+        Config::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 
-        $GLOBALS['sys_allow_anon'] = 1;
         $webDAVAuthentication = new WebDAVAuthenticationTestVersion($this);
         $webDAVAuthentication->setReturnValue('issetUsername', true);
         $webDAVAuthentication->setReturnValue('getUsername', null);

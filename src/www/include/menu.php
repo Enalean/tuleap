@@ -145,7 +145,7 @@ function menu_notloggedin() {
 function menu_print_sidebar($params) {
     if (!user_isloggedin()) {
 	echo menu_notloggedin();
-	if (!$GLOBALS['sys_allow_anon']) { return; }
+	if (! Config::areAnonymousAllowed()) { return; }
     } else {
 	echo menu_loggedin($params['title']);
     }
