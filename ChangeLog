@@ -1,3 +1,8 @@
+Version 8.0-2 (Tuesday, April 7th 2015)
+	== Bug Fix ==
+	* request #7960: Disabled "Migrate to gerrit" if repo not fully created
+	* request #7969: Add dependency with last gitphp package
+
 Version 8.0 (Thursday, April 2nd 2015)
 
 	== Enhancement ==
