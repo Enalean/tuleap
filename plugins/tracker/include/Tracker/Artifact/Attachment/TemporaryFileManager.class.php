@@ -66,7 +66,7 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
      * @return String
      */
     public function getPath($attachment_name) {
-        return Config::get('codendi_cache_dir') . DIRECTORY_SEPARATOR . $this->getUserTemporaryFilePrefix() . $attachment_name;
+        return ForgeConfig::get('codendi_cache_dir') . DIRECTORY_SEPARATOR . $this->getUserTemporaryFilePrefix() . $attachment_name;
     }
 
     /**
@@ -80,7 +80,7 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
             throw new Tracker_Artifact_Attachment_MaxFilesException('Temporary attachment limits: ' . self::TEMP_FILE_NB_MAX . ' files max.');
         }
         $prefix = $this->getUserTemporaryFilePrefix();
-        $file_path = tempnam(Config::get('codendi_cache_dir'), $prefix);
+        $file_path = tempnam(ForgeConfig::get('codendi_cache_dir'), $prefix);
         return substr(basename($file_path), strlen($prefix));
     }
 
@@ -248,7 +248,7 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
      * Max chunk size : 64 Mo = 67108864 bytes
      */
     public static function getMaximumTemporaryFileSize() {
-        return Config::get('sys_max_size_upload');
+        return ForgeConfig::get('sys_max_size_upload');
     }
 
     /**

@@ -84,7 +84,7 @@ class ForgeAccess_AdminController {
                 $this->csrf,
                 $title,
                 $this->localincfinder->getLocalIncPath(),
-                Config::get(ForgeAccess::CONFIG),
+                ForgeConfig::get(ForgeAccess::CONFIG),
                 count($this->user_dao->searchByStatus(PFUser::STATUS_RESTRICTED))
             )
         );
@@ -118,7 +118,7 @@ class ForgeAccess_AdminController {
     }
 
     private function getTemplateDir() {
-        return Config::get('codendi_dir') .'/src/templates/admin/anonymous/';
+        return ForgeConfig::get('codendi_dir') .'/src/templates/admin/anonymous/';
     }
 
     private function redirectToIndex() {

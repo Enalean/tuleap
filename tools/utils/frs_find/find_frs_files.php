@@ -18,7 +18,7 @@ class FRSGhostFiles {
 
     public function __construct(Project $project) {
         $this->project = $project;
-        $this->frs_path = Config::get('ftp_frs_dir_prefix').'/'.$project->getUnixName(false);
+        $this->frs_path = ForgeConfig::get('ftp_frs_dir_prefix').'/'.$project->getUnixName(false);
     }
 
     public function iterateOnFiles() {
@@ -171,7 +171,7 @@ class FRSGhostFiles {
         $dir_full_path = $base_dir.'/'.$release_path;
         if (! is_dir($dir_full_path)) {
             mkdir($dir_full_path, 0755);
-            chgrp($dir_full_path, Config::get('sys_http_user'));
+            chgrp($dir_full_path, ForgeConfig::get('sys_http_user'));
         }
         $rename = rename($base_dir.'/'.$candidate_path, $base_dir.'/'.$db_path);
         if ($rename) {

@@ -733,7 +733,7 @@ abstract class Tracker_SOAPServer_TemproraryAttachments_BaseTest extends Tracker
 
     public function setUp() {
         parent::setUp();
-        Config::store();
+        ForgeConfig::store();
 
         $fixtures_dir = '/var/tmp/_fixtures';
         if (! is_dir($fixtures_dir)) {
@@ -747,13 +747,13 @@ abstract class Tracker_SOAPServer_TemproraryAttachments_BaseTest extends Tracker
 
         $this->fixture_dir = $attachments_dir . '/tmp';
         mkdir($this->fixture_dir);
-        Config::set('codendi_cache_dir', $this->fixture_dir);
+        ForgeConfig::set('codendi_cache_dir', $this->fixture_dir);
     }
 
     public function tearDown() {
         $this->recurseDeleteInDir($this->fixture_dir);
         rmdir($this->fixture_dir);
-        Config::restore();
+        ForgeConfig::restore();
         parent::tearDown();
     }
 
@@ -833,7 +833,7 @@ class Tracker_SOAPServer_AppendTemporaryAttachments_Test extends Tracker_SOAPSer
     public function setUp() {
         parent::setUp();
         $this->max_size_upload = 16777216;
-        Config::set('sys_max_size_upload',$this->max_size_upload);
+        ForgeConfig::set('sys_max_size_upload',$this->max_size_upload);
     }
 
     public function itCannotAppendToNonExistingFile() {
@@ -869,7 +869,7 @@ class Tracker_SOAPServer_AppendTemporaryAttachments_Test extends Tracker_SOAPSer
     }
 
     public function itRaisesAnErrorIfChunkIsTooBig() {
-        Config::set('sys_max_size_upload', 2);
+        ForgeConfig::set('sys_max_size_upload', 2);
         $return = $this->server->appendTemporaryAttachmentChunk($this->session_key, '/../logo.png', base64_encode('toto le trololo'));
         $this->assertIsA($return, 'SOAPFault');
     }

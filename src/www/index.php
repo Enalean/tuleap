@@ -23,10 +23,10 @@ $current_user_display_name = '';
 if ($current_user->isLoggedIn()) {
     $current_user_display_name = $hp->purify(UserHelper::instance()->getDisplayNameFromUser($current_user));
 }
-if (Config::get('sys_https_host')) {
-    $login_form_url = 'https://'. Config::get('sys_https_host');
+if (ForgeConfig::get('sys_https_host')) {
+    $login_form_url = 'https://'. ForgeConfig::get('sys_https_host');
 } else {
-    $login_form_url = 'http://'. Config::get('sys_default_domain');
+    $login_form_url = 'http://'. ForgeConfig::get('sys_default_domain');
 }
 $login_form_url .= '/account/login.php';
 

@@ -69,7 +69,7 @@ class Tuleap_CustomToursFactory {
 
     private function getToursFolder(PFUser $user) {
         $user_lang = $user->getLocale();
-        return Config::get('sys_custom_incdir').'/'.$user_lang.'/tour/';
+        return ForgeConfig::get('sys_custom_incdir').'/'.$user_lang.'/tour/';
     }
 
     private function extractWellFormedTourList(array &$tour_list, $tour_folder) {

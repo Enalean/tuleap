@@ -170,7 +170,7 @@ if (db_numrows($res) < 1) {
             <TABLE WIDTH="70%">
             <TR>
         <?php 
-        if($GLOBALS['sys_user_approval'] == 1 && $page==ADMIN_APPROVE_PENDING_PAGE_PENDING && ! Config::areRestrictedUsersAllowed()) {
+        if($GLOBALS['sys_user_approval'] == 1 && $page==ADMIN_APPROVE_PENDING_PAGE_PENDING && ! ForgeConfig::areRestrictedUsersAllowed()) {
             
             // Can select Activate/validate
             echo '<TD>
@@ -198,7 +198,7 @@ if (db_numrows($res) < 1) {
              }
             echo '</TD>';
             
-        } else if($GLOBALS['sys_user_approval'] == 1 && $page==ADMIN_APPROVE_PENDING_PAGE_PENDING && Config::areRestrictedUsersAllowed()) {
+        } else if($GLOBALS['sys_user_approval'] == 1 && $page==ADMIN_APPROVE_PENDING_PAGE_PENDING && ForgeConfig::areRestrictedUsersAllowed()) {
              
            // Can select Std/Restricted and Activate/validate
            echo '<TD>
@@ -250,7 +250,7 @@ if (db_numrows($res) < 1) {
                 <option value="delete">'.$Language->getText('admin_approve_pending_users','delete').'        
                 </select>
             '.$Language->getText('admin_approve_pending_users','account');
-            if(Config::areRestrictedUsersAllowed()) {
+            if(ForgeConfig::areRestrictedUsersAllowed()) {
                 echo ' '.$Language->getText('admin_approve_pending_users','status').'
             <select name="status" size="1">
                 <option value="standard" ';
@@ -313,7 +313,7 @@ if (db_numrows($res) < 1) {
             <FORM action="?page='.$page.'" method="POST">
             '.$Language->getText('admin_approve_pending_users','activate').'
             '.$Language->getText('admin_approve_pending_users','all_accounts').' ';
-            if(Config::areRestrictedUsersAllowed()) {
+            if(ForgeConfig::areRestrictedUsersAllowed()) {
                 echo $Language->getText('admin_approve_pending_users','status').'
             <select name="status" size="1">
                 <option value="standard" selected>'.$Language->getText('admin_approve_pending_users','status_standard').'
@@ -328,7 +328,7 @@ if (db_numrows($res) < 1) {
             </TD>';
         }
 
-    if (Config::areRestrictedUsersAllowed() && $page==ADMIN_APPROVE_PENDING_PAGE_PENDING) {
+    if (ForgeConfig::areRestrictedUsersAllowed() && $page==ADMIN_APPROVE_PENDING_PAGE_PENDING) {
 
         echo '<TD>
             <FORM action="?page='.$page.'" method="POST">
@@ -348,7 +348,7 @@ if (db_numrows($res) < 1) {
             </TD>';        
     }
  
-        if($GLOBALS['sys_user_approval'] == 1 && $page==ADMIN_APPROVE_PENDING_PAGE_PENDING && ! Config::areRestrictedUsersAllowed()){
+        if($GLOBALS['sys_user_approval'] == 1 && $page==ADMIN_APPROVE_PENDING_PAGE_PENDING && ! ForgeConfig::areRestrictedUsersAllowed()){
             echo '<TD>
             <FORM action="?page='.$page.'" method="POST">
                 <select name="action_select" size="1">

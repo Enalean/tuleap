@@ -32,7 +32,7 @@ if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_fo
     $protocol = "http";
 }
 
-$server_uri  = $protocol .'://'. Config::get('sys_default_domain');
+$server_uri  = $protocol .'://'. ForgeConfig::get('sys_default_domain');
 $uri         = $server_uri . TRACKER_BASE_URL .'/soap';
 
 if ($request->exist('wsdl')) {
@@ -59,7 +59,7 @@ if ($request->exist('wsdl')) {
     require_once TRACKER_BASE_DIR.'/Tracker/SOAPServer.class.php';
 
     $soap_options = array();
-    if (Config::get('DEBUG_MODE')) {
+    if (ForgeConfig::get('DEBUG_MODE')) {
         $soap_options['cache_wsdl'] = WSDL_CACHE_NONE;
     }
 

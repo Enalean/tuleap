@@ -47,7 +47,7 @@ class Tracker_SOAP_TemporaryFile {
      * @return String
      */
     public function getPath() {
-        return Config::get('codendi_cache_dir').DIRECTORY_SEPARATOR.$this->getUserTemporaryFilePrefix().$this->attachment_name;
+        return ForgeConfig::get('codendi_cache_dir').DIRECTORY_SEPARATOR.$this->getUserTemporaryFilePrefix().$this->attachment_name;
     }
 
     /**
@@ -61,7 +61,7 @@ class Tracker_SOAP_TemporaryFile {
             throw new SoapFault(nb_max_temp_files, 'Temporary attachment limits: '.self::TEMP_FILE_NB_MAX.' files max.');
         }
         $prefix       = $this->getUserTemporaryFilePrefix();
-        $file_path    = tempnam(Config::get('codendi_cache_dir'), $prefix);
+        $file_path    = tempnam(ForgeConfig::get('codendi_cache_dir'), $prefix);
         return substr(basename($file_path), strlen($prefix));
     }
 
@@ -78,7 +78,7 @@ class Tracker_SOAP_TemporaryFile {
             if ($this->validTemporaryFilesSize($decoded_content)) {
                 return file_put_contents($this->getPath(), $decoded_content, FILE_APPEND);
             } else {
-                throw new SoapFault(uploaded_file_too_big, 'Uploaded file exceed max file size for attachments ('.Config::get('sys_max_size_upload').')');
+                throw new SoapFault(uploaded_file_too_big, 'Uploaded file exceed max file size for attachments ('.ForgeConfig::get('sys_max_size_upload').')');
             }
         } else {
             throw new SoapFault(temp_file_invalid, 'Invalid temporary file path');
@@ -98,7 +98,7 @@ class Tracker_SOAP_TemporaryFile {
     }
 
     private function getUserTemporaryFiles() {
-        return glob(Config::get('codendi_cache_dir').DIRECTORY_SEPARATOR.$this->getUserTemporaryFilePrefix().'*');
+        return glob(ForgeConfig::get('codendi_cache_dir').DIRECTORY_SEPARATOR.$this->getUserTemporaryFilePrefix().'*');
     }
 
     private function isOverUserTemporaryFileLimit() {
@@ -122,7 +122,7 @@ class Tracker_SOAP_TemporaryFile {
         $chunk_size = strlen($content);
         $total_size = $chunk_size + $this->getTemporaryFilesSize();
 
-        return $total_size <= Config::get('sys_max_size_upload');
+        return $total_size <= ForgeConfig::get('sys_max_size_upload');
     }
 }
 

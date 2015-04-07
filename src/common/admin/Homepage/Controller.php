@@ -109,7 +109,7 @@ class Admin_Homepage_Controller {
     }
 
     private function getTemplateDir() {
-        return Config::get('codendi_dir') .'/src/templates/homepage/';
+        return ForgeConfig::get('codendi_dir') .'/src/templates/homepage/';
     }
 
     private function getHeadlines() {

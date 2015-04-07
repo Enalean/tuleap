@@ -46,7 +46,7 @@ function create_project($data, $do_not_exit = false) {
     }
     
     //Verify if the approbation of the new project is automatic or not
-    $auto_approval = Config::get('sys_project_approval', 1) ? PROJECT_APPROVAL_BY_ADMIN : PROJECT_APPROVAL_AUTO;
+    $auto_approval = ForgeConfig::get('sys_project_approval', 1) ? PROJECT_APPROVAL_BY_ADMIN : PROJECT_APPROVAL_AUTO;
     
     // make group entry
     $insert_data = array(

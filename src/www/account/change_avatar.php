@@ -46,11 +46,11 @@ if (isset($_FILES['avatar'])) {
     $handle->allowed                = 'image/*';
     $handle->file_overwrite         = true;
 
-    if ($handle->uploaded && Config::get('sys_enable_avatars', true)) {
+    if ($handle->uploaded && ForgeConfig::get('sys_enable_avatars', true)) {
         $csrf->check();
 
         $user_id     = (string)$user->getId();
-        $avatar_path = Config::get('sys_avatar_path', Config::get('sys_data_dir') .'/user/avatar/');
+        $avatar_path = ForgeConfig::get('sys_avatar_path', ForgeConfig::get('sys_data_dir') .'/user/avatar/');
         $path        =  "$avatar_path/". substr($user_id, -2, 1) .'/'. substr($user_id, -1, 1) ."/$user_id";
         $handle->process($path);
         if ($handle->processed) {

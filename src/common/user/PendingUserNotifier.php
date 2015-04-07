@@ -24,14 +24,14 @@ class User_PendingUserNotifier {
         $user_name     = $user->getUserName();
         $href_approval = get_server_url().'/admin/approve_pending_users.php?page=pending';
 
-        $from    = Config::get('sys_noreply');
-        $to      = Config::get('sys_email_admin');
+        $from    = ForgeConfig::get('sys_noreply');
+        $to      = ForgeConfig::get('sys_email_admin');
         $subject = $GLOBALS['Language']->getText('account_register', 'mail_approval_subject', $user_name);
         $body    = stripcslashes(
             $GLOBALS['Language']->getText(
                 'account_register',
                 'mail_approval_body',
-                array(Config::get('sys_name'), $user_name, $href_approval)
+                array(ForgeConfig::get('sys_name'), $user_name, $href_approval)
             )
         );
 

@@ -30,14 +30,14 @@ $local_inc = $locar_inc_finder->getLocalIncPath();
 
 require($local_inc);
 require($GLOBALS['db_config_file']);
-Config::loadFromFile($GLOBALS['codendi_dir'] .'/src/etc/local.inc.dist'); //load the default settings
-Config::loadFromFile($local_inc);
-Config::loadFromFile($GLOBALS['db_config_file']);
+ForgeConfig::loadFromFile($GLOBALS['codendi_dir'] .'/src/etc/local.inc.dist'); //load the default settings
+ForgeConfig::loadFromFile($local_inc);
+ForgeConfig::loadFromFile($GLOBALS['db_config_file']);
 if (isset($GLOBALS['DEBUG_MODE'])) {
-    Config::loadFromFile($GLOBALS['codendi_dir'] .'/src/etc/development.inc.dist');
-    Config::loadFromFile(dirname($local_inc).'/development.inc');
+    ForgeConfig::loadFromFile($GLOBALS['codendi_dir'] .'/src/etc/development.inc.dist');
+    ForgeConfig::loadFromFile(dirname($local_inc).'/development.inc');
 }
-Config::loadFromDatabase();
+ForgeConfig::loadFromDatabase();
 
 // Fix path if needed
 if (isset($GLOBALS['htmlpurifier_dir'])) {
@@ -72,7 +72,7 @@ if (!IS_SCRIPT) {
 
     // XSS prevention
     header('X-XSS-Protection: 1; mode=block');
-    $csp_whitelist_script_scr = Config::get('sys_csp_script_scr_whitelist');
+    $csp_whitelist_script_scr = ForgeConfig::get('sys_csp_script_scr_whitelist');
     $csp_rules               .= "script-src 'self' 'unsafe-inline' 'unsafe-eval' $csp_whitelist_script_scr; "
                               . "reflected-xss block;";
 
@@ -252,6 +252,6 @@ if ($request->exist('postExpected') && !$request->exist('postReceived')) {
     $e = 'You tried to upload a file that is larger than the Codendi post_max_size setting.';
     exit_error('Error', $e);
 }
-if (Config::get('DEBUG_MODE')) {
+if (ForgeConfig::get('DEBUG_MODE')) {
     $GLOBALS['DEBUG_TIME_IN_PRE'] = microtime(1) - $GLOBALS['debug_time_start'];
 }

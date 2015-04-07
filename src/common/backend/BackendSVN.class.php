@@ -60,10 +60,10 @@ class BackendSVN extends Backend {
     /**
      * Wrapper for Config
      * 
-     * @return Config
+     * @return ForgeConfig
      */
     protected function getConfig($var) {
-        return Config::get($var);
+        return ForgeConfig::get($var);
     }
     
     /**
@@ -516,7 +516,7 @@ class BackendSVN extends Backend {
         $mydir      = $project->getSVNRootPath();
         $repopath   = dirname($mydir);
         $reponame   = basename($mydir);
-        $backupfile = Config::get('sys_project_backup_path')."/$reponame-svn.tgz";
+        $backupfile = ForgeConfig::get('sys_project_backup_path')."/$reponame-svn.tgz";
 
         if (is_dir($mydir)) {
             system("cd $repopath; tar cfz $backupfile $reponame");
@@ -613,7 +613,7 @@ class BackendSVN extends Backend {
         $hook_error = array();
 
         foreach ($hook_names as $hook_name) {
-            if(! $this->enableHook($project_svnroot, $hook_name, Config::get('codendi_bin_prefix').'/'.$hook_name.'.php')) {
+            if(! $this->enableHook($project_svnroot, $hook_name, ForgeConfig::get('codendi_bin_prefix').'/'.$hook_name.'.php')) {
                 $hook_error[] = $this->getHookPath($project_svnroot, $hook_name);
             }
         }

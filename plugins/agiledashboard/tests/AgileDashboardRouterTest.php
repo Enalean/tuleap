@@ -27,8 +27,8 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        Config::store();
-        Config::set('codendi_dir', AGILEDASHBOARD_BASE_DIR .'/../../..');
+        ForgeConfig::store();
+        ForgeConfig::set('codendi_dir', AGILEDASHBOARD_BASE_DIR .'/../../..');
 
         $milestone_controller_factory = mock('Planning_MilestoneControllerFactory');
         $this->planning_controller = mock('Planning_Controller');
@@ -59,7 +59,7 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
     }
 
     public function tearDown() {
-        Config::restore();
+        ForgeConfig::restore();
         parent::tearDown();
     }
     

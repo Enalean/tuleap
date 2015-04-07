@@ -33,7 +33,7 @@ class User_SSHKeyValidator {
 
     public function validateAllKeys(array $all_keys) {
         $valid_keys = array();
-        $key_file   = tempnam(Config::get('codendi_cache_dir'), 'ssh_key_');
+        $key_file   = tempnam(ForgeConfig::get('codendi_cache_dir'), 'ssh_key_');
         foreach ($all_keys as $key) {
             $key = trim($key);
 

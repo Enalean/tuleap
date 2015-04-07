@@ -21,7 +21,7 @@ namespace Tuleap\REST;
 
 use \PFUser;
 use \Exception;
-use \Config;
+use \ForgeConfig;
 
 /**
  * Ensure that request has the right properties before going RESTFul
@@ -51,7 +51,7 @@ class GateKeeper {
     }
 
     private function canReachApiWithoutHTTPS() {
-        return $this->isInDebugMode() || Config::get('sys_rest_api_over_http');
+        return $this->isInDebugMode() || ForgeConfig::get('sys_rest_api_over_http');
     }
 
     private function isInDebugMode() {

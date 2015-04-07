@@ -21,7 +21,7 @@ namespace Tuleap\REST;
 
 use Luracast\Restler\iUseAuthentication;
 use Luracast\Restler\RestException;
-use Config;
+use ForgeConfig;
 
 class AuthenticatedResource  implements iUseAuthentication {
 
@@ -43,7 +43,7 @@ class AuthenticatedResource  implements iUseAuthentication {
     private function setAccessLevel() {
         $this->access_level = self::ACCESS_LEVEL_NORMAL;
 
-        if (! Config::areAnonymousAllowed()) {
+        if (! ForgeConfig::areAnonymousAllowed()) {
             $this->access_level = self::ACCESS_LEVEL_FORBID_ANON;
         }
     }

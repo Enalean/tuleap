@@ -30,7 +30,7 @@ abstract class MVC2_PluginController extends MVC2_Controller {
     protected $group_id;
 
     protected function getTemplatesDir() {
-        return Config::get('codendi_dir') .'/plugins/'.$this->base_name.'/templates';
+        return ForgeConfig::get('codendi_dir') .'/plugins/'.$this->base_name.'/templates';
     }
 
     protected function redirect($query_parts) {

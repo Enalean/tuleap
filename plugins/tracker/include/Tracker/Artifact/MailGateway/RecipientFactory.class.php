@@ -75,7 +75,7 @@ class Tracker_Artifact_MailGateway_RecipientFactory {
             Tracker_ArtifactFactory::instance(),
             UserManager::instance(),
             $row['salt'],
-            Config::get('sys_default_domain')
+            ForgeConfig::get('sys_default_domain')
         );
     }
 

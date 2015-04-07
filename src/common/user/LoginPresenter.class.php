@@ -40,7 +40,7 @@ class User_LoginPresenter {
     }
 
     public function getTemplateDir() {
-        return Config::get('codendi_dir') .'/src/templates/user';
+        return ForgeConfig::get('codendi_dir') .'/src/templates/user';
     }
 
     public function getTemplate() {
@@ -68,7 +68,7 @@ class User_LoginPresenter {
     }
 
     public function help() {
-        return $GLOBALS['Language']->getText('account_login', 'help', array(Config::get('sys_email_admin'), Config::get('sys_name')));
+        return $GLOBALS['Language']->getText('account_login', 'help', array(ForgeConfig::get('sys_email_admin'), ForgeConfig::get('sys_name')));
     }
 
     public function cookies() {
@@ -80,7 +80,7 @@ class User_LoginPresenter {
     }
 
     public function account_login_page_title() {
-        return $GLOBALS['Language']->getText('account_login', 'page_title', array(Config::get('sys_name')));
+        return $GLOBALS['Language']->getText('account_login', 'page_title', array(ForgeConfig::get('sys_name')));
     }
 
     public function account_login_name() {
@@ -100,7 +100,7 @@ class User_LoginPresenter {
     }
 
     public function account_login_login_with_tuleap() {
-        return $GLOBALS['Language']->getText('account_login', 'login_with_tuleap', array(Config::get('sys_name')));
+        return $GLOBALS['Language']->getText('account_login', 'login_with_tuleap', array(ForgeConfig::get('sys_name')));
     }
 
     public function getReturnTo() {

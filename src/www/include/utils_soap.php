@@ -23,7 +23,7 @@ function groups_to_soap($groups) {
  * @return boolean true if the current session user has access to this project, false otherwise
  */
 function checkRestrictedAccess($group) {
-    if (Config::areRestrictedUsersAllowed()) {
+    if (ForgeConfig::areRestrictedUsersAllowed()) {
         if ($group) {
             $user = UserManager::instance()->getCurrentUser();
             if ($user) {

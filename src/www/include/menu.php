@@ -145,7 +145,7 @@ function menu_notloggedin() {
 function menu_print_sidebar($params) {
     if (!user_isloggedin()) {
 	echo menu_notloggedin();
-	if (! Config::areAnonymousAllowed()) { return; }
+	if (! ForgeConfig::areAnonymousAllowed()) { return; }
     } else {
 	echo menu_loggedin($params['title']);
     }

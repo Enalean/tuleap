@@ -34,7 +34,7 @@ class Admin_Homepage_LogoFinder {
 
     /** @return string */
     public static function getCustomPath() {
-        return Config::get('sys_data_dir') . self::PATH;
+        return ForgeConfig::get('sys_data_dir') . self::PATH;
     }
 
     /** @return boolean */

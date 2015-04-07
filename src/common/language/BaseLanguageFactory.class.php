@@ -43,8 +43,8 @@ class BaseLanguageFactory {
      */
     public function __construct() {
         $this->languages           = array();
-        $this->supported_languages = Config::get('sys_supported_languages');
-        $this->default_language    = Config::get('sys_lang');
+        $this->supported_languages = ForgeConfig::get('sys_supported_languages');
+        $this->default_language    = ForgeConfig::get('sys_lang');
     }
     
     /**

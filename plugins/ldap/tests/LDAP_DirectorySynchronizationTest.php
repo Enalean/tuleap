@@ -64,14 +64,14 @@ class LDAP_DirectorySynchronizationTest extends TuleapTestCase {
     function setUp() {
         $GLOBALS['Language'] = new MockBaseLanguage($this);
         $GLOBALS['Language']->setReturnValue('getContent', dirname(__FILE__).'/empty.txt');
-        $this->previous_log_dir = Config::get('codendi_log');
-        Config::set('codendi_log', '/tmp');
-        Config::set('sys_logger_level', 'debug');
+        $this->previous_log_dir = ForgeConfig::get('codendi_log');
+        ForgeConfig::set('codendi_log', '/tmp');
+        ForgeConfig::set('sys_logger_level', 'debug');
     }
 
     function tearDown() {
-        Config::restore();
-        Config::set('codendi_log', $this->previous_log_dir);
+        ForgeConfig::restore();
+        ForgeConfig::set('codendi_log', $this->previous_log_dir);
         unset($GLOBALS['Language']);
     }
 
@@ -136,7 +136,7 @@ class LDAP_DirectorySynchronizationTest extends TuleapTestCase {
 
     function testUserSuspendedIfNotInLDAP() {
         $sync = new LDAP_DirectorySynchronizationTestVersion($this);
-        Config::set('codendi_log', '/tmp');
+        ForgeConfig::set('codendi_log', '/tmp');
 
         $lri = new MockLDAPResultIterator($this);
         $lri->setReturnValue('valid', false);

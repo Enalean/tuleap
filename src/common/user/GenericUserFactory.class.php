@@ -100,7 +100,7 @@ class GenericUserFactory {
     }
 
     public function getGenericUser(Project $project, PFUser $user) {
-        return new GenericUser($project, $user, Config::get(self::CONFIG_KEY_SUFFIX));
+        return new GenericUser($project, $user, ForgeConfig::get(self::CONFIG_KEY_SUFFIX));
     }
 }
 ?>

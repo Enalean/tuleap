@@ -108,7 +108,7 @@ function db_insertid($qhandle) {
  */
 function db_error() {
     $error = @mysql_error();
-    if ($error && !Config::get('DEBUG_MODE')) {
+    if ($error && !ForgeConfig::get('DEBUG_MODE')) {
         $error = 'DB error';
     }
     return $error;

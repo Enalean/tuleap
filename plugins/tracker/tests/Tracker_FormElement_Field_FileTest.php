@@ -53,7 +53,7 @@ abstract class Tracker_FormElement_Field_File_BaseTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        Config::store();
+        ForgeConfig::store();
         $this->fixture_dir    = '/var/tmp'.'/_fixtures';
         if(!is_dir($this->fixture_dir)) {
             mkdir($this->fixture_dir);
@@ -82,7 +82,7 @@ abstract class Tracker_FormElement_Field_File_BaseTest extends TuleapTestCase {
             }
         }
         rmdir($this->thumbnails_dir);
-        Config::restore();
+        ForgeConfig::restore();
         parent::tearDown();
     }
     
@@ -658,10 +658,10 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
     }
     
     function testGetRootPath() {
-        Config::set('sys_data_dir', dirname(__FILE__) .'/data');
+        ForgeConfig::set('sys_data_dir', dirname(__FILE__) .'/data');
         $f = new Tracker_FormElement_Field_FileTestVersion();
         $f->setReturnValue('getId', 123);
-        $this->assertEqual($f->getRootPath(), Config::get('sys_data_dir') .'/tracker/123');
+        $this->assertEqual($f->getRootPath(), ForgeConfig::get('sys_data_dir') .'/tracker/123');
     }
 
     public function itReturnsTrueWhenTheFieldIsEmptyAtFieldUpdateAndHasAnEmptyPreviousChangeset(){
@@ -746,7 +746,7 @@ abstract class Tracker_FormElement_Field_File_TemporaryFileTest extends Tracker_
     public function setUp() {
         parent::setUp();
         $this->tmp_dir = '/var/tmp'.'/_fixtures/tmp';
-        Config::set('codendi_cache_dir', $this->tmp_dir);
+        ForgeConfig::set('codendi_cache_dir', $this->tmp_dir);
         if (! is_dir($this->tmp_dir)) {
             mkdir($this->tmp_dir);
         }
@@ -788,7 +788,7 @@ class Tracker_FormElement_Field_File_PersistDataTest extends Tracker_FormElement
             mkdir($this->storage_dir);
         }
 
-        Config::set('sys_data_dir', $this->storage_dir);
+        ForgeConfig::set('sys_data_dir', $this->storage_dir);
         $this->field_id = 987;
         $this->field    = partial_mock('Tracker_FormElement_Field_File_FileSystemPersistanceTest',
             array('getTemporaryFileManagerDao', 'getFileInfoFactory'),

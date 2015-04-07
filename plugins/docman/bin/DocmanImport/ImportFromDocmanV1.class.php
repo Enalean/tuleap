@@ -27,7 +27,7 @@ class Docman_ImportFromDocmanV1 {
     private $user_password;
 
     public function __construct($wsdl_url, $login, $password) {
-        $this->temporary_directory = tempnam(Config::get('tmp_dir'), 'docmanv1-docmanv2-');
+        $this->temporary_directory = tempnam(ForgeConfig::get('tmp_dir'), 'docmanv1-docmanv2-');
         $this->wsdl_url            = $wsdl_url;
         $this->user_login          = $login;
         $this->user_password       = $password;

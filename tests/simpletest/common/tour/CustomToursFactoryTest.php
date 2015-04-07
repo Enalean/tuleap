@@ -43,7 +43,7 @@ class CustomToursFactoryTest extends TuleapTestCase {
         $this->factory         = partial_mock('Tuleap_CustomToursFactory', array('getTourListJson'), array($this->project_manager, $this->url_processor));
 
         $this->user            = mock('PFUser');
-        Config::set('sys_custom_incdir', $this->fixtures_dir);
+        ForgeConfig::set('sys_custom_incdir', $this->fixtures_dir);
         stub($this->user)->getLocale()->returns('es_CU');
     }
 }
@@ -56,7 +56,7 @@ class CustomTourFactoryTest_getToursForPage extends CustomToursFactoryTest {
 
     public function itDoesNotGetToursIfCustomTourFolderDoesntExist() {
         $request_uri = '';
-        Config::set('sys_custom_incdir', $this->fixtures_dir.'/somewhereElse');
+        ForgeConfig::set('sys_custom_incdir', $this->fixtures_dir.'/somewhereElse');
         $user = mock('PFUser');
         stub($user)->getLocale()->returns('en_US');
 

@@ -35,11 +35,11 @@ class SVN_Apache_Auth_FactoryTestEventManager extends EventManager {
 class SVN_Apache_Auth_FactoryTest extends UnitTestCase {
     
     function setUp() {
-        Config::store();
+        ForgeConfig::store();
     }
     
     function tearDown() {
-        Config::restore();
+        ForgeConfig::restore();
     }
     
     private function GivenAAuthFactoryWithoutAnyPlugin() {
@@ -56,7 +56,7 @@ class SVN_Apache_Auth_FactoryTest extends UnitTestCase {
     
     function testFactoryShouldReturnModPerlIfPlatformConfiguredWithModPerl() {
         $projectInfo = array();
-        Config::set(SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_KEY, SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_PERL);
+        ForgeConfig::set(SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_KEY, SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_PERL);
         $factory = $this->GivenAAuthFactoryWithoutAnyPlugin();
         $this->assertIsA($factory->get($projectInfo), 'SVN_Apache_ModPerl');
     }
@@ -75,7 +75,7 @@ class SVN_Apache_Auth_FactoryTest extends UnitTestCase {
     
     function testFactoryShouldReturnModStuffIfStuffAuthIsConfiguredForThisProjectAndDefaultConfigIsModPerl() {
         $projectInfo = array();
-        Config::set(SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_KEY, SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_PERL);
+        ForgeConfig::set(SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_KEY, SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_PERL);
         $factory     = $this->GivenAAuthFactoryWithStuffPlugin();
         $this->assertIsA($factory->get($projectInfo), 'SVN_Apache_ModStuff');
     }

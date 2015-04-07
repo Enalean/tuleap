@@ -7,7 +7,7 @@ mock::generate('EventManager');
 class SVN_Apache_SvnrootConfTest extends TuleapTestCase {
     
     function setUp() {
-        Config::store();
+        ForgeConfig::store();
         $GLOBALS['sys_name']   = 'Platform';
         $GLOBALS['sys_dbhost'] = 'db_server';
         $GLOBALS['sys_dbname'] = 'db';
@@ -17,7 +17,7 @@ class SVN_Apache_SvnrootConfTest extends TuleapTestCase {
     }
     
     function tearDown() {
-        Config::restore();
+        ForgeConfig::restore();
         unset($GLOBALS['sys_name']);
         unset($GLOBALS['sys_dbname']);
         unset($GLOBALS['sys_dbhost']);
@@ -71,7 +71,7 @@ class SVN_Apache_SvnrootConfTest extends TuleapTestCase {
     }
     
     function GivenAFullApacheConfWithModPerl() {
-        Config::set(SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_KEY, SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_PERL);
+        ForgeConfig::set(SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_KEY, SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_PERL);
         $svnroot = $this->GivenSvnrootForTwoGroups();
         return $svnroot->getFullConf();
     }
@@ -87,13 +87,13 @@ class SVN_Apache_SvnrootConfTest extends TuleapTestCase {
     }
 
     public function itHasALogFileFromConfiguration() {
-        Config::store();
-        Config::set(SVN_Apache_SvnrootConf::CONFIG_SVN_LOG_PATH, '${APACHE_LOG_DIR}/tuleap_svn.log');
+        ForgeConfig::store();
+        ForgeConfig::set(SVN_Apache_SvnrootConf::CONFIG_SVN_LOG_PATH, '${APACHE_LOG_DIR}/tuleap_svn.log');
 
         $conf = $this->GivenAFullApacheConfWithModPerl();
         $this->assertPattern('%\${APACHE_LOG_DIR}/tuleap_svn\.log%', $conf);
 
-        Config::restore();
+        ForgeConfig::restore();
     }
 }
 

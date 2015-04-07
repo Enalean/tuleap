@@ -372,9 +372,9 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
         $project_dao = new ProjectDao();
         $nb_projects = $project_dao->countActiveProjects();
 
-        $most_secure_url = 'http://'. Config::get('sys_default_domain');
-        if (Config::get('sys_https_host')) {
-            $most_secure_url = 'https://'. Config::get('sys_https_host');
+        $most_secure_url = 'http://'. ForgeConfig::get('sys_default_domain');
+        if (ForgeConfig::get('sys_https_host')) {
+            $most_secure_url = 'https://'. ForgeConfig::get('sys_https_host');
         }
 
         $login_presenter_builder = new User_LoginPresenterBuilder();
@@ -391,7 +391,7 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
 
         $awesomeness = file_get_contents($GLOBALS['Language']->getContent('homepage/awesomeness', null, null, '.html'));
 
-        $templates_dir = Config::get('codendi_dir') .'/src/templates/homepage/';
+        $templates_dir = ForgeConfig::get('codendi_dir') .'/src/templates/homepage/';
         $renderer      = TemplateRendererFactory::build()->getRenderer($templates_dir);
         $presenter     = new FlamingParrot_HomepagePresenter(
             $headline,
@@ -453,7 +453,7 @@ class FlamingParrot_Theme extends DivBasedTabbedLayout {
     }
 
     private function isInDebugMode() {
-        return (Config::get('DEBUG_MODE') && (Config::get('DEBUG_DISPLAY_FOR_ALL') || user_ismember(1, 'A')));
+        return (ForgeConfig::get('DEBUG_MODE') && (ForgeConfig::get('DEBUG_DISPLAY_FOR_ALL') || user_ismember(1, 'A')));
     }
 }
 

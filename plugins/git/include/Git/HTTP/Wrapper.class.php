@@ -38,8 +38,8 @@ class Git_HTTP_Wrapper {
            1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
         );
 
-        if (Config::get('sys_logger_level') == Logger::DEBUG) {
-            $descriptorspec[2] = array('file', Config::get('codendi_log').'/git_http_error_log', 'a');
+        if (ForgeConfig::get('sys_logger_level') == Logger::DEBUG) {
+            $descriptorspec[2] = array('file', ForgeConfig::get('codendi_log').'/git_http_error_log', 'a');
         }
 
         $pipes = array();

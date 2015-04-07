@@ -1177,7 +1177,7 @@ class Layout extends Response {
      * @see includeJavascriptSnippet
      */
     public function displayJavascriptElements($params) {
-        $combined_dir = Config::get('sys_combined_dir');
+        $combined_dir = ForgeConfig::get('sys_combined_dir');
         if (! is_dir($combined_dir)) {
             $combined_dir = $GLOBALS['codendi_dir'] . '/src/www/scripts/combined';
         }
@@ -1200,7 +1200,7 @@ class Layout extends Response {
         '. $this->changeColorpickerPalette() .'
         </script>';
 
-        if (Config::get('DEBUG_MODE') && (Config::get('DEBUG_DISPLAY_FOR_ALL') || user_ismember(1, 'A')) ) {
+        if (ForgeConfig::get('DEBUG_MODE') && (ForgeConfig::get('DEBUG_DISPLAY_FOR_ALL') || user_ismember(1, 'A')) ) {
             echo '<script type="text/javascript" src="/scripts/codendi/debug_reserved_names.js"></script>';
         }
 
@@ -1507,7 +1507,7 @@ class Layout extends Response {
         include($Language->getContent('layout/footer'));
         echo '</footer>';
 
-        if ( Config::get('DEBUG_MODE') && (Config::get('DEBUG_DISPLAY_FOR_ALL') || user_ismember(1, 'A')) ) {
+        if ( ForgeConfig::get('DEBUG_MODE') && (ForgeConfig::get('DEBUG_DISPLAY_FOR_ALL') || user_ismember(1, 'A')) ) {
             $this->showDebugInfo();
         }
 
@@ -2100,7 +2100,7 @@ class Layout extends Response {
             if ($short_name == 'summary') {
 
                 $label = '<span>';
-                if (Config::get('sys_display_project_privacy_in_service_bar')) {
+                if (ForgeConfig::get('sys_display_project_privacy_in_service_bar')) {
                     // Add a default tab to explain project privacy
                     if ($project->isPublic()) {
                         $privacy = 'public';
@@ -2142,7 +2142,7 @@ class Layout extends Response {
         if ($project->isPublic()) {
             $privacy = 'public';
 
-            if (Config::areAnonymousAllowed()) {
+            if (ForgeConfig::areAnonymousAllowed()) {
                 $privacy .= '_w_anon';
             } else {
                 $privacy .= '_wo_anon';
@@ -2206,14 +2206,14 @@ class Layout extends Response {
             }
         }
 
-        if (Config::get('sys_use_trove')) {
+        if (ForgeConfig::get('sys_use_trove')) {
             $search_entries[] = array(
                 'value' => 'soft',
                 'label' => $GLOBALS['Language']->getText('include_menu', 'software_proj')
             );
         }
 
-        if (Config::get('sys_use_snippet')) {
+        if (ForgeConfig::get('sys_use_snippet')) {
             $search_entries[] = array(
                 'value'    => 'snippets',
                 'label'    => $GLOBALS['Language']->getText('include_menu', 'code_snippets'),

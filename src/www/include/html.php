@@ -62,7 +62,7 @@ function html_image($src,$args,$display=1) {
 }
 
 function html_get_timezone_popup($selected = 0) {
-    $renderer = TemplateRendererFactory::build()->getRenderer(Config::get('codendi_dir') .'/src/templates/account/');
+    $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/account/');
     return $renderer->renderToString('timezone', new Account_TimezoneSelectorPresenter($selected));
 }
 

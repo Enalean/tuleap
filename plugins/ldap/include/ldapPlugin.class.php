@@ -146,7 +146,7 @@ class LdapPlugin extends Plugin {
      * @return TruncateLevelLogger
      */
     public function getLogger() {
-        return new TruncateLevelLogger(new BackendLogger(), Config::get('sys_logger_level'));
+        return new TruncateLevelLogger(new BackendLogger(), ForgeConfig::get('sys_logger_level'));
     }
 
     /**
@@ -235,7 +235,7 @@ class LdapPlugin extends Plugin {
         return TemplateRendererFactory::build()->getRenderer(
             array(
                 dirname(__FILE__).'/../templates',
-                Config::get('codendi_dir') .'/src/templates/search',
+                ForgeConfig::get('codendi_dir') .'/src/templates/search',
             )
         );
     }

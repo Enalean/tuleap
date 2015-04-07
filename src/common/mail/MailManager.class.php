@@ -126,7 +126,7 @@ class MailManager {
      * @return String 
      */
     protected function getConfig($var) {
-        return Config::get($var);
+        return ForgeConfig::get($var);
     }
     
     /**

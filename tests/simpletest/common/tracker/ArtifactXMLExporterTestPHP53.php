@@ -47,12 +47,12 @@ abstract class ArtifactXMLExporter_BaseTest extends TuleapTestCase {
         $this->exporter           = new ArtifactXMLExporter($this->dao, $attachment_exporter, $node_helper, $this->logger);
         $this->fixtures_dir       = dirname(__FILE__) .'/_fixtures/';
         $this->expected_open_date = $this->toExpectedDate($this->open_date);
-        Config::store();
-        Config::set('sys_data_dir', dirname($this->fixtures_dir));
+        ForgeConfig::store();
+        ForgeConfig::set('sys_data_dir', dirname($this->fixtures_dir));
     }
 
     public function tearDown() {
-        Config::restore();
+        ForgeConfig::restore();
         parent::tearDown();
     }
 

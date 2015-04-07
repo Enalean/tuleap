@@ -41,8 +41,8 @@ abstract class Git_Driver_Gerrit_MembershipManagerCommonTest extends TuleapTestC
     protected $project_manager;
 
     public function setUp() {
-        Config::store();
-        Config::set('codendi_log', '/tmp/');
+        ForgeConfig::store();
+        ForgeConfig::set('codendi_log', '/tmp/');
         $this->user                                  = stub('PFUser')->getLdapId()->returns('whatever');
         $this->driver                                = mock('Git_Driver_Gerrit');
         $this->driver_factory                        = stub('Git_Driver_Gerrit_GerritDriverFactory')->getDriver()->returns($this->driver);
@@ -70,7 +70,7 @@ abstract class Git_Driver_Gerrit_MembershipManagerCommonTest extends TuleapTestC
     }
 
     public function tearDown() {
-        Config::restore();
+        ForgeConfig::restore();
         parent::tearDown();
     }
 }

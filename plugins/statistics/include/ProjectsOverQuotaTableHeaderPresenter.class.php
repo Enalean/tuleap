@@ -40,7 +40,7 @@ class ProjectsOverQuotaTableHeaderPresenter {
     }
 
     public function getTemplateDir() {
-        return Config::get('codendi_dir') .'/plugins/statistics/templates';
+        return ForgeConfig::get('codendi_dir') .'/plugins/statistics/templates';
     }
 }
 ?>

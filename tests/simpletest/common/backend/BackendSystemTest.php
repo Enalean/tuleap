@@ -58,8 +58,8 @@ class BackendSystemTest extends UnitTestCase {
         $GLOBALS['sys_custom_incdir']         = $GLOBALS['tmp_dir'];
         $GLOBALS['sys_incdir']                = $GLOBALS['tmp_dir'];
         $GLOBALS['codendi_log']               = $GLOBALS['tmp_dir'];
-        Config::store();
-        Config::set('sys_project_backup_path', dirname(__FILE__) . '/_fixtures/var/tmp');
+        ForgeConfig::store();
+        ForgeConfig::set('sys_project_backup_path', dirname(__FILE__) . '/_fixtures/var/tmp');
     }
     
     
@@ -75,7 +75,7 @@ class BackendSystemTest extends UnitTestCase {
         unset($GLOBALS['sys_file_deletion_delay']);
         unset($GLOBALS['sys_custom_incdir']);
         unset($GLOBALS['sys_incdir']);
-        Config::restore();
+        ForgeConfig::restore();
 
         $logfile = $GLOBALS['codendi_log'].'/codendi_syslog';
         if (is_file($logfile)) {
@@ -163,10 +163,10 @@ class BackendSystemTest extends UnitTestCase {
         
         $this->assertEqual($backend->archiveUserHome(104),True);
         $this->assertFalse(is_dir($GLOBALS['homedir_prefix']."/codendiadm"),"Home dir should be deleted");
-        $this->assertTrue(is_file(Config::get('sys_project_backup_path')."/codendiadm.tgz"),"Archive should be created");
+        $this->assertTrue(is_file(ForgeConfig::get('sys_project_backup_path')."/codendiadm.tgz"),"Archive should be created");
 
         // Cleanup
-        unlink(Config::get('sys_project_backup_path')."/codendiadm.tgz");
+        unlink(ForgeConfig::get('sys_project_backup_path')."/codendiadm.tgz");
     }
 
     function testArchiveProjectHome() {
@@ -194,13 +194,13 @@ class BackendSystemTest extends UnitTestCase {
         $this->assertEqual($backend->archiveProjectHome(142),True);
         $this->assertFalse(is_dir($projdir),"Project dir should be deleted");
         $this->assertFalse(is_link($lcprojlnk),"Project link should be deleted");
-        $this->assertTrue(is_file(Config::get('sys_project_backup_path')."/TestProj.tgz"),"Archive should be created");
+        $this->assertTrue(is_file(ForgeConfig::get('sys_project_backup_path')."/TestProj.tgz"),"Archive should be created");
 
         // Check that a wrong project id does not raise an error
         $this->assertEqual($backend->archiveProjectHome(99999),False);
 
         // Cleanup
-        unlink(Config::get('sys_project_backup_path')."/TestProj.tgz");
+        unlink(ForgeConfig::get('sys_project_backup_path')."/TestProj.tgz");
     }
     
     public function testRenameProjectHomeDirectory() {

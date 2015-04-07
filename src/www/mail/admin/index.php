@@ -10,9 +10,9 @@
 require_once('pre.php');
 require_once('../mail_utils.php');
 
-$sys_lists_domain = Config::get('sys_lists_domain');
+$sys_lists_domain = ForgeConfig::get('sys_lists_domain');
 if ($sys_lists_domain == 'lists.%sys_default_domain%') {
-    $sys_lists_domain = Config::get('sys_lists_host');
+    $sys_lists_domain = ForgeConfig::get('sys_lists_host');
 }
 
 $pm = ProjectManager::instance();
@@ -28,7 +28,7 @@ if ($group_id && user_ismember($group_id, 'A')) {
         if ($request->existAndNonEmpty('add_list')) {
             $list_password = substr(md5($GLOBALS['session_hash'] . time() . rand(0, 40000)), 0, 16);
             $list_name = $request->getValidated('list_name', 'string', '');
-            if (!$list_name || strlen($list_name) < Config::get('sys_lists_name_min_length')) {
+            if (!$list_name || strlen($list_name) < ForgeConfig::get('sys_lists_name_min_length')) {
                 exit_error($Language->getText('global', 'error'), $Language->getText('mail_admin_index', 'provide_correct_list_name'));
             }
             if (!ereg('(^([a-zA-Z\_0-9\.-]*))$', $list_name)) {
@@ -37,7 +37,7 @@ if ($group_id && user_ismember($group_id, 'A')) {
             if (user_is_super_user()) {
                 $new_list_name = strtolower($list_name);
             } else {
-                $new_list_name = Config::get('sys_lists_prefix') . strtolower($pm->getProject($group_id)->getUnixName() . '-' . $list_name) . Config::get('sys_lists_suffix');
+                $new_list_name = ForgeConfig::get('sys_lists_prefix') . strtolower($pm->getProject($group_id)->getUnixName() . '-' . $list_name) . ForgeConfig::get('sys_lists_suffix');
             }
 
             //see if that's a valid email address
@@ -149,9 +149,9 @@ if ($group_id && user_ismember($group_id, 'A')) {
         // full mailing list name
         if (user_is_super_user()) {
             echo '<INPUT TYPE="TEXT" NAME="list_name"
-            VALUE="' . Config::get('sys_lists_prefix') . $pm->getProject($group_id)->getUnixName() . '-xxxxx" SIZE="15" MAXLENGTH="20" CLASS="textfield_small">@' . $sys_lists_domain . '</B><BR>';
+            VALUE="' . ForgeConfig::get('sys_lists_prefix') . $pm->getProject($group_id)->getUnixName() . '-xxxxx" SIZE="15" MAXLENGTH="20" CLASS="textfield_small">@' . $sys_lists_domain . '</B><BR>';
         } else {
-            echo '<B>' . Config::get('sys_lists_prefix') . $pm->getProject($group_id)->getUnixName() . '-<INPUT TYPE="TEXT" NAME="list_name" VALUE="" SIZE="15" MAXLENGTH="20" CLASS="textfield_small">@' . $sys_lists_domain . '</B><BR>';
+            echo '<B>' . ForgeConfig::get('sys_lists_prefix') . $pm->getProject($group_id)->getUnixName() . '-<INPUT TYPE="TEXT" NAME="list_name" VALUE="" SIZE="15" MAXLENGTH="20" CLASS="textfield_small">@' . $sys_lists_domain . '</B><BR>';
         }
         echo '    <P>
             <B>' . $Language->getText('mail_admin_index', 'is_public') . ' </B>' . $Language->getText('mail_admin_index', 'public_explain') . '<BR>

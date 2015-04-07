@@ -124,7 +124,7 @@ class DataAccess {
             }
         }
 
-        if (Config::get('DEBUG_MODE')) {
+        if (ForgeConfig::get('DEBUG_MODE')) {
             $GLOBALS['DEBUG_DAO_QUERY_COUNT']++;
             $GLOBALS['QUERIES'][]=$sql;
             if (!isset($GLOBALS['DBSTORE'][md5($sql)])) {
@@ -189,7 +189,7 @@ class DataAccess {
             $error = mysql_error();
         }
         // Display real error only in Debug mode (prevent DB info leaking)
-        if ($error && !Config::get('DEBUG_MODE')) {
+        if ($error && !ForgeConfig::get('DEBUG_MODE')) {
             $error = 'DB error';
         }
         return $error;

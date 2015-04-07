@@ -18,7 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ConfigTestWhiteBoxVersion extends Config {
+class ConfigTestWhiteBoxVersion extends ForgeConfig {
 
     public static function load(ConfigValueProvider $value_provider) {
         return parent::load($value_provider);
@@ -28,58 +28,58 @@ class ConfigTestWhiteBoxVersion extends Config {
 class ConfigTest extends TuleapTestCase {
 
     public function setUp() {
-        Config::store();
+        ForgeConfig::store();
     }
 
     public function tearDown() {
-        Config::restore();
+        ForgeConfig::restore();
     }
 
     public function testUsage() {
-        $this->assertFalse(Config::get('toto'));
-        Config::loadFromFile(dirname(__FILE__).'/_fixtures/config/local.inc');
-        $this->assertEqual(Config::get('toto'), 66);
-        $this->assertFalse(Config::get('titi')); //not defined should return false
+        $this->assertFalse(ForgeConfig::get('toto'));
+        ForgeConfig::loadFromFile(dirname(__FILE__).'/_fixtures/config/local.inc');
+        $this->assertEqual(ForgeConfig::get('toto'), 66);
+        $this->assertFalse(ForgeConfig::get('titi')); //not defined should return false
     }
 
     public function testDefault() {
-        $this->assertEqual(Config::get('toto', 99), 99); //not defined should return default value given in parameter
-        Config::loadFromFile(dirname(__FILE__).'/_fixtures/config/local.inc');
-        $this->assertEqual(Config::get('toto', 99), 66); //now it is defined. Should NOT return default value given in parameter
+        $this->assertEqual(ForgeConfig::get('toto', 99), 99); //not defined should return default value given in parameter
+        ForgeConfig::loadFromFile(dirname(__FILE__).'/_fixtures/config/local.inc');
+        $this->assertEqual(ForgeConfig::get('toto', 99), 66); //now it is defined. Should NOT return default value given in parameter
     }
 
     public function testMultipleFiles() {
         // Unitialized
-        $this->assertIdentical(Config::get('toto'), false);
-        $this->assertIdentical(Config::get('tutu'), false);
-        $this->assertIdentical(Config::get('tata'), false);
+        $this->assertIdentical(ForgeConfig::get('toto'), false);
+        $this->assertIdentical(ForgeConfig::get('tutu'), false);
+        $this->assertIdentical(ForgeConfig::get('tata'), false);
 
         // Load the first file
-        Config::loadFromFile(dirname(__FILE__).'/_fixtures/config/local.inc');
-        $this->assertIdentical(Config::get('toto'), 66);
-        $this->assertIdentical(Config::get('tutu'), 123);
-        $this->assertIdentical(Config::get('tata'), false);
+        ForgeConfig::loadFromFile(dirname(__FILE__).'/_fixtures/config/local.inc');
+        $this->assertIdentical(ForgeConfig::get('toto'), 66);
+        $this->assertIdentical(ForgeConfig::get('tutu'), 123);
+        $this->assertIdentical(ForgeConfig::get('tata'), false);
 
         // Load the second one. Merge of the conf
-        Config::loadFromFile(dirname(__FILE__).'/_fixtures/config/other_file.inc.dist');
-        $this->assertIdentical(Config::get('toto'), 66);
-        $this->assertIdentical(Config::get('tutu'), 421);
-        $this->assertIdentical(Config::get('tata'), 456);
+        ForgeConfig::loadFromFile(dirname(__FILE__).'/_fixtures/config/other_file.inc.dist');
+        $this->assertIdentical(ForgeConfig::get('toto'), 66);
+        $this->assertIdentical(ForgeConfig::get('tutu'), 421);
+        $this->assertIdentical(ForgeConfig::get('tata'), 456);
     }
 
     public function testDump() {
-        Config::loadFromFile(dirname(__FILE__).'/_fixtures/config/local.inc');
+        ForgeConfig::loadFromFile(dirname(__FILE__).'/_fixtures/config/local.inc');
         ob_start();
-        Config::dump();
+        ForgeConfig::dump();
         $dump = ob_get_contents();
         ob_end_clean();
         $this->assertEqual($dump, var_export(array('toto' => 66, 'tutu' => 123), 1));
     }
 
     public function itDoesntEmitAnyNoticesOrWarningsWhenThereAreTwoRestoresAndOneLoad() {
-        Config::restore();
-        Config::restore();
-        Config::loadFromFile(dirname(__FILE__).'/_fixtures/config/local.inc');
+        ForgeConfig::restore();
+        ForgeConfig::restore();
+        ForgeConfig::loadFromFile(dirname(__FILE__).'/_fixtures/config/local.inc');
     }
 
     public function itLoadsFromDatabase() {
@@ -87,6 +87,6 @@ class ConfigTest extends TuleapTestCase {
         stub($dao)->searchAll()->returnsDar(array('name' => 'a_var', 'value' => 'its_value'));
         ConfigTestWhiteBoxVersion::load(new ConfigValueDatabaseProvider($dao));
 
-        $this->assertEqual('its_value', Config::get('a_var'));
+        $this->assertEqual('its_value', ForgeConfig::get('a_var'));
     }
 }

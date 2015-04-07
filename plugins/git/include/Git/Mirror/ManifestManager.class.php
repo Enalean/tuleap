@@ -77,8 +77,8 @@ class Git_Mirror_ManifestManager {
         $manifest_directory = $this->generator->getManifestDirectory();
         if (is_dir($manifest_directory)) {
             foreach (glob($manifest_directory . '/' . Git_Mirror_ManifestFileGenerator::FILE_PREFIX . '*') as $file) {
-                chown($file, Config::get('sys_http_user'));
-                chgrp($file, Config::get('sys_http_user'));
+                chown($file, ForgeConfig::get('sys_http_user'));
+                chgrp($file, ForgeConfig::get('sys_http_user'));
             }
         }
     }

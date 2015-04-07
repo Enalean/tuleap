@@ -37,8 +37,8 @@ class MilestoneController_BreadcrumbsTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        Config::store();
-        Config::set('codendi_dir', AGILEDASHBOARD_BASE_DIR .'/../../..');
+        ForgeConfig::store();
+        ForgeConfig::set('codendi_dir', AGILEDASHBOARD_BASE_DIR .'/../../..');
 
         $this->plugin_path = '/plugin/path';
 
@@ -58,7 +58,7 @@ class MilestoneController_BreadcrumbsTest extends TuleapTestCase {
     }
 
     public function tearDown() {
-        Config::restore();
+        ForgeConfig::restore();
         parent::tearDown();
     }
 

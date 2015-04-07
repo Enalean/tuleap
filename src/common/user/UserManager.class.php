@@ -841,7 +841,7 @@ class UserManager {
 
             switch ($user->getStatus()) {
                 case PFUser::STATUS_PENDING:
-                    if (Config::get('sys_user_approval')) {
+                    if (ForgeConfig::get('sys_user_approval')) {
                         $this->pending_user_notifier->notifyAdministrator($user);
                     }
                     break;

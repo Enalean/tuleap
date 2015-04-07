@@ -182,8 +182,8 @@ class LDAP_UserManager_AuthenticatTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        Config::store();
-        Config::set('sys_logger_level', 'debug');
+        ForgeConfig::store();
+        ForgeConfig::set('sys_logger_level', 'debug');
         $this->empty_ldap_result_iterator   = aLDAPResultIterator()->build();
         $this->john_mc_lane_result_iterator = aLDAPResultIterator()
             ->withParams($this->ldap_params)
@@ -215,7 +215,7 @@ class LDAP_UserManager_AuthenticatTest extends TuleapTestCase {
     }
 
     public function tearDown() {
-        Config::restore();
+        ForgeConfig::restore();
         parent::tearDown();
     }
 

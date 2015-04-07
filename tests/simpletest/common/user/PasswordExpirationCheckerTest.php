@@ -22,18 +22,18 @@ class User_PasswordExpirationCheckerTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        Config::store();
+        ForgeConfig::store();
         $this->password_expiration_checker = new User_PasswordExpirationChecker();
     }
 
     public function tearDown() {
-        Config::restore();
+        ForgeConfig::restore();
         parent::tearDown();
     }
 
     public function itRaisesAnExceptionWhenPasswordExpired() {
         $this->expectException('User_PasswordExpiredException');
-        Config::set('sys_password_lifetime', 10);
+        ForgeConfig::set('sys_password_lifetime', 10);
         $this->password_expiration_checker->checkPasswordLifetime(aUser()
                 ->withPassword('password')
                 ->withStatus(PFUser::STATUS_ACTIVE)

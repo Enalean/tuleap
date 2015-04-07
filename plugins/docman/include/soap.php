@@ -576,7 +576,7 @@ function createDocmanFile($sessionKey, $group_id, $parent_id, $title, $descripti
     //ignore mime type coming from the client, guess it instead
     //Write the content of the file into a temporary file
     //The best accurate results are got when the file has the real extension, therefore use the filename
-    $tmp     = tempnam(Config::get('tmp_dir'), 'Mime-detect');
+    $tmp     = tempnam(ForgeConfig::get('tmp_dir'), 'Mime-detect');
     $tmpname = $tmp .'-'. basename($file_name);
     file_put_contents($tmpname, $content);
     $mime_type = MIME::instance()->type($tmpname);

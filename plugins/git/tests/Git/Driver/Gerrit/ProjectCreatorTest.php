@@ -88,12 +88,12 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        Config::store();
-        Config::set('sys_default_domain', $this->tuleap_instance);
-        Config::set('tmp_dir', '/var/tmp');
+        ForgeConfig::store();
+        ForgeConfig::set('sys_default_domain', $this->tuleap_instance);
+        ForgeConfig::set('tmp_dir', '/var/tmp');
         $this->fixtures = dirname(__FILE__) .'/_fixtures';
         do {
-            $this->tmpdir   = Config::get('tmp_dir') .'/'. md5(uniqid(rand(), true));
+            $this->tmpdir   = ForgeConfig::get('tmp_dir') .'/'. md5(uniqid(rand(), true));
         } while (is_dir($this->tmpdir));
         `unzip $this->fixtures/firefox.zip -d $this->tmpdir`;
         `tar -xzf $this->fixtures/gitolite_firefox.git.tgz --directory $this->tmpdir`;
@@ -194,7 +194,7 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
     }
 
     public function tearDown() {
-        Config::restore();
+        ForgeConfig::restore();
         parent::tearDown();
         $this->recurseDeleteInDir($this->tmpdir);
         rmdir($this->tmpdir);

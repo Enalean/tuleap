@@ -29,12 +29,12 @@ class ThemeVariant {
     private $allowed;
 
     public function __construct() {
-        $this->default = Config::get('sys_default_theme_variant');
+        $this->default = ForgeConfig::get('sys_default_theme_variant');
         $this->setAllowedVartiants();
     }
 
     private function setAllowedVartiants() {
-        $this->allowed = Config::get('sys_available_theme_variants');
+        $this->allowed = ForgeConfig::get('sys_available_theme_variants');
         $this->allowed = explode(',', $this->allowed);
         $this->allowed = array_map('trim', $this->allowed);
         $this->allowed = array_filter($this->allowed);

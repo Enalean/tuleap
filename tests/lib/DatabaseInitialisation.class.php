@@ -13,7 +13,7 @@ class DatabaseInitialization {
 
     public function setUp() {
         $this->initDb();
-        $this->mysqli->select_db(Config::get('sys_dbname'));
+        $this->mysqli->select_db(ForgeConfig::get('sys_dbname'));
     }
 
     /**
@@ -30,12 +30,12 @@ class DatabaseInitialization {
 
     private function loadConfiguration() {
         $config_file = 'tests.inc';
-        Config::loadFromFile(dirname(__FILE__)."/../../src/etc/$config_file.dist");
-        Config::loadFromFile(dirname($this->getLocalIncPath())."/$config_file");
-        $GLOBALS['sys_dbhost']   = Config::get('sys_dbhost');
-        $GLOBALS['sys_dbuser']   = Config::get('sys_dbuser');
-        $GLOBALS['sys_dbpasswd'] = Config::get('sys_dbpasswd');
-        $GLOBALS['sys_dbname']   = Config::get('sys_dbname');
+        ForgeConfig::loadFromFile(dirname(__FILE__)."/../../src/etc/$config_file.dist");
+        ForgeConfig::loadFromFile(dirname($this->getLocalIncPath())."/$config_file");
+        $GLOBALS['sys_dbhost']   = ForgeConfig::get('sys_dbhost');
+        $GLOBALS['sys_dbuser']   = ForgeConfig::get('sys_dbuser');
+        $GLOBALS['sys_dbpasswd'] = ForgeConfig::get('sys_dbpasswd');
+        $GLOBALS['sys_dbname']   = ForgeConfig::get('sys_dbname');
     }
 
     private function getLocalIncPath() {

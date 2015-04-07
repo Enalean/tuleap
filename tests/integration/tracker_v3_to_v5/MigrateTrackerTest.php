@@ -52,8 +52,8 @@ abstract class MigrateDefaultTrackersTest extends TuleapDbTestCase {
 
     public function setUp() {
         parent::setUp();
-        Config::store();
-        Config::set('codendi_log', dirname(__FILE__));
+        ForgeConfig::store();
+        ForgeConfig::set('codendi_log', dirname(__FILE__));
 
         if (!self::$defect_tracker_converted && $this->thisTestIsNotUnderDevelopment()) {
             $this->convertTrackers();
@@ -67,10 +67,10 @@ abstract class MigrateDefaultTrackersTest extends TuleapDbTestCase {
     }
 
     public function tearDown() {
-        if (is_file(Config::get('codendi_log').'/tv3_to_tv5.log')) {
-            unlink(Config::get('codendi_log').'/tv3_to_tv5.log');
+        if (is_file(ForgeConfig::get('codendi_log').'/tv3_to_tv5.log')) {
+            unlink(ForgeConfig::get('codendi_log').'/tv3_to_tv5.log');
         }
-        Config::restore();
+        ForgeConfig::restore();
         parent::tearDown();
     }
 

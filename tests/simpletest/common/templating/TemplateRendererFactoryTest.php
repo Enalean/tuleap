@@ -23,7 +23,7 @@ require_once 'common/templating/TemplateRendererFactory.class.php';
 class TemplateRendererFactoryTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
-        Config::store();
+        ForgeConfig::store();
         
         $this->factory              = new TemplateRendererFactory();
         $this->plugin_templates_dir = dirname(__FILE__);
@@ -31,18 +31,18 @@ class TemplateRendererFactoryTest extends TuleapTestCase {
     
     public function tearDown() {
         parent::tearDown();
-        Config::restore();
+        ForgeConfig::restore();
     }
     
     public function itBuildsAMustacheRendererWhenDebugModeIsDisabled() {
-        Config::set('DEBUG_MODE', false);
+        ForgeConfig::set('DEBUG_MODE', false);
         $renderer = $this->factory->getRenderer($this->plugin_templates_dir);
         $this->assertIsA($renderer, 'MustacheRenderer');
         $this->assertNotA($renderer, 'MustacheDebugRenderer');
     }
     
     public function itBuildsAMustacheDebugRendererWhenDebugModeIsEnabled() {
-        Config::set('DEBUG_MODE', true);
+        ForgeConfig::set('DEBUG_MODE', true);
         $renderer = $this->factory->getRenderer($this->plugin_templates_dir);
         $this->assertIsA($renderer, 'MustacheDebugRenderer');
     }

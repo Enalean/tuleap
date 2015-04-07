@@ -1009,7 +1009,7 @@ class UserManager_createAccountTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        Config::store();
+        ForgeConfig::store();
         $this->user                  = aUser()->build();
         $this->dao                   = mock('UserDao');
         $this->pending_user_notifier = mock('User_PendingUserNotifier');
@@ -1026,7 +1026,7 @@ class UserManager_createAccountTest extends TuleapTestCase {
     }
 
     public function tearDown() {
-        Config::restore();
+        ForgeConfig::restore();
         parent::tearDown();
     }
 
@@ -1047,7 +1047,7 @@ class UserManager_createAccountTest extends TuleapTestCase {
     public function itSendsAnEmailToAdministratorIfUserIsPendingAndUserNeedsApproval() {
         stub($this->dao)->create()->returns(101);
         $this->user->setStatus(PFUser::STATUS_PENDING);
-        Config::set('sys_user_approval', 1);
+        ForgeConfig::set('sys_user_approval', 1);
 
         expect($this->pending_user_notifier)->notifyAdministrator($this->user)->once();
 
@@ -1057,7 +1057,7 @@ class UserManager_createAccountTest extends TuleapTestCase {
     public function itDoesNotSendAnEmailToAdministratorIfNoUserApproval() {
         stub($this->dao)->create()->returns(101);
         $this->user->setStatus(PFUser::STATUS_PENDING);
-        Config::set('sys_user_approval', 0);
+        ForgeConfig::set('sys_user_approval', 0);
 
         expect($this->pending_user_notifier)->notifyAdministrator()->never();
 

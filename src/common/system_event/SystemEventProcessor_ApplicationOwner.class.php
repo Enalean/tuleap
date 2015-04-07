@@ -43,6 +43,6 @@ class SystemEventProcessor_ApplicationOwner extends SystemEventProcessor {
     }
 
     public function getProcessOwner() {
-        return Config::get('sys_http_user');
+        return ForgeConfig::get('sys_http_user');
     }
 }

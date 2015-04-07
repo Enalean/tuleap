@@ -308,7 +308,7 @@ class Admin_PermissionDelegationController {
     }
 
     private function getTemplatesDir() {
-        return Config::get('codendi_dir') .'/src/templates/admin/permission_delegation/';
+        return ForgeConfig::get('codendi_dir') .'/src/templates/admin/permission_delegation/';
     }
 
     private function getUserManager() {

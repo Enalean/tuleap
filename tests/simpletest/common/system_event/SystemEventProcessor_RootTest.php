@@ -45,13 +45,13 @@ class SystemEventProcessor_RootTest extends TuleapTestCase {
                 mock('BackendSystem')
             )
         );
-        Config::store();
-        Config::set('codendi_dir', '/usr/share/codendi');
-        Config::set('sys_http_user', $this->sys_http_user);
+        ForgeConfig::store();
+        ForgeConfig::set('codendi_dir', '/usr/share/codendi');
+        ForgeConfig::set('sys_http_user', $this->sys_http_user);
     }
 
     public function tearDown() {
-        Config::restore();
+        ForgeConfig::restore();
         parent::tearDown();
     }
 

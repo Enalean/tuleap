@@ -56,7 +56,7 @@ class TemplateRendererFactory {
      * @return string
      */
     private function getRendererClassName() {
-        return Config::get('DEBUG_MODE') ? 'MustacheDebugRenderer' : 'MustacheRenderer';
+        return ForgeConfig::get('DEBUG_MODE') ? 'MustacheDebugRenderer' : 'MustacheRenderer';
     }
 }
 ?>

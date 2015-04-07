@@ -25,8 +25,8 @@ class AgileDashboardControllerTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        Config::store();
-        Config::set('codendi_dir', AGILEDASHBOARD_BASE_DIR .'/../../..');
+        ForgeConfig::store();
+        ForgeConfig::set('codendi_dir', AGILEDASHBOARD_BASE_DIR .'/../../..');
 
         $this->user_manager     = mock('UserManager');
         $this->request          = mock('Codendi_Request');
@@ -40,7 +40,7 @@ class AgileDashboardControllerTest extends TuleapTestCase {
     }
 
     public function tearDown() {
-        Config::restore();
+        ForgeConfig::restore();
         UserManager::clearInstance();
         parent::tearDown();
     }

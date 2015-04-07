@@ -371,7 +371,7 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
         $forwardSubEvents = '&event='.$event;
     }
 
-    $renderer = TemplateRendererFactory::build()->getRenderer(Config::get('codendi_dir') .'/src/templates/project/');
+    $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/project/');
 
     //Event select Box
     $events = array(
