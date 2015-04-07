@@ -46,4 +46,32 @@ class Tracker_FormElement_Container_ColumnTest extends TuleapTestCase {
     }
     
 }
-?>
+
+class Tracker_FormElement_Container_Column_ExportXMLTest extends TuleapTestCase {
+
+    public function itCallsExportPermissionsToXMLForEachSubfield() {
+        $column = partial_mock(
+            'Tracker_FormElement_Container_Column',
+            array('getAllFormElements')
+        );
+
+        $field_01 = mock('Tracker_FormElement_Field_String');
+        $field_02 = mock('Tracker_FormElement_Field_Float');
+        $field_03 = mock('Tracker_FormElement_Field_Text');
+
+        stub($column)->getAllFormElements()->returns(array(
+            $field_01, $field_02, $field_03
+        ));
+
+        $data    = '<?xml version="1.0" encoding="UTF-8"?>
+                    <permissions/>';
+        $xml     = new SimpleXMLElement($data);
+        $mapping = array();
+
+        expect($field_01)->exportPermissionsToXML()->once();
+        expect($field_02)->exportPermissionsToXML()->once();
+        expect($field_03)->exportPermissionsToXML()->once();
+
+        $column->exportPermissionsToXML($xml, $mapping);
+    }
+}

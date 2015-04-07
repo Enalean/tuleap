@@ -18,8 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-
 require_once('json.php');
 
 /**
@@ -768,6 +766,23 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         foreach ($this->getProperties() as $name => $property) {
             if (!empty($property['value'])) {
                 $child->addAttribute($name, $property['value']);
+            }
+        }
+    }
+
+    public function exportPermissionsToXML(SimpleXMLElement $node_perms, &$xmlMapping) {
+        if ($permissions = $this->getPermissionsByUgroupId()) {
+            foreach ($permissions as $ugroup_id => $permission_types) {
+                if (($ugroup = array_search($ugroup_id, $GLOBALS['UGROUPS'])) !== false && $ugroup_id < 100 && $this->isUsed()) {
+                    foreach ($permission_types as $permission_type) {
+                        $node_perm = $node_perms->addChild('permission');
+                        $node_perm->addAttribute('scope', 'field');
+                        $node_perm->addAttribute('REF', array_search($this->getId(), $xmlMapping));
+                        $node_perm->addAttribute('ugroup', $ugroup);
+                        $node_perm->addAttribute('type', $permission_type);
+                        unset($node_perm);
+                    }
+                }
             }
         }
     }

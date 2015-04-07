@@ -1853,39 +1853,18 @@ class Tracker_ExportToXmlTest extends TuleapTestCase {
     }
 
     public function testPermissionsExport() {
-
         stub($this->tracker)->getPermissionsByUgroupId()->returns(array(
-            1 => array('PERM_1'),
-            3 => array('PERM_2'),
-            5 => array('PERM_3'),
+            1   => array('PERM_1'),
+            3   => array('PERM_2'),
+            5   => array('PERM_3'),
             115 => array('PERM_3'),
         ));
 
-        $f1 = new Tracker_FormElement_InterfaceTestVersion();
-        $f1->setReturnValue('getId', 10);
-        $f1->setReturnValue(
-            'getPermissionsByUgroupId',
-            array(
-                2 => array('FIELDPERM_1'),
-                4 => array('FIELDPERM_2'),
-            )
+        stub($this->formelement_factory)->getUsedFormElementForTracker()->returns(array());
+
+        stub($this->workflow_factory)->getGlobalRulesManager()->returns(
+            mock('Tracker_RulesManager')
         );
-        $f1->setReturnValue('isUsed', true);
-
-        $f2 = new Tracker_FormElement_InterfaceTestVersion();
-        $f2->setReturnValue('getId', 20);
-        $f2->setReturnValue(
-            'getPermissionsByUgroupId',
-            array(
-                2 => array('FIELDPERM_2'),
-                4 => array('FIELDPERM_1'),
-            )
-        );
-        $f2->setReturnValue('isUsed', true);
-
-        stub($this->formelement_factory)->getUsedFormElementForTracker()->returns(array($f1, $f2));
-
-        stub($this->workflow_factory)->getGlobalRulesManager()->returns(mock('Tracker_RulesManager'));
 
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $xml = $this->tracker->exportToXML($xml);
@@ -1902,26 +1881,6 @@ class Tracker_ExportToXmlTest extends TuleapTestCase {
         $this->assertEqual((string)$xml->permissions->permission[2]['scope'], 'tracker');
         $this->assertEqual((string)$xml->permissions->permission[2]['ugroup'], 'UGROUP_5');
         $this->assertEqual((string)$xml->permissions->permission[2]['type'], 'PERM_3');
-
-        $this->assertEqual((string)$xml->permissions->permission[3]['scope'], 'field');
-        $this->assertEqual((string)$xml->permissions->permission[3]['ugroup'], 'UGROUP_2');
-        $this->assertEqual((string)$xml->permissions->permission[3]['type'], 'FIELDPERM_1');
-        $this->assertEqual((string)$xml->permissions->permission[3]['REF'], 'F10');
-
-        $this->assertEqual((string)$xml->permissions->permission[4]['scope'], 'field');
-        $this->assertEqual((string)$xml->permissions->permission[4]['ugroup'], 'UGROUP_4');
-        $this->assertEqual((string)$xml->permissions->permission[4]['type'], 'FIELDPERM_2');
-        $this->assertEqual((string)$xml->permissions->permission[4]['REF'], 'F10');
-
-        $this->assertEqual((string)$xml->permissions->permission[5]['scope'], 'field');
-        $this->assertEqual((string)$xml->permissions->permission[5]['ugroup'], 'UGROUP_2');
-        $this->assertEqual((string)$xml->permissions->permission[5]['type'], 'FIELDPERM_2');
-        $this->assertEqual((string)$xml->permissions->permission[5]['REF'], 'F20');
-
-        $this->assertEqual((string)$xml->permissions->permission[6]['scope'], 'field');
-        $this->assertEqual((string)$xml->permissions->permission[6]['ugroup'], 'UGROUP_4');
-        $this->assertEqual((string)$xml->permissions->permission[6]['type'], 'FIELDPERM_1');
-        $this->assertEqual((string)$xml->permissions->permission[6]['REF'], 'F20');
     }
 
     public function itExportsTheTrackerID() {
