@@ -1,1 +1,4 @@
-/usr/share/mediawiki-tuleap/profileinfo.php
+<?php
+
+require_once 'setenv.php';
+require_once "$mediawikipath/profileinfo.php";

@@ -1,1 +1,4 @@
-/usr/share/mediawiki-tuleap/opensearch_desc.php
+<?php
+
+require_once 'setenv.php';
+require_once "$mediawikipath/opensearch_desc.php";

@@ -51,6 +51,7 @@ $xml_security->enableExternalLoadOfEntities();
 sysdebug_lazymode(true);
 
 $IP = forge_get_config('src_path', 'mediawiki');
+
 if (forge_get_config('sys_https_host')) {
     $wgServer = 'https://'. forge_get_config('sys_https_host');
 } else {

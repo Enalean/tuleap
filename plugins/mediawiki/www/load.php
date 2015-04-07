@@ -1,1 +1,4 @@
-/usr/share/mediawiki-tuleap/load.php
+<?php
+
+require_once 'setenv.php';
+require_once "$mediawikipath/load.php";
