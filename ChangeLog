@@ -10,6 +10,7 @@ Version 8.1 (not yet released)
 	* git: 4.25
 	* ldap: 3.72
 	* webdav: 1.9.9
+	* mediawiki: 0.63
 
     == Themes ==
 	* FlamingParrot: 1.78
