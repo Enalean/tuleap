@@ -357,6 +357,11 @@ if (is_file("$project_dir/ProjectSettings.php")) {
 
 }
 
+// Add Tuleap Skin
+$wgAutoloadClasses['Tuleap'] = dirname(__FILE__)."/skins/Tuleap/Tuleap.php";
+$wgValidSkinNames['tuleap'] = 'Tuleap';
+require_once dirname(__FILE__)."/skins/Tuleap/Tuleap.php";
+
 // ParserFunctions Extension inclusion
 require_once( "$IP/extensions/ParserFunctions/ParserFunctions.php" );
 $wgPFEnableStringFunctions = true;

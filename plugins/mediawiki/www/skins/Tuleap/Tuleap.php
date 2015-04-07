@@ -66,10 +66,10 @@ class SkinTuleap extends SkinTemplate {
             }
 
             // TODO: Migrate all of these
-            $out->addStyle( 'tuleap/main.css', 'screen');
-            $out->addStyle( 'tuleap/TuleapSkin.css', 'screen');
-            $out->addStyle( 'tuleap/IE60Fixes.css', 'screen', 'IE 6' );
-            $out->addStyle( 'tuleap/IE70Fixes.css', 'screen', 'IE 7' );
+            $out->addStyle( 'Tuleap/main.css', 'screen');
+            $out->addStyle( 'Tuleap/TuleapSkin.css', 'screen');
+            $out->addStyle( 'Tuleap/IE60Fixes.css', 'screen', 'IE 6' );
+            $out->addStyle( 'Tuleap/IE70Fixes.css', 'screen', 'IE 7' );
     }
 
     function addToBodyAttributes( $out, &$bodyAttrs ) {
