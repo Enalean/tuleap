@@ -347,13 +347,14 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     }
 
     private function fetchParentSelector($prefill_parent, $name, Tracker $parent_tracker, PFUser $user, $can_create) {
-        $html  = '';
-        $html .= '<p>';
+        $purifier = Codendi_HTMLPurifier::instance();
+        $html     = '';
+        $html    .= '<p>';
         list($label, $possible_parents, $display_selector) = $this->getPossibleArtifactParents($parent_tracker, $user);
         if ($display_selector) {
             $html .= '<label>';
-            $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_choose_parent', $parent_tracker->getItemName());
-            $html .= '<select name="'. $name .'[parent]">';
+            $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_choose_parent', $purifier->purify($parent_tracker->getItemName()));
+            $html .= '<select name="'. $purifier->purify($name) .'[parent]">';
             $html .= '<option value="">'. $GLOBALS['Language']->getText('global', 'please_choose_dashed') .'</option>';
             if ($can_create) {
                 $html .= '<option value="'.self::CREATE_NEW_PARENT_VALUE.'">'. $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_create_new_parent') .'</option>';
@@ -369,15 +370,16 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     }
 
     private function fetchArtifactParentsOptions($prefill_parent, $label, array $possible_parents) {
-        $html  = '';
+        $purifier = Codendi_HTMLPurifier::instance();
+        $html     = '';
         if ($possible_parents) {
-            $html .= '<optgroup label="'. $label .'">';
+            $html .= '<optgroup label="'. $purifier->purify($label) .'">';
             foreach ($possible_parents as $possible_parent) {
                 $selected = '';
                 if ($possible_parent->getId() == $prefill_parent) {
                     $selected = ' selected="selected"';
                 }
-                $html .= '<option value="'. $possible_parent->getId() .'"'.$selected.'>'. $possible_parent->getXRefAndTitle() .'</option>';
+                $html .= '<option value="'. $possible_parent->getId() .'"'.$selected.'>'. $purifier->purify($possible_parent->getXRefAndTitle()) .'</option>';
             }
             $html .= '</optgroup>';
         }

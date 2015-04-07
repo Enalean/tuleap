@@ -520,12 +520,12 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     }
     
     public function fetchCriteriaValue($criteria) {
-        $hp = Codendi_HTMLPurifier::instance();
-        $html = '';
+        $purifier       = Codendi_HTMLPurifier::instance();
+        $html           = '';
         $criteria_value = $this->getCriteriaValue($criteria);
-        $multiple = ' ';
-        $size     = ' ';
-        $name     = "criteria[$this->id][values][]";
+        $multiple       = ' ';
+        $size           = ' ';
+        $name           = "criteria[$this->id][values][]";
         
         //Field values
         $permission_type ='PLUGIN_TRACKER_ARTIFACT_ACCESS';
@@ -585,7 +585,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
             $id = $value ['value'];
             $selected = isset($criteria_value[$id]) ? 'selected="selected"' : '';
             $html .= '<option value="'. $value['value'] .'">';
-            $html .= $value['text'];
+            $html .= $purifier->purify($value['text']);
             $html .= '</option>';
         }
         $html .= '</select>';

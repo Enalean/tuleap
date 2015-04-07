@@ -130,8 +130,9 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
      * @return string
      */
     protected function fetchOptgroup($method, $id_prefix, $used, $prefix) {
-        $prefix .= $this->getLabel();
-        $html = '<optgroup id="'. $id_prefix . $this->id .'" label="'. $prefix .'">';
+        $purifier  = Codendi_HTMLPurifier::instance();
+        $prefix   .= $purifier->purify($this->getLabel());
+        $html      = '<optgroup id="'. $id_prefix . $this->id .'" label="'. $prefix .'">';
         $optgroups = '';
         foreach($this->getFormElements() as $formElement) {
             if ($formElement->userCanRead()) {

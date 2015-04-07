@@ -56,7 +56,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         } else if ($name === false) { //we don't want a name
             $name = '';
         } else { //we keep the given name
-            $name = 'name="'. $name .'"';
+            $name = 'name="'. $hp->purify($name) .'"';
         }
         $html .= '<div class="textboxlist">
                     <input id="tracker_field_'. $this->id .'" 
@@ -71,7 +71,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         foreach($values as $v) {
             if ($v->getId() != 100) {
                 $html .= '<li value="'. $v->getJsonId() .'">';
-                $html .= $v->getLabel();
+                $html .= $hp->purify($v->getLabel());
                 $html .= '</li>';
             }
         }
@@ -96,7 +96,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         } else if ($name === false) { //we don't want a name
             $name = '';
         } else { //we keep the given name
-            $name = 'name="'. $name .'"';
+            $name = 'name="'. $hp->purify($name) .'"';
         }
         $html .= '<div class="textboxlist">
                     <input id="tracker_field_'. $this->id .'"

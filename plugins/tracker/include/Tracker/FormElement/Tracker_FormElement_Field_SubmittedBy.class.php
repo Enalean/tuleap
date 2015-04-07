@@ -205,10 +205,11 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
      * @return string
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
-        $html = '';
-        $value = new Tracker_FormElement_Field_List_Bind_UsersValue($artifact->getSubmittedBy());
-        $value = $value->getLabel();
-        $html .= $value;
+        $purifier = Codendi_HTMLPurifier::instance();
+        $html     = '';
+        $value    = new Tracker_FormElement_Field_List_Bind_UsersValue($artifact->getSubmittedBy());
+        $value    = $purifier->purify($value->getLabel());
+        $html    .= $value;
         return $html;
     }
 
@@ -287,12 +288,13 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
      * @return string html
      */
     protected function fetchAdminFormElement() {
-        $html = '';
+        $purifier   = Codendi_HTMLPurifier::instance();
+        $html       = '';
         $fake_value = new Tracker_FormElement_Field_List_Bind_UsersValue(UserManager::instance()->getCurrentUser()->getId());
-        $html .= $fake_value->getLabel() . '<br />';
-        $html .= '<span class="tracker-admin-form-element-help">';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'submittedby_help');
-        $html .= '</span>';
+        $html      .= $purifier->purify($fake_value->getLabel()) . '<br />';
+        $html      .= '<span class="tracker-admin-form-element-help">';
+        $html      .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'submittedby_help');
+        $html      .= '</span>';
         return $html;
     }
 

@@ -81,7 +81,7 @@ class Tracker_FormElement_Container_Column_Group {
             foreach ($columns as $c) {
                 if ($content = call_user_func_array(array($c, $method), $params)) {
                     if ($format == 'html') {
-                        $output .= $content ;
+                        $output .= $content;
                     } else {
                         $output .= $content . PHP_EOL;
                     }

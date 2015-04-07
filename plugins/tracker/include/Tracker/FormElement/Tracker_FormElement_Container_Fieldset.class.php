@@ -92,11 +92,12 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         if ($format == 'text') {
             return $label . PHP_EOL . str_pad('', strlen($label), '-') . PHP_EOL;
         } else {
+            $purifier = Codendi_HTMLPurifier::instance();
             return '
                 <tr><td colspan="2">&nbsp;</td></tr>
                 <tr style="color: #444444; background-color: #F6F6F6;">
                     <td align="left" colspan="2">
-                        <h3>'. $label .'</h3>
+                        <h3>'. $purifier->purify($label) .'</h3>
                     </td>
                 </tr>';
         }

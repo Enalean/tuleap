@@ -158,8 +158,8 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
         $output = '';
         switch ($format) {
             case 'html':
-                $proto = ($GLOBALS['sys_force_ssl']) ? 'https' : 'http';
-                $output .= '<span>' . $this->getArtifactRank($artifact->getID()) . '</span>';
+                $proto    = ($GLOBALS['sys_force_ssl']) ? 'https' : 'http';
+                $output  .= '<span>' . $this->getArtifactRank($artifact->getID()) . '</span>';
                 break;
             default:
                 $output .= $this->getArtifactRank($artifact->getID());
