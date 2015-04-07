@@ -1,5 +1,5 @@
 <div class="alert alert-error" ng-if="rest_error_occured" translate>A server error has occured. <b>You should refresh this page</b>.</div>
-<div class="alert alert-error" ng-if="rest_error_occured">{{ rest_error }}</div>
+<div class="alert alert-error" ng-if="rest_error_occured" ng-bind-html="rest_error"></div>
 
 <div id="planning-view">
     <div id="backlog" ng-class="{ loading_content: loading_backlog_items }">
