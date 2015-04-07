@@ -22,8 +22,7 @@ require_once 'common/autoload.php';
 
 class TrackerDataBuilder extends TestDataBuilder {
 
-    const XML_PROJECT_ID         = 108;
-    const XML_PROJECT_TRACKER_ID = 25;
+    const XML_PROJECT_ID_SHORT_NAME = 'rest-xml-api';
 
     public function __construct() {
         parent::__construct();
@@ -37,7 +36,7 @@ class TrackerDataBuilder extends TestDataBuilder {
         $this->setGlobalsForProjectCreation();
 
         $xml_test = $this->createProject(
-            'rest-xml-api',
+            self::XML_PROJECT_ID_SHORT_NAME,
             'RESTXMLAPI',
             true,
             array($this->user_manager->getUserByUserName(self::TEST_USER_1_NAME)),
