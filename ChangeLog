@@ -9,11 +9,12 @@ Version 8.1 (not yet released)
 	* request #7978: REST route called in top backlog in planning v2 contians a PHP notice
 	* request #7977: Reflected XSS in project statistics
 	* request #7790: Add missing anti-CSRF token in SSH keys edit form and bookmarks management
+	* request #7797: Fix persistent XSS in autocomplete forms
 
     == Plugins ==
 	* tracker: 5.608
 	* git: 4.26
-	* ldap: 3.73
+	* ldap: 3.74
 	* webdav: 1.9.10
 	* mediawiki: 0.64
 	* agiledashboard: 1.187
