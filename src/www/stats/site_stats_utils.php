@@ -38,14 +38,15 @@ function stats_generate_trove_pulldown( $selected_id = 0 ) {
 
 	$sql = "SELECT trove_cat_id,fullpath FROM trove_cat ORDER BY fullpath";
 	$res = db_query( $sql );
-	
+
+    $purifier = Codendi_HTMLPurifier::instance();
 	print '<SELECT name="trovecatid">' . "\n";
 	print "\t<OPTION value=\"0\"> ".$Language->getText('stats_site_stats_utils','all_proj')." </OPTION>\n";
 	print "\t<OPTION value=\"-1\"" . ( $selected_id == -1 ? " SELECTED" : "" ) . "> ".$Language->getText('stats_site_stats_utils','special_list')." </OPTION>\n";
 	while ( $row = db_fetch_array($res) ) {
-		print	"\t<OPTION value=\"" . $row["trove_cat_id"] . "\""
+		print	"\t<OPTION value=\"" . $purifier->purify($row["trove_cat_id"]) . "\""
 			. ( $selected_id == $row["trove_cat_id"] ? " SELECTED" : "" )
-			. ">" . $row["fullpath"] . "</OPTION>\n";
+			. ">" . $purifier->purify($row["fullpath"]) . "</OPTION>\n";
 	}
 	print '</SELECT>' . "\n";
 }
@@ -91,8 +92,9 @@ function stats_site_projects_form( $span = 21, $orderby = "downloads", $offset =
 	stats_generate_trove_pulldown( $trovecat );
 	print '</td></tr>';
 
+    $purifier = Codendi_HTMLPurifier::instance();
 	print '<tr><td><b>'.$Language->getText('stats_site_stats_utils','special_proj_list').' </b></td>';
-	print '<td> <INPUT type="text" width="100" name="projects" value="' . ($projects ? $projects : "") . '">';
+	print '<td> <INPUT type="text" width="100" name="projects" value="' . ($projects ? $purifier->purify($projects) : "") . '">';
 	print '  '.$Language->getText('stats_site_stats_utils','space_sep_gid').' </td></tr>';
 
 	print '<tr><td><b>'.$Language->getText('stats_site_stats_utils','days_spanned').' </b></td><td>';
@@ -189,19 +191,20 @@ function stats_site_projects( $span = 7, $orderby = "ranking", $offset = 0, $pro
 
 	   // if there are any rows, we have valid data (or close enough).
 	if ( ($valid_days = db_numrows( $res )) > 1 ) {
+        $purifier = Codendi_HTMLPurifier::instance();
 
 		print "<P><B>".$Language->getText('stats_site_stats_utils','proj_stats_for')." ";
 		if ( $span == $Language->getText('stats_site_stats_utils','all')) {
 			print $Language->getText('stats_site_stats_utils','all_time');
 		} else {
-			print $Language->getText('stats_site_stats_utils','past_x_days',$span);
+			print $Language->getText('stats_site_stats_utils','past_x_days', $purifier->purify($span));
 		}
-		print " ".$Language->getText('stats_site_stats_utils','sorted_by',$orderby);
+		print " ".$Language->getText('stats_site_stats_utils','sorted_by', $purifier->purify($orderby));
 		if ( $trove_cat > 0 ) {
-			print " ".$Language->getText('stats_site_stats_utils','within_cat',stats_trove_cat_to_name( $trove_cat ));
+			print " ".$Language->getText('stats_site_stats_utils','within_cat', $purifier->purify(stats_trove_cat_to_name( $trove_cat )));
 		}
 		if ( is_array($projects) && $trove_cat <= 0 ) {
-			print "<br> ".$Language->getText('stats_site_stats_utils','for_group',implode( ", ", $projects ));
+			print "<br> ".$Language->getText('stats_site_stats_utils','for_group', $purifier->purify(implode( ", ", $projects)));
 		}
 		print ". </B></P><BR>";
 
@@ -221,9 +224,9 @@ function stats_site_projects( $span = 7, $orderby = "ranking", $offset = 0, $pro
 			. '</TR>' . "\n";
 
 		   // Build the query string to resort results.
-		$uri_string = "projects.php?span=" . $span;
+		$uri_string = "projects.php?span=" . urlencode($span);
 		if ( $trove_cat > 0 ) {
-			$uri_string .= "&trovecatid=" . $trove_cat;
+			$uri_string .= "&trovecatid=" . urlencode($trove_cat);
 		}
 		if ( $trove_cat == -1 ) { 
 			$uri_string .= "&projects=" . urlencode( implode( " ", $projects) );
@@ -304,7 +307,6 @@ function stats_site_projects( $span = 7, $orderby = "ranking", $offset = 0, $pro
 
 	} else {
 		echo $Language->getText('stats_site_stats_utils','no_valid_data')."\n";
-		echo "<BR><HR><BR>\n $sql \n<BR><HR><BR>\n\n";
 	}
 
 }
@@ -529,5 +531,3 @@ function stats_getactiveusers($since) {
         return "error";
     }  
 }
-
-?>

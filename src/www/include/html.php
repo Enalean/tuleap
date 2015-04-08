@@ -25,10 +25,11 @@ function html_blankimage($height,$width) {
 
 function html_image($src,$args,$display=1) {
 	GLOBAL $img_size;
-	$return = ('<IMG src="'.util_get_dir_image_theme().$src.'"');
+	$return   = ('<IMG src="'.util_get_dir_image_theme().$src.'"');
+    $purifier = Codendi_HTMLPurifier::instance();
 	reset($args);
 	while(list($k,$v) = each($args)) {
-		$return .= ' '.$k.'="'.$v.'"';
+		$return .= ' '.$purifier->purify($k).'="'.$purifier->purify($v).'"';
 	}
 
 	// ## insert a border tag if there isn't one
@@ -51,7 +52,7 @@ function html_image($src,$args,$display=1) {
 	}
 
 	// ## insert alt tag if there isn't one
-	if (!isset($args['alt']) || !$args['alt']) $return .= " alt=\"$src\"";
+	if (!isset($args['alt']) || !$args['alt']) $return .= ' alt="'.$purifier->purify($src).'"';
 
 	$return .= ('>');
 	if ($display) {
@@ -74,8 +75,8 @@ function html_get_timezone_popup($selected = 0) {
  * @param		string	Which element of the box is to be selected
  */
 function html_get_language_popup ($Language,$title='language_id',$selected='xzxzxz') {
-    $hp = Codendi_HTMLPurifier::instance();
-    $html = '<select name="'. $title .'">';
+    $hp   = Codendi_HTMLPurifier::instance();
+    $html = '<select name="'. $hp->purify($title) .'">';
     foreach($GLOBALS['Language']->getLanguages() as $code => $lang) {
         $select = ($selected == $code) ? 'selected="selected"' : '';
         $html .= '<option value="'.  $hp->purify($code, CODENDI_PURIFIER_CONVERT_HTML)  .'" '. $select .'>';
@@ -95,13 +96,13 @@ function html_build_list_table_top ($title_arr,$links_arr=false,$mass_change=fal
 
 		Optionally takes a second array of links for the titles
 	*/
-	GLOBAL $HTML;
-	$return = '
+    $purifier = Codendi_HTMLPurifier::instance();
+	$return   = '
        <TABLE ';
         if ($full_width) $return.='WIDTH="100%" ';
-        if($id) $return .='id="'.$id.'"';
-        if($class) $return .=' class="'.$class.'" ';
-	$return .= 'BORDER="0" CELLSPACING="'. $cellspacing .'" CELLPADDING="'. $cellpadding .'">
+        if($id) $return .='id="'.$purifier->purify($id).'"';
+        if($class) $return .=' class="'.$purifier->purify($class).'" ';
+	$return .= 'BORDER="0" CELLSPACING="'. $purifier->purify($cellspacing) .'" CELLPADDING="'. $purifier->purify($cellpadding) .'">
 		<TR class="boxtable">';
 
 	if ($mass_change) $return .= '<TD class="boxtitle">Select?</TD>';
@@ -109,12 +110,12 @@ function html_build_list_table_top ($title_arr,$links_arr=false,$mass_change=fal
 	if ($links_arr) {
 		for ($i=0; $i<$count; $i++) {
 			$return .= '
-			<TD class="boxtitle"><a class=sortbutton href="'.$links_arr[$i].'">'.$title_arr[$i].'</A></TD>';
+			<TD class="boxtitle"><a class=sortbutton href="'.urlencode($links_arr[$i]).'">'.$purifier->purify($title_arr[$i]).'</A></TD>';
 		}
 	} else {
 		for ($i=0; $i<$count; $i++) {
 			$return .= '
-			<TD class="boxtitle">'.$title_arr[$i].'</TD>';
+			<TD class="boxtitle">'.$purifier->purify($title_arr[$i]).'</TD>';
 		}
 	}
 	return $return.'</TR>';
@@ -145,22 +146,23 @@ function html_build_select_box_from_array ($vals,$select_name,$checked_val='xzxz
 		The third parameter is optional. Pass the value of the item that should be checked
 	*/
 
-	$return = '
-		<SELECT NAME="'.$select_name.'" id="'.$select_name.'">';
+    $purifier = Codendi_HTMLPurifier::instance();
+	$return   = '
+		<SELECT NAME="'. $purifier->purify($select_name) .'" id="'. $purifier->purify($select_name) .'">';
 
         foreach ($vals as $value => $label) {
 		if ( $samevals ) {
-			$return .= "\n\t\t<OPTION VALUE=\"" . $label . "\"";
+			$return .= '<OPTION VALUE="' . $purifier->purify($label) . '""';
 			if ($label == $checked_val) {
 				$return .= ' SELECTED';
 			}
 		} else {
-			$return .= "\n\t\t<OPTION VALUE=\"" . $value .'"';
+			$return .= '<OPTION VALUE="' . $purifier->purify($value) .'"';
 			if ($value == $checked_val) {
 				$return .= ' SELECTED';
 			}
 		}
-		$return .= '>'.$label.'</OPTION>';
+		$return .= '>'. $purifier->purify($label) .'</OPTION>';
 	}
 	$return .= '
 		</SELECT>';
@@ -183,9 +185,9 @@ function html_build_select_box_from_arrays (
     $show_unknown_value = true
 ) {
     global $Language;
-        $return = '';
+        $return           = '';
         $isAValueSelected = false;
-        $hp =& Codendi_HTMLPurifier::instance();
+        $hp               = Codendi_HTMLPurifier::instance();
         
 	/*
 
@@ -224,17 +226,17 @@ function html_build_select_box_from_arrays (
 
 	if ( is_array($checked_val) ) {
 		$return .= '
-			<SELECT id="'.$select_name.'" NAME="'.$select_name.'[]" MULTIPLE SIZE="6">';
+			<SELECT id="'.$hp->purify($select_name).'" NAME="'.$hp->purify($select_name).'[]" MULTIPLE SIZE="6">';
 	} else {
 		$return .= '
-			<SELECT id="'.$select_name.'" NAME="'.$select_name.'">';
+			<SELECT id="'.$hp->purify($select_name).'" NAME="'.$hp->purify($select_name).'">';
 	}
 
 	/*
 		Put in the Unchanged box
 	*/
 	if ($show_unchanged) {
-	  $return .= "\n".'<OPTION VALUE="'.$text_unchanged.'" SELECTED>'.$hp->purify($text_unchanged, $purify_level).'</OPTION>';
+	  $return .= '<OPTION VALUE="'.$hp->purify($text_unchanged).'" SELECTED>'.$hp->purify($text_unchanged, $purify_level).'</OPTION>';
       $isAValueSelected = true;
 	}
 
@@ -253,7 +255,7 @@ function html_build_select_box_from_arrays (
                 $isAValueSelected = true;
             }
 	    }
-	    $return .= "\n<OPTION VALUE=\"0\" $selected>".$hp->purify($text_any, $purify_level)."</OPTION>";
+	    $return .= '<OPTION VALUE="0" '.$selected.'>'.$hp->purify($text_any, $purify_level).'</OPTION>';
 	}
 
 	//we don't always want the default 100 row shown
@@ -271,7 +273,7 @@ function html_build_select_box_from_arrays (
                     $isAValueSelected = true;
                 }
             }
-	    $return .= "\n<OPTION VALUE=\"100\" $selected>".$hp->purify($text_100,$purify_level)."</OPTION>";
+	    $return .= '<OPTION VALUE="100" '.$selected.'>'.$hp->purify($text_100,$purify_level).'</OPTION>';
 	}
 
 	$rows=count($vals);
@@ -286,7 +288,7 @@ function html_build_select_box_from_arrays (
 		 ($vals[$i] == '100' && !$show_100) ||
 		 ($vals[$i] == '0' && !$show_any) ) {
 			$return .= '
-				<OPTION VALUE="'.$vals[$i].'"';
+				<OPTION VALUE="'.$hp->purify($vals[$i]).'"';
 			if ( is_array($checked_val) ) {
 				if ( in_array($vals[$i],$checked_val) ) {
 					$return .= ' SELECTED';
@@ -302,7 +304,7 @@ function html_build_select_box_from_arrays (
 		}
 	}
     if ($show_unknown_value && ($checked_val && $checked_val != 'xzxz' && ! $isAValueSelected)) {
-        $return .= '<OPTION VALUE="'.$checked_val.'" SELECTED>'.$hp->purify($Language->getText('include_html','unknown_value'),$purify_level).'</OPTION>';
+        $return .= '<OPTION VALUE="'.$hp->purify($checked_val).'" SELECTED>'.$hp->purify($Language->getText('include_html','unknown_value'),$purify_level).'</OPTION>';
     }
     $return .= '
 		</SELECT>';
@@ -385,7 +387,7 @@ function html_build_multiple_select_box_from_array($array,$name,$checked_array,$
 		Ninth param determine whether to show numeric values next to
 		the menu label (default true for backward compatibility
 	*/
-        $hp =& Codendi_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         
         // Position default values for special menu items
         if ($text_100 == '') { $text_100 = $Language->getText('global','none'); }
@@ -397,13 +399,13 @@ function html_build_multiple_select_box_from_array($array,$name,$checked_array,$
 //      echo '-- '.$checked_count.' --';
     $id = str_replace('[]', '', $name);
 	$return = '
-		<SELECT NAME="'.$name.'" id="'.$id.'" MULTIPLE SIZE="'.$size.'" '. $disabled .'>';
+		<SELECT NAME="'.$hp->purify($name).'" id="'.$hp->purify($id).'" MULTIPLE SIZE="'.$hp->purify($size).'" '. $disabled .'>';
 
 	/*
 		Put in the Unchanged box
 	*/
 	if ($show_unchanged)
-	  $return .= "\n".'<OPTION VALUE="'.$text_unchanged.'" SELECTED>'.$hp->purify($text_unchanged,$purify_level).'</OPTION>';
+	  $return .= "\n".'<OPTION VALUE="'.$hp->purify($text_unchanged).'" SELECTED>'.$hp->purify($text_unchanged,$purify_level).'</OPTION>';
 
 	/*
 		Put in the Any box
@@ -437,7 +439,7 @@ function html_build_multiple_select_box_from_array($array,$name,$checked_array,$
         $val = $row['value'];
         if ($val != '100') {
 			$return .= '
-				<OPTION VALUE="'.$val.'"';
+				<OPTION VALUE="'.$hp->purify($val).'"';
 			/*
 				Determine if it's checked
 			*/
@@ -460,8 +462,9 @@ function html_buildpriority_select_box ($name='priority', $checked_val='5') {
 		The name of this select box is optional and so is the default checked value
 	*/
   global $Language;
+  $purifier = Codendi_HTMLPurifier::instance();
 	?>
-	<SELECT NAME="<?php echo $name; ?>">
+	<SELECT NAME="<?php echo $purifier->purify($name); ?>">
     <OPTION VALUE="1"<?php if ($checked_val=="1") {echo " SELECTED";} ?>>1 - <?php echo $Language->getText('include_html','lowest'); ?></OPTION>
 	<OPTION VALUE="2"<?php if ($checked_val=="2") {echo " SELECTED";} ?>>2</OPTION>
 	<OPTION VALUE="3"<?php if ($checked_val=="3") {echo " SELECTED";} ?>>3</OPTION>
@@ -477,18 +480,19 @@ function html_buildpriority_select_box ($name='priority', $checked_val='5') {
 }
 
 function html_buildcheckboxarray($options,$name,$checked_array) {
-	$option_count=count($options);
-	$checked_count=count($checked_array);
+	$option_count  = count($options);
+	$checked_count = count($checked_array);
+    $purifier      = Codendi_HTMLPurifier::instance();
 
 	for ($i=1; $i<=$option_count; $i++) {
 		echo '
-			<BR><INPUT type="checkbox" name="'.$name.'" value="'.$i.'"';
+			<BR><INPUT type="checkbox" name="'.$purifier->purify($name).'" value="'.$i.'"';
 		for ($j=0; $j<$checked_count; $j++) {
 			if ($i == $checked_array[$j]) {
 				echo ' CHECKED';
 			}
 		}
-		echo '> '.$options[$i];
+		echo '> '.$purifier->purify($options[$i]);
 	}
 }
 
@@ -600,12 +604,14 @@ function html_display_boolean($value,$true_value='Yes',$false_value='No') {
 }
 
 function html_trash_image($alt) {
+    $purifier = Codendi_HTMLPurifier::instance();
     return '<img src="'.util_get_image_theme("ic/trash.png").'" '.
-        'height="16" width="16" border="0" alt="'.$alt.'" title="'.$alt.'">';
+        'height="16" width="16" border="0" alt="'.$purifier->purify($alt).'" title="'.$purifier->purify($alt).'">';
 }
 
 function html_trash_link($link, $warn, $alt) {
-    return '<a href="'.$link.'" onClick="return confirm(\''.str_replace("'", "\'", $warn).'\')">'.html_trash_image($alt).'</a>';
+    $purifier = Codendi_HTMLPurifier::instance();
+    return '<a href="'.$link.'" onClick="return confirm(\''.$purifier->purify($warn, CODENDI_PURIFIER_JS_QUOTE).'\')">'.html_trash_image($alt).'</a>';
 }
 
 /**
