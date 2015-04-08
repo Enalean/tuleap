@@ -28,7 +28,7 @@ my_index	survey_done	Vous avez déjà répondu aux sondages
 my_index	my_bookmarks	Mes favoris
 my_index	no_bookmark	Vous n'avez pas encore de favori enregistré
 my_index	edit_link	Editer
-my_index	del_bookmark	Détruire ce favori ?
+my_index	del_bookmark	Confirmez vous que vous voulez détruire ce favori ?
 my_index	add_bookmark	Ajouter un favori
 my_index	my_projects	Mes projets
 my_index	not_member	Vous n'êtes membre d'aucun projet.

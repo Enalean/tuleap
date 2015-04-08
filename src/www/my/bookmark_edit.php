@@ -1,6 +1,7 @@
 <?php
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
+// Copyright (c) Enalean, 2015. All rights reserved
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
@@ -9,7 +10,7 @@ require_once('pre.php');
 require_once('bookmarks.php');
 require_once('my_utils.php');
 
-$request =& HTTPRequest::instance();
+$request = HTTPRequest::instance();
 
 $vId = new Valid_UInt('bookmark_id');
 $vId->setErrorMessage('bookmark_id is required');
@@ -27,20 +28,24 @@ $vTitle = new Valid_String('bookmark_title');
 $vTitle->setErrorMessage('Title is required');
 $vTitle->required();
 
+$bookmark_url_id = '/my/bookmark_edit.php?bookmark_id='.$bookmark_id;
+$csrf_token      = new CSRFSynchronizerToken($bookmark_url_id);
+
 if ($request->isPost() &&
     $request->valid($vUrl) &&
     $request->valid($vTitle)) {
+    $csrf_token->check();
 
     $bookmark_url   = $request->get('bookmark_url');
     $bookmark_title = $request->get('bookmark_title');
 
-    my_check_bookmark_URL($bookmark_url, '/my/bookmark_edit.php?bookmark_id='.$bookmark_id);
+    my_check_bookmark_URL($bookmark_url, $bookmark_url_id);
 
     bookmark_edit($bookmark_id, $bookmark_url, $bookmark_title);
     $GLOBALS['Response']->redirect('/my');
 }
 
-$purifier =& Codendi_HTMLPurifier::instance();
+$purifier = Codendi_HTMLPurifier::instance();
 
 $HTML->header(array("title"=>$Language->getText('bookmark_edit', 'title')));
 
@@ -60,7 +65,7 @@ if ($result) {
 <?php echo $Language->getText('bookmark_add', 'bkm_title'); ?>:<br>
 <input type="text" name="bookmark_title" size="60" value="<?php echo $purifier->purify($bookmark_title); ?>">
 <p>
-
+<?php echo $csrf_token->fetchHTMLInput(); ?>
 <input type="submit" value="<?php echo $Language->getText('global', 'btn_submit'); ?>">
 </form>
 <?php
@@ -68,5 +73,3 @@ if ($result) {
 print "<P><A HREF=\"/my/\">[".$Language->getText('global', 'back_home')."]</A>";
 
 $HTML->footer(array());
-
-?>

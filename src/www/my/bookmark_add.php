@@ -1,6 +1,7 @@
 <?php
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
+// Copyright (c) Enalean, 2015. All rights reserved
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
@@ -14,7 +15,12 @@ $vUrl = new Valid_String('bookmark_url');
 $vUrl->required();
 $vTitle = new Valid_String('bookmark_title');
 $vTitle->required();
-if ($request->valid($vUrl) && $request->valid($vTitle)) {
+
+$csrf_token = new CSRFSynchronizerToken('/my/bookmark_add.php');
+
+if ($request->isPost() && $request->valid($vUrl) && $request->valid($vTitle)) {
+    $csrf_token->check();
+
     $purifier = Codendi_HTMLPurifier::instance();
 
     $bookmark_url = $request->get('bookmark_url');
@@ -33,18 +39,27 @@ if ($request->valid($vUrl) && $request->valid($vTitle)) {
 } else {
     $HTML->header(array("title" => $Language->getText('bookmark_add', 'title')));
     print "<H3>" . $Language->getText('bookmark_add', 'title') . "</H3>";
+
+    $bookmark_url = 'http://';
+    if ($request->valid($vUrl)) {
+        $bookmark_url = $request->get('bookmark_url');
+    }
+    $bookmark_title = $Language->getText('bookmark_add', 'favorite');
+    if ($request->valid($vTitle)) {
+        $bookmark_title = $request->get('bookmark_title');
+    }
     ?>
     <FORM METHOD=POST>
         <?php echo $Language->getText('bookmark_add', 'bkm_url'); ?>:<br>
-        <input type="text" size="60" name="bookmark_url" value="http://">
+        <input type="text" size="60" name="bookmark_url" value="<?php echo $bookmark_url; ?>">
         <p>
             <?php echo $Language->getText('bookmark_add', 'bkm_title'); ?>:<br>
-            <input type="text" size="60" name="bookmark_title" value="<?php echo $Language->getText('bookmark_add', 'favorite'); ?>">
+            <input type="text" size="60" name="bookmark_title" value="<?php echo $bookmark_title; ?>">
         <p>
+            <?php echo $csrf_token->fetchHTMLInput();?>
             <input type="submit" value="<?php echo $Language->getText('global', 'btn_submit'); ?>">
     </form>
     <?php
 }
 
 $HTML->footer(array());
-?>

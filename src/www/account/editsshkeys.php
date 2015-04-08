@@ -1,6 +1,7 @@
 <?php
 //
 // SourceForge: Breaking Down the Barriers to Open Source Development
+// Copyright (c) Enalean, 2015. All rights reserved
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
@@ -13,6 +14,9 @@ session_require(array('isloggedin' => 1));
 
 $user_manager = UserManager::instance();
 $user         = $user_manager->getCurrentUser();
+
+$csrf = new CSRFSynchronizerToken('/account/index.php');
+$csrf->check();
 
 $request = HTTPRequest::instance();
 
