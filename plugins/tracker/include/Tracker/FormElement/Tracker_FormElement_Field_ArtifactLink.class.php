@@ -379,7 +379,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 if ($possible_parent->getId() == $prefill_parent) {
                     $selected = ' selected="selected"';
                 }
-                $html .= '<option value="'. $possible_parent->getId() .'"'.$selected.'>'. $purifier->purify($possible_parent->getXRefAndTitle()) .'</option>';
+                $html .= '<option value="'. $possible_parent->getId() .'"'.$selected.'>'. $possible_parent->getXRefAndTitle() .'</option>';
             }
             $html .= '</optgroup>';
         }
