@@ -31,6 +31,9 @@ Version 8.1 (not yet released)
     == Api ==
 	* REST API: 1.8
 
+    == Development ==
+	* Story #7886: Fix error with Config in Users (avatar)
+
 Version 8.0 (Thursday, April 2nd 2015)
 
 	== Enhancement ==
