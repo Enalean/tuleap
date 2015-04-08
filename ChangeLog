@@ -4,6 +4,8 @@ Version 8.1 (not yet released)
 	* story #7813: Refactoring- Introduce ConfigValueFileProvider
 	* request #7938: Allow proper reverse proxy of Tuleap (Allow to query REST API in HTTP without SSL)
 
+	== Bug Fix ==
+	* request #7974: Prevent SQL injections at the project creation
 
     == Plugins ==
 	* tracker: 5.608
