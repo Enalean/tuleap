@@ -1,3 +1,6 @@
+Version 5.607 - Tuleap 8.1
+    * request #7973 Tracker XML export does not export field permissions
+
 Version 5.606 - Tuleap 8.1
     * Properly display parent in the ArtifactLink field (follow-up to request #7945)
 
