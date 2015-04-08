@@ -53,10 +53,10 @@ function logs_display($sql, $span, $field, $title='') {
     // Executions will continue until morale improves.
     $res = db_query( $sql );
 
-    print '<p><u><b>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','access_for_past_x_days',array($title,$span));
+    print '<p><u><b>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','access_for_past_x_days',array($hp->purify($title) , $hp->purify($span)));
     if ( ($nb_downloads = db_numrows( $res )) >= 1 ) {
         $row = db_fetch_array($res);
-        print ' - '.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','in_total',$nb_downloads).'</u></b>';
+        print ' - '.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','in_total', $hp->purify($nb_downloads)).'</u></b>';
 
         print '<table width="100%" cellpadding="2" cellspacing="0" border="0">'."\n"
             . '<tr valign="top">'."\n"
@@ -67,7 +67,7 @@ function logs_display($sql, $span, $field, $title='') {
         }
         print ' <th>'.$GLOBALS['Language']->getText('project_export_utils','user').'</th>'."\n"
             . ' <th>'.$GLOBALS['Language']->getText('project_export_artifact_history_export','email').'</th>'."\n"
-            . ' <th>'.$field.'</th>'."\n"
+            . ' <th>'.$hp->purify($field).'</th>'."\n"
             . ' <th align="right">'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','time').'</th>'."\n"
             . '</tr>'."\n";
         $i = 0;
@@ -75,11 +75,11 @@ function logs_display($sql, $span, $field, $title='') {
             print '<tr class="'. util_get_alt_row_color($i++). '">'
             .' <td>'.strftime("%e %b %Y", $row['time'] ).'</td>';
             if (isset($row['type'])){
-                print' <td>'.$row['type'].'</td>';
+                print' <td>'.$hp->purify($row['type']).'</td>';
             }
 
-            print ' <td> <a href="/users/'.$row["user_name"].'/">'.$row["user_name"].'</a> ('. $hp->purify($row["realname"], CODENDI_PURIFIER_CONVERT_HTML) .')</td>'
-                .' <td>'.$row["email"].'</td>';
+            print ' <td> <a href="/users/'.$hp->purify($row["user_name"]).'/">'.$hp->purify($row["user_name"]).'</a> ('. $hp->purify($row["realname"]) .')</td>'
+                .' <td>'.$hp->purify($row["email"]).'</td>';
             print ' <td>';
             print $hp->purify($row["title"], CODENDI_PURIFIER_CONVERT_HTML) .'</td>'
                 .' <td align="right">'.strftime("%H:%M", $row["time"]).'</td>'
@@ -250,7 +250,7 @@ function cvsaccess_logs_daily($project, $span = 7, $who="allusers") {
 	// Executions will continue until morale improves.
 	$res = db_query( $sql );
 
-	print '<P><B><U>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','access_for_past_x_days',array($GLOBALS['Language']->getText('project_stats_source_code_access_utils','cvs_co_upd'),$span)).'</U></B></P>';
+	print '<P><B><U>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','access_for_past_x_days',array($GLOBALS['Language']->getText('project_stats_source_code_access_utils','cvs_co_upd'), $hp->purify($span))).'</U></B></P>';
 
 	// if there are any days, we have valid data.
 	if ( ($nb_downloads = db_numrows( $res )) >= 1 ) {
@@ -268,10 +268,10 @@ function cvsaccess_logs_daily($project, $span = 7, $who="allusers") {
 			$i++;
 			print	'<TR class="' . util_get_alt_row_color($i) . '">'
 				. '<TD>' . substr($row["day"],6,2) .' '. $month_name[substr($row["day"],4,2) - 1] .' '. substr($row["day"],0,4) .'</TD>'
-			    . '<TD> <a href="/users/'.$row["user_name"].'/">' . $row["user_name"] .'</a> ('. $hp->purify($row["realname"], CODENDI_PURIFIER_CONVERT_HTML) .')</TD>'
-				. '<TD>' . $row["email"] . '</TD>'
-				. '<TD>' . $row["cvs_checkouts"] . '</TD>'
-				. '<TD>' . $row["cvs_browse"] . '</TD>'
+			    . '<TD> <a href="/users/'.$hp->purify($row["user_name"]).'/">' . $hp->purify($row["user_name"]) .'</a> ('. $hp->purify($row["realname"]) .')</TD>'
+				. '<TD>' . $hp->purify($row["email"]) . '</TD>'
+				. '<TD>' . $hp->purify($row["cvs_checkouts"]) . '</TD>'
+				. '<TD>' . $hp->purify($row["cvs_browse"]) . '</TD>'
 				. '</TR>' . "\n";
 		}
 
@@ -344,7 +344,7 @@ function svnaccess_logs_daily($project, $span = 7, $who="allusers") {
 	// Executions will continue until morale improves.
 	$res = db_query( $sql );
 
-	print '<P><B><U>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','access_for_past_x_days',array($GLOBALS['Language']->getText('project_stats_source_code_access_utils','svn_access'),$span)).'</U></B></P>';
+	print '<P><B><U>'.$GLOBALS['Language']->getText('project_stats_source_code_access_utils','access_for_past_x_days',array($GLOBALS['Language']->getText('project_stats_source_code_access_utils','svn_access'), $hp->purify($span))).'</U></B></P>';
 
 	// if there are any days, we have valid data.
 	if ( ($nb_downloads = db_numrows( $res )) >= 1 ) {
@@ -362,10 +362,10 @@ function svnaccess_logs_daily($project, $span = 7, $who="allusers") {
 			$i++;
 			print	'<TR class="' . util_get_alt_row_color($i) . '">'
 				. '<TD>' . substr($row["day"],6,2) .' '. $month_name[substr($row["day"],4,2) - 1] .' '. substr($row["day"],0,4) .'</TD>'
-			    . '<TD> <a href="/users/'.$row["user_name"].'/">' . $row["user_name"] .'</a> ('. $hp->purify($row["realname"], CODENDI_PURIFIER_CONVERT_HTML) .')</TD>'
-				. '<TD>' . $row["email"] . '</TD>'
-				. '<TD>' . $row["svn_access_count"] . '</TD>'
-				. '<TD>' . $row["svn_browse"] . '</TD>'
+			    . '<TD> <a href="/users/'.$hp->purify($row["user_name"]).'/">' . $hp->purify($row["user_name"]) .'</a> ('. $hp->purify($row["realname"]) .')</TD>'
+				. '<TD>' . $hp->purify($row["email"]) . '</TD>'
+				. '<TD>' . $hp->purify($row["svn_access_count"]) . '</TD>'
+				. '<TD>' . $hp->purify($row["svn_browse"]) . '</TD>'
 				. '</TR>' . "\n";
 		}
 
@@ -492,6 +492,3 @@ function plugins_logs_daily($project, $span = 7, $who = 'allusers') {
         logs_display($log['sql'], $span, $log['field'], $log['title']);
     }
 }
-
-
-?>
