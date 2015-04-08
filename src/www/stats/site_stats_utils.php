@@ -55,7 +55,7 @@ function stats_generate_trove_pulldown( $selected_id = 0 ) {
 function stats_trove_cat_to_name( $trovecatid ) {
   global $Language;
 
-	$sql = "SELECT fullpath FROM trove_cat WHERE trove_cat_id = $trovecatid";
+	$sql = "SELECT fullpath FROM trove_cat WHERE trove_cat_id = " . db_ei($trovecatid);
 	$res = db_query( $sql );
 	if ( $row = db_fetch_array($res) ) {
 		return $row["fullpath"];
@@ -69,7 +69,7 @@ function stats_generate_trove_grouplist( $trovecatid ) {
 	
 	$results = array();
 
-	$sql = "SELECT * FROM trove_group_link WHERE trove_cat_id = $trovecatid";
+	$sql = "SELECT * FROM trove_group_link WHERE trove_cat_id = " . db_ei($trovecatid);
 	$res = db_query( $sql );
 	print db_error( $res );
 
@@ -81,6 +81,25 @@ function stats_generate_trove_grouplist( $trovecatid ) {
 	return $results;
 }
 
+function stats_site_projects_orderby_values() {
+    return array("ranking",
+        "downloads",
+        "site_views",
+        "subdomain_views",
+        "msg_posted",
+        "bugs_opened",
+        "bugs_closed",
+        "support_opened",
+        "support_closed",
+        "patches_opened",
+        "patches_closed",
+        "tasks_opened",
+        "tasks_closed",
+        "cvs_checkouts",
+        "cvs_commits",
+        "cvs_adds",
+        "svn_access_count");
+}
 
 function stats_site_projects_form( $span = 21, $orderby = "downloads", $offset = 0, $projects = 0, $trovecat = 0 ) {
   global $Language;
@@ -103,23 +122,7 @@ function stats_site_projects_form( $span = 21, $orderby = "downloads", $offset =
 	print ' days </td></tr>';
 
 	print '<tr><td><b>'.$Language->getText('stats_site_stats_utils','view_by').' </b></td><td>';
-	$orderby_vals = array(	"ranking",
-				"downloads",
-				"site_views",
-				"subdomain_views",
-				"msg_posted",
-				"bugs_opened",
-				"bugs_closed",
-				"support_opened",
-				"support_closed",
-				"patches_opened",
-				"patches_closed",
-				"tasks_opened",
-				"tasks_closed",
-				"cvs_checkouts",
-				"cvs_commits",
-				"cvs_adds",
-				"svn_access_count");
+	$orderby_vals = stats_site_projects_orderby_values();
 	print html_build_select_box_from_array( $orderby_vals, "orderby", $orderby, 1 );
 	print '</td></tr>';
 
@@ -164,6 +167,9 @@ function stats_site_projects( $span = 7, $orderby = "ranking", $offset = 0, $pro
 	$sql .= "AND ( s.group_id = m.group_id ) ";
 
 	if ( is_array( $projects ) ) {
+        array_walk($projects, function(&$project_id) {
+            $project_id = db_ei($project_id);
+        });
 		$sql .= "AND ( s.group_id IN (" . implode(",", $projects ) . ") ) ";
 	} else {
 	  $sql .= "AND g.type = 1 ";
@@ -172,6 +178,10 @@ function stats_site_projects( $span = 7, $orderby = "ranking", $offset = 0, $pro
 	$sql .= " ) ";
 	$sql .= "GROUP BY s.group_id ";
 
+    $valid_orderby_value = new Rule_WhiteList(stats_site_projects_orderby_values());
+    if (!$valid_orderby_value->isValid($orderby)) {
+        $orderby = 'ranking';
+    }
 	if ( $orderby == "ranking" ) {
 		$sql .= "ORDER BY $orderby ASC ";
 	} else {
@@ -179,12 +189,10 @@ function stats_site_projects( $span = 7, $orderby = "ranking", $offset = 0, $pro
 	}
 
 	if ( $offset > 0 ) {
-		$sql .= "LIMIT $offset,50";
+		$sql .= "LIMIT ". db_ei($offset) .",50";
 	} else {
 		$sql .= "LIMIT 50";
 	}
-
-	//print "\n\n<BR><HR><BR> $sql <BR><HR><BR>\n\n";
 
 	   // Executions will continue until morale improves.
 	$res = db_query( $sql );
