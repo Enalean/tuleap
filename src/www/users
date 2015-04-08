@@ -4,9 +4,9 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
-// 
+//
 
-require_once('pre.php');    
+require_once('pre.php');
 
 $expl_pathinfo = explode('/', $request->getFromServer('REQUEST_URI'));
 
@@ -29,10 +29,10 @@ if (!$user) {
         // default HTML view
 
         $user_id = $user->getId();
-        
+
         if (isset($expl_pathinfo[3]) && $expl_pathinfo[3] === 'avatar.png') {
             if ($user->hasAvatar()) {
-                $avatar_path = Config::get('sys_avatar_path', Config::get('sys_data_dir') .'/user/avatar/');
+                $avatar_path = ForgeConfig::get('sys_avatar_path', ForgeConfig::get('sys_data_dir') .'/user/avatar/');
                 $path = $avatar_path .DIRECTORY_SEPARATOR.
                         substr($user_id, -2, 1) . DIRECTORY_SEPARATOR . substr($user_id, -1, 1) .
                         DIRECTORY_SEPARATOR . $user_id . DIRECTORY_SEPARATOR . 'avatar';
@@ -55,7 +55,7 @@ if (!$user) {
 //
 // Following function was imported from FusionForge (almost) "as is"
 // Code should be kept as close as possible (ideally shared).
-// 
+//
 
 function negociate_content_user_home(PFO_User $user, $default_content_type) {
     $script='user_home';
