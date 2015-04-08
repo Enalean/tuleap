@@ -1,3 +1,6 @@
+Version 1.186 - Tuleap 8.1
+    * request #7925: Milestone should be collapsed by default in planning v2
+
 Version 1.185 - Tuleap 8.1
     * story #7886 - rename Config to ForgeConfig for Mediawiki 1.23
 
