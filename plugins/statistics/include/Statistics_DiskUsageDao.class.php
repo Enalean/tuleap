@@ -45,6 +45,36 @@ class Statistics_DiskUsageDao extends DataAccessObject {
         return $statement;
     }
 
+    public function searchOldestDate($table) {
+        $sql = "SELECT min(date) as date FROM $table";
+
+        $dar = $this->retrieve($sql);
+
+        if ($dar && !$dar->isError()) {
+            $row = $dar->getRow();
+            return $row['date'];
+        }
+
+        return false;
+    }
+
+    public function findFirstDateGreaterEqualThan($date, $table) {
+        $date = $this->da->quoteSmart($date);
+        $sql  = "SELECT date
+                 FROM $table
+                 WHERE date >= $date
+                 ORDER BY date ASC LIMIT 1";
+
+        $dar = $this->retrieve($sql);
+
+        if ($dar && !$dar->isError()) {
+            $row = $dar->getRow();
+            return $row['date'];
+        }
+
+        return false;
+    }
+
     public function findFirstDateGreaterThan($date, $table, $field='date') {
         $sql = 'SELECT date'.
                ' FROM '.$table.
@@ -425,6 +455,30 @@ class Statistics_DiskUsageDao extends DataAccessObject {
         
         return $this->retrieve($sql);
     
+    }
+
+    public function purgeDataOlderThan($dates_to_keep, $threshold_date, $table) {
+        $dates_to_keep  = $this->da->quoteSmartImplode(',', $dates_to_keep);
+        $threshold_date = $this->da->quoteSmart($threshold_date);
+
+        $sql = "DELETE FROM $table
+                WHERE date NOT IN ($dates_to_keep)
+                AND date < $threshold_date";
+
+        return $this->update($sql);
+    }
+
+    public function purgeDataBetweenTwoDates($dates_to_keep, $threshold_date_min, $threshold_date_max, $table) {
+        $dates_to_keep      = $this->da->quoteSmartImplode(',', $dates_to_keep);
+        $threshold_date_min = $this->da->quoteSmart($threshold_date_min);
+        $threshold_date_max = $this->da->quoteSmart($threshold_date_max);
+
+        $sql = "DELETE FROM $table
+                WHERE date NOT IN ($dates_to_keep)
+                AND date > $threshold_date_min
+                AND date < $threshold_date_max";
+
+        return $this->update($sql);
     }
 }
 
