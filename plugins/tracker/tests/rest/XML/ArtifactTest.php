@@ -31,11 +31,51 @@ require_once dirname(__FILE__).'/../bootstrap.php';
  */
 class ArtifactTest extends RestBase {
 
+    protected $project_id;
+    protected $tracker_id;
+    protected $slogan_field_id;
+    protected $desc_field_id;
+    protected $status_field_id;
+    protected $status_value_id;
+
     protected function getResponse($request) {
         return $this->getResponseByToken(
             $this->getTokenForUserName(TestDataBuilder::TEST_USER_1_NAME),
             $request
         );
+    }
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->project_id = $this->getProjectId();
+        $tracker          = $this->getTracker();
+        $this->tracker_id = $tracker['id'];
+
+        foreach ($tracker['fields'] as $field) {
+            if ($field['name'] === 'slogan') {
+                $this->slogan_field_id = $field['field_id'];
+            } elseif ($field['name'] === 'epic_desc') {
+                $this->desc_field_id = $field['field_id'];
+            } elseif ($field['name'] === 'status') {
+                $this->status_field_id = $field['field_id'];
+                $this->status_value_id = $field['values'][0]['id'];
+            }
+        }
+    }
+
+    private function getProjectId() {
+        $response = $this->getResponse($this->client->get('projects/'))->json();
+        foreach($response as $project_json) {
+            if ($project_json['shortname'] === TrackerDataBuilder::XML_PROJECT_ID_SHORT_NAME) {
+                return $project_json['id'];
+            }
+        }
+    }
+
+    private function getTracker() {
+        $response = $this->getResponse($this->client->get('projects/'. $this->project_id . '/trackers'))->json();
+        return $response[0];
     }
 
     public function testGetArtifact() {
@@ -78,7 +118,7 @@ class ArtifactTest extends RestBase {
     }
 
     public function testPOSTArtifactInXMLTracker() {
-        $xml = "<request><tracker><id>".TrackerDataBuilder::XML_PROJECT_TRACKER_ID."</id></tracker><values><item><field_id>819</field_id><value>slogan</value></item><item><field_id>839</field_id><value>desc</value></item><item><field_id>820</field_id><bind_value_ids><item>810</item></bind_value_ids></item></values></request>";
+        $xml = "<request><tracker><id>".$this->tracker_id."</id></tracker><values><item><field_id>".$this->slogan_field_id."</field_id><value>slogan</value></item><item><field_id>".$this->desc_field_id."</field_id><value>desc</value></item><item><field_id>".$this->status_field_id."</field_id><bind_value_ids><item>".$this->status_value_id."</item></bind_value_ids></item></values></request>";
 
         $response = $this->getResponse($this->xml_client->post('artifacts', null, $xml));
 
@@ -101,7 +141,7 @@ class ArtifactTest extends RestBase {
         $artifact_xml = $response->xml();
 
         $this->assertEquals((int) $artifact_xml->id, $artifact_id);
-        $this->assertEquals((int) $artifact_xml->project->id, TrackerDataBuilder::XML_PROJECT_ID);
+        $this->assertEquals((int) $artifact_xml->project->id, $this->project_id);
     }
 
 }
