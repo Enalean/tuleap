@@ -58,7 +58,7 @@ class MediawikiAdminPresenter {
     }
 
     public function help_intro() {
-        return $GLOBALS['Language']->getText('plugin_mediawiki', 'group_mapping_help_intro', Config::get('sys_name'));
+        return $GLOBALS['Language']->getText('plugin_mediawiki', 'group_mapping_help_intro', ForgeConfig::get('sys_name'));
     }
 
     public function help_link() {

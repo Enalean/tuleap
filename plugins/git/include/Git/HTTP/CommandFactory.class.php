@@ -71,7 +71,7 @@ class Git_HTTP_CommandFactory {
     }
 
     private function needAuthentication(GitRepository $repository, Git_URL $url) {
-        return ! Config::areAnonymousAllowed() ||
+        return ! ForgeConfig::areAnonymousAllowed() ||
             $this->isGitPush($url) ||
             ! $this->canBeReadByAnonymous($repository) ||
             $this->isInPrivateProject($repository);
@@ -96,7 +96,7 @@ class Git_HTTP_CommandFactory {
     }
 
     private function basicAuthenticationChallenge() {
-        header('WWW-Authenticate: Basic realm="'.Config::get('sys_name').' git authentication"');
+        header('WWW-Authenticate: Basic realm="'.ForgeConfig::get('sys_name').' git authentication"');
         header('HTTP/1.0 401 Unauthorized');
         exit;
     }

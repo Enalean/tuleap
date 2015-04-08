@@ -491,7 +491,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         return TemplateRendererFactory::build()->getRenderer(
             array(
                 TRACKER_TEMPLATE_DIR.'/report',
-                Config::get('codendi_dir').'/src/templates/common'
+                ForgeConfig::get('codendi_dir').'/src/templates/common'
             )
         );
     }

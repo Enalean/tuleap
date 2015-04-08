@@ -823,11 +823,11 @@ class trackerPlugin extends Plugin {
      * @see Event::BACKEND_ALIAS_GET_ALIASES
      */
     public function backend_alias_get_aliases($params) {
-        if (! Config::get('sys_enable_reply_by_mail')) {
+        if (! ForgeConfig::get('sys_enable_reply_by_mail')) {
             return;
         }
 
-        $src_dir  = Config::get('codendi_dir');
+        $src_dir  = ForgeConfig::get('codendi_dir');
         $script   = $src_dir .'/plugins/tracker/bin/emailgateway-wrapper.sh';
 
         $command = "sudo -u codendiadm $script";

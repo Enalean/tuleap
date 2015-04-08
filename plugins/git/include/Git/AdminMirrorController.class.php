@@ -80,7 +80,7 @@ class Git_AdminMirrorController {
             case 'set-mirror-restriction':
             case 'update-allowed-project-list':
                 $presenter = $this->getManageAllowedProjectsPresenter($request);
-                $renderer = TemplateRendererFactory::build()->getRenderer(Config::get('codendi_dir') . '/src/templates/resource_restrictor');
+                $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/resource_restrictor');
                 break;
             default:
                 $presenter = $this->getAllMirrorsPresenter($title);

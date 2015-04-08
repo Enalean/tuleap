@@ -35,11 +35,11 @@ class WebDAVAuthenticationTest extends UnitTestCase {
 
 
     public function setUp() {
-        Config::store();
+        ForgeConfig::store();
     }
 
     public function tearDown() {
-        Config::restore();
+        ForgeConfig::restore();
     }
 
     /**
@@ -94,7 +94,7 @@ class WebDAVAuthenticationTest extends UnitTestCase {
      * Testing when the user is authenticated as anonymous
      */
     function testAuthenticateSuccessWithAnonymousUserNotAllowed() {
-        Config::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
 
         $webDAVAuthentication = new WebDAVAuthenticationTestVersion($this);
         $webDAVAuthentication->setReturnValue('issetUsername', true);
@@ -111,7 +111,7 @@ class WebDAVAuthenticationTest extends UnitTestCase {
      * Testing when the user is authenticated as anonymous
      */
     function testAuthenticateSuccessWithAnonymousUserAllowed() {
-        Config::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 
         $webDAVAuthentication = new WebDAVAuthenticationTestVersion($this);
         $webDAVAuthentication->setReturnValue('issetUsername', true);

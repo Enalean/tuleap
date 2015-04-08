@@ -329,7 +329,7 @@ class PluginsAdministrationViews extends Views {
             $plugin_resource_restrictor->isPluginRestricted($plugin)
         );
 
-        $renderer = TemplateRendererFactory::build()->getRenderer(Config::get('codendi_dir') . '/src/templates/resource_restrictor');
+        $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/resource_restrictor');
         $renderer->renderToPage($presenter::TEMPLATE, $presenter);
     }
 

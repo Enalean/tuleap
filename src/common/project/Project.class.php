@@ -372,7 +372,7 @@ class Project extends Group implements PFO_Project {
      * @return String
      */
     public function getSVNRootPath() {
-        return Config::get('svn_prefix') . DIRECTORY_SEPARATOR . $this->getUnixNameMixedCase();
+        return ForgeConfig::get('svn_prefix') . DIRECTORY_SEPARATOR . $this->getUnixNameMixedCase();
     }
 
     function getProjectsCreatedFrom() {

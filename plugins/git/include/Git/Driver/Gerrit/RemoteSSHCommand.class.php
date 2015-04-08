@@ -77,7 +77,7 @@ class Git_Driver_Gerrit_RemoteSSHCommand {
      */
     public function getStdErrFilePath() {
         if (!$this->filepath) {
-            $this->filepath = tempnam(Config::get('tmp_dir'), 'stderr_');
+            $this->filepath = tempnam(ForgeConfig::get('tmp_dir'), 'stderr_');
         }
         return $this->filepath;
     }

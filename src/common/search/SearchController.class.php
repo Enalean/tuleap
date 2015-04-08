@@ -41,7 +41,7 @@ class Search_SearchController {
         $this->event_manager = $event_manager;
         $this->renderer = TemplateRendererFactory::build()->getRenderer(
             array(
-                 Config::get('codendi_dir') .'/src/templates/search',
+                 ForgeConfig::get('codendi_dir') .'/src/templates/search',
             )
         );
         $this->search_types = array(
@@ -195,7 +195,7 @@ class Search_SearchController {
                 $GLOBALS['Language']->getText('search_index', Search_SearchPeople::NAME)
             ),
         );
-        if (Config::get('sys_use_snippet') == 1) {
+        if (ForgeConfig::get('sys_use_snippet') == 1) {
             $search_types []= new Search_SearchTypePresenter(
                 Search_SearchSnippet::NAME,
                 $GLOBALS['Language']->getText('search_index', Search_SearchSnippet::NAME)

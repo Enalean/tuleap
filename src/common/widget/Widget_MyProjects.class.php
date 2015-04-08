@@ -37,7 +37,7 @@ class Widget_MyProjects extends Widget {
     }
     function getContent() {
         $html = '';
-        $display_privacy = Config::get('sys_display_project_privacy_in_service_bar');
+        $display_privacy = ForgeConfig::get('sys_display_project_privacy_in_service_bar');
         $user = UserManager::instance()->getCurrentUser();
 
         $order = 'groups.group_name';

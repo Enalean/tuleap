@@ -257,7 +257,7 @@ class URLVerification {
      */
     public function verifyRequest($server) {
         $user = $this->getCurrentUser();
-        if (! Config::areAnonymousAllowed() && $user->isAnonymous() && !$this->isScriptAllowedForAnonymous($server)) {
+        if (! ForgeConfig::areAnonymousAllowed() && $user->isAnonymous() && !$this->isScriptAllowedForAnonymous($server)) {
             $redirect = new URLRedirect();
             $this->urlChunks['script']   = $redirect->buildReturnToLogin($server);
         }

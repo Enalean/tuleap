@@ -153,7 +153,7 @@ class ArtifactFile extends Error {
         }
 
         public static function getParentDirectoryForArtifactTypeId($artifact_type_id) {
-            return Config::get('sys_data_dir') . DIRECTORY_SEPARATOR . self::ROOT_DIRNAME . DIRECTORY_SEPARATOR . $artifact_type_id;
+            return ForgeConfig::get('sys_data_dir') . DIRECTORY_SEPARATOR . self::ROOT_DIRNAME . DIRECTORY_SEPARATOR . $artifact_type_id;
         }
 
         public static function getPathOnFilesystem(Artifact $artifact, $attachment_id) {

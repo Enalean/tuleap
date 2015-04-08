@@ -479,7 +479,7 @@ class ProjectManager {
      * @return boolean true if the current session user has access to this project, false otherwise
      */
     private function getRestrictedAccessForUserInGroup($group, $user) {
-        if (Config::areRestrictedUsersAllowed()) {
+        if (ForgeConfig::areRestrictedUsersAllowed()) {
             if ($group) {
                 if ($user) {
                     if ($user->isRestricted()) {

@@ -32,14 +32,14 @@ class GenericUserFactoryTest extends TuleapTestCase {
         stub($this->project_manager)->getProject()->returns($this->project);
         $dao = mock('GenericUserDao');
 
-        Config::store();
+        ForgeConfig::store();
 
-        Config::set(GenericUserFactory::CONFIG_KEY_SUFFIX, '');
+        ForgeConfig::set(GenericUserFactory::CONFIG_KEY_SUFFIX, '');
         $this->factory = new GenericUserFactory($this->user_manager, $this->project_manager, $dao);
     }
 
     public function tearDown() {
-        Config::restore();
+        ForgeConfig::restore();
         parent::tearDown();
     }
 
@@ -65,7 +65,7 @@ class GenericUserFactoryTest extends TuleapTestCase {
 
     public function itCreatesUserWithPrefixSetFromConfig() {
         $suffix = '-team';
-        Config::set(GenericUserFactory::CONFIG_KEY_SUFFIX, $suffix);
+        ForgeConfig::set(GenericUserFactory::CONFIG_KEY_SUFFIX, $suffix);
 
         $generic_user = $this->factory->create('120', 'my_password');
         $this->assertEqual(substr($generic_user->getUnixName(), -strlen($suffix)), $suffix);

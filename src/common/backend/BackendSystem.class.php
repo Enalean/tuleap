@@ -344,7 +344,7 @@ class BackendSystem extends Backend {
         $user=$this->getUserManager()->getUserById($user_id);
         if (!$user) return false;
         $homedir=$GLOBALS['homedir_prefix']."/".$user->getUserName();
-        $backupfile=Config::get('sys_project_backup_path')."/".$user->getUserName().".tgz";
+        $backupfile=ForgeConfig::get('sys_project_backup_path')."/".$user->getUserName().".tgz";
 
         if (is_dir($homedir)) {
             system("cd ".$GLOBALS['homedir_prefix']."; tar cfz $backupfile ".$user->getUserName());
@@ -368,7 +368,7 @@ class BackendSystem extends Backend {
         $project=$this->getProjectManager()->getProject($group_id);
         if (!$project) return false;
         $mydir=$GLOBALS['grpdir_prefix']."/".$project->getUnixName(false);
-        $backupfile=Config::get('sys_project_backup_path')."/".$project->getUnixName(false).".tgz";
+        $backupfile=ForgeConfig::get('sys_project_backup_path')."/".$project->getUnixName(false).".tgz";
 
         if (is_dir($mydir)) {
             system("cd ".$GLOBALS['grpdir_prefix']."; tar cfz $backupfile ".$project->getUnixName(false));
@@ -402,7 +402,7 @@ class BackendSystem extends Backend {
             return false;
         }
         $anonymousFTP = $GLOBALS['ftp_anon_dir_prefix']."/".$project->getUnixName(false);
-        $backupfile   = Config::get('sys_project_backup_path')."/".$project->getUnixName(false)."-ftp.tgz";
+        $backupfile   = ForgeConfig::get('sys_project_backup_path')."/".$project->getUnixName(false)."-ftp.tgz";
         if (is_dir($anonymousFTP)) {
             system("cd ".$GLOBALS['ftp_anon_dir_prefix']."; tar cfz $backupfile ".$project->getUnixName(false));
             chmod($backupfile, 0600);

@@ -174,7 +174,7 @@ class TestDataBuilder {
     }
 
     public function activateDebug() {
-	Config::set('DEBUG_MODE', 1);
+	ForgeConfig::set('DEBUG_MODE', 1);
         return $this;
     }
 

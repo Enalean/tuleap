@@ -135,7 +135,7 @@ class Git_Driver_Gerrit_ProjectCreator {
                 $repository,
                 $gerrit_server,
                 $migrated_ugroups,
-                Config::get('sys_default_domain') .'-'. self::GROUP_REPLICATION,
+                ForgeConfig::get('sys_default_domain') .'-'. self::GROUP_REPLICATION,
                 $template_id
         );
 
@@ -227,7 +227,7 @@ class Git_Driver_Gerrit_ProjectCreator {
         if (! is_dir($this->dir)) {
             mkdir($this->dir);
             $git_exec->init();
-            $git_exec->setLocalCommiter($gerrit_server->getLogin(), 'codendiadm@'. Config::get('sys_default_domain'));
+            $git_exec->setLocalCommiter($gerrit_server->getLogin(), 'codendiadm@'. ForgeConfig::get('sys_default_domain'));
             $git_exec->remoteAdd($gerrit_project_url);
         }
         $git_exec->pullBranch('origin', 'refs/meta/config');

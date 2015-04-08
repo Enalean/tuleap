@@ -69,7 +69,7 @@ class SVN_Apache_SvnrootConf {
     }
     
     private function getApacheConfHeaders() {
-        $log_file_path = Config::get(self::CONFIG_SVN_LOG_PATH);
+        $log_file_path = ForgeConfig::get(self::CONFIG_SVN_LOG_PATH);
         $headers  = '';
         $headers .= "# " . $GLOBALS['sys_name'] . " SVN repositories\n";
         $headers .= "# Custom log file for SVN queries\n";

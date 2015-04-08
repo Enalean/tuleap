@@ -44,7 +44,7 @@ class OpenId_AccountManager {
                 throw new OpenId_IdentityUrlUpdateException($GLOBALS['Language']->getText('plugin_openid', 'error_identity_url_update'));
             }
         } else {
-            throw new OpenId_IdentityUrlAlreadyPairedException($GLOBALS['Language']->getText('plugin_openid', 'error_already_paired', array(Config::get('sys_name'))));
+            throw new OpenId_IdentityUrlAlreadyPairedException($GLOBALS['Language']->getText('plugin_openid', 'error_already_paired', array(ForgeConfig::get('sys_name'))));
         }
     }
 
@@ -79,7 +79,7 @@ class OpenId_AccountManager {
             $this->user_manager->openSessionForUser($user);
             return $user;
         }
-        throw new OpenId_UserNotFoundException($GLOBALS['Language']->getText('plugin_openid', 'error_no_matching_user', Config::get('sys_name')));
+        throw new OpenId_UserNotFoundException($GLOBALS['Language']->getText('plugin_openid', 'error_no_matching_user', ForgeConfig::get('sys_name')));
     }
 }
 

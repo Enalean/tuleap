@@ -106,7 +106,7 @@ if ($request->isPost()) {
                         break;
 
                     case PFUser::STATUS_RESTRICTED:
-                        if (Config::areRestrictedUsersAllowed()) {
+                        if (ForgeConfig::areRestrictedUsersAllowed()) {
                             $user->setStatus($request->get('form_status'));
                             // If the user had a shell, set it to restricted shell
                             if ($user->getShell()

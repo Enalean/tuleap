@@ -40,6 +40,6 @@ function forge_get_config($key, $scope = 'core') {
         }
         return $plugin->getPluginInfo()->getPropertyValueForName($key);
     }
-    return Config::get($key);
+    return ForgeConfig::get($key);
 }
 

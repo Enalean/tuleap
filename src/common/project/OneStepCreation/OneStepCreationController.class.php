@@ -98,8 +98,8 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
 
     private function notifySiteAdmin(Project $project) {
         $mail = new Mail();
-        $mail->setTo(Config::get('sys_email_admin'));
-        $mail->setFrom(Config::get('sys_noreply'));
+        $mail->setTo(ForgeConfig::get('sys_email_admin'));
+        $mail->setFrom(ForgeConfig::get('sys_noreply'));
         $mail->setSubject($GLOBALS['Language']->getText('register_project_one_step', 'complete_mail_subject', array($project->getPublicName())));
         if ($this->projectsMustBeApprovedByAdmin()) {
             $mail->setBody(
@@ -107,7 +107,7 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
                     'register_project_one_step',
                     'complete_mail_body_approve',
                     array(
-                        Config::get('sys_name'),
+                        ForgeConfig::get('sys_name'),
                         $project->getPublicName(),
                         get_server_url().'/admin/approve-pending.php'
                     )
@@ -119,7 +119,7 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
                     'register_project_one_step',
                     'complete_mail_body_auto',
                     array(
-                        Config::get('sys_name'),
+                        ForgeConfig::get('sys_name'),
                         $project->getPublicName(),
                         get_server_url().'/admin/groupedit.php?group_id='.$project->getID()
                     )
@@ -149,6 +149,6 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
     }
 
     private function projectsMustBeApprovedByAdmin() {
-        return Config::get('sys_project_approval', 1) == 1;
+        return ForgeConfig::get('sys_project_approval', 1) == 1;
     }
 }

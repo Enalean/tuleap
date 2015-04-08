@@ -47,7 +47,7 @@ class SVN_Hook_PreCommit extends SVN_Hook {
     }
 
     private function optionDoesNotAllowEmptyCommitMessage() {
-        return ! Config::get('sys_allow_empty_svn_commit_message');
+        return ! ForgeConfig::get('sys_allow_empty_svn_commit_message');
     }
 
     /**

@@ -40,8 +40,8 @@ class LDAP_RetrieveAllArguementsTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        Config::store();
-        Config::set('sys_logger_level', 'debug');
+        ForgeConfig::store();
+        ForgeConfig::set('sys_logger_level', 'debug');
         $this->ldap = partial_mock(
             'LDAP',
             array('search'),
@@ -49,7 +49,7 @@ class LDAP_RetrieveAllArguementsTest extends TuleapTestCase {
     }
 
     function tearDown() {
-        Config::restore();
+        ForgeConfig::restore();
     }
 
     public function itSearchesLoginWithAllAttributesExplicitly() {

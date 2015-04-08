@@ -62,7 +62,7 @@ if ($id_to_replay) {
 }
 
 $hp           = Codendi_HTMLPurifier::instance();
-$template_dir = Config::get('codendi_dir') .'/src/templates/admin/system_events/';
+$template_dir = ForgeConfig::get('codendi_dir') .'/src/templates/admin/system_events/';
 $renderer     = TemplateRendererFactory::build()->getRenderer($template_dir);
 
 $title = $Language->getText('admin_system_events', 'title');

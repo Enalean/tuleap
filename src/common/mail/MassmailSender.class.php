@@ -38,7 +38,7 @@ class MassmailSender {
         $hp             = Codendi_HTMLPurifier::instance();
         $project_name   = $project->getPublicName();
 
-        $sys_max_number_of_emailed_people = Config::get('sys_max_number_of_emailed_people');
+        $sys_max_number_of_emailed_people = ForgeConfig::get('sys_max_number_of_emailed_people');
         if (count($receivers) > $sys_max_number_of_emailed_people && !$user->isSuperUser()) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('my_index','massmail_not_sent_max_users', $sys_max_number_of_emailed_people));
             return;

@@ -61,7 +61,7 @@ class User_UserStatusManager {
                 case PFUser::STATUS_VALIDATED_RESTRICTED:
                     break;
                 case PFUser::STATUS_PENDING:
-                    if (Config::get('sys_user_approval') == 0) {
+                    if (ForgeConfig::get('sys_user_approval') == 0) {
                         break;
                     }
                 default:

@@ -44,7 +44,7 @@ class SVN_Hook_PreCommitTest extends TuleapTestCase {
     }
 
     public function itRejectsCommitIfCommitMessageIsEmptyAndForgeRequiresACommitMessage() {
-        Config::set('sys_allow_empty_svn_commit_message', false);
+        ForgeConfig::set('sys_allow_empty_svn_commit_message', false);
 
         $this->expectException('Exception');
         expect($this->commit_message_validator)->assertCommitMessageIsValid()->never();
@@ -53,7 +53,7 @@ class SVN_Hook_PreCommitTest extends TuleapTestCase {
     }
 
     public function itDoesNotRejectCommitIfCommitMessageIsEmptyAndForgeDoesNotRequireACommitMessage() {
-        Config::set('sys_allow_empty_svn_commit_message', true);
+        ForgeConfig::set('sys_allow_empty_svn_commit_message', true);
 
         expect($this->commit_message_validator)->assertCommitMessageIsValid()->once();
 

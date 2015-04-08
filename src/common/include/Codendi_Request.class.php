@@ -60,7 +60,7 @@ class Codendi_Request {
     }
 
     public function registerShutdownFunction() {
-        if (Config::get('DEBUG_MODE') && (strpos($_SERVER['REQUEST_URI'], '/soap/') !== 0)) {
+        if (ForgeConfig::get('DEBUG_MODE') && (strpos($_SERVER['REQUEST_URI'], '/soap/') !== 0)) {
             $php_code = '$request =& '. get_class($this) .'::instance(); $request->checkThatAllVariablesAreValidated();';
             register_shutdown_function(create_function('', $php_code));
         }

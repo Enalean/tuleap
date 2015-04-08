@@ -140,8 +140,8 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
         if (is_file($logger->getFilepath())) {
             $backendSystem->changeOwnerGroupMode(
                 $logger->getFilepath(),
-                Config::get('sys_http_user'),
-                Config::get('sys_http_user'),
+                ForgeConfig::get('sys_http_user'),
+                ForgeConfig::get('sys_http_user'),
                 0640
             );
         }

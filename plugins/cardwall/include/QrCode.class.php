@@ -47,8 +47,8 @@ class Cardwall_QrCode {
      * @param string $request_uri '/plugins/agiledashboard/?group_id=1&action=show&....
      */
     public function __construct($request_uri) {
-        $proto       = Config::get('sys_force_ssl') ? 'https' : 'http';
-        $url         = $proto .'://'. Config::get('sys_default_domain') . $request_uri;
+        $proto       = ForgeConfig::get('sys_force_ssl') ? 'https' : 'http';
+        $url         = $proto .'://'. ForgeConfig::get('sys_default_domain') . $request_uri;
         $dimensions  = $this->width .'x'. $this->height;
         $this->class = Toggler::getClassname('plugin_cardwall_qrcode_toggler', false, true);
         $this->url   = 'http://chart.apis.google.com/chart?'. http_build_query(

@@ -38,7 +38,7 @@ class TourFactoryTest extends TuleapTestCase {
         $this->factory         = new Tuleap_TourFactory($this->project_manager, mock('Url'));
         $this->user            = mock('PFUser');
 
-        Config::set('sys_custom_incdir', $this->fixtures_dir);
+        ForgeConfig::set('sys_custom_incdir', $this->fixtures_dir);
     }
 }
 

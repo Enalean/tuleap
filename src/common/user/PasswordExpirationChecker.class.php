@@ -63,7 +63,7 @@ class User_PasswordExpirationChecker {
     }
 
     private function getPasswordLifetimeInSeconds() {
-        $password_lifetime_in_days = Config::get('sys_password_lifetime');
+        $password_lifetime_in_days = ForgeConfig::get('sys_password_lifetime');
         if ($password_lifetime_in_days) {
             return DateHelper::SECONDS_IN_A_DAY * $password_lifetime_in_days;
         }

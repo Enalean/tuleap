@@ -45,7 +45,7 @@ class DiskQuotaWarningFormPresenter {
     }
 
     public function getTemplateDir() {
-        return Config::get('codendi_dir') .'/src/templates/project';
+        return ForgeConfig::get('codendi_dir') .'/src/templates/project';
     }
 
 }

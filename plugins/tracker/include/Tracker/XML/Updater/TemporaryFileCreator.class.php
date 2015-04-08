@@ -51,7 +51,7 @@ class Tracker_XML_Updater_TemporaryFileCreator {
     }
 
     private function getUniqueRandomDirectory() {
-        $tmp = Config::get('tmp_dir');
+        $tmp = ForgeConfig::get('tmp_dir');
         return exec("mktemp -d -p $tmp copy-artifactXXXXXX");
     }
 

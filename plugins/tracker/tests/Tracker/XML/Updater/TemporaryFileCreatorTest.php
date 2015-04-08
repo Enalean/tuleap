@@ -26,8 +26,8 @@ class Tracker_XML_Updater_TemporaryFileCreatorTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        Config::store();
-        Config::set('tmp_dir', $this->getTempDir());
+        ForgeConfig::store();
+        ForgeConfig::set('tmp_dir', $this->getTempDir());
 
         $this->creator = new Tracker_XML_Updater_TemporaryFileCreator();
         $this->initial = dirname(__FILE__).'/_fixtures/toto.txt';
@@ -42,7 +42,7 @@ class Tracker_XML_Updater_TemporaryFileCreatorTest extends TuleapTestCase {
     }
 
     public function tearDown() {
-        Config::restore();
+        ForgeConfig::restore();
         parent::tearDown();
     }
 
@@ -53,7 +53,7 @@ class Tracker_XML_Updater_TemporaryFileCreatorTest extends TuleapTestCase {
 
     public function itCreatesFileInPlateformDefinedTmpDir() {
         $copy = $this->creator->createTemporaryFile($this->initial);
-        $this->assertTrue(strpos($copy, Config::get('tmp_dir')) === 0);
+        $this->assertTrue(strpos($copy, ForgeConfig::get('tmp_dir')) === 0);
     }
 
     public function itCreatesFileInATemporaryDirectoryThatIsDifferentFromOtherCreators() {

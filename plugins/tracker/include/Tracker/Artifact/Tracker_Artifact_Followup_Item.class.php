@@ -33,7 +33,7 @@ abstract class Tracker_Artifact_Followup_Item {
     abstract public function getFollowupContent();
 
     public function getAvatarIfEnabled() {
-        if (Config::get('sys_enable_avatars')) {
+        if (ForgeConfig::get('sys_enable_avatars')) {
             return '<div class="tracker_artifact_followup_avatar">' . $this->getHTMLAvatar() . '</div>';
         }
 

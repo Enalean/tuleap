@@ -35,7 +35,7 @@ class SOAP_WSDLRenderer {
         $proc = new XSLTProcessor();
 
         $xslDoc = new DOMDocument();
-        $xslDoc->load(Config::get('codendi_dir')."/src/www/soap/wsdl-viewer.xsl");
+        $xslDoc->load(ForgeConfig::get('codendi_dir')."/src/www/soap/wsdl-viewer.xsl");
         $proc->importStylesheet($xslDoc);
         
         $xmlDoc = new DOMDocument();

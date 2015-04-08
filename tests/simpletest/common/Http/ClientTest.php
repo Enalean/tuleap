@@ -24,11 +24,11 @@ class Http_ClientTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        Config::store();
+        ForgeConfig::store();
     }
 
     public function tearDown() {
-        Config::restore();
+        ForgeConfig::restore();
         parent::tearDown();
     }
 
@@ -38,13 +38,13 @@ class Http_ClientTest extends TuleapTestCase {
     }
 
     public function itUsesTheProxyConfig() {
-        Config::set('sys_proxy', 'le_host:le_port');
+        ForgeConfig::set('sys_proxy', 'le_host:le_port');
         $client = new Http_Client();
         $this->assertEqual($client->getOption(CURLOPT_PROXY), 'le_host:le_port');
     }
 
     public function itDoesNotSetProxyOptionWhenProxyConfigDoesNotExist() {
-        Config::set('sys_proxy', '');
+        ForgeConfig::set('sys_proxy', '');
         $client = new Http_Client();
         $this->assertEqual($client->getOption(CURLOPT_PROXY), '');
     }

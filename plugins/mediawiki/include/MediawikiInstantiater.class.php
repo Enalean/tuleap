@@ -151,7 +151,7 @@ class MediaWikiInstantiater {
         $schema = strtr('plugin_mediawiki_' . $this->project_id, '-', '_');
         $src_path = forge_get_config('src_path', 'mediawiki');
         $table_file = $src_path . '/maintenance/tables.sql';
-        $main_db = Config::get('sys_dbname');
+        $main_db = ForgeConfig::get('sys_dbname');
 
         db_query('START TRANSACTION;');
 

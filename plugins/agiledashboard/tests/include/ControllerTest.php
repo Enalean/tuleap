@@ -39,8 +39,8 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        Config::store();
-        Config::set('codendi_dir', AGILEDASHBOARD_BASE_DIR .'/../../..');
+        ForgeConfig::store();
+        ForgeConfig::set('codendi_dir', AGILEDASHBOARD_BASE_DIR .'/../../..');
         $this->group_id            = 123;
         $this->project             = stub('Project')->getID()->returns($this->group_id);
         $this->project_manager     = stub('ProjectManager')->getProject($this->group_id)->returns($this->project);
@@ -92,7 +92,7 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
     }
 
     public function tearDown() {
-        Config::restore();
+        ForgeConfig::restore();
         UserManager::clearInstance();
         parent::tearDown();
     }
@@ -168,8 +168,8 @@ class Planning_ControllerNewTest extends TuleapTestCase {
 
     function setUp() {
         parent::setUp();
-        Config::store();
-        Config::set('codendi_dir', TRACKER_BASE_DIR .'/../../..');
+        ForgeConfig::store();
+        ForgeConfig::set('codendi_dir', TRACKER_BASE_DIR .'/../../..');
         $this->group_id            = 123;
         $this->request             = aRequest()->with('group_id', "$this->group_id")->build();
         $this->planning_factory    = mock('PlanningFactory');
@@ -211,7 +211,7 @@ class Planning_ControllerNewTest extends TuleapTestCase {
     }
 
     public function tearDown() {
-        Config::restore();
+        ForgeConfig::restore();
         parent::tearDown();
     }
 

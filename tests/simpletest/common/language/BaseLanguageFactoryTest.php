@@ -22,9 +22,9 @@ require_once 'common/language/BaseLanguageFactory.class.php';
 
 class BaseLanguageFactoryTest extends UnitTestCase {
     function setUp() {
-        Config::store();
-        Config::loadFromFile(dirname(__FILE__).'/_fixtures/local.inc');
-        $this->supportedLanguages = Config::get('sys_supported_languages');
+        ForgeConfig::store();
+        ForgeConfig::loadFromFile(dirname(__FILE__).'/_fixtures/local.inc');
+        $this->supportedLanguages = ForgeConfig::get('sys_supported_languages');
         $this->oldLocale = setlocale(LC_ALL, "0");
         setlocale(LC_ALL, 'fr_FR');
         $GLOBALS['tmp_dir']           = dirname(__FILE__) . '/_fixtures/var/tmp';
@@ -33,7 +33,7 @@ class BaseLanguageFactoryTest extends UnitTestCase {
     }
     
     function tearDown() {
-        Config::restore();
+        ForgeConfig::restore();
         setlocale(LC_ALL, $this->oldLocale);
         unset($GLOBALS['tmp_dir']);
         unset($GLOBALS['sys_incdir']);
@@ -66,8 +66,8 @@ class BaseLanguageFactoryTest extends UnitTestCase {
     }
     
     public function testFactoryShouldSetADefaultLanguageForUnknownLocales() {
-        $default_language = new BaseLanguage($this->supportedLanguages, Config::get('sys_lang'));
-        $default_language->loadLanguage(Config::get('sys_lang'));
+        $default_language = new BaseLanguage($this->supportedLanguages, ForgeConfig::get('sys_lang'));
+        $default_language->loadLanguage(ForgeConfig::get('sys_lang'));
         $factory = new BaseLanguageFactory();
         
         $this->assertEqual($default_language, $factory->getBaseLanguage('unknown_locale'));

@@ -23,7 +23,7 @@ class BackendLogger implements Logger {
     private $filepath;
 
     public function __construct($filename = null) {
-        $this->filepath = empty($filename) ? Config::get('codendi_log').'/'.self::FILENAME : $filename;
+        $this->filepath = empty($filename) ? ForgeConfig::get('codendi_log').'/'.self::FILENAME : $filename;
     }
 
     public function getFilepath() {

@@ -66,8 +66,8 @@ class BackendSVNTest extends TuleapTestCase {
         $GLOBALS['sys_name']                  = 'MyForge';
         $GLOBALS['sys_dbauth_user']           = 'dbauth_user';
         $GLOBALS['sys_dbauth_passwd']         = 'dbauth_passwd';
-        Config::store();
-        Config::set('sys_project_backup_path', dirname(__FILE__) . '/_fixtures/var/tmp');
+        ForgeConfig::store();
+        ForgeConfig::set('sys_project_backup_path', dirname(__FILE__) . '/_fixtures/var/tmp');
         mkdir($GLOBALS['svn_prefix'] . '/toto/hooks', 0777, true);
     }
 
@@ -85,7 +85,7 @@ class BackendSVNTest extends TuleapTestCase {
         unset($GLOBALS['sys_name']);
         unset($GLOBALS['sys_dbauth_user']);
         unset($GLOBALS['sys_dbauth_passwd']);
-        Config::restore();
+        ForgeConfig::restore();
     }
     
     function testConstructor() {
@@ -112,13 +112,13 @@ class BackendSVNTest extends TuleapTestCase {
         
         $this->assertEqual($backend->archiveProjectSVN(142),True);
         $this->assertFalse(is_dir($projdir),"Project SVN repository should be deleted");
-        $this->assertTrue(is_file(Config::get('sys_project_backup_path')."/TestProj-svn.tgz"),"SVN Archive should be created");
+        $this->assertTrue(is_file(ForgeConfig::get('sys_project_backup_path')."/TestProj-svn.tgz"),"SVN Archive should be created");
 
         // Check that a wrong project id does not raise an error
         $this->assertEqual($backend->archiveProjectSVN(99999),False);
 
         // Cleanup
-        unlink(Config::get('sys_project_backup_path') ."/TestProj-svn.tgz");
+        unlink(ForgeConfig::get('sys_project_backup_path') ."/TestProj-svn.tgz");
     }
 
 
@@ -412,10 +412,10 @@ class BackendSVN_EnableLogChangeHooks_Test extends TuleapTestCase {
         parent::setUp();
         $this->svn_prefix = dirname(__FILE__) . '/_fixtures/svnroot';
         mkdir($this->svn_prefix . '/toto/hooks', 0777, true);
-        Config::store();
+        ForgeConfig::store();
         $this->bin_dir = dirname(__FILE__) . '/_fixtures';
         $this->fake_revprop = $this->bin_dir.'/post-revprop-change.php';
-        Config::set('codendi_bin_prefix', $this->bin_dir);
+        ForgeConfig::set('codendi_bin_prefix', $this->bin_dir);
         $this->project = stub('Project')->getUnixName()->returns('toto');
         stub($this->project)->getSVNRootPath()->returns($this->svn_prefix.'/toto');
     }
@@ -424,7 +424,7 @@ class BackendSVN_EnableLogChangeHooks_Test extends TuleapTestCase {
         $this->recurseDeleteInDir($this->svn_prefix . '/toto');
         rmdir($this->svn_prefix . '/toto');
         unset($this->svn_prefix);
-        Config::restore();
+        ForgeConfig::restore();
         parent::tearDown();
     }
 

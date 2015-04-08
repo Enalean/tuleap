@@ -37,7 +37,7 @@ class GitViews_RepoManagement_Pane_GerritTest extends TuleapTestCase {
 
     public function testCanBeDisplayedReturnsFalseIfAuthTypeNotLdapAndGerritServersSet() {
         //set of type not ldap
-        Config::set('sys_auth_type', 'not_ldap');
+        ForgeConfig::set('sys_auth_type', 'not_ldap');
 
         $gerrit_servers = array('IAmAServer');
         $pane = new GitViews_RepoManagement_Pane_Gerrit(
@@ -53,7 +53,7 @@ class GitViews_RepoManagement_Pane_GerritTest extends TuleapTestCase {
 
     public function testCanBeDisplayedReturnsFalseIfAuthTypeLdapAndGerritServersNotSet() {
         //set of type ldap
-        Config::set('sys_auth_type', Config::AUTH_TYPE_LDAP);
+        ForgeConfig::set('sys_auth_type', ForgeConfig::AUTH_TYPE_LDAP);
 
         $gerrit_servers = array();
         $pane = new GitViews_RepoManagement_Pane_Gerrit(
@@ -69,7 +69,7 @@ class GitViews_RepoManagement_Pane_GerritTest extends TuleapTestCase {
 
     public function testCanBeDisplayedReturnsTrueIfAuthTypeLdapAndGerritServersSet() {
         //set of type ldap
-        Config::set('sys_auth_type', Config::AUTH_TYPE_LDAP);
+        ForgeConfig::set('sys_auth_type', ForgeConfig::AUTH_TYPE_LDAP);
 
         $gerrit_servers = array('IAmAServer');
         $pane = new GitViews_RepoManagement_Pane_Gerrit(

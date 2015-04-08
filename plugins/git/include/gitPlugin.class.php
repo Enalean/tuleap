@@ -1045,7 +1045,7 @@ class GitPlugin extends Plugin {
     }
 
     private function getProjectCreator() {
-        $tmp_dir = Config::get('tmp_dir') .'/gerrit_'. uniqid();
+        $tmp_dir = ForgeConfig::get('tmp_dir') .'/gerrit_'. uniqid();
         return new Git_Driver_Gerrit_ProjectCreator(
             $tmp_dir,
             $this->getGerritDriverFactory(),
@@ -1304,7 +1304,7 @@ class GitPlugin extends Plugin {
             $this->getMirrorDataMapper(),
             new Git_Mirror_ManifestFileGenerator(
                 $this->getLogger(),
-                Config::get('sys_data_dir').'/gitolite/grokmirror'
+                ForgeConfig::get('sys_data_dir').'/gitolite/grokmirror'
             )
         );
     }

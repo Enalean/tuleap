@@ -30,7 +30,7 @@ class CookieManager {
     const USER_ID    = 'user_id';
 
     public function setHTTPOnlyCookie($name, $value, $expire = 0) {
-        $secure    = (bool)Config::get('sys_force_ssl');
+        $secure    = (bool)ForgeConfig::get('sys_force_ssl');
         $http_only = true;
 
         return $this->phpsetcookie(
@@ -45,7 +45,7 @@ class CookieManager {
     }
 
     public function setGlobalCookie($name, $value, $expire = 0) {
-        $secure    = (bool)Config::get('sys_force_ssl');
+        $secure    = (bool)ForgeConfig::get('sys_force_ssl');
         $http_only = false;
 
         return $this->phpsetcookie(

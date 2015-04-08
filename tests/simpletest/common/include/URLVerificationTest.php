@@ -88,8 +88,8 @@ class URLVerificationTest extends TuleapTestCase {
 
     function setUp() {
         parent::setUp();
-        Config::store();
-        Config::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
+        ForgeConfig::store();
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 
         $GLOBALS['Response']           = mock('Layout');
         $GLOBALS['sys_default_domain'] = 'default';
@@ -116,7 +116,7 @@ class URLVerificationTest extends TuleapTestCase {
         unset($GLOBALS['sys_https_host']);
         unset($GLOBALS['group_id']);
         unset($_REQUEST['type_of_search']);
-        Config::restore();
+        ForgeConfig::restore();
         parent::tearDown();
     }
 
@@ -388,7 +388,7 @@ class URLVerificationTest extends TuleapTestCase {
                         'SCRIPT_NAME' => '',
                         'REQUEST_URI' => '/');
 
-        Config::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
         $GLOBALS['sys_https_host'] = 'secure.example.com';
 
         $user = mock('PFUser');
@@ -411,7 +411,7 @@ class URLVerificationTest extends TuleapTestCase {
                         'SCRIPT_NAME' => '',
                         'REQUEST_URI' => '/script/');
 
-        Config::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
         $GLOBALS['sys_https_host'] = 'secure.example.com';
 
         $user = mock('PFUser');
@@ -434,7 +434,7 @@ class URLVerificationTest extends TuleapTestCase {
                         'SCRIPT_NAME' => '',
                         'REQUEST_URI' => '/script?pv=2');
 
-        Config::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
         $GLOBALS['sys_https_host'] = 'secure.example.com';
 
         $user = mock('PFUser');
@@ -456,7 +456,7 @@ class URLVerificationTest extends TuleapTestCase {
         $server = array('SERVER_NAME' => 'example.com',
                         'SCRIPT_NAME' => '');
 
-        Config::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
 
         $user = mock('PFUser');
         $user->setReturnValue('isAnonymous', false);

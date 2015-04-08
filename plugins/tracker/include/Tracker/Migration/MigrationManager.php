@@ -112,7 +112,7 @@ class Tracker_Migration_MigrationManager {
     }
 
     private function getLogFilePath() {
-        return Config::get('codendi_log').'/'.self::LOG_FILE;
+        return ForgeConfig::get('codendi_log').'/'.self::LOG_FILE;
     }
 
     private function importArtifactsData($username, $tracker_id, $xml_file_path) {
@@ -123,7 +123,7 @@ class Tracker_Migration_MigrationManager {
         if ($tracker) {
             $xml_import = $this->getXMLImporter();
 
-            $xml_import->importFromFile($tracker, $xml_file_path, Config::get('sys_data_dir') . DIRECTORY_SEPARATOR . 'trackerv3');
+            $xml_import->importFromFile($tracker, $xml_file_path, ForgeConfig::get('sys_data_dir') . DIRECTORY_SEPARATOR . 'trackerv3');
         }
         $this->logger->info('<-- TV5 imported '.PHP_EOL);
     }
@@ -205,12 +205,12 @@ class Tracker_Migration_MigrationManager {
     }
 
     private function getIndentXSLResourcePath() {
-        return Config::get('codendi_utils_prefix') . self::INDENT_XSL_RESOURCE;
+        return ForgeConfig::get('codendi_utils_prefix') . self::INDENT_XSL_RESOURCE;
     }
 
     private function generateTemporaryPath() {
         // Generate a temporary File
-        $file_path = tempnam(Config::get('tmp_dir'), '');
+        $file_path = tempnam(ForgeConfig::get('tmp_dir'), '');
         // Erase it but keep the path
         unlink($file_path);
 

@@ -121,7 +121,7 @@ class BackendMailingList extends Backend {
 
                 // Archive first
                 $list_archive_dir = $GLOBALS['mailman_list_dir']."/../archives/private/".$list->getListName(); // Does it work? TODO
-                $backupfile=Config::get('sys_project_backup_path')."/".$list->getListName()."-mailman.tgz";
+                $backupfile=ForgeConfig::get('sys_project_backup_path')."/".$list->getListName()."-mailman.tgz";
                 system("tar cfz $backupfile $list_dir $list_archive_dir");
                 chmod($backupfile,0600);
 

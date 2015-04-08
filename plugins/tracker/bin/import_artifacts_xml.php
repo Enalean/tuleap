@@ -75,7 +75,7 @@ try {
         $archive = new Tracker_Artifact_XMLImport_XMLImportZipArchive(
             $tracker,
             $zip,
-            Config::get('tmp_dir')
+            ForgeConfig::get('tmp_dir')
         );
 
         $xml_import->importFromArchive($tracker, $archive);

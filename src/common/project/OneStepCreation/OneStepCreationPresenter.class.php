@@ -103,14 +103,14 @@ class Project_OneStepCreation_OneStepCreationPresenter {
     }
 
     public function getSysName() {
-        return Config::get('sys_name');
+        return ForgeConfig::get('sys_name');
     }
 
     /**
      * @return bool
      */
     public function isProjectApprovalEnabled() {
-        return Config::get('sys_project_approval');
+        return ForgeConfig::get('sys_project_approval');
     }
 
     /**

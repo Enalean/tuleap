@@ -96,7 +96,7 @@ class User_PreferencesPresenter {
     }
 
     public function has_avatar() {
-        return Config::get('sys_enable_avatars');
+        return ForgeConfig::get('sys_enable_avatars');
     }
 
     public function avatar() {

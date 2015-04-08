@@ -29,12 +29,12 @@ class Cardwall_CardControllerTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        Config::store();
-        Config::set('codendi_dir', dirname(__FILE__).'/../../..');
+        ForgeConfig::store();
+        ForgeConfig::set('codendi_dir', dirname(__FILE__).'/../../..');
     }
 
     public function tearDown() {
-        Config::restore();
+        ForgeConfig::restore();
         parent::tearDown();
     }
 

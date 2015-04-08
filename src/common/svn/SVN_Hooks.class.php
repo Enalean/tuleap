@@ -60,7 +60,7 @@ class SVN_Hooks {
      * @throws Exception
      */
     public function getProjectFromRepositoryPath($repository_path) {
-        $unix_group_name = substr($repository_path, strlen(Config::get('svn_prefix')) + 1);
+        $unix_group_name = substr($repository_path, strlen(ForgeConfig::get('svn_prefix')) + 1);
         $project = $this->project_manager->getProjectByUnixName($unix_group_name);
         if ($project && !$project->isError() && !$project->isDeleted()) {
             return $project;

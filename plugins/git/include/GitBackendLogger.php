@@ -22,8 +22,8 @@ class GitBackendLogger extends TruncateLevelLogger {
 
     public function __construct() {
         parent::__construct(
-            new BackendLogger(Config::get('codendi_log') .'/git_syslog'),
-            Config::get('sys_logger_level')
+            new BackendLogger(ForgeConfig::get('codendi_log') .'/git_syslog'),
+            ForgeConfig::get('sys_logger_level')
         );
     }
 }

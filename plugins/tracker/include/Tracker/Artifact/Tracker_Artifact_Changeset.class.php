@@ -594,7 +594,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
             // 2. Compute the body of the message + headers
             $messages = array();
 
-            if (Config::get('sys_enable_reply_by_mail')) {
+            if (ForgeConfig::get('sys_enable_reply_by_mail')) {
                 $messages = $this->buildAMessagePerRecipient($recipients, $is_update);
             } else {
                 $messages = $this->buildOneMessageForMultipleRecipients($recipients, $is_update);
@@ -637,7 +637,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
                     $messages[$hash]['recipients'] = array($recipient_mail);
                 }
 
-                $messages[$hash]['from'] = Config::get('sys_noreply');
+                $messages[$hash]['from'] = ForgeConfig::get('sys_noreply');
             }
         }
 
@@ -656,14 +656,14 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
                 $message_id = $this->getMessageId($user);
 
                 $messages[$message_id]               = $this->getMessageContent($user, $is_update, $check_perms);
-                $messages[$message_id]['from']       = Config::get('sys_name') . '<' .$this->getForgeArtifactEmail() . '>';
+                $messages[$message_id]['from']       = ForgeConfig::get('sys_name') . '<' .$this->getForgeArtifactEmail() . '>';
                 $messages[$message_id]['message-id'] = $message_id;
                 $messages[$message_id]['headers']    = $headers;
                 $messages[$message_id]['recipients'] = array($user->getEmail());
 
             } else {
                 $messages[$anonymous_mail]               = $this->getMessageContent($user, $is_update, $check_perms);
-                $messages[$anonymous_mail]['from']       = Config::get('sys_noreply');
+                $messages[$anonymous_mail]['from']       = ForgeConfig::get('sys_noreply');
                 $messages[$anonymous_mail]['message-id'] = null;
                 $messages[$anonymous_mail]['headers']    = array();
                 $messages[$anonymous_mail]['recipients'] = array($user->getEmail());
@@ -808,10 +808,10 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
     }
 
     private function getForgeArtifactEmail() {
-        $email_domain = Config::get('sys_default_mail_domain');
+        $email_domain = ForgeConfig::get('sys_default_mail_domain');
 
         if (! $email_domain) {
-            $email_domain = Config::get('sys_default_domain');
+            $email_domain = ForgeConfig::get('sys_default_domain');
         }
 
         return "forge__artifacts@" . $email_domain;

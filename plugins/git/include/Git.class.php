@@ -701,7 +701,7 @@ class Git extends PluginController {
                 $imageRenderer->display();
                 break;
             case 'migrate_to_gerrit':
-                if (Config::get('sys_auth_type') !== Config::AUTH_TYPE_LDAP) {
+                if (ForgeConfig::get('sys_auth_type') !== ForgeConfig::AUTH_TYPE_LDAP) {
                     $this->redirect('/plugins/git/?group_id='. $this->groupId);
                     break;
                 }

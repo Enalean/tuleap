@@ -2,7 +2,7 @@
 
 require_once('pre.php');
 
-set_include_path(get_include_path() . PATH_SEPARATOR . Config::get('sys_custompluginsroot') . PATH_SEPARATOR . Config::get('sys_pluginsroot'));
+set_include_path(get_include_path() . PATH_SEPARATOR . ForgeConfig::get('sys_custompluginsroot') . PATH_SEPARATOR . ForgeConfig::get('sys_pluginsroot'));
 
 $GLOBALS['mailman_lib_dir'] = '/var/lib/mailman';
 $GLOBALS['mailman_bin_dir'] = '/usr/lib/mailman/bin';
