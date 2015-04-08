@@ -1,3 +1,6 @@
+Version 1.187 - Tuleap 8.1
+    * request #7975: Can't move an item from a submilestone to the top backlog in planning v2
+
 Version 1.186 - Tuleap 8.1
     * request #7925: Milestone should be collapsed by default in planning v2
 
