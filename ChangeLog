@@ -6,14 +6,24 @@ Version 8.1 (not yet released)
 
 
     == Plugins ==
-	* tracker: 5.604
-	* git: 4.25
-	* ldap: 3.72
-	* webdav: 1.9.9
-	* mediawiki: 0.63
+	* tracker: 5.605
+	* git: 4.26
+	* ldap: 3.73
+	* webdav: 1.9.10
+	* mediawiki: 0.64
+	* agiledashboard: 1.185
+	* cardwall: 1.48
+	* docman: 2.26.69
+	* fusionforge_compat: 0.8
+	* openid: 0.8
+	* pluginsadministration: 1.8
+	* statistics: 0.42
 
     == Themes ==
-	* FlamingParrot: 1.78
+	* FlamingParrot: 1.79
+
+    == Api ==
+	* REST API: 1.8
 
 Version 8.0 (Thursday, April 2nd 2015)
 

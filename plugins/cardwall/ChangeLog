@@ -1,3 +1,6 @@
+Version 1.48 - Tuleap 8.1
+    * story #7886 - rename Config to ForgeConfig for Mediawiki 1.23
+
 Version 1.47 - Tuleap 8.0
     * Replace XmlValidator by XML_RNGValidator
 

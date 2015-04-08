@@ -1,3 +1,6 @@
+Version 5.605 - Tuleap 8.1
+    * story #7886 - rename Config to ForgeConfig for Mediawiki 1.23
+
 Version 5.604 - Tuleap 8.1
     * request #7945: Fix XSS in tracker form elements
 

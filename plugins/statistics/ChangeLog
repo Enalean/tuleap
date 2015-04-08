@@ -1,3 +1,6 @@
+Version 0.42 - Tuleap 8.1
+    * story #7886 - rename Config to ForgeConfig for Mediawiki 1.23
+
 Version 0.41 - Tuleap 7.9
     * request #7719 Non active user infos are not exported in service usage
 

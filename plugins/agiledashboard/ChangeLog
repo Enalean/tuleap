@@ -1,3 +1,6 @@
+Version 1.185 - Tuleap 8.1
+    * story #7886 - rename Config to ForgeConfig for Mediawiki 1.23
+
 Version 1.184 - Tuleap 8.0
     * request #7942: when too many inconsistencies to solve at once in AD, a time out occured
 
