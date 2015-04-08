@@ -1,5 +1,6 @@
 <?php
-/* 
+/*
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  * Copyright 2005, STMicroelectronics
  *
  * Originally written by Manuel Vacelet
@@ -173,7 +174,8 @@ class WikiViews extends Views {
                 print $GLOBALS['Language']->getText('wiki_views_wikiviews', 'empty_page');
             }
             else {
-                print $GLOBALS['Language']->getText('wiki_views_wikiviews', 'not_empty_page', array($pagename));
+                $purifier = Codendi_HTMLPurifier::instance();
+                print $GLOBALS['Language']->getText('wiki_views_wikiviews', 'not_empty_page', array($purifier->purify($pagename)));
                 permission_display_selection_form("WIKIPAGE_READ", $wp->getId(), $this->gid, $postUrl);
             }
         }

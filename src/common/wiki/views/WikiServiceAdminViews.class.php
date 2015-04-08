@@ -1,5 +1,6 @@
 <?php
-/* 
+/*
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  * Copyright 2005, STMicroelectronics
  *
  * Originally written by Manuel Vacelet
@@ -63,6 +64,7 @@ class WikiServiceAdminViews extends WikiViews {
    * displayEntryForm - private
    */
   function _displayEntryForm($act='', $id='', $name='', $page='', $desc='', $rank='') {
+    $purifier = Codendi_HTMLPurifier::instance();
     print '<form name="wikiEntry" method="post" action="'.$this->wikiAdminLink.'&view=wikiDocuments">
              <input type="hidden" name="group_id" value="'.$this->gid.'" />
              <input type="hidden" name="action" value="'.$act.'" />
@@ -71,18 +73,18 @@ class WikiServiceAdminViews extends WikiViews {
 
     print '<tr>
              <td>'.$GLOBALS['Language']->getText('wiki_views_wkserviews', 'entry_name').'</td>
-             <td ><input type="text" name="name" value="'.$name.'" size="60" maxlength="255"/></td>
+             <td ><input type="text" name="name" value="'. $purifier->purify($name) .'" size="60" maxlength="255"/></td>
              <td>'.$GLOBALS['Language']->getText('wiki_views_wkserviews', 'entry_em').'</td>
            </tr>';
 
     $allPages =& WikiPage::getAllUserPages();
     $allPages[]='';
 
-    $selectedPage = $page;
+    $selectedPage = $purifier->purify($page);
     $upageValue   = '';
     if(!in_array($page, $allPages)) {
         $selectedPage = '';
-        $upageValue = $page;
+        $upageValue   = $purifier->purify($page);
     }
     print '<tr>
              <td>'.$GLOBALS['Language']->getText('wiki_views_wkserviews', 'wikipage').'</td>
@@ -94,7 +96,7 @@ class WikiServiceAdminViews extends WikiViews {
     
     print '<tr>
              <td>'.$GLOBALS['Language']->getText('wiki_views_wkserviews', 'description').'</td>
-             <td><textarea name="desc" rows="5" cols="60">'.$desc.'</textarea></td>
+             <td><textarea name="desc" rows="5" cols="60">'. $purifier->purify($desc) .'</textarea></td>
              <td>'.$GLOBALS['Language']->getText('wiki_views_wkserviews', 'description_em').'</td>
            </tr>';
     
@@ -137,7 +139,7 @@ class WikiServiceAdminViews extends WikiViews {
 		       <li><a href="'.$this->wikiAdminLink.'&view=wikiPages">Wiki Pages</a>&nbsp;|&nbsp;</li>
 		       <li><a href="'.$this->wikiAdminLink.'&view=wikiAttachments">Wiki Attachments</a>&nbsp;|&nbsp;</li>
 		       <li><a href="'.$this->wikiAdminLink.'&view=wikiPerms">Wiki Permissions</a>&nbsp;|&nbsp;</li>
-		       <li>'.help_button('wiki.html',false,'help').'</li>
+		       <li>'.help_button('wiki.html',false,'Help').'</li>
 		     </ul>';
     }
   }
@@ -204,7 +206,7 @@ class WikiServiceAdminViews extends WikiViews {
    * _browseWikiDocument - private
    */
   function _browseWikiDocument() {
-
+    $purifier = Codendi_HTMLPurifier::instance();
     $wei = WikiEntry::getEntryIterator($this->gid);
    
     print $GLOBALS['Language']->getText('wiki_views_wkserviews', 'browsedoc');
@@ -220,11 +222,11 @@ class WikiServiceAdminViews extends WikiViews {
       print '<tr class="'.html_get_alt_row_color($i).'">';
 
       print '<td>
-               <a href="'.$this->wikiAdminLink.'&view=updateWikiDocument&id='.$we->getId().'">'.$we->getName().'</a>
+               <a href="'.$this->wikiAdminLink.'&view=updateWikiDocument&id='.$we->getId().'">'. $purifier->purify($we->getName()) .'</a>
             </td>';
 
       print '<td>';
-      print $we->getPage();
+      print $purifier->purify($we->getPage());
       print ' - ';
       print '<a href="'.$this->wikiAdminLink.'&view=docPerms&id='.$we->wikiPage->getId().'">';
       $status = $GLOBALS['Language']->getText('wiki_views_wkserviews', 'define_perms');
@@ -239,7 +241,7 @@ class WikiServiceAdminViews extends WikiViews {
 
       print '<td align="center">';
 
-      $alt = $GLOBALS['Language']->getText('wiki_views_wkserviews', 'deletedoc', array($we->getName()));
+      $alt = $GLOBALS['Language']->getText('wiki_views_wkserviews', 'deletedoc', array($purifier->purify($we->getName())));
       print html_trash_link($this->wikiAdminLink.'&view=wikiDocuments&action=delete&id='.$we->getId(),
                             $GLOBALS['Language']->getText('common_mvc_view','warn',$alt),
                             $alt);

@@ -1,5 +1,6 @@
 <?php
-/* 
+/*
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  * Copyright 2005, 2006 STMicroelectronics
  *
  * Originally written by Manuel Vacelet
@@ -20,7 +21,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('HTMLCleaner.class.php');
 require_once('WikiPage.class.php');
 
 /**
@@ -81,17 +81,17 @@ class WikiEntry {
   }
 
   function setName($name) {
-    $this->name = HTMLCleaner::clean($name);
+    $this->name = $name;
   }
 
   function setPage($page) {
-    $page = str_replace('&', '', $page); 
-    $page = str_replace('&amp;', '', $page); 
-    $this->page = HTMLCleaner::clean($page, HTMLCLEANER_FULL);
+    $page       = str_replace('&', '', $page);
+    $page       = str_replace('&amp;', '', $page);
+    $this->page = $page;
   }
 
   function setDesc($desc) {
-    $this->desc = HTMLCleaner::clean($desc);
+    $this->desc = $desc;
   }
 
   function setFromRow($row) {
@@ -135,7 +135,7 @@ class WikiEntry {
   }
 
   function getName() {
-    return stripslashes($this->name);
+    return $this->name;
   }
 
   function getPage() {
@@ -143,7 +143,7 @@ class WikiEntry {
   }
 
   function getDesc() {
-    return stripslashes($this->desc);
+    return $this->desc;
   }
 
     /**
@@ -247,5 +247,3 @@ class WikiEntry {
       }
   }
 }
-
-?>
