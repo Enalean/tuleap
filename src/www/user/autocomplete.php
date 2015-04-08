@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2008
@@ -22,8 +23,6 @@
  */
 
 require_once('pre.php');
-require_once('common/event/EventManager.class.php');
-require_once('common/dao/UserDao.class.php');
 
 //
 // Input treatment
@@ -57,7 +56,7 @@ $evParams = array('searchToken'     => $userName,
                   'codendiUserOnly' => $codendiUserOnly,
                   'userList'        => &$userList,
                   'pluginAnswered'  => &$pluginAnswered);
-$em =& EventManager::instance();
+$em = EventManager::instance();
 $em->processEvent("ajax_search_user", $evParams);
 
 // If no plugin answered, search in DB.
@@ -79,10 +78,9 @@ if(!$pluginAnswered) {
 // Display
 //
 
+$purifier = Codendi_HTMLPurifier::instance();
 echo "<ul>\n";
 foreach($userList as $user) {
-    echo "  <li>$user</li>\n";
+    echo '<li>' . $purifier->purify($user) . '</li>';
 }
 echo "</ul>\n";
-
-?>

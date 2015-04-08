@@ -19,8 +19,6 @@
  */
 
 require_once('pre.php');
-//require_once('common/event/EventManager.class.php');
-require_once('common/project/ProjectManager.class.php');
 
 //
 // Input treatment
@@ -68,11 +66,9 @@ if ($nbLeft > 0) {
 //
 // Display
 //
-
+$purifier = Codendi_HTMLPurifier::instance();
 echo "<ul>\n";
 foreach ($list as $entry) {
-    echo "  <li>$entry</li>\n";
+    echo '<li>' . $purifier->purify(htmlspecialchars_decode($entry)) . '</li>';
 }
 echo "</ul>\n";
-
-?>
