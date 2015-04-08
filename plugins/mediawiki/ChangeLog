@@ -1,3 +1,6 @@
+Version 0.65 - Tuleap 8.1
+    * Story #7886: replace MW symlinks by php includes
+
 Version 0.64 - Tuleap 8.1
     * story #7886 - rename Config to ForgeConfig for Mediawiki 1.23
 
