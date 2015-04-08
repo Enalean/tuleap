@@ -1,3 +1,6 @@
+Version 2.26.70 - Tuleap 8.1
+    * request #7981: Docman approval_table_reminder fix of warning (Contrib STMicroelectronics)
+
 Version 2.26.69 - Tuleap 8.1
     * story #7886 - rename Config to ForgeConfig for Mediawiki 1.23
 
