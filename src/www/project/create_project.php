@@ -26,10 +26,6 @@ define('PROJECT_APPROVAL_AUTO',     'A');
 *
 * @param  data  
 */
-
-        
-        
-
 function create_project($data, $do_not_exit = false) {
     srand((double)microtime()*1000000);
     $random_num=rand(0,1000000);
@@ -51,9 +47,9 @@ function create_project($data, $do_not_exit = false) {
     // make group entry
     $insert_data = array(
         'group_name'          => "'". htmlspecialchars(mysql_real_escape_string($data['project']['form_full_name'])) ."'",
-        'is_public'           => $GLOBALS['sys_is_project_public'],
-        'unix_group_name'     => "'". $data['project']['form_unix_name'] ."'",
-        'http_domain'         => "'". $http_domain ."'",
+        'is_public'           => db_ei($GLOBALS['sys_is_project_public']),
+        'unix_group_name'     => "'". db_es($data['project']['form_unix_name']) ."'",
+        'http_domain'         => "'". db_es($http_domain) ."'",
         'status'              => "'P'",
         'unix_box'            => "'shell1'",
         'cvs_box'             => "'cvs1'",
@@ -62,7 +58,7 @@ function create_project($data, $do_not_exit = false) {
         'short_description'   => "'". htmlspecialchars(mysql_real_escape_string($data['project']['form_short_description'])) ."'",
         'register_time'       => time(),
         'rand_hash'           => "'". md5($random_num) ."'",
-        'built_from_template' => $data['project']['built_from_template'],
+        'built_from_template' => db_ei($data['project']['built_from_template']),
         'type'                => ($data['project']['is_test'] ? 3 : 1),
         'is_public'           => ($data['project']['is_public'] ? 1 : 0),
     );
@@ -81,7 +77,7 @@ function create_project($data, $do_not_exit = false) {
 
 		for($i=0;$i<sizeof($descfieldsinfos);$i++){
 			if(isset($data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]]) && ($data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]]!='')){
-				$sql="INSERT INTO group_desc_value (group_id, group_desc_id, value) VALUES ('".$group_id."','".$descfieldsinfos[$i]["group_desc_id"]."','".db_escape_string(trim($data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]]))."')"; 
+				$sql="INSERT INTO group_desc_value (group_id, group_desc_id, value) VALUES ('".db_ei($group_id)."','".db_ei($descfieldsinfos[$i]["group_desc_id"])."','".db_escape_string(trim($data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]]))."')";
 				$result=db_query($sql);
         		
         		
@@ -99,7 +95,7 @@ function create_project($data, $do_not_exit = false) {
             foreach($data['project']['trove'] as $root => $values) {
                 foreach($values as $value) {
                     db_query("INSERT INTO trove_group_link (trove_cat_id,trove_cat_version,"
-                             ."group_id,trove_cat_root) VALUES (". $value .",". time() .",". $group_id .",". $root .")");
+                             ."group_id,trove_cat_root) VALUES (". db_ei($value) .",". time() .",". db_ei($group_id) .",". db_ei($root) .")");
                 }
             }
         }
@@ -135,20 +131,6 @@ function create_project($data, $do_not_exit = false) {
         // clear the user data to take into account this new group.
         $user = UserManager::instance()->getCurrentUser();
         $user->clearGroupData();
-        
-        /*//Add a couple of forums for this group and make the project creator 
-        // (current user) monitor these forums
-        $fid = forum_create_forum($group_id,addslashes($GLOBALS['Language']->getText('register_confirmation','open_discussion')),1,1,
-                      addslashes($GLOBALS['Language']->getText('register_confirmation','general_discussion')), $need_feedback = false);
-        if ($fid != -1) forum_add_monitor($fid, user_getid());
-        
-        $fid = forum_create_forum($group_id,addslashes($GLOBALS['Language']->getText('global','help')),1,1,
-                      addslashes($GLOBALS['Language']->getText('register_confirmation','get_help')), $need_feedback = false);
-        if ($fid != -1) forum_add_monitor($fid, user_getid());
-        $fid = forum_create_forum($group_id,addslashes($GLOBALS['Language']->getText('register_confirmation','developers')),0,1,
-                      addslashes($GLOBALS['Language']->getText('register_confirmation','proj_dev_discussion')), $need_feedback = false);
-        if ($fid != -1) forum_add_monitor($fid, user_getid());
-        */
             
         // Instanciate all services from the project template that are 'active'
         $group = $project_manager->getProject($group_id);
@@ -228,8 +210,8 @@ function create_project($data, $do_not_exit = false) {
         $result = db_query($sql);
         $arr = db_fetch_array($result);
         $query = "UPDATE groups 
-                  SET cvs_tracker='".$arr['cvs_tracker']."',  
-                      cvs_watch_mode='".$arr['cvs_watch_mode']."' , 
+                  SET cvs_tracker='".db_ei($arr['cvs_tracker'])."',
+                      cvs_watch_mode='".db_ei($arr['cvs_watch_mode'])."' ,
                       cvs_preamble='".db_escape_string($arr['cvs_preamble'])."',
                       cvs_is_private = ".db_escape_int($arr['cvs_is_private']) ."
                   WHERE group_id = '$group_id'";
@@ -254,10 +236,10 @@ function create_project($data, $do_not_exit = false) {
         $result = db_query($sql);
         $arr = db_fetch_array($result);
         $query = "UPDATE groups, svn_accessfile_history
-                  SET svn_tracker='".$arr['svn_tracker']."',
-                      svn_mandatory_ref='".$arr['svn_mandatory_ref']."',
+                  SET svn_tracker='".db_ei($arr['svn_tracker'])."',
+                      svn_mandatory_ref='".db_ei($arr['svn_mandatory_ref'])."',
                       svn_preamble='".db_escape_string($arr['svn_preamble'])."',
-                      svn_commit_to_tag_denied='".$arr['svn_commit_to_tag_denied']."',
+                      svn_commit_to_tag_denied='".db_ei($arr['svn_commit_to_tag_denied'])."',
                       svn_accessfile_version_id = svn_accessfile_history.id
                   WHERE groups.group_id = $group_id
                       AND groups.group_id = svn_accessfile_history.group_id";
@@ -291,9 +273,9 @@ function create_project($data, $do_not_exit = false) {
                 $sql = sprintf("INSERT INTO frs_package(group_id, name, status_id, rank, approve_license) VALUES (%s, '%s', %s, %s, %s)",
                     $group_id,
                     db_escape_string($p_data['name']),
-                    $p_data['status_id'],
-                    $p_data['rank'],
-                    $p_data['approve_license']
+                    db_ei($p_data['status_id']),
+                    db_ei($p_data['rank']),
+                    db_ei($p_data['approve_license'])
                 );
                 $rid = db_query($sql);
                 if ($rid) {
