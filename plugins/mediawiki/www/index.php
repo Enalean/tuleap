@@ -1,1 +1,4 @@
-/usr/share/mediawiki-tuleap/index.php
+<?php
+
+require_once 'setenv.php';
+require_once "$mediawikipath/index.php";
