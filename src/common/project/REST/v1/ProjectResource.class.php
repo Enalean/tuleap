@@ -496,12 +496,11 @@ class ProjectResource extends AuthenticatedResource {
      * @throws 409
      * @throws 400
      */
-    public function patchBacklog($id, OrderRepresentationBase $order, array $add = null) {
+    public function patchBacklog($id, OrderRepresentationBase $order = null, array $add = null) {
         $this->checkAccess();
 
         $this->checkAgileEndpointsAvailable();
 
-        $order->checkFormat($order);
         $project = $this->getProjectForUser($id);
         $result  = array();
 

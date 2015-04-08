@@ -178,7 +178,7 @@ class ProjectBacklogResource {
         $this->sendAllowHeaders();
     }
 
-    public function patch(PFUser $user, Project $project, OrderRepresentationBase $order, array $add = null) {
+    public function patch(PFUser $user, Project $project, OrderRepresentationBase $order = null, array $add = null) {
         $this->checkIfUserCanChangePrioritiesInMilestone($user, $project);
 
         if ($add) {
@@ -189,13 +189,17 @@ class ProjectBacklogResource {
             }
         }
 
-        $all_ids = array_merge(array($order->compared_to), $order->ids);
-        $this->validateArtifactIdsAreInOpenAndUnassignedTopBacklog($all_ids, $user, $project);
+        if ($order) {
+            $order->checkFormat($order);
 
-        try {
-            $this->resources_patcher->updateArtifactPriorities($order, self::TOP_BACKLOG_IDENTIFIER, $project->getId());
-        } catch (Tracker_Artifact_Exception_CannotRankWithMyself $exception) {
-            throw new RestException(400, $exception->getMessage());
+            $all_ids = array_merge(array($order->compared_to), $order->ids);
+            $this->validateArtifactIdsAreInOpenAndUnassignedTopBacklog($all_ids, $user, $project);
+
+            try {
+                $this->resources_patcher->updateArtifactPriorities($order, self::TOP_BACKLOG_IDENTIFIER, $project->getId());
+            } catch (Tracker_Artifact_Exception_CannotRankWithMyself $exception) {
+                throw new RestException(400, $exception->getMessage());
+            }
         }
     }
 

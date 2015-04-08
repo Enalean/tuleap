@@ -7,9 +7,10 @@
 
     function ProjectService(Restangular, $q) {
         return {
-            reorderBacklog         : reorderBacklog,
-            getProjectBacklog      : getProjectBacklog,
-            removeAddReorderBacklog: removeAddReorderBacklog
+            reorderBacklog           : reorderBacklog,
+            getProjectBacklog        : getProjectBacklog,
+            removeAddReorderToBacklog: removeAddReorderToBacklog,
+            removeAddToBacklog       : removeAddToBacklog
         };
 
         function reorderBacklog(project_id, dropped_item_id, compared_to) {
@@ -24,7 +25,7 @@
                 });
         }
 
-        function removeAddReorderBacklog(milestone_id, project_id, dropped_item_id, compared_to) {
+        function removeAddReorderToBacklog(milestone_id, project_id, dropped_item_id, compared_to) {
             return getRest('v1').one('projects', project_id)
                 .all('backlog')
                 .patch({
@@ -33,6 +34,17 @@
                         direction   : compared_to.direction,
                         compared_to : compared_to.item_id
                     },
+                    add: [{
+                        id         : dropped_item_id,
+                        remove_from: milestone_id
+                    }]
+                });
+        }
+
+        function removeAddToBacklog(milestone_id, project_id, dropped_item_id) {
+            return getRest('v1').one('projects', project_id)
+                .all('backlog')
+                .patch({
                     add: [{
                         id         : dropped_item_id,
                         remove_from: milestone_id

@@ -73,7 +73,9 @@
         function moveFromSubmilestoneToBacklog(dropped_item_id, compared_to, submilestone_id, backlog) {
             if (backlog.rest_base_route === 'projects') {
                 if (compared_to) {
-                    return ProjectService.removeAddReorderBacklog(submilestone_id, backlog.rest_route_id, dropped_item_id, compared_to);
+                    return ProjectService.removeAddReorderToBacklog(submilestone_id, backlog.rest_route_id, dropped_item_id, compared_to);
+                } else {
+                    return ProjectService.removeAddToBacklog(submilestone_id, backlog.rest_route_id, dropped_item_id);
                 }
 
             } else if (backlog.rest_base_route === 'milestones') {
