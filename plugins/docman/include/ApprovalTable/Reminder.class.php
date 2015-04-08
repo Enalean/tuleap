@@ -132,6 +132,7 @@ class Docman_ApprovalTableReminder {
         if ($table instanceof Docman_ApprovalTableFile) {
             $versionFactory = new Docman_VersionFactory();
             $version        = $versionFactory->getSpecificVersionById($table->getVersionId(), 'plugin_docman_version');
+            $itemId = "";
             if ($version) {
                 $itemId = $version->getItemId();
             }
