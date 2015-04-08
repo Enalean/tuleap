@@ -1232,6 +1232,7 @@ class Layout extends Response {
         echo '<script type="text/javascript" src="/scripts/jquery/jquery-2.1.1.min.js"></script>';
         echo '<script type="text/javascript" src="/scripts/bootstrap/bootstrap-tooltip.js"></script>';
         echo '<script type="text/javascript" src="/scripts/bootstrap/bootstrap-popover.js"></script>';
+        echo '<script type="text/javascript" src="/scripts/bootstrap/bootstrap-button.js"></script>';
         echo '<script type="text/javascript" src="/scripts/tuleap/project-privacy-tooltip.js"></script>';
     }
 

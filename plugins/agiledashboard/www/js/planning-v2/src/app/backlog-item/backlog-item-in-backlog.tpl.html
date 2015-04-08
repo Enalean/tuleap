@@ -19,6 +19,7 @@
                 data-type="{{ backlog_item.trackerId }}"
                 ng-repeat="backlog_item in backlog_item.children.data"
                 class="backlog-item child"
+                ng-if="canShowBacklogItem(backlog_item)"
                 ng-class="{ undraggable: ! backlog.user_can_move_cards }"
                 data-nodrag="{{ ! backlog.user_can_move_cards }}"
             >
