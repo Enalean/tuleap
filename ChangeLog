@@ -8,6 +8,7 @@ Version 8.1 (not yet released)
 	* request #7974: Prevent SQL injections at the project creation
 	* request #7978: REST route called in top backlog in planning v2 contians a PHP notice
 	* request #7977: Reflected XSS in project statistics
+	* request #7790: Add missing anti-CSRF token in SSH keys edit form and bookmarks management
 
     == Plugins ==
 	* tracker: 5.608
