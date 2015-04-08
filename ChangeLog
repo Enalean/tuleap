@@ -6,6 +6,7 @@ Version 8.1 (not yet released)
 
 	== Bug Fix ==
 	* request #7974: Prevent SQL injections at the project creation
+	* request #7978: REST route called in top backlog in planning v2 contians a PHP notice
 
     == Plugins ==
 	* tracker: 5.608
