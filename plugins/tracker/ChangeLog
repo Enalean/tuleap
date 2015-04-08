@@ -1,3 +1,6 @@
+Version 5.608 - Tuleap 8.1
+    * Refacto: Using the API to get information for REST tests
+
 Version 5.607 - Tuleap 8.1
     * request #7973 Tracker XML export does not export field permissions
 
