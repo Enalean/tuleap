@@ -41,6 +41,10 @@ class BasicAuthentication implements iAuthenticate {
         }
     }
 
+    public static function __getMaximumSupportedVersion() {
+        return 2;
+    }
+
     /**
      * Needed due to iAuthenticate interface since Restler v3.0.0-RC6
      */
