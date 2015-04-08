@@ -120,17 +120,11 @@
 
         function augmentMilestone(milestone, limit, offset, scope_items) {
             addContentDataToMilestone(milestone);
-            defineCurrentToggleState(milestone);
+            setMilestoneCollapsedByDefault(milestone);
             defineAllowedContentItemTypes(milestone);
 
-            function defineCurrentToggleState(milestone) {
-                if (milestone.semantic_status === 'closed') {
-                    milestone.collapsed = true;
-                } else {
-                    milestone.getContent();
-                }
-
-                return milestone;
+            function setMilestoneCollapsedByDefault(milestone) {
+                milestone.collapsed = true;
             }
 
             function addContentDataToMilestone(milestone) {
