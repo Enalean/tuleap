@@ -159,7 +159,7 @@ Group: Development/Tools
 Version: @@PLUGIN_GIT_VERSION@@
 Release: @@RELEASE@@%{?dist}
 Requires: %{name} >= %{version}, git > 1.7.4, %{php_base}-Smarty, gitolite = 2.3.1, gitphp-tuleap >= 0.2.5-9
-Requires: geshi, php-guzzle
+Requires: geshi, php-guzzle, sudo
 Provides: tuleap-plugin-git = %{version}
 Conflicts: tuleap-plugin-git-gitolite3
 %description plugin-git
@@ -550,12 +550,16 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__install} plugins/git/bin/gl-membership.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} plugins/git/bin/git-post-receive.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} plugins/git/bin/gitolite-suexec-wrapper.sh $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+%{__install} plugins/git/bin/restore-tar-repository.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} plugins/git/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_git
 %{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_git
+%{__install} -d $RPM_BUILD_ROOT/etc/sudoers.d
+%{__install} plugins/git/etc/sudoers.d/gitolite-http $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite2_http
+%{__perl} -pi -e "s~%libbin_dir%~%{APP_LIBBIN_DIR}~g" $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite2_http
 
 # plugin-git-gitolite3
-%{__install} -d $RPM_BUILD_ROOT/etc/sudoers.d
-%{__install} plugins/git/etc/sudoers.d/gitolite3-http $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite_http
+%{__install} plugins/git/etc/sudoers.d/gitolite3-http $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite3_http
+%{__perl} -pi -e "s~%libbin_dir%~%{APP_LIBBIN_DIR}~g" $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite3_http
 
 # Plugin archivedeleteditems
 %{__install} plugins/archivedeleteditems/bin/archive-deleted-items.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
@@ -1007,7 +1011,9 @@ fi
 %attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gl-membership.pl
 %attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/git-post-receive.pl
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gitolite-suexec-wrapper.sh
+%attr(00755,root,root) %{APP_LIBBIN_DIR}/restore-tar-repository.php
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_git
+%attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite2_http
 
 %files plugin-git-gitolite3
 %defattr(-,%{APP_USER},%{APP_USER},-)
@@ -1022,8 +1028,9 @@ fi
 %attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gl-membership.pl
 %attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/git-post-receive.pl
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gitolite-suexec-wrapper.sh
+%attr(00755,root,root) %{APP_LIBBIN_DIR}/restore-tar-repository.php
 %attr(00644,root,root) %{_sysconfdir}/logrotate.d/%{APP_NAME}_git
-%attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite_http
+%attr(00600,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite3_http
 
 %files plugin-docmanwatermark
 %defattr(-,%{APP_USER},%{APP_USER},-)

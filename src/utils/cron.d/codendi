@@ -30,7 +30,6 @@
 * * * * * codendiadm (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php fts)
 * * * * * codendiadm (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php tv3_tv5_migration)
 * * * * * codendiadm (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php git)
-* * * * * root (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php git_root)
 * * * * * codendiadm (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php grokmirror)
 
 #
