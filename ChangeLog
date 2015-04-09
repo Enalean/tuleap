@@ -11,6 +11,7 @@ Version 8.1 (not yet released)
 	* request #7977: Reflected XSS in project statistics
 	* request #7790: Add missing anti-CSRF token in SSH keys edit form and bookmarks management
 	* request #7797: Fix persistent XSS in autocomplete forms
+	* request #7985: SQL permissions object_id with no quotes if it is an ID
 
 	== Plugins ==
 	* tracker: 5.608
