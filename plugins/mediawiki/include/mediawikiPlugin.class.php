@@ -2,7 +2,7 @@
 /**
  * MediaWikiPlugin Class
  *
- * Copyright 2000-2011, Fusionforge Team 
+ * Copyright 2000-2011, Fusionforge Team
  * Copyright 2012, Franck Villaume - TrivialDev
  * Copyright (c) Enalean SAS 2014. All Rights Reserved.
  *
@@ -55,6 +55,8 @@ class MediaWikiPlugin extends Plugin {
 
             $this->_addHook(Event::SERVICE_REPLACE_TEMPLATE_NAME_IN_LINK);
             $this->_addHook(Event::RENAME_PROJECT, 'rename_project');
+            $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS, 'getSystemEventClass');
+            $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
 
             //User permissions
             $this->_addHook('project_admin_remove_user');
@@ -79,6 +81,9 @@ class MediaWikiPlugin extends Plugin {
             $this->addHook('plugin_statistics_disk_usage_collect_project');
             $this->addHook('plugin_statistics_disk_usage_service_label');
             $this->addHook('plugin_statistics_color');
+
+            // Site admin link
+            $this->_addHook('site_admin_option_hook', 'site_admin_option_hook', false);
     }
 
     public function getServiceShortname() {
@@ -626,7 +631,7 @@ class MediaWikiPlugin extends Plugin {
     private function getInstantiater($group_id) {
         $project_manager = ProjectManager::instance();
         $project = $project_manager->getProject($group_id);
-        
+
         if (! $project instanceof Project || $project->isError()) {
             return;
         }
@@ -824,5 +829,41 @@ class MediaWikiPlugin extends Plugin {
         if ($params['service'] == self::SERVICE_SHORTNAME) {
             $params['color'] = 'lightsalmon';
         }
+    }
+
+    public function site_admin_option_hook() {
+        echo '<li><a href="'.$this->getPluginPath().'/forge_admin?action=site_index'.'">Mediawiki</a></li>';
+    }
+
+    public function system_event_get_types_for_default_queue(array &$params) {
+        require_once 'events/SytemEvent_MEDIAWIKI_SWITCH_TO_123.class.php';
+
+        $params['types'] = array_merge($params['types'], array(
+            SystemEvent_MEDIAWIKI_SWITCH_TO_123::NAME
+        ));
+    }
+
+    public function getSystemEventClass($params) {
+        require_once 'events/SytemEvent_MEDIAWIKI_SWITCH_TO_123.class.php';
+
+        switch($params['type']) {
+            case SystemEvent_MEDIAWIKI_SWITCH_TO_123::NAME:
+                $params['class'] = 'SystemEvent_MEDIAWIKI_SWITCH_TO_123';
+                $params['dependencies'] = array(
+                    $this->getMediawikiMigrator(),
+                    $this->getProjectManager()
+                );
+                break;
+            default:
+                break;
+        }
+    }
+
+    private function getMediawikiMigrator() {
+        return new Mediawiki_Migration_MediawikiMigrator();
+    }
+
+    private function getProjectManager() {
+        return ProjectManager::instance();
     }
 }
