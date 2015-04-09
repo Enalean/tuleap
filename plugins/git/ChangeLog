@@ -1,3 +1,6 @@
+Version 4.28 - Tuleap 8.1
+    * request #7384: restoring a git repository is now done by the APP user
+
 Version 4.27 - Tuleap 8.1
     * request #7384: Restore archived gitolite repositories
 

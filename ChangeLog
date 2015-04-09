@@ -1,6 +1,7 @@
 Version 8.1 (not yet released)
 
 	== Enhancement ==
+	* request #7384: restoring a git repository is now done by the APP user
 	* story #7813: Refactoring- Introduce ConfigValueFileProvider
 	* request #7938: Allow proper reverse proxy of Tuleap (Allow to query REST API in HTTP without SSL)
 
@@ -11,9 +12,9 @@ Version 8.1 (not yet released)
 	* request #7790: Add missing anti-CSRF token in SSH keys edit form and bookmarks management
 	* request #7797: Fix persistent XSS in autocomplete forms
 
-    == Plugins ==
+	== Plugins ==
 	* tracker: 5.608
-	* git: 4.27
+	* git: 4.28
 	* ldap: 3.74
 	* webdav: 1.9.10
 	* mediawiki: 0.65
@@ -26,13 +27,13 @@ Version 8.1 (not yet released)
 	* statistics: 0.42
 	* IM: 1.5.24
 
-    == Themes ==
+	== Themes ==
 	* FlamingParrot: 1.79
 
-    == Api ==
+	== Api ==
 	* REST API: 1.8
 
-    == Development ==
+	== Development ==
 	* Story #7886: Fix error with Config in Users (avatar)
 
 Version 8.0 (Thursday, April 2nd 2015)
