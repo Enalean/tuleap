@@ -1,3 +1,6 @@
+Version 4.27 - Tuleap 8.1
+    * request #7384: Restore archived gitolite repositories
+
 Version 4.26 - Tuleap 8.1
     * story #7886 - rename Config to ForgeConfig for Mediawiki 1.23
 
