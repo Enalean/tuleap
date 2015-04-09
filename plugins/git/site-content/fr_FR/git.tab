@@ -387,3 +387,9 @@ plugin_git	clone_text	Clonez le dépôt pour obtenir votre copie de travail loca
 plugin_git	add_remote_text	Ou ajoutez simplement ce dépôt distant à votre copie locale:
 plugin_git	default_location	Défaut
 plugin_git	ssh_mirrors_text	Mirroirs SSH
+
+plugin_git	restore_invalid_id	Impossible de restorer le dépôt Git : Identifiant invalide
+plugin_git	restore_invalid_name	Impossible de restorer le dépôt Git : un dépôt avec le même nom existe déjà
+plugin_git	restore_event_created	Tâche crée pour restorer le dépôt
+plugin_git	restore_no_repo_found	Aucun dépôt Git restorable n'a été trouvé
+plugin_git	restore_confirmation	Confirmez la restoration de ce dépôt Git

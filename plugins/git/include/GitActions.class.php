@@ -1023,4 +1023,23 @@ class GitActions extends PluginActions {
     public function setSelectedRepositories($repositories) {
         $this->addData(array('repositories' => $repositories));
     }
+
+    public function restoreRepository($repo_id, $project_id) {
+        $repository = $this->factory->getDeletedRepository($repo_id);
+        $url        = '/admin/show_pending_documents.php?group_id='.$project_id.'&focus=git_repository';
+
+        if (! $repository) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'restore_invalid_id'));
+            $GLOBALS['Response']->redirect($url);
+        }
+
+        $active_repository = $this->factory->getRepositoryByPath($project_id, $repository->getPath());
+        if ($active_repository instanceof GitRepository) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'restore_invalid_name'));
+        } else {
+            $this->git_system_event_manager->queueRepositoryRestore($repository);
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git', 'restore_event_created').' : '.$repository->getName());
+        }
+        $GLOBALS['Response']->redirect($url);
+    }
 }

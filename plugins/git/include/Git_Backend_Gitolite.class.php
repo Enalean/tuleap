@@ -502,5 +502,22 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
 
         return $project_repositories;
     }
+
+    /**
+     *
+     * Restore archived Gitolite repositories
+     *
+     * @param GitRepository $repository
+     *
+     */
+    public function restoreArchivedRepository(GitRepository $repository) {
+        $this->logger->info('[Gitolite]Restoring repository : '.$repository->getName());
+        $backup_directory = realpath($this->getGitPlugin()->getConfigurationParameter('git_backup_dir').'/');
+        return $this->getDriver()->restoreRepository(
+            $repository,
+            $this->getGitRootPath(),
+            $backup_directory
+        );
+    }
 }
 ?>

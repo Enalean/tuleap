@@ -79,6 +79,7 @@ class Git_GitoliteDriver {
 
     CONST OLD_AUTHORIZED_KEYS_PATH = "/usr/com/gitolite/.ssh/authorized_keys";
     CONST NEW_AUTHORIZED_KEYS_PATH = "/var/lib/gitolite/.ssh/authorized_keys";
+    CONST EXTRA_REPO_RESTORE_DEPTH = 2;
 
 
     /**
@@ -454,6 +455,89 @@ class Git_GitoliteDriver {
                 $this->logger->info('Purge of Gitolite repository: '.$repository->getName().' terminated');
             }
         }
+    }
+
+    /**
+     *
+     * Restore archived repository
+     *
+     * @param GitRepository $repository
+     * @param String git_root_path
+     * @param String $backup_directory
+     *
+     * @return boolean
+     *
+     */
+    public function restoreRepository(GitRepository $repository, $git_root_path, $backup_directory) {
+        $repository_path = $git_root_path.$repository->getPath();
+        $backup_path     = $this->getBackupPath($repository, $backup_directory);
+        if(! file_exists($backup_path)) {
+            $this->logger->error('[Gitolite][Restore] Unable to find repository archive: '.$backup_path);
+            return false;
+        }
+
+        $backup_path      = realpath($backup_path);
+        $restore_path     = $this->getRestorePath($repository_path);
+        $extraction_depth = $this->getExtractionDepth($repository_path);
+
+        $this->extractRepository($backup_path, $restore_path, $extraction_depth);
+        $this->deleteBackup($repository, $backup_directory);
+
+        if(!$this->getDao()->activate($repository->getId())) {
+            $this->logger->error('[Gitolite][Restore] Unable to activate repository after restore: '.$repository->getName());
+        }
+        if(!$repository->getBackend()->updateRepoConf($repository)) {
+            $this->logger->warn('[Gitolite][Restore] Unable to update repository configuration after restore : '.$repository->getName());
+        }
+
+        // Change ownership to gitolite:gitolite
+        $backend = Backend::instance();
+        $backend->recurseChownChgrp($repository_path, "gitolite", "gitolite");
+
+        $this->logger->info('[Gitolite] Restore of repository "'.$repository->getName().'" completed');
+        return true;
+    }
+
+    /**
+     *
+     * Return Extraction depth
+     *
+     * @param $repository_path
+     *
+     */
+    private function getExtractionDepth($repository_path) {
+        $tmp_restore_path = explode ("/", $repository_path);
+        $extraction_depth = count($tmp_restore_path) - self::EXTRA_REPO_RESTORE_DEPTH;
+        return $extraction_depth;
+    }
+
+    /**
+     *
+     * Return restore path
+     *
+     * @param $repository_path
+     *
+     */
+    private function getRestorePath($repository_path) {
+        $path_parts = explode ("/", $repository_path);
+        array_pop($path_parts);
+        $repository_folder_path = implode("/", $path_parts);
+        return $repository_folder_path;
+    }
+
+    /**
+     *
+     * Extract repository
+     *
+     * @param String $backup_path
+     * @param String $restore_path
+     * @param String $extraction_depth
+     *
+     */
+    private function extractRepository($backup_path, $restore_path, $extraction_depth) {
+        $system_command = new System_Command();
+        $command        = 'tar xf '.escapeshellarg($backup_path).' --strip-components='.$extraction_depth.' -C '.escapeshellarg($restore_path);
+        $system_command->exec($command);
     }
 
     private function getBackupPath(GitRepository $repository, $backup_directory) {

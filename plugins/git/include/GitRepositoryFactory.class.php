@@ -307,6 +307,23 @@ class GitRepositoryFactory {
         return $archived_repositories;
     }
 
+    /**
+     * Get the list of all repositories for a given project
+     *
+     * @param Int $project_id
+     *
+     * @return GitRepository[]
+     */
+    public function getDeletedRepositoriesByProjectId($project_id, $retention_period) {
+        $repositories         = array();
+        $deleted_repositories = $this->dao->getDeletedRepositoriesByProjectId($project_id, $retention_period);
+        foreach ($deleted_repositories as $deleted_repository) {
+            $repository = $this->instanciateFromRow($deleted_repository);
+            array_push($repositories, $repository);
+        }
+        return $repositories;
+    }
+
     public function hasGitShellRepositories() {
         return $this->dao->hasGitShellRepositories();
     }

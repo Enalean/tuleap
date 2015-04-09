@@ -94,6 +94,7 @@ class GitPlugin extends Plugin {
         $this->_addHook('widget_instance',                                  'myPageBox',                                   false);
         $this->_addHook('widgets',                                          'widgets',                                     false);
         $this->_addHook('codendi_daily_start',                              'codendiDaily',                                false);
+        $this->_addHook('show_pending_documents',                           'showArchivedRepositories',                    false);
 
         $this->_addHook('SystemEvent_USER_RENAME', 'systemevent_user_rename');
 
@@ -326,6 +327,14 @@ class GitPlugin extends Plugin {
                 $params['class'] = 'SystemEvent_GIT_DUMP_ALL_SSH_KEYS';
                 $params['dependencies'] = array(
                     $this->getSSHKeyMassDumper(),
+                    $this->getLogger()
+                );
+                break;
+            case SystemEvent_GIT_REPO_RESTORE::NAME:
+                $params['class'] = 'SystemEvent_GIT_REPO_RESTORE';
+                $params['dependencies'] = array(
+                    $this->getRepositoryFactory(),
+                    $this->getGitSystemEventManager(),
                     $this->getLogger()
                 );
                 break;
@@ -1409,5 +1418,36 @@ class GitPlugin extends Plugin {
      */
     private function getCurrentUser() {
         return UserManager::instance()->getCurrentUser();
+    }
+
+    /**
+     * Hook to list archived repositories for restore in site admin page
+     *
+     * @param array $params
+     */
+    public function showArchivedRepositories($params) {
+        $group_id              = $params['group_id'];
+        $archived_repositories = $this->getRepositoryManager()->getRepositoriesForRestoreByProjectId($group_id);
+        $tab_content           = '<div class="contenu_onglet" id="contenu_onglet_git_repository">';
+
+        if (count($archived_repositories) == 0) {
+            $tab_content .= '<center>'.$GLOBALS['Language']->getText('plugin_git', 'restore_no_repo_found').'</center>';
+        } else {
+            $tab_content .= '<table>';
+            foreach($archived_repositories as $archived_repository) {
+                $tab_content .= '<tr class="boxitemgrey">';
+                $tab_content .= '<td>'.$archived_repository->getName().'</td>';
+                $tab_content .= '<td>'.$archived_repository->getCreationDate().'</td>';
+                $tab_content .= '<td>'.$archived_repository->getCreator()->getName().'</td>';
+                $tab_content .= '<td>'.$archived_repository->getDeletionDate().'</td>';
+                $tab_content .= '<td><a href="/plugins/git/?action=restore&group_id='.$group_id.'&repo_id='.$archived_repository->getId().'"><img src="'.util_get_image_theme("ic/convert.png").'" onClick="return confirm(\''.$GLOBALS['Language']->getText('plugin_git', 'restore_confirmation').'\')" border="0" height="16" width="16"></a></td>';
+                $tab_content .= '</tr>';
+            }
+            $tab_content .= '</table>';
+        }
+        $tab_content     .= '</div>';
+        $params['id'][]  = 'git_repository';
+        $params['nom'][] = 'Deleted git repositories';
+        $params['html'][]= $tab_content;
     }
 }

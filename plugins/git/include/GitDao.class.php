@@ -681,6 +681,46 @@ class GitDao extends DataAccessObject {
                  ' AND '.self::REPOSITORY_BACKEND_TYPE." = '".self::BACKEND_GITOLITE."'".
                  ' AND TO_DAYS(NOW()) - TO_DAYS('.self::REPOSITORY_DELETION_DATE.') ='.$retention_period;
         return $this->retrieve($query);
+     }
+
+    /**
+     * Get the list of all deleted Git repositories of a given project
+     *
+     * @param Int $project_id
+     * @param Int $retention_period
+     *
+     * @return DataAccessResult | false
+     */
+    public function getDeletedRepositoriesByProjectId($project_id, $retention_period) {
+        $project_id       = $this->da->escapeInt($project_id);
+        $retention_period = $this->da->escapeInt($retention_period);
+        $query = 'SELECT * '.
+                 ' FROM plugin_git'.
+                 ' WHERE '.self::REPOSITORY_DELETION_DATE.' != "0000-00-00 00:00:00"'.
+                 ' AND '.self::REPOSITORY_BACKEND_TYPE.' = "'.self::BACKEND_GITOLITE.'"'.
+                 ' AND '.self::FK_PROJECT_ID.' = '.$project_id.
+                 ' AND TO_DAYS(NOW()) - TO_DAYS('.self::REPOSITORY_DELETION_DATE.') < '.$retention_period.
+                 ' AND '.self::REPOSITORY_ID.' NOT IN ('.
+                 '     SELECT parameters FROM system_event'.
+                 '     WHERE type="'.SystemEvent_GIT_REPO_RESTORE::NAME.'"'.
+                 '     AND status IN ("'.SystemEvent::STATUS_NEW.'","'.SystemEvent::STATUS_RUNNING.'"))';
+        return $this->retrieve($query);
+    }
+
+    /**
+     * Activate deleted repository
+     *
+     * @param Int $repository_id
+     *
+     * @return GitDaoException | true
+     */
+    public function activate($repository_id) {
+        $id = $this->da->escapeInt($repository_id);
+        $query = ' UPDATE plugin_git'.
+                 ' SET '.self::REPOSITORY_DELETION_DATE."='0000-00-00 00:00:00'".
+                  ' ,'.self::REPOSITORY_BACKUP_PATH.' = ""'.
+                 ' WHERE '.self::REPOSITORY_ID.'='.$id;
+        return $this->update($query);
     }
 
     public function getPaginatedOpenRepositories($project_id, $limit, $offset) {

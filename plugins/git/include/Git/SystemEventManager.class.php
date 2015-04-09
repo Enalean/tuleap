@@ -175,6 +175,17 @@ class Git_SystemEventManager {
         );
     }
 
+    public function queueRepositoryRestore(GitRepository $repository) {
+        if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
+            $this->system_event_manager->createEvent(
+                SystemEvent_GIT_REPO_RESTORE::NAME,
+                $repository->getId(),
+                SystemEvent::PRIORITY_MEDIUM,
+                SystemEvent::OWNER_ROOT
+            );
+        }
+    }
+
     public function isRepositoryMigrationToGerritOnGoing(GitRepository $repository) {
         return $this->system_event_manager->isThereAnEventAlreadyOnGoingMatchingFirstParameter(SystemEvent_GIT_GERRIT_MIGRATION::NAME, $repository->getId());
     }
@@ -199,6 +210,7 @@ class Git_SystemEventManager {
             SystemEvent_GIT_USER_RENAME::NAME,
             SystemEvent_GIT_EDIT_SSH_KEYS::NAME,
             SystemEvent_GIT_DUMP_ALL_SSH_KEYS::NAME,
+            SystemEvent_GIT_REPO_RESTORE::NAME
         );
     }
 
