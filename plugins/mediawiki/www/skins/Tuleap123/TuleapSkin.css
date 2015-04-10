@@ -17,3 +17,7 @@
 div#content {
     margin-top: 1.8em;
 }
+
+div.toc {
+    display: inline-block;
+}
