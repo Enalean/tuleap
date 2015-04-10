@@ -165,7 +165,6 @@ $wgHiddenPrefs[] = 'language';
 $user            = UserManager::instance()->getCurrentUser();
 $wgLanguageCode  = substr($user->getLocale(), 0, 2);
 
-$wgDefaultSkin    = 'tuleap';
 $wgHtml5          = false;
 $wgStyleDirectory = forge_get_config('codendi_dir').forge_get_config('mw_style_path', 'mediawiki');
 $wgWellFormedXml  = true;
@@ -375,9 +374,17 @@ if (is_file("$project_dir/ProjectSettings.php")) {
 }
 
 // Add Tuleap Skin
-$wgAutoloadClasses['Tuleap'] = dirname(__FILE__)."/skins/Tuleap/Tuleap.php";
-$wgValidSkinNames['tuleap'] = 'Tuleap';
-require_once dirname(__FILE__)."/skins/Tuleap/Tuleap.php";
+if ($is_tuleap_mediawiki_123) {
+    $wgDefaultSkin    = 'tuleap123';
+    $wgAutoloadClasses['Tuleap123'] = __DIR__."/skins/Tuleap123/Tuleap123.php";
+    $wgValidSkinNames['tuleap123'] = 'Tuleap123';
+    require_once $wgAutoloadClasses['Tuleap123'];
+} else {
+    $wgDefaultSkin    = 'tuleap';
+    $wgAutoloadClasses['Tuleap'] = dirname(__FILE__)."/skins/Tuleap/Tuleap.php";
+    $wgValidSkinNames['tuleap'] = 'Tuleap';
+    require_once dirname(__FILE__)."/skins/Tuleap/Tuleap.php";
+}
 
 // ParserFunctions Extension inclusion
 require_once( "$IP/extensions/ParserFunctions/ParserFunctions.php" );
