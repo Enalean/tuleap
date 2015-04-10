@@ -24,8 +24,6 @@ require_once 'Docman_WikiRequest.class.php';
 require_once 'Docman_Log.class.php';
 require_once 'Docman_ItemDao.class.php';
 require_once 'Docman_ItemFactory.class.php';
-require_once 'common/wiki/phpwiki/lib/prepend.php';
-require_once 'common/wiki/phpwiki/lib/HtmlElement.php';
 
 class Docman_WikiController extends Docman_Controller {
 
