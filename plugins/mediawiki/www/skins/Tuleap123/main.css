@@ -17,12 +17,17 @@ div#column-content {
 }
 div#content {
 	margin: 2.8em 0 0 12.2em;
-	padding: 0 1em 1em 1em;
+	padding: 1em;
 	position: relative;
 	z-index: 2;
 }
 div#column-one {
 	padding-top: 160px;
+}
+/* Hide, but keep accessible for screen-readers */
+#column-one h2 {
+	position: absolute;
+	top: -9999px;
 }
 div#content {
 	background: white;
@@ -71,6 +76,7 @@ a.new,
 }
 
 ul {
+	list-style-type: square;
 	/* @embed */
 	list-style-image: url(bullet.gif);
 }
@@ -87,6 +93,9 @@ pre, .mw-code {
 	line-height: 1.1em;
 }
 
+#firstHeading {
+	padding-top: 0;
+}
 /*
 ** the main content area
 */
@@ -133,8 +142,7 @@ table.rimage {
 ** keep the whitespace in front of the ^=, hides rule from konqueror
 ** this is css3, the validator doesn't like it when validating as css2
 */
-#bodyContent a.external,
-#bodyContent a.external[href ^="gopher://"] {
+#bodyContent a.external {
 	/* @embed */
 	background: url(external-ltr.png) center right no-repeat;
 	padding-right: 13px;
@@ -224,30 +232,13 @@ table.rimage {
 	width: 11.6em;
 	overflow: hidden;
 }
-.portlet h4 {
-	font-size: 95%;
-	font-weight: normal;
-	white-space: nowrap;
-}
-.portlet h5 {
+.portlet h3 {
 	background: transparent;
 	padding: 0 1em 0 .5em;
 	display: inline;
 	height: 1em;
 	text-transform: lowercase;
 	font-size: 91%;
-	font-weight: normal;
-	white-space: nowrap;
-}
-.portlet h6 {
-	background: #ffae2e;
-	border: 1px solid #2f6fab;
-	border-style: solid solid none solid;
-	padding: 0 1em 0 1em;
-	text-transform: lowercase;
-	display: block;
-	font-size: 1em;
-	height: 1.2em;
 	font-weight: normal;
 	white-space: nowrap;
 }
@@ -259,18 +250,14 @@ table.rimage {
 	border: 1px solid #aaa;
 	padding: 0 .8em .3em .5em;
 }
-.portlet h1,
-.portlet h2,
-.portlet h3,
-.portlet h4 {
-	margin: 0;
-	padding: 0;
+/* allows .pBody styles to wrap around content added via BaseTemplateAfterPortlet hook */
+.pBody:after {
+	content: '';
+	clear: both;
+	display: block;
 }
 .portlet ul {
 	line-height: 1.5em;
-	list-style-type: square;
-	/* @embed */
-	list-style-image: url(bullet.gif);
 	font-size: 95%;
 }
 .portlet li {
@@ -291,7 +278,7 @@ table.rimage {
 	width: 12em;
 	overflow: visible;
 }
-#p-logo h5 {
+#p-logo h3 {
 	display: none;
 }
 #p-logo a,
@@ -340,7 +327,7 @@ input.searchButton {
 	position: absolute;
 	left: 0;
 	top: 0;
-	z-index: 0;
+	z-index: 3;
 }
 #p-personal {
 	width: 100%;
@@ -352,7 +339,7 @@ input.searchButton {
 	overflow: visible;
 	line-height: 1.2em;
 }
-#p-personal h5 {
+#p-personal h3 {
 	display: none;
 }
 #p-personal .portlet,
@@ -372,7 +359,8 @@ input.searchButton {
 	padding: 0 2em 0 3em;
 	margin: 0;
 	text-align: right;
-	list-style: none;
+	list-style-type: none;
+	list-style-image: none;
 	z-index: 0;
 	background: none;
 	cursor: default;
@@ -401,18 +389,21 @@ input.searchButton {
 #p-personal li.active a:hover {
 	background-color: transparent;
 }
-/* the icon in front of the user name, single quotes
-in bg url to hide it from iemac */
+/* The icon in front of the username / login link */
 li#pt-userpage,
 li#pt-anonuserpage,
 li#pt-login {
 	/* @embed */
 	background: url(user.gif) top left no-repeat;
 	padding-left: 20px;
-	text-transform: none;
 }
 #p-personal ul {
 	text-transform: lowercase;
+}
+/* Don't lowercase username or IP addresses (IPv6) */
+li#pt-userpage,
+li#pt-anonuserpage {
+	text-transform: none;
 }
 #p-personal li.active {
 	font-weight: bold;
@@ -432,24 +423,23 @@ li#pt-login {
 	background: none;
 	border-collapse: collapse;
 	padding-left: 1em;
-	list-style: none;
 	font-size: 95%;
 }
 #p-cactions ul {
-	list-style: none;
+	list-style-type: none;
+	list-style-image: none;
 }
 #p-cactions li {
 	display: inline;
 	border: 1px solid #aaa;
 	border-bottom: none;
-	padding: 0 0 .1em 0;
+	padding: 0 0 1em 0;
 	margin: 0 .3em 0 0;
 	overflow: visible;
 	background: white;
 }
 #p-cactions li.selected {
 	border-color: #fabd23;
-	padding: 0 0 .2em 0;
 	font-weight: bold;
 }
 #p-cactions li a {
@@ -474,7 +464,7 @@ li#pt-login {
 	text-decoration: none;
 	background-color: white;
 }
-#p-cactions h5 {
+#p-cactions h3 {
 	display: none;
 }
 #p-cactions li.istalk {
@@ -515,8 +505,7 @@ li#ca-print {
 }
 
 /* Override text-transform on languages where capitalization is significant */
-.capitalize-all-nouns .portlet h5,
-.capitalize-all-nouns .portlet h6,
+.capitalize-all-nouns .portlet h3,
 .capitalize-all-nouns #p-personal ul,
 .capitalize-all-nouns #p-cactions ul li a {
 	text-transform: none;
@@ -536,7 +525,8 @@ div#footer {
 	border-top: 1px solid #fabd23;
 	border-bottom: 1px solid #fabd23;
 	margin: .6em 0 1em 0;
-	padding: .4em 0 1.2em 0;
+	overflow: hidden;
+	padding: .4em 0 .3em 0;
 	text-align: center;
 	font-size: 90%;
 }
@@ -652,37 +642,6 @@ td.htmlform-tip {
 	margin-top: 2em;
 }
 
-div#userloginForm,
-div#userlogin {
-	margin: 0 3em 1em 0;
-	border: 1px solid #aaa;
-	clear: both;
-	padding: 1.5em 2em;
-	background-color: #f9f9f9;
-	float: left;
-}
-
-div#userloginForm table,
-div#userlogin table {
-	background-color: #f9f9f9;
-}
-
-div#userloginForm h2,
-div#userlogin h2 {
-	padding-top: 0;
-}
-
-div#userlogin .captcha,
-div#userloginForm .captcha {
-	border: 1px solid #bbb;
-	padding: 1.5em 2em;
-	background-color: white;
-}
-
-#loginend, #signupend {
-	clear: both;
-}
-
 #userloginprompt, #languagelinks {
 	font-size: 85%;
 }
@@ -693,67 +652,21 @@ div#userloginForm .captcha {
 	padding-top: 2em;
 }
 
-#userlogin .loginText, #userlogin .loginPassword {
-	width: 12em;
-}
-
 #userloginlink a, #wpLoginattempt, #wpCreateaccount {
 	font-weight: bold;
 }
 
-/*
-** IE/Mac fixes, hope to find a validating way to move this
-** to a separate stylesheet. This would work but doesn't validate:
-** @import("IEMacFixes.css");
-*/
-/* tabs: border on the a, not the div */
-* > html #p-cactions li {
-	border: none;
-}
-* > html #p-cactions li a {
-	border: 1px solid #aaa;
-	border-bottom: none;
-}
-* > html #p-cactions li.selected a {
-	border-color: #fabd23;
-}
-/* footer icons need a fixed width */
-* > html #f-poweredbyico,
-* > html #f-copyrightico {
-	width: 88px;
-}
-* > html #bodyContent,
-* > html #bodyContent pre {
-	overflow-x: auto;
-	width: 100%;
-	padding-bottom: 25px;
-}
-
-/* more IE fixes */
-/* float/negative margin brokenness */
-* html div#footer {
-	margin-top: 0;
-}
-* html div#column-content {
-	display: inline;
-	margin-bottom: 0;
-}
+/**
+ * This was originally added by Gabriel Wicke in r3681 (committed on 25 May 2004)
+ * with the commit message "tweaks to page history".
+ * Unlike the other IE/Mac fixes that used to be present here, this seems to get
+ * applied on more modern browsers, so let's keep it here until someone has the
+ * time to properly test it out.
+ */
 #pagehistory li.selected {
 	position: relative;
 }
 
-/* Mac IE 5.0 fix; floated content turns invisible */
-* > html div#column-content {
-	float: none;
-}
-* > html div#column-one {
-	position: absolute;
-	left: 0;
-	top: 0;
-}
-* > html div#footer {
-	margin-left: 13.2em;
-}
 .redirectText {
 	font-size: 150%;
 	margin: 5px;
@@ -824,7 +737,8 @@ div#searchTarget {
 }
 
 div#searchTarget ul li {
-	list-style: none;
+	list-style-type: none;
+	list-style-image: none;
 }
 
 div#searchTarget ul li:before {
@@ -917,6 +831,5 @@ div.mw-lag-warn-high {
 /* mediawiki.notification */
 .skin-monobook .mw-notification {
 	-webkit-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.125);
-	-moz-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.125);
 	box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.125);
 }
