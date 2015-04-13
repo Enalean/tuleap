@@ -19,14 +19,24 @@
  */
 
 require_once 'pre.php';
-
 require_once dirname(__FILE__) .'/../include/MediawikiAdminController.class.php';
+require_once dirname(__FILE__) .'/../include/MediawikiSiteAdminController.class.php';
 
-$service = $request->getProject()->getService('plugin_mediawiki');
-
-$controller = new MediawikiAdminController();
-$vWhiteList = new Valid_WhiteList('action', array('save', 'index'));
+$vWhiteList = new Valid_WhiteList('action', array('save', 'index', 'site_index', 'site_update_allowed_project_list'));
 $vWhiteList->required();
 
 $action = $request->getValidated('action', $vWhiteList, 'index');
-$controller->$action($service, $request);
+switch ($action) {
+    case 'index':
+    case 'save':
+        $service = $request->getProject()->getService('plugin_mediawiki');
+        $controller = new MediawikiAdminController();
+        $controller->$action($service, $request);
+        break;
+
+    case 'site_index':
+    case 'site_update_allowed_project_list':
+        $controller = new MediawikiSiteAdminController();
+        $controller->$action($request);
+        break;
+}

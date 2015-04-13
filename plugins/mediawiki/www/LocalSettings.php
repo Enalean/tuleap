@@ -41,8 +41,10 @@ require_once('common/include/HTTPRequest.class.php');
 require_once 'pre.php';
 require_once 'plugins_utils.php';
 require_once 'common/user/UserManager.class.php';
-require_once dirname(__FILE__) .'/../include/MediawikiDao.class.php';
-require_once dirname(__FILE__) .'/../include/MediawikiUserGroupsMapper.class.php';
+require_once 'common/project/Group.class.php';
+require_once __DIR__.'/../include/MediawikiDao.class.php';
+require_once __DIR__.'/../include/MediawikiUserGroupsMapper.class.php';
+require_once __DIR__.'/../include/MediawikiSiteAdminResourceRestrictor.php';
 
 //Trust Mediawiki security
 $xml_security = new XML_Security();
@@ -50,7 +52,6 @@ $xml_security->enableExternalLoadOfEntities();
 
 sysdebug_lazymode(true);
 
-$IP = forge_get_config('src_path', 'mediawiki');
 
 if (forge_get_config('sys_https_host')) {
     $wgServer = 'https://'. forge_get_config('sys_https_host');
@@ -81,6 +82,21 @@ while (count ($exppath) >= 4) {
             array_shift ($exppath) ;
     }
 }
+
+if (!isset($is_tuleap_mediawiki_123)) {
+    $is_tuleap_mediawiki_123 = false;
+
+    $restrictor_dao = new MediawikiSiteAdminResourceRestrictorDao();
+    if ($restrictor_dao->isMediawiki123(MediawikiSiteAdminResourceRestrictor::RESOURCE_ID, $fusionforgeproject)) {
+        $is_tuleap_mediawiki_123 = true;
+    }
+}
+
+$IP = '/usr/share/mediawiki-tuleap';
+if ($is_tuleap_mediawiki_123) {
+    $IP = '/usr/share/mediawiki-tuleap-123';
+}
+
 $group = group_get_object_by_name($fusionforgeproject) ;
 
 $gconfig_dir = forge_get_config('mwdata_path', 'mediawiki');
@@ -149,7 +165,6 @@ $wgHiddenPrefs[] = 'language';
 $user            = UserManager::instance()->getCurrentUser();
 $wgLanguageCode  = substr($user->getLocale(), 0, 2);
 
-$wgDefaultSkin    = 'tuleap';
 $wgHtml5          = false;
 $wgStyleDirectory = forge_get_config('codendi_dir').forge_get_config('mw_style_path', 'mediawiki');
 $wgWellFormedXml  = true;
@@ -174,13 +189,13 @@ $GLOBALS['sys_session_expire'] = forge_get_config('session_expire');
 $GLOBALS['REMOTE_ADDR']        = getStringFromServer('REMOTE_ADDR') ;
 $GLOBALS['HTTP_USER_AGENT']    = getStringFromServer('HTTP_USER_AGENT') ;
 
-require_once("$IP/includes/Exception.php");
-require_once("$IP/includes/db/Database.php");
 
-if (forge_get_config('mw_dbtype', 'mediawiki') == 'mysql') {
-    require_once 'DatabaseForgeMysql.php';
+if ($is_tuleap_mediawiki_123) {
+    require_once 'DatabaseForgeMysql123.php';
 } else {
-    require_once 'DatabaseForgePgsql.php';
+    require_once("$IP/includes/Exception.php");
+    require_once("$IP/includes/db/Database.php");
+    require_once 'DatabaseForgeMysql.php';
 }
 
 function TuleapMediawikiAuthentication($user, &$result) {
@@ -359,9 +374,17 @@ if (is_file("$project_dir/ProjectSettings.php")) {
 }
 
 // Add Tuleap Skin
-$wgAutoloadClasses['Tuleap'] = dirname(__FILE__)."/skins/Tuleap/Tuleap.php";
-$wgValidSkinNames['tuleap'] = 'Tuleap';
-require_once dirname(__FILE__)."/skins/Tuleap/Tuleap.php";
+if ($is_tuleap_mediawiki_123) {
+    $wgDefaultSkin    = 'tuleap123';
+    $wgAutoloadClasses['Tuleap123'] = __DIR__."/skins/Tuleap123/Tuleap123.php";
+    $wgValidSkinNames['tuleap123'] = 'Tuleap123';
+    require_once $wgAutoloadClasses['Tuleap123'];
+} else {
+    $wgDefaultSkin    = 'tuleap';
+    $wgAutoloadClasses['Tuleap'] = dirname(__FILE__)."/skins/Tuleap/Tuleap.php";
+    $wgValidSkinNames['tuleap'] = 'Tuleap';
+    require_once dirname(__FILE__)."/skins/Tuleap/Tuleap.php";
+}
 
 // ParserFunctions Extension inclusion
 require_once( "$IP/extensions/ParserFunctions/ParserFunctions.php" );

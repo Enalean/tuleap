@@ -146,3 +146,9 @@ CREATE TABLE IF NOT EXISTS plugin_mediawiki_admin_options (
     project_id INT(11) UNSIGNED PRIMARY KEY,
     enable_compatibility_view BOOLEAN DEFAULT 0
 ) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS plugin_mediawiki_site_restricted_features (
+    feature INT NOT NULL,
+    project_id int(11) NOT NULL,
+    PRIMARY KEY (feature, project_id)
+) ENGINE=InnoDB;

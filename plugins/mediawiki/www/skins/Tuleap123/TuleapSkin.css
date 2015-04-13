@@ -1,0 +1,23 @@
+#p-navigation {
+    margin-top : -156px;
+}
+
+#level_1 > ul, #level_2 > ul {
+    line-height: 2em;
+}
+
+.navbar-search > .input-append > .btn {
+    height: 30px;
+}
+
+#ff-mw-wrapper {
+    padding: 12px;
+}
+
+div#content {
+    margin-top: 1.8em;
+}
+
+div.toc {
+    display: inline-block;
+}
