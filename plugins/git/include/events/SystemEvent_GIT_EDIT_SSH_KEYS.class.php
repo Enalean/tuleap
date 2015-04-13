@@ -33,15 +33,20 @@ class SystemEvent_GIT_EDIT_SSH_KEYS extends SystemEvent {
     /** @var Git_UserAccountManager */
     private $git_user_account_manager;
 
+    /** @var Git_SystemEventManager */
+    private $system_event_manager;
+
     public function injectDependencies(
         UserManager $user_manager,
         Git_Gitolite_SSHKeyDumper $sshkey_dumper,
         Git_UserAccountManager $git_user_account_manager,
+        Git_SystemEventManager $system_event_manager,
         Logger $logger
     ) {
         $this->user_manager             = $user_manager;
         $this->sshkey_dumper            = $sshkey_dumper;
         $this->git_user_account_manager = $git_user_account_manager;
+        $this->system_event_manager     = $system_event_manager;
         $this->logger                   = $logger;
     }
 
@@ -64,11 +69,16 @@ class SystemEvent_GIT_EDIT_SSH_KEYS extends SystemEvent {
     }
 
     public function process() {
+        $user_id = $this->getUserIdFromParameters();
+        $this->logger->debug('Dump key for user '.$user_id);
+
+        $user                = $this->getUserFromParameters();
+        $gitolite_admin_repo = new GitRepositoryGitoliteAdmin();
+
+        $this->updateGitolite($user);
+        $this->system_event_manager->queueGrokMirrorManifest($gitolite_admin_repo);
+
         try {
-            $user_id = $this->getUserIdFromParameters();
-            $this->logger->debug('Dump key for user '.$user_id);
-            $user = $this->getUserFromParameters();
-            $this->updateGitolite($user);
             $this->updateGerrit($user);
             $this->done();
         } catch (Git_UserSynchronisationException $e) {
