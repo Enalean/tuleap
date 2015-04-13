@@ -12,6 +12,7 @@ Version 8.1 (not yet released)
 	* request #7790: Add missing anti-CSRF token in SSH keys edit form and bookmarks management
 	* request #7797: Fix persistent XSS in autocomplete forms
 	* request #7985: SQL permissions object_id with no quotes if it is an ID
+	* request #7763: Avoid errors concerning SELinux policies in packages
 
 	== Plugins ==
 	* tracker: 5.608
