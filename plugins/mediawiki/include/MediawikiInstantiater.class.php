@@ -25,8 +25,11 @@ require_once 'pre.php';
 require_once 'MediawikiInstantiaterException.class.php';
 require_once 'common/backend/BackendLogger.class.php';
 require_once 'MediawikiUserGroupsMapper.class.php';
+require_once 'MediawikiSiteAdminResourceRestrictor.php';
 
 class MediaWikiInstantiater {
+
+    const MW_123_PATH = '/usr/share/mediawiki-tuleap-123';
 
     /** @var BackendLogger */
     private $logger;
@@ -46,6 +49,9 @@ class MediaWikiInstantiater {
     /* @var MediawikiDao */
     private $dao;
 
+    /** @var MediawikiSiteAdminResourceRestrictor */
+    private $resource_restrictor;
+
     /**
      * @param string $project
      */
@@ -55,6 +61,10 @@ class MediaWikiInstantiater {
         $this->project_name     = $project->getUnixName();
         $this->project_id       = $project->getID();
         $this->dao              = new MediawikiDao();
+        $this->resource_restrictor = new MediawikiSiteAdminResourceRestrictor(
+            new MediawikiSiteAdminResourceRestrictorDao(),
+            ProjectManager::instance()
+        );
     }
 
     /**
@@ -72,6 +82,7 @@ class MediaWikiInstantiater {
         }
     }
 
+
     private function initMediawiki() {
         try {
             $exists = $this->checkForExistingProject();
@@ -85,9 +96,26 @@ class MediaWikiInstantiater {
             return false;
         } else {
             $this->createDirectory();
-            $this->createDatabase();
+            $this->createDatabase($this->getMediawikiPath());
+            if ($this->isMediawiki123()) {
+                $this->resource_restrictor->allowProject($this->project);
+            }
             return true;
         }
+    }
+
+    private function getMediawikiPath() {
+        if ($this->isMediawiki123()) {
+            return self::MW_123_PATH;
+        }
+        return forge_get_config('src_path', 'mediawiki');
+    }
+
+    private function isMediawiki123() {
+        if (file_exists(self::MW_123_PATH)) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -147,10 +175,9 @@ class MediaWikiInstantiater {
         mkdir($this->project_name_dir, 0775, true);
     }
 
-    private function createDatabase() {
+    private function createDatabase($mediawiki_path) {
         $schema = strtr('plugin_mediawiki_' . $this->project_id, '-', '_');
-        $src_path = forge_get_config('src_path', 'mediawiki');
-        $table_file = $src_path . '/maintenance/tables.sql';
+        $table_file = $mediawiki_path . '/maintenance/tables.sql';
         $main_db = ForgeConfig::get('sys_dbname');
 
         db_query('START TRANSACTION;');
