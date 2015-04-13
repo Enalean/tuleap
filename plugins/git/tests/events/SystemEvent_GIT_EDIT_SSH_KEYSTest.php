@@ -36,24 +36,25 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
-        $id = 456;
-        $mocked_methods = array(
-            'getGerritServerFactory'
-        );
-
-        $this->user = mock('PFUser');
-        $this->user_manager = mock('UserManager');
-        stub($this->user_manager)->getUserById(105)->returns($this->user);
-        $this->sshkey_dumper = mock('Git_Gitolite_SSHKeyDumper');
-
+        $this->user                 = mock('PFUser');
+        $this->user_manager         = mock('UserManager');
+        $this->sshkey_dumper        = mock('Git_Gitolite_SSHKeyDumper');
         $this->user_account_manager = mock('Git_UserAccountManager');
+        $this->system_event_manager = mock('Git_SystemEventManager');
+        $this->logger               = mock('BackendLogger');
 
-        $this->logger = mock('BackendLogger');
+        stub($this->user_manager)->getUserById(105)->returns($this->user);
     }
 
     public function testItLogsAnErrorIfNoUserIsPassed() {
         $event = new SystemEvent_GIT_EDIT_SSH_KEYS('', '', '', '', '', '', '', '', '', '');
-        $event->injectDependencies($this->user_manager, $this->sshkey_dumper, $this->user_account_manager, $this->logger);
+        $event->injectDependencies(
+            $this->user_manager,
+            $this->sshkey_dumper,
+            $this->user_account_manager,
+            $this->system_event_manager,
+            $this->logger
+        );
 
         $this->expectException('UserNotExistException');
 
@@ -62,7 +63,13 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TuleapTestCase {
 
     public function testItLogsAnErrorIfUserIsInvalid() {
         $event = new SystemEvent_GIT_EDIT_SSH_KEYS('', '', '', 'me', '', '', '', '', '', '');
-        $event->injectDependencies($this->user_manager, $this->sshkey_dumper, $this->user_account_manager, $this->logger);
+        $event->injectDependencies(
+            $this->user_manager,
+            $this->sshkey_dumper,
+            $this->user_account_manager,
+            $this->system_event_manager,
+            $this->logger
+        );
 
         $this->expectException('UserNotExistException');
 
@@ -74,7 +81,13 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TuleapTestCase {
         $new_keys = array();
 
         $event = new SystemEvent_GIT_EDIT_SSH_KEYS('', '', '', '105::', '', '', '', '', '', '');
-        $event->injectDependencies($this->user_manager, $this->sshkey_dumper, $this->user_account_manager, $this->logger);
+        $event->injectDependencies(
+            $this->user_manager,
+            $this->sshkey_dumper,
+            $this->user_account_manager,
+            $this->system_event_manager,
+            $this->logger
+        );
 
         stub($this->user)->getAuthorizedKeysArray()->returns($new_keys);
 
@@ -96,7 +109,13 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TuleapTestCase {
         );
 
         $event = new SystemEvent_GIT_EDIT_SSH_KEYS('', '', '', '105::'.'abcdefg'.PFUser::SSH_KEY_SEPARATOR.'wxyz', '', '', '', '', '', '');
-        $event->injectDependencies($this->user_manager, $this->sshkey_dumper, $this->user_account_manager, $this->logger);
+        $event->injectDependencies(
+            $this->user_manager,
+            $this->sshkey_dumper,
+            $this->user_account_manager,
+            $this->system_event_manager,
+            $this->logger
+        );
 
 
         stub($this->user)->getAuthorizedKeysArray()->returns($new_keys);
@@ -113,7 +132,13 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TuleapTestCase {
 
     public function itWarnsAdminsWhenSSHKeySynchFails() {
         $event = new SystemEvent_GIT_EDIT_SSH_KEYS('', '', '', '105::', '', '', '', '', '', '');
-        $event->injectDependencies($this->user_manager, $this->sshkey_dumper, $this->user_account_manager, $this->logger);
+        $event->injectDependencies(
+            $this->user_manager,
+            $this->sshkey_dumper,
+            $this->user_account_manager,
+            $this->system_event_manager,
+            $this->logger
+        );
 
         $this->user_account_manager->throwOn('synchroniseSSHKeys', new Git_UserSynchronisationException());
 

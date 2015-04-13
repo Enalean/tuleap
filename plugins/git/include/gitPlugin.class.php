@@ -319,6 +319,7 @@ class GitPlugin extends Plugin {
                     UserManager::instance(),
                     $this->getSSHKeyDumper(),
                     $this->getUserAccountManager(),
+                    $this->getGitSystemEventManager(),
                     $this->getLogger()
                 );
                 break;
