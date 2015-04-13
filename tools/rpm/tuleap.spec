@@ -427,6 +427,7 @@ Summary: Mediawiki plugin
 Group: Development/Tools
 Version: @@PLUGIN_MEDIAWIKI_VERSION@@
 Release: @@RELEASE@@%{?dist}
+AutoReqProv: no
 Requires: %{PKG_NAME}-plugin-fusionforge_compat
 Requires: php53-mediawiki-tuleap  >= 1.20.3-6
 %description plugin-mediawiki
