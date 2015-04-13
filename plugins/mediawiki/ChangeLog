@@ -1,3 +1,9 @@
+Version 0.66 - Tuleap 8.1
+    * * story #7886: site admin can select a project to migrate
+* story #7886: Duplicate Tuleap theme for 1.23
+* story #7886: Import Monobook difference from REL1_23 branch @ MW
+* story #7886 - Fix UI Glitches
+
 Version 0.65 - Tuleap 8.1
     * Story #7886: replace MW symlinks by php includes
 
