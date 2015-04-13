@@ -129,9 +129,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
      * @return string
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
-        $value    = $value ? $value->getValue() : '';
-        $purifier = Codendi_HTMLPurifier::instance();
-        $value    = $purifier->purify($value);
+        $value = $value ? $value->getValue() : '';
 
         if (! $value) {
             return $this->getNoValueLabel();
