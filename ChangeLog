@@ -1,3 +1,19 @@
+Version 8.0-3 (Monday, April 13th 2015)
+	== Bug Fix ==
+	* request #7973: Tracker XML export does not export field permissions
+	* request #7925: Milestone should be collapsed by default in planning v2
+	* request #7978: REST route called in top backlog in planning v2 contians a PHP notice
+	* request #7975: Can't move an item from a submilestone to the top backlog in planning v2
+	* request #7981: Docman approval_table_reminder fix of warning
+	* request #7985: SQL permissions object_id with no quotes if it is an ID
+
+	== Security ==
+	* request #7974: Prevent SQL injections at the project creation
+	* request #7977: Reflected XSS in project statistics
+	* request #7790: Add missing anti-CSRF token in SSH keys edit form and bookmarks management
+	* request #7797: Fix persistent XSS in autocomplete forms.
+	* request #7952: Disable the imadmin-bot account	
+
 Version 8.0-2 (Tuesday, April 7th 2015)
 	== Bug Fix ==
 	* request #7960: Disabled "Migrate to gerrit" if repo not fully created
