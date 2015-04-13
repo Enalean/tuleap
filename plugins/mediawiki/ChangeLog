@@ -1,3 +1,6 @@
+Version 0.67 - Tuleap 8.1
+    * Fix packaging issue
+
 Version 0.66 - Tuleap 8.1
     * * story #7886: site admin can select a project to migrate
 * story #7886: Duplicate Tuleap theme for 1.23
