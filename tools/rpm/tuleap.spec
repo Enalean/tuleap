@@ -85,6 +85,8 @@ Requires: forgeupgrade >= 1.2
 Requires: shared-mime-info
 # Documentation
 Requires: tuleap-documentation
+# SELinux policy tools
+Requires(post): policycoreutils
 
 %description
 Tuleap is a web based application that address all the aspects of product development.
@@ -774,7 +776,8 @@ else
 fi
 
 # In any cases fix the context
-/usr/bin/chcon -R root:object_r:httpd_sys_content_t $RPM_BUILD_ROOT/%{APP_DIR} || true
+/usr/sbin/semanage fcontext -a -t httpd_sys_content_t '%{APP_DIR}(/.*)?' || true
+/sbin/restorecon -R %{APP_DIR} || true
 
 # This adds the proper /etc/rc*.d links for the script that runs the Tuleap backend
 #/sbin/chkconfig --add %{APP_NAME}
