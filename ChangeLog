@@ -15,7 +15,7 @@ Version 8.1 (not yet released)
 	* request #7763: Avoid errors concerning SELinux policies in packages
 
 	== Plugins ==
-	* tracker: 5.610
+	* tracker: 5.611
 	* git: 4.29
 	* ldap: 3.75
 	* webdav: 1.9.11

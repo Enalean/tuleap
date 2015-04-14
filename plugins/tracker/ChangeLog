@@ -1,3 +1,6 @@
+Version 5.611 - Tuleap 8.1
+    * request #7980: fix XSS in site statistics
+
 Version 5.610 - Tuleap 8.1
     * request #7990 Updated tracker shortname not updated in ArtifactLink_changesetValue
 
