@@ -574,6 +574,11 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     function getEmail() {
         return $this->email;
     }
+
+    public function getEmailNew() {
+        return $this->email_new;
+    }
+
     /**
      * @return string the Status of the user
      * 'A' = Active
@@ -658,7 +663,23 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     function getUnixHomeDir() {
         return $GLOBALS['homedir_prefix']."/".$this->getUserName();
     }
-    
+
+    /**
+     * Return user unix uid as it is on the unix system (with ID shift)
+     * @return int
+     */
+    public function getSystemUnixUid() {
+        return $this->getUnixUid() + ForgeConfig::get('unix_uid_add');
+    }
+
+    /**
+     * Return user unix gid as it is on the unix system (with ID shift)
+     * @return int
+     */
+    public function getSystemUnixGid() {
+        return $this->getSystemUnixUid();
+    }
+
     /**
      * @return string unix box of the user
      */
@@ -953,6 +974,11 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     function setEmail($email) {
         $this->email = $email;
     }
+
+    public function setEmailNew($email) {
+        $this->email_new = $email;
+    }
+
     /**
      * @param string the Status of the user
      * 'A' = Active

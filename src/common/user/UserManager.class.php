@@ -96,9 +96,8 @@ class UserManager {
                 if ($user_id == 0) {
                     $this->_users[$user_id] = $this->getUserInstanceFromRow(array('user_id' => 0));
                 } else {
-                    $dar = $this->getDao()->searchByUserId($user_id);
-                    if ($row = $dar->getRow()) {
-                        $u = $this->getUserInstanceFromRow($row);
+                    $u = $this->getUserByIdWithoutCache($user_id);
+                    if ($u) {
                         $this->_users[$u->getId()] = $u;
                         $this->_userid_bynames[$u->getUserName()] = $user_id;
                     } else {
@@ -111,7 +110,15 @@ class UserManager {
         }
         return $this->_users[$user_id];
     }
-    
+
+    private function getUserByIdWithoutCache($id) {
+        $dar = $this->getDao()->searchByUserId($id);
+        if (count($dar)) {
+            return $this->getUserInstanceFromRow($dar->getRow());
+        }
+        return null;
+    }
+
     /**
      * @param string the user_name of the user to find
      * @return PFUser or null if the user is not found
@@ -704,6 +711,7 @@ class UserManager {
      */
     public function updateDb(PFUser $user) {
         if (!$user->isAnonymous()) {
+            $old_user = $this->getUserByIdWithoutCache($user->getId());
             $userRow = $user->toRow();
             if ($user->getPassword() != '') {
                 if (md5($user->getPassword()) != $user->getUserPw()) {
@@ -712,8 +720,11 @@ class UserManager {
                 }
             }
             $result = $this->getDao()->updateByRow($userRow);
-            if ($result && ($user->isSuspended() || $user->isDeleted())) {
-                $this->getDao()->deleteAllUserSessions($user->getId());
+            if ($result) {
+                if ($user->isSuspended() || $user->isDeleted()) {
+                    $this->getDao()->deleteAllUserSessions($user->getId());
+                }
+                $this->_getEventManager()->processEvent(Event::USER_MANAGER_UPDATE_DB, array('old_user' => $old_user, 'new_user' => &$user));
             }
             return $result;
         }
@@ -848,7 +859,7 @@ class UserManager {
                 case PFUser::STATUS_ACTIVE:
                 case PFUser::STATUS_RESTRICTED:
                     $em =$this->_getEventManager();
-                    $em->processEvent('project_admin_activate_user', array('user_id' => $user_id));
+                    $em->processEvent('project_admin_activate_user', array('user_id' => $user_id, 'user' => $user));
                     break;
             }
 

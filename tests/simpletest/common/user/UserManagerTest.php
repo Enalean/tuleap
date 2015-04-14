@@ -76,11 +76,8 @@ class UserManagerTest extends UnitTestCase {
     }
 
     function testCachingById() {
-        $dao = new MockUserDao($this);
-        $dar = new MockDataAccessResult($this);
-        $dao->setReturnReference('searchByUserId', $dar);
-        $dar->setReturnValueAt(0, 'getRow', array('user_name' => 'user_123', 'user_id' => 123));
-        $dar->setReturnValueAt(1, 'getRow', false);
+        $dao = mock('UserDao');
+        stub($dao)->searchByUserId()->returnsDar(array('user_name' => 'user_123', 'user_id' => 123));
 
         $dao->expectOnce('searchByUserId', array(123));
 
@@ -128,15 +125,9 @@ class UserManagerTest extends UnitTestCase {
     }
 
     function testDoubleCaching() {
-        $dao = new MockUserDao($this);
-        $dar_123 = new MockDataAccessResult($this);
-        $dao->setReturnReference('searchByUserId', $dar_123, array(123));
-        $dar_123->setReturnValueAt(0, 'getRow', array('user_name' => 'user_123', 'user_id' => 123));
-        $dar_123->setReturnValueAt(1, 'getRow', false);
-        $dar_456 = new MockDataAccessResult($this);
-        $dao->setReturnReference('searchByUserName', $dar_456, array('user_456'));
-        $dar_456->setReturnValueAt(0, 'getRow', array('user_name' => 'user_456', 'user_id' => 456));
-        $dar_456->setReturnValueAt(1, 'getRow', false);
+        $dao = mock('UserDao');
+        stub($dao)->searchByUserId(123)->returnsDar(array('user_name' => 'user_123', 'user_id' => 123));
+        stub($dao)->searchByUserName('user_456')->returnsDar(array('user_name' => 'user_456', 'user_id' => 456));
 
         $dao->expectOnce('searchByUserId', array(123));
         $dao->expectOnce('searchByUserName', array('user_456'));
@@ -162,11 +153,8 @@ class UserManagerTest extends UnitTestCase {
     }
 
     function testIsLoaded() {
-        $dao = new MockUserDao($this);
-        $dar = new MockDataAccessResult($this);
-        $dao->setReturnReference('searchByUserId', $dar);
-        $dar->setReturnValueAt(0, 'getRow', array('user_name' => 'user_123', 'user_id' => 123));
-        $dar->setReturnValueAt(1, 'getRow', false);
+        $dao = mock('UserDao');
+        stub($dao)->searchByUserId(123)->returnsDar(array('user_name' => 'user_123', 'user_id' => 123));
 
         $dao->expectOnce('searchByUserId', array(123));
 
@@ -593,11 +581,13 @@ class UserManagerTest extends UnitTestCase {
     	$user->setReturnValue('isDeleted',   false);
         $user->setReturnValue('toRow',       array());
 
+
     	// True
     	$daotrue = new MockUserDao($this);
         $daotrue->setReturnValue('updateByRow', true);
         $daotrue->expectNever('deleteAllUserSessions');
     	$umtrue = new UserManagerTestVersion($this);
+        stub($umtrue)->_getEventManager()->returns(mock('EventManager'));
         $umtrue->setReturnReference('getDao', $daotrue);
         $this->assertTrue($umtrue->updateDb($user));
 
@@ -606,6 +596,7 @@ class UserManagerTest extends UnitTestCase {
         $daofalse->setReturnValue('updateByRow', false);
         $daofalse->expectNever('deleteAllUserSessions');
         $umfalse = new UserManagerTestVersion($this);
+        stub($umfalse)->_getEventManager()->returns(mock('EventManager'));
         $umfalse->setReturnReference('getDao', $daofalse);
         $this->assertFalse($umfalse->updateDb($user));
     }
@@ -656,6 +647,7 @@ class UserManagerTest extends UnitTestCase {
         $dao->expectOnce('deleteAllUserSessions', array(123));
 
         $um = new UserManagerTestVersion($this);
+        stub($um)->_getEventManager()->returns(mock('EventManager'));
         $um->setReturnReference('getDao', $dao);
 
         $this->assertTrue($um->updateDb($user));
@@ -673,6 +665,7 @@ class UserManagerTest extends UnitTestCase {
         $dao->expectOnce('deleteAllUserSessions', array(123));
 
         $um = new UserManagerTestVersion($this);
+        stub($um)->_getEventManager()->returns(mock('EventManager'));
         $um->setReturnReference('getDao', $dao);
 
         $this->assertTrue($um->updateDb($user));

@@ -125,7 +125,30 @@ class LDAP {
             return true;
         }
     }
-    
+
+    private function authenticatedBindConnect($servers, $binddn, $bindpwd) {
+        $ds = false;
+        foreach (split('[,;]', $servers) as $ldap_server) {
+            $ds = ldap_connect($ldap_server);
+            if ($ds) {
+                // Force protocol to LDAPv3 (for AD & recent version of OpenLDAP)
+                ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
+                ldap_set_option($ds, LDAP_OPT_REFERRALS, 0);
+
+                // Since ldap_connect always return a resource with
+                // OpenLdap 2.2.x, we have to check that this ressource is
+                // valid with a bind, If bind success: that's great, if
+                // not, this is a connexion failure.
+                if (ldap_bind($ds, $binddn, $bindpwd)) {
+                    return $ds;
+                } else {
+                    throw new LDAP_Exception_BindException(ldap_error($ds));
+                }
+            }
+        }
+        throw new LDAP_Exception_ConnexionException(ldap_error($ds));
+    }
+
     /**
      * Perform LDAP binding.
      * - Some servers allow anonymous bindings for searching. Otherwise, set
@@ -277,13 +300,13 @@ class LDAP {
             $this->_restoreErrorHandler();
 
             if ($sr !== false) {
-                $this->logger->debug('LDAP search success '.$filter. ' ***SCOPE: '.$scope . ' ***ATTRIBUTES:'.print_r($attributes, true));
+                $this->logger->debug('LDAP search success '.$baseDn.' '.$filter. ' *** SCOPE: '.$scope . ' *** ATTRIBUTES: '.implode(', ', $attributes));
                 $entries = ldap_get_entries($this->ds, $sr);
                 if ($entries !== false) {
                     return new LDAPResultIterator($entries, $this->ldapParams);
                 }
             } else {
-                $this->logger->warn('LDAP search error: '.$this->ldapParams['server'].
+                $this->logger->warn('LDAP search error: '.$baseDn.' '.$filter.' '.$this->ldapParams['server'].
                     ' ***ERROR:'. ldap_error($this->ds).
                     ' ***ERROR no:'. $this->getErrno()
                 );
@@ -496,7 +519,51 @@ class LDAP {
             return $lri;
         }
     }
-    
+
+    public function add($dn, array $info) {
+        $ds = $this->getWriteConnexion();
+        if (@ldap_add($ds, $dn, $info)) {
+            return true;
+        }
+        throw new LDAP_Exception_AddException(ldap_error($ds), $dn);
+    }
+
+    public function update($dn, array $info) {
+        $ds = $this->getWriteConnexion();
+        if (@ldap_modify($ds, $dn, $info)) {
+            return true;
+        }
+        throw new LDAP_Exception_UpdateException(ldap_error($ds), $dn);
+    }
+
+    public function delete($dn) {
+        $ds = $this->getWriteConnexion();
+        if (@ldap_delete($ds, $dn)) {
+            return true;
+        }
+        throw new LDAP_Exception_DeleteException(ldap_error($ds), $dn);
+    }
+
+    public function renameUser($old_dn, $new_root_dn) {
+        return $this->rename($old_dn, $new_root_dn, $this->getLDAPParam('write_people_dn'));
+    }
+
+    private function rename($old_dn, $newrdn, $newparent) {
+        $ds = $this->getWriteConnexion();
+        if (@ldap_rename($ds, $old_dn, $newrdn, $newparent, true)) {
+            return true;
+        }
+        throw new LDAP_Exception_RenameException(ldap_error($ds), $old_dn, $newrdn.','.$newparent);
+    }
+
+    private function getWriteConnexion() {
+        return $this->authenticatedBindConnect(
+            $this->getLDAPParam('write_server'),
+            $this->getLDAPParam('write_dn'),
+            $this->getLDAPParam('write_password')
+        );
+    }
+
     /**
      * Enable fake error handler
      * 
