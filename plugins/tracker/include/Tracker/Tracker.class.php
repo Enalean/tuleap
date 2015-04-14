@@ -1847,9 +1847,9 @@ EOS;
     }
 
     protected function editOptions($request) {
-        $project = ProjectManager::instance()->getProject($this->group_id);
         $old_item_name = $this->getItemName();
-        $old_name = $this->getName();
+        $old_name      = $this->getName();
+
         $this->name                         = trim($request->getValidated('name', 'string', ''));
         $this->description                  = trim($request->getValidated('description', 'text', ''));
         $this->color                        = trim($request->getValidated('tracker_color', 'string', ''));
@@ -1894,6 +1894,9 @@ EOS;
                 //Update reference and cross references
                 //WARNING this replace existing reference(s) so that all old_item_name reference won't be extracted anymore
                 $reference_manager->updateProjectReferenceShortName($this->group_id, $old_item_name, $this->item_name);
+
+                $artifact_link_value_dao = new Tracker_FormElement_Field_Value_ArtifactLinkDao();
+                $artifact_link_value_dao->updateItemName($this->group_id, $old_item_name, $this->item_name);
             }
 
             $dao = new TrackerDao();
