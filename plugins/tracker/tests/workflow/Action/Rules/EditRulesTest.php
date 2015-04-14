@@ -206,7 +206,7 @@ class Tracker_Workflow_Action_Rules_EditRules_getRulesTest extends Tracker_Workf
 
     public function itSelectTheComparator() {
         $this->assertPattern('/SELECTED>=</s', $this->output);
-        $this->assertPattern('/SELECTED><</s', $this->output);
+        $this->assertPattern('/SELECTED>&lt;</s', $this->output);
     }
 }
 
