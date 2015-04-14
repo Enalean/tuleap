@@ -1,3 +1,6 @@
+Version 5.609 - Tuleap 8.1
+    * request #7998: Fix display of tracker form element string field
+
 Version 5.608 - Tuleap 8.1
     * Refacto: Using the API to get information for REST tests
 
