@@ -1,3 +1,6 @@
+Version 2.9 - Tuleap 8.1
+    * story #7813: allow the project administrator to give restricted users access to their project
+
 Version 2.8 - Tuleap 7.6
     * Update to latest autoload/phpab version
 

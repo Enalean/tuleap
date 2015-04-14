@@ -1,3 +1,6 @@
+Version 1.9.11 - Tuleap 8.1
+    * story #7813: allow the project administrator to give restricted users access to their project
+
 Version 1.9.10 - Tuleap 8.1
     * story #7886 - rename Config to ForgeConfig for Mediawiki 1.23
 
