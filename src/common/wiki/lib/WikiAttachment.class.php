@@ -231,6 +231,10 @@ class WikiAttachment /* implements UGroupPermission */ {
         return $this->filename;
     }
 
+    public function getProjectId() {
+        return $this->gid;
+    }
+
     /**
      * Obtain the name of the attachment as stored in the filesystem
      * Old attachments are stored in the filesystem as uploaded by the user
