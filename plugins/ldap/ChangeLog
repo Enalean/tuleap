@@ -1,3 +1,6 @@
+Version 3.75 - Tuleap 8.1
+    * story #7984: provision LDAP from Tuleap
+
 Version 3.74 - Tuleap 8.1
     * request #7797: Fix persistent XSS in autocomplete forms
 
