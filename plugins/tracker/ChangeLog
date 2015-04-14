@@ -1,3 +1,6 @@
+Version 5.610 - Tuleap 8.1
+    * request #7990 Updated tracker shortname not updated in ArtifactLink_changesetValue
+
 Version 5.609 - Tuleap 8.1
     * request #7998: Fix display of tracker form element string field
 
