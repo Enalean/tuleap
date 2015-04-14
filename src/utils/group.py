@@ -52,6 +52,6 @@ def svnGroup_mailto():
   return GROUP_INFO['cvs_events_mailing_list']
 
 def isGroupPublic():
-  return GROUP_INFO['is_public']
+  return (GROUP_INFO['access'] != 'private')
 
 

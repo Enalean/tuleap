@@ -124,7 +124,7 @@ INSERT INTO group_desc SET \
 INSERT INTO groups SET \
   group_id = '1', \
   group_name = 'Administration Project', \
-  is_public = '1', \
+  access = 'public', \
   status = 'A', \
   unix_group_name = 'admin', \
   unix_box = 'shell1', \
@@ -163,7 +163,7 @@ INSERT INTO groups SET \
 INSERT INTO groups SET \
   group_id = '46', \
   group_name = 'Site News', \
-  is_public = '0', \
+  access = 'private', \
   status = 'A', \
   unix_group_name = 'sitenews', \
   unix_box = 'shell1', \
@@ -203,7 +203,7 @@ INSERT INTO groups SET \
 INSERT INTO groups SET \
   group_id = '100', \
   group_name = 'Default Site Template', \
-  is_public = '0', \
+  access = 'private', \
   status = 's', \
   unix_group_name = 'none', \
   unix_box = 'shell1', \
@@ -886,9 +886,9 @@ INSERT INTO reference_group SET reference_id='14', group_id='46', is_active='1';
 --
 -- Add forums in Template project (group 100)
 --
-INSERT INTO forum_group_list (group_id,forum_name,is_public,description) VALUES ('100','Open Discussion','1' ,'General Discussion');
-INSERT INTO forum_group_list (group_id,forum_name,is_public,description) VALUES ('100','Help','1' ,'Get Help');
-INSERT INTO forum_group_list (group_id,forum_name,is_public,description) VALUES ('100','Developers','0' ,'Project Developer Discussion');
+INSERT INTO forum_group_list (group_id,forum_name,is_public,description) VALUES ('100','Open Discussion',1 ,'General Discussion');
+INSERT INTO forum_group_list (group_id,forum_name,is_public,description) VALUES ('100','Help',1 ,'Get Help');
+INSERT INTO forum_group_list (group_id,forum_name,is_public,description) VALUES ('100','Developers',0 ,'Project Developer Discussion');
 
 -- 
 -- Layouts

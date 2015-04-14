@@ -1,0 +1,18 @@
+<h3>{{ section_title }}</h3>
+<label for="project_visibility">{{ choose_visbility }}</label>
+<select name="project_visibility">
+    {{# options }}
+        <option value="{{ value }}" {{ selected }}>{{ label }}</option>
+    {{/ options }}
+</select>
+<br>
+{{# platform_allows_restricted }}
+    <p class="alert alert-warning">
+        {{{ restricted_warning_message }}}
+    </p>
+{{/ platform_allows_restricted }}
+{{^ platform_allows_restricted }}
+    <p class="alert alert-warning">
+        {{{ general_warning_message }}}
+    </p>
+{{/ platform_allows_restricted }}

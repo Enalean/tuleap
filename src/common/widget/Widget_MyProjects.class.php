@@ -42,9 +42,9 @@ class Widget_MyProjects extends Widget {
 
         $order = 'groups.group_name';
         if ($display_privacy) {
-            $order = 'is_public, groups.group_name';
+            $order = 'access, groups.group_name';
         }
-        $result = db_query("SELECT groups.group_id, groups.group_name, groups.unix_group_name, groups.status, groups.is_public, user_group.admin_flags".
+        $result = db_query("SELECT groups.group_id, groups.group_name, groups.unix_group_name, groups.status, groups.access, user_group.admin_flags".
                            " FROM groups".
                            " JOIN user_group USING (group_id)".
                            " WHERE user_group.user_id = ".$user->getId().
@@ -60,7 +60,7 @@ class Widget_MyProjects extends Widget {
             $token = new CSRFSynchronizerToken('massmail_to_project_members.php');
             while ($row = db_fetch_array($result)) {
                 $tdClass = '';
-                if ($display_privacy && $prevIsPublic == 0 && $row['is_public'] == 1) {
+                if ($display_privacy && $prevIsPublic == 0 && $row['access'] != Project::ACCESS_PRIVATE) {
                     $tdClass .= ' widget_my_projects_first_public';
                 }
 
@@ -68,10 +68,10 @@ class Widget_MyProjects extends Widget {
 
                 // Privacy
                 if ($display_privacy) {
-                    if ($row['is_public'] == 1) {
-                        $privacy = 'public';
+                    if ($row['access'] === Project::ACCESS_PRIVATE) {
+                        $privacy = Project::ACCESS_PRIVATE;
                     } else {
-                        $privacy = 'private';
+                        $privacy = Project::ACCESS_PUBLIC;
                     }
                     $html .= '<td class="widget_my_projects_privacy'.$tdClass.'"><span class="project_privacy_'.$privacy.'">';
                     $html .= '&nbsp;';
@@ -106,7 +106,7 @@ class Widget_MyProjects extends Widget {
 
                 $html .= '</tr>';
 
-                $prevIsPublic = $row['is_public'];
+                $prevIsPublic = ($row['access'] !== Project::ACCESS_PRIVATE);
             }
 
             if ($display_privacy) {
@@ -142,7 +142,7 @@ class Widget_MyProjects extends Widget {
             . "groups.group_id,"
             . "groups.unix_group_name,"
             . "groups.status,"
-            . "groups.is_public,"
+            . "groups.access,"
             . "user_group.admin_flags "
             . "FROM groups,user_group "
             . "WHERE groups.group_id=user_group.group_id "
@@ -158,7 +158,7 @@ class Widget_MyProjects extends Widget {
         } else {
             for ($i=0; $i<$rows; $i++) {
                 $title = db_result($result,$i,'group_name');
-                if ( db_result($result,$i,'is_public') == 0 ) {
+                if ( db_result($result,$i,'access') == Project::ACCESS_PRIVATE ) {
                     $title .= ' (*)';
                 }
 

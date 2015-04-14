@@ -49,14 +49,14 @@ print '<P><B><FONT size="+1">'.$title.'</FONT></B>
 <TD align="right"><B>'.$Language->getText('top_toplist','change').'</B>&nbsp;&nbsp;&nbsp;</TD></TR>
 ';
 
-$res_top = db_query("SELECT groups.group_id,groups.group_name,groups.unix_group_name,top_group.$rankfield,".
-	"top_group.rank_$rankfield,top_group.rank_".$rankfield."_old ".
-	"FROM groups,top_group ".
-	"WHERE top_group.$rankfield > 0 ".
-	"AND top_group.group_id=groups.group_id ".
-        "AND groups.type=1 ".
-	"AND groups.is_public=1 ".
-	"ORDER BY top_group.rank_$rankfield LIMIT 100");
+$res_top = db_query("SELECT groups.group_id,groups.group_name,groups.unix_group_name,top_group.$rankfield,
+	top_group.rank_$rankfield,top_group.rank_".$rankfield."_old
+	FROM groups,top_group
+	WHERE top_group.$rankfield > 0
+	AND top_group.group_id=groups.group_id
+        AND groups.type=1
+	AND groups.access != '".db_es(Project::ACCESS_PRIVATE). "'
+	ORDER BY top_group.rank_$rankfield LIMIT 100");
 
 echo db_error();
 

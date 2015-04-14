@@ -59,13 +59,6 @@ if ($request->existAndNonEmpty('Update')) {
     if ($group->getStatus() != $form_status) {
         group_add_history('status', $Language->getText('admin_groupedit', 'status_' . $group->getStatus()) . " :: " . $Language->getText('admin_groupedit', 'status_' . $form_status), $group_id);
     }
-    if ($group->isPublic() != $form_public) {
-        group_add_history('is_public', $group->isPublic(), $group_id);
-        $em->processEvent('project_is_private', array(
-            'group_id' => $group_id,
-            'project_is_private' => $form_public ? 0 : 1
-        ));
-    }
     if ($group->getType() != $group_type) {
         group_add_history('group_type', $group->getType(), $group_id);
     }
@@ -76,10 +69,10 @@ if ($request->existAndNonEmpty('Update')) {
         group_add_history('unix_box', $group->getUnixBox(), $group_id);
     }
     if (isset($form_status) && $form_status) {
-        db_query("UPDATE groups SET is_public=".db_ei($form_public).",status='".db_es($form_status)."',"
-                . "license='".db_es($form_license)."',type='".db_es($group_type)."',"
-                . "unix_box='".db_es($form_box)."',http_domain='".db_es($form_domain)."'"
-                . " WHERE group_id=".db_ei($group_id));
+        db_query("UPDATE groups SET status='".db_es($form_status)."',"
+            . "license='".db_es($form_license)."',type='".db_es($group_type)."',"
+            . "unix_box='".db_es($form_box)."',http_domain='".db_es($form_domain)."'"
+            . " WHERE group_id=".db_ei($group_id));
     }
 
     $GLOBALS['Response']->addFeedback('info', $Language->getText('admin_groupedit', 'feedback_info'));
@@ -142,13 +135,7 @@ echo $template->showTypeBox('group_type',$group->getType());
 <?php echo $Language->getText('admin_groupedit', 'status_D'); ?></OPTION>
 </SELECT>
 
-<B><?php echo $Language->getText('admin_groupedit','public'); ?></B>
-<SELECT name="form_public">
-    <OPTION <?php if ($group->isPublic()) print "selected "; ?> value="1">
-<?php echo $Language->getText('global','yes'); ?>
-<OPTION <?php if (! $group->isPublic()) print "selected "; ?> value="0">
-<?php echo $Language->getText('global','no'); ?>
-</SELECT>
+<a href="/project/admin/editgroupinfo.php?group_id=<?php echo $group_id; ?>"><?php echo $Language->getText('admin_groupedit', 'manage_access'); ?></a>
 
 <P><B><?php echo $Language->getText('admin_groupedit','license'); ?></B>
 <SELECT name="form_license">

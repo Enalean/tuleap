@@ -152,8 +152,10 @@ if ($valid_data==1) {
 
     //echo $sql;
     $result=db_query($sql);
+
+    $update_success = true;
     if ((! $result || db_affected_rows($result) < 1) && ($updatedesc==0) && ! $set_parent) {
-        $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_editgroupinfo','upd_fail',(db_error() ? db_error() : ' ' )));
+        $update_success = false;
     } else {
         if ($set_parent || (($result || db_affected_rows($result) > 0) && $valid_parent)) {
             $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_editgroupinfo','upd_success'));
@@ -166,7 +168,20 @@ if ($valid_data==1) {
             'group_id'       => $group_id
         ));
     }
+
+    //update visibility
+    if ($currentproject->getAccess() != $request->get('project_visibility')) {
+        $project_manager->setAccess($currentproject, $request->get('project_visibility'));
+        $update_success = true;
+    }
+
+    if (! $update_success) {
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_editgroupinfo','upd_fail',(db_error() ? db_error() : ' ' )));
+    }
 }
+
+$project_manager->clearProjectFromCache($currentproject->getID());
+$currentproject = $project_manager->getProject($currentproject->getID());
 
 // update info for page
 $res_grp = db_query("SELECT * FROM groups WHERE group_id='".db_ei($group_id)."'");
@@ -180,12 +195,17 @@ $descfieldsvalue=$currentproject->getProjectsDescFieldsValue();
 project_admin_header(array('title'=>$Language->getText('project_admin_editgroupinfo','editing_g_info'),'group'=>$group_id,
 			   'help' => 'project-admin.html#project-public-information'));
 
-print '<P><h3>'.$Language->getText('project_admin_editgroupinfo','editing_g_info_for',$row_grp['group_name']).'</h3>';
+echo '<FORM action="?group_id='.$group_id.'" method="post" id="project_info_form">';
+
+$presenter = new ProjectVisibilityPresenter($Language, ForgeConfig::areRestrictedUsersAllowed(), $currentproject->getAccess());
+$renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/project/');
+echo $renderer->renderToString('project_visibility', $presenter);
+
+print "<P><h3>".$Language->getText('project_admin_editgroupinfo','editing_g_info_for',$row_grp['group_name']).'</h3>';
 
 $hp = Codendi_HTMLPurifier::instance();
 print '
 <P>
-<FORM action="?group_id='.$group_id.'" method="post">
 <P>'.$Language->getText('project_admin_editgroupinfo','descriptive_g_name').'<font color="red">*</font>
 <BR><INPUT type="text" size="50" maxlen="40" name="form_group_name" value="'. $hp->purify(util_unconvert_htmlspecialchars($row_grp['group_name']), CODENDI_PURIFIER_CONVERT_HTML) .'">
 

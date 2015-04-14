@@ -499,7 +499,7 @@ CREATE TABLE group_type (
 CREATE TABLE groups (
   group_id int(11) NOT NULL auto_increment,
   group_name varchar(255) default NULL,
-  is_public int(11) NOT NULL default '0',
+  access VARCHAR(16) NOT NULL DEFAULT 'private',
   status char(1) NOT NULL default 'A',
   unix_group_name varchar(30) NOT NULL default '',
   unix_box varchar(20) NOT NULL default 'shell1',
@@ -542,7 +542,7 @@ CREATE TABLE groups (
   svn_commit_to_tag_denied TINYINT(1) NOT NULL DEFAULT '0',
   PRIMARY KEY  (group_id),
   KEY idx_groups_status (status),
-  KEY idx_groups_public (is_public),
+  KEY idx_groups_access (access),
   KEY idx_groups_unix (unix_group_name),
   KEY idx_groups_type (type)
 );

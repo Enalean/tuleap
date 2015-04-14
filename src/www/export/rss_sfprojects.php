@@ -14,15 +14,11 @@ if ($request->get('option') == "newest") {
   } else {
     $query = new_utils_get_new_projects(time(),0,$request->get('limit'));
   }
-  /**
-  $res = db_query('SELECT group_id,unix_group_name,group_name,short_description, xrx_export_ettm FROM groups '
-		  .'WHERE is_public=1 AND status=\'A\' AND type=1 ' 
-		  .'ORDER BY register_time DESC'.($limit?" LIMIT $limit":" LIMIT 10"));
-  **/
+
   $res = db_query($query);
 } else {
-  $res = db_query('SELECT group_id,unix_group_name,group_name,short_description, xrx_export_ettm FROM groups '
-		  .'WHERE is_public=1 AND status=\'A\' AND type=1 ORDER BY group_id'.($request->get('limit')?" LIMIT ".$request->get('limit'):""));
+  $res = db_query("SELECT group_id,unix_group_name,group_name,short_description, xrx_export_ettm FROM groups '
+		  .'WHERE access != '".db_es(Project::ACCESS_PRIVATE)."' AND status='A' AND type=1 ORDER BY group_id".($request->get('limit')?" LIMIT ".$request->get('limit'):""));
 }
 
 if ($request->get('type') == "rss") {

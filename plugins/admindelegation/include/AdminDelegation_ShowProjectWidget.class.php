@@ -82,7 +82,7 @@ class AdminDelegation_ShowProjectWidget extends Widget {
             $statements .= db_es($condition[$i]).' LIKE "%'.db_es($pattern).'%") AND ';
         }
         
-        $sql = 'SELECT SQL_CALC_FOUND_ROWS group_name, group_id, unix_group_name, is_public FROM groups WHERE '.$statements.' status = "A" ORDER BY register_time DESC LIMIT '.db_ei($offset).', '.db_ei($limit);
+        $sql = 'SELECT SQL_CALC_FOUND_ROWS group_name, group_id, unix_group_name, access FROM groups WHERE '.$statements.' status = "A" ORDER BY register_time DESC LIMIT '.db_ei($offset).', '.db_ei($limit);
         $res = db_query($sql);
 
         $sql = 'SELECT FOUND_ROWS() as nb';
@@ -174,7 +174,7 @@ class AdminDelegation_ShowProjectWidget extends Widget {
                     $html .= '<tr class="'. util_get_alt_row_color($i++) .'">';
                     $html .= '<td>';
                     $html .= '<a href="/projects/'.$row['unix_group_name'].'">'.$row['group_name'].'</a>';
-                    if (!$row['is_public']) {
+                    if ($row['access'] === Project::ACCESS_PRIVATE) {
                         $html .= '&nbsp;(*)';
                     }
                     $html .= '</td>';

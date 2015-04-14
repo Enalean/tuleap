@@ -22,7 +22,10 @@ require_once 'pre.php';
 
 $controller = new ForgeAccess_AdminController(
     new CSRFSynchronizerToken($_SERVER['SCRIPT_URL']),
-    new ConfigDao(),
+    new ForgeAccess_ForgePropertiesManager(
+        new ConfigDao(),
+         ProjectManager::instance()
+    ),
     new Config_LocalIncFinder(),
     new UserDao(),
     $request,

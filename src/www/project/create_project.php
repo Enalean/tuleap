@@ -40,14 +40,20 @@ function create_project($data, $do_not_exit = false) {
     } else {
       $http_domain=$data['project']['form_unix_name'].'.'.$GLOBALS['sys_default_domain'];
     }
-    
+
     //Verify if the approbation of the new project is automatic or not
     $auto_approval = ForgeConfig::get('sys_project_approval', 1) ? PROJECT_APPROVAL_BY_ADMIN : PROJECT_APPROVAL_AUTO;
-    
+
+    if (isset($data['project']['is_public'])) {
+        $access = ($data['project']['is_public']) ? Project::ACCESS_PUBLIC : Project::ACCESS_PRIVATE;
+    } else {
+        $access = ForgeConfig::get('sys_is_project_public') ? Project::ACCESS_PUBLIC : Project::ACCESS_PRIVATE;
+    }
+
     // make group entry
     $insert_data = array(
         'group_name'          => "'". htmlspecialchars(mysql_real_escape_string($data['project']['form_full_name'])) ."'",
-        'is_public'           => db_ei($GLOBALS['sys_is_project_public']),
+        'access'              => "'".$access."'",
         'unix_group_name'     => "'". db_es($data['project']['form_unix_name']) ."'",
         'http_domain'         => "'". db_es($http_domain) ."'",
         'status'              => "'P'",
@@ -60,13 +66,10 @@ function create_project($data, $do_not_exit = false) {
         'rand_hash'           => "'". md5($random_num) ."'",
         'built_from_template' => db_ei($data['project']['built_from_template']),
         'type'                => ($data['project']['is_test'] ? 3 : 1),
-        'is_public'           => ($data['project']['is_public'] ? 1 : 0),
     );
     $sql = 'INSERT INTO groups('. implode(', ', array_keys($insert_data)) .') VALUES ('. implode(', ', array_values($insert_data)) .')';
     $result=db_query($sql);
-    
-    
-    
+
     if (!$result) {
         exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','upd_fail',array($GLOBALS['sys_email_admin'],db_error())));
     } else {

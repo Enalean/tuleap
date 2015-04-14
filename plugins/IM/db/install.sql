@@ -7,7 +7,7 @@
 INSERT INTO groups SET 
   group_id = '99', 
   group_name = 'IM Administrators', 
-  is_public = '0', 
+  access = 'private',
   status = 'A', 
   unix_group_name = 'imadmingroup', 
   unix_box = 'shell1', 

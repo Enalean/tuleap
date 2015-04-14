@@ -219,6 +219,7 @@ admin_groupedit	rename_project_msg	Propagation of project's name update on syste
 admin_groupedit	rename_project_warn	Project name update will be effective only after system event processing.
 admin_groupedit	rename_project_already_queued	There is already an event scheduled to rename this project. Please check <a href="/admin/system_events/">System Event Monitor</a>.
 admin_groupedit	invalid_short_name	Invalid Short Name
+admin_groupedit	manage_access	Manage Access
 
 #
 #-----------------------------------------------

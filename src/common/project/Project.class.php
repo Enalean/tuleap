@@ -73,13 +73,12 @@ class Project extends Group implements PFO_Project {
      * The project is holding
      */
     const STATUS_HOLDING = 'H';
-    
-    /**
-     * The project is public
-     */
-    const IS_PUBLIC = 1;
 
     const SITE_NEWS_PROJECT_ID = 46;
+
+    const ACCESS_PRIVATE             = 'private';
+    const ACCESS_PUBLIC_UNRESTRICTED = 'unrestricted';
+    const ACCESS_PUBLIC              = 'public';
 
     var $project_data_array;
 
@@ -364,6 +363,22 @@ class Project extends Group implements PFO_Project {
     
     function getSVNAccess() {
         return $this->project_data_array['svn_accessfile'];
+    }
+
+    public function getAccess() {
+        return $this->data_array['access'];
+    }
+
+    public function isPublic() {
+        $access = $this->data_array['access'];
+        return $access != Project::ACCESS_PRIVATE;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function allowsRestricted() {
+        return $this->getAccess() === self::ACCESS_PUBLIC_UNRESTRICTED;
     }
 
     /**

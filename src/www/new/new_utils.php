@@ -8,7 +8,7 @@
 
 function new_utils_get_new_projects ($start_time,$offset,$limit) {
   $query = "SELECT group_id,unix_group_name,group_name,short_description,register_time FROM groups " .
-           "WHERE is_public=1 AND status='A' AND type=1 AND type=1 " .
+           "WHERE access != '".db_es(Project::ACCESS_PRIVATE)."' AND status='A' AND type=1 AND type=1 " .
            "AND register_time < ".db_ei($start_time)." ".
            "ORDER BY register_time ";
   if (isset($limit) && $limit != 0) {
@@ -65,7 +65,7 @@ function new_utils_get_new_releases($start_time,&$select,&$from,&$where ) {
          . "AND frs_release.package_id = frs_package.package_id "
 	 . "AND frs_package.group_id = groups.group_id "
          . "AND frs_release.status_id=".$frsrf->STATUS_ACTIVE." "
-         . "AND groups.is_public=1 ";
+         . "AND groups.access != '".db_es(Project::ACCESS_PRIVATE)."'";
 }
 
 

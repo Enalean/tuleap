@@ -43,9 +43,9 @@ class GroupFactory extends Error {
 		if (user_isloggedin()) {
 			// For  surperuser), we can see all the trackers (both public and non public)
                     if ( user_is_super_user() ) {
-				$public_flag='0,1';
+                            $access_condition = '';
 			} else {
-				$public_flag='1';
+                            $access_condition = " AND access != '" . db_es(Project::ACCESS_PRIVATE)."' ";
 			}
 		} else {
                     if (isset($GLOBALS['Language']))
@@ -55,7 +55,7 @@ class GroupFactory extends Error {
 
 		$sql="SELECT group_id,group_name,unix_group_name FROM groups
 			WHERE group_id <> 100 AND status = 'A'
-			AND is_public IN ($public_flag)
+			$access_condition
 			ORDER BY group_name ASC";
 
 		//echo $sql;

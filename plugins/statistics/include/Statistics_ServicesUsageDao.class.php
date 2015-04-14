@@ -70,7 +70,7 @@ class Statistics_ServicesUsageDao extends DataAccessObject {
     }
 
     public function getPrivacyOfActiveProjectsBeforeEndDate() {
-        $sql = "SELECT group_id, is_public AS result
+        $sql = "SELECT group_id, access AS result
             FROM groups
             WHERE status='A'
                AND register_time <= $this->end_date

@@ -94,7 +94,7 @@ if ($res['numrows'] > 0) {
         // group type
         print "<td>".$template->getLabel($grp['type'])."</td>";
 
-        print '<td>'.$grp['is_public'].'</td>';
+        print '<td>'.$grp['access'].'</td>';
         print '<td>'.$grp['license'].'</td>';
 
         // members

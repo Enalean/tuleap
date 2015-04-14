@@ -22,32 +22,6 @@ print '<?xml version="1.0" encoding="UTF-8" ?>
 if (!$limit) $limit = 10;
 if ($limit > 100) $limit = 100;
 
-/**
-$query = "SELECT groups.group_name AS group_name,"
-  . "groups.group_id AS group_id,"
-  . "groups.unix_group_name AS unix_group_name,"
-  . "groups.short_description AS short_description,"
-  . "groups.license AS license,"
-  . "user.user_name AS user_name,"
-  . "user.user_id AS user_id,"
-  . "frs_release.release_id AS release_id,"
-  . "frs_release.name AS release_version,"
-  . "frs_release.release_date AS release_date,"
-  . "frs_release.released_by AS released_by,"
-  . "frs_package.name AS module_name, "
-  . "frs_package.package_id AS package_id, "
-  . "frs_dlstats_grouptotal_agg.downloads AS downloads "
-  . "FROM groups,user,frs_package,frs_release,frs_dlstats_grouptotal_agg "
-  . "WHERE ( frs_release.package_id = frs_package.package_id "
-  . "AND frs_package.group_id = groups.group_id "
-  . "AND frs_release.released_by = user.user_id "
-  . "AND frs_package.group_id = frs_dlstats_grouptotal_agg.group_id "
-  . "AND frs_release.status_id=1 "
-  . "AND groups.is_public=1 ) "
-  . "GROUP BY frs_release.release_id "
-  . "ORDER BY frs_release.release_date DESC LIMIT ". $limit*3;
-
-**/
 $query = new_utils_get_new_releases_long(0,0,$limit*3);
 $res=db_query($query);
 

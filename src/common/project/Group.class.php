@@ -122,14 +122,6 @@ class Group extends Error {
         return $template->isProject($this->data_array['type']);
     }
 
-
-	/*
-		Simply returns the is_public flag from the database
-	*/
-	function isPublic() {
-		return $this->data_array['is_public'];
-	}
-
 	/*
 		Database field status of 'A' returns true
 	*/

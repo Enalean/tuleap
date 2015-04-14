@@ -41,9 +41,9 @@ class ForgeAccess_AdminController {
     private $request;
 
     /**
-     * @var ConfigDao
+     * @var ForgeAccess_ForgePropertiesManager
      */
-    private $dao;
+    private $manager;
 
     /**
      * @var CSRFSynchronizerToken
@@ -55,14 +55,14 @@ class ForgeAccess_AdminController {
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
-        ConfigDao $dao,
+        ForgeAccess_ForgePropertiesManager $manager,
         Config_LocalIncFinder $localincfinder,
         UserDao $user_dao,
         Codendi_Request $request,
         Response $response
     ) {
         $this->csrf           = $csrf;
-        $this->dao            = $dao;
+        $this->manager        = $manager;
         $this->request        = $request;
         $this->response       = $response;
         $this->user_dao       = $user_dao;
@@ -102,8 +102,11 @@ class ForgeAccess_AdminController {
                 ForgeAccess::RESTRICTED,
             )
         );
+
         if ($this->request->valid($validator)) {
-            $this->dao->save(ForgeAccess::CONFIG, $this->request->get(self::ACCESS_KEY));
+            $new_access_value = $this->request->get(self::ACCESS_KEY);
+            $old_access_value = ForgeConfig::get(ForgeAccess::CONFIG);
+            $this->manager->updateAccess($new_access_value, $old_access_value);
 
             $this->response->addFeedback(
                 Feedback::INFO,

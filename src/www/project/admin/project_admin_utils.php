@@ -183,7 +183,7 @@ function get_history_entries() {
                                                    'approved',
                                                    'deleted',
                                                    'rename_request',
-                                                   'is_public',
+                                                   'access',
                                                    'group_type',
                                                    'http_domain',
                                                    'unix_box',
