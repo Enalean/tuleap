@@ -41,7 +41,7 @@ class Git_URL {
     /** @var string */
     private $smart_http_url_pattern = '%^/plugins/git
         /(?P<project_name>[^/]*)
-        /(?P<path>[^?.]*(\.git){0,1})
+        /(?P<path>[^?]*(\.git){0,1})
         /(?P<smart_http>
             HEAD |
             info/refs |

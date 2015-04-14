@@ -34,6 +34,9 @@ class Git_URLTest extends TuleapTestCase {
     /** @var GitRepository */
     protected $goldfish_repository;
 
+    /** @var GitRepository */
+    protected $apache_repository;
+
     protected $gpig_project_name = 'gpig';
     protected $gpig_project_id   = '111';
     protected $repository_id     = '43';
@@ -60,6 +63,17 @@ class Git_URLTest extends TuleapTestCase {
         stub($this->repository_factory)
             ->getRepositoryById($this->repository_id)
             ->returns($this->goldfish_repository);
+
+        $this->apache_repository = aGitRepository()
+            ->withProject($this->gpig_project)
+            ->withName('apache-2.5')
+            ->build();
+
+        stub($this->repository_factory)
+            ->getByProjectNameAndPath(
+                $this->gpig_project_name,
+                'apache-2.5.git'
+            )->returns($this->apache_repository);
 
         stub($this->project_manager)
             ->getProject($this->gpig_project_id)
@@ -231,6 +245,13 @@ class Git_URL_GitSmartHTTPTest extends Git_URLTest {
 
     public function itIsSmartHTTPForObjects() {
         $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/objects/f5/30d381822b12f76923bfba729fead27b378bec');
+        $this->assertFalse($url->isFriendly());
+        $this->assertFalse($url->isStandard());
+        $this->assertTrue($url->isSmartHTTP());
+    }
+
+    public function itIsSmartHTTPWithAPointInRepoName() {
+        $url = $this->getUrl('/plugins/git/gpig/apache-2.5/HEAD');
         $this->assertFalse($url->isFriendly());
         $this->assertFalse($url->isStandard());
         $this->assertTrue($url->isSmartHTTP());
