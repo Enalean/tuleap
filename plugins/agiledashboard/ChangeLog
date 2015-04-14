@@ -1,3 +1,6 @@
+Version 1.188 - Tuleap 8.1
+    * request #7880 Hide Closed Items in V2 Planning only hides Parent artifacts
+
 Version 1.187 - Tuleap 8.1
     * request #7975: Can't move an item from a submilestone to the top backlog in planning v2
 
