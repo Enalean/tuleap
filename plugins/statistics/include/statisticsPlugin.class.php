@@ -96,6 +96,18 @@ class StatisticsPlugin extends Plugin {
         $dum->collectAll();
     }
 
+    private function getConfigurationManager() {
+        return new Statistics_ConfigurationManager(
+            new Statistics_ConfigurationDao()
+        );
+    }
+
+    private function getDiskUsagePurger() {
+        return new Statistics_DiskUsagePurger(
+            new Statistics_DiskUsageDao(CodendiDataAccess::instance())
+        );
+    }
+
     /**
      * Hook.
      *
@@ -108,6 +120,10 @@ class StatisticsPlugin extends Plugin {
         if ($day != "7") {
             $this->_archiveSessions();
             $this->_diskUsage();
+
+            if ($this->getConfigurationManager()->isDailyPurgeActivated()) {
+                $this->getDiskUsagePurger()->purge(strtotime(date('Y-m-d 00:00:00')));
+            }
         }
     }
 
