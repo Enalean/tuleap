@@ -39,7 +39,7 @@ class Tracker_FormElement_Field_Radiobutton extends Tracker_FormElement_Field_Se
             $is_selected = true; //Hackalert: "None" selected by default. Overrided when other value is selected
         }
         $purifier = Codendi_HTMLPurifier::instance();
-        $label    = $purifier->purify($this->getBind()->formatChangesetValueWithoutLink($value));
+        $label    = $this->getBind()->formatChangesetValueWithoutLink($value);
         $name     = $purifier->purify($name);
 
         if(!$name) {
