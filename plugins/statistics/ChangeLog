@@ -1,3 +1,6 @@
+Version 0.46 - Tuleap 8.1
+    * story #7742: Warn the user in UI that some dates have been purged
+
 Version 0.45 - Tuleap 8.1
     * story #7742: launch the purge on daily basis
 
