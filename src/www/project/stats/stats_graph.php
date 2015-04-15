@@ -4,6 +4,7 @@
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
 //
+exit();
 require_once('pre.php');
 require_once('graph_lib.php');
 require('./project_stats_utils.php');

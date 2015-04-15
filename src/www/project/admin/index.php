@@ -121,10 +121,6 @@ if ($group->usesHomePage()) {
     print '<P>'.$Language->getText('project_admin_index','home_page_link',$group->getHomePage()).'</B>';
  }
 
-print '&nbsp;
-<BR><P>
-'.$Language->getText('project_admin_index','view_proj_activity',"/project/stats/?group_id=$group_id");
-
 if ($GLOBALS['sys_use_trove'] != 0) {
     print '
 <P>
