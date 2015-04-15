@@ -56,6 +56,10 @@ if ($request->valid($vStartDate)) {
     $startDate = date('Y-m-d', strtotime('-1 week'));
 }
 
+if (strtotime($startDate) < strtotime('-3 months')) {
+    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_statistics', 'querying_purged_data'));
+}
+
 $vEndDate = new Valid('end_date');
 $vEndDate->addRule(new Rule_Date());
 $vEndDate->required();

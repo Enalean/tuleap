@@ -52,6 +52,10 @@ if ($request->valid($vPeriod)) {
     $period = 'months';
 }
 
+if ($period === 'year') {
+    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_statistics', 'querying_purged_data'));
+}
+
 $duMgr  = new Statistics_DiskUsageManager();
 $duHtml = new Statistics_DiskUsageHtml($duMgr);
 
