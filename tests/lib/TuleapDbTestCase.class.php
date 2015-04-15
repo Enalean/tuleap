@@ -136,6 +136,7 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
         $this->mysqlLoadFile('plugins/graphontrackers/db/initvalues.sql');
         $this->mysqlLoadFile('plugins/tracker/db/install.sql');
         $this->mysqlLoadFile('plugins/graphontrackersv5/db/install.sql');
+        $this->mysqlLoadFile('plugins/statistics/db/install.sql');
     }
 }
 

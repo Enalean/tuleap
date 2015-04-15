@@ -1,6 +1,12 @@
 ## 
 ## Sql Install Script
 ##
+DROP TABLE IF EXISTS plugin_statistics_configuration;
+CREATE TABLE plugin_statistics_configuration (
+    daily_purge_is_activated TINYINT(1) NOT NULL
+) ENGINE = InnoDB;
+INSERT INTO plugin_statistics_configuration (daily_purge_is_activated) VALUE (1);
+
 DROP TABLE IF EXISTS plugin_statistics_user_session;
 CREATE TABLE plugin_statistics_user_session (
     user_id INT UNSIGNED DEFAULT 0 NOT NULL,
