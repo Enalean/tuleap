@@ -1,3 +1,6 @@
+Version 1.5.26 - Tuleap 8.1
+    * request #7939: XSS in the web chat room
+
 Version 1.5.25 - Tuleap 8.1
     * story #7813: allow the project administrator to give restricted users access to their project
 
