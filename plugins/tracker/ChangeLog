@@ -1,3 +1,6 @@
+Version 5.612 - Tuleap 8.1
+    * request #8005: Decorator for radio button values are not displayed
+
 Version 5.611 - Tuleap 8.1
     * request #7980: fix XSS in site statistics
 
