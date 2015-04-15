@@ -27,7 +27,7 @@ Version 8.1 (not yet released)
 	* fusionforge_compat: 0.9
 	* openid: 0.8
 	* pluginsadministration: 1.8
-	* statistics: 0.44
+	* statistics: 0.45
 	* IM: 1.5.26
 	* admindelegation: 2.9
 
@@ -39,6 +39,7 @@ Version 8.1 (not yet released)
 
 	== Development ==
 	* Story #7886: Fix error with Config in Users (avatar)
+	* story #7742: ROOT_DAILY now logs if Exceptions are thrown during process
 
 Version 8.0 (Thursday, April 2nd 2015)
 
