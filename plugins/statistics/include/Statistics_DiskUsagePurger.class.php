@@ -32,15 +32,14 @@ class Statistics_DiskUsagePurger {
     /**
      * @var array
      */
-    private $statistic_tables;
+    public static $STATISTIC_TABLES = array(
+        'plugin_statistics_diskusage_group',
+        'plugin_statistics_diskusage_site',
+        'plugin_statistics_diskusage_user',
+    );
 
     public function __construct(Statistics_DiskUsageDao $disk_usage_dao) {
-        $this->disk_usage_dao   = $disk_usage_dao;
-        $this->statistic_tables = array(
-            'plugin_statistics_diskusage_group',
-            'plugin_statistics_diskusage_site',
-            'plugin_statistics_diskusage_user',
-        );
+        $this->disk_usage_dao = $disk_usage_dao;
     }
 
     private function checkPHPVersion() {
@@ -49,12 +48,12 @@ class Statistics_DiskUsagePurger {
         }
     }
 
-    public function firstPurge($from_date) {
+    public function purge($from_date) {
         $this->checkPHPVersion();
 
         $this->disk_usage_dao->startTransaction();
 
-        foreach($this->statistic_tables as $statistic_table) {
+        foreach(self::$STATISTIC_TABLES as $statistic_table) {
             $this->purgeDataOlderThanTwoYears($from_date, $statistic_table);
             $this->purgeDataBetweenTwoYearsAndThreeMonths($from_date, $statistic_table);
         }

@@ -33,7 +33,7 @@ $disk_data_purger = new Statistics_DiskUsagePurger(
 );
 
 try {
-    $disk_data_purger->firstPurge(strtotime(date('Y-m-d 00:00:00')));
+    $disk_data_purger->purge(strtotime(date('Y-m-d 00:00:00')));
 
     $configuration_manager = new Statistics_ConfigurationManager(
         new Statistics_ConfigurationDao()

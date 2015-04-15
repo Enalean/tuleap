@@ -52,8 +52,13 @@ class SystemEvent_ROOT_DAILY extends SystemEvent {
         // it is slooow (due to libnss-mysql)
         $this->userHomeSanityCheck($backend_system);
 
-        $this->_getEventManager()->processEvent('root_daily_start', array());
-        $this->done();
+        try {
+            $this->_getEventManager()->processEvent('root_daily_start', array());
+            $this->done();
+        } catch (Exception $e) {
+            $this->error($e->getMessage());
+        }
+
         return true;
     }
 
