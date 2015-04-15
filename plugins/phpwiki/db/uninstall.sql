@@ -11,5 +11,7 @@ DROP TABLE IF EXISTS plugin_phpwiki_attachment_revision;
 DROP TABLE IF EXISTS plugin_phpwiki_attachment_log;
 
 DELETE FROM service WHERE short_name='plugin_phpwiki';
+DELETE FROM reference WHERE service_short_name='PHPWiki';
 
 DELETE FROM permissions_values WHERE permission_type IN ('PHPWIKI_READ', 'PHPWIKIPAGE_READ', 'PHPWIKIATTACHMENT_READ');
+DELETE FROM permissions WHERE permission_type IN ('PHPWIKI_READ', 'PHPWIKIPAGE_READ', 'PHPWIKIATTACHMENT_READ');

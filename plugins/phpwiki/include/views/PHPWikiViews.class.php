@@ -44,9 +44,7 @@ function exit_wiki_empty() {
  */
 function hide_url ($svc, $db_item_id, $defaultHide=false, $hide=null) {
   $pref_name = 'hide_'.$svc.$db_item_id;
-
- 
-  if(empty($hide)) {
+  if (empty($hide) && isset($_REQUEST['hide_'.$svc])) {
     $hide=$_REQUEST['hide_'.$svc];
   }
 
