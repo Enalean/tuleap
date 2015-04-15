@@ -1,3 +1,6 @@
+Version 4.30 - Tuleap 8.1
+    * request #8003: Git HTTP - error while cloning
+
 Version 4.29 - Tuleap 8.1
     * story #7813: allow the project administrator to give restricted users access to their project
 
