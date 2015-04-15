@@ -67,6 +67,9 @@ class LDAP_UserWrite {
 
     public function updateWithPreviousUser(PFUser $old_user, PFUser $new_user) {
         try {
+            if ($this->userIsFirstAdmin($new_user)) {
+                return;
+            }
             $this->rename($old_user, $new_user);
             $this->updateWithUser($new_user);
         } catch (Exception $exception) {
@@ -92,6 +95,9 @@ class LDAP_UserWrite {
     }
 
     private function update(PFUser $user) {
+        if ($this->userIsFirstAdmin($user)) {
+            return;
+        }
         $dn = $this->getUserDN($user);
         if ($this->entryExists($user)) {
             if ($user->isAlive()) {
@@ -108,9 +114,17 @@ class LDAP_UserWrite {
         }
     }
 
+    private function userIsFirstAdmin(PFUser $user) {
+        return $user->getId() == 101;
+    }
+
     private function create(PFUser $user) {
-        $this->ldap->add($this->getUserDN($user), $this->getLDAPInfo($user));
-        $this->updateUserLdapId($user);
+        if ($user->getPassword() != '') {
+            $this->ldap->add($this->getUserDN($user), $this->getLDAPInfo($user));
+            $this->updateUserLdapId($user);
+        } else {
+            $this->logger->debug('No password for user '.$user->getUnixName().' '.$user->getId().' skip LDAP account creation');
+        }
     }
 
     private function getLDAPPassword(PFUser $user) {
