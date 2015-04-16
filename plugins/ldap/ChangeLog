@@ -1,3 +1,6 @@
+Version 3.77 - Tuleap 8.1
+    * Fix tests
+
 Version 3.76 - Tuleap 8.1
     * story #7984: Fix LDAP write usage
 
