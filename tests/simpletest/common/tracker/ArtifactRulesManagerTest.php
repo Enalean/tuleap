@@ -25,7 +25,7 @@ Mock::generate('ArtifactField');
  *
  * Tests the class ArtifactRulesManager
  */
-class ArtifactRulesManagerTest extends UnitTestCase {
+class ArtifactRulesManagerTest extends TuleapTestCase {
 
     function testValidate() {
         /*

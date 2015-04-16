@@ -48,7 +48,7 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
             self::$db_initialized = true;
             $this->initDb();
         }
-        $this->mysqli->select_db('integration_test');
+        $this->mysqli->select_db($GLOBALS['sys_dbname']);
         db_connect();
     }
 
@@ -124,7 +124,7 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
         $this->mysqli->query("CREATE DATABASE ".$GLOBALS['sys_dbname']);
     }
 
-    private function initDb() {
+    protected function initDb() {
         $this->foraceCreateDatabase();
         $this->mysqlLoadFile('src/db/mysql/database_structure.sql');
         $this->mysqlLoadFile('src/db/mysql/database_initvalues.sql');
