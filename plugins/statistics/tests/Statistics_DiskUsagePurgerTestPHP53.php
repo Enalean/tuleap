@@ -34,6 +34,7 @@ class Statistics_DiskDataPurgerTestPHP53 extends TuleapDbTestCase {
 
     public function __construct() {
         parent::__construct();
+        $this->initDb();
 
         $this->disk_usage_dao   = new Statistics_DiskUsageDao(CodendiDataAccess::instance());
         $this->disk_data_purger = new Statistics_DiskUsagePurger($this->disk_usage_dao);

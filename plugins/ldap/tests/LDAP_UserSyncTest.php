@@ -33,7 +33,7 @@ class LDAP_UserSyncTestVersion extends LDAP_UserSync {
     }
 }
 
-class LDAP_UserSyncTest extends UnitTestCase {
+class LDAP_UserSyncTest extends TuleapTestCase {
 
     function testNoUpdateWhenNoDifference() {
         $user = new User4LDAPUserSync($this);
