@@ -1,3 +1,6 @@
+Version 4.31 - Tuleap 8.1
+    * request #8001: SSH key update does not update Grokmirror manifest file
+
 Version 4.30 - Tuleap 8.1
     * request #8003: Git HTTP - error while cloning
 
