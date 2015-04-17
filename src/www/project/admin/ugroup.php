@@ -30,7 +30,8 @@ function format_html_row($row, &$row_num) {
         } else {
             $value = $cell;
         }
-        echo '  <td>'.$value."</td>\n";
+        $purifier = Codendi_HTMLPurifier::instance();
+        echo '  <td>'.$purifier->purify($value)."</td>\n";
     }
     echo "</tr>\n";
 }

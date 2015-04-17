@@ -18,19 +18,20 @@ $request = HTTPRequest::instance();
 
 function get_name_and_desc_form_content($ugroup_name, $ugroup_description) {
     global $Language;
+    $purifier = Codendi_HTMLPurifier::instance();
 
     return ' <table width="100%" border="0" cellpadding="5">
     <tr>
       <td width="21%"><b>'.$Language->getText('project_admin_editugroup', 'name').'</b>:</td>
       <td width="79%"> 
-        <input type="text" name="ugroup_name" value="'.$ugroup_name.'">
+        <input type="text" name="ugroup_name" value="'.$purifier->purify($ugroup_name).'">
       </td>
     </tr>
         <tr><td colspan=2><i>'.$Language->getText('project_admin_editugroup', 'avoid_special_ch').'</td></tr>
     <tr> 
       <td width="21%"><b>'.$Language->getText('project_admin_editugroup', 'desc').'</b>:</td>
       <td width="79%"> 
-      <textarea name="ugroup_description" rows="3" cols="50">'.$ugroup_description.'</textarea>
+      <textarea name="ugroup_description" rows="3" cols="50">'.$purifier->purify($ugroup_description).'</textarea>
       </td>
     </tr>';
 }
