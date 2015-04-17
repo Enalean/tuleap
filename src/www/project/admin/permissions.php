@@ -278,7 +278,7 @@ function permission_user_allowed_to_change($group_id, $permission_type, $object_
  * Return a DB list of ugroup_ids authorized to access the given object
  */
 function permission_db_authorized_ugroups($permission_type, $object_id) {
-    $sql="SELECT ugroup_id FROM permissions WHERE permission_type='$permission_type' AND object_id='$object_id' ORDER BY ugroup_id";
+    $sql="SELECT ugroup_id FROM permissions WHERE permission_type='".db_es($permission_type)."' AND object_id='".db_es($object_id)."' ORDER BY ugroup_id";
     // note that 'order by' is needed for comparing ugroup_lists (see permission_equals_to_default)
     return db_query($sql);
 }
@@ -290,7 +290,7 @@ function permission_db_authorized_ugroups($permission_type, $object_id) {
  * @see PermissionManager::getDefaults
  */
 function permission_db_get_defaults($permission_type) {
-    $sql="SELECT ugroup_id FROM permissions_values WHERE permission_type='$permission_type' AND is_default='1' ORDER BY ugroup_id";
+    $sql="SELECT ugroup_id FROM permissions_values WHERE permission_type='".db_es($permission_type)."' AND is_default='1' ORDER BY ugroup_id";
     return db_query($sql);
 }
 
@@ -463,10 +463,10 @@ function permission_get_ugroups_permissions($group_id, $object_id, $permission_t
         "       AND p.object_id = '".$object_id."' ".
         "       AND p.permission_type in (";
     if (count($permission_types) > 0) {
-        $sql .= "'".$permission_types[0]."'";
+        $sql .= "'".db_es($permission_types[0])."'";
         $i = 1;
         while($i < count($permission_types)) {
-            $sql .= ",'".$permission_types[$i++]."'";
+            $sql .= ",'".db_es($permission_types[$i++])."'";
         }
     }
     $sql .= ")";
@@ -507,10 +507,10 @@ function permission_get_ugroups_permissions($group_id, $object_id, $permission_t
             " WHERE ug.ugroup_id = pv.ugroup_id ".
             "       AND pv.permission_type in (";
         if (count($permission_types) > 0) {
-            $sql .= "'".$permission_types[0]."'";
+            $sql .= "'".db_es($permission_types[0])."'";
             $i = 1;
             while($i < count($permission_types)) {
-                $sql .= ",'".$permission_types[$i++]."'";
+                $sql .= ",'".db_es($permission_types[$i++])."'";
             }
         }
         $sql .= ")";
@@ -537,14 +537,14 @@ function permission_get_ugroups_permissions($group_id, $object_id, $permission_t
         //Now we look at project ugroups that have no permissions yet
         $sql = "SELECT ugroup_id, name ".
             " FROM ugroup ".
-            " WHERE group_id = '".$group_id."' ".
+            " WHERE group_id = '".db_ei($group_id)."' ".
             "       AND ugroup_id NOT IN (";
         $ugroup_ids = array_keys($return);
         if (count($ugroup_ids) > 0) {
-            $sql .= "'".$ugroup_ids[0]."'";
+            $sql .= "'".db_ei($ugroup_ids[0])."'";
             $i = 1;
             while($i < count($ugroup_ids)) {
-                $sql .= ",'".$ugroup_ids[$i++]."'";
+                $sql .= ",'".db_ei($ugroup_ids[$i++])."'";
             }
         }
         $sql .= ")";
@@ -642,7 +642,7 @@ function permission_fetch_selection_field(
     // Now retrieve all possible ugroups for this project, as well as the default values
     $sql = "SELECT ugroup_id, is_default
             FROM permissions_values
-            WHERE permission_type='$permission_type'";
+            WHERE permission_type='".db_es($permission_type)."'";
 
     if (! $show_admins) {
         $sql .= 'AND ugroup_id <> '. ProjectUGroup::PROJECT_ADMIN;
@@ -669,7 +669,7 @@ function permission_fetch_selection_field(
 
     $sql   = "SELECT *
               FROM ugroup
-              WHERE group_id=".$group_id."
+              WHERE group_id=".db_ei($group_id)."
                 OR ugroup_id IN (".$predefined_ugroups.")
             ORDER BY ugroup_id";
 
@@ -715,7 +715,7 @@ function permission_display_selection_frs($permission_type, $object_id = null, $
     $nb_set=db_numrows($res_ugroups);
 
     // Now retrieve all possible ugroups for this project, as well as the default values
-    $sql="SELECT ugroup_id,is_default FROM permissions_values WHERE permission_type='$permission_type'";
+    $sql="SELECT ugroup_id,is_default FROM permissions_values WHERE permission_type='".db_es($permission_type)."'";
     $res=db_query($sql);
     $predefined_ugroups='';
     $default_values=array();
@@ -729,7 +729,7 @@ function permission_display_selection_frs($permission_type, $object_id = null, $
             if ($row['is_default']) $default_values[]=$row['ugroup_id'];
         }
     }
-    $sql="SELECT * FROM ugroup WHERE group_id=".$group_id." OR ugroup_id IN (".$predefined_ugroups.") ORDER BY ugroup_id";
+    $sql="SELECT * FROM ugroup WHERE group_id=".db_ei($group_id)." OR ugroup_id IN (".$predefined_ugroups.") ORDER BY ugroup_id";
     $res=db_query($sql);
 
     $array = array();
@@ -753,7 +753,7 @@ function permission_display_selection_frs($permission_type, $object_id = null, $
 
 function permission_clear_all($group_id, $permission_type, $object_id, $log_permission_history=true) {
     if (!permission_user_allowed_to_change($group_id, $permission_type, $object_id)) { return false;}
-    $sql = "DELETE FROM permissions WHERE permission_type='$permission_type' AND object_id='$object_id'";
+    $sql = "DELETE FROM permissions WHERE permission_type='".db_es($permission_type)."' AND object_id='".db_es($object_id)."'";
     $res=db_query($sql);
     if (!$res) { 
         return false;
@@ -772,6 +772,9 @@ function permission_copy_tracker_and_field_permissions($from, $to, $group_id_fro
     if ($group_id_from != $group_id_to) {
         $and_remove_ugroups = " AND ugroup_id <= '100' ";
     }
+
+    $to   = db_es($to);
+    $from = db_es($from);
 
 
     //Copy of tracker permissions
@@ -806,18 +809,18 @@ EOS;
 
       foreach ($ugroup_mapping as $key => $val) {
 	$sql = "INSERT INTO permissions (permission_type,object_id,ugroup_id) ".
-	  "SELECT permission_type, $to, $val ".
+	  "SELECT permission_type, $to, ".db_ei($val)." ".
 	  "FROM permissions ".
-	  "WHERE object_id = '$from' AND ugroup_id = '$key'";
+	  "WHERE object_id = '$from' AND ugroup_id = '".db_ei($key)."'";
 	$res=db_query($sql);
 	if (!$res) {
 	  $result = false;
 	}
 
 	$sql = "INSERT INTO permissions (permission_type,object_id,ugroup_id) ".
-	  "SELECT permission_type, CONCAT('$to#',RIGHT(`object_id`, LENGTH(`object_id`)-LENGTH('$from#'))), $val ".
+	  "SELECT permission_type, CONCAT('$to#',RIGHT(`object_id`, LENGTH(`object_id`)-LENGTH('$from#'))), ".db_ei($val)." ".
 	  "FROM permissions ".
-	  "WHERE object_id LIKE '$from#%' AND ugroup_id = '$key'";
+	  "WHERE object_id LIKE '$from#%' AND ugroup_id = '".db_ei($key)."'";
 	$res=db_query($sql);
 	if (!$res) {
 	  $result = false;
@@ -868,7 +871,7 @@ function permission_clear_all_fields_tracker($group_id, $tracker_id, $field_id) 
  
 function permission_clear_ugroup($group_id, $ugroup_id) { 	 
     if (!user_ismember($group_id,'A')) { return false;} 	 
-    $sql = "DELETE FROM permissions WHERE ugroup_id='$ugroup_id'"; 	 
+    $sql = "DELETE FROM permissions WHERE ugroup_id='".db_ei($ugroup_id)."'";
     $res=db_query($sql); 	 
     if (!$res) { 	 
      return false; 	 
@@ -885,7 +888,7 @@ function permission_clear_ugroup($group_id, $ugroup_id) {
  */
 function permission_clear_ugroup_object($group_id, $permission_type, $ugroup_id, $object_id) {
     if (!permission_user_allowed_to_change($group_id, $permission_type,$object_id)) { return false;}
-    $sql = "DELETE FROM permissions WHERE ugroup_id='$ugroup_id' AND object_id='$object_id' AND permission_type='$permission_type'";
+    $sql = "DELETE FROM permissions WHERE ugroup_id='".db_ei($ugroup_id)."' AND object_id='".db_es($object_id)."' AND permission_type='".db_es($permission_type)."'";
     $res=db_query($sql);
     if (!$res) { 
         return false;
@@ -907,7 +910,7 @@ function permission_clear_ugroup_tracker($group_id, $ugroup_id, $object_id) {
  */
 function permission_add_ugroup($group_id, $permission_type, $object_id, $ugroup_id, $force = false) {
     if (!$force && !permission_user_allowed_to_change($group_id, $permission_type, $object_id)) { return false;}
-    $sql = "INSERT INTO permissions (permission_type, object_id, ugroup_id) VALUES ('$permission_type', '$object_id', $ugroup_id)";
+    $sql = "INSERT INTO permissions (permission_type, object_id, ugroup_id) VALUES ('".db_es($permission_type)."', '".db_es($object_id)."', ".db_ei($ugroup_id).")";
     $res=db_query($sql);
     if (!$res) {
         return false;
@@ -1920,5 +1923,3 @@ function permission_process_update_tracker_permissions($group_id, $atid, $permis
       if (!$perms) return false;
       return (in_array('TRACKER_FIELD_SUBMIT',$perms));
     }
-
-?>
