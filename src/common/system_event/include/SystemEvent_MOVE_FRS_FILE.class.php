@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2015. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,13 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-/**
- * Change User name
- *
- */
 class SystemEvent_MOVE_FRS_FILE extends SystemEvent {
 
-    const NAME          = 'MOVE_FRS_FILE';
+    const NAME = 'MOVE_FRS_FILE';
 
     /**
      * Set multiple logs
@@ -103,9 +99,11 @@ class SystemEvent_MOVE_FRS_FILE extends SystemEvent {
             return;
         }
 
-        if (! is_dir($project_path .$path_parts[0])) {
-            mkdir($project_path .$path_parts[0]);
+        $folder_name = $project_path .$path_parts[0];
+
+        if (! is_dir($folder_name)) {
+            mkdir($folder_name);
+            chgrp($folder_name, 'codendiadm');
         }
     }
 }
-?>
