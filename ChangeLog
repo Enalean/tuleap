@@ -7,6 +7,7 @@ Version 8.1 (not yet released)
 	* request #7938: Allow proper reverse proxy of Tuleap (Allow to query REST API in HTTP without SSL)
 
 	== Bug Fix ==
+	* request #8012: /soap/index.php is no more reachable; project data no-longer exports
 	* request #7974: Prevent SQL injections at the project creation
 	* request #7978: REST route called in top backlog in planning v2 contians a PHP notice
 	* request #7977: Reflected XSS in project statistics
