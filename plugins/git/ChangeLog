@@ -1,3 +1,12 @@
+Version 4.32 - Tuleap 8.1
+    * story #7813: configure a git repo to allow access for restricted users
+
+
+- need forge and project to allow restricted users
+- restricted user can clone and push
+- switching project to public or private disables access for restricted on repos
+- switching forge to public or anon disables access for restricted on repos (UI only)
+
 Version 4.31 - Tuleap 8.1
     * request #8001: SSH key update does not update Grokmirror manifest file
 
