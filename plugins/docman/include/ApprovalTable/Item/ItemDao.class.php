@@ -22,10 +22,11 @@
 
 class Docman_ApprovalTableItemDao extends DataAccessObject {
 
-    function getTableByTableId($tableId, $fields='*') {
+    public function getTableByItemId($item_id, $fields='*') {
         $sql = 'SELECT '.$fields.
             ' FROM plugin_docman_approval'.
-            ' WHERE table_id = '.$this->da->escapeInt($tableId);
+            ' WHERE item_id = '.$this->da->escapeInt($item_id);
+
         return $this->retrieve($sql);
     }
 
