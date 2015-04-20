@@ -144,7 +144,7 @@ class UserGroupDao extends DataAccessObject {
             $predefined = implode(',', $predefined);
             $extra = ' OR ugroup_id IN ('.$this->da->quoteSmart($predefined).')';
         }
-        $sql="SELECT ugroup_id, name
+        $sql="SELECT *
               FROM ugroup
               WHERE group_id=".$this->da->escapeInt($groupId)."
                 ".$extra."
@@ -266,6 +266,11 @@ class UserGroupDao extends DataAccessObject {
         $this->commit();
         return true;
     }
-}
 
-?>
+    public function getDynamicForgeUserGroupByName($name) {
+        $name = $this->da->quoteSmart($name);
+
+        $sql = "SELECT * FROM ugroup WHERE name = $name";
+        return $this->retrieveFirstRow($sql);;
+    }
+}

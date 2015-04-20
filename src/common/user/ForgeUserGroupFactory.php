@@ -79,4 +79,94 @@ class User_ForgeUserGroupFactory {
     private function instantiateFromRow($row) {
         return new User_ForgeUGroup($row['ugroup_id'], $row['name'], $row['description']);
     }
+
+    /**
+     * @param Project $project
+     * @return User_ForgeUGroup[]
+     */
+    public function getAllForProject(Project $project) {
+        $user_groups = array(
+            $this->getDynamicForgeUserGroupByName(User_ForgeUGroup::NOBODY)
+        );
+
+        if (ForgeConfig::areAnonymousAllowed()) {
+            $user_groups []= $this->getDynamicForgeUserGroupByName(User_ForgeUGroup::ANON);
+        }
+        if (ForgeConfig::areRestrictedUsersAllowed() && $project->allowsRestricted()) {
+            $user_groups []= $this->getDynamicForgeUserGroupByName(User_ForgeUGroup::AUTHENTICATED);
+        }
+
+        $user_groups []= $this->getDynamicForgeUserGroupByName(User_ForgeUGroup::REGISTERED);
+        $user_groups []= $this->getDynamicForgeUserGroupByName(User_ForgeUGroup::PROJECT_MEMBERS);
+        $user_groups []= $this->getDynamicForgeUserGroupByName(User_ForgeUGroup::PROJECT_ADMINS);
+
+        return array_merge($user_groups, $this->getStaticByProject($project));
+    }
+
+    /**
+     * @param string $permission
+     * @return User_ForgeUGroup[]
+     */
+    public function getUserGroupsAssignedToPermission($object_id, $permission) {
+        $permission_dao = new PermissionsDao();
+        $rows           = $permission_dao->getUgroupsByObjectIdAndPermissionType($object_id, $permission);
+
+        if (! $rows->count()) {
+            return $this->getDefaultForPermission($permission);
+        }
+
+        $user_groups = array();
+        foreach ($rows as $row) {
+            $user_groups[] = $this->instantiateFromRow($row);
+        }
+
+        return $user_groups;
+    }
+
+    /**
+     * @param string $permission
+     * @return User_ForgeUGroup[]
+     */
+    private function getDefaultForPermission($permission) {
+        $permission_manager = PermissionsManager::instance();
+        $rows = $permission_manager->getDefaults($permission);
+
+        $user_groups = array();
+        if (! $rows) {
+            return $user_groups;
+        }
+
+        foreach ($rows as $row) {
+            $user_groups[] = $this->instantiateFromRow($row);
+        }
+
+        return $user_groups;
+    }
+
+    /**
+     * @return User_ForgeUGroup
+     */
+    private function getDynamicForgeUserGroupByName($name) {
+        $row = $this->dao->getDynamicForgeUserGroupByName($name);
+        return $this->instantiateFromRow($row);
+    }
+
+    /**
+     * @param Project $project
+     * @return User_ForgeUGroup[]
+     */
+    private function getStaticByProject(Project $project) {
+        $user_groups = array();
+        $rows = $this->dao->getExistingUgroups($project->getID());
+
+        if (! $rows) {
+            return $user_groups;
+        }
+
+        foreach ($rows as $row) {
+            $user_groups[] = $this->instantiateFromRow($row);
+        }
+
+        return $user_groups;
+    }
 }

@@ -1,0 +1,40 @@
+{{# is_control_limited }}
+    <div class="alert-message block-message warning">';
+        {{ limited_control_notice }}
+    </div>
+{{/ is_control_limited }}
+
+<table>
+    <thead>
+        <tr>
+            <td>{{ label_read }}</td>
+            <td>{{ label_write }}</td>
+            <td>{{ label_rw }}</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <select multiple="true" id="{{ read_select_box_id }}" name="{{ read_select_box_id }}[]" size="8" >
+                    {{# read_options }}
+                        <option value="{{ value }}" {{ selected }}>{{ label }}</option>
+                    {{/ read_options }}
+                </select>
+            </td>
+            <td>
+                <select multiple="true" id="{{ write_select_box_id }}" name="{{ write_select_box_id }}[]" size="8" {{# is_control_limited }}disabled{{/ is_control_limited }}>
+                    {{# write_options }}
+                        <option value="{{ value }}" {{ selected }}>{{ label }}</option>
+                    {{/ write_options }}
+                </select>
+            </td>
+            <td>
+                <select multiple="true" id="{{ rewrite_select_box_id }}" name="{{ rewrite_select_box_id }}[]" size="8" {{# is_control_limited }}disabled{{/ is_control_limited }}>
+                    {{# rewrite_options }}
+                        <option value="{{ value }}" {{ selected }}>{{ label }}</option>
+                    {{/ rewrite_options }}
+                </select>
+            </td>
+        </tr>
+    </tbody>
+</table>

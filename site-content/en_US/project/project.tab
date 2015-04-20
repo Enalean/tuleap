@@ -977,7 +977,13 @@ project_ugroup	ugroup_wiki_admin_name_key	wiki_admins
 project_ugroup	ugroup_tracker_admins_name_key	tracker_admins
 #project_ugroup	ugroup_tracker_techs_name_key	tracker_techs
 project_ugroup	ugroup_nobody_name_key	nobody
-#-----------------------------------------------
+project_ugroup	ugroup_nobody	nobody
+project_ugroup	ugroup_anonymous_users	all Users
+project_ugroup	ugroup_authenticated_users	authenticated users
+project_ugroup	ugroup_unrestricted_users	unrestricted users
+project_ugroup	ugroup_project_members	project members
+project_ugroup	ugroup_project_admins	project admins
+
 # Script: /www/project/Project.class.php
 #
 project_desc_name	full_desc	Full Project Description

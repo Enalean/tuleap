@@ -357,7 +357,11 @@ class ProjectManager {
         group_add_history('access', $access_level, $project_id);
         $this->getEventManager()->processEvent('project_is_private', array(
             'group_id'           => $project_id,
-            'project_is_private' => $is_private
+            'project_is_private' => $is_private,
+        ));
+        $this->getEventManager()->processEvent(Event::PROJECT_ACCESS_CHANGE, array(
+            'project_id'         => $project_id,
+            'access'             => $access_level
         ));
     }
 

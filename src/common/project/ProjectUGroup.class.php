@@ -26,6 +26,7 @@ class ProjectUGroup implements User_UGroup {
     const NONE               = 100;
     const ANONYMOUS          = 1;
     const REGISTERED         = 2;
+    const AUTHENTICATED       = 5;
     const PROJECT_MEMBERS    = 3;
     const PROJECT_ADMIN      = 4;
     const FILE_MANAGER_ADMIN = 11;
@@ -56,6 +57,7 @@ class ProjectUGroup implements User_UGroup {
         self::NONE               => 'nobody',
         self::ANONYMOUS          => 'all_users',
         self::REGISTERED         => 'registered_users',
+        self::AUTHENTICATED      => 'authenticated_users',
         self::PROJECT_MEMBERS    => 'project_members',
         self::PROJECT_ADMIN      => 'project_admins',
         self::FILE_MANAGER_ADMIN => 'file_manager_admins',

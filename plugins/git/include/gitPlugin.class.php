@@ -121,6 +121,9 @@ class GitPlugin extends Plugin {
         $this->_addHook('register_project_creation');
         $this->_addHook(Event::GET_PROJECTID_FROM_URL);
         $this->_addHook('anonymous_access_to_script_allowed');
+        $this->_addHook(Event::IS_SCRIPT_ALLOWED_FOR_RESTRICTED);
+        $this->_addHook(Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED);
+        $this->_addHook(EVENT::PROJECT_ACCESS_CHANGE, 'project_access_change');
 
         $this->_addHook('fill_project_history_sub_events');
         $this->_addHook(Event::POST_SYSTEM_EVENTS_ACTIONS);
@@ -1104,7 +1107,7 @@ class GitPlugin extends Plugin {
             HTTPRequest::instance(),
             $this->getProjectCreator(),
             new Git_Driver_Gerrit_Template_TemplateFactory(new Git_Driver_Gerrit_Template_TemplateDao()),
-            new GitPermissionsManager(),
+            $this->getGitPermissionsManager(),
             $this->getGitRepositoryUrlManager(),
             $this->getLogger(),
             $this->getBackendGitolite(),
@@ -1450,5 +1453,27 @@ class GitPlugin extends Plugin {
         $params['id'][]  = 'git_repository';
         $params['nom'][] = 'Deleted git repositories';
         $params['html'][]= $tab_content;
+    }
+
+    public function is_script_allowed_for_restricted($params) {
+        $uri = $params['uri'];
+        if (strpos($uri, $this->getPluginPath()) === 0) {
+            $params['allow_restricted'] = true;
+        }
+    }
+
+    public function get_services_allowed_for_restricted($params) {
+        $params['allowed_services'][] = $this->getServiceShortname();
+    }
+
+    public function project_access_change($params) {
+        $project      = ProjectManager::instance()->getProject($params['project_id']);
+        $repositories = $this->getRepositoryFactory()->getAllRepositoriesOfProject($project);
+
+        $this->getGitPermissionsManager()->updateAccessForRepositories($repositories);
+
+        foreach ($repositories as $repository) {
+            $this->getGitSystemEventManager()->queueRepositoryUpdate($repository);  
+        }
     }
 }

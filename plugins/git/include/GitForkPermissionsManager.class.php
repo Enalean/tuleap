@@ -26,8 +26,12 @@ class GitForkPermissionsManager {
     /** @var GitRepository */
     private $repository;
 
-    public function __construct($repository) {
-        $this->repository  = $repository;
+    /** @var User_ForgeUserGroupFactory */
+    private $user_group_factory;
+
+    public function __construct(GitRepository $repository) {
+        $this->repository         = $repository;
+        $this->user_group_factory = new User_ForgeUserGroupFactory(new UserGroupDao());
     }
 
     /**
@@ -119,45 +123,55 @@ class GitForkPermissionsManager {
     /**
      * Display access control management for gitolite backend
      *
-     * @param Integer $projectId Project Id, to manage permissions when performing a cross project fork
+     * @param Integer $project_id Project Id, to manage permissions when performing a cross project fork
      *
      * @return String
      */
-    public function displayAccessControl($projectId = NULL) {
-        $html  = '';
-        $disabled = $this->repository->isMigratedToGerrit() ? true : false;
-        if ($disabled) {
-            $html .= '<div class="alert-message block-message warning">';
-            $html .=  $GLOBALS['Language']->getText('plugin_git', 'permissions_on_remote_server');
-            $html .= '</div>';
-        }
-        if (empty($projectId)) {
-            $projectId = $this->repository->getProjectId();
-        }
-        $html .= '<table>';
-        $html .= '<thead><tr>';
-        $html .= '<td>'. $GLOBALS['Language']->getText('plugin_git', 'perm_R') .'</td>';
-        $html .= '<td>'. $GLOBALS['Language']->getText('plugin_git', 'perm_W') .'</td>';
-        $html .= '<td>'. $GLOBALS['Language']->getText('plugin_git', 'perm_W+') .'</td>';
-        $html .= '</tr></thead>';
-        $html .= '<tbody><tr>';
-        // R
-        $html .= '<td>';
-        $html .= permission_fetch_selection_field(Git::PERM_READ, $this->repository->getId(), $projectId, 'repo_access['.Git::PERM_READ.']');
-        $html .= '</td>';
-        // W
-        $html .= '<td>';
-        $html .= permission_fetch_selection_field(Git::PERM_WRITE, $this->repository->getId(), $projectId, 'repo_access['.Git::PERM_WRITE.']', $disabled);
-        $html .= '</td>';
-        // W+
-        $html .= '<td>';
-        $html .= permission_fetch_selection_field(Git::PERM_WPLUS, $this->repository->getId(), $projectId, 'repo_access['.Git::PERM_WPLUS.']', $disabled);
-        $html .= '</td>';
-        $html .= '</tr></tbody>';
-        $html .= '</table>';
-        return $html;
+    public function displayAccessControl($project_id = null) {
+        $project = ($project_id) ? ProjectManager::instance()->getProject($project_id) : $this->repository->getProject();
+
+        $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
+        $presenter = new GitPresenters_AccessControlPresenter(
+            $this->repository->isMigratedToGerrit() ? true : false,
+            'repo_access['.Git::PERM_READ.']',
+            'repo_access['.Git::PERM_WRITE.']',
+            'repo_access['.Git::PERM_WPLUS.']',
+            $this->getOptions($project, Git::PERM_READ),
+            $this->getOptions($project, Git::PERM_WRITE),
+            $this->getOptions($project, Git::PERM_WPLUS)
+        );
+
+        return $renderer->renderToString('access-control', $presenter);
     }
 
-}
+    private function getOptions(Project $project, $permission) {
+        $user_groups     = $this->user_group_factory->getAllForProject($project);
+        $options         = array();
+        $selected_values = $this->getSelectedValues($permission);
 
-?>
+        foreach ($user_groups as $ugroup) {
+            if ($ugroup->getName() === User_ForgeUGroup::ANON && $permission !== Git::PERM_READ) {
+                continue;
+            }
+
+            $selected  = in_array($ugroup->getId(), $selected_values) ? 'selected="selected"' : '';
+            $options []= array(
+                'value'    => $ugroup->getId(),
+                'label'    => $ugroup->getName(),
+                'selected' => $selected
+            );
+        }
+
+        return $options;
+    }
+
+    private function getSelectedValues($permission) {
+        $values = $this->user_group_factory->getUserGroupsAssignedToPermission($this->repository->getId(), $permission);
+
+        array_walk($values, function (&$value) {
+            $value = $value->getId();
+        });
+
+        return $values;
+    }
+}

@@ -600,6 +600,7 @@ INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (1, "ugroup_a
 INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (2, "ugroup_registered_users_name_key", "ugroup_registered_users_desc_key", 100);
 INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (3, "ugroup_project_members_name_key", "ugroup_project_members_desc_key", 100);
 INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (4, "ugroup_project_admins_name_key", "ugroup_project_admins_desc_key", 100);
+INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (5, "ugroup_authenticated_users_name_key", "ugroup_authenticated_users_desc_key", 100);
 INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (11, "ugroup_file_manager_admin_name_key", "ugroup_file_manager_admin_desc_key", 100);
 INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (12, "ugroup_document_tech_name_key", "ugroup_document_tech_desc_key", 100);
 INSERT INTO ugroup (ugroup_id, name, description, group_id) VALUES (13, "ugroup_document_admin_name_key", "ugroup_document_admin_desc_key", 100);

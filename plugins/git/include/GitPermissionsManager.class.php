@@ -26,6 +26,11 @@ require_once 'www/project/admin/permissions.php';
  */
 class GitPermissionsManager {
 
+    /**
+     * @var PermissionsManager
+     */
+    private $permissions_manager;
+
     public function __construct() {
         $this->permissions_manager = PermissionsManager::instance();
     }
@@ -60,6 +65,10 @@ class GitPermissionsManager {
     public function getCurrentGitAdminUgroups($project_id) {
         return $this->permissions_manager->getAuthorizedUgroupIds($project_id, Git::PERM_ADMIN);
     }
-}
 
-?>
+    public function updateAccessForRepositories($repositories) {
+        foreach ($repositories as $repository) {
+            $this->permissions_manager->disableRestrictedAccessForObjectId(Git::allPermissionTypes(), $repository->getId());
+        }
+    }
+}

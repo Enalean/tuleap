@@ -92,6 +92,20 @@ class PermissionsDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function getUgroupsByObjectIdAndPermissionType($object_id, $permission_type) {
+        $object_id       = $this->da->quoteSmart($object_id, array('force_string' => true));
+        $permission_type = $this->da->quoteSmart($permission_type);
+
+        $sql = "SELECT ugroup.*
+               FROM permissions p
+                JOIN ugroup ON ugroup.ugroup_id = p.ugroup_id
+               WHERE p.object_id = $object_id
+               AND p.permission_type = $permission_type
+               ORDER BY p.ugroup_id";
+
+        return $this->retrieve($sql);
+    }
+
     /**
      * Return the list of the default ugroup_ids authorized to access the given permission_type
      *
@@ -104,7 +118,7 @@ class PermissionsDao extends DataAccessObject {
         $fields = '';
         $joins  = '';
         if ($withName) {
-            $fields = ' ug.name, ';
+            $fields = ' ug.*, ';
             $joins  = ' JOIN ugroup AS ug USING(ugroup_id) ';
         }
         $sql = 'SELECT '.$fields.' pv.ugroup_id'.
@@ -305,4 +319,33 @@ class PermissionsDao extends DataAccessObject {
 
         return (bool) $this->retrieveFirstRow($sql);
     }
+
+    public function disableRestrictedAccess() {
+        $public_ugroup_id       = $this->da->escapeInt(ProjectUGroup::REGISTERED);
+        $unrestricted_ugroup_id = $this->da->escapeInt(ProjectUGroup::AUTHENTICATED);
+
+        $sql =
+           "UPDATE permissions
+               SET ugroup_id = $public_ugroup_id
+            WHERE ugroup_id  = $unrestricted_ugroup_id";
+
+        return $this->update($sql);
+    }
+
+    public function disableRestrictedAccessForObjectId(array $permission_type, $object_id) {
+        $public_ugroup_id       = $this->da->escapeInt(ProjectUGroup::REGISTERED);
+        $unrestricted_ugroup_id = $this->da->escapeInt(ProjectUGroup::AUTHENTICATED);
+        $object_id              = $this->da->quoteSmart($object_id, array('force_string' => true));
+        $permission_type        = $this->da->quoteSmartImplode(',', $permission_type);
+
+        $sql =
+           "UPDATE permissions
+               SET ugroup_id = $public_ugroup_id
+            WHERE ugroup_id  = $unrestricted_ugroup_id
+            AND    object_id = $object_id
+            AND    permission_type IN ($permission_type)";
+
+        return $this->update($sql);
+    }
+
 }
