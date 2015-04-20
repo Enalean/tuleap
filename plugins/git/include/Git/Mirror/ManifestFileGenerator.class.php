@@ -45,6 +45,7 @@ class Git_Mirror_ManifestFileGenerator {
 
         $list_of_repositories = $this->getListOfRepositoriesFromManifest($filename);
         $this->setCurrentTimeForRepository($mirror, $list_of_repositories, $repository);
+        $this->setCurrentTimeForGitoliteAdminRepository($mirror, $list_of_repositories);
 
         $this->writeManifest($filename, $list_of_repositories);
     }
@@ -56,6 +57,8 @@ class Git_Mirror_ManifestFileGenerator {
         $key = $this->getRepositoryKeyFromPathName($repository_path);
         if (isset($list_of_repositories[$key])) {
             $this->removeRepository($mirror, $list_of_repositories, $key);
+            $this->setCurrentTimeForGitoliteAdminRepository($mirror, $list_of_repositories);
+
             $this->writeManifest($filename, $list_of_repositories);
         }
     }
@@ -88,6 +91,15 @@ class Git_Mirror_ManifestFileGenerator {
         return $this->manifest_directory
             . DIRECTORY_SEPARATOR
             . self::FILE_PREFIX . $mirror->id . '.js.gz';
+    }
+
+    private function setCurrentTimeForGitoliteAdminRepository(
+        Git_Mirror_Mirror $mirror,
+        array &$list_of_repositories
+    ) {
+        $repository = new GitRepositoryGitoliteAdmin();
+
+        $this->setCurrentTimeForRepository($mirror, $list_of_repositories, $repository);
     }
 
     private function setCurrentTimeForRepository(

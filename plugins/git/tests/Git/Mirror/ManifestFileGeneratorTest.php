@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2014. All rights reserved.
+ * Copyright Enalean (c) 2014 - 2015. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -108,7 +108,8 @@ class Git_Mirror_ManifestFileGenerator_removeTest extends Git_Mirror_ManifestFil
     public function itLogsDeletion() {
         $this->forgeExistingManifestFile($this->manifest_file_for_singapour);
 
-        expect($this->logger)->debug('removing /linux/kernel.git from manifest of mirror singapour.com (id: 1)')->once();
+        $this->logger->expectCallCount('debug', 2);
+        expect($this->logger)->debug('removing /linux/kernel.git from manifest of mirror singapour.com (id: 1)')->at(0);
 
         $this->generator->removeRepositoryFromManifestFile($this->singapour_mirror, $this->kernel_repository->getPath());
     }
@@ -138,7 +139,8 @@ class Git_Mirror_ManifestFileGenerator_addTest extends Git_Mirror_ManifestFileGe
     }
 
     public function itLogsAddition() {
-        expect($this->logger)->debug('adding /linux/kernel.git to manifest of mirror singapour.com (id: 1)')->once();
+        $this->logger->expectCallCount('debug', 2);
+        expect($this->logger)->debug('adding /linux/kernel.git to manifest of mirror singapour.com (id: 1)')->at(0);
 
         $this->generator->addRepositoryToManifestFile($this->singapour_mirror, $this->kernel_repository);
     }
@@ -204,7 +206,8 @@ class Git_Mirror_ManifestFileGenerator_addTest extends Git_Mirror_ManifestFileGe
     public function itLogsUpdate() {
         $this->forgeExistingManifestFile($this->manifest_file_for_singapour);
 
-        expect($this->logger)->debug('updating /linux/kernel.git in manifest of mirror singapour.com (id: 1)')->once();
+        $this->logger->expectCallCount('debug', 2);
+        expect($this->logger)->debug('updating /linux/kernel.git in manifest of mirror singapour.com (id: 1)')->at(0);
 
         $this->generator->addRepositoryToManifestFile($this->singapour_mirror, $this->kernel_repository);
     }
