@@ -217,7 +217,7 @@ class UserResource extends AuthenticatedResource {
      * </pre>
      *
      * @url GET {id}/membership
-     * @access hybrid
+     * @access protected
      *
      * @param int $id Id of the desired user
      *
