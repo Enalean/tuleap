@@ -1,3 +1,1 @@
-angular.module('user', [
-    'sharedProperties'
-]);
+angular.module('user', []);

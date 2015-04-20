@@ -2,15 +2,16 @@ angular
     .module('user')
     .service('UserService', UserService);
 
-UserService.$inject = ['$cookies', '$state', 'Restangular', 'SharedPropertiesService'];
+UserService.$inject = ['$q', '$cookies', 'Restangular'];
 
-function UserService($cookies, $state, Restangular, SharedPropertiesService) {
+function UserService($q, $cookies, Restangular) {
     var baseurl = '/api/v1',
         rest = Restangular.withConfig(setRestangularConfig);
 
     return {
-        getUser: getUser,
-        login: login
+        getUser                  : getUser,
+        getCurrentUser           : getCurrentUser,
+        getCurrentUserFromCookies: getCurrentUserFromCookies
     };
 
     function setRestangularConfig(RestangularConfigurer) {
@@ -22,9 +23,10 @@ function UserService($cookies, $state, Restangular, SharedPropertiesService) {
         return rest.one('users', user_id).get();
     }
 
-    function login() {
-        var user_id = $cookies.TULEAP_user_id,
-            token   = $cookies.TULEAP_user_token;
+    function getCurrentUser() {
+        var user_id = getUserIdFromCookies(),
+            token   = getUserTokenFromCookies(),
+            data    = $q.defer();
 
         if (angular.isUndefined(user_id) || angular.isUndefined(token)) {
             user_id = $cookies.CODENDI_user_id,
@@ -35,9 +37,24 @@ function UserService($cookies, $state, Restangular, SharedPropertiesService) {
             var user = response.data.plain();
             user.token = token;
 
-            SharedPropertiesService.setCurrentUser(user);
-
-            $state.go('campaigns.list');
+            data.resolve(user);
         });
+
+        return data.promise;
+    }
+
+    function getCurrentUserFromCookies() {
+        return {
+            id   : getUserIdFromCookies(),
+            token: getUserTokenFromCookies()
+        };
+    }
+
+    function getUserIdFromCookies() {
+        return $cookies.TULEAP_user_id || $cookies.CODENDI_user_id;
+    }
+
+    function getUserTokenFromCookies() {
+        return $cookies.TULEAP_user_token || $cookies.CODENDI_user_token;
     }
 }

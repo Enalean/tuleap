@@ -2,25 +2,30 @@ angular
     .module('sharedProperties')
     .service('SharedPropertiesService', SharedPropertiesService);
 
-SharedPropertiesService.$inject = ['Restangular', '$window'];
+SharedPropertiesService.$inject = ['Restangular', '$window', 'UserService'];
 
-function SharedPropertiesService(Restangular, $window) {
+function SharedPropertiesService(Restangular, $window, UserService) {
     var baseurl = '/api/v1',
         rest = Restangular.withConfig(setRestangularConfig);
 
     var property = {
-        project_id: undefined
+        project_id: undefined,
+        user: undefined
     };
 
     return {
         getNodeServerAddress: getNodeServerAddress,
         setNodeServerAddress: setNodeServerAddress,
-        getProjectId:   getProjectId,
-        setProjectId:   setProjectId,
-        getCurrentUser: getCurrentUser,
-        setCurrentUser: setCurrentUser,
-        removeCurrentUser: removeCurrentUser
+        getProjectId        : getProjectId,
+        setProjectId        : setProjectId,
+        getCurrentUser      : getCurrentUser,
+        setCurrentUser      : setCurrentUser
     };
+
+    function setRestangularConfig(RestangularConfigurer) {
+        RestangularConfigurer.setFullResponse(true);
+        RestangularConfigurer.setBaseUrl(baseurl);
+    }
 
     function getNodeServerAddress() {
         return property.node_server_address;
@@ -28,11 +33,6 @@ function SharedPropertiesService(Restangular, $window) {
 
     function setNodeServerAddress(node_server_address) {
         property.node_server_address = node_server_address;
-    }
-
-    function setRestangularConfig(RestangularConfigurer) {
-        RestangularConfigurer.setFullResponse(true);
-        RestangularConfigurer.setBaseUrl(baseurl);
     }
 
     function getProjectId() {
@@ -44,14 +44,14 @@ function SharedPropertiesService(Restangular, $window) {
     }
 
     function getCurrentUser() {
-        return JSON.parse($window.localStorage.getItem('tuleap_user'));
+        if (typeof property.user === 'undefined') {
+            return UserService.getCurrentUserFromCookies();
+        }
+
+        return property.user;
     }
 
-    function removeCurrentUser() {
-        $window.localStorage.removeItem('tuleap_user');
-    }
-
-    function setCurrentUser(current_user) {
-        $window.localStorage.setItem('tuleap_user', JSON.stringify(current_user));
+    function setCurrentUser(user) {
+        property.user = user;
     }
 }

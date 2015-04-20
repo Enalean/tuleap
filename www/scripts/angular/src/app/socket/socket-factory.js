@@ -1,31 +1,29 @@
-(function () {
-    angular
-        .module('socket')
-        .service('SocketFactory', SocketFactory);
+angular
+    .module('socket')
+    .service('SocketFactory', SocketFactory);
 
-    SocketFactory.$inject = ['socketFactory', 'SharedPropertiesService'];
+SocketFactory.$inject = ['socketFactory', 'SharedPropertiesService'];
 
-    function SocketFactory(socketFactory, SharedPropertiesService) {
-        var io_socket = io.connect(
-            'https://' + SharedPropertiesService.getNodeServerAddress(),
-            {
-                secure: true,
-                path: "/trafficlights/socket.io"
-            }
-        );
+function SocketFactory(socketFactory, SharedPropertiesService) {
+    var io_socket = io.connect(
+        'https://' + SharedPropertiesService.getNodeServerAddress(),
+        {
+            secure: true,
+            path: "/trafficlights/socket.io"
+        }
+    );
 
-        socket = socketFactory({
-            ioSocket: io_socket
-        });
+    socket = socketFactory({
+        ioSocket: io_socket
+    });
 
-        var current_user = SharedPropertiesService.getCurrentUser();
+    var current_user = SharedPropertiesService.getCurrentUser();
 
-        socket.emit('subscription', {
-            project_id: SharedPropertiesService.getProjectId(),
-            user_id: current_user.id,
-            token: current_user.token
-        });
+    socket.emit('subscription', {
+        project_id: SharedPropertiesService.getProjectId(),
+        user_id: current_user.id,
+        token: current_user.token
+    });
 
-        return socket;
-    }
-})();
+    return socket;
+}

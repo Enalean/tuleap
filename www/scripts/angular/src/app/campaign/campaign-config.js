@@ -16,13 +16,11 @@ function CampaignConfig($stateProvider) {
             }
         })
         .state('campaigns.list', {
-            authenticate: true,
             url:         '',
             controller:  'CampaignListCtrl',
             templateUrl: 'campaign/campaign-list.tpl.html'
         })
         .state('campaigns.new', {
-            authenticate: true,
             url:         '/new',
             controller:  'CampaignNewCtrl',
             templateUrl: 'campaign/campaign-new.tpl.html',
