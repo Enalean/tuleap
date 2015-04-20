@@ -1,3 +1,17 @@
+Version 8.0-3 (Monday, April 20th 2015)
+	== Bug Fix ==
+	* request #7880: Hide "Closed" Items in V2 Planning only hides Parent artifacts
+	* request #7990: Updated tracker shortname not updated in ArtifactLink_changesetValue
+	* request #7763: Avoid errors concerning SELinux policies in packages	
+	* request #8003: Git HTTP : error while cloning
+	* request #7979: Disable usage statistics in project administration
+	* request #8012: /soap/index.php is no more reachable
+	* request #8001: SSH key update does not update Grokmirror manifest file
+
+	== Security ==
+	* request #7980: XSS in site statistics
+	* request #7939: XSS in the web chat room
+
 Version 8.0-3 (Monday, April 13th 2015)
 	== Bug Fix ==
 	* request #7973: Tracker XML export does not export field permissions
