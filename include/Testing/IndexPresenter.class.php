@@ -23,7 +23,7 @@ namespace Tuleap\Testing;
 use PFUser;
 use Codendi_HTMLPurifier;
 use Tuleap\User\REST\UserRepresentation;
-use Config as TuleapConfig;
+use ForgeConfig as TuleapConfig;
 
 class IndexPresenter {
 
