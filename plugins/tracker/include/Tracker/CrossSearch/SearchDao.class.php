@@ -43,12 +43,6 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
                                             array $artifact_link_field_ids_for_column_display, 
                                             array $excluded_artifact_ids = array()) {
         $report_dao = new Tracker_ReportDao();
-        $report_dao->logStart(__METHOD__, json_encode(array(
-            'user'     => $user->getUserName(),
-            'project'  => $group_id, 
-            'query'    => $query->toArrayOfDoom(),
-            'trackers' => array_values($tracker_ids)
-        )));
         
         $is_super_user                = $user->isSuperUser();
         $ugroups                      = $user->getUgroups($group_id, array());
@@ -184,8 +178,7 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
             ";
             $results = $this->retrieve($sql);
         }
-        $nb_matching = count($results);
-        $report_dao->logEnd(__METHOD__, $nb_matching);
+
         return $results;
     }
     
