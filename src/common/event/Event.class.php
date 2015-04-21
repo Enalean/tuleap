@@ -931,6 +931,7 @@ class Event {
      * Parameters:
      *      'project_id' => int,
      *      'access'     => string
+     *      'old_access' => string (previous access)
      *
      */
     const PROJECT_ACCESS_CHANGE = 'project_access_change';

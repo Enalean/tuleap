@@ -335,6 +335,7 @@ class ProjectManager {
 
     public function setAccess(Project $project, $access_level) {
         $project_id = $project->getID();
+        $old_access = $project->getAccess();
 
         switch ($access_level) {
             case Project::ACCESS_PRIVATE:
@@ -361,7 +362,8 @@ class ProjectManager {
         ));
         $this->getEventManager()->processEvent(Event::PROJECT_ACCESS_CHANGE, array(
             'project_id'         => $project_id,
-            'access'             => $access_level
+            'access'             => $access_level,
+            'old_access'         => $old_access,
         ));
     }
 

@@ -78,9 +78,14 @@ class GitPermissionsManager {
         return $this->permissions_manager->getAuthorizedUgroupIds($project_id, Git::PERM_ADMIN);
     }
 
-    public function updateAccessForRepositories($repositories) {
-        foreach ($repositories as $repository) {
-            $this->permissions_manager->disableRestrictedAccessForObjectId(Git::allPermissionTypes(), $repository->getId());
+    public function updateAccessForRepositories(Project $project, $old_access, $new_access) {
+        if ($new_access == Project::ACCESS_PRIVATE) {
+            $this->git_permission_dao->disableAnonymousRegisteredAuthenticated($project->getID());
+            $this->git_system_event_manager->queueProjectsConfigurationUpdate(array($project->getID()));
+        }
+        if ($new_access == Project::ACCESS_PUBLIC && $old_access == Project::ACCESS_PUBLIC_UNRESTRICTED) {
+            $this->git_permission_dao->disableAuthenticated($project->getID());
+            $this->git_system_event_manager->queueProjectsConfigurationUpdate(array($project->getID()));
         }
     }
 

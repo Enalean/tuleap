@@ -20,12 +20,11 @@
 
 require_once 'bootstrap.php';
 
-class GitPermissionsManagerTest extends TuleapTestCase {
-
-    private $permissions_manager;
-    private $git_permissions_manager;
-    private $git_permissions_dao;
-    private $git_system_event_manager;
+abstract class GitPermissionsManagerTest extends TuleapTestCase {
+    protected $permissions_manager;
+    protected $git_permissions_manager;
+    protected $git_permissions_dao;
+    protected $git_system_event_manager;
 
     public function setUp() {
         parent::setUp();
@@ -40,6 +39,9 @@ class GitPermissionsManagerTest extends TuleapTestCase {
         parent::tearDown();
         PermissionsManager::clearInstance();
     }
+}
+
+class GitPermissionsManager_SiteAccessUpdateTest extends GitPermissionsManagerTest {
 
     public function testWhenSwitchingFromAnonymousToRegularItUpdatesAllProjectsThatWereUsingAnonymous() {
         stub($this->git_permissions_dao)->getAllProjectsWithAnonymousRepositories()->returnsDar(array('group_id' => 101), array('group_id' => 104));
@@ -114,5 +116,57 @@ class GitPermissionsManagerTest extends TuleapTestCase {
         expect($this->git_system_event_manager)->queueProjectsConfigurationUpdate()->never();
 
         $this->git_permissions_manager->updateSiteAccess(ForgeAccess::REGULAR, ForgeAccess::RESTRICTED);
+    }
+}
+
+class GitPermissionsManager_ProjectAccessUpdateTest extends GitPermissionsManagerTest {
+
+    private $project;
+
+    public function setUp() {
+        parent::setUp();
+        $this->project = aMockProject()->withId(102)->build();
+    }
+
+    public function testWhenSwitchingFromPublicToPrivateItSetsProjectMembersForAllPublicRepositories() {
+        expect($this->git_permissions_dao)->disableAnonymousRegisteredAuthenticated(102)->once();
+        expect($this->git_system_event_manager)->queueProjectsConfigurationUpdate(array(102))->once();
+
+        $this->git_permissions_manager->updateAccessForRepositories($this->project, Project::ACCESS_PUBLIC, Project::ACCESS_PRIVATE);
+    }
+
+    public function testWhenSwitchingFromPublicToUnrestrictedItDoesNothing() {
+        expect($this->git_permissions_dao)->disableAnonymousRegisteredAuthenticated()->never();
+        expect($this->git_system_event_manager)->queueProjectsConfigurationUpdate()->never();
+
+        $this->git_permissions_manager->updateAccessForRepositories($this->project, Project::ACCESS_PUBLIC, Project::ACCESS_PUBLIC_UNRESTRICTED);
+    }
+
+    public function testWhenSwitchingFromPrivateToPublicItDoesNothing() {
+        expect($this->git_permissions_dao)->disableAnonymousRegisteredAuthenticated()->never();
+        expect($this->git_system_event_manager)->queueProjectsConfigurationUpdate()->never();
+
+        $this->git_permissions_manager->updateAccessForRepositories($this->project, Project::ACCESS_PRIVATE, Project::ACCESS_PUBLIC);
+    }
+
+    public function testWhenSwitchingFromPrivateToUnrestrictedItDoesNothing() {
+        expect($this->git_permissions_dao)->disableAnonymousRegisteredAuthenticated()->never();
+        expect($this->git_system_event_manager)->queueProjectsConfigurationUpdate()->never();
+
+        $this->git_permissions_manager->updateAccessForRepositories($this->project, Project::ACCESS_PRIVATE, Project::ACCESS_PUBLIC);
+    }
+
+    public function testWhenSwitchingFromUnrestrictedToPublicItRemoveAccessToAuthenticated() {
+        expect($this->git_permissions_dao)->disableAuthenticated(102)->once();
+        expect($this->git_system_event_manager)->queueProjectsConfigurationUpdate(array(102))->once();
+
+        $this->git_permissions_manager->updateAccessForRepositories($this->project, Project::ACCESS_PUBLIC_UNRESTRICTED, Project::ACCESS_PUBLIC);
+    }
+
+    public function testWhenSwitchingFromUnrestrictedToPrivateItSetsProjectMembersForAllPublicRepositories() {
+        expect($this->git_permissions_dao)->disableAnonymousRegisteredAuthenticated(102)->once();
+        expect($this->git_system_event_manager)->queueProjectsConfigurationUpdate(array(102))->once();
+
+        $this->git_permissions_manager->updateAccessForRepositories($this->project, Project::ACCESS_PUBLIC_UNRESTRICTED, Project::ACCESS_PRIVATE);
     }
 }
