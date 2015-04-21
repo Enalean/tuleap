@@ -11,10 +11,11 @@ require_once('pre.php');
 require_once('vars.php');
 require_once('trove.php');
 
-
 if ($GLOBALS['sys_use_trove'] == 0) {
     exit_permission_denied();
 }
+
+$current_user = $request->getCurrentUser();
 
 // assign default. 18 is 'topic'
 $form_cat = 18;
@@ -149,41 +150,11 @@ for ($i=0;$i<$folders_len;$i++) {
 }
 
 // print subcategories
-/*
-t3 = SELECT t.trove_cat_id AS trove_cat_id, count(t.group_id) AS nb
-FROM trove_group_link AS t INNER JOIN groups AS g USING(group_id)
-WHERE g.is_public = 1
-  AND g.status = 'A'
-  AND g.type = 1
-GROUP BY trove_cat_id
 
-=> number of projects under each category (no sublevels)
-
-*************
-
-t = SELECT t.trove_cat_id FROM trove_cat AS t WHERE t.parent = 18
-
-=> All direct (one level) subcategories under 18
-
-*************
-
-t2 = SELECT ... 
-FROM trove_cat AS t, trove_cat AS t2
-WHERE t2.fullpath_ids LIKE CONCAT(t.trove_cat_id, ' ::%')
-   OR t2.fullpath_ids LIKE CONCAT('%:: ', t.trove_cat_id, ' ::%')
-   OR t2.fullpath_ids LIKE t.trove_cat_id
-   OR t2.fullpath_ids LIKE CONCAT('%:: ', t.trove_cat_id)
-
-=> All subcategories (deep) of a category
-
-*************
-
-=> Select direct (one level) subcategories under 18, then select their 
-   subcategories (deep), retrieve the number of projects for each. group and sum.
-*/$sql = "SELECT t.trove_cat_id AS trove_cat_id, t.fullname AS fullname, SUM(IFNULL(t3.nb, 0)) AS subprojects 
+$sql = "SELECT t.trove_cat_id AS trove_cat_id, t.fullname AS fullname, SUM(IFNULL(t3.nb, 0)) AS subprojects 
 FROM trove_cat AS t, trove_cat AS t2 LEFT JOIN (SELECT t.trove_cat_id AS trove_cat_id, count(t.group_id) AS nb
 FROM trove_group_link AS t INNER JOIN groups AS g USING(group_id)
-WHERE g.access != '".db_es(Project::ACCESS_PRIVATE)."'
+WHERE " .trove_get_visibility_for_user('g.access', $current_user). "
   AND g.status = 'A'
   AND g.type = 1
 GROUP BY trove_cat_id) AS t3 USING(trove_cat_id)
@@ -219,14 +190,14 @@ if($folders_len == 1) {
 FROM groups AS g
 LEFT JOIN trove_group_link AS t
 USING ( group_id )
-WHERE access != '".db_es(Project::ACCESS_PRIVATE)."'
+WHERE " .trove_get_visibility_for_user('access', $current_user). "
 AND STATUS = 'A'
 AND TYPE =1
 AND trove_cat_root = ". $form_cat;
     $res_nb = db_query($sql);
     $row_nb = db_fetch_array($res_nb);
 
-    $res_total = db_query("SELECT count(*) as count FROM groups WHERE access != '".db_es(Project::ACCESS_PRIVATE)."' AND status='A' and type=1");
+    $res_total = db_query("SELECT count(*) as count FROM groups WHERE " .trove_get_visibility_for_user('access', $current_user). " AND status='A' and type=1");
     $row_total = db_fetch_array($res_total);
     $nb_not_cat=$row_total['count']-$row_nb['count'];
     for ($sp=0;$sp<($folders_len*2);$sp++) {
@@ -299,7 +270,7 @@ if((isset($_GET['special_cat'])) && ($_GET['special_cat'] == 'none')) {
         . "FROM groups "
         . "LEFT JOIN project_metric USING (group_id) "
         . "WHERE "
-        . "(groups.access != '".db_es(Project::ACCESS_PRIVATE)."') AND "
+        . "(" .trove_get_visibility_for_user('groups.access', $current_user). ") AND "
     . "(groups.type=1) AND "
         . "(groups.status='A') "
         . $sql_list_categorized
@@ -324,7 +295,7 @@ $query_projlist = "SELECT groups.group_id, "
 	. ", trove_group_link "
 	. $discrim_queryalias
 	. "WHERE trove_group_link.group_id=groups.group_id AND "
-	. "(groups.access != '".db_es(Project::ACCESS_PRIVATE)."') AND "
+	. "(" .trove_get_visibility_for_user('groups.access', $current_user). ") AND "
         . "(groups.type=1) AND "
 	. "(groups.status='A') AND "
 	. "trove_group_link.trove_cat_id=$form_cat "
