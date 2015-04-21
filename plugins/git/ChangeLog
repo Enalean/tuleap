@@ -1,3 +1,6 @@
+Version 4.33 - Tuleap 8.1
+    * request #8018 Git repostory update does not update Grokmirror manifest file
+
 Version 4.32 - Tuleap 8.1
     * story #7813: configure a git repo to allow access for restricted users
 
