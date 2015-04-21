@@ -330,6 +330,7 @@ plugin_git	admin_mirror_deleted	Mirror deleted!
 plugin_git	add_mirror	Add a new mirror
 plugin_git	mirror_section_title	Git mirror administration
 plugin_git	url_label	SSH Host
+plugin_git	hostname_label	Hostname
 plugin_git	owner_label	Owner
 plugin_git	ssh_key_label	Owner's SSH Key
 plugin_git	pwd_label	Owner's Password
@@ -384,6 +385,8 @@ project_admin_utils	git_fork_repositories	Git fork repositories
 plugin_git	identifier	Identifier
 plugin_git	identifier_placeholder	e.g. location, ...
 plugin_git	url_placeholder	e.g. tuleap.net
+plugin_git	hostname_placeholder	e.g. sfo-mirror
+plugin_git	hostname_help	Related to .gitolite.rc HOSTNAME variable
 
 plugin_git	how_to_use_text	How to use a Git repository:
 plugin_git	clone_text	Clone the repository in order to get your working copy:

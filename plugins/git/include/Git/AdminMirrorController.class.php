@@ -111,6 +111,7 @@ class Git_AdminMirrorController {
             $mirror_presenters[] = array(
                 'id'                     => $mirror->id,
                 'url'                    => $mirror->url,
+                'hostname'               => $mirror->hostname,
                 'name'                   => $mirror->name,
                 'owner_id'               => $mirror->owner_id,
                 'owner_name'             => $mirror->owner_name,
@@ -211,6 +212,7 @@ class Git_AdminMirrorController {
 
     private function createMirror(Codendi_Request $request) {
         $url      = $request->get('new_mirror_url');
+        $hostname = $request->get('new_mirror_hostname');
         $ssh_key  = $request->get('new_mirror_key');
         $password = $request->get('new_mirror_pwd');
         $name     = $request->get('new_mirror_name');
@@ -218,7 +220,7 @@ class Git_AdminMirrorController {
         $this->csrf->check();
 
         try {
-            $this->git_mirror_mapper->save($url, $ssh_key, $password, $name);
+            $this->git_mirror_mapper->save($url, $hostname, $ssh_key, $password, $name);
         } catch (Git_Mirror_MissingDataException $e) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','admin_mirror_fields_required'));
         } catch (Git_Mirror_CreateException $e) {
@@ -269,6 +271,7 @@ class Git_AdminMirrorController {
             $update = $this->git_mirror_mapper->update(
                 $request->get('mirror_id'),
                 $request->get('mirror_url'),
+                $request->get('mirror_hostname'),
                 $request->get('mirror_key'),
                 $request->get('mirror_name')
             );

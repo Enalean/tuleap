@@ -58,7 +58,7 @@ class Git_Mirror_ManifestFileGenerator_BaseTest extends TuleapTestCase {
             ->withDescription('free and open-source web browser')
             ->build();
 
-        $this->singapour_mirror = new Git_Mirror_Mirror(mock('PFUser'), $this->singapour_mirror_id, 'singapour.com', 'SNP');
+        $this->singapour_mirror = new Git_Mirror_Mirror(mock('PFUser'), $this->singapour_mirror_id, 'singapour.com', 'singapour', 'SNP');
         $this->manifest_file_for_singapour = $this->manifest_directory
             . "/manifest_mirror_{$this->singapour_mirror_id}.js.gz";
 

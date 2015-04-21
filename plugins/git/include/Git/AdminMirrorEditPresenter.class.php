@@ -26,6 +26,8 @@ class Git_AdminMirrorEditPresenter extends Git_AdminMirrorPresenter{
 
     public $url;
 
+    private $hostname;
+
     public $name;
 
     public $owner_name;
@@ -41,11 +43,20 @@ class Git_AdminMirrorEditPresenter extends Git_AdminMirrorPresenter{
 
         $this->id         = $mirror->id;
         $this->url        = $mirror->url;
+        $this->hostname   = $mirror->hostname;
         $this->name       = $mirror->name;
 
         $this->owner      = $mirror->owner;
         $this->owner_name = $mirror->owner_name;
         $this->owner_id   = $mirror->owner_id;
+    }
+
+    public function hostname() {
+        if ($this->hostname) {
+            return $this->hostname;
+        }
+
+        return "";
     }
 
     public function update_button() {

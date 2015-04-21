@@ -326,6 +326,7 @@ plugin_git	admin_mirror_deleted	Miroir supprimé!
 plugin_git	add_mirror	Ajouter un nouveau mirroir
 plugin_git	mirror_section_title	Administration des mirroirs
 plugin_git	url_label	Hôte SSH
+plugin_git	hostname_label	Hôte
 plugin_git	owner_label	Propriétaire
 plugin_git	ssh_key_label	Clé SSH du propriétaire
 plugin_git	pwd_label	Mot de passe du propriétaire
@@ -381,6 +382,8 @@ project_admin_utils	git_fork_repositories	Fork de dépôts Git
 plugin_git	identifier	Identifiant
 plugin_git	identifier_placeholder	e.g. location, ...
 plugin_git	url_placeholder	e.g. tuleap.net
+plugin_git	hostname_placeholder	e.g. sfo-mirror
+plugin_git	hostname_help	Correspond à la variable HOSTNAME de .gitolite.rc
 
 plugin_git	how_to_use_text	Comment utiliser un dépôt Git:
 plugin_git	clone_text	Clonez le dépôt pour obtenir votre copie de travail locale:
