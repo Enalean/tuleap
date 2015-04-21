@@ -5,15 +5,21 @@
     <div class="">
         <br>
         <div class="control-group">
-            <label class="control-label" for="mirror_url">{{ identifier }}</label>
+            <label class="control-label" for="mirror_name">{{ identifier }}</label>
             <div class="controls">
-                <input name="mirror_name" type="text" value="{{ name }}" required/>
+                <input id="mirror_name" name="mirror_name" type="text" value="{{ name }}" required/>
             </div>
         </div>
         <div class="control-group">
             <label class="control-label" for="mirror_url">{{ url_label }}</label>
             <div class="controls">
-                <input name="mirror_url" type="text" value="{{ url }}" required/>
+                <input id="mirror_url" name="mirror_url" type="text" value="{{ url }}" required/>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="mirror_hostname">{{ hostname_label }}</label>
+            <div class="controls">
+                <input id="mirror_hostname" name="mirror_hostname" type="text" value="{{ hostname }}" />
             </div>
         </div>
         <div class="control-group">
@@ -31,7 +37,7 @@
         <div class="control-group">
             <label class="control-label" for="mirror_key">{{ ssh_key_label }}</label>
             <div class="controls">
-                <textarea name="mirror_key" rows="7" cols="70" required>{{ ssh_key }}</textarea>
+                <textarea id="mirror_key" name="mirror_key" rows="7" cols="70" required>{{ ssh_key }}</textarea>
             </div>
         </div>
 

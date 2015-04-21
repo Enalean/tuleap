@@ -18,6 +18,7 @@
                     <th></th>
                     <th>{{ identifier }}</th>
                     <th>{{ url_label }}</th>
+                    <th>{{ hostname_label }}</th>
                     <th>{{ owner_label }}</th>
                     <th>{{ ssh_key_label }}</th>
                     <th></th>
@@ -40,6 +41,11 @@
                     <td class="git_admin_mirror_url">
                         <span name="mirror_url">
                             {{ url }}
+                        </span>
+                    </td>
+                    <td class="git_admin_mirror_url">
+                        <span name="mirror_url">
+                            {{ hostname }}
                         </span>
                     </td>
                     <td>

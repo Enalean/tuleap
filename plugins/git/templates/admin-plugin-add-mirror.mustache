@@ -4,27 +4,33 @@
     <h3>{{ add_mirror }}</h3>
     <dl>
         <div class="control-group">
-            <label class="control-label" for="new_mirror_url">{{ identifier }}</label>
+            <label class="control-label" for="new_mirror_name">{{ identifier }}</label>
             <div class="controls">
-                <input name="new_mirror_name" type="text" placeholder="{{ identifier_placeholder }}" required/>
+                <input id="new_mirror_name" name="new_mirror_name" type="text" placeholder="{{ identifier_placeholder }}" required/>
             </div>
         </div>
         <div class="control-group">
             <label class="control-label" for="new_mirror_url">{{ url_label }}</label>
             <div class="controls">
-                <input name="new_mirror_url" type="text" placeholder="{{ url_placeholder }}" required/>
+                <input id="new_mirror_url" name="new_mirror_url" type="text" placeholder="{{ url_placeholder }}" required/>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="new_mirror_hostname">{{ hostname_label }}</label>
+            <div class="controls">
+                <input id="new_mirror_hostname" name="new_mirror_hostname" type="text" placeholder="{{ hostname_placeholder }}" /><span class="help-inline help-info">{{ hostname_help }}</span>
             </div>
         </div>
         <div class="control-group">
             <label class="control-label" for="new_mirror_key">{{ ssh_key_label }}</label>
             <div class="controls">
-                <textarea name="new_mirror_key"  rows="7" cols="70" required></textarea>
+                <textarea id="new_mirror_key" name="new_mirror_key"  rows="7" cols="70" required></textarea>
             </div>
         </div>
         <div class="control-group">
             <label class="control-label" for="new_mirror_pwd">{{ pwd_label }}</label>
             <div class="controls">
-                <input name="new_mirror_pwd" type="password" required/>
+                <input id="new_mirror_pwd" name="new_mirror_pwd" type="password" required/>
             </div>
         </div>
 

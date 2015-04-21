@@ -26,6 +26,8 @@ class Git_Mirror_Mirror {
 
     public $url;
 
+    public $hostname;
+
      /** @var PFUser */
     public $owner;
 
@@ -35,11 +37,12 @@ class Git_Mirror_Mirror {
 
     public $ssh_key;
 
-    public function __construct(PFUser $owner, $id, $url, $name) {
-        $this->id    = $id;
-        $this->url   = $url;
-        $this->owner = $owner;
-        $this->name  = $name;
+    public function __construct(PFUser $owner, $id, $url, $hostname, $name) {
+        $this->id       = $id;
+        $this->url      = $url;
+        $this->hostname = $hostname;
+        $this->owner    = $owner;
+        $this->name     = $name;
 
         $this->ssh_key    = ($owner->getAuthorizedKeysRaw()) ? $owner->getAuthorizedKeysRaw() : '';
         $this->owner_name = $owner->getName();

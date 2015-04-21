@@ -42,6 +42,10 @@ abstract class Git_AdminMirrorPresenter extends Git_AdminPresenter {
         return $GLOBALS['Language']->getText('plugin_git','url_label');
     }
 
+    public function hostname_label() {
+        return $GLOBALS['Language']->getText('plugin_git','hostname_label');
+    }
+
     public function owner_label() {
         return $GLOBALS['Language']->getText('plugin_git','owner_label');
     }
@@ -64,5 +68,13 @@ abstract class Git_AdminMirrorPresenter extends Git_AdminPresenter {
 
     public function url_placeholder() {
         return $GLOBALS['Language']->getText('plugin_git', 'url_placeholder');
+    }
+
+    public function hostname_placeholder() {
+        return $GLOBALS['Language']->getText('plugin_git', 'hostname_placeholder');
+    }
+
+    public function hostname_help() {
+        return $GLOBALS['Language']->getText('plugin_git', 'hostname_help');
     }
 }

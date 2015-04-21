@@ -130,6 +130,7 @@ CREATE TABLE IF NOT EXISTS plugin_git_mirrors (
     id INT(11) unsigned NOT NULL auto_increment,
     url VARCHAR(255) NOT NULL,
     name VARCHAR(255) NOT NULL,
+    hostname VARCHAR(255) NULL,
     PRIMARY KEY (id)
 );
 
