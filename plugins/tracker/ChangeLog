@@ -1,3 +1,6 @@
+Version 5.613 - Tuleap 8.1
+    * request #7995: Remove use of log method for cross tracker search
+
 Version 5.612 - Tuleap 8.1
     * request #8005: Decorator for radio button values are not displayed
 
