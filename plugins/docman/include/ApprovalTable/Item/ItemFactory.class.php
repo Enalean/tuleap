@@ -45,18 +45,21 @@ class Docman_ApprovalTableItemFactory extends Docman_ApprovalTableFactory {
      * @return int new table id
      */
     function _createTable($table) {
-        return $this->_getDao()->createTable($table->getItemId(),
-                                 $table->getOwner(),
-                                 $table->getDescription(),
-                                 $table->getDate(),
-                                 $table->getStatus(),
-                                 $table->getNotification());
+        return $this->_getDao()->createTable(
+            'item_id',
+            $table->getItemId(),
+            $table->getOwner(),
+            $table->getDescription(),
+            $table->getDate(),
+            $table->getStatus(),
+            $table->getNotification()
+        );
     }
 
     function _getTable() {
         $table = null;
         $dao = $this->_getDao();
-        $dar = $dao->getTableByTableId($this->item->getId());
+        $dar = $dao->getTableByItemId($this->item->getId());
         if($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->current();
             $table = $this->createTableFromRow($row);
