@@ -105,7 +105,11 @@ admin_main	access_regular_desc	Tous les utilisateurs doivent s'authentifier avan
 admin_main	access_restrited_label	Authentification requise et utilisateurs restreints
 admin_main	access_restrited_desc	Tous les utilisateurs doivent s'authentifier avant de pouvoir accéder au contenu. Certains utilisateurs peuvent être restreints (les utilisateurs restreints ont accès uniquement aux projets et aux services auxquels les autorisations leur sont spécifiquement accordées).
 admin_main	current_restricted_users_message	<h4>Attention !</h4><p>Il y a actuellement <a href="/admin/userlist.php?status_values[]=R">$1 utilisateur(s)</a> qui ont le status restreint. Changer le mode d'accès ne modifiera pas leur status, ils devront être gérés manuellement.</p>
-
+admin_main	ugroup_authenticated_users_placeholder	E.g employés $1 & présta
+admin_main	ugroup_registered_users_placeholder	E.g employés $1
+admin_main	ugroup_authenticated_users_label	Label pour les utilisateurs authentifiés (enregistrés + retreints)
+admin_main	ugroup_registered_users_label	Label pour les utilisateurs enregistrés
+admin_main	customize_ugroups_label_info	Vous pouvez redéfinir les noms des deux groups spéciaux suivants. Pour le moment, cela s'applique uniquement au service Git.
 #
 #-----------------------------------------------
 # Script: SF/www/admin/admin_utils.php

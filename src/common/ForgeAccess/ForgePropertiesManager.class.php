@@ -62,4 +62,9 @@ class ForgeAccess_ForgePropertiesManager {
             $this->permission_manager->disableRestrictedAccess();
         }
     }
+
+    public function updateLabels($authenticated_label, $registered_label) {
+        $this->config_dao->save(User_ForgeUGroup::CONFIG_AUTHENTICATED_LABEL, $authenticated_label);
+        $this->config_dao->save(User_ForgeUGroup::CONFIG_REGISTERED_LABEL, $registered_label);
+    }
 }

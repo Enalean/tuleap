@@ -85,7 +85,9 @@ class ForgeAccess_AdminController {
                 $title,
                 $this->localincfinder->getLocalIncPath(),
                 ForgeConfig::get(ForgeAccess::CONFIG),
-                count($this->user_dao->searchByStatus(PFUser::STATUS_RESTRICTED))
+                count($this->user_dao->searchByStatus(PFUser::STATUS_RESTRICTED)),
+                ForgeConfig::get(User_ForgeUGroup::CONFIG_AUTHENTICATED_LABEL),
+                ForgeConfig::get(User_ForgeUGroup::CONFIG_REGISTERED_LABEL)
             )
         );
         $this->response->footer($params);
@@ -107,6 +109,15 @@ class ForgeAccess_AdminController {
             $new_access_value = $this->request->get(self::ACCESS_KEY);
             $old_access_value = ForgeConfig::get(ForgeAccess::CONFIG);
             $this->manager->updateAccess($new_access_value, $old_access_value);
+
+            if ($new_access_value == ForgeAccess::RESTRICTED) {
+                $this->manager->updateLabels(
+                    trim($this->request->getValidated('ugroup_authenticated_users', 'string', '')),
+                    trim($this->request->getValidated('ugroup_registered_users', 'string', ''))
+                );
+            } else {
+                $this->manager->updateLabels('', '');
+            }
 
             $this->response->addFeedback(
                 Feedback::INFO,

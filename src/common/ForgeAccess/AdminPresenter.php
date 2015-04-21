@@ -47,12 +47,35 @@ class ForgeAccess_AdminPresenter {
     /** @var string html */
     public $csrf_token;
 
+    /** @var string */
+    public $ugroup_authenticated_users = '';
+
+    /** @var string */
+    public $ugroup_registered_users = '';
+
+    /** @var string */
+    public $ugroup_authenticated_users_placeholder;
+
+    /** @var string */
+    public $ugroup_registered_users_placeholder;
+
+    /** @var string */
+    public $ugroup_authenticated_users_label;
+
+    /** @var string */
+    public $ugroup_registered_users_label;
+
+    /** @var string */
+    public $customize_ugroups_label_info;
+
     public function __construct(
         CSRFSynchronizerToken $csrf,
         $title,
         $localinc_path,
         $current_access_mode,
-        $nb_restricted_users
+        $nb_restricted_users,
+        $ugroup_authenticated_users,
+        $ugroup_registered_users
     ) {
         $this->title               = $title;
         $this->csrf_token          = $csrf->fetchHTMLInput();
@@ -84,6 +107,20 @@ class ForgeAccess_AdminPresenter {
             'current_restricted_users_message',
             $this->nb_restricted_users
         );
+
+        if ($ugroup_authenticated_users != false) {
+            $this->ugroup_authenticated_users = $ugroup_authenticated_users;
+        }
+        if ($ugroup_registered_users != false) {
+            $this->ugroup_registered_users = $ugroup_registered_users;
+        }
+        $this->ugroup_authenticated_users_placeholder = $GLOBALS['Language']->getText('admin_main', 'ugroup_authenticated_users_placeholder', array(ForgeConfig::get('sys_org_name')));
+        $this->ugroup_registered_users_placeholder    = $GLOBALS['Language']->getText('admin_main', 'ugroup_registered_users_placeholder', array(ForgeConfig::get('sys_org_name')));
+
+        $this->ugroup_authenticated_users_label       = $GLOBALS['Language']->getText('admin_main', 'ugroup_authenticated_users_label');
+        $this->ugroup_registered_users_label          = $GLOBALS['Language']->getText('admin_main', 'ugroup_registered_users_label');
+
+        $this->customize_ugroups_label_info           = $GLOBALS['Language']->getText('admin_main', 'customize_ugroups_label_info');
     }
 
     private function isLocalIncObsolete() {
