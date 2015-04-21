@@ -342,6 +342,15 @@ class GitPlugin extends Plugin {
                     $this->getLogger()
                 );
                 break;
+            case SystemEvent_GIT_PROJECTS_UPDATE::NAME:
+                $params['class'] = 'SystemEvent_GIT_PROJECTS_UPDATE';
+                $params['dependencies'] = array(
+                    $this->getLogger(),
+                    $this->getGitSystemEventManager(),
+                    $this->getProjectManager(),
+                    $this->getGitoliteDriver(),
+                );
+                break;
             default:
                 break;
         }
@@ -1381,9 +1390,14 @@ class GitPlugin extends Plugin {
             && count($params['executed_events_ids']) > 0;
     }
 
+    public function getRESTRepositoryRepresentationBuilder($version) {
+        $class  = "Tuleap\\Git\\REST\\".$version."\\RepositoryRepresentationBuilder";
+        return new $class($this->getGitPermissionsManager());
+    }
+
     public function rest_project_get_git($params) {
         $class            = "Tuleap\\Git\\REST\\".$params['version']."\\ProjectResource";
-        $project_resource = new $class($this->getRepositoryFactory());
+        $project_resource = new $class($this->getRepositoryFactory(), $this->getRESTRepositoryRepresentationBuilder($params['version']));
         $project          = $params['project'];
 
         $params['result'] = $project_resource->getGit(
