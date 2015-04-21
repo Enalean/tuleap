@@ -1,3 +1,6 @@
+Version 2.26.71 - Tuleap 8.1
+    * request #8019 Not able to create an approval table for folder
+
 Version 2.26.70 - Tuleap 8.1
     * request #7981: Docman approval_table_reminder fix of warning (Contrib STMicroelectronics)
 
