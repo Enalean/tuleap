@@ -1,0 +1,285 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2015. All rights reserved
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/
+ */
+
+
+class ProjectSerializerTest extends TuleapTestCase {
+    private $project_serializer;
+    private $repository_factory;
+    private $url_manager;
+    private $gitolite_permissions_serializer;
+    private $logger;
+    private $_fixDir;
+    private $permissions_manager;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->_fixDir       = dirname(__FILE__).'/_fixtures';
+
+        $GLOBALS['sys_https_host'] = 'localhost';
+
+        PermissionsManager::setInstance(mock('PermissionsManager'));
+        $this->permissions_manager = PermissionsManager::instance();
+
+        $this->repository_factory = mock('GitRepositoryFactory');
+
+        $git_plugin        = stub('GitPlugin')->areFriendlyUrlsActivated()->returns(false);
+        $this->url_manager = new Git_GitRepositoryUrlManager($git_plugin);
+
+        $mirror_data_mapper = mock('Git_Mirror_MirrorDataMapper');
+        stub($mirror_data_mapper)->fetchAllRepositoryMirrors()->returns(array());
+        stub($mirror_data_mapper)->fetchAll()->returns(array());
+
+        $this->gitolite_permissions_serializer = new Git_Gitolite_ConfigPermissionsSerializer(
+            $mirror_data_mapper,
+            'whatever'
+        );
+
+        $this->logger                   = mock('Logger');
+
+        $this->project_serializer = new Git_Gitolite_ProjectSerializer(
+            $this->logger,
+            $this->repository_factory,
+            $this->gitolite_permissions_serializer,
+            $this->url_manager
+        );
+    }
+
+    public function tearDown() {
+        parent::tearDown();
+
+        unset($GLOBALS['sys_https_host']);
+        PermissionsManager::clearInstance();
+    }
+
+    public function testGetMailHookConfig() {
+        $prj = new MockProject($this);
+        $prj->setReturnValue('getUnixName', 'project1');
+        $prj->setReturnValue('getId', 101);
+
+        // ShowRev
+        $repo = new GitRepository();
+        $repo->setId(5);
+        $repo->setProject($prj);
+        $repo->setName('test_default');
+        $this->assertIdentical(
+            file_get_contents($this->_fixDir .'/gitolite-mail-config/mailhook-rev.txt'),
+            $this->project_serializer->fetchMailHookConfig($prj, $repo)
+        );
+
+        // ShowRev + Mail
+        $repo = new GitRepository();
+        $repo->setId(5);
+        $repo->setProject($prj);
+        $repo->setName('test_default');
+        $repo->setNotifiedMails(array('john.doe@enalean.com', 'mme.michue@enalean.com'));
+        $this->assertIdentical(
+            file_get_contents($this->_fixDir .'/gitolite-mail-config/mailhook-rev-mail.txt'),
+            $this->project_serializer->fetchMailHookConfig($prj, $repo)
+        );
+
+        // ShowRev + Mailprefix
+        $repo = new GitRepository();
+        $repo->setId(5);
+        $repo->setProject($prj);
+        $repo->setName('test_default');
+        $repo->setNotifiedMails(array('john.doe@enalean.com', 'mme.michue@enalean.com'));
+        $repo->setMailPrefix('[KOIN] ');
+        $this->assertIdentical(
+            file_get_contents($this->_fixDir .'/gitolite-mail-config/mailhook-rev-mail-prefix.txt'),
+            $this->project_serializer->fetchMailHookConfig($prj, $repo)
+        );
+
+        // ShowRev + Mailprefix
+        $repo = new GitRepository();
+        $repo->setId(5);
+        $repo->setProject($prj);
+        $repo->setName('test_default');
+        $repo->setNotifiedMails(array('john.doe@enalean.com', 'mme.michue@enalean.com'));
+        $repo->setMailPrefix('["\_o<"] \t');
+        $this->assertIdentical(
+            file_get_contents($this->_fixDir .'/gitolite-mail-config/mailhook-rev-mail-prefix-quote.txt'),
+            $this->project_serializer->fetchMailHookConfig($prj, $repo)
+        );
+    }
+
+    public function itAddsTheDescriptionToTheConfFile() {
+        $repo_description = 'Vive tuleap';
+        $repo_name        = 'test_default';
+        $project_name     = 'project1';
+
+        $prj = stub('Project')->getUnixName()->returns($project_name);
+
+        // List all repo
+        stub($this->repository_factory)->getAllRepositoriesOfProject($prj)->returns(
+            array(
+                aGitRepository()
+                    ->withId(4)
+                    ->withName($repo_name)
+                    ->withNamespace('')
+                    ->withDescription($repo_description)
+                    ->withProject($prj)
+                    ->build()
+            )
+        );
+
+        // Repo 4 (test_default): R = registered_users | W = project_members | W+ = none
+        stub($this->permissions_manager)->getAuthorizedUgroupIds(4, 'PLUGIN_GIT_READ')->returns(array('2'));
+        stub($this->permissions_manager)->getAuthorizedUgroupIds(4, 'PLUGIN_GIT_WRITE')->returns(array('3'));
+        stub($this->permissions_manager)->getAuthorizedUgroupIds(4, 'PLUGIN_GIT_WPLUS')->returns(array());
+
+        // Ensure file is correct
+        $result     = $this->project_serializer->dumpProjectRepoConf($prj);
+        $this->assertPattern("%$project_name/$repo_name = \"$repo_description\"%", $result);
+    }
+
+    public function itReplacesNewlinesBySpaces() {
+        $repo_description = 'Vive
+            tuleap';
+        $repo_name        = 'test_default';
+        $project_name     = 'project1';
+
+        $prj = new MockProject($this);
+        $prj->setReturnValue('getUnixName', $project_name);
+
+        // List all repo
+        stub($this->repository_factory)->getAllRepositoriesOfProject($prj)->returns(
+            array(
+                aGitRepository()
+                    ->withId(4)
+                    ->withName($repo_name)
+                    ->withNamespace('')
+                    ->withDescription($repo_description)
+                    ->withProject($prj)
+                    ->build()
+            )
+        );
+
+        stub($this->permissions_manager)->getAuthorizedUgroupIds(4, 'PLUGIN_GIT_READ')->returns(array('2'));
+        stub($this->permissions_manager)->getAuthorizedUgroupIds(4, 'PLUGIN_GIT_WRITE')->returns(array('3'));
+        stub($this->permissions_manager)->getAuthorizedUgroupIds(4, 'PLUGIN_GIT_WPLUS')->returns(array());
+
+        // Ensure file is correct
+        $result     = $this->project_serializer->dumpProjectRepoConf($prj);
+        $this->assertPattern("%$project_name/$repo_name = \"Vive tuleap\"%", $result);
+    }
+
+    //
+    // The project has 2 repositories nb 4 & 5.
+    // 4 has defaults
+    // 5 has pimped perms
+    public function testDumpProjectRepoPermissions() {
+        $prj = new MockProject($this);
+        $prj->setReturnValue('getUnixName', 'project1');
+        $prj->setReturnValue('getId', 404);
+
+        // List all repo
+        stub($this->repository_factory)->getAllRepositoriesOfProject($prj)->once()->returns(
+            array(
+                aGitRepository()
+                    ->withProject($prj)
+                    ->withId(4)
+                    ->withName('test_default')
+                    ->withNamespace('')
+                    ->withMailPrefix('[SCM]')
+                    ->withNotifiedEmails(array('john.doe@enalean.com', 'mme.michue@enalean.com'))
+                    ->build(),
+                aGitRepository()
+                    ->withId(5)
+                    ->withProject($prj)
+                    ->withName('test_pimped')
+                    ->withNamespace('')
+                    ->withMailPrefix('[KOIN] ')
+                    ->build()
+            )
+        );
+
+        // Repo 4 (test_default): R = registered_users | W = project_members | W+ = none
+        $this->permissions_manager->setReturnValue('getAuthorizedUgroupIds', array('2'),   array(4, 'PLUGIN_GIT_READ'));
+        $this->permissions_manager->setReturnValue('getAuthorizedUgroupIds', array('3'),   array(4, 'PLUGIN_GIT_WRITE'));
+        $this->permissions_manager->setReturnValue('getAuthorizedUgroupIds', array(),      array(4, 'PLUGIN_GIT_WPLUS'));
+
+        // Repo 5 (test_pimped): R = project_members | W = project_admin | W+ = user groups 101
+        $this->permissions_manager->setReturnValue('getAuthorizedUgroupIds', array('3'),   array(5, 'PLUGIN_GIT_READ'));
+        $this->permissions_manager->setReturnValue('getAuthorizedUgroupIds', array('4'),   array(5, 'PLUGIN_GIT_WRITE'));
+        $this->permissions_manager->setReturnValue('getAuthorizedUgroupIds', array('125'), array(5, 'PLUGIN_GIT_WPLUS'));
+
+        // Ensure file is correct
+        $result     = $this->project_serializer->dumpProjectRepoConf($prj);
+        $expected   = file_get_contents($this->_fixDir .'/perms/project1-full.conf');
+        $this->assertIdentical($expected, $result);
+    }
+
+    public function testRewindAccessRightsToGerritUserWhenRepoIsMigratedToGerrit() {
+        $prj = new MockProject($this);
+        $prj->setReturnValue('getUnixName', 'project1');
+        $prj->setReturnValue('getId', 404);
+
+        // List all repo
+        stub($this->repository_factory)->getAllRepositoriesOfProject($prj)->once()->returns(
+            array(
+                aGitRepository()
+                    ->withProject($prj)
+                    ->withId(4)
+                    ->withName('before_migration_to_gerrit')
+                    ->withNamespace('')
+                    ->build(),
+                aGitRepository()
+                    ->withId(5)
+                    ->withProject($prj)
+                    ->withName('after_migration_to_gerrit')
+                    ->withNamespace('')
+                    ->withRemoteServerId(1)
+                    ->build()
+            )
+        );
+
+        stub($this->permissions_manager)->getAuthorizedUgroupIds(4, 'PLUGIN_GIT_READ')->returns(array('2'));
+        stub($this->permissions_manager)->getAuthorizedUgroupIds(4, 'PLUGIN_GIT_WRITE')->returns(array('3'));
+        stub($this->permissions_manager)->getAuthorizedUgroupIds(4, 'PLUGIN_GIT_WPLUS')->returns(array('125'));
+        stub($this->permissions_manager)->getAuthorizedUgroupIds(5, 'PLUGIN_GIT_READ')->returns(array('2'));
+        stub($this->permissions_manager)->getAuthorizedUgroupIds(5, 'PLUGIN_GIT_WRITE')->returns(array('3'));
+        stub($this->permissions_manager)->getAuthorizedUgroupIds(5, 'PLUGIN_GIT_WPLUS')->returns(array('125'));
+
+
+        // Ensure file is correct
+        $result     = $this->project_serializer->dumpProjectRepoConf($prj);
+        $expected = file_get_contents($this->_fixDir .'/perms/migrated_to_gerrit.conf');
+        $this->assertIdentical($expected, $result);
+    }
+
+    public function testRepoFullNameConcats_UnixProjectName_Namespace_And_Name() {
+        $unix_name = 'project1';
+
+        $repo = $this->_GivenARepositoryWithNameAndNamespace('repo', 'toto');
+        $this->assertEqual('project1/toto/repo', $this->project_serializer->repoFullName($repo, $unix_name));
+
+        $repo = $this->_GivenARepositoryWithNameAndNamespace('repo', '');
+        $this->assertEqual('project1/repo', $this->project_serializer->repoFullName($repo, $unix_name));
+    }
+
+    private function _GivenARepositoryWithNameAndNamespace($name, $namespace) {
+        $repo = new GitRepository();
+        $repo->setName($name);
+        $repo->setNamespace($namespace);
+        return $repo;
+    }
+
+}

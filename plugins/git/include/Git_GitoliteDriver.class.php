@@ -20,10 +20,6 @@
  */
 
 require_once 'PathJoinUtil.php';
-require_once 'common/project/Project.class.php';
-require_once 'common/user/User.class.php';
-require_once 'common/project/UGroupManager.class.php';
-require_once 'common/project/UGroupLiteralizer.class.php';
 
 /**
  * This class manage the interaction between Tuleap and Gitolite
@@ -81,7 +77,6 @@ class Git_GitoliteDriver {
     CONST NEW_AUTHORIZED_KEYS_PATH = "/var/lib/gitolite/.ssh/authorized_keys";
     CONST EXTRA_REPO_RESTORE_DEPTH = 2;
 
-
     /**
      * Constructor
      *
@@ -105,7 +100,7 @@ class Git_GitoliteDriver {
         $this->setAdminPath($adminPath);
         $this->gitExec = $gitExec ? $gitExec : new Git_Exec($adminPath);
         $this->repository_factory = $repository_factory ? $repository_factory : new GitRepositoryFactory(
-            $this->getDao(),
+            new GitDao(),
             ProjectManager::instance()
         );
 
@@ -121,10 +116,6 @@ class Git_GitoliteDriver {
             ),
             PluginManager::instance()->getPluginByName('git')->getEtcTemplatesPath()
         );
-    }
-
-    public function repoFullName(GitRepository $repo, $unix_name) {
-        return unixPathJoin(array($unix_name, $repo->getFullName()));
     }
 
     /**
@@ -186,13 +177,41 @@ class Git_GitoliteDriver {
         return is_dir($headsPath);
     }
 
-    public function push() {
-        $this->logger->debug('Pushing in gitolite admin repository...');
-        $res = $this->gitExec->push();
-        $this->logger->debug('Pushing in gitolite admin repository: done');
-        chdir($this->oldCwd);
+    /**
+     * Save on filesystem all permission configuration for a project
+     *
+     * @param Project $project
+     */
+    public function dumpProjectRepoConf(Project $project) {
+        $project_serializer = new Git_Gitolite_ProjectSerializer(
+            $this->logger,
+            $this->repository_factory,
+            $this->permissions_serializer,
+            $this->url_manager
+        );
+        $this->logger->debug("Get Project Permission Conf File: " . $project->getUnixName() . "...");
+        $config_file = $this->getProjectPermissionConfFile($project);
+        $this->logger->debug("Get Project Permission Conf File: " . $project->getUnixName() . ": done");
+        $this->logger->debug("Write Git config: " . $project->getUnixName() . "...");
+        if ($this->writeGitConfig($config_file, $project_serializer->dumpProjectRepoConf($project))) {
+            $this->logger->debug("Write Git config: " . $project->getUnixName() . ": done");
+            return $this->updateMainConfIncludes($project);
+        }
+    }
+    
+    protected function getProjectPermissionConfFile($project) {
+        $prjConfDir = 'conf/projects';
+        if (!is_dir($prjConfDir)) {
+            mkdir($prjConfDir);
+        }
+        return $prjConfDir.'/'.$project->getUnixName().'.conf';
+    }
 
-        return $res;
+    protected function writeGitConfig($config_file, $config_datas) {
+        if (strlen($config_datas) !== file_put_contents($config_file, $config_datas)) {
+            return false;
+        }
+        return $this->gitExec->add($config_file);
     }
 
     public function updateMainConfIncludes($project) {
@@ -213,104 +232,19 @@ class Git_GitoliteDriver {
         return $project_names;
     }
 
-    /**
-     * Save on filesystem all permission configuration for a project
-     *
-     * @param Project $project
-     */
-    public function dumpProjectRepoConf($project) {
-        $this->logger->debug("Dumping project repo conf for: ". $project->getUnixName());
+    public function push() {
+        $this->logger->debug('Pushing in gitolite admin repository...');
+        $res = $this->gitExec->push();
+        $this->logger->debug('Pushing in gitolite admin repository: done');
+        chdir($this->oldCwd);
 
-        $project_config = '';
-        foreach ($this->repository_factory->getAllRepositoriesOfProject($project) as $repository) {
-
-            $this->logger->debug("Fetching Repo Configuration: ". $repository->getName()."...");
-            $project_config .= $this->fetchReposConfig($project, $repository);
-            $this->logger->debug("Fetching Repo Configuration: ". $repository->getName().": done");
-        }
-        $this->logger->debug("Get Project Permission Conf File: ". $project->getUnixName()."...");
-        $config_file = $this->getProjectPermissionConfFile($project);
-        $this->logger->debug("Get Project Permission Conf File: ". $project->getUnixName().": done");
-        $this->logger->debug("Write Git config: ". $project->getUnixName()."...");
-        if ($this->writeGitConfig($config_file, $project_config)) {
-            $this->logger->debug("Write Git config: ". $project->getUnixName().": done");
-            return $this->updateMainConfIncludes($project);
-        }
+        return $res;
     }
 
-    protected function fetchReposConfig(Project $project, GitRepository $repository) {
-        $repo_full_name   = $this->repoFullName($repository, $project->getUnixName());
-        $repo_config  = 'repo '. $repo_full_name . PHP_EOL;
-        $repo_config .= $this->fetchMailHookConfig($project, $repository);
-        $repo_config .= $this->permissions_serializer->getForRepository($repository);
-        $description = preg_replace( "%\s+%", ' ', $repository->getDescription());
-        $repo_config .= "$repo_full_name = \"$description\"".PHP_EOL;
-        
-        return $repo_config. PHP_EOL;
-    }
-    
-    /**
-     * Returns post-receive-email hook config in gitolite format
-     *
-     * @param Project $project
-     * @param GitRepository $repository
-     */
-    public function fetchMailHookConfig($project, $repository) {
-        $conf  = '';
-        $conf .= ' config hooks.showrev = "';
-        $conf .= $repository->getPostReceiveShowRev($this->url_manager);
-        $conf .= '"';
-        $conf .= PHP_EOL;
-        if ($repository->getNotifiedMails() && count($repository->getNotifiedMails()) > 0) {
-            $conf .= ' config hooks.mailinglist = "'. implode(', ', $repository->getNotifiedMails()). '"';
-        } else {
-            $conf .= ' config hooks.mailinglist = ""';
-        }
-        $conf .= PHP_EOL;
-        if ($repository->getMailPrefix() != GitRepository::DEFAULT_MAIL_PREFIX) {
-            $conf .= ' config hooks.emailprefix = "'. $repository->getMailPrefix() .'"';
-            $conf .= PHP_EOL;
-        }
-        return $conf;
-    }
-
-    protected function getProjectPermissionConfFile($project) {
-        $prjConfDir = 'conf/projects';
-        if (!is_dir($prjConfDir)) {
-            mkdir($prjConfDir);
-        }
-        return $prjConfDir.'/'.$project->getUnixName().'.conf';
-    }
-    
-    protected function writeGitConfig($config_file, $config_datas) {
-        if (strlen($config_datas) !== file_put_contents($config_file, $config_datas)) {
-            return false;
-        }
-        return $this->gitExec->add($config_file);
-    }
-    
     public function commit($message) {
         return $this->gitExec->commit($message);
     }
 
-    /**
-     * Wrapper for GitDao
-     *
-     * @return GitDao
-     */
-    protected function getDao() {
-        return new GitDao();
-    }
-
-    /**
-     * Wrapper for Git_PostReceiveMailManager
-     *
-     * @return Git_PostReceiveMailManager
-     */
-    protected function getPostReceiveMailManager() {
-        return new Git_PostReceiveMailManager();
-    }
-    
     /**
      * Rename a project
      * 
