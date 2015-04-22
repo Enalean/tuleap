@@ -330,7 +330,7 @@ class PluginsAdministrationViews extends Views {
         );
 
         $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/resource_restrictor');
-        $renderer->renderToPage($presenter::TEMPLATE, $presenter);
+        $renderer->renderToPage(PluginsAdministration_ManageAllowedProjectsPresenter::TEMPLATE, $presenter);
     }
 
     private function getPluginResourceRestrictor() {

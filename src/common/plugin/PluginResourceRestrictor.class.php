@@ -34,8 +34,8 @@ class PluginResourceRestrictor {
         return $this->restricted_plugin_dao->isResourceRestricted($plugin->getId());
     }
 
-    public function isPluginAllowedForProject(Plugin $plugin, Project $project) {
-        return $this->restricted_plugin_dao->isPluginAllowedForProject($plugin->getId(), $project->getId());
+    public function isPluginAllowedForProject(Plugin $plugin, $project_id) {
+        return $this->restricted_plugin_dao->isPluginAllowedForProject($plugin->getId(), $project_id);
     }
 
     public function setPluginRestricted(Plugin $plugin) {

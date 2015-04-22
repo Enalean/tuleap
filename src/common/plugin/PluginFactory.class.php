@@ -352,7 +352,7 @@ class PluginFactory {
     public function isPluginAllowedForProject($plugin, $project_id) {
         return $this->plugin_restrictor->isPluginAllowedForProject(
             $plugin,
-            $this->getProject($project_id)
+            $project_id
         );
     }
 
