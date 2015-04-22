@@ -342,15 +342,6 @@ class GitPlugin extends Plugin {
                     $this->getLogger()
                 );
                 break;
-            case SystemEvent_GIT_PROJECTS_UPDATE::NAME:
-                $params['class'] = 'SystemEvent_GIT_PROJECTS_UPDATE';
-                $params['dependencies'] = array(
-                    $this->getLogger(),
-                    $this->getGitSystemEventManager(),
-                    $this->getProjectManager(),
-                    $this->getGitoliteDriver(),
-                );
-                break;
             default:
                 break;
         }
