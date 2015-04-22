@@ -1,3 +1,6 @@
+Version 4.36 - Tuleap 8.1
+    * story #7813: Properly inject GitPermissionsManager
+
 Version 4.35 - Tuleap 8.1
     * story #8021: Refactoring: extract gitolite project serializer
 
