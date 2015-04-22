@@ -89,7 +89,7 @@ class Git_AdminMirrorController {
         }
 
         $GLOBALS['HTML']->header(array('title' => $title, 'selected_top_tab' => 'admin'));
-        $renderer->renderToPage($presenter::TEMPLATE, $presenter);
+        $renderer->renderToPage($presenter->getTemplate(), $presenter);
         $GLOBALS['HTML']->footer(array());
     }
 

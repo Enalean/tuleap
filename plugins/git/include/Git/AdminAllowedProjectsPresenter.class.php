@@ -47,6 +47,10 @@ class Git_AdminMAllowedProjectsPresenter {
         $this->is_resource_restricted = $is_mirror_restricted;
     }
 
+    public function getTemplate() {
+        return self::TEMPLATE;
+    }
+
     public function there_is_no_project() {
         return count($this->allowed_projects) === 0;
     }
