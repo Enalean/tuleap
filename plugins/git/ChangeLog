@@ -1,3 +1,6 @@
+Version 4.35 - Tuleap 8.1
+    * story #8021: Refactoring: extract gitolite project serializer
+
 Version 4.34 - Tuleap 8.1
     * story #8021: Add hostname info as mirror parameter
 
