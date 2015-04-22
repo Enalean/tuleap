@@ -46,14 +46,15 @@ class GitViews extends PluginViews {
     public function __construct(
         $controller,
         Git_GitRepositoryUrlManager $url_manager,
-        Git_Mirror_MirrorDataMapper $mirror_data_mapper
+        Git_Mirror_MirrorDataMapper $mirror_data_mapper,
+        GitPermissionsManager $permissions_manager
     ) {
         parent::__construct($controller);
         $this->groupId                 = (int)$this->request->get('group_id');
         $this->project                 = ProjectManager::instance()->getProject($this->groupId);
         $this->projectName             = $this->project->getUnixName();
         $this->userName                = $this->user->getName();
-        $this->git_permissions_manager = new GitPermissionsManager();
+        $this->git_permissions_manager = $permissions_manager;
         $this->ugroup_manager          = new UGroupManager();
         $this->url_manager             = $url_manager;
         $this->mirror_data_mapper      = $mirror_data_mapper;

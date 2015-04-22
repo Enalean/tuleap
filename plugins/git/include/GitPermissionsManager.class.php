@@ -27,12 +27,24 @@ require_once 'www/project/admin/permissions.php';
 class GitPermissionsManager {
 
     /**
+     * @var Git_SystemEventManager
+     */
+    private $git_system_event_manager;
+
+    /**
+     * @var Git_PermissionsDao
+     */
+    private $git_permission_dao;
+
+    /**
      * @var PermissionsManager
      */
     private $permissions_manager;
 
-    public function __construct() {
-        $this->permissions_manager = PermissionsManager::instance();
+    public function __construct(Git_PermissionsDao $git_permission_dao, Git_SystemEventManager $git_system_event_manager) {
+        $this->permissions_manager      = PermissionsManager::instance();
+        $this->git_permission_dao       = $git_permission_dao;
+        $this->git_system_event_manager = $git_system_event_manager;
     }
 
     public function userIsGitAdmin(PFUser $user, Project $project) {
@@ -70,5 +82,31 @@ class GitPermissionsManager {
         foreach ($repositories as $repository) {
             $this->permissions_manager->disableRestrictedAccessForObjectId(Git::allPermissionTypes(), $repository->getId());
         }
+    }
+
+    public function updateSiteAccess($old_value, $new_value) {
+        if ($old_value == ForgeAccess::ANONYMOUS) {
+            $project_ids = $this->queueProjectsConfigurationUpdate($this->git_permission_dao->getAllProjectsWithAnonymousRepositories());
+            if (count($project_ids)) {
+                $this->git_permission_dao->updateAllAnonymousRepositoriesToRegistered();
+            }
+        }
+        if ($old_value == ForgeAccess::RESTRICTED) {
+            $project_ids = $this->queueProjectsConfigurationUpdate($this->git_permission_dao->getAllProjectsWithUnrestrictedRepositories());
+            if (count($project_ids)) {
+                $this->git_permission_dao->updateAllAuthenticatedRepositoriesToRegistered();
+            }
+        }
+    }
+
+    private function queueProjectsConfigurationUpdate(DataAccessResult $dar) {
+        $projects_ids = array();
+        if (count($dar) > 0) {
+            foreach ($dar as $row) {
+                $projects_ids[] = $row['group_id'];
+            }
+            $this->git_system_event_manager->queueProjectsConfigurationUpdate($projects_ids);
+        }
+        return $projects_ids;
     }
 }

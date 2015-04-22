@@ -124,6 +124,7 @@ class GitPlugin extends Plugin {
         $this->_addHook(Event::IS_SCRIPT_ALLOWED_FOR_RESTRICTED);
         $this->_addHook(Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED);
         $this->_addHook(EVENT::PROJECT_ACCESS_CHANGE, 'project_access_change');
+        $this->_addHook(Event::SITE_ACCESS_CHANGE);
 
         $this->_addHook('fill_project_history_sub_events');
         $this->_addHook(Event::POST_SYSTEM_EVENTS_ACTIONS);
@@ -340,6 +341,15 @@ class GitPlugin extends Plugin {
                     $this->getRepositoryFactory(),
                     $this->getGitSystemEventManager(),
                     $this->getLogger()
+                );
+                break;
+            case SystemEvent_GIT_PROJECTS_UPDATE::NAME:
+                $params['class'] = 'SystemEvent_GIT_PROJECTS_UPDATE';
+                $params['dependencies'] = array(
+                    $this->getLogger(),
+                    $this->getGitSystemEventManager(),
+                    $this->getProjectManager(),
+                    $this->getGitoliteDriver(),
                 );
                 break;
             default:
@@ -1151,7 +1161,10 @@ class GitPlugin extends Plugin {
     }
 
     private function getGitPermissionsManager() {
-        return new GitPermissionsManager();
+        return new GitPermissionsManager(
+            new Git_PermissionsDao(),
+            $this->getGitSystemEventManager()
+        );
     }
 
     /**
@@ -1480,5 +1493,13 @@ class GitPlugin extends Plugin {
         foreach ($repositories as $repository) {
             $this->getGitSystemEventManager()->queueRepositoryUpdate($repository);  
         }
+    }
+
+    /**
+     * @see Event::SITE_ACCESS_CHANGE
+     * @param array $params
+     */
+    public function site_access_change(array $params) {
+        $this->getGitPermissionsManager()->updateSiteAccess($params['old_value'], $params['new_value']);
     }
 }

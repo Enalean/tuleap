@@ -38,6 +38,15 @@ class Git_SystemEventManager {
         $this->repository_factory   = $repository_factory;
     }
 
+    public function queueProjectsConfigurationUpdate(array $project_ids) {
+        $this->system_event_manager->createEvent(
+            SystemEvent_GIT_PROJECTS_UPDATE::NAME,
+            implode(SystemEvent::PARAMETER_SEPARATOR, $project_ids),
+            SystemEvent::PRIORITY_HIGH,
+            SystemEvent::OWNER_APP
+        );
+    }
+
     public function queueRepositoryUpdate(GitRepository $repository) {
         if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
             $this->system_event_manager->createEvent(
@@ -130,6 +139,10 @@ class Git_SystemEventManager {
         );
     }
 
+    public function queueGrokMirrorGitoliteAdminUpdate() {
+        $this->queueGrokMirrorManifest(new GitRepositoryGitoliteAdmin());
+    }
+
     public function queueGrokMirrorManifest(GitRepository $repository) {
         $this->system_event_manager->createEvent(
             SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE::NAME,
@@ -203,6 +216,7 @@ class Git_SystemEventManager {
             SystemEvent_GIT_REPO_UPDATE::NAME,
             SystemEvent_GIT_REPO_DELETE::NAME,
             SystemEvent_GIT_REPO_FORK::NAME,
+            SystemEvent_GIT_REPO_RESTORE::NAME,
             SystemEvent_GIT_GERRIT_MIGRATION::NAME,
             SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP::NAME,
             SystemEvent_GIT_GERRIT_PROJECT_DELETE::NAME,
@@ -210,7 +224,7 @@ class Git_SystemEventManager {
             SystemEvent_GIT_USER_RENAME::NAME,
             SystemEvent_GIT_EDIT_SSH_KEYS::NAME,
             SystemEvent_GIT_DUMP_ALL_SSH_KEYS::NAME,
-            SystemEvent_GIT_REPO_RESTORE::NAME
+            SystemEvent_GIT_PROJECTS_UPDATE::NAME,
         );
     }
 

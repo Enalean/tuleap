@@ -201,7 +201,7 @@ class Git extends PluginController {
     }
 
     protected function instantiateView() {
-        return new GitViews($this, new Git_GitRepositoryUrlManager($this->getPlugin()), $this->mirror_data_mapper);
+        return new GitViews($this, new Git_GitRepositoryUrlManager($this->getPlugin()), $this->mirror_data_mapper, $this->permissions_manager);
     }
 
     private function routeGitSmartHTTP(Git_URL $url) {

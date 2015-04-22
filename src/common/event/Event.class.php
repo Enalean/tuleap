@@ -934,4 +934,9 @@ class Event {
      *
      */
     const PROJECT_ACCESS_CHANGE = 'project_access_change';
+
+    /**
+     * When access level of platform changes
+     */
+    const SITE_ACCESS_CHANGE = 'site_access_change';
 }
