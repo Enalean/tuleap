@@ -30,11 +30,15 @@ include_once('www/project/admin/permissions.php');
 
 class ProjectResource {
 
+    /** @var RepositoryRepresentationBuilder */
+    private $repository_resource_builder;
+
     /** @var GitRepositoryFactory */
     private $repository_factory;
 
-    public function __construct(GitRepositoryFactory $repository_factory) {
-        $this->repository_factory = $repository_factory;
+    public function __construct(GitRepositoryFactory $repository_factory, RepositoryRepresentationBuilder $repository_resource_builder) {
+        $this->repository_factory          = $repository_factory;
+        $this->repository_resource_builder = $repository_resource_builder;
     }
 
     public function getGit(Project $project, PFUser $user, $limit, $offset, $fields) {
@@ -47,10 +51,7 @@ class ProjectResource {
         );
 
         foreach($git_repositories as $repository) {
-            $repo_representation = new GitRepositoryRepresentation();
-            $repo_representation->build($repository, $user, $fields);
-
-            $results[] = $repo_representation;
+            $results[] = $this->repository_resource_builder->build($user, $repository, $fields);
         }
 
         return array(

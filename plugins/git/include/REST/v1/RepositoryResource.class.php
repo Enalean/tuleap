@@ -31,6 +31,10 @@ use GitRepoNotReadableException;
 use GitRepoNotFoundException;
 use Exception;
 use UserManager;
+use GitPermissionsManager;
+use Git_PermissionsDao;
+use Git_SystemEventManager;
+use SystemEventManager;
 
 include_once('www/project/admin/permissions.php');
 
@@ -39,10 +43,16 @@ class RepositoryResource extends AuthenticatedResource {
     /** @var GitRepositoryFactory */
     private $repository_factory;
 
+    /** @var RepositoryRepresentationBuilder */
+    private $representation_builder;
+
     public function __construct() {
         $this->repository_factory = new GitRepositoryFactory(
             new \GitDao(),
             \ProjectManager::instance()
+        );
+        $this->representation_builder = new RepositoryRepresentationBuilder(
+            new GitPermissionsManager()
         );
     }
 
@@ -61,10 +71,8 @@ class RepositoryResource extends AuthenticatedResource {
 
         try {
             $repository = $this->repository_factory->getRepositoryByIdUserCanSee($user, $id);
-            $repo_representation = new GitRepositoryRepresentation();
-            $repo_representation->build($repository, $user, GitRepositoryRepresentationBase::FIELDS_ALL);
 
-            return $repo_representation;
+            return $this->representation_builder->build($user, $repository, GitRepositoryRepresentationBase::FIELDS_ALL);
         } catch (GitRepoNotReadableException $exception) {
             throw new RestException(403, 'Git repository not accessible for user');
         } catch (GitRepoNotFoundException $exception) {
