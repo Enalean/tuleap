@@ -67,6 +67,9 @@ class Git_GitoliteDriver {
     /** Git_Gitolite_ConfigPermissionsSerializer */
     private $permissions_serializer;
 
+    /** @var Git_Gitolite_GitoliteConfWriter  */
+    private $gitolite_conf_writer;
+
     public static $permissions_types = array(
         Git::PERM_READ  => ' R  ',
         Git::PERM_WRITE => ' RW ',
@@ -87,16 +90,14 @@ class Git_GitoliteDriver {
         Logger $logger,
         Git_SystemEventManager $git_system_event_manager,
         Git_GitRepositoryUrlManager $url_manager,
-        $adminPath                               = null,
         Git_Exec $gitExec                        = null,
         GitRepositoryFactory $repository_factory = null,
-        Git_Gitolite_ConfigPermissionsSerializer $permissions_serializer = null
+        Git_Gitolite_ConfigPermissionsSerializer $permissions_serializer = null,
+        Git_Gitolite_GitoliteConfWriter $gitolite_conf_writer = null
     ) {
         $this->logger                   = $logger;
         $this->git_system_event_manager = $git_system_event_manager;
-        if (!$adminPath) {
-            $adminPath = $GLOBALS['sys_data_dir'] . '/gitolite/admin';
-        }
+        $adminPath = $GLOBALS['sys_data_dir'] . '/gitolite/admin';
         $this->setAdminPath($adminPath);
         $this->gitExec = $gitExec ? $gitExec : new Git_Exec($adminPath);
         $this->repository_factory = $repository_factory ? $repository_factory : new GitRepositoryFactory(
@@ -115,6 +116,12 @@ class Git_GitoliteDriver {
                 )
             ),
             PluginManager::instance()->getPluginByName('git')->getEtcTemplatesPath()
+        );
+
+        $this->gitolite_conf_writer = $gitolite_conf_writer ? $gitolite_conf_writer : new Git_Gitolite_GitoliteConfWriter(
+            $this->permissions_serializer,
+            new Git_Gitolite_GitoliteRCReader(),
+            $adminPath
         );
     }
 
@@ -215,21 +222,14 @@ class Git_GitoliteDriver {
     }
 
     public function updateMainConfIncludes($project) {
-        $project_names = $this->getProjectList();
-        $main_config   = $this->permissions_serializer->getGitoliteDotConf($project_names);
-        file_put_contents($this->confFilePath, $main_config);
-        return $this->gitExec->add($this->confFilePath);
-    }
+        $git_modifications = $this->gitolite_conf_writer->writeGitoliteConfiguration();
+        $files_are_correctly_added = true;
 
-    private function getProjectList() {
-        $project_names = array();
-        $dir = new DirectoryIterator(dirname($this->confFilePath).'/projects');
-        foreach ($dir as $file) {
-            if (! $file->isDot()) {
-                $project_names[] = basename($file->getFilename(), '.conf');
-            }
+        foreach ($git_modifications->toAdd() as $touched_file) {
+            $files_are_correctly_added = $files_are_correctly_added && $this->gitExec->add($touched_file);
         }
-        return $project_names;
+
+        return $files_are_correctly_added;
     }
 
     public function push() {
@@ -259,30 +259,23 @@ class Git_GitoliteDriver {
      */
     public function renameProject($oldName, $newName) {
         $ok = true;
-        if (is_file('conf/projects/'. $oldName .'.conf')) {
-            $ok = $this->gitExec->mv(
-                'conf/projects/'. $oldName .'.conf',
-                'conf/projects/'. $newName .'.conf'
-            );
-            if ($ok) {
-                //conf/projects/newone.conf
-                $orig = file_get_contents('conf/projects/'. $newName .'.conf');
-                $dest = preg_replace('`(^|\n)repo '. preg_quote($oldName) .'/`', '$1repo '. $newName .'/', $orig);
-                $dest = str_replace('@'. $oldName .'_project_', '@'. $newName .'_project_', $dest);
-                $dest = preg_replace("%$oldName/(.*) = \"%", "$newName/$1 = \"", $dest);
-                file_put_contents('conf/projects/'. $newName .'.conf', $dest);
-                $this->gitExec->add('conf/projects/'. $newName .'.conf');
-                
-                //conf/gitolite.conf
-                $orig = file_get_contents($this->confFilePath);
-                $dest = str_replace('include "projects/'. $oldName .'.conf"', 'include "projects/'. $newName .'.conf"', $orig);
-                file_put_contents($this->confFilePath, $dest);
-                $this->gitExec->add($this->confFilePath);
-                
-                //commit
-                $ok = $this->gitExec->commit('Rename project '. $oldName .' to '. $newName) && $this->gitExec->push();
-            }
+
+        $git_modifications = $this->gitolite_conf_writer->renameProject($oldName, $newName);
+
+        foreach ($git_modifications->toAdd() as $file)
+        {
+            $ok = $ok && $this->gitExec->add($file);
         }
+
+        foreach ($git_modifications->toMove() as $old_file => $new_file)
+        {
+            $ok = $ok && $this->gitExec->mv($old_file, $new_file);
+        }
+
+        if ($ok) {
+            $ok = $this->gitExec->commit('Rename project '. $oldName .' to '. $newName) && $this->gitExec->push();
+        }
+
         return $ok;
     }
     

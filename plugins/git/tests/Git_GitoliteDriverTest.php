@@ -22,30 +22,100 @@ require_once 'Git_GitoliteTestCase.class.php';
 
 class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
 
+    /** @var  Git_Gitolite_GitoliteRCReader */
+    private $gitoliterc_reader;
+
+    /** @var  Git_Gitolite_ConfigPermissionsSerializer */
+    private $another_gitolite_permissions_serializer;
+
+    /** @var  Git_GitoliteDriver */
+    private $a_gitolite_driver;
+
+    /** @var  Git_GitoliteDriver */
+    private $another_gitolite_driver;
+
+    /** @var Git_Gitolite_GitoliteConfWriter */
+    private $gitolite_conf_writer;
+
+    /** @var  @var Git */
+    private $another_git_exec;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->gitoliterc_reader = mock('Git_Gitolite_GitoliteRCReader');
+
+        $this->another_gitolite_permissions_serializer = new Git_Gitolite_ConfigPermissionsSerializer(
+            $this->mirror_data_mapper,
+            'whatever'
+        );
+
+        $this->gitolite_conf_writer = new Git_Gitolite_GitoliteConfWriter(
+            $this->another_gitolite_permissions_serializer,
+            $this->gitoliterc_reader,
+            $this->sys_data_dir . '/gitolite/admin'
+        );
+
+        $this->a_gitolite_driver = new Git_GitoliteDriver(
+            $this->logger,
+            $this->git_system_event_manager,
+            $this->url_manager,
+            $this->gitExec,
+            $this->repository_factory,
+            $this->another_gitolite_permissions_serializer,
+            $this->gitolite_conf_writer
+        );
+
+        $this->another_git_exec = mock('Git_Exec');
+        stub($this->another_git_exec)->add()->returns(true);
+
+        $this->another_gitolite_driver = new Git_GitoliteDriver(
+            $this->logger,
+            $this->git_system_event_manager,
+            $this->url_manager,
+            $this->another_git_exec,
+            $this->repository_factory,
+            $this->another_gitolite_permissions_serializer,
+            $this->gitolite_conf_writer
+        );
+    }
+
+    public function tearDown() {
+        parent::tearDown();
+
+        unset($GLOBALS['sys_data_dir']);
+    }
+
     public function testGitoliteConfUpdate() {
+        stub($this->gitoliterc_reader)->getHostname()->returns(null);
+
         touch($this->_glAdmDir.'/conf/projects/project1.conf');
         $prj = new MockProject($this);
         $prj->setReturnValue('getUnixName', 'project1');
 
-        $this->driver->updateMainConfIncludes($prj);
+        $this->another_gitolite_driver->updateMainConfIncludes($prj);
 
         $gitoliteConf = $this->getGitoliteConf();
 
-        $this->assertWantedPattern('#^include "projects/project1.conf"$#m', $gitoliteConf);
+        $this->assertPattern('#^include "projects/project1.conf"$#m', $gitoliteConf);
     }
 
     protected function getGitoliteConf() {
         return file_get_contents($this->_glAdmDir.'/conf/gitolite.conf');
     }
 
+    protected function getFileConf($filename) {
+        return file_get_contents($this->_glAdmDir.'/conf/'.$filename.'.conf');
+    }
+
     public function itCanRenameProject() {
         $this->gitExec->expectOnce('push');
-        
+
         $this->assertTrue(is_file($this->_glAdmDir.'/conf/projects/legacy.conf'));
         $this->assertFalse(is_file($this->_glAdmDir.'/conf/projects/newone.conf'));
-        
-        $this->assertTrue($this->driver->renameProject('legacy', 'newone'));
-        
+
+        $this->assertTrue($this->a_gitolite_driver->renameProject('legacy', 'newone'));
+
         clearstatcache(true, $this->_glAdmDir.'/conf/projects/legacy.conf');
         $this->assertFalse(is_file($this->_glAdmDir.'/conf/projects/legacy.conf'));
         $this->assertTrue(is_file($this->_glAdmDir.'/conf/projects/newone.conf'));
@@ -62,6 +132,53 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
         expect($this->logger)->debug()->count(2);
 
         $this->driver->push();
+    }
+
+    public function itOnlyIncludeHOSTNAMERelatedConfFileIfHOSTNAMEVariableIsSetInGitoliteRcFile() {
+        stub($this->gitoliterc_reader)->getHostname()->returns("master");
+
+        touch($this->_glAdmDir.'/conf/projects/project1.conf');
+        $prj = new MockProject($this);
+        $prj->setReturnValue('getUnixName', 'project1');
+
+        $this->another_gitolite_driver->updateMainConfIncludes($prj);
+
+        $gitoliteConf = $this->getGitoliteConf();
+
+        $this->assertPattern('#^include "%HOSTNAME.conf"$#m', $gitoliteConf);
+        $this->assertNoPattern('#^include "projects/project1.conf"$#m', $gitoliteConf);
+    }
+
+    public function itWritesTheGitoliteConfFileInTheHOSTNAMEDotConfFileIfHostnameVariableIsSet()
+    {
+        $hostname = "master";
+        stub($this->gitoliterc_reader)->getHostname()->returns($hostname);
+
+        touch($this->_glAdmDir . '/conf/projects/project1.conf');
+        $prj = new MockProject($this);
+        $prj->setReturnValue('getUnixName', 'project1');
+
+        $this->another_gitolite_driver->updateMainConfIncludes($prj);
+
+        $gitoliteConf = $this->getFileConf($hostname);
+        $this->assertPattern('#^include "projects/project1.conf"$#m', $gitoliteConf);
+    }
+
+    public function itAddsAllTheRequiredFilesForPush()
+    {
+        $hostname = "master";
+
+        stub($this->gitoliterc_reader)->getHostname()->returns($hostname);
+
+        touch($this->_glAdmDir . '/conf/projects/project1.conf');
+        $prj = new MockProject($this);
+        $prj->setReturnValue('getUnixName', 'project1');
+
+        expect($this->another_git_exec)->add()->count(2);
+        expect($this->another_git_exec)->add('conf/gitolite.conf')->at(0);
+        expect($this->another_git_exec)->add('conf/master.conf')->at(1);
+
+        $this->another_gitolite_driver->updateMainConfIncludes($prj);
     }
 }
 

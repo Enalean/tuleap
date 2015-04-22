@@ -49,6 +49,9 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
     /** @var Git_SystemEventManager */
     protected $git_system_event_manager;
 
+    /** @var Git_Mirror_MirrorDataMapper */
+    protected $mirror_data_mapper;
+
     /** @var Logger */
     protected $logger;
 
@@ -58,18 +61,21 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
         $this->_fixDir       = dirname(__FILE__).'/_fixtures';
         $tmpDir              = $this->getTmpDir();
         $this->_glAdmDirRef  = $tmpDir.'/gitolite-admin-ref';
-        $this->_glAdmDir     = $tmpDir.'/gitolite-admin';
+        $this->sys_data_dir  = $tmpDir;
+        $this->_glAdmDir     = $tmpDir.'/gitolite/admin';
         $this->repoDir       = $tmpDir.'/repositories';
         
         // Copy the reference to save time & create symlink because
         // git is very sensitive to path you are using. Just symlinking
         // spots bugs
+        mkdir($tmpDir.'/gitolite');
         system('tar -xf '. $this->_fixDir.'/gitolite-admin-ref' .'.tar --directory '.$tmpDir);
         symlink($this->_glAdmDirRef, $this->_glAdmDir);
 
         mkdir($this->repoDir);
 
         $GLOBALS['sys_https_host'] = 'localhost';
+        $GLOBALS['sys_data_dir']   = $this->sys_data_dir;
         PermissionsManager::setInstance(new MockPermissionsManager());
         $this->permissions_manager = PermissionsManager::instance();
         $this->gitExec = partial_mock('Git_Exec', array('push'), array($this->_glAdmDir));
@@ -83,12 +89,12 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
         $git_plugin        = stub('GitPlugin')->areFriendlyUrlsActivated()->returns(false);
         $this->url_manager = new Git_GitRepositoryUrlManager($git_plugin);
 
-        $mirror_data_mapper = mock('Git_Mirror_MirrorDataMapper');
-        stub($mirror_data_mapper)->fetchAllRepositoryMirrors()->returns(array());
-        stub($mirror_data_mapper)->fetchAll()->returns(array());
+        $this->mirror_data_mapper = mock('Git_Mirror_MirrorDataMapper');
+        stub($this->mirror_data_mapper)->fetchAllRepositoryMirrors()->returns(array());
+        stub($this->mirror_data_mapper)->fetchAll()->returns(array());
 
         $this->gitolite_permissions_serializer = new Git_Gitolite_ConfigPermissionsSerializer(
-            $mirror_data_mapper,
+            $this->mirror_data_mapper,
             'whatever'
         );
 
@@ -99,7 +105,6 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
             $this->logger,
             $this->git_system_event_manager,
             $this->url_manager,
-            $this->_glAdmDir,
             $this->gitExec,
             $this->repository_factory,
             $this->gitolite_permissions_serializer
@@ -109,7 +114,8 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
     public function tearDown() {
         parent::tearDown();
         chdir($this->cwd);
-    
+
+        unset($GLOBALS['sys_data_dir']);
         unset($GLOBALS['sys_https_host']);
         PermissionsManager::clearInstance();
     }
