@@ -20,7 +20,7 @@ Version 8.1 (not yet released)
 
 	== Plugins ==
 	* tracker: 5.613
-	* git: 4.36
+	* git: 4.37
 	* ldap: 3.77
 	* webdav: 1.9.11
 	* mediawiki: 0.68
