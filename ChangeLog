@@ -17,6 +17,7 @@ Version 8.1 (not yet released)
 	* request #7985: SQL permissions object_id with no quotes if it is an ID
 	* request #7763: Avoid errors concerning SELinux policies in packages
 	* request #8023: Infinite loop when Tracker plugin is restricted
+	* request #8016 Force codendiadm owner group for FRS folder
 
 	== Plugins ==
 	* tracker: 5.613
