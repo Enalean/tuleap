@@ -33,6 +33,10 @@ class Git_AdminMirrorListPresenter extends Git_AdminMirrorPresenter {
         $this->btn_submit      = $GLOBALS['Language']->getText('global', 'btn_submit');
     }
 
+    public function getTemplate() {
+        return self::TEMPLATE;
+    }
+
     public function add_mirror() {
         return $GLOBALS['Language']->getText('plugin_git','add_mirror');
     }

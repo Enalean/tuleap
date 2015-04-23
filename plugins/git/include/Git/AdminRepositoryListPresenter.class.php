@@ -35,6 +35,10 @@ class Git_AdminMRepositoryListPresenter {
         $this->purifier                     = Codendi_HTMLPurifier::instance();
     }
 
+    public function getTemplate() {
+        return self::TEMPLATE;
+    }
+
     public function has_repositories() {
         return count($this->repository_list_for_projects) > 0;
     }
