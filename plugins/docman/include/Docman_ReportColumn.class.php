@@ -78,11 +78,13 @@ class Docman_ReportColumn {
         $url = $view->_buildSearchUrl($viewParams, array($sortParam => $toggleValue));
         $title = $GLOBALS['Language']->getText('plugin_docman', 'view_documenttable_toggletitle');
         
-        $link = $this->md->getName();
+        $purifier = Codendi_HTMLPurifier::instance();
+        $link = $purifier->purify($this->md->getName());
+
         if($sort !== null) {
             $link .= '&nbsp;'.$toogleIcon;
         }
-        
+
         $href = '<a href="'.$url.'" title="'.$title.'">'.$link.'</a>';
         
         return $href;

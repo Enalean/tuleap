@@ -59,13 +59,15 @@ class Docman_View_Table extends Docman_View_Browse {
         // Generate table header 
         $ci = $params['filter']->getColumnIterator();
         $ci->rewind();
+        $table = '<table border="0" cellspacing="1" cellpadding="2" width="100%">';
+        $table .= '<tr class="boxtable">';
         while($ci->valid()) {
             $column = $ci->current();
-            $columnsTitles[] = $column->getTitle($this, $params);
+            $table .= '<td class="boxtitle">'.$column->getTitle($this, $params).'</td>';
             $ci->next();
         }
-        $table = html_build_list_table_top($columnsTitles);
-        
+
+        $table .= '</tr>';
         // Generate table
         $altRowClass = 0;
         $itemIterator->rewind();
@@ -132,7 +134,7 @@ class Docman_View_Table extends Docman_View_Browse {
             print $htmlReport->getReportCustomization($params);
         }
         print $navbar;
-        print $table;        
+        print $table;
     }
 }
 ?>
