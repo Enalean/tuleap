@@ -21,6 +21,35 @@
 
 class Git_PermissionsDao extends DataAccessObject {
 
+    public function disableAnonymousRegisteredAuthenticated($project_id) {
+        return $this->updatePermissionsForGitRepositories(
+            $project_id,
+            array(ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED, ProjectUGroup::AUTHENTICATED),
+            ProjectUGroup::PROJECT_MEMBERS
+        );
+    }
+
+    public function disableAuthenticated($project_id) {
+        return $this->updatePermissionsForGitRepositories(
+            $project_id,
+            array(ProjectUGroup::AUTHENTICATED),
+            ProjectUGroup::REGISTERED
+        );
+    }
+
+    private function updatePermissionsForGitRepositories($project_id, array $old_ugroup_ids, $new_ugroup_id) {
+        $project_id          = $this->da->escapeInt($project_id);
+        $old_ugroup_ids      = $this->da->escapeIntImplode($old_ugroup_ids);
+        $git_permission_type = $this->da->quoteSmartImplode(',', Git::allPermissionTypes());
+        $sql = "UPDATE permissions perms
+                  JOIN plugin_git git ON (perms.object_id = CAST(git.repository_id AS CHAR) AND perms.permission_type IN ($git_permission_type))
+                SET perms.ugroup_id = $new_ugroup_id
+                WHERE perms.ugroup_id IN ($old_ugroup_ids)
+                  AND git.project_id = $project_id
+                ";
+        return $this->update($sql);
+    }
+
     public function getAllProjectsWithAnonymousRepositories() {
         return $this->getAllProjectsWithPermissionGroup(ProjectUGroup::ANONYMOUS);
     }

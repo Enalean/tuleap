@@ -123,7 +123,7 @@ class GitPlugin extends Plugin {
         $this->_addHook('anonymous_access_to_script_allowed');
         $this->_addHook(Event::IS_SCRIPT_ALLOWED_FOR_RESTRICTED);
         $this->_addHook(Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED);
-        $this->_addHook(EVENT::PROJECT_ACCESS_CHANGE, 'project_access_change');
+        $this->_addHook(Event::PROJECT_ACCESS_CHANGE);
         $this->_addHook(Event::SITE_ACCESS_CHANGE);
 
         $this->_addHook('fill_project_history_sub_events');
@@ -1484,15 +1484,14 @@ class GitPlugin extends Plugin {
         $params['allowed_services'][] = $this->getServiceShortname();
     }
 
+    /**
+     * @see Event::PROJECT_ACCESS_CHANGE
+     * @param type $params
+     */
     public function project_access_change($params) {
         $project      = ProjectManager::instance()->getProject($params['project_id']);
-        $repositories = $this->getRepositoryFactory()->getAllRepositoriesOfProject($project);
 
-        $this->getGitPermissionsManager()->updateAccessForRepositories($repositories);
-
-        foreach ($repositories as $repository) {
-            $this->getGitSystemEventManager()->queueRepositoryUpdate($repository);  
-        }
+        $this->getGitPermissionsManager()->updateAccessForRepositories($project, $params['old_access'], $params['access']);
     }
 
     /**
