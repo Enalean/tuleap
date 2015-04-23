@@ -52,7 +52,13 @@ class RepositoryResource extends AuthenticatedResource {
             \ProjectManager::instance()
         );
         $this->representation_builder = new RepositoryRepresentationBuilder(
-            new GitPermissionsManager()
+            new GitPermissionsManager(
+                new Git_PermissionsDao(),
+                new Git_SystemEventManager(
+                    SystemEventManager::instance(),
+                    $this->repository_factory
+                )
+            )
         );
     }
 

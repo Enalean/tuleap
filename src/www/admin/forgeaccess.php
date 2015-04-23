@@ -25,7 +25,8 @@ $controller = new ForgeAccess_AdminController(
     new ForgeAccess_ForgePropertiesManager(
         new ConfigDao(),
         ProjectManager::instance(),
-        PermissionsManager::instance()
+        PermissionsManager::instance(),
+        EventManager::instance()
     ),
     new Config_LocalIncFinder(),
     new UserDao(),

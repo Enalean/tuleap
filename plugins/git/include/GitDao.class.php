@@ -55,6 +55,7 @@ class GitDao extends DataAccessObject {
     const REMOTE_SERVER_DISCONNECT_DATE = 'remote_server_disconnect_date';
     const REMOTE_SERVER_DELETE_DATE     = 'remote_project_deleted_date';
 
+    const NOT_DELETED_DATE             = '0000-00-00 00:00:00';
 
     public function __construct() {
         parent::__construct( CodendiDataAccess::instance() );

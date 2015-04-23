@@ -21,6 +21,11 @@
 class ForgeAccess_ForgePropertiesManager {
 
     /**
+     * @var EventManager
+     */
+    private $event_manager;
+
+    /**
      * @var ConfigDao
      */
     private $config_dao;
@@ -35,10 +40,11 @@ class ForgeAccess_ForgePropertiesManager {
      */
     private $permission_manager;
 
-    public function __construct(ConfigDao $config_dao, ProjectManager $project_manager, PermissionsManager $permission_manager) {
+    public function __construct(ConfigDao $config_dao, ProjectManager $project_manager, PermissionsManager $permission_manager, EventManager $event_manager) {
         $this->config_dao         = $config_dao;
         $this->project_manager    = $project_manager;
         $this->permission_manager = $permission_manager;
+        $this->event_manager      = $event_manager;
     }
 
     public function updateAccess($new_value, $old_value) {
@@ -48,6 +54,8 @@ class ForgeAccess_ForgePropertiesManager {
 
         $property_name = ForgeAccess::CONFIG;
         $this->config_dao->save($property_name, $new_value);
+
+        $this->event_manager->processEvent(Event::SITE_ACCESS_CHANGE, array('new_value' => $new_value, 'old_value' => $old_value));
 
         if ($old_value === ForgeAccess::RESTRICTED || $new_value === ForgeAccess::RESTRICTED) {
             $this->project_manager->disableAllowRestrictedForAll();
