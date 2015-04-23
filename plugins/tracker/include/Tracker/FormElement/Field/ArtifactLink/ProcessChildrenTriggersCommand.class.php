@@ -67,6 +67,5 @@ class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand impl
 
         $diff = $new_value->getArtifactLinkInfoDiff($previous_value);
         return $diff->hasChanges();
-
     }
 }

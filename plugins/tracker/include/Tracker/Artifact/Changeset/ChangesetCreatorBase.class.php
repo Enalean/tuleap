@@ -78,6 +78,10 @@ abstract class Tracker_Artifact_Changeset_ChangesetCreatorBase {
             }
 
             $artifact->getWorkflow()->after($fields_data, $new_changeset, $previous_changeset);
+
+            return true;
         }
+
+        return false;
     }
 }

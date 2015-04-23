@@ -62,9 +62,9 @@ class Tracker_Artifact_Changeset_NewChangesetAtGivenDateCreator extends Tracker_
         $bypass_perms  = true;
 
         if ($this->isFieldSubmitted($field, $fields_data)) {
-            $field->saveNewChangeset($artifact, $previous_changeset, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission, $bypass_perms);
+            return $field->saveNewChangeset($artifact, $previous_changeset, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission, $bypass_perms);
         } else {
-            $field->saveNewChangeset($artifact, $previous_changeset, $changeset_id, null, $submitter, $is_submission, $bypass_perms);
+            return $field->saveNewChangeset($artifact, $previous_changeset, $changeset_id, null, $submitter, $is_submission, $bypass_perms);
         }
     }
 }

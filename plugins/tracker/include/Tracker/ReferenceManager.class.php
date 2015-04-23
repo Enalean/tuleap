@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
+ * Copyright Enalean (c) 2011 - 2015. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -63,9 +63,11 @@ class Tracker_ReferenceManager {
      * @param Tracker_Artifact $source_artifact
      * @param Tracker_Artifact $target_artifact
      * @param PFUser $user
+     *
+     * @return boolean
      */
     public function insertBetweenTwoArtifacts(Tracker_Artifact $source_artifact, Tracker_Artifact $target_artifact, PFUser $user) {
-        $this->reference_manager->insertCrossReference(
+        return $this->reference_manager->insertCrossReference(
             $this->getCrossReferenceBetweenTwoArtifacts($source_artifact, $target_artifact, $user)
         );
     }
@@ -76,12 +78,12 @@ class Tracker_ReferenceManager {
      * @param Tracker_Artifact $source_artifact
      * @param Tracker_Artifact $target_artifact
      * @param PFUser $user
+     *
+     * @return boolean
      */
     public function removeBetweenTwoArtifacts(Tracker_Artifact $source_artifact, Tracker_Artifact $target_artifact, PFUser $user) {
-        $this->reference_manager->removeCrossReference(
+        return $this->reference_manager->removeCrossReference(
             $this->getCrossReferenceBetweenTwoArtifacts($source_artifact, $target_artifact, $user)
         );
     }
 }
-
-?>

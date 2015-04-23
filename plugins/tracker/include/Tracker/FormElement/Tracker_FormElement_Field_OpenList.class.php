@@ -364,7 +364,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
      * @param mixed                           $value                   The value submitted by the user
      * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue The data previously stored in the db
      *
-     * @return int or array of int
+     * @return boolean
      */
     protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
         $openvalue_dao = $this->getOpenValueDao();
@@ -394,6 +394,11 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
                 );
             }
         }
+
+        if (empty($value_ids)) {
+            return true;
+        }
+
         return $this->getValueDao()->create($changeset_value_id, $value_ids);
     }
     

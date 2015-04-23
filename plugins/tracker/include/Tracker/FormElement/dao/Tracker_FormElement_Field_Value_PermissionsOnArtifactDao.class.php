@@ -39,7 +39,7 @@ class Tracker_FormElement_Field_Value_PermissionsOnArtifactDao extends Tracker_F
             $values = implode(',', $values);
             $sql = "INSERT INTO $this->table_name(changeset_value_id, use_perm, ugroup_id)
                     VALUES $values";
-            return $this->updateAndGetLastId($sql);
+            return $this->update($sql);
         }
         return false;
     }

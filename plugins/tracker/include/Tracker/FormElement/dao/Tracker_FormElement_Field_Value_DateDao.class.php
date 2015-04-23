@@ -34,7 +34,7 @@ class Tracker_FormElement_Field_Value_DateDao extends Tracker_FormElement_Field_
         }
         $sql = "INSERT INTO $this->table_name(changeset_value_id, value)
                 VALUES ($changeset_value_id, $value)";
-        return $this->updateAndGetLastId($sql);
+        return $this->update($sql);
     }
 
     /**
