@@ -291,6 +291,8 @@ project_admin_permissions	cant_add_ug	$1 - ERREUR&nbsp;: Impossible d'ajouter le
 project_admin_permissions	def_val	(valeurs par défaut)
 project_admin_permissions	perm_update_success	$1 - Permissions mises à jour avec succès
 project_admin_permissions	reset_to_def	Retour aux valeurs d'origine
+project_admin_permissions	save_db_error	Une erreur s'est produite lors de l'enregistrement des permissions en base. Veuillez contacter votre administreur site.
+project_admin_permissions	override	La permission $1 selectionnée pour $2 a été ignorée car elle est déjà accordée à $3
 #-----------------------------------------------
 # Script: SF/www/project/admin/reference.php
 #

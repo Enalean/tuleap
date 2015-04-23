@@ -197,18 +197,17 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     }
 
     private function savePermission(GitRepository $repository, $type, array $perms) {
-        if (isset($perms[$type]) && is_array($perms[$type])) {
-            $success = permission_process_selection_form($repository->getProjectId(), $type, $repository->getId(), $perms[$type]);
-            return $this->addFeedbackOnPermissionsSave($success);
+        try {
+            if (isset($perms[$type]) && is_array($perms[$type])) {
+                $override_collection = PermissionsManager::instance()->savePermissions($repository->getProject(), $repository->getId(), $type, $perms[$type]);
+                $override_collection->emitFeedback($type);
+            }
+            return true;
+        } catch (PermissionDaoException $exception) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('project_admin_permissions', 'save_db_error'));
+            $this->logger->error($exception->getMessage());
         }
-        return true;
-    }
-
-    private function addFeedbackOnPermissionsSave(array $success) {
-        if (!$success[0]) {
-            $GLOBALS['Response']->addFeedback('error', $success[1]);
-        }
-        return $success[0];
+        return false;
     }
 
     /**

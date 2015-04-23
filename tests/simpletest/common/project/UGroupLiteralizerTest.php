@@ -18,9 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/project/UGroupLiteralizer.class.php';
-require_once 'common/project/Project.class.php';
-
 class UGroupLiteralizerTest extends TuleapTestCase {
 
     protected $membership;
@@ -121,10 +118,11 @@ class UGroupLiteralizerTest extends TuleapTestCase {
     public function itCanReturnUgroupIdsFromAnItemAndItsPermissionTypes() {
         $object_id = 100;
         $expected  = array(ProjectUGroup::PROJECT_MEMBERS);
+        $project   = mock('Project');
         $permissions_manager = mock('PermissionsManager');
-        stub($permissions_manager)->getAuthorizedUgroupIds($object_id, self::PERMISSIONS_TYPE)->returns($expected);
+        stub($permissions_manager)->getAuthorizedUGroupIdsForProject($project, $object_id, self::PERMISSIONS_TYPE)->returns($expected);
         PermissionsManager::setInstance($permissions_manager);
-        $result = $this->ugroup_literalizer->getUgroupIds($object_id, self::PERMISSIONS_TYPE);
+        $result = $this->ugroup_literalizer->getUgroupIds($project, $object_id, self::PERMISSIONS_TYPE);
         $this->assertEqual($expected, $result);
         PermissionsManager::clearInstance();
 

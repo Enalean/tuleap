@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+require_once dirname(__FILE__).'/../../bootstrap.php';
+Mock::generate('Project');
 
 class ProjectSerializerTest extends TuleapTestCase {
     private $project_serializer;
@@ -141,9 +143,9 @@ class ProjectSerializerTest extends TuleapTestCase {
         );
 
         // Repo 4 (test_default): R = registered_users | W = project_members | W+ = none
-        stub($this->permissions_manager)->getAuthorizedUgroupIds(4, 'PLUGIN_GIT_READ')->returns(array('2'));
-        stub($this->permissions_manager)->getAuthorizedUgroupIds(4, 'PLUGIN_GIT_WRITE')->returns(array('3'));
-        stub($this->permissions_manager)->getAuthorizedUgroupIds(4, 'PLUGIN_GIT_WPLUS')->returns(array());
+        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject($prj, 4, 'PLUGIN_GIT_READ')->returns(array('2'));
+        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject($prj, 4, 'PLUGIN_GIT_WRITE')->returns(array('3'));
+        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject($prj, 4, 'PLUGIN_GIT_WPLUS')->returns(array());
 
         // Ensure file is correct
         $result     = $this->project_serializer->dumpProjectRepoConf($prj);
@@ -172,9 +174,9 @@ class ProjectSerializerTest extends TuleapTestCase {
             )
         );
 
-        stub($this->permissions_manager)->getAuthorizedUgroupIds(4, 'PLUGIN_GIT_READ')->returns(array('2'));
-        stub($this->permissions_manager)->getAuthorizedUgroupIds(4, 'PLUGIN_GIT_WRITE')->returns(array('3'));
-        stub($this->permissions_manager)->getAuthorizedUgroupIds(4, 'PLUGIN_GIT_WPLUS')->returns(array());
+        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject($prj, 4, 'PLUGIN_GIT_READ')->returns(array('2'));
+        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject($prj, 4, 'PLUGIN_GIT_WRITE')->returns(array('3'));
+        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject($prj, 4, 'PLUGIN_GIT_WPLUS')->returns(array());
 
         // Ensure file is correct
         $result     = $this->project_serializer->dumpProjectRepoConf($prj);
@@ -212,14 +214,14 @@ class ProjectSerializerTest extends TuleapTestCase {
         );
 
         // Repo 4 (test_default): R = registered_users | W = project_members | W+ = none
-        $this->permissions_manager->setReturnValue('getAuthorizedUgroupIds', array('2'),   array(4, 'PLUGIN_GIT_READ'));
-        $this->permissions_manager->setReturnValue('getAuthorizedUgroupIds', array('3'),   array(4, 'PLUGIN_GIT_WRITE'));
-        $this->permissions_manager->setReturnValue('getAuthorizedUgroupIds', array(),      array(4, 'PLUGIN_GIT_WPLUS'));
+        $this->permissions_manager->setReturnValue('getAuthorizedUGroupIdsForProject', array('2'),   array($prj, 4, 'PLUGIN_GIT_READ'));
+        $this->permissions_manager->setReturnValue('getAuthorizedUGroupIdsForProject', array('3'),   array($prj, 4, 'PLUGIN_GIT_WRITE'));
+        $this->permissions_manager->setReturnValue('getAuthorizedUGroupIdsForProject', array(),      array($prj, 4, 'PLUGIN_GIT_WPLUS'));
 
         // Repo 5 (test_pimped): R = project_members | W = project_admin | W+ = user groups 101
-        $this->permissions_manager->setReturnValue('getAuthorizedUgroupIds', array('3'),   array(5, 'PLUGIN_GIT_READ'));
-        $this->permissions_manager->setReturnValue('getAuthorizedUgroupIds', array('4'),   array(5, 'PLUGIN_GIT_WRITE'));
-        $this->permissions_manager->setReturnValue('getAuthorizedUgroupIds', array('125'), array(5, 'PLUGIN_GIT_WPLUS'));
+        $this->permissions_manager->setReturnValue('getAuthorizedUGroupIdsForProject', array('3'),   array($prj, 5, 'PLUGIN_GIT_READ'));
+        $this->permissions_manager->setReturnValue('getAuthorizedUGroupIdsForProject', array('4'),   array($prj, 5, 'PLUGIN_GIT_WRITE'));
+        $this->permissions_manager->setReturnValue('getAuthorizedUGroupIdsForProject', array('125'), array($prj, 5, 'PLUGIN_GIT_WPLUS'));
 
         // Ensure file is correct
         $result     = $this->project_serializer->dumpProjectRepoConf($prj);
@@ -251,12 +253,12 @@ class ProjectSerializerTest extends TuleapTestCase {
             )
         );
 
-        stub($this->permissions_manager)->getAuthorizedUgroupIds(4, 'PLUGIN_GIT_READ')->returns(array('2'));
-        stub($this->permissions_manager)->getAuthorizedUgroupIds(4, 'PLUGIN_GIT_WRITE')->returns(array('3'));
-        stub($this->permissions_manager)->getAuthorizedUgroupIds(4, 'PLUGIN_GIT_WPLUS')->returns(array('125'));
-        stub($this->permissions_manager)->getAuthorizedUgroupIds(5, 'PLUGIN_GIT_READ')->returns(array('2'));
-        stub($this->permissions_manager)->getAuthorizedUgroupIds(5, 'PLUGIN_GIT_WRITE')->returns(array('3'));
-        stub($this->permissions_manager)->getAuthorizedUgroupIds(5, 'PLUGIN_GIT_WPLUS')->returns(array('125'));
+        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject($prj, 4, 'PLUGIN_GIT_READ')->returns(array('2'));
+        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject($prj, 4, 'PLUGIN_GIT_WRITE')->returns(array('3'));
+        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject($prj, 4, 'PLUGIN_GIT_WPLUS')->returns(array('125'));
+        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject($prj, 5, 'PLUGIN_GIT_READ')->returns(array('2'));
+        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject($prj, 5, 'PLUGIN_GIT_WRITE')->returns(array('3'));
+        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject($prj, 5, 'PLUGIN_GIT_WPLUS')->returns(array('125'));
 
 
         // Ensure file is correct

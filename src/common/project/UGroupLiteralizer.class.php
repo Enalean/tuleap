@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/permission/PermissionsManager.class.php';
-
 /**
  * This class returns ugroup in a literalized form (eg: 'gpig_project_member')
  */
@@ -172,13 +170,13 @@ class UGroupLiteralizer {
      * @return array of groups converted to string
      */
     public function getUGroupsThatHaveGivenPermissionOnObject(Project $project, $object_id, $permission_type) {
-        $ugroup_ids = $this->getUgroupIds($object_id, $permission_type);
+        $ugroup_ids = $this->getUgroupIds($project, $object_id, $permission_type);
         return $this->ugroupIdsToString($ugroup_ids, $project);
 
     }
 
-    public function getUgroupIds($object_id, $permission_type) {
-        return PermissionsManager::instance()->getAuthorizedUgroupIds($object_id, $permission_type);
+    public function getUgroupIds(Project $project, $object_id, $permission_type) {
+        return PermissionsManager::instance()->getAuthorizedUGroupIdsForProject($project, $object_id, $permission_type);
     }
 
     public function ugroupIdsToString($ugroup_ids, Project $project) {
@@ -193,4 +191,3 @@ class UGroupLiteralizer {
         return array_values(array_unique(array_filter($strings)));
     }
 }
-?>

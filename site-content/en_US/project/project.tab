@@ -292,6 +292,8 @@ project_admin_permissions	cant_add_ug	$1 - ERROR: Cannot add ugroup $2. Are you 
 project_admin_permissions	def_val	(default values)
 project_admin_permissions	perm_update_success	$1 - Permissions successfully updated
 project_admin_permissions	reset_to_def	Reset To Defaults
+project_admin_permissions	save_db_error	An error occurred while saving permissions in database, please contact your site admin
+project_admin_permissions	override	Ignore $1 permission set to $2 because it was already granted to $3
 #-----------------------------------------------
 # Script: SF/www/project/admin/reference.php
 #

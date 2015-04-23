@@ -18,14 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/dao/PermissionsDao.class.php');
-require_once('common/dao/CodendiDataAccess.class.php');
-
-/**
-* Manage permissions
-*
-*/
-class PermissionsManager {
+class PermissionsManager implements IPermissionsManagerNG {
     /**
      * @var PermissionsDao
      */
@@ -219,7 +212,46 @@ class PermissionsManager {
          }
          return $ugroups;
      }
-     
+
+    public function getAuthorizedUGroupIdsForProject(Project $project, $object_id, $permission_type) {
+        $ugroups = array();
+        $dar = $this->getAuthorizedUgroups($object_id, $permission_type, false);
+        if ($dar && ! $dar->isError()) {
+            $normalizer = new PermissionsUGroupMapper($project);
+            foreach ($dar as $row) {
+                $ugroups[] = $normalizer->getUGroupIdAccordingToMapping($row['ugroup_id']);
+            }
+        }
+        return $ugroups;
+    }
+
+    /**
+     * @param Project $project
+     * @param type $object_id
+     * @param type $permission_type
+     * @param array $ugroup_ids
+     *
+     * @return PermissionsNormalizerOverrideCollection
+     * @throws PermissionDaoException
+     */
+    public function savePermissions(Project $project, $object_id, $permission_type, array $ugroup_ids) {
+        $normalizer            = new PermissionsNormalizer();
+        $override_collection   = new PermissionsNormalizerOverrideCollection();
+        $normalized_ugroup_ids = $normalizer->getNormalizedUGroupIds($project, $ugroup_ids, $override_collection);
+        $cleared = $this->_permission_dao->clearPermission($permission_type, $object_id);
+        if (! $cleared) {
+            throw new PermissionDaoException("Database issue while clearPermission $permission_type, $object_id: ".$this->_permission_dao->getDa()->getErrorMessage());
+        }
+        foreach ($normalized_ugroup_ids as $ugroup_id) {
+            $added = $this->_permission_dao->addPermission($permission_type, $object_id, $ugroup_id);
+            if (! $added) {
+                throw new PermissionDaoException("Database issue while addPermission $permission_type, $object_id, $ugroup_id: ".$this->_permission_dao->getDa()->getErrorMessage());
+            }
+        }
+        $this->_permission_dao->addHistory($project->getID(), $permission_type, $object_id);
+        return $override_collection;
+    }
+
     protected function buildPermissionsCache(&$dar, &$ugroups) {
         while ($row =& $dar->getRow()) {
             if (!isset($this->_permissions[$row['object_id']])) {

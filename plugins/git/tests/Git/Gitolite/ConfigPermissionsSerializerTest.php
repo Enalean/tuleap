@@ -62,69 +62,69 @@ class Git_Gitolite_ConfigPermissionsSerializerTest extends TuleapTestCase {
     }
 
     public function itReturnsEmptyStringForUnknownType() {
-        $this->permissions_manager->setReturnValue('getAuthorizedUgroupIds', array());
+        $this->permissions_manager->setReturnValue('getAuthorizedUGroupIdsForProject', array());
         $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, '__none__');
         $this->assertIdentical('', $result);
     }
 
     public function itReturnsEmptyStringForAUserIdLowerOrEqualThan_100() {
-        $this->permissions_manager->setReturnValue('getAuthorizedUgroupIds', array(100));
+        $this->permissions_manager->setReturnValue('getAuthorizedUGroupIdsForProject', array(100));
         $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
         $this->assertIdentical('', $result);
     }
 
     public function itReturnsStringWithUserIdIfIdGreaterThan_100() {
-        $this->permissions_manager->setReturnValue('getAuthorizedUgroupIds', array(101));
+        $this->permissions_manager->setReturnValue('getAuthorizedUGroupIdsForProject', array(101));
         $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
         $this->assertPattern('/=\s@ug_101$/', $result);
     }
 
     public function itReturnsSiteActiveIfUserGroupIsRegistered() {
-        $this->permissions_manager->setReturnValue('getAuthorizedUgroupIds', array(ProjectUGroup::REGISTERED));
+        $this->permissions_manager->setReturnValue('getAuthorizedUGroupIdsForProject', array(ProjectUGroup::REGISTERED));
         $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
         $this->assertPattern('/=\s@site_active @'. $this->project->getUnixName() .'_project_members$/', $result);
     }
 
     public function itReturnsProjectNameWithProjectMemberIfUserIsProjectMember() {
-        $this->permissions_manager->setReturnValue('getAuthorizedUgroupIds', array(ProjectUGroup::PROJECT_MEMBERS));
+        $this->permissions_manager->setReturnValue('getAuthorizedUGroupIdsForProject', array(ProjectUGroup::PROJECT_MEMBERS));
         $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
         $project_name = 'project' . $this->project_id;
         $this->assertPattern('/=\s@'.$project_name.'_project_members$/', $result);
     }
 
     public function itReturnsProjectNameWithProjectAdminIfUserIsProjectAdmin() {
-        $this->permissions_manager->setReturnValue('getAuthorizedUgroupIds', array(ProjectUGroup::PROJECT_ADMIN));
+        $this->permissions_manager->setReturnValue('getAuthorizedUGroupIdsForProject', array(ProjectUGroup::PROJECT_ADMIN));
         $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
         $project_name = 'project' . $this->project_id;
         $this->assertPattern('/=\s@'.$project_name.'_project_admin$/', $result);
     }
 
     public function itPrefixesWithRForReaders() {
-        $this->permissions_manager->setReturnValue('getAuthorizedUgroupIds', array(101));
+        $this->permissions_manager->setReturnValue('getAuthorizedUGroupIdsForProject', array(101));
         $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
         $this->assertPattern('/^\sR\s\s\s=/', $result);
     }
 
     public function itPrefixesWithRWForWriters() {
-        $this->permissions_manager->setReturnValue('getAuthorizedUgroupIds', array(101));
+        $this->permissions_manager->setReturnValue('getAuthorizedUGroupIdsForProject', array(101));
         $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_WRITE);
         $this->assertPattern('/^\sRW\s\s=/', $result);
     }
 
     public function itPrefixesWithRWPlusForWritersPlus() {
-        $this->permissions_manager->setReturnValue('getAuthorizedUgroupIds', array(101));
+        $this->permissions_manager->setReturnValue('getAuthorizedUGroupIdsForProject', array(101));
         $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_WPLUS);
         $this->assertPattern('/^\sRW\+\s=/', $result);
     }
 
     public function itReturnsAllGroupsSeparatedBySpaceIfItHasDifferentGroups() {
-        $this->permissions_manager->setReturnValue('getAuthorizedUgroupIds', array(666, ProjectUGroup::REGISTERED));
+        $this->permissions_manager->setReturnValue('getAuthorizedUGroupIdsForProject', array(666, ProjectUGroup::REGISTERED));
         $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
         $this->assertIdentical(' R   = @ug_666 @site_active @'. $this->project->getUnixName() .'_project_members' . PHP_EOL, $result);
     }
 
     public function itReturnsAllGroupsSeparatedBySpaceIfItHasDifferentGroupsAndAddCodendiadmIfOnlineEditIsEnable() {
-        $this->permissions_manager->setReturnValue('getAuthorizedUgroupIds', array(666, ProjectUGroup::REGISTERED));
+        $this->permissions_manager->setReturnValue('getAuthorizedUGroupIdsForProject', array(666, ProjectUGroup::REGISTERED));
         $this->repository->setReturnValue('hasOnlineEditEnabled', true);
         $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
         $this->assertIdentical(' R   = @ug_666 @site_active @'. $this->project->getUnixName() .'_project_members' . ' id_rsa_gl-adm' . PHP_EOL, $result);
@@ -168,7 +168,7 @@ class Git_Gitolite_ConfigPermissionsSerializer_MirrorsTest extends TuleapTestCas
                 $this->mirror_1
             )
         );
-        stub($this->permissions_manager)->getAuthorizedUgroupIds()->returns(array(ProjectUGroup::REGISTERED));
+        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject()->returns(array(ProjectUGroup::REGISTERED));
 
         $result = $this->serializer->getForRepository($this->repository);
         $this->assertPattern('/^ R   = git_mirror_1$/m', $result);
@@ -181,7 +181,7 @@ class Git_Gitolite_ConfigPermissionsSerializer_MirrorsTest extends TuleapTestCas
                 $this->mirror_2,
             )
         );
-        stub($this->permissions_manager)->getAuthorizedUgroupIds()->returns(array(ProjectUGroup::REGISTERED));
+        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject()->returns(array(ProjectUGroup::REGISTERED));
 
         $result = $this->serializer->getForRepository($this->repository);
         $this->assertPattern('/^ R   = git_mirror_1 git_mirror_2$/m', $result);
@@ -191,7 +191,7 @@ class Git_Gitolite_ConfigPermissionsSerializer_MirrorsTest extends TuleapTestCas
         stub($this->mirror_mapper)->fetchAllRepositoryMirrors($this->repository)->returns(
             array()
         );
-        stub($this->permissions_manager)->getAuthorizedUgroupIds()->returns(array());
+        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject()->returns(array());
 
         $result = $this->serializer->getForRepository($this->repository);
         $this->assertEqual('', $result);

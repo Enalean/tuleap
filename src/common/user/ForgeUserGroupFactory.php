@@ -87,58 +87,19 @@ class User_ForgeUserGroupFactory {
     public function getAllForProject(Project $project) {
         $user_groups = array();
 
-        if (ForgeConfig::areAnonymousAllowed()) {
+        if (ForgeConfig::areAnonymousAllowed() && $project->isPublic()) {
             $user_groups []= $this->getDynamicForgeUserGroupByName(User_ForgeUGroup::ANON);
         }
         if (ForgeConfig::areRestrictedUsersAllowed() && $project->allowsRestricted()) {
             $user_groups []= $this->getDynamicForgeUserGroupByName(User_ForgeUGroup::AUTHENTICATED);
         }
-
-        $user_groups []= $this->getDynamicForgeUserGroupByName(User_ForgeUGroup::REGISTERED);
+        if ($project->isPublic()) {
+            $user_groups []= $this->getDynamicForgeUserGroupByName(User_ForgeUGroup::REGISTERED);
+        }
         $user_groups []= $this->getDynamicForgeUserGroupByName(User_ForgeUGroup::PROJECT_MEMBERS);
         $user_groups []= $this->getDynamicForgeUserGroupByName(User_ForgeUGroup::PROJECT_ADMINS);
 
         return array_merge($user_groups, $this->getStaticByProject($project), array($this->getDynamicForgeUserGroupByName(User_ForgeUGroup::NOBODY)));
-    }
-
-    /**
-     * @param string $permission
-     * @return User_ForgeUGroup[]
-     */
-    public function getUserGroupsAssignedToPermission($object_id, $permission) {
-        $permission_dao = new PermissionsDao();
-        $rows           = $permission_dao->getUgroupsByObjectIdAndPermissionType($object_id, $permission);
-
-        if (! $rows->count()) {
-            return $this->getDefaultForPermission($permission);
-        }
-
-        $user_groups = array();
-        foreach ($rows as $row) {
-            $user_groups[] = $this->instantiateFromRow($row);
-        }
-
-        return $user_groups;
-    }
-
-    /**
-     * @param string $permission
-     * @return User_ForgeUGroup[]
-     */
-    private function getDefaultForPermission($permission) {
-        $permission_manager = PermissionsManager::instance();
-        $rows = $permission_manager->getDefaults($permission);
-
-        $user_groups = array();
-        if (! $rows) {
-            return $user_groups;
-        }
-
-        foreach ($rows as $row) {
-            $user_groups[] = $this->instantiateFromRow($row);
-        }
-
-        return $user_groups;
     }
 
     /**

@@ -18,12 +18,10 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('include/DataAccessObject.class.php');
-
 /**
  *  Data Access Object for Permissions 
  */
-class PermissionsDao extends DataAccessObject {
+class PermissionsDao extends DataAccessObject implements IPermissionsNGDao {
     
     const DUPLICATE_NEW_PROJECT   = 1;
     const DUPLICATE_SAME_PROJECT  = 2;
@@ -348,4 +346,7 @@ class PermissionsDao extends DataAccessObject {
         return $this->update($sql);
     }
 
+    public function addHistory($group_id, $permission_type, $object_id) {
+        permission_add_history($group_id, $permission_type, $object_id);
+    }
 }
