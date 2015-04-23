@@ -1,10 +1,11 @@
 Version 8.1 (not yet released)
 
 	== Enhancement ==
+	* story #7813: restricted users can view unrestricted public projects in trove cats
 	* request #7979: Disable usage statistics in project administration
 	* request #7384: restoring a git repository is now done by the APP user
 	* story #7813: Refactoring- Introduce ConfigValueFileProvider
-	* request #7938: Allow proper reverse proxy of Tuleap (Allow to query REST API in HTTP without SSL)
+        * request #7938: Allow proper reverse proxy of Tuleap (Allow to query REST API in HTTP without SSL)
 
 	== Bug Fix ==
 	* request #8017: SQL injection in user groups project administration
