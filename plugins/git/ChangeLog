@@ -1,3 +1,6 @@
+Version 4.40 - Tuleap 8.1
+    * story #7813: update git repositories when switching project access
+
 Version 4.39 - Tuleap 8.1
     * story #7813: detect access platform switch and update git repositories accordingly
 
