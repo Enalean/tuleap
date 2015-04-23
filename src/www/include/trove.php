@@ -304,3 +304,11 @@ function trove_getfullpath($node) {
 	}
 	return $return;
 }
+
+function trove_get_visibility_for_user($field, PFUser $user) {
+    if (ForgeConfig::areRestrictedUsersAllowed() && $user->isRestricted()) {
+        return $field.' = "'.db_es(Project::ACCESS_PUBLIC_UNRESTRICTED).'"';
+    } else {
+        return $field.' != "'.db_es(Project::ACCESS_PRIVATE).'"';
+    }
+}

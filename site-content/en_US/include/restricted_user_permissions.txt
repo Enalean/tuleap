@@ -1,11 +1,7 @@
 <?php
 //
-// Codendi
+// Copyright (c) Enalean SAS, 2011-2015. All rights reserved
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-// http://www.codendi.com
-//
-// 
-//
 
 // Restricted users are only granted access to their projects pages
 // Still, there are a few possible customizations proposed here.
@@ -15,13 +11,13 @@
 //$forbidden_url = array( 
 //          '/snippet',     // Code Snippet Library
 //          '/softwaremap/', // browsable software map
-//          '/new',         // list of the newest releases made on the Codendi site
+//          '/new',         // list of the newest releases made on the site
 //          '/search',      // search for people, projects, and artifacts in trackers!
 //          '/people/',      // people skills and profile
-//          '/stats',       // Codendi site statistics
+//          '/stats',       // site statistics
 //          '/top',         // projects rankings (active, downloads, etc)
 //          '/project/register.php',    // Register a new project
-//          '/export',      // Codendi XML feeds
+//          '/export',      //  XML feeds
 //          '/info.php'      // PHP info
 //          );
         

@@ -292,8 +292,8 @@ class URLVerification {
      */
     protected function restrictedUserCanAccessUrl($user, $url, $request_uri, $script_name) {
         $group_id =  (isset($GLOBALS['group_id'])) ? $GLOBALS['group_id'] : $url->getGroupIdFromUrl($request_uri);
-        
-         // Make sure the URI starts with a single slash
+
+        // Make sure the URI starts with a single slash
         $req_uri='/'.trim($request_uri, "/");
         $user_is_allowed=false;
         /* Examples of input params:
@@ -308,7 +308,6 @@ class URLVerification {
         // In addition, the following URLs are forbidden (value overriden in site-content file)
         $forbidden_url = array( 
           '/snippet',     // Code Snippet Library
-          '/softwaremap/',// browsable software map
           '/new/',        // list of the newest releases made on the Codendi site ('/news' must be allowed...)
           '/people/',     // people skills and profile
           '/stats',       // Codendi site statistics
@@ -351,7 +350,7 @@ class URLVerification {
         $allow_access_to_project_trackers_v5 = array_flip($allow_access_to_project_trackers_v5);
 
         foreach ($forbidden_url as $str) {
-            $pos = strpos($req_uri,$str);
+            $pos = strpos($req_uri, $str);
             if ($pos === false) {
                 // Not found
             } else {
