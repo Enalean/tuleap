@@ -5,6 +5,8 @@
     id="admin-anonymous"
     data-current-access-mode="{{ current_access_mode }}"
     data-nb-restricted-users="{{ nb_restricted_users }}"
+    data-ugroup_authenticated_users="{{ ugroup_authenticated_users }}"
+    data-ugroup_registered_users="{{ ugroup_registered_users }}"
 >
     {{{ csrf_token }}}
 
@@ -48,6 +50,18 @@
         {{ access_restricted_desc }}
     </p>
 
+    <div id="customize-ugroup-labels">
+        <p>{{ customize_ugroups_label_info }}</p>
+        <label>
+            {{ ugroup_authenticated_users_label }}
+            <input type="text" name="ugroup_authenticated_users" value="{{ ugroup_authenticated_users }}" placeholder="{{ ugroup_authenticated_users_placeholder }}" />
+        </label>
+        <label>
+            {{ ugroup_registered_users_label }}
+            <input type="text" name="ugroup_registered_users" value="{{ ugroup_registered_users }}" placeholder="{{ ugroup_registered_users_placeholder }}" />
+        </label>
+    </div>
+
     <div id="submit-panel">
         {{# access_restricted }}
             {{# nb_restricted_users }}
@@ -56,6 +70,6 @@
                 </div>
             {{/ nb_restricted_users }}
         {{/ access_restricted }}
-            <button type="submit" class="btn btn-primary" name="update" value="1" disabled>{{ btn_submit }}</button>
+        <button type="submit" class="btn btn-primary" name="update" value="1" disabled>{{ btn_submit }}</button>
     </div>
 </form>

@@ -38,7 +38,21 @@
                     $('#submit-panel').removeClass('alert alert-warning');
                 }
             }
-       });
+
+            if ($(this).val() === 'restricted') {
+                $('#customize-ugroup-labels').show();
+            } else {
+                $('#customize-ugroup-labels').hide();
+            }
+        });
+
+        form.find('[type=text]').keydown(function () {
+            form.find('[type=submit]').prop('disabled', false);
+        });
+
+        if (current_access_mode === 'restricted') {
+            $('#customize-ugroup-labels').show();
+        }
     });
 
 })(window.jQuery);

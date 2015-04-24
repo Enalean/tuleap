@@ -113,7 +113,11 @@ admin_main	access_regular_desc	Users must first login before going further.
 admin_main	access_restrited_label	All users must be logged in and restricted users are enabled
 admin_main	access_restrited_desc	Users must first login before going further. Some users may be restricted (restricted users have to be specifically granted access to projects and services).
 admin_main	current_restricted_users_message	<h4>Heads up!</h4><p>Currently there are <a href="/admin/userlist.php?status_values[]=R">$1 user(s)</a> that have restricted status. Changing current access mode will not change their status, they will need to be dealt with manually.</p>
-
+admin_main	ugroup_authenticated_users_placeholder	E.g $1 employees & subco
+admin_main	ugroup_registered_users_placeholder	E.g $1 employees
+admin_main	ugroup_authenticated_users_label	Authenticated users (Registered + Restricted) label
+admin_main	ugroup_registered_users_label	Registered users label
+admin_main	customize_ugroups_label_info	You can override default names for the two special groups groups. This only applies for git permissions at the moment.
 #
 #-----------------------------------------------
 # Script: SF/www/admin/admin_utils.php

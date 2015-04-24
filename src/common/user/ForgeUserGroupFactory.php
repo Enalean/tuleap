@@ -85,9 +85,7 @@ class User_ForgeUserGroupFactory {
      * @return User_ForgeUGroup[]
      */
     public function getAllForProject(Project $project) {
-        $user_groups = array(
-            $this->getDynamicForgeUserGroupByName(User_ForgeUGroup::NOBODY)
-        );
+        $user_groups = array();
 
         if (ForgeConfig::areAnonymousAllowed()) {
             $user_groups []= $this->getDynamicForgeUserGroupByName(User_ForgeUGroup::ANON);
@@ -100,7 +98,7 @@ class User_ForgeUserGroupFactory {
         $user_groups []= $this->getDynamicForgeUserGroupByName(User_ForgeUGroup::PROJECT_MEMBERS);
         $user_groups []= $this->getDynamicForgeUserGroupByName(User_ForgeUGroup::PROJECT_ADMINS);
 
-        return array_merge($user_groups, $this->getStaticByProject($project));
+        return array_merge($user_groups, $this->getStaticByProject($project), array($this->getDynamicForgeUserGroupByName(User_ForgeUGroup::NOBODY)));
     }
 
     /**
