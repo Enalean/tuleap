@@ -1,3 +1,6 @@
+Version 2.26.72 - Tuleap 8.1
+    * request #8028: Fix docman search table header
+
 Version 2.26.71 - Tuleap 8.1
     * request #8019 Not able to create an approval table for folder
 
