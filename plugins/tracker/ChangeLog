@@ -1,3 +1,6 @@
+Version 5.614 - Tuleap 8.1
+    * request #8030 Not able to modify value of a radio button
+
 Version 5.613 - Tuleap 8.1
     * request #7995: Remove use of log method for cross tracker search
 

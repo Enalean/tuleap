@@ -21,7 +21,7 @@ Version 8.1 (not yet released)
 	* request #8016 Force codendiadm owner group for FRS folder
 
 	== Plugins ==
-	* tracker: 5.613
+	* tracker: 5.614
 	* git: 4.41
 	* ldap: 3.77
 	* webdav: 1.9.11
