@@ -19,6 +19,6 @@
  */
 
 require_once dirname(__FILE__).'/../../../../tests/lib/autoload.php';
-require_once dirname(__FILE__).'/TestingDataBuilder.php';
-require_once dirname(__FILE__).'/TestingCampaignBuilder.php';
-require_once dirname(__FILE__).'/Testing/BaseTest.php';
+require_once dirname(__FILE__).'/TrafficlightsDataBuilder.php';
+require_once dirname(__FILE__).'/TrafficlightsCampaignBuilder.php';
+require_once dirname(__FILE__).'/Trafficlights/BaseTest.php';

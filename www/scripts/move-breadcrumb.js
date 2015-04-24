@@ -19,7 +19,7 @@
 
     function moveBreadcrumb() {
         var timeout = window.setInterval(function() {
-            var origin = $('#testing-breadcrumb');
+            var origin = $('#trafficlights-breadcrumb');
 
             if (origin.length === 0) {
                 return;

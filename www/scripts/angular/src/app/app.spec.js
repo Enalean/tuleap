@@ -1,13 +1,13 @@
-describe('TestingCtrl', function() {
-  var TestingCtrl, $location, $scope;
+describe('TrafficlightsCtrl', function() {
+  var TrafficlightsCtrl, $location, $scope;
 
-  beforeEach(module('testing'));
+  beforeEach(module('trafficlights'));
   beforeEach(module('user'));
 
   beforeEach(inject(function($controller, _$location_, $rootScope) {
     $location   = _$location_;
     $scope      = $rootScope.$new();
-    TestingCtrl = $controller('TestingCtrl', {$location: $location, $scope: $scope});
+    TrafficlightsCtrl = $controller('TrafficlightsCtrl', {$location: $location, $scope: $scope});
   }));
 
   it('has an init method', inject(function() {

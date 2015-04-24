@@ -1,5 +1,5 @@
 angular
-    .module('testing')
+    .module('trafficlights')
     .filter('InPropertiesFilter', InPropertiesFilter);
 
 InPropertiesFilter.$inject = ['$filter'];

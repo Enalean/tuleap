@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Testing;
+namespace Tuleap\Trafficlights;
 
 use TuleapTestCase;
 
@@ -76,7 +76,7 @@ class ConfigConformanceAsserterTest extends TuleapTestCase {
             ->withProject($another_project)
             ->build();
 
-        $config = mock('Tuleap\\Testing\\Config');
+        $config = mock('Tuleap\\Trafficlights\\Config');
         stub($config)
             ->getCampaignTrackerId($project)
             ->returns($campaign_tracker->getId());

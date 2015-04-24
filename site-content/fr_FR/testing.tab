@@ -1,13 +1,13 @@
-plugin_testing	descriptor_description	Gestion des tests
-plugin_testing	descriptor_name	Testing
+plugin_trafficlights	descriptor_description	Gestion des tests
+plugin_trafficlights	descriptor_name	Trafficlights
 
-plugin_testing	title	Testing
-plugin_testing	service_lbl_key	Testage
+plugin_trafficlights	title	Trafficlights
+plugin_trafficlights	service_lbl_key	Trafficlights
 
-plugin_testing	admin_campaign_tracker	Tracker de Campagnes
-plugin_testing	admin_definition_tracker	Tracker de Définitions des tests
-plugin_testing	admin_execution_tracker	Tracker d'Exécutions des tests
-plugin_testing	admin_tracker_placeholder	Entrez l'id du tracker…
+plugin_trafficlights	admin_campaign_tracker	Tracker de Campagnes
+plugin_trafficlights	admin_definition_tracker	Tracker de Définitions des tests
+plugin_trafficlights	admin_execution_tracker	Tracker d'Exécutions des tests
+plugin_trafficlights	admin_tracker_placeholder	Entrez l'id du tracker…
 
-plugin_testing	misconfigured_title	Nom de Zeus !
-plugin_testing	misconfigured_message	Vous devriez configurer la chose avant de pouvoir utiliser ce service.
+plugin_trafficlights	misconfigured_title	Nom de Zeus !
+plugin_trafficlights	misconfigured_message	Vous devriez configurer la chose avant de pouvoir utiliser ce service.

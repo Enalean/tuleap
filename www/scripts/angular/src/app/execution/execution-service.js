@@ -67,8 +67,8 @@ function ExecutionService(Restangular, $q, $rootScope) {
         function getRemoteExecutions(campaign_id, limit, offset) {
             var data = $q.defer();
 
-            rest.one('testing_campaigns', campaign_id)
-                .all('testing_executions')
+            rest.one('trafficlights_campaigns', campaign_id)
+                .all('trafficlights_executions')
                 .getList({
                     limit: limit,
                     offset: offset

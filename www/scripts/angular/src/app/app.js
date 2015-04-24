@@ -1,4 +1,4 @@
-angular.module('testing', [
+angular.module('trafficlights', [
     'ui.router',
     'user',
     'socket',

@@ -18,7 +18,7 @@ function EnvironmentService(Restangular, $q) {
         var data = $q.defer();
 
         rest.one('projects', project_id)
-            .all('testing_environments')
+            .all('trafficlights_environments')
             .getList({
                 limit: limit,
                 offset: offset

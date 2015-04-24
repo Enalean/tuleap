@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
-require_once dirname(__FILE__).'/TestingDataBuilder.php';
+require_once dirname(__FILE__).'/TrafficlightsDataBuilder.php';
 
-$data_builder = new TestingDataBuilder();
+$data_builder = new TrafficlightsDataBuilder();
 $data_builder->setUp();

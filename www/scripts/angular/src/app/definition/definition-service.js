@@ -18,7 +18,7 @@ function DefinitionService(Restangular, $q) {
         var data = $q.defer();
 
         rest.one('projects', project_id)
-            .all('testing_definitions')
+            .all('trafficlights_definitions')
             .getList({
                 limit: limit,
                 offset: offset

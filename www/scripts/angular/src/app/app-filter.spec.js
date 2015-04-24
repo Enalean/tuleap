@@ -1,5 +1,5 @@
 describe('InPropertiesFilter', function() {
-    beforeEach(module('testing'));
+    beforeEach(module('trafficlights'));
 
     var properties = ['label', 'status'],
         list = [

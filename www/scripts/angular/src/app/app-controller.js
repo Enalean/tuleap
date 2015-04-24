@@ -1,10 +1,10 @@
 angular
-    .module('testing')
-    .controller('TestingCtrl', TestingCtrl);
+    .module('trafficlights')
+    .controller('TrafficlightsCtrl', TrafficlightsCtrl);
 
-TestingCtrl.$inject = ['$scope', 'amMoment', 'gettextCatalog', 'SharedPropertiesService', 'UserService'];
+TrafficlightsCtrl.$inject = ['$scope', 'amMoment', 'gettextCatalog', 'SharedPropertiesService', 'UserService'];
 
-function TestingCtrl($scope, amMoment, gettextCatalog, SharedPropertiesService, UserService) {
+function TrafficlightsCtrl($scope, amMoment, gettextCatalog, SharedPropertiesService, UserService) {
     $scope.init = function(node_server_id, project_id, lang) {
         UserService.getCurrentUser().then(function(user) {
             SharedPropertiesService.setCurrentUser(user);

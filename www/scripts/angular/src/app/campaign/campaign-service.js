@@ -18,14 +18,14 @@ function CampaignService(Restangular, $q) {
     };
 
     function getCampaign(campaign_id) {
-        return rest.one('testing_campaigns', campaign_id).get().$object;
+        return rest.one('trafficlights_campaigns', campaign_id).get().$object;
     }
 
     function getCampaigns(project_id, limit, offset) {
         var data = $q.defer();
 
         rest.one('projects', project_id)
-            .all('testing_campaigns')
+            .all('trafficlights_campaigns')
             .getList({
                 limit: limit,
                 offset: offset
@@ -45,8 +45,8 @@ function CampaignService(Restangular, $q) {
     function getEnvironments(campaign_id, limit, offset) {
         var data = $q.defer();
 
-        rest.one('testing_campaigns', campaign_id)
-            .all('testing_environments')
+        rest.one('trafficlights_campaigns', campaign_id)
+            .all('trafficlights_environments')
             .getList({
                 limit: limit,
                 offset: offset
@@ -64,7 +64,7 @@ function CampaignService(Restangular, $q) {
     }
 
     function createCampaign(campaign) {
-        return rest.all('testing_campaigns')
+        return rest.all('trafficlights_campaigns')
             .post(campaign);
     }
 }

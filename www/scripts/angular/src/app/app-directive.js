@@ -1,5 +1,5 @@
 angular
-    .module('testing')
+    .module('trafficlights')
     .directive('autoFocus', AutoFocus);
 
 function AutoFocus() {

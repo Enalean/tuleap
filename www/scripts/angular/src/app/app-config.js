@@ -1,10 +1,10 @@
 angular
-    .module('testing')
-    .config(TestingConfig);
+    .module('trafficlights')
+    .config(TrafficlightsConfig);
 
-TestingConfig.$inject = ['$stateProvider', '$urlRouterProvider', '$breadcrumbProvider'];
+TrafficlightsConfig.$inject = ['$stateProvider', '$urlRouterProvider', '$breadcrumbProvider'];
 
-function TestingConfig($stateProvider, $urlRouterProvider, $breadcrumbProvider) {
+function TrafficlightsConfig($stateProvider, $urlRouterProvider, $breadcrumbProvider) {
     $urlRouterProvider.otherwise('/campaigns');
     $breadcrumbProvider.setOptions({
         templateUrl: 'breadcrumb.tpl.html'

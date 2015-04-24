@@ -3,10 +3,10 @@
     <img src="yuno.jpg" />
 {{/ is_properly_configured }}
 {{# is_properly_configured }}
-    <div id="testing-app" ng-app="testing" ng-controller="TestingCtrl" ng-init="init('{{ node_server_address }}', {{ project_id }}, '{{ lang }}')">
+    <div id="trafficlights-app" ng-app="trafficlights" ng-controller="TrafficlightsCtrl" ng-init="init('{{ node_server_address }}', {{ project_id }}, '{{ lang }}')">
         <div ncy-breadcrumb></div>
         <ui-view></ui-view>
     </div>
     <script src="scripts/angular/bin/assets/socket.io.js"></script>
-    <script src="scripts/angular/bin/assets/testing.js"></script>
+    <script src="scripts/angular/bin/assets/trafficlights.js"></script>
 {{/ is_properly_configured }}

@@ -1,5 +1,5 @@
 angular
-    .module('testing')
+    .module('trafficlights')
     .directive('adaptHeight', AdaptHeight);
 
 AdaptHeight.$inject = ['$timeout'];
