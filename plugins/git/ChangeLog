@@ -1,3 +1,6 @@
+Version 4.41 - Tuleap 8.1
+    * story #7813: site admin can rename registered and authentified groups
+
 Version 4.40 - Tuleap 8.1
     * story #7813: update git repositories when switching project access
 

@@ -22,7 +22,7 @@ Version 8.1 (not yet released)
 
 	== Plugins ==
 	* tracker: 5.613
-	* git: 4.40
+	* git: 4.41
 	* ldap: 3.77
 	* webdav: 1.9.11
 	* mediawiki: 0.68
@@ -37,7 +37,7 @@ Version 8.1 (not yet released)
 	* admindelegation: 2.9
 
 	== Themes ==
-	* FlamingParrot: 1.80
+	* FlamingParrot: 1.81
 
 	== Api ==
 	* REST API: 1.8
