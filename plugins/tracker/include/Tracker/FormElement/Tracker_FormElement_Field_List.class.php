@@ -769,12 +769,14 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     }
 
     protected function _fetchField($id, $name, $selected_values, $submitted_values = array()) {
-        $html = '';
+        $html     = '';
+        $purifier = Codendi_HTMLPurifier::instance();
+
         if ($name) {
             if ($this->isMultiple()) {
                 $name .= '[]';
             }
-            $name = 'name="'. $name .'"';
+            $name = 'name="'. $purifier->purify($name) .'"';
         }
 
         if ($id) {

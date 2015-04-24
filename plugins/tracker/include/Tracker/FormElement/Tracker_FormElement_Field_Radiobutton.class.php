@@ -24,10 +24,7 @@ class Tracker_FormElement_Field_Radiobutton extends Tracker_FormElement_Field_Se
 
 
     protected function fetchFieldContainerStart($id, $name) {
-        $purifier = Codendi_HTMLPurifier::instance();
-        $html     = "<div $id>";
-        $html    .= '<input type="hidden" '.$purifier->purify($name).' value="100" />';
-        return $html;
+        return '';
     }
 
     protected function fetchFieldValue(Tracker_FormElement_Field_List_Value $value, $name, $is_selected) {
@@ -38,9 +35,7 @@ class Tracker_FormElement_Field_Radiobutton extends Tracker_FormElement_Field_Se
 
             $is_selected = true; //Hackalert: "None" selected by default. Overrided when other value is selected
         }
-        $purifier = Codendi_HTMLPurifier::instance();
         $label    = $this->getBind()->formatChangesetValueWithoutLink($value);
-        $name     = $purifier->purify($name);
 
         if(!$name) {
             $name= 'name="admin"';
