@@ -5,9 +5,10 @@ Version 8.1 (not yet released)
 	* request #7979: Disable usage statistics in project administration
 	* request #7384: restoring a git repository is now done by the APP user
 	* story #7813: Refactoring- Introduce ConfigValueFileProvider
-        * request #7938: Allow proper reverse proxy of Tuleap (Allow to query REST API in HTTP without SSL)
+	* request #7938: Allow proper reverse proxy of Tuleap (Allow to query REST API in HTTP without SSL)
 
 	== Bug Fix ==
+	* request #8015: Fix reflected XSS in the user group creation	
 	* request #8017: SQL injection in user groups project administration
 	* request #8012: /soap/index.php is no more reachable; project data no-longer exports
 	* request #7974: Prevent SQL injections at the project creation
