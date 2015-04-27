@@ -3,8 +3,8 @@
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
+// Copyright (c) Enalean, 2015. All rights reserved
 //
-// 
 
 require_once('pre.php');    
 require_once('common/mail/MailManager.class.php');
@@ -104,6 +104,8 @@ if ($request->valid($valid)) {
     $body = $request->get('body');
 }
 
+$csrf_token = new CSRFSynchronizerToken('sendmessage.php');
+
 if (isset($send_mail)) {
     if (!$subject || !$body || !$email) {
         /*
@@ -111,6 +113,7 @@ if (isset($send_mail)) {
          */
         exit_missing_param();
     }
+    $csrf_token->check();
 
 
 $valid = new Valid_Text('cc');
@@ -183,6 +186,7 @@ $HTML->header(array('title'=>$Language->getText('sendmessage', 'title',array($to
 <FORM ACTION="?" METHOD="POST">
 <INPUT TYPE="HIDDEN" NAME="toaddress" VALUE="<?php echo $toaddress; ?>">
 <INPUT TYPE="HIDDEN" NAME="touser" VALUE="<?php echo $touser; ?>">
+<?php echo $csrf_token->fetchHTMLInput(); ?>
 
 <B><?php echo $Language->getText('sendmessage', 'email'); ?>:</B> <?php echo $email; ?>
 <P>
