@@ -1,3 +1,6 @@
+Version 2.26.73 - Tuleap 8.1
+    * request #8027: Git repositories in private projects can be accessed by non project members
+
 Version 2.26.72 - Tuleap 8.1
     * request #8028: Fix docman search table header
 
