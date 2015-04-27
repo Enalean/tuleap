@@ -541,6 +541,15 @@ class ProjectResource extends AuthenticatedResource {
     }
 
     /**
+     * @url OPTIONS {id}/user_groups
+     *
+     * @param int $id Id of the project
+     */
+    public function optionsUserGroups($id) {
+        $this->sendAllowHeadersForProject();
+    }
+
+    /**
      * Get user_groups
      *
      * Get the user_groups of a given project

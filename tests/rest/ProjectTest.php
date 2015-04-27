@@ -422,7 +422,13 @@ class ProjectTest extends RestBase {
         $this->assertEquals($third_backlog_item['artifact'], array('id' => TestDataBuilder::EPIC_7_ARTIFACT_ID, 'uri' => 'artifacts/'.TestDataBuilder::EPIC_7_ARTIFACT_ID, 'tracker' => array('id' => TestDataBuilder::EPICS_TRACKER_ID, 'uri' => 'trackers/'.TestDataBuilder::EPICS_TRACKER_ID, 'label' => 'Epics')));
     }
 
-   public function testGETUserGroupsContainingStaticUGroups() {
+    public function testOPTIONSUserGroups() {
+        $response = $this->getResponse($this->client->options('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/user_groups'));
+
+        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    public function testGETUserGroupsContainingStaticUGroups() {
         $response = $this->getResponse($this->client->get('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/user_groups'));
 
         $expected_result = array(
@@ -484,7 +490,7 @@ class ProjectTest extends RestBase {
         );
 
         $this->assertEquals($expected_result, $response->json());
-   }
+    }
 
     /**
      * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
@@ -500,7 +506,7 @@ class ProjectTest extends RestBase {
         $this->assertEquals($response_patch->getStatusCode(), 403);
     }
 
-   public function testPATCHbacklog() {
+    public function testPATCHbacklog() {
         $uri = 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/backlog';
         $backlog_items = $this->getResponse($this->client->get($uri))->json();
 
