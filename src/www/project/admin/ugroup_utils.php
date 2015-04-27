@@ -392,19 +392,20 @@ function ugroup_delete_user_from_project_ugroups($group_id,$user_id) {
  */
 function ugroup_create($group_id, $ugroup_name, $ugroup_description, $group_templates) {
     global $Language;
+    $purifier = Codendi_HTMLPurifier::instance();
 
     // Sanity check
     if (!$ugroup_name) { 
         exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','ug_name_missed'));
     }
     if (!eregi("^[a-zA-Z0-9_\-]+$",$ugroup_name)) {
-        exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','invalid_ug_name',$ugroup_name));
+        exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','invalid_ug_name', $purifier->purify($ugroup_name)));
     }
     // Check that there is no ugroup with the same name in this project
     $sql = "SELECT * FROM ugroup WHERE name='".db_es($ugroup_name)."' AND group_id='".db_ei($group_id)."'";
     $result=db_query($sql);
     if (db_numrows($result)>0) {
-        exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','ug__exist',$ugroup_name)); 
+        exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','ug__exist', $purifier->purify($ugroup_name)));
     }
     
     
@@ -482,13 +483,14 @@ function ugroup_create($group_id, $ugroup_name, $ugroup_description, $group_temp
  */
 function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description) {
     global $Language;
+    $purifier = Codendi_HTMLPurifier::instance();
 
     // Sanity check
     if (!$ugroup_name) { 
         exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','ug_name_missed'));
     }
     if (!eregi("^[a-zA-Z0-9_\-]+$",$ugroup_name)) {
-        exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','invalid_ug_name',$ugroup_name));
+        exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','invalid_ug_name', $purifier->purify($ugroup_name)));
     }
     if (!$ugroup_id) {
         exit_error($Language->getText('global','error'),$Language->getText('project_admin_editugroup','ug_id_missed'));
@@ -505,7 +507,7 @@ function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description)
     $sql = "SELECT * FROM ugroup WHERE name='".db_es($ugroup_name)."' AND group_id='".db_ei($group_id)."' AND ugroup_id!='".db_ei($ugroup_id)."'";
     $result=db_query($sql);
     if (db_numrows($result)>0) {
-        exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','ug__exist',$ugroup_name)); 
+        exit_error($Language->getText('global','error'),$Language->getText('project_admin_ugroup_utils','ug__exist', $purifier->purify($ugroup_name)));
     }
 
     // Update
