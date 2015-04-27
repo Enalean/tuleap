@@ -43,11 +43,11 @@ echo '
 <TABLE width=100% cellpadding=0 cellspacing=0 border=0>
 <TR valign=top>
 	<TD>'.$Language->getText('include_user_home','user_id').': </TD>
-	<TD><B>'.$user->getId().'</B></TD>
+	<TD><B>'.$hp->purify($user->getId()).'</B></TD>
 </TR>
 <TR valign=top>
 	<TD>'.$Language->getText('include_user_home','login_name').': </TD>
-	<TD><B>'.$user->getUserName().'</B></TD>
+	<TD><B>'.$hp->purify($user->getUserName()).'</B></TD>
 </TR>
 <TR valign=top>
 	<TD>'.$Language->getText('include_user_home','real_name').': </TD>
@@ -57,8 +57,8 @@ echo '
 	<TD>'.$Language->getText('include_user_home','email_addr').': </TD>
 	<TD>
 	<B>
-	<A HREF="mailto:'.$user->getEmail().'">
-	'.$user->getEmail().'	
+	<A HREF="mailto:'.urlencode($user->getEmail()).'">
+	'.$hp->purify($user->getEmail()).'
 	</A></B>
 	</TD>
 </TR>';
@@ -166,7 +166,7 @@ if (db_numrows($res_cat) < 1) {
 } else { // endif no groups
 	print '<p>'.$Language->getText('include_user_home','is_member').":<BR>&nbsp;";
 	while ($row_cat = db_fetch_array($res_cat)) {
-        print ('<BR><A href="/projects/'.$row_cat['unix_group_name'].'/">'.$row_cat['group_name']."</A>\n");
+        print ('<BR><A href="/projects/'.urlencode($row_cat['unix_group_name']).'/">'.$hp->purify($row_cat['group_name'])."</A>\n");
     }
 	print "</ul>";
 } // end if groups
@@ -190,8 +190,8 @@ if (user_isloggedin()) {
 	<INPUT TYPE="HIDDEN" NAME="touser" VALUE="'.$user->getId().'">';
     echo $csrf_token->fetchHTMLInput();
 
-	$my_name=user_getrealname(user_getid());
-    $cc = (isset($_REQUEST['cc'])?htmlspecialchars(trim($_REQUEST['cc'])):"");
+	$my_name = $hp->purify(user_getrealname(user_getid()));
+    $cc      = (isset($_REQUEST['cc'])?$hp->purify(trim($_REQUEST['cc'])):"");
 	echo  '
     <div>
         <script type="text/javascript" src="/scripts/blocks.js"></script>
