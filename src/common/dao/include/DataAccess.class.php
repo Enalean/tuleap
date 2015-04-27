@@ -194,7 +194,11 @@ class DataAccess {
         }
         return $error;
     }
-    
+
+    public function getErrorMessage() {
+        return mysql_error($this->db);
+    }
+
     /**
      * Quote variable to make safe
      * @see http://php.net/mysql-real-escape-string

@@ -78,7 +78,7 @@ class Docman_PermissionsItemManager {
     }
 
     private function getUgroupIdsPermissions(Docman_Item $item, UGroupLiteralizer $literalizer, Project $project) {
-        $ugroups_ids = $literalizer->getUgroupIds($item->getId(), self::PERMISSIONS_TYPE);
+        $ugroups_ids = $literalizer->getUgroupIds($project, $item->getId(), self::PERMISSIONS_TYPE);
         $parent_item = $this->getParentItem($item, $project);
         if ($parent_item) {
             $parent_ugroups_ids = $this->getUgroupIdsPermissions($parent_item, $literalizer, $project);

@@ -29,9 +29,13 @@ class GitForkPermissionsManager {
     /** @var User_ForgeUserGroupFactory */
     private $user_group_factory;
 
+    /** @var PermissionsManager */
+    private $permissions_manager;
+
     public function __construct(GitRepository $repository) {
-        $this->repository         = $repository;
-        $this->user_group_factory = new User_ForgeUserGroupFactory(new UserGroupDao());
+        $this->repository          = $repository;
+        $this->user_group_factory  = new User_ForgeUserGroupFactory(new UserGroupDao());
+        $this->permissions_manager = PermissionsManager::instance();
     }
 
     /**
@@ -147,10 +151,10 @@ class GitForkPermissionsManager {
     private function getOptions(Project $project, $permission) {
         $user_groups     = $this->user_group_factory->getAllForProject($project);
         $options         = array();
-        $selected_values = $this->getSelectedValues($permission);
+        $selected_values = $this->permissions_manager->getAuthorizedUGroupIdsForProject($project, $this->repository->getId(), $permission);
 
         foreach ($user_groups as $ugroup) {
-            if ($ugroup->getName() === User_ForgeUGroup::ANON && $permission !== Git::PERM_READ) {
+            if ($ugroup->getId() == ProjectUGroup::ANONYMOUS && $permission !== Git::PERM_READ) {
                 continue;
             }
 
@@ -163,15 +167,5 @@ class GitForkPermissionsManager {
         }
 
         return $options;
-    }
-
-    private function getSelectedValues($permission) {
-        $values = $this->user_group_factory->getUserGroupsAssignedToPermission($this->repository->getId(), $permission);
-
-        array_walk($values, function (&$value) {
-            $value = $value->getId();
-        });
-
-        return $values;
     }
 }
