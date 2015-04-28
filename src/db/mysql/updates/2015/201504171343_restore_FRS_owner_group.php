@@ -40,7 +40,7 @@ class b201504171343_restore_FRS_owner_group extends ForgeUpgrade_Bucket {
 
         foreach ($project_dirs as $project_dir) {
             if (! $project_dir->isDot() && $project_dir->isDir()) {
-                echo 'Checking in ' . $project_dir->getBasename() . PHP_EOL;
+                echo 'Checking in ' . basename($project_dir->getPathname()) . PHP_EOL;
 
                 $frs_project_dirs = new DirectoryIterator($project_dir->getPathname());
                 $this->checkInProjectFolder($frs_project_dirs);
