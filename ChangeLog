@@ -21,6 +21,7 @@ Version 8.1 (not yet released)
 	* request #8023: Infinite loop when Tracker plugin is restricted
 	* request #8016 Force codendiadm owner group for FRS folder
 	* request #8035: Missing route in REST API: OPTIONS projects/id/user_groups
+	* request #8039: Fix the purification in user group permissions
 
 	== Plugins ==
 	* tracker: 5.614
