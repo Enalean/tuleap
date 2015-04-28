@@ -30,8 +30,8 @@ function format_html_row($row, &$row_num) {
         } else {
             $value = $cell;
         }
-        $purifier = Codendi_HTMLPurifier::instance();
-        echo '  <td>'.$purifier->purify($value)."</td>\n";
+
+        echo '  <td>'.$value."</td>\n";
     }
     echo "</tr>\n";
 }
@@ -101,13 +101,15 @@ foreach($title_arr as $title) {
 }
 echo "</tr>\n";
 
+$purifier = Codendi_HTMLPurifier::instance();
+
 $ugroupRow = array();
 $row_num   = 0;
 $result    = db_query("SELECT * FROM ugroup WHERE group_id=100 ORDER BY ugroup_id");
 while ($row = db_fetch_array($result)) {
     if ($project->usesDocman() || ($row['name'] != 'ugroup_document_tech_name_key' && $row['name'] != 'ugroup_document_admin_name_key')) {
-        $ugroupRow[100] = util_translate_name_ugroup($row['name']).' *';
-        $ugroupRow[200] = util_translate_desc_ugroup($row['description']);
+        $ugroupRow[100] = $purifier->purify(util_translate_name_ugroup($row['name']).' *');
+        $ugroupRow[200] = $purifier->purify(util_translate_desc_ugroup($row['description']));
         $ugroupRow[300] = array('value' => '-', 'html_attrs' => 'align="center"');
         $ugroupRow[400] = array('value' => '-', 'html_attrs' => 'align="center"');
         ksort($ugroupRow);
@@ -122,8 +124,9 @@ if ($group_id != 100) {
   if (db_numrows($result) > 0) {
     $ugroupUserDao = new UGroupUserDao();
     while ($row = db_fetch_array($result)) {
-        $ugroupRow[100] = '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$row['ugroup_id'].'&func=edit">'.util_translate_name_ugroup($row['name']).'</a>';
-        $ugroupRow[200] = util_translate_desc_ugroup($row['description']);
+        $ugroupRow[100] = '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$row['ugroup_id'].'&func=edit">'.
+            $purifier->purify(util_translate_name_ugroup($row['name'])).'</a>';
+        $ugroupRow[200] = $purifier->purify(util_translate_desc_ugroup($row['description']));
         $res2=db_query("SELECT count(*) FROM ugroup_user WHERE ugroup_id=".$row['ugroup_id']);
         $nb_members=db_result($res2,0,0);
         if ($nb_members) {
