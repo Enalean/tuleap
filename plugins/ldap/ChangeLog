@@ -1,3 +1,6 @@
+Version 3.78 - Tuleap 8.1
+    * request #8043: Add more info on var usage in ldap.inc
+
 Version 3.77 - Tuleap 8.1
     * Fix tests
 

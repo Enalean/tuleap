@@ -29,7 +29,7 @@ Version 8.1 (not yet released)
 	== Plugins ==
 	* tracker: 5.616
 	* git: 4.42
-	* ldap: 3.77
+	* ldap: 3.78
 	* webdav: 1.9.11
 	* mediawiki: 0.68
 	* agiledashboard: 1.188
