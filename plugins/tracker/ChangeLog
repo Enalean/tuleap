@@ -1,3 +1,6 @@
+Version 5.616 - Tuleap 8.1
+    * request #8042: Artifact displays blank page due to fatal error when fetching followup
+
 Version 5.615 - Tuleap 8.1
     * request #8042: Artifact displays blank page due to fatal error
 

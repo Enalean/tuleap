@@ -27,7 +27,7 @@ Version 8.1 (not yet released)
 	* request #8044: Fatal error on full text search
 
 	== Plugins ==
-	* tracker: 5.615
+	* tracker: 5.616
 	* git: 4.42
 	* ldap: 3.77
 	* webdav: 1.9.11
