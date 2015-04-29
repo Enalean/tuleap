@@ -321,8 +321,12 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
     // so we introduced this function to determine wether we're in this
     // case or not.
     private function shouldBeDisplayedAsChange($changes, $comment) {
-        // Not comment AND no changes
-        return $comment->hasEmptyBody() && ! $changes;
+        if ($comment) {
+            // Not comment AND no changes
+            return $comment->hasEmptyBody() && ! $changes;
+        }
+
+        return true;
     }
 
     /**
