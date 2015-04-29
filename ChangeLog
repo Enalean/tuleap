@@ -24,7 +24,7 @@ Version 8.1 (not yet released)
 	* request #8039: Fix the purification in user group permissions
 
 	== Plugins ==
-	* tracker: 5.614
+	* tracker: 5.615
 	* git: 4.42
 	* ldap: 3.77
 	* webdav: 1.9.11

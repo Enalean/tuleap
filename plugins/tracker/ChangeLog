@@ -1,3 +1,6 @@
+Version 5.615 - Tuleap 8.1
+    * request #8042: Artifact displays blank page due to fatal error
+
 Version 5.614 - Tuleap 8.1
     * request #8030 Not able to modify value of a radio button
 
