@@ -22,6 +22,7 @@ Version 8.1 (not yet released)
 	* request #8016 Force codendiadm owner group for FRS folder
 	* request #8035: Missing route in REST API: OPTIONS projects/id/user_groups
 	* request #8039: Fix the purification in user group permissions
+	* request #8044: Fatal error on full text search
 
 	== Plugins ==
 	* tracker: 5.615
