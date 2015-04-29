@@ -121,7 +121,7 @@ class GitPlugin extends Plugin {
         $this->_addHook('register_project_creation');
         $this->_addHook(Event::GET_PROJECTID_FROM_URL);
         $this->_addHook('anonymous_access_to_script_allowed');
-        $this->_addHook(Event::IS_SCRIPT_ALLOWED_FOR_RESTRICTED);
+        $this->_addHook(Event::IS_SCRIPT_HANDLED_FOR_RESTRICTED);
         $this->_addHook(Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED);
         $this->_addHook(EVENT::PROJECT_ACCESS_CHANGE, 'project_access_change');
 
@@ -1454,7 +1454,7 @@ class GitPlugin extends Plugin {
         $params['html'][]= $tab_content;
     }
 
-    public function is_script_allowed_for_restricted($params) {
+    public function is_script_handled_for_restricted($params) {
         $uri = $params['uri'];
         if (strpos($uri, $this->getPluginPath()) === 0) {
             $params['allow_restricted'] = true;
