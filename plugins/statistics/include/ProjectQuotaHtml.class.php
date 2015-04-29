@@ -146,7 +146,7 @@ class ProjectQuotaHtml {
             if (empty($list)) {
                 $output .= $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_statistics', 'no_search_result'));
             }
-            $projectFilterParam = '&amp;project_filter='.$filter;
+            $projectFilterParam = '&project_filter='.urlencode($filter);
         }
 
         $resultExist  = false;
@@ -211,9 +211,10 @@ class ProjectQuotaHtml {
         $i        = 0;
         $purifier = Codendi_HTMLPurifier::instance();
         $um       = UserManager::instance();
-        $titles   = array($GLOBALS['Language']->getText('global', 'Project'), $GLOBALS['Language']->getText('plugin_statistics', 'requester'), '<a href="?sort=quota&amp;order='.$orderBy.$projectFilterParam.'&amp;offset='.$offset.'">'.$GLOBALS['Language']->getText('plugin_statistics', 'quota').'</a>', $GLOBALS['Language']->getText('plugin_statistics', 'motivation'), '<a href="?sort=date&amp;order='.$orderBy.$projectFilterParam.'&amp;offset='.$offset.'">'.$GLOBALS['Language']->getText('plugin_statistics', 'date').'</a>', $GLOBALS['Language']->getText('global', 'delete'));
+        $titles   = array($GLOBALS['Language']->getText('global', 'Project'), $GLOBALS['Language']->getText('plugin_statistics', 'requester'), $GLOBALS['Language']->getText('plugin_statistics', 'quota'), $GLOBALS['Language']->getText('plugin_statistics', 'motivation'), $GLOBALS['Language']->getText('plugin_statistics', 'date'), $GLOBALS['Language']->getText('global', 'delete'));
+        $links    = array(null, null, '?sort=quota&order='.urlencode($orderBy).$projectFilterParam.'&offset='.urlencode($offset), null, '?sort=date&order='.urlencode($orderBy).$projectFilterParam.'&offset='.urlencode($offset), null);
         $output  .= '<form method="post">';
-        $output  .= html_build_list_table_top($titles);
+        $output  .= html_build_list_table_top($titles, $links);
         foreach ($customQuotas as $row) {
             $project     = $this->projectManager->getProject($row[Statistics_ProjectQuotaDao::GROUP_ID]);
             $projectName = (empty($project)) ? '' : $project->getPublicName();

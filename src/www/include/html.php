@@ -109,8 +109,12 @@ function html_build_list_table_top ($title_arr,$links_arr=false,$mass_change=fal
 	$count=count($title_arr);
 	if ($links_arr) {
 		for ($i=0; $i<$count; $i++) {
-			$return .= '
-			<TD class="boxtitle"><a class=sortbutton href="'.urlencode($links_arr[$i]).'">'.$purifier->purify($title_arr[$i]).'</A></TD>';
+            if (empty($links_arr[$i])) {
+                $return .= '<td class="boxtitle">' . $purifier->purify($title_arr[$i]) . '</td>';
+            } else {
+                $return .= '
+			        <TD class="boxtitle"><a class=sortbutton href="' . $links_arr[$i] . '">' . $purifier->purify($title_arr[$i]) . '</A></TD>';
+            }
 		}
 	} else {
 		for ($i=0; $i<$count; $i++) {
