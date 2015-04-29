@@ -54,38 +54,40 @@ if (is_array($sparkline_urls)) {
             
             //Get the reference
             $ref = $reference_manager->loadReferenceFromKeywordAndNumArgs($key, $group_id, count($args));
+
+            if ($ref) {
+                // Get groupname (might be useful in replace rules)
+                $projname = null;
+                $project = $project_manager->getProject($group_id);
+                if ($project) {
+                    $projname = $project->getUnixName();
+                }
+
+                $ref->replaceLink($args, $projname);
             
-            // Get groupname (might be useful in replace rules)
-            $projname = null;
-            $project = $project_manager->getProject($group_id);
-            if ($project) {
-                $projname = $project->getUnixName();
-            }
-            
-            $ref->replaceLink($args, $projname);
-            
-            switch ($ref->getServiceShortName()) {
-            case 'tracker':
-            case 'svn':
-            case 'cvs':
-            case 'file':
-                break;
-                
-            default:
-                $res_sparkline = '';
-                //Process to display the reference sparkline (ex: Hudson jobs)
-                $em->processEvent(
-                    Event::AJAX_REFERENCE_SPARKLINE, 
-                    array(
-                        'reference'=> $ref,
-                        'keyword'  => $key,
-                        'group_id' => $group_id,
-                        'val'      => $val,
-                        'sparkline'=> &$res_sparkline
-                    )
-                );
-                if ($res_sparkline) {
-                    $json[$url] = $res_sparkline;
+                switch ($ref->getServiceShortName()) {
+                case 'tracker':
+                case 'svn':
+                case 'cvs':
+                case 'file':
+                    break;
+
+                default:
+                    $res_sparkline = '';
+                    //Process to display the reference sparkline (ex: Hudson jobs)
+                    $em->processEvent(
+                        Event::AJAX_REFERENCE_SPARKLINE,
+                        array(
+                            'reference'=> $ref,
+                            'keyword'  => $key,
+                            'group_id' => $group_id,
+                            'val'      => $val,
+                            'sparkline'=> &$res_sparkline
+                        )
+                    );
+                    if ($res_sparkline) {
+                        $json[$url] = $res_sparkline;
+                    }
                 }
             }
         }
