@@ -92,8 +92,8 @@ class Docman_View_Admin_Metadata extends Docman_View_Extra {
                                         array('action' => 'admin_delete_metadata',
                                               'md' => $md->getLabel()));
                 
-                $warn = $this->hp->purify(addslashes($GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_list_delete_warn', $md->getName())));
-                $alt  = $this->hp->purify($GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_list_delete_alt', $md->getName()));
+                $warn  = $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_list_delete_warn', $this->hp->purify($md->getName()));
+                $alt   = $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_list_delete_alt', $this->hp->purify($md->getName()));
                 $trash = html_trash_link($link, $warn, $alt);                    
             }
             $content .= '<td>'.$trash.'</td>';
