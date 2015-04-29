@@ -834,7 +834,7 @@ class Event {
      * Expected result:
      *    'allow_restricted' => boolean
      */
-    const IS_SCRIPT_ALLOWED_FOR_RESTRICTED = 'is_script_allowed_for_restricted';
+    const IS_SCRIPT_HANDLED_FOR_RESTRICTED = 'is_script_handled_for_restricted';
 
     /**
      * Sends-out an event to get all services that handle independently restricted users

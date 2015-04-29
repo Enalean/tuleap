@@ -591,7 +591,7 @@ class URLVerification {
         $event_manager    = EventManager::instance();
 
         $event_manager->processEvent(
-            Event::IS_SCRIPT_ALLOWED_FOR_RESTRICTED,
+            Event::IS_SCRIPT_HANDLED_FOR_RESTRICTED,
             array(
                 'allow_restricted' => &$allow_restricted,
                 'user'             => $user,

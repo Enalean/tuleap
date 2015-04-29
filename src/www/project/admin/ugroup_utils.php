@@ -211,16 +211,29 @@ function ugroup_user_is_member($user_id, $ugroup_id, $group_id, $atid=0) {
     } else if ($ugroup_id==$GLOBALS['UGROUP_ANONYMOUS']) { 
         // Anonymous user
         return true;
-    } else if ($ugroup_id==$GLOBALS['UGROUP_REGISTERED'] && ! ForgeConfig::areRestrictedUsersAllowed()) {
-        // Registered user
-        return $user_id != 0;
     } else if ($ugroup_id==$GLOBALS['UGROUP_AUTHENTICATED']) {
         // Registered user
         return $user_id != 0;
+    } else if ($ugroup_id==$GLOBALS['UGROUP_REGISTERED'] && ! ForgeConfig::areRestrictedUsersAllowed()) {
+        // Registered user
+        return $user_id != 0;
     } else if ($ugroup_id==$GLOBALS['UGROUP_REGISTERED'] && ForgeConfig::areRestrictedUsersAllowed()) {
-        // Non-restricted user
-        $user = UserManager::instance()->getUserById($user_id);
-        return ! $user->isRestricted();
+        $user                             = UserManager::instance()->getUserById($user_id);
+        $called_script_handles_restricted = false;
+        $event_manager                    = EventManager::instance();
+        $script                           = isset($_SERVER['SCRIPT_NAME']) ? $_SERVER['SCRIPT_NAME'] : '';
+
+        $event_manager->processEvent(
+            Event::IS_SCRIPT_HANDLED_FOR_RESTRICTED,
+            array(
+                'allow_restricted' => &$called_script_handles_restricted,
+                'user'             => $user,
+                'uri'              => $script
+            )
+        );
+
+        // Non-restricted user or restricted member in service that doesn't yet handle restricted users independently
+        return ! $user->isRestricted() || ! $called_script_handles_restricted;
     } else if ($ugroup_id==$GLOBALS['UGROUP_PROJECT_MEMBERS']) {
         // Project members
         if ($user->isMember($group_id)) { return true; }
