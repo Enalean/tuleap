@@ -8,6 +8,7 @@ Version 8.1 (not yet released)
 	* request #7938: Allow proper reverse proxy of Tuleap (Allow to query REST API in HTTP without SSL)
 
 	== Bug Fix ==
+	* request #8045: restricted user cannot access services even if they are a project member
 	* request #8050: Fatal error with sparklines
 	* request #7780: service_file_lbl_key is displayed in the toolbar in frs > edit package
 	* request #8015: Fix reflected XSS in the user group creation	
@@ -28,7 +29,7 @@ Version 8.1 (not yet released)
 
 	== Plugins ==
 	* tracker: 5.616
-	* git: 4.42
+	* git: 4.43
 	* ldap: 3.78
 	* webdav: 1.9.11
 	* mediawiki: 0.68

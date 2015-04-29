@@ -1,3 +1,6 @@
+Version 4.43 - Tuleap 8.1
+    * request #8045: restricted user cannot access services even if they are a project member
+
 Version 4.42 - Tuleap 8.1
     * request #8027: Git repositories in private projects can be accessed by non project members
 
