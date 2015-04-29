@@ -173,10 +173,10 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
             $html .= '<div class="tracker_artifact_followup_comment">';
             $html .= $comment->fetchFollowUp();
             $html .= '</div>';
-        }
 
-        if ($comment->fetchFollowUp() && $this->diffToPrevious()) {
-            $html .= '<hr size="1" />';
+            if ($comment->fetchFollowUp() && $this->diffToPrevious()) {
+                $html .= '<hr size="1" />';
+            }
         }
 
         //The changes
