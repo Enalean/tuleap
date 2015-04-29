@@ -1,3 +1,6 @@
+Version 2.26.74 - Tuleap 8.1
+    * request #8040: avoid to display HTML entities in the popup when you delete a property in Docman
+
 Version 2.26.73 - Tuleap 8.1
     * request #8027: Git repositories in private projects can be accessed by non project members
 
