@@ -424,12 +424,14 @@ class ProjectDao extends DataAccessObject {
             $long_desc  = $this->searchExplodeMatch('unix_group_name', $words);
         }
 
+        $private = $this->da->quoteSmart(Project::ACCESS_PRIVATE);
+
         $sql = "SELECT DISTINCT group_name, unix_group_name, groups.group_id, short_description
                 FROM groups
                     INNER JOIN group_desc_value ON (group_desc_value.group_id = groups.group_id)
                     $from
                 WHERE status='A'
-                AND is_public='1'
+                AND access != $private
                 AND (
                         (group_name LIKE $group_name)
                      OR (short_description LIKE $short_desc)
