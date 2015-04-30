@@ -174,6 +174,9 @@ function html_build_select_box_from_array ($vals,$select_name,$checked_val='xzxz
 	return $return;
 }
 
+/**
+ * @deprecated This function miss some purifications voluntary. Please, DO NOT USE it anymore !
+ */
 function html_build_select_box_from_arrays (
     $vals,
     $texts,
@@ -230,10 +233,10 @@ function html_build_select_box_from_arrays (
 
 	if ( is_array($checked_val) ) {
 		$return .= '
-			<SELECT id="'.$hp->purify($select_name).'" NAME="'.$hp->purify($select_name).'[]" MULTIPLE SIZE="6">';
+			<SELECT id="'.$select_name.'" NAME="'.$select_name.'[]" MULTIPLE SIZE="6">';
 	} else {
 		$return .= '
-			<SELECT id="'.$hp->purify($select_name).'" NAME="'.$hp->purify($select_name).'">';
+			<SELECT id="'.$select_name.'" NAME="'.$select_name.'">';
 	}
 
 	/*
