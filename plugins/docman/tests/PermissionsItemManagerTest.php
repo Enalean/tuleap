@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -44,6 +44,8 @@ class Docman_PermissionsItemManager_Test extends TuleapTestCase {
         stub($this->project)->getUnixName()->returns('gpig');
         stub($this->project)->getID()->returns($this->uniqId());
 
+        stub($this->permissions_manager)->getAuthorizedUgroupIds('*', 'PLUGIN_DOCMAN_ADMIN')->returns(array(114));
+
         PermissionsManager::setInstance($this->permissions_manager);
         ProjectManager::setInstance($this->project_manager);
         Docman_ItemFactory::setInstance($this->project->getID(), mock('Docman_ItemFactory'));
@@ -69,8 +71,15 @@ class Docman_PermissionsItemManager_Test extends TuleapTestCase {
     }
 
     public function itReturnsPermissionsThanksToPermissionsManager() {
+        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject()->returns(array(1));
+        $this->permissions_manager->expectOnce('getAuthorizedUGroupIdsForProject', array($this->project, $this->item_id, self::PERMISSIONS_TYPE));
+        $this->docman_permissions->exportPermissions($this->docman_item);
+    }
+
+    public function itAsksForDocmanAdminGroupIfNoPermissionSet() {
         stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject()->returns(array());
         $this->permissions_manager->expectOnce('getAuthorizedUGroupIdsForProject', array($this->project, $this->item_id, self::PERMISSIONS_TYPE));
+        $this->permissions_manager->expectOnce('getAuthorizedUgroupIds', array('*', 'PLUGIN_DOCMAN_ADMIN'));
         $this->docman_permissions->exportPermissions($this->docman_item);
     }
 
