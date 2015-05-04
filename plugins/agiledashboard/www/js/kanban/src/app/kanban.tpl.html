@@ -6,7 +6,7 @@
 
 <div id="kanban-board" resize>
     <div class="backlog"
-        ng-class="kanban.backlog.is_open ? 'column-displayed' : 'column-hidden'"
+        ng-class="{'column-displayed': kanban.backlog.is_open, 'column-hidden': ! kanban.backlog.is_open, 'small_column': kanban.backlog.is_small_width}"
         ng-click="!kanban.backlog.is_open && (kanban.backlog.is_open = true)"
         ng-attr-title="{{ kanban.backlog.is_open ? '' : 'Toggle the backlog' | translate }}"
         ng-style="{width: kanban.backlog.resize_width}"
@@ -30,6 +30,7 @@
             >
                 <li ui-tree-node ng-repeat="item in kanban.backlog.content" ng-include="'kanban-item/kanban-item.tpl.html'"></li>
             </ul>
+            <add-in-place column="kanban.backlog" create-item="kanban.createItemInPlaceInBacklog"></add-in-place>
         </div>
         <div class="column-label">
             <div ng-style="{top: kanban.backlog.resize_top, left: kanban.backlog.resize_left}">
@@ -41,7 +42,12 @@
 
     <div ng-repeat="column in kanban.board.columns"
         class="column"
-        ng-class="{'column-displayed': column.is_open, 'column-hidden': ! column.is_open, 'wip-reached': kanban.isColumnWipReached(column) }"
+        ng-class="{
+            'column-displayed': column.is_open,
+            'column-hidden': ! column.is_open,
+            'wip-reached': kanban.isColumnWipReached(column),
+            'small_column': column.is_small_width
+        }"
         ng-click="column.is_open = true"
         ng-attr-title="{{ column.is_open ? '' : 'Toggle this column' | translate }}"
         ng-style="{width: column.resize_width}"
@@ -83,6 +89,7 @@
             >
                 <li ui-tree-node ng-repeat="item in column.content" ng-include="'kanban-item/kanban-item.tpl.html'"></li>
             </ul>
+            <add-in-place column="column" create-item="kanban.createItemInPlace"></add-in-place>
         </div>
         <div class="column-label">
             <div ng-style="{top: column.resize_top, left: column.resize_left}">
@@ -93,7 +100,7 @@
     </div>
 
     <div class="archive"
-        ng-class="kanban.archive.is_open ? 'column-displayed' : 'column-hidden'"
+        ng-class="{'column-displayed': kanban.archive.is_open, 'column-hidden': ! kanban.archive.is_open, 'small_column': kanban.archive.is_small_width}"
         ng-click="kanban.archive.is_open = true"
         ng-attr-title="{{ kanban.archive.is_open ? '' : 'Toggle the archive' | translate }}"
         ng-style="{width: kanban.archive.resize_width}"

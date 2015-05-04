@@ -1,0 +1,16 @@
+<div class="column-content-addinplace"
+    ng-style="{width: column.resize_width}"
+    ng-class="{open: addInPlace.isOpen()}"
+    esc-key="addInPlace.close()"
+>
+    <i class="icon-plus" ng-click="addInPlace.open()"></i>
+    <form ng-submit="addInPlace.submit()" ng-if="addInPlace.isOpen()">
+        <div class="input-append">
+            <input type="text" ng-model="addInPlace.summary" placeholder="{{ 'Card summary' | translate }}" />
+            <button class="btn" type="submit"><i class="icon-ok"></i></button>
+            <button class="btn" type="button"  ng-click="addInPlace.close()">
+                <i class="icon-remove"></i>
+            </button>
+        </div>
+    </form>
+</div>

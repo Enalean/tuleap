@@ -24,6 +24,10 @@ msgstr ""
 msgid "Archive:"
 msgstr "Archive :"
 
+#: src/app/add-in-place/add-in-place.tpl.html
+msgid "Card summary"
+msgstr "Titre de la carte"
+
 #: src/app/app-kanban-controller.js
 msgid "Column:"
 msgstr "Colonne :"
@@ -31,6 +35,10 @@ msgstr "Colonne :"
 #: src/app/wip-popover/wip-popover.tpl.html
 msgid "Define max:"
 msgstr "Maximum :"
+
+#: src/app/error/error.tpl.html
+msgid "Error details"
+msgstr "Détails de l'erreur"
 
 #: src/app/app-kanban-controller.js
 msgid "Kanban:"
@@ -43,6 +51,10 @@ msgstr "OK, rafraichir la page"
 #: src/app/error/error.tpl.html
 msgid "Oh snap!"
 msgstr "Oups !"
+
+#: src/app/error/error.tpl.html
+msgid "Show details"
+msgstr "Afficher plus de détails"
 
 #: src/app/kanban.tpl.html
 msgid "Toggle the archive"

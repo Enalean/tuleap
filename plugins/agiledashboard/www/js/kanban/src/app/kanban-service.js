@@ -12,16 +12,16 @@
         });
 
         return {
-            getKanban:  getKanban,
-            getBacklog: getBacklog,
-            getArchive: getArchive,
-            getItems:   getItems,
-            reorderColumn:  reorderColumn,
-            reorderBacklog: reorderBacklog,
-            reorderArchive: reorderArchive,
-            moveInBacklog: moveInBacklog,
-            moveInArchive: moveInArchive,
-            moveInColumn: moveInColumn,
+            getKanban           : getKanban,
+            getBacklog          : getBacklog,
+            getArchive          : getArchive,
+            getItems            : getItems,
+            reorderColumn       : reorderColumn,
+            reorderBacklog      : reorderBacklog,
+            reorderArchive      : reorderArchive,
+            moveInBacklog       : moveInBacklog,
+            moveInArchive       : moveInArchive,
+            moveInColumn        : moveInColumn,
             setWipLimitForColumn: setWipLimitForColumn
         };
 
