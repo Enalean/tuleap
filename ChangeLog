@@ -1,10 +1,9 @@
-Version 8.1 (not yet released)
+Version 8.1 (Monday, May 4th 2015)
 
 	== Enhancement ==
 	* story #7813: restricted users can view unrestricted public projects in trove cats
 	* request #7979: Disable usage statistics in project administration
 	* request #7384: restoring a git repository is now done by the APP user
-	* story #7813: Refactoring- Introduce ConfigValueFileProvider
 	* request #7938: Allow proper reverse proxy of Tuleap (Allow to query REST API in HTTP without SSL)
 
 	== Bug Fix ==
@@ -12,21 +11,23 @@ Version 8.1 (not yet released)
 	* request #8045: restricted user cannot access services even if they are a project member
 	* request #8050: Fatal error with sparklines
 	* request #7780: service_file_lbl_key is displayed in the toolbar in frs > edit package
-	* request #8015: Fix reflected XSS in the user group creation	
-	* request #8017: SQL injection in user groups project administration
 	* request #8012: /soap/index.php is no more reachable; project data no-longer exports
-	* request #7974: Prevent SQL injections at the project creation
 	* request #7978: REST route called in top backlog in planning v2 contians a PHP notice
-	* request #7977: Reflected XSS in project statistics
-	* request #7790: Add missing anti-CSRF token in SSH keys edit form and bookmarks management
-	* request #7797: Fix persistent XSS in autocomplete forms
 	* request #7985: SQL permissions object_id with no quotes if it is an ID
-	* request #7763: Avoid errors concerning SELinux policies in packages
 	* request #8023: Infinite loop when Tracker plugin is restricted
-	* request #8016 Force codendiadm owner group for FRS folder
+	* request #8016: Force codendiadm owner group for FRS folder
 	* request #8035: Missing route in REST API: OPTIONS projects/id/user_groups
 	* request #8039: Fix the purification in user group permissions
 	* request #8044: Fatal error on full text search
+
+	== Security ==
+	* request #8015: Fix reflected XSS in the user group creation
+	* request #8017: SQL injection in user groups project administration
+	* request #7974: Prevent SQL injections at the project creation
+	* request #7977: Reflected XSS in project statistics
+	* request #7790: Add missing anti-CSRF token in SSH keys edit form and bookmarks management
+	* request #7797: Fix persistent XSS in autocomplete forms
+	* request #7763: Avoid errors concerning SELinux policies in packages
 
 	== Plugins ==
 	* tracker: 5.616
@@ -51,11 +52,8 @@ Version 8.1 (not yet released)
 	* REST API: 1.8
 
 	== Development ==
-	* Story #7886: Fix error with Config in Users (avatar)
 	* story #7742: ROOT_DAILY now logs if Exceptions are thrown during process
 	* Fix test suite
-	* story #7813: Launch an event on access platform switch
-	* story #7813: Add old_access information on project access switch
 
 Version 8.0 (Thursday, April 2nd 2015)
 
