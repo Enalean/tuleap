@@ -150,21 +150,22 @@ sub get_emails_by_path {
     my ($query, $res);
     # Split a given path into subpathes according to depth, then build a regular expression like below:
     # Path: '/trunk/src/common/' =>
-    # Regex: '^(/trunk)$|^(/trunk/)$|^(/trunk/src)$|^(/trunk/src/)$|^(/trunk/src/common)$|^(/trunk/src/common/)$'
+    # Regex: '^(/(trunk|\\*))$|^(/(trunk|\\*)/)$|^(/(trunk|\\*)/(src|\\*))$|^(/(trunk|\\*)/(src|\\*)/)$|^(/(trunk|\\*)/(src|\\*)/(common|\\*))$|^(/(trunk|\\*)/(src|\\*)/(common|\\*)/)$'
     my @dirs = split('/', $changed_directory);
+    my $starOperator = "\\*";
+
     $root = "/";
     $patternMatcher = '';
     $patternBuilder = '';
     foreach my $dirVal (@dirs) {
+        $patternBuilder .= $root.'('.$dirVal.'|'. $starOperator .')';
+
         if ($patternMatcher ne '') {
-                $patternBuilder .= $root.$dirVal;
                 $patternMatcher .= '|^('.$patternBuilder.')$|^('.$patternBuilder.'/)$';
         } else {
-                $patternBuilder .= $root.$dirVal;
                 $patternMatcher .= '^('.$patternBuilder.')$|^('.$patternBuilder.'/)$';
         }
     }
-
     my $groupid = $dbh->quote($groupid);
     if ($patternMatcher ne '') {
         my $patternMatcher = $dbh->quote($patternMatcher);
