@@ -223,7 +223,8 @@ class Git extends PluginController {
             new User_LoginManager(
                 EventManager::instance(),
                 UserManager::instance(),
-                new User_PasswordExpirationChecker()
+                new User_PasswordExpirationChecker(),
+                PasswordHandlerFactory::getPasswordHandler()
             ),
             PermissionsManager::instance(),
             $logger

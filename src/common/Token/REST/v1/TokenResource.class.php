@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2015. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@ use User_LoginManager;
 use User_InvalidPasswordWithUserException;
 use User_InvalidPasswordException;
 use User_PasswordExpirationChecker;
+use PasswordHandlerFactory;
 
 /**
  * Wrapper for token related REST methods
@@ -62,7 +63,8 @@ class TokenResource {
             $user_login = new User_LoginManager(
                 EventManager::instance(),
                 $this->user_manager,
-                new User_PasswordExpirationChecker()
+                new User_PasswordExpirationChecker(),
+                PasswordHandlerFactory::getPasswordHandler()
             );
 
             $user  = $user_login->authenticate($username, $password);

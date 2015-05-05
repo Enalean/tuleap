@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ use Rest_TokenDao;
 use Rest_TokenManager;
 use Rest_TokenFactory;
 use Rest_Token;
+use PasswordHandlerFactory;
 
 class UserManager {
 
@@ -56,7 +57,8 @@ class UserManager {
             new User_LoginManager(
                 EventManager::instance(),
                 $user_manager,
-                new User_PasswordExpirationChecker()
+                new User_PasswordExpirationChecker(),
+                PasswordHandlerFactory::getPasswordHandler()
             )
         );
     }

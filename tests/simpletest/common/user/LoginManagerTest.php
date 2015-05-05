@@ -26,7 +26,7 @@ class User_LoginManagerTest extends TuleapTestCase {
         parent::setUp();
         $this->event_manager = mock('EventManager');
         $this->user_manager  = mock('UserManager');
-        $this->login_manager = new User_LoginManager($this->event_manager, $this->user_manager, mock('User_PasswordExpirationChecker'));
+        $this->login_manager = new User_LoginManager($this->event_manager, $this->user_manager, mock('User_PasswordExpirationChecker'), mock('PasswordHandler'));
     }
 
     public function itDelegatesAuthenticationToPlugin() {
@@ -114,13 +114,15 @@ class User_LoginManager_validateAndSetCurrentUserTest extends TuleapTestCase {
     private $user_manager;
     private $login_manager;
     private $password_expiration_checker;
+    private $password_handler;
 
     public function setUp() {
         parent::setUp();
         $this->event_manager = mock('EventManager');
         $this->user_manager  = mock('UserManager');
         $this->password_expiration_checker = mock('User_PasswordExpirationChecker');
-        $this->login_manager = new User_LoginManager($this->event_manager, $this->user_manager, $this->password_expiration_checker);
+        $this->password_handler = mock('PasswordHandler');
+        $this->login_manager = new User_LoginManager($this->event_manager, $this->user_manager, $this->password_expiration_checker, $this->password_handler);
     }
 
     public function itPersistsValidUser() {
@@ -159,7 +161,7 @@ class User_LoginManagerPluginsTest extends TuleapTestCase {
         parent::setUp();
         $this->event_manager = new EventManager();
         $this->user_manager  = mock('UserManager');
-        $this->login_manager = new User_LoginManager($this->event_manager, $this->user_manager, mock('User_PasswordExpirationChecker'));
+        $this->login_manager = new User_LoginManager($this->event_manager, $this->user_manager, mock('User_PasswordExpirationChecker'), mock('PasswordHandler'));
     }
 
     public function authenticationSucceed(array $params) {
