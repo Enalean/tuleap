@@ -199,6 +199,15 @@ class Git_SystemEventManager {
         }
     }
 
+    public function queueDumpOfAllMirroredRepositories() {
+        $this->system_event_manager->createEvent(
+            SystemEvent_GIT_DUMP_ALL_MIRRORED_REPOSITORIES::NAME,
+            '',
+            SystemEvent::PRIORITY_HIGH,
+            SystemEvent::OWNER_APP
+        );
+    }
+
     public function isRepositoryMigrationToGerritOnGoing(GitRepository $repository) {
         return $this->system_event_manager->isThereAnEventAlreadyOnGoingMatchingFirstParameter(SystemEvent_GIT_GERRIT_MIGRATION::NAME, $repository->getId());
     }
@@ -225,6 +234,7 @@ class Git_SystemEventManager {
             SystemEvent_GIT_EDIT_SSH_KEYS::NAME,
             SystemEvent_GIT_DUMP_ALL_SSH_KEYS::NAME,
             SystemEvent_GIT_PROJECTS_UPDATE::NAME,
+            SystemEvent_GIT_DUMP_ALL_MIRRORED_REPOSITORIES::NAME,
         );
     }
 

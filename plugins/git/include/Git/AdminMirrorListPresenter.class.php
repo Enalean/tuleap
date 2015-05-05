@@ -76,4 +76,12 @@ class Git_AdminMirrorListPresenter extends Git_AdminMirrorPresenter {
     public function list_of_mirrors_not_empty() {
         return count($this->list_of_mirrors) > 0;
     }
+
+    public function dump_mirrored_repositories_label() {
+        return $GLOBALS['Language']->getText('plugin_git','dump_mirrored_repositories_label');
+    }
+
+    public function dump_mirrored_repositories_text() {
+        return $GLOBALS['Language']->getText('plugin_git', 'dump_mirrored_repositories_text');
+    }
 }

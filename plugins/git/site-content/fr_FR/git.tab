@@ -324,6 +324,9 @@ plugin_git	admin_mirror_updated	Miroir modifié !
 plugin_git	admin_mirror_cannot_delete	Impossible de supprimer le mirroir
 plugin_git	admin_mirror_deleted	Miroir supprimé!
 plugin_git	add_mirror	Ajouter un nouveau mirroir
+plugin_git	dump_mirrored_repositories_label	Reconstruire la configuration des dépôt mirroirs
+plugin_git	dump_mirrored_repositories_text	Si vous cliquez sur ce bouton, un évènement système sera généré pour reconstruire la configuration des dépôts mirroirs. Cette reconstruction réécrira la configuration de gitolite en tenant compte du hostname de chaque mirroir ainsi que de celui de ce serveur définit dans le fichier .gitolite.rc.
+plugin_git	dump_gitolite_conf_queued	Un évènement système a été généré. La configuration de gitolite sera reconstruite au moment de son éxécution.<a href="$1"> La queue Git se trouve ici</a>.
 plugin_git	mirror_section_title	Administration des mirroirs
 plugin_git	url_label	Hôte SSH
 plugin_git	hostname_label	Hôte
