@@ -1,3 +1,6 @@
+Version 2.26.75 - Tuleap 8.2
+    * request #8054: Poor SQL perf due to docman permissions
+
 Version 2.26.74 - Tuleap 8.1
     * request #8040: avoid to display HTML entities in the popup when you delete a property in Docman
 
