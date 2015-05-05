@@ -35,25 +35,19 @@ class GitViews_RepoManagement_Pane_GerritTest extends TuleapTestCase {
         stub($this->driver_factory)->getDriver()->returns($this->driver);
     }
 
-    public function testCanBeDisplayedReturnsFalseIfAuthTypeNotLdapAndGerritServersSet() {
-        //set of type not ldap
-        ForgeConfig::set('sys_auth_type', 'not_ldap');
-
-        $gerrit_servers = array('IAmAServer');
-        $pane = new GitViews_RepoManagement_Pane_Gerrit(
-            $this->repository,
-            $this->request,
-            $this->driver_factory,
-            $gerrit_servers,
-            array()
-        );
-
-        $this->assertFalse($pane->canBeDisplayed());
+    public function tearDown() {
+        EventManager::clearInstance();
     }
 
-    public function testCanBeDisplayedReturnsFalseIfAuthTypeLdapAndGerritServersNotSet() {
-        //set of type ldap
-        ForgeConfig::set('sys_auth_type', ForgeConfig::AUTH_TYPE_LDAP);
+    public function testCanBeDisplayedReturnsFalseIfPlatformCannotUseGerritAndGerritServersNotSet() {
+        $plugin = new GitViews_RepoManagement_Pane_GerritTest_LDAP_FakePlugin();
+        EventManager::instance()->addListener(
+            GIT_EVENT_PLATFORM_CAN_USE_GERRIT,
+            $plugin,
+            'git_event_platform_cannot_use_gerrit',
+            false,
+            0
+        );
 
         $gerrit_servers = array();
         $pane = new GitViews_RepoManagement_Pane_Gerrit(
@@ -67,9 +61,59 @@ class GitViews_RepoManagement_Pane_GerritTest extends TuleapTestCase {
         $this->assertFalse($pane->canBeDisplayed());
     }
 
-    public function testCanBeDisplayedReturnsTrueIfAuthTypeLdapAndGerritServersSet() {
-        //set of type ldap
-        ForgeConfig::set('sys_auth_type', ForgeConfig::AUTH_TYPE_LDAP);
+    public function testCanBeDisplayedReturnsFalseIfPlatformCannotUseGerritAndGerritServersSet() {
+        $plugin = new GitViews_RepoManagement_Pane_GerritTest_LDAP_FakePlugin();
+        EventManager::instance()->addListener(
+            GIT_EVENT_PLATFORM_CAN_USE_GERRIT,
+            $plugin,
+            'git_event_platform_cannot_use_gerrit',
+            false,
+            0
+        );
+
+        $gerrit_servers = array('IAmAServer');
+        $pane = new GitViews_RepoManagement_Pane_Gerrit(
+            $this->repository,
+            $this->request,
+            $this->driver_factory,
+            $gerrit_servers,
+            array()
+        );
+
+        $this->assertFalse($pane->canBeDisplayed());
+    }
+
+    public function testCanBeDisplayedReturnsFalseIfPlatformCanUseGerritAndGerritServersNotSet() {
+        $plugin = new GitViews_RepoManagement_Pane_GerritTest_LDAP_FakePlugin();
+        EventManager::instance()->addListener(
+            GIT_EVENT_PLATFORM_CAN_USE_GERRIT,
+            $plugin,
+            'git_event_platform_can_use_gerrit',
+            false,
+            0
+        );
+
+        $gerrit_servers = array();
+        $pane = new GitViews_RepoManagement_Pane_Gerrit(
+            $this->repository,
+            $this->request,
+            $this->driver_factory,
+            $gerrit_servers,
+            array()
+        );
+
+        $this->assertFalse($pane->canBeDisplayed());
+    }
+
+    public function testCanBeDisplayedReturnsTrueIfPlatformCanUseGerritAndGerritServersSet() {
+        $plugin = new GitViews_RepoManagement_Pane_GerritTest_LDAP_FakePlugin();
+        EventManager::instance()->addListener(
+            GIT_EVENT_PLATFORM_CAN_USE_GERRIT,
+            $plugin,
+            'git_event_platform_can_use_gerrit',
+            false,
+            0
+        );
 
         $gerrit_servers = array('IAmAServer');
         $pane = new GitViews_RepoManagement_Pane_Gerrit(
@@ -82,4 +126,16 @@ class GitViews_RepoManagement_Pane_GerritTest extends TuleapTestCase {
 
         $this->assertTrue($pane->canBeDisplayed());
     }
+}
+
+class GitViews_RepoManagement_Pane_GerritTest_LDAP_FakePlugin {
+
+    public function git_event_platform_cannot_use_gerrit($params) {
+        $params['platform_can_use_gerrit'] = false;
+    }
+
+    public function git_event_platform_can_use_gerrit($params) {
+        $params['platform_can_use_gerrit'] = true;
+    }
+
 }

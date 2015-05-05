@@ -56,8 +56,16 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
      * @return bool true if the pane can be displayed
      */
     public function canBeDisplayed() {
-        return (ForgeConfig::get('sys_auth_type') === ForgeConfig::AUTH_TYPE_LDAP &&
-                count($this->gerrit_servers) > 0);
+        $platform_can_use_gerrit = false;
+
+        EventManager::instance()->processEvent(
+            GIT_EVENT_PLATFORM_CAN_USE_GERRIT,
+            array(
+                'platform_can_use_gerrit' => &$platform_can_use_gerrit
+            )
+        );
+
+        return $platform_can_use_gerrit && count($this->gerrit_servers) > 0;
     }
 
     /**
