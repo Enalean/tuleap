@@ -1,3 +1,10 @@
+Version 5.617 - Tuleap 8.2
+    * request #8057 Add transaction in new changeset creation
+
+
+This commit add transaction in the new changeset creation process
+when updating an artifact
+
 Version 5.616 - Tuleap 8.1
     * request #8042: Artifact displays blank page due to fatal error when fetching followup
 
