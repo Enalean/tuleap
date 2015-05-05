@@ -128,7 +128,7 @@ class Docman_PermissionsManagerDao extends DataAccessObject {
 
         $sql =
            "SELECT * FROM plugin_docman_item
-                LEFT JOIN permissions ON permissions.object_id = plugin_docman_item.item_id
+                LEFT JOIN permissions ON permissions.object_id = CAST(plugin_docman_item.item_id as CHAR)
             WHERE plugin_docman_item.group_id = $project_id
                 AND permission_type IS NULL
             LIMIT 1
