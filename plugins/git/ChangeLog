@@ -1,3 +1,6 @@
+Version 4.44 - Tuleap 8.2
+    * request #8058: Remove never called method containing bad SQL query in GIT plugin
+
 Version 4.43 - Tuleap 8.1
     * request #8045: restricted user cannot access services even if they are a project member
 
