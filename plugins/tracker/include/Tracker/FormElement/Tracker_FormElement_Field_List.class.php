@@ -1085,7 +1085,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @param mixed                           $value                   The value submitted by the user
      * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue The data previously stored in the db
      *
-     * @return int or array of int
+     * @return boolean
      */
     protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
         return $this->getValueDao()->create($changeset_value_id, $value);

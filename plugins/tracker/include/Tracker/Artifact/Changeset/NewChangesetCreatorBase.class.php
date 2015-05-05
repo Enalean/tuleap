@@ -66,6 +66,8 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         $send_notification,
         $comment_format
     ) {
+        $this->changeset_dao->startTransaction();
+
         $comment = trim($comment);
 
         $email = null;
@@ -87,12 +89,19 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         $changeset_id = $this->changeset_dao->create($artifact->getId(), $submitter->getId(), $email, $submitted_on);
         if(! $changeset_id) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'unable_update'));
-            return false;
+            $this->changeset_dao->rollBack();
+            throw new Tracker_ChangesetNotCreatedException();
         }
 
-        $this->storeComment($artifact, $comment, $submitter, $submitted_on, $comment_format, $changeset_id);
+        if (! $this->storeComment($artifact, $comment, $submitter, $submitted_on, $comment_format, $changeset_id)) {
+            $this->changeset_dao->rollBack();
+            throw new Tracker_CommentNotStoredException();
+        }
 
-        $this->storeFieldsValues($artifact, $previous_changeset, $fields_data, $submitter, $changeset_id);
+        if (! $this->storeFieldsValues($artifact, $previous_changeset, $fields_data, $submitter, $changeset_id)) {
+            $this->changeset_dao->rollBack();
+            throw new Tracker_FieldValueNotStoredException();
+        }
 
         $new_changeset = new Tracker_Artifact_Changeset(
             $changeset_id,
@@ -103,7 +112,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         );
         $artifact->addChangeset($new_changeset);
 
-        $this->saveArtifactAfterNewChangeset(
+        $save_after_ok = $this->saveArtifactAfterNewChangeset(
             $artifact,
             $fields_data,
             $submitter,
@@ -111,7 +120,18 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
             $previous_changeset
         );
 
+        if (! $save_after_ok) {
+            $this->changeset_dao->rollBack();
+            throw new Tracker_AfterSaveException();
+        }
+
         $this->event_manager->processEvent(TRACKER_EVENT_ARTIFACT_POST_UPDATE, array('artifact' => $artifact));
+
+        try {
+            $this->changeset_dao->commit();
+        } catch (Exception $exception) {
+            throw new Tracker_ChangesetCommitException();
+        }
 
         if ($send_notification) {
             $artifact->getChangeset($changeset_id)->notify();
@@ -134,9 +154,13 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
 
     private function storeFieldsValues(Tracker_Artifact $artifact, $previous_changeset, array $fields_data, PFUser $submitter, $changeset_id) {
         $used_fields = $this->formelement_factory->getUsedFields($artifact->getTracker());
+        $save_ok     = true;
+
         foreach ($used_fields as $field) {
-            $this->saveNewChangesetForField($field, $artifact, $previous_changeset, $fields_data, $submitter, $changeset_id);
+            $save_ok = $save_ok && $this->saveNewChangesetForField($field, $artifact, $previous_changeset, $fields_data, $submitter, $changeset_id);
         }
+
+        return $save_ok;
     }
 
     private function storeComment(
@@ -151,7 +175,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
 
         $comment_added = $this->changeset_comment_dao->createNewVersion($changeset_id, $comment, $submitter->getId(), $submitted_on, 0, $comment_format);
         if (! $comment_added) {
-            return;
+            return false;
         }
 
         $this->reference_manager->extractCrossRef(
@@ -162,6 +186,8 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
             $submitter->getId(),
             $artifact->getTracker()->getItemName()
         );
+
+        return true;
     }
 
     private function validateNewChangeset(

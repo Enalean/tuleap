@@ -35,7 +35,7 @@ class Tracker_FormElement_Field_Value_FloatDao extends Tracker_FormElement_Field
         }
         $sql = "INSERT INTO $this->table_name(changeset_value_id, value)
                 VALUES ($changeset_value_id, $value)";
-        return $this->updateAndGetLastId($sql);
+        return $this->update($sql);
     }
 
      public function createNoneValue($tracker_id, $field_id) {

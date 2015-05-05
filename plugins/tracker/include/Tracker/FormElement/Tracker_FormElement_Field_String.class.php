@@ -274,8 +274,8 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
     }
 
     protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
-        $this->getValueDao()->create($changeset_value_id, $value);
-        $this->extractCrossRefs($artifact, $value);
+        return $this->getValueDao()->create($changeset_value_id, $value) &&
+               $this->extractCrossRefs($artifact, $value);
     }
 
     public function getFieldDataFromSoapValue(stdClass $soap_value, Tracker_Artifact $artifact = null) {

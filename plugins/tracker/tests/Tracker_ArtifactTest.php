@@ -544,6 +544,8 @@ class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactT
         $comment = '';
 
         $comment_dao = new MockTracker_Artifact_Changeset_CommentDao();
+        stub($comment_dao)->createNewVersion()->returns(true);
+
         $comment_dao->expectCallCount('createNewVersion', 1);
 
         $dao = new MockTracker_Artifact_ChangesetDao();
@@ -586,6 +588,7 @@ class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactT
         $field1->setReturnValue('getId', 101);
         $field1->setReturnValue('isValid', true);
         $field1->setReturnValue('userCanUpdate', true);
+        $field1->setReturnValue('saveNewChangeset', true);
         $workflow->setReturnValue('bypassPermissions', false, array($field1));
         $field1->expectOnce('saveNewChangeset');
 
@@ -593,6 +596,7 @@ class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactT
         $field2->setReturnValue('getId', 102);
         $field2->setReturnValue('isValid', true);
         $field2->setReturnValue('userCanUpdate', false);
+        $field2->setReturnValue('saveNewChangeset', true);
         $workflow->setReturnValue('bypassPermissions', true, array($field2));
         $field2->expectOnce('saveNewChangeset', array('*', '*', '*', '*', $user, false, true));
         $factory->setReturnValue('getUsedFields', array($field1, $field2));
@@ -618,6 +622,7 @@ class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactT
         ));
 
         $art_factory = new MockTracker_ArtifactFactory();
+        stub($art_factory)->save()->returns(true);
 
         $artifact->setReturnReference('getTracker', $tracker);
         $artifact->setReturnValue('getId', 66);
@@ -734,6 +739,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $this->response->expectCallCount('addFeedback', 0);
 
         $comment_dao = new MockTracker_Artifact_Changeset_CommentDao();
+        stub($comment_dao)->createNewVersion()->returns(true);
         $comment_dao->expectCallCount('createNewVersion', 1);
 
         $dao = new MockTracker_Artifact_ChangesetDao();
@@ -757,6 +763,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $field1->setReturnValue('isValid', true);
         $field1->setReturnValue('isValidRegardingRequiredProperty', true);
         $field1->setReturnValue('userCanUpdate', true);
+        $field1->setReturnValue('saveNewChangeset', true);
         $field1->expectOnce('saveNewChangeset');
         $field2  = new MockTracker_FormElement_Field();
         $field2->setReturnValue('getId', 102);
@@ -764,11 +771,13 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $field2->setReturnValue('isValid', false, array('*', '456'));
         $field2->setReturnValue('isValidRegardingRequiredProperty', true);
         $field2->setReturnValue('userCanUpdate', true);
+        $field2->setReturnValue('saveNewChangeset', true);
         $field2->expectOnce('saveNewChangeset');
         $field3  = new MockTracker_FormElement_Field();
         $field3->setReturnValue('getId', 103);
         $field3->setReturnValue('isValid', true);
         $field3->setReturnValue('isValidRegardingRequiredProperty', true);
+        $field3->setReturnValue('saveNewChangeset', true);
         $field3->expectOnce('saveNewChangeset');
         $field3->setReturnValue('userCanUpdate', true);
         $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
@@ -810,6 +819,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $artifact->setReturnReference('getReferenceManager', $reference_manager);
         $artifact->setReturnReference('getArtifactFactory', $art_factory);
 
+        stub($art_factory)->save()->returns(true);
         $art_factory->expectOnce('save');
 
         $workflow = new MockWorkflow();
@@ -947,6 +957,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $this->response->expectCallCount('addFeedback', 0);
 
         $comment_dao = new MockTracker_Artifact_Changeset_CommentDao();
+        stub($comment_dao)->createNewVersion()->returns(true);
         $comment_dao->expectCallCount('createNewVersion', 1);
 
         $dao = new MockTracker_Artifact_ChangesetDao();
@@ -970,6 +981,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $field1->setReturnValue('isValid', true);
         $field1->setReturnValue('isValidRegardingRequiredProperty', true);
         $field1->setReturnValue('userCanUpdate', true);
+        $field1->setReturnValue('saveNewChangeset', true);
         $field1->expectOnce('saveNewChangeset');
         $field2  = new MockTracker_FormElement_Field();
         $field2->setReturnValue('getId', 102);
@@ -977,11 +989,13 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $field2->setReturnValue('isValid', false, array('*', '456'));
         $field2->setReturnValue('isValidRegardingRequiredProperty', true);
         $field2->setReturnValue('userCanUpdate', true);
+        $field2->setReturnValue('saveNewChangeset', true);
         $field2->expectOnce('saveNewChangeset');
         $field3  = new MockTracker_FormElement_Field();
         $field3->setReturnValue('getId', 103);
         $field3->setReturnValue('isValid', true);
         $field3->setReturnValue('isValidRegardingRequiredProperty', true);
+        $field3->setReturnValue('saveNewChangeset', true);
         $field3->expectOnce('saveNewChangeset');
         $field3->setReturnValue('userCanUpdate', true);
         $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
@@ -1023,6 +1037,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $artifact->setReturnReference('getReferenceManager', $reference_manager);
         $artifact->setReturnReference('getArtifactFactory', $art_factory);
 
+        stub($art_factory)->save()->returns(true);
         $art_factory->expectOnce('save');
 
         $workflow = new MockWorkflow();
@@ -1387,11 +1402,13 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
         $fields_validator = mock('Tracker_Artifact_Changeset_NewChangesetFieldsValidator');
         stub($fields_validator)->validate()->returns(true);
 
+        $comment_dao = stub('Tracker_Artifact_Changeset_CommentDao')->createNewVersion()->returns(true);
+
         $this->creator = new Tracker_Artifact_Changeset_NewChangesetCreator(
             $fields_validator,
             $factory,
             $this->changeset_dao,
-            mock('Tracker_Artifact_Changeset_CommentDao'),
+            $comment_dao,
             $this->artifact_factory,
             mock('EventManager'),
             mock('ReferenceManager')
@@ -1418,6 +1435,8 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
         stub($this->changeset_dao)->create()->returns(true);
         stub($this->artifact_factory)->save()->returns(false);
         expect($this->workflow)->after()->never();
+
+        $this->expectException('Tracker_AfterSaveException');
 
         $this->creator->create(
             $this->artifact,

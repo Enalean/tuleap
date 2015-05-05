@@ -486,14 +486,14 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      * @param mixed                           $value                   The value submitted by the user
      * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue The data previously stored in the db
      *
-     * @return int or array of int
+     * @return boolean
      */
     protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
         $content     = $this->getRightContent($value);
         $body_format = $this->getRightBodyFormat($artifact, $value);
 
-        $this->getValueDao()->createWithBodyFormat($changeset_value_id, $content, $body_format);
-        $this->extractCrossRefs($artifact, $content);
+        return $this->getValueDao()->createWithBodyFormat($changeset_value_id, $content, $body_format) &&
+               $this->extractCrossRefs($artifact, $content);
     }
 
     private function getRightContent($value) {
@@ -507,7 +507,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
     }
 
     protected function extractCrossRefs($artifact, $content) {
-        ReferenceManager::instance()->extractCrossRef(
+        return ReferenceManager::instance()->extractCrossRef(
             $content,
             $artifact->getId(),
             Tracker_Artifact::REFERENCE_NATURE,

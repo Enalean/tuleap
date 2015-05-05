@@ -1442,7 +1442,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             );
         }
 
-        $this->updateCrossReferences($artifact, $value);
+        return $this->updateCrossReferences($artifact, $value);
     }
 
     /** @return array */
@@ -1480,14 +1480,20 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      *
      * @param Tracker_Artifact $artifact the artifact that is currently updated
      * @param array            $values   the array of added and removed artifact links ($values['added_values'] is a string and $values['removed_values'] is an array of artifact ids
+     *
+     * @return boolean
      */
     protected function updateCrossReferences(Tracker_Artifact $artifact, $values) {
+        $update_ok = true;
+
         foreach ($this->getAddedArtifactIds($values) as $added_artifact_id) {
-            $this->insertCrossReference($artifact, $added_artifact_id);
+            $update_ok = $update_ok && $this->insertCrossReference($artifact, $added_artifact_id);
         }
         foreach ($this->getRemovedArtifactIds($values) as $removed_artifact_id) {
-            $this->removeCrossReference($artifact, $removed_artifact_id);
+            $update_ok = $update_ok && $this->removeCrossReference($artifact, $removed_artifact_id);
         }
+
+        return $update_ok;
     }
 
     private function getAddedArtifactIds(array $values) {
@@ -1507,7 +1513,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     }
 
     private function insertCrossReference(Tracker_Artifact $source_artifact, $target_artifact_id) {
-        $this->getTrackerReferenceManager()->insertBetweenTwoArtifacts(
+        return $this->getTrackerReferenceManager()->insertBetweenTwoArtifacts(
             $source_artifact,
             $this->getArtifactFactory()->getArtifactById($target_artifact_id),
             $this->getCurrentUser()
@@ -1515,7 +1521,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     }
 
     private function removeCrossReference(Tracker_Artifact $source_artifact, $target_artifact_id) {
-        $this->getTrackerReferenceManager()->removeBetweenTwoArtifacts(
+        return $this->getTrackerReferenceManager()->removeBetweenTwoArtifacts(
             $source_artifact,
             $this->getArtifactFactory()->getArtifactById($target_artifact_id),
             $this->getCurrentUser()

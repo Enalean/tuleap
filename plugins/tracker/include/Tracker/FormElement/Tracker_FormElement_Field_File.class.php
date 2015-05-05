@@ -783,9 +783,11 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
      * @param mixed                           $value                   The value submitted by the user
      * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue The data previously stored in the db
      *
-     * @return int or array of int
+     * @return boolean
      */
     protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
+        $save_ok = true;
+
         $success = array();
         $dao = $this->getValueDao();
         //first save the previous files
@@ -797,7 +799,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                 }
             }
             if (count($previous_fileinfo_ids)) {
-                $dao->create($changeset_value_id, $previous_fileinfo_ids);
+                $save_ok = $save_ok && $dao->create($changeset_value_id, $previous_fileinfo_ids);
             }
         }
 
@@ -848,10 +850,11 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                 }
             }
         }
+
         if (count($success)) {
-            $dao->create($changeset_value_id, $success);
+            $save_ok = $save_ok && $dao->create($changeset_value_id, $success);
         }
-        return $success;
+        return $save_ok;
     }
 
     protected function createAttachment(Tracker_FileInfo $attachment, $file_info) {

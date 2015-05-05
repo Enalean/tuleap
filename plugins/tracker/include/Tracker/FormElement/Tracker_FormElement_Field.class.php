@@ -1023,6 +1023,10 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $save_new_value = false;
         $dao            = $this->getChangesetValueDao();
 
+        if ($this instanceof Tracker_FormElement_Field_ReadOnly) {
+            return true;
+        }
+
         if ($bypass_permissions) {
             $hasPermission = true;
         } else {
@@ -1043,6 +1047,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             } else {
                 $save_new_value = true;
             }
+        } else if ($submitted_value === null) {
+            return true;
         } else if ($submitted_value !== null && $hasPermission) {
             $save_new_value = true;
         }

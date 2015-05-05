@@ -677,12 +677,14 @@ class ReferenceManager {
 
     public function insertCrossReference(CrossReference $cross_reference) {
         if(! $cross_reference->existInDb()) {
-            $cross_reference->createDbCrossRef();
+            return $cross_reference->createDbCrossRef();
         }
+
+        return true;
     }
 
     public function removeCrossReference(CrossReference $cross_reference) {
-        $cross_reference->deleteCrossReference();
+        return $cross_reference->deleteCrossReference();
     }
 
     /**

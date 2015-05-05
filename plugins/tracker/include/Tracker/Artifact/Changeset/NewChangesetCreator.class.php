@@ -60,14 +60,14 @@ class Tracker_Artifact_Changeset_NewChangesetCreator extends Tracker_Artifact_Ch
 
         if ($this->isFieldSubmitted($field, $fields_data)) {
             if ($field->userCanUpdate()) {
-                $field->saveNewChangeset($artifact, $previous_changeset, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission);
+                return $field->saveNewChangeset($artifact, $previous_changeset, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission);
             } else if ($workflow && $workflow->bypassPermissions($field)) {
-                $field->saveNewChangeset($artifact, $previous_changeset, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission, $bypass_perms);
+                return $field->saveNewChangeset($artifact, $previous_changeset, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission, $bypass_perms);
             } else {
-                $field->saveNewChangeset($artifact, $previous_changeset, $changeset_id, null, $submitter, $is_submission);
+                return $field->saveNewChangeset($artifact, $previous_changeset, $changeset_id, null, $submitter, $is_submission);
             }
         } else {
-            $field->saveNewChangeset($artifact, $previous_changeset, $changeset_id, null, $submitter, $is_submission);
+            return $field->saveNewChangeset($artifact, $previous_changeset, $changeset_id, null, $submitter, $is_submission);
         }
     }
 }
