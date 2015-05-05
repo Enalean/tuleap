@@ -21,3 +21,11 @@
 define('GIT_BASE_URL', '/plugins/git');
 define('GIT_BASE_DIR', dirname(__FILE__));
 define('GIT_TEMPLATE_DIR', GIT_BASE_DIR . '/../templates');
+
+/**
+ * Check if platform can use gerrit
+ *
+ * Parameters:
+ *     'platform_can_use_gerrit' => boolean
+ */
+define('GIT_EVENT_PLATFORM_CAN_USE_GERRIT', 'git_event_platform_can_use_gerrit');
