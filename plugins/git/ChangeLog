@@ -1,3 +1,6 @@
+Version 4.45 - Tuleap 8.2
+    * story #8021 - Write gitolite.conf in %HOSTNAME.conf if variable set in .gitolite.rc
+
 Version 4.44 - Tuleap 8.2
     * request #8058: Remove never called method containing bad SQL query in GIT plugin
 

@@ -5,7 +5,7 @@ Version 8.2 (not released yet)
 	== Plugins ==
 	* docman: 2.26.75
 	* tracker: 5.617
-	* git: 4.44
+	* git: 4.45
 
 	== Enhancement ==
 	* story #7972: specify svn notifications using the star operator
