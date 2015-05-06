@@ -58,6 +58,25 @@ class Git_Gitolite_ConfigPermissionsSerializer {
         );
     }
 
+    public function getGitoliteDotConfForHostname(array $project_names) {
+        return $this->template_renderer->renderToString(
+            'gitolite-with-hostname.conf',
+            new Git_Gitolite_Presenter_GitoliteConfPresenter(
+                $project_names,
+                $this->data_mapper->fetchAll()
+            )
+        );
+    }
+
+    public function getAllIncludes(array $project_names) {
+        return $this->template_renderer->renderToString(
+            'gitolite-includes.conf',
+            array(
+                "project_names" => $project_names
+            )
+        );
+    }
+
     public function getForRepository(GitRepository $repository) {
         $project = $repository->getProject();
         $repo_config = '';
