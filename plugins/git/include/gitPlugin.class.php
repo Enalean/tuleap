@@ -352,6 +352,12 @@ class GitPlugin extends Plugin {
                     $this->getGitoliteDriver(),
                 );
                 break;
+            case SystemEvent_GIT_DUMP_ALL_MIRRORED_REPOSITORIES::NAME:
+                $params['class'] = 'SystemEvent_GIT_DUMP_ALL_MIRRORED_REPOSITORIES';
+                $params['dependencies'] = array(
+                    $this->getGitoliteDriver()
+                );
+                break;
             default:
                 break;
         }
@@ -454,7 +460,8 @@ class GitPlugin extends Plugin {
                 new ProjectHistoryDao()
             ),
             ProjectManager::instance(),
-            $this->getManifestManager()
+            $this->getManifestManager(),
+            $this->getGitSystemEventManager()
         );
         $admin->process($request);
         $admin->display($request);

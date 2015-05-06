@@ -35,19 +35,23 @@ class Git_AdminMirrorController {
     /** @var Git_Mirror_ManifestManager */
     private $git_mirror_manifest_manager;
 
+    /** @var Git_SystemEventManager */
+    private $git_system_event_manager;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
         Git_Mirror_MirrorDataMapper $git_mirror_mapper,
         Git_MirrorResourceRestrictor $git_mirror_resource_restrictor,
         ProjectManager $project_manager,
-        Git_Mirror_ManifestManager $git_mirror_manifest_manager
+        Git_Mirror_ManifestManager $git_mirror_manifest_manager,
+        Git_SystemEventManager $git_system_event_manager
     ) {
         $this->csrf                           = $csrf;
         $this->git_mirror_mapper              = $git_mirror_mapper;
         $this->git_mirror_resource_restrictor = $git_mirror_resource_restrictor;
         $this->project_manager                = $project_manager;
         $this->git_mirror_manifest_manager    = $git_mirror_manifest_manager;
+        $this->git_system_event_manager       = $git_system_event_manager;
     }
 
     public function process(Codendi_Request $request) {
@@ -65,6 +69,8 @@ class Git_AdminMirrorController {
             $this->setMirrorRestriction($request);
         } elseif ($request->get('action') == 'update-allowed-project-list') {
             $this->updateAllowedProjectList($request);
+        } elseif ($request->get('action') == 'dump-gitolite-conf') {
+            $this->askForAGitoliteDumpConf();
         }
     }
 
@@ -165,6 +171,18 @@ class Git_AdminMirrorController {
 
         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'mirror_allowed_project_restricted_error'));
         $GLOBALS['Response']->redirect('/plugins/git/admin/?pane=mirrors_admin&action=manage-allowed-projects&mirror_id=' . $mirror_id);
+    }
+
+    private function askForAGitoliteDumpConf() {
+        $this->csrf->check();
+
+        $this->git_system_event_manager->queueDumpOfAllMirroredRepositories();
+        $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_git','dump_gitolite_conf_queued', array($this->getGitSystemEventsQueueURL())), CODENDI_PURIFIER_DISABLED);
+        $GLOBALS['Response']->redirect('/plugins/git/admin/?pane=mirrors_admin');
+    }
+
+    private function getGitSystemEventsQueueURL() {
+        return "/admin/system_events/?queue=git";
     }
 
     private function updateAllowedProjectList($request) {

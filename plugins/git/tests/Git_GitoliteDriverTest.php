@@ -90,10 +90,8 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
         stub($this->gitoliterc_reader)->getHostname()->returns(null);
 
         touch($this->_glAdmDir.'/conf/projects/project1.conf');
-        $prj = new MockProject($this);
-        $prj->setReturnValue('getUnixName', 'project1');
 
-        $this->another_gitolite_driver->updateMainConfIncludes($prj);
+        $this->another_gitolite_driver->updateMainConfIncludes();
 
         $gitoliteConf = $this->getGitoliteConf();
 
@@ -138,10 +136,8 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
         stub($this->gitoliterc_reader)->getHostname()->returns("master");
 
         touch($this->_glAdmDir.'/conf/projects/project1.conf');
-        $prj = new MockProject($this);
-        $prj->setReturnValue('getUnixName', 'project1');
 
-        $this->another_gitolite_driver->updateMainConfIncludes($prj);
+        $this->another_gitolite_driver->updateMainConfIncludes();
 
         $gitoliteConf = $this->getGitoliteConf();
 
@@ -155,10 +151,8 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
         stub($this->gitoliterc_reader)->getHostname()->returns($hostname);
 
         touch($this->_glAdmDir . '/conf/projects/project1.conf');
-        $prj = new MockProject($this);
-        $prj->setReturnValue('getUnixName', 'project1');
 
-        $this->another_gitolite_driver->updateMainConfIncludes($prj);
+        $this->another_gitolite_driver->updateMainConfIncludes();
 
         $gitoliteConf = $this->getFileConf($hostname);
         $this->assertPattern('#^include "projects/project1.conf"$#m', $gitoliteConf);
@@ -171,14 +165,12 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
         stub($this->gitoliterc_reader)->getHostname()->returns($hostname);
 
         touch($this->_glAdmDir . '/conf/projects/project1.conf');
-        $prj = new MockProject($this);
-        $prj->setReturnValue('getUnixName', 'project1');
 
         expect($this->another_git_exec)->add()->count(2);
         expect($this->another_git_exec)->add('conf/gitolite.conf')->at(0);
         expect($this->another_git_exec)->add('conf/master.conf')->at(1);
 
-        $this->another_gitolite_driver->updateMainConfIncludes($prj);
+        $this->another_gitolite_driver->updateMainConfIncludes();
     }
 }
 

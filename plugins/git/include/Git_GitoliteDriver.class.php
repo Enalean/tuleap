@@ -202,7 +202,7 @@ class Git_GitoliteDriver {
         $this->logger->debug("Write Git config: " . $project->getUnixName() . "...");
         if ($this->writeGitConfig($config_file, $project_serializer->dumpProjectRepoConf($project))) {
             $this->logger->debug("Write Git config: " . $project->getUnixName() . ": done");
-            return $this->updateMainConfIncludes($project);
+            return $this->updateMainConfIncludes();
         }
     }
     
@@ -221,7 +221,7 @@ class Git_GitoliteDriver {
         return $this->gitExec->add($config_file);
     }
 
-    public function updateMainConfIncludes($project) {
+    public function updateMainConfIncludes() {
         $git_modifications = $this->gitolite_conf_writer->writeGitoliteConfiguration();
         $files_are_correctly_added = true;
 

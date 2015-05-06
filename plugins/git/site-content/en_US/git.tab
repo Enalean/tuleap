@@ -328,6 +328,9 @@ plugin_git	admin_mirror_updated	Mirror updated!
 plugin_git	admin_mirror_cannot_delete	Failed to delete mirror
 plugin_git	admin_mirror_deleted	Mirror deleted!
 plugin_git	add_mirror	Add a new mirror
+plugin_git	dump_mirrored_repositories_label	Dump mirrored repositories configuration
+plugin_git	dump_mirrored_repositories_text	If you click this button, a system event will be queued to dump the mirrored repositories configuration. This dump will rewrite the gitolite configuration according to the hostnames of each mirror and the hostname define for this server in the .gitolite.rc file.
+plugin_git	dump_gitolite_conf_queued	A system event has been queued. The gitolite configuration will be dumped at the time of its execution.<a href="$1"> Git queue can be found here</a>.
 plugin_git	mirror_section_title	Git mirror administration
 plugin_git	url_label	SSH Host
 plugin_git	hostname_label	Hostname
