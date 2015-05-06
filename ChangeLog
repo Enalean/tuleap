@@ -2,6 +2,7 @@ Version 8.2 (not released yet)
 	== Security ==
 	* request #8002: Use a bigger RSA modulus for the creation of the SSL certificate
 	* request #7983: SQL injection in site statistics
+	* request #8034: XSS in the send message page
 
 	== Plugins ==
 	* docman: 2.26.75
