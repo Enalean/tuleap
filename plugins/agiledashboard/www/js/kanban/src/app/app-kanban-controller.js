@@ -57,11 +57,13 @@
         self.cardFieldIsFile              = CardFieldsService.cardFieldIsFile;
         self.cardFieldIsCross             = CardFieldsService.cardFieldIsCross;
         self.cardFieldIsPermissions       = CardFieldsService.cardFieldIsPermissions;
+        self.cardFieldIsUser              = CardFieldsService.cardFieldIsUser;
         self.getCardFieldListValues       = CardFieldsService.getCardFieldListValues;
         self.getCardFieldTextValue        = CardFieldsService.getCardFieldTextValue;
         self.getCardFieldFileValue        = CardFieldsService.getCardFieldFileValue;
         self.getCardFieldCrossValue       = CardFieldsService.getCardFieldCrossValue;
         self.getCardFieldPermissionsValue = CardFieldsService.getCardFieldPermissionsValue;
+        self.getCardFieldUserValue        = CardFieldsService.getCardFieldUserValue;
         self.isColumnWipReached           = isColumnWipReached;
         self.setWipLimitForColumn         = setWipLimitForColumn;
         self.userIsAdmin                  = userIsAdmin;

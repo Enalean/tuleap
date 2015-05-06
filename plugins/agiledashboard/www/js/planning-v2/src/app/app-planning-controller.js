@@ -45,11 +45,13 @@
             cardFieldIsFile                       : CardFieldsService.cardFieldIsFile,
             cardFieldIsCross                      : CardFieldsService.cardFieldIsCross,
             cardFieldIsPermissions                : CardFieldsService.cardFieldIsPermissions,
+            cardFieldIsUser                       : CardFieldsService.cardFieldIsUser,
             getCardFieldListValues                : CardFieldsService.getCardFieldListValues,
             getCardFieldTextValue                 : CardFieldsService.getCardFieldTextValue,
             getCardFieldFileValue                 : CardFieldsService.getCardFieldFileValue,
             getCardFieldCrossValue                : CardFieldsService.getCardFieldCrossValue,
             getCardFieldPermissionsValue          : CardFieldsService.getCardFieldPermissionsValue,
+            getCardFieldUserValue                 : CardFieldsService.getCardFieldUserValue,
             displayUserCantPrioritizeForBacklog   : displayUserCantPrioritizeForBacklog,
             displayUserCantPrioritizeForMilestones: displayUserCantPrioritizeForMilestones
         });

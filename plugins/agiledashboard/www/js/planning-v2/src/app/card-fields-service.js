@@ -14,11 +14,13 @@
             cardFieldIsFile             : cardFieldIsFile,
             cardFieldIsCross            : cardFieldIsCross,
             cardFieldIsPermissions      : cardFieldIsPermissions,
+            cardFieldIsUser             : cardFieldIsUser,
             getCardFieldListValues      : getCardFieldListValues,
             getCardFieldTextValue       : getCardFieldTextValue,
             getCardFieldFileValue       : getCardFieldFileValue,
             getCardFieldCrossValue      : getCardFieldCrossValue,
-            getCardFieldPermissionsValue: getCardFieldPermissionsValue
+            getCardFieldPermissionsValue: getCardFieldPermissionsValue,
+            getCardFieldUserValue       : getCardFieldUserValue
         };
 
         function cardFieldIsSimpleValue(type) {
@@ -28,7 +30,6 @@
                 case 'float':
                 case 'aid':
                 case 'atid':
-                case 'subby':
                 case 'computed':
                 case 'priority':
                     return true;
@@ -72,19 +73,29 @@
             return type == 'perm';
         }
 
-        function getCardFieldListValues(values) {
-            function getValueRenderedWithColor(value) {
-                var color = '';
+        function cardFieldIsUser(type) {
+            return type == 'subby';
+        }
 
+        function getCardFieldListValues(values) {
+            function getValueRendered(value) {
                 if (value.color) {
-                    var rgb = 'rgb(' + value.color.r + ', ' + value.color.g + ', ' + value.color.b + ')';
-                    color = '<span class="color" style="background: ' + rgb + '"></span>';
+                    return getValueRenderedWithColor(value);
+                } else if (value.avatar_url) {
+                    return getCardFieldUserValue(value);
                 }
+
+                return value.label;
+            }
+
+            function getValueRenderedWithColor(value) {
+                var rgb   = 'rgb(' + value.color.r + ', ' + value.color.g + ', ' + value.color.b + ')',
+                    color = '<span class="color" style="background: ' + rgb + '"></span>';
 
                 return color + value.label;
             }
 
-            return $sce.trustAsHtml(_.map(values, getValueRenderedWithColor).join(', '));
+            return $sce.trustAsHtml(_.map(values, getValueRendered).join(', '));
         }
 
         function getCardFieldTextValue(value) {
@@ -113,6 +124,12 @@
 
         function getCardFieldPermissionsValue(values) {
             return _(values).join(', ');
+        }
+
+        function getCardFieldUserValue(value) {
+            var avatar = '<img src="' + value.avatar_url + '">';
+
+            return '<div data-nodrag="true" class="user"><div class="avatar">' + avatar + '</div>' + value.link + '</div>';
         }
     }
 })();

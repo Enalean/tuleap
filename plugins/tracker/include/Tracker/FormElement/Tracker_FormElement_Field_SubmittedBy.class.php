@@ -172,13 +172,16 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
     }
 
     public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
+        $value              = new Tracker_FormElement_Field_List_Bind_UsersValue($changeset->getArtifact()->getSubmittedBy());
+        $submitted_by_value = $value->getFullRESTValue($this);
+
         $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation';
         $artifact_field_value_full_representation = new $classname_with_namespace;
         $artifact_field_value_full_representation->build(
             $this->getId(),
             Tracker_FormElementFactory::instance()->getType($this),
             $this->getLabel(),
-            $this->fetchArtifactValueReadOnly($changeset->getArtifact())
+            $submitted_by_value
         );
         return $artifact_field_value_full_representation;
     }
