@@ -125,5 +125,24 @@ class Tracker_FormElement_Field_List_Bind_StaticValue extends Tracker_FormElemen
         $this->rank = (int) $rank;
         return $this;
     }
+
+    public function getFullRESTValue(Tracker_FormElement_Field $field) {
+        $color      = null;
+        $decorators = $field->getDecorators();
+
+        if (! empty($decorators) && isset($decorators[$this->getId()])) {
+            $decorator = $decorators[$this->getId()];
+            $color     = array(
+                'r' => (int)$decorator->r,
+                'g' => (int)$decorator->g,
+                'b' => (int)$decorator->b
+            );
+        }
+
+        return array(
+            'label' => $this->getLabel(),
+            'color' => $color
+        );
+    }
 }
 ?>

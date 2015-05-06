@@ -47,6 +47,10 @@
                 <span class="extra_card_field_title">{{ card_field.label }}: </span>
                 <span ng-bind-html="kanban.getCardFieldPermissionsValue(card_field.granted_groups)"></span>
             </div>
+            <div ng-if="kanban.cardFieldIsUser(card_field.type) && card_field.value">
+                <span class="extra_card_field_title">{{ card_field.label }}: </span>
+                <span ng-bind-html="kanban.getCardFieldUserValue(card_field.value)"></span>
+            </div>
             <!-- Artifact links & Burndown fields are not managed yet -->
         </li>
     </ul>
