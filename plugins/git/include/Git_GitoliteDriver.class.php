@@ -67,8 +67,17 @@ class Git_GitoliteDriver {
     /** Git_Gitolite_ConfigPermissionsSerializer */
     private $permissions_serializer;
 
+    /** @var Git_Gitolite_ProjectSerializer */
+    private $project_serializer;
+
     /** @var Git_Gitolite_GitoliteConfWriter  */
     private $gitolite_conf_writer;
+
+    /** @var ProjectManager */
+    private $project_manager;
+
+    /** @var Git_Mirror_MirrorDataMapper */
+    private $mirror_data_mapper;
 
     public static $permissions_types = array(
         Git::PERM_READ  => ' R  ',
@@ -93,7 +102,9 @@ class Git_GitoliteDriver {
         Git_Exec $gitExec                        = null,
         GitRepositoryFactory $repository_factory = null,
         Git_Gitolite_ConfigPermissionsSerializer $permissions_serializer = null,
-        Git_Gitolite_GitoliteConfWriter $gitolite_conf_writer = null
+        Git_Gitolite_GitoliteConfWriter $gitolite_conf_writer = null,
+        ProjectManager $project_manager = null,
+        Git_Mirror_MirrorDataMapper $mirror_data_mapper = null
     ) {
         $this->logger                   = $logger;
         $this->git_system_event_manager = $git_system_event_manager;
@@ -105,24 +116,40 @@ class Git_GitoliteDriver {
             ProjectManager::instance()
         );
 
-        $this->url_manager = $url_manager;
-        $this->permissions_serializer = $permissions_serializer ? $permissions_serializer : new Git_Gitolite_ConfigPermissionsSerializer(
-            new Git_Mirror_MirrorDataMapper(
-                new Git_Mirror_MirrorDao,
-                UserManager::instance(),
-                new GitRepositoryFactory(
-                    $this->getDao(),
-                    ProjectManager::instance()
-                )
+        $this->project_manager        = $project_manager ? $project_manager : ProjectManager::instance();
+        $this->url_manager            = $url_manager;
+        $this->mirror_data_mapper     = $mirror_data_mapper ? $mirror_data_mapper : new Git_Mirror_MirrorDataMapper(
+            new Git_Mirror_MirrorDao,
+            UserManager::instance(),
+            new GitRepositoryFactory(
+                new GitDao(),
+                ProjectManager::instance()
             ),
+            $this->project_manager,
+            $this->git_system_event_manager
+        );
+        $this->permissions_serializer = $permissions_serializer ? $permissions_serializer : new Git_Gitolite_ConfigPermissionsSerializer(
+            $this->mirror_data_mapper,
             PluginManager::instance()->getPluginByName('git')->getEtcTemplatesPath()
+        );
+
+        $this->project_serializer = new Git_Gitolite_ProjectSerializer(
+            $this->logger,
+            $this->repository_factory,
+            $this->permissions_serializer,
+            $this->url_manager
         );
 
         $this->gitolite_conf_writer = $gitolite_conf_writer ? $gitolite_conf_writer : new Git_Gitolite_GitoliteConfWriter(
             $this->permissions_serializer,
+            $this->project_serializer,
             new Git_Gitolite_GitoliteRCReader(),
+            $this->mirror_data_mapper,
+            $this->logger,
+            $this->project_manager,
             $adminPath
         );
+
     }
 
     /**
@@ -190,35 +217,13 @@ class Git_GitoliteDriver {
      * @param Project $project
      */
     public function dumpProjectRepoConf(Project $project) {
-        $project_serializer = new Git_Gitolite_ProjectSerializer(
-            $this->logger,
-            $this->repository_factory,
-            $this->permissions_serializer,
-            $this->url_manager
-        );
-        $this->logger->debug("Get Project Permission Conf File: " . $project->getUnixName() . "...");
-        $config_file = $this->getProjectPermissionConfFile($project);
-        $this->logger->debug("Get Project Permission Conf File: " . $project->getUnixName() . ": done");
-        $this->logger->debug("Write Git config: " . $project->getUnixName() . "...");
-        if ($this->writeGitConfig($config_file, $project_serializer->dumpProjectRepoConf($project))) {
-            $this->logger->debug("Write Git config: " . $project->getUnixName() . ": done");
-            return $this->updateMainConfIncludes();
+        $git_modifications = $this->gitolite_conf_writer->dumpProjectRepoConf($project);
+        foreach ($git_modifications->toAdd() as $file) {
+            if (! $this->gitExec->add($file)) {
+                return false;
+            }
         }
-    }
-    
-    protected function getProjectPermissionConfFile($project) {
-        $prjConfDir = 'conf/projects';
-        if (!is_dir($prjConfDir)) {
-            mkdir($prjConfDir);
-        }
-        return $prjConfDir.'/'.$project->getUnixName().'.conf';
-    }
-
-    protected function writeGitConfig($config_file, $config_datas) {
-        if (strlen($config_datas) !== file_put_contents($config_file, $config_datas)) {
-            return false;
-        }
-        return $this->gitExec->add($config_file);
+        return $this->updateMainConfIncludes();
     }
 
     public function updateMainConfIncludes() {
@@ -447,5 +452,41 @@ class Git_GitoliteDriver {
      */
     protected function getDao() {
         return new GitDao();
+    }
+
+    public function dumpAllMirroredRepositories() {
+        foreach ($this->mirror_data_mapper->fetchAllProjectsConcernedByMirroring() as $project) {
+            if (! $this->dumpProjectRepoConf($project)) {
+                return false;
+            }
+        }
+
+        return $this->updateMainConfIncludes();
+    }
+
+    public function renameMirror($mirror_id, $old_hostname) {
+        $git_modifications = $this->gitolite_conf_writer->renameMirror($mirror_id, $old_hostname);
+
+        foreach ($git_modifications->toAdd() as $file) {
+            if (! $this->gitExec->add($file)) {
+                return false;
+            }
+        }
+
+        foreach ($git_modifications->toRemove() as $file) {
+            $file_path = $this->getAdminPath().'/'.$file;
+
+            if (is_dir($file_path)) {
+                if (! $this->gitExec->recursiveRm($file)) {
+                    return false;
+                }
+            } elseif (is_file($file_path)) {
+                if (! $this->gitExec->rm($file)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }

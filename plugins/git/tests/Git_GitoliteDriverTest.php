@@ -22,27 +22,34 @@ require_once 'Git_GitoliteTestCase.class.php';
 
 class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
 
-    /** @var  Git_Gitolite_GitoliteRCReader */
+    /** @var Git_Gitolite_GitoliteRCReader */
     private $gitoliterc_reader;
 
-    /** @var  Git_Gitolite_ConfigPermissionsSerializer */
+    /** @var Git_Gitolite_ConfigPermissionsSerializer */
     private $another_gitolite_permissions_serializer;
 
-    /** @var  Git_GitoliteDriver */
+    /** @var Git_GitoliteDriver */
     private $a_gitolite_driver;
 
-    /** @var  Git_GitoliteDriver */
+    /** @var Git_GitoliteDriver */
     private $another_gitolite_driver;
 
     /** @var Git_Gitolite_GitoliteConfWriter */
     private $gitolite_conf_writer;
 
-    /** @var  @var Git */
+    /** @var Git */
     private $another_git_exec;
+
+    /** @var Git_Gitolite_ProjectSerializer */
+    private $a_gitolite_project_serializer;
+
+    /** @var ProjectManager */
+    private $project_manager;
 
     public function setUp() {
         parent::setUp();
 
+        $this->project_manager   = mock('ProjectManager');
         $this->gitoliterc_reader = mock('Git_Gitolite_GitoliteRCReader');
 
         $this->another_gitolite_permissions_serializer = new Git_Gitolite_ConfigPermissionsSerializer(
@@ -50,9 +57,20 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
             'whatever'
         );
 
+        $this->a_gitolite_project_serializer = new Git_Gitolite_ProjectSerializer(
+            $this->logger,
+            $this->repository_factory,
+            $this->another_gitolite_permissions_serializer,
+            $this->url_manager
+        );
+
         $this->gitolite_conf_writer = new Git_Gitolite_GitoliteConfWriter(
             $this->another_gitolite_permissions_serializer,
+            $this->a_gitolite_project_serializer,
             $this->gitoliterc_reader,
+            $this->mirror_data_mapper,
+            mock('Logger'),
+            $this->project_manager,
             $this->sys_data_dir . '/gitolite/admin'
         );
 
@@ -63,7 +81,9 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
             $this->gitExec,
             $this->repository_factory,
             $this->another_gitolite_permissions_serializer,
-            $this->gitolite_conf_writer
+            $this->gitolite_conf_writer,
+            $this->project_manager,
+            $this->mirror_data_mapper
         );
 
         $this->another_git_exec = mock('Git_Exec');
@@ -76,7 +96,9 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
             $this->another_git_exec,
             $this->repository_factory,
             $this->another_gitolite_permissions_serializer,
-            $this->gitolite_conf_writer
+            $this->gitolite_conf_writer,
+            $this->project_manager,
+            $this->mirror_data_mapper
         );
     }
 
@@ -107,12 +129,14 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
     }
 
     public function itCanRenameProject() {
+        $new_name = 'newone';
+        stub($this->project_manager)->getProjectByUnixName($new_name)->returns(aMockProject()->withUnixName($new_name)->build());
         $this->gitExec->expectOnce('push');
 
         $this->assertTrue(is_file($this->_glAdmDir.'/conf/projects/legacy.conf'));
         $this->assertFalse(is_file($this->_glAdmDir.'/conf/projects/newone.conf'));
 
-        $this->assertTrue($this->a_gitolite_driver->renameProject('legacy', 'newone'));
+        $this->assertTrue($this->a_gitolite_driver->renameProject('legacy', $new_name));
 
         clearstatcache(true, $this->_glAdmDir.'/conf/projects/legacy.conf');
         $this->assertFalse(is_file($this->_glAdmDir.'/conf/projects/legacy.conf'));

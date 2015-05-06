@@ -18,8 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SystemEvent_GIT_DUMP_ALL_MIRRORED_REPOSITORIES extends SystemEvent {
-    const NAME = 'GIT_DUMP_ALL_MIRRORED_REPOSITORIES';
+class SystemEvent_GIT_RENAME_MIRROR extends SystemEvent {
+    const NAME = 'GIT_RENAME_MIRROR';
 
     /** @var Git_GitoliteDriver */
     private $gitolite_driver;
@@ -32,17 +32,32 @@ class SystemEvent_GIT_DUMP_ALL_MIRRORED_REPOSITORIES extends SystemEvent {
 
     public function process() {
 
-        $dump_is_done = $this->gitolite_driver->dumpAllMirroredRepositories();
+        $dump_is_done = $this->gitolite_driver->renameMirror(
+            $this->getMirrorIdFromParameters(),
+            $this->getMirrorOldHostnameFromParameters()
+        );
 
         if ($dump_is_done) {
             $this->done();
             return true;
         }
 
-        $this->error('Something went wrong while dumping gitolite configuration.');
+        $this->error("Something went wrong while renaming mirror");
+    }
+
+    private function getMirrorIdFromParameters() {
+        $parameters    = $this->getParametersAsArray();
+
+        return $parameters[0];
+    }
+
+    private function getMirrorOldHostnameFromParameters() {
+        $parameters    = $this->getParametersAsArray();
+
+        return $parameters[1];
     }
 
     public function verbalizeParameters($with_link) {
-        return '';
+        return 'Mirror: '.$this->getMirrorIdFromParameters();
     }
 }
