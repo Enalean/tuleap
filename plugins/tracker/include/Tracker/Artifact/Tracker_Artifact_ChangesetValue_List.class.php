@@ -248,22 +248,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
     }
 
     protected function getFullRESTBindValue(Tracker_FormElement_Field_List_Value $value) {
-        $color      = null;
-        $decorators = $this->field->getDecorators();
-
-        if (! empty($decorators) && isset($decorators[$value->getId()])) {
-            $decorator = $decorators[$value->getId()];
-            $color     = array(
-                'r' => (int)$decorator->r,
-                'g' => (int)$decorator->g,
-                'b' => (int)$decorator->b
-            );
-        }
-
-        return array(
-            'label' => $value->getLabel(),
-            'color' => $color
-        );
+        return $value->getFullRESTValue($this->field);
     }
 
     /**
