@@ -10,6 +10,7 @@ Version 8.2 (not released yet)
 	* git: 4.46
 	* agiledashboard: 1.189
 	* ldap: 3.79
+	* IM: 1.5.27
 
 	== Enhancement ==
 	* story #7972: specify svn notifications using the star operator

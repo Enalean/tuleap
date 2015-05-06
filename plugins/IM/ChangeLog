@@ -1,3 +1,6 @@
+Version 1.5.27 - Tuleap 8.2
+    * request #7929: XSS when displaying IM user status
+
 Version 1.5.26 - Tuleap 8.1
     * request #7939: XSS in the web chat room
 
