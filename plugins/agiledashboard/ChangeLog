@@ -1,3 +1,6 @@
+Version 1.189 - Tuleap 8.2
+    * request #8062: On a card in kanban & planning view, display user with link and avatar
+
 Version 1.188 - Tuleap 8.1
     * request #7880 Hide Closed Items in V2 Planning only hides Parent artifacts
 

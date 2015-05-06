@@ -1,3 +1,6 @@
+Version 5.618 - Tuleap 8.2
+    * request #8062: On a card in kanban & planning view, display user with link and avatar
+
 Version 5.617 - Tuleap 8.2
     * request #8057 Add transaction in new changeset creation
 
