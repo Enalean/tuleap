@@ -463,16 +463,20 @@ class Workflow_ExportToSOAP_rulesTest extends Workflow_ExportToSOAP_BaseTest {
 
 class Workflow_validateTest extends TuleapTestCase {
 
-    public function itReturnsTrueIfWorkflowIsNotEnabled() {
+    public function itRaisesNoExceptionIfWorkflowIsNotEnabled() {
         $is_used     = 0;
         $workflow    = aWorkflow()->withIsUsed($is_used)->build();
         $fields_data = array();
         $artifact    = mock('Tracker_Artifact');
 
-        $this->assertTrue($workflow->validate($fields_data, $artifact));
+        try {
+            $workflow->validate($fields_data, $artifact);
+        } catch (Exception $e) {
+            $this->fail('Should not receive an exception');
+        }
     }
 
-    public function itReturnsFalseIfWorkflowIsEnabledAndTransitionNotValid() {
+    public function itRaisesExceptionIfWorkflowIsEnabledAndTransitionNotValid() {
         $value_from  = null;
         $value_to    = stub('Tracker_FormElement_Field_List_Value')->getId()->returns(66);
         $transition  = mock('Transition');
@@ -485,7 +489,9 @@ class Workflow_validateTest extends TuleapTestCase {
         $artifact    = mock('Tracker_Artifact');
 
         expect($transition)->validate()->once()->returns(false);
-        $this->assertFalse($workflow->validate($fields_data, $artifact));
+        $this->expectException(new Tracker_Workflow_PermissionTransitionViolationException());
+
+        $workflow->validate($fields_data, $artifact);
     }
 }
 
@@ -540,14 +546,19 @@ class Workflow_DisableTest extends TuleapTestCase {
 
     public function itIsNotValidWhenTheWOrkflowIsEnabled() {
         $fields_data = array($this->field_id => 66);
-        $this->assertFalse($this->workflow->validate($fields_data, $this->artifact));
+
+        $this->expectException(new Tracker_Workflow_PermissionTransitionViolationException());
+        $this->workflow->validate($fields_data, $this->artifact);
     }
 
     public function itDisablesTheValidationOfTransitions() {
         $this->workflow->disable();
 
         $fields_data = array($this->field_id => 66);
-        $this->assertTrue($this->workflow->validate($fields_data, $this->artifact));
+
+        expect($this->transition)->validate()->never();
+
+        $this->workflow->validate($fields_data, $this->artifact);
     }
 
     public function itDisablesTheGlobalRulesValidation() {

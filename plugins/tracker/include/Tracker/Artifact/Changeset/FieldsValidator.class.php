@@ -50,11 +50,7 @@ abstract class Tracker_Artifact_Changeset_FieldsValidator {
             }
         }
 
-        if ($is_valid) {
-            return $this->isWorkflowValid($artifact, $fields_data);
-        }
-
-        return false;
+        return $is_valid;
     }
 
     /**
@@ -81,15 +77,6 @@ abstract class Tracker_Artifact_Changeset_FieldsValidator {
         }
 
         return $submitted_value;
-    }
-
-    private function isWorkflowValid(Tracker_Artifact $artifact, $fields_data) {
-        $workflow = $artifact->getWorkflow();
-        if ($workflow) {
-            return $workflow->validate($fields_data, $artifact);
-        }
-
-        return true;
     }
 
     /**
