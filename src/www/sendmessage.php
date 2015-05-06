@@ -105,6 +105,7 @@ if ($request->valid($valid)) {
 }
 
 $csrf_token = new CSRFSynchronizerToken('sendmessage.php');
+$purifier = Codendi_HTMLPurifier::instance();
 
 if (isset($send_mail)) {
     if (!$subject || !$body || !$email) {
@@ -150,8 +151,7 @@ $mail->setSubject($subject);
 $vFormat = new Valid_WhiteList('body_format', array(FORMAT_HTML, FORMAT_TEXT));
 $bodyFormat = $request->getValidated('body_format', $vFormat, FORMAT_HTML);
 if ($bodyFormat == FORMAT_HTML) {
-    $hp = Codendi_HTMLPurifier::instance();
-    $mail->getLookAndFeelTemplate()->set('title', $hp->purify($subject, CODENDI_PURIFIER_CONVERT_HTML));
+    $mail->getLookAndFeelTemplate()->set('title', $purifier->purify($subject, CODENDI_PURIFIER_CONVERT_HTML));
     $mail->setBodyHtml($body);
 } else {
     $mail->setBodyText($body);
@@ -174,6 +174,7 @@ if ($toaddress) {
 } else {
 	$to_msg = $to->getUserName();
 }
+$to_msg = $purifier->purify($to_msg);
 
 $HTML->header(array('title'=>$Language->getText('sendmessage', 'title',array($to_msg))));
 
@@ -184,14 +185,14 @@ $HTML->header(array('title'=>$Language->getText('sendmessage', 'title',array($to
 <?php echo $Language->getText('sendmessage', 'message'); ?>
 <P>
 <FORM ACTION="?" METHOD="POST">
-<INPUT TYPE="HIDDEN" NAME="toaddress" VALUE="<?php echo $toaddress; ?>">
-<INPUT TYPE="HIDDEN" NAME="touser" VALUE="<?php echo $touser; ?>">
+<INPUT TYPE="HIDDEN" NAME="toaddress" VALUE="<?php echo $purifier->purify($toaddress); ?>">
+<INPUT TYPE="HIDDEN" NAME="touser" VALUE="<?php echo $purifier->purify($touser); ?>">
 <?php echo $csrf_token->fetchHTMLInput(); ?>
 
-<B><?php echo $Language->getText('sendmessage', 'email'); ?>:</B> <?php echo $email; ?>
+<B><?php echo $Language->getText('sendmessage', 'email'); ?>:</B> <?php echo $purifier->purify($email); ?>
 <P>
 <B><?php echo $Language->getText('sendmessage', 'subject'); ?>:</B><BR>
-<INPUT TYPE="TEXT" NAME="subject" SIZE="30" MAXLENGTH="40" VALUE="<?php echo $subject; ?>">
+<INPUT TYPE="TEXT" NAME="subject" SIZE="30" MAXLENGTH="40" VALUE="<?php echo $purifier->purify($subject); ?>">
 <P>
 <B><?php echo $Language->getText('sendmessage', 'message_body'); ?>:</B><BR>
 <TEXTAREA NAME="body" ROWS="15" COLS="60" WRAP="HARD"></TEXTAREA>
