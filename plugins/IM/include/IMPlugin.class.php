@@ -151,9 +151,10 @@ class IMPlugin extends Plugin {
 	 */
     function _get_presence_status ($jid) {
         $presence = $this->getPresence($jid);
-        return '<img src="'.$presence['icon'].'" title="'.$presence['status'].'"  alt="'.$presence['status'].'" border="0" height="16" width="16" style="vertical-align:top">';
-	}
-    
+        $purifier = Codendi_HTMLPurifier::instance();
+        return '<img src="'.$purifier->purify($presence['icon']).'" title="'.$purifier->purify($presence['status']).'"  alt="'.$purifier->purify($presence['status']).'" border="0" height="16" width="16" style="vertical-align:top">';
+    }
+
     protected $dynamicpresence_alreadydisplayed;
     function getDynamicPresence($jid) {
         $id = md5($jid);
@@ -167,7 +168,7 @@ class IMPlugin extends Plugin {
                     'jids[]':plugin_im_presence
                 },
                 onSuccess: function(transport) {
-                    var presences = eval(transport.responseText);
+                    var presences = JSON.parse(transport.responseText);
                     \$A(presences).each(function (presence) {
                         var html = '<img src=\"'+ presence.icon +'\" title=\"'+ presence.status +'\" />';
                         $$('.jid_'+presence.id).each(function (img) {
@@ -231,7 +232,6 @@ class IMPlugin extends Plugin {
 	            if(!empty($custom_msg)){
 	            	$img_title = ($img_title == $custom_msg) ? $img_title : ($img_title.' - '.$custom_msg);
 	            }
-	            
                 $this->_cache_presence[$jid] = array(
                     'icon' => $img_src,
                     'status' => $img_title

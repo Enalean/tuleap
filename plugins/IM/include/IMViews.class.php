@@ -68,17 +68,19 @@ class IMViews extends Views {
 	}
     
     function get_presence() {
+        header('Content-type: application/json');
         $request = HTTPRequest::instance();
         if ($request->exist('jid')) {
             $presence = $this->getControler()->getPlugin()->getPresence($request->get('jid'));
-            echo '({"icon":"'. $presence['icon'] .'","status":"'.$presence['status'].'"})';
+            echo json_encode($presence);
         } else if (is_array($request->get('jids'))) {
             $presences = array();
             foreach($request->get('jids') as $jid) {
                 $presence = $this->getControler()->getPlugin()->getPresence($jid);
-                $presences[] = '{"id":"'.md5($jid).'","icon":"'. $presence['icon'] .'","status":"'.$presence['status'].'"}';
+                $presence['id'] = md5($jid);
+                $presences[] = $presence;
             }
-            echo '(['. implode(',', $presences) .'])';
+            echo(json_encode($presences));
         }
     }
     // }}}
