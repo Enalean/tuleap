@@ -7,6 +7,9 @@ Version 8.2 (not released yet)
 	* tracker: 5.617
 	* git: 4.44
 
+	== Enhancement ==
+	* story #7972: specify svn notifications using the star operator
+
 Version 8.1 (Monday, May 4th 2015)
 
 	== Enhancement ==
