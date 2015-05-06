@@ -41,7 +41,9 @@ class LdapPlugin extends Plugin {
 
     function __construct($id) {
         parent::__construct($id);
+    }
 
+    public function getHooksAndCallbacks() {
         // Layout
         $this->_addHook('display_newaccount', 'forbidIfLdapAuth', false);
         $this->_addHook('before_register', 'before_register', false);
@@ -95,7 +97,6 @@ class LdapPlugin extends Plugin {
         $this->_addHook('svn_intro', 'svn_intro', false);
         $this->_addHook('svn_check_access_username', 'svn_check_access_username', false);
 
-
         // Search as you type user
         $this->_addHook('ajax_search_user', 'ajax_search_user', false);
         
@@ -119,6 +120,12 @@ class LdapPlugin extends Plugin {
         // User profile creation/update
         $this->addHook(Event::USER_MANAGER_UPDATE_DB);
         $this->addHook('project_admin_activate_user');
+
+        if (defined('GIT_EVENT_PLATFORM_CAN_USE_GERRIT')) {
+            $this->addHook(GIT_EVENT_PLATFORM_CAN_USE_GERRIT);
+        }
+
+        return parent::getHooksAndCallbacks();
     }
     
     /**
@@ -959,5 +966,19 @@ class LdapPlugin extends Plugin {
             new UserDao(),
             $this->getLogger()
         );
+    }
+
+    /**
+     * @see GIT_EVENT_PLATFORM_CAN_USE_GERRIT
+     */
+    public function git_event_platform_can_use_gerrit($params) {
+        $ldap_params = $this->getLDAPParams();
+
+        $platform_uses_ldap_for_authentication = ForgeConfig::get('sys_auth_type') === ForgeConfig::AUTH_TYPE_LDAP;
+        $ldap_write_server_is_configured       = isset($ldap_params['write_server']) && trim($ldap_params['write_server']) != '';
+
+        if ($platform_uses_ldap_for_authentication || $ldap_write_server_is_configured) {
+            $params['platform_can_use_gerrit'] = true;
+        }
     }
 }
