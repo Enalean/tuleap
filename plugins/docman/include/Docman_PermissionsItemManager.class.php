@@ -79,6 +79,14 @@ class Docman_PermissionsItemManager {
 
     private function getUgroupIdsPermissions(Docman_Item $item, UGroupLiteralizer $literalizer, Project $project) {
         $ugroups_ids = $literalizer->getUgroupIds($project, $item->getId(), self::PERMISSIONS_TYPE);
+
+        if (empty($ugroups_ids)) {
+            $ugroups_ids = PermissionsManager::instance()->getAuthorizedUgroupIds(
+                $project->getID(),
+                'PLUGIN_DOCMAN_ADMIN'
+            );
+        }
+
         $parent_item = $this->getParentItem($item, $project);
         if ($parent_item) {
             $parent_ugroups_ids = $this->getUgroupIdsPermissions($parent_item, $literalizer, $project);
@@ -106,5 +114,3 @@ class Docman_PermissionsItemManager {
         return $literalizer->ugroupIdsToString($ugroup_ids, $project);
     }
 }
-
-?>
