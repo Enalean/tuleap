@@ -3,7 +3,7 @@
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
-//
+// Copyright (c) Enalean, 2015. All rights reserved
 // 
 
 /*
@@ -181,12 +181,14 @@ $HTML->box1_bottom(); ?>
 <?php 
 
 if (user_isloggedin()) {
+    $csrf_token = new CSRFSynchronizerToken('sendmessage.php');
 
     $HTML->box1_top($Language->getText('include_user_home','send_message_to').' '. $hp->purify($user->getRealName(), CODENDI_PURIFIER_CONVERT_HTML));
 
     echo '
 	<FORM ACTION="/sendmessage.php" METHOD="POST">
 	<INPUT TYPE="HIDDEN" NAME="touser" VALUE="'.$user->getId().'">';
+    echo $csrf_token->fetchHTMLInput();
 
 	$my_name=user_getrealname(user_getid());
     $cc = (isset($_REQUEST['cc'])?htmlspecialchars(trim($_REQUEST['cc'])):"");
