@@ -1,4 +1,6 @@
 Version 8.2 (not released yet)
+	== Security ==
+	* request #8002: Use a bigger RSA modulus for the creation of the SSL certificate
 
 	== Plugins ==
 	* docman: 2.26.75
