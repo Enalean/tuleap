@@ -1,3 +1,6 @@
+Version 3.79 - Tuleap 8.2
+    * request #8060: I should be able to use the gerrit replication feature if Tuleap use a LDAP write server
+
 Version 3.78 - Tuleap 8.1
     * request #8043: Add more info on var usage in ldap.inc
 

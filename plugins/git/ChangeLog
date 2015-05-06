@@ -1,3 +1,6 @@
+Version 4.46 - Tuleap 8.2
+    * request #8060: I should be able to use the gerrit replication feature if Tuleap use a LDAP write server
+
 Version 4.45 - Tuleap 8.2
     * story #8021 - Write gitolite.conf in %HOSTNAME.conf if variable set in .gitolite.rc
 
