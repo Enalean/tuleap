@@ -5,7 +5,7 @@ Version 8.2 (not released yet)
 	* request #8034: XSS in the send message page
 
 	== Plugins ==
-	* docman: 2.26.75
+	* docman: 2.26.76
 	* tracker: 5.618
 	* git: 4.46
 	* agiledashboard: 1.189

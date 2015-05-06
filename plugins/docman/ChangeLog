@@ -1,3 +1,6 @@
+Version 2.26.76 - Tuleap 8.2
+    * request #8049 FTS - Empty folder permissions are not well taken in account
+
 Version 2.26.75 - Tuleap 8.2
     * request #8054: Poor SQL perf due to docman permissions
 
