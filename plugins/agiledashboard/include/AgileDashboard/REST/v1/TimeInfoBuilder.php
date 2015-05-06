@@ -40,7 +40,13 @@ class TimeInfoFactory {
         foreach ($this->dao->searchTimeInfoForItem($artifact->getTrackerId(), $artifact->getId()) as $row) {
             $timeinfo[$row['column_id']] = JsonCast::toDate($row['submitted_on']);
         }
-        $timeinfo['kanban']  = min($timeinfo);
+
+        if (empty($timeinfo)) {
+            $timeinfo['kanban'] = null;
+        } else {
+            $timeinfo['kanban'] = min($timeinfo);
+        }
+
         $timeinfo['archive'] = JsonCast::toDate($this->dao->getTimeInfoForArchivedItem($artifact->getId()));
 
         return $timeinfo;
