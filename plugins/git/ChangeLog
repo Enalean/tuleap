@@ -1,3 +1,6 @@
+Version 4.48 - Tuleap 8.2
+    * story #8021 - Fix error 'variable not found' on mirror adding
+
 Version 4.47 - Tuleap 8.2
     * story #8021 - Add a button to dump conf while taking hostname into account
 
