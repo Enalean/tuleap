@@ -41,7 +41,7 @@ class Tracker_FormElement_Field_Value_PermissionsOnArtifactDao extends Tracker_F
                     VALUES $values";
             return $this->updateAndGetLastId($sql);
         }
-        return false;
+        return true;
     }
     public function  createNoneValue($tracker_id, $field_id) {
         $tracker_id = $this->da->escapeInt($tracker_id);

@@ -158,7 +158,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         
         $html = '';
         $html .= '<p class="tracker_field_permissionsonartifact">';
-        $html .= '<input type="hidden" name="use_artifact_permissions" value="0" />';
+        $html .= '<input type="hidden" name="artifact['.$this->getId().'][use_artifact_permissions]" value="0" />';
         $html .= '<label class="checkbox" for="artifact_'.$this->getId().'_use_artifact_permissions">';
         $html .= '<input type="checkbox" name="artifact['.$this->getId().'][use_artifact_permissions]" id="artifact_'.$this->getId().'_use_artifact_permissions" value="1" '.$checked.'/>';
         $html .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'permissions_label') . '</label>';
@@ -185,7 +185,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         }
         $html = '';
         $html .= '<p class="tracker_field_permissionsonartifact">';
-        $html .= '<input type="hidden" name="use_artifact_permissions" value="0" />';
+        $html .= '<input type="hidden" name="artifact['.$this->getId().'][use_artifact_permissions]" value="0" />';
         $html .= '<label class="checkbox" for="artifact_'.$this->getId().'_use_artifact_permissions">';
         $html .= '<input type="checkbox" name="artifact['.$this->getId().'][use_artifact_permissions]" id="artifact_'.$this->getId().'_use_artifact_permissions" value="1"/>';
         $html .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'permissions_label') . '</label>';
@@ -270,7 +270,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         
         $html  = '';
         $html .= '<p class="tracker_field_permissionsonartifact">';
-        $html .= '<input type="hidden" name="use_artifact_permissions" value="0" />';
+        $html .= '<input type="hidden" name="artifact[' . $field_id . '][use_artifact_permissions]" value="0" />';
         $html .= '<label class="checkbox" for="artifact_' . $field_id . '_use_artifact_permissions">';
         $html .= '<input type="checkbox"
                                  name="artifact[' . $field_id . '][use_artifact_permissions]"
@@ -340,7 +340,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
             $value = $this->getDefaultValue();
         }
         $html .= '<p class="tracker_field_permissionsonartifact">';
-        $html .= '<input type="hidden" name="use_artifact_permissions" value="0" />';
+        $html .= '<input type="hidden" name="artifact['.$this->getId().'][use_artifact_permissions]" value="0" />';
         $html .= '<label class="checkbox" for="artifact_'.$this->getId().'_use_artifact_permissions">';
         $html .= '<input type="checkbox" name="artifact['.$this->getId().'][use_artifact_permissions]" id="artifact_'.$this->getId().'_use_artifact_permissions" value="1"/>';
         $html .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'permissions_label') .'</label>';
@@ -605,7 +605,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      * @return bool true if the value is considered ok
      */
     protected function validate(Tracker_Artifact $artifact, $value) {
-        if (isset($value['use_artifact_permissions']) && $value['use_artifact_permissions'] = 1) {
+        if (isset($value['use_artifact_permissions']) && $value['use_artifact_permissions'] === 1) {
             if (in_array(ProjectUGroup::NONE, $value['u_groups'])) {
                 return false;
             }
@@ -624,7 +624,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      * @return int or array of int
      */
     protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
-        if (empty($value) || ! isset($value['use_artifact_permissions'])) {
+        if (empty($value) || ! isset($value['use_artifact_permissions']) || $value['use_artifact_permissions'] == 0) {
             $value['use_artifact_permissions'] = 0;
             $value['u_groups'] = array();
         }
