@@ -1,3 +1,6 @@
+Version 5.619 - Tuleap 8.2
+    * Fix: request #8063: Cannot save artifact when removing value for checkbox
+
 Version 5.618 - Tuleap 8.2
     * request #8062: On a card in kanban & planning view, display user with link and avatar
 
