@@ -49,7 +49,7 @@ class Tracker_FormElement_Field_Value_ListDao extends Tracker_FormElement_Field_
                     VALUES $values";
             return $this->update($sql);
         }
-        return false;
+        return true;
     }
 
     public function  createNoneValue($tracker_id, $field_id) {        
