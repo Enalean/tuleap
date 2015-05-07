@@ -1,5 +1,6 @@
 <?php
-/* 
+/*
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  * Copyright 2005, STMicroelectronics
  *
  * Originally written by Manuel Vacelet
@@ -42,7 +43,7 @@ class WikiServiceViews extends WikiViews {
     $this->purifier = Codendi_HTMLPurifier::instance();
     parent::WikiView($controler, $id, $view);
     $pm = ProjectManager::instance();
-    if(!is_null($_REQUEST['pagename'])) {
+    if(isset($_REQUEST['pagename']) && !is_null($_REQUEST['pagename'])) {
         $this->html_params['title']  = $GLOBALS['Language']->getText('wiki_views_wikiserviceviews',
                                                           'wiki_page_title',
                                                           array( $this->purifier->purify($_REQUEST['pagename'], CODENDI_PURIFIER_CONVERT_HTML) ,
@@ -121,7 +122,7 @@ class WikiServiceViews extends WikiViews {
    */
   function _browseWikiDocuments() {
 
-    $wei =& WikiEntry::getEntryIterator($this->gid);
+    $wei = WikiEntry::getEntryIterator($this->gid);
 
     print '<ul class="WikiEntries">';
     while($wei->valid()) {
@@ -129,7 +130,8 @@ class WikiServiceViews extends WikiViews {
 
       $href = $this->_buildPageLink($we->wikiPage, $we->getName());
       if(!empty($href)) {
-          print $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'wikientries', array($href, $we->getDesc()));
+          $description = $this->purifier->purify($we->getDesc());
+          print $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'wikientries', array($href, $description));
       }
 
       $wei->next();
@@ -209,7 +211,7 @@ class WikiServiceViews extends WikiViews {
 
       $title = $this->purifier->purify($title, CODENDI_PURIFIER_CONVERT_HTML);
  
-      $link='/wiki/index.php?group_id='.$this->gid.'&pagename='.urlencode($pagename);
+      $link = '/wiki/index.php?group_id='.$this->gid.'&pagename='.urlencode($pagename);
       
       
       // Display title as emphasis if corresponding page does't exist.
@@ -248,7 +250,11 @@ class WikiServiceViews extends WikiViews {
     <table class="ServiceMenu">
       <tr>
         <td>';
-    switch(DEFAULT_LANGUAGE){
+    $language_id = '';
+    if (defined('DEFAULT_LANGUAGE')) {
+        $language_id = DEFAULT_LANGUAGE;
+    }
+    switch($language_id){
 	    case 'fr_FR':
             $attatch_page     = "DéposerUnFichier";
 			$preferences_page = "PréférencesUtilisateurs";   
@@ -324,7 +330,7 @@ class WikiServiceViews extends WikiViews {
    * @access public 
    */
   function pagePerms() {
-     $postUrl = '/wiki/index.php?group_id='.$this->gid.'&action=setWikiPagePerms';     
+     $postUrl = '/wiki/index.php?group_id='.$this->gid.'&action=setWikiPagePerms';
      $this->_pagePerms($postUrl);
      print '<p><a href="'.$this->wikiLink.'">'.$GLOBALS['Language']->getText('global', 'back').'</a></p>'."\n";
   }
@@ -406,7 +412,6 @@ echo '<input type="submit" value="'.$GLOBALS['Language']->getText('global','btn_
       // Make sure phpWiki instantiates the right pages corresponding the the given language
       define('DEFAULT_LANGUAGE', $language_id);
       $LANG = $language_id;
-
       $wpw = new WikiPageWrapper($this->gid);
       $wpw->install();
   }
