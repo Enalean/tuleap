@@ -190,6 +190,9 @@ class UserManager {
      */
     function findUser($ident) {
         $user = null;
+        if ($ident === false) {
+            return $user;
+        }
         $eParams = array('ident' => $ident,
                          'user'  => &$user);
         $this->_getEventManager()->processEvent('user_manager_find_user', $eParams);
