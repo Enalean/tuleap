@@ -100,7 +100,7 @@ class Git_GitoliteDriver {
         $this->setAdminPath($adminPath);
         $this->gitExec = $gitExec ? $gitExec : new Git_Exec($adminPath);
         $this->repository_factory = $repository_factory ? $repository_factory : new GitRepositoryFactory(
-            new GitDao(),
+            $this->getDao(),
             ProjectManager::instance()
         );
 
@@ -110,7 +110,7 @@ class Git_GitoliteDriver {
                 new Git_Mirror_MirrorDao,
                 UserManager::instance(),
                 new GitRepositoryFactory(
-                    new GitDao(),
+                    $this->getDao(),
                     ProjectManager::instance()
                 )
             ),
@@ -445,5 +445,14 @@ class Git_GitoliteDriver {
 
     private function getBackupPath(GitRepository $repository, $backup_directory) {
         return $backup_directory .'/'. $repository->getBackupPath() .'.tar.gz';
+    }
+
+    /**
+     * Wrapper for GitDao
+     *
+     * @return GitDao
+     */
+    protected function getDao() {
+        return new GitDao();
     }
 }
