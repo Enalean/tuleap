@@ -21,6 +21,8 @@
 class Tracker_ChangesetNotCreatedException extends Tracker_Exception {
 
     public function __construct() {
-        parent::__construct('Error while creating the changeset');
+       parent::__construct(
+            $GLOBALS['Language']->getText('plugin_tracker','changeset_not_stored_exception')
+        );
     }
 }

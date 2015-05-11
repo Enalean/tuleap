@@ -20,7 +20,7 @@
  */
 class Tracker_FieldValueNotStoredException extends Tracker_Exception {
 
-    public function __construct() {
-        parent::__construct('Error while storing the field values');
+    public function __construct($message) {
+        parent::__construct($message);
     }
 }

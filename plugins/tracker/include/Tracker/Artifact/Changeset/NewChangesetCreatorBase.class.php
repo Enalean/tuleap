@@ -55,6 +55,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
      *
      * @throws Tracker_Exception In the validation
      * @throws Tracker_NoChangeException In the validation
+     *
      * @return Tracker_Artifact_Changeset|Boolean The new changeset if update is done without error, false otherwise
      */
     public function create(
@@ -98,10 +99,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
             throw new Tracker_CommentNotStoredException();
         }
 
-        if (! $this->storeFieldsValues($artifact, $previous_changeset, $fields_data, $submitter, $changeset_id)) {
-            $this->changeset_dao->rollBack();
-            throw new Tracker_FieldValueNotStoredException();
-        }
+        $this->storeFieldsValues($artifact, $previous_changeset, $fields_data, $submitter, $changeset_id);
 
         $new_changeset = new Tracker_Artifact_Changeset(
             $changeset_id,
@@ -152,15 +150,26 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         $changeset_id
     );
 
+    /**
+     * @throws Tracker_FieldValueNotStoredException
+     */
     private function storeFieldsValues(Tracker_Artifact $artifact, $previous_changeset, array $fields_data, PFUser $submitter, $changeset_id) {
         $used_fields = $this->formelement_factory->getUsedFields($artifact->getTracker());
-        $save_ok     = true;
 
         foreach ($used_fields as $field) {
-            $save_ok = $save_ok && $this->saveNewChangesetForField($field, $artifact, $previous_changeset, $fields_data, $submitter, $changeset_id);
+            if (! $this->saveNewChangesetForField($field, $artifact, $previous_changeset, $fields_data, $submitter, $changeset_id)) {
+                $this->changeset_dao->rollBack();
+                throw new Tracker_FieldValueNotStoredException(
+                    $GLOBALS['Language']->getText(
+                        'plugin_tracker',
+                        'field_not_stored_exception',
+                        array($field->getLabel())
+                    )
+                );
+            }
         }
 
-        return $save_ok;
+        return true;
     }
 
     private function storeComment(
