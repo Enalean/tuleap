@@ -1,3 +1,6 @@
+Version 1.190 - Tuleap 8.2
+    * request #7976: HTML is not interpreted in planning v2 feedbacks (REST error)
+
 Version 1.189 - Tuleap 8.2
     * request #8062: On a card in kanban & planning view, display user with link and avatar
 
