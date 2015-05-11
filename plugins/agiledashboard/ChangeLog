@@ -1,3 +1,6 @@
+Version 1.191 - Tuleap 8.2
+    * story #7954: POST kanban_items
+
 Version 1.190 - Tuleap 8.2
     * request #7976: HTML is not interpreted in planning v2 feedbacks (REST error)
 
