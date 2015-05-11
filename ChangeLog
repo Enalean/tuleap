@@ -1,3 +1,14 @@
+Version 8.1-2 (Monday, May 11th 2015)
+
+	== Bug Fix ==
+	* request #8065: regression in restore gitolite repositories after git code refactoring
+	* request #8064: finduser method in UserManager should return NULL when the identifiant equals false
+	* request #7507: Modify artifact permissions is not enough to submit artifact form
+	* request #8049: FTS - Empty folder permissions are not well taken in account
+	* request #8060: I should be able to use the gerrit replication feature if Tuleap use a LDAP write server
+	* request #8062: On a card in kanban & planning view, display user with link and avatar
+	* request #8054: Poor SQL perf due to docman permissions
+
 Version 8.1 (Monday, May 4th 2015)
 
 	== Enhancement ==
