@@ -1,3 +1,6 @@
+Version 5.620 - Tuleap 8.2
+    * request #7507 Modify artifact permissions is not enough to submit artifact form
+
 Version 5.619 - Tuleap 8.2
     * Fix: request #8063: Cannot save artifact when removing value for checkbox
 
