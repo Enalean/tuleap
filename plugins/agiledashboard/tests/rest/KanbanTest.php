@@ -264,4 +264,81 @@ class KanbanTest extends RestBase {
             $this->getIdsOrderedByPriority($url)
         );
     }
+
+    /**
+     * @depends testPATCHArchiveWithAddAndOrder
+     */
+    public function testOPTIONSKanbanItems() {
+        $response = $this->getResponse($this->client->options('kanban_items'));
+        $this->assertEquals(array('OPTIONS', 'POST'), $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    /**
+     * @depends testPATCHArchiveWithAddAndOrder
+     */
+    public function testPOSTKanbanItemsInBacklog() {
+        $url = 'kanban_items/';
+
+        $response = $this->getResponse($this->client->post(
+            $url,
+            null,
+            json_encode(array(
+                "item" => array(
+                    "label"     => "New item in backlog",
+                    "kanban_id" => TestDataBuilder::KANBAN_ID,
+                )
+            ))
+        ));
+
+        $this->assertEquals($response->getStatusCode(), 201);
+
+        $item = $response->json();
+        $this->assertEquals($item['label'], "New item in backlog");
+    }
+
+    /**
+     * @depends testPOSTKanbanItemsInBacklog
+     */
+    public function testPOSTKanbanItemsInColmun() {
+        $url = 'kanban_items/';
+
+        $response = $this->getResponse($this->client->post(
+            $url,
+            null,
+            json_encode(array(
+                "item" => array(
+                    "label"     => "New item in column",
+                    "kanban_id" => TestDataBuilder::KANBAN_ID,
+                    "column_id" => TestDataBuilder::KANBAN_ONGOING_COLUMN_ID,
+                )
+            ))
+        ));
+
+        $this->assertEquals($response->getStatusCode(), 201);
+
+        $item = $response->json();
+        $this->assertEquals($item['label'], "New item in column");
+    }
+
+    /**
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     * @depends testPOSTKanbanItemsInColmun
+     */
+    public function testPOSTKanbanItemsInUnknowColmun() {
+        $url = 'kanban_items/';
+
+        $response = $this->getResponse($this->client->post(
+            $url,
+            null,
+            json_encode(array(
+                "item" => array(
+                    "label"     => "New item in column",
+                    "kanban_id" => TestDataBuilder::KANBAN_ID,
+                    "column_id" => 99999999,
+                )
+            ))
+        ));
+
+        $this->assertEquals($response->getStatusCode(), 400);
+    }
 }
