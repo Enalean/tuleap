@@ -1,3 +1,6 @@
+Version 4.49 - Tuleap 8.2
+    * request #8065: fix of regression in gitolite restore repositories after git code refactoring
+
 Version 4.48 - Tuleap 8.2
     * story #8021 - Fix error 'variable not found' on mirror adding
 
