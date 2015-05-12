@@ -242,8 +242,8 @@ print '</TD></TR></TABLE>';
 // one listing for each project
 
 //BAD QUERY!!!
-
-if((isset($_GET['special_cat'])) && ($_GET['special_cat'] == 'none')) {
+$special_cat = $request->getValidated('special_cat');
+if ($special_cat === 'none') {
     $qry_root_trov = 'SELECT group_id'
         .' FROM trove_group_link'
         .' WHERE trove_cat_root='.$form_cat
@@ -311,11 +311,9 @@ $querytotalcount = db_numrows($res_grp);
 // #################################################################
 // limit/offset display
 
-// no funny stuff with get vars
-if (!isset($page)) $page=1;
-$page = intval($page);
-if (!$page) {
-	$page = 1;
+$page = $request->getValidated('page', 'uint');
+if (! $page) {
+    $page = 1;
 }
 
 // store this as a var so it can be printed later as well
@@ -339,7 +337,9 @@ if ($querytotalcount > $TROVE_BROWSELIMIT) {
 		if ($page != $i) {
 			$html_limit .= '<A href="/softwaremap/trove_list.php?form_cat='.$form_cat;
 			$html_limit .= $discrim_url.'&page='.$i;
-                        if (isset($special_cat)) $html_limit .= "&special_cat=".$purifier->purify($special_cat);
+                        if ($special_cat) {
+                            $html_limit .= "&special_cat=".$purifier->purify($special_cat);
+                        }
 			$html_limit .= '">';
 		} else $html_limit .= '<B>';
 		$html_limit .= '&lt;'.$i.'&gt;';
