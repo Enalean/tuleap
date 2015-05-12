@@ -9,6 +9,7 @@ Version 8.2 (not released yet)
 	* request #7983: SQL injection in site statistics
 	* request #8034: XSS in the send message page
 	* request #7888: Fix persistent XSS in PHPWiki
+	* request #8073: Reflected XSS in the add bookmark page
 
 	== Plugins ==
 	* docman: 2.26.76
