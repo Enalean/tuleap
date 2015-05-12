@@ -1,3 +1,6 @@
+Version 5.622 - Tuleap 8.2
+    * request #8026: Moving cards on the tracker cardwall does not take permissions into account
+
 Version 5.621 - Tuleap 8.2
     * request #8067: Enhance transaction feedback on artifact update
 
