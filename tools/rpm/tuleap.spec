@@ -37,7 +37,7 @@ Source0: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Packager: Manuel VACELET <manuel.vacelet@st.com>
 
-AutoReqProv: no 
+AutoReqProv: no
 #Prereq: /sbin/chkconfig, /sbin/service
 
 # Package cutting is still a bit a mess so do not force dependency on custmization package yet
@@ -72,7 +72,7 @@ Requires: %{php_base}-zendframework = 1.8.1
 # Perl
 Requires: perl, perl-DBI, perl-DBD-MySQL, perl-suidperl, perl-URI, perl-HTML-Tagset, perl-HTML-Parser, perl-libwww-perl, perl-DateManip, perl-Text-Iconv
 # Automatic perl dependencies
-#perl(APR::Pool)  perl(APR::Table)  perl(Apache2::Access)  perl(Apache2::Const)  perl(Apache2::Module)  perl(Apache2::RequestRec)  perl(Apache2::RequestUtil)  perl(Apache2::ServerRec)  perl(Carp)  perl(Cwd)  perl(DBI)  perl(Digest::MD5)  perl(Encode)  perl(File::Basename)  perl(File::Copy)  perl(HTTP::Request::Common)  perl(LWP::UserAgent)  perl(Net::LDAP)  perl(POSIX)  perl(Time::Local)  perl(strict)  perl(subs)  perl(vars)  perl(warnings) 
+#perl(APR::Pool)  perl(APR::Table)  perl(Apache2::Access)  perl(Apache2::Const)  perl(Apache2::Module)  perl(Apache2::RequestRec)  perl(Apache2::RequestUtil)  perl(Apache2::ServerRec)  perl(Carp)  perl(Cwd)  perl(DBI)  perl(Digest::MD5)  perl(Encode)  perl(File::Basename)  perl(File::Copy)  perl(HTTP::Request::Common)  perl(LWP::UserAgent)  perl(Net::LDAP)  perl(POSIX)  perl(Time::Local)  perl(strict)  perl(subs)  perl(vars)  perl(warnings)
 # Apache
 Requires: httpd, mod_ssl, openssl
 # Mysql Client
@@ -260,7 +260,7 @@ Group: Development/Tools
 Version: @@PLUGIN_IM_VERSION@@
 Release: @@RELEASE@@%{?dist}
 AutoReqProv: no
-Requires: %{PKG_NAME}, openfire, openfire-codendi-plugins
+Requires: %{PKG_NAME}, openfire, glibc.i686, openfire-codendi-plugins
 %if %{PKG_NAME} == codendi_st
 Provides: codendi-plugin-im = %{version}
 %else
@@ -522,7 +522,7 @@ Obsoletes: %{PKG_NAME}-theme-experimental
 %description theme-flamingparrot
 FlamingParrot, default theme starting Tuleap 7
 
-# 
+#
 # Package setup
 %prep
 %setup -q
@@ -1179,4 +1179,3 @@ fi
 
 * Thu Jun  3 2010 Manuel VACELET <manuel.vacelet@st.com> -
 - Initial build.
-
