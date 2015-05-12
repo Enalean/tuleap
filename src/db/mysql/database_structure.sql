@@ -1740,25 +1740,6 @@ plugin_id INT NOT NULL
 );
 # }}}
 
-
-# DynamicFields tables
-# {{{
-
-DROP TABLE IF EXISTS artifact_rule;
-CREATE TABLE artifact_rule (
-  id int(11) unsigned NOT NULL auto_increment,
-  group_artifact_id int(11) unsigned NOT NULL default '0',
-  source_field_id int(11) unsigned NOT NULL default '0',
-  source_value_id int(11) unsigned NOT NULL default '0',
-  target_field_id int(11) unsigned NOT NULL default '0',
-  rule_type tinyint(4) unsigned NOT NULL default '0',
-  target_value_id int(11) unsigned default NULL,
-  PRIMARY KEY  (id),
-  KEY group_artifact_id (group_artifact_id)
-);
-
-# }}}
-
 #
 # Table structure for table 'reference'
 #
@@ -1804,15 +1785,6 @@ CREATE TABLE feedback (
   feedback TEXT NOT NULL ,
   created_at DATETIME NOT NULL ,
   PRIMARY KEY ( session_hash )
-);
-
-CREATE TABLE artifact_global_notification (
-  id                INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-  tracker_id        INT(11) NOT NULL ,
-  addresses         TEXT NOT NULL ,
-  all_updates       TINYINT(1) NOT NULL ,
-  check_permissions TINYINT(1) NOT NULL ,
-  INDEX (tracker_id)
 );
 
 CREATE TABLE notifications (
