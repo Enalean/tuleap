@@ -1,6 +1,7 @@
 Version 8.2 (not released yet)
 	== Bug Fix ==
 	* request #8069 Pagination does not work in "Browse all projects"
+	* request #8071: Remove hard coded limit to 300 in softwaremap
 
 	== Security ==
 	* request #8002: Use a bigger RSA modulus for the creation of the SSL certificate
