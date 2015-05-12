@@ -24,6 +24,7 @@ use \Tuleap\Project\REST\ProjectRepresentation;
 use \Tuleap\Token\REST\TokenRepresentation;
 use \Tuleap\Project\REST\UserGroupRepresentation;
 use \Tuleap\User\REST\UserRepresentation;
+use \Tuleap\REST\v1\PhpWikiPageRepresentation;
 use \Tuleap\Project\REST\ProjectResourceReference;
 use \Project;
 
@@ -37,11 +38,19 @@ class ResourcesInjector {
         $restler->addAPIClass('\\Tuleap\\Token\\REST\\TokenResource',       TokenRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\Project\\REST\\UserGroupResource', UserGroupRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\User\\REST\\UserResource',         UserRepresentation::ROUTE);
+        $restler->addAPIClass('\\Tuleap\\Wiki\\REST\\v1\\PhpWikiResource',  PhpWikiPageRepresentation::ROUTE);
     }
 
     public function declareProjectUserGroupResource(array &$resources, Project $project) {
         $resource_reference = new ProjectResourceReference();
         $resource_reference->build($project, UserGroupRepresentation::ROUTE);
+
+        $resources[] = $resource_reference;
+    }
+
+    public function declarePhpWikiResource(array &$resources, Project $project) {
+        $resource_reference = new ProjectResourceReference();
+        $resource_reference->build($project, PhpWikiPageRepresentation::ROUTE);
 
         $resources[] = $resource_reference;
     }

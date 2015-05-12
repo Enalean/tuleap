@@ -640,6 +640,28 @@ class ProjectTest extends RestBase {
         return $this->getIds($this->getResponse($this->client->get($uri))->json());
     }
 
+    public function testOPTIONSWiki() {
+        $response = $this->getResponse($this->client->options('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/wiki'));
+
+        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    public function testGETWiki() {
+        $response = $this->getResponse($this->client->get('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/wiki'));
+
+        $expected_result = array(
+            'pages' => array(
+                0 => array(
+                    'id'  => 6097,
+                    'uri' => 'wiki/6097',
+                    'name' => 'WithContent'
+                )
+            )
+        );
+
+        $this->assertEquals($expected_result, $response->json());
+    }
+
     public function testGETWithBasicAuth() {
         $response      = $this->getBasicAuthResponse($this->client->get('projects'));
         $json_projects = $response->json();
