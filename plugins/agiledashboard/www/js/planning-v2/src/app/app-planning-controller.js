@@ -118,7 +118,7 @@
                     $scope.backlog_items.push($scope.items[backlog_item.id]);
                 });
 
-                if (offset < data.total) {
+                if ((offset + limit) < data.total) {
                     fetchProjectBacklogItems(project_id, limit, offset + limit);
                 } else {
                     $scope.loading_backlog_items = false;
@@ -133,7 +133,7 @@
                     $scope.backlog_items.push($scope.items[backlog_item.id]);
                 });
 
-                if (offset < data.total) {
+                if ((offset + limit) < data.total) {
                     fetchMilestoneBacklogItems(milestone_id, limit, offset + limit);
                 } else {
                     $scope.loading_backlog_items = false;
@@ -153,7 +153,7 @@
             return MilestoneService.getMilestones(project_id, limit, offset, $scope.items).then(function(data) {
                 $scope.milestones = $scope.milestones.concat(data.results);
 
-                if (offset < data.total) {
+                if ((offset + limit) < data.total) {
                     fetchMilestones(project_id, limit, offset + limit);
                 } else {
                     $scope.loading_milestones = false;
@@ -165,7 +165,7 @@
             return MilestoneService.getSubMilestones(milestone_id, limit, offset, $scope.items).then(function(data) {
                 $scope.milestones = $scope.milestones.concat(data.results);
 
-                if (offset < data.total) {
+                if ((offset + limit) < data.total) {
                     fetchSubMilestones(milestone_id, limit, offset + limit);
                 } else {
                     $scope.loading_milestones = false;
@@ -248,9 +248,8 @@
             return BacklogItemService.getBacklogItemChildren(backlog_item.id, limit, offset).then(function(data) {
                 backlog_item.children.data = backlog_item.children.data.concat(data.results);
 
-                if (offset < data.total) {
+                if ((offset + limit) < data.total) {
                     fetchBacklogItemChildren(backlog_item, limit, offset + limit);
-
                 } else {
                     backlog_item.loading         = false;
                     backlog_item.children.loaded = true;

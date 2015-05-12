@@ -47,7 +47,7 @@ use PlanningPermissionsManager;
  * Wrapper for backlog related REST methods
  */
 class ProjectBacklogResource {
-    const MAX_LIMIT = 50;
+    const MAX_LIMIT = 100;
     const TOP_BACKLOG_IDENTIFIER = AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider::TOP_BACKLOG_IDENTIFIER;
 
     /** @var Planning_MilestoneFactory */
@@ -142,7 +142,10 @@ class ProjectBacklogResource {
              throw new RestException(406, 'Maximum value for limit exceeded');
         }
 
-        $backlog_items                       = $this->getBacklogItems($user, $project);
+        $top_milestone = $this->milestone_factory->getVirtualTopMilestone($user, $project);
+        $strategy      = $this->backlog_strategy_factory->getSelfBacklogStrategy($top_milestone, $limit, $offset);
+
+        $backlog_items                       = $this->backlog_item_collection_factory->getUnplannedOpenCollection($user, $top_milestone, $strategy, false);
         $backlog_item_representations        = array();
         $backlog_item_representation_factory = new BacklogItemRepresentationFactory();
 
@@ -151,9 +154,9 @@ class ProjectBacklogResource {
         }
 
         $this->sendAllowHeaders();
-        $this->sendPaginationHeaders($limit, $offset, count($backlog_items));
+        $this->sendPaginationHeaders($limit, $offset, $backlog_items->getTotalAvaialableSize());
 
-        return array_slice($backlog_item_representations, $offset, $limit);
+        return $backlog_item_representations;
     }
 
     private function limitValueIsAcceptable($limit) {
@@ -235,13 +238,6 @@ class ProjectBacklogResource {
         } catch (\Exception $exception) {
             throw new RestException(400, $exception->getMessage());
         }
-    }
-
-    private function getBacklogItems(PFUser $user, Project $project) {
-        $top_milestone       = $this->milestone_factory->getVirtualTopMilestone($user, $project);
-        $strategy_unassigned = $this->backlog_strategy_factory->getSelfBacklogStrategy($top_milestone);
-
-        return $this->backlog_item_collection_factory->getUnassignedOpenCollection($user, $top_milestone, $strategy_unassigned, false);
     }
 
     private function sendPaginationHeaders($limit, $offset, $size) {

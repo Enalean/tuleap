@@ -36,6 +36,9 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollection implements
     /** @var string */
     private $parent_item_name = '';
 
+    /** @var Int */
+    private $total_available_size;
+
     public function getParentItemName() {
         return $this->parent_item_name;
     }
@@ -76,5 +79,12 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollection implements
     public function count() {
         return count($this->rows);
     }
+
+    public function getTotalAvaialableSize() {
+        return $this->total_available_size;
+    }
+
+    public function setTotalAvaialableSize($size) {
+        $this->total_available_size = (int) $size;
+    }
 }
-?>

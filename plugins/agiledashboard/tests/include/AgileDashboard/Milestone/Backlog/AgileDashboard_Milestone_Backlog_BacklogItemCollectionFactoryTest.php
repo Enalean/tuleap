@@ -94,7 +94,12 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
         $this->story2 = anArtifact()->userCanView($this->user)->withTitle('story 2')->withId($this->open_unplanned_story_id)->withTracker($this->tracker2)->build();
         $this->story3 = anArtifact()->userCanView($this->user)->withTitle('story 3')->withId($this->closed_story_id)->withTracker($this->tracker3)->build();
 
-        $this->backlog_strategy = stub('AgileDashboard_Milestone_Backlog_BacklogStrategy')->getArtifacts($this->user)->returns(array($this->story1, $this->story2, $this->story3));
+        $backlog_items = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
+        $backlog_items->push($this->story1);
+        $backlog_items->push($this->story2);
+        $backlog_items->push($this->story3);
+
+        $this->backlog_strategy = stub('AgileDashboard_Milestone_Backlog_BacklogStrategy')->getArtifacts($this->user)->returns($backlog_items);
         stub($this->backlog_strategy)->getMilestoneBacklogArtifactsTracker()->returns(mock('Tracker'));
 
         $this->redirect_to_self = 'whatever';
@@ -194,22 +199,6 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
 
         $row = $content->current();
         $this->assertEqual($row->points(), null);
-    }
-
-    public function itCreatesACollectionForOpenAndUnplannedElements() {
-        stub($this->dao)->getPlannedItemIds(array(121,436))->returns(
-            array($this->open_story_id)
-        );
-
-        $unplanned_open_collection = $this->factory->getUnplannedOpenCollection(
-            $this->user,
-            $this->milestone,
-            $this->backlog_strategy,
-            $this->redirect_to_self
-        );
-
-        $row = $unplanned_open_collection->current();
-        $this->assertEqual($row->id(), $this->open_unplanned_story_id);
     }
 
     public function itCreatesACollectionForOpenAndUnassignedElements() {

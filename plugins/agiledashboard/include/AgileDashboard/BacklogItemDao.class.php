@@ -43,14 +43,104 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function getTopBacklogArtifacts(array $milestone_tracker_ids) {
-        $milestone_tracker_ids = $this->da->escapeIntImplode($milestone_tracker_ids);
+    public function getTopBacklogArtifacts(array $backlog_tracker_ids) {
+        $backlog_tracker_ids = $this->da->escapeIntImplode($backlog_tracker_ids);
 
-        $sql = "SELECT *
+        $sql = "SELECT SQL_CALC_FOUND_ROWS *
                 FROM tracker_artifact
                     INNER JOIN tracker_artifact_priority ON (tracker_artifact_priority.curr_id = tracker_artifact.id)
-                WHERE tracker_id IN ($milestone_tracker_ids)
+                WHERE tracker_id IN ($backlog_tracker_ids)
                 ORDER BY tracker_artifact_priority.rank ASC";
+
+        return $this->retrieve($sql);
+    }
+
+    public function getTopBacklogArtifactsWithLimitAndOffset(array $backlog_tracker_ids, $limit, $offset) {
+        $backlog_tracker_ids = $this->da->escapeIntImplode($backlog_tracker_ids);
+        $limit               = $this->da->escapeInt($limit);
+        $offset              = $this->da->escapeInt($offset);
+
+        $sql = "SELECT SQL_CALC_FOUND_ROWS *
+                FROM tracker_artifact
+                    INNER JOIN tracker_artifact_priority ON (tracker_artifact_priority.curr_id = tracker_artifact.id)
+                WHERE tracker_id IN ($backlog_tracker_ids)
+                ORDER BY tracker_artifact_priority.rank ASC
+                LIMIT $limit OFFSET $offset";
+
+        return $this->retrieve($sql);
+    }
+
+    public function getOpenUnplannedTopBacklogArtifacts(array $backlog_tracker_ids, $sub_milestone_ids) {
+        $backlog_tracker_ids = $this->da->escapeIntImplode($backlog_tracker_ids);
+        $sub_milestone_ids   = $this->da->escapeIntImplode($sub_milestone_ids);
+
+        $sql = "SELECT SQL_CALC_FOUND_ROWS art_1.*
+                FROM tracker_artifact AS art_1
+                    INNER JOIN tracker_artifact_priority ON (tracker_artifact_priority.curr_id = art_1.id)
+                    -- Open status section
+                    INNER JOIN tracker AS T              ON (art_1.tracker_id = T.id)
+                    INNER JOIN groups AS G               ON (G.group_id = T.group_id)
+                    INNER JOIN tracker_changeset AS C    ON (art_1.last_changeset_id = C.id)
+                    LEFT JOIN (                                                                -- Look if there is any status /open/ semantic defined
+                        tracker_semantic_status as SS
+                        INNER JOIN tracker_changeset_value AS CV3       ON (SS.field_id = CV3.field_id)
+                        INNER JOIN tracker_changeset_value_list AS CVL2 ON (CV3.id = CVL2.changeset_value_id)
+                    ) ON (T.id = SS.tracker_id AND C.id = CV3.changeset_id)
+                    -- ensure that the artifact is not planned in a milestone by joins + IS NULL (below)
+                    LEFT JOIN ( tracker_artifact parent_art
+                        INNER JOIN tracker_field                        f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
+                        INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
+                        INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
+                        INNER JOIN tracker_artifact                     child_art  ON (child_art.id = artlink.artifact_id)
+                        INNER JOIN plugin_agiledashboard_planning       planning   ON (planning.planning_tracker_id = parent_art.tracker_id)
+                    ) ON (art_1.id = child_art.id )
+                WHERE art_1.tracker_id IN ($backlog_tracker_ids)
+                    AND (
+                        SS.field_id IS NULL -- Use the status semantic only if it is defined
+                        OR
+                        CVL2.bindvalue_id = SS.open_value_id
+                     )
+                    AND child_art.id IS NULL
+                ORDER BY tracker_artifact_priority.rank ASC";
+
+        return $this->retrieve($sql);
+    }
+
+    public function getOpenUnplannedTopBacklogArtifactsWithLimitAndOffset(array $backlog_tracker_ids, $limit, $offset) {
+        $backlog_tracker_ids = $this->da->escapeIntImplode($backlog_tracker_ids);
+        $limit               = $this->da->escapeInt($limit);
+        $offset              = $this->da->escapeInt($offset);
+
+        $sql = "SELECT SQL_CALC_FOUND_ROWS art_1.*
+                FROM tracker_artifact AS art_1
+                    INNER JOIN tracker_artifact_priority ON (tracker_artifact_priority.curr_id = art_1.id)
+                        -- Open status section
+                    INNER JOIN tracker AS T              ON (art_1.tracker_id = T.id)
+                    INNER JOIN groups AS G               ON (G.group_id = T.group_id)
+                    INNER JOIN tracker_changeset AS C    ON (art_1.last_changeset_id = C.id)
+                    -- Look if there is any status /open/ semantic defined
+                    LEFT JOIN (
+                        tracker_semantic_status as SS
+                        INNER JOIN tracker_changeset_value AS CV3       ON (SS.field_id = CV3.field_id)
+                        INNER JOIN tracker_changeset_value_list AS CVL2 ON (CV3.id = CVL2.changeset_value_id)
+                    ) ON (T.id = SS.tracker_id AND C.id = CV3.changeset_id)
+                    -- ensure that the artifact is not planned in a milestone by joins + IS NULL (below)
+                    LEFT JOIN ( tracker_artifact parent_art
+                        INNER JOIN tracker_field                        f          ON (f.tracker_id = parent_art.tracker_id AND f.formElement_type = 'art_link' AND use_it = 1)
+                        INNER JOIN tracker_changeset_value              cv         ON (cv.changeset_id = parent_art.last_changeset_id AND cv.field_id = f.id)
+                        INNER JOIN tracker_changeset_value_artifactlink artlink    ON (artlink.changeset_value_id = cv.id)
+                        INNER JOIN tracker_artifact                     child_art  ON (child_art.id = artlink.artifact_id)
+                        INNER JOIN plugin_agiledashboard_planning       planning   ON (planning.planning_tracker_id = parent_art.tracker_id)
+                    ) ON (art_1.id = child_art.id )
+                WHERE art_1.tracker_id IN ($backlog_tracker_ids)
+                    AND (
+                        SS.field_id IS NULL -- Use the status semantic only if it is defined
+                        OR
+                        CVL2.bindvalue_id = SS.open_value_id
+                     )
+                    AND child_art.id IS NULL
+                ORDER BY tracker_artifact_priority.rank ASC
+                LIMIT $limit OFFSET $offset";
 
         return $this->retrieve($sql);
     }
@@ -126,5 +216,3 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 }
-
-?>

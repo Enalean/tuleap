@@ -107,7 +107,7 @@ class AgileDashboard_SequenceIdManagerTest extends TuleapTestCase {
     public function itReturnsNothingIfThereAreNoArtifactsInMilestonesBacklog() {
         $artifact_id = 2;
 
-        stub($this->strategy_1)->getArtifacts($this->user)->returns(array());
+        stub($this->strategy_1)->getArtifacts($this->user)->returns(new AgileDashboard_Milestone_Backlog_DescendantItemsCollection());
 
         expect($this->strategy_factory)->getBacklogStrategy($this->milestone_1)->once();
 
@@ -117,12 +117,13 @@ class AgileDashboard_SequenceIdManagerTest extends TuleapTestCase {
     public function itReturnsNothingIfTheArtifactIsNotInTheMilestoneBacklog() {
         $artifact_id = 2;
 
+        $backlog_items = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
+        $backlog_items->push($this->artifact_1);
+        $backlog_items->push($this->artifact_2);
+        $backlog_items->push($this->artifact_3);
+
         stub($this->strategy_1)->getArtifacts($this->user)->returns(
-            array(
-                $this->artifact_1,
-                $this->artifact_2,
-                $this->artifact_3
-                )
+            $backlog_items
         );
 
         expect($this->strategy_1)->getArtifacts($this->user)->once();
@@ -133,12 +134,13 @@ class AgileDashboard_SequenceIdManagerTest extends TuleapTestCase {
     public function itReturns1IfTheArtifactIsInFirstPlace() {
         $artifact_id = $this->artifact_id_1;
 
+        $backlog_items = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
+        $backlog_items->push($this->artifact_1);
+        $backlog_items->push($this->artifact_2);
+        $backlog_items->push($this->artifact_3);
+
         stub($this->strategy_1)->getArtifacts($this->user)->returns(
-            array(
-                $this->artifact_1,
-                $this->artifact_2,
-                $this->artifact_3
-            )
+            $backlog_items
         );
 
         expect($this->strategy_1)->getArtifacts($this->user)->once();
@@ -149,12 +151,13 @@ class AgileDashboard_SequenceIdManagerTest extends TuleapTestCase {
     public function itReturns2IfTheArtifactIsInFirstPlace() {
         $artifact_id = $this->artifact_id_1;
 
+        $backlog_items = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
+        $backlog_items->push($this->artifact_2);
+        $backlog_items->push($this->artifact_1);
+        $backlog_items->push($this->artifact_3);
+ 
         stub($this->strategy_1)->getArtifacts($this->user)->returns(
-            array(
-                $this->artifact_2,
-                $this->artifact_1,
-                $this->artifact_3
-            )
+            $backlog_items
         );
 
         expect($this->strategy_1)->getArtifacts($this->user)->once();
@@ -165,12 +168,13 @@ class AgileDashboard_SequenceIdManagerTest extends TuleapTestCase {
     public function itKeepsInMemoryTheBacklogResult() {
         $artifact_id = $this->artifact_id_1;
 
+        $backlog_items = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
+        $backlog_items->push($this->artifact_2);
+        $backlog_items->push($this->artifact_1);
+        $backlog_items->push($this->artifact_3);
+
         stub($this->strategy_1)->getArtifacts($this->user)->returns(
-            array(
-                $this->artifact_2,
-                $this->artifact_1,
-                $this->artifact_3
-            )
+            $backlog_items
         );
 
         expect($this->strategy_1)->getArtifacts($this->user)->once();
@@ -180,20 +184,26 @@ class AgileDashboard_SequenceIdManagerTest extends TuleapTestCase {
     }
 
     public function itCanDealWithMultipleCallWithDifferentMilestones() {
+        $backlog_items = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
+        $backlog_items->push($this->artifact_2);
+        $backlog_items->push($this->artifact_1);
+        $backlog_items->push($this->artifact_3);
+
         stub($this->strategy_1)->getArtifacts($this->user)->returns(
-            array(
-                $this->artifact_2,
-                $this->artifact_1,
-                $this->artifact_3
-            )
+            $backlog_items
+        );
+
+        $backlog_items = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();
+        $backlog_items->push($this->artifact_4);
+        $backlog_items->push($this->artifact_5);
+        $backlog_items->push($this->artifact_6);
+
+        stub($this->strategy_2)->getArtifacts($this->user)->returns(
+            $backlog_items
         );
 
         stub($this->strategy_2)->getArtifacts($this->user)->returns(
-            array(
-                $this->artifact_4,
-                $this->artifact_5,
-                $this->artifact_6
-            )
+            $backlog_items
         );
 
         expect($this->strategy_factory)->getBacklogStrategy()->count(2);
