@@ -16,12 +16,12 @@ $vUrl->required();
 $vTitle = new Valid_String('bookmark_title');
 $vTitle->required();
 
+$purifier = Codendi_HTMLPurifier::instance();
+
 $csrf_token = new CSRFSynchronizerToken('/my/bookmark_add.php');
 
 if ($request->isPost() && $request->valid($vUrl) && $request->valid($vTitle)) {
     $csrf_token->check();
-
-    $purifier = Codendi_HTMLPurifier::instance();
 
     $bookmark_url = $request->get('bookmark_url');
     $bookmark_title = $request->get('bookmark_title');
@@ -51,10 +51,10 @@ if ($request->isPost() && $request->valid($vUrl) && $request->valid($vTitle)) {
     ?>
     <FORM METHOD=POST>
         <?php echo $Language->getText('bookmark_add', 'bkm_url'); ?>:<br>
-        <input type="text" size="60" name="bookmark_url" value="<?php echo $bookmark_url; ?>">
+        <input type="text" size="60" name="bookmark_url" value="<?php echo $purifier->purify($bookmark_url); ?>">
         <p>
             <?php echo $Language->getText('bookmark_add', 'bkm_title'); ?>:<br>
-            <input type="text" size="60" name="bookmark_title" value="<?php echo $bookmark_title; ?>">
+            <input type="text" size="60" name="bookmark_title" value="<?php echo $purifier->purify($bookmark_title); ?>">
         <p>
             <?php echo $csrf_token->fetchHTMLInput();?>
             <input type="submit" value="<?php echo $Language->getText('global', 'btn_submit'); ?>">
