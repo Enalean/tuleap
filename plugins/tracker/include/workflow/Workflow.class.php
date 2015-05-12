@@ -338,16 +338,22 @@ class Workflow {
         $this->logger->end(__METHOD__, $new_changeset->getId(), ($previous_changeset ? $previous_changeset->getId() : 'null'));
     }
 
+    /**
+     * @throws Tracker_Workflow_PermissionTransitionViolationException
+     *
+     * @return void
+     */
     public function validate($fields_data, Tracker_Artifact $artifact) {
         if (! $this->is_used) {
-            return true;
+            return;
         }
 
         $transition = $this->getCurrentTransition($fields_data, $artifact->getLastChangeset());
         if (isset($transition)) {
-            return $transition->validate($fields_data, $artifact);
+            if (! $transition->validate($fields_data, $artifact)) {
+                throw new Tracker_Workflow_PermissionTransitionViolationException();
+            }
         }
-        return true;
     }
 
     private function getCurrentTransition($fields_data, Tracker_Artifact_Changeset $changeset = null) {

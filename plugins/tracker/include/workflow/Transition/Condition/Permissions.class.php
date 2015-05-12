@@ -109,7 +109,16 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
     }
 
     public function validate($fields_data, Tracker_Artifact $artifact) {
-        return true;
+        $current_user       = UserManager::instance()->getCurrentUser();
+        $transition_ugroups = $this->permission_manager->getAuthorizedUgroups($this->transition->getId(), self::PERMISSION_TRANSITION);
+
+        foreach($transition_ugroups as $ugroup) {
+            if ($current_user->isMemberOfUGroup($ugroup['ugroup_id'], $artifact->getTracker()->getGroupId())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
 ?>
