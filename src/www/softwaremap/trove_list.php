@@ -274,8 +274,7 @@ if ($special_cat === 'none') {
     . "(groups.type=1) AND "
         . "(groups.status='A') "
         . $sql_list_categorized
-        . "GROUP BY groups.group_id ORDER BY groups.group_name "
-        . "LIMIT ".$TROVE_HARDQUERYLIMIT;
+        . "GROUP BY groups.group_id ORDER BY groups.group_name ";
 }
 else {
 // now do limiting query
@@ -300,8 +299,7 @@ $query_projlist = "SELECT groups.group_id, "
 	. "(groups.status='A') AND "
 	. "trove_group_link.trove_cat_id=$form_cat "
 	. $discrim_queryand
-	. "GROUP BY groups.group_id ORDER BY groups.group_name "
-	. "LIMIT ".$TROVE_HARDQUERYLIMIT;
+	. "GROUP BY groups.group_id ORDER BY groups.group_name ";
 }
 
 $res_grp = db_query($query_projlist);
@@ -322,9 +320,6 @@ if ($querytotalcount ==0) {
     $html_limit .= $Language->getText('softwaremap_trove_list','no_project_in_cat')."<br>\n";
 }
 else {
-if ($querytotalcount == $TROVE_HARDQUERYLIMIT)
-     $html_limit .= $Language->getText('softwaremap_trove_list','more_projs_in_res',$querytotalcount);
-else
      $html_limit .= $Language->getText('softwaremap_trove_list','projs_in_res',$querytotalcount);
 
 // only display pages stuff if there is more to display
