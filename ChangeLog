@@ -1,4 +1,7 @@
 Version 8.2 (not released yet)
+	== Bug Fix ==
+	* request #8069 Pagination does not work in "Browse all projects"
+
 	== Security ==
 	* request #8002: Use a bigger RSA modulus for the creation of the SSL certificate
 	* request #7983: SQL injection in site statistics
