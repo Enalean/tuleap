@@ -10,7 +10,6 @@
 
 $TROVE_MAXPERROOT = 3;
 $TROVE_BROWSELIMIT = 20;
-$TROVE_HARDQUERYLIMIT = 300;
 
 // regenerates full path entries for $node and all subnodes
 function trove_genfullpaths($mynode,$myfullpath,$myfullpathids) {
