@@ -627,6 +627,10 @@ class UserDao extends DataAccessObject {
      * @return Boolean
      */
     function renameUser($user, $newName) {
+        if (! TrackerV3::instance()->available()) {
+            return true;
+        }
+
         $sqlArtcc = ' UPDATE artifact_cc SET email ='.$this->da->quoteSmart($newName).
                      ' WHERE email = '.$this->da->quoteSmart($user->getUserName());
         if ($this->update($sqlArtcc)) {
