@@ -50,8 +50,9 @@
                 })
                 .then(function (response) {
                     var result = {
-                        results: response.data.collection,
-                        total: response.headers('X-PAGINATION-SIZE')
+                        results              : response.data.collection,
+                        user_can_add_in_place: response.data.user_can_add_in_place,
+                        total                : response.headers('X-PAGINATION-SIZE')
                     };
 
                     data.resolve(result);
