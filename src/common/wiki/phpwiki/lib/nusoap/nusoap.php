@@ -2214,7 +2214,7 @@ class soap_server extends nusoap_base {
 			<br><br>
 			<div class=title>'.$this->wsdl->serviceName.'</div>
 			<div class=nav>
-				<p>View the <a href="'.$GLOBALS['PHP_SELF'].'?wsdl">WSDL</a> for the service.
+				<p>View the <a href="?wsdl">WSDL</a> for the service.
 				Click on an operation name to view it&apos;s details.</p>
 				<ul>';
 				foreach($this->wsdl->getOperations() as $op => $data){
