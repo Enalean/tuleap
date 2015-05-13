@@ -77,6 +77,16 @@ class Git_Gitolite_ConfigPermissionsSerializer {
         );
     }
 
+    public function getAllIncludesForHostname($hostname, array $project_names) {
+        return $this->template_renderer->renderToString(
+            'gitolite-includes-for-hostname.conf',
+            array(
+                "hostname"      => $hostname,
+                "project_names" => $project_names
+            )
+        );
+    }
+
     public function getForRepository(GitRepository $repository) {
         $project = $repository->getProject();
         $repo_config = '';

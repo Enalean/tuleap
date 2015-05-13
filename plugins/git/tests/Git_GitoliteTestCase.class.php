@@ -107,7 +107,10 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
             $this->url_manager,
             $this->gitExec,
             $this->repository_factory,
-            $this->gitolite_permissions_serializer
+            $this->gitolite_permissions_serializer,
+            null,
+            null,
+            $this->mirror_data_mapper
         );
     }
     

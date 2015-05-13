@@ -108,6 +108,14 @@ class Git_Exec {
         return true;
     }
 
+    public function recursiveRm($file) {
+        if ($this->canRemove($file)) {
+            $cmd = 'rm -r '.escapeshellarg(realpath($file));
+            return $this->gitCmd($cmd);
+        }
+        return true;
+    }
+
     private function canRemove($file) {
         $output = array();
         $this->gitCmdWithOutput('status --porcelain '.escapeshellarg(realpath($file)), $output);

@@ -358,6 +358,12 @@ class GitPlugin extends Plugin {
                     $this->getGitoliteDriver()
                 );
                 break;
+            case SystemEvent_GIT_RENAME_MIRROR::NAME:
+                $params['class'] = 'SystemEvent_GIT_RENAME_MIRROR';
+                $params['dependencies'] = array(
+                    $this->getGitoliteDriver()
+                );
+                break;
             default:
                 break;
         }
@@ -474,7 +480,9 @@ class GitPlugin extends Plugin {
             new GitRepositoryFactory(
                 new GitDao(),
                 ProjectManager::instance()
-            )
+            ),
+            $this->getProjectManager(),
+            $this->getGitSystemEventManager()
         );
     }
 
@@ -781,7 +789,13 @@ class GitPlugin extends Plugin {
         return new Git_GitoliteDriver(
             $this->getLogger(),
             $this->getGitSystemEventManager(),
-            $this->getGitRepositoryUrlManager()
+            $this->getGitRepositoryUrlManager(),
+            null,
+            null,
+            null,
+            null,
+            $this->getProjectManager(),
+            $this->getMirrorDataMapper()
         );
     }
 

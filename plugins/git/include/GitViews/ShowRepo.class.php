@@ -54,6 +54,9 @@ class GitViews_ShowRepo {
     /** @var Git_GitRepositoryUrlManager */
     private $url_manager;
 
+    /** @var Git_Mirror_MirrorDataMapper */
+    private $mirror_data_mapper;
+
     public function __construct(
             GitRepository $repository,
             Git $controller,
@@ -61,7 +64,8 @@ class GitViews_ShowRepo {
             Codendi_Request $request,
             Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
             Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
-            array $gerrit_servers
+            array $gerrit_servers,
+            Git_Mirror_MirrorDataMapper $mirror_data_mapper
     ) {
         $this->repository         = $repository;
         $this->controller         = $controller;
@@ -70,6 +74,7 @@ class GitViews_ShowRepo {
         $this->gerrit_usermanager = $gerrit_usermanager;
         $this->gerrit_servers     = $gerrit_servers;
         $this->url_manager        = $url_manager;
+        $this->mirror_data_mapper = $mirror_data_mapper;
     }
 
 
@@ -89,22 +94,11 @@ class GitViews_ShowRepo {
                 $this->url_manager,
                 $this->driver_factory,
                 $this->gerrit_usermanager,
-                $this->getMirrorDataMapper(),
+                $this->mirror_data_mapper,
                 $this->gerrit_servers,
                 $this->controller->getPlugin()->getThemePath()
             );
         }
         $view->display();
-    }
-
-    private function getMirrorDataMapper() {
-        return new Git_Mirror_MirrorDataMapper(
-            new Git_Mirror_MirrorDao(),
-            UserManager::instance(),
-            new GitRepositoryFactory(
-                new GitDao(),
-                ProjectManager::instance()
-            )
-        );
     }
 }

@@ -83,7 +83,29 @@ class Git_Mirror_MirrorDao extends DataAccessObject{
                 FROM plugin_git_repository_mirrors rm
                     INNER JOIN plugin_git g ON g.repository_id = rm.repository_id
                 WHERE rm.mirror_id = $mirror_id
-                AND g.project_id IN ($project_ids)";
+                AND g.project_id IN ($project_ids)
+                AND g.repository_deletion_date = '0000-00-00 00:00:00'";
+
+        return $this->retrieve($sql);
+    }
+
+    public function fetchAllProjectIdsConcernedByMirroring() {
+        $sql = "SELECT DISTINCT g.project_id
+                FROM plugin_git g
+                  INNER JOIN plugin_git_repository_mirrors rm ON g.repository_id = rm.repository_id";
+
+        return $this->retrieve($sql);
+    }
+
+    public function fetchAllProjectIdsConcernedByAMirror($mirror_id) {
+        $mirror_id = $this->da->escapeInt($mirror_id);
+
+        $sql = "SELECT DISTINCT g.project_id
+                FROM plugin_git g
+                  INNER JOIN plugin_git_repository_mirrors rm ON g.repository_id = rm.repository_id
+                  INNER JOIN plugin_git_mirrors gm ON gm.id = rm.mirror_id
+                WHERE rm.mirror_id = $mirror_id
+                AND g.repository_deletion_date = '0000-00-00 00:00:00'";
 
         return $this->retrieve($sql);
     }

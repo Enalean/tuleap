@@ -45,23 +45,29 @@ class GitViews_RepoManagement {
     /** @var Git_Driver_Gerrit_Template_Template[] */
     private $gerrit_config_templates;
 
+    /** @var Git_Mirror_MirrorDataMapper */
+    private $mirror_data_mapper;
+
     public function __construct(
         GitRepository $repository,
         Codendi_Request $request,
         Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
         array $gerrit_servers,
-        array $gerrit_config_templates
+        array $gerrit_config_templates,
+        Git_Mirror_MirrorDataMapper $mirror_data_mapper
     ) {
         $this->repository              = $repository;
         $this->request                 = $request;
         $this->driver_factory          = $driver_factory;
         $this->gerrit_servers          = $gerrit_servers;
         $this->gerrit_config_templates = $gerrit_config_templates;
+        $this->mirror_data_mapper      = $mirror_data_mapper;
         $this->panes                   = $this->buildPanes($repository);
         $this->current_pane            = 'settings';
         if (isset($this->panes[$request->get('pane')])) {
             $this->current_pane = $request->get('pane');
         }
+
     }
 
     /**
@@ -76,9 +82,9 @@ class GitViews_RepoManagement {
 
         $panes[] = new GitViews_RepoManagement_Pane_AccessControl($repository, $this->request);
 
-        $mirrors = $this->getMirrorDataMapper()->fetchAllForProject($repository->getProject());
+        $mirrors = $this->mirror_data_mapper->fetchAllForProject($repository->getProject());
         if (count($mirrors) > 0) {
-            $repository_mirrors = $this->getMirrorDataMapper()->fetchAllRepositoryMirrors($repository);
+            $repository_mirrors = $this->mirror_data_mapper->fetchAllRepositoryMirrors($repository);
             $panes[]            = new GitViews_RepoManagement_Pane_Mirroring($repository, $this->request, $mirrors, $repository_mirrors);
         }
 
@@ -92,17 +98,6 @@ class GitViews_RepoManagement {
             }
         }
         return $indexed_panes;
-    }
-
-    private function getMirrorDataMapper() {
-        return new Git_Mirror_MirrorDataMapper(
-            new Git_Mirror_MirrorDao(),
-            UserManager::instance(),
-            new GitRepositoryFactory(
-                new GitDao(),
-                ProjectManager::instance()
-            )
-        );
     }
 
     /**

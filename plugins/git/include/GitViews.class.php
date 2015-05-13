@@ -158,7 +158,8 @@ class GitViews extends PluginViews {
             $this->controller->getRequest(),
             $params['driver_factory'],
             $params['gerrit_usermanager'],
-            $params['gerrit_servers']
+            $params['gerrit_servers'],
+            $this->mirror_data_mapper
         );
         $index_view->display();
     }
@@ -176,7 +177,8 @@ class GitViews extends PluginViews {
             $this->controller->getRequest(),
             $params['driver_factory'],
             $params['gerrit_servers'],
-            $params['gerrit_templates']
+            $params['gerrit_templates'],
+            $this->mirror_data_mapper
         );
         $repo_management_view->display();
     }

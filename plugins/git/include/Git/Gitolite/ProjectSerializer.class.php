@@ -68,6 +68,19 @@ class Git_Gitolite_ProjectSerializer {
         return $project_config;
     }
 
+    public function dumpPartialProjectRepoConf(Project $project, array $repositories) {
+        $this->logger->debug("Dumping partial project repo conf for: " . $project->getUnixName());
+        $project_config = '';
+        foreach ($repositories as $repository) {
+
+            $this->logger->debug("Fetching Repo Configuration: " . $repository->getName() . "...");
+            $project_config .= $this->fetchReposConfig($project, $repository);
+            $this->logger->debug("Fetching Repo Configuration: " . $repository->getName() . ": done");
+        }
+
+        return $project_config;
+    }
+
     protected function fetchReposConfig(Project $project, GitRepository $repository) {
         $repo_full_name   = $this->repoFullName($repository, $project->getUnixName());
         $repo_config  = 'repo '. $repo_full_name . PHP_EOL;
