@@ -1,3 +1,6 @@
+Version 4.52 - Tuleap 8.2
+    * story #8021 - fix warning in gitolite syslog
+
 Version 4.51 - Tuleap 8.2
     * story #8021 - delete mirror configuration on mirror delete
 
