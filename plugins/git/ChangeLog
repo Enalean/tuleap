@@ -1,3 +1,6 @@
+Version 4.51 - Tuleap 8.2
+    * story #8021 - delete mirror configuration on mirror delete
+
 Version 4.50 - Tuleap 8.2
     * story #8021 - write conf on a per mirror basis if %HOSTNAME is set in .gitolite.rc file
 
