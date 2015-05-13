@@ -48,6 +48,7 @@
     @wip-reached-color: #F39333;
     @wip-reached-bg-color: #FFECD9;
     @border-color: #E0E0E0;
+    @light-border-color: #EFEFEF;
 
     width: 100%;
     position: relative;
@@ -206,11 +207,86 @@
         > .column-content {
             -moz-box-sizing: border-box;
                  box-sizing: border-box;
-            padding: 50px 0 10px;
+            padding: 50px 0 30px;
             text-transform: none;
 
             > .kanban-info {
                 font-style: italic;
+            }
+
+            > add-in-place > .column-content-addinplace {
+                position: absolute;
+                z-index: 1;
+                top: 150px;
+                width: 150px;
+                height: 48px;
+                box-sizing: border-box;
+                background: rgba(255, 255, 255, 0.95);
+                border-top: 1px solid @light-border-color;
+                border-right: 1px solid @border-color;
+                color: #333;
+                text-align: center;
+
+                > i {
+                    display: block;
+                    width: 100%;
+                    height: 100%;
+                    padding: 13px 0 0;
+                    box-sizing: border-box;
+                    color: #333;
+                    font-size: 22px;
+                    opacity: 0.6;
+                    cursor: pointer;
+                    transition: opacity 0.1s linear;
+
+                    &:hover {
+                        opacity: 1;
+                        transition: opacity 0.1s linear;
+                    }
+                }
+
+                &.open {
+                    > i {
+                        display: none;
+                    }
+
+                    > form {
+                        padding: 9px 9px 0;
+
+                        > .input-append {
+                            width: 100%;
+
+                            > input[type=text] {
+                                box-sizing: border-box;
+                                height: 30px;
+                                width: 80%;
+                            }
+
+                            > button {
+                                width: 10%;
+                                padding: 4px 0;
+                            }
+                        }
+
+                        &.ng-enter {
+                            -webkit-animation: fadeIn 0.15s;
+                               -moz-animation: fadeIn 0.15s;
+                                -ms-animation: fadeIn 0.15s;
+                                    animation: fadeIn 0.15s;
+                        }
+                    }
+                }
+            }
+        }
+
+        &.small_column > .column-content > add-in-place > .column-content-addinplace > form > .input-append {
+
+            > input[type=text] {
+                width: 70%;
+            }
+
+            > button {
+                width: 15%;
             }
         }
 
@@ -363,198 +439,7 @@ ul.kanban-items {
                 margin-top: 10px;
             }
         }
-
-        > .kanban-item {
-            position: relative;
-            padding: 5px 5px 5px 12px;
-            cursor: move;
-            color: #333;
-            font-weight: normal;
-            background: #FFFFFF;
-            border: 1px solid #E8E8E8;
-            border-radius: 3px;
-            box-shadow: 0px 1px 0px 0px rgba(242, 242, 242, 0.7);
-
-            > .icon-time {
-                position: absolute;
-                right: 5px;
-                top: 5px;
-                cursor: default;
-                opacity: 0.2;
-                transition: opacity 0.1s linear;
-
-                &:hover {
-                    opacity: 1;
-                    transition: opacity 0.1s linear;
-                }
-            }
-
-            > .tooltip > .tooltip-inner {
-                width: auto;
-                white-space: nowrap;
-                text-align: left;
-
-                > p {
-                    margin: 0 0 5px;
-
-                    &:last-child {
-                        margin: 0;
-                    }
-
-                    > span {
-                        opacity: 0.8;
-                    }
-
-                    > strong {
-                        white-space: nowrap;
-                    }
-                }
-            }
-
-            > div.type-border {
-                position: absolute;
-                top: 0;
-                left: 0;
-                height: 100%;
-                width: 5px;
-                border-top-left-radius: 2px;
-                border-bottom-left-radius: 2px;
-            }
-
-            &.inca_silver {
-                > div.type-border     { background-color: @inca_silver; }
-                > span.initial-effort { background-color: @inca_silver; }
-            }
-            &.chrome_silver {
-                > div.type-border     { background-color: @chrome_silver; }
-                > span.initial-effort { background-color: @chrome_silver; }
-            }
-            &.fiesta_red {
-                > div.type-border     { background-color: @fiesta_red; }
-                > span.initial-effort { background-color: @fiesta_red; }
-            }
-            &.teddy_brown {
-                > div.type-border     { background-color: @teddy_brown; }
-                > span.initial-effort { background-color: @teddy_brown; }
-            }
-            &.clockwork_orange {
-                > div.type-border     { background-color: @clockwork_orange; }
-                > span.initial-effort { background-color: @clockwork_orange; }
-            }
-            &.red_wine {
-                > div.type-border     { background-color: @red_wine; }
-                > span.initial-effort { background-color: @red_wine; }
-            }
-            &.acid_green {
-                > div.type-border     { background-color: @acid_green; }
-                > span.initial-effort { background-color: @acid_green; }
-            }
-            &.army_green {
-                > div.type-border     { background-color: @army_green; }
-                > span.initial-effort { background-color: @army_green; }
-            }
-            &.sherwood_green {
-                > div.type-border     { background-color: @sherwood_green; }
-                > span.initial-effort { background-color: @sherwood_green; }
-            }
-            &.ocean_turquoise {
-                > div.type-border     { background-color: @ocean_turquoise; }
-                > span.initial-effort { background-color: @ocean_turquoise; }
-            }
-            &.daphne_blue {
-                > div.type-border     { background-color: @daphne_blue; }
-                > span.initial-effort { background-color: @daphne_blue; }
-            }
-            &.lake_placid_blue {
-                > div.type-border     { background-color: @lake_placid_blue; }
-                > span.initial-effort { background-color: @lake_placid_blue; }
-            }
-            &.deep_blue {
-                > div.type-border     { background-color: @deep_blue; }
-                > span.initial-effort { background-color: @deep_blue; }
-            }
-            &.plum_crazy {
-                > div.type-border     { background-color: @plum_crazy; }
-                > span.initial-effort { background-color: @plum_crazy; }
-            }
-            &.peggy_pink {
-                > div.type-border     { background-color: @peggy_pink; }
-                > span.initial-effort { background-color: @peggy_pink; }
-            }
-            &.flamingo_pink {
-                > div.type-border     { background-color: @flamingo_pink; }
-                > span.initial-effort { background-color: @flamingo_pink; }
-            }
-
-            > .kanban-item-link {
-                position: absolute;
-                top: 3px;
-                left: 12px;
-                color: #999;
-                font-size: 0.8em;
-
-                &:hover {
-                    text-decoration: none;
-                    opacity: 0.7;
-                }
-            }
-
-            > .kanban-item-label {
-                padding: 20px 0;
-                text-align: center;
-            }
-
-            > ul.extra_card_fields {
-                margin: 0;
-                text-align: left;
-
-                > li {
-                    display: inline-block;
-                    list-style-type: none;
-                    font-size: 0.8em;
-
-                    &.large {
-                        width: 100%;
-                    }
-
-                    > div {
-                        margin: 0 20px 0 0;
-
-                        span.extra_card_field_title {
-                            color: #999;
-                        }
-
-                        span.color {
-                            display: inline-block;
-                            width: 9px;
-                            height: 9px;
-                            border-radius: 50%;
-                            margin: 0 3px 0 0;
-                        }
-
-                        a:hover {
-                            text-decoration: none;
-                        }
-
-                        .user {
-                            display: inline-block;
-
-                            .avatar {
-                                width: 22px;
-                                height: 22px;
-                                display: inline-block;
-                                margin: 0 4px 0 0;
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
-}
-
-#kanban-board > div.wip-reached ul.kanban-items > li > .kanban-item {
-    border: 1px solid #F5D5AB;
 }
 
 .modal-error {

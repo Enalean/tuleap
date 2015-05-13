@@ -6,6 +6,8 @@ ResizeDirective.$inject = ['$window', '$timeout'];
 
 function ResizeDirective($window, $timeout) {
     return function (scope, board_element, attr) {
+        var scrollbar_width = getScrollBarWidth();
+
         scope.$watch(watchExpressions, listener, true);
 
         board_element.bind('scroll', function(index, element) {
@@ -34,6 +36,18 @@ function ResizeDirective($window, $timeout) {
         function resetColumnHeaderPosition(element) {
             angular.element('.column-header').css('top', element.scrollTop());
             angular.element('.column-hidden > .column-label > div').css('top', element.scrollTop());
+
+            var addinplace_height = 48;
+
+            angular.element('.column-content-addinplace').css('top', element.scrollTop() + board_element.height() - addinplace_height - scrollbar_width);
+        }
+
+        function getScrollBarWidth() {
+            var outer = angular.element('<div>').css({visibility: 'hidden', width: 100, overflow: 'scroll'}).appendTo('body'),
+                widthWithScroll = angular.element('<div>').css({width: '100%'}).appendTo(outer).outerWidth();
+            outer.remove();
+
+            return 100 - widthWithScroll;
         }
 
         function bindSidebarEvent() {
@@ -158,32 +172,14 @@ function ResizeDirective($window, $timeout) {
         }
 
         function setUniformSizeForDisplayedColumns(board_element, board_width, nb_hidden, nb_displayed) {
-            var default_width_hidden = 75;
+            var default_width_hidden = 75,
+                width_displayed      = computeWidthDisplayed(board_width, nb_hidden, default_width_hidden, nb_displayed),
+                is_small_width       = width_displayed < 300;
 
-            var width_displayed = (board_width - nb_hidden * default_width_hidden) / nb_displayed;
-
-            if (width_displayed < 180) {
-                width_displayed = 180;
-            }
-
-            if (scope.kanban.backlog.is_open) {
-                scope.kanban.backlog.resize_width = width_displayed + 'px';
-            } else {
-                scope.kanban.backlog.resize_width = default_width_hidden + 'px';
-            }
-
-            if (scope.kanban.archive.is_open) {
-                scope.kanban.archive.resize_width = width_displayed + 'px';
-            } else {
-                scope.kanban.archive.resize_width = default_width_hidden + 'px';
-            }
-
+            resizeColumn(scope.kanban.backlog, width_displayed, is_small_width, default_width_hidden);
+            resizeColumn(scope.kanban.archive, width_displayed, is_small_width, default_width_hidden);
             scope.kanban.board.columns.map(function (column) {
-                if (column.is_open) {
-                    column.resize_width = width_displayed + 'px';
-                } else {
-                    column.resize_width = default_width_hidden + 'px';
-                }
+                resizeColumn(column, width_displayed, is_small_width, default_width_hidden);
             });
 
             scope.kanban.backlog.resize_top = '';
@@ -196,6 +192,26 @@ function ResizeDirective($window, $timeout) {
             scope.kanban.board.columns.map(function (column) {
                 column.resize_left = '';
             });
+
+            function computeWidthDisplayed(board_width, nb_hidden, default_width_hidden, nb_displayed) {
+                var width_displayed = (board_width - nb_hidden * default_width_hidden) / nb_displayed;
+
+                if (width_displayed < 180) {
+                    width_displayed = 180;
+                }
+
+                return width_displayed;
+            }
+
+            function resizeColumn(column, width_displayed, is_small_width, default_width_hidden) {
+                if (column.is_open) {
+                    column.resize_width   = width_displayed + 'px';
+                    column.is_small_width = is_small_width;
+
+                } else {
+                    column.resize_width = default_width_hidden + 'px';
+                }
+            }
         }
 
         function setUniformSizeForHiddenColumns(board_element, board_width, nb_hidden) {

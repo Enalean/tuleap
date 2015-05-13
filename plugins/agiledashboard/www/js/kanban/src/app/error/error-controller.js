@@ -2,11 +2,13 @@ angular
     .module('kanban')
     .controller('ErrorCtrl', ErrorCtrl);
 
-ErrorCtrl.$inject = ['$scope', '$window'];
+ErrorCtrl.$inject = ['$scope', '$window', 'message'];
 
-function ErrorCtrl($scope, $window) {
+function ErrorCtrl($scope, $window, message) {
     $scope.reloading = false;
     $scope.ok        = ok;
+    $scope.message   = message;
+    $scope.details   = false;
 
     function ok() {
         $scope.reloading = true;

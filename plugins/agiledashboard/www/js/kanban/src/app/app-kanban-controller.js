@@ -10,6 +10,7 @@
         'amCalendarFilter',
         'SharedPropertiesService',
         'KanbanService',
+        'KanbanItemService',
         'CardFieldsService'
     ];
 
@@ -20,6 +21,7 @@
         amCalendarFilter,
         SharedPropertiesService,
         KanbanService,
+        KanbanItemService,
         CardFieldsService
     ) {
         var self   = this,
@@ -38,7 +40,8 @@
             loading_items: true,
             resize_left: '',
             resize_top: '',
-            resize_width: ''
+            resize_width: '',
+            is_small_width: false
         };
         self.archive = {
             content: [],
@@ -47,7 +50,8 @@
             loading_items: true,
             resize_left: '',
             resize_top: '',
-            resize_width: ''
+            resize_width: '',
+            is_small_width: false
         };
 
         self.cardFieldIsSimpleValue       = CardFieldsService.cardFieldIsSimpleValue;
@@ -69,6 +73,8 @@
         self.userIsAdmin                  = userIsAdmin;
         self.getTimeInfo                  = getTimeInfo;
         self.getTimeInfoInArchive         = getTimeInfoInArchive;
+        self.createItemInPlace            = createItemInPlace;
+        self.createItemInPlaceInBacklog   = createItemInPlaceInBacklog;
 
         loadColumns();
         loadBacklog(limit, offset);
@@ -175,26 +181,38 @@
             }
         }
 
-        function reload() {
+        function reload(response) {
             $modal.open({
                 keyboard: false,
                 backdrop: 'static',
                 templateUrl: 'error/error.tpl.html',
-                controller: ErrorCtrl
+                controller: ErrorCtrl,
+                controllerAs: 'modal',
+                resolve: {
+                    message: function () {
+                        var message = response.status +' '+ response.statusText;
+                        if (response.data.error) {
+                            message = response.data.error.code +' '+ response.data.error.message;
+                        }
+
+                        return message;
+                    }
+                }
             });
         }
 
         function loadColumns() {
             KanbanService.getKanban(kanban.id).then(function (kanban) {
                 kanban.columns.forEach(function (column) {
-                    column.content       = [];
-                    column.loading_items = true;
-                    column.resize_left   = '';
-                    column.resize_top    = '';
-                    column.resize_width  = '';
-                    column.wip_in_edit   = false;
-                    column.limit_input   = column.limit;
-                    column.saving_wip    = false;
+                    column.content        = [];
+                    column.loading_items  = true;
+                    column.resize_left    = '';
+                    column.resize_top     = '';
+                    column.resize_width   = '';
+                    column.wip_in_edit    = false;
+                    column.limit_input    = column.limit;
+                    column.saving_wip     = false;
+                    column.is_small_width = false;
                     loadColumnContent(column, limit, offset);
                 });
                 self.board.columns = kanban.columns;
@@ -291,6 +309,40 @@
             }
 
             return timeinfo;
+        }
+
+        function createItemInPlaceInBacklog(label) {
+            var item = {
+                label: label,
+                updating: true
+            };
+
+            self.backlog.content.push(item);
+
+            KanbanItemService.createItemInBacklog(kanban.id, item.label).then(
+                function (response) {
+                    item.updating = false;
+                    _.extend(item, response.data);
+                },
+                reload
+            );
+        }
+
+        function createItemInPlace(label, column) {
+            var item = {
+                label: label,
+                updating: true
+            };
+
+            column.content.push(item);
+
+            KanbanItemService.createItem(kanban.id, column.id, item.label).then(
+                function (response) {
+                    item.updating = false;
+                    _.extend(item, response.data);
+                },
+                reload
+            );
         }
     }
 })();

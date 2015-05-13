@@ -1,4 +1,7 @@
-<div class="kanban-item {{ item.color }}" ui-tree-handle>
+<div ui-tree-handle
+    class="kanban-item {{ item.color }}"
+    ng-class="{ 'updating': item.updating }"
+>
     <div class="type-border"></div>
 
     <i ng-if="column" class="icon-time"
