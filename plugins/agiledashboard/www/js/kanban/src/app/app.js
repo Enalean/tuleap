@@ -9,6 +9,7 @@
         'angularMoment',
         'ngSanitize',
         'gettext',
-        'ngAnimate'
+        'ngAnimate',
+        'ngScrollbar'
     ]);
 })();
