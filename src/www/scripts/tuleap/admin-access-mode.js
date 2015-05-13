@@ -29,7 +29,7 @@
             nb_restricted_users = form.attr('data-nb-restricted-users');
 
         form.find('[name=access_mode]').click(function () {
-            form.find('[type=submit]').prop('disabled', $(this).val() === current_access_mode);
+            enableSubmitButton();
 
             if (current_access_mode === 'restricted' && nb_restricted_users > 0) {
                 if ($(this).val() !== current_access_mode) {
@@ -46,12 +46,20 @@
             }
         });
 
+        form.find('[name=project_admin_can_choose_visibility]').click(function () {
+            enableSubmitButton();
+        });
+
         form.find('[type=text]').keydown(function () {
-            form.find('[type=submit]').prop('disabled', false);
+            enableSubmitButton();
         });
 
         if (current_access_mode === 'restricted') {
             $('#customize-ugroup-labels').show();
+        }
+
+        function enableSubmitButton() {
+            form.find('[type=submit]').prop('disabled', false);
         }
     });
 

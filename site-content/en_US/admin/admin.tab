@@ -104,7 +104,11 @@ admin_main	upload_error	File upload error (error code: $1)
 admin_main	no_png	You should send a png image
 admin_main	100px	You should send an image with height smaller than 100px
 
-admin_main	configure_anonymous	Configure anonymous and restricted access
+admin_main	configure_access_controls	Access controls
+admin_main	who_can_access	Define who can access the platform
+admin_main	projects_visibility	Projects visibility
+admin_main	projects_visibility_label	Project administrators can choose project visibility
+admin_main	projects_visibility_help	If, in your organization, the strict privacy of the projects must be preserved by 'design', then you should uncheck this option so that project admins cannot disclose confidential resources to other platform users.
 admin_main	localinc_obsolete_message	<h4><i class="icon-warning-sign"></i> Your local.inc file is outdated!</h4><p>It appears that your local.inc file contains definitions of variables that are unused and it may lead to confusion.</p><p>Please edit <code>$1</code> and remove the following variables: <code>$sys_allow_anon</code> and <code>$sys_allow_restricted_users</code>.</p>
 admin_main	access_anonymous_label	Anonymous users can access the platform
 admin_main	access_anonymous_desc	Anonymous users can browse the public part of the site without logging in.
