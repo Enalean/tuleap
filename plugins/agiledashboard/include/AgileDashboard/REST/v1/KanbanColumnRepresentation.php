@@ -51,12 +51,17 @@ class KanbanColumnRepresentation {
      */
     public $color;
 
+    /**
+     * @var bool {@type bool}
+     */
+    public $user_can_add_in_place;
 
-    public function build(AgileDashboard_KanbanColumn $column) {
-        $this->id      = JsonCast::toInt($column->getId());
-        $this->label   = $column->getLabel();
-        $this->is_open = $column->isOpen();
-        $this->color   = $column->getColor();
-        $this->limit   = JsonCast::toInt($column->getLimit());
+    public function build(AgileDashboard_KanbanColumn $column, $user_can_add_in_place) {
+        $this->id                    = JsonCast::toInt($column->getId());
+        $this->label                 = $column->getLabel();
+        $this->is_open               = $column->isOpen();
+        $this->color                 = $column->getColor();
+        $this->limit                 = JsonCast::toInt($column->getLimit());
+        $this->user_can_add_in_place = $user_can_add_in_place;
     }
 }

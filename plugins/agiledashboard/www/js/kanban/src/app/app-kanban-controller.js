@@ -41,7 +41,8 @@
             resize_left: '',
             resize_top: '',
             resize_width: '',
-            is_small_width: false
+            is_small_width: false,
+            user_can_add_in_place: false
         };
         self.archive = {
             content: [],
@@ -233,7 +234,8 @@
 
         function loadBacklog(limit, offset) {
             return KanbanService.getBacklog(kanban.id, limit, offset).then(function(data) {
-                self.backlog.content = self.backlog.content.concat(data.results);
+                self.backlog.content               = self.backlog.content.concat(data.results);
+                self.backlog.user_can_add_in_place = data.user_can_add_in_place;
 
                 if (offset + limit < data.total) {
                     loadBacklog(limit, offset + limit);

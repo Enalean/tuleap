@@ -44,6 +44,7 @@ class KanbanTest extends RestBase {
         $this->assertEquals('My first kanban', $kanban['label']);
         $this->assertEquals(TestDataBuilder::KANBAN_TRACKER_ID, $kanban['tracker_id']);
 
+        $this->assertArrayHasKey('user_can_add_in_place', $kanban['columns'][0]);
         $this->assertNull($kanban['columns'][0]['limit']);
     }
 
@@ -53,6 +54,7 @@ class KanbanTest extends RestBase {
         $response = $this->getResponse($this->client->get($url))->json();
 
         $this->assertEquals(2, $response['total_size']);
+        $this->assertArrayHasKey('user_can_add_in_place', $response);
         $this->assertEquals('Do something', $response['collection'][0]['label']);
         $this->assertEquals('Do something v2', $response['collection'][1]['label']);
     }

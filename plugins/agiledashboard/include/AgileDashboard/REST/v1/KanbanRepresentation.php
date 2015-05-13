@@ -59,14 +59,14 @@ class KanbanRepresentation {
      */
     public $resources;
 
-    public function build(AgileDashboard_Kanban $kanban, AgileDashboard_KanbanColumnFactory $column_factory) {
+    public function build(AgileDashboard_Kanban $kanban, AgileDashboard_KanbanColumnFactory $column_factory, $user_can_add_in_place) {
         $this->id         = JsonCast::toInt($kanban->getId());
         $this->tracker_id = JsonCast::toInt($kanban->getTrackerId());
         $this->uri        = self::ROUTE.'/'.$this->id;
         $this->label      = $kanban->getName();
         $this->columns    = array();
 
-        $this->setColumns($kanban, $column_factory);
+        $this->setColumns($kanban, $column_factory, $user_can_add_in_place);
 
         $this->resources = array(
             'backlog' => array(
@@ -78,12 +78,12 @@ class KanbanRepresentation {
         );
     }
 
-    private function setColumns(AgileDashboard_Kanban $kanban, AgileDashboard_KanbanColumnFactory $column_factory) {
+    private function setColumns(AgileDashboard_Kanban $kanban, AgileDashboard_KanbanColumnFactory $column_factory, $user_can_add_in_place) {
         $columns = $column_factory->getAllKanbanColumnsForAKanban($kanban);
 
         foreach ($columns as $column) {
             $column_representation = new KanbanColumnRepresentation();
-            $column_representation->build($column);
+            $column_representation->build($column, $user_can_add_in_place);
 
             $this->columns[] = $column_representation;
         }
