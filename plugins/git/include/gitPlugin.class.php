@@ -358,8 +358,14 @@ class GitPlugin extends Plugin {
                     $this->getGitoliteDriver()
                 );
                 break;
-            case SystemEvent_GIT_RENAME_MIRROR::NAME:
-                $params['class'] = 'SystemEvent_GIT_RENAME_MIRROR';
+            case SystemEvent_GIT_UPDATE_MIRROR::NAME:
+                $params['class'] = 'SystemEvent_GIT_UPDATE_MIRROR';
+                $params['dependencies'] = array(
+                    $this->getGitoliteDriver()
+                );
+                break;
+            case SystemEvent_GIT_DELETE_MIRROR::NAME:
+                $params['class'] = 'SystemEvent_GIT_DELETE_MIRROR';
                 $params['dependencies'] = array(
                     $this->getGitoliteDriver()
                 );

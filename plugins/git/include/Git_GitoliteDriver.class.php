@@ -464,8 +464,8 @@ class Git_GitoliteDriver {
         return $this->updateMainConfIncludes();
     }
 
-    public function renameMirror($mirror_id, $old_hostname) {
-        $git_modifications = $this->gitolite_conf_writer->renameMirror($mirror_id, $old_hostname);
+    public function updateMirror($mirror_id, $old_hostname) {
+        $git_modifications = $this->gitolite_conf_writer->updateMirror($mirror_id, $old_hostname);
 
         foreach ($git_modifications->toAdd() as $file) {
             if (! $this->gitExec->add($file)) {
@@ -488,5 +488,23 @@ class Git_GitoliteDriver {
         }
 
         return true;
+    }
+
+    public function deleteMirror($old_hostname) {
+        $git_modifications = $this->gitolite_conf_writer->deleteMirror($old_hostname);
+
+        foreach ($git_modifications->toRemove() as $file) {
+            $file_path = $this->getAdminPath().'/'.$file;
+
+            if (is_dir($file_path)) {
+                if (! $this->gitExec->recursiveRm($file)) {
+                    return false;
+                }
+            } elseif (is_file($file_path)) {
+                if (! $this->gitExec->rm($file)) {
+                    return false;
+                }
+            }
+        }
     }
 }

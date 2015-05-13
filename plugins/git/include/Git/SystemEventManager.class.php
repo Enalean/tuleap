@@ -208,9 +208,18 @@ class Git_SystemEventManager {
         );
     }
 
-    public function queueRenameMirror($mirror_id, $old_hostname) {
+    public function queueUpdateMirror($mirror_id, $old_hostname) {
         $this->system_event_manager->createEvent(
-            SystemEvent_GIT_RENAME_MIRROR::NAME,
+            SystemEvent_GIT_UPDATE_MIRROR::NAME,
+            $mirror_id . SystemEvent::PARAMETER_SEPARATOR . $old_hostname,
+            SystemEvent::PRIORITY_HIGH,
+            SystemEvent::OWNER_APP
+        );
+    }
+
+    public function queueDeleteMirror($mirror_id, $old_hostname) {
+        $this->system_event_manager->createEvent(
+            SystemEvent_GIT_DELETE_MIRROR::NAME,
             $mirror_id . SystemEvent::PARAMETER_SEPARATOR . $old_hostname,
             SystemEvent::PRIORITY_HIGH,
             SystemEvent::OWNER_APP
@@ -244,7 +253,8 @@ class Git_SystemEventManager {
             SystemEvent_GIT_DUMP_ALL_SSH_KEYS::NAME,
             SystemEvent_GIT_PROJECTS_UPDATE::NAME,
             SystemEvent_GIT_DUMP_ALL_MIRRORED_REPOSITORIES::NAME,
-            SystemEvent_GIT_RENAME_MIRROR::NAME,
+            SystemEvent_GIT_UPDATE_MIRROR::NAME,
+            SystemEvent_GIT_DELETE_MIRROR::NAME,
         );
     }
 
