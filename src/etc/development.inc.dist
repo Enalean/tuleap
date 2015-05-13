@@ -32,4 +32,6 @@ $DEBUG_DISPLAY_FOR_ALL = 1;
 
 $GLOBALS['debug_time_start'] = microtime(true);
 
+$use_angular_new_modal = false;
+
 ?>

@@ -10,9 +10,10 @@
             init: init
         });
 
-        function init(project_id, milestone_id, lang) {
+        function init(project_id, milestone_id, lang, use_angular_new_modal) {
             SharedPropertiesService.setProjectId(project_id);
             SharedPropertiesService.setMilestoneId(milestone_id);
+            SharedPropertiesService.setUseAngularNewModal(use_angular_new_modal);
             gettextCatalog.setCurrentLanguage(lang);
             $window.moment.locale(lang);
         }

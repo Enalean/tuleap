@@ -10,7 +10,8 @@
     "angular-moment": "~0.8.0",
     "angular-ui-tree": "https://github.com/Enalean/angular-ui-tree.git#planning-v2",
     "angular-sanitize": "~1.3.7",
-    "tuleap-artifact-modal": "http://gerrit.tuleap.net/angular-artifact-modal.git"
+    "tuleap-artifact-modal": "http://gerrit.tuleap.net/angular-artifact-modal.git",
+    "angular-ui-bootstrap": "gh-pages"
   },
   "dependencies": {},
   "resolutions": {

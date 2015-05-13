@@ -1,0 +1,87 @@
+<form name="modalForm" ng-submit="modal.createArtifact()">
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="modal.cancel()" aria-hidden="true"><i class="icon-remove" ></i></button>
+        <h3>{{ modal.structure.label }}</h3>
+        <div class="alert alert-danger" ng-show="modal.getError().is_error">
+            {{ 'Error:' | translate }} {{ modal.getError().error_message }}
+        </div>
+    </div>
+    <div class="tuleap-modal-loading" ng-show="modal.isLoading()"></div>
+    <div class="modal-body">
+        <div ng-repeat="field in modal.structure.fields" ng-switch on="field.type" ng-init="field_index = $index">
+            <div ng-switch-when="sb">
+                <label for="{{ 'tracker_field_'+field.field_id }}" class="tracker_formelement_label" ng-class="{required: field.required}">{{ field.label }}</label>
+                <select ng-model="modal.values[field_index].bind_value_ids[0]" ng-options="fieldValue.id as fieldValue.label for fieldValue in field.values" ng-required="{{ field.required }}" id="{{ 'tracker_field_'+field.field_id }}">
+                    <option value="" label="None" translate>None</option>
+                </select>
+            </div>
+            <div ng-switch-when="msb">
+                <label for="{{ 'tracker_field_'+field.field_id }}" class="tracker_formelement_label" ng-class="{required: field.required}">{{ field.label }}</label>
+                <select multiple ng-model="modal.values[field_index].bind_value_ids" ng-options="fieldValue.id as fieldValue.label for fieldValue in field.values" ng-required="{{ field.required }}" id="{{ 'tracker_field_'+field.field_id }}">
+                    <option value="" label="None" translate>None</option>
+                </select>
+            </div>
+            <div ng-switch-when="rb">
+                <label class="tracker_formelement_label" ng-class="{required: field.required}">{{ field.label }}</label>
+                <div>
+                    <label for="{{ 'rb_'+field.field_id+'_100' }}" class="radio">
+                        <span translate>None</span>
+                        <input type="radio" ng-model="modal.values[field_index].bind_value_ids[0]" name="{{ field.name }}" value="100" ng-required="{{ field.required }}" id="{{ 'rb_'+field.field_id+'_100' }}">
+                    </label>
+                </div>
+                <div ng-repeat="fieldValue in field.values">
+                    <label for="{{ 'rb_'+field.field_id+'_'+fieldValue.id }}" class="radio">
+                        {{ fieldValue.label }}
+                        <input type="radio" ng-model="modal.values[field_index].bind_value_ids[0]" name="{{ field.name }}" value="{{ fieldValue.id }}" ng-required="{{ field.required }}" id="{{ 'rb_'+field.field_id+'_'+fieldValue.id }}">
+                    </label>
+                </div>
+            </div>
+            <div ng-switch-when="cb">
+                <label class="tracker_formelement_label" ng-class="{required: field.required}">{{ field.label }}</label>
+                <label ng-repeat="fieldValue in field.values" for="{{ 'cb_'+field.field_id+'_'+fieldValue.id }}" class="checkbox">
+                    {{ fieldValue.label }}
+                    <input type="checkbox" ng-model="modal.values[field_index].bind_value_ids[$index]" ng-true-value="{{ fieldValue.id }}" ng-false-value="null" id="{{ 'cb_'+field.field_id+'_'+fieldValue.id }}">
+                </label>
+            </div>
+            <div ng-switch-when="int">
+                <label for="{{ 'tracker_field_'+field.field_id }}" class="tracker_formelement_label" ng-class="{required: field.required}">{{ field.label }}</label>
+                <input type="number" size="5" ng-model="modal.values[field_index].value" ng-required="{{ field.required }}" id="{{ 'tracker_field_'+field.field_id }}">
+            </div>
+            <div ng-switch-when="string">
+                <label for="{{ 'tracker_field_'+field.field_id }}" class="tracker_formelement_label" ng-class="{required: field.required}">{{ field.label }}</label>
+                <input type="text" size="50" ng-model="modal.values[field_index].value" ng-required="{{ field.required }}" id="{{ 'tracker_field_'+field.field_id }}">
+            </div>
+            <div ng-switch-when="float">
+                <label for="{{ 'tracker_field_'+field.field_id }}" class="tracker_formelement_label" ng-class="{required: field.required}">{{ field.label }}</label>
+                <input type="number" step="any" size="5" ng-model="modal.values[field_index].value" ng-required="{{ field.required }}" id="{{ 'tracker_field_'+field.field_id }}">
+            </div>
+            <div ng-switch-when="text">
+                <label for="{{ 'tracker_field_'+field.field_id }}" class="tracker_formelement_label" ng-class="{required: field.required}">{{ field.label }}</label>
+                <textarea rows="5" cols="70" ng-model="modal.values[field_index].value" ng-required="{{ field.required }}" class="modal-textarea" id="{{ 'tracker_field_'+field.field_id }}"></textarea>
+            </div>
+            <div ng-switch-when="date">
+                <label for="{{ 'tracker_field_'+field.field_id }}" class="tracker_formelement_label" ng-class="{required: field.required}">{{ field.label }}</label>
+                <input ng-if="!field.is_time_displayed" type="text" ng-model="modal.values[field_index].value" placeholder="yyyy-mm-dd" ng-pattern="/^\d{4}-[01]\d-[0-3]\d$/" ng-required="{{ field.required }}" id="{{ 'tracker_field_'+field.field_id }}">
+                <input ng-if="field.is_time_displayed" type="text" ng-model="modal.values[field_index].value" placeholder="yyyy-mm-dd hh:MM:ss" ng-pattern="/^\d{4}-[01]\d-[0-3]\d [0-2]\d:[0-5]\d:[0-5]\d$/" ng-required="{{ field.required }}" id="{{ 'tracker_field_'+field.field_id }}">
+            </div>
+            <div ng-switch-when="art_link">
+                <label class="tracker_formelement_label" ng-class="{required: field.required}">{{ field.label }}</label>
+                <div class="artifact-link-value">
+                    <h5 class="artifact_link_subtitle" translate>Artifact links</h5>
+                    <input type="text" ng-model="modal.values[field_index].unformatted_links" title="{{ 'Enter artifact ids separated by a comma' | translate }}" id="{{ 'tracker_field_'+field.field_id }}">
+                    <p ng-show="modal.structure.parent">
+                        <label for="{{ 'tracker_field_'+field.field_id+'_parent' }}" translate>Select parent:</label>
+                        <select ng-model="modal.values[field_index].links[0].id" ng-required="{{ field.required }}" id="{{ 'tracker_field_'+field.field_id+'_parent' }}">
+                            <option selected="selected" value="" translate>-- Please choose</option>
+                            <option ng-repeat="artifact in modal.parent_artifacts" value="{{ artifact.id }}">{{ artifact.title }}</option>
+                        </select>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn tuleap-modal-close" ng-click="modal.cancel()" translate>Cancel</a>
+        <input type="submit" class="btn btn-primary" value="{{ 'Submit' | translate }}">
+    </div>
+</form>

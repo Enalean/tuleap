@@ -4,6 +4,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Project-Id-Version: \n"
 
+#: src/app/modal/modal.tpl.html
+msgid "-- Please choose"
+msgstr ""
+
 #: src/app/planning.tpl.html
 msgid "A server error has occured. <b>You should refresh this page</b>."
 msgstr ""
@@ -12,8 +16,16 @@ msgstr ""
 msgid "Add a new item"
 msgstr ""
 
+#: src/app/modal/modal.tpl.html
+msgid "Artifact links"
+msgstr ""
+
 #: src/app/planning.tpl.html
 msgid "Burndown"
+msgstr ""
+
+#: src/app/modal/modal.tpl.html
+msgid "Cancel"
 msgstr ""
 
 #: src/app/planning.tpl.html
@@ -26,6 +38,14 @@ msgstr ""
 
 #: src/app/planning.tpl.html
 msgid "Content"
+msgstr ""
+
+#: src/app/modal/modal.tpl.html
+msgid "Enter artifact ids separated by a comma"
+msgstr ""
+
+#: src/app/modal/modal.tpl.html
+msgid "Error:"
 msgstr ""
 
 #: src/app/planning.tpl.html
@@ -44,8 +64,20 @@ msgstr ""
 msgid "N/A"
 msgstr ""
 
+#: src/app/modal/modal.tpl.html
+msgid "None"
+msgstr ""
+
 #: src/app/planning.tpl.html
 msgid "Planning"
+msgstr ""
+
+#: src/app/modal/modal.tpl.html
+msgid "Select parent:"
+msgstr ""
+
+#: src/app/modal/modal.tpl.html
+msgid "Submit"
 msgstr ""
 
 #: src/app/planning.tpl.html

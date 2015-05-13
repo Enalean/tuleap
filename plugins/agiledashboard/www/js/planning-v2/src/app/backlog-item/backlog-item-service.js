@@ -12,14 +12,13 @@
         });
 
         return {
-            getBacklogItem                     : getBacklogItem,
-            getProjectBacklogItems             : getProjectBacklogItems,
-            getMilestoneBacklogItems           : getMilestoneBacklogItems,
-            getBacklogItemChildren             : getBacklogItemChildren,
-            reorderBacklogItemChildren         : reorderBacklogItemChildren,
-            removeAddReorderBacklogItemChildren: removeAddReorderBacklogItemChildren,
-            removeAddBacklogItemChildren       : removeAddBacklogItemChildren,
-            addToMilestone                     : addToMilestone
+            getBacklogItem                      : getBacklogItem,
+            getProjectBacklogItems              : getProjectBacklogItems,
+            getMilestoneBacklogItems            : getMilestoneBacklogItems,
+            getBacklogItemChildren              : getBacklogItemChildren,
+            reorderBacklogItemChildren          : reorderBacklogItemChildren,
+            removeAddReorderBacklogItemChildren : removeAddReorderBacklogItemChildren,
+            removeAddBacklogItemChildren        : removeAddBacklogItemChildren
         };
 
         function getBacklogItem(backlog_item_id) {
@@ -149,14 +148,6 @@
                         id         : dropped_item_id,
                         remove_from: source_backlog_item_id
                     }]
-                });
-        }
-
-        function addToMilestone(milestone_id, backlog_item_id) {
-            return rest.one('milestones', milestone_id)
-                .all('backlog')
-                .patch({
-                    add: [{ id: backlog_item_id }]
                 });
         }
     }
