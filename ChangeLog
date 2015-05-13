@@ -4,6 +4,7 @@ Version 8.2 (not released yet)
 	* request #8071: Remove hard coded limit to 300 in softwaremap
 	* request #8070: Unable to rename a user if I am not using legacy trackers
 	* request #8074: Public incl. restricted only applies to summary and git
+	* request #8075: Preserve privacy of projects
 
 	== Security ==
 	* request #8002: Use a bigger RSA modulus for the creation of the SSL certificate
