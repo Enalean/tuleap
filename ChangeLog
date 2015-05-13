@@ -23,6 +23,7 @@ Version 8.2 (not released yet)
 
 	== Enhancement ==
 	* story #7972: specify svn notifications using the star operator
+	* story #7684: access to wiki pages with REST API
 
 Version 8.1 (Monday, May 4th 2015)
 
