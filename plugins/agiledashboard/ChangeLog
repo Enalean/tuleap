@@ -1,3 +1,6 @@
+Version 1.194 - Tuleap 8.2
+    * story #7954: handle Workflow
+
 Version 1.193 - Tuleap 8.2
     * story #7954: Do not display the form if tracker is not simple or if user doesn't have perm
 
