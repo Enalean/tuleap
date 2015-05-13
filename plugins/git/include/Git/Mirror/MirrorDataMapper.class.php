@@ -63,6 +63,8 @@ class Git_Mirror_MirrorDataMapper {
             throw new Git_Mirror_MissingDataException();
         }
 
+        $this->checkThatHostnameIsValidOnCreation($hostname);
+
         $mirror_id = $this->dao->save($url, $hostname, $name);
         if (! $mirror_id) {
             throw new Git_Mirror_CreateException();
@@ -76,6 +78,30 @@ class Git_Mirror_MirrorDataMapper {
             'hostname' => $hostname,
             'name'     => $name
         ));
+    }
+
+    private function checkThatHostnameIsValidOnCreation($hostname) {
+        if (! $hostname) {
+            return true;
+        }
+
+        if ($this->dao->getNumberOfMirrorByHostname($hostname) > 0) {
+            throw new Git_Mirror_HostnameAlreadyUsedException();
+        }
+
+        return true;
+    }
+
+    private function checkThatHostnameIsValidOnUpdate($id, $hostname) {
+        if (! $hostname) {
+            return true;
+        }
+
+        if ($this->dao->getNumberOfMirrorByHostnameExcludingGivenId($hostname, $id) > 0) {
+            throw new Git_Mirror_HostnameAlreadyUsedException();
+        }
+
+        return true;
     }
 
     private function createUserForMirror($mirror_id, $password, $ssh_key) {
@@ -229,6 +255,8 @@ class Git_Mirror_MirrorDataMapper {
         if ($url == $mirror->url && $hostname == $mirror->hostname && $ssh_key == $mirror->ssh_key && $name == $mirror->name) {
             throw new Git_Mirror_MirrorNoChangesException();
         }
+
+        $this->checkThatHostnameIsValidOnUpdate($id, $hostname);
 
         if (! $url || ! $ssh_key) {
             throw new Git_Mirror_MissingDataException();
