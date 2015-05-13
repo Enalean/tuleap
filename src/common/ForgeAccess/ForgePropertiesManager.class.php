@@ -63,6 +63,10 @@ class ForgeAccess_ForgePropertiesManager {
         }
     }
 
+    public function updateProjectAdminVisibility($new_value) {
+        return $this->config_dao->save(ForgeAccess::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY, $new_value);
+    }
+
     public function updateLabels($authenticated_label, $registered_label) {
         $this->config_dao->save(User_ForgeUGroup::CONFIG_AUTHENTICATED_LABEL, $authenticated_label);
         $this->config_dao->save(User_ForgeUGroup::CONFIG_REGISTERED_LABEL, $registered_label);

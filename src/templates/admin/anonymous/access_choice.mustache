@@ -16,6 +16,7 @@
     </div>
     {{/ is_localinc_obsolete }}
 
+    <legend>{{ who_can_access }}</legend>
     <label class="radio">
         <input type="radio"
             name="access_mode"
@@ -61,6 +62,18 @@
             <input type="text" name="ugroup_registered_users" value="{{ ugroup_registered_users }}" placeholder="{{ ugroup_registered_users_placeholder }}" />
         </label>
     </div>
+
+    <legend>{{ projects_visibility }}</legend>
+    <section>
+        <label class="checkbox">
+            <input type="hidden"   name="project_admin_can_choose_visibility" value="0" />
+            <input type="checkbox" name="project_admin_can_choose_visibility" value="1" {{# project_admin_can_choose }}checked{{/ project_admin_can_choose }} />
+            {{ projects_visibility_label }}
+        </label>
+        <p class="help">
+            {{ projects_visibility_help }}
+        </p>
+    </section>
 
     <div id="submit-panel">
         {{# access_restricted }}

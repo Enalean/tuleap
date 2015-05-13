@@ -20,6 +20,9 @@
 
 class ForgeAccess_AdminPresenter {
 
+    /** @var bool */
+    public $project_admin_can_choose;
+
     /** @var int */
     public $nb_restricted_users;
 
@@ -68,6 +71,18 @@ class ForgeAccess_AdminPresenter {
     /** @var string */
     public $customize_ugroups_label_info;
 
+    /** @var string */
+    public $who_can_access;
+
+    /** @var string */
+    public $projects_visibility;
+
+    /** @var string */
+    public $projects_visibility_label;
+
+    /** @var string */
+    public $projects_visibility_help;
+
     public function __construct(
         CSRFSynchronizerToken $csrf,
         $title,
@@ -75,13 +90,15 @@ class ForgeAccess_AdminPresenter {
         $current_access_mode,
         $nb_restricted_users,
         $ugroup_authenticated_users,
-        $ugroup_registered_users
+        $ugroup_registered_users,
+        $project_admin_can_choose
     ) {
-        $this->title               = $title;
-        $this->csrf_token          = $csrf->fetchHTMLInput();
-        $this->localinc_path       = $localinc_path;
-        $this->current_access_mode = $current_access_mode;
-        $this->nb_restricted_users = $nb_restricted_users;
+        $this->title                    = $title;
+        $this->csrf_token               = $csrf->fetchHTMLInput();
+        $this->localinc_path            = $localinc_path;
+        $this->current_access_mode      = $current_access_mode;
+        $this->nb_restricted_users      = $nb_restricted_users;
+        $this->project_admin_can_choose = $project_admin_can_choose;
 
         $this->is_localinc_obsolete = $this->isLocalIncObsolete();
 
@@ -121,6 +138,11 @@ class ForgeAccess_AdminPresenter {
         $this->ugroup_registered_users_label          = $GLOBALS['Language']->getText('admin_main', 'ugroup_registered_users_label');
 
         $this->customize_ugroups_label_info           = $GLOBALS['Language']->getText('admin_main', 'customize_ugroups_label_info');
+
+        $this->who_can_access            = $GLOBALS['Language']->getText('admin_main', 'who_can_access');
+        $this->projects_visibility       = $GLOBALS['Language']->getText('admin_main', 'projects_visibility');
+        $this->projects_visibility_label = $GLOBALS['Language']->getText('admin_main', 'projects_visibility_label');
+        $this->projects_visibility_help  = $GLOBALS['Language']->getText('admin_main', 'projects_visibility_help');
     }
 
     private function isLocalIncObsolete() {

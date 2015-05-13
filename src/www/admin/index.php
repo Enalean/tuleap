@@ -168,7 +168,6 @@ $wUser->setContent('
   <li><a href="/people/admin">'.$Language->getText('admin_main', 'skills').'</a></li>
   <li><a href="register_admin.php?page=admin_creation">'.$Language->getText('admin_main', 'new_user').'</a></li>
   <li><a href="permission_delegation.php">'.$Language->getText('admin_main', 'permission_delegation').'</a></li>
-  <li><a href="/admin/forgeaccess.php">'. $Language->getText('admin_main', 'configure_anonymous') .'</a></li>
 </ul>');
 
 
@@ -233,6 +232,7 @@ if (count($additional_tracker_entries) > 0) {
 
 $wConf->setContent('
 <ul>
+  <li><a href="/admin/forgeaccess.php">'. $Language->getText('admin_main', 'configure_access_controls') .'</a></li>
   <li><a href="/admin/homepage.php">'. $Language->getText('admin_main', 'configure_homepage') .'</a></li>
   <li>'.$Language->getText('admin_main', 'conf_project').': 
     <ul>
