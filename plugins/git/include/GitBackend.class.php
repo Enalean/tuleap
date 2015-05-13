@@ -438,4 +438,13 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
     public function deleteArchivedRepository(GitRepository $repository) {
 
     }
+
+    /**
+     * Move the archived gitolite repositories to the archiving area before purge
+     *
+     * @param GitRepository $repository
+     */
+    public function archiveBeforePurge(GitRepository $repository) {
+        throw new Exception('not implemented');
+    }
 }

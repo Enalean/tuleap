@@ -136,4 +136,11 @@ interface Git_Backend_Interface {
      * @param GitRepository $repository
      */
     public function deleteArchivedRepository(GitRepository $repository);
+
+    /**
+     * Move the archived gitolite repositories to the archiving area before purge
+     *
+     * @param GitRepository $repository
+     */
+    public function archiveBeforePurge(GitRepository $repository);
 }
