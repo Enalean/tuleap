@@ -60,6 +60,9 @@ if($Update){
     
 $project_manager = ProjectManager::instance();
 $current_user = $request->getCurrentUser();
+
+$user_can_choose_visibility = $current_user->isSuperUser() || ForgeConfig::get(ForgeAccess::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY);
+
 $set_parent = false;
 $valid_parent = true;
 if ($valid_data==1) {
@@ -170,9 +173,11 @@ if ($valid_data==1) {
     }
 
     //update visibility
-    if ($currentproject->getAccess() != $request->get('project_visibility')) {
-        $project_manager->setAccess($currentproject, $request->get('project_visibility'));
-        $update_success = true;
+    if ($user_can_choose_visibility) {
+        if ($currentproject->getAccess() != $request->get('project_visibility')) {
+            $project_manager->setAccess($currentproject, $request->get('project_visibility'));
+            $update_success = true;
+        }
     }
 
     if (! $update_success) {
@@ -197,9 +202,11 @@ project_admin_header(array('title'=>$Language->getText('project_admin_editgroupi
 
 echo '<FORM action="?group_id='.$group_id.'" method="post" id="project_info_form">';
 
-$presenter = new ProjectVisibilityPresenter($Language, ForgeConfig::areRestrictedUsersAllowed(), $currentproject->getAccess());
-$renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/project/');
-echo $renderer->renderToString('project_visibility', $presenter);
+if ($user_can_choose_visibility) {
+    $presenter = new ProjectVisibilityPresenter($Language, ForgeConfig::areRestrictedUsersAllowed(), $currentproject->getAccess());
+    $renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/project/');
+    echo $renderer->renderToString('project_visibility', $presenter);
+}
 
 print "<P><h3>".$Language->getText('project_admin_editgroupinfo','editing_g_info_for',$row_grp['group_name']).'</h3>';
 

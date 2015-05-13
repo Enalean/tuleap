@@ -50,8 +50,9 @@ class ForgeAccess_AdminController {
      */
     private $csrf;
 
-    const TEMPLATE   = 'access_choice';
-    const ACCESS_KEY = ForgeAccess::CONFIG;
+    const TEMPLATE          = 'access_choice';
+    const ACCESS_KEY        = ForgeAccess::CONFIG;
+    const PROJECT_ADMIN_KEY = ForgeAccess::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
@@ -70,7 +71,7 @@ class ForgeAccess_AdminController {
     }
 
     public function index() {
-        $title  = $GLOBALS['Language']->getText('admin_main', 'configure_anonymous');
+        $title  = $GLOBALS['Language']->getText('admin_main', 'configure_access_controls');
         $params = array(
             'title' => $title
         );
@@ -87,7 +88,8 @@ class ForgeAccess_AdminController {
                 ForgeConfig::get(ForgeAccess::CONFIG),
                 count($this->user_dao->searchByStatus(PFUser::STATUS_RESTRICTED)),
                 ForgeConfig::get(User_ForgeUGroup::CONFIG_AUTHENTICATED_LABEL),
-                ForgeConfig::get(User_ForgeUGroup::CONFIG_REGISTERED_LABEL)
+                ForgeConfig::get(User_ForgeUGroup::CONFIG_REGISTERED_LABEL),
+                ForgeConfig::get(ForgeAccess::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY)
             )
         );
         $this->response->footer($params);
@@ -96,29 +98,11 @@ class ForgeAccess_AdminController {
     public function update() {
         $this->csrf->check();
 
-        $validator = new Valid_WhiteList(
-            self::ACCESS_KEY,
-            array(
-                ForgeAccess::ANONYMOUS,
-                ForgeAccess::REGULAR,
-                ForgeAccess::RESTRICTED,
-            )
-        );
+        $updated  = false;
+        $updated |= $this->updateAccessValue();
+        $updated |= $this->updateProjectAdminValue();
 
-        if ($this->request->valid($validator)) {
-            $new_access_value = $this->request->get(self::ACCESS_KEY);
-            $old_access_value = ForgeConfig::get(ForgeAccess::CONFIG);
-            $this->manager->updateAccess($new_access_value, $old_access_value);
-
-            if ($new_access_value == ForgeAccess::RESTRICTED) {
-                $this->manager->updateLabels(
-                    trim($this->request->getValidated('ugroup_authenticated_users', 'string', '')),
-                    trim($this->request->getValidated('ugroup_registered_users', 'string', ''))
-                );
-            } else {
-                $this->manager->updateLabels('', '');
-            }
-
+        if ($updated) {
             $this->response->addFeedback(
                 Feedback::INFO,
                 $GLOBALS['Language']->getText('admin_main', 'successfully_updated')
@@ -137,5 +121,55 @@ class ForgeAccess_AdminController {
 
     private function redirectToIndex() {
         $this->response->redirect($_SERVER['SCRIPT_URL']);
+    }
+
+    /** @return bool true if updated */
+    private function updateAccessValue() {
+        $validator = new Valid_WhiteList(
+            self::ACCESS_KEY,
+            array(
+                ForgeAccess::ANONYMOUS,
+                ForgeAccess::REGULAR,
+                ForgeAccess::RESTRICTED,
+            )
+        );
+        if (! $this->request->valid($validator)) {
+            return false;
+        }
+
+        $new_access_value = $this->request->get(self::ACCESS_KEY);
+        $old_access_value = ForgeConfig::get(ForgeAccess::CONFIG);
+        $this->manager->updateAccess($new_access_value, $old_access_value);
+
+        if ($new_access_value == ForgeAccess::RESTRICTED) {
+            $this->manager->updateLabels(
+                trim($this->request->getValidated('ugroup_authenticated_users', 'string', '')),
+                trim($this->request->getValidated('ugroup_registered_users', 'string', ''))
+            );
+        } else {
+            $this->manager->updateLabels('', '');
+        }
+
+        return true;
+    }
+
+    /** @return bool true if updated */
+    private function updateProjectAdminValue() {
+        $validator = new Valid_WhiteList(
+            self::PROJECT_ADMIN_KEY,
+            array("0", "1")
+        );
+        if (! $this->request->valid($validator)) {
+            return false;
+        }
+
+        $new_value = $this->request->get(self::PROJECT_ADMIN_KEY);
+        $old_value = ForgeConfig::get(ForgeAccess::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY);
+
+        if ($new_value == $old_value) {
+            return false;
+        }
+
+        return $this->manager->updateProjectAdminVisibility($new_value, $old_value);
     }
 }
