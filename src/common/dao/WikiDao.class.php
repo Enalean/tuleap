@@ -164,4 +164,22 @@ class WikiDao extends DataAccessObject {
         }
         return false;
     }
+
+    public function searchPaginatedUserWikiPages($project_id, $limit, $offset) {
+        $admin_pages   = $this->da->quoteSmartImplode(',', WikiPage::getAdminPages());
+        $default_pages = $this->da->quoteSmartImplode(',', WikiPage::getDefaultPages());
+
+        $project_id = $this->da->escapeInt($project_id);
+        $limit      = $this->da->escapeInt($limit);
+        $offset     = $this->da->escapeInt($offset);
+
+        $sql = "SELECT SQL_CALC_FOUND_ROWS wiki_page.pagename
+                FROM wiki_page, wiki_nonempty
+                WHERE wiki_page.group_id = $project_id
+                    AND wiki_nonempty.id = wiki_page.id
+                    AND wiki_page.pagename NOT IN ($default_pages,$admin_pages)
+                LIMIT $limit OFFSET $offset";
+
+        return $this->retrieve($sql);
+    }
 }

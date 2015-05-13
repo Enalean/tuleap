@@ -22,6 +22,7 @@ namespace Tuleap\Project\REST\v1;
 use Tuleap\Project\REST\ProjectRepresentation;
 use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\REST\v1\GitRepositoryRepresentationBase;
+use Tuleap\REST\v1\PhpWikiPageRepresentation;
 use Tuleap\REST\v1\OrderRepresentationBase;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\Header;
@@ -37,6 +38,9 @@ use ProjectUGroup;
 use UGroupManager;
 use URLVerification;
 use Luracast\Restler\RestException;
+use PaginatedWikiPagesFactory;
+use WikiDao;
+use Wiki;
 
 /**
  * Wrapper for project related REST methods
@@ -208,6 +212,7 @@ class ProjectResource extends AuthenticatedResource {
 
         $resources_injector = new ResourcesInjector();
         $resources_injector->declareProjectUserGroupResource($resources, $project);
+        $resources_injector->declarePhpWikiResource($resources, $project);
 
         $project_representation = new ProjectRepresentation();
         $project_representation->build($project, $resources);
@@ -732,6 +737,70 @@ class ProjectResource extends AuthenticatedResource {
             throw new RestException(404, 'Git plugin not activated');
         }
 
+    }
+
+    /**
+     * @url OPTIONS {id}/wiki
+     *
+     * @param int $id Id of the project
+     */
+    public function optionsWiki($id) {
+        $this->sendAllowHeadersForProject();
+    }
+
+    /**
+     * Get PhpWiki pages
+     *
+     * Get info about project non empty PhpWiki pages
+     *
+     * @url GET {id}/wiki
+     *
+     * @access hybrid
+     *
+     * @param int $id        Id of the project
+     * @param int $limit     Number of elements displayed per page {@from path}
+     * @param int $offset    Position of the first element to display {@from path}
+     *
+     * @return array {@type Tuleap\REST\v1\PhpWikiPageRepresentation}
+     */
+    public function getPhpWiki($id, $limit = 10, $offset = 0) {
+        $this->checkAccess();
+
+        $current_user = UserManager::instance()->getCurrentUser();
+
+        $this->userCanAccessPhpWikiService($current_user, $id);
+
+        $wiki_pages = array(
+            'pages' => array()
+        );
+
+        $wiki_pages_factory = new PaginatedWikiPagesFactory(new WikiDao());
+        $all_pages          = $wiki_pages_factory->getPaginatedUserPages(
+            $current_user,
+            $id,
+            $limit,
+            $offset
+        );
+
+        foreach ($all_pages->getPages() as $page) {
+            $representation = new PhpWikiPageRepresentation();
+            $representation->build($page);
+
+            $wiki_pages['pages'][] = $representation;
+        }
+
+        $this->sendAllowHeadersForProject();
+        $this->sendPaginationHeaders($limit, $offset, $all_pages->getTotalSize());
+
+        return $wiki_pages;
+    }
+
+    private function userCanAccessPhpWikiService(PFUser $user, $project_id) {
+        $wiki_service = new Wiki($project_id);
+
+        if (! $wiki_service->isAutorized($user->getId())) {
+            throw new RestException(403, 'You are not allowed to access to PhpWiki service');
+        }
     }
 
     private function checkAgileEndpointsAvailable() {

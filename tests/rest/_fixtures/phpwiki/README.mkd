@@ -1,0 +1,16 @@
+# How to generate data for REST tests ?
+
+To add data for REST tests, we import files generated with MySQL (the only way I found to add PhpWiki data ...)
+
+To do this:
+
+* Add the data you want in your PhpWiki instance
+* Connect to your Tuleap MySQL server
+* Get the project_id you want to extract data
+* Execute :
+    - SELECT * FROM wiki_group_list WHERE group_id = %PROJECT_ID% INTO OUTFILE '/tmp/rest-test-wiki-group-list';
+    - SELECT * FROM wiki_page WHERE group_id = %PROJECT_ID% INTO OUTFILE '/tmp/rest-test-wiki-page';
+    - SELECT * FROM wiki_nonempty WHERE id IN (SELECT id FROM wiki_page WHERE group_id = %PROJECT_ID%) INTO OUTFILE '/tmp/rest-test-wiki-nonempty';
+    - SELECT * FROM wiki_version WHERE id IN (SELECT id FROM wiki_page WHERE group_id = %PROJECT_ID%) INTO OUTFILE '/tmp/rest-test-wiki-version';
+    - SELECT * FROM wiki_recent WHERE id IN (SELECT id FROM wiki_page WHERE group_id = %PROJECT_ID%) INTO OUTFILE '/tmp/rest-test-wiki-recent';
+* Copy the generated files into Tuleap sources: `scp /tmp/rest-test-* /tuleap/tests/rest/_fixtures/phpwiki`
