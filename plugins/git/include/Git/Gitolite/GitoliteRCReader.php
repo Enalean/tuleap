@@ -37,7 +37,11 @@ class Git_Gitolite_GitoliteRCReader {
 
         preg_match('/running gitolite.* (2|3)./', implode(' ', $output), $match);
 
-        return $match[1];
+        if (isset($match[1])) {
+            return $match[1];
+        }
+
+        return null;
     }
 
     private function gitolite3IsUsed() {
