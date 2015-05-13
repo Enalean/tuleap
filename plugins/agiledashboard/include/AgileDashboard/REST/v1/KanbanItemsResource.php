@@ -182,7 +182,7 @@ class KanbanItemsResource {
             $value = $item->column_id;
         }
 
-        $fields_data[$status_field->getId()] = array($value);
+        $fields_data[$status_field->getId()] = $value;
     }
 
     /** @return AgileDashboard_Kanban */
