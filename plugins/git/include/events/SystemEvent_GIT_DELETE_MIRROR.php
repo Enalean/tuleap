@@ -18,8 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SystemEvent_GIT_RENAME_MIRROR extends SystemEvent {
-    const NAME = 'GIT_RENAME_MIRROR';
+class SystemEvent_GIT_DELETE_MIRROR extends SystemEvent {
+    const NAME = 'GIT_DELETE_MIRROR';
 
     /** @var Git_GitoliteDriver */
     private $gitolite_driver;
@@ -32,17 +32,16 @@ class SystemEvent_GIT_RENAME_MIRROR extends SystemEvent {
 
     public function process() {
 
-        $dump_is_done = $this->gitolite_driver->renameMirror(
-            $this->getMirrorIdFromParameters(),
+        $deletion_is_done = $this->gitolite_driver->deleteMirror(
             $this->getMirrorOldHostnameFromParameters()
         );
 
-        if ($dump_is_done) {
+        if ($deletion_is_done) {
             $this->done();
             return true;
         }
 
-        $this->error("Something went wrong while renaming mirror");
+        $this->error("Something went wrong while deleting mirror");
     }
 
     private function getMirrorIdFromParameters() {

@@ -238,7 +238,7 @@ class Git_Mirror_MirrorDataMapper {
             $this->user_manager->updateUserSSHKeys($mirror->owner, array($ssh_key));
         }
 
-        $this->git_system_event_manager->queueRenameMirror($id, $mirror->hostname);
+        $this->git_system_event_manager->queueUpdateMirror($id, $mirror->hostname);
 
         return $this->dao->updateMirror($id, $url, $hostname, $name);
     }
@@ -257,7 +257,7 @@ class Git_Mirror_MirrorDataMapper {
         $user = $this->user_manager->getUserById($mirror->owner_id);
         $user->setStatus(PFUser::STATUS_DELETED);
         $this->user_manager->updateDb($user);
-        $this->git_system_event_manager->queueDumpConfigurationForMirror($id, $mirror->hostname);
+        $this->git_system_event_manager->queueDeleteMirror($id, $mirror->hostname);
 
         return true;
     }

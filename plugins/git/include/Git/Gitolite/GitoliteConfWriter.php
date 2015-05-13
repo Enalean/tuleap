@@ -108,7 +108,7 @@ class Git_Gitolite_GitoliteConfWriter {
         return $git_modifications;
     }
 
-    public function renameMirror($mirror_id, $old_hostname) {
+    public function updateMirror($mirror_id, $old_hostname) {
         $git_modifications = new Git_Gitolite_GitModifications();
 
         if (! $this->gitoliterc_reader->getHostname()) {
@@ -124,6 +124,18 @@ class Git_Gitolite_GitoliteConfWriter {
         if ($mirror->hostname) {
             $this->dumpConfForMirror($mirror, $git_modifications);
         }
+
+        return $git_modifications;
+    }
+
+    public function deleteMirror($hostname) {
+        $git_modifications = new Git_Gitolite_GitModifications();
+
+        if (! ($this->gitoliterc_reader->getHostname() && $hostname)) {
+            return $git_modifications;
+        }
+
+        $this->removeMirrorConfiguration($hostname, $git_modifications);
 
         return $git_modifications;
     }
