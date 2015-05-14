@@ -223,7 +223,7 @@ function frs_file_restore_view($group_id, &$idArray, &$nomArray, &$htmlArray) {
     $html .= '</div>';
 
     $idArray[]   = 'frs_file';
-    $nomArray[]  = 'Deleted files';
+    $nomArray[]  = $GLOBALS['Language']->getText('admin_groupedit','archived_files');
     $htmlArray[] = $html;
 }
 
@@ -290,7 +290,7 @@ function wiki_attachment_restore_view($group_id, &$idArray, &$nomArray, &$htmlAr
     }
     $tabbed_content .= '</div>';
     $idArray[]   = 'wiki_attachment';
-    $nomArray[]  = 'Deleted wiki attachments';
+    $nomArray[]  = $GLOBALS['Language']->getText('admin_groupedit','archived_wiki');
     $htmlArray[] = $tabbed_content;
 }
 

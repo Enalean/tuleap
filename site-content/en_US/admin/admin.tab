@@ -201,6 +201,7 @@ admin_groupedit	error_group	Invalid project was passed in.
 admin_groupedit	proj_edit	Edit Project Details
 admin_groupedit	proj_admin	Project Admin
 admin_groupedit	proj_member	View/Edit Project Members
+admin_groupedit	pending_data	Show pending project data
 admin_groupedit	group_type	Project Type
 admin_groupedit	status_I	Incomplete
 admin_groupedit	status_A	Active
@@ -228,6 +229,8 @@ admin_groupedit	rename_project_warn	Project name update will be effective only a
 admin_groupedit	rename_project_already_queued	There is already an event scheduled to rename this project. Please check <a href="/admin/system_events/">System Event Monitor</a>.
 admin_groupedit	invalid_short_name	Invalid Short Name
 admin_groupedit	manage_access	Manage Access
+admin_groupedit	archived_wiki	Deleted wiki attachments
+admin_groupedit	archived_files	Deleted files
 
 #
 #-----------------------------------------------
