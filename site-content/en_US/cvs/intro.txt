@@ -35,4 +35,4 @@ print '<P><span class="command">cvs -d:pserver:'.$username.'@'.$cvs_domain.':/cv
 }
 
 
-print '<P>'.help_button('VersionControlWithCVS.html',false,'[More information about CVS&hellip;]');
+print '<P>'.help_button('VersionControlWithCVS.html',false,'[More information about CVS…]');

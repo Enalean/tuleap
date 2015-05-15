@@ -22,4 +22,4 @@ if (strtolower($username) != $username) {
    echo "<p>Attention à bien utiliser votre nom d'utilisateur en minuscules.";
 }
 
-print '<P>'.help_button('svn.html',false,'[Plus d\'information sur l\'utilisation de Subversion &hellip;]');
+print '<P>'.help_button('svn.html',false,'[Plus d\'information sur l\'utilisation de Subversion…]');
