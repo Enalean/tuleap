@@ -182,4 +182,21 @@ class WikiDao extends DataAccessObject {
 
         return $this->retrieve($sql);
     }
+
+    public function doesWikiPageExistInRESTContext($page_id) {
+        $admin_pages   = $this->da->quoteSmartImplode(',', WikiPage::getAdminPages());
+        $default_pages = $this->da->quoteSmartImplode(',', WikiPage::getDefaultPages());
+
+        $page_id = $this->da->escapeInt($page_id);
+
+        $sql = "SELECT SQL_CALC_FOUND_ROWS wiki_page.id
+                FROM wiki_page, wiki_nonempty
+                WHERE wiki_page.id = $page_id
+                    AND wiki_nonempty.id <> wiki_page.id
+                    AND wiki_page.pagename NOT IN ($default_pages,$admin_pages)";
+
+        $this->retrieve($sql);
+
+        return (int) $this->foundRows();
+    }
 }

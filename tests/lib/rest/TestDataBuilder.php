@@ -109,6 +109,8 @@ class TestDataBuilder {
     const KANBAN_ONGOING_COLUMN_ID = 231;
     const KANBAN_DONE_VALUE_ID     = 233;
 
+    const PHPWIKI_PAGE_ID          = 6097;
+
     /** @var ProjectManager */
     protected $project_manager;
 

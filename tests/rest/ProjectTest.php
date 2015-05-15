@@ -652,7 +652,7 @@ class ProjectTest extends RestBase {
         $expected_result = array(
             'pages' => array(
                 0 => array(
-                    'id'  => 6097,
+                    'id'  => TestDataBuilder::PHPWIKI_PAGE_ID,
                     'uri' => 'wiki/6097',
                     'name' => 'WithContent'
                 )
