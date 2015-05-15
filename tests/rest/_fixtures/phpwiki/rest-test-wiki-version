@@ -2228,7 +2228,7 @@ contain the title of this page?".\
 * [EmptyPage]	a:5:{s:7:"summary";s:15:"Added EmptyPage";s:6:"author";s:7:"testman";s:8:"pagetype";s:8:"wikitext";s:9:"author_id";s:7:"testman";s:11:"_supplanted";s:10:"1431503123";}
 6095	2	1431503123	0	ProjectWantedPages store pages created with main interface:\
 * [EmptyPage]\
-* [WithContent]	a:4:{s:7:"summary";s:17:"Added WithContent";s:6:"author";s:7:"testman";s:8:"pagetype";s:8:"wikitext";s:9:"author_id";s:7:"testman";}
+* [WithContent]	a:5:{s:7:"summary";s:17:"Added WithContent";s:6:"author";s:7:"testman";s:8:"pagetype";s:8:"wikitext";s:9:"author_id";s:7:"testman";s:11:"_supplanted";s:10:"1431503123";}
 6097	1	1431503136	0	Content v1	a:5:{s:6:"author";s:7:"testman";s:9:"author_id";s:7:"testman";s:6:"markup";d:2;s:8:"pagetype";s:8:"wikitext";s:11:"_supplanted";i:1431503144;}
 6097	2	1431503144	1	Content v2	a:5:{s:6:"author";s:7:"testman";s:9:"author_id";s:7:"testman";s:6:"markup";d:2;s:8:"pagetype";s:8:"wikitext";s:11:"_supplanted";i:1431503151;}
 6097	3	1431503151	0	Content v3	a:5:{s:6:"author";s:7:"testman";s:9:"author_id";s:7:"testman";s:6:"markup";d:2;s:8:"pagetype";s:8:"wikitext";s:11:"_supplanted";i:1431503613;}
@@ -2248,3 +2248,13 @@ _this is a content in italic_\
 <verbatim> content in verbatim tag </verbatim>\
 \
 [tuleap | tuleap.org]	a:4:{s:6:"author";s:7:"testman";s:9:"author_id";s:7:"testman";s:6:"markup";d:2;s:8:"pagetype";s:8:"wikitext";}
+6095	3	1431503123	0	ProjectWantedPages store pages created with main interface:\
+* [EmptyPage]\
+* [WithContent]\
+* [With Space]	a:5:{s:7:"summary";s:19:"With Space ajoutée";s:6:"author";s:7:"testman";s:8:"pagetype";s:8:"wikitext";s:9:"author_id";s:7:"testman";s:11:"_supplanted";s:10:"1431503123";}
+6100	1	1431690509	0	Describe [With Space] here.qdqsdsqdqsdqsdsq	a:4:{s:6:"author";s:7:"testman";s:9:"author_id";s:7:"testman";s:6:"markup";d:2;s:8:"pagetype";s:8:"wikitext";}
+6095	4	1431503123	0	ProjectWantedPages store pages created with main interface:\
+* [EmptyPage]\
+* [WithContent]\
+* [With Space]\
+* [Page#]	a:4:{s:7:"summary";s:14:"Page# ajoutée";s:6:"author";s:7:"testman";s:8:"pagetype";s:8:"wikitext";s:9:"author_id";s:7:"testman";}

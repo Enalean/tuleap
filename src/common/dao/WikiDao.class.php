@@ -183,6 +183,26 @@ class WikiDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function searchPaginatedUserWikiPagesByPagename($project_id, $limit, $offset, $pagename) {
+        $admin_pages   = $this->da->quoteSmartImplode(',', WikiPage::getAdminPages());
+        $default_pages = $this->da->quoteSmartImplode(',', WikiPage::getDefaultPages());
+
+        $project_id = $this->da->escapeInt($project_id);
+        $limit      = $this->da->escapeInt($limit);
+        $offset     = $this->da->escapeInt($offset);
+        $pagename   = $this->da->quoteSmart('%'.$pagename.'%');
+
+        $sql = "SELECT SQL_CALC_FOUND_ROWS wiki_page.pagename
+                FROM wiki_page, wiki_nonempty
+                WHERE wiki_page.group_id = $project_id
+                    AND wiki_nonempty.id = wiki_page.id
+                    AND wiki_page.pagename LIKE $pagename
+                    AND wiki_page.pagename NOT IN ($default_pages,$admin_pages)
+                LIMIT $limit OFFSET $offset";
+
+        return $this->retrieve($sql);
+    }
+
     public function doesWikiPageExistInRESTContext($page_id) {
         $admin_pages   = $this->da->quoteSmartImplode(',', WikiPage::getAdminPages());
         $default_pages = $this->da->quoteSmartImplode(',', WikiPage::getDefaultPages());

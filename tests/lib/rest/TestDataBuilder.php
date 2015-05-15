@@ -110,6 +110,7 @@ class TestDataBuilder {
     const KANBAN_DONE_VALUE_ID     = 233;
 
     const PHPWIKI_PAGE_ID          = 6097;
+    const PHPWIKI_SPACE_PAGE_ID    = 6100;
 
     /** @var ProjectManager */
     protected $project_manager;
