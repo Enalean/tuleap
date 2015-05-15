@@ -1,10 +1,11 @@
 Version 8.2 (not released yet)
 	== Bug Fix ==
-	* request #8069 Pagination does not work in "Browse all projects"
+	* request #8069: Pagination does not work in "Browse all projects"
 	* request #8071: Remove hard coded limit to 300 in softwaremap
 	* request #8070: Unable to rename a user if I am not using legacy trackers
 	* request #8074: Public incl. restricted only applies to summary and git
 	* request #8075: Preserve privacy of projects
+	* request #8078: Internationalization of show pending document
 
 	== Security ==
 	* request #8002: Use a bigger RSA modulus for the creation of the SSL certificate
@@ -15,9 +16,9 @@ Version 8.2 (not released yet)
 	* request #8072: Fix reflected XSS in NuSOAP
 
 	== Plugins ==
-	* docman: 2.26.76
+	* docman: 2.26.77
 	* tracker: 5.622
-	* git: 4.52
+	* git: 4.53
 	* agiledashboard: 1.194
 	* ldap: 3.79
 	* IM: 1.5.27

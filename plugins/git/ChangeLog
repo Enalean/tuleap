@@ -1,3 +1,7 @@
+Version 4.53 - Tuleap 8.2
+    * request #8078 Internationalization of show pending document
+
+
 Version 4.52 - Tuleap 8.2
     * story #8021 - fix warning in gitolite syslog
 
