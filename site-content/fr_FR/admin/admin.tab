@@ -190,8 +190,9 @@ admin_groupedit	title	Editer un projet
 admin_groupedit	feedback_info	Mettre à jour les infos du projet
 admin_groupedit	error_group	Projet invalide passé en paramètre.
 admin_groupedit	proj_edit	Editer les détails d'un projet
-admin_groupedit	proj_admin	Admin Projet
+admin_groupedit	proj_admin	Administration du Projet
 admin_groupedit	proj_member	Voir/Editer les membres d'un projet
+admin_groupedit	pending_data	Voir les données de projet en attente
 admin_groupedit	group_type	Type de projet
 admin_groupedit	status_I	Incomplet
 admin_groupedit	status_A	Actif
@@ -219,6 +220,8 @@ admin_groupedit	rename_project_warn	La mise à jour du nom du projet ne sera eff
 admin_groupedit	rename_project_already_queued	Il y a déjà une opération de renommage prévue pour ce projet. Merci de consulter les <a href="/admin/system_events/">Événements Système</a>.
 admin_groupedit	invalid_short_name	Nom court du projet invalide
 admin_groupedit	manage_access	Gérer l'accès
+admin_groupedit	archived_wiki	Pièces jointes wiki supprimées
+admin_groupedit	archived_files	Fichiers supprimés
 
 #
 #-----------------------------------------------

@@ -399,3 +399,5 @@ plugin_git	restore_invalid_name	Impossible de restorer le dépôt Git : un dép�
 plugin_git	restore_event_created	Tâche crée pour restorer le dépôt
 plugin_git	restore_no_repo_found	Aucun dépôt Git restorable n'a été trouvé
 plugin_git	restore_confirmation	Confirmez la restoration de ce dépôt Git
+
+plugin_git	archived_repositories	Dépôts git supprimés

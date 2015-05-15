@@ -104,7 +104,7 @@ echo '<H2>'.$group->getPublicName().'</H2>' ;?>
 <p>
 <A href="/project/admin/?group_id=<?php print $group_id; ?>"><B><BIG>[<?php echo $Language->getText('admin_groupedit','proj_admin'); ?>]</BIG></B></A><BR/>
 <A href="userlist.php?group_id=<?php print $group_id; ?>"><B><BIG>[<?php echo $Language->getText('admin_groupedit','proj_member'); ?>]</BIG></B></A><BR/>
-<A href="show_pending_documents.php?group_id=<?php print $group_id; ?>"><B><BIG>[<?php echo 'show pending documents'; ?>]</BIG></B></A><BR/>
+<A href="show_pending_documents.php?group_id=<?php print $group_id; ?>"><B><BIG>[<?php echo $Language->getText('admin_groupedit','pending_data'); ?>]</BIG></B></A><BR/>
 <?php $em->processEvent('groupedit_data', array('group_id' => $group_id)); ?>
 </p>
 

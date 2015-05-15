@@ -1496,7 +1496,7 @@ class GitPlugin extends Plugin {
         }
         $tab_content     .= '</div>';
         $params['id'][]  = 'git_repository';
-        $params['nom'][] = 'Deleted git repositories';
+        $params['nom'][] = $GLOBALS['Language']->getText('plugin_git', 'archived_repositories');
         $params['html'][]= $tab_content;
     }
 
