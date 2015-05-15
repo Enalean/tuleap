@@ -369,10 +369,14 @@ class Git_GitoliteDriver {
         }
 
         try {
+            $exec    = new System_Command();
             $command = 'tar cvzf '.escapeshellarg($backup_path).' '.escapeshellarg($repository->getFullPath());
-            $exec = new System_Command();
             $exec->exec($command);
+            $command = 'chmod 644 '.escapeshellarg($backup_path);
+            $exec->exec($command);
+            $this->logger->info('[Gitolite][Backup] Repository backup done in ['.$backup_path.']');
         } catch (System_Command_CommandException $exception) {
+            $this->logger->error('[Gitolite][Backup] Error when backuping repository in ['.$backup_path.'] error message : '.$exception->getMessage());
             throw new GitDriverErrorException($exception->getMessage());
         }
     }
@@ -410,7 +414,10 @@ class Git_GitoliteDriver {
 
         $backup_path = realpath($backup_path);
 
-        $this->extractRepository($backup_path);
+        if(!$this->extractRepository($backup_path)) {
+            $this->logger->error('[Gitolite][Restore] Unable to restore repository: '.$repository->getName());
+            return false;
+        }
         $this->deleteBackup($repository, $backup_directory);
 
         if(!$this->getDao()->activate($repository->getId())) {
@@ -436,9 +443,15 @@ class Git_GitoliteDriver {
         $this->logger->debug('[Gitolite][Restore] sudo gitolite restore');
         $base = realpath(ForgeConfig::get('codendi_bin_prefix'));
 
-        $system_command = new System_Command();
-        $command        = "sudo -u gitolite $base/restore-tar-repository.php  ".escapeshellarg($backup_path) . ' /';
-        $system_command->exec($command);
+        $system_command   = new System_Command();
+        $command          = "sudo -u gitolite TERM=xterm $base/restore-tar-repository.php  ".escapeshellarg($backup_path) . ' /';
+        $execution_result = $system_command->exec($command);
+        if(!empty($execution_result)) {
+            $this->logger->error('[Gitolite][Restore] Unable to extract repository from backup: ['.$backup_path.'] error message : '.$execution_result[0]);
+            return false;
+        }
+        $this->logger->info('[Gitolite][Restore] Repository extracted from backup: '.$backup_path);
+        return true;
     }
 
     private function getBackupPath(GitRepository $repository, $backup_directory) {
