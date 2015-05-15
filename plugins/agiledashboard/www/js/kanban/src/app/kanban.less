@@ -40,56 +40,61 @@
     }
 }
 
+@kanban-column-header-height: 48px;
+@kanban-column-footer-height: 48px;
+
 #kanban-board {
     @fontsizeheader: 14px;
-    @lineheightheader: 2.3em;
-    @lightenratio: 45%;
-    @lightenratiomiddle: 15%;
     @wip-reached-color: #F39333;
     @wip-reached-bg-color: #FFECD9;
     @border-color: #E0E0E0;
     @light-border-color: #EFEFEF;
 
     width: 100%;
-    position: relative;
+    height: 100%;
     white-space: nowrap;
     font-size: 0;
-    overflow-y: auto;
+    overflow-y: hidden;
     overflow-x: auto;
 
     > div {
+        position: relative;
         display: inline-block;
+        height: 100%;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        min-width: 180px;
+
         border-right: 1px solid @border-color;
         border-top-width: 4px;
         background: #FBFBFB;
         color: #CCC;
         font-size: @fontsizeheader;
-        line-height: @lineheightheader;
+        line-height: 1.25em;
         text-align: center;
         white-space: normal;
-        min-height: 100%;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
-        margin: 0 0 -10px;
 
         > .column-header {
-            padding: 8px 0 0;
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: @kanban-column-header-height;
+            max-height: @kanban-column-header-height;
+            z-index: 5;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            padding: 15px 0 0;
             border-right: 1px solid @border-color;
             font-size: @fontsizeheader;
             font-weight: 400;
             font-family: 'SourceSansPro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.03em;
             color: #CCC;
             background: white;
-            min-height: 48px;
             vertical-align: middle;
             box-shadow: inset 0 3px 0 #666, inset 0 -1px 0 @border-color;
             color: #666;
-            position: absolute;
-            z-index: 5;
             opacity: 0.95;
-            -moz-box-sizing: border-box;
-            box-sizing: border-box;
 
             .wip-limit-form {
                 left: auto;
@@ -124,10 +129,10 @@
             > .wip-limit {
                 float: right;
                 color: white;
-                margin: 6px 7px 0 0;
+                margin: 0 7px 0 0;
+                padding: 0px 7px;
                 line-height: 20px;
                 border-radius: 16px;
-                padding: 0px 7px;
                 font-weight: bold;
                 font-size: 0.9em;
                 background: #666;
@@ -169,6 +174,7 @@
             > .column-label {
                 font-size: 1.1em;
                 text-transform: uppercase;
+                position: relative;
             }
 
             > .warning-wip {
@@ -207,25 +213,43 @@
         > .column-content {
             -moz-box-sizing: border-box;
                  box-sizing: border-box;
-            padding: 50px 0 30px;
             text-transform: none;
+
+            .kustom-scroll {
+                height: 100%;
+
+                &:not(.has-content) {
+                    position: absolute;
+                    width: 100%;
+                    z-index: 0;
+                }
+            }
 
             > .kanban-info {
                 font-style: italic;
             }
+        }
 
-            > add-in-place > .column-content-addinplace {
-                position: absolute;
-                z-index: 1;
-                top: 150px;
-                width: 150px;
-                height: 48px;
-                box-sizing: border-box;
+        add-in-place {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: @kanban-column-footer-height;
+            z-index: 5;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+
+            > .column-content-addinplace {
+                width: 100%;
+                height: 100%;
                 background: rgba(255, 255, 255, 0.95);
                 border-top: 1px solid @light-border-color;
                 border-right: 1px solid @border-color;
                 color: #333;
                 text-align: center;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
 
                 > i {
                     display: block;
@@ -251,12 +275,14 @@
                     }
 
                     > form {
-                        padding: 9px 9px 0;
+                        padding: 7px 9px 0;
+                        margin: 0;
 
                         > .input-append {
                             width: 100%;
 
                             > input[type=text] {
+                                -moz-box-sizing: border-box;
                                 box-sizing: border-box;
                                 height: 30px;
                                 width: 80%;
@@ -279,8 +305,7 @@
             }
         }
 
-        &.small_column > .column-content > add-in-place > .column-content-addinplace > form > .input-append {
-
+        &.small_column > add-in-place > .column-content-addinplace > form > .input-append {
             > input[type=text] {
                 width: 70%;
             }
@@ -348,8 +373,8 @@
 
                 > div {
                     position: relative;
-                    margin-top: 85px;
                     left: -10px;
+                    margin-top: 85px;
                     top: 0;
                     text-align: right;
                     direction: rtl;
@@ -421,15 +446,20 @@
 }
 
 ul.kanban-items {
-    margin: 0 auto;
+    margin: 0;
+    padding: 0;
     height: inherit;
     list-style-type: none;
+
+    &.has-scrollbar {
+        padding: 0 6px 0 0;
+    }
 
     > li {
         margin: 0 10px 10px;
 
         &:first-child {
-            margin-top: 10px;
+            margin-top: @kanban-column-header-height + 10px;
 
             &.angular-ui-tree-placeholder:only-child {
                 margin-top: 0;
@@ -438,6 +468,10 @@ ul.kanban-items {
             &.angular-ui-tree-hidden + li {
                 margin-top: 10px;
             }
+        }
+
+        &:last-child {
+            margin-bottom: @kanban-column-footer-height + 10px;
         }
     }
 }
@@ -450,16 +484,9 @@ ul.kanban-items {
     }
 }
 
-#kanban-board > .archive ul.kanban-items > li {
-    margin: 0 23px 10px 10px;
-
-    &:first-child {
-        margin-top: 10px;
-    }
-}
-
 ul.kanban-items.angular-ui-tree-drag {
     opacity: 1;
+    height: auto;
 
     > li {
         box-shadow: 0 7px 30px rgba(0,0,0,0.2);

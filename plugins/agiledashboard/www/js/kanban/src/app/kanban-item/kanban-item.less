@@ -29,28 +29,6 @@
         }
     }
 
-    > .tooltip > .tooltip-inner {
-        width: auto;
-        white-space: nowrap;
-        text-align: left;
-
-        > p {
-            margin: 0 0 5px;
-
-            &:last-child {
-                margin: 0;
-            }
-
-            > span {
-                opacity: 0.8;
-            }
-
-            > strong {
-                white-space: nowrap;
-            }
-        }
-    }
-
     > div.type-border {
         position: absolute;
         top: 0;
@@ -187,6 +165,28 @@
                     }
                 }
             }
+        }
+    }
+}
+
+.tooltip > .tooltip-inner {
+    width: auto;
+    text-align: left;
+
+    > p {
+        margin: 0 0 5px;
+        white-space: nowrap;
+
+        &:last-child {
+            margin: 0;
+        }
+
+        > span {
+            opacity: 0.8;
+        }
+
+        > strong {
+            white-space: nowrap;
         }
     }
 }
