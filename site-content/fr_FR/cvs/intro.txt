@@ -31,4 +31,4 @@ print '<P><span class="command">cvs -d:pserver:'.$username.'@'.$cvs_domain.':/cv
 }
 
 
-print '<P>'.help_button('cvs.html',false,'[Plus d\'information sur CVS&hellip;]');
+print '<P>'.help_button('cvs.html',false,'[Plus d\'information sur CVS…]');
