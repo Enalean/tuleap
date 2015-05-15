@@ -25,4 +25,4 @@ if (strtolower($username) != $username) {
    echo "<p>Note: Please type your username in lower case.";
 }
 
-print '<P>'.help_button('svn.html',false,'[More on how to use Subversion &hellip;]');
+print '<P>'.help_button('svn.html',false,'[More on how to use Subversion…]');
