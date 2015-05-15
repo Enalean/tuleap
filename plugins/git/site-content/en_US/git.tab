@@ -401,6 +401,6 @@ plugin_git	restore_invalid_id	Unable to restore Git repository : Invalid reposit
 plugin_git	restore_invalid_name	Unable to restore Git repository : repository with the same name already exist
 plugin_git	restore_event_created	System event created to restore repository
 plugin_git	restore_no_repo_found	No restorable git repositories found
-plugin_git	restore_confirmation	Confirm restore of this Git repositoryoration de ce dépôt Git
+plugin_git	restore_confirmation	Confirm restore of this Git repository
 
 plugin_git	archived_repositories	Deleted git repositories
