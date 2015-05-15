@@ -38,15 +38,36 @@ SRC_DIR=$(cd $CURRENT_DIR/../..; pwd)
 
 VHOST=$TULEAP_NAME.$HOSTNAME
 
-docker run -d \
-    --name $TULEAP_NAME \
-    -v /srv/docker/$TULEAP_NAME:/data \
-    -v $SRC_DIR:/usr/share/tuleap \
-    -e VIRTUAL_HOST=$VHOST \
-    -e UID=$(id -u $CURRENT_USER) \
-    -e GID=$(id -g $CURRENT_USER) \
-    -e SSH_KEY="$SSH_KEY" \
-    enalean/tuleap-aio-dev
+OS=$(uname)
+if [ "$OS" == "Darwin" ]; then
+    # Create data container if none exists
+    if ! docker inspect "$TULEAP_NAME-data" 2>&1 >/dev/null; then
+        docker run --name "$TULEAP_NAME-data" -v /data busybox true
+    fi
+
+    docker run -d \
+        --name $TULEAP_NAME \
+        --volumes-from "$TULEAP_NAME-data" \
+        -v $SRC_DIR:/usr/share/tuleap \
+        -e VIRTUAL_HOST=$VHOST \
+        -e UID=$(id -u $CURRENT_USER) \
+        -e GID=$(id -g $CURRENT_USER) \
+        -e SSH_KEY="$SSH_KEY" \
+        -p 2222:22 \
+        -p 80:80 \
+        -p 443:443 \
+        enalean/tuleap-aio-dev
+else
+    docker run -d \
+        --name $TULEAP_NAME \
+        -v /srv/docker/$TULEAP_NAME:/data \
+        -v $SRC_DIR:/usr/share/tuleap \
+        -e VIRTUAL_HOST=$VHOST \
+        -e UID=$(id -u $CURRENT_USER) \
+        -e GID=$(id -g $CURRENT_USER) \
+        -e SSH_KEY="$SSH_KEY" \
+        enalean/tuleap-aio-dev
+fi
 
 IP_ADDRESS=$(docker inspect $TULEAP_NAME |  $JQ '.[].NetworkSettings.IPAddress')
 
