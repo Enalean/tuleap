@@ -92,6 +92,7 @@ $svn_mailing_header = $project->getSVNMailingHeader();
 echo '
        <h2>'.$Language->getText('svn_admin_notification','email').'</h2>
        '.$Language->getText('svn_admin_notification','mail_comment').'
+       <p><i>'.$Language->getText('svn_admin_notification','star_operator').'</i></p>
        <form action="" method="post">
            <input type="hidden" name="group_id" value="'.$group_id.'">
            <input type="hidden" name="post_changes" value="subject_header">
