@@ -1,3 +1,6 @@
+Version 4.57 - Tuleap 8.2
+    * request #8082: Grokmirror: Gitolite-admin should not be updated when a push occurs
+
 Version 4.56 - Tuleap 8.2
     * story #8021 - add a message to prevent hostname duplicates
 
