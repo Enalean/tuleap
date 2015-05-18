@@ -1,3 +1,12 @@
+Version 8.1-3 (Monday May 18th 2015)
+	* request #8077: fix of empty restored repository
+	* request #8079: HTML entity in CVS and SVN homepage not interpreted
+	* request #8069: Pagination does not work in "Browse all projects"
+	* request #8070: Unable to rename a user if I am not using legacy trackers
+	* request #8073: Reflected XSS in the add bookmark page
+	* request #8074: Public incl. restricted only applies to summary and git
+	* request #7976: HTML is not interpreted in planning v2 feedbacks (REST error)
+
 Version 8.1-2 (Monday, May 11th 2015)
 
 	== Bug Fix ==
