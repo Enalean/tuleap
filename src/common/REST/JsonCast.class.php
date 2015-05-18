@@ -39,6 +39,18 @@ class JsonCast {
     }
 
     /**
+     * Cast a value to boolean if it's not null
+     * @return boolean|null
+     */
+    public static function toBoolean($value) {
+        if (! is_null($value) && $value !== '') {
+            return (bool) $value;
+        }
+
+        return null;
+    }
+
+    /**
      * Cast a value to float if it's not null
      * @return float|null
      */

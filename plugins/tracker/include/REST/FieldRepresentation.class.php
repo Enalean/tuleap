@@ -58,6 +58,12 @@ class Tracker_REST_FieldRepresentation {
     public $values      = array();
 
     /**
+     *
+     * @var boolean
+     */
+    public $required;
+
+    /**
      * @var array
      */
     public $bindings    = array();
@@ -71,6 +77,7 @@ class Tracker_REST_FieldRepresentation {
         $this->field_id = JsonCast::toInt($field->getId());
         $this->name     = $field->getName();
         $this->label    = $field->getLabel();
+        $this->required = JsonCast::toBoolean($field->isRequired());
         $this->type     = $type;
 
         $this->values   = null;
