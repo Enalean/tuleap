@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
+ * Copyright Enalean (c) 2011, 2012, 2013, 2014, 2015. All rights reserved.
  * 
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -45,7 +45,7 @@ if ($argv[1] == "--init") {
 
     $repository = $git_repository_factory->getFromFullPath($repository_path);
     if ($repository) {
-        $system_event_manager->queueGrokMirrorManifest($repository);
+        $system_event_manager->queueGrokMirrorManifestFollowingAGitPush($repository);
     }
 } else {
     $repository_path = $argv[1];

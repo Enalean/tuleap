@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2014. All rights reserved.
+ * Copyright Enalean (c) 2014 - 2015. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -121,5 +121,15 @@ class Git_Mirror_ManifestManagerTest extends TuleapTestCase {
             )->at(1);
 
         $this->manager->checkManifestFiles();
+    }
+
+    public function itUpdatesTheCurrentTimeAfterAGitPush() {
+        stub($this->data_mapper)->fetchAllRepositoryMirrors()->returns(
+            array($this->singapour_mirror)
+        );
+
+        expect($this->generator)->updateCurrentTimeOfRepository($this->singapour_mirror, $this->repository)->once();
+
+        $this->manager->triggerUpdateFollowingAGitPush($this->repository);
     }
 }

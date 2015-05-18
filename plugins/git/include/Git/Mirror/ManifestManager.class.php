@@ -52,6 +52,14 @@ class Git_Mirror_ManifestManager {
         }
     }
 
+    public function triggerUpdateFollowingAGitPush(GitRepository $repository) {
+        $repository_mirrors = $this->data_mapper->fetchAllRepositoryMirrors($repository);
+
+        foreach ($repository_mirrors as $mirror) {
+            $this->generator->updateCurrentTimeOfRepository($mirror, $repository);
+        }
+    }
+
     public function checkManifestFiles() {
         $gitolite_admin_repository = new GitRepositoryGitoliteAdmin();
         $all_mirrors = $this->data_mapper->fetchAll();

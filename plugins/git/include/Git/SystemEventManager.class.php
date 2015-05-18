@@ -152,6 +152,15 @@ class Git_SystemEventManager {
         );
     }
 
+    public function queueGrokMirrorManifestFollowingAGitPush(GitRepository $repository) {
+        $this->system_event_manager->createEvent(
+            SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE_FOLLOWING_A_GIT_PUSH::NAME,
+            $repository->getId(),
+            SystemEvent::PRIORITY_LOW,
+            SystemEvent::OWNER_APP
+        );
+    }
+
     public function queueGrokMirrorManifestRepoDelete($repository_path) {
         $this->system_event_manager->createEvent(
             SystemEvent_GIT_GROKMIRROR_MANIFEST_REPODELETE::NAME,
@@ -261,6 +270,7 @@ class Git_SystemEventManager {
     public function getGrokMirrorTypes() {
         return array(
             SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE::NAME,
+            SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE_FOLLOWING_A_GIT_PUSH::NAME,
             SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECK::NAME,
             SystemEvent_GIT_GROKMIRROR_MANIFEST_REPODELETE::NAME,
         );

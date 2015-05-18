@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2015. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -38,6 +38,16 @@ class Git_Mirror_ManifestFileGenerator {
 
     public function getManifestDirectory() {
         return $this->manifest_directory;
+    }
+
+    public function updateCurrentTimeOfRepository(Git_Mirror_Mirror $mirror, GitRepository $repository) {
+        $filename = $this->getManifestFilenameForMirror($mirror);
+
+        $list_of_repositories = $this->getListOfRepositoriesFromManifest($filename);
+        $this->setCurrentTimeForRepository($mirror, $list_of_repositories, $repository);
+
+        $this->writeManifest($filename, $list_of_repositories);
+
     }
 
     public function addRepositoryToManifestFile(Git_Mirror_Mirror $mirror, GitRepository $repository) {
