@@ -306,6 +306,13 @@ class GitPlugin extends Plugin {
                     $this->getManifestManager(),
                 );
                 break;
+            case SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE_FOLLOWING_A_GIT_PUSH::NAME:
+                $params['class'] = 'SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE_FOLLOWING_A_GIT_PUSH';
+                $params['dependencies'] = array(
+                    $this->getRepositoryFactory(),
+                    $this->getManifestManager(),
+                );
+                break;
             case SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECK::NAME:
                 $params['class'] = 'SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECK';
                 $params['dependencies'] = array(

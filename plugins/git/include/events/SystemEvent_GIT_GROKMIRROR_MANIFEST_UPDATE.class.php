@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,10 +22,10 @@ class SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE extends SystemEvent {
     const NAME = 'GIT_GROKMIRROR_MANIFEST_UPDATE';
 
     /** @var GitRepositoryFactory */
-    private $repository_factory;
+    protected $repository_factory;
 
     /** @var Git_Mirror_ManifestManager */
-    private $manifest_manager;
+    protected $manifest_manager;
 
     public function injectDependencies(GitRepositoryFactory $repository_factory, Git_Mirror_ManifestManager $manifest_manager) {
         $this->repository_factory = $repository_factory;
@@ -37,7 +37,7 @@ class SystemEvent_GIT_GROKMIRROR_MANIFEST_UPDATE extends SystemEvent {
         return intval($parameters[0]);
     }
 
-    private function getRepositoryFromParameters() {
+    protected function getRepositoryFromParameters() {
         return $this->repository_factory->getRepositoryById($this->getRepositoryIdFromParameters());
     }
 

@@ -45,6 +45,7 @@ class Git_Mirror_ManifestFileGenerator_BaseTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->current_time       = $_SERVER['REQUEST_TIME'];
+        $this->time_in_the_past   = 1414684049;
         $this->fixture_dir        = dirname(__FILE__) .'/_fixtures';
         $this->manifest_directory = $this->fixture_dir .'/manifests';
         mkdir($this->manifest_directory);
@@ -81,7 +82,14 @@ class Git_Mirror_ManifestFileGenerator_BaseTest extends TuleapTestCase {
     protected function forgeExistingManifestFile($path) {
         file_put_contents(
             "compress.zlib://$path",
-            '{"\/linux\/kernel.git":{"owner":null,"description":"Linux4ever","reference":null,"modified":1414684049}}'
+            '{"\/linux\/kernel.git":{"owner":null,"description":"Linux4ever","reference":null,"modified":'. $this->time_in_the_past .'}}'
+        );
+    }
+
+    protected function forgeExistingManifestFileWithGitoliteAdmin($path) {
+        file_put_contents(
+            "compress.zlib://$path",
+            '{"\/gitolite-admin.git":{"owner":null,"description":"","reference":null,"modified":'. $this->time_in_the_past .'},"\/linux\/kernel.git":{"owner":null,"description":"Linux4ever","reference":null,"modified":'. $this->time_in_the_past .'}}'
         );
     }
 }
@@ -269,5 +277,38 @@ class Git_Mirror_ManifestFileGenerator_ensureManifestContainsLatestInfoOfReposit
 
         $content_after = $this->getManifestContent($this->manifest_file_for_singapour);
         $this->assertFalse(isset($content_after["/linux/kernel.git"]));
+    }
+}
+
+class Git_Mirror_ManifestFileGenerator_updateCurrentTimeOfRepositoryTest extends Git_Mirror_ManifestFileGenerator_BaseTest {
+
+    public function itUpdatesDateToCurrentDateIfRepoAlreadyInManifest() {
+        $this->forgeExistingManifestFileWithGitoliteAdmin($this->manifest_file_for_singapour);
+
+        $this->generator->updateCurrentTimeOfRepository($this->singapour_mirror, $this->kernel_repository);
+
+        $content = $this->getManifestContent($this->manifest_file_for_singapour);
+
+        $this->assertEqual($content["/linux/kernel.git"], array(
+            "owner"       => null,
+            "description" => "Linux4ever",
+            "reference"   => null,
+            "modified"    => $this->current_time
+        ));
+    }
+
+    public function itDoesNotUpdateCurrentDateOfGitoliteAdmin() {
+        $this->forgeExistingManifestFileWithGitoliteAdmin($this->manifest_file_for_singapour);
+
+        $this->generator->updateCurrentTimeOfRepository($this->singapour_mirror, $this->kernel_repository);
+
+        $content = $this->getManifestContent($this->manifest_file_for_singapour);
+
+        $this->assertEqual($content["/gitolite-admin.git"], array(
+            "owner"       => null,
+            "description" => "",
+            "reference"   => null,
+            "modified"    => $this->time_in_the_past
+        ));
     }
 }
