@@ -240,10 +240,17 @@ class Git_AdminMirrorController {
         try {
             $this->git_mirror_mapper->save($url, $hostname, $ssh_key, $password, $name);
         } catch (Git_Mirror_MissingDataException $e) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','admin_mirror_fields_required'));
+            $this->redirectToCreateWithError($GLOBALS['Language']->getText('plugin_git','admin_mirror_fields_required'));
         } catch (Git_Mirror_CreateException $e) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','admin_mirror_save_failed'));
+            $this->redirectToCreateWithError($GLOBALS['Language']->getText('plugin_git','admin_mirror_save_failed'));
+        } catch (Git_Mirror_HostnameAlreadyUsedException $e) {
+            $this->redirectToCreateWithError($GLOBALS['Language']->getText('plugin_git','admin_mirror_hostname_duplicate'));
         }
+    }
+
+    private function redirectToCreateWithError($message) {
+        $GLOBALS['Response']->addFeedback('error', $message);
+        $GLOBALS['Response']->redirect("?pane=mirrors_admin&action=show-add-mirror");
     }
 
     private function showAddMirror() {
@@ -286,8 +293,9 @@ class Git_AdminMirrorController {
         try {
             $this->csrf->check();
 
-            $update = $this->git_mirror_mapper->update(
-                $request->get('mirror_id'),
+            $mirror_id = $request->get('mirror_id');
+            $update    = $this->git_mirror_mapper->update(
+                $mirror_id,
                 $request->get('mirror_url'),
                 $request->get('mirror_hostname'),
                 $request->get('mirror_key'),
@@ -300,12 +308,19 @@ class Git_AdminMirrorController {
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git','admin_mirror_updated'));
             }
         } catch (Git_Mirror_MirrorNotFoundException $e) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','admin_mirror_cannot_update'));
+            $this->redirectToEditFormWithError($mirror_id, $GLOBALS['Language']->getText('plugin_git','admin_mirror_cannot_update'));
         } catch (Git_Mirror_MirrorNoChangesException $e) {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_git','admin_mirror_no_changes'));
+            $this->redirectToEditFormWithError($mirror_id, $GLOBALS['Language']->getText('plugin_git','admin_mirror_no_changes'));
         } catch (Git_Mirror_MissingDataException $e) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','admin_mirror_fields_required'));
+            $this->redirectToEditFormWithError($mirror_id, $GLOBALS['Language']->getText('plugin_git','admin_mirror_fields_required'));
+        } catch (Git_Mirror_HostnameAlreadyUsedException $e) {
+            $this->redirectToEditFormWithError($mirror_id, $GLOBALS['Language']->getText('plugin_git','admin_mirror_hostname_duplicate'));
         }
+    }
+
+    private function redirectToEditFormWithError($mirror_id, $message) {
+        $GLOBALS['Response']->addFeedback('error', $message);
+        $GLOBALS['Response']->redirect("?pane=mirrors_admin&action=show-edit-mirror&mirror_id=".$mirror_id);
     }
 
     private function deleteMirror(Codendi_Request $request) {

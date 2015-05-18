@@ -110,6 +110,31 @@ class Git_Mirror_MirrorDao extends DataAccessObject{
         return $this->retrieve($sql);
     }
 
+    public function getNumberOfMirrorByHostname($hostname) {
+        $hostname = $this->da->quoteSmart($hostname);
+
+        $sql = "SELECT SQL_CALC_FOUND_ROWS *
+                FROM plugin_git_mirrors
+                WHERE hostname = $hostname";
+
+        $this->retrieve($sql);
+
+        return (int) $this->foundRows();
+    }
+
+    public function getNumberOfMirrorByHostnameExcludingGivenId($hostname, $id) {
+        $hostname = $this->da->quoteSmart($hostname);
+
+        $sql = "SELECT SQL_CALC_FOUND_ROWS *
+                FROM plugin_git_mirrors
+                WHERE hostname = $hostname
+                AND id <> $id";
+
+        $this->retrieve($sql);
+
+        return (int) $this->foundRows();
+    }
+
     public function fetchAllForProject($project_id) {
         $project_id = $this->da->escapeInt($project_id);
 

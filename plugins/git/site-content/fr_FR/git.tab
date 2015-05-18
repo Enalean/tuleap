@@ -318,6 +318,7 @@ plugin_git	gerrit_tab_name	Gerrit
 plugin_git	mirror_tab_name	Miroirs
 plugin_git	admin_mirror_save_failed	Impossible d'enregistrer le mirroir
 plugin_git	admin_mirror_fields_required	Tous les champs sont requis
+plugin_git	admin_mirror_hostname_duplicate	Le hostname choisi doit être unique !
 plugin_git	admin_mirror_cannot_update	Impossible de mettre à jour le mirroir
 plugin_git	admin_mirror_no_changes	Pas de nouveau changements pour le mirroir
 plugin_git	admin_mirror_updated	Miroir modifié !
@@ -386,7 +387,7 @@ plugin_git	identifier	Identifiant
 plugin_git	identifier_placeholder	e.g. location, ...
 plugin_git	url_placeholder	e.g. tuleap.net
 plugin_git	hostname_placeholder	e.g. sfo-mirror
-plugin_git	hostname_help	Correspond à la variable HOSTNAME de .gitolite.rc
+plugin_git	hostname_help	Correspond à la variable HOSTNAME de .gitolite.rc (Doit être unique !)
 
 plugin_git	how_to_use_text	Comment utiliser un dépôt Git:
 plugin_git	clone_text	Clonez le dépôt pour obtenir votre copie de travail locale:
