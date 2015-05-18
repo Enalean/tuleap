@@ -80,6 +80,9 @@ class TrackersTest extends RestBase {
         $this->assertEquals(TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID, $tracker['project']['id']);
         $this->assertEquals('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID, $tracker['project']['uri']);
         $this->assertArrayHasKey('fields', $tracker);
+        foreach ($tracker['fields'] as $field) {
+            $this->assertArrayHasKey('required', $field);
+        }
         $this->assertArrayHasKey('semantics', $tracker);
         $this->assertArrayHasKey('workflow', $tracker);
         $this->assertArrayHasKey('parent', $tracker);
