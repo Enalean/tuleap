@@ -444,7 +444,7 @@ class Git_GitoliteDriver {
         $base = realpath(ForgeConfig::get('codendi_bin_prefix'));
 
         $system_command   = new System_Command();
-        $command          = "sudo -u gitolite TERM=xterm $base/restore-tar-repository.php  ".escapeshellarg($backup_path) . ' /';
+        $command          = "sudo -u gitolite $base/restore-tar-repository.php  ".escapeshellarg($backup_path) . ' /';
         $execution_result = $system_command->exec($command);
         if(!empty($execution_result)) {
             $this->logger->error('[Gitolite][Restore] Unable to extract repository from backup: ['.$backup_path.'] error message : '.$execution_result[0]);
