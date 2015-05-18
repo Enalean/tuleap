@@ -1,3 +1,6 @@
+Version 4.56 - Tuleap 8.2
+    * story #8021 - add a message to prevent hostname duplicates
+
 Version 4.55 - Tuleap 8.2
     * request #8077: fix of empty restored repository
 
