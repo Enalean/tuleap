@@ -361,19 +361,23 @@ class Git_Gitolite_GitoliteConfWriter {
     }
 
     private function getProjectList() {
-        $project_names = array();
-        $dir = new DirectoryIterator(dirname($this->getGitoliteConfFilePath()).'/projects');
-        foreach ($dir as $file) {
-            if (! $file->isDot()) {
-                $project_names[] = basename($file->getFilename(), '.conf');
-            }
-        }
-        return $project_names;
+        $dir_path = dirname($this->getGitoliteConfFilePath()).'/projects';
+        return $this->readProjectListFromPath($dir_path);
     }
 
     private function getProjectsListForMirror(Git_Mirror_Mirror $mirror) {
+        $dir_path = dirname($this->getGitoliteConfFilePath().'/'.$mirror->hostname);
+        return $this->readProjectListFromPath($dir_path);
+    }
+
+    private function readProjectListFromPath($dir_path) {
         $project_names = array();
-        $dir = new DirectoryIterator(dirname($this->getGitoliteConfFilePath()).'/'. $mirror->hostname);
+
+        if (! is_dir($dir_path)) {
+            return $project_names;
+        }
+
+        $dir = new DirectoryIterator($dir_path);
         foreach ($dir as $file) {
             if (! $file->isDot()) {
                 $project_names[] = basename($file->getFilename(), '.conf');
