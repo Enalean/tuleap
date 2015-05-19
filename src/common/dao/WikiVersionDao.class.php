@@ -30,4 +30,16 @@ class WikiVersionDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function getSpecificVersionForGivenPage($page_id, $version_id) {
+        $page_id    = $this->da->escapeInt($page_id);
+        $version_id = $this->da->escapeInt($version_id);
+
+        $sql = "SELECT id, version, content
+                FROM wiki_version
+                WHERE id = $page_id
+                AND version = $version_id";
+
+        return $this->retrieve($sql);
+    }
+
 }

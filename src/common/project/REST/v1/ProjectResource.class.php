@@ -740,7 +740,7 @@ class ProjectResource extends AuthenticatedResource {
     }
 
     /**
-     * @url OPTIONS {id}/wiki
+     * @url OPTIONS {id}/phpwiki
      *
      * @param int $id Id of the project
      */
@@ -753,7 +753,7 @@ class ProjectResource extends AuthenticatedResource {
      *
      * Get info about project non empty PhpWiki pages.
      *
-     * @url GET {id}/wiki
+     * @url GET {id}/phpwiki
      *
      * @access hybrid
      *
@@ -766,6 +766,7 @@ class ProjectResource extends AuthenticatedResource {
      */
     public function getPhpWiki($id, $limit = 10, $offset = 0, $pagename = '') {
         $this->checkAccess();
+        $this->getProjectForUser($id);
 
         $current_user = UserManager::instance()->getCurrentUser();
 

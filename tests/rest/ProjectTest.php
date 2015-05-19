@@ -641,24 +641,24 @@ class ProjectTest extends RestBase {
     }
 
     public function testOPTIONSWiki() {
-        $response = $this->getResponse($this->client->options('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/wiki'));
+        $response = $this->getResponse($this->client->options('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/phpwiki'));
 
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGETWiki() {
-        $response = $this->getResponse($this->client->get('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/wiki'));
+        $response = $this->getResponse($this->client->get('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/phpwiki'));
 
         $expected_result = array(
             'pages' => array(
                 0 => array(
                     'id'  => TestDataBuilder::PHPWIKI_PAGE_ID,
-                    'uri' => 'wiki/6097',
+                    'uri' => 'phpwiki/6097',
                     'name' => 'WithContent'
                 ),
                 1 => array(
                     'id'  => TestDataBuilder::PHPWIKI_SPACE_PAGE_ID,
-                    'uri' => 'wiki/6100',
+                    'uri' => 'phpwiki/6100',
                     'name' => 'With Space'
                 )
             )
@@ -668,13 +668,13 @@ class ProjectTest extends RestBase {
     }
 
     public function testGETWikiWithGoodPagename() {
-        $response = $this->getResponse($this->client->get('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/wiki?pagename=WithContent'));
+        $response = $this->getResponse($this->client->get('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/phpwiki?pagename=WithContent'));
 
         $expected_result = array(
             'pages' => array(
                 0 => array(
                     'id'  => TestDataBuilder::PHPWIKI_PAGE_ID,
-                    'uri' => 'wiki/6097',
+                    'uri' => 'phpwiki/6097',
                     'name' => 'WithContent'
                 )
             )
@@ -684,13 +684,13 @@ class ProjectTest extends RestBase {
     }
 
     public function testGETWikiWithGoodPagenameAndASpace() {
-        $response = $this->getResponse($this->client->get('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/wiki?pagename=With+Space'));
+        $response = $this->getResponse($this->client->get('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/phpwiki?pagename=With+Space'));
 
         $expected_result = array(
             'pages' => array(
                 0 => array(
                     'id'  => TestDataBuilder::PHPWIKI_SPACE_PAGE_ID,
-                    'uri' => 'wiki/6100',
+                    'uri' => 'phpwiki/6100',
                     'name' => 'With Space'
                 )
             )
@@ -700,18 +700,18 @@ class ProjectTest extends RestBase {
     }
 
     public function testGETWikiWithGoodRelativePagename() {
-        $response = $this->getResponse($this->client->get('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/wiki?pagename=With'));
+        $response = $this->getResponse($this->client->get('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/phpwiki?pagename=With'));
 
         $expected_result = array(
             'pages' => array(
                 0 => array(
                     'id'  => TestDataBuilder::PHPWIKI_PAGE_ID,
-                    'uri' => 'wiki/6097',
+                    'uri' => 'phpwiki/6097',
                     'name' => 'WithContent'
                 ),
                 1 => array(
                     'id'  => TestDataBuilder::PHPWIKI_SPACE_PAGE_ID,
-                    'uri' => 'wiki/6100',
+                    'uri' => 'phpwiki/6100',
                     'name' => 'With Space'
                 )
             )
@@ -721,7 +721,7 @@ class ProjectTest extends RestBase {
     }
 
     public function testGETWikiWithNotExistingPagename() {
-        $response = $this->getResponse($this->client->get('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/wiki?pagename="no"'));
+        $response = $this->getResponse($this->client->get('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/phpwiki?pagename="no"'));
 
         $expected_result = array(
             'pages' => array()

@@ -21,25 +21,25 @@
 
 namespace Tuleap\PhpWiki\REST\v1;
 
-use Tuleap\REST\v1\PhpWikiPageRepresentation;
 use WikiPageVersion;
+use WikiPage;
 
-class PhpWikiPageVersionRepresentation {
-
-    const ROUTE = 'versions';
-
-    /**
-     * @var int {@type int}
-     */
-    public $version_id;
+class PhpWikiPageVersionFullRepresentation extends PhpWikiPageVersionRepresentation {
 
     /**
      * @var string {@type string}
      */
-    public $uri;
+    public $wiki_content;
 
-    public function build(WikiPageVersion $version) {
-        $this->version_id = $version->getVersionId();
-        $this->uri        = PhpWikiPageRepresentation::ROUTE . '/' . $version->getPageId() . '/'.self::ROUTE .'?version_id='.$this->version_id;
+    /**
+     * @var string {@type string}
+     */
+    public $formatted_content;
+
+    public function build(WikiPage $wiki_page, WikiPageVersion $version) {
+        parent::build($version);
+
+        $this->wiki_content      = $version->getContent();
+        $this->formatted_content = $version->getFormattedContent($wiki_page);
     }
 }

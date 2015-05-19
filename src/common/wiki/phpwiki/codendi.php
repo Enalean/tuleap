@@ -117,7 +117,7 @@ if (defined('WIKI_SOAP')   and WIKI_SOAP)   return;
     $request->finish();
 }
 
-include(PHPWIKI_DIR."/lib/main.php");
+include_once(PHPWIKI_DIR."/lib/main.php");
 
 codendi_main();
 

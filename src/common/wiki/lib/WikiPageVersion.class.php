@@ -47,4 +47,10 @@ class WikiPageVersion {
     public function getContent() {
         return $this->content;
     }
+
+    public function getFormattedContent(WikiPage $page) {
+        $formatter = new WikiPageVersionContentFormatter($page->getGid());
+
+        return $formatter->getFormattedContent($page, $this);
+    }
 }

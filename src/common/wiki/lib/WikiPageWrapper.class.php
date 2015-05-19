@@ -60,8 +60,11 @@ class WikiPageWrapper {
     define('DATABASE_AUTO_OPTIMIZE', false);
   }
 
+  /**
+   * @return WikiRequest
+   */
   function &getRequest() {
-      define('PHPWIKI_NOMAIN', true);
+    define('PHPWIKI_NOMAIN', true);
     IniConfig(PHPWIKI_DIR."/config/config.ini");
     ini_set('include_path', PHPWIKI_DIR.':'.ini_get('include_path'));
 
