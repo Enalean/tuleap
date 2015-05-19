@@ -519,5 +519,7 @@ class Git_GitoliteDriver {
                 }
             }
         }
+
+        return true;
     }
 }
