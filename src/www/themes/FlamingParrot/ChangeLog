@@ -1,3 +1,6 @@
+Version 1.82 - Tuleap 8.2
+    * request #6966: Login no longer redirect to the page I was seeing
+
 Version 1.81 - Tuleap 8.1
     * story #7813: site admin can rename registered and authentified groups
 
