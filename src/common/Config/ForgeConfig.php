@@ -113,10 +113,33 @@ class ForgeConfig {
     }
 
     public static function areAnonymousAllowed() {
-        return self::get(ForgeAccess::CONFIG) === ForgeAccess::ANONYMOUS;
+        if (self::get(ForgeAccess::CONFIG) !== ForgeAccess::ANONYMOUS) {
+            return false;
+        }
+
+        $reverse_proxy_regexp = self::get(ForgeAccess::REVERSE_PROXY_REGEXP);
+        if (empty($reverse_proxy_regexp)) {
+            return true;
+        }
+
+        if (! isset($_SERVER['REMOTE_ADDR'])) {
+            return true;
+        }
+
+        $compiled_regexp = self::compileReverseProxyRegexp($reverse_proxy_regexp);
+        $is_user_behind_reverse_proxy = preg_match($compiled_regexp, $_SERVER['REMOTE_ADDR']);
+
+        return ! $is_user_behind_reverse_proxy;
     }
 
     public static function areRestrictedUsersAllowed() {
         return self::get(ForgeAccess::CONFIG) === ForgeAccess::RESTRICTED;
+    }
+
+    private static function compileReverseProxyRegexp($reverse_proxy_regexp) {
+        $reverse_proxy_regexp = str_replace('.', '\.', $reverse_proxy_regexp);
+        $reverse_proxy_regexp = str_replace('*', '\d{1,3}', $reverse_proxy_regexp);
+
+        return '`^'. $reverse_proxy_regexp .'`';
     }
 }

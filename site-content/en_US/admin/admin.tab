@@ -112,6 +112,8 @@ admin_main	projects_visibility_help	If, in your organization, the strict privacy
 admin_main	localinc_obsolete_message	<h4><i class="icon-warning-sign"></i> Your local.inc file is outdated!</h4><p>It appears that your local.inc file contains definitions of variables that are unused and it may lead to confusion.</p><p>Please edit <code>$1</code> and remove the following variables: <code>$sys_allow_anon</code> and <code>$sys_allow_restricted_users</code>.</p>
 admin_main	access_anonymous_label	Anonymous users can access the platform
 admin_main	access_anonymous_desc	Anonymous users can browse the public part of the site without logging in.
+admin_main	access_anonymous_except_proxy_label	Anonymous users can access the platform, except for users that are behind a reverse proxy
+admin_main	access_anonymous_except_proxy_desc	Address of the reverse proxy (eg: 172.16.254.1 or 172.16.254.*):
 admin_main	access_regular_label	All users must be logged in
 admin_main	access_regular_desc	Users must first login before going further.
 admin_main	access_restrited_label	All users must be logged in and restricted users are enabled
@@ -122,6 +124,7 @@ admin_main	ugroup_registered_users_placeholder	E.g $1 employees
 admin_main	ugroup_authenticated_users_label	Authenticated users (Registered + Restricted) label
 admin_main	ugroup_registered_users_label	Registered users label
 admin_main	customize_ugroups_label_info	You can override default names for the two special groups groups. This only applies for git permissions at the moment.
+admin_main	reverse_proxy_regexp_title	Valid IPv4 matching addresses: 172.*, 172.16, 172.16.*, 172.16.254, 172.16.254.* or 172.16.254.1
 #
 #-----------------------------------------------
 # Script: SF/www/admin/admin_utils.php

@@ -25,7 +25,7 @@ class ConfigTestWhiteBoxVersion extends ForgeConfig {
     }
 }
 
-class ConfigTest extends TuleapTestCase {
+class ForgeConfigTest extends TuleapTestCase {
 
     public function setUp() {
         ForgeConfig::store();
@@ -88,5 +88,88 @@ class ConfigTest extends TuleapTestCase {
         ConfigTestWhiteBoxVersion::load(new ConfigValueDatabaseProvider($dao));
 
         $this->assertEqual('its_value', ForgeConfig::get('a_var'));
+    }
+}
+
+class ForgeConfig_areAnonymousAllowedTest extends TuleapTestCase {
+
+    private $previous_remote_addr;
+
+    public function setUp() {
+        ForgeConfig::store();
+        if (isset($_SERVER['REMOTE_ADDR'])) {
+            $this->previous_remote_addr = $_SERVER['REMOTE_ADDR'];
+            unset($_SERVER['REMOTE_ADDR']);
+        }
+    }
+
+    public function tearDown() {
+        ForgeConfig::restore();
+        $_SERVER['REMOTE_ADDR'] = $this->previous_remote_addr;
+    }
+
+    public function itReturnsTrueIfAccessModeIsAnonymous() {
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
+
+        $this->assertTrue(ForgeConfig::areAnonymousAllowed());
+    }
+
+    public function itReturnsFalseIfAccessModeIsRegular() {
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
+
+        $this->assertFalse(ForgeConfig::areAnonymousAllowed());
+    }
+
+    public function itReturnsFalseIfAccessModeIsRestricted() {
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
+
+        $this->assertFalse(ForgeConfig::areAnonymousAllowed());
+    }
+
+    public function itReturnsTrueIfAccessModeIsAnonymousAndRemoteAddrIsNotSet() {
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
+        ForgeConfig::set(ForgeAccess::REVERSE_PROXY_REGEXP, '172.16.254.*');
+
+        $this->assertTrue(ForgeConfig::areAnonymousAllowed());
+    }
+
+    public function itReturnsTrueIfAccessModeIsAnonymousAndUserIsNotBehindReverseProxy() {
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
+        ForgeConfig::set(ForgeAccess::REVERSE_PROXY_REGEXP, '172.16.254.*');
+        $_SERVER['REMOTE_ADDR'] = '192.168.1.1';
+
+        $this->assertTrue(ForgeConfig::areAnonymousAllowed());
+    }
+
+    public function itReturnsFalseIfAccessModeIsAnonymousAndUserIsBehindReverseProxy() {
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
+        ForgeConfig::set(ForgeAccess::REVERSE_PROXY_REGEXP, '172.16.254.*');
+        $_SERVER['REMOTE_ADDR'] = '172.16.254.1';
+
+        $this->assertFalse(ForgeConfig::areAnonymousAllowed());
+    }
+
+    public function itReturnsFalseIfUsersStartsMatchingWithAWildcard() {
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
+        ForgeConfig::set(ForgeAccess::REVERSE_PROXY_REGEXP, '*.*.*.*');
+        $_SERVER['REMOTE_ADDR'] = '172.16.254.1';
+
+        $this->assertFalse(ForgeConfig::areAnonymousAllowed());
+    }
+
+    public function itReturnsFalseIfUsersStartsMatchingWithOnlyDigits() {
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
+        ForgeConfig::set(ForgeAccess::REVERSE_PROXY_REGEXP, '172');
+        $_SERVER['REMOTE_ADDR'] = '172.16.254.1';
+
+        $this->assertFalse(ForgeConfig::areAnonymousAllowed());
+    }
+
+    public function itReturnsTrueIfRegexpMatchsOnlyTheEndOfTheIP() {
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
+        ForgeConfig::set(ForgeAccess::REVERSE_PROXY_REGEXP, '172.*');
+        $_SERVER['REMOTE_ADDR'] = '2.2.172.1';
+
+        $this->assertTrue(ForgeConfig::areAnonymousAllowed());
     }
 }
