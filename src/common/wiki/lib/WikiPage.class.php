@@ -86,6 +86,22 @@ class WikiPage {
         return $this->referenced;
     }
 
+    public function getLastVersionId() {
+        $res = db_query(
+            'SELECT version
+            FROM wiki_version
+            WHERE id='.$this->id .' ORDER BY version DESC LIMIT 1'
+        );
+
+        if (db_numrows($res) !== 1) {
+            return '';
+        }
+
+        $results = db_fetch_array($res);
+
+        return $results['version'];
+    }
+
     public function getMetadata() {
         if ($this->isEmpty()) {
             return array('mtime' => time());
