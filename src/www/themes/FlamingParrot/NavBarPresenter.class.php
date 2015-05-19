@@ -297,4 +297,8 @@ class FlamingParrot_NavBarPresenter {
     public function extras_text() {
         return $GLOBALS['Language']->getText('include_menu','extras');
     }
+
+    public function return_to() {
+        return $_SERVER['REQUEST_URI'];
+    }
 }
