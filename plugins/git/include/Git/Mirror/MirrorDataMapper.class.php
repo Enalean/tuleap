@@ -21,6 +21,7 @@
 class Git_Mirror_MirrorDataMapper {
 
     const MIRROR_OWNER_PREFIX = 'forge__gitmirror_';
+    const PROJECTS_HOSTNAME   = 'projects';
 
     /** @var Git_Mirror_MirrorDao */
     private $dao;
@@ -39,18 +40,23 @@ class Git_Mirror_MirrorDataMapper {
     /** @var Git_SystemEventManager */
     private $git_system_event_manager;
 
+    /** @var Git_Gitolite_GitoliteRCReader */
+    private $reader;
+
     public function __construct(
         Git_Mirror_MirrorDao $dao,
         UserManager $user_manager,
         GitRepositoryFactory $repository_factory,
         ProjectManager $project_manager,
-        Git_SystemEventManager $git_system_event_manager
+        Git_SystemEventManager $git_system_event_manager,
+        Git_Gitolite_GitoliteRCReader $reader
     ) {
         $this->dao                      = $dao;
         $this->user_manager             = $user_manager;
         $this->repository_factory       = $repository_factory;
         $this->project_manager          = $project_manager;
         $this->git_system_event_manager = $git_system_event_manager;
+        $this->reader                   = $reader;
     }
 
     /**
@@ -89,7 +95,16 @@ class Git_Mirror_MirrorDataMapper {
             throw new Git_Mirror_HostnameAlreadyUsedException();
         }
 
+        if ($this->doesHostnameIsForbidden($hostname)) {
+            throw new Git_Mirror_HostnameIsReservedException();
+        }
+
         return true;
+    }
+
+    private function doesHostnameIsForbidden($hostname) {
+        return strtolower($hostname) === self::PROJECTS_HOSTNAME ||
+               strtolower($hostname) === strtolower($this->reader->getHostname());
     }
 
     private function checkThatHostnameIsValidOnUpdate($id, $hostname) {
@@ -99,6 +114,10 @@ class Git_Mirror_MirrorDataMapper {
 
         if ($this->dao->getNumberOfMirrorByHostnameExcludingGivenId($hostname, $id) > 0) {
             throw new Git_Mirror_HostnameAlreadyUsedException();
+        }
+
+        if ($this->doesHostnameIsForbidden($hostname)) {
+            throw new Git_Mirror_HostnameIsReservedException();
         }
 
         return true;

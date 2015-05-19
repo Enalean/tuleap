@@ -323,6 +323,8 @@ plugin_git	mirror_tab_name	Mirrors
 plugin_git	admin_mirror_save_failed	Failed to add new mirror
 plugin_git	admin_mirror_fields_required	All fields are required
 plugin_git	admin_mirror_hostname_duplicate	Hostname must be unique!
+plugin_git	admin_mirror_hostname_reserved	Hostname ($1) is reserved!
+plugin_git	reserved_hostnames_help	Must be unique. The name "projects" and the hostname defined in .gitolite.rc file cannot be used.
 plugin_git	admin_mirror_cannot_update	Failed to update mirror
 plugin_git	admin_mirror_no_changes	No changes for mirror
 plugin_git	admin_mirror_updated	Mirror updated!
@@ -390,7 +392,6 @@ plugin_git	identifier	Identifier
 plugin_git	identifier_placeholder	e.g. location, ...
 plugin_git	url_placeholder	e.g. tuleap.net
 plugin_git	hostname_placeholder	e.g. sfo-mirror
-plugin_git	hostname_help	Related to .gitolite.rc HOSTNAME variable (Must be unique!)
 
 plugin_git	how_to_use_text	How to use a Git repository:
 plugin_git	clone_text	Clone the repository in order to get your working copy:

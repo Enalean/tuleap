@@ -126,7 +126,8 @@ class Git_GitoliteDriver {
                 ProjectManager::instance()
             ),
             $this->project_manager,
-            $this->git_system_event_manager
+            $this->git_system_event_manager,
+            new Git_Gitolite_GitoliteRCReader()
         );
         $this->permissions_serializer = $permissions_serializer ? $permissions_serializer : new Git_Gitolite_ConfigPermissionsSerializer(
             $this->mirror_data_mapper,
