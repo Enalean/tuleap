@@ -1,3 +1,6 @@
+Version 4.58 - Tuleap 8.2
+    * request #8077: Remove unneeded XTERM hardcoding
+
 Version 4.57 - Tuleap 8.2
     * request #8082: Grokmirror: Gitolite-admin should not be updated when a push occurs
 
