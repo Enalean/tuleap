@@ -29,14 +29,23 @@ class PaginatedWikiPagesFactory {
     }
 
     /** @return PaginatedWikiPages */
-    public function getPaginatedUserPages(PFUser $user, $project_id, $limit, $offset) {
+    public function getPaginatedUserPages(PFUser $user, $project_id, $limit, $offset, $pagename) {
         $pages = array();
 
-        $row_pages = $this->dao->searchPaginatedUserWikiPages(
-            $project_id,
-            $limit,
-            $offset
-        );
+        if ($pagename !== '') {
+            $row_pages = $this->dao->searchPaginatedUserWikiPagesByPagename(
+                $project_id,
+                $limit,
+                $offset,
+                $pagename
+            );
+        } else {
+            $row_pages = $this->dao->searchPaginatedUserWikiPages(
+                $project_id,
+                $limit,
+                $offset
+            );
+        }
         $total_size = (int) $this->dao->foundRows();
 
         foreach ($row_pages as $page) {

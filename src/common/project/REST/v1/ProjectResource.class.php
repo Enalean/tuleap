@@ -751,19 +751,20 @@ class ProjectResource extends AuthenticatedResource {
     /**
      * Get PhpWiki pages
      *
-     * Get info about project non empty PhpWiki pages
+     * Get info about project non empty PhpWiki pages.
      *
      * @url GET {id}/wiki
      *
      * @access hybrid
      *
-     * @param int $id        Id of the project
-     * @param int $limit     Number of elements displayed per page {@from path}
-     * @param int $offset    Position of the first element to display {@from path}
+     * @param int $id          Id of the project
+     * @param int $limit       Number of elements displayed per page {@from path}
+     * @param int $offset      Position of the first element to display {@from path}
+     * @param string $pagename Part of the pagename or the full pagename to search {@from path}
      *
      * @return array {@type Tuleap\REST\v1\PhpWikiPageRepresentation}
      */
-    public function getPhpWiki($id, $limit = 10, $offset = 0) {
+    public function getPhpWiki($id, $limit = 10, $offset = 0, $pagename = '') {
         $this->checkAccess();
 
         $current_user = UserManager::instance()->getCurrentUser();
@@ -779,7 +780,8 @@ class ProjectResource extends AuthenticatedResource {
             $current_user,
             $id,
             $limit,
-            $offset
+            $offset,
+            $pagename
         );
 
         foreach ($all_pages->getPages() as $page) {
