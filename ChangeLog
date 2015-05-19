@@ -25,6 +25,7 @@ Version 8.2 (not released yet)
 	* IM: 1.5.27
 
 	== Enhancement ==
+	* story #7684: Add projects/:id/wiki?pagename
 	* story #7684: Add wiki/:pageid route
 	* story #7972: specify svn notifications using the star operator
 	* story #7684: access to wiki pages with REST API
