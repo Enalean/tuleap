@@ -63,6 +63,10 @@ class ForgeAccess_ForgePropertiesManager {
         }
     }
 
+    public function updateReverseProxyRegexp($new_value) {
+        return $this->config_dao->save(ForgeAccess::REVERSE_PROXY_REGEXP, $new_value);
+    }
+
     public function updateProjectAdminVisibility($new_value) {
         return $this->config_dao->save(ForgeAccess::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY, $new_value);
     }

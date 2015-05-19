@@ -22,9 +22,11 @@ class ForgeAccess {
 
     const CONFIG = 'access_mode';
 
-    const PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY = 'project_admin_can_choose_visibility';
-
     const ANONYMOUS  = 'anonymous';
     const REGULAR    = 'regular';
     const RESTRICTED = 'restricted';
+
+    const REVERSE_PROXY_REGEXP = 'reverse_proxy_regexp';
+
+    const PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY = 'project_admin_can_choose_visibility';
 }

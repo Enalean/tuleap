@@ -31,6 +31,23 @@
     <label class="radio">
         <input type="radio"
             name="access_mode"
+            value="anonymous_except_reverse_proxy"
+            {{# access_anonymous_except_reverse_proxy }}checked{{/ access_anonymous_except_reverse_proxy }}
+        />
+        {{ access_anonymous_except_proxy_label }}
+    </label>
+    <p class="help">
+        {{ access_anonymous_except_proxy_desc }}
+        <input type="text"
+               name="reverse_proxy_regexp"
+               value="{{ reverse_proxy_regexp }}"
+               title="{{ reverse_proxy_regexp_title }}"
+               pattern="\d{1,3}(\.\*|\.\d{1,3}){1,3}"
+               />
+    </p>
+    <label class="radio">
+        <input type="radio"
+            name="access_mode"
             value="regular"
             {{# access_regular }}checked{{/ access_regular }}
         />
