@@ -79,6 +79,7 @@ class Tracker_REST_FieldRepresentation {
         $this->label    = $field->getLabel();
         $this->required = JsonCast::toBoolean($field->isRequired());
         $this->type     = $type;
+        $this->default_value = $field->getDefaultValue();
 
         $this->values   = null;
         if ($field->getSoapAvailableValues()) {
