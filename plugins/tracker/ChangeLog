@@ -1,3 +1,6 @@
+Version 5.624 - Tuleap 8.2
+    * story #7857: Add fields' default value to the REST tracker structure
+
 Version 5.623 - Tuleap 8.2
     * story #7857: Add required fields to the REST tracker structure
 
