@@ -1,3 +1,8 @@
+Version 8.1-4 (Wednesday May 20th 2015)
+	* request #6966: Login no longer redirect to the page I was seeing
+	* request #8084: Force user to log in if outside of network
+	* request #8075: Preserve privacy of projects
+
 Version 8.1-3 (Monday May 18th 2015)
 	* request #8077: fix of empty restored repository
 	* request #8079: HTML entity in CVS and SVN homepage not interpreted
