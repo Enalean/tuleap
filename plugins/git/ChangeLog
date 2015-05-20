@@ -1,3 +1,6 @@
+Version 4.60 - Tuleap 8.2
+    * story #8021: Fix error when deleted mirror as no data
+
 Version 4.59 - Tuleap 8.2
     * story #8021: Fix error when config of a mirror has never been dump
 
