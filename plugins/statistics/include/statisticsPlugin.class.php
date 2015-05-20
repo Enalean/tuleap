@@ -39,6 +39,39 @@ class StatisticsPlugin extends Plugin {
         $this->_addHook('groupedit_data',           'groupedit_data',         false);
         $this->_addHook(Event::WSDL_DOC2SOAP_TYPES, 'wsdl_doc2soap_types',    false);
         $this->_addHook(Event::COMBINED_SCRIPTS, 'combined_scripts', false);
+
+        $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
+        $this->addHook(Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES);
+        $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE);
+    }
+
+    /** @see Event::GET_SYSTEM_EVENT_CLASS */
+    public function get_system_event_class($params) {
+        switch($params['type']) {
+            case SystemEvent_STATISTICS_DAILY::NAME:
+                $queue = new SystemEventQueueStatistics();
+                $params['class'] = 'SystemEvent_STATISTICS_DAILY';
+                $params['dependencies'] = array(
+                    $queue->getLogger(),
+                    $this->getConfigurationManager(),
+                    $this->getDiskUsagePurger()
+                );
+                break;
+            default:
+                break;
+        }
+    }
+
+    /** @see Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES */
+    public function system_event_get_custom_queues(array $params) {
+        $params['queues'][SystemEventQueueStatistics::NAME] = new SystemEventQueueStatistics();
+    }
+
+    /** @see Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE */
+    public function system_event_get_types_for_custom_queue($params) {
+        if ($params['queue'] === SystemEventQueueStatistics::NAME) {
+            $params['types'][] = SystemEvent_STATISTICS_DAILY::NAME;
+        }
     }
 
     function getPluginInfo() {
@@ -64,38 +97,6 @@ class StatisticsPlugin extends Plugin {
         $wDisk->display();
     }
 
-    /**
-     * Each day, load sessions info from elapsed day.
-     * We need to do that because sessions are deleted from DB when user logout
-     * or when session expire.
-     *
-     * This not perfect because with very short session (few hours for instance)
-     * do data will survive in this session table.
-     */
-    protected function _archiveSessions() {
-        $max = 0;
-        $sql = 'SELECT MAX(time) as max FROM plugin_statistics_user_session';
-        $res = db_query($sql);
-        if ($res && db_numrows($res) == 1) {
-            $row = db_fetch_array($res);
-            if($row['max'] != null) {
-                $max = $row['max'];
-            }
-        }
-
-        $sql = 'INSERT INTO plugin_statistics_user_session (user_id, time)'.
-               ' SELECT user_id, time FROM session WHERE time > '.$max;
-        db_query($sql);
-    }
-
-    /**
-     *
-     */
-    protected function _diskUsage() {
-        $dum = new Statistics_DiskUsageManager();
-        $dum->collectAll();
-    }
-
     private function getConfigurationManager() {
         return new Statistics_ConfigurationManager(
             new Statistics_ConfigurationDao()
@@ -109,22 +110,15 @@ class StatisticsPlugin extends Plugin {
     }
 
     /**
-     * Hook.
-     *
-     * @param $params
-     * @return void
+     * @see root_daily_start
      */
-    function root_daily_start($params) {
-        //We do not collect datas on Sundays, since the db is stopped (backup script)
-        $day = date("N");
-        if ($day != "7") {
-            $this->_archiveSessions();
-            $this->_diskUsage();
-
-            if ($this->getConfigurationManager()->isDailyPurgeActivated()) {
-                $this->getDiskUsagePurger()->purge(strtotime(date('Y-m-d 00:00:00')));
-            }
-        }
+    public function root_daily_start($params) {
+        SystemEventManager::instance()->createEvent(
+            SystemEvent_STATISTICS_DAILY::NAME,
+            null,
+            SystemEvent::PRIORITY_LOW,
+            SystemEvent::OWNER_ROOT
+        );
     }
 
     /**
@@ -270,5 +264,3 @@ class StatisticsPlugin extends Plugin {
     }
 
 }
-
-?>
