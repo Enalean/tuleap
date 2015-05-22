@@ -43,3 +43,4 @@ composer.*
 /.idea/
 /.config/
 npm-debug.log
+.env

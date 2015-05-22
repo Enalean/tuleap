@@ -1,0 +1,31 @@
+web:
+  image: enalean/tuleap-aio-dev:nodb
+  links:
+   - ldap:ldap
+   - db:db
+  volumes:
+   - .:/usr/share/tuleap
+  env_file:
+   - .env
+  volumes_from:
+   - tuleap_data
+
+ldap:
+  image: enalean/ldap
+  env_file:
+   - .env
+  volumes_from:
+   - tuleap_ldap_data
+
+es:
+  image: enalean/elasticsearch-tuleap
+  volumes_from:
+   - tuleap_es_data
+  command: /elasticsearch/bin/elasticsearch -Des.config=/data/elasticsearch.yml
+
+db:
+  image: mysql:5.5
+  env_file:
+   - .env
+  volumes_from:
+   - tuleap_db_data
