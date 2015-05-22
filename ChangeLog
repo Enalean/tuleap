@@ -30,6 +30,7 @@ Version 8.2 (not released yet)
 	* story #7684: Add wiki/:pageid route
 	* story #7972: specify svn notifications using the star operator
 	* story #7684: access to wiki pages with REST API
+	* story #8051: adding GET /users_memberships
 
 	== Dev ==
 	* Docker "dev start" version for Apple Macintosh personal computers
