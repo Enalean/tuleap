@@ -476,6 +476,32 @@ ul.kanban-items {
     }
 }
 
+.ngsb-wrap .ngsb-container,
+.ngsb-wrap .ngsb-scrollbar .ngsb-thumb-pos .ngsb-thumb {
+    transition: none;
+}
+
+.ngsb-wrap .ngsb-scrollbar {
+    height: calc(~'100% - @{kanban-column-header-height} - 10px - @{kanban-column-footer-height} - 10px');
+    margin-top: @kanban-column-header-height + 10px;
+    margin-bottom: @kanban-column-footer-height + 10px;
+}
+
+.ngsb-wrap .ngsb-scrollbar .ngsb-track {
+    width: 8px;
+    background: none;
+}
+
+.ngsb-wrap .ngsb-scrollbar .ngsb-thumb-pos {
+    .ngsb-thumb {
+        background: #CCCCCC;
+    }
+
+    &:hover .ngsb-thumb {
+        background: #AAAAAA;
+    }
+}
+
 .modal-error {
     > .modal-header {
         border-radius: 4px 4px 0 0;
