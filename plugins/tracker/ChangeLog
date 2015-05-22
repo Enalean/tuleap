@@ -1,3 +1,6 @@
+Version 5.625 - Tuleap 8.2
+    * request #8086: tracker xml export contains criteria refering to unused elements
+
 Version 5.624 - Tuleap 8.2
     * story #7857: Add fields' default value to the REST tracker structure
 
