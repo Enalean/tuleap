@@ -97,6 +97,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         return new Tracker_Report_CriteriaDao();
     }
 
+    /** @return Tracker_Report_Criteria[] */
     public function getCriteria() {
         $session_criteria = null;
         if (isset($this->report_session)) {
@@ -1283,8 +1284,10 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         }
         $child = $root->addChild('criterias');
         foreach($this->getCriteria() as $criteria) {
-            $grandchild = $child->addChild('criteria');
-            $criteria->exportToXML($grandchild, $xmlMapping);
+            if ($criteria->field->isUsed()) {
+                $grandchild = $child->addChild('criteria');
+                $criteria->exportToXML($grandchild, $xmlMapping);
+            }
         }
         $child = $root->addChild('renderers');
         foreach($this->getRenderers() as $renderer) {
