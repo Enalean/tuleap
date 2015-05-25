@@ -20,7 +20,7 @@ Version 8.2 (not released yet)
 	== Plugins ==
 	* docman: 2.26.77
 	* tracker: 5.625
-	* git: 4.60
+	* git: 4.61
 	* agiledashboard: 1.196
 	* ldap: 3.79
 	* IM: 1.5.27
