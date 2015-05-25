@@ -1,3 +1,6 @@
+Version 1.83 - Tuleap 8.2
+    * request #8091: Do not display HTML entities in the bookmark title field of the new bookmark page
+
 Version 1.82 - Tuleap 8.2
     * request #6966: Login no longer redirect to the page I was seeing
 
