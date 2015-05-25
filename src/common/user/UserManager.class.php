@@ -849,6 +849,10 @@ class UserManager {
             $user->setId($user_id);
             $this->assignNextUnixUid($user);
 
+            $em = $this->_getEventManager();
+
+            $em->processEvent(Event::USER_MANAGER_CREATE_ACCOUNT, array('user' => $user));
+
             // Create the first layout for the user and add some initial widgets
             $lm = $this->_getWidgetLayoutManager();
             $lm->createDefaultLayoutForUser($user_id);
@@ -861,8 +865,7 @@ class UserManager {
                     break;
                 case PFUser::STATUS_ACTIVE:
                 case PFUser::STATUS_RESTRICTED:
-                    $em =$this->_getEventManager();
-                    $em->processEvent('project_admin_activate_user', array('user_id' => $user_id, 'user' => $user));
+                    $em->processEvent('project_admin_activate_user', array('user_id' => $user_id));
                     break;
             }
 
