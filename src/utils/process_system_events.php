@@ -37,6 +37,7 @@ if (isset($custom_queues[$request_queue])) {
     $logger = $custom_queues[$request_queue]->getLogger();
     $logger->debug('Processing '. $request_queue .' queue.');
     $process = new SystemEventProcessCustomQueue($request_queue);
+    $owner   = $custom_queues[$request_queue]->getOwner();
 } else {
     switch ($request_queue) {
         case SystemEvent::OWNER_APP:
