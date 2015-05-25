@@ -23,8 +23,12 @@
  * Wrap access to git commands
  */
 class Git_Exec {
+
+    const GIT19_PATH = '/opt/rh/git19/root';
+
     private $work_tree;
     private $git_dir;
+    private $git_cmd = 'git';
 
     /**
      * @param String $work_tree The git repository path where we should operate
@@ -36,6 +40,13 @@ class Git_Exec {
         } else {
             $this->git_dir = $git_dir;
         }
+        if (self::isGit19Installed()) {
+            $this->git_cmd = self::GIT19_PATH.'/usr/bin/git';
+        }
+    }
+
+    public static function isGit19Installed() {
+        return is_file(self::GIT19_PATH.'/usr/bin/git');
     }
 
     public function init() {
@@ -274,7 +285,7 @@ class Git_Exec {
 
     protected function execInPath($cmd, &$output) {
         $retVal = 1;
-        $git = 'git --work-tree='.escapeshellarg($this->work_tree).' --git-dir='.escapeshellarg($this->git_dir);
+        $git = $this->git_cmd.' --work-tree='.escapeshellarg($this->work_tree).' --git-dir='.escapeshellarg($this->git_dir);
         exec("$git $cmd 2>&1", $output, $retVal);
         if ($retVal == 0) {
             return true;
