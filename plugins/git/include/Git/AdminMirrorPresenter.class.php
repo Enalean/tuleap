@@ -74,7 +74,7 @@ abstract class Git_AdminMirrorPresenter extends Git_AdminPresenter {
         return $GLOBALS['Language']->getText('plugin_git', 'hostname_placeholder');
     }
 
-    public function hostname_help() {
-        return $GLOBALS['Language']->getText('plugin_git', 'hostname_help');
+    public function reserved_hostnames_help() {
+        return $GLOBALS['Language']->getText('plugin_git', 'reserved_hostnames_help');
     }
 }

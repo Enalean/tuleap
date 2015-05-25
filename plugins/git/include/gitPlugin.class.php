@@ -495,7 +495,8 @@ class GitPlugin extends Plugin {
                 ProjectManager::instance()
             ),
             $this->getProjectManager(),
-            $this->getGitSystemEventManager()
+            $this->getGitSystemEventManager(),
+            new Git_Gitolite_GitoliteRCReader()
         );
     }
 

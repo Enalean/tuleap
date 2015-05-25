@@ -75,8 +75,9 @@ class Git_AdminMirrorController {
     }
 
     public function display(Codendi_Request $request) {
-        $title    = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
-        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
+        $title     = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
+        $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
+        $presenter = null;
 
         switch ($request->get('action')) {
             case 'list-repositories':
@@ -88,10 +89,17 @@ class Git_AdminMirrorController {
                 $presenter = $this->getManageAllowedProjectsPresenter($request);
                 $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/resource_restrictor');
                 break;
+            case 'show-edit-mirror':
+            case 'show-add-mirror':
+                break;
             default:
                 $presenter = $this->getAllMirrorsPresenter($title);
                 break;
 
+        }
+
+        if (! $presenter) {
+            return;
         }
 
         $GLOBALS['HTML']->header(array('title' => $title, 'selected_top_tab' => 'admin'));
@@ -245,6 +253,8 @@ class Git_AdminMirrorController {
             $this->redirectToCreateWithError($GLOBALS['Language']->getText('plugin_git','admin_mirror_save_failed'));
         } catch (Git_Mirror_HostnameAlreadyUsedException $e) {
             $this->redirectToCreateWithError($GLOBALS['Language']->getText('plugin_git','admin_mirror_hostname_duplicate'));
+        } catch (Git_Mirror_HostnameIsReservedException $e) {
+            $this->redirectToCreateWithError($GLOBALS['Language']->getText('plugin_git','admin_mirror_hostname_reserved', array($hostname)));
         }
     }
 
@@ -315,6 +325,8 @@ class Git_AdminMirrorController {
             $this->redirectToEditFormWithError($mirror_id, $GLOBALS['Language']->getText('plugin_git','admin_mirror_fields_required'));
         } catch (Git_Mirror_HostnameAlreadyUsedException $e) {
             $this->redirectToEditFormWithError($mirror_id, $GLOBALS['Language']->getText('plugin_git','admin_mirror_hostname_duplicate'));
+        } catch (Git_Mirror_HostnameIsReservedException $e) {
+            $this->redirectToEditFormWithError($mirror_id, $GLOBALS['Language']->getText('plugin_git','admin_mirror_hostname_reserved', array($request->get('mirror_hostname'))));
         }
     }
 

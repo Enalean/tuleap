@@ -18,7 +18,8 @@
         <div class="control-group">
             <label class="control-label" for="new_mirror_hostname">{{ hostname_label }}</label>
             <div class="controls">
-                <input id="new_mirror_hostname" name="new_mirror_hostname" type="text" placeholder="{{ hostname_placeholder }}" /><span class="help-inline help-info">{{ hostname_help }}</span>
+                <input id="new_mirror_hostname" name="new_mirror_hostname" type="text" placeholder="{{ hostname_placeholder }}" />
+                <p class="muted reserved-hostname-help">{{ reserved_hostnames_help }}</p>
             </div>
         </div>
         <div class="control-group">
