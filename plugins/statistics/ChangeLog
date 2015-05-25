@@ -1,3 +1,6 @@
+Version 0.49 - Tuleap 8.2
+    * request #8085: ROOT_DAILY is too long
+
 Version 0.48 - Tuleap 8.1
     * request #8048: Table header overly escaped in project quota page
 

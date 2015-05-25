@@ -24,6 +24,7 @@ Version 8.2 (not released yet)
 	* agiledashboard: 1.196
 	* ldap: 3.79
 	* IM: 1.5.27
+	* statistics: 0.49
 
 	== Enhancement ==
 	* story #7684: Add projects/:id/wiki?pagename
