@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -136,7 +136,7 @@ class FlamingParrot_NavBarPresenter {
     }
 
     public function bookmark_title() {
-        return urlencode(str_replace($GLOBALS['sys_name'].': ', '', $this->title));
+        return urlencode(str_replace($GLOBALS['sys_name'].': ', '', html_entity_decode($this->title)));
     }
 
     public function bookmark_url() {
