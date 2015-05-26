@@ -1,3 +1,6 @@
+Version 1.197 - Tuleap 8.2
+    * story #7967: Using REST headers instead of content length
+
 Version 1.196 - Tuleap 8.2
     * story #7954: fancy scrollbars are no nore under column headers
 
