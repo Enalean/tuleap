@@ -9,6 +9,7 @@ Version 8.2 (not released yet)
 	* request #8079: HTML entity in CVS and SVN homepage not interpreted
 	* request #8084: Force user to log in if outside of network
 	* request #7421: Add missing glibc.i686 dependency for Openfire
+	* request #8094: Site statistics doesn't work with PHP 5.1
 
 	== Security ==
 	* request #8002: Use a bigger RSA modulus for the creation of the SSL certificate
