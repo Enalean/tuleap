@@ -17,25 +17,40 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Wiki\REST\v1;
+namespace Tuleap\PhpWiki\REST\v1;
 
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Luracast\Restler\RestException;
-use Tuleap\Wiki\REST\v1\PhpWikiPageFullRepresentation;
+use Tuleap\PhpWiki\REST\v1\PhpWikiPageFullRepresentation;
+use Tuleap\REST\ProjectAuthorization;
 use WikiPage;
 use Wiki;
 use WikiDao;
 use UserManager;
+use ProjectManager;
+use URLVerification;
 use PFUser;
+use WikiVersionDao;
+use WikiPageVersionFactory;
 
 class PhpWikiResource extends AuthenticatedResource {
 
     /** @var WikiDao */
     private $wiki_dao;
 
+    /** @var WikiVersionDao */
+    private $wiki_version_dao;
+
+    /** @var WikiPageVersionFactory */
+    private $wiki_version_factory;
+
     public function __construct() {
-        $this->wiki_dao = new WikiDao();
+        $this->wiki_dao             = new WikiDao();
+        $this->wiki_version_dao     = new WikiVersionDao();
+        $this->wiki_version_factory = new WikiPageVersionFactory();
+        $this->user_manager         = UserManager::instance();
+        $this->project_manager      = ProjectManager::instance();
     }
 
     /**
@@ -58,14 +73,17 @@ class PhpWikiResource extends AuthenticatedResource {
      *
      * @throws 403
      *
-     * @return Tuleap\Wiki\REST\v1\PhpWikiPageFullRepresentation
+     * @return Tuleap\PhpWiki\REST\v1\PhpWikiPageFullRepresentation
      */
     public function get($id) {
         $this->checkAccess();
         $this->checkPhpWikiPageExists($id);
 
         $wiki_page    = new WikiPage($id);
-        $current_user = UserManager::instance()->getCurrentUser();
+
+        $this->checkUserCanAccessProject($wiki_page->getGid());
+
+        $current_user = $this->user_manager->getCurrentUser();
 
         $this->checkUserCanAccessPhpWikiService($current_user, $wiki_page->getGid());
         $this->checkUserCanSeeWikiPage($current_user, $wiki_page);
@@ -74,6 +92,71 @@ class PhpWikiResource extends AuthenticatedResource {
         $wiki_page_representation->build($wiki_page);
 
         return $wiki_page_representation;
+    }
+
+    /**
+     * @url OPTIONS {id}/versions
+     */
+    public function optionsVersions($id) {
+        Header::allowOptionsGet();
+    }
+
+    /**
+     * Get a PhpWiki page version representation
+     *
+     * Get the content of a non empty PhpWiki page version.
+     *
+     * Actually it returns a collection filtered by the version_id.
+     *
+     * @url GET {id}/versions
+     *
+     * @access hybrid
+     *
+     * @param int $id         Id of the wiki page
+     * @param int $version_id Id of the version to filter the collection. If version_id=0, we return the last version. {@from request}
+     *
+     * @throws 401
+     * @throws 403
+     * @throws 404
+     *
+     * @return array {@type Tuleap\PhpWiki\REST\v1\PhpWikiPageVersionFullRepresentation}
+     */
+    public function getVersions($id, $version_id) {
+        $this->checkAccess();
+        $this->checkPhpWikiPageExists($id);
+
+        $wiki_page    = new WikiPage($id);
+        $current_user = $this->user_manager->getCurrentUser();
+
+        $this->checkUserCanAccessProject($wiki_page->getGid());
+
+        $this->checkUserCanAccessPhpWikiService($current_user, $wiki_page->getGid());
+        $this->checkUserCanSeeWikiPage($current_user, $wiki_page);
+
+        $page_version = $this->getVersion($wiki_page, $version_id);
+
+        $wiki_page_representation = new PhpWikiPageVersionFullRepresentation();
+        $wiki_page_representation->build($wiki_page, $page_version);
+
+        return array($wiki_page_representation);
+    }
+
+    /** @return WikiPageVersion */
+    private function getVersion(WikiPage $wiki_page, $version_id) {
+        if ($version_id === 0) {
+            $version_id = $wiki_page->getLastVersionId();
+        }
+
+        $result = $this->wiki_version_dao->getSpecificVersionForGivenPage(
+            $wiki_page->getId(),
+            $version_id
+        );
+
+        if (! $result || $result->count() === 0) {
+            throw new RestException(404);
+        }
+
+        return $this->wiki_version_factory->getInstanceFromRow($result->getRow());
     }
 
     private function checkPhpWikiPageExists($page_id) {
@@ -96,5 +179,16 @@ class PhpWikiResource extends AuthenticatedResource {
         if (! $Wiki_page->isAutorized($user->getId())) {
             throw new RestException(403, 'You are not allowed to see this PhpWiki page');
         }
+    }
+
+    /**
+     * @throws 403
+     * @throws 404
+     */
+    private function checkUserCanAccessProject($project_id) {
+        $project = $this->project_manager->getProject($project_id);
+        $user    = $this->user_manager->getCurrentUser();
+
+        ProjectAuthorization::userCanAccessProject($user, $project, new URLVerification());
     }
 }

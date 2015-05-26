@@ -25,7 +25,7 @@ use WikiPage;
 
 class PhpWikiPageRepresentation {
 
-    const ROUTE = 'wiki';
+    const ROUTE = 'phpwiki';
 
     /**
      * @var int {@type int}

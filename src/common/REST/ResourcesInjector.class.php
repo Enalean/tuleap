@@ -39,8 +39,8 @@ class ResourcesInjector {
         $restler->addAPIClass('\\Tuleap\\Token\\REST\\TokenResource',       TokenRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\Project\\REST\\UserGroupResource', UserGroupRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\User\\REST\\UserResource',         UserRepresentation::ROUTE);
-        $restler->addAPIClass('\\Tuleap\\Wiki\\REST\\v1\\PhpWikiResource',  PhpWikiPageRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\User\\REST\\v1\\UserMembershipResource', UserMembershipRepresentation::ROUTE);
+        $restler->addAPIClass('\\Tuleap\\PhpWiki\\REST\\v1\\PhpWikiResource',  PhpWikiPageRepresentation::ROUTE);
     }
 
     public function declareProjectUserGroupResource(array &$resources, Project $project) {

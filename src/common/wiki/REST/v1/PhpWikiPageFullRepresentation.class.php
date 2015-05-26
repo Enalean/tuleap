@@ -19,10 +19,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Wiki\REST\v1;
+namespace Tuleap\PhpWiki\REST\v1;
 
 use Tuleap\REST\v1\PhpWikiPageRepresentation;
-use Tuleap\Wiki\REST\v1\PhpWikiPageVersionRepresentation;
+use Tuleap\PhpWiki\REST\v1\PhpWikiPageVersionRepresentation;
 use WikiPage;
 use WikiVersionDao;
 use WikiPageVersionFactory;
@@ -35,7 +35,7 @@ class PhpWikiPageFullRepresentation extends PhpWikiPageRepresentation {
     public $last_version;
 
     /**
-     * @var array {@type Tuleap\Wiki\REST\v1\PhpWikiPageVersionRepresentation}
+     * @var array {@type Tuleap\PhpWiki\REST\v1\PhpWikiPageVersionRepresentation}
      */
     public $versions;
 

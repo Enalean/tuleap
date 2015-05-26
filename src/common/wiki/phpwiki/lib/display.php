@@ -244,7 +244,7 @@ function displayPage(&$request, $template=false) {
             }
         }
     }
-   
+
     $toks['CONTENT'] = new Template('browse', $request, $page_content);
     
     $toks['TITLE'] = $pagetitle;   // <title> tag
