@@ -210,7 +210,7 @@ Group: Development/Tools
 Version: @@PLUGIN_IM_VERSION@@
 Release: @@RELEASE@@%{?dist}
 AutoReqProv: no
-Requires: tuleap, openfire, openfire-tuleap-plugins
+Requires: tuleap, openfire, glibc.i686, openfire-tuleap-plugins
 #, zlib.i686
 Provides: tuleap-plugin-im = %{version}
 %description plugin-im
