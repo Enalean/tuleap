@@ -27,6 +27,7 @@ Version 8.2 (not released yet)
 	* statistics: 0.49
 
 	== Enhancement ==
+	* story #7684: Add route phpwiki/:pageid/versions
 	* story #7684: Add projects/:id/wiki?pagename
 	* story #7684: Add wiki/:pageid route
 	* story #7972: specify svn notifications using the star operator
@@ -36,7 +37,7 @@ Version 8.2 (not released yet)
 	== Dev ==
 	* Docker "dev start" version for Apple Macintosh personal computers
 
-    == Themes ==
+	== Themes ==
 	* FlamingParrot: 1.83
 
 Version 8.1 (Monday, May 4th 2015)
