@@ -1,0 +1,252 @@
+<section id="forms">
+    <h1>Forms</h1>
+
+    <div class="row guideline">
+        <h2 id="forms-input-types">Input types</h2>
+        <p class="rule">Always use a placeholder.</p>
+
+        <div class="row guideline">
+            <div class="col-md-6 example">
+<form>
+    <div class="form-group">
+        <label for="field-text-id">Text</label>
+        <input type="text" class="form-control" id="field-text-id" name="field-text-name" placeholder="Placeholder">
+    </div>
+    <div class="form-group">
+        <label for="field-email-id">Email</label>
+        <input type="email" class="form-control" id="field-email-id" name="field-email-name" placeholder="john.mcclane@tuleap.net">
+    </div>
+    <div class="form-group">
+        <label for="field-password-id">Password</label>
+        <input type="password" class="form-control" id="field-password-id" name="field-password-name" placeholder="Password">
+    </div>
+    <div class="form-group">
+        <label for="field-number-id">Number</label>
+        <input type="number" class="form-control" id="field-number-id" name="field-number-name" placeholder="9">
+    </div>
+    <div class="form-group">
+        <label for="field-url-id">URL</label>
+        <input type="url" class="form-control" id="field-url-id" name="field-url-name" placeholder="http://www.tuleap.net">
+    </div>
+    <div class="form-group">
+        <label for="field-text-disabled-id">Disabled</label>
+        <input type="text" class="form-control" id="field-text-disabled-id" name="field-text-disabled-name" placeholder="Oh no, I'm disabled :(" disabled   >
+    </div>
+</form>
+            </div>
+            <div class="col-md-6 code"></div>
+        </div>
+    </div>
+
+    <div class="row guideline">
+        <h2 id="forms-append-prepend">Append & Prepend</h2>
+
+        <h3>Append</h3>
+        <div class="row guideline">
+            <div class="col-md-6 example">
+<form>
+    <div class="form-group">
+        <label for="field-email-append-id">Email</label>
+        <div class="input-group">
+            <input type="text" class="form-control" id="field-email-append-id" name="field-email-append-name" placeholder="username">
+            <div class="input-group-addon">@tuleap.net</div>
+        </div>
+    </div>
+</form>
+            </div>
+            <div class="col-md-6 code"></div>
+        </div>
+
+        <h3>Appended button</h3>
+        <div class="row guideline">
+            <div class="col-md-6 example">
+<form>
+    <div class="form-group">
+        <div class="input-group">
+            <input type="text" class="form-control" id="field-email-append-button-id" name="field-email-append-button-name" placeholder="Say hi!">
+            <span class="input-group-btn">
+                <button class="btn btn-default"><i class="fa fa-send"></i>Send</button>
+            </span>
+        </div>
+    </div>
+</form>
+            </div>
+            <div class="col-md-6 code"></div>
+        </div>
+
+        <h3>Appended dropdown</h3>
+        <div class="row guideline">
+            <div class="col-md-6 example">
+<form>
+    <div class="form-group">
+        <div class="input-group">
+            <input type="text" class="form-control" id="field-email-append-button-id" name="field-email-append-button-name" placeholder="Say hi!">
+            <span class="input-group-btn">
+                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                    Actions <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><i class="fa fa-send"></i>Send</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><i class="fa fa-share"></i>Share</a></li>
+                </ul>
+            </span>
+        </div>
+    </div>
+</form>
+            </div>
+            <div class="col-md-6 code"></div>
+        </div>
+
+        <h3>Prepend</h3>
+        <div class="row guideline">
+            <div class="col-md-6 example">
+<form>
+    <div class="form-group">
+        <label for="field-url-prepend-id">Website</label>
+        <div class="input-group">
+            <div class="input-group-addon"><i class="fa fa-globe"></i></div>
+            <input type="url" class="form-control" id="field-url-prepend-id" name="field-url-prepend-name" placeholder="http://www.tuleap.net">
+        </div>
+    </div>
+</form>
+            </div>
+            <div class="col-md-6 code"></div>
+        </div>
+    </div>
+
+    <div class="row guideline">
+        <h2 id="forms-textarea">Textarea</h2>
+
+        <div class="row guideline">
+            <div class="col-md-6 example">
+<form>
+    <div class="form-group">
+        <label for="field-textarea-id">Comment</label>
+        <textarea class="form-control" id="field-textarea-id" rows="5" placeholder="Comment"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="field-textarea-disabled-id">Comment (disabled)</label>
+        <textarea class="form-control" id="field-textarea-disabled-id" rows="2" placeholder="Disabled" disabled></textarea>
+    </div>
+</form>
+            </div>
+            <div class="col-md-6 code"></div>
+        </div>
+    </div>
+
+    <div class="row guideline">
+        <h2 id="forms-checkboxes-radios">Checkboxes & Radios</h2>
+
+        <h3>Normal</h3>
+        <div class="row guideline">
+            <div class="col-md-6 example">
+<form>
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" name="field-checkbox-name" id="field-checkbox-id" value="value">Checkbox one
+      </label>
+    </div>
+    <div class="checkbox disabled">
+      <label>
+        <input type="checkbox" name="field-checkbox-disabled-name" id="field-checkbox-disabled-id" value="value" disabled>Checkbox two is disabled
+      </label>
+    </div>
+
+    <div class="radio">
+      <label>
+        <input type="radio" name="field-radio-name" id="field-radio-id1" value="radio1" checked>Radio one
+      </label>
+    </div>
+    <div class="radio">
+      <label>
+        <input type="radio" name="field-radio-name" id="field-radio-id2" value="radio2">Radio two
+      </label>
+    </div>
+    <div class="radio disabled">
+      <label>
+        <input type="radio" name="field-radio-name" id="field-radio-id3" value="radio3" disabled>Radio three is disabled
+      </label>
+    </div>
+</form>
+            </div>
+            <div class="col-md-6 code"></div>
+        </div>
+
+        <h3>Inline</h3>
+        <div class="row guideline">
+            <div class="col-md-6 example">
+<form>
+    <div class="form-group">
+        <label class="checkbox-inline">
+          <input type="checkbox" name="field-checkbox-inline-name" id="field-checkbox-inline-id" value="value">Checkbox one
+        </label>
+        <label class="checkbox-inline disabled">
+          <input type="checkbox" name="field-checkbox-inline-disabled-name" id="field-checkbox-inline-disabled-id" value="value" disabled>Checkbox two is disabled
+        </label>
+    </div>
+
+    <div class="form-group">
+        <label class="radio-inline">
+          <input type="radio" id="field-radio-inline-id1" name="field-radio-inline-name" value="radio1" checked>Radio one
+        </label>
+        <label class="radio-inline">
+          <input type="radio" id="field-radio-inline-id2" name="field-radio-inline-name" value="radio2">Radio two
+        </label>
+        <label class="radio-inline">
+          <input type="radio" id="field-radio-inline-id3" name="field-radio-inline-name" value="radio3" disabled>Radio three is disabled
+        </label>
+    </div>
+</form>
+            </div>
+            <div class="col-md-6 code"></div>
+        </div>
+    </div>
+
+    <div class="row guideline">
+        <h2 id="forms-selects">Selects</h2>
+
+        <h3>Simple</h3>
+        <p class="rule">Do not forget the "form-control" class.</p>
+        <div class="row guideline">
+            <div class="col-md-6 example">
+<form>
+    <div class="form-group">
+        <label for="field-select-id">Choose a value</label>
+        <select class="form-control" id="field-select-id" name="field-select-name">
+            <option value="one">One</option>
+            <option value="two" disabled>Two</option>
+            <option value="three">Three</option>
+        </select>
+    </div>
+    <br><br>
+    <div class="form-group">
+        <label for="field-select-disabled-id">Choose a value</label>
+        <select class="form-control" disabled id="field-select-disabled-id" name="field-select-disabled-name">
+            <option value="one">One</option>
+            <option value="two">Two</option>
+            <option value="three">Three</option>
+        </select>
+    </div>
+</form>
+            </div>
+            <div class="col-md-6 code"></div>
+        </div>
+
+        <h3>Multiple</h3>
+        <div class="row guideline">
+            <div class="col-md-6 example">
+<form>
+    <div class="form-group">
+        <label for="field-select-multiple-id">Choose values</label>
+        <select multiple class="form-control" id="field-select-multiple-id" name="field-select-multiple-name">
+            <option value="one">One</option>
+            <option value="two" disabled>Two disabled</option>
+            <option value="three">Three</option>
+        </select>
+    </div>
+</form>
+            </div>
+            <div class="col-md-6 code"></div>
+        </div>
+    </div>
+</section>

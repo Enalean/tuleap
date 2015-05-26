@@ -1,0 +1,136 @@
+@import url('http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700');
+
+/* Mimic FlamingParrot Blue theme */
+@main-color: #1593C4;
+@main-accent-color: #1593C4;
+
+/* Tuleap Guidelines */
+@import "../colors/colors.less";
+@import "../avatars/avatars.less";
+@import "../typography/typography.less";
+@import "../buttons/buttons.less";
+@import "../tables/tables.less";
+@import "../tooltips/tooltips.less";
+@import "../forms/forms.less";
+
+#under-construction {
+    padding: 25px;
+    background: #333333;
+    text-align: center;
+
+    p {
+        margin: 0 0 20px;
+        font-family: "Open Sans";
+        font-size: 18px;
+        color: #DDD;
+        text-transform: uppercase;
+    }
+}
+
+#content {
+    font-family: "Open Sans";
+    padding: 25px;
+
+    #guidelines {
+        .nav {
+            > li {
+                > a {
+                    font-size: 13px;
+                    font-weight: 600;
+                    color: #666666;
+
+                    &:hover {
+                        background: none;
+                        color: @main-color;
+                        box-shadow: inset 4px 0 0 @main-color;
+                    }
+                }
+
+                > .nav {
+                    display: none;
+                }
+
+                &.active {
+                    > a {
+                        background: none;
+                        color: @main-color;
+                        box-shadow: inset 4px 0 0 @main-color;
+                    }
+
+                    > .nav {
+                        display: block;
+
+                        > li {
+                            > a {
+                                padding: 5px 25px;
+                                font-size: 12px;
+                                font-weight: 600;
+                                color: #666666;
+
+                                &:hover {
+                                    background: none;
+                                    color: @main-color;
+                                    box-shadow: none;
+                                }
+                            }
+
+                            &.active > a {
+                                background: none;
+                                color: @main-color;
+                                box-shadow: none;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        section {
+            margin: 0 0 100px;
+
+            > h1 {
+                border-bottom: 1px solid #EEEEEE;
+                padding: 10px 0;
+            }
+
+            .guideline {
+                margin: 0 0 40px;
+
+                .col-md-6, .col-md-12 {
+                    padding-left: 0;
+                }
+
+                .rule {
+                    margin: 0 0 20px;
+                }
+
+                > .code, > .javascript {
+                    @code-color: #7ACCE4;
+
+                    box-sizing: border-box;
+                    min-height: 46px;
+                    background: fade(@code-color, 8%);
+                    border-left: 5px solid fade(@code-color, 20%);
+                    word-break: break-all;
+                    word-wrap: break-word;
+                    white-space: pre-wrap;
+
+                    @media (max-width: 992px) {
+                        margin: 20px 0 0;
+                    }
+
+                    pre {
+                        margin: 0;
+                        background: none;
+                        border: none;
+
+                        code {
+                            background: none;
+                            font-size: 11px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
