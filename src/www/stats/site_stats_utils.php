@@ -167,10 +167,7 @@ function stats_site_projects( $span = 7, $orderby = "ranking", $offset = 0, $pro
 	$sql .= "AND ( s.group_id = m.group_id ) ";
 
 	if ( is_array( $projects ) ) {
-        array_walk($projects, function(&$project_id) {
-            $project_id = db_ei($project_id);
-        });
-		$sql .= "AND ( s.group_id IN (" . implode(",", $projects ) . ") ) ";
+		$sql .= "AND ( s.group_id IN (" . db_ei_implode($projects) . ") ) ";
 	} else {
 	  $sql .= "AND g.type = 1 ";
 	}

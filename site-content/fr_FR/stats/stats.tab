@@ -28,7 +28,7 @@ stats_site_stats_utils	special_list	LISTE SPECIFIQUE
 stats_site_stats_utils	no_cat	( $1 n'a retourné aucun nom de catégorie )
 stats_site_stats_utils	proj_type	Type de projet&nbsp;: 
 stats_site_stats_utils	special_proj_list	Liste spécifiques de projets&nbsp;:
-stats_site_stats_utils	space_sep_gid	(group_id séparés par des virgules)
+stats_site_stats_utils	space_sep_gid	(group_id séparés par des espaces)
 stats_site_stats_utils	days_spanned	Sur les N derniers jours&nbsp;:
 stats_site_stats_utils	all	Tous
 stats_site_stats_utils	view_by	Trié par&nbsp;: 
