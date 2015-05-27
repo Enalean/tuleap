@@ -1204,6 +1204,10 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return $value;
     }
 
+    public function getRestFieldData($value) {
+        return $this->getFieldData($value);
+    }
+
     /**
      * Transform REST representation of field into something that artifact createArtifact or updateArtifact can proceed
      *
@@ -1220,7 +1224,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             );
         }
 
-        return $this->getFieldData($value['value']);
+        return $this->getRestFieldData($value['value']);
     }
 
     /**
