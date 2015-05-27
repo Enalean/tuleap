@@ -458,7 +458,6 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      * @return Tracker_Artifact_ChangesetValue or null if not found
      */
     public function getChangesetValue($changeset, $value_id, $has_changed) {
-
         $changeset_value = null;
         if ($row = $this->getValueDao()->searchById($value_id, $this->id)->getRow()) {
             $changeset_value = new Tracker_Artifact_ChangesetValue_Text($value_id, $this, $has_changed, $row['value'], $row['body_format']);
@@ -476,6 +475,13 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      */
     public function hasChanges($previous_changesetvalue, $new_value) {
         return $previous_changesetvalue->getText() != $new_value['content'];
+    }
+
+    public function getRestFieldData($value) {
+        $data            = $this->getDefaultValue();
+        $data['content'] = $value;
+
+        return $data;
     }
 
     /**
