@@ -2,6 +2,9 @@ Version 8.3 (not released yet)
 	 == Plugins ==
 	* git: 4.64
 
+	== Development ==
+	* Adding SOAP example for legacy Tracker V3
+
 Version 8.2 (Thursday, May 28th 2015)
 	== Bug Fix ==
 	* request #8069: Pagination does not work in "Browse all projects"
