@@ -1,4 +1,4 @@
-Version 8.2 (not released yet)
+Version 8.2 (Thursday, May 28th 2015)
 	== Bug Fix ==
 	* request #8069: Pagination does not work in "Browse all projects"
 	* request #8071: Remove hard coded limit to 300 in softwaremap
