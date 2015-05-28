@@ -7,11 +7,24 @@ ModalInstanceCtrl.$inject = ['$modalInstance', 'tracker_id', 'displayItemCallbac
 function ModalInstanceCtrl($modalInstance, tracker_id, displayItemCallback, ModalTuleapFactory, ModalModelFactory, ModalValidateFactory) {
     var self = this;
     _.extend(self, {
-        activate        : activate,
-        cancel          : $modalInstance.dismiss,
-        createArtifact  : createArtifact,
-        getError        : function() { return ModalTuleapFactory.error; },
-        isLoading       : function() { return ModalTuleapFactory.is_loading; },
+        activate      : activate,
+        cancel        : $modalInstance.dismiss,
+        createArtifact: createArtifact,
+        getError      : function() { return ModalTuleapFactory.error; },
+        isLoading     : function() { return ModalTuleapFactory.is_loading; },
+
+        ckeditor_options: {
+            toolbar: [
+                ['Bold', 'Italic', 'Underline'],
+                ['NumberedList', 'BulletedList', '-', 'Blockquote', 'Format'],
+                ['Link', 'Unlink', 'Anchor', 'Image'],
+                ['Source']
+            ]
+        },
+        text_formats: [
+            { id: "text", label:"Text" },
+            { id: "html", label:"HTML" }
+        ],
         parent_artifacts: [],
         values          : []
     });

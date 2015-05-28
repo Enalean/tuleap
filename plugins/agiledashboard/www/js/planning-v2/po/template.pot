@@ -48,6 +48,10 @@ msgstr ""
 msgid "Error:"
 msgstr ""
 
+#: src/app/modal/modal.tpl.html
+msgid "Format:"
+msgstr ""
+
 #: src/app/planning.tpl.html
 msgid "Hide \"Closed\" Items"
 msgstr ""

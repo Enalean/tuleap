@@ -37,7 +37,14 @@ function ModalModelFactory() {
                     value_obj.value = (field.default_value) ? parseFloat(field.default_value, 10) : null;
                     break;
                 case "text":
-                    value_obj.value = (field.default_value) ? field.default_value.content : null;
+                    value_obj.value = {
+                        format  : "text",
+                        content : undefined
+                    };
+                    if (field.default_value) {
+                        value_obj.value.format = field.default_value.format;
+                        value_obj.value.content = field.default_value.content;
+                    }
                     break;
                 case "string":
                 case "date":
