@@ -1,3 +1,6 @@
+Version 4.64 - Tuleap 8.3
+    * request #8098 Restoration of deleted git repository failed
+
 Version 4.63 - Tuleap 8.2
     * Fix request #8098 Restoration of deleted git repository failed
 
