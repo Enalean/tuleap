@@ -1,5 +1,6 @@
 <?php
 //
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 //
 // 
@@ -45,7 +46,7 @@ function onChangeAllFilter() {
   <tr valign="center">
     <td colspan="2" align="center">
 <select name="group_id" size="8">
-<?
+<?php
     $filter = $request->get('filter');
 	if ( $filter == "member" ) {
 		$results = $gf->getMemberGroups();
@@ -54,7 +55,7 @@ function onChangeAllFilter() {
 	}
     $hp = Codendi_HTMLPurifier::instance();
     while ($groups_array = db_fetch_array($results)) {
-    	echo '<option value="'.(int)$groups_array["group_id"].'">'. $hp->purify($groups_array["group_name"]) .'</option>';
+    	echo '<option value="'.(int)$groups_array["group_id"].'">'. $hp->purify(html_entity_decode($groups_array["group_name"])) .'</option>';
     }
 
 ?>
