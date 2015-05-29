@@ -4,7 +4,7 @@ Version 8.3 (not released yet)
 	* request #8108: Project name are not correctly displayed in the tracker V3 creation
 
 	 == Plugins ==
-	* git: 4.64
+	* git: 4.65
 	* ldap: 3.80
 
 	== Development ==

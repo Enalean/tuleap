@@ -1,3 +1,6 @@
+Version 4.65 - Tuleap 8.3
+    * request #8110: MIRRORHOSTNAME.conf file are empty
+
 Version 4.64 - Tuleap 8.3
     * request #8098 Restoration of deleted git repository failed
 
