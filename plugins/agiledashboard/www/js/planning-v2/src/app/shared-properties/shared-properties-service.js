@@ -6,14 +6,17 @@
     function SharedPropertiesService() {
         var property = {
             project_id:   undefined,
-            milestone_id: undefined
+            milestone_id: undefined,
+            use_angular_new_modal: undefined
         };
 
         return {
-            getProjectId:   getProjectId,
-            setProjectId:   setProjectId,
-            getMilestoneId: getMilestoneId,
-            setMilestoneId: setMilestoneId
+            getProjectId         : getProjectId,
+            setProjectId         : setProjectId,
+            getMilestoneId       : getMilestoneId,
+            setMilestoneId       : setMilestoneId,
+            getUseAngularNewModal: getUseAngularNewModal,
+            setUseAngularNewModal: setUseAngularNewModal
         };
 
         function getProjectId() {
@@ -30,6 +33,14 @@
 
         function setMilestoneId(milestone_id) {
             property.milestone_id = milestone_id;
+        }
+
+        function getUseAngularNewModal() {
+            return property.use_angular_new_modal;
+        }
+
+        function setUseAngularNewModal(use_angular_new_modal) {
+            property.use_angular_new_modal = use_angular_new_modal;
         }
     }
 })();

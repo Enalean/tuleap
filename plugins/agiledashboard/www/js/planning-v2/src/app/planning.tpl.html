@@ -8,13 +8,13 @@
             You are not allowed to rank on this planning
         </div>
         <div class="controls" ng-if="backlog.user_can_move_cards">
-            <div class="btn-group dropdown">
-                <span class="dropdown-toggle btn btn-primary" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="#">
-                    <span translate>Add a new item</span>
-                    <b class="caret"></b>
-                </span>
-                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                    <li ng-repeat="accepted_type in backlog.accepted_types.content">
+            <div ng-if="!use_angular_new_modal" class="btn-group dropdown">
+                 <span class="dropdown-toggle btn btn-primary" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="#">
+                     <span translate>Add a new item</span>
+                     <b class="caret"></b>
+                 </span>
+                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                     <li ng-repeat="accepted_type in backlog.accepted_types.content">
                         <a
                            class="create-item-link"
                            data-tracker-id="{{ accepted_type.id }}"
@@ -22,6 +22,17 @@
                            href="submit_ur"
                            ng-click="showCreateNewModal($event, accepted_type, backlog); "
                         >{{ accepted_type.label }}</a>
+                    </li>
+                </ul>
+            </div>
+            <div ng-if="use_angular_new_modal" class="btn-group dropdown">
+                <span class="dropdown-toggle btn btn-primary" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="#">
+                    <span translate>Add a new item</span>
+                    <b class="caret"></b>
+                </span>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <li ng-repeat="accepted_type in backlog.accepted_types.content">
+                        <a href="" class="create-item-link" ng-click="showCreateNewModal($event, accepted_type, backlog)">{{ accepted_type.label }}</a>
                     </li>
                 </ul>
             </div>

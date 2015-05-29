@@ -11,12 +11,14 @@
         'ProjectService',
         'DroppedService',
         'CardFieldsService',
-        'TuleapArtifactModalService'
+        'TuleapArtifactModalService',
+        'ModalService'
     ];
 
-    function PlanningCtrl($scope, SharedPropertiesService, BacklogItemService, MilestoneService, ProjectService, DroppedService, CardFieldsService, TuleapArtifactModalService) {
+    function PlanningCtrl($scope, SharedPropertiesService, BacklogItemService, MilestoneService, ProjectService, DroppedService, CardFieldsService, TuleapArtifactModalService, ModalService) {
         var project_id                  = SharedPropertiesService.getProjectId(),
             milestone_id                = SharedPropertiesService.getMilestoneId(),
+            use_angular_new_modal       = SharedPropertiesService.getUseAngularNewModal(),
             pagination_limit            = 50,
             pagination_offset           = 0,
             show_closed_milestone_items = true;
@@ -32,12 +34,14 @@
             },
             loading_backlog_items                 : true,
             loading_milestones                    : true,
+            use_angular_new_modal                 : use_angular_new_modal,
             toggle                                : toggle,
             showChildren                          : showChildren,
             toggleClosedMilestoneItems            : toggleClosedMilestoneItems,
             canShowBacklogItem                    : canShowBacklogItem,
             generateMilestoneLinkUrl              : generateMilestoneLinkUrl,
             showCreateNewModal                    : showCreateNewModal,
+            showNewArtifactModal                  : ModalService.show,
             cardFieldIsSimpleValue                : CardFieldsService.cardFieldIsSimpleValue,
             cardFieldIsList                       : CardFieldsService.cardFieldIsList,
             cardFieldIsText                       : CardFieldsService.cardFieldIsText,
@@ -52,6 +56,7 @@
             getCardFieldCrossValue                : CardFieldsService.getCardFieldCrossValue,
             getCardFieldPermissionsValue          : CardFieldsService.getCardFieldPermissionsValue,
             getCardFieldUserValue                 : CardFieldsService.getCardFieldUserValue,
+            displayBacklogItems                   : displayBacklogItems,
             displayUserCantPrioritizeForBacklog   : displayUserCantPrioritizeForBacklog,
             displayUserCantPrioritizeForMilestones: displayUserCantPrioritizeForMilestones
         });
@@ -175,26 +180,45 @@
         function showCreateNewModal($event, item_type, backlog) {
             $event.preventDefault();
 
+            var compared_to;
+            if (!_.isEmpty($scope.backlog_items)) {
+                compared_to = {
+                    direction : "before",
+                    item_id   : $scope.backlog_items[0].id
+                };
+            }
             var callback = function(item_id) {
+                var promise;
                 if (backlog.rest_base_route == 'projects') {
-                    appendItemToBacklog(item_id);
+                    if (compared_to) {
+                        promise = ProjectService.removeAddReorderToBacklog(undefined, backlog.rest_route_id, item_id, compared_to);
+                    } else {
+                        promise = ProjectService.removeAddToBacklog(undefined, backlog.rest_route_id, item_id);
+                    }
                 } else {
-                    BacklogItemService.addToMilestone(backlog.rest_route_id, item_id).then(
-                        function() {
-                            appendItemToBacklog(item_id);
-                        }
-                    );
+                    if (compared_to) {
+                        promise = MilestoneService.removeAddReorderToBacklog(undefined, backlog.rest_route_id, item_id, compared_to);
+                    } else {
+                        promise = MilestoneService.removeAddToBacklog(undefined, backlog.rest_route_id, item_id);
+                    }
                 }
+                promise.then(function() {
+                    prependItemToBacklog(item_id);
+                });
             };
 
-            TuleapArtifactModalService.showCreateItemForm(item_type.id, backlog.rest_route_id, callback);
+            if (SharedPropertiesService.getUseAngularNewModal()) {
+                ModalService.show(item_type.id, callback);
+            } else {
+                TuleapArtifactModalService.showCreateItemForm(item_type.id, backlog.rest_route_id, callback);
+            }
         }
 
-        function appendItemToBacklog(backlog_item_id) {
-           BacklogItemService.getBacklogItem(backlog_item_id).then(
+        function prependItemToBacklog(backlog_item_id) {
+            BacklogItemService.getBacklogItem(backlog_item_id).then(
                 function(data) {
                     $scope.items[backlog_item_id] = data.backlog_item;
-                    $scope.backlog_items.push($scope.items[backlog_item_id]);
+                    $scope.backlog_items.unshift($scope.items[backlog_item_id]);
                 }
             );
         }
