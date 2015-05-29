@@ -1,0 +1,6 @@
+{
+    "require": {
+        "guzzle/guzzle": "~3.7",
+        "phpunit/phpunit": "~3.7"
+    }
+}

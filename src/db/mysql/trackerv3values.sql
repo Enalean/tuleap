@@ -909,3 +909,8 @@ INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_F
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','7#17',3);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','7#16',3);
 INSERT INTO permissions (permission_type,object_id,ugroup_id) VALUES ('TRACKER_FIELD_UPDATE','7#9',3);
+
+# As we add a tracker 100, add this *if necessary* in order to be consistent
+INSERT INTO tracker_idsharing_tracker (id)
+SELECT GREATEST(IFNULL(MAX(tracker_idsharing_tracker.id) , 0), IFNULL(MAX(artifact_group_list.group_artifact_id), 100)) + 1
+FROM tracker_idsharing_tracker, artifact_group_list;
