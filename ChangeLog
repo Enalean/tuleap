@@ -1,4 +1,7 @@
 Version 8.3 (not released yet)
+	== Bug Fix ==
+	* request #8111: Fix the IM plugin dependency to glibc.i686
+
 	 == Plugins ==
 	* git: 4.64
 
