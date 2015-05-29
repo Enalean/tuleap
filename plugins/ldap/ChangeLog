@@ -1,3 +1,6 @@
+Version 3.80 - Tuleap 8.3
+    * request #8093: User is not created in LDAP when done by site admin
+
 Version 3.79 - Tuleap 8.2
     * request #8060: I should be able to use the gerrit replication feature if Tuleap use a LDAP write server
 

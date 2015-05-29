@@ -5,6 +5,7 @@ Version 8.3 (not released yet)
 
 	 == Plugins ==
 	* git: 4.64
+	* ldap: 3.80
 
 	== Development ==
 	* Adding SOAP example for legacy Tracker V3
