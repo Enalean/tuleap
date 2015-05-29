@@ -119,7 +119,7 @@ class LdapPlugin extends Plugin {
 
         // User profile creation/update
         $this->addHook(Event::USER_MANAGER_UPDATE_DB);
-        $this->addHook('project_admin_activate_user');
+        $this->addHook(Event::USER_MANAGER_CREATE_ACCOUNT);
 
         if (defined('GIT_EVENT_PLATFORM_CAN_USE_GERRIT')) {
             $this->addHook(GIT_EVENT_PLATFORM_CAN_USE_GERRIT);
@@ -947,11 +947,11 @@ class LdapPlugin extends Plugin {
 
     /**
      *
-     * @see project_admin_activate_user
+     * @see Event::USER_MANAGER_CREATE_ACCOUNT
      */
-    public function project_admin_activate_user(array $params) {
+    public function user_manager_create_account(array $params) {
         try {
-            $this->getLDAPUserWrite()->updateWithUserId($params['user_id']);
+            $this->getLDAPUserWrite()->updateWithUser($params['user']);
         } catch (LDAP_Exception_NoWriteException $exception) {
             $this->getLogger()->debug('User info not updated in LDAP, no write LDAP configured');
         } catch (Exception $exception) {
