@@ -366,7 +366,7 @@ class Git_Gitolite_GitoliteConfWriter {
     }
 
     private function getProjectsListForMirror(Git_Mirror_Mirror $mirror) {
-        $dir_path = dirname($this->getGitoliteConfFilePath().'/'.$mirror->hostname);
+        $dir_path = dirname($this->getGitoliteConfFilePath()).'/'.$mirror->hostname;
         return $this->readProjectListFromPath($dir_path);
     }
 
