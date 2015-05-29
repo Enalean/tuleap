@@ -260,7 +260,7 @@ Group: Development/Tools
 Version: @@PLUGIN_IM_VERSION@@
 Release: @@RELEASE@@%{?dist}
 AutoReqProv: no
-Requires: %{PKG_NAME}, openfire, glibc.i686, openfire-codendi-plugins
+Requires: %{PKG_NAME}, openfire, openfire-codendi-plugins
 %if %{PKG_NAME} == codendi_st
 Provides: codendi-plugin-im = %{version}
 %else
