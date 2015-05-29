@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013. All rights reserved.
+ * Copyright Enalean (c) 2013 - 2015. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -35,7 +35,10 @@ try {
 
     $hook = new SVN_Hook_PreCommit(
         $svn_hooks,
-        new SVN_CommitMessageValidator(ReferenceManager::instance())
+        new SVN_CommitMessageValidator(ReferenceManager::instance()),
+        new SVN_Svnlook(),
+        new SVN_Immutable_Tags_Handler(new SVN_Immutable_Tags_DAO()),
+        new BackendLogger()
     );
     $hook->assertCommitMessageIsValid($repository, $commit_message);
     $hook->assertCommitToTagIsAllowed($repository, $txn);
@@ -44,4 +47,3 @@ try {
     fwrite (STDERR, $exeption->getMessage());
     exit(1);
 }
-?>

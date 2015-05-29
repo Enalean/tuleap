@@ -557,6 +557,12 @@ CREATE TABLE svn_accessfile_history (
     INDEX idx_svn_accessfile_group_id(group_id)
 );
 
+CREATE TABLE svn_immutable_tags_whitelist (
+    group_id INT(11),
+    content TEXT,
+    PRIMARY KEY(group_id)
+);
+
 #
 # Table structure for table 'group_desc'
 #
