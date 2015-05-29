@@ -6,9 +6,13 @@ Version 8.3 (not released yet)
 	 == Plugins ==
 	* git: 4.65
 	* ldap: 3.80
+	* agiledashboard: 1.198
 
 	== Development ==
 	* Adding SOAP example for legacy Tracker V3
+
+    == Themes ==
+	* FlamingParrot: 1.85
 
 Version 8.2 (Thursday, May 28th 2015)
 	== Bug Fix ==
