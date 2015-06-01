@@ -22,7 +22,8 @@
             moveInBacklog       : moveInBacklog,
             moveInArchive       : moveInArchive,
             moveInColumn        : moveInColumn,
-            setWipLimitForColumn: setWipLimitForColumn
+            setWipLimitForColumn: setWipLimitForColumn,
+            updateKanbanLabel   : updateKanbanLabel
         };
 
         function getKanban(id) {
@@ -201,6 +202,12 @@
                         kanban_id: kanban_id
                     }
                  );
+        }
+
+        function updateKanbanLabel(kanban_id, kanban_label) {
+            return rest.one('kanban', kanban_id).patch({
+                label: kanban_label
+            });
         }
     }
 })();

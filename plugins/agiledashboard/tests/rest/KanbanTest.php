@@ -48,6 +48,30 @@ class KanbanTest extends RestBase {
         $this->assertNull($kanban['columns'][0]['limit']);
     }
 
+    public function testPATCHKanban() {
+        $this->assertThatLabelIsUpdated("Willy's really weary");
+        $this->assertThatLabelIsUpdated("My first kanban"); // go back to original value
+    }
+
+    private function assertThatLabelIsUpdated($new_label) {
+        $patch_response = $this->getResponse($this->client->patch(
+            'kanban/'. TestDataBuilder::KANBAN_ID,
+            null,
+            json_encode(
+                array(
+                    'label' => $new_label
+                )
+            )
+        ));
+        $this->assertEquals($patch_response->getStatusCode(), 200);
+
+        $response = $this->getResponse($this->client->get('kanban/'. TestDataBuilder::KANBAN_ID));
+        $kanban   = $response->json();
+
+        $this->assertEquals($new_label, $kanban['label']);
+
+    }
+
     public function testGETBacklog() {
         $url = 'kanban/'. TestDataBuilder::KANBAN_ID .'/backlog';
 

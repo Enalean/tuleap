@@ -36,6 +36,14 @@
         > h1 {
             padding: 0 0 0 20px;
             margin-top: 0;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        > button {
+            display: inline-block;
+            margin-left: 20px;
+            vertical-align: text-bottom;
         }
     }
 }
@@ -507,6 +515,12 @@ ul.kanban-items {
         border-radius: 4px 4px 0 0;
         background: #DA5353;
         color: white;
+    }
+}
+
+.modal-body {
+    > label > input[type=text] {
+        vertical-align: baseline;
     }
 }
 

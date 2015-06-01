@@ -30,6 +30,17 @@ class AgileDashboard_KanbanDao extends DataAccessObject {
         return $this->update($sql);
     }
 
+    public function save($kanban_id, $kanban_name) {
+        $kanban_id   = $this->da->escapeInt($kanban_id);
+        $kanban_name = $this->da->quoteSmart($kanban_name);
+
+        $sql = "UPDATE plugin_agiledashboard_kanban_configuration
+                SET name = $kanban_name
+                WHERE id = $kanban_id";
+
+        return $this->update($sql);
+    }
+
     public function getKanbanByTrackerId($tracker_kanban) {
         $tracker_kanban = $this->da->escapeInt($tracker_kanban);
 
