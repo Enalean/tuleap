@@ -2,6 +2,7 @@ Version 8.3 (not released yet)
 	== Bug Fix ==
 	* request #8111: Fix the IM plugin dependency to glibc.i686
 	* request #8108: Project name are not correctly displayed in the tracker V3 creation
+	* request #5726: Remove the Twitter widget
 
 	 == Plugins ==
 	* git: 4.65
@@ -12,7 +13,7 @@ Version 8.3 (not released yet)
 	* Adding SOAP example for legacy Tracker V3
 
     == Themes ==
-	* FlamingParrot: 1.85
+	* FlamingParrot: 1.86
 
 Version 8.2 (Thursday, May 28th 2015)
 	== Bug Fix ==
