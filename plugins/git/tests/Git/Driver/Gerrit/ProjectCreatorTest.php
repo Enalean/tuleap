@@ -363,6 +363,39 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
         $this->assertPattern('/Registered Users/', file_get_contents("$this->gerrit_tmpdir/project.config"));
     }
 
+    public function isSetsPermsOnRegisteredUsersIfRepoHasReadForAuthenticated() {
+        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_READ)->returns(array(ProjectUGroup::AUTHENTICATED));
+        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WRITE)->returns(array());
+        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WPLUS)->returns(array());
+
+        $this->project_creator->createGerritProject($this->server, $this->repository_with_registered, $this->migrate_access_rights);
+        $this->project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
+
+        $this->assertPattern('/Registered Users/', file_get_contents("$this->gerrit_tmpdir/project.config"));
+    }
+
+    public function itSetsPermsOnRegisteredUsersIfRepoHasWriteForAuthenticated() {
+        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_READ)->returns(array());
+        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WRITE)->returns(array(ProjectUGroup::AUTHENTICATED));
+        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WPLUS)->returns(array());
+
+        $this->project_creator->createGerritProject($this->server, $this->repository_with_registered, $this->migrate_access_rights);
+        $this->project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
+
+        $this->assertPattern('/Registered Users/', file_get_contents("$this->gerrit_tmpdir/project.config"));
+    }
+
+    public function itSetsPermsOnRegisteredUsersIfRepoHasExecuteForAuthenticated() {
+        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_READ)->returns(array());
+        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WRITE)->returns(array());
+        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WPLUS)->returns(array(ProjectUGroup::AUTHENTICATED));
+
+        $this->project_creator->createGerritProject($this->server, $this->repository_with_registered, $this->migrate_access_rights);
+        $this->project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
+
+        $this->assertPattern('/Registered Users/', file_get_contents("$this->gerrit_tmpdir/project.config"));
+    }
+
     public function itSetsPermsOnRegisteredUsersIfRepoHasReadForAnonymous() {
         stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_READ)->returns(array(ProjectUGroup::ANONYMOUS));
         stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WRITE)->returns(array());
