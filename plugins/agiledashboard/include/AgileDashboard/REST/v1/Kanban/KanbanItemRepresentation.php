@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\AgileDashboard\REST\v1;
+namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 
 use Tuleap\REST\JsonCast;
 use Tracker_Artifact;

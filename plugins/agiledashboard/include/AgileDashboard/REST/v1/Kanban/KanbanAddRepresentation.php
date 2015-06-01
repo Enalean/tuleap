@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-namespace Tuleap\AgileDashboard\REST\v1;
+namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 
 use Luracast\Restler\RestException;
 

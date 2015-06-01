@@ -17,14 +17,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\AgileDashboard\REST\v1;
+namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 
 use Luracast\Restler\RestException;
 use Tuleap\REST\Header;
 use AgileDashboard_PermissionsManager;
 use AgileDashboard_KanbanDao;
 use AgileDashboard_KanbanFactory;
-use AgileDashboard_KanbanItemDao;
 use AgileDashboard_KanbanNotFoundException;
 use AgileDashboard_KanbanCannotAccessException;
 use AgileDashboard_Kanban;
