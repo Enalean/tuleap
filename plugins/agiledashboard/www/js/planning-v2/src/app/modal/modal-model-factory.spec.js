@@ -45,7 +45,59 @@ describe("ModalModelFactory createFromStructure() - ", function() {
         });
     });
 
-    describe("Given a tracker structure object containing a text field, an int field and a float field,", function() {
+    describe("Given a tracker structure object containing a text field,", function() {
+        it("and that id didn't have a default value, when I create the model from the structure, then an array of objects containing the field's id and a value object containing the 'text' format and undefined content will be returned", function() {
+            var input = {
+                fields: [
+                    {
+                        field_id: 336,
+                        label: "heritage",
+                        name: "forbidder",
+                        type: "text"
+                    }
+                ]
+            };
+            var output = ModalModelFactory.createFromStructure(input);
+            expect(output).toEqual([
+                {
+                    field_id: 336,
+                    value: {
+                        format: "text",
+                        content: undefined
+                    }
+                }
+            ]);
+        });
+
+        it("and that it had a default value, when I create the model from the structure, then an array of objects containing the field's id and a value object filled with the default value will be returned", function() {
+            var input = {
+                fields: [
+                    {
+                        field_id: 349,
+                        label: "excoriator",
+                        name: "phratrial",
+                        type: "text",
+                        default_value: {
+                            format: "HTML",
+                            content: "quartane Christel Kalchik roentgentherapy"
+                        }
+                    }
+                ]
+            };
+            var output = ModalModelFactory.createFromStructure(input);
+            expect(output).toEqual([
+                {
+                    field_id: 349,
+                    value: {
+                        format: "HTML",
+                        content: "quartane Christel Kalchik roentgentherapy"
+                    }
+                }
+            ]);
+        });
+    });
+
+    describe("Given a tracker structure object containing an int field and a float field,", function() {
         it("and that those fields didn't have a default value, when I create the model from the structure, then an array of objects containing only the fields' id and a null value will be returned", function() {
             var input = {
                 fields: [
@@ -59,19 +111,13 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                         label: "phalacrocoracine",
                         name: "unvariant",
                         type: "float"
-                    }, {
-                        field_id: 432,
-                        label: "multivoltine",
-                        name: "endevil",
-                        type: "text"
                     }
                 ]
             };
             var output = ModalModelFactory.createFromStructure(input);
             expect(output).toEqual([
                 { field_id: 685, value: null },
-                { field_id: 775, value: null },
-                { field_id: 432, value: null }
+                { field_id: 775, value: null }
             ]);
         });
 
@@ -90,23 +136,13 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                         name: "hodograph",
                         type: "int",
                         default_value: "236"
-                    }, {
-                        field_id: 313,
-                        label: "ophicephaloid",
-                        name: "bombed",
-                        type: "text",
-                        default_value: {
-                            format: "text",
-                            content: "Dravidian ocarina"
-                        }
                     }
                 ]
             };
             var output = ModalModelFactory.createFromStructure(input);
             expect(output).toEqual([
                 { field_id: 163, value: 68.8596 },
-                { field_id: 220, value: 236 },
-                { field_id: 313, value: "Dravidian ocarina" }
+                { field_id: 220, value: 236 }
             ]);
             expect(_.isNumber(output[0].value)).toBeTruthy();
             expect(_.isNumber(output[1].value)).toBeTruthy();

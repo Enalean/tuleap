@@ -83,6 +83,7 @@ module.exports = {
       'vendor/angular-sanitize/angular-sanitize.min.js',
       'vendor/angular-ui-bootstrap/ui-bootstrap-0.8.0.js',
       'vendor/angular-ui-bootstrap/ui-bootstrap-tpls-0.8.0.js',
+      'vendor/angular-ckeditor/angular-ckeditor.js'
     ],
     css: [
       'vendor/angular-ui-tree/dist/angular-ui-tree.min.css'

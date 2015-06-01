@@ -57,7 +57,12 @@
             </div>
             <div ng-switch-when="text">
                 <label for="{{ 'tracker_field_'+field.field_id }}" class="tracker_formelement_label" ng-class="{required: field.required}">{{ field.label }}</label>
-                <textarea rows="5" cols="70" ng-model="modal.values[field_index].value" ng-required="{{ field.required }}" class="modal-textarea" id="{{ 'tracker_field_'+field.field_id }}"></textarea>
+                <label for="{{ 'tracker_field_format_'+field.field_id }}">
+                    {{ 'Format:' | translate }}
+                    <select ng-model="modal.values[field_index].value.format" ng-options="format.id as format.label for format in modal.text_formats" class="input-small" id="{{ 'tracker_field_format_'+field.field_id }}"></select>
+                </label>
+                <textarea ng-if="modal.values[field_index].value.format === 'text'" rows="5" cols="70" ng-model="modal.values[field_index].value.content" ng-required="{{ field.required }}" class="modal-textarea" id="{{ 'tracker_field_'+field.field_id }}"></textarea>
+                <textarea ng-if="modal.values[field_index].value.format === 'html'" ng-model="modal.values[field_index].value.content" ckeditor="modal.ckeditor_options" ng-required="{{ field.required }}" id="{{ 'tracker_field_'+field.field_id }}"></textarea>
             </div>
             <div ng-switch-when="date">
                 <label for="{{ 'tracker_field_'+field.field_id }}" class="tracker_formelement_label" ng-class="{required: field.required}">{{ field.label }}</label>

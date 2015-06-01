@@ -60,6 +60,10 @@ msgstr "Entrer des ids d'artefacts séparés par une virgule"
 msgid "Error:"
 msgstr "Erreur :"
 
+#: src/app/modal/modal.tpl.html
+msgid "Format:"
+msgstr "Format :"
+
 #: src/app/planning.tpl.html
 msgid "Hide \"Closed\" Items"
 msgstr "Cacher les Éléments \"Fermés\""

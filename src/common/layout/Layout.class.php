@@ -1184,13 +1184,13 @@ class Layout extends Response {
         $c = new Combined($combined_dir);
         if ($this->shouldIncludeFatCombined($params)) {
             echo $c->getScripts(array('/scripts/codendi/common.js'));
-
-            $ckeditor_path = '/scripts/ckeditor-4.3.2/';
-            echo '<script type="text/javascript">window.CKEDITOR_BASEPATH = "'. $ckeditor_path .'";</script>
-                  <script type="text/javascript" src="'. $ckeditor_path .'/ckeditor.js"></script>';
         } else {
             $this->includeSubsetOfCombined();
         }
+
+        $ckeditor_path = '/scripts/ckeditor-4.3.2/';
+        echo '<script type="text/javascript">window.CKEDITOR_BASEPATH = "'. $ckeditor_path .'";</script>
+              <script type="text/javascript" src="'. $ckeditor_path .'/ckeditor.js"></script>';
 
         //Javascript i18n
         echo '<script type="text/javascript">'."\n";
