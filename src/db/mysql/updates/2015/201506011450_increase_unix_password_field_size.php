@@ -19,25 +19,20 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class WeakPasswordHandlerTest extends TuleapTestCase {
-    const HASHED_WORD = 'Tuleap';
-    const MD5_HASH    = '$1$aa$yURlyd26QSZm44JDJtAuT/';
-
-    private $password_handler;
-
-    public function setUp() {
-        parent::setUp();
-        $this->password_handler = new WeakPasswordHandler();
+class b201506011450_increase_unix_password_field_size extends ForgeUpgrade_Bucket {
+    public function description() {
+        return "Increase UNIX password field size";
     }
 
-    public function itVerifyPasswordSaltedMD5() {
-        $check_password = $this->password_handler->verifyHashPassword(self::HASHED_WORD, self::MD5_HASH);
-        $this->assertTrue($check_password);
+    public function preUp() {
+        $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function itCheckIfRehashingIsNeeded() {
-        $rehash_needed = $this->password_handler->isPasswordNeedRehash(self::MD5_HASH);
-        $this->assertFalse($rehash_needed);
+    public function up() {
+        $sql = 'ALTER TABLE user MODIFY COLUMN unix_pw VARCHAR(255)';
+        $res = $this->db->dbh->exec($sql);
+        if ($res === false) {
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding the new user password field in user table.');
+        }
     }
-
 }

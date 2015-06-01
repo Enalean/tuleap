@@ -31,4 +31,11 @@ class WeakPasswordHandler extends PasswordHandler {
     public function isPasswordNeedRehash($hash_password) {
         return false;
     }
+
+    public function computeUnixPassword($plain_password) {
+        $token_generator = new UserTokenGenerator(self::SALT_SIZE);
+        $salt            = $token_generator->getToken();
+        // We use a salted MD5 to create the Unix Password
+        return crypt($plain_password, '$1$' . $salt . '$');
+    }
 }

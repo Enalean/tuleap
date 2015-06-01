@@ -23,6 +23,7 @@
 class StandardPasswordHandlerTestPHP53 extends TuleapTestCase {
     const HASHED_WORD = 'Tuleap';
     const MD5_HASH    = '$1$aa$yURlyd26QSZm44JDJtAuT/';
+    const SHA512_HASH = '$6$rounds=50000$aaaaaaaaaaaaaaaa$sI3KG111U.auUFeiO.PlagitndbvX7gVnzecFnuCBs/TV.qUCla1mz3Zmaq1JTJWT2eErh4ea9Iw995D//pfo/';
     const BCRYPT_HASH = '$2y$10$aaaaaaaaaaaaaaaaaaaaaOBkuuklGwTPKAtCkHvUX3Lk5UDwjLI5O';
 
     private $password_handler;
@@ -46,8 +47,15 @@ class StandardPasswordHandlerTestPHP53 extends TuleapTestCase {
         $this->assertTrue($check_password);
     }
 
+    public function itVerifyPasswordSaltedSHA512() {
+        $check_password = $this->password_handler->verifyHashPassword(self::HASHED_WORD, self::SHA512_HASH);
+        $this->assertTrue($check_password);
+    }
+
     public function itCheckIfRehashingIsNeeded() {
         $rehash_needed = $this->password_handler->isPasswordNeedRehash(self::MD5_HASH);
+        $this->assertTrue($rehash_needed);
+        $rehash_needed = $this->password_handler->isPasswordNeedRehash(self::SHA512_HASH);
         $this->assertTrue($rehash_needed);
     }
 }

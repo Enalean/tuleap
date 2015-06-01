@@ -19,25 +19,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class WeakPasswordHandlerTest extends TuleapTestCase {
-    const HASHED_WORD = 'Tuleap';
-    const MD5_HASH    = '$1$aa$yURlyd26QSZm44JDJtAuT/';
-
-    private $password_handler;
-
-    public function setUp() {
-        parent::setUp();
-        $this->password_handler = new WeakPasswordHandler();
+class TokenGeneratorTest extends TuleapTestCase {
+    public function itGeneratesTokenOfTheAskedSize() {
+        $token_generator_8_bits = new UserTokenGenerator(1);
+        $this->assertEqual(2, strlen($token_generator_8_bits->getToken()));
+        $token_generator_64_bits = new UserTokenGenerator(8);
+        $this->assertEqual(16, strlen($token_generator_64_bits->getToken()));
+        $token_generator_128_bits = new UserTokenGenerator();
+        $this->assertEqual(32, strlen($token_generator_128_bits->getToken()));
     }
-
-    public function itVerifyPasswordSaltedMD5() {
-        $check_password = $this->password_handler->verifyHashPassword(self::HASHED_WORD, self::MD5_HASH);
-        $this->assertTrue($check_password);
-    }
-
-    public function itCheckIfRehashingIsNeeded() {
-        $rehash_needed = $this->password_handler->isPasswordNeedRehash(self::MD5_HASH);
-        $this->assertFalse($rehash_needed);
-    }
-
 }

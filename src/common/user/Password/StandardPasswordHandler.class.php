@@ -33,4 +33,13 @@ class StandardPasswordHandler extends PasswordHandler {
     public function isPasswordNeedRehash($hash_password) {
         return password_needs_rehash($hash_password, PASSWORD_DEFAULT);
     }
+
+    public function computeUnixPassword($plain_password) {
+        $token_generator = new UserTokenGenerator(self::SALT_SIZE);
+        $salt            = $token_generator->getToken();
+        // We use SHA-512 with 5000 rounds to create the Unix Password
+        // SHA-512 is more widely available than BCrypt in GLibc OS library
+        // Only 5000 rounds are used (which is the default value) to keep reasonable performance
+        return crypt($plain_password, '$6$rounds=5000$' . $salt . '$');
+    }
 }
