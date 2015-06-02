@@ -10,7 +10,7 @@ Version 8.3 (not released yet)
 	== Plugins ==
 	* git: 4.65
 	* ldap: 3.80
-	* agiledashboard: 1.199
+	* agiledashboard: 1.200
 
 	== Development ==
 	* Adding SOAP example for legacy Tracker V3
