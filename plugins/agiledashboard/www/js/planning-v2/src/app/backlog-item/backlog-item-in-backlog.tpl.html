@@ -1,6 +1,6 @@
 <div ui-tree-handle
     class="backlog-item-details {{ backlog_item.status | lowercase }} {{ backlog_item.color }}"
-    ng-include src="'backlog-item/backlog-item-details.tpl.html'"
+    ng-include="'backlog-item/backlog-item-details.tpl.html'"
 >
 </div>
 
@@ -24,7 +24,7 @@
                 data-nodrag="{{ ! backlog.user_can_move_cards }}"
             >
                 <div class="backlog-item-details {{ backlog_item.status | lowercase }} {{ backlog_item.color }}"
-                    ng-include src="'backlog-item/backlog-item-details.tpl.html'">
+                    ng-include="'backlog-item/backlog-item-details.tpl.html'">
                 </div>
             </li>
         </ul>

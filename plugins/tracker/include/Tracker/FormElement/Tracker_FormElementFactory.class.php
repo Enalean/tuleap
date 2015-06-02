@@ -802,6 +802,12 @@ class Tracker_FormElementFactory {
         return $this->cache_used_form_elements_by_tracker_and_type[$tracker_id][$key];
     }
 
+    public function getAllUsedFormElementOfAnyTypesForTracker(Tracker $tracker) {
+        $classes = array_keys(array_merge($this->classnames, $this->special_classnames, $this->group_classnames, $this->staticfield_classnames));
+
+        return $this->getUsedFormElementsByType($tracker, $classes);
+    }
+
     public function getUnusedFormElementForTracker(Tracker $tracker) {
         $unused = array();
         $tracker_id = $tracker->getId();

@@ -57,6 +57,7 @@ class TrackerRestBuilderTestPHP53 extends TuleapTestCase {
         stub($field3)->getSoapBindingProperties()->returns(aStringField()->build()->getSoapBindingProperties());
 
         stub($this->formelement_factory)->getUsedFields()->returns(array($field1, $field2, $field3));
+        stub($this->formelement_factory)->getAllUsedFormElementOfAnyTypesForTracker()->returns(array($field1, $field2, $field3));
         stub($this->formelement_factory)->getType()->returns('string');
 
         $tracker_representation = $this->builder->getTrackerRepresentation($this->user, $this->tracker);

@@ -47,7 +47,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         $hp           = Codendi_HTMLPurifier::instance();
         $current_user = UserManager::instance()->getCurrentUser();
         $always_collapsed      = '';
-        $fieldset_is_collapsed = $current_user->getPreference('fieldset_'. $this->getId());
+        $fieldset_is_collapsed = $this->isCollapsed();
         $fieldset_is_expanded  = ! $fieldset_is_collapsed;
         if ($fieldset_is_collapsed) {
             $always_collapsed = 'active';
@@ -231,6 +231,12 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
     protected function fetchAdminFormElement() {
         $html = '';
         return $html;
+    }
+
+    public function isCollapsed() {
+        $current_user = UserManager::instance()->getCurrentUser();
+
+        return $current_user->getPreference('fieldset_'. $this->getId());
     }
     
     /**

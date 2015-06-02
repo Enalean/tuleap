@@ -83,10 +83,12 @@ class TrackersTest extends RestBase {
         foreach ($tracker['fields'] as $field) {
             $this->assertArrayHasKey('required', $field);
             $this->assertArrayHasKey('default_value', $field);
+            $this->assertArrayHasKey('collapsed', $field);
         }
         $this->assertArrayHasKey('semantics', $tracker);
         $this->assertArrayHasKey('workflow', $tracker);
         $this->assertArrayHasKey('parent', $tracker);
+        $this->assertArrayHasKey('structure', $tracker);
 
         $this->assertEquals($response->getStatusCode(), 200);
     }

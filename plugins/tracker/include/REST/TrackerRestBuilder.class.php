@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\REST\TrackerRepresentation;
+use Tuleap\Tracker\REST\StructureElementRepresentation;
 use Tuleap\Tracker\REST\WorkflowRepresentation;
 use Tuleap\Tracker\REST\WorkflowTransitionRepresentation;
 use Tuleap\Tracker\REST\WorkflowRulesRepresentation;
@@ -40,6 +41,7 @@ class Tracker_REST_TrackerRestBuilder {
         $tracker_representation->build(
             $tracker,
             $this->getRESTFieldsUserCanRead($user, $tracker),
+            $this->getStructureRepresentation($tracker),
             $semantic_manager->exportToREST($user),
             $this->getWorkflowRepresentation($tracker->getWorkflow(), $user)
         );
@@ -58,6 +60,22 @@ class Tracker_REST_TrackerRestBuilder {
      */
     protected function getSemanticManager(Tracker $tracker) {
         return new Tracker_SemanticManager($tracker);
+    }
+
+    private function getStructureRepresentation(Tracker $tracker) {
+        $structure_element_representations = array();
+        $form_elements                     = $this->formelement_factory->getUsedFormElementForTracker($tracker);
+
+        if ($form_elements) {
+            foreach ($form_elements as $form_element) {
+                $structure_element_representation = new StructureElementRepresentation();
+                $structure_element_representation->build($form_element);
+
+                $structure_element_representations[] = $structure_element_representation;
+            }
+        }
+
+        return $structure_element_representations;
     }
 
     /**
@@ -155,7 +173,7 @@ class Tracker_REST_TrackerRestBuilder {
                 array_filter(
                     array_map(
                         $this->getFunctionToFilterOutFieldsUserCannotRead($user),
-                        $this->formelement_factory->getUsedFields($tracker)
+                        $this->formelement_factory->getAllUsedFormElementOfAnyTypesForTracker($tracker)
                     )
                 )
         );
@@ -164,7 +182,7 @@ class Tracker_REST_TrackerRestBuilder {
     private function getFunctionToFilterOutFieldsUserCannotRead(PFUser $user) {
         $formelement_factory = $this->formelement_factory;
 
-        return function (Tracker_FormElement_Field $field) use ($user, $formelement_factory) {
+        return function (Tracker_FormElement $field) use ($user, $formelement_factory) {
             if (! $field->userCanRead($user)) {
                 return false;
             }

@@ -219,4 +219,88 @@ describe("ModalTuleapFactory", function() {
             expect(failure).toHaveBeenCalled();
         });
     });
+
+    it('reorderFieldsInGoodOrder', function() {
+        var response = {
+            fields: [
+                { field_id: 1, type: 'int' },
+                { field_id: 2, type: 'int' },
+                { field_id: 3, type: 'fieldset' },
+                { field_id: 4, type: 'int' },
+                { field_id: 5, type: 'column' },
+                { field_id: 6, type: 'int' },
+                { field_id: 7, type: 'aid' },
+                { field_id: 8, type: 'atid' },
+                { field_id: 9, type: 'lud' },
+                { field_id: 10, type: 'burndown' },
+                { field_id: 11, type: 'priority' },
+                { field_id: 12, type: 'subby' },
+                { field_id: 13, type: 'subon' },
+                { field_id: 14, type: 'computed' },
+                { field_id: 15, type: 'cross' },
+                { field_id: 16, type: 'file' },
+                { field_id: 17, type: 'tbl' },
+                { field_id: 18, type: 'perm' }
+            ],
+            structure: [
+                { id: 1, content: null },
+                { id: 2, content: null },
+                { id: 3, content: [
+                    { id: 4, content: null },
+                    { id: 5, content: [
+                        { id: 6, content: null }
+                    ]}
+                ]},
+                { id: 7, content: null },
+                { id: 8, content: null },
+                { id: 9, content: null },
+                { id: 10, content: null },
+                { id: 11, content: null },
+                { id: 12, content: null },
+                { id: 13, content: null },
+                { id: 14, content: null },
+                { id: 15, content: null },
+                { id: 16, content: null },
+                { id: 17, content: null },
+                { id: 18, content: null }
+            ]
+        };
+
+        expect(ModalTuleapFactory.reorderFieldsInGoodOrder(response)).toEqual([
+            {
+                field_id: 1,
+                type: 'int',
+                template_url: 'field-int.tpl.html'
+            },
+            {
+                field_id: 2,
+                type: 'int',
+                template_url: 'field-int.tpl.html'
+            },
+            {
+                field_id: 3,
+                type: 'fieldset',
+                template_url: 'field-fieldset.tpl.html',
+                content: [
+                    {
+                        field_id: 4,
+                        type: 'int',
+                        template_url: 'field-int.tpl.html'
+                    },
+                    {
+                        field_id: 5,
+                        type: 'column',
+                        template_url: 'field-column.tpl.html',
+                        content: [
+                            {
+                                field_id: 6,
+                                type: 'int',
+                                template_url: 'field-int.tpl.html'
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]);
+    });
 });

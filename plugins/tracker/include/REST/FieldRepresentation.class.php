@@ -48,14 +48,14 @@ class Tracker_REST_FieldRepresentation {
     public $name;
 
     /**
-     * @var string (string|text|sb|msb|cb|date|file|int|float|tbl|art_link|perm|shared|aid|atid|lud|subby|subon|cross|burndown|computed)
+     * @var string (string|text|sb|msb|cb|date|file|int|float|tbl|art_link|perm|shared|aid|atid|lud|subby|subon|cross|burndown|computed|fieldset|column|linebreak|separator|staticrichtext)
      */
     public $type;
 
     /**
      * @var array {@type Tuleap\Tracker\REST\FieldValueRepresentation }
      */
-    public $values      = array();
+    public $values = array();
 
     /**
      *
@@ -64,24 +64,39 @@ class Tracker_REST_FieldRepresentation {
     public $required;
 
     /**
+     *
+     * @var boolean
+     */
+    public $collapsed;
+
+    /**
      * @var array
      */
-    public $bindings    = array();
+    public $bindings = array();
 
     /**
      * @var array {@type string} One of (read, update, submit)
      */
     public $permissions = array();
 
-    public function build(Tracker_FormElement_Field $field, $type, array $permissions) {
+    public function build(Tracker_FormElement $field, $type, array $permissions) {
         $this->field_id = JsonCast::toInt($field->getId());
         $this->name     = $field->getName();
         $this->label    = $field->getLabel();
-        $this->required = JsonCast::toBoolean($field->isRequired());
-        $this->type     = $type;
-        $this->default_value = $field->getDefaultValue();
 
-        $this->values   = null;
+        if ($field instanceof Tracker_FormElement_Field) {
+            $this->required      = JsonCast::toBoolean($field->isRequired());
+            $this->collapsed     = false;
+
+        } else {
+            $this->required      = false;
+            $this->collapsed     = (bool) $field->isCollapsed();
+        }
+
+        $this->default_value = $field->getDefaultValue();
+        $this->type   = $type;
+
+        $this->values = null;
         if ($field->getSoapAvailableValues()) {
             foreach ($field->getSoapAvailableValues() as $value) {
                 $field_value_representation = new Tuleap\Tracker\REST\FieldValueRepresentation();

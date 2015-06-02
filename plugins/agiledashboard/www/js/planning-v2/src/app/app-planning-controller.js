@@ -12,10 +12,11 @@
         'DroppedService',
         'CardFieldsService',
         'TuleapArtifactModalService',
-        'ModalService'
+        'ModalService',
+        'ModalLoading'
     ];
 
-    function PlanningCtrl($scope, SharedPropertiesService, BacklogItemService, MilestoneService, ProjectService, DroppedService, CardFieldsService, TuleapArtifactModalService, ModalService) {
+    function PlanningCtrl($scope, SharedPropertiesService, BacklogItemService, MilestoneService, ProjectService, DroppedService, CardFieldsService, TuleapArtifactModalService, ModalService, ModalLoading) {
         var project_id                  = SharedPropertiesService.getProjectId(),
             milestone_id                = SharedPropertiesService.getMilestoneId(),
             use_angular_new_modal       = SharedPropertiesService.getUseAngularNewModal(),
@@ -34,6 +35,7 @@
             },
             loading_backlog_items                 : true,
             loading_milestones                    : true,
+            loading_modal                         : ModalLoading.loading,
             use_angular_new_modal                 : use_angular_new_modal,
             toggle                                : toggle,
             showChildren                          : showChildren,
@@ -41,7 +43,6 @@
             canShowBacklogItem                    : canShowBacklogItem,
             generateMilestoneLinkUrl              : generateMilestoneLinkUrl,
             showCreateNewModal                    : showCreateNewModal,
-            showNewArtifactModal                  : ModalService.show,
             cardFieldIsSimpleValue                : CardFieldsService.cardFieldIsSimpleValue,
             cardFieldIsList                       : CardFieldsService.cardFieldIsList,
             cardFieldIsText                       : CardFieldsService.cardFieldIsText,

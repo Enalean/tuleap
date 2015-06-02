@@ -428,5 +428,48 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
         return $this->fetchArtifactContent($content);
     }
 
+    /**
+     * Get available values of this field for SOAP usage
+     * Fields like int, float, date, string don't have available values
+     *
+     * @return mixed The values or null if there are no specific available values
+     */
+    public function getSoapAvailableValues() {
+        return null;
+    }
+
+    /**
+     * Get binding data for Soap
+     *
+     * @return array the binding data
+     */
+    public function getSoapBindingProperties() {
+        return array(
+            'bind_type' => null,
+            'bind_list' => array()
+        );
+    }
+
+    public function isCollapsed() {
+        return false;
+    }
+
+    public function getDefaultValue() {
+        return null;
+    }
+
+    public function getRESTContent() {
+        $content_structure = array();
+
+        foreach($this->getFormElements() as $field) {
+            $classname_with_namespace         = 'Tuleap\Tracker\REST\StructureElementRepresentation';
+            $structure_element_representation = new $classname_with_namespace;
+            $structure_element_representation->build($field);
+
+            $content_structure[] = $structure_element_representation;
+        }
+
+        return $content_structure;
+    }
 
 }

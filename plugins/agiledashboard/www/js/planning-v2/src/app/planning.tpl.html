@@ -1,6 +1,8 @@
 <div class="alert alert-error" ng-if="rest_error_occured" translate>A server error has occured. <b>You should refresh this page</b>.</div>
 <div class="alert alert-error" ng-if="rest_error_occured" ng-bind-html="rest_error"></div>
 
+<div class="tuleap-modal-loading" ng-if="loading_modal.is_loading"></div>
+
 <div id="planning-view">
     <div id="backlog" ng-class="{ loading_content: loading_backlog_items }">
         <h2 translate>To be planned</h2>
@@ -32,7 +34,7 @@
                 </span>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                     <li ng-repeat="accepted_type in backlog.accepted_types.content">
-                        <a href="" class="create-item-link" ng-click="showCreateNewModal($event, accepted_type, backlog)">{{ accepted_type.label }}</a>
+                        <a href="#" class="create-item-link" ng-click="showCreateNewModal($event, accepted_type, backlog)">{{ accepted_type.label }}</a>
                     </li>
                 </ul>
             </div>
@@ -46,7 +48,7 @@
             >
                 <li ui-tree-node
                     ng-repeat="backlog_item in backlog_items"
-                    ng-include src="'backlog-item/backlog-item-in-backlog.tpl.html'"
+                    ng-include="'backlog-item/backlog-item-in-backlog.tpl.html'"
                     data-type="{{ backlog_item.trackerId }}"
                     data-accept="{{ backlog_item.accepted_types.toString() }}"
                     class="backlog-item parent"

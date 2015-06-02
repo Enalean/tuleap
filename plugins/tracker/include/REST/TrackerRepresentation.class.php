@@ -69,6 +69,11 @@ class TrackerRepresentation {
     public $fields = array();
 
     /**
+     * @var array {@type Tuleap\Tracker\REST\StructureElementRepresentation
+     */
+    public $structure = array();
+
+    /**
      * @var array {@type Tuleap\Tracker\REST\SemanticRepresentation}
      */
     public $semantics = array();
@@ -89,7 +94,7 @@ class TrackerRepresentation {
      */
     public $resources;
 
-    public function build(Tracker $tracker, array $tracker_fields, array $semantics, WorkflowRepresentation $workflow = null) {
+    public function build(Tracker $tracker, array $tracker_fields, array $structure, array $semantics, WorkflowRepresentation $workflow = null) {
         $this->id          = JsonCast::toInt($tracker->getId());
         $this->uri         = self::ROUTE . '/' . $this->id;
         $this->html_url    = $tracker->getUri();
@@ -101,6 +106,7 @@ class TrackerRepresentation {
         $this->description = $tracker->getDescription();
         $this->item_name   = $tracker->getItemName();
         $this->fields      = $tracker_fields;
+        $this->structure   = $structure;
         $this->semantics   = $semantics;
         $this->workflow    = $workflow;
         $this->resources   = array(

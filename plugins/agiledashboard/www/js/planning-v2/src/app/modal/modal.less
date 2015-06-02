@@ -4,6 +4,8 @@
     }
 
     .modal-body {
+        background: #F8F8F8;
+
         .modal-textarea {
             width: 100%;
             -moz-box-sizing: border-box;
@@ -23,6 +25,60 @@
         .artifact-link-value {
             padding: 5px 10px;
             border-left: 1px dotted #C7C7C7;
+        }
+
+        .field {
+            margin: 0 0 10px;
+
+            > label {
+                color: #4D4D4D;
+            }
+        }
+
+        fieldset {
+            margin: 20px 0;
+            background: #FFFFFF;
+            border-radius: 3px;
+            border: 1px solid #E9E9E9;
+
+            > legend {
+                float: left;
+                padding: 0 10px 0 30px;
+                margin: 0 0 10px;
+                border: none;
+                border-bottom: 2px solid #222;
+                cursor: pointer;
+                font-size: 1.2em;
+                background: #FFF url('/themes/common/images/toggle-fontawesome-minus.png') no-repeat 10px center;
+
+                &:hover {
+                    background-color: #FAFAFA;
+                    transition: background-color 0.1s linear;
+                }
+            }
+
+            > .fieldset-content {
+                padding: 0 10px;
+            }
+
+            &.collapsed {
+                > legend {
+                    margin: 0;
+                    border: none;
+                    background: #FFF url('/themes/common/images/toggle-fontawesome-plus.png') no-repeat 10px center;
+
+                    &:hover {
+                        background-color: #FAFAFA;
+                        transition: background-color 0.1s linear;
+                    }
+                }
+
+                > .fieldset-content {
+                    overflow: hidden;
+                    padding: 0;
+                    height: 0;
+                }
+            }
         }
     }
 }
