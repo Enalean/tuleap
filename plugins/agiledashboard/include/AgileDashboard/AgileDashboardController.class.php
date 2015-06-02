@@ -101,7 +101,6 @@ class AgileDashboard_Controller extends MVC2_PluginController {
             $tracker_uri,
             $root_planning_name,
             $potential_planning_trackers,
-            $user->useLabFeatures(),
             $kanban_activated,
             $scrum_activated,
             $all_activated,
@@ -138,45 +137,40 @@ class AgileDashboard_Controller extends MVC2_PluginController {
             return;
         }
 
-        if ($this->request->getCurrentUser()->useLabFeatures()) {
-            switch ($this->request->get('activate-ad-component')) {
-                case 'activate-scrum':
-                     $GLOBALS['Response']->addFeedback(
-                        Feedback::INFO,
-                        $GLOBALS['Language']->getText('plugin_agiledashboard', 'scrum_activated')
-                    );
+        switch ($this->request->get('activate-ad-component')) {
+            case 'activate-scrum':
+                 $GLOBALS['Response']->addFeedback(
+                    Feedback::INFO,
+                    $GLOBALS['Language']->getText('plugin_agiledashboard', 'scrum_activated')
+                );
 
-                    $scrum_is_activated  = 1;
-                    $kanban_is_activated = 0;
+                $scrum_is_activated  = 1;
+                $kanban_is_activated = 0;
 
-                    break;
-                case 'activate-kanban':
-                     $GLOBALS['Response']->addFeedback(
-                        Feedback::INFO,
-                        $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_activated')
-                    );
+                break;
+            case 'activate-kanban':
+                 $GLOBALS['Response']->addFeedback(
+                    Feedback::INFO,
+                    $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_activated')
+                );
 
-                    $scrum_is_activated  = 0;
-                    $kanban_is_activated = 1;
-                    break;
+                $scrum_is_activated  = 0;
+                $kanban_is_activated = 1;
+                break;
 
-                case 'activate-all':
-                    $GLOBALS['Response']->addFeedback(
-                        Feedback::INFO,
-                        $GLOBALS['Language']->getText('plugin_agiledashboard', 'all_activated')
-                    );
+            case 'activate-all':
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::INFO,
+                    $GLOBALS['Language']->getText('plugin_agiledashboard', 'all_activated')
+                );
 
-                    $scrum_is_activated  = 1;
-                    $kanban_is_activated = 1;
-                    break;
+                $scrum_is_activated  = 1;
+                $kanban_is_activated = 1;
+                break;
 
-                default:
-                    $this->notifyErrorAndRedirectToAdmin();
-                    return;
-            }
-        } else {
-            $scrum_is_activated  = $this->config_manager->scrumIsActivatedForProject($this->group_id);
-            $kanban_is_activated = $this->config_manager->kanbanIsActivatedForProject($this->group_id);
+            default:
+                $this->notifyErrorAndRedirectToAdmin();
+                return;
         }
 
         $this->config_manager->updateConfiguration(
@@ -214,10 +208,6 @@ class AgileDashboard_Controller extends MVC2_PluginController {
     }
 
     private function getKanbanTitle() {
-        if (! $this->request->getCurrentUser()->useLabFeatures()) {
-            return $this->config_manager->getKanbanTitle($this->group_id);
-        }
-
         $kanban_title     = trim($this->request->get('kanban-title-admin'));
         $old_kanban_title = $this->request->get('old-kanban-title-admin');
 
@@ -344,10 +334,6 @@ class AgileDashboard_Controller extends MVC2_PluginController {
         $user      = $this->request->getCurrentUser();
 
         try {
-            if (! $user->useLabFeatures()) {
-                throw new AgileDashboard_KanbanCannotAccessException();
-            }
-
             $kanban  = $this->kanban_factory->getKanban($user, $kanban_id);
             $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
 

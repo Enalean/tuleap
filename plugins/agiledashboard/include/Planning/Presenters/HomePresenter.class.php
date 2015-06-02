@@ -96,14 +96,6 @@ class Planning_Presenter_HomePresenter {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'nothing_set_up_admin', array('/plugins/agiledashboard/?group_id='.$this->group_id.'&action=admin'));
     }
 
-    public function user_cant_see_anything() {
-        return ! $this->user->useLabFeatures() && ! $this->scrum_activated;
-    }
-
-    public function uses_lab_feature() {
-        return $this->user->useLabFeatures();
-    }
-
     public function user_is_admin() {
         return $this->user->isAdmin($this->group_id);
     }
@@ -169,7 +161,7 @@ class Planning_Presenter_HomePresenter {
     }
 
     public function user_can_see_kanban() {
-        return $this->kanban_activated && $this->uses_lab_feature();
+        return $this->kanban_activated;
     }
 
     public function add_kanban_modal_title() {
@@ -190,9 +182,5 @@ class Planning_Presenter_HomePresenter {
 
     public function tracker_kanban_label() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard','tracker_kanban_label');
-    }
-
-    public function user_cant_see_anything_content() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard','user_cant_see_anything_content');
     }
 }

@@ -20,9 +20,6 @@
 
 class AdminPresenter {
 
-    /** @var bool */
-    public $uses_lab_features;
-
     /** @var int */
     public $group_id;
 
@@ -56,7 +53,6 @@ class AdminPresenter {
         $root_planning_tracker_url,
         $root_planning_name,
         array $hierarchy,
-        $uses_lab_features,
         $kanban_activated,
         $scrum_activated,
         $all_activated,
@@ -68,7 +64,6 @@ class AdminPresenter {
         $this->can_create_planning       = $can_create_planning;
         $this->root_planning_tracker_url = $root_planning_tracker_url;
         $this->root_planning_name        = $root_planning_name;
-        $this->uses_lab_features         = $uses_lab_features;
         $this->kanban_activated          = $kanban_activated;
         $this->scrum_activated           = $scrum_activated;
         $this->all_activated             = $all_activated;
@@ -159,10 +154,6 @@ class AdminPresenter {
 
     public function activate_service_legend() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'activate_service_legend');
-    }
-
-    public function lab_mode_message() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'lab_mode_message');
     }
 
     public function title_label() {

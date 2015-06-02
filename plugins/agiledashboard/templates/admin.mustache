@@ -1,8 +1,5 @@
 <form action="?group_id={{ group_id }}&action=updateConfiguration" method="POST" class="agiledashboard-admin-kanban">
-{{# uses_lab_features }}
-    <h2><i class="icon-beaker"></i> {{ config_title }}</h2>
-
-    <div class="alert">{{{ lab_mode_message }}}</div>
+    <h2>{{ config_title }}</h2>
 
     <p>{{ activate_service_legend }}</p>
 
@@ -19,9 +16,8 @@
            {{ all_label }}
         </option>
     </select>
-{{/ uses_lab_features }}
 
-<div {{# uses_lab_features }}class="agiledashboard-admin-section"{{/ uses_lab_features }}>
+<div class="agiledashboard-admin-section">
 <h2>Scrum</h2>
     <label>{{ title_label }}</label>
     <input name="old-scrum-title-admin" type="hidden" value="{{ scrum_title }}">
@@ -96,14 +92,12 @@
     {{/ has_plannings }}
 </div>
 
-{{# uses_lab_features }}
 <div class="agiledashboard-admin-section">
-    <h2><i class="icon-beaker"></i> Kanban</h2>
+    <h2>Kanban</h2>
     <label>{{ title_label }}</label>
     <input name="old-kanban-title-admin" type="hidden" value="{{ kanban_title }}">
     <input name="kanban-title-admin" type="text" required value="{{ kanban_title }}">
 </div>
-{{/ uses_lab_features }}
 
     {{{ token }}}
     <button type="submit" class="btn btn-primary" id="ad-service-submit">{{ config_submit_label }}</button>

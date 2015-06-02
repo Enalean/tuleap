@@ -200,9 +200,6 @@ class KanbanItemsResource {
 
     private function getCurrentUser() {
         $user = UserManager::instance()->getCurrentUser();
-        if (! $user->useLabFeatures()) {
-            throw new RestException(403, 'You must activate lab features');
-        }
 
         return $user;
     }
