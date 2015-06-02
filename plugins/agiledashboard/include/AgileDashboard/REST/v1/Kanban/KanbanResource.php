@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\AgileDashboard\REST\v1;
+namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 
 use Luracast\Restler\RestException;
 use Tuleap\REST\Header;
@@ -46,6 +46,10 @@ use Tracker_Semantic_Status;
 use Tracker_FormElementFactory;
 use Tracker;
 use Tracker_Semantic_Title;
+use Tuleap\AgileDashboard\REST\v1\OrderRepresentation;
+use Tuleap\AgileDashboard\REST\v1\OrderValidator;
+use Tuleap\AgileDashboard\REST\v1\ArtifactLinkUpdater;
+use Tuleap\AgileDashboard\REST\v1\ResourcesPatcher;
 
 class KanbanResource extends AuthenticatedResource {
 
@@ -130,7 +134,7 @@ class KanbanResource extends AuthenticatedResource {
      *
      * @param int $id Id of the kanban
      *
-     * @return Tuleap\AgileDashboard\REST\v1\KanbanRepresentation
+     * @return Tuleap\AgileDashboard\REST\v1\Kanban\KanbanRepresentation
      *
      * @throws 403
      * @throws 404
@@ -209,7 +213,7 @@ class KanbanResource extends AuthenticatedResource {
      * @param int $limit  Number of elements displayed per page
      * @param int $offset Position of the first element to display
      *
-     * @return Tuleap\AgileDashboard\REST\v1\KanbanBacklogRepresentation
+     * @return Tuleap\AgileDashboard\REST\v1\Kanban\KanbanBacklogRepresentation
      *
      * @throws 403
      * @throws 404
@@ -293,7 +297,7 @@ class KanbanResource extends AuthenticatedResource {
      *
      * @param int                                                    $id    Id of the Kanban
      * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation     $order Order of the children {@from body}
-     * @param \Tuleap\AgileDashboard\REST\v1\KanbanAddRepresentation $add   Ids to add to Kanban backlog {@from body}
+     * @param \Tuleap\AgileDashboard\REST\v1\Kanban\KanbanAddRepresentation $add   Ids to add to Kanban backlog {@from body}
      *
      */
     protected function patchBacklog($id, OrderRepresentation $order = null, KanbanAddRepresentation $add = null) {
@@ -439,7 +443,7 @@ class KanbanResource extends AuthenticatedResource {
      * @param int $limit  Number of elements displayed per page
      * @param int $offset Position of the first element to display
      *
-     * @return Tuleap\AgileDashboard\REST\v1\KanbanArchiveRepresentation
+     * @return Tuleap\AgileDashboard\REST\v1\Kanban\KanbanArchiveRepresentation
      *
      * @throws 403
      * @throws 404
@@ -471,7 +475,7 @@ class KanbanResource extends AuthenticatedResource {
      *
      * @param int                                                    $id    Id of the Kanban
      * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation     $order Order of the children {@from body}
-     * @param \Tuleap\AgileDashboard\REST\v1\KanbanAddRepresentation $add   Ids to add to Kanban backlog {@from body}
+     * @param \Tuleap\AgileDashboard\REST\v1\Kanban\KanbanAddRepresentation $add   Ids to add to Kanban backlog {@from body}
      */
     protected function patchArchive($id, OrderRepresentation $order = null, KanbanAddRepresentation $add = null) {
         $current_user = UserManager::instance()->getCurrentUser();
@@ -556,7 +560,7 @@ class KanbanResource extends AuthenticatedResource {
      * @param int $limit  Number of elements displayed per page
      * @param int $offset Position of the first element to display
      *
-     * @return Tuleap\AgileDashboard\REST\v1\KanbanItemCollectionRepresentation
+     * @return Tuleap\AgileDashboard\REST\v1\Kanban\KanbanItemCollectionRepresentation
      *
      * @throws 403
      * @throws 404
@@ -599,7 +603,7 @@ class KanbanResource extends AuthenticatedResource {
      * @param int                                                    $id    Id of the Kanban
      * @param int                                                    $column_id Id of the column the item belongs to {@from query}
      * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation     $order Order of the items {@from body}
-     * @param \Tuleap\AgileDashboard\REST\v1\KanbanAddRepresentation $add   Ids to add to the column {@from body}
+     * @param \Tuleap\AgileDashboard\REST\v1\Kanban\KanbanAddRepresentation $add   Ids to add to the column {@from body}
      */
     protected function patchItems(
         $id,
