@@ -29,7 +29,7 @@
             offset = 0,
             kanban = SharedPropertiesService.getKanban();
 
-        self.name      = kanban.name;
+        self.name  = kanban.name;
         self.board = {
             columns: []
         };
@@ -76,6 +76,7 @@
         self.getTimeInfoInArchive         = getTimeInfoInArchive;
         self.createItemInPlace            = createItemInPlace;
         self.createItemInPlaceInBacklog   = createItemInPlaceInBacklog;
+        self.editKanban                   = editKanban;
 
         loadColumns();
         loadBacklog(limit, offset);
@@ -200,6 +201,39 @@
                     }
                 }
             });
+        }
+
+        function editKanban() {
+            $modal.open({
+                backdrop:     'static',
+                templateUrl:  'edit-kanban/edit-kanban.tpl.html',
+                controller:   EditKanbanCtrl,
+                controllerAs: 'modal',
+                resolve: {
+                    kanban: function() {
+                        return kanban;
+                    }
+                }
+            }).result.then(
+                updateKanbanName,
+                reloadIfSomethingIsWrong
+            );
+
+            function updateKanbanName(new_kanban) {
+                kanban.name = new_kanban.name;
+                self.name   = kanban.name;
+            }
+
+            function reloadIfSomethingIsWrong(reason) {
+                if (reason && reason.status) {
+                    // the edit-kanban-controller dismissed the dialog
+                    // due to an error in PATCH response and it's passed to us
+                    // the failing request as a reason so that we can display
+                    // the error details in the error modal.
+                    // For more details, see https://angular-ui.github.io/bootstrap/#/modal
+                    reload(reason);
+                }
+            }
         }
 
         function loadColumns() {

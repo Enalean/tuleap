@@ -24,6 +24,10 @@ msgstr ""
 msgid "Archive:"
 msgstr "Archive :"
 
+#: src/app/edit-kanban/edit-kanban.tpl.html
+msgid "Cancel"
+msgstr "Annuler"
+
 #: src/app/add-in-place/add-in-place.tpl.html
 msgid "Card summary"
 msgstr "Titre de la carte"
@@ -36,9 +40,17 @@ msgstr "Colonne :"
 msgid "Define max:"
 msgstr "Maximum :"
 
+#: src/app/kanban.tpl.html
+msgid "Edit this Kanban"
+msgstr "Éditer ce Kanban"
+
 #: src/app/error/error.tpl.html
 msgid "Error details"
 msgstr "Détails de l'erreur"
+
+#: src/app/edit-kanban/edit-kanban.tpl.html
+msgid "Kanban label:"
+msgstr "Label du Kanban :"
 
 #: src/app/app-kanban-controller.js
 msgid "Kanban:"
@@ -51,6 +63,10 @@ msgstr "OK, rafraichir la page"
 #: src/app/error/error.tpl.html
 msgid "Oh snap!"
 msgstr "Oups !"
+
+#: src/app/edit-kanban/edit-kanban.tpl.html
+msgid "Save modifications"
+msgstr "Sauver les modifications"
 
 #: src/app/error/error.tpl.html
 msgid "Show details"

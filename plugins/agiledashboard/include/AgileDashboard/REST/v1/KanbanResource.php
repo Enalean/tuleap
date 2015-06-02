@@ -22,6 +22,7 @@ namespace Tuleap\AgileDashboard\REST\v1;
 use Luracast\Restler\RestException;
 use Tuleap\REST\Header;
 use Tuleap\REST\AuthenticatedResource;
+use AgileDashboard_PermissionsManager;
 use AgileDashboard_KanbanFactory;
 use AgileDashboard_KanbanDao;
 use AgileDashboard_KanbanItemDao;
@@ -59,6 +60,9 @@ class KanbanResource extends AuthenticatedResource {
     /** @var AgileDashboard_KanbanItemDao */
     private $kanban_item_dao;
 
+    /** @var AgileDashboard_KanbanDao */
+    private $kanban_dao;
+
     /** @var TrackerFactory */
     private $tracker_factory;
 
@@ -71,13 +75,17 @@ class KanbanResource extends AuthenticatedResource {
     /** @var Tracker_FormElementFactory */
     private $form_element_factory;
 
+    /** @var AgileDashboard_PermissionsManager */
+    private $permissions_manager;
+
     public function __construct() {
         $this->kanban_item_dao = new AgileDashboard_KanbanItemDao();
         $this->tracker_factory = TrackerFactory::instance();
 
+        $this->kanban_dao     = new AgileDashboard_KanbanDao();
         $this->kanban_factory = new AgileDashboard_KanbanFactory(
             $this->tracker_factory,
-            new AgileDashboard_KanbanDao()
+            $this->kanban_dao
         );
 
         $this->kanban_column_factory = new AgileDashboard_KanbanColumnFactory(new AgileDashboard_KanbanColumnDao());
@@ -98,6 +106,7 @@ class KanbanResource extends AuthenticatedResource {
         );
 
         $this->form_element_factory = Tracker_FormElementFactory::instance();
+        $this->permissions_manager  = new AgileDashboard_PermissionsManager();
     }
 
     /**
@@ -136,8 +145,37 @@ class KanbanResource extends AuthenticatedResource {
         $kanban_representation = new KanbanRepresentation();
         $kanban_representation->build($kanban, $this->kanban_column_factory, $user_can_add_in_place);
 
-        Header::allowOptionsGet();
+        Header::allowOptionsGetPatch();
         return $kanban_representation;
+    }
+
+    /**
+     * Patch kanban
+     *
+     * Patch properties of a given kanban
+     *
+     * <pre>
+     * /!\ Kanban REST routes are under construction and subject to changes /!\
+     * </pre>
+     *
+     * @url PATCH {id}
+     * @access hybrid
+     *
+     * @param int    $id    Id of the kanban
+     * @param string $label The new label {@from body} {@required}
+     *
+     * @throws 403
+     * @throws 404
+     */
+    public function patchId($id, $label) {
+        $this->checkAccess();
+        $user   = $this->getCurrentUser();
+        $kanban = $this->getKanban($user, $id);
+
+        $this->checkUserCanUpdateKanban($user, $kanban);
+        $this->kanban_dao->save($id, $label);
+
+        Header::allowOptionsGetPatch();
     }
 
     /**
@@ -152,7 +190,7 @@ class KanbanResource extends AuthenticatedResource {
      * @param string $id Id of the milestone
      */
     public function optionsId($id) {
-        Header::allowOptionsGet();
+        Header::allowOptionsGetPath();
     }
 
     /**
@@ -193,7 +231,7 @@ class KanbanResource extends AuthenticatedResource {
     }
 
     private function canUserAddInPlace(PFUser $user, AgileDashboard_Kanban $kanban) {
-        $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
+        $tracker = $this->getTrackerForKanban($kanban);
         if (! $tracker) {
             return;
         }
@@ -204,6 +242,21 @@ class KanbanResource extends AuthenticatedResource {
         }
 
         return $tracker->userCanSubmitArtifact($user) && $this->trackerHasOnlyTitleRequired($tracker, $semantic_title);
+    }
+
+    private function checkUserCanUpdateKanban(PFUser $user, AgileDashboard_Kanban $kanban) {
+        if (! $this->isUserAdmin($user, $kanban)) {
+            throw new RestException(403);
+        }
+    }
+
+    private function isUserAdmin(PFUser $user, AgileDashboard_Kanban $kanban) {
+        $tracker = $this->getTrackerForKanban($kanban);
+
+        return $this->permissions_manager->userCanAdministrate(
+            $user,
+            $tracker->getGroupId()
+        );
     }
 
     private function trackerHasOnlyTitleRequired(Tracker $tracker, Tracker_Semantic_Title $semantic_title) {
@@ -287,7 +340,7 @@ class KanbanResource extends AuthenticatedResource {
     }
 
     private function getStatusField(AgileDashboard_Kanban $kanban, PFUser $user) {
-        $tracker      = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
+        $tracker      = $this->getTrackerForKanban($kanban);
         $status_field = $tracker->getStatusField();
 
         if (! $status_field) {
@@ -644,7 +697,7 @@ class KanbanResource extends AuthenticatedResource {
     }
 
     private function getSemanticStatus(AgileDashboard_Kanban $kanban) {
-        $tracker = TrackerFactory::instance()->getTrackerById($kanban->getTrackerId());
+        $tracker = $this->getTrackerForKanban($kanban);
         if (! $tracker) {
             return;
         }
@@ -655,5 +708,14 @@ class KanbanResource extends AuthenticatedResource {
         }
 
         return $semantic;
+    }
+
+    private function getTrackerForKanban(AgileDashboard_Kanban $kanban) {
+        $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
+        if (! $tracker) {
+            throw new RestException(500, 'The tracker used by the kanban does not exist anymore');
+        }
+
+        return $tracker;
     }
 }

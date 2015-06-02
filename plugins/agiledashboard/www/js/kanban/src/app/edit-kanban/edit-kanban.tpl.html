@@ -1,0 +1,17 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()">&times;</button>
+    <h3>{{ kanban.name }}</h3>
+</div>
+<div class="modal-body">
+    <label>
+        <span translate>Kanban label:</span>
+        <input type="text" ng-model="kanban.name" required autofocus />
+    </label>
+</div>
+<div class="modal-footer">
+    <button class="btn" ng-click="cancel()" translate>Cancel</button>
+    <button class="btn btn-primary"
+            ng-disabled="saving"
+            ng-click="saveModifications();">
+        <i class="icon-spinner icon-spin" ng-show="saving"></i> <span translate>Save modifications</span></button>
+</div>
