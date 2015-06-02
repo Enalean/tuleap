@@ -41,6 +41,24 @@ class AgileDashboard_KanbanDao extends DataAccessObject {
         return $this->update($sql);
     }
 
+    public function delete($kanban_id) {
+        $kanban_id   = $this->da->escapeInt($kanban_id);
+
+        $this->startTransaction();
+
+        $sql = "DELETE FROM plugin_agiledashboard_kanban_configuration_column
+                WHERE kanban_id = $kanban_id";
+
+        $this->update($sql);
+
+        $sql = "DELETE FROM plugin_agiledashboard_kanban_configuration
+                WHERE id = $kanban_id";
+
+        $this->update($sql);
+
+        $this->commit();
+    }
+
     public function getKanbanByTrackerId($tracker_kanban) {
         $tracker_kanban = $this->da->escapeInt($tracker_kanban);
 

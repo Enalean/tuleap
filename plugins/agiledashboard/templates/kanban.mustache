@@ -1,5 +1,5 @@
 <link rel="stylesheet" href="js/kanban/bin/assets/kanban.css">
-<div id="kanban-app" ng-app="kanban" ng-controller="MainCtrl" ng-init="init({name:'{{ kanban_name }}', id: {{ kanban_id }}, nb_open: '{{ kanban_open }}', nb_closed:'{{ kanban_closed }}'}, {{ user_is_kanban_admin }}, '{{ language }}')">
+<div id="kanban-app" ng-app="kanban" ng-controller="MainCtrl" ng-init="init({name:'{{ kanban_name }}', id: {{ kanban_id }}, nb_open: '{{ kanban_open }}', nb_closed:'{{ kanban_closed }}'}, {{ user_is_kanban_admin }}, '{{ language }}', {{ project_id }})">
     <ui-view></ui-view>
 </div>
 <script type="text/javascript" src="js/kanban/bin/assets/kanban.js"></script>

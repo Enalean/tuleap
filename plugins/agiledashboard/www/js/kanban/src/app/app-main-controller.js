@@ -10,9 +10,10 @@
             init: init
         });
 
-        function init(kanban, user_is_admin, lang) {
+        function init(kanban, user_is_admin, lang, project_id) {
             SharedPropertiesService.setKanban(kanban);
             SharedPropertiesService.setUserIsAdmin(user_is_admin);
+            SharedPropertiesService.setProjectId(project_id);
             gettextCatalog.setCurrentLanguage(lang);
             amMoment.changeLocale(lang);
         }

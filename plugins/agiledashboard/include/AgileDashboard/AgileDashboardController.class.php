@@ -361,7 +361,8 @@ class AgileDashboard_Controller extends MVC2_PluginController {
                 new KanbanPresenter(
                     $kanban,
                     $user_is_kanban_admin,
-                    $user->getShortLocale()
+                    $user->getShortLocale(),
+                    $tracker->getGroupId()
                 )
             );
         } catch (AgileDashboard_KanbanNotFoundException $exception) {

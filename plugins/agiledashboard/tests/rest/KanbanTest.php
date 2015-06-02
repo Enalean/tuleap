@@ -367,4 +367,23 @@ class KanbanTest extends RestBase {
 
         $this->assertEquals($response->getStatusCode(), 400);
     }
+
+    /**
+     * @depends testPOSTKanbanItemsInUnknowColmun
+     */
+    public function testDELETEKanban() {
+        $response = $this->getResponse($this->client->delete('kanban/'. TestDataBuilder::KANBAN_ID));
+
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    /**
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     * @depends testDELETEKanban
+     */
+    public function testGETDeletedKanban() {
+        $response = $this->getResponse($this->client->get('kanban/'. TestDataBuilder::KANBAN_ID));
+
+        $this->assertEquals($response->getStatusCode(), 404);
+    }
 }

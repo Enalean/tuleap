@@ -36,9 +36,21 @@ msgstr "Titre de la carte"
 msgid "Column:"
 msgstr "Colonne :"
 
+#: src/app/edit-kanban/edit-kanban.tpl.html
+msgid "Configuration"
+msgstr "Configuration"
+
+#: src/app/edit-kanban/edit-kanban.tpl.html
+msgid "Danger zone"
+msgstr "Attention danger"
+
 #: src/app/wip-popover/wip-popover.tpl.html
 msgid "Define max:"
 msgstr "Maximum :"
+
+#: src/app/edit-kanban/edit-kanban.tpl.html
+msgid "Delete this Kanban"
+msgstr "Supprimer ce Kanban"
 
 #: src/app/kanban.tpl.html
 msgid "Edit this Kanban"
@@ -51,6 +63,10 @@ msgstr "Détails de l'erreur"
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Kanban label:"
 msgstr "Label du Kanban :"
+
+#: src/app/edit-kanban/edit-kanban-controller.js
+msgid "Kanban {{ label }} successfuly deleted"
+msgstr "Le Kanban {{ label }} a été supprimé"
 
 #: src/app/app-kanban-controller.js
 msgid "Kanban:"
@@ -72,6 +88,13 @@ msgstr "Sauver les modifications"
 msgid "Show details"
 msgstr "Afficher plus de détails"
 
+#: src/app/edit-kanban/edit-kanban.tpl.html
+msgid ""
+"The deletion of a Kanban is irreversible. Please be certain before doing it."
+msgstr ""
+"La suppression d'un Kanban est irréversible. Veuillez être certain de ce que "
+"vous faites."
+
 #: src/app/kanban.tpl.html
 msgid "Toggle the archive"
 msgstr "Basculer l'affichage de l'archive"
@@ -86,7 +109,7 @@ msgstr "Basculer l'affichage de cette colonne"
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Tracker used:"
-msgstr "Tracker utilisé :"
+msgstr "Outil de suivi utilisé :"
 
 #: src/app/kanban.tpl.html
 msgid "You have reached the work in progress limit for this column!"

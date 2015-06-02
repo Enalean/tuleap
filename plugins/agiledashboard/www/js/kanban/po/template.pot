@@ -24,8 +24,20 @@ msgstr ""
 msgid "Column:"
 msgstr ""
 
+#: src/app/edit-kanban/edit-kanban.tpl.html
+msgid "Configuration"
+msgstr ""
+
+#: src/app/edit-kanban/edit-kanban.tpl.html
+msgid "Danger zone"
+msgstr ""
+
 #: src/app/wip-popover/wip-popover.tpl.html
 msgid "Define max:"
+msgstr ""
+
+#: src/app/edit-kanban/edit-kanban.tpl.html
+msgid "Delete this Kanban"
 msgstr ""
 
 #: src/app/kanban.tpl.html
@@ -38,6 +50,10 @@ msgstr ""
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Kanban label:"
+msgstr ""
+
+#: src/app/edit-kanban/edit-kanban-controller.js
+msgid "Kanban {{ label }} successfuly deleted"
 msgstr ""
 
 #: src/app/app-kanban-controller.js
@@ -58,6 +74,10 @@ msgstr ""
 
 #: src/app/error/error.tpl.html
 msgid "Show details"
+msgstr ""
+
+#: src/app/edit-kanban/edit-kanban.tpl.html
+msgid "The deletion of a Kanban is irreversible. Please be certain before doing it."
 msgstr ""
 
 #: src/app/kanban.tpl.html
