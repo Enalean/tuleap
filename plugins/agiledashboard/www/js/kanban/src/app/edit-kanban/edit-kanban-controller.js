@@ -12,7 +12,7 @@ function EditKanbanCtrl($scope, $modalInstance, KanbanService, kanban) {
 
     function saveModifications() {
         $scope.saving = true;
-        KanbanService.updateKanbanLabel(kanban.id, kanban.name).then(function () {
+        KanbanService.updateKanbanLabel(kanban.id, kanban.label).then(function () {
             $modalInstance.close(kanban);
         }, function (response) {
             $modalInstance.dismiss(response);

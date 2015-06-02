@@ -72,6 +72,10 @@ msgstr ""
 msgid "Toggle this column"
 msgstr ""
 
+#: src/app/edit-kanban/edit-kanban.tpl.html
+msgid "Tracker used:"
+msgstr ""
+
 #: src/app/kanban.tpl.html
 msgid "You have reached the work in progress limit for this column!"
 msgstr ""

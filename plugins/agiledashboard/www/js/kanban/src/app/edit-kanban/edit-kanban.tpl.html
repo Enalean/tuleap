@@ -1,12 +1,22 @@
 <div class="modal-header">
     <button type="button" class="close" ng-click="cancel()">&times;</button>
-    <h3>{{ kanban.name }}</h3>
+    <h3>{{ kanban.label }}</h3>
 </div>
 <div class="modal-body">
-    <label>
-        <span translate>Kanban label:</span>
-        <input type="text" ng-model="kanban.name" required autofocus />
-    </label>
+    <form class="form-horizontal">
+        <div class="control-group">
+            <label class="control-label" for="input-kanban-label" translate>Kanban label:</label>
+            <div class="controls">
+                <input type="text" ng-model="kanban.label" id="input-kanban-label" required autofocus />
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="input-tracker-label" translate>Tracker used:</label>
+            <div class="controls">
+                <a class="btn btn-link" href="/plugins/tracker/?tracker={{ kanban.tracker.id }}">{{ kanban.tracker.label }}</a>
+            </div>
+        </div>
+    </form>
 </div>
 <div class="modal-footer">
     <button class="btn" ng-click="cancel()" translate>Cancel</button>

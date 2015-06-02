@@ -220,8 +220,8 @@
             );
 
             function updateKanbanName(new_kanban) {
-                kanban.name = new_kanban.name;
-                self.name   = kanban.name;
+                kanban.label = new_kanban.label;
+                self.name    = kanban.label;
             }
 
             function reloadIfSomethingIsWrong(reason) {
@@ -237,7 +237,9 @@
         }
 
         function loadColumns() {
-            KanbanService.getKanban(kanban.id).then(function (kanban) {
+            KanbanService.getKanban(kanban.id).then(function (full_kanban) {
+                kanban = full_kanban;
+                SharedPropertiesService.setKanban(kanban);
                 kanban.columns.forEach(function (column) {
                     column.content        = [];
                     column.loading_items  = true;
