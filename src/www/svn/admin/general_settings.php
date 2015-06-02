@@ -1,13 +1,24 @@
 <?php
-//
-// Codendi
-// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-// http://www.codendi.com
-//
-// 
-//
-//	Originally written by Laurent Julliard 2004, Codendi Team, Xerox
-//
+/**
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
 
 // CAUTION!!
@@ -58,48 +69,14 @@ svn_header_admin(array ('title'=>$Language->getText('svn_admin_general_settings'
 
 $pm = ProjectManager::instance();
 $project = $pm->getProject($group_id);
-$svn_tracked = $project->isSVNTracked();
-$svn_mandatory_ref = $project->isSVNMandatoryRef();
-$svn_preamble = $project->getSVNPreamble();
-$svn_can_change_log = $project->canChangeSVNLog();
-$svn_is_commit_to_tag_is_denied = $project->isCommitToTagDenied();
 
-echo '
-       <H2>'.$Language->getText('svn_admin_general_settings','gen_settings').'</H2>
-       <FORM ACTION="" METHOD="post">
-       <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
-       <INPUT TYPE="HIDDEN" NAME="func" VALUE="general_settings">
-       <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
-       <h3>'.$Language->getText('svn_admin_general_settings','tracking').'</H3><I>
-       <p>'.$Language->getText('svn_admin_general_settings','tracking_comment',$GLOBALS['sys_name']).
-    '</I>
-       <p><b>'.$Language->getText('svn_admin_general_settings','tracking').'</b>&nbsp;&nbsp;&nbsp;&nbsp;<SELECT name="form_tracked">
-       <OPTION VALUE="1"'.(($svn_tracked == '1') ? ' SELECTED':'').'>'.$Language->getText('global','on').'</OPTION>
-       <OPTION VALUE="0"'.(($svn_tracked == '0') ? ' SELECTED':'').'>'.$Language->getText('global','off').'</OPTION>       </SELECT></p>
-       <br><h3>'.$Language->getText('svn_admin_general_settings','mandatory_ref').'</H3><I>
-       <p>'.$Language->getText('svn_admin_general_settings','mandatory_ref_comment').
-    '</I>
-       <p><b>'.$Language->getText('svn_admin_general_settings','mandatory_ref').'</b>&nbsp;&nbsp;&nbsp;&nbsp;<SELECT name="form_mandatory_ref">
-       <OPTION VALUE="1"'.(($svn_mandatory_ref == '1') ? ' SELECTED':'').'>'.$Language->getText('global','on').'</OPTION>
-       <OPTION VALUE="0"'.(($svn_mandatory_ref == '0') ? ' SELECTED':'').'>'.$Language->getText('global','off').'</OPTION>       </SELECT></p>
-        <br><h3>'.$Language->getText('svn_admin_general_settings','svn_can_change_log').'</H3><I>
-       <p>'.$Language->getText('svn_admin_general_settings','svn_can_change_log_comment').
-    '</I>
-       <p><b>'.$Language->getText('svn_admin_general_settings','svn_can_change_log').'</b>&nbsp;&nbsp;&nbsp;&nbsp;<SELECT name="form_can_change_svn_log">
-       <OPTION VALUE="1"'.(($svn_can_change_log == '1') ? ' SELECTED':'').'>'.$Language->getText('global','on').'</OPTION>
-       <OPTION VALUE="0"'.(($svn_can_change_log == '0') ? ' SELECTED':'').'>'.$Language->getText('global','off').'</OPTION>       </SELECT></p>
-       </I>
-        <br><h3>'.$Language->getText('svn_admin_general_settings','svn_allow_tag_immutable').'</H3><I>
-       <p>'.$Language->getText('svn_admin_general_settings','svn_allow_tag_immutable_comment').
-    '</I>
-       <p><b>'.$Language->getText('svn_admin_general_settings','svn_allow_tag_immutable').'</b>&nbsp;&nbsp;&nbsp;&nbsp;<SELECT name="form_tag_immutable">
-       <OPTION VALUE="1"'.(($svn_is_commit_to_tag_is_denied == '1') ? ' SELECTED':'').'>'.$Language->getText('global','on').'</OPTION>
-       <OPTION VALUE="0"'.(($svn_is_commit_to_tag_is_denied == '0') ? ' SELECTED':'').'>'.$Language->getText('global','off').'</OPTION>       </SELECT></p>
-        <br>'.$Language->getText('svn_admin_general_settings','preamble',array('/svn/?func=info&group_id='.$group_id,$GLOBALS['sys_name'])).'
-       <BR>
-       <TEXTAREA cols="70" rows="8" wrap="virtual" name="form_preamble">'.$svn_preamble.'</TEXTAREA>
-        </p>
-        <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'"></p></FORM>';
+$template_dir = ForgeConfig::get('codendi_dir') .'/src/templates/svn/';
+$renderer     = TemplateRendererFactory::build()->getRenderer($template_dir);
+$presenter    = new SVN_GeneralSettingsPresenter($project);
+
+$renderer->renderToPage(
+    'general-settings',
+    $presenter
+);
 
 svn_footer(array());
-?>
