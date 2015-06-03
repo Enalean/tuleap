@@ -18,6 +18,7 @@ Version 8.3 (not released yet)
 	== Development ==
 	* Adding SOAP example for legacy Tracker V3
 	* story #8118: Tuleap Guidelines: first step
+	* Introduce usage of docker-compose
 
         == Themes ==
 	* FlamingParrot: 1.86
