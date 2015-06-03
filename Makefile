@@ -148,3 +148,38 @@ rest_docker_snap_run:
 	@echo "Once inside the container, just run:"
 	@echo "# ./run.sh --run tests/rest/UsersTest.php"
 	@docker run -ti --rm=true -v $(CURDIR):/tuleap --entrypoint=/bin/bash $(DOCKER_REST_TESTS_IMGINIT) +x
+
+#
+# Start development enviromnent with Docker Compose
+#
+
+.env:
+	@MYSQL_ROOT_PASSWORD=`cat /dev/urandom | tr -dc "a-zA-Z0-9" | fold -w 15 | head -1` && echo "MYSQL_ROOT_PASSWORD=$$MYSQL_ROOT_PASSWORD" > .env
+	@LDAP_ROOT_PASSWORD=`cat /dev/urandom | tr -dc "a-zA-Z0-9" | fold -w 15 | head -1` && echo "LDAP_ROOT_PASSWORD=$$LDAP_ROOT_PASSWORD" >> .env
+	@LDAP_MANAGER_PASSWORD=`cat /dev/urandom | tr -dc "a-zA-Z0-9" | fold -w 15 | head -1` && echo "LDAP_MANAGER_PASSWORD=$$LDAP_MANAGER_PASSWORD" >> .env
+	@echo VIRTUAL_HOST=tuleap_web_1.tuleap-aio-dev.docker >> .env
+
+dev-setup: .env
+	@echo "Create all data containers"
+	@docker inspect tuleap_ldap_data > /dev/null 2>&1 || docker run -t --name=tuleap_ldap_data -v /data busybox true
+	@docker inspect tuleap_db_data > /dev/null 2>&1 || docker run -t --name=tuleap_db_data -v /var/lib/mysql busybox true
+	@docker inspect tuleap_es_data > /dev/null 2>&1 || docker run -t --name=tuleap_es_data -v /data busybox true
+	@docker inspect tuleap_data > /dev/null 2>&1 || docker run -t --name=tuleap_data -v /data busybox true
+
+show-passwords:
+	@docker run --rm --volumes-from tuleap_data busybox cat /data/root/.tuleap_passwd
+
+start-dns:
+	@docker run -d -v /var/run/docker.sock:/var/run/docker.sock --name dnsdock -p 172.17.42.1:53:53/udp tonistiigi/dnsdock
+
+start:
+	@echo "Start Tuleap Web + LDAP + DB"
+	@docker-compose up -d web
+	@echo "You might want to type 'make show-passwords' to see site default passwords"
+
+start-es:
+	@docker-compose up -d es
+
+start-all:
+	echo "Start all containers (Web, LDAP, DB, Elasticsearch)"
+	@docker-compose up -d
