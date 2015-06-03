@@ -1,24 +1,42 @@
-describe("ModalValidateFactory", function() {
+describe("ModalValidateFactory validateArtifactFieldsValues() -", function() {
     var ModalValidateFactory;
     beforeEach(function() {
         module('modal');
 
-        inject(function (_ModalValidateFactory_) {
+        inject(function(_ModalValidateFactory_) {
             ModalValidateFactory = _ModalValidateFactory_;
         });
     });
 
-    it("Given an array containing field data including null values, when I validate the fields data, then an object containing only fields whose value is not null will be returned", function() {
+    it("Given an array containing field data including empty string, null and undefined values, when I validate the fields data, then an object containing only fields whose value is defined will be returned", function() {
         var input = [
             { field_id: 422, value: null },
             { field_id: 967, value: "petrogenic" },
+            { field_id: 768, value: undefined },
             { field_id: 847, value: 1.37765 },
+            { field_id: 328, value: "" },
             { field_id: 898 }
         ];
         var output = ModalValidateFactory.validateArtifactFieldsValues(input);
         expect(output).toEqual([
+            { field_id: 422, value: null },
             { field_id: 967, value: "petrogenic" },
-            { field_id: 847, value: 1.37765 }
+            { field_id: 847, value: 1.37765 },
+            { field_id: 328, value: "" }
+        ]);
+    });
+
+    it("Given an array containing date, int and fload fields with null values, when I validate the fields data, then an object containing all the fields' values as empty strings will be returned", function() {
+        var input = [
+            { field_id: 54, type: "int", value: null },
+            { field_id: 257, type: "float", value: null },
+            { field_id: 195, type: "date", value: null }
+        ];
+        var output = ModalValidateFactory.validateArtifactFieldsValues(input);
+        expect(output).toEqual([
+            { field_id: 54, value: "" },
+            { field_id: 257, value: "" },
+            { field_id: 195, value: "" }
         ]);
     });
 
@@ -47,7 +65,7 @@ describe("ModalValidateFactory", function() {
     });
 
     describe("Given an array containing an artifact link field and", function() {
-        it("given that its links array contains empty string and null and undefined values, when I validate the fields, then an object containing this field with a links containing only non-null ids will be returned", function() {
+        it("given that its links array contains empty string, null and undefined values, when I validate the fields, then an object containing this field with a links containing only non-null ids will be returned", function() {
             var input = [
                 {
                     field_id: 986,

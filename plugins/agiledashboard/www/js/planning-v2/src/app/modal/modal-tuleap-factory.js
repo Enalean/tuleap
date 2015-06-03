@@ -8,31 +8,30 @@ function ModalTuleapFactory(Restangular) {
     var rest = Restangular.withConfig(function(RestangularConfigurer) {
         RestangularConfigurer.setFullResponse(true);
         RestangularConfigurer.setBaseUrl('/api/v1');
-        RestangularConfigurer.addRequestInterceptor(requestInterceptor);
         RestangularConfigurer.addResponseInterceptor(responseInterceptor);
         RestangularConfigurer.setErrorInterceptor(errorInterceptor);
     });
 
-    var awkward_fields_for_creation = ['aid', 'atid', 'lud', 'burndown', 'priority', 'subby', 'subon', 'computed', 'cross', 'file', 'tbl', 'perm'];
-
     var service = {
+        createArtifact          : createArtifact,
+        editArtifact            : editArtifact,
+        getArtifact             : getArtifact,
+        getArtifactsTitles      : getArtifactsTitles,
+        getTrackerArtifacts     : getTrackerArtifacts,
+        getTrackerStructure     : getTrackerStructure,
+
         error: {
             is_error     : false,
             error_message: null
-        },
-
-        isLoading               : false,
-        createArtifact          : createArtifact,
-        reorderFieldsInGoodOrder: reorderFieldsInGoodOrder,
-        getArtifactsTitles      : getArtifactsTitles,
-        getTrackerArtifacts     : getTrackerArtifacts,
-        getTrackerStructure     : getTrackerStructure
+        }
     };
     return service;
 
     function getTrackerStructure(tracker_id) {
         return rest.one('trackers', tracker_id)
-            .get().then(function(response) {
+            .withHttpConfig({
+                cache: true
+            }).get().then(function(response) {
                 return response.data;
             });
     }
@@ -46,42 +45,11 @@ function ModalTuleapFactory(Restangular) {
             });
     }
 
-    function reorderFieldsInGoodOrder(complete_tracker_structure) {
-        var structure      = complete_tracker_structure.structure,
-            ordered_fields = [];
-
-        for (var i = 0; i < structure.length; i++) {
-            ordered_fields.push(getCompleteField(structure[i], complete_tracker_structure.fields));
-        }
-
-        return _.compact(ordered_fields);
-    }
-
-    /**
-     * Return a field with two additional attributes:
-     *     - content     : {array} of fields
-     *     - template_url: {string} angular tamplated used to render the field
-     */
-    function getCompleteField(structure_field, all_fields) {
-        var complete_field = _(all_fields).find({ field_id: structure_field.id });
-
-        if (_.contains(awkward_fields_for_creation, complete_field.type)) {
-            return false;
-        }
-
-        complete_field.template_url = 'field-' + complete_field.type + '.tpl.html';
-
-        if (structure_field.content != null) {
-            complete_field.content = [];
-
-            for (var i = 0; i < structure_field.content.length; i++) {
-                complete_field.content.push(getCompleteField(structure_field.content[i], all_fields));
-            }
-
-            complete_field.content = _.compact(complete_field.content);
-        }
-
-        return complete_field;
+    function getArtifact(artifact_id) {
+        return rest.one('artifacts', artifact_id)
+            .get().then(function(response) {
+                return response.data;
+            });
     }
 
     // Used to fill the <select> that lets you choose the parent artifact
@@ -118,13 +86,15 @@ function ModalTuleapFactory(Restangular) {
         return promise;
     }
 
-    function requestInterceptor(data) {
-        service.is_loading = true;
-        return data;
+    function editArtifact(artifact_id, field_values) {
+        return rest.one('artifacts', artifact_id).customPUT({
+            values : field_values
+        }).then (function() {
+            return { id: artifact_id };
+        });
     }
 
     function responseInterceptor(data) {
-        service.is_loading     = false;
         service.error.is_error = false;
         return data;
     }
@@ -140,7 +110,6 @@ function ModalTuleapFactory(Restangular) {
             is_error      : true,
             error_message : error_message
         };
-        service.is_loading = false;
         return true;
     }
 }

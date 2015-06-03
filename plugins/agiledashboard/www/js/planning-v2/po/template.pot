@@ -41,6 +41,10 @@ msgid "Content"
 msgstr ""
 
 #: src/app/modal/modal.tpl.html
+msgid "Create a new {{ modal.title }}"
+msgstr ""
+
+#: src/app/modal/modal.tpl.html
 msgid "Enter artifact ids separated by a comma"
 msgstr ""
 

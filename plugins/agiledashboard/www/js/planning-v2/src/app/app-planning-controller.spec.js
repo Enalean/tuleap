@@ -197,4 +197,27 @@ describe("PlanningCtrl", function() {
 
         });
     });
+
+    describe("refreshBacklogItem() -", function() {
+        it("Given an existing backlog item, when I refresh it, it gets the item from the server and publishes it to the scope", function() {
+            $scope.backlog_items = [
+                { id: 7088 }
+            ];
+            $scope.items = {
+                7088: { id: 7088 }
+            };
+            BacklogItemService.getBacklogItem.andReturn(deferred.promise);
+
+            $scope.refreshBacklogItem(7088);
+            deferred.resolve({
+                backlog_item: { id: 7088 }
+            });
+
+            expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(7088);
+            expect($scope.items[7088]).toEqual({ id: 7088 });
+            expect($scope.backlog_items).toEqual([
+                { id: 7088 }
+            ]);
+        });
+    });
 });

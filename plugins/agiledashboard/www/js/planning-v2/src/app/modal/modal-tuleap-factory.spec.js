@@ -3,7 +3,7 @@ describe("ModalTuleapFactory", function() {
     beforeEach(function() {
         module('modal');
 
-        inject(function (_ModalTuleapFactory_, $httpBackend, _$q_, _$rootScope_) {
+        inject(function(_ModalTuleapFactory_, $httpBackend, _$q_, _$rootScope_) {
             ModalTuleapFactory = _ModalTuleapFactory_;
             mockBackend = $httpBackend;
             $q = _$q_;
@@ -101,6 +101,32 @@ describe("ModalTuleapFactory", function() {
         expect(expected).toEqual(response);
     });
 
+    it("getArtifact() - Given an artifact id, when I get the artifact, then a promise will be resolved with", function() {
+        response = {
+            id: 792,
+            values: [
+                {
+                    field_id: 74,
+                    label: "Kartvel",
+                    value: "ruralize"
+                }, {
+                    field_id: 31,
+                    label: "xenium",
+                    bind_value_ids: [96, 81]
+                }
+            ]
+        };
+        mockBackend.expectGET('/api/v1/artifacts/792').respond(JSON.stringify(response));
+
+        var promise = ModalTuleapFactory.getArtifact(792);
+        var success = jasmine.createSpy("success");
+        promise.then(success);
+        mockBackend.flush();
+
+        var expected = sanitizeRestangular(success.calls[0].args[0]);
+        expect(expected).toEqual(response);
+    });
+
     it("getArtifactsTitles() - Given a tracker containing two artifacts and given its id, when I get the tracker's artifacts titles, then a promise will be resolved with an array of objects containing the artifact's id, label and the value of the artifact's title field", function() {
         var first_deferred = $q.defer();
         var second_deferred = $q.defer();
@@ -156,7 +182,7 @@ describe("ModalTuleapFactory", function() {
     });
 
     describe("createArtifact() -", function() {
-        it("Given a tracker id and an array of fields containing their id and selected values, when I create an artifact, then the field values will be sent using the artifact creation REST route and a promise will be resolved using the new artifact's id", function() {
+        it("Given a tracker id and an array of fields containing their id and selected values, when I create an artifact, then the field values will be sent using the artifact creation REST route and a promise will be resolved with the new artifact's id", function() {
             // We create the artifact in the given tracker id
             var response = {
                 id: 286,
@@ -206,7 +232,7 @@ describe("ModalTuleapFactory", function() {
             expect(failure).toHaveBeenCalled();
         });
 
-        it("Given the server doesn't respond, when I create an artifact, then the service's error will be set with the HTTP error code and message and a promise will be rejected", function() {
+        it("Given the server didn't respond, when I create an artifact, then the service's error will be set with the HTTP error code and message and a promise will be rejected", function() {
             mockBackend.expectPOST('/api/v1/artifacts').respond(404, undefined, undefined, 'Not Found');
 
             var promise = ModalTuleapFactory.createArtifact();
@@ -220,87 +246,38 @@ describe("ModalTuleapFactory", function() {
         });
     });
 
-    it('reorderFieldsInGoodOrder', function() {
-        var response = {
-            fields: [
-                { field_id: 1, type: 'int' },
-                { field_id: 2, type: 'int' },
-                { field_id: 3, type: 'fieldset' },
-                { field_id: 4, type: 'int' },
-                { field_id: 5, type: 'column' },
-                { field_id: 6, type: 'int' },
-                { field_id: 7, type: 'aid' },
-                { field_id: 8, type: 'atid' },
-                { field_id: 9, type: 'lud' },
-                { field_id: 10, type: 'burndown' },
-                { field_id: 11, type: 'priority' },
-                { field_id: 12, type: 'subby' },
-                { field_id: 13, type: 'subon' },
-                { field_id: 14, type: 'computed' },
-                { field_id: 15, type: 'cross' },
-                { field_id: 16, type: 'file' },
-                { field_id: 17, type: 'tbl' },
-                { field_id: 18, type: 'perm' }
-            ],
-            structure: [
-                { id: 1, content: null },
-                { id: 2, content: null },
-                { id: 3, content: [
-                    { id: 4, content: null },
-                    { id: 5, content: [
-                        { id: 6, content: null }
-                    ]}
-                ]},
-                { id: 7, content: null },
-                { id: 8, content: null },
-                { id: 9, content: null },
-                { id: 10, content: null },
-                { id: 11, content: null },
-                { id: 12, content: null },
-                { id: 13, content: null },
-                { id: 14, content: null },
-                { id: 15, content: null },
-                { id: 16, content: null },
-                { id: 17, content: null },
-                { id: 18, content: null }
-            ]
-        };
+    describe("editArtifact() -", function() {
+        it("Given an artifact id and an array of fields containing their id and selected value, when I edit an artifact, then the field values will be sent using the edit REST route and a promise will be resolved with the edited artifact's id", function() {
+            var field_values = [
+                { field_id: 47, value: "unpensionableness" },
+                { field_id: 71, bind_value_ids: [726, 332] }
+            ];
+            mockBackend.expectPUT('/api/v1/artifacts/8354', {
+                values: field_values
+            }).respond(200);
 
-        expect(ModalTuleapFactory.reorderFieldsInGoodOrder(response)).toEqual([
-            {
-                field_id: 1,
-                type: 'int',
-                template_url: 'field-int.tpl.html'
-            },
-            {
-                field_id: 2,
-                type: 'int',
-                template_url: 'field-int.tpl.html'
-            },
-            {
-                field_id: 3,
-                type: 'fieldset',
-                template_url: 'field-fieldset.tpl.html',
-                content: [
-                    {
-                        field_id: 4,
-                        type: 'int',
-                        template_url: 'field-int.tpl.html'
-                    },
-                    {
-                        field_id: 5,
-                        type: 'column',
-                        template_url: 'field-column.tpl.html',
-                        content: [
-                            {
-                                field_id: 6,
-                                type: 'int',
-                                template_url: 'field-int.tpl.html'
-                            }
-                        ]
-                    }
-                ]
-            }
-        ]);
+            var promise = ModalTuleapFactory.editArtifact(8354, field_values);
+            var success = jasmine.createSpy("success");
+            promise.then(success);
+            mockBackend.flush();
+
+            var expected = sanitizeRestangular(success.calls[0].args[0]);
+            expect(expected).toEqual({
+                id: 8354
+            });
+        });
+
+        it("Given the server didn't respond, when I edit an artifact, then the service's error will be set with the HTTP error code and message and a promise will be rejected", function() {
+            mockBackend.expectPUT('/api/v1/artifacts/6144').respond(404, undefined, undefined, 'Not Found');
+
+            var promise = ModalTuleapFactory.editArtifact(6144);
+            var failure = jasmine.createSpy("failure");
+            promise.then(null, failure);
+            mockBackend.flush();
+
+            expect(ModalTuleapFactory.error.is_error).toBeTruthy();
+            expect(ModalTuleapFactory.error.error_message).toEqual("404 Not Found");
+            expect(failure).toHaveBeenCalled();
+        });
     });
 });
