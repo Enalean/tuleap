@@ -3,6 +3,7 @@ Version 8.3 (not released yet)
 	* request #8111: Fix the IM plugin dependency to glibc.i686
 	* request #8108: Project name are not correctly displayed in the tracker V3 creation
 	* request #5726: Remove the Twitter widget
+	* Fix request #8119: PHPWiki SyntaxHighlighter plugin does not work on Centos 6
 
 	== Enhancements ==
 	* story #8089: Mustachify SVN general settings
