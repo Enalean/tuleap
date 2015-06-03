@@ -32,6 +32,7 @@ function ModalService($q, $modal, ModalTuleapFactory, ModalModelFactory, ModalLo
 
         return $modal.open({
             backdrop   : 'static',
+            keyboard   : false,
             templateUrl: 'modal/modal.tpl.html',
             controller : 'ModalInstanceCtrl as modal',
             resolve    : {
