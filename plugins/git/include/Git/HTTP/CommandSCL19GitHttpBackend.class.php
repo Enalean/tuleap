@@ -20,6 +20,6 @@
 
 class Git_HTTP_CommandSCL19GitHttpBackend extends Git_HTTP_Command {
     public function getCommand() {
-        return '/opt/rh/git19/root/usr/libexec/git-core/git-http-backend';
+        return Git_Exec::GIT19_PATH.'/usr/libexec/git-core/git-http-backend';
     }
 }
