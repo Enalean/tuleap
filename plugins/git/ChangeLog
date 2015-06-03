@@ -1,3 +1,6 @@
+Version 4.68 - Tuleap 8.3
+    * story #8059: Use secure hash function for the storage of password used for web login
+
 Version 4.67 - Tuleap 8.3
     * request #8116 Wrong gerrit Permission after migration (Authenticated Users)
 

@@ -7,12 +7,13 @@ Version 8.3 (not released yet)
 
 	== Enhancements ==
 	* story #8089: Mustachify SVN general settings
+	* story #8059: Use secure hash function for the storage of password used for web login
 
 	== Plugins ==
-	* git: 4.67
+	* git: 4.68
 	* ldap: 3.80
 	* agiledashboard: 1.204
-	* tracker: 5.628
+	* tracker: 5.629
 
 	== Development ==
 	* Adding SOAP example for legacy Tracker V3
