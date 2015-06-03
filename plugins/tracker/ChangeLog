@@ -1,3 +1,6 @@
+Version 5.626 - Tuleap 8.3
+    * request #8102: REST API throws 500 when empty artifact string field in PUT /artifacts/:id
+
 Version 5.625 - Tuleap 8.2
     * request #8086: tracker xml export contains criteria refering to unused elements
 
