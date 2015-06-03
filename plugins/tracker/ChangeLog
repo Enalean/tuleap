@@ -1,3 +1,6 @@
+Version 5.627 - Tuleap 8.3
+    * story #7967: refactoring AD to load faster (no more array_slice)
+
 Version 5.626 - Tuleap 8.3
     * request #8102: REST API throws 500 when empty artifact string field in PUT /artifacts/:id
 
