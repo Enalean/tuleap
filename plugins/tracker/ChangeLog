@@ -1,3 +1,6 @@
+Version 5.628 - Tuleap 8.3
+    * story #7857: diplay fields in the same order than in artifact view
+
 Version 5.627 - Tuleap 8.3
     * story #7967: refactoring AD to load faster (no more array_slice)
 
