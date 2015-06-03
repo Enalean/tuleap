@@ -368,7 +368,8 @@ class MilestoneResource extends AuthenticatedResource {
         $this->checkContentLimit($limit);
 
         $milestone                           = $this->getMilestoneById($this->getCurrentUser(), $id);
-        $backlog_items                       = $this->getMilestoneContentItems($milestone);
+        $strategy                            = $this->backlog_strategy_factory->getSelfBacklogStrategy($milestone, $limit, $offset);
+        $backlog_items                       = $this->getMilestoneContentItems($milestone, $strategy);
         $backlog_items_representations       = array();
         $backlog_item_representation_factory = new BacklogItemRepresentationFactory();
 
@@ -377,9 +378,9 @@ class MilestoneResource extends AuthenticatedResource {
         }
 
         $this->sendAllowHeaderForContent();
-        $this->sendPaginationHeaders($limit, $offset,  count($backlog_items_representations));
+        $this->sendPaginationHeaders($limit, $offset, $backlog_items->getTotalAvaialableSize());
 
-        return array_slice($backlog_items_representations, $offset, $limit);
+        return $backlog_items_representations;
     }
 
     /**
@@ -575,7 +576,8 @@ class MilestoneResource extends AuthenticatedResource {
 
         $user          = $this->getCurrentUser();
         $milestone     = $this->getMilestoneById($user, $id);
-        $backlog_items = $this->getMilestoneBacklogItems($user, $milestone);
+        $strategy      = $this->backlog_strategy_factory->getBacklogStrategy($milestone, $limit, $offset);
+        $backlog_items = $this->getMilestoneBacklogItems($user, $milestone, $strategy);
 
         $backlog_item_representation_factory = new BacklogItemRepresentationFactory();
         $backlog_items_representation        = array();
@@ -585,9 +587,9 @@ class MilestoneResource extends AuthenticatedResource {
         }
 
         $this->sendAllowHeaderForBacklog();
-        $this->sendPaginationHeaders($limit, $offset, count($backlog_items_representation));
+        $this->sendPaginationHeaders($limit, $offset, $backlog_items->getTotalAvaialableSize());
 
-        return array_slice($backlog_items_representation, $offset, $limit);
+        return $backlog_items_representation;
     }
 
     /**
@@ -901,20 +903,20 @@ class MilestoneResource extends AuthenticatedResource {
         return UserManager::instance()->getCurrentUser();
     }
 
-    private function getMilestoneBacklogItems(PFUser $user, $milestone) {
+    private function getMilestoneBacklogItems(PFUser $user, $milestone, $strategy) {
         return $this->backlog_item_collection_factory->getUnplannedOpenCollection(
             $user,
             $milestone,
-            $this->backlog_strategy_factory->getBacklogStrategy($milestone),
+            $strategy,
             false
         );
     }
 
-    private function getMilestoneContentItems($milestone) {
+    private function getMilestoneContentItems($milestone, $strategy) {
         return $this->backlog_item_collection_factory->getAllCollection(
             $this->getCurrentUser(),
             $milestone,
-            $this->backlog_strategy_factory->getSelfBacklogStrategy($milestone),
+            $strategy,
             ''
         );
     }

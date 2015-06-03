@@ -160,6 +160,25 @@ class Tracker_HierarchyFactory {
     }
 
     /**
+     * Epic
+     * `-- Story
+     *     `-- Task
+     * getUpwardsHierarchyForTracker(Task) -> ['Task tracker ID', 'Story tracker ID', 'Epic tracker ID']
+     *
+     * @return Int[] array of IDs
+     */
+    public function getUpwardsHierarchyForTracker($tracker_id) {
+        $hierarchy         = $this->getHierarchy(array($tracker_id));
+        $parent_tracker_id = $hierarchy->getParent($tracker_id);
+        $stack = array($tracker_id);
+        while ($parent_tracker_id) {
+            $stack[] = $parent_tracker_id;
+            $parent_tracker_id = $hierarchy->getParent($parent_tracker_id);
+        }
+        return $stack;
+    }
+
+    /**
      * Return the parent artifact
      *
      * @param PFUser $user

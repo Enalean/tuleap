@@ -46,9 +46,6 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
     private $done_collection;
 
     /** @var AgileDashboard_Milestone_Backlog_IBacklogItemCollection[] */
-    private $unplanned_open_collection;
-
-    /** @var AgileDashboard_Milestone_Backlog_IBacklogItemCollection[] */
     private $inconsistent_collection;
 
     /** @var Planning_MilestoneFactory */
@@ -87,7 +84,6 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
         $this->all_collection            = array();
         $this->todo_collection           = array();
         $this->done_collection           = array();
-        $this->unplanned_open_collection = array();
     }
 
     public function getTodoCollection(
@@ -126,12 +122,48 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
     public function getUnplannedOpenCollection(
         PFUser $user,
         Planning_Milestone $milestone,
-        AgileDashboard_Milestone_Backlog_BacklogStrategy $backlog_strategy,
+        AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy $backlog_strategy,
         $redirect_to_self
     ) {
-        $this->initCollections($user, $milestone, $backlog_strategy, $redirect_to_self);
+        $artifacts         = array();
+        $backlog_item_ids  = array();
+        $sub_milestone_ids = $this->getSubmilestoneIds($user, $milestone);
 
-        return $this->unplanned_open_collection[$milestone->getArtifactId()];
+        $item_collection = $backlog_strategy->getOpenUnplannedArtifacts($user, $sub_milestone_ids);
+        foreach ($item_collection as $artifact) {
+            $artifacts[$artifact->getId()] = $artifact;
+            $backlog_item_ids[]            = $artifact->getId();
+        }
+
+        $parents    = $this->getParentArtifacts($milestone, $user, $backlog_item_ids);
+        $semantics  = $this->getArtifactsSemantics($user, $milestone, $backlog_item_ids, $artifacts);
+
+        $collection = $this->backlog_item_builder->getCollection();
+        foreach ($artifacts as $artifact) {
+            $artifact_id = $artifact->getId();
+
+            if (! isset($semantics[$artifact_id])
+                || ! isset($semantics[$artifact_id][Tracker_Semantic_Status::NAME])
+                || $semantics[$artifact_id][Tracker_Semantic_Status::NAME] != AgileDashboard_BacklogItemDao::STATUS_OPEN
+            ) {
+                continue;
+            }
+
+            $artifact->setTitle($semantics[$artifact_id][Tracker_Semantic_Title::NAME]);
+
+            $backlog_item = $this->backlog_item_builder->getItem($artifact, $redirect_to_self);
+            $backlog_item->setStatus(Tracker_Semantic_Status::OPEN);
+            if (isset($parents[$artifact_id])) {
+                $backlog_item->setParent($parents[$artifact_id]);
+            }
+
+            $this->setInitialEffort($backlog_item, $semantics[$artifact_id]);
+
+            $collection->push($backlog_item);
+        }
+        $collection->setTotalAvaialableSize($item_collection->getTotalAvaialableSize());
+
+        return $collection;
     }
 
     public function getInconsistentCollection(
@@ -168,19 +200,17 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
 
         $id = $milestone->getArtifactId();
 
-        $this->all_collection[$id]            = $this->backlog_item_builder->getCollection();
-        $this->todo_collection[$id]           = $this->backlog_item_builder->getCollection();
-        $this->done_collection[$id]           = $this->backlog_item_builder->getCollection();
-        $this->unplanned_open_collection[$id] = $this->backlog_item_builder->getCollection();
-        $this->inconsistent_collection[$id]   = $this->backlog_item_builder->getCollection();
+        $this->all_collection[$id]          = $this->backlog_item_builder->getCollection();
+        $this->todo_collection[$id]         = $this->backlog_item_builder->getCollection();
+        $this->done_collection[$id]         = $this->backlog_item_builder->getCollection();
+        $this->inconsistent_collection[$id] = $this->backlog_item_builder->getCollection();
         $artifacts            = array();
         $backlog_item_ids     = array();
 
-        foreach ($backlog_strategy->getArtifacts($user) as $artifact) {
-            if ($artifact->userCanView($user)) {
-                $artifacts[$artifact->getId()] = $artifact;
-                $backlog_item_ids[] = $artifact->getId();
-            }
+        $items_collection = $backlog_strategy->getArtifacts($user);
+        foreach ($items_collection as $artifact) {
+            $artifacts[$artifact->getId()] = $artifact;
+            $backlog_item_ids[] = $artifact->getId();
         }
 
         $parents   = $this->getParentArtifacts($milestone, $user, $backlog_item_ids);
@@ -193,10 +223,11 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
                 $artifact,
                 $parents,
                 $semantics,
-                $planned,
                 $redirect_to_self
             );
         }
+
+        $this->all_collection[$id]->setTotalAvaialableSize($items_collection->getTotalAvaialableSize());
 
         $this->initInconsistentItems($user, $milestone, $redirect_to_self, $planned);
     }
@@ -219,9 +250,17 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
     }
 
     private function setParentItemName(Planning_Milestone $milestone, $name) {
-        $this->todo_collection[$milestone->getArtifactId()]->setParentItemName($name);
-        $this->done_collection[$milestone->getArtifactId()]->setParentItemName($name);
-        $this->unplanned_open_collection[$milestone->getArtifactId()]->setParentItemName($name);
+        if (! $milestone->getArtifactId() ) {
+            return;
+        }
+
+        if (isset($this->todo_collection[$milestone->getArtifactId()])) {
+            $this->todo_collection[$milestone->getArtifactId()]->setParentItemName($name);
+        }
+
+        if (isset($this->done_collection[$milestone->getArtifactId()])) {
+            $this->done_collection[$milestone->getArtifactId()]->setParentItemName($name);
+        }
     }
 
     private function getParentTracker(array $artifacts) {
@@ -346,7 +385,6 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
         Tracker_Artifact $artifact,
         array $parents,
         array $semantics,
-        array $planned,
         $redirect_to_self
     ) {
         $artifact_id = $artifact->getId();
@@ -362,12 +400,12 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
             $backlog_item->setParent($parents[$artifact_id]);
         }
 
-        $this->pushItemInOpenCollections($milestone, $artifact, $semantics, $planned, $backlog_item);
+        $this->pushItemInOpenCollections($milestone, $artifact, $semantics, $backlog_item);
         $this->pushItemInDoneCollection($milestone, $semantics, $artifact_id, $backlog_item);
         $this->all_collection[$milestone->getArtifactId()]->push($backlog_item);
     }
 
-    private function pushItemInOpenCollections(Planning_Milestone $milestone, Tracker_Artifact $artifact, array $semantics, array $planned, AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item) {
+    private function pushItemInOpenCollections(Planning_Milestone $milestone, Tracker_Artifact $artifact, array $semantics, AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item) {
         $artifact_id = $artifact->getId();
 
         if ($semantics[$artifact_id][Tracker_Semantic_Status::NAME] == AgileDashboard_BacklogItemDao::STATUS_OPEN) {
@@ -375,10 +413,6 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
 
             $this->setInitialEffort($backlog_item, $semantics[$artifact_id]);
             $this->todo_collection[$milestone->getArtifactId()]->push($backlog_item);
-
-            if (! in_array($artifact_id, $planned)) {
-                $this->unplanned_open_collection[$milestone->getArtifactId()]->push($backlog_item);
-            }
         }
     }
 
@@ -392,13 +426,17 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
     }
 
     private function getPlannedArtifactIds(PFUser $user, Planning_Milestone $milestone) {
-        $sub_milestones = $this->milestone_factory->getSubMilestones($user, $milestone);
-        $milestones_ids = array_map(array($this, 'extractArtifactId'), $sub_milestones);
-        if (! $milestones_ids) {
+        $sub_milestone_ids = $this->getSubmilestoneIds($user, $milestone);
+        if (! $sub_milestone_ids) {
             return array();
         }
 
-        return $this->dao->getPlannedItemIds($milestones_ids);
+        return $this->dao->getPlannedItemIds($sub_milestone_ids);
+    }
+
+    private function getSubmilestoneIds(PFUser $user, Planning_Milestone $milestone) {
+        $sub_milestones = $this->milestone_factory->getSubMilestones($user, $milestone);
+        return array_map(array($this, 'extractArtifactId'), $sub_milestones);
     }
 
     private function extractArtifactId(Planning_Milestone $milestone) {

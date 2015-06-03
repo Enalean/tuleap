@@ -33,26 +33,71 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
     /** @var Tracker[] */
     private $descendant_trackers;
 
-    public function __construct($milestone_backlog_artifacts, array $item_names, array $descendant_trackers, AgileDashboard_BacklogItemDao $dao) {
-        parent::__construct($milestone_backlog_artifacts, $item_names);
-        $this->dao = $dao;
-        $this->descendant_trackers = $descendant_trackers;
+    private $limit;
+
+    private $offset;
+
+    private $milestone;
+
+    private $content_size = 0;
+
+    private $backlog_size = 0;
+
+    /** @var Tracker[] */
+    private $backlogitem_trackers;
+
+    /** @var AgileDashboard_Milestone_Backlog_DescendantItemsFinder */
+    private $items_finder;
+
+    public function __construct(
+        Tracker_ArtifactFactory $artifact_factory,
+        Planning_Milestone $milestone,
+        array $item_names,
+        array $descendant_trackers,
+        AgileDashboard_BacklogItemDao $item_dao,
+        $limit  = null,
+        $offset = null
+    ) {
+        $this->milestone            = $milestone;
+        $this->backlogitem_trackers = $item_names;
+        $this->dao                  = $item_dao;
+        $this->descendant_trackers  = $descendant_trackers;
+        $this->limit                = $limit;
+        $this->offset               = $offset;
+
+        $this->items_finder = new AgileDashboard_Milestone_Backlog_DescendantItemsFinder(
+            $item_dao,
+            $artifact_factory->getDao(),
+            $artifact_factory,
+            $milestone,
+            $this->getDescendantTrackerIds()
+        );
     }
 
     public function getDescendantTrackers() {
         return $this->descendant_trackers;
     }
 
-    /** @return Tracker_Artifact[] */
-    public function getArtifacts(PFUser $user) {
-        $artifact_factory = Tracker_ArtifactFactory::instance();
-        $artifacts_finder = new AgileDashboard_Milestone_Backlog_ArtifactsFinder(
-            $artifact_factory,
-            $this->milestone_backlog_artifacts,
-            $this->descendant_trackers
-        );
+    public function getDescendantTrackerIds() {
+        $ids = array();
+        foreach ($this->descendant_trackers as $tracker) {
+            $ids[] = $tracker->getId();
+        }
 
-        return $artifacts_finder->getArtifacts($user);
+        return $ids;
+    }
+
+    public function getTotalContentSize() {
+        return $this->content_size;
+    }
+
+    public function getTotalBacklogSize() {
+        return $this->backlog_size;
+    }
+
+    /** @return Tracker[] */
+    public function getItemTrackers() {
+        return $this->backlogitem_trackers;
     }
 
     public function getBacklogItemName() {
@@ -63,18 +108,6 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
         }
 
         return implode(', ', $descendant_trackers_names);
-    }
-
-    private function getBacklogParentElements(PFUser $user, $redirect_to_self) {
-        $create_new = array();
-        foreach ($this->milestone_backlog_artifacts as $artifact) {
-            /* @var Tracker_Artifact $artifact */
-            $create_new[] = new AgileDashboard_Milestone_Pane_Content_ContentNewPresenter(
-                $artifact->getTitle(),
-                $artifact->getSubmitNewArtifactLinkedToMeUri($this->getDescendantTrackers()).'&'.$redirect_to_self
-            );
-        }
-        return $create_new;
     }
 
     public function getMilestoneBacklogArtifactsTracker() {
@@ -155,7 +188,42 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
                 "&action=solve-inconsistencies".
                 "&".$redirect_to_self;
     }
+
+    /** @return AgileDashboard_Milestone_Backlog_DescendantItemsCollection */
+    public function getArtifacts(PFUser $user) {
+        if ($this->milestone instanceof Planning_VirtualTopMilestone) {
+            if ($this->limit !== null || $this->offset !== null) {
+                $artifacts_collection = $this->items_finder->getAllTopMilestoneContentItemsWithLimitAndOffset($user, $this->limit, $this->offset);
+            } else {
+                $artifacts_collection = $this->items_finder->getAllTopMilestoneContentItems($user);
+            }
+        } else {
+            if ($this->limit !== null || $this->offset !== null) {
+                $artifacts_collection = $this->items_finder->getAllMilestoneContentItemsWithLimitAndOffset($user, $this->limit, $this->offset);
+            } else {
+                $artifacts_collection = $this->items_finder->getAllUIMilestoneBacklogItems($user);
+            }
+        }
+
+        return $artifacts_collection;
+    }
+
+    /** @return AgileDashboard_Milestone_Backlog_DescendantItemsCollection */
+    public function getOpenUnplannedArtifacts(PFUser $user, $sub_milestone_ids) {
+        if ($this->milestone instanceof Planning_VirtualTopMilestone) {
+            if ($this->limit !== null || $this->offset !== null) {
+                $artifacts_collection = $this->items_finder->getTopMilestoneOpenUnplannedBacklogItemsWithLimitAndOffset($user, $this->limit, $this->offset);
+            } else {
+                $artifacts_collection = $this->items_finder->getAllTopMilestoneOpenUnplannedBacklogItems($user, $sub_milestone_ids);
+            }
+        } else {
+            if ($this->limit !== null || $this->offset !== null) {
+                $artifacts_collection = $this->items_finder->getMilestoneOpenUnplannedBacklogItemsWithLimitAndOffset($user, $sub_milestone_ids, $this->limit, $this->offset);
+            } else {
+                $artifacts_collection = $this->items_finder->getAllMilestoneOpenUnplannedBacklogItems($user, $sub_milestone_ids);
+            }
+        }
+
+        return $artifacts_collection;
+    }
 }
-
-
-?>

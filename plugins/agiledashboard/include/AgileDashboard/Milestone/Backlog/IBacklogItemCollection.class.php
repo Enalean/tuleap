@@ -31,4 +31,8 @@ interface AgileDashboard_Milestone_Backlog_IBacklogItemCollection {
     function push(AgileDashboard_Milestone_Backlog_IBacklogItem $item);
 
     function containsId($id);
+
+    public function getTotalAvaialableSize();
+
+    public function setTotalAvaialableSize($size);
 }

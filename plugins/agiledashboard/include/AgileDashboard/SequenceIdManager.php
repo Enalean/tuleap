@@ -83,7 +83,7 @@ class AgileDashboard_SequenceIdManager {
         }
     }
 
-    private function storeBacklogArtifacts($milestone_id, array $backlog_artifacts) {
+    private function storeBacklogArtifacts($milestone_id,AgileDashboard_Milestone_Backlog_DescendantItemsCollection $backlog_artifacts) {
         $artifact_position = 1;
         foreach ($backlog_artifacts as $backlog_artifact) {
             $this->backlog_item_ids[$milestone_id][$backlog_artifact->getId()] = $artifact_position;
