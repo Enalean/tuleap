@@ -162,9 +162,16 @@ extends WikiPlugin
                 $html->pushContent($this->error(fmt("invalid %s ignored",'color')));
                 $color = false;
             }
-            if (!empty($color)) $args .= " --style $color -c ".FindFile('themes')."/default/highlight-$color.css";
+
+            if (!empty($color)) {
+                if ($color == "emacs") {
+                    $color = "";
+                } else {
+                    $args .= " --style $color -c ".FindFile('themes')."/default/highlight-$color.css";
+                }
+            }
             if (!empty($style)) $args .= " -F $style";
-            $commandLine = HIGHLIGHT_EXE . "$args -q -X -f -S $syntax";
+            $commandLine = HIGHLIGHT_EXE . "$args -q -f -S $syntax";
             if (check_php_version(4,3,0))
                 $code = $this->newFilterThroughCmd($source, $commandLine);
             else 
