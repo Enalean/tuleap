@@ -42,7 +42,11 @@ class Git_Driver_Gerrit_UserFinder {
             return false;
         }
         foreach ($this->permissions_manager->getAuthorizedUgroups($repository->getId(), $permission_type) as $row) {
-            if ($row['ugroup_id'] == ProjectUGroup::REGISTERED || $row['ugroup_id'] == ProjectUGroup::ANONYMOUS) {
+            if (
+                $row['ugroup_id'] == ProjectUGroup::REGISTERED ||
+                $row['ugroup_id'] == ProjectUGroup::ANONYMOUS ||
+                $row['ugroup_id'] == ProjectUGroup::AUTHENTICATED
+            ) {
                 return true;
             }
         }
