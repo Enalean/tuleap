@@ -1,3 +1,9 @@
+Version 4.66 - Tuleap 8.3
+    * request #8092 On fresh centos6 install with git19, gerrit migration fails
+
+
+
+
 Version 4.65 - Tuleap 8.3
     * request #8110: MIRRORHOSTNAME.conf file are empty
 

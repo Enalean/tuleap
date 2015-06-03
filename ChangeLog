@@ -8,7 +8,7 @@ Version 8.3 (not released yet)
 	* story #8089: Mustachify SVN general settings
 
 	== Plugins ==
-	* git: 4.65
+	* git: 4.66
 	* ldap: 3.80
 	* agiledashboard: 1.202
 
