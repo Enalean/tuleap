@@ -84,9 +84,16 @@ msgstr "Basculer l'affichage du backlog"
 msgid "Toggle this column"
 msgstr "Basculer l'affichage de cette colonne"
 
+#: src/app/edit-kanban/edit-kanban.tpl.html
+msgid "Tracker used:"
+msgstr "Tracker utilisé :"
+
 #: src/app/kanban.tpl.html
 msgid "You have reached the work in progress limit for this column!"
 msgstr "Vous avez atteint la limite du nombre de carte de cette colonne !"
+
+#~ msgid "Used tracker:"
+#~ msgstr "Tracker utilisé :"
 
 #~ msgid "Archive is currently empty"
 #~ msgstr "L'archive est actuellement vide"

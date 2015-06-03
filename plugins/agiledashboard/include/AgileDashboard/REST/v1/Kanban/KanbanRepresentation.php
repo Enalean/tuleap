@@ -20,8 +20,10 @@
 namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 
 use Tuleap\REST\JsonCast;
+use Tuleap\Tracker\REST\TrackerReference;
 use AgileDashboard_Kanban;
 use AgileDashboard_KanbanColumnFactory;
+use TrackerFactory;
 
 class KanbanRepresentation {
 
@@ -35,9 +37,9 @@ class KanbanRepresentation {
     public $id;
 
     /**
-     * @var int
+     * @var \Tuleap\Tracker\REST\TrackerReference
      */
-    public $tracker_id;
+    public $tracker;
 
     /**
      * @var int
@@ -66,6 +68,9 @@ class KanbanRepresentation {
         $this->label      = $kanban->getName();
         $this->columns    = array();
 
+        $this->tracker = new TrackerReference();
+        $this->tracker->build($this->getTracker($kanban));
+
         $this->setColumns($kanban, $column_factory, $user_can_add_in_place);
 
         $this->resources = array(
@@ -87,5 +92,9 @@ class KanbanRepresentation {
 
             $this->columns[] = $column_representation;
         }
+    }
+
+    private function getTracker(AgileDashboard_Kanban $kanban) {
+        return TrackerFactory::instance()->getTrackerById($kanban->getTrackerId());
     }
 }
