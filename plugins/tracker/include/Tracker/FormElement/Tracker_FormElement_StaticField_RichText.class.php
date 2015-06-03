@@ -113,6 +113,10 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
     public static function getFactoryIconCreate() {
         return $GLOBALS['HTML']->getImagePath('ic/edit-drop-cap--plus.png');
     }
+
+    public function getDefaultValue() {
+        return $this->getRichText();
+    }
     
 }
 

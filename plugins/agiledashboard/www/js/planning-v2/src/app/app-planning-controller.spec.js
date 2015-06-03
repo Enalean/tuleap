@@ -15,7 +15,7 @@ describe("PlanningCtrl", function() {
             ]);
             _.invoke(BacklogItemService, "andReturn", $q.defer().promise);
 
-            ProjectService  = jasmine.createSpyObj("ProjectService", [
+            ProjectService = jasmine.createSpyObj("ProjectService", [
                 "getProjectBacklog",
                 "removeAddToBacklog",
                 "removeAddReorderToBacklog"
@@ -42,6 +42,9 @@ describe("PlanningCtrl", function() {
             ModalService = jasmine.createSpyObj("ModalService", [
                 "show"
             ]);
+            ModalService.show.andReturn({
+                opened: $q.defer().promise
+            });
 
             PlanningCtrl = $controller('PlanningCtrl', {
                 $scope: $scope,

@@ -10,15 +10,16 @@ function ModalModelFactory() {
     /**
      * Create the modal's model from a tracker's structure
      * @param  {TrackerRepresentation} structure The structure that is returned from the REST route
-     * @return {array}                           An array of objects { field_id, value|bind_value_ids}
+     * @return Object                            A map of objects { field_id, value|bind_value_ids} indexed by field_id
      */
     function createFromStructure(structure) {
-        var values = [];
+        var values = {};
 
         for(var field, i = 0; field = structure.fields[i]; i++) {
             var value_obj = {
                 field_id: field.field_id
             };
+
             switch (field.type) {
                 case "sb":
                 case "msb":
@@ -58,8 +59,10 @@ function ModalModelFactory() {
                     // Do nothing
                     break;
             }
-            values.push(value_obj);
+
+            values[field.field_id] = value_obj;
         }
+
         return values;
     }
 

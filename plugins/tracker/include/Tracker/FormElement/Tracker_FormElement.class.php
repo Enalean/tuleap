@@ -538,7 +538,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     public function storeProperties($properties) {
         $success = true;
         $dao = $this->getDao();
-        
+
         if ($dao && ($success = $dao->save($this->id, $properties))) {
             $this->cache_specific_properties = null; //force reload
         }
@@ -1195,8 +1195,16 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         return false;
     }
 
+
     public function isCompatibleWithSoap() {
         return true;
+    }
+
+    /**
+     * Return underlying content. Should be overwritten in container fields
+     */
+    public function getRESTContent() {
+        return null;
     }
 }
 ?>

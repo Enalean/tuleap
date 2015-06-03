@@ -8,6 +8,7 @@ describe("ModalInstanceCtrl", function() {
             $q = _$q_;
             ModalTuleapFactory = jasmine.createSpyObj("ModalTuleapFactory", [
                 "getTrackerStructure",
+                "reorderFieldsInGoodOrder",
                 "getArtifactsTitles",
                 "createArtifact"
             ]);
@@ -28,6 +29,7 @@ describe("ModalInstanceCtrl", function() {
             $controller = _$controller_;
             controller_params = {
                 $modalInstance: $modalInstance,
+                modal_model: {},
                 ModalTuleapFactory: ModalTuleapFactory,
                 ModalModelFactory: ModalModelFactory,
                 ModalValidateFactory: ModalValidateFactory,
@@ -36,64 +38,10 @@ describe("ModalInstanceCtrl", function() {
         });
     });
 
-    describe("activate() -", function() {
-        it("Given a tracker id, when the controller is created, then the tracker's structure will be retrieved and the fields' initial values will be set in the scope", function() {
-            var deferred = $q.defer();
-            var tracker_structure = {
-                id: 28,
-                parent: null
-            };
-            var initial_values = [
-                { field_id: 744, value: null },
-                { field_id: 585, bind_value_ids: [100] }
-            ];
-            ModalTuleapFactory.getTrackerStructure.andReturn(deferred.promise);
-            ModalModelFactory.createFromStructure.andReturn(initial_values);
-
-            controller_params.tracker_id = 35;
-            ModalInstanceCtrl = $controller('ModalInstanceCtrl', controller_params);
-            deferred.resolve(tracker_structure);
-            opened.resolve();
-            $scope.$apply();
-
-            expect(ModalTuleapFactory.getTrackerStructure).toHaveBeenCalledWith(35);
-            expect(ModalInstanceCtrl.structure).toEqual(tracker_structure);
-            expect(ModalModelFactory.createFromStructure).toHaveBeenCalledWith(tracker_structure);
-            expect(ModalInstanceCtrl.values).toEqual(initial_values);
-        });
-
-        it("Given a tracker that had a parent and given its id, when the controller is created, then the tracker's parent's structure will be retrieved and the parent artifacts list will be set in the scope", function() {
-            var first_deferred = $q.defer();
-            var second_deferred = $q.defer();
-            var tracker_structure = {
-                id: 5,
-                parent: {
-                    id: 79
-                }
-            };
-            var artifacts_list = [
-                { id: 75, title: "Bombinae" },
-                { id: 395, title: "vergerism" }
-            ];
-            ModalTuleapFactory.getTrackerStructure.andReturn(first_deferred.promise);
-            ModalTuleapFactory.getArtifactsTitles.andReturn(second_deferred.promise);
-
-            controller_params.tracker_id = 94;
-            ModalInstanceCtrl = $controller('ModalInstanceCtrl', controller_params);
-            first_deferred.resolve(tracker_structure);
-            second_deferred.resolve(artifacts_list);
-            opened.resolve();
-            $scope.$apply();
-
-            expect(ModalTuleapFactory.getArtifactsTitles).toHaveBeenCalledWith(79);
-            expect(ModalInstanceCtrl.parent_artifacts).toEqual(artifacts_list);
-        });
-    });
-
     describe("createArtifact() - Given a tracker id, field values and a callback function,", function() {
         var deferred;
         beforeEach(function() {
-            controller_params.tracker_id = 39;
+            controller_params.modal_model.tracker_id = 39;
             ModalInstanceCtrl = $controller('ModalInstanceCtrl', controller_params);
             deferred = $q.defer();
             ModalValidateFactory.validateArtifactFieldsValues.andCallFake(function (values) {

@@ -2,14 +2,18 @@ angular
     .module('modal')
     .controller('ModalInstanceCtrl', ModalInstanceCtrl);
 
-ModalInstanceCtrl.$inject = ['$modalInstance', 'tracker_id', 'displayItemCallback', 'ModalTuleapFactory', 'ModalModelFactory', 'ModalValidateFactory'];
+ModalInstanceCtrl.$inject = ['$modalInstance', 'modal_model', 'displayItemCallback', 'ModalTuleapFactory', 'ModalValidateFactory', 'ModalLoading'];
 
-function ModalInstanceCtrl($modalInstance, tracker_id, displayItemCallback, ModalTuleapFactory, ModalModelFactory, ModalValidateFactory) {
+function ModalInstanceCtrl($modalInstance, modal_model, displayItemCallback, ModalTuleapFactory, ModalValidateFactory, ModalLoading) {
     var self = this;
+
     _.extend(self, {
-        activate      : activate,
+        title         : modal_model.title,
+        structure     : modal_model.structure,
+        values        : modal_model.values,
         cancel        : $modalInstance.dismiss,
         createArtifact: createArtifact,
+        toggleFieldset: toggleFieldset,
         getError      : function() { return ModalTuleapFactory.error; },
         isLoading     : function() { return ModalTuleapFactory.is_loading; },
 
@@ -25,33 +29,23 @@ function ModalInstanceCtrl($modalInstance, tracker_id, displayItemCallback, Moda
             { id: "text", label:"Text" },
             { id: "html", label:"HTML" }
         ],
-        parent_artifacts: [],
-        values          : []
+        parent_artifacts: []
     });
-    activate();
+
+    $modalInstance.opened.then(function() {
+        ModalLoading.loading.is_loading = false;
+    });
 
     function createArtifact() {
         var validated_values = ModalValidateFactory.validateArtifactFieldsValues(self.values);
-        ModalTuleapFactory.createArtifact(tracker_id, validated_values).then(function(new_artifact) {
+
+        ModalTuleapFactory.createArtifact(modal_model.tracker_id, validated_values).then(function(new_artifact) {
             $modalInstance.close();
             displayItemCallback(new_artifact.id);
         });
     }
 
-    function activate() {
-        return $modalInstance.opened.then(function() {
-            return ModalTuleapFactory.getTrackerStructure(tracker_id);
-        }).then(function(data) {
-            self.structure = data;
-            self.values = ModalModelFactory.createFromStructure(data);
-
-            var parent_tracker_id;
-            if (self.structure.parent != null) {
-                parent_tracker_id = self.structure.parent.id;
-                ModalTuleapFactory.getArtifactsTitles(parent_tracker_id).then(function(data) {
-                    self.parent_artifacts = data;
-                });
-            }
-        });
+    function toggleFieldset(fieldset) {
+        fieldset.collapsed = ! fieldset.collapsed;
     }
 }
