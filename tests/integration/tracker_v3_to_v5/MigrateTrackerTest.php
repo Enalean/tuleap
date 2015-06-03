@@ -82,7 +82,7 @@ abstract class MigrateDefaultTrackersTest extends TuleapDbTestCase {
     }
 
     protected function convertBugTracker() {
-        $res = db_query('SELECT * FROM artifact_group_list WHERE item_name = "bug"');
+        $res = db_query('SELECT * FROM artifact_group_list WHERE item_name = "bug" AND group_id = 100');
         if (db_numrows($res) !== 1) {
             die('No Tracker v3 data. Migration impossible');
         }
@@ -102,7 +102,7 @@ abstract class MigrateDefaultTrackersTest extends TuleapDbTestCase {
     }
 
     protected function convertTaskTracker() {
-        $res = db_query('SELECT * FROM artifact_group_list WHERE item_name = "task"');
+        $res = db_query('SELECT * FROM artifact_group_list WHERE item_name = "task" AND group_id = 100');
         $row = db_fetch_array($res);
 
         $trackerv3_id = $row['group_artifact_id'];

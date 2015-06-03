@@ -19,7 +19,6 @@
  */
 
 require_once dirname(__FILE__).'/../lib/autoload.php';
-require_once dirname(__FILE__).'/../lib/autoload.php';
 
 /**
  * @group ArtifactFilesTest

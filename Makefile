@@ -13,6 +13,7 @@ ifeq ($(BUILD_ENV),ci)
 OUTPUT_DIR=$(WORKSPACE)
 SIMPLETEST_OPTIONS=-x
 REST_TESTS_OPTIONS=--log-junit $(OUTPUT_DIR)/rest_tests.xml
+SOAP_TESTS_OPTIONS=--log-junit $(OUTPUT_DIR)/soap_tests.xml
 PHPUNIT_TESTS_OPTIONS=--log-junit $(OUTPUT_DIR)/phpunit_tests.xml --coverage-html $(OUTPUT_DIR)/phpunit_coverage --coverage-clover $(OUTPUT_DIR)/phpunit_coverage/coverage.xml
 PHPUNIT_OPTIONS=
 TULEAP_LOCAL_INC=$(WORKSPACE)/etc/integration_tests.inc
@@ -20,6 +21,7 @@ COMPOSER=/usr/local/bin/composer.phar
 else
 SIMPLETEST_OPTIONS=
 REST_TESTS_OPTIONS=
+SOAP_TESTS_OPTIONS=
 PHPUNIT_TESTS_OPTIONS=
 PHPUNIT_OPTIONS=--color
 TULEAP_LOCAL_INC=/etc/codendi/conf/integration_tests.inc
@@ -79,6 +81,10 @@ composer_update:
 	cp tests/rest/bin/composer.json .
 	php $(COMPOSER) install
 
+soap_composer_update:
+	cp tests/soap/bin/composer.json .
+	php $(COMPOSER) install
+
 local_composer_install:
 	curl -k -sS https://getcomposer.org/installer | php
 
@@ -89,6 +95,13 @@ api_test_setup: local_composer_install composer_update
 api_test_bootstrap:
 	php tests/lib/rest/init_db.php
 	$(PHP) tests/lib/rest/init_data.php
+
+soap_test_bootstrap:
+	php tests/lib/soap/init_db.php
+	$(PHP) tests/lib/soap/init_data.php
+
+soap_test: composer_update soap_test_bootstrap
+	$(PHPUNIT) $(SOAP_TESTS_OPTIONS) tests/soap
 
 api_test: composer_update api_test_bootstrap
 	$(PHPUNIT) $(REST_TESTS_OPTIONS) tests/rest
@@ -102,6 +115,13 @@ ci_api_test_setup: composer_update
 	cp tests/rest/bin/dbtest.inc.dist $(WORKSPACE)/etc/dbtest.inc
 	mkdir -p /tmp/run
 	php tests/bin/generate-phpunit-testsuite.php /tmp/run $(OUTPUT_DIR)
+
+ci_soap_test_setup: soap_composer_update
+	mkdir -p $(WORKSPACE)/etc
+	cat tests/soap/bin/integration_tests.inc.dist | perl -pe "s%/usr/share/codendi%$(CURDIR)%" > $(TULEAP_LOCAL_INC)
+	cp tests/soap/bin/dbtest.inc.dist $(WORKSPACE)/etc/dbtest.inc
+	mkdir -p /tmp/run
+	php tests/bin/generate-phpunit-testsuite-soap.php /tmp/run $(OUTPUT_DIR)
 
 ci_api_test: ci_api_test_setup api_test
 
