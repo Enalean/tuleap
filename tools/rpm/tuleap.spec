@@ -49,6 +49,8 @@ Requires: ckeditor >= 4.3.2
 %if %{php_base} == php53
 # contains posix* functions
 Requires: %{php_base}-process
+# Password storage
+Requires: %{php_base}-password-compat
 %endif
 Requires: dejavu-lgc-fonts
 %if %{PKG_NAME} == codendi_st
@@ -178,7 +180,7 @@ Summary: REST component for Tuleap
 Group: Development/Tools
 Version: @@CORE_REST_VERSION@@
 Release: @@RELEASE@@%{?dist}
-Requires: %{PKG_NAME}, php53-restler >= 3.0-0.7, php53-password-compat, restler-api-explorer
+Requires: %{PKG_NAME}, php53-restler >= 3.0-0.7, restler-api-explorer
 %description core-rest
 Provides REST api to Tuleap
 %endif

@@ -52,6 +52,7 @@ Requires: dejavu-lgc-sans-fonts, dejavu-lgc-sans-mono-fonts, dejavu-lgc-serif-fo
 Requires: jpgraph-%{PKG_NAME}
 Requires: htmlpurifier >= 4.5
 Requires: ckeditor >= 4.3.2
+Requires: %{php_base}-password-compat
 
 Requires: %{php_base}-pecl-apc
 Requires: curl
@@ -73,7 +74,7 @@ Requires: shared-mime-info
 # Documentation
 Requires: tuleap-documentation
 # Rest API
-Requires: %{php_base}-restler >= 3.0-0.7, %{php_base}-password-compat, restler-api-explorer
+Requires: %{php_base}-restler >= 3.0-0.7, restler-api-explorer
 # SELinux policy tools
 Requires(post): policycoreutils-python
 

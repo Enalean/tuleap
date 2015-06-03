@@ -502,3 +502,6 @@ $sys_cvs_convert_cp1252_to_utf8 = 0;
 // Can query REST API without using HTTPS
 // /!\ This is unsafe unless you have something else (reverse-proxy) providing the SSL Layer between you and the server /!\
 $sys_rest_api_over_http = 0;
+
+// Continue to store password hashed with MD5 for legacy purposes
+$sys_keep_md5_hashed_password = true;

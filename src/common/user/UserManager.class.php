@@ -435,10 +435,12 @@ class UserManager {
     function login($name, $pwd, $allowpending = false) {
         try {
             $password_expiration_checker = new User_PasswordExpirationChecker();
+            $password_handler            = PasswordHandlerFactory::getPasswordHandler();
             $login_manager = new User_LoginManager(
                 EventManager::instance(),
                 $this,
-                $password_expiration_checker
+                $password_expiration_checker,
+                $password_handler
             );
             $status_manager              = new User_UserStatusManager();
 
@@ -717,10 +719,15 @@ class UserManager {
             $old_user = $this->getUserByIdWithoutCache($user->getId());
             $userRow = $user->toRow();
             if ($user->getPassword() != '') {
-                if (md5($user->getPassword()) != $user->getUserPw()) {
+                $password_handler = PasswordHandlerFactory::getPasswordHandler();
+                if (!$password_handler->verifyHashPassword($user->getPassword(), $user->getUserPw()) ||
+                        $password_handler->isPasswordNeedRehash($user->getUserPw())) {
                     // Update password
-                    $userRow['password'] = $user->getPassword();
+                    $userRow['clear_password'] = $user->getPassword();
                 }
+            }
+            if ($user->getLegacyUserPw() !== '' && !ForgeConfig::get('sys_keep_md5_hashed_password')) {
+                $userRow['user_pw'] = '';
             }
             $result = $this->getDao()->updateByRow($userRow);
             if ($result) {

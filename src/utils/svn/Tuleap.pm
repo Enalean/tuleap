@@ -1,19 +1,20 @@
 #!/usr/bin/perl
 ##
+## Copyright (c) Enalean, 2015. All Rights Reserved.
 ## Copyright (c) Xerox Corporation, Codendi Team, 2001-2010. All rights reserved
 ##
-## Codendi is free software; you can redistribute it and/or modify
+## Tuleap is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
 ## the Free Software Foundation; either version 2 of the License, or
 ## (at your option) any later version.
 ##
-## Codendi is distributed in the hope that it will be useful,
+## Tuleap is distributed in the hope that it will be useful,
 ## but WITHOUT ANY WARRANTY; without even the implied warranty of
 ## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ## GNU General Public License for more details.
 ##
 ## You should have received a copy of the GNU General Public License
-## along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+## along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 ##
 
 ## This script has been written against the Redmine 
@@ -25,7 +26,6 @@ use strict;
 use warnings FATAL => 'all', NONFATAL => 'redefine';
 
 use DBI;
-use Digest::MD5;
 
 use Apache2::Module;
 use Apache2::Access;
@@ -75,7 +75,7 @@ my @directives = (
 sub TuleapDSN {
   my ($self, $parms, $arg) = @_;
   $self->{TuleapDSN} = $arg;
-  my $query = "SELECT user_name  FROM user, user_group WHERE (user.status='A' or (user.status='R' AND user_group.user_id=user.user_id and user_group.group_id=?)) AND user_name=? AND user_pw=?";
+  my $query = "SELECT unix_pw FROM user, user_group WHERE (user.status='A' or (user.status='R' AND user_group.user_id=user.user_id and user_group.group_id=?)) AND user_name=?";
 
   $self->{TuleapQuery} = trim($query);
 }
@@ -183,39 +183,42 @@ sub is_allowed {
 
 	my $project_id  = get_project_identifier($r);
 
-	my $pass_digest = Digest::MD5::md5_hex($tuleap_pass);
-
 	my $cfg = Apache2::Module::get_config(__PACKAGE__, $r->server, $r->per_dir_config);
 	my $usrprojpass;
 	if ($cfg->{TuleapCacheCredsMax}) {
 		$usrprojpass = $cfg->{TuleapCacheCreds}->get($tuleap_user.":".$project_id);
-		return 1 if (defined $usrprojpass and ($usrprojpass eq $pass_digest));
+		return 1 if (defined $usrprojpass and (crypt($tuleap_pass, $usrprojpass) eq $usrprojpass));
 	}
 
 	my $query = $cfg->{TuleapQuery};
-	my $dbh         = connect_database($r);
-	my $sth = $dbh->prepare($query);
-	$sth->execute($project_id, $tuleap_user, $pass_digest);
+	my $dbh   = connect_database($r);
+	my $sth   = $dbh->prepare($query);
+	$sth->execute($project_id, $tuleap_user);
 
-        my $ret = $sth->fetchrow_array; 
+	my $ret;
 
-	if ($cfg->{TuleapCacheCredsMax} and $ret) {
-		if (defined $usrprojpass) {
-			$cfg->{TuleapCacheCreds}->set($tuleap_user.":".$project_id, $pass_digest);
-		} else {
-			if ($cfg->{TuleapCacheCredsCount} < $cfg->{TuleapCacheCredsMax}) {
-				$cfg->{TuleapCacheCreds}->set($tuleap_user.":".$project_id, $pass_digest);
-				$cfg->{TuleapCacheCredsCount}++;
-			} else {
-				$cfg->{TuleapCacheCreds}->clear();
-				$cfg->{TuleapCacheCredsCount} = 0;
-			}
+	while (my ($hashed_password_res) = $sth->fetchrow_array) {
+		if (crypt($tuleap_pass, $hashed_password_res) eq $hashed_password_res) {
+			$ret         = 1;
+			$usrprojpass = $hashed_password_res;
 		}
 	}
-        $sth->finish();
-        undef $sth;
-        $dbh->disconnect();
-        undef $dbh;
+
+	$sth->finish();
+	undef $sth;
+	$dbh->disconnect();
+	undef $dbh;
+
+	if ($cfg->{TuleapCacheCredsMax} and $ret) {
+		if ($cfg->{TuleapCacheCredsCount} < $cfg->{TuleapCacheCredsMax}) {
+			$cfg->{TuleapCacheCreds}->set($tuleap_user.":".$project_id, $usrprojpass);
+			$cfg->{TuleapCacheCredsCount}++;
+		} else {
+			$cfg->{TuleapCacheCreds}->clear();
+			$cfg->{TuleapCacheCredsCount} = 0;
+		}
+	}
+
 	$ret;
 }
 

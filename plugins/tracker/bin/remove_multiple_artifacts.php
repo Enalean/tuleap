@@ -54,7 +54,8 @@ if (!isset($password)) {
 $login_manager = new User_LoginManager(
     EventManager::instance(),
     UserManager::instance(),
-    new User_PasswordExpirationChecker()
+    new User_PasswordExpirationChecker(),
+    PasswordHandlerFactory::getPasswordHandler()
 );
 
 try {

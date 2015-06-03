@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Codendi.
@@ -22,6 +23,14 @@
  *  Data Access Object for User 
  */
 class UserDao extends DataAccessObject {
+    /** @var PasswordHandler */
+    private $password_handler;
+
+    public function __construct($da = null) {
+        parent::__construct($da);
+        $this->password_handler = PasswordHandlerFactory::getPasswordHandler();
+    }
+
     /**
     * Gets all tables of the db
     * @return DataAccessResult
@@ -122,11 +131,18 @@ class UserDao extends DataAccessObject {
             $values[]  = $email;
         }
         if ($user_pw !== null) {
+            $columns[] = 'password';
+            $values[]  = $this->password_handler->computeHashPassword($user_pw);
+
             $columns[] = 'user_pw';
-            $values[]  = md5($user_pw);
+            if (ForgeConfig::get('sys_keep_md5_hashed_password')) {
+                $values[] = md5($user_pw);
+            } else {
+                $values[] = '';
+            }
 
             $columns[] = 'unix_pw';
-            $values[]  = $this->_generateUnixPwd($user_pw);
+            $values[]  = $this->password_handler->computeUnixPassword($user_pw);
         }
         if ($realname !== null) {
             $columns[] = 'realname';
@@ -234,12 +250,16 @@ class UserDao extends DataAccessObject {
 
     function updateByRow(array $user) {
         $stmt = array();
-        if (isset($user['password'])) {
-            $stmt[] = 'user_pw='.$this->da->quoteSmart(md5($user['password']));
-            $stmt[] = 'unix_pw='.$this->da->quoteSmart($this->_generateUnixPwd($user['password']));
-            //$stmt[] = 'windows_pw='.$this->da->quoteSmart(account_genwinpw($user['password']));
+        if (isset($user['clear_password'])) {
+            $stmt[] = 'password='.$this->da->quoteSmart($this->password_handler->computeHashPassword($user['clear_password']));
+            if(ForgeConfig::get('sys_keep_md5_hashed_password')) {
+                $stmt[] = 'user_pw='.$this->da->quoteSmart(md5($user['clear_password']));
+            } else {
+                $stmt[] = 'user_pw=""';
+            }
+            $stmt[] = 'unix_pw='.$this->da->quoteSmart($this->password_handler->computeUnixPassword($user['clear_password']));
             $stmt[] = 'last_pwd_update='.$_SERVER['REQUEST_TIME'];
-            unset($user['password']);
+            unset($user['clear_password']);
         }
         $dar = $this->searchByUserId($user['user_id']);
         if($dar && !$dar->isError()) {
@@ -255,56 +275,6 @@ class UserDao extends DataAccessObject {
             }
         }
         return false;
-    }
-
-    /**
-     * Generate a random number between 46 and 122
-     * 
-     * @return Integer
-     */
-    protected function _ranNum(){
-        mt_srand((double)microtime()*1000000);
-        $num = mt_rand(46,122);
-        return $num;
-    }
-
-    /**
-     * Generate a random alphanum character
-     * 
-     * @return String
-     */
-    protected function _genChr(){
-        do {
-            $num = $this->_ranNum();
-        } while ( ( $num > 57 && $num < 65 ) || ( $num > 90 && $num < 97 ) );
-        $char = chr($num);
-        return $char;
-    }
-
-    /**
-     * Random salt generator
-     * 
-     * @return String
-     */ 
-    protected function _genSalt(){
-        $a = $this->_genChr();
-        $b = $this->_genChr();
-        // (LJ) Adding $1$ at the beginning of the salt
-        // forces the MD5 encryption so the system has to
-        // have MD5 pam module installed for Unix passwd file.
-        $salt = "$1$" . "$a$b";
-        return $salt;
-    }
-
-    /**
-     * Generate Unix shadow password
-     *
-     * @param String $plainpw Clear password
-     * 
-     * @return String
-     */
-    protected function _generateUnixPwd($plainpw) {
-        return crypt($plainpw, $this->_genSalt());
     }
 
     /**

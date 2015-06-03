@@ -64,6 +64,7 @@ class MockEM4UserManager extends BaseMockEventManager {
  */
 
 class UserManagerTest extends UnitTestCase {
+    const PASSWORD      = 'pwd';
 
     function setUp() {
         $GLOBALS['Response'] = new MockResponse($this);
@@ -354,6 +355,7 @@ class UserManagerTest extends UnitTestCase {
         $user123          = mock('PFUser');
         $user_manager     = new UserManagerTestVersion($this);
         $em               = new MockEventManager($this);
+        $password_handler = PasswordHandlerFactory::getPasswordHandler();
 
         $user_manager->setReturnReference('_getEventManager', $em);
         $hash = 'valid_hash';
@@ -366,7 +368,7 @@ class UserManagerTest extends UnitTestCase {
 
         $user123->setReturnValue('getId', 123);
         $user123->setReturnValue('getUserName', 'user_123');
-        $user123->setReturnValue('getUserPw', md5('pwd'));
+        $user123->setReturnValue('getUserPw', $password_handler->computeHashPassword(self::PASSWORD));
         $user123->setReturnValue('getStatus', 'A');
         $user123->setReturnValue('isAnonymous', false);
         $user123->expectOnce('setSessionHash', array($hash));
@@ -389,7 +391,7 @@ class UserManagerTest extends UnitTestCase {
         $dao->expectNever('storeLoginFailure');
 
         $user_manager->setReturnReference('getDao', $dao);
-        $this->assertReference($user123, $user_manager->login('user_123', 'pwd', 0));
+        $this->assertReference($user123, $user_manager->login('user_123', self::PASSWORD, 0));
     }
 
     function testBadLogin() {
@@ -602,16 +604,14 @@ class UserManagerTest extends UnitTestCase {
     }
 
     function testUpdatePassword() {
-    	$password = "coco l'asticot";
-
     	$user = mock('PFUser');
         $user->setReturnValue('isAnonymous', false);
         $user->setReturnValue('toRow', array());
-        $user->setReturnValue('getPassword', $password);
-        $user->setReturnValue('getUserPw', md5("j'ai faim"));
+        $user->setReturnValue('getPassword', self::PASSWORD);
+        $user->setReturnValue('getUserPw', 'mustfail');
 
         $dao = new MockUserDao($this);
-        $dao->expect('updateByRow', array(array('password' => $password)));
+        $dao->expect('updateByRow', array(array('clear_password' => self::PASSWORD, 'user_pw' => '')));
 
         $um = new UserManagerTestVersion($this);
         $um->setReturnReference('getDao', $dao);
@@ -619,16 +619,15 @@ class UserManagerTest extends UnitTestCase {
     }
 
     function testUpdateNoPasswordChange() {
-        $password = "coco l'asticot";
-
-        $user = mock('PFUser');
+        $password_handler = PasswordHandlerFactory::getPasswordHandler();
+        $user             = mock('PFUser');
         $user->setReturnValue('isAnonymous', false);
         $user->setReturnValue('toRow', array());
-        $user->setReturnValue('getPassword', $password);
-        $user->setReturnValue('getUserPw', md5($password));
+        $user->setReturnValue('getPassword', self::PASSWORD);
+        $user->setReturnValue('getUserPw', $password_handler->computeHashPassword(self::PASSWORD));
 
         $dao = new MockUserDao($this);
-        $dao->expect('updateByRow', array(array()));
+        $dao->expect('updateByRow', array(array('user_pw' => '')));
 
         $um = new UserManagerTestVersion($this);
         $um->setReturnReference('getDao', $dao);

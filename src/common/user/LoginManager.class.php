@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2015. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,10 +28,15 @@ class User_LoginManager {
     /** @var User_PasswordExpirationChecker */
     private $password_expiration_checker;
 
-    public function __construct(EventManager $event_manager, UserManager $user_manager, User_PasswordExpirationChecker $password_expiration_checker) {
-        $this->event_manager = $event_manager;
-        $this->user_manager  = $user_manager;
+    /** @var PasswordHandler */
+    private $password_handler;
+
+    public function __construct(EventManager $event_manager, UserManager $user_manager,
+                                    User_PasswordExpirationChecker $password_expiration_checker, PasswordHandler $password_handler) {
+        $this->event_manager               = $event_manager;
+        $this->user_manager                = $user_manager;
         $this->password_expiration_checker = $password_expiration_checker;
+        $this->password_handler            = $password_handler;
     }
 
     /**
@@ -81,27 +86,61 @@ class User_LoginManager {
             $user = $this->user_manager->getUserById($auth_user_id);
         } else {
             $user = $this->user_manager->getUserByUserName($name);
-            if ($user && $user->getUserPw() == md5($password)) {
-                $user->setPassword($password);
-                $auth_success = true;
-                $this->event_manager->processEvent(
-                    Event::SESSION_AFTER_LOGIN,
-                    array(
-                        'user'                => $user,
-                        'allow_codendi_login' => &$auth_success
-                    )
-                );
+            if(!is_null($user)) {
+                $auth_success = $this->verifyPassword($user, $password);
             }
         }
 
-        if ($auth_success) {
-            return $user;
-        } else {
-            if ($user) {
-                throw new User_InvalidPasswordWithUserException($user);
-            } else {
-                throw new User_InvalidPasswordException();
-            }
+        if(!$user) {
+            throw new User_InvalidPasswordException();
+        } else if(!$auth_success) {
+            throw new User_InvalidPasswordWithUserException($user);
         }
+
+        return $user;
+    }
+
+    private function verifyPassword(PFUser $user, $password) {
+        $is_auth_valid          = false;
+
+        $hashed_password        = $user->getUserPw();
+        $legacy_hashed_password = $user->getLegacyUserPw();
+
+        if ($this->isPasswordValid($password, $hashed_password) ||
+            $this->isLegacyPasswordValid($password, $legacy_hashed_password)) {
+
+            $user->setPassword($password);
+            if ($this->isPasswordUpdatingNeeded($hashed_password) ||
+                $this->isLegacyPasswordRemovalNeeded($legacy_hashed_password)) {
+                $this->user_manager->updateDb($user);
+            }
+
+            $is_auth_valid = true;
+            $this->event_manager->processEvent(
+                Event::SESSION_AFTER_LOGIN,
+                array(
+                    'user'                => $user,
+                    'allow_codendi_login' => &$is_auth_valid
+                )
+            );
+        }
+
+        return $is_auth_valid;
+    }
+
+    private function isPasswordValid($password, $hashed_password) {
+        return $this->password_handler->verifyHashPassword($password, $hashed_password);
+    }
+
+    private function isLegacyPasswordValid($password, $legacy_hashed_password) {
+        return $legacy_hashed_password === md5($password);
+    }
+
+    private function isPasswordUpdatingNeeded($hashed_password) {
+        return $this->password_handler->isPasswordNeedRehash($hashed_password);
+    }
+
+    private function isLegacyPasswordRemovalNeeded($legacy_hashed_password) {
+        return !empty($legacy_hashed_password) && !ForgeConfig::get('sys_keep_md5_hashed_password') ;
     }
 }

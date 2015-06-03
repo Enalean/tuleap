@@ -202,7 +202,8 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
         $this->user_id            = isset($row['user_id'])            ? $row['user_id']            : 0;
         $this->user_name          = isset($row['user_name'])          ? $row['user_name']          : null;
         $this->email              = isset($row['email'])              ? $row['email']              : null;
-        $this->user_pw            = isset($row['user_pw'])            ? $row['user_pw']            : null;
+        $this->user_pw            = isset($row['password'])           ? $row['password']           : null;
+        $this->user_pw_legacy     = isset($row['user_pw'])            ? $row['user_pw']            : null;
         $this->realname           = isset($row['realname'])           ? $row['realname']           : null;
         $this->register_purpose   = isset($row['register_purpose'])   ? $row['register_purpose']   : null;
         $this->status             = isset($row['status'])             ? $row['status']             : null;
@@ -254,7 +255,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
             'user_id'            => $this->user_id,
             'user_name'          => $this->user_name,
             'email'              => $this->email,
-            'user_pw'            => $this->user_pw,
+            'password'            => $this->user_pw,
             'realname'           => $this->realname,
             'register_purpose'   => $this->register_purpose,
             'status'             => $this->status,
@@ -737,13 +738,16 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
         return $this->language_id;
     }
     /**
-     * @return string md5 of user pwd
+     * @return hash of user pwd
      */
     function getUserPw() {
         return $this->user_pw;
     }
-    
-    
+
+    public function getLegacyUserPw() {
+        return $this->user_pw_legacy;
+    }
+
     /**
      * @return String User shell
      */
@@ -1092,7 +1096,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     }
 
     /**
-     * @param string md5 of user pwd
+     * @param hash of user pwd
      */
     function setUserPw($userPw) {
         $this->user_pw = $userPw;
