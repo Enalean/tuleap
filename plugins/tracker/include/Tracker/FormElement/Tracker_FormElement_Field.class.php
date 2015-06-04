@@ -1161,11 +1161,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * @return mixed | null if no values
      */
     public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
-        $value = $changeset->getValue($this);
-        if ($value) {
-            return $value->getRESTValue($user);
-        }
-        return null;
+        return $this->getFullRESTValue($user, $changeset);
     }
 
     /**

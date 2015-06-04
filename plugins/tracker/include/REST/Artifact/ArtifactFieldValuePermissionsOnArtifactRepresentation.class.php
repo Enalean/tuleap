@@ -38,9 +38,15 @@ class ArtifactFieldValuePermissionsOnArtifactRepresentation {
      */
     public $granted_groups = array();
 
-    public function build($id, $label, array $granted_groups) {
-        $this->field_id       = JsonCast::toInt($id);
-        $this->label          = $label;
-        $this->granted_groups = $granted_groups;
+    /**
+     * @var Tuleap\Project\REST\UserGroupRepresentation[]
+     */
+    public $granted_groups_details = array();
+
+    public function build($id, $label, array $granted_groups, array $granted_groups_details) {
+        $this->field_id               = JsonCast::toInt($id);
+        $this->label                  = $label;
+        $this->granted_groups         = $granted_groups;
+        $this->granted_groups_details = $granted_groups_details;
     }
 }

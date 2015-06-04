@@ -76,7 +76,7 @@ class Tracker_Artifact_ChangesetValue_Float extends Tracker_Artifact_ChangesetVa
     }
 
     public function getRESTValue(PFUser $user) {
-        return $this->getSimpleRESTRepresentation($this->getFloat());
+        return $this->getFullRESTValue($user);
     }
 
     public function getFullRESTValue(PFUser $user) {

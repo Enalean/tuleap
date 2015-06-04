@@ -92,11 +92,7 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
     }
 
     public function getRESTValue(PFUser $user) {
-        $date = null;
-        if ($this->getTimestamp()) {
-            $date = date('c', $this->getTimestamp());
-        }
-        return $this->getSimpleRESTRepresentation($date);
+        return $this->getFullRESTValue($user);
     }
 
 

@@ -56,14 +56,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
     }
 
     public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
-        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation';
-        $artifact_field_value_full_representation = new $classname_with_namespace;
-        $artifact_field_value_full_representation->build(
-            $this->getId(),
-            $this->getLabel(),
-            $this->getCrossReferenceListForREST($changeset)
-        );
-        return $artifact_field_value_full_representation;
+        return $this->getFullRESTValue($user, $changeset);
     }
 
     public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {

@@ -184,18 +184,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
     }
 
     public function getRESTValue(PFUser $user) {
-        $values = array();
-        foreach ($this->getFiles() as $file_info) {
-            $values[] = $file_info->getRESTValue();
-        }
-        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFileRepresentation';
-        $field_value_file_representation = new $classname_with_namespace;
-        $field_value_file_representation->build(
-            $this->field->getId(),
-            $this->field->getLabel(),
-            $values
-        );
-        return $field_value_file_representation;
+        return $this->getFullRESTValue($user);
     }
 
     public function getFullRESTValue(PFUser $user) {

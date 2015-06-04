@@ -262,16 +262,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
      * @return mixed | null if no values
      */
     public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
-        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation';
-
-        $artifact_field_value_representation = new $classname_with_namespace;
-        $artifact_field_value_representation->build(
-            $this->id,
-            $this->label,
-            $this->getArtifactRank($changeset->getArtifact()->getID())
-        );
-
-        return $artifact_field_value_representation;
+        return $this->getFullRESTValue($user, $changeset);
     }
 
     public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {

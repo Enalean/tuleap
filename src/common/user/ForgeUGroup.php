@@ -38,7 +38,7 @@ class User_ForgeUGroup implements User_UGroup {
 
     public function __construct($id, $name, $description) {
         $this->id          = $id;
-        $this->name        = $this->getUserGroupName($name);
+        $this->name        = self::getUserGroupDisplayName($name);
         $this->description = $description;
     }
 
@@ -54,7 +54,7 @@ class User_ForgeUGroup implements User_UGroup {
         return $this->name;
     }
 
-    private function getUserGroupName($name) {
+    static public function getUserGroupDisplayName($name) {
         switch ($name) {
             case self::NOBODY:
                 return $GLOBALS['Language']->getText('project_ugroup', 'ugroup_nobody');
@@ -77,7 +77,7 @@ class User_ForgeUGroup implements User_UGroup {
             case self::PROJECT_ADMINS:
                 return $GLOBALS['Language']->getText('project_ugroup', 'ugroup_project_admins');
             default :
-                return $name;
+                return util_translate_name_ugroup($name);
         }
     }
 

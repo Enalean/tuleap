@@ -43,4 +43,18 @@ class Tracker_Artifact_ChangesetValue_String extends Tracker_Artifact_ChangesetV
     protected function fetchDiffInFollowUp($formated_diff) {
         return '<div class="diff">'. $formated_diff .'</div>';
     }
+
+    protected function getFullRESTRepresentation($value) {
+        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation';
+
+        $artifact_field_value_full_representation = new $classname_with_namespace;
+        $artifact_field_value_full_representation->build(
+            $this->field->getId(),
+            Tracker_FormElementFactory::instance()->getType($this->field),
+            $this->field->getLabel(),
+            $value
+        );
+
+        return $artifact_field_value_full_representation;
+    }
 }
