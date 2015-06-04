@@ -107,6 +107,16 @@ class User_LoginManagerTest extends TuleapTestCase {
             $user
         );
     }
+
+    public function itAcceptsValidPassword() {
+        $user = aUser()->withPassword('password')->build();
+        $this->assertTrue($this->login_manager->verifyPassword($user, 'password'));
+    }
+
+    public function itDeniesInvalidPassword() {
+        $user = aUser()->withPassword('password')->build();
+        $this->assertFalse($this->login_manager->verifyPassword($user, 'invalid_password'));
+    }
 }
 
 class User_LoginManager_validateAndSetCurrentUserTest extends TuleapTestCase {

@@ -112,6 +112,13 @@ account_change_pw	title	Password Change
 account_change_pw	old_password	Old Password
 account_change_pw	new_password	Password
 account_change_pw	new_password2	Repeat password
+account_change_pw	user_not_found	Internal error: Cannot locate user in database.
+account_change_pw	incorrect_old_password	Old password is incorrect.
+account_change_pw	account_inactive	Account must be active to change password.
+account_change_pw	password_needed	You must supply a password.
+account_change_pw	password_not_match	Passwords do not match.
+account_change_pw	identical_password	Old and new passwords are identical.
+account_change_pw	internal_error_update	Internal error: Could not update password.
 #
 #-----------------------------------------------
 # Script: SF/www/account/change_realname.php

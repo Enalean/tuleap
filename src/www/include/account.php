@@ -1,5 +1,6 @@
 <?php
 //
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
@@ -17,14 +18,6 @@ function account_pwvalid($pw, &$errors) {
     $valid = $password_strategy->validate($pw);
     $errors = $password_strategy->errors;
     return $valid;
-}
-
-// Set user password (Unix, Web)
-function account_set_password($user_id,$password) {
-    $um   = UserManager::instance();
-    $user = $um->getUserById($user_id);
-    $user->setPassword($password);
-    return $um->updateDb($user);
 }
 
 // Add user to an existing project
