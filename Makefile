@@ -195,6 +195,8 @@ start-dns:
 start:
 	@echo "Start Tuleap Web + LDAP + DB"
 	@docker-compose up -d web
+	@echo -n "Your instance will be soon available: http://"
+	@grep VIRTUAL_HOST .env | cut -d= -f2
 	@echo "You might want to type 'make show-passwords' to see site default passwords"
 
 start-es:
