@@ -27,7 +27,7 @@ class MilestonesTest extends RestBase {
 
     protected function getResponse($request) {
         return $this->getResponseByToken(
-            $this->getTokenForUserName(TestDataBuilder::TEST_USER_1_NAME),
+            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
             $request
         );
     }
@@ -38,24 +38,24 @@ class MilestonesTest extends RestBase {
     }
 
     public function testOPTIONSMilestonesId() {
-        $response = $this->getResponse($this->client->options('milestones/'.TestDataBuilder::RELEASE_ARTIFACT_ID));
+        $response = $this->getResponse($this->client->options('milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID));
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGETResourcesMilestones() {
-        $response = $this->getResponse($this->client->get('milestones/'.TestDataBuilder::RELEASE_ARTIFACT_ID));
+        $response = $this->getResponse($this->client->get('milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID));
 
         $this->assertEquals(200, $response->getStatusCode());
 
         $milestone = $response->json();
         $this->assertEquals(
             array(
-                'uri'    => 'milestones/'.TestDataBuilder::RELEASE_ARTIFACT_ID.'/milestones',
+                'uri'    => 'milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID.'/milestones',
                 'accept' => array(
                     'trackers' => array(
                         array(
-                            'id'  => TestDataBuilder::SPRINTS_TRACKER_ID,
-                            'uri' => 'trackers/'.TestDataBuilder::SPRINTS_TRACKER_ID,
+                            'id'  => REST_TestDataBuilder::SPRINTS_TRACKER_ID,
+                            'uri' => 'trackers/'.REST_TestDataBuilder::SPRINTS_TRACKER_ID,
                             'label' => 'Sprints'
                         )
                     )
@@ -66,19 +66,19 @@ class MilestonesTest extends RestBase {
     }
 
     public function testGETResourcesBacklog() {
-        $response = $this->getResponse($this->client->get('milestones/'.TestDataBuilder::RELEASE_ARTIFACT_ID));
+        $response = $this->getResponse($this->client->get('milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID));
 
         $this->assertEquals(200, $response->getStatusCode());
 
         $milestone = $response->json();
         $this->assertEquals(
             array(
-                'uri'    => 'milestones/'.TestDataBuilder::RELEASE_ARTIFACT_ID.'/backlog',
+                'uri'    => 'milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID.'/backlog',
                 'accept' => array(
                     'trackers' => array(
                         array(
-                            'id'  => TestDataBuilder::USER_STORIES_TRACKER_ID,
-                            'uri' => 'trackers/'.TestDataBuilder::USER_STORIES_TRACKER_ID,
+                            'id'  => REST_TestDataBuilder::USER_STORIES_TRACKER_ID,
+                            'uri' => 'trackers/'.REST_TestDataBuilder::USER_STORIES_TRACKER_ID,
                             'label' => 'User Stories'
                         )
                     )
@@ -89,18 +89,18 @@ class MilestonesTest extends RestBase {
     }
 
     public function testGETResourcesContent() {
-        $response = $this->getResponse($this->client->get('milestones/'.TestDataBuilder::RELEASE_ARTIFACT_ID));
+        $response = $this->getResponse($this->client->get('milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID));
         $this->assertEquals(200, $response->getStatusCode());
 
         $milestone = $response->json();
         $this->assertEquals(
             array(
-                'uri'    => 'milestones/'.TestDataBuilder::RELEASE_ARTIFACT_ID.'/content',
+                'uri'    => 'milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID.'/content',
                 'accept' => array(
                     'trackers' => array(
                         array(
-                            'id'  => TestDataBuilder::EPICS_TRACKER_ID,
-                            'uri' => 'trackers/'.TestDataBuilder::EPICS_TRACKER_ID,
+                            'id'  => REST_TestDataBuilder::EPICS_TRACKER_ID,
+                            'uri' => 'trackers/'.REST_TestDataBuilder::EPICS_TRACKER_ID,
                             'label' => 'Epics'
                         )
                     )
@@ -111,7 +111,7 @@ class MilestonesTest extends RestBase {
     }
 
     public function testGETResourcesBurndownCardwallEmpty() {
-        $response = $this->getResponse($this->client->get('milestones/'.TestDataBuilder::RELEASE_ARTIFACT_ID));
+        $response = $this->getResponse($this->client->get('milestones/'.REST_TestDataBuilder::RELEASE_ARTIFACT_ID));
         $this->assertEquals(200, $response->getStatusCode());
 
         $milestone = $response->json();
@@ -124,26 +124,26 @@ class MilestonesTest extends RestBase {
     }
 
     public function testGETResourcesBurndown() {
-        $response = $this->getResponse($this->client->get('milestones/'.TestDataBuilder::SPRINT_ARTIFACT_ID));
+        $response = $this->getResponse($this->client->get('milestones/'.REST_TestDataBuilder::SPRINT_ARTIFACT_ID));
         $this->assertEquals(200, $response->getStatusCode());
 
         $milestone = $response->json();
         $this->assertEquals(
             array(
-                'uri'    => 'milestones/'.TestDataBuilder::SPRINT_ARTIFACT_ID.'/burndown',
+                'uri'    => 'milestones/'.REST_TestDataBuilder::SPRINT_ARTIFACT_ID.'/burndown',
             ),
             $milestone['resources']['burndown']
         );
     }
 
     public function testGETResourcesCardwall() {
-        $response = $this->getResponse($this->client->get('milestones/'.TestDataBuilder::SPRINT_ARTIFACT_ID));
+        $response = $this->getResponse($this->client->get('milestones/'.REST_TestDataBuilder::SPRINT_ARTIFACT_ID));
         $this->assertEquals(200, $response->getStatusCode());
 
         $milestone = $response->json();
         $this->assertEquals(
             array(
-                'uri'    => 'milestones/'.TestDataBuilder::SPRINT_ARTIFACT_ID.'/cardwall',
+                'uri'    => 'milestones/'.REST_TestDataBuilder::SPRINT_ARTIFACT_ID.'/cardwall',
             ),
             $milestone['resources']['cardwall']
         );

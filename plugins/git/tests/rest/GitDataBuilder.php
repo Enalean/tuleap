@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2015. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,7 @@
 
 require_once 'common/autoload.php';
 
-class GitDataBuilder extends TestDataBuilder {
+class GitDataBuilder extends REST_TestDataBuilder {
 
     const PROJECT_TEST_GIT_SHORTNAME = 'test-git';
     const PROJECT_TEST_GIT_ID        = 107;
@@ -48,11 +48,7 @@ class GitDataBuilder extends TestDataBuilder {
     }
 
     public function generateProject() {
-        $GLOBALS['svn_prefix'] = '/tmp';
-        $GLOBALS['cvs_prefix'] = '/tmp';
-        $GLOBALS['grpdir_prefix'] = '/tmp';
-        $GLOBALS['ftp_frs_dir_prefix'] = '/tmp';
-        $GLOBALS['ftp_anon_dir_prefix'] = '/tmp';
+        $this->setGlobalsForProjectCreation();
 
         $user_test_rest_1 = $this->user_manager->getUserByUserName(self::TEST_USER_1_NAME);
 
@@ -63,14 +59,11 @@ class GitDataBuilder extends TestDataBuilder {
             'Git repo',
             false,
             array($user_test_rest_1),
-            array($user_test_rest_1)
+            array($user_test_rest_1),
+            array()
         );
 
-        unset($GLOBALS['svn_prefix']);
-        unset($GLOBALS['cvs_prefix']);
-        unset($GLOBALS['grpdir_prefix']);
-        unset($GLOBALS['ftp_frs_dir_prefix']);
-        unset($GLOBALS['ftp_anon_dir_prefix']);
+        $this->unsetGlobalsForProjectCreation();
 
         return $project;
     }

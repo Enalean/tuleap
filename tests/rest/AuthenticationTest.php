@@ -29,7 +29,7 @@ class AuthenticationTest extends RestBase {
     public function testRestrictedGETResourceIsNotReadableByAnonymous() {
         $exception_thrown = false;
         try {
-            $this->client->get('projects/'.TestDataBuilder::PROJECT_PUBLIC_ID.'/user_groups')->send();
+            $this->client->get('projects/'.REST_TestDataBuilder::PROJECT_PUBLIC_ID.'/user_groups')->send();
         } catch(Guzzle\Http\Exception\ClientErrorResponseException $e) {
             $this->assertEquals(401, $e->getResponse()->getStatusCode());
             $exception_thrown = true;
@@ -73,7 +73,7 @@ class AuthenticationTest extends RestBase {
 
     private function getUnauthorizedBasicAuthResponse($request) {
         return $this->getResponseByBasicAuth(
-            TestDataBuilder::TEST_USER_1_NAME,
+            REST_TestDataBuilder::TEST_USER_1_NAME,
             'wrong_password',
             $request
         );
@@ -81,7 +81,7 @@ class AuthenticationTest extends RestBase {
 
     private function getUnauthorizedTokenResponse($request) {
         $token = new Rest_Token(
-            TestDataBuilder::TEST_USER_1_ID,
+            REST_TestDataBuilder::TEST_USER_1_ID,
             'wrong_token'
         );
 

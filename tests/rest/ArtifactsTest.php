@@ -27,7 +27,7 @@ class ArtifactsTest extends RestBase {
 
     protected function getResponse($request) {
         return $this->getResponseByToken(
-            $this->getTokenForUserName(TestDataBuilder::TEST_USER_1_NAME),
+            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
             $request
         );
     }
@@ -47,12 +47,12 @@ class ArtifactsTest extends RestBase {
         $summary_field_value = "This is a new epic";
         $post_resource = json_encode(array(
             'tracker' => array(
-                'id'  => TestDataBuilder::EPICS_TRACKER_ID,
+                'id'  => REST_TestDataBuilder::EPICS_TRACKER_ID,
                 'uri' => 'whatever'
             ),
             'values' => array(
-               $this->getSubmitTextValue(TestDataBuilder::EPICS_TRACKER_ID, $summary_field_label, $summary_field_value),
-               $this->getSubmitListValue(TestDataBuilder::EPICS_TRACKER_ID, 'Status', 205)
+               $this->getSubmitTextValue(REST_TestDataBuilder::EPICS_TRACKER_ID, $summary_field_label, $summary_field_value),
+               $this->getSubmitListValue(REST_TestDataBuilder::EPICS_TRACKER_ID, 'Status', 205)
             ),
         ));
 
@@ -280,7 +280,7 @@ class ArtifactsTest extends RestBase {
 
     public function testAnonymousGETArtifact() {
         try {
-            $this->client->get('artifacts/'.TestDataBuilder::STORY_1_ARTIFACT_ID)->send();
+            $this->client->get('artifacts/'.REST_TestDataBuilder::STORY_1_ARTIFACT_ID)->send();
         } catch (Exception $e) {
             $this->assertEquals($e->getResponse()->getStatusCode(), 403);
         }

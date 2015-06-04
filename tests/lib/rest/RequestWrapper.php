@@ -35,6 +35,10 @@ class RequestWrapper {
         $this->user_manager = UserManager::instance();
     }
 
+    public function getResponseWithoutAuth($request) {
+        return $request->send();
+    }
+
     public function getResponseByName($name, $request) {
         return $this->getResponseByToken(
             $this->generateToken(

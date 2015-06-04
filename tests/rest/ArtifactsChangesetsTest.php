@@ -35,8 +35,8 @@ class ArtifactsChangesetsTest extends RestBase {
         $this->tracker_test_helper = new Test\Rest\Tracker\TrackerFactory(
             new Guzzle\Http\Client($this->base_url),
             $this->rest_request,
-            TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID,
-            TestDataBuilder::TEST_USER_1_NAME
+            REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID,
+            REST_TestDataBuilder::TEST_USER_1_NAME
         );
         $this->createData();
     }
@@ -69,7 +69,7 @@ class ArtifactsChangesetsTest extends RestBase {
 
     private function getResponse($request) {
         return $this->getResponseByName(
-            TestDataBuilder::TEST_USER_1_NAME,
+            REST_TestDataBuilder::TEST_USER_1_NAME,
             $request
         );
     }

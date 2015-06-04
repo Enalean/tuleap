@@ -1,6 +1,7 @@
 <?php
 
 class DatabaseInitialization {
+
     /** @var mysqli */
     protected $mysqli;
 
@@ -15,27 +16,6 @@ class DatabaseInitialization {
     public function setUp() {
         $this->initDb();
         $this->mysqli->select_db(ForgeConfig::get('sys_dbname'));
-        $this->insertPhpWikiContent();
-    }
-
-    private function insertPhpWikiContent() {
-        echo "Import PhpWiki content \n";
-
-        ForgeConfig::loadFromFile($this->getLocalIncPath());
-        $tuleap_path  = ForgeConfig::get('codendi_dir') ? ForgeConfig::get('codendi_dir') : '/tuleap';
-        $fixture_path = $tuleap_path.'/tests/rest/_fixtures/phpwiki';
-
-        $queries = array(
-            "LOAD DATA LOCAL INFILE '".$fixture_path."/rest-test-wiki-group-list' INTO TABLE wiki_group_list",
-            "LOAD DATA LOCAL INFILE '".$fixture_path."/rest-test-wiki-page' INTO TABLE wiki_page",
-            "LOAD DATA LOCAL INFILE '".$fixture_path."/rest-test-wiki-nonempty' INTO TABLE wiki_nonempty",
-            "LOAD DATA LOCAL INFILE '".$fixture_path."/rest-test-wiki-version' INTO TABLE wiki_version",
-            "LOAD DATA LOCAL INFILE '".$fixture_path."/rest-test-wiki-recent' INTO TABLE wiki_recent",
-        );
-
-        foreach ($queries as $query) {
-            $this->mysqli->real_query($query);
-        }
     }
 
     /**
@@ -50,7 +30,7 @@ class DatabaseInitialization {
         system($cmd);
     }
 
-    private function loadConfiguration() {
+    protected function loadConfiguration() {
         $config_file = 'tests.inc';
         ForgeConfig::loadFromFile(dirname(__FILE__)."/../../src/etc/$config_file.dist");
         ForgeConfig::loadFromFile(dirname($this->getLocalIncPath())."/$config_file");
@@ -60,11 +40,11 @@ class DatabaseInitialization {
         $GLOBALS['sys_dbname']   = ForgeConfig::get('sys_dbname');
     }
 
-    private function getLocalIncPath() {
+    protected function getLocalIncPath() {
         return getenv('CODENDI_LOCAL_INC') ? getenv('CODENDI_LOCAL_INC') : '/etc/codendi/conf/local.inc';
     }
 
-    private function initDb() {
+    protected function initDb() {
         echo "Create database structure \n";
 
         $this->forceCreateDatabase();
@@ -76,7 +56,7 @@ class DatabaseInitialization {
         $this->mysqlLoadFile('plugins/cardwall/db/install.sql');
     }
 
-    private function forceCreateDatabase() {
+    protected function forceCreateDatabase() {
         $this->mysqli->query("DROP DATABASE IF EXISTS ".$GLOBALS['sys_dbname']);
         $this->mysqli->query("CREATE DATABASE ".$GLOBALS['sys_dbname']." CHARACTER SET utf8");
     }

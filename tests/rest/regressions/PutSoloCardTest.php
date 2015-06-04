@@ -58,12 +58,12 @@ class Regressions_PutSoloCardTest extends RestBase {
 
     public function setUp() {
         parent::setUp();
-        $this->project_id = TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID;
+        $this->project_id = REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID;
         $this->tracker_test_helper = new Test\Rest\Tracker\TrackerFactory(
             $this->client,
             $this->rest_request,
             $this->project_id,
-            TestDataBuilder::TEST_USER_1_NAME
+            REST_TestDataBuilder::TEST_USER_1_NAME
         );
 
         try {
@@ -120,7 +120,7 @@ class Regressions_PutSoloCardTest extends RestBase {
 
     private function getResponse($request) {
         return $this->getResponseByToken(
-            $this->getTokenForUserName(TestDataBuilder::TEST_USER_1_NAME),
+            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
             $request
         );
     }

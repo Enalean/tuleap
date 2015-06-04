@@ -44,7 +44,7 @@ class MilestonesBacklogPatchTest extends RestBase {
 
     protected function getResponse($request) {
         return $this->getResponseByToken(
-            $this->getTokenForUserName(TestDataBuilder::TEST_USER_1_NAME),
+            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
             $request
         );
     }
@@ -52,13 +52,13 @@ class MilestonesBacklogPatchTest extends RestBase {
     public function setUp() {
         parent::setUp();
 
-        $project = $this->getProject(TestDataBuilder::PROJECT_BACKLOG_DND);
+        $project = $this->getProject(REST_TestDataBuilder::PROJECT_BACKLOG_DND);
 
         $this->tracker_test_helper = new Test\Rest\Tracker\TrackerFactory(
             $this->client,
             $this->rest_request,
             $project['id'],
-            TestDataBuilder::TEST_USER_1_NAME
+            REST_TestDataBuilder::TEST_USER_1_NAME
         );
 
         $this->createReleaseAndBacklog();
@@ -89,7 +89,7 @@ class MilestonesBacklogPatchTest extends RestBase {
      * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
      */
     public function testPatchBacklogWithoutPermission() {
-        $response = $this->getResponseByName(TestDataBuilder::TEST_USER_2_NAME, $this->client->patch($this->uri, null, json_encode(array(
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->patch($this->uri, null, json_encode(array(
             'order' => array(
                 'ids'         => array($this->story_div['id'], $this->story_mul['id']),
                 'direction'   => 'after',
@@ -202,7 +202,7 @@ class MilestonesBacklogPatchTest extends RestBase {
     public function testPatchContentWithoutPermission() {
         $uri = 'milestones/'.$this->release['id'].'/content';
 
-        $response = $this->getResponseByName(TestDataBuilder::TEST_USER_2_NAME, $this->client->patch($uri, null, json_encode(array(
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->patch($uri, null, json_encode(array(
             'order' => array(
                 'ids'         => array($this->epic_adv['id'], $this->epic_exp['id']),
                 'direction'   => 'after',

@@ -27,7 +27,7 @@ class CardsTest extends RestBase {
 
     protected function getResponse($request) {
         return $this->getResponseByToken(
-            $this->getTokenForUserName(TestDataBuilder::TEST_USER_1_NAME),
+            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
             $request
         );
     }
@@ -38,13 +38,13 @@ class CardsTest extends RestBase {
     }
 
     public function testPUTCardsWithId() {
-        $card_id        = TestDataBuilder::SPRINT_ARTIFACT_ID .'_'.TestDataBuilder::STORY_1_ARTIFACT_ID;
+        $card_id        = REST_TestDataBuilder::SPRINT_ARTIFACT_ID .'_'.REST_TestDataBuilder::STORY_1_ARTIFACT_ID;
         $test_label     = "Ieatlaughingcow";
         $test_column_id = 2;
 
         // Keep original values
         $original_card = $this->findCardInCardwall(
-            $this->getResponse($this->client->get('milestones/'. TestDataBuilder::SPRINT_ARTIFACT_ID .'/cardwall'))->json(),
+            $this->getResponse($this->client->get('milestones/'. REST_TestDataBuilder::SPRINT_ARTIFACT_ID .'/cardwall'))->json(),
             $card_id
         );
 
@@ -58,7 +58,7 @@ class CardsTest extends RestBase {
         $this->assertEquals($response_put->getStatusCode(), 200);
 
         $card = $this->findCardInCardwall(
-            $this->getResponse($this->client->get('milestones/'. TestDataBuilder::SPRINT_ARTIFACT_ID .'/cardwall'))->json(),
+            $this->getResponse($this->client->get('milestones/'. REST_TestDataBuilder::SPRINT_ARTIFACT_ID .'/cardwall'))->json(),
             $card_id
         );
 
@@ -86,7 +86,7 @@ class CardsTest extends RestBase {
     }
 
     public function testOPTIONSCardsWithId() {
-        $response = $this->getResponse($this->client->options('cards/'.TestDataBuilder::SPRINT_ARTIFACT_ID .'_'.TestDataBuilder::STORY_1_ARTIFACT_ID));
+        $response = $this->getResponse($this->client->options('cards/'.REST_TestDataBuilder::SPRINT_ARTIFACT_ID .'_'.REST_TestDataBuilder::STORY_1_ARTIFACT_ID));
         $this->assertEquals(array('OPTIONS', 'PUT'), $response->getHeader('Allow')->normalize()->toArray());
     }
 }

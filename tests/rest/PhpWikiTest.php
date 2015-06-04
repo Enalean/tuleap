@@ -26,19 +26,19 @@ require_once dirname(__FILE__).'/../lib/autoload.php';
 class PhpWikiTest extends RestBase {
     protected function getResponse($request) {
         return $this->getResponseByToken(
-            $this->getTokenForUserName(TestDataBuilder::TEST_USER_1_NAME),
+            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
             $request
         );
     }
 
     public function testOPTIONSId() {
-        $response = $this->getResponse($this->client->options('phpwiki/'.TestDataBuilder::PHPWIKI_PAGE_ID));
+        $response = $this->getResponse($this->client->options('phpwiki/'.REST_TestDataBuilder::PHPWIKI_PAGE_ID));
         $this->assertEquals($response->getStatusCode(), 200);
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGETId() {
-        $response = $this->getResponse($this->client->get('phpwiki/'.TestDataBuilder::PHPWIKI_PAGE_ID));
+        $response = $this->getResponse($this->client->get('phpwiki/'.REST_TestDataBuilder::PHPWIKI_PAGE_ID));
 
         $this->assertEquals($response->getStatusCode(), 200);
 
@@ -46,12 +46,12 @@ class PhpWikiTest extends RestBase {
         $this->assertArrayHasKey('versions', $content);
         $this->assertCount(4, $content['versions']);
         $this->assertEquals(4, $content['last_version']);
-        $this->assertEquals($content['id'], TestDataBuilder::PHPWIKI_PAGE_ID);
-        $this->assertEquals($content['versions'][0]['uri'], 'phpwiki/'.TestDataBuilder::PHPWIKI_PAGE_ID.'/versions?version_id=1');
+        $this->assertEquals($content['id'], REST_TestDataBuilder::PHPWIKI_PAGE_ID);
+        $this->assertEquals($content['versions'][0]['uri'], 'phpwiki/'.REST_TestDataBuilder::PHPWIKI_PAGE_ID.'/versions?version_id=1');
     }
 
     public function testOPTIONSVersions() {
-        $response = $this->getResponse($this->client->options('phpwiki/'.TestDataBuilder::PHPWIKI_PAGE_ID .'/versions'));
+        $response = $this->getResponse($this->client->options('phpwiki/'.REST_TestDataBuilder::PHPWIKI_PAGE_ID .'/versions'));
         $this->assertEquals($response->getStatusCode(), 200);
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
@@ -60,17 +60,17 @@ class PhpWikiTest extends RestBase {
      * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
      */
     public function testGETVersionsReturns400IfNoVersionGiven() {
-        $response = $this->getResponse($this->client->get('phpwiki/'.TestDataBuilder::PHPWIKI_PAGE_ID . '/versions'));
+        $response = $this->getResponse($this->client->get('phpwiki/'.REST_TestDataBuilder::PHPWIKI_PAGE_ID . '/versions'));
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
     public function testGETLastVersion() {
-        $response = $this->getResponse($this->client->get('phpwiki/'.TestDataBuilder::PHPWIKI_PAGE_ID . '/versions?version_id=0'));
+        $response = $this->getResponse($this->client->get('phpwiki/'.REST_TestDataBuilder::PHPWIKI_PAGE_ID . '/versions?version_id=0'));
         $this->assertResponseBodyIsVersion4($response);
     }
 
     public function testGETVersion4() {
-        $response = $this->getResponse($this->client->get('phpwiki/'.TestDataBuilder::PHPWIKI_PAGE_ID . '/versions?version_id=4'));
+        $response = $this->getResponse($this->client->get('phpwiki/'.REST_TestDataBuilder::PHPWIKI_PAGE_ID . '/versions?version_id=4'));
         $this->assertResponseBodyIsVersion4($response);
     }
 
@@ -78,7 +78,7 @@ class PhpWikiTest extends RestBase {
      * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
      */
     public function testGETVersionsThrows404WhenVersionNotExists() {
-        $response = $this->getResponse($this->client->get('phpwiki/'.TestDataBuilder::PHPWIKI_PAGE_ID . '/versions?version_id=10'));
+        $response = $this->getResponse($this->client->get('phpwiki/'.REST_TestDataBuilder::PHPWIKI_PAGE_ID . '/versions?version_id=10'));
 
         $this->assertEquals($response->getStatusCode(), 404);
     }

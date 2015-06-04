@@ -28,16 +28,16 @@ class UserMembershipsTest extends RestBase {
 
     protected function getResponse($request) {
         return $this->getResponseByToken(
-            $this->getTokenForUserName(TestDataBuilder::ADMIN_USER_NAME),
+            $this->getTokenForUserName(REST_TestDataBuilder::ADMIN_USER_NAME),
             $request
         );
     }
 
     public function testGET() {
         $comma_separated_users = implode(',',array(
-            TestDataBuilder::TEST_USER_1_NAME,
-            TestDataBuilder::TEST_USER_2_NAME,
-            TestDataBuilder::TEST_USER_3_NAME
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            REST_TestDataBuilder::TEST_USER_2_NAME,
+            REST_TestDataBuilder::TEST_USER_3_NAME
         ));
 
         $response = $this->getResponse($this->client->get('users_memberships/?users='.$comma_separated_users.'&limit=3&offset=0'));

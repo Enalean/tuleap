@@ -27,7 +27,7 @@ class TrackersTest extends RestBase {
 
     protected function getResponse($request) {
         return $this->getResponseByToken(
-            $this->getTokenForUserName(TestDataBuilder::TEST_USER_1_NAME),
+            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
             $request
         );
     }
@@ -77,8 +77,8 @@ class TrackersTest extends RestBase {
         $this->assertEquals($tracker_uri, $tracker['uri']);
         $this->assertEquals('Releases', $tracker['label']);
         $this->assertEquals('rel', $tracker['item_name']);
-        $this->assertEquals(TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID, $tracker['project']['id']);
-        $this->assertEquals('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID, $tracker['project']['uri']);
+        $this->assertEquals(REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID, $tracker['project']['id']);
+        $this->assertEquals('projects/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID, $tracker['project']['uri']);
         $this->assertArrayHasKey('fields', $tracker);
         foreach ($tracker['fields'] as $field) {
             $this->assertArrayHasKey('required', $field);
@@ -202,11 +202,11 @@ class TrackersTest extends RestBase {
     }
 
     private function getDeletedTrackerId() {
-        return 'trackers/' . TestDataBuilder::DELETED_TRACKER_ID;
+        return 'trackers/' . REST_TestDataBuilder::DELETED_TRACKER_ID;
     }
 
     private function getReleaseTrackerUri() {
-        $response_plannings = $this->getResponse($this->client->get('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/plannings'))->json();
+        $response_plannings = $this->getResponse($this->client->get('projects/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/plannings'))->json();
         return $response_plannings[0]['milestone_tracker']['uri'];
     }
 
