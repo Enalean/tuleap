@@ -1,5 +1,6 @@
 <?php
 //
+// Copyright (c) Enalean, 2015. All Rights Reserved.
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
@@ -42,7 +43,10 @@ function register_valid(Codendi_Request $request) {
     }
 	
     // if we got this far, it must be good
-    if (!account_set_password($request->get('user_id'), $request->get('form_pw')) ) {
+    $user_manager = UserManager::instance();
+    $user         = $user_manager->getUserById($request->get('user_id'));
+    $user->setPassword($request->get('form_pw'));
+    if (!$user_manager->updateDb($user)) {
         $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_user_changepw','error_update'));
         return false;
     }

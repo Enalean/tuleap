@@ -100,7 +100,7 @@ class User_LoginManager {
         return $user;
     }
 
-    private function verifyPassword(PFUser $user, $password) {
+    public function verifyPassword(PFUser $user, $password) {
         $is_auth_valid          = false;
 
         $hashed_password        = $user->getUserPw();

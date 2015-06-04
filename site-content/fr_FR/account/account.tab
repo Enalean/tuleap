@@ -131,6 +131,13 @@ account_change_timezone	choose_tz	Prière de choisir un fuseau horaire
 account_check_pw	password_robustness	Robustesse du mot de passe :
 account_check_pw	good	Bonne
 account_check_pw	bad	Mauvaise
+account_change_pw	user_not_found	Erreur interne : Impossible de trouver l'utilisateur dans la base de donnée.
+account_change_pw	incorrect_old_password	L'ancien mot de passe est incorrect.
+account_change_pw	account_inactive	Le compte doit être actif pour pouvoir modifier le mot de passe.
+account_change_pw	password_needed	Vous devez fournir un nouveau mot de passe.
+account_change_pw	password_not_match	Les mots de passe ne correspondent pas.
+account_change_pw	identical_password	L'ancien et le nouveau mot de passe sont identiques.
+account_change_pw	internal_error_update	Erreur interne : ne peut pas mettre à jour le mot de passe.
 #
 #-----------------------------------------------
 # Script: SF/www/account/deleted.php
