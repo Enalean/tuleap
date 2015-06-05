@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2015. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -50,7 +50,7 @@ class TrafficlightsCampaignBuilder {
             $client,
             $rest_request,
             TrafficlightsDataBuilder::PROJECT_TEST_MGMT_ID,
-            TestDataBuilder::TEST_USER_1_NAME
+            TrafficlightsDataBuilder::USER_TESTER_NAME
         );
     }
 

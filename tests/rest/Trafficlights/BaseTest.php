@@ -21,8 +21,7 @@ namespace Trafficlights;
 
 use TrafficlightsCampaignBuilder;
 use TrafficlightsDataBuilder;
-use TestDataBuilder;
-use \RestBase;
+use RestBase;
 
 require_once dirname(__FILE__).'/../bootstrap.php';
 
@@ -33,7 +32,7 @@ abstract class BaseTest extends RestBase {
 
     protected function getResponse($request) {
         return $this->getResponseByToken(
-            $this->getTokenForUserName(TestDataBuilder::TEST_USER_1_NAME),
+            $this->getTokenForUserName(TrafficlightsDataBuilder::USER_TESTER_NAME),
             $request
         );
     }

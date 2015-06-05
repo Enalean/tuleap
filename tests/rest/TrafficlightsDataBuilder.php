@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2015. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -23,7 +23,7 @@ require_once 'common/autoload.php';
 use Tuleap\Trafficlights\Config;
 use Tuleap\Trafficlights\Dao;
 
-class TrafficlightsDataBuilder extends TestDataBuilder {
+class TrafficlightsDataBuilder extends REST_TestDataBuilder {
 
     const PROJECT_TEST_MGMT_ID        = 109;
     const PROJECT_TEST_MGMT_SHORTNAME = 'test-mgmt';
@@ -31,6 +31,10 @@ class TrafficlightsDataBuilder extends TestDataBuilder {
     const CAMPAIGN_TRACKER_ID         = 26;
     const TEST_DEF_TRACKER_ID         = 27;
     const TEST_EXEC_TRACKER_ID        = 28;
+
+    const USER_TESTER_NAME   = 'user_tester';
+    const USER_TESTER_PASS   = 'welcome0';
+    const USER_TESTER_STATUS = 'A';
 
     public function __construct() {
         parent::__construct();
@@ -63,10 +67,24 @@ class TrafficlightsDataBuilder extends TestDataBuilder {
         return $this;
     }
 
+    /**
+     * @return PFUser
+     */
+    private function generateUser() {
+        $user = new PFUser();
+        $user->setUserName(self::USER_TESTER_NAME);
+        $user->setPassword(self::USER_TESTER_PASS);
+        $user->setStatus(self::USER_TESTER_STATUS);
+        $user->setLanguage($GLOBALS['Language']);
+        $this->user_manager->createAccount($user);
+
+        return $user;
+    }
+
     public function generateProject() {
         $this->setGlobalsForProjectCreation();
 
-        $user_test_rest_1 = $this->user_manager->getUserByUserName(self::TEST_USER_1_NAME);
+        $user_test_rest_1 = $this->generateUser();
 
         echo "Create Trafficlights Project\n";
 
@@ -75,7 +93,8 @@ class TrafficlightsDataBuilder extends TestDataBuilder {
             'Test-mgmt',
             true,
             array($user_test_rest_1),
-            array($user_test_rest_1)
+            array($user_test_rest_1),
+            array()
         );
 
         $this->unsetGlobalsForProjectCreation();
