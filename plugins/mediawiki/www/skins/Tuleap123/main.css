@@ -270,6 +270,7 @@ table.rimage {
 */
 
 #p-logo {
+	visibility: hidden;
 	top: 0;
 	left: 0;
 	position: absolute; /*needed to use z-index */
