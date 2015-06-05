@@ -126,7 +126,6 @@ plugin_agiledashboard	invalid_request	The request is invalid.
 plugin_agiledashboard	no_service_selected	At least one service must be selected.
 plugin_agiledashboard	tracker_used_in_scrum	The selected tracker is already used in a planning.
 plugin_agiledashboard	activate_service_legend	What do you want to display in the Agile Dashboard homepage ?
-plugin_agiledashboard	user_cant_see_anything_content	You can't see anything because you don't have activated lab features.
 plugin_agiledashboard	config_submit_label	Save the whole configuration
 plugin_agiledashboard	title	Title
 
@@ -149,5 +148,4 @@ plugin_agiledashboard	add_kanban_modal_title	Create a kanban
 plugin_agiledashboard	kanban_created	Kanban $1 successfully created.
 plugin_agiledashboard	kanban_creation_error	Error while creating Kanban $1.
 plugin_agiledashboard	kanban_tracker_used	Tracker already used by another Kanban.
-plugin_agiledashboard	lab_mode_message	<h4>Heads up, developer preview!</h4> Please note that the Kanban features shown here are work in progress . Users must activate lab mode features in their preferences.
 plugin_agiledashboard	kanban_not_found	Kanban not found.

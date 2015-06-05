@@ -162,9 +162,6 @@ class Planning_Controller extends MVC2_PluginController {
         $kanban_presenters = array();
 
         $user = $this->request->getCurrentUser();
-        if (! $user->useLabFeatures()) {
-            return $kanban_presenters;
-        }
 
         $list_of_kanban = $this->kanban_factory->getListOfKanbansForProject(
             $user,
