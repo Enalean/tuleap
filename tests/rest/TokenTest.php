@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,13 +30,27 @@ class TokenTest extends RestBase {
      * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
      */
     public function testPostThrowExceptionIfUsernameDoesNotExist() {
-        $this->client->put('I don\'t exists', 'pwd')->send();
+        $this->getResponseWithoutAuth($this->client->post(
+            'tokens',
+            null,
+            json_encode(array(
+                "username" => 'I don\'t exists',
+                "password" => 'pwd'
+            ))
+        ));
     }
 
     /**
      * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
      */
     public function testPostThrowExceptionIfUsernameAndPaswordDoesNotMatch() {
-        $this->client->put('usr', 'pwd')->send();
+        $this->getResponseWithoutAuth($this->client->post(
+            'tokens',
+            null,
+            json_encode(array(
+                "username" => REST_TestDataBuilder::TEST_USER_1_LDAPID,
+                "password" => 'pwd'
+            ))
+        ));
     }
 }

@@ -32,14 +32,14 @@ class ArtifactFilesTest extends RestBase {
 
     protected function getResponse($request) {
         return $this->getResponseByToken(
-            $this->getTokenForUserName(TestDataBuilder::TEST_USER_1_NAME),
+            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
             $request
         );
     }
 
     protected function getResponseForDifferentUser($request) {
         return $this->getResponseByToken(
-            $this->getTokenForUserName(TestDataBuilder::TEST_USER_2_NAME),
+            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_2_NAME),
             $request
         );
     }
@@ -89,7 +89,7 @@ class ArtifactFilesTest extends RestBase {
         $this->assertEquals($file_representation['description'], 'a very LARGE file');
         $this->assertEquals($file_representation['type'], 'text/plain');
         $this->assertEquals($file_representation['size'], strlen('a very LARGE file'));
-        $this->assertEquals($file_representation['submitted_by'], TestDataBuilder::TEST_USER_1_ID);
+        $this->assertEquals($file_representation['submitted_by'], REST_TestDataBuilder::TEST_USER_1_ID);
 
         return $file_representation['id'];
     }
@@ -131,7 +131,7 @@ class ArtifactFilesTest extends RestBase {
         $this->assertEquals($file_representation['description'], 'a very LARGE file');
         $this->assertEquals($file_representation['type'], 'text/plain');
         $this->assertEquals($file_representation['size'], strlen('a very LARGE file'.$second_chunk));
-        $this->assertEquals($file_representation['submitted_by'], TestDataBuilder::TEST_USER_1_ID);
+        $this->assertEquals($file_representation['submitted_by'], REST_TestDataBuilder::TEST_USER_1_ID);
 
         return $file_id;
     }
@@ -248,7 +248,7 @@ class ArtifactFilesTest extends RestBase {
         $response = $this->getResponse($request);
         $file_representation = $response->json();
 
-        $request = $this->client->get('trackers/'. TestDataBuilder::USER_STORIES_TRACKER_ID);
+        $request = $this->client->get('trackers/'. REST_TestDataBuilder::USER_STORIES_TRACKER_ID);
         $structure = json_decode($this->getResponse($request)->getBody(true), true);
         foreach ($structure['fields'] as $field) {
             if ($field['type'] == 'file') {
@@ -267,8 +267,8 @@ class ArtifactFilesTest extends RestBase {
 
         $params = json_encode(array(
             'tracker' => array(
-                'id'  => TestDataBuilder::USER_STORIES_TRACKER_ID,
-                'uri' => 'trackers/' . TestDataBuilder::USER_STORIES_TRACKER_ID
+                'id'  => REST_TestDataBuilder::USER_STORIES_TRACKER_ID,
+                'uri' => 'trackers/' . REST_TestDataBuilder::USER_STORIES_TRACKER_ID
             ),
             'values' => array(
                 array(
@@ -299,9 +299,9 @@ class ArtifactFilesTest extends RestBase {
      * @depends testPutArtifactFileId
      */
     public function testAttachFileToPutArtifact($file_id) {
-        $artifact_id = TestDataBuilder::STORY_1_ARTIFACT_ID;
+        $artifact_id = REST_TestDataBuilder::STORY_1_ARTIFACT_ID;
 
-        $request = $this->client->get('trackers/'. TestDataBuilder::USER_STORIES_TRACKER_ID);
+        $request = $this->client->get('trackers/'. REST_TestDataBuilder::USER_STORIES_TRACKER_ID);
         $structure = json_decode($this->getResponse($request)->getBody(true), true);
         foreach ($structure['fields'] as $field) {
             if ($field['type'] == 'file') {

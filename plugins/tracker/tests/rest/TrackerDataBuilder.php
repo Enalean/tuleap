@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 20145. All rights reserved
+ * Copyright (c) Enalean, 2014- 2015. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,7 @@
 
 require_once 'common/autoload.php';
 
-class TrackerDataBuilder extends TestDataBuilder {
+class TrackerDataBuilder extends REST_TestDataBuilder {
 
     const XML_PROJECT_ID_SHORT_NAME = 'rest-xml-api';
 
@@ -40,6 +40,7 @@ class TrackerDataBuilder extends TestDataBuilder {
             'RESTXMLAPI',
             true,
             array($this->user_manager->getUserByUserName(self::TEST_USER_1_NAME)),
+            array(),
             array()
         );
 

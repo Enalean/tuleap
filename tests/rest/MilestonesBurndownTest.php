@@ -27,18 +27,18 @@ class MilestoneBurndownTest extends RestBase {
 
     protected function getResponse($request) {
         return $this->getResponseByToken(
-            $this->getTokenForUserName(TestDataBuilder::TEST_USER_1_NAME),
+            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
             $request
         );
     }
 
     public function testOPTIONSBurndown() {
-        $response = $this->getResponse($this->client->options('milestones/'.TestDataBuilder::SPRINT_ARTIFACT_ID.'/burndown'));
+        $response = $this->getResponse($this->client->options('milestones/'.REST_TestDataBuilder::SPRINT_ARTIFACT_ID.'/burndown'));
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGetBurndown() {
-        $response = $this->getResponse($this->client->get('milestones/'.TestDataBuilder::SPRINT_ARTIFACT_ID.'/burndown'));
+        $response = $this->getResponse($this->client->get('milestones/'.REST_TestDataBuilder::SPRINT_ARTIFACT_ID.'/burndown'));
         $burndown = $response->json();
         $this->assertEquals(10, $burndown['duration']);
         $this->assertEquals(29, $burndown['capacity']);

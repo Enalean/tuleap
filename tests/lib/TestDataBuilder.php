@@ -21,11 +21,11 @@
 require_once 'account.php';
 require_once 'www/project/admin/UserPermissionsDao.class.php';
 
-class SOAP_TestDataBuilder {
+class TestDataBuilder {
 
-    const ADMIN_ID         = 101;
-    const ADMIN_USER_NAME  = 'admin';
-    const ADMIN_USER_PASS  = 'siteadmin';
+    const ADMIN_ID             = 101;
+    const ADMIN_USER_NAME      = 'admin';
+    const ADMIN_USER_PASS      = 'siteadmin';
     const ADMIN_REAL_NAME      = 'Site Administrator';
     const ADMIN_EMAIL          = 'codendi-admin@_DOMAIN_NAME_';
     const ADMIN_STATUS         = 'A';
@@ -38,13 +38,33 @@ class SOAP_TestDataBuilder {
     const TEST_USER_1_LDAPID   = 'tester1';
     const TEST_USER_1_STATUS   = 'A';
 
+    const TEST_USER_2_ID       = 103;
+    const TEST_USER_2_NAME     = 'rest_api_tester_2';
+    const TEST_USER_2_PASS     = 'welcome0';
+    const TEST_USER_2_STATUS   = 'A';
+
+    const TEST_USER_3_ID       = 104;
+    const TEST_USER_3_NAME     = 'rest_api_tester_3';
+    const TEST_USER_3_PASS     = 'welcome0';
+    const TEST_USER_3_STATUS   = 'A';
+
     const ADMIN_PROJECT_ID          = 100;
     const PROJECT_PRIVATE_MEMBER_ID = 101;
+    const PROJECT_PRIVATE_ID        = 102;
+    const PROJECT_PUBLIC_ID         = 103;
+    const PROJECT_PUBLIC_MEMBER_ID  = 104;
+    const PROJECT_PBI_ID            = 105;
 
     const PROJECT_PRIVATE_MEMBER_SHORTNAME = 'private-member';
+    const PROJECT_PRIVATE_SHORTNAME        = 'private';
+    const PROJECT_PUBLIC_SHORTNAME         = 'public';
+    const PROJECT_PUBLIC_MEMBER_SHORTNAME  = 'public-member';
+    const PROJECT_PBI_SHORTNAME            = 'pbi-6348';
+    const PROJECT_BACKLOG_DND              = 'dragndrop';
 
     const STATIC_UGROUP_1_ID    = 101;
     const STATIC_UGROUP_1_LABEL = 'static_ugroup_1';
+
     const STATIC_UGROUP_2_ID    = 102;
     const STATIC_UGROUP_2_LABEL = 'static_ugroup_2';
 
@@ -63,7 +83,8 @@ class SOAP_TestDataBuilder {
     const DYNAMIC_UGROUP_WIKI_ADMIN_ID             = 14;
     const DYNAMIC_UGROUP_WIKI_ADMIN_LABEL          = 'wiki_admins';
 
-    const TV3_SERVICE_ID = 15;
+    /** @var ProjectCreator */
+    protected $project_creator;
 
     /** @var ProjectManager */
     protected $project_manager;
@@ -71,11 +92,8 @@ class SOAP_TestDataBuilder {
     /** @var UserManager */
     protected $user_manager;
 
-    /** @var ProjectCreator */
-    private $project_creator;
-
     /** @var UserPermissionsDao */
-    private $user_permissions_dao;
+    protected $user_permissions_dao;
 
     public function __construct() {
         $this->project_manager      = ProjectManager::instance();
@@ -97,21 +115,6 @@ class SOAP_TestDataBuilder {
         return $this;
     }
 
-    public function generateUsers() {
-        $user_1 = new PFUser();
-        $user_1->setUserName(self::TEST_USER_1_NAME);
-        $user_1->setRealName(self::TEST_USER_1_REALNAME);
-        $user_1->setLdapId(self::TEST_USER_1_LDAPID);
-        $user_1->setPassword(self::TEST_USER_1_PASS);
-        $user_1->setStatus(self::TEST_USER_1_STATUS);
-        $user_1->setEmail(self::TEST_USER_1_EMAIL);
-        $user_1->setLanguage($GLOBALS['Language']);
-        $this->user_manager->createAccount($user_1);
-        $user_1->setLabFeatures(true);
-
-        return $this;
-    }
-
     protected function setGlobalsForProjectCreation() {
         $GLOBALS['svn_prefix'] = '/tmp';
         $GLOBALS['cvs_prefix'] = '/tmp';
@@ -128,27 +131,6 @@ class SOAP_TestDataBuilder {
         unset($GLOBALS['ftp_anon_dir_prefix']);
     }
 
-    public function generateProject() {
-        $this->setGlobalsForProjectCreation();
-
-        $user_test_soap = $this->user_manager->getUserByUserName(self::TEST_USER_1_NAME);
-
-        echo "Create projects\n";
-
-        $project_1 = $this->createProject(
-            self::PROJECT_PRIVATE_MEMBER_SHORTNAME,
-            'Private member',
-            false,
-            array($user_test_soap),
-            array($user_test_soap)
-        );
-        $this->addUserGroupsToProject($project_1);
-
-        $this->unsetGlobalsForProjectCreation();
-
-        return $this;
-    }
-
     /**
      * Instantiates a project with user, groups, admins ...
      *
@@ -157,15 +139,14 @@ class SOAP_TestDataBuilder {
      * @param string $is_public
      * @param array  $project_members
      * @param array  $project_admins
-     *
-     * @return Project
      */
     protected function createProject(
         $project_short_name,
         $project_long_name,
         $is_public,
         array $project_members,
-        array $project_admins
+        array $project_admins,
+        array $services
     ) {
 
         $user = $this->user_manager->getUserByUserName(self::ADMIN_USER_NAME);
@@ -178,9 +159,7 @@ class SOAP_TestDataBuilder {
                 'form_short_description' => '',
                 'is_test'                => false,
                 'is_public'              => $is_public,
-                'services'               => array(
-                    self::TV3_SERVICE_ID => array('is_used' => '1')
-                ),
+                'services'               => $services,
                 'built_from_template'    => 100,
             )
         ));
@@ -210,7 +189,11 @@ class SOAP_TestDataBuilder {
        $this->user_permissions_dao->addUserAsProjectAdmin($project, $user);
     }
 
-    private function addUserGroupsToProject(Project $project) {
+    protected function addUserToUserGroup($user, $project, $ugroup_id) {
+        ugroup_add_user_to_ugroup($project->getId(), $ugroup_id, $user->getId());
+    }
+
+    protected function addUserGroupsToProject(Project $project) {
         ugroup_create($project->getId(), 'static_ugroup_1', 'static_ugroup_1', '');
         ugroup_create($project->getId(), 'static_ugroup_2', 'static_ugroup_2', '');
     }

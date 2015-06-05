@@ -28,21 +28,21 @@ class UserGroupTest extends RestBase {
 
     protected function getResponse($request) {
         return $this->getResponseByToken(
-            $this->getTokenForUserName(TestDataBuilder::TEST_USER_1_NAME),
+            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
             $request
         );
     }
 
     public function testGETId() {
-        $response = $this->getResponse($this->client->get('user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::STATIC_UGROUP_1_ID));
+        $response = $this->getResponse($this->client->get('user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_1_ID));
 
         $this->assertEquals(
             $response->json(),
             array(
-                'id'        => TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::STATIC_UGROUP_1_ID,
-                'uri'       => 'user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::STATIC_UGROUP_1_ID,
-                'label'     => TestDataBuilder::STATIC_UGROUP_1_LABEL,
-                'users_uri' => 'user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::STATIC_UGROUP_1_ID.'/users'
+                'id'        => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_1_ID,
+                'uri'       => 'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_1_ID,
+                'label'     => REST_TestDataBuilder::STATIC_UGROUP_1_LABEL,
+                'users_uri' => 'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_1_ID.'/users'
             )
         );
         $this->assertEquals($response->getStatusCode(), 200);
@@ -52,7 +52,7 @@ class UserGroupTest extends RestBase {
         // Cannot use @expectedException as we want to check status code.
         $exception = false;
         try {
-            $response = $this->getResponse($this->client->get('user_groups/'.TestDataBuilder::PROJECT_PUBLIC_MEMBER_ID.'_'.TestDataBuilder::STATIC_UGROUP_1_ID));
+            $response = $this->getResponse($this->client->get('user_groups/'.REST_TestDataBuilder::PROJECT_PUBLIC_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_1_ID));
         } catch (Guzzle\Http\Exception\BadResponseException $e) {
             $this->assertEquals($e->getResponse()->getStatusCode(), 403);
             $exception = true;
@@ -65,7 +65,7 @@ class UserGroupTest extends RestBase {
         // Cannot use @expectedException as we want to check status code.
         $exception = false;
         try {
-            $response = $this->getResponse($this->client->get('user_groups/'.TestDataBuilder::PROJECT_PRIVATE_ID.'_'.TestDataBuilder::STATIC_UGROUP_1_ID));
+            $response = $this->getResponse($this->client->get('user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_1_ID));
         } catch (Guzzle\Http\Exception\BadResponseException $e) {
             $this->assertEquals($e->getResponse()->getStatusCode(), 403);
             $exception = true;
@@ -78,7 +78,7 @@ class UserGroupTest extends RestBase {
         // Cannot use @expectedException as we want to check status code.
         $exception = false;
         try {
-            $response = $this->getResponse($this->client->get('user_groups/'.TestDataBuilder::PROJECT_PRIVATE_ID.'_999'));
+            $response = $this->getResponse($this->client->get('user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_ID.'_999'));
         } catch (Guzzle\Http\Exception\BadResponseException $e) {
             $this->assertEquals($e->getResponse()->getStatusCode(), 404);
             $exception = true;
@@ -88,53 +88,53 @@ class UserGroupTest extends RestBase {
     }
 
     public function testOptionsUsers() {
-        $response = $this->getResponse($this->client->get('user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::STATIC_UGROUP_1_ID.'/users'));
+        $response = $this->getResponse($this->client->get('user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_1_ID.'/users'));
 
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
     public function testGetUsersFromADynamicGroup() {
-        $response = $this->getResponse($this->client->get('user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_3/users'));
+        $response = $this->getResponse($this->client->get('user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_3/users'));
         $this->assertEquals(
             $response->json(),
             array(
                 array(
-                    'id'         => TestDataBuilder::ADMIN_ID,
-                    'uri'        => 'users/'.TestDataBuilder::ADMIN_ID,
-                    'email'      => TestDataBuilder::ADMIN_EMAIL,
-                    'real_name'  => TestDataBuilder::ADMIN_REAL_NAME,
-                    'username'   => TestDataBuilder::ADMIN_USER_NAME,
+                    'id'         => REST_TestDataBuilder::ADMIN_ID,
+                    'uri'        => 'users/'.REST_TestDataBuilder::ADMIN_ID,
+                    'email'      => REST_TestDataBuilder::ADMIN_EMAIL,
+                    'real_name'  => REST_TestDataBuilder::ADMIN_REAL_NAME,
+                    'username'   => REST_TestDataBuilder::ADMIN_USER_NAME,
                     'ldap_id'    => '',
                     'avatar_url' => '/themes/common/images/avatar_default.png',
                     'status'     => 'A'
                 ),
                 array(
-                    'id'         => TestDataBuilder::TEST_USER_1_ID,
-                    'uri'        => 'users/'.TestDataBuilder::TEST_USER_1_ID,
-                    'email'      => TestDataBuilder::TEST_USER_1_EMAIL,
-                    'real_name'  => TestDataBuilder::TEST_USER_1_REALNAME,
-                    'username'   => TestDataBuilder::TEST_USER_1_NAME,
-                    'ldap_id'    => TestDataBuilder::TEST_USER_1_LDAPID,
+                    'id'         => REST_TestDataBuilder::TEST_USER_1_ID,
+                    'uri'        => 'users/'.REST_TestDataBuilder::TEST_USER_1_ID,
+                    'email'      => REST_TestDataBuilder::TEST_USER_1_EMAIL,
+                    'real_name'  => REST_TestDataBuilder::TEST_USER_1_REALNAME,
+                    'username'   => REST_TestDataBuilder::TEST_USER_1_NAME,
+                    'ldap_id'    => REST_TestDataBuilder::TEST_USER_1_LDAPID,
                     'avatar_url' => '/themes/common/images/avatar_default.png',
                     'status'     => 'A'
                 ),
                 array(
-                    'id'         => TestDataBuilder::TEST_USER_2_ID,
-                    'uri'        => 'users/'.TestDataBuilder::TEST_USER_2_ID,
+                    'id'         => REST_TestDataBuilder::TEST_USER_2_ID,
+                    'uri'        => 'users/'.REST_TestDataBuilder::TEST_USER_2_ID,
                     'email'      => '',
                     'real_name'  => '',
-                    'username'   => TestDataBuilder::TEST_USER_2_NAME,
+                    'username'   => REST_TestDataBuilder::TEST_USER_2_NAME,
                     'ldap_id'    => '',
                     'avatar_url' => '/themes/common/images/avatar_default.png',
                     'status'     => 'A'
                 ),
                 array(
-                    'id'         => TestDataBuilder::TEST_USER_3_ID,
-                    'uri'        => 'users/'.TestDataBuilder::TEST_USER_3_ID,
+                    'id'         => REST_TestDataBuilder::TEST_USER_3_ID,
+                    'uri'        => 'users/'.REST_TestDataBuilder::TEST_USER_3_ID,
                     'email'      => '',
                     'real_name'  => '',
-                    'username'   => TestDataBuilder::TEST_USER_3_NAME,
+                    'username'   => REST_TestDataBuilder::TEST_USER_3_NAME,
                     'ldap_id'    => '',
                     'avatar_url' => '/themes/common/images/avatar_default.png',
                     'status'     => 'A'
@@ -145,18 +145,18 @@ class UserGroupTest extends RestBase {
     }
 
     public function testGetUsersFromAStaticGroup() {
-        $response = $this->getResponse($this->client->get('user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::STATIC_UGROUP_1_ID.'/users'));
+        $response = $this->getResponse($this->client->get('user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_1_ID.'/users'));
 
         $this->assertEquals(
             $response->json(),
             array(
                 array(
-                    'id'         => TestDataBuilder::TEST_USER_1_ID,
-                    'uri'        => 'users/'.TestDataBuilder::TEST_USER_1_ID,
-                    'email'      => TestDataBuilder::TEST_USER_1_EMAIL,
-                    'real_name'  => TestDataBuilder::TEST_USER_1_REALNAME,
-                    'username'   => TestDataBuilder::TEST_USER_1_NAME,
-                    'ldap_id'    => TestDataBuilder::TEST_USER_1_LDAPID,
+                    'id'         => REST_TestDataBuilder::TEST_USER_1_ID,
+                    'uri'        => 'users/'.REST_TestDataBuilder::TEST_USER_1_ID,
+                    'email'      => REST_TestDataBuilder::TEST_USER_1_EMAIL,
+                    'real_name'  => REST_TestDataBuilder::TEST_USER_1_REALNAME,
+                    'username'   => REST_TestDataBuilder::TEST_USER_1_NAME,
+                    'ldap_id'    => REST_TestDataBuilder::TEST_USER_1_LDAPID,
                     'avatar_url' => '/themes/common/images/avatar_default.png',
                     'status'     => 'A'
                 )
@@ -166,27 +166,27 @@ class UserGroupTest extends RestBase {
     }
 
     public function testGetMultipleUsersFromAStaticGroup() {
-        $response = $this->getResponse($this->client->get('user_groups/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.TestDataBuilder::STATIC_UGROUP_2_ID.'/users'));
+        $response = $this->getResponse($this->client->get('user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_2_ID.'/users'));
 
         $this->assertEquals(
             $response->json(),
             array(
                 array(
-                    'id'         => TestDataBuilder::TEST_USER_1_ID,
-                    'uri'        => 'users/'.TestDataBuilder::TEST_USER_1_ID,
-                    'email'      => TestDataBuilder::TEST_USER_1_EMAIL,
-                    'real_name'  => TestDataBuilder::TEST_USER_1_REALNAME,
-                    'username'   => TestDataBuilder::TEST_USER_1_NAME,
-                    'ldap_id'    => TestDataBuilder::TEST_USER_1_LDAPID,
+                    'id'         => REST_TestDataBuilder::TEST_USER_1_ID,
+                    'uri'        => 'users/'.REST_TestDataBuilder::TEST_USER_1_ID,
+                    'email'      => REST_TestDataBuilder::TEST_USER_1_EMAIL,
+                    'real_name'  => REST_TestDataBuilder::TEST_USER_1_REALNAME,
+                    'username'   => REST_TestDataBuilder::TEST_USER_1_NAME,
+                    'ldap_id'    => REST_TestDataBuilder::TEST_USER_1_LDAPID,
                     'avatar_url' => '/themes/common/images/avatar_default.png',
                     'status'     => 'A'
                 ),
                 array(
-                    'id'         => TestDataBuilder::TEST_USER_2_ID,
-                    'uri'        => 'users/'.TestDataBuilder::TEST_USER_2_ID,
+                    'id'         => REST_TestDataBuilder::TEST_USER_2_ID,
+                    'uri'        => 'users/'.REST_TestDataBuilder::TEST_USER_2_ID,
                     'email'      => '',
                     'real_name'  => '',
-                    'username'   => TestDataBuilder::TEST_USER_2_NAME,
+                    'username'   => REST_TestDataBuilder::TEST_USER_2_NAME,
                     'ldap_id'    => '',
                     'avatar_url' => '/themes/common/images/avatar_default.png',
                     'status'     => 'A'

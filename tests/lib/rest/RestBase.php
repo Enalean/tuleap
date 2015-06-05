@@ -59,6 +59,10 @@ class RestBase extends PHPUnit_Framework_TestCase {
         $this->xml_client->setDefaultOption('headers/Content-Type', 'application/xml; charset=UTF8');
     }
 
+    protected function getResponseWithoutAuth($request) {
+        return $this->rest_request->getResponseWithoutAuth($request);
+    }
+
     protected function getResponseByName($name, $request) {
         return $this->rest_request->getResponseByName($name, $request);
     }

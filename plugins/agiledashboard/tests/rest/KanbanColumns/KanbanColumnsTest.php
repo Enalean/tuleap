@@ -26,7 +26,7 @@ require_once dirname(__FILE__).'/../bootstrap.php';
 class KanbanColumnsTest extends RestBase {
     protected function getResponse($request) {
         return $this->getResponseByToken(
-            $this->getTokenForUserName(TestDataBuilder::TEST_USER_1_NAME),
+            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
             $request
         );
     }
@@ -37,7 +37,7 @@ class KanbanColumnsTest extends RestBase {
     }
 
     public function testPATCHKanbanColumns() {
-        $url = 'kanban_columns/'. TestDataBuilder::KANBAN_ONGOING_COLUMN_ID.'?kanban_id='. TestDataBuilder::KANBAN_ID;
+        $url = 'kanban_columns/'. REST_TestDataBuilder::KANBAN_ONGOING_COLUMN_ID.'?kanban_id='. REST_TestDataBuilder::KANBAN_ID;
 
         $response = $this->getResponse($this->client->patch(
             $url,
@@ -49,7 +49,7 @@ class KanbanColumnsTest extends RestBase {
 
         $this->assertEquals($response->getStatusCode(), 200);
 
-        $response = $this->getResponse($this->client->get('kanban/'. TestDataBuilder::KANBAN_ID));
+        $response = $this->getResponse($this->client->get('kanban/'. REST_TestDataBuilder::KANBAN_ID));
         $kanban   = $response->json();
 
         $this->assertEquals($kanban['columns'][1]['limit'], 200);

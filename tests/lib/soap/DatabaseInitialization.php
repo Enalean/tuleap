@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All rights reserved
+ * Copyright (c) Enalean, 2015. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,21 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once 'pre.php';
-require_once dirname(__FILE__).'/../autoload.php';
+class SOAP_DatabaseInitialization extends DatabaseInitialization {
 
-$data_builder = new REST_TestDataBuilder();
-$data_builder
-    ->activatePlugins()
-    ->generateUsers()
-    ->generateProject()
-    ->delegatePermissionsToRetrieveMembership()
-    ->delegatePermissionsToManageUser()
-    ->generateMilestones()
-    ->generateContentItems()
-    ->generateBacklogItems()
-    ->generateTopBacklogItems()
-    ->generateKanban()
-    ->deleteTracker()
-    ->activateDebug()
-    ->initPlugins();
+    protected function initDb() {
+        echo "Create database structure \n";
+
+        $this->forceCreateDatabase();
+        $this->mysqlLoadFile('src/db/mysql/database_structure.sql');
+        $this->mysqlLoadFile('src/db/mysql/database_initvalues.sql');
+        $this->mysqlLoadFile('src/db/mysql/trackerv3structure.sql');
+        $this->mysqlLoadFile('src/db/mysql/trackerv3values.sql');
+    }
+}

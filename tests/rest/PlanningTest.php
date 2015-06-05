@@ -27,18 +27,18 @@ class PlanningTest extends RestBase {
 
     protected function getResponse($request) {
         return $this->getResponseByToken(
-            $this->getTokenForUserName(TestDataBuilder::TEST_USER_1_NAME),
+            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
             $request
         );
     }
 
     public function testOptionsPlannings() {
-        $response = $this->getResponse($this->client->options('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/plannings'));
+        $response = $this->getResponse($this->client->options('projects/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/plannings'));
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGetPlanningsContainsAReleasePlanning() {
-        $response = $this->getResponse($this->client->get('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/plannings'));
+        $response = $this->getResponse($this->client->get('projects/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/plannings'));
 
         $plannings = $response->json();
 
@@ -47,7 +47,7 @@ class PlanningTest extends RestBase {
         $release_planning = $plannings[0];
         $this->assertArrayHasKey('id', $release_planning);
         $this->assertEquals($release_planning['label'], "Release Planning");
-        $this->assertEquals($release_planning['project'], array('id' => TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID, 'uri' => 'projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID));
+        $this->assertEquals($release_planning['project'], array('id' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID, 'uri' => 'projects/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID));
         $this->assertArrayHasKey('id', $release_planning['milestone_tracker']);
         $this->assertArrayHasKey('uri', $release_planning['milestone_tracker']);
         $this->assertRegExp('%^trackers/[0-9]+$%', $release_planning['milestone_tracker']['uri']);
@@ -66,7 +66,7 @@ class PlanningTest extends RestBase {
     }
 
     private function getMilestonesUri() {
-        $response_plannings = $this->getResponse($this->client->get('projects/'.TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/plannings'))->json();
+        $response_plannings = $this->getResponse($this->client->get('projects/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'/plannings'))->json();
         return $response_plannings[0]['milestones_uri'];
     }
 }

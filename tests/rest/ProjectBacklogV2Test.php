@@ -29,19 +29,19 @@ class ProjectBacklogV2Test extends RestBase {
 
     protected function getResponse($request) {
         return $this->getResponseByToken(
-            $this->getTokenForUserName(TestDataBuilder::TEST_USER_1_NAME),
+            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
             $request
         );
     }
 
     public function testOPTIONSBacklog() {
         $response = $this->getResponse($this->client->options(
-                'projects/'.TestDataBuilder::PROJECT_PUBLIC_ID.'/backlog'));
+                'projects/'.REST_TestDataBuilder::PROJECT_PUBLIC_ID.'/backlog'));
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGETBacklogNoItems() {
-        $response = $this->getResponse($this->client->get('projects/'.TestDataBuilder::PROJECT_PUBLIC_ID.'/backlog?limit=0.0&offset=0'));
+        $response = $this->getResponse($this->client->get('projects/'.REST_TestDataBuilder::PROJECT_PUBLIC_ID.'/backlog?limit=0.0&offset=0'));
 
         $backlog = $response->json();
 

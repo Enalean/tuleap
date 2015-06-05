@@ -21,7 +21,7 @@
 namespace Git;
 
 use GitDataBuilder;
-use TestDataBuilder;
+use REST_TestDataBuilder;
 use RestBase;
 
 require_once dirname(__FILE__).'/../bootstrap.php';
@@ -33,14 +33,14 @@ class RepositoryTest extends RestBase {
 
     protected function getResponse($request) {
         return $this->getResponseByToken(
-            $this->getTokenForUserName(TestDataBuilder::TEST_USER_1_NAME),
+            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
             $request
         );
     }
 
     protected function getResponseForNonMember($request) {
         return $this->getResponseByToken(
-            $this->getTokenForUserName(TestDataBuilder::TEST_USER_2_NAME),
+            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_2_NAME),
             $request
         );
     }

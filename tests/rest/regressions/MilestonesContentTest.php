@@ -64,8 +64,8 @@ class Regressions_MilestonesContentTest extends RestBase {
         $this->tracker_test_helper = new Test\Rest\Tracker\TrackerFactory(
             $this->client,
             $this->rest_request,
-            TestDataBuilder::PROJECT_PBI_ID,
-            TestDataBuilder::TEST_USER_1_NAME
+            REST_TestDataBuilder::PROJECT_PBI_ID,
+            REST_TestDataBuilder::TEST_USER_1_NAME
         );
         $this->createBacklog();
         $this->createProductAndRelease();
@@ -118,7 +118,7 @@ class Regressions_MilestonesContentTest extends RestBase {
 
     protected function getResponse($request) {
         return $this->getResponseByToken(
-            $this->getTokenForUserName(TestDataBuilder::TEST_USER_1_NAME),
+            $this->getTokenForUserName(REST_TestDataBuilder::TEST_USER_1_NAME),
             $request
         );
     }
