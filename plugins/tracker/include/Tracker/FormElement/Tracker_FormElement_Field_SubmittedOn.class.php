@@ -96,7 +96,7 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
             $this->getId(),
             Tracker_FormElementFactory::instance()->getType($this),
             $this->getLabel(),
-            $this->fetchArtifactValueReadOnly($changeset->getArtifact())
+            date('c', $changeset->getArtifact()->getSubmittedOn())
         );
         return $artifact_field_value_full_representation;
     }

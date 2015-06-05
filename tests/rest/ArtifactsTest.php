@@ -105,6 +105,25 @@ class ArtifactsTest extends RestBase {
                     $this->assertTrue(is_string($field['label']));
                     $this->assertTrue(is_int($field['value']) || is_null($field['value']));
                     break;
+                case 'aid':
+                    $this->assertTrue(is_string($field['label']));
+                    $this->assertTrue(is_int($field['value']));
+                    break;
+                case 'subby':
+                    $this->assertTrue(is_string($field['label']));
+                    $this->assertTrue(is_array($field['value']));
+                    $this->assertTrue(array_key_exists('display_name', $field['value']));
+                    $this->assertTrue(array_key_exists('link', $field['value']));
+                    $this->assertTrue(array_key_exists('avatar_url', $field['value']));
+                    break;
+                case 'lud':
+                    $this->assertTrue(is_string($field['label']));
+                    $this->assertTrue(DateTime::createFromFormat('Y-m-d\TH:i:sT' , $field['value']) !== false);
+                    break;
+                case 'subon':
+                    $this->assertTrue(is_string($field['label']));
+                    $this->assertTrue(DateTime::createFromFormat('Y-m-d\TH:i:sT' , $field['value']) !== false);
+                    break;
                 default:
                     throw new Exception('You need to update this test for the field: '.print_r($field, true));
             }

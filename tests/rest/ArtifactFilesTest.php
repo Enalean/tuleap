@@ -292,7 +292,21 @@ class ArtifactFilesTest extends RestBase {
 
         $response = $this->getResponse($this->client->get('artifacts/' . $posted_artifact['id']));
         $posted_artifact = $response->json();
-        $this->assertCount(6, $posted_artifact['values']);
+
+        $this->assertCount(10, $posted_artifact['values']);
+
+        $file_exists =false;
+        foreach($posted_artifact['values'] as $field) {
+            if ($field['type'] == 'file') {
+                $this->assertCount(1, $field['file_descriptions']);
+                $this->assertEquals($field['file_descriptions'][0]['description'], $this->third_file['description']);
+                $this->assertEquals($field['file_descriptions'][0]['type'], $this->third_file['mimetype']);
+
+                $file_exists = true;
+            }
+        }
+
+        $this->assertTrue($file_exists);
     }
 
     /**
@@ -325,7 +339,20 @@ class ArtifactFilesTest extends RestBase {
 
         $response = $this->getResponse($this->client->get('artifacts/' . $artifact_id));
         $posted_artifact = $response->json();
-        $this->assertCount(5, $posted_artifact['values']);
+        $this->assertCount(9, $posted_artifact['values']);
+
+        $file_exists =false;
+        foreach($posted_artifact['values'] as $field) {
+            if ($field['type'] == 'file') {
+                $this->assertCount(1, $field['file_descriptions']);
+                $this->assertEquals($field['file_descriptions'][0]['description'], $this->first_file['description']);
+                $this->assertEquals($field['file_descriptions'][0]['type'], $this->first_file['mimetype']);
+
+                $file_exists = true;
+            }
+        }
+
+        $this->assertTrue($file_exists);
 
         return $file_id;
     }
