@@ -1,3 +1,6 @@
+Version 1.207 - Tuleap 8.3
+    * Fix REST tests
+
 Version 1.206 - Tuleap 8.3
     * story #7934: kanban is no moar in lab mode
 
