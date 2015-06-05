@@ -3,7 +3,8 @@
     <h3>{{ kanban.label }}</h3>
 </div>
 <div class="modal-body">
-    <form class="form-horizontal">
+    <h4><i class="icon-columns"></i> <span translate>Configuration</span></h4>
+    <div class="form-horizontal kanban-configuration">
         <div class="control-group">
             <label class="control-label" for="input-kanban-label" translate>Kanban label:</label>
             <div class="controls">
@@ -16,12 +17,21 @@
                 <a class="btn btn-link" href="/plugins/tracker/?tracker={{ kanban.tracker.id }}">{{ kanban.tracker.label }}</a>
             </div>
         </div>
-    </form>
+    </div>
+    <div class="danger-zone">
+        <h4><i class="icon-warning-sign"></i> <span translate>Danger zone</span></h4>
+        <p class="muted" translate>The deletion of a Kanban is irreversible. Please be certain before doing it.</p>
+        <button class="btn btn-danger btn-small" ng-click="deleteKanban()" ng-disabled="processing()">
+            <i class="icon-spinner icon-spin" ng-show="deleting"></i>
+            <i class="icon-trash" ng-hide="deleting"></i>
+            <span translate>Delete this Kanban</span>
+        </button>
+    </div>
 </div>
 <div class="modal-footer">
     <button class="btn" ng-click="cancel()" translate>Cancel</button>
     <button class="btn btn-primary"
-            ng-disabled="saving"
+            ng-disabled="processing()"
             ng-click="saveModifications();">
         <i class="icon-spinner icon-spin" ng-show="saving"></i> <span translate>Save modifications</span></button>
 </div>

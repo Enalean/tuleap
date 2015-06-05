@@ -44,6 +44,8 @@
             display: inline-block;
             margin-left: 20px;
             vertical-align: text-bottom;
+            position: relative;
+            top: 3px;
         }
     }
 }
@@ -521,6 +523,18 @@ ul.kanban-items {
 .modal-body {
     .btn-link {
         padding-left: 0;
+    }
+
+    > .danger-zone {
+        margin: 0 0 10px;
+    }
+
+    > .form-horizontal {
+        margin: 0 0 30px;
+
+        > .control-group {
+            margin-bottom: 10px;
+        }
     }
 }
 

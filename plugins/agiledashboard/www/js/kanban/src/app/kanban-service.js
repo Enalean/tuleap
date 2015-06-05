@@ -23,7 +23,8 @@
             moveInArchive       : moveInArchive,
             moveInColumn        : moveInColumn,
             setWipLimitForColumn: setWipLimitForColumn,
-            updateKanbanLabel   : updateKanbanLabel
+            updateKanbanLabel   : updateKanbanLabel,
+            deleteKanban        : deleteKanban
         };
 
         function getKanban(id) {
@@ -208,6 +209,10 @@
             return rest.one('kanban', kanban_id).patch({
                 label: kanban_label
             });
+        }
+
+        function deleteKanban(kanban_id) {
+            return rest.one('kanban', kanban_id).remove();
         }
     }
 })();

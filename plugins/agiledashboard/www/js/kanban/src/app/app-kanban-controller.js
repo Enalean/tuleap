@@ -77,6 +77,7 @@
         self.createItemInPlace            = createItemInPlace;
         self.createItemInPlaceInBacklog   = createItemInPlaceInBacklog;
         self.editKanban                   = editKanban;
+        self.showEditbutton               = showEditbutton;
 
         loadColumns();
         loadBacklog(limit, offset);
@@ -201,6 +202,10 @@
                     }
                 }
             });
+        }
+
+        function showEditbutton() {
+            return userIsAdmin() && kanban.label !== undefined;
         }
 
         function editKanban() {

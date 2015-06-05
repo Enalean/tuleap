@@ -38,12 +38,16 @@ class KanbanPresenter {
     /** @var boolean */
     public $user_is_kanban_admin;
 
-    public function __construct(AgileDashboard_Kanban $kanban, $user_is_kanban_admin, $language) {
+    /** @var int */
+    public $project_id;
+
+    public function __construct(AgileDashboard_Kanban $kanban, $user_is_kanban_admin, $language, $project_id) {
         $this->language             = $language;
         $this->kanban_name          = $kanban->getName();
         $this->kanban_open          = 0;
         $this->kanban_closed        = 0;
         $this->kanban_id            = $kanban->getId();
         $this->user_is_kanban_admin = (int) $user_is_kanban_admin;
+        $this->project_id           = $project_id;
     }
 }

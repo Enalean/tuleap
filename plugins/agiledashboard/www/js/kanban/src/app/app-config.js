@@ -3,9 +3,9 @@
         .module('kanban')
         .config(KanbanConfig);
 
-    KanbanConfig.$inject = ['$stateProvider', '$urlRouterProvider'];
+    KanbanConfig.$inject = ['$stateProvider', '$urlRouterProvider', 'RestangularProvider'];
 
-    function KanbanConfig($stateProvider, $urlRouterProvider) {
+    function KanbanConfig($stateProvider, $urlRouterProvider, RestangularProvider) {
         $urlRouterProvider.otherwise('/kanban');
 
         $stateProvider.state('kanban', {
@@ -14,5 +14,7 @@
             controllerAs: 'kanban',
             templateUrl: "kanban.tpl.html"
         });
+
+        RestangularProvider.setDefaultHeaders({'Content-Type': 'application/json'});
     }
 })();

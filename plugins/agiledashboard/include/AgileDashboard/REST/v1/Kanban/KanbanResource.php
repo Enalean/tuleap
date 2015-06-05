@@ -149,7 +149,7 @@ class KanbanResource extends AuthenticatedResource {
         $kanban_representation = new KanbanRepresentation();
         $kanban_representation->build($kanban, $this->kanban_column_factory, $user_can_add_in_place);
 
-        Header::allowOptionsGetPatch();
+        Header::allowOptionsGetPatchDelete();
         return $kanban_representation;
     }
 
@@ -163,7 +163,7 @@ class KanbanResource extends AuthenticatedResource {
      * </pre>
      *
      * @url PATCH {id}
-     * @access hybrid
+     * @access protected
      *
      * @param int    $id    Id of the kanban
      * @param string $label The new label {@from body} {@required}
@@ -172,14 +172,13 @@ class KanbanResource extends AuthenticatedResource {
      * @throws 404
      */
     public function patchId($id, $label) {
-        $this->checkAccess();
         $user   = $this->getCurrentUser();
         $kanban = $this->getKanban($user, $id);
 
         $this->checkUserCanUpdateKanban($user, $kanban);
         $this->kanban_dao->save($id, $label);
 
-        Header::allowOptionsGetPatch();
+        Header::allowOptionsGetPatchDelete();
     }
 
     /**
@@ -194,7 +193,7 @@ class KanbanResource extends AuthenticatedResource {
      * @param string $id Id of the milestone
      */
     public function optionsId($id) {
-        Header::allowOptionsGetPath();
+        Header::allowOptionsGetPatchDelete();
     }
 
     /**
@@ -679,6 +678,30 @@ class KanbanResource extends AuthenticatedResource {
      */
     public function optionsItems($id) {
         Header::allowOptionsGetPatch();
+    }
+
+    /**
+     * Delete Kanban
+     *
+     * Delete Kanban
+     *
+     * @url DELETE {id}
+     * @access protected
+     *
+     * <pre>
+     * /!\ Kanban REST routes are under construction and subject to changes /!\
+     * </pre>
+     *
+     * @param string $id Id of the kanban
+     */
+    protected function delete($id) {
+        $user   = $this->getCurrentUser();
+        $kanban = $this->getKanban($user, $id);
+
+        $this->checkUserCanUpdateKanban($user, $kanban);
+        $this->kanban_dao->delete($id);
+
+        Header::allowOptionsGetPatchDelete();
     }
 
     /** @return AgileDashboard_Kanban */

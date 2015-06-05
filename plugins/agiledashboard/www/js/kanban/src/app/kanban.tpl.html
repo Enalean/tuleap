@@ -1,7 +1,7 @@
 <div id="kanban-header">
     <div class="kanban-title">
         <h1>{{ kanban.name }}</h1>
-        <button type="button" class="btn btn-small" ng-click="kanban.editKanban()" ng-show="kanban.userIsAdmin()">
+        <button type="button" class="btn btn-small" ng-click="kanban.editKanban()" ng-show="kanban.showEditbutton()">
             <i class="icon-edit"></i>
             <span translate>Edit this Kanban</span>
         </button>
