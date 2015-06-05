@@ -372,7 +372,7 @@ class KanbanTest extends RestBase {
      * @depends testPOSTKanbanItemsInUnknowColmun
      */
     public function testDELETEKanban() {
-        $response = $this->getResponse($this->client->delete('kanban/'. TestDataBuilder::KANBAN_ID));
+        $response = $this->getResponse($this->client->delete('kanban/'. REST_TestDataBuilder::KANBAN_ID));
 
         $this->assertEquals($response->getStatusCode(), 200);
     }
@@ -382,7 +382,7 @@ class KanbanTest extends RestBase {
      * @depends testDELETEKanban
      */
     public function testGETDeletedKanban() {
-        $response = $this->getResponse($this->client->get('kanban/'. TestDataBuilder::KANBAN_ID));
+        $response = $this->getResponse($this->client->get('kanban/'. REST_TestDataBuilder::KANBAN_ID));
 
         $this->assertEquals($response->getStatusCode(), 404);
     }
