@@ -62,7 +62,6 @@ Everything is configured in `/etc/proftpd.conf`, update or add:
     TransferLog                     /var/log/xferlog
 
     LoadModule mod_sql.c
-    LoadModule mod_sql_passwd.c
     LoadModule mod_sql_mysql.c
 
     <Global>
@@ -81,8 +80,7 @@ Everything is configured in `/etc/proftpd.conf`, update or add:
 
         SQLAuthenticate   users groups usersetfast groupsetfast
         SQLBackend        mysql
-        SQLPasswordEngine on
-        SQLAuthTypes      MD5
+        SQLAuthTypes      Crypt
         SQLConnectInfo    tuleap@localhost proftpd_user proftpd_password
         SQLDefaultHomedir /var/lib/tuleap/secure_ftp
         SQLGroupInfo      ftpgroups groupname gid members
