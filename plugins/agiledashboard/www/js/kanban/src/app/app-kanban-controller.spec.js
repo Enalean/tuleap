@@ -13,7 +13,9 @@ describe('KanbanCtrl - ', function() {
         amCalendarFilter = {};
 
         SharedPropertiesService = jasmine.createSpyObj('SharedPropertiesService', [
-            'getKanban'
+            'getKanban',
+            'getUserId',
+            'getViewMode'
         ]);
 
         SharedPropertiesService.getKanban.andReturn({

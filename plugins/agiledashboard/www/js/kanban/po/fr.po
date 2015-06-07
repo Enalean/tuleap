@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.8.4\n"
 
 #: src/app/error/error.tpl.html
 msgid ""
@@ -36,6 +36,10 @@ msgstr "Titre de la carte"
 msgid "Column:"
 msgstr "Colonne :"
 
+#: src/app/kanban.tpl.html
+msgid "Compact view"
+msgstr "Vue compacte"
+
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Configuration"
 msgstr "Configuration"
@@ -51,6 +55,10 @@ msgstr "Maximum :"
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Delete this Kanban"
 msgstr "Supprimer ce Kanban"
+
+#: src/app/kanban.tpl.html
+msgid "Detailed view"
+msgstr "Vue détaillée"
 
 #: src/app/kanban.tpl.html
 msgid "Edit this Kanban"

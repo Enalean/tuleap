@@ -16,7 +16,8 @@
         'KanbanItemService',
         'CardFieldsService',
         'NewTuleapArtifactModalService',
-        'TuleapArtifactModalLoading'
+        'TuleapArtifactModalLoading',
+        'UserPreferencesService'
     ];
 
     function KanbanCtrl(
@@ -32,12 +33,14 @@
         KanbanItemService,
         CardFieldsService,
         NewTuleapArtifactModalService,
-        TuleapArtifactModalLoading
+        TuleapArtifactModalLoading,
+        UserPreferencesService
     ) {
-        var self   = this,
-            limit  = 50,
-            offset = 0,
-            kanban = SharedPropertiesService.getKanban();
+        var self    = this,
+            limit   = 50,
+            offset  = 0,
+            kanban  = SharedPropertiesService.getKanban(),
+            user_id = SharedPropertiesService.getUserId();
 
         self.label = kanban.label;
         self.board = {
@@ -62,6 +65,8 @@
             is_small_width: false
         });
 
+        self.detailed_view_key            = 'detailed-view';
+        self.compact_view_key             = 'compact-view';
         self.cardFieldIsSimpleValue       = CardFieldsService.cardFieldIsSimpleValue;
         self.cardFieldIsList              = CardFieldsService.cardFieldIsList;
         self.cardFieldIsText              = CardFieldsService.cardFieldIsText;
@@ -96,7 +101,9 @@
         self.loading_modal                = TuleapArtifactModalLoading.loading;
         self.showEditModal                = showEditModal;
         self.moveItemAtTheEnd             = moveItemAtTheEnd;
+        self.switchViewMode               = switchViewMode;
 
+        initViewMode();
         loadColumns();
         loadBacklog(limit, offset);
         loadArchive(limit, offset);
@@ -105,6 +112,20 @@
             dragStart: dragStart,
             dropped  : dropped
         };
+
+        function initViewMode() {
+            self.current_view_class = self.compact_view_key;
+
+            if (SharedPropertiesService.getViewMode()) {
+                self.current_view_class = SharedPropertiesService.getViewMode();
+            }
+        }
+
+        function switchViewMode(view_mode) {
+            self.current_view_class = view_mode;
+            UserPreferencesService.setPreference(user_id, 'agiledashboard_kanban_item_view_mode_' + kanban.id, view_mode);
+            $scope.$broadcast('rebuild:kustom-scroll');
+        }
 
         function filterCards() {
             self.backlog.filtered_content = $filter('InPropertiesFilter')(self.backlog.content, self.filter_terms);

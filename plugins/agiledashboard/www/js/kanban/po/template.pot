@@ -24,6 +24,10 @@ msgstr ""
 msgid "Column:"
 msgstr ""
 
+#: src/app/kanban.tpl.html
+msgid "Compact view"
+msgstr ""
+
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Configuration"
 msgstr ""
@@ -38,6 +42,10 @@ msgstr ""
 
 #: src/app/edit-kanban/edit-kanban.tpl.html
 msgid "Delete this Kanban"
+msgstr ""
+
+#: src/app/kanban.tpl.html
+msgid "Detailed view"
 msgstr ""
 
 #: src/app/kanban.tpl.html
