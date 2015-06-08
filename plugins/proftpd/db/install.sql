@@ -70,7 +70,7 @@ UNION
 
 -- View for users
 CREATE VIEW ftpusers AS
-SELECT user_name as username, user_pw as password, unix_uid+20000 as uid, unix_uid+20000 as gid, CONCAT("/home/users/", user_name) as home, shell
+SELECT user_name as username, unix_pw as password, unix_uid+20000 as uid, unix_uid+20000 as gid, CONCAT("/home/users/", user_name) as home, shell
 FROM user
 WHERE status IN ('A', 'R')
 AND user_id > 100;
