@@ -1,3 +1,7 @@
+Version 8.2-4 (Monday, June 8th 2015)
+	== Bug Fix ==
+	* request #8128: Fix angular dependencies
+
 Version 8.2-3 (Monday, June 8th 2015)
 	== Bug Fix ==
 	* request #8119: PHPWiki SyntaxHighlighter plugin does not work on Centos 6
