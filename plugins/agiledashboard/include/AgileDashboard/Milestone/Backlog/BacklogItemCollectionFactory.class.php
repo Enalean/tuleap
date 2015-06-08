@@ -119,6 +119,61 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
         return $this->filterOutAssignedBacklogItems($collection, $user);
     }
 
+    public function getUnassignedCollection(
+        PFUser $user,
+        Planning_Milestone $milestone,
+        AgileDashboard_Milestone_Backlog_BacklogStrategy $backlog_strategy,
+        $redirect_to_self
+    ) {
+        $collection = $this->getUnplannedCollection($user, $milestone, $backlog_strategy, $redirect_to_self);
+
+        return $this->filterOutAssignedBacklogItems($collection, $user);
+    }
+
+    public function getUnplannedCollection(
+        PFUser $user,
+        Planning_Milestone $milestone,
+        AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy $backlog_strategy,
+        $redirect_to_self
+    ) {
+        $artifacts         = array();
+        $backlog_item_ids  = array();
+        $sub_milestone_ids = $this->getSubmilestoneIds($user, $milestone);
+
+        $item_collection = $backlog_strategy->getUnplannedArtifacts($user, $sub_milestone_ids);
+        foreach ($item_collection as $artifact) {
+            $artifacts[$artifact->getId()] = $artifact;
+            $backlog_item_ids[]            = $artifact->getId();
+        }
+
+        $parents    = $this->getParentArtifacts($milestone, $user, $backlog_item_ids);
+        $semantics  = $this->getArtifactsSemantics($user, $milestone, $backlog_item_ids, $artifacts);
+
+        $collection = $this->backlog_item_builder->getCollection();
+        foreach ($artifacts as $artifact) {
+            $artifact_id = $artifact->getId();
+
+            if (! isset($semantics[$artifact_id]) || ! isset($semantics[$artifact_id][Tracker_Semantic_Status::NAME])) {
+                continue;
+            }
+
+            $artifact->setTitle($semantics[$artifact_id][Tracker_Semantic_Title::NAME]);
+
+            $backlog_item = $this->backlog_item_builder->getItem($artifact, $redirect_to_self);
+            $backlog_item->setStatus($semantics[$artifact_id][Tracker_Semantic_Status::NAME]);
+            if (isset($parents[$artifact_id])) {
+                $backlog_item->setParent($parents[$artifact_id]);
+            }
+
+            $this->setInitialEffort($backlog_item, $semantics[$artifact_id]);
+
+            $collection->push($backlog_item);
+        }
+        $collection->setTotalAvaialableSize($item_collection->getTotalAvaialableSize());
+
+        return $collection;
+    }
+
     public function getUnplannedOpenCollection(
         PFUser $user,
         Planning_Milestone $milestone,

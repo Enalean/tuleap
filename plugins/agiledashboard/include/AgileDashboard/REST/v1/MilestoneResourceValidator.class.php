@@ -101,9 +101,7 @@ class MilestoneResourceValidator {
         $todo           = null;
         $done           = null;
 
-        if (! $this->idsAreUnique($ids)) {
-            throw new IdsFromBodyAreNotUniqueException();
-        }
+        $this->validateIdsAreUnique($ids);
 
         if (! $accept_closed) {
             //We only want to use this strategy when editing the list of items in a milestone. (a descendant
@@ -135,18 +133,11 @@ class MilestoneResourceValidator {
             throw new UserCannotUpdateMilestoneException($milestone->getArtifactId());
         }
 
-        if (! $this->idsAreUnique($ids)) {
-            throw new IdsFromBodyAreNotUniqueException();
-        }
+        $this->validateIdsAreUnique($ids);
 
         foreach($ids as $id) {
             $this->checkSubMilestoneById($milestone, $user, $id);
         }
-    }
-
-    private function idsAreUnique(array $ids) {
-        $ids_unique = array_unique($ids);
-        return count($ids) == count($ids_unique);
     }
 
     /**
@@ -205,18 +196,16 @@ class MilestoneResourceValidator {
 
     /**
      * @throws IdsFromBodyAreNotUniqueException
-     * @throws ArtifactIsNotInOpenAndUnplannedBacklogItemsException
+     * @throws ArtifactIsNotInUnplannedBacklogItemsException
      */
-    public function validateArtifactIdsAreInOpenAndUnplannedMilestone(array $ids, Planning_Milestone $milestone, PFUser $user) {
-        if (! $this->idsAreUnique($ids)) {
-            throw new IdsFromBodyAreNotUniqueException();
-        }
+    public function validateArtifactIdsAreInUnplannedMilestone(array $ids, Planning_Milestone $milestone, PFUser $user) {
+        $this->validateIdsAreUnique($ids);
 
-        $open_unplanned = $this->backlog_item_collection_factory->getUnplannedOpenCollection($user, $milestone, $this->backlog_strategy_factory->getBacklogStrategy($milestone), false);
+        $unplanned = $this->backlog_item_collection_factory->getUnplannedCollection($user, $milestone, $this->backlog_strategy_factory->getBacklogStrategy($milestone), false);
 
         foreach($ids as $id) {
-            if (! $open_unplanned->containsId($id)) {
-                throw new ArtifactIsNotInOpenAndUnplannedBacklogItemsException($id);
+            if (! $unplanned->containsId($id)) {
+                throw new ArtifactIsNotInUnplannedBacklogItemsException($id);
             }
         }
 
@@ -225,12 +214,21 @@ class MilestoneResourceValidator {
 
     /**
      * @throws IdsFromBodyAreNotUniqueException
+     */
+    public function validateIdsAreUnique(array $ids) {
+        $ids_unique = array_unique($ids);
+
+        if (count($ids) != count($ids_unique)) {
+            throw new IdsFromBodyAreNotUniqueException();
+        }
+    }
+
+    /**
+     * @throws IdsFromBodyAreNotUniqueException
      * @throws ArtifactCannotBeInBacklogOfException
      */
     public function validateArtifactIdsCanBeAddedToBacklog(array $to_add, Planning_Milestone $milestone, PFUser $user) {
-        if (! $this->idsAreUnique($to_add)) {
-            throw new IdsFromBodyAreNotUniqueException();
-        }
+        $this->validateIdsAreUnique($to_add);
 
         $ids_to_add = $this->filterArtifactIdsAlreadyInBacklog($to_add, $milestone, $user);
         $indexed_children_backlog_trackers = $this->getIndexedChildrenBacklogTrackers($milestone);
@@ -287,20 +285,18 @@ class MilestoneResourceValidator {
 
     /**
      * @throws IdsFromBodyAreNotUniqueException
-     * @throws ArtifactIsNotInOpenAndUnassignedTopBacklogItemsException
+     * @throws ArtifactIsNotInUnassignedTopBacklogItemsException
      */
-    public function validateArtifactIdsAreInOpenAndUnassignedTopBacklog(array $ids, PFUser $user, Project $project) {
-        if (! $this->idsAreUnique($ids)) {
-            throw new IdsFromBodyAreNotUniqueException();
-        }
+    public function validateArtifactIdsAreInUnassignedTopBacklog(array $ids, PFUser $user, Project $project) {
+        $this->validateIdsAreUnique($ids);
 
         $top_milestone       = $this->milestone_factory->getVirtualTopMilestone($user, $project);
         $strategy_unassigned = $this->backlog_strategy_factory->getSelfBacklogStrategy($top_milestone);
-        $open_unassigned     = $this->backlog_item_collection_factory->getUnassignedOpenCollection($user, $top_milestone, $strategy_unassigned, false);
+        $unassigned          = $this->backlog_item_collection_factory->getUnassignedCollection($user, $top_milestone, $strategy_unassigned, false);
 
         foreach($ids as $id) {
-            if (! $open_unassigned->containsId($id)) {
-                throw new ArtifactIsNotInOpenAndUnassignedTopBacklogItemsException($id);
+            if (! $unassigned->containsId($id)) {
+                throw new ArtifactIsNotInUnassignedTopBacklogItemsException($id);
             }
         }
 

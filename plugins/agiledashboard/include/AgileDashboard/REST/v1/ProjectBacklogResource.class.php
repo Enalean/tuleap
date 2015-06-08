@@ -170,7 +170,7 @@ class ProjectBacklogResource {
     public function put(PFUser $user, Project $project, array $ids) {
         $this->checkIfUserCanChangePrioritiesInMilestone($user, $project);
 
-        $this->validateArtifactIdsAreInOpenAndUnassignedTopBacklog($ids, $user, $project);
+        $this->validateArtifactIdsAreInUnassignedTopBacklog($ids, $user, $project);
 
         try {
             $this->artifactlink_updater->setOrderWithHistoryChangeLogging($ids, self::TOP_BACKLOG_IDENTIFIER, $project->getId());
@@ -196,7 +196,7 @@ class ProjectBacklogResource {
             $order->checkFormat($order);
 
             $all_ids = array_merge(array($order->compared_to), $order->ids);
-            $this->validateArtifactIdsAreInOpenAndUnassignedTopBacklog($all_ids, $user, $project);
+            $this->validateArtifactIdsAreInUnassignedTopBacklog($all_ids, $user, $project);
 
             try {
                 $this->resources_patcher->updateArtifactPriorities($order, self::TOP_BACKLOG_IDENTIFIER, $project->getId());
@@ -228,10 +228,10 @@ class ProjectBacklogResource {
         }
     }
 
-    private function validateArtifactIdsAreInOpenAndUnassignedTopBacklog($ids, $user, $project) {
+    private function validateArtifactIdsAreInUnassignedTopBacklog($ids, $user, $project) {
         try {
-            $this->milestone_validator->validateArtifactIdsAreInOpenAndUnassignedTopBacklog($ids, $user, $project);
-        } catch (ArtifactIsNotInOpenAndUnassignedTopBacklogItemsException $exception) {
+            $this->milestone_validator->validateArtifactIdsAreInUnassignedTopBacklog($ids, $user, $project);
+        } catch (ArtifactIsNotInUnassignedTopBacklogItemsException $exception) {
             throw new RestException(409, $exception->getMessage());
         } catch (IdsFromBodyAreNotUniqueException $exception) {
             throw new RestException(409, $exception->getMessage());
