@@ -1,3 +1,11 @@
+Version 8.2-3 (Monday, June 8th 2015)
+	== Bug Fix ==
+	* request #8119: PHPWiki SyntaxHighlighter plugin does not work on Centos 6
+	* request #8116: Wrong gerrit Permission after migration (Authenticated Users)
+	* request #8102: cannot PUT empty artifact textarea field
+	* request #8092: On fresh centos6 install with git19, gerrit migration fails
+	* request #8072: Fix reflected XSS in NuSOAP
+
 Version 8.2-2 (Monday, June 1st 2015)
 	== Bug Fix ==
 	* request #8098: Restoration of deleted git repository failed
