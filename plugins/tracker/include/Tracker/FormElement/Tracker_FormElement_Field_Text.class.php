@@ -478,10 +478,18 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
     }
 
     public function getRestFieldData($value) {
+        if ($this->isValueAlreadyWellFormatted($value)) {
+            return $value;
+        }
+
         $data            = $this->getDefaultValue();
         $data['content'] = $value;
 
         return $data;
+    }
+
+    private function isValueAlreadyWellFormatted($value) {
+        return is_array($value) && isset($value['content']) && isset($value['format']);
     }
 
     /**
