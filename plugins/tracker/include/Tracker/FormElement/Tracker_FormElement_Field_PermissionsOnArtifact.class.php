@@ -746,4 +746,19 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     public function accept(Tracker_FormElement_FieldVisitor $visitor) {
         return $visitor->visitPermissionsOnArtifact($this);
     }
+    /**
+     * Return REST value of a field for a given changeset
+     *
+     * @param PFUser                     $user
+     * @param Tracker_Artifact_Changeset $changeset
+     *
+     * @return mixed | null if no values
+     */
+    public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
+        $value = $changeset->getValue($this);
+        if ($value) {
+            return $value->getRESTValue($user);
+        }
+    }
+
 }

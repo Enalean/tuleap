@@ -42,7 +42,8 @@ class UserGroupTest extends RestBase {
                 'id'        => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_1_ID,
                 'uri'       => 'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_1_ID,
                 'label'     => REST_TestDataBuilder::STATIC_UGROUP_1_LABEL,
-                'users_uri' => 'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_1_ID.'/users'
+                'users_uri' => 'user_groups/'.REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID.'_'.REST_TestDataBuilder::STATIC_UGROUP_1_ID.'/users',
+                'key'       => REST_TestDataBuilder::STATIC_UGROUP_1_LABEL
             )
         );
         $this->assertEquals($response->getStatusCode(), 200);

@@ -220,14 +220,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
     }
 
     public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
-        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation';
-        $artifact_field_value_representation = new $classname_with_namespace;
-        $artifact_field_value_representation->build(
-            $this->getId(),
-            $this->getLabel(),
-            $this->getComputedValue($user, $changeset->getArtifact())
-        );
-        return $artifact_field_value_representation;
+        return $this->getFullRESTValue($user, $changeset);
     }
 
     public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {

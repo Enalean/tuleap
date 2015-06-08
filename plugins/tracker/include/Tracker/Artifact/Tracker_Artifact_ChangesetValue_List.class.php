@@ -221,14 +221,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
     }
 
     public function getRESTValue(PFUser $user) {
-        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueListRepresentation';
-        $artifact_field_value_list_representation = new $classname_with_namespace;
-        $artifact_field_value_list_representation->build(
-            $this->field->getId(),
-            $this->field->getLabel(),
-            array_values(array_map(array($this, 'getRESTBindValue'), $this->getListValues()))
-        );
-        return $artifact_field_value_list_representation;
+        return $this->getFullRESTValue($user);
     }
 
     protected function getRESTBindValue(Tracker_FormElement_Field_List_Value $value) {
@@ -242,7 +235,8 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
             $this->field->getId(),
             Tracker_FormElementFactory::instance()->getType($this->field),
             $this->field->getLabel(),
-            array_values(array_map(array($this, 'getFullRESTBindValue'), $this->getListValues()))
+            array_values(array_map(array($this, 'getFullRESTBindValue'), $this->getListValues())),
+            array_values(array_map(array($this, 'getRESTBindValue'), $this->getListValues()))
         );
         return $artifact_field_value_list_representation;
     }

@@ -100,11 +100,26 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
 
 
     public function getRESTValue(PFUser $user) {
-        return $this->getSimpleRESTRepresentation($this->getText());
+        return $this->getFullRESTValue($user);
     }
 
     public function getFullRESTValue(PFUser $user) {
         return $this->getFullRESTRepresentation($this->getText());
+    }
+
+    protected function getFullRESTRepresentation($value) {
+        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueTextRepresentation';
+
+        $artifact_field_value_full_representation = new $classname_with_namespace;
+        $artifact_field_value_full_representation->build(
+            $this->field->getId(),
+            Tracker_FormElementFactory::instance()->getType($this->field),
+            $this->field->getLabel(),
+            $value,
+            $this->getFormat()
+        );
+
+        return $artifact_field_value_full_representation;
     }
 
     /**

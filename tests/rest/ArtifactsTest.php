@@ -68,6 +68,49 @@ class ArtifactsTest extends RestBase {
         return $artifact_reference['id'];
     }
 
+    /**
+     * @depends testPostArtifact
+     */
+    public function testGetArtifact() {
+        $test_put_return = func_get_args();
+        $artifact_id = $test_put_return[0];
+
+        $response   = $this->getResponse($this->client->get("artifacts/$artifact_id"));
+        $artifact = $response->json();
+
+        $fields = $artifact['values'];
+
+        foreach($fields as $field) {
+            switch($field['type']) {
+                case 'string':
+                    $this->assertTrue(is_string($field['label']));
+                    $this->assertTrue(is_string($field['value']));
+                    break;
+                case 'cross':
+                    $this->assertTrue(is_string($field['label']));
+                    $this->assertTrue(is_array($field['value']));
+                    break;
+                case 'text':
+                    $this->assertTrue(is_string($field['label']));
+                    $this->assertTrue(is_string($field['value']));
+                    $this->assertTrue(is_string($field['format']));
+                    $this->assertTrue($field['format'] == 'text'|| $field['format'] == 'html' );
+                    break;
+                case 'sb':
+                    $this->assertTrue(is_string($field['label']));
+                    $this->assertTrue(is_array($field['values']));
+                    $this->assertTrue(is_array($field['bind_value_ids']));
+                    break;
+                case 'computed':
+                    $this->assertTrue(is_string($field['label']));
+                    $this->assertTrue(is_int($field['value']) || is_null($field['value']));
+                    break;
+                default:
+                    throw new Exception('You need to update this test for the field: '.print_r($field, true));
+            }
+        }
+    }
+
 
     /**
      * @depends testPostArtifact
@@ -276,6 +319,8 @@ class ArtifactsTest extends RestBase {
         $changesets = $response->json();
         $this->assertEquals(5, count($changesets));
         $this->assertEquals('Please see my comment', $changesets[4]['last_comment']['body']);
+
+        return $artifact_id;
     }
 
     public function testAnonymousGETArtifact() {

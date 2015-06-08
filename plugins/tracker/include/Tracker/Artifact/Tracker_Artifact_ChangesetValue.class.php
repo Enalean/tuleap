@@ -199,4 +199,3 @@ abstract class Tracker_Artifact_ChangesetValue {
         return $artifact_field_value_full_representation;
     }
 }
-?>

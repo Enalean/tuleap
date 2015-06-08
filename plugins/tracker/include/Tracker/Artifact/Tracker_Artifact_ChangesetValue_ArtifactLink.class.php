@@ -159,22 +159,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
     }
 
     public function getRESTValue(PFUser $user) {
-        $values = array();
-        foreach ($this->getArtifactIdsUserCanSee($user) as $id) {
-            $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactReferenceRepresentation';
-            $artifact_reference_representation = new $classname_with_namespace;
-            $artifact_reference_representation->build($id);
-            $values[] = $artifact_reference_representation;
-        }
-
-        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\ArtifactFieldValueArtifactLinksRepresentation';
-        $artifact_links_representation = new $classname_with_namespace;
-        $artifact_links_representation->build(
-            $this->field->getId(),
-            $this->field->getLabel(),
-            $values
-        );
-        return $artifact_links_representation;
+        return $this->getFullRESTValue($user);
     }
 
     public function getFullRESTValue(PFUser $user) {

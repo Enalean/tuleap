@@ -86,7 +86,11 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
         $representation->build(
             $this->field->getId(),
             $this->field->getLabel(),
-            $this->getPerms()
+            $this->getPerms(),
+            array_map(
+                array($this, 'getUgroupRESTRepresentation'),
+                $this->getPerms()
+            )
         );
         return $representation;
     }
@@ -180,5 +184,16 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
         $row = $this->getDao()->searchByUGroupId($u_group)->getRow();
         return util_translate_name_ugroup($row['name']);
     }
+
+    protected function getUgroupRESTRepresentation($u_group_id) {
+        $ugroup_manager = new UGroupManager($this->getDao());
+        $u_group        = $ugroup_manager->getById($u_group_id);
+
+        $classname_with_namespace = 'Tuleap\Project\REST\UserGroupRepresentation';
+        $representation           = new $classname_with_namespace;
+
+        $representation->build($this->getField()->getTracker()->getProject()->getID(), $u_group);
+
+        return $representation;
+    }
 }
-?>

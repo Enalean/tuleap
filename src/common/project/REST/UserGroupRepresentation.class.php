@@ -47,7 +47,8 @@ class UserGroupRepresentation {
     public function build($project_id, ProjectUGroup $ugroup) {
         $this->id        = $project_id . '_' . $ugroup->getId();
         $this->uri       = UserGroupRepresentation::ROUTE . '/' . $this->id ;
-        $this->label     = $ugroup->getNormalizedName();
+        $this->label     = \User_ForgeUGroup::getUserGroupDisplayName($ugroup->getName());
+        $this->key       = $ugroup->getName();
         $this->users_uri = self::ROUTE . '/'. $this->id .'/users';
     }
 }
