@@ -1,3 +1,6 @@
+Version 5.630 - Tuleap 8.3
+    * request #8129: REST Text field does not take in account well formatted value
+
 Version 5.629 - Tuleap 8.3
     * story #8059: Use secure hash function for the storage of password used for web login
 
