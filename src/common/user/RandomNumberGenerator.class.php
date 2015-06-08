@@ -18,22 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class UserTokenGenerator {
+class RandomNumberGenerator {
     private $token_size;
 
-    // 128 bits of entropy is enough
+    // 128 bits of entropy is enough most of the time
     // @see https://www.owasp.org/index.php/Insufficient_Session-ID_Length
     public function __construct($token_size = 16) {
         $this->token_size = $token_size;
     }
 
     /**
-     * Generate a token that could be used has a session ID or during a password
+     * Generate a number that could be used has a session ID or during a password
      * reset procedure
      *
-     * @return string Token represented has a hexadecimal string
+     * @return string Number represented has a hexadecimal string
      */
-    public function getToken() {
+    public function getNumber() {
         $token = '';
         if (function_exists('openssl_random_pseudo_bytes')) {
             $token = bin2hex(openssl_random_pseudo_bytes($this->token_size));

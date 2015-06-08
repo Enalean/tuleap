@@ -12,8 +12,8 @@ require_once('pre.php');
 $em =& EventManager::instance();
 $em->processEvent('before_lostpw-confirm', array());
 
-$token_generator = new UserTokenGenerator();
-$confirm_hash = $token_generator->getToken();
+$number_generator = new RandomNumberGenerator();
+$confirm_hash     = $number_generator->getNumber();
 
 $request =& HTTPRequest::instance();
 

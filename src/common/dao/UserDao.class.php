@@ -326,9 +326,9 @@ class UserDao extends DataAccessObject {
         
         // generate a token from a PRNG
         // continue until unique token is generated (SHOULD only be once)
-        $token_generator = new UserTokenGenerator();
+        $number_generator = new RandomNumberGenerator();
         do {
-            $token = $token_generator->getToken();
+            $token = $number_generator->getNumber();
             $sql = "SELECT 1
                     FROM session
                     WHERE session_hash = ". $this->da->quoteSmart($token);
