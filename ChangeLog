@@ -14,6 +14,7 @@ Version 8.3 (not released yet)
 	* ldap: 3.80
 	* agiledashboard: 1.207
 	* tracker: 5.629
+	* proftpd: 0.21
 
 	== Development ==
 	* Adding SOAP example for legacy Tracker V3

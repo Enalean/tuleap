@@ -1,3 +1,6 @@
+Version 0.21 - Tuleap 8.3
+    * story #8059: Users can authenticate to ProFTPD on a platform who does not store MD5 passwords
+
 Version 0.20 - Tuleap 7.9
     * story #7694 Inherit permissions & ugroups from template for sftpd service
 
