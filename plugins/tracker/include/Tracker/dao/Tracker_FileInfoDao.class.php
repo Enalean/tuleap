@@ -74,13 +74,24 @@ class Tracker_FileInfoDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    public function searchArtifactIdByFileInfoId($id) {
+    public function searchArtifactIdByFileInfoIdInLastChangeset($id) {
         $id = $this->da->escapeInt($id);
         $sql = "SELECT DISTINCT c.artifact_id as artifact_id, cv.field_id as field_id
                 FROM tracker_changeset_value AS cv
                     INNER JOIN tracker_changeset_value_file AS cv_file ON (cv_file.changeset_value_id = cv.id)
                     INNER JOIN tracker_changeset AS c ON (cv.changeset_id = c.id)
                     INNER JOIN tracker_artifact AS a ON (a.id = c.artifact_id AND a.last_changeset_id = c.id)
+                WHERE cv_file.fileinfo_id = $id";
+        return $this->retrieve($sql);
+    }
+
+    public function searchArtifactIdByFileInfoId($id) {
+        $id = $this->da->escapeInt($id);
+        $sql = "SELECT DISTINCT c.artifact_id as artifact_id, cv.field_id as field_id
+                FROM tracker_changeset_value AS cv
+                    INNER JOIN tracker_changeset_value_file AS cv_file ON (cv_file.changeset_value_id = cv.id)
+                    INNER JOIN tracker_changeset AS c ON (cv.changeset_id = c.id)
+                    INNER JOIN tracker_artifact AS a ON (a.id = c.artifact_id)
                 WHERE cv_file.fileinfo_id = $id";
         return $this->retrieve($sql);
     }

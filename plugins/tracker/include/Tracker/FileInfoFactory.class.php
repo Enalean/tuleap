@@ -87,7 +87,7 @@ class Tracker_FileInfoFactory {
      * @throws Tracker_FileInfo_UnauthorisedException
      */
     public function getArtifactByFileInfoIdAndUser(PFUser $user, $id) {
-        $row = $this->dao->searchArtifactIdByFileInfoId($id)->getRow();
+        $row = $this->dao->searchArtifactIdByFileInfoIdInLastChangeset($id)->getRow();
         if (! $row) {
             throw new Tracker_FileInfo_InvalidFileInfoException('File does not exist');
         }
@@ -106,6 +106,21 @@ class Tracker_FileInfoFactory {
      * @return Tracker_Artifact
      * @throws Tracker_FileInfo_InvalidFileInfoException
      * @throws Tracker_FileInfo_UnauthorisedException
+     */
+    public function getArtifactByFileInfoIdInLastChangeset($id) {
+        $row = $this->dao->searchArtifactIdByFileInfoIdInLastChangeset($id)->getRow();
+        if (! $row) {
+            return;
+        }
+
+        return $this->artifact_factory->getArtifactById($row['artifact_id']);
+    }
+
+    /**
+     *
+     * @param int $id
+     *
+     * @return Tracker_Artifact | null
      */
     public function getArtifactByFileInfoId($id) {
         $row = $this->dao->searchArtifactIdByFileInfoId($id)->getRow();

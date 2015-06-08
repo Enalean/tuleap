@@ -81,7 +81,9 @@ class Tracker_FileInfo {
             $this->description,
             $this->filename,
             $this->filesize,
-            $this->filetype
+            $this->filetype,
+            $this->field->getFileHTMLUrl($this),
+            $this->field->getFileHTMLPreviewUrl($this)
         );
         return $file_info_representation;
     }
@@ -90,7 +92,7 @@ class Tracker_FileInfo {
      * @return Tuleap\Tracker\REST\Artifact\FileInfoFullRepresentation
      */
     public function getFullRESTValue() {
-        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\FileInfoFullRepresentation';
+        $classname_with_namespace = 'Tuleap\Tracker\REST\Artifact\FileInfoRepresentation';
         $file_info_representation = new $classname_with_namespace;
         $file_info_representation->build(
             $this->id,
@@ -98,7 +100,9 @@ class Tracker_FileInfo {
             $this->description,
             $this->filename,
             $this->filesize,
-            $this->filetype
+            $this->filetype,
+            $this->field->getFileHTMLUrl($this),
+            $this->field->getFileHTMLPreviewUrl($this)
         );
         return $file_info_representation;
     }
