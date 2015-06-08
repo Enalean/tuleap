@@ -1,3 +1,6 @@
+Version 1.208 - Tuleap 8.3
+    * request #8128 Fix angular dependencies
+
 Version 1.207 - Tuleap 8.3
     * Fix REST tests
 
