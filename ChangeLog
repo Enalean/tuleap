@@ -8,6 +8,7 @@ Version 8.3 (not released yet)
 	== Enhancements ==
 	* story #8089: Mustachify SVN general settings
 	* story #8059: Use secure hash function for the storage of password used for web login
+	* story #8118: do not compile whole www/guidelines during make less
 
 	== Plugins ==
 	* git: 4.68
@@ -22,7 +23,7 @@ Version 8.3 (not released yet)
 	* story #8118: Tuleap Guidelines: first step
 	* Introduce usage of docker-compose
 
-        == Themes ==
+	== Themes ==
 	* FlamingParrot: 1.86
 
 Version 8.2 (Thursday, May 28th 2015)
