@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2015. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Codendi.
@@ -56,10 +56,24 @@ require_once('common/valid/Rule.class.php');    // unit test not really unit...
 
 class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
 
+    /** @var XML_Security */
+    protected $xml_security;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->xml_security = new XML_Security();
+        $this->xml_security->enableExternalLoadOfEntities();
+    }
+
     public function tearDown() {
+        $this->xml_security->disableExternalLoadOfEntities();
+
         unset($GLOBALS['sys_incdir']);
         unset($GLOBALS['sys_custom_incdir']);
         unset($GLOBALS['Language']);
+
+        parent::tearDown();
     }
 
     function testNoDefaultValue() {

@@ -24,7 +24,6 @@ require_once 'pre.php';
 if ($argc < 4) {
     echo <<< EOT
 Usage: $argv[0] project_id admin_user_name xml_file_path
-Create a project trackers, agiledashboard and cardwall from XML format
 
 EOT;
     exit(1);
@@ -33,16 +32,23 @@ EOT;
 $user_manager = UserManager::instance();
 $xml_importer = new ProjectXMLImporter(
     EventManager::instance(),
-    ProjectManager::instance()
+    ProjectManager::instance(),
+    new XML_RNGValidator(),
+    new UGroupManager(),
+    UserManager::instance(),
+    new XMLImportHelper(),
+    new ProjectXMLImporterLogger()
 );
 
 try {
+    $project_id = $argv[1];
+
     $user = $user_manager->forceLogin($argv[2]);
     if ((! $user->isSuperUser() && ! $user->isAdmin($project_id)) || ! $user->isActive()) {
         throw new RuntimeException($GLOBALS['Language']->getText('project_import', 'invalid_user', array($user_name)));
     }
 
-    $xml_importer->import($argv[1], $argv[3]);
+    $xml_importer->importProjectData($project_id, $argv[3]);
 } catch (XML_ParseException $exception) {
     foreach ($exception->getErrors() as $parse_error) {
         fwrite(STDERR, "*** ERROR: ".$parse_error.PHP_EOL);

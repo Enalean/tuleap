@@ -247,10 +247,15 @@ class REST_TestDataBuilder extends TestDataBuilder {
     protected function importTemplateInProject($project_id, $template) {
         $xml_importer = new ProjectXMLImporter(
             EventManager::instance(),
-            $this->project_manager
+            $this->project_manager,
+            new XML_RNGValidator(),
+            new UGroupManager(),
+            UserManager::instance(),
+            new XMLImportHelper(),
+            new ProjectXMLImporterLogger()
         );
         $this->user_manager->forceLogin(self::ADMIN_USER_NAME);
-        $xml_importer->import($project_id, $this->template_path.$template);
+        $xml_importer->importWithoutUgroups($project_id, $this->template_path.$template);
     }
 
     public function deleteTracker() {

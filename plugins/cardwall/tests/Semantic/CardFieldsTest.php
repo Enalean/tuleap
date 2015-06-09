@@ -1,6 +1,6 @@
 <?php
 /**
-* Copyright Enalean (c) 2013. All rights reserved.
+* Copyright Enalean (c) 2013 - 2015. All rights reserved.
 * Tuleap and Enalean names and logos are registrated trademarks owned by
 * Enalean SAS. All other trademarks or names are properties of their respective
 * owners.
@@ -24,6 +24,22 @@
 require_once dirname(__FILE__) .'/../bootstrap.php';
 
 class Cardwall_Semantic_CardFieldsTest extends TuleapTestCase {
+
+    /** @var XML_Security */
+    protected $xml_security;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->xml_security = new XML_Security();
+        $this->xml_security->enableExternalLoadOfEntities();
+    }
+
+    public function tearDown() {
+        $this->xml_security->disableExternalLoadOfEntities();
+
+        parent::tearDown();
+    }
 
     public function itExportsInXMLFormat() {
         $tracker  = mock('Tracker');

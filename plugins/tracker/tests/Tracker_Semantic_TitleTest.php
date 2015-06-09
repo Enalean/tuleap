@@ -25,6 +25,21 @@ Mock::generate('BaseLanguage');
 
 class Tracker_Semantic_TitleTest extends UnitTestCase {
 
+    private $xml_security;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->xml_security = new XML_Security();
+        $this->xml_security->enableExternalLoadOfEntities();
+    }
+
+    public function tearDown() {
+        $this->xml_security->disableExternalLoadOfEntities();
+
+        parent::tearDown();
+    }
+
     public function testExport() {
         $GLOBALS['Language'] = new MockBaseLanguage($this);
         $GLOBALS['Language']->setReturnValue('getText','Title',array('plugin_tracker_admin_semantic','title_label'));

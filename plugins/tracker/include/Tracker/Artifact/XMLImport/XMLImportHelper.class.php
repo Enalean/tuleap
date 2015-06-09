@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_XMLImport_XMLImportHelper {
+class Tracker_Artifact_XMLImport_XMLImportHelper extends XMLImportHelper {
 
     /** @var UserManager */
     private $user_manager;
@@ -39,21 +39,5 @@ class Tracker_Artifact_XMLImport_XMLImportHelper {
         }
 
         return $submitter;
-    }
-
-    private function getUserFormat(SimpleXMLElement $xml_element) {
-        $format       = (string) $xml_element['format'];
-        $submitted_by = (string) $xml_element;
-        switch($format) {
-            case 'id':
-            case 'email':
-                return "$format:$submitted_by";
-
-            case 'ldap':
-                return "ldapId:$submitted_by";
-
-            default :
-                return (string) $xml_element;
-        }
     }
 }

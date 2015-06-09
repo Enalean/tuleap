@@ -1,7 +1,7 @@
 #!/usr/share/codendi/src/utils/php-launcher.sh
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,7 +21,7 @@
 
 require_once 'pre.php';
 
-if ($argc < 1) {
+if ($argc !== 2) {
     echo <<< EOT
 Usage: $argv[0] project_id
 Dump a project structure to XML format
@@ -31,18 +31,22 @@ EOT;
 }
 
 $project = ProjectManager::instance()->getProject($argv[1]);
-if ($project && !$project->isError() && !$project->isDeleted()) {
+if ($project && ! $project->isError() && ! $project->isDeleted()) {
     try {
-        $xml_exporter = new ProjectXMLExporter(EventManager::instance());
-        $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
-                                             <project />');
-        $xml_exporter->export($project, $xml_element);
-        $dom = dom_import_simplexml($xml_element)->ownerDocument;
-        $dom->formatOutput = true;
-        echo $dom->saveXML();
+        $xml_exporter = new ProjectXMLExporter(
+            EventManager::instance(),
+            new UGroupManager(),
+            new XML_RNGValidator(),
+            new ProjectXMLExporterLogger()
+        );
+
+        echo $xml_exporter->exportProjectData($project);
+
+        exit(0);
     } catch (XML_ParseException $exception) {
+        fwrite(STDERR, "*** PARSE ERROR: ".$exception->getIndentedXml().PHP_EOL);
         foreach ($exception->getErrors() as $parse_error) {
-            fwrite(STDERR, "*** ERROR: ".$parse_error.PHP_EOL);
+            fwrite(STDERR, "*** PARSE ERROR: ".$parse_error.PHP_EOL);
         }
         exit(1);
     } catch (Exception $exception) {

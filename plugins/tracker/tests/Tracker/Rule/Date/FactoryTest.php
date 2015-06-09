@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2012. All rights reserved
+  * Copyright (c) Enalean, 2012 - 2015. All rights reserved
   *
   * This file is a part of Tuleap.
   *
@@ -39,6 +39,9 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
     /** @var Tracker */
     protected $tracker;
 
+    /** @var XML_Security */
+    protected $xml_security;
+
     public function setUp() {
         parent::setUp();
 
@@ -56,6 +59,15 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
         stub($this->element_factory)->getFormElementById(465)->returns($this->target_field);
 
         $this->date_rule_factory = new Tracker_Rule_Date_Factory($this->date_rule_dao, $this->element_factory);
+
+        $this->xml_security = new XML_Security();
+        $this->xml_security->enableExternalLoadOfEntities();
+    }
+
+    public function tearDown() {
+        $this->xml_security->disableExternalLoadOfEntities();
+
+        parent::tearDown();
     }
 
     public function testCreateRuleDateGeneratesANewObjectThatContainsAllValuesPassed() {

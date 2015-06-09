@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -226,6 +226,7 @@ class TrackerXmlImportTest extends TuleapTestCase {
 class TrackerXmlImport_InstanceTest extends TuleapTestCase {
 
     private $tracker_xml_importer;
+    private $xml_security;
 
     public function setUp() {
         parent::setUp();
@@ -245,6 +246,15 @@ class TrackerXmlImport_InstanceTest extends TuleapTestCase {
             mock('XML_RNGValidator'),
             mock('Tracker_Workflow_Trigger_RulesManager')
         );
+
+        $this->xml_security = new XML_Security();
+        $this->xml_security->enableExternalLoadOfEntities();
+    }
+
+    public function tearDown() {
+        $this->xml_security->disableExternalLoadOfEntities();
+
+        parent::tearDown();
     }
 
     public function testImport() {

@@ -1,21 +1,22 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2015. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once(dirname(__FILE__).'/../include/HudsonTestResult.class.php');
@@ -31,12 +32,24 @@ Mock::generate('hudson');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
-class HudsonTestResultTest extends UnitTestCase {
-    function setUp() {
+class HudsonTestResultTest extends TuleapTestCase {
+
+    /** @var XML_Security */
+    private $xml_security;
+
+    public function setUp() {
+        parent::setUp();
+
         $GLOBALS['Language'] = new MockBaseLanguage($this);
+        $this->xml_security = new XML_Security();
+        $this->xml_security->enableExternalLoadOfEntities();
     }
-    function tearDown() {
+
+    public function tearDown() {
         unset($GLOBALS['Language']);
+        $this->xml_security->disableExternalLoadOfEntities();
+
+        parent::tearDown();
     }
     
     function testMalformedURL() {

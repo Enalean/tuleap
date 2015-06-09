@@ -18,22 +18,39 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Project.class.php';
-
-/** This class export a project to xml format */
+/**
+ * This class export a project to xml format
+ */
 class ProjectXMLExporter {
 
     /** @var EventManager */
     private $event_manager;
 
-    public function __construct(EventManager $event_manager) {
-        $this->event_manager = $event_manager;
+    /** @var UGroupManager */
+    private $ugroup_manager;
+
+    /** @var XML_RNGValidator */
+    private $xml_validator;
+
+    /** @var Logger */
+    private $logger;
+
+    public function __construct(
+        EventManager $event_manager,
+        UGroupManager $ugroup_manager,
+        XML_RNGValidator $xml_validator,
+        Logger $logger
+    ) {
+        $this->event_manager  = $event_manager;
+        $this->ugroup_manager = $ugroup_manager;
+        $this->xml_validator  = $xml_validator;
+        $this->logger         = $logger;
     }
 
     /**
      * @return SimpleXMLElement
      */
-    public function export(Project $project, SimpleXMLElement $into_xml) {
+    private function exportAllPlugins(Project $project, SimpleXMLElement $into_xml) {
         $this->event_manager->processEvent(
             Event::EXPORT_XML_PROJECT,
             array(
@@ -43,18 +60,75 @@ class ProjectXMLExporter {
         );
     }
 
-    /**
-     * @param Project $project
-     * @return string A full XML document string
-     */
-    public function exportAsStandaloneXMLDocument(Project $project) {
+    private function exportProjectUgroups(Project $project, SimpleXMLElement $into_xml) {
+        $this->logger->debug("Exporting project's static ugroups");
+
+        $ugroups = $this->ugroup_manager->getStaticUGroups($project);
+
+        if (empty($ugroups)) {
+            return;
+        }
+
+        $ugroups_node = $into_xml->addChild('ugroups');
+
+        foreach ($ugroups as $ugroup) {
+            $this->logger->debug("Current static ugroups: " . $ugroup->getName());
+
+            $ugroup_node = $ugroups_node->addChild('ugroup');
+            $ugroup_node->addAttribute('name', $ugroup->getNormalizedName());
+            $ugroup_node->addAttribute('description', $ugroup->getDescription());
+
+            $members_node = $ugroup_node->addChild('members');
+
+            foreach ($ugroup->getMembers() as $member) {
+                if ($member->getLdapId()) {
+                    $member_node = $members_node->addChild('member', $member->getLdapId());
+                    $member_node->addAttribute('format', 'ldap');
+                } else {
+                    $member_node = $members_node->addChild('member', $member->getUserName());
+                    $member_node->addAttribute('format', 'username');
+                }
+            }
+        }
+    }
+
+    public function exportProjectData(Project $project) {
+        $this->logger->info("Start exporting project " . $project->getPublicName());
+
         $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
                                              <project />');
-        $this->export($project, $xml_element);
+        $this->exportProjectUgroups($project, $xml_element);
+
+        $rng_path = realpath(dirname(__FILE__).'/../xml/resources/project.rng');
+        $this->xml_validator->validate($xml_element, $rng_path);
+
+        $this->logger->info("Finish exporting project " . $project->getPublicName());
+
+        return $this->convertToXml($xml_element);
+    }
+
+    /**
+     * @param Project $project
+     *
+     * @return string A full XML document string
+     */
+    public function exportWithoutUgroups(Project $project) {
+        $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+                                             <project />');
+        $this->exportAllPlugins($project, $xml_element);
+
+        return $this->convertToXml($xml_element);
+    }
+
+    /**
+     * @param SimpleXMLElement $xml_element
+     *
+     * @return String
+     */
+    private function convertToXml(SimpleXMLElement $xml_element) {
         $dom = dom_import_simplexml($xml_element)->ownerDocument;
         $dom->formatOutput = true;
 
         return $dom->saveXML();
     }
 }
-?>
