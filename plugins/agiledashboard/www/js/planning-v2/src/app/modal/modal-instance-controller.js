@@ -8,14 +8,20 @@ function ModalInstanceCtrl($modalInstance, modal_model, displayItemCallback, Mod
     var self = this;
 
     _.extend(self, {
-        title         : modal_model.title,
-        structure     : modal_model.structure,
-        values        : modal_model.values,
-        cancel        : $modalInstance.dismiss,
-        createArtifact: createArtifact,
-        toggleFieldset: toggleFieldset,
-        getError      : function() { return ModalTuleapFactory.error; },
-        isLoading     : function() { return ModalTuleapFactory.is_loading; },
+        artifact_id     : modal_model.artifact_id,
+        color           : modal_model.color,
+        creation_mode   : modal_model.creation_mode,
+        ordered_fields  : modal_model.ordered_fields,
+        parent          : modal_model.parent,
+        parent_artifacts: modal_model.parent_artifacts,
+        structure       : modal_model.structure,
+        title           : modal_model.title,
+        values          : modal_model.values,
+        cancel          : $modalInstance.dismiss,
+        getError        : function() { return ModalTuleapFactory.error; },
+        isLoading       : function() { return ModalTuleapFactory.is_loading; },
+        submit          : submit,
+        toggleFieldset  : toggleFieldset,
 
         ckeditor_options: {
             toolbar: [
@@ -28,20 +34,30 @@ function ModalInstanceCtrl($modalInstance, modal_model, displayItemCallback, Mod
         text_formats: [
             { id: "text", label:"Text" },
             { id: "html", label:"HTML" }
-        ],
-        parent_artifacts: []
+        ]
     });
 
     $modalInstance.opened.then(function() {
         ModalLoading.loading.is_loading = false;
     });
 
-    function createArtifact() {
+    function submit() {
+        ModalLoading.loading.is_loading = true;
+
         var validated_values = ModalValidateFactory.validateArtifactFieldsValues(self.values);
 
-        ModalTuleapFactory.createArtifact(modal_model.tracker_id, validated_values).then(function(new_artifact) {
+        var promise;
+        if (modal_model.creation_mode) {
+            promise = ModalTuleapFactory.createArtifact(modal_model.tracker_id, validated_values);
+        } else {
+            promise = ModalTuleapFactory.editArtifact(modal_model.artifact_id, validated_values);
+        }
+
+        promise.then(function(new_artifact) {
             $modalInstance.close();
-            displayItemCallback(new_artifact.id);
+            return displayItemCallback(new_artifact.id);
+        })["finally"](function() {
+            ModalLoading.loading.is_loading = false;
         });
     }
 

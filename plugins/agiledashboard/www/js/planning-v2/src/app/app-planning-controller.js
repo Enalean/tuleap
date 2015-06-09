@@ -43,6 +43,7 @@
             canShowBacklogItem                    : canShowBacklogItem,
             generateMilestoneLinkUrl              : generateMilestoneLinkUrl,
             showCreateNewModal                    : showCreateNewModal,
+            showEditModal                         : showEditModal,
             cardFieldIsSimpleValue                : CardFieldsService.cardFieldIsSimpleValue,
             cardFieldIsList                       : CardFieldsService.cardFieldIsList,
             cardFieldIsText                       : CardFieldsService.cardFieldIsText,
@@ -59,7 +60,8 @@
             getCardFieldUserValue                 : CardFieldsService.getCardFieldUserValue,
             displayBacklogItems                   : displayBacklogItems,
             displayUserCantPrioritizeForBacklog   : displayUserCantPrioritizeForBacklog,
-            displayUserCantPrioritizeForMilestones: displayUserCantPrioritizeForMilestones
+            displayUserCantPrioritizeForMilestones: displayUserCantPrioritizeForMilestones,
+            refreshBacklogItem                    : refreshBacklogItem
         });
 
         $scope.treeOptions = {
@@ -222,6 +224,25 @@
                     $scope.backlog_items.unshift($scope.items[backlog_item_id]);
                 }
             );
+        }
+
+        function showEditModal($event, backlog_item) {
+            var when_left_mouse_click = 1;
+            if($event.which === when_left_mouse_click) {
+                $event.preventDefault();
+
+                ModalService.show(backlog_item.artifact.tracker.id, refreshBacklogItem, backlog_item.artifact.id, backlog_item.color);
+            }
+        }
+
+        function refreshBacklogItem(backlog_item_id) {
+            BacklogItemService.getBacklogItem(backlog_item_id).then(function(data) {
+                $scope.items[backlog_item_id] = data.backlog_item;
+                var bl_index = _.findIndex($scope.backlog_items, function(item) {
+                    return item.id === backlog_item_id;
+                });
+                $scope.backlog_items[bl_index] = data.backlog_item;
+            });
         }
 
         function toggle(milestone) {

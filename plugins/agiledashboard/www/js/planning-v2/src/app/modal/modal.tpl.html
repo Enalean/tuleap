@@ -31,8 +31,16 @@
 
 <script type="text/ng-template" id="field-sb.tpl.html">
 <div class="field">
-    <label for="{{ 'tracker_field_' + field.field_id }}" class="tracker_formelement_label" ng-class="{required: field.required}">{{ field.label }}</label>
-    <select ng-model="modal.values[field.field_id].bind_value_ids[0]" ng-options="fieldValue.id as fieldValue.label for fieldValue in field.values" ng-required="{{ field.required }}" id="{{ 'tracker_field_' + field.field_id }}">
+    <label
+        for="{{ 'tracker_field_' + field.field_id }}"
+        class="tracker_formelement_label"
+        ng-class="{required: field.required}"
+    >{{ field.label }}</label>
+    <select
+        ng-model="modal.values[field.field_id].bind_value_ids[0]"
+        ng-options="fieldValue.id as fieldValue.label for fieldValue in field.values"
+        ng-required="{{ field.required }}" id="{{ 'tracker_field_' + field.field_id }}"
+    >
         <option value="" label="None" translate>None</option>
     </select>
 </div>
@@ -40,8 +48,17 @@
 
 <script type="text/ng-template" id="field-msb.tpl.html">
 <div class="field">
-    <label for="{{ 'tracker_field_' + field.field_id }}" class="tracker_formelement_label" ng-class="{required: field.required}">{{ field.label }}</label>
-    <select multiple ng-model="modal.values[field.field_id].bind_value_ids" ng-options="fieldValue.id as fieldValue.label for fieldValue in field.values" ng-required="{{ field.required }}" id="{{ 'tracker_field_' + field.field_id }}">
+    <label
+        for="{{ 'tracker_field_' + field.field_id }}"
+        class="tracker_formelement_label"
+        ng-class="{required: field.required}"
+    >{{ field.label }}</label>
+    <select
+        multiple
+        ng-model="modal.values[field.field_id].bind_value_ids"
+        ng-options="fieldValue.id as fieldValue.label for fieldValue in field.values"
+        ng-required="{{ field.required }}" id="{{ 'tracker_field_' + field.field_id }}"
+    >
         <option value="" label="None" translate>None</option>
     </select>
 </div>
@@ -51,15 +68,35 @@
 <div class="field">
     <label class="tracker_formelement_label" ng-class="{required: field.required}">{{ field.label }}</label>
     <div>
-        <label for="{{ 'rb_' + field.field_id + '_100' }}" class="radio">
+        <label
+            for="{{ 'rb_' + field.field_id + '_100' }}"
+            class="radio"
+        >
             <span translate>None</span>
-            <input type="radio" ng-model="modal.values[field.field_id].bind_value_ids[0]" name="{{ field.name }}" value="100" ng-required="{{ field.required }}" id="{{ 'rb_' + field.field_id + '_100' }}">
+            <input
+                type="radio"
+                ng-model="modal.values[field.field_id].bind_value_ids[0]"
+                name="{{ field.name }}"
+                value="100"
+                ng-required="{{ field.required }}"
+                id="{{ 'rb_' + field.field_id + '_100' }}"
+            >
         </label>
     </div>
     <div ng-repeat="fieldValue in field.values">
-        <label for="{{ 'rb_' + field.field_id + '_' + fieldValue.id }}" class="radio">
+        <label
+            for="{{ 'rb_' + field.field_id + '_' + fieldValue.id }}"
+            class="radio"
+        >
             {{ fieldValue.label }}
-            <input type="radio" ng-model="modal.values[field.field_id].bind_value_ids[0]" name="{{ field.name }}" value="{{ fieldValue.id }}" ng-required="{{ field.required }}" id="{{ 'rb_' + field.field_id + '_' + fieldValue.id }}">
+            <input
+                type="radio"
+                ng-model="modal.values[field.field_id].bind_value_ids[0]"
+                name="{{ field.name }}"
+                value="{{ fieldValue.id }}"
+                ng-required="{{ field.required }}"
+                id="{{ 'rb_' + field.field_id + '_' + fieldValue.id }}"
+            >
         </label>
     </div>
 </div>
@@ -68,51 +105,135 @@
 <script type="text/ng-template" id="field-cb.tpl.html">
 <div class="field">
     <label class="tracker_formelement_label" ng-class="{required: field.required}">{{ field.label }}</label>
-    <label ng-repeat="fieldValue in field.values" for="{{ 'cb_' + field.field_id + '_' + fieldValue.id }}" class="checkbox">
+    <label
+        ng-repeat="fieldValue in field.values"
+        for="{{ 'cb_' + field.field_id + '_' + fieldValue.id }}"
+        class="checkbox"
+    >
         {{ fieldValue.label }}
-        <input type="checkbox" ng-model="modal.values[field.field_id].bind_value_ids[$index]" ng-true-value="{{ fieldValue.id }}" ng-false-value="null" id="{{ 'cb_' + field.field_id + '_' + fieldValue.id }}">
+        <input
+            type="checkbox"
+            ng-model="modal.values[field.field_id].bind_value_ids[$index]"
+            ng-true-value="{{ fieldValue.id }}"
+            ng-false-value="null"
+            id="{{ 'cb_' + field.field_id + '_' + fieldValue.id }}"
+        >
     </label>
 </div>
 </script>
 
 <script type="text/ng-template" id="field-int.tpl.html">
 <div class="field">
-    <label for="{{ 'tracker_field_' + field.field_id }}" class="tracker_formelement_label" ng-class="{required: field.required}">{{ field.label }}</label>
-    <input type="number" size="5" ng-model="modal.values[field.field_id].value" ng-required="{{ field.required }}" id="{{ 'tracker_field_' + field.field_id }}">
+    <label
+        for="{{ 'tracker_field_' + field.field_id }}"
+        class="tracker_formelement_label"
+        ng-class="{required: field.required}"
+    >{{ field.label }}</label>
+    <input
+        type="number"
+        size="5"
+        ng-model="modal.values[field.field_id].value"
+        ng-required="{{ field.required }}"
+        id="{{ 'tracker_field_' + field.field_id }}"
+    >
 </div>
 </script>
 
 <script type="text/ng-template" id="field-string.tpl.html">
 <div class="field">
-    <label for="{{ 'tracker_field_' + field.field_id }}" class="tracker_formelement_label" ng-class="{required: field.required}">{{ field.label }}</label>
-    <input type="text" size="50" ng-model="modal.values[field.field_id].value" ng-required="{{ field.required }}" id="{{ 'tracker_field_' + field.field_id }}">
+    <label
+        for="{{ 'tracker_field_' + field.field_id }}"
+        class="tracker_formelement_label"
+        ng-class="{required: field.required}"
+    >{{ field.label }}</label>
+    <input
+        type="text"
+        size="50"
+        ng-model="modal.values[field.field_id].value"
+        ng-required="{{ field.required }}"
+        id="{{ 'tracker_field_' + field.field_id }}"
+    >
 </div>
 </script>
 
 <script type="text/ng-template" id="field-float.tpl.html">
 <div class="field">
-    <label for="{{ 'tracker_field_' + field.field_id }}" class="tracker_formelement_label" ng-class="{required: field.required}">{{ field.label }}</label>
-    <input type="number" step="any" size="5" ng-model="modal.values[field.field_id].value" ng-required="{{ field.required }}" id="{{ 'tracker_field_' + field.field_id }}">
+    <label
+        for="{{ 'tracker_field_' + field.field_id }}"
+        class="tracker_formelement_label"
+        ng-class="{required: field.required}"
+    >{{ field.label }}</label>
+    <input
+        type="number"
+        step="any"
+        size="5"
+        ng-model="modal.values[field.field_id].value"
+        ng-required="{{ field.required }}"
+        id="{{ 'tracker_field_' + field.field_id }}"
+    >
 </div>
 </script>
 
 <script type="text/ng-template" id="field-text.tpl.html">
 <div class="field">
-    <label for="{{ 'tracker_field_'+field.field_id }}" class="tracker_formelement_label" ng-class="{required: field.required}">{{ field.label }}</label>
+    <label
+        for="{{ 'tracker_field_'+field.field_id }}"
+        class="tracker_formelement_label"
+        ng-class="{required: field.required}"
+    >{{ field.label }}</label>
     <label for="{{ 'tracker_field_format_'+field.field_id }}">
         {{ 'Format:' | translate }}
-        <select ng-model="modal.values[field.field_id].value.format" ng-options="format.id as format.label for format in modal.text_formats" class="input-small" id="{{ 'tracker_field_format_'+field.field_id }}"></select>
+        <select
+            ng-model="modal.values[field.field_id].format"
+            ng-options="format.id as format.label for format in modal.text_formats"
+            class="input-small"
+            id="{{ 'tracker_field_format_'+field.field_id }}"
+        ></select>
     </label>
-    <textarea ng-if="modal.values[field.field_id].value.format === 'text'" rows="5" cols="70" ng-model="modal.values[field.field_id].value.content" ng-required="{{ field.required }}" class="modal-textarea" id="{{ 'tracker_field_'+field.field_id }}"></textarea>
-    <textarea ng-if="modal.values[field.field_id].value.format === 'html'" ng-model="modal.values[field.field_id].value.content" ckeditor="modal.ckeditor_options" ng-required="{{ field.required }}" id="{{ 'tracker_field_'+field.field_id }}"></textarea>
+    <textarea
+        ng-if="modal.values[field.field_id].format === 'text'"
+        rows="5"
+        cols="70"
+        ng-model="modal.values[field.field_id].value"
+        ng-required="{{ field.required }}"
+        class="modal-textarea"
+        id="{{ 'tracker_field_'+field.field_id }}"
+    ></textarea>
+    <textarea
+        ng-if="modal.values[field.field_id].format === 'html'"
+        ng-model="modal.values[field.field_id].value"
+        ckeditor="modal.ckeditor_options"
+        ng-required="{{ field.required }}"
+        id="{{ 'tracker_field_'+field.field_id }}"
+    ></textarea>
 </div>
 </script>
 
 <script type="text/ng-template" id="field-date.tpl.html">
 <div class="field">
-    <label for="{{ 'tracker_field_' + field.field_id }}" class="tracker_formelement_label" ng-class="{required: field.required}">{{ field.label }}</label>
-    <input ng-if="!field.is_time_displayed" type="text" ng-model="modal.values[field.field_id].value" placeholder="yyyy-mm-dd" ng-pattern="/^\d{4}-[01]\d-[0-3]\d$/" ng-required="{{ field.required }}" id="{{ 'tracker_field_' + field.field_id }}">
-    <input ng-if="field.is_time_displayed" type="text" ng-model="modal.values[field.field_id].value" placeholder="yyyy-mm-dd hh:MM:ss" ng-pattern="/^\d{4}-[01]\d-[0-3]\d [0-2]\d:[0-5]\d:[0-5]\d$/" ng-required="{{ field.required }}" id="{{ 'tracker_field_' + field.field_id }}">
+    <label
+        for="{{ 'tracker_field_' + field.field_id }}"
+        class="tracker_formelement_label"
+        ng-class="{required: field.required}"
+    >{{ field.label }}</label>
+    <input
+        ng-if="!field.is_time_displayed"
+        type="text"
+        ng-model="modal.values[field.field_id].value"
+        placeholder="yyyy-mm-dd"
+        ng-pattern="/^\d{4}-[01]\d-[0-3]\d$/"
+        ng-required="{{ field.required }}"
+        id="{{ 'tracker_field_' + field.field_id }}"
+    >
+    <input
+        ng-if="field.is_time_displayed"
+        type="text"
+        ng-model="modal.values[field.field_id].value"
+        placeholder="yyyy-mm-dd hh:MM:ss"
+        ng-pattern="/^\d{4}-[01]\d-[0-3]\d [0-2]\d:[0-5]\d:[0-5]\d$/"
+        ng-required="{{ field.required }}"
+        id="{{ 'tracker_field_' + field.field_id }}"
+    >
 </div>
 </script>
 
@@ -121,10 +242,19 @@
     <label class="tracker_formelement_label" ng-class="{required: field.required}">{{ field.label }}</label>
     <div class="artifact-link-value">
         <h5 class="artifact_link_subtitle" translate>Artifact links</h5>
-        <input type="text" ng-model="modal.values[field.field_id].unformatted_links" title="{{ 'Enter artifact ids separated by a comma' | translate }}" id="{{ 'tracker_field_' + field.field_id }}">
-        <p ng-show="modal.structure.parent">
+        <input
+            type="text"
+            ng-model="modal.values[field.field_id].unformatted_links"
+            title="{{ 'Enter artifact ids separated by a comma' | translate }}"
+            id="{{ 'tracker_field_' + field.field_id }}"
+        >
+        <p ng-if="modal.parent">
             <label for="{{ 'tracker_field_' + field.field_id + '_parent' }}" translate>Select parent:</label>
-            <select ng-model="modal.values[field.field_id].links[0].id" ng-required="{{ field.required }}" id="{{ 'tracker_field_' + field.field_id + '_parent' }}">
+            <select
+                ng-model="modal.values[field.field_id].links[0].id"
+                ng-required="{{ field.required }}"
+                id="{{ 'tracker_field_' + field.field_id + '_parent' }}"
+            >
                 <option selected="selected" value="" translate>-- Please choose</option>
                 <option ng-repeat="artifact in modal.parent_artifacts" value="{{ artifact.id }}">{{ artifact.title }}</option>
             </select>
@@ -133,17 +263,20 @@
 </div>
 </script>
 
-<form name="modalForm" ng-submit="modal.createArtifact()">
+<form name="modalForm" ng-submit="modal.submit()">
     <div class="modal-header">
         <button type="button" class="close" ng-click="modal.cancel()" aria-hidden="true"><i class="icon-remove" ></i></button>
-        <h3>{{ modal.title }}</h3>
+        <h3 ng-if="modal.creation_mode" translate>Create a new {{ modal.title }}</h3>
+        <h3 ng-if="!modal.creation_mode">
+            <span class="title" ng-class="modal.color">{{ modal.structure.item_name }} #{{ modal.artifact_id }}</span> {{ modal.title }}
+        </h3>
         <div class="alert alert-danger" ng-if="modal.getError().is_error">
             {{ 'Error:' | translate }} {{ modal.getError().error_message }}
         </div>
     </div>
 
     <div class="modal-body">
-        <ng-include src="field.template_url" ng-repeat="field in modal.structure"></ng-include>
+        <ng-include src="field.template_url" ng-repeat="field in modal.ordered_fields"></ng-include>
     </div>
 
     <div class="modal-footer">
