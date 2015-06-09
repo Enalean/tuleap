@@ -33,11 +33,16 @@ use AgileDashboard_KanbanColumnManager;
 use AgileDashboard_KanbanItemDao;
 use TrackerFactory;
 use Tracker_ArtifactFactory;
+use Tracker_FormElementFactory;
 use UserManager;
 use Tracker;
 use PFUser;
 use Tracker_FormElement_Field_List;
 use Tracker_Semantic_Status;
+use Tracker_REST_Artifact_ArtifactCreator                 as ArtifactCreator;
+use Tracker_REST_Artifact_ArtifactValidator               as ArtifactValidator;
+use Tuleap\Tracker\REST\TrackerReference                  as TrackerReference;
+use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation   as ArtifactValuesRepresentation;
 
 class KanbanItemsResource {
 
@@ -56,12 +61,16 @@ class KanbanItemsResource {
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
 
+    /** @var Tracker_FormElementFactory */
+    private $form_element_factory;
+
     /** @var TimeInfoFactory */
     private $time_info_factory;
 
     public function __construct() {
-        $this->tracker_factory  = TrackerFactory::instance();
-        $this->artifact_factory = Tracker_ArtifactFactory::instance();
+        $this->tracker_factory      = TrackerFactory::instance();
+        $this->artifact_factory     = Tracker_ArtifactFactory::instance();
+        $this->form_element_factory = Tracker_FormElementFactory::instance();
 
         $this->kanban_factory = new AgileDashboard_KanbanFactory(
             $this->tracker_factory,
@@ -116,15 +125,22 @@ class KanbanItemsResource {
         $kanban       = $this->getKanban($current_user, $item->kanban_id);
         $tracker      = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
 
-        $this->checkUserCanCreateItem($tracker, $current_user);
-
-        $artifact = $this->artifact_factory->createArtifact(
-            $tracker,
-            $this->buildFieldsData($tracker, $item),
-            $current_user,
-            null
+        $updater = new ArtifactCreator(
+            new ArtifactValidator(
+                $this->form_element_factory
+            ),
+            $this->artifact_factory,
+            $this->tracker_factory
         );
 
+        $tracker_reference = new TrackerReference();
+        $tracker_reference->build($tracker);
+
+        $artifact_fields = $this->buildFieldsData($tracker, $item);
+
+        $art_ref = $updater->create($current_user, $tracker_reference, $artifact_fields);
+
+        $artifact = $art_ref->getArtifact();
         if (! $artifact) {
             throw new RestException(500, implode('. ', $GLOBALS['Response']->getFeedbackErrors()));
         }
@@ -133,12 +149,6 @@ class KanbanItemsResource {
         $item_representation->build($artifact, $this->time_info_factory->getTimeInfo($artifact));
 
         return $item_representation;
-    }
-
-    private function checkUserCanCreateItem(Tracker $tracker, PFUser $user) {
-        if (! $tracker->userCanSubmitArtifact($user)) {
-            throw new RestException(403);
-        }
     }
 
     private function buildFieldsData(Tracker $tracker, KanbanItemPOSTRepresentation $item) {
@@ -157,7 +167,11 @@ class KanbanItemsResource {
             throw new RestException(403);
         }
 
-        $fields_data[$summary_field->getId()] = $item->label;
+        $representation           = new ArtifactValuesRepresentation();
+        $representation->field_id = (int) $summary_field->getId();
+        $representation->value    = $item->label;
+
+        $fields_data[] = $representation;
     }
 
     private function addStatusToFieldsData(Tracker $tracker, KanbanItemPOSTRepresentation $item, array &$fields_data) {
@@ -182,7 +196,12 @@ class KanbanItemsResource {
             $value = $item->column_id;
         }
 
-        $fields_data[$status_field->getId()] = $value;
+        $representation                 = new ArtifactValuesRepresentation();
+        $representation->field_id       = (int) $status_field->getId();
+        $representation->bind_value_ids = array((int) $value);
+
+        $fields_data[] = $representation;
+
     }
 
     /** @return AgileDashboard_Kanban */
