@@ -226,4 +226,23 @@ class AgileDashboard_Milestone_Backlog_DescendantBacklogStrategy extends AgileDa
 
         return $artifacts_collection;
     }
+
+    /** @return AgileDashboard_Milestone_Backlog_DescendantItemsCollection */
+    public function getUnplannedArtifacts(PFUser $user, $sub_milestone_ids) {
+        if ($this->milestone instanceof Planning_VirtualTopMilestone) {
+            if ($this->limit !== null || $this->offset !== null) {
+                $artifacts_collection = $this->items_finder->getTopMilestoneUnplannedBacklogItemsWithLimitAndOffset($user, $this->limit, $this->offset);
+            } else {
+                $artifacts_collection = $this->items_finder->getAllTopMilestoneUnplannedBacklogItems($user);
+            }
+        } else {
+            if ($this->limit !== null || $this->offset !== null) {
+                $artifacts_collection = $this->items_finder->getMilestoneUnplannedBacklogItemsWithLimitAndOffset($user, $sub_milestone_ids, $this->limit, $this->offset);
+            } else {
+                $artifacts_collection = $this->items_finder->getAllMilestoneUnplannedBacklogItems($user, $sub_milestone_ids);
+            }
+        }
+
+        return $artifacts_collection;
+    }
 }

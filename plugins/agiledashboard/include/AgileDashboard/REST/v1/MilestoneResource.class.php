@@ -621,8 +621,8 @@ class MilestoneResource extends AuthenticatedResource {
         $this->checkIfUserCanChangePrioritiesInMilestone($milestone, $user);
 
         try {
-            $this->milestone_validator->validateArtifactIdsAreInOpenAndUnplannedMilestone($ids, $milestone, $user);
-        } catch (ArtifactIsNotInOpenAndUnplannedBacklogItemsException $exception) {
+            $this->milestone_validator->validateArtifactIdsAreInUnplannedMilestone($ids, $milestone, $user);
+        } catch (ArtifactIsNotInUnplannedBacklogItemsException $exception) {
             throw new RestException(404, $exception->getMessage());
         } catch (IdsFromBodyAreNotUniqueException $exception) {
             throw new RestException(400, $exception->getMessage());
@@ -708,7 +708,7 @@ class MilestoneResource extends AuthenticatedResource {
         try {
             if ($order) {
                 $order->checkFormat($order);
-                $this->milestone_validator->validateArtifactIdsAreInOpenAndUnplannedMilestone(
+                $this->milestone_validator->validateArtifactIdsAreInUnplannedMilestone(
                     $this->filterOutAddedElements($order, $to_add),
                     $milestone,
                     $user
@@ -718,7 +718,7 @@ class MilestoneResource extends AuthenticatedResource {
             }
         } catch (IdsFromBodyAreNotUniqueException $exception) {
             throw new RestException(409, $exception->getMessage());
-        } catch (ArtifactIsNotInOpenAndUnplannedBacklogItemsException $exception) {
+        } catch (ArtifactIsNotInUnplannedBacklogItemsException $exception) {
             throw new RestException(409, $exception->getMessage());
         } catch (Tracker_Artifact_Exception_CannotRankWithMyself $exception) {
             throw new RestException(400, $exception->getMessage());
