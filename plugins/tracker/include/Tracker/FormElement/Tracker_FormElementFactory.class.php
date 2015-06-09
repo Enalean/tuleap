@@ -400,14 +400,7 @@ class Tracker_FormElementFactory {
      * @return Tracker_FormElement_Field[]
      */
     public function getUsedFieldsForREST(Tracker $tracker) {
-        $element_already_in_rest_basic_info = array(
-            'aid',
-            'lud',
-            'subby',
-            'subon',
-        );
-        $field_types = array_diff($this->getFieldsSQLTypes(), $element_already_in_rest_basic_info);
-        return $this->getUsedFormElementsByType($tracker, $field_types);
+        return $this->getUsedFormElementsByType($tracker, $this->getFieldsSQLTypes());
     }
 
     /**
