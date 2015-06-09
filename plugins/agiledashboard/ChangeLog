@@ -1,3 +1,6 @@
+Version 1.209 - Tuleap 8.3
+    * story #7857: creating a new closed item throws 409 when re-ordering in backlog
+
 Version 1.208 - Tuleap 8.3
     * request #8128 Fix angular dependencies
 
