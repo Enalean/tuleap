@@ -87,7 +87,7 @@ class User_LoginManager {
         } else {
             $user = $this->user_manager->getUserByUserName($name);
             if(!is_null($user)) {
-                $auth_success = $this->verifyPassword($user, $password);
+                $auth_success = $this->authenticateFromDatabase($user, $password);
             }
         }
 
@@ -100,20 +100,13 @@ class User_LoginManager {
         return $user;
     }
 
-    public function verifyPassword(PFUser $user, $password) {
+    private function authenticateFromDatabase(PFUser $user, $password) {
         $is_auth_valid          = false;
 
-        $hashed_password        = $user->getUserPw();
-        $legacy_hashed_password = $user->getLegacyUserPw();
-
-        if ($this->isPasswordValid($password, $hashed_password) ||
-            $this->isLegacyPasswordValid($password, $legacy_hashed_password)) {
+        if ($this->verifyPassword($user, $password)) {
 
             $user->setPassword($password);
-            if ($this->isPasswordUpdatingNeeded($hashed_password) ||
-                $this->isLegacyPasswordRemovalNeeded($legacy_hashed_password)) {
-                $this->user_manager->updateDb($user);
-            }
+            $this->checkPasswordStorageConformity($user);
 
             $is_auth_valid = true;
             $this->event_manager->processEvent(
@@ -126,6 +119,24 @@ class User_LoginManager {
         }
 
         return $is_auth_valid;
+    }
+
+    public function verifyPassword(PFUser $user, $password) {
+        $hashed_password        = $user->getUserPw();
+        $legacy_hashed_password = $user->getLegacyUserPw();
+
+        return $this->isPasswordValid($password, $hashed_password) ||
+                    $this->isLegacyPasswordValid($password, $legacy_hashed_password);
+    }
+
+    private function checkPasswordStorageConformity(PFUser $user) {
+        $hashed_password        = $user->getUserPw();
+        $legacy_hashed_password = $user->getLegacyUserPw();
+
+        if ($this->isPasswordUpdatingNeeded($hashed_password) ||
+            $this->isLegacyPasswordRemovalNeeded($legacy_hashed_password)) {
+            $this->user_manager->updateDb($user);
+        }
     }
 
     private function isPasswordValid($password, $hashed_password) {
