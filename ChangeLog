@@ -6,6 +6,7 @@ Version 8.3 (not released yet)
 	* Fix request #8119: PHPWiki SyntaxHighlighter plugin does not work on Centos 6
 
 	== Enhancements ==
+	* story #8089: forbid svn tags modifications (part 2)
 	* story #8089: Mustachify SVN general settings
 	* story #8059: Use secure hash function for the storage of password used for web login
 	* story #8118: do not compile whole www/guidelines during make less
@@ -25,7 +26,7 @@ Version 8.3 (not released yet)
 	* Introduce usage of docker-compose
 
 	== Themes ==
-	* FlamingParrot: 1.86
+	* FlamingParrot: 1.87
 
 Version 8.2 (Thursday, May 28th 2015)
 	== Bug Fix ==

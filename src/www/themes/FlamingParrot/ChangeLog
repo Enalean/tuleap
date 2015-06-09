@@ -1,3 +1,6 @@
+Version 1.87 - Tuleap 8.3
+    * story #8089: forbid svn tags modifications (part 2)
+
 Version 1.86 - Tuleap 8.3
     * request #5726: Remove the Twitter widget
 
