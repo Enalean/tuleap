@@ -1,3 +1,6 @@
+Version 5.632 - Tuleap 8.3
+    * story #7857: adding read-only fields to the response
+
 Version 5.631 - Tuleap 8.3
     * story #7857: /artifacts/:id GET returns more REST data
 
