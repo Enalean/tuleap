@@ -16,6 +16,7 @@ Version 8.3 (not released yet)
 	* agiledashboard: 1.209
 	* tracker: 5.633
 	* proftpd: 0.21
+	* mediawiki: 0.69
 
 	== Development ==
 	* Adding SOAP example for legacy Tracker V3
