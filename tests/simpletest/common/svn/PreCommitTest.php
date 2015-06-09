@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2014. All rights reserved.
+ * Copyright Enalean (c) 2014 - 2015. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -25,7 +25,16 @@
 /**
  * I'm responsible of handling what happens in pre-commit subversion hook
  */
-class SVN_Hook_PreCommitTest extends TuleapTestCase {
+class SVN_Hook_PreCommit_BaseTest extends TuleapTestCase {
+
+    /** @var SVN_Svnlook */
+    protected $svn_look;
+
+    /** @var Project */
+    protected $project;
+
+    /** @var SVN_Immutable_Tags_Handler */
+    protected $handler;
 
     public function setUp() {
         parent::setUp();
@@ -33,15 +42,27 @@ class SVN_Hook_PreCommitTest extends TuleapTestCase {
         $this->repo           = 'SVN_repo';
         $this->commit_message = '';
         $this->transaction    = '1';
+        $this->project        = mock('Project');
 
-        $svn_hook                       = stub('SVN_Hooks')->getProjectFromRepositoryPath($this->repo)->returns('');
+        $this->svn_hook                 = stub('SVN_Hooks')->getProjectFromRepositoryPath($this->repo)->returns($this->project);
         $this->commit_message_validator = mock('SVN_CommitMessageValidator');
 
+        $this->svn_look = mock('SVN_Svnlook');
+        $this->handler  = stub('SVN_Immutable_Tags_Handler')
+            ->getAllowedTagsFromWhiteList($this->project)
+            ->returns(array('moduleA'));
+
         $this->pre_commit = new SVN_Hook_PreCommit(
-            $svn_hook,
-            $this->commit_message_validator
+            $this->svn_hook,
+            $this->commit_message_validator,
+            $this->svn_look,
+            $this->handler,
+            mock('BackendLogger')
         );
     }
+}
+
+class SVN_Hook_PreCommit_MessageTest extends SVN_Hook_PreCommit_BaseTest {
 
     public function itRejectsCommitIfCommitMessageIsEmptyAndForgeRequiresACommitMessage() {
         ForgeConfig::set('sys_allow_empty_svn_commit_message', false);
@@ -59,24 +80,199 @@ class SVN_Hook_PreCommitTest extends TuleapTestCase {
 
         $this->pre_commit->assertCommitMessageIsValid($this->repo, $this->commit_message);
     }
+}
 
-    public function itDoesRejectCommitToTagIfCommitToTagNotAllowed() {
-        $project = mock('Project');
-        stub($project)->isCommitToTagDenied()->returns(true);
-        $hook = partial_mock('SVN_Hook_PreCommit', array('getProjectFromRepositoryPath', 'assertItIsAllowedOperationToTag'));
-        stub($hook)->getProjectFromRepositoryPath()->returns($project);
-        stub($hook)->assertItIsAllowedOperationToTag()->returns(true);
-        $this->expectException('Exception');
-        $hook->assertCommitToTagIsAllowed($this->repo, $this->transaction);
+class SVN_Hook_PreCommit_CommitToTagTest extends SVN_Hook_PreCommit_BaseTest {
+
+    public function testCommitToTagIsAllowed() {
+        stub($this->project)->isCommitToTagDenied()->returns(false);
+
+        $this->assertCommitIsAllowed('A   moduleA/trunk/toto');
+        $this->assertCommitIsAllowed('U   moduleA/trunk/toto');
+        $this->assertCommitIsAllowed('D   moduleA/trunk/toto');
+
+        $this->assertCommitIsAllowed('A   moduleA/tags/v1/');
+        $this->assertCommitIsAllowed('U   moduleA/tags/v1/');
+        $this->assertCommitIsAllowed('D   moduleA/tags/v1/');
+
+        $this->assertCommitIsAllowed('A   moduleA/tags/v1/toto');
+        $this->assertCommitIsAllowed('U   moduleA/tags/v1/toto');
+        $this->assertCommitIsAllowed('D   moduleA/tags/v1/toto');
+
+        $this->assertCommitIsAllowed('A   moduleA/branch', 'A   moduleA/tags/v1/toto');
+
+        $this->assertCommitIsAllowed('A   trunk/toto');
+        $this->assertCommitIsAllowed('U   trunk/toto');
+        $this->assertCommitIsAllowed('D   trunk/toto');
+
+        $this->assertCommitIsAllowed('A   tags/v1/');
+        $this->assertCommitIsAllowed('U   tags/v1/');
+        $this->assertCommitIsAllowed('D   tags/v1/');
+
+        $this->assertCommitIsAllowed('A   tags/v1/toto');
+        $this->assertCommitIsAllowed('U   tags/v1/toto');
+        $this->assertCommitIsAllowed('D   tags/v1/toto');
+
+        $this->assertCommitIsAllowed('A   tags/moduleA/');
+        $this->assertCommitIsAllowed('U   tags/moduleA/');
+        $this->assertCommitIsAllowed('D   tags/moduleA/');
+
+        $this->assertCommitIsAllowed('A   tags/moduleA/v1/');
+        $this->assertCommitIsAllowed('U   tags/moduleA/v1/');
+        $this->assertCommitIsAllowed('D   tags/moduleA/v1/');
+
+        $this->assertCommitIsAllowed('A   tags/moduleA/toto');
+        $this->assertCommitIsAllowed('U   tags/moduleA/toto');
+        $this->assertCommitIsAllowed('D   tags/moduleA/toto');
+
+        $this->assertCommitIsAllowed('A   tags/moduleA/v1/toto');
+        $this->assertCommitIsAllowed('U   tags/moduleA/v1/toto');
+        $this->assertCommitIsAllowed('D   tags/moduleA/v1/toto');
+
+        $this->assertCommitIsAllowed('A   trunk/toto', 'A   tags/moduleA/v1/toto');
     }
 
-    public function itAssertsUpdatedTargetIsTag() {
-        $path = array('U   project1/tags/release_1/');
-        $this->assertTrue($this->pre_commit->isItUpdateOrDeleteToTag($path[0]));
+    public function testCommitToTagIsDeniedInModule() {
+        stub($this->project)->isCommitToTagDenied()->returns(true);
+        stub($this->project)->isCommitToTagDeniedInModules()->returns(true);
+
+        $this->assertCommitIsAllowed('A   moduleA/trunk/toto');
+        $this->assertCommitIsAllowed('U   moduleA/trunk/toto');
+        $this->assertCommitIsAllowed('D   moduleA/trunk/toto');
+
+        $this->assertCommitIsAllowed('A   moduleA/tags/v1/');
+        $this->assertCommitIsDenied('U   moduleA/tags/v1/');
+        $this->assertCommitIsDenied('D   moduleA/tags/v1/');
+
+        $this->assertCommitIsDenied('A   moduleA/tags/v1/toto');
+        $this->assertCommitIsDenied('U   moduleA/tags/v1/toto');
+        $this->assertCommitIsDenied('D   moduleA/tags/v1/toto');
+
+        $this->assertCommitIsDenied('A   moduleA/branch', 'A   moduleA/tags/v1/toto');
+
+        $this->assertCommitIsAllowed('A   trunk/toto');
+        $this->assertCommitIsAllowed('U   trunk/toto');
+        $this->assertCommitIsAllowed('D   trunk/toto');
+
+        $this->assertCommitIsAllowed('A   tags/v1/');
+        $this->assertCommitIsAllowed('U   tags/v1/');
+        $this->assertCommitIsAllowed('D   tags/v1/');
+
+        $this->assertCommitIsAllowed('A   tags/v1/toto');
+        $this->assertCommitIsAllowed('U   tags/v1/toto');
+        $this->assertCommitIsAllowed('D   tags/v1/toto');
+
+        $this->assertCommitIsAllowed('A   tags/moduleA/');
+        $this->assertCommitIsAllowed('U   tags/moduleA/');
+        $this->assertCommitIsAllowed('D   tags/moduleA/');
+
+        $this->assertCommitIsAllowed('A   tags/moduleA/v1/');
+        $this->assertCommitIsAllowed('U   tags/moduleA/v1/');
+        $this->assertCommitIsAllowed('D   tags/moduleA/v1/');
+
+        $this->assertCommitIsAllowed('A   tags/moduleA/toto');
+        $this->assertCommitIsAllowed('U   tags/moduleA/toto');
+        $this->assertCommitIsAllowed('D   tags/moduleA/toto');
+
+        $this->assertCommitIsAllowed('A   tags/moduleA/v1/toto');
+        $this->assertCommitIsAllowed('U   tags/moduleA/v1/toto');
+        $this->assertCommitIsAllowed('D   tags/moduleA/v1/toto');
+
+        $this->assertCommitIsAllowed('A   trunk/toto', 'A   tags/moduleA/v1/toto');
     }
 
-    public function itAssertsAddedTargetIsTag() {
-        $path = array('A   project1/tags/release_1/');
-        $this->assertFalse($this->pre_commit->isItUpdateOrDeleteToTag($path[0]));
+    public function testCommitToTagIsDeniedAtRoot() {
+        stub($this->project)->isCommitToTagDenied()->returns(true);
+        stub($this->project)->isCommitToTagDeniedInModules()->returns(false);
+
+        $this->assertCommitIsAllowed('A   moduleA/trunk/toto');
+        $this->assertCommitIsAllowed('U   moduleA/trunk/toto');
+        $this->assertCommitIsAllowed('D   moduleA/trunk/toto');
+
+        $this->assertCommitIsAllowed('A   moduleA/tags/v1/');
+        $this->assertCommitIsAllowed('U   moduleA/tags/v1/');
+        $this->assertCommitIsAllowed('D   moduleA/tags/v1/');
+
+        $this->assertCommitIsAllowed('A   moduleA/tags/v1/toto');
+        $this->assertCommitIsAllowed('U   moduleA/tags/v1/toto');
+        $this->assertCommitIsAllowed('D   moduleA/tags/v1/toto');
+
+        $this->assertCommitIsAllowed('A   moduleA/branch', 'A   moduleA/tags/v1/toto');
+
+        $this->assertCommitIsAllowed('A   trunk/toto');
+        $this->assertCommitIsAllowed('U   trunk/toto');
+        $this->assertCommitIsAllowed('D   trunk/toto');
+
+        $this->assertCommitIsAllowed('A   tags/v1/');
+        $this->assertCommitIsDenied('U   tags/v1/');
+        $this->assertCommitIsDenied('D   tags/v1/');
+
+        $this->assertCommitIsDenied('A   tags/v1/toto');
+        $this->assertCommitIsDenied('U   tags/v1/toto');
+        $this->assertCommitIsDenied('D   tags/v1/toto');
+
+        $this->assertCommitIsAllowed('A   tags/moduleA/');
+        $this->assertCommitIsDenied('U   tags/moduleA/');
+        $this->assertCommitIsDenied('D   tags/moduleA/');
+
+        $this->assertCommitIsAllowed('A   tags/moduleA/v1/');
+        $this->assertCommitIsDenied('U   tags/moduleA/v1/');
+        $this->assertCommitIsDenied('D   tags/moduleA/v1/');
+
+        $this->assertCommitIsAllowed('A   tags/moduleA/toto');
+        $this->assertCommitIsDenied('U   tags/moduleA/toto');
+        $this->assertCommitIsDenied('D   tags/moduleA/toto');
+
+        $this->assertCommitIsDenied('A   tags/moduleA/v1/toto');
+        $this->assertCommitIsDenied('U   tags/moduleA/v1/toto');
+        $this->assertCommitIsDenied('D   tags/moduleA/v1/toto');
+
+        $this->assertCommitIsDenied('A   trunk/toto', 'A   tags/moduleA/v1/toto');
+    }
+
+    private function assertCommitIsAllowed() {
+        $paths      = func_get_args();
+        $pre_commit = $this->buildPreCommitHook($paths);
+
+        try {
+            $pre_commit->assertCommitToTagIsAllowed(
+               $this->repo,
+               $this->transaction
+            );
+
+            $this->pass();
+        } catch (SVN_CommitToTagDeniedException $ex) {
+            $this->fail('Commit of "'.implode(', ', $paths) .'" should be allowed');
+        }
+    }
+
+    private function assertCommitIsDenied() {
+        $paths      = func_get_args();
+        $pre_commit = $this->buildPreCommitHook($paths);
+
+        try {
+            $pre_commit->assertCommitToTagIsAllowed(
+               $this->repo,
+               $this->transaction
+            );
+
+            $this->fail('Commit of "'.implode(', ', $paths).'" should be denied');
+        } catch (SVN_CommitToTagDeniedException $ex) {
+            $this->pass();
+        }
+    }
+
+    private function buildPreCommitHook(array $paths) {
+        $svn_look = stub('SVN_Svnlook')
+            ->getTransactionPath($this->project, $this->transaction)
+            ->returns($paths);
+
+        return new SVN_Hook_PreCommit(
+            $this->svn_hook,
+            $this->commit_message_validator,
+            $svn_look,
+            $this->handler,
+            mock('BackendLogger')
+        );
     }
 }

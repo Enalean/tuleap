@@ -18,7 +18,7 @@
  */
 
 !(function ($) {
-    $(document).ready(function(){
+    function initAccessControlsVersionDisplayer() {
         var version_selector  = $('#old_access_file_container select');
         var version_displayer = $('#old_access_file_container textarea');
         var group_id          = $('input[name=group_id]').val();
@@ -50,5 +50,19 @@
                 }).success(updateVersionDisplayer);
             }
         });
+    }
+
+    function initImmutableTags() {
+        $('[name=immutable-tags-whitelist]').focus(function () {
+            var immutable_at_root_radio_selector = "[name=form_tag_immutable][value=2]";
+
+            $(immutable_at_root_radio_selector)[0].checked = true;
+        });
+    }
+
+    $(document).ready(function(){
+        initAccessControlsVersionDisplayer();
+        initImmutableTags();
     });
+
 })(window.jQuery);

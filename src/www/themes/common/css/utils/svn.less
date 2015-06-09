@@ -47,3 +47,19 @@ textarea.not_resizable {
         text-align: center;
     }
 }
+
+.immutable-tags-option {
+    vertical-align: top;
+    margin-bottom: 10px;
+
+    input[type=radio]:not(:checked) + div,
+    input[type=radio]:not(:checked) + div + div {
+        opacity: 0.3;
+    }
+
+    .text-error, .text-success {
+        font-family: monospace;
+        font-size: 0.8em;
+        line-height: 15px;
+    }
+}

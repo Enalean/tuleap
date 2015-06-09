@@ -1,33 +1,27 @@
 <?php
-
-//
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
-//
-// 
-
-/*
-
-	An object wrapper for project data
-
-	Extends the base object, Group
-
-	Tim Perdue, August 28, 2000
-
-
-
-	Example of proper use:
-
-	//get a local handle for the object
-	$pm = ProjectManager::instance();
-    $grp = $pm->getProject($group_id);
-
-	//now use the object to get the unix_name for the project
-	$grp->getUnixName();
-
-    @deprecated Use ProjectManager->getProject instead
-*/
+/**
+ * Copyright 1999-2000 (c) The SourceForge Crew
+ * Copyright Enalean (c) 2015. All rights reserved.
+ *
+ * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Enalean SAS. All other trademarks or names are properties of their respective
+ * owners.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 // see getProjectsDescFieldsInfos
 function cmp($a, $b){
@@ -79,6 +73,10 @@ class Project extends Group implements PFO_Project {
     const ACCESS_PRIVATE             = 'private';
     const ACCESS_PUBLIC_UNRESTRICTED = 'unrestricted';
     const ACCESS_PUBLIC              = 'public';
+
+    const SVN_COMMIT_TO_TAG_ALLOWED           = 0;
+    const SVN_COMMIT_TO_TAG_DENIED_IN_MODULES = 1;
+    const SVN_COMMIT_TO_TAG_DENIED_AT_ROOT    = 2;
 
     var $project_data_array;
 
@@ -340,12 +338,16 @@ class Project extends Group implements PFO_Project {
         return $this->project_data_array['svn_mandatory_ref'];
     }
 
-    /**
-     * Check if update/delete are no more allowed on tags for this subversion repository when this option is enabled
-     *
-     */
-    function isCommitToTagDenied() {
-        return $this->project_data_array['svn_commit_to_tag_denied'];
+    public function isCommitToTagDenied() {
+        return $this->project_data_array['svn_commit_to_tag_denied'] > self::SVN_COMMIT_TO_TAG_ALLOWED;
+    }
+
+    public function isCommitToTagDeniedInModules() {
+        return $this->project_data_array['svn_commit_to_tag_denied'] == self::SVN_COMMIT_TO_TAG_DENIED_IN_MODULES;
+    }
+
+    public function isCommitToTagDeniedAtRoot() {
+        return $this->project_data_array['svn_commit_to_tag_denied'] == self::SVN_COMMIT_TO_TAG_DENIED_AT_ROOT;
     }
 
     function canChangeSVNLog(){

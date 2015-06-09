@@ -23,8 +23,12 @@ class SVN_GeneralSettingsPresenter {
     /** @var Project */
     private $project;
 
-    public function __construct(Project $project) {
-        $this->project = $project;
+    /** @var string */
+    public $immutable_tags_whitelist;
+
+    public function __construct(Project $project, $immutable_tags_whitelist) {
+        $this->project                  = $project;
+        $this->immutable_tags_whitelist = $immutable_tags_whitelist;
     }
 
     public function svn_tracked() {
@@ -68,27 +72,71 @@ class SVN_GeneralSettingsPresenter {
     }
 
     public function mandatory_ref_title() {
-        return $GLOBALS['Language']->getText('svn_admin_general_settings','mandatory_ref');
+        return $GLOBALS['Language']->getText('svn_admin_general_settings', 'mandatory_ref');
     }
 
     public function mandatory_ref_comment() {
-        return $GLOBALS['Language']->getText('svn_admin_general_settings','mandatory_ref_comment');
+        return $GLOBALS['Language']->getText('svn_admin_general_settings', 'mandatory_ref_comment');
     }
 
     public function svn_can_change_log_title() {
-        return $GLOBALS['Language']->getText('svn_admin_general_settings','svn_can_change_log');
+        return $GLOBALS['Language']->getText('svn_admin_general_settings', 'svn_can_change_log');
     }
 
     public function svn_can_change_log_comment() {
-        return $GLOBALS['Language']->getText('svn_admin_general_settings','svn_can_change_log_comment');
+        return $GLOBALS['Language']->getText('svn_admin_general_settings', 'svn_can_change_log_comment');
     }
 
     public function svn_allow_tag_immutable_title() {
-        return $GLOBALS['Language']->getText('svn_admin_general_settings','svn_allow_tag_immutable');
+        return $GLOBALS['Language']->getText('svn_admin_general_settings', 'svn_allow_tag_immutable');
     }
 
     public function svn_allow_tag_immutable_comment() {
-        return $GLOBALS['Language']->getText('svn_admin_general_settings','svn_allow_tag_immutable_comment');
+        return $GLOBALS['Language']->getText('svn_admin_general_settings', 'svn_allow_tag_immutable_comment');
+    }
+
+    public function no_immutable() {
+        return $GLOBALS['Language']->getText('svn_admin_general_settings', 'no_immutable');
+    }
+
+    public function no_immutable_help() {
+        return $GLOBALS['Language']->getText('svn_admin_general_settings', 'no_immutable_help');
+    }
+
+    public function immutable_in_module() {
+        return $GLOBALS['Language']->getText('svn_admin_general_settings', 'immutable_in_module');
+    }
+
+    public function immutable_in_module_help() {
+        return $GLOBALS['Language']->getText('svn_admin_general_settings', 'immutable_in_module_help');
+    }
+
+    public function immutable_at_root() {
+        return $GLOBALS['Language']->getText('svn_admin_general_settings', 'immutable_at_root');
+    }
+
+    public function immutable_at_root_help() {
+        return $GLOBALS['Language']->getText('svn_admin_general_settings', 'immutable_at_root_help');
+    }
+
+    public function layout_example() {
+        return $GLOBALS['Language']->getText('svn_admin_general_settings', 'layout_example');
+    }
+
+    public function impacted_svn() {
+        return $GLOBALS['Language']->getText('svn_admin_general_settings', 'impacted_svn');
+    }
+
+    public function or_svn_status_form() {
+        return $GLOBALS['Language']->getText('svn_admin_general_settings', 'or_svn_status_form');
+    }
+
+    public function whitelist() {
+        return $GLOBALS['Language']->getText('svn_admin_general_settings', 'whitelist');
+    }
+
+    public function moduleA_whitelist() {
+        return $GLOBALS['Language']->getText('svn_admin_general_settings', 'moduleA_whitelist');
     }
 
     public function preamble_title() {
@@ -104,6 +152,18 @@ class SVN_GeneralSettingsPresenter {
 
     public function project_id() {
         return $this->project->getID();
+    }
+
+    public function no_immutable_tags() {
+        return ! $this->project->isCommitToTagDenied();
+    }
+
+    public function immutable_tags_in_modules() {
+        return $this->project->isCommitToTagDeniedInModules();
+    }
+
+    public function immutable_tags_at_root() {
+        return $this->project->isCommitToTagDeniedAtRoot();
     }
 
 }
