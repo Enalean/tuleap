@@ -4,6 +4,8 @@
         .controller('KanbanCtrl', KanbanCtrl);
 
     KanbanCtrl.$inject = [
+        '$scope',
+        '$filter',
         '$modal',
         '$sce',
         'gettextCatalog',
@@ -15,6 +17,8 @@
     ];
 
     function KanbanCtrl(
+        $scope,
+        $filter,
         $modal,
         $sce,
         gettextCatalog,
@@ -35,6 +39,7 @@
         };
         self.backlog = _.extend(kanban.backlog, {
             content: [],
+            filtered_content: [],
             loading_items: true,
             resize_left: '',
             resize_top: '',
@@ -43,6 +48,7 @@
         });
         self.archive = _.extend(kanban.archive, {
             content: [],
+            filtered_content: [],
             loading_items: true,
             resize_left: '',
             resize_top: '',
@@ -79,6 +85,8 @@
         self.toggleBacklog                = toggleBacklog;
         self.expandArchive                = expandArchive;
         self.toggleArchive                = toggleArchive;
+        self.filter_terms                 = '';
+        self.treeFilter                   = filterCards;
 
         loadColumns();
         loadBacklog(limit, offset);
@@ -88,6 +96,21 @@
             dragStart: dragStart,
             dropped  : dropped
         };
+
+        function filterCards() {
+            self.backlog.filtered_content = $filter('InPropertiesFilter')(self.backlog.content, self.filter_terms);
+            self.archive.filtered_content = $filter('InPropertiesFilter')(self.archive.content, self.filter_terms);
+
+            self.board.columns.forEach(function(column) {
+                column.filtered_content = $filter('InPropertiesFilter')(column.content, self.filter_terms);
+            });
+
+            reflowKustomScrollBars();
+        }
+
+        function reflowKustomScrollBars() {
+            $scope.$broadcast('rebuild:kustom-scroll');
+        }
 
         function collapseColumn(column) {
             if (column.is_open) {
@@ -310,16 +333,18 @@
 
         function loadColumns() {
             kanban.columns.forEach(function (column) {
-                column.content        = [];
-                column.loading_items  = true;
-                column.resize_left    = '';
-                column.resize_top     = '';
-                column.resize_width   = '';
-                column.wip_in_edit    = false;
-                column.limit_input    = column.limit;
-                column.saving_wip     = false;
-                column.is_small_width = false;
-                column.is_defered     = ! column.is_open;
+                column.content          = [];
+                column.filtered_content = [];
+                column.loading_items    = true;
+                column.resize_left      = '';
+                column.resize_top       = '';
+                column.resize_width     = '';
+                column.wip_in_edit      = false;
+                column.limit_input      = column.limit;
+                column.saving_wip       = false;
+                column.is_small_width   = false;
+                column.is_defered       = ! column.is_open;
+
                 if (column.is_open) {
                     loadColumnContent(column, limit, offset);
                 }
@@ -341,7 +366,8 @@
 
         function loadColumnContent(column, limit, offset) {
             return KanbanService.getItems(kanban.id, column.id, limit, offset).then(function(data) {
-                column.content = column.content.concat(data.results);
+                column.content          = column.content.concat(data.results);
+                column.filtered_content = column.content;
 
                 if (offset + limit < data.total) {
                     loadColumnContent(column, limit, offset + limit);
@@ -354,7 +380,8 @@
 
         function loadBacklog(limit, offset) {
             return KanbanService.getBacklog(kanban.id, limit, offset).then(function(data) {
-                self.backlog.content = self.backlog.content.concat(data.results);
+                self.backlog.content          = self.backlog.content.concat(data.results);
+                self.backlog.filtered_content = self.backlog.content;
 
                 if (offset + limit < data.total) {
                     loadBacklog(limit, offset + limit);
@@ -367,7 +394,8 @@
 
         function loadArchive(limit, offset) {
             return KanbanService.getArchive(kanban.id, limit, offset).then(function(data) {
-                self.archive.content = self.archive.content.concat(data.results);
+                self.archive.content          = self.archive.content.concat(data.results);
+                self.archive.filtered_content = self.archive.content;
 
                 if (offset + limit < data.total) {
                     loadArchive(limit, offset + limit);

@@ -20,43 +20,43 @@
         tooltip-class="timeinfo"
         tooltip-placement="left"></i>
 
-    <a data-nodrag="true" href="/plugins/tracker/?aid={{ item.id }}" class="kanban-item-link">{{ item.item_name }} #{{ item.id }}</a>
+    <a data-nodrag="true" href="/plugins/tracker/?aid={{ item.id }}" class="kanban-item-link">{{ item.item_name }} #<span ng-bind-html="item.id | highlight:kanban.filter_terms"></span></a>
 
-    <div class="kanban-item-label">{{ item.label }}</div>
+    <div class="kanban-item-label" ng-bind-html="item.label | highlight:kanban.filter_terms"></div>
 
     <ul class="extra_card_fields" ng-if="item.card_fields.length > 0">
         <li ng-repeat="card_field in item.card_fields track by $index" ng-class="{ large: kanban.cardFieldIsText(card_field.type) && card_field.value }">
             <div ng-if="kanban.cardFieldIsSimpleValue(card_field.type) && card_field.value">
                 <span class="extra_card_field_title">{{ card_field.label }}: </span>
-                {{ card_field.value }}
+                <span ng-bind-html="card_field.value | highlight:kanban.filter_terms"></span>
             </div>
             <div ng-if="kanban.cardFieldIsList(card_field.type) && card_field.values.length > 0">
                 <span class="extra_card_field_title">{{ card_field.label }}: </span>
-                <span ng-bind-html="kanban.getCardFieldListValues(card_field.values)"></span>
+                <span ng-bind-html="kanban.getCardFieldListValues(card_field.values, kanban.filter_terms)"></span>
             </div>
             <div ng-if="kanban.cardFieldIsDate(card_field.type) && card_field.value">
                 <span class="extra_card_field_title">{{ card_field.label }}: </span>
-                <span am-time-ago="card_field.value"></span>
+                <span title="{{ card_field.value }}" ng-bind-html="card_field.value | amCalendar | highlight:kanban.filter_terms"></span>
             </div>
             <div ng-if="kanban.cardFieldIsText(card_field.type) && card_field.value">
                 <span class="extra_card_field_title">{{ card_field.label }}: </span>
-                <span ng-bind-html="kanban.getCardFieldTextValue(card_field.value)"></span>
+                <span ng-bind-html="kanban.getCardFieldTextValue(card_field.value) | highlight:kanban.filter_terms"></span>
             </div>
             <div ng-if="kanban.cardFieldIsFile(card_field.type) && card_field.file_descriptions.length > 0">
                 <span class="extra_card_field_title">{{ card_field.label }}: </span>
-                <span ng-bind-html="kanban.getCardFieldFileValue(item.id, card_field.field_id, card_field.file_descriptions)"></span>
+                <span ng-bind-html="kanban.getCardFieldFileValue(item.id, card_field.field_id, card_field.file_descriptions, kanban.filter_terms)"></span>
             </div>
             <div ng-if="kanban.cardFieldIsCross(card_field.type) && card_field.value">
                 <span class="extra_card_field_title">{{ card_field.label }}: </span>
-                <span ng-bind-html="kanban.getCardFieldCrossValue(card_field.value)"></span>
+                <span ng-bind-html="kanban.getCardFieldCrossValue(card_field.value, kanban.filter_terms)"></span>
             </div>
             <div ng-if="kanban.cardFieldIsPermissions(card_field.type) && card_field.granted_groups.length > 0">
                 <span class="extra_card_field_title">{{ card_field.label }}: </span>
-                <span ng-bind-html="kanban.getCardFieldPermissionsValue(card_field.granted_groups)"></span>
+                <span ng-bind-html="kanban.getCardFieldPermissionsValue(card_field.granted_groups) | highlight:kanban.filter_terms"></span>
             </div>
             <div ng-if="kanban.cardFieldIsUser(card_field.type) && card_field.value">
                 <span class="extra_card_field_title">{{ card_field.label }}: </span>
-                <span ng-bind-html="kanban.getCardFieldUserValue(card_field.value)"></span>
+                <span ng-bind-html="kanban.getCardFieldUserValue(card_field.value, kanban.filter_terms)"></span>
             </div>
             <!-- Artifact links & Burndown fields are not managed yet -->
         </li>

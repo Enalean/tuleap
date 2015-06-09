@@ -62,7 +62,7 @@ class ArtifactsTest extends RestBase {
         $this->assertNotNull($response->getHeader('Etag'));
         $artifact_reference = $response->json();
         $this->assertGreaterThan(0, $artifact_reference['id']);
-        
+
         $fetched_value = $this->getFieldValueForFieldLabel($artifact_reference['id'], $summary_field_label);
         $this->assertEquals($summary_field_value, $fetched_value);
         return $artifact_reference['id'];
@@ -114,6 +114,7 @@ class ArtifactsTest extends RestBase {
                     $this->assertTrue(is_array($field['value']));
                     $this->assertTrue(array_key_exists('display_name', $field['value']));
                     $this->assertTrue(array_key_exists('link', $field['value']));
+                    $this->assertTrue(array_key_exists('user_url', $field['value']));
                     $this->assertTrue(array_key_exists('avatar_url', $field['value']));
                     break;
                 case 'lud':
