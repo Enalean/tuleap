@@ -19,6 +19,7 @@ Version 8.3 (not released yet)
 	* tracker: 5.633
 	* proftpd: 0.21
 	* mediawiki: 0.69
+	* statistics: 0.50
 
 	== Development ==
 	* Adding SOAP example for legacy Tracker V3
