@@ -25,7 +25,7 @@ if (user_isloggedin()) {
     // personal page
     header("Cache-Control: no-cache, no-store, must-revalidate"); // for HTTP 1.1
     header("Pragma: no-cache");  // for HTTP 1.0
-    
+
     if (browser_is_netscape4()) {
         $feedback.= $Language->getText('my_index', 'err_badbrowser');
     }

@@ -19,9 +19,13 @@
  */
 
 class UserTokenGenerator {
+    private $token_size;
+
     // 128 bits of entropy is enough
     // @see https://www.owasp.org/index.php/Insufficient_Session-ID_Length
-    const TOKEN_SIZE = 16;
+    public function __construct($token_size = 16) {
+        $this->token_size = $token_size;
+    }
 
     /**
      * Generate a token that could be used has a session ID or during a password
@@ -32,22 +36,22 @@ class UserTokenGenerator {
     public function getToken() {
         $token = '';
         if (function_exists('openssl_random_pseudo_bytes')) {
-            $token = bin2hex(openssl_random_pseudo_bytes(self::TOKEN_SIZE));
+            $token = bin2hex(openssl_random_pseudo_bytes($this->token_size));
         }
         // Before PHP 5.3.7 mcrypt_create_iv() is bugged
         // @see https://bugs.php.net/bug.php?id=55169
         else if (function_exists('mcrypt_create_iv') && version_compare(PHP_VERSION, '5.3.7') >= 0) {
-            $token = bin2hex(mcrypt_create_iv(self::TOKEN_SIZE));
+            $token = bin2hex(mcrypt_create_iv($this->token_size));
         }
         else if ($handle = @fopen('/dev/urandom', 'rb')) {
-            $token = bin2hex(fread($handle, self::TOKEN_SIZE));
+            $token = bin2hex(fread($handle, $this->token_size));
             fclose($handle);
         }
 
         // In case of a token can not be generated with safe PRNG, we create one
         // using a non cryptographic PRNG
         if (!$token) {
-            $token = $this->fallbackRandomGenerator(self::TOKEN_SIZE);
+            $token = $this->fallbackRandomGenerator($this->token_size);
         }
 
         return $token;

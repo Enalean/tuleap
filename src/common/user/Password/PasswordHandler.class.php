@@ -20,43 +20,14 @@
  */
 
 abstract class PasswordHandler {
+    // We need 16 hex chars (8 bytes) to use as a salt to generate the UNIX password
+    const SALT_SIZE = 8;
+
     public abstract function verifyHashPassword($plain_password, $hash_password);
 
     public abstract function computeHashPassword($plain_password);
 
     public abstract function isPasswordNeedRehash($hash_password);
-
-    /**
-     * Generate a random number between 46 and 122
-     *
-     * @return Integer
-     */
-    private function ranNum() {
-        mt_srand();
-        $num = mt_rand(46,122);
-        return $num;
-    }
-
-    /**
-     * Generate a random alphanum character
-     *
-     * @return String
-     */
-    private function genChr() {
-        do {
-            $num = $this->ranNum();
-        } while ( ( $num > 57 && $num < 65 ) || ( $num > 90 && $num < 97 ) );
-        $char = chr($num);
-        return $char;
-    }
-
-    private function genStr($length) {
-        $res = '';
-        for ($i = $length; $i > 0; $i--) {
-            $res .= $this->genChr();
-        }
-        return $res;
-    }
 
     /**
      * Generate Unix shadow password
@@ -65,10 +36,5 @@ abstract class PasswordHandler {
      *
      * @return String
      */
-    public function computeUnixPassword($plain_password) {
-        // (LJ) Adding $1$ at the beginning of the salt
-        // forces the MD5 encryption so the system has to
-        // have MD5 pam module installed for Unix passwd file.
-        return crypt($plain_password, '$1$' . $this->genStr(2));
-    }
+    public abstract function computeUnixPassword($plain_password);
 }
