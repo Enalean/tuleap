@@ -27,16 +27,37 @@
             vertical-align: top;
             width: 48%;
 
-            h2 {
-                display: inline;
+            .planning-header {
                 margin: 0 0 20px;
-            }
 
-            .controls {
-                display: inline-block;
-                position: relative;
-                top: -5px;
-                margin: 0 0 20px 10px;
+                h2 {
+                    float: left;
+                    display: inline-block;
+                    margin: 0 10px 0 0;
+                }
+
+                button {
+                    float: left;
+                    position: relative;
+                    top: 7px;
+                    margin: 0 0 10px;
+                }
+
+                .view-switcher, .items-toggle-button {
+                    float: right;
+                }
+
+                .view-switcher {
+                    span {
+                        display: none;
+                    }
+
+                    @media screen and (min-width: 1500px) {
+                        span {
+                            display: inline;
+                        }
+                    }
+                }
             }
 
             div.alert.alert-warning {

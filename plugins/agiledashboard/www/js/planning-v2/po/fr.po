@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AgileDashboard Planning\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2015-06-22 11:30+0100\n"
+"PO-Revision-Date: 2015-07-21 16:09+0200\n"
 "Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: French (http://www.transifex.com/projects/p/test-188/language/"
 "fr/)\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.6.9\n"
+"X-Generator: Poedit 1.8.2\n"
 
 #: src/app/planning.tpl.html
 msgid "A server error has occured. <b>You should refresh this page</b>."
@@ -54,16 +54,28 @@ msgid "Cardwall"
 msgstr "Cardwall"
 
 #: src/app/planning.tpl.html
+msgid "Compact view"
+msgstr "Vue compacte"
+
+#: src/app/planning.tpl.html
 msgid "Content"
 msgstr "Contenu"
 
 #: src/app/planning.tpl.html
+msgid "Detailed view"
+msgstr "Vue détaillée"
+
+#: src/app/planning.tpl.html
 msgid "Hide \"Closed\" Items"
-msgstr "Cacher les Éléments \"Fermés\""
+msgstr "Cacher les éléments \"fermés\""
 
 #: src/app/planning.tpl.html
 msgid "Initial effort:"
 msgstr "Effort estimé:"
+
+#: src/app/backlog-item/backlog-item-details.tpl.html
+msgid "Itinial effort"
+msgstr "Effort estimé"
 
 #: src/app/planning.tpl.html
 msgid "Milestones"
@@ -72,6 +84,10 @@ msgstr "Jalons"
 #: src/app/planning.tpl.html
 msgid "N/A"
 msgstr "N/A"
+
+#: src/app/backlog-item/backlog-item-details.tpl.html
+msgid "No itinial effort defined"
+msgstr "Aucun effort n’a été estimé"
 
 #: src/app/planning.tpl.html
 msgid "Planning"

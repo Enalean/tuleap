@@ -8,7 +8,7 @@
     <div ng-show="! collapsed" class="children">
         <ul ui-tree-nodes
             ng-model="backlog_item.children.data"
-            class="backlog-item-children"
+            class="backlog-item-children {{ current_view_class }}"
             data-accept="{{ backlog_item.accepted_types.toString() }}"
             ng-show="! collapsed"
             ng-class="{ hidden: collapsed }"

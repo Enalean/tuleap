@@ -6,16 +6,16 @@ ul.backlog-items, ul.backlog-item-children {
         position: relative;
 
         > .show-children {
-                margin: 0 auto;
-                width: 90%;
-                background: #FFFFFF;
-                border-bottom-right-radius: 3px;
-                border-bottom-left-radius: 3px;
-                box-shadow: inset 1px 0 0 #E3E3E3,
-                    inset -1px 0 0 #E3E3E3,
-                    inset 0 1px 0 rgba(242,242,242,0.50),
-                    inset 0 -1px 0 #E3E3E3,
-                    0 1px 0 0 rgba(242,242,242,0.50);
+            margin: 0 auto;
+            width: 90%;
+            background: #FFFFFF;
+            border-bottom-right-radius: 3px;
+            border-bottom-left-radius: 3px;
+            box-shadow: inset 1px 0 0 #EFEFEF,
+                inset -1px 0 0 #EFEFEF,
+                inset 0 1px 0 rgba(242,242,242,0.50),
+                inset 0 -1px 0 #E3E3E3,
+                0 1px 0 0 rgba(242,242,242,0.50);
 
             > .children {
                 padding: 10px;
@@ -53,7 +53,7 @@ ul.backlog-items, ul.backlog-item-children {
             margin: 10px 0 0;
             padding: 5px 5px 5px 12px;
             background: #FFFFFF;
-            border: 1px solid #E8E8E8;
+            border: 1px solid #EFEFEF;
             border-radius: 3px;
             box-shadow: 0px 1px 0px 0px rgba(242, 242, 242, 0.5);
 
@@ -74,67 +74,67 @@ ul.backlog-items, ul.backlog-item-children {
 
             &.inca_silver {
                 > div.type-border     { background-color: @inca_silver; }
-                > span.initial-effort { background-color: @inca_silver; }
+                span.initial-effort   { background-color: @inca_silver; }
             }
             &.chrome_silver {
                 > div.type-border     { background-color: @chrome_silver; }
-                > span.initial-effort { background-color: @chrome_silver; }
+                span.initial-effort   { background-color: @chrome_silver; }
             }
             &.fiesta_red {
                 > div.type-border     { background-color: @fiesta_red; }
-                > span.initial-effort { background-color: @fiesta_red; }
+                span.initial-effort   { background-color: @fiesta_red; }
             }
             &.teddy_brown {
                 > div.type-border     { background-color: @teddy_brown; }
-                > span.initial-effort { background-color: @teddy_brown; }
+                span.initial-effort   { background-color: @teddy_brown; }
             }
             &.clockwork_orange {
                 > div.type-border     { background-color: @clockwork_orange; }
-                > span.initial-effort { background-color: @clockwork_orange; }
+                span.initial-effort   { background-color: @clockwork_orange; }
             }
             &.red_wine {
                 > div.type-border     { background-color: @red_wine; }
-                > span.initial-effort { background-color: @red_wine; }
+                span.initial-effort   { background-color: @red_wine; }
             }
             &.acid_green {
                 > div.type-border     { background-color: @acid_green; }
-                > span.initial-effort { background-color: @acid_green; }
+                span.initial-effort   { background-color: @acid_green; }
             }
             &.army_green {
                 > div.type-border     { background-color: @army_green; }
-                > span.initial-effort { background-color: @army_green; }
+                span.initial-effort   { background-color: @army_green; }
             }
             &.sherwood_green {
                 > div.type-border     { background-color: @sherwood_green; }
-                > span.initial-effort { background-color: @sherwood_green; }
+                span.initial-effort   { background-color: @sherwood_green; }
             }
             &.ocean_turquoise {
                 > div.type-border     { background-color: @ocean_turquoise; }
-                > span.initial-effort { background-color: @ocean_turquoise; }
+                span.initial-effort   { background-color: @ocean_turquoise; }
             }
             &.daphne_blue {
                 > div.type-border     { background-color: @daphne_blue; }
-                > span.initial-effort { background-color: @daphne_blue; }
+                span.initial-effort   { background-color: @daphne_blue; }
             }
             &.lake_placid_blue {
                 > div.type-border     { background-color: @lake_placid_blue; }
-                > span.initial-effort { background-color: @lake_placid_blue; }
+                span.initial-effort   { background-color: @lake_placid_blue; }
             }
             &.deep_blue {
                 > div.type-border     { background-color: @deep_blue; }
-                > span.initial-effort { background-color: @deep_blue; }
+                span.initial-effort   { background-color: @deep_blue; }
             }
             &.plum_crazy {
                 > div.type-border     { background-color: @plum_crazy; }
-                > span.initial-effort { background-color: @plum_crazy; }
+                span.initial-effort   { background-color: @plum_crazy; }
             }
             &.peggy_pink {
                 > div.type-border     { background-color: @peggy_pink; }
-                > span.initial-effort { background-color: @peggy_pink; }
+                span.initial-effort   { background-color: @peggy_pink; }
             }
             &.flamingo_pink {
                 > div.type-border     { background-color: @flamingo_pink; }
-                > span.initial-effort { background-color: @flamingo_pink; }
+                span.initial-effort   { background-color: @flamingo_pink; }
             }
 
             .id {
@@ -164,9 +164,20 @@ ul.backlog-items, ul.backlog-item-children {
                 font-size: 0.9em;
             }
 
-            > span.initial-effort {
+            > span.initial-effort-placeholder {
                 float: right;
-                margin: 0 0 0 5px;
+                min-width: 50px;
+                height: 15px;
+                text-align: right;
+                margin: 0 0 7px 5px;
+
+                > .no-initial-effort {
+                    width: 28px;
+                    background-color: #EEE;
+                    text-align: center;
+                    text-shadow: none;
+                    color: #888;
+                }
             }
 
             > span.parent {
@@ -233,6 +244,39 @@ ul.backlog-items, ul.backlog-item-children {
             background-position: right 5px bottom 5px;
         }
     }
+
+    &.small-card {
+        > li.backlog-item {
+            margin: 5px 0;
+
+            > .backlog-item-details {
+                > a.id {
+                }
+
+                > span.summary {
+                }
+
+                > span.parent {
+                    display: inline;
+                    float: right;
+                    text-align: right;
+                    color: #4DB3D0;
+                }
+
+                ul.extra_card_fields {
+                    display: none;
+                }
+
+                &:after {
+                    content: ".";
+                    visibility: hidden;
+                    display: block;
+                    height: 0;
+                    clear: both;
+                }
+            }
+        }
+    }
 }
 
 div.milestones > fieldset.milestone > div.content {
@@ -279,6 +323,12 @@ ul.backlog-items, ul.backlog-item-children {
                 background-color: #58B359;
             }
         }
+    }
+}
+
+ul.backlog-item-children {
+    span.initial-effort-placeholder {
+        display: none;
     }
 }
 .angular-ui-tree-drag {

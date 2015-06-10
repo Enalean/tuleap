@@ -42,7 +42,15 @@ msgid "Cardwall"
 msgstr ""
 
 #: src/app/planning.tpl.html
+msgid "Compact view"
+msgstr ""
+
+#: src/app/planning.tpl.html
 msgid "Content"
+msgstr ""
+
+#: src/app/planning.tpl.html
+msgid "Detailed view"
 msgstr ""
 
 #: src/app/planning.tpl.html
@@ -53,12 +61,20 @@ msgstr ""
 msgid "Initial effort:"
 msgstr ""
 
+#: src/app/backlog-item/backlog-item-details.tpl.html
+msgid "Itinial effort"
+msgstr ""
+
 #: src/app/planning.tpl.html
 msgid "Milestones"
 msgstr ""
 
 #: src/app/planning.tpl.html
 msgid "N/A"
+msgstr ""
+
+#: src/app/backlog-item/backlog-item-details.tpl.html
+msgid "No itinial effort defined"
 msgstr ""
 
 #: src/app/planning.tpl.html
