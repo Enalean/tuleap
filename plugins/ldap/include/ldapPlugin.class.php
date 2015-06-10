@@ -363,12 +363,12 @@ class LdapPlugin extends Plugin {
             else {
                 $params['allow_codendi_login'] = true;
             }
-        }
-        if ($this->hasLDAPWrite() && $params['user']->getLdapId() == null) {
-            try {
-                $this->getLDAPUserWrite()->updateWithUser($params['user']);
-            } catch (Exception $exception) {
-                $this->getLogger()->error('An error occured while registering user (session_after_login): '.$exception->getMessage());
+            if ($this->hasLDAPWrite() && $params['user']->getLdapId() == null) {
+                try {
+                    $this->getLDAPUserWrite()->updateWithUser($params['user']);
+                } catch (Exception $exception) {
+                    $this->getLogger()->error('An error occured while registering user (session_after_login): '.$exception->getMessage());
+                }
             }
         }
     }
