@@ -30,7 +30,8 @@ function ModalModelFactory() {
 
             if (_(awkward_fields_for_creation).contains(field.type)) {
                 values[field.field_id] = {
-                    field_id: field.field_id
+                    field_id: field.field_id,
+                    type    : field.type
                 };
                 if (artifact_value) {
                     // We attach the value to the structure to avoid submitting it
@@ -75,7 +76,8 @@ function ModalModelFactory() {
 
     function getDefaultValue(field) {
         var value_obj = {
-            field_id: field.field_id
+            field_id: field.field_id,
+            type    : field.type
         };
         switch (field.type) {
             case "sb":

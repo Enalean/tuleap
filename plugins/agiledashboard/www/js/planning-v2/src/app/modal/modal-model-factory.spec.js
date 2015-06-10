@@ -17,9 +17,9 @@ describe("ModalModelFactory createFromStructure() - ", function() {
     describe("createFromStructure() -", function() {
         it("Given an array of artifact field objects containing a field_id and a value and given a tracker structure object containing those fields, when I create the model from the structure, then a map containing all the fields provided and also containing default values for all the other fields of the structure will be returned", function() {
             var artifact_values = [
-                { field_id: 655, value: "alumna Aurora Arpin" },
-                { field_id: 378, bind_value_ids: [667, 967] },
-                { field_id: 320, links: [
+                { field_id: 655, type: 'string', value: "alumna Aurora Arpin" },
+                { field_id: 378, type: 'sb', bind_value_ids: [667, 967] },
+                { field_id: 320, type: 'art_link', links: [
                     { id: 158},
                     { id: 434}
                 ]}
@@ -54,10 +54,10 @@ describe("ModalModelFactory createFromStructure() - ", function() {
             };
             var output = ModalModelFactory.createFromStructure(artifact_values, structure);
             expect(output).toEqual({
-                655: { field_id: 655, value: "alumna Aurora Arpin" },
-                728: { field_id: 728, bind_value_ids: [422] },
-                378: { field_id: 378, bind_value_ids: [667, 967] },
-                320: { field_id: 320, links: [
+                655: { field_id: 655, type: 'string', value: "alumna Aurora Arpin" },
+                728: { field_id: 728, type: 'rb', bind_value_ids: [422] },
+                378: { field_id: 378, type: 'sb', bind_value_ids: [667, 967] },
+                320: { field_id: 320, type: 'art_link', links: [
                     { id: 158 },
                     { id: 434 }
                 ]}
@@ -66,15 +66,15 @@ describe("ModalModelFactory createFromStructure() - ", function() {
 
         it("Given an array of artifact field values containing a string field, a cross field, a burndown field, a priority field and a computed field and given a tracker structure object containing those fields, when I create the model from the structure, then the cross, burndown, priority and computed fields won't have a value in the returned map", function() {
             var artifact_values = [
-                { field_id: 33, value: "Nadia Ledon" },
-                { field_id: 79, value: [] },
-                { field_id: 81, value: 98 },
-                { field_id: 10, value: {
+                { field_id: 33, type: "string", value: "Nadia Ledon" },
+                { field_id: 79, type: "cross", value: [] },
+                { field_id: 81, type: "priority", value: 98 },
+                { field_id: 10, type: "burndown", value: {
                     "duration": 85,
                     "capacity": 79,
                     "points": [11.52, 87.50, 70.65]
                 } },
-                { field_id: 28, value: 86 }
+                { field_id: 28, type: "computed", value: 86 }
             ];
             var structure = {
                 fields: [
@@ -87,11 +87,11 @@ describe("ModalModelFactory createFromStructure() - ", function() {
             };
             var output = ModalModelFactory.createFromStructure(artifact_values, structure);
             expect(output).toEqual({
-                33: { field_id: 33, value: "Nadia Ledon" },
-                79: { field_id: 79 },
-                81: { field_id: 81 },
-                10: { field_id: 10 },
-                28: { field_id: 28 }
+                33: { field_id: 33, type: 'string', value: "Nadia Ledon" },
+                79: { field_id: 79, type: 'cross' },
+                81: { field_id: 81, type: 'priority' },
+                10: { field_id: 10, type: 'burndown' },
+                28: { field_id: 28, type: 'computed' }
             });
         });
 
@@ -109,7 +109,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 };
                 var output = ModalModelFactory.createFromStructure([], structure);
                 expect(output).toEqual({
-                    870: { field_id: 870, value: null }
+                    870: { field_id: 870, type: 'string', value: null }
                 });
             });
 
@@ -127,7 +127,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 };
                 var output = ModalModelFactory.createFromStructure([], structure);
                 expect(output).toEqual({
-                    175: { field_id: 175, value: "Despina Pistorius chronoisothermal" }
+                    175: { field_id: 175, type: 'string', value: "Despina Pistorius chronoisothermal" }
                 });
             });
         });
@@ -138,7 +138,8 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                     {
                         field_id: 901,
                         value: "<p><b>Cleta</b> Goetsch bicipital <em>xylophagid</em></p>",
-                        format: "HTML"
+                        format: "HTML",
+                        type: "text"
                     }
                 ];
                 var structure = {
@@ -156,6 +157,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                     901: {
                         field_id: 901,
                         format: "HTML",
+                        type: "text",
                         value: "<p><b>Cleta</b> Goetsch bicipital <em>xylophagid</em></p>"
                     }
                 });
@@ -177,7 +179,8 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                     336: {
                         field_id: 336,
                         format: "text",
-                        value: null
+                        value: null,
+                        type: "text"
                     }
                 });
             });
@@ -202,6 +205,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                     349: {
                         field_id: 349,
                         format: "HTML",
+                        type: "text",
                         value: "<p>quartane <b>Christel</b> Kalchik roentgentherapy</p>"
                     }
                 });
@@ -227,8 +231,8 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 };
                 var output = ModalModelFactory.createFromStructure([], structure);
                 expect(output).toEqual({
-                    685: { field_id: 685, value: null },
-                    775: { field_id: 775, value: null }
+                    685: { field_id: 685, type: 'int', value: null },
+                    775: { field_id: 775, type: 'float', value: null }
                 });
             });
 
@@ -252,8 +256,8 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 };
                 var output = ModalModelFactory.createFromStructure([], structure);
                 expect(output).toEqual({
-                    163: { field_id: 163, value: 68.8596 },
-                    220: { field_id: 220, value: 236 }
+                    163: { field_id: 163, type: 'float', value: 68.8596 },
+                    220: { field_id: 220, type: 'int', value: 236 }
                 });
                 expect(_.isNumber(output[163].value)).toBeTruthy();
                 expect(_.isNumber(output[220].value)).toBeTruthy();
@@ -322,8 +326,8 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 };
                 var output = ModalModelFactory.createFromStructure([], structure);
                 expect(output).toEqual({
-                    87:  { field_id: 87, bind_value_ids: [] },
-                    860: { field_id: 860, bind_value_ids: [] }
+                    87:  { field_id: 87, type: "sb", bind_value_ids: [] },
+                    860: { field_id: 860, type: "msb", bind_value_ids: [] }
                 });
             });
 
@@ -347,8 +351,8 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 };
                 var output = ModalModelFactory.createFromStructure([], structure);
                 expect(output).toEqual({
-                    622: { field_id: 622, bind_value_ids: [941] },
-                    698: { field_id: 698, bind_value_ids: [196, 800] }
+                    622: { field_id: 622, type: "sb", bind_value_ids: [941] },
+                    698: { field_id: 698, type: "msb", bind_value_ids: [196, 800] }
                 });
             });
         });
@@ -356,7 +360,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
         describe("Given a tracker structure object containing a checkbox field with 3 possible values,", function() {
             it("and given an array of artifact field values containing that field, when I create the model from the structure, then a map of objects containing an array of 3 elements including the values in the artifact field value will be returned", function() {
                 var artifact_values = [
-                    { field_id: 137, bind_value_ids: [498, 443] }
+                    { field_id: 137, type: "cb", bind_value_ids: [498, 443] }
                 ];
                 var structure = {
                     fields: [
@@ -375,7 +379,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 };
                 var output = ModalModelFactory.createFromStructure(artifact_values, structure);
                 expect(output).toEqual({
-                    137: { field_id: 137, bind_value_ids: [498, null, 443] }
+                    137: { field_id: 137, type: "cb", bind_value_ids: [498, null, 443] }
                 });
             });
 
@@ -397,7 +401,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 };
                 var output = ModalModelFactory.createFromStructure([], structure);
                 expect(output).toEqual({
-                    607: { field_id: 607, bind_value_ids: [null, null, null]}
+                    607: { field_id: 607, type: "cb", bind_value_ids: [null, null, null]}
                 });
             });
 
@@ -420,7 +424,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 };
                 var output = ModalModelFactory.createFromStructure([], structure);
                 expect(output).toEqual({
-                    910: { field_id: 910, bind_value_ids: [477, null, 848]}
+                    910: { field_id: 910, type: "cb", bind_value_ids: [477, null, 848]}
                 });
             });
         });
@@ -428,7 +432,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
         describe("Given a tracker structure object containing a radiobutton field,", function() {
             it("and given an array of artifact field values containing that field and that field's bind_value_ids array was empty, when I create the model from the structure, then a map of objects containing only the field's id and a bind_value_ids array [100] will be returned", function() {
                 var artifact_values = [
-                    { field_id: 430, bind_value_ids: [] }
+                    { field_id: 430, type: "rb", bind_value_ids: [] }
                 ];
                 var structure = {
                     fields: [
@@ -442,7 +446,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 };
                 var output = ModalModelFactory.createFromStructure(artifact_values, structure);
                 expect(output).toEqual({
-                    430: { field_id: 430, bind_value_ids: [100] }
+                    430: { field_id: 430, type: "rb", bind_value_ids: [100] }
                 });
             });
 
@@ -459,7 +463,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 };
                 var output = ModalModelFactory.createFromStructure([], structure);
                 expect(output).toEqual({
-                    242: { field_id: 242, bind_value_ids: [100] }
+                    242: { field_id: 242, type: "rb", bind_value_ids: [100] }
                 });
             });
 
@@ -477,7 +481,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
                 };
                 var output = ModalModelFactory.createFromStructure([], structure);
                 expect(output).toEqual({
-                    897: { field_id: 897, bind_value_ids: [931, 410] }
+                    897: { field_id: 897, type: "rb", bind_value_ids: [931, 410] }
                 });
             });
         });
@@ -497,6 +501,7 @@ describe("ModalModelFactory createFromStructure() - ", function() {
             expect(output).toEqual({
                 803: {
                     field_id: 803,
+                    type: "art_link",
                     unformatted_links: "",
                     links: [ {id: ""} ]
                 }
