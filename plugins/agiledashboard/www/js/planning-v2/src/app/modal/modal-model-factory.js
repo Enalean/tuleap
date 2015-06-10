@@ -28,13 +28,13 @@ function ModalModelFactory() {
         _.forEach(structure.fields, function(field) {
             artifact_value = indexed_values[field.field_id];
 
+            field = transformStructure(field, artifact_value, structure.workflow);
+
             if (_(awkward_fields_for_creation).contains(field.type)) {
                 values[field.field_id] = {
                     field_id: field.field_id,
                     type    : field.type
                 };
-                // We attach the value to the structure to avoid submitting it
-                field = augmentStructureField(field, artifact_value);
             } else if (artifact_value) {
                 values[field.field_id] = formatExistingValue(field, artifact_value);
             } else {
@@ -45,8 +45,30 @@ function ModalModelFactory() {
         return values;
     }
 
+    function transformStructure(field, artifact_value, workflow) {
+        // We attach the value to the structure to avoid submitting it
+        if (_(awkward_fields_for_creation).contains(field.type)) {
+            field = augmentStructureField(field, artifact_value);
+        } else {
+            switch (field.type) {
+                case "sb":
+                    var selected_id;
+                    if (artifact_value) {
+                        selected_id = formatExistingValue(field, artifact_value).bind_value_ids[0];
+                    } else {
+                        selected_id = null;
+                    }
+                    field.values = filterWorkflowTransitions(workflow, field, selected_id);
+                    break;
+                default:
+                    break;
+            }
+        }
+        return field;
+    }
+
     function augmentStructureField(field, artifact_value) {
-        if (!artifact_value) {
+        if (! artifact_value) {
             return field;
         }
         if (artifact_value.value) {
@@ -61,11 +83,32 @@ function ModalModelFactory() {
         return field;
     }
 
+    function filterWorkflowTransitions(workflow, field, selected_id) {
+        if (! workflow) {
+            return field.values;
+        }
+        var workflow_id = workflow.field_id;
+        var workflow_is_used = workflow.is_used;
+        if (! workflow_is_used || (field.field_id !== workflow_id)) {
+            return field.values;
+        }
+
+        var available_transition_ids = _(workflow.transitions).filter(function(transition) {
+            return transition.from_id === selected_id;
+        }).pluck("to_id").push(selected_id).compact().value();
+
+        var selectable_ids = _.filter(field.values, function(value) {
+            return _(available_transition_ids).contains(value.id);
+        });
+        return selectable_ids;
+    }
+
     function formatExistingValue(field, artifact_value) {
         var value_obj         = artifact_value;
         value_obj.type        = field.type;
         value_obj.permissions = field.permissions;
         switch (field.type) {
+            case "sb":
             case "date":
                 if (field.is_time_displayed) {
                     if (artifact_value.value) {
