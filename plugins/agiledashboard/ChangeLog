@@ -1,3 +1,6 @@
+Version 1.214 - Tuleap 8.3
+    * story #7857: Can't submit a new artifact with empty value for integer & float
+
 Version 1.213 - Tuleap 8.3
     * request #8136: on kanban create modal dropdown some trackers appear twice
 
