@@ -29,31 +29,26 @@
             offset = 0,
             kanban = SharedPropertiesService.getKanban();
 
-        self.name  = kanban.name;
+        self.label = kanban.label;
         self.board = {
-            columns: []
+            columns: kanban.columns
         };
-        self.backlog = {
+        self.backlog = _.extend(kanban.backlog, {
             content: [],
-            label: 'Backlog',
-            is_open: false,
-            loading_items: true,
-            resize_left: '',
-            resize_top: '',
-            resize_width: '',
-            is_small_width: false,
-            user_can_add_in_place: false
-        };
-        self.archive = {
-            content: [],
-            label: 'Closed',
-            is_open: false,
             loading_items: true,
             resize_left: '',
             resize_top: '',
             resize_width: '',
             is_small_width: false
-        };
+        });
+        self.archive = _.extend(kanban.archive, {
+            content: [],
+            loading_items: true,
+            resize_left: '',
+            resize_top: '',
+            resize_width: '',
+            is_small_width: false
+        });
 
         self.cardFieldIsSimpleValue       = CardFieldsService.cardFieldIsSimpleValue;
         self.cardFieldIsList              = CardFieldsService.cardFieldIsList;
@@ -205,7 +200,7 @@
         }
 
         function showEditbutton() {
-            return userIsAdmin() && kanban.label !== undefined;
+            return userIsAdmin();
         }
 
         function editKanban() {
@@ -226,7 +221,7 @@
 
             function updateKanbanName(new_kanban) {
                 kanban.label = new_kanban.label;
-                self.name    = kanban.label;
+                self.label   = kanban.label;
             }
 
             function reloadIfSomethingIsWrong(reason) {
@@ -242,22 +237,17 @@
         }
 
         function loadColumns() {
-            KanbanService.getKanban(kanban.id).then(function (full_kanban) {
-                kanban = full_kanban;
-                SharedPropertiesService.setKanban(kanban);
-                kanban.columns.forEach(function (column) {
-                    column.content        = [];
-                    column.loading_items  = true;
-                    column.resize_left    = '';
-                    column.resize_top     = '';
-                    column.resize_width   = '';
-                    column.wip_in_edit    = false;
-                    column.limit_input    = column.limit;
-                    column.saving_wip     = false;
-                    column.is_small_width = false;
-                    loadColumnContent(column, limit, offset);
-                });
-                self.board.columns = kanban.columns;
+            kanban.columns.forEach(function (column) {
+                column.content        = [];
+                column.loading_items  = true;
+                column.resize_left    = '';
+                column.resize_top     = '';
+                column.resize_width   = '';
+                column.wip_in_edit    = false;
+                column.limit_input    = column.limit;
+                column.saving_wip     = false;
+                column.is_small_width = false;
+                loadColumnContent(column, limit, offset);
             });
         }
 
@@ -275,8 +265,7 @@
 
         function loadBacklog(limit, offset) {
             return KanbanService.getBacklog(kanban.id, limit, offset).then(function(data) {
-                self.backlog.content               = self.backlog.content.concat(data.results);
-                self.backlog.user_can_add_in_place = data.user_can_add_in_place;
+                self.backlog.content = self.backlog.content.concat(data.results);
 
                 if (offset + limit < data.total) {
                     loadBacklog(limit, offset + limit);

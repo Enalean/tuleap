@@ -111,6 +111,12 @@ class KanbanResource extends AuthenticatedResource {
 
         $this->form_element_factory = Tracker_FormElementFactory::instance();
         $this->permissions_manager  = new AgileDashboard_PermissionsManager();
+
+        $this->kanban_representation_builder = new KanbanRepresentationBuilder(
+            $this->kanban_column_factory,
+            $this->tracker_factory,
+            $this->form_element_factory
+        );
     }
 
     /**
@@ -144,10 +150,7 @@ class KanbanResource extends AuthenticatedResource {
         $user   = $this->getCurrentUser();
         $kanban = $this->getKanban($user, $id);
 
-        $user_can_add_in_place = $this->canUserAddInPlace($user, $kanban);
-
-        $kanban_representation = new KanbanRepresentation();
-        $kanban_representation->build($kanban, $this->kanban_column_factory, $user_can_add_in_place);
+        $kanban_representation = $this->kanban_representation_builder->build($kanban, $user);
 
         Header::allowOptionsGetPatchDelete();
         return $kanban_representation;
@@ -222,29 +225,13 @@ class KanbanResource extends AuthenticatedResource {
         $user   = $this->getCurrentUser();
         $kanban = $this->getKanban($user, $id);
 
-        $user_can_add_in_place = $this->canUserAddInPlace($user, $kanban);
-
         $backlog_representation = new KanbanBacklogRepresentation();
-        $backlog_representation->build($user, $kanban, $user_can_add_in_place, $limit, $offset);
+        $backlog_representation->build($user, $kanban, $limit, $offset);
 
         Header::allowOptionsGet();
         Header::sendPaginationHeaders($limit, $offset, $backlog_representation->total_size, self::MAX_LIMIT);
 
         return $backlog_representation;
-    }
-
-    private function canUserAddInPlace(PFUser $user, AgileDashboard_Kanban $kanban) {
-        $tracker = $this->getTrackerForKanban($kanban);
-        if (! $tracker) {
-            return;
-        }
-
-        $semantic_title = $this->getSemanticTitle($tracker);
-        if (! $semantic_title) {
-            return;
-        }
-
-        return $tracker->userCanSubmitArtifact($user) && $this->trackerHasOnlyTitleRequired($tracker, $semantic_title);
     }
 
     private function checkUserCanUpdateKanban(PFUser $user, AgileDashboard_Kanban $kanban) {
@@ -260,27 +247,6 @@ class KanbanResource extends AuthenticatedResource {
             $user,
             $tracker->getGroupId()
         );
-    }
-
-    private function trackerHasOnlyTitleRequired(Tracker $tracker, Tracker_Semantic_Title $semantic_title) {
-        $used_fields = $this->form_element_factory->getUsedFields($tracker);
-
-        foreach($used_fields as $used_field) {
-            if ($used_field->isRequired() && $used_field->getId() != $semantic_title->getFieldId()) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private function getSemanticTitle(Tracker $tracker) {
-        $semantic = Tracker_Semantic_Title::load($tracker);
-        if (! $semantic->getFieldId()) {
-            return;
-        }
-
-        return $semantic;
     }
 
     /**
