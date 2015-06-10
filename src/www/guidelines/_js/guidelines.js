@@ -9,6 +9,14 @@ $(function() {
     });
 
     $('body').scrollspy({ target: '#menu' });
+
+    $('#color-switcher > li').click(function() {
+        $('#color-switcher > li').removeClass('active');
+        $(this).addClass('active');
+
+        $('body').removeClass();
+        $('body').addClass($(this).attr('class'));
+    });
 });
 
 function escapeHtml(text) {

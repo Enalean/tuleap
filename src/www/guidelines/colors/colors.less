@@ -7,12 +7,19 @@
 
 /* FlamingParrot colors */
 @color-theme-orange: #F79514;
+@color-theme-accent-orange: #1593C4;
 @color-theme-dark-orange: #F36100;
+@color-theme-accent-dark-orange: #67AF45;
 @color-theme-blue: #1593C4;
+@color-theme-accent-blue: #F79514;
 @color-theme-green: #67AF45;
+@color-theme-accent-green: #F79514;
 @color-theme-bluegrey: #5B6C79;
+@color-theme-accent-bluegrey: #F79514;
 @color-theme-purple: #79558A;
+@color-theme-accent-purple: #67AF45;
 @color-theme-red: #BD2626;
+@color-theme-accent-red: #1593C4;
 
 /* Color swatches */
 @color-swatch-inca-silver: #767676;
@@ -48,6 +55,7 @@
 @color-swatch-peggy-pink-secondary: #FFE9FD;
 @color-swatch-flamingo-pink-secondary: #FFF2F8;
 
+
 #colors {
     th {
         font-size: 11px;
@@ -67,13 +75,34 @@
         &.warning { div { background: @color-warning; } }
         &.error   { div { background: @color-error;   } }
 
-        &.theme-orange      { div { background: @color-theme-orange;      } }
-        &.theme-dark-orange { div { background: @color-theme-dark-orange; } }
-        &.theme-blue        { div { background: @color-theme-blue;        } }
-        &.theme-green       { div { background: @color-theme-green;       } }
-        &.theme-bluegrey    { div { background: @color-theme-bluegrey;    } }
-        &.theme-purple      { div { background: @color-theme-purple;      } }
-        &.theme-red         { div { background: @color-theme-red;         } }
+        &.theme-orange {
+            .main-color   { background: @color-theme-orange;      }
+            .accent-color { background: @color-theme-accent-orange;      }
+        }
+        &.theme-dark-orange {
+            .main-color   { background: @color-theme-dark-orange; }
+            .accent-color { background: @color-theme-accent-dark-orange; }
+        }
+        &.theme-blue {
+            .main-color   { background: @color-theme-blue;        }
+            .accent-color { background: @color-theme-accent-blue;        }
+        }
+        &.theme-green {
+            .main-color   { background: @color-theme-green;       }
+            .accent-color { background: @color-theme-accent-green;       }
+        }
+        &.theme-bluegrey {
+            .main-color   { background: @color-theme-bluegrey;    }
+            .accent-color { background: @color-theme-accent-bluegrey;    }
+        }
+        &.theme-purple {
+            .main-color   { background: @color-theme-purple;      }
+            .accent-color { background: @color-theme-accent-purple;      }
+        }
+        &.theme-red{
+            .main-color   { background: @color-theme-red;         }
+            .accent-color { background: @color-theme-accent-red;         }
+        }
 
         &.swatch.inca-silver {
             div { background: @color-swatch-inca-silver-secondary; box-shadow: inset 0 0 0 3px @color-swatch-inca-silver; }
@@ -128,11 +157,21 @@
             vertical-align: middle;
             padding: 5px 10px 5px 0;
             font-size: 15px;
+            position: relative;
 
-            div {
+            div, .main-color {
                 width: 30px;
                 height: 30px;
                 border-radius: 50%;
+            }
+            .accent-color {
+                position: absolute;
+                width: 15px;
+                height: 15px;
+                border-radius: 50%;
+                bottom: 0px;
+                right: 8px;
+                box-shadow: -1px -1px 2px rgba(0, 0, 0, 0.2);
             }
 
             &.name {

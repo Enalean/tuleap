@@ -70,6 +70,15 @@
             ?>
             <div class="col-md-2">
                 <nav id="menu" class="hidden-print hidden-xs hidden-sm affix">
+                    <ul id="color-switcher">
+                        <li class="fp-orange active"></li>
+                        <li class="fp-dark-orange"></li>
+                        <li class="fp-blue"></li>
+                        <li class="fp-green"></li>
+                        <li class="fp-bluegrey"></li>
+                        <li class="fp-purple"></li>
+                        <li class="fp-red"></li>
+                    </ul>
                     <ul class="nav">
                         <?php
                             foreach($sections as $section) {
@@ -81,6 +90,35 @@
             </div>
 
             <div class="col-md-10">
+<svg id="preview-ui" width="383px" height="195px" viewBox="0 0 383 195" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <g id="svg-Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="svg-preview" sketch:type="MSArtboardGroup">
+            <rect shape-rendering="crispEdges" id="svg-page" stroke="#E1E1E1" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="382" height="194"></rect>
+            <rect shape-rendering="crispEdges" id="svg-navbar" sketch:type="MSShapeGroup" x="0" y="0" width="382" height="20"></rect>
+            <rect shape-rendering="crispEdges" id="svg-navbar-user" fill-opacity="0.100000001" fill="#000000" sketch:type="MSShapeGroup" x="307" y="0" width="76" height="20"></rect>
+            <rect shape-rendering="crispEdges" id="svg-title-1" fill="#C0C0C0" sketch:type="MSShapeGroup" x="90" y="38" width="152" height="4"></rect>
+            <rect shape-rendering="crispEdges" id="svg-sidebar" fill="#3E3E3E" sketch:type="MSShapeGroup" x="0" y="20" width="76" height="174"></rect>
+            <g id="svg-table" sketch:type="MSLayerGroup" transform="translate(90.000000, 83.000000)">
+                <rect shape-rendering="crispEdges" id="svg-table-row-1" stroke="#F1F1F1" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="0" width="276" height="13"></rect>
+                <rect shape-rendering="crispEdges" id="svg-table-row-2" stroke="#F1F1F1" fill="#F9F9F9" sketch:type="MSShapeGroup" x="0" y="12" width="276" height="13"></rect>
+                <rect shape-rendering="crispEdges" id="svg-table-row-3" stroke="#F1F1F1" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="24" width="276" height="13"></rect>
+                <rect shape-rendering="crispEdges" id="svg-table-row-4" stroke="#F1F1F1" fill="#F9F9F9" sketch:type="MSShapeGroup" x="0" y="36" width="276" height="13"></rect>
+                <rect shape-rendering="crispEdges" id="svg-table-row-5" stroke="#F1F1F1" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="48" width="276" height="13"></rect>
+                <rect shape-rendering="crispEdges" id="svg-table-row-6" stroke="#F1F1F1" fill="#F9F9F9" sketch:type="MSShapeGroup" x="0" y="60" width="276" height="13"></rect>
+                <rect shape-rendering="crispEdges" id="svg-table-row-7" stroke="#F1F1F1" fill="#FFFFFF" sketch:type="MSShapeGroup" x="0" y="72" width="276" height="13"></rect>
+                <rect shape-rendering="crispEdges" id="svg-table-row-header" sketch:type="MSShapeGroup" x="0" y="12" width="276" height="1"></rect>
+                <path d="M17.5,0.5 L17.5,84.5535507" id="svg-column-1" stroke="#F0F0F0" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                <path d="M75.5,0.5 L75.5,84.5535507" id="svg-column-2" stroke="#F0F0F0" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+                <path d="M133.5,0.5 L133.5,84.5535507" id="svg-column-3" stroke="#F0F0F0" stroke-linecap="square" sketch:type="MSShapeGroup"></path>
+            </g>
+            <rect shape-rendering="crispEdges" id="svg-btn-primary" fill="#FFFFFF" sketch:type="MSShapeGroup" x="90" y="67" width="50" height="11"></rect>
+            <rect shape-rendering="crispEdges" id="svg-btn1" class="svg-btn" fill="#FFFFFF" sketch:type="MSShapeGroup" x="270" y="67" width="37" height="11"></rect>
+            <path shape-rendering="crispEdges" d="M312,67 L337,67 L337,78 L312,78 L312,67 Z" id="svg-btn2" class="svg-btn" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+            <path shape-rendering="crispEdges" d="M341,67 L366,67 L366,78 L341,78 L341,67 Z" id="svg-btn3" class="svg-btn" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+        </g>
+    </g>
+</svg>
+
                 <?php
                     foreach($sections as $section) {
                         include_once("$section/$section.html");
