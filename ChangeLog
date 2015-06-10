@@ -9,6 +9,7 @@ Version 8.3 (not released yet)
 	* story #8089: forbid svn tags modifications (part 2)
 	* story #8089: Mustachify SVN general settings
 	* story #8059: Use secure hash function for the storage of password used for web login
+	* story #8059: Use salted SHA-512 instead of salted MD5 to store UNIX passwords
 	* story #8118: do not compile whole www/guidelines during make less
 
 	== Plugins ==
