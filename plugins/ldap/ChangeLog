@@ -1,3 +1,6 @@
+Version 3.81 - Tuleap 8.3
+    * request #8135: cannot log-in with non-ldap account if ldap plugin activated
+
 Version 3.80 - Tuleap 8.3
     * request #8093: User is not created in LDAP when done by site admin
 
