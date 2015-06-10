@@ -73,6 +73,12 @@
         self.createItemInPlaceInBacklog   = createItemInPlaceInBacklog;
         self.editKanban                   = editKanban;
         self.showEditbutton               = showEditbutton;
+        self.expandColumn                 = expandColumn;
+        self.toggleColumn                 = toggleColumn;
+        self.expandBacklog                = expandBacklog;
+        self.toggleBacklog                = toggleBacklog;
+        self.expandArchive                = expandArchive;
+        self.toggleArchive                = toggleArchive;
 
         loadColumns();
         loadBacklog(limit, offset);
@@ -82,6 +88,72 @@
             dragStart: dragStart,
             dropped  : dropped
         };
+
+        function collapseColumn(column) {
+            if (column.is_open) {
+                KanbanService.collapseColumn(kanban.id, column.id);
+                column.is_open = false;
+            }
+        }
+
+        function expandColumn(column) {
+            if (! column.is_open) {
+                KanbanService.expandColumn(kanban.id, column.id);
+                column.is_open = true;
+            }
+        }
+
+        function toggleColumn(column) {
+            if (column.is_open) {
+                collapseColumn(column);
+            } else {
+                expandColumn(column);
+            }
+        }
+
+        function collapseBacklog() {
+            if (self.backlog.is_open) {
+                KanbanService.collapseBacklog(kanban.id);
+                self.backlog.is_open = false;
+            }
+        }
+
+        function expandBacklog() {
+            if (! self.backlog.is_open) {
+                KanbanService.expandBacklog(kanban.id);
+                self.backlog.is_open = true;
+            }
+        }
+
+        function toggleBacklog() {
+            if (self.backlog.is_open) {
+                collapseBacklog();
+            } else {
+                expandBacklog();
+            }
+        }
+
+        function collapseArchive() {
+            if (self.archive.is_open) {
+                KanbanService.collapseArchive(kanban.id);
+                self.archive.is_open = false;
+            }
+        }
+
+        function expandArchive() {
+            if (! self.archive.is_open) {
+                KanbanService.expandArchive(kanban.id);
+                self.archive.is_open = true;
+            }
+        }
+
+        function toggleArchive() {
+            if (self.archive.is_open) {
+                collapseArchive();
+            } else {
+                expandArchive();
+            }
+        }
 
         function dragStart(event) {
             self.board.columns.forEach(function(column) {
@@ -247,8 +319,24 @@
                 column.limit_input    = column.limit;
                 column.saving_wip     = false;
                 column.is_small_width = false;
-                loadColumnContent(column, limit, offset);
+                column.is_defered     = ! column.is_open;
+                if (column.is_open) {
+                    loadColumnContent(column, limit, offset);
+                }
             });
+        }
+
+        function loadDeferedColumns() {
+            if (kanban.columns.every(function (column){
+                return column.is_defered || ! column.loading_items;
+            })) {
+                kanban.columns.forEach(function (column) {
+                    if (column.is_defered) {
+                        column.is_defered = false;
+                        loadColumnContent(column, limit, offset);
+                    }
+                });
+            }
         }
 
         function loadColumnContent(column, limit, offset) {
@@ -259,6 +347,7 @@
                     loadColumnContent(column, limit, offset + limit);
                 } else {
                     column.loading_items = false;
+                    loadDeferedColumns();
                 }
             });
         }
@@ -271,6 +360,7 @@
                     loadBacklog(limit, offset + limit);
                 } else {
                     self.backlog.loading_items = false;
+                    loadDeferedColumns();
                 }
             });
         }
@@ -283,6 +373,7 @@
                     loadArchive(limit, offset + limit);
                 } else {
                     self.archive.loading_items = false;
+                    loadDeferedColumns();
                 }
             });
         }

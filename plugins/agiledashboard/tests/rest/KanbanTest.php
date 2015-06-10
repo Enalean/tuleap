@@ -53,6 +53,77 @@ class KanbanTest extends RestBase {
     public function testPATCHKanban() {
         $this->assertThatLabelIsUpdated("Willy's really weary");
         $this->assertThatLabelIsUpdated("My first kanban"); // go back to original value
+        $this->assertThatBacklogIsToggled();
+        $this->assertThatArchiveIsToggled();
+        $this->assertThatColumnIsToggled();
+    }
+
+    private function assertThatBacklogIsToggled() {
+        $initial_state_response = $this->getResponse($this->client->get('kanban/'. REST_TestDataBuilder::KANBAN_ID));
+        $initial_state_kanban   = $initial_state_response->json();
+        $this->assertFalse($initial_state_kanban['backlog']['is_open']);
+
+        $patch_response = $this->getResponse($this->client->patch(
+            'kanban/'. REST_TestDataBuilder::KANBAN_ID,
+            null,
+            json_encode(
+                array(
+                    'collapse_backlog' => false
+                )
+            )
+        ));
+        $this->assertEquals($patch_response->getStatusCode(), 200);
+
+        $new_state_response = $this->getResponse($this->client->get('kanban/'. REST_TestDataBuilder::KANBAN_ID));
+        $new_state_kanban   = $new_state_response->json();
+        $this->assertTrue($new_state_kanban['backlog']['is_open']);
+    }
+
+    private function assertThatArchiveIsToggled() {
+        $initial_state_response = $this->getResponse($this->client->get('kanban/'. REST_TestDataBuilder::KANBAN_ID));
+        $initial_state_kanban   = $initial_state_response->json();
+        $this->assertFalse($initial_state_kanban['archive']['is_open']);
+
+        $patch_response = $this->getResponse($this->client->patch(
+            'kanban/'. REST_TestDataBuilder::KANBAN_ID,
+            null,
+            json_encode(
+                array(
+                    'collapse_archive' => false
+                )
+            )
+        ));
+        $this->assertEquals($patch_response->getStatusCode(), 200);
+
+        $new_state_response = $this->getResponse($this->client->get('kanban/'. REST_TestDataBuilder::KANBAN_ID));
+        $new_state_kanban   = $new_state_response->json();
+        $this->assertTrue($new_state_kanban['archive']['is_open']);
+    }
+
+    private function assertThatColumnIsToggled() {
+        $initial_state_response = $this->getResponse($this->client->get('kanban/'. REST_TestDataBuilder::KANBAN_ID));
+        $initial_state_kanban   = $initial_state_response->json();
+        $first_column = $initial_state_kanban['columns'][0];
+        $this->assertTrue($first_column['is_open']);
+
+        $patch_response = $this->getResponse($this->client->patch(
+            'kanban/'. REST_TestDataBuilder::KANBAN_ID,
+            null,
+            json_encode(
+                array(
+                    'collapse_column' => array(
+                        'column_id' => $first_column['id'],
+                        'value'     => true
+                    )
+                )
+            )
+        ));
+        $this->assertEquals($patch_response->getStatusCode(), 200);
+
+        $new_state_response = $this->getResponse($this->client->get('kanban/'. REST_TestDataBuilder::KANBAN_ID));
+        $new_state_kanban   = $new_state_response->json();
+        $new_state_first_column = $new_state_kanban['columns'][0];
+        $this->assertFalse($new_state_first_column['is_open']);
     }
 
     private function assertThatLabelIsUpdated($new_label) {

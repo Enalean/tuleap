@@ -44,12 +44,11 @@ use Tracker_NoChangeException;
 use Tracker_FormElement_Field_List_Bind;
 use Tracker_Semantic_Status;
 use Tracker_FormElementFactory;
-use Tracker;
-use Tracker_Semantic_Title;
 use Tuleap\AgileDashboard\REST\v1\OrderRepresentation;
 use Tuleap\AgileDashboard\REST\v1\OrderValidator;
 use Tuleap\AgileDashboard\REST\v1\ArtifactLinkUpdater;
 use Tuleap\AgileDashboard\REST\v1\ResourcesPatcher;
+use AgileDashboard_KanbanUserPreferences;
 
 class KanbanResource extends AuthenticatedResource {
 
@@ -82,6 +81,9 @@ class KanbanResource extends AuthenticatedResource {
     /** @var AgileDashboard_PermissionsManager */
     private $permissions_manager;
 
+    /** @var AgileDashboard_KanbanUserPreferences */
+    private $user_preferences;
+
     public function __construct() {
         $this->kanban_item_dao = new AgileDashboard_KanbanItemDao();
         $this->tracker_factory = TrackerFactory::instance();
@@ -92,7 +94,11 @@ class KanbanResource extends AuthenticatedResource {
             $this->kanban_dao
         );
 
-        $this->kanban_column_factory = new AgileDashboard_KanbanColumnFactory(new AgileDashboard_KanbanColumnDao());
+        $this->user_preferences = new AgileDashboard_KanbanUserPreferences();
+        $this->kanban_column_factory = new AgileDashboard_KanbanColumnFactory(
+            new AgileDashboard_KanbanColumnDao(),
+            $this->user_preferences
+        );
 
         $this->artifact_factory = Tracker_ArtifactFactory::instance();
         $priority_manager       = new Tracker_Artifact_PriorityManager(
@@ -113,6 +119,7 @@ class KanbanResource extends AuthenticatedResource {
         $this->permissions_manager  = new AgileDashboard_PermissionsManager();
 
         $this->kanban_representation_builder = new KanbanRepresentationBuilder(
+            $this->user_preferences,
             $this->kanban_column_factory,
             $this->tracker_factory,
             $this->form_element_factory
@@ -165,21 +172,86 @@ class KanbanResource extends AuthenticatedResource {
      * /!\ Kanban REST routes are under construction and subject to changes /!\
      * </pre>
      *
+     * <br>
+     * To update the label of a kanban:
+     * <pre>
+     * {<br>
+     * &nbsp;&nbsp;"label": "The new label"<br>
+     * }
+     * </pre>
+     *
+     * <br>
+     * To collapse a column (will be saved in current user preferences):
+     * <pre>
+     * {<br>
+     * &nbsp;&nbsp;"collapse_column": {<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;"column_id": 1337,<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;"value": true      // false to expand<br>
+     * &nbsp;&nbsp;}<br>
+     * }
+     * </pre>
+     *
+     * <br>
+     * To collapse the backlog (the same for archive):
+     * <pre>
+     * {<br>
+     * &nbsp;&nbsp;"collapse_backlog": true  // false to expand<br>
+     * }
+     * </pre>
+     *
      * @url PATCH {id}
      * @access protected
      *
      * @param int    $id    Id of the kanban
-     * @param string $label The new label {@from body} {@required}
+     * @param string $label The new label {@from body}
+     * @param \Tuleap\AgileDashboard\REST\v1\Kanban\KanbanCollapseColumnRepresentation  $collapse_column The column to collapse (save in user prefs) {@from body}
+     * @param bool $collapse_archive True to collapse the archive (save in user prefs) {@from body}
+     * @param bool $collapse_backlog True to collapse the backlog (save in user prefs) {@from body}
      *
      * @throws 403
      * @throws 404
      */
-    public function patchId($id, $label) {
+    public function patchId(
+            $id,
+            $label = null,
+            KanbanCollapseColumnRepresentation $collapse_column = null,
+            $collapse_archive = null,
+            $collapse_backlog = null
+    ) {
         $user   = $this->getCurrentUser();
         $kanban = $this->getKanban($user, $id);
 
-        $this->checkUserCanUpdateKanban($user, $kanban);
-        $this->kanban_dao->save($id, $label);
+        if ($label) {
+            $this->checkUserCanUpdateKanban($user, $kanban);
+            $this->kanban_dao->save($id, $label);
+        }
+
+        if ($collapse_column) {
+            if (! $this->columnIsInTracker($kanban, $user, $collapse_column->column_id)) {
+                throw new RestException(404, 'Cannot collapse unknown column');
+            }
+            if ($collapse_column->value == true) {
+                $this->user_preferences->closeColumn($kanban, $collapse_column->column_id, $user);
+            } else {
+                $this->user_preferences->openColumn($kanban, $collapse_column->column_id, $user);
+            }
+        }
+
+        if ($collapse_archive !== null) {
+            if ($collapse_archive) {
+                $this->user_preferences->closeArchive($kanban, $user);
+            } else {
+                $this->user_preferences->openArchive($kanban, $user);
+            }
+        }
+
+        if ($collapse_backlog !== null) {
+            if ($collapse_backlog) {
+                $this->user_preferences->closeBacklog($kanban, $user);
+            } else {
+                $this->user_preferences->openBacklog($kanban, $user);
+            }
+        }
 
         Header::allowOptionsGetPatchDelete();
     }

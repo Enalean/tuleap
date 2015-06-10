@@ -35,6 +35,7 @@ use AgileDashboard_UserNotAdminException;
 use TrackerFactory;
 use UserManager;
 use PFUser;
+use AgileDashboard_KanbanUserPreferences;
 
 class KanbanColumnsResource {
 
@@ -59,7 +60,10 @@ class KanbanColumnsResource {
 
         $kanban_column_dao           = new AgileDashboard_KanbanColumnDao();
         $permissions_manager         = new AgileDashboard_PermissionsManager();
-        $this->kanban_column_factory = new AgileDashboard_KanbanColumnFactory($kanban_column_dao);
+        $this->kanban_column_factory = new AgileDashboard_KanbanColumnFactory(
+            $kanban_column_dao,
+            new AgileDashboard_KanbanUserPreferences()
+        );
         $this->kanban_column_manager = new AgileDashboard_KanbanColumnManager(
             $kanban_column_dao,
             $permissions_manager,
@@ -98,7 +102,7 @@ class KanbanColumnsResource {
         $kanban       = $this->getKanban($current_user, $kanban_id);
 
         try{
-            $column = $this->kanban_column_factory->getColumnForAKanban($kanban, $id);
+            $column = $this->kanban_column_factory->getColumnForAKanban($kanban, $id, $current_user);
             if (! $this->kanban_column_manager->setColumnWipLimit($current_user, $kanban, $column, $wip_limit)) {
                 throw new RestException(500);
             }

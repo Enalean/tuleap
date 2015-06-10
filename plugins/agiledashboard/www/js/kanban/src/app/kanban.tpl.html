@@ -11,7 +11,7 @@
 <div id="kanban-board" resize>
     <div class="backlog"
         ng-class="{'column-displayed': kanban.backlog.is_open, 'column-hidden': ! kanban.backlog.is_open, 'small_column': kanban.backlog.is_small_width}"
-        ng-click="!kanban.backlog.is_open && (kanban.backlog.is_open = true)"
+        ng-click="kanban.expandBacklog()"
         ng-attr-title="{{ kanban.backlog.is_open ? '' : 'Toggle the backlog' | translate }}"
         ng-style="{width: kanban.backlog.resize_width}"
     >
@@ -21,7 +21,7 @@
             <span class="wip-count" ng-class="{ loading: kanban.backlog.loading_items }">{{ kanban.backlog.content.length }}</span>
             <span class="toggle-column"
                 title="{{ 'Toggle the backlog' | translate }}"
-                ng-click="kanban.backlog.is_open = ! kanban.backlog.is_open; $event.stopPropagation();"
+                ng-click="kanban.toggleBacklog(); $event.stopPropagation();"
             >
                 <i class="icon-inbox"></i>
             </span>
@@ -60,7 +60,7 @@
             'wip-reached': kanban.isColumnWipReached(column),
             'small_column': column.is_small_width
         }"
-        ng-click="column.is_open = true"
+        ng-click="kanban.expandColumn(column)"
         ng-attr-title="{{ column.is_open ? '' : 'Toggle this column' | translate }}"
         ng-style="{width: column.resize_width}"
         data-column-id="{{ column.id }}"
@@ -78,7 +78,7 @@
             <span class="wip-count" ng-class="{ loading: column.loading_items }">{{ column.content.length }}</span>
             <span class="toggle-column"
                 title="{{ 'Toggle this column' | translate }}"
-                ng-click="column.is_open = ! column.is_open; $event.stopPropagation();"
+                ng-click="kanban.toggleColumn(column); $event.stopPropagation();"
             >
                 <i ng-class="column.is_open ? 'icon-minus-sign-alt' : 'icon-plus-sign-alt'"></i>
             </span>
@@ -122,7 +122,7 @@
 
     <div class="archive"
         ng-class="{'column-displayed': kanban.archive.is_open, 'column-hidden': ! kanban.archive.is_open, 'small_column': kanban.archive.is_small_width}"
-        ng-click="kanban.archive.is_open = true"
+        ng-click="kanban.expandArchive()"
         ng-attr-title="{{ kanban.archive.is_open ? '' : 'Toggle the archive' | translate }}"
         ng-style="{width: kanban.archive.resize_width}"
     >
@@ -132,7 +132,7 @@
             <span class="wip-count" ng-class="{ loading: kanban.archive.loading_items }">{{ kanban.archive.content.length }}</span>
             <span class="toggle-column"
                 title="{{ 'Toggle the archive' | translate }}"
-                ng-click="kanban.archive.is_open = ! kanban.archive.is_open; $event.stopPropagation();"
+                ng-click="kanban.toggleArchive(); $event.stopPropagation();"
             >
                 <i class="icon-archive"></i>
             </span>
