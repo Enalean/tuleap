@@ -1,3 +1,6 @@
+Version 1.212 - Tuleap 8.3
+    * request #8132 Include default values for fields when adding a kanban item
+
 Version 1.211 - Tuleap 8.3
     * story #7857: Handle date & datetime fields
 
