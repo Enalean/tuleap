@@ -274,7 +274,9 @@ class ArtifactTemporaryFilesResource {
             $file->getDescription(),
             $file->getName(),
             $file->getSize(),
-            $file->getType()
+            $file->getType(),
+            null,
+            null
         );
     }
 
@@ -361,7 +363,7 @@ class ArtifactTemporaryFilesResource {
      */
     private function getArtifactByFileInfoId($fileinfo_id) {
         try {
-            $artifact = $this->fileinfo_factory->getArtifactByFileInfoId($this->user, $fileinfo_id);
+            $artifact = $this->fileinfo_factory->getArtifactByFileInfoIdInLastChangeset($this->user, $fileinfo_id);
         } catch (InvalidFileInfoException $e) {
             throw new RestException(404, $e->getMessage());
         } catch (UnauthorisedException $e) {

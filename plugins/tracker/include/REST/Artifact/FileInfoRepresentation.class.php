@@ -53,14 +53,26 @@ class FileInfoRepresentation {
      */
     public $type;
 
-    public function build($id, $submitted_by, $description, $name, $filesize, $filetype) {
-        $this->id           = JsonCast::toInt($id);
-        $this->submitted_by = JsonCast::toInt($submitted_by);
-        $this->description  = $description;
-        $this->name         = $name;
-        $this->size         = JsonCast::toInt($filesize);
-        $this->type         = $filetype;
-        $this->uri          = 'artifact_files/'.$this->id;
+    /**
+     * @var string
+     */
+    public $html_url;
+
+    /**
+     * @var string
+     */
+    public $html_preview_url;
+
+    public function build($id, $submitted_by, $description, $name, $filesize, $filetype, $html_url, $html_preview_url) {
+        $this->id               = JsonCast::toInt($id);
+        $this->submitted_by     = JsonCast::toInt($submitted_by);
+        $this->description      = $description;
+        $this->name             = $name;
+        $this->size             = JsonCast::toInt($filesize);
+        $this->type             = $filetype;
+        $this->html_url         = $html_url;
+        $this->html_preview_url = $html_preview_url;
+        $this->uri              = 'artifact_files/'.$this->id;
 
         return $this;
     }

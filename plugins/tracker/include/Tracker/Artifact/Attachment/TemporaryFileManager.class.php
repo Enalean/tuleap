@@ -351,7 +351,7 @@ class Tracker_Artifact_Attachment_TemporaryFileManager {
         $given_rest_file_ids = $rest_value->value;
         // Ids given in REST
         foreach ($given_rest_file_ids as $file_id) {
-            $linked_artifact = $this->file_info_factory->getArtifactByFileInfoId($file_id);
+            $linked_artifact = $this->file_info_factory->getArtifactByFileInfoIdInLastChangeset($file_id);
 
             // Temporary => link
             if (! $linked_artifact && $this->isFileIdTemporary($file_id)) {

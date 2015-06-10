@@ -307,6 +307,51 @@ class ArtifactFilesTest extends RestBase {
         }
 
         $this->assertTrue($file_exists);
+
+        return $parameters = array(
+            'artifact_id' => $posted_artifact['id'],
+            'field_id'    => $field_id_file,
+            'file_id'     => $file_representation['id']
+        );
+    }
+
+    /**
+     * @depends testAttachFileToPostArtifact
+     */
+    public function testAttachementHasHTMLURL(array $parameters) {
+        $response = $this->getResponse($this->client->get('artifacts/' . $parameters['artifact_id']));
+        $artifact = $response->json();
+
+        $value = $this->getAttachementFieldValues($artifact['values'], $parameters);
+        $this->assertNotNull($value);
+
+        $show_url = $this->getHTMLUrl($value['file_descriptions']);
+
+        $this->assertNotNull($show_url);
+        $this->assertEquals(
+            $show_url,
+            "/plugins/tracker/?aid=".$parameters['artifact_id']."&field=".$parameters['field_id']."&func=show-attachment&attachment=".$parameters['file_id']
+        );
+
+        $preview_url = $this->getPreviewUrl($value['file_descriptions']);
+
+        $this->assertNull($preview_url);
+    }
+
+    private function getPreviewUrl($files) {
+        return $files[0]['html_preview_url'];
+    }
+
+    private function getHTMLUrl($files) {
+        return $files[0]['html_url'];
+    }
+
+    private function getAttachementFieldValues($values, $parameters) {
+        foreach ($values as $value) {
+            if ($value['field_id'] == $parameters['field_id']) {
+                return $value;
+            }
+        }
     }
 
     /**
