@@ -13,7 +13,11 @@
     "tuleap-artifact-modal": "http://gerrit.tuleap.net/angular-artifact-modal.git",
     "angular-ui-bootstrap": "gh-pages",
     "angular-ckeditor": "~0.4.2",
-    "lodash": "~2.4.0"
+    "lodash": "~2.4.0",
+    "angular-bootstrap-datetimepicker": "~0.3.12"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "resolutions": {
+    "moment": "^2.9.0"
+  }
 }

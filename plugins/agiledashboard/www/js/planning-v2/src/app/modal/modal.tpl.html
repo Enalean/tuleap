@@ -216,24 +216,18 @@
         class="tracker_formelement_label"
         ng-class="{required: field.required}"
     >{{ field.label }}</label>
-    <input
-        ng-if="!field.is_time_displayed"
-        type="text"
-        ng-model="modal.values[field.field_id].value"
-        placeholder="yyyy-mm-dd"
-        ng-pattern="/^\d{4}-[01]\d-[0-3]\d$/"
-        ng-required="{{ field.required }}"
-        id="{{ 'tracker_field_' + field.field_id }}"
-    >
-    <input
-        ng-if="field.is_time_displayed"
-        type="text"
-        ng-model="modal.values[field.field_id].value"
-        placeholder="yyyy-mm-dd hh:MM:ss"
-        ng-pattern="/^\d{4}-[01]\d-[0-3]\d [0-2]\d:[0-5]\d:[0-5]\d$/"
-        ng-required="{{ field.required }}"
-        id="{{ 'tracker_field_' + field.field_id }}"
-    >
+    <div class="dropdown">
+        <div class="input-append dropdown-toggle" data-toggle="dropdown">
+            <input ng-if="!field.is_time_displayed" field-date type="text" id="{{ 'tracker_field_' + field.field_id }}" class="form-control" data-ng-model="modal.values[field.field_id].value" placeholder="yyyy-mm-dd" ng-required="{{ field.required }}">
+            <input ng-if="field.is_time_displayed" field-datetime type="text" id="{{ 'tracker_field_' + field.field_id }}" class="form-control" data-ng-model="modal.values[field.field_id].value" placeholder="yyyy-mm-dd hh:mm" ng-required="{{ field.required }}">
+            <span class="add-on"><i class="icon-calendar"></i></span>
+        </div>
+
+        <ul class="dropdown-menu">
+            <datetimepicker ng-if="!field.is_time_displayed" data-ng-model="modal.values[field.field_id].value" data-datetimepicker-config="{ dropdownSelector: 'tracker_field_{{ field.field_id }}', minView: 'day' }"></datetimepicker>
+            <datetimepicker ng-if="field.is_time_displayed"  data-ng-model="modal.values[field.field_id].value" data-datetimepicker-config="{ dropdownSelector: 'tracker_field_{{ field.field_id }}', minView: 'minute' }"></datetimepicker>
+        </ul>
+    </div>
 </div>
 </script>
 
