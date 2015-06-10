@@ -46,11 +46,6 @@ function ModalValidateFactory() {
     function validateValue(field) {
         switch (field.type) {
             case "date":
-                if (field.value === null) {
-                    field.value = "";
-                }
-                break;
-
             case "int":
             case "float":
                 if (field.value === null) {
