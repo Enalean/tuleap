@@ -88,7 +88,13 @@ class AgileDashboard_KanbanDao extends DataAccessObject {
 
         $sql = "SELECT tracker.id,
                     tracker.name,
-                    COALESCE(kanban_config.name, planning.planning_tracker_id, backlog.tracker_id, TH1.parent_id, TH2.child_id) AS used
+                    COALESCE(
+                        kanban_config.name,
+                        planning.planning_tracker_id,
+                        backlog.tracker_id,
+                        TH1.parent_id,
+                        TH2.child_id
+                    ) AS used
                 FROM tracker
                     LEFT JOIN plugin_agiledashboard_kanban_configuration AS kanban_config
                     ON (tracker.id = kanban_config.tracker_id)
@@ -102,6 +108,7 @@ class AgileDashboard_KanbanDao extends DataAccessObject {
                     ON (tracker.id = TH2.child_id)
                 WHERE tracker.group_id = $project_id
                     AND tracker.deletion_date IS NULL
+                GROUP BY tracker.id
                 ORDER BY tracker.name ASC";
 
         return $this->retrieve($sql);
