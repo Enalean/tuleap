@@ -1,3 +1,6 @@
+Version 1.213 - Tuleap 8.3
+    * request #8136: on kanban create modal dropdown some trackers appear twice
+
 Version 1.212 - Tuleap 8.3
     * request #8132 Include default values for fields when adding a kanban item
 
