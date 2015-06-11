@@ -172,7 +172,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 $ff = $this->report->getFormElementFactory();
                 $this->_columns = array();
                 foreach ($columns as $key => $column) {
-                    if ($formElement = $ff->getFormElementFieldById($key)) {
+                    if ($formElement = $ff->getUsedFormElementFieldById($key)) {
                         if ($formElement->userCanRead()) {
                             $this->_columns[$key] = array(
                                 'field'    => $formElement,
@@ -1627,6 +1627,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         }
         $child = $root->addChild('columns');
         foreach ($this->getColumns() as $key => $col) {
+
             $child->addChild('field')->addAttribute('REF', array_search($key, $xmlMapping));
         }
         //TODO : add aggregates in XML export
