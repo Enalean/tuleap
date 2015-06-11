@@ -66,7 +66,7 @@ class AgileDashboardRouter {
     private $project_manager;
 
     /**
-     * @var ProjectXMLExporter
+     * @var AgileDashboard_XMLFullStructureExporter
      */
     private $xml_exporter;
 
@@ -89,7 +89,7 @@ class AgileDashboardRouter {
         Planning_ShortAccessFactory $planning_shortaccess_factory,
         Planning_MilestoneControllerFactory $milestone_controller_factory,
         ProjectManager $project_manager,
-        ProjectXMLExporter $xml_exporter,
+        AgileDashboard_XMLFullStructureExporter $xml_exporter,
         AgileDashboard_KanbanManager $kanban_manager,
         AgileDashboard_ConfigurationManager $config_manager,
         AgileDashboard_KanbanFactory $kanban_factory,

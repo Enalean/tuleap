@@ -66,7 +66,6 @@ class trackerPlugin extends Plugin {
         $this->_addHook('codendi_daily_start',                 'codendi_daily_start',               false);
         $this->_addHook('fill_project_history_sub_events',     'fillProjectHistorySubEvents',       false);
         $this->_addHook(Event::SOAP_DESCRIPTION,               'soap_description',                  false);
-        $this->_addHook(Event::EXPORT_XML_PROJECT);
         $this->_addHook(Event::IMPORT_XML_PROJECT);
         $this->addHook(Event::USER_MANAGER_GET_USER_INSTANCE);
         $this->_addHook('plugin_statistics_service_usage');
@@ -84,6 +83,7 @@ class trackerPlugin extends Plugin {
         if (defined('AGILEDASHBOARD_BASE_DIR')) {
             $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
             $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_INFO_ON_MILESTONE);
+            $this->addHook(AGILEDASHBOARD_EXPORT_XML);
 
             // REST Milestones
             $this->addHook(AGILEDASHBOARD_EVENT_REST_GET_MILESTONE);
@@ -664,10 +664,9 @@ class trackerPlugin extends Plugin {
     }
 
     /**
-     * @see Event::EXPORT_XML_PROJECT
      * @param array $params
      */
-    public function export_xml_project($params) {
+    public function agiledashboard_export_xml($params) {
         $tracker_factory = TrackerFactory::instance();
         $xml_export = new TrackerXmlExport(
             $tracker_factory,

@@ -48,7 +48,7 @@ class Planning_Controller extends MVC2_PluginController {
     /** @var ProjectManager */
     private $project_manager;
 
-    /** @var ProjectXMLExporter */
+    /** @var AgileDashboard_XMLFullStructureExporter */
     private $xml_exporter;
 
     /** @var string */
@@ -72,7 +72,7 @@ class Planning_Controller extends MVC2_PluginController {
         Planning_ShortAccessFactory $planning_shortaccess_factory,
         Planning_MilestoneFactory $milestone_factory,
         ProjectManager $project_manager,
-        ProjectXMLExporter $xml_exporter,
+        AgileDashboard_XMLFullStructureExporter $xml_exporter,
         $plugin_theme_path,
         $plugin_path,
         AgileDashboard_KanbanManager $kanban_manager,
@@ -405,7 +405,7 @@ class Planning_Controller extends MVC2_PluginController {
     }
 
     private function getFullConfigurationAsXML(Project $project) {
-        return $this->xml_exporter->exportWithoutUgroups($project);
+        return $this->xml_exporter->export($project);
     }
 
     public function create() {
